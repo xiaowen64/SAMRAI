@@ -1,0 +1,189 @@
+##############################################################################
+# Change cache dirs, admins have them set to be read only
+##############################################################################
+
+insure++.GusCacheDir $HOME/guscache
+insure++.lrtCacheDir $HOME/guscache
+
+
+# Record all output to a single file
+insure++.report_file $HOME/insure.out
+insure++.report_banner off
+insure++.report_overwrite false
+
+insure++.summarize leaks
+
+# Additional things to check beyond the default
+insure++.summarize bugs
+insure++.checking_uninit on
+insure++.unsuppress COPY_DANGLING
+insure++.unsuppress RETURN_FAILURE
+insure++.unsuppress FREE_DANGLING
+insure++.unsuppress ALLOC_CONFLICT
+insure++.unsuppress DELETE_MISMATCH
+insure++.unsuppress DEAD_CODE
+insure++.unsuppress READ_BAD_INDEX
+insure++.unsuppress WRITE_BAD_INDEX
+insure++.unsuppress RETURN_INCONSISTENT
+insure++.unsuppress FREE_NULL
+
+
+##############################################################################
+# Suppress OS, compiler, and external library problems
+##############################################################################
+
+# GCC internal problems 
+# SGS 5/20/04
+insure++.suppress RETURN_FAILURE { getenv * __libc_start_main }
+
+
+# Strings in g++ are very badly damaged
+# SGS 5/20/04
+insure++.leaksummaryfilter -! * std::string::_Rep::_S_create *
+
+# gfortran initialization
+# SGS 10/24/07
+insure++.suppress RETURN_FAILURE { * *_gfortrani_init_variables * }
+
+# I/O was returning 0 which insure++ was warning about 0 items
+# being written.  This is not an error, bug maybe not good 
+# programming.  Is there a way to stop the stream from doing this?
+# SGS 4/8/09
+insure++.suppress RETURN_FAILURE { * SAMRAI::tbox::ParallelBuffer::outputBuffer() * }
+
+# Did not work
+# insure++.file_ignore complex
+# insure++.suppress_output complex:632
+# insure++.suppress parserwarning in complex
+
+# MPI 1.2.4 & 1.2.5
+# SGS 5/20/04
+insure++.suppress RETURN_FAILURE { * MPI_Send *  } 
+insure++.suppress RETURN_FAILURE { * PMPI_Send *  } 
+insure++.suppress RETURN_FAILURE { * MPI_Recv *  } 
+insure++.suppress RETURN_FAILURE { * PMPI_Recv *  } 
+insure++.suppress RETURN_FAILURE { * MPI_Isend *  } 
+insure++.suppress RETURN_FAILURE { * PMPI_Isend *  } 
+insure++.suppress RETURN_FAILURE { * MPI_Irecv *  } 
+insure++.suppress RETURN_FAILURE { * PMPI_Irecv *  } 
+insure++.suppress RETURN_FAILURE { * MPI_Wait *  } 
+insure++.suppress RETURN_FAILURE { * PMPI_Wait *  } 
+insure++.suppress RETURN_FAILURE { * MPI_Test *  } 
+insure++.suppress RETURN_FAILURE { * PMPI_Test *  } 
+insure++.suppress RETURN_FAILURE { * MPI_Init *  } 
+insure++.suppress RETURN_FAILURE { * PMPI_Init *  } 
+insure++.suppress RETURN_FAILURE { * PMPI_Waitall *  } 
+insure++.suppress RETURN_FAILURE { * PMPI_Waitsome *  } 
+
+insure++.leaksummaryfilter -! * MPI_Init *
+insure++.leaksummaryfilter -! * PMPI_Init *
+insure++.leaksummaryfilter -! * MPI_Barrier *
+insure++.leaksummaryfilter -! * PMPI_Barrier *
+
+# OpenMPI 1.2.8
+# SGS 10/27/2008
+insure++.suppress RETURN_FAILURE { * _dl_init *  } 
+insure++.suppress RETURN_FAILURE { * PMPI_Finalize *  } 
+insure++.suppress FREE_NULL { * _dl_init *  } 
+insure++.suppress FREE_NULL { * PMPI_Init *  } 
+insure++.suppress FREE_NULL { * PMPI_Finalize *  } 
+insure++.suppress USER_ERROR { * PMPI_Finalize *  } 
+
+insure++.leaksummaryfilter -! * PMPI_Finalize *
+
+# SGS this rule does not work so use a more generic one....
+#insure++.leaksummaryfilter -! * SAMRAI::tbox::SAMRAIManager::initialize * PMPI_Comm_dup * 
+insure++.leaksummaryfilter -! * PMPI_Comm_dup *
+
+#
+# Added by ???? for ???
+#
+insure++.leaksummaryfilter -! * MPI_Irecv *
+insure++.leaksummaryfilter -! * PMPI_Irecv *
+
+# HDF
+# insure++.suppress RETURN_FAILURE { getenv H5_init_library * }
+# SGS 5/20/04
+insure++.suppress USER_ERROR { qsort H5AC_flush * }
+insure++.leaksummaryfilter -! * H5O_mtime_decode *
+# SGS 11/20/07
+# this is a little broad but HDF is leaking in fopen
+insure++.leaksummaryfilter -! * SAMRAI::tbox::HDFDatabase::open *
+insure++.leaksummaryfilter -! * SAMRAI::tbox::HDFDatabase::create *
+insure++.leaksummaryfilter -! * H5FCreate *
+insure++.leaksummaryfilter -! * H5FL_reg_malloc *
+
+# SGS 6/22/04
+# This does not appear in gcc 3.3.2 but is present in 3.2.2
+insure++.leaksummaryfilter -! * gmtime *
+
+# SGS 10/12/07
+# qsort has a memory leak
+insure++.leaksummaryfilter -! * qsort *
+
+
+# SGS 11/27/07
+# time method have leak
+insure++.leaksummaryfilter -! * tzset *
+
+# BTNG 10/17/08
+# This may be system dependent.  SGS could not replicate using identical configuration.
+insure++.leaksummaryfilter -! * localtime *
+
+# hypre 
+# Calling realloc with NULL pointer.  According to realloc docs this is
+# not an error.
+# SGS 5/20/04
+insure++.suppress FREE_NULL { realloc hypre_ReAlloc * }
+# Hypre is allocating boxes with malloc and then copying them.
+# SGS 4/23/09
+insure++.suppress READ_UNINIT_MEM { * hypre_BoxSetExtents * }
+
+# PETSC
+insure++.suppress RETURN_FAILURE { * PetscInitialize * }
+insure++.suppress RETURN_FAILURE { * PetscFinalize * }
+insure++.leaksummaryfilter -! * PetscDLLibraryOpen *
+insure++.leaksummaryfilter -! * PetscInitialize *
+insure++.leaksummaryfilter -! * PetscHeaderCreate_Private *
+insure++.leaksummaryfilter -! * PetscViewerASCIIGetStdout *
+insure++.leaksummaryfilter -! * VecInitializePackage *
+insure++.leaksummaryfilter -! * PETSC_VIEWER_STDOUT_ *
+
+# SILO
+insure++.leaksummaryfilter -! * _lite_PD_init_chrt *
+insure++.leaksummaryfilter -! * lite_SC_date *
+insure++.suppress RETURN_FAILURE { * _PD_get_tok * }
+insure++.suppress RETURN_FAILURE { * _lite_PD_rd_symt * }
+
+##############################################################################
+# Suppress warnings in SAMRAI
+# 	These should all include documentation on why it is valid to
+#	suppress the warning.
+##############################################################################
+
+# 
+# This error is signaling the end of file.
+# Reads that are smaller than maxsize are handled correctly by the parser code.
+# Insure incorrectly reports that anything smaller than the read size is 
+# is an error.  This is not true.
+#
+# SGS 5/20/04
+suppress RETURN_FAILURE at Parser.C
+
+# SGS 1/4/05
+suppress RETURN_FAILURE { fread * std::istream::sentry::sentry * }
+
+# Using stat return code to determine if path exists; this should be correct
+# SGS 10/24/07
+suppress RETURN_FAILURE { * stat SAMRAI::tbox::Utilities::recursiveMkdir * }
+
+# SGS 10/10/07
+# Problems with the code generated by grammer/parser.
+suppress READ_UNINIT_MEM(read) at Grammar.C
+suppress READ_UNINIT_MEM at Grammar.C
+
+# SGS 4/22/07
+# For performance reasons don't instrument these
+# file_ignore Dimension.* IntVector.* Box.* Index.*
+
+

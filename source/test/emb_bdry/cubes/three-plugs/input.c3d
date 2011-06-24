@@ -1,0 +1,58 @@
+"  _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+  /                                                                     \
+  |                                                                     |
+  |           Cartesian Mesh Generation Input Specifications            |
+  |                                                                     |
+  \_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _/ 
+"
+// PARSING NOTES - Comments can be added before each numerical entry in this 
+//              file. This file is parsed by searching for a colen character, 
+//              DO NOT use  a colen in your comments.                   -M.A.
+
+1. Surface Geometry File Name (Cart3d surface triangulation file format):
+   threePlugs.I.tri
+   //   three intersecting teardrops
+
+2. Outer Cartesian Box Specs:
+      Xmin     Xmax            Ymin    Ymax            Zmin     Zmax
+      -225.    751.           -500.1  500.01         -500.001   500.0001
+  // comments here...
+
+3. Starting Mesh Dimensions (# of nodes in each dimension, inclusive): 
+   # verts in X    # verts in Y     # verts in Z  
+      16             16              16  
+  //      dimensions of the background mesh
+
+4. Maximum Hex Cell Aspect Ratio ( Isotropic = 1):
+        1
+
+5. Minimum Number of cell refinements on body surface (auto = -1):
+        0 
+
+6. Maximum Number of cell refinements:
+        0
+
+7. Num of bits of resolution assigned to integer coordinates (maximum = 21):
+        21
+
+8. Bounday conditions (ONLY requried if converting mesh to tiger format):
+       LoX HiX  LoY  HiY  LoZ HiZ
+        0   0   0    0     0   0
+
+------------------------------------------------------------------------
+** NOTES: 
+  o add comments after each entry but before next line. additional lines
+    may be added with out messing up the parsing. 
+
+  #1: Surface tri  with no internal geometry: output from "intersect"
+  #4: max diff in num of refinements of 2 directions. cell AR=2^N
+  #7: Dont touch this unless you're sure you konw what you're doing.
+  #8: boundary conditions on the mesh (applied boundary by boundary
+      (only apply if mesh will be converted to TIGER format). 
+        FAR_FIELD              0          Boundary Condition Types;   
+	SYMMETRY               1        
+        INFLOW                 2      // not implemented in 'cart2tiger'
+        OUTFLOW                3      // not implemented in 'cart2tiger'
+        OTHER_WALL             4      // not implemented in 'cart2tiger'
+        OTHER                  5      // not implemented in 'cart2tiger'
+------------------------------------------------------------------------

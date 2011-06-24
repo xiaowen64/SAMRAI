@@ -1,0 +1,242 @@
+/*************************************************************************
+ *
+ * This file is part of the SAMRAI distribution.  For full copyright 
+ * information, see COPYRIGHT and COPYING.LESSER. 
+ *
+ * Copyright:     (c) 1997-2010 Lawrence Livermore National Security, LLC
+ * Description:   Robin boundary condition support on cartesian grids. 
+ *
+ ************************************************************************/
+#ifndef included_solv_LocationIndexRobinBcCoefs_C
+#define included_solv_LocationIndexRobinBcCoefs_C
+
+#include <stdlib.h>
+
+#include "SAMRAI/solv/LocationIndexRobinBcCoefs.h"
+
+#include "SAMRAI/geom/CartesianPatchGeometry.h"
+#include "SAMRAI/hier/Index.h"
+#include "SAMRAI/tbox/Array.h"
+#include "SAMRAI/tbox/Utilities.h"
+#include "SAMRAI/tbox/MathUtilities.h"
+#include IOMANIP_HEADER_FILE
+#ifndef SAMRAI_INLINE
+#include "SAMRAI/solv/LocationIndexRobinBcCoefs.I"
+#endif
+
+namespace SAMRAI {
+namespace solv {
+
+/*
+ ************************************************************************
+ * Constructor using database
+ ************************************************************************
+ */
+
+LocationIndexRobinBcCoefs::LocationIndexRobinBcCoefs(
+   const tbox::Dimension& dim,
+   const std::string& object_name,
+   tbox::Pointer<tbox::Database> database):
+   d_dim(dim),
+   d_object_name(object_name)
+{
+   int i;
+   for (i = 0; i < 2 * d_dim.getValue(); ++i) {
+      d_a_map[i] = tbox::MathUtilities<double>::getSignalingNaN();
+      d_b_map[i] = tbox::MathUtilities<double>::getSignalingNaN();
+      d_g_map[i] = tbox::MathUtilities<double>::getSignalingNaN();
+   }
+   getFromInput(database);
+}
+
+/*
+ ************************************************************************
+ * Destructor                                                           *
+ ************************************************************************
+ */
+
+LocationIndexRobinBcCoefs::~LocationIndexRobinBcCoefs(
+   void) {
+}
+
+/*
+ ********************************************************************
+ * Set state from input database                                    *
+ ********************************************************************
+ */
+
+void LocationIndexRobinBcCoefs::getFromInput(
+   tbox::Pointer<tbox::Database> database)
+{
+   if (database) {
+      int i;
+      for (i = 0; i < 2 * d_dim.getValue(); ++i) {
+         std::string name = "boundary_" + tbox::Utilities::intToString(i);
+         if (database->isString(name)) {
+            d_a_map[i] = 1.0;
+            d_g_map[i] = 0.0;
+            tbox::Array<std::string> specs = database->getStringArray(name);
+            if (specs[0] == "value") {
+               d_a_map[i] = 1.0;
+               d_b_map[i] = 0.0;
+               if (specs.size() > 1) d_g_map[i] = atof(specs[1].c_str());
+            } else if (specs[0] == "slope") {
+               d_a_map[i] = 0.0;
+               d_b_map[i] = 1.0;
+               if (specs.size() > 1) d_g_map[i] = atof(specs[1].c_str());
+            } else if (specs[0] == "coefficients") {
+               if (specs.size() > 1) d_a_map[i] = atof(specs[1].c_str());
+               if (specs.size() > 2) d_b_map[i] = atof(specs[2].c_str());
+               if (specs.size() > 3) d_g_map[i] = atof(specs[3].c_str());
+            } else {
+               TBOX_ERROR(d_object_name << ": Bad boundary specifier\n"
+                  << "'" << specs[0] << "'.  Use either 'value'\n"
+                                     << "'slope' or 'coefficients'.\n");
+            }
+         }
+      }
+   }
+}
+
+/*
+ ************************************************************************
+ * Set the boundary value for a Dirichlet boundary condition.           *
+ ************************************************************************
+ */
+
+void LocationIndexRobinBcCoefs::setBoundaryValue(
+   int location_index,
+   double value)
+{
+   if (location_index < 0 || location_index >= 2 * d_dim.getValue()) {
+      TBOX_ERROR("Location index in " << d_dim.getValue() << "D must be\n"
+                                      << "in [0," << 2 * d_dim.getValue() - 1 << "].\n");
+   }
+   d_a_map[location_index] = 1.0;
+   d_b_map[location_index] = 0.0;
+   d_g_map[location_index] = value;
+}
+
+/*
+ ************************************************************************
+ * Set the slpe for a Neumann boundary condition.                       *
+ ************************************************************************
+ */
+
+void LocationIndexRobinBcCoefs::setBoundarySlope(
+   int location_index,
+   double slope)
+{
+   if (location_index >= 2 * d_dim.getValue()) {
+      TBOX_ERROR("Location index in " << d_dim.getValue() << "D must be\n"
+                                      << "in [0," << 2 * d_dim.getValue() - 1 << "].\n");
+   }
+   d_a_map[location_index] = 0.0;
+   d_b_map[location_index] = 1.0;
+   d_g_map[location_index] = slope;
+}
+
+/*
+ ************************************************************************
+ * Set the raw bc coefficients.                                         *
+ ************************************************************************
+ */
+
+void LocationIndexRobinBcCoefs::setRawCoefficients(
+   int location_index,
+   double a,
+   double b,
+   double g)
+{
+   if (location_index >= 2 * d_dim.getValue()) {
+      TBOX_ERROR("Location index in " << d_dim.getValue() << "D must be\n"
+                                      << "in [0," << 2 * d_dim.getValue() - 1 << "].\n");
+   }
+   d_a_map[location_index] = a;
+   d_b_map[location_index] = b;
+   d_g_map[location_index] = g;
+}
+
+/*
+ ************************************************************************
+ * Set the bc coefficients to their mapped values.                      *
+ ************************************************************************
+ */
+
+void LocationIndexRobinBcCoefs::setBcCoefs(
+   tbox::Pointer<pdat::ArrayData<double> >& acoef_data,
+   tbox::Pointer<pdat::ArrayData<double> >& bcoef_data,
+   tbox::Pointer<pdat::ArrayData<double> >& gcoef_data,
+   const tbox::Pointer<hier::Variable>& variable,
+   const hier::Patch& patch,
+   const hier::BoundaryBox& bdry_box,
+   double fill_time) const
+{
+   TBOX_DIM_ASSERT_CHECK_DIM_ARGS2(d_dim, patch, bdry_box);
+
+   NULL_USE(variable);
+   NULL_USE(patch);
+   NULL_USE(fill_time);
+
+   int location = bdry_box.getLocationIndex();
+#ifdef DEBUG_CHECK_ASSERTIONS
+   TBOX_ASSERT(location >= 0 && location < 2 * d_dim.getValue());
+#endif
+   if (acoef_data) {
+      TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(d_dim, *acoef_data);
+
+      acoef_data->fill(d_a_map[location]);
+   }
+   if (bcoef_data) {
+      TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(d_dim, *bcoef_data);
+
+      bcoef_data->fill(d_b_map[location]);
+   }
+   if (gcoef_data) {
+      TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(d_dim, *gcoef_data);
+
+      gcoef_data->fill(d_g_map[location]);
+   }
+}
+
+hier::IntVector
+LocationIndexRobinBcCoefs::numberOfExtensionsFillable() const
+{
+   /*
+    * Return some really big number.  We have no limits.
+    */
+   return hier::IntVector(d_dim, 1 << (sizeof(int) - 1));
+}
+
+void LocationIndexRobinBcCoefs::getCoefficients(
+   int i,
+   double& a,
+   double& b,
+   double& g) const
+{
+   a = d_a_map[i];
+   b = d_b_map[i];
+   g = d_g_map[i];
+}
+
+/*
+ ************************************************************************
+ * Assignment operator                                                  *
+ ************************************************************************
+ */
+
+const LocationIndexRobinBcCoefs& LocationIndexRobinBcCoefs::operator = (
+   const LocationIndexRobinBcCoefs& r)
+{
+   d_object_name = r.d_object_name;
+   for (int i = 0; i < 2 * d_dim.getValue(); ++i) {
+      d_a_map[i] = r.d_a_map[i];
+      d_b_map[i] = r.d_b_map[i];
+      d_g_map[i] = r.d_g_map[i];
+   }
+   return *this;
+}
+
+}
+}
+#endif

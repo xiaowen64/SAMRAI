@@ -1,0 +1,36 @@
+ ********* LATHE generated CUBES input file ********* 
+
+
+1. Surface Geometry File Name:
+slc-rev.tri
+
+
+2. Outer Cartesian Box Specs:
+      Xmin     Xmax            Ymin    Ymax            Zmin     Zmax
+     5656.01     7015.           7000.001   8000.           0.10001      200.00
+
+
+3. Starting Mesh Dimensions (# of nodes in each dimension, inclusive):
+# verts in X    # verts in Y     # verts in Z
+50               30           30 
+
+
+4. Maximum Hex Cell Aspect Ratio ( Isotropic = 1):
+     1
+
+
+5. Minimum Number of cell refinements on body surface (auto = -1):
+    4
+
+
+6. Maximum Number of cell refinements:
+    5
+
+
+7. Num of bits of resolution assigned to integer coordinates (maximum = 21):
+   21
+
+
+8. Bounday conditions (ONLY requried if converting mesh to tiger format):
+     LoX HiX  LoY  HiY  LoZ HiZ
+     0   0   0    0     0   0

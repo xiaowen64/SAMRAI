@@ -1,0 +1,295 @@
+/*************************************************************************
+ *
+ * This file is part of the SAMRAI distribution.  For full copyright 
+ * information, see COPYRIGHT and COPYING.LESSER. 
+ *
+ * Copyright:     (c) 1997-2010 Lawrence Livermore National Security, LLC
+ * Description:   Templated norm operations for real node-centered patch data. 
+ *
+ ************************************************************************/
+
+#ifndef included_math_PatchNodeDataNormOpsReal_C
+#define included_math_PatchNodeDataNormOpsReal_C
+
+#include "SAMRAI/math/PatchNodeDataNormOpsReal.h"
+#include "SAMRAI/tbox/Utilities.h"
+#include "SAMRAI/pdat/NodeGeometry.h"
+
+namespace SAMRAI {
+namespace math {
+
+template<class TYPE>
+PatchNodeDataNormOpsReal<TYPE>::PatchNodeDataNormOpsReal()
+{
+}
+
+template<class TYPE>
+PatchNodeDataNormOpsReal<TYPE>::~PatchNodeDataNormOpsReal()
+{
+}
+
+/*
+ *************************************************************************
+ *                                                                       *
+ * The const constructor and assignment operator are not actually used   *
+ * but are defined here for compilers that require an implementation for *
+ * every declaration.                                                    *
+ *                                                                       *
+ *************************************************************************
+ */
+
+template<class TYPE>
+PatchNodeDataNormOpsReal<TYPE>::PatchNodeDataNormOpsReal(
+   const PatchNodeDataNormOpsReal<TYPE>& foo)
+{
+   NULL_USE(foo);
+}
+
+template<class TYPE>
+void PatchNodeDataNormOpsReal<TYPE>::operator = (
+   const PatchNodeDataNormOpsReal<TYPE>& foo)
+{
+   NULL_USE(foo);
+}
+
+/*
+ *************************************************************************
+ *                                                                       *
+ * Compute the number of data entries on a patch in the given box.       *
+ *                                                                       *
+ *************************************************************************
+ */
+
+template<class TYPE>
+int PatchNodeDataNormOpsReal<TYPE>::numberOfEntries(
+   const tbox::Pointer<pdat::NodeData<TYPE> >& data,
+   const hier::Box& box) const
+{
+   TBOX_ASSERT(!data.isNull());
+   TBOX_DIM_ASSERT_CHECK_ARGS2(*data, box);
+
+   const hier::Box ibox =
+      pdat::NodeGeometry::toNodeBox(box * data->getGhostBox());
+   int retval = ibox.size() * data->getDepth();
+   return retval;
+}
+
+/*
+ *************************************************************************
+ *                                                                       *
+ * Templated norm operations for real node-centered data.                *
+ *                                                                       *
+ *************************************************************************
+ */
+
+template<class TYPE>
+double PatchNodeDataNormOpsReal<TYPE>::sumControlVolumes(
+   const tbox::Pointer<pdat::NodeData<TYPE> >& data,
+   const tbox::Pointer<pdat::NodeData<double> >& cvol,
+   const hier::Box& box) const
+{
+#ifdef DEBUG_CHECK_ASSERTIONS
+   TBOX_ASSERT(!data.isNull() && !cvol.isNull());
+#endif
+   const hier::Box node_box = pdat::NodeGeometry::toNodeBox(box);
+   return d_array_ops.sumControlVolumes(data->getArrayData(),
+      cvol->getArrayData(),
+      node_box);
+}
+
+template<class TYPE>
+void PatchNodeDataNormOpsReal<TYPE>::abs(
+   tbox::Pointer<pdat::NodeData<TYPE> >& dst,
+   const tbox::Pointer<pdat::NodeData<TYPE> >& src,
+   const hier::Box& box) const
+{
+   TBOX_ASSERT(!dst.isNull() && !src.isNull());
+   TBOX_DIM_ASSERT_CHECK_ARGS3(*dst, *src, box);
+
+   const hier::Box node_box = pdat::NodeGeometry::toNodeBox(box);
+   d_array_ops.abs(dst->getArrayData(),
+      src->getArrayData(),
+      node_box);
+}
+
+template<class TYPE>
+double PatchNodeDataNormOpsReal<TYPE>::L1Norm(
+   const tbox::Pointer<pdat::NodeData<TYPE> >& data,
+   const hier::Box& box,
+   const tbox::Pointer<pdat::NodeData<double> > cvol) const
+{
+   TBOX_ASSERT(!data.isNull());
+   TBOX_DIM_ASSERT_CHECK_ARGS2(*data, box);
+
+   double retval;
+   const hier::Box node_box = pdat::NodeGeometry::toNodeBox(box);
+   if (cvol.isNull()) {
+      retval = d_array_ops.L1Norm(data->getArrayData(), node_box);
+   } else {
+      TBOX_DIM_ASSERT_CHECK_ARGS2(*data, *cvol);
+
+      retval = d_array_ops.L1NormWithControlVolume(data->getArrayData(),
+            cvol->getArrayData(),
+            node_box);
+   }
+   return retval;
+}
+
+template<class TYPE>
+double PatchNodeDataNormOpsReal<TYPE>::L2Norm(
+   const tbox::Pointer<pdat::NodeData<TYPE> >& data,
+   const hier::Box& box,
+   const tbox::Pointer<pdat::NodeData<double> > cvol) const
+{
+   TBOX_ASSERT(!data.isNull());
+   TBOX_DIM_ASSERT_CHECK_ARGS2(*data, box);
+
+   double retval;
+   const hier::Box node_box = pdat::NodeGeometry::toNodeBox(box);
+   if (cvol.isNull()) {
+      retval = d_array_ops.L2Norm(data->getArrayData(), node_box);
+   } else {
+      TBOX_DIM_ASSERT_CHECK_ARGS2(*data, *cvol);
+
+      retval = d_array_ops.L2NormWithControlVolume(data->getArrayData(),
+            cvol->getArrayData(),
+            node_box);
+   }
+   return retval;
+}
+
+template<class TYPE>
+double PatchNodeDataNormOpsReal<TYPE>::weightedL2Norm(
+   const tbox::Pointer<pdat::NodeData<TYPE> >& data,
+   const tbox::Pointer<pdat::NodeData<TYPE> >& weight,
+   const hier::Box& box,
+   const tbox::Pointer<pdat::NodeData<double> > cvol) const
+{
+   TBOX_ASSERT(!data.isNull() && !weight.isNull());
+   TBOX_DIM_ASSERT_CHECK_ARGS3(*data, *weight, box);
+
+   double retval;
+   const hier::Box node_box = pdat::NodeGeometry::toNodeBox(box);
+   if (cvol.isNull()) {
+      retval = d_array_ops.weightedL2Norm(data->getArrayData(),
+            weight->getArrayData(),
+            node_box);
+   } else {
+      TBOX_DIM_ASSERT_CHECK_ARGS2(*data, *cvol);
+
+      retval = d_array_ops.weightedL2NormWithControlVolume(
+            data->getArrayData(),
+            weight->getArrayData(),
+            cvol->getArrayData(),
+            node_box);
+   }
+   return retval;
+}
+
+template<class TYPE>
+double PatchNodeDataNormOpsReal<TYPE>::RMSNorm(
+   const tbox::Pointer<pdat::NodeData<TYPE> >& data,
+   const hier::Box& box,
+   const tbox::Pointer<pdat::NodeData<double> > cvol) const
+{
+#ifdef DEBUG_CHECK_ASSERTIONS
+   TBOX_ASSERT(!data.isNull());
+#endif
+   double retval = L2Norm(data, box, cvol);
+   if (cvol.isNull()) {
+      retval /= sqrt((double)numberOfEntries(data, box));
+   } else {
+      retval /= sqrt(sumControlVolumes(data, cvol, box));
+   }
+   return retval;
+}
+
+template<class TYPE>
+double PatchNodeDataNormOpsReal<TYPE>::weightedRMSNorm(
+   const tbox::Pointer<pdat::NodeData<TYPE> >& data,
+   const tbox::Pointer<pdat::NodeData<TYPE> >& weight,
+   const hier::Box& box,
+   const tbox::Pointer<pdat::NodeData<double> > cvol) const
+{
+#ifdef DEBUG_CHECK_ASSERTIONS
+   TBOX_ASSERT(!data.isNull() && !weight.isNull());
+#endif
+   double retval = weightedL2Norm(data, weight, box, cvol);
+   if (cvol.isNull()) {
+      retval /= sqrt((double)numberOfEntries(data, box));
+   } else {
+      retval /= sqrt(sumControlVolumes(data, cvol, box));
+   }
+   return retval;
+}
+
+template<class TYPE>
+double PatchNodeDataNormOpsReal<TYPE>::maxNorm(
+   const tbox::Pointer<pdat::NodeData<TYPE> >& data,
+   const hier::Box& box,
+   const tbox::Pointer<pdat::NodeData<double> > cvol) const
+{
+#ifdef DEBUG_CHECK_ASSERTIONS
+   TBOX_ASSERT(!data.isNull());
+#endif
+   double retval;
+   const hier::Box node_box = pdat::NodeGeometry::toNodeBox(box);
+   if (cvol.isNull()) {
+      retval = d_array_ops.maxNorm(data->getArrayData(), node_box);
+   } else {
+      retval = d_array_ops.maxNormWithControlVolume(data->getArrayData(),
+            cvol->getArrayData(),
+            node_box);
+   }
+   return retval;
+}
+
+template<class TYPE>
+TYPE PatchNodeDataNormOpsReal<TYPE>::dot(
+   const tbox::Pointer<pdat::NodeData<TYPE> >& data1,
+   const tbox::Pointer<pdat::NodeData<TYPE> >& data2,
+   const hier::Box& box,
+   const tbox::Pointer<pdat::NodeData<double> > cvol) const
+{
+#ifdef DEBUG_CHECK_ASSERTIONS
+   TBOX_ASSERT(!data1.isNull() && !data2.isNull());
+#endif
+   TYPE retval;
+   const hier::Box node_box = pdat::NodeGeometry::toNodeBox(box);
+   if (cvol.isNull()) {
+      retval = d_array_ops.dot(data1->getArrayData(),
+            data2->getArrayData(),
+            node_box);
+   } else {
+      retval = d_array_ops.dotWithControlVolume(
+            data1->getArrayData(),
+            data2->getArrayData(),
+            cvol->getArrayData(),
+            node_box);
+   }
+   return retval;
+}
+
+template<class TYPE>
+TYPE PatchNodeDataNormOpsReal<TYPE>::integral(
+   const tbox::Pointer<pdat::NodeData<TYPE> >& data,
+   const hier::Box& box,
+   const tbox::Pointer<pdat::NodeData<double> > vol) const
+{
+#ifdef DEBUG_CHECK_ASSERTIONS
+   TBOX_ASSERT(!data.isNull());
+#endif
+   TYPE retval;
+   const hier::Box node_box = pdat::NodeGeometry::toNodeBox(box);
+
+   retval = d_array_ops.integral(
+         data->getArrayData(),
+         vol->getArrayData(),
+         node_box);
+
+   return retval;
+}
+
+}
+}
+#endif

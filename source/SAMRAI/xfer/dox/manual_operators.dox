@@ -1,0 +1,56 @@
+/*************************************************************************
+ *
+ * This file is part of the SAMRAI distribution.  For full copyright 
+ * information, see COPYRIGHT and COPYING.LESSER. 
+ *
+ * Copyright:     (c) 1997-2010 Lawrence Livermore National Security, LLC
+ * Description:   Generation of SAMRAI Doxygen source code manual 
+ *
+ ************************************************************************/
+namespace SAMRAI {
+   namespace xfer {
+
+/*!
+  @page package_transfer_operators Patch Data Transfer Operators
+
+  These abstract base classes provide interfaces between transfer operators 
+  and geometry and the rest of the SAMRAI framework.  Specifically, each 
+  operator used within the framework inter-patch communication routines
+  is derived from either the spatial coarsening, spatial refining, or time 
+  interpolation operator base class provided here.  The transfer 
+  geometry class provides a lookup mechanism whereby applications and 
+  algorithms may obtain the operators to treat specific variable quantities 
+  within the communication routines.
+
+  The string identifiers for the coarsening, refining, and time
+  interpolation operators are defined in the SAMRAI::pdat and 
+  SAMRAI::geom packages.
+
+  - @ref package_geometry_cartesian
+  - @ref package_patchdata_operators
+
+  The lookup mechanism provided by the transfer geometry class (xfer::Geometry)
+  allows for arguments that bypass standrad operators for coarsening and refining
+  provided by the SAMRAI library.  If no coarsening is desired for a specific 
+  variable quantity, the string "NO_COARSEN" should be used, and if no 
+  refinement is desired, the string "NO_REFINE" should be used.  For 
+  user-defined coarsening and/or refinement the strings "USER_DEFINED_COARSEN" 
+  and "USER_DEFINED_REFINE" are available.  If these options are used, 
+  coarsening and/or refinement operations can be written in a user-defined 
+  class that implements the abstract base classes 
+  SAMRAI::xfer::CoarsenPatchStrategy and or SAMRAI::xfer::RefinePatchStrategy.  
+  In xfer::CoarsenPatchStrategy, the user-defined coarsen operations can be 
+  implemented in @c preprocessCoarsen() and/or @c postprocessCoarsen().  In 
+  SAMRAI::xfer::RefinePatchStrategy, the user-defined coarsen operations can be 
+  implemented in @c preprocessRefine() and/or @c postprocessRefine().
+
+  @see SAMRAI::xfer::CoarsenPatchStrategy
+  @see SAMRAI::xfer::RefinePatchStrategy 
+  @see SAMRAI::xfer::CoarsenOperator
+  @see SAMRAI::xfer::Geometry
+  @see SAMRAI::xfer::RefineOperator
+  @see SAMRAI::xfer::TimeInterpolateOperator
+*/
+
+}
+}

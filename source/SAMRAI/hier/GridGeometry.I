@@ -1,0 +1,142 @@
+/*************************************************************************
+ *
+ * This file is part of the SAMRAI distribution.  For full copyright 
+ * information, see COPYRIGHT and COPYING.LESSER. 
+ *
+ * Copyright:     (c) 1997-2010 Lawrence Livermore National Security, LLC
+ * Description:   Base class for geometry management in AMR hierarchy 
+ *
+ ************************************************************************/
+
+namespace SAMRAI {
+namespace hier {
+
+SAMRAI_INLINE_KEYWORD
+const BoxList& GridGeometry::getPhysicalDomain(const int block_num) const
+{
+   return d_physical_domain[block_num];
+}
+
+SAMRAI_INLINE_KEYWORD
+bool GridGeometry::getDomainIsSingleBox(const int block_num) const
+{
+   return d_domain_is_single_box[block_num];
+}
+
+SAMRAI_INLINE_KEYWORD
+const tbox::Dimension& GridGeometry::getDim() const {
+   return d_dim;
+}
+
+SAMRAI_INLINE_KEYWORD
+const std::string& GridGeometry::getObjectName() const {
+   return d_object_name;
+}
+
+SAMRAI_INLINE_KEYWORD
+const BoxList&
+GridGeometry::Neighbor::getTranslatedDomain() const
+{
+   return d_translated_domain;
+}
+
+SAMRAI_INLINE_KEYWORD
+int
+GridGeometry::getNumberOfBlockSingularities() const
+{
+   return d_number_of_block_singularities;
+}
+
+SAMRAI_INLINE_KEYWORD
+const BoxList&
+GridGeometry::getSingularityBoxList(
+   const int block_number) const
+{
+   return d_singularity[block_number];
+}
+
+SAMRAI_INLINE_KEYWORD
+const std::vector<int> &
+GridGeometry::getSingularityIndices(
+   const int block_number) const
+{
+   return d_singularity_indices[block_number];
+}
+
+SAMRAI_INLINE_KEYWORD
+bool
+GridGeometry::reducedConnectivityExists(
+   const int block_number) const
+{
+   return d_reduced_connect[block_number];
+}
+
+/*
+ * ************************************************************************
+ *                                                                        *
+ * Returns the number of neighbors a specific block of the multiblock     *
+ * domain has.                                                            *
+ *                                                                        *
+ * ************************************************************************
+ */
+SAMRAI_INLINE_KEYWORD
+int GridGeometry::getNumberOfNeighbors(
+   const int block_number) const
+{
+   return d_block_neighbors[block_number].getNumberOfItems();
+}
+
+
+SAMRAI_INLINE_KEYWORD
+const tbox::List<GridGeometry::Neighbor>&
+GridGeometry::getNeighbors(
+   const int block_number) const
+{
+   return d_block_neighbors[block_number];
+}
+
+SAMRAI_INLINE_KEYWORD
+bool GridGeometry::Neighbor::isSingularity() const
+{
+   return d_is_singularity;
+}
+
+SAMRAI_INLINE_KEYWORD
+int GridGeometry::Neighbor::getBlockNumber() const
+{
+   return d_block_number;
+}
+
+SAMRAI_INLINE_KEYWORD
+const Transformation&
+GridGeometry::Neighbor::getTransformation() const
+{
+   return d_transformation;
+}
+
+SAMRAI_INLINE_KEYWORD
+Transformation::RotationIdentifier
+GridGeometry::Neighbor::getRotationIdentifier() const
+{
+   return d_transformation.getRotation();
+}
+
+SAMRAI_INLINE_KEYWORD
+const hier::IntVector& GridGeometry::Neighbor::getShift() const
+{
+   return d_transformation.getOffset();
+}
+
+SAMRAI_INLINE_KEYWORD
+int GridGeometry::getNumberBlocks() const
+{
+   return d_number_blocks;
+}
+
+
+
+
+
+
+}
+}

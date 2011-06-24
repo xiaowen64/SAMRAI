@@ -1,0 +1,443 @@
+/*************************************************************************
+ *
+ * This file is part of the SAMRAI distribution.  For full copyright 
+ * information, see COPYRIGHT and COPYING.LESSER. 
+ *
+ * Copyright:     (c) 1997-2010 Lawrence Livermore National Security, LLC
+ * Description:   hier 
+ *
+ ************************************************************************/
+
+#ifndef included_pdat_EdgeGeometry_C
+#define included_pdat_EdgeGeometry_C
+
+#include "SAMRAI/pdat/EdgeGeometry.h"
+#include "SAMRAI/pdat/EdgeOverlap.h"
+#include "SAMRAI/hier/BoxList.h"
+#include "SAMRAI/tbox/Utilities.h"
+
+#ifndef SAMRAI_INLINE
+#include "SAMRAI/pdat/EdgeGeometry.I"
+#endif
+
+namespace SAMRAI {
+namespace pdat {
+
+/*
+ *************************************************************************
+ *									*
+ * Create a edge geometry object given the box and ghost cell width.	*
+ *									*
+ *************************************************************************
+ */
+
+EdgeGeometry::EdgeGeometry(
+   const hier::Box& box,
+   const hier::IntVector& ghosts):
+   d_box(box),
+   d_ghosts(ghosts)
+{
+   TBOX_DIM_ASSERT_CHECK_ARGS2(box, ghosts);
+   TBOX_ASSERT(ghosts.min() >= 0);
+}
+
+EdgeGeometry::~EdgeGeometry()
+{
+}
+
+/*
+ *************************************************************************
+ *									*
+ * Attempt to calculate the intersection between two edge centered box	*
+ * geometries.  The calculateOverlap() checks whether both arguments are	*
+ * edge geometries; if so, it compuates the intersection.  If not, then	*
+ * it calls calculateOverlap() on the source object (if retry is true)	*
+ * to allow the source a chance to calculate the intersection.  See the	*
+ * hier::BoxGeometry base class for more information about the protocol.	*
+ * A pointer to null is returned if the intersection cannot be computed.	*
+ *                                                                      *
+ *************************************************************************
+ */
+
+tbox::Pointer<hier::BoxOverlap> EdgeGeometry::calculateOverlap(
+   const hier::BoxGeometry& dst_geometry,
+   const hier::BoxGeometry& src_geometry,
+   const hier::Box& src_mask,
+   const hier::Box& fill_box,
+   const bool overwrite_interior,
+   const hier::Transformation& transformation,
+   const bool retry,
+   const hier::BoxList& dst_restrict_boxes) const
+{
+   TBOX_DIM_ASSERT_CHECK_ARGS2(d_box, src_mask);
+
+   const EdgeGeometry* t_dst =
+      dynamic_cast<const EdgeGeometry *>(&dst_geometry);
+   const EdgeGeometry* t_src =
+      dynamic_cast<const EdgeGeometry *>(&src_geometry);
+
+   tbox::Pointer<hier::BoxOverlap> over(NULL);
+
+   if ((t_src != NULL) && (t_dst != NULL)) {
+      over = doOverlap(*t_dst, *t_src, src_mask, fill_box, overwrite_interior,
+            transformation, dst_restrict_boxes);
+   } else if (retry) {
+      over = src_geometry.calculateOverlap(dst_geometry, src_geometry,
+            src_mask, fill_box, overwrite_interior,
+            transformation, false,
+            dst_restrict_boxes);
+   }
+   return over;
+}
+
+/*
+ *************************************************************************
+ *									*
+ * Convert an AMR-index space hier::Box into a edge-index space box by a	*
+ * cyclic shift of indices.						*
+ *									*
+ *************************************************************************
+ */
+
+hier::Box EdgeGeometry::toEdgeBox(
+   const hier::Box& box,
+   int axis)
+{
+   const tbox::Dimension& dim(box.getDim());
+
+   TBOX_ASSERT(0 <= axis && axis < dim.getValue());
+
+   hier::Box edge_box(dim);
+
+   if (!box.empty()) {
+      edge_box = box;
+      for (int i = 0; i < dim.getValue(); i++) {
+         if (axis != i) {
+            edge_box.upper(i) += 1;
+         }
+      }
+   }
+
+   return edge_box;
+}
+
+/*
+ *************************************************************************
+ *									*
+ * Compute the overlap between two edge centered boxes.  The algorithm	*
+ * is fairly straight-forward.  First, we perform a quick-and-dirty	*
+ * intersection to see if the boxes might overlap.  If that intersection	*
+ * is not empty, then we need to do a better job calculating the overlap	*
+ * for each dimension.  Note that the AMR index space boxes must be	*
+ * shifted into the edge centered space before we calculate the proper	*
+ * intersections.							*
+ *									*
+ *************************************************************************
+ */
+
+tbox::Pointer<hier::BoxOverlap> EdgeGeometry::doOverlap(
+   const EdgeGeometry& dst_geometry,
+   const EdgeGeometry& src_geometry,
+   const hier::Box& src_mask,
+   const hier::Box& fill_box,
+   const bool overwrite_interior,
+   const hier::Transformation& transformation,
+   const hier::BoxList& dst_restrict_boxes)
+{
+   const tbox::Dimension& dim(src_mask.getDim());
+
+   tbox::Array<hier::BoxList> dst_boxes(dim.getValue());
+
+   // Perform a quick-and-dirty intersection to see if the boxes might overlap
+
+   const hier::Box src_box(
+      hier::Box::grow(src_geometry.d_box, src_geometry.d_ghosts) * src_mask);
+   hier::Box src_shift(src_box);
+   transformation.transform(src_shift);
+   const hier::Box dst_ghost(
+      hier::Box::grow(dst_geometry.d_box, dst_geometry.d_ghosts));
+
+   // Compute the intersection (if any) for each of the edge directions
+
+   const hier::IntVector one_vector(dim, 1);
+
+   const hier::Box quick_check =
+      hier::Box::grow(src_shift, one_vector) * hier::Box::grow(dst_ghost,
+         one_vector);
+
+   if (!quick_check.empty()) {
+
+      for (int d = 0; d < dim.getValue(); d++) {
+
+         const hier::Box dst_edge(toEdgeBox(dst_ghost, d));
+         const hier::Box src_edge(toEdgeBox(src_shift, d));
+         const hier::Box fill_edge(toEdgeBox(fill_box, d));
+         const hier::Box together(dst_edge * src_edge * fill_edge);
+
+         if (!together.empty()) {
+
+            dst_boxes[d].unionBoxes(together);
+            if (!overwrite_interior) {
+               const hier::Box int_edge(toEdgeBox(dst_geometry.d_box, d));
+               dst_boxes[d].removeIntersections(together, int_edge);
+            } else {
+               dst_boxes[d].appendItem(together);
+            }
+
+         }  // if (!together.empty())
+
+         if (dst_restrict_boxes.size() && dst_boxes[d].size()) {
+            hier::BoxList edge_restrict_boxes;
+            for (hier::BoxList::Iterator b(dst_restrict_boxes); b; b++) {
+               edge_restrict_boxes.appendItem(toEdgeBox(b(), d));
+            }
+            dst_boxes[d].intersectBoxes(edge_restrict_boxes);
+         }
+      }  // loop over dim
+
+   }  // if (!quick_check.empty())
+
+   // Create the edge overlap data object using the boxes and source shift
+
+   hier::BoxOverlap* overlap = new EdgeOverlap(dst_boxes, transformation);
+   return tbox::Pointer<hier::BoxOverlap>(overlap);
+}
+
+/*
+ *************************************************************************
+ *                                                                       *
+ * Set up a EdgeOverlap oject using the given boxes and offset           *
+ *                                                                       *
+ *************************************************************************
+ */
+tbox::Pointer<hier::BoxOverlap>
+EdgeGeometry::setUpOverlap(
+   const hier::BoxList& boxes,
+   const hier::Transformation& transformation) const
+{
+   const tbox::Dimension& dim(transformation.getOffset().getDim());
+   tbox::Array<hier::BoxList> dst_boxes(dim.getValue());
+
+   for (hier::BoxList::Iterator b(boxes); b; b++) {
+      for (int d = 0; d < dim.getValue(); d++) {
+         hier::Box edge_box(EdgeGeometry::toEdgeBox(b(), d));
+         dst_boxes[d].appendItem(edge_box);
+      }
+   }
+
+   // Create the edge overlap data object using the boxes and source shift
+   hier::BoxOverlap* overlap = new EdgeOverlap(dst_boxes, transformation);
+   return tbox::Pointer<hier::BoxOverlap>(overlap);
+
+}
+
+/*
+ *************************************************************************
+ *                                                                       *
+ * Transform a box                                                       *
+ *                                                                       *
+ *************************************************************************
+ */
+
+void
+EdgeGeometry::transform(
+   hier::Box& box,
+   int& axis_direction,
+   const hier::Transformation& transformation)
+{
+
+   const tbox::Dimension& dim = box.getDim();
+
+   if (transformation.getRotation() == hier::Transformation::NO_ROTATE &&
+       transformation.getOffset() == hier::IntVector::getZero(dim)) {
+      return;
+   }
+
+   if (!box.empty()) {
+      const hier::Transformation::RotationIdentifier rotation =
+         transformation.getRotation();
+
+      for (int d = 0; d < dim.getValue(); d++) {
+         if (d != axis_direction) {
+            box.upper()(d) -= 1;
+         }
+      }
+      transformation.transform(box);
+      if (dim.getValue() == 2) {
+         const int rotation_num = static_cast<int>(rotation);
+         if (rotation_num % 2) {
+            axis_direction = (axis_direction+1)%2;
+         }
+      } else if (dim.getValue() == 3) {
+
+         if (axis_direction == 0) {
+
+            switch (rotation) {
+
+               case hier::Transformation::IUP_JUP_KUP:
+               case hier::Transformation::IDOWN_KUP_JUP:
+               case hier::Transformation::IUP_KDOWN_JUP:
+               case hier::Transformation::IDOWN_JUP_KDOWN:
+               case hier::Transformation::IUP_KUP_JDOWN:
+               case hier::Transformation::IDOWN_JDOWN_KUP:
+               case hier::Transformation::IUP_JDOWN_KDOWN:
+               case hier::Transformation::IDOWN_KDOWN_JDOWN:
+
+                  axis_direction = 0;
+                  break;
+
+               case hier::Transformation::KUP_IUP_JUP:
+               case hier::Transformation::JUP_IDOWN_KUP:
+               case hier::Transformation::JUP_IUP_KDOWN:
+               case hier::Transformation::KDOWN_IDOWN_JUP:
+               case hier::Transformation::JDOWN_IUP_KUP:
+               case hier::Transformation::KUP_IDOWN_JDOWN:
+               case hier::Transformation::KDOWN_IUP_JDOWN:
+               case hier::Transformation::JDOWN_IDOWN_KDOWN:
+
+                  axis_direction = 1;
+                  break;
+
+               default:
+
+                  axis_direction = 2;
+                  break;
+
+            }
+
+         } else if (axis_direction == 1) {
+
+            switch (rotation) {
+               case hier::Transformation::JUP_KUP_IUP:
+               case hier::Transformation::JUP_IDOWN_KUP:
+               case hier::Transformation::JUP_IUP_KDOWN:
+               case hier::Transformation::JUP_KDOWN_IDOWN:
+               case hier::Transformation::JDOWN_IUP_KUP:
+               case hier::Transformation::JDOWN_KUP_IDOWN:
+               case hier::Transformation::JDOWN_KDOWN_IUP:
+               case hier::Transformation::JDOWN_IDOWN_KDOWN:
+
+                  axis_direction = 0;
+                  break;
+
+               case hier::Transformation::IUP_JUP_KUP:
+               case hier::Transformation::KUP_JUP_IDOWN:
+               case hier::Transformation::KDOWN_JUP_IUP:
+               case hier::Transformation::IDOWN_JUP_KDOWN:
+               case hier::Transformation::KUP_JDOWN_IUP:
+               case hier::Transformation::IDOWN_JDOWN_KUP:
+               case hier::Transformation::IUP_JDOWN_KDOWN:
+               case hier::Transformation::KDOWN_JDOWN_IDOWN:
+
+                  axis_direction = 1;
+                  break;
+
+               default:
+
+                  axis_direction = 2;
+                  break;
+            }
+
+         } else if (axis_direction == 2) {
+
+            switch (rotation) {
+               case hier::Transformation::KUP_IUP_JUP:
+               case hier::Transformation::KUP_JUP_IDOWN:
+               case hier::Transformation::KDOWN_JUP_IUP:
+               case hier::Transformation::KDOWN_IDOWN_JUP:
+               case hier::Transformation::KUP_JDOWN_IUP:
+               case hier::Transformation::KUP_IDOWN_JDOWN:
+               case hier::Transformation::KDOWN_IUP_JDOWN:
+               case hier::Transformation::KDOWN_JDOWN_IDOWN:
+
+                  axis_direction = 0;
+                  break;
+
+               case hier::Transformation::JUP_KUP_IUP:
+               case hier::Transformation::IDOWN_KUP_JUP:
+               case hier::Transformation::IUP_KDOWN_JUP:
+               case hier::Transformation::JUP_KDOWN_IDOWN:
+               case hier::Transformation::IUP_KUP_JDOWN:
+               case hier::Transformation::JDOWN_KUP_IDOWN:
+               case hier::Transformation::JDOWN_KDOWN_IUP:
+               case hier::Transformation::IDOWN_KDOWN_JDOWN:
+
+                  axis_direction = 1;
+                  break;
+
+               default:
+
+                  axis_direction = 2;
+                  break;
+
+            }
+         }
+      }
+
+      for (int d = 0; d < dim.getValue(); d++) {
+         if (d != axis_direction) {
+            box.upper()(d) += 1;
+         }
+      }
+   }
+}
+
+/*
+ *************************************************************************
+ *                                                                       *
+ * Transform an EdgeIndex                                                *
+ *                                                                       *
+ *************************************************************************
+ */
+
+void
+EdgeGeometry::transform(
+   EdgeIndex& index,
+   const hier::Transformation& transformation)
+{
+   const tbox::Dimension& dim = index.getDim();
+
+   if (transformation.getRotation() == hier::Transformation::NO_ROTATE &&
+       transformation.getOffset() == hier::IntVector::getZero(dim)) {
+      return;
+   }
+
+   const hier::Transformation::RotationIdentifier& rotation =
+      transformation.getRotation();
+   if (dim.getValue() == 2) {
+      const int rotation_num = static_cast<int>(rotation);
+
+      TBOX_ASSERT(rotation_num <= 3);
+
+      if (rotation_num) {
+         const int axis_direction = index.getAxis();
+         int new_axis_direction = (axis_direction + rotation_num) % 2;
+
+         for (int i = 0; i < dim.getValue(); i++) {
+            if (i == axis_direction && index(i) >= 0) {
+               index(i)++;
+            }
+         }
+
+         EdgeIndex tmp_index(dim);
+         for (int r = 0; r < rotation_num; r++) {
+            tmp_index = index;
+            index(0) = tmp_index(1);
+            index(1) = -tmp_index(0);
+         }
+
+         for (int i = 0; i < dim.getValue(); i++) {
+            if (i == new_axis_direction && index(i) > 0) {
+               index(i)--;
+            }
+         }
+
+         index.setAxis(new_axis_direction);
+      }
+   }
+}
+
+
+}
+}
+#endif

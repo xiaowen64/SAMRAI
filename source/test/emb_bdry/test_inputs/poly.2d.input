@@ -1,0 +1,152 @@
+/*************************************************************************
+ *
+ * This file is part of the SAMRAI distribution.  For full copyright 
+ * information, see COPYRIGHT and COPYING.LESSER. 
+ *
+ * Copyright:     (c) 1997-2010 Lawrence Livermore National Security, LLC
+ * Description:   Input file for SAMRAI embedded boundary test 
+ *
+ ************************************************************************/
+
+Main {
+
+   log_file_name            = "two-polys-2d.log"
+
+   visit_dump_interval        = 1      
+   visit_dump_dirname         = "viz_two-polys-2d"
+
+}
+
+SampleApp {
+  tag_cut_cells        = TRUE
+}
+
+
+EmbeddedBoundaryGeometry {
+
+      verbose = FALSE
+
+// set max_subdivides larger to reduce error in volume and 
+// area fractions in cut cells 
+      max_subdivides = 2
+
+      read_from_file  = FALSE 
+      write_to_file   = FALSE
+      dirname        = "simple"
+
+      compute_areas_and_normal = TRUE
+      compute_boundary_node_data = FALSE
+      use_recursive_algs       = TRUE
+
+
+// Set the shapes used - note: each sub-database should be named
+// something different because the input_manager is unable to
+// store two databases of the same name.  The name can be arbitrary.
+// Input should be of the form:
+   Shapes {
+      Shape1 {
+         type = "POLYGON"    
+
+            vertices {
+
+               // v1 = 1.5 , 1.2 
+               // v2 = 2.0 , 1.0 
+               // v3 = 2.5 , 2.5 
+               // v4 = 1.0 , 2.0 
+
+               // v1 = 1.0 , 1.0
+               // v2 = 2.0 , 1.0 
+               // v3 = 2.0 , 2.0 
+               // v4 = 1.5 , 2.5
+               // v5 = 1.0 , 2.0 
+
+               v1 = 1.0 , 1.0
+               v2 = 1.5 , .5 
+               v3 = 2.0 , 1.75 
+               v4 = 1.5 , 4.5
+               v5 = .5 , 2.0 
+            } 
+
+      }
+
+      Shape2 {
+         type = "POLYGON"    
+
+            vertices {
+               v1 = 3.0 , 3.0
+               v2 = 3.5 , 2.5 
+               v3 = 4.0 , 3.75 
+               v4 = 3.5 , 4.5
+               v5 = 2.5 , 4.0 
+
+
+            } 
+
+      }
+
+
+
+   }
+
+}
+
+CartesianGeometry {
+   domain_boxes  = [ (0,0) , (99,99) ]   // coarse mesh
+   x_lo          = 0.e0 , 0.e0  // lower end of computational domain.
+   x_up          = 5.e0 , 5.e0  // upper end of computational domain.
+}
+
+PatchHierarchy {
+   max_levels              = 3 // Maximum number of levels in hierarchy.
+
+// Note: For the following regridding information, data is required for each
+//       potential in the patch hierarchy; i.e., levels 0 thru max_levels-1.
+//       If more data values than needed are given, only the number required
+//       will be read in.  If fewer values are given, an error will result.
+//
+// Specify coarsening ratios for each level 1 through max_levels-1
+   ratio_to_coarser {         // vector ratio to next coarser level
+      level_1               = 2 , 2 
+      level_2               = 2 , 2 
+      level_3               = 2 , 2 
+   }
+
+   largest_patch_size {
+      level_0 = 19 , 19 
+      // all finer levels will use same values as level_0...
+   }
+
+   smallest_patch_size {
+      level_0 = 1 , 1 
+      // all finer levels will use same values as level_0...
+   }
+}
+
+GriddingAlgorithm {
+
+   efficiency_tolerance     = 0.70e0   // min % of tag cells in new patch level
+   combine_efficiency       = 0.85e0   // chop box if sum of volumes of smaller
+                                       // boxes < efficiency * vol of large box
+}
+
+StandardTagAndInitialize{
+   tagging_method = "GRADIENT_DETECTOR"
+//   tagging_method = "REFINE_BOXES"
+//   RefineBoxes {
+//      level_0  = [ (10,10) , (80,80) ]
+//   }
+}
+
+TimerManager {
+   timer_list = "apps::main::*"
+}
+
+
+UniformLoadBalance {  // for SAMRAI v1.3.1
+//   processors         = 1 , 1
+   use_spatial_bin_pack = TRUE
+}
+LoadBalancer {  // for SAMRAI v1.3.2
+   use_spatial_bin_pack = TRUE
+}
+

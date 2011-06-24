@@ -1,0 +1,382 @@
+/*************************************************************************
+ *
+ * This file is part of the SAMRAI distribution.  For full copyright 
+ * information, see COPYRIGHT and COPYING.LESSER. 
+ *
+ * Copyright:     (c) 1997-2010 Lawrence Livermore National Security, LLC
+ * Description:   Test program for performance of tree search algorithm. 
+ *
+ ************************************************************************/
+#include "SAMRAI/SAMRAI_config.h"
+
+#include "SAMRAI/hier/MappedBox.h"
+#include "SAMRAI/hier/MappedBoxTree.h"
+#include "SAMRAI/tbox/InputDatabase.h"
+#include "SAMRAI/tbox/InputManager.h"
+#include "SAMRAI/tbox/SAMRAIManager.h"
+#include "SAMRAI/tbox/SAMRAI_MPI.h"
+#include "SAMRAI/tbox/TimerManager.h"
+
+#include <algorithm>
+#include <vector>
+#include <iomanip>
+
+using namespace SAMRAI;
+using namespace tbox;
+
+/*
+ ************************************************************************
+ *
+ * This is a performance test for the tree search algorithm
+ * in MappedBoxTree:
+ *
+ * 1. Generate a set of MappedBoxes.
+ *
+ * 2. Sort the MappedBoxes into trees using layerNodeTree.
+ *
+ * 3. Search for overlaps.
+ *
+ *************************************************************************
+ */
+
+typedef std::vector<hier::MappedBox> NodeVec;
+typedef std::vector<hier::Box> BoxVec;
+
+/*
+ * Generate uniform boxes as specified in the database.
+ */
+void
+generateBoxesUniform(
+   const tbox::Dimension& dim,
+   std::vector<hier::Box>& output,
+   const Pointer<Database>& db);
+
+int main(
+   int argc,
+   char* argv[])
+{
+   /*
+    * Initialize MPI, SAMRAI.
+    */
+
+   SAMRAI_MPI::init(&argc, &argv);
+   SAMRAIManager::initialize();
+   SAMRAIManager::startup();
+   tbox::SAMRAI_MPI mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
+
+   const int rank = mpi.getRank();
+   int fail_count = 0;
+
+   {
+
+      /*
+       * Process command line arguments.  For each run, the input
+       * filename must be specified.  Usage is:
+       *
+       * executable <input file name>
+       */
+      std::string input_filename;
+
+      if (argc != 2) {
+         TBOX_ERROR("USAGE:  " << argv[0] << " <input file> \n"
+                                          << "  options:\n"
+                                          << "  none at this time" << std::endl);
+      } else {
+         input_filename = argv[1];
+      }
+
+      /*
+       * Create input database and parse all data in input file.
+       */
+
+      Pointer<Database> input_db(new InputDatabase("input_db"));
+      tbox::InputManager::getManager()->parseInputFile(input_filename, input_db);
+
+      /*
+       * Set up the timer manager.
+       */
+      if (input_db->isDatabase("TimerManager")) {
+         TimerManager::createManager(input_db->getDatabase("TimerManager"));
+      }
+
+      /*
+       * Retrieve "Main" section from input database.
+       * The main database is used only in main().
+       * The base_name variable is a base name for
+       * all name strings in this program.
+       */
+
+      Pointer<Database> main_db = input_db->getDatabase("Main");
+
+      const tbox::Dimension dim(static_cast<unsigned short>(main_db->getInteger("dim")));
+
+      std::string base_name = "unnamed";
+      base_name = main_db->getStringWithDefault("base_name", base_name);
+
+      /*
+       * Start logging.
+       */
+      const std::string log_file_name = base_name + ".log";
+      bool log_all_nodes = false;
+      log_all_nodes = main_db->getBoolWithDefault("log_all_nodes",
+            log_all_nodes);
+      if (log_all_nodes) {
+         PIO::logAllNodes(log_file_name);
+      } else {
+         PIO::logOnlyNodeZero(log_file_name);
+      }
+
+      plog << "Input database after initialization..." << std::endl;
+      input_db->printClassData(plog);
+
+      const std::string box_gen_method =
+         main_db->getStringWithDefault("box_gen_method", "UNIFORM");
+
+      tbox::TimerManager * tm(tbox::TimerManager::getManager());
+      tbox::Pointer<tbox::Timer> t_build_tree =
+         tm->getTimer("apps::main::build_tree");
+      tbox::Pointer<tbox::Timer> t_search_tree_for_set =
+         tm->getTimer("apps::main::search_tree_for_set");
+      tbox::Pointer<tbox::Timer> t_search_tree_for_vec =
+         tm->getTimer("apps::main::search_tree_for_vec");
+
+      /*
+       * Generate the boxes.
+       */
+      BoxVec boxes;
+      if (box_gen_method == "UNIFORM") {
+         generateBoxesUniform(dim,
+            boxes,
+            main_db->getDatabase("UniformBoxGen"));
+      } else {
+         TBOX_ERROR("Unsupported box_gen_method: " << box_gen_method);
+      }
+      tbox::plog << "\n\n\nGenerated boxes (" << boxes.size() << "):\n";
+      for (size_t i = 0; i < boxes.size(); ++i) {
+         tbox::plog << '\t' << i << '\t' << boxes[i] << '\n';
+         if (i > 20) {
+            tbox::plog << "\t...\n";
+            break;
+         }
+      }
+      tbox::plog << "\n\n\n";
+
+      /*
+       * Compute bounding box.
+       */
+      hier::Box bounding_box(dim);
+      for (BoxVec::iterator bi = boxes.begin(); bi != boxes.end(); ++bi) {
+         bounding_box += *bi;
+      }
+
+      /*
+       * Randomize the boxes.
+       */
+      bool randomize_order = main_db->getBoolWithDefault("randomize_order",
+            false);
+      if (randomize_order) {
+         std::random_shuffle(boxes.begin(), boxes.end());
+      }
+
+      /*
+       * Scale up the number of boxes and time the sort and search for the
+       * growing set of boxes.
+       */
+      size_t num_scale = (size_t)main_db->getIntegerWithDefault("num_scale", 1);
+      for (unsigned int iscale = 0; iscale < num_scale; ++iscale) {
+
+         if (iscale != 0) {
+            /*
+             * Scale up the box array.
+             */
+            int shift_dir = (iscale - 1) % dim.getValue();
+            int shift_distance = bounding_box.numberCells(shift_dir);
+
+            const size_t old_size = boxes.size();
+            boxes.insert(boxes.end(), boxes.begin(), boxes.end());
+            for (size_t i = 0; i < old_size; ++i) {
+               boxes[i].shift(shift_dir, shift_distance);
+            }
+            bounding_box.upper() (shift_dir) += shift_distance;
+         }
+
+         tbox::plog << "Repetition " << iscale << " has "
+                    << boxes.size() << " boxes bounded by "
+                    << bounding_box << std::endl;
+
+         /*
+          * Generate the nodes from the boxes.
+          */
+         NodeVec nodes;
+         nodes.reserve(boxes.size());
+         for (hier::LocalId i(0); i < static_cast<int>(boxes.size()); ++i) {
+            nodes.push_back(hier::MappedBox(boxes[i.getValue()], i, 0));
+         }
+         const size_t node_count = nodes.size();
+
+         /*
+          * Grow the boxes for overlap search.
+          */
+         hier::IntVector growth(dim, 1);
+         if (main_db->isInteger("growth")) {
+            main_db->getIntegerArray("growth", &growth[0], dim.getValue());
+         }
+         BoxVec grown_boxes = boxes;
+         if (growth != 1) {
+            for (BoxVec::iterator bi = grown_boxes.begin();
+                 bi != grown_boxes.end();
+                 ++bi) {
+               bi->grow(growth);
+            }
+         }
+
+         /*
+          * Reset timers and statistics.
+          */
+         tm->resetAllTimers();
+         hier::MappedBoxTree::resetStatistics(dim);
+
+         /*
+          * Build search tree.
+          */
+         hier::MappedBoxTree search_tree(dim);
+         t_build_tree->start();
+         search_tree.generateTree(nodes);
+         t_build_tree->stop();
+
+         /*
+          * Search the tree.
+          *
+          * We test outputing in a set and a vector.  Results show that outputing
+          * in a vector is almost twice as fast, probably due to the set having to
+          * sort the output.
+          */
+         hier::MappedBoxSet overlap_set;
+         t_search_tree_for_set->start();
+         for (BoxVec::iterator bi = grown_boxes.begin();
+              bi != grown_boxes.end();
+              ++bi) {
+            overlap_set.clear();
+            search_tree.findOverlapMappedBoxes(overlap_set, *bi);
+         }
+         t_search_tree_for_set->stop();
+
+         NodeVec overlap_vec;
+         t_search_tree_for_vec->start();
+         for (BoxVec::iterator bi = grown_boxes.begin();
+              bi != grown_boxes.end();
+              ++bi) {
+            overlap_vec.clear();
+            search_tree.findOverlapMappedBoxes(overlap_vec, *bi);
+         }
+         t_search_tree_for_vec->stop();
+
+         /*
+          * Output normalized timer to plog.
+          */
+         tbox::plog << t_build_tree->getName() << " = "
+                    << t_build_tree->getTotalWallclockTime() /
+                       static_cast<double>(node_count)
+                    << std::endl;
+         tbox::plog << t_search_tree_for_set->getName() << " = "
+                    << t_search_tree_for_set->getTotalWallclockTime()
+         / static_cast<double>(node_count)
+                    << std::endl;
+         tbox::plog << t_search_tree_for_vec->getName() << " = "
+                    << t_search_tree_for_vec->getTotalWallclockTime()
+         / static_cast<double>(node_count)
+                    << std::endl;
+
+         /*
+          * Log timer results and search tree statistics.
+          */
+         tbox::TimerManager::getManager()->print(tbox::plog);
+         hier::MappedBoxTree::printStatistics(dim);
+
+         tbox::plog << "\n\n\n";
+
+      }
+
+      /*
+       * Print input database again to fully show usage.
+       */
+      plog << "Input database after running..." << std::endl;
+      input_db->printClassData(plog);
+
+      tbox::pout << "\nPASSED:  Tree search" << std::endl;
+
+      input_db.setNull();
+      main_db.setNull();
+      t_search_tree_for_set.setNull();
+      t_search_tree_for_vec.setNull();
+
+      /*
+       * Exit properly by shutting down services in correct order.
+       */
+      tbox::plog << "\nShutting down..." << std::endl;
+
+   }
+
+   /*
+    * Shut down.
+    */
+   SAMRAIManager::shutdown();
+   SAMRAIManager::finalize();
+
+   if (fail_count == 0) {
+      SAMRAI_MPI::finalize();
+   } else {
+      tbox::pout << "Process " << std::setw(5) << rank << " aborting."
+                 << std::endl;
+      SAMRAI::tbox::Utilities::abort("Aborting due to nonzero fail count",
+         __FILE__, __LINE__);
+   }
+
+   tbox::plog << "Process " << std::setw(5) << rank << " exiting." << std::endl;
+   return fail_count;
+}
+
+/*
+ * Function to generate a uniform set of boxes.
+ */
+void generateBoxesUniform(
+   const tbox::Dimension& dim,
+   std::vector<hier::Box>& output,
+   const Pointer<Database>& db)
+{
+   output.clear();
+
+   hier::IntVector boxsize(dim, 1);
+   if (db->isInteger("boxsize")) {
+      db->getIntegerArray("boxsize", &boxsize[0], dim.getValue());
+   } else {
+      TBOX_ERROR("CartesianGridGeometry::getFromInput() error...\n"
+         << "    box size is absent.");
+   }
+
+   hier::IntVector boxrepeat(dim, 1);
+   if (db->isInteger("boxrepeat")) {
+      db->getIntegerArray("boxrepeat", &boxrepeat[0], dim.getValue());
+   }
+
+   /*
+    * Create an array of boxes by repeating the given box.
+    */
+   hier::IntVector index(dim, 0);
+   do {
+      hier::IntVector lower(index * boxsize);
+      hier::IntVector upper(lower + boxsize - 1);
+      int& e = index(0);
+      for (e = 0; e < boxrepeat(0); ++e) {
+         lower(0) = e * boxsize(0);
+         upper(0) = lower(0) + boxsize(0) - 1;
+         output.insert(output.end(), hier::Box(lower, upper));
+      }
+      for (int d = 0; d < dim.getValue(); ++d) {
+         if (index(d) == boxrepeat(d) && d < dim.getValue() - 1) {
+            index(d) = 0;
+            ++index(d + 1);
+         }
+      }
+   } while (index(dim.getValue() - 1) < boxrepeat(dim.getValue() - 1));
+}

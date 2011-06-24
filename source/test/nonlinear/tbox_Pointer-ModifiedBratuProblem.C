@@ -1,0 +1,32 @@
+/*************************************************************************
+ *
+ * This file is part of the SAMRAI distribution.  For full copyright 
+ * information, see COPYRIGHT and COPYING.LESSER. 
+ *
+ * Copyright:     (c) 1997-2010 Lawrence Livermore National Security, LLC
+ * Description:   $Description 
+ *
+ ************************************************************************/
+
+#include "SAMRAI/tbox/Pointer.h"
+#include "SAMRAI/tbox/Pointer.C"
+#include "ModifiedBratuProblem.h"
+
+#if !defined(HAVE_PETSC) || !defined(HAVE_SUNDIALS) || !defined(HAVE_HYPRE)
+
+/*
+ *************************************************************************
+ * If the library is not compiled with PETSC -and- KINSOL, print an error.
+ * If we're running autotests, skip the error
+ *************************************************************************
+ */
+#if (TESTING != 1)
+#error \
+   "This example requires SAMRAI be compiled with KINSOL, PETSC, and HYPRE."
+#endif
+
+#else
+
+template class SAMRAI::tbox::Pointer<ModifiedBratuProblem>;
+
+#endif

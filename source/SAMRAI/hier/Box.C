@@ -1,0 +1,442 @@
+/*************************************************************************
+ *
+ * This file is part of the SAMRAI distribution.  For full copyright 
+ * information, see COPYRIGHT and COPYING.LESSER. 
+ *
+ * Copyright:     (c) 1997-2010 Lawrence Livermore National Security, LLC
+ * Description:   Box representing a portion of the AMR index space 
+ *
+ ************************************************************************/
+
+#ifndef included_hier_Box_C
+#define included_hier_Box_C
+
+#include "SAMRAI/hier/Box.h"
+#include "SAMRAI/tbox/Utilities.h"
+#include "SAMRAI/tbox/StartupShutdownManager.h"
+
+#ifndef SAMRAI_INLINE
+#include "SAMRAI/hier/Box.I"
+#endif
+
+namespace SAMRAI {
+namespace hier {
+
+Box * Box::s_emptys[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+Box * Box::s_universes[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+
+tbox::StartupShutdownManager::Handler
+Box::s_initialize_finalize_handler(
+   Box::initializeCallback,
+   0,
+   0,
+   Box::finalizeCallback,
+   tbox::StartupShutdownManager::priorityListElements);
+
+/*
+ *************************************************************************
+ *                                                                       *
+ * Return the dimension of the box that is the longest.                  *
+ *                                                                       *
+ *************************************************************************
+ */
+
+int Box::longestDimension() const
+{
+   int max = upper(0) - lower(0);
+   int dim = 0;
+
+   for (int i = 1; i < getDim().getValue(); i++)
+      if ((upper(i) - lower(i)) > max) {
+         max = upper(i) - lower(i);
+         dim = i;
+      }
+   return dim;
+}
+
+/*
+ *************************************************************************
+ *									*
+ * Type Conversions							*
+ *									*
+ *************************************************************************
+ */
+
+tbox::DatabaseBox Box::DatabaseBox_from_Box() const
+{
+   TBOX_DIM_ASSERT_CHECK_DIM(getDim());
+
+   tbox::DatabaseBox new_Box;
+
+   new_Box.setDim(getDim());
+
+   for (int i = 0; i < getDim().getValue(); i++) {
+      new_Box.lower(i) = d_lo(i);
+      new_Box.upper(i) = d_hi(i);
+   }
+
+   return new_Box;
+}
+
+void Box::set_Box_from_DatabaseBox(
+   const tbox::DatabaseBox& box)
+{
+   TBOX_DIM_ASSERT_CHECK_DIM(getDim());
+
+   for (int i = 0; i < box.getDim().getValue(); i++) {
+      d_lo(i) = box.lower(i);
+      d_hi(i) = box.upper(i);
+   }
+}
+
+/*
+ *************************************************************************
+ *									*
+ * Stream input/output operators: [(l0,...,ln),(u0,...,un)].		*
+ *									*
+ *************************************************************************
+ */
+
+std::istream& operator >> (
+   std::istream& s,
+   Box& box)
+{
+   TBOX_DIM_ASSERT_CHECK_DIM(box.getDim());
+
+   while (s.get() != '[') ;
+   s >> box.lower();
+   while (s.get() != ',') NULL_STATEMENT;
+   s >> box.upper();
+   while (s.get() != ']') NULL_STATEMENT;
+   return s;
+}
+
+std::ostream& operator << (
+   std::ostream& s,
+   const Box& box)
+{
+   TBOX_DIM_ASSERT_CHECK_DIM(box.getDim());
+
+   if (box.empty()) {
+      s << "[(),()]";
+   } else {
+      s << '[' << box.lower() << ',' << box.upper() << ']';
+   }
+   return s;
+}
+
+Box& Box::operator += (
+   const Box& box)
+{
+
+   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, box);
+
+   if (!box.empty()) {
+      if (empty()) {
+         *this = box;
+      } else {
+         d_lo.min(box.d_lo);
+         d_hi.max(box.d_hi);
+      }
+   }
+   return *this;
+}
+
+/*
+ *************************************************************************
+ *                                                                       *
+ * Static member function called from coalesceWith().  It attempts to    *
+ * recursively coalesce intervals individual dimensions in index space.  *
+ * If it is possible to coalesce two intervals (defined by a proper      *
+ * overlap or adjacency relationship), the value true is returned.       *
+ * If this is impossible, false is returned.                             *
+ *                                                                       *
+ *************************************************************************
+ */
+
+bool Box::coalesceIntervals(
+   const int* lo1,
+   const int* hi1,
+   const int* lo2,
+   const int* hi2,
+   const int dim)
+{
+   bool retval = false;
+   if (dim == 1) {
+      // interval 1 to the right of interval 2.
+      if ((lo1[0] <= hi2[0] + 1) && (hi2[0] <= hi1[0])) {
+         retval = true;
+         return retval;
+      }
+      // interval 1 to the left of interval 2.
+      if ((lo1[0] <= lo2[0]) && (lo2[0] <= hi1[0] + 1)) {
+         retval = true;
+         return retval;
+      }
+   } else {
+      for (int id = 0; id < dim; id++) {
+         if ((lo1[id] == lo2[id]) && (hi1[id] == hi2[id])) {
+            int id2;
+            int low1[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+            int high1[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+            int low2[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+            int high2[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+            for (id2 = 0; id2 < id; id2++) {
+               low1[id2] = lo1[id2];
+               high1[id2] = hi1[id2];
+               low2[id2] = lo2[id2];
+               high2[id2] = hi2[id2];
+            }
+            for (id2 = id + 1; id2 < dim; id2++) {
+               int id1 = id2 - 1;
+               low1[id1] = lo1[id2];
+               high1[id1] = hi1[id2];
+               low2[id1] = lo2[id2];
+               high2[id1] = hi2[id2];
+            }
+            if (coalesceIntervals(low1, high1, low2, high2, dim - 1)) {
+               retval = true;
+               return retval;
+            }
+         }
+      }
+   }
+
+   return retval;
+}
+
+/*
+ *************************************************************************
+ *                                                                       *
+ * Return true if this box can be coalesced with the argument box,       *
+ * and set this box to the union of the boxes.  Otherwise, return false  *
+ * and leave this box as is.  Two boxes may be coalesced if their union  *
+ * is a box.  This routine attempts to coalesce the boxes along          *
+ * each coordinate direction using the coalesceIntervals() function.     *
+ *                                                                       *
+ *************************************************************************
+ */
+
+bool Box::coalesceWith(
+   const Box& box)
+{
+   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, box);
+
+   bool retval = false;
+
+   if (empty() || box.empty()) {
+      retval = true;
+      *this += box;
+   } else {
+      int id;
+      const int* box_lo = &box.lower()[0];
+      const int* box_hi = &box.upper()[0];
+      int me_lo[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+      int me_hi[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+      for (id = 0; id < getDim().getValue(); id++) {
+         me_lo[id] = d_lo(id);
+         me_hi[id] = d_hi(id);
+      }
+      if (coalesceIntervals(box_lo, box_hi, me_lo, me_hi, getDim().getValue())) {
+         retval = true;
+      } else { // test for one box containing the other...
+         // test whether me contains box.
+         retval = true;
+         id = 0;
+         while (retval && (id < getDim().getValue())) {
+            retval = ((me_lo[id] <= box_lo[id]) && (me_hi[id] >= box_hi[id]));
+            id++;
+         }
+         if (!retval) { // me doesn't contain box; check other way around...
+            retval = true;
+            id = 0;
+            while (retval && (id < getDim().getValue())) {
+               retval = ((box_lo[id] <= me_lo[id])
+                         && (box_hi[id] >= me_hi[id]));
+               id++;
+            }
+         }
+      }
+   }
+
+   if (retval) *this += box;
+
+   return retval;
+}
+
+/*
+ *************************************************************************
+ *                                                                       *
+ * Rotates a 3-Dimensional box 45*num_rotations degrees around the given *
+ * and set this box to the union of the boxes.                           *
+ *                                                                       *
+ *************************************************************************
+ */
+
+void Box::rotateAboutAxis(
+   const int axis,
+   const int num_rotations)
+{
+   TBOX_DIM_ASSERT_CHECK_DIM(getDim());
+   TBOX_ASSERT(axis < getDim().getValue());
+   TBOX_ASSERT(getDim().getValue() == 3);
+
+   const tbox::Dimension& dim(getDim());
+
+   const int a = (axis + 1) % dim.getValue();
+   const int b = (axis + 2) % dim.getValue();
+
+   Index tmp_lo(dim);
+   Index tmp_hi(dim);
+
+   for (int j = 0; j < num_rotations; j++) {
+      tmp_lo = d_lo;
+      tmp_hi = d_hi;
+      d_lo(a) = tmp_lo(b);
+      d_lo(b) = -tmp_hi(a) - 1;
+      d_hi(a) = tmp_hi(b);
+      d_hi(b) = -tmp_lo(a) - 1;
+   }
+}
+
+/*
+ *************************************************************************
+ *                                                                       *
+ * Rotate a box in the manner determined by the rotation number          *
+ *                                                                       *
+ *************************************************************************
+ */
+
+void Box::rotate(
+   const Transformation::RotationIdentifier rotation_ident)
+{
+   if (rotation_ident == Transformation::NO_ROTATE)
+      return;
+
+   TBOX_DIM_ASSERT_CHECK_DIM(getDim());
+   TBOX_ASSERT(getDim().getValue() == 2 || getDim().getValue() == 3);
+
+   if (getDim().getValue() == 2) {
+      int rotation_number = static_cast<int>(rotation_ident);
+      if (rotation_number > 3) {
+         TBOX_ERROR("Box::rotate invalid 2D RotationIdentifier.");
+      }
+      for (int j = 0; j < rotation_number; j++) {
+         Index tmp_lo(d_lo);
+         Index tmp_hi(d_hi);
+
+         d_lo(0) = tmp_lo(1);
+         d_lo(1) = -tmp_hi(0) - 1;
+         d_hi(0) = tmp_hi(1);
+         d_hi(1) = -tmp_lo(0) - 1;
+      }
+   } else {
+
+      if (getDim().getValue() == 3) {
+         if (rotation_ident == Transformation::NO_ROTATE) {
+            return;
+         } else if (rotation_ident == Transformation::KUP_IUP_JUP) {
+            rotateAboutAxis(0, 3);
+            rotateAboutAxis(2, 3);
+         } else if (rotation_ident == Transformation::JUP_KUP_IUP) {
+            rotateAboutAxis(1, 1);
+            rotateAboutAxis(2, 1);
+         } else if (rotation_ident == Transformation::IDOWN_KUP_JUP) {
+            rotateAboutAxis(1, 2);
+            rotateAboutAxis(0, 3);
+         } else if (rotation_ident == Transformation::KUP_JUP_IDOWN) {
+            rotateAboutAxis(1, 3);
+         } else if (rotation_ident == Transformation::JUP_IDOWN_KUP) {
+            rotateAboutAxis(2, 1);
+         } else if (rotation_ident == Transformation::KDOWN_JUP_IUP) {
+            rotateAboutAxis(1, 1);
+         } else if (rotation_ident == Transformation::IUP_KDOWN_JUP) {
+            rotateAboutAxis(0, 3);
+         } else if (rotation_ident == Transformation::JUP_IUP_KDOWN) {
+            rotateAboutAxis(0, 2);
+            rotateAboutAxis(2, 3);
+         } else if (rotation_ident == Transformation::KDOWN_IDOWN_JUP) {
+            rotateAboutAxis(0, 3);
+            rotateAboutAxis(2, 1);
+         } else if (rotation_ident == Transformation::IDOWN_JUP_KDOWN) {
+            rotateAboutAxis(1, 2);
+         } else if (rotation_ident == Transformation::JUP_KDOWN_IDOWN) {
+            rotateAboutAxis(0, 3);
+            rotateAboutAxis(1, 3);
+         } else if (rotation_ident == Transformation::JDOWN_IUP_KUP) {
+            rotateAboutAxis(2, 3);
+         } else if (rotation_ident == Transformation::IUP_KUP_JDOWN) {
+            rotateAboutAxis(0, 1);
+         } else if (rotation_ident == Transformation::KUP_JDOWN_IUP) {
+            rotateAboutAxis(0, 2);
+            rotateAboutAxis(1, 1);
+         } else if (rotation_ident == Transformation::JDOWN_KUP_IDOWN) {
+            rotateAboutAxis(0, 1);
+            rotateAboutAxis(1, 3);
+         } else if (rotation_ident == Transformation::IDOWN_JDOWN_KUP) {
+            rotateAboutAxis(0, 2);
+            rotateAboutAxis(1, 2);
+         } else if (rotation_ident == Transformation::KUP_IDOWN_JDOWN) {
+            rotateAboutAxis(0, 1);
+            rotateAboutAxis(2, 1);
+         } else if (rotation_ident == Transformation::JDOWN_KDOWN_IUP) {
+            rotateAboutAxis(0, 3);
+            rotateAboutAxis(1, 1);
+         } else if (rotation_ident == Transformation::KDOWN_IUP_JDOWN) {
+            rotateAboutAxis(0, 1);
+            rotateAboutAxis(2, 3);
+         } else if (rotation_ident == Transformation::IUP_JDOWN_KDOWN) {
+            rotateAboutAxis(0, 2);
+         } else if (rotation_ident == Transformation::JDOWN_IDOWN_KDOWN) {
+            rotateAboutAxis(0, 2);
+            rotateAboutAxis(2, 1);
+         } else if (rotation_ident == Transformation::KDOWN_JDOWN_IDOWN) {
+            rotateAboutAxis(0, 2);
+            rotateAboutAxis(1, 3);
+         } else if (rotation_ident == Transformation::IDOWN_KDOWN_JDOWN) {
+            rotateAboutAxis(1, 2);
+            rotateAboutAxis(0, 1);
+         } else {
+            TBOX_ERROR("Box::rotate invalid 3D RotationIdentifier.");
+         }
+      }
+   }
+}
+
+/*
+ *************************************************************************
+ *************************************************************************
+ */
+void Box::initializeCallback()
+{
+   for (unsigned short d = 0; d < tbox::Dimension::MAXIMUM_DIMENSION_VALUE; ++d) {
+      tbox::Dimension dim(static_cast<unsigned short>(d + 1));
+      s_emptys[d] = new Box(dim);
+
+      /*
+       * Note we can't use Index getMin, getMax here as that
+       * would create a dependency between static initializers
+       */
+      s_universes[d] = new hier::Box(
+            hier::Index(dim, tbox::MathUtilities<int>::getMin()),
+            hier::Index(dim, tbox::MathUtilities<int>::getMax()));
+   }
+
+}
+
+/*
+ *************************************************************************
+ *************************************************************************
+ */
+void Box::finalizeCallback()
+{
+   for (int d = 0; d < tbox::Dimension::MAXIMUM_DIMENSION_VALUE; ++d) {
+      delete s_emptys[d];
+      delete s_universes[d];
+   }
+}
+
+}
+}
+
+#endif

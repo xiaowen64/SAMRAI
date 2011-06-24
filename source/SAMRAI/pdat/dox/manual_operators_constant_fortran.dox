@@ -1,0 +1,23 @@
+/*************************************************************************
+ *
+ * This file is part of the SAMRAI distribution.  For full copyright 
+ * information, see COPYRIGHT and COPYING.LESSER. 
+ *
+ * Copyright:     (c) 1997-2010 Lawrence Livermore National Security, LLC
+ * Description:   Generation of SAMRAI Doxygen source code manual 
+ *
+ ************************************************************************/
+namespace SAMRAI {
+   namespace pdat {
+/*!
+  @page package_patchdata_generic_ops_constant_fortran Constant Transfer Operator Numerical Routines
+
+  The routines that perform constant spatial refining/coarsening on
+  standard patch data types are located in the directory
+  <TT>SAMRAI/source/patchdata/generic_ops/constant/fortran</TT>.
+  These routines are written in FORTRAN 77 and are invoked from the
+  appropriate operator classes.
+*/
+
+}
+}

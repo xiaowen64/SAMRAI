@@ -1,0 +1,19 @@
+/*************************************************************************
+ *
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
+ *
+ * Copyright:     (c) 1997-2010 Lawrence Livermore National Security, LLC
+ * Description:   
+ *
+ ************************************************************************/
+
+#include "SAMRAI/tbox/Pointer.h"
+#include "SAMRAI/tbox/Pointer.C"
+#include "HierarchyTester.h"
+
+namespace SAMRAI {
+
+template class tbox::Pointer<HierarchyTester>;
+
+}

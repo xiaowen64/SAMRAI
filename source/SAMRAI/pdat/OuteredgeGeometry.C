@@ -1,0 +1,440 @@
+/*************************************************************************
+ *
+ * This file is part of the SAMRAI distribution.  For full copyright 
+ * information, see COPYRIGHT and COPYING.LESSER. 
+ *
+ * Copyright:     (c) 1997-2010 Lawrence Livermore National Security, LLC
+ * Description:   Box geometry information for outeredge centered objects 
+ *
+ ************************************************************************/
+
+#ifndef included_pdat_OuteredgeGeometry_C
+#define included_pdat_OuteredgeGeometry_C
+
+#include "SAMRAI/pdat/OuteredgeGeometry.h"
+
+#include "SAMRAI/pdat/EdgeGeometry.h"
+#include "SAMRAI/pdat/EdgeOverlap.h"
+#include "SAMRAI/hier/BoxList.h"
+#include "SAMRAI/tbox/Utilities.h"
+
+#ifndef SAMRAI_INLINE
+#include "SAMRAI/pdat/OuteredgeGeometry.I"
+#endif
+
+namespace SAMRAI {
+namespace pdat {
+
+/*
+ *************************************************************************
+ *									*
+ * Create an outeredge geometry object given box and ghost cell width.	*
+ *									*
+ *************************************************************************
+ */
+
+OuteredgeGeometry::OuteredgeGeometry(
+   const hier::Box& box,
+   const hier::IntVector& ghosts):
+   d_box(box),
+   d_ghosts(ghosts)
+
+{
+   TBOX_DIM_ASSERT_CHECK_ARGS2(box, ghosts);
+   TBOX_ASSERT(ghosts.min() >= 0);
+}
+
+OuteredgeGeometry::~OuteredgeGeometry()
+{
+}
+
+/*
+ *************************************************************************
+ *									*
+ * Attempt to calculate the intersection between two edge centered box	*
+ * geometries.  The calculateOverlap() checks whether both arguments are	*
+ * edge geometries; if so, it compuates the intersection.  If not, then	*
+ * it calls calculateOverlap() on the source object (if retry is true)	*
+ * to allow the source a chance to calculate the intersection.  See the	*
+ * hier::BoxGeometry base class for more information about the protocol.	*
+ * A pointer to null is returned if the intersection cannot be computed.	*
+ *                                                                      *
+ *************************************************************************
+ */
+
+tbox::Pointer<hier::BoxOverlap>
+OuteredgeGeometry::calculateOverlap(
+   const hier::BoxGeometry& dst_geometry,
+   const hier::BoxGeometry& src_geometry,
+   const hier::Box& src_mask,
+   const hier::Box& fill_box,
+   const bool overwrite_interior,
+   const hier::Transformation& transformation,
+   const bool retry,
+   const hier::BoxList& dst_restrict_boxes) const
+{
+   TBOX_DIM_ASSERT_CHECK_ARGS2(d_box, src_mask);
+
+   const EdgeGeometry* t_dst_edge =
+      dynamic_cast<const EdgeGeometry *>(&dst_geometry);
+   const OuteredgeGeometry* t_dst_oedge =
+      dynamic_cast<const OuteredgeGeometry *>(&dst_geometry);
+   const OuteredgeGeometry* t_src =
+      dynamic_cast<const OuteredgeGeometry *>(&src_geometry);
+
+   tbox::Pointer<hier::BoxOverlap> over(NULL);
+
+   if ((t_src != NULL) && (t_dst_edge != NULL)) {
+      over = doOverlap(*t_dst_edge, *t_src, src_mask, fill_box,
+            overwrite_interior,
+            transformation, dst_restrict_boxes);
+   } else if ((t_src != NULL) && (t_dst_oedge != NULL)) {
+      over = doOverlap(*t_dst_oedge, *t_src, src_mask, fill_box,
+            overwrite_interior,
+            transformation, dst_restrict_boxes);
+   } else if (retry) {
+      over = src_geometry.calculateOverlap(dst_geometry, src_geometry,
+            src_mask, fill_box, overwrite_interior,
+            transformation, false,
+            dst_restrict_boxes);
+   }
+   return over;
+}
+
+/*
+ *************************************************************************
+ *									*
+ * Compute the overlap between an edge and an outeredge centered boxes.  *
+ * The algorithm is similar to the standard edge intersection algorithm  *
+ * except we operate only on the boundaries of the source box.           *
+ *									*
+ *************************************************************************
+ */
+tbox::Pointer<hier::BoxOverlap>
+OuteredgeGeometry::doOverlap(
+   const EdgeGeometry& dst_geometry,
+   const OuteredgeGeometry& src_geometry,
+   const hier::Box& src_mask,
+   const hier::Box& fill_box,
+   const bool overwrite_interior,
+   const hier::Transformation& transformation,
+   const hier::BoxList& dst_restrict_boxes)
+{
+   const tbox::Dimension& dim(src_mask.getDim());
+
+   tbox::Array<hier::BoxList> dst_boxes(dim.getValue());
+
+   // Perform a quick-and-dirty intersection to see if the boxes might overlap
+
+   const hier::Box src_box(
+      hier::Box::grow(src_geometry.d_box, src_geometry.d_ghosts) * src_mask);
+   hier::Box src_box_shifted(src_box);
+   transformation.transform(src_box_shifted);
+   const hier::Box dst_box(
+      hier::Box::grow(dst_geometry.getBox(), dst_geometry.getGhosts()));
+
+   // Compute the intersection (if any) for each of the edge directions
+
+   const hier::IntVector one_vector(dim, 1);
+
+   bool quick_boxes_intersect =
+      (hier::Box::grow(src_box_shifted, one_vector)).intersects(
+         hier::Box::grow(dst_box, one_vector));
+   if (quick_boxes_intersect) {
+
+      for (int axis = 0; axis < dim.getValue(); ++axis) {
+
+         const hier::Box dst_edge_box(
+            EdgeGeometry::toEdgeBox(dst_box, axis));
+         const hier::Box src_edge_box(
+            EdgeGeometry::toEdgeBox(src_box_shifted, axis));
+
+         bool boxes_intersect = dst_edge_box.intersects(src_edge_box);
+
+         if (boxes_intersect) {
+
+            const hier::Box fill_edge_box(
+               EdgeGeometry::toEdgeBox(fill_box, axis));
+
+            for (int face_normal = 0; face_normal < dim.getValue(); ++face_normal) {
+
+               if (face_normal != axis) {
+
+                  for (int side = 0; side < 2; ++side) {
+                     hier::Box outeredge_src_box(
+                        toOuteredgeBox(src_box_shifted,
+                           axis,
+                           face_normal,
+                           side));
+                     dst_boxes[axis].unionBoxes(
+                        outeredge_src_box * dst_edge_box * fill_edge_box);
+                  }
+
+               }  // data is not defined when face_normal == axis
+
+            }  // iterate over face normal directions
+
+            if (!overwrite_interior) {
+               const hier::Box interior_edges(
+                  EdgeGeometry::toEdgeBox(dst_geometry.getBox(),
+                     axis));
+               dst_boxes[axis].removeIntersections(interior_edges);
+            }
+
+         }  // if source and destination edge boxes overlap in axis direction
+
+         if (dst_restrict_boxes.size() && dst_boxes[axis].size()) {
+            hier::BoxList edge_restrict_boxes;
+            for (hier::BoxList::Iterator b(dst_restrict_boxes); b; b++) {
+               edge_restrict_boxes.appendItem(EdgeGeometry::toEdgeBox(b(), axis));
+            }
+            dst_boxes[axis].intersectBoxes(edge_restrict_boxes);
+         }
+
+      }  // iterate over axis directions
+
+   }  // if quick check passes
+
+   // Create the edge overlap data object using the boxes and source shift
+   hier::BoxOverlap* overlap =
+      new pdat::EdgeOverlap(dst_boxes, transformation);
+   return tbox::Pointer<hier::BoxOverlap>(overlap);
+}
+
+/*
+ *************************************************************************
+ *									*
+ * Compute the overlap between two outeredge centered boxes.             *
+ * The algorithm is similar to the standard edge intersection algorithm  *
+ * except we operate only on the boundaries of the source box.           *
+ *									*
+ *************************************************************************
+ */
+
+tbox::Pointer<hier::BoxOverlap>
+OuteredgeGeometry::doOverlap(
+   const OuteredgeGeometry& dst_geometry,
+   const OuteredgeGeometry& src_geometry,
+   const hier::Box& src_mask,
+   const hier::Box& fill_box,
+   const bool overwrite_interior,
+   const hier::Transformation& transformation,
+   const hier::BoxList& dst_restrict_boxes)
+{
+
+   const tbox::Dimension& dim(src_mask.getDim());
+
+   tbox::Array<hier::BoxList> dst_boxes(dim.getValue());
+
+   // Perform a quick-and-dirty intersection to see if the boxes might overlap
+
+   const hier::Box src_box(
+      hier::Box::grow(src_geometry.d_box, src_geometry.d_ghosts) * src_mask);
+   hier::Box src_box_shifted(src_box);
+   transformation.transform(src_box_shifted);
+   const hier::Box dst_box(
+      hier::Box::grow(dst_geometry.getBox(), dst_geometry.getGhosts()));
+
+   // Compute the intersection (if any) for each of the edge directions
+
+   const hier::IntVector one_vector(dim, 1);
+
+   bool quick_boxes_intersect =
+      (hier::Box::grow(src_box_shifted, one_vector)).intersects(
+         hier::Box::grow(dst_box, one_vector));
+   if (quick_boxes_intersect) {
+
+      for (int axis = 0; axis < dim.getValue(); ++axis) {
+
+         const hier::Box dst_edge_box(
+            EdgeGeometry::toEdgeBox(dst_box, axis));
+         const hier::Box src_edge_box(
+            EdgeGeometry::toEdgeBox(src_box_shifted, axis));
+
+         bool boxes_intersect = dst_edge_box.intersects(src_edge_box);
+
+         if (boxes_intersect) {
+
+            const hier::Box fill_edge_box(
+               EdgeGeometry::toEdgeBox(fill_box, axis));
+
+            for (int src_face_normal = 0;
+                 src_face_normal < dim.getValue();
+                 ++src_face_normal) {
+
+               if (src_face_normal != axis) {
+
+                  hier::Box outeredge_src_box_lo(toOuteredgeBox(
+                        src_box_shifted,
+                        axis,
+                        src_face_normal,
+                        0));
+                  hier::Box outeredge_src_box_up(toOuteredgeBox(
+                        src_box_shifted,
+                        axis,
+                        src_face_normal,
+                        1));
+
+                  for (int dst_face_normal = 0;
+                       dst_face_normal < dim.getValue();
+                       ++dst_face_normal) {
+
+                     if (dst_face_normal != axis) {
+
+                        hier::Box outeredge_dst_box_lo(toOuteredgeBox(dst_box,
+                              axis,
+                              dst_face_normal,
+                              0));
+                        hier::Box outeredge_dst_box_up(toOuteredgeBox(dst_box,
+                              axis,
+                              dst_face_normal,
+                              1));
+
+                        outeredge_dst_box_lo =
+                           outeredge_dst_box_lo * fill_edge_box;
+                        outeredge_dst_box_up =
+                           outeredge_dst_box_up * fill_edge_box;
+
+                        dst_boxes[axis].unionBoxes(
+                           outeredge_src_box_lo * outeredge_dst_box_lo);
+                        dst_boxes[axis].unionBoxes(
+                           outeredge_src_box_lo * outeredge_dst_box_up);
+                        dst_boxes[axis].unionBoxes(
+                           outeredge_src_box_up * outeredge_dst_box_lo);
+                        dst_boxes[axis].unionBoxes(
+                           outeredge_src_box_up * outeredge_dst_box_up);
+
+                     }  // dst data undefined when dst_face_normal == axis
+
+                  }  // iterate over dst face normal directions
+
+               }  // src data undefined when src_face_normal == axis
+
+            }  // iterate over src face normal directions
+
+         }  // if source and destination edge boxes overlap in axis direction
+
+         if (!overwrite_interior) {
+            const hier::Box interior_edges(
+               EdgeGeometry::toEdgeBox(dst_geometry.getBox(),
+                  axis));
+            dst_boxes[axis].removeIntersections(interior_edges);
+         }
+
+         if (dst_restrict_boxes.size() && dst_boxes[axis].size()) {
+            hier::BoxList edge_restrict_boxes;
+            for (hier::BoxList::Iterator b(dst_restrict_boxes); b; b++) {
+               edge_restrict_boxes.appendItem(EdgeGeometry::toEdgeBox(b(), axis));
+            }
+            dst_boxes[axis].intersectBoxes(edge_restrict_boxes);
+         }
+
+      }  // iterate over axis directions
+
+   }  // if quick check passes
+
+   // Create the edge overlap data object using the boxes and source shift
+   hier::BoxOverlap* overlap =
+      new EdgeOverlap(dst_boxes, transformation);
+   return tbox::Pointer<hier::BoxOverlap>(overlap);
+}
+
+/*
+ *************************************************************************
+ *                                                                       *
+ * Convert an AMR-index space hier::Box into a edge-index space box      *
+ * for an outeredge region.                                              *
+ *                                                                       *
+ *************************************************************************
+ */
+
+hier::Box OuteredgeGeometry::toOuteredgeBox(
+   const hier::Box& box,
+   int axis,
+   int face_normal,
+   int side)
+{
+   const tbox::Dimension& dim(box.getDim());
+
+   TBOX_ASSERT(0 <= axis && axis < dim.getValue());
+   TBOX_ASSERT(0 <= face_normal && face_normal < dim.getValue());
+   TBOX_ASSERT(face_normal != axis);
+   TBOX_ASSERT(side == 0 || side == 1);
+
+   hier::Box oedge_box(dim);
+
+   /*
+    * If data is defined (i.e., face_normal != axis), then
+    *    1) Make an edge box for the given axis.
+    *    2) Trim box as needed to avoid redundant edge indices
+    *       for different face normal directions.
+    *    3) Restrict box to lower or upper face for given
+    *       face normal direction.
+    */
+
+   if ((face_normal != axis) && !box.empty()) {
+
+      oedge_box = EdgeGeometry::toEdgeBox(box, axis);
+
+      for (int d = 0; d < dim.getValue(); ++d) {
+
+         if (d != axis) {    // do not trim in axis direction
+
+            for (int dh = d + 1; dh < dim.getValue(); ++dh) { // trim in higher dimensions
+
+               if (dh != axis && dh != face_normal) {
+                  // do not trim in axis or face_normal direction
+
+                  ++oedge_box.lower(dh);
+                  --oedge_box.upper(dh);
+
+               }
+
+            }
+
+         }
+
+      }
+
+      if (side == 0) {   // lower side in face normal direction
+         oedge_box.upper(face_normal) = oedge_box.lower(face_normal);
+      } else {  // side == 1; upper side in face normal direction
+         oedge_box.lower(face_normal) = oedge_box.upper(face_normal);
+      }
+
+   }
+
+   return oedge_box;
+}
+
+/*
+ *************************************************************************
+ *                                                                       *
+ * Set up a EdgeOverlap oject using the given boxes and offset           *
+ *                                                                       *
+ *************************************************************************
+ */
+tbox::Pointer<hier::BoxOverlap>
+OuteredgeGeometry::setUpOverlap(
+   const hier::BoxList& boxes,
+   const hier::Transformation& transformation) const
+{
+   const tbox::Dimension& dim(transformation.getOffset().getDim());
+   tbox::Array<hier::BoxList> dst_boxes(dim.getValue());
+
+   for (hier::BoxList::Iterator b(boxes); b; b++) {
+      for (int d = 0; d < dim.getValue(); d++) {
+         hier::Box edge_box(EdgeGeometry::toEdgeBox(b(), d));
+         dst_boxes[d].appendItem(edge_box);
+      }
+   }
+
+   // Create the edge overlap data object using the boxes and transformation
+   hier::BoxOverlap* overlap = new EdgeOverlap(dst_boxes, transformation);
+   return tbox::Pointer<hier::BoxOverlap>(overlap);
+
+}
+
+}
+}
+#endif

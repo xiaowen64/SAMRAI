@@ -1,0 +1,79 @@
+*****************************************************************************
+  Copyright 1997-2010
+  Lawrence Livermore National Security, LLC.
+  All rights reserved.
+*****************************************************************************
+
+                     Release Notes for SAMRAI v3.1.1 (beta)
+
+     (notes for previous releases may be found in /SAMRAI/docs/release)
+
+*****************************************************************************
+
+Please direct any questions related to these notes to the SAMRAI development
+team by sending email to samrai@llnl.gov.
+
+LLNL users can use the discussion groups on the LLNL Sourceforge site:
+
+https://sourceforge.llnl.gov/sf/discussion/do/listForums/projects.samrai/discussion
+
+*****************************************************************************
+
+Where to report Bugs
+--------------------
+
+If a bug is found in the SAMRAI library, we ask that you kindly report
+it to us so that we may fix it.  LLNL users may report bugs using the
+LLNL Sourceforge site if you have a sourceforge account:
+
+https://sourceforge.llnl.gov/sf/tracker/do/listTrackers/projects.samrai/tracker
+
+Bugs found by other users should send email to samrai-bugs@llnl.gov.
+
+*****************************************************************************
+
+----------------------------------------------------------------------------
+                Summary of what's new
+-----------------------------------------------------------------------------
+
+(1) Block id (as in multiblock meshes) are a part of the MappedBoxId.
+
+This section contains a summary of additions to SAMRAI.  More detailed
+descriptions of items in the following list are provided below.
+
+-----------------------------------------------------------------------------
+                Summary of what's changed
+-----------------------------------------------------------------------------
+
+(1) Many interfaces specifying components of a MappedBoxId have been
+extended to include the new BlockId component of the MappedBoxId.
+
+This section contains a summary of changes to SAMRAI.  More detailed
+descriptions of items in the following list are provided below.
+
+*****************************************************************************
+
+-----------------------------------------------------------------------------
+                Details about what's new
+-----------------------------------------------------------------------------
+
+(1) Block id (as in multiblock meshes) are a part of the MappedBoxId.
+
+This is a part of changing SAMRAI multiblock from a wrapper around
+single-block code to a first principle.  Everything from the MappedBox
+to the PatchHierarchy will eventually be multiblock-aware.
+
+-----------------------------------------------------------------------------
+                Details about what's changed
+-----------------------------------------------------------------------------
+
+(1) Many interfaces specifying components of a MappedBoxId have been
+extended to include the new BlockId component of the MappedBoxId.
+
+Among changed interfaces are the MappedBoxId and MappedBox constructors.
+NeighborhoodSets now key on the MappedBoxId instead of the GlobalId.
+MappedBoxLevel interfaces for adding, removing and finding MappedBoxes
+now include the BlockId.
+
+=============================================================================
+=============================================================================

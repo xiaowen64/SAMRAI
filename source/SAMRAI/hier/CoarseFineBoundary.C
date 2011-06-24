@@ -1,0 +1,566 @@
+/*************************************************************************
+ *
+ * This file is part of the SAMRAI distribution.  For full copyright 
+ * information, see COPYRIGHT and COPYING.LESSER. 
+ *
+ * Copyright:     (c) 1997-2010 Lawrence Livermore National Security, LLC
+ * Description:   For describing coarse-fine boundary interfaces 
+ *
+ ************************************************************************/
+
+#ifndef included_hier_CoarseFineBoundary_C
+#define included_hier_CoarseFineBoundary_C
+
+#include "SAMRAI/hier/CoarseFineBoundary.h"
+
+#include "SAMRAI/hier/Connector.h"
+#include "SAMRAI/hier/MappedBoxSetSingleBlockIterator.h"
+#include "SAMRAI/hier/PatchLevel.h"
+
+#if !defined(__BGL_FAMILY__) && defined(__xlC__)
+/*
+ * Suppress XLC warnings
+ */
+#pragma report(disable, CPPC5334)
+#pragma report(disable, CPPC5328)
+#endif
+
+namespace SAMRAI {
+namespace hier {
+
+CoarseFineBoundary::CoarseFineBoundary(
+   const tbox::Dimension& dim):
+   d_dim(dim),
+   d_initialized(1, false)
+{
+}
+
+CoarseFineBoundary::CoarseFineBoundary(
+   const CoarseFineBoundary& rhs):
+   tbox::DescribedClass(),
+   d_dim(rhs.d_dim),
+   d_initialized(1, false),
+   d_boundary_boxes(rhs.d_boundary_boxes)
+{
+   /*
+    * This needs to be written this way since STL vector for bools
+    * causes uninitialized memory reads because it is poorly implemented.
+    * So the vector is initialized and then copied.
+    */
+   d_initialized = rhs.d_initialized;
+}
+
+CoarseFineBoundary::CoarseFineBoundary(
+   const PatchHierarchy& hierarchy,
+   int level_num,
+   const IntVector& max_ghost_width):
+   d_dim(max_ghost_width.getDim()),
+   d_initialized(hierarchy.getGridGeometry()->getNumberBlocks(), false)
+{
+   TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(d_dim, max_ghost_width);
+   TBOX_ASSERT(max_ghost_width > IntVector(d_dim, -1));
+
+   if (hierarchy.getGridGeometry()->getNumberBlocks() == 1) {
+      const PatchLevel& level =
+         dynamic_cast<const PatchLevel&>(*hierarchy.getPatchLevel(level_num));
+      const Connector& level_to_level =
+         level.getMappedBoxLevel()->getPersistentOverlapConnectors().
+         findOrCreateConnector(
+            *level.getMappedBoxLevel(),
+            max_ghost_width);
+      const Connector& level_to_domain =
+         level.getMappedBoxLevel()->getPersistentOverlapConnectors().
+         findOrCreateConnector(
+            hierarchy.getDomainMappedBoxLevel(),
+            max_ghost_width);
+      computeFromLevel(level,
+                       level_to_domain,
+                       level_to_level,
+                       max_ghost_width);
+   }
+   else {
+      const PatchLevel& level =
+         dynamic_cast<const PatchLevel&>(*hierarchy.getPatchLevel(level_num));
+      const PatchLevel& level0 =
+         dynamic_cast<const PatchLevel&>(*hierarchy.getPatchLevel(0));
+      computeFromLevel(
+         level,
+         level0,
+         max_ghost_width);
+   }
+
+}
+
+CoarseFineBoundary::CoarseFineBoundary(
+   const PatchLevel& level,
+   const Connector& mapped_box_level_to_domain,
+   const Connector& mapped_box_level_to_self,
+   const IntVector& max_ghost_width):
+   d_dim(max_ghost_width.getDim()),
+   d_initialized(1, false)
+{
+   TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(d_dim, max_ghost_width);
+   TBOX_ASSERT(max_ghost_width > IntVector(d_dim, -1));
+
+   computeFromLevel(level,
+                    mapped_box_level_to_domain,
+                    mapped_box_level_to_self,
+                    max_ghost_width);
+
+}
+
+CoarseFineBoundary::~CoarseFineBoundary()
+{
+}
+
+/*
+ ************************************************************************
+ * Use grid_geometry.computeBoundaryGeometry function,                  *
+ * setting up the arguments in a way that will generate                 *
+ * the coarse-fine boundary (instead of the domain boundary).           *
+ ************************************************************************
+ */
+void CoarseFineBoundary::computeFromLevel(
+   const PatchLevel& level,
+   const Connector& mapped_box_level_to_domain,
+   const Connector& mapped_box_level_to_self,
+   const IntVector& max_ghost_width)
+{
+//this is single block version.
+   TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(d_dim, max_ghost_width);
+
+   clear();
+
+   const MappedBoxLevel& mapped_box_level = *level.getMappedBoxLevel();
+   const IntVector& ratio = level.getRatioToLevelZero();
+
+   tbox::Pointer<GridGeometry> grid_geometry = level.getGridGeometry();
+
+   /*
+    * Get the domain's periodic shift.
+    */
+   const IntVector periodic_shift(grid_geometry->getPeriodicShift(ratio));
+
+   bool is_periodic = false;
+   for (int i = 0; i < d_dim.getValue(); ++i) {
+      is_periodic = is_periodic || periodic_shift(i);
+   }
+
+   /*
+    * Here we add some boxes outside of non-periodic boundaries to the
+    * adjusted level.  For each patch that touches a regular boundary,
+    * grow the patch box (and any periodic images of the patch box) by
+    * the max ghost width.  Remove intersections with the periodic
+    * adjusted physical domain.  Add what remains to the adjusted level.
+    *
+    * This will ensure that ensuing call to create boundary boxes will not
+    * create boundary boxes at the locations where the level touches a
+    * non-periodic physical boundary, but only where there is a coarse-fine
+    * interface in the domain interior (A periodic boundary is considered
+    * part of the domain interior for this purpose).
+    */
+
+   /*
+    * Build a fake domain in fake_domain_list.
+    *
+    * The fake domain should be such that when fed to computeBoundaryBoxesOnLevel,
+    * the coarse-fine boundaries are computed rather than the physical boundary.
+    * computeBoundaryBoxesOnLevel defines boundaries of a patch to be the
+    * parts of the grown patch box that lie outside the "domain".  So se make
+    * the fake domain be everywhere there is NOT a coarse-fine boundary--or
+    * everywhere there IS a physical boundary or a fine-boundary.
+    */
+   BoxList fake_domain_list(d_dim);
+   const NeighborhoodSet& mapped_box_level_eto_domain =
+      mapped_box_level_to_domain.getNeighborhoodSets();
+
+   // Every mapped_box should connect to the domain mapped_box_level.
+   TBOX_ASSERT(
+      mapped_box_level_eto_domain.size() == mapped_box_level.getLocalNumberOfBoxes());
+
+   // Add physical boundaries to the fake domain.
+   for (NeighborhoodSet::const_iterator ei = mapped_box_level_eto_domain.begin();
+        ei != mapped_box_level_eto_domain.end(); ++ei) {
+      const MappedBox& mapped_box = *mapped_box_level.getMappedBoxStrict(
+            ei->first);
+      const NeighborhoodSet::NeighborSet& domain_nabrs = ei->second;
+      NeighborhoodSet::NeighborSet refined_domain_nabrs;
+      domain_nabrs.refine(refined_domain_nabrs, ratio);
+      Box box = mapped_box.getBox();
+      box.grow(max_ghost_width);
+      BoxList physical_boundary_portion(box);
+      refined_domain_nabrs.removeBoxListIntersections(
+         physical_boundary_portion);
+      fake_domain_list.copyItems(physical_boundary_portion);
+   }
+   // Add fine-fine boundaries to the fake domain.
+   Connector::NeighborSet all_peer_nabrs;
+
+   TBOX_ASSERT(mapped_box_level_to_self.getConnectorWidth() >=
+      IntVector::getOne(d_dim));
+
+   mapped_box_level_to_self.getNeighborhoodSets().getNeighbors(all_peer_nabrs);
+   for (Connector::NeighborSet::const_iterator na = all_peer_nabrs.begin();
+        na != all_peer_nabrs.end(); ++na) {
+      fake_domain_list.appendItem(na->getBox());
+   }
+
+   /*
+    * Call GridGeometry::computeBoundaryGeometry with arguments contrived
+    * such that they give the coarse-fine boundaries instead of the domain
+    * boundaries.  The basic algorithm used by
+    * GridGeometry::computeBoundaryGeometry is
+    * 1. grow boxes by ghost width
+    * 2. remove intersection with domain
+    * 3. reorganize and classify resulting boxes
+    *
+    * This is how we get GridGeometry::computeBoundaryGeometry to
+    * compute the coarse-fine boundary instead of the physical boundary.
+    *
+    * Since we handle the periodic boundaries ourselves, do not treat
+    * them differently from regular boundaries.  State that all boundaries
+    * are non-periodic boundaries.
+    *
+    * Send the periodic-adjusted level boxes as the domain for the
+    * remove-intersection-with-domain operation.  This causes that
+    * operation to remove non-coarse-fine (that is, fine-fine) boxes
+    * along the periodic boundaries, leaving the coarse-fine boundary
+    * boxes.
+    *
+    * Send the periodic-adjusted domain for the limit-domain intersect
+    * operation.  This removes the boundaries that are on the non-periodic
+    * boundaries, which is what we want because there is no possibility
+    * of a coarse-fine boundary there.
+    */
+   bool do_all_patches = true;
+   const IntVector use_periodic_shift(d_dim, 0);
+   const tbox::Array<BoxList> fake_domain(1, BoxList(fake_domain_list));
+   grid_geometry->computeBoundaryBoxesOnLevel(
+      d_boundary_boxes,
+      level,
+      use_periodic_shift,
+      max_ghost_width,
+      fake_domain,
+      do_all_patches);
+
+   d_initialized[0] = true;
+}
+
+void CoarseFineBoundary::computeFromLevel(
+   const PatchLevel& level,
+   const PatchLevel& level0,
+   const IntVector& max_ghost_width)
+{
+   TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(d_dim, max_ghost_width);
+
+   /*
+    * Get all the boxes on level and level0.  These will be used later.
+    */
+   const MappedBoxSet& all_boxes_on_level =
+      level.getMappedBoxLevel()->getGlobalizedVersion().getGlobalMappedBoxes();
+   const MappedBoxSet& all_boxes_on_level0 =
+      level0.getMappedBoxLevel()->getGlobalizedVersion().getGlobalMappedBoxes();
+
+   /*
+    * Get the dimension and number of blocks from the GridGeometry.
+    */
+   tbox::Pointer<hier::GridGeometry> grid_geometry = level.getGridGeometry();
+   int nblocks = grid_geometry->getNumberBlocks();
+
+   tbox::Array<BoxList> adjusted_level_domain(nblocks, BoxList(d_dim));
+
+   /*
+    * Loop over each block.
+    */
+   for (int i = 0; i < nblocks; ++i) {
+
+      clear();
+ 
+      BlockId block_id(i);
+      /*
+       * Construct an iterator which filters only level's boxes in this block.
+       */
+      MappedBoxSetSingleBlockIterator itr(all_boxes_on_level, block_id);
+
+      /*
+       * Only do work if there any boxes in this block.
+       */
+      if (itr.isValid()) {
+
+         /*
+          * Construct the array of boxes on level and level0 in this block.
+          */
+         tbox::Pointer<BoxList> level_domain =
+            all_boxes_on_level.getSingleBlockBoxList(d_dim, block_id);
+         tbox::Pointer<BoxList> phys_domain =
+            all_boxes_on_level0.getSingleBlockBoxList(d_dim, block_id);
+
+         const hier::IntVector& ratio = level.getRatioToLevelZero();
+         phys_domain->refine(ratio);
+
+         /*
+          * Create a pseudo-domain -- the union of the physical domain boxes
+          * of the current block with the physical domain boxes of all of the
+          * current block's neighbors.  These are all represented in the
+          * current block's index space, and refined by level's refinement
+          * ratio.
+          */
+
+         BoxList pseudo_domain(*phys_domain);
+
+         for (tbox::List<GridGeometry::Neighbor>::Iterator
+              ni(grid_geometry->getNeighbors(i)); ni; ni++) {
+
+            BoxList neighbor_domain(ni().getTranslatedDomain());
+            neighbor_domain.refine(ratio);
+
+            pseudo_domain.unionBoxes(neighbor_domain);
+
+         }
+
+         /*
+          * Make a list containing the level boxes for the current block,
+          * then add more boxes as a buffer around physical domain boundaries.
+          * This prevents physical boundaries from being identified as
+          * coarse-fine boundaries.
+          */
+
+         BoxList adjusted_level_domain_list(*level_domain);
+
+         for (PatchLevel::Iterator p(level); p; ++p) {
+            if ((*p)->getMappedBox().getBlockId() == i &&
+                (*p)->getPatchGeometry()->getTouchesRegularBoundary()) {
+
+               const Box& patch_box = (*p)->getBox();
+
+               BoxList no_shift_boxes(patch_box);
+               no_shift_boxes.grow(max_ghost_width);
+               no_shift_boxes.removeIntersections(pseudo_domain);
+               adjusted_level_domain_list.unionBoxes(no_shift_boxes);
+            }
+         }
+
+         /*
+          * Add buffer of boxes that exist on the current level across
+          * block boundaries from the current block.  This prevents block
+          * boundaries from being identified as coarse-fine boundaries when
+          * they are not.
+          */
+         for (tbox::List<GridGeometry::Neighbor>::Iterator
+              ni(grid_geometry->getNeighbors(i)); ni; ni++) {
+
+            /*
+             * Construct the array of boxes on level in this neighbor's block.
+             */
+            BlockId nbr_block_id(ni().getBlockNumber());
+            tbox::Pointer<BoxList> neighbor_boxes =
+               all_boxes_on_level.getSingleBlockBoxList(d_dim, nbr_block_id);
+
+            if (neighbor_boxes->size()) {
+               grid_geometry->translateBoxList(*neighbor_boxes,
+                  ratio,
+                  block_id,
+                  BlockId(ni().getBlockNumber()));
+
+               BoxList neighbor_boxes_to_add(*phys_domain);
+               neighbor_boxes_to_add.grow(max_ghost_width);
+
+               neighbor_boxes_to_add.intersectBoxes(hier::BoxList(
+                  *neighbor_boxes));
+
+               adjusted_level_domain_list.unionBoxes(neighbor_boxes_to_add);
+            }
+         }
+
+         adjusted_level_domain[i] = BoxList(adjusted_level_domain_list);
+      }
+      d_boundary_boxes.clear();
+
+      /*
+       * Call GridGeometry::computeBoundaryGeometry with arguments contrived
+       * such that they give the coarse-fine boundaries instead of the
+       * domain boundaries.  The basic algorithm used by
+       * GridGeometry::computeBoundaryGeometry is
+       * 1. grow boxes by ghost width
+       * 2. remove intersection with domain
+       * 3. reorganize and classify resulting boxes
+       *
+       * This is how we get GridGeometry::computeBoundaryGeometry to
+       * compute the coarse-fine boundary instead of the physical boundary.
+       *
+       * Send the adjusted level boxes as the domain for the
+       * remove-intersection-with-domain operation.  This causes that
+       * operation to remove non-coarse-fine (that is, fine-fine) boxes
+       * along the periodic boundaries, leaving the coarse-fine boundary
+       * boxes.
+       *
+       * Send the adjusted domain for the limit-domain intersect
+       * operation.  This removes the boundaries that are on the physical
+       * boundaries, which is what we want because there is no possibility
+       * of a coarse-fine boundary there.
+       */
+      bool do_all_patches = true;
+      IntVector use_periodic_shift(d_dim, 0);
+      grid_geometry->computeBoundaryBoxesOnLevel(
+         d_boundary_boxes,
+         level,
+         use_periodic_shift,
+         max_ghost_width,
+         adjusted_level_domain,
+         do_all_patches);
+
+      d_initialized[i] = true;
+
+   }
+
+}
+
+void CoarseFineBoundary::addPeriodicImageBoxes(
+   BoxList& boxes,
+   const tbox::Array<tbox::List<IntVector> >& shifts)
+{
+   TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(d_dim, boxes);
+   TBOX_ASSERT(shifts.size() == boxes.getNumberOfBoxes());
+
+   int current_size = boxes.getNumberOfBoxes();
+
+   TBOX_ERROR("Code disabled because getShiftsForLevel is gone.");
+
+   // TODO Something needs to be done with this
+
+   /*
+    * Count number of boxes that must be added to boxes.
+    * And resize boxes accordingly before adding the
+    * periodic images to it.
+    */
+   int new_size = current_size;
+   for (int ip = 0; ip < current_size; ++ip) {
+      new_size += shifts[ip].getNumberOfItems();
+   }
+
+   /*
+    * For all the possible shifts of all patches,
+    * compute the shifted box and add it to boxes.
+    * This completes the addition of images boxes.
+    */
+   const int old_size = current_size;
+
+   BoxList::Iterator itr(boxes);
+   for (int ip = 0; ip < old_size; ++ip, itr++) {
+      const Box& unshifted_box = *itr;
+      const tbox::List<IntVector>& shifts_list = shifts[ip];
+      if (!shifts_list.isEmpty()) {
+         tbox::List<IntVector>::Iterator sh;
+         for (sh = shifts_list.listStart(); sh; sh++) {
+            Box shifted_box(unshifted_box);
+            shifted_box.shift((*sh));
+            boxes.appendItem(shifted_box);
+            ++current_size;
+         }
+      }
+   }
+
+   TBOX_ASSERT(current_size == new_size);
+}
+
+void CoarseFineBoundary::clear()
+{
+   d_boundary_boxes.clear();
+}
+
+const tbox::Array<BoundaryBox>&
+CoarseFineBoundary::getNodeBoundaries(
+   const GlobalId& global_id,
+   const BlockId& block_id) const
+{
+   return getBoundaries(global_id, d_dim.getValue(), block_id);
+}
+
+const tbox::Array<BoundaryBox>&
+CoarseFineBoundary::getEdgeBoundaries(
+   const GlobalId& global_id,
+   const BlockId& block_id) const
+{
+#ifdef DEBUG_CHECK_ASSERTIONS
+   if (d_dim.getValue() < 2) {
+      TBOX_ERROR("CoarseFineBoundary::getEdgeBoundaries():  There is\n"
+         << "no edge boundaries in " << d_dim << "d.\n");
+   }
+#endif
+   return getBoundaries(global_id, d_dim.getValue() - 1, block_id);
+}
+
+const tbox::Array<BoundaryBox>&
+CoarseFineBoundary::getFaceBoundaries(
+   const GlobalId& global_id,
+   const BlockId& block_id) const
+{
+#ifdef DEBUG_CHECK_ASSERTIONS
+   if (d_dim.getValue() < 3) {
+      TBOX_ERROR("CoarseFineBoundary::getFaceBoundaries():  There is\n"
+         << "no face boundaries in " << d_dim << "d.\n");
+   }
+#endif
+   return getBoundaries(global_id, d_dim.getValue() - 2, block_id);
+}
+
+const tbox::Array<BoundaryBox>&
+CoarseFineBoundary::getBoundaries(
+   const GlobalId& global_id,
+   const int boundary_type,
+   const BlockId& block_id) const
+{
+   const int& block_num = block_id.getBlockValue();
+   if (!d_initialized[block_num]) {
+      TBOX_ERROR("The boundary boxes have not been computed.");
+   }
+
+   MappedBoxId mapped_box_id(global_id, block_id);
+   std::map<MappedBoxId, PatchBoundaries>::const_iterator
+   mi = d_boundary_boxes.find(mapped_box_id);
+   TBOX_ASSERT(mi != d_boundary_boxes.end());
+   return (*mi).second[boundary_type - 1];
+}
+
+void CoarseFineBoundary::printClassData(
+   std::ostream& os) const {
+   os << "\nCoarseFineBoundary::printClassData...";
+   for (std::map<MappedBoxId, PatchBoundaries>::const_iterator
+        mi = d_boundary_boxes.begin(); mi != d_boundary_boxes.end(); ++mi) {
+      os << "\n	        patch "<< (*mi).first;
+      for (unsigned int btype = 0; btype < d_dim.getValue(); ++btype) {
+         os << "\n                type "<< btype;
+         const tbox::Array<BoundaryBox>
+         & array_of_boxes = (*mi).second[btype];
+         int num_boxes = array_of_boxes.getSize();
+         int bn;
+         for (bn = 0; bn < num_boxes; ++bn) {
+            os << "\n                           box "
+               << bn << "/" << num_boxes << ":";
+            os << array_of_boxes[bn].getBox();
+         }
+      }
+   }
+   os << "\n";
+}
+
+CoarseFineBoundary& CoarseFineBoundary::operator = (
+   const CoarseFineBoundary& rhs)
+{
+   d_initialized = rhs.d_initialized;
+   d_boundary_boxes = rhs.d_boundary_boxes;
+   return *this;
+}
+
+}
+}
+
+#if !defined(__BGL_FAMILY__) && defined(__xlC__)
+/*
+ * Suppress XLC warnings
+ */
+#pragma report(enable, CPPC5334)
+#pragma report(enable, CPPC5328)
+#endif
+
+#endif

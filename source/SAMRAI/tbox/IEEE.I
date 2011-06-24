@@ -1,0 +1,89 @@
+/*************************************************************************
+ *
+ * This file is part of the SAMRAI distribution.  For full copyright 
+ * information, see COPYRIGHT and COPYING.LESSER. 
+ *
+ * Copyright:     (c) 1997-2010 Lawrence Livermore National Security, LLC
+ * Description:   IEEE routines to set up handlers and get signaling NaNs 
+ *
+ ************************************************************************/
+
+#include "SAMRAI/tbox/MathUtilities.h"
+
+namespace SAMRAI {
+namespace tbox {
+
+/*
+ * Routines to get signaling NaN value.
+ */
+
+SAMRAI_INLINE_KEYWORD
+float IEEE::getSignalingFloatNaN()
+{
+   return MathUtilities<float>::getSignalingNaN();
+}
+
+SAMRAI_INLINE_KEYWORD
+double IEEE::getSignalingNaN()
+{
+   return MathUtilities<double>::getSignalingNaN();
+}
+
+SAMRAI_INLINE_KEYWORD
+dcomplex IEEE::getSignalingComplexNaN()
+{
+   return MathUtilities<dcomplex>::getSignalingNaN();
+}
+
+/*
+ * Routines to set signaling NaN value.
+ */
+
+SAMRAI_INLINE_KEYWORD
+void IEEE::setNaN(
+   float& f)
+{
+   f = MathUtilities<float>::getSignalingNaN();
+}
+
+SAMRAI_INLINE_KEYWORD
+void IEEE::setNaN(
+   double& d)
+{
+   d = MathUtilities<double>::getSignalingNaN();
+}
+
+SAMRAI_INLINE_KEYWORD
+void IEEE::setNaN(
+   dcomplex& dc)
+{
+   dc = MathUtilities<dcomplex>::getSignalingNaN();
+}
+
+/*
+ * Routines to check against signaling NaN value.
+ */
+
+SAMRAI_INLINE_KEYWORD
+bool IEEE::isNaN(
+   const float& f)
+{
+   return MathUtilities<float>::isNaN(f);
+}
+
+SAMRAI_INLINE_KEYWORD
+bool IEEE::isNaN(
+   const double& d)
+{
+   return MathUtilities<double>::isNaN(d);
+}
+
+SAMRAI_INLINE_KEYWORD
+bool IEEE::isNaN(
+   const dcomplex& dc)
+{
+   return MathUtilities<dcomplex>::isNaN(dc);
+}
+
+}
+}
