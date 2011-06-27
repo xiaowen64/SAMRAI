@@ -1365,7 +1365,6 @@ void GriddingAlgorithm::regridFinerLevel(
    }
 #endif
 
-   const hier::IntVector& zero_vec(hier::IntVector::getZero(d_dim));
    const hier::OverlapConnectorAlgorithm oca;
 
    if (s_print_steps == 'y') {
@@ -1386,8 +1385,6 @@ void GriddingAlgorithm::regridFinerLevel(
 
       tbox::Pointer<hier::PatchLevel>
       tag_level = d_hierarchy->getPatchLevel(tag_ln);
-
-      const hier::Connector& tag_to_tag = d_hierarchy->getConnector(tag_ln, tag_ln);
 
       /*
        * Compute nesting data at tag_ln for use in constructing
