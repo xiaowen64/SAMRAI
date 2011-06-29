@@ -1060,58 +1060,6 @@ void MappedBoxLevelConnectorUtils::computeExternalParts(
 
 /*
 *************************************************************************
-*
-* Compare an input MappedBoxLevel to a "reference" MappedBoxLevel.
-* Identify parts of the input that are external to the reference
-* MappedBoxLevel, and store the external parts in an "external"
-* MappedBoxLevel.  Create Connectors between the input and its
-* external parts.
-*
-* For generality, the reference MappedBoxLevel can be grown a specified
-* amount (nesting_width) before comparing.
-* nesting_width must be in the index space of the
-* input MappedBoxLevel (not the reference MappedBoxLevel, despite the
-* name).  A negative growth indicates shrinking the reference layer at
-* its boundary.
-*
-* As a practical consideration of how this method is used, we do not
-* shrink the reference layer where it touches the domain boundary.
-* This feature can be disabled by specifying an uninitialized domain
-* object.
-*
-* On return, input_to_external is set to an appropriate mapping for
-* use in MappingConnectorAlgorithm::modify().  An input mapped_box
-* that is entirely internal gets mapped to an empty set (because it
-* has no external part).  An input MappedBox that is entirely
-* external does not get mapped, since it would just get trivially
-* mapped to itself.  An input MappedBox that has some parts outside
-* the reference MappedBoxLevel is mapped to its external parts.
-*
-* This method does not require any communication.
-*
-* Formula for computing external parts:
-*
-* Definitions:
-* L = input MappedBoxLevel
-* R = reference MappedBoxLevel
-* g = nesting width (non-negative or non-positive, but not mixed)
-* E = parts of L external to R^g (R^g is R grown by g)
-* O = domain (without periodic images).  Universe, if not specified.
-* \ = set theory notation.  x \ y means set x with y removed from it.
-*
-* For non-negative g:
-*
-* E := L \ { (R^g) <intersection> O }
-*
-* For non-positive g:
-*
-* E := L <intersection> { ( ( (R^1) \ R ) <intersection> O )^(-g) }
-*
-* A requirement of the computation for negative g is that input must
-* nest in R^(1-g).  In other words: L \ (R^(1-g)} = <empty>.  If not
-* satisfied, this method may classify some external parts as
-* internal.
-*
 *************************************************************************
 */
 void MappedBoxLevelConnectorUtils::computeExternalPartsForMultiblock(
@@ -1121,298 +1069,15 @@ void MappedBoxLevelConnectorUtils::computeExternalPartsForMultiblock(
    const hier::IntVector& nesting_width,
    const hier::MultiblockMappedBoxTree& domain) const
 {
-   const tbox::Dimension& dim(nesting_width.getDim());
-
    t_compute_external_parts->start();
 
-   const MappedBoxLevel& input = input_to_reference.getBase();
-
-   const tbox::ConstPointer<hier::GridGeometry> &grid_geometry(input.getGridGeometry());
-
-   const hier::IntVector& zero_vec = IntVector::getZero(dim);
-   const hier::IntVector& one_vec = IntVector::getOne(dim);
-
-#ifdef DEBUG_CHECK_ASSERTIONS
-   if (!(nesting_width >= zero_vec) &&
-       !(nesting_width <= zero_vec)) {
-      TBOX_ERROR(
-         "MappedBoxLevelConnectorUtils::computeExternalParts: internal error:\n"
-         << "nesting_width cannot have mix of positive\n"
-         << "and negative values.");
-   }
-   if (nesting_width >= zero_vec) {
-      if (!(input_to_reference.getConnectorWidth() >=
-            nesting_width)) {
-         TBOX_ERROR(
-            "MappedBoxLevelConnectorUtils::computeExternalParts: internal error:\n"
-            << "nesting_width "
-            << nesting_width << " exceeds\n"
-            << "ghost cell width " << input_to_reference.getConnectorWidth()
-            << ",\n"
-            << "which can lead to possible missed overlaps.");
-      }
-   }
-#endif
-
-   const NeighborhoodSet& input_eto_reference = input_to_reference.getNeighborhoodSets();
-
-   external.initialize(input.getRefinementRatio(),
-      input.getGridGeometry(), input.getMPI());
-
-   LocalId last_used_index = input.getLastLocalId();
-
-
-   /*
-    * Get the set of neighboring boxes on the reference
-    * MappedBoxLevel.  We first store these boxes in a NeighborSet in
-    * order to remove duplicate entries.  Then we move them into a
-    * vector for box manipulation.
-    */
-   Connector::NeighborSet reference_nabrs;
-   input_eto_reference.getNeighbors(reference_nabrs);
-   std::vector<MappedBox> reference_mapped_box_vec(
-      reference_nabrs.begin(), reference_nabrs.end());
-
-   /*
-    * Bring reference_mapped_box_vec into refinement ratio of input
-    * (for intersection checks).
-    */
-   if (input_to_reference.getRatio() != hier::IntVector::getOne(dim)) {
-
-      if (input_to_reference.getHeadCoarserFlag()) {
-         hier::MappedBoxContainerUtils::refineMappedBoxVectorBoxes(
-            reference_mapped_box_vec,
-            input_to_reference.getRatio());
-      } else {
-         hier::MappedBoxContainerUtils::coarsenMappedBoxVectorBoxes(
-            reference_mapped_box_vec,
-            input_to_reference.getRatio());
-      }
-
-   }
-
-   /*
-    * Build the tree used for searching for either the internal or
-    * external parts (as specified by search_tree_repesents_internal).
-    * The search tree is built differently, depending on the sign of
-    * nesting_width.
-    */
-
-   hier::MultiblockMappedBoxTree search_tree;
-   const bool search_tree_represents_internal(nesting_width >= zero_vec);
-
-   if ( search_tree_represents_internal) {
-
-      if ( !(nesting_width == zero_vec) ) {
-         hier::MappedBoxContainerUtils::growMappedBoxVectorBoxes(
-            reference_mapped_box_vec,
-            nesting_width);
-      }
-
-      search_tree.generateTree(grid_geometry,
-                               reference_mapped_box_vec);
-
-   } else {
-
-      /*
-       * nesting_width is non-positive.  The
-       * external parts are given by the grown boundary boxes.
-       */
-
-      std::map<BlockId,BoxList> reference_boundary;
-      computeBoxesAroundBoundary(
-         reference_boundary,
-         reference_mapped_box_vec,
-         input.getRefinementRatio(),
-         grid_geometry );
-      // ... reference_boundary is now ( (R^1) \ R )
-
-      if (domain.isInitialized()) {
-
-         t_compute_external_parts_intersection->start();
-         if (input.getRefinementRatio() == one_vec) {
-            for ( std::map<BlockId,BoxList>::iterator mi=reference_boundary.begin();
-                  mi!=reference_boundary.end(); ++mi ) {
-               mi->second.intersectBoxes(
-                  mi->first,
-                  input.getRefinementRatio(),
-                  domain);
-            }
-         } else {
-            tbox::Pointer<MultiblockMappedBoxTree> refined_domain =
-               domain.createRefinedTree(input.getRefinementRatio());
-            for ( std::map<BlockId,BoxList>::iterator mi=reference_boundary.begin();
-                  mi!=reference_boundary.end(); ++mi ) {
-               mi->second.intersectBoxes(
-                  mi->first,
-                  input.getRefinementRatio(),
-                  *refined_domain);
-            }
-         }
-         t_compute_external_parts_intersection->stop();
-
-      }
-      // ... reference_boundary is now ( ( (R^1) \ R ) <intersection> O )
-
-      for ( std::map<BlockId,BoxList>::iterator mi=reference_boundary.begin();
-            mi!=reference_boundary.end(); ++mi ) {
-         mi->second.grow(-nesting_width);
-      }
-      // ... reference_boundary is now ( ( (R^1) \ R ) <intersection> O )^(-g)
-
-      std::vector<MappedBox> reference_boundary_vector;
-      for ( std::map<BlockId,BoxList>::const_iterator mi=reference_boundary.begin();
-            mi!=reference_boundary.end(); ++mi ) {
-	MappedBoxContainerUtils::convertBoxListToMappedBoxVector(
-           mi->second,
-           reference_boundary_vector,
-           mi->first);
-      }
-
-      search_tree.generateTree(grid_geometry, reference_boundary_vector);
-
-   } // search_tree_represents_internal == false
-
-   reference_mapped_box_vec.clear();
-
-   const MappedBoxSet& input_mapped_boxes = input.getMappedBoxes();
-
-   NeighborhoodSet input_eto_external;
-
-   /*
-    * For each MappedBox in input_mapped_boxes, compare it to the
-    * search tree to compute its external parts.
-    */
-
-   for (RealMappedBoxConstIterator ni(input_mapped_boxes); ni.isValid();
-        ++ni) {
-
-      const hier::MappedBox& input_mapped_box = *ni;
-
-      NeighborhoodSet::const_iterator ei = input_eto_reference.find(ni->getId());
-
-      if (ei == input_eto_reference.end()) {
-
-         /*
-          * Input mapped_box does not overlap reference, so it must be
-          * completely external.
-          */
-         external.addMappedBox(input_mapped_box);
-
-      } else {
-
-         hier::BoxList external_parts(input_mapped_box.getBox());
-         /*
-          * Compute external_parts of input_mapped_box by comparing
-          * it to the search tree.
-          *
-          * Note about intersections in singularity neighbor blocks:
-          * Cells from multiple singularity neighbor blocks can
-          * coincide when transformed into input_mapped_box's block.
-          * There is no way to specify that a cell in input_mapped_box
-          * intersects in some singularity block neighbors but not
-          * others.  By comparing to singularity neighbor blocks, we
-          * take the convention that intersection in one singularity
-          * block neighbor is considered intersection in all at the
-          * same singularity.  When search_tree_represents_internal,
-          * this can lead to overspecifying internal parts and
-          * underspecifying external parts, and vice versa.
-          */
-
-         t_compute_external_parts_intersection->start();
-         if (search_tree_represents_internal) {
-            external_parts.removeIntersections(
-               input_mapped_box.getBlockId(),
-               input.getRefinementRatio(),
-               search_tree,
-               true /* Count singularity neighbors */ );
-         } else {
-            external_parts.intersectBoxes(
-               input_mapped_box.getBlockId(),
-               input.getRefinementRatio(),
-               search_tree,
-               true /* Count singularity neighbors */ );
-         }
-         t_compute_external_parts_intersection->stop();
-
-
-         /*
-          * Make external MappedBoxes from external_parts and create
-          * Connector from input.
-          */
-         if (external_parts.size() == 1 &&
-             external_parts.getFirstItem() == input_mapped_box.getBox()) {
-
-            /*
-             * The entire input_mapped_box is external.
-             * The input_mapped_box should be mapped to itself.
-             * We can create such a map, but a missing map
-             * means the same thing, so we omit the map
-             */
-            external.addMappedBox(input_mapped_box);
-
-         } else {
-
-            hier::Connector::NeighborSet
-            & external_parts_of_input_mapped_box = input_eto_external[input_mapped_box.getId()];
-
-            for (hier::BoxList::Iterator bi(external_parts); bi; bi++) {
-               const hier::MappedBox
-               external_mapped_box((*bi),
-                                   ++last_used_index,
-                                   input_mapped_box.getOwnerRank(),
-                                   input_mapped_box.getBlockId());
-               external.addMappedBox(external_mapped_box);
-
-               // Set connectivities between input and external.
-               external_parts_of_input_mapped_box.insert(external_mapped_box);
-            }
-
-         } // external_parts
-
-      } // ei != input_eto_reference.end()
-
-   } // Loop through input_mapped_boxes
-
-
-#ifdef DEBUG_CHECK_ASSERTIONS
-   if (external.getMappedBoxes().empty()) {
-      /*
-       * If there are no external parts, then all in input
-       * should be mapped to empty neighbor containers according
-       * to the definition of a map in MappingConnectorAlgorithm::modify().
-       */
-      if (input_eto_external.size() != input.getLocalNumberOfBoxes()) {
-         tbox::perr <<"MappedBoxLevelConnectorUtils::computeExternalPartsForMultiblock library error:\n"
-                    <<"There are no external parts, so input MappedBoxLevel should be completely mapped away.\n"
-                    <<"However, not all input MappedBoxes have been mapped.\n"
-                    <<"input MappedBoxLevel:\n" << input.format("",2)
-                    <<"input_eto_external:\n" << input_eto_external.format("",2)
-            ;
-         TBOX_ERROR("Library error\n");
-      }
-      for (NeighborhoodSet::const_iterator ci = input_eto_external.begin();
-           ci != input_eto_external.end(); ++ci) {
-         TBOX_ASSERT((*ci).second.empty());
-      }
-   }
-#endif
-
-   /*
-    * input_to_external has zero width because a non-zero width means
-    * that we should have some edges from an input MappedBox and the
-    * external parts of a nearby-input MappedBox, which we don't.
-    * Moreover, we cannot compute edges unless we know input<==>input.
-    */
-   input_to_external.swapInitialize(
-      input,
+   computeInternalOrExternalPartsForMultiblock(
       external,
-      zero_vec,
-      input_eto_external,
-      hier::MappedBoxLevel::DISTRIBUTED);
-   input_to_external.setConnectorType(Connector::BASE_GENERATED);
-
-   TBOX_ASSERT(input_to_external.isLocal());
+      input_to_external,
+      'e',
+      input_to_reference,
+      nesting_width,
+      domain);
 
    t_compute_external_parts->stop();
 }
@@ -1707,58 +1372,6 @@ void MappedBoxLevelConnectorUtils::computeInternalParts(
 
 /*
 *************************************************************************
-*
-* Compare an input MappedBoxLevel to a "reference" MappedBoxLevel.
-* Identify parts of the input that are internal to the reference
-* MappedBoxLevel, and store the internal parts in an "internal"
-* MappedBoxLevel.  Create Connectors between the input and its
-* internal parts.
-*
-* For generality, the reference MappedBoxLevel can be grown a specified
-* amount (nesting_width) before comparing.
-* nesting_width must be in the index space of the
-* input MappedBoxLevel (not the reference MappedBoxLevel, despite the
-* name).  A negative growth indicates shrinking the reference layer at
-* its boundary.
-*
-* As a practical consideration of how this method is used, we do not
-* shrink the reference layer where it touches the domain boundary.
-* This feature can be disabled by specifying an uninitialized domain
-* object.
-*
-* On return, input_to_internal is set to an appropriate mapping for
-* use in MappingConnectorAlgorithm::modify().  An input MappedBox
-* that is entirely external gets mapped to an empty set (because it
-* has no internal part).  An input MappedBox that is entirely
-* internal does not get mapped, since it would just get trivially
-* mapped to itself.  An input MappedBox that has some parts inside
-* the reference MappedBoxLevel is mapped to its internal parts.
-*
-* This method does not require any communication.
-*
-* Formula for computing external parts:
-*
-* Defs:
-* L = MappedBoxLevel whose internal parts are sought
-* R = reference MappedBoxLevel
-* g = nesting width (non-negative or non-positive, but not mixed)
-* I = parts of L internal to R^g (R^g is R grown by g)
-* O = domain (without periodic images).  Universe, if not specified.
-* \ = set theory notation.  x \ y means set x with y removed from it.
-*
-* For non-negative g:
-*
-* I := L <intersection> { (R^g) <intersection> O }
-*
-* For non-positive g:
-*
-* I := L \ { ( ( (R^1) \ R ) <intersection> O )^(-g) }
-*
-* A requirement of the computation for negative g is that input must
-* nest in R^(1-g).  In other words: L \ (R^(1-g)} = <empty>.  If not
-* satisfied, this method may classify some external parts as
-* internal.
-*
 *************************************************************************
 */
 void MappedBoxLevelConnectorUtils::computeInternalPartsForMultiblock(
@@ -1768,285 +1381,20 @@ void MappedBoxLevelConnectorUtils::computeInternalPartsForMultiblock(
    const hier::IntVector& nesting_width,
    const hier::MultiblockMappedBoxTree& domain) const
 {
-   const tbox::Dimension& dim(nesting_width.getDim());
-
    t_compute_internal_parts->start();
 
-   const MappedBoxLevel& input = input_to_reference.getBase();
-
-   const tbox::ConstPointer<GridGeometry> &grid_geometry(input.getGridGeometry());
-
-   const IntVector& zero_vec(IntVector::getZero(dim));
-   const IntVector& one_vec(IntVector::getOne(dim));
-
-#ifdef DEBUG_CHECK_ASSERTIONS
-   if (!(nesting_width >= zero_vec) &&
-       !(nesting_width <= zero_vec)) {
-      TBOX_ERROR(
-         "MappedBoxLevelConnectorUtils::computeInternalParts: input parameter error:\n"
-         << "nesting_width cannot have mix of positive\n"
-         << "and negative values.");
-   }
-   if (nesting_width >= zero_vec) {
-      if (!(input_to_reference.getConnectorWidth() >=
-            nesting_width)) {
-         TBOX_ERROR(
-            "MappedBoxLevelConnectorUtils::computeInternalParts: internal error:\n"
-            << "nesting_width "
-            << nesting_width << " exceeds\n"
-            << "ghost cell width " << input_to_reference.getConnectorWidth()
-            << ",\n"
-            << "which can lead to possible missed overlaps.");
-      }
-   }
-#endif
-
-   const NeighborhoodSet& input_eto_reference = input_to_reference.getNeighborhoodSets();
-
-   internal.initialize(input.getRefinementRatio(),
-      input.getGridGeometry(), input.getMPI());
-
-   LocalId last_used_index = input.getLastLocalId();
-
-
-   /*
-    * Get the set of neighboring boxes on the reference
-    * MappedBoxLevel.  We first store these boxes in a NeighborSet in
-    * order to remove duplicate entries.  Then we move them into a
-    * vector for box manipulation.
-    */
-   Connector::NeighborSet reference_nabrs;
-   input_eto_reference.getNeighbors(reference_nabrs);
-   std::vector<MappedBox> reference_mapped_box_vec(
-      reference_nabrs.begin(), reference_nabrs.end());
-
-   /*
-    * Bring reference_mapped_box_vec into refinement ratio of input
-    * (for intersection checks).
-    */
-   if (input_to_reference.getRatio() != hier::IntVector::getOne(dim)) {
-
-      if (input_to_reference.getHeadCoarserFlag()) {
-         hier::MappedBoxContainerUtils::refineMappedBoxVectorBoxes(
-            reference_mapped_box_vec,
-            input_to_reference.getRatio());
-      } else {
-         hier::MappedBoxContainerUtils::coarsenMappedBoxVectorBoxes(
-            reference_mapped_box_vec,
-            input_to_reference.getRatio());
-      }
-
-   }
-
-   /*
-    * Build the search tree containing either the internal or external
-    * parts (as specified by search_tree_repesents_internal).  The
-    * search tree is built differently, depending on the sign of
-    * nesting_width.
-    */
-
-   hier::MultiblockMappedBoxTree search_tree;
-   const bool search_tree_represents_internal(nesting_width >= zero_vec);
-
-   if (search_tree_represents_internal) {
-
-      if ( !(nesting_width == zero_vec) ) {
-         hier::MappedBoxContainerUtils::growMappedBoxVectorBoxes(
-            reference_mapped_box_vec,
-            nesting_width);
-      }
-
-      search_tree.generateTree(grid_geometry,
-                               reference_mapped_box_vec);
-
-   } else {
-
-      /*
-       * nesting_width is non-positive.  The
-       * external parts are given by the grown boundary boxes.
-       */
-
-      std::map<BlockId,BoxList> reference_boundary;
-      computeBoxesAroundBoundary(
-         reference_boundary,
-         reference_mapped_box_vec,
-         input.getRefinementRatio(),
-         grid_geometry );
-      // ... boundary is now ( (R^1) \ R )
-
-      if (domain.isInitialized()) {
-
-         t_compute_external_parts_intersection->start();
-         if (input.getRefinementRatio() == one_vec) {
-            for ( std::map<BlockId,BoxList>::iterator mi=reference_boundary.begin();
-                  mi!=reference_boundary.end(); ++mi ) {
-               mi->second.intersectBoxes(
-                  mi->first,
-                  input.getRefinementRatio(),
-                  domain);
-            }
-         } else {
-            tbox::Pointer<MultiblockMappedBoxTree> refined_domain =
-               domain.createRefinedTree(input.getRefinementRatio());
-            for ( std::map<BlockId,BoxList>::iterator mi=reference_boundary.begin();
-                  mi!=reference_boundary.end(); ++mi ) {
-               mi->second.intersectBoxes(
-                  mi->first,
-                  input.getRefinementRatio(),
-                  *refined_domain);
-            }
-         }
-         t_compute_external_parts_intersection->stop();
-
-      }
-      // ... reference_boundary is now ( (R^1) \ R ) <intersection> O )
-
-      for ( std::map<BlockId,BoxList>::iterator mi=reference_boundary.begin();
-            mi!=reference_boundary.end(); ++mi ) {
-         mi->second.grow(-nesting_width);
-      }
-      // ... reference_boundary is now ( ( (R^1) \ R ) <intersection> O )^(-g)
-
-      std::vector<MappedBox> reference_boundary_vector;
-      for ( std::map<BlockId,BoxList>::const_iterator mi=reference_boundary.begin();
-            mi!=reference_boundary.end(); ++mi ) {
-         MappedBoxContainerUtils::convertBoxListToMappedBoxVector(
-            mi->second,
-            reference_boundary_vector,
-            mi->first);
-      }
-
-      search_tree.generateTree(grid_geometry, reference_boundary_vector);
-
-   } // search_tree_represents_internal == false
-
-   reference_mapped_box_vec.clear();
-
-   const MappedBoxSet& input_mapped_boxes = input.getMappedBoxes();
-
-   NeighborhoodSet input_eto_internal;
-
-   /*
-    * For each MappedBox in input_mapped_boxes, compare it to the
-    * search tree to compute its internal parts.
-    */
-
-   for (RealMappedBoxConstIterator ni(input_mapped_boxes); ni.isValid();
-        ++ni) {
-
-      const hier::MappedBox& input_mapped_box = *ni;
-
-      NeighborhoodSet::const_iterator ei = input_eto_reference.find(ni->getId());
-
-      if (ei == input_eto_reference.end()) {
-
-         /*
-          * Input mapped_box does not overlap reference, so it must be
-          * completely external.  Create a blank neighbor set to indicate
-          * that there is no internal part.
-          */
-         input_eto_internal[input_mapped_box.getId()];
-
-      } else {
-
-         hier::BoxList internal_parts(input_mapped_box.getBox());
-         /*
-          * Compute internal_parts of input_mapped_box by comparing
-          * it to the search tree.
-          *
-          * Note about intersections in singularity neighbor blocks:
-          * Cells from multiple singularity neighbor blocks can
-          * coincide when transformed into input_mapped_box's block.
-          * There is no way to specify that a cell in input_mapped_box
-          * intersects in some singularity block neighbors but not
-          * others.  By comparing to singularity neighbor blocks, we
-          * take the convention that intersection in one singularity
-          * block neighbor is considered intersection in all at the
-          * same singularity.  When search_tree_represents_internal,
-          * this can lead to overspecifying internal parts and
-          * underspecifying external parts, and vice versa.
-          */
-
-         t_compute_internal_parts_intersection->start();
-         if (search_tree_represents_internal) {
-            internal_parts.intersectBoxes(
-               input_mapped_box.getBlockId(),
-               input.getRefinementRatio(),
-               search_tree,
-               true /* Count singularity neighbors */ );
-         } else {
-            internal_parts.removeIntersections(
-               input_mapped_box.getBlockId(),
-               input.getRefinementRatio(),
-               search_tree,
-               true /* Count singularity neighbors */ );
-         }
-         t_compute_internal_parts_intersection->stop();
-
-
-         /*
-          * Make internal MappedBoxes from internal_parts and create
-          * Connector from input.
-          */
-         if (internal_parts.size() == 1 &&
-             internal_parts.getFirstItem() == input_mapped_box.getBox()) {
-
-            /*
-             * The entire input_mapped_box is internal.
-             * The input_mapped_box should be mapped to itself.
-             * We can create such a map, but a missing map
-             * means the same thing, so we omit the map
-             */
-            internal.addMappedBox(input_mapped_box);
-
-         } else {
-
-            hier::Connector::NeighborSet
-            & replacements = input_eto_internal[input_mapped_box.getId()];
-            for (hier::BoxList::Iterator bi(internal_parts); bi; bi++) {
-               const hier::MappedBox
-               internal_mapped_box((*bi),
-                                   ++last_used_index,
-                                   input_mapped_box.getOwnerRank(),
-                                   input_mapped_box.getBlockId());
-               internal.addMappedBox(internal_mapped_box);
-               // Set connectivities between input and internal.
-               replacements.insert(internal_mapped_box);
-            }
-
-         } // internal_parts
-
-      } // ei != input_eto_reference.end()
-
-   } // Loop through input_mapped_boxes
-
-
-#ifdef DEBUG_CHECK_ASSERTIONS
-   if (internal.getMappedBoxes().empty()) {
-      /*
-       * If there are no internal parts, then all in input
-       * should be mapped to empty neighbor containers according
-       * to the definition of a map in MappingConnectorAlgorithm::modify().
-       */
-      TBOX_ASSERT(input_eto_internal.size() == input.getLocalNumberOfBoxes());
-      for (NeighborhoodSet::const_iterator ci = input_eto_internal.begin();
-           ci != input_eto_internal.end(); ++ci) {
-         TBOX_ASSERT((*ci).second.empty());
-      }
-   }
-#endif
-
-   input_to_internal.swapInitialize(
-      input,
+   computeInternalOrExternalPartsForMultiblock(
       internal,
-      zero_vec,
-      input_eto_internal,
-      hier::MappedBoxLevel::DISTRIBUTED);
-
-   TBOX_ASSERT(input_to_internal.isLocal());
+      input_to_internal,
+      'i',
+      input_to_reference,
+      nesting_width,
+      domain);
 
    t_compute_internal_parts->stop();
 }
+
+
 
 
 /*
@@ -2069,6 +1417,397 @@ void MappedBoxLevelConnectorUtils::computeInternalParts(
                         input_to_reference,
                         nesting_width,
                         dummy_domain);
+   return;
+}
+
+
+
+/*
+*************************************************************************
+* Methods computeInternalPartsForMultiblock and
+* computeExternalPartsForMultiblock delegates to this method.
+*
+* Compare an input MappedBoxLevel to a "reference" MappedBoxLevel.
+* Identify parts of the input that are internal or external (depending
+* on the value of internal_or_external) to the reference
+* MappedBoxLevel, and store the in/external parts in a MappedBoxLevel.
+* Create the input_to_parts Connector between the input and these
+* parts.
+*
+* For generality, the reference MappedBoxLevel can be grown a
+* specified amount (nesting_width) before comparing.  nesting_width
+* must be in the index space of the input MappedBoxLevel (not the
+* reference MappedBoxLevel, despite the name).  A negative growth
+* indicates shrinking the reference layer at its boundary.
+*
+* As a practical consideration of how this method is used, we do not
+* shrink the reference layer where it touches the domain boundary.
+* This feature can be disabled by specifying an uninitialized domain
+* object.
+*
+* On return, input_to_parts is set to an appropriate mapping for use
+* in MappingConnectorAlgorithm::modify().
+*
+* This method does not require any communication.
+*
+* Formula for computing external parts:
+*
+* Definitions:
+* L = input MappedBoxLevel
+* R = reference MappedBoxLevel
+* g = nesting width (non-negative or non-positive, but not mixed)
+* E = parts of L external to R^g (R^g is R grown by g)
+* I = parts of L internal to R^g (R^g is R grown by g)
+* O = domain (without periodic images).  Universe, if not specified.
+* \ = set theory notation.  x \ y means set x with y removed from it.
+*
+* For non-negative g:
+*
+* E := L \ { (R^g) <intersection> O }
+* I := L <intersection> { (R^g) <intersection> O }
+*
+* For non-positive g:
+*
+* E := L <intersection> { ( ( (R^1) \ R ) <intersection> O )^(-g) }
+* I := L \ { ( ( (R^1) \ R ) <intersection> O )^(-g) }
+*
+* A requirement of the computation for negative g is that input must
+* nest in R^(1-g).  In other words: L \ (R^(1-g)} = <empty>.  If not
+* satisfied, this method may classify some external parts as
+* internal.
+*
+*************************************************************************
+*/
+void MappedBoxLevelConnectorUtils::computeInternalOrExternalPartsForMultiblock(
+   hier::MappedBoxLevel& parts,
+   hier::Connector& input_to_parts,
+   char internal_or_external,
+   const hier::Connector& input_to_reference,
+   const hier::IntVector& nesting_width,
+   const hier::MultiblockMappedBoxTree& domain) const
+{
+   const MappedBoxLevel& input = input_to_reference.getBase();
+
+   const tbox::ConstPointer<GridGeometry> &grid_geometry(
+      input.getGridGeometry());
+
+   const tbox::Dimension &dim(input.getDim());
+   const IntVector& zero_vec(IntVector::getZero(input.getDim()));
+   const IntVector& one_vec(IntVector::getOne(dim));
+
+#ifdef DEBUG_CHECK_ASSERTIONS
+   const char *caller = internal_or_external == 'i' ?
+      "computInternalPartsForMultiblock" : "computeExternalpartsForMultiblock";
+
+   // Sanity check inputs.
+
+   if (!(nesting_width >= zero_vec) && !(nesting_width <= zero_vec)) {
+      TBOX_ERROR(
+         "MappedBoxLevelConnectorUtils::" << caller << ": error:\n"
+         << "nesting_width may not have mix of positive\n"
+         << "and negative values.");
+   }
+
+   if (nesting_width >= zero_vec) {
+      if (!(input_to_reference.getConnectorWidth() >=
+            nesting_width)) {
+         TBOX_ERROR(
+            "MappedBoxLevelConnectorUtils::" << caller << ": error:\n"
+            << "nesting_width "
+            << nesting_width << " exceeds\n"
+            << "ghost cell width " << input_to_reference.getConnectorWidth()
+            << ",\n"
+            << "which can lead to erroneous results.");
+      }
+   }
+#endif
+
+   parts.initialize(input.getRefinementRatio(),
+      input.getGridGeometry(), input.getMPI());
+
+
+   /*
+    * Get the set of neighboring boxes on the reference
+    * MappedBoxLevel.  We first store these boxes in a NeighborSet in
+    * order to remove duplicate entries.  Then we move them into a
+    * vector for box manipulation.
+    */
+   Connector::NeighborSet reference_nabrs;
+   input_to_reference.getNeighborhoodSets().getNeighbors(reference_nabrs);
+   std::vector<MappedBox> reference_mapped_box_vec(
+      reference_nabrs.begin(), reference_nabrs.end());
+   reference_nabrs.clear();
+
+   /*
+    * Bring reference_mapped_box_vec into refinement ratio of input
+    * (for intersection checks).
+    */
+   if (input_to_reference.getRatio() != hier::IntVector::getOne(dim)) {
+
+      if (input_to_reference.getHeadCoarserFlag()) {
+         hier::MappedBoxContainerUtils::refineMappedBoxVectorBoxes(
+            reference_mapped_box_vec,
+            input_to_reference.getRatio());
+      } else {
+         hier::MappedBoxContainerUtils::coarsenMappedBoxVectorBoxes(
+            reference_mapped_box_vec,
+            input_to_reference.getRatio());
+      }
+
+   }
+
+
+   /*
+    * Build a search tree containing either the internal or external
+    * parts of the reference MappedBoxLevel, depending on the sign of
+    * nesting_width.  If the nesting_width is non-negative, the
+    * internal parts are the same as the reference, possibly after
+    * growing.  If it is negative, shrinking the reference boxes does
+    * not work.  We grow its complement and grow the complement by
+    * -nesting_width.  The result represents the external parts of the
+    * reference.
+    */
+
+   const bool search_tree_represents_internal = nesting_width >= zero_vec;
+
+   hier::MultiblockMappedBoxTree search_tree;
+
+   if (search_tree_represents_internal) {
+
+      if ( !(nesting_width == zero_vec) ) {
+         hier::MappedBoxContainerUtils::growMappedBoxVectorBoxes(
+            reference_mapped_box_vec,
+            nesting_width);
+      }
+
+      search_tree.generateTree(grid_geometry,
+                               reference_mapped_box_vec);
+
+   } else {
+
+      /*
+       * nesting_width is non-positive.  The external parts are given
+       * by the grown boundary boxes.
+       */
+
+      std::map<BlockId,BoxList> reference_boundary;
+      computeBoxesAroundBoundary(
+         reference_boundary,
+         reference_mapped_box_vec,
+         input.getRefinementRatio(),
+         grid_geometry );
+      // ... reference_boundary is now ( (R^1) \ R )
+
+      if (domain.isInitialized()) {
+
+         if (input.getRefinementRatio() == one_vec) {
+            for ( std::map<BlockId,BoxList>::iterator mi=reference_boundary.begin();
+                  mi!=reference_boundary.end(); ++mi ) {
+               mi->second.intersectBoxes(
+                  mi->first,
+                  input.getRefinementRatio(),
+                  domain);
+            }
+         } else {
+            tbox::Pointer<MultiblockMappedBoxTree> refined_domain =
+               domain.createRefinedTree(input.getRefinementRatio());
+            for ( std::map<BlockId,BoxList>::iterator mi=reference_boundary.begin();
+                  mi!=reference_boundary.end(); ++mi ) {
+               mi->second.intersectBoxes(
+                  mi->first,
+                  input.getRefinementRatio(),
+                  *refined_domain);
+            }
+         }
+
+      }
+      // ... reference_boundary is now ( ( (R^1) \ R ) <intersection> O )
+
+      for ( std::map<BlockId,BoxList>::iterator mi=reference_boundary.begin();
+            mi!=reference_boundary.end(); ++mi ) {
+         mi->second.grow(-nesting_width);
+      }
+      // ... reference_boundary is now ( ( (R^1) \ R ) <intersection> O )^(-g)
+
+      std::vector<MappedBox> reference_boundary_vector;
+      for ( std::map<BlockId,BoxList>::const_iterator mi=reference_boundary.begin();
+            mi!=reference_boundary.end(); ++mi ) {
+         MappedBoxContainerUtils::convertBoxListToMappedBoxVector(
+            mi->second,
+            reference_boundary_vector,
+            mi->first);
+      }
+
+      search_tree.generateTree(grid_geometry, reference_boundary_vector);
+
+   } // search_tree_represents_internal == false
+
+   reference_mapped_box_vec.clear();
+
+
+   const NeighborhoodSet& input_eto_reference = input_to_reference.getNeighborhoodSets();
+
+   /*
+    * Keep track of last index so we don't give parts an index
+    * used by input.  This is required because if we allow parts
+    * to select an index it is not using, it may select one that is
+    * used by input, creating an invalid mapping that prevents
+    * MappingConnectorAlgorithm::modify() from working correctly.
+    */
+   LocalId last_used_index = input.getLastLocalId();
+
+   NeighborhoodSet input_eto_parts;
+
+   const bool compute_overlaps =
+      search_tree_represents_internal == (internal_or_external == 'i');
+
+   /*
+    * For each MappedBox in input, compare it to the search tree to
+    * compute its overlapping (or non-overlapping) parts.
+    */
+
+   const MappedBoxSet& input_mapped_boxes = input.getMappedBoxes();
+
+   for (RealMappedBoxConstIterator ni(input_mapped_boxes); ni.isValid();
+        ++ni) {
+
+      const hier::MappedBox& input_mapped_box = *ni;
+
+      NeighborhoodSet::const_iterator ei = input_eto_reference.find(ni->getId());
+
+      if (ei == input_eto_reference.end()) {
+         /*
+          * Absence of a neighbor set in the overlap Connector means
+          * the input MappedBox does not overlap the reference
+          * MappedBoxLevel.
+          */
+         if ( compute_overlaps ) {
+            /*
+             * Trying to get the overlapping parts.  Create empty
+             * neighbor list to indicate there is no such parts.
+             */
+            input_eto_parts[input_mapped_box.getId()];
+         }
+         else {
+            /*
+             * Trying to get the non-overlapping parts.
+             * Non-overlapping parts is the whole box.
+             */
+            parts.addMappedBox(input_mapped_box);
+         }
+
+      } else {
+
+         hier::BoxList parts_list(input_mapped_box.getBox());
+         /*
+          * Compute parts of input_mapped_box either overlapping
+          * or nor overlapping the search_tree.
+          *
+          * Note about intersections in singularity neighbor blocks:
+          * Cells from multiple singularity neighbor blocks can
+          * coincide when transformed into input_mapped_box's block.
+          * There is no way to specify that a cell in input_mapped_box
+          * intersects in some singularity block neighbors but not
+          * others.  By comparing to singularity neighbor blocks, we
+          * take the convention that intersection in one singularity
+          * block neighbor is considered intersection in all at the
+          * same singularity.  When compute_overlaps == true,
+          * this can lead to overspecifying parts and
+          * underspecifying external parts, and vice versa.
+          */
+
+         t_compute_internal_parts_intersection->start();
+         if (compute_overlaps) {
+            parts_list.intersectBoxes(
+               input_mapped_box.getBlockId(),
+               input.getRefinementRatio(),
+               search_tree,
+               true /* Count singularity neighbors */ );
+         } else {
+            parts_list.removeIntersections(
+               input_mapped_box.getBlockId(),
+               input.getRefinementRatio(),
+               search_tree,
+               true /* Count singularity neighbors */ );
+         }
+         t_compute_internal_parts_intersection->stop();
+
+
+         /*
+          * Make MappedBoxes from parts_list and create
+          * Connector from input.
+          */
+         if (parts_list.size() == 1 &&
+             parts_list.getFirstItem() == input_mapped_box.getBox()) {
+
+            /*
+             * The entire input_mapped_box is the part we want.
+             * The input_mapped_box should be mapped to itself.
+             * We can create such a map, but a missing map
+             * means the same thing, so we omit the map
+             */
+            parts.addMappedBox(input_mapped_box);
+
+         } else {
+
+            hier::Connector::NeighborSet
+            & replacements = input_eto_parts[input_mapped_box.getId()];
+            for (hier::BoxList::Iterator bi(parts_list); bi; bi++) {
+               const hier::MappedBox
+               parts_mapped_box((*bi),
+                                ++last_used_index,
+                                input_mapped_box.getOwnerRank(),
+                                input_mapped_box.getBlockId());
+               parts.addMappedBox(parts_mapped_box);
+
+               // Set connectivities between input and internal.
+               replacements.insert(parts_mapped_box);
+            }
+
+         } // parts_list
+
+      } // ei != input_eto_reference.end()
+
+   } // Loop through input_mapped_boxes
+
+
+#ifdef DEBUG_CHECK_ASSERTIONS
+   if (parts.getMappedBoxes().empty()) {
+      /*
+       * If there are no parts, then all in input
+       * should be mapped to empty neighbor containers according
+       * to the definition of a map in MappingConnectorAlgorithm::modify().
+       */
+      if (input_eto_parts.size() != input.getLocalNumberOfBoxes()) {
+         tbox::perr <<"MappedBoxLevelConnectorUtils::" << caller << ": library error:\n"
+                    <<"There are no parts, so input MappedBoxLevel should be completely mapped away.\n"
+                    <<"However, not all input MappedBoxes have been mapped.\n"
+                    <<"input MappedBoxLevel:\n" << input.format("",2)
+                    <<"input_eto_parts:\n" << input_eto_parts.format("",2)
+            ;
+         TBOX_ERROR("Library error\n");
+      }
+      for (NeighborhoodSet::const_iterator ci = input_eto_parts.begin();
+           ci != input_eto_parts.end(); ++ci) {
+         TBOX_ASSERT((*ci).second.empty());
+      }
+   }
+#endif
+
+   /*
+    * The output mapping has zero width.  For a mapping, zero width
+    * means that no MappedBox is mapped to something outside its
+    * extent.
+    */
+   input_to_parts.swapInitialize(
+      input,
+      parts,
+      zero_vec,
+      input_eto_parts,
+      hier::MappedBoxLevel::DISTRIBUTED);
+
+   TBOX_ASSERT(input_to_parts.isLocal());
+
    return;
 }
 

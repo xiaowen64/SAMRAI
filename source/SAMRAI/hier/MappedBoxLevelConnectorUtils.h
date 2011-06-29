@@ -538,6 +538,18 @@ public:
 private:
 
    /*!
+    * @brief Delegated work of computeInternalPartsForMultiblock and
+    * computeExternalPartsForMultiblock.
+    */
+   void computeInternalOrExternalPartsForMultiblock(
+      hier::MappedBoxLevel& parts,
+      hier::Connector& input_to_parts,
+      char internal_or_external,
+      const hier::Connector& input_to_reference,
+      const hier::IntVector& nesting_width,
+      const hier::MultiblockMappedBoxTree& domain) const;
+
+   /*!
     * @brief Call-back function to sort boxes.
     */
    static int
