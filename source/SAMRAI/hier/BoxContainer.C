@@ -392,7 +392,7 @@ bool BoxContainer::boxesIntersect() const
 void BoxContainer::removeIntersections(
    const Box& takeaway)
 {
-   BoxContainer fragments;
+   BoxContainer fragments(d_dim);
    while (!isEmpty()) {
       Box tryme = front();
       popFront();
@@ -527,7 +527,7 @@ void BoxContainer::removeIntersections(
 void BoxContainer::intersectBoxes(
    const Box& keep)
 {
-   BoxContainer intersection;
+   BoxContainer intersection(d_dim);
    while (!isEmpty()) {
       Box tryme = front();
       popFront();
@@ -542,7 +542,7 @@ void BoxContainer::intersectBoxes(
 void BoxContainer::intersectBoxes(
    const BoxContainer& keep)
 {
-   BoxContainer intersection;
+   BoxContainer intersection(d_dim);
    while (!isEmpty()) {
       Box tryme = front();
       popFront();
