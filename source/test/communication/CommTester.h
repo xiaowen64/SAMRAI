@@ -233,10 +233,27 @@ public:
       const double dt_time,
       const bool initial_time)
    {
-      (void)level;
-      (void)dt_time;
-      (void)initial_time;
+      NULL_USE(level);
+      NULL_USE(dt_time);
+      NULL_USE(initial_time);
       return 0.0;
+   }
+
+   void
+   fillSingularityBoundaryConditions(
+      hier::Patch& patch,
+      const hier::PatchLevel& encon_level,
+      const hier::Connector& dst_to_encon,
+      const double fill_time,
+      const hier::Box& fill_box,
+      const hier::BoundaryBox& boundary_box)
+   {
+      NULL_USE(patch);
+      NULL_USE(encon_level);
+      NULL_USE(dst_to_encon);
+      NULL_USE(fill_time);
+      NULL_USE(fill_box);
+      NULL_USE(boundary_box);
    }
 
    /*

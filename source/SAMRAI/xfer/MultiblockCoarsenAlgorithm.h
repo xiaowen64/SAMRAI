@@ -208,8 +208,8 @@ public:
       tbox::Pointer<hier::PatchLevel> fine_level,
       MultiblockCoarsenPatchStrategy* patch_strategy =
          ((MultiblockCoarsenPatchStrategy *)NULL),
-      MultiblockRefinePatchStrategy* refine_strategy =
-         ((MultiblockRefinePatchStrategy *)NULL),
+      RefinePatchStrategy* refine_strategy =
+         ((RefinePatchStrategy *)NULL),
       tbox::Pointer<xfer::CoarsenTransactionFactory> transaction_factory =
          tbox::Pointer<xfer::CoarsenTransactionFactory>(NULL)) const;
 

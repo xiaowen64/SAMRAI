@@ -473,6 +473,12 @@ private:
    operator = (
       const FaceData<TYPE>&);                           // not implemented
 
+   void copyWithRotation(const FaceData<TYPE>& src,
+                         const FaceOverlap& overlap);
+
+   void packWithRotation(tbox::MessageStream& stream,
+                         const FaceOverlap& overlap) const;
+
    int d_depth;
    ArrayData<TYPE> d_data[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
 

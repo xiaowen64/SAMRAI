@@ -469,6 +469,12 @@ private:
    operator = (
       const EdgeData<TYPE>&);                           // not implemented
 
+   void copyWithRotation(const EdgeData<TYPE>& src,
+                         const EdgeOverlap& overlap);
+
+   void packWithRotation(tbox::MessageStream& stream,
+                         const EdgeOverlap& overlap) const;
+
    int d_depth;
    ArrayData<TYPE> d_data[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
 

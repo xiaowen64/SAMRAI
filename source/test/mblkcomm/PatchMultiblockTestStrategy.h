@@ -21,7 +21,6 @@
 #include "MultiblockTester.h"
 #include "SAMRAI/hier/IntVector.h"
 #include "SAMRAI/hier/Patch.h"
-#include "SAMRAI/xfer/MultiblockRefinePatchStrategy.h"
 #include "SAMRAI/hier/PatchHierarchy.h"
 #include "SAMRAI/hier/VariableContext.h"
 
@@ -219,13 +218,14 @@ public:
 
    virtual void fillSingularityBoundaryConditions(
       hier::Patch& patch,
-      tbox::List<tbox::Pointer<hier::Patch> >&
-      singularity_patches,
+      const hier::PatchLevel& encon_level,
+      const hier::Connector& dst_to_encon,
       const hier::Box& fill_box,
       const hier::BoundaryBox& boundary_box)
    {
       NULL_USE(patch);
-      NULL_USE(singularity_patches);
+      NULL_USE(encon_level);
+      NULL_USE(dst_to_encon);
       NULL_USE(fill_box);
       NULL_USE(boundary_box);
    }

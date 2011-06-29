@@ -27,7 +27,7 @@ namespace mesh {
  * Class TagAndInitializeStrategy is a base class that defines a
  * Strategy pattern interface for level initialization and cell tagging
  * routines that are needed by the adaptive meshing algorithms provided
- * by the class GriddingAlgorithm or MultiblockGriddingAlgorithm.  The class
+ * by the class GriddingAlgorithm.  The class
  * maintains functionality to construct refined regions based on a
  * user-supplied set of boxes, but its main role is to provide interfaces
  * for level initialization and cell tagging operations.

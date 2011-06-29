@@ -742,7 +742,7 @@ public:
       const BoxList& getTranslatedDomain() const;
 
       /*!
-       * @brief Get the rotation identifier for the neighbor relationship.
+       * @brief Get the Transformation for the neighbor relationship.
        */
       const Transformation& getTransformation() const;
 
@@ -973,6 +973,29 @@ private:
    int
    getNumberOfNeighbors(
       const int block_number) const;
+
+   /*!
+    * @brief Tell if the given BlockIds represent neighboring blocks.
+    */
+   bool areNeighbors(const BlockId& block_a, const BlockId& block_b) const;
+
+   /*!
+    * @brief Tell if the given BlockIds represent neighboring blocks.
+    */
+   bool areSingularityNeighbors(const BlockId& block_a,
+                                const BlockId& block_b) const;
+
+   /*!
+    * @brief Get the rotation identifier to rotate from src to dst.
+    */
+   Transformation::RotationIdentifier
+   getRotationIdentifier(const BlockId& dst, const BlockId& src) const;
+
+   /*!
+    * @brief Get the offset to shift from src to dst after rotation.
+    */
+   const IntVector& 
+   getOffset(const BlockId& dst, const BlockId& src) const;
 
    /*!
     * @brief Print object data to the specified output stream.

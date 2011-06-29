@@ -506,6 +506,12 @@ private:
    operator = (
       const SideData<TYPE>&);                           // not implemented
 
+   void copyWithRotation(const SideData<TYPE>& src,
+                         const SideOverlap& overlap);
+
+   void packWithRotation(tbox::MessageStream& stream,
+                         const SideOverlap& overlap) const;
+
    int d_depth;
    hier::IntVector d_directions;
 

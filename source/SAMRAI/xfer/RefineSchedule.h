@@ -118,7 +118,6 @@ public:
       tbox::Pointer<PatchLevelFillPattern> dst_level_fill_pattern,
       tbox::Pointer<hier::PatchLevel> dst_level,
       tbox::Pointer<hier::PatchLevel> src_level,
-      const hier::BlockId& block_id,
       const tbox::Pointer<xfer::RefineClasses> refine_classes,
       tbox::Pointer<xfer::RefineTransactionFactory> transaction_factory,
       xfer::RefinePatchStrategy* patch_strategy,
@@ -187,7 +186,6 @@ public:
       tbox::Pointer<hier::PatchLevel> dst_level,
       tbox::Pointer<hier::PatchLevel> src_level,
       int next_coarser_level,
-      const hier::BlockId& block_id,
       tbox::Pointer<hier::PatchHierarchy> hierarchy,
       const tbox::Pointer<xfer::RefineClasses> refine_classes,
       tbox::Pointer<xfer::RefineTransactionFactory> transaction_factory,
@@ -405,7 +403,6 @@ private:
       tbox::Pointer<hier::PatchLevel> dst_level,
       tbox::Pointer<hier::PatchLevel> src_level,
       int next_coarser_level,
-      const hier::BlockId& block_id,
       tbox::Pointer<hier::PatchHierarchy> hierarchy,
       const hier::IntVector& src_growth_to_nest_dst,
       const hier::Connector &dst_to_src,
@@ -493,6 +490,10 @@ private:
    fillPhysicalBoundaries(
       double fill_time) const;
 
+   void
+   fillSingularityBoundaries(
+      double fill_time) const;
+
    /*!
     * @brief Copy the scratch space into the destination space in d_dst_level.
     *
@@ -504,16 +505,33 @@ private:
 
    /*!
     * @brief Refine scratch data between coarse and fine patch levels.
+    *
+    * @param[in] fine_level          Fine level to receive interpolated data
+    * @param[in] coarse_level        Coarse level source of interpolation
+    * @param[in] coarse_to_fine      Connector coarse to fine
+    * @param[in] coarse_to_unfilled  Connector coarse to level representing
+    *                                boxes that need to be filled. 
     */
    void
-   refineScratchData() const;
+   refineScratchData(
+      const tbox::Pointer<hier::PatchLevel>& fine_level,
+      const tbox::Pointer<hier::PatchLevel>& coarse_level,
+      const Connector& coarse_to_fine,
+      const Connector& coarse_to_unfilled,
+      const tbox::List<tbox::Array<tbox::Pointer<hier::BoxOverlap> > >&
+         overlaps) const;
 
    /*!
     * @brief Compute and store the BoxOverlaps that will be needed by
     * refineScratchData().
     */
    void
-   computeRefineOverlaps();
+   computeRefineOverlaps(
+      tbox::List<tbox::Array<tbox::Pointer<hier::BoxOverlap> > >& overlaps,
+      const tbox::Pointer<hier::PatchLevel>& fine_level,
+      const tbox::Pointer<hier::PatchLevel>& coarse_level,
+      const Connector& coarse_to_fine,
+      const Connector& coarse_to_unfilled);
 
    /*!
     * @brief Constructs the transactions for all communication and copying
@@ -529,6 +547,14 @@ private:
     *                                        the source level are added here.
     * @param[out] dst_to_unfilled  Connector from dst_level to
     *                              unfilled_mapped_box_level.
+    * @param[out] unfilled_encon_mb_level  The parts of the fill level
+    *                                      at enhanced connectivity block
+    *                                      boundaries that cannot be filled
+    *                                      from the source level.
+    * @param[out] encon_to_unfilled_encon  Connector from level representing
+    *                                      enhanced connectivity on the
+    *                                      destination level to
+    *                                      unfilled_encon_mb_level
     * @param[in] dst_to_src  Connector between dst_level and src_level
     *                        passed into the constructor
     * @param[in] src_to_dst  Connector between src_level and dst_level
@@ -548,6 +574,8 @@ private:
    generateCommunicationSchedule(
       MappedBoxLevel& unfilled_mapped_box_level,
       Connector& dst_to_unfilled,
+      MappedBoxLevel& unfilled_encon_mb_level,
+      Connector& encon_to_unfilled_encon,
       const Connector& dst_to_src,
       const Connector& src_to_dst,
       const Connector& dst_to_fill,
@@ -560,7 +588,7 @@ private:
     *
     * fill_mapped_box_level will be filled with mapped boxes representing all
     * of the regions intended to be filled by the schedule.  It will include
-    * the boxes of dst_mapped_box_level grown by fill_gcw, but then can be
+    * the boxes of dst_mapped_box_level grown by ill_gcw, but then can be
     * restricted based on the PatchLevelFillPattern given to the schedule
     * constructor.  This method sets up this fill level, as well as a
     * connector from the destination level to the fill level, and also provides
@@ -591,6 +619,51 @@ private:
       const hier::Connector* dst_to_src,
       const hier::Connector* src_to_dst,
       const hier::IntVector& fill_gcw);
+
+   /*
+    * @brief Set up level to represent ghost regions at enhanced
+    * connectivity block boundaries.
+    *
+    * @param[in] fill_gcw Width to extend across the block boundary
+    */
+   void createEnconLevel(const hier::IntVector& fill_gcw);
+
+   /*
+    * @brief Create level for unfilled boxes at enhanced connectivity when
+    * there is no source to fill any destination boxes.
+    *
+    * Connnector dst_to_fill points to a head MappedBoxLevel consisting of
+    * fill boxes needing to be filled by this schedule.  Since there is no
+    * source to fill any of these boxes, all of the fill boxes will be
+    * considered unfilled.  This method creates and stores a level consisting
+    * of those fill boxes that lie across enhanced connectivity block
+    * boundaries.  The level is stored internally as d_unfilled_encon_level,
+    * and the method also initialized the Connector encon_to_unfilled_encon,
+    * which connects d_encon_level to d_unfilled_encon_level.
+    *
+    * @param[out]  encon_to_unfilled_encon  Connector from d_encon_level to
+    *                                       d_unfilled_encon_level
+    * @param[in]   dst_to_fill    Connector from destination level to 
+    *                             level for fill boxes
+    */ 
+   void createUnfilledEnconLevelWithNoSource(
+      hier::Connector& encon_to_unfilled_encon,
+      const hier::Connector& dst_to_fill);
+
+   /*
+    * @brief Create schedule for filling unfilled boxes at enhanced
+    * connectivity.
+    *
+    * @param[in]  hierarchy         The patch hierarchy
+    * @param[in]  hiercoarse_level  Level on hierarchy one level coarser than
+    *                               the destination level
+    */
+   void createEnconFillSchedule(
+      const tbox::Pointer<hier::PatchHierarchy>& hierarchy,
+      const tbox::Pointer<hier::PatchLevel>& hiercoarse_level,
+      const bool dst_is_supplemental_level,
+      const hier::IntVector& src_growth_to_nest_dst,
+      const hier::Connector& encon_to_unfilled_encon);
 
    /*!
     * @brief Communicate dst_to_fill info to the src owners when the owners
@@ -650,7 +723,7 @@ private:
       const MappedBoxVector& fill_boxes,
       const MappedBox& dst_mapped_box,
       const MappedBox& src_mapped_box,
-      bool use_time_interpolation);
+      const bool use_time_interpolation);
 
    /*!
     * @brief Restructure the neighborhood sets from a src_to_dst Connector
@@ -785,13 +858,7 @@ private:
     * @brief Boolean flag indicating whether physical domain
     * can be represented as a single box region.
     */
-   bool d_domain_is_one_box;
-
-   /*!
-    * @brief  Box describing physical domain when that domain
-    * can be represented as a single box region
-    */
-   hier::Box d_domain_box;
+   tbox::Array<bool> d_domain_is_one_box;
 
    /*!
     * @brief Number of non-zero entries in periodic shift vector.
@@ -830,21 +897,32 @@ private:
    tbox::Pointer<tbox::Schedule> d_fine_priority_level_schedule;
 
    /*!
-    * @brief The supplemental level is a temporary level created to
+    * @brief The supplemental level is an internal level created to
     * hold data required for interpolating into the fill boxes of the
     * destination that could not be filled directly from the source
     * level.
     *
     * Once d_supp_level is filled (by executing d_supp_schedule)
     * interpolating data into the corresponding fill boxes of the
-    * destination is a local process.
+    * destination is a local operation.
     *
-    * This coarser level is filled by the refine schedule above.  If
+    * This coarser level is filled by the d_supp_schedule.  If
     * no coarser level data is needed, then this pointer will be NULL.
     * Note that the supplemental level may not have the same mapping
     * as the destination level.
     */
    tbox::Pointer<hier::PatchLevel> d_supp_level;
+
+   /*!
+    * @brief The supplemental encon level is an internal level created
+    * to hold data used for interpolating into unfilled boxes at
+    * enhanced connectivity block boundaries.
+    *
+    * d_supp_encon_level will be filled by d_supp_encon_schedule.  Once it
+    * is filled, the interpolation of data to patches in d_encon_level will
+    * be a local operation.
+    */
+   tbox::Pointer<hier::PatchLevel> d_supp_encon_level;
 
    /*!
     * @brief Schedule to recursively fill the supplemental level using
@@ -857,6 +935,27 @@ private:
    tbox::Pointer<xfer::RefineSchedule> d_supp_schedule;
 
    /*!
+    * @brief Schedule to recursively fill d_supp_encon_level using
+    * the next coarser hierarchy level.
+    *
+    * This schedule fills d_supp_encon_level so that it can be used to
+    * interpolate data onto d_encon_level in fill boxes that could not be
+    * filled from the source level.
+    */
+   tbox::Pointer<xfer::RefineSchedule> d_supp_encon_schedule;
+
+   /*!
+    * @brief Internal level representing ghost regions of destination patches
+    * at enhanced connectivity block boundaries.
+    *
+    * When a destination patch touches an enhanced connectivity block boundary,
+    * a patch will be created in the coordinate systems of its singularity
+    * neighbor blocks representing the portion of the destination patch's
+    * ghost region that lies in those neighboring blocks.
+    */
+   tbox::Pointer<hier::PatchLevel> d_encon_level;
+
+   /*!
     * @brief Describes remaining unfilled boxes after attempting to
     * fill from the source level.  These remaining boxes must be
     * filled using a supplemental schedule, d_supp_schedule.
@@ -864,10 +963,24 @@ private:
    MappedBoxLevel d_unfilled_mapped_box_level;
 
    /*!
+    * @brief Describes remaining unfilled boxes of d_encon_level after
+    * attempting to fill from the source level.  These remaining boxes must
+    * be filled using a supplemental schedule, d_supp_encon_schedule.
+    */
+   MappedBoxLevel d_unfilled_encon_mb_level;
+
+   /*!
     * @brief Stores the BoxOverlaps needed by refineScratchData()
     */
    tbox::List< tbox::Array<tbox::Pointer<hier::BoxOverlap> > >
    d_refine_overlaps;
+
+   /*!
+    * @brief Stores the BoxOverlaps needed by refineScratchData() for
+    * unfilled boxes at enhanced connectivity
+    */
+   tbox::List< tbox::Array<tbox::Pointer<hier::BoxOverlap> > >
+   d_encon_refine_overlaps;
 
    /*!
     * @brief Connector from the supplemental level to the destination.
@@ -880,11 +993,23 @@ private:
    Connector d_dst_to_supp;
 
    /*!
+    * @brief Connector from d_encon_level to d_supp_encon_level.
+    */
+   Connector d_encon_to_supp_encon;
+
+   /*!
     * @brief Connector d_supp_level to d_unfilled_mapped_box_level.
     *
     * Cached for use during schedule filling.
     */
    Connector d_supp_to_unfilled;
+
+   Connector d_supp_encon_to_unfilled_encon;
+   Connector d_supp_encon_to_encon;
+
+   Connector d_dst_to_encon;
+   Connector d_src_to_encon;
+   Connector d_encon_to_src;
 
    //@{
 
@@ -915,11 +1040,6 @@ private:
     * destination level.
     */
    int d_max_fill_boxes;
-
-   /*!
-    * @brief Identifies which block the schedule operates on.
-    */
-   hier::BlockId d_block_id;
 
    //@}
 

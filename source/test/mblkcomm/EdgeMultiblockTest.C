@@ -308,10 +308,20 @@ void EdgeMultiblockTest::setPhysicalBoundaryConditions(
 
 void EdgeMultiblockTest::fillSingularityBoundaryConditions(
    hier::Patch& patch,
-   tbox::List<tbox::Pointer<hier::Patch> >& sing_patches,
+   const hier::PatchLevel& encon_level,
+   const hier::Connector& dst_to_encon,
    const hier::Box& fill_box,
    const hier::BoundaryBox& bbox)
 {
+   const tbox::Dimension& dim = fill_box.getDim();
+
+   const hier::MappedBoxId& dst_mb_id = patch.getMappedBox().getId();
+
+   const int patch_blk_num = dst_mb_id.getBlockId().getBlockValue();
+
+   const tbox::List<hier::GridGeometry::Neighbor>& neighbors =
+      encon_level.getGridGeometry()->getNeighbors(patch_blk_num);
+
    for (int i = 0; i < d_variables.getSize(); i++) {
 
       tbox::Pointer<pdat::EdgeData<double> > edge_data =
@@ -346,47 +356,98 @@ void EdgeMultiblockTest::fillSingularityBoundaryConditions(
          }
       }
 
-      /*
-       * If sing_patches is not empty, that means there is enhanced
-       * connectivity, and we get data from other blocks
-       */
+      const hier::NeighborhoodSet& dst_to_encon_nbrhood_set =
+         dst_to_encon.getNeighborhoodSets();
 
-      if (sing_patches.size()) {
+      hier::NeighborhoodSet::const_iterator ni =
+         dst_to_encon_nbrhood_set.find(dst_mb_id);
 
-         for (tbox::List<tbox::Pointer<hier::Patch> >::Iterator
-              sp(sing_patches); sp; sp++) {
-            tbox::Pointer<pdat::EdgeData<double> > sing_data =
-               sp()->getPatchData(d_variables[i], getDataContext());
-            tbox::Pointer<hier::PatchGeometry> patch_geom =
-               sp()->getPatchGeometry();
-            int sing_neighbor_id = 
-               sp()->getMappedBox().getBlockId().getBlockValue();
-            for (int axis = 0; axis < d_dim.getValue(); axis++) {
+      int num_encon_used = 0;
+      if (ni != dst_to_encon_nbrhood_set.end()) {
 
-               hier::Box pbox =
-                  pdat::EdgeGeometry::toEdgeBox(patch.getBox(), axis);
+         const hier::MappedBoxSet& encon_nbrs = ni->second;
 
-               hier::Index plower(pbox.lower());
-               hier::Index pupper(pbox.upper());
+         for (hier::MappedBoxSet::const_iterator ei = encon_nbrs.begin();
+              ei != encon_nbrs.end(); ++ei) {
 
-               for (pdat::EdgeIterator ci(sing_fill_box, axis); ci; ci++) {
-                  bool use_index = true;
-                  for (int n = 0; n < d_dim.getValue(); n++) {
-                     if (axis != n && bbox.getBox().numberCells(n) == 1) {
-                        if (ci() (n) == plower(n) || ci() (n) == pupper(n)) {
-                           use_index = false;
-                           break;
+            tbox::Pointer<hier::Patch> encon_patch(
+               encon_level.getPatch(ei->getId()));
+
+            int encon_blk_num = ei->getBlockId().getBlockValue();
+
+            hier::Transformation::RotationIdentifier rotation =
+               hier::Transformation::NO_ROTATE;
+            hier::IntVector offset(dim);
+
+            for (tbox::List<hier::GridGeometry::Neighbor>::Iterator
+                 ni(neighbors); ni; ni++) {
+
+               if (ni().getBlockNumber() == encon_blk_num) {
+                  rotation = ni().getRotationIdentifier();
+                  offset = ni().getShift();
+                  break;
+               }
+            }
+
+            offset *= patch.getPatchGeometry()->getRatio();
+
+            hier::Transformation transformation(rotation, offset);
+            hier::Box encon_patch_box(encon_patch->getBox());
+            transformation.transform(encon_patch_box);
+
+            hier::Box encon_fill_box(encon_patch_box * sing_fill_box);
+            if (!encon_fill_box.empty()) {
+
+               const hier::Transformation::RotationIdentifier back_rotate =
+                  hier::Transformation::getReverseRotationIdentifier(
+                     rotation, dim);
+
+               hier::IntVector back_shift(dim);
+
+               hier::Transformation::calculateReverseShift(
+                  back_shift, offset, rotation);
+
+               hier::Transformation back_trans(back_rotate, back_shift);
+
+               tbox::Pointer<pdat::EdgeData<double> > sing_data(
+                  encon_patch->getPatchData(d_variables[i], getDataContext()));
+
+               for (int axis = 0; axis < d_dim.getValue(); axis++) {
+
+                  hier::Box pbox(
+                     pdat::EdgeGeometry::toEdgeBox(patch.getBox(), axis));
+
+                  hier::Index plower(pbox.lower());
+                  hier::Index pupper(pbox.upper());
+
+                  for (pdat::EdgeIterator ci(sing_fill_box, axis); ci; ci++) {
+                     bool use_index = true;
+                     for (int n = 0; n < d_dim.getValue(); n++) {
+                        if (axis != n && bbox.getBox().numberCells(n) == 1) {
+                           if (ci() (n) == plower(n) || ci() (n) == pupper(n)) {
+                              use_index = false;
+                              break;
+                           }
+                        }
+                     }
+                     if (use_index) {
+
+                        pdat::EdgeIndex src_index(ci());
+                        pdat::EdgeGeometry::transform(src_index, back_trans);
+
+                        for (int d = 0; d < depth; d++) {
+                           (*edge_data)(ci(), d) += (*sing_data)(src_index,d);
                         }
                      }
                   }
-                  if (use_index) {
-                     for (int d = 0; d < depth; d++) {
-                        (*edge_data)(ci(), d) += sing_neighbor_id;
-                     }
-                  }
                }
+
+               ++num_encon_used;
             }
          }
+      }
+
+      if (num_encon_used) {
 
          for (int axis = 0; axis < d_dim.getValue(); axis++) {
 
@@ -408,18 +469,18 @@ void EdgeMultiblockTest::fillSingularityBoundaryConditions(
                }
                if (use_index) {
                   for (int d = 0; d < depth; d++) {
-                     (*edge_data)(ci(), d) /= sing_patches.size();
+                     (*edge_data)(ci(), d) /= num_encon_used;
                   }
                }
             }
          }
 
+      } else {
+
          /*
           * In cases of reduced connectivity, there are no other blocks
           * from which to acquire data.
           */
-
-      } else {
 
          for (int axis = 0; axis < d_dim.getValue(); axis++) {
 
@@ -530,6 +591,8 @@ bool EdgeMultiblockTest::verifyResults(
          hier::Box patch_edge_box =
             pdat::EdgeGeometry::toEdgeBox(pbox, axis);
 
+         hier::BoxList tested_neighbors(d_dim);
+
          hier::BoxList sing_edge_boxlist;
          for (hier::BoxList::Iterator si(singularity); si; si++) {
             sing_edge_boxlist.addItem(
@@ -539,14 +602,18 @@ bool EdgeMultiblockTest::verifyResults(
          for (tbox::List<hier::GridGeometry::Neighbor>::
               Iterator ne(neighbors); ne; ne++) {
 
+            if (ne().isSingularity()) continue;
+
             correct = ne().getBlockNumber();
 
             hier::BoxList neighbor_ghost(ne().getTranslatedDomain());
 
             hier::BoxList neighbor_edge_ghost;
             for (hier::BoxList::Iterator nn(neighbor_ghost); nn; nn++) {
-               neighbor_edge_ghost.addItem(
+               hier::Box neighbor_ghost_interior(
                   pdat::EdgeGeometry::toEdgeBox(nn(), axis));
+               neighbor_ghost_interior.grow(-hier::IntVector::getOne(d_dim));
+               neighbor_edge_ghost.addItem(neighbor_ghost_interior);
             }
 
             neighbor_edge_ghost.refine(ratio);
@@ -555,13 +622,15 @@ bool EdgeMultiblockTest::verifyResults(
                pdat::EdgeGeometry::toEdgeBox(gbox, axis));
 
             neighbor_edge_ghost.removeIntersections(sing_edge_boxlist);
+            neighbor_edge_ghost.removeIntersections(tested_neighbors);
 
             for (hier::BoxList::Iterator ng(neighbor_edge_ghost);
                  ng; ng++) {
 
                for (hier::BoxIterator ci(ng()); ci; ci++) {
-                  if (!patch_edge_box.contains(ci())) {
-                     pdat::EdgeIndex ei(ci(), axis, 0);
+                  pdat::EdgeIndex ei(ci(), 0, 0);
+                  ei.setAxis(axis);
+                  if (!patch_edge_box.contains(ei)) {
 
                      for (int d = 0; d < depth; d++) {
                         double result = (*edge_data)(ei, d);
@@ -581,6 +650,8 @@ bool EdgeMultiblockTest::verifyResults(
                   }
                }
             }
+
+            tested_neighbors.unionBoxes(neighbor_edge_ghost);
          }
       }
 
@@ -611,7 +682,7 @@ bool EdgeMultiblockTest::verifyResults(
                      neighbor_ghost.intersectBoxes(fill_box);
                      if (neighbor_ghost.size()) {
                         num_sing_neighbors++;
-                        correct += block_id.getBlockValue();
+                        correct += ns().getBlockNumber();
                      }
                   }
                }

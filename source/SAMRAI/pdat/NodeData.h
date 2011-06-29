@@ -398,6 +398,12 @@ private:
    operator = (
       const NodeData<TYPE>&);                           // not implemented
 
+   void copyWithRotation(const NodeData<TYPE>& src,
+                         const NodeOverlap& overlap);
+
+   void packWithRotation(tbox::MessageStream& stream,
+                         const NodeOverlap& overlap) const;
+
    int d_depth;
    ArrayData<TYPE> d_data;
 

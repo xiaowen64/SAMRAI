@@ -430,7 +430,6 @@ void PatchBoundaryNodeSum::setupSum(
          single_level_sum_algorithm.createSchedule(
             d_level,
             (xfer::RefinePatchStrategy *)NULL,
-            hier::BlockId::zero(),
             d_sum_transaction_factory);
 
    }
@@ -522,7 +521,6 @@ void PatchBoundaryNodeSum::setupSum(
          single_level_sum_algorithm.createSchedule(
             coarsest_level_loop,
             (xfer::RefinePatchStrategy *)NULL,
-            hier::BlockId::zero(),
             d_sum_transaction_factory);
 
       for (int ln = d_coarsest_level + 1; ln <= d_finest_level; ln++) {
@@ -539,7 +537,6 @@ void PatchBoundaryNodeSum::setupSum(
             single_level_sum_algorithm.createSchedule(
                fine_level,
                (xfer::RefinePatchStrategy *)NULL,
-               hier::BlockId::zero(),
                d_sum_transaction_factory);
 
          d_cfbdry_tmp_level[fine_level_num] = new hier::PatchLevel(dim);

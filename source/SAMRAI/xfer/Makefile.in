@@ -32,15 +32,12 @@ OBJS =  BoxGeometryVariableFillPattern.o \
         VariableFillPattern.o		\
 	MultiblockCoarsenAlgorithm.o \
 	MultiblockCoarsenSchedule.o \
-	MultiblockRefineAlgorithm.o \
-	MultiblockRefineSchedule.o \
 	RefineAlgorithm.o \
 	CoarsenAlgorithm.o \
 	RefineSchedule.o \
 	RefineScheduleConnectorWidthRequestor.o \
 	CoarsenSchedule.o \
 	RefineTimeTransaction.o \
-	MultiblockRefinePatchStrategy.o \
 	RefineCopyTransaction.o \
 	StandardRefineTransactionFactory.o \
 	RefineTransactionFactory.o \

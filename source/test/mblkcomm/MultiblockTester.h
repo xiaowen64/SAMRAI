@@ -28,9 +28,9 @@
 #include "SAMRAI/hier/IntVector.h"
 #include "SAMRAI/xfer/MultiblockCoarsenAlgorithm.h"
 #include "SAMRAI/hier/PatchHierarchy.h"
-#include "SAMRAI/xfer/MultiblockRefinePatchStrategy.h"
-#include "SAMRAI/xfer/MultiblockRefineAlgorithm.h"
-#include "SAMRAI/xfer/MultiblockRefineSchedule.h"
+#include "SAMRAI/xfer/RefinePatchStrategy.h"
+#include "SAMRAI/xfer/RefineAlgorithm.h"
+#include "SAMRAI/xfer/RefineSchedule.h"
 #include "SAMRAI/hier/Patch.h"
 #include "SAMRAI/hier/PatchHierarchy.h"
 #include "SAMRAI/hier/PatchLevel.h"
@@ -67,7 +67,7 @@ class PatchMultiblockTestStrategy;
 class MultiblockTester:
    public mesh::StandardTagAndInitStrategy,
    public xfer::CoarsenPatchStrategy,
-   public xfer::MultiblockRefinePatchStrategy
+   public xfer::RefinePatchStrategy
 {
 public:
    /**
@@ -232,8 +232,8 @@ public:
    void
    fillSingularityBoundaryConditions(
       hier::Patch& patch,
-      tbox::List<tbox::Pointer<hier::Patch> >&
-      singularity_patches,
+      const hier::PatchLevel& encon_level,
+      const hier::Connector& dst_to_encon,
       const double fill_time,
       const hier::Box& fill_box,
       const hier::BoundaryBox& boundary_box);
@@ -359,11 +359,11 @@ private:
    xfer::RefineAlgorithm d_reset_refine_algorithm;
    xfer::CoarsenAlgorithm d_reset_coarsen_algorithm;
 
-   tbox::Pointer<xfer::MultiblockRefineAlgorithm> d_mblk_refine_alg;
+   tbox::Pointer<xfer::RefineAlgorithm> d_mblk_refine_alg;
 
    bool d_is_reset;
 
-   tbox::Array<tbox::Pointer<xfer::MultiblockRefineSchedule> >
+   tbox::Array<tbox::Pointer<xfer::RefineSchedule> >
    d_refine_schedule;
    tbox::Array<tbox::Pointer<xfer::CoarsenSchedule> >
    d_coarsen_schedule;

@@ -13,15 +13,7 @@
 
 #include "SAMRAI/SAMRAI_config.h"
 
-#include "SAMRAI/tbox/Array.h"
-#include "SAMRAI/tbox/Pointer.h"
-#include "SAMRAI/hier/Box.h"
-#include "SAMRAI/pdat/SideData.h"
-#include "SAMRAI/tbox/Database.h"
-#include "SAMRAI/hier/IntVector.h"
-#include "SAMRAI/hier/Patch.h"
 #include "PatchMultiblockTestStrategy.h"
-#include "SAMRAI/hier/Variable.h"
 
 using namespace SAMRAI;
 
@@ -65,10 +57,10 @@ public:
    void
    fillSingularityBoundaryConditions(
       hier::Patch& patch,
-      tbox::List<tbox::Pointer<hier::Patch> >&
-      sing_patches,
+      const hier::PatchLevel& encon_level,
+      const hier::Connector& dst_to_encon,
       const hier::Box& fill_box,
-      const hier::BoundaryBox& boundary_box);
+      const hier::BoundaryBox& bbox);
 
    /**
     * This function is called from the MultiblockTester constructor.  Its

@@ -42,7 +42,7 @@ MultiblockTester::MultiblockTester(
    bool do_coarsen,
    const string& refine_option):
    xfer::CoarsenPatchStrategy(dim),
-   xfer::MultiblockRefinePatchStrategy(dim),
+   xfer::RefinePatchStrategy(dim),
    d_dim(dim),
    d_reset_refine_algorithm(dim),
    d_reset_coarsen_algorithm(dim)
@@ -146,7 +146,7 @@ void MultiblockTester::registerVariable(
             operator_name);
 
       d_mblk_refine_alg =
-         new xfer::MultiblockRefineAlgorithm(d_patch_hierarchy, d_dim);
+         new xfer::RefineAlgorithm(d_dim);
 
       hier::IntVector scratch_ghosts =
          hier::IntVector::max(src_ghosts, dst_ghosts);
@@ -589,15 +589,7 @@ void MultiblockTester::setPhysicalBoundaryConditions(
    tbox::Pointer<hier::VariableContext> save_context =
       d_data_test_strategy->getDataContext();
 
-   if (d_filling_coarse_scratch) {
-      d_data_test_strategy->setDataContext(d_refine_scratch);
-   } else {
-      if (d_patch_hierarchy->getGridGeometry()->getNumberBlocks() > 1) {
-         d_data_test_strategy->setDataContext(d_destination);
-      } else {
-         d_data_test_strategy->setDataContext(d_refine_scratch);
-      }
-   }
+   d_data_test_strategy->setDataContext(d_refine_scratch);
 
    d_data_test_strategy->setPhysicalBoundaryConditions(patch,
       d_fake_time,
@@ -609,8 +601,8 @@ void MultiblockTester::setPhysicalBoundaryConditions(
 
 void MultiblockTester::fillSingularityBoundaryConditions(
    hier::Patch& patch,
-   tbox::List<tbox::Pointer<hier::Patch> >&
-   singularity_patches,
+   const hier::PatchLevel& encon_level,
+   const hier::Connector& dst_to_encon,
    const double time,
    const hier::Box& fill_box,
    const hier::BoundaryBox& boundary_box)
@@ -620,15 +612,16 @@ void MultiblockTester::fillSingularityBoundaryConditions(
    tbox::Pointer<hier::VariableContext> save_context =
       d_data_test_strategy->getDataContext();
 
-   if (d_filling_coarse_scratch) {
+//   if (d_filling_coarse_scratch) {
       d_data_test_strategy->setDataContext(d_refine_scratch);
-   } else {
-      d_data_test_strategy->setDataContext(d_destination);
-   }
+//   } else {
+//      d_data_test_strategy->setDataContext(d_destination);
+//   }
 
    d_data_test_strategy->fillSingularityBoundaryConditions(
       patch,
-      singularity_patches,
+      encon_level,
+      dst_to_encon,
       fill_box,
       boundary_box);
 

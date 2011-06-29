@@ -1896,8 +1896,8 @@ void GridGeometry::registerNeighbors(
    b_domain_in_a_space.shift(shift);
    a_domain_in_b_space.shift(back_shift);
 
-   hier::Transformation transformation(rotation, shift);
-   hier::Transformation back_transformation(back_rotation, back_shift);
+   Transformation transformation(rotation, shift);
+   Transformation back_transformation(back_rotation, back_shift);
    Neighbor neighbor_of_b(a, a_domain_in_b_space,
                           back_transformation,
                           is_singularity);
@@ -2020,7 +2020,7 @@ void GridGeometry::adjustMultiblockPatchLevelBoundaries(
 
       for (int nb = 0; nb < d_number_blocks; nb++) {
 
-         const hier::BlockId block_id(nb);
+         const BlockId block_id(nb);
 
          BoxList singularity(d_singularity[nb]);
          singularity.refine(patch_level.getRatioToLevelZero());
@@ -2124,6 +2124,96 @@ void GridGeometry::adjustBoundaryBoxesOnPatch(
    }
 
 }
+
+/*
+ *************************************************************************
+ *                                                                       *
+ *************************************************************************
+ */
+Transformation::RotationIdentifier
+GridGeometry::getRotationIdentifier(const BlockId& dst,
+                                    const BlockId& src) const
+{
+   TBOX_ASSERT(areNeighbors(dst, src));
+
+   Transformation::RotationIdentifier rotate = Transformation::NO_ROTATE;
+   for (tbox::List<GridGeometry::Neighbor>::Iterator
+        ni(d_block_neighbors[dst.getBlockValue()]); ni; ni++) {
+      if (ni().getBlockNumber() == src.getBlockValue()) {
+         rotate = ni().getTransformation().getRotation();
+         break;
+      }
+   }
+
+   return rotate;
+}
+
+/*
+ *************************************************************************
+ *                                                                       *
+ *************************************************************************
+ */
+const IntVector&
+GridGeometry::getOffset(const BlockId& dst,
+                        const BlockId& src) const
+{
+   TBOX_ASSERT(areNeighbors(dst, src));
+
+   for (tbox::List<GridGeometry::Neighbor>::Iterator
+        ni(d_block_neighbors[dst.getBlockValue()]); ni; ni++) {
+      if (ni().getBlockNumber() == src.getBlockValue()) {
+         return ni().getTransformation().getOffset();
+      }
+   }
+
+   return IntVector::getOne(d_dim);
+}
+
+
+/*
+ *************************************************************************
+ *                                                                       *
+ *************************************************************************
+ */
+bool GridGeometry::areNeighbors(const BlockId& block_a,
+                                const BlockId& block_b) const
+{
+   bool are_neighbors = false;
+
+   for (tbox::List<GridGeometry::Neighbor>::Iterator
+        ni(d_block_neighbors[block_a.getBlockValue()]); ni; ni++) {
+      if (ni().getBlockNumber() == block_b.getBlockValue()) {
+         are_neighbors = true;
+         break;
+      }
+   }
+
+   return are_neighbors;
+}
+
+/*
+ *************************************************************************
+ *                                                                       *
+ *************************************************************************
+ */
+bool GridGeometry::areSingularityNeighbors(const BlockId& block_a,
+                                           const BlockId& block_b) const
+{
+   bool are_sing_neighbors = false;
+
+   for (tbox::List<GridGeometry::Neighbor>::Iterator
+        ni(d_block_neighbors[block_a.getBlockValue()]); ni; ni++) {
+      if (ni().getBlockNumber() == block_b.getBlockValue()) {
+         if (ni().isSingularity()) {
+            are_sing_neighbors = true;
+            break;
+         }
+      }
+   }
+
+   return are_sing_neighbors;
+}
+
 
 
 /*

@@ -2234,17 +2234,19 @@ void MblkLinAdv::tagGradientDetectorCells(
  */
 void MblkLinAdv::fillSingularityBoundaryConditions(
    hier::Patch& patch,
-   tbox::List<tbox::Pointer<hier::Patch> >& sing_patches,
+   const hier::PatchLevel& encon_level,
+   const hier::Connector& dst_to_encon,
    const double fill_time,
    const hier::Box& fill_box,
-   const hier::BoundaryBox& bbox)
+   const hier::BoundaryBox& boundary_box)
 {
 
    NULL_USE(patch);
-   NULL_USE(sing_patches);
+   NULL_USE(encon_level);
+   NULL_USE(dst_to_encon);
    NULL_USE(fill_time);
    NULL_USE(fill_box);
-   NULL_USE(bbox);
+   NULL_USE(boundary_box);
 
 }
 

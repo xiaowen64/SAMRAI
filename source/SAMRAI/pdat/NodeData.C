@@ -150,9 +150,14 @@ void NodeData<TYPE>::copy(
    if ((t_src == NULL) || (t_overlap == NULL)) {
       src.copy2(*this, overlap);
    } else {
-      d_data.copy(t_src->d_data,
-         t_overlap->getDestinationBoxList(),
-         t_overlap->getSourceOffset());
+      if (t_overlap->getTransformation().getRotation() ==
+          hier::Transformation::NO_ROTATE) {
+         d_data.copy(t_src->d_data,
+            t_overlap->getDestinationBoxList(),
+            t_overlap->getSourceOffset());
+      } else {
+         copyWithRotation(*t_src, *t_overlap);
+      }
    }
 }
 
@@ -171,9 +176,67 @@ void NodeData<TYPE>::copy2(
    TBOX_ASSERT(t_dst != NULL);
    TBOX_ASSERT(t_overlap != NULL);
 
-   t_dst->d_data.copy(d_data,
-      t_overlap->getDestinationBoxList(),
-      t_overlap->getSourceOffset());
+   if (t_overlap->getTransformation().getRotation() ==
+       hier::Transformation::NO_ROTATE) {
+      t_dst->d_data.copy(d_data,
+         t_overlap->getDestinationBoxList(),
+         t_overlap->getSourceOffset());
+   } else {
+      t_dst->copyWithRotation(*this, *t_overlap);
+   }
+}
+
+template<class TYPE>
+void NodeData<TYPE>::copyWithRotation(
+   const NodeData<TYPE>& src,
+   const NodeOverlap& overlap)
+{
+   TBOX_ASSERT(overlap.getTransformation().getRotation() !=
+               hier::Transformation::NO_ROTATE);
+
+   const tbox::Dimension& dim(src.getDim());
+   const hier::BoxList& overlap_boxes = overlap.getDestinationBoxList();
+   const hier::Transformation::RotationIdentifier rotate =
+      overlap.getTransformation().getRotation();
+   const hier::IntVector& shift = overlap.getSourceOffset();
+
+   hier::Box rotatebox(src.getGhostBox());
+   overlap.getTransformation().transform(rotatebox);
+
+   hier::Box node_rotatebox(NodeGeometry::toNodeBox(rotatebox));
+
+   const hier::Transformation::RotationIdentifier back_rotate =
+      hier::Transformation::getReverseRotationIdentifier(
+         rotate, dim);
+
+   hier::IntVector back_shift(dim);
+
+   hier::Transformation::calculateReverseShift(
+      back_shift, shift, rotate);
+
+   hier::Transformation back_trans(back_rotate, back_shift);
+
+   for (hier::BoxList::Iterator bi(overlap_boxes); bi; bi++) {
+      const hier::Box& overlap_box = bi();
+
+      const hier::Box copybox(node_rotatebox * overlap_box);
+
+      if (!copybox.empty()) {
+         const int depth = ((getDepth() < src.getDepth()) ?
+                            getDepth() : src.getDepth());
+
+         for (hier::Box::Iterator ci(copybox); ci; ci++) {
+
+            NodeIndex dst_index(ci(), hier::IntVector::getZero(dim));
+            NodeIndex src_index(dst_index);
+            NodeGeometry::transform(src_index, back_trans);
+
+            for (int d = 0; d < depth; d++) {
+               d_data(dst_index, d) = src.d_data(src_index, d);
+            }
+         }
+      }
+   }
 }
 
 /*
@@ -246,9 +309,73 @@ void NodeData<TYPE>::packStream(
 
    TBOX_ASSERT(t_overlap != NULL);
 
-   d_data.packStream(stream,
-      t_overlap->getDestinationBoxList(),
-      t_overlap->getSourceOffset());
+   if (t_overlap->getTransformation().getRotation() ==
+       hier::Transformation::NO_ROTATE) {
+      d_data.packStream(stream,
+         t_overlap->getDestinationBoxList(),
+         t_overlap->getSourceOffset());
+   } else {
+      packWithRotation(stream, *t_overlap);
+   }
+}
+
+template<class TYPE>
+void NodeData<TYPE>::packWithRotation(
+   tbox::MessageStream& stream,
+   const NodeOverlap& overlap) const
+{
+   TBOX_ASSERT(overlap.getTransformation().getRotation() !=
+               hier::Transformation::NO_ROTATE);
+
+   const tbox::Dimension& dim(getDim());
+   const hier::BoxList& overlap_boxes = overlap.getDestinationBoxList();
+   const hier::Transformation::RotationIdentifier rotate =
+      overlap.getTransformation().getRotation();
+   const hier::IntVector& shift = overlap.getSourceOffset();
+
+   hier::Box rotatebox(getGhostBox());
+   overlap.getTransformation().transform(rotatebox);
+
+   hier::Box node_rotatebox(NodeGeometry::toNodeBox(rotatebox));
+
+   const hier::Transformation::RotationIdentifier back_rotate =
+      hier::Transformation::getReverseRotationIdentifier(
+         rotate, dim);
+
+   hier::IntVector back_shift(dim);
+
+   hier::Transformation::calculateReverseShift(
+      back_shift, shift, rotate);
+
+   hier::Transformation back_trans(back_rotate, back_shift);
+
+   const int depth = getDepth();
+
+   const int size = depth * overlap_boxes.getTotalSizeOfBoxes();
+   tbox::Array<TYPE> buffer(size);
+
+   int i = 0;
+   for (hier::BoxList::Iterator bi(overlap_boxes); bi; bi++) {
+      const hier::Box& overlap_box = bi();
+
+      const hier::Box copybox(node_rotatebox * overlap_box);
+
+      if (!copybox.empty()) {
+
+         for (int d = 0; d < depth; d++) {
+            for (hier::Box::Iterator ci(copybox); ci; ci++) {
+
+               NodeIndex src_index(ci(), hier::IntVector::getZero(dim));
+               NodeGeometry::transform(src_index, back_trans);
+
+               buffer[i] = d_data(src_index, d);
+               i++;
+            }
+         }
+      }
+   }
+
+   stream.pack(buffer.getPointer(), size);
 }
 
 template<class TYPE>

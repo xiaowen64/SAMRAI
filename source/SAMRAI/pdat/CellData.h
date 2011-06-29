@@ -397,6 +397,13 @@ private:
    operator = (
       const CellData<TYPE>&);                           // not implemented
 
+
+   void copyWithRotation(const CellData<TYPE>& src,
+                         const CellOverlap& overlap);
+
+   void packWithRotation(tbox::MessageStream& stream,
+                         const CellOverlap& overlap) const;
+
    int d_depth;
    ArrayData<TYPE> d_data;
 

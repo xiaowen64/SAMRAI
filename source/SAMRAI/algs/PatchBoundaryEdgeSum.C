@@ -331,7 +331,6 @@ void PatchBoundaryEdgeSum::setupSum(
       single_level_sum_algorithm.createSchedule(
          d_level,
          (xfer::RefinePatchStrategy *)NULL,
-         hier::BlockId::zero(),
          d_sum_transaction_factory);
 
 }

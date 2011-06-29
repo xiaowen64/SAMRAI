@@ -104,6 +104,16 @@ public:
       const hier::Patch& coarse,
       const hier::Box& fine_box,
       const hier::IntVector& ratio);
+   virtual void
+   fillSingularityBoundaryConditions(
+      hier::Patch& patch,
+      const hier::PatchLevel& encon_level,
+      const hier::Connector& dst_to_encon,
+      const double fill_time,
+      const hier::Box& fill_box,
+      const hier::BoundaryBox& boundary_box)
+   {
+   }
 
    //@}
 

@@ -1851,9 +1851,6 @@ DEPENDS_10:=\
 	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenPatchStrategy.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenSchedule.h			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenTransactionFactory.h		\
-	$(INCLUDE_SAM)/SAMRAI/xfer/MultiblockRefineAlgorithm.h		\
-	$(INCLUDE_SAM)/SAMRAI/xfer/MultiblockRefinePatchStrategy.h	\
-	$(INCLUDE_SAM)/SAMRAI/xfer/MultiblockRefineSchedule.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/PatchLevelFillPattern.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineAlgorithm.h			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineClasses.I			\

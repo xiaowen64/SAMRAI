@@ -21,8 +21,8 @@
 #include "SAMRAI/xfer/RefinePatchStrategy.h"
 #include "SAMRAI/xfer/MultiblockCoarsenPatchStrategy.h"
 #include "SAMRAI/mesh/BaseGriddingAlgorithm.h"
-#include "SAMRAI/xfer/MultiblockRefineSchedule.h"
-#include "SAMRAI/xfer/MultiblockRefinePatchStrategy.h"
+#include "SAMRAI/xfer/RefineSchedule.h"
+#include "SAMRAI/xfer/RefinePatchStrategy.h"
 
 /**
  * Class MblkHyperbolicPatchStrategy is an abstract base class defining the
@@ -59,7 +59,7 @@ using namespace SAMRAI;
 class MblkHyperbolicLevelIntegrator;
 
 class MblkHyperbolicPatchStrategy:
-   public xfer::MultiblockRefinePatchStrategy,
+   public xfer::RefinePatchStrategy,
    public xfer::MultiblockCoarsenPatchStrategy
 {
 public:
@@ -350,10 +350,11 @@ public:
    virtual void
    fillSingularityBoundaryConditions(
       hier::Patch& patch,
-      tbox::List<tbox::Pointer<hier::Patch> >& sing_patches,
+      const hier::PatchLevel& encon_level,
+      const hier::Connector& dst_to_encon,
       const double fill_time,
       const hier::Box& fill_box,
-      const hier::BoundaryBox& bbox) = 0;
+      const hier::BoundaryBox& boundary_box) = 0;
 
    /**
     * Return maximum stencil width needed for user-defined

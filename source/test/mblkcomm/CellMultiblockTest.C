@@ -250,10 +250,20 @@ void CellMultiblockTest::setPhysicalBoundaryConditions(
 
 void CellMultiblockTest::fillSingularityBoundaryConditions(
    hier::Patch& patch,
-   tbox::List<tbox::Pointer<hier::Patch> >& sing_patches,
+   const hier::PatchLevel& encon_level,
+   const hier::Connector& dst_to_encon,
    const hier::Box& fill_box,
    const hier::BoundaryBox& bbox)
 {
+   const tbox::Dimension& dim = fill_box.getDim();
+
+   const hier::MappedBoxId& dst_mb_id = patch.getMappedBox().getId();
+
+   const int patch_blk_num = dst_mb_id.getBlockId().getBlockValue();
+
+   const tbox::List<hier::GridGeometry::Neighbor>& neighbors =
+      encon_level.getGridGeometry()->getNeighbors(patch_blk_num);
+
    for (int i = 0; i < d_variables.getSize(); i++) {
 
       tbox::Pointer<pdat::CellData<double> > cell_data =
@@ -264,44 +274,84 @@ void CellMultiblockTest::fillSingularityBoundaryConditions(
 
       int depth = cell_data->getDepth();
 
-      /*
-       * If sing_patches is not empty, that means there is enhanced
-       * connectivity, and we get data from other blocks
-       */
+      const hier::NeighborhoodSet& dst_to_encon_nbrhood_set =
+         dst_to_encon.getNeighborhoodSets();
 
-      if (sing_patches.size()) {
+      hier::NeighborhoodSet::const_iterator ni =
+         dst_to_encon_nbrhood_set.find(dst_mb_id);
 
-         for (tbox::List<tbox::Pointer<hier::Patch> >::
-              Iterator sp(sing_patches); sp; sp++) {
-            tbox::Pointer<pdat::CellData<double> > sing_data =
-               sp()->getPatchData(d_variables[i], getDataContext());
-            tbox::Pointer<hier::PatchGeometry> patch_geom =
-               sp()->getPatchGeometry();
-            int sing_neighbor_id = 
-               sp()->getMappedBox().getBlockId().getBlockValue();
-            for (pdat::CellIterator ci(sing_fill_box); ci; ci++) {
-               for (int d = 0; d < depth; d++) {
-                  (*cell_data)(ci(), d) += sing_neighbor_id;
+      int num_encon_used = 0;
+      if (ni != dst_to_encon_nbrhood_set.end()) {
+
+         const hier::MappedBoxSet& encon_nbrs = ni->second;
+
+         for (hier::MappedBoxSet::const_iterator ei = encon_nbrs.begin();
+              ei != encon_nbrs.end(); ++ei) {
+
+            tbox::Pointer<hier::Patch> encon_patch(
+               encon_level.getPatch(ei->getId()));
+
+            int encon_blk_num = ei->getBlockId().getBlockValue();
+
+            hier::Transformation::RotationIdentifier rotation =
+               hier::Transformation::NO_ROTATE;
+            hier::IntVector offset(dim);
+
+            for (tbox::List<hier::GridGeometry::Neighbor>::Iterator
+                 ni(neighbors); ni; ni++) {
+
+               if (ni().getBlockNumber() == encon_blk_num) {
+                  rotation = ni().getRotationIdentifier();
+                  offset = ni().getShift();
+                  break;
                }
             }
-         }
 
-         for (pdat::CellIterator ci(sing_fill_box); ci; ci++) {
-            for (int d = 0; d < depth; d++) {
-               (*cell_data)(ci(), d) /= sing_patches.size();
+            offset *= patch.getPatchGeometry()->getRatio();
+
+            hier::Transformation transformation(rotation, offset);
+            hier::Box encon_patch_box(encon_patch->getBox());
+            transformation.transform(encon_patch_box);
+
+            hier::Box encon_fill_box(encon_patch_box * sing_fill_box);
+            if (!encon_fill_box.empty()) {
+
+               const hier::Transformation::RotationIdentifier back_rotate =
+                  hier::Transformation::getReverseRotationIdentifier(
+                     rotation, dim);
+
+               hier::IntVector back_shift(dim);
+
+               hier::Transformation::calculateReverseShift(
+                  back_shift, offset, rotation);
+
+               hier::Transformation back_trans(back_rotate, back_shift);
+
+               tbox::Pointer<pdat::CellData<double> > sing_data(
+                  encon_patch->getPatchData(d_variables[i], getDataContext()));
+
+               for (pdat::CellIterator ci(encon_fill_box); ci; ci++) {
+                  pdat::CellIndex src_index(ci());
+                  pdat::CellGeometry::transform(src_index, back_trans);
+                  for (int d = 0; d < depth; d++) {
+                     (*cell_data)(ci(), d) += (*sing_data)(src_index,d);
+                  }
+               }
+
+               ++num_encon_used;
             }
          }
+      }
 
-         /*
-          * In cases of reduced connectivity, there are no other blocks
-          * from which to acquire data.
-          */
-
+      if (num_encon_used) {
+         for (pdat::CellIterator ci(sing_fill_box); ci; ci++) {
+            for (int d = 0; d < depth; d++) {
+               (*cell_data)(ci(), d) /= num_encon_used;
+            }
+         }
       } else {
-
          cell_data->fillAll(
             (double)bbox.getLocationIndex() + 200.0, fill_box);
-
       }
    }
 }
@@ -454,7 +504,7 @@ bool CellMultiblockTest::verifyResults(
                      neighbor_ghost.intersectBoxes(fill_box);
                      if (neighbor_ghost.size()) {
                         num_sing_neighbors++;
-                        correct += block_id.getBlockValue();
+                        correct += ns().getBlockNumber();
                      }
                   }
                }

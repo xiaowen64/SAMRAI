@@ -253,7 +253,6 @@ public:
       tbox::Pointer<hier::PatchLevel> level,
       RefinePatchStrategy* patch_strategy =
          ((RefinePatchStrategy *)NULL),
-      const hier::BlockId& block_id = hier::BlockId::zero(),
       tbox::Pointer<xfer::RefineTransactionFactory> transaction_factory =
          tbox::Pointer<xfer::RefineTransactionFactory>(NULL));
 
@@ -270,7 +269,6 @@ public:
       tbox::Pointer<hier::PatchLevel> level,
       RefinePatchStrategy* patch_strategy =
          ((RefinePatchStrategy *)NULL),
-      const hier::BlockId& block_id = hier::BlockId::zero(),
       tbox::Pointer<xfer::RefineTransactionFactory> transaction_factory =
          tbox::Pointer<xfer::RefineTransactionFactory>(NULL));
 
@@ -318,7 +316,6 @@ public:
       tbox::Pointer<hier::PatchLevel> src_level,
       xfer::RefinePatchStrategy* patch_strategy =
          ((xfer::RefinePatchStrategy *)NULL),
-      const hier::BlockId& block_id = hier::BlockId::zero(),
       bool use_time_interpolation = false,
       tbox::Pointer<xfer::RefineTransactionFactory> transaction_factory =
          tbox::Pointer<xfer::RefineTransactionFactory>(NULL));
@@ -337,7 +334,6 @@ public:
       tbox::Pointer<hier::PatchLevel> src_level,
       xfer::RefinePatchStrategy* patch_strategy =
          ((xfer::RefinePatchStrategy *)NULL),
-      const hier::BlockId& block_id = hier::BlockId::zero(),
       bool use_time_interpolation = false,
       tbox::Pointer<xfer::RefineTransactionFactory> transaction_factory =
          tbox::Pointer<xfer::RefineTransactionFactory>(NULL));
@@ -415,7 +411,6 @@ public:
       tbox::Pointer<hier::PatchHierarchy> hierarchy,
       xfer::RefinePatchStrategy* patch_strategy =
          ((xfer::RefinePatchStrategy *)NULL),
-      const hier::BlockId& block_id = hier::BlockId::zero(),
       bool use_time_interpolation = false,
       tbox::Pointer<xfer::RefineTransactionFactory> transaction_factory =
          tbox::Pointer<xfer::RefineTransactionFactory>(NULL));
@@ -435,7 +430,6 @@ public:
       tbox::Pointer<hier::PatchHierarchy> hierarchy,
       xfer::RefinePatchStrategy* patch_strategy =
          ((xfer::RefinePatchStrategy *)NULL),
-      const hier::BlockId& block_id = hier::BlockId::zero(),
       bool use_time_interpolation = false,
       tbox::Pointer<xfer::RefineTransactionFactory> transaction_factory =
          tbox::Pointer<xfer::RefineTransactionFactory>(NULL));
@@ -531,7 +525,6 @@ public:
       tbox::Pointer<hier::PatchHierarchy> hierarchy,
       xfer::RefinePatchStrategy* patch_strategy =
          ((xfer::RefinePatchStrategy *)NULL),
-      const hier::BlockId& block_id = hier::BlockId::zero(),
       bool use_time_interpolation = false,
       tbox::Pointer<xfer::RefineTransactionFactory> transaction_factory =
          tbox::Pointer<xfer::RefineTransactionFactory>(NULL));
@@ -552,7 +545,6 @@ public:
       tbox::Pointer<hier::PatchHierarchy> hierarchy,
       xfer::RefinePatchStrategy* patch_strategy =
          ((xfer::RefinePatchStrategy *)NULL),
-      const hier::BlockId& block_id = hier::BlockId::zero(),
       bool use_time_interpolation = false,
       tbox::Pointer<xfer::RefineTransactionFactory> transaction_factory =
          tbox::Pointer<xfer::RefineTransactionFactory>(NULL));

@@ -16,6 +16,7 @@
 #include "SAMRAI/hier/BoxList.h"
 #include "SAMRAI/hier/IntVector.h"
 #include "SAMRAI/hier/Patch.h"
+#include "SAMRAI/hier/PatchLevel.h"
 #include "SAMRAI/tbox/DescribedClass.h"
 
 #include <set>
@@ -109,6 +110,47 @@ public:
       hier::Patch& patch,
       const double fill_time,
       const hier::IntVector& ghost_width_to_fill) = 0;
+
+   /*!
+    * @brief Set the ghost data at a multiblock singularity.
+    *
+    * This virtual method allows for a user-defined implemenation to fill
+    * ghost data at ghost regions located at reduced or enhanced connectivity
+    * multiblock singularities.  The method is virtual so that it need not
+    * be overridden in single-block applications.  The encon_level and
+    * dst_to_encon arguments may be ignored if the patch touches
+    * no enhanced connectivity singularities.
+    *
+    * The patches in encon level are in the coordinate system of the blocks
+    * where they originated, not in that of the destination patch, so the
+    * filling operation must take into account the transformation between
+    * blocks.
+    *
+    * @param patch The patch containing the data to be filled
+    * @param encon_level  Level representing enhanced connectivity ghost
+    *                     regions
+    * @param dst_to_encon  Connector from destination level to encon_level
+    * @param fill_time Simulation time at which data is filled
+    * @param fill_box Box covering maximum amount of ghost cells to be filled
+    * @param boundary_box BoundaryBox describing location of singularity in
+    *                     relation to patch
+    */
+   virtual void
+   fillSingularityBoundaryConditions(
+      hier::Patch& patch,
+      const hier::PatchLevel& encon_level,
+      const hier::Connector& dst_to_encon,
+      const double fill_time,
+      const hier::Box& fill_box,
+      const hier::BoundaryBox& boundary_box)
+   {
+      NULL_USE(patch);
+      NULL_USE(encon_level);
+      NULL_USE(dst_to_encon);
+      NULL_USE(fill_time);
+      NULL_USE(fill_box);
+      NULL_USE(boundary_box);
+   }
 
    /*!
     * @brief Return maximum stencil width needed for user-defined

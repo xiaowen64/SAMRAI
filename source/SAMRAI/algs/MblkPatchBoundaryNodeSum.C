@@ -21,7 +21,7 @@
 #include "SAMRAI/pdat/OuternodeDoubleConstantCoarsen.h"
 #include "SAMRAI/algs/OuternodeSumTransactionFactory.h"
 #include "SAMRAI/xfer/CoarsenAlgorithm.h"
-#include "SAMRAI/xfer/MultiblockRefineAlgorithm.h"
+#include "SAMRAI/xfer/RefineAlgorithm.h"
 #include "SAMRAI/xfer/RefineAlgorithm.h"
 #include "SAMRAI/xfer/RefinePatchStrategy.h"
 #include "SAMRAI/hier/RefineOperator.h"
@@ -72,7 +72,7 @@ MblkPatchBoundaryNodeSum::s_onode_dst_id_array =
 
 MblkPatchBoundaryNodeSum::MblkPatchBoundaryNodeSum(
    const std::string& object_name,
-   tbox::Pointer<hier::MultiblockPatchHierarchy> hierarchy)
+   tbox::Pointer<hier::PatchHierarchy> hierarchy)
 {
    TBOX_ASSERT(!object_name.empty());
 
@@ -297,7 +297,7 @@ void MblkPatchBoundaryNodeSum::registerSum(
  */
 
 void MblkPatchBoundaryNodeSum::setupSum(
-   tbox::Pointer<hier::MultiblockPatchLevel> level)
+   tbox::Pointer<hier::PatchLevel> level)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(!level.isNull());
@@ -330,13 +330,13 @@ void MblkPatchBoundaryNodeSum::setupSum(
             (hier::RefineOperator *)NULL);
       }
 
-      xfer::MultiblockRefineAlgorithm mblk_sum_algorithm(
+      xfer::RefineAlgorithm mblk_sum_algorithm(
          single_level_sum_algorithm, d_hierarchy);
 
       d_single_level_sum_schedule[0] =
          mblk_sum_algorithm.createSchedule(
             d_level,
-            (xfer::MultiblockRefinePatchStrategy *)NULL,
+            (xfer::RefinePatchStrategy *)NULL,
             d_sum_transaction_factory);
 
    }
@@ -404,7 +404,7 @@ void MblkPatchBoundaryNodeSum::computeSum(
  */
 
 void MblkPatchBoundaryNodeSum::doLevelSum(
-   tbox::Pointer<hier::MultiblockPatchLevel> level) const
+   tbox::Pointer<hier::PatchLevel> level) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(!level.isNull());
@@ -436,7 +436,7 @@ void MblkPatchBoundaryNodeSum::doLevelSum(
  */
 
 void MblkPatchBoundaryNodeSum::copyNodeToOuternodeOnLevel(
-   tbox::Pointer<hier::MultiblockPatchLevel> level,
+   tbox::Pointer<hier::PatchLevel> level,
    const tbox::Array<int>& node_data_id,
    const tbox::Array<int>& onode_data_id) const
 {
@@ -468,7 +468,7 @@ void MblkPatchBoundaryNodeSum::copyNodeToOuternodeOnLevel(
 }
 
 void MblkPatchBoundaryNodeSum::copyOuternodeToNodeOnLevel(
-   tbox::Pointer<hier::MultiblockPatchLevel> level,
+   tbox::Pointer<hier::PatchLevel> level,
    const tbox::Array<int>& onode_data_id,
    const tbox::Array<int>& node_data_id) const
 {

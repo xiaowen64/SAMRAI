@@ -223,6 +223,7 @@ CellGeometry::transform(
             index(1) = -tmp_index(0)-1;
          }
       }
+
    } else if (dim.getValue() == 3) {
       switch (rotation) {
 
@@ -343,6 +344,8 @@ CellGeometry::transform(
    } else {
       TBOX_ERROR("CellGeometry::transform implemented for 2D and 3d only.");
    }
+
+   index += transformation.getOffset();
 }
 
 void

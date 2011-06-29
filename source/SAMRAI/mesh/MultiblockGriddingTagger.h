@@ -12,33 +12,32 @@
 #define included_mesh_MultiblockGriddingTagger
 
 #include "SAMRAI/SAMRAI_config.h"
-#include "SAMRAI/xfer/MultiblockRefinePatchStrategy.h"
+#include "SAMRAI/xfer/RefinePatchStrategy.h"
 
 namespace SAMRAI {
 namespace mesh {
 
 /*!
  * @brief Class MultiblockGriddingTagger is a concrete implementation
- * of MultiblockRefinePatchStrategy<DIMI> that is used for boundary filling
+ * of RefinePatchStrategy<DIMI> that is used for boundary filling
  * of patch data representing cells tagged for refinement.
  *
- * This class is needed for the calls to MultiblockRefineSchedule in
- * the MultiblockGriddingAlgorithm.
+ * This class is needed for the calls to RefineSchedule in
+ * the GriddingAlgorithm.
  *
- * This class implements the interface from MultiblockRefinePatchStrategy for
+ * This class implements the interface from RefinePatchStrategy for
  * fillSingularityBoundaryConditions(), so that boundary conditions for
  * tag data that abuts a singularity can be properly filled.  Also
  * implemented are the interfaces for xfer::RefinePatchStrategy, needed
  * primarily for physical boundary filling.
  *
- * @see mesh::MultiblockGriddingAlgorithm
- * @see xfer::MultiblockRefineSchedule
- * @see xfer::MultiblockRefinePatchStrategy
+ * @see mesh::GriddingAlgorithm
+ * @see xfer::RefineSchedule
  * @see xfer::RefinePatchStrategy
  */
 
 class MultiblockGriddingTagger:
-   public xfer::MultiblockRefinePatchStrategy
+   public xfer::RefinePatchStrategy
 {
 public:
    /*!
@@ -80,17 +79,16 @@ public:
    /*!
     * @brief Set the ghost data at a multiblock singularity.
     *
-    * Implementation of interface defined in MultiblockRefinePatchStrategy.
+    * Implementation of interface defined in RefinePatchStrategy.
     * Fills ghost cells of patch data that abut multiblock singularities.
-    * The list of singularity patches contains the data from neighboring
-    * blocks that also abut the singularity, and that data from the neighbors
+    * The encon_level contains the data from neighboring blocks that also
+    * also abut the singularity, and that data from the neighbors
     * is used to fill data on the local patch.
     *
     * @param patch               Local patch containing data to be filled
-    * @param singularity_patches List of structures that contain data from
-    *                             neighboring blocks.  See
-    *                             MultiblockRefineSchedule for more
-    *                             information on struct SingularityPatch
+    * @param encon_level  Level representing enhanced connectivity ghost
+    *                     regions
+    * @param dst_to_encon  Connector from destination level to encon_level
     * @param fill_time            Simulation time when filling occurs
     * @param fill_box             All ghost data to be filled will be within
     *                             this box
@@ -101,8 +99,8 @@ public:
    virtual void
    fillSingularityBoundaryConditions(
       hier::Patch& patch,
-      tbox::List<tbox::Pointer<hier::Patch> >&
-      singularity_patches,
+      const hier::PatchLevel& encon_level,
+      const hier::Connector& dst_to_encon,
       const double fill_time,
       const hier::Box& fill_box,
       const hier::BoundaryBox& boundary_box);
@@ -113,7 +111,7 @@ public:
     * determine the correct interpolation data dependencies.
     *
     * Always returns an IntVector of ones, because that is the maximum
-    * stencil needed for the operations in MultiblockGriddingAlgorithm
+    * stencil needed for the operations in GriddingAlgorithm
     */
    virtual hier::IntVector getRefineOpStencilWidth() const
    {

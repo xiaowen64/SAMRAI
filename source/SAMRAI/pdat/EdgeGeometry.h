@@ -152,6 +152,12 @@ private:
       const hier::Transformation& transformation,
       const hier::BoxList& dst_restrict_boxes);
 
+   static void
+   rotateAboutAxis(pdat::EdgeIndex& index,
+                   const int axis,
+                   const int num_rotations);
+
+
    EdgeGeometry(
       const EdgeGeometry&);             // not implemented
    void

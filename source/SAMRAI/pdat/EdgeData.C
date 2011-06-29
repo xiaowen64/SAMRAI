@@ -159,10 +159,16 @@ void EdgeData<TYPE>::copy(
    if ((t_src == NULL) || (t_overlap == NULL)) {
       src.copy2(*this, overlap);
    } else {
-      const hier::IntVector& src_offset = t_overlap->getSourceOffset();
-      for (int d = 0; d < getDim().getValue(); d++) {
-         const hier::BoxList& box_list = t_overlap->getDestinationBoxList(d);
-         d_data[d].copy(t_src->d_data[d], box_list, src_offset);
+      if (t_overlap->getTransformation().getRotation() ==
+          hier::Transformation::NO_ROTATE) {
+
+         const hier::IntVector& src_offset = t_overlap->getSourceOffset();
+         for (int d = 0; d < getDim().getValue(); d++) {
+            const hier::BoxList& box_list = t_overlap->getDestinationBoxList(d);
+            d_data[d].copy(t_src->d_data[d], box_list, src_offset);
+         }
+      } else {
+         copyWithRotation(*t_src, *t_overlap);
       }
    }
 }
@@ -182,12 +188,77 @@ void EdgeData<TYPE>::copy2(
    TBOX_ASSERT(t_dst != NULL);
    TBOX_ASSERT(t_overlap != NULL);
 
-   const hier::IntVector& src_offset = t_overlap->getSourceOffset();
-   for (int d = 0; d < getDim().getValue(); d++) {
-      const hier::BoxList& box_list = t_overlap->getDestinationBoxList(d);
-      t_dst->d_data[d].copy(d_data[d], box_list, src_offset);
+   if (t_overlap->getTransformation().getRotation() ==
+       hier::Transformation::NO_ROTATE) {
+
+      const hier::IntVector& src_offset = t_overlap->getSourceOffset();
+      for (int d = 0; d < getDim().getValue(); d++) {
+         const hier::BoxList& box_list = t_overlap->getDestinationBoxList(d);
+         t_dst->d_data[d].copy(d_data[d], box_list, src_offset);
+      }
+   } else {
+      t_dst->copyWithRotation(*this, *t_overlap);
    }
 }
+
+template<class TYPE>
+void EdgeData<TYPE>::copyWithRotation(
+   const EdgeData<TYPE>& src,
+   const EdgeOverlap& overlap)
+{
+   TBOX_ASSERT(overlap.getTransformation().getRotation() !=
+               hier::Transformation::NO_ROTATE);
+
+   const tbox::Dimension& dim(src.getDim());
+   const hier::Transformation::RotationIdentifier rotate =
+      overlap.getTransformation().getRotation();
+   const hier::IntVector& shift = overlap.getSourceOffset();
+
+   const hier::Transformation::RotationIdentifier back_rotate =
+      hier::Transformation::getReverseRotationIdentifier(
+         rotate, dim);
+
+   hier::IntVector back_shift(dim);
+
+   hier::Transformation::calculateReverseShift(
+      back_shift, shift, rotate);
+
+   hier::Transformation back_trans(back_rotate, back_shift);
+
+   hier::Box rotatebox(src.getGhostBox());
+   overlap.getTransformation().transform(rotatebox);
+
+   for (int i = 0; i < dim.getValue(); i++) {
+      const hier::BoxList& overlap_boxes = overlap.getDestinationBoxList(i);
+
+      hier::Box edge_rotatebox(EdgeGeometry::toEdgeBox(rotatebox, i));
+
+      for (hier::BoxList::Iterator bi(overlap_boxes); bi; bi++) {
+         const hier::Box& overlap_box = bi();
+
+         const hier::Box copybox(edge_rotatebox * overlap_box);
+
+         if (!copybox.empty()) {
+            const int depth = ((getDepth() < src.getDepth()) ?
+                               getDepth() : src.getDepth());
+
+            for (hier::Box::Iterator ci(copybox); ci; ci++) {
+
+               EdgeIndex dst_index(ci(), 0, 0);
+               dst_index.setAxis(i);
+               EdgeIndex src_index(dst_index);
+               EdgeGeometry::transform(src_index, back_trans);
+
+               for (int d = 0; d < depth; d++) {
+                  (*this)(dst_index, d) = src(src_index, d);
+               }
+            }
+         }
+      }
+   }
+}
+
+
 
 /*
  *************************************************************************
@@ -267,14 +338,85 @@ void EdgeData<TYPE>::packStream(
 
    TBOX_ASSERT(t_overlap != NULL);
 
-   const hier::IntVector& offset = t_overlap->getSourceOffset();
-   for (int d = 0; d < getDim().getValue(); d++) {
-      const hier::BoxList& boxes = t_overlap->getDestinationBoxList(d);
-      if (boxes.getNumberOfItems() > 0) {
-         d_data[d].packStream(stream, boxes, offset);
+   if (t_overlap->getTransformation().getRotation() ==
+       hier::Transformation::NO_ROTATE) {
+
+      const hier::IntVector& offset = t_overlap->getSourceOffset();
+      for (int d = 0; d < getDim().getValue(); d++) {
+         const hier::BoxList& boxes = t_overlap->getDestinationBoxList(d);
+         if (boxes.getNumberOfItems() > 0) {
+            d_data[d].packStream(stream, boxes, offset);
+         }
       }
+   } else {
+      packWithRotation(stream, *t_overlap);
    }
 }
+
+template<class TYPE>
+void EdgeData<TYPE>::packWithRotation(
+   tbox::MessageStream& stream,
+   const EdgeOverlap& overlap) const
+{
+   TBOX_ASSERT(overlap.getTransformation().getRotation() !=
+               hier::Transformation::NO_ROTATE);
+
+   const tbox::Dimension& dim(getDim());
+   const hier::Transformation::RotationIdentifier rotate =
+      overlap.getTransformation().getRotation();
+   const hier::IntVector& shift = overlap.getSourceOffset();
+
+   const hier::Transformation::RotationIdentifier back_rotate =
+      hier::Transformation::getReverseRotationIdentifier(
+         rotate, dim);
+
+   hier::IntVector back_shift(dim);
+
+   hier::Transformation::calculateReverseShift(
+      back_shift, shift, rotate);
+
+   hier::Transformation back_trans(back_rotate, back_shift);
+
+   hier::Box rotatebox(getGhostBox());
+   overlap.getTransformation().transform(rotatebox);
+
+   const int depth = getDepth();
+
+   for (int i = 0; i < dim.getValue(); i++) {
+      const hier::BoxList& overlap_boxes = overlap.getDestinationBoxList(i);
+
+
+      const int size = depth * overlap_boxes.getTotalSizeOfBoxes();
+      tbox::Array<TYPE> buffer(size);
+
+      hier::Box edge_rotatebox(EdgeGeometry::toEdgeBox(rotatebox, i));
+
+      int buf_count = 0;
+      for (hier::BoxList::Iterator bi(overlap_boxes); bi; bi++) {
+         const hier::Box& overlap_box = bi();
+
+         const hier::Box copybox(edge_rotatebox * overlap_box);
+
+         if (!copybox.empty()) {
+
+            for (int d = 0; d < depth; d++) {
+
+               for (hier::Box::Iterator ci(copybox); ci; ci++) {
+
+                  EdgeIndex src_index(ci(), 0, 0);
+                  src_index.setAxis(i);
+                  EdgeGeometry::transform(src_index, back_trans);
+
+                  buffer[buf_count] = (*this)(src_index, d);
+                  buf_count++;
+               }
+            }
+         }
+      }
+      stream.pack(buffer.getPointer(), size);
+   }
+}
+
 
 template<class TYPE>
 void EdgeData<TYPE>::unpackStream(

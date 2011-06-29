@@ -455,7 +455,7 @@ void CoarsenSchedule::generateSchedule()
    if (d_fill_coarse_data) {
       d_precoarsen_refine_schedule =
          d_precoarsen_refine_algorithm->createSchedule(d_temp_crse_level,
-            d_crse_level, NULL, d_block_id);
+            d_crse_level, NULL);
    }
 
    d_schedule = new tbox::Schedule();

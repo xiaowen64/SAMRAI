@@ -186,9 +186,6 @@ DEPENDS_0:=\
 	$(INCLUDE_SAM)/SAMRAI/xfer/MultiblockCoarsenAlgorithm.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/MultiblockCoarsenPatchStrategy.h	\
 	$(INCLUDE_SAM)/SAMRAI/xfer/MultiblockCoarsenSchedule.h		\
-	$(INCLUDE_SAM)/SAMRAI/xfer/MultiblockRefineAlgorithm.h		\
-	$(INCLUDE_SAM)/SAMRAI/xfer/MultiblockRefinePatchStrategy.h	\
-	$(INCLUDE_SAM)/SAMRAI/xfer/MultiblockRefineSchedule.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/PatchLevelFillPattern.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineAlgorithm.h			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineClasses.I			\
@@ -403,9 +400,6 @@ DEPENDS_1:=\
 	$(INCLUDE_SAM)/SAMRAI/xfer/MultiblockCoarsenAlgorithm.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/MultiblockCoarsenPatchStrategy.h	\
 	$(INCLUDE_SAM)/SAMRAI/xfer/MultiblockCoarsenSchedule.h		\
-	$(INCLUDE_SAM)/SAMRAI/xfer/MultiblockRefineAlgorithm.h		\
-	$(INCLUDE_SAM)/SAMRAI/xfer/MultiblockRefinePatchStrategy.h	\
-	$(INCLUDE_SAM)/SAMRAI/xfer/MultiblockRefineSchedule.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/PatchLevelFillPattern.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineAlgorithm.h			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineClasses.I			\
@@ -622,9 +616,6 @@ DEPENDS_2:=\
 	$(INCLUDE_SAM)/SAMRAI/xfer/MultiblockCoarsenAlgorithm.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/MultiblockCoarsenPatchStrategy.h	\
 	$(INCLUDE_SAM)/SAMRAI/xfer/MultiblockCoarsenSchedule.h		\
-	$(INCLUDE_SAM)/SAMRAI/xfer/MultiblockRefineAlgorithm.h		\
-	$(INCLUDE_SAM)/SAMRAI/xfer/MultiblockRefinePatchStrategy.h	\
-	$(INCLUDE_SAM)/SAMRAI/xfer/MultiblockRefineSchedule.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/PatchLevelFillPattern.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineAlgorithm.h			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineClasses.I			\
@@ -850,9 +841,6 @@ DEPENDS_3:=\
 	$(INCLUDE_SAM)/SAMRAI/xfer/MultiblockCoarsenAlgorithm.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/MultiblockCoarsenPatchStrategy.h	\
 	$(INCLUDE_SAM)/SAMRAI/xfer/MultiblockCoarsenSchedule.h		\
-	$(INCLUDE_SAM)/SAMRAI/xfer/MultiblockRefineAlgorithm.h		\
-	$(INCLUDE_SAM)/SAMRAI/xfer/MultiblockRefinePatchStrategy.h	\
-	$(INCLUDE_SAM)/SAMRAI/xfer/MultiblockRefineSchedule.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/PatchLevelFillPattern.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineAlgorithm.h			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineClasses.I			\
@@ -1066,9 +1054,6 @@ DEPENDS_4:=\
 	$(INCLUDE_SAM)/SAMRAI/xfer/MultiblockCoarsenAlgorithm.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/MultiblockCoarsenPatchStrategy.h	\
 	$(INCLUDE_SAM)/SAMRAI/xfer/MultiblockCoarsenSchedule.h		\
-	$(INCLUDE_SAM)/SAMRAI/xfer/MultiblockRefineAlgorithm.h		\
-	$(INCLUDE_SAM)/SAMRAI/xfer/MultiblockRefinePatchStrategy.h	\
-	$(INCLUDE_SAM)/SAMRAI/xfer/MultiblockRefineSchedule.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/PatchLevelFillPattern.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineAlgorithm.h			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineClasses.I			\
@@ -1272,9 +1257,6 @@ DEPENDS_5:=\
 	$(INCLUDE_SAM)/SAMRAI/xfer/MultiblockCoarsenAlgorithm.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/MultiblockCoarsenPatchStrategy.h	\
 	$(INCLUDE_SAM)/SAMRAI/xfer/MultiblockCoarsenSchedule.h		\
-	$(INCLUDE_SAM)/SAMRAI/xfer/MultiblockRefineAlgorithm.h		\
-	$(INCLUDE_SAM)/SAMRAI/xfer/MultiblockRefinePatchStrategy.h	\
-	$(INCLUDE_SAM)/SAMRAI/xfer/MultiblockRefineSchedule.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/PatchLevelFillPattern.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineAlgorithm.h			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineClasses.I			\
@@ -1454,9 +1436,6 @@ DEPENDS_6:=\
 	$(INCLUDE_SAM)/SAMRAI/xfer/MultiblockCoarsenAlgorithm.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/MultiblockCoarsenPatchStrategy.h	\
 	$(INCLUDE_SAM)/SAMRAI/xfer/MultiblockCoarsenSchedule.h		\
-	$(INCLUDE_SAM)/SAMRAI/xfer/MultiblockRefineAlgorithm.h		\
-	$(INCLUDE_SAM)/SAMRAI/xfer/MultiblockRefinePatchStrategy.h	\
-	$(INCLUDE_SAM)/SAMRAI/xfer/MultiblockRefineSchedule.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/PatchLevelFillPattern.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineAlgorithm.h			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineClasses.I			\
@@ -1661,9 +1640,6 @@ DEPENDS_7:=\
 	$(INCLUDE_SAM)/SAMRAI/xfer/MultiblockCoarsenAlgorithm.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/MultiblockCoarsenPatchStrategy.h	\
 	$(INCLUDE_SAM)/SAMRAI/xfer/MultiblockCoarsenSchedule.h		\
-	$(INCLUDE_SAM)/SAMRAI/xfer/MultiblockRefineAlgorithm.h		\
-	$(INCLUDE_SAM)/SAMRAI/xfer/MultiblockRefinePatchStrategy.h	\
-	$(INCLUDE_SAM)/SAMRAI/xfer/MultiblockRefineSchedule.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/PatchLevelFillPattern.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineAlgorithm.h			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineClasses.I			\
@@ -1853,16 +1829,6 @@ DEPENDS_8:=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/NodeIterator.h			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/NodeOverlap.I			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/NodeOverlap.h			\
-	$(INCLUDE_SAM)/SAMRAI/pdat/SideData.I				\
-	$(INCLUDE_SAM)/SAMRAI/pdat/SideData.h				\
-	$(INCLUDE_SAM)/SAMRAI/pdat/SideGeometry.I			\
-	$(INCLUDE_SAM)/SAMRAI/pdat/SideGeometry.h			\
-	$(INCLUDE_SAM)/SAMRAI/pdat/SideIndex.I				\
-	$(INCLUDE_SAM)/SAMRAI/pdat/SideIndex.h				\
-	$(INCLUDE_SAM)/SAMRAI/pdat/SideIterator.I			\
-	$(INCLUDE_SAM)/SAMRAI/pdat/SideIterator.h			\
-	$(INCLUDE_SAM)/SAMRAI/pdat/SideOverlap.I			\
-	$(INCLUDE_SAM)/SAMRAI/pdat/SideOverlap.h			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.I			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.I				\
@@ -1930,9 +1896,6 @@ DEPENDS_8:=\
 	$(INCLUDE_SAM)/SAMRAI/xfer/MultiblockCoarsenAlgorithm.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/MultiblockCoarsenPatchStrategy.h	\
 	$(INCLUDE_SAM)/SAMRAI/xfer/MultiblockCoarsenSchedule.h		\
-	$(INCLUDE_SAM)/SAMRAI/xfer/MultiblockRefineAlgorithm.h		\
-	$(INCLUDE_SAM)/SAMRAI/xfer/MultiblockRefinePatchStrategy.h	\
-	$(INCLUDE_SAM)/SAMRAI/xfer/MultiblockRefineSchedule.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/PatchLevelFillPattern.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineAlgorithm.h			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineClasses.I			\
@@ -1957,7 +1920,6 @@ DEPENDS_8 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/FaceData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/MultiblockCellDataTranslator.C	\
 	$(INCLUDE_SAM)/SAMRAI/pdat/NodeData.C				\
-	$(INCLUDE_SAM)/SAMRAI/pdat/SideData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/AsyncCommPeer.C			\

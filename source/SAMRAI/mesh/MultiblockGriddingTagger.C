@@ -13,6 +13,7 @@
 
 #include "SAMRAI/mesh/MultiblockGriddingTagger.h"
 
+#include "SAMRAI/hier/Connector.h"
 #include "SAMRAI/hier/VariableDatabase.h"
 #include "SAMRAI/pdat/CellData.h"
 #include "SAMRAI/pdat/CellVariable.h"
@@ -40,7 +41,7 @@ namespace mesh {
 
 MultiblockGriddingTagger::MultiblockGriddingTagger(
    const tbox::Dimension& dim):
-   xfer::MultiblockRefinePatchStrategy(dim),
+   xfer::RefinePatchStrategy(dim),
    d_dim(dim)
 {
 }
@@ -114,80 +115,94 @@ void MultiblockGriddingTagger::setPhysicalBoundaryConditions(
 
 void MultiblockGriddingTagger::fillSingularityBoundaryConditions(
    hier::Patch& patch,
-   tbox::List<tbox::Pointer<hier::Patch> >& singularity_patches,
+   const hier::PatchLevel& encon_level,
+   const hier::Connector& dst_to_encon,
    const double fill_time,
    const hier::Box& fill_box,
    const hier::BoundaryBox& boundary_box)
 {
    TBOX_DIM_ASSERT_CHECK_DIM_ARGS3(d_dim, patch, fill_box, boundary_box);
 
-   NULL_USE(boundary_box);
-   NULL_USE(fill_time);
+   const tbox::Dimension& dim = fill_box.getDim();
 
-   const tbox::Dimension dim(fill_box.getDim());
+   const hier::MappedBoxId& dst_mb_id = patch.getMappedBox().getId();
+
+   const int patch_blk_num = dst_mb_id.getBlockId().getBlockValue();
+
+   const tbox::List<hier::GridGeometry::Neighbor>& neighbors =
+      encon_level.getGridGeometry()->getNeighbors(patch_blk_num);
 
    const tbox::Pointer<pdat::CellData<int> > tag_data =
       patch.getPatchData(d_buf_tag_indx);
 
-   int num_sing_patches = singularity_patches.getNumberOfItems();
-   tbox::Pointer<pdat::CellData<int> >* sing_tag_data;
-   sing_tag_data =
-      new tbox::Pointer<pdat::CellData<int> >[num_sing_patches];
+   hier::Box sing_fill_box(tag_data->getGhostBox() * fill_box);
+   tag_data->fillAll(0, sing_fill_box);
 
-   int sn = 0;
+   const hier::NeighborhoodSet& dst_to_encon_nbrhood_set =
+      dst_to_encon.getNeighborhoodSets();
 
-   for (tbox::List<tbox::Pointer<hier::Patch> >::Iterator
-        sp(singularity_patches); sp; sp++) {
-      sing_tag_data[sn] =
-         sp()->getPatchData(d_buf_tag_indx);
-      sn++;
-   }
+   hier::NeighborhoodSet::const_iterator ni =
+      dst_to_encon_nbrhood_set.find(dst_mb_id);
 
-   hier::Box sing_box(dim);
-   if (num_sing_patches == 0) {
-      sing_box = fill_box;
-   } else {
-      sing_box = sing_tag_data[0]->getBox();
-      for (int i = 1; i < num_sing_patches; i++) {
-         sing_box = sing_box * sing_tag_data[i]->getBox();
-      }
-   }
+   if (ni != dst_to_encon_nbrhood_set.end()) {
 
-   const hier::Box tag_fill_box =
-      fill_box * sing_box * tag_data->getGhostBox();
+      const hier::MappedBoxSet& encon_nbrs = ni->second;
 
-   for (pdat::CellData<int>::Iterator cdi(tag_fill_box);
-        cdi; cdi++) {
-      for (int n = 0; n < num_sing_patches; n++) {
-         int sing_tag_val = (*sing_tag_data[n])(cdi());
-         if (sing_tag_val != 0) {
-            (*tag_data)(cdi()) = sing_tag_val;
-            break;
-         }
-      }
-   }
+      for (hier::MappedBoxSet::const_iterator ei = encon_nbrs.begin();
+           ei != encon_nbrs.end(); ++ei) {
 
-   if (num_sing_patches > 1) {
-      for (int st = 0; st < num_sing_patches; st++) {
-         if ((sing_tag_data[st]->getBox() + sing_box) != sing_box) {
-            hier::Box sing_tag_box(sing_tag_data[st]->getBox());
+         tbox::Pointer<hier::Patch> encon_patch(
+            encon_level.getPatch(ei->getId()));
 
-            hier::Box new_fill_box = fill_box * sing_tag_box
-               * tag_data->getGhostBox();
-            for (pdat::CellData<int>::Iterator cdi(new_fill_box);
-                 cdi; cdi++) {
-               if (!sing_box.contains(cdi())) {
-                  int sing_tag_val = (*sing_tag_data[st])(cdi());
-                  if (sing_tag_val != 0) {
-                     (*tag_data)(cdi()) = sing_tag_val;
-                  }
-               }
+         int encon_blk_num = ei->getBlockId().getBlockValue();
+
+         hier::Transformation::RotationIdentifier rotation =
+            hier::Transformation::NO_ROTATE;
+         hier::IntVector offset(dim);
+
+         for (tbox::List<hier::GridGeometry::Neighbor>::Iterator
+              ni(neighbors); ni; ni++) {
+
+            if (ni().getBlockNumber() == encon_blk_num) {
+               rotation = ni().getRotationIdentifier();
+               offset = ni().getShift();
+               break;
             }
          }
+
+         offset *= patch.getPatchGeometry()->getRatio();
+
+         hier::Transformation transformation(rotation, offset);
+         hier::Box encon_patch_box(encon_patch->getBox());
+         transformation.transform(encon_patch_box);
+
+         hier::Box encon_fill_box(encon_patch_box * sing_fill_box);
+         if (!encon_fill_box.empty()) {
+
+            const hier::Transformation::RotationIdentifier back_rotate =
+               hier::Transformation::getReverseRotationIdentifier(
+                  rotation, dim);
+
+            hier::IntVector back_shift(dim);
+
+            hier::Transformation::calculateReverseShift(
+               back_shift, offset, rotation);
+
+            hier::Transformation back_trans(back_rotate, back_shift);
+
+            tbox::Pointer<pdat::CellData<int> > sing_data(
+               encon_patch->getPatchData(d_buf_tag_indx));
+
+            for (pdat::CellIterator ci(encon_fill_box); ci; ci++) {
+               pdat::CellIndex src_index(ci());
+               pdat::CellGeometry::transform(src_index, back_trans);
+ 
+               (*tag_data)(ci()) += (*sing_data)(src_index);
+            }
+
+         }
       }
    }
-
-   delete[] sing_tag_data;
 }
 
 void MultiblockGriddingTagger::postprocessRefine(

@@ -186,13 +186,13 @@ MblkHyperbolicLevelIntegrator::MblkHyperbolicLevelIntegrator(
 
    // multi-block versions of Coarsen/Refine algs
    d_mblk_bdry_fill_advance =
-      new xfer::MultiblockRefineAlgorithm(mblk_hierarchy, d_dim);
+      new xfer::RefineAlgorithm(d_dim);
    d_mblk_bdry_fill_advance_new =
-      new xfer::MultiblockRefineAlgorithm(mblk_hierarchy, d_dim);
+      new xfer::RefineAlgorithm(d_dim);
    d_mblk_bdry_fill_advance_old =
-      new xfer::MultiblockRefineAlgorithm(mblk_hierarchy, d_dim);
+      new xfer::RefineAlgorithm(d_dim);
    d_mblk_fill_new_level =
-      new xfer::MultiblockRefineAlgorithm(mblk_hierarchy, d_dim);
+      new xfer::RefineAlgorithm(d_dim);
    d_mblk_coarsen_fluxsum =
       new xfer::MultiblockCoarsenAlgorithm(mblk_hierarchy);
    d_mblk_coarsen_sync_data =
@@ -352,7 +352,7 @@ void MblkHyperbolicLevelIntegrator::initializeLevelData(
    if ((level_number > 0) || !old_level.isNull()) {
       t_fill_new_level_create->start();
 
-      tbox::Pointer<xfer::MultiblockRefineSchedule> sched =
+      tbox::Pointer<xfer::RefineSchedule> sched =
          d_mblk_fill_new_level->createSchedule(mblk_level,
             mblk_old_level,
             level_number - 1,
@@ -1067,7 +1067,7 @@ MblkHyperbolicLevelIntegrator::advanceLevel(
    mblk_level->allocatePatchData(d_new_time_dep_data, new_time);
    mblk_level->allocatePatchData(d_saved_var_scratch_data, current_time);
 
-   tbox::Pointer<xfer::MultiblockRefineSchedule> mblk_fill_schedule;
+   tbox::Pointer<xfer::RefineSchedule> mblk_fill_schedule;
 
    const bool in_hierarchy = mblk_level->inHierarchy();
 

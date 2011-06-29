@@ -169,7 +169,6 @@ tbox::Pointer<xfer::RefineSchedule>
 RefineAlgorithm::createSchedule(
    tbox::Pointer<hier::PatchLevel> level,
    xfer::RefinePatchStrategy* patch_strategy,
-   const hier::BlockId& block_id,
    tbox::Pointer<xfer::RefineTransactionFactory> transaction_factory)
 {
    TBOX_ASSERT(!level.isNull());
@@ -196,7 +195,6 @@ RefineAlgorithm::createSchedule(
                                                  fill_pattern,
                                                  level,
                                                  level,
-                                                 block_id,
                                                  d_refine_classes,
                                                  trans_factory,
                                                  patch_strategy));
@@ -217,7 +215,6 @@ RefineAlgorithm::createSchedule(
    tbox::Pointer<PatchLevelFillPattern> fill_pattern,
    tbox::Pointer<hier::PatchLevel> level,
    xfer::RefinePatchStrategy* patch_strategy,
-   const hier::BlockId& block_id,
    tbox::Pointer<xfer::RefineTransactionFactory> transaction_factory)
 {
    TBOX_ASSERT(!level.isNull());
@@ -241,7 +238,6 @@ RefineAlgorithm::createSchedule(
                                                  fill_pattern,
                                                  level,
                                                  level,
-                                                 block_id,
                                                  d_refine_classes,
                                                  trans_factory,
                                                  patch_strategy));
@@ -262,7 +258,6 @@ RefineAlgorithm::createSchedule(
    tbox::Pointer<hier::PatchLevel> dst_level,
    tbox::Pointer<hier::PatchLevel> src_level,
    xfer::RefinePatchStrategy* patch_strategy,
-   const hier::BlockId& block_id,
    bool use_time_refinement,
    tbox::Pointer<xfer::RefineTransactionFactory> transaction_factory)
 {
@@ -296,7 +291,6 @@ RefineAlgorithm::createSchedule(
                                                  fill_pattern,
                                                  dst_level,
                                                  src_level,
-                                                 block_id,
                                                  d_refine_classes,
                                                  trans_factory,
                                                  patch_strategy,
@@ -319,7 +313,6 @@ RefineAlgorithm::createSchedule(
    tbox::Pointer<hier::PatchLevel> dst_level,
    tbox::Pointer<hier::PatchLevel> src_level,
    xfer::RefinePatchStrategy* patch_strategy,
-   const hier::BlockId& block_id,
    bool use_time_refinement,
    tbox::Pointer<xfer::RefineTransactionFactory> transaction_factory)
 {
@@ -347,7 +340,6 @@ RefineAlgorithm::createSchedule(
                                                  fill_pattern,
                                                  dst_level,
                                                  src_level,
-                                                 block_id,
                                                  d_refine_classes,
                                                  trans_factory,
                                                  patch_strategy,
@@ -370,7 +362,6 @@ RefineAlgorithm::createSchedule(
    const int next_coarser_level,
    tbox::Pointer<hier::PatchHierarchy> hierarchy,
    xfer::RefinePatchStrategy* patch_strategy,
-   const hier::BlockId& block_id,
    bool use_time_refinement,
    tbox::Pointer<xfer::RefineTransactionFactory> transaction_factory)
 {
@@ -405,7 +396,6 @@ RefineAlgorithm::createSchedule(
                                                  level,
                                                  level,
                                                  next_coarser_level,
-                                                 block_id,
                                                  hierarchy,
                                                  d_refine_classes,
                                                  trans_factory,
@@ -430,7 +420,6 @@ RefineAlgorithm::createSchedule(
    const int next_coarser_level,
    tbox::Pointer<hier::PatchHierarchy> hierarchy,
    xfer::RefinePatchStrategy* patch_strategy,
-   const hier::BlockId& block_id,
    bool use_time_refinement,
    tbox::Pointer<xfer::RefineTransactionFactory> transaction_factory)
 {
@@ -462,7 +451,6 @@ RefineAlgorithm::createSchedule(
                                                  level,
                                                  level,
                                                  next_coarser_level,
-                                                 block_id,
                                                  hierarchy,
                                                  d_refine_classes,
                                                  trans_factory,
@@ -487,7 +475,6 @@ RefineAlgorithm::createSchedule(
    const int next_coarser_level,
    tbox::Pointer<hier::PatchHierarchy> hierarchy,
    xfer::RefinePatchStrategy* patch_strategy,
-   const hier::BlockId& block_id,
    bool use_time_refinement,
    tbox::Pointer<xfer::RefineTransactionFactory> transaction_factory)
 {
@@ -530,7 +517,6 @@ RefineAlgorithm::createSchedule(
                                                  dst_level,
                                                  src_level,
                                                  next_coarser_level,
-                                                 block_id,
                                                  hierarchy,
                                                  d_refine_classes,
                                                  trans_factory,
@@ -556,7 +542,6 @@ RefineAlgorithm::createSchedule(
    const int next_coarser_level,
    tbox::Pointer<hier::PatchHierarchy> hierarchy,
    xfer::RefinePatchStrategy* patch_strategy,
-   const hier::BlockId& block_id,
    bool use_time_refinement,
    tbox::Pointer<xfer::RefineTransactionFactory> transaction_factory)
 {
@@ -598,7 +583,6 @@ RefineAlgorithm::createSchedule(
                                                  dst_level,
                                                  src_level,
                                                  next_coarser_level,
-                                                 block_id,
                                                  hierarchy,
                                                  d_refine_classes,
                                                  trans_factory,

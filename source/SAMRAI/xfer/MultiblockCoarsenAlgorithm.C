@@ -124,7 +124,7 @@ MultiblockCoarsenAlgorithm::createSchedule(
    tbox::Pointer<hier::PatchLevel> crse_level,
    tbox::Pointer<hier::PatchLevel> fine_level,
    MultiblockCoarsenPatchStrategy* patch_strategy,
-   MultiblockRefinePatchStrategy* refine_strategy,
+   RefinePatchStrategy* refine_strategy,
    tbox::Pointer<xfer::CoarsenTransactionFactory> transaction_factory) const
 {
    tbox::Pointer<xfer::CoarsenTransactionFactory> trans_factory =

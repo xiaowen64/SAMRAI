@@ -40,8 +40,6 @@ bool PatchLevelEnhancedFillPattern::fillingEnhancedConnectivityOnly() const
 SAMRAI_INLINE_KEYWORD
 int PatchLevelEnhancedFillPattern::getMaxFillBoxes() const
 {
-   TBOX_ERROR("getMaxFillBoxes() should not be called for PatchLevelEnhancedFillPattern.");
-
    return d_max_fill_boxes;
 }
 

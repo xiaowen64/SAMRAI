@@ -93,7 +93,7 @@ MultiblockCoarsenSchedule::MultiblockCoarsenSchedule(
    tbox::Pointer<hier::PatchHierarchy> hierarchy,
    tbox::Pointer<xfer::CoarsenTransactionFactory> transaction_factory,
    MultiblockCoarsenPatchStrategy* patch_strategy,
-   MultiblockRefinePatchStrategy* refine_strategy,
+   RefinePatchStrategy* refine_strategy,
    bool fill_coarse_data):
    d_ratio_between_levels(crse_level->getDim())
 {
@@ -428,8 +428,7 @@ void MultiblockCoarsenSchedule::setupRefineAlgorithm()
 
    if (d_fill_coarse_data) {
 
-      d_mblk_fill_coarse_data_alg = new MultiblockRefineAlgorithm(
-            d_mblk_hierarchy, dim);
+      d_mblk_fill_coarse_data_alg = new RefineAlgorithm(dim);
 
       for (int ici = 0; ici < d_number_coarsen_items; ici++) {
          const int src_id = d_coarsen_items[ici]->d_src;
@@ -443,8 +442,7 @@ void MultiblockCoarsenSchedule::setupRefineAlgorithm()
    tbox::Pointer<PatchInteriorVariableFillPattern> interior_fill(
       new PatchInteriorVariableFillPattern(dim));
 
-   d_mblk_fill_dst_alg = new MultiblockRefineAlgorithm(
-      d_mblk_hierarchy, dim);
+   d_mblk_fill_dst_alg = new RefineAlgorithm(dim);
 
    for (int ici = 0; ici < d_number_coarsen_items; ici++) {
       const int dst_id = d_coarsen_items[ici]->d_dst;
@@ -456,7 +454,8 @@ void MultiblockCoarsenSchedule::setupRefineAlgorithm()
          interior_fill);
    }
 
-   d_mblk_fill_dst_alg->disableSingularityPatches();
+//FIXME
+//   d_mblk_fill_dst_alg->disableSingularityPatches();
 }
 
 /*

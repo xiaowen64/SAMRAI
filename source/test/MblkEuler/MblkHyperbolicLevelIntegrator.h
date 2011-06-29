@@ -32,8 +32,6 @@
 #include "SAMRAI/xfer/CoarsenAlgorithm.h"
 #include "SAMRAI/xfer/MultiblockCoarsenAlgorithm.h"
 #include "SAMRAI/xfer/RefineAlgorithm.h"
-#include "SAMRAI/xfer/MultiblockRefineAlgorithm.h"
-#include "SAMRAI/xfer/MultiblockRefineSchedule.h"
 #include "SAMRAI/tbox/Timer.h"
 
 #include <string>
@@ -888,9 +886,9 @@ private:
     * and INPUT data at specified time. TIME_DEP data in patch interiors
     * will be filled with CURRENT_VAR values.
     */
-   tbox::Pointer<xfer::MultiblockRefineAlgorithm>
+   tbox::Pointer<xfer::RefineAlgorithm>
    d_mblk_bdry_fill_advance;
-   tbox::Array<tbox::Pointer<xfer::MultiblockRefineSchedule> >
+   tbox::Array<tbox::Pointer<xfer::RefineSchedule> >
    d_mblk_bdry_sched_advance;
 
    /*
@@ -908,9 +906,9 @@ private:
     * with values corresponding to NEW descriptor indices.  See notes
     * accompanying MblkHyperbolicLevelIntegrator::advanceLevel.
     */
-   tbox::Pointer<xfer::MultiblockRefineAlgorithm>
+   tbox::Pointer<xfer::RefineAlgorithm>
    d_mblk_bdry_fill_advance_new;
-   tbox::Array<tbox::Pointer<xfer::MultiblockRefineSchedule> >
+   tbox::Array<tbox::Pointer<xfer::RefineSchedule> >
    d_mblk_bdry_sched_advance_new;
 
    /*
@@ -921,7 +919,7 @@ private:
     * data is required only when three time levels are used
     * (i.e. d_number_time_data_levels=3).
     */
-   tbox::Pointer<xfer::MultiblockRefineAlgorithm>
+   tbox::Pointer<xfer::RefineAlgorithm>
    d_mblk_bdry_fill_advance_old;
 
    /*
@@ -944,7 +942,7 @@ private:
    /*
     * Algorithm for filling a new patch level in the hierarchy.
     */
-   tbox::Pointer<xfer::MultiblockRefineAlgorithm>
+   tbox::Pointer<xfer::RefineAlgorithm>
    d_mblk_fill_new_level;
 
    /*

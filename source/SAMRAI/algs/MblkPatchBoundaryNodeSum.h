@@ -17,9 +17,9 @@
 #include "SAMRAI/hier/CoarseFineBoundary.h"
 #include "SAMRAI/hier/PatchHierarchy.h"
 #include "SAMRAI/hier/PatchLevel.h"
-#include "SAMRAI/hier/MultiblockPatchHierarchy.h"
-#include "SAMRAI/hier/MultiblockPatchLevel.h"
-#include "SAMRAI/xfer/MultiblockRefineSchedule.h"
+#include "SAMRAI/hier/PatchHierarchy.h"
+#include "SAMRAI/hier/PatchLevel.h"
+#include "SAMRAI/xfer/RefineSchedule.h"
 #include "SAMRAI/pdat/NodeVariable.h"
 #include "SAMRAI/pdat/OuternodeVariable.h"
 #include "SAMRAI/tbox/Pointer.h"
@@ -83,7 +83,7 @@ public:
     */
    MblkPatchBoundaryNodeSum(
       const std::string& object_name,
-      tbox::Pointer<hier::MultiblockPatchHierarchy> hierarchy);
+      tbox::Pointer<hier::PatchHierarchy> hierarchy);
 
    /*!
     *  @brief Destructor for the schedule releases all internal storage.
@@ -115,7 +115,7 @@ public:
     */
    void
    setupSum(
-      tbox::Pointer<hier::MultiblockPatchLevel> level);
+      tbox::Pointer<hier::PatchLevel> level);
 
    /*!
     *  @brief Compute sum of node values at each shared node and replace
@@ -167,7 +167,7 @@ private:
     */
    void
    doLevelSum(
-      tbox::Pointer<hier::MultiblockPatchLevel> level) const;
+      tbox::Pointer<hier::PatchLevel> level) const;
 
    /*
     * Private member function to copy node data to outernode data
@@ -175,7 +175,7 @@ private:
     */
    void
    copyNodeToOuternodeOnLevel(
-      tbox::Pointer<hier::MultiblockPatchLevel> level,
+      tbox::Pointer<hier::PatchLevel> level,
       const tbox::Array<int>& node_data_id,
       const tbox::Array<int>& onode_data_id) const;
 
@@ -185,7 +185,7 @@ private:
     */
    void
    copyOuternodeToNodeOnLevel(
-      tbox::Pointer<hier::MultiblockPatchLevel> level,
+      tbox::Pointer<hier::PatchLevel> level,
       const tbox::Array<int>& onode_data_id,
       const tbox::Array<int>& node_data_id) const;
 
@@ -229,9 +229,9 @@ private:
    hier::ComponentSelector d_onode_src_data_set;
    hier::ComponentSelector d_onode_dst_data_set;
 
-   tbox::Pointer<hier::MultiblockPatchLevel> d_level;
+   tbox::Pointer<hier::PatchLevel> d_level;
 
-   tbox::Pointer<hier::MultiblockPatchHierarchy> d_hierarchy;
+   tbox::Pointer<hier::PatchHierarchy> d_hierarchy;
    int d_coarsest_level;
    int d_finest_level;
 
@@ -240,7 +240,7 @@ private:
 
    tbox::Pointer<xfer::RefineTransactionFactory> d_sum_transaction_factory;
 
-   tbox::Array<tbox::Pointer<xfer::MultiblockRefineSchedule> >
+   tbox::Array<tbox::Pointer<xfer::RefineSchedule> >
    d_single_level_sum_schedule;
 
 };

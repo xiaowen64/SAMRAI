@@ -18,9 +18,9 @@
 #include "SAMRAI/tbox/Schedule.h"
 #include "SAMRAI/xfer/CoarsenClasses.h"
 #include "SAMRAI/xfer/CoarsenTransactionFactory.h"
-#include "SAMRAI/xfer/MultiblockRefineAlgorithm.h"
+#include "SAMRAI/xfer/RefineAlgorithm.h"
 #include "SAMRAI/xfer/MultiblockCoarsenPatchStrategy.h"
-#include "SAMRAI/xfer/MultiblockRefineAlgorithm.h"
+#include "SAMRAI/xfer/RefineAlgorithm.h"
 
 namespace SAMRAI {
 namespace xfer {
@@ -120,7 +120,7 @@ public:
       tbox::Pointer<hier::PatchHierarchy> hierarchy,
       tbox::Pointer<xfer::CoarsenTransactionFactory> transaction_factory,
       MultiblockCoarsenPatchStrategy* coarsen_strategy,
-      MultiblockRefinePatchStrategy* refine_strategy,
+      RefinePatchStrategy* refine_strategy,
       bool fill_coarse_data);
 
    /*!
@@ -272,7 +272,7 @@ private:
       tbox::Pointer<hier::PatchLevel> src_level);
 
    /*!
-    * @brief Constructs the MultiblockRefineSchedule that is used
+    * @brief Constructs the RefineSchedule that is used
     * to move coarsened data from the temporary coarse level to the
     * destination level.
     */
@@ -362,7 +362,7 @@ private:
     */
    MultiblockCoarsenPatchStrategy* d_mblk_coarsen_patch_strategy;
 
-   MultiblockRefinePatchStrategy* d_mblk_refine_strategy;
+   RefinePatchStrategy* d_mblk_refine_strategy;
 
    /*!
     * Factory object used to create data transactions when schedule is constructed.
@@ -382,11 +382,11 @@ private:
     * fill operations.
     */
    bool d_fill_coarse_data;
-   tbox::Pointer<MultiblockRefineAlgorithm> d_mblk_fill_coarse_data_alg;
-   tbox::Pointer<MultiblockRefineSchedule> d_mblk_fill_coarse_data_sched;
+   tbox::Pointer<RefineAlgorithm> d_mblk_fill_coarse_data_alg;
+   tbox::Pointer<RefineSchedule> d_mblk_fill_coarse_data_sched;
 
-   tbox::Pointer<MultiblockRefineAlgorithm> d_mblk_fill_dst_alg;
-   tbox::Pointer<MultiblockRefineSchedule> d_mblk_fill_dst_sched;
+   tbox::Pointer<RefineAlgorithm> d_mblk_fill_dst_alg;
+   tbox::Pointer<RefineSchedule> d_mblk_fill_dst_sched;
 
    hier::ComponentSelector d_sources;
 

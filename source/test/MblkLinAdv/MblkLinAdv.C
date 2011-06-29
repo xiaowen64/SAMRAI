@@ -2413,71 +2413,19 @@ void MblkLinAdv::tagGradientDetectorCells(
  */
 void MblkLinAdv::fillSingularityBoundaryConditions(
    hier::Patch& patch,
-   tbox::List<tbox::Pointer<hier::Patch> >& sing_patches,
+   const hier::PatchLevel& encon_level,
+   const hier::Connector& dst_to_encon,
    const double fill_time,
    const hier::Box& fill_box,
-   const hier::BoundaryBox& bbox)
+   const hier::BoundaryBox& boundary_box)
 {
 
    NULL_USE(patch);
-   NULL_USE(sing_patches);
+   NULL_USE(encon_level);
+   NULL_USE(dst_to_encon);
    NULL_USE(fill_time);
    NULL_USE(fill_box);
-   NULL_USE(bbox);
-
-   /*
-    * Here we need to specify how to fill the singularities...
-    */
-#if 0
-   for (int i = 0; i < d_variables.getSize(); i++) {
-
-      tbox::Pointer<pdat::CellData<double> > cell_data =
-         patch.getPatchData(d_variables[i], getDataContext());
-
-      hier::Box sing_fill_box(cell_data->getGhostBox() * fill_box);
-      cell_data->fillAll(0.0, sing_fill_box);
-
-      int depth = cell_data->getDepth();
-
-      /*
-       * If sing_patches is not empty, that means there is enhanced
-       * connectivity, and we get data from other blocks
-       */
-
-      if (sing_patches.size()) {
-
-         for (tbox::List
-              <xfer::MultiblockRefineSchedule::SingularityPatch>::
-              Iterator sp(sing_patches); sp; sp++) {
-            tbox::Pointer<pdat::CellData<double> > sing_data =
-               sp().d_patch->getPatchData(d_variables[i], getDataContext());
-            int sing_neighbor_id = sp().getBlockNumber();
-            for (pdat::CellIterator ci(sing_fill_box); ci; ci++) {
-               for (int d = 0; d < depth; d++) {
-                  (*cell_data)(ci(), d) += sing_neighbor_id;
-               }
-            }
-         }
-
-         for (pdat::CellIterator ci(sing_fill_box); ci; ci++) {
-            for (int d = 0; d < depth; d++) {
-               (*cell_data)(ci(), d) /= sing_patches.size();
-            }
-         }
-
-         /*
-          * In cases of reduced connectivity, there are no other blocks
-          * from which to acquire data.
-          */
-
-      } else {
-
-         cell_data->fillAll(
-            (double)bbox.getLocationIndex() + 200.0, fill_box);
-
-      }
-   }
-#endif
+   NULL_USE(boundary_box);
 
 }
 

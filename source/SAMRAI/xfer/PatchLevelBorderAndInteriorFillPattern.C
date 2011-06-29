@@ -92,8 +92,36 @@ PatchLevelBorderAndInteriorFillPattern::computeFillMappedBoxesAndNeighborhoodSet
 
       for (NeighborSet::const_iterator na = nabrs.begin();
            na != nabrs.end(); ++na) {
-         if (*ni != *na && dst_mapped_box.getBlockId() == na->getBlockId()) {
-            fill_boxes.removeIntersections(na->getBox());
+         if (*ni != *na) {
+            if (dst_mapped_box.getBlockId() == na->getBlockId()) {
+               fill_boxes.removeIntersections(na->getBox());
+            } else {
+
+               tbox::ConstPointer<hier::GridGeometry> grid_geometry(
+                  dst_mapped_box_level.getGridGeometry());
+
+               const hier::BlockId& dst_block_id = dst_mapped_box.getBlockId();
+               const hier::BlockId& nbr_block_id = na->getBlockId();
+
+               TBOX_ASSERT(grid_geometry->areNeighbors(dst_block_id,
+                                                       nbr_block_id));
+
+               hier::Transformation::RotationIdentifier rotation =
+                  grid_geometry->getRotationIdentifier(dst_block_id,
+                                                       nbr_block_id);
+               hier::IntVector offset(
+                  grid_geometry->getOffset(dst_block_id, nbr_block_id));
+
+               offset *= (dst_mapped_box_level.getRefinementRatio());
+
+               hier::Transformation transformation(rotation, offset);
+
+               hier::Box nbr_box(na->getBox());
+               transformation.transform(nbr_box);
+
+               fill_boxes.removeIntersections(nbr_box);
+
+            }
          }
       }
 

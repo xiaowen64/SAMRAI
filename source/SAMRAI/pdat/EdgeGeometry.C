@@ -404,20 +404,23 @@ EdgeGeometry::transform(
 
    const hier::Transformation::RotationIdentifier& rotation =
       transformation.getRotation();
+
+   const int axis_direction = index.getAxis();
+
+   for (int i = 0; i < dim.getValue(); i++) {
+      if (i == axis_direction && index(i) >= 0) {
+         index(i)++;
+      }
+   }
+
+   int new_axis_direction = axis_direction;
+
    if (dim.getValue() == 2) {
       const int rotation_num = static_cast<int>(rotation);
 
       TBOX_ASSERT(rotation_num <= 3);
 
       if (rotation_num) {
-         const int axis_direction = index.getAxis();
-         int new_axis_direction = (axis_direction + rotation_num) % 2;
-
-         for (int i = 0; i < dim.getValue(); i++) {
-            if (i == axis_direction && index(i) >= 0) {
-               index(i)++;
-            }
-         }
 
          EdgeIndex tmp_index(dim);
          for (int r = 0; r < rotation_num; r++) {
@@ -426,16 +429,168 @@ EdgeGeometry::transform(
             index(1) = -tmp_index(0);
          }
 
-         for (int i = 0; i < dim.getValue(); i++) {
-            if (i == new_axis_direction && index(i) > 0) {
-               index(i)--;
-            }
-         }
+         new_axis_direction = (axis_direction + rotation_num) % 2;
 
          index.setAxis(new_axis_direction);
       }
+   } else {
+
+      switch (rotation) {
+
+         case hier::Transformation::NO_ROTATE:
+            break;
+
+         case hier::Transformation::KUP_IUP_JUP:
+            rotateAboutAxis(index, 0, 3);
+            rotateAboutAxis(index, 2, 3);
+            break;
+
+         case hier::Transformation::JUP_KUP_IUP:
+            rotateAboutAxis(index, 1, 1);
+            rotateAboutAxis(index, 2, 1);
+            break;
+
+         case hier::Transformation::IDOWN_KUP_JUP:
+            rotateAboutAxis(index, 1, 2);
+            rotateAboutAxis(index, 0, 3);
+            break;
+
+         case hier::Transformation::KUP_JUP_IDOWN:
+            rotateAboutAxis(index, 1, 3);
+            break;
+
+         case hier::Transformation::JUP_IDOWN_KUP:
+            rotateAboutAxis(index, 2, 1);
+            break;
+
+         case hier::Transformation::KDOWN_JUP_IUP:
+            rotateAboutAxis(index, 1, 1);
+            break;
+
+         case hier::Transformation::IUP_KDOWN_JUP:
+            rotateAboutAxis(index, 0, 3);
+            break;
+
+         case hier::Transformation::JUP_IUP_KDOWN:
+            rotateAboutAxis(index, 0, 2);
+            rotateAboutAxis(index, 2, 3);
+            break;
+
+         case hier::Transformation::KDOWN_IDOWN_JUP:
+            rotateAboutAxis(index, 0, 3);
+            rotateAboutAxis(index, 2, 1);
+            break;
+
+         case hier::Transformation::IDOWN_JUP_KDOWN:
+            rotateAboutAxis(index, 1, 2);
+            break;
+
+         case hier::Transformation::JUP_KDOWN_IDOWN:
+            rotateAboutAxis(index, 0, 3);
+            rotateAboutAxis(index, 1, 3);
+            break;
+
+         case hier::Transformation::JDOWN_IUP_KUP:
+            rotateAboutAxis(index, 2, 3);
+            break;
+
+         case hier::Transformation::IUP_KUP_JDOWN:
+            rotateAboutAxis(index, 0, 1);
+            break;
+
+         case hier::Transformation::KUP_JDOWN_IUP:
+            rotateAboutAxis(index, 0, 2);
+            rotateAboutAxis(index, 1, 1);
+            break;
+
+         case hier::Transformation::JDOWN_KUP_IDOWN:
+            rotateAboutAxis(index, 0, 1);
+            rotateAboutAxis(index, 1, 3);
+            break;
+
+         case hier::Transformation::IDOWN_JDOWN_KUP:
+            rotateAboutAxis(index, 0, 2);
+            rotateAboutAxis(index, 1, 2);
+            break;
+
+         case hier::Transformation::KUP_IDOWN_JDOWN:
+            rotateAboutAxis(index, 0, 1);
+            rotateAboutAxis(index, 2, 1);
+            break;
+
+         case hier::Transformation::JDOWN_KDOWN_IUP:
+            rotateAboutAxis(index, 0, 3);
+            rotateAboutAxis(index, 1, 1);
+            break;
+
+         case hier::Transformation::KDOWN_IUP_JDOWN:
+            rotateAboutAxis(index, 0, 1);
+            rotateAboutAxis(index, 2, 3);
+            break;
+
+         case hier::Transformation::IUP_JDOWN_KDOWN:
+            rotateAboutAxis(index, 0, 2);
+            break;
+
+         case hier::Transformation::JDOWN_IDOWN_KDOWN:
+            rotateAboutAxis(index, 0, 2);
+            rotateAboutAxis(index, 2, 1);
+            break;
+
+         case hier::Transformation::KDOWN_JDOWN_IDOWN:
+            rotateAboutAxis(index, 0, 2);
+            rotateAboutAxis(index, 1, 3);
+            break;
+
+         case hier::Transformation::IDOWN_KDOWN_JDOWN:
+            rotateAboutAxis(index, 1, 2);
+            rotateAboutAxis(index, 0, 1);
+            break;
+
+         default:
+            TBOX_ERROR("EdgeGeometry::transform invalid 3D RotationIdentifier.");
+
+      }
+
+      new_axis_direction = index.getAxis();
+
    }
+
+   for (int i = 0; i < dim.getValue(); i++) {
+      if (i == new_axis_direction && index(i) > 0) {
+         index(i)--;
+      }
+   }
+
+
+   index += transformation.getOffset();
 }
+
+void
+EdgeGeometry::rotateAboutAxis(pdat::EdgeIndex& index,
+                              const int axis,
+                              const int num_rotations)
+{
+   const tbox::Dimension& dim = index.getDim();
+   const int a = (axis + 1) % dim.getValue();
+   const int b = (axis + 2) % dim.getValue();
+
+   pdat::EdgeIndex tmp_index(dim);
+   for (int j = 0; j < num_rotations; j++) {
+      tmp_index = index;
+      index(a) = tmp_index(b);
+      index(b) = -tmp_index(a);
+   }
+
+   int new_axis_direction = index.getAxis();
+   if (new_axis_direction != axis) {
+      for (int j = 0; j < num_rotations; j++) {
+         new_axis_direction = new_axis_direction == a ? b : a ;
+      }
+   }
+   index.setAxis(new_axis_direction);
+}
+
 
 
 }

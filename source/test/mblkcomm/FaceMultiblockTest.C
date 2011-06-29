@@ -310,10 +310,20 @@ void FaceMultiblockTest::setPhysicalBoundaryConditions(
 
 void FaceMultiblockTest::fillSingularityBoundaryConditions(
    hier::Patch& patch,
-   tbox::List<tbox::Pointer<hier::Patch> >& sing_patches,
+   const hier::PatchLevel& encon_level,
+   const hier::Connector& dst_to_encon,
    const hier::Box& fill_box,
    const hier::BoundaryBox& bbox)
 {
+   const tbox::Dimension& dim = fill_box.getDim();
+
+   const hier::MappedBoxId& dst_mb_id = patch.getMappedBox().getId();
+
+   const int patch_blk_num = dst_mb_id.getBlockId().getBlockValue();
+
+   const tbox::List<hier::GridGeometry::Neighbor>& neighbors =
+      encon_level.getGridGeometry()->getNeighbors(patch_blk_num);
+
    for (int i = 0; i < d_variables.getSize(); i++) {
 
       tbox::Pointer<pdat::FaceData<double> > face_data =
@@ -348,47 +358,98 @@ void FaceMultiblockTest::fillSingularityBoundaryConditions(
          }
       }
 
-      /*
-       * If sing_patches is not empty, that means there is enhanced
-       * connectivity, and we get data from other blocks
-       */
+      const hier::NeighborhoodSet& dst_to_encon_nbrhood_set =
+         dst_to_encon.getNeighborhoodSets();
 
-      if (sing_patches.size()) {
+      hier::NeighborhoodSet::const_iterator ni =
+         dst_to_encon_nbrhood_set.find(dst_mb_id);
 
-         for (tbox::List<tbox::Pointer<hier::Patch> >::Iterator
-              sp(sing_patches); sp; sp++) {
-            tbox::Pointer<pdat::FaceData<double> > sing_data =
-               sp()->getPatchData(d_variables[i], getDataContext());
-            tbox::Pointer<hier::PatchGeometry> patch_geom =
-               sp()->getPatchGeometry();
-            int sing_neighbor_id =
-               sp()->getMappedBox().getBlockId().getBlockValue();
-            for (int axis = 0; axis < d_dim.getValue(); axis++) {
+      int num_encon_used = 0;
+      if (ni != dst_to_encon_nbrhood_set.end()) {
 
-               hier::Box pbox =
-                  pdat::FaceGeometry::toFaceBox(patch.getBox(), axis);
+         const hier::MappedBoxSet& encon_nbrs = ni->second;
 
-               hier::Index plower(pbox.lower());
-               hier::Index pupper(pbox.upper());
+         for (hier::MappedBoxSet::const_iterator ei = encon_nbrs.begin();
+              ei != encon_nbrs.end(); ++ei) {
 
-               for (pdat::FaceIterator ci(sing_fill_box, axis); ci; ci++) {
-                  bool use_index = true;
-                  for (int n = 0; n < d_dim.getValue(); n++) {
-                     if (axis == n && bbox.getBox().numberCells(n) == 1) {
-                        if (ci() (0) == plower(0) || ci() (0) == pupper(0)) {
-                           use_index = false;
-                           break;
+            tbox::Pointer<hier::Patch> encon_patch(
+               encon_level.getPatch(ei->getId()));
+
+            int encon_blk_num = ei->getBlockId().getBlockValue();
+
+            hier::Transformation::RotationIdentifier rotation =
+               hier::Transformation::NO_ROTATE;
+            hier::IntVector offset(dim);
+
+            for (tbox::List<hier::GridGeometry::Neighbor>::Iterator
+                 ni(neighbors); ni; ni++) {
+
+               if (ni().getBlockNumber() == encon_blk_num) {
+                  rotation = ni().getRotationIdentifier();
+                  offset = ni().getShift();
+                  break;
+               }
+            }
+
+            offset *= patch.getPatchGeometry()->getRatio();
+
+            hier::Transformation transformation(rotation, offset);
+            hier::Box encon_patch_box(encon_patch->getBox());
+            transformation.transform(encon_patch_box);
+
+            hier::Box encon_fill_box(encon_patch_box * sing_fill_box);
+            if (!encon_fill_box.empty()) {
+
+               const hier::Transformation::RotationIdentifier back_rotate =
+                  hier::Transformation::getReverseRotationIdentifier(
+                     rotation, dim);
+
+               hier::IntVector back_shift(dim);
+
+               hier::Transformation::calculateReverseShift(
+                  back_shift, offset, rotation);
+
+               hier::Transformation back_trans(back_rotate, back_shift);
+
+               tbox::Pointer<pdat::FaceData<double> > sing_data(
+                  encon_patch->getPatchData(d_variables[i], getDataContext()));
+
+               for (int axis = 0; axis < d_dim.getValue(); axis++) {
+
+                  hier::Box pbox(
+                     pdat::FaceGeometry::toFaceBox(patch.getBox(), axis));
+
+                  hier::Index plower(pbox.lower());
+                  hier::Index pupper(pbox.upper());
+
+                  for (pdat::FaceIterator ci(sing_fill_box, axis); ci; ci++) {
+                     bool use_index = true;
+                     for (int n = 0; n < d_dim.getValue(); n++) {
+                        if (axis == n && bbox.getBox().numberCells(n) == 1) {
+                           if (ci() (0) == plower(0) || ci() (0) == pupper(0)) {
+                              use_index = false;
+                              break;
+                           }
+                        }
+                     }
+                     if (use_index) {
+
+                        pdat::FaceIndex src_index(ci());
+                        pdat::FaceGeometry::transform(src_index, back_trans);
+
+                        for (int d = 0; d < depth; d++) {
+                           (*face_data)(ci(), d) += (*sing_data)(src_index, d);
                         }
                      }
                   }
-                  if (use_index) {
-                     for (int d = 0; d < depth; d++) {
-                        (*face_data)(ci(), d) += sing_neighbor_id;
-                     }
-                  }
                }
+
+               ++num_encon_used;
             }
          }
+      }
+
+      if (num_encon_used) {
 
          for (int axis = 0; axis < d_dim.getValue(); axis++) {
 
@@ -410,18 +471,19 @@ void FaceMultiblockTest::fillSingularityBoundaryConditions(
                }
                if (use_index) {
                   for (int d = 0; d < depth; d++) {
-                     (*face_data)(ci(), d) /= sing_patches.size();
+                     (*face_data)(ci(), d) /= num_encon_used;
                   }
                }
             }
          }
+
+      } else {
 
          /*
           * In cases of reduced connectivity, there are no other blocks
           * from which to acquire data.
           */
 
-      } else {
 
          for (int axis = 0; axis < d_dim.getValue(); axis++) {
 
@@ -532,6 +594,8 @@ bool FaceMultiblockTest::verifyResults(
          hier::Box patch_face_box =
             pdat::FaceGeometry::toFaceBox(pbox, axis);
 
+         hier::BoxList tested_neighbors(d_dim);
+
          for (tbox::List<hier::GridGeometry::Neighbor>::
               Iterator ne(neighbors); ne; ne++) {
 
@@ -540,20 +604,33 @@ bool FaceMultiblockTest::verifyResults(
             correct = ne().getBlockNumber();
 
             hier::BoxList neighbor_ghost(ne().getTranslatedDomain());
-            neighbor_ghost.refine(ratio);
-            neighbor_ghost.intersectBoxes(gbox);
+            hier::BoxList neighbor_face_ghost;
+            for (hier::BoxList::Iterator nn(neighbor_ghost); nn; nn++) {
+               hier::Box neighbor_ghost_interior(
+                  pdat::FaceGeometry::toFaceBox(nn(), axis));
+               neighbor_ghost_interior.grow(-hier::IntVector::getOne(d_dim));
+               neighbor_face_ghost.addItem(neighbor_ghost_interior);
+            }
 
-            for (hier::BoxList::Iterator ng(neighbor_ghost); ng; ng++) {
+            neighbor_face_ghost.refine(ratio);
+            neighbor_face_ghost.intersectBoxes(
+               pdat::FaceGeometry::toFaceBox(gbox, axis));
 
-               for (pdat::FaceIterator ci(ng(), axis); ci; ci++) {
-                  if (!patch_face_box.contains(ci())) {
+            neighbor_face_ghost.removeIntersections(tested_neighbors);
+
+            for (hier::BoxList::Iterator ng(neighbor_face_ghost); ng; ng++) {
+
+               for (hier::BoxIterator ci(ng()); ci; ci++) {
+                  pdat::FaceIndex fi(ci(), 0, 0);
+                  fi.setAxis(axis); 
+                  if (!patch_face_box.contains(fi)) {
                      for (int d = 0; d < depth; d++) {
-                        double result = (*face_data)(ci(), d);
+                        double result = (*face_data)(fi, d);
 
                         if (!tbox::MathUtilities<double>::equalEps(correct,
                                result)) {
                            tbox::perr << "Test FAILED: ...."
-                                      << " : face index = " << ci() << endl;
+                                      << " : face index = " << fi << endl;
                            tbox::perr << "  Variable = "
                            << d_variable_src_name[i]
                            << " : depth index = " << d << endl;
@@ -565,6 +642,7 @@ bool FaceMultiblockTest::verifyResults(
                   }
                }
             }
+            tested_neighbors.unionBoxes(neighbor_face_ghost);
          }
       }
 
@@ -595,7 +673,7 @@ bool FaceMultiblockTest::verifyResults(
                      neighbor_ghost.intersectBoxes(fill_box);
                      if (neighbor_ghost.size()) {
                         num_sing_neighbors++;
-                        correct += block_id.getBlockValue();
+                        correct += ns().getBlockNumber();
                      }
                   }
                }

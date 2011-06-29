@@ -24,12 +24,12 @@ namespace xfer {
  * @brief Class PatchLevelEnhancedFillPattern is an implementation of the
  * abstract base class PatchLevelFillPattern.
  *
- * This class is used by the MultiblockRefineSchedule to restrict filling to
+ * This class is used by the RefineSchedule to restrict filling to
  * only patches in ghost regions across an ehanced connectivity block boundary.
  * It is intended for users who wish to handle the filling of data at these
  * singularities separately from the filling of all other data.
  *
- * @see xfer::MultiblockRefineSchedule
+ * @see xfer::RefineSchedule
  */
 
 class PatchLevelEnhancedFillPattern:public PatchLevelFillPattern
@@ -47,7 +47,7 @@ public:
 
    /*!
     * @brief Compute the mapped boxes representing the region that will
-    *        be filled by a MultiblockRefineSchedule.
+    *        be filled by a RefineSchedule.
     *
     * This is currently unimplemented until MappedBoxLevel is
     * multiblock-aware.  An error will occur if this is called.

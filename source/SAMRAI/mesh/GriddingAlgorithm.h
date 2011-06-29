@@ -24,8 +24,8 @@
 #include "SAMRAI/mesh/LoadBalanceStrategy.h"
 #include "SAMRAI/hier/PatchHierarchy.h"
 #include "SAMRAI/hier/PatchLevel.h"
-#include "SAMRAI/xfer/MultiblockRefineAlgorithm.h"
-#include "SAMRAI/xfer/MultiblockRefineSchedule.h"
+#include "SAMRAI/xfer/RefineAlgorithm.h"
+#include "SAMRAI/xfer/RefineSchedule.h"
 #include "SAMRAI/tbox/Array.h"
 #include "SAMRAI/tbox/Database.h"
 #include "SAMRAI/tbox/Pointer.h"
@@ -1061,8 +1061,8 @@ private:
    int d_tag_indx;
    int d_buf_tag_indx;
 
-   tbox::Pointer<xfer::MultiblockRefineAlgorithm> d_bdry_fill_tags;
-   tbox::Array<tbox::Pointer<xfer::MultiblockRefineSchedule> > d_bdry_sched_tags;
+   tbox::Pointer<xfer::RefineAlgorithm> d_bdry_fill_tags;
+   tbox::Array<tbox::Pointer<xfer::RefineSchedule> > d_bdry_sched_tags;
 
    /*
     * True and false integer tag values set in constructor and used to

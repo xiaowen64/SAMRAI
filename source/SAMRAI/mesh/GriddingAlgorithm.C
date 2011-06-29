@@ -259,8 +259,7 @@ GriddingAlgorithm::GriddingAlgorithm(
    /*
     * Initialize communication algorithm for exchanging buffered tag data.
     */
-   d_bdry_fill_tags = new xfer::MultiblockRefineAlgorithm(d_hierarchy,
-                                                          d_dim);
+   d_bdry_fill_tags = new xfer::RefineAlgorithm(d_dim);
 
    d_bdry_fill_tags->
    registerRefine(d_buf_tag_indx,
@@ -2583,6 +2582,10 @@ void GriddingAlgorithm::readLevelBoxes(
             false,
             true);
       }
+
+      oca.findOverlaps(coarser_to_new);
+      oca.findOverlaps(new_to_coarser);
+
       const hier::Connector& coarser_to_coarser =
          d_hierarchy->getConnector(level_number,
             level_number);
