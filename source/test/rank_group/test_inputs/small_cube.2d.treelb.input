@@ -70,12 +70,12 @@ TreeLoadBalancer {
   precut_penalty_wt = 1.0
 
   // Debugging options
-  check_map = 'n'
-  check_connectivity = 'n'
-  print_steps = 'y'
-  print_swap_steps = 'n'
-  print_break_steps = 'n'
-  print_edge_steps = 'n'
+  check_map = FALSE
+  check_connectivity = FALSE
+  print_steps = TRUE
+  print_swap_steps = FALSE
+  print_break_steps = FALSE
+  print_edge_steps = FALSE
 }
 
 TimerManager {

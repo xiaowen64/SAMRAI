@@ -294,12 +294,12 @@ TreeLoadBalancer {
   barrier_before = TRUE
   barrier_after = TRUE
   n_root_cycles = 1
-  check_map = 'n'
-  check_connectivity = 'n'
-  print_steps = 'n'
-  print_swap_steps = 'n'
-  print_break_steps = 'n'
-  print_edge_steps = 'n'
+  check_map = FALSE
+  check_connectivity = FALSE
+  print_steps = FALSE
+  print_swap_steps = FALSE
+  print_break_steps = FALSE
+  print_edge_steps = FALSE
 }
 
 HyperbolicLevelIntegrator {

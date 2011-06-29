@@ -969,6 +969,12 @@ private:
    warnIfDomainTooSmallInPeriodicDir() const;
 
    /*!
+    * @brief Allocate timers.
+    */
+   void
+   allocateTimers();
+
+   /*!
     * @brief Initialize static objects and register shutdown routine.
     *
     * Only called by StartupShutdownManager.
@@ -1187,60 +1193,60 @@ private:
    /*
     * Timers interspersed throughout the class.
     */
-   static tbox::Pointer<tbox::Timer> t_find_domain_complement;
-   static tbox::Pointer<tbox::Timer> t_load_balance;
-   static tbox::Pointer<tbox::Timer> t_load_balance0;
-   static tbox::Pointer<tbox::Timer> t_load_balance_setup;
-   static tbox::Pointer<tbox::Timer> t_bdry_fill_tags_create;
-   static tbox::Pointer<tbox::Timer> t_make_coarsest;
-   static tbox::Pointer<tbox::Timer> t_make_finer;
-   static tbox::Pointer<tbox::Timer> t_make_finer_setup;
-   static tbox::Pointer<tbox::Timer> t_make_finer_tagging;
-   static tbox::Pointer<tbox::Timer> t_make_finer_create;
-   static tbox::Pointer<tbox::Timer> t_regrid_all_finer;
-   static tbox::Pointer<tbox::Timer> t_regrid_finer_create;
-   static tbox::Pointer<tbox::Timer> t_bridge_links;
-   static tbox::Pointer<tbox::Timer> t_fill_tags;
-   static tbox::Pointer<tbox::Timer> t_tag_cells_for_refinement;
-   static tbox::Pointer<tbox::Timer> t_buffer_tags;
-   static tbox::Pointer<tbox::Timer> t_bdry_fill_tags_comm;
-   static tbox::Pointer<tbox::Timer> t_second_finer_tagging;
-   static tbox::Pointer<tbox::Timer> t_find_refinement;
-   static tbox::Pointer<tbox::Timer> t_bridge_new_to_new;
-   static tbox::Pointer<tbox::Timer> t_find_new_to_new;
-   static tbox::Pointer<tbox::Timer> t_bridge_new_to_coarser;
-   static tbox::Pointer<tbox::Timer> t_bridge_new_to_finer;
-   static tbox::Pointer<tbox::Timer> t_bridge_new_to_old;
-   static tbox::Pointer<tbox::Timer> t_find_boxes_containing_tags;
-   static tbox::Pointer<tbox::Timer> t_enforce_nesting;
-   static tbox::Pointer<tbox::Timer> t_make_nesting_map;
-   static tbox::Pointer<tbox::Timer> t_make_nesting_map_compute;
-   static tbox::Pointer<tbox::Timer> t_make_nesting_map_convert;
-   static tbox::Pointer<tbox::Timer> t_use_nesting_map;
-   static tbox::Pointer<tbox::Timer> t_make_overflow_map;
-   static tbox::Pointer<tbox::Timer> t_make_overflow_map_compute;
-   static tbox::Pointer<tbox::Timer> t_make_overflow_map_convert;
-   static tbox::Pointer<tbox::Timer> t_use_overflow_map;
-   static tbox::Pointer<tbox::Timer> t_compute_external_parts;
-   static tbox::Pointer<tbox::Timer> t_compute_nesting_violator;
-   static tbox::Pointer<tbox::Timer> t_extend_to_domain_boundary;
-   static tbox::Pointer<tbox::Timer> t_extend_within_domain;
-   static tbox::Pointer<tbox::Timer> t_grow_boxes_within_domain;
-   static tbox::Pointer<tbox::Timer> t_sort_nodes;
-   static tbox::Pointer<tbox::Timer> t_modify_connector;
-   static tbox::Pointer<tbox::Timer> t_misc1;
-   static tbox::Pointer<tbox::Timer> t_misc2;
-   static tbox::Pointer<tbox::Timer> t_misc3;
-   static tbox::Pointer<tbox::Timer> t_misc4;
-   static tbox::Pointer<tbox::Timer> t_misc5;
-   static tbox::Pointer<tbox::Timer> t_make_domain;
-   static tbox::Pointer<tbox::Timer> t_get_balance;
-   static tbox::Pointer<tbox::Timer> t_use_balance;
-   static tbox::Pointer<tbox::Timer> t_make_new;
-   static tbox::Pointer<tbox::Timer> t_process_error;
-   static tbox::Pointer<tbox::Timer> t_limit_overflow;
-   static tbox::Pointer<tbox::Timer> t_reset_hier;
-   static tbox::Pointer<tbox::Timer> t_box_massage;
+   tbox::Pointer<tbox::Timer> t_find_domain_complement;
+   tbox::Pointer<tbox::Timer> t_load_balance;
+   tbox::Pointer<tbox::Timer> t_load_balance0;
+   tbox::Pointer<tbox::Timer> t_load_balance_setup;
+   tbox::Pointer<tbox::Timer> t_bdry_fill_tags_create;
+   tbox::Pointer<tbox::Timer> t_make_coarsest;
+   tbox::Pointer<tbox::Timer> t_make_finer;
+   tbox::Pointer<tbox::Timer> t_make_finer_setup;
+   tbox::Pointer<tbox::Timer> t_make_finer_tagging;
+   tbox::Pointer<tbox::Timer> t_make_finer_create;
+   tbox::Pointer<tbox::Timer> t_regrid_all_finer;
+   tbox::Pointer<tbox::Timer> t_regrid_finer_create;
+   tbox::Pointer<tbox::Timer> t_bridge_links;
+   tbox::Pointer<tbox::Timer> t_fill_tags;
+   tbox::Pointer<tbox::Timer> t_tag_cells_for_refinement;
+   tbox::Pointer<tbox::Timer> t_buffer_tags;
+   tbox::Pointer<tbox::Timer> t_bdry_fill_tags_comm;
+   tbox::Pointer<tbox::Timer> t_second_finer_tagging;
+   tbox::Pointer<tbox::Timer> t_find_refinement;
+   tbox::Pointer<tbox::Timer> t_bridge_new_to_new;
+   tbox::Pointer<tbox::Timer> t_find_new_to_new;
+   tbox::Pointer<tbox::Timer> t_bridge_new_to_coarser;
+   tbox::Pointer<tbox::Timer> t_bridge_new_to_finer;
+   tbox::Pointer<tbox::Timer> t_bridge_new_to_old;
+   tbox::Pointer<tbox::Timer> t_find_boxes_containing_tags;
+   tbox::Pointer<tbox::Timer> t_enforce_nesting;
+   tbox::Pointer<tbox::Timer> t_make_nesting_map;
+   tbox::Pointer<tbox::Timer> t_make_nesting_map_compute;
+   tbox::Pointer<tbox::Timer> t_make_nesting_map_convert;
+   tbox::Pointer<tbox::Timer> t_use_nesting_map;
+   tbox::Pointer<tbox::Timer> t_make_overflow_map;
+   tbox::Pointer<tbox::Timer> t_make_overflow_map_compute;
+   tbox::Pointer<tbox::Timer> t_make_overflow_map_convert;
+   tbox::Pointer<tbox::Timer> t_use_overflow_map;
+   tbox::Pointer<tbox::Timer> t_compute_external_parts;
+   tbox::Pointer<tbox::Timer> t_compute_nesting_violator;
+   tbox::Pointer<tbox::Timer> t_extend_to_domain_boundary;
+   tbox::Pointer<tbox::Timer> t_extend_within_domain;
+   tbox::Pointer<tbox::Timer> t_grow_boxes_within_domain;
+   tbox::Pointer<tbox::Timer> t_sort_nodes;
+   tbox::Pointer<tbox::Timer> t_modify_connector;
+   tbox::Pointer<tbox::Timer> t_misc1;
+   tbox::Pointer<tbox::Timer> t_misc2;
+   tbox::Pointer<tbox::Timer> t_misc3;
+   tbox::Pointer<tbox::Timer> t_misc4;
+   tbox::Pointer<tbox::Timer> t_misc5;
+   tbox::Pointer<tbox::Timer> t_make_domain;
+   tbox::Pointer<tbox::Timer> t_get_balance;
+   tbox::Pointer<tbox::Timer> t_use_balance;
+   tbox::Pointer<tbox::Timer> t_make_new;
+   tbox::Pointer<tbox::Timer> t_process_error;
+   tbox::Pointer<tbox::Timer> t_limit_overflow;
+   tbox::Pointer<tbox::Timer> t_reset_hier;
+   tbox::Pointer<tbox::Timer> t_box_massage;
 
 #ifdef GA_RECORD_STATS
    /*
@@ -1259,11 +1265,11 @@ private:
       const GriddingAlgorithm&);
 
    // Verbose flags.
-   static char s_check_overflow_nesting;
-   static char s_check_proper_nesting;
-   static char s_check_connectors;
-   static char s_print_hierarchy;
-   static char s_print_steps;
+   bool d_check_overflow_nesting;
+   bool d_check_proper_nesting;
+   bool d_check_connectors;
+   bool d_print_hierarchy;
+   bool d_print_steps;
 
    /*
     * Static initialization and cleanup handler.

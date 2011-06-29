@@ -16,7 +16,6 @@
 #include "SAMRAI/tbox/IEEE.h"
 #include "SAMRAI/tbox/RestartManager.h"
 #include "SAMRAI/hier/BoxUtilities.h"
-#include "SAMRAI/hier/MappedBoxContainerUtils.h"
 #include "SAMRAI/hier/MappedBoxLevelConnectorUtils.h"
 #include "SAMRAI/hier/MappingConnectorAlgorithm.h"
 #include "SAMRAI/hier/OverlapConnectorAlgorithm.h"
@@ -49,11 +48,6 @@ namespace mesh {
 
 const int GriddingAlgorithm::ALGS_GRIDDING_ALGORITHM_VERSION = 3;
 
-char GriddingAlgorithm::s_check_overflow_nesting = 0;
-char GriddingAlgorithm::s_check_proper_nesting = 0;
-char GriddingAlgorithm::s_check_connectors = 0;
-char GriddingAlgorithm::s_print_hierarchy = 0;
-char GriddingAlgorithm::s_print_steps = 0;
 
 /*
  *************************************************************************
@@ -65,61 +59,6 @@ char GriddingAlgorithm::s_print_steps = 0;
 
 tbox::Array<int> * GriddingAlgorithm::s_tag_indx = 0;
 tbox::Array<int> * GriddingAlgorithm::s_buf_tag_indx = 0;
-
-tbox::Pointer<tbox::Timer> GriddingAlgorithm::t_find_domain_complement;
-tbox::Pointer<tbox::Timer> GriddingAlgorithm::t_load_balance;
-tbox::Pointer<tbox::Timer> GriddingAlgorithm::t_load_balance0;
-tbox::Pointer<tbox::Timer> GriddingAlgorithm::t_load_balance_setup;
-tbox::Pointer<tbox::Timer> GriddingAlgorithm::t_bdry_fill_tags_create;
-tbox::Pointer<tbox::Timer> GriddingAlgorithm::t_make_coarsest;
-tbox::Pointer<tbox::Timer> GriddingAlgorithm::t_make_finer;
-tbox::Pointer<tbox::Timer> GriddingAlgorithm::t_make_finer_setup;
-tbox::Pointer<tbox::Timer> GriddingAlgorithm::t_make_finer_tagging;
-tbox::Pointer<tbox::Timer> GriddingAlgorithm::t_make_finer_create;
-tbox::Pointer<tbox::Timer> GriddingAlgorithm::t_regrid_all_finer;
-tbox::Pointer<tbox::Timer> GriddingAlgorithm::t_regrid_finer_create;
-tbox::Pointer<tbox::Timer> GriddingAlgorithm::t_bridge_links;
-tbox::Pointer<tbox::Timer> GriddingAlgorithm::t_fill_tags;
-tbox::Pointer<tbox::Timer> GriddingAlgorithm::t_tag_cells_for_refinement;
-tbox::Pointer<tbox::Timer> GriddingAlgorithm::t_buffer_tags;
-tbox::Pointer<tbox::Timer> GriddingAlgorithm::t_bdry_fill_tags_comm;
-tbox::Pointer<tbox::Timer> GriddingAlgorithm::t_second_finer_tagging;
-tbox::Pointer<tbox::Timer> GriddingAlgorithm::t_find_refinement;
-tbox::Pointer<tbox::Timer> GriddingAlgorithm::t_bridge_new_to_new;
-tbox::Pointer<tbox::Timer> GriddingAlgorithm::t_find_new_to_new;
-tbox::Pointer<tbox::Timer> GriddingAlgorithm::t_bridge_new_to_coarser;
-tbox::Pointer<tbox::Timer> GriddingAlgorithm::t_bridge_new_to_finer;
-tbox::Pointer<tbox::Timer> GriddingAlgorithm::t_bridge_new_to_old;
-tbox::Pointer<tbox::Timer> GriddingAlgorithm::t_find_boxes_containing_tags;
-tbox::Pointer<tbox::Timer> GriddingAlgorithm::t_enforce_nesting;
-tbox::Pointer<tbox::Timer> GriddingAlgorithm::t_make_nesting_map;
-tbox::Pointer<tbox::Timer> GriddingAlgorithm::t_make_nesting_map_compute;
-tbox::Pointer<tbox::Timer> GriddingAlgorithm::t_make_nesting_map_convert;
-tbox::Pointer<tbox::Timer> GriddingAlgorithm::t_use_nesting_map;
-tbox::Pointer<tbox::Timer> GriddingAlgorithm::t_make_overflow_map;
-tbox::Pointer<tbox::Timer> GriddingAlgorithm::t_make_overflow_map_compute;
-tbox::Pointer<tbox::Timer> GriddingAlgorithm::t_make_overflow_map_convert;
-tbox::Pointer<tbox::Timer> GriddingAlgorithm::t_use_overflow_map;
-tbox::Pointer<tbox::Timer> GriddingAlgorithm::t_compute_external_parts;
-tbox::Pointer<tbox::Timer> GriddingAlgorithm::t_compute_nesting_violator;
-tbox::Pointer<tbox::Timer> GriddingAlgorithm::t_extend_to_domain_boundary;
-tbox::Pointer<tbox::Timer> GriddingAlgorithm::t_extend_within_domain;
-tbox::Pointer<tbox::Timer> GriddingAlgorithm::t_grow_boxes_within_domain;
-tbox::Pointer<tbox::Timer> GriddingAlgorithm::t_sort_nodes;
-tbox::Pointer<tbox::Timer> GriddingAlgorithm::t_modify_connector;
-tbox::Pointer<tbox::Timer> GriddingAlgorithm::t_misc1;
-tbox::Pointer<tbox::Timer> GriddingAlgorithm::t_misc2;
-tbox::Pointer<tbox::Timer> GriddingAlgorithm::t_misc3;
-tbox::Pointer<tbox::Timer> GriddingAlgorithm::t_misc4;
-tbox::Pointer<tbox::Timer> GriddingAlgorithm::t_misc5;
-tbox::Pointer<tbox::Timer> GriddingAlgorithm::t_make_domain;
-tbox::Pointer<tbox::Timer> GriddingAlgorithm::t_get_balance;
-tbox::Pointer<tbox::Timer> GriddingAlgorithm::t_use_balance;
-tbox::Pointer<tbox::Timer> GriddingAlgorithm::t_make_new;
-tbox::Pointer<tbox::Timer> GriddingAlgorithm::t_process_error;
-tbox::Pointer<tbox::Timer> GriddingAlgorithm::t_limit_overflow;
-tbox::Pointer<tbox::Timer> GriddingAlgorithm::t_reset_hier;
-tbox::Pointer<tbox::Timer> GriddingAlgorithm::t_box_massage;
 
 tbox::StartupShutdownManager::Handler
 GriddingAlgorithm::s_startup_shutdown_handler(
@@ -168,7 +107,12 @@ GriddingAlgorithm::GriddingAlgorithm(
    d_enforce_proper_nesting(true),
    d_extend_to_domain_boundary(true),
    d_load_balance(true),
-   d_barrier_and_time(false)
+   d_barrier_and_time(false),
+   d_check_overflow_nesting(false),
+   d_check_proper_nesting(false),
+   d_check_connectors(false),
+   d_print_hierarchy(false),
+   d_print_steps(false)
 {
    TBOX_ASSERT(!hierarchy.isNull());
    TBOX_ASSERT(!object_name.empty());
@@ -312,6 +256,8 @@ GriddingAlgorithm::GriddingAlgorithm(
    d_bdry_sched_tags.resizeArray(d_hierarchy->getMaxNumberOfLevels());
 
    warnIfDomainTooSmallInPeriodicDir();
+
+   allocateTimers();
 
 #ifdef GA_RECORD_STATS
 
@@ -588,7 +534,7 @@ void GriddingAlgorithm::makeCoarsestLevel(
       d_hierarchy->getDomainSearchTree(hier::BlockId::zero()),
       domain_to_domain);
 
-   if (s_check_connectors == 'y') {
+   if (d_check_connectors) {
       TBOX_ASSERT(oca.checkOverlapCorrectness(new_to_domain) == 0);
       TBOX_ASSERT(oca.checkOverlapCorrectness(domain_to_new) == 0);
    }
@@ -668,7 +614,7 @@ void GriddingAlgorithm::makeCoarsestLevel(
          new_to_new.getConnectorWidth(),
          new_to_new.getNeighborhoodSets());
 
-      if (s_print_hierarchy == 'y') {
+      if (d_print_hierarchy) {
          tbox::plog << "GriddingAlgorithm::makeCoarsestLevel produced:\n";
          d_hierarchy->recursivePrint(tbox::plog, "", 4);
       }
@@ -698,7 +644,7 @@ void GriddingAlgorithm::makeCoarsestLevel(
       d_hierarchy->makeNewPatchLevel(ln,
          new_mapped_box_level);
 
-      if (s_print_hierarchy == 'y') {
+      if (d_print_hierarchy) {
          tbox::plog << "GriddingAlgorithm::makeCoarsestLevel produced:\n";
          d_hierarchy->recursivePrint(tbox::plog, "", 4);
       }
@@ -783,7 +729,7 @@ void GriddingAlgorithm::makeFinerLevel(
    const int tag_buffer,
    const double regrid_start_time)
 {
-   if (s_print_steps == 'y') {
+   if (d_print_steps) {
       tbox::plog
       << "GriddingAlgorithm::makeFinerLevel entered with finest ln = "
       << d_hierarchy->getFinestLevelNumber() << "\n";
@@ -924,7 +870,7 @@ void GriddingAlgorithm::makeFinerLevel(
 
          if (new_mapped_box_level.isInitialized()) {
 
-            if (s_check_proper_nesting == 'y') {
+            if (d_check_proper_nesting) {
                /*
                 * Check that the new MappedBoxLevel nests inside the tag level.
                 *
@@ -1138,7 +1084,7 @@ void GriddingAlgorithm::makeFinerLevel(
                tag_to_new.getConnectorWidth(),
                tag_to_new.getNeighborhoodSets());
 
-         if (s_print_hierarchy == 'y') {
+         if (d_print_hierarchy) {
             tbox::plog << "GriddingAlgorithm::makeFinerLevel produced:\n";
             d_hierarchy->recursivePrint(tbox::plog, "", 4);
          }
@@ -1208,7 +1154,7 @@ void GriddingAlgorithm::regridAllFinerLevels(
 
    if (d_hierarchy->levelCanBeRefined(level_number)) {
 
-      if (s_print_steps == 'y') {
+      if (d_print_steps) {
          tbox::plog
          << "GriddingAlgorithm::regridAllFinerLevels: regridding finer than "
          << level_number << "\n";
@@ -1285,7 +1231,7 @@ void GriddingAlgorithm::regridAllFinerLevels(
 
       d_base_ln = -1;
 
-      if (s_print_steps == 'y') {
+      if (d_print_steps) {
          tbox::plog
          << "GriddingAlgorithm::regridAllFinerLevels: regridded finer than "
          << level_number << "\n";
@@ -1304,7 +1250,7 @@ void GriddingAlgorithm::regridAllFinerLevels(
       t_regrid_all_finer->barrierAndStop();
    }
 
-   if (s_print_hierarchy == 'y') {
+   if (d_print_hierarchy) {
       tbox::plog << "GriddingAlgorithm::regridAllFinerLevels produced:\n";
       d_hierarchy->recursivePrint(tbox::plog, "", 4);
    }
@@ -1366,7 +1312,7 @@ void GriddingAlgorithm::regridFinerLevel(
 
    const hier::OverlapConnectorAlgorithm oca;
 
-   if (s_print_steps == 'y') {
+   if (d_print_steps) {
       tbox::plog
       << "GriddingAlgorithm::regridFinerLevel: entered with tag_ln = "
       << tag_ln << "\n";
@@ -1452,7 +1398,7 @@ void GriddingAlgorithm::regridFinerLevel(
          if (d_hierarchy->finerLevelExists(tag_ln)
              && d_hierarchy->levelCanBeRefined(new_ln)) {
 
-            if (s_print_steps == 'y') {
+            if (d_print_steps) {
                tbox::plog
                   << "GriddingAlgorithm::regridFinerLevel: recursing to tag_ln = "
                   << new_ln << "\n";
@@ -1466,7 +1412,7 @@ void GriddingAlgorithm::regridFinerLevel(
                tag_buffer,
                regrid_start_time);
 
-            if (s_print_steps == 'y') {
+            if (d_print_steps) {
                tbox::plog
                   << "GriddingAlgorithm::regridFinerLevel: recursion returned to tag_ln = "
                   << tag_ln << "\n";
@@ -1497,7 +1443,7 @@ void GriddingAlgorithm::regridFinerLevel(
             t_misc3->start();
          }
 
-         if (s_print_steps == 'y') {
+         if (d_print_steps) {
             if (new_mapped_box_level.isInitialized()) {
                tbox::plog
                <<
@@ -1839,7 +1785,7 @@ void GriddingAlgorithm::regridFinerLevel_createAndInstallNewLevel(
    /*
     * Compute self-Connector for the new level.
     */
-   if (s_print_steps == 'y') {
+   if (d_print_steps) {
       tbox::plog
          << "GriddingAlgorithm::findRefinementBoxes: bridge links\n";
    }
@@ -1918,7 +1864,7 @@ void GriddingAlgorithm::regridFinerLevel_createAndInstallNewLevel(
 
    if (d_hierarchy->levelExists(new_ln + 1)) {
 
-      if (s_check_proper_nesting == 'y') {
+      if (d_check_proper_nesting) {
 
          /*
           * Check that the new_mapped_box_level nests the next finer
@@ -1979,7 +1925,7 @@ void GriddingAlgorithm::regridFinerLevel_createAndInstallNewLevel(
 
          } /* !finer_nests_in_new */
 
-      } /* s_check_proper_nesting == 'y' */
+      } /* d_check_proper_nesting */
 
    } /* d_hierarchy->levelExists(new_ln + 1) */
 
@@ -2852,7 +2798,7 @@ void GriddingAlgorithm::findRefinementBoxes(
    TBOX_ASSERT(!(d_hierarchy->getPatchLevel(tag_ln).isNull()));
    TBOX_DIM_ASSERT_CHECK_DIM_ARGS2(d_dim, new_mapped_box_level, *d_hierarchy);
 
-   if (s_print_steps == 'y') {
+   if (d_print_steps) {
       tbox::plog
       << "GriddingAlgorithm::findRefinementBoxes entered with tag_ln = "
       << tag_ln << "\n";
@@ -2906,7 +2852,7 @@ void GriddingAlgorithm::findRefinementBoxes(
       d_hierarchy->getPatchLevel(tag_ln);
 
 
-   if (s_print_steps == 'y') {
+   if (d_print_steps) {
       tbox::plog << "GriddingAlgorithm::findRefinementBoxes: clustering\n";
    }
 
@@ -3000,12 +2946,12 @@ void GriddingAlgorithm::findRefinementBoxes(
 
    if (new_mapped_box_level.getGlobalNumberOfBoxes() > 0) {
 
-      if (s_check_connectors == 'y') {
+      if (d_check_connectors) {
          /*
           * At this stage, there are no edges to periodic images yet, so
           * don't check for them.
           */
-         if (s_print_steps == 'y') {
+         if (d_print_steps) {
             tbox::plog
             <<
             "GriddingAlgorithm::findRefinementBoxes: checking new-->tag from findBoxesContainingTags\n";
@@ -3014,7 +2960,7 @@ void GriddingAlgorithm::findRefinementBoxes(
                false,
                true,
                true) == 0);
-         if (s_print_steps == 'y') {
+         if (d_print_steps) {
             tbox::plog
             <<
             "GriddingAlgorithm::findRefinementBoxes: checking tag-->new from findBoxesContainingTags\n";
@@ -3029,7 +2975,7 @@ void GriddingAlgorithm::findRefinementBoxes(
 
 
       {
-         if (s_print_steps == 'y') {
+         if (d_print_steps) {
             tbox::plog
             <<
             "GriddingAlgorithm::findRefinementBoxes: enforcing overflow nesting\n";
@@ -3055,7 +3001,7 @@ void GriddingAlgorithm::findRefinementBoxes(
             unnested_to_nested,
             new_mapped_box_level,
             new_to_tag );
-         if (s_print_steps == 'y') {
+         if (d_print_steps) {
             tbox::plog
             << "GriddingAlgorithm::findRefinementBoxes applying overflow nesting map."
             << std::endl;
@@ -3073,14 +3019,14 @@ void GriddingAlgorithm::findRefinementBoxes(
          if (d_barrier_and_time) {
             t_limit_overflow->stop();
          }
-         if (s_print_steps == 'y') {
+         if (d_print_steps) {
             tbox::plog
             << "GriddingAlgorithm::findRefinementBoxes finished applying overflow nesting map."
             << std::endl;
          }
 
-         if (s_check_overflow_nesting == 'y') {
-            if (s_print_steps == 'y') {
+         if (d_check_overflow_nesting) {
+            if (d_print_steps) {
                tbox::plog << "GriddingAlgorithm::findRefinementBoxes checking overflow."
                           << std::endl;
             }
@@ -3108,7 +3054,7 @@ void GriddingAlgorithm::findRefinementBoxes(
 
       if (d_enforce_proper_nesting) {
 
-         if (s_print_steps == 'y') {
+         if (d_print_steps) {
             tbox::plog
             <<
             "GriddingAlgorithm::findRefinementBoxes: enforcing proper nesting\n";
@@ -3127,7 +3073,7 @@ void GriddingAlgorithm::findRefinementBoxes(
             tag_to_new,
             new_to_tag,
             new_ln );
-         if (s_print_steps == 'y') {
+         if (d_print_steps) {
             tbox::plog << "GriddingAlgorithm::findRefinementBoxes applying proper nesting map.\n"
                        << "Proper nesting map:\n" << unnested_to_nested.format("", 3);
          }
@@ -3145,7 +3091,7 @@ void GriddingAlgorithm::findRefinementBoxes(
             t_enforce_nesting->stop();
          }
 
-         if (tag_ln == d_base_ln && s_check_proper_nesting == 'y') {
+         if (tag_ln == d_base_ln && d_check_proper_nesting) {
             /*
              * Tag level will be regridded when we exit the current
              * recursion if tag_ln is not d_base_ln, so do not check
@@ -3208,7 +3154,7 @@ void GriddingAlgorithm::findRefinementBoxes(
 
       if (d_extend_to_domain_boundary) {
 
-         if (s_print_steps == 'y') {
+         if (d_print_steps) {
             tbox::plog
             << "GriddingAlgorithm::findRefinementBoxes: extending nodes\n";
          }
@@ -3228,7 +3174,7 @@ void GriddingAlgorithm::findRefinementBoxes(
 
       // BTNG: these if-else blocks can be significantly simplified by factoring.
       if (!allow_patches_smaller_than_minimum_size_to_prevent_overlaps) {
-         if (s_print_steps == 'y') {
+         if (d_print_steps) {
             tbox::plog
             << "GriddingAlgorithm::findRefinementBoxes: growing boxes\n";
          }
@@ -3279,7 +3225,7 @@ void GriddingAlgorithm::findRefinementBoxes(
       t_box_massage->stop();
 
       if (d_load_balance) {
-         if (s_print_steps == 'y') {
+         if (d_print_steps) {
             tbox::plog
             << "GriddingAlgorithm::findRefinementBoxes: load balancing\n";
          }
@@ -3307,7 +3253,7 @@ void GriddingAlgorithm::findRefinementBoxes(
 
          t_load_balance->stop();
 
-         if (s_check_connectors == 'y') {
+         if (d_check_connectors) {
             tbox::plog << "GriddingAlgorithm checking new-tag" << std::endl;
             int errs = 0;
             if (oca.checkOverlapCorrectness(new_to_tag, false, true, true)) {
@@ -3334,7 +3280,7 @@ void GriddingAlgorithm::findRefinementBoxes(
       }
 
       if (d_sequentialize_patch_indices) {
-         if (s_check_connectors == 'y') {
+         if (d_check_connectors) {
             tbox::plog << "GriddingAlgorithm begin sorting nodes." << std::endl;
          }
          renumberBoxes(new_mapped_box_level,
@@ -3342,7 +3288,7 @@ void GriddingAlgorithm::findRefinementBoxes(
             new_to_tag,
             false,
             true);
-         if (s_check_connectors == 'y') {
+         if (d_check_connectors) {
             tbox::plog << "GriddingAlgorithm end sorting nodes." << std::endl;
          }
       }
@@ -3353,7 +3299,7 @@ void GriddingAlgorithm::findRefinementBoxes(
        */
       const hier::Connector& tag_to_tag =
          d_hierarchy->getConnector(tag_ln, tag_ln);
-      if (s_check_connectors == 'y') {
+      if (d_check_connectors) {
          tbox::plog << "GriddingAlgorithm begin adding periodic images."
                     << std::endl;
       }
@@ -3363,12 +3309,12 @@ void GriddingAlgorithm::findRefinementBoxes(
          tag_to_new,
          d_hierarchy->getDomainSearchTree(hier::BlockId::zero()),
          tag_to_tag);
-      if (s_check_connectors == 'y') {
+      if (d_check_connectors) {
          tbox::plog << "GriddingAlgorithm begin adding periodic images."
                     << std::endl;
       }
 
-      if (s_check_connectors == 'y') {
+      if (d_check_connectors) {
          TBOX_ASSERT(oca.checkOverlapCorrectness(new_to_tag) == 0);
          TBOX_ASSERT(oca.checkOverlapCorrectness(tag_to_new) == 0);
       }
@@ -3384,7 +3330,7 @@ void GriddingAlgorithm::findRefinementBoxes(
          new_to_tag,
          ratio);
 
-      if (s_check_connectors == 'y') {
+      if (d_check_connectors) {
          TBOX_ASSERT(oca.checkOverlapCorrectness(new_to_tag) == 0);
          TBOX_ASSERT(oca.checkOverlapCorrectness(tag_to_new) == 0);
       }
@@ -3596,7 +3542,7 @@ void GriddingAlgorithm::makeOverflowNestingMap(
 
    hier::MappedBoxLevel violator_mapped_box_level(d_dim);
    hier::Connector unnested_to_violator;
-   if (s_print_steps == 'y') {
+   if (d_print_steps) {
       tbox::plog << " GriddingAlgorithm::makeOverflowNestingMap computing external parts."
                  << std::endl;
    }
@@ -3614,7 +3560,7 @@ void GriddingAlgorithm::makeOverflowNestingMap(
 
    TBOX_ASSERT(unnested_to_violator.isLocal());
 
-   if (s_print_steps == 'y') {
+   if (d_print_steps) {
       tbox::plog << " GriddingAlgorithm::makeOverflowNestingMap making remainer map." << std::endl;
    }
    t_make_overflow_map_convert->start();
@@ -3625,15 +3571,7 @@ void GriddingAlgorithm::makeOverflowNestingMap(
    t_make_overflow_map_convert->stop();
    t_make_overflow_map->stop();
 
-   if (s_print_steps == 'y') {
-      tbox::plog << " GriddingAlgorithm::makeOverflowNestingMap checking remainer map."
-                 << std::endl;
-   }
-#if 0
-   hier::MappingConnectorAlgorithm mca;
-   mca.assertMappingValidity(unnested_to_nested);
-#endif
-   if (s_print_steps == 'y') {
+   if (d_print_steps) {
       tbox::plog << " GriddingAlgorithm::makeOverflowNestingMap finished." << std::endl;
    }
 }
@@ -4404,25 +4342,16 @@ void GriddingAlgorithm::getFromInput(
 
    TBOX_ASSERT(!db.isNull());
 
-   if (s_check_connectors == 0) {
-      s_check_overflow_nesting = 'n';
-      s_check_proper_nesting = 'n';
-      s_check_connectors = 'n';
-      s_print_hierarchy = 'n';
-      s_print_steps = 'n';
-   }
-
-   s_check_overflow_nesting =
-      db->getCharWithDefault("check_overflow_nesting", s_check_overflow_nesting);
-   s_check_proper_nesting =
-      db->getCharWithDefault("check_proper_nesting", s_check_proper_nesting);
-   s_check_connectors =
-      db->getCharWithDefault("check_connectors", s_check_connectors);
-   s_print_hierarchy =
-      db->getCharWithDefault("print_hierarchy",
-         s_print_hierarchy);
-   s_print_steps =
-      db->getCharWithDefault("print_steps", s_print_steps);
+   d_check_overflow_nesting =
+      db->getBoolWithDefault("check_overflow_nesting", d_check_overflow_nesting);
+   d_check_proper_nesting =
+      db->getBoolWithDefault("check_proper_nesting", d_check_proper_nesting);
+   d_check_connectors =
+      db->getBoolWithDefault("check_connectors", d_check_connectors);
+   d_print_hierarchy =
+      db->getBoolWithDefault("print_hierarchy", d_print_hierarchy);
+   d_print_steps =
+      db->getBoolWithDefault("print_steps", d_print_steps);
 
    int ln;
 
@@ -4600,6 +4529,22 @@ void GriddingAlgorithm::shutdownCallback()
  */
 void GriddingAlgorithm::initializeCallback()
 {
+}
+
+/*
+ *************************************************************************
+ *************************************************************************
+ */
+void GriddingAlgorithm::finalizeCallback()
+{
+}
+
+/*
+ *************************************************************************
+ *************************************************************************
+ */
+void GriddingAlgorithm::allocateTimers()
+{
    /*
     * Timers:  for gathering performance information about box
     * calculus and other regridding operations.
@@ -4710,68 +4655,6 @@ void GriddingAlgorithm::initializeCallback()
       getTimer("mesh::GriddingAlgorithm::limit_overflow");
    t_box_massage = tbox::TimerManager::getManager()->
       getTimer("mesh::GriddingAlgorithm::box_massage");
-}
-
-/*
- *************************************************************************
- *************************************************************************
- */
-void GriddingAlgorithm::finalizeCallback()
-{
-   t_find_domain_complement.setNull();
-   t_load_balance.setNull();
-   t_load_balance0.setNull();
-   t_load_balance_setup.setNull();
-   t_bdry_fill_tags_create.setNull();
-   t_make_coarsest.setNull();
-   t_make_finer.setNull();
-   t_make_finer_setup.setNull();
-   t_make_finer_tagging.setNull();
-   t_make_finer_create.setNull();
-   t_regrid_all_finer.setNull();
-   t_regrid_finer_create.setNull();
-   t_bridge_links.setNull();
-   t_fill_tags.setNull();
-   t_tag_cells_for_refinement.setNull();
-   t_buffer_tags.setNull();
-   t_bdry_fill_tags_comm.setNull();
-   t_second_finer_tagging.setNull();
-   t_find_refinement.setNull();
-   t_bridge_new_to_new.setNull();
-   t_find_new_to_new.setNull();
-   t_bridge_new_to_coarser.setNull();
-   t_bridge_new_to_finer.setNull();
-   t_bridge_new_to_old.setNull();
-   t_find_boxes_containing_tags.setNull();
-   t_enforce_nesting.setNull();
-   t_make_nesting_map.setNull();
-   t_make_nesting_map_compute.setNull();
-   t_make_nesting_map_convert.setNull();
-   t_use_nesting_map.setNull();
-   t_make_overflow_map.setNull();
-   t_make_overflow_map_compute.setNull();
-   t_make_overflow_map_convert.setNull();
-   t_use_overflow_map.setNull();
-   t_compute_external_parts.setNull();
-   t_compute_nesting_violator.setNull();
-   t_extend_to_domain_boundary.setNull();
-   t_extend_within_domain.setNull();
-   t_grow_boxes_within_domain.setNull();
-   t_sort_nodes.setNull();
-   t_modify_connector.setNull();
-   t_misc1.setNull();
-   t_misc2.setNull();
-   t_misc3.setNull();
-   t_misc4.setNull();
-   t_misc5.setNull();
-   t_make_domain.setNull();
-   t_get_balance.setNull();
-   t_use_balance.setNull();
-   t_make_new.setNull();
-   t_process_error.setNull();
-   t_limit_overflow.setNull();
-   t_reset_hier.setNull();
-   t_box_massage.setNull();
 }
 
 }

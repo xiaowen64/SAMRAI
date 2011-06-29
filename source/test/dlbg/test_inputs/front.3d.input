@@ -74,12 +74,12 @@ TreeLoadBalancer {
   n_root_cycles = -1
 
   // Debugging options
-  check_map = 'n'
-  check_connectivity = 'n'
-  print_steps = 'n'
-  print_swap_steps = 'n'
-  print_break_steps = 'n'
-  print_edge_steps = 'n'
+  check_map = FALSE
+  check_connectivity = FALSE
+  print_steps = FALSE
+  print_swap_steps = FALSE
+  print_break_steps = FALSE
+  print_edge_steps = FALSE
 }
 
 PatchHierarchy {
@@ -125,11 +125,11 @@ GriddingAlgorithm {
    sequentialize_patch_indices = TRUE
    coalesce_boxes = FALSE
 
-   check_overflow_nesting = 'n'
-   check_proper_nesting = 'y'
-   check_connectors = 'n'
-   print_layer_hierarchy = 'n'
-   print_steps = 'n'
+   check_overflow_nesting = FALSE
+   check_proper_nesting = TRUE
+   check_connectors = FALSE
+   print_layer_hierarchy = FALSE
+   print_steps = FALSE
 }
 
 
@@ -145,10 +145,4 @@ TimerManager{
   print_threshold = 0
   print_summed = TRUE
   print_max = TRUE
-}
-
-LayerHierarchy {
-   log_actions = 'n'
-   check_input_connectors = 'n'
-   check_output_connectors = 'n'
 }

@@ -988,12 +988,12 @@ private:
    mutable std::vector<int> d_box_count_stat;
 
    // Extra checks independent of optimization/debug.
-   static char s_print_steps;
-   static char s_print_break_steps;
-   static char s_print_swap_steps;
-   static char s_print_edge_steps;
-   static char s_check_connectivity;
-   static char s_check_map;
+   char d_print_steps;
+   char d_print_break_steps;
+   char d_print_swap_steps;
+   char d_print_edge_steps;
+   char d_check_connectivity;
+   char d_check_map;
 
 };
 
