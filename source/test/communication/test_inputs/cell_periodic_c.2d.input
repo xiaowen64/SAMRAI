@@ -193,12 +193,6 @@ StandardTaggingAndInitializer {
 
 }
 
-MappedBoxHierarchy {
-   log_actions = 'y'
-   check_input_connectors = 'y'
-   check_output_connectors = 'y'
-}
-
 OverlapConnectorUtil {
    print_bridge_steps = 'n'
 }

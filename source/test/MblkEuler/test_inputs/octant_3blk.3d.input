@@ -247,11 +247,3 @@ PatchHierarchy {
    }
    sequentialize_patch_indices = TRUE
 }
-
-
-
-MappedBoxHierarchy {
-    log_actions = 'n'
-    check_input_connectors = 'n'
-    check_output_connectors = 'n'
-}

@@ -158,9 +158,3 @@ MethodOfLinesIntegrator{
 LoadBalancer {
 // using default uniform load balance configuration (see mesh_LoadBalancerX.h.sed)
 }
-
-MappedBoxHierarchy {
-   check_input_connectors = 'y'
-   check_output_connectors = 'y'
-   log_actions = 'y'
-}

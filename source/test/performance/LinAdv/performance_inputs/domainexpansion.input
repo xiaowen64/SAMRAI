@@ -310,13 +310,6 @@ HyperbolicLevelIntegrator {
    distinguish_mpi_reduction_costs = TRUE
 }
 
-MappedBoxHierarchy {
-  log_actions = 'n'
-  check_input_connectors = 'n'
-  check_output_connectors = 'n'
-  check_connectors = 'n'
-}
-
 RefineSchedule {
   barrier_and_time = TRUE
 }
