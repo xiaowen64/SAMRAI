@@ -1,7 +1,7 @@
 //
 // File:        $URL$
 // Package:     SAMRAI mesh generation
-// Copyright:   (c) 1997-2010 Lawrence Livermore National Security, LLC
+// Copyright:   (c) 1997-2011 Lawrence Livermore National Security, LLC
 // Revision:    $LastChangedRevision$
 // Modified:    $LastChangedDate$
 // Description: Load balance routines for uniform and non-uniform workloads.

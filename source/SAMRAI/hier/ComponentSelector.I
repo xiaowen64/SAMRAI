@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright 
  * information, see COPYRIGHT and COPYING.LESSER. 
  *
- * Copyright:     (c) 1997-2010 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
  * Description:   Simple bit vector.  The size of the bit vector depends on
  *                The number of PatchData entries.  It is implemented as a 
  *                vector of bitsets to take advantage of the speed of 

@@ -1,7 +1,7 @@
 c
 c  File:        $URL$
 c  Package:     SAMRAI patchdata
-c  Copyright:   (c) 1997-2010 Lawrence Livermore National Security, LLC
+c  Copyright:   (c) 1997-2011 Lawrence Livermore National Security, LLC
 c  Revision:    $LastChangedRevision$
 c  Modified:    $LastChangedDate$
 c  Description: F77 routines for debugging 2d patch data types.
@@ -9,7 +9,7 @@ c
 c
 c  File:        $URL$
 c  Package:     SAMRAI patchdata
-c  Copyright:   (c) 1997-2010 Lawrence Livermore National Security, LLC
+c  Copyright:   (c) 1997-2011 Lawrence Livermore National Security, LLC
 c  Revision:    $LastChangedRevision$
 c  Modified:    $LastChangedDate$
 c  Description: m4 include file for 2d patchdata debugging routines
@@ -17,7 +17,7 @@ c
 c
 c  File:        $URL$
 c  Package:     SAMRAI patchdata
-c  Copyright:   (c) 1997-2010 Lawrence Livermore National Security, LLC
+c  Copyright:   (c) 1997-2011 Lawrence Livermore National Security, LLC
 c  Revision:    $LastChangedRevision$
 c  Modified:    $LastChangedDate$
 c  Description: m4 include file for dimensioning 2d arrays in FORTRAN routines.

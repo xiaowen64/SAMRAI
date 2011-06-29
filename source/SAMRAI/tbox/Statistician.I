@@ -1,7 +1,7 @@
 //
 // File:        $URL$
 // Package:     SAMRAI toolbox
-// Copyright:   (c) 1997-2010 Lawrence Livermore National Security, LLC
+// Copyright:   (c) 1997-2011 Lawrence Livermore National Security, LLC
 // Revision:    \f$       \f$
 // Modified:    $LastChangedDate$
 // Description: Singleton manager class for statistic objects.

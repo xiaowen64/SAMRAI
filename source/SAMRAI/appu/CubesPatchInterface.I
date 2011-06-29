@@ -2,7 +2,7 @@
 // File:        $URL$
 // Package:     SAMRAI
 //              Structured Adaptive Mesh Refinement Applications Infrastructure
-// Copyright:   (c) 1997-2010 Lawrence Livermore National Security, LLC
+// Copyright:   (c) 1997-2011 Lawrence Livermore National Security, LLC
 // Release:     $Name:  $
 // Revision:    $LastChangedRevision$
 // Modified:    $LastChangedDate$

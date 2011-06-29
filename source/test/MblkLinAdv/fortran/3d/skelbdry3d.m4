@@ -16,7 +16,7 @@ c***********************************************************************
 c
 c  File:        appu_cartbdryparams3d.i
 c  Package:     SAMRAI application utilities
-c  Copyright:   (c) 1997-2010 Lawrence Livermore National Security, LLC
+c  Copyright:   (c) 1997-2011 Lawrence Livermore National Security, LLC
 c  Revision:    
 c  Modified:    
 c  Description: m4 include file for 3d boundary constant common blocks
@@ -297,7 +297,7 @@ c***********************************************************************
 c
 c  File:        appu_skelbdryparams3d.i
 c  Package:     SAMRAI application utilities
-c  Copyright:   (c) 1997-2010 Lawrence Livermore National Security, LLC
+c  Copyright:   (c) 1997-2011 Lawrence Livermore National Security, LLC
 c  Revision:    
 c  Modified:    
 c  Description: m4 include file for 3d boundary constant common blocks
@@ -949,7 +949,7 @@ c***********************************************************************
 c
 c  File:        appu_skelbdryparams3d.i
 c  Package:     SAMRAI application utilities
-c  Copyright:   (c) 1997-2010 Lawrence Livermore National Security, LLC
+c  Copyright:   (c) 1997-2011 Lawrence Livermore National Security, LLC
 c  Revision:    
 c  Modified:    
 c  Description: m4 include file for 3d boundary constant common blocks
@@ -1276,7 +1276,7 @@ c***********************************************************************
 c
 c  File:        appu_skelbdryparams3d.i
 c  Package:     SAMRAI application utilities
-c  Copyright:   (c) 1997-2010 Lawrence Livermore National Security, LLC
+c  Copyright:   (c) 1997-2011 Lawrence Livermore National Security, LLC
 c  Revision:    
 c  Modified:    
 c  Description: m4 include file for 3d boundary constant common blocks
@@ -1358,7 +1358,7 @@ c***********************************************************************
 c
 c  File:        appu_skelbdryparams3d.i
 c  Package:     SAMRAI application utilities
-c  Copyright:   (c) 1997-2010 Lawrence Livermore National Security, LLC
+c  Copyright:   (c) 1997-2011 Lawrence Livermore National Security, LLC
 c  Revision:    
 c  Modified:    
 c  Description: m4 include file for 3d boundary constant common blocks

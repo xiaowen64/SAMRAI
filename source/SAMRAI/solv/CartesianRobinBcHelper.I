@@ -1,7 +1,7 @@
 /*
  * File:        $URL$
  * Package:     SAMRAI solvers
- * Copyright:   (c) 1997-2010 Lawrence Livermore National Security, LLC
+ * Copyright:   (c) 1997-2011 Lawrence Livermore National Security, LLC
  * Revision:    $LastChangedRevision$
  * Modified:    $LastChangedDate$
  * Description: Robin boundary condition support on cartesian grids.

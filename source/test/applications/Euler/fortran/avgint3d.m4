@@ -1,7 +1,7 @@
 c
 c  File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/trunk/examples/Euler/fortran/3d/avgint.m4 $
 c  Package:     SAMRAI applications
-c  Copyright:   (c) 1997-2010 Lawrence Livermore National Security, LLC
+c  Copyright:   (c) 1997-2011 Lawrence Livermore National Security, LLC
 c  Revision:    $LastChangedRevision: 1917 $
 c  Modified:    $LastChangedDate: 2008-01-25 13:28:01 -0800 (Fri, 25 Jan 2008) $
 c  Description: F77 routines for conservative interlevel transfer of velocity 

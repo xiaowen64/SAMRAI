@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright 
  * information, see COPYRIGHT and COPYING.LESSER. 
  *
- * Copyright:     (c) 1997-2010 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
  * Description:   "Glue code" between Sundials vector interface and SAMRAI vectors. 
  *
  ************************************************************************/
