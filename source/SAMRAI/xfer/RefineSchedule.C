@@ -3239,6 +3239,9 @@ void RefineSchedule::generateCommunicationSchedule(
    restructureNeighborhoodSetsByDstNodes(src_eto_dst_bydst, src_to_dst);
    t_invert_edges->stop();
 
+   /*
+    * Construct transactions with local source and remote destination.
+    */
    for (FullNeighborhoodSet::const_iterator ei = src_eto_dst_bydst.begin();
         ei != src_eto_dst_bydst.end(); ++ei) {
 
@@ -3290,8 +3293,9 @@ void RefineSchedule::generateCommunicationSchedule(
    t_construct_send_trans->stop();
 
    /*
-    * Construct receiving transactions for local dst mapped_boxes.
-    * Set unfilled_mapped_box_level, and dst_eto_unfilled.
+    * Construct transactions for local destination MappedBoxes, whether from
+    * local or remote sources.  Set up unfilled_mapped_box_level
+    * and connector from destination to unfilled_mapped_box_level.
     */
    if (s_extra_debug) {
       tbox::plog << "Constructing receive and copy transactions" << std::endl;
@@ -3317,7 +3321,22 @@ void RefineSchedule::generateCommunicationSchedule(
       hier::NeighborhoodSet::const_iterator cs =
          dst_eto_src.find(dst_mapped_box_id);
 
+      /*
+       * There are two possible code paths here.
+       *
+       * If dst_mapped_box has any source neighbors in the NeighborhoodSet
+       * dst_eto_src, then we create transactions to communicate data from
+       * the source level to the patch associated with dst_mapped_box.  Any
+       * portion of the fill boxes that cannot be filled via these transactions
+       * will be considered unfilled. 
+       *
+       * If dst_mapped_box does not have source neighbors in dst_eto_src,
+       * then no transactions will be created, and all of the fill boxes
+       * will be considered unfilled.
+       */
+
       if (cs != dst_eto_src.end()) {
+
          /*
           * dst_mapped_box has overlaps with src mapped_box_level.
           * Fill what we can using src and add the remaining to unfilled.
@@ -3331,6 +3350,13 @@ void RefineSchedule::generateCommunicationSchedule(
               bi != fill_nabrs.end(); ++bi) {
             fill_boxes.push_back(*bi);
          }
+
+         /*
+          * unfilled_box_for_dst starts out containing the fill boxes
+          * for the current dst_mapped_box.  As transactions are created,
+          * the space covered by those transactions will be removed from this
+          * list, and whatever is left cannot be filled from the source level.
+          */ 
          hier::BoxList unfilled_box_for_dst;
          for (MappedBoxVector::iterator vi = fill_boxes.begin();
               vi != fill_boxes.end(); ++vi) {
@@ -3338,9 +3364,16 @@ void RefineSchedule::generateCommunicationSchedule(
          }
 
          /*
-          * Map holds BoxList for each enhanced connectivity neighbor block
-          * of dst_mapped_box.  Each BoxList will be used to determine
-          * any unfilled boxes at that enhanced connectivity boundary.
+          * If there is enhanced connectivity, we need to keep separate
+          * BoxLists to track any unfilled boxes at enhanced connectivity
+          * ghost regions.
+          *  
+          * For each enhanced connectivity neighbor block, determine what
+          * portion, if any, of the fill boxes lies in the enhanced
+          * connectivity ghost region, and store them in the map
+          * unfilled_box_for_encon.  If any transactions are created to fill
+          * data at these locations, boxes will be from the BoxLists in this
+          * map.
           */
          std::map<hier::BlockId, hier::BoxList> unfilled_box_for_encon;
          if (nblocks > 1) {
@@ -3366,6 +3399,10 @@ void RefineSchedule::generateCommunicationSchedule(
 
          }
 
+         /*
+          * Construct the transactions and remove source box from
+          * list of unfilled boxes.
+          */
          const NeighborSet& src_nabrs = cs->second;
          for (NeighborSet::const_iterator na = src_nabrs.begin();
               na != src_nabrs.end(); ++na) {
@@ -3416,8 +3453,9 @@ void RefineSchedule::generateCommunicationSchedule(
             unfilled_box_for_dst.removeIntersections(src_box_in_dst_space);
 
             /*
-             * If src and dst meet at a singularity, then also remove
-             * src_box_in_dst_space from unfilled_box_for_encon.
+             * If src and dst meet at an enhanced connectivity singularity,
+             * then also remove src_box_in_dst_space from
+             * unfilled_box_for_encon.
              */
             if (is_singularity) {
                unfilled_box_for_encon[src_block_id].removeIntersections(
@@ -3425,14 +3463,16 @@ void RefineSchedule::generateCommunicationSchedule(
             }
          }
 
+         /*
+          * All transactions for dst_mapped_box have now been created.
+          *
+          * Now, if any part of unfilled_box_for_dst overlaps with
+          * unfilled_box_for_encon, it can be removed from
+          * unfilled_box_for_dst, as the unfilled boxes at enhanced
+          * connectivity will be handled separately.
+          */  
          if (nblocks > 1 && !unfilled_box_for_dst.isEmpty()) {
 
-            /*
-             * Any overlap between unfilled_box_for_dst and
-             * unfilled_box_for_encon can be removed from
-             * unfilled_box_for_dst, as filling at those singularities will
-             * be handled separately.
-             */
             for (std::map<hier::BlockId,hier::BoxList>::const_iterator
                  ue_iter = unfilled_box_for_encon.begin();
                  ue_iter != unfilled_box_for_encon.end(); ++ue_iter) {
@@ -3443,7 +3483,7 @@ void RefineSchedule::generateCommunicationSchedule(
          } 
 
          /*
-          * Create MappedBoxes for unfilled MappedBoxLevel
+          * Create MappedBoxes for unfilled_mapped_box_level.
           */
          if (!unfilled_box_for_dst.isEmpty()) {
             NeighborSet& unfilled_nabrs = dst_eto_unfilled[dst_mapped_box_id];
@@ -3658,8 +3698,9 @@ void RefineSchedule::generateCommunicationSchedule(
                dst_to_encon_nbrhood_set.find(dst_mapped_box_id);
 
             /*
-             * Create the MappedBoxes from unfilled_box_for_encon,
-             * and also store the unfilled boxes in a BoxList
+             * Create MappedBoxes from unfilled_box_for_encon, to be added
+             * to unfilled_encon_mb_level.  Also store the unfilled boxes
+             * in a BoxList in the destination coordinate system.
              */
             if (find_encon_nabrs != dst_to_encon_nbrhood_set.end()) {
                const NeighborSet& dst_encon_nabrs = find_encon_nabrs->second;
