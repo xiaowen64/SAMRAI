@@ -2105,9 +2105,13 @@ void MappedBoxLevelConnectorUtils::makeRemainderMap(
          for (hier::BoxList::Iterator bi(remaining_parts_list);
               bi; bi++) {
             hier::Box new_box = (*bi);
-            hier::MappedBox new_node(new_box, ++last_used_index, rank);
+            hier::MappedBox new_node(new_box,
+                                     ++last_used_index,
+                                     rank,
+                                     orig_node.getBlockId());
             remainder_nodes.insert(remainder_nodes.end(), new_node);
-            remaining_parts_neighbors.insert(remaining_parts_neighbors.end(), new_node);
+            remaining_parts_neighbors.insert(remaining_parts_neighbors.end(),
+                                             new_node);
          }
       }
 
