@@ -77,14 +77,12 @@ namespace mesh {
  *      hierarchy if no cells are tagged.
  *
  *
- * These basic AMR operations are used to generate of individual levels in
+ * These basic AMR operations are used to generate levels in
  * the AMR patch hierarchy at the beginning of a simulation, and regridding
  * collections of levels during an adaptive calculation.  More details are
  * found in the comments accompanying each member function below.
  *
- * Each GriddingAlgorithm object is provided a PatchHierarchy when
- * constructed.  The GriddingAlgorithm object is then responsible for
- * manipulating levels in that hierarchy.  Other objects passed to the
+ * Other objects passed to the
  * constructor provide the gridding algorithm with particular operations
  * needed during meshing operations.  Operations that tag cells for 
  * refinement on a patch level and initialize data on new levels are
@@ -108,15 +106,16 @@ namespace mesh {
  *      the tolerance.  This tolerance helps users control the amount
  *      of extra refined cells created (beyond those tagged explicitly)
  *      that is typical in patch-based AMR computations.
- *      The index of the value in the array corresponds to 
- *      the number of the level to which the tolerance value applies.  If 
- *      more values are given than the maximum number of levels allowed in 
- *      the hierarchy, the extra values will be ignored.  If fewer
- *      values are given, then the last value given will be used
- *      for each level without a specified input value.  For example,
- *      if only a single value is specified, then that value will be used on
- *      all levels.  If no input values are given, a default of 0.8 is used.
- *      See sample input below for input file format.
+ *      If no input values are given, a default of 0.8 is
+ *      used.  See sample input below for input file format.
+ *      The index of the value in the array corresponds to the number
+ *      of the level to which the tolerance value applies.  If more
+ *      values are given than the maximum number of levels allowed in
+ *      the hierarchy, extra values will be ignored.  If fewer values
+ *      are given, then the last value given will be used for each
+ *      level without a specified input value.  For example, if only a
+ *      single value is specified, then that value will be used on all
+ *      levels.
  *
  *   - \b    combine_efficiency
  *      An array of double values, each of which serves as a threshold
@@ -125,15 +124,11 @@ namespace mesh {
  *      If that ratio is greater than the combine efficiency, the box will not
  *      be split.  This tolerance helps users avoids splitting up portions 
  *      of the domain into into very small patches which can increase
- *      the overhead of AMR operations.  The index of the value in
- *      the array corresponds to the number of the level to which the
- *      efficiency value applies.  If more values are given than
- *      the maximum number of levels allowed in the hierarchy, extra values 
- *      will be ignored.  If fewer values are given, then the last value given
- *      will be used for each level without a specified input value.  For 
- *      example, if only a single value is specified, then that value will 
- *      be used on all levels.  If no input values are given, a default of 
- *      0.8 is used.  See sample input below for input file format.
+ *      the overhead of AMR operations.
+ *      If no input values are given, a default of 0.8 is
+ *      used.  See sample input below for input file format.
+ *      Multiple values in the array are handled similar to
+ *      efficiency_tolerance.
  *
  *   - @b check_nonnesting_user_boxes
  *      A flag to control how user-specified refinement boxes that violate
@@ -236,11 +231,10 @@ public:
     * this object for restart using the specified object name when the
     * boolean argument is true (default).
     *
-    * If assertion checking is turned on, an unrecoverable assertion will
-    * result if any of the input database, level strategy,
-    * box generator, or load balancer pointers is null.  Assertions
-    * may also be thrown if any checks for consistency among input
-    * parameters fail.
+    * If assertion checking is turned on, an unrecoverable assertion
+    * will result if any of the required pointer arguments is null.
+    * Assertions may also be thrown if any checks for consistency
+    * among input parameters fail.
     *
     * @param[in] hierarchy The hierarchy that this GriddingAlgorithm will
     * work on.  The pointer is cached.  All hierarchy operations will
@@ -258,8 +252,9 @@ public:
     * @param[in] balancer Load balancer
     *
     * @param[in] balancer0 Special load balancer to use for level zero
-    * only when a single process owns all the unbalanced load (such as during
-    * initialization).  If omitted, will use @c balancer instead.
+    * only when a single process owns all the unbalanced load (such as
+    * during initialization).  If omitted, will use @c balancer
+    * instead.
     *
     * @param[in] register_for_restart
     */
@@ -271,8 +266,6 @@ public:
       tbox::Pointer<BoxGeneratorStrategy> generator,
       tbox::Pointer<LoadBalanceStrategy> balancer,
       tbox::Pointer<LoadBalanceStrategy> balancer0 = tbox::Pointer<LoadBalanceStrategy>(NULL),
-      MultiblockGriddingTagger* mb_tagger_strategy =
-         (MultiblockGriddingTagger *)NULL,
       bool register_for_restart = true);
 
    /*!
@@ -295,12 +288,28 @@ public:
     * Generally, an unrecoverable assertion will result if the constraints
     * are not satisfied.
     *
-    * If level 0 already exists in the hierarchy, then the routine will
-    * generate a new level zero by re-applying the load balancing procedure to
-    * the existing level.  Data will be moved from the old level to the
-    * new level and the pre-existing level 0 will be discarded.  Note that
-    * this routine is different than the routine makeFinerLevel() below,
-    * which is used to construct levels finer than level zero.  
+    * If level 0 already exists in the hierarchy, then the routine
+    * will generate a new level zero by re-applying the load balancing
+    * procedure to the existing level.  Data will be moved from the
+    * old level to the new level and the pre-existing level 0 will be
+    * discarded.  Note that this routine is different than the routine
+    * makeFinerLevel() below, which is used to construct levels finer
+    * than level zero.  In particular, this routine does not select
+    * cells for refinement, whereas the other routine does.
+    *
+    * @param[in] level_time Simulation time.
+    */
+   void
+   makeCoarsestLevel(
+      const double level_time);
+
+   /*!
+    * @brief Create or rebalnce the coarsest level.
+    *
+    * This is an implementation of interface defined in BaseGriddingAlgorithm.
+    * This implementation is similar to makeCoarsestLevel(const double)
+    * but allows user to specify the configuration of level 0 with the second
+    * argument.
     *
     * @param[in] level_time Simulation time.
     *
@@ -314,38 +323,12 @@ public:
       const double level_time,
       const hier::MappedBoxLevel& override_mapped_box_level);
 
-   using BaseGriddingAlgorithm::makeCoarsestLevel;
-
    /*!
-    * @brief Attempt to create a new level in the hierarchy finer
-    * than the finest level currently residing in the hierarchy.
+    * @brief Attempt to create a new level in the hierarchy finer than
+    * the finest level currently residing in the hierarchy.
     *
-    * This is an implementation of interface defined in BaseGriddingAlgorithm.
-    *
-    * This routine attempts to create a new level in the AMR patch hierarchy
-    * finer than the finest level currently residing in the hierarchy.
-    * It will tag cells for refinement on the finest level and construct
-    * a new finest level, if necessary.  If no cells are tagged for
-    * refinement, no new level will be added to the hierarchy.   The boolean
-    * argument initial_time indicates whether the routine is called at the
-    * initial simulation time.  This value is passed to level initialization
-    * routines in the TagAndInitializeStrategy object given to the constructor.
-    * The level time value is the current simulation time.  Note that this 
-    * routine cannot be used to construct the coarsest level in the hierarchy
-    * (i.e., level 0).  The routine makeCoarsestLevel() above must be used
-    * for that purpose.
-    *
-    * The tag buffer indicates the number of cells by which cells tagged
-    * for refinement will be buffered before new finer level boxes are
-    * constructed.  The buffer is important to keep phenomena of interest
-    * on refined regions of the mesh until adaptive regridding occurs next.
-    * Thus, the buffer size should take into account how the simulation may
-    * evolve before regridding occurs (e.g., number of timesteps taken).
-    *
-    * Important note: If assertion checking is activated, several
-    * checks are applied to the functions arguments.  If any check is
-    * violated, an unrecoverable assertion will result.  Also, the the
-    * tag buffer must be positive.
+    * This is an implementation of interface method
+    * BaseGriddingAlgorithm::makeFinerLevel().
     *
     * @param[in] level_time See text.
     *
@@ -365,47 +348,28 @@ public:
       const double regrid_start_time = 0.0);
 
    /*!
-    * @brief Attempt to regrid each level in the AMR patch hierarchy 
+    * @brief Attempt to regrid each level in the PatchHierarchy
     * that is finer than the specified level.
     *
-    * The given level number is that of the coarsest level on which
-    * cells will be tagged for refinement.  In other words,
-    * that level is the finest level that will not be subject to a
-    * change in its patch configuration during the regridding process.
-    * Generally, this routine should be used for adaptive meshing during
-    * a simulation. The routine makeFinerLevel() above should be used to 
-    * construct the initial hierarchy configuration or to add more than 
-    * one new level into the hierarchy (added one at a time).  Also, this 
-    * routine will not change the patches on level zero (i.e., the coarsest 
-    * in the hierarchy).  The routine makeCoarsestLevel() above is 
-    * provided for that purpose.
+    * This method implements the virtual interface
+    * BaseGriddingAlgorithm::regridAllFinerLevels().
+    *
+    * Note that the current algorithm permits at most one new finest level
+    * to be added to the hierarchy with each invocation of the regridding
+    * process.  This constraint, though seemingly restrictive makes the
+    * process of maintaining properly nested levels much easier.
     *
     * Note that the current algorithm permits at most one new finest level
     * to be added to the hierarchy with each call to this method.
     * This constraint, though seemingly restrictive makes the
     * process of maintaining properly nested levels much easier.
     *
-    * The tag buffer array indicates the number of cells by which cells
-    * tagged for refinement on a level will be buffered before new finer
-    * level boxes are constructed.  The buffer is important to keep phenomena
-    * of interest on refined regions of the mesh until adaptive regridding
-    * occurs next.  Thus, the buffer size should take into account how the
-    * simulation may evolve before regridding occurs (e.g., number of
-    * timesteps taken between regrids).
-    *
-    * The boolean argument is used for regridding in time-dependent
-    * problems.  When true, it indicates that the specified level is
-    * the coarsest level to synchronize at the current regrid time
-    * before this regridding method is called.  This is a pretty
-    * idiosyncratic argument but allows some flexibility in the way
-    * memory is managed during time-dependent regridding operations.
-    *
-    * Important note: If assertion checking is activated, several checks
-    * are applied to the functions arguments.  If any check is violated,
-    * an unrecoverable assertion will result.  In particular,
-    * the given level number must match that of
-    * of some level in the hierarchy.  Also, the tag buffer array must
-    * contain a positive value for each level in the hierarchy.
+    * Important note: If assertion checking is activated, several
+    * checks are applied to the functions arguments.  If any check is
+    * violated, an unrecoverable assertion will result.  In
+    * particular, the given level number must match that of of some
+    * level in the hierarchy.  Also, the tag buffer array must contain
+    * a positive value for each level in the hierarchy.
     *
     * @param[in] level_number Coarsest level on which cells will be
     * tagged for refinement
@@ -483,6 +447,21 @@ public:
    double
    getCombineEfficiency(
       const int level_number) const;
+
+   /*!
+    * @brief Set the user-defined implementation of
+    * MultiblockGriddingTagger.
+    *
+    * The tag buffering process requires a MultiblockGriddingTagger
+    * for multiblock hierarchies with enhanced connectivity.  This
+    * method is not usually required because the default
+    * implementation is sufficient.  User may subclass
+    * MultiblockGriddingTagger to override some methods and set the
+    * new implementation using this method.
+    *
+    * @param[in] mb_tagger_strategy
+    */
+   void setMultiblockGriddingTagger(MultiblockGriddingTagger* mb_tagger_strategy);
 
    /*!
     * @brief Print all data members of the class instance to given output stream.
@@ -1089,31 +1068,17 @@ private:
    int d_base_ln;
 
    /*
-    * Parameters for box generation routines that govern the splitting
-    * of boxes containing tagged cells into smaller boxes:
+    * @brief Efficiency tolerance during clustering.
     *
-    * The efficiency tolerance is a threshold value for the percentage of
-    * tagged cells in each box.  If this percentage is below the tolerance,
-    * the box will continue to be split into smaller boxes.
-    *
-    * The combine efficiency is a threshold value for the sum of the volumes
-    * of two boxes into which a box may be potentially split.  If that sum
-    * is greater than the combine efficiency multiplied by the volume of
-    * the original box, the box will not be split.
-    *
-    * For each of these parameters, an array of values may be given.  Each
-    * value in the array will be used for cell clustering on the level whose
-    * number matches the index of the value in the array.   If more values
-    * are given than the maximum number of levels, extra values will
-    * be ignored.  If fewer values are given, then the last element in the
-    * array will be used on each level without a specified input value.
-    * For example, if only a single value is specified, then that value
-    * will be used for all levels.
-    *
-    * These values are optional input parameters.  If not given, a default
-    * value of 0.8 is set for each parameter.
+    * See input parameter efficiency_tolerance.
     */
    tbox::Array<double> d_efficiency_tolerance;
+
+   /*
+    * @brief Combine efficiency during clustering.
+    *
+    * See input parameter combine_efficiency.
+    */
    tbox::Array<double> d_combine_efficiency;
 
    /*

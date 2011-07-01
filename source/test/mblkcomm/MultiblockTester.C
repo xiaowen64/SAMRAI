@@ -716,7 +716,6 @@ void MultiblockTester::setupHierarchy(
          box_generator,
          load_balancer,
          load_balancer,
-         (mesh::MultiblockGriddingTagger *)NULL,
          true));
 
    int fake_tag_buffer = 0;

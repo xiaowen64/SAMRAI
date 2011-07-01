@@ -19,8 +19,8 @@ namespace mesh {
 
 /*!
  * @brief Class MultiblockGriddingTagger is a concrete implementation
- * of RefinePatchStrategy<DIMI> that is used for boundary filling
- * of patch data representing cells tagged for refinement.
+ * of RefinePatchStrategy that is used for boundary filling of tag
+ * data.
  *
  * This class is needed for the calls to RefineSchedule in
  * the GriddingAlgorithm.

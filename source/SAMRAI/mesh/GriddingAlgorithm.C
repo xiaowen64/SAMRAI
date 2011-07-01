@@ -92,12 +92,11 @@ GriddingAlgorithm::GriddingAlgorithm(
    tbox::Pointer<BoxGeneratorStrategy> generator,
    tbox::Pointer<LoadBalanceStrategy> balancer,
    tbox::Pointer<LoadBalanceStrategy> balancer0,
-   MultiblockGriddingTagger* mb_tagger_strategy,
    bool register_for_restart):
    BaseGriddingAlgorithm( hierarchy ),
    d_hierarchy(hierarchy),
    d_dim(hierarchy->getDim()),
-   d_mb_tagger_strategy(mb_tagger_strategy),
+   d_mb_tagger_strategy(NULL),
    d_internal_tagger_strategy(false),
    d_check_nonrefined_tags('w'),
    d_check_overlapping_patches('i'),
@@ -135,11 +134,6 @@ GriddingAlgorithm::GriddingAlgorithm(
    d_load_balancer0 = balancer0;
    if (d_load_balancer0.isNull()) {
       d_load_balancer0 = d_load_balancer;
-   }
-
-   if (d_mb_tagger_strategy == false) {
-      d_mb_tagger_strategy = new MultiblockGriddingTagger(d_dim);
-      d_internal_tagger_strategy = true;
    }
 
    d_hierarchy->registerConnectorWidthRequestor(
@@ -192,7 +186,11 @@ GriddingAlgorithm::GriddingAlgorithm(
    d_tag_indx = (*s_tag_indx)[d_dim.getValue() - 1];
    d_buf_tag_indx = (*s_buf_tag_indx)[d_dim.getValue() - 1];
 
-   d_mb_tagger_strategy->setScratchTagPatchDataIndex(d_buf_tag_indx);
+   if ( d_hierarchy->getGridGeometry()->getNumberBlocks() > 1 ) {
+      d_mb_tagger_strategy = new MultiblockGriddingTagger(d_dim);
+      d_mb_tagger_strategy->setScratchTagPatchDataIndex(d_buf_tag_indx);
+      d_internal_tagger_strategy = true;
+   }
 
    /*
     * Tag value for refined cells is one; others are zero.
@@ -295,6 +293,24 @@ GriddingAlgorithm::~GriddingAlgorithm()
    if (d_registered_for_restart) {
       tbox::RestartManager::getManager()->unregisterRestartItem(d_object_name);
    }
+   if ( d_internal_tagger_strategy ) {
+      delete d_mb_tagger_strategy;
+      d_internal_tagger_strategy = false;
+   }
+   d_mb_tagger_strategy = NULL;
+}
+
+/*
+ *************************************************************************
+ *************************************************************************
+ */
+
+void GriddingAlgorithm::makeCoarsestLevel(
+   const double level_time)
+{
+   makeCoarsestLevel(level_time,
+                     hier::MappedBoxLevel(d_hierarchy->getDim()));
+   return;
 }
 
 /*
@@ -4247,6 +4263,24 @@ void GriddingAlgorithm::warnIfDomainTooSmallInPeriodicDir() const
       }
 
    }
+}
+
+
+
+/*
+**************************************************************************
+**************************************************************************
+*/
+void GriddingAlgorithm::setMultiblockGriddingTagger(
+   MultiblockGriddingTagger* mb_tagger_strategy)
+{
+   TBOX_ASSERT( mb_tagger_strategy != NULL );
+   if ( d_internal_tagger_strategy ) {
+      delete d_mb_tagger_strategy;
+   }
+   d_mb_tagger_strategy = mb_tagger_strategy;
+   d_internal_tagger_strategy = false;
+   return;
 }
 
 /*
