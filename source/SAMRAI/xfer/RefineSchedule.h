@@ -96,8 +96,6 @@ public:
     *                                   destination level to fill.
     * @param[in] dst_level       Pointer to destination patch level.
     * @param[in] src_level       Pointer to source patch level.
-    * @param[in] block_id       Identifies the block that this schedule will
-    *                           operate on.
     * @param[in] refine_classes  Pointer to structure containing patch data and
     *                            operator information.  In general, this is
     *                            constructed by the calling RefineAlgorithm
@@ -159,8 +157,6 @@ public:
     *                                destination level has number zero (i.e.,
     *                                the coarsest level), this value should be
     *                                less than zero.
-    * @param[in] block_id       Identifies the block that this schedule will
-    *                           operate on.
     * @param[in] hierarchy   Pointer to patch hierarchy.  This pointer may be
     *                        null only if the next_coarser_level value is < 0,
     *                        indicating that there is no level in the hierarchy
@@ -382,8 +378,6 @@ private:
     *                                destination level has number zero (i.e.,
     *                                the coarsest level), this value should be
     *                                less than zero.
-    * @param[in] block_id       Identifies the block that this schedule will
-    *                           operate on.
     * @param[in] hierarchy   Pointer to patch hierarchy.
     * @param[in] src_growth_to_nest_dst  The minimum amount that src_level has
     *                                    to grow in order to nest dst.
@@ -685,6 +679,103 @@ private:
       const Connector& dst_to_fill,
       const Connector& dst_to_src,
       const Connector& src_to_dst);
+
+   /*!
+    * @brief Create all transactions for a local destination box and
+    * store containers of unfilled boxes.
+    *
+    * This method creates all of the transactions to fill the fill boxes
+    * associated with a single local destination mapped box.  The sources
+    * of the transactions are given in src_mapped_boxes.  If there is any
+    * portion of the fill boxes that cannot be filled from the given
+    * source boxes, then the unfilled parts will be stored in
+    * unfilled_mapped_boxes (for the general case) or unfilled_encon_boxes
+    * (for special handling of ghost regions at enhanced connectivity).
+    *
+    * unfilled_encon_boxes will only be populated when part of the fill boxes
+    * representing ghosts of the destination box lie across an enhanced
+    * connectivity block boundary, and those ghosts cannot be filled from the
+    * source level of the schedule.
+    *
+    * @param[out] unfilled_mapped_boxes   Set of unfilled boxes
+    * @param[out] unfilled_encon_boxes    Set of unfilled boxes at enhanced
+    *                                     connectivity
+    * @param[out] dst_to_unfilled_nbrhood_set Holds neighbor relationships
+    *                                         from d_dst_level to
+    *                                         unfilled_mapped_boxes 
+    * @param[out] dst_to_unfilled_nbrhood_set Holds neighbor relationships
+    *                                         from d_encon_level to
+    *                                         unfilled_encon_boxes 
+    * @param[in,out] last_unfilled_local_id  The highest value LocalId
+    *                                        currently in unfilled_mapped_boxes
+    *                                        or unfilled_encon_boxes, or -1
+    *                                        if those sets are empty
+    * @param[in] dst_mapped_box     Destination box for filling data
+    * @param[in] fill_mapped_boxes  Fill boxes giving specific parts of
+    *                               dst_mapped_box and its ghosts that need
+    *                               to be filled
+    * @param[in] src_mapped_boxes   Source boxes that neighbor dst_mapped_box
+    *                               and can provide sources for transactions
+    * @param[in] use_time_interpolation  Indicates whether to set up
+    *                                    transactions with time interpolation.
+    */
+   void
+   createTransactionsAndUnfilledBoxes(
+      hier::MappedBoxSet& unfilled_mapped_boxes,
+      hier::MappedBoxSet& unfilled_encon_boxes,
+      hier::NeighborhoodSet& dst_to_unfilled_nbrhood_set,
+      hier::NeighborhoodSet& encon_to_unfilled_encon_nbrhood_set,
+      hier::LocalId& last_unfilled_local_id,
+      const hier::MappedBox& dst_mapped_box,
+      const hier::MappedBoxSet& fill_mapped_boxes,
+      const hier::MappedBoxSet& src_mapped_boxes,
+      const bool use_time_interpolation);
+
+   /*!
+    * @brief Create and store unfilled boxes when there are no source boxes
+    * that can be used to fill data on a destination box.
+    *
+    * When a given destination mapped box has no neighbors on the source
+    * level that can be used to fill its data, all of its associated fill
+    * boxes are considered unfilled.  This method creates the unfilled mapped
+    * boxes and adds them to unfilled_mapped_boxes (for the general case) or
+    * unfilled_encon_boxes (for special handling of ghost regions at enhanced
+    * connectivity).
+    *
+    * unfilled_encon_boxes will only be populated when part of the fill boxes
+    * representing ghosts of the destination box lie across an enhanced
+    * connectivity block boundary.
+    *
+    * This method is only called for the multiblock case.  There will be
+    * an assertion failure if the number of blocks is 1.
+    *
+    * @param[out] unfilled_mapped_boxes   Set of unfilled boxes
+    * @param[out] unfilled_encon_boxes    Set of unfilled boxes at enhanced
+    *                                     connectivity
+    * @param[out] dst_to_unfilled_nbrhood_set Holds neighbor relationships
+    *                                         from d_dst_level to
+    *                                         unfilled_mapped_boxes 
+    * @param[out] dst_to_unfilled_nbrhood_set Holds neighbor relationships
+    *                                         from d_encon_level to
+    *                                         unfilled_encon_boxes 
+    * @param[in,out] last_unfilled_local_id  The highest value LocalId
+    *                                        currently in unfilled_mapped_boxes
+    *                                        or unfilled_encon_boxes, or -1
+    *                                        if those sets are empty
+    * @param[in] dst_mapped_box     Destination box for filling data
+    * @param[in] fill_mapped_boxes  Fill boxes giving specific parts of
+    *                               dst_mapped_box and its ghosts that need
+    *                               to be filled
+    */
+   void
+   createUnfilledMappedBoxesWithNoSource(
+      hier::MappedBoxSet& unfilled_mapped_boxes,
+      hier::MappedBoxSet& unfilled_encon_boxes,
+      hier::NeighborhoodSet& dst_to_unfilled_nbrhood_set,
+      hier::NeighborhoodSet& encon_to_unfilled_encon_nbrhood_set,
+      hier::LocalId& last_unfilled_local_id,
+      const hier::MappedBox& dst_mapped_box,
+      const hier::MappedBoxSet& fill_mapped_boxes);
 
    /*!
     * @brief Get the maximum ghost cell width of all destination
