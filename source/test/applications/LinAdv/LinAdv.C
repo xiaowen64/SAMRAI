@@ -1449,14 +1449,13 @@ void LinAdv::boundaryReset(
 {
    const hier::Index ifirst = patch.getBox().lower();
    const hier::Index ilast = patch.getBox().upper();
-   int i, idir;
+   int idir;
    bool bdry_cell = true;
 
    const tbox::Pointer<geom::CartesianPatchGeometry> patch_geom =
       patch.getPatchGeometry();
    hier::BoxList domain_boxes(d_dim);
    d_grid_geometry->computePhysicalDomain(domain_boxes, patch_geom->getRatio(), hier::BlockId::zero());
-   int num_domain_boxes = domain_boxes.getNumberOfBoxes();
 
    pdat::CellIndex icell(ifirst);
    hier::BoxList bdrybox(d_dim);
