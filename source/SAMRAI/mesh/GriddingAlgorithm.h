@@ -851,7 +851,6 @@ private:
     */
    void
    readLevelBoxes(
-      hier::BoxList& new_level_boxes,
       hier::MappedBoxLevel& new_mapped_box_level,
       hier::Connector& coarser_to_new,
       hier::Connector& new_to_coarser,
@@ -916,6 +915,13 @@ private:
    void checkDomainBoxes(const hier::BoxList &domain_boxes) const;
 
    /*!
+    * @brief Check for non-nesting user-specified boxes.
+    */
+   void checkNonnestingUserBoxes(
+      const hier::Connector &new_to_tag,
+      const hier::IntVector &nesting_buffer ) const;
+
+   /*!
     * @brief Check for boxes that are too close to the physical
     * boundary without touching it.
     *
@@ -933,6 +939,17 @@ private:
    checkBoundaryProximityViolation(
       const hier::MappedBoxLevel& mapped_box_level,
       const hier::IntVector& extend_ghosts) const;
+
+   /*!
+    * @brief Check for boxes that are too close to the physical
+    * boundary without touching it.
+    *
+    * Compute the allowable distance from boxes in new_mapped_box_level
+    * to domain boundary and delegate the checking.
+    */
+   void checkBoundaryProximityViolation(
+      const int tag_ln,
+      const hier::MappedBoxLevel &new_mapped_box_level ) const;
 
    /*!
     * @brief Check for user tags that violate proper nesting.

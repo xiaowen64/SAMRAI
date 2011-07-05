@@ -721,8 +721,6 @@ void GriddingAlgorithm::makeFinerLevel(
       const tbox::Pointer<hier::PatchLevel>
          tag_level = d_hierarchy->getPatchLevel(tag_ln);
 
-      hier::BoxList fine_boxes(d_dim);
-
       hier::MappedBoxLevel new_mapped_box_level(d_dim);
       hier::Connector tag_to_new;
       hier::Connector new_to_tag;
@@ -904,8 +902,7 @@ void GriddingAlgorithm::makeFinerLevel(
           * constructing the finer level.
           */
          bool remove_old_fine_level = false;
-         readLevelBoxes(fine_boxes,
-                        new_mapped_box_level,
+         readLevelBoxes(new_mapped_box_level,
                         tag_to_new,
                         new_to_tag,
                         tag_ln,
@@ -917,64 +914,17 @@ void GriddingAlgorithm::makeFinerLevel(
           */
 
          if (d_check_nonnesting_user_boxes != 'i') {
-
-            hier::MappedBoxLevel violating_parts(d_dim);
-            hier::Connector new_to_violating_parts;
-
-            hier::MappedBoxLevelConnectorUtils mblc_utils;
-            mblc_utils.computeExternalPartsForMultiblock(
-               violating_parts,
-               new_to_violating_parts,
+            TBOX_ASSERT(
+               new_to_tag.getRatio()*d_hierarchy->getProperNestingBuffer(tag_ln) ==
+               hier::IntVector(d_dim, d_hierarchy->getProperNestingBuffer(tag_ln))*new_to_tag.getRatio() );
+            checkNonnestingUserBoxes(
                new_to_tag,
-               hier::IntVector(d_dim, -d_hierarchy->getProperNestingBuffer(tag_ln))*d_hierarchy->getRatioToCoarserLevel(new_ln),
-               d_hierarchy->getDomainSearchTree());
-            if (violating_parts.getGlobalNumberOfBoxes() > 0) {
-               tbox::perr << "GriddingAlgorihtm: user-specified refinement boxes\n"
-                          << "violates nesting requirement.  Diagnostics will be\n"
-                          << "writen to log files." << std::endl;
-               const std::string left_margin("ERR: ");
-               tbox::plog
-                  << left_margin << "Tag MappedBoxLevel:\n" << new_to_tag.getHead().format(left_margin, 2)
-                  << left_margin << "User-specified boxes:\n" << new_mapped_box_level.format(left_margin, 2)
-                  << left_margin << "Violating parts:\n" << violating_parts.format(left_margin, 2)
-                  << left_margin << "User-specified boxes and their violating parts:\n" << new_to_violating_parts.format(left_margin, 2);
-               if (d_check_nonnesting_user_boxes == 'e') {
-                  TBOX_ERROR("Exiting due to above error");
-               }
-               if (d_check_nonnesting_user_boxes == 'w') {
-                  TBOX_WARNING("Proceeding with nesting violation as requested.\n"
-                               << "SAMRAI is not guaranteed to work with nesting"
-                               << "violations!");
-               }
-            }
-
+               new_to_tag.getRatio()*d_hierarchy->getProperNestingBuffer(tag_ln) );
          }
 
 
          if (d_check_boundary_proximity_violation != 'i') {
-
-            hier::IntVector extend_ghosts(d_dim);
-            hier::IntVector smallest_patch(d_dim);
-            hier::IntVector smallest_box_to_refine(d_dim);
-            hier::IntVector largest_patch(d_dim);
-            getGriddingParameters(smallest_patch,
-                                  smallest_box_to_refine,
-                                  largest_patch,
-                                  extend_ghosts,
-                                  tag_ln,
-                                  false);
-
-            const size_t nerr(
-               checkBoundaryProximityViolation(
-                  new_mapped_box_level,
-                  extend_ghosts));
-            if (nerr > 0 && d_check_boundary_proximity_violation == 'e') {
-               TBOX_ERROR("GriddingAlgorithm::makeFinerLevel: User error:\n"
-                          << "Making level " << new_ln << ".\n"
-                          << "New boxes violate boundary proximity.\n"
-                          << "All boxes must be at least " << extend_ghosts
-                          << " from physical boundaries or touching the physical boundary.");
-            }
+            checkBoundaryProximityViolation( tag_ln, new_mapped_box_level );
          }
 
 
@@ -1432,13 +1382,10 @@ void GriddingAlgorithm::regridFinerLevel(
 
          /*
           * If tagging is not necessary (do_tagging = false) we simply
-          * need to access the level boxes, either from a dumped file or
-          * from user-supplied refine boxes, and load balance them before
-          * constructing the finer level.
+          * need to access the user-supplied refine boxes, and load
+          * balance them before constructing the finer level.
           */
-         hier::BoxList fine_boxes(d_dim);
-         readLevelBoxes(fine_boxes,
-                        new_mapped_box_level,
+         readLevelBoxes(new_mapped_box_level,
                         tag_to_new,
                         new_to_tag,
                         tag_ln,
@@ -2164,6 +2111,94 @@ void GriddingAlgorithm::checkDomainBoxes(const hier::BoxList &domain_boxes) cons
    return;
 }
 
+
+
+/*
+ *******************************************************************
+ * Check for non-nesting user-specified boxes.
+ *******************************************************************
+ */
+void GriddingAlgorithm::checkNonnestingUserBoxes(
+   const hier::Connector &new_to_tag,
+   const hier::IntVector &nesting_buffer ) const
+{
+
+   const hier::MappedBoxLevel &new_mapped_box_level(new_to_tag.getBase());
+
+   hier::MappedBoxLevel violating_parts(d_dim);
+   hier::Connector new_to_violating_parts;
+
+   hier::MappedBoxLevelConnectorUtils mblc_utils;
+   mblc_utils.computeExternalPartsForMultiblock(
+      violating_parts,
+      new_to_violating_parts,
+      new_to_tag,
+      -nesting_buffer,
+      d_hierarchy->getDomainSearchTree());
+
+   if (violating_parts.getGlobalNumberOfBoxes() > 0) {
+
+      tbox::perr << "GriddingAlgorihtm: user-specified refinement boxes\n"
+                 << "violates nesting requirement.  Diagnostics will be\n"
+                 << "writen to log files." << std::endl;
+      const std::string left_margin("ERR: ");
+      tbox::plog
+         << left_margin << "Tag MappedBoxLevel:\n" << new_to_tag.getHead().format(left_margin, 2)
+         << left_margin << "User-specified boxes:\n" << new_mapped_box_level.format(left_margin, 2)
+         << left_margin << "Violating parts:\n" << violating_parts.format(left_margin, 2)
+         << left_margin << "User-specified boxes and their violating parts:\n" << new_to_violating_parts.format(left_margin, 2);
+
+      if (d_check_nonnesting_user_boxes == 'e') {
+         TBOX_ERROR("Exiting due to above error");
+      }
+      if (d_check_nonnesting_user_boxes == 'w') {
+         TBOX_WARNING("Proceeding with nesting violation as requested.\n"
+                      << "SAMRAI is not guaranteed to work with nesting"
+                      << "violations!");
+      }
+
+   }
+
+   return;
+}
+
+
+
+/*
+ *******************************************************************
+ * Check for non-nesting user-specified boxes.
+ *******************************************************************
+ */
+void GriddingAlgorithm::checkBoundaryProximityViolation(
+   const int tag_ln,
+   const hier::MappedBoxLevel &new_mapped_box_level) const
+{
+   hier::IntVector extend_ghosts(d_dim);
+   hier::IntVector smallest_patch(d_dim);
+   hier::IntVector smallest_box_to_refine(d_dim);
+   hier::IntVector largest_patch(d_dim);
+   getGriddingParameters(smallest_patch,
+                         smallest_box_to_refine,
+                         largest_patch,
+                         extend_ghosts,
+                         tag_ln,
+                         false);
+
+   const size_t nerr(
+      checkBoundaryProximityViolation(
+         new_mapped_box_level,
+         extend_ghosts));
+   if (nerr > 0 && d_check_boundary_proximity_violation == 'e') {
+      TBOX_ERROR("GriddingAlgorithm::makeFinerLevel: User error:\n"
+                 << "Making level " << tag_ln+1 << ".\n"
+                 << "New boxes violate boundary proximity.\n"
+                 << "All boxes must be at least " << extend_ghosts
+                 << " from physical boundaries or touching the physical boundary.");
+   }
+
+   return;
+}
+
 /*
  *************************************************************************
  *                                                                       *
@@ -2418,25 +2453,22 @@ void GriddingAlgorithm::checkOverlappingPatches(
  *************************************************************************
  */
 void GriddingAlgorithm::readLevelBoxes(
-   hier::BoxList& new_level_boxes,
    hier::MappedBoxLevel& new_mapped_box_level,
    hier::Connector& coarser_to_new,
    hier::Connector& new_to_coarser,
-   const int level_number,
+   const int tag_ln,
    const double regrid_time,
    bool& remove_old_fine_level)
 {
-   (void)new_level_boxes;
-
-   TBOX_ASSERT((level_number >= 0)
-      && (level_number <= d_hierarchy->getFinestLevelNumber()));
+   TBOX_ASSERT((tag_ln >= 0)
+      && (tag_ln <= d_hierarchy->getFinestLevelNumber()));
 
    TBOX_DIM_ASSERT_CHECK_DIM_ARGS2(d_dim, *d_hierarchy, new_mapped_box_level);
 
    const hier::MappedBoxLevel& coarser_mapped_box_level = *d_hierarchy->getMappedBoxLevel(
-         level_number);
+         tag_ln);
 
-   int fine_level_number = level_number + 1;
+   int fine_level_number = tag_ln + 1;
    hier::BoxList boxes_to_refine(d_dim);
 
    /*
@@ -2451,7 +2483,7 @@ void GriddingAlgorithm::readLevelBoxes(
 
       new_level_has_new_boxes = d_tag_init_strategy->
          getUserSuppliedRefineBoxes(boxes_to_refine,
-            level_number,
+            tag_ln,
             regrid_time);
 
    }
@@ -2513,12 +2545,12 @@ void GriddingAlgorithm::readLevelBoxes(
       coarser_to_new.initialize(
          coarser_mapped_box_level,
          new_mapped_box_level,
-         d_hierarchy->getRequiredConnectorWidth(level_number, level_number + 1));
+         d_hierarchy->getRequiredConnectorWidth(tag_ln, tag_ln + 1));
       new_to_coarser.initialize(
          new_mapped_box_level,
          coarser_mapped_box_level,
-         hier::IntVector::ceiling(d_hierarchy->getRequiredConnectorWidth(level_number + 1,
-               level_number), ratio));
+         hier::IntVector::ceiling(d_hierarchy->getRequiredConnectorWidth(tag_ln + 1,
+               tag_ln), ratio));
       const hier::OverlapConnectorAlgorithm oca;
       oca.findOverlaps(coarser_to_new);
       oca.findOverlaps(new_to_coarser);
@@ -2545,7 +2577,7 @@ void GriddingAlgorithm::readLevelBoxes(
          new_to_coarser,
          coarser_to_new,
          d_hierarchy,
-         level_number,
+         tag_ln,
          hier::Connector(),
          hier::Connector(),
          smallest_patch,
@@ -2572,8 +2604,7 @@ void GriddingAlgorithm::readLevelBoxes(
       oca.findOverlaps(new_to_coarser);
 
       const hier::Connector& coarser_to_coarser =
-         d_hierarchy->getConnector(level_number,
-            level_number);
+         d_hierarchy->getConnector(tag_ln, tag_ln);
       const hier::MappedBoxLevelConnectorUtils mblc_utils;
       mblc_utils.addPeriodicImagesAndRelationships(
          new_mapped_box_level,
