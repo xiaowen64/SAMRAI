@@ -452,12 +452,21 @@ public:
     * @brief Set the user-defined implementation of
     * MultiblockGriddingTagger.
     *
-    * The tag buffering process requires a MultiblockGriddingTagger
-    * for multiblock hierarchies with enhanced connectivity.  This
-    * method is not usually required because the default
-    * implementation is sufficient.  User may subclass
-    * MultiblockGriddingTagger to override some methods and set the
-    * new implementation using this method.
+    * This features applies only to multiblock hierarchies with
+    * enhanced connectivity block boundaries.  The purpose of the
+    * MultiblockGriddingTagger is to use the
+    * xfer::RefinePatchStrategy::fillSingularityBoundaryConditions
+    * interface to do tag buffering across those boundaries.
+    *
+    * Tag buffering requires filling one layer of ghost cells from the
+    * values held in neighboring patches.  At enhanced connectivity,
+    * more than one neighboring patch can overlap a single ghost cell.
+    * MultiblockGriddingTagger::fillSingularityBoundaryConditions
+    * makes sure that the ghost cell has a nonzero value if at least
+    * one of the enhanced connectivity neighbors has a nonzero value.
+    *
+    * User may subclass MultiblockGriddingTagger to override some
+    * methods and set the new implementation using this method.
     *
     * @param[in] mb_tagger_strategy
     */
@@ -902,6 +911,11 @@ private:
       const bool for_building_finer) const;
 
    /*!
+    * @brief Check domain boxes for violations of certain constraints.
+    */
+   void checkDomainBoxes(const hier::BoxList &domain_boxes) const;
+
+   /*!
     * @brief Check for boxes that are too close to the physical
     * boundary without touching it.
     *
@@ -1030,6 +1044,14 @@ private:
    tbox::Pointer<BoxGeneratorStrategy> d_box_generator;
    tbox::Pointer<LoadBalanceStrategy> d_load_balancer;
    tbox::Pointer<LoadBalanceStrategy> d_load_balancer0;
+
+   /*
+    * MultiblockGriddingTagger is the RefinePatchStrategy
+    * implementation provided to the RefineSchedule d_bdry_sched_tags
+    * inside GriddingAlgorithm.
+    *
+    * @see setMultiblockGriddingTagger().
+    */
    MultiblockGriddingTagger* d_mb_tagger_strategy;
    bool d_internal_tagger_strategy;
 
@@ -1055,8 +1077,8 @@ private:
     * these variables are easier to read in the code than integer constants,
     * such as 0 and 1.
     */
-   int d_true_tag;
-   int d_false_tag;
+   const int d_true_tag;
+   const int d_false_tag;
 
    /*!
     * @brief Finest level not changed during regrid.

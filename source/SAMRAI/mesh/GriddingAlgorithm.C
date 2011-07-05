@@ -95,9 +95,19 @@ GriddingAlgorithm::GriddingAlgorithm(
    bool register_for_restart):
    BaseGriddingAlgorithm( hierarchy ),
    d_hierarchy(hierarchy),
+   d_connector_width_requestor(),
    d_dim(hierarchy->getDim()),
+   d_object_name(object_name),
+   d_registered_for_restart(register_for_restart),
+   d_tag_init_strategy(tag_init_strategy),
+   d_box_generator(generator),
+   d_load_balancer(balancer),
+   d_load_balancer0(balancer0),
    d_mb_tagger_strategy(NULL),
    d_internal_tagger_strategy(false),
+   d_true_tag(1),
+   d_false_tag(0),
+   d_base_ln(-1),
    d_check_nonrefined_tags('w'),
    d_check_overlapping_patches('i'),
    d_check_nonnesting_user_boxes('e'),
@@ -120,18 +130,12 @@ GriddingAlgorithm::GriddingAlgorithm(
    TBOX_ASSERT(!generator.isNull());
    TBOX_ASSERT(!balancer.isNull());
 
-   d_object_name = object_name;
-   d_registered_for_restart = register_for_restart;
 
    if (d_registered_for_restart) {
       tbox::RestartManager::getManager()->
-      registerRestartItem(d_object_name, this);
+         registerRestartItem(d_object_name, this);
    }
 
-   d_tag_init_strategy = tag_init_strategy;
-   d_box_generator = generator;
-   d_load_balancer = balancer;
-   d_load_balancer0 = balancer0;
    if (d_load_balancer0.isNull()) {
       d_load_balancer0 = d_load_balancer;
    }
@@ -175,12 +179,12 @@ GriddingAlgorithm::GriddingAlgorithm(
    if ((*s_tag_indx)[d_dim.getValue() - 1] < 0) {
       (*s_tag_indx)[d_dim.getValue() - 1] =
          var_db->registerInternalSAMRAIVariable(d_tag,
-            hier::IntVector::getZero(d_dim));
+                                                hier::IntVector::getZero(d_dim));
    }
    if ((*s_buf_tag_indx)[d_dim.getValue() - 1] < 0) {
       (*s_buf_tag_indx)[d_dim.getValue() - 1] =
          var_db->registerInternalSAMRAIVariable(d_buf_tag,
-            hier::IntVector::getOne(d_dim));
+                                                hier::IntVector::getOne(d_dim));
    }
 
    d_tag_indx = (*s_tag_indx)[d_dim.getValue() - 1];
@@ -192,11 +196,6 @@ GriddingAlgorithm::GriddingAlgorithm(
       d_internal_tagger_strategy = true;
    }
 
-   /*
-    * Tag value for refined cells is one; others are zero.
-    */
-   d_true_tag = 1;
-   d_false_tag = 0;
 
    /*
     * Initialize communication algorithm for exchanging buffered tag data.
@@ -204,13 +203,11 @@ GriddingAlgorithm::GriddingAlgorithm(
    d_bdry_fill_tags = new xfer::RefineAlgorithm(d_dim);
 
    d_bdry_fill_tags->
-   registerRefine(d_buf_tag_indx,
-      d_buf_tag_indx,
-      d_buf_tag_indx,
-      ((tbox::Pointer<hier::RefineOperator>)NULL));
+      registerRefine(d_buf_tag_indx,
+                     d_buf_tag_indx,
+                     d_buf_tag_indx,
+                     ((tbox::Pointer<hier::RefineOperator>)NULL));
 
-
-   d_base_ln = -1;
 
    d_efficiency_tolerance.resizeArray(d_hierarchy->getMaxNumberOfLevels());
    d_combine_efficiency.resizeArray(d_hierarchy->getMaxNumberOfLevels());
@@ -343,7 +340,7 @@ void GriddingAlgorithm::makeCoarsestLevel(
 
    if (override_mapped_box_level.isInitialized()) {
       TBOX_ERROR("GriddingAlgorithm::makeCoarsestLevel is not\n"
-         "supporting override_mapped_box_level yet, due to incomplete coding.");
+                 "supporting override_mapped_box_level yet, due to incomplete coding.");
    }
 
    if (d_barrier_and_time) {
@@ -374,89 +371,26 @@ void GriddingAlgorithm::makeCoarsestLevel(
    hier::IntVector largest_patch(d_dim);
    hier::IntVector extend_ghosts(d_dim);
    {
-   hier::IntVector smallest_box_to_refine(d_dim);
-   // "false" argument: for_building_finer level = false
-   getGriddingParameters(
-      smallest_patch,
-      smallest_box_to_refine,
-      largest_patch,
-      extend_ghosts,
-      ln,
-      false);
+      hier::IntVector smallest_box_to_refine(d_dim);
+      // "false" argument: for_building_finer level = false
+      getGriddingParameters(
+         smallest_patch,
+         smallest_box_to_refine,
+         largest_patch,
+         extend_ghosts,
+         ln,
+         false);
    }
+
 
    /*
-    * If there is no level 0 in the patch hierarchy, then check
-    * constraints on domain description.
+    * If making coarsest level for the first time, check domain boxes
+    * for violations of user constraints.
     */
-
    if (!level_zero_exists) {
-
-      int i = 0;
-      for (hier::BoxList::Iterator itr(domain_boxes); itr; itr++, ++i) {
-         hier::Box test_box = *itr;
-         for (int dir = 0; dir < d_dim.getValue(); dir++) {
-            if (test_box.numberCells(dir) < smallest_patch(dir)) {
-               int error_coarsen_ratio =
-                  d_tag_init_strategy->getErrorCoarsenRatio();
-               if (error_coarsen_ratio > 1) {
-                  TBOX_ERROR(
-                     d_object_name << ": "
-                     << "\nBox " << i << ", " << test_box
-                     << ", from the input file violates"
-                     <<
-                     "the minimum patch size constraints."
-                     <<
-                     "\nVerify that boxes are larger than"
-                     << "the maximum ghost width and/or"
-                     <<
-                     "\nthe specified minimum patch size."
-                     <<
-                     "\nNOTE: to assure the constraints are"
-                     <<
-                     "properly enforced during coarsening for"
-                     <<
-                     "\nerror computation, the minimum patch"
-                     <<
-                     "size is the smallest patch size multiplied"
-                     <<
-                     "\nby the error coarsen ratio, which is "
-                     << error_coarsen_ratio
-                     << " in this case."
-                     << std::endl);
-               } else {
-                  TBOX_ERROR(
-                     d_object_name << ": "
-                     << "\nBox " << i << ", " << test_box
-                     << ", from the input file violates"
-                     <<
-                     "the minimum patch size constraints."
-                     <<
-                     "\nVerify that boxes are larger than"
-                     << "the maximum ghost width and/or"
-                     <<
-                     "\nthe specified minimum patch size."
-                     << std::endl);
-               }
-            }
-         }
-      }
-
-      // TODO: This check only works for single-block.
-      if (domain_boxes.boxesIntersect()) {
-         TBOX_ERROR(d_object_name << ":  "
-                                  << "Boxes specified for coarsest level "
-                                  << "contain intersections with each other!");
-      }
-
-      if ((d_hierarchy->getMaxNumberOfLevels() > 1)
-          && (!d_tag_init_strategy->coarsestLevelBoxesOK(domain_boxes))) {
-         TBOX_ERROR(d_object_name << ":  "
-                                  << "level gridding strategy encountered"
-                                  << " a problem with the domain boxes!");
-      }
-
+      checkDomainBoxes(domain_boxes);
    }
+
 
    const hier::MappedBoxLevel &domain_mapped_box_level(d_hierarchy->getDomainMappedBoxLevel());
 
@@ -603,7 +537,7 @@ void GriddingAlgorithm::makeCoarsestLevel(
       }
 
       TBOX_ASSERT(new_to_new.getConnectorWidth() ==
-         d_hierarchy->getRequiredConnectorWidth(0,0));
+                  d_hierarchy->getRequiredConnectorWidth(0,0));
       TBOX_ASSERT(&new_to_new.getBase() == &new_mapped_box_level);
       TBOX_ASSERT(&new_to_new.getHead() == &new_mapped_box_level);
 
@@ -617,7 +551,7 @@ void GriddingAlgorithm::makeCoarsestLevel(
    if (!level_zero_exists) {
 
       d_hierarchy->makeNewPatchLevel(ln,
-         new_mapped_box_level);
+                                     new_mapped_box_level);
       /*
        * Add computed Connectors to new level's collection of
        * persistent overlap Connectors.
@@ -625,10 +559,10 @@ void GriddingAlgorithm::makeCoarsestLevel(
       tbox::Pointer<hier::PatchLevel> new_level =
          d_hierarchy->getPatchLevel(ln);
       new_level->getMappedBoxLevel()->getPersistentOverlapConnectors().
-      createConnector(
-         *new_level->getMappedBoxLevel(),
-         new_to_new.getConnectorWidth(),
-         new_to_new.getNeighborhoodSets());
+         createConnector(
+            *new_level->getMappedBoxLevel(),
+            new_to_new.getConnectorWidth(),
+            new_to_new.getNeighborhoodSets());
 
       if (d_print_hierarchy) {
          tbox::plog << "GriddingAlgorithm::makeCoarsestLevel produced:\n";
@@ -640,10 +574,10 @@ void GriddingAlgorithm::makeCoarsestLevel(
 
       // "true" argument: const bool initial_time = true;
       d_tag_init_strategy->initializeLevelData(d_hierarchy,
-         ln,
-         level_time,
-         d_hierarchy->levelCanBeRefined(ln),
-         true);
+                                               ln,
+                                               level_time,
+                                               d_hierarchy->levelCanBeRefined(ln),
+                                               true);
 
    } else {
 
@@ -658,7 +592,7 @@ void GriddingAlgorithm::makeCoarsestLevel(
       d_hierarchy->removePatchLevel(ln);
 
       d_hierarchy->makeNewPatchLevel(ln,
-         new_mapped_box_level);
+                                     new_mapped_box_level);
 
       if (d_print_hierarchy) {
          tbox::plog << "GriddingAlgorithm::makeCoarsestLevel produced:\n";
@@ -684,11 +618,11 @@ void GriddingAlgorithm::makeCoarsestLevel(
 
       // "false" argument: const bool initial_time = false;
       d_tag_init_strategy->initializeLevelData(d_hierarchy,
-         ln,
-         level_time,
-         d_hierarchy->levelCanBeRefined(ln),
-         false,
-         old_level);
+                                               ln,
+                                               level_time,
+                                               d_hierarchy->levelCanBeRefined(ln),
+                                               false,
+                                               old_level);
 
       old_level.setNull();
 
@@ -747,8 +681,8 @@ void GriddingAlgorithm::makeFinerLevel(
 {
    if (d_print_steps) {
       tbox::plog
-      << "GriddingAlgorithm::makeFinerLevel entered with finest ln = "
-      << d_hierarchy->getFinestLevelNumber() << "\n";
+         << "GriddingAlgorithm::makeFinerLevel entered with finest ln = "
+         << d_hierarchy->getFinestLevelNumber() << "\n";
    }
 
    TBOX_ASSERT(!(d_hierarchy.isNull()));
@@ -834,11 +768,11 @@ void GriddingAlgorithm::makeFinerLevel(
           */
          if (errorEstimationUsesTimeIntegration()) {
             d_tag_init_strategy->
-            preprocessErrorEstimation(d_hierarchy,
-               tag_ln,
-               level_time,
-               regrid_start_time,
-               initial_time);
+               preprocessErrorEstimation(d_hierarchy,
+                                         tag_ln,
+                                         level_time,
+                                         regrid_start_time,
+                                         initial_time);
          }
 
          /*
@@ -848,14 +782,14 @@ void GriddingAlgorithm::makeFinerLevel(
           */
          bool coarsest_sync_level = false;
          d_tag_init_strategy->
-         tagCellsForRefinement(d_hierarchy,
-            tag_ln,
-            level_time,
-            d_tag_indx,
-            initial_time,
-            coarsest_sync_level,
-            d_hierarchy->levelCanBeRefined(tag_ln),
-            regrid_start_time);
+            tagCellsForRefinement(d_hierarchy,
+                                  tag_ln,
+                                  level_time,
+                                  d_tag_indx,
+                                  initial_time,
+                                  coarsest_sync_level,
+                                  d_hierarchy->levelCanBeRefined(tag_ln),
+                                  regrid_start_time);
 
          /*
           * Check for user-tagged cells that violate proper nesting.
@@ -902,7 +836,7 @@ void GriddingAlgorithm::makeFinerLevel(
                hier::IntVector required_nesting(d_dim);
                if (tag_ln > 0) {
                   required_nesting = hier::IntVector(d_dim,
-                        d_hierarchy->getProperNestingBuffer(tag_ln));
+                                                     d_hierarchy->getProperNestingBuffer(tag_ln));
                } else {
                   required_nesting =
                      d_hierarchy->getPatchDescriptor()->getMaxGhostWidth(
@@ -971,12 +905,12 @@ void GriddingAlgorithm::makeFinerLevel(
           */
          bool remove_old_fine_level = false;
          readLevelBoxes(fine_boxes,
-            new_mapped_box_level,
-            tag_to_new,
-            new_to_tag,
-            tag_ln,
-            level_time,
-            remove_old_fine_level);
+                        new_mapped_box_level,
+                        tag_to_new,
+                        new_to_tag,
+                        tag_ln,
+                        level_time,
+                        remove_old_fine_level);
 
          /*
           * Check for user-specified boxes that violate nesting requirements.
@@ -1009,8 +943,8 @@ void GriddingAlgorithm::makeFinerLevel(
                }
                if (d_check_nonnesting_user_boxes == 'w') {
                   TBOX_WARNING("Proceeding with nesting violation as requested.\n"
-                     << "SAMRAI is not guaranteed to work with nesting"
-                     << "violations!");
+                               << "SAMRAI is not guaranteed to work with nesting"
+                               << "violations!");
                }
             }
 
@@ -1036,10 +970,10 @@ void GriddingAlgorithm::makeFinerLevel(
                   extend_ghosts));
             if (nerr > 0 && d_check_boundary_proximity_violation == 'e') {
                TBOX_ERROR("GriddingAlgorithm::makeFinerLevel: User error:\n"
-                  << "Making level " << new_ln << ".\n"
-                  << "New boxes violate boundary proximity.\n"
-                  << "All boxes must be at least " << extend_ghosts
-                  << " from physical boundaries or touching the physical boundary.");
+                          << "Making level " << new_ln << ".\n"
+                          << "New boxes violate boundary proximity.\n"
+                          << "All boxes must be at least " << extend_ghosts
+                          << " from physical boundaries or touching the physical boundary.");
             }
          }
 
@@ -1109,15 +1043,15 @@ void GriddingAlgorithm::makeFinerLevel(
             *d_hierarchy->getPatchLevel(new_ln));
 
          d_tag_init_strategy->initializeLevelData(d_hierarchy,
-            new_ln,
-            level_time,
-            d_hierarchy->levelCanBeRefined(new_ln),
-            initial_time);
+                                                  new_ln,
+                                                  level_time,
+                                                  d_hierarchy->levelCanBeRefined(new_ln),
+                                                  initial_time);
 
          t_reset_hier->barrierAndStart();
          d_tag_init_strategy->resetHierarchyConfiguration(d_hierarchy,
-            new_ln,
-            new_ln);
+                                                          new_ln,
+                                                          new_ln);
          t_reset_hier->barrierAndStop();
          t_make_finer_create->stop();
       }
@@ -1155,7 +1089,7 @@ void GriddingAlgorithm::regridAllFinerLevels(
    const bool level_is_coarsest_sync_level)
 {
    TBOX_ASSERT((level_number >= 0)
-      && (level_number <= d_hierarchy->getFinestLevelNumber()));
+               && (level_number <= d_hierarchy->getFinestLevelNumber()));
    TBOX_ASSERT(!(d_hierarchy->getPatchLevel(level_number).isNull()));
    TBOX_ASSERT(tag_buffer.getSize() >= level_number + 1);
 #ifdef DEBUG_CHECK_ASSERTIONS
@@ -1172,8 +1106,8 @@ void GriddingAlgorithm::regridAllFinerLevels(
 
       if (d_print_steps) {
          tbox::plog
-         << "GriddingAlgorithm::regridAllFinerLevels: regridding finer than "
-         << level_number << "\n";
+            << "GriddingAlgorithm::regridAllFinerLevels: regridding finer than "
+            << level_number << "\n";
       }
 
       /*
@@ -1202,11 +1136,11 @@ void GriddingAlgorithm::regridAllFinerLevels(
                }
 
                d_tag_init_strategy->
-               preprocessErrorEstimation(d_hierarchy,
-                  ln,
-                  regrid_time,
-                  level_regrid_start_time,
-                  initial_time);
+                  preprocessErrorEstimation(d_hierarchy,
+                                            ln,
+                                            regrid_time,
+                                            level_regrid_start_time,
+                                            initial_time);
             }
          }
       }
@@ -1237,9 +1171,9 @@ void GriddingAlgorithm::regridAllFinerLevels(
             t_reset_hier->barrierAndStart();
          }
          d_tag_init_strategy->
-         resetHierarchyConfiguration(d_hierarchy,
-            level_number + 1,
-            d_hierarchy->getFinestLevelNumber());
+            resetHierarchyConfiguration(d_hierarchy,
+                                        level_number + 1,
+                                        d_hierarchy->getFinestLevelNumber());
          if (d_barrier_and_time) {
             t_reset_hier->barrierAndStop();
          }
@@ -1249,8 +1183,8 @@ void GriddingAlgorithm::regridAllFinerLevels(
 
       if (d_print_steps) {
          tbox::plog
-         << "GriddingAlgorithm::regridAllFinerLevels: regridded finer than "
-         << level_number << "\n";
+            << "GriddingAlgorithm::regridAllFinerLevels: regridded finer than "
+            << level_number << "\n";
       }
 
    } //  if level cannot be refined, the routine drops through...
@@ -1315,10 +1249,10 @@ void GriddingAlgorithm::regridFinerLevel(
    const tbox::Array<double>& regrid_start_time)
 {
    TBOX_ASSERT((tag_ln >= 0)
-      && (tag_ln <= d_hierarchy->getFinestLevelNumber()));
+               && (tag_ln <= d_hierarchy->getFinestLevelNumber()));
    TBOX_ASSERT(!(d_hierarchy->getPatchLevel(tag_ln).isNull()));
    TBOX_ASSERT(finest_level_not_regridded >= 0
-      && finest_level_not_regridded <= tag_ln);
+               && finest_level_not_regridded <= tag_ln);
    TBOX_ASSERT(tag_buffer.getSize() >= tag_ln + 1);
 #ifdef DEBUG_CHECK_ASSERTIONS
    for (int i = 0; i < tag_buffer.getSize(); i++) {
@@ -1330,8 +1264,8 @@ void GriddingAlgorithm::regridFinerLevel(
 
    if (d_print_steps) {
       tbox::plog
-      << "GriddingAlgorithm::regridFinerLevel: entered with tag_ln = "
-      << tag_ln << "\n";
+         << "GriddingAlgorithm::regridFinerLevel: entered with tag_ln = "
+         << tag_ln << "\n";
    }
 
    hier::MappedBoxLevelConnectorUtils mblc_utils;
@@ -1345,7 +1279,7 @@ void GriddingAlgorithm::regridFinerLevel(
       int new_ln = tag_ln + 1;
 
       tbox::Pointer<hier::PatchLevel>
-      tag_level = d_hierarchy->getPatchLevel(tag_ln);
+         tag_level = d_hierarchy->getPatchLevel(tag_ln);
 
       /*
        * Compute nesting data at tag_ln for use in constructing
@@ -1462,12 +1396,12 @@ void GriddingAlgorithm::regridFinerLevel(
          if (d_print_steps) {
             if (new_mapped_box_level.isInitialized()) {
                tbox::plog
-               <<
-               "GriddingAlgorithm::regridFinerLevel got inititalized new_mapped_box_level\n";
+                  <<
+                  "GriddingAlgorithm::regridFinerLevel got inititalized new_mapped_box_level\n";
             } else {
                tbox::plog
-               <<
-               "GriddingAlgorithm::regridFinerLevel got un-inititalized new_mapped_box_level\n";
+                  <<
+                  "GriddingAlgorithm::regridFinerLevel got un-inititalized new_mapped_box_level\n";
             }
          }
 
@@ -1504,12 +1438,12 @@ void GriddingAlgorithm::regridFinerLevel(
           */
          hier::BoxList fine_boxes(d_dim);
          readLevelBoxes(fine_boxes,
-            new_mapped_box_level,
-            tag_to_new,
-            new_to_tag,
-            tag_ln,
-            regrid_time,
-            remove_old_fine_level);
+                        new_mapped_box_level,
+                        tag_to_new,
+                        new_to_tag,
+                        tag_ln,
+                        regrid_time,
+                        remove_old_fine_level);
 
       } /* end do_tagging == false */
 
@@ -2090,8 +2024,8 @@ void GriddingAlgorithm::regridFinerLevel_createAndInstallNewLevel(
  *************************************************************************
  */
 size_t GriddingAlgorithm::checkBoundaryProximityViolation(
-   const hier::MappedBoxLevel& mapped_box_level,
-   const hier::IntVector& extend_ghosts) const
+const hier::MappedBoxLevel& mapped_box_level,
+const hier::IntVector& extend_ghosts) const
 {
    /*
     * 1. Compute the boundary regions of the boxes.
@@ -2125,13 +2059,13 @@ size_t GriddingAlgorithm::checkBoundaryProximityViolation(
             if (leftover_size(d) != 0 && leftover_size(d) < extend_ghosts(d)) {
                ++nerr;
                TBOX_WARNING("GriddingAlgorithm::makeFinerLevel:\n"
-                  << "User-specified box (refined) " << *bi
-                  << " violates boundary proximity.\n"
-                  << "In dimension " << d << ", it is "
-                  << extend_ghosts(d) - leftover_size(d)
-                  << " cells from a physical domain boundary.\n"
-                  << "All boxes must be at least " << extend_ghosts
-                  << " from physical boundaries or touching the physical boundary.");
+                            << "User-specified box (refined) " << *bi
+                            << " violates boundary proximity.\n"
+                            << "In dimension " << d << ", it is "
+                            << extend_ghosts(d) - leftover_size(d)
+                            << " cells from a physical domain boundary.\n"
+                            << "All boxes must be at least " << extend_ghosts
+                            << " from physical boundaries or touching the physical boundary.");
             }
          }
       }
@@ -2139,6 +2073,95 @@ size_t GriddingAlgorithm::checkBoundaryProximityViolation(
    }
 
    return nerr;
+}
+
+
+
+/*
+ *******************************************************************
+ * Check domain boxes for violations of user constraints.
+ *******************************************************************
+ */
+void GriddingAlgorithm::checkDomainBoxes(const hier::BoxList &domain_boxes) const {
+
+   hier::IntVector smallest_patch(d_dim);
+   hier::IntVector largest_patch(d_dim);
+   hier::IntVector extend_ghosts(d_dim);
+   {
+      hier::IntVector smallest_box_to_refine(d_dim);
+      // "false" argument: for_building_finer level = false
+      getGriddingParameters(
+         smallest_patch,
+         smallest_box_to_refine,
+         largest_patch,
+         extend_ghosts,
+         0,
+         false);
+   }
+
+   /*
+    * Check minimum size violations.
+    */
+   int i = 0;
+   for (hier::BoxList::Iterator itr(domain_boxes); itr; itr++, ++i) {
+
+      hier::Box test_box = *itr;
+      for (int dir = 0; dir < d_dim.getValue(); dir++) {
+
+         if (test_box.numberCells(dir) < smallest_patch(dir)) {
+
+            int error_coarsen_ratio =
+               d_tag_init_strategy->getErrorCoarsenRatio();
+            if (error_coarsen_ratio > 1) {
+               TBOX_ERROR(
+                  d_object_name << ": " << "\ndomain Box " << i << ", " << test_box
+                  << ", violates the minimum patch size constraints."
+                  << "\nVerify that boxes are larger than"
+                  << "the maximum ghost width and/or"
+                  << "\nthe specified minimum patch size."
+                  << "\nNOTE: to assure the constraints are"
+                  << "properly enforced during coarsening for"
+                  << "\nerror computation, the minimum patch"
+                  << "size is the smallest patch size multiplied"
+                  << "\nby the error coarsen ratio, which is "
+                  << error_coarsen_ratio
+                  << " in this case."
+                  << std::endl);
+            } else {
+               TBOX_ERROR(
+                  d_object_name << ": "
+                  << "\ndomain Box " << i << ", " << test_box
+                  << ", violates the minimum patch size constraints."
+                  << "\nVerify that boxes are larger than"
+                  << "the maximum ghost width and/or"
+                  << "\nthe specified minimum patch size."
+                  << std::endl);
+            }
+         }
+      }
+   }
+
+   /*
+    * Check for overlapping boxes.
+    * TODO: This check only works for single-block.
+    */
+   if (domain_boxes.boxesIntersect()) {
+      TBOX_ERROR(d_object_name << ":  "
+                 << "Boxes specified for coarsest level "
+                 << "contain intersections with each other!");
+   }
+
+   /*
+    * Check for violations of implementation of TagAndInitStrategy.
+    */
+   if ((d_hierarchy->getMaxNumberOfLevels() > 1)
+       && (!d_tag_init_strategy->coarsestLevelBoxesOK(domain_boxes))) {
+      TBOX_ERROR(d_object_name << ":  "
+                 << "level gridding strategy encountered"
+                 << " a problem with the domain boxes!");
+   }
+
+   return;
 }
 
 /*
