@@ -914,9 +914,6 @@ void GriddingAlgorithm::makeFinerLevel(
           */
 
          if (d_check_nonnesting_user_boxes != 'i') {
-            TBOX_ASSERT(
-               new_to_tag.getRatio()*d_hierarchy->getProperNestingBuffer(tag_ln) ==
-               hier::IntVector(d_dim, d_hierarchy->getProperNestingBuffer(tag_ln))*new_to_tag.getRatio() );
             checkNonnestingUserBoxes(
                new_to_tag,
                new_to_tag.getRatio()*d_hierarchy->getProperNestingBuffer(tag_ln) );
