@@ -267,6 +267,27 @@ EOF
 # Maintained by Susan Hazlett
 ;;
 
+# TODO Need to add in other support libraries in order to get complete 
+# coverage
+casc_rh5_insure) # CASC RedHat 5, Insure++ with default GNU compilers, 
+cat <<-EOF
+        --with-CXX="/usr/apps/insure++/7.1.7/bin/insure /usr/bin/g++"
+	--with-CC="/usr/apps/insure++/7.1.7/bin/insure /usr/bin/gcc"
+	--with-F77=/usr/bin/gfortran
+	--with-hdf5=/nfs/casc/samrai/apps/rh5/hdf5/1.8.5p1
+        --with-boost=/usr/casc/samrai/apps/rh5/boost/1.45.0
+	--with-silo=/nfs/casc/samrai/apps/rh5/silo/4.7.2_opt
+	--with-mpi-include=/usr/apps/mpich2/1.3.2/include
+	--with-mpi-lib-dirs=/usr/apps/mpich2/1.3.2/lib
+	--with-mpi-libs="mpich mpl pthread"
+	--with-parallel-run-bin=/usr/apps/mpich2/1.3.2/bin/mpirun
+	--with-hypre=no
+	--with-petsc=no
+	--with-x
+EOF
+# 
+;;
+
 casc_rh5_icc_x64) # CASC RedHat 5, Intel v12.0 compilers, x86_64
 cat <<-EOF
 	--with-CXX="/nfs/apps/intel/latest/bin/icpc -Kc++ -gcc-name=/usr/bin/gcc"
