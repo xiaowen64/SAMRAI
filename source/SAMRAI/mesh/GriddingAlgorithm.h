@@ -276,7 +276,7 @@ public:
    virtual ~GriddingAlgorithm();
 
    /*!
-    * @brief Create or rebalnce the coarsest level.
+    * @brief Create or rebalance the coarsest level.
     *
     * This is an implementation of interface defined in BaseGriddingAlgorithm.
     *
