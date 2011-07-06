@@ -51,10 +51,6 @@ class MappedBoxTree;
  * about the index space describing the physical domain and computing this
  * information for patches in an AMR hierarchy.
  *
- * Member functions that manage the description of the spatial coordinates on
- * the mesh are pure virtual here and must be implemented in an appropriate
- * subclass.
- *
  * Required input file keys and data types (only required when using first
  * constructor which takes an input database):
  *
@@ -294,10 +290,10 @@ public:
    //@}
 
    /*!
-    * @brief Compute the box array describing the index space for the given
-    * block number of the physical domain managed by this geometry object.
+    * @brief Compute the box array describing the index space for a
+    * given block of the physical domain.
     *
-    * The domain description includes periodic images, if any exists.
+    * The domain description does not include periodic images.
     *
     * If any entry of the ratio vector is negative, the index space is
     * coarsened with respect to the physical domain description.
@@ -314,11 +310,10 @@ public:
       const BlockId& block_id) const;
 
    /*!
-    * @brief Compute the MappedBoxedSet describing the index space for the
-    * given block number of the physical domain managed by this geometry
-    * object.
+    * @brief Compute the MappedBoxedSet describing the index space for a
+    * given block of the physical domain.
     *
-    * The domain description includes periodic images, if any exists.
+    * The domain description includes periodic images, if any exist.
     *
     * Unlike the BoxList version of this function, the domain computed
     * contains periodic image boxes.  If any entry of ratio vector is
@@ -335,6 +330,21 @@ public:
       MappedBoxSet& domain_mapped_boxes,
       const IntVector& ratio_to_level_zero,
       const BlockId& block_id) const;
+
+   /*!
+    * @brief Compute the MappedBoxSet describing the complete physical
+    * domain for all blocks.
+    *
+    * The domain description includes periodic images, if any exist. 
+    *
+    * If any entry of the ratio vector is negative, the index space is
+    * coarsened with respect to the physical domain description.
+    * Otherwise, the index space is refined.
+    *
+    * @param[out]    domain_mapped_boxes The MappedBoxSet containing all
+    *                MappedBoxes describing the physical domain
+    * @param[in]     ratio_to_level_zero ratio to the coarsest level
+    */
    void
    computePhysicalDomain(
       MappedBoxSet& domain_mapped_boxes,
