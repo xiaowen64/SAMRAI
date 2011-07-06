@@ -197,8 +197,9 @@ public:
     * @brief Return true if error estimation process uses time integration;
     * otherwise, return false.
     *
-    * QUESTION: Will this ever neec to be anything other than
-    * getTagAndInitializeStrategy()->usesTimeIntegration() ?
+    * QUESTION: Will this ever need to be anything other than
+    * getTagAndInitializeStrategy()->usesTimeIntegration() ?  If not,
+    * do we really need this interface?
     */
    virtual bool
    errorEstimationUsesTimeIntegration() const = 0;
@@ -235,7 +236,8 @@ public:
 
 private:
 
-   tbox::Pointer<hier::PatchHierarchy> d_hierarchy;
+   // TODO: What is the purpose of this data?
+   const tbox::Pointer<hier::PatchHierarchy> d_hierarchy;
 };
 
 }

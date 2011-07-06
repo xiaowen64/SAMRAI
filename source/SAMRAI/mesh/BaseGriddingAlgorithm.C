@@ -41,22 +41,6 @@ BaseGriddingAlgorithm::~BaseGriddingAlgorithm()
 {
 }
 
-/*
- *************************************************************************
- *
- * Provide default for override_mapping.
- *
- *************************************************************************
- */
-void BaseGriddingAlgorithm::makeCoarsestLevel(
-   const double level_time)
-
-{
-   makeCoarsestLevel(
-      level_time,
-      hier::MappedBoxLevel(d_hierarchy->getDim()));
-}
-
 }
 }
 #endif
