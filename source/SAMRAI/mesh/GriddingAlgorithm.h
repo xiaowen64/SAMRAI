@@ -495,14 +495,6 @@ public:
    printStatistics(
       std::ostream& s = tbox::plog) const;
 
-   /*!
-    * @brief Get the name of this object.
-    *
-    * @return The name of this object.
-    */
-   const std::string&
-   getObjectName() const;
-
 private:
    /*
     * Static integer constant describing this class's version number.
@@ -575,6 +567,10 @@ private:
 
    /*
     * @brief Tagging stuff after recursive regrid, called from regridFinerLevel.
+    *
+    * A side-effect of this method is setting the overlap Connectors
+    * between the tag level (number tag_ln) and the finer level
+    * (number tag_ln+2) if the finer level exists in the hierarchy.
     */
    void regridFinerLevel_doTaggingAfterRecursiveRegrid(
       hier::Connector &tag_to_finer,
@@ -676,8 +672,8 @@ private:
 
    /*
     * @brief Make a map that, when applied to a MappedBoxLevel that
-    * extends too far outside of a reference MappedBoxLevel, removes
-    * those parts too far outside.
+    * extends outside of a reference MappedBoxLevel, removes those
+    * outside parts.
     *
     * @param[out] nested_mapped_box_level  The nesting parts of the
     * unnested MappedBoxLevel.

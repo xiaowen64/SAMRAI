@@ -1263,7 +1263,7 @@ void GriddingAlgorithm::regridFinerLevel(
 
       /*
        * tag_to_finer is [tag_ln]->[tag_ln+2].
-       * finer_to_tag is [tag_ln]->[tag_ln+2].
+       * finer_to_tag is [tag_ln+2]->[tag_ln].
        *
        * These are declared in this scope, computed and cached if
        * [tag_ln+2] exists.  They are used to tag the footprint of

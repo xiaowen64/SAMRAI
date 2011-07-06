@@ -26,16 +26,6 @@ const
    return d_tag_init_strategy->usesTimeIntegration();
 }
 
-#if 0
-SAMRAI_INLINE_KEYWORD
-int
-GriddingAlgorithm::getErrorCoarsenRatio()
-const
-{
-   return d_tag_init_strategy->getErrorCoarsenRatio();
-}
-#endif
-
 SAMRAI_INLINE_KEYWORD
 tbox::Pointer<TagAndInitializeStrategy>
 GriddingAlgorithm::getTagAndInitializeStrategy() const
@@ -56,15 +46,6 @@ GriddingAlgorithm::getLoadBalanceStrategy0() const
 {
    return d_load_balancer0;
 }
-
-#if 0
-SAMRAI_INLINE_KEYWORD
-int
-GriddingAlgorithm::getMaxLevels() const
-{
-   return d_hierarchy->getMaxNumberOfLevels();
-}
-#endif
 
 SAMRAI_INLINE_KEYWORD
 double
@@ -92,12 +73,6 @@ GriddingAlgorithm::getCombineEfficiency(
    return (level_number < size)
           ? d_combine_efficiency[level_number]
           : d_combine_efficiency[size - 1];
-}
-
-SAMRAI_INLINE_KEYWORD
-const std::string& GriddingAlgorithm::getObjectName() const
-{
-   return d_object_name;
 }
 
 }
