@@ -79,7 +79,25 @@ class MappedBoxTree;
  *       single block mesh), as periodic boundaries are not supported for
  *       multiblock meshes.
  *
- * TODO:  Documentation for multiblock meta-data.
+ *    - @b   BlockNeighbors*
+ *
+ *       For multiblock grids, a BlockNeighbors entry must be given for
+ *       every pair of blocks that touch each other in any way.  The key
+ *       for this entry must include a unique trailing integer, and the
+ *       integers for the full set of BlockNeighbors keys must be a
+ *       continuous sequence beginning with 0.
+ *
+ *    - @b  Singularity*        
+ *
+ *       When there is a reduced or enhanced connectivity singularity,
+ *       this key must be used to identify which blocks touch the
+ *       singularity and the position of the singularity in relation to
+ *       each block's index space.  Like BlockNeighbors, each entry must
+ *       have a trailing integer beginning with 0.
+ *
+ * A description of the input format for BlockNeighbors* and Singularity*
+ * is included in the Multiblock.pdf document in the docs/userdocs
+ * directory of the SAMRAI distribution.
  *
  * @par Additional Functionality
  * Operations performed by this class include determining which patches are
