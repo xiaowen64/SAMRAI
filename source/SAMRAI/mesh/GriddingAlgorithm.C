@@ -762,16 +762,14 @@ void GriddingAlgorithm::makeFinerLevel(
          fillTags( d_false_tag, tag_level, d_tag_indx);
 
          /*
-          * Perform pre-processing of error estimation data, if appropriate.
+          * Perform pre-processing of error estimation data.
           */
-         if (errorEstimationUsesTimeIntegration()) {
-            d_tag_init_strategy->
-               preprocessErrorEstimation(d_hierarchy,
-                                         tag_ln,
-                                         level_time,
-                                         regrid_start_time,
-                                         initial_time);
-         }
+         d_tag_init_strategy->
+            preprocessErrorEstimation(d_hierarchy,
+                                      tag_ln,
+                                      level_time,
+                                      regrid_start_time,
+                                      initial_time);
 
          /*
           * Determine cells needing refinement on level and set tags to true.
@@ -1044,6 +1042,7 @@ void GriddingAlgorithm::regridAllFinerLevels(
       TBOX_ASSERT(tag_buffer[i] >= 0);
    }
 #endif
+
    if (d_barrier_and_time) {
       t_regrid_all_finer->barrierAndStart();
    }
@@ -1070,7 +1069,7 @@ void GriddingAlgorithm::regridAllFinerLevels(
        * Perform pre-processing of error estimation data, if
        * appropriate.
        */
-      if (errorEstimationUsesTimeIntegration()) {
+      if (d_tag_init_strategy->usesTimeIntegration()) {
          for (int ln = level_number;
               ln <= d_hierarchy->getFinestLevelNumber(); ln++) {
             if (d_hierarchy->levelCanBeRefined(ln)) {
