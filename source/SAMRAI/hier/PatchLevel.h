@@ -159,6 +159,35 @@ public:
       const int level);
 
    /*!
+    * @brief Convenience method to get the next coarser level
+    * number in a hierarchy.
+    *
+    * Used for data interpolation from coarser levels.  If the
+    * level is in a hierarchy, then this value is getLevelNumber() - 1.
+    *
+    * @see inHierarchy()
+    *
+    * @return The next coarser level in the hierarchy or -1 if the level
+    * does not exist in the hierarchy.
+    */
+   int
+   getNextCoarserHierarchyLevelNumber() const;
+
+   /*!
+    * @brief Convenience method to set the number of of the next coarser
+    * level in a hierarchy.
+    *
+    * For the purposes of data interpolation from coarser levels, set the
+    * next coarser level in a hierarchy.  The default of -1 means the
+    * level does not relate to any hierarchy.
+    *
+    * @param[in]  level
+    */
+   void
+   setNextCoarserHierarchyLevelNumber(
+      const int level);
+
+   /*!
     * @brief Determine if this level resides in a hierarchy.
     *
     * @return true if this level resides in a hierarchy, otherwise false.

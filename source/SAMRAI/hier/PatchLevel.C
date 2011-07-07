@@ -392,6 +392,17 @@ void PatchLevel::setLevelNumber(
 }
 
 /*
+ *************************************************************************
+ *************************************************************************
+ */
+
+void PatchLevel::setNextCoarserHierarchyLevelNumber(
+   const int level)
+{
+   d_next_coarser_level_number = level;
+}
+
+/*
  * ************************************************************************
  *                                                                       *
  * Set whether this level resides in a hierarchy.                        *

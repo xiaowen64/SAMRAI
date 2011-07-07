@@ -342,6 +342,8 @@ void CoarsenSchedule::generateTemporaryLevel()
    d_temp_crse_level->setCoarsenedPatchLevel(d_fine_level,
       d_ratio_between_levels);
    d_temp_crse_level->setLevelNumber(d_crse_level->getLevelNumber());
+   d_temp_crse_level->setNextCoarserHierarchyLevelNumber(
+      d_crse_level->getLevelNumber());
 
    /*
     * Generate temporary MappedBoxLevel and Connectors.

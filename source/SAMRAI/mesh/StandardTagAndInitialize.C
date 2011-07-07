@@ -754,6 +754,7 @@ StandardTagAndInitialize::preprocessRichardsonExtrapolation(
            coarsened_level->getRatioToLevelZero())) {
       coarsened_level->setLevelNumber(level_number - 1);
    }
+   coarsened_level->setNextCoarserHierarchyLevelNumber(level_number - 1);
 
    /*
     * Generate Connector patch_level<==>coarsened_level and

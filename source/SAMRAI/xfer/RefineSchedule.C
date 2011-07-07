@@ -1786,6 +1786,7 @@ void RefineSchedule::finishScheduleConstruction(
             hiercoarse_level->getPatchDescriptor());
       t_make_supp_level->stop();
       d_supp_level->setLevelNumber(next_coarser_ln);
+      d_supp_level->setNextCoarserHierarchyLevelNumber(next_coarser_ln - 1);;
 
       if (hiercoarse_level->getGridGeometry()->getNumberBlocks() > 1) {
          hiercoarse_level->getGridGeometry()->

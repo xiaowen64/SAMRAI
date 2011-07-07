@@ -666,7 +666,7 @@ MblkHyperbolicLevelIntegrator::applyRichardsonExtrapolation(
     */
 
    int error_level_number =
-      level->getLevelNumber() + 2;
+      level->getNextCoarserHierarchyLevelNumber() + 1;
 
    for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
       tbox::Pointer<hier::Patch> patch = *ip;

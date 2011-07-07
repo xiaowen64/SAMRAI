@@ -725,8 +725,7 @@ void HyperbolicLevelIntegrator::applyRichardsonExtrapolation(
     * performed on each patch.
     */
 
-   int error_level_number =
-      level->getLevelNumber() + 2;
+   const int error_level_number = level->getNextCoarserHierarchyLevelNumber() + 1;
 
    for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
       tbox::Pointer<hier::Patch> patch(*ip);
@@ -1072,7 +1071,7 @@ double HyperbolicLevelIntegrator::advanceLevel(
 
       const hier::OverlapConnectorAlgorithm oca;
 
-      const int coarser_ln = patch_level->getLevelNumber() + 1;
+      const int coarser_ln = patch_level->getNextCoarserHierarchyLevelNumber();
 
       if (coarser_ln < 0) {
 

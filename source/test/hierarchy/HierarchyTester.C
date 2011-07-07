@@ -285,6 +285,18 @@ int HierarchyTester::runHierarchyTestAndVerify()
                     << test_level->getLevelNumber() << std::endl;
       }
 
+      // Test #3:
+      if (init_level->getNextCoarserHierarchyLevelNumber() !=
+          test_level->getNextCoarserHierarchyLevelNumber()) {
+         fail_count++;
+         tbox::perr << "FAILED: - Test #3: for level number " << ln
+                    << " initial hierarchy next coarser level number is "
+                    << init_level->getNextCoarserHierarchyLevelNumber()
+                    << "\n and test hierarchy next coarser level number is "
+                    << test_level->getNextCoarserHierarchyLevelNumber()
+                    << std::endl;
+      }
+
       // Test #4:
       if (init_level->inHierarchy() !=
           test_level->inHierarchy()) {

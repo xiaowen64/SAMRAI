@@ -348,6 +348,8 @@ void MultiblockCoarsenSchedule::generateTemporaryLevel()
    d_mblk_temp_crse_level->setCoarsenedPatchLevel(d_mblk_fine_level,
       d_ratio_between_levels);
    d_mblk_temp_crse_level->setLevelNumber(d_mblk_crse_level->getLevelNumber());
+   d_mblk_temp_crse_level->setNextCoarserHierarchyLevelNumber(
+      d_mblk_crse_level->getLevelNumber());
 
    if (d_fill_coarse_data) {
       d_mblk_hierarchy->getGridGeometry()->adjustMultiblockPatchLevelBoundaries(

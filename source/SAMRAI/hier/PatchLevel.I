@@ -26,6 +26,12 @@ int PatchLevel::getLevelNumber() const
 }
 
 SAMRAI_INLINE_KEYWORD
+int PatchLevel::getNextCoarserHierarchyLevelNumber() const
+{
+   return d_next_coarser_level_number;
+}
+
+SAMRAI_INLINE_KEYWORD
 bool PatchLevel::inHierarchy() const
 {
    return d_in_hierarchy;

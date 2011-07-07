@@ -502,6 +502,7 @@ PatchHierarchy::makeRefinedPatchHierarchy(
          fine_geometry);
 
       new_level->setLevelNumber(ln);
+      new_level->setNextCoarserHierarchyLevelNumber(ln - 1);
       new_level->setLevelInHierarchy(true);
       new_level->setRatioToCoarserLevel(
          d_patch_levels[ln]->getRatioToCoarserLevel());
@@ -564,6 +565,7 @@ PatchHierarchy::makeCoarsenedPatchHierarchy(
          coarsen_ratio,
          coarse_geometry);
       new_level->setLevelNumber(ln);
+      new_level->setNextCoarserHierarchyLevelNumber(ln - 1);
       new_level->setLevelInHierarchy(true);
       new_level->setRatioToCoarserLevel(
          d_patch_levels[ln]->getRatioToCoarserLevel());
@@ -634,6 +636,7 @@ void PatchHierarchy::makeNewPatchLevel(
    d_patch_levels[ln]->getMappedBoxLevel()->cacheGlobalReducedData();
 
    d_patch_levels[ln]->setLevelNumber(ln);
+   d_patch_levels[ln]->setNextCoarserHierarchyLevelNumber(ln - 1);
    d_patch_levels[ln]->setLevelInHierarchy(true);
 
    if ((ln > 0) && (!d_patch_levels[ln - 1].isNull())) {
