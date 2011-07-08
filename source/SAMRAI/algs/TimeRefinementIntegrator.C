@@ -70,7 +70,7 @@ TimeRefinementIntegrator::TimeRefinementIntegrator(
    tbox::Pointer<tbox::Database> input_db,
    tbox::Pointer<hier::PatchHierarchy> hierarchy,
    tbox::Pointer<TimeRefinementLevelStrategy> level_integrator,
-   tbox::Pointer<mesh::BaseGriddingAlgorithm> gridding_algorithm,
+   tbox::Pointer<mesh::GriddingAlgorithmStrategy> gridding_algorithm,
    bool register_for_restart):
    d_barrier_and_time(false)
 {
@@ -1453,7 +1453,7 @@ void TimeRefinementIntegrator::printClassData(
    os << "d_refine_level_integrator = "
       << (TimeRefinementLevelStrategy *)d_refine_level_integrator << std::endl;
    os << "d_gridding_algorithm = "
-      << (mesh::BaseGriddingAlgorithm *)d_gridding_algorithm << std::endl;
+      << (mesh::GriddingAlgorithmStrategy *)d_gridding_algorithm << std::endl;
 
    const int max_levels = d_patch_hierarchy->getMaxNumberOfLevels();
    for (int level_number = 0; level_number < max_levels; level_number++) {

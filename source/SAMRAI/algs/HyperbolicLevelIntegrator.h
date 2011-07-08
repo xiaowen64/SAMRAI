@@ -223,7 +223,7 @@ public:
     */
    virtual void
    initializeLevelIntegrator(
-      tbox::Pointer<mesh::BaseGriddingAlgorithm> base_gridding_alg);
+      tbox::Pointer<mesh::GriddingAlgorithmStrategy> gridding_alg_strategy);
 
    /**
     * Determine time increment to advance data on level and return that

@@ -13,7 +13,7 @@
 
 #include "SAMRAI/SAMRAI_config.h"
 
-#include "SAMRAI/mesh/BaseGriddingAlgorithm.h"
+#include "SAMRAI/mesh/GriddingAlgorithmStrategy.h"
 #include "SAMRAI/mesh/BoxGeneratorStrategy.h"
 #include "SAMRAI/pdat/CellVariable.h"
 #include "SAMRAI/mesh/GriddingAlgorithmConnectorWidthRequestor.h"
@@ -217,7 +217,7 @@ namespace mesh {
  */
 
 class GriddingAlgorithm:
-      public BaseGriddingAlgorithm
+      public GriddingAlgorithmStrategy
 {
 public:
    /*!
@@ -278,7 +278,7 @@ public:
    /*!
     * @brief Create or rebalance the coarsest level.
     *
-    * This is an implementation of interface defined in BaseGriddingAlgorithm.
+    * This is an implementation of interface defined in GriddingAlgorithmStrategy.
     *
     * This routine will attempt to construct the coarsest level in the AMR
     * patch hierarchy (i.e., level 0).  If level 0 does not already exist,
@@ -308,7 +308,7 @@ public:
     * the finest level currently residing in the hierarchy.
     *
     * This is an implementation of interface method
-    * BaseGriddingAlgorithm::makeFinerLevel().
+    * GriddingAlgorithmStrategy::makeFinerLevel().
     *
     * @param[in] level_time See text.
     *
@@ -332,7 +332,7 @@ public:
     * that is finer than the specified level.
     *
     * This method implements the virtual interface
-    * BaseGriddingAlgorithm::regridAllFinerLevels().
+    * GriddingAlgorithmStrategy::regridAllFinerLevels().
     *
     * Note that the current algorithm permits at most one new finest level
     * to be added to the hierarchy with each invocation of the regridding

@@ -128,7 +128,7 @@ TimeRefinementIntegrator::getLevelIntegrator() const
 }
 
 SAMRAI_INLINE_KEYWORD
-tbox::Pointer<mesh::BaseGriddingAlgorithm>
+tbox::Pointer<mesh::GriddingAlgorithmStrategy>
 TimeRefinementIntegrator::getGriddingAlgorithm() const
 {
    return d_gridding_algorithm;

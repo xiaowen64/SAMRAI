@@ -8,10 +8,10 @@
  *
  ************************************************************************/
 
-#ifndef included_mesh_BaseGriddingAlgorithm_C
-#define included_mesh_BaseGriddingAlgorithm_C
+#ifndef included_mesh_GriddingAlgorithmStrategy_C
+#define included_mesh_GriddingAlgorithmStrategy_C
 
-#include "SAMRAI/mesh/BaseGriddingAlgorithm.h"
+#include "SAMRAI/mesh/GriddingAlgorithmStrategy.h"
 
 namespace SAMRAI {
 namespace mesh {
@@ -19,11 +19,11 @@ namespace mesh {
 /*
  *************************************************************************
  *                                                                       *
- * Constructor and destructor for BaseGriddingAlgorithm.            *
+ * Constructor and destructor for GriddingAlgorithmStrategy.            *
  *                                                                       *
  *************************************************************************
  */
-BaseGriddingAlgorithm::BaseGriddingAlgorithm(
+GriddingAlgorithmStrategy::GriddingAlgorithmStrategy(
    const tbox::Pointer<hier::PatchHierarchy> &hierarchy )
    : d_hierarchy(hierarchy)
 {
@@ -37,7 +37,7 @@ BaseGriddingAlgorithm::BaseGriddingAlgorithm(
  *                                                                       *
  *************************************************************************
  */
-BaseGriddingAlgorithm::~BaseGriddingAlgorithm()
+GriddingAlgorithmStrategy::~GriddingAlgorithmStrategy()
 {
 }
 

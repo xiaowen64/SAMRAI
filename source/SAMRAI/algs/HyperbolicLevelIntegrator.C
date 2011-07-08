@@ -758,9 +758,9 @@ void HyperbolicLevelIntegrator::applyRichardsonExtrapolation(
  */
 
 void HyperbolicLevelIntegrator::initializeLevelIntegrator(
-   tbox::Pointer<mesh::BaseGriddingAlgorithm> base_gridding_alg)
+   tbox::Pointer<mesh::GriddingAlgorithmStrategy> gridding_alg_strategy)
 {
-   d_gridding_alg = base_gridding_alg;
+   d_gridding_alg = gridding_alg_strategy;
 
    TBOX_ASSERT(!d_gridding_alg.isNull());
 

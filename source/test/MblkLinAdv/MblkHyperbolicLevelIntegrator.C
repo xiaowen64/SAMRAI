@@ -694,7 +694,7 @@ MblkHyperbolicLevelIntegrator::applyRichardsonExtrapolation(
 
 void
 MblkHyperbolicLevelIntegrator::initializeLevelIntegrator(
-   tbox::Pointer<mesh::BaseGriddingAlgorithm> gridding_alg)
+   tbox::Pointer<mesh::GriddingAlgorithmStrategy> gridding_alg)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(!gridding_alg.isNull());

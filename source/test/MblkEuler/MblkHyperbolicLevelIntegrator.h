@@ -19,7 +19,7 @@
 #include "SAMRAI/hier/ComponentSelector.h"
 #include "SAMRAI/hier/Variable.h"
 #include "SAMRAI/hier/VariableContext.h"
-#include "SAMRAI/mesh/BaseGriddingAlgorithm.h"
+#include "SAMRAI/mesh/GriddingAlgorithmStrategy.h"
 #include "SAMRAI/hier/CoarsenOperator.h"
 #include "SAMRAI/hier/RefineOperator.h"
 #include "SAMRAI/hier/TimeInterpolateOperator.h"
@@ -221,7 +221,7 @@ public:
     */
    virtual void
    initializeLevelIntegrator(
-      tbox::Pointer<mesh::BaseGriddingAlgorithm> gridding_alg);
+      tbox::Pointer<mesh::GriddingAlgorithmStrategy> gridding_alg);
 
    /**
     * Determine time increment to advance data on level and return that

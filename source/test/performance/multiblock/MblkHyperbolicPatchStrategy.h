@@ -20,7 +20,7 @@
 #include "SAMRAI/tbox/Pointer.h"
 #include "SAMRAI/xfer/RefinePatchStrategy.h"
 #include "SAMRAI/xfer/MultiblockCoarsenPatchStrategy.h"
-#include "SAMRAI/mesh/BaseGriddingAlgorithm.h"
+#include "SAMRAI/mesh/GriddingAlgorithmStrategy.h"
 #include "SAMRAI/xfer/RefineSchedule.h"
 #include "SAMRAI/xfer/RefinePatchStrategy.h"
 
@@ -108,7 +108,7 @@ public:
     */
    virtual void setupLoadBalancer(
       MblkHyperbolicLevelIntegrator* integrator,
-      mesh::BaseGriddingAlgorithm* gridding_algorithm)
+      mesh::GriddingAlgorithmStrategy* gridding_algorithm)
    {
       NULL_USE(integrator);
       NULL_USE(gridding_algorithm);

@@ -14,7 +14,7 @@
 #include "SAMRAI/SAMRAI_config.h"
 
 #include "SAMRAI/algs/TimeRefinementLevelStrategy.h"
-#include "SAMRAI/mesh/BaseGriddingAlgorithm.h"
+#include "SAMRAI/mesh/GriddingAlgorithmStrategy.h"
 #include "SAMRAI/hier/PatchHierarchy.h"
 #include "SAMRAI/tbox/Array.h"
 #include "SAMRAI/tbox/Database.h"
@@ -63,7 +63,7 @@ namespace algs {
  * of this class is configured with routines suitable for a given problem.
  * The TimeRefinementLevelStrategy data member supplies routines
  * for advancing levels and synchronizing data on different levels during
- * time integration.  The mesh::BaseGriddingAlgorithm data member provides
+ * time integration.  The mesh::GriddingAlgorithmStrategy data member provides
  * operations that construct and dynamically reconfigure the patch hierarchy.
  * The collaboration between this class and each of those objects follows
  * the Strategy design pattern.
@@ -138,7 +138,7 @@ namespace algs {
  * between each regrid of the hierarchy.
  *
  * @see algs::TimeRefinementLevelStrategy
- * @see mesh::BaseGriddingAlgorithm
+ * @see mesh::GriddingAlgorithmStrategy
  */
 
 class TimeRefinementIntegrator:
@@ -172,7 +172,7 @@ public:
       tbox::Pointer<tbox::Database> input_db,
       tbox::Pointer<hier::PatchHierarchy> hierarchy,
       tbox::Pointer<TimeRefinementLevelStrategy> level_integrator,
-      tbox::Pointer<mesh::BaseGriddingAlgorithm> gridding_algorithm,
+      tbox::Pointer<mesh::GriddingAlgorithmStrategy> gridding_algorithm,
       bool register_for_restart = true);
 
    /**
@@ -350,7 +350,7 @@ public:
    /**
     * Return pointer to gridding algorithm object.
     */
-   tbox::Pointer<mesh::BaseGriddingAlgorithm>
+   tbox::Pointer<mesh::GriddingAlgorithmStrategy>
    getGriddingAlgorithm() const;
 
    /**
@@ -524,7 +524,7 @@ private:
     */
    tbox::Pointer<hier::PatchHierarchy> d_patch_hierarchy;
    tbox::Pointer<TimeRefinementLevelStrategy> d_refine_level_integrator;
-   tbox::Pointer<mesh::BaseGriddingAlgorithm> d_gridding_algorithm;
+   tbox::Pointer<mesh::GriddingAlgorithmStrategy> d_gridding_algorithm;
 
    /*
     */

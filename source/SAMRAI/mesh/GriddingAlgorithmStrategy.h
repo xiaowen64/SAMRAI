@@ -8,8 +8,8 @@
  *
  ************************************************************************/
 
-#ifndef included_mesh_BaseGriddingAlgorithm
-#define included_mesh_BaseGriddingAlgorithm
+#ifndef included_mesh_GriddingAlgorithmStrategy
+#define included_mesh_GriddingAlgorithmStrategy
 
 #include "SAMRAI/SAMRAI_config.h"
 #include "SAMRAI/hier/PatchHierarchy.h"
@@ -24,7 +24,7 @@ namespace mesh {
  * @brief Virtual base class providing interface for gridding
  * algorithms.
  *
- * Class BaseGriddingAlgorithm in a virtual base class that provides
+ * Class GriddingAlgorithmStrategy in a virtual base class that provides
  * an abstract interface for a gridding algorithm.  This allows
  * higher-level classes in SAMRAI and in applications that use SAMRAI
  * to interface with a gridding algorithm in an abstract manner
@@ -35,17 +35,17 @@ namespace mesh {
  * QUESTION: Should this be called GriddingAlgorithmStrategy?  There
  * are only pure virtual interfaces.
  *
- * Each BaseGriddingAlgorithm is constructed a PatchHierarchy.  All
+ * Each GriddingAlgorithmStrategy is constructed a PatchHierarchy.  All
  * hierarchy operations refer to this hierarchy.
  *
- * The BaseGriddingAlgorithm constructor requires a PatchHierarchy.
+ * The GriddingAlgorithmStrategy constructor requires a PatchHierarchy.
  * The implementation is then responsible for manipulating levels in
  * that hierarchy using the other interfaces defined here.
  *
  * @see mesh::GriddingAlgorithm
  */
 
-class BaseGriddingAlgorithm:
+class GriddingAlgorithmStrategy:
    public tbox::Serializable
 {
 public:
@@ -56,13 +56,13 @@ public:
     * will operate on.  All hierarchy operations and data refers to
     * this hierarchy.
     */
-   BaseGriddingAlgorithm(
+   GriddingAlgorithmStrategy(
       const tbox::Pointer<hier::PatchHierarchy> &hierarchy );
 
    /*!
-    * @brief Virtual destructor for BaseGriddingAlgorithm.
+    * @brief Virtual destructor for GriddingAlgorithmStrategy.
     */
-   virtual ~BaseGriddingAlgorithm();
+   virtual ~GriddingAlgorithmStrategy();
 
    /*!
     * @brief Construct the coarsest level in the hierarchy (i.e., level 0).

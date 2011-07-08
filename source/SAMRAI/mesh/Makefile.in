@@ -34,7 +34,7 @@ OBJS = 	\
 	TreeLoadBalancer.o \
 	ChopAndPackLoadBalancer.o \
 	LoadBalanceStrategy.o \
-	BaseGriddingAlgorithm.o \
+	GriddingAlgorithmStrategy.o \
 	BergerRigoutsos.o \
 	BergerRigoutsosNode.o \
 	MultiblockGriddingTagger.o

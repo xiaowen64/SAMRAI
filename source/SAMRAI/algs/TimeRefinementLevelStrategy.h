@@ -15,7 +15,7 @@
 #include "SAMRAI/tbox/Array.h"
 #include "SAMRAI/hier/PatchHierarchy.h"
 #include "SAMRAI/hier/PatchLevel.h"
-#include "SAMRAI/mesh/BaseGriddingAlgorithm.h"
+#include "SAMRAI/mesh/GriddingAlgorithmStrategy.h"
 #include "SAMRAI/tbox/DescribedClass.h"
 #include "SAMRAI/hier/IntVector.h"
 #include "SAMRAI/tbox/Pointer.h"
@@ -78,7 +78,7 @@ public:
     */
    virtual void
    initializeLevelIntegrator(
-      tbox::Pointer<mesh::BaseGriddingAlgorithm> gridding_alg) = 0;
+      tbox::Pointer<mesh::GriddingAlgorithmStrategy> gridding_alg) = 0;
 
    /**
     * Return appropriate time increment for given level in the patch
