@@ -114,7 +114,7 @@ SAMRAI_INLINE_KEYWORD
 bool
 SparseData<BOX_GEOMETRY>::canEstimateStreamSizeFromBox() const
 {
-   return true;
+   return false;
 }
 
 /********************************************************************** 

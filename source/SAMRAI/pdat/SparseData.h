@@ -219,12 +219,9 @@ public:
    void copy2(hier::PatchData& dst, const hier::BoxOverlap& overlap) const;
 
    /*!
-    * @brief Calculate the number of bytes needed to stream the data.
-    *
-    * ASSERTION
-    *    <tt>overlap</tt> must not be NULL.
-    * 
-    * @param [in] overlap
+    * @brief Return true if the patch data object can estimate the
+    * stream size required to fit its data using only index
+    * space information (i.e., a box); else false.
     */
    bool canEstimateStreamSizeFromBox() const;
 

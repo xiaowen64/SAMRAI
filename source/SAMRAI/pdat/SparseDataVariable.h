@@ -19,8 +19,12 @@ namespace SAMRAI {
 namespace pdat {
 
 /*!
- * @brief Variable class used to define sparse data on a cell-centered index
- * set.
+ * @brief Variable class used to define sparse data on a set of box indices
+ * defined by a template parameter defining the box geometry.
+ *
+ * In reality, this class can only be used for cell-centered and node-centered
+ * box geoemtries because of the internal calling semantics of the underlying
+ * overlap operations. 
  *
  * @see SparseData
  * @see SparseDataFactory
@@ -51,27 +55,18 @@ public:
    ~SparseDataVariable();
 
    /*!
-    * @brief Returns true.
-    *
-    * Sparse data quantities will always be treated as cell-centered 
-    * quantities for communication purposes.  Note that this is 
-    * artificial, since the cell data index space matches the cell-centered
-    * index space for AMR patches. Cell data does not live on patch borders,
-    * so there is no ambiguity regarding coarse-fine interface values.
-    *
-    * @see SparseDataVariable::dataLivesOnPatchBorder
+    * @brief Returns true since this class can be used for either cell-centered
+    *        or node-centered index spaces and this covers all cases.
     */
    bool
    fineBoundaryRepresentsVariable() const { return true; }
 
    /*!
-    * @brief Returns false.
-    * 
-    * The sparse data index space matches the cell-centered index space for
-    * AMR patches.  Sparse data, therefore, does not live on patch borders.
+    * @brief Returns true since this class can be used for either cell-centered
+    *        or node-centered index spaces and this covers all cases.
     */
    bool
-   dataLivesOnPatchBorder() const { return false; }
+   dataLivesOnPatchBorder() const { return true; }
 
 private:
    /*
