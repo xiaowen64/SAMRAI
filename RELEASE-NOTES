@@ -63,6 +63,9 @@ MultiblockRefinePatchStrategy have been removed, and RefineSchedule and
 RefineAlgorithm can handle the multiblock communication functionality
 formerly done by those classes.
 
+(6) GriddingAlgorithm's check_overlapping_patches flag now defaults to
+"WARN".
+
 
 This section contains a summary of changes to SAMRAI.  More detailed
 descriptions of items in the following list are provided below.
@@ -135,6 +138,13 @@ no-op implementation, so that single-block user code need add an
 implementation, but it should be overridden in multiblock user code to 
 handle ghost data at such singularities.  Some of the arguments have also
 changed from the version that was in MultiblockRefinePatchStrategy.
+
+(6) GriddingAlgorithm's check_overlapping_patches flag now defaults to
+"WARN".
+
+This change is meant to spare applications that can tolerate overlapping
+patches from an unneeded error while giving a fair warning to users of
+applications that cannot tolerate overlapping patches.
 
 
 

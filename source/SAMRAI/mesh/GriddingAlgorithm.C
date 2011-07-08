@@ -109,7 +109,7 @@ GriddingAlgorithm::GriddingAlgorithm(
    d_false_tag(0),
    d_base_ln(-1),
    d_check_nonrefined_tags('w'),
-   d_check_overlapping_patches('i'),
+   d_check_overlapping_patches('w'),
    d_check_nonnesting_user_boxes('e'),
    d_check_boundary_proximity_violation('e'),
    d_sequentialize_patch_indices(true),

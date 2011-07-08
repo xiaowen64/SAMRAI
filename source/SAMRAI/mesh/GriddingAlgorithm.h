@@ -182,10 +182,10 @@ namespace mesh {
  *      disregarded.
  *      @b "ERROR" - violating tags will cause an unrecoverable
  *      assertion.
- *      The default is "IGNORE".  The check for overlapping patches may be
- *      expensive, so the use of "WARN" and "ERROR" is recommended only 
- *      for debugging purposes.  To prevent the creation of levels 
- *      with overlapping patches, see the input flag
+ *      The default is "WARN".  The check for overlapping patches may be
+ *      and should be bypassed by application that can tolerate overlaps.
+ *      To prevent the creation of levels with overlapping patches, see
+ *      the input flag
  *      "allow_patches_smaller_than_minimum_size_to_prevent_overlaps"
  *
  *   - \b   sequentialize_patch_indices
