@@ -66,6 +66,9 @@ formerly done by those classes.
 (6) GriddingAlgorithm's check_overlapping_patches flag now defaults to
 "WARN".
 
+(7) GriddingAlgorithm::makeCoarsestLevel taking a user-defined
+box configuration is removed.
+
 
 This section contains a summary of changes to SAMRAI.  More detailed
 descriptions of items in the following list are provided below.
@@ -141,6 +144,15 @@ changed from the version that was in MultiblockRefinePatchStrategy.
 
 (6) GriddingAlgorithm's check_overlapping_patches flag now defaults to
 "WARN".
+
+(7) GriddingAlgorithm::makeCoarsestLevel taking a user-defined
+box configuration is removed.
+
+The capability for users to build the coarsest level with a given
+configuration can be done on other ways.  Users can specify a specific
+partitioner for level 0 that generates the desired configuration or
+build the coarsest level manually using PatchHierarchy::removePatchLevel
+and makeNewPatchLevel.
 
 This change is meant to spare applications that can tolerate overlapping
 patches from an unneeded error while giving a fair warning to users of

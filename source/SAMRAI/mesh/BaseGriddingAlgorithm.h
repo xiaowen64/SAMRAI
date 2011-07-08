@@ -71,28 +71,9 @@ public:
     * exists, it may be re-balanced.
     *
     * @param level_time Simulation time when level is constructed
-    *
-    * @param override_mapped_box_level MappedBoxLevel representing a
-    *                                  decomposition of level zero of the
-    *                                  hierarchy.
     */
    virtual void
    makeCoarsestLevel(const double level_time) = 0;
-
-   /*
-    * @brief Same as makeCoarsestLevel(const double) but allows user to
-    * specify the configuration of level 0.
-    *
-    * @param level_time Simulation time when level is constructed
-    *
-    * @param override_mapped_box_level MappedBoxLevel representing a
-    * decomposition of level zero of the hierarchy.  This should cover
-    * all of the domain.
-    */
-   virtual void
-   makeCoarsestLevel(
-      const double level_time,
-      const hier::MappedBoxLevel& override_mapped_box_level) = 0;
 
    /*!
     * @brief Attempts to create a new level in the hierarchy finer

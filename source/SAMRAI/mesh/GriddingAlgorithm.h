@@ -304,26 +304,6 @@ public:
       const double level_time);
 
    /*!
-    * @brief Create or rebalnce the coarsest level.
-    *
-    * This is an implementation of interface defined in BaseGriddingAlgorithm.
-    * This implementation is similar to makeCoarsestLevel(const double)
-    * but allows user to specify the configuration of level 0 with the second
-    * argument.
-    *
-    * @param[in] level_time Simulation time.
-    *
-    * @param[in] override_mapped_box_level For specifying the
-    * configuration of the new level (instead of applying the load
-    * balancer).  If not using the override, use the other alternate
-    * version of this method, defined in BaseGriddingAlgorithm.
-    */
-   void
-   makeCoarsestLevel(
-      const double level_time,
-      const hier::MappedBoxLevel& override_mapped_box_level);
-
-   /*!
     * @brief Attempt to create a new level in the hierarchy finer than
     * the finest level currently residing in the hierarchy.
     *

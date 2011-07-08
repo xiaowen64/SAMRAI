@@ -210,19 +210,6 @@ public:
     * must exactly fill the index space of the physical domain of the
     * hierarchy.  If omitted or given an uninitialized
     * mapped_box_level, the standard decomposition method is used.
-    *
-    * @param override_mapped_box_level mapped_box_level representing a decomposition of level
-    *                       zero of the hierarchy.  If non is required use the overloaded
-    *                       intializeHierarchy that does not require this argument.
-    */
-   double
-   initializeHierarchy(
-      const hier::MappedBoxLevel& override_mapped_box_level);
-
-   /**
-    * Set AMR patch hierarchy configuration and data at start of
-    * simulation.  See previous method for more information.  This
-    * initialize does not require a level zero decomposition.
     */
    double
    initializeHierarchy();

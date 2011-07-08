@@ -299,19 +299,6 @@ GriddingAlgorithm::~GriddingAlgorithm()
 
 /*
  *************************************************************************
- *************************************************************************
- */
-
-void GriddingAlgorithm::makeCoarsestLevel(
-   const double level_time)
-{
-   makeCoarsestLevel(level_time,
-                     hier::MappedBoxLevel(d_hierarchy->getDim()));
-   return;
-}
-
-/*
- *************************************************************************
  *
  * Construct coarsest level in the patch hierarchy (i.e., level 0).
  * This routine operates in two modes:
@@ -332,16 +319,10 @@ void GriddingAlgorithm::makeCoarsestLevel(
  */
 
 void GriddingAlgorithm::makeCoarsestLevel(
-   const double level_time,
-   const hier::MappedBoxLevel& override_mapped_box_level)
+   const double level_time)
 {
 
-   TBOX_DIM_ASSERT_CHECK_DIM_ARGS2(d_dim, *d_hierarchy, override_mapped_box_level);
-
-   if (override_mapped_box_level.isInitialized()) {
-      TBOX_ERROR("GriddingAlgorithm::makeCoarsestLevel is not\n"
-                 "supporting override_mapped_box_level yet, due to incomplete coding.");
-   }
+   TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(d_dim, *d_hierarchy);
 
    if (d_barrier_and_time) {
       t_make_coarsest->barrierAndStart();

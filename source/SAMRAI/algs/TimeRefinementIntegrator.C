@@ -229,11 +229,10 @@ TimeRefinementIntegrator::~TimeRefinementIntegrator()
  *************************************************************************
  */
 
-double TimeRefinementIntegrator::initializeHierarchy(
-   const hier::MappedBoxLevel& override_mapped_box_level)
+double TimeRefinementIntegrator::initializeHierarchy()
 {
 
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*d_patch_hierarchy, override_mapped_box_level);
+   TBOX_DIM_ASSERT_CHECK_ARGS1(*d_patch_hierarchy);
 
    if (d_barrier_and_time) {
       t_initialize_hier->barrierAndStart();
@@ -255,8 +254,7 @@ double TimeRefinementIntegrator::initializeHierarchy(
    } else {
 
       d_gridding_algorithm->makeCoarsestLevel(
-         d_start_time,
-         override_mapped_box_level);
+         d_start_time);
 
       if (d_use_refined_timestepping) {
          initializeRefinedTimesteppingLevelData(0);
@@ -287,12 +285,6 @@ double TimeRefinementIntegrator::initializeHierarchy(
 
    return d_dt_max_level[0];
 
-}
-
-double TimeRefinementIntegrator::initializeHierarchy()
-{
-   return initializeHierarchy(
-      hier::MappedBoxLevel(d_patch_hierarchy->getDim()));
 }
 
 /*
