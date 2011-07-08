@@ -69,6 +69,12 @@ formerly done by those classes.
 (7) GriddingAlgorithm::makeCoarsestLevel taking a user-defined
 box configuration is removed.
 
+(8) MultiblockGriddingAlgorithm is removed.
+
+(9) MappedBox and MappedBoxId ordering has changed.
+
+(10) Neighbor look-ups in Connectors now uses MappedBoxId.
+
 
 This section contains a summary of changes to SAMRAI.  More detailed
 descriptions of items in the following list are provided below.
@@ -158,7 +164,21 @@ This change is meant to spare applications that can tolerate overlapping
 patches from an unneeded error while giving a fair warning to users of
 applications that cannot tolerate overlapping patches.
 
+(8) MultiblockGriddingAlgorithm is removed.
 
+GriddingAlgorithm now supports multiblock hierarchies.
+
+(9) MappedBox and MappedBoxId ordering has changed.
+
+MappedBoxes and MappedBoxIds used to be ordered so that objects with
+the same BlockId are grouped together.  They are now ordered so that
+those with owner ranks are grouped together.  Within a group with
+the same owner ranks, those with the same BlockIds are grouped together.
+
+(10) Neighbor look-ups in Connectors now uses MappedBoxId.
+
+These look-ups used to take GlobalIds.  That does not work for multiblock
+because GlobalIds lack the BlockId data.
 
 =============================================================================
 =============================================================================
