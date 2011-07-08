@@ -135,42 +135,39 @@ MappedBoxTree::MappedBoxTree(
     * Compute the bounding box for the set of mapped boxes.  Also get
     * BlockId from the given mapped_boxes.
     */
+   if ( !mapped_boxes.empty() ) {
+      TBOX_ASSERT(mapped_boxes.begin()->getBlockId() != BlockId::invalidId());
+      d_block_id = mapped_boxes.begin()->getBlockId();
+   }
    for (MappedBoxSet::const_iterator ni = mapped_boxes.begin();
         ni != mapped_boxes.end(); ++ni) {
       d_bounding_box += (*ni).getBox();
-      if (d_block_id == BlockId::invalidId()) {
-         d_block_id = (*ni).getBlockId();
-      } else {
-         TBOX_ASSERT(d_block_id == (*ni).getBlockId());
-      }
+      TBOX_ASSERT(ni->getBlockId() == d_block_id);
    }
 
    /*
     * If the list of boxes is small enough, we won't
     * do any recursive stuff: we'll just let the boxes
     * live here.  In this case, there is no left child,
-    * no right child.
+    * no right child, and no recursive d_center_child.
     */
    if (mapped_boxes.size() <= min_number) {
-      d_mapped_boxes.insert(d_mapped_boxes.end(),
-         mapped_boxes.begin(), mapped_boxes.end());
-      if (s_max_lin_search[d_dim.getValue() - 1] < d_mapped_boxes.size()) {
-         s_max_lin_search[d_dim.getValue() - 1] =
-            static_cast<int>(d_mapped_boxes.size());
-      }
-   } else {
+      d_mapped_boxes.insert(d_mapped_boxes.end(), mapped_boxes.begin(), mapped_boxes.end());
+   }
+   else {
 
       /*
        * Partition the boxes into three sets, using the midpoint of
        * the longest dimension of the bounding box:
        *
-       * - those that belong to me (intersects the midpoint plane)
+       * - those that belong to me (intersects the midpoint plane).  Put
+       * these in d_mapped_boxes.
        *
        * - those that belong to my left child (lower than the midpoint
-       *      plane)
+       * plane)
        *
-       * - those that belong to my right child (higher than the
-       *      midpoint plane)
+       * - those that belong to my right child (higher than the midpoint
+       * plane)
        */
 
       const IntVector bbsize = d_bounding_box.numberCells();
@@ -181,7 +178,7 @@ MappedBoxTree::MappedBoxTree(
          }
       }
 
-      int mid =
+      int midpoint =
          (d_bounding_box.lower(d_partition_dim)
           + d_bounding_box.upper(d_partition_dim)) / 2;
 
@@ -189,38 +186,22 @@ MappedBoxTree::MappedBoxTree(
       for (MappedBoxSet::const_iterator ni = mapped_boxes.begin();
            ni != mapped_boxes.end(); ++ni) {
          const MappedBox& mapped_box = *ni;
-         if (mapped_box.getBox().upper(d_partition_dim) <= mid) {
+         if (mapped_box.getBox().upper(d_partition_dim) <= midpoint) {
             left_mapped_boxes.insert(left_mapped_boxes.end(), mapped_box);
-         } else if (mapped_box.getBox().lower(d_partition_dim) > mid) {
+         } else if (mapped_box.getBox().lower(d_partition_dim) > midpoint) {
             right_mapped_boxes.insert(right_mapped_boxes.end(), mapped_box);
          } else {
             d_mapped_boxes.insert(d_mapped_boxes.end(), mapped_box);
          }
       }
 
-      /*
-       * Recurse to build this mapped_box's left and right children.
-       */
-      if (!left_mapped_boxes.empty()) {
-         tbox::Pointer<MappedBoxTree> child(new MappedBoxTree(d_dim));
-         d_left_child = child;
-         d_left_child->privateGenerateTree(left_mapped_boxes, min_number);
-      }
+      setupChildren(min_number, left_mapped_boxes, right_mapped_boxes);
 
-      if (!right_mapped_boxes.empty()) {
-         tbox::Pointer<MappedBoxTree> child(new MappedBoxTree(d_dim));
-         d_right_child = child;
-         d_right_child->privateGenerateTree(right_mapped_boxes, min_number);
-      }
+   }
 
-      /*
-       * TODO: Unlike in privateGenerateTree, we seem to be assuming
-       * that d_mapped_boxes have few enough boxes.  I think we should
-       * follow privateGenerateTree's code and generate a d_tree if
-       * d_mapped_boxes have more than min_number of boxes.  This may
-       * fix mysterious performance issues observed at 64K processes.
-       * BTNG.
-       */
+   if (s_max_lin_search[d_dim.getValue() - 1] < d_mapped_boxes.size()) {
+      s_max_lin_search[d_dim.getValue() - 1] =
+         static_cast<int>(d_mapped_boxes.size());
    }
 
    t_build_tree[d_dim.getValue() - 1]->stop();
@@ -263,31 +244,39 @@ MappedBoxTree::MappedBoxTree(
     * Compute the bounding box for the vector of mapped boxes.  Also get
     * BlockId from the mapped boxes.
     */
+   if ( !mapped_boxes.empty() ) {
+      TBOX_ASSERT(mapped_boxes.begin()->getBlockId() != BlockId::invalidId());
+      d_block_id = mapped_boxes.begin()->getBlockId();
+   }
    for (std::vector<MappedBox>::const_iterator ni = mapped_boxes.begin();
         ni != mapped_boxes.end(); ++ni) {
       d_bounding_box += (*ni).getBox();
-      if (d_block_id == BlockId::invalidId()) {
-         d_block_id = (*ni).getBlockId();
-      } else {
-         TBOX_ASSERT(d_block_id == (*ni).getBlockId());
-      }
+      TBOX_ASSERT(ni->getBlockId() == d_block_id);
    }
 
    /*
     * If the list of boxes is small enough, we won't
     * do any recursive stuff: we'll just let the boxes
     * live here.  In this case, there is no left child,
-    * no right child, and no recursive d_tree.
+    * no right child, and no recursive d_center_child.
     */
    if (mapped_boxes.size() <= min_number) {
       d_mapped_boxes = mapped_boxes;
-   } else {
+   }
+   else {
 
       /*
-       * Partition the boxes into three sets:
-       *    - those that belong to me
-       *    - those that belong to my left child
-       *    - those that belong to my right child
+       * Partition the boxes into three sets, using the midpoint of
+       * the longest dimension of the bounding box:
+       *
+       * - those that belong to me (intersects the midpoint plane).  Put
+       * these in d_mapped_boxes.
+       *
+       * - those that belong to my left child (lower than the midpoint
+       * plane)
+       *
+       * - those that belong to my right child (higher than the midpoint
+       * plane)
        */
 
       const IntVector bbsize = d_bounding_box.numberCells();
@@ -298,7 +287,7 @@ MappedBoxTree::MappedBoxTree(
          }
       }
 
-      int mid =
+      int midpoint =
          (d_bounding_box.lower(d_partition_dim)
           + d_bounding_box.upper(d_partition_dim)) / 2;
 
@@ -306,36 +295,22 @@ MappedBoxTree::MappedBoxTree(
       for (std::vector<MappedBox>::const_iterator ni = mapped_boxes.begin();
            ni != mapped_boxes.end(); ++ni) {
          const MappedBox& mapped_box = *ni;
-         if (mapped_box.getBox().upper(d_partition_dim) <= mid) {
+         if (mapped_box.getBox().upper(d_partition_dim) <= midpoint) {
             left_mapped_boxes.insert(left_mapped_boxes.end(), mapped_box);
-         } else if (mapped_box.getBox().lower(d_partition_dim) > mid) {
+         } else if (mapped_box.getBox().lower(d_partition_dim) > midpoint) {
             right_mapped_boxes.insert(right_mapped_boxes.end(), mapped_box);
          } else {
             d_mapped_boxes.insert(d_mapped_boxes.end(), mapped_box);
          }
       }
 
-      /*
-       * Recurse to build this mapped_box's left and right children.
-       */
-      if (!left_mapped_boxes.empty()) {
-         d_left_child = new MappedBoxTree(d_dim);
-         d_left_child->privateGenerateTree(left_mapped_boxes, min_number);
-      }
+      setupChildren(min_number, left_mapped_boxes, right_mapped_boxes);
 
-      if (!right_mapped_boxes.empty()) {
-         d_right_child = new MappedBoxTree(d_dim);
-         d_right_child->privateGenerateTree(right_mapped_boxes, min_number);
-      }
+   }
 
-      /*
-       * TODO: Unlike in privateGenerateTree, we seem to be assuming
-       * that d_mapped_boxes have few enough boxes.  I think we should
-       * follow privateGenerateTree's code and generate a d_tree if
-       * d_mapped_boxes have more than min_number of boxes.  This may
-       * fix mysterious performance issues observed at 64K processes.
-       * BTNG.
-       */
+   if (s_max_lin_search[d_dim.getValue() - 1] < d_mapped_boxes.size()) {
+      s_max_lin_search[d_dim.getValue() - 1] =
+         static_cast<int>(d_mapped_boxes.size());
    }
 
    t_build_tree[d_dim.getValue() - 1]->stop();
@@ -384,7 +359,7 @@ MappedBoxTree::MappedBoxTree(
     * If the list of boxes is small enough, we won't
     * do any recursive stuff: we'll just let the boxes
     * live here.  In this case, there is no left child,
-    * no right child, and no recursive d_tree.
+    * no right child, and no recursive d_center_child.
     */
    if ((size_t)boxes.size() <= min_number) {
       d_mapped_boxes.reserve(boxes.size());
@@ -393,17 +368,21 @@ MappedBoxTree::MappedBoxTree(
          const MappedBox n(*li, ++count, 0, d_block_id);
          d_mapped_boxes.insert(d_mapped_boxes.end(), n);
       }
-      if (s_max_lin_search[d_dim.getValue() - 1] < d_mapped_boxes.size()) {
-         s_max_lin_search[d_dim.getValue() - 1] =
-            static_cast<int>(d_mapped_boxes.size());
-      }
-   } else {
+   }
+   else {
 
       /*
-       * Partition the boxes into three sets:
-       *    - those that belong to me
-       *    - those that belong to my left child
-       *    - those that belong to my right child
+       * Partition the boxes into three sets, using the midpoint of
+       * the longest dimension of the bounding box:
+       *
+       * - those that belong to me (intersects the midpoint plane).  Put
+       * these in d_mapped_boxes.
+       *
+       * - those that belong to my left child (lower than the midpoint
+       * plane)
+       *
+       * - those that belong to my right child (higher than the midpoint
+       * plane)
        */
 
       const IntVector bbsize = d_bounding_box.numberCells();
@@ -414,7 +393,7 @@ MappedBoxTree::MappedBoxTree(
          }
       }
 
-      int mid =
+      int midpoint =
          (d_bounding_box.lower(d_partition_dim)
           + d_bounding_box.upper(d_partition_dim)) / 2;
 
@@ -422,36 +401,22 @@ MappedBoxTree::MappedBoxTree(
       LocalId count(-1);
       for (hier::BoxList::Iterator li(boxes); li; li++) {
          const MappedBox mapped_box(*li, ++count, 0);
-         if (mapped_box.getBox().upper(d_partition_dim) <= mid) {
+         if (mapped_box.getBox().upper(d_partition_dim) <= midpoint) {
             left_mapped_boxes.insert(left_mapped_boxes.end(), mapped_box);
-         } else if (mapped_box.getBox().lower(d_partition_dim) > mid) {
+         } else if (mapped_box.getBox().lower(d_partition_dim) > midpoint) {
             right_mapped_boxes.insert(right_mapped_boxes.end(), mapped_box);
          } else {
             d_mapped_boxes.insert(d_mapped_boxes.end(), mapped_box);
          }
       }
 
-      /*
-       * Recurse to build this mapped_box's left and right children.
-       */
-      if (!left_mapped_boxes.empty()) {
-         d_left_child = new MappedBoxTree(d_dim);
-         d_left_child->privateGenerateTree(left_mapped_boxes, min_number);
-      }
+      setupChildren(min_number, left_mapped_boxes, right_mapped_boxes);
 
-      if (!right_mapped_boxes.empty()) {
-         d_right_child = new MappedBoxTree(d_dim);
-         d_right_child->privateGenerateTree(right_mapped_boxes, min_number);
-      }
+   }
 
-      /*
-       * TODO: Unlike in privateGenerateTree, we seem to be assuming
-       * that d_mapped_boxes have few enough boxes.  I think we should
-       * follow privateGenerateTree's code and generate a d_tree if
-       * d_mapped_boxes have more than min_number of boxes.  This may
-       * fix mysterious performance issues observed at 64K processes.
-       * BTNG.
-       */
+   if (s_max_lin_search[d_dim.getValue() - 1] < d_mapped_boxes.size()) {
+      s_max_lin_search[d_dim.getValue() - 1] =
+         static_cast<int>(d_mapped_boxes.size());
    }
 
    t_build_tree[d_dim.getValue() - 1]->stop();
@@ -490,7 +455,7 @@ MappedBoxTree& MappedBoxTree::operator = (
    d_right_child = r.d_right_child;
    d_mapped_boxes = r.d_mapped_boxes;
    d_partition_dim = r.d_partition_dim;
-   d_tree = r.d_tree;
+   d_center_child = r.d_center_child;
    return *this;
 }
 
@@ -530,16 +495,16 @@ void MappedBoxTree::generateTree(
 
 /*
  *************************************************************************
- * Generate the tree from a given mutable vector of mapped_boxes.
+ * Generate the tree from a given mutable vector of MappedBoxes.
  * The vector will be changed and its output state is undefined.
  *
- * Methods taking various input containers of mapped_boxes could
+ * Methods taking various input containers of MappedBoxes could
  * simply copy the input MappedBoxes into a vector, then call this
  * method.  However, we don't do that for efficiency reasons.  The
  * extra copy turns out to be significant.  Therefore, the
- * constructors have code similar to privateGenerateTree to make the
- * first tree branching.  Further branching is done by
- * privateGenerateTree.
+ * constructors have code similar to privateGenerateTree to split
+ * the incoming MappedBoxes into three groups.  These groups
+ * are turned into child branches by setupChildren.
  *
  * This method is not timed using the Timers.  Only the public
  * itnerfaces are timed.  Isolating the recursive code in
@@ -553,21 +518,16 @@ void MappedBoxTree::privateGenerateTree(
 {
    ++s_num_generate[d_dim.getValue() - 1];
 
-   if (d_block_id == BlockId::invalidId() && mapped_boxes.size()) {
+   if (mapped_boxes.size()) {
       d_block_id = mapped_boxes[0].getBlockId();
    }
 
-   // d_partition_dim = dim;
-   if (&mapped_boxes != &d_mapped_boxes) {
-      swap(mapped_boxes, d_mapped_boxes);
-   }
-
    /*
-    * Compute this mapped_box's domain, which is the bounding box
-    * for the list of boxes.
+    * Compute this tree's domain, which is the bounding box for the
+    * constituent boxes.
     */
-   for (std::vector<MappedBox>::const_iterator ni = d_mapped_boxes.begin();
-        ni != d_mapped_boxes.end(); ++ni) {
+   for (std::vector<MappedBox>::const_iterator ni = mapped_boxes.begin();
+        ni != mapped_boxes.end(); ++ni) {
       d_bounding_box += (*ni).getBox();
    }
 
@@ -575,79 +535,103 @@ void MappedBoxTree::privateGenerateTree(
     * If the list of boxes is small enough, we won't
     * do any recursive stuff: we'll just let the boxes
     * live here.  In this case, there is no left child,
-    * no right child, and no recursive d_tree.
+    * no right child, and no recursive d_center_child.
     */
-   if (d_mapped_boxes.size() <= min_number) {
-      if (s_max_lin_search[d_dim.getValue() - 1] < d_mapped_boxes.size()) {
-         s_max_lin_search[d_dim.getValue() - 1] =
-            static_cast<int>(d_mapped_boxes.size());
-      }
-      return;
+   if (mapped_boxes.size() <= min_number) {
+      d_mapped_boxes.swap(mapped_boxes);
    }
+   else {
+
+      /*
+       * Partition the boxes into three sets, using the midpoint of
+       * the longest dimension of the bounding box:
+       *
+       * - those that belong to me (intersects the midpoint plane).  Put
+       * these in d_mapped_boxes.
+       *
+       * - those that belong to my left child (lower than the midpoint
+       * plane)
+       *
+       * - those that belong to my right child (higher than the midpoint
+       * plane)
+       */
+
+      const IntVector bbsize = d_bounding_box.numberCells();
+      d_partition_dim = 0;
+      for (int d = 1; d < d_dim.getValue(); ++d) {
+         if (bbsize(d_partition_dim) < bbsize(d)) {
+            d_partition_dim = d;
+         }
+      }
+
+      int midpoint =
+         (d_bounding_box.lower(d_partition_dim)
+          + d_bounding_box.upper(d_partition_dim)) / 2;
+
+      std::vector<MappedBox> left_mapped_boxes, right_mapped_boxes;
+      for (std::vector<MappedBox>::const_iterator ni = mapped_boxes.begin();
+           ni != mapped_boxes.end(); ++ni) {
+         const MappedBox& mapped_box = *ni;
+         if (mapped_box.getBox().upper(d_partition_dim) <= midpoint) {
+            left_mapped_boxes.insert(left_mapped_boxes.end(), mapped_box);
+         } else if (mapped_box.getBox().lower(d_partition_dim) > midpoint) {
+            right_mapped_boxes.insert(right_mapped_boxes.end(), mapped_box);
+         } else {
+            d_mapped_boxes.insert(d_mapped_boxes.end(), mapped_box);
+         }
+      }
+
+      setupChildren(min_number, left_mapped_boxes, right_mapped_boxes);
+
+   }
+
+   if (s_max_lin_search[d_dim.getValue() - 1] < d_mapped_boxes.size()) {
+      s_max_lin_search[d_dim.getValue() - 1] =
+         static_cast<int>(d_mapped_boxes.size());
+   }
+
+   return;
+}
+
+
+/*
+**************************************************************************
+* This method finishes the tree generation by setting up the children
+* branches.  It expects the MappedBoxes be have been split into
+* left_mapped_boxes, right_mapped_boxes, and d_mapped_boxes.  It will
+* generate the d_left_child and d_right_child.  If d_mapped_boxes is
+* big enough, it will generate d_center_child.
+*
+**************************************************************************
+*/
+void MappedBoxTree::setupChildren(
+   const size_t min_number,
+   std::vector<MappedBox> &left_mapped_boxes,
+   std::vector<MappedBox> &right_mapped_boxes )
+{
+   const size_t total_size =
+      left_mapped_boxes.size() + right_mapped_boxes.size() + d_mapped_boxes.size();
 
    /*
-    * Partition the boxes into three sets:
-    *    - those that belong to me
-    *    - those that belong to my left child
-    *    - those that belong to my right child
-    */
-
-   const IntVector bbsize = d_bounding_box.numberCells();
-   d_partition_dim = 0;
-   for (int d = 1; d < d_dim.getValue(); ++d) {
-      if (bbsize(d_partition_dim) < bbsize(d)) {
-         d_partition_dim = d;
-      }
-   }
-
-   int mid =
-      (d_bounding_box.lower(d_partition_dim)
-       + d_bounding_box.upper(d_partition_dim)) / 2;
-
-   std::vector<MappedBox> left_mapped_boxes, right_mapped_boxes,
-                          cent_mapped_boxes;
-   for (std::vector<MappedBox>::const_iterator ni = d_mapped_boxes.begin();
-        ni != d_mapped_boxes.end(); ++ni) {
-      const MappedBox& mapped_box = *ni;
-      if (mapped_box.getBox().upper(d_partition_dim) <= mid) {
-         left_mapped_boxes.insert(left_mapped_boxes.end(), mapped_box);
-      } else if (mapped_box.getBox().lower(d_partition_dim) > mid) {
-         right_mapped_boxes.insert(right_mapped_boxes.end(), mapped_box);
-      } else {
-         cent_mapped_boxes.insert(cent_mapped_boxes.end(), mapped_box);
-      }
-   }
-   /*
-    * If all of d_mapped_boxes goes into a single child, the child is
-    * just as big as its parent, so there is no point recursing.  Put
-    * everything into the center so the check below will prevent
+    * If all MappedBoxes are in a single child, the child is just as
+    * big as its parent, so there is no point recursing.  Put
+    * everything into d_mapped_boxes so the check below will prevent
     * recursion.
     */
-   if (left_mapped_boxes.size() == d_mapped_boxes.size()) {
-      swap(left_mapped_boxes, cent_mapped_boxes);
-   } else if (right_mapped_boxes.size() == d_mapped_boxes.size()) {
-      swap(right_mapped_boxes, cent_mapped_boxes);
+   if (left_mapped_boxes.size() == total_size) {
+      swap(left_mapped_boxes, d_mapped_boxes);
+   } else if (right_mapped_boxes.size() == total_size) {
+      swap(right_mapped_boxes, d_mapped_boxes);
    }
 
-#if 0
-   tbox::plog << "Split " << d_mapped_boxes.size() << "  " << d_bounding_box
-              << " across " << d_partition_dim << " at " << mid << " into "
-              << ' ' << left_mapped_boxes.size()
-              << ' ' << cent_mapped_boxes.size()
-              << ' ' << right_mapped_boxes.size()
-              << std::endl;
-#endif
-   if (cent_mapped_boxes.size() <= min_number /* truncate recursion */ ||
-       cent_mapped_boxes.size() == d_mapped_boxes.size() /* avoid infinite recursion */) {
-      swap(d_mapped_boxes, cent_mapped_boxes);
-      if (s_max_lin_search[d_dim.getValue() - 1] < d_mapped_boxes.size()) {
-         s_max_lin_search[d_dim.getValue() - 1] =
-            static_cast<int>(d_mapped_boxes.size());
-      }
-   } else {
+   /*
+    * If d_mapped_boxes is big enough, generate a center child for it.
+    */
+   if ( d_mapped_boxes.size() > min_number /* recursion criterion */ &&
+        d_mapped_boxes.size() < total_size /* avoid infinite recursion */ ) {
+      d_center_child = new MappedBoxTree(d_dim);
+      d_center_child->privateGenerateTree(d_mapped_boxes, min_number);
       d_mapped_boxes.clear();   // No longer needed for tree construction or search.
-      d_tree = new MappedBoxTree(d_dim);
-      d_tree->privateGenerateTree(cent_mapped_boxes, min_number);
    }
 
    /*
@@ -662,7 +646,11 @@ void MappedBoxTree::privateGenerateTree(
       d_right_child->privateGenerateTree(right_mapped_boxes, min_number);
    }
 
+   return;
 }
+
+
+
 
 bool MappedBoxTree::hasOverlap(
    const Box& box) const
@@ -713,7 +701,7 @@ void MappedBoxTree::clear()
    d_left_child.setNull();
    d_right_child.setNull();
    d_mapped_boxes.clear();
-   d_tree.setNull();
+   d_center_child.setNull();
 }
 
 bool MappedBoxTree::isInitialized() const
@@ -759,8 +747,8 @@ bool MappedBoxTree::privateHasOverlap(
    bool has_overlap = false;
    if (box.intersects(d_bounding_box)) {
 
-      if (d_tree) {
-         has_overlap = d_tree->privateHasOverlap(box);
+      if (d_center_child) {
+         has_overlap = d_center_child->privateHasOverlap(box);
       } else {
          for (std::vector<MappedBox>::const_iterator ni = d_mapped_boxes.begin();
               ni != d_mapped_boxes.end(); ++ni) {
@@ -791,8 +779,8 @@ void MappedBoxTree::privateFindOverlapMappedBoxes(
 
    if (box.intersects(d_bounding_box)) {
 
-      if (d_tree) {
-         d_tree->privateFindOverlapMappedBoxes(overlap_mapped_boxes, box);
+      if (d_center_child) {
+         d_center_child->privateFindOverlapMappedBoxes(overlap_mapped_boxes, box);
       } else {
          for (std::vector<MappedBox>::const_iterator ni = d_mapped_boxes.begin();
               ni != d_mapped_boxes.end(); ++ni) {
@@ -821,8 +809,8 @@ void MappedBoxTree::privateFindOverlapMappedBoxes(
 
    if (box.intersects(d_bounding_box)) {
 
-      if (d_tree) {
-         d_tree->privateFindOverlapMappedBoxes(overlap_mapped_boxes, box);
+      if (d_center_child) {
+         d_center_child->privateFindOverlapMappedBoxes(overlap_mapped_boxes, box);
       } else {
          for (std::vector<MappedBox>::const_iterator ni = d_mapped_boxes.begin();
               ni != d_mapped_boxes.end(); ++ni) {
@@ -852,8 +840,8 @@ void MappedBoxTree::privateFindOverlapMappedBoxes(
 
    if (box.intersects(d_bounding_box)) {
 
-      if (d_tree) {
-         d_tree->privateFindOverlapMappedBoxes(overlap_mapped_boxes, box);
+      if (d_center_child) {
+         d_center_child->privateFindOverlapMappedBoxes(overlap_mapped_boxes, box);
       } else {
          for (std::vector<MappedBox>::const_iterator ni = d_mapped_boxes.begin();
               ni != d_mapped_boxes.end(); ++ni) {
@@ -877,8 +865,8 @@ void MappedBoxTree::privateFindOverlapMappedBoxes(
 void MappedBoxTree::getMappedBoxes(
    std::vector<MappedBox>& mapped_boxes) const
 {
-   if (d_tree) {
-      d_tree->getMappedBoxes(mapped_boxes);
+   if (d_center_child) {
+      d_center_child->getMappedBoxes(mapped_boxes);
    } else {
       mapped_boxes.insert(
          mapped_boxes.end(),
@@ -913,8 +901,8 @@ tbox::Pointer<MappedBoxTree> MappedBoxTree::createRefinedTree(
       (*ni).getBox().refine(ratio);
    }
 
-   if (!d_tree.isNull()) {
-      rval->d_tree = d_tree->createRefinedTree(ratio);
+   if (!d_center_child.isNull()) {
+      rval->d_center_child = d_center_child->createRefinedTree(ratio);
    }
    if (!d_left_child.isNull()) {
       rval->d_left_child = d_left_child->createRefinedTree(ratio);

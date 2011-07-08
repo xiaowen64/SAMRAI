@@ -351,6 +351,25 @@ private:
       size_t min_number = 10);
 
    /*!
+    * @brief Set up the child branches.
+    *
+    * This method is called after splitting the MappedBoxes into the
+    * left_mapped_boxes and right_mapped_boxes, with boxes straddling
+    * the divider stored in d_mapped_boxes.  It generates
+    * d_left_child, d_right_child and, if needed, d_center_child.
+    *
+    * @param[in] min_number
+    *
+    * @param[in,out] left_mapped_boxes
+    *
+    * @param[in,out] right_mapped_boxes
+    */
+   void setupChildren(
+      const size_t min_number,
+      std::vector<MappedBox> &left_mapped_boxes,
+      std::vector<MappedBox> &right_mapped_boxes);
+
+   /*!
     * @brief Check whether given box has any ovarlap with the tree.
     *
     * @param[in] box
@@ -441,8 +460,15 @@ private:
    tbox::Pointer<MappedBoxTree> d_right_child;
 
    /*!
+    * @brief A tree for MappedBoxes that are not given to the left or
+    * right children.
+    */
+   tbox::Pointer<MappedBoxTree> d_center_child;
+
+   /*!
     * @brief MappedBoxes that are contained within the physical domain
-    * that this tree represents.
+    * that this tree represents.  When we have a small number of boxes
+    * that do not warant the overhead of a child tree, the boxes go here.
     */
    std::vector<MappedBox> d_mapped_boxes;
 
@@ -451,12 +477,6 @@ private:
     * partitioned.
     */
    int d_partition_dim;
-
-   /*!
-    * @brief A tree for MappedBoxes that are not given to the left or
-    * right children.
-    */
-   tbox::Pointer<MappedBoxTree> d_tree;
 
    /*
     * Timers are static to keep the objects light-weight.
