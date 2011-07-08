@@ -191,7 +191,11 @@ int main(
              * Scale up the box array.
              */
             int shift_dir = (iscale - 1) % dim.getValue();
-            int shift_distance = bounding_box.numberCells(shift_dir);
+            /*
+             * Shift distance is less than number of bounding boxes in shift_dir
+             * in order to generate some non-trivial overlaps.
+             */
+            int shift_distance = int(0.91*bounding_box.numberCells(shift_dir));
 
             const size_t old_size = boxes.size();
             boxes.insert(boxes.end(), boxes.begin(), boxes.end());
@@ -240,8 +244,8 @@ int main(
          /*
           * Build search tree.
           */
-         hier::MappedBoxTree search_tree(dim);
          t_build_tree->start();
+         hier::MappedBoxTree search_tree(dim);
          search_tree.generateTree(nodes);
          t_build_tree->stop();
 
