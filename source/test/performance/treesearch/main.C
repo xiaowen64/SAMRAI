@@ -133,12 +133,13 @@ int main(
          main_db->getStringWithDefault("box_gen_method", "UNIFORM");
 
       tbox::TimerManager * tm(tbox::TimerManager::getManager());
+      const std::string dim_str( tbox::Utilities::intToString(dim.getValue()) );
       tbox::Pointer<tbox::Timer> t_build_tree =
-         tm->getTimer("apps::main::build_tree");
+         tm->getTimer("apps::main::build_tree[" + dim_str + "]");
       tbox::Pointer<tbox::Timer> t_search_tree_for_set =
-         tm->getTimer("apps::main::search_tree_for_set");
+         tm->getTimer("apps::main::search_tree_for_set[" + dim_str + "]");
       tbox::Pointer<tbox::Timer> t_search_tree_for_vec =
-         tm->getTimer("apps::main::search_tree_for_vec");
+         tm->getTimer("apps::main::search_tree_for_vec[" + dim_str + "]");
 
       /*
        * Generate the boxes.

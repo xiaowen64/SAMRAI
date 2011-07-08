@@ -933,10 +933,11 @@ tbox::Pointer<MappedBoxTree> MappedBoxTree::createRefinedTree(
 void MappedBoxTree::initializeCallback()
 {
    for (int i = 0; i < tbox::Dimension::MAXIMUM_DIMENSION_VALUE; ++i) {
+      const std::string dim_str( tbox::Utilities::intToString(i+1) );
       t_build_tree[i] = tbox::TimerManager::getManager()->
-         getTimer("hier::MappedBoxTree::build_tree");
+         getTimer(std::string("hier::MappedBoxTree::build_tree[") + dim_str + "]");
       t_search[i] = tbox::TimerManager::getManager()->
-         getTimer("hier::MappedBoxTree::search");
+                  getTimer(std::string("hier::MappedBoxTree::search[") + dim_str + "]");
    }
 }
 
