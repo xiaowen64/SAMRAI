@@ -313,6 +313,11 @@ MappedBoxTree::MappedBoxTree(
          static_cast<int>(d_mapped_boxes.size());
    }
 
+   if (s_max_lin_search[d_dim.getValue() - 1] < d_mapped_boxes.size()) {
+      s_max_lin_search[d_dim.getValue() - 1] =
+         static_cast<int>(d_mapped_boxes.size());
+   }
+
    t_build_tree[d_dim.getValue() - 1]->stop();
 }
 
@@ -412,6 +417,11 @@ MappedBoxTree::MappedBoxTree(
 
       setupChildren(min_number, left_mapped_boxes, right_mapped_boxes);
 
+   }
+
+   if (s_max_lin_search[d_dim.getValue() - 1] < d_mapped_boxes.size()) {
+      s_max_lin_search[d_dim.getValue() - 1] =
+         static_cast<int>(d_mapped_boxes.size());
    }
 
    if (s_max_lin_search[d_dim.getValue() - 1] < d_mapped_boxes.size()) {
