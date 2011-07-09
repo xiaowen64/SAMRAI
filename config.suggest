@@ -248,23 +248,26 @@ EOF
 
 casc_rh5_gnu_x64) # CASC RedHat 5, default GNU compilers, x86_64
 cat <<-EOF
-	--with-CXX=g++
-	--with-CC=gcc
-	--with-F77=g77
+	--with-CXX=/usr/bin/g++
+	--with-CC=/usr/bin/gcc
+	--with-F77=/usr/bin/gfortran
 	--with-hdf5=/nfs/casc/samrai/apps/rh5/hdf5/1.8.5p1
-   --with-boost=/usr/casc/samrai/apps/rh5/boost/1.45.0
+        --with-boost=/usr/casc/samrai/apps/rh5/boost/1.45.0
 	--with-silo=/nfs/casc/samrai/apps/rh5/silo/4.7.2_opt
 	--with-mpi-include=/usr/apps/mpich2/1.3.2/include
 	--with-mpi-lib-dirs=/usr/apps/mpich2/1.3.2/lib
 	--with-mpi-libs="mpich mpl pthread"
 	--with-parallel-run-bin=/usr/apps/mpich2/1.3.2/bin/mpirun
-	--with-hypre=no
-	--with-petsc=no
-	--with-x
-   --enable-opt
-   --enable-inline
+	--with-hypre=/usr/casc/samrai/apps/rh5/hypre/2.6.0b.gcc.4.1.2.opt
+        --with-lapack=/usr/casc/samrai/apps/rh5/lapack/3.2.2-gcc.4.1.2
+	--with-lapack-libs="-L/usr/casc/samrai/apps/rh5/lapack/3.2.2-gcc.4.1.2/lib -llapack"
+	--with-blas=/usr/casc/samrai/apps/rh5/lapack/3.2.2-gcc.4.1.2
+	--with-blas-libs="-L/usr/casc/samrai/apps/rh5/lapack/3.2.2-gcc.4.1.2/lib -lf77blas -lcblas -latlas"
+	--with-petsc=/usr/casc/samrai/apps/rh5/petsc/petsc-2.3.3-p11.gcc.4.1.2
+	--with-sundials=/usr/casc/samrai/apps/rh5/sundials/2.3.0_gcc.4.1.2
+	--enable-rpath=-Wl,-R
 EOF
-# Maintained by Susan Hazlett
+# 
 ;;
 
 # TODO Need to add in other support libraries in order to get complete 
@@ -281,9 +284,14 @@ cat <<-EOF
 	--with-mpi-lib-dirs=/usr/apps/mpich2/1.3.2/lib
 	--with-mpi-libs="mpich mpl pthread"
 	--with-parallel-run-bin=/usr/apps/mpich2/1.3.2/bin/mpirun
-	--with-hypre=no
-	--with-petsc=no
-	--with-x
+	--with-hypre=/usr/casc/samrai/apps/rh5/hypre/2.6.0b.gcc.4.1.2.opt
+        --with-lapack=/usr/casc/samrai/apps/rh5/lapack/3.2.2-gcc.4.1.2
+	--with-lapack-libs="-L/usr/casc/samrai/apps/rh5/lapack/3.2.2-gcc.4.1.2/lib -llapack"
+	--with-blas=/usr/casc/samrai/apps/rh5/lapack/3.2.2-gcc.4.1.2
+	--with-blas-libs="-L/usr/casc/samrai/apps/rh5/lapack/3.2.2-gcc.4.1.2/lib -lf77blas -lcblas -latlas"
+	--with-petsc=/usr/casc/samrai/apps/rh5/petsc/petsc-2.3.3-p11.gcc.4.1.2
+	--with-sundials=/usr/casc/samrai/apps/rh5/sundials/2.3.0_gcc.4.1.2
+	--enable-rpath=-Wl,-R
 EOF
 # 
 ;;
@@ -293,10 +301,10 @@ cat <<-EOF
 	--with-CXX="/nfs/apps/intel/latest/bin/icpc -Kc++ -gcc-name=/usr/bin/gcc"
 	--with-CC="/nfs/apps/intel/latest/bin/icc -gcc-name=/usr/bin/gcc"
 	--with-F77=/nfs/apps/intel/latest/bin/ifort
-   --with-extra-ld-flags="-shared-intel"
+	--with-extra-ld-flags="-shared-intel"
 	--enable-rpath=-Wl,-R
 	--with-hdf5=/usr/casc/samrai/apps/rh5/hdf5/1.8.5p1
-   --with-boost=/usr/casc/samrai/apps/rh5/boost/1.45.0
+	--with-boost=/usr/casc/samrai/apps/rh5/boost/1.45.0
 	--with-silo=/usr/casc/samrai/apps/rh5/silo/4.7.2_opt
 	--with-mpi-include=/usr/apps/mpich2/latest/include
 	--with-mpi-lib-dirs=/usr/apps/mpich2/latest/lib
