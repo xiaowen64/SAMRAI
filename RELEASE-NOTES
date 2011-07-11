@@ -75,6 +75,8 @@ box configuration is removed.
 
 (10) Neighbor look-ups in Connectors now uses MappedBoxId.
 
+(11) BaseGriddingAlgorithm is renamed to GriddingAlgorithmStrategy.
+
 
 This section contains a summary of changes to SAMRAI.  More detailed
 descriptions of items in the following list are provided below.
@@ -179,6 +181,10 @@ the same owner ranks, those with the same BlockIds are grouped together.
 
 These look-ups used to take GlobalIds.  That does not work for multiblock
 because GlobalIds lack the BlockId data.
+
+(11) BaseGriddingAlgorithm is renamed to GriddingAlgorithmStrategy.
+
+This conforms better to SAMRAI naming standards.
 
 =============================================================================
 =============================================================================
