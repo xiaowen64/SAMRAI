@@ -36,10 +36,15 @@ Bugs found by other users should send email to samrai-bugs@llnl.gov.
                 Summary of what's new
 -----------------------------------------------------------------------------
 
-(1) Block id (as in multiblock meshes) are a part of the MappedBoxId.
+(1) BlockId, identifying a block within a multiblock mesh, is now part of the 
+MappedBoxId.
+
+(2) Transformation class added, to handle transformation between
+coordinate systems of different blocks.
 
 This section contains a summary of additions to SAMRAI.  More detailed
 descriptions of items in the following list are provided below.
+
 
 -----------------------------------------------------------------------------
                 Summary of what's changed
@@ -87,11 +92,23 @@ descriptions of items in the following list are provided below.
                 Details about what's new
 -----------------------------------------------------------------------------
 
-(1) Block id (as in multiblock meshes) are a part of the MappedBoxId.
+(1) BlockId, identifying a block within a multiblock mesh, is now part of the
+MappedBoxId.
 
-This is a part of changing SAMRAI multiblock from a wrapper around
-single-block code to a first principle.  Everything from the MappedBox
-to the PatchHierarchy will eventually be multiblock-aware.
+The BlockId is used to specify a block for a MappedBoxId, a MappedBox, or
+a Patch.
+
+(2) Transformation class added, to handle transformations between
+coordinate systems of different blocks.
+
+The Transformation class uses a RotationIdentifier and an offset IntVector
+to describe the transformation between blocks.  The BoxOverlap child classes
+in the pdat package now hold a Transformation, which allows transactions
+(copy, packStream, unpackStream) to be constructed between patches on
+different blocks.  The Transformation is also used to hold the offset
+for transactions across periodic boundaries, in which case the rotation is
+always null and the offset is the shift from one side of the periodic domain
+to the other.
 
 -----------------------------------------------------------------------------
                 Details about what's changed
