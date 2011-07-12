@@ -487,9 +487,6 @@ Transformation::calculateReverseShift(
 
    const tbox::Dimension& dim(back_shift.getDim());
 
-   RotationIdentifier back_rotation =
-      getReverseRotationIdentifier(rotation, dim);
-
    if (dim.getValue() == 2) {
 
       if (rotation == IUP_JUP) {

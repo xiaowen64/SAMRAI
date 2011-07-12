@@ -238,7 +238,6 @@ RefineSchedule::RefineSchedule(
     */ 
    MappedBoxLevel unused_unfilled_mapped_box_level(dim);
    Connector unused_dst_to_unfilled;
-   const int nblocks = d_dst_level->getGridGeometry()->getNumberBlocks();
    MappedBoxLevel unused_unfilled_encon_mb_level(dim);
    Connector unused_encon_to_unfilled_encon;
    generateCommunicationSchedule(
@@ -1966,9 +1965,6 @@ RefineSchedule::createEnconFillSchedule(
       const hier::MappedBoxId& encon_mapped_box_mbid = ei->first;
       const NeighborSet& encon_unfilled_parts = ei->second;
 
-      const int dst_blk =
-         encon_mapped_box_mbid.getBlockId().getBlockValue();
-
       /*
        * For each unfilled box, coarsen and add to supp_encon_mb_level.
        */
@@ -2325,7 +2321,6 @@ RefineSchedule::createUnfilledEnconLevelWithNoSource(
               fn_iter != fill_nabrs.end(); ++fn_iter) {
 
             const hier::MappedBox& fill_mapped_box = *fn_iter;
-            const hier::MappedBoxId& fill_id = fill_mapped_box.getId();
 
             const hier::NeighborhoodSet& dst_to_encon_nbrhood_set =
                d_dst_to_encon.getNeighborhoodSets();
@@ -2358,10 +2353,6 @@ RefineSchedule::createUnfilledEnconLevelWithNoSource(
                   const hier::BlockId& nbr_blk_id =
                      encon_mb_id.getBlockId();
                   const int nbr_blk = nbr_blk_id.getBlockValue();
-
-
-                  const tbox::List<hier::GridGeometry::Neighbor>&
-                     neighbors = grid_geometry->getNeighbors(dst_blk);
 
                   /*
                    * The intersection, if any, of the fill_mapped_box 
@@ -3224,10 +3215,6 @@ void RefineSchedule::generateCommunicationSchedule(
    const hier::NeighborhoodSet& dst_eto_src = dst_to_src.getNeighborhoodSets();
 
    const MappedBoxLevel& dst_mapped_box_level = dst_to_src.getBase();
-
-   const bool dst_finer = dst_to_src.getHeadCoarserFlag();
-   const bool src_finer = !dst_to_src.getHeadCoarserFlag() &&
-      dst_to_src.getRatio() != hier::IntVector::getOne(dim);
 
 
    /*

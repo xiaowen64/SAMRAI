@@ -121,6 +121,8 @@ void MultiblockGriddingTagger::fillSingularityBoundaryConditions(
    const hier::Box& fill_box,
    const hier::BoundaryBox& boundary_box)
 {
+   NULL_USE(fill_time);
+
    TBOX_DIM_ASSERT_CHECK_DIM_ARGS3(d_dim, patch, fill_box, boundary_box);
 
    const tbox::Dimension& dim = fill_box.getDim();

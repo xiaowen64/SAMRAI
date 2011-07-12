@@ -766,7 +766,7 @@ Array<DatabaseBox> SiloDatabase::getDatabaseBoxArray(
 
    int* values = static_cast<int *>(ca->values);
    int offset = ca->elemlengths[0];
-   for (unsigned int i = 0; i < (ca->elemlengths[0]); i++) {
+   for (int i = 0; i < (ca->elemlengths[0]); i++) {
       boxArray[i].d_data.d_dimension = values[i];
       /*
        * This preserves old behavior where boxes can be different dims but is

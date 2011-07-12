@@ -3436,7 +3436,7 @@ void MblkLinAdv::checkBoundaryData(
 #endif
       int bloc = bbox.getLocationIndex();
 
-      int bscalarcase, refbdryloc;
+      int bscalarcase = 0, refbdryloc = 0;
       if (d_dim == tbox::Dimension(2)) {
          if (btype == Bdry::EDGE2D) {
 #ifdef DEBUG_CHECK_ASSERTIONS

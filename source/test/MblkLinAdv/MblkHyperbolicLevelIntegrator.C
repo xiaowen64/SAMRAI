@@ -969,8 +969,6 @@ MblkHyperbolicLevelIntegrator::advanceLevel(
    TBOX_ASSERT(current_time <= new_time);
 #endif
 
-   int nb;
-
 #ifdef RECORD_STATS
    tbox::Pointer<tbox::Statistic> num_boxes_l0 =
       tbox::Statistician::getStatistician()->
@@ -1531,8 +1529,6 @@ MblkHyperbolicLevelIntegrator::synchronizeLevelWithCoarser(
    t_advance_bdry_fill_comm->stop();
 
    const double reflux_dt = sync_time - coarse_sim_time;
-
-   int nb;
 
    for (hier::PatchLevel::Iterator mi(mblk_coarse_level); mi; mi++) {
 

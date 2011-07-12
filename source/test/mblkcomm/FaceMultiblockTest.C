@@ -46,9 +46,6 @@ FaceMultiblockTest::FaceMultiblockTest(
       getDatabase("PatchHierarchy")->
       getInteger("max_levels") - 1;
 
-   int num_blocks = main_input_db->getDatabase("BlockGridGeometry")->
-      getInteger("num_blocks");
-
    char geom_name[32];
 
    sprintf(geom_name, "BlockGridGeometry");

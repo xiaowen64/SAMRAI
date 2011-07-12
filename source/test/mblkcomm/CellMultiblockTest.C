@@ -46,8 +46,8 @@ CellMultiblockTest::CellMultiblockTest(
       getDatabase("PatchHierarchy")->
       getInteger("max_levels") - 1;
 
-   int num_blocks = main_input_db->getDatabase("BlockGridGeometry")->
-      getInteger("num_blocks");
+   //int num_blocks = main_input_db->getDatabase("BlockGridGeometry")->
+   //   getInteger("num_blocks");
 
    //d_skel_grid_geometry.resizeArray(num_blocks);
 

@@ -1474,7 +1474,7 @@ void LinAdv::boundaryReset(
 {
    const hier::Index ifirst = patch.getBox().lower();
    const hier::Index ilast = patch.getBox().upper();
-   int i, idir;
+   int idir;
    bool bdry_cell = true;
 
    const tbox::Pointer<geom::CartesianPatchGeometry> patch_geom =
@@ -3119,7 +3119,7 @@ void LinAdv::checkBoundaryData(
 #endif
       int bloc = bbox.getLocationIndex();
 
-      int bscalarcase, refbdryloc;
+      int bscalarcase = 0, refbdryloc = 0;
       if (d_dim == tbox::Dimension(2)) {
          if (btype == Bdry::EDGE2D) {
 #ifdef DEBUG_CHECK_ASSERTIONS
