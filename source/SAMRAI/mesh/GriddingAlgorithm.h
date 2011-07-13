@@ -311,6 +311,16 @@ public:
     * This is an implementation of interface method
     * GriddingAlgorithmStrategy::makeFinerLevel().
     *
+    * The tag buffer indicates the number of cells by which cells
+    * selected for refinement should be buffered before new finer
+    * level boxes are constructed.  All tagged cells should be refined
+    * except where refinement would violate proper nesting.  The
+    * buffer is meant to keep phenomena of interest on refined regions
+    * of the mesh until adaptive regridding occurs next.  Callers of
+    * this method should take into account how the simulation may
+    * evolve before regridding occurs (e.g., number of timesteps
+    * taken) when calculating the tag_buffer.
+    *
     * @param[in] level_time See text.
     *
     * @param[in] initial_time See text.

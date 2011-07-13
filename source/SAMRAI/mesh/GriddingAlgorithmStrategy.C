@@ -23,9 +23,7 @@ namespace mesh {
  *                                                                       *
  *************************************************************************
  */
-GriddingAlgorithmStrategy::GriddingAlgorithmStrategy(
-   const tbox::Pointer<hier::PatchHierarchy> &hierarchy )
-   : d_hierarchy(hierarchy)
+GriddingAlgorithmStrategy::GriddingAlgorithmStrategy()
 {
 }
 
