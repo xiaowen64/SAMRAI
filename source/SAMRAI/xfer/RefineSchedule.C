@@ -3184,8 +3184,6 @@ void RefineSchedule::generateCommunicationSchedule(
 {
    t_gen_comm_sched->start();
 
-   const tbox::Dimension& dim(d_dst_level->getDim());
-
    tbox::Pointer<hier::GridGeometry> grid_geometry(
       d_dst_level->getGridGeometry());
    const int nblocks = grid_geometry->getNumberBlocks();
