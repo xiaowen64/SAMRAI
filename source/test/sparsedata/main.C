@@ -48,9 +48,9 @@ int main(
 
    // Need scope for tester object so it will be destroyed 
    // and cleaned up before SAMRAI finalize is called.
+   int fail_count = 0;
    {
       SparseDataTester tester(dim);
-      int fail_count = 0;
 
       bool success = true;
       if (is_restart) {
