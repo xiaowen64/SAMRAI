@@ -385,16 +385,6 @@ public:
       const bool level_is_coarsest_to_sync = true);
 
    /*!
-    * @brief Return true if error estimation process uses time integration;
-    * otherwise, return false.
-    *
-    * @return true if error estimation process uses time integration;
-    * otherwise, return false.
-    */
-   bool
-   errorEstimationUsesTimeIntegration() const;
-
-   /*!
     * @brief Return pointer to level gridding strategy data member.
     *
     * @return pointer to level gridding strategy data member.

@@ -19,14 +19,6 @@ namespace SAMRAI {
 namespace mesh {
 
 SAMRAI_INLINE_KEYWORD
-bool
-GriddingAlgorithm::errorEstimationUsesTimeIntegration()
-const
-{
-   return d_tag_init_strategy->usesTimeIntegration();
-}
-
-SAMRAI_INLINE_KEYWORD
 tbox::Pointer<TagAndInitializeStrategy>
 GriddingAlgorithm::getTagAndInitializeStrategy() const
 {

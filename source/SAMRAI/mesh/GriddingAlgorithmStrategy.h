@@ -137,17 +137,6 @@ public:
       const bool level_is_coarsest_to_sync = true) = 0;
 
    /*!
-    * @brief Return true if error estimation process uses time integration;
-    * otherwise, return false.
-    *
-    * QUESTION: Will this ever need to be anything other than
-    * getTagAndInitializeStrategy()->usesTimeIntegration() ?  If not,
-    * do we really need this interface?
-    */
-   virtual bool
-   errorEstimationUsesTimeIntegration() const = 0;
-
-   /*!
     * @brief Return pointer to level gridding strategy data member.
     */
    virtual
