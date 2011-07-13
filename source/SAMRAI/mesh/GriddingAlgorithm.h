@@ -35,8 +35,8 @@
 #include <string>
 #include <vector>
 
-#define GA_RECORD_STATS
-// #undef GA_RECORD_STATS
+// #define GA_RECORD_STATS
+#undef GA_RECORD_STATS
 
 #ifdef GA_RECORD_STATS
 #include "SAMRAI/tbox/Statistic.h"
