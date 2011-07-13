@@ -392,8 +392,7 @@ void BergerRigoutsosNode::clusterAndComputeRelationships()
 
          d_common->t_compute->start();
          while (!d_common->relaunch_queue.empty()) {
-            BergerRigoutsosNode* node_for_relaunch =
-               d_common->relaunch_queue.front();
+            BergerRigoutsosNode* node_for_relaunch =  d_common->relaunch_queue.front();
             d_common->relaunch_queue.pop_front();
             if (0) {
                tbox::plog << "Continuing from queue ";
@@ -1238,7 +1237,8 @@ bool BergerRigoutsosNode::runChildren_check()
     */
    delete d_lft_child;
    delete d_rht_child;
-   d_lft_child = d_rht_child = NULL;
+   d_lft_child = 0;
+   d_rht_child = 0;
 
    return true;
 }
