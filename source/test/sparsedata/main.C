@@ -46,8 +46,6 @@ int main(
 
    PIO::logAllNodes(log_name);
 
-   int fail_count = 0;
-
    // Need scope for tester object so it will be destroyed 
    // and cleaned up before SAMRAI finalize is called.
    int fail_count = 0;
