@@ -217,7 +217,8 @@ namespace mesh {
  */
 
 class GriddingAlgorithm:
-      public GriddingAlgorithmStrategy
+      public GriddingAlgorithmStrategy,
+      public tbox::Serializable
 {
 public:
    /*!
