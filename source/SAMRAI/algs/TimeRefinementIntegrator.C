@@ -418,7 +418,7 @@ TimeRefinementIntegrator::initializeRefinedTimesteppingLevelData(
    if (d_patch_hierarchy->levelCanBeRefined(level_number)) {
 
       int buffer;
-      if (d_gridding_algorithm->getTagAndInitializeStrategy()->usesTimeIntegration()) {
+      if (d_gridding_algorithm->errorEstimationUsesTimeIntegration()) {
          buffer = d_regrid_interval[level_number];
       } else {
          buffer = d_tag_buffer[level_number];
@@ -451,7 +451,7 @@ TimeRefinementIntegrator::initializeRefinedTimesteppingLevelData(
           * regridding on the finer level.
           */
          if (d_patch_hierarchy->levelCanBeRefined(level_number + 1) &&
-             d_gridding_algorithm->getTagAndInitializeStrategy()->usesTimeIntegration()) {
+             d_gridding_algorithm->errorEstimationUsesTimeIntegration()) {
 
             if (d_barrier_and_time) {
                t_advance_level->barrierAndStart();
@@ -486,7 +486,7 @@ TimeRefinementIntegrator::initializeRefinedTimesteppingLevelData(
           */
 
          if (d_patch_hierarchy->levelCanBeRefined(level_number + 1) &&
-             d_gridding_algorithm->getTagAndInitializeStrategy()->usesTimeIntegration()) {
+             d_gridding_algorithm->errorEstimationUsesTimeIntegration()) {
             d_refine_level_integrator->
             resetDataToPreadvanceState(patch_level);
          }
@@ -544,7 +544,7 @@ TimeRefinementIntegrator::initializeSynchronizedTimesteppingLevelData(
    if (d_patch_hierarchy->levelCanBeRefined(level_number)) {
 
       int buffer;
-      if (d_gridding_algorithm->getTagAndInitializeStrategy()->usesTimeIntegration()) {
+      if (d_gridding_algorithm->errorEstimationUsesTimeIntegration()) {
          buffer = d_regrid_interval[level_number];
       } else {
          buffer = d_tag_buffer[level_number];
@@ -577,7 +577,7 @@ TimeRefinementIntegrator::initializeSynchronizedTimesteppingLevelData(
           * regridding on the finer level.
           */
          if (d_patch_hierarchy->levelCanBeRefined(level_number + 1) &&
-             d_gridding_algorithm->getTagAndInitializeStrategy()->usesTimeIntegration()) {
+             d_gridding_algorithm->errorEstimationUsesTimeIntegration()) {
 
             if (d_barrier_and_time) {
                t_advance_level->barrierAndStart();
@@ -612,7 +612,7 @@ TimeRefinementIntegrator::initializeSynchronizedTimesteppingLevelData(
           * may require a different initial time increment size.
           */
          if (d_patch_hierarchy->levelCanBeRefined(level_number + 1) &&
-             d_gridding_algorithm->getTagAndInitializeStrategy()->usesTimeIntegration()) {
+             d_gridding_algorithm->errorEstimationUsesTimeIntegration()) {
             d_refine_level_integrator->
             resetDataToPreadvanceState(patch_level);
          }
@@ -901,7 +901,7 @@ void TimeRefinementIntegrator::advanceRecursivelyForRefinedTimestepping(
              * gridding algorithm does not used time integration, reset data
              * on all levels.
              */
-            if (d_gridding_algorithm->getTagAndInitializeStrategy()->usesTimeIntegration()) {
+            if (d_gridding_algorithm->errorEstimationUsesTimeIntegration()) {
                if (!d_patch_hierarchy->
                    levelCanBeRefined(finest_level_number)) {
                   d_refine_level_integrator->resetTimeDependentData(
@@ -937,7 +937,7 @@ void TimeRefinementIntegrator::advanceRecursivelyForRefinedTimestepping(
              */
 
             tbox::Array<double> regrid_start_time;
-            if (!d_gridding_algorithm->getTagAndInitializeStrategy()->usesTimeIntegration()) {
+            if (!d_gridding_algorithm->errorEstimationUsesTimeIntegration()) {
 
                int max_levels = d_patch_hierarchy->getMaxNumberOfLevels();
                regrid_start_time.resizeArray(max_levels);
@@ -1162,7 +1162,7 @@ double TimeRefinementIntegrator::advanceForSynchronizedTimestepping(
        * this is properly done in the level integrator.
        */
 
-      if (d_gridding_algorithm->getTagAndInitializeStrategy()->usesTimeIntegration()) {
+      if (d_gridding_algorithm->errorEstimationUsesTimeIntegration()) {
          if (!d_patch_hierarchy->
              levelCanBeRefined(finest_level_number)) {
             d_refine_level_integrator->resetTimeDependentData(
@@ -1197,7 +1197,7 @@ double TimeRefinementIntegrator::advanceForSynchronizedTimestepping(
        */
 
       tbox::Array<double> regrid_start_time;
-      if (!d_gridding_algorithm->getTagAndInitializeStrategy()->usesTimeIntegration()) {
+      if (!d_gridding_algorithm->errorEstimationUsesTimeIntegration()) {
 
          int max_levels = d_patch_hierarchy->getMaxNumberOfLevels();
          regrid_start_time.resizeArray(max_levels);

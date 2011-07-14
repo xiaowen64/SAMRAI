@@ -724,7 +724,7 @@ MblkHyperbolicLevelIntegrator::initializeLevelIntegrator(
          << "   gridding algorithm has bad error coarsen ratio" << endl);
    }
 
-   if ((gridding_alg->getTagAndInitializeStrategy()->usesTimeIntegration()) &&
+   if ((gridding_alg->errorEstimationUsesTimeIntegration()) &&
        (gridding_alg->getTagAndInitializeStrategy()->getErrorCoarsenRatio() == 3)) {
       d_number_time_data_levels = 3;
       d_old = hier::VariableDatabase::getDatabase()->getContext("OLD");

@@ -35,8 +35,8 @@
 #include <string>
 #include <vector>
 
-// #define GA_RECORD_STATS
-#undef GA_RECORD_STATS
+#define GA_RECORD_STATS
+// #undef GA_RECORD_STATS
 
 #ifdef GA_RECORD_STATS
 #include "SAMRAI/tbox/Statistic.h"
@@ -217,8 +217,7 @@ namespace mesh {
  */
 
 class GriddingAlgorithm:
-      public GriddingAlgorithmStrategy,
-      public tbox::Serializable
+      public GriddingAlgorithmStrategy
 {
 public:
    /*!
@@ -311,16 +310,6 @@ public:
     * This is an implementation of interface method
     * GriddingAlgorithmStrategy::makeFinerLevel().
     *
-    * The tag buffer indicates the number of cells by which cells
-    * selected for refinement should be buffered before new finer
-    * level boxes are constructed.  All tagged cells should be refined
-    * except where refinement would violate proper nesting.  The
-    * buffer is meant to keep phenomena of interest on refined regions
-    * of the mesh until adaptive regridding occurs next.  Callers of
-    * this method should take into account how the simulation may
-    * evolve before regridding occurs (e.g., number of timesteps
-    * taken) when calculating the tag_buffer.
-    *
     * @param[in] level_time See text.
     *
     * @param[in] initial_time See text.
@@ -383,6 +372,16 @@ public:
       const tbox::Array<int>& tag_buffer,
       tbox::Array<double> regrid_start_time = tbox::Array<double>(),
       const bool level_is_coarsest_to_sync = true);
+
+   /*!
+    * @brief Return true if error estimation process uses time integration;
+    * otherwise, return false.
+    *
+    * @return true if error estimation process uses time integration;
+    * otherwise, return false.
+    */
+   bool
+   errorEstimationUsesTimeIntegration() const;
 
    /*!
     * @brief Return pointer to level gridding strategy data member.

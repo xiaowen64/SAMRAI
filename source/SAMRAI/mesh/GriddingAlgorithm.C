@@ -93,7 +93,7 @@ GriddingAlgorithm::GriddingAlgorithm(
    tbox::Pointer<LoadBalanceStrategy> balancer,
    tbox::Pointer<LoadBalanceStrategy> balancer0,
    bool register_for_restart):
-   GriddingAlgorithmStrategy(),
+   GriddingAlgorithmStrategy( hierarchy ),
    d_hierarchy(hierarchy),
    d_connector_width_requestor(),
    d_dim(hierarchy->getDim()),
