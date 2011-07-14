@@ -13,7 +13,7 @@ namespace SAMRAI {
 /*!
   @page package_mesh_multiblock Multiblock Hierarchy Construction and Adaptive Meshing 
 
-  A gridding algorithm is provided for multiblock hierarchies.
+  Special classes for constructing and adapting multiblock hierarchyies:
   - SAMRAI::mesh::MultiblockGriddingTagger
 */
 

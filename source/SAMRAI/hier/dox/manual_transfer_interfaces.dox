@@ -8,16 +8,19 @@
  *
  ************************************************************************/
 namespace SAMRAI {
-   namespace pdat {
+   namespace hier {
 
 /*!
-  @page package_patchdata_operators_time_interpolate_fortran Time Interpolation Numerical Routines
+  @page package_hierarchy_transfer Data transfer interfaces
 
-  The routines that perform time interpolation on standard patch data types
-  are located in the directory
-  @c source/SAMRAI/pdat/fortran.
-  The numerical routines are written in FORTRAN and are called from the
-  appropriate operator classes.
+  These base classes define interfaces through which SAMRAI works with
+  arbitrary refinement, coarsening and time interpolation of data.
+  SAMRAI implementations of these interfaces are in the SAMRAI::xfer
+  package.
+
+  - SAMRAI::hier::CoarsenOperator
+  - SAMRAI::hier::RefineOperator
+  - SAMRAI::hier::TimeInterpolateOperator
 */
 
 }

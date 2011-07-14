@@ -18,8 +18,7 @@ namespace SAMRAI {
   divided into these categories: 
   -# @ref package_transfer_operators "spatial coarsen/refine and time interpolation operator interfaces"
   -# @ref package_transfer_datamovers "classes for moving data between patch levels on an AMR patch hierarchy"
-  -# @ref package_transfer_multiblock "classes for moving data between patch levels on a multiblock AMR patch hierarchy"
- 
+
   All class names in the Transfer package are in the SAMRAI::xfer namespace.
 */
 

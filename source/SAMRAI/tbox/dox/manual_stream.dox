@@ -17,9 +17,6 @@ namespace SAMRAI {
   communication in the SAMRAI library.
 
   - SAMRAI::tbox::MessageStream
-  - SAMRAI::tbox::FileStream
-  - SAMRAI::tbox::MessageStream
-  - SAMRAI::tbox::XDRStream
 */
 
 }

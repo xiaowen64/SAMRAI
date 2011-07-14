@@ -16,7 +16,7 @@ namespace SAMRAI {
 
   The routines that perform spatial refining/coarsening on standard patch 
   data types in Cartesian geometry are located in the directory
-  <TT>SAMRAI/source/geometry/cartesian/operators/fortran</TT>.
+  <TT>source/SAMRAI/geom/fortran</TT>.
   These routines are written in FORTRAN 77 and are invoked from the
   appropriate operator classes.
 */

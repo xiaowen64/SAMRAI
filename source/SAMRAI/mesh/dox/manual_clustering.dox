@@ -18,9 +18,6 @@ namespace SAMRAI {
   some extensions to the algorithm introduced by Berger and Rigoutsos.
   - SAMRAI::mesh::BergerRigoutsos
   - SAMRAI::mesh::BoxGeneratorStrategy
-  - SAMRAI::mesh::HistogramBox
-  - SAMRAI::mesh::AsyncBergerRigoutsos.h
-  - SAMRAI::mesh::AsyncBergerRigoutsosNode.h
 */
 
 }

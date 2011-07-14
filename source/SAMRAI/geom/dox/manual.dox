@@ -21,7 +21,6 @@ namespace SAMRAI {
   mesh description.  Geometry support is divided into three categories:
   -# @ref package_geometry_cartesian "simple Cartesian mesh (grid geometry and operators)"
   -# @ref package_geometry_skeleton "generic 'skeleton' geometry classes"
-  -# @ref package_geometry_multiblock "multiblock geometry classes"
  
   All class names in the Geometry package are in the SAMRAI::geom namespace.
 

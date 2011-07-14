@@ -17,11 +17,12 @@ namespace SAMRAI {
   patch hierarchy definition and management capabilities.  Also,
   base classes for patch data and variables, and variable-data 
   management are found here.  These classes are divided into these categories:
+
   -# @ref package_hierarchy_boxes "index space and box calculus"
   -# @ref package_hierarchy_patches "AMR patch hierarchy structure"
+  -# @ref package_hierarchy_dlbg "Distributed mesh metadata"
   -# @ref package_hierarchy_variables "AMR patch data and variable support"
-  -# @ref package_hierarchy_dlbg "Distributed layered box-graph data"
-  -# @ref package_hierarchy_multiblock "Multiblock AMR patch hierarchy structure"
+  -# @ref package_hierarchy_transfer "Data transfer interfaces"
 
   All class names in the Hierarchy package are in the namespace
   SAMRAI::hier.

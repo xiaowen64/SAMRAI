@@ -16,7 +16,6 @@ namespace SAMRAI {
   These classes handle the copying of data between different blocks in a
   multiblock domain.  Each block has its own index space, so patches must
   be rotated and shifted to create a mapping from one index space to the other.
-  - SAMRAI::pdat::MBDataUtilities
   - SAMRAI::pdat::MultiblockCellDataTranslator 
   - SAMRAI::pdat::MultiblockEdgeDataTranslator 
   - SAMRAI::pdat::MultiblockFaceDataTranslator 

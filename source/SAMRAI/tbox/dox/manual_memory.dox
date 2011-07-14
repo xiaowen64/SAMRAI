@@ -18,7 +18,6 @@ namespace SAMRAI {
   - SAMRAI::tbox::Array
   - SAMRAI::tbox::ConstPointer
   - SAMRAI::tbox::ConstPointerBase
-  - SAMRAI::tbox::DescribedClass
   - SAMRAI::tbox::MemoryUtilities
   - SAMRAI::tbox::Pointer
   - SAMRAI::tbox::PointerBase

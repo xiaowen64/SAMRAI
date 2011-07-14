@@ -14,7 +14,7 @@ namespace SAMRAI {
 
   Macros and basic debugging support to facilitate the interaction of 
   SAMRAI data management (in C++) with FORTRAN numerical routines 
-  are located in the directory <TT>SAMRAI/source/patchdata/fortran</TT>.
+  are located in the directory <TT>source/SAMRAI/pdat/patchdata/fortran</TT>.
 */
 
 }

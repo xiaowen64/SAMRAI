@@ -25,7 +25,7 @@
  * implement complex as a double complex.  dcomplex is used to hide this
  * platform issue behind a typedef.
  *
- * NOTE: This should be removed when no longer required.
+ * @internal NOTE: This should be removed when no longer required.
  *
  */
 

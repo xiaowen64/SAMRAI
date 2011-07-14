@@ -29,8 +29,9 @@ namespace SAMRAI {
   amount of work needed to update the solution in the cell).  In addition, 
   load balancing routines attempt to assign patches near each other in 
   space to the same processor when possible.
-  - SAMRAI::mesh::LoadBalancer
+  - SAMRAI::mesh::ChopAndPackLoadBalancer
   - SAMRAI::mesh::LoadBalanceStrategy
+  - SAMRAI::mesh::TreeLoadBalancer
   - SAMRAI::mesh::BalanceUtilities
   - SAMRAI::mesh::SpatialKey
 */

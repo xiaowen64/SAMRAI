@@ -17,12 +17,9 @@ namespace SAMRAI {
   AMR index space.  A box consists of an upper and lower index and represents
   a rectangular region of index space.
   - SAMRAI::hier::Box
-  - SAMRAI::hier::BoxArray
-  - SAMRAI::hier::BoxGraphUtilities
+  - SAMRAI::hier::BoxContainer
   - SAMRAI::hier::BoxIOUtility
   - SAMRAI::hier::BoxList
-  - SAMRAI::hier::BoxTree
-  - SAMRAI::hier::BoxTreeNode
   - SAMRAI::hier::BoxUtilities
   - SAMRAI::hier::Index
   - SAMRAI::hier::IntVector

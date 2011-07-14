@@ -1029,6 +1029,7 @@ INCLUDE_FILE_PATTERNS  =
 # instead of the = operator.
 
 PREDEFINED             = NDIM=3 \
+                         HAVE_SILO \
                          HAVE_SUNDIALS \
                          HAVE_HYPRE \
                          HAVE_PETSC \
