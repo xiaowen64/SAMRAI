@@ -11,7 +11,7 @@
 ****************************************************************************
 *    For installation help, see INSTALL-NOTES.                             *
 *    For release notes, see RELEASE-NOTES.                                 *
-*    For copyright information, see COPYRIGHT-STATEMENT.                   *
+*    For copyright information, see COPYRIGHT and COPYING.LESSER.          *
 *    For code and user documentation, see files in /docs directory         *
 *    For help and information about updates and releases, please send      *
 *        email to samrai@llnl.gov                                          *
@@ -132,13 +132,10 @@ configuration options.
 The configuration script will create a number of files in the ``objs'' object
 directory, including config, include, lib, and source directories.  The source
 directory contains Makefiles that will be used to compile the SAMRAI code.  The
-config and include subdirectories contain the following files:
+config and include subdirectories contain the following file paths:
 
-		objs/
-			config/
-				Makefile.config
-			include/
-				SAMRAI_config.h
+		config/Makefile.config
+		include/SAMRAI/SAMRAI_config.h
 
 These two files contain the configuration information required for the SAMRAI
 build.  You may edit these files to fix options that were incorrectly set by
@@ -157,11 +154,6 @@ only those sections for a specified problem dimension.
 
 	(a) cd objs
 	(b) gmake library
-
-or
-
-	(a) cd objs
-	(b) gmake lib2d lib3d
 
 Get a cup of coffee.  Go watch ``The Simpsons.''  Compiling all of the
 SAMRAI distribution will take from twenty minutes to well over an hour, unless
@@ -338,7 +330,7 @@ MPICH2          1.0.7    (MPICH1 is no longer supported and
 
 OpenMPI	        1.2.8
 
-PETSc 	        2.3.3    (this version is required)
+PETSc 	        2.3.3    (this version is required if PETSc is used)
 
 Sundials        2.3.0
 
@@ -346,7 +338,7 @@ hypre           2.2.0b, 2.6.0b
 
 Visit		1.8.0
 
-doxygen	        1.5.1
+doxygen	        1.5.7
 
 graphviz	2.6
 
