@@ -415,9 +415,6 @@ MappedBoxTree::MappedBoxTree(
          }
       }
 
-      // Free memory so it doesn't sit around during recursion in setupChildren.
-      mapped_boxes.clear();
-
       setupChildren(min_number, left_mapped_boxes, right_mapped_boxes);
 
    }
