@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   utility routines useful for load balancing operations 
+ * Description:   utility routines useful for load balancing operations
  *
  ************************************************************************/
 
@@ -1108,6 +1108,7 @@ double BalanceUtilities::spatialBinPack(
    for (hier::BoxList::Iterator itr(boxes); itr; itr++) {
       *itr = unsorted_boxes[permutation[i]];
       weights[i] = unsorted_weights[permutation[i]];
+      ++i;
    }
 
 #ifdef DEBUG_CHECK_ASSERTIONS
