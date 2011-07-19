@@ -18419,7 +18419,7 @@ if test "${hypre_PREFIX+set}" = set ; then
     test -n "${hypre_PREFIX}" && hypre_INCLUDES="-I${hypre_PREFIX}/include"
   fi
   if test ! "${hypre_LIBS+set}" = set ; then
-    hypre_LIBS='-lHYPRE_sstruct_ls -lHYPRE_sstruct_mv -lHYPRE_struct_ls -lHYPRE_struct_mv -lHYPRE_parcsr_ls -lHYPRE_DistributedMatrixPilutSolver -lHYPRE_ParaSails -lHYPRE_Euclid -lHYPRE_MatrixMatrix -lHYPRE_DistributedMatrix -lHYPRE_IJ_mv -lHYPRE_parcsr_mv -lHYPRE_seq_mv -lHYPRE_krylov -lHYPRE_utilities'
+    hypre_LIBS='-lHYPRE'
     if test -n "${hypre_PREFIX}" ; then
       for i in ${hypre_LIBS} ; do
 	tmp_name=`echo $i | sed 's/^-l//'`

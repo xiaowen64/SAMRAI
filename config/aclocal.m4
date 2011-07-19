@@ -4562,7 +4562,7 @@ if test "${$1+set}" = set ; then
     test -n "${$1}" && $2="-I${$1}/include"
   fi
   if test ! "${$3+set}" = set ; then
-    $3='-lHYPRE_sstruct_ls -lHYPRE_sstruct_mv -lHYPRE_struct_ls -lHYPRE_struct_mv -lHYPRE_parcsr_ls -lHYPRE_DistributedMatrixPilutSolver -lHYPRE_ParaSails -lHYPRE_Euclid -lHYPRE_MatrixMatrix -lHYPRE_DistributedMatrix -lHYPRE_IJ_mv -lHYPRE_parcsr_mv -lHYPRE_seq_mv -lHYPRE_krylov -lHYPRE_utilities'
+    $3='-lHYPRE'
     if test -n "${$1}" ; then
       for i in ${$3} ; do
 	tmp_name=`echo $i | sed 's/^-l//'`
