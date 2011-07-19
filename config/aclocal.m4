@@ -14,7 +14,7 @@
 dnl File arg-with-environment.m4
 dnl Written by Brian T.N. Gunney
 dnl gunneyb@llnl.gov
-dnl $Id: arg-with-environment.m4 155 2007-05-14 22:09:31Z gunney $
+dnl $Id$
 
 dnl IMPORTANT NOTE: This macro was originally written to
 dnl let configure macros check environments so that developers
@@ -239,140 +239,7 @@ BTNG_AC_LOG(environment $2 not defined)
 
 
 
-# ===========================================================================
-#           http://www.nongnu.org/autoconf-archive/check_zlib.html
-# ===========================================================================
-#
-# SYNOPSIS
-#
-#   CHECK_ZLIB()
-#
-# DESCRIPTION
-#
-#   This macro searches for an installed zlib library. If nothing was
-#   specified when calling configure, it searches first in /usr/local and
-#   then in /usr. If the --with-zlib=DIR is specified, it will try to find
-#   it in DIR/include/zlib.h and DIR/lib/libz.a. If --without-zlib is
-#   specified, the library is not searched at all.
-#
-#   If either the header file (zlib.h) or the library (libz) is not found,
-#   the configuration exits on error, asking for a valid zlib installation
-#   directory or --without-zlib.
-#
-#   The macro defines the symbol HAVE_LIBZ if the library is found. You
-#   should use autoheader to include a definition for this symbol in a
-#   config.h file. Sample usage in a C/C++ source is as follows:
-#
-#     #ifdef HAVE_LIBZ
-#     #include <zlib.h>
-#     #endif /* HAVE_LIBZ */
-#
-# LICENSE
-#
-#   Copyright (c) 2008 Loic Dachary <loic@senga.org>
-#
-#   This program is free software; you can redistribute it and/or modify it
-#   under the terms of the GNU General Public License as published by the
-#   Free Software Foundation; either version 2 of the License, or (at your
-#   option) any later version.
-#
-#   This program is distributed in the hope that it will be useful, but
-#   WITHOUT ANY WARRANTY; without even the implied warranty of
-#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General
-#   Public License for more details.
-#
-#   You should have received a copy of the GNU General Public License along
-#   with this program. If not, see <http://www.gnu.org/licenses/>.
-#
-#   As a special exception, the respective Autoconf Macro's copyright owner
-#   gives unlimited permission to copy, distribute and modify the configure
-#   scripts that are the output of Autoconf when processing the Macro. You
-#   need not follow the terms of the GNU General Public License when using
-#   or distributing such scripts, even though portions of the text of the
-#   Macro appear in them. The GNU General Public License (GPL) does govern
-#   all other use of the material that constitutes the Autoconf Macro.
-#
-#   This special exception to the GPL applies to versions of the Autoconf
-#   Macro released by the Autoconf Archive. When you make and distribute a
-#   modified version of the Autoconf Macro, you may extend this special
-#   exception to the GPL to apply to your modified version as well.
-
-AC_DEFUN([CHECK_ZLIB],
-#
-# DEFINES :
-#	        zlib_PREFIX
-#		zlib_INCLUDES
-#		zlib_LIBS
-#
-[AC_MSG_CHECKING(if zlib is wanted)
-AC_ARG_WITH(zlib,
-[  --with-zlib=DIR root directory path of zlib installation [DIR defaults to
-                    /usr/local or /usr if not found in /usr/local]
-  --without-zlib to disable zlib usage completely [the default]],
-[if test "$withval" != no ; then
-  AC_MSG_RESULT(yes)
-  if test "$withval" == yes ;
-  then
-     ZLIB_HOME=/usr/local
-  else
-     ZLIB_HOME="$withval"
-  fi
-  if test ! -d "$ZLIB_HOME"
-  then
-    AC_MSG_WARN([Sorry, $ZLIB_HOME does not exist, checking usual places])
-    ZLIB_HOME=/usr/local
-    if test ! -f "${ZLIB_HOME}/include/zlib.h"
-    then
-       ZLIB_HOME=/usr
-    fi
-  fi
-else
-  AC_MSG_RESULT(no)
-fi],
-  [AC_MSG_RESULT(no)]
-)
-
-
-#
-# Locate zlib, if wanted
-#
-if test -n "${ZLIB_HOME}"
-then
-        ZLIB_OLD_LDFLAGS=$LDFLAGS
-        ZLIB_OLD_CPPFLAGS=$LDFLAGS
-        LDFLAGS="$LDFLAGS -L${ZLIB_HOME}/lib"
-        CPPFLAGS="$CPPFLAGS -I${ZLIB_HOME}/include"
-        AC_LANG_SAVE
-        AC_LANG_C
-        AC_CHECK_LIB(z, inflateEnd, [zlib_cv_libz=yes], [zlib_cv_libz=no])
-        AC_CHECK_HEADER(zlib.h, [zlib_cv_zlib_h=yes], [zlib_cv_zlib_h=no])
-        AC_LANG_RESTORE
-        if test "$zlib_cv_libz" = "yes" -a "$zlib_cv_zlib_h" = "yes"
-        then
-	        zlib_PREFIX="${ZLIB_HOME}"
-		zlib_INCLUDES="-I${ZLIB_HOME}/include"
-		zlib_LIBS="-L${ZLIB_HOME}/lib -lz"
-                #
-                # If both library and header were found, use them
-                #
-                AC_CHECK_LIB(z, inflateEnd)
-                AC_MSG_CHECKING(zlib in ${ZLIB_HOME})
-                AC_MSG_RESULT(ok)
-        else
-                #
-                # If either header or library was not found, revert and bomb
-                #
-                AC_MSG_CHECKING(zlib in ${ZLIB_HOME})
-                LDFLAGS="$ZLIB_OLD_LDFLAGS"
-                CPPFLAGS="$ZLIB_OLD_CPPFLAGS"
-                AC_MSG_RESULT(failed)
-                AC_MSG_ERROR(either specify a valid zlib installation with --with-zlib=DIR or disable zlib usage with --without-zlib)
-        fi
-fi
-
-])
-
-dnl $Id: compiler-id.m4 155 2007-05-14 22:09:31Z gunney $
+dnl $Id$
 
 dnl Determines which compiler is being used.
 dnl This check uses the compiler behavior when possible.
@@ -682,7 +549,7 @@ yes;
 # End macro BTNG_INFO_CC_ID_NAMES
 ])
 
-dnl $Id: compiling-boolean.m4 155 2007-05-14 22:09:31Z gunney $
+dnl $Id$
 
 
 AC_DEFUN([BTNG_TYPE_BOOL],[
@@ -719,7 +586,7 @@ fi
 
 ])	dnl End of COMPILE_BOOLEAN_MACRO definition.
 
-dnl $Id: compiling-namespace.m4 155 2007-05-14 22:09:31Z gunney $
+dnl $Id$
 
 
 
@@ -788,7 +655,7 @@ done
 undefine([btng_log_label])
 ])
 
-dnl $Id: support-blas.m4 155 2007-05-14 22:09:31Z gunney $
+dnl $Id$
 
 AC_DEFUN([BTNG_VAR_SET_BLAS],[
 dnl Provides support for the blas library.
@@ -887,7 +754,7 @@ BTNG_AC_LOG_VAR(blas_PREFIX blas_INCLUDES blas_LIBS)
 ])
 
 dnl Define macros for supporting HDF5.
-dnl $Id: support-dl.m4 155 2007-05-14 22:09:31Z gunney $
+dnl $Id$
 
 AC_DEFUN([BTNG_VAR_SET_DL],[
 dnl Provides support for the dl (dynamic loading) library.
@@ -975,7 +842,7 @@ BTNG_VAR_SET_DL(dl_PREFIX,dl_INCLUDES,dl_LIBS)
 # End macro BTNG_SUPPORT_DL
 ])
 
-dnl $Id: support-hypre.m4 369 2010-11-01 17:04:28Z smithsg $
+dnl $Id$
 
 dnl Define macros for supporting HYPRE.
 
@@ -1048,24 +915,23 @@ if test "${$1+set}" = set ; then
     test -n "${$1}" && $2="-I${$1}/include"
   fi
   if test ! "${$3+set}" = set ; then
-    hypre_libs_found=
-    hypre_libs_test='-lHYPRE -lHYPRE_sstruct_ls -lHYPRE_sstruct_mv -lHYPRE_struct_ls -lHYPRE_struct_mv -lHYPRE_parcsr_ls -lHYPRE_DistributedMatrixPilutSolver -lHYPRE_ParaSails -lHYPRE_Euclid -lHYPRE_MatrixMatrix -lHYPRE_DistributedMatrix -lHYPRE_IJ_mv -lHYPRE_parcsr_mv -lHYPRE_seq_mv -lHYPRE_krylov -lHYPRE_utilities'
+    $3='-lHYPRE_sstruct_ls -lHYPRE_sstruct_mv -lHYPRE_struct_ls -lHYPRE_struct_mv -lHYPRE_parcsr_ls -lHYPRE_DistributedMatrixPilutSolver -lHYPRE_ParaSails -lHYPRE_Euclid -lHYPRE_MatrixMatrix -lHYPRE_DistributedMatrix -lHYPRE_IJ_mv -lHYPRE_parcsr_mv -lHYPRE_seq_mv -lHYPRE_krylov -lHYPRE_utilities'
     if test -n "${$1}" ; then
-      for i in $hypre_libs_test ; do
+      for i in ${$3} ; do
 	tmp_name=`echo $i | sed 's/^-l//'`
-        if test -f "${$1}/lib/lib${tmp_name}.a" || \
-          test -f "${$1}/lib/lib${tmp_name}.so"; then
-	  hypre_libs_found="$hypre_libs_found $i"
+        if test ! -f "${$1}/lib/lib${tmp_name}.a" && \
+          test ! -f "${$1}/lib/lib${tmp_name}.so"; then
+          AC_MSG_WARN(Library file for ${tmp_name} is missing from ${$1}/lib.)
         fi
       done
-      $3="-L${$1}/lib ${hypre_libs_found}"
+      $3="-L${$1}/lib ${$3}"
     fi
   fi
 fi
 # End macro BTNG_VAR_SET_HYPRE
 ])dnl
 
-dnl $Id: support-ieee-float.m4 155 2007-05-14 22:09:31Z gunney $
+dnl $Id$
 
 AC_DEFUN([BTNG_C_IEEE_FLOAT],[
 dnl Check on certain declarations in the float.h file:
@@ -1130,7 +996,7 @@ BTNG_AC_LOG(["DBL_MAX is ok (in float.h)"])
 # End macro BTNG_IEEE_FLOAT
 ])dnl
 
-dnl $Id: support-lapack.m4 155 2007-05-14 22:09:31Z gunney $
+dnl $Id$
 
 AC_DEFUN([BTNG_VAR_SET_LAPACK],[
 dnl Provides support for the lapack library.
@@ -1227,7 +1093,7 @@ BTNG_AC_LOG_VAR(lapack_PREFIX lapack_INCLUDES lapack_LIBS)
 # End macro BTNG_SUPPORT_LAPACK
 ])
 
-dnl $Id: support-nsl.m4 155 2007-05-14 22:09:31Z gunney $
+dnl $Id$
 
 AC_DEFUN([BTNG_VAR_SET_NSL],[
 dnl Provides support for the nsl library.
@@ -1314,7 +1180,7 @@ BTNG_VAR_SET_NSL(nsl_PREFIX,nsl_INCLUDES,nsl_LIBS)
 # End macro BTNG_SUPPORT_NSL
 ])
 
-dnl $Id: support-petsc.m4 305 2007-12-04 17:03:07Z smithsg $
+dnl $Id$
 
 AC_DEFUN([BTNG_SUPPORT_PETSC],[
 # Begin macro SUPPORT_PETSC
@@ -1486,7 +1352,7 @@ fi
 # End macro SUPPORT_PETSC
 ])
 
-dnl $Id: support-restrict.m4 155 2007-05-14 22:09:31Z gunney $
+dnl $Id$
 
 
 
@@ -1537,7 +1403,7 @@ fi
 
 ])	dnl End of BTNG_C_RESTRICT definition.
 
-dnl $Id: support-rpath.m4 333 2008-02-08 00:36:14Z smithsg $
+dnl $Id$
 
 
 AC_DEFUN([BTNG_LIBS_ADD_RPATH],[
@@ -1734,7 +1600,7 @@ undefine([btng_possible_rpaths])
 ])
 
 dnl Define macros for supporting z compression library.
-dnl $Id: support-spooles.m4 155 2007-05-14 22:09:31Z gunney $
+dnl $Id$
 
 
 AC_DEFUN([BTNG_SUPPORT_SPOOLES],[
@@ -1784,7 +1650,7 @@ BTNG_AC_LOG_VAR(spooles_PREFIX spooles_LIBS spooles_INCLUDES)
 # End macro BTNG_SUPPORT_SPOOLES
 ])
 
-dnl $Id: variable-header-filenames.m4 155 2007-05-14 22:09:31Z gunney $
+dnl $Id$
 
 AC_DEFUN([BTNG_FIND_CORRECT_HEADER_FILENAME],[
 dnl There is no standard naming convention for STL header files.
