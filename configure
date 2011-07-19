@@ -4685,7 +4685,7 @@ $as_echo "$ac_cv_path_EGREP" >&6; }
 
 
 
-# Start macro BTNG_INFO_CC_ID_NAMES
+# Start macro CASC_INFO_CC_ID_NAMES
 
 
   ac_ext=c
@@ -4915,7 +4915,7 @@ for btng_log_vars_index in $btng_log_vars ; do
 done
 
 
-# End macro BTNG_INFO_CC_ID_NAMES
+# End macro CASC_INFO_CC_ID_NAMES
 
 
 ac_ext=cpp
@@ -5154,7 +5154,7 @@ ac_compiler_gnu=$ac_cv_c_compiler_gnu
 
 
 
-# Start macro BTNG_INFO_CXX_ID_NAMES
+# Start macro CASC_INFO_CXX_ID_NAMES
 
 
   ac_ext=cpp
@@ -5375,7 +5375,7 @@ for btng_log_vars_index in $btng_log_vars ; do
 done
 
 
-# End macro BTNG_INFO_CXX_ID_NAMES
+# End macro CASC_INFO_CXX_ID_NAMES
 
 
 
@@ -10653,7 +10653,7 @@ fi
 
 
 
-# Start macro BTNG_ARG_WITH_ENV_WRAPPER with args doxygen and DOXYGEN_BIN
+# Start macro CASC_ARG_WITH_ENV_WRAPPER with args doxygen and DOXYGEN_BIN
 { $as_echo "$as_me:$LINENO: checking for doxygen" >&5
 $as_echo_n "checking for doxygen... " >&6; }
 if test "${btng_cv_prog_doxygen+set}" = set; then
@@ -10718,7 +10718,7 @@ if test "${btng_cv_prog_doxygen+set}" = set ; then
 else
   unset DOXYGEN_BIN
 fi
-# End macro BTNG_ARG_WITH_ENV_WRAPPER with args DOXYGEN_BIN and doxygen
+# End macro CASC_ARG_WITH_ENV_WRAPPER with args DOXYGEN_BIN and doxygen
 if test "${DOXYGEN_BIN+set}" = set; then
   # Extract the first word of "doxygen", so it can be a program name with args.
 set dummy doxygen; ac_word=$2
@@ -10857,7 +10857,7 @@ fi
 
 
 
-# Start macro BTNG_ARG_WITH_ENV_WRAPPER with args perl and SAMRAI_PERL
+# Start macro CASC_ARG_WITH_ENV_WRAPPER with args perl and SAMRAI_PERL
 { $as_echo "$as_me:$LINENO: checking for perl" >&5
 $as_echo_n "checking for perl... " >&6; }
 if test "${btng_cv_prog_perl+set}" = set; then
@@ -10922,7 +10922,7 @@ if test "${btng_cv_prog_perl+set}" = set ; then
 else
   unset SAMRAI_PERL
 fi
-# End macro BTNG_ARG_WITH_ENV_WRAPPER with args SAMRAI_PERL and perl
+# End macro CASC_ARG_WITH_ENV_WRAPPER with args SAMRAI_PERL and perl
 if test "${SAMRAI_PERL+set}" = set; then
   # Extract the first word of "perl", so it can be a program name with args.
 set dummy perl; ac_word=$2
@@ -11020,7 +11020,7 @@ echo "configure:11019:" end stringize >&5
 
 
 
-# Start macro BTNG_C_RESTRICT
+# Start macro CASC_C_RESTRICT
 
 { $as_echo "$as_me:$LINENO: checking checking whether restrict is broken" >&5
 $as_echo_n "checking checking whether restrict is broken... " >&6; }
@@ -11127,13 +11127,13 @@ _ACEOF
 fi
 
 
-# End macro BTNG_C_RESTRICT
+# End macro CASC_C_RESTRICT
 
 
 
 
 
-# Start macro BTNG_TYPE_NAMESPACE
+# Start macro CASC_TYPE_NAMESPACE
 
 { $as_echo "$as_me:$LINENO: checking whether namespace is broken" >&5
 $as_echo_n "checking whether namespace is broken... " >&6; }
@@ -11226,12 +11226,12 @@ _ACEOF
 fi
 
 
-# End macro BTNG_TYPE_NAMESPACE
+# End macro CASC_TYPE_NAMESPACE
 
 
 
 
-# Start macro BTNG_TYPE_BOOL
+# Start macro CASC_TYPE_BOOL
 
 { $as_echo "$as_me:$LINENO: checking checking whether bool type is broken" >&5
 $as_echo_n "checking checking whether bool type is broken... " >&6; }
@@ -11325,13 +11325,13 @@ _ACEOF
 fi
 
 
-# End macro BTNG_TYPE_BOOL
+# End macro CASC_TYPE_BOOL
 
 
 
-# Start macro BTNG_IOSTREAM_HEADER_FILENAME
+# Start macro CASC_IOSTREAM_HEADER_FILENAME
 
-# Start macro BTNG_TREAT_VARIABLE_HEADER_FILENAME
+# Start macro CASC_TREAT_VARIABLE_HEADER_FILENAME
 if test "${btng_cv_iostream_header_filename+set}" = set; then
   $as_echo_n "(cached) " >&6
 else
@@ -11342,7 +11342,7 @@ if test "${with_iostream_header_file+set}" = set; then
   withval=$with_iostream_header_file; btng_cv_iostream_header_filename=$with_iostream_header_file
 else
 
-# Start macro BTNG_FIND_CORRECT_HEADER_FILENAME
+# Start macro CASC_FIND_CORRECT_HEADER_FILENAME
 
   ac_ext=cpp
 ac_cpp='$CXXCPP $CPPFLAGS'
@@ -11508,7 +11508,7 @@ cat confdefs.h >>conftest.$ac_ext
 cat >>conftest.$ac_ext <<_ACEOF
 /* end confdefs.h.  */
 
-/* macro BTNG_FIND_CORRECT_HEADER_FILENAME checking for $file */
+/* macro CASC_FIND_CORRECT_HEADER_FILENAME checking for $file */
 #ifdef BOOL_IS_BROKEN
 typedef int bool;
 #define true 1
@@ -11580,7 +11580,7 @@ ac_link='$CC -o conftest$ac_exeext $CFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $
 ac_compiler_gnu=$ac_cv_c_compiler_gnu
 
   CPPFLAGS=$CPPFLAGS_SAVE
-# End macro BTNG_FIND_CORRECT_HEADER_FILENAME
+# End macro CASC_FIND_CORRECT_HEADER_FILENAME
 
 
 fi
@@ -11616,15 +11616,15 @@ _ACEOF
 
   echo "configure:11617:" header file iostream is ok >&5
 fi
-# End macro BTNG_TREAT_VARIABLE_HEADER_FILENAME
+# End macro CASC_TREAT_VARIABLE_HEADER_FILENAME
 
-# End macro BTNG_IOSTREAM_HEADER_FILENAME
-
-
-# Start macro BTNG_IOMANIP_HEADER_FILENAME
+# End macro CASC_IOSTREAM_HEADER_FILENAME
 
 
-# Start macro BTNG_TREAT_VARIABLE_HEADER_FILENAME
+# Start macro CASC_IOMANIP_HEADER_FILENAME
+
+
+# Start macro CASC_TREAT_VARIABLE_HEADER_FILENAME
 if test "${btng_cv_iomanip_header_filename+set}" = set; then
   $as_echo_n "(cached) " >&6
 else
@@ -11635,7 +11635,7 @@ if test "${with_iomanip_header_file+set}" = set; then
   withval=$with_iomanip_header_file; btng_cv_iomanip_header_filename=$with_iomanip_header_file
 else
 
-# Start macro BTNG_FIND_CORRECT_HEADER_FILENAME
+# Start macro CASC_FIND_CORRECT_HEADER_FILENAME
 
   ac_ext=cpp
 ac_cpp='$CXXCPP $CPPFLAGS'
@@ -11801,7 +11801,7 @@ cat confdefs.h >>conftest.$ac_ext
 cat >>conftest.$ac_ext <<_ACEOF
 /* end confdefs.h.  */
 
-/* macro BTNG_FIND_CORRECT_HEADER_FILENAME checking for $file */
+/* macro CASC_FIND_CORRECT_HEADER_FILENAME checking for $file */
 #ifdef BOOL_IS_BROKEN
 typedef int bool;
 #define true 1
@@ -11870,7 +11870,7 @@ ac_link='$CC -o conftest$ac_exeext $CFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $
 ac_compiler_gnu=$ac_cv_c_compiler_gnu
 
   CPPFLAGS=$CPPFLAGS_SAVE
-# End macro BTNG_FIND_CORRECT_HEADER_FILENAME
+# End macro CASC_FIND_CORRECT_HEADER_FILENAME
 
 
 fi
@@ -11906,15 +11906,15 @@ _ACEOF
 
   echo "configure:11907:" header file iomanip is ok >&5
 fi
-# End macro BTNG_TREAT_VARIABLE_HEADER_FILENAME
+# End macro CASC_TREAT_VARIABLE_HEADER_FILENAME
 
-# End macro BTNG_IOMANIP_HEADER_FILENAME
+# End macro CASC_IOMANIP_HEADER_FILENAME
 
 
 
-# Start macro BTNG_IOSTREAM_HEADER_FILENAME
+# Start macro CASC_IOSTREAM_HEADER_FILENAME
 
-# Start macro BTNG_TREAT_VARIABLE_HEADER_FILENAME
+# Start macro CASC_TREAT_VARIABLE_HEADER_FILENAME
 if test "${btng_cv_iostream_header_filename+set}" = set; then
   $as_echo_n "(cached) " >&6
 else
@@ -11925,7 +11925,7 @@ if test "${with_iostream_header_file+set}" = set; then
   withval=$with_iostream_header_file; btng_cv_iostream_header_filename=$with_iostream_header_file
 else
 
-# Start macro BTNG_FIND_CORRECT_HEADER_FILENAME
+# Start macro CASC_FIND_CORRECT_HEADER_FILENAME
 
   ac_ext=cpp
 ac_cpp='$CXXCPP $CPPFLAGS'
@@ -12091,7 +12091,7 @@ cat confdefs.h >>conftest.$ac_ext
 cat >>conftest.$ac_ext <<_ACEOF
 /* end confdefs.h.  */
 
-/* macro BTNG_FIND_CORRECT_HEADER_FILENAME checking for $file */
+/* macro CASC_FIND_CORRECT_HEADER_FILENAME checking for $file */
 #ifdef BOOL_IS_BROKEN
 typedef int bool;
 #define true 1
@@ -12163,7 +12163,7 @@ ac_link='$CC -o conftest$ac_exeext $CFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $
 ac_compiler_gnu=$ac_cv_c_compiler_gnu
 
   CPPFLAGS=$CPPFLAGS_SAVE
-# End macro BTNG_FIND_CORRECT_HEADER_FILENAME
+# End macro CASC_FIND_CORRECT_HEADER_FILENAME
 
 
 fi
@@ -12199,20 +12199,20 @@ _ACEOF
 
   echo "configure:12200:" header file iostream is ok >&5
 fi
-# End macro BTNG_TREAT_VARIABLE_HEADER_FILENAME
+# End macro CASC_TREAT_VARIABLE_HEADER_FILENAME
 
-# End macro BTNG_IOSTREAM_HEADER_FILENAME
+# End macro CASC_IOSTREAM_HEADER_FILENAME
 
 
 
-# Start macro BTNG_STL_SSTREAM_HEADER_FILENAME
+# Start macro CASC_STL_SSTREAM_HEADER_FILENAME
 btng_stl_sstream_test_body='/* New syntax */ istringstream ist("a string");'
 test "$CXX_ID" = "sunpro" && echo "$CXX_VERSION" | grep '^0x420' > /dev/null && \
 btng_stl_sstream_test_body='/* Old syntax */ char i[10]; istrstream ist(i);'
 test "$CXX_ID" = "gnu" && echo "$CXX_VERSION" | grep '^2.95.2' > /dev/null && \
 btng_stl_sstream_test_body='/* Old syntax */ char i[10]; istrstream ist(i);'
 
-# Start macro BTNG_TREAT_VARIABLE_HEADER_FILENAME
+# Start macro CASC_TREAT_VARIABLE_HEADER_FILENAME
 if test "${btng_cv_stl_sstream_header_filename+set}" = set; then
   $as_echo_n "(cached) " >&6
 else
@@ -12223,7 +12223,7 @@ if test "${with_stl_sstream_header_file+set}" = set; then
   withval=$with_stl_sstream_header_file; btng_cv_stl_sstream_header_filename=$with_stl_sstream_header_file
 else
 
-# Start macro BTNG_FIND_CORRECT_HEADER_FILENAME
+# Start macro CASC_FIND_CORRECT_HEADER_FILENAME
 
   ac_ext=cpp
 ac_cpp='$CXXCPP $CPPFLAGS'
@@ -12389,7 +12389,7 @@ cat confdefs.h >>conftest.$ac_ext
 cat >>conftest.$ac_ext <<_ACEOF
 /* end confdefs.h.  */
 
-/* macro BTNG_FIND_CORRECT_HEADER_FILENAME checking for $file */
+/* macro CASC_FIND_CORRECT_HEADER_FILENAME checking for $file */
 #ifdef BOOL_IS_BROKEN
 typedef int bool;
 #define true 1
@@ -12458,7 +12458,7 @@ ac_link='$CC -o conftest$ac_exeext $CFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $
 ac_compiler_gnu=$ac_cv_c_compiler_gnu
 
   CPPFLAGS=$CPPFLAGS_SAVE
-# End macro BTNG_FIND_CORRECT_HEADER_FILENAME
+# End macro CASC_FIND_CORRECT_HEADER_FILENAME
 
 
 fi
@@ -12494,9 +12494,9 @@ _ACEOF
 
   echo "configure:12495:" header file stl-sstream is ok >&5
 fi
-# End macro BTNG_TREAT_VARIABLE_HEADER_FILENAME
+# End macro CASC_TREAT_VARIABLE_HEADER_FILENAME
 
-# End macro BTNG_STL_SSTREAM_HEADER_FILENAME
+# End macro CASC_STL_SSTREAM_HEADER_FILENAME
 
 ac_ext=cpp
 ac_cpp='$CXXCPP $CPPFLAGS'
@@ -12506,7 +12506,7 @@ ac_compiler_gnu=$ac_cv_cxx_compiler_gnu
 
 
 
-# Start macro BTNG_TYPE_NAMESPACE
+# Start macro CASC_TYPE_NAMESPACE
 
 { $as_echo "$as_me:$LINENO: checking whether namespace is broken" >&5
 $as_echo_n "checking whether namespace is broken... " >&6; }
@@ -12599,7 +12599,7 @@ _ACEOF
 fi
 
 
-# End macro BTNG_TYPE_NAMESPACE
+# End macro CASC_TYPE_NAMESPACE
 
 
 { $as_echo "$as_me:$LINENO: checking type ostringstream" >&5
@@ -13277,10 +13277,10 @@ _ACEOF
 
 
 
-# Begin macro BTNG_SUPPORT_DL
+# Begin macro CASC_SUPPORT_DL
 
 
-# Start macro BTNG_ARG_WITH_ENV_WRAPPER with args dl and dl_PREFIX
+# Start macro CASC_ARG_WITH_ENV_WRAPPER with args dl and dl_PREFIX
 { $as_echo "$as_me:$LINENO: checking for dl" >&5
 $as_echo_n "checking for dl... " >&6; }
 if test "${btng_cv_prog_dl+set}" = set; then
@@ -13338,13 +13338,13 @@ if test "${btng_cv_prog_dl+set}" = set ; then
 else
   unset dl_PREFIX
 fi
-# End macro BTNG_ARG_WITH_ENV_WRAPPER with args dl_PREFIX and dl
+# End macro CASC_ARG_WITH_ENV_WRAPPER with args dl_PREFIX and dl
 
 
 
-# Start macro BTNG_ARG_WITH_PREFIX
+# Start macro CASC_ARG_WITH_PREFIX
 
-# Start macro BTNG_ARG_WITH_ENV_WRAPPER with args dl-includes and dl_INCLUDES
+# Start macro CASC_ARG_WITH_ENV_WRAPPER with args dl-includes and dl_INCLUDES
 { $as_echo "$as_me:$LINENO: checking for dl-includes" >&5
 $as_echo_n "checking for dl-includes... " >&6; }
 if test "${btng_cv_prog_dl_includes+set}" = set; then
@@ -13409,13 +13409,13 @@ if test "${btng_cv_prog_dl_includes+set}" = set ; then
 else
   unset dl_INCLUDES
 fi
-# End macro BTNG_ARG_WITH_ENV_WRAPPER with args dl_INCLUDES and dl-includes
-# End macro BTNG_ARG_WITH_PREFIX
+# End macro CASC_ARG_WITH_ENV_WRAPPER with args dl_INCLUDES and dl-includes
+# End macro CASC_ARG_WITH_PREFIX
 
 
-# Start macro BTNG_ARG_WITH_PREFIX
+# Start macro CASC_ARG_WITH_PREFIX
 
-# Start macro BTNG_ARG_WITH_ENV_WRAPPER with args dl-libs and dl_LIBS
+# Start macro CASC_ARG_WITH_ENV_WRAPPER with args dl-libs and dl_LIBS
 { $as_echo "$as_me:$LINENO: checking for dl-libs" >&5
 $as_echo_n "checking for dl-libs... " >&6; }
 if test "${btng_cv_prog_dl_libs+set}" = set; then
@@ -13480,11 +13480,11 @@ if test "${btng_cv_prog_dl_libs+set}" = set ; then
 else
   unset dl_LIBS
 fi
-# End macro BTNG_ARG_WITH_ENV_WRAPPER with args dl_LIBS and dl-libs
-# End macro BTNG_ARG_WITH_PREFIX
+# End macro CASC_ARG_WITH_ENV_WRAPPER with args dl_LIBS and dl-libs
+# End macro CASC_ARG_WITH_PREFIX
 
 
-# Begin macro BTNG_VAR_SET_DL
+# Begin macro CASC_VAR_SET_DL
 if test "${dl_PREFIX+set}" = set ; then
   # Modify the output INCLUDES variable, if it is not set.
   if test ! "${dl_INCLUDES+set}" = set ; then
@@ -13652,9 +13652,9 @@ fi
     echo "configure:13652:" Not looking for dl because dl_LIBS is already set >&5
   fi
 fi
-# End macro BTNG_VAR_SET_DL
+# End macro CASC_VAR_SET_DL
 
-# End macro BTNG_SUPPORT_DL
+# End macro CASC_SUPPORT_DL
 
 if test "${dl_PREFIX+set}" = set; then
   if echo $target_os | grep '^linux' > /dev/null \
@@ -14053,10 +14053,10 @@ done
 
 
 
-# Begin macro BTNG_SUPPORT_NSL
+# Begin macro CASC_SUPPORT_NSL
 
 
-# Start macro BTNG_ARG_WITH_ENV_WRAPPER with args nsl and nsl_PREFIX
+# Start macro CASC_ARG_WITH_ENV_WRAPPER with args nsl and nsl_PREFIX
 { $as_echo "$as_me:$LINENO: checking for nsl" >&5
 $as_echo_n "checking for nsl... " >&6; }
 if test "${btng_cv_prog_nsl+set}" = set; then
@@ -14114,7 +14114,7 @@ if test "${btng_cv_prog_nsl+set}" = set ; then
 else
   unset nsl_PREFIX
 fi
-# End macro BTNG_ARG_WITH_ENV_WRAPPER with args nsl_PREFIX and nsl
+# End macro CASC_ARG_WITH_ENV_WRAPPER with args nsl_PREFIX and nsl
 
 
 
@@ -14132,9 +14132,9 @@ done
 
 
 
-# Start macro BTNG_ARG_WITH_PREFIX
+# Start macro CASC_ARG_WITH_PREFIX
 
-# Start macro BTNG_ARG_WITH_ENV_WRAPPER with args nsl-includes and nsl_INCLUDES
+# Start macro CASC_ARG_WITH_ENV_WRAPPER with args nsl-includes and nsl_INCLUDES
 { $as_echo "$as_me:$LINENO: checking for nsl-includes" >&5
 $as_echo_n "checking for nsl-includes... " >&6; }
 if test "${btng_cv_prog_nsl_includes+set}" = set; then
@@ -14199,13 +14199,13 @@ if test "${btng_cv_prog_nsl_includes+set}" = set ; then
 else
   unset nsl_INCLUDES
 fi
-# End macro BTNG_ARG_WITH_ENV_WRAPPER with args nsl_INCLUDES and nsl-includes
-# End macro BTNG_ARG_WITH_PREFIX
+# End macro CASC_ARG_WITH_ENV_WRAPPER with args nsl_INCLUDES and nsl-includes
+# End macro CASC_ARG_WITH_PREFIX
 
 
-# Start macro BTNG_ARG_WITH_PREFIX
+# Start macro CASC_ARG_WITH_PREFIX
 
-# Start macro BTNG_ARG_WITH_ENV_WRAPPER with args nsl-libs and nsl_LIBS
+# Start macro CASC_ARG_WITH_ENV_WRAPPER with args nsl-libs and nsl_LIBS
 { $as_echo "$as_me:$LINENO: checking for nsl-libs" >&5
 $as_echo_n "checking for nsl-libs... " >&6; }
 if test "${btng_cv_prog_nsl_libs+set}" = set; then
@@ -14270,8 +14270,8 @@ if test "${btng_cv_prog_nsl_libs+set}" = set ; then
 else
   unset nsl_LIBS
 fi
-# End macro BTNG_ARG_WITH_ENV_WRAPPER with args nsl_LIBS and nsl-libs
-# End macro BTNG_ARG_WITH_PREFIX
+# End macro CASC_ARG_WITH_ENV_WRAPPER with args nsl_LIBS and nsl-libs
+# End macro CASC_ARG_WITH_PREFIX
 
 
 if test "${nsl_PREFIX+set}" = set ; then
@@ -14442,7 +14442,7 @@ fi
   fi
 fi
 
-# End macro BTNG_SUPPORT_NSL
+# End macro CASC_SUPPORT_NSL
 
 if test "${nsl_PREFIX+set}" = set; then
   LIBS="$nsl_LIBS $LIBS"
@@ -14463,10 +14463,10 @@ fi
 fi
 
 
-# Begin macro BTNG_SUPPORT_BLAS
+# Begin macro CASC_SUPPORT_BLAS
 
 
-# Start macro BTNG_ARG_WITH_ENV_WRAPPER with args blas and blas_PREFIX
+# Start macro CASC_ARG_WITH_ENV_WRAPPER with args blas and blas_PREFIX
 { $as_echo "$as_me:$LINENO: checking for blas" >&5
 $as_echo_n "checking for blas... " >&6; }
 if test "${btng_cv_prog_blas+set}" = set; then
@@ -14529,13 +14529,13 @@ if test "${btng_cv_prog_blas+set}" = set ; then
 else
   unset blas_PREFIX
 fi
-# End macro BTNG_ARG_WITH_ENV_WRAPPER with args blas_PREFIX and blas
+# End macro CASC_ARG_WITH_ENV_WRAPPER with args blas_PREFIX and blas
 
 
 
-# Start macro BTNG_ARG_WITH_PREFIX
+# Start macro CASC_ARG_WITH_PREFIX
 
-# Start macro BTNG_ARG_WITH_ENV_WRAPPER with args blas-includes and blas_INCLUDES
+# Start macro CASC_ARG_WITH_ENV_WRAPPER with args blas-includes and blas_INCLUDES
 { $as_echo "$as_me:$LINENO: checking for blas-includes" >&5
 $as_echo_n "checking for blas-includes... " >&6; }
 if test "${btng_cv_prog_blas_includes+set}" = set; then
@@ -14600,13 +14600,13 @@ if test "${btng_cv_prog_blas_includes+set}" = set ; then
 else
   unset blas_INCLUDES
 fi
-# End macro BTNG_ARG_WITH_ENV_WRAPPER with args blas_INCLUDES and blas-includes
-# End macro BTNG_ARG_WITH_PREFIX
+# End macro CASC_ARG_WITH_ENV_WRAPPER with args blas_INCLUDES and blas-includes
+# End macro CASC_ARG_WITH_PREFIX
 
 
-# Start macro BTNG_ARG_WITH_PREFIX
+# Start macro CASC_ARG_WITH_PREFIX
 
-# Start macro BTNG_ARG_WITH_ENV_WRAPPER with args blas-libs and blas_LIBS
+# Start macro CASC_ARG_WITH_ENV_WRAPPER with args blas-libs and blas_LIBS
 { $as_echo "$as_me:$LINENO: checking for blas-libs" >&5
 $as_echo_n "checking for blas-libs... " >&6; }
 if test "${btng_cv_prog_blas_libs+set}" = set; then
@@ -14671,8 +14671,8 @@ if test "${btng_cv_prog_blas_libs+set}" = set ; then
 else
   unset blas_LIBS
 fi
-# End macro BTNG_ARG_WITH_ENV_WRAPPER with args blas_LIBS and blas-libs
-# End macro BTNG_ARG_WITH_PREFIX
+# End macro CASC_ARG_WITH_ENV_WRAPPER with args blas_LIBS and blas-libs
+# End macro CASC_ARG_WITH_PREFIX
 
 
 if test "${blas_PREFIX+set}" = set ; then
@@ -14865,7 +14865,7 @@ for btng_log_vars_index in $btng_log_vars ; do
 done
 
 
-# End macro BTNG_SUPPORT_BLAS
+# End macro CASC_SUPPORT_BLAS
 
 if test "${blas_PREFIX+set}" = set ||
    test "${blas_INCLUDES+set}" = set ||
@@ -14906,10 +14906,10 @@ done
 
 
 
-# Begin macro BTNG_SUPPORT_LAPACK
+# Begin macro CASC_SUPPORT_LAPACK
 
 
-# Start macro BTNG_ARG_WITH_ENV_WRAPPER with args lapack and lapack_PREFIX
+# Start macro CASC_ARG_WITH_ENV_WRAPPER with args lapack and lapack_PREFIX
 { $as_echo "$as_me:$LINENO: checking for lapack" >&5
 $as_echo_n "checking for lapack... " >&6; }
 if test "${btng_cv_prog_lapack+set}" = set; then
@@ -14972,13 +14972,13 @@ if test "${btng_cv_prog_lapack+set}" = set ; then
 else
   unset lapack_PREFIX
 fi
-# End macro BTNG_ARG_WITH_ENV_WRAPPER with args lapack_PREFIX and lapack
+# End macro CASC_ARG_WITH_ENV_WRAPPER with args lapack_PREFIX and lapack
 
 
 
-# Start macro BTNG_ARG_WITH_PREFIX
+# Start macro CASC_ARG_WITH_PREFIX
 
-# Start macro BTNG_ARG_WITH_ENV_WRAPPER with args lapack-includes and lapack_INCLUDES
+# Start macro CASC_ARG_WITH_ENV_WRAPPER with args lapack-includes and lapack_INCLUDES
 { $as_echo "$as_me:$LINENO: checking for lapack-includes" >&5
 $as_echo_n "checking for lapack-includes... " >&6; }
 if test "${btng_cv_prog_lapack_includes+set}" = set; then
@@ -15043,13 +15043,13 @@ if test "${btng_cv_prog_lapack_includes+set}" = set ; then
 else
   unset lapack_INCLUDES
 fi
-# End macro BTNG_ARG_WITH_ENV_WRAPPER with args lapack_INCLUDES and lapack-includes
-# End macro BTNG_ARG_WITH_PREFIX
+# End macro CASC_ARG_WITH_ENV_WRAPPER with args lapack_INCLUDES and lapack-includes
+# End macro CASC_ARG_WITH_PREFIX
 
 
-# Start macro BTNG_ARG_WITH_PREFIX
+# Start macro CASC_ARG_WITH_PREFIX
 
-# Start macro BTNG_ARG_WITH_ENV_WRAPPER with args lapack-libs and lapack_LIBS
+# Start macro CASC_ARG_WITH_ENV_WRAPPER with args lapack-libs and lapack_LIBS
 { $as_echo "$as_me:$LINENO: checking for lapack-libs" >&5
 $as_echo_n "checking for lapack-libs... " >&6; }
 if test "${btng_cv_prog_lapack_libs+set}" = set; then
@@ -15114,8 +15114,8 @@ if test "${btng_cv_prog_lapack_libs+set}" = set ; then
 else
   unset lapack_LIBS
 fi
-# End macro BTNG_ARG_WITH_ENV_WRAPPER with args lapack_LIBS and lapack-libs
-# End macro BTNG_ARG_WITH_PREFIX
+# End macro CASC_ARG_WITH_ENV_WRAPPER with args lapack_LIBS and lapack-libs
+# End macro CASC_ARG_WITH_PREFIX
 
 
 if test "${lapack_PREFIX+set}" = set ; then
@@ -15308,7 +15308,7 @@ for btng_log_vars_index in $btng_log_vars ; do
 done
 
 
-# End macro BTNG_SUPPORT_LAPACK
+# End macro CASC_SUPPORT_LAPACK
 
 if test "${lapack_PREFIX+set}" = set ||
    test "${lapack_INCLUDES+set}" = set ||
@@ -18349,9 +18349,9 @@ done
 
 
 
-# Begin macro BTNG_SUPPORT_HYPRE
+# Begin macro CASC_SUPPORT_HYPRE
 
-# Start macro BTNG_ARG_WITH_ENV_WRAPPER with args hypre and hypre_PREFIX
+# Start macro CASC_ARG_WITH_ENV_WRAPPER with args hypre and hypre_PREFIX
 { $as_echo "$as_me:$LINENO: checking for hypre" >&5
 $as_echo_n "checking for hypre... " >&6; }
 if test "${btng_cv_prog_hypre+set}" = set; then
@@ -18410,10 +18410,10 @@ if test "${btng_cv_prog_hypre+set}" = set ; then
 else
   unset hypre_PREFIX
 fi
-# End macro BTNG_ARG_WITH_ENV_WRAPPER with args hypre_PREFIX and hypre
+# End macro CASC_ARG_WITH_ENV_WRAPPER with args hypre_PREFIX and hypre
 
 
-# Begin macro BTNG_VAR_SET_HYPRE
+# Begin macro CASC_VAR_SET_HYPRE
 if test "${hypre_PREFIX+set}" = set ; then
   if test ! "${hypre_INCLUDES+set}" = set ; then
     test -n "${hypre_PREFIX}" && hypre_INCLUDES="-I${hypre_PREFIX}/include"
@@ -18433,7 +18433,7 @@ $as_echo "$as_me: WARNING: Library file for ${tmp_name} is missing from ${hypre_
     fi
   fi
 fi
-# End macro BTNG_VAR_SET_HYPRE
+# End macro CASC_VAR_SET_HYPRE
 
 
 
@@ -18667,7 +18667,7 @@ done
 
 
 fi
-# End macro BTNG_SUPPORT_HYPRE
+# End macro CASC_SUPPORT_HYPRE
 
 if test "${hypre_PREFIX+set}" = set; then
 
@@ -18760,7 +18760,7 @@ fi
 LIB_NAME="$superlu_LIB $LIB_NAME"
 
 
-# Begin macro BTNG_SUPPORT_SPOOLES
+# Begin macro CASC_SUPPORT_SPOOLES
 
 unset spooles_PREFIX
 
@@ -18811,7 +18811,7 @@ done
 
 
 
-# End macro BTNG_SUPPORT_SPOOLES
+# End macro CASC_SUPPORT_SPOOLES
 
 if test "${spooles_PREFIX+set}" = set; then
 
@@ -18835,9 +18835,9 @@ fi
 
 # Set PETSC_DIR to the PETSC root directory.
 
-# Start macro BTNG_ARG_WITH_PREFIX
+# Start macro CASC_ARG_WITH_PREFIX
 
-# Start macro BTNG_ARG_WITH_ENV_WRAPPER with args petsc and PETSC_DIR
+# Start macro CASC_ARG_WITH_ENV_WRAPPER with args petsc and PETSC_DIR
 { $as_echo "$as_me:$LINENO: checking for petsc" >&5
 $as_echo_n "checking for petsc... " >&6; }
 if test "${btng_cv_prog_petsc+set}" = set; then
@@ -18908,8 +18908,8 @@ if test "${btng_cv_prog_petsc+set}" = set ; then
 else
   unset PETSC_DIR
 fi
-# End macro BTNG_ARG_WITH_ENV_WRAPPER with args PETSC_DIR and petsc
-# End macro BTNG_ARG_WITH_PREFIX
+# End macro CASC_ARG_WITH_ENV_WRAPPER with args PETSC_DIR and petsc
+# End macro CASC_ARG_WITH_PREFIX
 
 
 # Set version numbers (PETSC_VERSION_...) for use by configure.
@@ -18938,9 +18938,9 @@ done
 
 # Set PETSC_ARCH.
 
-# Start macro BTNG_ARG_WITH_PREFIX
+# Start macro CASC_ARG_WITH_PREFIX
 
-# Start macro BTNG_ARG_WITH_ENV_WRAPPER with args petsc-arch and PETSC_ARCH
+# Start macro CASC_ARG_WITH_ENV_WRAPPER with args petsc-arch and PETSC_ARCH
 { $as_echo "$as_me:$LINENO: checking for petsc-arch" >&5
 $as_echo_n "checking for petsc-arch... " >&6; }
 if test "${btng_cv_prog_petsc_arch+set}" = set; then
@@ -19005,13 +19005,13 @@ if test "${btng_cv_prog_petsc_arch+set}" = set ; then
 else
   unset PETSC_ARCH
 fi
-# End macro BTNG_ARG_WITH_ENV_WRAPPER with args PETSC_ARCH and petsc-arch
-# End macro BTNG_ARG_WITH_PREFIX
+# End macro CASC_ARG_WITH_ENV_WRAPPER with args PETSC_ARCH and petsc-arch
+# End macro CASC_ARG_WITH_PREFIX
 
 
 # Set PETSC_OPTIMIZE.
 
-# Start macro BTNG_ARG_WITH_ENV_WRAPPER with args petsc-optimize and PETSC_OPTIMIZE
+# Start macro CASC_ARG_WITH_ENV_WRAPPER with args petsc-optimize and PETSC_OPTIMIZE
 { $as_echo "$as_me:$LINENO: checking for petsc-optimize" >&5
 $as_echo_n "checking for petsc-optimize... " >&6; }
 if test "${btng_cv_prog_petsc_optimize+set}" = set; then
@@ -19086,12 +19086,12 @@ if test "${btng_cv_prog_petsc_optimize+set}" = set ; then
 else
   unset PETSC_OPTIMIZE
 fi
-# End macro BTNG_ARG_WITH_ENV_WRAPPER with args PETSC_OPTIMIZE and petsc-optimize
+# End macro CASC_ARG_WITH_ENV_WRAPPER with args PETSC_OPTIMIZE and petsc-optimize
 
 
 # Set PETSC_MPIUNI.
 
-# Start macro BTNG_ARG_WITH_ENV_WRAPPER with args petsc-mpiuni and PETSC_MPIUNI
+# Start macro CASC_ARG_WITH_ENV_WRAPPER with args petsc-mpiuni and PETSC_MPIUNI
 { $as_echo "$as_me:$LINENO: checking for petsc-mpiuni" >&5
 $as_echo_n "checking for petsc-mpiuni... " >&6; }
 if test "${btng_cv_prog_petsc_mpiuni+set}" = set; then
@@ -19151,7 +19151,7 @@ if test "${btng_cv_prog_petsc_mpiuni+set}" = set ; then
 else
   unset PETSC_MPIUNI
 fi
-# End macro BTNG_ARG_WITH_ENV_WRAPPER with args PETSC_MPIUNI and petsc-mpiuni
+# End macro CASC_ARG_WITH_ENV_WRAPPER with args PETSC_MPIUNI and petsc-mpiuni
 
 
 # Set PETSC_LIBFILES
@@ -19747,7 +19747,7 @@ fi
 
 
 
-# Begin macro BTNG_IEEE_FLOAT
+# Begin macro CASC_IEEE_FLOAT
 
 ac_ext=c
 ac_cpp='$CPP $CPPFLAGS'
@@ -19886,7 +19886,7 @@ fi
 rm -f conftest*
 
 
-# End macro BTNG_IEEE_FLOAT
+# End macro CASC_IEEE_FLOAT
 
 
 
@@ -19938,7 +19938,7 @@ done
 
 
 
-# Begin macro BTNG_LIBS_ADD_RPATH
+# Begin macro CASC_LIBS_ADD_RPATH
 
 
 
@@ -19979,7 +19979,7 @@ ac_compiler_gnu=$ac_cv_cxx_compiler_gnu
       # This compiler may use a variable rpath syntax because it may use
       # the native loader.
 
-# Begin macro BTNG_LIBS_FIND_RPATH
+# Begin macro CASC_LIBS_FIND_RPATH
 
   btng_save_LIBS="$LIBS";
   for i in '---bogus-flag-meant-to-cause-error' '-Wl,-rpath ' '-Wl,-R' '-Wl,-R '; do
@@ -20054,14 +20054,14 @@ rm -f core conftest.err conftest.$ac_objext conftest_ipa8_conftest.oo \
   done
   LIBS="$btng_save_LIBS"
 
-# End macro BTNG_LIBS_FIND_RPATH
+# End macro CASC_LIBS_FIND_RPATH
 
     ;;
     intel)
       # This compiler may use a variable rpath syntax because it may use
       # the native loader.
 
-# Begin macro BTNG_LIBS_FIND_RPATH
+# Begin macro CASC_LIBS_FIND_RPATH
 
   btng_save_LIBS="$LIBS";
   for i in '---bogus-flag-meant-to-cause-error' '-Wl,-rpath ' '-Wl,-R' '-Wl,-R '; do
@@ -20136,7 +20136,7 @@ rm -f core conftest.err conftest.$ac_objext conftest_ipa8_conftest.oo \
   done
   LIBS="$btng_save_LIBS"
 
-# End macro BTNG_LIBS_FIND_RPATH
+# End macro CASC_LIBS_FIND_RPATH
 
       if test "$btng_rpath_beginning" = "---bogus-flag-meant-to-cause-error"; then
         # Do not rely on the compiler return value to test for syntax
@@ -20162,7 +20162,7 @@ $as_echo "$as_me: WARNING: Your compiler $CXX returns 0 even when it is
     sunpro)
       # This compiler may use a variable rpath syntax.
 
-# Begin macro BTNG_LIBS_FIND_RPATH
+# Begin macro CASC_LIBS_FIND_RPATH
 
   btng_save_LIBS="$LIBS";
   for i in '---bogus-flag-meant-to-cause-error' '-R' '-R '; do
@@ -20237,7 +20237,7 @@ rm -f core conftest.err conftest.$ac_objext conftest_ipa8_conftest.oo \
   done
   LIBS="$btng_save_LIBS"
 
-# End macro BTNG_LIBS_FIND_RPATH
+# End macro CASC_LIBS_FIND_RPATH
 
     ;;
     kai)
@@ -20251,7 +20251,7 @@ rm -f core conftest.err conftest.$ac_objext conftest_ipa8_conftest.oo \
       # it is wrong and we resort to an alternative method for
       # getting the rpath syntax.
 
-# Begin macro BTNG_LIBS_FIND_RPATH
+# Begin macro CASC_LIBS_FIND_RPATH
 
   btng_save_LIBS="$LIBS";
   for i in '---bogus-flag-meant-to-cause-error' '-R' '-R ' '-rpath ' '-Wl,-rpath ' '-Wl,-R' '-Wl,-R '; do
@@ -20326,7 +20326,7 @@ rm -f core conftest.err conftest.$ac_objext conftest_ipa8_conftest.oo \
   done
   LIBS="$btng_save_LIBS"
 
-# End macro BTNG_LIBS_FIND_RPATH
+# End macro CASC_LIBS_FIND_RPATH
 
       if test "$btng_rpath_beginning" = "---bogus-flag-meant-to-cause-error"; then
         # Do not rely on the compiler return value to test for syntax
@@ -20351,7 +20351,7 @@ $as_echo "$as_me: WARNING: Your compiler $CXX returns 0 even when it is
     ;;
     *)
 
-# Begin macro BTNG_LIBS_FIND_RPATH
+# Begin macro CASC_LIBS_FIND_RPATH
 
   btng_save_LIBS="$LIBS";
   for i in '-R ' '-R' '-rpath ' '-Wl,-rpath ' '-Wl,-R ' '-Wl,-R'; do
@@ -20426,7 +20426,7 @@ rm -f core conftest.err conftest.$ac_objext conftest_ipa8_conftest.oo \
   done
   LIBS="$btng_save_LIBS"
 
-# End macro BTNG_LIBS_FIND_RPATH
+# End macro CASC_LIBS_FIND_RPATH
 
     ;;
   esac
@@ -20494,7 +20494,7 @@ if test "${btng_rpath_beginning+set}" = set	\
 fi
 
 
-# End macro BTNG_LIBS_ADD_RPATH
+# End macro CASC_LIBS_ADD_RPATH
 
 
 

@@ -13,7 +13,7 @@ dnl
 dnl Therefore, you are encouraged to use the plain autoconf
 dnl macros (AC_ARC_WITH and AC_ARG_ENABLE).
 
-AC_DEFUN([BTNG_ARG_WITH_ENV_WRAPPER],[
+AC_DEFUN([CASC_ARG_WITH_ENV_WRAPPER],[
 dnl This is a high-level macro similar to AC_ARG_WITH but it does
 dnl   a few extra things.
 dnl
@@ -82,7 +82,7 @@ dnl     This is run before caching result.  Generally, this would issue
 dnl     a warning or error as appropriate.  For example, if this macro
 dnl     is used to set the path to a program, you may want to check
 dnl     if that program exist and is executable.
-# Start macro BTNG_ARG_WITH_ENV_WRAPPER with args $1 and $2
+# Start macro CASC_ARG_WITH_ENV_WRAPPER with args $1 and $2
 AC_CACHE_CHECK(for $1,btng_cv_prog_[]translit($1,-,_),[
 AC_ARG_WITH($1,
 ifelse($3,,[  --with-$1	Specify $1 (same as setting $2 in environment)],[$3]))
@@ -146,13 +146,13 @@ if test "${btng_cv_prog_[]translit($1,-,_)+set}" = set ; then
 else
   unset $2
 fi
-# End macro BTNG_ARG_WITH_ENV_WRAPPER with args $2 and $1
+# End macro CASC_ARG_WITH_ENV_WRAPPER with args $2 and $1
 ])
 
 
 
 
-AC_DEFUN([BTNG_PATH_PROG],[
+AC_DEFUN([CASC_PATH_PROG],[
 dnl This is a high-level macro to find paths to certain programs.
 dnl In addition to (possibly) running AC_ARG_WITH and AC_PATH_PROG it:
 dnl   Allows the path to be set in an environment variable ($1),
@@ -161,15 +161,15 @@ dnl     for avoiding manual configure options setting.
 dnl   Makes sure that the program is executable, if the user explicitly
 dnl     specified it.
 dnl The arguments are (similar to AC_PATH_PROG):
-dnl   1: Variable name to set to the path (used in BTNG_PATH_PROG).
-dnl   2: Name of program being sought (used in BTNG_PATH_PROG).
+dnl   1: Variable name to set to the path (used in CASC_PATH_PROG).
+dnl   2: Name of program being sought (used in CASC_PATH_PROG).
 dnl   3(optional): Commands to set $1 in case neither environment
 dnl      nor command line options are given.  Defaults to a call to
 dnl      AC_PATH_PROG($1,$2).
 dnl   4(optional): Quality check commands to make sure that a
 dnl      sufficiently good program is found.  Defaults to a simple
 dnl      check that the program is executable.
-BTNG_ARG_WITH_ENV_WRAPPER($2,$1,
+CASC_ARG_WITH_ENV_WRAPPER($2,$1,
 [[  --with-$2=PATH	Specify path to $2 program
 			(equivalent to setting $1 in environment)]]dnl
 ,
@@ -193,7 +193,7 @@ fi
 
 
 
-AC_DEFUN([BTNG_ARG_WITH_PREFIX],[
+AC_DEFUN([CASC_ARG_WITH_PREFIX],[
 dnl This is a high-level macro to set the prefix for a
 dnl previously installed package.
 dnl The macro arguments are:
@@ -207,8 +207,8 @@ dnl   run if with_blah is "yes" or "".  They should set or unset
 dnl   the variable named in arg2, depending on what you want
 dnl   the defaul behavior to be in these cases.  The default is
 dnl   to exit with an error.
-# Start macro BTNG_ARG_WITH_PREFIX
-BTNG_ARG_WITH_ENV_WRAPPER($1,$2,
+# Start macro CASC_ARG_WITH_PREFIX
+CASC_ARG_WITH_ENV_WRAPPER($1,$2,
 ifelse([$3],,
 [[  --with-$1=PATH	Specify prefix where $1 is installed
 			(equivalent to setting $2 in the environment)]]
@@ -217,10 +217,10 @@ ifelse([$4],,
 [[if test "${with_[]translit($1,-,_)}" = yes ; then
   AC_MSG_ERROR([[If you specify --with-$1, you must give it the path as in --with-$1=/installation/path]])
 fi
-BTNG_AC_LOG(environment $2 not defined)
+CASC_AC_LOG(environment $2 not defined)
 ]],[[[$4]]])
 )dnl
-# End macro BTNG_ARG_WITH_PREFIX
+# End macro CASC_ARG_WITH_PREFIX
 ])
 
 

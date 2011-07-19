@@ -1,6 +1,6 @@
 dnl $Id$
 
-AC_DEFUN([BTNG_VAR_SET_LAPACK],[
+AC_DEFUN([CASC_VAR_SET_LAPACK],[
 dnl Provides support for the lapack library.
 dnl
 dnl Arguments are:
@@ -29,15 +29,15 @@ if test "${$1+set}" = set ; then
     test -n "${$1}" && btng_extra_libs="-L${$1}/lib $btng_extra_libs"
     # Look for library.
     AC_SEARCH_LIBS([xerbla_],lapack,[
-      BTNG_AC_LOG_VAR(LIBS,After finding lapack flag)
+      CASC_AC_LOG_VAR(LIBS,After finding lapack flag)
       # Action if found ...
       # Extract modifications to LIB into library-specific LIBS variable.
       $3=`echo " $LIBS" | sed "s! $btng_save_LIBS!!"`;
       test -n "${$1}" && $3="-L${$1}/lib ${$3}"
-      BTNG_AC_LOG_VAR($3, Found lapack library flag)
+      CASC_AC_LOG_VAR($3, Found lapack library flag)
       ],[
       # Action if NOT found ...
-      BTNG_AC_LOG_VAR($3, Did not find lapack library flag)
+      CASC_AC_LOG_VAR($3, Did not find lapack library flag)
       AC_MSG_WARN(
 [I could not systematically find the name of
 the lapack library so I am using -llapack instead.])
@@ -49,7 +49,7 @@ the lapack library so I am using -llapack instead.])
     unset btng_extra_libs
     unset btng_save_LIBS
   else
-    BTNG_AC_LOG(Not looking for lapack because $3 is already set)
+    CASC_AC_LOG(Not looking for lapack because $3 is already set)
   fi
 fi
 ])dnl
@@ -57,14 +57,14 @@ fi
 
 
 
-AC_DEFUN([BTNG_SUPPORT_LAPACK],[
+AC_DEFUN([CASC_SUPPORT_LAPACK],[
 dnl Support lapack library by setting the variables
 dnl lapack_PREFIX, lapack_INCLUDES, and lapack_LIBS.
 dnl Arg1: non-empty if you want the default to be on.
 dnl
-# Begin macro BTNG_SUPPORT_LAPACK
+# Begin macro CASC_SUPPORT_LAPACK
 
-BTNG_ARG_WITH_ENV_WRAPPER(lapack, lapack_PREFIX,
+CASC_ARG_WITH_ENV_WRAPPER(lapack, lapack_PREFIX,
 ifelse($1,,
 [  --with-lapack[=PATH]
 			Use lapack and optionally specify where
@@ -77,20 +77,20 @@ ifelse($1,,unset lapack_PREFIX,lapack_PREFIX=)
 fi
 )
 
-BTNG_ARG_WITH_PREFIX(lapack-includes,lapack_INCLUDES,
+CASC_ARG_WITH_PREFIX(lapack-includes,lapack_INCLUDES,
 [  --with-lapack-includes=STRING
 			Specify the INCLUDES flags for lapack.
 			If not specified, and --with-lapack=PATH is,
 			this defaults to "-IPATH/include".])dnl
 
-BTNG_ARG_WITH_PREFIX(lapack-libs,lapack_LIBS,
+CASC_ARG_WITH_PREFIX(lapack-libs,lapack_LIBS,
 [  --with-lapack-libs=STRING
 			Specify LIBS flags for lapack.
 			If not specified, and --with-lapack=PATH is,
 			this defaults to "-LPATH/lib -llapack".])dnl
 
-BTNG_VAR_SET_LAPACK(lapack_PREFIX,lapack_INCLUDES,lapack_LIBS)
+CASC_VAR_SET_LAPACK(lapack_PREFIX,lapack_INCLUDES,lapack_LIBS)
 
-BTNG_AC_LOG_VAR(lapack_PREFIX lapack_INCLUDES lapack_LIBS)
-# End macro BTNG_SUPPORT_LAPACK
+CASC_AC_LOG_VAR(lapack_PREFIX lapack_INCLUDES lapack_LIBS)
+# End macro CASC_SUPPORT_LAPACK
 ])

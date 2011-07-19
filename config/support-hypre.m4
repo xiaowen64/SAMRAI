@@ -3,26 +3,26 @@ dnl $Id$
 dnl Define macros for supporting HYPRE.
 
 
-AC_DEFUN([BTNG_SUPPORT_HYPRE],[
+AC_DEFUN([CASC_SUPPORT_HYPRE],[
 dnl Support hypre libraries by setting the variables
 dnl hypre_PREFIX, hypre_INCLUDES, and hypre_LIBS.
 dnl Arg1: empty if you want the default to be off.
 dnl
-# Begin macro BTNG_SUPPORT_HYPRE
-BTNG_ARG_WITH_ENV_WRAPPER(hypre, hypre_PREFIX,
+# Begin macro CASC_SUPPORT_HYPRE
+CASC_ARG_WITH_ENV_WRAPPER(hypre, hypre_PREFIX,
 ifelse($1,,
 [  --with-hypre[=PATH]	Use HYPRE and optionally specify where it is installed.],
 [  --without-hypre	Do not use the HYPRe library.]),
 ifelse($1,,if test "$with_hypre" = '' ; then unset hypre_PREFIX; else hypre_PREFIX=; fi, hypre_PREFIX=)
 )
-BTNG_VAR_SET_HYPRE(hypre_PREFIX,hypre_INCLUDES,hypre_LIBS)
-BTNG_AC_LOG_VAR(hypre_PREFIX hypre_INCLUDES hypre_LIBS)
+CASC_VAR_SET_HYPRE(hypre_PREFIX,hypre_INCLUDES,hypre_LIBS)
+CASC_AC_LOG_VAR(hypre_PREFIX hypre_INCLUDES hypre_LIBS)
 if test "${hypre_PREFIX+set}" = set; then
   btng_save_cppflags=$CPPFLAGS
 
   # Add hypre include flags to cpp so we can examine its header file.
   CPPFLAGS="$hypre_INCLUDES $CPPFLAGS"
-  BTNG_AC_LOG_VAR(hypre_INCLUDES CPPFLAGS)
+  CASC_AC_LOG_VAR(hypre_INCLUDES CPPFLAGS)
 
   # Check if HYPRE header is ok.
   AC_CHECK_HEADER(HYPRE_config.h,:,
@@ -44,14 +44,14 @@ HYPRE_SEQUENTIAL_IS_DEFINED
   CPPFLAGS=$btng_save_cppflags
   unset btng_save_cppflags
 
-  BTNG_AC_LOG_VAR(CPPFLAGS)
-  BTNG_AC_LOG_VAR(hypre_config_file hypre_PARALLELISM)
+  CASC_AC_LOG_VAR(CPPFLAGS)
+  CASC_AC_LOG_VAR(hypre_config_file hypre_PARALLELISM)
 fi
-# End macro BTNG_SUPPORT_HYPRE
+# End macro CASC_SUPPORT_HYPRE
 ])
 
 
-AC_DEFUN([BTNG_VAR_SET_HYPRE],[
+AC_DEFUN([CASC_VAR_SET_HYPRE],[
 dnl Provides support for the blas and lapack libraries.
 dnl
 dnl Arguments are:
@@ -65,7 +65,7 @@ dnl
 dnl If arg1 is defined, assume that the user wants blas and lapack
 dnl support.  Do so by assigning arg2 and arg3 if they are not defined.
 dnl
-# Begin macro BTNG_VAR_SET_HYPRE
+# Begin macro CASC_VAR_SET_HYPRE
 if test "${$1+set}" = set ; then
   if test ! "${$2+set}" = set ; then
     test -n "${$1}" && $2="-I${$1}/include"
@@ -84,5 +84,5 @@ if test "${$1+set}" = set ; then
     fi
   fi
 fi
-# End macro BTNG_VAR_SET_HYPRE
+# End macro CASC_VAR_SET_HYPRE
 ])dnl

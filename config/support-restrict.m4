@@ -2,9 +2,9 @@ dnl $Id$
 
 
 
-AC_DEFUN([BTNG_C_RESTRICT],[
+AC_DEFUN([CASC_C_RESTRICT],[
 
-# Start macro BTNG_C_RESTRICT
+# Start macro CASC_C_RESTRICT
 
 AC_MSG_CHECKING(checking whether restrict is broken)
 
@@ -45,6 +45,6 @@ if test "$btng_cv_c_restrict_broken" = yes; then
 fi
 
 
-# End macro BTNG_C_RESTRICT
+# End macro CASC_C_RESTRICT
 
-])	dnl End of BTNG_C_RESTRICT definition.
+])	dnl End of CASC_C_RESTRICT definition.

@@ -97,13 +97,13 @@ AH_BOTTOM([
 #endif
 ])
 
-BTNG_AC_LOG_VAR(CONFIG_SHELL)
+CASC_AC_LOG_VAR(CONFIG_SHELL)
 
 AC_CONFIG_AUX_DIR(config)
 
 # Get system type.
 AC_CANONICAL_SYSTEM
-BTNG_AC_LOG_VAR(target_cpu target_vendor target_os)
+CASC_AC_LOG_VAR(target_cpu target_vendor target_os)
 
 dnl SAMRAI has some code specific for the Solaris operating system.
 dnl (This is independent of what compiler is being used).
@@ -293,14 +293,14 @@ LIB_SUFFIX=.a
 dnl For debugging configure:
 dnl LD_LIBRARY_PATH influences the configuration tests,
 dnl so we want to know what it is.
-BTNG_AC_LOG_VAR(LD_LIBRARY_PATH)
+CASC_AC_LOG_VAR(LD_LIBRARY_PATH)
 
 dnl
 dnl Guess the machine architecture and set the variable ARCH
 dnl
 
 CASC_GUESS_ARCH
-BTNG_AC_LOG_VAR(ARCH)
+CASC_AC_LOG_VAR(ARCH)
 
 dnl
 dnl Set up the C++ compiler.  
@@ -316,9 +316,9 @@ else
      *) CCC=
    esac
 fi
-BTNG_AC_LOG_VAR(with_CXX CXX CCC, before running compiler search)
+CASC_AC_LOG_VAR(with_CXX CXX CCC, before running compiler search)
 AC_PROG_CXX($CCC)
-BTNG_AC_LOG_VAR(with_CXX CXX CCC, after running compiler search)
+CASC_AC_LOG_VAR(with_CXX CXX CCC, after running compiler search)
 
 dnl
 dnl Set up the C compiler.  This macro must come first and be followed
@@ -396,7 +396,7 @@ dnl
 dnl Determine what compilers are being used.
 dnl
 
-BTNG_INFO_CC_CXX_ID
+CASC_INFO_CC_CXX_ID
 # Warn user about unsupported compilers:
 case $CXX_ID in
 gnu|xlc|intel) ;;
@@ -651,7 +651,7 @@ if test -n "$debug_switches" ; then
    F77_FLAGS="$debug_switches $F77_FLAGS"
 fi
 
-BTNG_AC_LOG_VAR(debug_switches opt_switches)
+CASC_AC_LOG_VAR(debug_switches opt_switches)
 
 dnl
 dnl Set the optional classes to build
@@ -684,7 +684,7 @@ else
 fi
 
 test -z "$F77" && AC_MSG_ERROR([no acceptable Fortran found in $PATH])
-BTNG_AC_LOG_VAR(F77)
+CASC_AC_LOG_VAR(F77)
 
 if test "$ac_cv_prog_g77" = "yes"; then
    F77_FLAGS="-Wall -Wimplicit -Wunused $F77_FLAGS"
@@ -709,7 +709,7 @@ AC_F77_LIBRARY_LDFLAGS
 SAMRAI_SPLIT_LIBS_STRING(FLIBS,FLIBS_PATH,FLIBS_NAME)
 LIB_NAME="${LIB_NAME} ${FLIBS_NAME}"
 LIB_PATH="${LIB_PATH} ${FLIBS_PATH}"
-BTNG_AC_LOG_VAR([FLIBS FLIBS_PATH FLIBS_NAME], [after using ac_f77_library_ldflags])
+CASC_AC_LOG_VAR([FLIBS FLIBS_PATH FLIBS_NAME], [after using ac_f77_library_ldflags])
 
 dnl
 dnl Find the correct way to mangle fortran function names
@@ -809,8 +809,8 @@ dnl
 dnl Set DOXYGEN_BIN to the doxygen binary.
 dnl
 
-BTNG_PATH_PROG(DOXYGEN_BIN,doxygen)
-BTNG_AC_LOG_VAR(DOXYGEN_BIN)
+CASC_PATH_PROG(DOXYGEN_BIN,doxygen)
+CASC_AC_LOG_VAR(DOXYGEN_BIN)
 
 dnl
 dnl Set DOT_PATH to the directory of the dot binary, for use with doxygen.
@@ -846,12 +846,12 @@ You can expect doxygen documentation generation to not work properly.
   DOT_PATH=${with_dot_dir}
   HAVE_DOT=YES
 fi
-BTNG_AC_LOG_VAR(with_dot_dir HAVE_DOT DOT_PATH)
+CASC_AC_LOG_VAR(with_dot_dir HAVE_DOT DOT_PATH)
 AC_SUBST(HAVE_DOT)
 AC_SUBST(DOT_PATH)
 
-dnl BTNG_PATH_PROG(DOT_BIN,dot)
-dnl BTNG_AC_LOG_VAR(DOT_BIN)
+dnl CASC_PATH_PROG(DOT_BIN,dot)
+dnl CASC_AC_LOG_VAR(DOT_BIN)
 dnl AC_SUBST(DOT_BIN)
 dnl # Doxygen wants to know if we have the dot binary.
 dnl HAVE_DOT=NO;  test "${DOT_BIN+set}" = set && HAVE_DOT=YES
@@ -879,42 +879,42 @@ dnl
 dnl Set SAMRAI_PERL to the perl binary for use in doxygen.
 dnl
 
-BTNG_PATH_PROG(SAMRAI_PERL,perl)
-BTNG_AC_LOG_VAR(SAMRAI_PERL)
+CASC_PATH_PROG(SAMRAI_PERL,perl)
+CASC_AC_LOG_VAR(SAMRAI_PERL)
 
 dnl
 dnl Whether restrict key word works.
 dnl
-BTNG_AC_LOG(begin stringize)
+CASC_AC_LOG(begin stringize)
 AC_C_STRINGIZE
-BTNG_AC_LOG(end stringize)
+CASC_AC_LOG(end stringize)
 
 dnl
 dnl Whether restrict key word works.
 dnl
-BTNG_C_RESTRICT
+CASC_C_RESTRICT
 
 dnl
 dnl Look for the iomanip header file name.
 dnl
-BTNG_IOMANIP_HEADER_FILENAME
+CASC_IOMANIP_HEADER_FILENAME
 
 dnl
 dnl Look for the iostream header file name.
 dnl
-BTNG_IOSTREAM_HEADER_FILENAME
+CASC_IOSTREAM_HEADER_FILENAME
 
 dnl
 dnl Look for the strstream header file name.
 dnl
-BTNG_STL_SSTREAM_HEADER_FILENAME
+CASC_STL_SSTREAM_HEADER_FILENAME
 dnl
 dnl Deal with broken ostringstream type.
 dnl Some platforms have ostringstream and some ostrstream.
 dnl We need to know which is broken.
 dnl
 AC_LANG_PUSH([C++])
-BTNG_TYPE_NAMESPACE
+CASC_TYPE_NAMESPACE
 AC_MSG_CHECKING(type ostringstream)
 AC_TRY_COMPILE([#include STL_SSTREAM_HEADER_FILE
 #ifndef NAMESPACE_IS_BROKEN
@@ -965,7 +965,7 @@ dnl for example) require it.  When configuring on Linux, if the
 dnl dl library is found, use it.
 dnl
 
-BTNG_SUPPORT_DL(1)
+CASC_SUPPORT_DL(1)
 if test "${dl_PREFIX+set}" = set; then
   if echo $target_os | grep '^linux' > /dev/null \
     && test ! "${dl_LIBS+set}" = set; then
@@ -993,26 +993,26 @@ AC_F77_LIBRARY_LDFLAGS
 SAMRAI_SPLIT_LIBS_STRING(FLIBS,FLIBS_PATH,FLIBS_NAME)
 LIB_NAME="${LIB_NAME} ${FLIBS_NAME}"
 LIB_PATH="${LIB_PATH} ${FLIBS_PATH}"
-BTNG_AC_LOG_VAR([FLIBS FLIBS_PATH FLIBS_NAME], [after using ac_f77_library_ldflags])
+CASC_AC_LOG_VAR([FLIBS FLIBS_PATH FLIBS_NAME], [after using ac_f77_library_ldflags])
 dnl dnl
 dnl dnl Set fortran library.
 dnl dnl
-dnl BTNG_AC_LOG_VAR(fortran_LIBS fortran_LIB_PATH fortran_LIB_NAME LIB_PATH LIB_NAME, before getting fortran libs)
-dnl BTNG_SUPPORT_FORTRAN_FROM_C(1)
+dnl CASC_AC_LOG_VAR(fortran_LIBS fortran_LIB_PATH fortran_LIB_NAME LIB_PATH LIB_NAME, before getting fortran libs)
+dnl CASC_SUPPORT_FORTRAN_FROM_C(1)
 dnl if test -n "$fortran_LIBS" ; then
 dnl   LIBS="$LIBS $fortran_LIBS"
 dnl   SAMRAI_SPLIT_LIBS_STRING(fortran_LIBS,fortran_LIB_PATH,fortran_LIB_NAME)
 dnl   LIB_PATH="$fortran_LIB_PATH $LIB_PATH"
 dnl   LIB_NAME="$fortran_LIB_NAME $LIB_NAME"
 dnl fi
-dnl BTNG_AC_LOG_VAR(fortran_LIBS fortran_LIB_PATH fortran_LIB_NAME LIB_PATH LIB_NAME, after getting fortran libs)
+dnl CASC_AC_LOG_VAR(fortran_LIBS fortran_LIB_PATH fortran_LIB_NAME LIB_PATH LIB_NAME, after getting fortran libs)
 
 
 dnl
 dnl If the nsl library can be found, use it.
 dnl
 
-BTNG_SUPPORT_NSL(1)
+CASC_SUPPORT_NSL(1)
 if test "${nsl_PREFIX+set}" = set; then
   LIBS="$nsl_LIBS $LIBS"
   SAMRAI_SPLIT_LIBS_STRING(nsl_LIBS,nsl_LIB_PATH,nsl_LIB_NAME)
@@ -1024,7 +1024,7 @@ fi
 dnl
 dnl Set variables for blas support
 dnl
-BTNG_SUPPORT_BLAS
+CASC_SUPPORT_BLAS
 if test "${blas_PREFIX+set}" = set ||
    test "${blas_INCLUDES+set}" = set ||
    test "${blas_LIBS+set}" = set ; then
@@ -1034,12 +1034,12 @@ if test "${blas_PREFIX+set}" = set ||
   INC_PATH="$blas_INCLUDES $INC_PATH"
   AC_DEFINE(HAVE_BLAS,1,BLAS library is available so use it)
 fi
-BTNG_AC_LOG_VAR(blas_LIB_PATH blas_LIB_NAME LIB_PATH LIB_NAME)
+CASC_AC_LOG_VAR(blas_LIB_PATH blas_LIB_NAME LIB_PATH LIB_NAME)
 
 dnl
 dnl Set variables for lapack support
 dnl
-BTNG_SUPPORT_LAPACK
+CASC_SUPPORT_LAPACK
 if test "${lapack_PREFIX+set}" = set ||
    test "${lapack_INCLUDES+set}" = set ||
    test "${lapack_LIBS+set}" = set ; then
@@ -1049,7 +1049,7 @@ if test "${lapack_PREFIX+set}" = set ||
   INC_PATH="$lapack_INCLUDES $INC_PATH"
   AC_DEFINE(HAVE_LAPACK,1,LAPACK library is available so use it)
 fi
-BTNG_AC_LOG_VAR(lapack_LIB_PATH lapack_LIB_NAME LIB_PATH LIB_NAME)
+CASC_AC_LOG_VAR(lapack_LIB_PATH lapack_LIB_NAME LIB_PATH LIB_NAME)
 
 dnl
 dnl If MPI is requested, then determine the proper path using CASC_FIND_MPI.
@@ -1079,12 +1079,12 @@ else
       INC_PATH="$MPIINCLUDE $INC_PATH"
       LIB_NAME="$MPILIBS $LIB_NAME"
       LIB_PATH="$MPILIBDIRS $LIB_PATH"
-      BTNG_AC_LOG_VAR(MPIINCLUDE MPILIBS MPILIBDIRS, After successfully finding MPI using casc_find_mpi)
+      CASC_AC_LOG_VAR(MPIINCLUDE MPILIBS MPILIBDIRS, After successfully finding MPI using casc_find_mpi)
       CONFIGURED_WITH_MPI="with_mpi"
       AC_SUBST(CONFIGURED_WITH_MPI)
    fi
 fi
-BTNG_AC_LOG_VAR(with_mpi)
+CASC_AC_LOG_VAR(with_mpi)
 
 dnl
 dnl Support linking with Z lib if HDF requires it
@@ -1119,7 +1119,7 @@ else
    AC_MSG_ERROR([HDF5 not found - either specify a valid location via --with-hdf5=PATH or if you do not have HDF5 use --without-hdf5.  Note: if you do not have HDF5 you will not be able to use SAMRAI's VisIt Data writer and the VisIt visualization package.])
   fi
 fi
-BTNG_AC_LOG_VAR(
+CASC_AC_LOG_VAR(
 [hdf5_INCLUDES INC_PATH hdf5_LIB_PATH hdf5_LIB_NAME LIB_PATH LIB_NAME])
 
 dnl
@@ -1137,7 +1137,7 @@ else
       AC_MSG_ERROR([BOOST is not found. You must specify a valid location via --with-boost=PATH.  SAMRAI requires the use of BOOST.])
    fi
 fi
-BTNG_AC_LOG_VAR(
+CASC_AC_LOG_VAR(
 [boost_INCLUDES INC_PATH boost_LIBS LIB_PATH LIB_NAME])dnl
 
 dnl
@@ -1150,9 +1150,9 @@ if test -n "$TBBINCLUDE" -o -n "$TBBLIBS" -o -n "$TBBLIBDIRS"; then
    INC_PATH="$TBBINCLUDE $INC_PATH"
    LIB_NAME="$TBBLIBS $LIB_NAME"
    LIB_PATH="$TBBLIBDIRS $LIB_PATH"
-   BTNG_AC_LOG_VAR([TBBINCLUDE TBBLIBS TBBLIBDIRS])dnl
+   CASC_AC_LOG_VAR([TBBINCLUDE TBBLIBS TBBLIBDIRS])dnl
 fi
-BTNG_AC_LOG_VAR(with_tbb)
+CASC_AC_LOG_VAR(with_tbb)
 
 dnl
 dnl Silo support
@@ -1165,13 +1165,13 @@ if test "${silo_PREFIX+set}" = set; then
   INC_PATH="$silo_INCLUDES $INC_PATH"
   AC_DEFINE([HAVE_SILO],[1],[SILO library is available so use it])
 fi
-BTNG_AC_LOG_VAR(
+CASC_AC_LOG_VAR(
 [silo_INCLUDES INC_PATH silo_LIB_PATH silo_LIB_NAME LIB_PATH LIB_NAME])
 
 dnl
 dnl Set variables for hypre support.
 dnl
-BTNG_SUPPORT_HYPRE
+CASC_SUPPORT_HYPRE
 if test "${hypre_PREFIX+set}" = set; then
   SAMRAI_SPLIT_LIBS_STRING(hypre_LIBS,hypre_LIB_PATH,hypre_LIB_NAME)
   LIB_PATH="$hypre_LIB_PATH $LIB_PATH"
@@ -1180,7 +1180,7 @@ if test "${hypre_PREFIX+set}" = set; then
   AC_DEFINE(HAVE_HYPRE,1,HYPRE library is available so use it)
   AC_MSG_CHECKING(whether HYPRE was compiled with MPI)
   # Check how HYPRe was compiled.
-  BTNG_AC_LOG_VAR(hypre_PARALLELISM)
+  CASC_AC_LOG_VAR(hypre_PARALLELISM)
   if test "$hypre_PARALLELISM" = 'parallel'; then
      AC_MSG_RESULT(yes)
      if test "$with_mpi" = no ; then
@@ -1220,7 +1220,7 @@ LIB_NAME="$superlu_LIB $LIB_NAME"
 dnl
 dnl Set variables for spooles support.
 dnl
-BTNG_SUPPORT_SPOOLES
+CASC_SUPPORT_SPOOLES
 if test "${spooles_PREFIX+set}" = set; then
   SAMRAI_SPLIT_LIBS_STRING(spooles_LIBS,spooles_LIB_PATH,spooles_LIB_NAME)
   LIB_PATH="$spooles_LIB_PATH $LIB_PATH"
@@ -1231,7 +1231,7 @@ fi
 dnl
 dnl Set variables for petsc support.
 dnl
-BTNG_SUPPORT_PETSC
+CASC_SUPPORT_PETSC
 if test "${PETSC_DIR+set}" = set; then
   SAMRAI_SPLIT_LIBS_STRING(petsc_LIBS,petsc_LIB_PATH,petsc_LIB_NAME)
   LIB_PATH="$petsc_LIB_PATH $LIB_PATH"
@@ -1329,7 +1329,7 @@ else
 fi
 AC_SUBST(SUNDIALS_C_FILES)
 
-BTNG_AC_LOG_VAR(with_sundials sundials_dir)
+CASC_AC_LOG_VAR(with_sundials sundials_dir)
 
 dnl
 dnl If CUBES is requested, then set up the CUBES libraries and include paths.
@@ -1357,7 +1357,7 @@ else
    LIB_PATH="$cubes_lib $LIB_PATH"
    LIB_NAME="${cubes_dir}/patchCubes_lib_LINUX.a ${cubes_dir}/cart3d/lib/arg.LINUX.a $LIB_NAME"
 fi
-BTNG_AC_LOG_VAR(with_cubes cubes_dir)
+CASC_AC_LOG_VAR(with_cubes cubes_dir)
 
 
 dnl
@@ -1386,7 +1386,7 @@ else
    LIB_PATH="$eleven_lib $LIB_PATH"
    LIB_NAME="$LIB_NAME -l11g -lexpat"
 fi
-BTNG_AC_LOG_VAR(with_eleven eleven_dir)
+CASC_AC_LOG_VAR(with_eleven eleven_dir)
 
 
 dnl
@@ -1414,7 +1414,7 @@ else
    LIB_PATH="$cubes_lib $LIB_PATH"
    LIB_NAME="${cubes_dir}/patchCubes_lib_LINUX.a ${cubes_dir}/cart3d/lib/arg.LINUX.a $LIB_NAME"
 fi
-BTNG_AC_LOG_VAR(with_cubes cubes_dir)
+CASC_AC_LOG_VAR(with_cubes cubes_dir)
 
 
 dnl
@@ -1443,7 +1443,7 @@ else
    LIB_PATH="$eleven_lib $LIB_PATH"
    LIB_NAME="$LIB_NAME -l11g -lexpat"
 fi
-BTNG_AC_LOG_VAR(with_eleven eleven_dir)
+CASC_AC_LOG_VAR(with_eleven eleven_dir)
 
 
 dnl
@@ -1489,7 +1489,7 @@ else
       with_vampir=no
    fi
 fi
-BTNG_AC_LOG_VAR( with_vampir vampir_dir )
+CASC_AC_LOG_VAR( with_vampir vampir_dir )
 
 dnl
 dnl If TAU is requested, setup the TAU included makefile, libraries,
@@ -1517,7 +1517,7 @@ fi
 dnl
 dnl Determine which IEEE-specified C macros are broken.
 dnl
-BTNG_C_IEEE_FLOAT
+CASC_C_IEEE_FLOAT
 
 
 # If on the alpha, and the ots library exists, use it.
@@ -1562,9 +1562,9 @@ INSTDIR=$prefix
 dnl
 dnl Support rpath syntax by adding it to the LIB_PATH variable.
 dnl
-BTNG_AC_LOG_VAR(LIB_PATH, before adding rpath syntax)
-BTNG_LIBS_ADD_RPATH(LIB_PATH,LIB_PATH,1)
-BTNG_AC_LOG_VAR(LIB_PATH, after adding rpath syntax)
+CASC_AC_LOG_VAR(LIB_PATH, before adding rpath syntax)
+CASC_LIBS_ADD_RPATH(LIB_PATH,LIB_PATH,1)
+CASC_AC_LOG_VAR(LIB_PATH, after adding rpath syntax)
 
 
 dnl
@@ -1704,8 +1704,8 @@ subdirs="${subdirs} esyscmd(find source tools	samrai_find_excludes -name Makefil
 
 unset makefiles
 for i in $subdirs; do makefiles="$makefiles $i/Makefile"; done
-BTNG_AC_LOG_VAR(makefiles)
-BTNG_AC_LOG_VAR(subdirs)
+CASC_AC_LOG_VAR(makefiles)
+CASC_AC_LOG_VAR(subdirs)
 $MKDIR_P $subdirs
 
 AC_OUTPUT([

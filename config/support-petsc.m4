@@ -1,6 +1,6 @@
 dnl $Id$
 
-AC_DEFUN([BTNG_SUPPORT_PETSC],[
+AC_DEFUN([CASC_SUPPORT_PETSC],[
 # Begin macro SUPPORT_PETSC
 dnl Support PETSC by setting PETSC_DIR, PETSC_ARCH,
 dnl petsc_INCLUDE and petsc_LIBS.
@@ -15,7 +15,7 @@ dnl
 dnl This version supports PETSc-2.1.0 and later.
 
 # Set PETSC_DIR to the PETSC root directory.
-BTNG_ARG_WITH_PREFIX(petsc,PETSC_DIR,
+CASC_ARG_WITH_PREFIX(petsc,PETSC_DIR,
 ifelse($1,,
 [[  --with-petsc=PATH	Support PETSc, and specify PETSC top-level directory.
 			Setting PETSC_DIR is equivalent to this.]],
@@ -47,27 +47,27 @@ PETSC_VERSION_MINOR=`sed -e '/^[ \t]\{0,\}#define PETSC_VERSION_MINOR/!d' -e 's/
 PETSC_VERSION_SUBMINOR=`sed -e '/^[ \t]\{0,\}#define PETSC_VERSION_SUBMINOR/!d' -e 's/.\{0,\}[ \t]\{1,\}//' $PETSC_DIR/include/petscversion.h`
 ]
 fi
-BTNG_AC_LOG_VAR(PETSC_VERSION_MAJOR PETSC_VERSION_MINOR PETSC_VERSION_SUBMINOR)
+CASC_AC_LOG_VAR(PETSC_VERSION_MAJOR PETSC_VERSION_MINOR PETSC_VERSION_SUBMINOR)
 
 # Set PETSC_ARCH.
-BTNG_ARG_WITH_PREFIX(petsc-arch,PETSC_ARCH,
+CASC_ARG_WITH_PREFIX(petsc-arch,PETSC_ARCH,
 [  --with-petsc-arch=PETSC_ARCH
 			Specify the PETSC architecture.
 			If omitted, the output of the petscarch script
 			in the PETSc directory is used.])
 
 # Set PETSC_OPTIMIZE.
-BTNG_ARG_WITH_ENV_WRAPPER(petsc-optimize,PETSC_OPTIMIZE,
+CASC_ARG_WITH_ENV_WRAPPER(petsc-optimize,PETSC_OPTIMIZE,
 [  --with-petsc-optimize
 			Use the optimized PETSC libraries],
 # By default, use the debug PETSC library.
 PETSC_OPTIMIZE=g
-BTNG_AC_LOG_VAR(with_petsc_optimize)
+CASC_AC_LOG_VAR(with_petsc_optimize)
 test "$with_petsc_optimize" = yes && PETSC_OPTIMIZE=O
 )
 
 # Set PETSC_MPIUNI.
-BTNG_ARG_WITH_ENV_WRAPPER(petsc-mpiuni,PETSC_MPIUNI,
+CASC_ARG_WITH_ENV_WRAPPER(petsc-mpiuni,PETSC_MPIUNI,
 [  --with-petsc-mpiuni	Use the PETSC uniprocessor MPI library],
 # By default, do not use the PETSC uniprocessor MPI library.
 unset PETSC_MPIUNI
@@ -99,7 +99,7 @@ if test "${PETSC_DIR+set}" = set; then
     fi    
     export PETSC_ARCH
   fi
-  BTNG_AC_LOG_VAR(PETSC_ARCH)
+  CASC_AC_LOG_VAR(PETSC_ARCH)
   if test ! -d "$PETSC_DIR/bmake/$PETSC_ARCH"; then
     AC_MSG_WARN([PETSC architecture ($PETSC_ARCH) does not look right])
   fi
@@ -150,7 +150,7 @@ if test "${PETSC_DIR+set}" = set; then
     petsc_libs_ls=`echo "$petsc_libs_ls" | sed 's/\(.*\)\( \{0,1\}'"$i"'\{0,1\} \)\(.*\)/\1 \3 \2/g'`
   done
   # Build up petsc_LIBS string using library names.
-  BTNG_AC_LOG_VAR(petsc_libs_ls1 petsc_libs_ls)
+  CASC_AC_LOG_VAR(petsc_libs_ls1 petsc_libs_ls)
   if test -n "$petsc_libs_ls"; then
     if test "${PETSC_LIBFILES+set}" = set; then
       for i in $petsc_libs_ls; do
@@ -164,7 +164,7 @@ if test "${PETSC_DIR+set}" = set; then
     fi
   fi
 
-  BTNG_AC_LOG_VAR(PETSC_DIR petsc_INCLUDES petsc_LIBS PETSC_OPTIMIZE PETSC_MPIUNI)
+  CASC_AC_LOG_VAR(PETSC_DIR petsc_INCLUDES petsc_LIBS PETSC_OPTIMIZE PETSC_MPIUNI)
 
 fi
 # End macro SUPPORT_PETSC

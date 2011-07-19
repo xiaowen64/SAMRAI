@@ -2,9 +2,9 @@ dnl $Id$
 
 
 
-AC_DEFUN([BTNG_TYPE_NAMESPACE],[
+AC_DEFUN([CASC_TYPE_NAMESPACE],[
 
-# Start macro BTNG_TYPE_NAMESPACE
+# Start macro CASC_TYPE_NAMESPACE
 
 AC_MSG_CHECKING(whether namespace is broken)
 
@@ -34,6 +34,6 @@ if test "$btng_cv_type_namespace_broken" = yes; then
 fi
 
 
-# End macro BTNG_TYPE_NAMESPACE
+# End macro CASC_TYPE_NAMESPACE
 
-])	dnl End of BTNG_TYPE_NAMESPACE definition.
+])	dnl End of CASC_TYPE_NAMESPACE definition.

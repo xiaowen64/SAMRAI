@@ -1,6 +1,6 @@
 dnl $Id$
 
-AC_DEFUN([BTNG_VAR_SET_BLAS],[
+AC_DEFUN([CASC_VAR_SET_BLAS],[
 dnl Provides support for the blas library.
 dnl
 dnl Arguments are:
@@ -30,15 +30,15 @@ if test "${$1+set}" = set ; then
     test -n "${$1}" && btng_extra_libs="-L${$1}/lib $btng_extra_libs"
     # Look for library.
     AC_SEARCH_LIBS([daxpy_],blas,[
-      BTNG_AC_LOG_VAR(LIBS,After finding blas flag)
+      CASC_AC_LOG_VAR(LIBS,After finding blas flag)
       # Action if found ...
       # Extract modifications to LIB into library-specific LIBS variable.
       $3=`echo " $LIBS" | sed "s! $btng_save_LIBS!!"`;
       test -n "${$1}" && $3="-L${$1}/lib ${$3}"
-      BTNG_AC_LOG_VAR($3, Found blas library flag)
+      CASC_AC_LOG_VAR($3, Found blas library flag)
       ],[
       # Action if NOT found ...
-      BTNG_AC_LOG_VAR($3, Did not find blas library flag)
+      CASC_AC_LOG_VAR($3, Did not find blas library flag)
       AC_MSG_WARN(
 [I could not systematically find the name of
 the blas library so I am using -lblas instead.])
@@ -50,7 +50,7 @@ the blas library so I am using -lblas instead.])
     unset btng_extra_libs
     unset btng_save_LIBS
   else
-    BTNG_AC_LOG(Not looking for blas because $3 is already set)
+    CASC_AC_LOG(Not looking for blas because $3 is already set)
   fi
 fi
 ])dnl
@@ -58,14 +58,14 @@ fi
 
 
 
-AC_DEFUN([BTNG_SUPPORT_BLAS],[
+AC_DEFUN([CASC_SUPPORT_BLAS],[
 dnl Support blas library by setting the variables
 dnl blas_PREFIX, blas_INCLUDES, and blas_LIBS.
 dnl Arg1: non-empty if you want the default to be on.
 dnl
-# Begin macro BTNG_SUPPORT_BLAS
+# Begin macro CASC_SUPPORT_BLAS
 
-BTNG_ARG_WITH_ENV_WRAPPER(blas, blas_PREFIX,
+CASC_ARG_WITH_ENV_WRAPPER(blas, blas_PREFIX,
 ifelse($1,,
 [  --with-blas[=PATH]
 			Use blas and optionally specify where
@@ -78,20 +78,20 @@ ifelse($1,,unset blas_PREFIX,blas_PREFIX=)
 fi
 )
 
-BTNG_ARG_WITH_PREFIX(blas-includes,blas_INCLUDES,
+CASC_ARG_WITH_PREFIX(blas-includes,blas_INCLUDES,
 [  --with-blas-includes=STRING
 			Specify the INCLUDES flags for blas.
 			If not specified, and --with-blas=PATH is,
 			this defaults to "-IPATH/include".])dnl
 
-BTNG_ARG_WITH_PREFIX(blas-libs,blas_LIBS,
+CASC_ARG_WITH_PREFIX(blas-libs,blas_LIBS,
 [  --with-blas-libs=STRING
 			Specify LIBS flags for blas.
 			If not specified, and --with-blas=PATH is,
 			this defaults to "-LPATH/lib -lblas".])dnl
 
-BTNG_VAR_SET_BLAS(blas_PREFIX,blas_INCLUDES,blas_LIBS)
+CASC_VAR_SET_BLAS(blas_PREFIX,blas_INCLUDES,blas_LIBS)
 
-BTNG_AC_LOG_VAR(blas_PREFIX blas_INCLUDES blas_LIBS)
-# End macro BTNG_SUPPORT_BLAS
+CASC_AC_LOG_VAR(blas_PREFIX blas_INCLUDES blas_LIBS)
+# End macro CASC_SUPPORT_BLAS
 ])

@@ -1,8 +1,8 @@
 dnl $Id$
 
 
-AC_DEFUN([BTNG_LIBS_ADD_RPATH],[
-# Begin macro BTNG_LIBS_ADD_RPATH
+AC_DEFUN([CASC_LIBS_ADD_RPATH],[
+# Begin macro CASC_LIBS_ADD_RPATH
 dnl Support RPATH by going in a LIBS string and, for each -L flag,
 dnl add a flag immediately following it to set the RPATH, for
 dnl paths that contain shared libraries.
@@ -16,7 +16,7 @@ dnl Determine which compiler is being used, because
 dnl the syntax of the RPATH flag depends on the compiler.
 dnl Use the C++ compiler and assume the C compiler
 dnl is from the same family.
-AC_REQUIRE([BTNG_INFO_CC_CXX_ID])
+AC_REQUIRE([CASC_INFO_CC_CXX_ID])
 
 
 AC_ARG_ENABLE(rpath,
@@ -51,13 +51,13 @@ if test "$enable_rpath" = yes; then
     gnu)
       # This compiler may use a variable rpath syntax because it may use
       # the native loader.
-      BTNG_LIBS_FIND_RPATH(btng_rpath_beginning,
+      CASC_LIBS_FIND_RPATH(btng_rpath_beginning,
 	['---bogus-flag-meant-to-cause-error' '-Wl,-rpath ' '-Wl,-R' '-Wl,-R '])
     ;;
     intel)
       # This compiler may use a variable rpath syntax because it may use
       # the native loader.
-      BTNG_LIBS_FIND_RPATH(btng_rpath_beginning,
+      CASC_LIBS_FIND_RPATH(btng_rpath_beginning,
 	['---bogus-flag-meant-to-cause-error' '-Wl,-rpath ' '-Wl,-R' '-Wl,-R '])
       if test "$btng_rpath_beginning" = "---bogus-flag-meant-to-cause-error"; then
         # Do not rely on the compiler return value to test for syntax
@@ -78,7 +78,7 @@ if test "$enable_rpath" = yes; then
     ;;
     sunpro)
       # This compiler may use a variable rpath syntax.
-      BTNG_LIBS_FIND_RPATH(btng_rpath_beginning,['---bogus-flag-meant-to-cause-error' '-R' '-R '])
+      CASC_LIBS_FIND_RPATH(btng_rpath_beginning,['---bogus-flag-meant-to-cause-error' '-R' '-R '])
     ;;
     kai)
       # The KAI compilers use the system native loader.
@@ -90,7 +90,7 @@ if test "$enable_rpath" = yes; then
       # If the compiler accepts this flag (by returning 0), we know
       # it is wrong and we resort to an alternative method for
       # getting the rpath syntax.
-      BTNG_LIBS_FIND_RPATH(btng_rpath_beginning,
+      CASC_LIBS_FIND_RPATH(btng_rpath_beginning,
 	['---bogus-flag-meant-to-cause-error' '-R' '-R ' '-rpath ' '-Wl,-rpath ' '-Wl,-R' '-Wl,-R '])
       if test "$btng_rpath_beginning" = "---bogus-flag-meant-to-cause-error"; then
         # Do not rely on the compiler return value to test for syntax
@@ -110,10 +110,10 @@ if test "$enable_rpath" = yes; then
       fi
     ;;
     *)
-      BTNG_LIBS_FIND_RPATH(btng_rpath_beginning)
+      CASC_LIBS_FIND_RPATH(btng_rpath_beginning)
     ;;
   esac
-  BTNG_AC_LOG_VAR(host_os CC_ID CXX_ID btng_rpath_compiler_id btng_rpath_beginning, forming rpaths)
+  CASC_AC_LOG_VAR(host_os CC_ID CXX_ID btng_rpath_compiler_id btng_rpath_beginning, forming rpaths)
 
   AC_LANG_RESTORE
 
@@ -159,11 +159,11 @@ fi
 
 dnl Now, arg2 should be similar to arg1, but with the additional RPATH flags.
 
-# End macro BTNG_LIBS_ADD_RPATH
+# End macro CASC_LIBS_ADD_RPATH
 ])
 
-AC_DEFUN([BTNG_LIBS_FIND_RPATH],[
-# Begin macro BTNG_LIBS_FIND_RPATH
+AC_DEFUN([CASC_LIBS_FIND_RPATH],[
+# Begin macro CASC_LIBS_FIND_RPATH
 dnl Find the correct rpath syntax from the list given in arg1.
 dnl arg1: variable to set to the syntax string
 dnl arg2: list of syntaxes to try;
@@ -191,5 +191,5 @@ define(btng_possible_rpaths,dnl
   done
   LIBS="$btng_save_LIBS"
 undefine([btng_possible_rpaths])
-# End macro BTNG_LIBS_FIND_RPATH
+# End macro CASC_LIBS_FIND_RPATH
 ])

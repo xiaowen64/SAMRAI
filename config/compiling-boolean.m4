@@ -1,9 +1,9 @@
 dnl $Id$
 
 
-AC_DEFUN([BTNG_TYPE_BOOL],[
+AC_DEFUN([CASC_TYPE_BOOL],[
 
-# Start macro BTNG_TYPE_BOOL
+# Start macro CASC_TYPE_BOOL
 
 AC_MSG_CHECKING(checking whether bool type is broken)
 
@@ -31,6 +31,6 @@ if test "$btng_cv_type_bool_broken" = yes; then
 fi
 
 
-# End macro BTNG_TYPE_BOOL
+# End macro CASC_TYPE_BOOL
 
 ])	dnl End of COMPILE_BOOLEAN_MACRO definition.

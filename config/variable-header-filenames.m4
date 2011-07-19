@@ -1,6 +1,6 @@
 dnl $Id$
 
-AC_DEFUN([BTNG_FIND_CORRECT_HEADER_FILENAME],[
+AC_DEFUN([CASC_FIND_CORRECT_HEADER_FILENAME],[
 dnl There is no standard naming convention for STL header files.
 dnl This macro helps to pick the right name out of a list.
 dnl Arg1 is the variable to set to the found file name.
@@ -11,14 +11,14 @@ dnl Arg4 is the code body to test if the included file works.
   AC_LANG_SAVE
   AC_LANG_CPLUSPLUS
   $1=
-  AC_REQUIRE([BTNG_TYPE_NAMESPACE])
-  AC_REQUIRE([BTNG_TYPE_BOOL])
+  AC_REQUIRE([CASC_TYPE_NAMESPACE])
+  AC_REQUIRE([CASC_TYPE_BOOL])
   CPPFLAGS_SAVE=$CPPFLAGS
   for file in $2; do
     AC_CHECK_HEADER($file, btng_header_found=1, unset btng_header_found)
     if test -n "$btng_header_found"; then
       AC_MSG_CHECKING(whether $file is the header sought)
-      BTNG_AC_LOG(found header file $file)
+      CASC_AC_LOG(found header file $file)
       CPPFLAGS="$CPPFLAGS_SAVE $CXX_OPTIONS"
       AC_TRY_COMPILE(
         [
@@ -50,8 +50,8 @@ using namespace std;
 
 
 
-AC_DEFUN([BTNG_TREAT_VARIABLE_HEADER_FILENAME],[
-dnl BTNG_TREAT_VARIABLE_HEADER_FILENAME is a generic macro
+AC_DEFUN([CASC_TREAT_VARIABLE_HEADER_FILENAME],[
+dnl CASC_TREAT_VARIABLE_HEADER_FILENAME is a generic macro
 dnl used by (and using) other macros in this file.
 dnl It determines, from a given list, the correct name of
 dnl a header file required to compile a test code body.
@@ -75,7 +75,7 @@ AC_CACHE_VAL(btng_cv_[]translit($1,[-],[_])[]_header_filename, [
   AC_ARG_WITH($1-header-file,
   [  --with-$1-header-file	Specify name of the $1 header file.],
   btng_cv_[]translit($1,[-],[_])[]_header_filename=$with_[]translit($1,[-],[_])[]_header_file,
-  [BTNG_FIND_CORRECT_HEADER_FILENAME(btng_cv_[]translit($1,[-],[_])[]_header_filename,$2,[$3],[[$4]])]
+  [CASC_FIND_CORRECT_HEADER_FILENAME(btng_cv_[]translit($1,[-],[_])[]_header_filename,$2,[$3],[[$4]])]
   )
 ])	dnl End AC_CACHE_VAL call
 # We must be able to find the $1 header file or else.
@@ -88,15 +88,15 @@ if test -z "$translit($1,[-a-z],[_A-Z])[]_HEADER_FILE"; then
       use the option --with-[]$1[]-header-file=FILENAME
       with configure.])
   AC_DEFINE(translit($1,[-a-z],[_A-Z])[]_IS_BROKEN,[1],[The $1 header file is broken])
-  BTNG_AC_LOG(header file $1 is broken)
+  CASC_AC_LOG(header file $1 is broken)
 else
   unset translit($1,[-],[_])[]_header_is_broken
   AC_DEFINE_UNQUOTED(translit($1,[-a-z],[_A-Z])[]_HEADER_FILE,<$translit($1,[-a-z],[_A-Z])[]_HEADER_FILE>,
     [Header file for $1])
-  BTNG_AC_LOG(header file $1 is ok)
+  CASC_AC_LOG(header file $1 is ok)
 fi
 # End macro $0
-])	dnl end of BTNG_TREAT_VARIABLE_HEADER_FILENAME definition.
+])	dnl end of CASC_TREAT_VARIABLE_HEADER_FILENAME definition.
 
 
 
@@ -105,30 +105,30 @@ dnl These are some STL headers with uncertain names.
 dnl
 
 
-AC_DEFUN([BTNG_STL_STRING_HEADER_FILENAME],[
+AC_DEFUN([CASC_STL_STRING_HEADER_FILENAME],[
 # Start macro $0
 dnl dnl AC_MSG_CHECKING(name of the STL string header file)
-BTNG_TREAT_VARIABLE_HEADER_FILENAME([stl-string],
+CASC_TREAT_VARIABLE_HEADER_FILENAME([stl-string],
   [string strings string.h strings.h string.hxx strings.hxx],,
   [std::string s; s = "sample string";])
 # End macro $0
-])	dnl end of BTNG_STL_STRING_HEADER_FILENAME definition.
+])	dnl end of CASC_STL_STRING_HEADER_FILENAME definition.
 
 
-AC_DEFUN([BTNG_STL_SET_HEADER_FILENAME],[
+AC_DEFUN([CASC_STL_SET_HEADER_FILENAME],[
 # Start macro $0
 dnl AC_MSG_CHECKING(name of the STL set header file)
-BTNG_TREAT_VARIABLE_HEADER_FILENAME([stl-set], [set set.h set.hxx],,
+CASC_TREAT_VARIABLE_HEADER_FILENAME([stl-set], [set set.h set.hxx],,
   [set<int> s; s.insert(1);])
 # End macro $0
-])	dnl end of BTNG_STL_SET_HEADER_FILENAME definition.
+])	dnl end of CASC_STL_SET_HEADER_FILENAME definition.
 
 
-AC_DEFUN([BTNG_STL_STACK_HEADER_FILENAME],[
+AC_DEFUN([CASC_STL_STACK_HEADER_FILENAME],[
 # Start macro $0
 dnl AC_MSG_CHECKING(name of the STL stack header file)
-AC_REQUIRE([BTNG_INFO_CXX_ID])
-AC_REQUIRE([BTNG_STL_LIST_HEADER_FILENAME])
+AC_REQUIRE([CASC_INFO_CXX_ID])
+AC_REQUIRE([CASC_STL_LIST_HEADER_FILENAME])
 btng_stl_stack_test_body='[stack<int> s; s.push(1);]'
 # The Sun compiler version 5.2 does not treat default template
 # arguments correctly.  The STL standard states that for stack,
@@ -137,34 +137,34 @@ btng_stl_stack_test_body='[stack<int> s; s.push(1);]'
 if test "$CXX_ID" = "sunpro" && echo "$CXX_VERSION" | grep '^0x420' > /dev/null || test "$CXX_ID" = "sunpro" && echo "$CXX_VERSION" | grep '^0x520' > /dev/null ; then
 btng_stl_stack_test_body='[stack<int,list<int> > s; s.push(1);]'
 fi
-BTNG_TREAT_VARIABLE_HEADER_FILENAME([stl-stack], [stack stack.h stack.hxx],,
+CASC_TREAT_VARIABLE_HEADER_FILENAME([stl-stack], [stack stack.h stack.hxx],,
   [$btng_stl_stack_test_body])
 # End macro $0
-])	dnl end of BTNG_STL_STACK_HEADER_FILENAME definition.
+])	dnl end of CASC_STL_STACK_HEADER_FILENAME definition.
 
 
-AC_DEFUN([BTNG_STL_VECTOR_HEADER_FILENAME],[
+AC_DEFUN([CASC_STL_VECTOR_HEADER_FILENAME],[
 # Start macro $0
-BTNG_TREAT_VARIABLE_HEADER_FILENAME([stl-vector], [vector vector.h vector.hxx],,
+CASC_TREAT_VARIABLE_HEADER_FILENAME([stl-vector], [vector vector.h vector.hxx],,
 [vector<int> v; v.insert(v.begin(),1);
 vector<char> s; s.insert( s.end(), 10, '\0' );])
 # End macro $0
-])	dnl end of BTNG_STL_VECTOR_HEADER_FILENAME definition.
+])	dnl end of CASC_STL_VECTOR_HEADER_FILENAME definition.
 
 
-AC_DEFUN([BTNG_STL_LIST_HEADER_FILENAME],[
+AC_DEFUN([CASC_STL_LIST_HEADER_FILENAME],[
 # Start macro $0
 dnl AC_MSG_CHECKING(name of the STL list header file)
-BTNG_TREAT_VARIABLE_HEADER_FILENAME([stl-list], [list list.h list.hxx],,
+CASC_TREAT_VARIABLE_HEADER_FILENAME([stl-list], [list list.h list.hxx],,
   [list<int> v; v.insert(v.begin(),1);])
 # End macro $0
-])	dnl end of BTNG_STL_LIST_HEADER_FILENAME definition.
+])	dnl end of CASC_STL_LIST_HEADER_FILENAME definition.
 
 
-AC_DEFUN([BTNG_STL_MAP_HEADER_FILENAME],[
+AC_DEFUN([CASC_STL_MAP_HEADER_FILENAME],[
 # Start macro $0
 dnl AC_MSG_CHECKING(name of the STL map header file)
-AC_REQUIRE([BTNG_INFO_CXX_ID])
+AC_REQUIRE([CASC_INFO_CXX_ID])
 btng_stl_map_test_body='[map<int,int> v; v[0]=1;]'
 # The Sun compiler version 4.2 does not treat default template
 # arguments correctly.  The STL standard states that for map,
@@ -172,54 +172,54 @@ btng_stl_map_test_body='[map<int,int> v; v[0]=1;]'
 # requires the third.
 test "$CXX_ID" = "sunpro" && echo "$CXX_VERSION" | grep '^0x420' > /dev/null && \
 btng_stl_map_test_body='[map<int,int,less<int> > v; v[0]=1;]'
-BTNG_TREAT_VARIABLE_HEADER_FILENAME([stl-map], [map map.h map.hxx],,
+CASC_TREAT_VARIABLE_HEADER_FILENAME([stl-map], [map map.h map.hxx],,
   [$btng_stl_map_test_body])
 # End macro $0
-])	dnl end of BTNG_STL_MAP_HEADER_FILENAME definition.
+])	dnl end of CASC_STL_MAP_HEADER_FILENAME definition.
 
 
-AC_DEFUN([BTNG_STL_ITERATOR_HEADER_FILENAME],[
+AC_DEFUN([CASC_STL_ITERATOR_HEADER_FILENAME],[
 # Start macro $0
 dnl AC_MSG_CHECKING(name of the STL iterator header file)
-BTNG_TREAT_VARIABLE_HEADER_FILENAME([stl-iterator],
+CASC_TREAT_VARIABLE_HEADER_FILENAME([stl-iterator],
   [iterator iterator.h iterator.hxx],,
   [int a[10], size; size=distance(a,a+10);])
 dnl  [ostream_iterator<int> v(cout," ");])
 # End macro $0
-])	dnl end of BTNG_STL_ITERATOR_HEADER_FILENAME definition.
+])	dnl end of CASC_STL_ITERATOR_HEADER_FILENAME definition.
 
 
-AC_DEFUN([BTNG_STL_ALGO_HEADER_FILENAME],[
+AC_DEFUN([CASC_STL_ALGO_HEADER_FILENAME],[
 # Start macro $0
 dnl AC_MSG_CHECKING(name of the STL algo header file)
-BTNG_TREAT_VARIABLE_HEADER_FILENAME([stl-algo],
+CASC_TREAT_VARIABLE_HEADER_FILENAME([stl-algo],
   [algo algorithm algo.h algorithm.h algo.hxx algorithm.hxx] ,,
   [int n[10]; find(n,n+10,0);])
 # End macro $0
-])	dnl end of BTNG_STL_ALGO_HEADER_FILENAME definition.
+])	dnl end of CASC_STL_ALGO_HEADER_FILENAME definition.
 
 
-AC_DEFUN([BTNG_STL_FUNCTION_HEADER_FILENAME],[
+AC_DEFUN([CASC_STL_FUNCTION_HEADER_FILENAME],[
 # Start macro $0
 dnl AC_MSG_CHECKING(name of the STL numeric header file)
-BTNG_TREAT_VARIABLE_HEADER_FILENAME([stl-function],
+CASC_TREAT_VARIABLE_HEADER_FILENAME([stl-function],
   [function function.h function.hxx] ,,
   [int a=1, b=2, c; plus<int> adder; c=adder(a,b);])
 # End macro $0
-])	dnl end of BTNG_STL_FUNCTION_HEADER_FILENAME definition.
+])	dnl end of CASC_STL_FUNCTION_HEADER_FILENAME definition.
 
 
-AC_DEFUN([BTNG_STL_NUMERIC_HEADER_FILENAME],[
+AC_DEFUN([CASC_STL_NUMERIC_HEADER_FILENAME],[
 # Start macro $0
 dnl AC_MSG_CHECKING(name of the STL numeric header file)
-BTNG_TREAT_VARIABLE_HEADER_FILENAME([stl-numeric],
+CASC_TREAT_VARIABLE_HEADER_FILENAME([stl-numeric],
   [numeric numeric.h numeric.hxx] ,,
   [int n[10]; iota(n,n+10,0);])
 # End macro $0
-])	dnl end of BTNG_STL_NUMERIC_HEADER_FILENAME definition.
+])	dnl end of CASC_STL_NUMERIC_HEADER_FILENAME definition.
 
 
-AC_DEFUN([BTNG_STL_SSTREAM_HEADER_FILENAME],[
+AC_DEFUN([CASC_STL_SSTREAM_HEADER_FILENAME],[
 # Start macro $0
 dnl AC_MSG_CHECKING(name of the STL string stream header file)
 btng_stl_sstream_test_body='/* New syntax */ istringstream ist("a string");'
@@ -229,34 +229,34 @@ test "$CXX_ID" = "sunpro" && echo "$CXX_VERSION" | grep '^0x420' > /dev/null && 
 btng_stl_sstream_test_body='/* Old syntax */ char i[[10]]; istrstream ist(i);'
 test "$CXX_ID" = "gnu" && echo "$CXX_VERSION" | grep '^2.95.2' > /dev/null && \
 btng_stl_sstream_test_body='/* Old syntax */ char i[[10]]; istrstream ist(i);'
-BTNG_TREAT_VARIABLE_HEADER_FILENAME([stl-sstream],
+CASC_TREAT_VARIABLE_HEADER_FILENAME([stl-sstream],
   [sstream stringstream strstream sstream.h stringstream.h strstream.h sstream.hxx stringstream.hxx strstream.hxx] ,,
   [$btng_stl_sstream_test_body] )
 # End macro $0
-])      dnl end of BTNG_STL_SSTREAM_HEADER_FILENAME definition.
+])      dnl end of CASC_STL_SSTREAM_HEADER_FILENAME definition.
 
 
-AC_DEFUN([BTNG_STL_MULTIMAP_HEADER_FILENAME],[
+AC_DEFUN([CASC_STL_MULTIMAP_HEADER_FILENAME],[
 # Start macro $0
 dnl AC_MSG_CHECKING(name of the STL multimap header file)
-AC_REQUIRE([BTNG_INFO_CXX_ID])
+AC_REQUIRE([CASC_INFO_CXX_ID])
 btng_stl_multimap_test_body='[multimap<int,int > v; pair<const int,int> thePair(0,1); v.insert(thePair);]'
 test "$CXX_ID" = "sunpro" && echo "$CXX_VERSION" | grep '^0x420' > /dev/null && \
 btng_stl_multimap_test_body='[multimap<int,int,less<int> > v; pair<const int,int> thePair(0,1); v.insert(thePair);]'
-BTNG_TREAT_VARIABLE_HEADER_FILENAME([stl-multimap],
+CASC_TREAT_VARIABLE_HEADER_FILENAME([stl-multimap],
     [multimap mmap multimap.h mmap.h multimap.hxx mmap.hxx map map.h map.hxx],,
     [$btng_stl_multimap_test_body])
 # End macro $0
-])      dnl end of BTNG_STL_MULTIMAP_HEADER_FILENAME definition.
+])      dnl end of CASC_STL_MULTIMAP_HEADER_FILENAME definition.
 
 
-AC_DEFUN([BTNG_STL_PAIR_HEADER_FILENAME],[
+AC_DEFUN([CASC_STL_PAIR_HEADER_FILENAME],[
 # Start macro $0
 dnl AC_MSG_CHECKING(name of the STL pair header file)
-BTNG_TREAT_VARIABLE_HEADER_FILENAME([stl-pair], [pair pair.h pair.hxx],,
+CASC_TREAT_VARIABLE_HEADER_FILENAME([stl-pair], [pair pair.h pair.hxx],,
   [pair<int,int> s(0,1);])
 # End macro $0
-])      dnl end of BTNG_STL_PAIR_HEADER_FILENAME definition.
+])      dnl end of CASC_STL_PAIR_HEADER_FILENAME definition.
 
 
 
@@ -266,36 +266,36 @@ dnl These are some stream-related headers with uncertain names.
 dnl
 
 
-AC_DEFUN([BTNG_IOSTREAM_HEADER_FILENAME],[
+AC_DEFUN([CASC_IOSTREAM_HEADER_FILENAME],[
 # Start macro $0
 dnl AC_MSG_CHECKING(name of the iostream header file)
-BTNG_TREAT_VARIABLE_HEADER_FILENAME([iostream],
+CASC_TREAT_VARIABLE_HEADER_FILENAME([iostream],
   [iostream iostream.h iostream.hxx],,
   [ostream &co=cout; // test ostream declaration
    istream &ci=cin; // test istream declaration
    cout<<"test"<<endl; // test extraction operator
    ])
 # End macro $0
-])	dnl end of BTNG_IOSTREAM_HEADER_FILENAME definition.
+])	dnl end of CASC_IOSTREAM_HEADER_FILENAME definition.
 
 
-AC_DEFUN([BTNG_FSTREAM_HEADER_FILENAME],[
+AC_DEFUN([CASC_FSTREAM_HEADER_FILENAME],[
 # Start macro $0
 dnl AC_MSG_CHECKING(name of the fstream header file)
-BTNG_TREAT_VARIABLE_HEADER_FILENAME([fstream],
+CASC_TREAT_VARIABLE_HEADER_FILENAME([fstream],
   [fstream fstream.h fstream.hxx],,
   [fstream iost("theStream",ios::app);])
 # End macro $0
-])	dnl end of BTNG_FSTREAM_HEADER_FILENAME definition.
+])	dnl end of CASC_FSTREAM_HEADER_FILENAME definition.
 
 
-AC_DEFUN([BTNG_IOMANIP_HEADER_FILENAME],[
+AC_DEFUN([CASC_IOMANIP_HEADER_FILENAME],[
 # Start macro $0
 dnl AC_MSG_CHECKING(name of the iomanip header file)
-AC_REQUIRE([BTNG_IOSTREAM_HEADER_FILENAME])
-BTNG_TREAT_VARIABLE_HEADER_FILENAME([iomanip],
+AC_REQUIRE([CASC_IOSTREAM_HEADER_FILENAME])
+CASC_TREAT_VARIABLE_HEADER_FILENAME([iomanip],
   [iomanip iomanip.h iomanip.hxx],[#include IOSTREAM_HEADER_FILE],
   [cout<<setw(13)<<endl;])
 # End macro $0
-])	dnl end of BTNG_IOMANIP_HEADER_FILENAME definition.
+])	dnl end of CASC_IOMANIP_HEADER_FILENAME definition.
 

@@ -1,7 +1,7 @@
 dnl Define a macro for supporting generalized serial-parallel run.
 
 
-AC_DEFUN([BTNG_SUPPORT_SERPA],[
+AC_DEFUN([CASC_SUPPORT_SERPA],[
 dnl Support a generalized way to run a program in serial or parallel mode.
 dnl (serpa is serial + parallel).
 dnl
@@ -41,11 +41,11 @@ case "$with_parallel_run_bin" in
     PARALLEL_RUN_BIN="$with_parallel_run_bin"
     ;;
 esac
-BTNG_AC_LOG_VAR(with_parallel_run_bin PARALLEL_RUN_BIN target_os, with-parallel-run-bin given)
+CASC_AC_LOG_VAR(with_parallel_run_bin PARALLEL_RUN_BIN target_os, with-parallel-run-bin given)
 
 ],[
 unset PARALLEL_RUN_BIN;
-BTNG_AC_LOG_VAR(with_parallel_run_bin PARALLEL_RUN_BIN target_os, with-parallel-run-bin NOT given)
+CASC_AC_LOG_VAR(with_parallel_run_bin PARALLEL_RUN_BIN target_os, with-parallel-run-bin NOT given)
 ])
 # If PARALLEL_RUN_BIN is unset, guess it.
 if test ! "${PARALLEL_RUN_BIN+set}" = set; then
@@ -55,7 +55,7 @@ if test ! "${PARALLEL_RUN_BIN+set}" = set; then
     *) PARALLEL_RUN_BIN=mpirun
     ;;
   esac
-  BTNG_AC_LOG_VAR(with_parallel_run_bin PARALLEL_RUN_BIN target_os, after setting PARALLEL_RUN_BIN)
+  CASC_AC_LOG_VAR(with_parallel_run_bin PARALLEL_RUN_BIN target_os, after setting PARALLEL_RUN_BIN)
 fi
 AC_SUBST(PARALLEL_RUN_BIN)
 
@@ -459,11 +459,11 @@ dnl Settings to make before running the above.
 btng_serpa_dir_name=`echo ']btng_serpa_run_fn[' | sed -e ['s:^\([^/]*\)$:./\1:'] -e ['s:/[^/]*$::']`;
 btng_serpa_machine_file="${btng_serpa_dir_name}/serpa.machines"
 DISTCLEANFILES="$DISTCLEANFILES ${btng_serpa_machine_file}"
-BTNG_AC_LOG_VAR(btng_serpa_machine_file DISTCLEANFILES, in support-serpa-run)
+CASC_AC_LOG_VAR(btng_serpa_machine_file DISTCLEANFILES, in support-serpa-run)
 
 
 undefine([btng_serpa_run_fn])
 
 
 # End macro $0
-])dnl End BTNG_SUPPORT_SERPA macro.
+])dnl End CASC_SUPPORT_SERPA macro.

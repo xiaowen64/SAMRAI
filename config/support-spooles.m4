@@ -2,12 +2,12 @@ dnl Define macros for supporting z compression library.
 dnl $Id$
 
 
-AC_DEFUN([BTNG_SUPPORT_SPOOLES],[
+AC_DEFUN([CASC_SUPPORT_SPOOLES],[
 dnl Support spooles library by setting the variables
 dnl spooles_PREFIX, spooles_INCLUDES, and spooles_LIBS.
 dnl Arg1: non-empty if you want the default to be on.
 dnl
-# Begin macro BTNG_SUPPORT_SPOOLES
+# Begin macro CASC_SUPPORT_SPOOLES
 
 ifelse($1,,unset spooles_PREFIX,spooles_PREFIX=)
 
@@ -44,7 +44,7 @@ if test "${spooles_PREFIX+set}" = set; then
   fi
 fi
 
-BTNG_AC_LOG_VAR(spooles_PREFIX spooles_LIBS spooles_INCLUDES)
+CASC_AC_LOG_VAR(spooles_PREFIX spooles_LIBS spooles_INCLUDES)
 
-# End macro BTNG_SUPPORT_SPOOLES
+# End macro CASC_SUPPORT_SPOOLES
 ])
