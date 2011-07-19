@@ -306,9 +306,6 @@
 /* LACK_ISO_SSTREAM */
 #undef LACK_ISO_SSTREAM
 
-/* Define if namespace is not properly supported */
-#undef NAMESPACE_IS_BROKEN
-
 /* Define if NAN is not in float.h */
 #undef NAN_IS_BROKEN
 

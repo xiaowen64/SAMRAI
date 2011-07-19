@@ -33,10 +33,8 @@
 #include "SAMRAI/tbox/TimerManager.h"
 #include <vector>
 
-#ifndef LACKS_NAMESPACE
 using namespace SAMRAI;
 using namespace tbox;
-#endif
 
 /*
  ************************************************************************

@@ -9,10 +9,6 @@
  ************************************************************************/
 #include <string>
 
-#ifndef NAMESPACE_IS_BROKEN
-
-#endif
-
 /*!
  * This function gets the input file name from the argument list.
  * For most cases, this is simply the first

@@ -54,9 +54,7 @@
 
 #include "get-input-filename.h"
 
-#ifndef LACKS_NAMESPACE
 using namespace SAMRAI;
-#endif
 
 int main(
    int argc,

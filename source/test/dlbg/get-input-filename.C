@@ -13,10 +13,6 @@
 
 #include <string>
 
-#ifndef NAMESPACE_IS_BROKEN
-// using namespace std;
-#endif
-
 #include "get-input-filename.h"
 
 int get_input_filename(

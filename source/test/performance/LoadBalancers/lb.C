@@ -35,10 +35,8 @@
 
 #include "DerivedVisOwnerData.h"
 
-#ifndef LACKS_NAMESPACE
 using namespace SAMRAI;
 using namespace tbox;
-#endif
 
 /*
  ************************************************************************

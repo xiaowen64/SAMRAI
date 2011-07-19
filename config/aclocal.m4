@@ -3417,46 +3417,6 @@ fi
 
 ])	dnl End of COMPILE_BOOLEAN_MACRO definition.
 
-dnl $Id$
-
-
-
-AC_DEFUN([CASC_TYPE_NAMESPACE],[
-
-# Start macro CASC_TYPE_NAMESPACE
-
-AC_MSG_CHECKING(whether namespace is broken)
-
-AC_CACHE_VAL(btng_cv_type_namespace_broken, [
-
-  dnl AC_LANG_SAVE
-  dnl AC_LANG_CPLUSPLUS
-  AC_LANG_PUSH([C++])
-  AC_TRY_COMPILE(namespace test{ int i; }
-		, using namespace test;,
-    # namespace is not broken.
-    btng_cv_type_namespace_broken=no
-    ,
-    # namespace is broken.
-    btng_cv_type_namespace_broken=yes
-  )	dnl End AC_TRY_COMPILE call
-
-  AC_LANG_POP([C++])
-  dnl AC_LANG_RESTORE
-
-])	dnl End AC_CACHE_VAL call
-
-AC_MSG_RESULT($btng_cv_type_namespace_broken)
-
-if test "$btng_cv_type_namespace_broken" = yes; then
-  AC_DEFINE([NAMESPACE_IS_BROKEN],1,Define if namespace is not properly supported)
-fi
-
-
-# End macro CASC_TYPE_NAMESPACE
-
-])	dnl End of CASC_TYPE_NAMESPACE definition.
-
 AC_DEFUN([CASC_AC_LOG],[echo "configure:__oline__:" $1 >&AC_FD_CC])
 
 AC_DEFUN([CASC_AC_LOG_VAR],[
@@ -5310,7 +5270,6 @@ dnl Arg4 is the code body to test if the included file works.
   AC_LANG_SAVE
   AC_LANG_CPLUSPLUS
   $1=
-  AC_REQUIRE([CASC_TYPE_NAMESPACE])
   AC_REQUIRE([CASC_TYPE_BOOL])
   CPPFLAGS_SAVE=$CPPFLAGS
   for file in $2; do
@@ -5329,9 +5288,7 @@ typedef int bool;
 #endif
 	$3
         #include <$file>
-#ifndef NAMESPACE_IS_BROKEN
 using namespace std;
-#endif
 ],
         $4,
 	AC_MSG_RESULT(yes)

@@ -11,7 +11,6 @@ dnl Arg4 is the code body to test if the included file works.
   AC_LANG_SAVE
   AC_LANG_CPLUSPLUS
   $1=
-  AC_REQUIRE([CASC_TYPE_NAMESPACE])
   AC_REQUIRE([CASC_TYPE_BOOL])
   CPPFLAGS_SAVE=$CPPFLAGS
   for file in $2; do
@@ -30,9 +29,7 @@ typedef int bool;
 #endif
 	$3
         #include <$file>
-#ifndef NAMESPACE_IS_BROKEN
 using namespace std;
-#endif
 ],
         $4,
 	AC_MSG_RESULT(yes)

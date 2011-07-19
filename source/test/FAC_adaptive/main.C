@@ -44,9 +44,7 @@
 #include "SAMRAI/mesh/StandardTagAndInitialize.h"
 #include "SAMRAI/solv/FACPreconditioner.h"
 
-#ifndef LACKS_NAMESPACE
 using namespace SAMRAI;
-#endif
 
 int main(
    int argc,

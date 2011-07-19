@@ -51,12 +51,10 @@
 
 #include "get-input-filename.h"
 
-#ifndef LACKS_NAMESPACE
 using namespace SAMRAI;
 using namespace tbox;
 using namespace hier;
 using namespace mesh;
-#endif
 
 static int
 createAndTestDLBG(
