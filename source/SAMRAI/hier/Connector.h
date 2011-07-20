@@ -20,7 +20,7 @@
 #include <vector>
 #include <string>
 
-class SAMRAI::tbox::SAMRAI_MPI;
+
 
 namespace SAMRAI {
 namespace hier {
