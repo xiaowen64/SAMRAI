@@ -18114,11 +18114,9 @@ cat >>confdefs.h <<\_ACEOF
 _ACEOF
 
 else
-   if test ! "$with_boost" = no; then
-      { { $as_echo "$as_me:$LINENO: error: BOOST is not found. You must specify a valid location via --with-boost=PATH.  SAMRAI requires the use of BOOST." >&5
+   { { $as_echo "$as_me:$LINENO: error: BOOST is not found. You must specify a valid location via --with-boost=PATH.  SAMRAI requires the use of BOOST." >&5
 $as_echo "$as_me: error: BOOST is not found. You must specify a valid location via --with-boost=PATH.  SAMRAI requires the use of BOOST." >&2;}
    { (exit 1); exit 1; }; }
-   fi
 fi
 
 
@@ -18130,7 +18128,7 @@ for btng_log_vars_index in $btng_log_vars ; do
   else
     btng_log_vars_value="unset";
   fi
-  echo "configure:18133:" "$btng_log_vars_index is $btng_log_vars_value" >&5;
+  echo "configure:18131:" "$btng_log_vars_index is $btng_log_vars_value" >&5;
 done
 
 
@@ -18393,7 +18391,7 @@ for btng_log_vars_index in $btng_log_vars ; do
   else
     btng_log_vars_value="unset";
   fi
-  echo "configure:18396:" "$btng_log_vars_index is $btng_log_vars_value" >&5;
+  echo "configure:18394:" "$btng_log_vars_index is $btng_log_vars_value" >&5;
 done
 
 fi
@@ -18407,7 +18405,7 @@ for btng_log_vars_index in $btng_log_vars ; do
   else
     btng_log_vars_value="unset";
   fi
-  echo "configure:18410:" "$btng_log_vars_index is $btng_log_vars_value" >&5;
+  echo "configure:18408:" "$btng_log_vars_index is $btng_log_vars_value" >&5;
 done
 
 
@@ -18522,7 +18520,7 @@ for btng_log_vars_index in $btng_log_vars ; do
   else
     btng_log_vars_value="unset";
   fi
-  echo "configure:18525:" "$btng_log_vars_index is $btng_log_vars_value" >&5;
+  echo "configure:18523:" "$btng_log_vars_index is $btng_log_vars_value" >&5;
 done
 
 
@@ -18624,7 +18622,7 @@ for btng_log_vars_index in $btng_log_vars ; do
   else
     btng_log_vars_value="unset";
   fi
-  echo "configure:18627:" "$btng_log_vars_index is $btng_log_vars_value" >&5;
+  echo "configure:18625:" "$btng_log_vars_index is $btng_log_vars_value" >&5;
 done
 
 
@@ -18643,7 +18641,7 @@ for btng_log_vars_index in $btng_log_vars ; do
   else
     btng_log_vars_value="unset";
   fi
-  echo "configure:18646:" "$btng_log_vars_index is $btng_log_vars_value" >&5;
+  echo "configure:18644:" "$btng_log_vars_index is $btng_log_vars_value" >&5;
 done
 
 
@@ -18827,7 +18825,7 @@ for btng_log_vars_index in $btng_log_vars ; do
   else
     btng_log_vars_value="unset";
   fi
-  echo "configure:18830:" "$btng_log_vars_index is $btng_log_vars_value" >&5;
+  echo "configure:18828:" "$btng_log_vars_index is $btng_log_vars_value" >&5;
 done
 
 
@@ -18841,7 +18839,7 @@ for btng_log_vars_index in $btng_log_vars ; do
   else
     btng_log_vars_value="unset";
   fi
-  echo "configure:18844:" "$btng_log_vars_index is $btng_log_vars_value" >&5;
+  echo "configure:18842:" "$btng_log_vars_index is $btng_log_vars_value" >&5;
 done
 
 
@@ -18881,7 +18879,7 @@ for btng_log_vars_index in $btng_log_vars ; do
   else
     btng_log_vars_value="unset";
   fi
-  echo "configure:18884:" "$btng_log_vars_index is $btng_log_vars_value" >&5;
+  echo "configure:18882:" "$btng_log_vars_index is $btng_log_vars_value" >&5;
 done
 
 
@@ -18985,7 +18983,7 @@ for btng_log_vars_index in $btng_log_vars ; do
   else
     btng_log_vars_value="unset";
   fi
-  echo "configure:18988:" "$btng_log_vars_index is $btng_log_vars_value" >&5;
+  echo "configure:18986:" "$btng_log_vars_index is $btng_log_vars_value" >&5;
 done
 
 
@@ -19110,7 +19108,7 @@ for btng_log_vars_index in $btng_log_vars ; do
   else
     btng_log_vars_value="unset";
   fi
-  echo "configure:19113:" "$btng_log_vars_index is $btng_log_vars_value" >&5;
+  echo "configure:19111:" "$btng_log_vars_index is $btng_log_vars_value" >&5;
 done
 
 
@@ -19154,7 +19152,7 @@ case "$with_petsc_arch" in
 $as_echo "$as_me: error: If you specify --with-petsc-arch, you must give it the path as in --with-petsc-arch=/installation/path" >&2;}
    { (exit 1); exit 1; }; }
 fi
-echo "configure:19157:" environment PETSC_ARCH not defined >&5
+echo "configure:19155:" environment PETSC_ARCH not defined >&5
 
 
     fi
@@ -19232,7 +19230,7 @@ for btng_log_vars_index in $btng_log_vars ; do
   else
     btng_log_vars_value="unset";
   fi
-  echo "configure:19235:" "$btng_log_vars_index is $btng_log_vars_value" >&5;
+  echo "configure:19233:" "$btng_log_vars_index is $btng_log_vars_value" >&5;
 done
 
 
@@ -19372,7 +19370,7 @@ for btng_log_vars_index in $btng_log_vars ; do
   else
     btng_log_vars_value="unset";
   fi
-  echo "configure:19375:" "$btng_log_vars_index is $btng_log_vars_value" >&5;
+  echo "configure:19373:" "$btng_log_vars_index is $btng_log_vars_value" >&5;
 done
 
 
@@ -19440,7 +19438,7 @@ for btng_log_vars_index in $btng_log_vars ; do
   else
     btng_log_vars_value="unset";
   fi
-  echo "configure:19443:" "$btng_log_vars_index is $btng_log_vars_value" >&5;
+  echo "configure:19441:" "$btng_log_vars_index is $btng_log_vars_value" >&5;
 done
 
 
@@ -19467,7 +19465,7 @@ for btng_log_vars_index in $btng_log_vars ; do
   else
     btng_log_vars_value="unset";
   fi
-  echo "configure:19470:" "$btng_log_vars_index is $btng_log_vars_value" >&5;
+  echo "configure:19468:" "$btng_log_vars_index is $btng_log_vars_value" >&5;
 done
 
 
@@ -19609,7 +19607,7 @@ for btng_log_vars_index in $btng_log_vars ; do
   else
     btng_log_vars_value="unset";
   fi
-  echo "configure:19612:" "$btng_log_vars_index is $btng_log_vars_value" >&5;
+  echo "configure:19610:" "$btng_log_vars_index is $btng_log_vars_value" >&5;
 done
 
 
@@ -19661,7 +19659,7 @@ for btng_log_vars_index in $btng_log_vars ; do
   else
     btng_log_vars_value="unset";
   fi
-  echo "configure:19664:" "$btng_log_vars_index is $btng_log_vars_value" >&5;
+  echo "configure:19662:" "$btng_log_vars_index is $btng_log_vars_value" >&5;
 done
 
 
@@ -19714,7 +19712,7 @@ for btng_log_vars_index in $btng_log_vars ; do
   else
     btng_log_vars_value="unset";
   fi
-  echo "configure:19717:" "$btng_log_vars_index is $btng_log_vars_value" >&5;
+  echo "configure:19715:" "$btng_log_vars_index is $btng_log_vars_value" >&5;
 done
 
 
@@ -19766,7 +19764,7 @@ for btng_log_vars_index in $btng_log_vars ; do
   else
     btng_log_vars_value="unset";
   fi
-  echo "configure:19769:" "$btng_log_vars_index is $btng_log_vars_value" >&5;
+  echo "configure:19767:" "$btng_log_vars_index is $btng_log_vars_value" >&5;
 done
 
 
@@ -19819,7 +19817,7 @@ for btng_log_vars_index in $btng_log_vars ; do
   else
     btng_log_vars_value="unset";
   fi
-  echo "configure:19822:" "$btng_log_vars_index is $btng_log_vars_value" >&5;
+  echo "configure:19820:" "$btng_log_vars_index is $btng_log_vars_value" >&5;
 done
 
 
@@ -19890,7 +19888,7 @@ for btng_log_vars_index in $btng_log_vars ; do
   else
     btng_log_vars_value="unset";
   fi
-  echo "configure:19893:" "$btng_log_vars_index is $btng_log_vars_value" >&5;
+  echo "configure:19891:" "$btng_log_vars_index is $btng_log_vars_value" >&5;
 done
 
 
@@ -19953,9 +19951,9 @@ cat >>confdefs.h <<\_ACEOF
 #define NAN_IS_BROKEN 1
 _ACEOF
 
-echo "configure:19956:" "NAN is broken (not in float.h)" >&5
+echo "configure:19954:" "NAN is broken (not in float.h)" >&5
 else
-  echo "configure:19958:" "NAN is ok (in float.h)" >&5
+  echo "configure:19956:" "NAN is ok (in float.h)" >&5
 
 fi
 rm -f conftest*
@@ -19979,9 +19977,9 @@ cat >>confdefs.h <<\_ACEOF
 #define FLT_SNAN_IS_BROKEN 1
 _ACEOF
 
-echo "configure:19982:" "FLT_NAN is broken (not in float.h)" >&5
+echo "configure:19980:" "FLT_NAN is broken (not in float.h)" >&5
 else
-  echo "configure:19984:" "FLT_NAN is ok (in float.h)" >&5
+  echo "configure:19982:" "FLT_NAN is ok (in float.h)" >&5
 
 fi
 rm -f conftest*
@@ -20005,9 +20003,9 @@ cat >>confdefs.h <<\_ACEOF
 #define DBL_SNAN_IS_BROKEN 1
 _ACEOF
 
-echo "configure:20008:" "DBL_NAN is broken (not in float.h)" >&5
+echo "configure:20006:" "DBL_NAN is broken (not in float.h)" >&5
 else
-  echo "configure:20010:" "DBL_NAN is ok (in float.h)" >&5
+  echo "configure:20008:" "DBL_NAN is ok (in float.h)" >&5
 
 fi
 rm -f conftest*
@@ -20031,9 +20029,9 @@ cat >>confdefs.h <<\_ACEOF
 #define FLT_MAX_IS_BROKEN 1
 _ACEOF
 
-echo "configure:20034:" "FLT_MAX is broken (not in float.h)" >&5
+echo "configure:20032:" "FLT_MAX is broken (not in float.h)" >&5
 else
-  echo "configure:20036:" "FLT_MAX is ok (in float.h)" >&5
+  echo "configure:20034:" "FLT_MAX is ok (in float.h)" >&5
 
 fi
 rm -f conftest*
@@ -20057,9 +20055,9 @@ cat >>confdefs.h <<\_ACEOF
 #define DBL_MAX_IS_BROKEN 1
 _ACEOF
 
-echo "configure:20060:" "DBL_MAX is broken (not in float.h)" >&5
+echo "configure:20058:" "DBL_MAX is broken (not in float.h)" >&5
 else
-  echo "configure:20062:" "DBL_MAX is ok (in float.h)" >&5
+  echo "configure:20060:" "DBL_MAX is ok (in float.h)" >&5
 
 fi
 rm -f conftest*
@@ -20112,7 +20110,7 @@ for btng_log_vars_index in $btng_log_vars ; do
   else
     btng_log_vars_value="unset";
   fi
-  echo "configure:20115:" "before adding rpath syntax: $btng_log_vars_index is $btng_log_vars_value" >&5;
+  echo "configure:20113:" "before adding rpath syntax: $btng_log_vars_index is $btng_log_vars_value" >&5;
 done
 
 
@@ -20619,7 +20617,7 @@ for btng_log_vars_index in $btng_log_vars ; do
   else
     btng_log_vars_value="unset";
   fi
-  echo "configure:20622:" "forming rpaths: $btng_log_vars_index is $btng_log_vars_value" >&5;
+  echo "configure:20620:" "forming rpaths: $btng_log_vars_index is $btng_log_vars_value" >&5;
 done
 
 
@@ -20685,7 +20683,7 @@ for btng_log_vars_index in $btng_log_vars ; do
   else
     btng_log_vars_value="unset";
   fi
-  echo "configure:20688:" "after adding rpath syntax: $btng_log_vars_index is $btng_log_vars_value" >&5;
+  echo "configure:20686:" "after adding rpath syntax: $btng_log_vars_index is $btng_log_vars_value" >&5;
 done
 
 
@@ -20728,7 +20726,7 @@ for btng_log_vars_index in $btng_log_vars ; do
   else
     btng_log_vars_value="unset";
   fi
-  echo "configure:20731:" "with-parallel-run-bin given: $btng_log_vars_index is $btng_log_vars_value" >&5;
+  echo "configure:20729:" "with-parallel-run-bin given: $btng_log_vars_index is $btng_log_vars_value" >&5;
 done
 
 
@@ -20747,7 +20745,7 @@ for btng_log_vars_index in $btng_log_vars ; do
   else
     btng_log_vars_value="unset";
   fi
-  echo "configure:20750:" "with-parallel-run-bin NOT given: $btng_log_vars_index is $btng_log_vars_value" >&5;
+  echo "configure:20748:" "with-parallel-run-bin NOT given: $btng_log_vars_index is $btng_log_vars_value" >&5;
 done
 
 
@@ -20772,7 +20770,7 @@ for btng_log_vars_index in $btng_log_vars ; do
   else
     btng_log_vars_value="unset";
   fi
-  echo "configure:20775:" "after setting PARALLEL_RUN_BIN: $btng_log_vars_index is $btng_log_vars_value" >&5;
+  echo "configure:20773:" "after setting PARALLEL_RUN_BIN: $btng_log_vars_index is $btng_log_vars_value" >&5;
 done
 
 
@@ -20804,7 +20802,7 @@ for btng_log_vars_index in $btng_log_vars ; do
   else
     btng_log_vars_value="unset";
   fi
-  echo "configure:20807:" "in support-serpa-run: $btng_log_vars_index is $btng_log_vars_value" >&5;
+  echo "configure:20805:" "in support-serpa-run: $btng_log_vars_index is $btng_log_vars_value" >&5;
 done
 
 
@@ -20982,7 +20980,7 @@ for btng_log_vars_index in $btng_log_vars ; do
   else
     btng_log_vars_value="unset";
   fi
-  echo "configure:20985:" "$btng_log_vars_index is $btng_log_vars_value" >&5;
+  echo "configure:20983:" "$btng_log_vars_index is $btng_log_vars_value" >&5;
 done
 
 
@@ -20996,7 +20994,7 @@ for btng_log_vars_index in $btng_log_vars ; do
   else
     btng_log_vars_value="unset";
   fi
-  echo "configure:20999:" "$btng_log_vars_index is $btng_log_vars_value" >&5;
+  echo "configure:20997:" "$btng_log_vars_index is $btng_log_vars_value" >&5;
 done
 
 

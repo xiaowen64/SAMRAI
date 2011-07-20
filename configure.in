@@ -1117,9 +1117,7 @@ if test "${boost_PREFIX+set}" = set; then
    INC_PATH="$boost_INCLUDES $INC_PATH"
    AC_DEFINE([HAVE_BOOST],[1],[BOOST headers are available to use])
 else
-   if test ! "$with_boost" = no; then
-      AC_MSG_ERROR([BOOST is not found. You must specify a valid location via --with-boost=PATH.  SAMRAI requires the use of BOOST.])
-   fi
+   AC_MSG_ERROR([BOOST is not found. You must specify a valid location via --with-boost=PATH.  SAMRAI requires the use of BOOST.])
 fi
 CASC_AC_LOG_VAR(
 [boost_INCLUDES INC_PATH boost_LIBS LIB_PATH LIB_NAME])dnl
