@@ -171,24 +171,6 @@ public:
     * initialize levels in patch hierarchy.  These operations are
     * pure virtual in GradientDetectorStrategy.
     */
-/*
- * void
- * initializeLevelData(
- *    const tbox::Pointer< hier::PatchHierarchy > hierarchy,
- *    const int level_number,
- *    const double init_data_time,
- *    const bool can_be_refined,
- *    const bool initial_time,
- *    const tbox::Pointer< hier::PatchLevel > old_level =
- *          tbox::Pointer< hier::PatchLevel >(NULL),
- #ifdef USING_SAMRAI_DLBG
- *    const tbox::Array< tbox::Pointer<hier::Connector > > &to_old_mapped_box_level =
- *          tbox::Array< tbox::Pointer<hier::Connector > >(NULL),
- *    const tbox::Array< tbox::Pointer<hier::Connector > > &from_old_mapped_box_level =
- *          tbox::Array< tbox::Pointer<hier::Connector > >(NULL),
- #endif
- *    const bool allocate_data = true);
- */
    void
    initializeLevelData(
       const tbox::Pointer<hier::PatchHierarchy> hierarchy,
