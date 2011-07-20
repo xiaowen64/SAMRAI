@@ -26,14 +26,6 @@ OBJS = \
 	VisItDataWriter.o \
 	VisDerivedDataStrategy.o \
 	VisMaterialsDataStrategy.o \
-	CubesPatchInterface.o \
-        ElevenPatchInterface.o \
-	BoundaryNode.o \
-	CutCell.o \
-	EmbeddedBoundaryGeometry.o \
-	EmbeddedBoundaryShape.o \
-	EmbeddedBoundaryShapePolygon.o \
-	EmbeddedBoundaryShapeSphere.o \
 	CartesianBoundaryUtilities2.o \
 	CartesianBoundaryUtilities3.o
 

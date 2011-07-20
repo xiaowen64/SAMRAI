@@ -53,14 +53,6 @@ SUBDIRS = \
    fill_pattern \
    applications 
 
-##############################################################################
-# TODO : some work completed but not working
-##############################################################################
-
-# emb_bdry
-# All tests fail with DLBG error message
-# P=00000:We don't have a box-growing function for DLBG yet.
-
 default: check 
 
 include $(OBJECT)/config/Makefile.config

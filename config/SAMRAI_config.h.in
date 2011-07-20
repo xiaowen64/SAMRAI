@@ -72,12 +72,6 @@
 /* HAVE_CTIME */
 #undef HAVE_CTIME
 
-/* Configured with Cubes library */
-#undef HAVE_CUBES
-
-/* Configured with Eleven library */
-#undef HAVE_ELEVEN
-
 /* HAVE_EXCEPTION_HANDLING */
 #undef HAVE_EXCEPTION_HANDLING
 
@@ -233,12 +227,6 @@
 
 /* LACKS_CTIME */
 #undef LACKS_CTIME
-
-/* Configured without Cubes library */
-#undef LACKS_CUBES
-
-/* Configured without Eleven library */
-#undef LACKS_ELEVEN
 
 /* LACKS_EXCEPTION_HANDLING */
 #undef LACKS_EXCEPTION_HANDLING
