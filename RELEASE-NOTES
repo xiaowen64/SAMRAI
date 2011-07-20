@@ -4,7 +4,7 @@
   All rights reserved.
 *****************************************************************************
 
-                     Release Notes for SAMRAI v3.2.1 
+                     Release Notes for SAMRAI v3.2.2 
 
      (notes for previous releases may be found in /SAMRAI/docs/release)
 
@@ -36,20 +36,22 @@ Bugs found by other users should send email to samrai-bugs@llnl.gov.
                 Summary of what's new
 -----------------------------------------------------------------------------
 
-(1) 
-
 This section contains a summary of additions to SAMRAI.  More detailed
 descriptions of items in the following list are provided below.
+
+(1) Boost is now required for building SAMRAI.
+
 
 
 -----------------------------------------------------------------------------
                 Summary of what's changed
 -----------------------------------------------------------------------------
 
-(1) 
-
 This section contains a summary of changes to SAMRAI.  More detailed
 descriptions of items in the following list are provided below.
+
+(1) 
+
 
 *****************************************************************************
 
@@ -57,7 +59,14 @@ descriptions of items in the following list are provided below.
                 Details about what's new
 -----------------------------------------------------------------------------
 
-(1) 
+(1) Boost is now required for building SAMRAI.
+
+Boost is required to build SAMRAI.   We have tested against boost/1.45.0.
+
+Boost is available at www.boost.org.
+
+Use the --with-boost=<directory> configure option to specify the path to 
+the boost install.
 
 -----------------------------------------------------------------------------
                 Details about what's changed

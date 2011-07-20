@@ -20,12 +20,13 @@
 #include <vector>
 #include <string>
 
+class SAMRAI::tbox::SAMRAI_MPI;
+
 namespace SAMRAI {
 namespace hier {
 
 class MappedBoxLevelHandle;
 class NeighborhoodSet;
-class SAMRAI_MPI;
 
 /*!
  * @brief A container which holds relationship connections between two

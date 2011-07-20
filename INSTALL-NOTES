@@ -323,6 +323,8 @@ pathscale	Does not currently work.  Core dumps and produces incorrect results.
 
 PGI             Does not currently work.
 
+Boost		1.45.0
+
 HDF5		1.6.5, 1.8.5
 
 MPICH2          1.0.7    (MPICH1 is no longer supported and 
