@@ -19,14 +19,6 @@ namespace SAMRAI {
 namespace mesh {
 
 SAMRAI_INLINE_KEYWORD
-bool
-GriddingAlgorithm::errorEstimationUsesTimeIntegration()
-const
-{
-   return d_tag_init_strategy->usesTimeIntegration();
-}
-
-SAMRAI_INLINE_KEYWORD
 tbox::Pointer<TagAndInitializeStrategy>
 GriddingAlgorithm::getTagAndInitializeStrategy() const
 {
@@ -42,9 +34,21 @@ GriddingAlgorithm::getLoadBalanceStrategy() const
 
 SAMRAI_INLINE_KEYWORD
 tbox::Pointer<LoadBalanceStrategy>
-GriddingAlgorithm::getLoadBalanceStrategy0() const
+GriddingAlgorithm::getLoadBalanceStrategyZero() const
 {
    return d_load_balancer0;
+}
+
+SAMRAI_INLINE_KEYWORD
+void
+GriddingAlgorithm::setEfficiencyTolerance(
+   const double efficiency_tolerance,
+   const int level_number)
+{
+   TBOX_ASSERT((level_number >= 0) && (level_number < d_hierarchy->getMaxNumberOfLevels()));
+   TBOX_ASSERT( (efficiency_tolerance >= 0) && (efficiency_tolerance <= 1.0) );
+   d_efficiency_tolerance[level_number] = efficiency_tolerance;
+   return;
 }
 
 SAMRAI_INLINE_KEYWORD
@@ -73,6 +77,18 @@ GriddingAlgorithm::getCombineEfficiency(
    return (level_number < size)
           ? d_combine_efficiency[level_number]
           : d_combine_efficiency[size - 1];
+}
+
+SAMRAI_INLINE_KEYWORD
+void
+GriddingAlgorithm::setCombineEfficiency(
+   const double combine_efficiency,
+   const int level_number)
+{
+   TBOX_ASSERT((level_number >= 0) && (level_number < d_hierarchy->getMaxNumberOfLevels()));
+   TBOX_ASSERT( (combine_efficiency >= 0) && (combine_efficiency <= 1.0) );
+   d_combine_efficiency[level_number] = combine_efficiency;
+   return;
 }
 
 }

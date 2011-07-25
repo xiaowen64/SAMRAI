@@ -217,7 +217,8 @@ namespace mesh {
  */
 
 class GriddingAlgorithm:
-      public GriddingAlgorithmStrategy
+      public GriddingAlgorithmStrategy,
+      public tbox::Serializable
 {
 public:
    /*!
@@ -251,10 +252,8 @@ public:
     *
     * @param[in] balancer Load balancer
     *
-    * @param[in] balancer0 Special load balancer to use for level zero
-    * only when a single process owns all the unbalanced load (such as
-    * during initialization).  If omitted, will use @c balancer
-    * instead.
+    * @param[in] balancer_zero Special load balancer to use for level
+    * zero.  If omitted, will use @c balancer instead.
     *
     * @param[in] register_for_restart
     */
@@ -265,15 +264,13 @@ public:
       tbox::Pointer<TagAndInitializeStrategy> level_strategy,
       tbox::Pointer<BoxGeneratorStrategy> generator,
       tbox::Pointer<LoadBalanceStrategy> balancer,
-      tbox::Pointer<LoadBalanceStrategy> balancer0 = tbox::Pointer<LoadBalanceStrategy>(NULL),
+      tbox::Pointer<LoadBalanceStrategy> balancer_zero = tbox::Pointer<LoadBalanceStrategy>(NULL),
       bool register_for_restart = true);
 
    /*!
     * @brief Destructor
-    *
-    * Virtual destructor is for inheritance purposes.
     */
-   virtual ~GriddingAlgorithm();
+   ~GriddingAlgorithm();
 
    /*!
     * @brief Create or rebalance the coarsest level.
@@ -310,11 +307,21 @@ public:
     * This is an implementation of interface method
     * GriddingAlgorithmStrategy::makeFinerLevel().
     *
-    * @param[in] level_time See text.
+    * The tag buffer indicates the number of cells by which cells
+    * selected for refinement should be buffered before new finer
+    * level boxes are constructed.  All tagged cells should be refined
+    * except where refinement would violate proper nesting.  The
+    * buffer is meant to keep phenomena of interest on refined regions
+    * of the mesh until adaptive regridding occurs next.  Callers of
+    * this method should take into account how the simulation may
+    * evolve before regridding occurs (e.g., number of timesteps
+    * taken) when calculating the tag_buffer.
     *
-    * @param[in] initial_time See text.
+    * @param[in] level_time See above text.
     *
-    * @param[in] tag_buffer See text.
+    * @param[in] initial_time See above text.
+    *
+    * @param[in] tag_buffer See above text.
     *
     * @param regrid_start_time[in] The simulation time when the
     * regridding operation began (this parameter is ignored except
@@ -374,19 +381,12 @@ public:
       const bool level_is_coarsest_to_sync = true);
 
    /*!
-    * @brief Return true if error estimation process uses time integration;
-    * otherwise, return false.
-    *
-    * @return true if error estimation process uses time integration;
-    * otherwise, return false.
-    */
-   bool
-   errorEstimationUsesTimeIntegration() const;
-
-   /*!
     * @brief Return pointer to level gridding strategy data member.
     *
-    * @return pointer to level gridding strategy data member.
+    * Access to this member is useful when an integrator implementation
+    * needs to know if the error estimator uses time integration.
+    *
+    * @return pointer to TagAndInitializeStrategy data member.
     */
    virtual
    tbox::Pointer<TagAndInitializeStrategy>
@@ -400,15 +400,26 @@ public:
    getLoadBalanceStrategy() const;
 
    /*!
-    * @brief Return pointer to load balance strategy specialized for the case
-    * where one processor owns all the initial loads.
+    * @brief Return pointer to load balance strategy specialized for
+    * balancing level zero.
     *
     * @return pointer to load balance strategy specialized for the case
     * where one processor owns all the initial loads.
     */
    virtual
    tbox::Pointer<LoadBalanceStrategy>
-   getLoadBalanceStrategy0() const;
+   getLoadBalanceStrategyZero() const;
+
+   /*!
+    * @brief Set efficiency tolerance for clustering tags on level.
+    *
+    * @param[in] efficiency_tolerance
+    * @param[in] level_number
+    */
+   void
+   setEfficiencyTolerance(
+      const double efficiency_tolerance,
+      const int level_number);
 
    /*!
     * @brief Return efficiency tolerance for clustering tags on level.
@@ -420,6 +431,17 @@ public:
       const int level_number) const;
 
    /*!
+    * @brief Set combine efficiency for clustering tags on level.
+    *
+    * @param[in] combine_efficiency
+    * @param[in] level_number
+    */
+   void
+   setCombineEfficiency(
+      const double combine_efficiency,
+      const int level_number);
+
+   /*!
     * @brief Return combine efficiency for clustering tags on level.
     *
     * @return combine efficiency for clustering tags on level.
@@ -427,30 +449,6 @@ public:
    double
    getCombineEfficiency(
       const int level_number) const;
-
-   /*!
-    * @brief Set the user-defined implementation of
-    * MultiblockGriddingTagger.
-    *
-    * This features applies only to multiblock hierarchies with
-    * enhanced connectivity block boundaries.  The purpose of the
-    * MultiblockGriddingTagger is to use the
-    * xfer::RefinePatchStrategy::fillSingularityBoundaryConditions
-    * interface to do tag buffering across those boundaries.
-    *
-    * Tag buffering requires filling one layer of ghost cells from the
-    * values held in neighboring patches.  At enhanced connectivity,
-    * more than one neighboring patch can overlap a single ghost cell.
-    * MultiblockGriddingTagger::fillSingularityBoundaryConditions
-    * makes sure that the ghost cell has a nonzero value if at least
-    * one of the enhanced connectivity neighbors has a nonzero value.
-    *
-    * User may subclass MultiblockGriddingTagger to override some
-    * methods and set the new implementation using this method.
-    *
-    * @param[in] mb_tagger_strategy
-    */
-   void setMultiblockGriddingTagger(MultiblockGriddingTagger* mb_tagger_strategy);
 
    /*!
     * @brief Print all data members of the class instance to given output stream.
@@ -1046,7 +1044,6 @@ private:
     * @see setMultiblockGriddingTagger().
     */
    MultiblockGriddingTagger* d_mb_tagger_strategy;
-   bool d_internal_tagger_strategy;
 
    /*
     * Cell-centered integer variables use to tag cells for refinement.

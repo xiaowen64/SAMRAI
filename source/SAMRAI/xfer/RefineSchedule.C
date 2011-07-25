@@ -179,12 +179,12 @@ RefineSchedule::RefineSchedule(
    hier::IntVector min_connector_width = d_max_scratch_gcw;
    min_connector_width.max(d_boundary_fill_ghost_width);
 
-   const Connector dst_to_src =
+   const Connector &dst_to_src =
       dst_level->getMappedBoxLevel()->getPersistentOverlapConnectors().findConnector(
          *src_level->getMappedBoxLevel(),
          min_connector_width);
 
-   const Connector src_to_dst =
+   const Connector &src_to_dst =
       src_level->getMappedBoxLevel()->getPersistentOverlapConnectors().findConnector(
          *dst_level->getMappedBoxLevel(),
          Connector::convertHeadWidthToBase(src_level->getMappedBoxLevel()->

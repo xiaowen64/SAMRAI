@@ -24,51 +24,28 @@ namespace mesh {
  * @brief Virtual base class providing interface for gridding
  * algorithms.
  *
- * Class GriddingAlgorithmStrategy in a virtual base class that provides
- * an abstract interface for a gridding algorithm.  This allows
- * higher-level classes in SAMRAI and in applications that use SAMRAI
- * to interface with a gridding algorithm in an abstract manner
- * without knowing whether it is a mesh::GriddingAlgorithm that
- * handles gridding operations on a rectangular domain or if it is an
- * algorithm for gridding on, for example, a multiblock domain.
- *
- * QUESTION: Should this be called GriddingAlgorithmStrategy?  There
- * are only pure virtual interfaces.
- *
- * Each GriddingAlgorithmStrategy is constructed a PatchHierarchy.  All
- * hierarchy operations refer to this hierarchy.
- *
- * The GriddingAlgorithmStrategy constructor requires a PatchHierarchy.
- * The implementation is then responsible for manipulating levels in
- * that hierarchy using the other interfaces defined here.
+ * This class defines operations for building and regridding
+ * hierarchies.  The interfaces imply that the implementation of this
+ * strategy class works on some hierarchy.
  *
  * @see mesh::GriddingAlgorithm
  */
 
-class GriddingAlgorithmStrategy:
-   public tbox::Serializable
+class GriddingAlgorithmStrategy
 {
 public:
    /*!
     * @brief Constructor
-    *
-    * @param hierarchy The hierarchy that this gridding algorithm
-    * will operate on.  All hierarchy operations and data refers to
-    * this hierarchy.
     */
-   GriddingAlgorithmStrategy(
-      const tbox::Pointer<hier::PatchHierarchy> &hierarchy );
+   GriddingAlgorithmStrategy() {}
 
    /*!
     * @brief Virtual destructor for GriddingAlgorithmStrategy.
     */
-   virtual ~GriddingAlgorithmStrategy();
+   virtual ~GriddingAlgorithmStrategy() {}
 
    /*!
     * @brief Construct the coarsest level in the hierarchy (i.e., level 0).
-    *
-    * Level 0 should occupy the full domain.  If level 0 already
-    * exists, it may be re-balanced.
     *
     * @param level_time Simulation time when level is constructed
     */
@@ -97,15 +74,9 @@ public:
     *
     * The tag buffer indicates the number of cells by which cells
     * selected for refinement should be buffered before new finer
-    * level boxes are constructed.  All tagged cells should be refined
-    * except where refinement would violate proper nesting.  The
-    * buffer is meant to keep phenomena of interest on refined regions
-    * of the mesh until adaptive regridding occurs next.  Callers of
-    * this method should take into account how the simulation may
-    * evolve before regridding occurs (e.g., number of timesteps
-    * taken) when calculating the tag_buffer.
+    * level boxes are constructed.
     *
-    * @param level_time Simulation time when level is constructed
+    * @param level_time Current simulation time.
     * @param initial_time Must be true if level_time is the initial time
     *                     of the simulation, false otherwise
     * @param tag_buffer Size of buffer around tagged cells that will be
@@ -138,15 +109,6 @@ public:
     * patches on level 0 (i.e., the coarsest in the hierarchy).  The
     * routine makeCoarsestLevel() above is provided for that purpose.
     *
-    * The tag buffer array indicates the number of cells by which
-    * cells selected for refinement on a level will be buffered before
-    * new finer level boxes are constructed.  The buffer is important
-    * to keep phenomena of interest on refined regions of the mesh
-    * until adaptive regridding occurs next.  Thus, the buffer size
-    * should take into account how the simulation may evolve before
-    * regridding occurs (e.g., number of timesteps taken on each
-    * level).  Tag buffers must be non-negative.
-    *
     * The boolean level_is_coarsest_to_sync is used for regridding in
     * time-dependent problems.  When true, it indicates that the
     * specified level is the coarsest level to synchronize at the
@@ -158,12 +120,13 @@ public:
     * @param level_number Coarsest level on which cells will be tagged for
     *                     refinement
     * @param regrid_time Simulation time when regridding occurs
-    * @param tag_buffer Size of buffer on each level around tagged cells
-    *                   that will be covered by the next finer level
+    * @param tag_buffer See tag_buffer in makeFinerLevel.
+    *                   There is one value per level in the hierarchy.
     * @param regrid_start_time The simulation time when the regridding
-    *                          operation began on each level (this parameter is
-    *                          ignored except when using Richardson
-    *                          extrapolation)
+    *                          operation began on each level (this parameter
+    *                          is ignored except when using Richardson
+    *                          extrapolation, where it is passed on to the
+    *                          estimation methods.)
     * @param level_is_coarsest_to_sync Level is the coarsest to sync
     */
    virtual void
@@ -175,50 +138,12 @@ public:
       const bool level_is_coarsest_to_sync = true) = 0;
 
    /*!
-    * @brief Return true if error estimation process uses time integration;
-    * otherwise, return false.
-    *
-    * QUESTION: Will this ever need to be anything other than
-    * getTagAndInitializeStrategy()->usesTimeIntegration() ?  If not,
-    * do we really need this interface?
-    */
-   virtual bool
-   errorEstimationUsesTimeIntegration() const = 0;
-
-   /*!
     * @brief Return pointer to level gridding strategy data member.
     */
    virtual
    tbox::Pointer<TagAndInitializeStrategy>
    getTagAndInitializeStrategy() const = 0;
 
-   /*!
-    * @brief Return efficiency tolerance for clustering tags on level.
-    */
-   virtual double
-   getEfficiencyTolerance(
-      const int level_number) const = 0;
-
-   /*!
-    * @brief Return combine efficiency for clustering tags on level.
-    */
-   virtual double
-   getCombineEfficiency(
-      const int level_number) const = 0;
-
-   /*!
-    * @brief Write object state out to the given database.
-    *
-    * When assertion checking is active, the database pointer must be non-null.
-    */
-   virtual void
-   putToDatabase(
-      tbox::Pointer<tbox::Database> db) = 0;
-
-private:
-
-   // TODO: What is the purpose of this data?
-   const tbox::Pointer<hier::PatchHierarchy> d_hierarchy;
 };
 
 }

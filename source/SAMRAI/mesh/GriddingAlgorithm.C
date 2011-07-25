@@ -93,7 +93,7 @@ GriddingAlgorithm::GriddingAlgorithm(
    tbox::Pointer<LoadBalanceStrategy> balancer,
    tbox::Pointer<LoadBalanceStrategy> balancer0,
    bool register_for_restart):
-   GriddingAlgorithmStrategy( hierarchy ),
+   GriddingAlgorithmStrategy(),
    d_hierarchy(hierarchy),
    d_connector_width_requestor(),
    d_dim(hierarchy->getDim()),
@@ -104,7 +104,6 @@ GriddingAlgorithm::GriddingAlgorithm(
    d_load_balancer(balancer),
    d_load_balancer0(balancer0),
    d_mb_tagger_strategy(NULL),
-   d_internal_tagger_strategy(false),
    d_true_tag(1),
    d_false_tag(0),
    d_base_ln(-1),
@@ -193,7 +192,6 @@ GriddingAlgorithm::GriddingAlgorithm(
    if ( d_hierarchy->getGridGeometry()->getNumberBlocks() > 1 ) {
       d_mb_tagger_strategy = new MultiblockGriddingTagger(d_dim);
       d_mb_tagger_strategy->setScratchTagPatchDataIndex(d_buf_tag_indx);
-      d_internal_tagger_strategy = true;
    }
 
 
@@ -290,10 +288,7 @@ GriddingAlgorithm::~GriddingAlgorithm()
    if (d_registered_for_restart) {
       tbox::RestartManager::getManager()->unregisterRestartItem(d_object_name);
    }
-   if ( d_internal_tagger_strategy ) {
-      delete d_mb_tagger_strategy;
-      d_internal_tagger_strategy = false;
-   }
+   delete d_mb_tagger_strategy;
    d_mb_tagger_strategy = NULL;
 }
 
@@ -3327,7 +3322,7 @@ void GriddingAlgorithm::findRefinementBoxes(
       }
 
       if (d_sequentialize_patch_indices) {
-         if (d_check_connectors) {
+         if (d_print_steps) {
             tbox::plog << "GriddingAlgorithm begin sorting nodes." << std::endl;
          }
          renumberBoxes(new_mapped_box_level,
@@ -3335,7 +3330,7 @@ void GriddingAlgorithm::findRefinementBoxes(
             new_to_tag,
             false,
             true);
-         if (d_check_connectors) {
+         if (d_print_steps) {
             tbox::plog << "GriddingAlgorithm end sorting nodes." << std::endl;
          }
       }
@@ -3346,7 +3341,7 @@ void GriddingAlgorithm::findRefinementBoxes(
        */
       const hier::Connector& tag_to_tag =
          d_hierarchy->getConnector(tag_ln, tag_ln);
-      if (d_check_connectors) {
+      if (d_print_steps) {
          tbox::plog << "GriddingAlgorithm begin adding periodic images."
                     << std::endl;
       }
@@ -3356,7 +3351,7 @@ void GriddingAlgorithm::findRefinementBoxes(
          tag_to_new,
          d_hierarchy->getDomainSearchTree(hier::BlockId::zero()),
          tag_to_tag);
-      if (d_check_connectors) {
+      if (d_print_steps) {
          tbox::plog << "GriddingAlgorithm begin adding periodic images."
                     << std::endl;
       }
@@ -4299,22 +4294,6 @@ void GriddingAlgorithm::warnIfDomainTooSmallInPeriodicDir() const
 
 
 /*
-**************************************************************************
-**************************************************************************
-*/
-void GriddingAlgorithm::setMultiblockGriddingTagger(
-   MultiblockGriddingTagger* mb_tagger_strategy)
-{
-   TBOX_ASSERT( mb_tagger_strategy != NULL );
-   if ( d_internal_tagger_strategy ) {
-      delete d_mb_tagger_strategy;
-   }
-   d_mb_tagger_strategy = mb_tagger_strategy;
-   d_internal_tagger_strategy = false;
-   return;
-}
-
-/*
  *************************************************************************
  *
  * Print out all attributes of class instance for debugging.
@@ -4418,26 +4397,26 @@ void GriddingAlgorithm::getFromInput(
    d_print_steps =
       db->getBoolWithDefault("print_steps", d_print_steps);
 
-   int ln;
-
 
    /*
     * Read input for efficiency tolerance.
     */
 
    if (db->keyExists("efficiency_tolerance")) {
-      d_efficiency_tolerance = db->getDoubleArray("efficiency_tolerance");
+      tbox::Array<double> efficiency_tolerance = db->getDoubleArray("efficiency_tolerance");
 
-      for (ln = 0; ln < d_efficiency_tolerance.getSize(); ln++) {
-         if ((d_efficiency_tolerance[ln] <= 0.0e0)
-             || (d_efficiency_tolerance[ln] >= 1.0e0)) {
-            TBOX_ERROR(
-               d_object_name << ":  "
-               <<
-               "Key data `efficiency_tolerance' has values"
+      int ln;
+      for (ln = 0; ln < efficiency_tolerance.getSize() && ln < d_hierarchy->getMaxNumberOfLevels(); ++ln) {
+         if ((efficiency_tolerance[ln] <= 0.0e0) ||
+             (efficiency_tolerance[ln] >= 1.0e0)) {
+            TBOX_ERROR( d_object_name << ":  "
+               << "Key data `efficiency_tolerance' has values"
                << " out of range 0.0 < tol < 1.0.");
-
          }
+         d_efficiency_tolerance[ln] = efficiency_tolerance[ln];
+      }
+      for ( ; ln<d_hierarchy->getMaxNumberOfLevels(); ++ln ) {
+         d_efficiency_tolerance[ln] = efficiency_tolerance.back();
       }
 
    }
@@ -4447,18 +4426,21 @@ void GriddingAlgorithm::getFromInput(
     */
 
    if (db->keyExists("combine_efficiency")) {
-      d_combine_efficiency = db->getDoubleArray("combine_efficiency");
+      tbox::Array<double> combine_efficiency = db->getDoubleArray("combine_efficiency");
 
-      for (ln = 0; ln < d_combine_efficiency.getSize(); ln++) {
-         if ((d_combine_efficiency[ln] <= 0.0e0)
-             || (d_combine_efficiency[ln] >= 1.0e0)) {
+      int ln;
+      for (ln = 0; ln < combine_efficiency.getSize() && ln < d_hierarchy->getMaxNumberOfLevels(); ++ln) {
+         if ((combine_efficiency[ln] <= 0.0e0) ||
+             (combine_efficiency[ln] >= 1.0e0)) {
             TBOX_ERROR(
                d_object_name << ":  "
-               <<
-               "Key data `combine_efficiency' has values"
+               << "Key data `combine_efficiency' has values"
                << " out of range 0.0 < tol < 1.0.");
-
          }
+         d_combine_efficiency[ln] = combine_efficiency[ln];
+      }
+      for ( ; ln<d_hierarchy->getMaxNumberOfLevels(); ++ln ) {
+         d_combine_efficiency[ln] = combine_efficiency.back();
       }
 
    }

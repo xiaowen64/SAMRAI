@@ -16,31 +16,6 @@
 namespace SAMRAI {
 namespace mesh {
 
-/*
- *************************************************************************
- *                                                                       *
- * Constructor and destructor for GriddingAlgorithmStrategy.            *
- *                                                                       *
- *************************************************************************
- */
-GriddingAlgorithmStrategy::GriddingAlgorithmStrategy(
-   const tbox::Pointer<hier::PatchHierarchy> &hierarchy )
-   : d_hierarchy(hierarchy)
-{
-}
-
-/*
- *************************************************************************
- *                                                                       *
- * Destructor tells the tbox_RestartManager to remove this object from   *
- * the list of restart items.                                            *
- *                                                                       *
- *************************************************************************
- */
-GriddingAlgorithmStrategy::~GriddingAlgorithmStrategy()
-{
-}
-
 }
 }
 #endif
