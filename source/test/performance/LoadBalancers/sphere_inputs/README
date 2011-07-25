@@ -8,6 +8,6 @@
 ##
 #########################################################################
 
-These are inputs for testing the load balancers on concentric sphere 
-configurations.  Each grade (small, med, big, etc.) the initial mesh 
-resolution by about 4 times in each coordinate direction.
+These are inputs for testing the load balancers on concentric sphere
+configurations.  Each grade (small, med, big, etc.) increases the
+initial mesh resolution by about 4 times in each coordinate direction.
