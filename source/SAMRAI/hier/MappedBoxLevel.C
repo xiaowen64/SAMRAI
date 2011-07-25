@@ -85,11 +85,12 @@ MappedBoxLevel::MappedBoxLevel():
    d_grid_geometry(tbox::ConstPointer<GridGeometry>(NULL))
 {
    // This ctor should never be invoked.
-   TBOX_ASSERT(false);
+   TBOX_ERROR("Somehow, we entered code that was never meant to be used.");
 }
 
 MappedBoxLevel::MappedBoxLevel(
    const tbox::Dimension& dim):
+
    d_mpi(tbox::SAMRAI_MPI::commNull),
    d_mapped_boxes(),
    d_global_mapped_boxes(),
@@ -763,9 +764,9 @@ void MappedBoxLevel::acquireRemoteMappedBoxes()
 
 /*
  ***********************************************************************
- * Acquire remote mapped_boxes for multiple mapped_box_level mapped_box
- * sets.  This method combines communication for the multiple
- * mapped_box_levels to increase message passing efficiency.
+ * Acquire remote MappedBoxes for multiple MappedBoxLevels.
+ * This method combines communication for the multiple
+ * MappedBoxLevels to increase message passing efficiency.
  *
  * Note: This method is stateless (could be static).
  ***********************************************************************
@@ -800,9 +801,7 @@ void MappedBoxLevel::acquireRemoteMappedBoxes(
    std::vector<int> send_mesg;
    std::vector<int> recv_mesg;
    /*
-    * Pack mapped_boxes from all mapped_box_level mapped_box sets into a single message.
-    * Note that each mapped_box_level mapped_box set object packs the size of its
-    * sub-message into send_mesg.
+    * Pack MappedBoxes from all MappedBoxLevels into a single message.
     */
    for (n = 0; n < num_sets; ++n) {
       const MappedBoxLevel& mapped_box_level =
@@ -839,7 +838,7 @@ void MappedBoxLevel::acquireRemoteMappedBoxes(
       MPI_INT);
 
    /*
-    * Extract mapped_box info received from other processors.
+    * Extract MappedBox info received from other processors.
     */
    for (n = 0; n < num_sets; ++n) {
       MappedBoxLevel& mapped_box_level =
@@ -862,12 +861,12 @@ void MappedBoxLevel::acquireRemoteMappedBoxes_pack(
 {
    const tbox::Dimension& dim(getDim());
    /*
-    * MappedBox acquisition is done during globalization.  Thus, do not
+    * MappedBox acquisition occurs during globalization.  Thus, do not
     * rely on current value of d_parallel_state.
     */
 
    /*
-    * Pack mapped_box info from d_mapped_boxes into send_mesg,
+    * Pack MappedBox info from d_mapped_boxes into send_mesg,
     * starting at the offset location.
     */
    /*
@@ -905,7 +904,7 @@ void MappedBoxLevel::acquireRemoteMappedBoxes_unpack(
 {
    const tbox::Dimension& dim(getDim());
    /*
-    * Unpack mapped_box info from recv_mesg into d_global_mapped_boxes,
+    * Unpack MappedBox info from recv_mesg into d_global_mapped_boxes,
     * starting at the offset location.
     * Advance the proc_offset past the used data.
     */
@@ -949,7 +948,7 @@ MappedBoxSet::iterator MappedBoxLevel::addBox(
 {
    const tbox::Dimension& dim(getDim());
    /*
-    * FIXME: bug: if some procs add a mapped_box and others do not,
+    * FIXME: bug: if some procs add a MappedBox and others do not,
     * their d_computed_global_* flags will be inconsistent
     * resulting in incomplete participation in future communication
     * calls to compute those parameters.
@@ -1062,8 +1061,8 @@ MappedBoxLevel::addPeriodicMappedBox(
    /*
     * Sanity checks:
     *
-    * - Require that the real version of the reference mapped_box exists
-    *   before adding the periodic image mapped_box.
+    * - Require that the real version of the reference MappedBox exists
+    *   before adding the periodic image MappedBox.
     */
    MappedBox real_mapped_box(getDim(),
                              ref_mapped_box.getLocalId(),
@@ -1100,7 +1099,7 @@ MappedBoxLevel::addMappedBox(
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    if (d_parallel_state != GLOBALIZED && mapped_box.getOwnerRank() != d_rank) {
-      TBOX_ERROR("MappedBoxLevel::addMappedBox: Cannot add remote mapped_box\n"
+      TBOX_ERROR("MappedBoxLevel::addMappedBox: Cannot add remote MappedBox\n"
          << "(owned by rank " << mapped_box.getOwnerRank() << ")\n"
          << "when not in GLOBALIZED state.");
    }
@@ -1111,7 +1110,7 @@ MappedBoxLevel::addMappedBox(
 #ifdef DEBUG_CHECK_ASSERTIONS
    /*
     * Sanity checks:
-    * - Require that the real mapped_box exists before adding the periodic image mapped_box.
+    * - Require that the real MappedBox exists before adding the periodic image MappedBox.
     */
    if (mapped_box.isPeriodicImage()) {
       MappedBox real_mapped_box(getDim(),
@@ -1124,20 +1123,20 @@ MappedBoxLevel::addMappedBox(
          d_rank ? d_mapped_boxes : d_global_mapped_boxes;
       if (mapped_boxes.find(real_mapped_box) == mapped_boxes.end()) {
          TBOX_ERROR(
-            "MappedBoxLevel::addMappedBox: cannot add periodic image mapped_box "
+            "MappedBoxLevel::addMappedBox: cannot add periodic image MappedBox "
             << mapped_box
             <<
-            "\nwithout the real mapped_box (" << real_mapped_box
+            "\nwithout the real MappedBox (" << real_mapped_box
             <<
-            ") already in the mapped_box_level.\n");
+            ") already in the MappedBoxLevel.\n");
       }
       if (d_global_mapped_boxes.find(mapped_box) !=
           d_global_mapped_boxes.end()) {
          TBOX_ERROR(
-            "MappedBoxLevel::addMappedBox: cannot add mapped_box "
+            "MappedBoxLevel::addMappedBox: cannot add MappedBox "
             << mapped_box
             <<
-            "\nbecause mapped_box already exists ("
+            "\nbecause it already exists ("
             << *mapped_boxes.find(mapped_box) << "\n");
       }
    }
@@ -1155,7 +1154,7 @@ MappedBoxLevel::addMappedBox(
       }
       d_global_data_up_to_date = false;
       /*
-       * FIXME: bug: if some procs add a real mapped_box and others do not,
+       * FIXME: bug: if some procs add a real MappedBox and others do not,
        * their d_global_data_up_to_date flags will be inconsistent
        * resulting in incomplete participation in future collective
        * communication to compute that parameter.
@@ -1209,7 +1208,7 @@ MappedBoxLevel::eraseMappedBox(
       d_local_bounding_box_up_to_date = d_global_data_up_to_date = false;
       --d_local_number_of_mapped_boxes;
       d_local_number_of_cells -= ibox->getBox().size();
-      // Erase real mapped_box and its periodic images.
+      // Erase real MappedBox and its periodic images.
       const LocalId &local_id = ibox->getLocalId();
       do {
          d_mapped_boxes.erase(ibox++);
@@ -1510,7 +1509,7 @@ void MappedBoxLevel::printMappedBoxStats(
 
    // Per-processor statistics.
    double has_mapped_box = (double)(getLocalNumberOfBoxes() > 0);
-   double mapped_number_of_boxes = (double)(getLocalNumberOfBoxes());
+   double number_of_mapped_boxes = (double)(getLocalNumberOfBoxes());
    double largest_dim = 0;
    double smallest_dim = (double)(getLocalNumberOfBoxes() == 0 ? 0 : 9999999);
    double largest_aspect = 0;
@@ -1559,8 +1558,8 @@ void MappedBoxLevel::printMappedBoxStats(
       double sum_dbl[MAPPED_BOX_LEVEL_NUMBER_OF_STATS];
       std::string names[MAPPED_BOX_LEVEL_NUMBER_OF_STATS];
       int k = 0;
-      names[k] = "mapped_number_of_boxes (N)";
-      loc_dbl[k++] = mapped_number_of_boxes;
+      names[k] = "number_of_mapped_boxes (N)";
+      loc_dbl[k++] = number_of_mapped_boxes;
       names[k] = "has_mapped_box";
       loc_dbl[k++] = has_mapped_box;
       names[k] = "smallest_aspect";

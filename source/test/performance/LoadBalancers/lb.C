@@ -45,9 +45,6 @@ using namespace tbox;
  *************************************************************************
  */
 
-typedef std::vector<hier::MappedBox> NodeVec;
-typedef std::vector<hier::Box> BoxVec;
-
 void
 generatePrebalanceByUserBoxes(
    tbox::Pointer<tbox::Database> database,
