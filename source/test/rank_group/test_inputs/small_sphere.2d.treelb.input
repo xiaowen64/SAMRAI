@@ -70,7 +70,6 @@ Main {
       radii = 0.0, 0.6, 0.75, 0.85, 0.99, 1.0
       efficiency_tol = 0.80
       combine_tol = 0.90
-      max_lap_cut_from_center = 1.0
       BergerRigoutsos {
          log_node_history = FALSE
          log_cluster_summary = TRUE

@@ -13,11 +13,14 @@
 Main {
    dim = 2
 
-   base_name = "med_sphere.2d.caplb"
+   base_name = "small_cube.2d.treelb"
+   baseline_dirname = "test_inputs"
+   // generate_baseline = TRUE // Default is FALSE
+
    log_all_nodes = FALSE
 
    // Balancer types: TreeLoadBalancer, ChopAndPackLoadBalancer
-   load_balancer_type = "ChopAndPackLoadBalancer"
+   load_balancer_type = "TreeLoadBalancer"
 
    /*
      Specify domain as a box array in the reference index space.
@@ -48,8 +51,6 @@ Main {
    */
    min_size = 4, 4
 
-   box_gen_method = "PrebalanceByUserShells"
-
    PrebalanceByUserBoxes {
       /*
         Specify unbalanced layer as a box array in the reference index space.
@@ -59,27 +60,6 @@ Main {
       */
       balance_boxes = [(10,10),(189,189)]
       initial_owners = 0
-      max_box_size = -1, -1, -1
-   }
-
-   PrebalanceByUserShells {
-      /*
-        Specify unbalanced layer by tagging a set of concentric shells,
-        centered at r0, with shell i having inner radius 2*i
-        and outer radius (2*i)+1.  Note that making shells too thin
-        can lead to discontinuous tagging.
-      */
-      r0 = 0, 0 // 0.5, 0.5
-      radii = 0.0, 0.6, 0.75, 0.85, 0.99, 1.0
-      efficiency_tol = 0.80
-      combine_tol = 0.90
-      BergerRigoutsos {
-         log_node_history = TRUE
-         log_cluster_summary = TRUE
-         log_cluster = FALSE
-         sequentialize_output_indices = FALSE
-         barrier_before_cluster = FALSE
-      }
    }
 
 }

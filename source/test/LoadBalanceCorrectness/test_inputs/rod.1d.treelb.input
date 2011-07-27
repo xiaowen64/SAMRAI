@@ -11,18 +11,19 @@
 
 
 Main {
-   dim = 2
+   base_name = "rod.treelb.1d"
+   baseline_dirname = "test_inputs"
+   // generate_baseline = TRUE // Default is FALSE
 
-   base_name = "med_sphere.2d.caplb"
    log_all_nodes = FALSE
 
    // Balancer types: TreeLoadBalancer, ChopAndPackLoadBalancer
-   load_balancer_type = "ChopAndPackLoadBalancer"
+   load_balancer_type = "TreeLoadBalancer"
 
    /*
      Specify domain as a box array in the reference index space.
    */
-   domain_boxes = [(0,0),(199,199)]
+   domain_boxes = [(0),(299)]
 
    /*
      Specify anchor layer as a box array in the reference index space.
@@ -31,7 +32,7 @@ Main {
 
      If omitted, the anchor layer is the same as the domain.
    */
-   anchor_boxes = [(0,0),(199,199)]
+   anchor_boxes = [(0),(299)]
    /*
      If anchor is not contained in domain, you can use this flag
      to remove the parts that are outside the domain.
@@ -41,14 +42,12 @@ Main {
    /*
      Specify ghost-cell-width between anchor and unbalanced.
    */
-   ghost_cell_width = 4, 4
+   ghost_cell_width = 4
 
    /*
      Specify the min patch size.
    */
-   min_size = 4, 4
-
-   box_gen_method = "PrebalanceByUserShells"
+   min_size = 1
 
    PrebalanceByUserBoxes {
       /*
@@ -57,29 +56,8 @@ Main {
         initial_owners are the ranks of the owner sof all the initial balance boxes.
         By default, processor 0 owns all the initial balance boxes.
       */
-      balance_boxes = [(10,10),(189,189)]
+      balance_boxes = [(1),(298)]
       initial_owners = 0
-      max_box_size = -1, -1, -1
-   }
-
-   PrebalanceByUserShells {
-      /*
-        Specify unbalanced layer by tagging a set of concentric shells,
-        centered at r0, with shell i having inner radius 2*i
-        and outer radius (2*i)+1.  Note that making shells too thin
-        can lead to discontinuous tagging.
-      */
-      r0 = 0, 0 // 0.5, 0.5
-      radii = 0.0, 0.6, 0.75, 0.85, 0.99, 1.0
-      efficiency_tol = 0.80
-      combine_tol = 0.90
-      BergerRigoutsos {
-         log_node_history = TRUE
-         log_cluster_summary = TRUE
-         log_cluster = FALSE
-         sequentialize_output_indices = FALSE
-         barrier_before_cluster = FALSE
-      }
    }
 
 }

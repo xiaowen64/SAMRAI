@@ -13,7 +13,10 @@
 Main {
    dim = 2
 
-   base_name = "med_sphere.2d.caplb"
+   base_name = "small_sphere.2d.caplb"
+   baseline_dirname = "test_inputs"
+   // generate_baseline = TRUE // Default is FALSE
+
    log_all_nodes = FALSE
 
    // Balancer types: TreeLoadBalancer, ChopAndPackLoadBalancer
@@ -22,7 +25,7 @@ Main {
    /*
      Specify domain as a box array in the reference index space.
    */
-   domain_boxes = [(0,0),(199,199)]
+   domain_boxes = [(0,0),(49,49)]
 
    /*
      Specify anchor layer as a box array in the reference index space.
@@ -31,7 +34,7 @@ Main {
 
      If omitted, the anchor layer is the same as the domain.
    */
-   anchor_boxes = [(0,0),(199,199)]
+   anchor_boxes = [(0,0),(49,49)]
    /*
      If anchor is not contained in domain, you can use this flag
      to remove the parts that are outside the domain.
@@ -57,28 +60,27 @@ Main {
         initial_owners are the ranks of the owner sof all the initial balance boxes.
         By default, processor 0 owns all the initial balance boxes.
       */
-      balance_boxes = [(10,10),(189,189)]
+      balance_boxes = [(10,10),(89,89)]
       initial_owners = 0
       max_box_size = -1, -1, -1
    }
 
    PrebalanceByUserShells {
       /*
-        Specify unbalanced layer by tagging a set of concentric shells,
-        centered at r0, with shell i having inner radius 2*i
-        and outer radius (2*i)+1.  Note that making shells too thin
-        can lead to discontinuous tagging.
+        Specify unbalanced layer by tagging a set of concentric shells.
       */
       r0 = 0, 0 // 0.5, 0.5
       radii = 0.0, 0.6, 0.75, 0.85, 0.99, 1.0
       efficiency_tol = 0.80
       combine_tol = 0.90
       BergerRigoutsos {
-         log_node_history = TRUE
+         log_node_history = FALSE
          log_cluster_summary = TRUE
          log_cluster = FALSE
          sequentialize_output_indices = FALSE
          barrier_before_cluster = FALSE
+         // owner_mode = "SINGLE_OWNER"
+         // algo_advance_mode = "SYNCHRONOUS"
       }
    }
 

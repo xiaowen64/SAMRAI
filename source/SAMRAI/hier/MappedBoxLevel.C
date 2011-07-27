@@ -1323,7 +1323,7 @@ void MappedBoxLevel::putToDatabase(
 
 void MappedBoxLevel::getFromDatabase(
    tbox::Database& database,
-   tbox::ConstPointer<GridGeometry> &grid_geom)
+   const tbox::ConstPointer<GridGeometry> &grid_geom)
 {
    TBOX_ASSERT(database.isInteger("dim"));
    const tbox::Dimension dim(static_cast<unsigned short>(database.getInteger("dim")));

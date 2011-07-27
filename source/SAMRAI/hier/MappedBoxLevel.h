@@ -1013,7 +1013,7 @@ public:
    void
    getFromDatabase(
       tbox::Database& database,
-      tbox::ConstPointer<GridGeometry> &grid_geom);
+      const tbox::ConstPointer<GridGeometry> &grid_geom);
 
    //@}
 

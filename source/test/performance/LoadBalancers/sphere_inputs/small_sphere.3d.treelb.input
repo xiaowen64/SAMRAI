@@ -64,7 +64,10 @@ Main {
 
    PrebalanceByUserShells {
       /*
-        Specify unbalanced layer by tagging a set of concentric shells.
+        Specify unbalanced layer by tagging a set of concentric shells,
+        centered at r0, with shell i having inner radius 2*i
+        and outer radius (2*i)+1.  Note that making shells too thin
+        can lead to discontinuous tagging.
       */
       r0 = 0.0, 0.0, 0.0
       radii = 0.0, 0.5, 0.7, 0.8, 1.4, 1.41
