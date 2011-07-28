@@ -66,7 +66,7 @@ cat <<-EOF
 	--with-hdf5=/usr/local/tools/hdf5-intel-parallel-1.8.1
         --with-boost=/usr/gapps/samrai/devapps/chaos/boost/1.45.0
 	--with-zlib
-	--with-hypre=/usr/casc/aleamr/atlas-local/hypre-2.2.0b
+	--with-hypre=/usr/gapps/samrai/devapps/chaos/hypre/2.2.0b
 	--without-sundials
 	--without-petsc
 	--without-x
@@ -118,7 +118,7 @@ cat <<-EOF
 	--with-CC=mpixlc
 	--with-F77=mpif77
 	--with-hdf5=/usr/local/tools/hdf5/hdf5-1.8.1/parallel
-        --with-boost=/usr/casc/samrai/apps/sles/boost/1.45.0
+        --with-boost=/usr/gapps/samrai/apps/sles/boost/1.45.0
 	--with-hypre=no
 	--without-sundials
 	--without-petsc
@@ -135,7 +135,7 @@ cat <<-EOF
 	--with-CC=mpcc
 	--with-F77=mpxlf
 	--with-hdf5=/usr/local/tools/hdf5/hdf5-1.8.1/parallel
-        --with-boost=/usr/casc/samrai/apps/sles/boost/1.45.0
+        --with-boost=/usr/gapps/samrai/apps/sles/boost/1.45.0
 	--with-hypre=no
 	--without-sundials
 	--without-petsc
@@ -152,7 +152,7 @@ cat <<-EOF
         --with-CC=mpxlc
 	--with-F77=mpxlf
 	--with-hdf5=/usr/local/tools/hdf5/hdf5-1.8.1/parallel
-        --with-boost=/usr/casc/samrai/apps/sles/boost/1.45.0
+        --with-boost=/usr/gapps/samrai/apps/sles/boost/1.45.0
 	--with-hypre=no
 	--without-sundials
 	--without-petsc
@@ -175,7 +175,7 @@ cat <<-EOF
         --with-boost=/usr/gapps/samrai/devapps/chaos/boost/1.45.0
 	--with-zlib
 	--with-parallel-run-bin=/usr/local/bin/mpirun
-	--with-hypre=/usr/gapps/samrai/hypre/2.2.0b/chaos_4_x86_64
+	--with-hypre=/usr/gapps/samrai/devapps/chaos/hypre/2.2.0b
 	--without-sundials
 	--without-petsc
 	--without-x
@@ -194,7 +194,7 @@ cat <<-EOF
 	--with-hdf5=/usr/local/tools/hdf5-intel-parallel-1.8.1
         --with-boost=/usr/gapps/samrai/devapps/chaos/boost/1.45.0
 	--with-zlib
-	--with-hypre=/usr/casc/aleamr/hypre/chaos4_x86_64_ib/hypre-2.2.0b
+	--with-hypre=/usr/gapps/samrai/devapps/chaos/hypre/2.2.0b
 	--without-sundials
 	--without-petsc
 	--without-x
@@ -213,7 +213,7 @@ cat <<-EOF
 	--with-szlib=/usr/gapps/silo/szip/2.1/chaos_4_x86_64
         --with-boost=/usr/gapps/samrai/devapps/chaos/boost/1.45.0
 	--with-zlib
-        --with-hypre=/usr/casc/samrai/hypre/2.6.0b.opt
+        --with-hypre=/usr/gapps/samrai/devapps/chaos/hypre/2.6.0b.opt
 	EOF
 # Maintained by Steven Smith
 ;;
