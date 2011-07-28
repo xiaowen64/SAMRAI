@@ -78,6 +78,7 @@ Main {
          log_cluster_summary = TRUE
          log_cluster = FALSE
          sequentialize_output_indices = FALSE
+         sort_output_nodes = TRUE
          barrier_before_cluster = FALSE
          // owner_mode = "SINGLE_OWNER"
          // algo_advance_mode = "SYNCHRONOUS"
