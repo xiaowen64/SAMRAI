@@ -342,8 +342,6 @@ private:
    finalizeCallback();
 
    //! @brief Shorthand typedef.
-   typedef hier::MappedBox MappedBox;
-   //! @brief Shorthand typedef.
    typedef hier::LocalId LocalId;
    //! @brief Shorthand typedef.
    typedef hier::MappedBoxLevel MappedBoxLevel;
@@ -354,11 +352,11 @@ private:
    //! @brief Shorthand typedef.
    typedef std::vector<hier::Box> BoxVector;
    //! @brief Shorthand typedef.
-   typedef std::vector<hier::MappedBox> MappedBoxVector;
+   typedef std::vector<hier::Box> MappedBoxVector;
    //! @brief Similar to NeighborhoodSet but maps to BoxVector instead of MappedBoxSet.
    typedef std::map<hier::GlobalId, MappedBoxVector> FillSet;
-   //! @brief Mapping from a (potentially remote) MappedBox to a set of neighbors.
-   typedef std::map<MappedBox, NeighborSet> FullNeighborhoodSet;
+   //! @brief Mapping from a (potentially remote) Box to a set of neighbors.
+   typedef std::map<hier::Box, NeighborSet, hier::Box::id_less> FullNeighborhoodSet;
 
    /*!
     * @brief This private constructor creates a communication schedule
@@ -726,7 +724,7 @@ private:
       hier::NeighborhoodSet& dst_to_unfilled_nbrhood_set,
       hier::NeighborhoodSet& encon_to_unfilled_encon_nbrhood_set,
       hier::LocalId& last_unfilled_local_id,
-      const hier::MappedBox& dst_mapped_box,
+      const hier::Box& dst_mapped_box,
       const hier::MappedBoxSet& fill_mapped_boxes,
       const hier::MappedBoxSet& src_mapped_boxes,
       const bool use_time_interpolation);
@@ -774,7 +772,7 @@ private:
       hier::NeighborhoodSet& dst_to_unfilled_nbrhood_set,
       hier::NeighborhoodSet& encon_to_unfilled_encon_nbrhood_set,
       hier::LocalId& last_unfilled_local_id,
-      const hier::MappedBox& dst_mapped_box,
+      const hier::Box& dst_mapped_box,
       const hier::MappedBoxSet& fill_mapped_boxes);
 
    /*!
@@ -805,15 +803,15 @@ private:
     * destination mapped boxes with the fill boxes.
     *
     * @param[in] fill_boxes  A container of boxes that need to be filled.
-    * @param[in] dst_mapped_box  MappedBox from a destination patch.
-    * @param[in] src_mapped_box  MappedBox from a source patch.
+    * @param[in] dst_mapped_box  Box from a destination patch.
+    * @param[in] src_mapped_box  Box from a source patch.
     * @param[in] use_time_interpolation
     */
    void
    constructScheduleTransactions(
       const MappedBoxVector& fill_boxes,
-      const MappedBox& dst_mapped_box,
-      const MappedBox& src_mapped_box,
+      const hier::Box& dst_mapped_box,
+      const hier::Box& src_mapped_box,
       const bool use_time_interpolation);
 
    /*!

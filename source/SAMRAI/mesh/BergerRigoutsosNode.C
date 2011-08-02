@@ -1412,7 +1412,7 @@ bool BergerRigoutsosNode::broadcastAcceptability_check()
       if (!boxHasNoTag()) {
          const hier::LocalId node_local_id(*(ptr++));
          ptr = getBoxFromBuffer(d_box, ptr);
-         d_mapped_box = MappedBox(d_box, node_local_id, d_owner, d_block_id);
+         d_mapped_box = hier::Box(d_box, node_local_id, d_owner, d_block_id);
 #ifdef DEBUG_CHECK_ASSERTIONS
          TBOX_ASSERT(d_mapped_box.getLocalId() >= 0);
          if ( d_parent != NULL ) {
@@ -1664,7 +1664,7 @@ bool BergerRigoutsosNode::broadcastToDropouts_check()
             TBOX_ASSERT(d_box.numberCells() >= d_common->min_box);
          }
 #endif
-         d_mapped_box = MappedBox(d_box, local_id, d_owner, d_block_id);
+         d_mapped_box = hier::Box(d_box, local_id, d_owner, d_block_id);
       }
    }
    return d_comm_group->isDone();
@@ -1773,7 +1773,7 @@ void BergerRigoutsosNode::computeMinimalBoundingBoxForTags()
    const hier::Box new_box(new_lower, new_upper);
    const hier::IntVector new_size = new_box.numberCells();
 
-   if (new_box != d_box) {
+   if (! new_box.isSpatiallyEqual(d_box)) {
 #ifdef DEBUG_CHECK_ASSERTIONS
       if ( d_parent != NULL ) {
          /*
@@ -2251,7 +2251,7 @@ void BergerRigoutsosNode::cutAtLaplacian(
 
 /*
  ********************************************************************
- * Create a DLBG MappedBox in d_common->new_mapped_box_set,
+ * Create a DLBG Box in d_common->new_mapped_box_set,
  * where the output boxes of the algorithm is saved.
 
  * Only the owner should create the mapped_box_level node this way.
@@ -2269,16 +2269,16 @@ void BergerRigoutsosNode::createMappedBox()
 
    d_mapped_box_iterator = d_common->new_mapped_box_set.insert(
       d_common->new_mapped_box_set.end(),
-      hier::MappedBox(d_box, last_index+1, d_common->rank, d_block_id) );
+      hier::Box(d_box, last_index+1, d_common->rank, d_block_id) );
 
    d_mapped_box = *d_mapped_box_iterator;
 }
 
 /*
  ********************************************************************
- * Discard the MappedBox.  On the owner, this MappedBox is a part of
+ * Discard the Box.  On the owner, this Box is a part of
  * d_common->new_mapped_box_set where it must be removed.  On
- * contributors the MappedBox can just be ignored.  To prevent bugs,
+ * contributors the Box can just be ignored.  To prevent bugs,
  * the node and its iterator are set to unusable values.
  ********************************************************************
  */
@@ -2289,7 +2289,7 @@ void BergerRigoutsosNode::eraseMappedBox()
    }
 #ifdef DEBUG_CHECK_ASSERTIONS
    d_mapped_box_iterator = MappedBoxSet().end();
-   d_mapped_box = MappedBox(d_dim);
+   d_mapped_box = hier::Box(d_dim);
 #endif
 }
 
@@ -2550,16 +2550,16 @@ void BergerRigoutsosNode::computeNewNeighborhoodSets()
 
    const int index_of_counter =
       (relationship_message != NULL ? static_cast<int>(relationship_message->size()) : 0) - 1;
-   const int ints_per_node = MappedBox::commBufferSize(d_dim);
+   const int ints_per_node = hier::Box::commBufferSize(d_dim);
 
    const MappedBoxSet& tag_mapped_boxes =
       d_common->tag_mapped_box_level->getMappedBoxes();
 
    for (hier::RealMappedBoxConstIterator ni(tag_mapped_boxes); ni.isValid(); ++ni) {
 
-      const MappedBox& tag_mapped_box = *ni;
+      const hier::Box& tag_mapped_box = *ni;
 
-      hier::Box intersection = tag_mapped_box.getBox() * grown_box;
+      hier::Box intersection = tag_mapped_box * grown_box;
 
       if (!intersection.empty()) {
 
@@ -2631,7 +2631,7 @@ void BergerRigoutsosNode::shareNewNeighborhoodSetsWithOwners()
    std::map<int, VectorOfInts>& relationship_messages = d_common->relationship_messages;
    hier::NeighborhoodSet& new_eto_tag = d_common->new_eto_tag;
 
-   const int ints_per_node = MappedBox::commBufferSize(d_dim);
+   const int ints_per_node = hier::Box::commBufferSize(d_dim);
 
    int ierr;
    tbox::SAMRAI_MPI::Status mpi_status;
@@ -2731,7 +2731,7 @@ void BergerRigoutsosNode::shareNewNeighborhoodSetsWithOwners()
 #endif
          GraphNeighborSet& nabrs = (*nn).second;
          for (int n = 0; n < n_new_relationships; ++n) {
-            MappedBox node(d_dim);
+            hier::Box node(d_dim);
             node.getFromIntBuffer(ptr);
             ptr += ints_per_node;
             nabrs.insert(node);

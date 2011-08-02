@@ -203,7 +203,7 @@ SkeletonGridGeometry::makeCoarsenedGridGeometry(
    hier::BoxList::Iterator coarse_domain_itr(coarse_domain);
    for (int ib = 0; ib < nboxes; ib++, fine_domain_itr++, coarse_domain_itr++) {
       hier::Box testbox = hier::Box::refine(*coarse_domain_itr, coarsen_ratio);
-      if (testbox != *fine_domain_itr) {
+      if (! testbox.isSpatiallyEqual(*fine_domain_itr)) {
          tbox::plog
          << "SkeletonGridGeometry::makeCoarsenedGridGeometry : Box # "
          << ib << std::endl;

@@ -638,7 +638,7 @@ GridGeometry::makeCoarsenedGridGeometry(
       BoxList::Iterator fine_domain_itr(fine_domain);
       for (int ib = 0; ib < nboxes; ib++, coarse_domain_itr++, fine_domain_itr++) {
          Box testbox = Box::refine(*coarse_domain_itr, coarsen_ratio);
-         if (testbox != *fine_domain_itr) {
+         if (! testbox.isSpatiallyEqual(*fine_domain_itr)) {
 #ifdef DEBUG_CHECK_ASSERTIONS
             tbox::plog
             << "GridGeometry::makeCoarsenedGridGeometry : Box # "
@@ -1385,7 +1385,7 @@ void GridGeometry::resetDomainMappedBoxSet(const int block_number)
 {
   BoxList::Iterator itr(d_physical_domain[block_number]);
   for (LocalId i(0); i < d_physical_domain[block_number].size(); ++i, itr++) {
-      MappedBox mapped_box(*itr, i, 0, BlockId(block_number));
+      Box mapped_box(*itr, i, 0, BlockId(block_number));
       d_domain_mapped_box_sets[block_number].insert(mapped_box);
    }
    const IntVector periodic_shift_distances = getPeriodicShift(
@@ -1408,16 +1408,16 @@ void GridGeometry::resetDomainMappedBoxSet(const int block_number)
       const MappedBoxSet& mapped_boxes =
          d_domain_mapped_box_sets[block_number];
       for (RealMappedBoxConstIterator ni(mapped_boxes); ni.isValid(); ++ni) {
-         const MappedBox& mapped_box = *ni;
+         const Box& mapped_box = *ni;
          computeShiftsForBox(shifts,
-            mapped_box.getBox(),
+            mapped_box,
             *d_domain_tree[block_number],
             periodic_shift_distances);
          for (std::vector<IntVector>::const_iterator si = shifts.begin();
               si != shifts.end(); ++si) {
             PeriodicId shift_number =
                periodic_shift_catalog->shiftDistanceToShiftNumber(*si);
-            MappedBox image_mapped_box(
+            Box image_mapped_box(
                mapped_box,
                shift_number,
                IntVector::getOne(d_dim));
@@ -1658,7 +1658,7 @@ bool GridGeometry::checkBoundaryBox(
 
    grow_patch_box.grow(IntVector::getOne(d_dim));
 
-   if (grow_patch_box != (grow_patch_box + bbox)) {
+   if (! grow_patch_box.isSpatiallyEqual((grow_patch_box + bbox))) {
       bool valid_box = false;
       grow_patch_box = patch_box;
       for (int j = 0; j < d_dim.getValue(); j++) {
@@ -1682,7 +1682,7 @@ bool GridGeometry::checkBoundaryBox(
 
          }
          grow_patch_box.grow(j, 1);
-         if (grow_patch_box == (grow_patch_box + bbox)) {
+         if (grow_patch_box.isSpatiallyEqual((grow_patch_box + bbox))) {
             valid_box = true;
          }
          grow_patch_box = patch_box;

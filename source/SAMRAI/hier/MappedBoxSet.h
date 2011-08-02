@@ -12,7 +12,7 @@
 
 #include "SAMRAI/SAMRAI_config.h"
 
-#include "SAMRAI/hier/MappedBox.h"
+#include "SAMRAI/hier/Box.h"
 #include "SAMRAI/tbox/Database.h"
 #include "SAMRAI/tbox/Dimension.h"
 
@@ -24,9 +24,9 @@ namespace hier {
 class BoxList;
 
 /*!
- * @brief A wrapper around std::set<MappedBox>.
+ * @brief A wrapper around std::set<Box>.
  *
- * This is little more than a std::set<MappedBox>, a sorted container
+ * This is little more than a std::set<Box>, a sorted container
  * of MappedBoxes.  It adds a few additional "features" such as:
  *
  * - Database reading/writing
@@ -58,15 +58,15 @@ public:
 
    //! @name Types defined by std::set.
 
-   typedef std::set<MappedBox>::iterator iterator;
-   typedef std::set<MappedBox>::const_iterator const_iterator;
-   typedef std::set<MappedBox>::reverse_iterator reverse_iterator;
-   typedef std::set<MappedBox>::const_reverse_iterator const_reverse_iterator;
-   typedef std::set<MappedBox>::key_type key_type;
-   typedef std::set<MappedBox>::value_type value_type;
-   typedef std::set<MappedBox>::size_type size_type;
-   typedef std::set<MappedBox>::reference reference;
-   typedef std::set<MappedBox>::const_reference const_reference;
+   typedef std::set<Box, Box::id_less>::iterator iterator;
+   typedef std::set<Box, Box::id_less>::const_iterator const_iterator;
+   typedef std::set<Box, Box::id_less>::reverse_iterator reverse_iterator;
+   typedef std::set<Box, Box::id_less>::const_reverse_iterator const_reverse_iterator;
+   typedef std::set<Box, Box::id_less>::key_type key_type;
+   typedef std::set<Box, Box::id_less>::value_type value_type;
+   typedef std::set<Box, Box::id_less>::size_type size_type;
+   typedef std::set<Box, Box::id_less>::reference reference;
+   typedef std::set<Box, Box::id_less>::const_reference const_reference;
 
    //@}
 
@@ -241,7 +241,7 @@ public:
       const IntVector& ratio) const;
 
    /*!
-    * @brief Coarsen the boxes in a set<MappedBox>.
+    * @brief Coarsen the boxes in a set<Box>.
     *
     * Put the results in the output container.  For flexibility and
     * efficiency, the output container is NOT cleared first, so you
@@ -319,7 +319,7 @@ public:
       BoxList& boxes) const;
 
    /*!
-    * @brief Insert MappedBox owners into a single set container.
+    * @brief Insert Box owners into a single set container.
     *
     * @param[out] owners
     */
@@ -328,22 +328,7 @@ public:
       std::set<int>& owners) const;
 
    /*!
-    * @brief Convert a MappedBoxSet to a BoxList.
-    *
-    * Put the results in the output container.  For flexibility and
-    * efficiency, the output container is NOT cleared first, so you
-    * may want to clear it before calling this method.
-    *
-    * @param[out] box_list
-    *
-    * @param[in] mapped_box_set
-    */
-   void
-   convertToBoxList(
-      BoxList& box_list) const;
-
-   /*!
-    * @brief Split a MappedBoxSet into two vector<MappedBox>
+    * @brief Split a MappedBoxSet into two vector<Box>
     * objects, one containing real MappedBoxes and one containing their
     * periodic images.
     *
@@ -357,8 +342,8 @@ public:
     */
    void
    separatePeriodicImages(
-      std::vector<MappedBox>& real_mapped_box_vector,
-      std::vector<MappedBox>& periodic_image_mapped_box_vector) const;
+      std::vector<Box>& real_mapped_box_vector,
+      std::vector<Box>& periodic_image_mapped_box_vector) const;
 
 
    //@{
@@ -450,7 +435,7 @@ private:
     */
    static const int HIER_MAPPED_BOX_SET_VERSION;
 
-   std::set<MappedBox> d_set;
+   std::set<Box, Box::id_less> d_set;
 
 };
 

@@ -537,98 +537,97 @@ int main(
          }
 
 #if (TESTING == 1)
-            /*
-             * If we are doing autotests, check result...
-             */
-            autotester.evalTestData(iteration_num,
-               patch_hierarchy,
-               time_integrator,
-               hyp_level_integrator,
-               gridding_algorithm);
-#endif
-
-         }
-
          /*
-          * Output timer results.
+          * If we are doing autotests, check result...
           */
-#if (TESTING != 1)
-         tbox::TimerManager::getManager()->print(tbox::plog);
+         autotester.evalTestData(iteration_num,
+            patch_hierarchy,
+            time_integrator,
+            hyp_level_integrator,
+            gridding_algorithm);
 #endif
 
-         /*
-          * At conclusion of simulation, deallocate objects.
-          */
-
-#ifdef HAVE_HDF5
-         visit_data_writer.setNull();
-#endif
-
-         time_integrator.setNull();
-         mblk_gridding_algorithm.setNull();
-         load_balancer.setNull();
-         box_generator.setNull();
-         error_detector.setNull();
-         mblk_hyp_level_integrator.setNull();
-
-         if (linear_advection_model) {
-	    delete linear_advection_model;
-	 }
-
-         mblk_patch_hierarchy.setNull();
-         geom.setNull();
-
-         input_db.setNull();
-         main_db.setNull();
-
-
-
-	 tbox::SAMRAIManager::shutdown();
       }
-
-      tbox::SAMRAIManager::finalize();
-      tbox::SAMRAI_MPI::finalize();
-
-      tbox::pout << "\nPASSED:  MblkLinAdv" << endl;
-
-      return 0;
-   }
-
-   void setupHierarchy(
-      tbox::Pointer<tbox::Database> main_input_db,
-      const tbox::Dimension& dim,
-      tbox::Pointer<hier::GridGeometry>& geometry,
-      tbox::Pointer<hier::PatchHierarchy>& mblk_hierarchy)
-   {
-#ifdef DEBUG_CHECK_ASSERTIONS
-      TBOX_ASSERT(!main_input_db.isNull());
-#endif
-
-      tbox::Pointer<tbox::Database> mult_db =
-         main_input_db->getDatabase("PatchHierarchy");
 
       /*
-       * Read the geometry information and build array of geometries
+       * Output timer results.
+       */
+#if (TESTING != 1)
+      tbox::TimerManager::getManager()->print(tbox::plog);
+#endif
+
+      /*
+       * At conclusion of simulation, deallocate objects.
        */
 
-      char geom_name[32];
+#ifdef HAVE_HDF5
+      visit_data_writer.setNull();
+#endif
 
-      sprintf(geom_name, "BlockGeometry");
-      if (main_input_db->keyExists(geom_name)) {
-         geometry =
-            new hier::GridGeometry(
-               dim,
-               geom_name,
-               tbox::Pointer<hier::TransferOperatorRegistry>(
-                  new geom::SAMRAITransferOperatorRegistry(dim)),
-               main_input_db->getDatabase(geom_name));
-      } else {
-         TBOX_ERROR("main::setupHierarchy(): could not find entry `"
-            << geom_name << "' in input.");
+      time_integrator.setNull();
+      mblk_gridding_algorithm.setNull();
+      load_balancer.setNull();
+      box_generator.setNull();
+      error_detector.setNull();
+      mblk_hyp_level_integrator.setNull();
+
+      if (linear_advection_model) {
+         delete linear_advection_model;
       }
 
-      mblk_hierarchy =
-         new hier::PatchHierarchy("PatchHierarchy",
-            geometry, mult_db, true);
+      mblk_patch_hierarchy.setNull();
+      geom.setNull();
 
+      input_db.setNull();
+      main_db.setNull();
+
+
+
+      tbox::SAMRAIManager::shutdown();
    }
+
+   tbox::SAMRAIManager::finalize();
+   tbox::SAMRAI_MPI::finalize();
+
+   tbox::pout << "\nPASSED:  MblkLinAdv" << endl;
+
+   return 0;
+}
+
+void setupHierarchy(
+   tbox::Pointer<tbox::Database> main_input_db,
+   const tbox::Dimension& dim,
+   tbox::Pointer<hier::GridGeometry>& geometry,
+   tbox::Pointer<hier::PatchHierarchy>& mblk_hierarchy)
+{
+#ifdef DEBUG_CHECK_ASSERTIONS
+   TBOX_ASSERT(!main_input_db.isNull());
+#endif
+
+   tbox::Pointer<tbox::Database> mult_db =
+      main_input_db->getDatabase("PatchHierarchy");
+
+   /*
+    * Read the geometry information and build array of geometries
+    */
+
+   char geom_name[32];
+
+   sprintf(geom_name, "BlockGeometry");
+   if (main_input_db->keyExists(geom_name)) {
+      geometry =
+         new hier::GridGeometry(
+            dim,
+            geom_name,
+            tbox::Pointer<hier::TransferOperatorRegistry>(
+               new geom::SAMRAITransferOperatorRegistry(dim)),
+            main_input_db->getDatabase(geom_name));
+   } else {
+      TBOX_ERROR("main::setupHierarchy(): could not find entry `"
+         << geom_name << "' in input.");
+   }
+
+   mblk_hierarchy =
+      new hier::PatchHierarchy("PatchHierarchy", geometry, mult_db, true);
+
+}

@@ -78,8 +78,8 @@ public:
       tbox::Pointer<hier::PatchLevel> dst_level,
       tbox::Pointer<hier::PatchLevel> src_level,
       tbox::Pointer<hier::BoxOverlap> overlap,
-      const hier::MappedBox& dst_node,
-      const hier::MappedBox& src_node,
+      const hier::Box& dst_node,
+      const hier::Box& src_node,
       int ritem_id,
       const hier::Box& box,
       bool use_time_interpolation = false) const;
@@ -95,8 +95,8 @@ public:
       tbox::Pointer<hier::PatchLevel> dst_level,
       tbox::Pointer<hier::PatchLevel> src_level,
       tbox::Pointer<hier::BoxOverlap> overlap,
-      const hier::MappedBox& dst_node,
-      const hier::MappedBox& src_node,
+      const hier::Box& dst_node,
+      const hier::Box& src_node,
       int ritem_id) const;
 
    /*!

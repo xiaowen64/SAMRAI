@@ -12,7 +12,6 @@
 
 #include "SAMRAI/SAMRAI_config.h"
 
-#include "SAMRAI/hier/MappedBox.h"
 #include "SAMRAI/hier/MappedBoxLevel.h"
 #include "SAMRAI/hier/NeighborhoodSet.h"
 #include "SAMRAI/tbox/Timer.h"
@@ -286,6 +285,16 @@ public:
    getNeighborSet(
       const MappedBoxId& mapped_box_id) const;
 
+   /*!
+    * @brief Return the neighbor set for the specified MappedBoxId.
+    *
+    * @param[in] mapped_box_id
+    */
+   void
+   getNeighborBoxes(
+      const MappedBoxId& mapped_box_id,
+      BoxList& nbr_boxes) const;
+
    //@{
    /*!
     * @name Algorithms for changing individual MappedBox's neighbor data
@@ -313,7 +322,7 @@ public:
     */
    void
    eraseNeighbor(
-      const MappedBox& neighbor,
+      const Box& neighbor,
       const MappedBoxId& mapped_box_id);
 
    /*!
@@ -601,39 +610,35 @@ public:
 
    // TODO: refactor use of size_t as return type.  This could be
    // problematic.
-
    /*!
-    * @brief Check for consistency between the relationship data and
-    * base MappedBoxes, and return the number of consistency errors.
+    * @brief Check for consistency between the relationship data and base
+    * mapped boxes, and return the number of consistency errors.
     *
     * Consistency stipulates that each neighbor list must correspond to
     * a base mapped box.
     *
-    * Relationship consistency errors should be treated as fatal
-    * because many operations assume consistency.
-    *
-    * @return number of inconsistencies found.
+    * relationship consistency errors should be treated as fatal because many
+    * operations assume consistency.
     */
    size_t
    checkConsistencyWithBase() const;
 
    /*!
-    * @brief Run checkConsistencyWithBase().  If any inconsistency is
+    * @brief Run checkConsistencyWithBase().
+    *
+    * If any inconsistency is
     * found, write out diagnostic information and throw an
-    * unrecoverable assertion.
+    * unrecoverable assertion is found.
     */
    void
    assertConsistencyWithBase() const;
 
    /*!
-    * @brief Check that the neighbors exist in the head
-    * MappedBoxLevel.
+    * @brief Check that the neighbors specified by the relationships exist in
+    * the head MappedBoxLevel.
     *
-    * Consistency stipulates that each neighbor referenced in the
-    * Connector must exist in the head.
-    *
-    * Relationship consistency errors should be treated as fatal
-    * because many operations assume consistency.
+    * If the head is not GLOBALIZED, a temporary copy is made and
+    * globalized for checking, triggering communication.
     *
     * @return number of inconsistencies found.
     */
@@ -650,15 +655,14 @@ public:
    assertConsistencyWithHead() const;
 
    /*!
-    * @brief Check that MappedBoxes referenced by the given
-    * NeighborhoodSet match those in the given MappedBoxLevel.
+    * @brief Check that MappedBoxes referenced by the given NeighborhoodSet
+    * match those in the given MappedBoxLevel.
     *
     * This method is static so users can check data without having to
     * put it in a Connector object.  Connectors prohibit initializing
     * with inconsistent data.
     *
     * @param[in] relationships
-    *
     * @param[in] head_mapped_box_level
     *
     * @return number of inconsistencies found.

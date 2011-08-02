@@ -13,7 +13,7 @@
 #include "SAMRAI/SAMRAI_config.h"
 
 #include "SAMRAI/hier/GridGeometry.h"
-#include "SAMRAI/hier/MappedBox.h"
+#include "SAMRAI/hier/Box.h"
 #include "SAMRAI/hier/MappedBoxLevelHandle.h"
 #include "SAMRAI/hier/MappedBoxSet.h"
 #include "SAMRAI/hier/PersistentOverlapConnectors.h"
@@ -30,7 +30,7 @@ namespace SAMRAI {
 namespace hier {
 
 /*!
- * @brief A distributed set of MappedBox objects which reside in the
+ * @brief A distributed set of Box objects which reside in the
  * same index space.
  *
    *
@@ -70,11 +70,11 @@ namespace hier {
  *
  * @note
  * The general attributes of a MappedBoxLevel are
- * <li> the set of MappedBox objects with unique MappedBoxIds,
+ * <li> the set of Box objects with unique MappedBoxIds,
  * <li> the refinement ratio defining their index space, and
  * <li> the parallel state.
  *
- * MappedBox object uniqueness is based on the MappedBox equality operator,
+ * Box object uniqueness is based on the Box equality operator,
  * which compares owner MPI ranks and local indices.  Therefore, 
  * a valid MappedBoxLevel does not contain two MappedBoxes with the same
  * owner and index.
@@ -231,7 +231,7 @@ public:
     * Similar to initialize(const MappedBoxSet&, const IntVector&, const tbox::SAMRAI_MPI&, const ParallelState), except that the @c mapped_boxes are mutable.
     *
     * The state of the object before calling this function is
-    * discarded.  The MappedBox content before calling this function
+    * discarded.  The Box content before calling this function
     * is returned via the @c mapped_boxes argument.
     *
     * @see initializePrivate()
@@ -296,7 +296,7 @@ public:
     * @brief Set the parallel state.
     *
     * This method is potentially expensive.
-    * Acquiring remote MappedBox information (when going
+    * Acquiring remote Box information (when going
     * to GLOBALIZED mode) triggers all-gather communication.
     * More memory is required to store additional MappedBoxes.
     *
@@ -315,7 +315,7 @@ public:
    getParallelState() const;
 
    /*!
-    * @brief If global reduced data (global MappedBox count, global
+    * @brief If global reduced data (global Box count, global
     * cell count and global bounding box) have not been updated,
     * compute and cache them (communication required).
     *
@@ -434,7 +434,7 @@ public:
     * see the equality differently from another.
     *
     * The cost for the comparison is on the order of the local
-    * MappedBox count.  An object may be compared to itself, an
+    * Box count.  An object may be compared to itself, an
     * efficient operation that always returns true.
     *
     * @param[in] rhs
@@ -452,7 +452,7 @@ public:
     * see the inequality differently from another.
     *
     * The cost for the comparison is on the order of the local
-    * MappedBox count.  However, an object may be compared to itself,
+    * Box count.  However, an object may be compared to itself,
     * an efficient operation that always returns false.
     *
     * @param[in] rhs
@@ -495,6 +495,15 @@ public:
    const MappedBoxSet&
    getGlobalMappedBoxes() const;
 
+   /*!
+    * @brief Returns the container of global Boxes.
+    *
+    * @par Assertions
+    * Throws an unrecoverable assertion if not in GLOBALIZED mode.
+    */
+   void
+   getGlobalBoxes(BoxList &global_boxes) const;
+
    /*
     * TODO: Why are the following two methods here?  Returning local id 
     * information like this is dangerous in that it seems to imply that 
@@ -504,14 +513,14 @@ public:
     */
    /*!
     * @brief Returns the first LocalId, or one with a value of -1 if
-    * no local MappedBox exists.
+    * no local Box exists.
     */
    LocalId
    getFirstLocalId() const;
 
    /*!
     * @brief Returns the last LocalId, or one with a value of -1 if no
-    * local MappedBox exists.
+    * local Box exists.
     */
    LocalId
    getLastLocalId() const;
@@ -661,19 +670,19 @@ public:
    getGlobalBoundingBox( int block_number ) const;
 
    /*!
-    * @brief Return size of the largest local MappedBox in a block.
+    * @brief Return size of the largest local Box in a block.
     */
    const IntVector&
    getLocalMaxBoxSize( int block_number ) const;
 
    /*!
-    * @brief Return size of the smallest local MappedBox in a block.
+    * @brief Return size of the smallest local Box in a block.
     */
    const IntVector&
    getLocalMinBoxSize( int block_number ) const;
 
    /*!
-    * @brief Return size of the largest MappedBox globally in a block.
+    * @brief Return size of the largest Box globally in a block.
     *
     * This requires a global reduction if the global bounding box has
     * not been computed and cached.  When communication is required,
@@ -684,7 +693,7 @@ public:
    getGlobalMaxBoxSize( int block_number ) const;
 
    /*!
-    * @brief Return size of the smallest MappedBox globally in a block.
+    * @brief Return size of the smallest Box globally in a block.
     *
     * This requires a global reduction if the global bounding box has
     * not been computed and cached.  When communication is required,
@@ -716,7 +725,7 @@ public:
 
    //@{
 
-   //! @name Individual MappedBox methods.
+   //! @name Individual Box methods.
 
    /*
     * TODO: Why the vacant index thing?  The comments say that the
@@ -732,14 +741,14 @@ public:
 
 
    /*!
-    * @brief Create new local MappedBox from given Box and add it to this
+    * @brief Create new local Box from given Box and add it to this
     * level.
     *
-    * The new MappedBox will be assigned an unused local index.  To be
+    * The new Box will be assigned an unused local index.  To be
     * efficient, no communication will be used.  Therefore, the state
     * must be distributed.
     *
-    * The new MappedBox will have a periodic shift number
+    * The new Box will have a periodic shift number
     * corresponding to zero-shift.
     *
     * It is faster not to request a vacant index when adding a box.
@@ -757,9 +766,9 @@ public:
       const bool use_vacant_index = true);
 
    /*!
-    * @brief Add a MappedBox to this level.
+    * @brief Add a Box to this level.
     *
-    * Adding a remote MappedBox is allowed if the object is in
+    * Adding a remote Box is allowed if the object is in
     * GLOBALIZED mode.
     *
     * @par CAUTION
@@ -769,10 +778,10 @@ public:
     * elusive bugs.
     *
     * @par Errors
-    * It is an error to add a periodic image of a MappedBox that is
+    * It is an error to add a periodic image of a Box that is
     * not a part of the MappedBoxLevel.
     *
-    * It is an error to add any MappedBox that already exists.
+    * It is an error to add any Box that already exists.
     *
     * FIXME: Should we prevent this operation if persistent overlap
     * Connectors are attached to this object?
@@ -781,16 +790,16 @@ public:
     */
    void
    addMappedBox(
-      const MappedBox& mapped_box);
+      const Box& mapped_box);
 
    /*!
-    * @brief Insert given periodic image of an existing MappedBox.
+    * @brief Insert given periodic image of an existing Box.
     *
-    * Adding a remote MappedBox is allowed if the object is in
+    * Adding a remote Box is allowed if the object is in
     * GLOBALIZED mode.
     *
-    * Unlike adding a regular MappedBox, it is OK to add a periodic
-    * image MappedBox that already exists.  However, that is a no-op.
+    * Unlike adding a regular Box, it is OK to add a periodic
+    * image Box that already exists.  However, that is a no-op.
     *
     * @par CAUTION
     * To be efficient, no checks are made to make sure the
@@ -799,51 +808,51 @@ public:
     * bugs.
     *
     * @par Errors
-    * It is an error to add a periodic image of a MappedBox that does
+    * It is an error to add a periodic image of a Box that does
     * not exist.
     *
     * FIXME: Should we prevent this operation if persistent overlap
     * Connectors are attached to this object?
     *
-    * @param[in] existing_mapped_box  An existing MappedBox for reference.
-    *      This MappedBox must be in the MappedBoxLevel.  The MappedBox added
-    *      is an image of the reference MappedBox but shifted to another
+    * @param[in] existing_mapped_box  An existing Box for reference.
+    *      This Box must be in the MappedBoxLevel.  The Box added
+    *      is an image of the reference Box but shifted to another
     *      position.
-    * @param[in] shift_number The valid shift number for the MappedBox being
+    * @param[in] shift_number The valid shift number for the Box being
     *      added.  The shift amount is taken from the PeriodicShiftCatalog.
     */
    void
    addPeriodicMappedBox(
-      const MappedBox& existing_mapped_box,
+      const Box& existing_mapped_box,
       const PeriodicId& shift_number);
 
    /*!
-    * @brief Erase the existing MappedBox specified by its iterator.
+    * @brief Erase the existing Box specified by its iterator.
     *
     * The given iterator @em MUST be a valid iterator pointing to a
-    * MappedBox currently in this object.  After erasing, the iterator
-    * is advanced to the next valid MappedBox (or the end of its
+    * Box currently in this object.  After erasing, the iterator
+    * is advanced to the next valid Box (or the end of its
     * MappedBoxSet).
     *
-    * Erasing a MappedBox also erases all of its periodic images.
+    * Erasing a Box also erases all of its periodic images.
     *
     * FIXME: Should we prevent this operation if the object has
     * persistent overlap Connectors?
     *
-    * @param[in] ibox The iterator of the MappedBox to erase.
+    * @param[in] ibox The iterator of the Box to erase.
     */
    void
    eraseMappedBox(
       MappedBoxSet::iterator& ibox);
 
    /*!
-    * @brief Erase the MappedBox matching the one given.
+    * @brief Erase the Box matching the one given.
     *
-    * The given MappedBox @em MUST match a MappedBox currently in this
+    * The given Box @em MUST match a Box currently in this
     * object.  Matching means that the MappedBoxId's match
     * (disregarding the Boxes).
     *
-    * Erasing a MappedBox also erases all of its periodic images.
+    * Erasing a Box also erases all of its periodic images.
     *
     * FIXME: Should we prevent this operation if the object has
     * persistent overlap Connectors?
@@ -852,15 +861,15 @@ public:
     */
    void
    eraseMappedBox(
-      const MappedBox& mapped_box);
+      const Box& mapped_box);
 
    /*!
-    * @brief Find the MappedBox matching the one given.
+    * @brief Find the Box matching the one given.
     *
     * Only the MappedBoxId matters in matching, so the actual Box can
     * be anything.
     *
-    * If @c mapped_box is not a local MappedBox, the state must be
+    * If @c mapped_box is not a local Box, the state must be
     * GLOBALIZED.
     *
     * @param[in] mapped_box
@@ -870,13 +879,13 @@ public:
     */
    MappedBoxSet::const_iterator
    getMappedBox(
-      const MappedBox& mapped_box) const;
+      const Box& mapped_box) const;
 
    /*!
-    * @brief Find the MappedBox specified by the given MappedBoxId and
+    * @brief Find the Box specified by the given MappedBoxId and
     * periodic shift.
     *
-    * If @c mapped_box is not a local MappedBox, the state must be
+    * If @c mapped_box is not a local Box, the state must be
     * GLOBALIZED.
     * @param[in] mapped_box_id
     *
@@ -893,7 +902,7 @@ public:
     */
 
    /*!
-    * @brief Find the MappedBox matching the one given.
+    * @brief Find the Box matching the one given.
     *
     * Only the MappedBoxId matters in matching, so the actual Box can
     * be anything.
@@ -906,7 +915,7 @@ public:
     * the MappedBoxSet.
     *
     * @par Assertions
-    * Throws an unrecoverable assertion if the MappedBox does not
+    * Throws an unrecoverable assertion if the Box does not
     * exist.
     *
     * @param[in] mapped_box
@@ -915,10 +924,10 @@ public:
     */
    MappedBoxSet::const_iterator
    getMappedBoxStrict(
-      const MappedBox& mapped_box) const;
+      const Box& mapped_box) const;
 
    /*!
-    * @brief Find the MappedBox specified by the given MappedBoxId and
+    * @brief Find the Box specified by the given MappedBoxId and
     * periodic shift.
     *
     * You cannot directly modify the MappedBoxSet because it may
@@ -926,7 +935,7 @@ public:
     * the MappedBoxSet.
     *
     * @par Assertions
-    * Throw an unrecoverable assertion if the MappedBox does not exist.
+    * Throw an unrecoverable assertion if the Box does not exist.
     *
     * @param[in] mapped_box_id
     *
@@ -937,7 +946,7 @@ public:
       const MappedBoxId& mapped_box_id) const;
 
    /*!
-    * @brief Returns true when the object has a MappedBox specified by the
+    * @brief Returns true when the object has a Box specified by the
     * MappedBoxId.
     *
     * @param[in] mapped_box_id
@@ -947,7 +956,7 @@ public:
       const MappedBoxId& mapped_box_id) const;
 
    /*!
-    * @brief Returns true when the object has a MappedBox consistent with all
+    * @brief Returns true when the object has a Box consistent with all
     * of the arguments
     *
     * @param[in] global_id
@@ -961,14 +970,14 @@ public:
       const PeriodicId &periodic_id) const;
 
    /*!
-    * @brief Returns true when the object has a MappedBox matching the
+    * @brief Returns true when the object has a Box matching the
     * one parameter.
     *
     * @param[in] mapped_box
     */
    bool
    hasMappedBox(
-      const MappedBox& mapped_box) const;
+      const Box& mapped_box) const;
 
    //@}
 
@@ -1090,7 +1099,7 @@ public:
     */
 
    /*!
-    * @brief Print MappedBox info from this level
+    * @brief Print Box info from this level
     *
     * @param[in,out] os The output stream
     * @param[in] border
@@ -1351,7 +1360,7 @@ private:
    mutable int d_global_number_of_cells;
 
    /*!
-    * @brief Local MappedBox count, excluding periodic images.
+    * @brief Local Box count, excluding periodic images.
     *
     * Unlike d_global_number_of_mapped_boxes, this parameter is always current.
     */

@@ -64,13 +64,6 @@ class DatabaseBox;
 class Dimension
 {
 public:
-
-   /**
-    * @brief Default constructor, creating an invalid dimension object
-    * that must be set using setValue() before using.
-    */
-   Dimension();
-
    /**
     * Constructor for Dimension, object is built using the specified dimension
     *
@@ -107,18 +100,9 @@ public:
     * Returns true if Dimension is initialized (not set 
     * to getInvalidDimension()).
     *
-    * Uninitialized dimensions may be set using setValue().
     */
    bool
    isInitialized() const;
-
-   /*!
-    * @brief Set the value of the dimension.
-    *
-    * This method can be called at most once per object.
-    * It may be called only if the current value is invalid.
-    */
-   void setValue( const unsigned short &dim );
 
    /**
     * Equality operator.
@@ -219,6 +203,20 @@ public:
    static unsigned short 
    getInvalidDimValue();
 
+   /*
+    * Classes that are friends of dimension in order to access th
+    * private ctor which builds invalid dimensions.
+    *
+    * This is obviously not a very good design but so far
+    * a better solution has been elusive.   Allowing
+    * any code to create invalid dimensions seemed too
+    * error prone.
+    */
+   template<class>
+   friend class ::SAMRAI::pdat::ArrayData;
+   friend class ::SAMRAI::hier::IntVector;
+   friend class ::SAMRAI::tbox::DatabaseBox;
+
    /**
     * Output operator for debugging and error messages.
     */
@@ -229,6 +227,16 @@ public:
 
 private:
 
+
+   /**
+    * @brief Create an invalid dimension object.
+    *
+    * This ctor is private to prevent a default constructor call.
+    * Currently Dimension objects must always created with a dimension
+    * specified for normal code.  Several special classes are allowed
+    * and are declared to be friends to access this ctor.
+    */
+   Dimension();
 
    /**
     * Assignment operator is private to prevent dimensions

@@ -53,17 +53,6 @@ SAMRAI_INLINE_KEYWORD bool Dimension::isInitialized() const {
    return d_dim != Dimension::getInvalidDimValue();
 }
 
-SAMRAI_INLINE_KEYWORD void Dimension::setValue( const unsigned short &dim ) {
-   if ( isValid() ) {
-      TBOX_ERROR("Dimension::setValue: The dimension may be set only if\n"
-                 << "it is currently invalid.  The current value is "
-                 << d_dim );
-   }
-   TBOX_ASSERT(dim > 0 && dim <= Dimension::getMaxDimValue());
-   d_dim = dim;
-   return;
-}
-
 SAMRAI_INLINE_KEYWORD bool Dimension::operator == (
    const Dimension& rhs) const {
    TBOX_DIM_ASSERT_CHECK_DIM(*this);

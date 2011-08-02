@@ -13,7 +13,7 @@
 
 #include "SAMRAI/xfer/PatchLevelBorderAndInteriorFillPattern.h"
 #include "SAMRAI/hier/BoxList.h"
-#include "SAMRAI/hier/MappedBox.h"
+#include "SAMRAI/hier/Box.h"
 #include "SAMRAI/tbox/MathUtilities.h"
 
 #ifndef SAMRAI_INLINE
@@ -83,18 +83,18 @@ PatchLevelBorderAndInteriorFillPattern::computeFillMappedBoxesAndNeighborhoodSet
         ni != dst_mapped_boxes.end(); ++ni) {
 
       const hier::MappedBoxId& gid(ni->getId());
-      const hier::MappedBox& dst_mapped_box =
+      const hier::Box& dst_mapped_box =
          *dst_mapped_box_level.getMappedBox(gid);
-      hier::BoxList fill_boxes(dst_mapped_box.getBox());
+      hier::BoxList fill_boxes(dst_mapped_box);
       fill_boxes.getFirstItem().grow(fill_ghost_width);
       const NeighborSet& nabrs =
          dst_to_dst.getNeighborSet(dst_mapped_box.getId());
 
       for (NeighborSet::const_iterator na = nabrs.begin();
            na != nabrs.end(); ++na) {
-         if (*ni != *na) {
+         if (! ni->isSpatiallyEqual(*na)) {
             if (dst_mapped_box.getBlockId() == na->getBlockId()) {
-               fill_boxes.removeIntersections(na->getBox());
+               fill_boxes.removeIntersections(*na);
             } else {
 
                tbox::ConstPointer<hier::GridGeometry> grid_geometry(
@@ -116,7 +116,7 @@ PatchLevelBorderAndInteriorFillPattern::computeFillMappedBoxesAndNeighborhoodSet
 
                hier::Transformation transformation(rotation, offset);
 
-               hier::Box nbr_box(na->getBox());
+               hier::Box nbr_box(*na);
                transformation.transform(nbr_box);
 
                fill_boxes.removeIntersections(nbr_box);
@@ -131,7 +131,7 @@ PatchLevelBorderAndInteriorFillPattern::computeFillMappedBoxesAndNeighborhoodSet
 
          NeighborSet& fill_nabrs = dst_to_fill_edges[gid];
          for (hier::BoxList::Iterator li(fill_boxes); li; li++) {
-            hier::MappedBox fill_mapped_box(*li,
+            hier::Box fill_mapped_box(*li,
                                             ++last_id,
                                             dst_mapped_box.getOwnerRank(),
                                             dst_mapped_box.getBlockId());

@@ -372,8 +372,7 @@ public:
     * boxes after computing them.
     */
    void computeBoxesAroundBoundary(
-      std::map<BlockId,BoxList> &boundary_boxes,
-      const std::vector<MappedBox>& mapped_boxes,
+      std::map<BlockId,BoxList> &boundary,
       const IntVector &refinement_ratio,
       const tbox::ConstPointer<GridGeometry> &grid_geometry,
       const bool simplify_boundary_boxes = true ) const;

@@ -12,6 +12,7 @@
 
 #include "SAMRAI/hier/NeighborhoodSet.h"
 #include "SAMRAI/hier/Connector.h"
+#include "SAMRAI/hier/MappedBoxSetSingleBlockIterator.h"
 
 #include "SAMRAI/tbox/Utilities.h"
 
@@ -45,9 +46,9 @@ NeighborhoodSet::findRanksRange(
    Range rval(d_map.end(), d_map.end());
    if (!d_map.empty()) {
       /*
-       * start_key is an iterator pointing to the first MappedBox in
+       * start_key is an iterator pointing to the first Box in
        * the range.  stop_key is an iterator pointing just past the
-       * last MappedBox in the range.
+       * last Box in the range.
        */
       MappedBoxId start_key(LocalId::getZero(), rank);
       rval.first = d_map.lower_bound(start_key);
@@ -70,9 +71,9 @@ NeighborhoodSet::findRanksRange(
    ConstRange rval(d_map.end(), d_map.end());
    if (!d_map.empty()) {
       /*
-       * start_key is an iterator pointing to the first MappedBox in
+       * start_key is an iterator pointing to the first Box in
        * the range.  stop_key is an iterator pointing just past the
-       * last MappedBox in the range.
+       * last Box in the range.
        */
       MappedBoxId start_key(LocalId::getZero(), rank);
       rval.first = d_map.lower_bound(start_key);
@@ -159,6 +160,58 @@ NeighborhoodSet::getNeighbors(
    for (const_iterator ei = begin(); ei != end(); ++ei) {
       const NeighborSet& nabrs = (*ei).second;
       all_nabrs.insert(nabrs.begin(), nabrs.end());
+   }
+}
+
+/*!
+ ***********************************************************************
+ * Insert all neighbors from a NeighborhoodSet into a single NeighborSet.
+ ***********************************************************************
+ */
+void
+NeighborhoodSet::getNeighbors(
+   BoxList& all_nabrs) const
+{
+   NeighborSet tmp_nabrs;
+   getNeighbors(tmp_nabrs);
+   for (MappedBoxSet::const_iterator ei = tmp_nabrs.begin();
+        ei != tmp_nabrs.end(); ++ei) {
+      all_nabrs.appendItem(*ei);
+   }
+}
+
+/*!
+ ***********************************************************************
+ * Insert all neighbors from a NeighborhoodSet into a single NeighborSet.
+ ***********************************************************************
+ */
+void
+NeighborhoodSet::getNeighbors(
+   BoxList& all_nabrs,
+   const BlockId& block_id) const
+{
+   NeighborSet tmp_nabrs;
+   getNeighbors(tmp_nabrs);
+   for (MappedBoxSetSingleBlockIterator ei(tmp_nabrs, block_id);
+        ei.isValid(); ++ei) {
+      all_nabrs.appendItem(*ei);
+   }
+}
+
+/*!
+ ***********************************************************************
+ * Insert all neighbors from a NeighborhoodSet into a single NeighborSet.
+ ***********************************************************************
+ */
+void
+NeighborhoodSet::getNeighbors(
+   std::map<BlockId, BoxList>& all_nabrs) const
+{
+   NeighborSet tmp_nabrs;
+   getNeighbors(tmp_nabrs);
+   for (MappedBoxSet::const_iterator ei = tmp_nabrs.begin();
+        ei != tmp_nabrs.end(); ++ei) {
+      all_nabrs[ei->getBlockId()].appendItem(*ei);
    }
 }
 

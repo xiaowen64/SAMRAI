@@ -188,11 +188,6 @@ public:
    swap(
       NeighborhoodSet& other);
 
-   static void
-   swap(
-      NeighborhoodSet& a,
-      NeighborhoodSet& b);
-
 
    //@}
 
@@ -317,6 +312,38 @@ public:
    void
    getNeighbors(
       NeighborSet& all_neighbors) const;
+
+   /*!
+    * @brief Insert all neighbors from a NeighborhoodSet into a
+    * single BoxList.
+    *
+    * @param[out] all_neighbors
+    */
+   void
+   getNeighbors(
+      BoxList& all_neighbors) const;
+
+   /*!
+    * @brief Insert all neighbors from a NeighborhoodSet with a
+    * given BlockId into a single BoxList.
+    *
+    * @param[out] all_neighbors
+    */
+   void
+   getNeighbors(
+      BoxList& all_neighbors,
+      const BlockId& block_id) const;
+
+   /*!
+    * @brief Insert all neighbors from a NeighborhoodSet into
+    * multiple BoxLists differentiated by the BlockId of the
+    * neighbors.
+    *
+    * @param[out] all_neighbors
+    */
+   void
+   getNeighbors(
+      std::map<BlockId, BoxList>& all_neighbors) const;
 
    /*!
     * @brief Insert all owners of neighbors from a NeighborhoodSet

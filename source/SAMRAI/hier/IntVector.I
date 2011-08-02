@@ -133,7 +133,7 @@ IntVector& IntVector::operator = (
       TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
    } else {
       TBOX_DIM_ASSERT_CHECK_DIM(rhs.getDim());
-      d_dim.setValue(rhs.getDim().getValue());
+      d_dim = rhs.getDim();
    }
 
    for (int i = 0; i < d_dim.getValue(); i++)

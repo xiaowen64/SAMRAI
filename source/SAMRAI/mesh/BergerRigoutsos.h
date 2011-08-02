@@ -128,6 +128,19 @@ public:
    /*!
     * @brief Implement the mesh::BoxGeneratorStrategy interface
     * method of the same name.
+    *
+    * Create a set of boxes that covers all integer tags on
+    * the patch level that match the specified tag value.
+    * Each box will be at least as large as the given minimum
+    * size and the tolerances will be met.
+    *
+    * The efficiency tolerance is a threshold value for the percentage of
+    * tagged cells in each box.  If this percentage is below the tolerance,
+    * the box will continue to be split into smaller boxes.
+    *
+    * The combine tolerance is a threshold value for the sum of the volumes
+    * of two boxes into which a box may be potentially split.  If ratio of
+    * that sum and the volume of the original box, the box will not be split.
     */
    void
    findBoxesContainingTags(

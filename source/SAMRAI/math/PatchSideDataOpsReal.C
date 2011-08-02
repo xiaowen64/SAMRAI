@@ -79,9 +79,9 @@ void PatchSideDataOpsReal<TYPE>::swapData(
 
    TBOX_ASSERT(!d1.isNull() && !d2.isNull());
    TBOX_ASSERT(d1->getDepth() && d2->getDepth());
-   TBOX_ASSERT(d1->getBox() == d2->getBox());
+   TBOX_ASSERT(d1->getBox().isSpatiallyEqual(d2->getBox()));
    TBOX_ASSERT(d1->getDirectionVector() == d2->getDirectionVector());
-   TBOX_ASSERT(d1->getGhostBox() == d2->getGhostBox());
+   TBOX_ASSERT(d1->getGhostBox().isSpatiallyEqual(d2->getGhostBox()));
 
    patch->setPatchData(data1_id, d2);
    patch->setPatchData(data2_id, d1);

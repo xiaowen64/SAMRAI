@@ -15,6 +15,7 @@
 
 #include "SAMRAI/hier/Index.h"
 #include "SAMRAI/hier/IntVector.h"
+#include "SAMRAI/hier/MappedBoxId.h"
 #include "SAMRAI/hier/Transformation.h"
 #include "SAMRAI/tbox/DatabaseBox.h"
 
@@ -66,10 +67,254 @@ public:
    explicit Box(
       const tbox::DatabaseBox& box);
 
+   /*!
+    * @brief Initializing constructor.
+    *
+    * @param[in] box
+    *
+    * @param[in] local_id
+    *
+    * @param[in] owner_rank
+    *
+    * @param[in] block_id
+    *
+    * @param[in] periodic_id The periodic shift number.  If
+    * periodic_id is non-zero, specify the Box in the position shifted
+    * according to the @c periodic_id.  The default argument for @c
+    * periodic_id corresponds to the zero-shift.
+    */
+   explicit Box(
+      const hier::Box& box,
+      const LocalId &local_id,
+      const int owner_rank,
+      const BlockId &block_id = BlockId::zero(),
+      const PeriodicId &periodic_id = PeriodicId::zero());
+
+   /*!
+    * @brief Constructor with undefined box.
+    *
+    * The box can be initialized using any of the initialize()
+    * methods or by assignment.
+    *
+    * @param[in] dim
+    *
+    * @param[in] local_id
+    *
+    * @param[in] owner_rank
+    *
+    * @param[in] block_id
+    *
+    * @param[in] periodic_id
+    */
+   /*
+    * TODO: Constructors initializing boxes are only used to construct
+    * temporary objects for finding other MappedBoxes in a
+    * stl::set<MappedBox>.  We need another way to do it and get rid
+    * of these constructors.
+    */
+   explicit Box(
+      const tbox::Dimension& dim,
+      const LocalId &local_id,
+      const int owner_rank,
+      const BlockId &block_id = BlockId::zero(),
+      const PeriodicId &periodic_id = PeriodicId::zero());
+
+   /*!
+    * @brief Constructor with undefined box.
+    *
+    * The box can be initialized using any of the initialize()
+    * methods or by assignment.
+    *
+    * @param[in] dim
+    *
+    * @param[in] global_id
+    *
+    * @param[in] block_id
+    *
+    * @param[in] periodic_id
+    */
+   /*
+    * TODO: Constructors initializing boxes are only used to construct
+    * temporary objects for finding other MappedBoxes in a
+    * stl::set<MappedBox>.  We need another way to do it and get rid
+    * of these constructors.
+    */
+   explicit Box(
+      const tbox::Dimension& dim,
+      const GlobalId& id,
+      const BlockId &block_id = BlockId::zero(),
+      const PeriodicId &periodic_id = PeriodicId::zero());
+
+
+   /*!
+    * @brief Constructor with undefined box and a MappedBoxId.
+    *
+    * The box can be initialized using any of the initialize()
+    * methods or by assignment.
+    *
+    * @param[in] dim
+    *
+    * @param[in] mapped_box_id
+    *
+    * @param[in] periodic_id
+    */
+   /*
+    * TODO: Constructors initializing boxes are only used to construct
+    * temporary objects for finding other MappedBoxes in a
+    * stl::set<MappedBox>.  We need another way to do it and get rid
+    * of these constructors.
+    */
+   explicit Box(
+      const tbox::Dimension& dim,
+      const MappedBoxId& mapped_box_id);
+
+   /*!
+    * @brief "Copy" constructor allowing change in PeriodicId.
+    *
+    * @param[in] other Make a copy (but not an exact copy) of this
+    * MappedBox.
+    *
+    * @param[in] periodic_id Periodic shift number to use instead of
+    * the shift in @c other.  The box will be set to the real box
+    * shifted to the position specified by this value.
+    *
+    * @param[in] refinement_ratio The index space where the MappedBox
+    * lives.
+    *
+    * @see initialize( const MappedBox&, const int, const IntVector&);
+    */
+   explicit Box(
+      const Box& other,
+      const PeriodicId &periodic_id,
+      const IntVector& refinement_ratio);
+
+   /*!
+    * @brief Set all the attributes of the MappedBox.
+    *
+    * @param[in] box
+    *
+    * @param[in] local_id
+    *
+    * @param[in] owner_rank
+    *
+    * @param[in] block_id
+    *
+    * @param[in] periodic_id The periodic shift number.  If
+    * this is not zero, specify @c box in the shifted position.  The
+    * default argument for @c periodic_id corresponds to the
+    * zero-shift.
+    */
+   void
+   initialize(
+      const hier::Box& box,
+      const LocalId &local_id,
+      const int owner_rank,
+      const BlockId &block_id = BlockId::zero(),
+      const PeriodicId &periodic_id = PeriodicId::zero());
+
+   /*!
+    * @brief Set all the attributes identical to that of a reference
+    * MappedBox, but with a different PeriodicId.
+    *
+    * @param[in] other Initialize to this MappedBox, but with the shift
+    * given by @c periodic_id.
+    *
+    * @param[in] periodic_id PeriodicId number to use instead of the
+    * shift in @c other.  The box will be set to the real box shifted
+    * to the position specified by this value.
+    *
+    * @param[in] refinement_ratio The index space where the MappedBox
+    * lives.
+    */
+   void
+   initialize(
+      const Box& other,
+      const PeriodicId &periodic_id,
+      const IntVector& refinement_ratio);
+
    /**
     * The destructor for Box.
     */
    ~Box();
+
+   //! @brief Get the MappedBoxId.
+   MappedBoxId&
+   getId();
+
+   //! @brief Get the MappedBoxId.
+   const MappedBoxId&
+   getId() const;
+
+   //! @brief Get the Block.
+   const BlockId &getBlockId() const;
+
+   //! @brief Get the LocalId.
+   const LocalId &getLocalId() const;
+
+   //! @brief Get the GlobalId.
+   const GlobalId& getGlobalId() const;
+
+   //! @brief Get the owner rank.
+   int getOwnerRank() const;
+
+   /*!
+    * @brief Get the periodic shift number.
+    *
+    * @see PeriodicShiftCatalog.
+    */
+   const PeriodicId &getPeriodicId() const;
+
+   //! @brief Whether the MappedBox is a periodic image.
+   bool isPeriodicImage() const;
+
+   bool isIdEqual(const Box& other) const;
+
+   struct id_equal {
+      bool operator() (const Box& b1, const Box& b2) const
+      {
+         return b1.isIdEqual(b2);
+      }
+   };
+
+   struct id_less {
+      bool operator() (const Box& b1, const Box& b2) const
+      {
+         return b1.getId() < b2.getId();
+      }
+   };
+
+   /*!
+    * @brief Give number of ints required for putting a MappedBox in
+    * message passing buffer.
+    *
+    * This number is independent of instance but dependent on
+    * dimension.
+    *
+    * @see putToIntBuffer(), getFromIntBuffer().
+    */
+   static int
+   commBufferSize(
+      const tbox::Dimension& dim);
+
+   /*!
+    * @brief Put self into a int buffer.
+    *
+    * This is the opposite of getFromIntBuffer().  Number of ints
+    * written is given by commBufferSize().
+    */
+   void
+   putToIntBuffer(
+      int* buffer) const;
+
+   /*!
+    * @brief Set attributes according to data in int buffer.
+    *
+    * This is the opposite of putToIntBuffer().  Number of ints read
+    * is given by commBufferSize().
+    */
+   void
+   getFromIntBuffer(
+      const int* buffer);
 
    /**
     * The assignment operator copies the index space of the argument box.
@@ -226,16 +471,14 @@ public:
    /**
     * Check whether two boxes represent the same portion of index space.
     */
-   int
-   operator == (
-      const Box& box) const;
+   bool isSpatiallyEqual(const Box& box) const;
+   struct box_equality {
+      bool operator() (const Box& b1, const Box& b2) const
+      {
+         return b1.isSpatiallyEqual(b2);
+      }
+   };
 
-   /**
-    * Check whether two boxes cover different portions of index space.
-    */
-   int
-   operator != (
-      const Box& box) const;
 
    /**
     * Calculate the intersection of the index spaces of two boxes.  The
@@ -244,6 +487,16 @@ public:
    Box
    operator * (
       const Box& box) const;
+
+   /**
+    * Preallocated box intersection.
+    * Calculate the intersection of the index spaces of two boxes.  The
+    * intersection with an empty box always yields an empty box.
+    */
+   void
+   intersect(
+      const Box& other,
+      Box &result) const;
 
    /**
     * Return true if two boxes have a non-empty intersection.
@@ -529,6 +782,19 @@ public:
    friend class BoxIterator;
    friend class std::vector<Box>;
 
+#ifdef BOX_TELEMETRY
+   // These are to optionally track the cumulative number of Boxes constructed,
+   // the cumulative number of Box assignments, and the high water mark of
+   // Boxes in existance at any given time.
+   static int s_cumulative_constructed_ct;
+
+   static int s_cumulative_assigned_ct;
+
+   static int s_active_ct;
+
+   static int s_high_water;
+#endif
+
 private:
    /**
     * The default constructor creates an uninitialized box.
@@ -557,6 +823,7 @@ private:
 
    Index d_lo;
    Index d_hi;
+   MappedBoxId d_id;
 
    /*!
     * @brief Initialize static objects and register shutdown routine.

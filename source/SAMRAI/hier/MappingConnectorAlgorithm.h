@@ -13,7 +13,7 @@
 #include "SAMRAI/SAMRAI_config.h"
 
 #include "SAMRAI/hier/Connector.h"
-#include "SAMRAI/hier/MappedBox.h"
+#include "SAMRAI/hier/Box.h"
 #include "SAMRAI/hier/MappedBoxLevel.h"
 #include "SAMRAI/tbox/AsyncCommPeer.h"
 #include "SAMRAI/tbox/SAMRAI_MPI.h"
@@ -120,7 +120,7 @@ public:
     * An important constraint in the old_to_new Connectors is
     * that this method cannot handle multiple maps at once.  For
     * example, it cannot map mapped_box J to mapped_box K and at the
-    * same time map mapped_box I to mapped_box J.  MappedBox J in the
+    * same time map mapped_box I to mapped_box J.  Box J in the
     * old mapped_box_level and mapped_box J on the new
     * mapped_box_level are considered entirely different mapped_boxes.
     *
@@ -366,11 +366,11 @@ private:
    typedef std::set<MappedBoxId> MappedBoxIdSet;
 
    /*!
-    * @brief Mapping from a (potentially remote) MappedBox to a
+    * @brief Mapping from a (potentially remote) Box to a
     * set of MappedBoxIds, representing an inverted information
     * from a NeighborhoodSet.
     */
-   typedef std::map<MappedBox, MappedBoxIdSet> InvertedNeighborhoodSet;
+   typedef std::map<Box, MappedBoxIdSet, Box::id_less> InvertedNeighborhoodSet;
 
    /*!
     * @brief Most general version of method to modify existing

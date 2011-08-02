@@ -47,7 +47,7 @@ SAMRAI_INLINE_KEYWORD
 DatabaseBox& DatabaseBox::operator = (
    const DatabaseBox& box)
 {
-   d_dim.setValue(box.d_dim.getValue());
+   d_dim = box.d_dim;
    d_data.d_dimension = box.d_data.d_dimension;
    d_data.d_lo[0] = box.d_data.d_lo[0];
    d_data.d_lo[1] = box.d_data.d_lo[1];
@@ -69,7 +69,7 @@ void DatabaseBox::setDim(
 {
    TBOX_DIM_ASSERT_CHECK_DIM(dim);
    TBOX_ASSERT(dim.getValue() <= DatabaseBox_MAX_DIM);
-   d_dim.setValue(dim.getValue());
+   d_dim = tbox::Dimension(dim);
    d_data.d_dimension = d_dim.getValue();
 }
 

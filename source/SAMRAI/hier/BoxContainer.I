@@ -172,7 +172,12 @@ void BoxContainer::clear()
 SAMRAI_INLINE_KEYWORD
 bool BoxContainer::operator == (const BoxContainer& rhs) const
 {
-   return d_dim == rhs.d_dim && d_list == rhs.d_list;
+   bool isEqual = (d_dim == rhs.d_dim);
+   if (isEqual) {
+      isEqual = std::equal(d_list.begin(), d_list.end(),
+         rhs.d_list.begin(), Box::box_equality());
+   }
+   return isEqual;
 }
 
 SAMRAI_INLINE_KEYWORD

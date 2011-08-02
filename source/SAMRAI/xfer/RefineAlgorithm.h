@@ -21,7 +21,7 @@
 #include "SAMRAI/hier/TimeInterpolateOperator.h"
 #include "SAMRAI/xfer/VariableFillPattern.h"
 #include "SAMRAI/hier/Connector.h"
-#include "SAMRAI/hier/MappedBox.h"
+#include "SAMRAI/hier/Box.h"
 #include "SAMRAI/hier/MappedBoxLevel.h"
 #include "SAMRAI/hier/PatchHierarchy.h"
 #include "SAMRAI/hier/PatchLevel.h"
@@ -630,7 +630,7 @@ private:
       const RefineAlgorithm&);                  // not implemented
 
    //! @brief Shorthand typedef.
-   typedef hier::MappedBox MBox;
+   typedef hier::Box MBox;
    //! @brief Shorthand typedef.
    typedef hier::MappedBoxLevel MappedBoxLevel;
    //! @brief Shorthand typedef.

@@ -181,29 +181,23 @@ void CoarseFineBoundary::computeFromLevel(
    // Add physical boundaries to the fake domain.
    for (NeighborhoodSet::const_iterator ei = mapped_box_level_eto_domain.begin();
         ei != mapped_box_level_eto_domain.end(); ++ei) {
-      const MappedBox& mapped_box = *mapped_box_level.getMappedBoxStrict(
+      const Box& mapped_box = *mapped_box_level.getMappedBoxStrict(
             ei->first);
       const NeighborhoodSet::NeighborSet& domain_nabrs = ei->second;
       NeighborhoodSet::NeighborSet refined_domain_nabrs;
       domain_nabrs.refine(refined_domain_nabrs, ratio);
-      Box box = mapped_box.getBox();
+      Box box = mapped_box;
       box.grow(max_ghost_width);
       BoxList physical_boundary_portion(box);
       refined_domain_nabrs.removeBoxListIntersections(
          physical_boundary_portion);
       fake_domain_list.copyItems(physical_boundary_portion);
    }
-   // Add fine-fine boundaries to the fake domain.
-   Connector::NeighborSet all_peer_nabrs;
 
+   // Add fine-fine boundaries to the fake domain.
    TBOX_ASSERT(mapped_box_level_to_self.getConnectorWidth() >=
       IntVector::getOne(d_dim));
-
-   mapped_box_level_to_self.getNeighborhoodSets().getNeighbors(all_peer_nabrs);
-   for (Connector::NeighborSet::const_iterator na = all_peer_nabrs.begin();
-        na != all_peer_nabrs.end(); ++na) {
-      fake_domain_list.appendItem(na->getBox());
-   }
+   mapped_box_level_to_self.getNeighborhoodSets().getNeighbors(fake_domain_list);
 
    /*
     * Call GridGeometry::computeBoundaryGeometry with arguments contrived

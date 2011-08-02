@@ -10,7 +10,7 @@
 
 #include "SAMRAI/SAMRAI_config.h"
 
-#include "SAMRAI/hier/MappedBox.h"
+#include "SAMRAI/hier/Box.h"
 #include "SAMRAI/hier/MappedBoxSet.h"
 #include "SAMRAI/hier/MappedBoxSetSingleBlockIterator.h"
 #include "SAMRAI/hier/MappedBoxSetSingleOwnerIterator.h"
@@ -57,7 +57,7 @@ int main(
          hier::LocalId lid(i);
          hier::MappedBoxId mbid(lid, owner, bid);
 
-         hier::MappedBox mb(dim, mbid);
+         hier::Box mb(dim, mbid);
          mboxes.insert(mb);
 
       }

@@ -7,6 +7,7 @@
  * Description:   Extension of a std 
  *
  ************************************************************************/
+#include "SAMRAI/hier/PeriodicShiftCatalog.h"
 #include "SAMRAI/tbox/Utilities.h"
 
 namespace SAMRAI {
@@ -42,14 +43,15 @@ SAMRAI_INLINE_KEYWORD
 bool MappedBoxSet::operator == (
    const MappedBoxSet& rhs) const
 {
-   return d_set == rhs.d_set;
+   return std::equal(d_set.begin(), d_set.end(),
+      rhs.d_set.begin(), Box::id_equal());
 }
 
 SAMRAI_INLINE_KEYWORD
 bool MappedBoxSet::operator != (
    const MappedBoxSet& rhs) const
 {
-   return d_set != rhs.d_set;
+   return ! this->operator==(rhs);
 }
 
 SAMRAI_INLINE_KEYWORD
@@ -61,12 +63,12 @@ void MappedBoxSet::swap(
 
 SAMRAI_INLINE_KEYWORD
 void MappedBoxSet::separatePeriodicImages(
-   std::vector<MappedBox>& real_mapped_box_vector,
-   std::vector<MappedBox>& periodic_image_mapped_box_vector) const
+   std::vector<Box>& real_mapped_box_vector,
+   std::vector<Box>& periodic_image_mapped_box_vector) const
 {
    if (!empty()) {
 
-      const MappedBox& first_element(*begin());
+      const Box& first_element(*begin());
 
       const PeriodicId zero_shift_number(PeriodicShiftCatalog::getCatalog(
                                      first_element.getDim())->
@@ -74,7 +76,7 @@ void MappedBoxSet::separatePeriodicImages(
 
       real_mapped_box_vector.reserve(real_mapped_box_vector.size() + size());
       for (const_iterator ni = begin(); ni != end(); ++ni) {
-         const MappedBox& mapped_box = *ni;
+         const Box& mapped_box = *ni;
          if (mapped_box.getPeriodicId() == zero_shift_number) {
             real_mapped_box_vector.push_back(*ni);
          } else {

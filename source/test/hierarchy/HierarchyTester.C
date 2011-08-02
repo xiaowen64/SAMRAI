@@ -220,7 +220,7 @@ int HierarchyTester::runHierarchyTestAndVerify()
    hier::BoxList::Iterator tpditr(test_phys_domain);
    if (d_do_refine_test) {
       for (int ib = 0; ib < npdboxes; ib++, ipditr++, tpditr++) {
-         if (Box::refine(*ipditr, d_ratio) != *tpditr) {
+         if (! Box::refine(*ipditr, d_ratio).isSpatiallyEqual(*tpditr)) {
             fail_count++;
             tbox::perr << "FAILED: - Test #0b: test hierarchy physical domain"
                        << " box with array index " << ib
@@ -231,7 +231,7 @@ int HierarchyTester::runHierarchyTestAndVerify()
    }
    if (d_do_coarsen_test) {
       for (int ib = 0; ib < npdboxes; ib++, ipditr++, tpditr++) {
-         if (Box::coarsen(*ipditr, d_ratio) != *tpditr) {
+         if (! Box::coarsen(*ipditr, d_ratio).isSpatiallyEqual(*tpditr)) {
             fail_count++;
             tbox::perr << "FAILED: - Test #0b: test hierarchy physical domain"
                        << " box with array index " << ib
@@ -351,7 +351,7 @@ int HierarchyTester::runHierarchyTestAndVerify()
       hier::BoxList::Iterator tditr(test_domain);
       if (d_do_refine_test) {
          for (int ib = 0; ib < nboxes; ib++, iditr++, tditr++) {
-            if (Box::refine(*iditr, d_ratio) != *tditr) {
+            if (! Box::refine(*iditr, d_ratio).isSpatiallyEqual(*tditr)) {
                fail_count++;
                tbox::perr << "FAILED: - Test #8: for level number " << ln
                           << " refined domain box with array index " << ib
@@ -362,7 +362,7 @@ int HierarchyTester::runHierarchyTestAndVerify()
       }
       if (d_do_coarsen_test) {
          for (int ib = 0; ib < nboxes; ib++, iditr++, tditr++) {
-            if (Box::coarsen(*iditr, d_ratio) != *tditr) {
+            if (! Box::coarsen(*iditr, d_ratio).isSpatiallyEqual(*tditr)) {
                fail_count++;
                tbox::perr << "FAILED: - Test #8: for level number " << ln
                           << " coarsened domain box with array index " << ib
@@ -403,8 +403,7 @@ int HierarchyTester::runHierarchyTestAndVerify()
          const MappedBoxId& mapped_box_id = ip->getMappedBox().getId();
          // Test #9:
          if (d_do_refine_test) {
-            if (Box::refine(init_level->getBoxForPatch(mapped_box_id), d_ratio) !=
-                test_level->getBoxForPatch(mapped_box_id)) {
+            if (! Box::refine(init_level->getBoxForPatch(mapped_box_id), d_ratio).isSpatiallyEqual(test_level->getBoxForPatch(mapped_box_id))) {
                fail_count++;
                tbox::perr << "FAILED: - Test #9: for level number " << ln
                           << " refined patch box with array index " << mapped_box_id 
@@ -414,8 +413,8 @@ int HierarchyTester::runHierarchyTestAndVerify()
          }
 
          if (d_do_coarsen_test) {
-            if (Box::coarsen(init_level->getBoxForPatch(mapped_box_id), d_ratio) !=
-                test_level->getBoxForPatch(mapped_box_id)) {
+            if (! Box::coarsen(init_level->getBoxForPatch(mapped_box_id), d_ratio).isSpatiallyEqual(
+                test_level->getBoxForPatch(mapped_box_id))) {
                fail_count++;
                tbox::perr << "FAILED: - Test #9: for level number " << ln
                           << " coarsened patch box with array index " << mapped_box_id
@@ -474,8 +473,8 @@ int HierarchyTester::runHierarchyTestAndVerify()
 
          // Test #14:
          if (d_do_refine_test) {
-            if (Box::refine(init_patch->getBox(), d_ratio) !=
-                test_patch->getBox()) {
+            if (! Box::refine(init_patch->getBox(), d_ratio).isSpatiallyEqual(
+                test_patch->getBox())) {
                fail_count++;
                tbox::perr << "FAILED: - Test #14: for level number " << ln
                           << " box for test level patch " << mapped_box_id
@@ -485,8 +484,8 @@ int HierarchyTester::runHierarchyTestAndVerify()
             }
          }
          if (d_do_coarsen_test) {
-            if (Box::coarsen(init_patch->getBox(), d_ratio) !=
-                test_patch->getBox()) {
+            if (! Box::coarsen(init_patch->getBox(), d_ratio).isSpatiallyEqual(
+                test_patch->getBox())) {
                fail_count++;
                tbox::perr << "FAILED: - Test #14: for level number " << ln
                           << " box for test level patch " << mapped_box_id

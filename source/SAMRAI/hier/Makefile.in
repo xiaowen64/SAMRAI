@@ -56,7 +56,6 @@ OBJS = 	\
 	MappedBoxLevel.o \
 	PersistentOverlapConnectors.o \
 	MappedBoxSet.o \
-	MappedBox.o \
 	NeighborhoodSet.o \
 	BoxOverlap.o \
 	BoxGeometry.o \

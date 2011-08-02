@@ -49,12 +49,12 @@ MappedBoxSetSingleOwnerIterator& MappedBoxSetSingleOwnerIterator::operator = (
    return *this;
 }
 
-const MappedBox& MappedBoxSetSingleOwnerIterator::operator * () const
+const Box& MappedBoxSetSingleOwnerIterator::operator * () const
 {
    return *d_iter;
 }
 
-const MappedBox *MappedBoxSetSingleOwnerIterator::operator -> () const
+const Box *MappedBoxSetSingleOwnerIterator::operator -> () const
 {
    return &(*d_iter);
 }

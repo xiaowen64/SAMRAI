@@ -201,8 +201,6 @@ private:
    finalizeCallback();
 
    //! @brief Shorthand typedef.
-   typedef hier::MappedBox MappedBox;
-   //! @brief Shorthand typedef.
    typedef hier::LocalId LocalId;
    //! @brief Shorthand typedef.
    typedef hier::MappedBoxLevel MappedBoxLevel;
@@ -210,8 +208,8 @@ private:
    typedef hier::Connector Connector;
    //! @brief Shorthand typedef.
    typedef hier::Connector::NeighborSet NeighborSet;
-   //! @brief Mapping from a (potentially remote) MappedBox to a set of neighbors.
-   typedef std::map<MappedBox, NeighborSet> FullNeighborhoodSet;
+   //! @brief Mapping from a (potentially remote) Box to a set of neighbors.
+   typedef std::map<hier::Box, NeighborSet, hier::Box::id_less> FullNeighborhoodSet;
 
    /*!
     * @brief Main schedule generation routine for moving data from temporary
@@ -317,9 +315,9 @@ private:
    void
    constructScheduleTransactions(
       tbox::Pointer<hier::PatchLevel> dst_level,
-      const MappedBox& dst_mapped_box,
+      const hier::Box& dst_mapped_box,
       tbox::Pointer<hier::PatchLevel> src_level,
-      const MappedBox& src_mapped_box);
+      const hier::Box& src_mapped_box);
 
    /*!
     * @brief Restructure the neighborhood sets from a src_to_dst Connector

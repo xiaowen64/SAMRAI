@@ -53,12 +53,12 @@ public:
    /*!
     * @brief Dereference operator mimicking a pointer dereference.
     */
-   const MappedBox &operator * () const;
+   const Box &operator * () const;
 
    /*!
     * @brief Dereference operator mimicking a pointer dereference.
     */
-   const MappedBox *operator -> () const;
+   const Box *operator -> () const;
 
    /*!
     * @brief Equality comparison.

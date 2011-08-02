@@ -155,8 +155,8 @@ private:
    typedef hier::LocalId LocalId;
    //! @brief Shorthand typedef.
    typedef hier::Connector::NeighborSet NeighborSet;
-   //! @brief Mapping from a (potentially remote) MappedBox to a set of neighbors.
-   typedef std::map<hier::MappedBox, NeighborSet> FullNeighborhoodSet;
+   //! @brief Mapping from a (potentially remote) Box to a set of neighbors.
+   typedef std::map<hier::Box, NeighborSet, hier::Box::id_less> FullNeighborhoodSet;
 
    /*!
     * @brief set the internal pointer to equivalence classes
@@ -262,9 +262,9 @@ private:
    void
    constructScheduleTransactions(
       tbox::Pointer<hier::PatchLevel> dst_level,
-      const hier::MappedBox& dst_mapped_box,
+      const hier::Box& dst_mapped_box,
       tbox::Pointer<hier::PatchLevel> src_level,
-      const hier::MappedBox& src_mapped_box);
+      const hier::Box& src_mapped_box);
 
    void
    constructScheduleTransactions(

@@ -12,8 +12,8 @@
 
 #include "SAMRAI/SAMRAI_config.h"
 
+#include "SAMRAI/hier/Box.h"
 #include "SAMRAI/hier/Connector.h"
-#include "SAMRAI/hier/MappedBox.h"
 #include "SAMRAI/hier/MappedBoxTree.h"
 #include "SAMRAI/hier/MappedBoxLevel.h"
 #include "SAMRAI/tbox/AsyncCommPeer.h"
@@ -32,9 +32,9 @@ class Connector;
  * represents overlaps.
  *
  * An overlap Connector is one in which neighbors represent a pair of
- * overlapping MappedBoxes.  If a base MappedBox grown by the
- * Connector width overlaps a head MappedBox, the head MappedBox is a
- * neighbor of the base MappedBox.  This class implements some
+ * overlapping MappedBoxes.  If a base Box grown by the
+ * Connector width overlaps a head Box, the head Box is a
+ * neighbor of the base Box.  This class implements some
  * functions for working with a overlap Connectors.
  *
  * OverlapConnectorAlgorithm objects create, check and operate on overlap
@@ -76,7 +76,7 @@ public:
     * @brief Discover and add overlaps from base to
     * (a globalized version of the) head for an overlap Connector.
     *
-    * A MappedBox's overlap with another MappedBox is disregarded if:
+    * A Box's overlap with another Box is disregarded if:
     * @li @c ignore_self_overlap is true and
     * @li the two MappedBoxes have the same MappedBoxId and.
     * @li the Connectors's base and head have the same refinement ratio.
@@ -523,9 +523,9 @@ private:
    //! @brief Utility used in privateBridge()
    void
    unshiftOverlappingNeighbors(
-      const MappedBox& mapped_box,
-      std::vector<MappedBox>& neighbors,
-      std::vector<MappedBox>& scratch_space,
+      const Box& mapped_box,
+      std::vector<Box>& neighbors,
+      std::vector<Box>& scratch_space,
       const IntVector& neighbor_refinement_ratio) const;
 
    //! @brief Send discovery to one processor during privateBridge().

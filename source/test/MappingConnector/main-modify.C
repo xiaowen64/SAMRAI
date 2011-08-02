@@ -11,7 +11,7 @@
 
 #include "SAMRAI/hier/Connector.h"
 #include "SAMRAI/hier/GridGeometry.h"
-#include "SAMRAI/hier/MappedBox.h"
+#include "SAMRAI/hier/Box.h"
 #include "SAMRAI/hier/MappedBoxLevel.h"
 #include "SAMRAI/hier/MappingConnectorAlgorithm.h"
 #include "SAMRAI/hier/OverlapConnectorAlgorithm.h"
@@ -371,8 +371,8 @@ void breakUpBoxes(
       hier::MappedBoxSet refined_mapped_boxes;
       for ( hier::MappedBoxSet::const_iterator bi=mapped_boxes.begin();
             bi!=mapped_boxes.end(); ++bi ) {
-         hier::MappedBox refined_mapped_box(*bi);
-         refined_mapped_box.getBox().refine(refinement_ratio);
+         hier::Box refined_mapped_box(*bi);
+         refined_mapped_box.refine(refinement_ratio);
          refined_mapped_boxes.insert( refined_mapped_boxes.end(), refined_mapped_box );
       }
       mapped_box_level.swapInitialize(
@@ -446,8 +446,8 @@ void alterAndGenerateMapping(
    hier::NeighborhoodSet c_eto_b;
    for ( hier::MappedBoxSet::const_iterator bi(mapped_boxes_b.begin());
          bi!=mapped_boxes_b.end(); ++bi ) {
-      const hier::MappedBox &mapped_box_b(*bi);
-      hier::MappedBox mapped_box_c(mapped_box_b.getBox(),
+      const hier::Box &mapped_box_b(*bi);
+      hier::Box mapped_box_c(mapped_box_b,
                                    mapped_box_b.getLocalId() + local_id_increment,
                                    mapped_box_b.getOwnerRank(),
                                    mapped_box_b.getBlockId(),

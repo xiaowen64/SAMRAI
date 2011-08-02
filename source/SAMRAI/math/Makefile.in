@@ -50,8 +50,6 @@ OBJS = 		\
 	HierarchySideDataOpsComplex.o \
 	HierarchyNodeDataOpsComplex.o \
 	HierarchyDataOpsComplex.o \
-	HierarchyDataOpsComplex.o \
-	HierarchyDataOpsComplex.o \
 	ArrayDataNormOpsComplex.o \
 	ArrayDataNormOpsInteger.o
 

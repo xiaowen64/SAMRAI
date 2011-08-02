@@ -67,7 +67,7 @@ int main(
          zero_trans.transform(trans_box); 
          zero_trans.inverseTransform(trans_box);
 
-         if (trans_box != ref_box) {
+         if (! trans_box.isSpatiallyEqual(ref_box)) {
             fail_count++;
             tbox::perr << "FAILED: - 2D trivial tranformation" << endl;
          }
@@ -89,7 +89,7 @@ int main(
          zero_trans.transform(trans_box);
          zero_trans.inverseTransform(trans_box);
 
-         if (trans_box != ref_box) {
+         if (! trans_box.isSpatiallyEqual(ref_box)) {
             fail_count++;
             tbox::perr << "FAILED: - 3D trivial tranformation" << endl;
          }
@@ -114,7 +114,7 @@ int main(
          shift_trans.transform(trans_box);
          shift_trans.inverseTransform(trans_box);
 
-         if (trans_box != ref_box) {
+         if (! trans_box.isSpatiallyEqual(ref_box)) {
             fail_count++;
             tbox::perr << "FAILED: - 2D shift tranformation" << endl;
          }
@@ -140,7 +140,7 @@ int main(
          shift_trans.transform(trans_box);
          shift_trans.inverseTransform(trans_box);
 
-         if (trans_box != ref_box) {
+         if (! trans_box.isSpatiallyEqual(ref_box)) {
             fail_count++;
             tbox::perr << "FAILED: - 3D shift tranformation" << endl;
          }
@@ -172,7 +172,7 @@ int main(
             trans.transform(trans_box);
             trans.inverseTransform(trans_box);
 
-            if (trans_box != ref_box) {
+            if (! trans_box.isSpatiallyEqual(ref_box)) {
                fail_count++;
                tbox::perr << "FAILED: - 2D rotate/shift transformation" << endl;
             }
@@ -205,7 +205,7 @@ int main(
             trans.transform(trans_box);
             trans.inverseTransform(trans_box);
 
-            if (trans_box != ref_box) {
+            if (! trans_box.isSpatiallyEqual(ref_box)) {
                fail_count++;
                tbox::perr << "FAILED: - 3D rotate/shift transformation" << endl;
             }
@@ -264,7 +264,7 @@ int testGeometryTransformations(const hier::Transformation& transformation,
    hier::Box trans_node_box(ref_node_box); 
    pdat::NodeGeometry::transform(trans_node_box, transformation);
    pdat::NodeGeometry::transform(trans_node_box, reverse_trans);
-   if (trans_node_box != ref_node_box) {
+   if (! trans_node_box.isSpatiallyEqual(ref_node_box)) {
       fail_count++;
       tbox::perr << "FAILED: - Node box transformation" << endl;
    }
@@ -288,7 +288,7 @@ int testGeometryTransformations(const hier::Transformation& transformation,
       int direction = d;
       pdat::SideGeometry::transform(trans_side_box, direction, transformation);
       pdat::SideGeometry::transform(trans_side_box, direction, reverse_trans);
-      if (trans_side_box != ref_side_box) {
+      if (! trans_side_box.isSpatiallyEqual(ref_side_box)) {
          fail_count++;
          tbox::perr << "FAILED: - Side box transformation" << endl;
       }
@@ -313,7 +313,7 @@ int testGeometryTransformations(const hier::Transformation& transformation,
       int direction = d;
       pdat::EdgeGeometry::transform(trans_edge_box, direction, transformation);
       pdat::EdgeGeometry::transform(trans_edge_box, direction, reverse_trans);
-      if (trans_edge_box != ref_edge_box) {
+      if (! trans_edge_box.isSpatiallyEqual(ref_edge_box)) {
          fail_count++;
          tbox::perr << "FAILED: - Edge box transformation" << endl;
       }
@@ -338,7 +338,7 @@ int testGeometryTransformations(const hier::Transformation& transformation,
       int direction = d;
       pdat::FaceGeometry::transform(trans_face_box, direction, transformation);
       pdat::FaceGeometry::transform(trans_face_box, direction, reverse_trans);
-      if (trans_face_box != ref_face_box) {
+      if (! trans_face_box.isSpatiallyEqual(ref_face_box)) {
          fail_count++;
          tbox::perr << "FAILED: - Face box transformation" << endl;
       }

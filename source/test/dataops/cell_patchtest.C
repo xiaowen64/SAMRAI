@@ -113,7 +113,7 @@ int main(
                                            lo, hi, grid_domain);
       hier::ComponentSelector patch_components;
 
-      hier::MappedBox patch_node(patch_box, hier::LocalId::getZero(), mpi.getRank());
+      hier::Box patch_node(patch_box, hier::LocalId::getZero(), mpi.getRank());
       tbox::Pointer<hier::Patch> tpatch(
          new hier::Patch(
             patch_node,
@@ -344,7 +344,7 @@ int main(
       }
 
       // Test #2: Check state of hier::Patch before allocating storage
-      if (tpatch->getBox() != patch_box) {
+      if (! tpatch->getBox().isSpatiallyEqual(patch_box)) {
          num_failures++;
          tbox::perr << "FAILED: - Test #2a: hier::Patch box incorrectly set\n"
                     << "Expected: d_box = " << patch_box << "\n"
@@ -380,7 +380,7 @@ int main(
       tpatch->allocatePatchData(patch_components);
 
       // Test #3: Check state of hier::Patch after allocating storage
-      if (tpatch->getBox() != patch_box) {
+      if (! tpatch->getBox().isSpatiallyEqual(patch_box)) {
          num_failures++;
          tbox::perr << "FAILED: - Test #3a: hier::Patch box incorrectly set\n"
                     << "Expected: d_box = " << patch_box << "\n"
@@ -1055,7 +1055,7 @@ int main(
       }
 
       // Test #26: Check state of hier::Patch before deallocating storage
-      if (tpatch->getBox() != patch_box) {
+      if (! tpatch->getBox().isSpatiallyEqual(patch_box)) {
          num_failures++;
          tbox::perr << "FAILED: - Test #26a: hier::Patch box incorrectly set\n"
                     << "Expected: d_box = " << patch_box << "\n"
@@ -1208,7 +1208,7 @@ int main(
       tpatch->deallocatePatchData(patch_components);
 
       // Test #27: Check state of hier::Patch after deallocating storage
-      if (tpatch->getBox() != patch_box) {
+      if (! tpatch->getBox().isSpatiallyEqual(patch_box)) {
          num_failures++;
          tbox::perr << "FAILED: - Test #27a: hier::Patch box incorrectly set\n"
                     << "Expected: d_box = " << patch_box << "\n"

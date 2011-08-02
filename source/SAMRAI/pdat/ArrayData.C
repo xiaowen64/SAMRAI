@@ -138,7 +138,7 @@ void ArrayData<TYPE>::initializeArray(
 {
    TBOX_ASSERT(depth > 0);
 
-   d_dim.setValue(box.getDim().getValue());
+   d_dim = box.getDim();
    d_depth = depth;
    d_offset = box.size();
    d_box = box;
@@ -194,8 +194,8 @@ void ArrayData<TYPE>::copy(
     */
 
    if ((d_depth == src.d_depth) &&
-       (d_box == src.d_box) &&
-       (box == d_box)) {
+       (d_box.isSpatiallyEqual(src.d_box)) &&
+       (box.isSpatiallyEqual(d_box))) {
 
       TYPE * const dst_ptr = d_array.getPointer();
       const TYPE * const src_ptr = src.d_array.getPointer();
@@ -328,7 +328,7 @@ void ArrayData<TYPE>::copyDepth(
     * Do a fast copy of data if all data aligns with copy region
     */
 
-   if ((d_box == src.d_box) && (box == d_box)) {
+   if ((d_box.isSpatiallyEqual(src.d_box)) && (box.isSpatiallyEqual(d_box))) {
 
       TYPE * const dst_ptr = d_array.getPointer();
       const TYPE * const src_ptr = src.d_array.getPointer();
@@ -392,8 +392,8 @@ void ArrayData<TYPE>::sum(
     */
 
    if ((d_depth == src.d_depth) &&
-       (d_box == src.d_box) &&
-       (box == d_box)) {
+       (d_box.isSpatiallyEqual(src.d_box)) &&
+       (box.isSpatiallyEqual(d_box))) {
 
       TYPE * const dst_ptr = d_array.getPointer();
       const TYPE * const src_ptr = src.d_array.getPointer();
@@ -866,7 +866,7 @@ void ArrayData<TYPE>::packBuffer(
    TYPE* buffer,
    const hier::Box& box) const
 {
-   TBOX_ASSERT((box * d_box) == box);
+   TBOX_ASSERT((box * d_box).isSpatiallyEqual(box));
 
    bool src_is_buffer = false;
 
@@ -886,7 +886,7 @@ void ArrayData<TYPE>::unpackBuffer(
    const TYPE* buffer,
    const hier::Box& box)
 {
-   TBOX_ASSERT((box * d_box) == box);
+   TBOX_ASSERT((box * d_box).isSpatiallyEqual(box));
 
    bool src_is_buffer = true;
 
@@ -914,7 +914,7 @@ void ArrayData<TYPE>::unpackBufferAndSum(
    const TYPE* buffer,
    const hier::Box& box)
 {
-   TBOX_ASSERT((box * d_box) == box);
+   TBOX_ASSERT((box * d_box).isSpatiallyEqual(box));
 
    bool src_is_buffer = true;
 
@@ -931,7 +931,7 @@ void ArrayData<TYPE>::unpackBufferAndSum(
 template<class TYPE>
 void ArrayData<TYPE>::invalidateArray(
    const tbox::Dimension& dim) {
-   d_dim.setValue(dim.getValue());
+   d_dim = dim;
    d_depth = 0;
    d_offset = 0;
    d_box = hier::Box::getEmptyBox(dim);

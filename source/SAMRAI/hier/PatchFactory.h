@@ -13,7 +13,6 @@
 
 #include "SAMRAI/SAMRAI_config.h"
 
-#include "SAMRAI/hier/MappedBox.h"
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/hier/Patch.h"
 #include "SAMRAI/hier/PatchDescriptor.h"
@@ -52,7 +51,7 @@ public:
     */
    virtual tbox::Pointer<Patch>
    allocate(
-      const MappedBox& mapped_box_level_mapped_box,
+      const Box& mapped_box_level_mapped_box,
       tbox::Pointer<PatchDescriptor> descriptor) const;
 
 private:

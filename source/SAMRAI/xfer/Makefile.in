@@ -44,7 +44,6 @@ OBJS =  BoxGeometryVariableFillPattern.o \
 	RefinePatchStrategy.o \
 	RefineClasses.o \
 	MultiblockCoarsenPatchStrategy.o \
-	MultiblockCoarsenAlgorithm.o \
 	CoarsenCopyTransaction.o \
 	StandardCoarsenTransactionFactory.o \
 	CoarsenTransactionFactory.o \

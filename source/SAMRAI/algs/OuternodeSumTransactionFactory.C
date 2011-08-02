@@ -73,8 +73,8 @@ OuternodeSumTransactionFactory::allocate(
    tbox::Pointer<hier::PatchLevel> dst_level,
    tbox::Pointer<hier::PatchLevel> src_level,
    tbox::Pointer<hier::BoxOverlap> overlap,
-   const hier::MappedBox& dst_node,
-   const hier::MappedBox& src_node,
+   const hier::Box& dst_node,
+   const hier::Box& src_node,
    int ritem_id,
    const hier::Box& box,
    bool use_time_interpolation) const
@@ -99,8 +99,8 @@ OuternodeSumTransactionFactory::allocate(
    tbox::Pointer<hier::PatchLevel> dst_level,
    tbox::Pointer<hier::PatchLevel> src_level,
    tbox::Pointer<hier::BoxOverlap> overlap,
-   const hier::MappedBox& dst_node,
-   const hier::MappedBox& src_node,
+   const hier::Box& dst_node,
+   const hier::Box& src_node,
    int ritem_id) const
 {
    TBOX_DIM_ASSERT_CHECK_ARGS4(*dst_level, *src_level, dst_node, src_node);

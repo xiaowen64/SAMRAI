@@ -15,7 +15,6 @@
 
 #include <stdio.h>
 
-#include "SAMRAI/hier/MappedBoxContainerUtils.h"
 #include "SAMRAI/hier/OverlapConnectorAlgorithm.h"
 #include "SAMRAI/hier/PeriodicShiftCatalog.h"
 #include "SAMRAI/hier/VariableDatabase.h"
@@ -712,7 +711,7 @@ void PatchHierarchy::setupDomainData(
    }
 
    // Initialize the multiblock domain search tree.
-   std::vector<MappedBox> multiblock_mapped_boxes;
+   std::vector<Box> multiblock_mapped_boxes;
    for (int nb = 0; nb < d_number_blocks; nb++) {
       multiblock_mapped_boxes.insert(
          multiblock_mapped_boxes.end(),
@@ -726,8 +725,8 @@ void PatchHierarchy::setupDomainData(
 
    // Generate the non-periodic multiblock domain search tree.
    if ( PeriodicShiftCatalog::getCatalog(d_dim)->isPeriodic() ) {
-      std::vector<MappedBox> multiblock_mapped_boxes_noperiodic;
-      for ( std::vector<MappedBox>::const_iterator ni=multiblock_mapped_boxes.begin();
+      std::vector<Box> multiblock_mapped_boxes_noperiodic;
+      for ( std::vector<Box>::const_iterator ni=multiblock_mapped_boxes.begin();
             ni!=multiblock_mapped_boxes.end(); ++ni ) {
          if ( !ni->isPeriodicImage() ) {
             multiblock_mapped_boxes_noperiodic.push_back(*ni);
@@ -742,30 +741,23 @@ void PatchHierarchy::setupDomainData(
    }
 
 
-   std::vector<MappedBox> multiblock_complement_mapped_boxes;
+   std::map<BlockId, BoxList> multiblock_complement_boxes;
 
    for (int nb = 0; nb < d_number_blocks; nb++) {
 
       /*
        * Set up the search tree for the domain's complement.
        */
-      hier::BoxList complement_list(hier::Box::getUniverse(d_dim));
-      complement_list.removeIntersections(d_domain_search_tree_periodic.getSingleBlockMappedBoxTree(BlockId(nb)));
-
-      /*
-       * Put all complement MappedBoxes in
-       * multiblock_complement_mapped_boxes for building
-       * d_complement_searchtree.
-       */
-      MappedBoxContainerUtils::convertBoxListToMappedBoxVector(complement_list,
-         multiblock_complement_mapped_boxes,
-         BlockId(nb) );
-
+      BlockId block_id(nb);
+      multiblock_complement_boxes[block_id].appendItem(
+         hier::Box::getUniverse(d_dim));
+      multiblock_complement_boxes[block_id].removeIntersections(
+         d_domain_search_tree_periodic.getSingleBlockMappedBoxTree(block_id));
    }
 
    d_complement_searchtree.generateTree(
       d_grid_geometry,
-      multiblock_complement_mapped_boxes);
+      multiblock_complement_boxes);
 
    return;
 }

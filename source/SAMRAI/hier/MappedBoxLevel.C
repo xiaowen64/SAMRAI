@@ -486,22 +486,19 @@ void MappedBoxLevel::computeLocalRedundantData()
    d_local_number_of_mapped_boxes = 0;
    d_local_number_of_cells = 0;
 
-   d_local_bounding_box.clear();
-   d_local_min_box_size.clear();
-   d_local_max_box_size.clear();
    if ( int(d_local_bounding_box.size()) != nblocks ) {
-      d_local_bounding_box.insert(d_local_bounding_box.end(),nblocks,hier::Box(d_grid_geometry->getDim()));
-      d_local_min_box_size.insert(d_local_min_box_size.end(),nblocks, max_vec);
-      d_local_max_box_size.insert(d_local_max_box_size.end(),nblocks, zero_vec);
+      d_local_bounding_box.resize(nblocks,hier::Box(d_grid_geometry->getDim()));
+      d_local_min_box_size.resize(nblocks, max_vec);
+      d_local_max_box_size.resize(nblocks, zero_vec);
    }
 
    for (RealMappedBoxConstIterator ni(d_mapped_boxes); ni.isValid(); ++ni) {
 
       int block_num = ni->getBlockId().getBlockValue();
-      const IntVector boxdim(ni->getBox().numberCells());
+      const IntVector boxdim(ni->numberCells());
       ++d_local_number_of_mapped_boxes;
       d_local_number_of_cells += boxdim.getProduct();
-      d_local_bounding_box[block_num] += ni->getBox();
+      d_local_bounding_box[block_num] += *ni;
       d_local_min_box_size[block_num].min(boxdim);
       d_local_max_box_size[block_num].max(boxdim);
 
@@ -541,7 +538,7 @@ void MappedBoxLevel::cacheGlobalReducedData() const
            ni.isValid();
            ++ni) {
          ++d_global_number_of_mapped_boxes;
-         d_global_number_of_cells += ni->getBox().size();
+         d_global_number_of_cells += ni->size();
       }
    } else {
       if (d_mpi.getSize() > 1) {
@@ -861,7 +858,7 @@ void MappedBoxLevel::acquireRemoteMappedBoxes_pack(
 {
    const tbox::Dimension& dim(getDim());
    /*
-    * MappedBox acquisition occurs during globalization.  Thus, do not
+    * Box acquisition occurs during globalization.  Thus, do not
     * rely on current value of d_parallel_state.
     */
 
@@ -874,7 +871,7 @@ void MappedBoxLevel::acquireRemoteMappedBoxes_pack(
     *   - Number of MappedBoxes from self
     *   - Self MappedBoxes
     */
-   const int mapped_box_com_buf_size = MappedBox::commBufferSize(dim);
+   const int mapped_box_com_buf_size = Box::commBufferSize(dim);
    const int send_mesg_size = 1 + mapped_box_com_buf_size
       * static_cast<int>(d_mapped_boxes.size());
    const int old_size = static_cast<int>(send_mesg.size());
@@ -909,7 +906,7 @@ void MappedBoxLevel::acquireRemoteMappedBoxes_unpack(
     * Advance the proc_offset past the used data.
     */
    int n;
-   int mapped_box_com_buf_size = MappedBox::commBufferSize(dim);
+   int mapped_box_com_buf_size = Box::commBufferSize(dim);
 
    for (n = 0; n < d_nproc; ++n) {
       if (n != d_rank) {
@@ -919,7 +916,7 @@ void MappedBoxLevel::acquireRemoteMappedBoxes_unpack(
          proc_offset[d_rank] += (n_self_mapped_boxes) * mapped_box_com_buf_size;
 
          int i;
-         MappedBox mapped_box(dim);
+         Box mapped_box(dim);
 
          for (i = 0; i < n_self_mapped_boxes; ++i) {
             mapped_box.getFromIntBuffer(ptr);
@@ -972,8 +969,8 @@ MappedBoxSet::iterator MappedBoxLevel::addBox(
    MappedBoxSet::iterator new_iterator;
 
    if (d_mapped_boxes.size() == 0) {
-      MappedBox new_mapped_box =
-         MappedBox(box,
+      Box new_mapped_box =
+         Box(box,
                    LocalId::getZero(),
                    d_rank,
                    block_id,
@@ -1010,8 +1007,8 @@ MappedBoxSet::iterator MappedBoxLevel::addBox(
          }
       }
 
-      const MappedBox new_mapped_box =
-         MappedBox(box, new_index, d_rank, block_id);
+      const Box new_mapped_box =
+         Box(box, new_index, d_rank, block_id);
       new_iterator = d_mapped_boxes.insert(ni, new_mapped_box);
    }
 
@@ -1032,7 +1029,7 @@ MappedBoxSet::iterator MappedBoxLevel::addBox(
  */
 void
 MappedBoxLevel::addPeriodicMappedBox(
-   const MappedBox& ref_mapped_box,
+   const Box& ref_mapped_box,
    const PeriodicId& shift_number)
 {
    // FIXME: We don't allow individually adding remote MappedBoxes even in globalized state.  We probably shouldn't allow adding remote images either.
@@ -1045,7 +1042,7 @@ MappedBoxLevel::addPeriodicMappedBox(
    if (d_parallel_state != GLOBALIZED && ref_mapped_box.getOwnerRank() !=
        d_rank) {
       TBOX_ERROR(
-         "MappedBoxLevel::addPeriodicMappedBox: Cannot add remote MappedBox\n"
+         "MappedBoxLevel::addPeriodicMappedBox: Cannot add remote Box\n"
          << "(owned by rank " << ref_mapped_box.getOwnerRank() << ")\n"
          << "when not in GLOBALIZED state.");
    }
@@ -1053,7 +1050,7 @@ MappedBoxLevel::addPeriodicMappedBox(
 
    clearForBoxChanges(false);
 
-   MappedBox image_mapped_box(ref_mapped_box, shift_number, d_ratio);
+   Box image_mapped_box(ref_mapped_box, shift_number, d_ratio);
 
 #ifdef DEBUG_CHECK_ASSERTIONS
    MappedBoxSet& mapped_boxes =
@@ -1064,7 +1061,7 @@ MappedBoxLevel::addPeriodicMappedBox(
     * - Require that the real version of the reference MappedBox exists
     *   before adding the periodic image MappedBox.
     */
-   MappedBox real_mapped_box(getDim(),
+   Box real_mapped_box(getDim(),
                              ref_mapped_box.getLocalId(),
                              ref_mapped_box.getOwnerRank(),
                              ref_mapped_box.getBlockId(),
@@ -1072,10 +1069,10 @@ MappedBoxLevel::addPeriodicMappedBox(
                                 getDim())->getZeroShiftNumber());
    if (mapped_boxes.find(real_mapped_box) == mapped_boxes.end()) {
       TBOX_ERROR(
-         "MappedBoxLevel::addPeriodicMappedBox: cannot add periodic image MappedBox "
+         "MappedBoxLevel::addPeriodicMappedBox: cannot add periodic image Box "
          << image_mapped_box
          <<
-         "\nwithout the real MappedBox (" << real_mapped_box
+         "\nwithout the real Box (" << real_mapped_box
          <<
          ") already in the MappedBoxLevel.\n");
    }
@@ -1095,7 +1092,7 @@ MappedBoxLevel::addPeriodicMappedBox(
  */
 void
 MappedBoxLevel::addMappedBox(
-   const MappedBox& mapped_box)
+   const Box& mapped_box)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    if (d_parallel_state != GLOBALIZED && mapped_box.getOwnerRank() != d_rank) {
@@ -1113,7 +1110,7 @@ MappedBoxLevel::addMappedBox(
     * - Require that the real MappedBox exists before adding the periodic image MappedBox.
     */
    if (mapped_box.isPeriodicImage()) {
-      MappedBox real_mapped_box(getDim(),
+      Box real_mapped_box(getDim(),
                                 mapped_box.getLocalId(),
                                 mapped_box.getOwnerRank(),
                                 mapped_box.getBlockId(),
@@ -1145,10 +1142,10 @@ MappedBoxLevel::addMappedBox(
    // Update counters.
    if (!mapped_box.isPeriodicImage()) {
       if (mapped_box.getOwnerRank() == d_rank) {
-         const IntVector box_size(mapped_box.getBox().numberCells());
+         const IntVector box_size(mapped_box.numberCells());
          ++d_local_number_of_mapped_boxes;
-         d_local_number_of_cells += mapped_box.getBox().size();
-         d_local_bounding_box[mapped_box.getBlockId().getBlockValue()] += mapped_box.getBox();
+         d_local_number_of_cells += mapped_box.size();
+         d_local_bounding_box[mapped_box.getBlockId().getBlockValue()] += mapped_box;
          d_local_max_box_size[mapped_box.getBlockId().getBlockValue()].max(box_size);
          d_local_min_box_size[mapped_box.getBlockId().getBlockValue()].min(box_size);
       }
@@ -1191,7 +1188,7 @@ MappedBoxLevel::eraseMappedBox(
 #ifdef DEBUG_CHECK_ASSERTIONS
    if (ibox != d_mapped_boxes.find(*ibox)) {
       TBOX_ERROR("MappedBoxLevel::eraseMappedBox: Attempt to erase a\n"
-         << "MappedBox that does not belong to the MappedBoxLevel\n"
+         << "Box that does not belong to the MappedBoxLevel\n"
          << "object.\n");
    }
 #endif
@@ -1207,7 +1204,7 @@ MappedBoxLevel::eraseMappedBox(
        */
       d_local_bounding_box_up_to_date = d_global_data_up_to_date = false;
       --d_local_number_of_mapped_boxes;
-      d_local_number_of_cells -= ibox->getBox().size();
+      d_local_number_of_cells -= ibox->size();
       // Erase real MappedBox and its periodic images.
       const LocalId &local_id = ibox->getLocalId();
       do {
@@ -1224,7 +1221,7 @@ MappedBoxLevel::eraseMappedBox(
 
 void
 MappedBoxLevel::eraseMappedBox(
-   const MappedBox& mapped_box)
+   const Box& mapped_box)
 {
    /*
     * FIXME: bug: if some procs erase some MappedBoxes and others do
@@ -1251,7 +1248,7 @@ MappedBoxLevel::eraseMappedBox(
 
    MappedBoxSet::iterator ibox = d_mapped_boxes.find(mapped_box);
    if (ibox == d_mapped_boxes.end()) {
-      TBOX_ERROR("MappedBoxLevel::eraseMappedBox: MappedBox to be erased ("
+      TBOX_ERROR("MappedBoxLevel::eraseMappedBox: Box to be erased ("
          << mapped_box << ") is NOT a part of the MappedBoxLevel.\n");
    }
    d_mapped_boxes.erase(ibox);
@@ -1292,6 +1289,18 @@ const
       d_persistent_overlap_connectors = new PersistentOverlapConnectors(*this);
    }
    return *d_persistent_overlap_connectors;
+}
+
+/*
+ ***********************************************************************
+ ***********************************************************************
+ */
+void MappedBoxLevel::getGlobalBoxes(BoxList& global_boxes) const
+{
+   for (MappedBoxSet::const_iterator itr = d_global_mapped_boxes.begin();
+        itr != d_global_mapped_boxes.end(); itr++) {
+      global_boxes.appendItem(*itr);
+   }
 }
 
 /*
@@ -1463,10 +1472,10 @@ void MappedBoxLevel::recursivePrint(
          for (MappedBoxSet::const_iterator bi = d_global_mapped_boxes.begin();
               bi != d_global_mapped_boxes.end();
               ++bi) {
-            MappedBox mapped_box = *bi;
+            Box mapped_box = *bi;
             co << border << "    "
                << mapped_box << "   "
-               << mapped_box.getBox().numberCells() << '\n';
+               << mapped_box.numberCells() << '\n';
          }
       } else {
          /*
@@ -1475,10 +1484,10 @@ void MappedBoxLevel::recursivePrint(
          for (MappedBoxSet::const_iterator bi = d_mapped_boxes.begin();
               bi != d_mapped_boxes.end();
               ++bi) {
-            MappedBox mapped_box = *bi;
+            Box mapped_box = *bi;
             co << border << "    "
                << mapped_box << "   "
-               << mapped_box.getBox().numberCells() << '\n';
+               << mapped_box.numberCells() << '\n';
          }
       }
    }
@@ -1522,8 +1531,8 @@ void MappedBoxLevel::printMappedBoxStats(
 
    for (RealMappedBoxConstIterator ni(mapped_boxes); ni.isValid(); ++ni) {
 
-      const MappedBox& mapped_box = *ni;
-      const IntVector boxdims = mapped_box.getBox().numberCells();
+      const Box& mapped_box = *ni;
+      const IntVector boxdims = mapped_box.numberCells();
       const double boxvol = boxdims.getProduct();
       const double longdim = boxdims.max();
       const double shortdim = boxdims.min();

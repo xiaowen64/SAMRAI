@@ -303,7 +303,7 @@ size_t MappedBoxLevel::getLocalNumberOfCells(
       MappedBoxSetSingleOwnerIterator mbi(d_global_mapped_boxes, rank);
       for ( ; mbi.isValid(); mbi++) {
          if (!(*mbi).isPeriodicImage()) {
-            count += (*mbi).getBox().size();
+            count += (*mbi).size();
          }
       }
 
@@ -317,7 +317,7 @@ size_t MappedBoxLevel::getLocalNumberOfCells(
  */
 SAMRAI_INLINE_KEYWORD
 bool MappedBoxLevel::hasMappedBox(
-   const MappedBox& mapped_box) const
+   const Box& mapped_box) const
 {
    if (mapped_box.getOwnerRank() == d_rank) {
 
@@ -327,7 +327,7 @@ bool MappedBoxLevel::hasMappedBox(
    } else {
 #ifdef DEBUG_CHECK_ASSERTIONS
       if (d_parallel_state == DISTRIBUTED) {
-         TBOX_ERROR("MappedBoxLevel: Cannot check on remote MappedBox "
+         TBOX_ERROR("MappedBoxLevel: Cannot check on remote Box "
             << mapped_box << " while in DISTRIBUTED mode.\n"
             << "See MappedBoxLevel::setParallelState().");
       }
@@ -347,7 +347,7 @@ bool MappedBoxLevel::hasMappedBox(
    const BlockId& block_id,
    const PeriodicId &periodic_id) const
 {
-   const MappedBox mapped_box(
+   const Box mapped_box(
       getDim(),
       global_id,
       block_id,
@@ -363,7 +363,7 @@ SAMRAI_INLINE_KEYWORD
 bool MappedBoxLevel::hasMappedBox(
    const MappedBoxId& mapped_box_id) const
 {
-   const MappedBox mapped_box(getDim(), mapped_box_id);
+   const Box mapped_box(getDim(), mapped_box_id);
    return hasMappedBox(mapped_box);
 }
 
@@ -392,7 +392,7 @@ int MappedBoxLevel::getNproc() const
 SAMRAI_INLINE_KEYWORD
 MappedBoxSet::const_iterator
 MappedBoxLevel::getMappedBox(
-   const MappedBox& mapped_box) const
+   const Box& mapped_box) const
 {
    MappedBoxSet::const_iterator ni;
    if (mapped_box.getOwnerRank() == d_rank) {
@@ -420,7 +420,7 @@ MappedBoxLevel::getMappedBox(
    const MappedBoxId& mapped_box_id) const
 {
 
-   const MappedBox mapped_box(getDim(),
+   const Box mapped_box(getDim(),
                               mapped_box_id);
    MappedBoxSet::const_iterator ni;
    if (mapped_box.getOwnerRank() == d_rank) {
@@ -445,7 +445,7 @@ MappedBoxLevel::getMappedBox(
 SAMRAI_INLINE_KEYWORD
 MappedBoxSet::const_iterator
 MappedBoxLevel::getMappedBoxStrict(
-   const MappedBox& mapped_box) const
+   const Box& mapped_box) const
 {
    MappedBoxSet::const_iterator ni;
    if (mapped_box.getOwnerRank() == d_rank) {
@@ -495,7 +495,7 @@ MappedBoxLevel::getMappedBoxStrict(
    }
 #endif
 
-   MappedBox mapped_box(getDim(),
+   Box mapped_box(getDim(),
                         mapped_box_id);
    MappedBoxSet::const_iterator ni;
    if (mapped_box.getOwnerRank() == d_rank) {

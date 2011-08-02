@@ -49,12 +49,12 @@ MappedBoxSetSingleBlockIterator& MappedBoxSetSingleBlockIterator::operator = (
    return *this;
 }
 
-const MappedBox& MappedBoxSetSingleBlockIterator::operator * () const
+const Box& MappedBoxSetSingleBlockIterator::operator * () const
 {
    return *d_iter;
 }
 
-const MappedBox *MappedBoxSetSingleBlockIterator::operator -> () const
+const Box *MappedBoxSetSingleBlockIterator::operator -> () const
 {
    return &(*d_iter);
 }

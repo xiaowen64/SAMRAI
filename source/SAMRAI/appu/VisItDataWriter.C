@@ -3703,10 +3703,10 @@ void VisItDataWriter::writeParentChildInfoToSummaryHDFFile(
             child_ptrs[child_ptrs_idx++].offset = VISIT_UNDEFINED_INDEX;
          } else {
             hier::BlockId block_id(bi->getBlockId());
-            hier::Box compare_box(bi->getBox());
+            hier::Box compare_box(*bi);
             compare_box.refine(ratio);
 
-            std::vector<hier::MappedBox> overlap_mapped_boxes; 
+            std::vector<hier::Box> overlap_mapped_boxes; 
 
             child_box_tree->findOverlapMappedBoxes(
                overlap_mapped_boxes,
@@ -3904,7 +3904,7 @@ void VisItDataWriter::packPatchDataIntoDoubleBuffer(
    const variable_centering centering)
 {
    TBOX_ASSERT(depth_index >= 0);
-   TBOX_ASSERT((patch_box * pdata->getGhostBox()) == patch_box);
+   TBOX_ASSERT((patch_box * pdata->getGhostBox()).isSpatiallyEqual(patch_box));
 
    /*
     * Currently, Fortran calls in this method limit it to two or

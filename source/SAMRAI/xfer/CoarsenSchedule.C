@@ -509,7 +509,7 @@ void CoarsenSchedule::generateScheduleNSquared()
    hier::BoxList::Iterator crse_itr_dp(d_crse_level->getBoxes());
    for (int dp = 0; dp < dst_npatches; dp++, crse_itr_dp++) {
 
-      const MappedBox dst_mapped_box(*crse_itr_dp,
+      const hier::Box dst_mapped_box(*crse_itr_dp,
                                      hier::LocalId(dp),
                                      d_crse_level->getProcessorMapping().
                                      getProcessorAssignment(dp));
@@ -517,7 +517,7 @@ void CoarsenSchedule::generateScheduleNSquared()
       hier::BoxList::Iterator crse_itr_sp(d_temp_crse_level->getBoxes());
       for (int sp = 0; sp < src_npatches; sp++, crse_itr_sp++) {
 
-         const MappedBox src_mapped_box(*crse_itr_sp,
+         const hier::Box src_mapped_box(*crse_itr_sp,
                                         hier::LocalId(sp),
                                         d_temp_crse_level->getProcessorMapping()
                                         .getProcessorAssignment(sp));
@@ -568,7 +568,7 @@ void CoarsenSchedule::generateScheduleDLBG()
        * local_temp_mapped_boxes are the local source mapped_boxes that
        * contribute data to coarse_mapped_box.
        */
-      const MappedBox& coarse_mapped_box = ei->first;
+      const hier::Box& coarse_mapped_box = ei->first;
       const hier::MappedBoxSet& local_temp_mapped_boxes = ei->second;
       TBOX_ASSERT(!coarse_mapped_box.isPeriodicImage());
 
@@ -579,7 +579,7 @@ void CoarsenSchedule::generateScheduleDLBG()
       for (hier::MappedBoxSet::const_iterator ni =
               local_temp_mapped_boxes.begin();
            ni != local_temp_mapped_boxes.end(); ++ni) {
-         const MappedBox& temp_mapped_box = *ni;
+         const hier::Box& temp_mapped_box = *ni;
          if (temp_mapped_box.getOwnerRank() ==
              coarse_mapped_box.getOwnerRank()) {
             /*
@@ -605,13 +605,13 @@ void CoarsenSchedule::generateScheduleDLBG()
         ei != coarse_eto_temp.end(); ++ei) {
 
       const hier::MappedBoxId& dst_gid = ei->first;
-      const MappedBox& dst_mapped_box =
+      const hier::Box& dst_mapped_box =
          *coarse_mapped_box_level.getMappedBoxStrict(dst_gid);
 
       const hier::MappedBoxSet& src_mapped_boxes = ei->second;
       for (hier::MappedBoxSet::const_iterator ni = src_mapped_boxes.begin();
            ni != src_mapped_boxes.end(); ++ni) {
-         const MappedBox& src_mapped_box = *ni;
+         const hier::Box& src_mapped_box = *ni;
 
          constructScheduleTransactions(d_crse_level,
             dst_mapped_box,
@@ -658,17 +658,17 @@ void CoarsenSchedule::restructureNeighborhoodSetsByDstNodes(
     * These are the counterparts to shifted dst mapped_boxes and unshifted src
     * mapped_boxes.
     */
-   MappedBox shifted_mapped_box(dim), unshifted_nabr(dim);
+   hier::Box shifted_mapped_box(dim), unshifted_nabr(dim);
    full_inverted_edges.clear();
    for (hier::NeighborhoodSet::const_iterator ci = edges.begin();
         ci != edges.end();
         ++ci) {
-      const MappedBox& mapped_box =
+      const hier::Box& mapped_box =
          *src_mapped_box_level.getMappedBoxStrict(ci->first);
       const NeighborSet& nabrs = ci->second;
       for (NeighborSet::const_iterator na = nabrs.begin();
            na != nabrs.end(); ++na) {
-         const hier::MappedBox& nabr = *na;
+         const hier::Box& nabr = *na;
          if (nabr.isPeriodicImage()) {
             shifted_mapped_box.initialize(
                mapped_box,
@@ -698,7 +698,7 @@ hier::IntVector CoarsenSchedule::getMaxGhostsToGrow() const
    const tbox::Dimension& dim(d_crse_level->getDim());
 
    /*
-    * MappedBox, face and side elements of adjacent cells overlap even though
+    * Box, face and side elements of adjacent cells overlap even though
     * the cells do not overlap.  Therefore, we always grow at least one
     * cell catch overlaps of mapped_box, face and side elements.
     */
@@ -737,9 +737,9 @@ hier::IntVector CoarsenSchedule::getMaxGhostsToGrow() const
 
 void CoarsenSchedule::constructScheduleTransactions(
    tbox::Pointer<hier::PatchLevel> dst_level,
-   const MappedBox& dst_mapped_box,
+   const hier::Box& dst_mapped_box,
    tbox::Pointer<hier::PatchLevel> src_level,
-   const MappedBox& src_mapped_box)
+   const hier::Box& src_mapped_box)
 {
    TBOX_ASSERT(!dst_level.isNull());
    TBOX_ASSERT(!src_level.isNull());
@@ -760,8 +760,8 @@ void CoarsenSchedule::constructScheduleTransactions(
    tbox::Pointer<hier::PatchDescriptor> src_patch_descriptor =
       src_level->getPatchDescriptor();
 
-   const hier::Box& dst_box = dst_mapped_box.getBox();
-   const hier::Box& src_box = src_mapped_box.getBox();
+   const hier::Box& dst_box = dst_mapped_box;
+   const hier::Box& src_box = src_mapped_box;
 
    const int num_equiv_classes =
       d_coarsen_classes->getNumberOfEquivalenceClasses();
@@ -774,8 +774,8 @@ void CoarsenSchedule::constructScheduleTransactions(
     */
    hier::IntVector src_shift(dim, 0);
    hier::IntVector dst_shift(dim, 0);
-   hier::Box unshifted_src_box = src_mapped_box.getBox();
-   hier::Box unshifted_dst_box = dst_mapped_box.getBox();
+   hier::Box unshifted_src_box = src_mapped_box;
+   hier::Box unshifted_dst_box = dst_mapped_box;
    if (src_mapped_box.isPeriodicImage()) {
       TBOX_ASSERT(!dst_mapped_box.isPeriodicImage());
       src_shift = shift_catalog->shiftNumberToShiftDistance(
@@ -812,13 +812,13 @@ void CoarsenSchedule::constructScheduleTransactions(
 
       const hier::Box dst_fill_box(hier::Box::grow(unshifted_dst_box, dst_gcw));
 
-      hier::Box test_mask = dst_fill_box * src_mapped_box.getBox();
+      hier::Box test_mask = dst_fill_box * src_mapped_box;
       if (test_mask.empty() &&
           (dst_gcw == constant_zero_intvector) &&
           dst_pdf->dataLivesOnPatchBorder()) {
          hier::Box tmp_dst_fill_box(
             hier::Box::grow(dst_fill_box, constant_one_intvector));
-         test_mask = tmp_dst_fill_box * src_mapped_box.getBox();
+         test_mask = tmp_dst_fill_box * src_mapped_box;
       }
       hier::Box src_mask = hier::Box::shift(test_mask, -src_shift);
 
@@ -833,7 +833,7 @@ void CoarsenSchedule::constructScheduleTransactions(
          rep_item.d_var_fill_pattern->calculateOverlap(
             *dst_pdf->getBoxGeometry(unshifted_dst_box),
             *src_pdf->getBoxGeometry(unshifted_src_box),
-            dst_mapped_box.getBox(),
+            dst_mapped_box,
             src_mask,
             dst_fill_box,
             true, hier::Transformation(src_shift)));

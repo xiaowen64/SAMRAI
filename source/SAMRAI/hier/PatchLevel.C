@@ -162,7 +162,7 @@ PatchLevel::PatchLevel(
 
    const MappedBoxSet& mapped_boxes = d_mapped_box_level->getMappedBoxes();
    for (RealMappedBoxConstIterator ni(mapped_boxes); ni.isValid(); ++ni) {
-      const MappedBox& mapped_box = *ni;
+      const Box& mapped_box = *ni;
       const MappedBoxId &ip = mapped_box.getId();
       tbox::Pointer<Patch>& patch = d_patches[ip];
       patch = d_factory->allocate(mapped_box, d_descriptor);
@@ -533,7 +533,7 @@ void PatchLevel::setRefinedPatchLevel(
 
    const MappedBoxSet& mapped_boxes = d_mapped_box_level->getMappedBoxes();
    for (RealMappedBoxConstIterator ni(mapped_boxes); ni.isValid(); ++ni) {
-      const MappedBox& mapped_box = *ni;
+      const Box& mapped_box = *ni;
       const MappedBoxId& mapped_box_id = mapped_box.getId();
       d_patches[mapped_box_id] = d_factory->allocate(mapped_box, d_descriptor);
       d_patches[mapped_box_id]->setPatchLevelNumber(d_level_number);
@@ -720,7 +720,7 @@ void PatchLevel::setCoarsenedPatchLevel(
 
    const MappedBoxSet& mapped_boxes = d_mapped_box_level->getMappedBoxes();
    for (RealMappedBoxConstIterator ni(mapped_boxes); ni.isValid(); ++ni) {
-      const MappedBox& mapped_box = *ni;
+      const Box& mapped_box = *ni;
       const MappedBoxId& mapped_box_id = mapped_box.getId();
       d_patches[mapped_box_id] = d_factory->allocate(mapped_box, d_descriptor);
       d_patches[mapped_box_id]->setPatchLevelNumber(d_level_number);
@@ -863,7 +863,7 @@ void PatchLevel::getFromDatabase(
    const MappedBoxSet& mapped_boxes = d_mapped_box_level->getMappedBoxes();
    tbox::Pointer<tbox::Database> patch_database;
    for (RealMappedBoxConstIterator ni(mapped_boxes); ni.isValid(); ++ni) {
-      const MappedBox& mapped_box = *ni;
+      const Box& mapped_box = *ni;
       const LocalId &local_id = mapped_box.getLocalId();
       const MappedBoxId &mapped_box_id = mapped_box.getId();
 
@@ -1032,7 +1032,7 @@ void PatchLevel::initializeGlobalizedMappedBoxLevel() const
            ni.isValid();
            ++ni) {
          d_mapping.setProcessorAssignment(count, ni->getOwnerRank());
-         d_boxes.appendItem(ni->getBox());
+         d_boxes.appendItem(*ni);
          ++count;
       }
 

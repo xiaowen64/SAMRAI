@@ -85,8 +85,8 @@ RefineTimeTransaction::RefineTimeTransaction(
    tbox::Pointer<hier::PatchLevel>& dst_level,
    tbox::Pointer<hier::PatchLevel>& src_level,
    tbox::Pointer<hier::BoxOverlap> overlap,
-   const hier::MappedBox& dst_mapped_box,
-   const hier::MappedBox& src_mapped_box,
+   const hier::Box& dst_mapped_box,
+   const hier::Box& src_mapped_box,
    const hier::Box& box,
    int refine_item_id):
    d_dst_patch(0),
@@ -169,7 +169,7 @@ size_t RefineTimeTransaction::computeOutgoingMessageSize()
 void RefineTimeTransaction::packStream(
    tbox::MessageStream& stream)
 {
-   hier::MappedBox temporary_mapped_box(d_box.getDim());
+   hier::Box temporary_mapped_box(d_box.getDim());
    temporary_mapped_box.initialize(d_box, hier::LocalId(-1), tbox::SAMRAI_MPI::getInvalidRank());
 
    hier::Patch temporary_patch(
@@ -219,7 +219,7 @@ void RefineTimeTransaction::copyLocalData()
 
    } else {
 
-      hier::MappedBox temporary_mapped_box(d_box.getDim());
+      hier::Box temporary_mapped_box(d_box.getDim());
       temporary_mapped_box.initialize(d_box, hier::LocalId(-1), tbox::SAMRAI_MPI::getInvalidRank());
 
       hier::Patch temporary_patch(

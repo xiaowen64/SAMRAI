@@ -321,12 +321,10 @@ void ChopAndPackLoadBalancer::loadBalanceMappedBoxLevel(
       hier::MappedBoxLevel::GLOBALIZED);
 
    hier::BoxList in_boxes;
-   globalized_input_mapped_box_level.getGlobalMappedBoxes().convertToBoxList(
-      in_boxes);
+   globalized_input_mapped_box_level.getGlobalBoxes(in_boxes);
 
    hier::BoxList physical_domain(d_dim);
-   domain_mapped_box_level.getGlobalMappedBoxes().convertToBoxList(
-      physical_domain);
+   domain_mapped_box_level.getGlobalBoxes(physical_domain);
 
    hier::BoxList out_boxes(d_dim);
    hier::ProcessorMapping mapping;
@@ -352,7 +350,7 @@ void ChopAndPackLoadBalancer::loadBalanceMappedBoxLevel(
       hier::MappedBoxLevel::GLOBALIZED);
    int i = 0;
    for (hier::BoxList::Iterator itr(out_boxes); itr; itr++, ++i) {
-      hier::MappedBox node(*itr, hier::LocalId(i),
+      hier::Box node(*itr, hier::LocalId(i),
                            mapping.getProcessorAssignment(i));
       balance_mapped_box_level.addMappedBox(node);
    }
@@ -879,7 +877,7 @@ void ChopAndPackLoadBalancer::chopBoxesWithNonuniformWorkload(
          hier::MappedBoxLevel::GLOBALIZED));
    idx = 0;
    for (hier::BoxList::Iterator i(tmp_level_boxes); i; i++, ++idx) {
-      hier::MappedBox node(*i, hier::LocalId(idx),
+      hier::Box node(*i, hier::LocalId(idx),
                            tmp_level_mapping.getProcessorAssignment(idx));
       tmp_mapped_box_level->addMappedBox(node);
    }

@@ -162,7 +162,7 @@ void PatchLevel::getBoxes(BoxList& boxes, const BlockId& block_id) const
 
    for (MappedBoxSetSingleBlockIterator gi(global_mapped_boxes, block_id);
         gi.isValid(); gi++) {
-      boxes.appendItem(gi->getBox());
+      boxes.appendItem(*gi);
    }
 }
 

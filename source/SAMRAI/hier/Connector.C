@@ -245,7 +245,7 @@ void Connector::insertNeighbors(
  ***********************************************************************
  */
 void Connector::eraseNeighbor(
-   const MappedBox& neighbor,
+   const Box& neighbor,
    const MappedBoxId& mapped_box_id)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
@@ -411,7 +411,7 @@ void Connector::acquireRemoteNeighborhoods_pack(
    const int mesg_size =
       1             /* number of local mapped_boxes with neighbor lists */
       + 3 * num_mapped_boxes /* local index, block id, and neighbor list size of each mapped_box */
-      + num_nabrs * MappedBox::commBufferSize(dim) /* neighbors */
+      + num_nabrs * Box::commBufferSize(dim) /* neighbors */
    ;
 
    send_mesg.resize(mesg_size, BAD_INT);
@@ -431,7 +431,7 @@ void Connector::acquireRemoteNeighborhoods_pack(
       for (NeighborSet::const_iterator ni = nabrs.begin();
            ni != nabrs.end(); ++ni) {
          (*ni).putToIntBuffer(&send_mesg[imesg]);
-         imesg += MappedBox::commBufferSize(dim);
+         imesg += Box::commBufferSize(dim);
       }
 
    }
@@ -453,7 +453,7 @@ void Connector::acquireRemoteNeighborhoods_unpack(
    /*
     * Unpack relationship info from recv_mesg into d_relationships.
     */
-   int mapped_box_com_buf_size = MappedBox::commBufferSize(dim);
+   int mapped_box_com_buf_size = Box::commBufferSize(dim);
 
    d_global_relationships = d_relationships;
 
@@ -472,7 +472,7 @@ void Connector::acquireRemoteNeighborhoods_unpack(
             const MappedBoxId mapped_box_id(local_id, n, block_id);
 
             NeighborSet& nabrs = d_global_relationships[mapped_box_id];
-            MappedBox nabr(dim);
+            Box nabr(dim);
             for (int nn = 0; nn < num_nabrs; ++nn) {
                nabr.getFromIntBuffer(ptr);
                nabrs.insert(nabrs.end(), nabr);
@@ -816,12 +816,12 @@ void Connector::initializeToLocalTranspose(
             << "This means that the incoming Connector data was not a\n"
             << "self-consistent local mapping.\n");
       }
-      const MappedBox& my_head_mapped_box = *ni;
+      const Box& my_head_mapped_box = *ni;
 
       const NeighborSet& my_base_subset = ci->second;
       for (NeighborSet::const_iterator na = my_base_subset.begin();
            na != my_base_subset.end(); ++na) {
-         const MappedBox& my_base_mapped_box = *na;
+         const Box& my_base_mapped_box = *na;
          if (my_base_mapped_box.getOwnerRank() != d_rank) {
             TBOX_ERROR(
                "Connector::initializeToLocalTranspose: base mapped_box "
@@ -831,7 +831,7 @@ void Connector::initializeToLocalTranspose(
                << "Mapped_boxes must have only local neighbors in this method.");
          }
          if (my_base_mapped_box.isPeriodicImage()) {
-            MappedBox my_shifted_head_mapped_box(
+            Box my_shifted_head_mapped_box(
                my_head_mapped_box,
                shift_catalog->getOppositeShiftNumber(
                   my_base_mapped_box.getPeriodicId()),
@@ -1111,7 +1111,7 @@ void Connector::recursivePrint(
       << d_ratio << (d_head_coarser ? " (head coarser)" : "") << '\n'
       << border << "Base,head widths   : " << d_base_width << ", "
       << head_gcw << '\n'
-      << border << "MappedBox count    : " << getBase().getLocalNumberOfBoxes()
+      << border << "Box count    : " << getBase().getLocalNumberOfBoxes()
       << " (" << relationships.size() << " with neighbor lists)\n"
    ;
    if (detail_depth > 0) {
@@ -1122,7 +1122,7 @@ void Connector::recursivePrint(
          if (ni != getBase().getMappedBoxes().end()) {
             os << border << "  "
                << (*ni) << "_"
-               << (*ni).getBox().numberCells() << '\n';
+               << (*ni).numberCells() << '\n';
          } else {
             os << border << "  #"
                << (*ei).first
@@ -1131,7 +1131,7 @@ void Connector::recursivePrint(
                << "Neighbor data found for mapped_box "
                << (*ei).first << " but there is no such mapped_box!\n");
          }
-         hier::Box ghost_box = (*ni).getBox();
+         hier::Box ghost_box = (*ni);
          ghost_box.grow(d_base_width);
          const NeighborSet& nabrs = (*ei).second;
          os << border << "    Neighbors (" << nabrs.size() << "):"
@@ -1139,7 +1139,7 @@ void Connector::recursivePrint(
          if (detail_depth > 1) {
             NeighborSet::const_iterator i_nabr;
             for (i_nabr = nabrs.begin(); i_nabr != nabrs.end(); ++i_nabr) {
-               hier::Box ovlap = i_nabr->getBox();
+               hier::Box ovlap = *i_nabr;
                if ( ni->getBlockId() != i_nabr->getBlockId() ) {
                   d_base_handle->getMappedBoxLevel().getGridGeometry()->
                      translateBox(
@@ -1153,7 +1153,7 @@ void Connector::recursivePrint(
                ovlap = ovlap * ghost_box;
                os << border << "      "
                   << (*i_nabr) << "_"
-                  << (*i_nabr).getBox().numberCells()
+                  << (*i_nabr).numberCells()
                   << "\tov" << ovlap << "_" << ovlap.numberCells() << '\n';
             }
          }
@@ -1207,9 +1207,9 @@ void Connector::printNeighborStats(
         ni != relationships.end(); ++ni) {
 
       ++sum_nabr_sets;
-      const MappedBox& mapped_box = *getBase().getMappedBoxStrict(ni->first);
-      sum_cells += mapped_box.getBox().size();
-      Box base_ghost_box = mapped_box.getBox();
+      const Box& mapped_box = *getBase().getMappedBoxStrict(ni->first);
+      sum_cells += mapped_box.size();
+      Box base_ghost_box = mapped_box;
       base_ghost_box.grow(d_base_width);
 
       const NeighborSet& nabrs = ni->second;
@@ -1220,9 +1220,9 @@ void Connector::printNeighborStats(
       for (NeighborSet::const_iterator na = nabrs.begin();
            na != nabrs.end(); ++na) {
 
-         const MappedBox& nabr = *na;
+         const Box& nabr = *na;
 
-         Box head_box = nabr.getBox();
+         Box head_box = nabr;
          if (d_head_coarser) {
             head_box.refine(d_ratio);
          } else {
@@ -1496,8 +1496,8 @@ size_t Connector::checkTransposeCorrectness(
     */
    const NeighborhoodSet& this_relationships = getNeighborhoodSets();
 
-   MappedBox shifted_mapped_box(dim);   // Shifted version of an unshifted MappedBox.
-   MappedBox unshifted_mapped_box(dim); // Unhifted version of a shifted MappedBox.
+   Box shifted_mapped_box(dim);   // Shifted version of an unshifted Box.
+   Box unshifted_mapped_box(dim); // Unhifted version of a shifted Box.
 
    size_t err_count = 0;
 
@@ -1505,7 +1505,7 @@ size_t Connector::checkTransposeCorrectness(
         ci != this_relationships.end(); ++ci) {
 
       const MappedBoxId& mapped_box_id = ci->first;
-      const MappedBox& mapped_box = *getBase().getMappedBox(mapped_box_id);
+      const Box& mapped_box = *getBase().getMappedBox(mapped_box_id);
 
       size_t err_count_for_current_index = 0;
 
@@ -1518,7 +1518,7 @@ size_t Connector::checkTransposeCorrectness(
             continue;
          }
 
-         const MappedBox& nabr = *ni;
+         const Box& nabr = *ni;
 
          const NeighborhoodSet& tran_relationships = transpose->getGlobalNeighborhoodSets();
 
@@ -1608,12 +1608,12 @@ size_t Connector::checkTransposeCorrectness(
       if (!head.hasMappedBox(mapped_box_id)) {
          TBOX_ASSERT(head.hasMappedBox(mapped_box_id));
       }
-      const MappedBox& head_mapped_box = *head.getMappedBoxStrict(mapped_box_id);
+      const Box& head_mapped_box = *head.getMappedBoxStrict(mapped_box_id);
 
       for (NeighborSet::const_iterator na = nabrs.begin();
            na != nabrs.end(); ++na) {
 
-         const MappedBox nabr = *na;
+         const Box nabr = *na;
 
          if (nabr.getOwnerRank() == d_rank) {
 
@@ -1637,7 +1637,7 @@ size_t Connector::checkTransposeCorrectness(
                continue;
             }
 
-            const MappedBox& base_mapped_box = *getBase().getMappedBoxStrict(
+            const Box& base_mapped_box = *getBase().getMappedBoxStrict(
                   nabr);
 
             /*
@@ -1669,7 +1669,7 @@ size_t Connector::checkTransposeCorrectness(
 
             const NeighborSet& nabr_nabrs = nabr_nabrs_->second;
 
-            const MappedBox nabr_nabr(dim, mapped_box_id.getGlobalId(),
+            const Box nabr_nabr(dim, mapped_box_id.getGlobalId(),
                                       head_mapped_box.getBlockId(),
                                       shift_catalog->getOppositeShiftNumber(
                                          base_mapped_box.getPeriodicId()));
@@ -1802,7 +1802,7 @@ void Connector::computeNeighborhoodDifferences(
             anabrs.end(),
             bnabrs.begin(),
             bnabrs.end(),
-            ii);
+            ii, Box::id_less());
          if (diff.empty()) {
             drelationships.erase(mapped_box_id);
          }
@@ -1880,8 +1880,8 @@ size_t Connector::checkConsistencyWithHead(
       for (NeighborSet::const_iterator na = nabrs.begin();
            na != nabrs.end(); ++na) {
 
-         const MappedBox& nabr = *na;
-         const MappedBox unshifted_nabr(
+         const Box& nabr = *na;
+         const Box unshifted_nabr(
             nabr, PeriodicId::zero(), head_mapped_box_level.getRefinementRatio());
 
          MappedBoxSet::const_iterator na_in_head =
@@ -1901,9 +1901,9 @@ size_t Connector::checkConsistencyWithHead(
             continue;
          }
 
-         const MappedBox& nabr_in_head = *na_in_head;
-         if (unshifted_nabr != nabr_in_head ||
-             unshifted_nabr.getBox() != nabr_in_head.getBox()) {
+         const Box& nabr_in_head = *na_in_head;
+         if (! unshifted_nabr.isIdEqual(nabr_in_head) ||
+             !unshifted_nabr.isSpatiallyEqual(nabr_in_head)) {
             tbox::perr << "\nConnector::checkConsistencyWithHead:\n"
                        << "Inconsistent mapped_box data at mapped_box "
                        << mapped_box_id << "\n"
@@ -1918,6 +1918,21 @@ size_t Connector::checkConsistencyWithHead(
    }
 
    return number_of_inconsistencies;
+}
+
+/*
+ ***************************************************************************
+ ***************************************************************************
+ */
+void Connector::getNeighborBoxes(
+   const MappedBoxId& mapped_box_id,
+   BoxList& nbr_boxes) const
+{
+   const NeighborSet& nbr_mapped_boxes = getNeighborSet(mapped_box_id);
+   for (NeighborSet::const_iterator ni = nbr_mapped_boxes.begin();
+        ni != nbr_mapped_boxes.end(); ni++) {
+      nbr_boxes.appendItem(*ni);
+   }
 }
 
 /*

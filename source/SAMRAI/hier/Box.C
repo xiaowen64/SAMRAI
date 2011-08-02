@@ -12,6 +12,8 @@
 #define included_hier_Box_C
 
 #include "SAMRAI/hier/Box.h"
+#include "SAMRAI/hier/MappedBoxId.h"
+#include "SAMRAI/hier/PeriodicShiftCatalog.h"
 #include "SAMRAI/tbox/Utilities.h"
 #include "SAMRAI/tbox/StartupShutdownManager.h"
 
@@ -32,6 +34,174 @@ Box::s_initialize_finalize_handler(
    0,
    Box::finalizeCallback,
    tbox::StartupShutdownManager::priorityListElements);
+
+#ifdef BOX_TELEMETRY
+// These are to optionally track the cumulative number of Boxes constructed,
+// the cumulative number of Box assignments, and the high water mark of
+// Boxes in existance at any given time.
+int Box::s_cumulative_constructed_ct = 0;
+
+int Box::s_cumulative_assigned_ct = 0;
+
+int Box::s_active_ct = 0;
+
+int Box::s_high_water = 0;
+#endif
+/*
+ *********************************************************************************
+ * Construct Box from the components of a reference MappedBox
+ * and possibly changing the periodic shift.
+ *
+ * This method is not inlined because constructing a periodic-shifted
+ * Box from another (possibly shifted) Box is more involved
+ * and less frequently used.
+ *********************************************************************************
+ */
+Box::Box(
+   const Box& other,
+   const PeriodicId &periodic_id,
+   const IntVector& refinement_ratio) :
+   d_lo(other.d_lo),
+   d_hi(other.d_hi),
+   d_id(other.getLocalId(), other.getOwnerRank(), other.getBlockId(), 
+      periodic_id)
+{
+   TBOX_DIM_ASSERT_CHECK_ARGS3(*this, other, refinement_ratio);
+#if BOX_TELEMETRY
+   // Increment the cumulative constructed count, active mapped box count and
+   // reset the high water mark of active mapped boxes if necessary.
+   ++s_cumulative_constructed_ct;
+   ++s_active_ct;
+   if (s_active_ct > s_high_water) {
+      s_high_water = s_active_ct;
+   }
+#endif
+
+   const tbox::Dimension& dim(d_lo.getDim());
+
+   const PeriodicShiftCatalog* shift_catalog =
+      PeriodicShiftCatalog::getCatalog(dim);
+
+   TBOX_ASSERT(periodic_id.isValid());
+   TBOX_ASSERT(periodic_id.getPeriodicValue() < shift_catalog->getNumberOfShifts());
+
+   if (refinement_ratio > hier::IntVector::getZero(dim)) {
+
+      if (other.getPeriodicId() != shift_catalog->getZeroShiftNumber()) {
+         // Undo the shift that existed in other's Box.
+         shift(-shift_catalog->shiftNumberToShiftDistance(other.
+               getPeriodicId())
+            * refinement_ratio);
+      }
+
+      if (periodic_id != shift_catalog->getZeroShiftNumber()) {
+         // Apply the shift for this Box.
+         shift(shift_catalog->shiftNumberToShiftDistance(periodic_id)
+            * refinement_ratio);
+      }
+
+   } else if (refinement_ratio < hier::IntVector::getZero(dim)) {
+
+      if (other.getPeriodicId() != shift_catalog->getZeroShiftNumber()) {
+         // Undo the shift that existed in other's Box.
+         shift(shift_catalog->shiftNumberToShiftDistance(other.getPeriodicId())
+            / refinement_ratio);
+      }
+
+      if (periodic_id != shift_catalog->getZeroShiftNumber()) {
+         // Apply the shift for this Box.
+         shift(-shift_catalog->shiftNumberToShiftDistance(periodic_id)
+            / refinement_ratio);
+      }
+
+   } else {
+
+      TBOX_ERROR(
+         "Box::Box: Invalid refinement ratio "
+         << refinement_ratio
+         <<
+         "\nRefinement ratio must be completely positive or negative.");
+
+   }
+}
+
+
+/*
+ *********************************************************************************
+ * Construct Box from a reference Box and possibly
+ * changing the periodic shift.
+ *
+ * This method is not inlined because initializing a periodic-shifted
+ * Box from another (possibly shifted) Box is more involved
+ * and less frequently used.
+ *
+ * We inititalize d_id last so that we can support inititalizing an
+ * object from a reference to itself.
+ *********************************************************************************
+ */
+void Box::initialize(
+   const Box& other,
+   const PeriodicId &periodic_id,
+   const IntVector& refinement_ratio)
+{
+   TBOX_DIM_ASSERT_CHECK_ARGS3(*this, other, refinement_ratio);
+
+   const tbox::Dimension& dim(d_lo.getDim());
+
+   const PeriodicShiftCatalog* shift_catalog =
+      PeriodicShiftCatalog::getCatalog(dim);
+
+   TBOX_ASSERT(periodic_id.isValid());
+   TBOX_ASSERT(periodic_id.getPeriodicValue() < shift_catalog->getNumberOfShifts());
+
+   d_lo = other.d_lo;
+   d_hi = other.d_hi;
+
+   if (refinement_ratio > hier::IntVector::getZero(dim)) {
+
+      if (other.getPeriodicId() != shift_catalog->getZeroShiftNumber()) {
+         // Undo the shift that existed in r's Box.
+         shift(-shift_catalog->shiftNumberToShiftDistance(other.
+               getPeriodicId())
+            * refinement_ratio);
+      }
+
+      if (periodic_id != shift_catalog->getZeroShiftNumber()) {
+         // Apply the shift for this Box.
+         shift(shift_catalog->shiftNumberToShiftDistance(periodic_id)
+            * refinement_ratio);
+      }
+
+   } else if (refinement_ratio < hier::IntVector::getZero(dim)) {
+
+      if (other.getPeriodicId() != shift_catalog->getZeroShiftNumber()) {
+         // Undo the shift that existed in r's Box.
+         shift(shift_catalog->shiftNumberToShiftDistance(other.getPeriodicId())
+            / refinement_ratio);
+      }
+
+      if (periodic_id != shift_catalog->getZeroShiftNumber()) {
+         // Apply the shift for this Box.
+         shift(-shift_catalog->shiftNumberToShiftDistance(periodic_id)
+            / refinement_ratio);
+      }
+
+   } else {
+
+      TBOX_ERROR(
+         "Box::initialize: Invalid refinement ratio "
+         << refinement_ratio
+         <<
+         "\nRefinement ratio must be completely positive or negative.");
+
+   }
+
+   d_id.initialize(
+      other.getLocalId(), other.getOwnerRank(), 
+      other.getBlockId(), periodic_id);
+}
+
+
 
 /*
  *************************************************************************
@@ -120,7 +290,7 @@ std::ostream& operator << (
    if (box.empty()) {
       s << "[(),()]";
    } else {
-      s << '[' << box.lower() << ',' << box.upper() << ']';
+      s << box.getId() << " [" << box.lower() << "," << box.upper() << "]";
    }
    return s;
 }

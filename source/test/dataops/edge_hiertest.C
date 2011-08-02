@@ -140,11 +140,11 @@ int main(
       for (int ib = 0; ib < n_coarse_boxes; ib++, coarse_itr++) {
          if (nproc > 1) {
             if (ib == layer0.getRank()) {
-               layer0.addMappedBox(hier::MappedBox(*coarse_itr, hier::LocalId(ib),
+               layer0.addMappedBox(hier::Box(*coarse_itr, hier::LocalId(ib),
                      layer0.getRank()));
             }
          } else {
-            layer0.addMappedBox(hier::MappedBox(*coarse_itr, hier::LocalId(ib), 0));
+            layer0.addMappedBox(hier::Box(*coarse_itr, hier::LocalId(ib), 0));
          }
       }
 
@@ -152,11 +152,11 @@ int main(
       for (int ib = 0; ib < n_fine_boxes; ib++, fine_itr++) {
          if (nproc > 1) {
             if (ib == layer1.getRank()) {
-               layer1.addMappedBox(hier::MappedBox(*fine_itr, hier::LocalId(ib),
+               layer1.addMappedBox(hier::Box(*fine_itr, hier::LocalId(ib),
                      layer1.getRank()));
             }
          } else {
-            layer1.addMappedBox(hier::MappedBox(*fine_itr, hier::LocalId(ib), 0));
+            layer1.addMappedBox(hier::Box(*fine_itr, hier::LocalId(ib), 0));
          }
       }
 

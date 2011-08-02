@@ -332,7 +332,7 @@ private:
     * @brief Shorthand for the box-graph node corresponding
     * to boxes.
     */
-   typedef hier::MappedBox MappedBox;
+   typedef hier::Box MappedBox;
 
    //! @brief Shorthand for a container of graph-nodes.
    typedef hier::MappedBoxSet MappedBoxSet;
@@ -952,13 +952,13 @@ private:
     *
     * On the owner process, this belongs in a hier::MappedBoxLevel
     * object.  On contributor nodes, this is used to identify the
-    * MappedBox assigned by the owner.  The MappedBox is important for
+    * Box assigned by the owner.  The Box is important for
     * computing neighbor data.
     */
-   MappedBox d_mapped_box;
+   hier::Box d_mapped_box;
 
    /*!
-    * @brief MappedBox iterator corresponding to an accepted box on
+    * @brief Box iterator corresponding to an accepted box on
     * the owner.
     *
     * This is relevant only on the owner, where the d_mapped_box is

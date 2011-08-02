@@ -24,7 +24,7 @@ PatchFactory::~PatchFactory()
 }
 
 tbox::Pointer<Patch> PatchFactory::allocate(
-   const MappedBox& mapped_box_level_mapped_box,
+   const Box& mapped_box_level_mapped_box,
    tbox::Pointer<PatchDescriptor> descriptor) const
 {
    return tbox::Pointer<Patch>(new Patch(mapped_box_level_mapped_box,

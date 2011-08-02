@@ -179,7 +179,7 @@ void ArrayDataOperationUtilities<TYPE, OP>::doArrayDataBufferOperationOnBox(
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(arraydata, opbox);
    TBOX_ASSERT(buffer != (const TYPE *)NULL);
-   TBOX_ASSERT(opbox == (opbox * arraydata.getBox()));
+   TBOX_ASSERT(opbox.isSpatiallyEqual((opbox * arraydata.getBox())));
 
    const tbox::Dimension& dim(arraydata.getDim());
 

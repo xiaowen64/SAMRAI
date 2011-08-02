@@ -568,7 +568,8 @@ class BoxContainer
       removeIntersections(
          const BlockId &block_id,
          const IntVector &refinement_ratio,
-         const MultiblockMappedBoxTree& takeaway);
+         const MultiblockMappedBoxTree& takeaway,
+         bool include_singularity_block_neighbors = false);
 #endif
 
       /*!
@@ -650,7 +651,8 @@ class BoxContainer
       intersectBoxes(
          const BlockId &block_id,
          const IntVector &refinement_ratio,
-         const MultiblockMappedBoxTree& keep);
+         const MultiblockMappedBoxTree& keep,
+         bool include_singularity_block_neighbors = false);
 #endif
 
 
@@ -697,6 +699,42 @@ private:
          const Box& bursty,
          const Box& solid,
          const int dimension);
+
+      /*!
+       * @brief Break up bursty against solid and adds the pieces to container
+       * starting at location pointed to by itr.
+       *
+       * The bursting is done on dimensions 0 through dimension-1, starting
+       * with lowest dimensions first to try to maintain the canonical
+       * representation for the bursted domains.
+       *
+       * @param[in] bursty
+       * @param[in] solid
+       * @param[in] dimension
+       * @param[in] itr
+       */
+      void
+      burstBoxes(
+         const Box& bursty,
+         const Box& solid,
+         const int dimension,
+         Iterator &itr);
+      /*!
+       * @brief Remove from each box in the sublist of this container defined
+       * by sublist_start and sublist_end portions intersecting takeaway.
+       *
+       * @param[in] takeaway
+       * @param[in] sublist_start
+       * @param[in] sublist_end
+       * @param[in] insertion_pt Where to put new boxes created by this
+       * operation.
+       */
+      void
+      removeIntersectionsFromSublist(
+         const Box& takeaway,
+         Iterator& sublist_start,
+         Iterator& sublist_end,
+         Iterator& insertion_pt);
 
       /*
        * The dimemsion of each box in the container.

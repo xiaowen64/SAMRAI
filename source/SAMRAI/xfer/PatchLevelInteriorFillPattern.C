@@ -12,7 +12,7 @@
 #define included_xfer_PatchLevelInteriorFillPattern_C
 
 #include "SAMRAI/xfer/PatchLevelInteriorFillPattern.h"
-#include "SAMRAI/hier/MappedBox.h"
+#include "SAMRAI/hier/Box.h"
 #include "SAMRAI/tbox/MathUtilities.h"
 
 #ifndef SAMRAI_INLINE
@@ -87,7 +87,7 @@ void PatchLevelInteriorFillPattern::computeFillMappedBoxesAndNeighborhoodSets(
    for (hier::MappedBoxSet::const_iterator ni = dst_mapped_boxes.begin();
         ni != dst_mapped_boxes.end(); ++ni) {
       const hier::MappedBoxId& gid = ni->getId();
-      const hier::MappedBox& dst_mapped_box =
+      const hier::Box& dst_mapped_box =
          *dst_mapped_box_level.getMappedBox(gid);
       fill_mapped_boxes.insert(fill_mapped_boxes.end(), dst_mapped_box);
       dst_to_fill_edges[gid].insert(dst_mapped_box);

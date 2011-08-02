@@ -392,23 +392,33 @@ bool BoxContainer::boxesIntersect() const
 void BoxContainer::removeIntersections(
    const Box& takeaway)
 {
-   BoxContainer fragments(d_dim);
-   while (!isEmpty()) {
-      Box tryme = front();
-      popFront();
-      if ((tryme * takeaway).empty()) {
-         fragments.pushBack(tryme);
+   if (isEmpty()) {
+      return;
+   }
+
+   const unsigned short dim = takeaway.getDim().getValue();
+   Iterator insertion_pt(*this);
+   while (insertion_pt) {
+      Box &tryme = *insertion_pt;
+      if (!tryme.intersects(takeaway)) {
+         insertion_pt++;
       }
       else {
-         fragments.burstBoxes(tryme, takeaway, takeaway.getDim().getValue());
+         Iterator tmp = insertion_pt;
+         burstBoxes(tryme, takeaway, dim, insertion_pt);
+         insertion_pt++;
+         erase(tmp);
       }
    }
-   spliceFront(fragments);
 }
 
 void BoxContainer::removeIntersections(
    const BoxContainer& takeaway)
 {
+   if (isEmpty()) {
+      return;
+   }
+
    for (ConstIterator remove(takeaway); remove; remove++) {
       const Box& byebye = remove();
       removeIntersections(byebye);
@@ -422,27 +432,30 @@ void BoxContainer::removeIntersections(
       return;
    }
 
-   // Parts of the container not intersecting "takeaway"
-   BoxContainer old_boxes(*this);
-   clear();
-
-   std::vector<MappedBox> overlap_mapped_boxes;
-   for (ConstIterator itr(old_boxes); itr; itr++) {
+   std::vector<const Box*> overlap_mapped_boxes;
+   Iterator itr(*this);
+   while (itr) {
       const Box& tryme = *itr;
       takeaway.findOverlapMappedBoxes(overlap_mapped_boxes, tryme);
       if (overlap_mapped_boxes.empty()) {
-         pushBack(tryme);
+         itr++;
       }
       else {
-         // Remove overlap_mapped_boxes from tryme and save leftovers.
-         BoxContainer leftover(tryme);
+         Iterator sublist_start = itr;
+         Iterator sublist_end = sublist_start;
+         sublist_end++;
          for (size_t i = 0;
-              i < overlap_mapped_boxes.size() && !leftover.isEmpty();
+              i < overlap_mapped_boxes.size() && sublist_start != sublist_end;
               ++i) {
-            leftover.removeIntersections(overlap_mapped_boxes[i].getBox());
+            Iterator insertion_pt = sublist_start;
+            removeIntersectionsFromSublist(
+               *overlap_mapped_boxes[i],
+               sublist_start,
+               sublist_end,
+               insertion_pt);
          }
-         spliceBack(leftover);
          overlap_mapped_boxes.clear();
+         itr = sublist_end;
       }
    }
 }
@@ -451,7 +464,8 @@ void BoxContainer::removeIntersections(
 void BoxContainer::removeIntersections(
    const BlockId &block_id,
    const IntVector &refinement_ratio,
-   const MultiblockMappedBoxTree& takeaway)
+   const MultiblockMappedBoxTree& takeaway,
+   bool include_singularity_block_neighbors)
 {
    if (isEmpty()) {
       return;
@@ -460,35 +474,49 @@ void BoxContainer::removeIntersections(
    const tbox::ConstPointer<hier::GridGeometry>
       &grid_geometry(takeaway.getGridGeometry());
 
-   // Parts of the container not intersecting "takeaway"
-   BoxContainer old_boxes(*this);
-   clear();
-
-   std::vector<MappedBox> overlap_mapped_boxes;
-   for (ConstIterator itr(old_boxes); itr; itr++) {
+   std::vector<const Box*> overlap_mapped_boxes;
+   Iterator itr(*this);
+   while (itr) {
       const Box& tryme = *itr;
       takeaway.findOverlapMappedBoxes(overlap_mapped_boxes,
                                       tryme,
                                       block_id,
-                                      refinement_ratio);
+                                      refinement_ratio,
+                                      include_singularity_block_neighbors);
       if (overlap_mapped_boxes.empty()) {
-         pushBack(tryme);
+         itr++;
       } else {
-         // Remove overlap_mapped_boxes from tryme and save leftovers.
-         BoxContainer leftover(tryme);
+         Iterator sublist_start = itr;
+         Iterator sublist_end = sublist_start;
+         sublist_end++;
          for (size_t i = 0;
-              i < overlap_mapped_boxes.size() && !leftover.isEmpty();
+              i < overlap_mapped_boxes.size() && sublist_start != sublist_end;
               ++i) {
-            if ( overlap_mapped_boxes[i].getBlockId() != block_id ) {
-               grid_geometry->translateBox( overlap_mapped_boxes[i].getBox(),
+            Iterator insertion_pt = sublist_start;
+            const BlockId &overlap_box_block_id =
+               overlap_mapped_boxes[i]->getBlockId();
+            if ( overlap_box_block_id != block_id ) {
+               Box overlap_box = *overlap_mapped_boxes[i];
+               grid_geometry->translateBox( overlap_box,
                                             refinement_ratio,
                                             block_id,
-                                            overlap_mapped_boxes[i].getBlockId() );
+                                            overlap_box_block_id );
+               removeIntersectionsFromSublist(
+                  overlap_box,
+                  sublist_start,
+                  sublist_end,
+                  insertion_pt);
             }
-            leftover.removeIntersections(overlap_mapped_boxes[i].getBox());
+            else {
+               removeIntersectionsFromSublist(
+                  *overlap_mapped_boxes[i],
+                  sublist_start,
+                  sublist_end,
+                  insertion_pt);
+            }
          }
-         spliceBack(leftover);
          overlap_mapped_boxes.clear();
+         itr = sublist_end;
       }
    }
 }
@@ -507,13 +535,39 @@ void BoxContainer::removeIntersections(
     */
    TBOX_ASSERT(isEmpty());
 
-   if (!(box * takeaway).empty()) {
+   if (box.intersects(takeaway)) {
       burstBoxes(box, takeaway, box.getDim().getValue());
    }
    else {
       pushBack(box);
    }
 
+}
+
+void BoxContainer::removeIntersectionsFromSublist(
+   const Box& takeaway,
+   Iterator& sublist_start,
+   Iterator& sublist_end,
+   Iterator& insertion_pt)
+{
+   const unsigned short dim = takeaway.getDim().getValue();
+   Iterator itr = sublist_start;
+   while (itr != sublist_end) {
+      Box &tryme = *itr;
+      if (!tryme.intersects(takeaway)) {
+         itr++;
+      }
+      else {
+         burstBoxes(tryme, takeaway, dim, insertion_pt);
+         Iterator tmp = itr;
+         itr++;
+         if (tmp == sublist_start) {
+            sublist_start++;
+         }
+         erase(tmp);
+      }
+      insertion_pt = itr;
+   }
 }
 
 /*
@@ -527,33 +581,49 @@ void BoxContainer::removeIntersections(
 void BoxContainer::intersectBoxes(
    const Box& keep)
 {
-   BoxContainer intersection(d_dim);
-   while (!isEmpty()) {
-      Box tryme = front();
-      popFront();
-      Box overlap = tryme * keep;
+   if (isEmpty()) {
+      return;
+   }
+
+   Iterator i(*this);
+   Box overlap(i().getDim());
+   while (i) {
+      Box &tryMe = *i;
+      tryMe.intersect(keep, overlap);
       if (!overlap.empty()) {
-         intersection.pushBack(overlap);
+         tryMe = overlap;
+         i++;
+      }
+      else {
+         Iterator tmp = i;
+         i++;
+         erase(tmp);
       }
    }
-   spliceFront(intersection);
 }
 
 void BoxContainer::intersectBoxes(
    const BoxContainer& keep)
 {
-   BoxContainer intersection(d_dim);
-   while (!isEmpty()) {
-      Box tryme = front();
-      popFront();
+   if (isEmpty()) {
+      return;
+   }
+
+   Iterator insertion_pt(*this);
+   Box overlap(insertion_pt().getDim());
+   while (insertion_pt) {
+      Iterator tmp = insertion_pt;
+      const Box &tryme = *insertion_pt;
       for (ConstIterator i(keep); i; i++) {
-         Box overlap = tryme * i();
+         tryme.intersect(i(), overlap);
          if (!overlap.empty()) {
-            intersection.pushBack(overlap);
+            insertAfter(insertion_pt, overlap);
+            insertion_pt++;
          }
       }
+      insertion_pt++;
+      erase(tmp);
    }
-   spliceFront(intersection);
 }
 
 void BoxContainer::intersectBoxes(
@@ -563,20 +633,25 @@ void BoxContainer::intersectBoxes(
       return;
    }
 
-   // Parts of the container intersecting "keep"
-   BoxContainer old_boxes(*this);
-   clear();
-
-   std::vector<MappedBox> overlap_mapped_boxes;
-   for (ConstIterator itr(old_boxes); itr; itr++) {
+   std::vector<const Box*> overlap_mapped_boxes;
+   Box overlap(front().getDim());
+   Iterator itr(*this);
+   Iterator insertion_pt = itr;
+   while (itr) {
       const Box& tryme = *itr;
       keep.findOverlapMappedBoxes(overlap_mapped_boxes, tryme);
       for (size_t i = 0; i < overlap_mapped_boxes.size(); ++i) {
-         BoxContainer tryme_burst(tryme);
-         tryme_burst.intersectBoxes(overlap_mapped_boxes[i].getBox());
-         spliceBack(tryme_burst);
+         tryme.intersect(*overlap_mapped_boxes[i], overlap);
+         if (!overlap.empty()) {
+            insertAfter(insertion_pt, overlap);
+            insertion_pt++;
+         }
       }
       overlap_mapped_boxes.clear();
+      Iterator tmp = itr;
+      insertion_pt++;
+      itr = insertion_pt;
+      erase(tmp);
    }
 }
 
@@ -584,7 +659,8 @@ void BoxContainer::intersectBoxes(
 void BoxContainer::intersectBoxes(
    const BlockId &block_id,
    const IntVector &refinement_ratio,
-   const MultiblockMappedBoxTree& keep)
+   const MultiblockMappedBoxTree& keep,
+   bool include_singularity_block_neighbors)
 {
    if (isEmpty()) {
       return;
@@ -593,29 +669,45 @@ void BoxContainer::intersectBoxes(
    const tbox::ConstPointer<hier::GridGeometry>
       &grid_geometry(keep.getGridGeometry());
 
-   // Parts of the container intersecting "keep"
-   BoxContainer old_boxes(*this);
-   clear();
-
-   std::vector<MappedBox> overlap_mapped_boxes;
-   for (ConstIterator itr(old_boxes); itr; itr++) {
+   std::vector<const Box*> overlap_mapped_boxes;
+   Box overlap(front().getDim());
+   Iterator itr(*this);
+   Iterator insertion_pt = itr;
+   while (itr) {
       const Box& tryme = *itr;
       keep.findOverlapMappedBoxes(overlap_mapped_boxes,
                                   tryme,
                                   block_id,
-                                  refinement_ratio);
+                                  refinement_ratio,
+                                  include_singularity_block_neighbors);
       for (size_t i = 0; i < overlap_mapped_boxes.size(); ++i) {
-         BoxContainer tryme_burst(tryme);
-         if ( overlap_mapped_boxes[i].getBlockId() != block_id ) {
-            grid_geometry->translateBox( overlap_mapped_boxes[i].getBox(),
+         const BlockId &overlap_box_block_id =
+            overlap_mapped_boxes[i]->getBlockId();
+         if ( overlap_box_block_id != block_id ) {
+            Box overlap_box = *overlap_mapped_boxes[i];
+            grid_geometry->translateBox( overlap_box,
                                          refinement_ratio,
                                          block_id,
-                                         overlap_mapped_boxes[i].getBlockId() );
+                                         overlap_box_block_id );
+            tryme.intersect(overlap_box, overlap);
+            if (!overlap.empty()) {
+               insertAfter(insertion_pt, overlap);
+               insertion_pt++;
+            }
          }
-         tryme_burst.intersectBoxes(overlap_mapped_boxes[i].getBox());
-         spliceBack(tryme_burst);
+         else {
+            tryme.intersect(*overlap_mapped_boxes[i], overlap);
+            if (!overlap.empty()) {
+               insertAfter(insertion_pt, overlap);
+               insertion_pt++;
+            }
+         }
       }
       overlap_mapped_boxes.clear();
+      Iterator tmp = itr;
+      insertion_pt++;
+      itr = insertion_pt;
+      erase(tmp);
    }
 }
 #endif
@@ -696,6 +788,53 @@ void BoxContainer::burstBoxes(
          newh(d) = solidl(d) - 1;
          pushBack(Box(burstl, newh));
          burstl(d) = solidl(d);
+      }
+   }
+}
+
+/*
+ *************************************************************************
+ *                                                                       *
+ * Break up box bursty against box solid and adds the pieces to          *
+ * container starting at the location pointed to by the supplied         *
+ * iterator.  The bursting is done on dimensions 0 through dimension-1,  *
+ * starting with lowest dimensions first to try to maintain the          *
+ * canonical representation for the bursted domains.                     *
+ *                                                                       *
+ *************************************************************************
+ */
+void BoxContainer::burstBoxes(
+   const Box& bursty,
+   const Box& solid,
+   const int dimension,
+   Iterator &insertion_pt)
+{
+   TBOX_DIM_ASSERT_CHECK_ARGS2(bursty, solid);
+   TBOX_ASSERT(dimension <= bursty.getDim().getValue());
+
+   // Set up the lower and upper bounds of the regions for ease of access
+
+   Index burstl = bursty.lower();
+   Index bursth = bursty.upper();
+   const Index& solidl = solid.lower();
+   const Index& solidh = solid.upper();
+
+   // Break bursty region against solid region along low dimensions first
+
+   for (int d = 0; d < dimension; d++) {
+      if (bursth(d) > solidh(d)) {
+         Index newl = burstl;
+         newl(d) = solidh(d) + 1;
+         insertAfter(insertion_pt, Box(newl, bursth));
+         bursth(d) = solidh(d);
+         insertion_pt++;
+      }
+      if (burstl(d) < solidl(d)) {
+         Index newh = bursth;
+         newh(d) = solidl(d) - 1;
+         insertAfter(insertion_pt, Box(burstl, newh));
+         burstl(d) = solidl(d);
+         insertion_pt++;
       }
    }
 }

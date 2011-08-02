@@ -35,7 +35,7 @@
 #include "SAMRAI/math/HierarchyDataOpsManager.h"
 #include "SAMRAI/math/HierarchyFaceDataOpsReal.h"
 #include "SAMRAI/math/HierarchyNodeDataOpsReal.h"
-#include "SAMRAI/hier/MappedBox.h"
+#include "SAMRAI/hier/Box.h"
 #include "SAMRAI/hier/Index.h"
 #include "SAMRAI/hier/IntVector.h"
 #include "SAMRAI/pdat/NodeData.h"
@@ -174,7 +174,7 @@ int main(
       hier::BoxList::Iterator coarse_domain_itr(coarse_domain);
       for (int ib = 0; ib < n_coarse_boxes; ib++, coarse_domain_itr++) {
          if (ib % nproc == layer0.getRank()) {
-            layer0.addMappedBox(hier::MappedBox(*coarse_domain_itr,
+            layer0.addMappedBox(hier::Box(*coarse_domain_itr,
                                                 hier::LocalId(ib),
                                                 layer0.getRank()));
          }
@@ -183,7 +183,7 @@ int main(
       hier::BoxList::Iterator fine_boxes_itr(fine_boxes);
       for (int ib = 0; ib < n_fine_boxes; ib++, fine_boxes_itr++) {
          if (ib % nproc == layer1.getRank()) {
-            layer1.addMappedBox(hier::MappedBox(*fine_boxes_itr,
+            layer1.addMappedBox(hier::Box(*fine_boxes_itr,
                                                 hier::LocalId(ib),
                                                 layer1.getRank()));
          }

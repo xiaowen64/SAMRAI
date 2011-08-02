@@ -14,7 +14,7 @@
 #include "SAMRAI/SAMRAI_config.h"
 
 #include "SAMRAI/hier/Box.h"
-#include "SAMRAI/hier/MappedBox.h"
+#include "SAMRAI/hier/Box.h"
 #include "SAMRAI/hier/MappedBoxSet.h"
 #include "SAMRAI/tbox/DescribedClass.h"
 #include "SAMRAI/tbox/Pointer.h"
@@ -82,22 +82,6 @@ public:
       size_t min_number = 10);
 
    /*!
-    * @brief Constructs a MappedBoxTree from vector of MappedBoxes.
-    *
-    * See MappedBoxTree( const tbox::Dimension& , const MappedBoxSet& , size_t min_number );
-    *
-    * @param[in] dim
-    *
-    * @param[in] mapped_boxes.  No empty boxes are allowed.
-    *
-    * @param[in] min_number.  @b Default: 10
-    */
-   explicit MappedBoxTree(
-      const tbox::Dimension& dim,
-      const std::vector<MappedBox>& mapped_boxes,
-      size_t min_number = 10);
-
-   /*!
     * @brief Constructs a MappedBoxTree from a list of Boxes.
     *
     * See MappedBoxTree( const tbox::Dimension& , const MappedBoxSet& , size_t min_number );
@@ -107,7 +91,7 @@ public:
     * @param[in] boxes  No empty boxes are allowed.
     *
     * @param[in] block_id The BlockId that will be assigned to every
-    *                     MappedBox in the tree.
+    *                     Box in the tree.
     *
     * @param[in] min_number  @b Default: 10
     */
@@ -136,7 +120,7 @@ public:
     */
    void
    generateTree(
-      std::vector<MappedBox>& mapped_boxes,
+      MappedBoxSet& mapped_boxes,
       size_t min_number = 10);
 
    /*!
@@ -168,7 +152,7 @@ public:
     */
    void
    getMappedBoxes(
-      std::vector<MappedBox>& mapped_boxes) const;
+      std::vector<Box>& mapped_boxes) const;
 
    /*!
     * @brief Return the bounding box of all the MappedBoxes in the
@@ -218,7 +202,8 @@ public:
    void
    findOverlapMappedBoxes(
       MappedBoxSet& overlap_mapped_boxes,
-      const Box& box) const;
+      const Box& box,
+      bool recursive_call = false) const;
 
    /*!
     * @brief Find all boxes that overlap the given \b box.
@@ -236,18 +221,21 @@ public:
     */
    void
    findOverlapMappedBoxes(
-      std::vector<MappedBox>& overlap_mapped_boxes,
-      const Box& box) const;
+      std::vector<Box>& overlap_mapped_boxes,
+      const Box& box,
+      bool recursive_call = false) const;
 
    /*!
     * @brief Find all boxes that overlap the given \b box.
     *
-    * To avoid unneeded work, the output @b overlap_mapped_boxes container
-    * is not emptied.  Overlapping MappedBoxes are simply added.
+    * Analogous to findOverlapMappedBoxes returning a vector of MappedBoxes
+    * but avoids the copies.  If the returned overlapped mapped boxes are used
+    * in a context in which the MappedBoxTree is constant there is no point
+    * in incurring the cost of copying the tree's MappedBoxes.  Just return
+    * a vector of their addresses.
     *
-    * Output is unsorted.
-    *
-    * @param[out] overlap_mapped_boxes MappedBoxes that overlap with box.
+    * @param[out] overlap_mapped_boxes Pointers to MappedBoxes that overlap
+    * with box.
     *
     * @param[in] box the specified box whose overlaps are requested.
     * The box is assumed to be in same index space as those in the
@@ -255,8 +243,29 @@ public:
     */
    void
    findOverlapMappedBoxes(
-      hier::BoxList & overlap_mapped_boxes,
-      const Box& box) const;
+      std::vector<const Box*>& overlap_mapped_boxes,
+      const Box& box,
+      bool recursive_call = false) const;
+
+   /*!
+    * @brief Find all boxes that overlap the given \b box.
+    *
+    * To avoid unneeded work, the output @b overlap_boxes container
+    * is not emptied.  Overlapping Boxes are simply added.
+    *
+    * Output is unsorted.
+    *
+    * @param[out] overlap_boxes Boxes that overlap with box.
+    *
+    * @param[in] box the specified box whose overlaps are requested.
+    * The box is assumed to be in same index space as those in the
+    * tree.
+    */
+   void
+   findOverlapBoxes(
+      BoxList& overlap_boxes,
+      const Box& box,
+      bool recursive_call = false) const;
 
    //@}
 
@@ -311,18 +320,6 @@ public:
    resetStatistics(
       const tbox::Dimension& dim);
 
-   /*!
-    * @brief To satisfy requirements of STL vectors, the vector is
-    * allowed to use this constructor.
-    */
-   friend class std::vector<MappedBoxTree>;
-
-   /*!
-    * @brief To satisfy requirements of STL maps, the map is
-    * allowed to use this constructor.
-    */
-   friend class std::map<BlockId,MappedBoxTree>;
-
 private:
 
    /*!
@@ -341,13 +338,10 @@ private:
     * been initialized, it should be cleared before calling this
     * method.  @see clear().
     *
-    * @param[in] mapped_boxes
-    *
     * @param min_number.  @b Default: 10
     */
    void
    privateGenerateTree(
-      std::vector<MappedBox>& mapped_boxes,
       size_t min_number = 10);
 
    /*!
@@ -366,60 +360,8 @@ private:
     */
    void setupChildren(
       const size_t min_number,
-      std::vector<MappedBox> &left_mapped_boxes,
-      std::vector<MappedBox> &right_mapped_boxes);
-
-   /*!
-    * @brief Check whether given box has any ovarlap with the tree.
-    *
-    * @param[in] box
-    */
-   bool
-   privateHasOverlap(
-      const Box& box) const;
-
-   /*!
-    * @brief Find all boxes that overlap the given \b box.
-    *
-    * Output is sorted.
-    *
-    * @param[out] overlap_boxes Output, mapped_boxes that overlap with box.
-    *
-    * @param[in] box the specified box whose overlaps are requested.
-    */
-   void
-   privateFindOverlapMappedBoxes(
-      MappedBoxSet& overlap_mapped_boxes,
-      const Box& box) const;
-
-   /*!
-    * @brief Find all boxes that overlap the given \b box.
-    *
-    * Output is unsorted.
-    *
-    * @param[out] overlap_boxes Output, mapped_boxes that overlap with box.
-    *
-    * @param[in] box the specified box whose overlaps are requested.
-    */
-   void
-   privateFindOverlapMappedBoxes(
-      std::vector<MappedBox>& overlap_mapped_boxes,
-      const Box& box) const;
-
-   /*!
-    * @brief Find all boxes that overlap the given \b box.
-    *
-    * Output is unsorted.
-    *
-    * @param[out] overlap_boxes Output, mapped_boxes that overlap with box.
-    *
-    * @param[in] box the specified box whose overlaps are requested.
-    */
-   void
-   privateFindOverlapMappedBoxes(
-      hier::BoxList& overlap_mapped_boxes,
-      const Box& box) const;
-
+      MappedBoxSet& left_mapped_boxes,
+      MappedBoxSet& right_mapped_boxes);
 
    /*!
     * @brief Set up static class members.
@@ -470,7 +412,7 @@ private:
     * that this tree represents.  When we have a small number of boxes
     * that do not warant the overhead of a child tree, the boxes go here.
     */
-   std::vector<MappedBox> d_mapped_boxes;
+   MappedBoxSet d_mapped_boxes;
 
    /*!
     * @brief Dimension along which the input box triples are

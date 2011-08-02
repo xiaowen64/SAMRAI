@@ -45,12 +45,12 @@ RealMappedBoxConstIterator& RealMappedBoxConstIterator::operator = (
    return *this;
 }
 
-const MappedBox& RealMappedBoxConstIterator::operator * () const
+const Box& RealMappedBoxConstIterator::operator * () const
 {
    return *d_ni;
 }
 
-const MappedBox *RealMappedBoxConstIterator::operator -> () const
+const Box *RealMappedBoxConstIterator::operator -> () const
 {
    return &(*d_ni);
 }

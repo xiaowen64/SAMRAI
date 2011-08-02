@@ -14,7 +14,6 @@
 #include "SAMRAI/SAMRAI_config.h"
 
 #include "SAMRAI/hier/Box.h"
-#include "SAMRAI/hier/MappedBox.h"
 #include "SAMRAI/hier/ComponentSelector.h"
 #include "SAMRAI/hier/PatchData.h"
 #include "SAMRAI/hier/PatchDescriptor.h"
@@ -68,7 +67,7 @@ public:
     * @param[in]  descriptor
     */
    explicit Patch(
-      const MappedBox& mapped_box,
+      const Box& mapped_box,
       tbox::Pointer<PatchDescriptor> descriptor);
 
    /*!
@@ -93,7 +92,7 @@ public:
     *
     * The GlobalId is the patch's unique identifier within the
     * PatchLevel.  It is identical to the GlobalId of the Patch's
-    * MappedBox.
+    * Box.
     *
     * @return GlobalId for this patch.
     */
@@ -101,20 +100,20 @@ public:
    getGlobalId() const;
 
    /*!
-    * @brief Get the MappedBox from which this patch is defined.
+    * @brief Get the Box from which this patch is defined.
     *
-    * The box corresponding to this MappedBox is the same as that
+    * The box corresponding to this Box is the same as that
     * given by getBox();
     *
-    * @return the MappedBox from which patch is defined.
+    * @return the Box from which patch is defined.
     */
-   const MappedBox&
+   const Box&
    getMappedBox() const;
 
    /*!
     * @brief Get the patch's LocalId.
     *
-    * The LocalId is the same as that of the MappedBox used to
+    * The LocalId is the same as that of the Box used to
     * construct the Patch.
     *
     * @return The LocalId of this patch.
@@ -477,7 +476,7 @@ private:
    /*
     * The box defining the extent of this patch.
     */
-   MappedBox d_mapped_box;
+   Box d_mapped_box;
 
    tbox::Pointer<PatchDescriptor> d_descriptor;
 

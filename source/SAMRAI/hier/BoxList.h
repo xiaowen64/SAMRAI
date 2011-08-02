@@ -14,7 +14,6 @@
 #include "SAMRAI/SAMRAI_config.h"
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/hier/IntVector.h"
-#include "SAMRAI/hier/MappedBox.h"
 #include "SAMRAI/hier/MultiblockMappedBoxTree.h"
 #include "SAMRAI/tbox/Array.h"
 #include "SAMRAI/tbox/List.h"
@@ -370,12 +369,20 @@ private:
       const Box& bursty,
       const Box& solid,
       const int dimension);
+
    void
    burstBoxes(
-      std::vector<Box>& non_intersecting,
       const Box& bursty,
       const Box& solid,
-      const int dimension) const;
+      const int dimension,
+      Iterator &itr);
+
+   void
+   removeIntersectionsFromSublist(
+      const Box& takeaway,
+      Iterator& sublist_start,
+      Iterator& sublist_end,
+      Iterator& insertion_pt);
 
    /**
     *

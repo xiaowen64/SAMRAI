@@ -90,8 +90,8 @@ public:
       tbox::Pointer<hier::PatchLevel> dst_level,
       tbox::Pointer<hier::PatchLevel> src_level,
       tbox::Pointer<hier::BoxOverlap> overlap,
-      const hier::MappedBox& dst_node,
-      const hier::MappedBox& src_node,
+      const hier::Box& dst_node,
+      const hier::Box& src_node,
       int refine_item_id);
 
    /*!
@@ -175,8 +175,8 @@ private:
    tbox::Pointer<hier::PatchLevel> d_dst_level;
    tbox::Pointer<hier::PatchLevel> d_src_level;
    tbox::Pointer<hier::BoxOverlap> d_overlap;
-   hier::MappedBox d_dst_node;
-   hier::MappedBox d_src_node;
+   hier::Box d_dst_node;
+   hier::Box d_src_node;
    int d_refine_item_id;
    int d_incoming_bytes;
    int d_outgoing_bytes;

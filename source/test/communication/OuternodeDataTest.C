@@ -225,8 +225,8 @@ void OuternodeDataTest::setLinearData(
 
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(!data.isNull());
-   TBOX_ASSERT(box == patch.getBox());
-   if (box != data->getBox()) {
+   TBOX_ASSERT(box.isSpatiallyEqual(patch.getBox()));
+   if (!box.isSpatiallyEqual(data->getBox())) {
       TBOX_ERROR("Box is not identical to data box, which is\n"
          << "required for testing Outernode communication.");
    }

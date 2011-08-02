@@ -43,7 +43,7 @@ using namespace tbox;
  *************************************************************************
  */
 
-typedef std::vector<hier::MappedBox> NodeVec;
+typedef std::vector<hier::Box> NodeVec;
 typedef std::vector<hier::Box> BoxVec;
 
 void
@@ -249,7 +249,7 @@ int main(
 
       hier::BoxList::Iterator domain_boxes_itr(domain_boxes);
       for (int i = 0; i < domain_boxes.size(); ++i, domain_boxes_itr++) {
-         domain_mapped_box_level.addMappedBox(hier::MappedBox(*domain_boxes_itr,
+         domain_mapped_box_level.addMappedBox(hier::Box(*domain_boxes_itr,
                                                               hier::LocalId(i), 0));
       }
 
@@ -761,7 +761,7 @@ void generatePrebalanceByUserBoxes(
    for (int i = 0; i < balance_boxes.size(); ++i, balance_boxes_itr++) {
       const int owner = i % initial_owners.size();
       if (owner == balance_mapped_box_level.getRank()) {
-         balance_mapped_box_level.addMappedBox(hier::MappedBox(*balance_boxes_itr,
+         balance_mapped_box_level.addMappedBox(hier::Box(*balance_boxes_itr,
                                                                hier::LocalId(i), owner));
       }
    }

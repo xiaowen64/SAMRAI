@@ -309,7 +309,7 @@ private:
       const CoarsenAlgorithm&);                   // not implemented
 
    //! @brief Shorthand typedef.
-   typedef hier::MappedBox MBox;
+   typedef hier::Box MBox;
    //! @brief Shorthand typedef.
    typedef hier::MappedBoxLevel MappedBoxLevel;
    //! @brief Shorthand typedef.

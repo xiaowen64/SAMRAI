@@ -28,8 +28,6 @@ DEPENDS_0:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
@@ -123,8 +121,6 @@ DEPENDS_1:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
@@ -206,12 +202,22 @@ ${FILE_1:X.o=${NDIM}.o}: ${DEPENDS_1}
 FILE_2=ArrayDataIterator.o
 DEPENDS_2:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.I				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.I				\
+	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Index.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Index.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
+	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.I			\
+	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicId.I				\
+	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Transformation.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/Transformation.h			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataIterator.I			\
@@ -239,6 +245,8 @@ DEPENDS_2:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/PointerBase.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.h			\
+	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.I				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h ArrayDataIterator.C
 
@@ -269,8 +277,6 @@ DEPENDS_3:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
@@ -379,8 +385,6 @@ DEPENDS_4:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
@@ -533,8 +537,6 @@ DEPENDS_5:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
@@ -677,8 +679,6 @@ DEPENDS_6:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
@@ -799,8 +799,6 @@ DEPENDS_7:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
@@ -949,8 +947,6 @@ DEPENDS_8:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
@@ -1103,8 +1099,6 @@ DEPENDS_9:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
@@ -1257,8 +1251,6 @@ DEPENDS_10:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
@@ -1410,8 +1402,6 @@ DEPENDS_11:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
@@ -1554,8 +1544,6 @@ DEPENDS_12:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
@@ -1697,8 +1685,6 @@ DEPENDS_14:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
@@ -1841,8 +1827,6 @@ DEPENDS_15:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
@@ -1929,8 +1913,6 @@ DEPENDS_16:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
@@ -2023,8 +2005,6 @@ DEPENDS_17:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
@@ -2203,8 +2183,6 @@ DEPENDS_20:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
@@ -2365,8 +2343,6 @@ DEPENDS_21:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
@@ -2517,8 +2493,6 @@ DEPENDS_22:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
@@ -2639,8 +2613,6 @@ DEPENDS_23:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
@@ -2797,8 +2769,6 @@ DEPENDS_24:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
@@ -2959,8 +2929,6 @@ DEPENDS_25:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
@@ -3121,8 +3089,6 @@ DEPENDS_26:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
@@ -3282,8 +3248,6 @@ DEPENDS_27:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
@@ -3434,8 +3398,6 @@ DEPENDS_28:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
@@ -3577,8 +3539,6 @@ DEPENDS_30:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
@@ -3729,8 +3689,6 @@ DEPENDS_31:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
@@ -3817,8 +3775,6 @@ DEPENDS_32:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
@@ -3911,8 +3867,6 @@ DEPENDS_33:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
@@ -4071,8 +4025,6 @@ DEPENDS_34:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
@@ -4233,8 +4185,6 @@ DEPENDS_35:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
@@ -4385,8 +4335,6 @@ DEPENDS_36:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
@@ -4507,8 +4455,6 @@ DEPENDS_37:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
@@ -4665,8 +4611,6 @@ DEPENDS_38:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
@@ -4827,8 +4771,6 @@ DEPENDS_39:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
@@ -4989,8 +4931,6 @@ DEPENDS_40:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
@@ -5150,8 +5090,6 @@ DEPENDS_41:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
@@ -5302,8 +5240,6 @@ DEPENDS_42:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
@@ -5445,8 +5381,6 @@ DEPENDS_44:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
@@ -5597,8 +5531,6 @@ DEPENDS_45:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
@@ -5685,8 +5617,6 @@ DEPENDS_46:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
@@ -5779,8 +5709,6 @@ DEPENDS_47:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
@@ -5929,8 +5857,6 @@ DEPENDS_48:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
@@ -6027,8 +5953,6 @@ DEPENDS_49:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
@@ -6125,8 +6049,6 @@ DEPENDS_50:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
@@ -6221,8 +6143,6 @@ DEPENDS_51:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
@@ -6317,8 +6237,6 @@ DEPENDS_52:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
@@ -6433,8 +6351,6 @@ DEPENDS_53:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
@@ -6569,8 +6485,6 @@ DEPENDS_55:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
@@ -6717,8 +6631,6 @@ DEPENDS_56:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
@@ -6865,8 +6777,6 @@ DEPENDS_57:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
@@ -7013,8 +6923,6 @@ DEPENDS_58:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
@@ -7161,8 +7069,6 @@ DEPENDS_59:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
@@ -7309,8 +7215,6 @@ DEPENDS_60:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
@@ -7470,8 +7374,6 @@ DEPENDS_61:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
@@ -7622,8 +7524,6 @@ DEPENDS_62:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
@@ -7744,8 +7644,6 @@ DEPENDS_63:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
@@ -7902,8 +7800,6 @@ DEPENDS_64:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
@@ -8063,8 +7959,6 @@ DEPENDS_65:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
@@ -8225,8 +8119,6 @@ DEPENDS_66:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
@@ -8386,8 +8278,6 @@ DEPENDS_67:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
@@ -8538,8 +8428,6 @@ DEPENDS_68:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
@@ -8681,8 +8569,6 @@ DEPENDS_70:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
@@ -8832,8 +8718,6 @@ DEPENDS_71:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
@@ -8920,8 +8804,6 @@ DEPENDS_72:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
@@ -9014,8 +8896,6 @@ DEPENDS_73:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
@@ -9164,8 +9044,6 @@ DEPENDS_74:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
@@ -9291,8 +9169,6 @@ DEPENDS_75:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
@@ -9439,8 +9315,6 @@ DEPENDS_76:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
@@ -9539,8 +9413,6 @@ DEPENDS_77:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
@@ -9699,8 +9571,6 @@ DEPENDS_78:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
@@ -9861,8 +9731,6 @@ DEPENDS_79:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
@@ -10013,8 +9881,6 @@ DEPENDS_80:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
@@ -10138,8 +10004,6 @@ DEPENDS_81:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
@@ -10296,8 +10160,6 @@ DEPENDS_82:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
@@ -10458,8 +10320,6 @@ DEPENDS_83:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
@@ -10620,8 +10480,6 @@ DEPENDS_84:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
@@ -10782,8 +10640,6 @@ DEPENDS_85:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
@@ -10934,8 +10790,6 @@ DEPENDS_86:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
@@ -11034,8 +10888,6 @@ DEPENDS_87:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
@@ -11196,8 +11048,6 @@ DEPENDS_88:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
@@ -11346,8 +11196,6 @@ DEPENDS_89:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
@@ -11471,8 +11319,6 @@ DEPENDS_90:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
@@ -11629,8 +11475,6 @@ DEPENDS_91:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
@@ -11781,8 +11625,6 @@ DEPENDS_92:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
@@ -11881,8 +11723,6 @@ DEPENDS_93:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
@@ -12041,8 +11881,6 @@ DEPENDS_94:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
@@ -12193,8 +12031,6 @@ DEPENDS_95:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
@@ -12318,8 +12154,6 @@ DEPENDS_96:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
@@ -12476,8 +12310,6 @@ DEPENDS_97:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
@@ -12638,8 +12470,6 @@ DEPENDS_98:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
@@ -12790,8 +12620,6 @@ DEPENDS_99:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
@@ -12890,8 +12718,6 @@ DEPENDS_100:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
@@ -13040,8 +12866,6 @@ DEPENDS_101:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
@@ -13138,8 +12962,6 @@ DEPENDS_102:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
@@ -13246,8 +13068,6 @@ DEPENDS_103:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
@@ -13408,8 +13228,6 @@ DEPENDS_104:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
@@ -13560,8 +13378,6 @@ DEPENDS_105:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
@@ -13682,8 +13498,6 @@ DEPENDS_106:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
@@ -13840,8 +13654,6 @@ DEPENDS_107:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
@@ -14002,8 +13814,6 @@ DEPENDS_108:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
@@ -14164,8 +13974,6 @@ DEPENDS_109:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
@@ -14325,8 +14133,6 @@ DEPENDS_110:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
@@ -14477,8 +14283,6 @@ DEPENDS_111:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
@@ -14620,8 +14424,6 @@ DEPENDS_113:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
@@ -14772,8 +14574,6 @@ DEPENDS_114:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
@@ -14860,8 +14660,6 @@ DEPENDS_115:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
@@ -14954,8 +14752,6 @@ DEPENDS_116:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
@@ -15102,8 +14898,6 @@ DEPENDS_117:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
@@ -15203,8 +14997,6 @@ DEPENDS_118:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
@@ -15324,8 +15116,6 @@ DEPENDS_119:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBox.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\

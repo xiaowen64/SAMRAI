@@ -228,7 +228,7 @@ void SimpleCellRobinBcCoefs::setBcCoefs(
                << "Dirichlet coefficients.");
          }
          tbox::Pointer<hier::PatchLevel> level = d_hierarchy->getPatchLevel(ln);
-         if (level->getPatch(global_id, block_id)->getBox() != patch.getBox()) {
+         if (! level->getPatch(global_id, block_id)->getBox().isSpatiallyEqual(patch.getBox())) {
             TBOX_ERROR(
                d_object_name << ": patch is not in the hierarchy\n"
                << "of cached boundary data.\n"

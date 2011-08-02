@@ -11,7 +11,7 @@
 
 #include "SAMRAI/hier/Connector.h"
 #include "SAMRAI/hier/GridGeometry.h"
-#include "SAMRAI/hier/MappedBox.h"
+#include "SAMRAI/hier/Box.h"
 #include "SAMRAI/hier/MappedBoxLevel.h"
 #include "SAMRAI/hier/MultiblockMappedBoxTree.h"
 #include "SAMRAI/hier/TransferOperatorRegistry.h"
@@ -48,7 +48,7 @@ void breakUpBoxes(
  */
 void exhaustiveFindOverlapMappedBoxes(
    hier::MappedBoxSet& overlap_mapped_boxes,
-   const hier::MappedBox& mapped_box,
+   const hier::Box& mapped_box,
    const hier::IntVector &refinement_ratio,
    const tbox::ConstPointer<hier::GridGeometry> &grid_geometry,
    const hier::MappedBoxSet& search_mapped_boxes );
@@ -277,11 +277,11 @@ int main(
       for ( hier::MappedBoxSet::iterator bi=mapped_box_level.getMappedBoxes().begin();
             bi!=mapped_box_level.getMappedBoxes().end(); ++bi ) {
 
-         const hier::MappedBox &mapped_box(*bi);
+         const hier::Box &mapped_box(*bi);
 
          hier::MappedBoxSet &neighbors(neighborhood_set[mapped_box.getId()]);
 
-         hier::Box grown_box(mapped_box.getBox());
+         hier::Box grown_box(mapped_box);
          grown_box.grow(connector_width);
 
          multiblock_mapped_box_tree.findOverlapMappedBoxes(
@@ -313,12 +313,12 @@ int main(
          for ( hier::MappedBoxSet::iterator bi=mapped_box_level.getMappedBoxes().begin();
                bi!=mapped_box_level.getMappedBoxes().end(); ++bi ) {
 
-            const hier::MappedBox &mapped_box(*bi);
+            const hier::Box &mapped_box(*bi);
 
             hier::MappedBoxSet &neighbors(neighborhood_set_from_exhaustive_search[mapped_box.getId()]);
 
-            hier::MappedBox grown_mapped_box(mapped_box);
-            grown_mapped_box.getBox().grow(connector_width);
+            hier::Box grown_mapped_box(mapped_box);
+            grown_mapped_box.grow(connector_width);
 
             exhaustiveFindOverlapMappedBoxes(
                neighbors,
@@ -499,19 +499,19 @@ void breakUpBoxes(
  */
 void exhaustiveFindOverlapMappedBoxes(
    hier::MappedBoxSet& overlap_mapped_boxes,
-   const hier::MappedBox& mapped_box,
+   const hier::Box& mapped_box,
    const hier::IntVector &refinement_ratio,
    const tbox::ConstPointer<hier::GridGeometry> &grid_geometry,
    const hier::MappedBoxSet& search_mapped_boxes )
 {
 
-   hier::Box transformed_box(mapped_box.getBox());
+   hier::Box transformed_box(mapped_box);
    hier::BlockId transformed_block_id(mapped_box.getBlockId());
 
    for ( hier::MappedBoxSet::const_iterator bi=search_mapped_boxes.begin();
          bi!=search_mapped_boxes.end(); ++bi ) {
 
-      const hier::MappedBox &search_mapped_box(*bi);
+      const hier::Box &search_mapped_box(*bi);
 
       /*
        * Get transformed_box in coordinate of search_mapped_box, if
@@ -520,7 +520,7 @@ void exhaustiveFindOverlapMappedBoxes(
        * search_mapped_box.
        */
       if ( transformed_block_id != search_mapped_box.getBlockId() ) {
-         transformed_box = mapped_box.getBox();
+         transformed_box = mapped_box;
          bool transformed = grid_geometry->translateBox(transformed_box,
                                                         refinement_ratio,
                                                         search_mapped_box.getBlockId(),
@@ -531,7 +531,7 @@ void exhaustiveFindOverlapMappedBoxes(
       }
 
       if ( transformed_block_id == search_mapped_box.getBlockId() ) {
-         if ( transformed_box.intersects(search_mapped_box.getBox()) ) {
+         if ( transformed_box.intersects(search_mapped_box) ) {
             overlap_mapped_boxes.insert(search_mapped_box);
          }
       }

@@ -237,7 +237,7 @@ void TreeLoadBalancer::loadBalanceMappedBoxLevel(
 
    {
       /*
-       * Periodic image MappedBox should be ignored during load
+       * Periodic image Box should be ignored during load
        * balancing.  The load-balanced results should contain no
        * periodic images.
        *
@@ -608,23 +608,23 @@ void TreeLoadBalancer::mapOversizedBoxes(
    for (hier::MappedBoxSet::const_iterator ni = unconstrained_mapped_boxes.begin();
         ni != unconstrained_mapped_boxes.end(); ++ni) {
 
-      const MappedBox& mapped_box = *ni;
+      const hier::Box& mapped_box = *ni;
 
-      const hier::IntVector mapped_box_size = mapped_box.getBox().numberCells();
+      const hier::IntVector mapped_box_size = mapped_box.numberCells();
 
       if (mapped_box_size <= d_max_size) {
          if (d_print_break_steps) {
             tbox::plog << "    Not oversized: " << mapped_box
-                       << mapped_box.getBox().numberCells() << "\n";
+                       << mapped_box.numberCells() << "\n";
          }
          constrained.addMappedBox(mapped_box);
       } else {
 
          if (d_print_break_steps) {
             tbox::plog << "    Breaking oversized " << mapped_box
-                       << mapped_box.getBox().numberCells() << " ->";
+                       << mapped_box.numberCells() << " ->";
          }
-         hier::BoxList chopped(mapped_box.getBox());
+         hier::BoxList chopped(mapped_box);
          hier::BoxUtilities::chopBoxes(chopped,
             d_max_size,
             d_min_size,
@@ -642,14 +642,14 @@ void TreeLoadBalancer::mapOversizedBoxes(
 
                const hier::Box new_box = *li;
 
-               const MappedBox new_mapped_box(new_box,
+               const hier::Box new_mapped_box(new_box,
                                    next_available_index++,
                                    d_rank,
                                    (*ni).getBlockId());
 
                if (d_print_break_steps) {
                   tbox::plog << "  " << new_mapped_box
-                             << new_mapped_box.getBox().numberCells();
+                             << new_mapped_box.numberCells();
                }
 
                constrained.addMappedBox(new_mapped_box);
@@ -953,7 +953,7 @@ void TreeLoadBalancer::loadBalanceMappedBoxLevel_rootCycle(
        */
       for (hier::MappedBoxSet::const_iterator ni = unbalanced_mapped_boxes.begin();
            ni != unbalanced_mapped_boxes.end(); ++ni) {
-         const MappedBox& mapped_box = *ni;
+         const hier::Box& mapped_box = *ni;
          balanced_mapped_box_level.addMappedBox(mapped_box);
       }
    } else {
@@ -977,7 +977,7 @@ void TreeLoadBalancer::loadBalanceMappedBoxLevel_rootCycle(
        * important to performance.  Transfering all local MappedBoxes
        * into unassigned at the start may affect the performance
        * of this algorithms though, because it bypasses one
-       * reassignLoads call but makes the unassigned MappedBox set
+       * reassignLoads call but makes the unassigned Box set
        * bigger, which may make other calls to reassignLoads
        * work harder.  Which one is a bigger effect and whether
        * there are any significant effects at all remains to
@@ -1051,7 +1051,7 @@ void TreeLoadBalancer::loadBalanceMappedBoxLevel_rootCycle(
          /*
           * Extract data from the children.  Initialize data for tree
           * rooted at children.  If child sent up any excess
-          * MappedBox, put them in unassigned.
+          * Box, put them in unassigned.
           */
          int old_size = static_cast<int>(unassigned.size());
          unpackSubtreeLoadData(received_data,
@@ -1329,8 +1329,8 @@ void TreeLoadBalancer::loadBalanceMappedBoxLevel_rootCycle(
         ni != unassigned.end(); /* incremented in loop */) {
       const MappedBoxInTransit& mapped_box_in_transit = *ni;
       balanced_mapped_box_level.addMappedBox(mapped_box_in_transit.mapped_box);
-      if (mapped_box_in_transit.mapped_box != mapped_box_in_transit.orig_mapped_box) {
-         // Create relationship for changed MappedBox.
+      if ( ! mapped_box_in_transit.mapped_box.isIdEqual(mapped_box_in_transit.orig_mapped_box)) {
+         // Create relationship for changed Box.
          balanced_eto_unbalanced[mapped_box_in_transit.mapped_box.getId()].insert(mapped_box_in_transit.orig_mapped_box);
          ++ni;
       } else {
@@ -1632,7 +1632,7 @@ void TreeLoadBalancer::reassignLoads(
     * swapping options that were not there before, so we loop back to
     * try swapping again.
     *
-    * If a break phase does not break any MappedBox (and does not generate more
+    * If a break phase does not break any Box (and does not generate more
     * swap options), the loop will stop making changes.  We exit the loop
     * at that point (and whenever we reached the ideal transfer).
     */
@@ -1694,7 +1694,7 @@ void TreeLoadBalancer::reassignLoads(
       }
       if (brk_transfer == 0) {
          /*
-          * If no MappedBox can be broken to improve the actual_transfer,
+          * If no Box can be broken to improve the actual_transfer,
           * there is nothing further we can do.  (The swap phase, tried
           * before the break phase, also generated no transfer.)
           */
@@ -1702,7 +1702,7 @@ void TreeLoadBalancer::reassignLoads(
       }
 
       /*
-       * Now that we have broken up a MappedBox, redo this loop to
+       * Now that we have broken up a Box, redo this loop to
        * see if swapping can produce a better result.
        */
    } while (ideal_transfer != actual_transfer);
@@ -2765,7 +2765,7 @@ bool TreeLoadBalancer::findLoadSwapPair(
        * degnerate to moving a src MappedBoxInTransit to dst.  Find
        * the best src MappedBoxInTransit to move.
        */
-      dummy_search_target = MappedBoxInTransit(MappedBox(dummy_box, hier::LocalId::getZero(), 0));
+      dummy_search_target = MappedBoxInTransit(hier::Box(dummy_box, hier::LocalId::getZero(), 0));
       dummy_search_target.load = ideal_transfer;
       TransitSet::iterator jsrc = src.lower_bound(dummy_search_target);
 
@@ -2814,7 +2814,7 @@ bool TreeLoadBalancer::findLoadSwapPair(
           * Look for a load less than the load of jsrc by
           * ideal_transfer.
           */
-         dummy_search_target = MappedBoxInTransit(MappedBox(dummy_box, hier::LocalId::getZero(), 0));
+         dummy_search_target = MappedBoxInTransit(hier::Box(dummy_box, hier::LocalId::getZero(), 0));
          dummy_search_target.load = tbox::MathUtilities<int>::Max(
                (*jsrc).load - ideal_transfer,
                0);
@@ -2976,7 +2976,7 @@ bool TreeLoadBalancer::findLoadSwapPair(
  *************************************************************************
  */
 bool TreeLoadBalancer::breakOffLoad(
-   const MappedBox& mapped_box,
+   const hier::Box& mapped_box,
    double ideal_load_to_break,
    std::vector<hier::Box>& breakoff,
    std::vector<hier::Box>& leftover,
@@ -3013,7 +3013,7 @@ bool TreeLoadBalancer::breakOffLoad(
       if (d_print_break_steps) {
          tbox::plog << "      ideal_load_to_break " << ideal_load_to_break
                     << " < " << d_min_size.getProduct() << d_min_size
-                    << ":  Cannot break MappedBox " << mapped_box << std::endl;
+                    << ":  Cannot break Box " << mapped_box << std::endl;
       }
       t_break_off_load->stop();
       return false;
@@ -3027,18 +3027,18 @@ bool TreeLoadBalancer::breakOffLoad(
    tbox::Array<tbox::Array<bool> > bad_cuts(d_dim.getValue());
    t_find_bad_cuts->start();
    hier::BoxUtilities::findBadCutPoints(bad_cuts,
-      mapped_box.getBox(),
+      mapped_box,
       d_domain_boxes,
       d_bad_interval);
    t_find_bad_cuts->stop();
 
    // Penalty for not transfering ideal load.
-   double best_balance_penalty = computeBalancePenalty(mapped_box.getBox(),
+   double best_balance_penalty = computeBalancePenalty(mapped_box,
          ideal_load_to_break);
    // Penalty for new surfaces generated (none generated yet).
-   double best_surface_penalty = computeSurfacePenalty(mapped_box.getBox());
+   double best_surface_penalty = computeSurfacePenalty(mapped_box);
    // Penalty for slender boxes.
-   double best_slender_penalty = computeSlenderPenalty(mapped_box.getBox());
+   double best_slender_penalty = computeSlenderPenalty(mapped_box);
 
    double best_combined_penalty = tbox::MathUtilities<double>::getMax();
 
@@ -3088,8 +3088,8 @@ bool TreeLoadBalancer::breakOffLoad(
             tbox::plog << "      Planar-break broke off "
                        << planar_brk_load << " / " << ideal_load_to_break
                        << " from " << mapped_box << '|'
-                       << mapped_box.getBox().numberCells() << '|'
-                       << mapped_box.getBox().size() << " into "
+                       << mapped_box.numberCells() << '|'
+                       << mapped_box.size() << " into "
                        << planar_breakoff.size()
                        << " breakoff: ";
             for (std::vector<hier::Box>::const_iterator bi =
@@ -3173,8 +3173,8 @@ bool TreeLoadBalancer::breakOffLoad(
             tbox::plog << "      Cubic-break broke off "
                        << cubic1_brk_load << " / " << ideal_load_to_break
                        << " from " << mapped_box << '|'
-                       << mapped_box.getBox().numberCells() << '|'
-                       << mapped_box.getBox().size() << " into "
+                       << mapped_box.numberCells() << '|'
+                       << mapped_box.size() << " into "
                        << cubic1_breakoff.size()
                        << " breakoff: ";
             for (std::vector<hier::Box>::const_iterator bi =
@@ -3222,8 +3222,8 @@ bool TreeLoadBalancer::breakOffLoad(
          if (d_print_break_steps) {
             tbox::plog << "      breakOffLoad_cubic1 could not break "
                        << ideal_load_to_break << " from " << mapped_box
-                       << '/' << mapped_box.getBox().numberCells()
-                       << '/' << mapped_box.getBox().numberCells().getProduct()
+                       << '/' << mapped_box.numberCells()
+                       << '/' << mapped_box.numberCells().getProduct()
                        << std::endl;
          }
       }
@@ -3418,10 +3418,10 @@ double TreeLoadBalancer::computeBalancePenalty(
 #elif TreeLoadBalancer_BalancePenaltyType == 2
    int total_volume = 0;
    for (TransitSet::const_iterator bi = a.begin(); bi != a.end(); ++bi) {
-      total_volume += bi->mapped_box.getBox().size();
+      total_volume += bi->mapped_box.size();
    }
    for (TransitSet::const_iterator bi = b.begin(); bi != b.end(); ++bi) {
-      total_volume += bi->mapped_box.getBox().size();
+      total_volume += bi->mapped_box.size();
    }
    const double balance_penalty =
       tbox::MathUtilities<double>::Abs(imbalance) / total_volume;
@@ -3588,10 +3588,10 @@ double TreeLoadBalancer::computeSurfacePenalty(
 #if TreeLoadBalancer_SurfacePenaltyType == 1
    double surface_area = 0;
    for (TransitSet::const_iterator bi = a.begin(); bi != a.end(); ++bi) {
-      surface_area += computeBoxSurfaceArea(bi->mapped_box.getBox());
+      surface_area += computeBoxSurfaceArea(bi->mapped_box);
    }
    for (TransitSet::const_iterator bi = b.begin(); bi != b.end(); ++bi) {
-      surface_area += computeBoxSurfaceArea(bi->mapped_box.getBox());
+      surface_area += computeBoxSurfaceArea(bi->mapped_box);
    }
    double surface_penalty = pow(surface_area, (double)(d_dim) / (d_dim.getValue() - 1)));
    return surface_penalty;
@@ -3600,13 +3600,13 @@ double TreeLoadBalancer::computeSurfacePenalty(
    double surface_area = 0;
    int total_volume = 0;
    for (TransitSet::const_iterator bi = a.begin(); bi != a.end(); ++bi) {
-      int boxvol = bi->mapped_box.getBox().size();
-      surface_area += computeBoxSurfaceArea(bi->mapped_box.getBox());
+      int boxvol = bi->mapped_box.size();
+      surface_area += computeBoxSurfaceArea(bi->mapped_box);
       total_volume += boxvol;
    }
    for (TransitSet::const_iterator bi = b.begin(); bi != b.end(); ++bi) {
-      int boxvol = bi->mapped_box.getBox().size();
-      surface_area += computeBoxSurfaceArea(bi->mapped_box.getBox());
+      int boxvol = bi->mapped_box.size();
+      surface_area += computeBoxSurfaceArea(bi->mapped_box);
       total_volume += boxvol;
    }
    double best_surface = 2 * d_dim * pow(total_volume,
@@ -3618,16 +3618,16 @@ double TreeLoadBalancer::computeSurfacePenalty(
    double surface_penalty = 0;
    double total_volume = 0;
    for (TransitSet::const_iterator bi = a.begin(); bi != a.end(); ++bi) {
-      int boxvol = bi->mapped_box.getBox().size();
-      double surface_area = computeBoxSurfaceArea(bi->mapped_box.getBox());
+      int boxvol = bi->mapped_box.size();
+      double surface_area = computeBoxSurfaceArea(bi->mapped_box);
       double best_surface = 2 * d_dim * pow((double)boxvol,
                                             (double)(d_dim.getValue() - 1)) / d_dim);
       surface_penalty += surface_area / best_surface - 1.0;
       total_volume += boxvol;
    }
    for (TransitSet::const_iterator bi = b.begin(); bi != b.end(); ++bi) {
-      int boxvol = bi->mapped_box.getBox().size();
-      double surface_area = computeBoxSurfaceArea(bi->mapped_box.getBox());
+      int boxvol = bi->mapped_box.size();
+      double surface_area = computeBoxSurfaceArea(bi->mapped_box);
       double best_surface = 2 * d_dim * pow((double)boxvol,
                                             (double)(d_dim.getValue() - 1)) / d_dim);
       surface_penalty += surface_area / best_surface - 1.0;
@@ -3640,10 +3640,10 @@ double TreeLoadBalancer::computeSurfacePenalty(
 #elif TreeLoadBalancer_SurfacePenaltyType == 4
    double surface_penalty = 0;
    for (TransitSet::const_iterator bi = a.begin(); bi != a.end(); ++bi) {
-      surface_penalty += computeSurfacePenalty(bi->mapped_box.getBox());
+      surface_penalty += computeSurfacePenalty(bi->mapped_box);
    }
    for (TransitSet::const_iterator bi = b.begin(); bi != b.end(); ++bi) {
-      surface_penalty += computeSurfacePenalty(bi->mapped_box.getBox());
+      surface_penalty += computeSurfacePenalty(bi->mapped_box);
    }
    return surface_penalty;
 
@@ -3801,14 +3801,14 @@ double TreeLoadBalancer::computeSlenderPenalty(
    double slender_penalty = 0;
    int total_volume = 0;
    for (TransitSet::const_iterator bi = a.begin(); bi != a.end(); ++bi) {
-      const hier::IntVector boxdim = bi->mapped_box.getBox().numberCells();
+      const hier::IntVector boxdim = bi->mapped_box.numberCells();
       double slender = (double)boxdim.max() / boxdim.min() - 1.0;
       const int boxvol = boxdim.getProduct();
       slender_penalty += boxvol * slender;
       total_volume += boxvol;
    }
    for (TransitSet::const_iterator bi = b.begin(); bi != b.end(); ++bi) {
-      const hier::IntVector boxdim = bi->mapped_box.getBox().numberCells();
+      const hier::IntVector boxdim = bi->mapped_box.numberCells();
       double slender = (double)boxdim.max() / boxdim.min() - 1.0;
       const int boxvol = boxdim.getProduct();
       slender_penalty += boxvol * slender;
@@ -3822,14 +3822,14 @@ double TreeLoadBalancer::computeSlenderPenalty(
    double slender_penalty = 0;
    double total_volume = 0;
    for (TransitSet::const_iterator bi = a.begin(); bi != a.end(); ++bi) {
-      const hier::IntVector boxdim = bi->mapped_box.getBox().numberCells();
+      const hier::IntVector boxdim = bi->mapped_box.numberCells();
       slender_penalty += tbox::MathUtilities<double>::Min(0.0,
             (double)boxdim.max() / boxdim.min() - 1.0
             - d_slender_penalty_threshold);
       total_volume += boxdim.getProduct();
    }
    for (TransitSet::const_iterator bi = b.begin(); bi != b.end(); ++bi) {
-      const hier::IntVector boxdim = bi->mapped_box.getBox().numberCells();
+      const hier::IntVector boxdim = bi->mapped_box.numberCells();
       slender_penalty += tbox::MathUtilities<double>::Min(0.0,
             (double)boxdim.max() / boxdim.min() - 1.0
             - d_slender_penalty_threshold);
@@ -3842,10 +3842,10 @@ double TreeLoadBalancer::computeSlenderPenalty(
 #elif TreeLoadBalancer_SlenderPenaltyType == 4
    double slender_penalty = 0;
    for (TransitSet::const_iterator bi = a.begin(); bi != a.end(); ++bi) {
-      slender_penalty += computeSlenderPenalty(bi->mapped_box.getBox());
+      slender_penalty += computeSlenderPenalty(bi->mapped_box);
    }
    for (TransitSet::const_iterator bi = b.begin(); bi != b.end(); ++bi) {
-      slender_penalty += computeSlenderPenalty(bi->mapped_box.getBox());
+      slender_penalty += computeSlenderPenalty(bi->mapped_box);
    }
    return slender_penalty;
 
@@ -3920,7 +3920,7 @@ void TreeLoadBalancer::burstBox(
 
    boxes.clear();
    hier::Box cutme = bursty;
-   while (cutme != solid) {
+   while (! cutme.isSpatiallyEqual(solid)) {
 
       int cut_dir = 999999;
       bool cut_above_solid = false; // Whether to slice off the piece above solid (vs below).
@@ -4022,7 +4022,7 @@ double TreeLoadBalancer::computeLocalLoads(
  *************************************************************************
  */
 double TreeLoadBalancer::computeLoad(
-   const hier::MappedBox& mapped_box,
+   const hier::Box& mapped_box,
    const hier::Box& box) const
 {
    /*
@@ -4031,7 +4031,7 @@ double TreeLoadBalancer::computeLoad(
     * needs the patch data index for the load.  It would summ up
     * the individual cell loads in the overlap region.
     */
-   hier::Box overlap = mapped_box.getBox() * box;
+   hier::Box overlap = mapped_box * box;
    return double(overlap.size());
 }
 
@@ -4040,7 +4040,7 @@ double TreeLoadBalancer::computeLoad(
  *************************************************************************
  */
 double TreeLoadBalancer::computeLoad(
-   const hier::MappedBox& mapped_box) const
+   const hier::Box& mapped_box) const
 {
    /*
     * Currently only for uniform loads, where the load is equal
@@ -4048,7 +4048,7 @@ double TreeLoadBalancer::computeLoad(
     * needs the patch data index for the load.  It would summ up
     * the individual cell loads in the cell.
     */
-   return double(mapped_box.getBox().size());
+   return double(mapped_box.size());
 }
 
 /*
@@ -4205,7 +4205,7 @@ void TreeLoadBalancer::assertNoMessageForPrivateCommunicator() const
  *************************************************************************
  */
 bool TreeLoadBalancer::breakOffLoad_planar(
-   const MappedBox& mapped_box,
+   const hier::Box& mapped_box,
    double ideal_load_to_break,
    const tbox::Array<tbox::Array<bool> >& bad_cuts,
    std::vector<hier::Box>& breakoff,
@@ -4217,7 +4217,7 @@ bool TreeLoadBalancer::breakOffLoad_planar(
 
    if (d_print_break_steps) {
       tbox::plog << "      breakOffLoad_planar attempting to break "
-                 << ideal_load_to_break << " from MappedBox " << mapped_box
+                 << ideal_load_to_break << " from Box " << mapped_box
                  << " min_size=" << d_min_size << std::endl;
    }
 
@@ -4225,16 +4225,16 @@ bool TreeLoadBalancer::breakOffLoad_planar(
    breakoff.clear();
    leftover.clear();
 
-   const hier::IntVector& box_dims = mapped_box.getBox().numberCells();
+   const hier::IntVector& box_dims = mapped_box.numberCells();
 
    const int box_vol = box_dims.getProduct();
 
    if (box_vol <= ideal_load_to_break) {
       // Easy: break off everything.
-      breakoff.push_back(mapped_box.getBox());
+      breakoff.push_back(mapped_box);
       brk_load = box_vol;
       if (d_print_break_steps) {
-         tbox::plog << "      breakOffload_planar broke off entire MappedBox "
+         tbox::plog << "      breakOffload_planar broke off entire Box "
                     << mapped_box
                     << std::endl;
       }
@@ -4313,10 +4313,10 @@ bool TreeLoadBalancer::breakOffLoad_planar(
                 bad[brk_len] == false) {
                // Cutting brk_len from low side is ok.
                best_overload = overload;
-               best_breakoff_box = mapped_box.getBox();
+               best_breakoff_box = mapped_box;
                best_breakoff_box.upper() (brk_dir) =
                   best_breakoff_box.lower() (brk_dir) + brk_len - 1;
-               best_leftover_box = mapped_box.getBox();
+               best_leftover_box = mapped_box;
                best_leftover_box.lower() (brk_dir) =
                   best_breakoff_box.upper() (brk_dir) + 1;
                return_value = true;
@@ -4324,10 +4324,10 @@ bool TreeLoadBalancer::breakOffLoad_planar(
             } else if (bad[box_dims(brk_dir) - brk_len] == false) {
                // Cutting brk_len from high side is ok.
                best_overload = overload;
-               best_breakoff_box = mapped_box.getBox();
+               best_breakoff_box = mapped_box;
                best_breakoff_box.lower() (brk_dir) =
                   best_breakoff_box.upper() (brk_dir) - brk_len + 1;
-               best_leftover_box = mapped_box.getBox();
+               best_leftover_box = mapped_box;
                best_leftover_box.upper() (brk_dir) =
                   best_breakoff_box.lower() (brk_dir) - 1;
                return_value = true;
@@ -4349,7 +4349,7 @@ bool TreeLoadBalancer::breakOffLoad_planar(
    } else {
       if (d_print_break_steps) {
          tbox::plog << "      breakOffload_planar could not break "
-                    << ideal_load_to_break << " from MappedBox " << mapped_box
+                    << ideal_load_to_break << " from Box " << mapped_box
                     << std::endl;
       }
    }
@@ -4410,7 +4410,7 @@ bool TreeLoadBalancer::breakOffLoad_planar(
  *************************************************************************
  */
 bool TreeLoadBalancer::breakOffLoad_cubic1(
-   const MappedBox& mapped_box,
+   const hier::Box& mapped_box,
    double ideal_load_to_break,
    const tbox::Array<tbox::Array<bool> >& bad_cuts,
    std::vector<hier::Box>& breakoff,
@@ -4420,7 +4420,7 @@ bool TreeLoadBalancer::breakOffLoad_cubic1(
 
    const tbox::Dimension dim(d_dim);
 
-   const hier::IntVector box_dims(mapped_box.getBox().numberCells());
+   const hier::IntVector box_dims(mapped_box.numberCells());
 
    const double mapped_box_load(box_dims.getProduct());
 
@@ -4428,10 +4428,10 @@ bool TreeLoadBalancer::breakOffLoad_cubic1(
       // Easy: break off everything.
       leftover.clear();
       breakoff.clear();
-      breakoff.push_back(mapped_box.getBox());
+      breakoff.push_back(mapped_box);
       brk_load = mapped_box_load;
       if (d_print_break_steps) {
-         tbox::plog << "      breakOffload_cubic1 broke off entire MappedBox "
+         tbox::plog << "      breakOffload_cubic1 broke off entire Box "
                     << mapped_box
                     << std::endl;
       }
@@ -4465,7 +4465,7 @@ bool TreeLoadBalancer::breakOffLoad_cubic1(
 
    if (d_print_break_steps) {
       tbox::plog << "      breakOffload_cubic1 attempting to break "
-                 << ideal_load_to_break << " from MappedBox " << mapped_box
+                 << ideal_load_to_break << " from Box " << mapped_box
                  << " min_size=" << d_min_size << std::endl;
    }
 
@@ -4581,7 +4581,7 @@ bool TreeLoadBalancer::breakOffLoad_cubic1(
       tbox::plog << std::endl;
    }
 
-   const hier::Box& box = mapped_box.getBox();
+   const hier::Box& box = mapped_box;
    /*
     * Find a place to put the break-away box so that it does not
     * lie across a bad cut.
@@ -4600,7 +4600,7 @@ bool TreeLoadBalancer::breakOffLoad_cubic1(
       /*
        * To minimize the number of boxes remaining after brk_box is
        * removed, try to place brk_box against the upper or lower side
-       * of the MappedBox.  First try putting the brk_box along the
+       * of the Box.  First try putting the brk_box along the
        * upper side of dimension d.  If it cuts the box at a bad point,
        * try the lower side.  If it still cuts at a bad points, slide
        * the box toward the upper side until it does not cut at any bad
@@ -4669,7 +4669,7 @@ bool TreeLoadBalancer::breakOffLoad_cubic1(
    breakoff.clear();
    breakoff.push_back(brk_box);
 
-   burstBox(mapped_box.getBox(),
+   burstBox(mapped_box,
       brk_box,
       leftover);
 
@@ -4686,7 +4686,7 @@ bool TreeLoadBalancer::breakOffLoad_cubic1(
                << "breakoff box " << b << ", with size " << s
                << "\nis not between the min size " << d_min_size
                << "\nand the original box size " << box_dims << "\n"
-               << "orig box " << mapped_box.getBox() << "\n"
+               << "orig box " << mapped_box << "\n"
                << "break box " << brk_box << "\n"
                << "break box size " << brk_size << "\n"
                << "ideal brk load " << ideal_load_to_break);
@@ -4705,7 +4705,7 @@ bool TreeLoadBalancer::breakOffLoad_cubic1(
                << "leftover box " << b << ", with size " << s
                << "\nis not between the min size " << d_min_size
                << "\nand the original box size " << box_dims << "\n"
-               << "orig box " << mapped_box.getBox() << "\n"
+               << "orig box " << mapped_box << "\n"
                << "break box " << brk_box << "\n"
                << "break box size " << brk_size << "\n"
                << "ideal brk load " << ideal_load_to_break);
@@ -4743,16 +4743,8 @@ void TreeLoadBalancer::setShadowData(
       hier::MappedBoxLevel::GLOBALIZED);
 
    d_domain_boxes.clearItems();
-   {
-      const hier::MappedBoxSet& domain_mapped_boxes =
-         domain_mapped_box_level.getGlobalMappedBoxes();
-      const int n = static_cast<int>(domain_mapped_boxes.size());
-      hier::MappedBoxSet::const_iterator ni = domain_mapped_boxes.begin();
-      for (int i = 0; i < n; ++i, ++ni) {
-         d_domain_boxes.appendItem(ni->getBox());
-      }
-      d_domain_boxes.refine(refinement_ratio);
-   }
+   domain_mapped_box_level.getGlobalBoxes(d_domain_boxes);
+   d_domain_boxes.refine(refinement_ratio);
 }
 
 void TreeLoadBalancer::unsetShadowData() const {
@@ -4894,12 +4886,12 @@ void TreeLoadBalancer::prebalanceMappedBoxLevel(
               unchanged_mapped_boxes.begin();
            ni != unchanged_mapped_boxes.end(); ++ni) {
 
-         const hier::MappedBox& mapped_box = *ni;
+         const hier::Box& mapped_box = *ni;
          tmp_mapped_box_level.addMappedBox(mapped_box);
       }
    }
 
-   const int buf_size = hier::MappedBox::commBufferSize(d_dim);
+   const int buf_size = hier::Box::commBufferSize(d_dim);
 
    /*
     * On sending ranks, pack the MappedBoxes into buffers and send.
@@ -4915,7 +4907,7 @@ void TreeLoadBalancer::prebalanceMappedBoxLevel(
       for (hier::MappedBoxSet::const_iterator ni = sending_mapped_boxes.begin();
            ni != sending_mapped_boxes.end(); ++ni) {
 
-         const hier::MappedBox& mapped_box = *ni;
+         const hier::Box& mapped_box = *ni;
 
          mapped_box.putToIntBuffer(&buffer[box_count * buf_size]);
          box_count++;
@@ -4946,12 +4938,12 @@ void TreeLoadBalancer::prebalanceMappedBoxLevel(
                int* id_buffer = new int[num_boxes];
 
                for (int b = 0; b < num_boxes; b++) {
-                  hier::MappedBox mapped_box(d_dim);
+                  hier::Box mapped_box(d_dim);
 
                   mapped_box.getFromIntBuffer(&buffer[b * buf_size]);
 
                   hier::MappedBoxSet::iterator tmp_iter =
-                     tmp_mapped_box_level.addBox(mapped_box.getBox(),
+                     tmp_mapped_box_level.addBox(mapped_box,
                                                  mapped_box.getBlockId());
 
                   hier::MappedBoxId tmp_mapped_box_id = (*tmp_iter).getId();
@@ -4998,8 +4990,8 @@ void TreeLoadBalancer::prebalanceMappedBoxLevel(
               sending_mapped_boxes.begin();
            ni != sending_mapped_boxes.end(); ++ni) {
 
-         hier::MappedBox new_mapped_box(
-            (*ni).getBox(),
+         hier::Box new_mapped_box(
+            (*ni),
             (hier::LocalId)buffer[box_count],
             rank_group.getMappedRank(d_rank % output_nproc),
             (*ni).getBlockId());
@@ -5062,14 +5054,14 @@ std::ostream& operator << (
    const MappedBoxInTransit& r)
 {
    co << r.mapped_box
-      << r.mapped_box.getBox().numberCells() << '|'
-      << r.mapped_box.getBox().numberCells().getProduct();
+      << r.mapped_box.numberCells() << '|'
+      << r.mapped_box.numberCells().getProduct();
    for (int i = static_cast<int>(r.proc_hist.size()) - 1; i >= 0; --i) {
       co << '-' << r.proc_hist[i];
    }
    co << '-' << r.orig_mapped_box
-      << r.mapped_box.getBox().numberCells() << '|'
-      << r.mapped_box.getBox().numberCells().getProduct();
+      << r.mapped_box.numberCells() << '|'
+      << r.mapped_box.numberCells().getProduct();
    return co;
 }
 

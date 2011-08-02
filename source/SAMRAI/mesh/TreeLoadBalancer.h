@@ -31,20 +31,20 @@ namespace SAMRAI {
 namespace mesh {
 
 /*!
- * @brief Data to save for each MappedBox that gets passed along the
+ * @brief Data to save for each Box that gets passed along the
  * tree edges.
  *
  * The purpose of the MappedBoxInTransit is to associate extra data
- * with a MappedBox as the it is broken up and passed from processor
- * to processor.  A MappedBoxInTransit is a MappedBox going through
+ * with a Box as the it is broken up and passed from processor
+ * to processor.  A MappedBoxInTransit is a Box going through
  * these changes.  It has a current work load and an orginating
- * MappedBox.  It is passed from process to process and keeps a
+ * Box.  It is passed from process to process and keeps a
  * history of the processes it passed through.  It is assigned a
  * LocalId on every process it passes through, but the LocalId history
  * is not kept.
  */
 struct MappedBoxInTransit {
-   typedef hier::MappedBox MappedBox;
+   typedef hier::Box MappedBox;
    typedef hier::LocalId LocalId;
 
    /*!
@@ -65,10 +65,10 @@ struct MappedBoxInTransit {
     * @param[in] other
     */
    MappedBoxInTransit(
-      const MappedBox& other):
+      const hier::Box& other):
       mapped_box(other),
       orig_mapped_box(other),
-      load(other.getBox().size()),
+      load(other.size()),
       proc_hist()
    {
    }
@@ -114,18 +114,18 @@ struct MappedBoxInTransit {
       return *this;
    }
 
-   //! @brief The MappedBox.
-   MappedBox mapped_box;
+   //! @brief The Box.
+   hier::Box mapped_box;
 
-   //! @brief Originating MappedBox.
-   MappedBox orig_mapped_box;
+   //! @brief Originating Box.
+   hier::Box orig_mapped_box;
 
    //! @brief Normalized work load.
    int load;
 
    /*!
     * @brief History of processors passed in transit.  Each time a
-    * processor passes on a MappedBox, it should append its rank to
+    * processor passes on a Box, it should append its rank to
     * the proc_hist.
     */
    std::vector<int> proc_hist;
@@ -142,12 +142,12 @@ struct MappedBoxInTransit {
 
    //! @brief Return the Box.
    hier::Box& getBox() {
-      return mapped_box.getBox();
+      return mapped_box;
    }
 
    //! @brief Return the Box.
    const hier::Box& getBox() const {
-      return mapped_box.getBox();
+      return mapped_box;
    }
 
    /*!
@@ -156,7 +156,7 @@ struct MappedBoxInTransit {
     */
    int commBufferSize() const {
       const tbox::Dimension& dim(mapped_box.getDim());
-      return 2 * MappedBox::commBufferSize(dim) + 2 + static_cast<int>(proc_hist.size());
+      return 2 * hier::Box::commBufferSize(dim) + 2 + static_cast<int>(proc_hist.size());
    }
 
    /*!
@@ -169,9 +169,9 @@ struct MappedBoxInTransit {
       int* buffer) const {
       const tbox::Dimension& dim(mapped_box.getDim());
       mapped_box.putToIntBuffer(buffer);
-      buffer += MappedBox::commBufferSize(dim);
+      buffer += hier::Box::commBufferSize(dim);
       orig_mapped_box.putToIntBuffer(buffer);
-      buffer += MappedBox::commBufferSize(dim);
+      buffer += hier::Box::commBufferSize(dim);
       *(buffer++) = load;
       *(buffer++) = static_cast<int>(proc_hist.size());
       for (unsigned int i = 0; i < proc_hist.size(); ++i) {
@@ -189,9 +189,9 @@ struct MappedBoxInTransit {
       const int* buffer) {
       const tbox::Dimension& dim(mapped_box.getDim());
       mapped_box.getFromIntBuffer(buffer);
-      buffer += MappedBox::commBufferSize(dim);
+      buffer += hier::Box::commBufferSize(dim);
       orig_mapped_box.getFromIntBuffer(buffer);
-      buffer += MappedBox::commBufferSize(dim);
+      buffer += hier::Box::commBufferSize(dim);
       load = *(buffer++);
       proc_hist.clear();
       proc_hist.insert(proc_hist.end(), *(buffer++), 0);
@@ -218,7 +218,7 @@ struct MappedBoxInTransitMoreLoad {
       if (a.getBox().size() != b.getBox().size()) {
          return a.load > b.load;
       }
-      return a.mapped_box < b.mapped_box;
+      return a.mapped_box.getId() < b.mapped_box.getId();
    }
 };
 
@@ -436,7 +436,7 @@ private:
    static const int TreeLoadBalancer_PREBALANCE1;
    static const int TreeLoadBalancer_FIRSTDATALEN;
 
-   typedef hier::MappedBox MappedBox;
+   typedef hier::Box MappedBox;
 
    typedef hier::LocalId LocalId;
 
@@ -637,7 +637,7 @@ private:
       const std::vector<int>& peer_ranks) const;
 
    /*!
-    * @brief Break off a given load size from a given MappedBox.
+    * @brief Break off a given load size from a given Box.
     *
     * Try various breaking schemes and choose the best one.  This
     * method always return a breakage if at all possible, without
@@ -646,16 +646,16 @@ private:
     * breakage of 100 cells!  The decision to use such a breakage
     * requires context that breakOffLoad does not have.
     *
-    * @param mapped_box MappedBox to break.
+    * @param mapped_box Box to break.
     * @param @ideal_load_to_break Ideal load to break.
     * This is not guaranteed to be met.  The actual
     * amount broken off may be slightly over or under.
     * @param breakoff Boxes broken off (usually just one).
-    * @parem leftover Remainder of MappedBox after breakoff is gone.
+    * @parem leftover Remainder of Box after breakoff is gone.
     */
    bool
    breakOffLoad(
-      const MappedBox& mapped_box,
+      const hier::Box& mapped_box,
       double ideal_load_to_break,
       std::vector<hier::Box>& breakoff,
       std::vector<hier::Box>& leftover,
@@ -726,7 +726,7 @@ private:
 
    bool
    breakOffLoad_planar(
-      const MappedBox& mapped_box,
+      const hier::Box& mapped_box,
       double ideal_load_to_break,
       const tbox::Array<tbox::Array<bool> >& bad_cuts,
       std::vector<hier::Box>& breakoff,
@@ -735,7 +735,7 @@ private:
 
    bool
    breakOffLoad_cubic1(
-      const MappedBox& mapped_box,
+      const hier::Box& mapped_box,
       double ideal_load_to_give,
       const tbox::Array<tbox::Array<bool> >& bad_cuts,
       std::vector<hier::Box>& breakoff,
@@ -756,18 +756,18 @@ private:
       int level_number) const;
 
    /*!
-    * @brief Compute the load for a MappedBox.
+    * @brief Compute the load for a Box.
     */
    double
    computeLoad(
-      const hier::MappedBox& mapped_box) const;
+      const hier::Box& mapped_box) const;
 
    /*!
-    * @brief Compute the load for the MappedBox where it intersects the given box.
+    * @brief Compute the load for the Box where it intersects the given box.
     */
    double
    computeLoad(
-      const hier::MappedBox& mapped_box,
+      const hier::Box& mapped_box,
       const hier::Box& box) const;
 
    /*

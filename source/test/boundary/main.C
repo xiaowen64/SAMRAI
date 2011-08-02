@@ -197,7 +197,7 @@ int main(
       hier::MappedBoxLevel layer0(hier::IntVector(dim, 1), grid_geometry);
       hier::BoxList::Iterator domain_boxes(domain);
       for (hier::LocalId ib(0); ib < patch_boxes.getNumberOfBoxes(); ib++, domain_boxes++) {
-         layer0.addMappedBox(hier::MappedBox(domain_boxes(), ib, 0));
+         layer0.addMappedBox(hier::Box(domain_boxes(), ib, 0));
       }
       edge_utils.addPeriodicImages(
          layer0,

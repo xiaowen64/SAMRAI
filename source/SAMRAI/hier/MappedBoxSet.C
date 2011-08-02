@@ -49,7 +49,7 @@ bool MappedBoxSet::isLocallyEqual(
    MappedBoxSetSingleOwnerIterator other_iter(other, rank);
 
    while (this_iter.isValid() && other_iter.isValid()) {
-      if ((*this_iter) != (*other_iter)) {
+      if (! (*this_iter).isIdEqual((*other_iter))) {
          is_equal = false;
          break;
       }
@@ -99,7 +99,7 @@ void MappedBoxSet::putToDatabase(
          ranks.push_back(ni->getOwnerRank());
          block_ids.push_back(ni->getBlockId().getBlockValue());
          periodic_ids.push_back(ni->getPeriodicId().getPeriodicValue());
-         db_box_array[++counter] = ni->getBox();
+         db_box_array[++counter] = *ni;
       }
 
       database.putIntegerArray(
@@ -144,7 +144,7 @@ void MappedBoxSet::getFromDatabase(
 
       for (unsigned int i = 0; i < mbs_size; ++i) {
          Box box(db_box_array[i]);
-         MappedBox mapped_box(
+         Box mapped_box(
             box,
             LocalId(local_ids[i]),
             ranks[i],
@@ -169,9 +169,9 @@ MappedBoxSet::getSingleBlockBoxList(
    MappedBoxSetSingleBlockIterator itr(*this, which_block);
    BoxList* boxes_in_block = new BoxList(dim);
    while (itr.isValid()) {
-      const MappedBox& mapped_box = *itr;
+      const Box& mapped_box = *itr;
       TBOX_ASSERT(dim == mapped_box.getDim());
-      boxes_in_block->appendItem(mapped_box.getBox());
+      boxes_in_block->appendItem(mapped_box);
       ++itr;
    }
    return tbox::Pointer<BoxList>(boxes_in_block);
@@ -188,15 +188,15 @@ void MappedBoxSet::refine(
 {
    if (this != &output_mapped_boxes) {
       for (const_iterator na = begin(); na != end(); ++na) {
-         MappedBox n = *na;
-         n.getBox().refine(ratio);
+         Box n = *na;
+         n.refine(ratio);
          output_mapped_boxes.insert(output_mapped_boxes.end(), n);
       }
    } else {
       MappedBoxSet tmp_mapped_boxes;
       for (const_iterator na = begin(); na != end(); ++na) {
-         MappedBox n = *na;
-         n.getBox().refine(ratio);
+         Box n = *na;
+         n.refine(ratio);
          tmp_mapped_boxes.insert(tmp_mapped_boxes.end(), n);
       }
       output_mapped_boxes.swap(tmp_mapped_boxes);
@@ -214,15 +214,15 @@ void MappedBoxSet::coarsen(
 {
    if (this != &output_mapped_boxes) {
       for (const_iterator na = begin(); na != end(); ++na) {
-         MappedBox n = *na;
-         n.getBox().coarsen(ratio);
+         Box n = *na;
+         n.coarsen(ratio);
          output_mapped_boxes.insert(output_mapped_boxes.end(), n);
       }
    } else {
       MappedBoxSet tmp_mapped_boxes;
       for (const_iterator na = begin(); na != end(); ++na) {
-         MappedBox n = *na;
-         n.getBox().coarsen(ratio);
+         Box n = *na;
+         n.coarsen(ratio);
          tmp_mapped_boxes.insert(tmp_mapped_boxes.end(), n);
       }
       output_mapped_boxes.swap(tmp_mapped_boxes);
@@ -240,15 +240,15 @@ void MappedBoxSet::grow(
 {
    if (this != &output_mapped_boxes) {
       for (const_iterator na = begin(); na != end(); ++na) {
-         MappedBox n = *na;
-         n.getBox().grow(growth);
+         Box n = *na;
+         n.grow(growth);
          output_mapped_boxes.insert(output_mapped_boxes.end(), n);
       }
    } else {
       MappedBoxSet tmp_mapped_boxes;
       for (const_iterator na = begin(); na != end(); ++na) {
-         MappedBox n = *na;
-         n.getBox().grow(growth);
+         Box n = *na;
+         n.grow(growth);
          tmp_mapped_boxes.insert(tmp_mapped_boxes.end(), n);
       }
       output_mapped_boxes.swap(tmp_mapped_boxes);
@@ -265,7 +265,7 @@ void MappedBoxSet::removePeriodicImageMappedBoxes(
 {
    iterator hint = output_mapped_boxes.begin();
    for (const_iterator na = begin(); na != end(); ++na) {
-      const MappedBox& n = *na;
+      const Box& n = *na;
       if (!n.isPeriodicImage()) {
          hint = output_mapped_boxes.insert(hint, n);
       }
@@ -284,7 +284,7 @@ void MappedBoxSet::unshiftPeriodicImageMappedBoxes(
    iterator hint = output_mapped_boxes.begin();
 
    if (!empty()) {
-      const MappedBox& first_element(*begin());
+      const Box& first_element(*begin());
 
       const PeriodicId zero_shift_number(PeriodicShiftCatalog::getCatalog(
                                      first_element.getDim())->
@@ -292,7 +292,7 @@ void MappedBoxSet::unshiftPeriodicImageMappedBoxes(
 
       for (const_iterator na = begin(); na != end(); ++na) {
          if (na->isPeriodicImage()) {
-            const MappedBox unshifted_mapped_box(
+            const Box unshifted_mapped_box(
                *na, zero_shift_number, refinement_ratio);
             hint = output_mapped_boxes.insert(hint, unshifted_mapped_box);
          } else {
@@ -311,14 +311,14 @@ void MappedBoxSet::removeBoxListIntersections(
    BoxList& boxes) const
 {
    for (const_iterator na = begin(); na != end(); ++na) {
-      const MappedBox& nabr = *na;
-      boxes.removeIntersections(nabr.getBox());
+      const Box& nabr = *na;
+      boxes.removeIntersections(nabr);
    }
 }
 
 /*
  ***********************************************************************
- * Insert MappedBox owners into a single set container.
+ * Insert Box owners into a single set container.
  ***********************************************************************
  */
 void MappedBoxSet::getOwners(
@@ -327,19 +327,6 @@ void MappedBoxSet::getOwners(
    for (const_iterator i_nabr = begin(); i_nabr != end(); ++i_nabr) {
       const int owner = (*i_nabr).getOwnerRank();
       owners.insert(owner);
-   }
-}
-
-/*
- ***********************************************************************
- * Convert a MappedBoxSet to a MappedBoxList.
- ***********************************************************************
- */
-void MappedBoxSet::convertToBoxList(
-   BoxList& box_list) const
-{
-   for (const_iterator ni = begin(); ni != end(); ++ni) {
-      box_list.appendItem(ni->getBox());
    }
 }
 
@@ -355,10 +342,10 @@ void MappedBoxSet::recursivePrint(
 {
    NULL_USE(detail_depth);
    for (const_iterator bi = begin(); bi != end(); ++bi) {
-      MappedBox mapped_box = *bi;
+      Box mapped_box = *bi;
       co << border << "    "
          << mapped_box << "   "
-         << mapped_box.getBox().numberCells() << '\n';
+         << mapped_box.numberCells() << '\n';
    }
 }
 

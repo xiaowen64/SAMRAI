@@ -78,7 +78,7 @@ BoxList::operator tbox::Array<tbox::DatabaseBox>() const
    tbox::Array<tbox::DatabaseBox> new_Array(number_boxes);
 
    int j = 0;
-   for (BoxList::Iterator i(*this); i; i++) {
+   for (Iterator i(*this); i; i++) {
       new_Array[j++] = (tbox::DatabaseBox)(*i);
    }
 
@@ -157,7 +157,7 @@ void BoxList::simplifyBoxes()
 
             if (!tryMe.empty()) {
                bool combineDaPuppies = false;
-               BoxList::Iterator l;
+               Iterator l;
                for (l = this->listStart(); l; l++) {
                   const Box andMe = l();
 
@@ -266,20 +266,22 @@ void BoxList::burstBoxes(
 /*
  *************************************************************************
  *                                                                       *
- * Same as burstBoxes without output argument.  This version uses a      *
- * vector for output to minimize numerous tiny memory allocations.       *
+ * Break up box bursty against box solid and adds the pieces to list.    *
+ * The bursting is done on dimensions 0 through dimension-1, starting    *
+ * with lowest dimensions first to try to maintain the canonical         *
+ * representation for the bursted domains.                               *
  *                                                                       *
  *************************************************************************
  */
 
 void BoxList::burstBoxes(
-   std::vector<Box>& non_intersecting,
    const Box& bursty,
    const Box& solid,
-   const int dimension) const
+   const int dimension,
+   Iterator &insertion_pt)
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(bursty, solid);
-   TBOX_ASSERT(bursty.getDim().getValue() <= dimension);
+   TBOX_ASSERT(dimension <= bursty.getDim().getValue());
 
    // Set up the lower and upper bounds of the regions for ease of access
 
@@ -290,19 +292,20 @@ void BoxList::burstBoxes(
 
    // Break bursty region against solid region along low dimensions first
 
-   non_intersecting.clear();
    for (int d = 0; d < dimension; d++) {
       if (bursth(d) > solidh(d)) {
          Index newl = burstl;
          newl(d) = solidh(d) + 1;
-         non_intersecting.push_back(Box(newl, bursth));
+         addItemAfter(insertion_pt, Box(newl, bursth));
          bursth(d) = solidh(d);
+         insertion_pt++;
       }
       if (burstl(d) < solidl(d)) {
          Index newh = bursth;
          newh(d) = solidl(d) - 1;
-         non_intersecting.push_back(Box(burstl, newh));
+         addItemAfter(insertion_pt, Box(burstl, newh));
          burstl(d) = solidl(d);
+         insertion_pt++;
       }
    }
 }
@@ -318,17 +321,50 @@ void BoxList::burstBoxes(
 void BoxList::removeIntersections(
    const Box& takeaway)
 {
-   BoxList fragments;
-   while (!this->isEmpty()) {
-      Box tryme = this->getFirstItem();
-      this->removeFirstItem();
-      if ((tryme * takeaway).empty()) {
-         fragments.appendItem(tryme);
-      } else {
-         fragments.burstBoxes(tryme, takeaway, takeaway.getDim().getValue());
+   if (isEmpty()) {
+      return;
+   }
+
+   const unsigned short dim = takeaway.getDim().getValue();
+   Iterator insertion_pt(*this);
+   while (insertion_pt) {
+      Box &tryme = *insertion_pt;
+      if (!tryme.intersects(takeaway)) {
+         insertion_pt++;
+      }
+      else {
+         Iterator tmp = insertion_pt;
+         burstBoxes(tryme, takeaway, dim, insertion_pt);
+         insertion_pt++;
+         removeItem(tmp);
       }
    }
-   catenateItems(fragments);
+}
+
+void BoxList::removeIntersectionsFromSublist(
+   const Box& takeaway,
+   Iterator& sublist_start,
+   Iterator& sublist_end,
+   Iterator& insertion_pt)
+{
+   const unsigned short dim = takeaway.getDim().getValue();
+   Iterator itr = sublist_start;
+   while (itr != sublist_end) {
+      Box &tryme = *itr;
+      if (!tryme.intersects(takeaway)) {
+         itr++;
+      }
+      else {
+         burstBoxes(tryme, takeaway, dim, insertion_pt);
+         Iterator tmp = itr;
+         itr++;
+         if (tmp == sublist_start) {
+            sublist_start++;
+         }
+         removeItem(tmp);
+      }
+      insertion_pt = itr;
+   }
 }
 
 void BoxList::removeIntersections(
@@ -344,8 +380,8 @@ void BoxList::removeIntersections(
     */
    TBOX_ASSERT(this->isEmpty());
 
-   if (!(box * takeaway).empty()) {
-      BoxList::burstBoxes(box, takeaway, box.getDim().getValue());
+   if (box.intersects(takeaway)) {
+      burstBoxes(box, takeaway, box.getDim().getValue());
    } else {
       appendItem(box);
    }
@@ -355,9 +391,13 @@ void BoxList::removeIntersections(
 void BoxList::removeIntersections(
    const BoxList& takeaway)
 {
-   for (BoxList::Iterator remove(takeaway); remove; remove++) {
+   if (isEmpty()) {
+      return;
+   }
+
+   for (Iterator remove(takeaway); remove; remove++) {
       const Box& byebye = remove();
-      BoxList::removeIntersections(byebye);
+      removeIntersections(byebye);
    }
 }
 
@@ -368,26 +408,30 @@ void BoxList::removeIntersections(
       return;
    }
 
-   // Parts of the list not intersecting "takeaway"
-   BoxList old_boxes(*this);
-   clearItems();
-
-   std::vector<MappedBox> overlap_mapped_boxes;
-   for (BoxList::Iterator itr(old_boxes); itr; itr++) {
+   std::vector<const Box*> overlap_mapped_boxes;
+   Iterator itr(*this);
+   while (itr) {
       const Box& tryme = *itr;
       takeaway.findOverlapMappedBoxes(overlap_mapped_boxes, tryme);
       if (overlap_mapped_boxes.empty()) {
-         appendItem(tryme);
-      } else {
-         // Remove overlap_mapped_boxes from tryme and save leftovers.
-         BoxList leftover(tryme);
+         itr++;
+      }
+      else {
+         Iterator sublist_start = itr;
+         Iterator sublist_end = sublist_start;
+         sublist_end++;
          for (size_t i = 0;
-              i < overlap_mapped_boxes.size() && !leftover.isEmpty();
+              i < overlap_mapped_boxes.size() && sublist_start != sublist_end;
               ++i) {
-            leftover.removeIntersections(overlap_mapped_boxes[i].getBox());
+            Iterator insertion_pt = sublist_start;
+            removeIntersectionsFromSublist(
+               *overlap_mapped_boxes[i],
+               sublist_start,
+               sublist_end,
+               insertion_pt);
          }
-         copyItems(leftover);
          overlap_mapped_boxes.clear();
+         itr = sublist_end;
       }
    }
 }
@@ -405,12 +449,9 @@ void BoxList::removeIntersections(
    const tbox::ConstPointer<hier::GridGeometry>
       &grid_geometry(takeaway.getGridGeometry());
 
-   // Parts of the list not intersecting "takeaway"
-   BoxList old_boxes(*this);
-   clearItems();
-
-   std::vector<MappedBox> overlap_mapped_boxes;
-   for (BoxList::Iterator itr(old_boxes); itr; itr++) {
+   std::vector<const Box*> overlap_mapped_boxes;
+   Iterator itr(*this);
+   while (itr) {
       const Box& tryme = *itr;
       takeaway.findOverlapMappedBoxes(overlap_mapped_boxes,
                                       tryme,
@@ -418,23 +459,39 @@ void BoxList::removeIntersections(
                                       refinement_ratio,
                                       include_singularity_block_neighbors);
       if (overlap_mapped_boxes.empty()) {
-         appendItem(tryme);
+         itr++;
       } else {
-         // Remove overlap_mapped_boxes from tryme and save leftovers.
-         BoxList leftover(tryme);
+         Iterator sublist_start = itr;
+         Iterator sublist_end = sublist_start;
+         sublist_end++;
          for (size_t i = 0;
-              i < overlap_mapped_boxes.size() && !leftover.isEmpty();
+              i < overlap_mapped_boxes.size() && sublist_start != sublist_end;
               ++i) {
-            if ( overlap_mapped_boxes[i].getBlockId() != block_id ) {
-               grid_geometry->translateBox( overlap_mapped_boxes[i].getBox(),
+            Iterator insertion_pt = sublist_start;
+            const BlockId& overlap_box_block_id =
+               overlap_mapped_boxes[i]->getBlockId();
+            if ( overlap_box_block_id != block_id ) {
+               Box overlap_box = *overlap_mapped_boxes[i];
+               grid_geometry->translateBox( overlap_box,
                                             refinement_ratio,
                                             block_id,
-                                            overlap_mapped_boxes[i].getBlockId() );
+                                            overlap_box_block_id );
+               removeIntersectionsFromSublist(
+                  overlap_box,
+                  sublist_start,
+                  sublist_end,
+                  insertion_pt);
             }
-            leftover.removeIntersections(overlap_mapped_boxes[i].getBox());
+            else {
+               removeIntersectionsFromSublist(
+                  *overlap_mapped_boxes[i],
+                  sublist_start,
+                  sublist_end,
+                  insertion_pt);
+            }
          }
-         copyItems(leftover);
          overlap_mapped_boxes.clear();
+         itr = sublist_end;
       }
    }
 }
@@ -446,20 +503,25 @@ void BoxList::intersectBoxes(
       return;
    }
 
-   // Parts of the list intersecting "boxes"
-   BoxList old_boxes(*this);
-   clearItems();
-
-   std::vector<MappedBox> overlap_mapped_boxes;
-   for (BoxList::Iterator itr(old_boxes); itr; itr++) {
+   std::vector<const Box*> overlap_mapped_boxes;
+   Box overlap(getFirstItem().getDim());
+   Iterator itr(*this);
+   Iterator insertion_pt = itr;
+   while (itr) {
       const Box& tryme = *itr;
       boxes.findOverlapMappedBoxes(overlap_mapped_boxes, tryme);
       for (size_t i = 0; i < overlap_mapped_boxes.size(); ++i) {
-         BoxList tryme_burst(tryme);
-         tryme_burst.intersectBoxes(overlap_mapped_boxes[i].getBox());
-         copyItems(tryme_burst);
+         tryme.intersect(*overlap_mapped_boxes[i], overlap);
+         if (!overlap.empty()) {
+            addItemAfter(insertion_pt, overlap);
+            insertion_pt++;
+         }
       }
       overlap_mapped_boxes.clear();
+      Iterator tmp = itr;
+      insertion_pt++;
+      itr = insertion_pt;
+      removeItem(tmp);
    }
 }
 
@@ -476,12 +538,11 @@ void BoxList::intersectBoxes(
    const tbox::ConstPointer<hier::GridGeometry>
       &grid_geometry(boxes.getGridGeometry());
 
-   // Parts of the list intersecting "boxes"
-   BoxList old_boxes(*this);
-   clearItems();
-
-   std::vector<MappedBox> overlap_mapped_boxes;
-   for (BoxList::Iterator itr(old_boxes); itr; itr++) {
+   std::vector<const Box*> overlap_mapped_boxes;
+   Box overlap(getFirstItem().getDim());
+   Iterator itr(*this);
+   Iterator insertion_pt = itr;
+   while (itr) {
       const Box& tryme = *itr;
       boxes.findOverlapMappedBoxes(overlap_mapped_boxes,
                                    tryme,
@@ -489,17 +550,33 @@ void BoxList::intersectBoxes(
                                    refinement_ratio,
                                    include_singularity_block_neighbors);
       for (size_t i = 0; i < overlap_mapped_boxes.size(); ++i) {
-         BoxList tryme_burst(tryme);
-         if ( overlap_mapped_boxes[i].getBlockId() != block_id ) {
-            grid_geometry->translateBox( overlap_mapped_boxes[i].getBox(),
-                                         refinement_ratio,
-                                         block_id,
-                                         overlap_mapped_boxes[i].getBlockId() );
+         const BlockId &overlap_box_block_id =
+            overlap_mapped_boxes[i]->getBlockId();
+         if ( overlap_box_block_id != block_id ) {
+            Box overlap_box = *overlap_mapped_boxes[i];
+            grid_geometry->translateBox(overlap_box,
+                                        refinement_ratio,
+                                        block_id,
+                                        overlap_box_block_id );
+            tryme.intersect(overlap_box, overlap);
+            if (!overlap.empty()) {
+               addItemAfter(insertion_pt, overlap);
+               insertion_pt++;
+            }
          }
-         tryme_burst.intersectBoxes(overlap_mapped_boxes[i].getBox());
-         copyItems(tryme_burst);
+         else {
+            tryme.intersect(*overlap_mapped_boxes[i], overlap);
+            if (!overlap.empty()) {
+               addItemAfter(insertion_pt, overlap);
+               insertion_pt++;
+            }
+         }
       }
       overlap_mapped_boxes.clear();
+      Iterator tmp = itr;
+      insertion_pt++;
+      itr = insertion_pt;
+      removeItem(tmp);
    }
 }
 
@@ -515,33 +592,49 @@ void BoxList::intersectBoxes(
 void BoxList::intersectBoxes(
    const Box& box)
 {
-   BoxList intersection;
-   while (!this->isEmpty()) {
-      Box tryme = this->getFirstItem();
-      this->removeFirstItem();
-      Box overlap = tryme * box;
+   if (isEmpty()) {
+      return;
+   }
+
+   Iterator i(*this);
+   Box overlap(i().getDim());
+   while (i) {
+      Box &tryme = *i;
+      tryme.intersect(box, overlap);
       if (!overlap.empty()) {
-         intersection.appendItem(overlap);
+         tryme = overlap;
+         i++;
+      }
+      else {
+         Iterator tmp = i;
+         i++;
+         removeItem(tmp);
       }
    }
-   catenateItems(intersection);
 }
 
 void BoxList::intersectBoxes(
    const BoxList& boxes)
 {
-   BoxList intersection;
-   while (!this->isEmpty()) {
-      Box tryme = this->getFirstItem();
-      this->removeFirstItem();
-      for (BoxList::Iterator i(boxes); i; i++) {
-         Box overlap = tryme * i();
+   if (isEmpty()) {
+      return;
+   }
+
+   Iterator insertion_pt(*this);
+   Box overlap(insertion_pt().getDim());
+   while (insertion_pt) {
+      Iterator tmp = insertion_pt;
+      const Box &tryme = *insertion_pt;
+      for (Iterator boxes_itr(boxes); boxes_itr; boxes_itr++) {
+         tryme.intersect(boxes_itr(), overlap);
          if (!overlap.empty()) {
-            intersection.appendItem(overlap);
+            addItemAfter(insertion_pt, overlap);
+            insertion_pt++;
          }
       }
+      insertion_pt++;
+      removeItem(tmp);
    }
-   catenateItems(intersection);
 }
 
 /*
@@ -563,12 +656,12 @@ void BoxList::intersectBoxes(
 
 void BoxList::coalesceBoxes()
 {
-   BoxList::Iterator tb = this->listStart();
+   Iterator tb = this->listStart();
    while (tb) {
 
       bool found_match = false;
 
-      BoxList::Iterator tb2 = tb;
+      Iterator tb2 = tb;
       tb2++;
 
       while (!found_match && tb2) {
@@ -626,7 +719,7 @@ void BoxList::heapify(
 int BoxList::getTotalSizeOfBoxes() const
 {
    int size = 0;
-   for (BoxList::Iterator i(*this); i; i++) {
+   for (Iterator i(*this); i; i++) {
       size += i().size();
    }
    return size;
@@ -645,7 +738,7 @@ int BoxList::getTotalSizeOfBoxes() const
 bool BoxList::contains(
    const Index& p) const
 {
-   for (BoxList::Iterator i(*this); i; i++) {
+   for (Iterator i(*this); i; i++) {
       if (i().contains(p)) return true;
    }
    return false;
@@ -654,7 +747,7 @@ bool BoxList::contains(
 void BoxList::grow(
    const IntVector& ghosts)
 {
-   for (BoxList::Iterator i(*this); i; i++) {
+   for (Iterator i(*this); i; i++) {
       i().grow(ghosts);
    }
 }
@@ -662,7 +755,7 @@ void BoxList::grow(
 void BoxList::shift(
    const IntVector& offset)
 {
-   for (BoxList::Iterator i(*this); i; i++) {
+   for (Iterator i(*this); i; i++) {
       i().shift(offset);
    }
 }
@@ -671,7 +764,7 @@ void BoxList::rotate(
    const Transformation::RotationIdentifier rotation_ident)
 {
    if (getDim().getValue() == 2 || getDim().getValue() == 3) {
-      for (BoxList::Iterator i(*this); i; i++) {
+      for (Iterator i(*this); i; i++) {
          i().rotate(rotation_ident);
       }
    } else {
@@ -685,7 +778,7 @@ void BoxList::rotate(
 void BoxList::refine(
    const IntVector& ratio)
 {
-   for (BoxList::Iterator i(*this); i; i++) {
+   for (Iterator i(*this); i; i++) {
       i().refine(ratio);
    }
 }
@@ -693,7 +786,7 @@ void BoxList::refine(
 void BoxList::coarsen(
    const IntVector& ratio)
 {
-   for (BoxList::Iterator i(*this); i; i++) {
+   for (Iterator i(*this); i; i++) {
       i().coarsen(ratio);
    }
 }
@@ -747,7 +840,7 @@ Box BoxList::getBoundingBox() const
 
       Box bbox(dim);
 
-      for (BoxList::Iterator i(*this); i; i++) {
+      for (Iterator i(*this); i; i++) {
          bbox += i();
       }
 
@@ -767,7 +860,7 @@ void BoxList::print(
    std::ostream& os) const
 {
    int i = 0;
-   for (BoxList::Iterator b(*this); b; b++) {
+   for (Iterator b(*this); b; b++) {
       os << "Box # " << i << ":  " << b() << std::endl;
       i++;
    }

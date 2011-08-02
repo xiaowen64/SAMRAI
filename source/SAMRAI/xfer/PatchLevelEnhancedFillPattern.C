@@ -13,7 +13,7 @@
 
 #include "SAMRAI/xfer/PatchLevelEnhancedFillPattern.h"
 #include "SAMRAI/hier/RealMappedBoxConstIterator.h"
-#include "SAMRAI/hier/MappedBox.h"
+#include "SAMRAI/hier/Box.h"
 #include "SAMRAI/tbox/MathUtilities.h"
 
 #ifndef SAMRAI_INLINE
@@ -78,8 +78,8 @@ void PatchLevelEnhancedFillPattern::computeFillMappedBoxesAndNeighborhoodSets(
    hier::LocalId last_id = dst_mapped_box_level.getLastLocalId();
    for (hier::RealMappedBoxConstIterator ni(dst_mapped_boxes);
         ni.isValid(); ++ni) {
-      const hier::MappedBox& dst_mapped_box = *ni;
-      hier::BoxList fill_boxes(dst_mapped_box.getBox());
+      const hier::Box& dst_mapped_box = *ni;
+      hier::BoxList fill_boxes(dst_mapped_box);
       fill_boxes.getFirstItem().grow(fill_ghost_width);
 
       const tbox::List<hier::GridGeometry::Neighbor>& neighbors =
@@ -104,7 +104,7 @@ void PatchLevelEnhancedFillPattern::computeFillMappedBoxesAndNeighborhoodSets(
 
                for (hier::BoxList::Iterator ei(encon_boxes); ei; ei++) {
 
-                  hier::MappedBox fill_mapped_box(
+                  hier::Box fill_mapped_box(
                      *ei,
                      ++last_id,
                      dst_mapped_box.getOwnerRank(),

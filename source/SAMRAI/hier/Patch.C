@@ -37,7 +37,7 @@ const int Patch::HIER_PATCH_VERSION = 2;
  */
 
 Patch::Patch(
-   const MappedBox& mapped_box,
+   const Box& mapped_box,
    tbox::Pointer<PatchDescriptor> descriptor):
    d_mapped_box(mapped_box),
    d_descriptor(descriptor),
@@ -75,7 +75,7 @@ size_t Patch::getSizeOfPatchData(
    const int id) const
 {
    return d_descriptor->getPatchDataFactory(id)->getSizeOfMemory(
-      d_mapped_box.getBox());
+      d_mapped_box);
 }
 
 size_t
@@ -87,7 +87,7 @@ Patch::getSizeOfPatchData(
 
    for (int i = 0; i < max_set_component && components.isSet(i); i++) {
       size += d_descriptor->getPatchDataFactory(i)->getSizeOfMemory(
-         d_mapped_box.getBox());
+         d_mapped_box);
    }
 
    return size;
@@ -312,7 +312,7 @@ void Patch::putToDatabase(
    int i;
 
    database->putInteger("HIER_PATCH_VERSION", HIER_PATCH_VERSION);
-   database->putDatabaseBox("d_box", d_mapped_box.getBox());
+   database->putDatabaseBox("d_box", d_mapped_box);
    database->putInteger("d_patch_local_id",
                         d_mapped_box.getLocalId().getValue());
    database->putInteger("d_patch_owner",
@@ -367,12 +367,12 @@ int Patch::recursivePrint(
 
    os << border
       << d_mapped_box
-      << "\tdims: " << d_mapped_box.getBox().numberCells(0)
+      << "\tdims: " << d_mapped_box.numberCells(0)
    ;
    for (int i = 1; i < dim.getValue(); ++i) {
-      os << " X " << d_mapped_box.getBox().numberCells(i);
+      os << " X " << d_mapped_box.numberCells(i);
    }
-   os << "\tsize: " << d_mapped_box.getBox().size()
+   os << "\tsize: " << d_mapped_box.size()
       << "\n";
    return 0;
 }

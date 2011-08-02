@@ -113,9 +113,9 @@ void CellDoubleLinearTimeInterpolateOp::timeInterpolate(
    TBOX_ASSERT(old_dat != NULL);
    TBOX_ASSERT(new_dat != NULL);
    TBOX_ASSERT(dst_dat != NULL);
-   TBOX_ASSERT(where * old_dat->getGhostBox() == where);
-   TBOX_ASSERT(where * new_dat->getGhostBox() == where);
-   TBOX_ASSERT(where * dst_dat->getGhostBox() == where);
+   TBOX_ASSERT((where * old_dat->getGhostBox()).isSpatiallyEqual(where));
+   TBOX_ASSERT((where * new_dat->getGhostBox()).isSpatiallyEqual(where));
+   TBOX_ASSERT((where * dst_dat->getGhostBox()).isSpatiallyEqual(where));
    TBOX_DIM_ASSERT_CHECK_ARGS4(dst_data, where, src_data_old, src_data_new);
 
    const hier::Index old_ilo = old_dat->getGhostBox().lower();

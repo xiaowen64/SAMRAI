@@ -13,7 +13,7 @@
 
 #include "SAMRAI/xfer/PatchLevelFullFillPattern.h"
 #include "SAMRAI/hier/RealMappedBoxConstIterator.h"
-#include "SAMRAI/hier/MappedBox.h"
+#include "SAMRAI/hier/Box.h"
 #include "SAMRAI/tbox/MathUtilities.h"
 
 #ifndef SAMRAI_INLINE
@@ -83,9 +83,9 @@ void PatchLevelFullFillPattern::computeFillMappedBoxesAndNeighborhoodSets(
 
    for (hier::RealMappedBoxConstIterator ni(dst_mapped_boxes);
         ni.isValid(); ++ni) {
-      const hier::MappedBox& dst_mapped_box = *ni;
-      hier::MappedBox fill_mapped_box(dst_mapped_box);
-      fill_mapped_box.getBox().grow(fill_ghost_width);
+      const hier::Box& dst_mapped_box = *ni;
+      hier::Box fill_mapped_box(dst_mapped_box);
+      fill_mapped_box.grow(fill_ghost_width);
       fill_mapped_boxes.insert(fill_mapped_boxes.end(), fill_mapped_box);
       dst_to_fill_edges[dst_mapped_box.getId()].insert(fill_mapped_box);
       TBOX_ASSERT(dst_to_fill_edges[dst_mapped_box.getId()].size() == 1);
@@ -126,8 +126,8 @@ void PatchLevelFullFillPattern::computeDestinationFillBoxesOnSourceProc(
    for (NeighborSet::const_iterator na = all_dst_nabrs.begin();
         na != all_dst_nabrs.end(); ++na) {
       MappedBoxVector& fill_boxes = dst_fill_boxes_on_src_proc[na->getGlobalId()];
-      hier::MappedBox fill_box(*na);
-      fill_box.getBox().grow(fill_ghost_width);
+      hier::Box fill_box(*na);
+      fill_box.grow(fill_ghost_width);
       fill_boxes.push_back(fill_box);
       d_max_fill_boxes = tbox::MathUtilities<int>::Max(d_max_fill_boxes,
             static_cast<int>(fill_boxes.size()));

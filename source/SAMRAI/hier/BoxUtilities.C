@@ -1731,7 +1731,7 @@ void BoxUtilities::makeNonOverlappingBoxLists(
 
       for (tbox::List<Box>::Iterator l(box_list); l; l++) {
          Box intersection = remove * l();
-         if (intersection == l()) {
+         if (intersection.isSpatiallyEqual(l())) {
             box_list_array[ib].appendItem(l());
          }
       }

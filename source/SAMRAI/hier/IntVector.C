@@ -78,7 +78,7 @@ void IntVector::getFromDatabase(
    const std::string& name)
 {
    int d = database.getArraySize(name);
-   d_dim.setValue(static_cast<unsigned short>(d));
+   d_dim = tbox::Dimension(static_cast<unsigned short>(d));
    database.getIntegerArray(name, d_vector, d_dim.getValue());
 }
 

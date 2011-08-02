@@ -2865,7 +2865,7 @@ bool Euler::packDerivedDataIntoDoubleBuffer(
    int depth_id) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT((region * patch.getBox()) == region);
+   TBOX_ASSERT((region * patch.getBox()).isSpatiallyEqual(region));
 #endif
 
    bool data_on_patch = FALSE;
@@ -2881,9 +2881,9 @@ bool Euler::packDerivedDataIntoDoubleBuffer(
    TBOX_ASSERT(!density.isNull());
    TBOX_ASSERT(!velocity.isNull());
    TBOX_ASSERT(!pressure.isNull());
-   TBOX_ASSERT(density->getGhostBox() == patch.getBox());
-   TBOX_ASSERT(velocity->getGhostBox() == patch.getBox());
-   TBOX_ASSERT(pressure->getGhostBox() == patch.getBox());
+   TBOX_ASSERT(density->getGhostBox().isSpatiallyEqual(patch.getBox()));
+   TBOX_ASSERT(velocity->getGhostBox().isSpatiallyEqual(patch.getBox()));
+   TBOX_ASSERT(pressure->getGhostBox().isSpatiallyEqual(patch.getBox()));
 #endif
 
    const hier::Box& data_box = density->getGhostBox();

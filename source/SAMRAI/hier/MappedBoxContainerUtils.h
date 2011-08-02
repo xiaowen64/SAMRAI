@@ -37,49 +37,6 @@ public:
 
 
    //@{
-   //! @name Changing a plain array of MappedBoxes in place.
-
-   /*!
-    * @brief Refine the boxes in a vector of MappedBoxes.
-    *
-    * @brief[in,out] mapped_box_vector
-    *
-    * @param[in] ratio Ratio in refinement operation.
-    */
-   static void
-   refineMappedBoxVectorBoxes(
-      std::vector<MappedBox>& mapped_box_vector,
-      const IntVector& ratio);
-
-   /*!
-    * @brief Coarsen the boxes in a vector of MappedBoxes.
-    *
-    * @brief[in,out] mapped_box_vector
-    *
-    * @param[in] ratio Ratio in coarsen operation.
-    */
-   static void
-   coarsenMappedBoxVectorBoxes(
-      std::vector<MappedBox>& mapped_box_vector,
-      const IntVector& ratio);
-
-   /*!
-    * @brief Grow the boxes in a vector of MappedBoxes.
-    *
-    * @param[in,out] mapped_box_vector
-    *
-    * @param[in] growth Growth amount.
-    */
-   static void
-   growMappedBoxVectorBoxes(
-      std::vector<MappedBox>& mapped_box_vector,
-      const IntVector& growth);
-
-   //@}
-
-
-
-   //@{
 
    //! @name I/O operations for containers that lack built-in versions.
 
@@ -96,56 +53,10 @@ public:
     */
    static void
    recursivePrintMappedBoxVector(
-      const std::vector<MappedBox>& mapped_boxes,
+      const std::vector<Box>& mapped_boxes,
       std::ostream& output_stream = tbox::plog,
       const std::string& border = std::string(),
       int detail_depth = 0);
-
-   //@}
-
-
-
-   //@{
-
-   //! @name Some nasty conversions which should eventually go away.
-
-   /**
-    * @brief Convert a BoxList to a vector<MappedBox>.
-    *
-    * Each input box is converted to a MappedBox owned by process 0
-    * The LocalIndices are set sequentially starting with 0 for the
-    * first input Box.
-    *
-    * Put the results in the output container.  For flexibility and
-    * efficiency, the output container is NOT cleared first, so you
-    * may want to clear it before calling this method.
-    *
-    * @param[out] mapped_box_vector
-    *
-    * @param[in] block_id
-    *
-    * @param[in] box_list
-    */
-   static void
-   convertBoxListToMappedBoxVector(
-      const BoxList& box_list,
-      std::vector<MappedBox>& mapped_box_vector,
-      const BlockId& block_id = BlockId::zero());
-
-   /**
-    * @brief Convert a vector<MappedBox> to a BoxList.
-    *
-    * Put the results in the output container.  For flexibility and
-    * efficiency, the output container is NOT cleared first, so you
-    * may want to clear it before calling this method.
-    *
-    * @param[in] mapped_box_vector
-    * @param[out] box_list
-    */
-   static void
-   convertMappedBoxVectorToBoxList(
-      const std::vector<MappedBox>& mapped_box_vector,
-      BoxList& box_list);
 
    //@}
 

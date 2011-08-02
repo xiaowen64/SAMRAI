@@ -361,7 +361,7 @@ bool SingleLevelTestCase(
       }
 
       if (proc == mpi.getRank()) {
-         mblevel.addMappedBox(hier::MappedBox(*level_boxes_itr, local_id, proc));
+         mblevel.addMappedBox(hier::Box(*level_boxes_itr, local_id, proc));
          local_id++;
       }
 

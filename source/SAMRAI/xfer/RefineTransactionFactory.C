@@ -47,8 +47,8 @@ RefineTransactionFactory::allocate(
    tbox::Pointer<hier::PatchLevel> dst_level,
    tbox::Pointer<hier::PatchLevel> src_level,
    tbox::Pointer<hier::BoxOverlap> overlap,
-   const hier::MappedBox& dst_mapped_box,
-   const hier::MappedBox& src_mapped_box,
+   const hier::Box& dst_mapped_box,
+   const hier::Box& src_mapped_box,
    int ritem_id) const {
    TBOX_DIM_ASSERT_CHECK_ARGS4(*dst_level,
       *src_level,

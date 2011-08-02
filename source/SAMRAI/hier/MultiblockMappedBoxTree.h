@@ -60,7 +60,7 @@ public:
     * searching slower, and vice versa.  @b Default: 10
     */
    explicit MultiblockMappedBoxTree(
-      const tbox::ConstPointer<hier::GridGeometry> &grid_geometry,
+      const tbox::ConstPointer<GridGeometry> &grid_geometry,
       const MappedBoxSet& mapped_boxes,
       size_t min_number = 10);
 
@@ -76,8 +76,22 @@ public:
     * @param[in] min_number.  @b Default: 10
     */
    explicit MultiblockMappedBoxTree(
-      const tbox::ConstPointer<hier::GridGeometry> &grid_geometry,
-      const std::vector<MappedBox>& mapped_boxes,
+      const tbox::ConstPointer<GridGeometry> &grid_geometry,
+      const std::vector<Box>& mapped_boxes,
+      size_t min_number = 10);
+
+   /*!
+    * @brief Constructs a MultiblockMappedBoxTree from vector of MappedBoxes.
+    *
+    * @param[in] grid_geometry
+    *
+    * @param[in] boxes.  No empty boxes are allowed.
+    *
+    * @param[in] min_number.  @b Default: 10
+    */
+   explicit MultiblockMappedBoxTree(
+      const tbox::ConstPointer<GridGeometry> &grid_geometry,
+      const std::map<BlockId, BoxList>& boxes,
       size_t min_number = 10);
 
    /*!
@@ -107,8 +121,28 @@ public:
     */
    void
    generateTree(
-      const tbox::ConstPointer<hier::GridGeometry> &grid_geometry,
-      const std::vector<MappedBox>& mapped_boxes,
+      const tbox::ConstPointer<GridGeometry> &grid_geometry,
+      const std::vector<Box>& mapped_boxes,
+      size_t min_number = 10);
+
+   /*!
+    * @brief Generates the tree from MUTABLE lists of Boxes.
+    *
+    * For efficiency reasons, boxes is changed in the process.
+    * Its output state is undefined.  However, you can change
+    * boxes after tree generation without invalidating the
+    * tree.
+    *
+    * @param[in] grid_geometry
+    *
+    * @param[in] mapped_boxes.  No empty boxes are allowed.
+    *
+    * @param[in] min_number
+    */
+   void
+   generateTree(
+      const tbox::ConstPointer<GridGeometry> &grid_geometry,
+      const std::map<BlockId, BoxList>& boxes,
       size_t min_number = 10);
 
    /*!
@@ -120,19 +154,19 @@ public:
     * for the given BlockId.
     */
    bool hasMappedBoxInBlock(
-      const hier::BlockId &block_id ) const;
+      const BlockId &block_id ) const;
 
    /*!
     * @brief Return the tree for a single block.
     *
     * If the MappedBoxes initializing the tree did not contain at
-    * least one MappedBox with the given BlockId, the corresponding
+    * least one Box with the given BlockId, the corresponding
     * single-block tree does not exist, and this method throws an
     * unrecoverable error.  To check for the existance of the tree,
     * use hasMappedBoxInBlock().
     */
    const MappedBoxTree &getSingleBlockMappedBoxTree(
-      const hier::BlockId &block_id ) const;
+      const BlockId &block_id ) const;
 
    /*!
     * @brief Reset to uninitialized state.
@@ -154,7 +188,7 @@ public:
     * @brief Return the GridGeometry object for the multiblock
     * environment.
     */
-   const tbox::ConstPointer<hier::GridGeometry> &getGridGeometry() const;
+   const tbox::ConstPointer<GridGeometry> &getGridGeometry() const;
 
 
    //@{
@@ -162,7 +196,7 @@ public:
    //! @name Overlap checks
 
    /*!
-    * @brief Whether the given MappedBox has an overlap with
+    * @brief Whether the given Box has an overlap with
     * MappedBoxes in the tree.
     *
     * We also check for overlap with MappedBoxes in blocks adjacent
@@ -184,7 +218,7 @@ public:
       bool include_singularity_block_neighbors = false) const;
 
    /*!
-    * @brief Find all boxes that overlap the given MappedBox.
+    * @brief Find all boxes that overlap the given Box.
     *
     * To avoid unneeded work, the output @b overlap_mapped_boxes
     * container is not emptied.  Overlapping MappedBoxes are simply
@@ -215,13 +249,15 @@ public:
       bool include_singularity_block_neighbors = false) const;
 
    /*!
-    * @brief Find all boxes that overlap the given MappedBox.
+    * @brief Find all boxes that overlap the given Box.
     *
     * To avoid unneeded work, the output @b overlap_mapped_boxes
     * container is not emptied.  Overlapping MappedBoxes are simply
     * added.
     *
     * Output is unsorted.
+    *
+    * @param[out] overlap_mapped_boxes
     *
     * @param[in] box
     *
@@ -237,17 +273,51 @@ public:
     */
    void
    findOverlapMappedBoxes(
-      std::vector<MappedBox>& overlap_mapped_boxes,
+      std::vector<Box>& overlap_mapped_boxes,
       const Box& box,
       const BlockId &block_id,
       const IntVector &refinement_ratio,
       bool include_singularity_block_neighbors = false) const;
 
    /*!
-    * @brief Find all boxes that overlap the given MappedBox.
+    * @brief Find all boxes that overlap the given Box.
     *
-    * To avoid unneeded work, the output @b overlap_mapped_boxes
-    * container is not emptied.  Overlapping MappedBoxes are simply
+    * Analogous to findOverlapMappedBoxes returning a vector of MappedBoxes
+    * but avoids the copies.  If the returned overlapped mapped boxes are used
+    * in a context in which the MultiblockMappedBoxTree is constant there is
+    * no point in incurring the cost of copying the tree's MappedBoxes.  Just
+    * return a vector of their addresses.
+    *
+    * Output is unsorted.
+    *
+    * @param[out] overlap_mapped_boxes Pointers to MappedBoxes that overlap
+    * with box.
+    *
+    * @param[in] box
+    *
+    * @param[in] block_id Specifies the block in which box is
+    * specified.
+    *
+    * @param[in] refinement_ratio Refinement ratio of box's index
+    * space.
+    *
+    * @param[in] include_singularity_block_neighbors Whether to include
+    * intersections with boxes in blocks that are neighbors of block
+    * block_id across a multiblock singularity.
+    */
+   void
+   findOverlapMappedBoxes(
+      std::vector<const Box*>& overlap_mapped_boxes,
+      const Box& box,
+      const BlockId &block_id,
+      const IntVector &refinement_ratio,
+      bool include_singularity_block_neighbors = false) const;
+
+   /*!
+    * @brief Find all boxes that overlap the given Box.
+    *
+    * To avoid unneeded work, the output @b overlap_boxes
+    * container is not emptied.  Overlapping Boxes are simply
     * added.
     *
     * Output is unsorted.
@@ -265,8 +335,8 @@ public:
     * block_id across a multiblock singularity.
     */
    void
-   findOverlapMappedBoxes(
-      hier::BoxList & overlap_mapped_boxes,
+   findOverlapBoxes(
+      BoxList& overlap_boxes,
       const Box& box,
       const BlockId &block_id,
       const IntVector &refinement_ratio,
@@ -279,7 +349,7 @@ public:
     */
    void
    getMappedBoxes(
-      std::vector<MappedBox>& mapped_boxes) const;
+      std::vector<Box>& mapped_boxes) const;
 
    /*!
     * @brief Create a similar tree with the boxes refined by a given
@@ -309,7 +379,7 @@ private:
     */
    std::map<BlockId,MappedBoxTree> d_single_block_trees;
 
-   tbox::ConstPointer<hier::GridGeometry> d_grid_geometry;
+   tbox::ConstPointer<GridGeometry> d_grid_geometry;
 
 };
 

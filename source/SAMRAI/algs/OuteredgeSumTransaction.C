@@ -73,8 +73,8 @@ OuteredgeSumTransaction::OuteredgeSumTransaction(
    tbox::Pointer<hier::PatchLevel> dst_level,
    tbox::Pointer<hier::PatchLevel> src_level,
    tbox::Pointer<hier::BoxOverlap> overlap,
-   const hier::MappedBox& dst_node,
-   const hier::MappedBox& src_node,
+   const hier::Box& dst_node,
+   const hier::Box& src_node,
    int refine_item_id):
    d_dst_level(dst_level),
    d_src_level(src_level),

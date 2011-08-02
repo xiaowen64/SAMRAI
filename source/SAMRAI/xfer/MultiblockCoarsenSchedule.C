@@ -550,7 +550,7 @@ void MultiblockCoarsenSchedule::generateScheduleNSquared()
       hier::BoxList::Iterator crse_itr_dp(d_mblk_crse_level->getBoxes());
       for (int dp = 0; dp < dst_npatches; dp++, crse_itr_dp++) {
 
-         const hier::MappedBox dst_mapped_box(
+         const hier::Box dst_mapped_box(
             *crse_itr_dp,
             hier::LocalId(dp),
             dst_mapping.
@@ -560,7 +560,7 @@ void MultiblockCoarsenSchedule::generateScheduleNSquared()
          hier::BoxList::Iterator crse_itr_sp(d_mblk_temp_crse_level->getBoxes());
          for (int sp = 0; sp < src_npatches; sp++, crse_itr_sp++) {
 
-            const hier::MappedBox src_mapped_box(
+            const hier::Box src_mapped_box(
                *crse_itr_sp,
                hier::LocalId(sp),
                src_mapping.
@@ -640,17 +640,17 @@ void MultiblockCoarsenSchedule::restructureNeighborhoodSetsByDstNodes(
     * These are the counterparts to shifted dst mapped_boxes and unshifted src
     * mapped_boxes.
     */
-   hier::MappedBox shifted_mapped_box(dim), unshifted_nabr(dim);
+   hier::Box shifted_mapped_box(dim), unshifted_nabr(dim);
    full_inverted_edges.clear();
    for (hier::NeighborhoodSet::const_iterator ci = edges.begin();
         ci != edges.end();
         ++ci) {
-      const hier::MappedBox& mapped_box =
+      const hier::Box& mapped_box =
          *src_mapped_box_level.getMappedBoxStrict(ci->first);
       const NeighborSet& nabrs = ci->second;
       for (NeighborSet::const_iterator na = nabrs.begin();
            na != nabrs.end(); ++na) {
-         const hier::MappedBox& nabr = *na;
+         const hier::Box& nabr = *na;
          if (nabr.isPeriodicImage()) {
             shifted_mapped_box.initialize(
                mapped_box,
@@ -680,7 +680,7 @@ hier::IntVector MultiblockCoarsenSchedule::getMaxGhostsToGrow() const
    const tbox::Dimension& dim(d_mblk_crse_level->getDim());
 
    /*
-    * MappedBox, face and side elements of adjacent cells overlap even though
+    * Box, face and side elements of adjacent cells overlap even though
     * the cells do not overlap.  Therefore, we always grow at least one
     * cell catch overlaps of mapped_box, face and side elements.
     */
@@ -719,9 +719,9 @@ hier::IntVector MultiblockCoarsenSchedule::getMaxGhostsToGrow() const
 
 void MultiblockCoarsenSchedule::constructScheduleTransactions(
    tbox::Pointer<hier::PatchLevel> dst_level,
-   const hier::MappedBox& dst_mapped_box,
+   const hier::Box& dst_mapped_box,
    tbox::Pointer<hier::PatchLevel> src_level,
-   const hier::MappedBox& src_mapped_box)
+   const hier::Box& src_mapped_box)
 {
    TBOX_ASSERT(!dst_level.isNull());
    TBOX_ASSERT(!src_level.isNull());
@@ -742,8 +742,8 @@ void MultiblockCoarsenSchedule::constructScheduleTransactions(
    tbox::Pointer<hier::PatchDescriptor> src_patch_descriptor =
       src_level->getPatchDescriptor();
 
-   const hier::Box& dst_box = dst_mapped_box.getBox();
-   const hier::Box& src_box = src_mapped_box.getBox();
+   const hier::Box& dst_box = dst_mapped_box;
+   const hier::Box& src_box = src_mapped_box;
 
    const int num_equiv_classes =
       d_coarsen_classes->getNumberOfEquivalenceClasses();
@@ -756,8 +756,8 @@ void MultiblockCoarsenSchedule::constructScheduleTransactions(
     */
    hier::IntVector src_shift(dim, 0);
    hier::IntVector dst_shift(dim, 0);
-   hier::Box unshifted_src_box = src_mapped_box.getBox();
-   hier::Box unshifted_dst_box = dst_mapped_box.getBox();
+   hier::Box unshifted_src_box = src_mapped_box;
+   hier::Box unshifted_dst_box = dst_mapped_box;
    if (src_mapped_box.isPeriodicImage()) {
       TBOX_ASSERT(!dst_mapped_box.isPeriodicImage());
       src_shift = shift_catalog->shiftNumberToShiftDistance(
@@ -794,13 +794,13 @@ void MultiblockCoarsenSchedule::constructScheduleTransactions(
 
       const hier::Box dst_fill_box(hier::Box::grow(unshifted_dst_box, dst_gcw));
 
-      hier::Box test_mask = dst_fill_box * src_mapped_box.getBox();
+      hier::Box test_mask = dst_fill_box * src_mapped_box;
       if (test_mask.empty() &&
           (dst_gcw == constant_zero_intvector) &&
           dst_pdf->dataLivesOnPatchBorder()) {
          hier::Box tmp_dst_fill_box(
             hier::Box::grow(dst_fill_box, constant_one_intvector));
-         test_mask = tmp_dst_fill_box * src_mapped_box.getBox();
+         test_mask = tmp_dst_fill_box * src_mapped_box;
       }
       hier::Box src_mask = hier::Box::shift(test_mask, -src_shift);
 
@@ -816,7 +816,7 @@ void MultiblockCoarsenSchedule::constructScheduleTransactions(
          rep_item.d_var_fill_pattern->calculateOverlap(
             *dst_pdf->getBoxGeometry(unshifted_dst_box),
             *src_pdf->getBoxGeometry(unshifted_src_box),
-            dst_mapped_box.getBox(),
+            dst_mapped_box,
             src_mask,
             dst_fill_box,
             true, transformation);

@@ -9,7 +9,7 @@
  ************************************************************************/
 #include "SAMRAI/SAMRAI_config.h"
 
-#include "SAMRAI/hier/MappedBox.h"
+#include "SAMRAI/hier/Box.h"
 #include "SAMRAI/hier/MappedBoxTree.h"
 #include "SAMRAI/tbox/InputDatabase.h"
 #include "SAMRAI/tbox/InputManager.h"
@@ -39,7 +39,7 @@ using namespace tbox;
  *************************************************************************
  */
 
-typedef std::vector<hier::MappedBox> NodeVec;
+typedef std::vector<hier::Box> NodeVec;
 typedef std::vector<hier::Box> BoxVec;
 
 /*
@@ -212,10 +212,10 @@ int main(
          /*
           * Generate the nodes from the boxes.
           */
-         NodeVec nodes;
-         nodes.reserve(boxes.size());
+         hier::MappedBoxSet nodes;
          for (hier::LocalId i(0); i < static_cast<int>(boxes.size()); ++i) {
-            nodes.push_back(hier::MappedBox(boxes[i.getValue()], i, 0));
+            nodes.insert(nodes.end(),
+               hier::Box(boxes[i.getValue()], i, 0));
          }
          const size_t node_count = nodes.size();
 
