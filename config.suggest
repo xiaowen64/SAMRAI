@@ -66,7 +66,7 @@ cat <<-EOF
 	--with-hdf5=/usr/local/tools/hdf5-intel-parallel-1.8.1
         --with-boost=/usr/gapps/samrai/devapps/chaos/boost/1.45.0
 	--with-zlib
-	--with-hypre=/usr/gapps/samrai/devapps/chaos/hypre/2.2.0b
+	--with-hypre=/usr/gapps/samrai/devapps/chaos/hypre/2.6.0b.opt
 	--without-sundials
 	--without-petsc
 	--without-x
@@ -175,7 +175,7 @@ cat <<-EOF
         --with-boost=/usr/gapps/samrai/devapps/chaos/boost/1.45.0
 	--with-zlib
 	--with-parallel-run-bin=/usr/local/bin/mpirun
-	--with-hypre=/usr/gapps/samrai/devapps/chaos/hypre/2.2.0b
+	--with-hypre=/usr/gapps/samrai/devapps/chaos/hypre/2.6.0b.opt
 	--without-sundials
 	--without-petsc
 	--without-x
@@ -194,7 +194,7 @@ cat <<-EOF
 	--with-hdf5=/usr/local/tools/hdf5-intel-parallel-1.8.1
         --with-boost=/usr/gapps/samrai/devapps/chaos/boost/1.45.0
 	--with-zlib
-	--with-hypre=/usr/gapps/samrai/devapps/chaos/hypre/2.2.0b
+	--with-hypre=/usr/gapps/samrai/devapps/chaos/hypre/2.6.0b.opt
 	--without-sundials
 	--without-petsc
 	--without-x
