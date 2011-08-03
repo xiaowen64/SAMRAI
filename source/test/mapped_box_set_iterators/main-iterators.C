@@ -55,7 +55,7 @@ int main(
          int owner(i % num_owners);
          hier::BlockId bid(i/num_blocks);
          hier::LocalId lid(i);
-         hier::MappedBoxId mbid(lid, owner, bid);
+         hier::BoxId mbid(lid, owner, bid);
 
          hier::Box mb(dim, mbid);
          mboxes.insert(mb);

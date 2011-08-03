@@ -12,7 +12,7 @@
 #define included_hier_Box_C
 
 #include "SAMRAI/hier/Box.h"
-#include "SAMRAI/hier/MappedBoxId.h"
+#include "SAMRAI/hier/BoxId.h"
 #include "SAMRAI/hier/PeriodicShiftCatalog.h"
 #include "SAMRAI/tbox/Utilities.h"
 #include "SAMRAI/tbox/StartupShutdownManager.h"
@@ -49,7 +49,7 @@ int Box::s_high_water = 0;
 #endif
 /*
  *********************************************************************************
- * Construct Box from the components of a reference MappedBox
+ * Construct Box from the components of a reference Box
  * and possibly changing the periodic shift.
  *
  * This method is not inlined because constructing a periodic-shifted

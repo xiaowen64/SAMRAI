@@ -573,10 +573,10 @@ void MappingConnectorAlgorithm::privateModify(
     * The width of old-->new indicates the maximum amount of box
     * growth caused by the change.  A value of zero means no growth.
     *
-    * Growing old MappedBoxes may generate new overlaps that we cannot
+    * Growing old Boxes may generate new overlaps that we cannot
     * detect because they lie outside the current anchor<==>mapped
     * widths.  To reflect that we do not see any farther just because
-    * the MappedBoxes have grown, we shrink the widths by (nominally)
+    * the Boxes have grown, we shrink the widths by (nominally)
     * the amount of growth.  To ensure the shrinkage is consistent
     * between transpose pairs of Connectors, it is converted to the
     * coarser index space then converted into the final index space.
@@ -678,7 +678,7 @@ void MappingConnectorAlgorithm::privateModify(
 
       /*
        * Determine which ranks we have to communicate with.  They are
-       * the ones who owns MappedBoxes that the local MappedBoxes will
+       * the ones who owns Boxes that the local Boxes will
        * be mapped to.
        */
       std::set<int> incoming_ranks, outgoing_ranks;
@@ -718,15 +718,15 @@ void MappingConnectorAlgorithm::privateModify(
 
       /*
        * There are three major parts to computing the new neighbors:
-       * (1) remove relationships for MappedBoxes being mapped into
+       * (1) remove relationships for Boxes being mapped into
        * something else, (2) discover new relationships for the new
-       * MappedBoxes and (3) share information with other processes.
+       * Boxes and (3) share information with other processes.
        *
-       * In steps 1 and 2, the owners of the MappedBoxes being
+       * In steps 1 and 2, the owners of the Boxes being
        * modified determine which relationships to remove and which to
        * add.  Some of this information is kept locally while the rest
        * are to be sent to the owners of the affected anchor and new
-       * MappedBoxes.
+       * Boxes.
        *
        * The three parts are done in the 3 steps following.  Note that
        * these steps do not correspond to the parts.
@@ -741,7 +741,7 @@ void MappingConnectorAlgorithm::privateModify(
       std::map<int, std::vector<int> > neighbor_removal_mesg;
 
       /*
-       * First step: Remove neighbor data for MappedBoxes that are
+       * First step: Remove neighbor data for Boxes that are
        * going away and cache information to be sent out.
        */
       t_modify_remove_neighbors->start();
@@ -753,7 +753,7 @@ void MappingConnectorAlgorithm::privateModify(
       t_modify_remove_neighbors->stop();
 
       /*
-       * Second step: Discover overlaps for new MappedBoxes.  Send
+       * Second step: Discover overlaps for new Boxes.  Send
        * messages with information about what relationships to remove
        * or create.
        */
@@ -1006,12 +1006,12 @@ void MappingConnectorAlgorithm::privateModify_receiveAndUnpack(
                                                            << number_affected
                                                            << " mapped_boxes."
                                                            << std::endl;
-//TODO: Is MappedBoxId usage in this method correct regarding block id?
+//TODO: Is BoxId usage in this method correct regarding block id?
                for (int iii = 0; iii < number_affected; ++iii) {
                   const LocalId id_affected(*(ptr++));
                   const BlockId block_id_affected(*(ptr++));
                   NeighborhoodSet::iterator ci =
-                     anchor_eto_new.find(MappedBoxId(id_affected, rank, block_id_affected));
+                     anchor_eto_new.find(BoxId(id_affected, rank, block_id_affected));
                   NeighborSet& nabrs = (*ci).second;
                   if (s_print_modify_steps == 'y') tbox::plog
                      << " Removing " << mapped_box_gone
@@ -1024,7 +1024,7 @@ void MappingConnectorAlgorithm::privateModify_receiveAndUnpack(
                TBOX_ASSERT(ptr != peer->getRecvData() + peer->getRecvSize());
             }
 
-            // Get the referenced neighbor MappedBoxes.
+            // Get the referenced neighbor Boxes.
             NeighborSet referenced_base_nabrs;
             NeighborSet referenced_head_nabrs;
             const int offset = *(ptr++);
@@ -1059,7 +1059,7 @@ void MappingConnectorAlgorithm::privateModify_receiveAndUnpack(
             for (int ii = 0; ii < n_base_mapped_boxes; ++ii) {
                LocalId local_id(*(ptr++));
                BlockId block_id(*(ptr++));
-               const MappedBoxId gid(local_id, rank, block_id);
+               const BoxId gid(local_id, rank, block_id);
                NeighborSet& nabrs = anchor_eto_new[gid];
                const int n_nabrs_found = *(ptr++);
                for (int j = 0; j < n_nabrs_found; ++j) {
@@ -1075,7 +1075,7 @@ void MappingConnectorAlgorithm::privateModify_receiveAndUnpack(
             for (int ii = 0; ii < n_head_mapped_boxes; ++ii) {
                LocalId local_id(*(ptr++));
                BlockId block_id(*(ptr++));
-               const MappedBoxId gid(local_id, rank, block_id);
+               const BoxId gid(local_id, rank, block_id);
                NeighborSet& nabrs = new_eto_anchor[gid];
                const int n_nabrs_found = *(ptr++);
                for (int j = 0; j < n_nabrs_found; ++j) {
@@ -1102,7 +1102,7 @@ void MappingConnectorAlgorithm::privateModify_receiveAndUnpack(
 
 /*
  ***********************************************************************
- * Discover overlaps with new MappedBoxes and send outgoing messages.
+ * Discover overlaps with new Boxes and send outgoing messages.
  * We interlace discovery with sends rather than wait until all
  * discovery is completed before sending.  This makes sure sends are
  * started asap to maximize communication and computation.
@@ -1145,7 +1145,7 @@ void MappingConnectorAlgorithm::privateModify_discoverAndSend(
    InvertedNeighborhoodSet anchor_eto_old, new_eto_old;
    for (NeighborhoodSet::const_iterator ei = old_eto_anchor.begin();
         ei != old_eto_anchor.end(); ++ei) {
-      const MappedBoxId& old_gid = (*ei).first;
+      const BoxId& old_gid = (*ei).first;
       const NeighborSet& anchor_nabrs = (*ei).second;
       for (NeighborSet::const_iterator na = anchor_nabrs.begin();
            na != anchor_nabrs.end(); ++na) {
@@ -1153,8 +1153,8 @@ void MappingConnectorAlgorithm::privateModify_discoverAndSend(
          if (old_eto_new.find(old_gid) != old_eto_new.end()) {
             /*
              * anchor_eto_old is an InvertedNeighborhoodSet mapping visible anchor
-             * MappedBoxes to local old MappedBoxes that are changing (excludes
-             * old MappedBoxes that do not change).
+             * Boxes to local old Boxes that are changing (excludes
+             * old Boxes that do not change).
              */
             anchor_eto_old[*na].insert(old_gid);
          }
@@ -1162,7 +1162,7 @@ void MappingConnectorAlgorithm::privateModify_discoverAndSend(
    }
    for (NeighborhoodSet::const_iterator ei = old_eto_new.begin();
         ei != old_eto_new.end(); ++ei) {
-      const MappedBoxId& old_gid = (*ei).first;
+      const BoxId& old_gid = (*ei).first;
       const NeighborSet& new_nabrs = (*ei).second;
       for (NeighborSet::const_iterator na = new_nabrs.begin();
            na != new_nabrs.end(); ++na) {
@@ -1312,7 +1312,7 @@ void MappingConnectorAlgorithm::privateModify_discoverAndSend(
 
       /*
        * Find locally visible new neighbors for all anchor
-       * MappedBoxes owned by curr_owner.
+       * Boxes owned by curr_owner.
        */
       while (anchor_ni != visible_anchor_nabrs.end() &&
              (*anchor_ni).getOwnerRank() == curr_owner) {
@@ -1331,9 +1331,9 @@ void MappingConnectorAlgorithm::privateModify_discoverAndSend(
          Box transformed_compare_box(compare_box);
 
          std::vector<Box> found_nabrs;
-         const MappedBoxIdSet& old_indices = anchor_eto_old[anchor_mapped_box];
+         const BoxIdSet& old_indices = anchor_eto_old[anchor_mapped_box];
 
-         for (MappedBoxIdSet::const_iterator na = old_indices.begin();
+         for (BoxIdSet::const_iterator na = old_indices.begin();
               na != old_indices.end(); ++na) {
             const NeighborSet& new_nabrs = old_eto_new.find(*na)->second;
             for (NeighborSet::const_iterator naa = new_nabrs.begin();
@@ -1415,7 +1415,7 @@ void MappingConnectorAlgorithm::privateModify_discoverAndSend(
 
       /*
        * Find locally visible anchor neighbors for all new
-       * MappedBoxes owned by curr_owner.
+       * Boxes owned by curr_owner.
        */
       while (new_ni != visible_new_nabrs.end() &&
              (*new_ni).getOwnerRank() == curr_owner) {
@@ -1434,14 +1434,14 @@ void MappingConnectorAlgorithm::privateModify_discoverAndSend(
          Box transformed_compare_box(compare_box);
 
          std::vector<Box> found_nabrs;
-         const MappedBoxIdSet& old_indices = new_eto_old[new_mapped_box];
+         const BoxIdSet& old_indices = new_eto_old[new_mapped_box];
 
-         for (MappedBoxIdSet::const_iterator na = old_indices.begin();
+         for (BoxIdSet::const_iterator na = old_indices.begin();
               na != old_indices.end(); ++na) {
             NeighborhoodSet::const_iterator anchor_nabrs_i = old_eto_anchor.find(*na);
             if (anchor_nabrs_i != old_eto_anchor.end()) {
                /*
-                * There are anchor MappedBoxes with relationships to
+                * There are anchor Boxes with relationships to
                 * the old Box identified by *na.
                 */
                const NeighborSet& anchor_nabrs = anchor_nabrs_i->second;
@@ -1631,10 +1631,10 @@ void MappingConnectorAlgorithm::privateModify_removeAndCache(
 
    /*
     * Remove relationships with old mapped_boxes (because
-    * they are going away). These are MappedBoxes mapped by
+    * they are going away). These are Boxes mapped by
     * old_to_new.
     *
-    * Erase local old MappedBoxes from new_eto_anchor.
+    * Erase local old Boxes from new_eto_anchor.
     *
     * If the old mapped_boxes have neighbors in the anchor
     * MappedBoxLevel, some relationships from anchor_eto_old should be
@@ -1646,7 +1646,7 @@ void MappingConnectorAlgorithm::privateModify_removeAndCache(
    for (NeighborhoodSet::const_iterator iold = old_eto_new.begin();
         iold != old_eto_new.end(); ++iold) {
 
-      const MappedBoxId& old_gid_gone = iold->first;
+      const BoxId& old_gid_gone = iold->first;
       const Box old_mapped_box_gone(dim, old_gid_gone);
 
       NeighborhoodSet::iterator inew =
@@ -1698,7 +1698,7 @@ void MappingConnectorAlgorithm::privateModify_removeAndCache(
 
                   ++ianchor;
 
-                  // Skip past periodic image MappedBoxes.
+                  // Skip past periodic image Boxes.
                   while (ianchor != affected_anchor_nabrs.end() &&
                          ianchor->isPeriodicImage()) {
                      ++ianchor;
@@ -1920,7 +1920,7 @@ size_t MappingConnectorAlgorithm::findMappingErrors(
    int error_count = 0;
 
    /*
-    * Find old MappedBoxes that changed or disappeared on
+    * Find old Boxes that changed or disappeared on
     * the new MappedBoxLevel.  There should be a mapping for each
     * Box that changed or disappeared.
     */
@@ -1956,12 +1956,12 @@ size_t MappingConnectorAlgorithm::findMappingErrors(
 
    /*
     * All mappings should point from a old Box to a new
-    * set of MappedBoxes.
+    * set of Boxes.
     */
    for (NeighborhoodSet::const_iterator ei = neighborhoods.begin();
         ei != neighborhoods.end(); ++ei) {
 
-      const MappedBoxId& gid = (*ei).first;
+      const BoxId& gid = (*ei).first;
       const NeighborSet& nabrs = (*ei).second;
 
       if (!connector.getBase().hasMappedBox(gid)) {

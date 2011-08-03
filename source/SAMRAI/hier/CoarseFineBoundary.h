@@ -311,7 +311,7 @@ private:
     *
     * Map each local patch to a PatchBoundaries object.
     */
-   std::map<MappedBoxId, PatchBoundaries> d_boundary_boxes;
+   std::map<BoxId, PatchBoundaries> d_boundary_boxes;
 
 };
 

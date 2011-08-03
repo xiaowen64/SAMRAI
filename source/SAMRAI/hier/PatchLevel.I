@@ -42,7 +42,7 @@ const tbox::Pointer<Patch>& PatchLevel::getPatch(
    const GlobalId& gid,
    const BlockId& bid) const
 {
-   MappedBoxId mbid(gid, bid);
+   BoxId mbid(gid, bid);
    PatchContainer::const_iterator it = d_patches.find(mbid);
    TBOX_ASSERT(it != d_patches.end());
    return it->second;
@@ -50,7 +50,7 @@ const tbox::Pointer<Patch>& PatchLevel::getPatch(
 
 SAMRAI_INLINE_KEYWORD
 tbox::Pointer<Patch> PatchLevel::getPatch(
-   const MappedBoxId &mapped_box_id) const
+   const BoxId &mapped_box_id) const
 {
    const PatchContainer::const_iterator mi = d_patches.find(mapped_box_id);
 #ifdef DEBUG_CHECK_ASSERTIONS
@@ -209,7 +209,7 @@ const tbox::Dimension& PatchLevel::getDim() const
 
 SAMRAI_INLINE_KEYWORD
 int PatchLevel::getMappingForPatch(
-   const MappedBoxId &mapped_box_id) const
+   const BoxId &mapped_box_id) const
 {
    // Note: p is required to be a local index.
    /*
@@ -225,7 +225,7 @@ int PatchLevel::getMappingForPatch(
 
 SAMRAI_INLINE_KEYWORD
 const Box& PatchLevel::getBoxForPatch(
-   const MappedBoxId &mapped_box_id) const
+   const BoxId &mapped_box_id) const
 {
    TBOX_ASSERT(mapped_box_id.getOwnerRank() == d_mapped_box_level->getRank());
    return getPatch(mapped_box_id)->getBox(); 
@@ -233,7 +233,7 @@ const Box& PatchLevel::getBoxForPatch(
 
 SAMRAI_INLINE_KEYWORD
 bool PatchLevel::patchTouchesRegularBoundary(
-   const MappedBoxId &mapped_box_id) const
+   const BoxId &mapped_box_id) const
 {
    TBOX_ASSERT(mapped_box_id.getOwnerRank() == d_mapped_box_level->getRank());
    bool rval = getPatch(mapped_box_id)->getPatchGeometry()->getTouchesRegularBoundary();
@@ -242,7 +242,7 @@ bool PatchLevel::patchTouchesRegularBoundary(
 
 SAMRAI_INLINE_KEYWORD
 bool PatchLevel::patchTouchesPeriodicBoundary(
-   const MappedBoxId &mapped_box_id) const
+   const BoxId &mapped_box_id) const
 {
    TBOX_ASSERT(mapped_box_id.getOwnerRank() == d_mapped_box_level->getRank());
    bool rval = getPatch(mapped_box_id)->getPatchGeometry()->getTouchesPeriodicBoundary();

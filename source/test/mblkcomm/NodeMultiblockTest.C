@@ -303,7 +303,7 @@ void NodeMultiblockTest::fillSingularityBoundaryConditions(
 {
    const tbox::Dimension& dim = fill_box.getDim();
 
-   const hier::MappedBoxId& dst_mb_id = patch.getMappedBox().getId();
+   const hier::BoxId& dst_mb_id = patch.getMappedBox().getId();
 
    const int patch_blk_num = dst_mb_id.getBlockId().getBlockValue();
 

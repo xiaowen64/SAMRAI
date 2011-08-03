@@ -4,7 +4,7 @@
  * information, see COPYRIGHT and COPYING.LESSER. 
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Set of MappedBoxes in the same "level". 
+ * Description:   Set of Boxes in the same "level". 
  *
  ************************************************************************/
 #ifndef included_hier_MappedBoxLevel
@@ -45,15 +45,15 @@ namespace hier {
  * the coarsest level or level zero).  
  *
  * Like a PatchLevel, a MappedBoxLevel is a parallel object.  The
- * MappedBoxes of a MappedBoxLevel may be distributed across all the
+ * Boxes of a MappedBoxLevel may be distributed across all the
  * processors in an MPI communicator and can be in one
  * of two parallel states:
  *
- * - @b DISTRIBUTED: Each MPI process knows only the MappedBoxes in the set
+ * - @b DISTRIBUTED: Each MPI process knows only the Boxes in the set
  * that are "owned" by that process.  This is analogous to a PatchLevel 
  * which owns only the Patches that reside on a process.
  *
- * - @b GLOBALIZED: All processes know all MappedBoxes in the set.
+ * - @b GLOBALIZED: All processes know all Boxes in the set.
  * This is analogous to PatchLevel BoxList state when it is globalized
  * (@see PatchLevel::getBoxes()).
  *
@@ -70,13 +70,13 @@ namespace hier {
  *
  * @note
  * The general attributes of a MappedBoxLevel are
- * <li> the set of Box objects with unique MappedBoxIds,
+ * <li> the set of Box objects with unique BoxIds,
  * <li> the refinement ratio defining their index space, and
  * <li> the parallel state.
  *
  * Box object uniqueness is based on the Box equality operator,
  * which compares owner MPI ranks and local indices.  Therefore, 
- * a valid MappedBoxLevel does not contain two MappedBoxes with the same
+ * a valid MappedBoxLevel does not contain two Boxes with the same
  * owner and index.
  */
 class MappedBoxLevel:public tbox::DescribedClass
@@ -172,10 +172,10 @@ public:
     * @brief Initialize the MappedBoxLevel
     *
     * If @c parallel_state is GLOBALIZED, mapped_boxes must be
-    * the global set of MappedBoxes.
+    * the global set of Boxes.
     *
     * If @c parallel_state is DISTRIBUTED, mapped_boxes should contain
-    * all local MappedBoxes.  Non-local MappedBoxes are ignored.
+    * all local Boxes.  Non-local Boxes are ignored.
     *
     * Once the object is initialized, you can further modify it by
     * adding and removing boxes.
@@ -204,7 +204,7 @@ public:
       const ParallelState parallel_state = DISTRIBUTED);
 
   /*!
-    * @brief Initialize the MappedBoxLevel without and MappedBoxes
+    * @brief Initialize the MappedBoxLevel without and Boxes
     *
     * The content and state of the object before calling this function
     * is discarded.
@@ -237,8 +237,8 @@ public:
     * @see initializePrivate()
     *
     * @param[in,out] mapped_boxes On input, this should contain the
-    * MappedBoxes to place in the MappedBoxLevel.  On output, it
-    * contains the MappedBoxes that were in the MappedBoxLevel before 
+    * Boxes to place in the MappedBoxLevel.  On output, it
+    * contains the Boxes that were in the MappedBoxLevel before 
     * the call.
     *
     * @param[in] mapped_boxes
@@ -298,7 +298,7 @@ public:
     * This method is potentially expensive.
     * Acquiring remote Box information (when going
     * to GLOBALIZED mode) triggers all-gather communication.
-    * More memory is required to store additional MappedBoxes.
+    * More memory is required to store additional Boxes.
     *
     * Data not used by the new state gets deallocated.
     *
@@ -338,7 +338,7 @@ public:
     *
     * The cached version remains until it is removed by
     * deallocateGlobalizedVersion() or a method that can potentially
-    * change the MappedBoxes is called.  Note that globalizing and
+    * change the Boxes is called.  Note that globalizing and
     * globalized data is not scalable.  Use only when necessary.
     *
     * Obviously, when the globalized version must be created (when the
@@ -357,7 +357,7 @@ public:
    deallocateGlobalizedVersion() const;
 
    /*!
-    * @brief Returns the SAMRAI_MPI communicator over which the MappedBoxes
+    * @brief Returns the SAMRAI_MPI communicator over which the Boxes
     * are distributed.
     */
    const tbox::SAMRAI_MPI&
@@ -468,11 +468,11 @@ public:
     */
 
    /*!
-    * @brief Returns the container of local MappedBoxes.
+    * @brief Returns the container of local Boxes.
     *
     * @par Important
     * The MappedBoxSet returned contains periodic image
-    * MappedBoxes (if any).  To iterate through real MappedBoxes only, see
+    * Boxes (if any).  To iterate through real Boxes only, see
     * RealMappedBoxConstIterator.
     *
     * You cannot directly modify the MappedBoxSet because it may
@@ -487,7 +487,7 @@ public:
    getMappedBoxes() const;
 
    /*!
-    * @brief Returns the container of global MappedBoxes.
+    * @brief Returns the container of global Boxes.
     *
     * @par Assertions
     * Throws an unrecoverable assertion if not in GLOBALIZED mode.
@@ -535,7 +535,7 @@ public:
    /*!
     * @brief Return local number of boxes.
     *
-    * Periodic image MappedBoxes are excluded.
+    * Periodic image Boxes are excluded.
     */
    size_t
    getLocalNumberOfBoxes() const;
@@ -543,7 +543,7 @@ public:
    /*!
     * @brief Return number of boxes local to the given rank.
     *
-    * Periodic image MappedBoxes are excluded.
+    * Periodic image Boxes are excluded.
     *
     * Object must be in GLOBALIZED mode to use this method.
     *
@@ -554,40 +554,40 @@ public:
       int rank) const;
 
    /*!
-    * @brief Return global number of MappedBoxes.
+    * @brief Return global number of Boxes.
     *
     * This requires a global reduction, if the global-reduced data has
     * not been computed and cached.  When communication is required,
     * all processors must call this method.  To ensure that no
     * communication is needed, call cacheGlobalReducedData() first.
     *
-    * Periodic image MappedBoxes are excluded.
+    * Periodic image Boxes are excluded.
     */
    int
    getGlobalNumberOfBoxes() const;
 
    /*!
-    * @brief Return maximum number of MappedBoxes over all processes.
+    * @brief Return maximum number of Boxes over all processes.
     *
     * This requires a global reduction, if the global-reduced data has
     * not been computed and cached.  When communication is required,
     * all processors must call this method.  To ensure that no
     * communication is needed, call cacheGlobalReducedData() first.
     *
-    * Periodic image MappedBoxes are excluded.
+    * Periodic image Boxes are excluded.
     */
    int
    getMaxNumberOfBoxes() const;
 
    /*!
-    * @brief Return maximum number of MappedBoxes over all processes.
+    * @brief Return maximum number of Boxes over all processes.
     *
     * This requires a global reduction, if the global-reduced data has
     * not been computed and cached.  When communication is required,
     * all processors must call this method.  To ensure that no
     * communication is needed, call cacheGlobalReducedData() first.
     *
-    * Periodic image MappedBoxes are excluded.
+    * Periodic image Boxes are excluded.
     */
    int
    getMinNumberOfBoxes() const;
@@ -595,7 +595,7 @@ public:
    /*!
     * @brief Return local number of cells.
     *
-    * Cells in periodic image MappedBoxes are excluded.
+    * Cells in periodic image Boxes are excluded.
     */
    size_t
    getLocalNumberOfCells() const;
@@ -608,7 +608,7 @@ public:
     * all processors must call this method.  To ensure that no
     * communication is needed, call cacheGlobalReducedData() first.
     *
-    * Periodic image MappedBoxes are excluded.
+    * Periodic image Boxes are excluded.
     */
    int
    getMaxNumberOfCells() const;
@@ -621,7 +621,7 @@ public:
     * all processors must call this method.  To ensure that no
     * communication is needed, call cacheGlobalReducedData() first.
     *
-    * Periodic image MappedBoxes are excluded.
+    * Periodic image Boxes are excluded.
     */
    int
    getMinNumberOfCells() const;
@@ -629,7 +629,7 @@ public:
    /*!
     * @brief Return number of cells local to the given rank.
     *
-    * Cells in periodic image MappedBoxes are excluded.
+    * Cells in periodic image Boxes are excluded.
     *
     * Object must be in GLOBALIZED mode to use this method.
     *
@@ -647,19 +647,19 @@ public:
     * all processors must call this method.  To ensure that no
     * communication is needed, call cacheGlobalReducedData() first.
     *
-    * Cells in periodic image MappedBoxes are excluded.
+    * Cells in periodic image Boxes are excluded.
     */
    int
    getGlobalNumberOfCells() const;
 
    /*!
-    * @brief Return bounding box for local MappedBoxes in a block.
+    * @brief Return bounding box for local Boxes in a block.
     */
    const Box&
    getLocalBoundingBox( int block_number ) const;
 
    /*!
-    * @brief Return bounding box for global MappedBoxes in a block.
+    * @brief Return bounding box for global Boxes in a block.
     *
     * This requires a global reduction if the global bounding box has
     * not been computed and cached.  When communication is required,
@@ -757,7 +757,7 @@ public:
     * @param[in] block_id 
     * @param[in] use_vacant_index
     *
-    * @return iterator to the new MappedBox
+    * @return iterator to the new Box
     */
    MappedBoxSet::iterator
    addBox(
@@ -849,7 +849,7 @@ public:
     * @brief Erase the Box matching the one given.
     *
     * The given Box @em MUST match a Box currently in this
-    * object.  Matching means that the MappedBoxId's match
+    * object.  Matching means that the BoxId's match
     * (disregarding the Boxes).
     *
     * Erasing a Box also erases all of its periodic images.
@@ -866,7 +866,7 @@ public:
    /*!
     * @brief Find the Box matching the one given.
     *
-    * Only the MappedBoxId matters in matching, so the actual Box can
+    * Only the BoxId matters in matching, so the actual Box can
     * be anything.
     *
     * If @c mapped_box is not a local Box, the state must be
@@ -882,7 +882,7 @@ public:
       const Box& mapped_box) const;
 
    /*!
-    * @brief Find the Box specified by the given MappedBoxId and
+    * @brief Find the Box specified by the given BoxId and
     * periodic shift.
     *
     * If @c mapped_box is not a local Box, the state must be
@@ -894,7 +894,7 @@ public:
     */
    MappedBoxSet::const_iterator
    getMappedBox(
-      const MappedBoxId& mapped_box_id) const;
+      const BoxId& mapped_box_id) const;
 
    /*
     * TODO: What is different about these "strict" methods compared to
@@ -904,7 +904,7 @@ public:
    /*!
     * @brief Find the Box matching the one given.
     *
-    * Only the MappedBoxId matters in matching, so the actual Box can
+    * Only the BoxId matters in matching, so the actual Box can
     * be anything.
     *
     * If @c mapped_box is not owned by the local process, the state
@@ -927,7 +927,7 @@ public:
       const Box& mapped_box) const;
 
    /*!
-    * @brief Find the Box specified by the given MappedBoxId and
+    * @brief Find the Box specified by the given BoxId and
     * periodic shift.
     *
     * You cannot directly modify the MappedBoxSet because it may
@@ -943,17 +943,17 @@ public:
     */
    MappedBoxSet::const_iterator
    getMappedBoxStrict(
-      const MappedBoxId& mapped_box_id) const;
+      const BoxId& mapped_box_id) const;
 
    /*!
     * @brief Returns true when the object has a Box specified by the
-    * MappedBoxId.
+    * BoxId.
     *
     * @param[in] mapped_box_id
     */
    bool
    hasMappedBox(
-      const MappedBoxId& mapped_box_id) const;
+      const BoxId& mapped_box_id) const;
 
    /*!
     * @brief Returns true when the object has a Box consistent with all
@@ -1081,7 +1081,7 @@ public:
     * @li operator=() (assignment) (Exception: assigning to
     *     self is a no-op, which does not invalidate Connector
     *     data.
-    * @li eraseMappedBox() (Note that adding a MappedBox
+    * @li eraseMappedBox() (Note that adding a Box
     *     does not invalidate Connector data.)
     * @li going out of scope
     *
@@ -1112,7 +1112,7 @@ public:
       int detail_depth = 0) const;
 
    /*!
-    * @brief Print out statistics on the MappedBoxes.
+    * @brief Print out statistics on the Boxes.
     *
     * @param[in,out] os The output stream
     * @param[in] border
@@ -1246,7 +1246,7 @@ private:
    //@{
 
    /*!
-    * @brief Get and store info on remote MappedBoxes.
+    * @brief Get and store info on remote Boxes.
     *
     * This requires global communication (all-gather).
     * Call acquireRemoteMappedBoxes_pack to pack up messages.
@@ -1256,13 +1256,13 @@ private:
    void
    acquireRemoteMappedBoxes();
 
-   //! @brief Pack local MappedBoxes into an integer array.
+   //! @brief Pack local Boxes into an integer array.
    void
    acquireRemoteMappedBoxes_pack(
       std::vector<int>& send_mesg) const;
 
    /*!
-    * @brief Unpack MappedBoxes from an integer array into internal
+    * @brief Unpack Boxes from an integer array into internal
     * storage.
     */
    void
@@ -1271,7 +1271,7 @@ private:
       std::vector<int>& proc_offset);
 
    /*!
-    * @brief Get and store info on remote MappedBoxes for multiple
+    * @brief Get and store info on remote Boxes for multiple
     * MappedBoxLevel objects.
     *
     * This method combines communication for the multiple
@@ -1317,15 +1317,15 @@ private:
    tbox::SAMRAI_MPI d_mpi;
 
    /*!
-    * @brief Locally-stored MappedBoxes.
+    * @brief Locally-stored Boxes.
     *
-    * This is always the container of local MappedBoxes, regardless of
+    * This is always the container of local Boxes, regardless of
     * parallel mode.
     */
    MappedBoxSet d_mapped_boxes;
 
    /*!
-    * @brief Locally-stored global MappedBoxes (for GLOBALIZED mode).
+    * @brief Locally-stored global Boxes (for GLOBALIZED mode).
     *
     * In DISTRIBUTED mode, this is empty.
     */
@@ -1352,7 +1352,7 @@ private:
    /*!
     * @brief Global cell count, excluding periodic images.
     *
-    * This is mutable because it depends on the MappedBoxes and may be
+    * This is mutable because it depends on the Boxes and may be
     * saved by a const object if computed.
     *
     * A value < 0 means it has not been computed.
@@ -1369,7 +1369,7 @@ private:
    /*!
     * @brief Global box count, excluding periodic images.
     *
-    * This is mutable because it depends on the MappedBoxes and may be
+    * This is mutable because it depends on the Boxes and may be
     * saved by a const object if computed.
     *
     * A value < 0 means it has not been computed.
@@ -1395,10 +1395,10 @@ private:
    mutable std::vector<IntVector> d_global_min_box_size;
 
    /*!
-    * @brief Bounding box of local MappedBoxes, excluding periodic images.
+    * @brief Bounding box of local Boxes, excluding periodic images.
     * One for each block.
     *
-    * This is mutable because it depends on the MappedBoxes and may be
+    * This is mutable because it depends on the Boxes and may be
     * saved by a const object if computed.
     */
    mutable std::vector<Box> d_local_bounding_box;
@@ -1410,10 +1410,10 @@ private:
    mutable bool d_local_bounding_box_up_to_date;
 
    /*!
-    * @brief Bounding box of global MappedBoxes, excluding periodic images.
+    * @brief Bounding box of global Boxes, excluding periodic images.
     * One for each block.
     *
-    * This is mutable because it depends on the MappedBoxes and may be
+    * This is mutable because it depends on the Boxes and may be
     * saved by a const object if computed.
     */
    mutable std::vector<Box> d_global_bounding_box;

@@ -163,7 +163,7 @@ PatchLevel::PatchLevel(
    const MappedBoxSet& mapped_boxes = d_mapped_box_level->getMappedBoxes();
    for (RealMappedBoxConstIterator ni(mapped_boxes); ni.isValid(); ++ni) {
       const Box& mapped_box = *ni;
-      const MappedBoxId &ip = mapped_box.getId();
+      const BoxId &ip = mapped_box.getId();
       tbox::Pointer<Patch>& patch = d_patches[ip];
       patch = d_factory->allocate(mapped_box, d_descriptor);
       patch->setPatchLevelNumber(d_level_number);
@@ -181,8 +181,8 @@ PatchLevel::PatchLevel(
    t_constructor_phys_domain->stop();
 
    t_constructor_touch_boundaries->start();
-   std::map<MappedBoxId, PatchGeometry::TwoDimBool> touches_regular_bdry;
-   std::map<MappedBoxId, PatchGeometry::TwoDimBool> touches_periodic_bdry;
+   std::map<BoxId, PatchGeometry::TwoDimBool> touches_regular_bdry;
+   std::map<BoxId, PatchGeometry::TwoDimBool> touches_periodic_bdry;
    grid_geometry->findPatchesTouchingBoundaries(
       touches_regular_bdry,
       touches_periodic_bdry,
@@ -254,8 +254,8 @@ PatchLevel::PatchLevel(
    d_boundary_boxes_created = false;
 
    t_constructor_touch_boundaries->start();
-   std::map<MappedBoxId, PatchGeometry::TwoDimBool> touches_regular_bdry;
-   std::map<MappedBoxId, PatchGeometry::TwoDimBool> touches_periodic_bdry;
+   std::map<BoxId, PatchGeometry::TwoDimBool> touches_regular_bdry;
+   std::map<BoxId, PatchGeometry::TwoDimBool> touches_periodic_bdry;
    grid_geometry->findPatchesTouchingBoundaries(
       touches_regular_bdry,
       touches_periodic_bdry,
@@ -534,37 +534,37 @@ void PatchLevel::setRefinedPatchLevel(
    const MappedBoxSet& mapped_boxes = d_mapped_box_level->getMappedBoxes();
    for (RealMappedBoxConstIterator ni(mapped_boxes); ni.isValid(); ++ni) {
       const Box& mapped_box = *ni;
-      const MappedBoxId& mapped_box_id = mapped_box.getId();
+      const BoxId& mapped_box_id = mapped_box.getId();
       d_patches[mapped_box_id] = d_factory->allocate(mapped_box, d_descriptor);
       d_patches[mapped_box_id]->setPatchLevelNumber(d_level_number);
       d_patches[mapped_box_id]->setPatchInHierarchy(d_in_hierarchy);
    }
 
-   std::map<MappedBoxId, PatchGeometry::TwoDimBool> touches_regular_bdry;
-   std::map<MappedBoxId, PatchGeometry::TwoDimBool> touches_periodic_bdry;
+   std::map<BoxId, PatchGeometry::TwoDimBool> touches_regular_bdry;
+   std::map<BoxId, PatchGeometry::TwoDimBool> touches_periodic_bdry;
 
    for (PatchLevel::Iterator ip(coarse_level); ip; ip++) {
       tbox::Pointer<PatchGeometry> coarse_pgeom =
          (*ip)->getPatchGeometry();
 
       /* If map does not contain values create them */
-      std::map<MappedBoxId,
+      std::map<BoxId,
                PatchGeometry::TwoDimBool>::iterator iter_touches_regular_bdry(
          touches_regular_bdry.find(ip->getMappedBox().getId()));
       if (iter_touches_regular_bdry == touches_regular_bdry.end()) {
          iter_touches_regular_bdry = touches_regular_bdry.insert(
                iter_touches_regular_bdry,
-               std::pair<MappedBoxId, PatchGeometry::TwoDimBool>(ip->getMappedBox().getId(),
+               std::pair<BoxId, PatchGeometry::TwoDimBool>(ip->getMappedBox().getId(),
                   PatchGeometry::TwoDimBool(getDim())));
       }
 
-      std::map<MappedBoxId,
+      std::map<BoxId,
                PatchGeometry::TwoDimBool>::iterator iter_touches_periodic_bdry(
          touches_periodic_bdry.find(ip->getMappedBox().getId()));
       if (iter_touches_periodic_bdry == touches_periodic_bdry.end()) {
          iter_touches_periodic_bdry = touches_periodic_bdry.insert(
                iter_touches_periodic_bdry,
-               std::pair<MappedBoxId, PatchGeometry::TwoDimBool>(ip->getMappedBox().getId(),
+               std::pair<BoxId, PatchGeometry::TwoDimBool>(ip->getMappedBox().getId(),
                   PatchGeometry::TwoDimBool(getDim())));
       }
 
@@ -721,7 +721,7 @@ void PatchLevel::setCoarsenedPatchLevel(
    const MappedBoxSet& mapped_boxes = d_mapped_box_level->getMappedBoxes();
    for (RealMappedBoxConstIterator ni(mapped_boxes); ni.isValid(); ++ni) {
       const Box& mapped_box = *ni;
-      const MappedBoxId& mapped_box_id = mapped_box.getId();
+      const BoxId& mapped_box_id = mapped_box.getId();
       d_patches[mapped_box_id] = d_factory->allocate(mapped_box, d_descriptor);
       d_patches[mapped_box_id]->setPatchLevelNumber(d_level_number);
       d_patches[mapped_box_id]->setPatchInHierarchy(d_in_hierarchy);
@@ -729,31 +729,31 @@ void PatchLevel::setCoarsenedPatchLevel(
 
    d_boundary_boxes_created = false;
 
-   std::map<MappedBoxId, PatchGeometry::TwoDimBool> touches_regular_bdry;
-   std::map<MappedBoxId, PatchGeometry::TwoDimBool> touches_periodic_bdry;
+   std::map<BoxId, PatchGeometry::TwoDimBool> touches_regular_bdry;
+   std::map<BoxId, PatchGeometry::TwoDimBool> touches_periodic_bdry;
 
    for (PatchLevel::Iterator ip(fine_level); ip; ip++) {
       tbox::Pointer<PatchGeometry> fine_pgeom =
          (*ip)->getPatchGeometry();
 
       /* If map does not contain values create them */
-      std::map<MappedBoxId,
+      std::map<BoxId,
                PatchGeometry::TwoDimBool>::iterator iter_touches_regular_bdry(
          touches_regular_bdry.find(ip->getMappedBox().getId()));
       if (iter_touches_regular_bdry == touches_regular_bdry.end()) {
          iter_touches_regular_bdry = touches_regular_bdry.insert(
                iter_touches_regular_bdry,
-               std::pair<MappedBoxId, PatchGeometry::TwoDimBool>(ip->getMappedBox().getId(),
+               std::pair<BoxId, PatchGeometry::TwoDimBool>(ip->getMappedBox().getId(),
                   PatchGeometry::TwoDimBool(getDim())));
       }
 
-      std::map<MappedBoxId,
+      std::map<BoxId,
                PatchGeometry::TwoDimBool>::iterator iter_touches_periodic_bdry(
          touches_periodic_bdry.find(ip->getMappedBox().getId()));
       if (iter_touches_periodic_bdry == touches_periodic_bdry.end()) {
          iter_touches_periodic_bdry = touches_periodic_bdry.insert(
                iter_touches_periodic_bdry,
-               std::pair<MappedBoxId, PatchGeometry::TwoDimBool>(ip->getMappedBox().getId(),
+               std::pair<BoxId, PatchGeometry::TwoDimBool>(ip->getMappedBox().getId(),
                   PatchGeometry::TwoDimBool(getDim())));
       }
 
@@ -865,7 +865,7 @@ void PatchLevel::getFromDatabase(
    for (RealMappedBoxConstIterator ni(mapped_boxes); ni.isValid(); ++ni) {
       const Box& mapped_box = *ni;
       const LocalId &local_id = mapped_box.getLocalId();
-      const MappedBoxId &mapped_box_id = mapped_box.getId();
+      const BoxId &mapped_box_id = mapped_box.getId();
 
       std::string patch_name = "level_" + tbox::Utilities::levelToString(
             d_level_number)

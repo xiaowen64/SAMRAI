@@ -927,7 +927,7 @@ void MultiblockCoarsenSchedule::coarsenSourceData(
              * Loop over all local patches (fine and temp have the same mapping)
              */
                for( ; fine_iter.isValid(); fine_iter++) {
-                  const hier::MappedBoxId& mapped_box_id = fine_iter->getId();
+                  const hier::BoxId& mapped_box_id = fine_iter->getId();
                tbox::Pointer<hier::Patch> fine_patch(
                   d_mblk_fine_level->getPatch(mapped_box_id));
                tbox::Pointer<hier::Patch> temp_patch(

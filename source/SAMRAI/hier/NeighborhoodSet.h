@@ -12,7 +12,7 @@
 
 #include "SAMRAI/SAMRAI_config.h"
 
-#include "SAMRAI/hier/MappedBoxId.h"
+#include "SAMRAI/hier/BoxId.h"
 #include "SAMRAI/hier/MappedBoxSet.h"
 #include "SAMRAI/tbox/Database.h"
 
@@ -26,19 +26,19 @@ namespace hier {
 class Connector;
 
 /*!
- * @brief A wrapper around std::map<MappedBoxId,MappedBoxSet>.
+ * @brief A wrapper around std::map<BoxId,MappedBoxSet>.
  *
- * A neighborhood is defined as a MappedBox and its "neighbors" which
+ * A neighborhood is defined as a Box and its "neighbors" which
  * are related to it via Connector relationships.  For example, 
- * a NeighborhoodSet is used to group the set of MappedBox neighbors 
- * for each MappedBoxId (corresponding to a MappedBox).
+ * a NeighborhoodSet is used to group the set of Box neighbors 
+ * for each BoxId (corresponding to a Box).
  *
  * This is little more than a dumb container of neighbor data
  * with a few additional "features" such as:
  * - Database reading/writing
  * - printing
  *
- * The NeighborhoodSet @c m maps a MappedBoxId @c i to a set of MappedBoxes @c
+ * The NeighborhoodSet @c m maps a BoxId @c i to a set of Boxes @c
  * m[i], usually its "neighbors".  (The neighbor are stored in a
  * MappedBoxSet.)
  */
@@ -70,12 +70,12 @@ public:
 
    //! @name Types defined by std::map.
 
-   typedef std::map<MappedBoxId, NeighborSet>::iterator iterator;
-   typedef std::map<MappedBoxId, NeighborSet>::const_iterator const_iterator;
-   typedef std::map<MappedBoxId, NeighborSet>::reverse_iterator reverse_iterator;
-   typedef std::map<MappedBoxId, NeighborSet>::key_type key_type;
-   typedef std::map<MappedBoxId, NeighborSet>::value_type value_type;
-   typedef std::map<MappedBoxId, NeighborSet>::size_type size_type;
+   typedef std::map<BoxId, NeighborSet>::iterator iterator;
+   typedef std::map<BoxId, NeighborSet>::const_iterator const_iterator;
+   typedef std::map<BoxId, NeighborSet>::reverse_iterator reverse_iterator;
+   typedef std::map<BoxId, NeighborSet>::key_type key_type;
+   typedef std::map<BoxId, NeighborSet>::value_type value_type;
+   typedef std::map<BoxId, NeighborSet>::size_type size_type;
 
    //@}
 
@@ -448,7 +448,7 @@ private:
    /*!
     * @brief NeighborhoodSet is just a wrapper around an STL map.
     */
-   std::map<MappedBoxId, NeighborSet> d_map;
+   std::map<BoxId, NeighborSet> d_map;
 
 };
 

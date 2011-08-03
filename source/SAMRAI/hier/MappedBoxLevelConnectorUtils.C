@@ -599,9 +599,9 @@ bool MappedBoxLevelConnectorUtils::baseNestsInHeadForMultiblock(
  * patch indices while we try to be backward compatible with non-DLBG
  * parts of SAMRAI.
  *
- * If sort_mapped_boxes_by_corner is true, the local MappedBoxes are
+ * If sort_mapped_boxes_by_corner is true, the local Boxes are
  * sorted by their corner indices.  This helps to de-randomize
- * MappedBoxes that may be randomly ordered by non-deterministic
+ * Boxes that may be randomly ordered by non-deterministic
  * algorithms.
  ***********************************************************************
  */
@@ -1119,7 +1119,7 @@ void MappedBoxLevelConnectorUtils::computeInternalParts(
     * We eventually put the visible reference neighbors in the
     * reference_mapped_box_vec for the generation of a search tree.
     * However, if the user gave a domain, we have to manipulate these
-    * MappedBoxes first, so we put them in a BoxList instead.
+    * Boxes first, so we put them in a BoxList instead.
     */
    int num_blocks = input.getGridGeometry()->getNumberBlocks();
    std::map<BlockId, BoxList> reference_mapped_box_map;
@@ -1171,7 +1171,7 @@ void MappedBoxLevelConnectorUtils::computeInternalParts(
    if (nesting_width >= zero_vec) {
       /*
        * nesting_width is non-negative, grow reference
-       * MappedBoxes, which will then represent the internal parts.
+       * Boxes, which will then represent the internal parts.
        */
       search_tree_represents_internal = true;
       if ( domain.isInitialized() ) {
@@ -1668,7 +1668,7 @@ void MappedBoxLevelConnectorUtils::computeInternalOrExternalPartsForMultiblock(
 
 
          /*
-          * Make MappedBoxes from parts_list and create
+          * Make Boxes from parts_list and create
           * Connector from input.
           */
          if (parts_list.size() == 1 &&
@@ -1715,7 +1715,7 @@ void MappedBoxLevelConnectorUtils::computeInternalOrExternalPartsForMultiblock(
       if (input_eto_parts.size() != input.getLocalNumberOfBoxes()) {
          tbox::perr <<"MappedBoxLevelConnectorUtils::" << caller << ": library error:\n"
                     <<"There are no parts, so input MappedBoxLevel should be completely mapped away.\n"
-                    <<"However, not all input MappedBoxes have been mapped.\n"
+                    <<"However, not all input Boxes have been mapped.\n"
                     <<"input MappedBoxLevel:\n" << input.format("",2)
                     <<"input_eto_parts:\n" << input_eto_parts.format("",2)
             ;
@@ -1823,7 +1823,7 @@ void MappedBoxLevelConnectorUtils::computeBoxesAroundBoundary(
        * the fix is to always remove them because they do not live in
        * the index space of any block.  At enhanced connectivity, we determine
        * through some box calculus portions of the boundary that are touched
-       * by MappedBoxes in all blocks.  The boundary cannot touch these portions
+       * by Boxes in all blocks.  The boundary cannot touch these portions
        * so we remove these parts of the boundary.
        */
 
@@ -1874,9 +1874,9 @@ void MappedBoxLevelConnectorUtils::computeBoxesAroundBoundary(
    
 
          /*
-          * Intersect singularity_boxes with MappedBoxes from each
+          * Intersect singularity_boxes with Boxes from each
           * singularity neighbor.  What remains is where all
-          * singularity neighbors have MappedBoxes touching the
+          * singularity neighbors have Boxes touching the
           * singularity.  The remains tell us where the boundary does
           * not touch the singularity, overriding what the (R^1)\R
           * formula says.
@@ -1971,7 +1971,7 @@ void MappedBoxLevelConnectorUtils::makeRemainderMap(
         ni != orig_nodes.end(); ++ni) {
 
       const Box& orig_node = *ni;
-      const MappedBoxId mapped_box_id = orig_node.getId();
+      const BoxId mapped_box_id = orig_node.getId();
 
       NeighborhoodSet::const_iterator ci =
          orig_eto_rejection.find(orig_node.getId());

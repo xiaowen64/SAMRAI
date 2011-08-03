@@ -361,16 +361,16 @@ private:
    typedef Connector::NeighborSet NeighborSet;
 
    /*!
-    * @brief MappedBoxIdSet is a clarifying typedef.
+    * @brief BoxIdSet is a clarifying typedef.
     */
-   typedef std::set<MappedBoxId> MappedBoxIdSet;
+   typedef std::set<BoxId> BoxIdSet;
 
    /*!
     * @brief Mapping from a (potentially remote) Box to a
-    * set of MappedBoxIds, representing an inverted information
+    * set of BoxIds, representing an inverted information
     * from a NeighborhoodSet.
     */
-   typedef std::map<Box, MappedBoxIdSet, Box::id_less> InvertedNeighborhoodSet;
+   typedef std::map<Box, BoxIdSet, Box::id_less> InvertedNeighborhoodSet;
 
    /*!
     * @brief Most general version of method to modify existing

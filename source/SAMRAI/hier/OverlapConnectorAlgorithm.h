@@ -32,7 +32,7 @@ class Connector;
  * represents overlaps.
  *
  * An overlap Connector is one in which neighbors represent a pair of
- * overlapping MappedBoxes.  If a base Box grown by the
+ * overlapping Boxes.  If a base Box grown by the
  * Connector width overlaps a head Box, the head Box is a
  * neighbor of the base Box.  This class implements some
  * functions for working with a overlap Connectors.
@@ -78,7 +78,7 @@ public:
     *
     * A Box's overlap with another Box is disregarded if:
     * @li @c ignore_self_overlap is true and
-    * @li the two MappedBoxes have the same MappedBoxId and.
+    * @li the two Boxes have the same BoxId and.
     * @li the Connectors's base and head have the same refinement ratio.
     *
     * @param[in,out] connector
@@ -112,7 +112,7 @@ public:
    extractNeighbors(
       Connector::NeighborSet& neighbors,
       const Connector& connector,
-      const MappedBoxId& mapped_box_id,
+      const BoxId& mapped_box_id,
       const IntVector& connector_width) const;
 
    /*!

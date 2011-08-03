@@ -4,12 +4,12 @@
  * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Identifier for a MappedBox.
+ * Description:   Identifier for a Box.
  *
  ************************************************************************/
 
-#ifndef included_hier_MappedBoxId
-#define included_hier_MappedBoxId
+#ifndef included_hier_BoxId
+#define included_hier_BoxId
 
 #include <iostream>
 
@@ -23,15 +23,15 @@ namespace SAMRAI {
 namespace hier {
 
 /*!
- * @brief Identifier for a MappedBox, consisting of a GlobalId,
+ * @brief Identifier for a Box, consisting of a GlobalId,
  * a BlockId and a PeriodicId.
  *
- * MappedBoxes are identified by their BlockId, GlobalId and
+ * Boxes are identified by their BlockId, GlobalId and
  * PeriodicId.  SAMRAI does not support multiblock periodic domains so
  * either the BlockId must be zero or the PeriodicId must be zero, or
  * both.
  *
- * A MappedBox and all its periodic images have the same GlobalId but
+ * A Box and all its periodic images have the same GlobalId but
  * different PeriodicId.
  *
  * Comparison operators are provided to define sorted ordering of
@@ -39,7 +39,7 @@ namespace hier {
  * comparisons.  The BlockIds are compared first, then GlobalIds,
  * followed by the PeriodicId.
  */
-class MappedBoxId
+class BoxId
 {
 
 public:
@@ -50,7 +50,7 @@ public:
     *
     * The object can be changed using initialize() or by assignment.
     */
-   MappedBoxId();
+   BoxId();
 
    /*!
     * @brief Initializing constructor.
@@ -63,7 +63,7 @@ public:
     *
     * @param[in] periodic_id
     */
-   explicit MappedBoxId(
+   explicit BoxId(
       const LocalId &local_id,
       const int owner_rank,
       const BlockId &block_id = BlockId::zero(),
@@ -78,7 +78,7 @@ public:
     *
     * @param[in] periodic_id
     */
-   explicit MappedBoxId(
+   explicit BoxId(
       const GlobalId& id,
       const BlockId &block_id = BlockId::zero(),
       const PeriodicId &periodic_id = PeriodicId::zero());
@@ -88,13 +88,13 @@ public:
     *
     * @param[in] other
     */
-   MappedBoxId(
-      const MappedBoxId& other);
+   BoxId(
+      const BoxId& other);
 
    /*!
     * @brief Destructor.
     */
-   virtual ~MappedBoxId();
+   virtual ~BoxId();
 
    /*!
     * @brief Set all the attributes to given values.
@@ -164,16 +164,16 @@ public:
     */
    bool
    operator == (
-      const MappedBoxId& r) const;
+      const BoxId& r) const;
 
    /*!
     * @brief Inequality operator.
     *
-    * See note on comparison for operator==(const MappedBoxId&);
+    * See note on comparison for operator==(const BoxId&);
     */
    bool
    operator != (
-      const MappedBoxId& r) const;
+      const BoxId& r) const;
 
    /*!
     * @brief Less-than operator.
@@ -184,7 +184,7 @@ public:
     */
    bool
    operator < (
-      const MappedBoxId& r) const;
+      const BoxId& r) const;
 
    /*!
     * @brief Greater-than operator.
@@ -195,21 +195,21 @@ public:
     */
    bool
    operator > (
-      const MappedBoxId& r) const;
+      const BoxId& r) const;
 
    /*!
     * @brief Less-than-or-equal-to operator.
     */
    bool
    operator <= (
-      const MappedBoxId& r) const;
+      const BoxId& r) const;
 
    /*!
     * @brief Greater-than-or-equal-to operator.
     */
    bool
    operator >= (
-      const MappedBoxId& r) const;
+      const BoxId& r) const;
 
    //@}
 
@@ -219,7 +219,7 @@ public:
    //! @name Support for message passing
 
    /*!
-    * @brief Give number of ints required for putting a MappedBoxId in
+    * @brief Give number of ints required for putting a BoxId in
     * message passing buffer.
     *
     * @see putToIntBuffer(), getFromIntBuffer().
@@ -256,7 +256,7 @@ public:
    friend std::ostream&
    operator << (
       std::ostream& co,
-      const MappedBoxId& r);
+      const BoxId& r);
 
 private:
    GlobalId d_global_id;
@@ -270,7 +270,7 @@ private:
 }
 
 #ifdef SAMRAI_INLINE
-#include "SAMRAI/hier/MappedBoxId.I"
+#include "SAMRAI/hier/BoxId.I"
 #endif
 
-#endif  // included_hier_MappedBoxId
+#endif  // included_hier_BoxId

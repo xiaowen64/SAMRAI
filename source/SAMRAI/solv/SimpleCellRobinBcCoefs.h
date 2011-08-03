@@ -321,7 +321,7 @@ private:
     * The position of the cached boundary box bn of patch pn of
     * level ln is d_dirichlet_data_pos[ln][pn]+bn.
     */
-   std::vector<std::map<hier::MappedBoxId, int> > d_dirichlet_data_pos;
+   std::vector<std::map<hier::BoxId, int> > d_dirichlet_data_pos;
 
    /*!
     * @brief Timers for performance measurement.

@@ -33,6 +33,8 @@ DEPENDS_0:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
@@ -55,8 +57,6 @@ DEPENDS_0:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.I			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxLevel.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxLevel.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxLevelHandle.h		\
@@ -440,6 +440,8 @@ DEPENDS_1:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
@@ -462,8 +464,6 @@ DEPENDS_1:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.I			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxLevel.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxLevel.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxLevelHandle.h		\
@@ -864,6 +864,8 @@ DEPENDS_2:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
@@ -886,8 +888,6 @@ DEPENDS_2:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.I			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxLevel.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxLevel.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxLevelHandle.h		\
@@ -1253,6 +1253,8 @@ DEPENDS_3:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
@@ -1275,8 +1277,6 @@ DEPENDS_3:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.I			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxId.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxLevel.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxLevel.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxLevelHandle.h		\

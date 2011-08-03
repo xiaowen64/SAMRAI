@@ -207,8 +207,8 @@ public:
     */
    void
    findPatchesTouchingBoundaries(
-      std::map<MappedBoxId, TwoDimBool>& touches_regular_boundary,
-      std::map<MappedBoxId, TwoDimBool>& touches_periodic_boundary,
+      std::map<BoxId, TwoDimBool>& touches_regular_boundary,
+      std::map<BoxId, TwoDimBool>& touches_periodic_boundary,
       const PatchLevel& level,
       const IntVector& periodic_shift,
       const tbox::Array<BoxList>& domain) const;
@@ -227,8 +227,8 @@ public:
     */
    void
    findPatchesTouchingBoundaries(
-      std::map<MappedBoxId, TwoDimBool>& touches_regular_boundary,
-      std::map<MappedBoxId, TwoDimBool>& touches_periodic_boundary,
+      std::map<BoxId, TwoDimBool>& touches_regular_boundary,
+      std::map<BoxId, TwoDimBool>& touches_periodic_boundary,
       const PatchLevel& level,
       const IntVector& periodic_shift,
       const tbox::Array<tbox::Pointer<MappedBoxTree> >& domain_tree) const;
@@ -283,8 +283,8 @@ public:
    setGeometryOnPatches(
       PatchLevel& level,
       const IntVector& ratio_to_level_zero,
-      std::map<MappedBoxId, TwoDimBool>& touches_regular_bdry,
-      std::map<MappedBoxId, TwoDimBool>& touches_periodic_bdry,
+      std::map<BoxId, TwoDimBool>& touches_regular_bdry,
+      std::map<BoxId, TwoDimBool>& touches_periodic_bdry,
       bool defer_boundary_box_creation);
 
    /*!
@@ -339,7 +339,7 @@ public:
     * domain description.  Otherwise, the index space is refined.
     *
     * @param[out]    domain_mapped_boxes The MappedBoxSet containing all
-    *                MappedBoxes describing the index space
+    *                Boxes describing the index space
     * @param[in]     ratio_to_level_zero ratio to the coarsest level
     * @param[in]     block_number
     */
@@ -360,7 +360,7 @@ public:
     * Otherwise, the index space is refined.
     *
     * @param[out]    domain_mapped_boxes The MappedBoxSet containing all
-    *                MappedBoxes describing the physical domain
+    *                Boxes describing the physical domain
     * @param[in]     ratio_to_level_zero ratio to the coarsest level
     */
    void
@@ -562,7 +562,7 @@ public:
     */
    void
    computeBoundaryBoxesOnLevel(
-      std::map<MappedBoxId, PatchBoundaries>& boundaries,
+      std::map<BoxId, PatchBoundaries>& boundaries,
       const PatchLevel& level,
       const IntVector& periodic_shift,
       const IntVector& ghost_width,
@@ -1221,7 +1221,7 @@ private:
 
    /*!
     * @brief MappedBoxSet representation of the physical domain, including
-    * its periodic image MappedBoxes.
+    * its periodic image Boxes.
     */
    tbox::Array<MappedBoxSet> d_domain_mapped_box_sets;
 

@@ -35,7 +35,7 @@ const int NeighborhoodSet::HIER_EDGE_SET_VERSION = 0;
 
 /*
  ***********************************************************************
- * Find all the MappedBoxes corresponding to a given rank as a range in
+ * Find all the Boxes corresponding to a given rank as a range in
  * the container.
  ***********************************************************************
  */
@@ -50,9 +50,9 @@ NeighborhoodSet::findRanksRange(
        * the range.  stop_key is an iterator pointing just past the
        * last Box in the range.
        */
-      MappedBoxId start_key(LocalId::getZero(), rank);
+      BoxId start_key(LocalId::getZero(), rank);
       rval.first = d_map.lower_bound(start_key);
-      MappedBoxId stop_key(LocalId::getZero(), rank + 1);
+      BoxId stop_key(LocalId::getZero(), rank + 1);
       rval.second = d_map.lower_bound(stop_key);
    }
    return rval;
@@ -60,7 +60,7 @@ NeighborhoodSet::findRanksRange(
 
 /*
  ***********************************************************************
- * Find all the MappedBoxes corresponding to a given rank as a range in
+ * Find all the Boxes corresponding to a given rank as a range in
  * the container.
  ***********************************************************************
  */
@@ -75,9 +75,9 @@ NeighborhoodSet::findRanksRange(
        * the range.  stop_key is an iterator pointing just past the
        * last Box in the range.
        */
-      MappedBoxId start_key(LocalId::getZero(), rank);
+      BoxId start_key(LocalId::getZero(), rank);
       rval.first = d_map.lower_bound(start_key);
-      MappedBoxId stop_key(LocalId::getZero(), rank + 1);
+      BoxId stop_key(LocalId::getZero(), rank + 1);
       rval.second = d_map.lower_bound(stop_key);
    }
    return rval;
@@ -94,7 +94,7 @@ NeighborhoodSet::coarsenNeighbors(
    const IntVector& ratio) const
 {
    for (const_iterator ei = begin(); ei != end(); ++ei) {
-      const MappedBoxId& mapped_box_id = (*ei).first;
+      const BoxId& mapped_box_id = (*ei).first;
       const NeighborSet& orig_nabrs = (*ei).second;
       orig_nabrs.coarsen(output_edges[mapped_box_id], ratio);
    }
@@ -111,7 +111,7 @@ NeighborhoodSet::refineNeighbors(
    const IntVector& ratio) const
 {
    for (const_iterator ei = begin(); ei != end(); ++ei) {
-      const MappedBoxId& mapped_box_id = (*ei).first;
+      const BoxId& mapped_box_id = (*ei).first;
       const NeighborSet& orig_nabrs = (*ei).second;
       orig_nabrs.refine(output_edges[mapped_box_id], ratio);
    }
@@ -128,7 +128,7 @@ NeighborhoodSet::growNeighbors(
    const IntVector& growth) const
 {
    for (const_iterator ei = begin(); ei != end(); ++ei) {
-      const MappedBoxId& mapped_box_id = (*ei).first;
+      const BoxId& mapped_box_id = (*ei).first;
       const NeighborSet& orig_nabrs = (*ei).second;
       orig_nabrs.grow(output_edges[mapped_box_id], growth);
    }
@@ -273,7 +273,7 @@ void NeighborhoodSet::putToDatabase(
       const std::string set_db_string("set_for_local_id_");
 
       for (const_iterator ei = begin(); ei != end(); ++ei) {
-         const MappedBoxId& mbid = ei->first;
+         const BoxId& mbid = ei->first;
          const NeighborSet& mapped_boxes = ei->second;
          const std::string set_name =
             set_db_string +
@@ -310,7 +310,7 @@ void NeighborhoodSet::getFromDatabase(
 
       const std::string set_db_string("set_for_local_id_");
 
-      std::pair<MappedBoxId, NeighborSet> tmp_pair;
+      std::pair<BoxId, NeighborSet> tmp_pair;
       for (size_t i = 0; i < number_of_sets; ++i) {
          tmp_pair.first.initialize( LocalId(local_indices[i]),
                                     owners[i],
@@ -344,7 +344,7 @@ void NeighborhoodSet::recursivePrint(
    const std::string indented_border = border + "  ";
    co << border << "  " << size() << " neigborhoods:\n";
    for (NeighborhoodSet::const_iterator ei = begin(); ei != end(); ++ei) {
-      const MappedBoxId& mbid = ei->first;
+      const BoxId& mbid = ei->first;
       const NeighborSet& nabrs = ei->second;
       co << border << "  " << mbid << "\n";
       co << border << "    Neighbors (" << nabrs.size() << "):\n";

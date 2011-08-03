@@ -509,8 +509,8 @@ CoarseFineBoundary::getBoundaries(
       TBOX_ERROR("The boundary boxes have not been computed.");
    }
 
-   MappedBoxId mapped_box_id(global_id, block_id);
-   std::map<MappedBoxId, PatchBoundaries>::const_iterator
+   BoxId mapped_box_id(global_id, block_id);
+   std::map<BoxId, PatchBoundaries>::const_iterator
    mi = d_boundary_boxes.find(mapped_box_id);
    TBOX_ASSERT(mi != d_boundary_boxes.end());
    return (*mi).second[boundary_type - 1];
@@ -519,7 +519,7 @@ CoarseFineBoundary::getBoundaries(
 void CoarseFineBoundary::printClassData(
    std::ostream& os) const {
    os << "\nCoarseFineBoundary::printClassData...";
-   for (std::map<MappedBoxId, PatchBoundaries>::const_iterator
+   for (std::map<BoxId, PatchBoundaries>::const_iterator
         mi = d_boundary_boxes.begin(); mi != d_boundary_boxes.end(); ++mi) {
       os << "\n	        patch "<< (*mi).first;
       for (unsigned int btype = 0; btype < d_dim.getValue(); ++btype) {

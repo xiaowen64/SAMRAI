@@ -1031,9 +1031,9 @@ void RefineSchedule::finishScheduleConstruction(
        *
        * Build connector d_dst_to_supp using dst_to_unfilled, since
        * supp is came from unfilled.  This Connector is incomplete
-       * because each dst Box only has edges to supp MappedBoxes
+       * because each dst Box only has edges to supp Boxes
        * it generated.  Nevertheless, we set its gcw big enough so each
-       * dst Box nests its potential supp MappedBoxes so that we
+       * dst Box nests its potential supp Boxes so that we
        * bridge to the supp MappedBoxLevel.
        *
        * Build up supp_eto_unfilled, so we can find the unfilled box
@@ -1059,7 +1059,7 @@ void RefineSchedule::finishScheduleConstruction(
       for (hier::NeighborhoodSet::const_iterator ei = dst_eto_unfilled.begin();
            ei != dst_eto_unfilled.end(); ++ei) {
 
-         const hier::MappedBoxId& dst_mapped_box_mbid = ei->first;
+         const hier::BoxId& dst_mapped_box_mbid = ei->first;
          const NeighborSet& dst_unfilled_parts = ei->second;
 
          const int dst_blk = dst_mapped_box_mbid.getBlockId().getBlockValue();
@@ -1388,7 +1388,7 @@ void RefineSchedule::finishScheduleConstruction(
                 * Don't use the strict bridge theorem here because it
                 * cannot guarantee sufficient width.  We know from how
                 * dst nests in hiercoarse what output Connector width
-                * can guarantee that all dst MappedBoxes are seen by a
+                * can guarantee that all dst Boxes are seen by a
                 * hiercoarse Box.
                 */
                oca.bridge(
@@ -1556,7 +1556,7 @@ void RefineSchedule::finishScheduleConstruction(
           * Don't use the strict bridge theorem here because it
           * cannot guarantee sufficient width.  We know from how
           * dst nests in hiercoarse what output Connector width
-          * can guarantee that all dst MappedBoxes are seen by a
+          * can guarantee that all dst Boxes are seen by a
           * hiercoarse Box.
           */
          oca.bridge(
@@ -1961,7 +1961,7 @@ RefineSchedule::createEnconFillSchedule(
         encon_to_unfilled_encon_nbrhood_set.begin();
         ei != encon_to_unfilled_encon_nbrhood_set.end(); ++ei) {
 
-      const hier::MappedBoxId& encon_mapped_box_mbid = ei->first;
+      const hier::BoxId& encon_mapped_box_mbid = ei->first;
       const NeighborSet& encon_unfilled_parts = ei->second;
 
       /*
@@ -1985,7 +1985,7 @@ RefineSchedule::createEnconFillSchedule(
             encon_to_supp_encon_nbrhood_set[encon_mapped_box_mbid];
          encon_to_supp_encon_nabrs.insert(supp_mapped_box);
 
-         const hier::MappedBoxId& supp_mapped_box_id =
+         const hier::BoxId& supp_mapped_box_id =
             supp_mapped_box.getId();
          NeighborSet& supp_encon_to_unfilled_nabrs =
             supp_encon_to_unfilled_nbrhood_set[supp_mapped_box_id];
@@ -2153,7 +2153,7 @@ RefineSchedule::createEnconFillSchedule(
           * Don't use the strict bridge theorem here because it
           * cannot guarantee sufficient width.  We know from how
           * dst nests in hiercoarse what output Connector width
-          * can guarantee that all dst MappedBoxes are seen by a
+          * can guarantee that all dst Boxes are seen by a
           * hiercoarse MappedBox.
           */
          oca.bridge(
@@ -2179,7 +2179,7 @@ RefineSchedule::createEnconFillSchedule(
        * Don't use the strict bridge theorem here because it
        * cannot guarantee sufficient width.  We know from how
        * dst nests in hiercoarse what output Connector width
-       * can guarantee that all dst MappedBoxes are seen by a
+       * can guarantee that all dst Boxes are seen by a
        * hiercoarse MappedBox.
        */
       oca.bridge(
@@ -2297,7 +2297,7 @@ RefineSchedule::createUnfilledEnconLevelWithNoSource(
         df_iter = dst_to_fill_nbrhood_set.begin();
         df_iter != dst_to_fill_nbrhood_set.end(); ++df_iter) {
 
-      const hier::MappedBoxId& dst_mapped_box_id = df_iter->first;
+      const hier::BoxId& dst_mapped_box_id = df_iter->first;
       const int dst_blk = dst_mapped_box_id.getBlockId().getBlockValue();
 
       const tbox::Pointer<hier::GridGeometry> grid_geometry
@@ -2346,7 +2346,7 @@ RefineSchedule::createUnfilledEnconLevelWithNoSource(
                     de_iter = dst_encon_nabrs.begin();
                     de_iter != dst_encon_nabrs.end(); ++de_iter) {
 
-                  const hier::MappedBoxId& encon_mb_id =
+                  const hier::BoxId& encon_mb_id =
                      de_iter->getId();
 
                   const hier::BlockId& nbr_blk_id =
@@ -2745,7 +2745,7 @@ void RefineSchedule::fillSingularityBoundaries(
 
                for ( ; dst_local_iter.isValid(); dst_local_iter++) {
 
-                  const hier::MappedBoxId& mapped_box_id =
+                  const hier::BoxId& mapped_box_id =
                      dst_local_iter->getId();
 
                   tbox::Pointer<hier::Patch> patch(
@@ -3289,7 +3289,7 @@ void RefineSchedule::generateCommunicationSchedule(
    t_construct_send_trans->stop();
 
    /*
-    * Construct transactions for local destination MappedBoxes, whether from
+    * Construct transactions for local destination Boxes, whether from
     * local or remote sources.  Set up unfilled_mapped_box_level
     * and connector from destination to unfilled_mapped_box_level.
     */
@@ -3308,7 +3308,7 @@ void RefineSchedule::generateCommunicationSchedule(
    for (hier::NeighborhoodSet::const_iterator cf = dst_eto_fill.begin();
         cf != dst_eto_fill.end(); ++cf) {
 
-      const hier::MappedBoxId& dst_mapped_box_id(cf->first);
+      const hier::BoxId& dst_mapped_box_id(cf->first);
       const hier::Box& dst_mapped_box = *dst_mapped_box_level.getMappedBox(
             dst_mapped_box_id);
 
@@ -3458,7 +3458,7 @@ RefineSchedule::createTransactionsAndUnfilledBoxes(
 {
    const tbox::Dimension& dim = dst_mapped_box.getDim();
 
-   const hier::MappedBoxId& dst_mapped_box_id = dst_mapped_box.getId();
+   const hier::BoxId& dst_mapped_box_id = dst_mapped_box.getId();
    const hier::BlockId& dst_block_id = dst_mapped_box_id.getBlockId();
    const int dst_blk = dst_block_id.getBlockValue();
 
@@ -3600,7 +3600,7 @@ RefineSchedule::createTransactionsAndUnfilledBoxes(
    }
 
    /*
-    * Create MappedBoxes for unfilled_mapped_box_level.
+    * Create Boxes for unfilled_mapped_box_level.
     */
    if (!unfilled_box_for_dst.isEmpty()) {
       NeighborSet& unfilled_nabrs =
@@ -3623,7 +3623,7 @@ RefineSchedule::createTransactionsAndUnfilledBoxes(
 
    if (nblocks > 1) {
       /*
-       * Do appropriate tranformations and create MappedBoxes for
+       * Do appropriate tranformations and create Boxes for
        * unfilled_encon_mapped_box_level 
        */
       const hier::NeighborhoodSet& dst_to_encon_nbrhood_set =
@@ -3641,7 +3641,7 @@ RefineSchedule::createTransactionsAndUnfilledBoxes(
               de_iter = dst_encon_nabrs.begin();
               de_iter != dst_encon_nabrs.end(); ++de_iter) {
 
-            const hier::MappedBoxId& encon_mapped_box_id =
+            const hier::BoxId& encon_mapped_box_id =
                de_iter->getId();
             const hier::BlockId& nbr_blk_id =
                encon_mapped_box_id.getBlockId();
@@ -3715,7 +3715,7 @@ RefineSchedule::createUnfilledMappedBoxesWithNoSource(
     * at enhanced connectivity, which are handled separately.
     */
 
-   const hier::MappedBoxId& dst_mapped_box_id = dst_mapped_box.getId();
+   const hier::BoxId& dst_mapped_box_id = dst_mapped_box.getId();
    const hier::BlockId& dst_block_id = dst_mapped_box_id.getBlockId();
    const int dst_blk = dst_block_id.getBlockValue();
 
@@ -3807,7 +3807,7 @@ RefineSchedule::createUnfilledMappedBoxesWithNoSource(
       dst_to_encon_nbrhood_set.find(dst_mapped_box_id);
 
    /*
-    * Create MappedBoxes from unfilled_box_for_encon, to be added
+    * Create Boxes from unfilled_box_for_encon, to be added
     * to unfilled_encon_mb_level.  Also store the unfilled boxes
     * in a BoxList in the destination coordinate system.
     */
@@ -3818,7 +3818,7 @@ RefineSchedule::createUnfilledMappedBoxesWithNoSource(
            de_iter = dst_encon_nabrs.begin();
            de_iter != dst_encon_nabrs.end(); ++de_iter) {
 
-         const hier::MappedBoxId& encon_mapped_box_id =
+         const hier::BoxId& encon_mapped_box_id =
             de_iter->getId();
          const hier::BlockId& nbr_blk_id =
             encon_mapped_box_id.getBlockId();
@@ -3878,7 +3878,7 @@ RefineSchedule::createUnfilledMappedBoxesWithNoSource(
    }
 
    /*
-    * Now the MappedBoxes stored in fill_mapped_boxes_at_encon can be
+    * Now the Boxes stored in fill_mapped_boxes_at_encon can be
     * added to unfilled_mapped_boxes, after first removing 
     * intersections with unfilled_encon_list, to keep
     * unfilled_mapped_boxes from overlapping with unfilled_encon_boxes
@@ -3922,8 +3922,8 @@ RefineSchedule::createUnfilledMappedBoxesWithNoSource(
  * owners see them.  Transactions must have the same order on the
  * sending and receiving processors.
  *
- * 2. It shifts periodic image dst MappedBoxes back to the zero-shift position,
- * and applies a similar shift to src MappedBoxes so that the overlap is
+ * 2. It shifts periodic image dst Boxes back to the zero-shift position,
+ * and applies a similar shift to src Boxes so that the overlap is
  * unchanged.  The constructScheduleTransactions method requires all
  * shifts to be absorbed in the src Box.
  ***********************************************************************
@@ -4235,7 +4235,7 @@ void RefineSchedule::createEnconLevel(const hier::IntVector& fill_gcw)
 
                   for ( ; dst_local_iter.isValid(); dst_local_iter++) {
 
-                     const hier::MappedBoxId& mapped_box_id =
+                     const hier::BoxId& mapped_box_id =
                         dst_local_iter->getId();
    
                      tbox::Pointer<hier::Patch> patch(
@@ -4431,7 +4431,7 @@ void RefineSchedule::communicateFillBoxes(
    const hier::NeighborhoodSet& dst_eto_fill = dst_to_fill.getNeighborhoodSets();
    for (hier::NeighborhoodSet::const_iterator ei = dst_eto_fill.begin();
         ei != dst_eto_fill.end(); ++ei) {
-      const hier::MappedBoxId& dst_mapped_box_id = ei->first;
+      const hier::BoxId& dst_mapped_box_id = ei->first;
       const NeighborSet& fill_nabrs = ei->second;
       /*
        * Pack dst_mapped_box_id's fill box info into tmp_mesg.

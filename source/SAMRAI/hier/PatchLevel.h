@@ -251,15 +251,15 @@ public:
       const BlockId& bid) const;
 
    /*!
-    * @brief Get a Patch based on its MappedBoxId.
+    * @brief Get a Patch based on its BoxId.
     *
     * @param[in]  mbid
     *
-    * @return A Pointer to the Patch indicated by the MappedBoxId.
+    * @return A Pointer to the Patch indicated by the BoxId.
     */
    tbox::Pointer<Patch>
    getPatch(
-      const MappedBoxId &mbid) const;
+      const BoxId &mbid) const;
 
    /*!
     * @brief Get the PatchDescriptor
@@ -519,35 +519,35 @@ public:
     * @return the processor that owns the specified patch.  The patches
     * are numbered starting at zero.
     *
-    * @param[in] mapped_box_id Patch's MappedBoxId
+    * @param[in] mapped_box_id Patch's BoxId
     */
    int
    getMappingForPatch(
-      const MappedBoxId &mapped_box_id) const;
+      const BoxId &mapped_box_id) const;
 
    /*!
     * @brief Get the box for the specified patch
     *
     * @return The box for the specified patch.
     *
-    * @param[in] mapped_box_id Patch's MappedBoxId
+    * @param[in] mapped_box_id Patch's BoxId
     */
    const Box&
    getBoxForPatch(
-      const MappedBoxId &mapped_box_id) const;
+      const BoxId &mapped_box_id) const;
 
    /*!
     * @brief Determine if the patch is adjacent to a non-periodic
     * physical domain boundary.
     *
-    * @param[in] mapped_box_id Patch's MappedBoxId
+    * @param[in] mapped_box_id Patch's BoxId
     *
     * @return True if patch with given number is adjacent to a non-periodic
     * physical domain boundary.  Otherwise, false.
     */
    bool
    patchTouchesRegularBoundary(
-      const MappedBoxId &mapped_box_id) const;
+      const BoxId &mapped_box_id) const;
 
    /*!
     * @brief Determine if the patch is adjacent to a periodic physical
@@ -556,11 +556,11 @@ public:
     * @return True if patch with given number is adjacent to a periodic
     * physical domain boundary.  Otherwise, false.
     *
-    * @param[in] mapped_box_id Patch's MappedBoxId
+    * @param[in] mapped_box_id Patch's BoxId
     */
    bool
    patchTouchesPeriodicBoundary(
-      const MappedBoxId &mapped_box_id) const;
+      const BoxId &mapped_box_id) const;
 
    /*!
     * @brief Allocate the specified component on all patches.
@@ -727,7 +727,7 @@ private:
     * @brief Container of distributed patches on level.
     *
     */
-   typedef std::map<MappedBoxId, tbox::Pointer<Patch> >
+   typedef std::map<BoxId, tbox::Pointer<Patch> >
    PatchContainer;
 
 public:

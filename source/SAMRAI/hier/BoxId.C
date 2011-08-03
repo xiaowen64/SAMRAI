@@ -4,19 +4,19 @@
  * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Identifier for a MappedBox.
+ * Description:   Identifier for a Box.
  *
  ************************************************************************/
 
-#ifndef included_hier_MappedBoxId_C
-#define included_hier_MappedBoxId_C
+#ifndef included_hier_BoxId_C
+#define included_hier_BoxId_C
 
-#include "SAMRAI/hier/MappedBoxId.h"
+#include "SAMRAI/hier/BoxId.h"
 
 #include <iostream>
 
 #ifndef SAMRAI_INLINE
-#include "SAMRAI/hier/MappedBoxId.I"
+#include "SAMRAI/hier/BoxId.I"
 #endif
 
 namespace SAMRAI {
@@ -29,7 +29,7 @@ Stream-insert operator.
 */
 std::ostream& operator << (
    std::ostream& co,
-   const MappedBoxId& r)
+   const BoxId& r)
 {
    co << r.d_global_id.getOwnerRank()
       << ':' << r.d_block_id

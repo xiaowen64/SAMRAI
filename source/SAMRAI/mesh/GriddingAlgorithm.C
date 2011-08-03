@@ -779,7 +779,7 @@ void GriddingAlgorithm::makeFinerLevel(
          t_make_finer_tagging->stop();
 
          /*
-          * Determine MappedBoxes for new fine level.
+          * Determine Boxes for new fine level.
           */
          findRefinementBoxes(new_mapped_box_level,
             tag_to_new,
@@ -2313,7 +2313,7 @@ void GriddingAlgorithm::checkNonrefinedTags(
    const hier::NeighborhoodSet& tag_eto_violator = tag_to_violator.getNeighborhoodSets();
    for (hier::NeighborhoodSet::const_iterator ei = tag_eto_violator.begin();
         ei != tag_eto_violator.end(); ++ei) {
-      const hier::MappedBoxId &mapped_box_id = (*ei).first;
+      const hier::BoxId &mapped_box_id = (*ei).first;
       tbox::Pointer<hier::Patch> patch = level.getPatch(mapped_box_id);
       tbox::Pointer<pdat::CellData<int> > tag_data =
          patch->getPatchData(d_tag_indx);
@@ -2667,7 +2667,7 @@ void GriddingAlgorithm::fillTagsFromMappedBoxLevel(
 
       TBOX_ASSERT(!(tag_data.isNull()));
 
-      const hier::MappedBoxId& mapped_box_id(patch->getMappedBox().getId());
+      const hier::BoxId& mapped_box_id(patch->getMappedBox().getId());
 
       NeighborSet neighbors;
 
@@ -3329,7 +3329,7 @@ void GriddingAlgorithm::findRefinementBoxes(
       }
 
       /*
-       * Add periodic image MappedBoxes to new_mapped_box_level and add edges
+       * Add periodic image Boxes to new_mapped_box_level and add edges
        * incident on those nodes.
        */
       const hier::Connector& tag_to_tag =
@@ -3474,7 +3474,7 @@ void GriddingAlgorithm::refineNewMappedBoxLevel(
 
 /*
  *************************************************************************
- * Extend MappedBoxes to domain boundary if they are too close.
+ * Extend Boxes to domain boundary if they are too close.
  *************************************************************************
  */
 
@@ -3664,8 +3664,8 @@ void GriddingAlgorithm::makeProperNestingMap(
  * Make a map from a MappedBoxLevel to parts of that MappedBoxLevel
  * that violate proper nesting.
  *
- * The violating MappedBoxes are found by comparing candidate
- * MappedBoxes to d_to_nesting_complement's head MappedBoxLevel.
+ * The violating Boxes are found by comparing candidate
+ * Boxes to d_to_nesting_complement's head MappedBoxLevel.
  * Boxes inside the nesting complement violate nesting.
  *************************************************************************
  */
@@ -3740,11 +3740,11 @@ void GriddingAlgorithm::computeNestingViolator(
                                          *refined_domain_search_tree);
       if (!addl_violators.isEmpty()) {
          /*
-          * Non-periodic MappedBoxId needed for NeighborhoodSet::find()
+          * Non-periodic BoxId needed for NeighborhoodSet::find()
           */
-         hier::MappedBoxId cmb_non_per_id(cmb.getGlobalId(),
-                                          cmb.getBlockId(),
-                                          hier::PeriodicId::zero());
+         hier::BoxId cmb_non_per_id(cmb.getGlobalId(),
+                                    cmb.getBlockId(),
+                                    hier::PeriodicId::zero());
          if (candidate_eto_violator.find(cmb_non_per_id) !=
              candidate_eto_violator.end()) {
             /*
@@ -4006,7 +4006,7 @@ void GriddingAlgorithm::growBoxesWithinNestingDomain(
     * Connect new_mapped_box_level to the nesting complement so we
     * know it cannot exist.  Use a Connector width of zero because we
     * don't need it any bigger and we don't want inter-block
-    * neighbors.  (The new MappedBoxes are already confined to their
+    * neighbors.  (The new Boxes are already confined to their
     * own blocks before entering this method, so a zero Connector
     * width eliminates inter-block neighbors.)
     */
@@ -4040,7 +4040,7 @@ void GriddingAlgorithm::growBoxesWithinNestingDomain(
    tmp_mapped_box_vector.reserve(10);
 
    /*
-    * Loop through the new MappedBoxes and grow if needed.  For each
+    * Loop through the new Boxes and grow if needed.  For each
     * Box, determine a sufficient view of the domain where it
     * can grow into.  This view includes domain boxes overlapping the
     * Box minus parts removed to satisfy nesting requirements.

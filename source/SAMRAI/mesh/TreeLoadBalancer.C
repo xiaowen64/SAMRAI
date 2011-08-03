@@ -4946,7 +4946,7 @@ void TreeLoadBalancer::prebalanceMappedBoxLevel(
                      tmp_mapped_box_level.addBox(mapped_box,
                                                  mapped_box.getBlockId());
 
-                  hier::MappedBoxId tmp_mapped_box_id = (*tmp_iter).getId();
+                  hier::BoxId tmp_mapped_box_id = (*tmp_iter).getId();
 
                   tmp_to_balance_edges[tmp_mapped_box_id].insert(mapped_box);
 

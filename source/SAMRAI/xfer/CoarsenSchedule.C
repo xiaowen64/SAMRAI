@@ -547,7 +547,7 @@ void CoarsenSchedule::generateScheduleDLBG()
    t_gen_sched_dlbg->start();
 
    /*
-    * Construct sending transactions for local src MappedBoxes.
+    * Construct sending transactions for local src Boxes.
     */
    /*
     * Restructure the d_temp_to_coarse edge data to arange neighbors by the
@@ -604,7 +604,7 @@ void CoarsenSchedule::generateScheduleDLBG()
    for (hier::NeighborhoodSet::const_iterator ei = coarse_eto_temp.begin();
         ei != coarse_eto_temp.end(); ++ei) {
 
-      const hier::MappedBoxId& dst_gid = ei->first;
+      const hier::BoxId& dst_gid = ei->first;
       const hier::Box& dst_mapped_box =
          *coarse_mapped_box_level.getMappedBoxStrict(dst_gid);
 

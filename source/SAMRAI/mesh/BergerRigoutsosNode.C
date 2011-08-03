@@ -2725,7 +2725,7 @@ void BergerRigoutsosNode::shareNewNeighborhoodSetsWithOwners()
          const hier::LocalId new_local_id(*(ptr++));
          int n_new_relationships = *(ptr++);
          hier::NeighborhoodSet::iterator nn =
-            new_eto_tag.find(hier::MappedBoxId(new_local_id, d_common->rank, d_block_id));
+            new_eto_tag.find(hier::BoxId(new_local_id, d_common->rank, d_block_id));
 #ifdef DEBUG_CHECK_ASSERTIONS
          TBOX_ASSERT(nn != new_eto_tag.end());
 #endif

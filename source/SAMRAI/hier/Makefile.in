@@ -68,7 +68,7 @@ OBJS = 	\
 	Index.o \
 	IntVector.o \
 	GlobalId.o \
-	MappedBoxId.o \
+	BoxId.o \
 	ProcessorMapping.o \
 	ComponentSelector.o \
 	VariableContext.o \

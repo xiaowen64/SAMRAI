@@ -9,7 +9,7 @@
  ************************************************************************/
 
 #include "SAMRAI/tbox/MathUtilities.h"
-#include "SAMRAI/hier/MappedBoxId.h"
+#include "SAMRAI/hier/BoxId.h"
 #include "SAMRAI/hier/PeriodicShiftCatalog.h"
 
 namespace SAMRAI {
@@ -190,7 +190,7 @@ Box::Box(
 SAMRAI_INLINE_KEYWORD
 Box::Box(
    const tbox::Dimension& dim,
-   const MappedBoxId& mapped_box_id) :
+   const BoxId& mapped_box_id) :
    d_lo(dim),
    d_hi(dim),
    d_id(mapped_box_id)
@@ -233,12 +233,12 @@ Box::~Box()
 #endif
 }
 SAMRAI_INLINE_KEYWORD
-hier::MappedBoxId& Box::getId() {
+hier::BoxId& Box::getId() {
    return d_id;
 }
 
 SAMRAI_INLINE_KEYWORD
-const hier::MappedBoxId& Box::getId() const {
+const hier::BoxId& Box::getId() const {
    return d_id;
 }
 
@@ -290,7 +290,7 @@ SAMRAI_INLINE_KEYWORD
 int Box::commBufferSize(
    const tbox::Dimension& dim)
 {
-   return MappedBoxId::commBufferSize() + 2 * dim.getValue();
+   return BoxId::commBufferSize() + 2 * dim.getValue();
 }
 
 SAMRAI_INLINE_KEYWORD
@@ -298,7 +298,7 @@ void Box::putToIntBuffer(
    int* buffer) const
 {
    d_id.putToIntBuffer(buffer);
-   buffer += MappedBoxId::commBufferSize();
+   buffer += BoxId::commBufferSize();
 
    const tbox::Dimension& dim(d_lo.getDim());
    for (int d = 0; d < dim.getValue(); ++d) {
@@ -312,7 +312,7 @@ void Box::getFromIntBuffer(
    const int* buffer)
 {
    d_id.getFromIntBuffer(buffer);
-   buffer += MappedBoxId::commBufferSize();
+   buffer += BoxId::commBufferSize();
 
    const tbox::Dimension& dim(d_lo.getDim());
    for (int d = 0; d < dim.getValue(); ++d) {

@@ -400,7 +400,7 @@ int HierarchyTester::runHierarchyTestAndVerify()
             true /* exact width only */ );
 
       for (hier::PatchLevel::Iterator ip(test_level); ip; ip++) {
-         const MappedBoxId& mapped_box_id = ip->getMappedBox().getId();
+         const BoxId& mapped_box_id = ip->getMappedBox().getId();
          // Test #9:
          if (d_do_refine_test) {
             if (! Box::refine(init_level->getBoxForPatch(mapped_box_id), d_ratio).isSpatiallyEqual(test_level->getBoxForPatch(mapped_box_id))) {
@@ -467,7 +467,7 @@ int HierarchyTester::runHierarchyTestAndVerify()
        **************************************************************
        */
       for (PatchLevel::Iterator tip(test_level); tip; tip++) {
-         const MappedBoxId& mapped_box_id = tip->getMappedBox().getId();
+         const BoxId& mapped_box_id = tip->getMappedBox().getId();
          Pointer<Patch> test_patch = test_level->getPatch(mapped_box_id);
          Pointer<Patch> init_patch = init_level->getPatch(mapped_box_id);
 

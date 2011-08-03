@@ -361,7 +361,7 @@ bool MappedBoxLevel::hasMappedBox(
  */
 SAMRAI_INLINE_KEYWORD
 bool MappedBoxLevel::hasMappedBox(
-   const MappedBoxId& mapped_box_id) const
+   const BoxId& mapped_box_id) const
 {
    const Box mapped_box(getDim(), mapped_box_id);
    return hasMappedBox(mapped_box);
@@ -417,7 +417,7 @@ MappedBoxLevel::getMappedBox(
 SAMRAI_INLINE_KEYWORD
 MappedBoxSet::const_iterator
 MappedBoxLevel::getMappedBox(
-   const MappedBoxId& mapped_box_id) const
+   const BoxId& mapped_box_id) const
 {
 
    const Box mapped_box(getDim(),
@@ -484,7 +484,7 @@ MappedBoxLevel::getMappedBoxStrict(
 SAMRAI_INLINE_KEYWORD
 MappedBoxSet::const_iterator
 MappedBoxLevel::getMappedBoxStrict(
-   const MappedBoxId& mapped_box_id) const
+   const BoxId& mapped_box_id) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    if (mapped_box_id.getOwnerRank() != d_rank && d_parallel_state != GLOBALIZED) {

@@ -15,7 +15,7 @@
 
 #include "SAMRAI/hier/Index.h"
 #include "SAMRAI/hier/IntVector.h"
-#include "SAMRAI/hier/MappedBoxId.h"
+#include "SAMRAI/hier/BoxId.h"
 #include "SAMRAI/hier/Transformation.h"
 #include "SAMRAI/tbox/DatabaseBox.h"
 
@@ -108,8 +108,8 @@ public:
     */
    /*
     * TODO: Constructors initializing boxes are only used to construct
-    * temporary objects for finding other MappedBoxes in a
-    * stl::set<MappedBox>.  We need another way to do it and get rid
+    * temporary objects for finding other Boxes in a
+    * stl::set<Box>.  We need another way to do it and get rid
     * of these constructors.
     */
    explicit Box(
@@ -135,8 +135,8 @@ public:
     */
    /*
     * TODO: Constructors initializing boxes are only used to construct
-    * temporary objects for finding other MappedBoxes in a
-    * stl::set<MappedBox>.  We need another way to do it and get rid
+    * temporary objects for finding other Boxes in a
+    * stl::set<Box>.  We need another way to do it and get rid
     * of these constructors.
     */
    explicit Box(
@@ -147,7 +147,7 @@ public:
 
 
    /*!
-    * @brief Constructor with undefined box and a MappedBoxId.
+    * @brief Constructor with undefined box and a BoxId.
     *
     * The box can be initialized using any of the initialize()
     * methods or by assignment.
@@ -160,28 +160,28 @@ public:
     */
    /*
     * TODO: Constructors initializing boxes are only used to construct
-    * temporary objects for finding other MappedBoxes in a
-    * stl::set<MappedBox>.  We need another way to do it and get rid
+    * temporary objects for finding other Boxes in a
+    * stl::set<Box>.  We need another way to do it and get rid
     * of these constructors.
     */
    explicit Box(
       const tbox::Dimension& dim,
-      const MappedBoxId& mapped_box_id);
+      const BoxId& mapped_box_id);
 
    /*!
     * @brief "Copy" constructor allowing change in PeriodicId.
     *
     * @param[in] other Make a copy (but not an exact copy) of this
-    * MappedBox.
+    * Box.
     *
     * @param[in] periodic_id Periodic shift number to use instead of
     * the shift in @c other.  The box will be set to the real box
     * shifted to the position specified by this value.
     *
-    * @param[in] refinement_ratio The index space where the MappedBox
+    * @param[in] refinement_ratio The index space where the Box
     * lives.
     *
-    * @see initialize( const MappedBox&, const int, const IntVector&);
+    * @see initialize( const Box&, const int, const IntVector&);
     */
    explicit Box(
       const Box& other,
@@ -189,7 +189,7 @@ public:
       const IntVector& refinement_ratio);
 
    /*!
-    * @brief Set all the attributes of the MappedBox.
+    * @brief Set all the attributes of the Box.
     *
     * @param[in] box
     *
@@ -214,16 +214,16 @@ public:
 
    /*!
     * @brief Set all the attributes identical to that of a reference
-    * MappedBox, but with a different PeriodicId.
+    * Box, but with a different PeriodicId.
     *
-    * @param[in] other Initialize to this MappedBox, but with the shift
+    * @param[in] other Initialize to this Box, but with the shift
     * given by @c periodic_id.
     *
     * @param[in] periodic_id PeriodicId number to use instead of the
     * shift in @c other.  The box will be set to the real box shifted
     * to the position specified by this value.
     *
-    * @param[in] refinement_ratio The index space where the MappedBox
+    * @param[in] refinement_ratio The index space where the Box
     * lives.
     */
    void
@@ -237,12 +237,12 @@ public:
     */
    ~Box();
 
-   //! @brief Get the MappedBoxId.
-   MappedBoxId&
+   //! @brief Get the BoxId.
+   BoxId&
    getId();
 
-   //! @brief Get the MappedBoxId.
-   const MappedBoxId&
+   //! @brief Get the BoxId.
+   const BoxId&
    getId() const;
 
    //! @brief Get the Block.
@@ -264,7 +264,7 @@ public:
     */
    const PeriodicId &getPeriodicId() const;
 
-   //! @brief Whether the MappedBox is a periodic image.
+   //! @brief Whether the Box is a periodic image.
    bool isPeriodicImage() const;
 
    bool isIdEqual(const Box& other) const;
@@ -284,7 +284,7 @@ public:
    };
 
    /*!
-    * @brief Give number of ints required for putting a MappedBox in
+    * @brief Give number of ints required for putting a Box in
     * message passing buffer.
     *
     * This number is independent of instance but dependent on
@@ -823,7 +823,7 @@ private:
 
    Index d_lo;
    Index d_hi;
-   MappedBoxId d_id;
+   BoxId d_id;
 
    /*!
     * @brief Initialize static objects and register shutdown routine.

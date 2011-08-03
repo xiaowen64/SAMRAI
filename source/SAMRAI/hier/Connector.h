@@ -33,21 +33,21 @@ class NeighborhoodSet;
  *
  * Connectors have a notion of a "base" and a "head", representing a
  * directional relationship between two MappedBoxLevels.  The relationships
- * are a collection of MappedBoxes in the head, pointed to by a MappedBox in
+ * are a collection of Boxes in the head, pointed to by a Box in
  * the base.   The association between base and head relationships is
- * 1 .. 0-many.  That is, one MappedBox in the base can be related to zero or
- * more MappedBoxes (called its NeighborSet) in the head.
+ * 1 .. 0-many.  That is, one Box in the base can be related to zero or
+ * more Boxes (called its NeighborSet) in the head.
  *
  * @par Usage
  * Connections in a Connector can have three possible relationships:
  *
- * # A MappedBox in the base has no related NeighborSet.  In this case,
- *   the MappedBox in the base will exist as-is in the head.
- * # A MappedBox in the base has NeighborSet which is empty.  In this case, the
- *   MappedBox from the base will not exist in the head MappedBoxLevel.
- * # A MappedBox in the base has a corresponding NeighborSet which in
- *   non-empty.  In this case, the NeighborSet contains the set of MappedBoxes
- *   to which the MappedBox in the base is related.
+ * # A Box in the base has no related NeighborSet.  In this case,
+ *   the Box in the base will exist as-is in the head.
+ * # A Box in the base has NeighborSet which is empty.  In this case, the
+ *   Box from the base will not exist in the head MappedBoxLevel.
+ * # A Box in the base has a corresponding NeighborSet which in
+ *   non-empty.  In this case, the NeighborSet contains the set of Boxes
+ *   to which the Box in the base is related.
  */
 
 class Connector:public tbox::DescribedClass
@@ -82,8 +82,8 @@ public:
     * all overlaps are represented.
     *
     * @b BASE_GENERATED: The head is generated from the base.  Each
-    * head MappedBox comes from a base MappedBox and there is an relationship
-    * from the base MappedBox to the head MappedBox.
+    * head Box comes from a base Box and there is an relationship
+    * from the base Box to the head Box.
     *
     * @b MAPPING: relationships indicate a mapping relationship.  Applying
     * the map would change Connectors incident to the base into
@@ -165,7 +165,7 @@ public:
     * The Connector is initialized with the provided information.
     *
     * Consistency with the base and head requires that the relationships be
-    * from an existing MappedBox in the base to an existing MappedBox
+    * from an existing Box in the base to an existing Box
     * in the head.
     *
     * @par Assertions
@@ -180,7 +180,7 @@ public:
     * @param[in] parallel_state Either DISTRIBUTED or GLOBALIZED.
     *   If state is GLOBALIZED, base must be in GLOBALIZED mode.
     * @param[in] relationships The input relationship data.  For DISTRIBUTED state, we
-    *   disregard relationships from remote MappedBoxes.
+    *   disregard relationships from remote Boxes.
     *
     * @see initializePrivate()
     * @see checkConsistencyWithBase()
@@ -252,7 +252,7 @@ public:
    isInitialized() const;
 
    /*!
-    * @brief Return relationships from local base MappedBoxes.
+    * @brief Return relationships from local base Boxes.
     */
    const NeighborhoodSet&
    getNeighborhoodSets() const;
@@ -268,40 +268,40 @@ public:
 
    /*!
     * @brief Return true if a neighbor set exists for the specified
-    * MappedBoxId.
+    * BoxId.
     *
     * @param[in] mapped_box_id
     */
    bool
    hasNeighborSet(
-      const MappedBoxId& mapped_box_id) const;
+      const BoxId& mapped_box_id) const;
 
    /*!
-    * @brief Return the neighbor set for the specified MappedBoxId.
+    * @brief Return the neighbor set for the specified BoxId.
     *
     * @param[in] mapped_box_id
     */
    const NeighborSet&
    getNeighborSet(
-      const MappedBoxId& mapped_box_id) const;
+      const BoxId& mapped_box_id) const;
 
    /*!
-    * @brief Return the neighbor set for the specified MappedBoxId.
+    * @brief Return the neighbor set for the specified BoxId.
     *
     * @param[in] mapped_box_id
     */
    void
    getNeighborBoxes(
-      const MappedBoxId& mapped_box_id,
+      const BoxId& mapped_box_id,
       BoxList& nbr_boxes) const;
 
    //@{
    /*!
-    * @name Algorithms for changing individual MappedBox's neighbor data
+    * @name Algorithms for changing individual Box's neighbor data
     */
 
    /*!
-    * @brief Insert additional neighbors for the specified MappedBox.
+    * @brief Insert additional neighbors for the specified Box.
     *
     * @param[in] neighbors
     * @param[in] mapped_box_id
@@ -309,13 +309,13 @@ public:
    void
    insertNeighbors(
       const NeighborSet& neighbors,
-      const MappedBoxId& mapped_box_id);
+      const BoxId& mapped_box_id);
 
    /*!
-    * @brief Erase neighbor of the specified MappedBoxId.
+    * @brief Erase neighbor of the specified BoxId.
     *
     * @note Assertions
-    * It is an error to to specify a non-existent MappedBoxId.
+    * It is an error to to specify a non-existent BoxId.
     *
     * @param[in] neighbor
     * @param[in] mapped_box_id
@@ -323,16 +323,16 @@ public:
    void
    eraseNeighbor(
       const Box& neighbor,
-      const MappedBoxId& mapped_box_id);
+      const BoxId& mapped_box_id);
 
    /*!
-    * @brief Set the neighbors for the specified MappedBoxId to the
+    * @brief Set the neighbors for the specified BoxId to the
     * given set by swapping the sets.
     *
-    * If no neighbor set exists for the specified MappedBoxId, an empty
+    * If no neighbor set exists for the specified BoxId, an empty
     * set is first created for swapping.
     *
-    * An assertion failure will occur if the MappedBoxId has a non-zero
+    * An assertion failure will occur if the BoxId has a non-zero
     * PeriodicId.
     *
     * @param[out] neighbors
@@ -341,7 +341,7 @@ public:
    void
    swapNeighbors(
       NeighborSet& neighbors,
-      const MappedBoxId& mapped_box_id);
+      const BoxId& mapped_box_id);
 
    /*!
     * @brief Remove empty sets of neighbors.
@@ -391,9 +391,9 @@ public:
 
    /*!
     * @brief Return true if the Connector contains only relationships to local
-    * MappedBoxes.
+    * Boxes.
     *
-    * The check only applies to neighbors of local base MappedBoxes,
+    * The check only applies to neighbors of local base Boxes,
     * so it is possible for the results to be different on different
     * processors.
     */
@@ -411,7 +411,7 @@ public:
     * transpose relationship.  For each periodic relationships in @c connector, we create a
     * periodic relationship incident from @c connector's unshifted head neighbor to
     * @c connectors's shifted base neighbor.  This is because all relationships must be
-    * incident from a real (unshifted) MappedBox.
+    * incident from a real (unshifted) Box.
     *
     * @param[in] connector
     */
@@ -430,7 +430,7 @@ public:
    //  considering the caution statement.
    /*!
     * @brief Equality operator checks relationship data, Connector width and
-    * equality of base and head MappedBox pointers.
+    * equality of base and head Box pointers.
     *
     * @par CAUTION
     * Equality here means just the local parts are equal.
@@ -521,7 +521,7 @@ public:
     * @brief Return the Connector width associated with the relationships.
     *
     * For overlap Connectors, an relationship exists between a base and head
-    * MappedBoxes if the base mapped_box, grown by this width,
+    * Boxes if the base mapped_box, grown by this width,
     * overlaps the head mapped_box.  For mapping Connectors, the width
     * the amount that a pre-map box must grow to nest the post-map
     * boxes.
@@ -655,7 +655,7 @@ public:
    assertConsistencyWithHead() const;
 
    /*!
-    * @brief Check that MappedBoxes referenced by the given NeighborhoodSet
+    * @brief Check that Boxes referenced by the given NeighborhoodSet
     * match those in the given MappedBoxLevel.
     *
     * This method is static so users can check data without having to
@@ -855,7 +855,7 @@ private:
       const Connector& other) const;
 
    /*!
-    * @brief Get and store info on remote MappedBoxes.
+    * @brief Get and store info on remote Boxes.
     *
     * This requires global communication (all gather).
     * Call acquireRemoteNeighborhoods_pack to pack up messages.
@@ -865,13 +865,13 @@ private:
    void
    acquireRemoteNeighborhoods();
 
-   //! @brief Pack local MappedBoxes into an integer array.
+   //! @brief Pack local Boxes into an integer array.
    void
    acquireRemoteNeighborhoods_pack(
       std::vector<int>& send_mesg,
       int offset) const;
 
-   //! @brief Unpack MappedBoxes from an integer array into internal storage.
+   //! @brief Unpack Boxes from an integer array into internal storage.
    void
    acquireRemoteNeighborhoods_unpack(
       const std::vector<int>& recv_mesg,
@@ -966,12 +966,12 @@ private:
    bool d_head_coarser;
 
    /*!
-    * @brief Neighbor data for local MappedBoxes.
+    * @brief Neighbor data for local Boxes.
     */
    NeighborhoodSet d_relationships;
 
    /*!
-    * @brief Neighbor data for global MappedBoxes in GLOBALIZED mode.
+    * @brief Neighbor data for global Boxes in GLOBALIZED mode.
     */
    NeighborhoodSet d_global_relationships;
 

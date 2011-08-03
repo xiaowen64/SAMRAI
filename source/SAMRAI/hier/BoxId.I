@@ -4,11 +4,11 @@
  * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Identifier for a MappedBox.
+ * Description:   Identifier for a Box.
  *
  ************************************************************************/
 
-#include "SAMRAI/hier/MappedBoxId.h"
+#include "SAMRAI/hier/BoxId.h"
 #include "SAMRAI/tbox/Utilities.h"
 
 namespace SAMRAI {
@@ -19,7 +19,7 @@ namespace hier {
 ************************************************************************
 */
 SAMRAI_INLINE_KEYWORD
-MappedBoxId::MappedBoxId():
+BoxId::BoxId():
    d_global_id(),
    d_block_id(),
    d_periodic_id()
@@ -31,7 +31,7 @@ MappedBoxId::MappedBoxId():
 ************************************************************************
 */
 SAMRAI_INLINE_KEYWORD
-MappedBoxId::MappedBoxId(
+BoxId::BoxId(
    const GlobalId& id,
    const BlockId &block_id,
    const PeriodicId &periodic_id):
@@ -47,7 +47,7 @@ MappedBoxId::MappedBoxId(
 ************************************************************************
 */
 SAMRAI_INLINE_KEYWORD
-MappedBoxId::MappedBoxId(
+BoxId::BoxId(
    const LocalId &local_id,
    const int owner,
    const BlockId &block_id,
@@ -64,8 +64,8 @@ MappedBoxId::MappedBoxId(
 ************************************************************************
 */
 SAMRAI_INLINE_KEYWORD
-MappedBoxId::MappedBoxId(
-   const MappedBoxId& r):
+BoxId::BoxId(
+   const BoxId& r):
    d_global_id(r.d_global_id),
    d_block_id(r.d_block_id),
    d_periodic_id(r.d_periodic_id)
@@ -78,7 +78,7 @@ MappedBoxId::MappedBoxId(
 ************************************************************************
 */
 SAMRAI_INLINE_KEYWORD
-MappedBoxId::~MappedBoxId()
+BoxId::~BoxId()
 {
    return;
 }
@@ -88,7 +88,7 @@ MappedBoxId::~MappedBoxId()
 ************************************************************************
 */
 SAMRAI_INLINE_KEYWORD
-void MappedBoxId::initialize(
+void BoxId::initialize(
    const LocalId &local_id,
    const int owner,
    const BlockId &block_id,
@@ -107,7 +107,7 @@ void MappedBoxId::initialize(
 ************************************************************************
 */
 SAMRAI_INLINE_KEYWORD
-const hier::GlobalId& MappedBoxId::getGlobalId() const {
+const hier::GlobalId& BoxId::getGlobalId() const {
    return d_global_id;
 }
 
@@ -116,7 +116,7 @@ const hier::GlobalId& MappedBoxId::getGlobalId() const {
 ************************************************************************
 */
 SAMRAI_INLINE_KEYWORD
-int MappedBoxId::getOwnerRank() const {
+int BoxId::getOwnerRank() const {
    return d_global_id.getOwnerRank();
 }
 
@@ -125,7 +125,7 @@ int MappedBoxId::getOwnerRank() const {
 ************************************************************************
 */
 SAMRAI_INLINE_KEYWORD
-const LocalId &MappedBoxId::getLocalId() const {
+const LocalId &BoxId::getLocalId() const {
    return d_global_id.getLocalId();
 }
 
@@ -134,7 +134,7 @@ const LocalId &MappedBoxId::getLocalId() const {
 ************************************************************************
 */
 SAMRAI_INLINE_KEYWORD
-const BlockId &MappedBoxId::getBlockId() const {
+const BlockId &BoxId::getBlockId() const {
    return d_block_id;
 }
 
@@ -143,7 +143,7 @@ const BlockId &MappedBoxId::getBlockId() const {
 ************************************************************************
 */
 SAMRAI_INLINE_KEYWORD
-const PeriodicId &MappedBoxId::getPeriodicId() const {
+const PeriodicId &BoxId::getPeriodicId() const {
    return d_periodic_id;
 }
 
@@ -152,7 +152,7 @@ const PeriodicId &MappedBoxId::getPeriodicId() const {
 ************************************************************************
 */
 SAMRAI_INLINE_KEYWORD
-bool MappedBoxId::isPeriodicImage() const {
+bool BoxId::isPeriodicImage() const {
    return d_periodic_id != PeriodicId::zero();
 }
 
@@ -161,7 +161,7 @@ bool MappedBoxId::isPeriodicImage() const {
 ************************************************************************
 */
 SAMRAI_INLINE_KEYWORD
-int MappedBoxId::commBufferSize()
+int BoxId::commBufferSize()
 {
    return 4;
 }
@@ -171,7 +171,7 @@ int MappedBoxId::commBufferSize()
 ************************************************************************
 */
 SAMRAI_INLINE_KEYWORD
-void MappedBoxId::putToIntBuffer(
+void BoxId::putToIntBuffer(
    int* buffer) const
 {
    buffer[0] = getOwnerRank();
@@ -186,7 +186,7 @@ void MappedBoxId::putToIntBuffer(
 ************************************************************************
 */
 SAMRAI_INLINE_KEYWORD
-void MappedBoxId::getFromIntBuffer(
+void BoxId::getFromIntBuffer(
    const int* buffer)
 {
    initialize(LocalId(buffer[1]),
@@ -201,8 +201,8 @@ void MappedBoxId::getFromIntBuffer(
 ************************************************************************
 */
 SAMRAI_INLINE_KEYWORD
-bool MappedBoxId::operator == (
-   const MappedBoxId& r) const {
+bool BoxId::operator == (
+   const BoxId& r) const {
    bool rval =
       d_block_id == r.d_block_id &&
       d_global_id == r.d_global_id &&
@@ -216,8 +216,8 @@ bool MappedBoxId::operator == (
 ************************************************************************
 */
 SAMRAI_INLINE_KEYWORD
-bool MappedBoxId::operator != (
-   const MappedBoxId& r) const {
+bool BoxId::operator != (
+   const BoxId& r) const {
    TBOX_ASSERT(d_periodic_id.isValid() && r.d_periodic_id.isValid());
    bool rval =
       d_block_id != r.d_block_id ||
@@ -231,8 +231,8 @@ bool MappedBoxId::operator != (
 ************************************************************************
 */
 SAMRAI_INLINE_KEYWORD
-bool MappedBoxId::operator < (
-   const MappedBoxId& r) const {
+bool BoxId::operator < (
+   const BoxId& r) const {
    TBOX_ASSERT(d_periodic_id.isValid() && r.d_periodic_id.isValid());
    return
       d_global_id.getOwnerRank() < r.d_global_id.getOwnerRank() ||
@@ -249,8 +249,8 @@ bool MappedBoxId::operator < (
 ************************************************************************
 */
 SAMRAI_INLINE_KEYWORD
-bool MappedBoxId::operator > (
-   const MappedBoxId& r) const {
+bool BoxId::operator > (
+   const BoxId& r) const {
    TBOX_ASSERT(d_periodic_id.isValid() && r.d_periodic_id.isValid());
    return
       d_global_id.getOwnerRank() > r.d_global_id.getOwnerRank() ||
@@ -267,8 +267,8 @@ bool MappedBoxId::operator > (
 ************************************************************************
 */
 SAMRAI_INLINE_KEYWORD
-bool MappedBoxId::operator <= (
-   const MappedBoxId& r) const {
+bool BoxId::operator <= (
+   const BoxId& r) const {
    TBOX_ASSERT(d_periodic_id.isValid() && r.d_periodic_id.isValid());
    return *this < r || *this == r;
 }
@@ -278,8 +278,8 @@ bool MappedBoxId::operator <= (
 ************************************************************************
 */
 SAMRAI_INLINE_KEYWORD
-bool MappedBoxId::operator >= (
-   const MappedBoxId& r) const {
+bool BoxId::operator >= (
+   const BoxId& r) const {
    TBOX_ASSERT(d_periodic_id.isValid() && r.d_periodic_id.isValid());
    return *this > r || *this == r;
 }

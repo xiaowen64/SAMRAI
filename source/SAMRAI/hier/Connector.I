@@ -109,14 +109,14 @@ bool Connector::getHeadCoarserFlag() const
  */
 SAMRAI_INLINE_KEYWORD
 bool Connector::hasNeighborSet(
-   const MappedBoxId& mapped_box_id) const
+   const BoxId& mapped_box_id) const
 {
    if (d_parallel_state == MappedBoxLevel::DISTRIBUTED) {
       TBOX_ASSERT(mapped_box_id.getOwnerRank() == d_rank);
    }
    const NeighborhoodSet& relationships = d_parallel_state == MappedBoxLevel::DISTRIBUTED ?
       d_relationships : d_global_relationships;
-   MappedBoxId non_per_id(mapped_box_id.getGlobalId(),
+   BoxId non_per_id(mapped_box_id.getGlobalId(),
                           mapped_box_id.getBlockId(),
                           PeriodicId::zero());
    NeighborhoodSet::const_iterator ei = relationships.find(non_per_id);
@@ -129,14 +129,14 @@ bool Connector::hasNeighborSet(
  */
 SAMRAI_INLINE_KEYWORD
 const Connector::NeighborSet& Connector::getNeighborSet(
-   const MappedBoxId& mapped_box_id) const
+   const BoxId& mapped_box_id) const
 {
    if (d_parallel_state == MappedBoxLevel::DISTRIBUTED) {
       TBOX_ASSERT(mapped_box_id.getOwnerRank() == d_rank);
    }
    const NeighborhoodSet& relationships = d_parallel_state == MappedBoxLevel::DISTRIBUTED ?
       d_relationships : d_global_relationships;
-   MappedBoxId non_per_id(mapped_box_id.getGlobalId(),
+   BoxId non_per_id(mapped_box_id.getGlobalId(),
                           mapped_box_id.getBlockId(),
                           PeriodicId::zero());
    NeighborhoodSet::const_iterator ei = relationships.find(non_per_id);

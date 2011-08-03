@@ -129,7 +129,7 @@ void OverlapConnectorAlgorithm::setSanityCheckMethodPostconditions(
 void OverlapConnectorAlgorithm::extractNeighbors(
    NeighborSet& neighbors,
    const Connector& connector,
-   const MappedBoxId& mapped_box_id,
+   const BoxId& mapped_box_id,
    const IntVector& gcw) const
 {
    const tbox::Dimension& dim(gcw.getDim());
@@ -395,7 +395,7 @@ void OverlapConnectorAlgorithm::shrinkConnectorWidth(
 
    for (NeighborhoodSet::iterator ei = neighborhood_set.begin();
         ei != neighborhood_set.end(); ++ei) {
-      const MappedBoxId& mapped_box_id = ei->first;
+      const BoxId& mapped_box_id = ei->first;
       NeighborSet& nabrs = ei->second;
       const Box& mapped_box = *connector.getBase().getMappedBoxStrict(
             mapped_box_id);
@@ -590,7 +590,7 @@ void OverlapConnectorAlgorithm::bridge(
  *
  * Bridge operation is in two phases, discovery and
  * sharing.  The discovery phase loops through local
- * MappedBoxes in the center and comparing the west and east neighbors
+ * Boxes in the center and comparing the west and east neighbors
  * for overlaps.  Local overlaps are stored immediately.
  * Remote overlaps are placed in messages to be sent to appropriate
  * processors by the sharing phase.
@@ -839,7 +839,7 @@ void OverlapConnectorAlgorithm::privateBridge(
 
    /*
     * Owners we have to exchange information with are the ones
-    * owning east/west MappedBoxes visible to the local process.
+    * owning east/west Boxes visible to the local process.
     */
    std::set<int> outgoing_ranks, incoming_ranks;
    cent_to_east.getNeighborhoodSets().getOwners(outgoing_ranks);
@@ -953,7 +953,7 @@ void OverlapConnectorAlgorithm::privateBridge(
       NeighborSet::iterator east_ni;
       /*
        * Local process can find some neighbors for the (local and
-       * remote) MappedBoxes in visible_west_nabrs and
+       * remote) Boxes in visible_west_nabrs and
        * visible_east_nabrs.  We loop through the visible_west_nabrs
        * and compare each to visible_ease_nabrs, looking for overlaps.
        * Then vice versa.
@@ -966,7 +966,7 @@ void OverlapConnectorAlgorithm::privateBridge(
        * the lower-end ranks from having to wait for messages at the
        * end.  After the highest rank owner has been handled, continue
        * at the beginning and do the remaining.  (If local rank is
-       * highest of all owners of the visible MappedBoxes, start at
+       * highest of all owners of the visible Boxes, start at
        * the beginning.)
        */
       const Box start_loop_here(dim, hier::LocalId::getZero(), rank + 1);
@@ -979,7 +979,7 @@ void OverlapConnectorAlgorithm::privateBridge(
           (!compute_reverse ||
            east_ni == visible_east_nabrs.end())) {
          /*
-          * There are no visible MappedBoxes owned by rank higher than
+          * There are no visible Boxes owned by rank higher than
           * local process.  So loop from the beginning.
           */
          west_ni = visible_west_nabrs.begin();
@@ -1039,10 +1039,10 @@ void OverlapConnectorAlgorithm::privateBridge(
           * - number of east mapped_boxes for which neighbors are found
           *   - index of west/east mapped_box
           *   - number of neighbors found for west/east mapped_box.
-          *     - MappedBoxId of neighbors found.
+          *     - BoxId of neighbors found.
           *       Boxes of these found neighbors are given in the
           *       reference section of the message.
-          * - reference section: all the MappedBoxes referenced as
+          * - reference section: all the Boxes referenced as
           *   neighbors (accumulated in referenced_west_nabrs
           *   and referenced_east_nabrs).
           *   - number of referenced west neighbors
@@ -1052,7 +1052,7 @@ void OverlapConnectorAlgorithm::privateBridge(
           *
           * The purpose of factoring out info on the neighbors referenced
           * is to reduce redundant data that can eat up lots of memory
-          * when we find lots of MappedBoxes with the same neighbors.
+          * when we find lots of Boxes with the same neighbors.
           */
          std::vector<int> send_mesg(3); // Message to send to curr_owner.
          MappedBoxSet referenced_west_nabrs; // Referenced neighbors in west.
@@ -1131,8 +1131,8 @@ void OverlapConnectorAlgorithm::privateBridge(
          } // Block to send discoveries to curr_owner.
 
          /*
-          * If we come to the end of visible MappedBoxes, go back and
-          * work on the MappedBoxes owned by processors with lower rank
+          * If we come to the end of visible Boxes, go back and
+          * work on the Boxes owned by processors with lower rank
           * than the local rank.  (This is part of the optimization
           * to reduce communication time.)
           */
@@ -1140,7 +1140,7 @@ void OverlapConnectorAlgorithm::privateBridge(
              (!compute_reverse ||
               east_ni == visible_east_nabrs.end())) {
             /*
-             * There are no MappedBoxes that owned by rank higher than
+             * There are no Boxes that owned by rank higher than
              * local process and that we still need to find neighbors
              * for.  So loop from the beginning.
              */
@@ -1308,13 +1308,13 @@ void OverlapConnectorAlgorithm::unpackDiscoveryMessage(
    for (int ii = 0; ii < n_west_mapped_boxes; ++ii) {
       const LocalId local_id(*(ptr++));
       const BlockId block_id(*(ptr++));
-      const MappedBoxId west_mapped_box_id(local_id, rank, block_id);
+      const BoxId west_mapped_box_id(local_id, rank, block_id);
       const int n_east_nabrs_found = *(ptr++);
       // Add received neighbors to Box west_mapped_box_id.
       west_to_east.swapNeighbors(east_nabrs, west_mapped_box_id);
       for (int j = 0; j < n_east_nabrs_found; ++j) {
          tmp_mapped_box.getId().getFromIntBuffer(ptr);
-         ptr += MappedBoxId::commBufferSize();
+         ptr += BoxId::commBufferSize();
          NeighborSet::const_iterator na =
             referenced_east_nabrs.find(tmp_mapped_box);
          TBOX_ASSERT(na != referenced_east_nabrs.end());
@@ -1327,13 +1327,13 @@ void OverlapConnectorAlgorithm::unpackDiscoveryMessage(
    for (int ii = 0; ii < n_east_mapped_boxes; ++ii) {
       const LocalId local_id(*(ptr++));
       const BlockId block_id(*(ptr++));
-      const MappedBoxId east_mapped_box_id(local_id, rank, block_id);
+      const BoxId east_mapped_box_id(local_id, rank, block_id);
       const int n_west_nabrs_found = *(ptr++);
       // Add received neighbors to Box east_mapped_box_id.
       east_to_west->swapNeighbors(west_nabrs, east_mapped_box_id);
       for (int j = 0; j < n_west_nabrs_found; ++j) {
          tmp_mapped_box.getId().getFromIntBuffer(ptr);
-         ptr += MappedBoxId::commBufferSize();
+         ptr += BoxId::commBufferSize();
          NeighborSet::const_iterator na =
             referenced_west_nabrs.find(tmp_mapped_box);
          TBOX_ASSERT(na != referenced_west_nabrs.end());
@@ -1418,10 +1418,10 @@ void OverlapConnectorAlgorithm::sendDiscoveryToOneProcess(
  ***********************************************************************
  *
  * Find overlaps from visible_base_nabrs to head_rbbt.  Find only
- * overlaps for MappedBoxes owned by owner_rank.
+ * overlaps for Boxes owned by owner_rank.
  *
  * On input, base_ni points to the first Box in visible_base_nabrs
- * owned by owner_rank.  Increment base_ni past those MappedBoxes
+ * owned by owner_rank.  Increment base_ni past those Boxes
  * processed and remove them from visible_base_nabrs.
  *
  * Save local and semilocal overlaps in bridging_connector.  For
@@ -1499,7 +1499,7 @@ void OverlapConnectorAlgorithm::findOverlapsForOneProcess(
             // Pack up info for sending.
             ++send_mesg[remote_mapped_box_counter_index];
             const int subsize = 3 +
-               MappedBoxId::commBufferSize() * static_cast<int>(found_nabrs.size());
+               BoxId::commBufferSize() * static_cast<int>(found_nabrs.size());
             send_mesg.insert(send_mesg.end(), subsize, -1);
             int* submesg = &send_mesg[send_mesg.size() - subsize];
             *(submesg++) = base_mapped_box.getLocalId().getValue();
@@ -1510,11 +1510,11 @@ void OverlapConnectorAlgorithm::findOverlapsForOneProcess(
                const Box& head_nabr = *na;
                referenced_head_nabrs.insert(head_nabr);
                head_nabr.getId().putToIntBuffer(submesg);
-               submesg += MappedBoxId::commBufferSize();
+               submesg += BoxId::commBufferSize();
             }
          } else {
             // Save neighbor info locally.
-            MappedBoxId unshifted_base_mapped_box_id;
+            BoxId unshifted_base_mapped_box_id;
             if (!base_mapped_box.isPeriodicImage()) {
                unshifted_base_mapped_box_id = base_mapped_box.getId();
             } else {
@@ -1766,7 +1766,7 @@ size_t OverlapConnectorAlgorithm::checkOverlapCorrectness(
    for (NeighborhoodSet::const_iterator ei = relationships.begin();
         ei != relationships.end(); ++ei) {
 
-      MappedBoxId mapped_box_id(ei->first);
+      BoxId mapped_box_id(ei->first);
 
       TBOX_ASSERT(mapped_box_id.getPeriodicId().getPeriodicValue() == 0); 
 
@@ -1806,7 +1806,7 @@ size_t OverlapConnectorAlgorithm::checkOverlapCorrectness(
    const NeighborhoodSet& missing_overlaps = missing.getNeighborhoodSets();
    const NeighborhoodSet& extra_overlaps = extra.getNeighborhoodSets();
 
-   const MappedBoxId dummy_mapped_box_id;
+   const BoxId dummy_mapped_box_id;
 
    /*
     * Report the errors found, ordered by the Box where the
@@ -1819,9 +1819,9 @@ size_t OverlapConnectorAlgorithm::checkOverlapCorrectness(
         im != missing_overlaps.end() || ie != extra_overlaps.end();
         /* incremented in loop */) {
 
-      const MappedBoxId& global_id_missing =
+      const BoxId& global_id_missing =
          im == missing_overlaps.end() ? dummy_mapped_box_id : im->first;
-      const MappedBoxId& global_id_extra =
+      const BoxId& global_id_extra =
          ie == extra_overlaps.end() ? dummy_mapped_box_id : ie->first;
 
       if (im != missing_overlaps.end() && ie != extra_overlaps.end() &&
