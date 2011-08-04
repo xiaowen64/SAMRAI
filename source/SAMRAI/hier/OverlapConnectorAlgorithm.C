@@ -11,7 +11,7 @@
 #define included_hier_OverlapConnectorAlgorithm_C
 
 #include "SAMRAI/hier/OverlapConnectorAlgorithm.h"
-#include "SAMRAI/hier/MappedBoxContainerUtils.h"
+#include "SAMRAI/hier/BoxContainerUtils.h"
 #include "SAMRAI/hier/MultiblockMappedBoxTree.h"
 #include "SAMRAI/hier/PeriodicShiftCatalog.h"
 #include "SAMRAI/hier/RealMappedBoxConstIterator.h"
@@ -1484,7 +1484,7 @@ void OverlapConnectorAlgorithm::findOverlapsForOneProcess(
       head_rbbt.findOverlapMappedBoxes(found_nabrs, base_box);
       if (s_print_bridge_steps == 'y') {
          tbox::plog << "Found " << found_nabrs.size() << " neighbors:";
-         hier::MappedBoxContainerUtils::recursivePrintMappedBoxVector(found_nabrs, tbox::plog, "\n ");
+         hier::BoxContainerUtils::recursivePrintBoxVector(found_nabrs, tbox::plog, "\n ");
          tbox::plog << std::endl;
       }
       if (!found_nabrs.empty()) {

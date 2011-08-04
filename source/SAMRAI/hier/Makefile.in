@@ -41,7 +41,7 @@ OBJS = 	\
 	PatchGeometry.o \
 	PatchData.o \
 	MappedBoxLevelConnectorUtils.o \
-	MappedBoxContainerUtils.o \
+	BoxContainerUtils.o \
 	OverlapConnectorAlgorithm.o \
 	MappingConnectorAlgorithm.o \
 	Connector.o \

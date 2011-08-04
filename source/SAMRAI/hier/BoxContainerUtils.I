@@ -4,7 +4,7 @@
  * information, see COPYRIGHT and COPYING.LESSER. 
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Common MappedBox operations for MappedBox containers. 
+ * Description:   Common Box operations for Box containers. 
  *
  ************************************************************************/
 #include "SAMRAI/hier/Box.h"

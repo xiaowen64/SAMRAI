@@ -4,11 +4,11 @@
  * information, see COPYRIGHT and COPYING.LESSER. 
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Common MappedBox operations for MappedBox containers. 
+ * Description:   Common Box operations for Box containers. 
  *
  ************************************************************************/
-#ifndef included_hier_MappedBoxContainerUtils
-#define included_hier_MappedBoxContainerUtils
+#ifndef included_hier_BoxContainerUtils
+#define included_hier_BoxContainerUtils
 
 #include "SAMRAI/SAMRAI_config.h"
 
@@ -20,7 +20,7 @@ namespace hier {
 
 /*!
  * @brief Utilities for performing simple common tasks on a container
- * of MappedBoxes.
+ * of Boxes.
  *
  * TODO: Arguments should be re-ordered to the SAMRAI standard, output
  * before input.
@@ -30,7 +30,7 @@ namespace hier {
  * does not.  For uniformity, all these methods should support input and
  * output containers being the same object.  It's simple to implement.
  */
-class MappedBoxContainerUtils
+class BoxContainerUtils
 {
 
 public:
@@ -41,7 +41,7 @@ public:
    //! @name I/O operations for containers that lack built-in versions.
 
    /*!
-    * @brief Print a vector of MappedBoxes to an output stream.
+    * @brief Print a vector of Boxes to an output stream.
     *
     * @param[in] mapped_boxes
     *
@@ -52,7 +52,7 @@ public:
     * @param[in] detail_depth
     */
    static void
-   recursivePrintMappedBoxVector(
+   recursivePrintBoxVector(
       const std::vector<Box>& mapped_boxes,
       std::ostream& output_stream = tbox::plog,
       const std::string& border = std::string(),
@@ -63,7 +63,7 @@ public:
 private:
 
    // Disabled constructor.  No need for objects of this class.
-   MappedBoxContainerUtils();
+   BoxContainerUtils();
 
 
 };
@@ -72,7 +72,7 @@ private:
 }
 
 #ifdef SAMRAI_INLINE
-#include "SAMRAI/hier/MappedBoxContainerUtils.I"
+#include "SAMRAI/hier/BoxContainerUtils.I"
 #endif
 
-#endif  // included_hier_MappedBoxContainerUtils
+#endif  // included_hier_BoxContainerUtils

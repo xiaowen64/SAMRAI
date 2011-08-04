@@ -7,15 +7,15 @@
  * Description:   Common Box operations for Box containers. 
  *
  ************************************************************************/
-#ifndef included_hier_MappedBoxContainerUtils_C
-#define included_hier_MappedBoxContainerUtils_C
+#ifndef included_hier_BoxContainerUtils_C
+#define included_hier_BoxContainerUtils_C
 
-#include "SAMRAI/hier/MappedBoxContainerUtils.h"
+#include "SAMRAI/hier/BoxContainerUtils.h"
 #include "SAMRAI/tbox/StartupShutdownManager.h"
 #include "SAMRAI/tbox/TimerManager.h"
 
 #ifndef SAMRAI_INLINE
-#include "SAMRAI/hier/MappedBoxContainerUtils.I"
+#include "SAMRAI/hier/BoxContainerUtils.I"
 #endif
 
 namespace SAMRAI {
@@ -25,7 +25,7 @@ namespace hier {
  * Constructor does nothing because the objects are stateless.
  */
 
-MappedBoxContainerUtils::MappedBoxContainerUtils() {
+BoxContainerUtils::BoxContainerUtils() {
 }
 
 /*
@@ -33,7 +33,7 @@ MappedBoxContainerUtils::MappedBoxContainerUtils() {
  ***************************************************************************
  */
 
-void MappedBoxContainerUtils::recursivePrintMappedBoxVector(
+void BoxContainerUtils::recursivePrintBoxVector(
    const std::vector<Box>& mapped_boxes,
    std::ostream& os,
    const std::string& border,
