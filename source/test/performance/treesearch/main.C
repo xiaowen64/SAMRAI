@@ -10,7 +10,7 @@
 #include "SAMRAI/SAMRAI_config.h"
 
 #include "SAMRAI/hier/Box.h"
-#include "SAMRAI/hier/MappedBoxTree.h"
+#include "SAMRAI/hier/BoxTree.h"
 #include "SAMRAI/tbox/InputDatabase.h"
 #include "SAMRAI/tbox/InputManager.h"
 #include "SAMRAI/tbox/SAMRAIManager.h"
@@ -28,7 +28,7 @@ using namespace tbox;
  ************************************************************************
  *
  * This is a performance test for the tree search algorithm
- * in MappedBoxTree:
+ * in BoxTree:
  *
  * 1. Generate a set of MappedBoxes.
  *
@@ -239,13 +239,13 @@ int main(
           * Reset timers and statistics.
           */
          tm->resetAllTimers();
-         hier::MappedBoxTree::resetStatistics(dim);
+         hier::BoxTree::resetStatistics(dim);
 
          /*
           * Build search tree.
           */
          t_build_tree->start();
-         hier::MappedBoxTree search_tree(dim);
+         hier::BoxTree search_tree(dim);
          search_tree.generateTree(nodes);
          t_build_tree->stop();
 
@@ -262,7 +262,7 @@ int main(
               bi != grown_boxes.end();
               ++bi) {
             overlap_set.clear();
-            search_tree.findOverlapMappedBoxes(overlap_set, *bi);
+            search_tree.findOverlapBoxes(overlap_set, *bi);
          }
          t_search_tree_for_set->stop();
 
@@ -272,7 +272,7 @@ int main(
               bi != grown_boxes.end();
               ++bi) {
             overlap_vec.clear();
-            search_tree.findOverlapMappedBoxes(overlap_vec, *bi);
+            search_tree.findOverlapBoxes(overlap_vec, *bi);
          }
          t_search_tree_for_vec->stop();
 
@@ -296,7 +296,7 @@ int main(
           * Log timer results and search tree statistics.
           */
          tbox::TimerManager::getManager()->print(tbox::plog);
-         hier::MappedBoxTree::printStatistics(dim);
+         hier::BoxTree::printStatistics(dim);
 
          tbox::plog << "\n\n\n";
 

@@ -27,9 +27,9 @@ namespace hier {
 
 class BoxContainerIterator;
 class BoxContainerConstIterator;
-class MappedBoxTree;
-#ifdef MB_MAPPEDBOXTREE_EXISTS
-class MultiblockMappedBoxTree;
+class BoxTree;
+#ifdef MB_BOXTREE_EXISTS
+class MultiblockBoxTree;
 #endif
 
 /*!
@@ -537,7 +537,7 @@ class BoxContainer
       /*!
        * @brief Remove from each box portions intersecting boxes in takeaway.
        *
-       * MappedBoxTree has an efficient overlap search method so this
+       * BoxTree has an efficient overlap search method so this
        * version of removeIntersection is relatively fast.
        * For each box, b, in this container and for each box, t, in takeaway
        * this operation computes b-(b^t) where '^' indicates intersection.
@@ -546,14 +546,14 @@ class BoxContainer
        */
       void
       removeIntersections(
-         const MappedBoxTree& takeaway);
+         const BoxTree& takeaway);
 
-#ifdef MB_MAPPEDBOXTREE_EXISTS
+#ifdef MB_BOXTREE_EXISTS
       /*!
        * @brief Remove from each box portions intersecting boxes in takeaway.
        *
        * Use extra data to provide needed information in a multiblock setting.
-       * MultiblockMappedBoxTree has an efficient overlap search method so this
+       * MultiblockBoxTree has an efficient overlap search method so this
        * version of removeIntersection is relatively fast.
        *
        * @param[in] block_id Assume all boxes in this BoxContainer belong in
@@ -568,7 +568,7 @@ class BoxContainer
       removeIntersections(
          const BlockId &block_id,
          const IntVector &refinement_ratio,
-         const MultiblockMappedBoxTree& takeaway,
+         const MultiblockBoxTree& takeaway,
          bool include_singularity_block_neighbors = false);
 #endif
 
@@ -620,7 +620,7 @@ class BoxContainer
       /*!
        * @brief Keep the intersection of the container's boxes and keep's boxes
        *
-       * MappedBoxTree has an efficient overlap search method so this
+       * BoxTree has an efficient overlap search method so this
        * version of intersectBoxes is relatively fast.  The complement of
        * removeIntersections.
        *
@@ -628,14 +628,14 @@ class BoxContainer
        */
       void
       intersectBoxes(
-         const MappedBoxTree& keep);
+         const BoxTree& keep);
 
-#ifdef MB_MAPPEDBOXTREE_EXISTS
+#ifdef MB_BOXTREE_EXISTS
       /*!
        * @brief Keep the intersection of the container's boxes and keep's boxes
        *
        * Use extra data to provide needed information in a multiblock setting.
-       * MultiblockMappedBoxTree has an efficient overlap search method so this
+       * MultiblockBoxTree has an efficient overlap search method so this
        * version of intersectBoxes is relatively fast.  The complement of
        * removeIntersection.
        *
@@ -651,7 +651,7 @@ class BoxContainer
       intersectBoxes(
          const BlockId &block_id,
          const IntVector &refinement_ratio,
-         const MultiblockMappedBoxTree& keep,
+         const MultiblockBoxTree& keep,
          bool include_singularity_block_neighbors = false);
 #endif
 

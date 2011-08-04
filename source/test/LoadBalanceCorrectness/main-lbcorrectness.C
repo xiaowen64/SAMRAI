@@ -873,7 +873,7 @@ int checkBalanceCorrectness(
    const hier::MappedBoxSet &globalized_prebalance_mapped_box_set =
       globalized_prebalance.getGlobalMappedBoxes();
 
-   const hier::MultiblockMappedBoxTree globalized_prebalance_mapped_box_tree(
+   const hier::MultiblockBoxTree globalized_prebalance_mapped_box_tree(
       prebalance.getGridGeometry(),
       globalized_prebalance_mapped_box_set);
 
@@ -884,7 +884,7 @@ int checkBalanceCorrectness(
    const hier::MappedBoxSet &globalized_postbalance_mapped_box_set =
       globalized_postbalance.getGlobalMappedBoxes();
 
-   const hier::MultiblockMappedBoxTree globalized_postbalance_mapped_box_tree(
+   const hier::MultiblockBoxTree globalized_postbalance_mapped_box_tree(
       postbalance.getGridGeometry(),
       globalized_postbalance_mapped_box_set);
 

@@ -612,7 +612,7 @@ int main(
        * Output box search results.
        */
       tbox::plog << "\n\nBox searching results:\n";
-      hier::MappedBoxTree::printStatistics(dim);
+      hier::BoxTree::printStatistics(dim);
 
       /*
        * At conclusion of simulation, deallocate objects.

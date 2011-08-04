@@ -311,9 +311,9 @@ void GridGeometry::findPatchesTouchingBoundaries(
 {
    TBOX_DIM_ASSERT_CHECK_ARGS3(level, periodic_shift, domain[0]);
 
-   tbox::Array<tbox::Pointer<MappedBoxTree> > domain_tree(d_number_blocks);
+   tbox::Array<tbox::Pointer<BoxTree> > domain_tree(d_number_blocks);
    for (int nb = 0; nb < d_number_blocks; nb++) {
-      domain_tree[nb] = new MappedBoxTree(d_dim, domain[nb], BlockId(nb));
+      domain_tree[nb] = new BoxTree(d_dim, domain[nb], BlockId(nb));
    }
    findPatchesTouchingBoundaries(touches_regular_bdry,
       touches_periodic_bdry,
@@ -327,7 +327,7 @@ void GridGeometry::findPatchesTouchingBoundaries(
    std::map<BoxId, TwoDimBool>& touches_periodic_bdry,
    const PatchLevel& level,
    const IntVector& periodic_shift,
-   const tbox::Array<tbox::Pointer<MappedBoxTree> >& domain_tree) const
+   const tbox::Array<tbox::Pointer<BoxTree> >& domain_tree) const
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(level, periodic_shift);
 
@@ -375,7 +375,7 @@ void GridGeometry::computeBoxTouchingBoundaries(
    TwoDimBool& touches_periodic_bdry,
    const Box& box,
    const IntVector& periodic_shift,
-   const MappedBoxTree& domain_tree) const
+   const BoxTree& domain_tree) const
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(box, periodic_shift);
 
@@ -880,7 +880,7 @@ void GridGeometry::putToDatabase(
 void GridGeometry::computeShiftsForBox(
    std::vector<IntVector>& shifts,
    const Box& box,
-   const MappedBoxTree& domain_search_tree,
+   const BoxTree& domain_search_tree,
    const IntVector& periodic_shift) const
 {
    TBOX_DIM_ASSERT_CHECK_ARGS3(*this, box, periodic_shift);
@@ -1116,7 +1116,7 @@ void GridGeometry::getBoundaryBoxes(
                 */
 
                BoxList border_list(border);
-               border_list.intersectBoxes(domain_list); // Should use MappedBoxTree here if possible.
+               border_list.intersectBoxes(domain_list); // Should use BoxTree here if possible.
 
                border_list.shift(border_shift);
 
@@ -1366,7 +1366,7 @@ void GridGeometry::setPhysicalDomain(
 
       resetDomainMappedBoxSet(b);
 
-      d_domain_tree[b] = new MappedBoxTree(d_dim,
+      d_domain_tree[b] = new BoxTree(d_dim,
             d_physical_domain[b],
             BlockId(b));
    }

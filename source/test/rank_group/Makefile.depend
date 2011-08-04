@@ -36,6 +36,7 @@ DEPENDS_0:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/ComponentSelector.I			\
@@ -61,10 +62,9 @@ DEPENDS_0:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSetSingleBlockIterator.h	\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSetSingleOwnerIterator.h	\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappingConnectorAlgorithm.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockDataTranslator.h		\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockMappedBoxTree.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/NeighborhoodSet.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/NeighborhoodSet.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/OverlapConnectorAlgorithm.h		\

@@ -15,7 +15,7 @@
 
 #include "SAMRAI/hier/Index.h"
 #include "SAMRAI/hier/GridGeometry.h"
-#include "SAMRAI/hier/MappedBoxTree.h"
+#include "SAMRAI/hier/BoxTree.h"
 #include "SAMRAI/tbox/Utilities.h"
 
 #ifndef SAMRAI_INLINE
@@ -402,7 +402,7 @@ void BoxList::removeIntersections(
 }
 
 void BoxList::removeIntersections(
-   const MappedBoxTree& takeaway)
+   const BoxTree& takeaway)
 {
    if (isEmpty()) {
       return;
@@ -412,7 +412,7 @@ void BoxList::removeIntersections(
    Iterator itr(*this);
    while (itr) {
       const Box& tryme = *itr;
-      takeaway.findOverlapMappedBoxes(overlap_mapped_boxes, tryme);
+      takeaway.findOverlapBoxes(overlap_mapped_boxes, tryme);
       if (overlap_mapped_boxes.empty()) {
          itr++;
       }
@@ -439,7 +439,7 @@ void BoxList::removeIntersections(
 void BoxList::removeIntersections(
    const BlockId &block_id,
    const IntVector &refinement_ratio,
-   const MultiblockMappedBoxTree& takeaway,
+   const MultiblockBoxTree& takeaway,
    bool include_singularity_block_neighbors )
 {
    if (isEmpty()) {
@@ -453,11 +453,11 @@ void BoxList::removeIntersections(
    Iterator itr(*this);
    while (itr) {
       const Box& tryme = *itr;
-      takeaway.findOverlapMappedBoxes(overlap_mapped_boxes,
-                                      tryme,
-                                      block_id,
-                                      refinement_ratio,
-                                      include_singularity_block_neighbors);
+      takeaway.findOverlapBoxes(overlap_mapped_boxes,
+                                tryme,
+                                block_id,
+                                refinement_ratio,
+                                include_singularity_block_neighbors);
       if (overlap_mapped_boxes.empty()) {
          itr++;
       } else {
@@ -497,7 +497,7 @@ void BoxList::removeIntersections(
 }
 
 void BoxList::intersectBoxes(
-   const MappedBoxTree& boxes)
+   const BoxTree& boxes)
 {
    if (isEmpty()) {
       return;
@@ -509,7 +509,7 @@ void BoxList::intersectBoxes(
    Iterator insertion_pt = itr;
    while (itr) {
       const Box& tryme = *itr;
-      boxes.findOverlapMappedBoxes(overlap_mapped_boxes, tryme);
+      boxes.findOverlapBoxes(overlap_mapped_boxes, tryme);
       for (size_t i = 0; i < overlap_mapped_boxes.size(); ++i) {
          tryme.intersect(*overlap_mapped_boxes[i], overlap);
          if (!overlap.empty()) {
@@ -528,7 +528,7 @@ void BoxList::intersectBoxes(
 void BoxList::intersectBoxes(
    const BlockId &block_id,
    const IntVector &refinement_ratio,
-   const MultiblockMappedBoxTree& boxes,
+   const MultiblockBoxTree& boxes,
    bool include_singularity_block_neighbors )
 {
    if (isEmpty()) {
@@ -544,11 +544,11 @@ void BoxList::intersectBoxes(
    Iterator insertion_pt = itr;
    while (itr) {
       const Box& tryme = *itr;
-      boxes.findOverlapMappedBoxes(overlap_mapped_boxes,
-                                   tryme,
-                                   block_id,
-                                   refinement_ratio,
-                                   include_singularity_block_neighbors);
+      boxes.findOverlapBoxes(overlap_mapped_boxes,
+                             tryme,
+                             block_id,
+                             refinement_ratio,
+                             include_singularity_block_neighbors);
       for (size_t i = 0; i < overlap_mapped_boxes.size(); ++i) {
          const BlockId &overlap_box_block_id =
             overlap_mapped_boxes[i]->getBlockId();

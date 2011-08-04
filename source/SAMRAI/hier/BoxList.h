@@ -14,7 +14,7 @@
 #include "SAMRAI/SAMRAI_config.h"
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/hier/IntVector.h"
-#include "SAMRAI/hier/MultiblockMappedBoxTree.h"
+#include "SAMRAI/hier/MultiblockBoxTree.h"
 #include "SAMRAI/tbox/Array.h"
 #include "SAMRAI/tbox/List.h"
 #include "SAMRAI/tbox/PIO.h"
@@ -24,7 +24,7 @@
 namespace SAMRAI {
 namespace hier {
 
-class MappedBoxTree;
+class BoxTree;
 
 /**
  * Class BoxList represents a linked list of boxes.  It defines
@@ -166,21 +166,21 @@ public:
 
    /**
     * Remove from the current boxlist the portions that intersect the
-    * boxes in the MappedBoxTree takeaway.
+    * boxes in the BoxTree takeaway.
     *
-    * MappedBoxTree has an efficient overlap search method so this
+    * BoxTree has an efficient overlap search method so this
     * version of removeIntersection is relatively fast.
     */
    void
    removeIntersections(
-      const MappedBoxTree& takeaway);
+      const BoxTree& takeaway);
 
    /**
     * Remove from the current boxlist the portions that intersect the
-    * boxes in the MultiblockMappedBoxTree takeaway.  Use extra data
+    * boxes in the MultiblockBoxTree takeaway.  Use extra data
     * to provide needed information in a multiblock setting.
     *
-    * MultiblockMappedBoxTree has an efficient overlap search method
+    * MultiblockBoxTree has an efficient overlap search method
     * so this version of removeIntersection is relatively fast.
     *
     * @param[in] block_id Assume all boxes in this BoxList belong in
@@ -199,7 +199,7 @@ public:
    removeIntersections(
       const BlockId &block_id,
       const IntVector &refinement_ratio,
-      const MultiblockMappedBoxTree& takeaway,
+      const MultiblockBoxTree& takeaway,
       bool include_singularity_block_neighbors = false);
 
    /**
@@ -232,21 +232,21 @@ public:
       const BoxList& boxes);
 
    /**
-    * Intersect the current boxlist against the boxes in the specified MappedBoxtree.
+    * Intersect the current boxlist against the boxes in the specified BoxTree.
     *
-    * MappedBoxTree has an efficient overlap search method so this
+    * BoxTree has an efficient overlap search method so this
     * version of intersectBoxes is relatively fast.
     */
    void
    intersectBoxes(
-      const MappedBoxTree& boxes);
+      const BoxTree& boxes);
 
    /**
     * Intersect the current boxlist against the boxes in the specified
-    * MultiblockMappedBoxtree.  Use extra data to provide needed
+    * MultiblockBoxtree.  Use extra data to provide needed
     * information in a multiblock setting.
     *
-    * MultiblockMappedBoxTree has an efficient overlap search method
+    * MultiblockBoxTree has an efficient overlap search method
     * so this version of intersectBoxes is relatively fast.
     *
     * @param[in] block_id Assume all boxes in this BoxList belong in
@@ -265,7 +265,7 @@ public:
    intersectBoxes(
       const BlockId &block_id,
       const IntVector &refinement_ratio,
-      const MultiblockMappedBoxTree& boxes,
+      const MultiblockBoxTree& boxes,
       bool include_singularity_block_neighbors = false);
 
    /**

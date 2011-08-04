@@ -15,7 +15,7 @@
 #include "SAMRAI/hier/MappedBoxLevel.h"
 #include "SAMRAI/hier/MappedBoxLevelConnectorUtils.h"
 #include "SAMRAI/hier/MappedBoxSetSingleBlockIterator.h"
-#include "SAMRAI/hier/MultiblockMappedBoxTree.h"
+#include "SAMRAI/hier/MultiblockBoxTree.h"
 #include "SAMRAI/hier/TransferOperatorRegistry.h"
 #include "SAMRAI/mesh/TreeLoadBalancer.h"
 #include "SAMRAI/tbox/InputDatabase.h"
@@ -239,7 +239,7 @@ int main(
                  << domain_mapped_boxes.format()
                  << std::endl;
 
-      const hier::MultiblockMappedBoxTree domain_mapped_box_tree(
+      const hier::MultiblockBoxTree domain_mapped_box_tree(
          grid_geometry, domain_mapped_boxes );
 
 
@@ -365,7 +365,7 @@ int main(
 
       const hier::MappedBoxSet &small_mapped_box_set( small_mapped_box_level.getMappedBoxes() );
 
-      const hier::MultiblockMappedBoxTree small_box_tree( grid_geometry, small_mapped_box_level.getGlobalizedVersion().getGlobalMappedBoxes() );
+      const hier::MultiblockBoxTree small_box_tree( grid_geometry, small_mapped_box_level.getGlobalizedVersion().getGlobalMappedBoxes() );
 
 
 
@@ -518,7 +518,7 @@ int main(
                     << "big_to_internal:\n"
                     << big_to_internal.format("", 2);
 
-         hier::MultiblockMappedBoxTree internal_box_tree(
+         hier::MultiblockBoxTree internal_box_tree(
             grid_geometry,
             internal_mapped_box_level.getGlobalizedVersion().getGlobalMappedBoxes() );
 
@@ -579,7 +579,7 @@ int main(
             big_to_external,
             big_to_small,
             zero_vector,
-            hier::MultiblockMappedBoxTree() );
+            hier::MultiblockBoxTree() );
          const hier::MappedBoxSet &external_mapped_box_set(external_mapped_box_level.getMappedBoxes());
          tbox::plog << "\nexternal_mapped_box_level:\n"
                     << external_mapped_box_level.format("", 2)
@@ -587,7 +587,7 @@ int main(
                     << "big_to_external:\n"
                     << big_to_external.format("", 2);
 
-         hier::MultiblockMappedBoxTree external_box_tree(
+         hier::MultiblockBoxTree external_box_tree(
             grid_geometry,
             external_mapped_box_level.getGlobalizedVersion().getGlobalMappedBoxes() );
 
@@ -774,7 +774,7 @@ void shrinkMappedBoxLevel(
       boundary_boxes[si->getBlockId()].appendItem(*si);
    }
 
-   hier::MultiblockMappedBoxTree visible_box_tree(
+   hier::MultiblockBoxTree visible_box_tree(
       grid_geometry,
       visible_mapped_boxes );
 
@@ -819,7 +819,7 @@ void shrinkMappedBoxLevel(
 
    }
 
-   const hier::MultiblockMappedBoxTree complement_mapped_box_tree(
+   const hier::MultiblockBoxTree complement_mapped_box_tree(
       grid_geometry,
       complement_mapped_boxes);
 

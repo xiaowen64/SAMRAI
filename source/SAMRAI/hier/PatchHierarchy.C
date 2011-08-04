@@ -752,7 +752,7 @@ void PatchHierarchy::setupDomainData(
       multiblock_complement_boxes[block_id].appendItem(
          hier::Box::getUniverse(d_dim));
       multiblock_complement_boxes[block_id].removeIntersections(
-         d_domain_search_tree_periodic.getSingleBlockMappedBoxTree(block_id));
+         d_domain_search_tree_periodic.getSingleBlockBoxTree(block_id));
    }
 
    d_complement_searchtree.generateTree(

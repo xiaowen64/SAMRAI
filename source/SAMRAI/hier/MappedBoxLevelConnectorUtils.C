@@ -91,7 +91,7 @@ bool MappedBoxLevelConnectorUtils::baseNestsInHead(
    const IntVector& base_swell,
    const IntVector& head_swell,
    const IntVector& head_nesting_margin,
-   const MappedBoxTree* domain) const
+   const BoxTree* domain) const
 {
 
    tbox::Dimension dim(head.getDim());
@@ -149,7 +149,7 @@ bool MappedBoxLevelConnectorUtils::baseNestsInHeadForMultiblock(
    const IntVector& base_swell,
    const IntVector& head_swell,
    const IntVector& head_nesting_margin,
-   const MultiblockMappedBoxTree* domain) const
+   const MultiblockBoxTree* domain) const
 {
 
    tbox::Dimension dim(head.getDim());
@@ -222,7 +222,7 @@ bool MappedBoxLevelConnectorUtils::baseNestsInHead(
    const IntVector& base_swell,
    const IntVector& head_swell,
    const IntVector& head_nesting_margin,
-   const MappedBoxTree* domain) const
+   const BoxTree* domain) const
 {
    TBOX_DIM_ASSERT_CHECK_ARGS3(
       connector.getBase(), base_swell, head_nesting_margin);
@@ -257,7 +257,7 @@ bool MappedBoxLevelConnectorUtils::baseNestsInHead(
    const MappedBoxLevel& head = connector.getHead();
    const tbox::ConstPointer<GridGeometry>& grid_geom = base.getGridGeometry();
 
-   tbox::Pointer<MappedBoxTree> refined_domain;
+   tbox::Pointer<BoxTree> refined_domain;
    if (domain != NULL) {
       refined_domain = domain->createRefinedTree(head.getRefinementRatio());
    }
@@ -354,7 +354,7 @@ bool MappedBoxLevelConnectorUtils::baseNestsInHead(
          swelledbase_to_external,
          swelledbase_to_swelledhead,
          -head_nesting_margin,
-         MappedBoxTree(dim) );
+         BoxTree(dim) );
    }
    if (domain) {
       /*
@@ -364,7 +364,7 @@ bool MappedBoxLevelConnectorUtils::baseNestsInHead(
        */
       MappingConnectorAlgorithm mca;
       std::vector<Box> domain_mapped_boxes;
-      domain->getMappedBoxes(domain_mapped_boxes);
+      domain->getBoxes(domain_mapped_boxes);
       MappedBoxLevel domain_mapped_box_level(
          IntVector::getOne(dim),
          grid_geom,
@@ -408,7 +408,7 @@ bool MappedBoxLevelConnectorUtils::baseNestsInHeadForMultiblock(
    const IntVector& base_swell,
    const IntVector& head_swell,
    const IntVector& head_nesting_margin,
-   const MultiblockMappedBoxTree* domain) const
+   const MultiblockBoxTree* domain) const
 {
    TBOX_DIM_ASSERT_CHECK_ARGS3(
       connector.getBase(), base_swell, head_nesting_margin);
@@ -443,7 +443,7 @@ bool MappedBoxLevelConnectorUtils::baseNestsInHeadForMultiblock(
    const MappedBoxLevel& head = connector.getHead();
    const tbox::ConstPointer<GridGeometry>& grid_geom = base.getGridGeometry();
 
-   tbox::Pointer<MappedBoxTree> refined_domain;
+   tbox::Pointer<BoxTree> refined_domain;
    if (domain != NULL) {
       refined_domain = domain->createRefinedTree(head.getRefinementRatio());
    }
@@ -540,7 +540,7 @@ bool MappedBoxLevelConnectorUtils::baseNestsInHeadForMultiblock(
          swelledbase_to_external,
          swelledbase_to_swelledhead,
          -head_nesting_margin,
-         MultiblockMappedBoxTree() );
+         MultiblockBoxTree() );
    }
    if (domain) {
       /*
@@ -550,7 +550,7 @@ bool MappedBoxLevelConnectorUtils::baseNestsInHeadForMultiblock(
        */
       MappingConnectorAlgorithm mca;
       std::vector<Box> domain_mapped_boxes;
-      domain->getMappedBoxes(domain_mapped_boxes);
+      domain->getBoxes(domain_mapped_boxes);
       MappedBoxLevel domain_mapped_box_level(
          IntVector::getOne(dim),
          grid_geom,
@@ -785,7 +785,7 @@ void MappedBoxLevelConnectorUtils::computeExternalParts(
    Connector& input_to_external,
    const Connector& input_to_reference,
    const IntVector& nesting_width,
-   const MappedBoxTree& domain) const
+   const BoxTree& domain) const
 {
    const tbox::Dimension& dim(nesting_width.getDim());
 
@@ -833,7 +833,7 @@ void MappedBoxLevelConnectorUtils::computeExternalParts(
     *  MappingConnectorAlgorithm::modify() from working correctly.
     *
     *  Potential optimization: This loop uses many removeIntersections()
-    *  calls.  If it gets too slow, consider precomputing a MappedBoxTree
+    *  calls.  If it gets too slow, consider precomputing a BoxTree
     *  of all the visible neighbors (or one of the complement of all the
     *  visible neighbors, depending on the sign of nesting_width)
     *  to speed up intersection removals.
@@ -884,7 +884,7 @@ void MappedBoxLevelConnectorUtils::computeExternalParts(
 
       search_tree_represents_internal = false;
 
-      MappedBoxTree reference_mapped_boxes_tree(dim, reference_box_list, block_id);
+      BoxTree reference_mapped_boxes_tree(dim, reference_box_list, block_id);
       reference_box_list.grow(one_vec);
       // ... reference_box_list is now (R^1)
       t_compute_external_parts_intersection->start();
@@ -894,7 +894,7 @@ void MappedBoxLevelConnectorUtils::computeExternalParts(
          if (input.getRefinementRatio() == one_vec) {
             reference_box_list.intersectBoxes(domain);
          } else {
-            tbox::Pointer<MappedBoxTree> refined_domain =
+            tbox::Pointer<BoxTree> refined_domain =
                domain.createRefinedTree(input.getRefinementRatio());
             reference_box_list.intersectBoxes(*refined_domain);
          }
@@ -904,7 +904,7 @@ void MappedBoxLevelConnectorUtils::computeExternalParts(
       reference_box_list.grow(-nesting_width);
       // ... reference_box_list is now ( (R^1) \ R ) <intersection> O ) - g
    }
-   MappedBoxTree search_tree(dim, reference_box_list, block_id);
+   BoxTree search_tree(dim, reference_box_list, block_id);
 
    reference_box_list.clearItems();
 
@@ -1038,7 +1038,7 @@ void MappedBoxLevelConnectorUtils::computeExternalPartsForMultiblock(
    Connector& input_to_external,
    const Connector& input_to_reference,
    const IntVector& nesting_width,
-   const MultiblockMappedBoxTree& domain) const
+   const MultiblockBoxTree& domain) const
 {
    t_compute_external_parts->start();
 
@@ -1066,7 +1066,7 @@ void MappedBoxLevelConnectorUtils::computeInternalParts(
    Connector& input_to_internal,
    const Connector& input_to_reference,
    const IntVector& nesting_width,
-   const MappedBoxTree& domain) const
+   const BoxTree& domain) const
 {
    const tbox::Dimension& dim(nesting_width.getDim());
 
@@ -1165,7 +1165,7 @@ void MappedBoxLevelConnectorUtils::computeInternalParts(
     * nesting_width.
     */
 
-   tbox::Array<tbox::Pointer<MappedBoxTree> > search_tree(num_blocks);
+   tbox::Array<tbox::Pointer<BoxTree> > search_tree(num_blocks);
    bool search_tree_represents_internal;
 
    if (nesting_width >= zero_vec) {
@@ -1181,17 +1181,17 @@ void MappedBoxLevelConnectorUtils::computeInternalParts(
          if (input.getRefinementRatio() == one_vec) {
             reference_mapped_box_map[block_id].intersectBoxes(domain);
          } else {
-            tbox::Pointer<MappedBoxTree> refined_domain =
+            tbox::Pointer<BoxTree> refined_domain =
                domain.createRefinedTree(input.getRefinementRatio());
             reference_mapped_box_map[block_id].intersectBoxes(*refined_domain);
          }
          for (int b = 0; b < num_blocks; ++b) {
             if (b == block_id.getBlockValue()) {
-               search_tree[b] = new MappedBoxTree(dim,
+               search_tree[b] = new BoxTree(dim,
                   reference_mapped_box_map[block_id], block_id);
             }
             else {
-               search_tree[b] = new MappedBoxTree(dim);
+               search_tree[b] = new BoxTree(dim);
             }
          }
       }
@@ -1202,7 +1202,7 @@ void MappedBoxLevelConnectorUtils::computeInternalParts(
                reference_mapped_box_map[bid].grow(nesting_width);
             }
             search_tree[b] =
-               new MappedBoxTree(dim, reference_mapped_box_map[bid], bid);
+               new BoxTree(dim, reference_mapped_box_map[bid], bid);
          }
       }
    } else {
@@ -1333,7 +1333,7 @@ void MappedBoxLevelConnectorUtils::computeInternalPartsForMultiblock(
    Connector& input_to_internal,
    const Connector& input_to_reference,
    const IntVector& nesting_width,
-   const MultiblockMappedBoxTree& domain) const
+   const MultiblockBoxTree& domain) const
 {
    t_compute_internal_parts->start();
 
@@ -1365,7 +1365,7 @@ void MappedBoxLevelConnectorUtils::computeInternalParts(
    const IntVector& nesting_width) const
 {
    const tbox::Dimension& dim(nesting_width.getDim());
-   const MappedBoxTree dummy_domain(dim);
+   const BoxTree dummy_domain(dim);
    computeInternalParts(internal,
                         input_to_internal,
                         input_to_reference,
@@ -1438,7 +1438,7 @@ void MappedBoxLevelConnectorUtils::computeInternalOrExternalPartsForMultiblock(
    char internal_or_external,
    const Connector& input_to_reference,
    const IntVector& nesting_width,
-   const MultiblockMappedBoxTree& domain) const
+   const MultiblockBoxTree& domain) const
 {
    const MappedBoxLevel& input = input_to_reference.getBase();
 
@@ -1555,7 +1555,7 @@ void MappedBoxLevelConnectorUtils::computeInternalOrExternalPartsForMultiblock(
                   domain);
             }
          } else {
-            tbox::Pointer<MultiblockMappedBoxTree> refined_domain =
+            tbox::Pointer<MultiblockBoxTree> refined_domain =
                domain.createRefinedTree(input.getRefinementRatio());
             for ( std::map<BlockId,BoxList>::iterator mi=reference_box_list.begin();
                   mi!=reference_box_list.end(); ++mi ) {
@@ -1576,7 +1576,7 @@ void MappedBoxLevelConnectorUtils::computeInternalOrExternalPartsForMultiblock(
       // ... reference_boundary is now ( ( (R^1) \ R ) <intersection> O )^(-g)
    } // search_tree_represents_internal == false
 
-   MultiblockMappedBoxTree search_tree(grid_geometry, reference_box_list);
+   MultiblockBoxTree search_tree(grid_geometry, reference_box_list);
 
    reference_box_list.clear();
 
@@ -1774,7 +1774,7 @@ void MappedBoxLevelConnectorUtils::computeBoxesAroundBoundary(
    }
    // ... boundary is now (R^1)
 
-   MultiblockMappedBoxTree reference_mapped_boxes_tree(
+   MultiblockBoxTree reference_mapped_boxes_tree(
       grid_geometry,
       box_list_map);
    for ( std::map<BlockId,BoxList>::iterator mi=boundary.begin();
@@ -1892,7 +1892,7 @@ void MappedBoxLevelConnectorUtils::computeBoxesAroundBoundary(
             const GridGeometry::Neighbor &neighbor(*ni);
             const BlockId neighbor_block_id(neighbor.getBlockNumber());
             if ( neighbor.isSingularity() &&
-                 reference_mapped_boxes_tree.hasMappedBoxInBlock(neighbor_block_id) ) {
+                 reference_mapped_boxes_tree.hasBoxInBlock(neighbor_block_id) ) {
 
                grid_geometry->translateBoxList(singularity_boxes,
                                                refinement_ratio,
@@ -1900,7 +1900,7 @@ void MappedBoxLevelConnectorUtils::computeBoxesAroundBoundary(
                                                block_id);
 
                singularity_boxes.intersectBoxes(
-                  reference_mapped_boxes_tree.getSingleBlockMappedBoxTree(neighbor_block_id));
+                  reference_mapped_boxes_tree.getSingleBlockBoxTree(neighbor_block_id));
 
                grid_geometry->translateBoxList(singularity_boxes,
                                                refinement_ratio,
@@ -2075,7 +2075,7 @@ void MappedBoxLevelConnectorUtils::makeRemainderMap(
 
 void MappedBoxLevelConnectorUtils::addPeriodicImages(
    MappedBoxLevel& mapped_box_level,
-   const MappedBoxTree& domain_search_tree,
+   const BoxTree& domain_search_tree,
    const IntVector &threshold_distance) const
 {
    const PeriodicShiftCatalog* shift_catalog =
@@ -2085,10 +2085,10 @@ void MappedBoxLevelConnectorUtils::addPeriodicImages(
       return; // No-op.
    }
 
-   tbox::Pointer<MappedBoxTree> domain_tree_for_mapped_box_level =
+   tbox::Pointer<BoxTree> domain_tree_for_mapped_box_level =
       domain_search_tree.createRefinedTree(mapped_box_level.getRefinementRatio());
 
-   const MappedBoxTree& domain_tree =
+   const BoxTree& domain_tree =
       *domain_tree_for_mapped_box_level;
 
    const IntVector& mapped_box_level_growth = threshold_distance;
@@ -2133,7 +2133,7 @@ void MappedBoxLevelConnectorUtils::addPeriodicImagesAndRelationships(
    MappedBoxLevel& mapped_box_level,
    Connector& mapped_box_level_to_anchor,
    Connector& anchor_to_mapped_box_level,
-   const MappedBoxTree& domain_search_tree,
+   const BoxTree& domain_search_tree,
    const Connector& anchor_to_anchor) const
 {
    OverlapConnectorAlgorithm oca;
@@ -2184,7 +2184,7 @@ void MappedBoxLevelConnectorUtils::addPeriodicImagesAndRelationships(
 
    const MappedBoxLevel& anchor = anchor_to_mapped_box_level.getBase();
 
-   tbox::Pointer<MappedBoxTree> domain_tree_for_mapped_box_level =
+   tbox::Pointer<BoxTree> domain_tree_for_mapped_box_level =
       domain_search_tree.createRefinedTree(mapped_box_level.getRefinementRatio());
 
    {
@@ -2200,7 +2200,7 @@ void MappedBoxLevelConnectorUtils::addPeriodicImagesAndRelationships(
          tbox::perr << "mapped_box_level:\n"
                     << mapped_box_level.format("BEFORE-> ", 3);
       }
-      const MappedBoxTree& domain_tree =
+      const BoxTree& domain_tree =
          *domain_tree_for_mapped_box_level;
 
       const IntVector& mapped_box_level_growth =

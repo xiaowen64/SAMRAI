@@ -4,14 +4,14 @@
  * information, see COPYRIGHT and COPYING.LESSER. 
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Binary tree of MappedBoxes for overlap searches. 
+ * Description:   Binary tree of Boxes for overlap searches. 
  *
  ************************************************************************/
 
-#ifndef included_hier_MappedBoxTree_C
-#define included_hier_MappedBoxTree_C
+#ifndef included_hier_BoxTree_C
+#define included_hier_BoxTree_C
 
-#include "SAMRAI/hier/MappedBoxTree.h"
+#include "SAMRAI/hier/BoxTree.h"
 #include "SAMRAI/hier/BoxList.h"
 #include "SAMRAI/tbox/MathUtilities.h"
 #include "SAMRAI/tbox/SAMRAI_MPI.h"
@@ -31,39 +31,39 @@
 namespace SAMRAI {
 namespace hier {
 
-tbox::Pointer<tbox::Timer> MappedBoxTree::t_build_tree[tbox::Dimension::
+tbox::Pointer<tbox::Timer> BoxTree::t_build_tree[tbox::Dimension::
                                                        MAXIMUM_DIMENSION_VALUE];
-tbox::Pointer<tbox::Timer> MappedBoxTree::t_search[tbox::Dimension::
+tbox::Pointer<tbox::Timer> BoxTree::t_search[tbox::Dimension::
                                                    MAXIMUM_DIMENSION_VALUE];
-unsigned int MappedBoxTree::s_num_build[tbox::Dimension::MAXIMUM_DIMENSION_VALUE] =
+unsigned int BoxTree::s_num_build[tbox::Dimension::MAXIMUM_DIMENSION_VALUE] =
 { 0 };
-unsigned int MappedBoxTree::s_num_generate[tbox::Dimension::MAXIMUM_DIMENSION_VALUE]
+unsigned int BoxTree::s_num_generate[tbox::Dimension::MAXIMUM_DIMENSION_VALUE]
    =
    { 0 };
-unsigned int MappedBoxTree::s_num_duplicate[tbox::Dimension::MAXIMUM_DIMENSION_VALUE]
+unsigned int BoxTree::s_num_duplicate[tbox::Dimension::MAXIMUM_DIMENSION_VALUE]
    =
    { 0 };
-unsigned int MappedBoxTree::s_num_search[tbox::Dimension::MAXIMUM_DIMENSION_VALUE] =
+unsigned int BoxTree::s_num_search[tbox::Dimension::MAXIMUM_DIMENSION_VALUE] =
 { 0 };
-unsigned int MappedBoxTree::s_num_sorted_box[tbox::Dimension::MAXIMUM_DIMENSION_VALUE
+unsigned int BoxTree::s_num_sorted_box[tbox::Dimension::MAXIMUM_DIMENSION_VALUE
 ] = { 0 };
-unsigned int MappedBoxTree::s_num_found_box[tbox::Dimension::MAXIMUM_DIMENSION_VALUE]
+unsigned int BoxTree::s_num_found_box[tbox::Dimension::MAXIMUM_DIMENSION_VALUE]
    =
    { 0 };
-unsigned int MappedBoxTree::s_max_sorted_box[tbox::Dimension::MAXIMUM_DIMENSION_VALUE
+unsigned int BoxTree::s_max_sorted_box[tbox::Dimension::MAXIMUM_DIMENSION_VALUE
 ] = { 0 };
-unsigned int MappedBoxTree::s_max_found_box[tbox::Dimension::MAXIMUM_DIMENSION_VALUE]
+unsigned int BoxTree::s_max_found_box[tbox::Dimension::MAXIMUM_DIMENSION_VALUE]
    =
    { 0 };
-unsigned int MappedBoxTree::s_max_lin_search[tbox::Dimension::MAXIMUM_DIMENSION_VALUE
+unsigned int BoxTree::s_max_lin_search[tbox::Dimension::MAXIMUM_DIMENSION_VALUE
 ] = { 0 };
 
 tbox::StartupShutdownManager::Handler
-MappedBoxTree::s_initialize_finalize_handler(
-   MappedBoxTree::initializeCallback,
+BoxTree::s_initialize_finalize_handler(
+   BoxTree::initializeCallback,
    0,
    0,
-   MappedBoxTree::finalizeCallback,
+   BoxTree::finalizeCallback,
    tbox::StartupShutdownManager::priorityTimers);
 
 /*
@@ -71,7 +71,7 @@ MappedBoxTree::s_initialize_finalize_handler(
  *************************************************************************
  */
 
-MappedBoxTree::MappedBoxTree(
+BoxTree::BoxTree(
    const tbox::Dimension& dim):
    d_dim(dim),
    d_bounding_box(dim),
@@ -80,7 +80,7 @@ MappedBoxTree::MappedBoxTree(
 {
 }
 
-MappedBoxTree::MappedBoxTree(
+BoxTree::BoxTree(
    const tbox::Dimension& dim,
    const MappedBoxSet& mapped_boxes,
    size_t min_number):
@@ -198,12 +198,12 @@ MappedBoxTree::MappedBoxTree(
 
 /*
  *************************************************************************
- * Constructs a MappedBoxTree that represents the physical
+ * Constructs a BoxTree that represents the physical
  * domain specified by box.
  *************************************************************************
  */
 
-MappedBoxTree::MappedBoxTree(
+BoxTree::BoxTree(
    const tbox::Dimension& dim,
    const hier::BoxList& boxes,
    const BlockId& block_id,
@@ -307,7 +307,7 @@ MappedBoxTree::MappedBoxTree(
  *************************************************************************
  */
 
-MappedBoxTree::~MappedBoxTree()
+BoxTree::~BoxTree()
 {
 }
 
@@ -315,17 +315,17 @@ MappedBoxTree::~MappedBoxTree()
  *************************************************************************
  * Assignment operator.
  *
- * We share the children with the reference MappedBoxTree.  This is
+ * We share the children with the reference BoxTree.  This is
  * safe because the trees are never changed once they are set up.  If
- * one MappedBoxTree changes, it simply sets its children pointers to
+ * one BoxTree changes, it simply sets its children pointers to
  * NULL instead of trying to change the children.  Other
- * MappedBoxTrees sharing the children do not see any changes to the
+ * BoxTrees sharing the children do not see any changes to the
  * children.
  *************************************************************************
  */
 
-MappedBoxTree& MappedBoxTree::operator = (
-   const MappedBoxTree& r)
+BoxTree& BoxTree::operator = (
+   const BoxTree& r)
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, r);
 
@@ -343,7 +343,7 @@ MappedBoxTree& MappedBoxTree::operator = (
  * Generate the tree from a given mutable set of mapped_boxes.
  *************************************************************************
  */
-void MappedBoxTree::generateTree(
+void BoxTree::generateTree(
    MappedBoxSet& mapped_boxes,
    size_t min_number)
 {
@@ -357,7 +357,7 @@ void MappedBoxTree::generateTree(
 
 #ifdef DEBUG_CHECK_ASSERTIONS
    // Catch empty boxes so sorting logic does not have to.
-   // Ensure all MappedBoxes are all in the same block.
+   // Ensure all Boxes are all in the same block.
    for (MappedBoxSet::const_iterator ni = mapped_boxes.begin();
         ni != mapped_boxes.end();
         ++ni) {
@@ -374,15 +374,15 @@ void MappedBoxTree::generateTree(
 
 /*
  *************************************************************************
- * Generate the tree from a given mutable vector of MappedBoxes.
+ * Generate the tree from a given mutable vector of Boxes.
  * The vector will be changed and its output state is undefined.
  *
- * Methods taking various input containers of MappedBoxes could
- * simply copy the input MappedBoxes into a vector, then call this
+ * Methods taking various input containers of Boxes could
+ * simply copy the input Boxes into a vector, then call this
  * method.  However, we don't do that for efficiency reasons.  The
  * extra copy turns out to be significant.  Therefore, the
  * constructors have code similar to privateGenerateTree to split
- * the incoming MappedBoxes into three groups.  These groups
+ * the incoming Boxes into three groups.  These groups
  * are turned into child branches by setupChildren.
  *
  * This method is not timed using the Timers.  Only the public
@@ -391,7 +391,7 @@ void MappedBoxTree::generateTree(
  * starts/stops can be removed from the recursive codes.
  *************************************************************************
  */
-void MappedBoxTree::privateGenerateTree(
+void BoxTree::privateGenerateTree(
    size_t min_number)
 {
    ++s_num_generate[d_dim.getValue() - 1];
@@ -476,14 +476,14 @@ void MappedBoxTree::privateGenerateTree(
 /*
 **************************************************************************
 * This method finishes the tree generation by setting up the children
-* branches.  It expects the MappedBoxes be have been split into
+* branches.  It expects the Boxes be have been split into
 * left_mapped_boxes, right_mapped_boxes, and d_mapped_boxes.  It will
 * generate the d_left_child and d_right_child.  If d_mapped_boxes is
 * big enough, it will generate d_center_child.
 *
 **************************************************************************
 */
-void MappedBoxTree::setupChildren(
+void BoxTree::setupChildren(
    const size_t min_number,
    MappedBoxSet &left_mapped_boxes,
    MappedBoxSet &right_mapped_boxes )
@@ -492,7 +492,7 @@ void MappedBoxTree::setupChildren(
       left_mapped_boxes.size() + right_mapped_boxes.size() + d_mapped_boxes.size();
 
    /*
-    * If all MappedBoxes are in a single child, the child is just as
+    * If all Boxes are in a single child, the child is just as
     * big as its parent, so there is no point recursing.  Put
     * everything into d_mapped_boxes so the check below will prevent
     * recursion.
@@ -516,7 +516,7 @@ void MappedBoxTree::setupChildren(
     */
    if ( d_mapped_boxes.size() > min_number /* recursion criterion */ &&
         d_mapped_boxes.size() < total_size /* avoid infinite recursion */ ) {
-      d_center_child = new MappedBoxTree(d_dim);
+      d_center_child = new BoxTree(d_dim);
       d_mapped_boxes.swap(d_center_child->d_mapped_boxes);
       d_center_child->privateGenerateTree(min_number);
       d_mapped_boxes.clear();   // No longer needed for tree construction or search.
@@ -526,12 +526,12 @@ void MappedBoxTree::setupChildren(
     * Recurse to build this node's left and right children.
     */
    if (!left_mapped_boxes.empty()) {
-      d_left_child = new MappedBoxTree(d_dim);
+      d_left_child = new BoxTree(d_dim);
       left_mapped_boxes.swap(d_left_child->d_mapped_boxes);
       d_left_child->privateGenerateTree(min_number);
    }
    if (!right_mapped_boxes.empty()) {
-      d_right_child = new MappedBoxTree(d_dim);
+      d_right_child = new BoxTree(d_dim);
       right_mapped_boxes.swap(d_right_child->d_mapped_boxes);
       d_right_child->privateGenerateTree(min_number);
    }
@@ -542,7 +542,7 @@ void MappedBoxTree::setupChildren(
 
 
 
-bool MappedBoxTree::hasOverlap(
+bool BoxTree::hasOverlap(
    const Box& box) const
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, box);
@@ -573,7 +573,7 @@ bool MappedBoxTree::hasOverlap(
    return has_overlap;
 }
 
-void MappedBoxTree::findOverlapMappedBoxes(
+void BoxTree::findOverlapBoxes(
    std::vector<Box>& overlap_mapped_boxes,
    const Box& box,
    bool recursive_call) const
@@ -590,7 +590,7 @@ void MappedBoxTree::findOverlapMappedBoxes(
    if (box.intersects(d_bounding_box)) {
 
       if (d_center_child) {
-         d_center_child->findOverlapMappedBoxes(overlap_mapped_boxes, box, true);
+         d_center_child->findOverlapBoxes(overlap_mapped_boxes, box, true);
       } else {
          for (MappedBoxSet::const_iterator ni = d_mapped_boxes.begin();
               ni != d_mapped_boxes.end(); ++ni) {
@@ -602,11 +602,11 @@ void MappedBoxTree::findOverlapMappedBoxes(
       }
 
       if (d_left_child) {
-         d_left_child->findOverlapMappedBoxes(overlap_mapped_boxes, box, true);
+         d_left_child->findOverlapBoxes(overlap_mapped_boxes, box, true);
       }
 
       if (d_right_child) {
-         d_right_child->findOverlapMappedBoxes(overlap_mapped_boxes, box, true);
+         d_right_child->findOverlapBoxes(overlap_mapped_boxes, box, true);
       }
    }
 
@@ -621,7 +621,7 @@ void MappedBoxTree::findOverlapMappedBoxes(
    }
 }
 
-void MappedBoxTree::findOverlapMappedBoxes(
+void BoxTree::findOverlapBoxes(
    std::vector<const Box*>& overlap_mapped_boxes,
    const Box& box,
    bool recursive_call) const
@@ -638,7 +638,7 @@ void MappedBoxTree::findOverlapMappedBoxes(
    if (box.intersects(d_bounding_box)) {
 
       if (d_center_child) {
-         d_center_child->findOverlapMappedBoxes(overlap_mapped_boxes, box, true);
+         d_center_child->findOverlapBoxes(overlap_mapped_boxes, box, true);
       } else {
          for (MappedBoxSet::const_iterator ni = d_mapped_boxes.begin();
               ni != d_mapped_boxes.end(); ++ni) {
@@ -650,11 +650,11 @@ void MappedBoxTree::findOverlapMappedBoxes(
       }
 
       if (d_left_child) {
-         d_left_child->findOverlapMappedBoxes(overlap_mapped_boxes, box, true);
+         d_left_child->findOverlapBoxes(overlap_mapped_boxes, box, true);
       }
 
       if (d_right_child) {
-         d_right_child->findOverlapMappedBoxes(overlap_mapped_boxes, box, true);
+         d_right_child->findOverlapBoxes(overlap_mapped_boxes, box, true);
       }
    }
 
@@ -669,7 +669,7 @@ void MappedBoxTree::findOverlapMappedBoxes(
    }
 }
 
-void MappedBoxTree::findOverlapBoxes(
+void BoxTree::findOverlapBoxes(
    BoxList& overlap_boxes,
    const Box& box,
    bool recursive_call) const
@@ -716,7 +716,7 @@ void MappedBoxTree::findOverlapBoxes(
    }
 }
 
-void MappedBoxTree::clear()
+void BoxTree::clear()
 {
    d_bounding_box.setEmpty();
    d_left_child.setNull();
@@ -725,22 +725,22 @@ void MappedBoxTree::clear()
    d_center_child.setNull();
 }
 
-bool MappedBoxTree::isInitialized() const
+bool BoxTree::isInitialized() const
 {
    return !d_bounding_box.empty();
 }
 
-const Box& MappedBoxTree::getBoundingBox() const
+const Box& BoxTree::getBoundingBox() const
 {
    return d_bounding_box;
 }
 
-const tbox::Dimension& MappedBoxTree::getDim() const
+const tbox::Dimension& BoxTree::getDim() const
 {
    return d_dim;
 }
 
-void MappedBoxTree::findOverlapMappedBoxes(
+void BoxTree::findOverlapBoxes(
    MappedBoxSet& overlap_mapped_boxes,
    const Box& box,
    bool recursive_call) const
@@ -757,7 +757,7 @@ void MappedBoxTree::findOverlapMappedBoxes(
    if (box.intersects(d_bounding_box)) {
 
       if (d_center_child) {
-         d_center_child->findOverlapMappedBoxes(overlap_mapped_boxes, box, true);
+         d_center_child->findOverlapBoxes(overlap_mapped_boxes, box, true);
       } else {
          for (MappedBoxSet::const_iterator ni = d_mapped_boxes.begin();
               ni != d_mapped_boxes.end(); ++ni) {
@@ -769,11 +769,11 @@ void MappedBoxTree::findOverlapMappedBoxes(
       }
 
       if (d_left_child) {
-         d_left_child->findOverlapMappedBoxes(overlap_mapped_boxes, box, true);
+         d_left_child->findOverlapBoxes(overlap_mapped_boxes, box, true);
       }
 
       if (d_right_child) {
-         d_right_child->findOverlapMappedBoxes(overlap_mapped_boxes, box, true);
+         d_right_child->findOverlapBoxes(overlap_mapped_boxes, box, true);
       }
    }
 
@@ -788,11 +788,11 @@ void MappedBoxTree::findOverlapMappedBoxes(
    }
 }
 
-void MappedBoxTree::getMappedBoxes(
+void BoxTree::getBoxes(
    std::vector<Box>& mapped_boxes) const
 {
    if (d_center_child) {
-      d_center_child->getMappedBoxes(mapped_boxes);
+      d_center_child->getBoxes(mapped_boxes);
    } else {
       mapped_boxes.insert(
          mapped_boxes.end(),
@@ -800,21 +800,21 @@ void MappedBoxTree::getMappedBoxes(
    }
 
    if (d_left_child) {
-      d_left_child->getMappedBoxes(mapped_boxes);
+      d_left_child->getBoxes(mapped_boxes);
    }
 
    if (d_right_child) {
-      d_right_child->getMappedBoxes(mapped_boxes);
+      d_right_child->getBoxes(mapped_boxes);
    }
 }
 
-tbox::Pointer<MappedBoxTree> MappedBoxTree::createRefinedTree(
+tbox::Pointer<BoxTree> BoxTree::createRefinedTree(
    const IntVector& ratio) const
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, ratio);
    TBOX_ASSERT(ratio >= IntVector::getOne(d_dim));
 
-   MappedBoxTree* rval = new MappedBoxTree(d_dim);
+   BoxTree* rval = new BoxTree(d_dim);
 
    rval->d_partition_dim = d_dim.getValue();
 
@@ -838,21 +838,21 @@ tbox::Pointer<MappedBoxTree> MappedBoxTree::createRefinedTree(
       rval->d_right_child = d_right_child->createRefinedTree(ratio);
    }
 
-   return tbox::Pointer<MappedBoxTree>(rval);
+   return tbox::Pointer<BoxTree>(rval);
 }
 
 /*
  ***********************************************************************
  ***********************************************************************
  */
-void MappedBoxTree::initializeCallback()
+void BoxTree::initializeCallback()
 {
    for (int i = 0; i < tbox::Dimension::MAXIMUM_DIMENSION_VALUE; ++i) {
       const std::string dim_str( tbox::Utilities::intToString(i+1) );
       t_build_tree[i] = tbox::TimerManager::getManager()->
-         getTimer(std::string("hier::MappedBoxTree::build_tree[") + dim_str + "]");
+         getTimer(std::string("hier::BoxTree::build_tree[") + dim_str + "]");
       t_search[i] = tbox::TimerManager::getManager()->
-                  getTimer(std::string("hier::MappedBoxTree::search[") + dim_str + "]");
+                  getTimer(std::string("hier::BoxTree::search[") + dim_str + "]");
    }
 }
 
@@ -862,7 +862,7 @@ void MappedBoxTree::initializeCallback()
  * memory for timers does not leak.                                        *
  ***************************************************************************
  */
-void MappedBoxTree::finalizeCallback()
+void BoxTree::finalizeCallback()
 {
    for (int i = 0; i < tbox::Dimension::MAXIMUM_DIMENSION_VALUE; ++i) {
       t_build_tree[i].setNull();
@@ -874,7 +874,7 @@ void MappedBoxTree::finalizeCallback()
  ***************************************************************************
  ***************************************************************************
  */
-void MappedBoxTree::resetStatistics(
+void BoxTree::resetStatistics(
    const tbox::Dimension& dim)
 {
    s_num_build[dim.getValue() - 1] = 0;
@@ -892,10 +892,10 @@ void MappedBoxTree::resetStatistics(
  ***************************************************************************
  ***************************************************************************
  */
-void MappedBoxTree::printStatistics(
+void BoxTree::printStatistics(
    const tbox::Dimension& dim)
 {
-   tbox::plog << "MappedBoxTree local stats:"
+   tbox::plog << "BoxTree local stats:"
    << "  build=" << s_num_build[dim.getValue() - 1]
    << "  generate=" << s_num_generate[dim.getValue() - 1]
    << "  duplicate=" << s_num_duplicate[dim.getValue() - 1]

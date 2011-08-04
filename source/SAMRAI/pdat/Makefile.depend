@@ -22,6 +22,7 @@ DEPENDS_0:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Index.I				\
@@ -32,8 +33,7 @@ DEPENDS_0:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxTree.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockMappedBoxTree.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicShiftCatalog.I		\
@@ -115,6 +115,7 @@ DEPENDS_1:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Index.I				\
@@ -125,8 +126,7 @@ DEPENDS_1:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxTree.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockMappedBoxTree.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicShiftCatalog.I		\
@@ -273,6 +273,7 @@ DEPENDS_3:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Index.I				\
@@ -283,8 +284,7 @@ DEPENDS_3:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxTree.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockMappedBoxTree.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicShiftCatalog.I		\
@@ -375,6 +375,7 @@ DEPENDS_4:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/ComponentSelector.I			\
@@ -391,9 +392,8 @@ DEPENDS_4:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxTree.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockDataTranslator.h		\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockMappedBoxTree.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchBoundaries.I			\
@@ -527,6 +527,7 @@ DEPENDS_5:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/ComponentSelector.I			\
@@ -543,9 +544,8 @@ DEPENDS_5:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxTree.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockDataTranslator.h		\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockMappedBoxTree.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchBoundaries.I			\
@@ -675,6 +675,7 @@ DEPENDS_6:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Index.I				\
@@ -685,8 +686,7 @@ DEPENDS_6:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxTree.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockMappedBoxTree.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchData.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchData.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicId.I				\
@@ -789,6 +789,7 @@ DEPENDS_7:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/ComponentSelector.I			\
@@ -805,9 +806,8 @@ DEPENDS_7:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxTree.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockDataTranslator.h		\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockMappedBoxTree.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchBoundaries.I			\
@@ -937,6 +937,7 @@ DEPENDS_8:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/ComponentSelector.I			\
@@ -953,9 +954,8 @@ DEPENDS_8:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxTree.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockDataTranslator.h		\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockMappedBoxTree.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchBoundaries.I			\
@@ -1089,6 +1089,7 @@ DEPENDS_9:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/ComponentSelector.I			\
@@ -1105,9 +1106,8 @@ DEPENDS_9:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxTree.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockDataTranslator.h		\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockMappedBoxTree.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchBoundaries.I			\
@@ -1241,6 +1241,7 @@ DEPENDS_10:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/ComponentSelector.I			\
@@ -1257,9 +1258,8 @@ DEPENDS_10:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxTree.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockDataTranslator.h		\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockMappedBoxTree.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchBoundaries.I			\
@@ -1392,6 +1392,7 @@ DEPENDS_11:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/ComponentSelector.I			\
@@ -1408,9 +1409,8 @@ DEPENDS_11:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxTree.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockDataTranslator.h		\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockMappedBoxTree.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchBoundaries.I			\
@@ -1540,6 +1540,7 @@ DEPENDS_12:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Index.I				\
@@ -1550,8 +1551,7 @@ DEPENDS_12:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxTree.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockMappedBoxTree.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicShiftCatalog.I		\
@@ -1675,6 +1675,7 @@ DEPENDS_14:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/ComponentSelector.I			\
@@ -1691,9 +1692,8 @@ DEPENDS_14:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxTree.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockDataTranslator.h		\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockMappedBoxTree.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchBoundaries.I			\
@@ -1823,6 +1823,7 @@ DEPENDS_15:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Index.I				\
@@ -1833,8 +1834,7 @@ DEPENDS_15:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxTree.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockMappedBoxTree.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicShiftCatalog.I		\
@@ -1909,6 +1909,7 @@ DEPENDS_16:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Index.I				\
@@ -1919,8 +1920,7 @@ DEPENDS_16:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxTree.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockMappedBoxTree.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicShiftCatalog.I		\
@@ -1995,6 +1995,7 @@ DEPENDS_17:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/ComponentSelector.I			\
@@ -2011,9 +2012,8 @@ DEPENDS_17:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxTree.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockDataTranslator.h		\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockMappedBoxTree.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchBoundaries.I			\
@@ -2173,6 +2173,7 @@ DEPENDS_20:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/ComponentSelector.I			\
@@ -2189,9 +2190,8 @@ DEPENDS_20:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxTree.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockDataTranslator.h		\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockMappedBoxTree.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchBoundaries.I			\
@@ -2333,6 +2333,7 @@ DEPENDS_21:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/ComponentSelector.I			\
@@ -2349,9 +2350,8 @@ DEPENDS_21:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxTree.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockDataTranslator.h		\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockMappedBoxTree.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchBoundaries.I			\
@@ -2489,6 +2489,7 @@ DEPENDS_22:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Index.I				\
@@ -2499,8 +2500,7 @@ DEPENDS_22:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxTree.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockMappedBoxTree.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchData.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchData.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicId.I				\
@@ -2603,6 +2603,7 @@ DEPENDS_23:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/ComponentSelector.I			\
@@ -2619,9 +2620,8 @@ DEPENDS_23:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxTree.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockDataTranslator.h		\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockMappedBoxTree.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchBoundaries.I			\
@@ -2759,6 +2759,7 @@ DEPENDS_24:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/ComponentSelector.I			\
@@ -2775,9 +2776,8 @@ DEPENDS_24:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxTree.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockDataTranslator.h		\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockMappedBoxTree.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchBoundaries.I			\
@@ -2919,6 +2919,7 @@ DEPENDS_25:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/ComponentSelector.I			\
@@ -2935,9 +2936,8 @@ DEPENDS_25:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxTree.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockDataTranslator.h		\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockMappedBoxTree.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchBoundaries.I			\
@@ -3079,6 +3079,7 @@ DEPENDS_26:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/ComponentSelector.I			\
@@ -3095,9 +3096,8 @@ DEPENDS_26:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxTree.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockDataTranslator.h		\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockMappedBoxTree.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchBoundaries.I			\
@@ -3238,6 +3238,7 @@ DEPENDS_27:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/ComponentSelector.I			\
@@ -3254,9 +3255,8 @@ DEPENDS_27:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxTree.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockDataTranslator.h		\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockMappedBoxTree.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchBoundaries.I			\
@@ -3394,6 +3394,7 @@ DEPENDS_28:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Index.I				\
@@ -3404,8 +3405,7 @@ DEPENDS_28:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxTree.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockMappedBoxTree.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicShiftCatalog.I		\
@@ -3529,6 +3529,7 @@ DEPENDS_30:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/ComponentSelector.I			\
@@ -3545,9 +3546,8 @@ DEPENDS_30:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxTree.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockDataTranslator.h		\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockMappedBoxTree.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchBoundaries.I			\
@@ -3685,6 +3685,7 @@ DEPENDS_31:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Index.I				\
@@ -3695,8 +3696,7 @@ DEPENDS_31:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxTree.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockMappedBoxTree.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicShiftCatalog.I		\
@@ -3771,6 +3771,7 @@ DEPENDS_32:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Index.I				\
@@ -3781,8 +3782,7 @@ DEPENDS_32:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxTree.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockMappedBoxTree.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicShiftCatalog.I		\
@@ -3857,6 +3857,7 @@ DEPENDS_33:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/ComponentSelector.I			\
@@ -3873,9 +3874,8 @@ DEPENDS_33:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxTree.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockDataTranslator.h		\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockMappedBoxTree.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchBoundaries.I			\
@@ -4015,6 +4015,7 @@ DEPENDS_34:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/ComponentSelector.I			\
@@ -4031,9 +4032,8 @@ DEPENDS_34:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxTree.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockDataTranslator.h		\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockMappedBoxTree.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchBoundaries.I			\
@@ -4175,6 +4175,7 @@ DEPENDS_35:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/ComponentSelector.I			\
@@ -4191,9 +4192,8 @@ DEPENDS_35:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxTree.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockDataTranslator.h		\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockMappedBoxTree.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchBoundaries.I			\
@@ -4331,6 +4331,7 @@ DEPENDS_36:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Index.I				\
@@ -4341,8 +4342,7 @@ DEPENDS_36:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxTree.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockMappedBoxTree.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchData.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchData.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicId.I				\
@@ -4445,6 +4445,7 @@ DEPENDS_37:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/ComponentSelector.I			\
@@ -4461,9 +4462,8 @@ DEPENDS_37:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxTree.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockDataTranslator.h		\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockMappedBoxTree.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchBoundaries.I			\
@@ -4601,6 +4601,7 @@ DEPENDS_38:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/ComponentSelector.I			\
@@ -4617,9 +4618,8 @@ DEPENDS_38:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxTree.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockDataTranslator.h		\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockMappedBoxTree.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchBoundaries.I			\
@@ -4761,6 +4761,7 @@ DEPENDS_39:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/ComponentSelector.I			\
@@ -4777,9 +4778,8 @@ DEPENDS_39:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxTree.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockDataTranslator.h		\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockMappedBoxTree.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchBoundaries.I			\
@@ -4921,6 +4921,7 @@ DEPENDS_40:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/ComponentSelector.I			\
@@ -4937,9 +4938,8 @@ DEPENDS_40:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxTree.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockDataTranslator.h		\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockMappedBoxTree.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchBoundaries.I			\
@@ -5080,6 +5080,7 @@ DEPENDS_41:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/ComponentSelector.I			\
@@ -5096,9 +5097,8 @@ DEPENDS_41:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxTree.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockDataTranslator.h		\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockMappedBoxTree.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchBoundaries.I			\
@@ -5236,6 +5236,7 @@ DEPENDS_42:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Index.I				\
@@ -5246,8 +5247,7 @@ DEPENDS_42:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxTree.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockMappedBoxTree.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicShiftCatalog.I		\
@@ -5371,6 +5371,7 @@ DEPENDS_44:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/ComponentSelector.I			\
@@ -5387,9 +5388,8 @@ DEPENDS_44:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxTree.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockDataTranslator.h		\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockMappedBoxTree.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchBoundaries.I			\
@@ -5527,6 +5527,7 @@ DEPENDS_45:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Index.I				\
@@ -5537,8 +5538,7 @@ DEPENDS_45:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxTree.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockMappedBoxTree.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicShiftCatalog.I		\
@@ -5613,6 +5613,7 @@ DEPENDS_46:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Index.I				\
@@ -5623,8 +5624,7 @@ DEPENDS_46:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxTree.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockMappedBoxTree.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicShiftCatalog.I		\
@@ -5699,6 +5699,7 @@ DEPENDS_47:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/ComponentSelector.I			\
@@ -5715,9 +5716,8 @@ DEPENDS_47:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxTree.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockDataTranslator.h		\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockMappedBoxTree.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchBoundaries.I			\
@@ -5853,6 +5853,7 @@ DEPENDS_48:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Index.I				\
@@ -5863,8 +5864,7 @@ DEPENDS_48:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxTree.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockMappedBoxTree.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchData.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchData.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchDataFactory.I			\
@@ -5949,6 +5949,7 @@ DEPENDS_49:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Index.I				\
@@ -5959,8 +5960,7 @@ DEPENDS_49:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxTree.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockMappedBoxTree.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchData.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchData.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchDataFactory.I			\
@@ -6045,6 +6045,7 @@ DEPENDS_50:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Index.I				\
@@ -6055,8 +6056,7 @@ DEPENDS_50:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxTree.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockMappedBoxTree.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchData.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchData.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchDataFactory.I			\
@@ -6139,6 +6139,7 @@ DEPENDS_51:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Index.I				\
@@ -6149,8 +6150,7 @@ DEPENDS_51:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxTree.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockMappedBoxTree.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchData.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchData.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicId.I				\
@@ -6231,6 +6231,7 @@ DEPENDS_52:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/ComponentSelector.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/ComponentSelector.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.I				\
@@ -6243,8 +6244,7 @@ DEPENDS_52:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxTree.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockMappedBoxTree.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchBoundaries.I			\
@@ -6345,6 +6345,7 @@ DEPENDS_53:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/ComponentSelector.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/ComponentSelector.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.I				\
@@ -6357,8 +6358,7 @@ DEPENDS_53:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxTree.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockMappedBoxTree.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchBoundaries.I			\
@@ -6475,6 +6475,7 @@ DEPENDS_55:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/ComponentSelector.I			\
@@ -6491,9 +6492,8 @@ DEPENDS_55:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxTree.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockDataTranslator.h		\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockMappedBoxTree.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchBoundaries.I			\
@@ -6621,6 +6621,7 @@ DEPENDS_56:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/ComponentSelector.I			\
@@ -6637,9 +6638,8 @@ DEPENDS_56:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxTree.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockDataTranslator.h		\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockMappedBoxTree.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchBoundaries.I			\
@@ -6767,6 +6767,7 @@ DEPENDS_57:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/ComponentSelector.I			\
@@ -6783,9 +6784,8 @@ DEPENDS_57:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxTree.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockDataTranslator.h		\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockMappedBoxTree.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchBoundaries.I			\
@@ -6913,6 +6913,7 @@ DEPENDS_58:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/ComponentSelector.I			\
@@ -6929,9 +6930,8 @@ DEPENDS_58:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxTree.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockDataTranslator.h		\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockMappedBoxTree.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchBoundaries.I			\
@@ -7059,6 +7059,7 @@ DEPENDS_59:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/ComponentSelector.I			\
@@ -7075,9 +7076,8 @@ DEPENDS_59:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxTree.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockDataTranslator.h		\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockMappedBoxTree.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchBoundaries.I			\
@@ -7205,6 +7205,7 @@ DEPENDS_60:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/ComponentSelector.I			\
@@ -7221,9 +7222,8 @@ DEPENDS_60:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxTree.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockDataTranslator.h		\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockMappedBoxTree.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchBoundaries.I			\
@@ -7364,6 +7364,7 @@ DEPENDS_61:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/ComponentSelector.I			\
@@ -7380,9 +7381,8 @@ DEPENDS_61:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxTree.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockDataTranslator.h		\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockMappedBoxTree.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchBoundaries.I			\
@@ -7520,6 +7520,7 @@ DEPENDS_62:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Index.I				\
@@ -7530,8 +7531,7 @@ DEPENDS_62:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxTree.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockMappedBoxTree.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchData.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchData.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicId.I				\
@@ -7634,6 +7634,7 @@ DEPENDS_63:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/ComponentSelector.I			\
@@ -7650,9 +7651,8 @@ DEPENDS_63:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxTree.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockDataTranslator.h		\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockMappedBoxTree.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchBoundaries.I			\
@@ -7790,6 +7790,7 @@ DEPENDS_64:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/ComponentSelector.I			\
@@ -7806,9 +7807,8 @@ DEPENDS_64:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxTree.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockDataTranslator.h		\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockMappedBoxTree.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchBoundaries.I			\
@@ -7949,6 +7949,7 @@ DEPENDS_65:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/ComponentSelector.I			\
@@ -7965,9 +7966,8 @@ DEPENDS_65:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxTree.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockDataTranslator.h		\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockMappedBoxTree.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchBoundaries.I			\
@@ -8109,6 +8109,7 @@ DEPENDS_66:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/ComponentSelector.I			\
@@ -8125,9 +8126,8 @@ DEPENDS_66:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxTree.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockDataTranslator.h		\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockMappedBoxTree.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchBoundaries.I			\
@@ -8268,6 +8268,7 @@ DEPENDS_67:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/ComponentSelector.I			\
@@ -8284,9 +8285,8 @@ DEPENDS_67:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxTree.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockDataTranslator.h		\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockMappedBoxTree.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchBoundaries.I			\
@@ -8424,6 +8424,7 @@ DEPENDS_68:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Index.I				\
@@ -8434,8 +8435,7 @@ DEPENDS_68:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxTree.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockMappedBoxTree.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicShiftCatalog.I		\
@@ -8559,6 +8559,7 @@ DEPENDS_70:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/ComponentSelector.I			\
@@ -8575,9 +8576,8 @@ DEPENDS_70:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxTree.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockDataTranslator.h		\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockMappedBoxTree.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchBoundaries.I			\
@@ -8714,6 +8714,7 @@ DEPENDS_71:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Index.I				\
@@ -8724,8 +8725,7 @@ DEPENDS_71:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxTree.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockMappedBoxTree.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicShiftCatalog.I		\
@@ -8800,6 +8800,7 @@ DEPENDS_72:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Index.I				\
@@ -8810,8 +8811,7 @@ DEPENDS_72:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxTree.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockMappedBoxTree.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicShiftCatalog.I		\
@@ -8886,6 +8886,7 @@ DEPENDS_73:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/ComponentSelector.I			\
@@ -8902,9 +8903,8 @@ DEPENDS_73:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxTree.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockDataTranslator.h		\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockMappedBoxTree.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchBoundaries.I			\
@@ -9040,6 +9040,7 @@ DEPENDS_74:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Index.I				\
@@ -9050,8 +9051,7 @@ DEPENDS_74:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxTree.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockMappedBoxTree.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchData.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchData.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicId.I				\
@@ -9159,6 +9159,7 @@ DEPENDS_75:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/ComponentSelector.I			\
@@ -9175,9 +9176,8 @@ DEPENDS_75:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxTree.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockDataTranslator.h		\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockMappedBoxTree.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchBoundaries.I			\
@@ -9311,6 +9311,7 @@ DEPENDS_76:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Index.I				\
@@ -9321,8 +9322,7 @@ DEPENDS_76:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxTree.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockMappedBoxTree.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicShiftCatalog.I		\
@@ -9403,6 +9403,7 @@ DEPENDS_77:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/ComponentSelector.I			\
@@ -9419,9 +9420,8 @@ DEPENDS_77:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxTree.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockDataTranslator.h		\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockMappedBoxTree.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchBoundaries.I			\
@@ -9561,6 +9561,7 @@ DEPENDS_78:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/ComponentSelector.I			\
@@ -9577,9 +9578,8 @@ DEPENDS_78:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxTree.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockDataTranslator.h		\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockMappedBoxTree.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchBoundaries.I			\
@@ -9721,6 +9721,7 @@ DEPENDS_79:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/ComponentSelector.I			\
@@ -9737,9 +9738,8 @@ DEPENDS_79:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxTree.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockDataTranslator.h		\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockMappedBoxTree.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchBoundaries.I			\
@@ -9877,6 +9877,7 @@ DEPENDS_80:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Index.I				\
@@ -9887,8 +9888,7 @@ DEPENDS_80:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxTree.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockMappedBoxTree.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchData.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchData.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicId.I				\
@@ -9994,6 +9994,7 @@ DEPENDS_81:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/ComponentSelector.I			\
@@ -10010,9 +10011,8 @@ DEPENDS_81:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxTree.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockDataTranslator.h		\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockMappedBoxTree.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchBoundaries.I			\
@@ -10150,6 +10150,7 @@ DEPENDS_82:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/ComponentSelector.I			\
@@ -10166,9 +10167,8 @@ DEPENDS_82:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxTree.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockDataTranslator.h		\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockMappedBoxTree.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchBoundaries.I			\
@@ -10310,6 +10310,7 @@ DEPENDS_83:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/ComponentSelector.I			\
@@ -10326,9 +10327,8 @@ DEPENDS_83:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxTree.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockDataTranslator.h		\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockMappedBoxTree.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchBoundaries.I			\
@@ -10470,6 +10470,7 @@ DEPENDS_84:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/ComponentSelector.I			\
@@ -10486,9 +10487,8 @@ DEPENDS_84:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxTree.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockDataTranslator.h		\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockMappedBoxTree.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchBoundaries.I			\
@@ -10630,6 +10630,7 @@ DEPENDS_85:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/ComponentSelector.I			\
@@ -10646,9 +10647,8 @@ DEPENDS_85:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxTree.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockDataTranslator.h		\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockMappedBoxTree.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchBoundaries.I			\
@@ -10786,6 +10786,7 @@ DEPENDS_86:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Index.I				\
@@ -10796,8 +10797,7 @@ DEPENDS_86:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxTree.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockMappedBoxTree.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicShiftCatalog.I		\
@@ -10878,6 +10878,7 @@ DEPENDS_87:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/ComponentSelector.I			\
@@ -10894,9 +10895,8 @@ DEPENDS_87:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxTree.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockDataTranslator.h		\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockMappedBoxTree.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchBoundaries.I			\
@@ -11038,6 +11038,7 @@ DEPENDS_88:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/ComponentSelector.I			\
@@ -11054,9 +11055,8 @@ DEPENDS_88:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxTree.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockDataTranslator.h		\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockMappedBoxTree.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchBoundaries.I			\
@@ -11192,6 +11192,7 @@ DEPENDS_89:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Index.I				\
@@ -11202,8 +11203,7 @@ DEPENDS_89:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxTree.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockMappedBoxTree.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchData.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchData.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicId.I				\
@@ -11309,6 +11309,7 @@ DEPENDS_90:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/ComponentSelector.I			\
@@ -11325,9 +11326,8 @@ DEPENDS_90:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxTree.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockDataTranslator.h		\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockMappedBoxTree.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchBoundaries.I			\
@@ -11465,6 +11465,7 @@ DEPENDS_91:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/ComponentSelector.I			\
@@ -11481,9 +11482,8 @@ DEPENDS_91:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxTree.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockDataTranslator.h		\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockMappedBoxTree.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchBoundaries.I			\
@@ -11621,6 +11621,7 @@ DEPENDS_92:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Index.I				\
@@ -11631,8 +11632,7 @@ DEPENDS_92:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxTree.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockMappedBoxTree.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicShiftCatalog.I		\
@@ -11713,6 +11713,7 @@ DEPENDS_93:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/ComponentSelector.I			\
@@ -11729,9 +11730,8 @@ DEPENDS_93:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxTree.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockDataTranslator.h		\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockMappedBoxTree.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchBoundaries.I			\
@@ -11871,6 +11871,7 @@ DEPENDS_94:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/ComponentSelector.I			\
@@ -11887,9 +11888,8 @@ DEPENDS_94:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxTree.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockDataTranslator.h		\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockMappedBoxTree.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchBoundaries.I			\
@@ -12027,6 +12027,7 @@ DEPENDS_95:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Index.I				\
@@ -12037,8 +12038,7 @@ DEPENDS_95:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxTree.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockMappedBoxTree.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchData.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchData.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicId.I				\
@@ -12144,6 +12144,7 @@ DEPENDS_96:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/ComponentSelector.I			\
@@ -12160,9 +12161,8 @@ DEPENDS_96:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxTree.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockDataTranslator.h		\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockMappedBoxTree.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchBoundaries.I			\
@@ -12300,6 +12300,7 @@ DEPENDS_97:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/ComponentSelector.I			\
@@ -12316,9 +12317,8 @@ DEPENDS_97:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxTree.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockDataTranslator.h		\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockMappedBoxTree.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchBoundaries.I			\
@@ -12460,6 +12460,7 @@ DEPENDS_98:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/ComponentSelector.I			\
@@ -12476,9 +12477,8 @@ DEPENDS_98:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxTree.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockDataTranslator.h		\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockMappedBoxTree.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchBoundaries.I			\
@@ -12616,6 +12616,7 @@ DEPENDS_99:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Index.I				\
@@ -12626,8 +12627,7 @@ DEPENDS_99:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxTree.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockMappedBoxTree.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicShiftCatalog.I		\
@@ -12708,6 +12708,7 @@ DEPENDS_100:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/ComponentSelector.I			\
@@ -12724,9 +12725,8 @@ DEPENDS_100:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxTree.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockDataTranslator.h		\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockMappedBoxTree.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchBoundaries.I			\
@@ -12862,6 +12862,7 @@ DEPENDS_101:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Index.I				\
@@ -12872,8 +12873,7 @@ DEPENDS_101:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxTree.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockMappedBoxTree.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchData.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchData.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchDataFactory.I			\
@@ -12958,6 +12958,7 @@ DEPENDS_102:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Index.I				\
@@ -12968,8 +12969,7 @@ DEPENDS_102:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxTree.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockMappedBoxTree.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchData.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchData.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchDataFactory.I			\
@@ -13058,6 +13058,7 @@ DEPENDS_103:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/ComponentSelector.I			\
@@ -13074,9 +13075,8 @@ DEPENDS_103:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxTree.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockDataTranslator.h		\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockMappedBoxTree.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchBoundaries.I			\
@@ -13218,6 +13218,7 @@ DEPENDS_104:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/ComponentSelector.I			\
@@ -13234,9 +13235,8 @@ DEPENDS_104:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxTree.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockDataTranslator.h		\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockMappedBoxTree.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchBoundaries.I			\
@@ -13374,6 +13374,7 @@ DEPENDS_105:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Index.I				\
@@ -13384,8 +13385,7 @@ DEPENDS_105:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxTree.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockMappedBoxTree.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchData.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchData.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicId.I				\
@@ -13488,6 +13488,7 @@ DEPENDS_106:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/ComponentSelector.I			\
@@ -13504,9 +13505,8 @@ DEPENDS_106:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxTree.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockDataTranslator.h		\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockMappedBoxTree.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchBoundaries.I			\
@@ -13644,6 +13644,7 @@ DEPENDS_107:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/ComponentSelector.I			\
@@ -13660,9 +13661,8 @@ DEPENDS_107:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxTree.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockDataTranslator.h		\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockMappedBoxTree.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchBoundaries.I			\
@@ -13804,6 +13804,7 @@ DEPENDS_108:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/ComponentSelector.I			\
@@ -13820,9 +13821,8 @@ DEPENDS_108:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxTree.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockDataTranslator.h		\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockMappedBoxTree.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchBoundaries.I			\
@@ -13964,6 +13964,7 @@ DEPENDS_109:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/ComponentSelector.I			\
@@ -13980,9 +13981,8 @@ DEPENDS_109:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxTree.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockDataTranslator.h		\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockMappedBoxTree.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchBoundaries.I			\
@@ -14123,6 +14123,7 @@ DEPENDS_110:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/ComponentSelector.I			\
@@ -14139,9 +14140,8 @@ DEPENDS_110:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxTree.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockDataTranslator.h		\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockMappedBoxTree.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchBoundaries.I			\
@@ -14279,6 +14279,7 @@ DEPENDS_111:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Index.I				\
@@ -14289,8 +14290,7 @@ DEPENDS_111:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxTree.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockMappedBoxTree.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicShiftCatalog.I		\
@@ -14414,6 +14414,7 @@ DEPENDS_113:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/ComponentSelector.I			\
@@ -14430,9 +14431,8 @@ DEPENDS_113:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxTree.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockDataTranslator.h		\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockMappedBoxTree.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchBoundaries.I			\
@@ -14570,6 +14570,7 @@ DEPENDS_114:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Index.I				\
@@ -14580,8 +14581,7 @@ DEPENDS_114:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxTree.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockMappedBoxTree.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicShiftCatalog.I		\
@@ -14656,6 +14656,7 @@ DEPENDS_115:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Index.I				\
@@ -14666,8 +14667,7 @@ DEPENDS_115:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxTree.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockMappedBoxTree.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicShiftCatalog.I		\
@@ -14742,6 +14742,7 @@ DEPENDS_116:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/ComponentSelector.I			\
@@ -14758,9 +14759,8 @@ DEPENDS_116:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxTree.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockDataTranslator.h		\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockMappedBoxTree.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchBoundaries.I			\
@@ -14894,6 +14894,7 @@ DEPENDS_117:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Index.I				\
@@ -14904,8 +14905,7 @@ DEPENDS_117:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxTree.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockMappedBoxTree.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchData.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchData.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicId.I				\
@@ -14991,6 +14991,7 @@ DEPENDS_118:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/ComponentSelector.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/ComponentSelector.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.I				\
@@ -15003,8 +15004,7 @@ DEPENDS_118:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxTree.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockMappedBoxTree.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchBoundaries.I			\
@@ -15110,6 +15110,7 @@ DEPENDS_119:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/ComponentSelector.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/ComponentSelector.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.I				\
@@ -15122,8 +15123,7 @@ DEPENDS_119:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxTree.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockMappedBoxTree.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchBoundaries.I			\

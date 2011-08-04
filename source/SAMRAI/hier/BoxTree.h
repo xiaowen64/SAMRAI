@@ -4,12 +4,12 @@
  * information, see COPYRIGHT and COPYING.LESSER. 
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Binary tree of MappedBoxes for overlap searches. 
+ * Description:   Binary tree of Boxes for overlap searches. 
  *
  ************************************************************************/
 
-#ifndef included_hier_MappedBoxTree
-#define included_hier_MappedBoxTree
+#ifndef included_hier_BoxTree
+#define included_hier_BoxTree
 
 #include "SAMRAI/SAMRAI_config.h"
 
@@ -29,27 +29,27 @@ namespace hier {
 class BoxList;
 
 /*!
- * @brief Utility sorting MappedBoxes into tree-like form for finding
+ * @brief Utility sorting Boxes into tree-like form for finding
  * box overlaps.
  *
- * This class recursively splits a set of MappedBoxes into tree-like
+ * This class recursively splits a set of Boxes into tree-like
  * form and stores them for fast searches.  The recursive
  * splitting stops when the number of boxes in a leaf node of the tree
  * is less than a minimum number specified in the constructor.
  *
- * All mapped boxes in a MappedBoxTree must exist in the same index space.
+ * All mapped boxes in a BoxTree must exist in the same index space.
  * This means that the must all have the same BlockId value.
  *
  * Overlap searches are done by
  * - hasOverlap()
- * - findOverlapMappedBoxes()
+ * - findOverlapBoxes()
  *
  * Information about the boxes in the tree are given by
  * - getBoundingBox()
- * - getMappedBoxes()
+ * - getBoxes()
  */
 
-class MappedBoxTree:public tbox::DescribedClass
+class BoxTree:public tbox::DescribedClass
 {
 public:
    /*!
@@ -59,11 +59,11 @@ public:
     *
     * @param[in] dim
     */
-   explicit MappedBoxTree(
+   explicit BoxTree(
       const tbox::Dimension& dim);
 
    /*!
-    * @brief Constructs a MappedBoxTree from set of MappedBoxes.
+    * @brief Constructs a BoxTree from set of Boxes.
     *
     * @param[in] dim
     *
@@ -76,15 +76,15 @@ public:
     * larger value tends to make tree building faster but tree
     * searching slower, and vice versa.  @b Default: 10
     */
-   explicit MappedBoxTree(
+   explicit BoxTree(
       const tbox::Dimension& dim,
       const MappedBoxSet& mapped_boxes,
       size_t min_number = 10);
 
    /*!
-    * @brief Constructs a MappedBoxTree from a list of Boxes.
+    * @brief Constructs a BoxTree from a list of Boxes.
     *
-    * See MappedBoxTree( const tbox::Dimension& , const MappedBoxSet& , size_t min_number );
+    * See BoxTree( const tbox::Dimension& , const MappedBoxSet& , size_t min_number );
     *
     * @param[in] dim
     *
@@ -95,7 +95,7 @@ public:
     *
     * @param[in] min_number  @b Default: 10
     */
-   explicit MappedBoxTree(
+   explicit BoxTree(
       const tbox::Dimension& dim,
       const BoxList& boxes,
       const BlockId& block_id,
@@ -104,10 +104,10 @@ public:
    /*!
     * @brief Destructor.
     */
-   ~MappedBoxTree();
+   ~BoxTree();
 
    /*!
-    * @brief Generates the tree from a MUTABLE vector of MappedBoxes.
+    * @brief Generates the tree from a MUTABLE set of Boxes.
     *
     * For efficiency reasons, mapped_boxes is changed in the process.
     * Its output state is undefined.  However, you can change
@@ -146,16 +146,16 @@ public:
    //! @name Access to box data
 
    /*!
-    * @brief Get the MappedBoxes in the tree.
+    * @brief Get the Boxes in the tree.
     *
     * @param[out] mapped_boxes
     */
    void
-   getMappedBoxes(
+   getBoxes(
       std::vector<Box>& mapped_boxes) const;
 
    /*!
-    * @brief Return the bounding box of all the MappedBoxes in the
+    * @brief Return the bounding box of all the Boxes in the
     * tree.
     */
    const Box&
@@ -175,7 +175,7 @@ public:
    //! @name Overlap checks
 
    /*!
-    * @brief Whether the given box has an overlap with MappedBoxes in the
+    * @brief Whether the given box has an overlap with Boxes in the
     * tree.
     *
     * @param[in] box The box is assumed to be in same index space as
@@ -189,18 +189,18 @@ public:
     * @brief Find all boxes that overlap the given \b box.
     *
     * To avoid unneeded work, the output @b overlap_mapped_boxes container
-    * is not emptied.  Overlapping MappedBoxes are simply added.
+    * is not emptied.  Overlapping Boxes are simply added.
     *
     * Output is sorted.
     *
-    * @param[out] overlap_mapped_boxes MappedBoxes that overlap with box.
+    * @param[out] overlap_mapped_boxes Boxes that overlap with box.
     *
     * @param[in] box the specified box whose overlaps are requested.
     * The box is assumed to be in same index space as those in the
     * tree.
     */
    void
-   findOverlapMappedBoxes(
+   findOverlapBoxes(
       MappedBoxSet& overlap_mapped_boxes,
       const Box& box,
       bool recursive_call = false) const;
@@ -209,18 +209,18 @@ public:
     * @brief Find all boxes that overlap the given \b box.
     *
     * To avoid unneeded work, the output @b overlap_mapped_boxes container
-    * is not emptied.  Overlapping MappedBoxes are simply added.
+    * is not emptied.  Overlapping Boxes are simply added.
     *
     * Output is unsorted.
     *
-    * @param[out] overlap_mapped_boxes MappedBoxes that overlap with box.
+    * @param[out] overlap_mapped_boxes Boxes that overlap with box.
     *
     * @param[in] box the specified box whose overlaps are requested.
     * The box is assumed to be in same index space as those in the
     * tree.
     */
    void
-   findOverlapMappedBoxes(
+   findOverlapBoxes(
       std::vector<Box>& overlap_mapped_boxes,
       const Box& box,
       bool recursive_call = false) const;
@@ -228,13 +228,13 @@ public:
    /*!
     * @brief Find all boxes that overlap the given \b box.
     *
-    * Analogous to findOverlapMappedBoxes returning a vector of MappedBoxes
+    * Analogous to findOverlapBoxes returning a vector of Boxes
     * but avoids the copies.  If the returned overlapped mapped boxes are used
-    * in a context in which the MappedBoxTree is constant there is no point
-    * in incurring the cost of copying the tree's MappedBoxes.  Just return
+    * in a context in which the BoxTree is constant there is no point
+    * in incurring the cost of copying the tree's Boxes.  Just return
     * a vector of their addresses.
     *
-    * @param[out] overlap_mapped_boxes Pointers to MappedBoxes that overlap
+    * @param[out] overlap_mapped_boxes Pointers to Boxes that overlap
     * with box.
     *
     * @param[in] box the specified box whose overlaps are requested.
@@ -242,7 +242,7 @@ public:
     * tree.
     */
    void
-   findOverlapMappedBoxes(
+   findOverlapBoxes(
       std::vector<const Box*>& overlap_mapped_boxes,
       const Box& box,
       bool recursive_call = false) const;
@@ -281,7 +281,7 @@ public:
     * manually get the boxes, coarsen them and use them to build a new
     * tree.
     */
-   tbox::Pointer<MappedBoxTree>
+   tbox::Pointer<BoxTree>
    createRefinedTree(
       const IntVector& ratio) const;
 
@@ -296,9 +296,9 @@ public:
     *
     * @param[in] r
     */
-   MappedBoxTree&
+   BoxTree&
    operator = (
-      const MappedBoxTree& r);
+      const BoxTree& r);
 
    /*!
     * @brief Print statistics on number of constructor calls, tree
@@ -326,7 +326,7 @@ private:
     * @brief Default constructor is private to disallow user access.
     * Objects are normally constructed with at least a dimension.
     */
-   MappedBoxTree();
+   BoxTree();
 
    /*!
     * @brief Private recursive function for generating the search tree.
@@ -347,7 +347,7 @@ private:
    /*!
     * @brief Set up the child branches.
     *
-    * This method is called after splitting the MappedBoxes into the
+    * This method is called after splitting the Boxes into the
     * left_mapped_boxes and right_mapped_boxes, with boxes straddling
     * the divider stored in d_mapped_boxes.  It generates
     * d_left_child, d_right_child and, if needed, d_center_child.
@@ -386,7 +386,7 @@ private:
    const tbox::Dimension d_dim;
 
    /*!
-    * @brief Bounding box of all the MappedBoxes in this tree.
+    * @brief Bounding box of all the Boxes in this tree.
     */
    Box d_bounding_box;
 
@@ -398,17 +398,17 @@ private:
    /*!
     * Pointers to familial mapped_boxes.
     */
-   tbox::Pointer<MappedBoxTree> d_left_child;
-   tbox::Pointer<MappedBoxTree> d_right_child;
+   tbox::Pointer<BoxTree> d_left_child;
+   tbox::Pointer<BoxTree> d_right_child;
 
    /*!
-    * @brief A tree for MappedBoxes that are not given to the left or
+    * @brief A tree for Boxes that are not given to the left or
     * right children.
     */
-   tbox::Pointer<MappedBoxTree> d_center_child;
+   tbox::Pointer<BoxTree> d_center_child;
 
    /*!
-    * @brief MappedBoxes that are contained within the physical domain
+    * @brief Boxes that are contained within the physical domain
     * that this tree represents.  When we have a small number of boxes
     * that do not warant the overhead of a child tree, the boxes go here.
     */

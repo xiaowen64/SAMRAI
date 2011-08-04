@@ -17,7 +17,7 @@
 #include "SAMRAI/hier/ComponentSelector.h"
 #include "SAMRAI/hier/GridGeometry.h"
 #include "SAMRAI/hier/MappedBoxLevel.h"
-#include "SAMRAI/hier/MultiblockMappedBoxTree.h"
+#include "SAMRAI/hier/MultiblockBoxTree.h"
 #include "SAMRAI/hier/PatchDescriptor.h"
 #include "SAMRAI/hier/PatchFactory.h"
 #include "SAMRAI/hier/PatchLevel.h"
@@ -549,7 +549,7 @@ public:
     *
     * @return The multiblock domain description as a search tree.
     */
-   const hier::MultiblockMappedBoxTree& getDomainSearchTree() const;
+   const hier::MultiblockBoxTree& getDomainSearchTree() const;
 
    /*!
     * @brief Access the domain description without periodic images.
@@ -558,7 +558,7 @@ public:
     * 
     * @return The domain description as a search tree.
     */
-   const hier::MappedBoxTree&
+   const hier::BoxTree&
    getDomainSearchTree(const BlockId& block_id) const;
 
    /*!
@@ -568,7 +568,7 @@ public:
     * @return The domain description as a search tree with periodic
     * images (if any).
     */
-   const hier::MultiblockMappedBoxTree&
+   const hier::MultiblockBoxTree&
    getPeriodicDomainSearchTree() const;
 
    /*!
@@ -579,7 +579,7 @@ public:
     * @return The domain description as a search tree with periodic
     * images (if any).
     */
-   const hier::MappedBoxTree&
+   const hier::BoxTree&
    getPeriodicDomainSearchTree(const BlockId& block_id) const;
 
    //@{
@@ -1110,9 +1110,9 @@ private:
 
    /*!
     * @brief The domain, excluding periodic images, in
-    * MultiblockMappedBoxTree form, used for overlap searches.
+    * MultiblockBoxTree form, used for overlap searches.
     */
-   MultiblockMappedBoxTree d_domain_search_tree;
+   MultiblockBoxTree d_domain_search_tree;
 
    /*!
     * @brief The same as d_domain_search_tree, but with periodic
@@ -1121,13 +1121,13 @@ private:
     * For non-periodic domains, this tree is identical to
     * d_domain_search_tree.
     */
-   MultiblockMappedBoxTree d_domain_search_tree_periodic;
+   MultiblockBoxTree d_domain_search_tree_periodic;
 
    /*!
     * @brief The multiblock domain complement description stored in a
     * search tree.
     */
-   MultiblockMappedBoxTree d_complement_searchtree;
+   MultiblockBoxTree d_complement_searchtree;
 
    //@}
 

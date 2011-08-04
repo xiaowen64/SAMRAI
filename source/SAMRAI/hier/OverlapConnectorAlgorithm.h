@@ -14,7 +14,7 @@
 
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/hier/Connector.h"
-#include "SAMRAI/hier/MappedBoxTree.h"
+#include "SAMRAI/hier/BoxTree.h"
 #include "SAMRAI/hier/MappedBoxLevel.h"
 #include "SAMRAI/tbox/AsyncCommPeer.h"
 #include "SAMRAI/tbox/AsyncCommStage.h"
@@ -517,7 +517,7 @@ private:
       std::vector<int>& send_mesg,
       const size_t remote_mapped_box_counter_index,
       Connector& bridging_connector,
-      const MappedBoxTree& head_rbbt,
+      const BoxTree& head_rbbt,
       NeighborSet& referenced_head_nabrs) const;
 
    //! @brief Utility used in privateBridge()

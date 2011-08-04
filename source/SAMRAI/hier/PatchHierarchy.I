@@ -52,14 +52,14 @@ const tbox::SAMRAI_MPI& PatchHierarchy::getMPI() const
  */
 
 SAMRAI_INLINE_KEYWORD
-const hier::MappedBoxTree& PatchHierarchy::
+const hier::BoxTree& PatchHierarchy::
 getDomainSearchTree(const BlockId& block_id) const
 {
-   return d_domain_search_tree.getSingleBlockMappedBoxTree(block_id);
+   return d_domain_search_tree.getSingleBlockBoxTree(block_id);
 }
 
 SAMRAI_INLINE_KEYWORD
-const hier::MultiblockMappedBoxTree& PatchHierarchy::
+const hier::MultiblockBoxTree& PatchHierarchy::
 getDomainSearchTree() const
 {
    return d_domain_search_tree;
@@ -71,10 +71,10 @@ getDomainSearchTree() const
  ***********************************************************************
  */
 
-SAMRAI_INLINE_KEYWORD const hier::MappedBoxTree& PatchHierarchy::
+SAMRAI_INLINE_KEYWORD const hier::BoxTree& PatchHierarchy::
 getPeriodicDomainSearchTree(const BlockId& block_id) const
 {
-   return d_domain_search_tree_periodic.getSingleBlockMappedBoxTree(block_id);
+   return d_domain_search_tree_periodic.getSingleBlockBoxTree(block_id);
 }
 
 /*
@@ -82,7 +82,7 @@ getPeriodicDomainSearchTree(const BlockId& block_id) const
  ***********************************************************************
  */
 
-SAMRAI_INLINE_KEYWORD const hier::MultiblockMappedBoxTree& PatchHierarchy::
+SAMRAI_INLINE_KEYWORD const hier::MultiblockBoxTree& PatchHierarchy::
 getPeriodicDomainSearchTree() const
 {
    return d_domain_search_tree_periodic;

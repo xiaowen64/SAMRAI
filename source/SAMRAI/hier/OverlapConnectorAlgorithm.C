@@ -12,7 +12,7 @@
 
 #include "SAMRAI/hier/OverlapConnectorAlgorithm.h"
 #include "SAMRAI/hier/BoxContainerUtils.h"
-#include "SAMRAI/hier/MultiblockMappedBoxTree.h"
+#include "SAMRAI/hier/MultiblockBoxTree.h"
 #include "SAMRAI/hier/PeriodicShiftCatalog.h"
 #include "SAMRAI/hier/RealMappedBoxConstIterator.h"
 #include "SAMRAI/tbox/AsyncCommStage.h"
@@ -257,7 +257,7 @@ void OverlapConnectorAlgorithm::findOverlaps_rbbt(
     * in which case we want to avoid the expense
     * of creating a temporary GLOBALIZED version.
     *
-    * Global mapped_boxes provided by head are sorted in a hier::MappedBoxTree
+    * Global mapped_boxes provided by head are sorted in a hier::BoxTree
     * so they can be quickly searched to see which intersects the
     * boxes in this object.
     */
@@ -286,7 +286,7 @@ void OverlapConnectorAlgorithm::findOverlaps_rbbt(
     * Create single container of visible head mapped_boxes
     * to generate the search tree.
     */
-   hier::MultiblockMappedBoxTree rbbt(head.getGridGeometry(),
+   hier::MultiblockBoxTree rbbt(head.getGridGeometry(),
       head.getGlobalMappedBoxes());
 
    /*
@@ -310,7 +310,7 @@ void OverlapConnectorAlgorithm::findOverlaps_rbbt(
       connector.getConnectorWidth());
 
    /*
-    * Use MappedBoxTree to find local base boxes intersecting head mapped_boxes.
+    * Use BoxTree to find local base boxes intersecting head mapped_boxes.
     */
    NeighborSet nabrs_for_box;
    const MappedBoxSet& base_mapped_boxes = base.getMappedBoxes();
@@ -329,11 +329,11 @@ void OverlapConnectorAlgorithm::findOverlaps_rbbt(
       }
 
       // Add found overlaps to neighbor set for mapped_box.
-      rbbt.findOverlapMappedBoxes(nabrs_for_box,
-                                  box,
-                                  base_mapped_box.getBlockId(),
-                                  head.getRefinementRatio(),
-                                  true);
+      rbbt.findOverlapBoxes(nabrs_for_box,
+                            box,
+                            base_mapped_box.getBlockId(),
+                            head.getRefinementRatio(),
+                            true);
       if (discard_self_overlap) {
          nabrs_for_box.erase(base_mapped_box);
       }
@@ -939,8 +939,8 @@ void OverlapConnectorAlgorithm::privateBridge(
       }
 
       t_bridge_discover_form_rbbt->start();
-      const MappedBoxTree west_rbbt(dim, visible_west_nabrs);
-      const MappedBoxTree east_rbbt(dim, visible_east_nabrs);
+      const BoxTree west_rbbt(dim, visible_west_nabrs);
+      const BoxTree east_rbbt(dim, visible_east_nabrs);
       t_bridge_discover_form_rbbt->stop();
 
       /*
@@ -1439,7 +1439,7 @@ void OverlapConnectorAlgorithm::findOverlapsForOneProcess(
    std::vector<int>& send_mesg,
    const size_t remote_mapped_box_counter_index,
    Connector& bridging_connector,
-   const MappedBoxTree& head_rbbt,
+   const BoxTree& head_rbbt,
    NeighborSet& referenced_head_nabrs) const
 {
    bool refine_base = false;
@@ -1481,7 +1481,7 @@ void OverlapConnectorAlgorithm::findOverlapsForOneProcess(
          base_box.coarsen(bridging_connector.getRatio());
       }
       found_nabrs.clear();
-      head_rbbt.findOverlapMappedBoxes(found_nabrs, base_box);
+      head_rbbt.findOverlapBoxes(found_nabrs, base_box);
       if (s_print_bridge_steps == 'y') {
          tbox::plog << "Found " << found_nabrs.size() << " neighbors:";
          hier::BoxContainerUtils::recursivePrintBoxVector(found_nabrs, tbox::plog, "\n ");

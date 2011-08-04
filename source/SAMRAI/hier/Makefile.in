@@ -51,8 +51,8 @@ OBJS = 	\
 	RealMappedBoxConstIterator.o \
 	MappedBoxSetSingleBlockIterator.o \
 	MappedBoxSetSingleOwnerIterator.o \
-	MappedBoxTree.o \
-	MultiblockMappedBoxTree.o \
+	BoxTree.o \
+	MultiblockBoxTree.o \
 	MappedBoxLevel.o \
 	PersistentOverlapConnectors.o \
 	MappedBoxSet.o \

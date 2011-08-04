@@ -1951,10 +1951,10 @@ const hier::IntVector& extend_ghosts) const
     *    it means they are partially inside the domain.
     */
 
-   const hier::MultiblockMappedBoxTree& periodic_domain_search_tree =
+   const hier::MultiblockBoxTree& periodic_domain_search_tree =
       d_hierarchy->getPeriodicDomainSearchTree();
 
-   tbox::Pointer<hier::MultiblockMappedBoxTree> refined_periodic_domain_search_tree(
+   tbox::Pointer<hier::MultiblockBoxTree> refined_periodic_domain_search_tree(
       periodic_domain_search_tree.createRefinedTree(mapped_box_level.getRefinementRatio()));
 
    size_t nerr(0);
@@ -3728,7 +3728,7 @@ void GriddingAlgorithm::computeNestingViolator(
       candidate_to_violator.getConnectorWidth(),
       candidate_eto_violator);
 
-   tbox::Pointer<hier::MultiblockMappedBoxTree> refined_domain_search_tree =
+   tbox::Pointer<hier::MultiblockBoxTree> refined_domain_search_tree =
       d_hierarchy->getDomainSearchTree().createRefinedTree(candidate.getRefinementRatio());
 
    for (hier::MappedBoxSet::const_iterator ni = candidate_mapped_boxes.begin();
@@ -4032,7 +4032,7 @@ void GriddingAlgorithm::growBoxesWithinNestingDomain(
    // Temporary storage for mapping Connector from new to grown.
    hier::NeighborhoodSet new_eto_grown;
 
-   tbox::Pointer<hier::MultiblockMappedBoxTree> refined_domain_search_tree =
+   tbox::Pointer<hier::MultiblockBoxTree> refined_domain_search_tree =
       d_hierarchy->getDomainSearchTree().createRefinedTree(
          new_mapped_box_level.getRefinementRatio());
 

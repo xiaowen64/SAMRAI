@@ -17,7 +17,7 @@
 
 #include "SAMRAI/tbox/TimerManager.h"
 #include "SAMRAI/hier/MappedBoxLevelConnectorUtils.h"
-#include "SAMRAI/hier/MultiblockMappedBoxTree.h"
+#include "SAMRAI/hier/MultiblockBoxTree.h"
 #include "SAMRAI/hier/PatchLevel.h"
 #include "SAMRAI/hier/RealMappedBoxConstIterator.h"
 #include "SAMRAI/hier/VariableDatabase.h"
@@ -3655,7 +3655,7 @@ void VisItDataWriter::writeParentChildInfoToSummaryHDFFile(
       const hier::MappedBoxSet& coarser_mapped_boxes =
          patch_level->getMappedBoxLevel()->getGlobalizedVersion().getGlobalMappedBoxes();
 
-      tbox::Pointer<hier::MultiblockMappedBoxTree> child_box_tree;
+      tbox::Pointer<hier::MultiblockBoxTree> child_box_tree;
       hier::IntVector ratio(d_dim);
 
       if (ln != finest_level) {
@@ -3681,14 +3681,14 @@ void VisItDataWriter::writeParentChildInfoToSummaryHDFFile(
             }
 
             child_box_tree =
-               new hier::MultiblockMappedBoxTree(
+               new hier::MultiblockBoxTree(
                   hierarchy->getGridGeometry(),
                   non_per_child_boxes);
 
          } else {
 
             child_box_tree =
-               new hier::MultiblockMappedBoxTree(
+               new hier::MultiblockBoxTree(
                   hierarchy->getGridGeometry(),
                   global_child_boxes);
 
@@ -3708,7 +3708,7 @@ void VisItDataWriter::writeParentChildInfoToSummaryHDFFile(
 
             std::vector<hier::Box> overlap_mapped_boxes; 
 
-            child_box_tree->findOverlapMappedBoxes(
+            child_box_tree->findOverlapBoxes(
                overlap_mapped_boxes,
                compare_box,
                block_id,

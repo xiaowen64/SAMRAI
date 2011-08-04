@@ -4,17 +4,17 @@
  * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Multiblock binary trees of MappedBoxes for overlap searches.
+ * Description:   Multiblock binary trees of Boxes for overlap searches.
  *
  ************************************************************************/
 
-#ifndef included_hier_MultiblockMappedBoxTree
-#define included_hier_MultiblockMappedBoxTree
+#ifndef included_hier_MultiblockBoxTree
+#define included_hier_MultiblockBoxTree
 
 #include "SAMRAI/SAMRAI_config.h"
 
 #include "SAMRAI/hier/MappedBoxSet.h"
-#include "SAMRAI/hier/MappedBoxTree.h"
+#include "SAMRAI/hier/BoxTree.h"
 #include "SAMRAI/tbox/ConstPointer.h"
 #include "SAMRAI/tbox/DescribedClass.h"
 
@@ -27,25 +27,25 @@ namespace hier {
 class GridGeometry;
 
 /*!
- * @brief Utility sorting MappedBoxes into tree-like form for finding
+ * @brief Utility sorting Boxes into tree-like form for finding
  * box overlaps.  All boxes must be specified in the transformation
  * specified by their BlockId.
  *
  * Overlap searches are done by
  * - hasOverlap()
- * - findOverlapMappedBoxes()
+ * - findOverlapBoxes()
  *
  * Significant changes since design review:
- * - findOverlapMappedBoxes requires refinement_ratio.
+ * - findOverlapBoxes requires refinement_ratio.
  */
 
-class MultiblockMappedBoxTree : public tbox::DescribedClass
+class MultiblockBoxTree : public tbox::DescribedClass
 {
 
 public:
 
    /*!
-    * @brief Constructs a MultiblockMappedBoxTree from set of MappedBoxes.
+    * @brief Constructs a MultiblockBoxTree from set of Boxes.
     *
     * @param[in] grid_geometry GridGeometry desribing the multiblock
     * environment.
@@ -59,15 +59,15 @@ public:
     * larger value tends to make tree building faster but tree
     * searching slower, and vice versa.  @b Default: 10
     */
-   explicit MultiblockMappedBoxTree(
+   explicit MultiblockBoxTree(
       const tbox::ConstPointer<GridGeometry> &grid_geometry,
       const MappedBoxSet& mapped_boxes,
       size_t min_number = 10);
 
    /*!
-    * @brief Constructs a MultiblockMappedBoxTree from vector of MappedBoxes.
+    * @brief Constructs a MultiblockBoxTree from vector of Boxes.
     *
-    * See MultiblockMappedBoxTree( const tbox::Dimension& , const MappedBoxSet& , size_t min_number );
+    * See MultiblockBoxTree( const tbox::Dimension& , const MappedBoxSet& , size_t min_number );
     *
     * @param[in] grid_geometry
     *
@@ -75,13 +75,14 @@ public:
     *
     * @param[in] min_number.  @b Default: 10
     */
-   explicit MultiblockMappedBoxTree(
+   explicit MultiblockBoxTree(
       const tbox::ConstPointer<GridGeometry> &grid_geometry,
       const std::vector<Box>& mapped_boxes,
       size_t min_number = 10);
 
    /*!
-    * @brief Constructs a MultiblockMappedBoxTree from vector of MappedBoxes.
+    * @brief Constructs a MultiblockBoxTree from a collection of BoxLists each
+    * of which is associated with a specific BlockId.
     *
     * @param[in] grid_geometry
     *
@@ -89,24 +90,24 @@ public:
     *
     * @param[in] min_number.  @b Default: 10
     */
-   explicit MultiblockMappedBoxTree(
+   explicit MultiblockBoxTree(
       const tbox::ConstPointer<GridGeometry> &grid_geometry,
       const std::map<BlockId, BoxList>& boxes,
       size_t min_number = 10);
 
    /*!
     * @brief Default constructor constructs an uninitialized
-    * MultiblockMappedBoxTree.
+    * MultiblockBoxTree.
     */
-   explicit MultiblockMappedBoxTree();
+   explicit MultiblockBoxTree();
 
    /*!
     * @brief Destructor.
     */
-   ~MultiblockMappedBoxTree();
+   ~MultiblockBoxTree();
 
    /*!
-    * @brief Generates the tree from a MUTABLE vector of MappedBoxes.
+    * @brief Generates the tree from a MUTABLE vector of Boxes.
     *
     * For efficiency reasons, mapped_boxes is changed in the process.
     * Its output state is undefined.  However, you can change
@@ -146,26 +147,26 @@ public:
       size_t min_number = 10);
 
    /*!
-    * @brief Return whether the tree contains any MappedBoxes with the
+    * @brief Return whether the tree contains any Boxes with the
     * given BlockId.
     *
-    * If the method getSingleBlockMappedBoxTree(const BlockId&) method
+    * If the method getSingleBlockBoxTree(const BlockId&) method
     * will throw an unrecoverable error if this method returns false
     * for the given BlockId.
     */
-   bool hasMappedBoxInBlock(
+   bool hasBoxInBlock(
       const BlockId &block_id ) const;
 
    /*!
     * @brief Return the tree for a single block.
     *
-    * If the MappedBoxes initializing the tree did not contain at
+    * If the Boxes initializing the tree did not contain at
     * least one Box with the given BlockId, the corresponding
     * single-block tree does not exist, and this method throws an
     * unrecoverable error.  To check for the existance of the tree,
-    * use hasMappedBoxInBlock().
+    * use hasBoxInBlock().
     */
-   const MappedBoxTree &getSingleBlockMappedBoxTree(
+   const BoxTree &getSingleBlockBoxTree(
       const BlockId &block_id ) const;
 
    /*!
@@ -197,9 +198,9 @@ public:
 
    /*!
     * @brief Whether the given Box has an overlap with
-    * MappedBoxes in the tree.
+    * Boxes in the tree.
     *
-    * We also check for overlap with MappedBoxes in blocks adjacent
+    * We also check for overlap with Boxes in blocks adjacent
     * to mapped_box's block.
     *
     * @param[in] box
@@ -221,12 +222,12 @@ public:
     * @brief Find all boxes that overlap the given Box.
     *
     * To avoid unneeded work, the output @b overlap_mapped_boxes
-    * container is not emptied.  Overlapping MappedBoxes are simply
+    * container is not emptied.  Overlapping Boxes are simply
     * added.
     *
     * Output is sorted.
     *
-    * @param[out] overlap_mapped_boxes MappedBoxes that overlap with box.
+    * @param[out] overlap_mapped_boxes Boxes that overlap with box.
     *
     * @param[in] box
     *
@@ -241,7 +242,7 @@ public:
     * block_id across a multiblock singularity.
     */
    void
-   findOverlapMappedBoxes(
+   findOverlapBoxes(
       MappedBoxSet& overlap_mapped_boxes,
       const Box& box,
       const BlockId &block_id,
@@ -252,7 +253,7 @@ public:
     * @brief Find all boxes that overlap the given Box.
     *
     * To avoid unneeded work, the output @b overlap_mapped_boxes
-    * container is not emptied.  Overlapping MappedBoxes are simply
+    * container is not emptied.  Overlapping Boxes are simply
     * added.
     *
     * Output is unsorted.
@@ -272,7 +273,7 @@ public:
     * block_id across a multiblock singularity.
     */
    void
-   findOverlapMappedBoxes(
+   findOverlapBoxes(
       std::vector<Box>& overlap_mapped_boxes,
       const Box& box,
       const BlockId &block_id,
@@ -282,15 +283,15 @@ public:
    /*!
     * @brief Find all boxes that overlap the given Box.
     *
-    * Analogous to findOverlapMappedBoxes returning a vector of MappedBoxes
+    * Analogous to findOverlapBoxes returning a vector of Boxes
     * but avoids the copies.  If the returned overlapped mapped boxes are used
-    * in a context in which the MultiblockMappedBoxTree is constant there is
-    * no point in incurring the cost of copying the tree's MappedBoxes.  Just
+    * in a context in which the MultiblockBoxTree is constant there is
+    * no point in incurring the cost of copying the tree's Boxes.  Just
     * return a vector of their addresses.
     *
     * Output is unsorted.
     *
-    * @param[out] overlap_mapped_boxes Pointers to MappedBoxes that overlap
+    * @param[out] overlap_mapped_boxes Pointers to Boxes that overlap
     * with box.
     *
     * @param[in] box
@@ -306,7 +307,7 @@ public:
     * block_id across a multiblock singularity.
     */
    void
-   findOverlapMappedBoxes(
+   findOverlapBoxes(
       std::vector<const Box*>& overlap_mapped_boxes,
       const Box& box,
       const BlockId &block_id,
@@ -343,12 +344,12 @@ public:
       bool include_singularity_block_neighbors = false) const;
 
    /*!
-    * @brief Get the MappedBoxes in the tree.
+    * @brief Get the Boxes in the tree.
     *
     * @param[out] mapped_boxes
     */
    void
-   getMappedBoxes(
+   getBoxes(
       std::vector<Box>& mapped_boxes) const;
 
    /*!
@@ -363,7 +364,7 @@ public:
     * manually get the boxes, coarsen them and use them to build a new
     * tree.
     */
-   tbox::Pointer<MultiblockMappedBoxTree>
+   tbox::Pointer<MultiblockBoxTree>
    createRefinedTree(
       const IntVector& ratio) const;
 
@@ -372,12 +373,12 @@ public:
 private:
 
    /*!
-    * @brief Container of single-block MappedBoxTrees.
+    * @brief Container of single-block BoxTrees.
     *
-    * For each BlockId represented in the set of MappedBoxes, there is
+    * For each BlockId represented in the set of Boxes, there is
     * an entry in this container.
     */
-   std::map<BlockId,MappedBoxTree> d_single_block_trees;
+   std::map<BlockId, BoxTree> d_single_block_trees;
 
    tbox::ConstPointer<GridGeometry> d_grid_geometry;
 

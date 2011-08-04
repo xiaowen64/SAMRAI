@@ -20,6 +20,7 @@ DEPENDS_0:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Index.I				\
@@ -30,7 +31,6 @@ DEPENDS_0:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicShiftCatalog.I		\

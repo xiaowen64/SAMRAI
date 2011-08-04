@@ -34,7 +34,7 @@ namespace hier {
 class PatchLevel;
 class MappedBoxLevel;
 class MultiblockPatchLevel;
-class MappedBoxTree;
+class BoxTree;
 
 /*!
  * @brief Class GridGeometry manages the index space that determines the
@@ -231,7 +231,7 @@ public:
       std::map<BoxId, TwoDimBool>& touches_periodic_boundary,
       const PatchLevel& level,
       const IntVector& periodic_shift,
-      const tbox::Array<tbox::Pointer<MappedBoxTree> >& domain_tree) const;
+      const tbox::Array<tbox::Pointer<BoxTree> >& domain_tree) const;
 
    /*!
     * @brief Version of findPatchTouchingBoundaries for a single box.
@@ -250,7 +250,7 @@ public:
       TwoDimBool& touches_periodic_bdry,
       const Box& box,
       const IntVector& periodic_shift,
-      const MappedBoxTree& domain_tree) const;
+      const BoxTree& domain_tree) const;
 
    /*!
     * @brief Sets geometry data for patches on a level.
@@ -1120,7 +1120,7 @@ private:
    computeShiftsForBox(
       std::vector<IntVector>& shifts,
       const Box& box,
-      const MappedBoxTree& domain_search_tree,
+      const BoxTree& domain_search_tree,
       const IntVector& periodic_shift) const;
 
    /*!
@@ -1211,7 +1211,7 @@ private:
     *
     * Each entry of the array provides a tree representation for one block.
     */
-   tbox::Array<tbox::Pointer<MappedBoxTree> > d_domain_tree;
+   tbox::Array<tbox::Pointer<BoxTree> > d_domain_tree;
 
    /*!
     * Boolean array telling for each block whether the domain of that block

@@ -14,7 +14,7 @@
 
 #include "SAMRAI/hier/Connector.h"
 #include "SAMRAI/hier/MappedBoxLevel.h"
-#include "SAMRAI/hier/MultiblockMappedBoxTree.h"
+#include "SAMRAI/hier/MultiblockBoxTree.h"
 
 namespace SAMRAI {
 namespace hier {
@@ -112,7 +112,7 @@ public:
       const IntVector& base_swell,
       const IntVector& head_swell,
       const IntVector& head_nesting_margin,
-      const MappedBoxTree* domain = NULL) const;
+      const BoxTree* domain = NULL) const;
 
    /*!
     * @brief Multiblock version of baseNestsInHead.
@@ -124,7 +124,7 @@ public:
       const IntVector& base_swell,
       const IntVector& head_swell,
       const IntVector& head_nesting_margin,
-      const MultiblockMappedBoxTree* domain = NULL) const;
+      const MultiblockBoxTree* domain = NULL) const;
 
    /*!
     * @brief Given base and head MappedBoxLevels, determine the extent
@@ -141,7 +141,7 @@ public:
     * Connector is not scalable.  If you already have such a
     * Connector, you should call baseNestsInHead(bool*, const Connector&,
     * const IntVector&, const IntVector&, const IntVector&,
-    * const MappedBoxTree*) directly.
+    * const BoxTree*) directly.
     *
     * TODO: Is this method really needed now that we can automatically
     * build the base--->head Connector automatically using
@@ -182,7 +182,7 @@ public:
       const IntVector& base_swell,
       const IntVector& head_swell,
       const IntVector& head_margin,
-      const MappedBoxTree* domain = NULL) const;
+      const BoxTree* domain = NULL) const;
    bool
 
    /*!
@@ -195,7 +195,7 @@ public:
       const IntVector& base_swell,
       const IntVector& head_swell,
       const IntVector& head_margin,
-      const MultiblockMappedBoxTree* domain = NULL) const;
+      const MultiblockBoxTree* domain = NULL) const;
 
    /*!
     * @brief Compute the parts of one MappedBoxLevel that are external
@@ -211,7 +211,7 @@ public:
       Connector& input_to_external,
       const Connector& input_to_reference,
       const IntVector& nesting_width,
-      const MappedBoxTree& domain) const;
+      const BoxTree& domain) const;
 
    /*!
     * @brief Compute the parts of one MappedBoxLevel that are internal
@@ -227,7 +227,7 @@ public:
       Connector& input_to_internal,
       const Connector& input_to_reference,
       const IntVector& nesting_width,
-      const MappedBoxTree& domain) const;
+      const BoxTree& domain) const;
 
    /*!
     * @brief Compute the parts of one MappedBoxLevel that are external
@@ -274,7 +274,7 @@ public:
       Connector& input_to_external,
       const Connector& input_to_reference,
       const IntVector& nesting_width,
-      const MultiblockMappedBoxTree& domain = MultiblockMappedBoxTree() ) const;
+      const MultiblockBoxTree& domain = MultiblockBoxTree() ) const;
 
    /*!
     * @brief Compute the parts of one MappedBoxLevel that are internal
@@ -321,7 +321,7 @@ public:
       Connector& input_to_internal,
       const Connector& input_to_reference,
       const IntVector& nesting_width,
-      const MultiblockMappedBoxTree& domain = MultiblockMappedBoxTree() ) const;
+      const MultiblockBoxTree& domain = MultiblockBoxTree() ) const;
 
    /*!
     * @brief Compute the parts of one MappedBoxLevel that is internal
@@ -330,7 +330,7 @@ public:
     * This version of computeInternalParts() does not require a domain.
     * The domain is taken to be big enough that it does not affect
     * the definition of "internal".
-    * @see computeInternalParts(MappedBoxLevel&,Connector&,const Connector&,const IntVector&,const MappedBoxTree&)const
+    * @see computeInternalParts(MappedBoxLevel&,Connector&,const Connector&,const IntVector&,const BoxTree&)const
     *
     * @param[out] internal Any internal part is owned by the process
     * owning the input MappedBox that generated it.
@@ -484,7 +484,7 @@ public:
    void
    addPeriodicImages(
       MappedBoxLevel& mapped_box_level,
-      const MappedBoxTree& domain_search_tree,
+      const BoxTree& domain_search_tree,
       const IntVector &threshold_distance) const;
 
    /*!
@@ -527,7 +527,7 @@ public:
       MappedBoxLevel& mapped_box_level,
       Connector& mapped_box_level_to_anchor,
       Connector& anchor_to_mapped_box_level,
-      const MappedBoxTree& domain_search_tree,
+      const BoxTree& domain_search_tree,
       const Connector& anchor_to_anchor) const;
 
    //@}
@@ -546,7 +546,7 @@ private:
       char internal_or_external,
       const hier::Connector& input_to_reference,
       const hier::IntVector& nesting_width,
-      const hier::MultiblockMappedBoxTree& domain) const;
+      const hier::MultiblockBoxTree& domain) const;
 
    /*!
     * @brief Call-back function to sort boxes.
