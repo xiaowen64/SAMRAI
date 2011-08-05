@@ -27,7 +27,7 @@ CoarsenClasses::Data& CoarsenClasses::getCoarsenItem(
 SAMRAI_INLINE_KEYWORD
 int CoarsenClasses::getNumberOfEquivalenceClasses() const
 {
-   return d_equivalence_class_ids.size();
+   return d_equivalence_class_indices.size();
 }
 
 SAMRAI_INLINE_KEYWORD

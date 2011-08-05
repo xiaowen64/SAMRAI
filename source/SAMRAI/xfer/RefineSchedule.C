@@ -3023,7 +3023,7 @@ void RefineSchedule::refineScratchData(
          if (!(ref_item->d_oprefine.isNull())) {
 
             tbox::Pointer<hier::BoxOverlap> refine_overlap(
-               overlap_iter()[ref_item->d_class_id]);
+               overlap_iter()[ref_item->d_class_index]);
 
             const int scratch_id = ref_item->d_scratch;
 
@@ -5001,7 +5001,7 @@ void RefineSchedule::constructScheduleTransactions(
            l(d_refine_classes->getIterator(nc)); l; l++) {
          const RefineClasses::Data& item =
             d_refine_classes->getRefineItem(l());
-         TBOX_ASSERT(item.d_class_id == nc);
+         TBOX_ASSERT(item.d_class_index == nc);
 
          const int dst_id = item.d_scratch;
          const int src_id = item.d_src;
@@ -5182,7 +5182,7 @@ void RefineSchedule::setRefineItems(
  * In particular, each scratch data entry must have at least as many
  * ghost cells as the user-defined refine operator stencil width.
  * Other checks are performed in the
- * xfer::RefineClasses::checkRefineItem() routine.
+ * xfer::RefineClasses::itemIsValid() routine.
  *
  *************************************************************************
  */
@@ -5207,7 +5207,7 @@ void RefineSchedule::initialCheckRefineClassItems() const
          const xfer::RefineClasses::Data * const ref_item = d_refine_items[iri];
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-         if (d_refine_classes->checkRefineItem(*ref_item, pd)) {
+         if (d_refine_classes->itemIsValid(*ref_item, pd)) {
 #endif
 
          const int scratch = ref_item->d_scratch;

@@ -27,7 +27,7 @@ RefineClasses::Data& RefineClasses::getRefineItem(
 SAMRAI_INLINE_KEYWORD
 int RefineClasses::getNumberOfEquivalenceClasses() const
 {
-   return d_equivalence_class_ids.size();
+   return d_equivalence_class_indices.size();
 }
 
 SAMRAI_INLINE_KEYWORD

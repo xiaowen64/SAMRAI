@@ -192,7 +192,7 @@ private:
     * ghost cell width at least as large as the ghost cell width to coarsen
     * refined to the source (finer) level index space.  Although it is
     * redundant if the coarsen algorithm created the coarsen classes, the
-    * routine xfer::CoarsenClasses::checkCoarsenItem() is also called.
+    * routine xfer::CoarsenClasses::itemIsValid() is also called.
     *
     * If any entries are erroneous an assertion is thrown with a descriptive
     * error message and program halts.

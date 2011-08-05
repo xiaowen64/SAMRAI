@@ -41,7 +41,6 @@ int RefineClasses::s_default_refine_item_array_size = 20;
 RefineClasses::RefineClasses():
    d_num_refine_items(0)
 {
-   d_equivalence_class_ids.resizeArray(0);
    d_refine_classes_data_items.resizeArray(s_default_refine_item_array_size);
 }
 
@@ -56,8 +55,6 @@ RefineClasses::RefineClasses():
 
 RefineClasses::~RefineClasses()
 {
-   d_equivalence_class_ids.resizeArray(0);
-   d_refine_classes_data_items.resizeArray(0);
 }
 
 /*
@@ -70,12 +67,12 @@ RefineClasses::~RefineClasses()
 
 const RefineClasses::Data&
 RefineClasses::getClassRepresentative(
-   int equiv_class_id) const
+   int equiv_class_index) const
 {
-   TBOX_ASSERT((equiv_class_id >= 0) &&
-      (equiv_class_id < d_equivalence_class_ids.size()));
+   TBOX_ASSERT((equiv_class_index >= 0) &&
+      (equiv_class_index < getNumberOfEquivalenceClasses()));
    return d_refine_classes_data_items[
-             d_equivalence_class_ids[equiv_class_id].getFirstItem()];
+             d_equivalence_class_indices[equiv_class_index].getFirstItem()];
 }
 
 /*
@@ -88,21 +85,20 @@ RefineClasses::getClassRepresentative(
 
 tbox::List<int>::Iterator
 RefineClasses::getIterator(
-   int equiv_class_id)
+   int equiv_class_index)
 {
-   TBOX_ASSERT((equiv_class_id >= 0) &&
-      (equiv_class_id < d_equivalence_class_ids.size()));
+   TBOX_ASSERT((equiv_class_index >= 0) &&
+      (equiv_class_index < getNumberOfEquivalenceClasses()));
    return tbox::List<int>::
-          Iterator(d_equivalence_class_ids[equiv_class_id]);
+          Iterator(d_equivalence_class_indices[equiv_class_index]);
 
 }
 
 /*
  *************************************************************************
- *									*
- * Insert a data item into the refine data list for the proper           *
- * equivalence class in sorted order by ascending operator priority.     *
- *									*
+ *								 	 *
+ * Insert a data item into the proper equivalence class.                 *
+ *									 *
  *************************************************************************
  */
 
@@ -111,8 +107,8 @@ void RefineClasses::insertEquivalenceClassItem(
    tbox::Pointer<hier::PatchDescriptor> descriptor)
 {
 
-   if (!checkRefineItem(data, descriptor)) {
-      tbox::perr << "Bad refine class data passed to "
+   if (!itemIsValid(data, descriptor)) {
+      tbox::perr << "Invalid refine class data passed to "
                  << "RefineClasses::insertEquivalenceClassItem\n";
       printRefineItem(tbox::perr, data);
       TBOX_ERROR("Check entries..." << std::endl);
@@ -121,11 +117,11 @@ void RefineClasses::insertEquivalenceClassItem(
       int eq_index = getEquivalenceClassIndex(data, descriptor);
 
       if (eq_index < 0) {
-         eq_index = d_equivalence_class_ids.size();
-         d_equivalence_class_ids.resizeArray(eq_index + 1);
+         eq_index = d_equivalence_class_indices.size();
+         d_equivalence_class_indices.resizeArray(eq_index + 1);
       }
 
-      data.d_class_id = eq_index;
+      data.d_class_index = eq_index;
 
       if (d_num_refine_items >= d_refine_classes_data_items.size()) {
          d_refine_classes_data_items.resizeArray(
@@ -134,7 +130,7 @@ void RefineClasses::insertEquivalenceClassItem(
 
       d_refine_classes_data_items[d_num_refine_items] = data;
 
-      d_equivalence_class_ids[eq_index].appendItem(d_num_refine_items);
+      d_equivalence_class_indices[eq_index].appendItem(d_num_refine_items);
 
       d_num_refine_items++;
 
@@ -156,7 +152,7 @@ void RefineClasses::insertEquivalenceClassItem(
  *************************************************************************
  */
 
-bool RefineClasses::checkRefineItem(
+bool RefineClasses::itemIsValid(
    const RefineClasses::Data& data_item,
    tbox::Pointer<hier::PatchDescriptor> descriptor) const
 {
@@ -309,18 +305,21 @@ bool RefineClasses::checkRefineItem(
 /*
  *************************************************************************
  *                                                                       *
- * Compare refine data items in this refine classes object against       *
- * those in the argument refine classes object.  Return true if they     *
- * all match with regard to the patch data types, patch data ghost cell  *
- * widths, operator stencils, etc. that they refer to and return false   *
- * otherwise.  If a null patch descriptor argument is passed, the        *
+ * Compare the equivalence classes in this refine classes object against *
+ * those in the argument refine classes object.  Return true if both     *
+ * object contain the same number of classes and the classes with the    *
+ * class number match.  Two equivalence classes match if their           *
+ * representatives are equivalent as defined by the method               *
+ * itemsAreEquivalent().                                                 *
+ *                                                                       *
+ * If a null patch descriptor argument is passed, the                    *
  * descriptor associated with the variable database Singleton object     *
  * will be used.                                                         *
  *                                                                       *
  *************************************************************************
  */
 
-bool RefineClasses::checkConsistency(
+bool RefineClasses::classesMatch(
    tbox::Pointer<RefineClasses> test_classes,
    tbox::Pointer<hier::PatchDescriptor> descriptor) const
 {
@@ -332,100 +331,30 @@ bool RefineClasses::checkConsistency(
       pd = hier::VariableDatabase::getDatabase()->getPatchDescriptor();
    }
 
-   if (d_equivalence_class_ids.size() !=
-       test_classes->d_equivalence_class_ids.size()) {
+   if ( getNumberOfEquivalenceClasses()!=
+       test_classes->getNumberOfEquivalenceClasses() ) {
 
       items_match = false;
 
    } else {
 
-      int num_equiv_classes = d_equivalence_class_ids.size();
       int eq_index = 0;
-      while (items_match && eq_index < num_equiv_classes) {
+      while (items_match && eq_index < getNumberOfEquivalenceClasses()) {
 
-         if (d_equivalence_class_ids[eq_index].size() !=
+         if (d_equivalence_class_indices[eq_index].size() !=
              test_classes->
-             d_equivalence_class_ids[eq_index].size()) {
+             d_equivalence_class_indices[eq_index].size()) {
 
             items_match = false;
 
          } else {
 
-            tbox::List<int>::Iterator myli(d_equivalence_class_ids[eq_index]);
-            tbox::List<int>::Iterator testli(test_classes->d_equivalence_class_ids[eq_index]);
-            while (items_match && myli) {
+            const RefineClasses::Data& my_item = 
+                  getClassRepresentative(eq_index);
+            const RefineClasses::Data& test_item = 
+                  test_classes->getClassRepresentative(eq_index);
 
-               const RefineClasses::Data& myli_item =
-                  d_refine_classes_data_items[myli()];
-               const RefineClasses::Data& testli_item =
-                  d_refine_classes_data_items[testli()];
-
-               items_match = checkPatchDataItemConsistency(
-                     myli_item.d_dst, testli_item.d_dst, pd);
-
-               if (items_match) {
-                  items_match = checkPatchDataItemConsistency(
-                        myli_item.d_src, testli_item.d_src, pd);
-               }
-
-               if (items_match && myli_item.d_time_interpolate) {
-                  items_match = checkPatchDataItemConsistency(
-                        myli_item.d_src_told,
-                        testli_item.d_src_told,
-                        pd);
-               }
-
-               if (items_match && myli_item.d_time_interpolate) {
-                  items_match = checkPatchDataItemConsistency(
-                        myli_item.d_src_tnew,
-                        testli_item.d_src_tnew,
-                        pd);
-               }
-
-               if (items_match) {
-                  items_match = checkPatchDataItemConsistency(
-                        myli_item.d_scratch,
-                        testli_item.d_scratch,
-                        pd);
-               }
-
-               if (items_match) {
-                  items_match = (myli_item.d_fine_bdry_reps_var ==
-                                 testli_item.d_fine_bdry_reps_var);
-               }
-
-               if (items_match) {
-                  items_match = (!myli_item.d_oprefine.isNull() ==
-                                 !testli_item.d_oprefine.isNull());
-                  if (items_match && !myli_item.d_oprefine.isNull()) {
-                     items_match =
-                        (myli_item.d_oprefine->getStencilWidth() ==
-                         testli_item.d_oprefine->getStencilWidth());
-                  }
-               }
-
-               if (items_match) {
-                  items_match = (myli_item.d_time_interpolate ==
-                                 testli_item.d_time_interpolate);
-                  if (items_match && myli_item.d_time_interpolate) {
-                     items_match = (typeid(*(myli_item.d_optime)) ==
-                                    typeid(*(testli_item.d_optime)));
-                  }
-               }
-
-               if (items_match) {
-                  items_match = (!myli_item.d_var_fill_pattern.isNull() ==
-                                 !testli_item.d_var_fill_pattern.isNull());
-                  if (items_match && !myli_item.d_var_fill_pattern.isNull()) {
-                     items_match = (typeid(*(myli_item.d_var_fill_pattern)) ==
-                                    typeid(*(testli_item.d_var_fill_pattern)));
-                  }
-               }
-
-               myli++;
-               testli++;
-
-            } // while items in equivalence class match
+            items_match = itemsAreEquivalent(my_item, test_item);
 
          } // if number of items in equivalence class match
 
@@ -442,141 +371,52 @@ bool RefineClasses::checkConsistency(
 /*
  *************************************************************************
  *                                                                       *
- * Private member function to determine whether two patch data items     *
- * are consistent.                                                       *
+ * Return true if data items are equivalent; false otherwise.            *
+ * This routine defines refine item equivalence.                         * 
  *                                                                       *
  *************************************************************************
  */
 
-bool RefineClasses::checkPatchDataItemConsistency(
-   int item_id1,
-   int item_id2,
-   tbox::Pointer<hier::PatchDescriptor> pd) const
-{
-
-   bool items_match = ((item_id1 >= 0) && (item_id2 >= 0));
-
-   if (items_match) {
-
-      tbox::Pointer<hier::PatchDataFactory> pdf1 =
-         pd->getPatchDataFactory(item_id1);
-      tbox::Pointer<hier::PatchDataFactory> pdf2 =
-         pd->getPatchDataFactory(item_id2);
-
-      items_match = (typeid(*pdf1) == typeid(*pdf2));
-
-      if (items_match) {
-         items_match = (pdf1->getGhostCellWidth() ==
-                        pdf2->getGhostCellWidth());
-      }
-
-   }
-
-   return items_match;
-
-}
-
-/*
- *************************************************************************
- *                                                                       *
- * Private member function to determine equivalence class for            *
- * given data item.  Return value of -1 indicates no match found; else   *
- * return value is index of match.                                       *
- *                                                                       *
- *************************************************************************
- */
-
-int RefineClasses::getEquivalenceClassIndex(
-   const RefineClasses::Data& data,
+bool RefineClasses::itemsAreEquivalent(
+   const RefineClasses::Data& data1,
+   const RefineClasses::Data& data2,
    tbox::Pointer<hier::PatchDescriptor> descriptor) const
 {
-
-   int eq_index = -1;
+   bool equivalent = true;
 
    tbox::Pointer<hier::PatchDescriptor> pd = descriptor;
    if (pd.isNull()) {
       pd = hier::VariableDatabase::getDatabase()->getPatchDescriptor();
    }
 
-   int dst_id = data.d_dst;
-   int src_id = data.d_src;
+   equivalent = patchDataMatch(data1.d_dst, data2.d_dst, pd);
 
-   tbox::Pointer<hier::PatchDataFactory> dst_pdf =
-      pd->getPatchDataFactory(dst_id);
-   tbox::Pointer<hier::PatchDataFactory> src_pdf =
-      pd->getPatchDataFactory(src_id);
+   equivalent &= patchDataMatch(data1.d_src, data2.d_src, pd);
 
-   hier::IntVector dst_ghosts = dst_pdf->getGhostCellWidth();
-   hier::IntVector src_ghosts = src_pdf->getGhostCellWidth();
+   equivalent &= patchDataMatch(data1.d_scratch, data2.d_scratch, pd);
 
-   int num_equiv_classes = d_equivalence_class_ids.size();
-   bool equiv_found = false;
-   int nl = 0;
-   while (!equiv_found && nl < num_equiv_classes) {
-
-      bool dst_equiv = false;
-      bool src_equiv = false;
-
-      const RefineClasses::Data& class_rep = getClassRepresentative(nl);
-
-      int rep_dst_id = class_rep.d_dst;
-      tbox::Pointer<hier::PatchDataFactory> rep_dst_pdf =
-         pd->getPatchDataFactory(rep_dst_id);
-      hier::IntVector rep_dst_ghosts =
-         rep_dst_pdf->getGhostCellWidth();
-
-      /*
-       * Check if destinations are equivalent
-       */
-      if ((dst_ghosts == rep_dst_ghosts) &&
-          (typeid(*dst_pdf) == typeid(*rep_dst_pdf))) {
-         dst_equiv = true;
-      }
-
-      /*
-       * If src_id and dst_id are the same, there is nothing more to check.
-       * Otherwise, if destinations were equivalent, check if sources
-       * are equivalent.
-       */
-      if (dst_id == src_id) {
-         src_equiv = dst_equiv;
-      } else if (dst_equiv) {
-         int rep_src_id = class_rep.d_src;
-         tbox::Pointer<hier::PatchDataFactory> rep_src_pdf =
-            pd->getPatchDataFactory(rep_src_id);
-         hier::IntVector rep_src_ghosts =
-            rep_src_pdf->getGhostCellWidth();
-         if ((src_ghosts == rep_src_ghosts) &&
-             (typeid(*src_pdf) == typeid(*rep_src_pdf))) {
-            src_equiv = true;
-         }
-      }
-
-      /*
-       * Check if fill patterns are the same.
-       */
-      bool fill_patterns_same = false;
-      if (dst_equiv && src_equiv) {
-         fill_patterns_same =
-            (data.d_var_fill_pattern->getPatternName() ==
-             class_rep.d_var_fill_pattern->getPatternName());
-      }
-
-      /*
-       * If destinations and sources are both equivalent, exit loop
-       * and set return value to identify current equivalence class id.
-       */
-      if (dst_equiv && src_equiv && fill_patterns_same) {
-         eq_index = nl;
-         equiv_found = true;
-      }
-
-      nl++;
-
+   equivalent &= (data1.d_time_interpolate == data2.d_time_interpolate);
+   if (equivalent && data1.d_time_interpolate) {
+      equivalent &= patchDataMatch(data1.d_src_told, data2.d_src_told, pd);
+      equivalent &= patchDataMatch(data1.d_src_tnew, data2.d_src_tnew, pd);
    }
 
-   return eq_index;
+   equivalent &= (data1.d_fine_bdry_reps_var == data2.d_fine_bdry_reps_var);
 
+   equivalent &= (data1.d_oprefine.isNull() == data2.d_oprefine.isNull());
+   if (equivalent && !data1.d_oprefine.isNull()) {
+      equivalent &= (data1.d_oprefine->getStencilWidth() == 
+                     data2.d_oprefine->getStencilWidth());
+   }
+
+   equivalent &= (data1.d_var_fill_pattern.isNull() == 
+                  data2.d_var_fill_pattern.isNull());
+   if (equivalent && !data1.d_var_fill_pattern.isNull()) {
+      equivalent &= (typeid(*(data1.d_var_fill_pattern)) ==
+                     typeid(*(data2.d_var_fill_pattern)));
+   }
+
+   return equivalent;
 }
 
 /*
@@ -608,11 +448,11 @@ void RefineClasses::printClassData(
 {
    stream << "RefineClasses::printClassData()\n";
    stream << "--------------------------------------\n";
-   for (int i = 0; i < d_equivalence_class_ids.size(); i++) {
+   for (int i = 0; i < d_equivalence_class_indices.size(); i++) {
       stream << "EQUIVALENCE CLASS # " << i << std::endl;
       int j = 0;
       for (tbox::List<int>::Iterator
-           li(d_equivalence_class_ids[i]); li; li++) {
+           li(d_equivalence_class_indices[i]); li; li++) {
 
          stream << "Item # " << j << std::endl;
          stream << "-----------------------------\n";
@@ -674,6 +514,86 @@ void RefineClasses::printRefineItem(
              << std::endl;
    }
    stream << std::endl;
+}
+
+
+/*
+ *************************************************************************
+ *                                                                       *
+ * Private member function to determine whether two patch data items     *
+ * match (are same type and have same ghost width.)                      *
+ *                                                                       *
+ *************************************************************************
+ */
+
+bool RefineClasses::patchDataMatch(
+   int item_id1,
+   int item_id2,
+   tbox::Pointer<hier::PatchDescriptor> pd) const
+{
+
+   bool items_match = ((item_id1 >= 0) && (item_id2 >= 0));
+
+   if (items_match) {
+
+      tbox::Pointer<hier::PatchDataFactory> pdf1 =
+         pd->getPatchDataFactory(item_id1);
+      tbox::Pointer<hier::PatchDataFactory> pdf2 =
+         pd->getPatchDataFactory(item_id2);
+
+      items_match = (typeid(*pdf1) == typeid(*pdf2));
+
+      if (items_match) {
+         items_match = (pdf1->getGhostCellWidth() ==
+                        pdf2->getGhostCellWidth());
+      }
+
+   }
+
+   return items_match;
+
+}
+
+/*
+ *************************************************************************
+ *                                                                       *
+ * Private member function to determine equivalence class index for      *
+ * given data item.  Return value of -1 indicates no match found; else   *
+ * return value is index of match.                                       *
+ *                                                                       *
+ *************************************************************************
+ */
+
+int RefineClasses::getEquivalenceClassIndex(
+   const RefineClasses::Data& data,
+   tbox::Pointer<hier::PatchDescriptor> descriptor) const
+{
+
+   int eq_index = -1;
+
+   tbox::Pointer<hier::PatchDescriptor> pd = descriptor;
+   if (pd.isNull()) {
+      pd = hier::VariableDatabase::getDatabase()->getPatchDescriptor();
+   }
+
+   bool class_found = false;
+   int check_index = 0;
+   while (!class_found && check_index < getNumberOfEquivalenceClasses()) {
+
+      const RefineClasses::Data& class_rep = 
+            getClassRepresentative(check_index);
+
+      class_found = itemsAreEquivalent(data, class_rep);
+
+      if ( class_found ) {
+         eq_index = check_index;
+      }
+
+      check_index++;
+   }
+
+   return eq_index;
+
 }
 
 }

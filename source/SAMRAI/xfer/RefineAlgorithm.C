@@ -604,8 +604,7 @@ bool RefineAlgorithm::checkConsistency(
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(!schedule.isNull());
 #endif
-   return d_refine_classes->
-          checkConsistency(schedule->getEquivalenceClasses());
+   return d_refine_classes->classesMatch(schedule->getEquivalenceClasses());
 }
 
 void RefineAlgorithm::resetSchedule(
@@ -614,13 +613,12 @@ void RefineAlgorithm::resetSchedule(
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(!schedule.isNull());
 #endif
-   if (d_refine_classes->
-       checkConsistency(schedule->getEquivalenceClasses())) {
+   if (d_refine_classes->classesMatch(schedule->getEquivalenceClasses())) {
       schedule->reset(d_refine_classes);
    } else {
       TBOX_ERROR("RefineAlgorithm::resetSchedule error..."
          << "\n Items in xfer::RefineClasses object passed to reset"
-         << "\n routine are inconsistent with those in existing schedule."
+         << "\n routine does not match that in existing schedule."
          << std::endl);
    }
 }

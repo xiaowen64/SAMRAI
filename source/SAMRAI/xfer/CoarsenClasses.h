@@ -29,35 +29,25 @@ namespace xfer {
  * into equivalence classes.
  * 
  * CoarsenClasses is used by the CoarsenSchedule and CoarsenAlgorithm
- * lasses to manage a set of coarsening data items that describe
- * coarsening of patch data between two levels in an AMR hierarchy.
- * Specifically, this class organizes these items into equivalence clases, so
- * that items are grouped together if they are considered equivalent.
- *
- * Two items are equivalent if all of the following are true:
- * <ul>
- *   <li> The referenced patch data type for the source component
- *        is the same for both items.
- *   <li> The referenced patch data type for the destination component
- *        is the same for both items.
- *   <li> The ghost cell width of the source patch data is the same
- *        for both items.
- *   <li> The ghost cell width of the destination patch data is the same
- *        for both items.
- *   <li> They have the same VariableFillPattern
- * </ul>
+ * classes to manage coarsen data items that describe coarsening of 
+ * patch data between two levels in an AMR hierarchy.  Specifically, this 
+ * class organizes these items into equivalence clases, so that items are 
+ * grouped together if they have the same data communication dependencies.   
+ * See documentation for the method itemsAreEquivalent() for definition  
+ * of equivalence.
  */
 
 class CoarsenClasses:public tbox::DescribedClass
 {
 public:
+
    /*!
     * @brief Nested class used to describe a coarsening operation
     * between patch data components on an AMR hierarchy.
     */
    class Data
    {
-public:
+   public:  
       /*!
        * @brief Destination patch data component
        */
@@ -90,10 +80,10 @@ public:
       tbox::Pointer<hier::CoarsenOperator> d_opcoarsen;
 
       /*!
-       * @brief Identifier of equivalence class where this item belongs.  All
+       * @brief Index of equivalence class where this item belongs.  All
        * items of the same equivalence class will have the same value.
        */
-      int d_class_id;
+      int d_class_index;
 
       /*!
        * @brief An array index telling where this item sits in an array of
@@ -117,7 +107,7 @@ public:
          d_gcw_to_coarsen(dim) {
       }
 
-private:
+   private:
       Data();  //not implemented 
    };
 
@@ -149,29 +139,18 @@ private:
    getNumberOfCoarsenItems() const;
 
    /*!
-    * @brief Return number of coarsen data items in the equivalence class
-    * represented by the given integer identifier.
+    * @brief Get representative item for a given equivalence class index.
     *
-    * @param[in] equiv_class_id
-    */
-   int
-   getNumberOfItemsInEquivalenceClass(
-      int equiv_class_id) const;
-
-   /*!
-    * @brief Get a representative item for a given equivalence class.
+    * When assertion checking is active, the index will be checked for validity.
     *
-    * When assertion checking is active, the id will be checked for validity.
-    *
-    * @return Given an id indicating a specific equivalence class, one item
-    * from that class is returned, to represent the characteristics of the
-    * equivalence class.
+    * @return Given an index of an existing equivalence class, one item
+    * from that class is returned.
     *
     * @param[in] equiv_class_id
     */
    const CoarsenClasses::Data&
    getClassRepresentative(
-      int equiv_class_id) const;
+      int equiv_class_index) const;
 
    /*!
     * @brief Get a coarsen item from the array of all coarsen items held by
@@ -182,7 +161,7 @@ private:
     * over all of the items, from 0 to getNumberOfCoarsenItems()-1, or when
     * looping over the integers in the List obtained from getIterator().
     *
-    * @return A coarsen item identified by an integer id.
+    * @return A coarsen classes data object identified by an integer id.
     *
     * @param[in] coarsen_item_array_id
     */
@@ -192,7 +171,7 @@ private:
 
    /*!
     * @brief Return an iterator for the list of array ids corresponding to the
-    * equivalence class with the given integer identifier.
+    * equivalence class with the given integer index.
     *
     * The number of quivalence classes can be determined via the
     * getNumberOfEquivalenceClasses() member function.  Valid integer
@@ -206,23 +185,23 @@ private:
     * single list all correspond to coarsen items in a single equivalence
     * class.
     *
-    * @param[in] equiv_class_id
+    * @param[in] equiv_class_index
     */
    tbox::List<int>::Iterator
    getIterator(
-      int equiv_class_id);
+      int equiv_class_index);
 
    /*!
-    * @brief Give a data item to the CoarsenClasses object, which will store
-    * it with the proper equivalence class.
+    * @brief Given a CoarsenClasses::Data object, insert it into the proper
+    * equivalence class.
     *
     * If the item belongs in an existing equivalence class, it will be added
-    * there, otherwise a new equivalence class will be created for this item.
-    * The internal data of the item will be changed so that it stores an
-    * integer identifier of its equivalence class.
+    * to that class. Otherwise, a new equivalence class will be created for 
+    * this item.  The integer class index in the data item will set to the
+    * index of the equivalence class into which it is inserted.
     *
-    * An error will occur with a descriptive message if the data item is
-    * not valid.  See checkCoarsenItem() for explanation of validity.
+    * If assertion checking is active, the data item will be checked for
+    * validity.  See itemIsValid() for explanation of validity.
     *
     * If a null patch descriptor argument is passed (or ommitted), the
     * descriptor associated with the variable database Singleton object will be
@@ -238,13 +217,12 @@ private:
          tbox::Pointer<hier::PatchDescriptor>(NULL));
 
    /*!
-    * Check coarsen data item for validity.
+    * @brief Check coarsen data item for validity.
     *
-    * A coarsen data item is invalid if any of its patch data components are
+    * A coarsen data item is invalid if any of its patch data ids are
     * negative, or if its source data does not have sufficient ghost width
-    * for the stencil of the coarsen operator. or if the data types of
-    * the source and destination data are not compatible to be copied
-    * from one to another.
+    * for the stencil of the coarsen operator, or if copying from
+    * the source to the destination data is not valid.
     *
     * An error will occur with a descriptive message if the item is invalid.
     *
@@ -252,32 +230,59 @@ private:
     * descriptor associated with the variable database Singleton object will
     * be used.
     *
-    * @return True if the item is valid.
+    * @return True if the item is valid; else false.
     *
     * @param[in] data_item
     * @param[in] descriptor
     */
    bool
-   checkCoarsenItem(
+   itemIsValid(
       const CoarsenClasses::Data& data_item,
       tbox::Pointer<hier::PatchDescriptor> descriptor =
          tbox::Pointer<hier::PatchDescriptor>(NULL)) const;
 
    /*!
-    * @brief Compare CoarsenClasses object with another CoarsenClasses object.
+    * @brief Compare CoarsenClasses object with another CoarsenClasses object;
+    *        return true if they match, else false.
     *
-    * This method checks if the equivalence classes held by the two objects
-    * match with regard to their patch data types, patch data ghost cell widths,    * operator stencils, etc.
+    * This method checks whether all equivalence classes match between this
+    * CoarsenClasses object and the argument object.  To match, the number of 
+    * equivalence classes held by the objects must be the same and each
+    * equivalence class in this object must match the class with the same 
+    * equivalence class number in the argument object.  Two classes match if 
+    * they have the same number of items and their representative items are
+    * equialvent as defined by the method itemsAreEquivalent().
     *
-    * Two CoarsenClasses objects are consistent if they have the same number of
-    * equivalence classes and each corresponding equivalence class has the same
-    * characteristics as follows:
+    * If a null patch descriptor argument is passed (or ommitted), the
+    * descriptor associated with the variable database Singleton object will
+    * be used.
+    *
+    * @return true if test_classes matches this object.
+    *
+    * @param[in] test_classes  CoarsenClasses object to compare with this.
+    * @param[in] descriptor
+    */
+   bool
+   classesMatch(
+      tbox::Pointer<CoarsenClasses> test_classes,
+      tbox::Pointer<hier::PatchDescriptor> descriptor =
+         tbox::Pointer<hier::PatchDescriptor>(NULL)) const;
+
+   /*!
+    * @brief Compare CoarsenClasses::Data objects for equivalence;
+    *        return true if equivalent, else false.
+    *
+    * Two CoarsenClasses::Data objects are equivalent if and only if
+    * the following conditions hold:
     *
     * <ul>
     *    <li> Each corresponding patch data component (d_dst and d_src)
     *         must have the same patch data type and ghost cell width.
-    *    <li> d_fine_bdry_reps_var flag must have the same value.
-    *    <li> The coarsening operators, if any, have the same stencil width.
+    *    <li> d_fine_bdry_reps_var flag must have the same value for
+    *         each object.
+    *    <li> The coarsening operator ptr d_opcoarsen must be null or non-null
+    *         for both objects.  If non-null, both operators must have the
+    *         same stencil width.
     *    <li> The same variable fill pattern is used.
     * </ul>
     *
@@ -285,16 +290,18 @@ private:
     * descriptor associated with the variable database Singleton object will
     * be used.
     *
-    * @return true if test_classes is consistent with this object.
+    * @return true if test_classes matches this object.
     *
-    * @param[in] test_classes  CoarsenClasses object to check for consistency
+    * @param[in] data1  CoarsenClasses::Data object to compare.
+    * @param[in] data2  CoarsenClasses::Data object to compare.
     * @param[in] descriptor
     */
    bool
-   checkConsistency(
-      tbox::Pointer<CoarsenClasses> test_classes,
+   itemsAreEquivalent(
+      const CoarsenClasses::Data& data1,
+      const CoarsenClasses::Data& data2,
       tbox::Pointer<hier::PatchDescriptor> descriptor =
-         tbox::Pointer<hier::PatchDescriptor>(NULL)) const;
+         tbox::Pointer<hier::PatchDescriptor>(NULL)) const; 
 
    /*!
     * @brief Get the size that has been allocated for the array storing coarsen
@@ -351,10 +358,10 @@ private:
       const CoarsenClasses&);                     // not implemented
 
    /*!
-    * @brief Function to compare two patch data components (with given
-    * descriptor indices) for consistency.
+    * @brief Check two patch data items (with given descriptor indices) 
+    * to see whether they match.
     *
-    * Two components are consistent if the are of the same patch data type and
+    * Two patch data items match if the are of the same patch data type and
     * have the same ghost width.
     *
     * @return true if consistent; false otherwise.
@@ -364,20 +371,20 @@ private:
     * @param[in] pd  descriptor
     */
    bool
-   checkPatchDataItemConsistency(
+   patchDataMatch(
       int item_id1,
       int item_id2,
       tbox::Pointer<hier::PatchDescriptor> pd) const;
 
    /*!
-    * @brief Function to determine the equivalence class where a coarsen data
-    * item belongs.
+    * @brief Determine the equivalence class index of given 
+    * CoarsenClasses::Data object.
     *
-    * The coarsen data item is compared to existing equivalence classes to
+    * The coarsen data item is compared with existing equivalence classes to
     * determine if it can be a member of any of them.
     *
     * @return If the item matches an existing equivalence class the integer
-    * identifier for that equivalence class is returned.  Otherwise -1 is
+    * index for that equivalence class is returned.  Otherwise -1 is
     * returned.
     *
     * @param[in] data
@@ -410,7 +417,7 @@ private:
     * which items are part of an equivalence class.  The integers index into
     * the array d_coarsen_classes_data_items.
     */
-   tbox::Array<tbox::List<int> > d_equivalence_class_ids;
+   tbox::Array<tbox::List<int> > d_equivalence_class_indices;
 
    /*!
     * The number of coarsen items that have been registered.

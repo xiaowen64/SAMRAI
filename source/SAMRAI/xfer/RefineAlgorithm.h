@@ -560,7 +560,7 @@ public:
     * stencil requirements, etc.).  However, the specific source, destination
     * patch data ids and refine operators can be different.  The specific
     * time interpolation operators and variable fill patterns must be
-    * the same.
+    * the same.  See RefineClasses::classesMatch() for more details.
     *
     * @return true if schedule reset is valid; false otherwise.
     *

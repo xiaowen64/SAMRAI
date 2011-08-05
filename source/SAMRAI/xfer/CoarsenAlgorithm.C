@@ -165,7 +165,7 @@ bool CoarsenAlgorithm::checkConsistency(
    TBOX_ASSERT(!schedule.isNull());
 
    return d_coarsen_classes->
-          checkConsistency(schedule->getEquivalenceClasses());
+          classesMatch(schedule->getEquivalenceClasses());
 }
 
 void CoarsenAlgorithm::resetSchedule(
@@ -174,12 +174,12 @@ void CoarsenAlgorithm::resetSchedule(
 
    TBOX_ASSERT(!schedule.isNull());
 
-   if (d_coarsen_classes->checkConsistency(schedule->getEquivalenceClasses())) {
+   if (d_coarsen_classes->classesMatch(schedule->getEquivalenceClasses())) {
       schedule->reset(d_coarsen_classes);
    } else {
       TBOX_ERROR("CoarsenAlgorithm::resetSchedule error..."
          << "\n CoarsenClasses object passed to reset routine"
-         << "\n inconsistent with that owned by existing schedule."
+         << "\n does not match that owned by existing schedule."
          << std::endl);
    }
 }

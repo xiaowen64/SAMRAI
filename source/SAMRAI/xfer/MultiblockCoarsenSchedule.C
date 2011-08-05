@@ -834,7 +834,7 @@ void MultiblockCoarsenSchedule::constructScheduleTransactions(
               l; l++) {
             const CoarsenClasses::Data& item =
                d_coarsen_classes->getCoarsenItem(l());
-            TBOX_ASSERT(item.d_class_id == nc);
+            TBOX_ASSERT(item.d_class_index == nc);
 
             const int citem_count = item.d_tag;
             transactions[citem_count] =
@@ -1024,13 +1024,13 @@ void MultiblockCoarsenSchedule::setCoarsenItems(
  * Private utility function to check coarsen items in initial setup to   *
  * see whether source and destination patch data components have         *
  * sufficient ghost cell widths to satisfy the "ghost width to coarsen"  *
- * functionality described in the CoarsenAlgorithm class header.   *
+ * functionality described in the CoarsenAlgorithm class header.         *
  * Specifically, the destination data must have a ghost cell width at    *
  * least as large as the ghost cell width to coarsen.  The source data   *
  * must have a ghost cell width at least as large as the ghost cell      *
  * width to coarsen refined to the source (finer) level index space.     *
  * Other checks are also performed here by calling the                   *
- * CoarsenClasses::checkCoarsenItem() routine.                     *
+ * CoarsenClasses::itemIsValid() routine.                                *
  *                                                                       *
  * ***********************************************************************
  */
@@ -1052,7 +1052,7 @@ void MultiblockCoarsenSchedule::initialCheckCoarsenClassItems() const
       const xfer::CoarsenClasses::Data * const crs_item = d_coarsen_items[ici];
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-      if (d_coarsen_classes->checkCoarsenItem(*crs_item, pd)) {
+      if (d_coarsen_classes->itemIsValid(*crs_item, pd)) {
 #endif
 
       const int dst_id = crs_item->d_dst;
