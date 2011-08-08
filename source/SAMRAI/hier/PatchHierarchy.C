@@ -85,16 +85,7 @@ PatchHierarchy::PatchHierarchy(
    d_patch_level_factory = new PatchLevelFactory;
    d_number_blocks = d_grid_geometry->getNumberBlocks();
 
-   /*
-    * Grab the physical domain (including periodic images) from the
-    * GridGeometry and set up domain data dependent on it.
-    */
-   tbox::Array<MappedBoxSet> domain_mapped_boxes(d_number_blocks);
-   for (int nb = 0; nb < d_number_blocks; nb++ ) {
-      geometry->computePhysicalDomain(domain_mapped_boxes[nb],
-         IntVector::getOne(d_dim), BlockId(nb));
-   }
-   setupDomainData(domain_mapped_boxes);
+   setupDomainData();
 
    d_individual_cwrs = s_class_cwrs;
 
@@ -673,19 +664,18 @@ void PatchHierarchy::removePatchLevel(
  ****************************************************************************
  */
 
-void PatchHierarchy::setupDomainData(
-   const tbox::Array<MappedBoxSet>& domain_mapped_boxes)
+void PatchHierarchy::setupDomainData()
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
-   for (int nb = 0; nb < d_number_blocks; nb++) {
-      for (MappedBoxSet::const_iterator ni = domain_mapped_boxes[nb].begin();
-           ni != domain_mapped_boxes[nb].end();
-           ++ni) {
-         TBOX_ASSERT(ni->getOwnerRank() == 0);
-      }
-   }
-#endif
 
+   /*
+    * Grab the physical domain (including periodic images) from the
+    * GridGeometry and set up domain data dependent on it.
+    */
+   tbox::Array<MappedBoxSet> domain_mapped_boxes(d_number_blocks);
+   for (int nb = 0; nb < d_number_blocks; nb++ ) {
+      d_grid_geometry->computePhysicalDomain(domain_mapped_boxes[nb],
+         IntVector::getOne(d_dim), BlockId(nb));
+   }
 
    // Initialize the multiblock domain.
    if ( d_number_blocks == 1 ) {

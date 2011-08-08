@@ -881,19 +881,13 @@ private:
     * @brief Set the various physical domain description in various
     * forms.
     *
-    * The input MappedBoxSet must include the periodic image
-    * MappedBoxes, if the domain is periodic.
-    *
     * PatchHierarchy saves the global physical domain on every
     * processor.  Many loops look through the entire global boxes
     * defining the domain.  For best performance, simplify the
     * physical domain as much as possible before setting it.
-    *
-    * @param[in]  domain_mapped_boxes
     */
    void
-   setupDomainData(
-      const tbox::Array<MappedBoxSet>& domain_mapped_boxes);
+   setupDomainData();
 
    /*!
     * @brief Set up things for the entire class.
