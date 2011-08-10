@@ -393,6 +393,8 @@ void OverlapConnectorAlgorithm::shrinkConnectorWidth(
       connector.getBase().getRefinementRatio() !=
       connector.getHead().getRefinementRatio();
 
+   const tbox::ConstPointer<hier::GridGeometry> &grid_geom(connector.getBase().getGridGeometry());
+
    for (NeighborhoodSet::iterator ei = neighborhood_set.begin();
         ei != neighborhood_set.end(); ++ei) {
       const BoxId& mapped_box_id = ei->first;
@@ -408,6 +410,12 @@ void OverlapConnectorAlgorithm::shrinkConnectorWidth(
            na != nabrs.end(); /* incremented in loop */) {
          const Box& nabr = *na;
          hier::Box nabr_box = nabr;
+         if ( nabr.getBlockId() != mapped_box.getBlockId() ) {
+            grid_geom->translateBox(nabr_box,
+                                    connector.getHead().getRefinementRatio(),
+                                    mapped_box.getBlockId(),
+                                    nabr.getBlockId() );
+         }
          if (head_coarser) nabr_box.refine(connector.getRatio());
          if (!mapped_box_box.intersects(nabr_box)) {
             nabrs.erase(na++);
