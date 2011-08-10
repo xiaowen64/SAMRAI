@@ -193,6 +193,17 @@ public:
     * MappedBoxLevels involved.  Bridging is meant to be fast and
     * scalable.
     *
+    * @li Periodic relationships are automatically generated if a head
+    * Box in its shifted position overlaps the grown base Box.
+    * However, because neighbors may be remote, we cannot scalably
+    * verify that the periodic neighbors actually exist in the heads
+    * of the output Connectors.  Spurious periodic relationships may
+    * be generated when the periodic image simply has not be added to
+    * the head or when parts of east or west lie outside the domain
+    * extents.  They can be discarded using
+    * Connector::removePeriodicRelationships and properly regenerated
+    * using MappedBoxLevelConnectorUtils.
+    *
     * @param[out] west_to_east
     * @param[out] east_to_west
     * @param[in] west_to_center
