@@ -3579,7 +3579,7 @@ void RefineSchedule::findEnconUnfilledBoxes(
                                            src_block_id); 
 
                unfilled_encon_nbr_boxes[src_block_id].removeIntersections(
-                  src_mapped_box);
+                  transformed_src_box);
 
             }
          }
