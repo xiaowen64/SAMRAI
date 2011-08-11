@@ -116,8 +116,8 @@ RefineSchedule::RefineSchedule(
    d_max_scratch_gcw(dst_level->getDim()),
    d_boundary_fill_ghost_width(dst_level->getDim()),
    d_periodic_shift(dst_level->getDim()),
-   d_unfilled_mapped_box_level(dst_level->getDim()),
-   d_unfilled_encon_mb_level(dst_level->getDim()),
+   d_unfilled_mapped_box_level(),
+   d_unfilled_encon_box_level(),
    d_src_masks(dst_level->getDim()),
    d_dst_level_fill_pattern(dst_level_fill_pattern),
    d_constructing_internal_schedule(false)
@@ -235,14 +235,14 @@ RefineSchedule::RefineSchedule(
     * schedules that do not do anything to fill the parts of the
     * destination that can't be filled directly from the source.
     */ 
-   MappedBoxLevel unused_unfilled_mapped_box_level(dim);
-   Connector unused_dst_to_unfilled;
-   MappedBoxLevel unused_unfilled_encon_mb_level(dim);
-   Connector unused_encon_to_unfilled_encon;
+   tbox::Pointer<MappedBoxLevel> unused_unfilled_mapped_box_level;
+   tbox::Pointer<Connector> unused_dst_to_unfilled;
+   tbox::Pointer<MappedBoxLevel> unused_unfilled_encon_box_level;
+   tbox::Pointer<Connector> unused_encon_to_unfilled_encon;
    generateCommunicationSchedule(
       unused_unfilled_mapped_box_level,
       unused_dst_to_unfilled,
-      unused_unfilled_encon_mb_level,
+      unused_unfilled_encon_box_level,
       unused_encon_to_unfilled_encon,
       dst_to_src,
       src_to_dst,
@@ -304,8 +304,8 @@ RefineSchedule::RefineSchedule(
    d_max_scratch_gcw(dst_level->getDim()),
    d_boundary_fill_ghost_width(dst_level->getDim()),
    d_periodic_shift(dst_level->getDim()),
-   d_unfilled_mapped_box_level(dst_level->getDim()),
-   d_unfilled_encon_mb_level(dst_level->getDim()),
+   d_unfilled_mapped_box_level(),
+   d_unfilled_encon_box_level(),
    d_src_masks(dst_level->getDim()),
    d_dst_level_fill_pattern(dst_level_fill_pattern),
    d_constructing_internal_schedule(false)
@@ -484,8 +484,8 @@ RefineSchedule::RefineSchedule(
    d_max_scratch_gcw(dst_level->getDim()),
    d_boundary_fill_ghost_width(dst_level->getDim()),
    d_periodic_shift(dst_level->getDim()),
-   d_unfilled_mapped_box_level(dst_level->getDim()),
-   d_unfilled_encon_mb_level(dst_level->getDim()),
+   d_unfilled_mapped_box_level(),
+   d_unfilled_encon_box_level(),
    d_src_masks(dst_level->getDim()),
    d_constructing_internal_schedule(true)
 {
@@ -790,12 +790,12 @@ void RefineSchedule::finishScheduleConstruction(
     * in the hierarchy.
     */
 
-   Connector dst_to_unfilled;
+   tbox::Pointer<Connector> dst_to_unfilled;
 
    tbox::Pointer<hier::GridGeometry> grid_geometry(
       d_dst_level->getGridGeometry());
    const int nblocks = grid_geometry->getNumberBlocks();
-   Connector encon_to_unfilled_encon;
+   tbox::Pointer<Connector> encon_to_unfilled_encon;
 
    if (s_extra_debug) {
       tbox::plog << "finishScheduleConstruction in recursion_level="
@@ -815,31 +815,34 @@ void RefineSchedule::finishScheduleConstruction(
        * There is no source level, so the entire fill_mapped_box_level
        * is the unfilled_mapped_box_level
        */
-      d_unfilled_mapped_box_level = fill_mapped_box_level;
-      dst_to_unfilled.initialize(
+      d_unfilled_mapped_box_level =
+         new hier::MappedBoxLevel(fill_mapped_box_level);
+      dst_to_unfilled = new Connector(
          dst_mapped_box_level,
-         d_unfilled_mapped_box_level,
+         *d_unfilled_mapped_box_level,
          dst_to_fill.getConnectorWidth(),
          dst_to_fill.getNeighborhoodSets(),
          MappedBoxLevel::DISTRIBUTED);
-      dst_to_unfilled.setConnectorType(hier::Connector::BASE_GENERATED);
+      dst_to_unfilled->setConnectorType(hier::Connector::BASE_GENERATED);
 
       /*
        * Here we determine if any of d_unfilled_mapped_box_level touches
        * enhanced connectivity, in which case boxes will need to be
-       * added to d_unfilled_encon_mb_level.
+       * added to d_unfilled_encon_box_level.
        */
       if (nblocks > 1) {
          createUnfilledEnconLevelWithNoSource(
             encon_to_unfilled_encon,
             dst_to_fill);
-      }
+      } else {
+         encon_to_unfilled_encon = new hier::Connector();
+      } 
 
    } else {
       generateCommunicationSchedule(
          d_unfilled_mapped_box_level,
          dst_to_unfilled,
-         d_unfilled_encon_mb_level,
+         d_unfilled_encon_box_level,
          encon_to_unfilled_encon,
          dst_to_src,
          src_to_dst,
@@ -852,15 +855,15 @@ void RefineSchedule::finishScheduleConstruction(
                  << recursion_level << " next_coarser_ln=" << next_coarser_ln
                  << " after computing unfilled boxes."
                  << "\nd_unfilled_mapped_box_level:\n"
-                 << d_unfilled_mapped_box_level.format("UF->", 2)
+                 << d_unfilled_mapped_box_level->format("UF->", 2)
                  << "\ndst_to_unfilled:\n"
-                 << dst_to_unfilled.format("DUF->", 2)
+                 << dst_to_unfilled->format("DUF->", 2)
                  << std::endl;
    }
 #ifdef DEBUG_CHECK_ASSERTIONS
    for ( int bn=0; bn<nblocks; ++bn ) {
       TBOX_ASSERT(fill_mapped_box_level.getLocalBoundingBox(bn).contains(
-                     d_unfilled_mapped_box_level.getLocalBoundingBox(bn)));
+                     d_unfilled_mapped_box_level->getLocalBoundingBox(bn)));
    }
 #endif
 
@@ -904,7 +907,7 @@ void RefineSchedule::finishScheduleConstruction(
 
       // Shearing for the mapped_box_level.
       Connector unfilled_to_periodic_domain(
-         d_unfilled_mapped_box_level,
+         *d_unfilled_mapped_box_level,
          periodic_domain_mapped_box_level,
          dst_to_fill.getConnectorWidth());
       oca.findOverlaps(unfilled_to_periodic_domain);
@@ -917,11 +920,11 @@ void RefineSchedule::finishScheduleConstruction(
          zero_vector);
       t_modify_connector->start();
       hier::MappingConnectorAlgorithm mca;
-      mca.modify(dst_to_unfilled,
+      mca.modify(*dst_to_unfilled,
          unfilled_to_sheared,
-         &d_unfilled_mapped_box_level);
+         d_unfilled_mapped_box_level.getPointer());
       t_modify_connector->stop();
-      dst_to_unfilled.eraseEmptyNeighborSets();
+      dst_to_unfilled->eraseEmptyNeighborSets();
 
       t_shear->stop();
 
@@ -929,11 +932,11 @@ void RefineSchedule::finishScheduleConstruction(
 
    t_get_global_mapped_box_count->barrierAndStart();
    const bool need_to_fill =
-      (d_unfilled_mapped_box_level.getGlobalNumberOfBoxes() > 0);
+      (d_unfilled_mapped_box_level->getGlobalNumberOfBoxes() > 0);
    bool need_to_fill_encon = false;
    if (nblocks > 1) {
       need_to_fill_encon =
-         (d_unfilled_encon_mb_level.getGlobalNumberOfBoxes() > 0);
+         (d_unfilled_encon_box_level->getGlobalNumberOfBoxes() > 0);
    }
 
    t_get_global_mapped_box_count->stop();
@@ -971,8 +974,8 @@ void RefineSchedule::finishScheduleConstruction(
             << "\n No coarser levels...will not fill from coarser."
             << "\n dst_mapped_box_level:\n" << dst_mapped_box_level.format("DEST->", 2)
             << "\n dst_to_fill:\n" << dst_to_fill.format("DF->", 2)
-            << "\n d_unfilled_mapped_box_level:\n" << d_unfilled_mapped_box_level.format("UF->", 2)
-            << "\n dst_to_unfilled:\n" << dst_to_unfilled.format("DU->", 2)
+            << "\n d_unfilled_mapped_box_level:\n" << d_unfilled_mapped_box_level->format("UF->", 2)
+            << "\n dst_to_unfilled:\n" << dst_to_unfilled->format("DU->", 2)
             << "\n dst_to_src:\n" << dst_to_src.format("DS->", 2)
             << std::endl);
       } else {
@@ -1044,12 +1047,12 @@ void RefineSchedule::finishScheduleConstruction(
       hier::MappedBoxLevel supp_mapped_box_level(
          hiercoarse_level->getRatioToLevelZero(),
          hiercoarse_level->getGridGeometry(),
-         d_unfilled_mapped_box_level.getMPI());
+         d_unfilled_mapped_box_level->getMPI());
 
       hier::NeighborhoodSet dst_eto_supp, supp_eto_unfilled;
 
       const hier::NeighborhoodSet& dst_eto_unfilled =
-         dst_to_unfilled.getNeighborhoodSets();
+         dst_to_unfilled->getNeighborhoodSets();
 
       t_build_supp_mapped_box_level->start();
       /*
@@ -1174,8 +1177,8 @@ void RefineSchedule::finishScheduleConstruction(
 
       d_supp_to_unfilled.initialize(
          supp_mapped_box_level,
-         d_unfilled_mapped_box_level,
-         hier::IntVector(dim, 0),
+         *d_unfilled_mapped_box_level,
+         hier::IntVector::getZero(dim),
          supp_eto_unfilled);
       d_supp_to_unfilled.setConnectorType(hier::Connector::BASE_GENERATED);
 
@@ -1906,7 +1909,7 @@ void RefineSchedule::finishScheduleConstruction(
          hiercoarse_level,
          dst_is_supplemental_level,
          src_growth_to_nest_dst,
-         encon_to_unfilled_encon);
+         *encon_to_unfilled_encon);
    }
 
    if (s_extra_debug) {
@@ -1938,10 +1941,10 @@ RefineSchedule::createEnconFillSchedule(
 
    const int next_coarser_ln = hiercoarse_level->getLevelNumber();
 
-   hier::MappedBoxLevel supp_encon_mb_level(
+   hier::MappedBoxLevel supp_encon_box_level(
       hiercoarse_level->getRatioToLevelZero(),
       hiercoarse_level->getGridGeometry(),
-      d_unfilled_mapped_box_level.getMPI());
+      d_unfilled_mapped_box_level->getMPI());
 
    hier::NeighborhoodSet encon_to_supp_encon_nbrhood_set;
    hier::NeighborhoodSet supp_encon_to_unfilled_nbrhood_set;
@@ -1965,7 +1968,7 @@ RefineSchedule::createEnconFillSchedule(
       const NeighborSet& encon_unfilled_parts = ei->second;
 
       /*
-       * For each unfilled box, coarsen and add to supp_encon_mb_level.
+       * For each unfilled box, coarsen and add to supp_encon_box_level.
        */
       for (hier::MappedBoxSet::const_iterator ni =
          encon_unfilled_parts.begin();
@@ -1976,10 +1979,10 @@ RefineSchedule::createEnconFillSchedule(
          supp_box.coarsen(dst_hiercoarse_ratio);
 
          const hier::Box& supp_mapped_box =
-            *supp_encon_mb_level.addBox(supp_box, (*ni).getBlockId());
+            *supp_encon_box_level.addBox(supp_box, (*ni).getBlockId());
 
          /*
-          * Set up neighbor relationships for supp_encon_mb_level
+          * Set up neighbor relationships for supp_encon_box_level
           */
          NeighborSet& encon_to_supp_encon_nabrs =
             encon_to_supp_encon_nbrhood_set[encon_mapped_box_mbid];
@@ -2000,15 +2003,15 @@ RefineSchedule::createEnconFillSchedule(
     */
    d_encon_to_supp_encon.swapInitialize(
       *(d_encon_level->getMappedBoxLevel()),
-      supp_encon_mb_level,
+      supp_encon_box_level,
       hier::IntVector::getZero(dim),
       encon_to_supp_encon_nbrhood_set);
    d_encon_to_supp_encon.setConnectorType(
       hier::Connector::BASE_GENERATED);
 
    d_supp_encon_to_unfilled_encon.initialize(
-      supp_encon_mb_level,
-      d_unfilled_encon_mb_level,
+      supp_encon_box_level,
+      *d_unfilled_encon_box_level,
       hier::IntVector::getZero(dim),
       supp_encon_to_unfilled_nbrhood_set);
    d_supp_encon_to_unfilled_encon.setConnectorType(
@@ -2197,7 +2200,7 @@ RefineSchedule::createEnconFillSchedule(
     * Create d_supp_encon_level
     */
    d_supp_encon_level = new hier::PatchLevel(
-      supp_encon_mb_level,
+      supp_encon_box_level,
       d_dst_level->getGridGeometry(),
       hiercoarse_level->getPatchDescriptor());
    d_supp_encon_level->setLevelNumber(next_coarser_ln);
@@ -2278,11 +2281,11 @@ RefineSchedule::createEnconFillSchedule(
  */
 void
 RefineSchedule::createUnfilledEnconLevelWithNoSource(
-   hier::Connector& encon_to_unfilled_encon,
+   tbox::Pointer<hier::Connector>& encon_to_unfilled_encon,
    const hier::Connector& dst_to_fill)
 {
    hier::MappedBoxSet unfilled_encon_boxes;
-   hier::LocalId last_unfilled_index(-1);
+   hier::LocalId last_unfilled_local_id(-1);
 
    hier::NeighborhoodSet unfilled_encon_nbrhood_set;
 
@@ -2390,7 +2393,7 @@ RefineSchedule::createUnfilledEnconLevelWithNoSource(
 
                               hier::Box unfilled_mapped_box(
                                  unfilled_box,
-                                 ++last_unfilled_index,
+                                 ++last_unfilled_local_id,
                                  fill_mapped_box.getOwnerRank(),
                                  nbr_blk_id);
 
@@ -2424,19 +2427,19 @@ RefineSchedule::createUnfilledEnconLevelWithNoSource(
    /*
     * Initialize MappedBoxLevel and Connector.
     */
-   d_unfilled_encon_mb_level.initialize(
+   d_unfilled_encon_box_level = new MappedBoxLevel(
       unfilled_encon_boxes,
       dst_mapped_box_level.getRefinementRatio(),
       dst_mapped_box_level.getGridGeometry(),
       dst_mapped_box_level.getMPI());
 
-   encon_to_unfilled_encon.initialize(
+   encon_to_unfilled_encon = new Connector(
       *(d_encon_level->getMappedBoxLevel()),
-      d_unfilled_encon_mb_level,
+      *d_unfilled_encon_box_level,
       dst_to_fill.getConnectorWidth(),
       unfilled_encon_nbrhood_set,
       MappedBoxLevel::DISTRIBUTED);
-   encon_to_unfilled_encon.setConnectorType(
+   encon_to_unfilled_encon->setConnectorType(
       hier::Connector::BASE_GENERATED);
 
 }
@@ -3152,29 +3155,20 @@ void RefineSchedule::computeRefineOverlaps(
  *
  * Generate communication schedule routine creates transactions to move
  * data from interiors of the source space on the source level into the
- * specified fill box regions of the destination level.  Each fill box
- * will typically be the interior plus max ghost cells over all data
- * components on the destination region.  If the source and the scratch
- * are the same and the source and destination levels  are the same,
- * then there is no need to copy on the interiors for the same patch.
+ * specified fill box regions of the destination level.
  *
  * The resulting transactions will only fill the regions of intersection
  * between the fill_boxes and destination level boxes.  The remaining
  * box regions are returned in unfilled_boxes.
  *
- * This main schedule generation routine which passes control to one
- * of the algorithmic variations below based on boolean parameters set
- * to default settings in the constructors and possibly changed via
- * an input file.
- *
  *********************************************************************
  */
 
 void RefineSchedule::generateCommunicationSchedule(
-   MappedBoxLevel& unfilled_mapped_box_level,
-   Connector& dst_to_unfilled,
-   hier::MappedBoxLevel& unfilled_encon_mb_level,
-   Connector& encon_to_unfilled_encon,
+   tbox::Pointer<MappedBoxLevel>& unfilled_mapped_box_level,
+   tbox::Pointer<Connector>& dst_to_unfilled,
+   tbox::Pointer<MappedBoxLevel>& unfilled_encon_box_level,
+   tbox::Pointer<Connector>& encon_to_unfilled_encon,
    const Connector& dst_to_src,
    const Connector& src_to_dst,
    const Connector& dst_to_fill,
@@ -3193,15 +3187,10 @@ void RefineSchedule::generateCommunicationSchedule(
          src_to_dst.assertTransposeCorrectness(dst_to_src);
       }
    }
-   if (s_extra_debug) {
-      tbox::plog
-         << "generateCommunicationSchedule: dst_to_src:" << dst_to_src.format("\t", 2)
-         << "generateCommunicationSchedule: src_to_dst:" << src_to_dst.format("\t", 2)
-         << "generateCommunicationSchedule: dst_to_fill:" << dst_to_fill.format("\t", 2);
-   }
+
    /*
     * We invert the edges so that the src transactions on the local
-    * process is created in the same order the dst transactions
+    * process are created in the same order the dst transactions
     * are created on remote processes.  The ordering is how the
     * source and destination transactions are matched up on the
     * receiving process.  We chose to order the transactions
@@ -3209,36 +3198,30 @@ void RefineSchedule::generateCommunicationSchedule(
     * grouped together, then all transactions for the next
     * dst Box, and so on).
     */
-   const hier::NeighborhoodSet& dst_eto_src = dst_to_src.getNeighborhoodSets();
+   const hier::NeighborhoodSet& dst_to_src_edges =
+      dst_to_src.getNeighborhoodSets();
 
    const MappedBoxLevel& dst_mapped_box_level = dst_to_src.getBase();
 
-
    /*
-    * Construct sending transactions for local src mapped_boxes (except
-    * for transactions with local dst mapped_boxes).
-    */
-   if (s_extra_debug) {
-      tbox::plog << "Constructing send transactions" << std::endl;
-   }
-   t_construct_send_trans->start();
-
-   /*
-    * Restructure the src_to_dst edge data to arange neighbors by the
+    * Reorder the src_to_dst edge data to arrange neighbors by the
     * dst mapped_boxes, as required to match the transaction ordering
-    * on the receiving processors.  At the same time, shift src-dst
-    * pairs to make the dst shifts zero.
+    * on the receiving processors.
     */
-   FullNeighborhoodSet src_eto_dst_bydst;
+   FullNeighborhoodSet src_to_dst_edges_bydst;
    t_invert_edges->start();
-   restructureNeighborhoodSetsByDstNodes(src_eto_dst_bydst, src_to_dst);
+   reorderNeighborhoodSetsByDstNodes(src_to_dst_edges_bydst, src_to_dst);
    t_invert_edges->stop();
+
+
+   t_construct_send_trans->start();
 
    /*
     * Construct transactions with local source and remote destination.
     */
-   for (FullNeighborhoodSet::const_iterator ei = src_eto_dst_bydst.begin();
-        ei != src_eto_dst_bydst.end(); ++ei) {
+   for (FullNeighborhoodSet::const_iterator
+        ei = src_to_dst_edges_bydst.begin();
+        ei != src_to_dst_edges_bydst.end(); ++ei) {
 
       /*
        * dst_mapped_box can be remote (by definition of FullNeighborhoodSet).
@@ -3249,9 +3232,9 @@ void RefineSchedule::generateCommunicationSchedule(
       const hier::MappedBoxSet& local_src_mapped_boxes = ei->second;
       TBOX_ASSERT(!dst_mapped_box.isPeriodicImage());
 
-      FillSet::const_iterator dst_fill_boxes_ =
+      FillSet::const_iterator dst_fill_iter =
          dst_to_fill_on_src_proc.find(dst_mapped_box.getGlobalId());
-      if (dst_fill_boxes_ == dst_to_fill_on_src_proc.end()) {
+      if (dst_fill_iter == dst_to_fill_on_src_proc.end()) {
          /*
           * Missing fill boxes should indicate that the dst mapped_box
           * has no fill box.  One way this is possible is for
@@ -3260,189 +3243,411 @@ void RefineSchedule::generateCommunicationSchedule(
           */
          continue;
       }
-      const MappedBoxVector& dst_fill_boxes = dst_fill_boxes_->second;
 
-      /*
-       * Construct transactions for data going from local source mapped_boxes
-       * to remote dst mapped_boxes.
-       */
+      const MappedBoxVector& dst_fill_boxes = dst_fill_iter->second;
+
       for (hier::MappedBoxSet::const_iterator
            ni = local_src_mapped_boxes.begin();
            ni != local_src_mapped_boxes.end(); ++ni) {
          const hier::Box& src_mapped_box = *ni;
-         if (src_mapped_box.getOwnerRank() == dst_mapped_box.getOwnerRank()) {
-            /*
-             * Disregard local dst_mapped_box to avoid duplicating same
-             * transactions created by the second loop below.
-             */
-            continue;
-         }
 
-         constructScheduleTransactions(
-            dst_fill_boxes,
-            dst_mapped_box,
-            src_mapped_box,
-            use_time_interpolation);
+         if (src_mapped_box.getOwnerRank() != dst_mapped_box.getOwnerRank()) {
+
+            constructScheduleTransactions(
+               dst_fill_boxes,
+               dst_mapped_box,
+               src_mapped_box,
+               use_time_interpolation);
+
+         }
       }
 
-   }
+   } // end send transactions loop
+
    t_construct_send_trans->stop();
 
-   /*
-    * Construct transactions for local destination Boxes, whether from
-    * local or remote sources.  Set up unfilled_mapped_box_level
-    * and connector from destination to unfilled_mapped_box_level.
-    */
-   if (s_extra_debug) {
-      tbox::plog << "Constructing receive and copy transactions" << std::endl;
-   }
-   const hier::NeighborhoodSet& dst_eto_fill = dst_to_fill.getNeighborhoodSets();
-   hier::MappedBoxSet unfilled_mapped_boxes;
-   hier::MappedBoxSet unfilled_encon_boxes;
-   hier::NeighborhoodSet dst_eto_unfilled;
-   hier::LocalId last_unfilled_index(-1);
+   const hier::NeighborhoodSet& dst_to_fill_edges =
+      dst_to_fill.getNeighborhoodSets();
 
+   hier::MappedBoxSet level_unfilled_boxes;
+   hier::MappedBoxSet level_encon_unfilled_boxes;
+   hier::NeighborhoodSet dst_to_unfilled_nbrhood_set;
    hier::NeighborhoodSet encon_to_unfilled_encon_nbrhood_set;
 
+   hier::LocalId last_unfilled_local_id(-1);
+
    t_construct_recv_trans->start();
-   for (hier::NeighborhoodSet::const_iterator cf = dst_eto_fill.begin();
-        cf != dst_eto_fill.end(); ++cf) {
+   for (hier::NeighborhoodSet::const_iterator cf = dst_to_fill_edges.begin();
+        cf != dst_to_fill_edges.end(); ++cf) {
 
       const hier::BoxId& dst_mapped_box_id(cf->first);
       const hier::Box& dst_mapped_box = *dst_mapped_box_level.getMappedBox(
             dst_mapped_box_id);
+      const hier::BlockId& dst_block_id = dst_mapped_box_id.getBlockId();
 
-      const NeighborSet& fill_nabrs = cf->second;
+      const tbox::Dimension& dim = dst_mapped_box.getDim();
 
-      hier::NeighborhoodSet::const_iterator cs =
-         dst_eto_src.find(dst_mapped_box_id);
+      const hier::MappedBoxSet& fill_nabrs = cf->second;
 
       /*
-       * There are two possible code paths here.
-       *
-       * If dst_mapped_box has any source neighbors in the NeighborhoodSet
-       * dst_eto_src, then we create transactions to communicate data from
-       * the source level to the patch associated with dst_mapped_box.  Any
-       * portion of the fill boxes that cannot be filled via these transactions
-       * will be considered unfilled. 
-       *
-       * If dst_mapped_box does not have source neighbors in dst_eto_src,
-       * then no transactions will be created, and all of the fill boxes
-       * will be considered unfilled.
-       */
-
-      if (cs != dst_eto_src.end()) {
-
-         /*
-          * dst_mapped_box has overlaps with src mapped_box_level.
-          * Fill what we can using src and add the remaining to unfilled.
-          */
-
-         createTransactionsAndUnfilledBoxes(unfilled_mapped_boxes, 
-                                            unfilled_encon_boxes,
-                                            dst_eto_unfilled,
-                                            encon_to_unfilled_encon_nbrhood_set,
-                                            last_unfilled_index,
-                                            dst_mapped_box,
-                                            fill_nabrs,
-                                            cs->second,
-                                            use_time_interpolation);
-
-      } else {
-
-         if (nblocks == 1) {
-            /*
-             * dst_mapped_box does not overlap with any mapped_boxes in src.
-             * All of its fill boxes go into unfilled.
-             */
-            NeighborSet& unfilled_nabrs = dst_eto_unfilled[dst_mapped_box_id];
-            for (NeighborSet::const_iterator na = fill_nabrs.begin();
-                 na != fill_nabrs.end(); ++na) {
-            
-               const hier::Box& fill_nabr = *na;
-
-               hier::Box unfilled_mapped_box(
-                  fill_nabr,
-                  ++last_unfilled_index,
-                  fill_nabr.getOwnerRank(),
-                  fill_nabr.getBlockId());
-
-               unfilled_mapped_boxes.insert(
-                  unfilled_mapped_boxes.end(),
-                  unfilled_mapped_box); 
-
-               unfilled_nabrs.insert(
-                  unfilled_nabrs.end(),
-                  unfilled_mapped_box);
-            }
-         } else {
-
-            createUnfilledMappedBoxesWithNoSource(
-               unfilled_mapped_boxes,
-               unfilled_encon_boxes,
-               dst_eto_unfilled,
-               encon_to_unfilled_encon_nbrhood_set,
-               last_unfilled_index,
-               dst_mapped_box,
-               fill_nabrs);
-         }
-
+       * TODO: Here we are copying into more containers than we really want to,
+       * because constructScheduleTransactions requires a vector, and the
+       * intersection operations used for unfilled boxes require lists.
+       */ 
+      MappedBoxVector fill_boxes_vector;
+      hier::BoxList fill_boxes_list(dim);
+      for (hier::MappedBoxSet::iterator bi = fill_nabrs.begin();
+           bi != fill_nabrs.end(); ++bi) {
+         fill_boxes_vector.push_back(*bi);
+         fill_boxes_list.appendItem(*bi);
       }
 
-   } // End loop through dst mapped_boxes.
+      /*
+       * If the destination box touches enhanced connectivity,
+       * encon_fill_boxes will hold the portion of fill_boxes_list that lies
+       * in the enhanced connectivity ghost region of the destination.
+       * Otherwise, encon_fill_boxes will be empty.
+       */
+      hier::BoxList encon_fill_boxes(dim);
+      if (nblocks > 1) {
+         findEnconFillBoxes(encon_fill_boxes,
+                            fill_boxes_list,
+                            dst_block_id);
+      }
+
+      /*
+       * unfilled_boxes_for_dst starts out containing the fill boxes
+       * for the current dst_mapped_box.  As transactions are created,
+       * the space covered by those transactions will be removed from this
+       * list, and whatever is left cannot be filled from the source level.
+       *
+       * The boxes in encon_fill_boxes, if any, are removed from
+       * unfilled_boxes_for_dst, because unfilled boxes at enhanced
+       * connectivity are handled separately at a later step.
+       */
+      hier::BoxList unfilled_boxes_for_dst(fill_boxes_list);
+      unfilled_boxes_for_dst.removeIntersections(encon_fill_boxes);
+
+      hier::NeighborhoodSet::const_iterator dst_to_src_iter =
+         dst_to_src_edges.find(dst_mapped_box_id);
+
+      if (dst_to_src_iter != dst_to_src_edges.end()) {
+         const hier::MappedBoxSet& src_mapped_boxes = dst_to_src_iter->second; 
+
+         for (hier::MappedBoxSet::const_iterator na = src_mapped_boxes.begin();
+              na != src_mapped_boxes.end(); ++na) {
+
+            const hier::Box& src_mapped_box = *na;
+            const hier::BlockId& src_block_id = src_mapped_box.getBlockId();
+
+            /*
+             * Remove the source box from the unfilled boxes list.  If
+             * necessary, the source box is transformed to the destination
+             * coordinate system.
+             *
+             * The removal of the source box is skipped if the source
+             * and destination are enhanced connectivity (singularity)
+             * neighbors, since the handling of unfilled boxes in this case
+             * is a separate step.
+             */
+            if (src_block_id != dst_block_id) {
+
+               if (!grid_geometry->areSingularityNeighbors(dst_block_id,
+                                                           src_block_id)) {
+
+                  hier::Box transformed_src_box(src_mapped_box);
+
+                  grid_geometry->translateBox(
+                     transformed_src_box,
+                     d_dst_level->getRatioToLevelZero(),
+                     dst_block_id,
+                     src_block_id);
+
+                  unfilled_boxes_for_dst.removeIntersections(
+                     transformed_src_box);
+ 
+               }
+            } else {
+               unfilled_boxes_for_dst.removeIntersections(
+                  src_mapped_box);
+            }
+            constructScheduleTransactions(
+               fill_boxes_vector,
+               dst_mapped_box,
+               src_mapped_box,
+               use_time_interpolation);
+
+         }
+      }
+
+      /*
+       * Add mapping information to unfilled boxes and add them to
+       * containers for the level.
+       */
+      if (unfilled_boxes_for_dst.size() > 0) {
+         NeighborSet& unfilled_nabrs =
+            dst_to_unfilled_nbrhood_set[dst_mapped_box_id];
+
+         for (hier::BoxList::Iterator bi(unfilled_boxes_for_dst);
+              bi; bi++) {
+
+            hier::Box unfilled_mapped_box(bi(),
+                                          ++last_unfilled_local_id,
+                                          dst_mapped_box.getOwnerRank(),
+                                          dst_block_id);
+
+            level_unfilled_boxes.insert(level_unfilled_boxes.end(),
+                                        unfilled_mapped_box);
+            unfilled_nabrs.insert(unfilled_nabrs.end(),
+                                  unfilled_mapped_box);
+
+         }
+      }
+
+      /*
+       * Call private method to handle unfilled boxes where the destination
+       * box touches enhanced connectivity.
+       */
+      if (encon_fill_boxes.size() > 0) {
+         findEnconUnfilledBoxes(
+            level_encon_unfilled_boxes,
+            encon_to_unfilled_encon_nbrhood_set,
+            last_unfilled_local_id,
+            dst_mapped_box,
+            dst_to_src,
+            encon_fill_boxes);
+      } 
+
+   } // End receive/copy transactions loop
    t_construct_recv_trans->stop();
 
-   unfilled_mapped_box_level.initialize(
-      unfilled_mapped_boxes,
+   unfilled_mapped_box_level = new MappedBoxLevel(
+      level_unfilled_boxes,
       dst_mapped_box_level.getRefinementRatio(),
       dst_mapped_box_level.getGridGeometry(),
       dst_mapped_box_level.getMPI());
 
-   dst_to_unfilled.initialize(
+   dst_to_unfilled = new Connector(
       dst_mapped_box_level,
-      unfilled_mapped_box_level,
+      *unfilled_mapped_box_level,
       dst_to_fill.getConnectorWidth(),
-      dst_eto_unfilled,
+      dst_to_unfilled_nbrhood_set,
       MappedBoxLevel::DISTRIBUTED);
-   dst_to_unfilled.setConnectorType(hier::Connector::BASE_GENERATED);
+   dst_to_unfilled->setConnectorType(hier::Connector::BASE_GENERATED);
 
-   const hier::MappedBoxLevel &fill_mapped_box_level(dst_to_fill.getHead());
-   for ( int bn=0; bn<nblocks; ++bn ) {
-      if ( !fill_mapped_box_level.getLocalBoundingBox(bn).isEmpty() &&
-           !fill_mapped_box_level.getLocalBoundingBox(bn).contains(
-             unfilled_mapped_box_level.getLocalBoundingBox(bn))) {
-         TBOX_ERROR(
-            "RefineSchedule::generateCommunicationSchedule: library error\n"
-            << "Unfilled bounding box "
-            << unfilled_mapped_box_level.getLocalBoundingBox(bn)
-            << "does not nest inside fill bounding box "
-            << dst_to_fill.getHead().getLocalBoundingBox(bn)
-            << " in block " << bn << ".\n"
-            << "fill:\n" << dst_to_fill.getHead().format("ERR:F-> ", 3)
-            << "unfilled:\n" << unfilled_mapped_box_level.format("ERR:U-> ", 3)
-            << "dst-->fill:\n" << dst_to_fill.format("ERR:DF->", 3)
-            << "dst-->unfilled:\n" << dst_to_fill.format("ERR:DU-> ", 3));
-      }
-   }
-
-   unfilled_encon_mb_level.initialize(
-      unfilled_encon_boxes,
+   unfilled_encon_box_level = new MappedBoxLevel(
+      level_encon_unfilled_boxes,
       dst_mapped_box_level.getRefinementRatio(),
       dst_mapped_box_level.getGridGeometry(),
       dst_mapped_box_level.getMPI());
 
-   encon_to_unfilled_encon.initialize(
+   encon_to_unfilled_encon = new Connector(
       *(d_encon_level->getMappedBoxLevel()),
-      unfilled_encon_mb_level,
+      *unfilled_encon_box_level,
       dst_to_fill.getConnectorWidth(),
       encon_to_unfilled_encon_nbrhood_set,
       MappedBoxLevel::DISTRIBUTED);
-   encon_to_unfilled_encon.setConnectorType(
+   encon_to_unfilled_encon->setConnectorType(
       hier::Connector::BASE_GENERATED);
-
 
    t_gen_comm_sched->stop();
 }
+
+/*
+ ***********************************************************************
+ * Given a BlockId and a list of fill boxes, populate encon_fill_boxes
+ * with the portion of the fill boxes that lie across an enhanced
+ * connectivity boundary from the destination block.
+ ***********************************************************************
+ */
+void RefineSchedule::findEnconFillBoxes(
+   hier::BoxList& encon_fill_boxes,
+   const hier::BoxList& fill_boxes_list,
+   const hier::BlockId& dst_block_id)
+{
+   TBOX_ASSERT(encon_fill_boxes.size() == 0);
+
+   tbox::Pointer<hier::GridGeometry> grid_geometry(
+      d_dst_level->getGridGeometry());
+
+   const int dst_blk = dst_block_id.getBlockValue();
+ 
+   const tbox::List<hier::GridGeometry::Neighbor>& neighbors =
+      grid_geometry->getNeighbors(dst_blk);
+
+   hier::BoxList encon_neighbor_list(encon_fill_boxes.getDim());
+   for (tbox::List<hier::GridGeometry::Neighbor>::Iterator
+        ni(neighbors); ni; ni++) {
+
+      if(ni().isSingularity()) {
+         encon_fill_boxes.unionBoxes(ni().getTranslatedDomain());
+      }
+
+   }
+
+   encon_fill_boxes.refine(d_dst_level->getRatioToLevelZero());
+
+   encon_fill_boxes.intersectBoxes(fill_boxes_list);
+
+   encon_fill_boxes.coalesceBoxes();
+}
+
+/*
+ ***********************************************************************
+ * Given a list of fill boxes for a destination box at enhanced
+ * connectivity, determine which fill boxes cannot be filled from the
+ * source level and add those unfilled boxes to the appropriate containers.
+ ***********************************************************************
+ */
+void RefineSchedule::findEnconUnfilledBoxes(
+   hier::MappedBoxSet& level_encon_unfilled_boxes,
+   hier::NeighborhoodSet& encon_to_unfilled_encon_nbrhood_set,
+   hier::LocalId& last_unfilled_local_id,
+   const hier::Box& dst_mapped_box,
+   const Connector& dst_to_src,
+   const hier::BoxList& encon_fill_boxes)
+{
+   tbox::Pointer<hier::GridGeometry> grid_geometry(
+      d_dst_level->getGridGeometry());
+
+   const hier::BoxId& dst_mapped_box_id = dst_mapped_box.getId();
+   const hier::BlockId& dst_block_id = dst_mapped_box_id.getBlockId();
+   const int dst_blk = dst_block_id.getBlockValue();
+
+   /*
+    * map container will hold unfilled boxes for each block that is
+    * an enhanced connectivity neighbor of the destination box.
+    *
+    * To start, each entry in the map will have the intersection of
+    * encon_fill_boxes and the neighboring block's domain, represented in
+    * the destination coordinate system.
+    */
+   std::map<hier::BlockId, hier::BoxList> unfilled_encon_nbr_boxes;
+
+   const tbox::List<hier::GridGeometry::Neighbor>& neighbors =
+      grid_geometry->getNeighbors(dst_blk);
+
+   for (tbox::List<hier::GridGeometry::Neighbor>::Iterator
+        ni(neighbors); ni; ni++) {
+
+      if(ni().isSingularity()) {
+         const hier::BlockId nbr_block_id(ni().getBlockNumber());
+
+         unfilled_encon_nbr_boxes[nbr_block_id].unionBoxes(
+            ni().getTranslatedDomain());
+         unfilled_encon_nbr_boxes[nbr_block_id].refine(
+            d_dst_level->getRatioToLevelZero());
+         unfilled_encon_nbr_boxes[nbr_block_id].intersectBoxes(
+            encon_fill_boxes);
+      }
+   }
+
+   const hier::NeighborhoodSet& dst_to_src_edges =
+      dst_to_src.getNeighborhoodSets();
+
+   /*
+    * If there are overlapping source boxes found in dst_to_src_edges,
+    * and if those source boxes lie across enhanced connectivity from
+    * the destination box, then we remove the source box from the
+    * source block's entry in the unfilled_encon_nbr_boxes map container.
+    */
+   hier::NeighborhoodSet::const_iterator dst_to_src_iter =
+      dst_to_src_edges.find(dst_mapped_box_id);
+
+   if (dst_to_src_iter != dst_to_src_edges.end()) {
+      const hier::MappedBoxSet& src_mapped_boxes = dst_to_src_iter->second;
+
+      /*
+       * If at enhanced connectivity, remove source box from container of
+       * unfilled boxes
+       */
+      for (hier::MappedBoxSet::const_iterator na = src_mapped_boxes.begin();
+           na != src_mapped_boxes.end(); ++na) {
+
+         const hier::Box& src_mapped_box = *na;
+         const hier::BlockId& src_block_id = src_mapped_box.getBlockId();
+
+         if (src_block_id != dst_block_id) {
+
+            if (grid_geometry->areSingularityNeighbors(dst_block_id,
+                                                       src_block_id)) {
+
+               unfilled_encon_nbr_boxes[src_block_id].removeIntersections(
+                  src_mapped_box);
+
+            }
+         }
+      }
+   }
+
+   /*
+    * If any unfilled boxes remain for any block in unfilled_encon_nbr_boxes,
+    * they need to be added to the output containers.
+    */
+   if (unfilled_encon_nbr_boxes.size() > 0) {
+
+      const hier::NeighborhoodSet& dst_to_encon_nbrhood_set =
+         d_dst_to_encon.getNeighborhoodSets();
+
+      hier::NeighborhoodSet::const_iterator find_encon_nabrs =
+         dst_to_encon_nbrhood_set.find(dst_mapped_box_id);
+
+      if (find_encon_nabrs != dst_to_encon_nbrhood_set.end()) {
+
+         const NeighborSet& dst_encon_nabrs = find_encon_nabrs->second;
+
+         for (NeighborSet::const_iterator de_iter = dst_encon_nabrs.begin();
+              de_iter != dst_encon_nabrs.end(); ++de_iter) {
+
+            const hier::BoxId& encon_mapped_box_id =
+               de_iter->getId();
+            const hier::BlockId& nbr_block_id =
+               encon_mapped_box_id.getBlockId();
+
+            NeighborSet& unfilled_nabrs =
+               encon_to_unfilled_encon_nbrhood_set[encon_mapped_box_id];
+
+            const hier::BoxList& unfilled_boxes =
+               unfilled_encon_nbr_boxes[nbr_block_id];
+
+            if (unfilled_boxes.size() > 0) {
+
+               /*
+                * The unfilled boxes are, at this point, represented in
+                * the destination coordinates.  Here they are transformed
+                * into the neighboring block's coordinates before being
+                * added to the output containers. 
+                */
+
+               for (hier::BoxList::Iterator bi(unfilled_boxes);
+                    bi; bi++) {
+
+                  hier::Box unfilled_box(bi());
+                  grid_geometry->translateBox(
+                     unfilled_box,
+                     d_dst_level->getRatioToLevelZero(),
+                     nbr_block_id,
+                     dst_block_id); 
+ 
+                  hier::Box unfilled_encon_box(unfilled_box,
+                                               ++last_unfilled_local_id,
+                                               dst_mapped_box.getOwnerRank(),
+                                               nbr_block_id);
+
+                  level_encon_unfilled_boxes.insert(
+                     level_encon_unfilled_boxes.end(),
+                     unfilled_encon_box);
+
+                  unfilled_nabrs.insert(unfilled_nabrs.end(),
+                                        unfilled_encon_box);
+
+               }
+            }
+         }
+      }
+   }
+}
+
 
 void
 RefineSchedule::createTransactionsAndUnfilledBoxes(
@@ -3649,7 +3854,7 @@ RefineSchedule::createTransactionsAndUnfilledBoxes(
             const hier::BoxList& unfilled_boxes =
                unfilled_box_for_encon[nbr_blk_id];
 
-            if (unfilled_boxes.size()) {
+            if (unfilled_boxes.size() > 0) {
 
                NeighborSet& unfilled_encon_nabrs =
                   encon_to_unfilled_encon_nbrhood_set[encon_mapped_box_id];
@@ -3808,7 +4013,7 @@ RefineSchedule::createUnfilledMappedBoxesWithNoSource(
 
    /*
     * Create Boxes from unfilled_box_for_encon, to be added
-    * to unfilled_encon_mb_level.  Also store the unfilled boxes
+    * to unfilled_encon_box_level.  Also store the unfilled boxes
     * in a BoxList in the destination coordinate system.
     */
    if (find_encon_nabrs != dst_to_encon_nbrhood_set.end()) {
@@ -3826,7 +4031,7 @@ RefineSchedule::createUnfilledMappedBoxesWithNoSource(
          const hier::BoxList& unfilled_boxes =
             unfilled_box_for_encon[nbr_blk_id];
 
-         if (unfilled_boxes.size()) {
+         if (unfilled_boxes.size() > 0) {
 
             NeighborSet& unfilled_encon_nabrs =
                encon_to_unfilled_encon_nbrhood_set[encon_mapped_box_id];
@@ -3928,7 +4133,7 @@ RefineSchedule::createUnfilledMappedBoxesWithNoSource(
  * shifts to be absorbed in the src Box.
  ***********************************************************************
  */
-void RefineSchedule::restructureNeighborhoodSetsByDstNodes(
+void RefineSchedule::reorderNeighborhoodSetsByDstNodes(
    FullNeighborhoodSet& full_inverted_edges,
    const Connector& src_to_dst) const
 {
@@ -4189,7 +4394,7 @@ void RefineSchedule::createEnconLevel(const hier::IntVector& fill_gcw)
          const hier::BoxList& sing_boxes =
             grid_geometry->getSingularityBoxList(bn);
 
-         if (sing_boxes.size()) {
+         if (sing_boxes.size() > 0) {
             const tbox::List<hier::GridGeometry::Neighbor>& neighbors =
                grid_geometry->getNeighbors(bn);
 
@@ -4256,7 +4461,7 @@ void RefineSchedule::createEnconLevel(const hier::IntVector& fill_gcw)
                         encon_test_list.grow(encon_gcw);
                         encon_test_list.intersectBoxes(trans_neighbor_list);
 
-                        if (encon_test_list.size()) {
+                        if (encon_test_list.size() > 0) {
 
                            encon_test_list.coalesceBoxes();
                            TBOX_ASSERT(encon_test_list.size() == 1);
@@ -4329,11 +4534,11 @@ void RefineSchedule::createEnconLevel(const hier::IntVector& fill_gcw)
     * d_encon_level.  This level, once filled with data, will be provided
     * to RefinePatchStrategy's fillSingularityBoundaryConditions. 
     */
-   hier::MappedBoxLevel encon_mb_level(encon_mapped_boxes,
+   hier::MappedBoxLevel encon_box_level(encon_mapped_boxes,
                                        d_dst_level->getRatioToLevelZero(),
                                        grid_geometry);
 
-   d_encon_level = new hier::PatchLevel(encon_mb_level,
+   d_encon_level = new hier::PatchLevel(encon_box_level,
                                         grid_geometry,
                                         d_dst_level->getPatchDescriptor(),
                                         tbox::Pointer<hier::PatchFactory>(NULL),

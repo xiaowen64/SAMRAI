@@ -539,14 +539,14 @@ private:
     *                                        the source level are added here.
     * @param[out] dst_to_unfilled  Connector from dst_level to
     *                              unfilled_mapped_box_level.
-    * @param[out] unfilled_encon_mb_level  The parts of the fill level
+    * @param[out] unfilled_encon_box_level  The parts of the fill level
     *                                      at enhanced connectivity block
     *                                      boundaries that cannot be filled
     *                                      from the source level.
     * @param[out] encon_to_unfilled_encon  Connector from level representing
     *                                      enhanced connectivity on the
     *                                      destination level to
-    *                                      unfilled_encon_mb_level
+    *                                      unfilled_encon_box_level
     * @param[in] dst_to_src  Connector between dst_level and src_level
     *                        passed into the constructor
     * @param[in] src_to_dst  Connector between src_level and dst_level
@@ -564,10 +564,10 @@ private:
     */
    void
    generateCommunicationSchedule(
-      MappedBoxLevel& unfilled_mapped_box_level,
-      Connector& dst_to_unfilled,
-      MappedBoxLevel& unfilled_encon_mb_level,
-      Connector& encon_to_unfilled_encon,
+      tbox::Pointer<MappedBoxLevel>& unfilled_mapped_box_level,
+      tbox::Pointer<Connector>& dst_to_unfilled,
+      tbox::Pointer<MappedBoxLevel>& unfilled_encon_box_level,
+      tbox::Pointer<Connector>& encon_to_unfilled_encon,
       const Connector& dst_to_src,
       const Connector& src_to_dst,
       const Connector& dst_to_fill,
@@ -639,8 +639,53 @@ private:
     *                             level for fill boxes
     */ 
    void createUnfilledEnconLevelWithNoSource(
-      hier::Connector& encon_to_unfilled_encon,
+      tbox::Pointer<hier::Connector>& encon_to_unfilled_encon,
       const hier::Connector& dst_to_fill);
+
+   /*
+    * @brief Find the fill boxes that are at enhanced connectivity.
+    *
+    * Given a list representing fill boxes, determine the portion of those
+    * boxes that lie across any enhanced connectivity boundary from the
+    * block specified by dst_block_id.
+    *
+    * @param[out]  encon_fill_boxes
+    * @param[in]   fill_boxes_list
+    * @param[in]   dst_block_id
+    */
+   void findEnconFillBoxes(
+      hier::BoxList& encon_fill_boxes,
+      const hier::BoxList& fill_boxes_list,
+      const hier::BlockId& dst_block_id);
+
+   /*
+    * @brief Find unfilled boxes at enhanced connectivity.
+    *
+    * Determine which portion of encon_fill_boxes cannot be filled
+    * from a source level.  Those unfilled boxes are added to
+    * level_encon_unfilled_boxes, and edges are added to
+    * encon_to_unfilled_encon_nbrhood_set.
+    *
+    * The source level is the head level from the connector dst_to_src. 
+    *
+    * @param[out]  level_encon_unfilled_boxes  set of encon unfilled boxes
+    *                                          for the dst level
+    * @param[out]  encon_to_unfilled_encon_nbrhood_set  edges from
+    *                                                d_encon_level to
+    *                                                level_encon_unfilled_boxes
+    * @param[in,out]  last_unfilled_local_id a unique LocalId not already
+    *                                        used in level_encon_unfilled_boxes
+    * @param[in]  dst_mapped_box  The destination box
+    * @param[in]  dst_to_src
+    * @param[in]  encon_fill_boxes
+    */ 
+   void findEnconUnfilledBoxes(
+      hier::MappedBoxSet& level_encon_unfilled_boxes,
+      hier::NeighborhoodSet& encon_to_unfilled_encon_nbrhood_set,
+      hier::LocalId& last_unfilled_local_id,
+      const hier::Box& dst_mapped_box,
+      const Connector& dst_to_src,
+      const hier::BoxList& encon_fill_boxes);
 
    /*
     * @brief Create schedule for filling unfilled boxes at enhanced
@@ -815,7 +860,7 @@ private:
       const bool use_time_interpolation);
 
    /*!
-    * @brief Restructure the neighborhood sets from a src_to_dst Connector
+    * @brief Reorder the neighborhood sets from a src_to_dst Connector
     * so they can be used in schedule generation.
     *
     * First, this puts the neighborhood set data in src_to_dst into dst-major
@@ -828,13 +873,13 @@ private:
     * overlap is unchanged.  The constructScheduleTransactions method requires
     * all shifts to be absorbed in the src mapped_box.
     *
-    * The restructured neighboorhood sets are added to the output parameter.
+    * The reordered neighboorhood sets are added to the output parameter.
     *
     * @param[out] full_inverted_edges
     * @param[in]  src_to_dst
     */
    void
-   restructureNeighborhoodSetsByDstNodes(
+   reorderNeighborhoodSetsByDstNodes(
       FullNeighborhoodSet& full_inverted_edges,
       const Connector& src_to_dst) const;
 
@@ -1049,14 +1094,14 @@ private:
     * fill from the source level.  These remaining boxes must be
     * filled using a supplemental schedule, d_supp_schedule.
     */
-   MappedBoxLevel d_unfilled_mapped_box_level;
+   tbox::Pointer<MappedBoxLevel> d_unfilled_mapped_box_level;
 
    /*!
     * @brief Describes remaining unfilled boxes of d_encon_level after
     * attempting to fill from the source level.  These remaining boxes must
     * be filled using a supplemental schedule, d_supp_encon_schedule.
     */
-   MappedBoxLevel d_unfilled_encon_mb_level;
+   tbox::Pointer<MappedBoxLevel> d_unfilled_encon_box_level;
 
    /*!
     * @brief Stores the BoxOverlaps needed by refineScratchData()
