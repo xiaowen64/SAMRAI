@@ -1026,6 +1026,11 @@ private:
    getOffset(const BlockId& dst, const BlockId& src) const;
 
    /*!
+    * @brief Query if the geometry has enhanced connectivity.
+    */
+   bool hasEnhancedConnectivity() const; 
+
+   /*!
     * @brief Print object data to the specified output stream.
     *
     * @param[out] stream The output stream (as a std::ostream&) to print to.
@@ -1273,6 +1278,12 @@ private:
     * singularity.
     */
    tbox::Array<bool> d_reduced_connect;
+
+   /*!
+    * @brief Tell whether there is enhanced connectivity anywhere in the
+    * geometry.
+    */
+   bool d_has_enhanced_connectivity;
 
    /*!
     * Flag to determine whether this instance is registered for restart.

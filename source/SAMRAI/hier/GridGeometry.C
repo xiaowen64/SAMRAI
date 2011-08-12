@@ -93,6 +93,7 @@ GridGeometry::GridGeometry(
    d_domain_mapped_box_sets(1, MappedBoxSet()),
    d_periodic_shift(IntVector::getZero(d_dim)),
    d_max_data_ghost_width(IntVector(d_dim, -1)),
+   d_has_enhanced_connectivity(false),
    d_transfer_operator_registry(op_reg)
 {
    TBOX_ASSERT(!object_name.empty());
@@ -139,6 +140,7 @@ GridGeometry::GridGeometry(
    d_singularity(1, BoxList(dim)),
    d_singularity_indices(1),
    d_reduced_connect(1),
+   d_has_enhanced_connectivity(false),
    d_transfer_operator_registry(op_reg)
 {
    TBOX_ASSERT(!object_name.empty());
@@ -161,6 +163,7 @@ GridGeometry::GridGeometry(
    d_periodic_shift(IntVector::getZero(d_dim)),
    d_max_data_ghost_width(IntVector(d_dim, -1)),
    d_number_of_block_singularities(0),
+   d_has_enhanced_connectivity(false),
    d_transfer_operator_registry(op_reg)
 {
    TBOX_ASSERT(!object_name.empty());
@@ -765,6 +768,7 @@ void GridGeometry::getFromRestart()
    db->getIntegerArray("d_periodic_shift", temp_shift, dim.getValue());
    initializePeriodicShift(periodic_shift);
 
+   d_has_enhanced_connectivity = db->getBool("d_has_enhanced_connectivity");
 }
 
 /*
@@ -865,6 +869,7 @@ void GridGeometry::putToDatabase(
    int* temp_shift = &level0_shift[0];
    db->putIntegerArray("d_periodic_shift", temp_shift, dim.getValue());
 
+   db->putBool("d_has_enhanced_connectivity", d_has_enhanced_connectivity);
 }
 
 
@@ -1907,6 +1912,10 @@ void GridGeometry::registerNeighbors(
 
    d_block_neighbors[a].addItem(neighbor_of_a);
    d_block_neighbors[b].addItem(neighbor_of_b);
+
+   if (is_singularity) {
+      d_has_enhanced_connectivity = true;
+   }
 
 }
 

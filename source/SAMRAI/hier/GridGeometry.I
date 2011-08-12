@@ -133,8 +133,11 @@ int GridGeometry::getNumberBlocks() const
    return d_number_blocks;
 }
 
-
-
+SAMRAI_INLINE_KEYWORD
+bool GridGeometry::hasEnhancedConnectivity() const
+{
+   return d_has_enhanced_connectivity;
+}
 
 
 

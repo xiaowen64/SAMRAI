@@ -830,7 +830,7 @@ void RefineSchedule::finishScheduleConstruction(
        * enhanced connectivity, in which case boxes will need to be
        * added to d_unfilled_encon_box_level.
        */
-      if (nblocks > 1) {
+      if (grid_geometry->hasEnhancedConnectivity()) {
          createUnfilledEnconLevelWithNoSource(
             encon_to_unfilled_encon,
             dst_to_fill);
@@ -934,7 +934,7 @@ void RefineSchedule::finishScheduleConstruction(
    const bool need_to_fill =
       (d_unfilled_mapped_box_level->getGlobalNumberOfBoxes() > 0);
    bool need_to_fill_encon = false;
-   if (nblocks > 1) {
+   if (grid_geometry->hasEnhancedConnectivity()) {
       need_to_fill_encon =
          (d_unfilled_encon_box_level->getGlobalNumberOfBoxes() > 0);
    }
@@ -3179,7 +3179,6 @@ void RefineSchedule::generateCommunicationSchedule(
 
    tbox::Pointer<hier::GridGeometry> grid_geometry(
       d_dst_level->getGridGeometry());
-   const int nblocks = grid_geometry->getNumberBlocks();
 
    if (s_extra_debug) {
       if (dst_to_src.isInitialized()) {
@@ -3309,7 +3308,7 @@ void RefineSchedule::generateCommunicationSchedule(
        * Otherwise, encon_fill_boxes will be empty.
        */
       hier::BoxList encon_fill_boxes(dim);
-      if (nblocks > 1) {
+      if (grid_geometry->hasEnhancedConnectivity()) {
          findEnconFillBoxes(encon_fill_boxes,
                             fill_boxes_list,
                             dst_block_id);
