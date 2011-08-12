@@ -228,9 +228,6 @@ public:
     *                           this patch strategy is null (default state),
     *                           then no user-defined coarsen operations will be
     *                           performed.
-    * @param[in] block_id       Identifies the block that this schedule will
-    *                           operate on.  Defaults to zero for single-block
-    *                           problems.
     * @param[in] transaction_factory Optional Pointer to a coarsen transaction
     *                                factory that creates data transactions for
     *                                the schedule.  If this pointer is null
@@ -242,9 +239,8 @@ public:
    createSchedule(
       tbox::Pointer<hier::PatchLevel> crse_level,
       tbox::Pointer<hier::PatchLevel> fine_level,
-      xfer::CoarsenPatchStrategy* patch_strategy =
+      xfer::CoarsenPatchStrategy* coarsen_strategy =
          ((xfer::CoarsenPatchStrategy *)NULL),
-      const hier::BlockId& block_id = hier::BlockId::zero(),
       tbox::Pointer<xfer::CoarsenTransactionFactory> transaction_factory =
          tbox::Pointer<xfer::CoarsenTransactionFactory>(NULL));
 

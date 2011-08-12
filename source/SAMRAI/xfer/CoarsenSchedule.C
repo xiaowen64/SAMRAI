@@ -28,6 +28,7 @@
 #include "SAMRAI/tbox/Timer.h"
 #include "SAMRAI/tbox/Utilities.h"
 #include "SAMRAI/xfer/CoarsenCopyTransaction.h"
+#include "SAMRAI/xfer/PatchLevelInteriorFillPattern.h"
 
 namespace SAMRAI {
 namespace xfer {
@@ -94,7 +95,6 @@ void CoarsenSchedule::setScheduleGenerationMethod(
 CoarsenSchedule::CoarsenSchedule(
    tbox::Pointer<hier::PatchLevel> crse_level,
    tbox::Pointer<hier::PatchLevel> fine_level,
-   const hier::BlockId& block_id,
    const tbox::Pointer<xfer::CoarsenClasses> coarsen_classes,
    tbox::Pointer<xfer::CoarsenTransactionFactory> transaction_factory,
    xfer::CoarsenPatchStrategy* patch_strategy,
@@ -111,14 +111,13 @@ CoarsenSchedule::CoarsenSchedule(
    /*
     * Initial values; some may change in setup operations.
     */
-   d_block_id = block_id;
-
    d_crse_level = crse_level;
    d_fine_level = fine_level;
    d_transaction_factory = transaction_factory;
    d_temp_crse_level.setNull();
 
    d_coarsen_patch_strategy = patch_strategy;
+//   d_refine_patch_strategy = refine_strategy;
 
    d_fill_coarse_data = fill_coarse_data;
 
@@ -326,6 +325,7 @@ void CoarsenSchedule::generateTemporaryLevel()
    const tbox::Dimension& dim(d_crse_level->getDim());
 
    hier::IntVector min_gcw = getMaxGhostsToGrow();
+
    const hier::Connector &coarse_to_fine = d_crse_level->getMappedBoxLevel()->getPersistentOverlapConnectors().findConnector(
       *d_fine_level->getMappedBoxLevel(),
       Connector::convertHeadWidthToBase(d_crse_level->getMappedBoxLevel()->
@@ -412,10 +412,9 @@ void CoarsenSchedule::generateTemporaryLevel()
 
 void CoarsenSchedule::setupRefineAlgorithm()
 {
+   const tbox::Dimension& dim(d_crse_level->getDim());
 
    if (d_fill_coarse_data) {
-
-      const tbox::Dimension& dim(d_crse_level->getDim());
 
       d_precoarsen_refine_algorithm.setNull();
       d_precoarsen_refine_algorithm = new RefineAlgorithm(dim);
@@ -791,6 +790,60 @@ void CoarsenSchedule::constructScheduleTransactions(
       unshifted_dst_box.shift(-dst_shift);
    }
 
+   /*
+    * Transformation initialized to src_shift with no rotation.
+    * It will never be modified in single-block runs, nor in multiblock runs
+    * when src_mapped_box and dst_mapped_box are on the same block.
+    */
+   hier::Transformation transformation(src_shift);
+
+   /*
+    * When src_mapped_box and dst_mapped_box are on different blocks
+    * transformed_src_box is a representation of the source box in the
+    * destination coordinate system.
+    *
+    * For all other cases, transformed_src_box is simply a copy of the
+    * box from src_mapped_box.
+    */
+   hier::Box transformed_src_box(src_mapped_box);
+
+   /*
+    * When needed, transform the source box and determine if src and 
+    * dst touch at an enhance connectivity singularity.
+    */
+   if (src_mapped_box.getBlockId() != dst_mapped_box.getBlockId()) {
+      const hier::BlockId& dst_block_id = dst_mapped_box.getBlockId();
+      const hier::BlockId& src_block_id = src_mapped_box.getBlockId();
+
+      tbox::Pointer<hier::GridGeometry> grid_geometry(
+         d_crse_level->getGridGeometry());
+
+      hier::Transformation::RotationIdentifier rotation =
+         grid_geometry->getRotationIdentifier(dst_block_id,
+                                              src_block_id);
+      hier::IntVector offset(
+         grid_geometry->getOffset(dst_block_id, src_block_id));
+
+      offset *= d_crse_level->getRatioToLevelZero();
+
+      transformation = hier::Transformation(rotation, offset);
+      transformation.transform(transformed_src_box);
+
+#ifdef DEBUG_CHECK_ASSERTIONS
+      if (grid_geometry->areSingularityNeighbors(dst_block_id, src_block_id)) {
+         const int num_items = d_coarsen_classes->getNumberOfCoarsenItems(); 
+         for (int nc = 0; nc < num_items; nc++) {
+            const xfer::CoarsenClasses::Data& rep_item =
+               d_coarsen_classes->getClassRepresentative(nc);
+
+            TBOX_ASSERT(rep_item.d_var_fill_pattern->getStencilWidth() ==
+                        hier::IntVector::getZero(dim));
+
+         } 
+      }
+#endif
+   }
+
    const int num_coarsen_items = d_coarsen_classes->getNumberOfCoarsenItems();
    tbox::Array<tbox::Pointer<tbox::Transaction> >
    transactions(num_coarsen_items);
@@ -812,20 +865,22 @@ void CoarsenSchedule::constructScheduleTransactions(
 
       const hier::Box dst_fill_box(hier::Box::grow(unshifted_dst_box, dst_gcw));
 
-      hier::Box test_mask = dst_fill_box * src_mapped_box;
-      if (test_mask.empty() &&
-          (dst_gcw == constant_zero_intvector) &&
-          dst_pdf->dataLivesOnPatchBorder()) {
-         hier::Box tmp_dst_fill_box(
-            hier::Box::grow(dst_fill_box, constant_one_intvector));
-         test_mask = tmp_dst_fill_box * src_mapped_box;
+      hier::Box test_mask(dst_fill_box * transformed_src_box);
+      if ((dst_gcw == constant_zero_intvector) &&
+          dst_pdf->dataLivesOnPatchBorder() &&
+          test_mask.empty()) {
+         test_mask = dst_fill_box;
+         test_mask.grow(constant_one_intvector);
+         test_mask = test_mask * transformed_src_box;
       }
-      hier::Box src_mask = hier::Box::shift(test_mask, -src_shift);
+      hier::Box src_mask(test_mask);
+      transformation.inverseTransform(src_mask);
 
-      test_mask = hier::Box::grow(unshifted_src_box,
-            hier::IntVector::min(
-               rep_item.d_gcw_to_coarsen,
-               src_pdf->getGhostCellWidth()));
+      test_mask = unshifted_src_box;
+      test_mask.grow(
+         hier::IntVector::min(
+            rep_item.d_gcw_to_coarsen,
+            src_pdf->getGhostCellWidth()));
 
       src_mask += test_mask;
 
@@ -836,7 +891,7 @@ void CoarsenSchedule::constructScheduleTransactions(
             dst_mapped_box,
             src_mask,
             dst_fill_box,
-            true, hier::Transformation(src_shift)));
+            true, transformation));
 
       if (overlap.isNull()) {
          TBOX_ERROR("Internal CoarsenSchedule error..."

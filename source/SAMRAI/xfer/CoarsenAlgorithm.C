@@ -127,7 +127,6 @@ CoarsenAlgorithm::createSchedule(
    tbox::Pointer<hier::PatchLevel> crse_level,
    tbox::Pointer<hier::PatchLevel> fine_level,
    xfer::CoarsenPatchStrategy* patch_strategy,
-   const hier::BlockId& block_id,
    tbox::Pointer<xfer::CoarsenTransactionFactory> transaction_factory)
 {
    TBOX_DIM_ASSERT_CHECK_DIM_ARGS2(d_dim, *crse_level, *fine_level);
@@ -144,7 +143,6 @@ CoarsenAlgorithm::createSchedule(
    return tbox::Pointer<xfer::CoarsenSchedule>(new xfer::CoarsenSchedule(
                                                   crse_level,
                                                   fine_level,
-                                                  block_id,
                                                   d_coarsen_classes,
                                                   trans_factory,
                                                   patch_strategy,

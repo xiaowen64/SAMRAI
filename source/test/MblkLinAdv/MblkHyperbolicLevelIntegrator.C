@@ -194,11 +194,11 @@ MblkHyperbolicLevelIntegrator::MblkHyperbolicLevelIntegrator(
    d_mblk_fill_new_level =
       new xfer::RefineAlgorithm(d_dim);
    d_mblk_coarsen_fluxsum =
-      new xfer::MultiblockCoarsenAlgorithm(mblk_hierarchy);
+      new xfer::CoarsenAlgorithm(d_dim);
    d_mblk_coarsen_sync_data =
-      new xfer::MultiblockCoarsenAlgorithm(mblk_hierarchy);
+      new xfer::CoarsenAlgorithm(d_dim);
    d_mblk_sync_initial_data =
-      new xfer::MultiblockCoarsenAlgorithm(mblk_hierarchy);
+      new xfer::CoarsenAlgorithm(d_dim);
 
    /*
     * hier::Variable contexts used in algorithm.  Note that "OLD" context
@@ -1420,7 +1420,7 @@ void MblkHyperbolicLevelIntegrator::synchronizeNewLevels(
             mblk_hierarchy->getPatchLevel(coarse_ln);
 
          t_sync_initial_create->start();
-         tbox::Pointer<xfer::MultiblockCoarsenSchedule> sched =
+         tbox::Pointer<xfer::CoarsenSchedule> sched =
             d_mblk_sync_initial_data->createSchedule(coarse_level,
                fine_level,
                d_patch_strategy);
@@ -1503,7 +1503,7 @@ MblkHyperbolicLevelIntegrator::synchronizeLevelWithCoarser(
     */
 
    t_coarsen_fluxsum_create->start();
-   tbox::Pointer<xfer::MultiblockCoarsenSchedule> sched =
+   tbox::Pointer<xfer::CoarsenSchedule> sched =
       d_mblk_coarsen_fluxsum->createSchedule(mblk_coarse_level,
          mblk_fine_level,
          NULL);

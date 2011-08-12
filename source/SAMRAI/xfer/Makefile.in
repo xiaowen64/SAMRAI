@@ -30,8 +30,6 @@ OBJS =  BoxGeometryVariableFillPattern.o \
         PatchLevelInteriorFillPattern.o		\
         PatchLevelFillPattern.o		\
         VariableFillPattern.o		\
-	MultiblockCoarsenAlgorithm.o \
-	MultiblockCoarsenSchedule.o \
 	RefineAlgorithm.o \
 	CoarsenAlgorithm.o \
 	RefineSchedule.o \
@@ -43,7 +41,6 @@ OBJS =  BoxGeometryVariableFillPattern.o \
 	RefineTransactionFactory.o \
 	RefinePatchStrategy.o \
 	RefineClasses.o \
-	MultiblockCoarsenPatchStrategy.o \
 	CoarsenCopyTransaction.o \
 	StandardCoarsenTransactionFactory.o \
 	CoarsenTransactionFactory.o \

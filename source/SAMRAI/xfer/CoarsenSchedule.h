@@ -90,8 +90,6 @@ public:
     *
     * @param[in] crse_level      Pointer to coarse (destination) patch level.
     * @param[in] fine_level      Pointer to fine (source) patch level.
-    * @param[in] block_id       Identifies the block that this schedule will
-    *                           operate on.
     * @param[in] coarsen_classes Pointer to structure containing patch data and
     *                            operator information.  In general, this is
     *                            constructed by the calling CoarsenAlgorithm
@@ -110,7 +108,6 @@ public:
    explicit CoarsenSchedule(
       tbox::Pointer<hier::PatchLevel> crse_level,
       tbox::Pointer<hier::PatchLevel> fine_level,
-      const hier::BlockId& block_id,
       const tbox::Pointer<xfer::CoarsenClasses> coarsen_classes,
       tbox::Pointer<xfer::CoarsenTransactionFactory> transaction_factory,
       xfer::CoarsenPatchStrategy* patch_strategy,
@@ -435,6 +432,7 @@ private:
     * coarsening operations.
     */
    CoarsenPatchStrategy* d_coarsen_patch_strategy;
+//   RefinePatchStrategy* d_refine_patch_strategy;
 
    /*!
     * @brief Factory object used to create data transactions when schedule is 
@@ -465,11 +463,6 @@ private:
     * constructor).
     */
    bool d_fill_coarse_data;
-
-   /*!
-    * @brief Identifies what block the schedule operates on.
-    */
-   hier::BlockId d_block_id;
 
    /*!
     * @brief Algorithm used to set up schedule to fill temporary level if

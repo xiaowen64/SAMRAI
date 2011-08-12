@@ -26,7 +26,6 @@
 #include "SAMRAI/xfer/CoarsenSchedule.h"
 #include "SAMRAI/hier/GridGeometry.h"
 #include "SAMRAI/hier/IntVector.h"
-#include "SAMRAI/xfer/MultiblockCoarsenAlgorithm.h"
 #include "SAMRAI/hier/PatchHierarchy.h"
 #include "SAMRAI/xfer/RefinePatchStrategy.h"
 #include "SAMRAI/xfer/RefineAlgorithm.h"
@@ -336,7 +335,7 @@ private:
     */
 
    tbox::Pointer<xfer::RefineAlgorithm> d_refine_algorithm;
-   tbox::Pointer<xfer::MultiblockCoarsenAlgorithm> d_coarsen_algorithm;
+   tbox::Pointer<xfer::CoarsenAlgorithm> d_coarsen_algorithm;
 
    xfer::RefineAlgorithm d_reset_refine_algorithm;
    xfer::CoarsenAlgorithm d_reset_coarsen_algorithm;

@@ -22,7 +22,6 @@ using namespace std;
 #include "MblkHyperbolicPatchStrategy.h"
 
 #include "SAMRAI/xfer/CoarsenAlgorithm.h"
-#include "SAMRAI/xfer/MultiblockCoarsenAlgorithm.h"
 #include "SAMRAI/mesh/StandardTagAndInitStrategy.h"
 #include "SAMRAI/algs/TimeRefinementLevelStrategy.h"
 
@@ -917,11 +916,11 @@ private:
     * Coarsen algorithms for conservative data synchronization
     * (e.g., flux correction or refluxing).
     */
-   tbox::Pointer<xfer::MultiblockCoarsenAlgorithm>
+   tbox::Pointer<xfer::CoarsenAlgorithm>
    d_mblk_coarsen_fluxsum;
-   tbox::Pointer<xfer::MultiblockCoarsenAlgorithm>
+   tbox::Pointer<xfer::CoarsenAlgorithm>
    d_mblk_coarsen_sync_data;
-   tbox::Pointer<xfer::MultiblockCoarsenAlgorithm>
+   tbox::Pointer<xfer::CoarsenAlgorithm>
    d_mblk_sync_initial_data;
 
    /*

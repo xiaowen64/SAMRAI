@@ -37,6 +37,7 @@ using namespace std;
 #include "SAMRAI/tbox/Utilities.h"
 #include "SAMRAI/tbox/MathUtilities.h"
 #include "SAMRAI/xfer/CoarsenSchedule.h"
+#include "SAMRAI/xfer/PatchInteriorVariableFillPattern.h"
 
 //#define RECORD_STATS
 #undef RECORD_STATS
@@ -209,11 +210,11 @@ MblkHyperbolicLevelIntegrator::MblkHyperbolicLevelIntegrator(
    d_mblk_fill_new_level =
       new xfer::RefineAlgorithm(d_dim);
    d_mblk_coarsen_fluxsum =
-      new xfer::MultiblockCoarsenAlgorithm(mblk_hierarchy);
+      new xfer::CoarsenAlgorithm(d_dim);
    d_mblk_coarsen_sync_data =
-      new xfer::MultiblockCoarsenAlgorithm(mblk_hierarchy);
+      new xfer::CoarsenAlgorithm(d_dim);
    d_mblk_sync_initial_data =
-      new xfer::MultiblockCoarsenAlgorithm(mblk_hierarchy);
+      new xfer::CoarsenAlgorithm(d_dim);
 
    /*
     * hier::Variable contexts used in algorithm.  Note that "OLD" context
@@ -1437,10 +1438,9 @@ void MblkHyperbolicLevelIntegrator::synchronizeNewLevels(
             mblk_hierarchy->getPatchLevel(coarse_ln);
 
          t_sync_initial_create->start();
-         tbox::Pointer<xfer::MultiblockCoarsenSchedule> sched =
+         tbox::Pointer<xfer::CoarsenSchedule> sched =
             d_mblk_sync_initial_data->createSchedule(coarse_level,
                fine_level,
-               d_patch_strategy,
                d_patch_strategy);
          t_sync_initial_create->stop();
 
@@ -1519,7 +1519,7 @@ MblkHyperbolicLevelIntegrator::synchronizeLevelWithCoarser(
     */
 
    t_coarsen_fluxsum_create->start();
-   tbox::Pointer<xfer::MultiblockCoarsenSchedule> sched =
+   tbox::Pointer<xfer::CoarsenSchedule> sched =
       d_mblk_coarsen_fluxsum->createSchedule(mblk_coarse_level,
          mblk_fine_level,
          d_patch_strategy);
@@ -1574,7 +1574,6 @@ MblkHyperbolicLevelIntegrator::synchronizeLevelWithCoarser(
    t_coarsen_sync_create->start();
    sched = d_mblk_coarsen_sync_data->createSchedule(mblk_coarse_level,
          mblk_fine_level,
-         d_patch_strategy,
          d_patch_strategy);
    t_coarsen_sync_create->stop();
 
@@ -1841,9 +1840,13 @@ void MblkHyperbolicLevelIntegrator::registerVariable(
           * (see synchronizeLevelWithCoarser routine).
           */
 
-         d_mblk_coarsen_sync_data->registerCoarsen(new_id, new_id, coarsen_op);
+         tbox::Pointer<xfer::PatchInteriorVariableFillPattern> fill_pattern(
+            new xfer::PatchInteriorVariableFillPattern(d_dim));
+         d_mblk_coarsen_sync_data->registerCoarsen(new_id, new_id, coarsen_op, 
+                                                   fill_pattern);
 
-         d_mblk_sync_initial_data->registerCoarsen(cur_id, cur_id, coarsen_op);
+         d_mblk_sync_initial_data->registerCoarsen(cur_id, cur_id, coarsen_op, 
+                                                   fill_pattern);
 
          /*
           * Coarsen operations used in Richardson extrapolation.  The init
@@ -1867,16 +1870,19 @@ void MblkHyperbolicLevelIntegrator::registerVariable(
                scr_id, cur_id, old_id, new_id, scr_id, refine_op, time_int);
 
             d_coarsen_rich_extrap_init->
-            registerCoarsen(cur_id, old_id, coarsen_op);
+            registerCoarsen(cur_id, old_id, coarsen_op, 
+                                                   fill_pattern);
 
          } else {
 
             d_coarsen_rich_extrap_init->
-            registerCoarsen(cur_id, cur_id, coarsen_op);
+            registerCoarsen(cur_id, cur_id, coarsen_op, 
+                                                   fill_pattern);
          }
 
          d_coarsen_rich_extrap_final->
-         registerCoarsen(new_id, new_id, coarsen_op);
+         registerCoarsen(new_id, new_id, coarsen_op, 
+                                                   fill_pattern);
 
          break;
       }
@@ -1921,7 +1927,11 @@ void MblkHyperbolicLevelIntegrator::registerVariable(
           * up through the hierarchy so that all levels are consistent.
           */
 
-         d_mblk_sync_initial_data->registerCoarsen(cur_id, cur_id, coarsen_op);
+         tbox::Pointer<xfer::PatchInteriorVariableFillPattern> fill_pattern(
+            new xfer::PatchInteriorVariableFillPattern(d_dim));
+
+         d_mblk_sync_initial_data->registerCoarsen(cur_id, cur_id, coarsen_op, 
+                                                   fill_pattern);
 
          /*
           * Coarsen operation for setting initial data on coarser level
@@ -1929,7 +1939,7 @@ void MblkHyperbolicLevelIntegrator::registerVariable(
           */
 
          d_coarsen_rich_extrap_init->
-         registerCoarsen(cur_id, cur_id, coarsen_op);
+         registerCoarsen(cur_id, cur_id, coarsen_op, fill_pattern);
 
          break;
       }
@@ -1964,8 +1974,11 @@ void MblkHyperbolicLevelIntegrator::registerVariable(
           * in the Richardson extrapolation algorithm.
           */
 
+         tbox::Pointer<xfer::PatchInteriorVariableFillPattern> fill_pattern(
+            new xfer::PatchInteriorVariableFillPattern(d_dim));
+
          d_coarsen_rich_extrap_init->
-         registerCoarsen(cur_id, cur_id, coarsen_op);
+         registerCoarsen(cur_id, cur_id, coarsen_op, fill_pattern);
 
          break;
       }
@@ -2054,7 +2067,10 @@ void MblkHyperbolicLevelIntegrator::registerVariable(
 
          d_fluxsum_data.setFlag(fs_id);
 
-         d_mblk_coarsen_fluxsum->registerCoarsen(scr_id, fs_id, coarsen_op);
+         tbox::Pointer<xfer::PatchInteriorVariableFillPattern> fill_pattern(
+            new xfer::PatchInteriorVariableFillPattern(d_dim));
+         d_mblk_coarsen_fluxsum->registerCoarsen(scr_id, fs_id, coarsen_op,
+                                                 fill_pattern);
 
          break;
       }

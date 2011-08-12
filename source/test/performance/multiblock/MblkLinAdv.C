@@ -1951,7 +1951,7 @@ void MblkLinAdv::preprocessCoarsen(
    int xyz_id = hier::VariableDatabase::getDatabase()->
       mapVariableAndContextToIndex(d_xyz, getDataContext());
 
-   int block_number = getCoarsenBlockNumber();
+   int block_number = coarse.getMappedBox().getBlockId().getBlockValue();
    if (coarse.checkAllocated(xyz_id)) {
       setMappedGridOnPatch(coarse, cln, block_number);
    }

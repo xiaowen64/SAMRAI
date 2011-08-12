@@ -19,7 +19,7 @@
 #include "SAMRAI/hier/VariableContext.h"
 #include "SAMRAI/tbox/Pointer.h"
 #include "SAMRAI/xfer/RefinePatchStrategy.h"
-#include "SAMRAI/xfer/MultiblockCoarsenPatchStrategy.h"
+#include "SAMRAI/xfer/CoarsenPatchStrategy.h"
 #include "SAMRAI/mesh/GriddingAlgorithmStrategy.h"
 #include "SAMRAI/xfer/RefineSchedule.h"
 #include "SAMRAI/xfer/RefinePatchStrategy.h"
@@ -60,7 +60,7 @@ class MblkHyperbolicLevelIntegrator;
 
 class MblkHyperbolicPatchStrategy:
    public xfer::RefinePatchStrategy,
-   public xfer::MultiblockCoarsenPatchStrategy
+   public xfer::CoarsenPatchStrategy
 {
 public:
    /**

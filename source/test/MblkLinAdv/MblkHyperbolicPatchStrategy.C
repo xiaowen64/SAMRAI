@@ -18,7 +18,7 @@ using namespace SAMRAI;
 MblkHyperbolicPatchStrategy::MblkHyperbolicPatchStrategy(
    const tbox::Dimension& dim):
    xfer::RefinePatchStrategy(dim),
-   xfer::MultiblockCoarsenPatchStrategy(dim),
+   xfer::CoarsenPatchStrategy(dim),
    d_dim(dim)
 {
    d_data_context.setNull();
