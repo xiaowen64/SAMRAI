@@ -117,7 +117,6 @@ CoarsenSchedule::CoarsenSchedule(
    d_temp_crse_level.setNull();
 
    d_coarsen_patch_strategy = patch_strategy;
-//   d_refine_patch_strategy = refine_strategy;
 
    d_fill_coarse_data = fill_coarse_data;
 
@@ -831,8 +830,7 @@ void CoarsenSchedule::constructScheduleTransactions(
 
 #ifdef DEBUG_CHECK_ASSERTIONS
       if (grid_geometry->areSingularityNeighbors(dst_block_id, src_block_id)) {
-         const int num_items = d_coarsen_classes->getNumberOfCoarsenItems(); 
-         for (int nc = 0; nc < num_items; nc++) {
+         for (int nc = 0; nc < num_equiv_classes; nc++) {
             const xfer::CoarsenClasses::Data& rep_item =
                d_coarsen_classes->getClassRepresentative(nc);
 
