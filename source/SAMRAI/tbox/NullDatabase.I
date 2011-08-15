@@ -55,9 +55,11 @@ bool NullDatabase::create(
 
 SAMRAI_INLINE_KEYWORD
 bool NullDatabase::open(
-   const std::string& name)
+   const std::string& name,
+   const bool read_write_mode)
 {
    NULL_USE(name);
+   NULL_USE(read_write_mode);
    return true;
 }
 

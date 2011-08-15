@@ -1661,7 +1661,8 @@ void VisItDataWriter::writeHDFFiles(
 
       } else {
          // file already created other procs just need to open it
-         if (!visit_HDFFilePointer->open(visit_HDFFilename)) {
+         const bool read_write_mode(true);
+         if (!visit_HDFFilePointer->open(visit_HDFFilename,read_write_mode)) {
             TBOX_ERROR("VisItDataWriter::writeHDFFiles"
                << "\n    data writer with name " << d_object_name
                << "\n    Error attempting to open visit file "

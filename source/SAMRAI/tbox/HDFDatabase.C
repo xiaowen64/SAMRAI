@@ -2263,14 +2263,17 @@ bool HDFDatabase::create(
  */
 
 bool HDFDatabase::open(
-   const std::string& name) {
+   const std::string& name,
+   const bool read_write_mode ) {
    TBOX_ASSERT(!name.empty());
 
    bool status = false;
 
    hid_t file_id = 0;
 
-   file_id = H5Fopen(name.c_str(), H5F_ACC_RDWR, H5P_DEFAULT);
+   file_id = H5Fopen(name.c_str(),
+                     read_write_mode ? H5F_ACC_RDWR : H5F_ACC_RDONLY,
+                     H5P_DEFAULT);
    if (file_id < 0) {
       TBOX_ERROR("Unable to open HDF5 file " << name << "\n");
       status = false;

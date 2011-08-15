@@ -199,7 +199,8 @@ bool SiloDatabase::create(
  */
 
 bool SiloDatabase::open(
-   const std::string& name)
+   const std::string& name,
+   const bool read_write_mode)
 {
    TBOX_ASSERT(!name.empty());
 
@@ -209,7 +210,9 @@ bool SiloDatabase::open(
       close();
    }
 
-   d_file = DBOpen(name.c_str(), DB_UNKNOWN, DB_READ);
+   d_file = DBOpen(name.c_str(),
+                   DB_UNKNOWN,
+                   read_write_mode ? DB_APPEND : DB_READ);
 
    if (d_file == NULL) {
 

@@ -79,10 +79,15 @@ public:
     * Returns true if successful.
     *
     * @param name name of database. Normally a filename.
+    *
+    * @param read_write_mode Open the database in read-write
+    * mode instead of read-only mode.  NOTE: This class currently
+    * does not support read-only mode, so this flag must be true.
     */
    virtual bool
    open(
-      const std::string& name);
+      const std::string& name,
+      const bool read_write_mode=false);
 
    /**
     * Close the database.

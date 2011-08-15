@@ -83,8 +83,14 @@ bool MemoryDatabase::create(
  */
 
 bool MemoryDatabase::open(
-   const std::string& name)
+   const std::string& name,
+   const bool read_write_mode)
 {
+   if ( read_write_mode == false ) {
+      TBOX_ERROR("MemoryDatabase::open: MemoryDatabase only supports\n"
+                 <<"read-write mode.  The read_write_mode flag must be true.");
+
+   }
    d_database_name = name;
    d_keyvalues.clearItems();
 
