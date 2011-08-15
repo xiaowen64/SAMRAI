@@ -354,7 +354,7 @@ private:
    //! @brief Shorthand typedef.
    typedef std::vector<hier::Box> MappedBoxVector;
    //! @brief Similar to NeighborhoodSet but maps to BoxVector instead of MappedBoxSet.
-   typedef std::map<hier::GlobalId, MappedBoxVector> FillSet;
+   typedef std::map<hier::BoxId, hier::MappedBoxSet> FillSet;
    //! @brief Mapping from a (potentially remote) Box to a set of neighbors.
    typedef std::map<hier::Box, NeighborSet, hier::Box::id_less> FullNeighborhoodSet;
 
@@ -757,7 +757,7 @@ private:
     */
    void
    constructScheduleTransactions(
-      const MappedBoxVector& fill_boxes,
+      const hier::MappedBoxSet& fill_boxes,
       const hier::Box& dst_mapped_box,
       const hier::Box& src_mapped_box,
       const bool use_time_interpolation);

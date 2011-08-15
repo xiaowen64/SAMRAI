@@ -128,8 +128,8 @@ void PatchLevelInteriorFillPattern::computeDestinationFillBoxesOnSourceProc(
    tmp_nabrs.clear();
    for (NeighborSet::const_iterator na = all_dst_nabrs.begin();
         na != all_dst_nabrs.end(); ++na) {
-      MappedBoxVector& fill_boxes = dst_fill_boxes_on_src_proc[na->getGlobalId()];
-      fill_boxes.push_back(*na);
+      hier::MappedBoxSet& fill_boxes = dst_fill_boxes_on_src_proc[na->getId()];
+      fill_boxes.insert(*na);
       d_max_fill_boxes = tbox::MathUtilities<int>::Max(d_max_fill_boxes,
             static_cast<int>(fill_boxes.size()));
    }

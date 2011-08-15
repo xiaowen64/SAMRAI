@@ -3232,7 +3232,7 @@ void RefineSchedule::generateCommunicationSchedule(
       TBOX_ASSERT(!dst_mapped_box.isPeriodicImage());
 
       FillSet::const_iterator dst_fill_iter =
-         dst_to_fill_on_src_proc.find(dst_mapped_box.getGlobalId());
+         dst_to_fill_on_src_proc.find(dst_mapped_box.getId());
       if (dst_fill_iter == dst_to_fill_on_src_proc.end()) {
          /*
           * Missing fill boxes should indicate that the dst mapped_box
@@ -3243,7 +3243,7 @@ void RefineSchedule::generateCommunicationSchedule(
          continue;
       }
 
-      const MappedBoxVector& dst_fill_boxes = dst_fill_iter->second;
+      const hier::MappedBoxSet& dst_fill_boxes = dst_fill_iter->second;
 
       for (hier::MappedBoxSet::const_iterator
            ni = local_src_mapped_boxes.begin();
@@ -3288,16 +3288,9 @@ void RefineSchedule::generateCommunicationSchedule(
 
       const hier::MappedBoxSet& fill_nabrs = cf->second;
 
-      /*
-       * TODO: Here we are copying into more containers than we really want to,
-       * because constructScheduleTransactions requires a vector, and the
-       * intersection operations used for unfilled boxes require lists.
-       */ 
-      MappedBoxVector fill_boxes_vector;
       hier::BoxList fill_boxes_list(dim);
       for (hier::MappedBoxSet::iterator bi = fill_nabrs.begin();
            bi != fill_nabrs.end(); ++bi) {
-         fill_boxes_vector.push_back(*bi);
          fill_boxes_list.appendItem(*bi);
       }
 
@@ -3371,7 +3364,7 @@ void RefineSchedule::generateCommunicationSchedule(
                   src_mapped_box);
             }
             constructScheduleTransactions(
-               fill_boxes_vector,
+               fill_nabrs,
                dst_mapped_box,
                src_mapped_box,
                use_time_interpolation);
@@ -4167,7 +4160,7 @@ void RefineSchedule::communicateFillBoxes(
     */
    // Pack messages.
    std::vector<int> tmp_mesg;
-   MappedBoxVector tmp_fill_boxes;
+   hier::MappedBoxSet tmp_fill_boxes;
    const hier::NeighborhoodSet& dst_eto_fill = dst_to_fill.getNeighborhoodSets();
    for (hier::NeighborhoodSet::const_iterator ei = dst_eto_fill.begin();
         ei != dst_eto_fill.end(); ++ei) {
@@ -4181,18 +4174,18 @@ void RefineSchedule::communicateFillBoxes(
        * Also, create BoxVector object for local use.
        */
       tmp_mesg.clear();
-      tmp_mesg.reserve(2 + fill_nabrs.size() * hier::Box::commBufferSize(dim));
-      tmp_mesg.insert(tmp_mesg.end(), 2, 0);
+      tmp_mesg.reserve(3 + fill_nabrs.size() * hier::Box::commBufferSize(dim));
+      tmp_mesg.insert(tmp_mesg.end(), 3, 0);
       tmp_mesg[0] = dst_mapped_box_id.getLocalId().getValue();
-      tmp_mesg[1] = static_cast<int>(fill_nabrs.size());
+      tmp_mesg[1] = dst_mapped_box_id.getBlockId().getBlockValue();
+      tmp_mesg[2] = static_cast<int>(fill_nabrs.size());
       tmp_fill_boxes.clear();
-      tmp_fill_boxes.reserve(fill_nabrs.size());
       for (NeighborSet::const_iterator na = fill_nabrs.begin();
            na != fill_nabrs.end(); ++na) {
          tmp_mesg.insert(tmp_mesg.end(), hier::Box::commBufferSize(dim), 0);
          na->putToIntBuffer(&tmp_mesg[tmp_mesg.size()
                                       - hier::Box::commBufferSize(dim)]);
-         tmp_fill_boxes.insert(tmp_fill_boxes.end(), *na);
+         tmp_fill_boxes.insert(*na);
       }
       // Append tmp_mesg to buffers for sending to src owners.
       hier::NeighborhoodSet::const_iterator di = dst_eto_src.find(dst_mapped_box_id);
@@ -4204,7 +4197,7 @@ void RefineSchedule::communicateFillBoxes(
               so != tmp_owners.end(); ++so) {
             const int& src_owner = *so;
             if (src_owner == dst_mapped_box_id.getOwnerRank()) {
-               dst_to_fill_on_src_proc[dst_mapped_box_id.getGlobalId()] = tmp_fill_boxes;
+               dst_to_fill_on_src_proc[dst_mapped_box_id] = tmp_fill_boxes;
             } else {
                std::vector<int>& send_mesg = send_mesgs[src_owner];
                send_mesg.insert(send_mesg.end(),
@@ -4243,13 +4236,15 @@ void RefineSchedule::communicateFillBoxes(
             // This is a receive.  Unpack it.  (Otherwise, ignore send completion.)
             const int* ptr = peer->getRecvData();
             while (ptr != peer->getRecvData() + peer->getRecvSize()) {
-               const hier::GlobalId distributed_id(hier::LocalId(ptr[0]), peer->getPeerRank());
-               const unsigned int num_fill_mapped_boxes = ptr[1];
-               ptr += 2;
+               const hier::BoxId distributed_id(hier::LocalId(ptr[0]),
+                                                peer->getPeerRank(),
+                                                hier::BlockId(ptr[1]));
+               const unsigned int num_fill_mapped_boxes = ptr[2];
+               ptr += 3;
                d_max_fill_boxes = tbox::MathUtilities<int>::Max(
                      d_max_fill_boxes,
                      num_fill_mapped_boxes);
-               MappedBoxVector& fill_boxes = dst_to_fill_on_src_proc[distributed_id];
+               hier::MappedBoxSet& fill_boxes = dst_to_fill_on_src_proc[distributed_id];
                for (size_t ii = 0; ii < num_fill_mapped_boxes; ++ii) {
                   hier::Box tmp_dst_mapped_box(dim);
                   tmp_dst_mapped_box.getFromIntBuffer(ptr);
@@ -4350,7 +4345,7 @@ hier::IntVector RefineSchedule::getMaxStencilGhosts() const
  */
 
 void RefineSchedule::constructScheduleTransactions(
-   const MappedBoxVector& fill_boxes,
+   const hier::MappedBoxSet& fill_boxes,
    const hier::Box& dst_mapped_box,
    const hier::Box& src_mapped_box,
    bool use_time_interpolation)
@@ -4390,7 +4385,7 @@ void RefineSchedule::constructScheduleTransactions(
                  << "R" << d_dst_level->getRatioToLevelZero()
                  << " / " << dst_mapped_box << std::endl;
       tbox::plog << "  fill_boxes (" << fill_boxes.size() << ")";
-      for (MappedBoxVector::const_iterator bi = fill_boxes.begin();
+      for (hier::MappedBoxSet::const_iterator bi = fill_boxes.begin();
            bi != fill_boxes.end(); ++bi) {
          tbox::plog << " " << *bi;
       }
@@ -4624,7 +4619,7 @@ void RefineSchedule::constructScheduleTransactions(
 
       hier::BoxList::Iterator box_itr(d_src_masks);
       int box_num = 0;
-      for (MappedBoxVector::const_iterator bi = fill_boxes.begin();
+      for (hier::MappedBoxSet::const_iterator bi = fill_boxes.begin();
            bi != fill_boxes.end(); ++bi) {
 
          const hier::Box& fill_box = *bi;

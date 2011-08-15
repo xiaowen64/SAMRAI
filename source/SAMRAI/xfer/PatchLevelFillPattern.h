@@ -40,7 +40,7 @@ class PatchLevelFillPattern:public tbox::DescribedClass
 public:
    typedef std::vector<hier::Box> BoxVector;
    typedef std::vector<hier::Box> MappedBoxVector;
-   typedef std::map<hier::GlobalId, MappedBoxVector> FillSet;
+   typedef std::map<hier::BoxId, hier::MappedBoxSet> FillSet;
 
    /*!
     * @brief Default constructor
