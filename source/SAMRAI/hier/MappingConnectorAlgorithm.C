@@ -1344,7 +1344,7 @@ void MappingConnectorAlgorithm::privateModify_discoverAndSend(
                   transformed_compare_box = compare_box;
                   compare_box_block_id = new_nabr.getBlockId();
                   if ( compare_box_block_id != anchor_mapped_box.getBlockId() ) {
-                     grid_geometry->translateBox(transformed_compare_box,
+                     grid_geometry->transformBox(transformed_compare_box,
                                                  old.getRefinementRatio(),
                                                  new_nabr.getBlockId(),
                                                  anchor_mapped_box.getBlockId());
@@ -1453,7 +1453,7 @@ void MappingConnectorAlgorithm::privateModify_discoverAndSend(
                      transformed_compare_box = compare_box;
                      compare_box_block_id = anchor_nabr.getBlockId();
                      if ( compare_box_block_id != new_mapped_box.getBlockId() ) {
-                        grid_geometry->translateBox(transformed_compare_box,
+                        grid_geometry->transformBox(transformed_compare_box,
                                                     new_mapped_box_level.getRefinementRatio(),
                                                     anchor_nabr.getBlockId(),
                                                     new_mapped_box.getBlockId());

@@ -2382,7 +2382,7 @@ void GriddingAlgorithm::checkOverlappingPatches(
             }
             else {
                hier::Box nabr_box(nabr);
-               grid_geom.translateBox( nabr_box,
+               grid_geom.transformBox( nabr_box,
                                        ratio,
                                        mapped_box.getBlockId(),
                                        nabr.getBlockId() );
@@ -2684,7 +2684,7 @@ void GriddingAlgorithm::fillTagsFromMappedBoxLevel(
          box.grow(fill_box_growth);
          box.coarsen(ratio);
          if ( neighbor.getBlockId() != patch->getMappedBox().getBlockId() ) {
-            grid_geom->translateBox( box,
+            grid_geom->transformBox( box,
                                      tag_level->getRatioToLevelZero(),
                                      patch->getMappedBox().getBlockId(),
                                      neighbor.getBlockId() );

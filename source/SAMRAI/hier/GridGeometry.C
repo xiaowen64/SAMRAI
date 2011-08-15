@@ -1851,7 +1851,7 @@ GridGeometry::getDomainOutsideBlock(
 {
    for (tbox::List<Neighbor>::Iterator
         nei(d_block_neighbors[block_number]); nei; nei++) {
-      domain_outside_block.unionBoxes(BoxList(nei().getTranslatedDomain()));
+      domain_outside_block.unionBoxes(BoxList(nei().getTransformedDomain()));
    }
 }
 
@@ -1922,13 +1922,13 @@ void GridGeometry::registerNeighbors(
 /*
  *************************************************************************
  * Rotate and shift a box according to the rotation and shift that is
- * used to translate the index space of input_block into the
+ * used to transform the index space of input_block into the
  * index space of base_block.
  *************************************************************************
  */
 
 bool
-GridGeometry::translateBox(
+GridGeometry::transformBox(
    Box& box,
    const IntVector& ratio,
    const BlockId &output_block,
@@ -1952,14 +1952,14 @@ GridGeometry::translateBox(
  * ************************************************************************
  *                                                                        *
  * Rotate and shift the boxes in the given array according to the         *
- * rotation and shift that is used to translated the index space of       *
+ * rotation and shift that is used to transformed the index space of       *
  * input_block into the index space of output_block.                   *
  *                                                                        *
  * ************************************************************************
  */
 
 bool
-GridGeometry::translateBoxList(
+GridGeometry::transformBoxList(
    BoxList& boxes,
    const IntVector& ratio,
    const BlockId &output_block,
@@ -1982,24 +1982,24 @@ GridGeometry::translateBoxList(
 /*
  * ************************************************************************
  *                                                                        *
- * Set block to be the domain of translated_block in the index space of   *
+ * Set block to be the domain of transformed_block in the index space of   *
  * base_block.                                                            *
  *                                                                        *
  * ************************************************************************
  */
 
 void
-GridGeometry::getTranslatedBlock(
+GridGeometry::getTransformedBlock(
    BoxList& block,
    const int base_block,
-   const int translated_block)
+   const int transformed_block)
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, block);
 
    for (tbox::List<Neighbor>::Iterator
         ni(d_block_neighbors[base_block]); ni; ni++) {
-      if (ni().getBlockNumber() == translated_block) {
-         block = ni().getTranslatedDomain();
+      if (ni().getBlockNumber() == transformed_block) {
+         block = ni().getTransformedDomain();
          break;
       }
    }
@@ -2038,7 +2038,7 @@ void GridGeometry::adjustMultiblockPatchLevelBoundaries(
 
          for (tbox::List<GridGeometry::Neighbor>::Iterator
               nei(d_block_neighbors[nb]); nei; nei++) {
-            pseudo_domain.unionBoxes(BoxList(nei().getTranslatedDomain()));
+            pseudo_domain.unionBoxes(BoxList(nei().getTransformedDomain()));
          }
 
          pseudo_domain.refine(patch_level.getRatioToLevelZero());

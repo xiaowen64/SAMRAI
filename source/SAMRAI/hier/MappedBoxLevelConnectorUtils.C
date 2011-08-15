@@ -1860,7 +1860,7 @@ void MappedBoxLevelConnectorUtils::computeBoxesAroundBoundary(
             const GridGeometry::Neighbor &neighbor(*ni);
             if ( neighbor.isSingularity() ) {
                reduced_connectivity_singularity_boxes.removeIntersections(
-                  neighbor.getTranslatedDomain());
+                  neighbor.getTransformedDomain());
             }
          }
 
@@ -1894,7 +1894,7 @@ void MappedBoxLevelConnectorUtils::computeBoxesAroundBoundary(
             if ( neighbor.isSingularity() &&
                  reference_mapped_boxes_tree.hasBoxInBlock(neighbor_block_id) ) {
 
-               grid_geometry->translateBoxList(singularity_boxes,
+               grid_geometry->transformBoxList(singularity_boxes,
                                                refinement_ratio,
                                                neighbor_block_id,
                                                block_id);
@@ -1902,7 +1902,7 @@ void MappedBoxLevelConnectorUtils::computeBoxesAroundBoundary(
                singularity_boxes.intersectBoxes(
                   reference_mapped_boxes_tree.getSingleBlockBoxTree(neighbor_block_id));
 
-               grid_geometry->translateBoxList(singularity_boxes,
+               grid_geometry->transformBoxList(singularity_boxes,
                                                refinement_ratio,
                                                block_id,
                                                neighbor_block_id);

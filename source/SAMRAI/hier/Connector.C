@@ -1142,7 +1142,7 @@ void Connector::recursivePrint(
                hier::Box ovlap = *i_nabr;
                if ( ni->getBlockId() != i_nabr->getBlockId() ) {
                   d_base_handle->getMappedBoxLevel().getGridGeometry()->
-                     translateBox(
+                     transformBox(
                         ovlap,
                         d_head_handle->getMappedBoxLevel().getRefinementRatio(),
                         ni->getBlockId(),

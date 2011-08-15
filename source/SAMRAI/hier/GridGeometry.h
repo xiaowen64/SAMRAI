@@ -753,7 +753,7 @@ public:
          const Transformation& transformation,
          const bool is_singularity):
          d_block_number(block_number),
-         d_translated_domain(domain),
+         d_transformed_domain(domain),
          d_transformation(transformation),
          d_is_singularity(is_singularity) {
       }
@@ -767,7 +767,7 @@ public:
        * @brief Get the neighboring block's domain in the current block's
        * index space.
        */
-      const BoxList& getTranslatedDomain() const;
+      const BoxList& getTransformedDomain() const;
 
       /*!
        * @brief Get the Transformation for the neighbor relationship.
@@ -802,7 +802,7 @@ private:
        * @brief The neighboring block's domain in the current block's
        * index space.
        */
-      BoxList d_translated_domain;
+      BoxList d_transformed_domain;
 
       /*!
        * @brief The transformation to transform the neighboring block's
@@ -845,7 +845,7 @@ private:
     *
     * A BoxList will be constructed that contains the full set of the
     * coarse level domains of all blocks except the one identified by
-    * block_number.  The domains will all be translated into the index space
+    * block_number.  The domains will all be transformed into the index space
     * represented by block_number.
     *
     * @param[out] domain_outside_block
@@ -907,11 +907,11 @@ private:
 
    /*!
     * @brief Modify a box by rotating and shifting from the index space of
-    * the translated_block to the index space of the base_block at the
+    * the transformed_block to the index space of the base_block at the
     * resolution level defined by ratio_to_level_zero.
     *
-    * @param[in,out] box The boxes will be translated from the
-    *                      translated_block index space to the base_block
+    * @param[in,out] box The boxes will be transformed from the
+    *                      transformed_block index space to the base_block
     *                      index space.
     * @param[in] ratio_to_level_zero
     * @param[in] output_block Integer identifier of the block whose index space
@@ -919,12 +919,12 @@ private:
     * @param[in] input_block Integer identifier of the block whose index
     *                             space is represented in the boxes at input
     *
-    * @return Whether the box has been translated.  True if there is a
+    * @return Whether the box has been transformed.  True if there is a
     * relationship between input_block and output_block.  False if
     * there is no such relationship.
     */
    bool
-   translateBox(
+   transformBox(
       Box& box,
       const IntVector& ratio,
       const BlockId &output_block,
@@ -935,7 +935,7 @@ private:
     * the input_block to the index space of the output_block at the
     * resolution level defined by ratio_to_level_zero.
     *
-    * @param[in,out] boxes The boxes will be translated from the
+    * @param[in,out] boxes The boxes will be transformed from the
     *                      input_block index space to the output_block
     *                      index space.
     * @param[in] ratio_to_level_zero
@@ -944,12 +944,12 @@ private:
     * @param[in] input_block Integer identifier of the block whose index
     *                             space is represented in the boxes at input
     *
-    * @return Whether the boxes have been translated.  True if there
+    * @return Whether the boxes have been transformed.  True if there
     * is a relationship between input_block and output_block.  False
     * if there is no such relationship.
     */
    bool
-   translateBoxList(
+   transformBoxList(
       BoxList& boxes,
       const IntVector& ratio,
       const BlockId &output_block,
@@ -957,23 +957,23 @@ private:
 
    /*!
     * @brief Get a box array that describes the coarse-level domain of the
-    * translated_block in terms of the index space of base_block.
+    * transformed_block in terms of the index space of base_block.
     *
     * @param[out] block_boxes The coarse-level domain of the block 
-    *                         identified by translated_block, represented
+    *                         identified by transformed_block, represented
     *                         in the index space of the block identified by
     *                         base_block
     * @param[in] base_block  The block whose index space will be used for
     *                        the output boxes
-    * @param[in] translated_block Integer identifier of another block whose
+    * @param[in] transformed_block Integer identifier of another block whose
     *                             domain will be represented in the index space
     *                             of the base block
     */
    void
-   getTranslatedBlock(
+   getTransformedBlock(
       BoxList& block_boxes,
       const int base_block,
-      const int translated_block);
+      const int transformed_block);
 
    /*!
     * @brief Return a list of Neighbor objects describing all of the neighbors

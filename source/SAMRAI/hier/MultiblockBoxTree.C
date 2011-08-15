@@ -343,7 +343,7 @@ void MultiblockBoxTree::findOverlapBoxes(
 
       Box transformed_box(box);
 
-      d_grid_geometry->translateBox(transformed_box,
+      d_grid_geometry->transformBox(transformed_box,
                                     refinement_ratio,
                                     neighbor_block_id,
                                     block_id);
@@ -408,7 +408,7 @@ void MultiblockBoxTree::findOverlapBoxes(
 
       Box transformed_box(box);
 
-      d_grid_geometry->translateBox(transformed_box,
+      d_grid_geometry->transformBox(transformed_box,
                                     refinement_ratio,
                                     neighbor_block_id,
                                     block_id);
@@ -473,7 +473,7 @@ void MultiblockBoxTree::findOverlapBoxes(
 
       Box transformed_box(box);
 
-      d_grid_geometry->translateBox(transformed_box,
+      d_grid_geometry->transformBox(transformed_box,
                                     refinement_ratio,
                                     neighbor_block_id,
                                     block_id);
@@ -538,7 +538,7 @@ void MultiblockBoxTree::findOverlapBoxes(
 
       Box transformed_box(box);
 
-      d_grid_geometry->translateBox(transformed_box,
+      d_grid_geometry->transformBox(transformed_box,
                                     refinement_ratio,
                                     neighbor_block_id,
                                     block_id);

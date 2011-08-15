@@ -472,7 +472,7 @@ void BoxList::removeIntersections(
                overlap_mapped_boxes[i]->getBlockId();
             if ( overlap_box_block_id != block_id ) {
                Box overlap_box = *overlap_mapped_boxes[i];
-               grid_geometry->translateBox( overlap_box,
+               grid_geometry->transformBox( overlap_box,
                                             refinement_ratio,
                                             block_id,
                                             overlap_box_block_id );
@@ -554,7 +554,7 @@ void BoxList::intersectBoxes(
             overlap_mapped_boxes[i]->getBlockId();
          if ( overlap_box_block_id != block_id ) {
             Box overlap_box = *overlap_mapped_boxes[i];
-            grid_geometry->translateBox(overlap_box,
+            grid_geometry->transformBox(overlap_box,
                                         refinement_ratio,
                                         block_id,
                                         overlap_box_block_id );

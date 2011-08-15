@@ -185,7 +185,7 @@ void OverlapConnectorAlgorithm::extractNeighbors(
             const Box &neighbor(*ni);
             Box nabr_box(neighbor);
             if ( neighbor.getBlockId() != mapped_box.getBlockId() ) {
-               grid_geom->translateBox(nabr_box,
+               grid_geom->transformBox(nabr_box,
                                        connector.getHead().getRefinementRatio(),
                                        mapped_box.getBlockId(),
                                        neighbor.getBlockId() );
@@ -411,7 +411,7 @@ void OverlapConnectorAlgorithm::shrinkConnectorWidth(
          const Box& nabr = *na;
          hier::Box nabr_box = nabr;
          if ( nabr.getBlockId() != mapped_box.getBlockId() ) {
-            grid_geom->translateBox(nabr_box,
+            grid_geom->transformBox(nabr_box,
                                     connector.getHead().getRefinementRatio(),
                                     mapped_box.getBlockId(),
                                     nabr.getBlockId() );

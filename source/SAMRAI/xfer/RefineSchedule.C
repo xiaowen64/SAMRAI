@@ -2368,7 +2368,7 @@ RefineSchedule::createUnfilledEnconLevelWithNoSource(
                      if(ni().getBlockNumber() == nbr_blk) {
 
                         hier::BoxList unfilled_box_for_encon(
-                           ni().getTranslatedDomain());
+                           ni().getTransformedDomain());
                         unfilled_box_for_encon.refine(
                            d_dst_level->getRatioToLevelZero());
                         unfilled_box_for_encon.intersectBoxes(
@@ -3349,7 +3349,7 @@ void RefineSchedule::generateCommunicationSchedule(
 
                   hier::Box transformed_src_box(src_mapped_box);
 
-                  grid_geometry->translateBox(
+                  grid_geometry->transformBox(
                      transformed_src_box,
                      d_dst_level->getRatioToLevelZero(),
                      dst_block_id,
@@ -3472,7 +3472,7 @@ void RefineSchedule::findEnconFillBoxes(
         ni(neighbors); ni; ni++) {
 
       if(ni().isSingularity()) {
-         encon_fill_boxes.unionBoxes(ni().getTranslatedDomain());
+         encon_fill_boxes.unionBoxes(ni().getTransformedDomain());
       }
 
    }
@@ -3526,7 +3526,7 @@ void RefineSchedule::findEnconUnfilledBoxes(
          const hier::BlockId nbr_block_id(ni().getBlockNumber());
 
          unfilled_encon_nbr_boxes[nbr_block_id].unionBoxes(
-            ni().getTranslatedDomain());
+            ni().getTransformedDomain());
          unfilled_encon_nbr_boxes[nbr_block_id].refine(
             d_dst_level->getRatioToLevelZero());
          unfilled_encon_nbr_boxes[nbr_block_id].intersectBoxes(
@@ -3565,7 +3565,7 @@ void RefineSchedule::findEnconUnfilledBoxes(
                                                        src_block_id)) {
 
                hier::Box transformed_src_box(src_mapped_box);
-               grid_geometry->translateBox(transformed_src_box,
+               grid_geometry->transformBox(transformed_src_box,
                                            d_dst_level->getRatioToLevelZero(),
                                            dst_block_id,
                                            src_block_id); 
@@ -3621,7 +3621,7 @@ void RefineSchedule::findEnconUnfilledBoxes(
                     bi; bi++) {
 
                   hier::Box unfilled_box(bi());
-                  grid_geometry->translateBox(
+                  grid_geometry->transformBox(
                      unfilled_box,
                      d_dst_level->getRatioToLevelZero(),
                      nbr_block_id,
@@ -3951,7 +3951,7 @@ void RefineSchedule::createEnconLevel(const hier::IntVector& fill_gcw)
                   hier::Transformation transformation(rotation, offset);
 
                   hier::BoxList trans_neighbor_list(dim);
-                  grid_geometry->getTranslatedBlock(trans_neighbor_list,
+                  grid_geometry->getTransformedBlock(trans_neighbor_list,
                      bn,
                      nbr_num);
                   trans_neighbor_list.refine(

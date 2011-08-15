@@ -35,9 +35,9 @@ const std::string& GridGeometry::getObjectName() const {
 
 SAMRAI_INLINE_KEYWORD
 const BoxList&
-GridGeometry::Neighbor::getTranslatedDomain() const
+GridGeometry::Neighbor::getTransformedDomain() const
 {
-   return d_translated_domain;
+   return d_transformed_domain;
 }
 
 SAMRAI_INLINE_KEYWORD

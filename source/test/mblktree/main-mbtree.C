@@ -521,7 +521,7 @@ void exhaustiveFindOverlapMappedBoxes(
        */
       if ( transformed_block_id != search_mapped_box.getBlockId() ) {
          transformed_box = mapped_box;
-         bool transformed = grid_geometry->translateBox(transformed_box,
+         bool transformed = grid_geometry->transformBox(transformed_box,
                                                         refinement_ratio,
                                                         search_mapped_box.getBlockId(),
                                                         mapped_box.getBlockId());

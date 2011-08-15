@@ -600,7 +600,7 @@ bool FaceMultiblockTest::verifyResults(
 
             correct = ne().getBlockNumber();
 
-            hier::BoxList neighbor_ghost(ne().getTranslatedDomain());
+            hier::BoxList neighbor_ghost(ne().getTransformedDomain());
             hier::BoxList neighbor_face_ghost;
             for (hier::BoxList::Iterator nn(neighbor_ghost); nn; nn++) {
                hier::Box neighbor_ghost_interior(
@@ -665,7 +665,7 @@ bool FaceMultiblockTest::verifyResults(
                     Iterator ns(neighbors); ns; ns++) {
                   if (ns().isSingularity()) {
                      hier::BoxList neighbor_ghost(
-                        ns().getTranslatedDomain());
+                        ns().getTransformedDomain());
                      neighbor_ghost.refine(ratio);
                      neighbor_ghost.intersectBoxes(fill_box);
                      if (neighbor_ghost.size()) {

@@ -92,7 +92,7 @@ void PatchLevelEnhancedFillPattern::computeFillMappedBoxesAndNeighborhoodSets(
 
          if (ni().isSingularity()) {
 
-            hier::BoxList encon_boxes(ni().getTranslatedDomain());
+            hier::BoxList encon_boxes(ni().getTransformedDomain());
             encon_boxes.refine(dst_mapped_box_level.getRefinementRatio());
             encon_boxes.intersectBoxes(fill_boxes);
             encon_boxes.removeIntersections(constructed_fill_boxes);
