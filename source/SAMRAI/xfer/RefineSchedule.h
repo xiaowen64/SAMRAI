@@ -725,6 +725,19 @@ private:
       const Connector& src_to_dst);
 
    /*!
+    * @brief Shear off parts of unfilled boxes that lie outside non-periodic
+    * domain boundaries and update an overlap Connector based on the change.
+    *
+    * @param[in,out] unfilled
+    *
+    * @param[in,out] dst_to_unfilled
+    */
+   void shearUnfilledBoxesOutsideNonperiodicBoundaries(
+      hier::MappedBoxLevel &unfilled,
+      hier::Connector &dst_to_unfilled,
+      const tbox::Pointer<hier::PatchHierarchy> &hierarchy);
+
+   /*!
     * @brief Get the maximum ghost cell width of all destination
     * patch data components.
     */
