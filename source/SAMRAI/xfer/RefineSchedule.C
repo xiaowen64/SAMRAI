@@ -1836,8 +1836,9 @@ void RefineSchedule::finishScheduleConstruction_setupSupplementalMappedBoxLevel(
    hier::NeighborhoodSet dst_eto_supp, supp_eto_unfilled;
 
    /*
-    * This loop builds up supp_mapped_box_level, dst_eto_supp and
-    *  supp_eto_unfilled.
+    * This loop builds up supp_mapped_box_level.  It also builds up the
+    * neighborhood sets dst_eto_supp and supp_eto_unfilled using simple
+    * associations in dst_to_unfilled.
     */
    for (hier::NeighborhoodSet::const_iterator ei = dst_eto_unfilled.begin();
         ei != dst_eto_unfilled.end(); ++ei) {
@@ -1850,87 +1851,43 @@ void RefineSchedule::finishScheduleConstruction_setupSupplementalMappedBoxLevel(
       for (hier::MappedBoxSet::const_iterator ni = dst_unfilled_parts.begin();
            ni != dst_unfilled_parts.end(); ++ni) {
 
+         /*
+          * Build the supplemental box by coarsening the unfilled box.
+          * The box is sheared at the physical boundary or extended to
+          * the physical boundary to conform to normal gridding
+          * restrictions.
+          */
          const hier::Box& unfilled_mapped_box = *ni;
          hier::Box supp_box(unfilled_mapped_box);
          supp_box.coarsen(dst_hiercoarse_ratio);
 
 
+         hier::BoxList sheared_supp_boxes(supp_box);
+
          if (do_coarse_shearing[dst_blk] &&
              (d_dst_level->patchTouchesRegularBoundary(
                  dst_mapped_box_mbid))) {
-
-            hier::BoxList sheared_supp_boxes(supp_box);
             sheared_supp_boxes.intersectBoxes(coarser_shear_domain[dst_blk]);
             sheared_supp_boxes.simplifyBoxes();
+         }
 
-            (void)hier::BoxUtilities::extendBoxesToDomainBoundary(
-               sheared_supp_boxes,
-               coarser_physical_domain[dst_blk],
-               d_max_stencil_width);
-            /*
-             * Connector widths must be big enough to make sure
-             * we have complete sets after extending mapped_boxes to boundary!
-             */
-            if (sheared_supp_boxes.size() > 0) {
+         (void)hier::BoxUtilities::extendBoxesToDomainBoundary(
+            sheared_supp_boxes,
+            coarser_physical_domain[dst_blk],
+            d_max_stencil_width);
 
-               NeighborSet& supp_nabrs = dst_eto_supp[dst_mapped_box_mbid];
+         if (sheared_supp_boxes.size() > 0) {
 
-               for (hier::BoxList::Iterator b(sheared_supp_boxes); b; b++) {
-                  const hier::Box& supp_mapped_box =
-                     *supp_mapped_box_level.addBox(*b, (*ni).getBlockId());
-                  supp_nabrs.insert(supp_mapped_box);
-
-                  /*
-                   * Note that each supp_mapped_box must have at least one
-                   * unfilled_nabr and may have multiple.
-                   */
-                  supp_eto_unfilled[supp_mapped_box.getId()].insert(
-                     unfilled_mapped_box);
-
-               }
-
-            }
-
-         } else {
-
-            /*
-             * If the supp_box is less than a ghost width
-             * (d_max_stencil_width for the supplemental level) of a
-             * physical boundary, extend it to the boundary.
-             *
-             * Note: If we end up extending the supp_box, we may
-             * fail sanity checks further down because have not
-             * accounted for this extension in the various
-             * Connector widths.  However, it is not likely that
-             * the extension would have any effects on computations
-             * because, being so close to the physical boundary,
-             * they should not create any new relationships.  This
-             * is just a hunch and need to be rigously verified.
-             *
-             * For now, just warn if the box is grown.
-             */
-            const hier::Box save_supp_box(supp_box);
-            (void)hier::BoxUtilities::extendBoxToDomainBoundary(
-               supp_box,
-               coarser_physical_domain[dst_blk],
-               d_max_stencil_width);
-            if (! supp_box.isSpatiallyEqual(save_supp_box)) {
-               TBOX_WARNING("Supplemental box " << save_supp_box
-                            << " was extended to " << supp_box
-                            << " at a physical boundary.  This is"
-                            << " probably ok but a rigorous proof"
-                            << " that won't cause problem is currently"
-                            << " lacking.  Expect some sanity checks"
-                            << " to fail and a slim chance that the"
-                            << " schedule generate will be bad.");
-            }
-
-            const hier::Box& supp_mapped_box = *supp_mapped_box_level.addBox(
-               supp_box, (*ni).getBlockId());
             NeighborSet& supp_nabrs = dst_eto_supp[dst_mapped_box_mbid];
-            supp_nabrs.insert(supp_mapped_box);
-            supp_eto_unfilled[supp_mapped_box.getId()].insert(
-               unfilled_mapped_box);
+
+            for (hier::BoxList::Iterator b(sheared_supp_boxes); b; b++) {
+               const hier::Box& supp_mapped_box =
+                  *supp_mapped_box_level.addBox(*b, (*ni).getBlockId());
+               supp_nabrs.insert(supp_mapped_box);
+
+               supp_eto_unfilled[supp_mapped_box.getId()].insert(
+                  unfilled_mapped_box);
+            }
 
          }
 
