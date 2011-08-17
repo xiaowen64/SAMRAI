@@ -239,6 +239,7 @@ RefineSchedule::RefineSchedule(
    tbox::Pointer<Connector> unused_dst_to_unfilled;
    tbox::Pointer<MappedBoxLevel> unused_unfilled_encon_box_level;
    tbox::Pointer<Connector> unused_encon_to_unfilled_encon;
+   bool create_transactions = true;
    generateCommunicationSchedule(
       unused_unfilled_mapped_box_level,
       unused_dst_to_unfilled,
@@ -248,7 +249,8 @@ RefineSchedule::RefineSchedule(
       src_to_dst,
       dst_to_fill,
       dst_to_fill_on_src_proc,
-      use_time_refinement);
+      use_time_refinement,
+      create_transactions);
 
    if (!d_supp_level.isNull()) {
       computeRefineOverlaps(d_refine_overlaps,
@@ -809,47 +811,24 @@ void RefineSchedule::finishScheduleConstruction(
                  << dst_to_fill.format("DF->", 2)
                  << std::endl;
    }
+
+   bool create_transactions = true;
    if (d_src_level.isNull() || skip_generate_schedule) {
-
-      /*
-       * There is no source level, so the entire fill_mapped_box_level
-       * is the unfilled_mapped_box_level
-       */
-      d_unfilled_mapped_box_level =
-         new hier::MappedBoxLevel(fill_mapped_box_level);
-      dst_to_unfilled = new Connector(
-         dst_mapped_box_level,
-         *d_unfilled_mapped_box_level,
-         dst_to_fill.getConnectorWidth(),
-         dst_to_fill.getNeighborhoodSets(),
-         MappedBoxLevel::DISTRIBUTED);
-      dst_to_unfilled->setConnectorType(hier::Connector::BASE_GENERATED);
-
-      /*
-       * Here we determine if any of d_unfilled_mapped_box_level touches
-       * enhanced connectivity, in which case boxes will need to be
-       * added to d_unfilled_encon_box_level.
-       */
-      if (grid_geometry->hasEnhancedConnectivity()) {
-         createUnfilledEnconLevelWithNoSource(
-            encon_to_unfilled_encon,
-            dst_to_fill);
-      } else {
-         encon_to_unfilled_encon = new hier::Connector();
-      } 
-
-   } else {
-      generateCommunicationSchedule(
-         d_unfilled_mapped_box_level,
-         dst_to_unfilled,
-         d_unfilled_encon_box_level,
-         encon_to_unfilled_encon,
-         dst_to_src,
-         src_to_dst,
-         dst_to_fill,
-         dst_to_fill_on_src_proc,
-         use_time_interpolation);
+      create_transactions = false;
    }
+
+   generateCommunicationSchedule(
+      d_unfilled_mapped_box_level,
+      dst_to_unfilled,
+      d_unfilled_encon_box_level,
+      encon_to_unfilled_encon,
+      dst_to_src,
+      src_to_dst,
+      dst_to_fill,
+      dst_to_fill_on_src_proc,
+      use_time_interpolation,
+      create_transactions);
+
    if (s_extra_debug) {
       tbox::plog << "finishScheduleConstruction in recursion_level="
                  << recursion_level << " next_coarser_ln=" << next_coarser_ln
@@ -3173,7 +3152,8 @@ void RefineSchedule::generateCommunicationSchedule(
    const Connector& src_to_dst,
    const Connector& dst_to_fill,
    const FillSet& dst_to_fill_on_src_proc,
-   const bool use_time_interpolation)
+   const bool use_time_interpolation,
+   const bool create_transactions)
 {
    t_gen_comm_sched->start();
 
@@ -3187,83 +3167,87 @@ void RefineSchedule::generateCommunicationSchedule(
       }
    }
 
-   /*
-    * We invert the edges so that the src transactions on the local
-    * process are created in the same order the dst transactions
-    * are created on remote processes.  The ordering is how the
-    * source and destination transactions are matched up on the
-    * receiving process.  We chose to order the transactions
-    * dst-major (all the transactions for one dst Box are
-    * grouped together, then all transactions for the next
-    * dst Box, and so on).
-    */
-   const hier::NeighborhoodSet& dst_to_src_edges =
-      dst_to_src.getNeighborhoodSets();
+   const MappedBoxLevel& dst_mapped_box_level = dst_to_fill.getBase();
 
-   const MappedBoxLevel& dst_mapped_box_level = dst_to_src.getBase();
-
-   /*
-    * Reorder the src_to_dst edge data to arrange neighbors by the
-    * dst mapped_boxes, as required to match the transaction ordering
-    * on the receiving processors.
-    */
-   FullNeighborhoodSet src_to_dst_edges_bydst;
-   t_invert_edges->start();
-   reorderNeighborhoodSetsByDstNodes(src_to_dst_edges_bydst, src_to_dst);
-   t_invert_edges->stop();
-
-
-   t_construct_send_trans->start();
-
-   /*
-    * Construct transactions with local source and remote destination.
-    */
-   for (FullNeighborhoodSet::const_iterator
-        ei = src_to_dst_edges_bydst.begin();
-        ei != src_to_dst_edges_bydst.end(); ++ei) {
+   if (create_transactions) {
+      /*
+       * We invert the edges so that the src transactions on the local
+       * process are created in the same order the dst transactions
+       * are created on remote processes.  The ordering is how the
+       * source and destination transactions are matched up on the
+       * receiving process.  We chose to order the transactions
+       * dst-major (all the transactions for one dst Box are
+       * grouped together, then all transactions for the next
+       * dst Box, and so on).
+       */
+      const hier::NeighborhoodSet& dst_to_src_edges =
+         dst_to_src.getNeighborhoodSets();
 
       /*
-       * dst_mapped_box can be remote (by definition of FullNeighborhoodSet).
-       * local_src_mapped_boxes are the local source mapped_boxes that
-       * contribute data to dst_mapped_box.
+       * Reorder the src_to_dst edge data to arrange neighbors by the
+       * dst mapped_boxes, as required to match the transaction ordering
+       * on the receiving processors.
        */
-      const hier::Box& dst_mapped_box = ei->first;
-      const hier::MappedBoxSet& local_src_mapped_boxes = ei->second;
-      TBOX_ASSERT(!dst_mapped_box.isPeriodicImage());
+      FullNeighborhoodSet src_to_dst_edges_bydst;
+      t_invert_edges->start();
+      reorderNeighborhoodSetsByDstNodes(src_to_dst_edges_bydst, src_to_dst);
+      t_invert_edges->stop();
 
-      FillSet::const_iterator dst_fill_iter =
-         dst_to_fill_on_src_proc.find(dst_mapped_box.getId());
-      if (dst_fill_iter == dst_to_fill_on_src_proc.end()) {
+
+      t_construct_send_trans->start();
+
+      /*
+       * Construct transactions with local source and remote destination.
+       */
+      for (FullNeighborhoodSet::const_iterator
+           ei = src_to_dst_edges_bydst.begin();
+           ei != src_to_dst_edges_bydst.end(); ++ei) {
+
          /*
-          * Missing fill boxes should indicate that the dst mapped_box
-          * has no fill box.  One way this is possible is for
-          * d_dst_level_fill_pattern to be of type PatchLevelBorderFillPattern
-          * and for dst_mapped_box to be away from level borders.
+          * dst_mapped_box can be remote (by definition of FullNeighborhoodSet).
+          * local_src_mapped_boxes are the local source mapped_boxes that
+          * contribute data to dst_mapped_box.
           */
-         continue;
-      }
+         const hier::Box& dst_mapped_box = ei->first;
+         const hier::MappedBoxSet& local_src_mapped_boxes = ei->second;
+         TBOX_ASSERT(!dst_mapped_box.isPeriodicImage());
 
-      const hier::MappedBoxSet& dst_fill_boxes = dst_fill_iter->second;
-
-      for (hier::MappedBoxSet::const_iterator
-           ni = local_src_mapped_boxes.begin();
-           ni != local_src_mapped_boxes.end(); ++ni) {
-         const hier::Box& src_mapped_box = *ni;
-
-         if (src_mapped_box.getOwnerRank() != dst_mapped_box.getOwnerRank()) {
-
-            constructScheduleTransactions(
-               dst_fill_boxes,
-               dst_mapped_box,
-               src_mapped_box,
-               use_time_interpolation);
-
+         FillSet::const_iterator dst_fill_iter =
+            dst_to_fill_on_src_proc.find(dst_mapped_box.getId());
+         if (dst_fill_iter == dst_to_fill_on_src_proc.end()) {
+            /*
+             * Missing fill boxes should indicate that the dst mapped_box
+             * has no fill box.  One way this is possible is for
+             * d_dst_level_fill_pattern to be of type PatchLevelBorderFillPattern
+             * and for dst_mapped_box to be away from level borders.
+             */
+            continue;
          }
-      }
 
-   } // end send transactions loop
+         const hier::MappedBoxSet& dst_fill_boxes = dst_fill_iter->second;
 
-   t_construct_send_trans->stop();
+         for (hier::MappedBoxSet::const_iterator
+              ni = local_src_mapped_boxes.begin();
+              ni != local_src_mapped_boxes.end(); ++ni) {
+            const hier::Box& src_mapped_box = *ni;
+
+            if (src_mapped_box.getOwnerRank() !=
+                dst_mapped_box.getOwnerRank()) {
+
+               constructScheduleTransactions(
+                  dst_fill_boxes,
+                  dst_mapped_box,
+                  src_mapped_box,
+                  use_time_interpolation);
+
+            }
+         }
+
+      } // end send transactions loop
+
+      t_construct_send_trans->stop();
+
+   } // if create_transactions
 
    const hier::NeighborhoodSet& dst_to_fill_edges =
       dst_to_fill.getNeighborhoodSets();
@@ -3320,55 +3304,63 @@ void RefineSchedule::generateCommunicationSchedule(
       hier::BoxList unfilled_boxes_for_dst(fill_boxes_list);
       unfilled_boxes_for_dst.removeIntersections(encon_fill_boxes);
 
-      hier::NeighborhoodSet::const_iterator dst_to_src_iter =
-         dst_to_src_edges.find(dst_mapped_box_id);
+      if (create_transactions) {
 
-      if (dst_to_src_iter != dst_to_src_edges.end()) {
-         const hier::MappedBoxSet& src_mapped_boxes = dst_to_src_iter->second; 
+         const hier::NeighborhoodSet& dst_to_src_edges =
+            dst_to_src.getNeighborhoodSets();
 
-         for (hier::MappedBoxSet::const_iterator na = src_mapped_boxes.begin();
-              na != src_mapped_boxes.end(); ++na) {
+         hier::NeighborhoodSet::const_iterator dst_to_src_iter =
+            dst_to_src_edges.find(dst_mapped_box_id);
 
-            const hier::Box& src_mapped_box = *na;
-            const hier::BlockId& src_block_id = src_mapped_box.getBlockId();
+         if (dst_to_src_iter != dst_to_src_edges.end()) {
+            const hier::MappedBoxSet& src_mapped_boxes =
+               dst_to_src_iter->second; 
 
-            /*
-             * Remove the source box from the unfilled boxes list.  If
-             * necessary, the source box is transformed to the destination
-             * coordinate system.
-             *
-             * The removal of the source box is skipped if the source
-             * and destination are enhanced connectivity (singularity)
-             * neighbors, since the handling of unfilled boxes in this case
-             * is a separate step.
-             */
-            if (src_block_id != dst_block_id) {
+            for (hier::MappedBoxSet::const_iterator
+                 na = src_mapped_boxes.begin();
+                 na != src_mapped_boxes.end(); ++na) {
 
-               if (!grid_geometry->areSingularityNeighbors(dst_block_id,
-                                                           src_block_id)) {
+               const hier::Box& src_mapped_box = *na;
+               const hier::BlockId& src_block_id = src_mapped_box.getBlockId();
 
-                  hier::Box transformed_src_box(src_mapped_box);
+               /*
+                * Remove the source box from the unfilled boxes list.  If
+                * necessary, the source box is transformed to the destination
+                * coordinate system.
+                *
+                * The removal of the source box is skipped if the source
+                * and destination are enhanced connectivity (singularity)
+                * neighbors, since the handling of unfilled boxes in this case
+                * is a separate step.
+                */
+               if (src_block_id != dst_block_id) {
 
-                  grid_geometry->transformBox(
-                     transformed_src_box,
-                     d_dst_level->getRatioToLevelZero(),
-                     dst_block_id,
-                     src_block_id);
+                  if (!grid_geometry->areSingularityNeighbors(dst_block_id,
+                                                              src_block_id)) {
 
-                  unfilled_boxes_for_dst.removeIntersections(
-                     transformed_src_box);
+                     hier::Box transformed_src_box(src_mapped_box);
+
+                     grid_geometry->transformBox(
+                        transformed_src_box,
+                        d_dst_level->getRatioToLevelZero(),
+                        dst_block_id,
+                        src_block_id);
+
+                     unfilled_boxes_for_dst.removeIntersections(
+                        transformed_src_box);
  
+                  }
+               } else {
+                  unfilled_boxes_for_dst.removeIntersections(
+                     src_mapped_box);
                }
-            } else {
-               unfilled_boxes_for_dst.removeIntersections(
-                  src_mapped_box);
-            }
-            constructScheduleTransactions(
-               fill_nabrs,
-               dst_mapped_box,
-               src_mapped_box,
-               use_time_interpolation);
+               constructScheduleTransactions(
+                  fill_nabrs,
+                  dst_mapped_box,
+                  src_mapped_box,
+                  use_time_interpolation);
 
+            }
          }
       }
 
