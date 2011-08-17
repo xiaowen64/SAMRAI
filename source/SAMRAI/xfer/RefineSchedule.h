@@ -732,10 +732,27 @@ private:
    void setupSupplementalMappedBoxLevel(
       hier::MappedBoxLevel &supp_mapped_box_level,
       const hier::MappedBoxLevel &hiercoarse_mapped_box_level,
-      const hier::Connector &dst_to_unfilled,
-      const tbox::Array<hier::BoxList> &coarser_physical_domain,
-      const tbox::Array<hier::BoxList> &coarser_shear_domain,
-      const tbox::Array<bool> &do_coarse_shearing);
+      const hier::Connector &dst_to_unfilled);
+
+   /*!
+    * @brief Compute the Connectors between the supplemental level
+    * and the hiercoarse level.
+    *
+    * @param[in] supp_to_hiercoarse
+    * @param[out] hiercoarse_to_supp
+    * @param[in] dst_is_supplemental_level
+    */
+   void connectSuppToHiercoarse(
+      hier::Connector &supp_to_hiercoarse,
+      hier::Connector &hiercoarse_to_supp,
+      const hier::MappedBoxLevel &dst_mapped_box_level,
+      const hier::Connector &dst_to_src,
+      const hier::Connector &src_to_dst,
+      const tbox::Pointer<hier::PatchHierarchy> &hierarchy,
+      const int next_coarser_ln,
+      const bool dst_is_supplemental_level,
+      hier::MappedBoxLevel &supp_mapped_box_level,
+      const hier::MappedBoxLevel &hiercoarse_mapped_box_level);
 
    /*
     * @brief Shear off parts of unfilled boxes that lie outside non-periodic
