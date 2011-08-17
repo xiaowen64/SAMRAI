@@ -702,9 +702,9 @@ RefineSchedule::getBoundaryFillGhostWidth() const
  *
  * Generate communication schedules to transfer data from src to
  * fillboxes associated with dst boxes.  What parts cannot be filled
- * becomes the "unfilled" boxes.  If no source, all fill boxes become
- * "unfilled" boxes.  We also construct unfilled boxes at enhanced
- * connectivity block boundaries.
+ * from the src becomes the "unfilled" boxes.  If no source, all fill
+ * boxes become "unfilled" boxes.  We also construct unfilled boxes at
+ * enhanced connectivity block boundaries.
  *
  * If there are any unfilled boxes, we coarsen them to create a
  * supplemental level and set up a recursive schedule for filling the
@@ -822,10 +822,10 @@ void RefineSchedule::finishScheduleConstruction(
 
 
    /*
-    * d_unfilled_mapped_box_level may now include boxes outside of the
-    * physical domain.  These parts must be removed if they are not at
-    * periodic boundaries.  They will be filled through a user
-    * call-back method.
+    * d_unfilled_mapped_box_level may include ghost cells that lie
+    * outside the physical domain.  These parts must be removed if
+    * they are not at periodic boundaries.  They will be filled
+    * through a user call-back method.
     */
 
    if (!fully_periodic) {
@@ -1689,43 +1689,32 @@ void RefineSchedule::finishScheduleConstruction_shearUnfilledBoxesOutsideNonperi
    const bool fully_periodic = d_num_periodic_directions == dim.getValue();
 
    if ( fully_periodic ) {
+      /*
+       * Bypass shearing for fully_periodic domains, where it would be a
+       * no-op anyway.
+       */
       return;
    }
 
-   /*
-    * Shearing is the removal of parts of unfilled_boxes that lie
-    * along physical boundaries.  We should not fill these because
-    * they would be filled by boundary conditions.
-    *
-    * We bypass shearing for fully_periodic domains, where it would
-    * be a no-op anyway.
-    */
-
-   const MappedBoxLevel& periodic_domain_mapped_box_level =
-      hierarchy->getDomainMappedBoxLevel();
-   TBOX_ASSERT(
-      periodic_domain_mapped_box_level.getParallelState() ==
-      MappedBoxLevel::GLOBALIZED);
 
    t_shear->start();
 
-   hier::MappedBoxLevelConnectorUtils edge_utils;
-   hier::OverlapConnectorAlgorithm oca;
-
-   // Shearing for the mapped_box_level.
-   Connector unfilled_to_periodic_domain(
-      *d_unfilled_mapped_box_level,
-      periodic_domain_mapped_box_level,
-      dst_to_unfilled.getConnectorWidth());
-   oca.findOverlaps(unfilled_to_periodic_domain);
+   const Connector &unfilled_to_periodic_domain(
+      d_unfilled_mapped_box_level->getPersistentOverlapConnectors().
+      findOrCreateConnector(
+         hierarchy->getDomainMappedBoxLevel(),
+         dst_to_unfilled.getConnectorWidth()));
 
    Connector unfilled_to_sheared;
    MappedBoxLevel sheared_mapped_box_level(dim);
+
+   hier::MappedBoxLevelConnectorUtils edge_utils;
    edge_utils.computeInternalPartsForMultiblock(
       sheared_mapped_box_level,
       unfilled_to_sheared,
       unfilled_to_periodic_domain,
       hier::IntVector::getZero(dim) );
+
 
    t_modify_connector->start();
    hier::MappingConnectorAlgorithm mca;
@@ -1744,24 +1733,24 @@ void RefineSchedule::finishScheduleConstruction_shearUnfilledBoxesOutsideNonperi
 
 /*
  **************************************************************************
- * Set up the supplemental MappedBoxLevel The supplemental level will
- * be used to fill data in d_unfilled_mapped_box_level.
+ * Set up the supplemental MappedBoxLevel.  The supp_mapped_box_level
+ * represents parts of the fill boxes that cannot be filled by
+ * d_src_level (d_unfilled_mapped_box_level).  It will be filled by
+ * appealing to coarser levels in the hierarchy.
  *
  * - Start with the d_unfilled_mapped_box_level.
  * - Coarsen unfilled boxes
- * - Shear off parts outside non-periodic boundaries, if needed.
+ * - Shear off parts outside non-periodic boundaries or extend to boundary,
+ *   if needed for conforming to gridding restrictions at boundary.
  *
- * The supp_mapped_box_level is to be filled by the next coarser level
- * in the hierarchy.
- *
- * Build Connectors d_dst_to_supp, d_supp_to_dst and d_supp_to_unfilled.
- * The data to be filled on the supp level
+ * Build Connectors d_dst_to_supp, d_supp_to_dst and
+ * d_supp_to_unfilled.  The ghost data to be filled on the supp level
  * will be the max stencil width.
  *
- * We set d_dst_to_supp's width big enough so each dst Box,
- * grown by this width, nests its potential supp MappedBoxes.  Note
- * that d_dst_to_supp is incomplete because each dst Box only
- * has edges to supp MappedBoxes it generated.
+ * We set d_dst_to_supp's width big enough so each dst Box, grown by
+ * this width, nests its potential supp MappedBoxes.  Note that
+ * d_dst_to_supp is incomplete because each dst Box only has edges to
+ * supp MappedBoxes it generated.
  **************************************************************************
  */
 void RefineSchedule::finishScheduleConstruction_setupSupplementalMappedBoxLevel(
@@ -1803,7 +1792,6 @@ void RefineSchedule::finishScheduleConstruction_setupSupplementalMappedBoxLevel(
       nblocks, hier::BoxList(dim));
    tbox::Array<bool> do_coarse_shearing(nblocks);
    for (int b = 0; b < nblocks; b++) {
-      // coarser_physical_domain[b] = hiercoarse_level->getPhysicalDomain(hier::BlockId(b));
       grid_geometry->computePhysicalDomain(
          coarser_physical_domain[b],
          hiercoarse_mapped_box_level.getRefinementRatio(),
@@ -2005,8 +1993,7 @@ void RefineSchedule::finishScheduleConstruction_connectSuppToHiercoarse(
 
 
    /*
-    * Compute the Connector widths required to properly
-    * set up overlap Connectors.
+    * Compute the overlap Connector widths required by RefineSchedule.
     */
 
    std::vector<hier::IntVector> self_connector_widths;
@@ -2017,6 +2004,7 @@ void RefineSchedule::finishScheduleConstruction_connectSuppToHiercoarse(
                                          fine_connector_widths,
                                          *hierarchy);
 
+
    const hier::MappedBoxLevel &dst_mapped_box_level(
       *d_dst_level->getMappedBoxLevel());
 
@@ -2025,6 +2013,7 @@ void RefineSchedule::finishScheduleConstruction_connectSuppToHiercoarse(
 
    const hier::MappedBoxLevel &hiercoarse_mapped_box_level(
       *hiercoarse_level->getMappedBoxLevel());
+
 
    /*
     * Correspondance between consecutive recursions:
