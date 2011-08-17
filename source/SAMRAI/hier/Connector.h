@@ -326,6 +326,11 @@ public:
       const BoxId& mapped_box_id);
 
    /*!
+    * @brief Remove all the periodic relationships in the Connector.
+    */
+   void removePeriodicRelationships();
+
+   /*!
     * @brief Set the neighbors for the specified BoxId to the
     * given set by swapping the sets.
     *

@@ -2203,34 +2203,16 @@ void RefineSchedule::connectSuppToHiercoarse(
             t_bridge_dst_hiercoarse->stop();
          }
 
-         {
-            /*
-             * hiercoarse has periodic images but dst does not.
-             * Consequently, the bridge for dst<==>hiercoarse
-             * may not catch all periodic neighbors.  Because we
-             * don't need periodic neighbors for
-             * dst<==>hiercoarse, we will remove them to make
-             * dst<==>hiercoarse proper transposes.
-             */
-            hier::NeighborhoodSet tmp_edges;
-            bridged_dst_to_hiercoarse.getNeighborhoodSets().removePeriodicNeighbors(
-               tmp_edges);
-            bridged_dst_to_hiercoarse.swapInitialize(
-               bridged_dst_to_hiercoarse.getBase(),
-               bridged_dst_to_hiercoarse.getHead(),
-               bridged_dst_to_hiercoarse.getConnectorWidth(),
-               tmp_edges,
-               MappedBoxLevel::DISTRIBUTED);
-            tmp_edges.clear();
-            bridged_hiercoarse_to_dst.getNeighborhoodSets().removePeriodicNeighbors(
-               tmp_edges);
-            bridged_hiercoarse_to_dst.swapInitialize(
-               bridged_hiercoarse_to_dst.getBase(),
-               bridged_hiercoarse_to_dst.getHead(),
-               bridged_hiercoarse_to_dst.getConnectorWidth(),
-               tmp_edges,
-               MappedBoxLevel::DISTRIBUTED);
-         }
+         /*
+          * hiercoarse has periodic images but dst does not.
+          * Consequently, the bridge for dst<==>hiercoarse
+          * may not catch all periodic neighbors.  Because we
+          * don't need periodic neighbors for
+          * dst<==>hiercoarse, we will remove them to make
+          * dst<==>hiercoarse proper transposes.
+          */
+         bridged_dst_to_hiercoarse.removePeriodicRelationships();
+         bridged_hiercoarse_to_dst.removePeriodicRelationships();
 
          if (s_extra_debug) {
             size_t err1 =
@@ -2405,32 +2387,17 @@ void RefineSchedule::connectSuppToHiercoarse(
 
    if (d_num_periodic_directions > 0) {
       /*
-       * Remove periodic relationships that might have been added
-       * when bridging for supp<==>hiercoarse.
+       * supp_mapped_box_level does not have any periodic images yet.
+       * Remove periodic relationships that might have been added when
+       * bridging for supp<==>hiercoarse.
        *
-       * Removing periodic edges should make supp<==>hiercoarse
-       * proper transposes and prevent elusive bugs caused by
-       * extraneous periodic relationships..
+       * This makes supp<==>hiercoarse proper transposes and prevent
+       * elusive bugs caused by extraneous periodic relationships.
        */
-      hier::NeighborhoodSet tmp_edges;
-      supp_to_hiercoarse.getNeighborhoodSets().removePeriodicNeighbors(
-         tmp_edges);
-      supp_to_hiercoarse.swapInitialize(
-         supp_to_hiercoarse.getBase(),
-         supp_to_hiercoarse.getHead(),
-         supp_to_hiercoarse.getConnectorWidth(),
-         tmp_edges,
-         MappedBoxLevel::DISTRIBUTED);
-      tmp_edges.clear();
-      hiercoarse_to_supp.getNeighborhoodSets().removePeriodicNeighbors(
-         tmp_edges);
-      hiercoarse_to_supp.swapInitialize(
-         hiercoarse_to_supp.getBase(),
-         hiercoarse_to_supp.getHead(),
-         hiercoarse_to_supp.getConnectorWidth(),
-         tmp_edges,
-         MappedBoxLevel::DISTRIBUTED);
+      supp_to_hiercoarse.removePeriodicRelationships();
+      hiercoarse_to_supp.removePeriodicRelationships();
    }
+
 
    if (s_extra_debug) {
       size_t err1 = supp_to_hiercoarse.checkTransposeCorrectness(
