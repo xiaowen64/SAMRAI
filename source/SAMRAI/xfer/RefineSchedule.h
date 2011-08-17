@@ -725,11 +725,31 @@ private:
       const Connector& src_to_dst);
 
    /*!
+    * @brief Shear off parts of unfilled boxes that lie outside non-periodic
+    * domain boundaries and update an overlap Connector based on the change.
+    *
+    * @param[in,out] unfilled
+    *
+    * @param[in,out] dst_to_unfilled
+    */
+   void finishScheduleConstruction_shearUnfilledBoxesOutsideNonperiodicBoundaries(
+      hier::MappedBoxLevel &unfilled,
+      hier::Connector &dst_to_unfilled,
+      const tbox::Pointer<hier::PatchHierarchy> &hierarchy);
+
+   /*!
     * @brief Set up the supplemental MappedBoxLevel and related data.
     *
+    * Also sets up d_dst_to_supp, d_supp_to_dst and d_supp_to_unfilled.
+    *
     * @param[out] supp_mapped_box_level
+    *
+    * @param[in] hiercoarse_mapped_box_level The MappedBoxLevel on the
+    * hierarchy at the resolution that supp_mapped_box_level is to have.
+    *
+    * @param[in] dst_to_unfilled
     */
-   void setupSupplementalMappedBoxLevel(
+   void finishScheduleConstruction_setupSupplementalMappedBoxLevel(
       hier::MappedBoxLevel &supp_mapped_box_level,
       const hier::MappedBoxLevel &hiercoarse_mapped_box_level,
       const hier::Connector &dst_to_unfilled);
@@ -739,33 +759,39 @@ private:
     * and the hiercoarse level.
     *
     * @param[in] supp_to_hiercoarse
+    *
     * @param[out] hiercoarse_to_supp
+    *
     * @param[in] dst_is_supplemental_level
+    *
+    * @param[in] hierarchy
+    *
+    * @param[in] next_coarser_ln Level number of hiercoarse (the
+    * coarser level on the hierarchy
     */
-   void connectSuppToHiercoarse(
+   void finishScheduleConstruction_connectSuppToHiercoarse(
       hier::Connector &supp_to_hiercoarse,
       hier::Connector &hiercoarse_to_supp,
-      const hier::MappedBoxLevel &dst_mapped_box_level,
-      const hier::Connector &dst_to_src,
-      const hier::Connector &src_to_dst,
+      const hier::MappedBoxLevel &supp_mapped_box_level,
       const tbox::Pointer<hier::PatchHierarchy> &hierarchy,
       const int next_coarser_ln,
-      const bool dst_is_supplemental_level,
-      hier::MappedBoxLevel &supp_mapped_box_level,
-      const hier::MappedBoxLevel &hiercoarse_mapped_box_level);
+      const hier::Connector &dst_to_src,
+      const hier::Connector &src_to_dst,
+      const bool dst_is_supplemental_level );
 
-   /*
-    * @brief Shear off parts of unfilled boxes that lie outside non-periodic
-    * domain boundaries and update an overlap Connector based on the change.
+   /*!
+    * @brief Sanity check to try to catch library errors before
+    * they create more elusive bugs.
     *
-    * @param[in,out] unfilled
-    *
-    * @param[in,out] dst_to_unfilled
+    * Check that the two Connectors are proper transposes and that
+    * the supplemental MappedBoxLevel sufficiently nests inside
+    * the hiercoarse.
     */
-   void shearUnfilledBoxesOutsideNonperiodicBoundaries(
-      hier::MappedBoxLevel &unfilled,
-      hier::Connector &dst_to_unfilled,
-      const tbox::Pointer<hier::PatchHierarchy> &hierarchy);
+   void sanityCheckSupplementalAndHiercoarseLevels(
+      const hier::Connector &supp_to_hiercoarse,
+      const hier::Connector &hiercoarse_to_supp,
+      const tbox::Pointer<hier::PatchHierarchy> &hierarchy,
+      const int next_coarser_ln);
 
    /*!
     * @brief Get the maximum ghost cell width of all destination
