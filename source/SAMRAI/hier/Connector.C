@@ -737,7 +737,6 @@ void Connector::swap(
 
    if (&a != &b) {
       tbox::Pointer<MappedBoxLevelHandle> tmplayer;
-      // tbox::Pointer<PersistentOverlapConnectors> tmphub;
       int tmpint;
       bool tmpbool;
       IntVector tmpvec(a.getBase().getDim());

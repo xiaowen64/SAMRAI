@@ -394,12 +394,20 @@ void MappedBoxLevel::swap(
       level_a.detachMyHandle();
       level_b.detachMyHandle();
 
+      // Swap objects supporting swap operation.
+      level_a.d_mapped_boxes.swap(level_b.d_mapped_boxes);
+      level_a.d_global_mapped_boxes.swap(level_b.d_global_mapped_boxes);
+      level_a.d_local_bounding_box.swap(level_b.d_local_bounding_box);
+      level_a.d_local_min_box_size.swap(level_b.d_local_min_box_size);
+      level_a.d_local_max_box_size.swap(level_b.d_local_max_box_size);
+      level_a.d_global_bounding_box.swap(level_b.d_global_bounding_box);
+
+      // Swap objects not supporting swap operation.
+
       int tmpint;
       bool tmpbool;
       IntVector tmpvec(level_a.getDim());
       Box tmpbox(level_a.getDim());
-      std::vector<Box> tmpvecbox;
-      std::vector<IntVector> tmpvecvec;
       ParallelState tmpstate;
       const MappedBoxLevel *tmpmbl;
       tbox::SAMRAI_MPI tmpmpi(tbox::SAMRAI_MPI::commNull);
@@ -441,25 +449,9 @@ void MappedBoxLevel::swap(
       level_a.d_global_number_of_mapped_boxes = level_b.d_global_number_of_mapped_boxes;
       level_b.d_global_number_of_mapped_boxes = tmpint;
 
-      tmpvecbox.swap(level_a.d_local_bounding_box);
-      level_a.d_local_bounding_box.swap(level_b.d_local_bounding_box);
-      level_b.d_local_bounding_box.swap(tmpvecbox);
-
       tmpbool = level_a.d_local_bounding_box_up_to_date;
       level_a.d_local_bounding_box_up_to_date = level_b.d_local_bounding_box_up_to_date;
       level_b.d_local_bounding_box_up_to_date = tmpbool;
-
-      tmpvecvec.swap(level_a.d_local_min_box_size);
-      level_a.d_local_min_box_size.swap(level_b.d_local_min_box_size);
-      level_b.d_local_min_box_size.swap(tmpvecvec);
-
-      tmpvecvec.swap(level_a.d_local_max_box_size);
-      level_a.d_local_max_box_size.swap(level_b.d_local_max_box_size);
-      level_b.d_local_max_box_size.swap(tmpvecvec);
-
-      tmpvecbox.swap(level_a.d_global_bounding_box);
-      level_a.d_global_bounding_box.swap(level_b.d_global_bounding_box);
-      level_b.d_global_bounding_box.swap(tmpvecbox);
 
       tmpbool = level_a.d_global_data_up_to_date;
       level_a.d_global_data_up_to_date = level_b.d_global_data_up_to_date;
@@ -469,9 +461,7 @@ void MappedBoxLevel::swap(
       level_a.d_globalized_version = level_b.d_globalized_version;
       level_b.d_globalized_version = tmpmbl;
 
-      level_a.d_mapped_boxes.swap(level_b.d_mapped_boxes);
-      level_a.d_global_mapped_boxes.swap(level_b.d_global_mapped_boxes);
-
+      tmpgridgeom = level_b.d_grid_geometry;
       level_a.d_grid_geometry = level_b.d_grid_geometry;
       level_b.d_grid_geometry = tmpgridgeom;
    }
