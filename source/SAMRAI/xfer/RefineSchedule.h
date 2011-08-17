@@ -725,6 +725,19 @@ private:
       const Connector& src_to_dst);
 
    /*!
+    * @brief Set up the supplemental MappedBoxLevel and related data.
+    *
+    * @param[out] supp_mapped_box_level
+    */
+   void setupSupplementalMappedBoxLevel(
+      hier::MappedBoxLevel &supp_mapped_box_level,
+      const hier::MappedBoxLevel &hiercoarse_mapped_box_level,
+      const hier::Connector &dst_to_unfilled,
+      const tbox::Array<hier::BoxList> &coarser_physical_domain,
+      const tbox::Array<hier::BoxList> &coarser_shear_domain,
+      const tbox::Array<bool> &do_coarse_shearing);
+
+   /*
     * @brief Shear off parts of unfilled boxes that lie outside non-periodic
     * domain boundaries and update an overlap Connector based on the change.
     *
@@ -1135,7 +1148,7 @@ private:
    static tbox::Pointer<tbox::Timer> t_barrier_and_time;
    static tbox::Pointer<tbox::Timer> t_get_global_mapped_box_count;
    static tbox::Pointer<tbox::Timer> t_coarse_shear;
-   static tbox::Pointer<tbox::Timer> t_build_supp_mapped_box_level;
+   static tbox::Pointer<tbox::Timer> t_setup_supp_mapped_box_level;
    static tbox::Pointer<tbox::Timer> t_misc2;
    static tbox::Pointer<tbox::Timer> t_bridge_supp_hiercoarse;
    static tbox::Pointer<tbox::Timer> t_bridge_dst_hiercoarse;

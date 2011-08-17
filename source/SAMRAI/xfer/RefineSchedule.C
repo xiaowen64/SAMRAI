@@ -72,7 +72,7 @@ tbox::Pointer<tbox::Timer> RefineSchedule::t_misc1;
 tbox::Pointer<tbox::Timer> RefineSchedule::t_barrier_and_time;
 tbox::Pointer<tbox::Timer> RefineSchedule::t_get_global_mapped_box_count;
 tbox::Pointer<tbox::Timer> RefineSchedule::t_coarse_shear;
-tbox::Pointer<tbox::Timer> RefineSchedule::t_build_supp_mapped_box_level;
+tbox::Pointer<tbox::Timer> RefineSchedule::t_setup_supp_mapped_box_level;
 tbox::Pointer<tbox::Timer> RefineSchedule::t_misc2;
 tbox::Pointer<tbox::Timer> RefineSchedule::t_bridge_supp_hiercoarse;
 tbox::Pointer<tbox::Timer> RefineSchedule::t_bridge_dst_hiercoarse;
@@ -967,218 +967,26 @@ void RefineSchedule::finishScheduleConstruction(
          }
       }
 
-      /*
-       * Convert the unfilled parts of dst into the supplemental MappedBoxLevel
-       * supp_mapped_box_level by coarsening it (and shearing if needed).
-       * The supp_mapped_box_level is to be filled by the next coarser
-       * level in the hierarchy.  The data to be filled on the supp level
-       * will be the max stencil width.
-       *
-       * Build connector d_dst_to_supp using dst_to_unfilled, since
-       * supp is came from unfilled.  This Connector is incomplete
-       * because each dst Box only has edges to supp Boxes
-       * it generated.  Nevertheless, we set its gcw big enough so each
-       * dst Box nests its potential supp Boxes so that we
-       * bridge to the supp MappedBoxLevel.
-       *
-       * Build up supp_eto_unfilled, so we can find the unfilled box
-       * that the suppplemental box is supposed to fill.
-       * d_supp_to_unfilled is used when filling data.
-       */
-
-      hier::MappedBoxLevel supp_mapped_box_level(
-         hiercoarse_level->getRatioToLevelZero(),
-         hiercoarse_level->getGridGeometry(),
-         d_unfilled_mapped_box_level->getMPI());
-
-      hier::NeighborhoodSet dst_eto_supp, supp_eto_unfilled;
-
-      const hier::NeighborhoodSet& dst_eto_unfilled =
-         dst_to_unfilled->getNeighborhoodSets();
-
-      t_build_supp_mapped_box_level->start();
-      /*
-       * This loop builds up supp_mapped_box_level, dst_eto_supp and
-       *  supp_eto_unfilled.
-       */
-      for (hier::NeighborhoodSet::const_iterator ei = dst_eto_unfilled.begin();
-           ei != dst_eto_unfilled.end(); ++ei) {
-
-         const hier::BoxId& dst_mapped_box_mbid = ei->first;
-         const NeighborSet& dst_unfilled_parts = ei->second;
-
-         const int dst_blk = dst_mapped_box_mbid.getBlockId().getBlockValue();
-
-         for (hier::MappedBoxSet::const_iterator ni = dst_unfilled_parts.begin();
-              ni != dst_unfilled_parts.end(); ++ni) {
-
-            const hier::Box& unfilled_mapped_box = *ni;
-            hier::Box supp_box = unfilled_mapped_box;
-            supp_box.coarsen(dst_hiercoarse_ratio);
-
-
-            if (do_coarse_shearing[dst_blk] &&
-                (d_dst_level->patchTouchesRegularBoundary(
-                    dst_mapped_box_mbid))) {
-
-               hier::BoxList sheared_supp_boxes(supp_box);
-               sheared_supp_boxes.intersectBoxes(coarser_shear_domain[dst_blk]);
-               sheared_supp_boxes.simplifyBoxes();
-
-               (void)hier::BoxUtilities::extendBoxesToDomainBoundary(
-                  sheared_supp_boxes,
-                  coarser_physical_domain[dst_blk],
-                  d_max_stencil_width);
-               /*
-                * Connector widths must be big enough to make sure
-                * we have complete sets after extending mapped_boxes to boundary!
-                */
-               if (sheared_supp_boxes.size() > 0) {
-
-                  NeighborSet& supp_nabrs = dst_eto_supp[dst_mapped_box_mbid];
-
-                  for (hier::BoxList::Iterator b(sheared_supp_boxes); b; b++) {
-                     const hier::Box& supp_mapped_box =
-                        *supp_mapped_box_level.addBox(*b, (*ni).getBlockId());
-                     supp_nabrs.insert(supp_mapped_box);
-
-                     /*
-                      * Note that each supp_mapped_box must have at least one
-                      * unfilled_nabr and may have multiple.
-                      */
-                     supp_eto_unfilled[supp_mapped_box.getId()].insert(
-                        unfilled_mapped_box);
-
-                  }
-
-               }
-
-            } else {
-
-               /*
-                * If the supp_box is less than a ghost width
-                * (d_max_stencil_width for the supplemental level) of a
-                * physical boundary, extend it to the boundary.
-                *
-                * Note: If we end up extending the supp_box, we may
-                * fail sanity checks further down because have not
-                * accounted for this extension in the various
-                * Connector widths.  However, it is not likely that
-                * the extension would have any effects on computations
-                * because, being so close to the physical boundary,
-                * they should not create any new relationships.  This
-                * is just a hunch and need to be rigously verified.
-                *
-                * For now, just warn if the box is grown.
-                */
-               const hier::Box save_supp_box(supp_box);
-               (void)hier::BoxUtilities::extendBoxToDomainBoundary(
-                  supp_box,
-                  coarser_physical_domain[dst_blk],
-                  d_max_stencil_width);
-               if (! supp_box.isSpatiallyEqual(save_supp_box)) {
-                  TBOX_WARNING("Supplemental box " << save_supp_box
-                                                   << " was extended to " << supp_box
-                                                   << " at a physical boundary.  This is"
-                                                   << " probably ok but a rigorous proof"
-                                                   << " that won't cause problem is currently"
-                                                   << " lacking.  Expect some sanity checks"
-                                                   << " to fail and a slim chance that the"
-                                                   << " schedule generate will be bad.");
-               }
-
-               const hier::Box& supp_mapped_box = *supp_mapped_box_level.addBox(
-                     supp_box, (*ni).getBlockId());
-               NeighborSet& supp_nabrs = dst_eto_supp[dst_mapped_box_mbid];
-               supp_nabrs.insert(supp_mapped_box);
-               supp_eto_unfilled[supp_mapped_box.getId()].insert(
-                  unfilled_mapped_box);
-
-            }
-
-         }
-      }
 
       /*
-       * Width of dst-->supp is
-       *
-       * - width of dst-->fill, but rounded up so it extends
-       *   the growth of supp caused by coarsening unfilled.
-       *
-       * - extended by the stencil width, where supp has its ghost data.
-       *
-       * This width states that each dst box sees all of its
-       * supplemental boxes, including the ghost cells in the
-       * supplemental boxes.
+       * Set up the supplemental MappedBoxLevel and also set up
+       * d_dst_to_supp, d_supp_to_dst and d_supp_to_unfilled.
        */
-      const hier::IntVector dst_to_supp_width =
-         (hier::IntVector::ceiling(dst_to_fill.getConnectorWidth(),
-             dst_hiercoarse_ratio) + d_max_stencil_width)
-         * dst_hiercoarse_ratio;
-
-      d_dst_to_supp.swapInitialize(
-         dst_mapped_box_level,
+      hier::MappedBoxLevel supp_mapped_box_level(dim);
+      setupSupplementalMappedBoxLevel(
          supp_mapped_box_level,
-         dst_to_supp_width,
-         dst_eto_supp);
+         hiercoarse_mapped_box_level,
+         *dst_to_unfilled,
+         coarser_physical_domain,
+         coarser_shear_domain,
+         do_coarse_shearing);
 
-      d_supp_to_unfilled.swapInitialize(
-         supp_mapped_box_level,
-         *d_unfilled_mapped_box_level,
-         hier::IntVector::getZero(dim),
-         supp_eto_unfilled);
-
-      t_build_supp_mapped_box_level->stop();
 
 
       /*
        * Connect the supplemental MappedBoxLevel (the next recursion's dst)
        * to the hiercoarse MappedBoxLevel (the next recursion's src).
        */
-
-      /*
-       * Get the transpose of d_dst_to_supp, which is simple to compute
-       * because we know the edges are all local.
-       */
-      t_misc2->start();
-      d_supp_to_dst.initializeToLocalTranspose(d_dst_to_supp);
-      t_misc2->stop();
-
-      if (s_extra_debug) {
-
-         /*
-          * We have set up supp to nest in dst^dst_to_supp_width to
-          * ensure dst sees all of supp and also supp's ghosts.  Note
-          * that supp's relevant ghost data width is
-          * d_max_stencil_width.
-          *
-          * The nesting assures that when bridging across dst<==>supp
-          * for supp<==>hiercoarse, we get a complete overlap
-          * Connectors.
-          */
-         bool locally_nests;
-         edge_utils.setSanityCheckMethodPreconditions(false);
-         edge_utils.setSanityCheckMethodPostconditions(false);
-         tbox::plog << "\nsupp_mapped_box_level:\n" << supp_mapped_box_level.format("S-> ", 2)
-                    << "\ndst_mapped_box_level:\n" << dst_mapped_box_level.format("D-> ", 2)
-                    << "\nd_dst_to_supp:\n" << d_dst_to_supp.format("DS-> ", 2)
-                    << "\nd_supp_to_dst:\n" << d_supp_to_dst.format("SD-> ", 2)
-                    << std::endl;
-         if ( ! edge_utils.baseNestsInHead(
-                 &locally_nests,
-                 supp_mapped_box_level,
-                 dst_mapped_box_level,
-                 zero_vector,
-                 dst_to_supp_width,
-                 zero_vector,
-                 NULL) ) {
-            TBOX_ERROR("RefineSchedule::finishScheduleConstruction: supp does\n"
-                       <<"to nest in dst.\n");
-         }
-
-         TBOX_ASSERT(d_supp_to_dst.checkTransposeCorrectness(d_dst_to_supp) == 0);
-         TBOX_ASSERT(d_dst_to_supp.checkTransposeCorrectness(d_supp_to_dst) == 0);
-      }
 
       Connector supp_to_hiercoarse;
       Connector hiercoarse_to_supp;
@@ -2103,7 +1911,7 @@ RefineSchedule::createEnconFillSchedule(
           * cannot guarantee sufficient width.  We know from how
           * dst nests in hiercoarse what output Connector width
           * can guarantee that all dst Boxes are seen by a
-          * hiercoarse MappedBox.
+          * hiercoarse Box.
           */
          oca.bridge(
             bridged_encon_to_hiercoarse,
@@ -2129,7 +1937,7 @@ RefineSchedule::createEnconFillSchedule(
        * cannot guarantee sufficient width.  We know from how
        * dst nests in hiercoarse what output Connector width
        * can guarantee that all dst Boxes are seen by a
-       * hiercoarse MappedBox.
+       * hiercoarse Box.
        */
       oca.bridge(
          supp_encon_to_hiercoarse,
@@ -2457,6 +2265,239 @@ void RefineSchedule::shearUnfilledBoxesOutsideNonperiodicBoundaries(
    dst_to_unfilled.eraseEmptyNeighborSets();
 
    t_shear->stop();
+
+   return;
+}
+
+
+
+/*
+ **************************************************************************
+ * Set up the supplemental MappedBoxLevel The supplemental level will
+ * be used to fill data in d_unfilled_mapped_box_level.
+ *
+ * - Start with the d_unfilled_mapped_box_level.
+ * - Coarsen unfilled boxes
+ * - Shear off parts outside non-periodic boundaries, if needed.
+ *
+ * The supp_mapped_box_level is to be filled by the next coarser level
+ * in the hierarchy.
+ *
+ * Build Connectors d_dst_to_supp, d_supp_to_dst and d_supp_to_unfilled.
+ * The data to be filled on the supp level
+ * will be the max stencil width.
+ *
+ * We set d_dst_to_supp's width big enough so each dst Box,
+ * grown by this width, nests its potential supp MappedBoxes.  Note
+ * that d_dst_to_supp is incomplete because each dst Box only
+ * has edges to supp MappedBoxes it generated.
+ */
+void RefineSchedule::setupSupplementalMappedBoxLevel(
+   hier::MappedBoxLevel &supp_mapped_box_level,
+   const hier::MappedBoxLevel &hiercoarse_mapped_box_level,
+   const hier::Connector &dst_to_unfilled,
+   const tbox::Array<hier::BoxList> &coarser_physical_domain,
+   const tbox::Array<hier::BoxList> &coarser_shear_domain,
+   const tbox::Array<bool> &do_coarse_shearing)
+{
+   t_setup_supp_mapped_box_level->start();
+
+   supp_mapped_box_level.initialize(
+      hiercoarse_mapped_box_level.getRefinementRatio(),
+      hiercoarse_mapped_box_level.getGridGeometry(),
+      d_unfilled_mapped_box_level->getMPI());
+
+   const hier::IntVector dst_hiercoarse_ratio(
+      d_dst_level->getRatioToLevelZero()
+      / hiercoarse_mapped_box_level.getRefinementRatio() );
+
+   const hier::NeighborhoodSet& dst_eto_unfilled =
+      dst_to_unfilled.getNeighborhoodSets();
+
+
+   hier::NeighborhoodSet dst_eto_supp, supp_eto_unfilled;
+
+   /*
+    * This loop builds up supp_mapped_box_level, dst_eto_supp and
+    *  supp_eto_unfilled.
+    */
+   for (hier::NeighborhoodSet::const_iterator ei = dst_eto_unfilled.begin();
+        ei != dst_eto_unfilled.end(); ++ei) {
+
+      const hier::BoxId& dst_mapped_box_mbid = ei->first;
+      const NeighborSet& dst_unfilled_parts = ei->second;
+
+      const int dst_blk = dst_mapped_box_mbid.getBlockId().getBlockValue();
+
+      for (hier::MappedBoxSet::const_iterator ni = dst_unfilled_parts.begin();
+           ni != dst_unfilled_parts.end(); ++ni) {
+
+         const hier::Box& unfilled_mapped_box = *ni;
+         hier::Box supp_box(unfilled_mapped_box);
+         supp_box.coarsen(dst_hiercoarse_ratio);
+
+
+         if (do_coarse_shearing[dst_blk] &&
+             (d_dst_level->patchTouchesRegularBoundary(
+                 dst_mapped_box_mbid))) {
+
+            hier::BoxList sheared_supp_boxes(supp_box);
+            sheared_supp_boxes.intersectBoxes(coarser_shear_domain[dst_blk]);
+            sheared_supp_boxes.simplifyBoxes();
+
+            (void)hier::BoxUtilities::extendBoxesToDomainBoundary(
+               sheared_supp_boxes,
+               coarser_physical_domain[dst_blk],
+               d_max_stencil_width);
+            /*
+             * Connector widths must be big enough to make sure
+             * we have complete sets after extending mapped_boxes to boundary!
+             */
+            if (sheared_supp_boxes.size() > 0) {
+
+               NeighborSet& supp_nabrs = dst_eto_supp[dst_mapped_box_mbid];
+
+               for (hier::BoxList::Iterator b(sheared_supp_boxes); b; b++) {
+                  const hier::Box& supp_mapped_box =
+                     *supp_mapped_box_level.addBox(*b, (*ni).getBlockId());
+                  supp_nabrs.insert(supp_mapped_box);
+
+                  /*
+                   * Note that each supp_mapped_box must have at least one
+                   * unfilled_nabr and may have multiple.
+                   */
+                  supp_eto_unfilled[supp_mapped_box.getId()].insert(
+                     unfilled_mapped_box);
+
+               }
+
+            }
+
+         } else {
+
+            /*
+             * If the supp_box is less than a ghost width
+             * (d_max_stencil_width for the supplemental level) of a
+             * physical boundary, extend it to the boundary.
+             *
+             * Note: If we end up extending the supp_box, we may
+             * fail sanity checks further down because have not
+             * accounted for this extension in the various
+             * Connector widths.  However, it is not likely that
+             * the extension would have any effects on computations
+             * because, being so close to the physical boundary,
+             * they should not create any new relationships.  This
+             * is just a hunch and need to be rigously verified.
+             *
+             * For now, just warn if the box is grown.
+             */
+            const hier::Box save_supp_box(supp_box);
+            (void)hier::BoxUtilities::extendBoxToDomainBoundary(
+               supp_box,
+               coarser_physical_domain[dst_blk],
+               d_max_stencil_width);
+            if (! supp_box.isSpatiallyEqual(save_supp_box)) {
+               TBOX_WARNING("Supplemental box " << save_supp_box
+                            << " was extended to " << supp_box
+                            << " at a physical boundary.  This is"
+                            << " probably ok but a rigorous proof"
+                            << " that won't cause problem is currently"
+                            << " lacking.  Expect some sanity checks"
+                            << " to fail and a slim chance that the"
+                            << " schedule generate will be bad.");
+            }
+
+            const hier::Box& supp_mapped_box = *supp_mapped_box_level.addBox(
+               supp_box, (*ni).getBlockId());
+            NeighborSet& supp_nabrs = dst_eto_supp[dst_mapped_box_mbid];
+            supp_nabrs.insert(supp_mapped_box);
+            supp_eto_unfilled[supp_mapped_box.getId()].insert(
+               unfilled_mapped_box);
+
+         }
+
+      }
+   }
+
+
+   /*
+    * Width of dst-->supp is
+    *
+    * - width of dst-->fill, but rounded up so it extends
+    *   the growth of supp caused by coarsening unfilled.
+    *
+    * - extended by the stencil width, where supp has its ghost data.
+    *
+    * This width states that each dst box sees all of its
+    * supplemental boxes, including the ghost cells in the
+    * supplemental boxes.
+    */
+   const hier::IntVector dst_to_supp_width =
+      (hier::IntVector::ceiling(dst_to_unfilled.getConnectorWidth(),
+                                dst_hiercoarse_ratio) + d_max_stencil_width)
+      * dst_hiercoarse_ratio;
+
+   d_dst_to_supp.swapInitialize(
+      dst_to_unfilled.getBase(),
+      supp_mapped_box_level,
+      dst_to_supp_width,
+      dst_eto_supp);
+
+   d_supp_to_unfilled.swapInitialize(
+      supp_mapped_box_level,
+      *d_unfilled_mapped_box_level,
+      hier::IntVector::getZero(hiercoarse_mapped_box_level.getDim()),
+      supp_eto_unfilled);
+
+
+   /*
+    * Get the transpose of d_dst_to_supp, which is simple to compute
+    * because we know the edges are all local.
+    */
+   t_misc2->start();
+   d_supp_to_dst.initializeToLocalTranspose(d_dst_to_supp);
+   t_misc2->stop();
+
+
+   if (s_extra_debug) {
+      /*
+       * We have set up supp to nest in dst^dst_to_supp_width to
+       * ensure dst sees all of supp and also supp's ghosts.  Note
+       * that supp's relevant ghost data width is
+       * d_max_stencil_width.
+       *
+       * The nesting assures that when bridging across dst<==>supp
+       * for supp<==>hiercoarse, we get a complete overlap
+       * Connectors.
+       */
+      const tbox::Dimension& dim(supp_mapped_box_level.getDim());
+      const hier::IntVector &zero_vector(hier::IntVector::getZero(dim));
+      hier::MappedBoxLevelConnectorUtils mblc_utils;
+      mblc_utils.setSanityCheckMethodPreconditions(false);
+      mblc_utils.setSanityCheckMethodPostconditions(false);
+      tbox::plog << "\nsupp_mapped_box_level:\n" << supp_mapped_box_level.format("S-> ", 2)
+                 << "\ndst_mapped_box_level:\n" << d_dst_to_supp.getBase().format("D-> ", 2)
+                 << "\nd_dst_to_supp:\n" << d_dst_to_supp.format("DS-> ", 2)
+                 << "\nd_supp_to_dst:\n" << d_supp_to_dst.format("SD-> ", 2)
+                 << std::endl;
+      bool locally_nests;
+      if ( ! mblc_utils.baseNestsInHeadForMultiblock(
+              &locally_nests,
+              supp_mapped_box_level,
+              d_dst_to_supp.getBase(),
+              zero_vector,
+              d_dst_to_supp.getConnectorWidth(),
+              zero_vector,
+              NULL) ) {
+         TBOX_ERROR("RefineSchedule::finishScheduleConstruction: supp does\n"
+                    <<"to nest in dst.\n");
+      }
+
+      TBOX_ASSERT(d_supp_to_dst.checkTransposeCorrectness(d_dst_to_supp) == 0);
+      TBOX_ASSERT(d_dst_to_supp.checkTransposeCorrectness(d_supp_to_dst) == 0);
+   }
+
+   t_setup_supp_mapped_box_level->stop();
 
    return;
 }
@@ -4023,7 +4064,7 @@ void RefineSchedule::createEnconLevel(const hier::IntVector& fill_gcw)
                            /*
                             * Transform the boxes representing the ghost
                             * region back to the neighbor block's
-                            * coordinate system, and create a MappedBox
+                            * coordinate system, and create a Box
                             * to be added to encon_mapped_boxes. 
                             */ 
 
@@ -5087,9 +5128,8 @@ void RefineSchedule::initializeCallback()
          "xfer::RefineSchedule::finish...()_get_global_mapped_box_count");
    t_coarse_shear = tbox::TimerManager::getManager()->
       getTimer("xfer::RefineSchedule::finish...()_coarse_shear");
-   t_build_supp_mapped_box_level = tbox::TimerManager::getManager()->
-      getTimer(
-         "xfer::RefineSchedule::finish...()_build_supp_mapped_box_level");
+   t_setup_supp_mapped_box_level = tbox::TimerManager::getManager()->
+      getTimer("xfer::RefineSchedule::setupSupplementalMappedBoxLevel()");
    t_misc2 = tbox::TimerManager::getManager()->
       getTimer("xfer::RefineSchedule::finish...()_misc2");
    t_bridge_supp_hiercoarse = tbox::TimerManager::getManager()->
@@ -5131,7 +5171,7 @@ void RefineSchedule::finalizeCallback()
    t_barrier_and_time.setNull();
    t_get_global_mapped_box_count.setNull();
    t_coarse_shear.setNull();
-   t_build_supp_mapped_box_level.setNull();
+   t_setup_supp_mapped_box_level.setNull();
    t_misc2.setNull();
    t_bridge_supp_hiercoarse.setNull();
    t_bridge_dst_hiercoarse.setNull();
