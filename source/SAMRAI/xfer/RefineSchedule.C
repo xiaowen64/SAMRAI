@@ -727,9 +727,7 @@ void RefineSchedule::finishScheduleConstruction(
    }
 
    const tbox::Dimension& dim(hierarchy->getDim());
-   const hier::IntVector zero_vector(hier::IntVector::getZero(dim));
-   const hier::IntVector neg1_vector(dim, -1);
-   const hier::IntVector huge_vector(dim, SAMRAI::tbox::MathUtilities<int>::getMax());
+   const hier::IntVector &zero_vector(hier::IntVector::getZero(dim));
 
    hier::MappedBoxLevelConnectorUtils edge_utils;
    hier::OverlapConnectorAlgorithm oca;
@@ -741,7 +739,6 @@ void RefineSchedule::finishScheduleConstruction(
                                          fine_connector_widths,
                                          *hierarchy);
 
-   const Connector dummy_cnect;
    const MappedBoxLevel& dst_mapped_box_level = dst_to_fill.getBase();
    if (!d_src_level.isNull()) {
       TBOX_ASSERT(dst_to_src.isInitialized());
@@ -750,7 +747,7 @@ void RefineSchedule::finishScheduleConstruction(
    /*
     * hiercoarse is the coarse level on the hierarchy.  It is to be
     * differentiated from the supplemental (supp) level, which is at
-    * the same refimenent ratio but is not on the hierarchy.
+    * the same resolution and level number but is not on the hierarchy.
     */
    tbox::Pointer<hier::PatchLevel> hiercoarse_level;
    if (next_coarser_ln >= 0) {
@@ -1138,9 +1135,15 @@ void RefineSchedule::finishScheduleConstruction(
 
       /*
        * Width of dst-->supp is
-       *   - width of dst-->fill, but rounded up so it extends equal
-       *     to the growth of supp caused by coarsening unfilled.
-       *   - extended by the stencil width, where supp has its ghost data.
+       *
+       * - width of dst-->fill, but rounded up so it extends
+       *   the growth of supp caused by coarsening unfilled.
+       *
+       * - extended by the stencil width, where supp has its ghost data.
+       *
+       * This width states that each dst box sees all of its
+       * supplemental boxes, including the ghost cells in the
+       * supplemental boxes.
        */
       const hier::IntVector dst_to_supp_width =
          (hier::IntVector::ceiling(dst_to_fill.getConnectorWidth(),
@@ -1152,14 +1155,12 @@ void RefineSchedule::finishScheduleConstruction(
          supp_mapped_box_level,
          dst_to_supp_width,
          dst_eto_supp);
-      d_dst_to_supp.setConnectorType(hier::Connector::BASE_GENERATED);
 
-      d_supp_to_unfilled.initialize(
+      d_supp_to_unfilled.swapInitialize(
          supp_mapped_box_level,
          *d_unfilled_mapped_box_level,
          hier::IntVector::getZero(dim),
          supp_eto_unfilled);
-      d_supp_to_unfilled.setConnectorType(hier::Connector::BASE_GENERATED);
 
       t_build_supp_mapped_box_level->stop();
 
