@@ -2081,44 +2081,7 @@ void RefineSchedule::finishScheduleConstruction_connectSuppToHiercoarse(
             d_dst_level->getMappedBoxLevel()->getRefinementRatio(),
             min_dst_to_hiercoarse_width);
 
-      const bool has_dst_to_hiercoarse =
-         d_dst_level->getMappedBoxLevel()->getPersistentOverlapConnectors().
-         hasConnector(
-            hiercoarse_mapped_box_level,
-            min_dst_to_hiercoarse_width);
-      const bool has_hiercoarse_to_dst =
-         hiercoarse_mapped_box_level.getPersistentOverlapConnectors().
-         hasConnector(
-            *d_dst_level->getMappedBoxLevel(),
-            min_hiercoarse_to_dst_width);
-
-      if (has_dst_to_hiercoarse && has_hiercoarse_to_dst) {
-
-         dst_to_hiercoarse =
-            &d_dst_level->getMappedBoxLevel()->getPersistentOverlapConnectors()
-            .findConnector(
-               hiercoarse_mapped_box_level,
-               min_dst_to_hiercoarse_width);
-
-         hiercoarse_to_dst =
-            &hiercoarse_mapped_box_level.getPersistentOverlapConnectors()
-            .findConnector(
-               *d_dst_level->getMappedBoxLevel(),
-               min_hiercoarse_to_dst_width);
-
-         TBOX_ASSERT(
-            dst_to_hiercoarse->getBase() == *d_dst_level->getMappedBoxLevel());
-         TBOX_ASSERT(
-            dst_to_hiercoarse->getConnectorWidth() >= d_max_scratch_gcw);
-         TBOX_ASSERT(
-            dst_to_hiercoarse->getConnectorWidth() >= d_max_stencil_width);
-         TBOX_ASSERT(
-            dst_to_hiercoarse->getConnectorWidth() >=
-            d_boundary_fill_ghost_width);
-         TBOX_ASSERT(
-            hiercoarse_to_dst->getHead() == *d_dst_level->getMappedBoxLevel());
-
-      } else {
+      {
          /*
           * Connectors dst<==>hiercoarse are not provided.
           * We have to bridge through src for it.
@@ -2142,10 +2105,10 @@ void RefineSchedule::finishScheduleConstruction_connectSuppToHiercoarse(
             hiercoarse_to_src_width*d_src_level->getRatioToCoarserLevel();
 
          /*
-          * Using lh to get required Connector width assumes that
-          * the src level has same refinement ratio as
-          * next_coarser_ln+1, but for Richardson extrapolation,
-          * that is not the case, so we have to adjust.
+          * Using the hierarchy to get required Connector width
+          * assumes that the src level has same refinement ratio as
+          * next_coarser_ln+1, but for Richardson extrapolation, that
+          * is not the case, so we have to adjust.
           */
          if (d_src_level->getMappedBoxLevel()->getRefinementRatio() <=
              hierarchy->getMappedBoxLevel(next_coarser_ln + 1)->getRefinementRatio()) {
@@ -2178,7 +2141,6 @@ void RefineSchedule::finishScheduleConstruction_connectSuppToHiercoarse(
             t_bridge_dst_hiercoarse->barrierAndStart();
          }
 
-         oca.setSanityCheckMethodPostconditions(true);
          /*
           * Don't use the strict bridge theorem here because it
           * cannot guarantee sufficient width.  We know from how
