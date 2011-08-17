@@ -762,6 +762,9 @@ private:
     *
     * @param[out] hiercoarse_to_supp
     *
+    * @param[in,out] supp_mapped_box_level This method will add
+    * periodic images to supp_mapped_box_level, if needed.
+    *
     * @param[in] dst_is_supplemental_level
     *
     * @param[in] hierarchy
@@ -772,7 +775,7 @@ private:
    void finishScheduleConstruction_connectSuppToHiercoarse(
       hier::Connector &supp_to_hiercoarse,
       hier::Connector &hiercoarse_to_supp,
-      const hier::MappedBoxLevel &supp_mapped_box_level,
+      hier::MappedBoxLevel &supp_mapped_box_level,
       const tbox::Pointer<hier::PatchHierarchy> &hierarchy,
       const int next_coarser_ln,
       const hier::Connector &dst_to_src,

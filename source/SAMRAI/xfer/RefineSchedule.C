@@ -959,44 +959,6 @@ void RefineSchedule::finishScheduleConstruction(
 
 
 
-      if (d_num_periodic_directions > 0) {
-         /*
-          * Add periodic images to supp_mapped_box_level and
-          * corresponding edges to hiercoarse_to_supp and
-          * supp_to_hiercoarse.  (supp_mapped_box_level was built
-          * from unfilled_mapped_box_level, which did not have
-          * periodic images.  Since supp_mapped_box_level is the
-          * next dst MappedBoxLevel, the next recursion may have to
-          * fill it using periodic neighbors, supp_mapped_box_level
-          * needs periodic images.)
-          */
-         TBOX_ASSERT(
-            supp_mapped_box_level.getLocalNumberOfBoxes() ==
-            supp_mapped_box_level.getMappedBoxes().size());
-         const hier::Connector& hiercoarse_to_hiercoarse =
-            hiercoarse_level->getMappedBoxLevel()->
-            getPersistentOverlapConnectors().
-            findConnector(*hiercoarse_level->getMappedBoxLevel(),
-                          hiercoarse_to_supp.getConnectorWidth());
-         edge_utils.addPeriodicImagesAndRelationships(
-            supp_mapped_box_level,
-            supp_to_hiercoarse,
-            hiercoarse_to_supp,
-            hierarchy->getDomainSearchTree(hier::BlockId(0)),
-            hiercoarse_to_hiercoarse);
-
-         if (s_extra_debug) {
-            sanityCheckSupplementalAndHiercoarseLevels(
-               supp_to_hiercoarse,
-               hiercoarse_to_supp,
-               hierarchy,
-               next_coarser_ln);
-         }
-
-      }
-
-
-
       /*
        * Construct the supplemental PatchLevel and reset
        * supp<==>hiercoarse connectors to use the PatchLevel's
@@ -1979,7 +1941,7 @@ void RefineSchedule::finishScheduleConstruction_setupSupplementalMappedBoxLevel(
 void RefineSchedule::finishScheduleConstruction_connectSuppToHiercoarse(
    hier::Connector &supp_to_hiercoarse,
    hier::Connector &hiercoarse_to_supp,
-   const hier::MappedBoxLevel &supp_mapped_box_level,
+   hier::MappedBoxLevel &supp_mapped_box_level,
    const tbox::Pointer<hier::PatchHierarchy> &hierarchy,
    const int next_coarser_ln,
    const hier::Connector &dst_to_src,
@@ -2347,6 +2309,40 @@ void RefineSchedule::finishScheduleConstruction_connectSuppToHiercoarse(
        */
       supp_to_hiercoarse.removePeriodicRelationships();
       hiercoarse_to_supp.removePeriodicRelationships();
+
+      /*
+       * Add periodic images to supp_mapped_box_level and
+       * corresponding edges to hiercoarse_to_supp and
+       * supp_to_hiercoarse.  (supp_mapped_box_level was built
+       * from unfilled_mapped_box_level, which did not have
+       * periodic images.  Since supp_mapped_box_level is the
+       * next dst MappedBoxLevel, the next recursion may have to
+       * fill it using periodic neighbors, supp_mapped_box_level
+       * needs periodic images.)
+       */
+      TBOX_ASSERT(
+         supp_mapped_box_level.getLocalNumberOfBoxes() ==
+         supp_mapped_box_level.getMappedBoxes().size());
+      const hier::Connector& hiercoarse_to_hiercoarse =
+         hiercoarse_level->getMappedBoxLevel()->
+         getPersistentOverlapConnectors().
+         findConnector(*hiercoarse_level->getMappedBoxLevel(),
+                       hiercoarse_to_supp.getConnectorWidth());
+      edge_utils.addPeriodicImagesAndRelationships(
+         supp_mapped_box_level,
+         supp_to_hiercoarse,
+         hiercoarse_to_supp,
+         hierarchy->getDomainSearchTree(hier::BlockId(0)),
+         hiercoarse_to_hiercoarse);
+
+      if (s_extra_debug) {
+         sanityCheckSupplementalAndHiercoarseLevels(
+            supp_to_hiercoarse,
+            hiercoarse_to_supp,
+            hierarchy,
+            next_coarser_ln);
+      }
+
    }
 
 
