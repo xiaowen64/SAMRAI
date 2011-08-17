@@ -84,8 +84,6 @@ void RefineScheduleConnectorWidthRequestor::computeRequiredConnectorWidths(
 
    const hier::IntVector& zero_vector(hier::IntVector::getZero(dim));
 
-   hier::IntVector ratio_to_coarser(dim);
-
    /*
     * Compute the Connector width needed to ensure all edges are found
     * during mesh recursive refine schedule generation.  It is safe to
@@ -125,7 +123,8 @@ void RefineScheduleConnectorWidthRequestor::computeRequiredConnectorWidths(
       hier::IntVector width_for_refining_recursively = max_data_gcw;
       for (int lnc = ln - 1; lnc > -1; --lnc) {
 
-         ratio_to_coarser = patch_hierarchy.getRatioToCoarserLevel(lnc+1);
+         const hier::IntVector &ratio_to_coarser =
+            patch_hierarchy.getRatioToCoarserLevel(lnc+1);
          width_for_refining_recursively.ceiling(ratio_to_coarser);
 
          /*
