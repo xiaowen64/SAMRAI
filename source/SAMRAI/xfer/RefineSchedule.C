@@ -1936,6 +1936,8 @@ void RefineSchedule::finishScheduleConstruction_setupSupplementalMappedBoxLevel(
  * coarser level on the hierarchy.  The coarser level on the hierarchy
  * at the same resolution as the supplementary and will be used as the
  * source for filling the supplementary level.
+ *
+ * Also add periodic images and relationships if needed.
  **************************************************************************
  */
 void RefineSchedule::finishScheduleConstruction_connectSuppToHiercoarse(
@@ -1957,10 +1959,8 @@ void RefineSchedule::finishScheduleConstruction_connectSuppToHiercoarse(
    /*
     * Compute the overlap Connector widths required by RefineSchedule.
     */
-
    std::vector<hier::IntVector> self_connector_widths;
    std::vector<hier::IntVector> fine_connector_widths;
-
    RefineScheduleConnectorWidthRequestor rscwri;
    rscwri.computeRequiredConnectorWidths(self_connector_widths,
                                          fine_connector_widths,
@@ -1978,32 +1978,18 @@ void RefineSchedule::finishScheduleConstruction_connectSuppToHiercoarse(
 
 
    /*
-    * Correspondance between consecutive recursions:
+    * To compute supp<==>hiercoarse, we will perform this bridge:
+    * supp<==>dst<==>hiercoarse.
     *
-    * This recursion:   supp<==>hiercoarse, supp_to_hiercoarse
+    * First, we need dst<==>hiercoarse.
     *
-    * Next recursion:    dst<==>src,            dst_to_src
+    * If dst is a supplemental level, we know that src is on the
+    * hierarchy.  Get the cached src<==>hiercoarse and bridge
+    * dst<==>src<==>hiercoarse.
     *
-    * We will bridge across dst for supp<==>hiercoarse.
-    *
-    * The bridge legs d_supp_to_dst and d_dst_to_supp are not
-    * complete, as usually required to guarantee that the bridge is
-    * complete.  However, supp nests in dst^gcw, so they need not be
-    * complete.
-    */
-
-   /*
-    * We now need supp<==>hiercoarse and can get it with the
-    * bridge supp<==>dst<==>hiercoarse.
-    *
-    * To do this bridge, we require dst<==>hiercoarse.  Look
-    * them up in the PersistentOverlapConnectors.  The Connector
-    * width we need and expect to have been precomputed depends
-    * on whether dst is a supplemental level from a previous
-    * recursive RefineSchedule.
-    *
-    * If we cannot look up dst<==>hiercoarse, we will attempt to
-    * bridge for it.
+    * If dst is not a supplemental level, hopefully what ever
+    * generated dst also computed and cached the Connectors for us to
+    * look up.
     */
 
    const Connector* dst_to_hiercoarse = NULL;
@@ -2012,175 +1998,92 @@ void RefineSchedule::finishScheduleConstruction_connectSuppToHiercoarse(
    Connector bridged_hiercoarse_to_dst;
 
    if (dst_is_supplemental_level) {
+
+      const hier::MappedBoxLevel& src_mapped_box_level =
+         dst_to_src.getHead();
+      if (hierarchy->getMappedBoxLevel(next_coarser_ln+1).getPointer() !=
+          &src_mapped_box_level) {
+         TBOX_ERROR("Missing dst<==>hiercoarse connector and\n"
+                    << "src is not from hierarchy.");
+      }
+      if (s_extra_debug) {
+         TBOX_WARNING(
+            "RefineSchedule::finishScheduleConstruction bridging through src for dst<==>hiercoarse\n");
+      }
+
+      const hier::IntVector &hiercoarse_to_src_width =
+         fine_connector_widths[next_coarser_ln];
+      hier::IntVector src_to_hiercoarse_width =
+         hiercoarse_to_src_width*d_src_level->getRatioToCoarserLevel();
+
+
       /*
-       * Here, dst is a supplemental (temporary) level created
-       * from the unfilled boxes of another dst (which itself
-       * may also be another supplemental level).  We cannot use
-       * the required Connector widths for levels in the
-       * hierarchy.  We must compute the correct required width
-       * for this particular temporary level.  We know how
-       * to do this because the temporary level is created by
-       * RefineSchedule code.
+       * The computation of src_to_hiercoarse_width puts it in the
+       * resolution of next_coarser_ln+1, but that is not the
+       * resolution of src (for example, src may be a Richardson
+       * extrapolation temporary level), so we have to adjust.
        */
+      if (d_src_level->getMappedBoxLevel()->getRefinementRatio() <=
+          hierarchy->getMappedBoxLevel(next_coarser_ln + 1)->getRefinementRatio()) {
+         src_to_hiercoarse_width *=
+            d_src_level->getMappedBoxLevel()->getRefinementRatio();
+         src_to_hiercoarse_width /= hierarchy->getMappedBoxLevel(
+            next_coarser_ln + 1)->getRefinementRatio();
+      } else if (d_src_level->getMappedBoxLevel()->getRefinementRatio()
+                 >=
+                 hierarchy->getMappedBoxLevel(next_coarser_ln
+                                              + 1)->getRefinementRatio()) {
+         src_to_hiercoarse_width *= hierarchy->getMappedBoxLevel(
+            next_coarser_ln + 1)->getRefinementRatio();
+         src_to_hiercoarse_width /=
+            d_src_level->getMappedBoxLevel()->getRefinementRatio();
+      }
 
-      hier::IntVector min_dst_to_hiercoarse_width(d_max_scratch_gcw);
-      min_dst_to_hiercoarse_width.max(d_max_stencil_width);
-      min_dst_to_hiercoarse_width.max(d_boundary_fill_ghost_width);
-      hier::IntVector min_hiercoarse_to_dst_width =
-         Connector::convertHeadWidthToBase(
-            hiercoarse_mapped_box_level.getRefinementRatio(),
-            d_dst_level->getMappedBoxLevel()->getRefinementRatio(),
-            min_dst_to_hiercoarse_width);
 
-      {
-         /*
-          * Connectors dst<==>hiercoarse are not provided.
-          * We have to bridge through src for it.
-          * (This requires dst<==>src<==>hiercoarse.)
-          */
-         const hier::MappedBoxLevel& src_mapped_box_level =
-            dst_to_src.getHead();
-         if (*hierarchy->getMappedBoxLevel(next_coarser_ln+1) !=
-             src_mapped_box_level) {
-            TBOX_ERROR("Missing dst<==>hiercoarse connector and\n"
-                       << "src is not from hierarchy.");
-         }
-         if (s_extra_debug) {
-            TBOX_WARNING(
-               "RefineSchedule::finishScheduleConstruction bridging through src for dst<==>hiercoarse\n");
-         }
+      const hier::Connector& src_to_hiercoarse =
+         d_src_level->getMappedBoxLevel()->getPersistentOverlapConnectors()
+         .findConnector(
+            hiercoarse_mapped_box_level,
+            src_to_hiercoarse_width);
 
-         hier::IntVector hiercoarse_to_src_width =
-            fine_connector_widths[next_coarser_ln];
-         hier::IntVector src_to_hiercoarse_width =
-            hiercoarse_to_src_width*d_src_level->getRatioToCoarserLevel();
+      const hier::Connector& hiercoarse_to_src =
+         hiercoarse_mapped_box_level.getPersistentOverlapConnectors()
+         .findConnector(
+            *d_src_level->getMappedBoxLevel(),
+            hiercoarse_to_src_width);
 
-         /*
-          * Using the hierarchy to get required Connector width
-          * assumes that the src level has same refinement ratio as
-          * next_coarser_ln+1, but for Richardson extrapolation, that
-          * is not the case, so we have to adjust.
-          */
-         if (d_src_level->getMappedBoxLevel()->getRefinementRatio() <=
-             hierarchy->getMappedBoxLevel(next_coarser_ln + 1)->getRefinementRatio()) {
-            src_to_hiercoarse_width *=
-               d_src_level->getMappedBoxLevel()->getRefinementRatio();
-            src_to_hiercoarse_width /= hierarchy->getMappedBoxLevel(
-               next_coarser_ln + 1)->getRefinementRatio();
-         } else if (d_src_level->getMappedBoxLevel()->getRefinementRatio()
-                    >=
-                    hierarchy->getMappedBoxLevel(next_coarser_ln
-                                                 + 1)->getRefinementRatio()) {
-            src_to_hiercoarse_width *= hierarchy->getMappedBoxLevel(
-               next_coarser_ln + 1)->getRefinementRatio();
-            src_to_hiercoarse_width /=
-               d_src_level->getMappedBoxLevel()->getRefinementRatio();
-         }
+      if (s_barrier_and_time) {
+         t_bridge_dst_hiercoarse->barrierAndStart();
+      }
 
-         const hier::Connector& src_to_hiercoarse =
-            d_src_level->getMappedBoxLevel()->getPersistentOverlapConnectors()
-            .findConnector(
-               hiercoarse_mapped_box_level,
-               src_to_hiercoarse_width);
-         const hier::Connector& hiercoarse_to_src =
-            hiercoarse_mapped_box_level.getPersistentOverlapConnectors()
-            .findConnector(
-               *d_src_level->getMappedBoxLevel(),
-               hiercoarse_to_src_width);
+      oca.bridge(
+         bridged_dst_to_hiercoarse,
+         bridged_hiercoarse_to_dst,
+         dst_to_src,
+         src_to_hiercoarse,
+         hiercoarse_to_src,
+         src_to_dst,
+         fine_connector_widths[next_coarser_ln]);
 
-         if (s_barrier_and_time) {
-            t_bridge_dst_hiercoarse->barrierAndStart();
-         }
+      if (s_barrier_and_time) {
+         t_bridge_dst_hiercoarse->stop();
+      }
 
-         /*
-          * Don't use the strict bridge theorem here because it
-          * cannot guarantee sufficient width.  We know from how
-          * dst nests in hiercoarse what output Connector width
-          * can guarantee that all dst MappedBoxes are seen by a
-          * hiercoarse MappedBox.
-          */
-         oca.bridge(
-            bridged_dst_to_hiercoarse,
-            bridged_hiercoarse_to_dst,
-            dst_to_src,
-            src_to_hiercoarse,
-            hiercoarse_to_src,
-            src_to_dst,
-            fine_connector_widths[next_coarser_ln]);
+      bridged_dst_to_hiercoarse.removePeriodicRelationships();
+      bridged_hiercoarse_to_dst.removePeriodicRelationships();
 
-         if (s_barrier_and_time) {
-            t_bridge_dst_hiercoarse->stop();
-         }
-
-         /*
-          * hiercoarse has periodic images but dst does not.
-          * Consequently, the bridge for dst<==>hiercoarse
-          * may not catch all periodic neighbors.  Because we
-          * don't need periodic neighbors for
-          * dst<==>hiercoarse, we will remove them to make
-          * dst<==>hiercoarse proper transposes.
-          */
-         bridged_dst_to_hiercoarse.removePeriodicRelationships();
-         bridged_hiercoarse_to_dst.removePeriodicRelationships();
-
-         if (s_extra_debug) {
-            size_t err1 =
-               bridged_dst_to_hiercoarse.checkTransposeCorrectness(
-                  bridged_hiercoarse_to_dst);
-            if (err1) tbox::perr
-               << "bridged_dst_to_hiercoarse failed transpose correctness."
-               << std::endl;
-            size_t err2 =
-               bridged_hiercoarse_to_dst.checkTransposeCorrectness(
-                  bridged_dst_to_hiercoarse);
-            if (err2) tbox::perr
-               << "bridged_hiercoarse_to_dst failed transpose correctness."
-               << std::endl;
-            if (err1 || err2) {
-               tbox::perr << "dst:\n"
-                          << dst_mapped_box_level.format("DEST->", 2)
-                          << "hiercoarse:\n"
-                          << hierarchy->getMappedBoxLevel(next_coarser_ln)->format("HCRS->", 2)
-                          << "bridged_dst_to_hiercoarse:\n"
-                          << bridged_dst_to_hiercoarse.format("bDH->", 2)
-                          << "bridged_hiercoarse_to_dst:\n"
-                          << bridged_hiercoarse_to_dst.format("bHD->", 2)
-                          << std::endl;
-               dst_mapped_box_level.getMPI().Barrier();
-               TBOX_ERROR(
-                  "Bridged dst<==>hiercoarse (next_coarser_ln="
-                  << next_coarser_ln << ") have problems as reported above.\n" );
-            }
-         }
-         dst_to_hiercoarse = &bridged_dst_to_hiercoarse;
-         hiercoarse_to_dst = &bridged_hiercoarse_to_dst;
-      } // End block bridging for dst<==>hiercoarse.
+      dst_to_hiercoarse = &bridged_dst_to_hiercoarse;
+      hiercoarse_to_dst = &bridged_hiercoarse_to_dst;
 
    } else { /* !dst_is_supplemental_level */
 
-      /*
-       * dst may be the level next_coarser_ln+1 on the
-       * hierarchy, or it could be a coarsened version (generated by Richardson extrapolation).
-       * Make sure Connector width based on dst is
-       * properly adjusted for the correct case.  The
-       * refinement ratio of next_coarser_ln is not
-       * affected by the choice of which case, so use it
-       * as the basis for the transpose width.
-       *
-       * Note: This method always assumes that dst is
-       * related to a level in the hierarchy.  src need
-       * not be.  If that is not the case, we need to
-       * rewrite a few things.  For scalability, we expect
-       * to have precomputed Connectors dst<==>hiercoarse.
-       * We simply don't have enough information in
-       * RefineSchedule to compute them efficiently.
-       */
       const hier::IntVector &hiercoarse_to_dst_width(fine_connector_widths[next_coarser_ln]);
       const hier::IntVector dst_to_hiercoarse_width(
          hier::Connector::convertHeadWidthToBase(
             d_dst_level->getMappedBoxLevel()->getRefinementRatio(),
             hiercoarse_mapped_box_level.getRefinementRatio(),
             hiercoarse_to_dst_width));
+
       dst_to_hiercoarse = &d_dst_level->getMappedBoxLevel()->
          getPersistentOverlapConnectors().
          findConnector(hiercoarse_mapped_box_level,
@@ -2189,62 +2092,12 @@ void RefineSchedule::finishScheduleConstruction_connectSuppToHiercoarse(
          getPersistentOverlapConnectors().
          findConnector(*d_dst_level->getMappedBoxLevel(),
                        hiercoarse_to_dst_width);
-      TBOX_ASSERT(
-         dst_to_hiercoarse->getBase() == *d_dst_level->getMappedBoxLevel());
-      TBOX_ASSERT(
-         dst_to_hiercoarse->getConnectorWidth() >= d_max_scratch_gcw);
-      TBOX_ASSERT(
-         dst_to_hiercoarse->getConnectorWidth() >= d_max_stencil_width);
-      TBOX_ASSERT(
-         dst_to_hiercoarse->getConnectorWidth() >=
-         d_boundary_fill_ghost_width);
-      TBOX_ASSERT(
-         hiercoarse_to_dst->getHead() == *d_dst_level->getMappedBoxLevel());
-      if (s_extra_debug) {
-         if (dst_to_hiercoarse != NULL || hiercoarse_to_dst != NULL) {
-            size_t err1 = dst_to_hiercoarse ? oca.checkOverlapCorrectness(
-               *dst_to_hiercoarse) : 0;
-            if (err1) tbox::perr
-               << "\ndst_to_hiercoarse failed overlap correctness." << std::endl;
-            size_t err2 = hiercoarse_to_dst ? oca.checkOverlapCorrectness(
-               *hiercoarse_to_dst) : 0;
-            if (err2) tbox::perr
-               << "\nhiercoarse_to_dst failed overlap correctness." << std::endl;
-            size_t err3 = (dst_to_hiercoarse && hiercoarse_to_dst) ?
-               dst_to_hiercoarse->checkTransposeCorrectness(*hiercoarse_to_dst) :
-               0;
-            if (err3) tbox::perr
-               << "dst_to_hiercoarse failed transpose correctness."
-               << std::endl;
-            size_t err4 = (dst_to_hiercoarse && hiercoarse_to_dst) ?
-               hiercoarse_to_dst->checkTransposeCorrectness(*dst_to_hiercoarse) :
-               0;
-            if (err4) tbox::perr
-               << "hiercoarse_to_dst failed transpose correctness."
-               << std::endl;
-            if (err1 || err2 || err3 || err4) {
-               TBOX_ERROR(
-                  "dst<==>hiercoarse have problems as reported above."
-                  << "dst:\n" << d_dst_level->getMappedBoxLevel()->format("DEST->", 2)
-                  << "hiercoarse:\n" << hiercoarse_mapped_box_level.format("HCRS->", 2)
-                  << "dst_to_hiercoarse:\n" << dst_to_hiercoarse->format("DH->", 2)
-                  << "hiercoarse_to_dst:\n" << hiercoarse_to_dst->format("HD->", 2)
-                  << std::endl);
-            }
-         }
-      }
    }
 
 
    /*
     * Compute supp<==>hiercoarse by bridging
     * supp<==>dst<==>hiercoarse.
-    *
-    * Don't use the strict bridge theorem here because it
-    * cannot guarantee sufficient width.  We know from how
-    * dst nests in hiercoarse what output Connector width
-    * can guarantee that all dst MappedBoxes are seen by a
-    * hiercoarse MappedBox.
     */
 
    if (s_barrier_and_time) {
@@ -2262,67 +2115,18 @@ void RefineSchedule::finishScheduleConstruction_connectSuppToHiercoarse(
       t_bridge_supp_hiercoarse->stop();
    }
 
-   if (s_extra_debug) {
-      bool locally_nests = false;
-      if ( !edge_utils.baseNestsInHead(
-              &locally_nests,
-              supp_to_hiercoarse.getBase(),
-              supp_to_hiercoarse.getHead(),
-              d_max_stencil_width,
-              supp_to_hiercoarse.getConnectorWidth(),
-              zero_vector,
-              &hierarchy->getDomainSearchTree(hier::BlockId(0))) ) {
-         TBOX_ERROR(
-            "RefineSchedule::finishScheduleConstruction: library error:\n"
-            <<"hiercoarse--->supp Connector may not see all of supp.\n"
-            <<"This is because supp, grown by the max stencil width\n"
-            <<"of " << d_max_stencil_width << " does not nest in\n"
-            <<"hiercoarse grown by the width of hiercoarse--->supp.\n"
-            <<"locally_nest = " << locally_nests
-            <<"\nsupp:\n" << supp_mapped_box_level.format("S: ",2)
-            <<"\nhiercoarse:\n" << hiercoarse_mapped_box_level.format("H: ",2)
-            <<"\nhiercoarse_to_supp:\n"
-            << hiercoarse_to_supp.format("HS: ",3));
-      }
-   }
-
-   TBOX_ASSERT(&supp_to_hiercoarse.getBase() == &supp_mapped_box_level);
-   TBOX_ASSERT(&hiercoarse_to_supp.getHead() == &supp_mapped_box_level);
-   TBOX_ASSERT(
-      supp_to_hiercoarse.getConnectorWidth() >=
-      hier::IntVector::ceiling(d_max_stencil_width,
-                               d_dst_to_supp.getRatio()));
-   TBOX_ASSERT(
-      hiercoarse_to_supp.getConnectorWidth() >=
-      hier::IntVector::ceiling(d_max_stencil_width,
-                               d_dst_to_supp.getRatio()));
 
 
    if (d_num_periodic_directions > 0) {
       /*
-       * supp_mapped_box_level does not have any periodic images yet.
-       * Remove periodic relationships that might have been added when
-       * bridging for supp<==>hiercoarse.
-       *
-       * This makes supp<==>hiercoarse proper transposes and prevent
-       * elusive bugs caused by extraneous periodic relationships.
+       * Remove periodic relationships added by bridging.  Some of
+       * them may be extraneous because supp may have parts outside
+       * the domain boundary.  Then add periodic images for supp and
+       * periodic relationships in supp<==>hiercoarse.
        */
       supp_to_hiercoarse.removePeriodicRelationships();
       hiercoarse_to_supp.removePeriodicRelationships();
 
-      /*
-       * Add periodic images to supp_mapped_box_level and
-       * corresponding edges to hiercoarse_to_supp and
-       * supp_to_hiercoarse.  (supp_mapped_box_level was built
-       * from unfilled_mapped_box_level, which did not have
-       * periodic images.  Since supp_mapped_box_level is the
-       * next dst MappedBoxLevel, the next recursion may have to
-       * fill it using periodic neighbors, supp_mapped_box_level
-       * needs periodic images.)
-       */
-      TBOX_ASSERT(
-         supp_mapped_box_level.getLocalNumberOfBoxes() ==
-         supp_mapped_box_level.getMappedBoxes().size());
       const hier::Connector& hiercoarse_to_hiercoarse =
          hiercoarse_level->getMappedBoxLevel()->
          getPersistentOverlapConnectors().
@@ -2334,14 +2138,6 @@ void RefineSchedule::finishScheduleConstruction_connectSuppToHiercoarse(
          hiercoarse_to_supp,
          hierarchy->getDomainSearchTree(hier::BlockId(0)),
          hiercoarse_to_hiercoarse);
-
-      if (s_extra_debug) {
-         sanityCheckSupplementalAndHiercoarseLevels(
-            supp_to_hiercoarse,
-            hiercoarse_to_supp,
-            hierarchy,
-            next_coarser_ln);
-      }
 
    }
 
