@@ -323,7 +323,7 @@ void MultiblockBoxTree::findOverlapBoxes(
     */
 
    const tbox::List<GridGeometry::Neighbor>& block_neighbors(
-      d_grid_geometry->getNeighbors(block_id.getBlockValue()));
+      d_grid_geometry->getNeighbors(block_id));
 
    for ( tbox::ListIterator<GridGeometry::Neighbor> ni(block_neighbors); ni; ni++ ) {
 
@@ -333,7 +333,7 @@ void MultiblockBoxTree::findOverlapBoxes(
          continue;
       }
 
-      const BlockId neighbor_block_id(neighbor.getBlockNumber());
+      const BlockId neighbor_block_id(neighbor.getBlockId());
 
       blocki = d_single_block_trees.find(neighbor_block_id);
 
@@ -388,7 +388,7 @@ void MultiblockBoxTree::findOverlapBoxes(
     */
 
    const tbox::List<GridGeometry::Neighbor>& block_neighbors(
-      d_grid_geometry->getNeighbors(block_id.getBlockValue()));
+      d_grid_geometry->getNeighbors(block_id));
 
    for ( tbox::ListIterator<GridGeometry::Neighbor> ni(block_neighbors); ni; ni++ ) {
 
@@ -398,7 +398,7 @@ void MultiblockBoxTree::findOverlapBoxes(
          continue;
       }
 
-      const BlockId neighbor_block_id(neighbor.getBlockNumber());
+      const BlockId neighbor_block_id(neighbor.getBlockId());
 
       blocki = d_single_block_trees.find(neighbor_block_id);
 
@@ -453,7 +453,7 @@ void MultiblockBoxTree::findOverlapBoxes(
     */
 
    const tbox::List<GridGeometry::Neighbor>& block_neighbors(
-      d_grid_geometry->getNeighbors(block_id.getBlockValue()));
+      d_grid_geometry->getNeighbors(block_id));
 
    for ( tbox::ListIterator<GridGeometry::Neighbor> ni(block_neighbors); ni; ni++ ) {
 
@@ -463,7 +463,7 @@ void MultiblockBoxTree::findOverlapBoxes(
          continue;
       }
 
-      const BlockId neighbor_block_id(neighbor.getBlockNumber());
+      const BlockId neighbor_block_id(neighbor.getBlockId());
 
       blocki = d_single_block_trees.find(neighbor_block_id);
 
@@ -518,7 +518,7 @@ void MultiblockBoxTree::findOverlapBoxes(
     */
 
    const tbox::List<GridGeometry::Neighbor>& block_neighbors(
-      d_grid_geometry->getNeighbors(block_id.getBlockValue()));
+      d_grid_geometry->getNeighbors(block_id));
 
    for ( tbox::ListIterator<GridGeometry::Neighbor> ni(block_neighbors); ni; ni++ ) {
 
@@ -528,7 +528,7 @@ void MultiblockBoxTree::findOverlapBoxes(
          continue;
       }
 
-      const BlockId neighbor_block_id(neighbor.getBlockNumber());
+      const BlockId neighbor_block_id(neighbor.getBlockId());
 
       blocki = d_single_block_trees.find(neighbor_block_id);
 

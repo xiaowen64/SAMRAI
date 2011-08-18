@@ -236,7 +236,7 @@ CartesianGridGeometry::makeRefinedGridGeometry(
    TBOX_ASSERT(fine_geom_name != getObjectName());
    TBOX_ASSERT(refine_ratio > hier::IntVector::getZero(dim));
 
-   hier::BoxList fine_domain(this->getPhysicalDomain(0));
+   hier::BoxList fine_domain(this->getPhysicalDomain(hier::BlockId(0)));
    fine_domain.refine(refine_ratio);
 
    CartesianGridGeometry* fine_geometry =
@@ -273,13 +273,13 @@ makeCoarsenedGridGeometry(
    TBOX_ASSERT(coarse_geom_name != getObjectName());
    TBOX_ASSERT(coarsen_ratio > hier::IntVector::getZero(dim));
 
-   hier::BoxList coarse_domain(this->getPhysicalDomain(0));
+   hier::BoxList coarse_domain(this->getPhysicalDomain(hier::BlockId(0)));
    coarse_domain.coarsen(coarsen_ratio);
 
    /*
     * Need to check that domain can be coarsened by given ratio.
     */
-   const hier::BoxList& fine_domain = this->getPhysicalDomain(0);
+   const hier::BoxList& fine_domain = this->getPhysicalDomain(hier::BlockId(0));
    const int nboxes = fine_domain.getNumberOfBoxes();
    hier::BoxList::Iterator fine_domain_itr(fine_domain);
    hier::BoxList::Iterator coarse_domain_itr(coarse_domain);
@@ -358,7 +358,7 @@ void CartesianGridGeometry::setGeometryData(
    this->setPhysicalDomain(domain_array);
 
    hier::Box bigbox(dim);
-   for (hier::BoxList::Iterator k(getPhysicalDomain(0)); k; k++)
+   for (hier::BoxList::Iterator k(getPhysicalDomain(hier::BlockId(0))); k; k++)
       bigbox += *k;
 
    d_domain_box = bigbox;
@@ -504,7 +504,7 @@ void CartesianGridGeometry::putToDatabase(
 
    db->putInteger("GEOM_CARTESIAN_GRID_GEOMETRY_VERSION",
       GEOM_CARTESIAN_GRID_GEOMETRY_VERSION);
-   tbox::Array<tbox::DatabaseBox> temp_box_array = this->getPhysicalDomain(0);
+   tbox::Array<tbox::DatabaseBox> temp_box_array = this->getPhysicalDomain(hier::BlockId(0));
    db->putDatabaseBoxArray("d_physical_domain", temp_box_array);
 
    db->putDoubleArray("d_dx", d_dx, dim.getValue());

@@ -210,8 +210,8 @@ int HierarchyTester::runHierarchyTestAndVerify()
                  << test_geometry->getPeriodicShift(one_vector) << std::endl;
    }
 
-   const BoxList& init_phys_domain = init_geometry->getPhysicalDomain(0);
-   const BoxList& test_phys_domain = test_geometry->getPhysicalDomain(0);
+   const BoxList& init_phys_domain = init_geometry->getPhysicalDomain(BlockId(0));
+   const BoxList& test_phys_domain = test_geometry->getPhysicalDomain(BlockId(0));
 
    const int npdboxes = init_phys_domain.getNumberOfBoxes();
 
@@ -242,8 +242,8 @@ int HierarchyTester::runHierarchyTestAndVerify()
    }
 
    // Test #0c:
-   if (init_geometry->getDomainIsSingleBox(0) !=
-       test_geometry->getDomainIsSingleBox(0)) {
+   if (init_geometry->getDomainIsSingleBox(BlockId(0)) !=
+       test_geometry->getDomainIsSingleBox(BlockId(0))) {
       fail_count++;
       tbox::perr
       << "FAILED: - Test #0c: initial and test hierarchy do not match"
@@ -341,8 +341,8 @@ int HierarchyTester::runHierarchyTestAndVerify()
                     << test_level->getRatioToCoarserLevel() << std::endl;
       }
 
-      const BoxList& init_domain = init_level->getPhysicalDomain(BlockId::zero());
-      const BoxList& test_domain = test_level->getPhysicalDomain(BlockId::zero());
+      const BoxList& init_domain = init_level->getPhysicalDomain(BlockId(0));
+      const BoxList& test_domain = test_level->getPhysicalDomain(BlockId(0));
 
       const int nboxes = init_domain.getNumberOfBoxes();
 

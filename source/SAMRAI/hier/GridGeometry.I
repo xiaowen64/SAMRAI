@@ -12,15 +12,15 @@ namespace SAMRAI {
 namespace hier {
 
 SAMRAI_INLINE_KEYWORD
-const BoxList& GridGeometry::getPhysicalDomain(const int block_num) const
+const BoxList& GridGeometry::getPhysicalDomain(const BlockId& block_id) const
 {
-   return d_physical_domain[block_num];
+   return d_physical_domain[block_id.getBlockValue()];
 }
 
 SAMRAI_INLINE_KEYWORD
-bool GridGeometry::getDomainIsSingleBox(const int block_num) const
+bool GridGeometry::getDomainIsSingleBox(const BlockId& block_id) const
 {
-   return d_domain_is_single_box[block_num];
+   return d_domain_is_single_box[block_id.getBlockValue()];
 }
 
 SAMRAI_INLINE_KEYWORD
@@ -50,25 +50,25 @@ GridGeometry::getNumberOfBlockSingularities() const
 SAMRAI_INLINE_KEYWORD
 const BoxList&
 GridGeometry::getSingularityBoxList(
-   const int block_number) const
+   const BlockId& block_id) const
 {
-   return d_singularity[block_number];
+   return d_singularity[block_id.getBlockValue()];
 }
 
 SAMRAI_INLINE_KEYWORD
 const std::vector<int> &
 GridGeometry::getSingularityIndices(
-   const int block_number) const
+   const BlockId& block_id) const
 {
-   return d_singularity_indices[block_number];
+   return d_singularity_indices[block_id.getBlockValue()];
 }
 
 SAMRAI_INLINE_KEYWORD
 bool
 GridGeometry::reducedConnectivityExists(
-   const int block_number) const
+   const BlockId& block_id) const
 {
-   return d_reduced_connect[block_number];
+   return d_reduced_connect[block_id.getBlockValue()];
 }
 
 /*
@@ -81,18 +81,18 @@ GridGeometry::reducedConnectivityExists(
  */
 SAMRAI_INLINE_KEYWORD
 int GridGeometry::getNumberOfNeighbors(
-   const int block_number) const
+   const BlockId& block_id) const
 {
-   return d_block_neighbors[block_number].getNumberOfItems();
+   return d_block_neighbors[block_id.getBlockValue()].getNumberOfItems();
 }
 
 
 SAMRAI_INLINE_KEYWORD
 const tbox::List<GridGeometry::Neighbor>&
 GridGeometry::getNeighbors(
-   const int block_number) const
+   const BlockId& block_id) const
 {
-   return d_block_neighbors[block_number];
+   return d_block_neighbors[block_id.getBlockValue()];
 }
 
 SAMRAI_INLINE_KEYWORD
@@ -102,9 +102,9 @@ bool GridGeometry::Neighbor::isSingularity() const
 }
 
 SAMRAI_INLINE_KEYWORD
-int GridGeometry::Neighbor::getBlockNumber() const
+const BlockId& GridGeometry::Neighbor::getBlockId() const
 {
-   return d_block_number;
+   return d_block_id;
 }
 
 SAMRAI_INLINE_KEYWORD

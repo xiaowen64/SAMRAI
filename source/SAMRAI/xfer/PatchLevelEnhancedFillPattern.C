@@ -83,7 +83,7 @@ void PatchLevelEnhancedFillPattern::computeFillMappedBoxesAndNeighborhoodSets(
       fill_boxes.getFirstItem().grow(fill_ghost_width);
 
       const tbox::List<hier::GridGeometry::Neighbor>& neighbors =
-         grid_geometry->getNeighbors(dst_mapped_box.getBlockId().getBlockValue());
+         grid_geometry->getNeighbors(dst_mapped_box.getBlockId());
 
       hier::BoxList constructed_fill_boxes(dst_mapped_box.getDim());
 

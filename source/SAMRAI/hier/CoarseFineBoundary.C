@@ -303,7 +303,7 @@ void CoarseFineBoundary::computeFromLevel(
          BoxList pseudo_domain(*phys_domain);
 
          for (tbox::List<GridGeometry::Neighbor>::Iterator
-              ni(grid_geometry->getNeighbors(i)); ni; ni++) {
+              ni(grid_geometry->getNeighbors(block_id)); ni; ni++) {
 
             BoxList neighbor_domain(ni().getTransformedDomain());
             neighbor_domain.refine(ratio);
@@ -341,12 +341,12 @@ void CoarseFineBoundary::computeFromLevel(
           * they are not.
           */
          for (tbox::List<GridGeometry::Neighbor>::Iterator
-              ni(grid_geometry->getNeighbors(i)); ni; ni++) {
+              ni(grid_geometry->getNeighbors(block_id)); ni; ni++) {
 
             /*
              * Construct the array of boxes on level in this neighbor's block.
              */
-            BlockId nbr_block_id(ni().getBlockNumber());
+            BlockId nbr_block_id(ni().getBlockId());
             tbox::Pointer<BoxList> neighbor_boxes =
                all_boxes_on_level.getSingleBlockBoxList(d_dim, nbr_block_id);
 
@@ -354,7 +354,7 @@ void CoarseFineBoundary::computeFromLevel(
                grid_geometry->transformBoxList(*neighbor_boxes,
                   ratio,
                   block_id,
-                  BlockId(ni().getBlockNumber()));
+                  nbr_block_id);
 
                BoxList neighbor_boxes_to_add(*phys_domain);
                neighbor_boxes_to_add.grow(max_ghost_width);

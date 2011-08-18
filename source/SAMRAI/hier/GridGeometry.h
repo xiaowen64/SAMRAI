@@ -341,7 +341,7 @@ public:
     * @param[out]    domain_mapped_boxes The MappedBoxSet containing all
     *                Boxes describing the index space
     * @param[in]     ratio_to_level_zero ratio to the coarsest level
-    * @param[in]     block_number
+    * @param[in]     block_id
     */
    void
    computePhysicalDomain(
@@ -386,10 +386,10 @@ public:
     *
     * @return const reference to physical domain description for level 0.
     *
-    * @param[in]   block_number
+    * @param[in]   block_id
     */
    const BoxList&
-   getPhysicalDomain(const int block_number) const;
+   getPhysicalDomain(const hier::BlockId& block_id) const;
 
    /*!
     * @brief returns whether the physical domain for a block managed by this
@@ -398,10 +398,10 @@ public:
     * @return true if the physical domain can be represented as a single box,
     *         otherwise false.
     *
-    * @param[in]   block_number
+    * @param[in]   block_id
     */
    bool
-   getDomainIsSingleBox(const int block_number) const;
+   getDomainIsSingleBox(const hier::BlockId& block_id) const;
 
    /*!
     * @brief Initialize the periodic shift on the coarsest level.
@@ -735,7 +735,7 @@ public:
       /*!
        * @brief Constructor
        *
-       * @param[in] block_number  The block number of the neighboring block
+       * @param[in] block_id   The block id of the neighboring block
        * @param[in] domain     The neighboring block's domain in the current
        *                       block's index space
        * @param[in] rotation   The rotation needed to align the axes of the
@@ -748,11 +748,11 @@ public:
        *                           or enhanced connectivity singularity
        */
       Neighbor(
-         int block_number,
-         BoxList& domain,
+         const BlockId& block_id,
+         const BoxList& domain,
          const Transformation& transformation,
          const bool is_singularity):
-         d_block_number(block_number),
+         d_block_id(block_id),
          d_transformed_domain(domain),
          d_transformation(transformation),
          d_is_singularity(is_singularity) {
@@ -761,7 +761,7 @@ public:
       /*!
        * @brief Get the block number of the neighboring block.
        */
-      int getBlockNumber() const;
+      const BlockId&  getBlockId() const;
 
       /*!
        * @brief Get the neighboring block's domain in the current block's
@@ -796,7 +796,7 @@ private:
       /*!
        * @brief The block number of the neighboring block
        */
-      int d_block_number;
+      hier::BlockId d_block_id;
 
       /*!
        * @brief The neighboring block's domain in the current block's
@@ -833,10 +833,10 @@ private:
     */
    void
    registerNeighbors(
-      int block_a,
-      int block_b,
-      Transformation::RotationIdentifier rotation_b_to_a,
-      IntVector& shift_b_to_a,
+      const BlockId& block_a,
+      const BlockId& block_b,
+      const Transformation::RotationIdentifier rotation_b_to_a,
+      const IntVector& shift_b_to_a,
       const int neighbor_type);
 
    /*!
@@ -845,17 +845,17 @@ private:
     *
     * A BoxList will be constructed that contains the full set of the
     * coarse level domains of all blocks except the one identified by
-    * block_number.  The domains will all be transformed into the index space
-    * represented by block_number.
+    * block_id.  The domains will all be transformed into the index space
+    * represented by block_id.
     *
     * @param[out] domain_outside_block
-    * @param[in] block_number
+    * @param[in] block_id
     *
     */
    void
    getDomainOutsideBlock(
       BoxList& domain_outside_block,
-      const int block_number);
+      const BlockId& block_id);
 
    /*!
     * @brief Return the number of block singularities in the block
@@ -865,7 +865,7 @@ private:
 
    /*!
     * @brief Return a BoxList that describes all of the singularities
-    * touched by the block indicated by block_number.
+    * touched by the block indicated by block_id.
     *
     * @return For every singularity point the block touches, the BoxList will
     * contain a single-cell box that lies just outside the block domain,
@@ -874,36 +874,36 @@ private:
     * lying outside the block's coarse-level domain and touching the domain
     * only along the line of singularity.
     *
-    * @param[io] block_number
+    * @param[io] block_id
     */
    const BoxList&
    getSingularityBoxList(
-      const int block_number) const;
+      const BlockId& block_id) const;
 
    /*!
     * @brief Return a list of integers indicating all of the
-    * singularities touched by the block indicated by block_number.
+    * singularities touched by the block indicated by block_id.
     *
     * @return For every singularity point the block touches, the
     * vector<int> will contain the index of that singularity.
     *
-    * @param[i] block_number
+    * @param[i] block_id
     */
    const std::vector<int> &
-   getSingularityIndices(const int block_number) const;
+   getSingularityIndices(const BlockId& block_id) const;
 
    /*!
-    * @brief Tell if block represented by block_number touches
+    * @brief Tell if block represented by block_id touches
     * a reduced-connectivity singularity
     *
     * @return True if the block touches reduced connectivity singularity,
     * false if not.
     *
-    * @param[in] block_number
+    * @param[in] block_id
     */
    bool
    reducedConnectivityExists(
-      const int block_number) const;
+      const BlockId& block_id) const;
 
    /*!
     * @brief Modify a box by rotating and shifting from the index space of
@@ -965,27 +965,27 @@ private:
     *                         base_block
     * @param[in] base_block  The block whose index space will be used for
     *                        the output boxes
-    * @param[in] transformed_block Integer identifier of another block whose
+    * @param[in] transformed_block ID of another block whose
     *                             domain will be represented in the index space
     *                             of the base block
     */
    void
    getTransformedBlock(
       BoxList& block_boxes,
-      const int base_block,
-      const int transformed_block);
+      const BlockId& base_block,
+      const BlockId& transformed_block);
 
    /*!
     * @brief Return a list of Neighbor objects describing all of the neighbors
-    * of the block indicated by the block_number.
+    * of the block indicated by the block_id.
     *
     * @return The list of neighbors
     *
-    * @param[in] block_number
+    * @param[in] block_id
     */
    const tbox::List<Neighbor>&
    getNeighbors(
-      const int block_number) const;
+      const BlockId& block_id) const;
 
    /*!
     * @brief Return the number of neighbors a specific block of the Multiblock
@@ -996,11 +996,11 @@ private:
     *
     * @return The number of neighbors
     *
-    * @param[in] block_number
+    * @param[in] block_id
     */
    int
    getNumberOfNeighbors(
-      const int block_number) const;
+      const BlockId& block_id) const;
 
    /*!
     * @brief Tell if the given BlockIds represent neighboring blocks.
@@ -1081,10 +1081,10 @@ private:
 
    /*!
     * @brief Reset domain MappedBoxSet after data it depends on has changed.
-    * TODO:  Remove block_num
+    * TODO:  Remove block_id
     */
    void
-   resetDomainMappedBoxSet(const int block_number);
+   resetDomainMappedBoxSet(const hier::BlockId& block_id);
 
    /*!
     * @brief Check that the domain is valid for periodic boundary conditions

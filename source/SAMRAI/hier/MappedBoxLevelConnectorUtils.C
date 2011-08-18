@@ -1851,9 +1851,9 @@ void MappedBoxLevelConnectorUtils::computeBoxesAroundBoundary(
           * space.
           */
          BoxList reduced_connectivity_singularity_boxes =
-            grid_geometry->getSingularityBoxList(block_id.getBlockValue());
+            grid_geometry->getSingularityBoxList(block_id);
          const tbox::List<GridGeometry::Neighbor> &neighbors(
-            grid_geometry->getNeighbors(block_id.getBlockValue()));
+            grid_geometry->getNeighbors(block_id));
 
          for ( tbox::List<GridGeometry::Neighbor>::Iterator ni(neighbors);
                ni; ni++ ) {
@@ -1882,7 +1882,7 @@ void MappedBoxLevelConnectorUtils::computeBoxesAroundBoundary(
           * formula says.
           */
          BoxList singularity_boxes =
-            grid_geometry->getSingularityBoxList(block_id.getBlockValue());
+            grid_geometry->getSingularityBoxList(block_id);
          if ( refinement_ratio != one_vec ) {
             singularity_boxes.refine(refinement_ratio);
          }
@@ -1890,7 +1890,7 @@ void MappedBoxLevelConnectorUtils::computeBoxesAroundBoundary(
          for ( tbox::List<GridGeometry::Neighbor>::Iterator ni(neighbors);
                ni; ni++ ) {
             const GridGeometry::Neighbor &neighbor(*ni);
-            const BlockId neighbor_block_id(neighbor.getBlockNumber());
+            const BlockId neighbor_block_id(neighbor.getBlockId());
             if ( neighbor.isSingularity() &&
                  reference_mapped_boxes_tree.hasBoxInBlock(neighbor_block_id) ) {
 

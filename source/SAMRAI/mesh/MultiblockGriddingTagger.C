@@ -130,10 +130,10 @@ void MultiblockGriddingTagger::fillSingularityBoundaryConditions(
 
    const hier::BoxId& dst_mb_id = patch.getMappedBox().getId();
 
-   const int patch_blk_num = dst_mb_id.getBlockId().getBlockValue();
+   const hier::BlockId& patch_blk_id = dst_mb_id.getBlockId();
 
    const tbox::List<hier::GridGeometry::Neighbor>& neighbors =
-      encon_level.getGridGeometry()->getNeighbors(patch_blk_num);
+      encon_level.getGridGeometry()->getNeighbors(patch_blk_id);
 
    const tbox::Pointer<pdat::CellData<int> > tag_data =
       patch.getPatchData(d_buf_tag_indx);
@@ -157,7 +157,7 @@ void MultiblockGriddingTagger::fillSingularityBoundaryConditions(
          tbox::Pointer<hier::Patch> encon_patch(
             encon_level.getPatch(ei->getId()));
 
-         int encon_blk_num = ei->getBlockId().getBlockValue();
+         const hier::BlockId& encon_blk_id = ei->getBlockId();
 
          hier::Transformation::RotationIdentifier rotation =
             hier::Transformation::NO_ROTATE;
@@ -166,7 +166,7 @@ void MultiblockGriddingTagger::fillSingularityBoundaryConditions(
          for (tbox::List<hier::GridGeometry::Neighbor>::Iterator
               ni(neighbors); ni; ni++) {
 
-            if (ni().getBlockNumber() == encon_blk_num) {
+            if (ni().getBlockId() == encon_blk_id) {
                rotation = ni().getRotationIdentifier();
                offset = ni().getShift();
                break;

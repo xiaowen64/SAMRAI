@@ -316,10 +316,10 @@ void FaceMultiblockTest::fillSingularityBoundaryConditions(
 
    const hier::BoxId& dst_mb_id = patch.getMappedBox().getId();
 
-   const int patch_blk_num = dst_mb_id.getBlockId().getBlockValue();
+   const hier::BlockId& patch_blk_id = dst_mb_id.getBlockId();
 
    const tbox::List<hier::GridGeometry::Neighbor>& neighbors =
-      encon_level.getGridGeometry()->getNeighbors(patch_blk_num);
+      encon_level.getGridGeometry()->getNeighbors(patch_blk_id);
 
    for (int i = 0; i < d_variables.getSize(); i++) {
 
@@ -372,7 +372,7 @@ void FaceMultiblockTest::fillSingularityBoundaryConditions(
             tbox::Pointer<hier::Patch> encon_patch(
                encon_level.getPatch(ei->getId()));
 
-            int encon_blk_num = ei->getBlockId().getBlockValue();
+            const hier::BlockId& encon_blk_id = ei->getBlockId();
 
             hier::Transformation::RotationIdentifier rotation =
                hier::Transformation::NO_ROTATE;
@@ -381,7 +381,7 @@ void FaceMultiblockTest::fillSingularityBoundaryConditions(
             for (tbox::List<hier::GridGeometry::Neighbor>::Iterator
                  ni(neighbors); ni; ni++) {
 
-               if (ni().getBlockNumber() == encon_blk_num) {
+               if (ni().getBlockId() == encon_blk_id) {
                   rotation = ni().getRotationIdentifier();
                   offset = ni().getShift();
                   break;
@@ -545,9 +545,9 @@ bool FaceMultiblockTest::verifyResults(
    tbox.grow(tgcw);
 
    const tbox::List<hier::GridGeometry::Neighbor>& neighbors =
-      hierarchy->getGridGeometry()->getNeighbors(block_id.getBlockValue());
+      hierarchy->getGridGeometry()->getNeighbors(block_id);
    hier::BoxList singularity(
-      hierarchy->getGridGeometry()->getSingularityBoxList(block_id.getBlockValue()));
+      hierarchy->getGridGeometry()->getSingularityBoxList(block_id));
 
    hier::IntVector ratio =
       hierarchy->getPatchLevel(level_number)->getRatioToLevelZero();
@@ -598,7 +598,7 @@ bool FaceMultiblockTest::verifyResults(
 
             if (ne().isSingularity()) continue;
 
-            correct = ne().getBlockNumber();
+            correct = ne().getBlockId().getBlockValue();
 
             hier::BoxList neighbor_ghost(ne().getTransformedDomain());
             hier::BoxList neighbor_face_ghost;
@@ -670,7 +670,7 @@ bool FaceMultiblockTest::verifyResults(
                      neighbor_ghost.intersectBoxes(fill_box);
                      if (neighbor_ghost.size()) {
                         num_sing_neighbors++;
-                        correct += ns().getBlockNumber();
+                        correct += ns().getBlockId().getBlockValue();
                      }
                   }
                }

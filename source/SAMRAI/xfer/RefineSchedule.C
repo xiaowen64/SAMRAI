@@ -1460,7 +1460,6 @@ RefineSchedule::createEnconFillSchedule(
 }
 
 
-
 /*
  **************************************************************************
  * Shear off parts of unfilled boxes that lie outside non-periodic
@@ -2368,7 +2367,7 @@ void RefineSchedule::fillSingularityBoundaries(
             hier::BlockId block_id(bn); 
 
             for (hier::BoxList::Iterator sb(
-                    grid_geometry->getSingularityBoxList(bn)); sb; sb++) {
+                    grid_geometry->getSingularityBoxList(block_id)); sb; sb++) {
 
                hier::Box singularity(sb());
                singularity.refine(ratio);
@@ -3102,10 +3101,8 @@ void RefineSchedule::findEnconFillBoxes(
    tbox::Pointer<hier::GridGeometry> grid_geometry(
       d_dst_level->getGridGeometry());
 
-   const int dst_blk = dst_block_id.getBlockValue();
- 
    const tbox::List<hier::GridGeometry::Neighbor>& neighbors =
-      grid_geometry->getNeighbors(dst_blk);
+      grid_geometry->getNeighbors(dst_block_id);
 
    hier::BoxList encon_neighbor_list(encon_fill_boxes.getDim());
    for (tbox::List<hier::GridGeometry::Neighbor>::Iterator
@@ -3144,7 +3141,6 @@ void RefineSchedule::findEnconUnfilledBoxes(
 
    const hier::BoxId& dst_mapped_box_id = dst_mapped_box.getId();
    const hier::BlockId& dst_block_id = dst_mapped_box_id.getBlockId();
-   const int dst_blk = dst_block_id.getBlockValue();
 
    /*
     * map container will hold unfilled boxes for each block that is
@@ -3157,13 +3153,13 @@ void RefineSchedule::findEnconUnfilledBoxes(
    std::map<hier::BlockId, hier::BoxList> unfilled_encon_nbr_boxes;
 
    const tbox::List<hier::GridGeometry::Neighbor>& neighbors =
-      grid_geometry->getNeighbors(dst_blk);
+      grid_geometry->getNeighbors(dst_block_id);
 
    for (tbox::List<hier::GridGeometry::Neighbor>::Iterator
         ni(neighbors); ni; ni++) {
 
       if(ni().isSingularity()) {
-         const hier::BlockId nbr_block_id(ni().getBlockNumber());
+         const hier::BlockId nbr_block_id(ni().getBlockId());
 
          unfilled_encon_nbr_boxes[nbr_block_id].unionBoxes(
             ni().getTransformedDomain());
@@ -3559,11 +3555,11 @@ void RefineSchedule::createEnconLevel(const hier::IntVector& fill_gcw)
           * this block.
           */ 
          const hier::BoxList& sing_boxes =
-            grid_geometry->getSingularityBoxList(bn);
+            grid_geometry->getSingularityBoxList(block_id);
 
          if (sing_boxes.size() > 0) {
             const tbox::List<hier::GridGeometry::Neighbor>& neighbors =
-               grid_geometry->getNeighbors(bn);
+               grid_geometry->getNeighbors(block_id);
 
             /*
              * Loop over neighboring blocks and find the ones that are
@@ -3574,8 +3570,7 @@ void RefineSchedule::createEnconLevel(const hier::IntVector& fill_gcw)
 
                if (ni().isSingularity()) {
 
-                  const int nbr_num = ni().getBlockNumber();
-                  hier::BlockId nbr_id(nbr_num);
+                  const hier::BlockId& nbr_id = ni().getBlockId();
 
                   /*
                    * Get the transformation from neighbor block to dst
@@ -3591,8 +3586,8 @@ void RefineSchedule::createEnconLevel(const hier::IntVector& fill_gcw)
 
                   hier::BoxList trans_neighbor_list(dim);
                   grid_geometry->getTransformedBlock(trans_neighbor_list,
-                     bn,
-                     nbr_num);
+                     block_id,
+                     nbr_id);
                   trans_neighbor_list.refine(
                      d_dst_level->getRatioToLevelZero());
 
@@ -4504,7 +4499,7 @@ RefineSchedule::initializeDomainAndGhostInformation(
       d_dst_level->getRatioToLevelZero();
 
    for (int b = 0; b < grid_geom->getNumberBlocks(); b++) {
-      d_domain_is_one_box[b] = grid_geom->getDomainIsSingleBox(b);
+      d_domain_is_one_box[b] = grid_geom->getDomainIsSingleBox(hier::BlockId(b));
    }
 
    d_periodic_shift = grid_geom->getPeriodicShift(ratio_to_level_zero);

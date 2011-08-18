@@ -340,9 +340,6 @@ void GriddingAlgorithm::makeCoarsestLevel(
       }
    }
 
-   hier::BoxList domain_boxes =
-      d_hierarchy->getGridGeometry()->getPhysicalDomain(0);
-
    hier::IntVector smallest_patch(d_dim);
    hier::IntVector largest_patch(d_dim);
    hier::IntVector extend_ghosts(d_dim);
@@ -364,7 +361,12 @@ void GriddingAlgorithm::makeCoarsestLevel(
     * for violations of user constraints.
     */
    if (!level_zero_exists) {
-      checkDomainBoxes(domain_boxes);
+      for (int b = 0; b < d_hierarchy->getGridGeometry()->getNumberBlocks();
+           b++) {
+         hier::BoxList domain_boxes =
+            d_hierarchy->getGridGeometry()->getPhysicalDomain(hier::BlockId(b));
+         checkDomainBoxes(domain_boxes);
+      }
    }
 
 

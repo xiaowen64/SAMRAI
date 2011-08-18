@@ -721,7 +721,7 @@ static void dumpMatlabData1dPencil(
       nlevels = hierarchy->getNumberOfLevels();
    }
 
-   hier::BoxList domain(hierarchy->getGridGeometry()->getPhysicalDomain(0));
+   hier::BoxList domain(hierarchy->getGridGeometry()->getPhysicalDomain(hier::BlockId(0)));
    hier::Box pencil_box(domain.getBoundingBox());
 
    if (dim > tbox::Dimension(1)) {
