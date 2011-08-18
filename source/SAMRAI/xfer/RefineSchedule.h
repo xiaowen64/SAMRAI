@@ -622,28 +622,6 @@ private:
    void createEnconLevel(const hier::IntVector& fill_gcw);
 
    /*
-    * @brief Create level for unfilled boxes at enhanced connectivity when
-    * there is no source to fill any destination boxes.
-    *
-    * Connnector dst_to_fill points to a head MappedBoxLevel consisting of
-    * fill boxes needing to be filled by this schedule.  Since there is no
-    * source to fill any of these boxes, all of the fill boxes will be
-    * considered unfilled.  This method creates and stores a level consisting
-    * of those fill boxes that lie across enhanced connectivity block
-    * boundaries.  The level is stored internally as d_unfilled_encon_level,
-    * and the method also initialized the Connector encon_to_unfilled_encon,
-    * which connects d_encon_level to d_unfilled_encon_level.
-    *
-    * @param[out]  encon_to_unfilled_encon  Connector from d_encon_level to
-    *                                       d_unfilled_encon_level
-    * @param[in]   dst_to_fill    Connector from destination level to 
-    *                             level for fill boxes
-    */ 
-   void createUnfilledEnconLevelWithNoSource(
-      tbox::Pointer<hier::Connector>& encon_to_unfilled_encon,
-      const hier::Connector& dst_to_fill);
-
-   /*
     * @brief Find the fill boxes that are at enhanced connectivity.
     *
     * Given a list representing fill boxes, determine the portion of those
