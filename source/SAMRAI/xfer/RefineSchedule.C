@@ -1338,7 +1338,6 @@ RefineSchedule::createEnconFillSchedule(
                *d_src_level->getMappedBoxLevel(),
                hiercoarse_to_src_width);
 
-         oca.setSanityCheckMethodPostconditions(true);
          /*
           * Don't use the strict bridge theorem here because it
           * cannot guarantee sufficient width.  We know from how
