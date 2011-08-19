@@ -119,10 +119,12 @@ void MultiblockGriddingTagger::fillSingularityBoundaryConditions(
    const hier::Connector& dst_to_encon,
    const double fill_time,
    const hier::Box& fill_box,
-   const hier::BoundaryBox& boundary_box)
+   const hier::BoundaryBox& boundary_box,
+   const tbox::Pointer<hier::GridGeometry> &grid_geometry)
 {
    NULL_USE(fill_time);
    NULL_USE(boundary_box);
+   NULL_USE(grid_geometry);
 
    TBOX_DIM_ASSERT_CHECK_DIM_ARGS3(d_dim, patch, fill_box, boundary_box);
 
@@ -133,7 +135,7 @@ void MultiblockGriddingTagger::fillSingularityBoundaryConditions(
    const hier::BlockId& patch_blk_id = dst_mb_id.getBlockId();
 
    const tbox::List<hier::GridGeometry::Neighbor>& neighbors =
-      encon_level.getGridGeometry()->getNeighbors(patch_blk_id);
+      grid_geometry->getNeighbors(patch_blk_id);
 
    const tbox::Pointer<pdat::CellData<int> > tag_data =
       patch.getPatchData(d_buf_tag_indx);
@@ -141,68 +143,74 @@ void MultiblockGriddingTagger::fillSingularityBoundaryConditions(
    hier::Box sing_fill_box(tag_data->getGhostBox() * fill_box);
    tag_data->fillAll(0, sing_fill_box);
 
-   const hier::NeighborhoodSet& dst_to_encon_nbrhood_set =
-      dst_to_encon.getNeighborhoodSets();
+   if ( grid_geometry->hasEnhancedConnectivity() ) {
 
-   hier::NeighborhoodSet::const_iterator ni =
-      dst_to_encon_nbrhood_set.find(dst_mb_id);
+      const tbox::List<hier::GridGeometry::Neighbor>& neighbors =
+         grid_geometry->getNeighbors(patch_blk_id);
 
-   if (ni != dst_to_encon_nbrhood_set.end()) {
+      const hier::NeighborhoodSet& dst_to_encon_nbrhood_set =
+         dst_to_encon.getNeighborhoodSets();
 
-      const hier::MappedBoxSet& encon_nbrs = ni->second;
+      hier::NeighborhoodSet::const_iterator ni =
+         dst_to_encon_nbrhood_set.find(dst_mb_id);
 
-      for (hier::MappedBoxSet::const_iterator ei = encon_nbrs.begin();
-           ei != encon_nbrs.end(); ++ei) {
+      if (ni != dst_to_encon_nbrhood_set.end()) {
 
-         tbox::Pointer<hier::Patch> encon_patch(
-            encon_level.getPatch(ei->getId()));
+         const hier::MappedBoxSet& encon_nbrs = ni->second;
 
-         const hier::BlockId& encon_blk_id = ei->getBlockId();
+         for (hier::MappedBoxSet::const_iterator ei = encon_nbrs.begin();
+              ei != encon_nbrs.end(); ++ei) {
 
-         hier::Transformation::RotationIdentifier rotation =
-            hier::Transformation::NO_ROTATE;
-         hier::IntVector offset(dim);
+            tbox::Pointer<hier::Patch> encon_patch(
+               encon_level.getPatch(ei->getId()));
 
-         for (tbox::List<hier::GridGeometry::Neighbor>::Iterator
-              ni(neighbors); ni; ni++) {
+            const hier::BlockId& encon_blk_id = ei->getBlockId();
 
-            if (ni().getBlockId() == encon_blk_id) {
-               rotation = ni().getRotationIdentifier();
-               offset = ni().getShift();
-               break;
+            hier::Transformation::RotationIdentifier rotation =
+               hier::Transformation::NO_ROTATE;
+            hier::IntVector offset(dim);
+
+            for (tbox::List<hier::GridGeometry::Neighbor>::Iterator
+                    ni(neighbors); ni; ni++) {
+
+               if (ni().getBlockId() == encon_blk_id) {
+                  rotation = ni().getRotationIdentifier();
+                  offset = ni().getShift();
+                  break;
+               }
             }
-         }
 
-         offset *= patch.getPatchGeometry()->getRatio();
+            offset *= patch.getPatchGeometry()->getRatio();
 
-         hier::Transformation transformation(rotation, offset);
-         hier::Box encon_patch_box(encon_patch->getBox());
-         transformation.transform(encon_patch_box);
+            hier::Transformation transformation(rotation, offset);
+            hier::Box encon_patch_box(encon_patch->getBox());
+            transformation.transform(encon_patch_box);
 
-         hier::Box encon_fill_box(encon_patch_box * sing_fill_box);
-         if (!encon_fill_box.empty()) {
+            hier::Box encon_fill_box(encon_patch_box * sing_fill_box);
+            if (!encon_fill_box.empty()) {
 
-            const hier::Transformation::RotationIdentifier back_rotate =
-               hier::Transformation::getReverseRotationIdentifier(
-                  rotation, dim);
+               const hier::Transformation::RotationIdentifier back_rotate =
+                  hier::Transformation::getReverseRotationIdentifier(
+                     rotation, dim);
 
-            hier::IntVector back_shift(dim);
+               hier::IntVector back_shift(dim);
 
-            hier::Transformation::calculateReverseShift(
-               back_shift, offset, rotation);
+               hier::Transformation::calculateReverseShift(
+                  back_shift, offset, rotation);
 
-            hier::Transformation back_trans(back_rotate, back_shift);
+               hier::Transformation back_trans(back_rotate, back_shift);
 
-            tbox::Pointer<pdat::CellData<int> > sing_data(
-               encon_patch->getPatchData(d_buf_tag_indx));
+               tbox::Pointer<pdat::CellData<int> > sing_data(
+                  encon_patch->getPatchData(d_buf_tag_indx));
 
-            for (pdat::CellIterator ci(encon_fill_box); ci; ci++) {
-               pdat::CellIndex src_index(ci());
-               pdat::CellGeometry::transform(src_index, back_trans);
+               for (pdat::CellIterator ci(encon_fill_box); ci; ci++) {
+                  pdat::CellIndex src_index(ci());
+                  pdat::CellGeometry::transform(src_index, back_trans);
  
-               (*tag_data)(ci()) += (*sing_data)(src_index);
-            }
+                  (*tag_data)(ci()) += (*sing_data)(src_index);
+               }
 
+            }
          }
       }
    }

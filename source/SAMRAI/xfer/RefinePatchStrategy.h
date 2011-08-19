@@ -134,6 +134,7 @@ public:
     * @param fill_box Box covering maximum amount of ghost cells to be filled
     * @param boundary_box BoundaryBox describing location of singularity in
     *                     relation to patch
+    * @param[in] grid_geometry
     */
    virtual void
    fillSingularityBoundaryConditions(
@@ -142,7 +143,8 @@ public:
       const hier::Connector& dst_to_encon,
       const double fill_time,
       const hier::Box& fill_box,
-      const hier::BoundaryBox& boundary_box)
+      const hier::BoundaryBox& boundary_box,
+      const tbox::Pointer<hier::GridGeometry> &grid_geometry)
    {
       NULL_USE(patch);
       NULL_USE(encon_level);
@@ -150,6 +152,7 @@ public:
       NULL_USE(fill_time);
       NULL_USE(fill_box);
       NULL_USE(boundary_box);
+      NULL_USE(grid_geometry);
    }
 
    /*!

@@ -2117,7 +2117,7 @@ void RefineSchedule::fillData(
 
    const int num_blocks = d_dst_level->getGridGeometry()->getNumberBlocks();
    hier::ComponentSelector encon_allocate_vector;
-   if (num_blocks > 1) {
+   if (d_dst_level->getGridGeometry()->hasEnhancedConnectivity()) {
       allocateScratchSpace(encon_allocate_vector, d_encon_level, fill_time);
    }
 
@@ -2143,7 +2143,7 @@ void RefineSchedule::fillData(
 
    d_dst_level->deallocatePatchData(allocate_vector);
 
-   if (num_blocks > 1) {
+   if (d_dst_level->getGridGeometry()->hasEnhancedConnectivity()) {
       d_encon_level->deallocatePatchData(encon_allocate_vector);
    }
 
@@ -2203,7 +2203,7 @@ void RefineSchedule::recursiveFill(
       allocateScratchSpace(allocate_vector, d_supp_level, fill_time);
 
       hier::ComponentSelector encon_allocate_vector;
-      if (num_blocks > 1) {
+      if (d_dst_level->getGridGeometry()->hasEnhancedConnectivity()) {
          allocateScratchSpace(encon_allocate_vector,
                               d_supp_schedule->d_encon_level,
                               fill_time);
@@ -2233,7 +2233,7 @@ void RefineSchedule::recursiveFill(
 
       d_supp_level->deallocatePatchData(allocate_vector);
 
-      if (num_blocks > 1) {
+      if (d_dst_level->getGridGeometry()->hasEnhancedConnectivity()) {
          d_supp_schedule->d_encon_level->deallocatePatchData(
             encon_allocate_vector);
       }
@@ -2251,7 +2251,7 @@ void RefineSchedule::recursiveFill(
       allocateScratchSpace(allocate_vector, d_supp_encon_level, fill_time);
 
       hier::ComponentSelector encon_allocate_vector;
-      if (num_blocks > 1) {
+      if (d_dst_level->getGridGeometry()->hasEnhancedConnectivity()) {
          allocateScratchSpace(encon_allocate_vector,
                               d_supp_encon_schedule->d_encon_level,
                               fill_time);
@@ -2282,7 +2282,7 @@ void RefineSchedule::recursiveFill(
 
       d_supp_encon_level->deallocatePatchData(allocate_vector);
 
-      if (num_blocks > 1) {
+      if (d_dst_level->getGridGeometry()->hasEnhancedConnectivity()) {
          d_supp_encon_schedule->d_encon_level->deallocatePatchData(
             encon_allocate_vector);
       }
@@ -2404,7 +2404,8 @@ void RefineSchedule::fillSingularityBoundaries(
                                  fillSingularityBoundaryConditions(
                                     *patch, *d_encon_level,
                                     d_dst_to_encon,
-                                    fill_time, fill_box, nboxes[bb]);
+                                    fill_time, fill_box, nboxes[bb],
+                                    grid_geometry);
 
                            }
                         }
@@ -2431,7 +2432,8 @@ void RefineSchedule::fillSingularityBoundaries(
                                     fillSingularityBoundaryConditions(
                                     *patch, *d_encon_level,
                                     d_dst_to_encon,
-                                    fill_time, fill_box, eboxes[bb]);
+                                    fill_time, fill_box, eboxes[bb],
+                                    grid_geometry);
                               }
                            }
                         }
@@ -3068,18 +3070,20 @@ void RefineSchedule::generateCommunicationSchedule(
       dst_to_unfilled_nbrhood_set,
       MappedBoxLevel::DISTRIBUTED);
 
-   unfilled_encon_box_level = new MappedBoxLevel(
-      level_encon_unfilled_boxes,
-      dst_mapped_box_level.getRefinementRatio(),
-      dst_mapped_box_level.getGridGeometry(),
-      dst_mapped_box_level.getMPI());
+   if ( grid_geometry->hasEnhancedConnectivity() ) {
+      unfilled_encon_box_level = new MappedBoxLevel(
+         level_encon_unfilled_boxes,
+         dst_mapped_box_level.getRefinementRatio(),
+         dst_mapped_box_level.getGridGeometry(),
+         dst_mapped_box_level.getMPI());
 
-   encon_to_unfilled_encon = new Connector(
-      *(d_encon_level->getMappedBoxLevel()),
-      *unfilled_encon_box_level,
-      dst_to_fill.getConnectorWidth(),
-      encon_to_unfilled_encon_nbrhood_set,
-      MappedBoxLevel::DISTRIBUTED);
+      encon_to_unfilled_encon = new Connector(
+         *(d_encon_level->getMappedBoxLevel()),
+         *unfilled_encon_box_level,
+         dst_to_fill.getConnectorWidth(),
+         encon_to_unfilled_encon_nbrhood_set,
+         MappedBoxLevel::DISTRIBUTED);
+   }
 
    t_gen_comm_sched->stop();
 }
@@ -3503,7 +3507,9 @@ void RefineSchedule::setDefaultFillMappedBoxLevel(
       }
    }
 
-   createEnconLevel(fill_gcw);
+   if ( d_dst_level->getGridGeometry()->hasEnhancedConnectivity() ) {
+      createEnconLevel(fill_gcw);
+   }
 }
 
 /*

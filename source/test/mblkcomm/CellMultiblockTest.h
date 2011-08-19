@@ -62,7 +62,8 @@ public:
       const hier::PatchLevel& encon_level,
       const hier::Connector& dst_to_encon,
       const hier::Box& fill_box,
-      const hier::BoundaryBox& boundary_box);
+      const hier::BoundaryBox& boundary_box,
+      const tbox::Pointer<hier::GridGeometry> &grid_geometry);
 
    /**
     * This function is called from the MultiblockTester constructor.  Its

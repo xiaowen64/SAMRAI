@@ -253,7 +253,8 @@ void CellMultiblockTest::fillSingularityBoundaryConditions(
    const hier::PatchLevel& encon_level,
    const hier::Connector& dst_to_encon,
    const hier::Box& fill_box,
-   const hier::BoundaryBox& bbox)
+   const hier::BoundaryBox& bbox,
+   const tbox::Pointer<hier::GridGeometry> &grid_geometry)
 {
    const tbox::Dimension& dim = fill_box.getDim();
 
@@ -262,7 +263,7 @@ void CellMultiblockTest::fillSingularityBoundaryConditions(
    const hier::BlockId& patch_blk_id = dst_mb_id.getBlockId();
 
    const tbox::List<hier::GridGeometry::Neighbor>& neighbors =
-      encon_level.getGridGeometry()->getNeighbors(patch_blk_id);
+      grid_geometry->getNeighbors(patch_blk_id);
 
    for (int i = 0; i < d_variables.getSize(); i++) {
 
@@ -273,72 +274,77 @@ void CellMultiblockTest::fillSingularityBoundaryConditions(
       cell_data->fillAll(0.0, sing_fill_box);
 
       int depth = cell_data->getDepth();
-
-      const hier::NeighborhoodSet& dst_to_encon_nbrhood_set =
-         dst_to_encon.getNeighborhoodSets();
-
-      hier::NeighborhoodSet::const_iterator ni =
-         dst_to_encon_nbrhood_set.find(dst_mb_id);
-
       int num_encon_used = 0;
-      if (ni != dst_to_encon_nbrhood_set.end()) {
 
-         const hier::MappedBoxSet& encon_nbrs = ni->second;
+      if ( grid_geometry->hasEnhancedConnectivity() ) {
 
-         for (hier::MappedBoxSet::const_iterator ei = encon_nbrs.begin();
-              ei != encon_nbrs.end(); ++ei) {
+         const hier::NeighborhoodSet& dst_to_encon_nbrhood_set =
+            dst_to_encon.getNeighborhoodSets();
 
-            tbox::Pointer<hier::Patch> encon_patch(
-               encon_level.getPatch(ei->getId()));
+         hier::NeighborhoodSet::const_iterator ni =
+            dst_to_encon_nbrhood_set.find(dst_mb_id);
 
-            const hier::BlockId& encon_blk_id = ei->getBlockId();
+         if (ni != dst_to_encon_nbrhood_set.end()) {
 
-            hier::Transformation::RotationIdentifier rotation =
-               hier::Transformation::NO_ROTATE;
-            hier::IntVector offset(dim);
+            const hier::MappedBoxSet& encon_nbrs = ni->second;
 
-            for (tbox::List<hier::GridGeometry::Neighbor>::Iterator
-                 ni(neighbors); ni; ni++) {
+            for (hier::MappedBoxSet::const_iterator ei = encon_nbrs.begin();
+                 ei != encon_nbrs.end(); ++ei) {
 
-               if (ni().getBlockId() == encon_blk_id) {
-                  rotation = ni().getRotationIdentifier();
-                  offset = ni().getShift();
-                  break;
-               }
-            }
+               tbox::Pointer<hier::Patch> encon_patch(
+                  encon_level.getPatch(ei->getId()));
 
-            offset *= patch.getPatchGeometry()->getRatio();
+               const hier::BlockId& encon_blk_id = ei->getBlockId();
 
-            hier::Transformation transformation(rotation, offset);
-            hier::Box encon_patch_box(encon_patch->getBox());
-            transformation.transform(encon_patch_box);
+               int encon_blk_num = ei->getBlockId().getBlockValue();
 
-            hier::Box encon_fill_box(encon_patch_box * sing_fill_box);
-            if (!encon_fill_box.empty()) {
+               hier::Transformation::RotationIdentifier rotation =
+                  hier::Transformation::NO_ROTATE;
+               hier::IntVector offset(dim);
 
-               const hier::Transformation::RotationIdentifier back_rotate =
-                  hier::Transformation::getReverseRotationIdentifier(
-                     rotation, dim);
+               for (tbox::List<hier::GridGeometry::Neighbor>::Iterator
+                       ni(neighbors); ni; ni++) {
 
-               hier::IntVector back_shift(dim);
-
-               hier::Transformation::calculateReverseShift(
-                  back_shift, offset, rotation);
-
-               hier::Transformation back_trans(back_rotate, back_shift);
-
-               tbox::Pointer<pdat::CellData<double> > sing_data(
-                  encon_patch->getPatchData(d_variables[i], getDataContext()));
-
-               for (pdat::CellIterator ci(encon_fill_box); ci; ci++) {
-                  pdat::CellIndex src_index(ci());
-                  pdat::CellGeometry::transform(src_index, back_trans);
-                  for (int d = 0; d < depth; d++) {
-                     (*cell_data)(ci(), d) += (*sing_data)(src_index,d);
+                  if (ni().getBlockId() == encon_blk_id) {
+                     rotation = ni().getRotationIdentifier();
+                     offset = ni().getShift();
+                     break;
                   }
                }
 
-               ++num_encon_used;
+               offset *= patch.getPatchGeometry()->getRatio();
+
+               hier::Transformation transformation(rotation, offset);
+               hier::Box encon_patch_box(encon_patch->getBox());
+               transformation.transform(encon_patch_box);
+
+               hier::Box encon_fill_box(encon_patch_box * sing_fill_box);
+               if (!encon_fill_box.empty()) {
+
+                  const hier::Transformation::RotationIdentifier back_rotate =
+                     hier::Transformation::getReverseRotationIdentifier(
+                        rotation, dim);
+
+                  hier::IntVector back_shift(dim);
+
+                  hier::Transformation::calculateReverseShift(
+                     back_shift, offset, rotation);
+
+                  hier::Transformation back_trans(back_rotate, back_shift);
+
+                  tbox::Pointer<pdat::CellData<double> > sing_data(
+                     encon_patch->getPatchData(d_variables[i], getDataContext()));
+
+                  for (pdat::CellIterator ci(encon_fill_box); ci; ci++) {
+                     pdat::CellIndex src_index(ci());
+                     pdat::CellGeometry::transform(src_index, back_trans);
+                     for (int d = 0; d < depth; d++) {
+                        (*cell_data)(ci(), d) += (*sing_data)(src_index,d);
+                     }
+                  }
+
+                  ++num_encon_used;
+               }
             }
          }
       }

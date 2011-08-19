@@ -605,9 +605,10 @@ void MultiblockTester::fillSingularityBoundaryConditions(
    const hier::Connector& dst_to_encon,
    const double time,
    const hier::Box& fill_box,
-   const hier::BoundaryBox& boundary_box)
+   const hier::BoundaryBox& boundary_box,
+   const tbox::Pointer<hier::GridGeometry> &grid_geometry)
 {
-
+   NULL_USE(grid_geometry);
    (void)time;
    tbox::Pointer<hier::VariableContext> save_context =
       d_data_test_strategy->getDataContext();
@@ -623,7 +624,8 @@ void MultiblockTester::fillSingularityBoundaryConditions(
       encon_level,
       dst_to_encon,
       fill_box,
-      boundary_box);
+      boundary_box,
+      grid_geometry);
 
    d_data_test_strategy->setDataContext(save_context);
 }

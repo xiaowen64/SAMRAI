@@ -2417,7 +2417,8 @@ void MblkLinAdv::fillSingularityBoundaryConditions(
    const hier::Connector& dst_to_encon,
    const double fill_time,
    const hier::Box& fill_box,
-   const hier::BoundaryBox& boundary_box)
+   const hier::BoundaryBox& boundary_box,
+   const tbox::Pointer<hier::GridGeometry> &grid_geometry)
 {
 
    NULL_USE(patch);
@@ -2426,6 +2427,7 @@ void MblkLinAdv::fillSingularityBoundaryConditions(
    NULL_USE(fill_time);
    NULL_USE(fill_box);
    NULL_USE(boundary_box);
+   NULL_USE(grid_geometry);
 
 }
 
