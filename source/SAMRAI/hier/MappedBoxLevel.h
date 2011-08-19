@@ -1476,7 +1476,9 @@ private:
     */
    mutable tbox::Pointer<MappedBoxLevelHandle> d_handle;
 
+   static tbox::Pointer<tbox::Timer> t_initialize_private;
    static tbox::Pointer<tbox::Timer> t_acquire_remote_mapped_boxes;
+   static tbox::Pointer<tbox::Timer> t_cache_global_reduced_data;
 
    /*!
     * @brief Process rank (id),

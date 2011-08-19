@@ -40,9 +40,9 @@ namespace hier {
 
 const int Connector::HIER_CONNECTOR_VERSION = 0;
 
-tbox::Pointer<tbox::Timer> Connector::t_initialize;
-
+tbox::Pointer<tbox::Timer> Connector::t_initialize_private;
 tbox::Pointer<tbox::Timer> Connector::t_acquire_remote_relationships;
+tbox::Pointer<tbox::Timer> Connector::t_cache_global_reduced_data;
 
 tbox::StartupShutdownManager::Handler
 Connector::s_initialize_finalize_handler(
@@ -607,7 +607,7 @@ void Connector::initializePrivate(
    const IntVector& headRefinementRatio,
    const MappedBoxLevel::ParallelState parallel_state)
 {
-   t_initialize->start();
+   t_initialize_private->start();
    /*
     * Check inputs.
     */
@@ -724,7 +724,7 @@ void Connector::initializePrivate(
 
    d_parallel_state = parallel_state;
 
-   t_initialize->stop();
+   t_initialize_private->stop();
 }
 
 /*
@@ -1005,12 +1005,16 @@ int Connector::getGlobalNumberOfRelationships() const
  */
 void Connector::cacheGlobalReducedData() const
 {
-   tbox::SAMRAI_MPI mpi(getMPI());
    TBOX_ASSERT(isInitialized());
 
    if (d_global_data_up_to_date) {
       return;
    }
+
+   t_cache_global_reduced_data->barrierAndStart();
+
+   tbox::SAMRAI_MPI mpi(getMPI());
+
    if (d_parallel_state == MappedBoxLevel::GLOBALIZED) {
       d_global_number_of_relationships = 0;
       for (NeighborhoodSet::const_iterator ei(d_global_relationships.begin());
@@ -1047,6 +1051,8 @@ void Connector::cacheGlobalReducedData() const
    }
 
    d_global_data_up_to_date = true;
+
+   t_cache_global_reduced_data->barrierAndStop();
 }
 
 /*
@@ -1980,10 +1986,12 @@ Connector::ConnectorType Connector::getConnectorType() const
 
 void Connector::initializeCallback()
 {
-   t_initialize = tbox::TimerManager::getManager()->
-      getTimer("hier::Connector::initialize()");
+   t_initialize_private = tbox::TimerManager::getManager()->
+      getTimer("hier::Connector::initializePrivate()");
    t_acquire_remote_relationships = tbox::TimerManager::getManager()->
-      getTimer("hier::Connector::acquire_remote_relationships");
+      getTimer("hier::Connector::acquireRemoteNeighborhoods()");
+   t_cache_global_reduced_data = tbox::TimerManager::getManager()->
+      getTimer("hier::Connector::cacheGlobalReducedData()");
 }
 
 /*
@@ -1997,8 +2005,9 @@ void Connector::initializeCallback()
 
 void Connector::finalizeCallback()
 {
-   t_initialize.setNull();
+   t_initialize_private.setNull();
    t_acquire_remote_relationships.setNull();
+   t_cache_global_reduced_data.setNull();
 }
 
 }

@@ -511,11 +511,11 @@ private:
    static char s_print_modify_steps;
 
    static tbox::Pointer<tbox::Timer> t_modify;
-   static tbox::Pointer<tbox::Timer> t_modify_remove_neighbors;
-   static tbox::Pointer<tbox::Timer> t_modify_discover;
-   static tbox::Pointer<tbox::Timer> t_modify_share;
-   static tbox::Pointer<tbox::Timer> t_modify_comm_init;
-   static tbox::Pointer<tbox::Timer> t_modify_unpack;
+   static tbox::Pointer<tbox::Timer> t_modify_shortcut;
+   static tbox::Pointer<tbox::Timer> t_modify_setup_comm;
+   static tbox::Pointer<tbox::Timer> t_modify_remove_and_cache;
+   static tbox::Pointer<tbox::Timer> t_modify_discover_and_send;
+   static tbox::Pointer<tbox::Timer> t_modify_receive_and_unpack;
    static tbox::Pointer<tbox::Timer> t_modify_MPI_wait;
 
    bool d_sanity_check_inputs;

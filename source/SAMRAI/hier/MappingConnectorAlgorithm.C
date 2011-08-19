@@ -30,17 +30,11 @@ const int MappingConnectorAlgorithm::MAPPING_CONNECTOR_ALGORITHM_FIRST_DATA_LENG
 char MappingConnectorAlgorithm::s_print_modify_steps = '\0';
 
 tbox::Pointer<tbox::Timer> MappingConnectorAlgorithm::t_modify;
-
-tbox::Pointer<tbox::Timer> MappingConnectorAlgorithm::t_modify_remove_neighbors;
-
-tbox::Pointer<tbox::Timer> MappingConnectorAlgorithm::t_modify_discover;
-
-tbox::Pointer<tbox::Timer> MappingConnectorAlgorithm::t_modify_share;
-
-tbox::Pointer<tbox::Timer> MappingConnectorAlgorithm::t_modify_comm_init;
-
-tbox::Pointer<tbox::Timer> MappingConnectorAlgorithm::t_modify_unpack;
-
+tbox::Pointer<tbox::Timer> MappingConnectorAlgorithm::t_modify_shortcut;
+tbox::Pointer<tbox::Timer> MappingConnectorAlgorithm::t_modify_setup_comm;
+tbox::Pointer<tbox::Timer> MappingConnectorAlgorithm::t_modify_remove_and_cache;
+tbox::Pointer<tbox::Timer> MappingConnectorAlgorithm::t_modify_discover_and_send;
+tbox::Pointer<tbox::Timer> MappingConnectorAlgorithm::t_modify_receive_and_unpack;
 tbox::Pointer<tbox::Timer> MappingConnectorAlgorithm::t_modify_MPI_wait;
 
 const std::string MappingConnectorAlgorithm::s_dbgbord;
@@ -517,7 +511,7 @@ void MappingConnectorAlgorithm::privateModify(
    MappedBoxLevel* mutable_new,
    MappedBoxLevel* mutable_old) const
 {
-   t_modify->start();
+   t_modify->barrierAndStart();
 
    if (s_print_modify_steps == 'y') {
       tbox::plog
@@ -614,8 +608,18 @@ void MappingConnectorAlgorithm::privateModify(
          anchor.getRefinementRatio(),
          anchor_to_new_width);
 
-   if (d_shortcut_trivial_maps &&
-       old_to_new.getGlobalNumberOfNeighborSets() == 0) {
+
+
+   bool do_shortcut(false);
+   if ( d_shortcut_trivial_maps ) {
+      t_modify_shortcut->start();
+      do_shortcut = (old_to_new.getGlobalNumberOfNeighborSets() == 0);
+      t_modify_shortcut->stop();
+   }
+
+   if ( do_shortcut ) {
+
+      t_modify_shortcut->start();
       /*
        * Shortcut for trivial mapping.
        *
@@ -648,6 +652,9 @@ void MappingConnectorAlgorithm::privateModify(
       if (new_to_anchor_width != new_to_anchor.getConnectorWidth()) {
          oca.shrinkConnectorWidth(new_to_anchor, new_to_anchor_width);
       }
+
+      t_modify_shortcut->stop();
+
    } else {
 
       /*
@@ -701,8 +708,6 @@ void MappingConnectorAlgorithm::privateModify(
       tbox::AsyncCommPeer<int> * all_comms(NULL);
       tbox::AsyncCommStage::MemberVec completed;
 
-      t_modify_share->start();
-      t_modify_comm_init->start();
       /*
        * Set up communication mechanism (and post receives).
        */
@@ -713,8 +718,6 @@ void MappingConnectorAlgorithm::privateModify(
          anchor.getMPI(),
          incoming_ranks,
          outgoing_ranks);
-      t_modify_comm_init->stop();
-      t_modify_share->stop();
 
       /*
        * There are three major parts to computing the new neighbors:
@@ -744,20 +747,17 @@ void MappingConnectorAlgorithm::privateModify(
        * First step: Remove neighbor data for Boxes that are
        * going away and cache information to be sent out.
        */
-      t_modify_remove_neighbors->start();
       privateModify_removeAndCache(
          neighbor_removal_mesg,
          anchor_eto_new,
          new_eto_anchor,
          old_to_new);
-      t_modify_remove_neighbors->stop();
 
       /*
        * Second step: Discover overlaps for new Boxes.  Send
        * messages with information about what relationships to remove
        * or create.
        */
-      t_modify_discover->start();
       privateModify_discoverAndSend(
          neighbor_removal_mesg,
          anchor_to_new,
@@ -771,14 +771,12 @@ void MappingConnectorAlgorithm::privateModify(
          old_to_anchor,
          anchor_to_old,
          old_to_new);
-      t_modify_discover->stop();
 
       /*
        * Third step: Receive and unpack messages from incoming_ranks.
        * These message contain information about what relationships to
        * remove or add.
        */
-      t_modify_share->start();
       privateModify_receiveAndUnpack(
          anchor_eto_new,
          new_eto_anchor,
@@ -788,7 +786,6 @@ void MappingConnectorAlgorithm::privateModify(
          completed,
          dim,
          mpi);
-      t_modify_share->stop();
 
       delete[] all_comms;
 
@@ -876,7 +873,7 @@ void MappingConnectorAlgorithm::privateModify(
       }
    }
 
-   t_modify->stop();
+   t_modify->barrierAndStop();
 }
 
 /*
@@ -892,6 +889,8 @@ void MappingConnectorAlgorithm::privateModify_setupCommunication(
    const std::set<int>& incoming_ranks,
    const std::set<int>& outgoing_ranks) const
 {
+   t_modify_setup_comm->start();
+
    /*
     * Set up communication mechanism (and post receives).  We lump all
     * communication objects into one array, all_comms.  all_comms is
@@ -937,6 +936,8 @@ void MappingConnectorAlgorithm::privateModify_setupCommunication(
       outgoing_comm.setMPITag(tag0, tag1);
       outgoing_comm.limitFirstDataLength(MAPPING_CONNECTOR_ALGORITHM_FIRST_DATA_LENGTH);
    }
+
+   t_modify_setup_comm->stop();
 }
 
 /*
@@ -954,6 +955,8 @@ void MappingConnectorAlgorithm::privateModify_receiveAndUnpack(
    const tbox::Dimension& dim,
    const tbox::SAMRAI_MPI &mpi) const
 {
+   t_modify_receive_and_unpack->start();
+
    const int rank(mpi.getRank());
 
    do {
@@ -965,7 +968,6 @@ void MappingConnectorAlgorithm::privateModify_receiveAndUnpack(
          TBOX_ASSERT(peer != NULL);
 
          if ((unsigned int)(peer - all_comms) < outgoing_ranks.size()) {
-            t_modify_unpack->start();
             // Received from this peer.
             const int sender = peer->getPeerRank();
             const int* ptr = peer->getRecvData();
@@ -1088,7 +1090,6 @@ void MappingConnectorAlgorithm::privateModify_receiveAndUnpack(
                   nabrs.insert(nabr);
                }
             }
-            t_modify_unpack->stop();
          } else {
             // Sent to this peer.  No need to do anything.
          }
@@ -1098,6 +1099,8 @@ void MappingConnectorAlgorithm::privateModify_receiveAndUnpack(
       comm_stage.advanceSome(completed);
 
    } while (completed.size() > 0);
+
+   t_modify_receive_and_unpack->stop();
 }
 
 /*
@@ -1122,6 +1125,8 @@ void MappingConnectorAlgorithm::privateModify_discoverAndSend(
    const Connector& anchor_to_old,
    const Connector& old_to_new) const
 {
+   t_modify_discover_and_send->start();
+
    const MappedBoxLevel& old(old_to_new.getBase());
    const MappedBoxLevel& new_mapped_box_level(old_to_new.getHead());
    const IntVector& anchor_to_new_width(anchor_to_new.getConnectorWidth());
@@ -1522,8 +1527,6 @@ void MappingConnectorAlgorithm::privateModify_discoverAndSend(
       }
 
       if (curr_owner != rank) {
-         t_modify_discover->stop();
-         t_modify_share->start();
          /*
           * Send discoveries to the curr_owner.
           */
@@ -1587,8 +1590,6 @@ void MappingConnectorAlgorithm::privateModify_discoverAndSend(
 
          owners_sent_to.insert(curr_owner);
 
-         t_modify_share->stop();
-         t_modify_discover->start();
       }
 
       /*
@@ -1609,6 +1610,8 @@ void MappingConnectorAlgorithm::privateModify_discoverAndSend(
       }
 
    }
+
+   t_modify_discover_and_send->stop();
 }
 
 /*
@@ -1623,6 +1626,8 @@ void MappingConnectorAlgorithm::privateModify_removeAndCache(
    NeighborhoodSet& new_eto_anchor,
    const Connector& old_to_new) const
 {
+   t_modify_remove_and_cache->start();
+
    const tbox::Dimension &dim(old_to_new.getBase().getDim());
    const tbox::SAMRAI_MPI &mpi(old_to_new.getBase().getMPI());
    const int rank(mpi.getRank());
@@ -1740,6 +1745,8 @@ void MappingConnectorAlgorithm::privateModify_removeAndCache(
       }
 
    }
+
+   t_modify_remove_and_cache->stop();
 }
 
 /*
@@ -2051,18 +2058,18 @@ void MappingConnectorAlgorithm::initializeCallback()
 
    t_modify = tbox::TimerManager::getManager()->
       getTimer("hier::MappingConnectorAlgorithm::privateModify()");
-   t_modify_remove_neighbors = tbox::TimerManager::getManager()->
-      getTimer("hier::MappingConnectorAlgorithm::privateModify()_neighbors");
-   t_modify_discover = tbox::TimerManager::getManager()->
-      getTimer("hier::MappingConnectorAlgorithm::privateModify()_discover");
-   t_modify_share = tbox::TimerManager::getManager()->
-      getTimer("hier::MappingConnectorAlgorithm::privateModify()_share");
+   t_modify_shortcut = tbox::TimerManager::getManager()->
+      getTimer("hier::MappingConnectorAlgorithm::privateModify()_shortcut");
+   t_modify_setup_comm = tbox::TimerManager::getManager()->
+      getTimer("hier::MappingConnectorAlgorithm::privateModify_setupCommunication()");
+   t_modify_remove_and_cache = tbox::TimerManager::getManager()->
+      getTimer("hier::MappingConnectorAlgorithm::privateModify_removeAndCache()");
+   t_modify_discover_and_send = tbox::TimerManager::getManager()->
+      getTimer("hier::MappingConnectorAlgorithm::privateModify_discoverAndSend()");
+   t_modify_receive_and_unpack = tbox::TimerManager::getManager()->
+      getTimer("hier::MappingConnectorAlgorithm::privateModify_receiveAndUnpack()");
    t_modify_MPI_wait = tbox::TimerManager::getManager()->
       getTimer("hier::MappingConnectorAlgorithm::privateModify()_MPI_wait");
-   t_modify_comm_init = tbox::TimerManager::getManager()->
-      getTimer("hier::MappingConnectorAlgorithm::modify_comm_init");
-   t_modify_unpack = tbox::TimerManager::getManager()->
-      getTimer("hier::MappingConnectorAlgorithm::modify_unpack");
 }
 
 /*
@@ -2075,11 +2082,10 @@ void MappingConnectorAlgorithm::initializeCallback()
 void MappingConnectorAlgorithm::finalizeCallback()
 {
    t_modify.setNull();
-   t_modify_remove_neighbors.setNull();
-   t_modify_discover.setNull();
-   t_modify_share.setNull();
-   t_modify_comm_init.setNull();
-   t_modify_unpack.setNull();
+   t_modify_setup_comm.setNull();
+   t_modify_remove_and_cache.setNull();
+   t_modify_discover_and_send.setNull();
+   t_modify_receive_and_unpack.setNull();
    t_modify_MPI_wait.setNull();
 
    if (s_class_mpi.getCommunicator() != tbox::SAMRAI_MPI::commNull) {

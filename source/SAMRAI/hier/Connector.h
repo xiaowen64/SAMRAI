@@ -1018,8 +1018,9 @@ private:
 
    ConnectorType d_connector_type;
 
-   static tbox::Pointer<tbox::Timer> t_initialize;
+   static tbox::Pointer<tbox::Timer> t_initialize_private;
    static tbox::Pointer<tbox::Timer> t_acquire_remote_relationships;
+   static tbox::Pointer<tbox::Timer> t_cache_global_reduced_data;
 
    static tbox::StartupShutdownManager::Handler
    s_initialize_finalize_handler;

@@ -38,7 +38,9 @@ namespace hier {
 const int MappedBoxLevel::HIER_MAPPED_BOX_LEVEL_VERSION = 0;
 const int MappedBoxLevel::MAPPED_BOX_LEVEL_NUMBER_OF_STATS = 20;
 
+tbox::Pointer<tbox::Timer> MappedBoxLevel::t_initialize_private;
 tbox::Pointer<tbox::Timer> MappedBoxLevel::t_acquire_remote_mapped_boxes;
+tbox::Pointer<tbox::Timer> MappedBoxLevel::t_cache_global_reduced_data;
 
 const LocalId MappedBoxLevel::s_negative_one_local_id(-1);
 
@@ -310,6 +312,7 @@ void MappedBoxLevel::initializePrivate(
    const ParallelState parallel_state)
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, ratio);
+   t_initialize_private->start();
 
    clearForBoxChanges();
 
@@ -341,6 +344,8 @@ void MappedBoxLevel::initializePrivate(
    d_local_bounding_box_up_to_date = false;
    d_global_data_up_to_date = false;
    computeLocalRedundantData();
+
+   t_initialize_private->stop();
 }
 
 /*
@@ -515,6 +520,8 @@ void MappedBoxLevel::cacheGlobalReducedData() const
       return;
    }
 
+   t_cache_global_reduced_data->barrierAndStart();
+
    const int nblocks = d_grid_geometry->getNumberBlocks();
 
    /*
@@ -624,6 +631,8 @@ void MappedBoxLevel::cacheGlobalReducedData() const
    }
 
    d_global_data_up_to_date = true;
+
+   t_cache_global_reduced_data->barrierAndStop();
 }
 
 int MappedBoxLevel::getGlobalNumberOfBoxes() const
@@ -1618,22 +1627,28 @@ void MappedBoxLevel::printMappedBoxStats(
 
 void MappedBoxLevel::initializeCallback()
 {
+   t_initialize_private = tbox::TimerManager::getManager()->
+      getTimer("hier::MappedBoxLevel::initializePrivate()");
    t_acquire_remote_mapped_boxes = tbox::TimerManager::getManager()->
-      getTimer("MappedBoxLevel::acquireRemoteMappedBoxes()");
+      getTimer("hier::MappedBoxLevel::acquireRemoteMappedBoxes()");
+   t_cache_global_reduced_data = tbox::TimerManager::getManager()->
+      getTimer("hier::MappedBoxLevel::cacheGlobalReducedData()");
 }
 
 /*
  ***************************************************************************
- * *                                                                         *
- * * Release static timers.  To be called by shutdown registry to make sure  *
- * * memory for timers does not leak.                                        *
- * *                                                                         *
+ *
+ * Release static timers.  To be called by shutdown registry to make sure
+ * memory for timers does not leak.
+ *
  ***************************************************************************
  */
 
 void MappedBoxLevel::finalizeCallback()
 {
+   t_initialize_private.setNull();
    t_acquire_remote_mapped_boxes.setNull();
+   t_cache_global_reduced_data.setNull();
 }
 
 }
