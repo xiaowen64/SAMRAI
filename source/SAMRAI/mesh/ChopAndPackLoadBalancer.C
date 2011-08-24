@@ -16,6 +16,7 @@
 #include "SAMRAI/mesh/ChopAndPackLoadBalancer.h"
 
 #include "SAMRAI/hier/BoxUtilities.h"
+#include "SAMRAI/hier/RealMappedBoxConstIterator.h"
 #include "SAMRAI/hier/PatchDescriptor.h"
 #include "SAMRAI/hier/VariableDatabase.h"
 #include "SAMRAI/mesh/BalanceUtilities.h"
@@ -321,7 +322,12 @@ void ChopAndPackLoadBalancer::loadBalanceMappedBoxLevel(
       hier::MappedBoxLevel::GLOBALIZED);
 
    hier::BoxList in_boxes;
-   globalized_input_mapped_box_level.getGlobalBoxes(in_boxes);
+   const hier::MappedBoxSet globalized_input_mapped_boxes(
+      globalized_input_mapped_box_level.getGlobalMappedBoxes());
+   for ( hier::RealMappedBoxConstIterator bi(globalized_input_mapped_boxes);
+         bi.isValid(); ++bi ) {
+      in_boxes.appendItem(*bi);
+   }
 
    hier::BoxList physical_domain(d_dim);
    domain_mapped_box_level.getGlobalBoxes(physical_domain);
