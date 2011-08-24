@@ -32,8 +32,6 @@ namespace SAMRAI {
 namespace hier {
 
 class PatchLevel;
-class MappedBoxLevel;
-class MultiblockPatchLevel;
 class BoxTree;
 
 /*!
