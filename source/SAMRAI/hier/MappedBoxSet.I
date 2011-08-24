@@ -43,6 +43,9 @@ SAMRAI_INLINE_KEYWORD
 bool MappedBoxSet::operator == (
    const MappedBoxSet& rhs) const
 {
+   if ( size() != rhs.size() ) {
+      return false;
+   }
    return std::equal(d_set.begin(), d_set.end(),
       rhs.d_set.begin(), Box::id_equal());
 }
