@@ -217,30 +217,21 @@ int main(
 
       hier::OverlapConnectorAlgorithm oca;
 
-      /*
-       * Set up the domain from input.
-       */
-      hier::BoxList domain_boxes(main_db->getDatabaseBoxArray("domain_boxes"));
 
       /*
-       * Create hierarchy we can satisfy the load balancing
-       * interface and dump visit output.
+       * Set up hierarchy.
        *
        * anchor_mapped_box_level is used for level 0.
        * balance_mapped_box_level is used for level 1.
        */
-      std::vector<double> xlo(dim.getValue());
-      std::vector<double> xhi(dim.getValue());
-      for (int i = 0; i < dim.getValue(); ++i) {
-         xlo[i] = 0.0;
-         xhi[i] = 1.0;
-      }
+
       tbox::Pointer<geom::CartesianGridGeometry> grid_geometry(
          new geom::CartesianGridGeometry(
+            dim,
             "GridGeometry",
-            &xlo[0],
-            &xhi[0],
-            domain_boxes));
+            input_db->getDatabase("CartesianGridGeometry")));
+
+      const hier::BoxList domain_boxes(grid_geometry->getPhysicalDomain(0));
 
       tbox::Pointer<hier::PatchHierarchy> hierarchy(
          new hier::PatchHierarchy(
@@ -249,16 +240,7 @@ int main(
 
       hierarchy->setMaxNumberOfLevels(2);
 
-      hier::MappedBoxLevel domain_mapped_box_level(
-         hier::IntVector(dim, 1),
-         grid_geometry,
-         tbox::SAMRAI_MPI::getSAMRAIWorld(),
-         hier::MappedBoxLevel::GLOBALIZED);
-      hier::BoxList::Iterator domain_boxes_itr(domain_boxes);
-      for (int i = 0; i < domain_boxes.size(); ++i, domain_boxes_itr++) {
-         domain_mapped_box_level.addMappedBox(hier::Box(*domain_boxes_itr,
-                                                        hier::LocalId(i), 0));
-      }
+      const hier::MappedBoxLevel &domain_mapped_box_level(hierarchy->getDomainMappedBoxLevel());
 
       /*
        * Set up the load balancers.
@@ -398,14 +380,14 @@ int main(
             bad_interval,
             cut_factor);
 
+         oca.assertOverlapCorrectness(anchor_to_domain,false,true,true);
+         oca.assertOverlapCorrectness(domain_to_anchor,false,true,true);
+
          sortNodes(anchor_mapped_box_level,
             domain_to_anchor,
             anchor_to_domain,
             false,
             true);
-
-         oca.assertOverlapCorrectness(anchor_to_domain);
-         oca.assertOverlapCorrectness(domain_to_anchor);
 
          anchor_mapped_box_level.cacheGlobalReducedData();
 

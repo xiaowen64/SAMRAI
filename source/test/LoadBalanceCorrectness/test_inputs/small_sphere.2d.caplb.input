@@ -23,11 +23,6 @@ Main {
    load_balancer_type = "ChopAndPackLoadBalancer"
 
    /*
-     Specify domain as a box array in the reference index space.
-   */
-   domain_boxes = [(0,0),(49,49)]
-
-   /*
      Specify anchor layer as a box array in the reference index space.
      The anchor layer will be partitioned but its partitioning is not
      used in the performance test.
@@ -35,6 +30,7 @@ Main {
      If omitted, the anchor layer is the same as the domain.
    */
    anchor_boxes = [(0,0),(49,49)]
+
    /*
      If anchor is not contained in domain, you can use this flag
      to remove the parts that are outside the domain.
@@ -85,6 +81,13 @@ Main {
       }
    }
 
+}
+
+CartesianGridGeometry {
+   domain_boxes = [(0,0),(49,49)]
+   x_lo = 0.0, 0.0
+   x_up = 1.0, 1.0
+   periodic_dimension = 0,1
 }
 
 TreeLoadBalancer {
