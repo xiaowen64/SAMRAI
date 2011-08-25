@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Numerical routines for example Hypre Poisson solver 
+ * Description:   Numerical routines for example Hypre Poisson solver
  *
  ************************************************************************/
 #include "HyprePoisson.h"
@@ -23,20 +23,20 @@
 #include "SAMRAI/hier/VariableDatabase.h"
 
 extern "C" {
-void F77_FUNC(setexactandrhs2d, SETEXACTANDRHS2D) (const int & ifirst0,
-   const int & ilast0,
-   const int & ifirst1,
-   const int & ilast1,
+void F77_FUNC(setexactandrhs2d, SETEXACTANDRHS2D) (const int& ifirst0,
+   const int& ilast0,
+   const int& ifirst1,
+   const int& ilast1,
    double* exact,
    double* rhs,
    const double* dx,
    const double* xlower);
-void F77_FUNC(setexactandrhs3d, SETEXACTANDRHS3D) (const int & ifirst0,
-   const int & ilast0,
-   const int & ifirst1,
-   const int & ilast1,
-   const int & ifirst2,
-   const int & ilast2,
+void F77_FUNC(setexactandrhs3d, SETEXACTANDRHS3D) (const int& ifirst0,
+   const int& ilast0,
+   const int& ifirst1,
+   const int& ilast1,
+   const int& ifirst2,
+   const int& ilast2,
    double* exact,
    double* rhs,
    const double* dx,
@@ -62,14 +62,14 @@ HyprePoisson::HyprePoisson(
                    object_name + "::poisson_hypre",
                    (!database.isNull() &&
                     database->isDatabase("CellPoissonHypreSolver")) ?
-                   database->getDatabase("CellPoissonHypreSolver"):
-                      tbox::Pointer<tbox::Database>(NULL)),
+                   database->getDatabase("CellPoissonHypreSolver") :
+                   tbox::Pointer<tbox::Database>(NULL)),
    d_bc_coefs(dim,
               object_name + "::bc_coefs",
               (!database.isNull() &&
                database->isDatabase("bc_coefs")) ?
-              database->getDatabase("bc_coefs"):
-                 tbox::Pointer<tbox::Database>(NULL)),
+              database->getDatabase("bc_coefs") :
+              tbox::Pointer<tbox::Database>(NULL)),
    d_context()
 {
 
@@ -316,11 +316,11 @@ int HyprePoisson::registerVariablesWithPlotter(
    if (d_hierarchy.isNull()) {
       TBOX_ERROR(
          d_object_name << ": No hierarchy in\n"
-         <<
+                       <<
          " HyprePoisson::registerVariablesWithPlotter\n"
-         <<
+                       <<
          "The hierarchy must be built before calling\n"
-         << "this function.\n");
+                       << "this function.\n");
    }
    /*
     * Register variables with plotter.
@@ -384,7 +384,7 @@ bool HyprePoisson::packDerivedDataIntoDoubleBuffer(
       // Did not register this name.
       TBOX_ERROR(
          "Unregistered variable name '" << variable_name << "' in\n"
-         <<
+                                        <<
          "HyprePoissonX::writeDerivedDataToStream");
 
    }

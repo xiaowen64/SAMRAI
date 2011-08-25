@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   A simple doubly-linked list template class 
+ * Description:   A simple doubly-linked list template class
  *
  ************************************************************************/
 
@@ -35,7 +35,7 @@ template<class TYPE>
 bool List<TYPE>::s_initialized = false;
 
 template<class TYPE>
-void* ListNode<TYPE>::operator new (
+void * ListNode<TYPE>::operator new (
    size_t bytes)
 {
    if (s_free_list) {
@@ -59,7 +59,7 @@ void ListNode<TYPE>::operator delete (
    if (++s_num_free > s_max_free) {
       int cut_to = s_max_free / 2;
       while (s_num_free > cut_to) {
-         void* byebye = s_free_list;
+         void * byebye = s_free_list;
          s_free_list = s_free_list->d_next;
          --s_num_free
          ;
@@ -73,7 +73,7 @@ template<class TYPE>
 void ListNode<TYPE>::freeCachedListItems()
 {
    while (s_free_list) {
-      void* byebye = s_free_list;
+      void * byebye = s_free_list;
       s_free_list = s_free_list->d_next
       ;
       ::operator delete (
@@ -98,7 +98,7 @@ List<TYPE>::List(
 }
 
 template<class TYPE>
-List<TYPE>&List<TYPE>::operator = (
+List<TYPE>& List<TYPE>::operator = (
    const List<TYPE>& list)
 {
    if (this != &list) {

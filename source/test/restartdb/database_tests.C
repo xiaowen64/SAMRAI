@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Some simple generic database test functions 
+ * Description:   Some simple generic database test functions
  *
  ************************************************************************/
 
@@ -383,10 +383,10 @@ void testDatabaseContents(
    for (i = 0; i < tsize; i++) {
       if (tarraydb_boolArray[i] != arraydb_boolArray[i]) {
          tbox::perr << "FAILED: - Test #4d-" << tag
-         << ": `Array Entries' database"
-         << "\n   `BoolArray' entry " << i << " incorrect"
-         << "\n   " << tarraydb_boolArray[i] << " should be "
-         << arraydb_boolArray[i] << endl;
+                    << ": `Array Entries' database"
+                    << "\n   `BoolArray' entry " << i << " incorrect"
+                    << "\n   " << tarraydb_boolArray[i] << " should be "
+                    << arraydb_boolArray[i] << endl;
          ++number_of_failures;
       }
    }
@@ -413,9 +413,9 @@ void testDatabaseContents(
    tsize = tarraydb_stringArray.getSize();
    if (tsize != arraydb_stringArray.getSize()) {
       tbox::perr << "FAILED: - Test #4g-" << tag
-      << ": `Array Entries' database"
-      << "\n   Returned `StringArray' size = " << tsize
-      << "  , Expected = " << arraydb_stringArray[i] << endl;
+                 << ": `Array Entries' database"
+                 << "\n   Returned `StringArray' size = " << tsize
+                 << "  , Expected = " << arraydb_stringArray[i] << endl;
       ++number_of_failures;
    }
    for (i = 0; i < tsize; i++) {
@@ -1172,18 +1172,18 @@ void testDatabaseContents(
 
    if (vector_IntVector[0] != intVector1) {
       tbox::perr << "FAILED: - Test #16a-" << tag
-      << ": stl::vector<IntVector> did not restore correctly" << endl
-      << "   Returned `IntVector' = " << vector_IntVector[0]
-      << "  , Expected = " << intVector1 << endl;
+                 << ": stl::vector<IntVector> did not restore correctly" << endl
+                 << "   Returned `IntVector' = " << vector_IntVector[0]
+                 << "  , Expected = " << intVector1 << endl;
       ++number_of_failures;
 
    }
 
    if (vector_IntVector[1] != intVector2) {
       tbox::perr << "FAILED: - Test #16b-" << tag
-      << ": stl::vector<IntVector> did not restore correctly" << endl
-      << "   Returned `IntVector' = " << vector_IntVector[1]
-      << "  , Expected = " << intVector2 << endl;
+                 << ": stl::vector<IntVector> did not restore correctly" << endl
+                 << "   Returned `IntVector' = " << vector_IntVector[1]
+                 << "  , Expected = " << intVector2 << endl;
       ++number_of_failures;
    }
 

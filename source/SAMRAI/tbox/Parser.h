@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Parser that reads the input database grammar 
+ * Description:   Parser that reads the input database grammar
  *
  ************************************************************************/
 
@@ -76,7 +76,7 @@ public:
    int
    parse(
       const std::string& filename,
-      FILE* fstream,
+      FILE * fstream,
       Pointer<Database> database);
 
    /**
@@ -197,7 +197,7 @@ public:
     */
    int
    yyinput(
-      char* buffer,
+      char * buffer,
       const int max_size);
 
 private:

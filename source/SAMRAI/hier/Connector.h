@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Set of distributed box-graph relationships from one MappedBoxLevel to another. 
+ * Description:   Set of distributed box-graph relationships from one MappedBoxLevel to another.
  *
  ************************************************************************/
 #ifndef included_hier_Connector
@@ -18,8 +18,6 @@
 
 #include <vector>
 #include <string>
-
-
 
 namespace SAMRAI {
 namespace hier {
@@ -57,7 +55,6 @@ public:
     * @brief NeighborsSet is a clarifying typedef.
     */
    typedef BoxSet NeighborSet;
-
 
    /// TODO:  Possible refactor?  Since Connectors do not imply relationship
    // meanings, why is this even defined?  The "getConnectorType function
@@ -328,7 +325,8 @@ public:
    /*!
     * @brief Remove all the periodic relationships in the Connector.
     */
-   void removePeriodicRelationships();
+   void
+   removePeriodicRelationships();
 
    /*!
     * @brief Set the neighbors for the specified BoxId to the
@@ -385,7 +383,8 @@ public:
     * The ratio is exact if it can be represented by an IntVector.
     * @see getRatio().
     */
-   bool ratioIsExact() const;
+   bool
+   ratioIsExact() const;
 
    /*!
     * @brief Return true if head MappedBoxLevel is coarser than base
@@ -428,7 +427,7 @@ public:
     * @brief Assignment operator
     */
    const Connector&
-   operator= (
+   operator = (
       const Connector& rhs);
 
    //  TODO:  need to find out what the use case is for this, especially
@@ -449,7 +448,7 @@ public:
     * same objects would improve performance.
     */
    bool
-   operator== (
+   operator == (
       const Connector& rhs) const;
 
    /*!
@@ -539,7 +538,6 @@ public:
     * @name For outputs, error checking and debugging.
     */
 
-
    /*
     * @brief output data
     *
@@ -611,7 +609,6 @@ public:
       const IntVector& base_refinement_ratio,
       const IntVector& head_refinement_ratio,
       const IntVector& head_gcw);
-
 
    // TODO: refactor use of size_t as return type.  This could be
    // problematic.
@@ -808,19 +805,26 @@ public:
     *
     * To use, @see Connector::format().
     */
-   class Outputter {
-      friend std::ostream& operator << ( std::ostream& s, const Outputter& f);
-   private:
+   class Outputter
+   {
+      friend std::ostream&
+      operator << (
+         std::ostream& s,
+         const Outputter& f);
+private:
       friend class Connector;
       /*!
        * @brief Construct the Outputter with a Connector and the
        * parameters needed to output the Connector to a stream.
        */
-      Outputter( const Connector &connector,
-                 const std::string& border,
-                 int detail_depth = 0);
-      void operator=( const Outputter &r ); // Unimplemented private.
-      const Connector &d_conn;
+      Outputter(
+         const Connector& connector,
+         const std::string& border,
+         int detail_depth = 0);
+      void
+      operator = (
+         const Outputter& r);               // Unimplemented private.
+      const Connector& d_conn;
       const std::string d_border;
       const int d_detail_depth;
    };
@@ -838,8 +842,10 @@ public:
     * @param[in] border
     * @param[in] detail_depth
     */
-   Outputter format( const std::string& border=std::string(),
-                     int detail_depth = 0 ) const;
+   Outputter
+   format(
+      const std::string& border = std::string(),
+      int detail_depth = 0) const;
 
 private:
    /*
@@ -1023,7 +1029,7 @@ private:
    static tbox::Pointer<tbox::Timer> t_cache_global_reduced_data;
 
    static tbox::StartupShutdownManager::Handler
-   s_initialize_finalize_handler;
+      s_initialize_finalize_handler;
 
 };
 

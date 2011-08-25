@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   SampleIndexData example demonstrating IndexData type. 
+ * Description:   SampleIndexData example demonstrating IndexData type.
  *
  ************************************************************************/
 
@@ -26,13 +26,15 @@
 
 using namespace SAMRAI;
 
-SampleIndexData::SampleIndexData(const tbox::Dimension& dim) :
+SampleIndexData::SampleIndexData(
+   const tbox::Dimension& dim):
    d_index(dim),
    d_dummy_int(0)
 {
 }
 
-SampleIndexData::SampleIndexData(const hier::Index& ic) :
+SampleIndexData::SampleIndexData(
+   const hier::Index& ic):
    d_index(ic),
    d_dummy_int(0)
 {

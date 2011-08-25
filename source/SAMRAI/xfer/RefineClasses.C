@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Simple structure for managing refinement data in equivalence classes. 
+ * Description:   Simple structure for managing refinement data in equivalence classes.
  *
  ************************************************************************/
 
@@ -96,7 +96,7 @@ RefineClasses::getIterator(
 
 /*
  *************************************************************************
- *								 	 *
+ *								         *
  * Insert a data item into the proper equivalence class.                 *
  *									 *
  *************************************************************************
@@ -331,8 +331,8 @@ bool RefineClasses::classesMatch(
       pd = hier::VariableDatabase::getDatabase()->getPatchDescriptor();
    }
 
-   if ( getNumberOfEquivalenceClasses()!=
-       test_classes->getNumberOfEquivalenceClasses() ) {
+   if (getNumberOfEquivalenceClasses() !=
+       test_classes->getNumberOfEquivalenceClasses()) {
 
       items_match = false;
 
@@ -349,10 +349,10 @@ bool RefineClasses::classesMatch(
 
          } else {
 
-            const RefineClasses::Data& my_item = 
-                  getClassRepresentative(eq_index);
-            const RefineClasses::Data& test_item = 
-                  test_classes->getClassRepresentative(eq_index);
+            const RefineClasses::Data& my_item =
+               getClassRepresentative(eq_index);
+            const RefineClasses::Data& test_item =
+               test_classes->getClassRepresentative(eq_index);
 
             items_match = itemsAreEquivalent(my_item, test_item);
 
@@ -372,7 +372,7 @@ bool RefineClasses::classesMatch(
  *************************************************************************
  *                                                                       *
  * Return true if data items are equivalent; false otherwise.            *
- * This routine defines refine item equivalence.                         * 
+ * This routine defines refine item equivalence.                         *
  *                                                                       *
  *************************************************************************
  */
@@ -405,11 +405,11 @@ bool RefineClasses::itemsAreEquivalent(
 
    equivalent &= (data1.d_oprefine.isNull() == data2.d_oprefine.isNull());
    if (equivalent && !data1.d_oprefine.isNull()) {
-      equivalent &= (data1.d_oprefine->getStencilWidth() == 
+      equivalent &= (data1.d_oprefine->getStencilWidth() ==
                      data2.d_oprefine->getStencilWidth());
    }
 
-   equivalent &= (data1.d_var_fill_pattern.isNull() == 
+   equivalent &= (data1.d_var_fill_pattern.isNull() ==
                   data2.d_var_fill_pattern.isNull());
    if (equivalent && !data1.d_var_fill_pattern.isNull()) {
       equivalent &= (typeid(*(data1.d_var_fill_pattern)) ==
@@ -516,7 +516,6 @@ void RefineClasses::printRefineItem(
    stream << std::endl;
 }
 
-
 /*
  *************************************************************************
  *                                                                       *
@@ -580,12 +579,12 @@ int RefineClasses::getEquivalenceClassIndex(
    int check_index = 0;
    while (!class_found && check_index < getNumberOfEquivalenceClasses()) {
 
-      const RefineClasses::Data& class_rep = 
-            getClassRepresentative(check_index);
+      const RefineClasses::Data& class_rep =
+         getClassRepresentative(check_index);
 
       class_found = itemsAreEquivalent(data, class_rep);
 
-      if ( class_found ) {
+      if (class_found) {
          eq_index = check_index;
       }
 

@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Main program for SAMRAI Linear Advection example problem. 
+ * Description:   Main program for SAMRAI Linear Advection example problem.
  *
  ************************************************************************/
 
@@ -170,7 +170,7 @@ int main(
    /*
     * Run problem twice to test startup/shutdown process for multi-block problems.
     */
-   for(int run = 0; run < 2; run++) {
+   for (int run = 0; run < 2; run++) {
 
       tbox::SAMRAIManager::startup();
       const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
@@ -183,11 +183,11 @@ int main(
 
       if ((argc != 2) && (argc != 4)) {
          tbox::pout << "USAGE:  " << argv[0] << " <input filename> "
-                                             <<
+                    <<
          "<restart dir> <restore number> [options]\n"
-                                             << "  options:\n"
-                                             << "  none at this time"
-                                             << endl;
+                    << "  options:\n"
+                    << "  none at this time"
+                    << endl;
          tbox::SAMRAI_MPI::abort();
          return -1;
       } else {
@@ -580,8 +580,6 @@ int main(
 
       input_db.setNull();
       main_db.setNull();
-
-
 
       tbox::SAMRAIManager::shutdown();
    }

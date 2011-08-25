@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Main program to test statistics operations 
+ * Description:   Main program to test statistics operations
  *
  ************************************************************************/
 
@@ -55,10 +55,10 @@ int main(
 
       if ((argc != 1) && (argc != 3)) {
          tbox::pout << "USAGE:  " << argv[0]
-         << "<restart dir> <restore number> [options]\n"
-         << "  options:\n"
-         << "  none at this time"
-         << endl;
+                    << "<restart dir> <restore number> [options]\n"
+                    << "  options:\n"
+                    << "  none at this time"
+                    << endl;
          tbox::SAMRAI_MPI::abort();
          return -1;
       } else {

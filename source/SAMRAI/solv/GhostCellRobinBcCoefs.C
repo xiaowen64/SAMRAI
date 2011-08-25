@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Robin boundary condition support on cartesian grids. 
+ * Description:   Robin boundary condition support on cartesian grids.
  *
  ************************************************************************/
 #ifndef included_solv_GhostCellRobinBcCoefs_C
@@ -92,7 +92,7 @@ void GhostCellRobinBcCoefs::setGhostDataId(
       if (!cell_variable_ptr) {
          TBOX_ERROR(
             d_object_name << ": hier::Index " << ghost_data_id
-            <<
+                          <<
             " does not correspond to a cell-double variable.");
       }
    }
@@ -170,16 +170,16 @@ void GhostCellRobinBcCoefs::setBcCoefs(
       if (cell_data.isNull()) {
          TBOX_ERROR(
             d_object_name << ": hier::Patch data for index "
-            << d_ghost_data_id
-            << " is not cell double data.");
+                          << d_ghost_data_id
+                          << " is not cell double data.");
       }
       const int location_index = bdry_box.getLocationIndex();
       const hier::IntVector& gw = cell_data->getGhostCellWidth();
       if (gw[norm_dir] < 1) {
          TBOX_ERROR(
             d_object_name << ": hier::Patch data for index "
-            << d_ghost_data_id
-            << " has zero ghost width.");
+                          << d_ghost_data_id
+                          << " has zero ghost width.");
       }
       const pdat::ArrayData<double>& cell_array_data =
          cell_data->getArrayData();

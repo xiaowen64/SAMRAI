@@ -1,7 +1,7 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
  * Description:   Class for managing transformations between index spaces in
@@ -25,14 +25,12 @@
 #include "SAMRAI/hier/Transformation.I"
 #endif
 
-
 namespace SAMRAI {
 namespace hier {
 
-
 /*
  * ************************************************************************
- * 
+ *
  * Constructors
  *
  * ************************************************************************
@@ -40,41 +38,41 @@ namespace hier {
 
 Transformation::Transformation(
    RotationIdentifier rotation,
-   const IntVector& src_offset)
-: d_rotation(rotation),
-  d_offset(src_offset)
+   const IntVector& src_offset):
+   d_rotation(rotation),
+   d_offset(src_offset)
 {
 }
 
 Transformation::Transformation(
-   const IntVector& src_offset)
-: d_rotation(NO_ROTATE),
-  d_offset(src_offset)
+   const IntVector& src_offset):
+   d_rotation(NO_ROTATE),
+   d_offset(src_offset)
 {
 }
 
 Transformation::Transformation(
-   const Transformation& copy_trans)
-: d_rotation(copy_trans.d_rotation),
-  d_offset(copy_trans.d_offset)
+   const Transformation& copy_trans):
+   d_rotation(copy_trans.d_rotation),
+   d_offset(copy_trans.d_offset)
 {
 }
 
 /*
  * ************************************************************************
- * 
+ *
  * Destructor
  *
  * ************************************************************************
  */
- 
+
 Transformation::~Transformation()
 {
 }
 
 /*
  * ************************************************************************
- * 
+ *
  * Transform a box
  *
  * ************************************************************************
@@ -88,7 +86,7 @@ Transformation::transform(Box& box) const
 
 /*
  * ************************************************************************
- * 
+ *
  * Do inverse tranformation on a box
  *
  * ************************************************************************
@@ -105,7 +103,7 @@ Transformation::inverseTransform(Box& box) const
 
 /*
  * ************************************************************************
- * 
+ *
  * Get a RotationIdentifier value associated with given string input
  *
  * ************************************************************************
@@ -149,8 +147,8 @@ Transformation::getRotationIdentifier(
       }
       if (is_error) {
          TBOX_ERROR("Rotation_input " << rotation_string[0] << " "
-            << rotation_string[1] << " "
-            << " is invalid.\n");
+                                      << rotation_string[1] << " "
+                                      << " is invalid.\n");
       }
 
    } else if (dim.getValue() == 3) {
@@ -328,8 +326,8 @@ Transformation::getRotationIdentifier(
 
       if (is_error) {
          TBOX_ERROR("Rotation_input " << rotation_string[0] << " "
-            << rotation_string[1] << " " << rotation_string[2]
-            << " is invalid.\n");
+                                      << rotation_string[1] << " " << rotation_string[2]
+                                      << " is invalid.\n");
       }
    } else {
       TBOX_ERROR(
@@ -339,12 +337,11 @@ Transformation::getRotationIdentifier(
    return id;
 }
 
-
 /*
  * ************************************************************************
- * 
+ *
  * Get a RotationIdentifier value for the reverse of the given rotation.
- * 
+ *
  * ************************************************************************
  */
 
@@ -353,10 +350,10 @@ Transformation::getReverseRotationIdentifier(
    const RotationIdentifier rotation,
    const tbox::Dimension& dim)
 {
-   RotationIdentifier reverse_id = (RotationIdentifier) 0;
+   RotationIdentifier reverse_id = (RotationIdentifier)0;
 
    if (dim.getValue() == 2) {
-      reverse_id = (RotationIdentifier) ((4 - (int)rotation)%4);
+      reverse_id = (RotationIdentifier)((4 - (int)rotation) % 4);
    } else if (dim.getValue() == 3) {
       switch (rotation) {
 
@@ -471,9 +468,9 @@ Transformation::getReverseRotationIdentifier(
 
 /*
  * ************************************************************************
- * 
+ *
  * Get the reverse of the given shift
- * 
+ *
  * ************************************************************************
  */
 

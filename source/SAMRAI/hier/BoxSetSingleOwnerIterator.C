@@ -17,7 +17,7 @@ namespace hier {
 
 BoxSetSingleOwnerIterator::BoxSetSingleOwnerIterator(
    const BoxSet& mapped_boxes,
-   const int &owner_rank):
+   const int& owner_rank):
    d_mapped_boxes(&mapped_boxes),
    d_owner_rank(owner_rank)
 {
@@ -34,10 +34,9 @@ BoxSetSingleOwnerIterator::~BoxSetSingleOwnerIterator()
 
 bool BoxSetSingleOwnerIterator::isValid() const
 {
-   return
-      d_mapped_boxes != NULL &&
-      d_iter != d_mapped_boxes->end() &&
-      d_iter->getOwnerRank() == d_owner_rank;
+   return d_mapped_boxes != NULL &&
+          d_iter != d_mapped_boxes->end() &&
+          d_iter->getOwnerRank() == d_owner_rank;
 }
 
 BoxSetSingleOwnerIterator& BoxSetSingleOwnerIterator::operator = (
@@ -62,19 +61,17 @@ const Box *BoxSetSingleOwnerIterator::operator -> () const
 bool BoxSetSingleOwnerIterator::operator == (
    const BoxSetSingleOwnerIterator& r) const
 {
-   return
-      d_mapped_boxes == r.d_mapped_boxes &&
-      d_owner_rank == r.d_owner_rank &&
-      d_iter == r.d_iter;
+   return d_mapped_boxes == r.d_mapped_boxes &&
+          d_owner_rank == r.d_owner_rank &&
+          d_iter == r.d_iter;
 }
 
 bool BoxSetSingleOwnerIterator::operator != (
    const BoxSetSingleOwnerIterator& r) const
 {
-   return
-      d_mapped_boxes != r.d_mapped_boxes ||
-      d_owner_rank != r.d_owner_rank ||
-      d_iter != r.d_iter;
+   return d_mapped_boxes != r.d_mapped_boxes ||
+          d_owner_rank != r.d_owner_rank ||
+          d_iter != r.d_iter;
 }
 
 /*
@@ -83,7 +80,7 @@ bool BoxSetSingleOwnerIterator::operator != (
  ****************************************************************************
  */
 
-BoxSetSingleOwnerIterator &BoxSetSingleOwnerIterator::operator ++ ()
+BoxSetSingleOwnerIterator& BoxSetSingleOwnerIterator::operator ++ ()
 {
    do {
       ++d_iter;

@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Linear time interp operator for cell-centered double patch data. 
+ * Description:   Linear time interp operator for cell-centered double patch data.
  *
  ************************************************************************/
 
@@ -35,38 +35,38 @@ extern "C" {
 #endif
 
 // in lintimint1d.f:
-void F77_FUNC(lintimeintcelldoub1d, LINTIMEINTCELLDOUB1D) (const int &,
-   const int &,
-   const int &, const int &,
-   const int &, const int &,
-   const int &, const int &,
-   const double &,
+void F77_FUNC(lintimeintcelldoub1d, LINTIMEINTCELLDOUB1D) (const int&,
+   const int&,
+   const int&, const int&,
+   const int&, const int&,
+   const int&, const int&,
+   const double&,
    const double *, const double *,
    double *);
 // in lintimint2d.f:
-void F77_FUNC(lintimeintcelldoub2d, LINTIMEINTCELLDOUB2D) (const int &,
-   const int &,
-   const int &, const int &,
-   const int &, const int &,
-   const int &, const int &,
-   const int &, const int &,
-   const int &, const int &,
-   const int &, const int &,
-   const int &, const int &,
-   const double &,
+void F77_FUNC(lintimeintcelldoub2d, LINTIMEINTCELLDOUB2D) (const int&,
+   const int&,
+   const int&, const int&,
+   const int&, const int&,
+   const int&, const int&,
+   const int&, const int&,
+   const int&, const int&,
+   const int&, const int&,
+   const int&, const int&,
+   const double&,
    const double *, const double *,
    double *);
 // in lintimint3d.f:
-void F77_FUNC(lintimeintcelldoub3d, LINTIMEINTCELLDOUB3D) (const int &,
-   const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
-   const double &,
+void F77_FUNC(lintimeintcelldoub3d, LINTIMEINTCELLDOUB3D) (const int&,
+   const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
+   const double&,
    const double *, const double *,
    double *);
 }

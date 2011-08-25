@@ -1,7 +1,7 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
  * Description:   Test class for SparseData (implementation).
@@ -21,7 +21,8 @@ using namespace SAMRAI;
 
 namespace sam_test {
 
-SparseDataTester::SparseDataTester(const tbox::Dimension& dim) : 
+SparseDataTester::SparseDataTester(
+   const tbox::Dimension& dim):
    d_initialized(false),
    d_dim(dim)
 {
@@ -31,7 +32,7 @@ SparseDataTester::~SparseDataTester() {
    d_sparse_data->clear();
 }
 
-bool 
+bool
 SparseDataTester::testConstruction()
 {
    hier::Index lo = hier::Index(d_dim, 0);
@@ -45,8 +46,8 @@ SparseDataTester::testConstruction()
    std::vector<std::string> ikeys;
    _getIntKeys(ikeys);
 
-   tbox::Pointer<SparseDataType> sparse(new SparseDataType(box, ghosts, 
-      dkeys, ikeys));
+   tbox::Pointer<SparseDataType> sparse(new SparseDataType(box, ghosts,
+                                           dkeys, ikeys));
    d_sparse_data = sparse;
 
    d_sparse_data->printNames(tbox::plog);
@@ -60,14 +61,14 @@ SparseDataTester::testConstruction()
    }
 
    SparseDataType::Iterator iter = d_sparse_data->registerIndex(hi);
-   
-   SparseDataType::AttributeIterator index_iter(d_sparse_data->begin(hi)), 
-      index_iterend(d_sparse_data->end(hi));
+
+   SparseDataType::AttributeIterator index_iter(d_sparse_data->begin(hi)),
+   index_iterend(d_sparse_data->end(hi));
 
    if (index_iter != index_iterend) {
       passed = false;
       tbox::perr << "something is wrong with index2's list of attributes"
-         << std::endl;
+                 << std::endl;
    }
 
    d_sparse_data->clear();
@@ -98,7 +99,7 @@ SparseDataTester::testCopy2()
    d_sparse_data->clear();
    tbox::Pointer<SparseDataType> sample = _createEmptySparseData();
    _fillObject(sample);
-   
+
    bool success = _testCopy(sample, d_sparse_data);
    // clean up d_sparse_data
    d_sparse_data->clear();
@@ -106,7 +107,7 @@ SparseDataTester::testCopy2()
    return success;
 }
 
-bool 
+bool
 SparseDataTester::testAdd()
 {
    bool success = true;
@@ -115,7 +116,7 @@ SparseDataTester::testAdd()
    success = success && (sample->empty() ? true : false);
    if (success)
       _fillObject(sample);
-   
+
    success = success && (!sample->empty() ? true : false);
    if (success)
       sample->clear();
@@ -124,7 +125,7 @@ SparseDataTester::testAdd()
    return success;
 }
 
-bool 
+bool
 SparseDataTester::testRemove()
 {
    tbox::Pointer<SparseDataType> sample = _createEmptySparseData();
@@ -140,7 +141,7 @@ SparseDataTester::testRemove()
       } else {
          ++iter;
       }
-   }   
+   }
 
    int newsize = sample->size();
    success = success && (newsize = size - 1) ? true : false;
@@ -149,7 +150,7 @@ SparseDataTester::testRemove()
       sample->clear();
       success = success && (sample->empty() ? true : false);
    }
-   
+
    return success;
 }
 
@@ -165,7 +166,7 @@ SparseDataTester::_testCopy(
    pdat::SparseData<pdat::CellGeometry>::Iterator other(dst);
 
    bool success = true;
-   for (; me != me_end && success != false; ++me, ++other) {
+   for ( ; me != me_end && success != false; ++me, ++other) {
       if (me != other) {
          success = false;
       }
@@ -200,7 +201,7 @@ SparseDataTester::testPackStream()
 
    tbox::Pointer<SparseDataType> sample2 = _createEmptySparseData();
    tbox::MessageStream upStr(strsize, tbox::MessageStream::Read);
-   memcpy(upStr.getBufferStart(), str.getBufferStart(), strsize); 
+   memcpy(upStr.getBufferStart(), str.getBufferStart(), strsize);
 
    sample2->unpackStream(upStr, overlap);
 
@@ -209,18 +210,18 @@ SparseDataTester::testPackStream()
    sample2->printNames(tbox::plog);
    tbox::plog << "Printing sample2" << std::endl;
    sample2->printAttributes(tbox::plog);
-   for (; iter != sample->end() && iter2 != sample2->end(); ++iter, ++iter2) {
+   for ( ; iter != sample->end() && iter2 != sample2->end(); ++iter, ++iter2) {
       tbox::plog << "iter1 node: " << std::endl;
       tbox::plog << iter;
       tbox::plog << "iter2 node: " << std::endl;
       tbox::plog << iter2;
-      if (! iter.equals(iter2)) {
+      if (!iter.equals(iter2)) {
          success = false;
       }
       tbox::plog << std::endl;
    }
 
-   const pdat::DoubleAttributeId did = 
+   const pdat::DoubleAttributeId did =
       sample2->getDblAttributeId("double_key_0");
 
    if (!sample2->isValid(did)) {
@@ -231,7 +232,7 @@ SparseDataTester::testPackStream()
    return success;
 }
 
-bool 
+bool
 SparseDataTester::testDatabaseInterface()
 {
    bool success = true;
@@ -247,9 +248,9 @@ SparseDataTester::testDatabaseInterface()
    SparseDataType::Iterator iter1(sample);
    SparseDataType::Iterator iter2(sample2);
 
-   for (; iter1 != sample->end() && iter2 != sample2->end() && success; 
+   for ( ; iter1 != sample->end() && iter2 != sample2->end() && success;
          ++iter1, ++iter2) {
-      if ( ! iter1.equals(iter2)) {
+      if (!iter1.equals(iter2)) {
          success = false;
       }
    }
@@ -282,7 +283,7 @@ SparseDataTester::testTiming()
          _getIntValues(ivalues);
 
          iter = sample->registerIndex(idx);
-         for (int m = i; m < j+1; ++m) {
+         for (int m = i; m < j + 1; ++m) {
             iter.insert(dvalues, ivalues);
          }
       }
@@ -292,8 +293,8 @@ SparseDataTester::testTiming()
    int numItems = sample->size();
    tbox::plog << numItems << std::endl;
    tbox::plog.precision(16);
-   tbox::plog << "SparseData addItem insert time : " 
-      << timer->getTotalWallclockTime() << std::endl;
+   tbox::plog << "SparseData addItem insert time : "
+              << timer->getTotalWallclockTime() << std::endl;
    tbox::plog << "End Timing" << std::endl;
    sample->clear();
 }
@@ -303,7 +304,7 @@ SparseDataTester::_getRandomIndex()
 {
    // return a random index in the range that we created
    // with _fillObject
-   int val = (rand() % NUM_INDICES); 
+   int val = (rand() % NUM_INDICES);
    hier::IntVector v(d_dim, 0);
    v[0] = val;
    v[1] = val;
@@ -335,7 +336,7 @@ SparseDataTester::_fillObject(
    delete[] ivalues;
 }
 
-tbox::Pointer<pdat::SparseData<pdat::CellGeometry> > 
+tbox::Pointer<pdat::SparseData<pdat::CellGeometry> >
 SparseDataTester::_createEmptySparseData()
 {
    hier::Index lo = hier::Index(d_dim, 0);
@@ -353,7 +354,7 @@ SparseDataTester::_createEmptySparseData()
 }
 
 void
-SparseDataTester::_getDblKeys(std::vector<std::string>& keys) 
+SparseDataTester::_getDblKeys(std::vector<std::string>& keys)
 {
    for (int i = 0; i < DSIZE; ++i) {
       std::stringstream key_name;
@@ -363,7 +364,7 @@ SparseDataTester::_getDblKeys(std::vector<std::string>& keys)
 }
 
 void
-SparseDataTester::_getIntKeys(std::vector<std::string>& keys) 
+SparseDataTester::_getIntKeys(std::vector<std::string>& keys)
 {
    for (int i = 0; i < ISIZE; ++i) {
       std::stringstream key_name;
@@ -372,15 +373,15 @@ SparseDataTester::_getIntKeys(std::vector<std::string>& keys)
    }
 }
 
-void 
+void
 SparseDataTester::_getDblValues(double* values)
 {
    for (int i = 0; i < DSIZE; ++i) {
-      values[i] = (double) i;
+      values[i] = (double)i;
    }
 }
 
-void 
+void
 SparseDataTester::_getIntValues(int* values)
 {
    for (int i = 0; i < ISIZE; ++i) {

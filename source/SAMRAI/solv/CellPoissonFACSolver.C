@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   High-level solver (wrapper) for scalar poisson equation. 
+ * Description:   High-level solver (wrapper) for scalar poisson equation.
  *
  ************************************************************************/
 #ifndef included_solv_CellPoissonFACSolver_C
@@ -254,9 +254,9 @@ void CellPoissonFACSolver::initializeSolverState(
    if (d_bc_object == NULL) {
       TBOX_ERROR(
          d_object_name << ": No BC coefficient strategy object!\n"
-         <<
+                       <<
          "Use either setBoundaries or setPhysicalBcCoefObject\n"
-         << "to specify the boundary conidition.\n");
+                       << "to specify the boundary conidition.\n");
    }
 
 #ifdef DEBUG_CHECK_ASSERTIONS
@@ -368,7 +368,7 @@ void CellPoissonFACSolver::setBoundaries(
    if (d_bc_object != NULL && d_bc_object != &d_simple_bc) {
       TBOX_ERROR(
          d_object_name << ": Bad attempt to set boundary condition\n"
-         <<
+                       <<
          "by using default bc object after it has been overriden.\n");
    }
 #endif
@@ -414,13 +414,13 @@ bool CellPoissonFACSolver::solveSystem(
    if (!d_solver_is_initialized) {
       TBOX_ERROR(
          d_object_name << ".solveSystem(int,int): uninitialized\n"
-         <<
+                       <<
          "solver state.  You must call initializeSolverState()\n"
-         <<
+                       <<
          "before using this function.  Or you can use\n"
-         <<
+                       <<
          "solveSystem(int,int,...) to initialize the solver,\n"
-         << "solve and deallocate the solver.\n");
+                       << "solve and deallocate the solver.\n");
    }
    if (u < 0 || f < 0) {
       TBOX_ERROR(d_object_name << ": Bad patch data id.\n");
@@ -485,11 +485,11 @@ bool CellPoissonFACSolver::solveSystem(
    if (d_solver_is_initialized) {
       TBOX_ERROR(
          d_object_name << ".solveSystem(int,int,...): initialized\n"
-         <<
+                       <<
          "solver state.  This function can only used when the\n"
-         <<
+                       <<
          "solver state is uninitialized.  You should deallocate\n"
-         <<
+                       <<
          "the solver state or use solveSystem(int,int).\n");
    }
    if (!hierarchy) {

@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Templated outernode centered patch data type 
+ * Description:   Templated outernode centered patch data type
  *
  ************************************************************************/
 
@@ -84,7 +84,7 @@ const ArrayData<TYPE>
 
 template<class TYPE>
 SAMRAI_INLINE_KEYWORD
-TYPE & OuternodeData<TYPE>::operator () (
+TYPE& OuternodeData<TYPE>::operator () (
    const NodeIndex& i,
    int depth)
 {
@@ -108,7 +108,7 @@ TYPE & OuternodeData<TYPE>::operator () (
 
 template<class TYPE>
 SAMRAI_INLINE_KEYWORD
-const TYPE &OuternodeData<TYPE>::operator () (
+const TYPE& OuternodeData<TYPE>::operator () (
    const NodeIndex& i,
    int depth) const
 {

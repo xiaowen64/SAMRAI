@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   An abstract base class for objects to be serialized 
+ * Description:   An abstract base class for objects to be serialized
  *
  ************************************************************************/
 
@@ -60,8 +60,8 @@ public:
 
    /*!
     * @brief Serializes the object by writing necessary state to the
-    * specified database.  
-    * 
+    * specified database.
+    *
     */
    virtual void
    putToDatabase(

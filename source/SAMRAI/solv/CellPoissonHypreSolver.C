@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Hypre solver interface for diffusion-like elliptic problems. 
+ * Description:   Hypre solver interface for diffusion-like elliptic problems.
  *
  ************************************************************************/
 #ifndef included_solv_CellPoissonHypreSolver_C
@@ -492,18 +492,18 @@ void CellPoissonHypreSolver::allocateHypreData()
                if (tmpi > domain_bound.numberCells(d)) {
                   TBOX_ERROR(
                      d_object_name << ": Hypre currently requires\n"
-                     <<
+                                   <<
                      "that grid size in periodic directions be\n"
-                     <<
+                                   <<
                      "powers of two.  (This requirement may go\n"
-                     <<
+                                   <<
                      "away in future versions of hypre.)\n"
-                     << "Size problem in direction "
-                     << d << "\n"
-                     << "Domain bound is "
-                     << domain_bound << ",\n"
-                     << "Size of "
-                     << domain_bound.numberCells() << "\n");
+                                   << "Size problem in direction "
+                                   << d << "\n"
+                                   << "Domain bound is "
+                                   << domain_bound << ",\n"
+                                   << "Size of "
+                                   << domain_bound.numberCells() << "\n");
                }
                tmpi = tmpi ? tmpi << 1 : 1;
             }
@@ -726,11 +726,11 @@ void CellPoissonHypreSolver::setMatrixCoefficients(
    if (d_physical_bc_coef_strategy == NULL) {
       TBOX_ERROR(
          d_object_name << ": No BC coefficient strategy object!\n"
-         <<
+                       <<
          "Use either setBoundaries or setPhysicalBcCoefObject\n"
-         <<
+                       <<
          "to specify the boundary conidition.  Do it before\n"
-         << "calling setMatrixCoefficients.");
+                       << "calling setMatrixCoefficients.");
    }
 
    t_set_matrix_coefficients->start();
@@ -887,7 +887,7 @@ void CellPoissonHypreSolver::setMatrixCoefficients(
             if (boundary_box.getBoundaryType() != 1) {
                TBOX_ERROR(
                   d_object_name << ": Illegal boundary type in "
-                  <<
+                                <<
                   "CellPoissonHypreSolver::setMatrixCoefficients\n");
             }
             const hier::BoundaryBoxUtils bbu(boundary_box);
@@ -949,7 +949,7 @@ void CellPoissonHypreSolver::setMatrixCoefficients(
             if (boundary_box.getBoundaryType() != 1) {
                TBOX_ERROR(
                   d_object_name << ": Illegal boundary type in "
-                  <<
+                                <<
                   "CellPoissonHypreSolver::setMatrixCoefficients\n");
             }
             const int location_index = boundary_box.getLocationIndex();
@@ -1241,11 +1241,11 @@ int CellPoissonHypreSolver::solveSystem(
    if (d_physical_bc_coef_strategy == NULL) {
       TBOX_ERROR(
          d_object_name << ": No BC coefficient strategy object!\n"
-         <<
+                       <<
          "Use either setBoundaries or setPhysicalBcCoefObject\n"
-         <<
+                       <<
          "to specify the boundary conidition.  Do it before\n"
-         << "calling solveSystem.");
+                       << "calling solveSystem.");
    }
    // Tracer t("CellPoissonHypreSolver::solveSystem");
 

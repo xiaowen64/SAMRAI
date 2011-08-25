@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Implicit time integration manager class for nonlinear problems. 
+ * Description:   Implicit time integration manager class for nonlinear problems.
  *
  ************************************************************************/
 
@@ -298,7 +298,7 @@ void ImplicitIntegrator::getFromInput(
                if (d_max_integrator_steps < d_integrator_step) {
                   TBOX_ERROR(
                      d_object_name << " -- Error in input data "
-                     <<
+                                   <<
                      "max_integrator_steps < current integrator step.");
                }
             }

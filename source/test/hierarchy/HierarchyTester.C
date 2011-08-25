@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Manager class for patch hierarchy refine/coarsen tests. 
+ * Description:   Manager class for patch hierarchy refine/coarsen tests.
  *
  ************************************************************************/
 
@@ -125,8 +125,8 @@ void HierarchyTester::setupInitialHierarchy(
 
    d_initial_patch_hierarchy =
       new PatchHierarchy("InitialPatchHierarchy",
-                         grid_geometry,
-                         main_input_db->getDatabase("PatchHierarchy"));
+         grid_geometry,
+         main_input_db->getDatabase("PatchHierarchy"));
 
    Pointer<BergerRigoutsos> box_generator(new BergerRigoutsos(d_dim));
 
@@ -220,7 +220,7 @@ int HierarchyTester::runHierarchyTestAndVerify()
    hier::BoxList::Iterator tpditr(test_phys_domain);
    if (d_do_refine_test) {
       for (int ib = 0; ib < npdboxes; ib++, ipditr++, tpditr++) {
-         if (! Box::refine(*ipditr, d_ratio).isSpatiallyEqual(*tpditr)) {
+         if (!Box::refine(*ipditr, d_ratio).isSpatiallyEqual(*tpditr)) {
             fail_count++;
             tbox::perr << "FAILED: - Test #0b: test hierarchy physical domain"
                        << " box with array index " << ib
@@ -231,7 +231,7 @@ int HierarchyTester::runHierarchyTestAndVerify()
    }
    if (d_do_coarsen_test) {
       for (int ib = 0; ib < npdboxes; ib++, ipditr++, tpditr++) {
-         if (! Box::coarsen(*ipditr, d_ratio).isSpatiallyEqual(*tpditr)) {
+         if (!Box::coarsen(*ipditr, d_ratio).isSpatiallyEqual(*tpditr)) {
             fail_count++;
             tbox::perr << "FAILED: - Test #0b: test hierarchy physical domain"
                        << " box with array index " << ib
@@ -351,7 +351,7 @@ int HierarchyTester::runHierarchyTestAndVerify()
       hier::BoxList::Iterator tditr(test_domain);
       if (d_do_refine_test) {
          for (int ib = 0; ib < nboxes; ib++, iditr++, tditr++) {
-            if (! Box::refine(*iditr, d_ratio).isSpatiallyEqual(*tditr)) {
+            if (!Box::refine(*iditr, d_ratio).isSpatiallyEqual(*tditr)) {
                fail_count++;
                tbox::perr << "FAILED: - Test #8: for level number " << ln
                           << " refined domain box with array index " << ib
@@ -362,7 +362,7 @@ int HierarchyTester::runHierarchyTestAndVerify()
       }
       if (d_do_coarsen_test) {
          for (int ib = 0; ib < nboxes; ib++, iditr++, tditr++) {
-            if (! Box::coarsen(*iditr, d_ratio).isSpatiallyEqual(*tditr)) {
+            if (!Box::coarsen(*iditr, d_ratio).isSpatiallyEqual(*tditr)) {
                fail_count++;
                tbox::perr << "FAILED: - Test #8: for level number " << ln
                           << " coarsened domain box with array index " << ib
@@ -379,42 +379,42 @@ int HierarchyTester::runHierarchyTestAndVerify()
        */
 
       IntVector init_connector_width =
-         d_initial_patch_hierarchy->getRequiredConnectorWidth(ln,ln);
+         d_initial_patch_hierarchy->getRequiredConnectorWidth(ln, ln);
       IntVector test_connector_width =
-         d_test_patch_hierarchy->getRequiredConnectorWidth(ln,ln);
+         d_test_patch_hierarchy->getRequiredConnectorWidth(ln, ln);
       if (d_do_refine_test) {
-         test_connector_width = init_connector_width*d_ratio;
+         test_connector_width = init_connector_width * d_ratio;
+      } else {
+         init_connector_width = test_connector_width * d_ratio;
       }
-      else {
-         init_connector_width = test_connector_width*d_ratio;
-      }
-      const Connector &init_connector =
+      const Connector& init_connector =
          init_level->getMappedBoxLevel()->getPersistentOverlapConnectors().findOrCreateConnector(
             d_initial_patch_hierarchy->getDomainMappedBoxLevel(),
             init_connector_width,
-            true /* exact width only */ );
-      const Connector &test_connector =
+            true /* exact width only */);
+      const Connector& test_connector =
          test_level->getMappedBoxLevel()->getPersistentOverlapConnectors().findConnector(
             d_test_patch_hierarchy->getDomainMappedBoxLevel(),
             test_connector_width,
-            true /* exact width only */ );
+            true /* exact width only */);
 
       for (hier::PatchLevel::Iterator ip(test_level); ip; ip++) {
          const BoxId& mapped_box_id = ip->getMappedBox().getId();
          // Test #9:
          if (d_do_refine_test) {
-            if (! Box::refine(init_level->getBoxForPatch(mapped_box_id), d_ratio).isSpatiallyEqual(test_level->getBoxForPatch(mapped_box_id))) {
+            if (!Box::refine(init_level->getBoxForPatch(mapped_box_id),
+                   d_ratio).isSpatiallyEqual(test_level->getBoxForPatch(mapped_box_id))) {
                fail_count++;
                tbox::perr << "FAILED: - Test #9: for level number " << ln
-                          << " refined patch box with array index " << mapped_box_id 
+                          << " refined patch box with array index " << mapped_box_id
                           << " is not a proper refinement of initial domain "
                           << "box with same index" << std::endl;
             }
          }
 
          if (d_do_coarsen_test) {
-            if (! Box::coarsen(init_level->getBoxForPatch(mapped_box_id), d_ratio).isSpatiallyEqual(
-                test_level->getBoxForPatch(mapped_box_id))) {
+            if (!Box::coarsen(init_level->getBoxForPatch(mapped_box_id), d_ratio).isSpatiallyEqual(
+                   test_level->getBoxForPatch(mapped_box_id))) {
                fail_count++;
                tbox::perr << "FAILED: - Test #9: for level number " << ln
                           << " coarsened patch box with array index " << mapped_box_id
@@ -424,7 +424,8 @@ int HierarchyTester::runHierarchyTestAndVerify()
          }
 
          // Test #10:
-         if (init_connector.getNeighborSet(mapped_box_id) != test_connector.getNeighborSet(mapped_box_id)) {
+         if (init_connector.getNeighborSet(mapped_box_id) !=
+             test_connector.getNeighborSet(mapped_box_id)) {
             fail_count++;
             tbox::perr << "FAILED: - Test #10: for level number " << ln
                        << " initial and test level have different number of "
@@ -473,8 +474,8 @@ int HierarchyTester::runHierarchyTestAndVerify()
 
          // Test #14:
          if (d_do_refine_test) {
-            if (! Box::refine(init_patch->getBox(), d_ratio).isSpatiallyEqual(
-                test_patch->getBox())) {
+            if (!Box::refine(init_patch->getBox(), d_ratio).isSpatiallyEqual(
+                   test_patch->getBox())) {
                fail_count++;
                tbox::perr << "FAILED: - Test #14: for level number " << ln
                           << " box for test level patch " << mapped_box_id
@@ -484,8 +485,8 @@ int HierarchyTester::runHierarchyTestAndVerify()
             }
          }
          if (d_do_coarsen_test) {
-            if (! Box::coarsen(init_patch->getBox(), d_ratio).isSpatiallyEqual(
-                test_patch->getBox())) {
+            if (!Box::coarsen(init_patch->getBox(), d_ratio).isSpatiallyEqual(
+                   test_patch->getBox())) {
                fail_count++;
                tbox::perr << "FAILED: - Test #14: for level number " << ln
                           << " box for test level patch " << mapped_box_id

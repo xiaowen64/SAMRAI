@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   GriddingAlgorihtm's implementation of PatchHierarchy 
+ * Description:   GriddingAlgorihtm's implementation of PatchHierarchy
  *
  ************************************************************************/
 
@@ -26,16 +26,13 @@
 namespace SAMRAI {
 namespace mesh {
 
-
 /*
  **************************************************************************
  **************************************************************************
  */
 GriddingAlgorithmConnectorWidthRequestor::GriddingAlgorithmConnectorWidthRequestor()
 {
-   return;
 }
-
 
 /*
  **************************************************************************
@@ -48,7 +45,7 @@ void GriddingAlgorithmConnectorWidthRequestor::computeRequiredConnectorWidths(
    std::vector<hier::IntVector>& fine_connector_widths,
    const hier::PatchHierarchy& patch_hierarchy) const
 {
-   const tbox::Dimension &dim(patch_hierarchy.getDim());
+   const tbox::Dimension& dim(patch_hierarchy.getDim());
    const int max_levels(patch_hierarchy.getMaxNumberOfLevels());
 
    const hier::IntVector max_ghost_width(
@@ -57,7 +54,7 @@ void GriddingAlgorithmConnectorWidthRequestor::computeRequiredConnectorWidths(
    const hier::IntVector max_stencil_width(
       patch_hierarchy.getGridGeometry()->getMaxTransferOpStencilWidth());
 
-   fine_connector_widths.resize(max_levels-1, hier::IntVector(dim));
+   fine_connector_widths.resize(max_levels - 1, hier::IntVector(dim));
    self_connector_widths.resize(max_levels, hier::IntVector(dim));
 
    /*
@@ -79,13 +76,12 @@ void GriddingAlgorithmConnectorWidthRequestor::computeRequiredConnectorWidths(
          fine_connector_widths[ln],
          self_connector_widths[ln],
          self_connector_widths[ln + 1],
-         patch_hierarchy.getRatioToCoarserLevel(ln+1),
-         hier::IntVector(dim, patch_hierarchy.getProperNestingBuffer(ln+1)),
+         patch_hierarchy.getRatioToCoarserLevel(ln + 1),
+         hier::IntVector(dim, patch_hierarchy.getProperNestingBuffer(ln + 1)),
          max_stencil_width,
          max_ghost_width);
    }
 }
-
 
 /*
  *************************************************************************
@@ -121,7 +117,7 @@ void GriddingAlgorithmConnectorWidthRequestor::computeCoarserLevelConnectorWidth
    NULL_USE(max_stencil_width_at_coarse);
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-   const tbox::Dimension &dim(fine_to_fine_width.getDim());
+   const tbox::Dimension& dim(fine_to_fine_width.getDim());
    TBOX_DIM_ASSERT_CHECK_DIM_ARGS7(dim,
       coarse_to_fine_width,
       coarse_to_coarse_width,
@@ -180,7 +176,7 @@ void GriddingAlgorithmConnectorWidthRequestor::computeCoarserLevelConnectorWidth
    /*
     * Must cover coarse level's own ghost cells.
     */
-   coarse_to_coarse_width.max( max_ghost_width_at_coarse );
+   coarse_to_coarse_width.max(max_ghost_width_at_coarse);
 }
 
 }

@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   All-to-one and one-to-all communication using a tree. 
+ * Description:   All-to-one and one-to-all communication using a tree.
  *
  ************************************************************************/
 #ifndef included_tbox_AsyncCommGroup
@@ -87,8 +87,8 @@ public:
     */
    explicit AsyncCommGroup(
       const size_t nchild,
-      AsyncCommStage* stage,
-      AsyncCommStage::Handler* handler = NULL);
+      AsyncCommStage * stage,
+      AsyncCommStage::Handler * handler = NULL);
 
    /*!
     * @brief Destructor.
@@ -112,8 +112,8 @@ public:
    void
    initialize(
       const int nchild,
-      AsyncCommStage* stage,
-      AsyncCommStage::Handler* handler = NULL);
+      AsyncCommStage * stage,
+      AsyncCommStage::Handler * handler = NULL);
 
    //@{
    //! @name Define the communication group
@@ -128,7 +128,7 @@ public:
    void
    setGroupAndRootIndex(
       const SAMRAI_MPI& mpi,
-      const int* group_ranks,
+      const int * group_ranks,
       const int group_size,
       const int root_index);
 
@@ -142,7 +142,7 @@ public:
    void
    setGroupAndRootRank(
       const SAMRAI_MPI& mpi,
-      const int* group_ranks,
+      const int * group_ranks,
       const int group_size,
       const int root_rank);
 
@@ -218,7 +218,7 @@ public:
     */
    bool
    beginBcast(
-      int* buffer,
+      int * buffer,
       int size);
 
    /*!
@@ -260,7 +260,7 @@ public:
     */
    bool
    beginGather(
-      int* buffer,
+      int * buffer,
       int size);
 
    /*!
@@ -287,7 +287,7 @@ public:
     */
    bool
    beginSumReduce(
-      int* buffer,
+      int * buffer,
       int size);
 
    /*!
@@ -655,7 +655,7 @@ private:
    static Pointer<Timer> t_wait_all;
 
    static tbox::StartupShutdownManager::Handler
-   s_initialize_finalize_handler;
+      s_initialize_finalize_handler;
 
 #ifdef DEBUG_CHECK_ASSERTIONS
    /*!

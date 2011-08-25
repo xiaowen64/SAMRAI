@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Templated cell centered patch data type 
+ * Description:   Templated cell centered patch data type
  *
  ************************************************************************/
 
@@ -397,12 +397,15 @@ private:
    operator = (
       const CellData<TYPE>&);                           // not implemented
 
+   void
+   copyWithRotation(
+      const CellData<TYPE>& src,
+      const CellOverlap& overlap);
 
-   void copyWithRotation(const CellData<TYPE>& src,
-                         const CellOverlap& overlap);
-
-   void packWithRotation(tbox::MessageStream& stream,
-                         const CellOverlap& overlap) const;
+   void
+   packWithRotation(
+      tbox::MessageStream& stream,
+      const CellOverlap& overlap) const;
 
    int d_depth;
    ArrayData<TYPE> d_data;

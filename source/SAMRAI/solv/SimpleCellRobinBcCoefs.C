@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Level solver for diffusion-like elliptic problems. 
+ * Description:   Level solver for diffusion-like elliptic problems.
  *
  ************************************************************************/
 #ifndef included_solv_SimpleCellRobinBcCoefs_C
@@ -114,8 +114,8 @@ void SimpleCellRobinBcCoefs::setBoundaries(
       if (fluxes < 0) {
          TBOX_ERROR(
             d_object_name << ": bad flux patch data index ("
-            << fluxes
-            << ") for Neumann boundary condition.\n");
+                          << fluxes
+                          << ") for Neumann boundary condition.\n");
       }
 #endif
       d_flux_id = fluxes;
@@ -125,14 +125,14 @@ void SimpleCellRobinBcCoefs::setBoundaries(
       if (fluxes < 0) {
          TBOX_ERROR(
             d_object_name << ": bad flux patch data index ("
-            << fluxes
-            << ") for Mixed boundary condition.\n");
+                          << fluxes
+                          << ") for Mixed boundary condition.\n");
       }
       if (flags < 0) {
          TBOX_ERROR(
             d_object_name << ": bad flag patch data index ("
-            << flags
-            << ") for Mixed boundary condition.\n");
+                          << flags
+                          << ") for Mixed boundary condition.\n");
       }
 #endif
       d_flux_id = fluxes;
@@ -149,7 +149,7 @@ void SimpleCellRobinBcCoefs::setBoundaries(
    } else {
       TBOX_ERROR(
          d_object_name << ": Non-existing case of\n"
-         <<
+                       <<
          "boundary_type in PoissonSolver<DIM>::setBoundaries()");
    }
 
@@ -196,8 +196,8 @@ void SimpleCellRobinBcCoefs::setBcCoefs(
    t_set_bc_coefs->start();
 
    const int ln = patch.getPatchLevelNumber();
-   const hier::GlobalId &global_id = patch.getGlobalId();
-   const hier::BlockId &block_id = patch.getMappedBox().getBlockId();
+   const hier::GlobalId& global_id = patch.getGlobalId();
+   const hier::BlockId& block_id = patch.getMappedBox().getBlockId();
    const int location_index = bdry_box.getLocationIndex();
 
    tbox::Pointer<hier::PatchData> patch_data;
@@ -221,22 +221,22 @@ void SimpleCellRobinBcCoefs::setBcCoefs(
          if (!patch.inHierarchy()) {
             TBOX_ERROR(
                d_object_name << ": patch is not in any hierarchy.\n"
-               << "SimpleCellRobinBcCoefs can only set\n"
-               <<
+                             << "SimpleCellRobinBcCoefs can only set\n"
+                             <<
                "boundary coefficients for patches in\n"
-               << "the same hierarchy as cached\n"
-               << "Dirichlet coefficients.");
+                             << "the same hierarchy as cached\n"
+                             << "Dirichlet coefficients.");
          }
          tbox::Pointer<hier::PatchLevel> level = d_hierarchy->getPatchLevel(ln);
-         if (! level->getPatch(global_id, block_id)->getBox().isSpatiallyEqual(patch.getBox())) {
+         if (!level->getPatch(global_id, block_id)->getBox().isSpatiallyEqual(patch.getBox())) {
             TBOX_ERROR(
                d_object_name << ": patch is not in the hierarchy\n"
-               << "of cached boundary data.\n"
-               << "SimpleCellRobinBcCoefs can only set\n"
-               <<
+                             << "of cached boundary data.\n"
+                             << "SimpleCellRobinBcCoefs can only set\n"
+                             <<
                "boundary coefficients for patches in\n"
-               << "the same hierarchy as cached\n"
-               << "Dirichlet coefficients.");
+                             << "the same hierarchy as cached\n"
+                             << "Dirichlet coefficients.");
          }
       }
       if (d_bdry_types[location_index] == NEUMANN
@@ -250,8 +250,8 @@ void SimpleCellRobinBcCoefs::setBcCoefs(
          if (!flux_data_ptr) {
             TBOX_ERROR(
                d_object_name << ": Flux data (patch data id = "
-               << d_flux_id
-               << ") is not outerface double data.");
+                             << d_flux_id
+                             << ") is not outerface double data.");
          }
          if (d_diffusion_coef_id != -1) {
             patch_data = patch.getPatchData(d_diffusion_coef_id);
@@ -280,8 +280,8 @@ void SimpleCellRobinBcCoefs::setBcCoefs(
          if (!flag_data_ptr) {
             TBOX_ERROR(
                d_object_name << ": Flags data (patch data id = "
-               << d_flag_id
-               << ") is not outerface int data.");
+                             << d_flag_id
+                             << ") is not outerface int data.");
          }
       }
    }
@@ -327,11 +327,11 @@ void SimpleCellRobinBcCoefs::setBcCoefs(
          if (bn == codim1_boxes.getSize()) {
             TBOX_ERROR(
                d_object_name << " cannot find cached Dirichlet data.\n"
-               <<
+                             <<
                "This is most likely caused by not calling\n"
-               <<
+                             <<
                "SimpleCellRobinBcCoefs::cacheDirichletData()\n"
-               << "after the hierarchy changed.\n");
+                             << "after the hierarchy changed.\n");
          }
 #endif
          hier::BoxId mapped_box_id(global_id, block_id);
@@ -433,11 +433,11 @@ void SimpleCellRobinBcCoefs::setBcCoefs(
          if (bn == codim1_boxes.getSize()) {
             TBOX_ERROR(
                d_object_name << " cannot find cached Dirichlet data.\n"
-               <<
+                             <<
                "This is most likely caused by not calling\n"
-               <<
+                             <<
                "SimpleCellRobinBcCoefs::cacheDirichletData() after the\n"
-               << "hierarchy changed.\n");
+                             << "hierarchy changed.\n");
          }
 #endif
          hier::BoxId mapped_box_id(global_id, block_id);
@@ -514,9 +514,9 @@ void SimpleCellRobinBcCoefs::cacheDirichletData(
    if (!d_hierarchy) {
       TBOX_ERROR(
          d_object_name << ": hierarchy has not been set.\n"
-         <<
+                       <<
          "use setHierarchy() to set the hierarchy before\n"
-         << "caching boundary ghost cell data.\n");
+                       << "caching boundary ghost cell data.\n");
    }
 #endif
    d_dirichlet_data.setNull();
@@ -529,8 +529,8 @@ void SimpleCellRobinBcCoefs::cacheDirichletData(
       hier::PatchLevel::Iterator pi(level);
       for ( ; pi; pi++) {
          hier::Patch& patch = **pi;
-         const hier::GlobalId &global_id = patch.getGlobalId();
-         const hier::BlockId &block_id = patch.getMappedBox().getBlockId();
+         const hier::GlobalId& global_id = patch.getGlobalId();
+         const hier::BlockId& block_id = patch.getMappedBox().getBlockId();
          hier::BoxId mapped_box_id(global_id, block_id);
          tbox::Pointer<geom::CartesianPatchGeometry> pg =
             patch.getPatchGeometry();
@@ -547,8 +547,8 @@ void SimpleCellRobinBcCoefs::cacheDirichletData(
       hier::PatchLevel::Iterator pi(level);
       for ( ; pi; pi++) {
          hier::Patch& patch = **pi;
-         const hier::GlobalId &global_id = patch.getGlobalId();
-         const hier::BlockId &block_id = patch.getMappedBox().getBlockId();
+         const hier::GlobalId& global_id = patch.getGlobalId();
+         const hier::BlockId& block_id = patch.getMappedBox().getBlockId();
          hier::BoxId mapped_box_id(global_id, block_id);
          tbox::Pointer<pdat::CellData<double> > cell_data =
             patch.getPatchData(dirichlet_data_id);
@@ -599,8 +599,8 @@ void SimpleCellRobinBcCoefs::restoreDirichletData(
       hier::PatchLevel::Iterator pi(level);
       for ( ; pi; pi++) {
          hier::Patch& patch = **pi;
-         const hier::GlobalId &global_id = patch.getGlobalId();
-         const hier::BlockId &block_id = patch.getMappedBox().getBlockId();
+         const hier::GlobalId& global_id = patch.getGlobalId();
+         const hier::BlockId& block_id = patch.getMappedBox().getBlockId();
          hier::BoxId mapped_box_id(global_id, block_id);
          tbox::Pointer<pdat::CellData<double> > cell_data =
             patch.getPatchData(dirichlet_data_id);

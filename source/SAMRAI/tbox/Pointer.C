@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   A smart pointer template class with RTTI 
+ * Description:   A smart pointer template class with RTTI
  *
  ************************************************************************/
 
@@ -25,7 +25,7 @@ namespace tbox {
 template<class TYPE>
 Pointer<TYPE>::Pointer(
    TYPE* ptr,
-   const bool managed) :
+   const bool managed):
    d_object(ptr)
 {
    if (d_object && managed) {
@@ -55,7 +55,7 @@ Pointer<TYPE>::Pointer(
 }
 
 template<class TYPE>
-Pointer<TYPE>&Pointer<TYPE>::operator = (
+Pointer<TYPE>& Pointer<TYPE>::operator = (
    TYPE* ptr)
 {
    if (d_counter && d_counter->deleteReference()) deleteObject();
@@ -82,7 +82,7 @@ void Pointer<TYPE>::reset(
 }
 
 template<class TYPE>
-Pointer<TYPE>&Pointer<TYPE>::operator = (
+Pointer<TYPE>& Pointer<TYPE>::operator = (
    const PointerBase& ptr)
 {
    if (this != &ptr) {
@@ -104,7 +104,6 @@ Pointer<TYPE>&Pointer<TYPE>::operator = (
    }
    return *this;
 }
-
 
 }
 }

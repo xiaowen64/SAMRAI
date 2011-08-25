@@ -1,7 +1,7 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
  * Description:   SparseDataVariable
@@ -17,26 +17,24 @@
 namespace SAMRAI {
 namespace pdat {
 
-template <typename BOX_GEOMETRY>
+template<typename BOX_GEOMETRY>
 SparseDataVariable<BOX_GEOMETRY>::SparseDataVariable(
-      const tbox::Dimension& dim,
-      const std::string& name,
-      const std::vector<std::string>& dbl_attributes,
-      const std::vector<std::string>& int_attributes) :
-         hier::Variable(name,
-            tbox::Pointer<hier::PatchDataFactory>(
-               new SparseDataFactory<BOX_GEOMETRY>(
-                  hier::IntVector::getZero(dim), 
-                  dbl_attributes, int_attributes)))
+   const tbox::Dimension& dim,
+   const std::string& name,
+   const std::vector<std::string>& dbl_attributes,
+   const std::vector<std::string>& int_attributes):
+   hier::Variable(name,
+                  tbox::Pointer<hier::PatchDataFactory>(
+                     new SparseDataFactory<BOX_GEOMETRY>(
+                        hier::IntVector::getZero(dim),
+                        dbl_attributes, int_attributes)))
 {
 }
 
-template <typename BOX_GEOMETRY>
+template<typename BOX_GEOMETRY>
 SparseDataVariable<BOX_GEOMETRY>::~SparseDataVariable()
 {
 }
-
-
 
 } // end namespace pdat
 } // end namespace SAMRAI

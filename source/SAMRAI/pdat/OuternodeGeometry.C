@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   hier 
+ * Description:   hier
  *
  ************************************************************************/
 
@@ -168,14 +168,14 @@ OuternodeGeometry::doOverlap(
          // Add lower side intersection (if any) to the box list
          hier::Box low_node_box(trimmed_src_node_box);
          low_node_box.upper(d) = low_node_box.lower(d);
-         dst_boxes.unionBoxes(low_node_box * msk_node_box * dst_node_box *
-                              fill_node_box);
+         dst_boxes.unionBoxes(low_node_box * msk_node_box * dst_node_box
+            * fill_node_box);
 
          // Add upper side intersection (if any) to the box list
          hier::Box hig_node_box(trimmed_src_node_box);
          hig_node_box.lower(d) = hig_node_box.upper(d);
-         dst_boxes.unionBoxes(hig_node_box * msk_node_box * dst_node_box *
-                              fill_node_box);
+         dst_boxes.unionBoxes(hig_node_box * msk_node_box * dst_node_box
+            * fill_node_box);
 
          // Take away the interior if over_write interior is not set
 

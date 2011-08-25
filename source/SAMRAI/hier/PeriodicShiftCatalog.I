@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Utility for computing all possible periodic shift directions. 
+ * Description:   Utility for computing all possible periodic shift directions.
  *
  ************************************************************************/
 #include "SAMRAI/tbox/MathUtilities.h"
@@ -25,7 +25,7 @@ namespace hier {
  ***********************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-const PeriodicId &PeriodicShiftCatalog::getZeroShiftNumber() const
+const PeriodicId& PeriodicShiftCatalog::getZeroShiftNumber() const
 {
    return PeriodicId::zero();
 }
@@ -52,7 +52,7 @@ int PeriodicShiftCatalog::getNumberOfShifts() const
 
 SAMRAI_INLINE_KEYWORD
 const IntVector& PeriodicShiftCatalog::shiftNumberToShiftDistance(
-   const PeriodicId &shift_number) const
+   const PeriodicId& shift_number) const
 {
    TBOX_ASSERT(shift_number.isValid());
    TBOX_ASSERT(shift_number.getPeriodicValue() < (int)d_shifts.size());
@@ -61,8 +61,8 @@ const IntVector& PeriodicShiftCatalog::shiftNumberToShiftDistance(
 }
 
 SAMRAI_INLINE_KEYWORD
-const PeriodicId &PeriodicShiftCatalog::getOppositeShiftNumber(
-   const PeriodicId &shift_number) const
+const PeriodicId& PeriodicShiftCatalog::getOppositeShiftNumber(
+   const PeriodicId& shift_number) const
 {
    TBOX_ASSERT(shift_number.isValid());
    TBOX_ASSERT(shift_number.getPeriodicValue() < (int)d_shifts.size());

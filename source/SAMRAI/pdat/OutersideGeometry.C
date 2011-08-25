@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   hier 
+ * Description:   hier
  *
  ************************************************************************/
 
@@ -123,7 +123,7 @@ tbox::Pointer<hier::BoxOverlap> OutersideGeometry::doOverlap(
 
    // Perform a quick-and-dirty intersection to see if the boxes might overlap
 
-   const hier::Box src_box( 
+   const hier::Box src_box(
       hier::Box::grow(src_geometry.d_box, src_geometry.d_ghosts) * src_mask);
    hier::Box src_shift(src_box);
    transformation.transform(src_shift);

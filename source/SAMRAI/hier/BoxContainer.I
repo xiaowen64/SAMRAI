@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   A container of boxes with basic domain calculus operations 
+ * Description:   A container of boxes with basic domain calculus operations
  *
  ************************************************************************/
 
@@ -16,7 +16,9 @@ namespace SAMRAI {
 namespace hier {
 
 SAMRAI_INLINE_KEYWORD
-BoxContainer::BoxContainer(const tbox::Dimension& dim, const int n):
+BoxContainer::BoxContainer(
+   const tbox::Dimension& dim,
+   const int n):
    d_dim(dim),
    d_list(n, Box(dim))
 {
@@ -175,7 +177,7 @@ bool BoxContainer::operator == (const BoxContainer& rhs) const
    bool isEqual = (d_dim == rhs.d_dim);
    if (isEqual) {
       isEqual = std::equal(d_list.begin(), d_list.end(),
-         rhs.d_list.begin(), Box::box_equality());
+            rhs.d_list.begin(), Box::box_equality());
    }
    return isEqual;
 }

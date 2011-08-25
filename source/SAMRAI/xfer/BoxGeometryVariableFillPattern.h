@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Default fill pattern class 
+ * Description:   Default fill pattern class
  *
  ************************************************************************/
 
@@ -22,7 +22,7 @@ namespace xfer {
  * @brief Class BoxGeometryVariableFillPattern is a default implementation of
  * the abstract base class VariableFillPattern.
  *
- * It is used to calculate overlaps that consist of the full intersection 
+ * It is used to calculate overlaps that consist of the full intersection
  * between source and destination patches, including all ghost regions.  If
  * no VariableFillPattern object is provided when a refine operation is
  * registered with a RefineAlgorithm, this class is used by default.

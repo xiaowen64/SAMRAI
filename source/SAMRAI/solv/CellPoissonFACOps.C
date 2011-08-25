@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Operator class for cell-centered scalar Poisson using FAC 
+ * Description:   Operator class for cell-centered scalar Poisson using FAC
  *
  ************************************************************************/
 #ifndef included_solv_CellPoissonFACOps_C
@@ -95,7 +95,7 @@ void F77_FUNC(compfluxcondc2d, COMPFLUXCONDC2D) (
    double* yflux,
    const int* fluxgi,
    const int* fluxgj,
-   const double & diff_coef,
+   const double& diff_coef,
    const double* soln,
    const int* solngi,
    const int* solngj,
@@ -134,7 +134,7 @@ void F77_FUNC(rbgswithfluxmaxcondcvarsf2d, RBGSWITHFLUXMAXCONDCVARSF2D) (
    const double* yflux,
    const int* fluxgi,
    const int* fluxgj,
-   const double & dc,
+   const double& dc,
    const double* rhs,
    const int* rhsgi,
    const int* rhsgj,
@@ -163,7 +163,7 @@ void F77_FUNC(rbgswithfluxmaxvardcconsf2d, RBGSWITHFLUXMAXVARDCCONSF2D) (
    const double* rhs,
    const int* rhsgi,
    const int* rhsgj,
-   const double & scalar_field,
+   const double& scalar_field,
    double* soln,
    const int* solngi,
    const int* solngj,
@@ -179,11 +179,11 @@ void F77_FUNC(rbgswithfluxmaxcondcconsf2d, RBGSWITHFLUXMAXCONDCCONSF2D) (
    const double* yflux,
    const int* fluxgi,
    const int* fluxgj,
-   const double & dc,
+   const double& dc,
    const double* rhs,
    const int* rhsgi,
    const int* rhsgj,
-   const double & scalar_field,
+   const double& scalar_field,
    double* soln,
    const int* solngi,
    const int* solngj,
@@ -227,7 +227,7 @@ void F77_FUNC(compresconsca2d, COMPRESCONSCA2D) (
    double* residual,
    const int* residualgi,
    const int* residualgj,
-   const double & scalar_field,
+   const double& scalar_field,
    const double* soln,
    const int* solngi,
    const int* solngj,
@@ -262,7 +262,7 @@ void F77_FUNC(ewingfixfluxcondc2d, EWINGFIXFLUXCONDC2D) (
    const double* yflux,
    const int* fluxgi,
    const int* fluxgj,
-   const double & diff_coef,
+   const double& diff_coef,
    const double* soln,
    const int* solngi,
    const int* solngj,
@@ -307,7 +307,7 @@ void F77_FUNC(compfluxcondc3d, COMPFLUXCONDC3D) (
    const int* fluxgi,
    const int* fluxgj,
    const int* fluxgk,
-   const double & diff_coef,
+   const double& diff_coef,
    const double* soln,
    const int* solngi,
    const int* solngj,
@@ -360,7 +360,7 @@ void F77_FUNC(rbgswithfluxmaxcondcvarsf3d, RBGSWITHFLUXMAXCONDCVARSF3D) (
    const int* fluxgi,
    const int* fluxgj,
    const int* fluxgk,
-   const double & dc,
+   const double& dc,
    const double* rhs,
    const int* rhsgi,
    const int* rhsgj,
@@ -399,7 +399,7 @@ void F77_FUNC(rbgswithfluxmaxvardcconsf3d, RBGSWITHFLUXMAXVARDCCONSF3D) (
    const int* rhsgi,
    const int* rhsgj,
    const int* rhsgk,
-   const double & scalar_field,
+   const double& scalar_field,
    double* soln,
    const int* solngi,
    const int* solngj,
@@ -420,12 +420,12 @@ void F77_FUNC(rbgswithfluxmaxcondcconsf3d, RBGSWITHFLUXMAXCONDCCONSF3D) (
    const int* fluxgi,
    const int* fluxgj,
    const int* fluxgk,
-   const double & dc,
+   const double& dc,
    const double* rhs,
    const int* rhsgi,
    const int* rhsgj,
    const int* rhsgk,
-   const double & scalar_field,
+   const double& scalar_field,
    double* soln,
    const int* solngi,
    const int* solngj,
@@ -484,7 +484,7 @@ void F77_FUNC(compresconsca3d, COMPRESCONSCA3D) (
    const int* residualgi,
    const int* residualgj,
    const int* residualgk,
-   const double & scalar_field,
+   const double& scalar_field,
    const double* soln,
    const int* solngi,
    const int* solngj,
@@ -531,7 +531,7 @@ void F77_FUNC(ewingfixfluxcondc3d, EWINGFIXFLUXCONDC3D) (
    const int* fluxgi,
    const int* fluxgj,
    const int* fluxgk,
-   const double & diff_coef,
+   const double& diff_coef,
    const double* soln,
    const int* solngi,
    const int* solngj,
@@ -585,8 +585,8 @@ CellPoissonFACOps::CellPoissonFACOps(
    d_hypre_solver(dim,
                   object_name + "::hypre_solver",
                   database && database->isDatabase("hypre_solver") ?
-                  database->getDatabase("hypre_solver"):
-                     tbox::Pointer<tbox::Database>(NULL)),
+                  database->getDatabase("hypre_solver") :
+                  tbox::Pointer<tbox::Database>(NULL)),
 #endif
    d_physical_bc_coef(NULL),
    d_context(hier::VariableDatabase::getDatabase()
@@ -752,12 +752,12 @@ void CellPoissonFACOps::initializeOperatorState(
        */
       TBOX_ERROR(
          d_object_name << ": No physical bc object in\n"
-         <<
+                       <<
          "CellPoissonFACOps::initializeOperatorState\n"
-         << "You must use "
-         <<
+                       << "You must use "
+                       <<
          "CellPoissonFACOps::setPhysicalBcCoefObject\n"
-         <<
+                       <<
          "to set one before calling initializeOperatorState\n");
    }
 
@@ -873,8 +873,8 @@ void CellPoissonFACOps::initializeOperatorState(
    hier::IntVector max_gcw(d_dim, 1);
    for (ln = d_ln_min; ln <= d_ln_max; ++ln) {
       d_cf_boundary[ln] = new hier::CoarseFineBoundary(*d_hierarchy,
-                                                       ln,
-                                                       max_gcw);
+            ln,
+            max_gcw);
    }
 #ifdef HAVE_HYPRE
    if (d_coarse_solver_choice == "hypre") {
@@ -1050,7 +1050,7 @@ void CellPoissonFACOps::initializeOperatorState(
       d_urestriction_coarsen_schedules[dest_ln] =
          d_urestriction_coarsen_algorithm->
          createSchedule(d_hierarchy->getPatchLevel(dest_ln),
-            d_hierarchy->getPatchLevel(dest_ln + 1) );
+            d_hierarchy->getPatchLevel(dest_ln + 1));
       if (!d_urestriction_coarsen_schedules[dest_ln]) {
          TBOX_ERROR(d_object_name
             << ": Cannot create a coarsen schedule for U restriction!\n");
@@ -1670,8 +1670,8 @@ int CellPoissonFACOps::solveCoarsestLevel(
    } else {
       TBOX_ERROR(
          d_object_name << ": Bad coarse level solver choice '"
-         << d_coarse_solver_choice
-         <<
+                       << d_coarse_solver_choice
+                       <<
          "' in scapCellPoissonOps::solveCoarsestLevel.");
    }
 

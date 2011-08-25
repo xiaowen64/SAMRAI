@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   An restart manager singleton class 
+ * Description:   An restart manager singleton class
  *
  ************************************************************************/
 
@@ -139,13 +139,13 @@ bool RestartManager::openRestartFile(
       if (!database->open(restart_filename)) {
          TBOX_ERROR(
             "Error attempting to open restart file " << restart_filename
-            <<
+                                                     <<
             "\n   No restart file for processor: " << proc_num
-            <<
+                                                     <<
             "\n   restart directory name = " << root_dirname
-            <<
+                                                     <<
             "\n   number of processors   = " << num_nodes
-            <<
+                                                     <<
             "\n   restore number         = " << restore_num << std::endl);
          open_successful = false;
       } else {

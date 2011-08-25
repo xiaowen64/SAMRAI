@@ -1,11 +1,11 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
  * Description:   Class to manage different timer objects used throughout the
- *                library. 
+ *                library.
  *
  ************************************************************************/
 
@@ -288,6 +288,7 @@ Pointer<Timer> TimerManager::getTimer(
       }
    }
    return timer;
+
 #else
    // since timers aren't active - and we need to still provide
    // pseudo-timer functionality (i.e., a valid timer), we'll
@@ -295,6 +296,7 @@ Pointer<Timer> TimerManager::getTimer(
    timer = new Timer(name);
    timer->setActive(false);
    return timer;
+
 #endif
 }
 
@@ -316,8 +318,10 @@ bool TimerManager::checkTimerExists(
    }
 
    return timer_found;
+
 #else
    return false;
+
 #endif
 }
 
@@ -665,8 +669,10 @@ bool TimerManager::checkTimerInNameLists(
    }
 
    return will_use_timer;
+
 #else
    return false;
+
 #endif
 }
 
@@ -1531,7 +1537,7 @@ void TimerManager::printOverhead(
       perc = computePercentageInt(est_cost, total_est_cost);
 
       os << std::setw(maxlen + 3) << timer_names[n].c_str()
-      << std::setw(25) << num_accesses << "  ";
+         << std::setw(25) << num_accesses << "  ";
 #ifndef LACKS_SSTREAM
       std::ostringstream out2;
       out2 << est_cost << " (" << perc << "%)";
@@ -1628,10 +1634,10 @@ void TimerManager::printConcurrent(
             if (d_timers[n]->isConcurrentTimer(*d_timers[j])) {
                if (count == 0) {
                   os << std::setw(25) << d_timers[j]->getName().c_str()
-                  << std::endl;
+                     << std::endl;
                } else {
                   os << std::setw(maxlen + 3) << " "
-                  << d_timers[j]->getName().c_str() << std::endl;
+                     << d_timers[j]->getName().c_str() << std::endl;
                }
                count++;
             }
@@ -1714,11 +1720,11 @@ void TimerManager::checkConsistencyAcrossProcessors()
    for (unsigned int i = 0; i < d_timers.size(); i++) {
       if (max_timer_lengths[i] != int(d_timers[i]->getName().size())) {
          TBOX_WARNING("Timer[" << i << "]: " << d_timers[i]->getName()
-            << "\nis not consistent across all processors."
-            << "\nOther timer[" << i << "] has up to "
-            << max_timer_lengths[i] << " characters in their names."
-                                    << "\nIt is not possible to print global"
-                                    << "\nsummed or max timer information."
+                               << "\nis not consistent across all processors."
+                               << "\nOther timer[" << i << "] has up to "
+                               << max_timer_lengths[i] << " characters in their names."
+                               << "\nIt is not possible to print global"
+                               << "\nsummed or max timer information."
             );
          ++inconsistency_count;
       }
@@ -2165,10 +2171,10 @@ void TimerManager::getFromInput(
             d_print_concurrent);
 
       d_print_timer_overhead = input_db->
-            getBoolWithDefault("print_timer_overhead", d_print_timer_overhead);
+         getBoolWithDefault("print_timer_overhead", d_print_timer_overhead);
 
       d_print_threshold = input_db->
-            getDoubleWithDefault("print_threshold", d_print_threshold);
+         getDoubleWithDefault("print_threshold", d_print_threshold);
 
       Array<std::string> timer_list;
       if (input_db->keyExists("timer_list")) {
@@ -2387,7 +2393,7 @@ void TimerManager::addTimerToNameLists(
 }
 
 double TimerManager::computeOverheadConstantActiveOrInactive(
-   bool active) 
+   bool active)
 {
 #ifdef ENABLE_SAMRAI_TIMERS
    tbox::Pointer<tbox::Timer> outer_timer;
@@ -2409,13 +2415,15 @@ double TimerManager::computeOverheadConstantActiveOrInactive(
 
    return (outer_timer->getTotalWallclockTime()
            - inner_timer->getTotalWallclockTime()) / (static_cast<double>(ntest));
+
 #else
    return 0.0;
+
 #endif // ENABLE_SAMRAI_TIMERS
 }
 
 void TimerManager::computeOverheadConstants(
-   void) 
+   void)
 {
 #ifdef ENABLE_SAMRAI_TIMERS
 
@@ -2435,7 +2443,7 @@ void TimerManager::computeOverheadConstants(
 }
 
 void TimerManager::clearArrays(
-   void) 
+   void)
 {
 #ifdef ENABLE_SAMRAI_TIMERS
    /*

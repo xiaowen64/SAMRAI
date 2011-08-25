@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   hier 
+ * Description:   hier
  *
  ************************************************************************/
 
@@ -54,7 +54,7 @@ public:
       const hier::Box& box);
 
    /*!
-    * @brief Transform a CellIndex. 
+    * @brief Transform a CellIndex.
     *
     * This static method applies a coordinate system transformation to the
     * given CellIndex.
@@ -63,8 +63,9 @@ public:
     * @param[in]      transformation
     */
    static void
-   transform (pdat::CellIndex& index,
-              const hier::Transformation& transformation);
+   transform(
+      pdat::CellIndex& index,
+      const hier::Transformation& transformation);
 
    /*!
     * @brief Construct the cell geometry object given an AMR index
@@ -149,9 +150,10 @@ private:
       const hier::BoxList& dst_restrict_boxes);
 
    static void
-   rotateAboutAxis(pdat::CellIndex& index,
-                   const int axis,
-                   const int num_rotations);
+   rotateAboutAxis(
+      pdat::CellIndex& index,
+      const int axis,
+      const int num_rotations);
 
    CellGeometry(
       const CellGeometry&);             // not implemented

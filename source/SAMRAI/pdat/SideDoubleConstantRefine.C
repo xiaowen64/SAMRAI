@@ -1,11 +1,11 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
  * Description:   Constant refine operator for side-centered double data on
- *                a  mesh. 
+ *                a  mesh.
  *
  ************************************************************************/
 
@@ -35,59 +35,59 @@ extern "C" {
 #endif
 
 // in conrefine1d.f:
-void F77_FUNC(conrefsidedoub1d, CONREFSIDEDOUB1D) (const int &, const int &,
-   const int &, const int &,
-   const int &, const int &,
-   const int &, const int &,
+void F77_FUNC(conrefsidedoub1d, CONREFSIDEDOUB1D) (const int&, const int&,
+   const int&, const int&,
+   const int&, const int&,
+   const int&, const int&,
    const int *,
    const double *, double *);
 // in conrefine2d.f:
-void F77_FUNC(conrefsidedoub2d0, CONREFSIDEDOUB2D0) (const int &, const int &,
-   const int &, const int &,
-   const int &, const int &, const int &, const int &,
-   const int &, const int &, const int &, const int &,
-   const int &, const int &, const int &, const int &,
+void F77_FUNC(conrefsidedoub2d0, CONREFSIDEDOUB2D0) (const int&, const int&,
+   const int&, const int&,
+   const int&, const int&, const int&, const int&,
+   const int&, const int&, const int&, const int&,
+   const int&, const int&, const int&, const int&,
    const int *,
    const double *, double *);
-void F77_FUNC(conrefsidedoub2d1, CONREFSIDEDOUB2D1) (const int &, const int &,
-   const int &, const int &,
-   const int &, const int &, const int &, const int &,
-   const int &, const int &, const int &, const int &,
-   const int &, const int &, const int &, const int &,
+void F77_FUNC(conrefsidedoub2d1, CONREFSIDEDOUB2D1) (const int&, const int&,
+   const int&, const int&,
+   const int&, const int&, const int&, const int&,
+   const int&, const int&, const int&, const int&,
+   const int&, const int&, const int&, const int&,
    const int *,
    const double *, double *);
 // in conrefine3d.f:
-void F77_FUNC(conrefsidedoub3d0, CONREFSIDEDOUB3D0) (const int &, const int &,
-   const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
+void F77_FUNC(conrefsidedoub3d0, CONREFSIDEDOUB3D0) (const int&, const int&,
+   const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
    const int *,
    const double *, double *);
-void F77_FUNC(conrefsidedoub3d1, CONREFSIDEDOUB3D1) (const int &, const int &,
-   const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
+void F77_FUNC(conrefsidedoub3d1, CONREFSIDEDOUB3D1) (const int&, const int&,
+   const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
    const int *,
    const double *, double *);
-void F77_FUNC(conrefsidedoub3d2, CONREFSIDEDOUB3D2) (const int &, const int &,
-   const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
+void F77_FUNC(conrefsidedoub3d2, CONREFSIDEDOUB3D2) (const int&, const int&,
+   const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
    const int *,
    const double *, double *);
 }

@@ -1,11 +1,11 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
  * Description:   Weighted averaging operator for outerface double data on
- *                a Cartesian mesh. 
+ *                a Cartesian mesh.
  *
  ************************************************************************/
 
@@ -36,58 +36,58 @@ extern "C" {
 #endif
 
 // in cartcoarsen1d.f:
-void F77_FUNC(cartwgtavgoutfacedoub1d, CARTWGTAVGOUTFACEDOUB1D) (const int &,
-   const int &,
-   const int &, const int &,
-   const int &, const int &,
+void F77_FUNC(cartwgtavgoutfacedoub1d, CARTWGTAVGOUTFACEDOUB1D) (const int&,
+   const int&,
+   const int&, const int&,
+   const int&, const int&,
    const int *, const double *, const double *,
    const double *, double *);
 // in cartcoarsen2d.f:
-void F77_FUNC(cartwgtavgoutfacedoub2d0, CARTWGTAVGOUTFACEDOUB2D0) (const int &,
-   const int &,
-   const int &, const int &,
-   const int &, const int &,
-   const int &, const int &,
-   const int &, const int &,
-   const int &, const int &,
+void F77_FUNC(cartwgtavgoutfacedoub2d0, CARTWGTAVGOUTFACEDOUB2D0) (const int&,
+   const int&,
+   const int&, const int&,
+   const int&, const int&,
+   const int&, const int&,
+   const int&, const int&,
+   const int&, const int&,
    const int *, const double *, const double *,
    const double *, double *);
 
-void F77_FUNC(cartwgtavgoutfacedoub2d1, CARTWGTAVGOUTFACEDOUB2D1) (const int &,
-   const int &,
-   const int &, const int &,
-   const int &, const int &,
-   const int &, const int &,
-   const int &, const int &,
-   const int &, const int &,
+void F77_FUNC(cartwgtavgoutfacedoub2d1, CARTWGTAVGOUTFACEDOUB2D1) (const int&,
+   const int&,
+   const int&, const int&,
+   const int&, const int&,
+   const int&, const int&,
+   const int&, const int&,
+   const int&, const int&,
    const int *, const double *, const double *,
    const double *, double *);
 // in cartcoarsen3d.f:
-void F77_FUNC(cartwgtavgoutfacedoub3d0, CARTWGTAVGOUTFACEDOUB3D0) (const int &,
-   const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
+void F77_FUNC(cartwgtavgoutfacedoub3d0, CARTWGTAVGOUTFACEDOUB3D0) (const int&,
+   const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
    const int *, const double *, const double *,
    const double *, double *);
-void F77_FUNC(cartwgtavgoutfacedoub3d1, CARTWGTAVGOUTFACEDOUB3D1) (const int &,
-   const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
+void F77_FUNC(cartwgtavgoutfacedoub3d1, CARTWGTAVGOUTFACEDOUB3D1) (const int&,
+   const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
    const int *, const double *, const double *,
    const double *, double *);
-void F77_FUNC(cartwgtavgoutfacedoub3d2, CARTWGTAVGOUTFACEDOUB3D2) (const int &,
-   const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
+void F77_FUNC(cartwgtavgoutfacedoub3d2, CARTWGTAVGOUTFACEDOUB3D2) (const int&,
+   const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
    const int *, const double *, const double *,
    const double *, double *);
 }

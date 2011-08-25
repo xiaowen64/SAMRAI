@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Patch container class for patch data objects 
+ * Description:   Patch container class for patch data objects
  *
  ************************************************************************/
 
@@ -87,7 +87,7 @@ Patch::getSizeOfPatchData(
 
    for (int i = 0; i < max_set_component && components.isSet(i); i++) {
       size += d_descriptor->getPatchDataFactory(i)->getSizeOfMemory(
-         d_mapped_box);
+            d_mapped_box);
    }
 
    return size;
@@ -113,7 +113,7 @@ void Patch::allocatePatchData(
       d_patch_data.resizeArray(ncomponents);
    }
 
-   if ( !checkAllocated(id) ) {
+   if (!checkAllocated(id)) {
       d_patch_data[id] =
          d_descriptor->getPatchDataFactory(id)->allocate(*this);
    }
@@ -131,7 +131,7 @@ void Patch::allocatePatchData(
 
    for (int i = 0; i < ncomponents; i++) {
       if (components.isSet(i)) {
-         if ( !checkAllocated(i) ) {
+         if (!checkAllocated(i)) {
             d_patch_data[i] =
                d_descriptor->getPatchDataFactory(i)->allocate(*this);
          }
@@ -228,9 +228,9 @@ void Patch::getFromDatabase(
    int patch_owner = database->getInteger("d_patch_owner");
    int block_id = database->getInteger("d_block_id");
    d_mapped_box.initialize(box,
-                           patch_local_id,
-                           patch_owner,
-                           BlockId(block_id));
+      patch_local_id,
+      patch_owner,
+      BlockId(block_id));
 
    d_patch_level_number = database->getInteger("d_patch_level_number");
    d_patch_in_hierarchy = database->getBool("d_patch_in_hierarchy");
@@ -314,11 +314,11 @@ void Patch::putToDatabase(
    database->putInteger("HIER_PATCH_VERSION", HIER_PATCH_VERSION);
    database->putDatabaseBox("d_box", d_mapped_box);
    database->putInteger("d_patch_local_id",
-                        d_mapped_box.getLocalId().getValue());
+      d_mapped_box.getLocalId().getValue());
    database->putInteger("d_patch_owner",
       d_mapped_box.getOwnerRank());
    database->putInteger("d_block_id",
-                        d_mapped_box.getBlockId().getBlockValue());
+      d_mapped_box.getBlockId().getBlockValue());
    database->putInteger("d_patch_level_number", d_patch_level_number);
    database->putBool("d_patch_in_hierarchy", d_patch_in_hierarchy);
 
@@ -382,13 +382,13 @@ std::ostream& operator << (
    const Patch& patch)
 {
    s << "Patch::mapped_box = "
-     << patch.d_mapped_box << std::endl << std::flush;
+   << patch.d_mapped_box << std::endl << std::flush;
    s << "Patch::patch_level_number = " << patch.d_patch_level_number
-     << std::endl << std::flush;
+   << std::endl << std::flush;
    s << "Patch::patch_in_hierarchy = " << patch.d_patch_in_hierarchy
-     << std::endl << std::flush;
+   << std::endl << std::flush;
    s << "Patch::number_components = " << patch.d_patch_data.getSize()
-     << std::endl << std::flush;
+   << std::endl << std::flush;
    const int ncomponents = patch.d_patch_data.getSize();
    for (int i = 0; i < ncomponents; i++) {
       s << "Component(" << i << ")=";

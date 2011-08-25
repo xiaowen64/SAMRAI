@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Fixed-size message buffer used in interprocessor communication 
+ * Description:   Fixed-size message buffer used in interprocessor communication
  *
  ************************************************************************/
 
@@ -113,7 +113,7 @@ public:
    /*!
     * @brief Pack a single data item into message stream.
     *
-    * @param[in] data  Single item of type DATA_TYPE to be copied 
+    * @param[in] data  Single item of type DATA_TYPE to be copied
     * into the stream.
     */
    template<typename DATA_TYPE>
@@ -124,7 +124,7 @@ public:
    /*!
     * @brief Pack an array of data items into message stream.
     *
-    * @param[in] data  Pointer to an array of data of type DATA_TYPE 
+    * @param[in] data  Pointer to an array of data of type DATA_TYPE
     *                  to be copied into the stream.
     * @param[in] size  Number of items to pack.
     */
@@ -137,7 +137,7 @@ public:
    /*!
     * @brief Unpack a single data item from message stream.
     *
-    * @param[out] data  Single item of type DATA_TYPE that will be 
+    * @param[out] data  Single item of type DATA_TYPE that will be
     *                   copied from the stream.
     */
    template<typename DATA_TYPE>
@@ -148,7 +148,7 @@ public:
    /*!
     * @brief Unpack an array of data items from message stream.
     *
-    * @param[out] data  Pointer to an array of data of type DATA_TYPE 
+    * @param[out] data  Pointer to an array of data of type DATA_TYPE
     *                   that will receive data copied from
     *                   the stream.
     * @param[out] size  Number of items that will be copied.
@@ -156,7 +156,7 @@ public:
    template<typename DATA_TYPE>
    void
    unpack(
-      DATA_TYPE* data,
+      DATA_TYPE * data,
       unsigned int size = 1);
 
    /*!
@@ -175,7 +175,8 @@ private:
     *
     * @param[in]  nbytes
     */
-   void *getPointerAndAdvanceCursor(
+   void *
+   getPointerAndAdvanceCursor(
       const size_t nbytes);
 
    MessageStream(
@@ -191,7 +192,7 @@ private:
 
    /*!
     * Number of bytes allocated in the buffer.
-    */ 
+    */
    size_t d_buffer_size;
 
    /*!

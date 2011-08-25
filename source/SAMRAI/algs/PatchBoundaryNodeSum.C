@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Routines for summing node data at patch boundaries 
+ * Description:   Routines for summing node data at patch boundaries
  *
  ************************************************************************/
 
@@ -45,55 +45,55 @@ extern "C" {
 
 // in algs_nodeouternodeops2d.f:
 void F77_FUNC(nodeouternodesum2d, NODEOUTERNODESUM2D) (
-   const int &, const int &,   // fine patch lo
-   const int &, const int &,   // fine patch hi
-   const int &, const int &,   // coarse patch lo
-   const int &, const int &,   // coarse patch hi
+   const int&, const int&,     // fine patch lo
+   const int&, const int&,     // fine patch hi
+   const int&, const int&,     // coarse patch lo
+   const int&, const int&,     // coarse patch hi
    const int *,                // ratio vector
-   const int &,                // data depth
-   const int &, const int &,   // node data gcw
+   const int&,                 // data depth
+   const int&, const int&,     // node data gcw
    double *,                   // node array
    const double *, const double *,   // onode arrays
    const double *, const double *);
 
 void F77_FUNC(nodehangnodeinterp2d, NODEHANGNODEINTERP2D) (
-   const int &, const int &,  // fine patch lo
-   const int &, const int &,  // fine patch hi
-   const int &, const int &,  // coarse patch lo
-   const int &, const int &,  // coarse patch hi
-   const int &, const int &,  // bbox lo
-   const int &, const int &,  // bbox hi
-   const int &,               // bbox location
+   const int&, const int&,    // fine patch lo
+   const int&, const int&,    // fine patch hi
+   const int&, const int&,    // coarse patch lo
+   const int&, const int&,    // coarse patch hi
+   const int&, const int&,    // bbox lo
+   const int&, const int&,    // bbox hi
+   const int&,                // bbox location
    const int *,               // ratio vector
-   const int &,               // data depth
-   const int &, const int &,  // node data gcw
+   const int&,                // data depth
+   const int&, const int&,    // node data gcw
    double *);                 // node array
 
 // in algs_nodeouternodeops3d.f:
 void F77_FUNC(nodeouternodesum3d, NODEOUTERNODESUM3D) (
-   const int &, const int &, const int &, // fine patch lo
-   const int &, const int &, const int &, // fine patch hi
-   const int &, const int &, const int &, // coarse patch lo
-   const int &, const int &, const int &, // coarse patch hi
+   const int&, const int&, const int&,    // fine patch lo
+   const int&, const int&, const int&,    // fine patch hi
+   const int&, const int&, const int&,    // coarse patch lo
+   const int&, const int&, const int&,    // coarse patch hi
    const int *,                           // ratio vector
-   const int &,                           // data depth
-   const int &, const int &, const int &, // node data gcw
+   const int&,                            // data depth
+   const int&, const int&, const int&,    // node data gcw
    double *,                              // node array
    const double *, const double *,        // onode arrays
    const double *, const double *,
    const double *, const double *);
 
 void F77_FUNC(nodehangnodeinterp3d, NODEHANGNODEINTERP3D) (
-   const int &, const int &, const int &, // fine patch lo
-   const int &, const int &, const int &, // fine patch hi
-   const int &, const int &, const int &, // coarse patch lo
-   const int &, const int &, const int &, // coarse patch hi
-   const int &, const int &, const int &, // bbox lo
-   const int &, const int &, const int &, // bbox hi
-   const int &,                           // bbox location
+   const int&, const int&, const int&,    // fine patch lo
+   const int&, const int&, const int&,    // fine patch hi
+   const int&, const int&, const int&,    // coarse patch lo
+   const int&, const int&, const int&,    // coarse patch hi
+   const int&, const int&, const int&,    // bbox lo
+   const int&, const int&, const int&,    // bbox hi
+   const int&,                            // bbox location
    const int *,                           // ratio vector
-   const int &,                           // data depth
-   const int &, const int &, const int &, // node data gcw
+   const int&,                            // data depth
+   const int&, const int&, const int&,    // node data gcw
    double *);                             // node array
 }
 
@@ -580,9 +580,9 @@ void PatchBoundaryNodeSum::setupSum(
          d_coarse_fine_boundary[fine_level_num] =
             new hier::CoarseFineBoundary(
                *(d_cfbdry_tmp_level[fine_level_num]),
-                  crse_to_domain,
-                  crse_to_crse,
-                  hier::IntVector::getOne(dim));
+               crse_to_domain,
+               crse_to_crse,
+               hier::IntVector::getOne(dim));
 #if 1
          tbox::plog << "PatchBoundaryNodeSum::d_coarse_fine_boundary["
                     << fine_level_num << "]:" << std::endl;
@@ -779,7 +779,7 @@ void PatchBoundaryNodeSum::doLocalCoarseFineBoundarySum(
          tbox::Pointer<hier::Patch> fpatch = *ip;
          tbox::Pointer<hier::Patch> cfpatch =
             coarsened_fine_level->getPatch(fpatch->getGlobalId(),
-                                           fpatch->getMappedBox().getBlockId());
+               fpatch->getMappedBox().getBlockId());
 
          const hier::Index& filo = fpatch->getBox().lower();
          const hier::Index& fihi = fpatch->getBox().upper();

@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Template for a multiblock AMR Euler code 
+ * Description:   Template for a multiblock AMR Euler code
  *
  ************************************************************************/
 #include "MblkEuler.h"
@@ -253,10 +253,10 @@ void MblkEuler::registerModelVariables(
    if (d_visit_writer.isNull()) {
       TBOX_WARNING(
          d_object_name << ": registerModelVariables()"
-         << "\nVisit data writer was"
-         <<
+                       << "\nVisit data writer was"
+                       <<
          "\nregistered.  Consequently, no plot data will"
-         << "\nbe written." << endl);
+                       << "\nbe written." << endl);
    }
 
    for (int n = 0; n < d_nState; n++) {
@@ -1627,7 +1627,7 @@ void MblkEuler::setPhysicalBoundaryConditions(
    const hier::IntVector ratio = patch_geom->getRatio();
    hier::BoxList domain_boxes(d_dim);
    d_grid_geometry->computePhysicalDomain(domain_boxes, ratio,
-                                          patch.getMappedBox().getBlockId());
+      patch.getMappedBox().getBlockId());
 
    const hier::IntVector& periodic =
       d_grid_geometry->getPeriodicShift(
@@ -2503,13 +2503,13 @@ void MblkEuler::tagGradientDetectorCells(
  *************************************************************************
  */
 void MblkEuler::fillSingularityBoundaryConditions(
-      hier::Patch& patch,
-      const hier::PatchLevel& encon_level,
-      const hier::Connector& dst_to_encon,
-      const double fill_time,
-      const hier::Box& fill_box,
-      const hier::BoundaryBox& boundary_box,
-      const tbox::Pointer<hier::GridGeometry> &grid_geometry)
+   hier::Patch& patch,
+   const hier::PatchLevel& encon_level,
+   const hier::Connector& dst_to_encon,
+   const double fill_time,
+   const hier::Box& fill_box,
+   const hier::BoundaryBox& boundary_box,
+   const tbox::Pointer<hier::GridGeometry>& grid_geometry)
 {
 
    NULL_USE(patch);
@@ -2541,7 +2541,7 @@ void MblkEuler::setMappedGridOnPatch(
    hier::IntVector ratio = patch_geom->getRatio();
    hier::BoxList domain_boxes(d_dim);
    d_grid_geometry->computePhysicalDomain(domain_boxes, ratio,
-                                          patch.getMappedBox().getBlockId());
+      patch.getMappedBox().getBlockId());
 
    //
    // statistics on the level domain
@@ -2775,7 +2775,7 @@ void MblkEuler::getFromInput(
       } else {
          TBOX_ERROR(
             d_object_name << ":  "
-            <<
+                          <<
             "Key data `advection_velocity' not found in input.");
       }
    }
@@ -2804,8 +2804,8 @@ void MblkEuler::getFromInput(
       } else {
          TBOX_ERROR(
             d_object_name << ": "
-            << "`data_problem' value not found in input."
-            << endl);
+                          << "`data_problem' value not found in input."
+                          << endl);
       }
 
       int problem_1d = 1;
@@ -2952,9 +2952,9 @@ void MblkEuler::getFromInput(
       } else {
          TBOX_WARNING(
             d_object_name << ": "
-            <<
+                          <<
             "No key `refine_criteria' found in data for"
-            <<
+                          <<
             " RefinementData. No refinement will occur." << endl);
       }
 
@@ -2975,8 +2975,8 @@ void MblkEuler::getFromInput(
 
                TBOX_ERROR(
                   "Unknown refinement criteria: " << error_key
-                  << " in input."
-                  << endl);
+                                                  << " in input."
+                                                  << endl);
 
             } else {
                error_db = refine_db->getDatabase(error_key);
@@ -3014,7 +3014,7 @@ void MblkEuler::getFromInput(
                   } else {
                      TBOX_ERROR(
                         "No tolerance array " << grad_name
-                        << "found for gradient detector" << endl);
+                                              << "found for gradient detector" << endl);
                   }
 
                }
@@ -3094,7 +3094,7 @@ void MblkEuler::getFromRestart()
    if (ver != MBLKEULER_VERSION) {
       TBOX_ERROR(
          d_object_name << ":  "
-         <<
+                       <<
          "Restart file version different than class version.");
    }
 

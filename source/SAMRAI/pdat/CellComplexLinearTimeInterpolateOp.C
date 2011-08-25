@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Linear time interp operator for cell-centered complex data. 
+ * Description:   Linear time interp operator for cell-centered complex data.
  *
  ************************************************************************/
 
@@ -34,38 +34,38 @@ extern "C" {
 #pragma warning (disable:1419)
 #endif
 // in lintimint1d.f:
-void F77_FUNC(lintimeintcellcmplx1d, LINTIMEINTCELLCMPLX1D) (const int &,
-   const int &,
-   const int &, const int &,
-   const int &, const int &,
-   const int &, const int &,
-   const double &,
+void F77_FUNC(lintimeintcellcmplx1d, LINTIMEINTCELLCMPLX1D) (const int&,
+   const int&,
+   const int&, const int&,
+   const int&, const int&,
+   const int&, const int&,
+   const double&,
    const dcomplex *, const dcomplex *,
    dcomplex *);
 // in lintimint2d.f:
-void F77_FUNC(lintimeintcellcmplx2d, LINTIMEINTCELLCMPLX2D) (const int &,
-   const int &,
-   const int &, const int &,
-   const int &, const int &,
-   const int &, const int &,
-   const int &, const int &,
-   const int &, const int &,
-   const int &, const int &,
-   const int &, const int &,
-   const double &,
+void F77_FUNC(lintimeintcellcmplx2d, LINTIMEINTCELLCMPLX2D) (const int&,
+   const int&,
+   const int&, const int&,
+   const int&, const int&,
+   const int&, const int&,
+   const int&, const int&,
+   const int&, const int&,
+   const int&, const int&,
+   const int&, const int&,
+   const double&,
    const dcomplex *, const dcomplex *,
    dcomplex *);
 // in lintimint3d.f:
-void F77_FUNC(lintimeintcellcmplx3d, LINTIMEINTCELLCMPLX3D) (const int &,
-   const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
-   const double &,
+void F77_FUNC(lintimeintcellcmplx3d, LINTIMEINTCELLCMPLX3D) (const int&,
+   const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
+   const double&,
    const dcomplex *, const dcomplex *,
    dcomplex *);
 }

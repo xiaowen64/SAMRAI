@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Scalable load balancer using tree algorithm. 
+ * Description:   Scalable load balancer using tree algorithm.
  *
  ************************************************************************/
 
@@ -257,7 +257,6 @@ class TreeLoadBalancer:
    public LoadBalanceStrategy
 {
 public:
-
    /*!
     * @brief Initializing constructor sets object state to default or,
     * if provided, to parameters in database.
@@ -422,7 +421,6 @@ public:
     */
    const std::string&
    getObjectName() const;
-
 
 private:
    /*

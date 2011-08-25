@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Communication transaction for summing outeredge data 
+ * Description:   Communication transaction for summing outeredge data
  *
  ************************************************************************/
 
@@ -49,7 +49,7 @@ public:
     */
    static void
    setRefineItems(
-      const xfer::RefineClasses::Data** refine_items,
+      const xfer::RefineClasses::Data ** refine_items,
       int num_refine_items);
 
    /*!

@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Simple bit vector of a fixed length (128 bits) 
+ * Description:   Simple bit vector of a fixed length (128 bits)
  *
  ************************************************************************/
 
@@ -37,11 +37,11 @@ ComponentSelector::none() const {
 }
 
 int ComponentSelector::_findMaxIndex(
-      const std::vector<std::bitset<C_BITSET_SIZE> >& bits) const
+   const std::vector<std::bitset<C_BITSET_SIZE> >& bits) const
 {
    bool bits_set = false;
    int max_index = -1;
-   for (size_t i = 0; i < bits.size() && !bits_set; ++i)  {
+   for (size_t i = 0; i < bits.size() && !bits_set; ++i) {
       bits_set |= bits[i].any();
    }
 
@@ -54,7 +54,6 @@ int ComponentSelector::_findMaxIndex(
    }
    return max_index;
 }
-
 
 void ComponentSelector::printClassData(
    std::ostream& os) const

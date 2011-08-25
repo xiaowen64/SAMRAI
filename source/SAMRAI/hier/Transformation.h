@@ -1,7 +1,7 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
  * Description:   Class for managing tanssformations between index spaces in
@@ -57,7 +57,6 @@ class Patch;
 class Transformation
 {
 public:
-
    /*!
     * @brief Type that identifies the rotation relationship between two blocks.
     */
@@ -96,11 +95,12 @@ public:
    /*!
     * @brief Constructor to set rotation and offset
     *
-    * @param[in] rotation  specifies rotation, if any, between blocks 
+    * @param[in] rotation  specifies rotation, if any, between blocks
     * @param[in] offset    offset to be applied after rotation
     */
-   explicit Transformation(const RotationIdentifier rotation,
-                           const IntVector& offset);
+   explicit Transformation(
+      const RotationIdentifier rotation,
+      const IntVector& offset);
 
    /*!
     * @brief Constructor that sets only offset
@@ -112,36 +112,42 @@ public:
     *
     * @param[in]  offset
     */
-   explicit Transformation(const IntVector& offset);
+   explicit Transformation(
+      const IntVector& offset);
 
    /*!
     * @brief Copy constructor
     *
     * @param[in] copy_trans
     */
-   Transformation(const Transformation& copy_trans);
+   Transformation(
+      const Transformation& copy_trans);
 
    /*!
     * @brief Destructor
-    */ 
+    */
    virtual ~Transformation();
 
    /*!
     * @brief Get the rotation
     */
-   RotationIdentifier getRotation() const;
+   RotationIdentifier
+   getRotation() const;
 
    /*!
     * @brief Get the offset
     */
-   const IntVector& getOffset() const;
+   const IntVector&
+   getOffset() const;
 
    /*!
     * @brief Transform the Box in the way defined by this object
     *
     * @param[in,out] box  The Box will be transformed
     */
-   void transform(Box& box) const;
+   void
+   transform(
+      Box& box) const;
 
    /*!
     * @brief Apply the inverse of this object's transformation to the Box
@@ -151,12 +157,16 @@ public:
     *
     * @param[in,out]
     */
-   void inverseTransform(Box& box) const;
+   void
+   inverseTransform(
+      Box& box) const;
 
    /*!
     * @brief Assignment operator
     */
-   Transformation& operator=(const Transformation& rhs);
+   Transformation&
+   operator = (
+      const Transformation& rhs);
 
    /*!
     * @brief Map a string-based identifier of a rotation operation to a
@@ -211,7 +221,7 @@ public:
     * neighboring blocks, get a reverse shift that, combined with the
     * reverse rotation from getReverseRotationIdentifier, can be used
     * to reverse the effect of the original rotation and shift.
-    * 
+    *
     * @param[out] back_shift
     * @param[in] shift
     * @param[in] rotation

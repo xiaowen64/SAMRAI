@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Reference counting class for Array and Pointer 
+ * Description:   Reference counting class for Array and Pointer
  *
  ************************************************************************/
 
@@ -31,8 +31,6 @@ ReferenceCounter::s_handler(
    0,
    ReferenceCounter::finalizeCallback,
    StartupShutdownManager::priorityReferenceCounter);
-
-
 
 void *ReferenceCounter::operator new (
    size_t bytes)
@@ -68,7 +66,7 @@ void ReferenceCounter::operator delete (
 void ReferenceCounter::finalizeCallback()
 {
    while (s_free_list) {
-      void* byebye = s_free_list;
+      void * byebye = s_free_list;
       s_free_list = s_free_list->d_next
       ;
       ::operator delete (
@@ -77,7 +75,6 @@ void ReferenceCounter::finalizeCallback()
 
    s_is_finalized = true;
 }
-
 
 }
 }

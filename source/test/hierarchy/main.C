@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Main program for hierachy coarsen/refine tests. 
+ * Description:   Main program for hierachy coarsen/refine tests.
  *
  ************************************************************************/
 
@@ -53,8 +53,8 @@ int main(
 
       if (argc != 2) {
          TBOX_ERROR("USAGE:  " << argv[0] << " <input file> \n"
-                                          << "  options:\n"
-                                          << "  none at this time" << std::endl);
+                               << "  options:\n"
+                               << "  none at this time" << std::endl);
       } else {
          input_filename = std::string(argv[1]);
       }

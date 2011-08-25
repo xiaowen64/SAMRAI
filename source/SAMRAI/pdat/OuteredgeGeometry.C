@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Box geometry information for outeredge centered objects 
+ * Description:   Box geometry information for outeredge centered objects
  *
  ************************************************************************/
 
@@ -265,15 +265,15 @@ OuteredgeGeometry::doOverlap(
                if (src_face_normal != axis) {
 
                   hier::Box outeredge_src_box_lo(toOuteredgeBox(
-                        src_box_shifted,
-                        axis,
-                        src_face_normal,
-                        0));
+                                                    src_box_shifted,
+                                                    axis,
+                                                    src_face_normal,
+                                                    0));
                   hier::Box outeredge_src_box_up(toOuteredgeBox(
-                        src_box_shifted,
-                        axis,
-                        src_face_normal,
-                        1));
+                                                    src_box_shifted,
+                                                    axis,
+                                                    src_face_normal,
+                                                    1));
 
                   for (int dst_face_normal = 0;
                        dst_face_normal < dim.getValue();
@@ -282,13 +282,13 @@ OuteredgeGeometry::doOverlap(
                      if (dst_face_normal != axis) {
 
                         hier::Box outeredge_dst_box_lo(toOuteredgeBox(dst_box,
-                              axis,
-                              dst_face_normal,
-                              0));
+                                                          axis,
+                                                          dst_face_normal,
+                                                          0));
                         hier::Box outeredge_dst_box_up(toOuteredgeBox(dst_box,
-                              axis,
-                              dst_face_normal,
-                              1));
+                                                          axis,
+                                                          dst_face_normal,
+                                                          1));
 
                         outeredge_dst_box_lo =
                            outeredge_dst_box_lo * fill_edge_box;

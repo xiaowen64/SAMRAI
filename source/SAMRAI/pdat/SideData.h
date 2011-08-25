@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Templated side centered patch data type 
+ * Description:   Templated side centered patch data type
  *
  ************************************************************************/
 
@@ -506,11 +506,15 @@ private:
    operator = (
       const SideData<TYPE>&);                           // not implemented
 
-   void copyWithRotation(const SideData<TYPE>& src,
-                         const SideOverlap& overlap);
+   void
+   copyWithRotation(
+      const SideData<TYPE>& src,
+      const SideOverlap& overlap);
 
-   void packWithRotation(tbox::MessageStream& stream,
-                         const SideOverlap& overlap) const;
+   void
+   packWithRotation(
+      tbox::MessageStream& stream,
+      const SideOverlap& overlap) const;
 
    int d_depth;
    hier::IntVector d_directions;

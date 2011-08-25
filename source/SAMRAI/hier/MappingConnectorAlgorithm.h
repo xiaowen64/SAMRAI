@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Algorithms to work with maping Connectors. 
+ * Description:   Algorithms to work with maping Connectors.
  *
  ************************************************************************/
 #ifndef included_hier_MappingConnectorAlgorithm
@@ -410,7 +410,7 @@ private:
       tbox::AsyncCommPeer<int> *& all_comms,
       tbox::AsyncCommStage& comm_stage,
       tbox::AsyncCommStage::MemberVec& completed,
-      const tbox::SAMRAI_MPI &mpi,
+      const tbox::SAMRAI_MPI& mpi,
       const std::set<int>& incoming_ranks,
       const std::set<int>& outgoing_ranks) const;
 
@@ -456,7 +456,7 @@ private:
       tbox::AsyncCommStage& comm_stage,
       tbox::AsyncCommStage::MemberVec& completed,
       const tbox::Dimension& dim,
-      const tbox::SAMRAI_MPI &mpi) const;
+      const tbox::SAMRAI_MPI& mpi) const;
 
    /*
     * @brief Performn checks on the arguments of modify.
@@ -523,7 +523,7 @@ private:
    bool d_shortcut_trivial_maps;
 
    static tbox::StartupShutdownManager::Handler
-   s_initialize_finalize_handler;
+      s_initialize_finalize_handler;
 
 };
 

@@ -23,18 +23,18 @@ namespace SAMRAI {
 namespace hier {
 
 /*
-*******************************************************************************
-Stream-insert operator.
-*******************************************************************************
-*/
+ *******************************************************************************
+ * Stream-insert operator.
+ *******************************************************************************
+ */
 std::ostream& operator << (
    std::ostream& co,
    const BoxId& r)
 {
    co << r.d_global_id.getOwnerRank()
-      << ':' << r.d_block_id
-      << '#' << r.d_global_id.getLocalId()
-      << '/' << r.d_periodic_id;
+   << ':' << r.d_block_id
+   << '#' << r.d_global_id.getLocalId()
+   << '/' << r.d_periodic_id;
    return co;
 }
 

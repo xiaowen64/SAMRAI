@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Time integration manager for AMR with local time stepping. 
+ * Description:   Time integration manager for AMR with local time stepping.
  *
  ************************************************************************/
 
@@ -407,7 +407,6 @@ public:
    const std::string&
    getObjectName() const;
 
-
 private:
    /*
     * Static integer constant describing class's version number.
@@ -603,7 +602,6 @@ private:
    operator = (
       const TimeRefinementIntegrator&);
 
-
    /*!
     * @brief Initialize static objects and register shutdown routine.
     *
@@ -620,12 +618,12 @@ private:
    static void
    finalizeCallback();
 
-   /* 
+   /*
     * Static initialization and cleanup handler.
     */
 
    static tbox::StartupShutdownManager::Handler
-   s_initialize_handler;
+      s_initialize_handler;
 
 };
 

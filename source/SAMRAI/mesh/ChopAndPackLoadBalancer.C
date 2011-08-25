@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Load balance routines for uniform and non-uniform workloads. 
+ * Description:   Load balance routines for uniform and non-uniform workloads.
  *
  ************************************************************************/
 
@@ -194,9 +194,9 @@ void ChopAndPackLoadBalancer::setWorkloadPatchDataIndex(
    if (datafact.isNull()) {
       TBOX_ERROR(
          d_object_name << " error: "
-         << "\n   data_id " << data_id << " passed to "
-         << "setWorkloadPatchDataIndex()"
-         <<
+                       << "\n   data_id " << data_id << " passed to "
+                       << "setWorkloadPatchDataIndex()"
+                       <<
          " does not refer to cell-centered double patch data. " << std::endl);
    }
 
@@ -248,10 +248,10 @@ void ChopAndPackLoadBalancer::setBinPackMethod(
          method == "SPATIAL")) {
       TBOX_ERROR(
          d_object_name << " error: "
-         << "\n   String " << method
-         << " passed to setBinPackMethod()"
-         << " is not a valid method string identifier."
-         << std::endl);
+                       << "\n   String " << method
+                       << " passed to setBinPackMethod()"
+                       << " is not a valid method string identifier."
+                       << std::endl);
 
    }
 
@@ -324,8 +324,8 @@ void ChopAndPackLoadBalancer::loadBalanceMappedBoxLevel(
    hier::BoxList in_boxes;
    const hier::BoxSet globalized_input_mapped_boxes(
       globalized_input_mapped_box_level.getGlobalMappedBoxes());
-   for ( hier::RealBoxConstIterator bi(globalized_input_mapped_boxes);
-         bi.isValid(); ++bi ) {
+   for (hier::RealBoxConstIterator bi(globalized_input_mapped_boxes);
+        bi.isValid(); ++bi) {
       in_boxes.appendItem(*bi);
    }
 
@@ -357,7 +357,7 @@ void ChopAndPackLoadBalancer::loadBalanceMappedBoxLevel(
    int i = 0;
    for (hier::BoxList::Iterator itr(out_boxes); itr; itr++, ++i) {
       hier::Box node(*itr, hier::LocalId(i),
-                           mapping.getProcessorAssignment(i));
+                     mapping.getProcessorAssignment(i));
       balance_mapped_box_level.addMappedBox(node);
    }
    // Reinitialize Connectors due to changed balance_mapped_box_level.
@@ -468,7 +468,7 @@ void ChopAndPackLoadBalancer::loadBalanceBoxes(
       return;
    }
 
-   const tbox::SAMRAI_MPI &mpi(hierarchy->getMPI());
+   const tbox::SAMRAI_MPI& mpi(hierarchy->getMPI());
 
    /*
     * If uniform load balancing is used and the level domain can be
@@ -648,7 +648,7 @@ void ChopAndPackLoadBalancer::chopUniformSingleBox(
    const hier::IntVector& cut_factor,
    const hier::IntVector& bad_interval,
    const hier::BoxList& physical_domain,
-   const tbox::SAMRAI_MPI &mpi) const
+   const tbox::SAMRAI_MPI& mpi) const
 {
 
    TBOX_DIM_ASSERT_CHECK_ARGS4(min_size, max_size, cut_factor, bad_interval);
@@ -736,7 +736,7 @@ void ChopAndPackLoadBalancer::chopBoxesWithUniformWorkload(
    const hier::IntVector& cut_factor,
    const hier::IntVector& bad_interval,
    const hier::BoxList& physical_domain,
-   const tbox::SAMRAI_MPI &mpi) const
+   const tbox::SAMRAI_MPI& mpi) const
 {
    NULL_USE(hierarchy);
    TBOX_DIM_ASSERT_CHECK_DIM_ARGS5(d_dim,
@@ -787,9 +787,9 @@ void ChopAndPackLoadBalancer::chopBoxesWithUniformWorkload(
    if (tmp_box_list.getNumberOfItems() != tmp_work_list.getNumberOfItems()) {
       TBOX_ERROR(
          d_object_name << ": "
-         <<
+                       <<
          "Number of boxes generated != number of workload values generated."
-         << std::endl);
+                       << std::endl);
    }
 
    /*
@@ -831,7 +831,7 @@ void ChopAndPackLoadBalancer::chopBoxesWithNonuniformWorkload(
    const hier::IntVector& cut_factor,
    const hier::IntVector& bad_interval,
    const hier::BoxList& physical_domain,
-   const tbox::SAMRAI_MPI &mpi) const
+   const tbox::SAMRAI_MPI& mpi) const
 {
 
    TBOX_DIM_ASSERT_CHECK_ARGS5(ratio_to_hierarchy_level_zero,
@@ -878,13 +878,13 @@ void ChopAndPackLoadBalancer::chopBoxesWithNonuniformWorkload(
 
    tbox::Pointer<hier::MappedBoxLevel> tmp_mapped_box_level(
       new hier::MappedBoxLevel(ratio_to_hierarchy_level_zero,
-                               hierarchy->getGridGeometry(),
-                               mpi,
+         hierarchy->getGridGeometry(),
+         mpi,
          hier::MappedBoxLevel::GLOBALIZED));
    idx = 0;
    for (hier::BoxList::Iterator i(tmp_level_boxes); i; i++, ++idx) {
       hier::Box node(*i, hier::LocalId(idx),
-                           tmp_level_mapping.getProcessorAssignment(idx));
+                     tmp_level_mapping.getProcessorAssignment(idx));
       tmp_mapped_box_level->addMappedBox(node);
    }
 
@@ -977,9 +977,9 @@ void ChopAndPackLoadBalancer::chopBoxesWithNonuniformWorkload(
    if (tmp_box_list.getNumberOfItems() != tmp_work_list.getNumberOfItems()) {
       TBOX_ERROR(
          d_object_name << ": "
-         <<
+                       <<
          "Number of boxes generated != number of workload values generated."
-         << std::endl);
+                       << std::endl);
    }
 
    /*
@@ -1000,10 +1000,10 @@ void ChopAndPackLoadBalancer::chopBoxesWithNonuniformWorkload(
     * Gather local box and work arrays so that each processor has a copy.
     */
    exchangeBoxListsAndWeightArrays(local_out_boxes,
-                                   local_out_workloads,
-                                   out_boxes,
-                                   out_workloads,
-                                   mpi);
+      local_out_workloads,
+      out_boxes,
+      out_workloads,
+      mpi);
 
 }
 
@@ -1019,7 +1019,7 @@ void ChopAndPackLoadBalancer::exchangeBoxListsAndWeightArrays(
    const tbox::Array<double>& weights_in,
    hier::BoxList& box_list_out,
    tbox::Array<double>& weights_out,
-   const tbox::SAMRAI_MPI &mpi) const
+   const tbox::SAMRAI_MPI& mpi) const
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(box_list_in, box_list_out);
    TBOX_ASSERT(box_list_in.getNumberOfBoxes() == weights_in.getSize());
@@ -1051,8 +1051,7 @@ void ChopAndPackLoadBalancer::exchangeBoxListsAndWeightArrays(
       for (int i = curr_box_list_out_size; i < size_out; ++i) {
          box_list_out.appendItem(hier::Box(dim));
       }
-   }
-   else if (size_out < curr_box_list_out_size) {
+   } else if (size_out < curr_box_list_out_size) {
       for (int i = size_out; i < curr_box_list_out_size; ++i) {
          box_list_out.removeLastItem();
       }
@@ -1162,22 +1161,22 @@ void ChopAndPackLoadBalancer::printClassData(
    os << "d_workload_data_id..." << std::endl;
    for (ln = 0; ln < d_workload_data_id.getSize(); ln++) {
       os << "    d_workload_data_id[" << ln << "] = "
-      << d_workload_data_id[ln] << std::endl;
+         << d_workload_data_id[ln] << std::endl;
    }
    os << "d_max_workload_factor..." << std::endl;
    for (ln = 0; ln < d_max_workload_factor.getSize(); ln++) {
       os << "    d_max_workload_factor[" << ln << "] = "
-      << d_max_workload_factor[ln] << std::endl;
+         << d_max_workload_factor[ln] << std::endl;
    }
    os << "d_workload_tolerance..." << std::endl;
    for (ln = 0; ln < d_workload_tolerance.getSize(); ln++) {
       os << "    d_workload_tolerance[" << ln << "] = "
-      << d_workload_tolerance[ln] << std::endl;
+         << d_workload_tolerance[ln] << std::endl;
    }
    os << "d_bin_pack_method..." << std::endl;
    for (ln = 0; ln < d_bin_pack_method.getSize(); ln++) {
       os << "    d_bin_pack_method[" << ln << "] = "
-      << d_bin_pack_method[ln] << std::endl;
+         << d_bin_pack_method[ln] << std::endl;
    }
    os << "d_ignore_level_box_union_is_single_box = "
       << d_ignore_level_box_union_is_single_box << std::endl;
@@ -1207,9 +1206,9 @@ void ChopAndPackLoadBalancer::getFromInput(
             d_master_bin_pack_method == "SPATIAL")) {
          TBOX_WARNING(
             d_object_name << ": "
-            << "Unknown 'bin_pack_method' "
-            << d_master_bin_pack_method
-            <<
+                          << "Unknown 'bin_pack_method' "
+                          << d_master_bin_pack_method
+                          <<
             " found in input. \nDefault 'GREEDY' will be used." << std::endl);
          d_master_bin_pack_method = "GREEDY";
       }
@@ -1263,12 +1262,12 @@ void ChopAndPackLoadBalancer::getFromInput(
          if (totprocs != mpi.getSize()) {
             TBOX_WARNING(
                d_object_name << ": "
-               <<
+                             <<
                "Input values for 'processor_layout' are inconsistent with"
-               <<
+                             <<
                "\nnumber of processors.  Processor layout information will"
-               << "\nbe generated when needed."
-               << std::endl);
+                             << "\nbe generated when needed."
+                             << std::endl);
          } else {
             for (int n = 0; n < d_dim.getValue(); n++) {
                d_processor_layout(n) = temp_processor_layout[n];
@@ -1335,8 +1334,8 @@ void ChopAndPackLoadBalancer::binPackBoxes(
 
       TBOX_ERROR(
          d_object_name << ": "
-         << "Unknown bin pack method "
-         << bin_pack_method << " found." << std::endl);
+                       << "Unknown bin pack method "
+                       << bin_pack_method << " found." << std::endl);
 
    }
    t_bin_pack_boxes_pack->stop();
@@ -1439,7 +1438,6 @@ void ChopAndPackLoadBalancer::finalizeCallback()
    t_bin_pack_boxes_pack.setNull();
    t_chop_boxes.setNull();
 }
-
 
 }
 }

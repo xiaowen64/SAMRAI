@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   TreeLoadBalancer test. 
+ * Description:   TreeLoadBalancer test.
  *
  ************************************************************************/
 #include "DerivedVisOwnerData.h"
@@ -41,7 +41,7 @@ bool DerivedVisOwnerData::packDerivedDataIntoDoubleBuffer(
       // Did not register this name.
       TBOX_ERROR(
          "Unregistered variable name '" << variable_name << "' in\n"
-         <<
+                                        <<
          "DerivedVisOwnerData::packDerivedPatchDataIntoDoubleBuffer");
    }
 

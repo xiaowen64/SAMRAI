@@ -1,13 +1,12 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   $Description 
+ * Description:   $Description
  *
  ************************************************************************/
-
 
 #include <cassert>
 #include <cstdlib>
@@ -97,11 +96,11 @@ public:
    double x[NN];
 };
 
-/* 
+/*
  * SGH: BG{L,P} et. al. do not like to have explicit template instantiations
  * outside of the namespace in which the template is defined.  This causes
  * a compile-time error, so we'll just avoid this on BG{L,P} platforms.
- * 
+ *
  * Reference:  XL C/C++ V9.0 for Linux documentation, i
  * section: Templates
  * subsection: Explicit instantiation

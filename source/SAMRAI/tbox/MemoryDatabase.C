@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   An memory database structure that stores (key,value) pairs in memory 
+ * Description:   An memory database structure that stores (key,value) pairs in memory
  *
  ************************************************************************/
 
@@ -40,9 +40,9 @@
 namespace SAMRAI {
 namespace tbox {
 
-const int MemoryDatabase::PRINT_DEFAULT  = 1;
-const int MemoryDatabase::PRINT_INPUT    = 2;
-const int MemoryDatabase::PRINT_UNUSED   = 4;
+const int MemoryDatabase::PRINT_DEFAULT = 1;
+const int MemoryDatabase::PRINT_INPUT = 2;
+const int MemoryDatabase::PRINT_UNUSED = 4;
 const int MemoryDatabase::SSTREAM_BUFFER = 4096;
 
 /*
@@ -86,9 +86,9 @@ bool MemoryDatabase::open(
    const std::string& name,
    const bool read_write_mode)
 {
-   if ( read_write_mode == false ) {
+   if (read_write_mode == false) {
       TBOX_ERROR("MemoryDatabase::open: MemoryDatabase only supports\n"
-                 <<"read-write mode.  The read_write_mode flag must be true.");
+         << "read-write mode.  The read_write_mode flag must be true.");
 
    }
    d_database_name = name;
@@ -323,8 +323,8 @@ void MemoryDatabase::getBoolArray(
    if (nelements != tmp.getSize()) {
       MEMORY_DB_ERROR(
          "Incorrect array size=" << nelements << " specified for key="
-         << key << " with array size="
-         << tsize << "...");
+                                 << key << " with array size="
+                                 << tsize << "...");
    }
 
    for (int i = 0; i < tsize; i++) {
@@ -428,8 +428,8 @@ void MemoryDatabase::getDatabaseBoxArray(
    if (nelements != tmp.getSize()) {
       MEMORY_DB_ERROR(
          "Incorrect array size=" << nelements << " specified for key="
-         << key << " with array size="
-         << tsize << "...");
+                                 << key << " with array size="
+                                 << tsize << "...");
    }
 
    for (int i = 0; i < tsize; i++) {
@@ -533,8 +533,8 @@ void MemoryDatabase::getCharArray(
    if (nelements != tmp.getSize()) {
       MEMORY_DB_ERROR(
          "Incorrect array size=" << nelements << " specified for key="
-         << key << " with array size="
-         << tsize << "...");
+                                 << key << " with array size="
+                                 << tsize << "...");
    }
 
    for (int i = 0; i < tsize; i++) {
@@ -688,8 +688,8 @@ void MemoryDatabase::getComplexArray(
    if (nelements != tmp.getSize()) {
       MEMORY_DB_ERROR(
          "Incorrect array size=" << nelements << " specified for key="
-         << key << " with array size="
-         << tsize << "...");
+                                 << key << " with array size="
+                                 << tsize << "...");
    }
 
    for (int i = 0; i < tsize; i++) {
@@ -832,8 +832,8 @@ void MemoryDatabase::getDoubleArray(
    if (nelements != tmp.getSize()) {
       MEMORY_DB_ERROR(
          "Incorrect array size=" << nelements << " specified for key="
-         << key << " with array size="
-         << tsize << "...");
+                                 << key << " with array size="
+                                 << tsize << "...");
    }
 
    for (int i = 0; i < tsize; i++) {
@@ -982,8 +982,8 @@ void MemoryDatabase::getFloatArray(
    if (nelements != tmp.getSize()) {
       MEMORY_DB_ERROR(
          "Incorrect array size=" << nelements << " specified for key="
-         << key << " with array size="
-         << tsize << "...");
+                                 << key << " with array size="
+                                 << tsize << "...");
    }
 
    for (int i = 0; i < tsize; i++) {
@@ -1087,8 +1087,8 @@ void MemoryDatabase::getIntegerArray(
    if (nelements != tmp.getSize()) {
       MEMORY_DB_ERROR(
          "Incorrect array size=" << nelements << " specified for key="
-         << key << " with array size="
-         << tsize << "...");
+                                 << key << " with array size="
+                                 << tsize << "...");
    }
 
    for (int i = 0; i < tsize; i++) {
@@ -1192,8 +1192,8 @@ void MemoryDatabase::getStringArray(
    if (nelements != tmp.getSize()) {
       MEMORY_DB_ERROR(
          "Incorrect array size=" << nelements << " specified for key="
-         << key << " with array size="
-         << tsize << "...");
+                                 << key << " with array size="
+                                 << tsize << "...");
    }
 
    for (int i = 0; i < tsize; i++) {

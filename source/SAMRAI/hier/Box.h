@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Box representing a portion of the AMR index space 
+ * Description:   Box representing a portion of the AMR index space
  *
  ************************************************************************/
 
@@ -85,10 +85,10 @@ public:
     */
    explicit Box(
       const hier::Box& box,
-      const LocalId &local_id,
+      const LocalId& local_id,
       const int owner_rank,
-      const BlockId &block_id = BlockId::zero(),
-      const PeriodicId &periodic_id = PeriodicId::zero());
+      const BlockId& block_id = BlockId::zero(),
+      const PeriodicId& periodic_id = PeriodicId::zero());
 
    /*!
     * @brief Constructor with undefined box.
@@ -114,10 +114,10 @@ public:
     */
    explicit Box(
       const tbox::Dimension& dim,
-      const LocalId &local_id,
+      const LocalId& local_id,
       const int owner_rank,
-      const BlockId &block_id = BlockId::zero(),
-      const PeriodicId &periodic_id = PeriodicId::zero());
+      const BlockId& block_id = BlockId::zero(),
+      const PeriodicId& periodic_id = PeriodicId::zero());
 
    /*!
     * @brief Constructor with undefined box.
@@ -142,9 +142,8 @@ public:
    explicit Box(
       const tbox::Dimension& dim,
       const GlobalId& id,
-      const BlockId &block_id = BlockId::zero(),
-      const PeriodicId &periodic_id = PeriodicId::zero());
-
+      const BlockId& block_id = BlockId::zero(),
+      const PeriodicId& periodic_id = PeriodicId::zero());
 
    /*!
     * @brief Constructor with undefined box and a BoxId.
@@ -185,7 +184,7 @@ public:
     */
    explicit Box(
       const Box& other,
-      const PeriodicId &periodic_id,
+      const PeriodicId& periodic_id,
       const IntVector& refinement_ratio);
 
    /*!
@@ -207,10 +206,10 @@ public:
    void
    initialize(
       const hier::Box& box,
-      const LocalId &local_id,
+      const LocalId& local_id,
       const int owner_rank,
-      const BlockId &block_id = BlockId::zero(),
-      const PeriodicId &periodic_id = PeriodicId::zero());
+      const BlockId& block_id = BlockId::zero(),
+      const PeriodicId& periodic_id = PeriodicId::zero());
 
    /*!
     * @brief Set all the attributes identical to that of a reference
@@ -229,7 +228,7 @@ public:
    void
    initialize(
       const Box& other,
-      const PeriodicId &periodic_id,
+      const PeriodicId& periodic_id,
       const IntVector& refinement_ratio);
 
    /**
@@ -246,38 +245,46 @@ public:
    getId() const;
 
    //! @brief Get the Block.
-   const BlockId &getBlockId() const;
+   const BlockId&
+   getBlockId() const;
 
    //! @brief Get the LocalId.
-   const LocalId &getLocalId() const;
+   const LocalId&
+   getLocalId() const;
 
    //! @brief Get the GlobalId.
-   const GlobalId& getGlobalId() const;
+   const GlobalId&
+   getGlobalId() const;
 
    //! @brief Get the owner rank.
-   int getOwnerRank() const;
+   int
+   getOwnerRank() const;
 
    /*!
     * @brief Get the periodic shift number.
     *
     * @see PeriodicShiftCatalog.
     */
-   const PeriodicId &getPeriodicId() const;
+   const PeriodicId&
+   getPeriodicId() const;
 
    //! @brief Whether the Box is a periodic image.
-   bool isPeriodicImage() const;
+   bool
+   isPeriodicImage() const;
 
-   bool isIdEqual(const Box& other) const;
+   bool
+   isIdEqual(
+      const Box& other) const;
 
    struct id_equal {
-      bool operator() (const Box& b1, const Box& b2) const
+      bool operator () (const Box& b1, const Box& b2) const
       {
          return b1.isIdEqual(b2);
       }
    };
 
    struct id_less {
-      bool operator() (const Box& b1, const Box& b2) const
+      bool operator () (const Box& b1, const Box& b2) const
       {
          return b1.getId() < b2.getId();
       }
@@ -304,7 +311,7 @@ public:
     */
    void
    putToIntBuffer(
-      int* buffer) const;
+      int * buffer) const;
 
    /*!
     * @brief Set attributes according to data in int buffer.
@@ -314,7 +321,7 @@ public:
     */
    void
    getFromIntBuffer(
-      const int* buffer);
+      const int * buffer);
 
    /**
     * The assignment operator copies the index space of the argument box.
@@ -471,14 +478,15 @@ public:
    /**
     * Check whether two boxes represent the same portion of index space.
     */
-   bool isSpatiallyEqual(const Box& box) const;
+   bool
+   isSpatiallyEqual(
+      const Box& box) const;
    struct box_equality {
-      bool operator() (const Box& b1, const Box& b2) const
+      bool operator () (const Box& b1, const Box& b2) const
       {
          return b1.isSpatiallyEqual(b2);
       }
    };
-
 
    /**
     * Calculate the intersection of the index spaces of two boxes.  The
@@ -496,7 +504,7 @@ public:
    void
    intersect(
       const Box& other,
-      Box &result) const;
+      Box& result) const;
 
    /**
     * Return true if two boxes have a non-empty intersection.
@@ -687,12 +695,12 @@ public:
    /**
     * Type conversion from Box to Box
     */
-   operator tbox::DatabaseBox ();
+   operator tbox::DatabaseBox();
 
    /**
     * Type conversion from Box to Box
     */
-   operator tbox::DatabaseBox () const;
+   operator tbox::DatabaseBox() const;
 
    /**
     * Utility function to grow a box by the specified vector ghost cell
@@ -778,7 +786,7 @@ public:
    typedef BoxIterator Iterator;
 
    template<class>
-   friend class ::SAMRAI::pdat::ArrayData;
+   friend class::SAMRAI::pdat::ArrayData;
    friend class BoxIterator;
    friend class std::vector<Box>;
 
@@ -856,7 +864,7 @@ private:
    static Box* s_universes[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
 
    static tbox::StartupShutdownManager::Handler
-   s_initialize_finalize_handler;
+      s_initialize_finalize_handler;
 };
 
 /**

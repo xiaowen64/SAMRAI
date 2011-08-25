@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   An input manager singleton class that parses input files 
+ * Description:   An input manager singleton class that parses input files
  *
  ************************************************************************/
 
@@ -162,16 +162,16 @@ void InputManager::parseInputFile(
    if (errors > 0) {
       TBOX_WARNING(
          "InputManager: Errors = " << errors
-         << ", Warnings = " << warnings
-         << "\n when parsing input file = "
-         << filename << std::endl);
+                                   << ", Warnings = " << warnings
+                                   << "\n when parsing input file = "
+                                   << filename << std::endl);
       db->printClassData(plog);
       TBOX_ERROR("InputManager exiting..." << std::endl);
    }
    if (warnings > 0) {
       TBOX_WARNING(
          "InputManager: Warnings  = " << warnings
-         <<
+                                      <<
          "\n when parsing input file = " << filename << std::endl);
    }
 

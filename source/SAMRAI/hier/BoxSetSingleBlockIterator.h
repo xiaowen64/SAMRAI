@@ -27,10 +27,10 @@ namespace hier {
  * in the order they appear in the BoxSet, skipping over
  * MappedBoxes that do not have the specified owner rank.
  */
-class BoxSetSingleBlockIterator {
+class BoxSetSingleBlockIterator
+{
 
 public:
-
    /*!
     * @brief Constructor
     *
@@ -38,8 +38,8 @@ public:
     * @param [i] block_id
     */
    BoxSetSingleBlockIterator(
-      const BoxSet &container,
-      const BlockId &block_id);
+      const BoxSet& container,
+      const BlockId& block_id);
 
    //! @brief Destructor
    ~BoxSetSingleBlockIterator();
@@ -54,28 +54,35 @@ public:
    /*!
     * @brief Dereference operator mimicking a pointer dereference.
     */
-   const Box &operator * () const;
+   const Box&
+   operator * () const;
 
    /*!
     * @brief Dereference operator mimicking a pointer dereference.
     */
-   const Box *operator -> () const;
+   const Box *
+   operator -> () const;
 
    /*!
     * @brief Equality comparison.
     */
-   bool operator == (const BoxSetSingleBlockIterator& r) const;
+   bool
+   operator == (
+      const BoxSetSingleBlockIterator& r) const;
 
    /*!
     * @brief Inequality comparison.
     */
-   bool operator != (const BoxSetSingleBlockIterator& r) const;
+   bool
+   operator != (
+      const BoxSetSingleBlockIterator& r) const;
 
    /*!
     * @brief Whether the iterator can be dereferenced.  When the
     * iterator reaches its end, this returns false.
     */
-   bool isValid() const;
+   bool
+   isValid() const;
 
    /*!
     * @brief Pre-increment iterator.
@@ -83,7 +90,8 @@ public:
     * Pre-increment increment the iterator and returns the incremented
     * state.
     */
-   BoxSetSingleBlockIterator &operator ++ ();
+   BoxSetSingleBlockIterator&
+   operator ++ ();
 
    /*!
     * @brief Post-increment iterator.
@@ -91,15 +99,17 @@ public:
     * Post-increment saves the iterator, increment it and returns the
     * saved iterator.
     */
-   BoxSetSingleBlockIterator operator ++ (int);
+   BoxSetSingleBlockIterator
+   operator ++ (
+      int);
 
    /*!
     * @brief Returns the number of BoxSets being iterated through.
     */
-   int count() const;
+   int
+   count() const;
 
 private:
-
    /*!
     * @brief BoxSet being iterated through.
     */
@@ -116,7 +126,6 @@ private:
    BoxSet::const_iterator d_iter;
 
 };
-
 
 }
 }

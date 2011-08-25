@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Support for coordinating multiple asynchronous communications 
+ * Description:   Support for coordinating multiple asynchronous communications
  *
  ************************************************************************/
 #include "SAMRAI/tbox/AsyncCommStage.h"
@@ -212,8 +212,8 @@ void AsyncCommStage::assertDataConsistency() const
          if (d_members[i]->d_nreq !=
              d_member_to_req[i + 1] - d_member_to_req[i]) {
             TBOX_ERROR("d_members[" << i << "] has bad d_nreq="
-               << d_members[i]->d_nreq << ", stage value is "
-               << (d_member_to_req[i + 1] - d_member_to_req[i]));
+                                    << d_members[i]->d_nreq << ", stage value is "
+                                    << (d_member_to_req[i + 1] - d_member_to_req[i]));
          }
       }
    }
@@ -227,9 +227,9 @@ void AsyncCommStage::assertDataConsistency() const
          if (d_members[member_index] != NULL) {
             if (d_members[member_index]->d_nreq != number_of_requests) {
                TBOX_ERROR("d_members[" << member_index << "]->d_nreq is "
-                  << d_members[member_index]->d_nreq
-                  << " while stage claims it should have "
-                  << number_of_requests << " requests");
+                                       << d_members[member_index]->d_nreq
+                                       << " while stage claims it should have "
+                                       << number_of_requests << " requests");
             }
          }
          member_index = d_req_to_member[i];
@@ -238,9 +238,9 @@ void AsyncCommStage::assertDataConsistency() const
    }
    if (d_members[member_index]->d_nreq != number_of_requests) {
       TBOX_ERROR("d_members[" << member_index << "]->d_nreq is "
-         << d_members[member_index]->d_nreq
-         << " while stage claims it should have "
-         << number_of_requests << " requests");
+                              << d_members[member_index]->d_nreq
+                              << " while stage claims it should have "
+                              << number_of_requests << " requests");
    }
 }
 
@@ -516,11 +516,11 @@ size_t AsyncCommStage::advanceSome(
                   << "MPI_REQUEST_NULL = " << MPI_REQUEST_NULL << '\n'
                   << "number of requests = "
                   << d_member_to_req[d_members.size()] << '\n'
-                                                       <<
+                  <<
                   "d_req.size() = " << d_req.size() << '\n'
-                                                       <<
+                  <<
                   "n_req_completed = " << n_req_completed << '\n'
-                                                       <<
+                  <<
                   "i = " << i << '\n'
                   );
             }
@@ -563,10 +563,10 @@ size_t AsyncCommStage::advanceSome(
          index[iout] = static_cast<int>(d_req_to_member[index[iout]]);
 #ifdef AsyncCommStage_ExtraDebug
          tbox::plog << "AsyncCommStage::advanceSome completed:"
-         << " tag-" << stat[iout].MPI_TAG
-         << " source-" << stat[iout].MPI_SOURCE
-         << " for member index " << index[iout]
-         << std::endl;
+                    << " tag-" << stat[iout].MPI_TAG
+                    << " source-" << stat[iout].MPI_SOURCE
+                    << " for member index " << index[iout]
+                    << std::endl;
 #endif
          unsigned int i;
          for (i = 0; i < n_check_member; ++i) {

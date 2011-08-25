@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   A list of boxes with basic domain calculus operations 
+ * Description:   A list of boxes with basic domain calculus operations
  *
  ************************************************************************/
 
@@ -51,7 +51,8 @@ public:
    /**
     * Create an empty box list with no boxes.
     */
-   BoxList(const tbox::Dimension& dim);
+   BoxList(
+      const tbox::Dimension& dim);
 
    /**
     * Create a box list with one box in it.
@@ -197,8 +198,8 @@ public:
     */
    void
    removeIntersections(
-      const BlockId &block_id,
-      const IntVector &refinement_ratio,
+      const BlockId& block_id,
+      const IntVector& refinement_ratio,
       const MultiblockBoxTree& takeaway,
       bool include_singularity_block_neighbors = false);
 
@@ -263,8 +264,8 @@ public:
     */
    void
    intersectBoxes(
-      const BlockId &block_id,
-      const IntVector &refinement_ratio,
+      const BlockId& block_id,
+      const IntVector& refinement_ratio,
       const MultiblockBoxTree& boxes,
       bool include_singularity_block_neighbors = false);
 
@@ -375,7 +376,7 @@ private:
       const Box& bursty,
       const Box& solid,
       const int dimension,
-      Iterator &itr);
+      Iterator& itr);
 
    void
    removeIntersectionsFromSublist(

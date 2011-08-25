@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Dimension class for abstracting dimension 
+ * Description:   Dimension class for abstracting dimension
  *
  ************************************************************************/
 
@@ -89,7 +89,7 @@ public:
    /**
     * Returns true if Dimension is valid.
     *
-    * A valid Dimension != 0; != getInvalidDimension(), 
+    * A valid Dimension != 0; != getInvalidDimension(),
     * and <= getMaxDimension().
     *
     */
@@ -97,7 +97,7 @@ public:
    isValid() const;
 
    /**
-    * Returns true if Dimension is initialized (not set 
+    * Returns true if Dimension is initialized (not set
     * to getInvalidDimension()).
     *
     */
@@ -170,7 +170,7 @@ public:
     *
     * The value must be >= 1 and < numeric_limits<unsigned short>::max()
     */
-   static const unsigned short MAXIMUM_DIMENSION_VALUE = 
+   static const unsigned short MAXIMUM_DIMENSION_VALUE =
       SAMRAI_MAXIMUM_DIMENSION;
    static unsigned short
    getMaxDimValue();
@@ -190,7 +190,7 @@ public:
    /**
     * An invalid dimension value as a Dimension object.
     */
-   static const Dimension& 
+   static const Dimension&
    getInvalidDimension();
 
    /**
@@ -200,7 +200,7 @@ public:
     * use this symbol as it is more readable.
     *
     */
-   static unsigned short 
+   static unsigned short
    getInvalidDimValue();
 
    /*
@@ -213,9 +213,9 @@ public:
     * error prone.
     */
    template<class>
-   friend class ::SAMRAI::pdat::ArrayData;
-   friend class ::SAMRAI::hier::IntVector;
-   friend class ::SAMRAI::tbox::DatabaseBox;
+   friend class::SAMRAI::pdat::ArrayData;
+   friend class::SAMRAI::hier::IntVector;
+   friend class::SAMRAI::tbox::DatabaseBox;
 
    /**
     * Output operator for debugging and error messages.
@@ -226,8 +226,6 @@ public:
       const Dimension& rhs);
 
 private:
-
-
    /**
     * @brief Create an invalid dimension object.
     *

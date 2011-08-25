@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Main program to test variable database operations 
+ * Description:   Main program to test variable database operations
  *
  ************************************************************************/
 
@@ -663,7 +663,6 @@ int main(
       << "\naddition of \n\"dummy\" context and removal of "
       << "flux scratch variable-context mapping" << endl;
       var_db->printClassData(tbox::plog);
-
 
       tbox::plog
       << "\nPrintout #6 of hier::Variable tbox::Database after removal of \"flux\" "

@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Communication transaction for time interpolation during data refining 
+ * Description:   Communication transaction for time interpolation during data refining
  *
  ************************************************************************/
 
@@ -138,13 +138,17 @@ public:
     * Return the sending processor number for the communications transaction.
     */
    virtual int
-   getSourceProcessor() { return d_src_patch_rank; }
+   getSourceProcessor() {
+      return d_src_patch_rank;
+   }
 
    /*!
     * Return the receiving processor number for the communications transaction.
     */
    virtual int
-   getDestinationProcessor() { return d_dst_patch_rank; }
+   getDestinationProcessor() {
+      return d_dst_patch_rank;
+   }
 
    /*!
     * Pack the transaction data into the message stream.
@@ -191,9 +195,9 @@ private:
       const tbox::Pointer<hier::PatchData>& pd_new);
 
    tbox::Pointer<hier::Patch> d_dst_patch;
-   int                        d_dst_patch_rank;
+   int d_dst_patch_rank;
    tbox::Pointer<hier::Patch> d_src_patch;
-   int                        d_src_patch_rank;
+   int d_src_patch_rank;
    tbox::Pointer<hier::BoxOverlap> d_overlap;
    hier::Box d_box;
    int d_refine_item_id;

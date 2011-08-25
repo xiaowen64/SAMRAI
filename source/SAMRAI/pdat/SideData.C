@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Templated side centered patch data type 
+ * Description:   Templated side centered patch data type
  *
  ************************************************************************/
 
@@ -25,7 +25,8 @@
 namespace SAMRAI {
 namespace pdat {
 
-template<class TYPE> const int SideData<TYPE>::PDAT_SIDEDATA_VERSION = 1;
+template<class TYPE>
+const int SideData<TYPE>::PDAT_SIDEDATA_VERSION = 1;
 
 /*
  *************************************************************************
@@ -263,7 +264,7 @@ void SideData<TYPE>::copyWithRotation(
    const SideOverlap& overlap)
 {
    TBOX_ASSERT(overlap.getTransformation().getRotation() !=
-               hier::Transformation::NO_ROTATE);
+      hier::Transformation::NO_ROTATE);
 
    const tbox::Dimension& dim(src.getDim());
    const hier::Transformation::RotationIdentifier rotate =
@@ -315,7 +316,6 @@ void SideData<TYPE>::copyWithRotation(
       }
    }
 }
-
 
 /*
  *************************************************************************
@@ -424,7 +424,7 @@ void SideData<TYPE>::packWithRotation(
    const SideOverlap& overlap) const
 {
    TBOX_ASSERT(overlap.getTransformation().getRotation() !=
-               hier::Transformation::NO_ROTATE);
+      hier::Transformation::NO_ROTATE);
 
    const tbox::Dimension& dim(getDim());
    const hier::Transformation::RotationIdentifier rotate =
@@ -482,7 +482,6 @@ void SideData<TYPE>::packWithRotation(
       }
    }
 }
-
 
 template<class TYPE>
 void SideData<TYPE>::unpackStream(
@@ -670,7 +669,7 @@ void SideData<TYPE>::printAxis(
    if (d_directions(side_normal)) {
       for (SideIterator i(box, side_normal); i; i++) {
          os << "array" << i() << " = "
-         << d_data[side_normal](i(), depth) << std::endl << std::flush;
+            << d_data[side_normal](i(), depth) << std::endl << std::flush;
       }
    } else {
       os << "No side data in " << side_normal << " side normal direction"

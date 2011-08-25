@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Staged peer-to-peer communication. 
+ * Description:   Staged peer-to-peer communication.
  *
  ************************************************************************/
 #ifndef included_tbox_AsyncCommPeer_C
@@ -150,7 +150,7 @@ AsyncCommPeer<TYPE>::AsyncCommPeer(
  ***********************************************************************
  */
 template<class TYPE>
-AsyncCommPeer<TYPE> &AsyncCommPeer<TYPE>::operator = (
+AsyncCommPeer<TYPE>& AsyncCommPeer<TYPE>::operator = (
    const AsyncCommPeer& r) {
    (void)r;
    TBOX_ERROR(
@@ -735,8 +735,8 @@ bool AsyncCommPeer<TYPE>::checkRecv()
                 * read.
                 */
                const int shift_bytes = static_cast<int>(
-                  first_chunk_count * sizeof(FlexData) - d_max_first_data_len
-                  * sizeof(TYPE));
+                     first_chunk_count * sizeof(FlexData) - d_max_first_data_len
+                     * sizeof(TYPE));
                TBOX_ASSERT(shift_bytes >= 0);
                if (shift_bytes > 0) {
                   char* correct_place, * current_place;
@@ -853,13 +853,13 @@ void AsyncCommPeer<TYPE>::logCurrentState(
 {
    SAMRAI_MPI::Request * const req = getRequestPointer();
    co << "State=" << 10 * d_base_op + d_next_task_op
-   << "  tag-0=" << d_tag0
-   << "  tag-1=" << d_tag1
-   << "  communicator=" << d_mpi.getCommunicator()
-   << "  extern. buff=" << d_external_buf
-   << "  size=" << d_full_count
-   << "  request,status-0=" << (void *)req[0]
-   << "  request,status-1=" << (void *)req[1]
+      << "  tag-0=" << d_tag0
+      << "  tag-1=" << d_tag1
+      << "  communicator=" << d_mpi.getCommunicator()
+      << "  extern. buff=" << d_external_buf
+      << "  size=" << d_full_count
+      << "  request,status-0=" << (void *)req[0]
+      << "  request,status-1=" << (void *)req[1]
    ;
    co << '\n';
 }

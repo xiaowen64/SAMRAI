@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Templated outeredge centered patch data type 
+ * Description:   Templated outeredge centered patch data type
  *
  ************************************************************************/
 
@@ -94,7 +94,7 @@ OuteredgeData<TYPE>::getArrayData(
 
 template<class TYPE>
 SAMRAI_INLINE_KEYWORD
-TYPE & OuteredgeData<TYPE>::operator () (
+TYPE& OuteredgeData<TYPE>::operator () (
    const EdgeIndex& i,
    int depth)
 {
@@ -128,7 +128,7 @@ TYPE & OuteredgeData<TYPE>::operator () (
 
 template<class TYPE>
 SAMRAI_INLINE_KEYWORD
-const TYPE &OuteredgeData<TYPE>::operator () (
+const TYPE& OuteredgeData<TYPE>::operator () (
    const EdgeIndex& i,
    int depth) const
 {

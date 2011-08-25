@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Simple structure for managing refinement data in equivalence classes. 
+ * Description:   Simple structure for managing refinement data in equivalence classes.
  *
  ************************************************************************/
 
@@ -30,18 +30,17 @@ namespace xfer {
  * into equivalence classes.
  *
  * RefineClasses is used by the RefineSchedule and RefineAlgorithm
- * classes to manage refinement data items that describe communication 
+ * classes to manage refinement data items that describe communication
  * of patch data on an AMR hierarchy.  Specifically, this class organizes
  * these items into equivalence clases, so that items are grouped
- * together if they have the same data communication dependencies.  
- * See documentation for the method itemsAreEquivalent() for definition 
- * of equivalence. 
+ * together if they have the same data communication dependencies.
+ * See documentation for the method itemsAreEquivalent() for definition
+ * of equivalence.
  */
 
 class RefineClasses:public tbox::DescribedClass
 {
 public:
-
    /*!
     * @brief Data structure used to describe a refinement operation
     * between patch data components on an AMR hierarchy.
@@ -100,7 +99,7 @@ public:
       /*!
        * @brief Index of equivalence class where this item belongs.  All
        * items of the same equivalence class will have the same value.
-       */ 
+       */
       int d_class_index;
 
       /*!
@@ -111,8 +110,8 @@ public:
 
       /*!
        * @brief VariableFillPattern that can restrict the stencil of the data
-       * filled by the RefineSchedule. 
-       */ 
+       * filled by the RefineSchedule.
+       */
       tbox::Pointer<VariableFillPattern> d_var_fill_pattern;
    };
 
@@ -198,7 +197,7 @@ public:
     * equivalence class.
     *
     * If the item belongs in an existing equivalence class, it will be added
-    * to that class. Otherwise, a new equivalence class will be created for 
+    * to that class. Otherwise, a new equivalence class will be created for
     * this item.  The integer class index in the data item will set to the
     * index of the equivalence class into which it is inserted.
     *
@@ -223,10 +222,10 @@ public:
     *
     * A refine data item is invalid if any of its patch data integer ids are
     * negative, or if its scratch data does not have sufficient ghost width
-    * for the stencil of the refine operator or the fill pattern, or if 
-    * it is not a valid operation to copy from source data to scratch data or 
+    * for the stencil of the refine operator or the fill pattern, or if
+    * it is not a valid operation to copy from source data to scratch data or
     * from scratch data to destination data, or when time interpolation is used
-    * the old and new time patch data enties are either undefined or their 
+    * the old and new time patch data enties are either undefined or their
     * types do not match the source data type.
     *
     * An error will occur with a descriptive message if the item is invalid.
@@ -251,13 +250,13 @@ public:
     *        return true if they match, else false.
     *
     * This method checks whether all equivalence classes match between this
-    * RefineClasses object and the argument object.  To match, the number of 
+    * RefineClasses object and the argument object.  To match, the number of
     * equivalence classes held by the objects must be the same and each
-    * equivalence class in this object must match the class with the same 
-    * equivalence class number in the argument object.  Two classes match if 
+    * equivalence class in this object must match the class with the same
+    * equivalence class number in the argument object.  Two classes match if
     * they have the same number of items and their representative items are
     * equialvent as defined by the method itemsAreEquivalent().
-    * 
+    *
     * If a null patch descriptor argument is passed (or ommitted), the
     * descriptor associated with the variable database Singleton object will
     * be used.
@@ -283,16 +282,16 @@ public:
     * <ul>
     *    <li> Each corresponding patch data component (d_dst, d_src, etc.)
     *         must have the same patch data type and ghost cell width.
-    *    <li> The d_time_interpolate flag must be true or false for both 
-    *         objects. If true, each corresponding patch data component 
-    *         (d_src_told, d_src_tnew) must have the same data type and 
-    *         ghost cell width.  Also, the time interpolate operators 
+    *    <li> The d_time_interpolate flag must be true or false for both
+    *         objects. If true, each corresponding patch data component
+    *         (d_src_told, d_src_tnew) must have the same data type and
+    *         ghost cell width.  Also, the time interpolate operators
     *         must be the same type.
-    *    <li> d_fine_bdry_reps_var flag must have the same value for 
+    *    <li> d_fine_bdry_reps_var flag must have the same value for
     *         each object.
     *    <li> The refinement operator ptr d_oprefine must be null or non-null
-    *         for both objects.  If non-null, both operators must have the 
-    *         same stencil width. 
+    *         for both objects.  If non-null, both operators must have the
+    *         same stencil width.
     *    <li> The type of the d_var_fill_pattern must be the same for both
     *         objects.
     * </ul>
@@ -368,7 +367,7 @@ private:
       const RefineClasses&);                     // not implemented
 
    /*!
-    * @brief Check two patch data items (with given descriptor indices) 
+    * @brief Check two patch data items (with given descriptor indices)
     * to see whether they match.
     *
     * Two patch data items match if the are of the same patch data type and
@@ -398,7 +397,7 @@ private:
     * returned.
     *
     * @param[in] data
-    * @param[in] descriptor 
+    * @param[in] descriptor
     */
    int
    getEquivalenceClassIndex(

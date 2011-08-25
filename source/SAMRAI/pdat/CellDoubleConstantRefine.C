@@ -1,11 +1,11 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
  * Description:   Constant refine operator for cell-centered double data on
- *                a  mesh. 
+ *                a  mesh.
  *
  ************************************************************************/
 
@@ -35,30 +35,30 @@ extern "C" {
 #endif
 
 // in conrefine1d.f:
-void F77_FUNC(conrefcelldoub1d, CONREFCELLDOUB1D) (const int &, const int &,
-   const int &, const int &,
-   const int &, const int &,
-   const int &, const int &,
+void F77_FUNC(conrefcelldoub1d, CONREFCELLDOUB1D) (const int&, const int&,
+   const int&, const int&,
+   const int&, const int&,
+   const int&, const int&,
    const int *,
    const double *, double *);
 // in conrefine2d.f:
-void F77_FUNC(conrefcelldoub2d, CONREFCELLDOUB2D) (const int &, const int &,
-   const int &, const int &,
-   const int &, const int &, const int &, const int &,
-   const int &, const int &, const int &, const int &,
-   const int &, const int &, const int &, const int &,
+void F77_FUNC(conrefcelldoub2d, CONREFCELLDOUB2D) (const int&, const int&,
+   const int&, const int&,
+   const int&, const int&, const int&, const int&,
+   const int&, const int&, const int&, const int&,
+   const int&, const int&, const int&, const int&,
    const int *,
    const double *, double *);
 // in conrefine3d.f:
-void F77_FUNC(conrefcelldoub3d, CONREFCELLDOUB3D) (const int &, const int &,
-   const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
+void F77_FUNC(conrefcelldoub3d, CONREFCELLDOUB3D) (const int&, const int&,
+   const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
    const int *,
    const double *, double *);
 }

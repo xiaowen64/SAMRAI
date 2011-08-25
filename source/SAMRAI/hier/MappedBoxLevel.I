@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Set of mapped_boxes in a mapped_box_level of a distributed box graph. 
+ * Description:   Set of mapped_boxes in a mapped_box_level of a distributed box graph.
  *
  ************************************************************************/
 #include "SAMRAI/hier/RealBoxConstIterator.h"
@@ -113,31 +113,30 @@ void MappedBoxLevel::clearPersistentOverlapConnectors()
 }
 
 /*
-****************************************************************************
-****************************************************************************
-*/
+ ****************************************************************************
+ ****************************************************************************
+ */
 SAMRAI_INLINE_KEYWORD
 void MappedBoxLevel::deallocateGlobalizedVersion() const
 {
-   if ( d_globalized_version != NULL ) {
-      TBOX_ASSERT( d_globalized_version->getParallelState() == GLOBALIZED );
+   if (d_globalized_version != NULL) {
+      TBOX_ASSERT(d_globalized_version->getParallelState() == GLOBALIZED);
       delete d_globalized_version;
       d_globalized_version = NULL;
    }
-   return;
 }
 
 /*
-****************************************************************************
-Clear certain data that would become inconsistent when a box changes.
-****************************************************************************
-*/
+ ****************************************************************************
+ * Clear certain data that would become inconsistent when a box changes.
+ ****************************************************************************
+ */
 SAMRAI_INLINE_KEYWORD
-void MappedBoxLevel::clearForBoxChanges( bool isInvalid )
+void MappedBoxLevel::clearForBoxChanges(bool isInvalid)
 {
    deallocateGlobalizedVersion();
    clearPersistentOverlapConnectors();
-   if ( isInvalid ) {
+   if (isInvalid) {
       /*
        * Box removal can lead on inconsistent Connectors holding on to
        * handle, so detach the handle.  Box addition does NOT lead to
@@ -146,7 +145,6 @@ void MappedBoxLevel::clearForBoxChanges( bool isInvalid )
        */
       detachMyHandle();
    }
-   return;
 }
 
 /*
@@ -224,9 +222,9 @@ LocalId MappedBoxLevel::getLastLocalId() const
       return s_negative_one_local_id;
    }
    LocalId last_local_id(0);
-   for ( BoxSet::const_reverse_iterator ni = mapped_boxes.rbegin();
-         ni!=mapped_boxes.rend(); ++ni ) {
-      if ( last_local_id < ni->getLocalId() ) {
+   for (BoxSet::const_reverse_iterator ni = mapped_boxes.rbegin();
+        ni != mapped_boxes.rend(); ++ni) {
+      if (last_local_id < ni->getLocalId()) {
          last_local_id = ni->getLocalId();
       }
    }
@@ -323,7 +321,7 @@ bool MappedBoxLevel::hasMappedBox(
 
       BoxSet::const_iterator ni = d_mapped_boxes.find(mapped_box);
       return ni != d_mapped_boxes.end();
- 
+
    } else {
 #ifdef DEBUG_CHECK_ASSERTIONS
       if (d_parallel_state == DISTRIBUTED) {
@@ -345,7 +343,7 @@ SAMRAI_INLINE_KEYWORD
 bool MappedBoxLevel::hasMappedBox(
    const GlobalId& global_id,
    const BlockId& block_id,
-   const PeriodicId &periodic_id) const
+   const PeriodicId& periodic_id) const
 {
    const Box mapped_box(
       getDim(),
@@ -421,7 +419,7 @@ MappedBoxLevel::getMappedBox(
 {
 
    const Box mapped_box(getDim(),
-                              mapped_box_id);
+                        mapped_box_id);
    BoxSet::const_iterator ni;
    if (mapped_box.getOwnerRank() == d_rank) {
       ni = d_mapped_boxes.find(mapped_box);
@@ -490,13 +488,13 @@ MappedBoxLevel::getMappedBoxStrict(
    if (mapped_box_id.getOwnerRank() != d_rank && d_parallel_state != GLOBALIZED) {
       TBOX_ERROR(
          "MappedBoxLevel::getMappedBoxStrict: cannot get remote mapped_box " << mapped_box_id
-         <<
+                                                                             <<
          " without being in globalized state.");
    }
 #endif
 
    Box mapped_box(getDim(),
-                        mapped_box_id);
+                  mapped_box_id);
    BoxSet::const_iterator ni;
    if (mapped_box.getOwnerRank() == d_rank) {
       ni = d_mapped_boxes.find(mapped_box);

@@ -1,11 +1,11 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
  * Description:   Constant refine operator for face-centered complex data on
- *                a  mesh. 
+ *                a  mesh.
  *
  ************************************************************************/
 
@@ -33,59 +33,59 @@ extern "C" {
 #endif
 
 // in refine1d.f:
-void F77_FUNC(conreffacecplx1d, CONREFFACECPLX1D) (const int &, const int &,
-   const int &, const int &,
-   const int &, const int &,
-   const int &, const int &,
+void F77_FUNC(conreffacecplx1d, CONREFFACECPLX1D) (const int&, const int&,
+   const int&, const int&,
+   const int&, const int&,
+   const int&, const int&,
    const int *,
    const dcomplex *, dcomplex *);
 // in refine2d.f:
-void F77_FUNC(conreffacecplx2d0, CONREFFACECPLX2D0) (const int &, const int &,
-   const int &, const int &,
-   const int &, const int &, const int &, const int &,
-   const int &, const int &, const int &, const int &,
-   const int &, const int &, const int &, const int &,
+void F77_FUNC(conreffacecplx2d0, CONREFFACECPLX2D0) (const int&, const int&,
+   const int&, const int&,
+   const int&, const int&, const int&, const int&,
+   const int&, const int&, const int&, const int&,
+   const int&, const int&, const int&, const int&,
    const int *,
    const dcomplex *, dcomplex *);
-void F77_FUNC(conreffacecplx2d1, CONREFFACECPLX2D1) (const int &, const int &,
-   const int &, const int &,
-   const int &, const int &, const int &, const int &,
-   const int &, const int &, const int &, const int &,
-   const int &, const int &, const int &, const int &,
+void F77_FUNC(conreffacecplx2d1, CONREFFACECPLX2D1) (const int&, const int&,
+   const int&, const int&,
+   const int&, const int&, const int&, const int&,
+   const int&, const int&, const int&, const int&,
+   const int&, const int&, const int&, const int&,
    const int *,
    const dcomplex *, dcomplex *);
 // in refine3d.f:
-void F77_FUNC(conreffacecplx3d0, CONREFFACECPLX3D0) (const int &, const int &,
-   const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
+void F77_FUNC(conreffacecplx3d0, CONREFFACECPLX3D0) (const int&, const int&,
+   const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
    const int *,
    const dcomplex *, dcomplex *);
-void F77_FUNC(conreffacecplx3d1, CONREFFACECPLX3D1) (const int &, const int &,
-   const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
+void F77_FUNC(conreffacecplx3d1, CONREFFACECPLX3D1) (const int&, const int&,
+   const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
    const int *,
    const dcomplex *, dcomplex *);
-void F77_FUNC(conreffacecplx3d2, CONREFFACECPLX3D2) (const int &, const int &,
-   const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
+void F77_FUNC(conreffacecplx3d2, CONREFFACECPLX3D2) (const int&, const int&,
+   const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
    const int *,
    const dcomplex *, dcomplex *);
 }

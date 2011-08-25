@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Operator class for solving scalar Poisson using FAC 
+ * Description:   Operator class for solving scalar Poisson using FAC
  *
  ************************************************************************/
 namespace SAMRAI {
@@ -24,9 +24,9 @@ void CellPoissonFACOps::setUseSMG(
    if (d_hierarchy) {
       TBOX_ERROR(
          d_object_name << ": setUseSMG(bool) may NOT be called\n"
-         <<
+                       <<
          "while the solver state is initialized, as that\n"
-         << "would lead to a corrupted solver state.\n");
+                       << "would lead to a corrupted solver state.\n");
    }
    d_hypre_solver.setUseSMG(use_smg);
 }
@@ -131,8 +131,8 @@ void CellPoissonFACOps::setCoarsestLevelSolverChoice(
    } else {
       TBOX_ERROR(
          d_object_name << ": Bad coarse level solver choice '"
-         << choice
-         <<
+                       << choice
+                       <<
          "' in scapCellPoissonOpsX::setCoarseLevelSolver.");
    }
 }
@@ -179,10 +179,10 @@ void CellPoissonFACOps::setCoarseFineDiscretization(
    if (d_hierarchy) {
       TBOX_ERROR(
          d_object_name << ": Cannot change coarse-fine\n"
-         <<
+                       <<
          "discretization method while operator state\n"
-         << "is initialized because that causes a\n"
-         << "corruption in the state.\n");
+                       << "is initialized because that causes a\n"
+                       << "corruption in the state.\n");
    }
 #endif
    d_cf_discretization = coarsefine_method;
@@ -201,9 +201,9 @@ void CellPoissonFACOps::setProlongationMethod(
    if (d_hierarchy) {
       TBOX_ERROR(
          d_object_name << ": Cannot change prolongation method\n"
-         <<
+                       <<
          "while operator state is initialized because that\n"
-         << "causes a corruption in the state.\n");
+                       << "causes a corruption in the state.\n");
    }
 #endif
    d_prolongation_method = prolongation_method;

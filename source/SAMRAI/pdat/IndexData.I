@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   hier 
+ * Description:   hier
  *
  ************************************************************************/
 
@@ -95,14 +95,14 @@ IndexIterator<TYPE, BOX_GEOMETRY>::~IndexIterator()
 
 template<class TYPE, class BOX_GEOMETRY>
 SAMRAI_INLINE_KEYWORD
-TYPE & IndexIterator<TYPE, BOX_GEOMETRY>::operator * ()
+TYPE& IndexIterator<TYPE, BOX_GEOMETRY>::operator * ()
 {
    return *d_node->d_item;
 }
 
 template<class TYPE, class BOX_GEOMETRY>
 SAMRAI_INLINE_KEYWORD
-const TYPE &IndexIterator<TYPE, BOX_GEOMETRY>::operator * () const
+const TYPE& IndexIterator<TYPE, BOX_GEOMETRY>::operator * () const
 {
    return *d_node->d_item;
 }
@@ -123,14 +123,14 @@ const hier::Index& IndexIterator<TYPE, BOX_GEOMETRY>::getIndex() const
 
 template<class TYPE, class BOX_GEOMETRY>
 SAMRAI_INLINE_KEYWORD
-TYPE & IndexIterator<TYPE, BOX_GEOMETRY>::operator () ()
+TYPE& IndexIterator<TYPE, BOX_GEOMETRY>::operator () ()
 {
    return getItem();
 }
 
 template<class TYPE, class BOX_GEOMETRY>
 SAMRAI_INLINE_KEYWORD
-const TYPE &IndexIterator<TYPE, BOX_GEOMETRY>::operator () () const
+const TYPE& IndexIterator<TYPE, BOX_GEOMETRY>::operator () () const
 {
    return *d_node->d_item;
 }
@@ -145,7 +145,7 @@ IndexIterator<TYPE, BOX_GEOMETRY>::operator bool () const
 #ifndef LACKS_BOOL_VOID_RESOLUTION
 template<class TYPE, class BOX_GEOMETRY>
 SAMRAI_INLINE_KEYWORD
-IndexIterator<TYPE, BOX_GEOMETRY>::operator const void* () const
+IndexIterator<TYPE, BOX_GEOMETRY>::operator const void * () const
 {
    return d_node ? this : NULL;
 }

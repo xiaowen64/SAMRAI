@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Communication transaction for data copies during data coarsening 
+ * Description:   Communication transaction for data copies during data coarsening
  *
  ************************************************************************/
 
@@ -96,13 +96,13 @@ CoarsenCopyTransaction::CoarsenCopyTransaction(
 
    // Note: s_num_coarsen_items cannot be used at this point!
 
-   if ( d_dst_patch_rank == dst_level->getMappedBoxLevel()->getRank() ) {
-      d_dst_patch = dst_level->getPatch( dst_mapped_box.getGlobalId(),
-                                         dst_mapped_box.getBlockId() );
+   if (d_dst_patch_rank == dst_level->getMappedBoxLevel()->getRank()) {
+      d_dst_patch = dst_level->getPatch(dst_mapped_box.getGlobalId(),
+            dst_mapped_box.getBlockId());
    }
-   if ( d_src_patch_rank == src_level->getMappedBoxLevel()->getRank() ) {
-      d_src_patch = src_level->getPatch( src_mapped_box.getGlobalId(),
-                                         src_mapped_box.getBlockId() );
+   if (d_src_patch_rank == src_level->getMappedBoxLevel()->getRank()) {
+      d_src_patch = src_level->getPatch(src_mapped_box.getGlobalId(),
+            src_mapped_box.getBlockId());
    }
 }
 
@@ -121,23 +121,23 @@ CoarsenCopyTransaction::~CoarsenCopyTransaction()
 bool CoarsenCopyTransaction::canEstimateIncomingMessageSize()
 {
    bool can_estimate = false;
-   if ( !d_src_patch.isNull() ) {
-      can_estimate = 
+   if (!d_src_patch.isNull()) {
+      can_estimate =
          d_src_patch->getPatchData(s_coarsen_items[d_coarsen_item_id]->d_src)
-                    ->canEstimateStreamSizeFromBox();
+         ->canEstimateStreamSizeFromBox();
    } else {
-      can_estimate = 
+      can_estimate =
          d_dst_patch->getPatchData(s_coarsen_items[d_coarsen_item_id]->d_dst)
-                    ->canEstimateStreamSizeFromBox();
+         ->canEstimateStreamSizeFromBox();
    }
    return can_estimate;
 }
 
 size_t CoarsenCopyTransaction::computeIncomingMessageSize()
 {
-   d_incoming_bytes = 
+   d_incoming_bytes =
       d_dst_patch->getPatchData(s_coarsen_items[d_coarsen_item_id]->d_dst)
-                 ->getDataStreamSize(*d_overlap);
+      ->getDataStreamSize(*d_overlap);
    return d_incoming_bytes;
 }
 
@@ -145,7 +145,7 @@ size_t CoarsenCopyTransaction::computeOutgoingMessageSize()
 {
    d_outgoing_bytes =
       d_src_patch->getPatchData(s_coarsen_items[d_coarsen_item_id]->d_src)
-                 ->getDataStreamSize(*d_overlap);
+      ->getDataStreamSize(*d_overlap);
    return d_outgoing_bytes;
 }
 
@@ -153,14 +153,14 @@ void CoarsenCopyTransaction::packStream(
    tbox::MessageStream& stream)
 {
    d_src_patch->getPatchData(s_coarsen_items[d_coarsen_item_id]->d_src)
-              ->packStream(stream, *d_overlap);
+   ->packStream(stream, *d_overlap);
 }
 
 void CoarsenCopyTransaction::unpackStream(
    tbox::MessageStream& stream)
 {
    d_dst_patch->getPatchData(s_coarsen_items[d_coarsen_item_id]->d_dst)
-              ->unpackStream(stream, *d_overlap);
+   ->unpackStream(stream, *d_overlap);
 }
 
 void CoarsenCopyTransaction::copyLocalData()
@@ -195,9 +195,9 @@ void CoarsenCopyTransaction::printClassData(
           << std::endl;
    stream << "   coarsen item id:        " << d_coarsen_item_id << std::endl;
    stream << "   destination patch data id: "
-   << s_coarsen_items[d_coarsen_item_id]->d_dst << std::endl;
+          << s_coarsen_items[d_coarsen_item_id]->d_dst << std::endl;
    stream << "   source patch data id:      "
-   << s_coarsen_items[d_coarsen_item_id]->d_src << std::endl;
+          << s_coarsen_items[d_coarsen_item_id]->d_src << std::endl;
    stream << "   incoming bytes:         " << d_incoming_bytes << std::endl;
    stream << "   outgoing bytes:         " << d_outgoing_bytes << std::endl;
    stream << "   destination patch:           "

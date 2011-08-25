@@ -1,11 +1,11 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
  * Description:   Conservative linear refine operator for cell-centered
- *                omplex data on a Cartesian mesh. 
+ *                omplex data on a Cartesian mesh.
  *
  ************************************************************************/
 
@@ -39,32 +39,32 @@ extern "C" {
 #endif
 
 // in cartrefine1d.f:
-void F77_FUNC(cartclinrefcellcplx1d, CARTCLINREFCELLCPLX1D) (const int &,
-   const int &,
-   const int &, const int &,
-   const int &, const int &,
-   const int &, const int &,
+void F77_FUNC(cartclinrefcellcplx1d, CARTCLINREFCELLCPLX1D) (const int&,
+   const int&,
+   const int&, const int&,
+   const int&, const int&,
+   const int&, const int&,
    const int *, const double *, const double *,
    const dcomplex *, dcomplex *,
    dcomplex *, dcomplex *);
 // in cartrefine2d.f:
-void F77_FUNC(cartclinrefcellcplx2d, CARTCLINREFCELLCPLX2D) (const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &, const int &,
-   const int &, const int &, const int &, const int &,
-   const int &, const int &, const int &, const int &,
+void F77_FUNC(cartclinrefcellcplx2d, CARTCLINREFCELLCPLX2D) (const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&, const int&,
+   const int&, const int&, const int&, const int&,
+   const int&, const int&, const int&, const int&,
    const int *, const double *, const double *,
    const dcomplex *, dcomplex *,
    dcomplex *, dcomplex *, dcomplex *, dcomplex *);
-void F77_FUNC(cartclinrefcellcplx3d, CARTCLINREFCELLCPLX3D) (const int &,
-   const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
+void F77_FUNC(cartclinrefcellcplx3d, CARTCLINREFCELLCPLX3D) (const int&,
+   const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
    const int *, const double *, const double *,
    const dcomplex *, dcomplex *,
    dcomplex *, dcomplex *, dcomplex *,

@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Program for poisson solver on adaptive grid using FAC 
+ * Description:   Program for poisson solver on adaptive grid using FAC
  *
  ************************************************************************/
 #include "SAMRAI/SAMRAI_config.h"
@@ -201,7 +201,7 @@ int main(
           * and create the grid.
           */
          gridding_algorithm = new mesh::GriddingAlgorithm(
-            patch_hierarchy,
+               patch_hierarchy,
                " Gridding Algorithm",
                input_db->getDatabase("GriddingAlgorithm"),
                tag_and_initializer,
@@ -284,10 +284,10 @@ int main(
                     << "\n";
          for (ln = 0; ln < patch_hierarchy->getNumberOfLevels(); ++ln) {
             tbox::plog << setw(10) << "l2[" << setw(2) << ln << "]: "
-            << setw(10) << scientific << l2norms[ln]
-            << setw(10) << "li[" << setw(2) << ln << "]: "
-            << setw(10) << scientific << linorms[ln]
-            << "\n";
+                       << setw(10) << scientific << l2norms[ln]
+                       << setw(10) << "li[" << setw(2) << ln << "]: "
+                       << setw(10) << scientific << linorms[ln]
+                       << "\n";
          }
 
          /* Write the plot file. */

@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   All-to-one and one-to-all communication using a tree. 
+ * Description:   All-to-one and one-to-all communication using a tree.
  *
  ************************************************************************/
 #include "SAMRAI/tbox/AsyncCommGroup.h"
@@ -422,10 +422,10 @@ bool AsyncCommGroup::checkBcast()
                }
 #ifdef AsyncCommGroup_DEBUG_OUTPUT
                tbox::plog << "tag-" << d_mpi_tag
-               << " sending " << d_external_size
-               << " to " << d_child_data[ic].rank
-               << " in checkBcast"
-               << std::endl;
+                          << " sending " << d_external_size
+                          << " to " << d_child_data[ic].rank
+                          << " in checkBcast"
+                          << std::endl;
 #endif
             }
          }
@@ -450,10 +450,10 @@ bool AsyncCommGroup::checkBcast()
                   d_mpi.Get_count(&d_mpi_status, MPI_INT, &count);
 #ifdef AsyncCommGroup_DEBUG_OUTPUT
                   tbox::plog << "tag-" << d_mpi_tag
-                  << " sent unknown size (MPI convention)"
-                  << " to " << d_child_data[ic].rank
-                  << " in checkBcast"
-                  << std::endl;
+                             << " sent unknown size (MPI convention)"
+                             << " to " << d_child_data[ic].rank
+                             << " in checkBcast"
+                             << std::endl;
 #endif
                }
 #endif
@@ -490,18 +490,18 @@ bool AsyncCommGroup::checkBcast()
  */
 bool AsyncCommGroup::gatherByMpiCollective()
 {
-   if ( d_mpi.getSize() > 1 ) {
+   if (d_mpi.getSize() > 1) {
       d_internal_buf.clear();
-      d_internal_buf.insert( d_internal_buf.begin(),
-                             d_external_buf,
-                             d_external_buf+d_external_size );
+      d_internal_buf.insert(d_internal_buf.begin(),
+         d_external_buf,
+         d_external_buf + d_external_size);
       d_mpi.Gather(&d_internal_buf[0],
-                 d_external_size,
-                 MPI_INT,
-                 d_external_buf,
-                 d_external_size,
-                 MPI_INT,
-                 d_root_rank);
+         d_external_size,
+         MPI_INT,
+         d_external_buf,
+         d_external_size,
+         MPI_INT,
+         d_root_rank);
       d_internal_buf.clear();
    }
    d_next_task_op = none;
@@ -957,10 +957,10 @@ bool AsyncCommGroup::checkReduce()
                }
 #ifdef AsyncCommGroup_DEBUG_OUTPUT
                tbox::plog << "tag-" << d_mpi_tag
-               << " expecting " << msg_size
-               << " from " << d_child_data[ic].rank
-               << " in checkReduce"
-               << std::endl;
+                          << " expecting " << msg_size
+                          << " from " << d_child_data[ic].rank
+                          << " in checkReduce"
+                          << std::endl;
 #endif
             }
          }
@@ -998,21 +998,21 @@ bool AsyncCommGroup::checkReduce()
                      TBOX_ERROR(
                         "Did not get the expected message size from proc "
                         << d_child_data[ic].rank << "\n"
-                                                 << "Expect " << msg_size
-                                                 << "\n"
-                                                 << "Actual " << count << '\n'
-                                                 << "mpi_communicator = "
-                                                 << d_mpi.getCommunicator() << '\n'
-                                                 << "mpi_tag = "
-                                                 << d_mpi_tag << '\n');
+                        << "Expect " << msg_size
+                        << "\n"
+                        << "Actual " << count << '\n'
+                        << "mpi_communicator = "
+                        << d_mpi.getCommunicator() << '\n'
+                        << "mpi_tag = "
+                        << d_mpi_tag << '\n');
                   }
 #endif
                } else {
 #ifdef AsyncCommGroup_DEBUG_OUTPUT
                   tbox::plog << " child-" << ic << " tag-" << d_mpi_tag
-                  << " still waiting for proc " << d_child_data[ic].rank
-                  << " in checkReduce"
-                  << std::endl;
+                             << " still waiting for proc " << d_child_data[ic].rank
+                             << " in checkReduce"
+                             << std::endl;
                   TBOX_ASSERT(req[ic] != MPI_REQUEST_NULL);
                   TBOX_ASSERT(numberOfPendingRequests() > 0);
 #endif
@@ -1142,9 +1142,9 @@ void AsyncCommGroup::setGroupAndRootRank(
    if (i == group_size) {
       TBOX_ERROR(
          "New root " << root_rank << " is not in the group.\n"
-         << "mpi_communicator = " << d_mpi.getCommunicator()
-         << '\n'
-         << "mpi_tag = " << d_mpi_tag << '\n');
+                     << "mpi_communicator = " << d_mpi.getCommunicator()
+                     << '\n'
+                     << "mpi_tag = " << d_mpi_tag << '\n');
    }
    setGroupAndRootIndex(mpi, group_ranks, group_size, i);
 }
@@ -1210,10 +1210,10 @@ void AsyncCommGroup::setGroupAndRootIndex(
    if (d_idx == -1) {
       TBOX_ERROR(
          "The local process (" << d_rank
-         << ") MUST be in the communication group.\n"
-         << "mpi_communicator = "
-         << d_mpi.getCommunicator() << '\n'
-         << "mpi_tag = " << d_mpi_tag << '\n');
+                               << ") MUST be in the communication group.\n"
+                               << "mpi_communicator = "
+                               << d_mpi.getCommunicator() << '\n'
+                               << "mpi_tag = " << d_mpi_tag << '\n');
    }
    d_group_ranks.clear();
    d_group_ranks.insert(d_group_ranks.end(), d_group_size, -1);
@@ -1222,11 +1222,11 @@ void AsyncCommGroup::setGroupAndRootIndex(
       if (group_ranks[i] < 0 || group_ranks[i] >= d_nproc) {
          TBOX_ERROR(
             "Rank " << group_ranks[i] << " is not in the current\n"
-                                      << "MPI communicator.\n"
-                                      << "mpi_communicator = "
-                                      << d_mpi.getCommunicator() << '\n'
-                                      << "mpi_tag = " << d_mpi_tag
-                                      << '\n');
+                    << "MPI communicator.\n"
+                    << "mpi_communicator = "
+                    << d_mpi.getCommunicator() << '\n'
+                    << "mpi_tag = " << d_mpi_tag
+                    << '\n');
       }
       if (group_ranks[i] == d_rank) ++dup;
       d_group_ranks[i] = group_ranks[i];
@@ -1280,8 +1280,8 @@ void AsyncCommGroup::computeDependentData(
     */
    const int pos = toPosition(d_idx);
    if (pos > 0) {
-      d_parent_rank = group_ranks[toIndex((pos - 1) /
-                                          static_cast<int>(d_nchild))];
+      d_parent_rank = group_ranks[toIndex((pos - 1)
+                                     / static_cast<int>(d_nchild))];
    } else d_parent_rank = -1;
    for (ic = 0; ic < d_nchild; ++ic) {
       const int pos_of_child_ic = toChildPosition(pos, ic);
@@ -1323,7 +1323,7 @@ void AsyncCommGroup::logCurrentState(
    ;
    for (size_t i = 0; i < d_nchild; ++i) {
       co << "  [" << i << "]=" << d_child_data[i].rank
-      << " (" << req[i] << ')';
+         << " (" << req[i] << ')';
    }
    co << '\n';
 }

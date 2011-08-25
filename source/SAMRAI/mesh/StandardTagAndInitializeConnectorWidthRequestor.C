@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   StandardTagAndInitialize's implementation of PatchHierarchy 
+ * Description:   StandardTagAndInitialize's implementation of PatchHierarchy
  *
  ************************************************************************/
 
@@ -33,7 +33,6 @@ namespace mesh {
  *************************************************************************
  */
 
-
 static int GCD(
    const int a,
    const int b)
@@ -60,7 +59,6 @@ static int GCD(
    return r1;
 }
 
-
 /*
  **************************************************************************
  **************************************************************************
@@ -68,9 +66,7 @@ static int GCD(
 StandardTagAndInitializeConnectorWidthRequestor::StandardTagAndInitializeConnectorWidthRequestor(
    )
 {
-   return;
 }
-
 
 /*
  **************************************************************************
@@ -96,7 +92,7 @@ void StandardTagAndInitializeConnectorWidthRequestor::computeRequiredConnectorWi
    std::vector<hier::IntVector>& fine_connector_widths,
    const hier::PatchHierarchy& patch_hierarchy) const
 {
-   const tbox::Dimension &dim(patch_hierarchy.getDim());
+   const tbox::Dimension& dim(patch_hierarchy.getDim());
 
    /*
     * Get the refinement ratios on the hierarchy.  This is the ratio
@@ -107,7 +103,7 @@ void StandardTagAndInitializeConnectorWidthRequestor::computeRequiredConnectorWi
       patch_hierarchy.getMaxNumberOfLevels(),
       hier::IntVector(dim));
 
-   for ( int ln=0; ln<patch_hierarchy.getMaxNumberOfLevels(); ++ln ) {
+   for (int ln = 0; ln < patch_hierarchy.getMaxNumberOfLevels(); ++ln) {
       ratios_to_coarser[ln] = patch_hierarchy.getRatioToCoarserLevel(ln);
    }
 
@@ -118,13 +114,11 @@ void StandardTagAndInitializeConnectorWidthRequestor::computeRequiredConnectorWi
     * associated with the coarsened ghost regions.
     */
    xfer::RefineScheduleConnectorWidthRequestor rscwri;
-   rscwri.setGhostCellWidthFactor( error_coarsen_ratio );
+   rscwri.setGhostCellWidthFactor(error_coarsen_ratio);
    rscwri.computeRequiredConnectorWidths(
       self_connector_widths,
       fine_connector_widths,
       patch_hierarchy);
-
-   return;
 }
 
 /*
@@ -142,7 +136,7 @@ void StandardTagAndInitializeConnectorWidthRequestor::computeRequiredConnectorWi
 int StandardTagAndInitializeConnectorWidthRequestor::computeCoarsenRatio(
    const tbox::Array<hier::IntVector>& ratios_to_coarser) const
 {
-   const tbox::Dimension &dim(ratios_to_coarser[0].getDim());
+   const tbox::Dimension& dim(ratios_to_coarser[0].getDim());
    /*
     * Compute GCD on first dimension of level 1
     */
@@ -154,10 +148,10 @@ int StandardTagAndInitializeConnectorWidthRequestor::computeCoarsenRatio(
       error_coarsen_ratio = 3;
    } else {
       TBOX_ERROR("Unable to perform Richardson extrapolation algorithm "
-                 << "with ratios_to_coarser[1](0) = " << gcd_level1 << "\n"
-                 <<"Did you intend to use Richardson extrapolation?\n"
-                 <<"If no, you don't have to be here.  If yes, fix\n"
-                 <<"the refinement ratios in your hierarchy.");
+         << "with ratios_to_coarser[1](0) = " << gcd_level1 << "\n"
+         << "Did you intend to use Richardson extrapolation?\n"
+         << "If no, you don't have to be here.  If yes, fix\n"
+         << "the refinement ratios in your hierarchy.");
    }
 
    /*
@@ -193,16 +187,15 @@ int StandardTagAndInitializeConnectorWidthRequestor::computeCoarsenRatio(
                << "\n   level " << ln << "(" << d
                << "):"
                << ": ratios_to_coarser = " << gcd << "\n"
-               <<"Did you intend to use Richardson extrapolation?\n"
-               <<"If no, you don't have to be here.  If yes, fix\n"
-               <<"the refinement ratios in your hierarchy.");
+               << "Did you intend to use Richardson extrapolation?\n"
+               << "If no, you don't have to be here.  If yes, fix\n"
+               << "the refinement ratios in your hierarchy.");
          }
       }
    }
 
    return error_coarsen_ratio;
 }
-
 
 }
 }

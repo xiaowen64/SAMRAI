@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Describes boundaries for a patch 
+ * Description:   Describes boundaries for a patch
  *
  ************************************************************************/
 
@@ -27,9 +27,10 @@ namespace hier {
  *                                                                       *
  *************************************************************************
  */
-PatchBoundaries::PatchBoundaries(const tbox::Dimension& dim)
-: d_dim(dim),
-  d_array_of_bboxes(dim.getValue())
+PatchBoundaries::PatchBoundaries(
+   const tbox::Dimension& dim):
+   d_dim(dim),
+   d_array_of_bboxes(dim.getValue())
 {
 }
 
@@ -40,9 +41,10 @@ PatchBoundaries::PatchBoundaries(const tbox::Dimension& dim)
  *                                                                       *
  *************************************************************************
  */
-PatchBoundaries::PatchBoundaries(const PatchBoundaries& r)
-: d_dim(r.d_dim),
-  d_array_of_bboxes(r.d_dim.getValue())
+PatchBoundaries::PatchBoundaries(
+   const PatchBoundaries& r):
+   d_dim(r.d_dim),
+   d_array_of_bboxes(r.d_dim.getValue())
 {
    for (unsigned int d = 0; d < d_dim.getValue(); ++d) {
       d_array_of_bboxes[d] = r.d_array_of_bboxes[d];
@@ -66,10 +68,7 @@ PatchBoundaries::operator = (const PatchBoundaries& r)
    return *this;
 }
 
-
-
 } // SAMRAI namespace
 } // hier namespace
-
 
 #endif

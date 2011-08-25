@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   hier 
+ * Description:   hier
  *
  ************************************************************************/
 
@@ -259,14 +259,14 @@ EdgeGeometry::transform(
 
       for (int d = 0; d < dim.getValue(); d++) {
          if (d != axis_direction) {
-            box.upper()(d) -= 1;
+            box.upper() (d) -= 1;
          }
       }
       transformation.transform(box);
       if (dim.getValue() == 2) {
          const int rotation_num = static_cast<int>(rotation);
          if (rotation_num % 2) {
-            axis_direction = (axis_direction+1)%2;
+            axis_direction = (axis_direction + 1) % 2;
          }
       } else if (dim.getValue() == 3) {
 
@@ -376,7 +376,7 @@ EdgeGeometry::transform(
 
       for (int d = 0; d < dim.getValue(); d++) {
          if (d != axis_direction) {
-            box.upper()(d) += 1;
+            box.upper() (d) += 1;
          }
       }
    }
@@ -562,7 +562,6 @@ EdgeGeometry::transform(
       }
    }
 
-
    index += transformation.getOffset();
 }
 
@@ -585,13 +584,11 @@ EdgeGeometry::rotateAboutAxis(pdat::EdgeIndex& index,
    int new_axis_direction = index.getAxis();
    if (new_axis_direction != axis) {
       for (int j = 0; j < num_rotations; j++) {
-         new_axis_direction = new_axis_direction == a ? b : a ;
+         new_axis_direction = new_axis_direction == a ? b : a;
       }
    }
    index.setAxis(new_axis_direction);
 }
-
-
 
 }
 }

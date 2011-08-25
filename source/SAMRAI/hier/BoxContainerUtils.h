@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Common Box operations for Box containers. 
+ * Description:   Common Box operations for Box containers.
  *
  ************************************************************************/
 #ifndef included_hier_BoxContainerUtils
@@ -34,8 +34,6 @@ class BoxContainerUtils
 {
 
 public:
-
-
    //@{
 
    //! @name I/O operations for containers that lack built-in versions.
@@ -61,10 +59,8 @@ public:
    //@}
 
 private:
-
    // Disabled constructor.  No need for objects of this class.
    BoxContainerUtils();
-
 
 };
 

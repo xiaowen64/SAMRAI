@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Wrapper for SNES solver for use in a SAMRAI-based application. 
+ * Description:   Wrapper for SNES solver for use in a SAMRAI-based application.
  *
  ************************************************************************/
 
@@ -1009,9 +1009,9 @@ void SNES_SAMRAIContext::getFromInput(
          } else if (!(d_forcing_term_strategy == "CONSTANT")) {
             TBOX_ERROR(
                d_object_name << ": "
-               << "Key data `forcing_term_strategy' = "
-               << d_forcing_term_strategy
-               << " in input not recognized.");
+                             << "Key data `forcing_term_strategy' = "
+                             << d_forcing_term_strategy
+                             << " in input not recognized.");
          }
       }
 

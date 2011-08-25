@@ -40,7 +40,6 @@ class GlobalId
 {
 
 public:
-
    /*!
     * @brief Default constructor is non-initializing.
     *
@@ -59,7 +58,7 @@ public:
     * @brief Initializing constructor.
     */
    explicit GlobalId(
-      const LocalId &local_id,
+      const LocalId& local_id,
       const int owner_rank);
 
    /*!
@@ -99,7 +98,6 @@ public:
     */
    const LocalId&
    getLocalId() const;
-
 
    //@{
 

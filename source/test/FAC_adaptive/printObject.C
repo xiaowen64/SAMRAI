@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Misc printing functions in FAC solver test. 
+ * Description:   Misc printing functions in FAC solver test.
  *
  ************************************************************************/
 #include "SAMRAI/SAMRAI_config.h"
@@ -110,7 +110,8 @@ int printObject(
       );
    return 0;
 }
-template int printObject<double>(
+template int printObject<double
+                         >(
    std::ostream& os,
    const pdat::ArrayData<double>& adat,
    const int depth,

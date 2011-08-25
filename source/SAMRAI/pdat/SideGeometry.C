@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   hier 
+ * Description:   hier
  *
  ************************************************************************/
 
@@ -261,12 +261,12 @@ SideGeometry::transform(
       const hier::Transformation::RotationIdentifier rotation =
          transformation.getRotation();
 
-      box.upper()(normal_direction) -= 1;
+      box.upper() (normal_direction) -= 1;
       transformation.transform(box);
       if (dim.getValue() == 2) {
          const int rotation_num = static_cast<int>(rotation);
          if (rotation_num % 2) {
-            normal_direction = (normal_direction+1)%2;
+            normal_direction = (normal_direction + 1) % 2;
          }
       } else if (dim.getValue() == 3) {
 
@@ -303,7 +303,7 @@ SideGeometry::transform(
                   normal_direction = 2;
                   break;
 
-            }   
+            }
 
          } else if (normal_direction == 1) {
 
@@ -338,7 +338,7 @@ SideGeometry::transform(
                   break;
             }
 
-         } else if (normal_direction == 2) { 
+         } else if (normal_direction == 2) {
 
             switch (rotation) {
                case hier::Transformation::KUP_IUP_JUP:
@@ -363,7 +363,7 @@ SideGeometry::transform(
                case hier::Transformation::IDOWN_KDOWN_JDOWN:
 
                   normal_direction = 1;
-                  break; 
+                  break;
 
                default:
 
@@ -374,10 +374,9 @@ SideGeometry::transform(
          }
       }
 
-      box.upper()(normal_direction) += 1;     
+      box.upper() (normal_direction) += 1;
    }
 }
-
 
 /*
  *************************************************************************
@@ -558,7 +557,6 @@ SideGeometry::transform(
    index += transformation.getOffset();
 }
 
-
 void
 SideGeometry::rotateAboutAxis(pdat::SideIndex& index,
                               const int axis,
@@ -578,14 +576,11 @@ SideGeometry::rotateAboutAxis(pdat::SideIndex& index,
    int new_normal_direction = index.getAxis();
    if (new_normal_direction != axis) {
       for (int j = 0; j < num_rotations; j++) {
-         new_normal_direction = new_normal_direction == a ? b : a ;
+         new_normal_direction = new_normal_direction == a ? b : a;
       }
    }
    index.setAxis(new_normal_direction);
 }
-
-
-
 
 }
 }

@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Main program to test SAMRAI-KINSOL vector interface. 
+ * Description:   Main program to test SAMRAI-KINSOL vector interface.
  *
  ************************************************************************/
 
@@ -175,8 +175,8 @@ int main(
       for (int ib = 0; ib < n_coarse_boxes; ib++, coarse_domain_itr++) {
          if (ib % nproc == layer0.getRank()) {
             layer0.addMappedBox(hier::Box(*coarse_domain_itr,
-                                                hier::LocalId(ib),
-                                                layer0.getRank()));
+                  hier::LocalId(ib),
+                  layer0.getRank()));
          }
       }
 
@@ -184,8 +184,8 @@ int main(
       for (int ib = 0; ib < n_fine_boxes; ib++, fine_boxes_itr++) {
          if (ib % nproc == layer1.getRank()) {
             layer1.addMappedBox(hier::Box(*fine_boxes_itr,
-                                                hier::LocalId(ib),
-                                                layer1.getRank()));
+                  hier::LocalId(ib),
+                  layer1.getRank()));
          }
       }
 

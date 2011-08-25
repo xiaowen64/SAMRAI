@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Coarsening algorithm for data transfer between AMR levels 
+ * Description:   Coarsening algorithm for data transfer between AMR levels
  *
  ************************************************************************/
 
@@ -45,8 +45,8 @@ namespace xfer {
  * dependencies for a particular hierarchy configuration, the algorithm
  * generates a schedule based on the current hierarchy configuration.  This
  * schedule then performs the communication based on the registered data types
- * and their associated operators.  User-defined coarsening operations can 
- * be written using the interfaces in CoarsenPatchStrategy for 
+ * and their associated operators.  User-defined coarsening operations can
+ * be written using the interfaces in CoarsenPatchStrategy for
  * preprocessCoarsen() and postProcessCoarsen().
  *
  * The source patch data space is used during processing to store temporary
@@ -131,7 +131,7 @@ public:
     * @brief Register a coarsening operation with the coarsening algorithm.
     *
     * Data from the interiors of the source component on a source (fine) patch
-    * level will be coarsened into the source component of a temporary (coarse) 
+    * level will be coarsened into the source component of a temporary (coarse)
     * patch level and then copied into the destination component on the
     * destination (coarse) patch level.  If the coarsening operator requires
     * data in ghost cells outside of the patch interiors (i.e., a non-zero
@@ -159,7 +159,7 @@ public:
     *                  patch strategy member functions.  See the comments for
     *                  CoarsenPatchStrategy::preprocessCoarsen() and
     *                  CoarsenPatchStrategy::postprocessCoarsen().
-    * @param[in] gcw_to_coarsen Ghost cell width to be used when data should 
+    * @param[in] gcw_to_coarsen Ghost cell width to be used when data should
     *                           be coarsened from ghost cell regions of the
     *                           source (finer) level into the destination
     *                           (coarser) level. If coarsening from fine ghost
@@ -187,21 +187,21 @@ public:
       const tbox::Pointer<hier::CoarsenOperator> opcoarsen,
       const hier::IntVector& gcw_to_coarsen,
       tbox::Pointer<VariableFillPattern> var_fill_pattern =
-         (tbox::Pointer<BoxGeometryVariableFillPattern>)NULL);
+         (tbox::Pointer<BoxGeometryVariableFillPattern>) NULL);
 
    /*!
     * @brief Register a coarsening operation with the coarsening algorithm.
     *
     * This will do all of the same things as the above registerCoarsen(),
     * except it does not have the gcw_to_coarsen parameter.
-    */ 
+    */
    void
    registerCoarsen(
       const int dst,
       const int src,
       const tbox::Pointer<hier::CoarsenOperator> opcoarsen,
       tbox::Pointer<VariableFillPattern> var_fill_pattern =
-         (tbox::Pointer<BoxGeometryVariableFillPattern>)NULL);
+         (tbox::Pointer<BoxGeometryVariableFillPattern>) NULL);
 
    /*!
     * @brief Create a communication schedule to coarsen data from the given
@@ -239,7 +239,7 @@ public:
    createSchedule(
       tbox::Pointer<hier::PatchLevel> crse_level,
       tbox::Pointer<hier::PatchLevel> fine_level,
-      xfer::CoarsenPatchStrategy* coarsen_strategy =
+      xfer::CoarsenPatchStrategy * coarsen_strategy =
          ((xfer::CoarsenPatchStrategy *)NULL),
       tbox::Pointer<xfer::CoarsenTransactionFactory> transaction_factory =
          tbox::Pointer<xfer::CoarsenTransactionFactory>(NULL));

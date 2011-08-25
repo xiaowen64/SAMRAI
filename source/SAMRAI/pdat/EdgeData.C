@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Templated edge centered patch data type 
+ * Description:   Templated edge centered patch data type
  *
  ************************************************************************/
 
@@ -25,7 +25,8 @@
 namespace SAMRAI {
 namespace pdat {
 
-template<class TYPE> const int EdgeData<TYPE>::PDAT_EDGEDATA_VERSION = 1;
+template<class TYPE>
+const int EdgeData<TYPE>::PDAT_EDGEDATA_VERSION = 1;
 
 /*
  *************************************************************************
@@ -207,7 +208,7 @@ void EdgeData<TYPE>::copyWithRotation(
    const EdgeOverlap& overlap)
 {
    TBOX_ASSERT(overlap.getTransformation().getRotation() !=
-               hier::Transformation::NO_ROTATE);
+      hier::Transformation::NO_ROTATE);
 
    const tbox::Dimension& dim(src.getDim());
    const hier::Transformation::RotationIdentifier rotate =
@@ -257,8 +258,6 @@ void EdgeData<TYPE>::copyWithRotation(
       }
    }
 }
-
-
 
 /*
  *************************************************************************
@@ -359,7 +358,7 @@ void EdgeData<TYPE>::packWithRotation(
    const EdgeOverlap& overlap) const
 {
    TBOX_ASSERT(overlap.getTransformation().getRotation() !=
-               hier::Transformation::NO_ROTATE);
+      hier::Transformation::NO_ROTATE);
 
    const tbox::Dimension& dim(getDim());
    const hier::Transformation::RotationIdentifier rotate =
@@ -384,7 +383,6 @@ void EdgeData<TYPE>::packWithRotation(
 
    for (int i = 0; i < dim.getValue(); i++) {
       const hier::BoxList& overlap_boxes = overlap.getDestinationBoxList(i);
-
 
       const int size = depth * overlap_boxes.getTotalSizeOfBoxes();
       tbox::Array<TYPE> buffer(size);
@@ -416,7 +414,6 @@ void EdgeData<TYPE>::packWithRotation(
       stream.pack(buffer.getPointer(), size);
    }
 }
-
 
 template<class TYPE>
 void EdgeData<TYPE>::unpackStream(
@@ -588,7 +585,7 @@ void EdgeData<TYPE>::printAxis(
    os.precision(prec);
    for (EdgeIterator i(box, axis); i; i++) {
       os << "array" << i() << " = " << d_data[axis](i(), depth)
-      << std::endl << std::flush;
+         << std::endl << std::flush;
    }
 }
 

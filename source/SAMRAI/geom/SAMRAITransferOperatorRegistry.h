@@ -1,7 +1,7 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
  * Description:   Singleton registry for all tranfer operators.
@@ -24,10 +24,10 @@ namespace geom {
  * @brief Class SAMRAITransferOperatorRegistry is intended to implement the
  * buildCoarsenOperator, buildRefineOperator and buildTimeInterpolateOperator
  * member functions of TransferOperatorRegistry.
-
+ *
  * @see hier::TransferOperatorRegistry
  */
-  class SAMRAITransferOperatorRegistry : public hier::TransferOperatorRegistry
+class SAMRAITransferOperatorRegistry:public hier::TransferOperatorRegistry
 {
 public:
    /*!
@@ -35,7 +35,8 @@ public:
     *
     * @param[in]  dim
     */
-   SAMRAITransferOperatorRegistry(const tbox::Dimension& dim);
+   SAMRAITransferOperatorRegistry(
+      const tbox::Dimension& dim);
 
    /*!
     * @brief Destructor
@@ -43,15 +44,18 @@ public:
    ~SAMRAITransferOperatorRegistry();
 
 protected:
-   tbox::Pointer<hier::CoarsenOperator> buildCoarsenOperator(
+   tbox::Pointer<hier::CoarsenOperator>
+   buildCoarsenOperator(
       const tbox::Pointer<hier::Variable>& var,
       const std::string& op_name);
 
-   tbox::Pointer<hier::RefineOperator> buildRefineOperator(
+   tbox::Pointer<hier::RefineOperator>
+   buildRefineOperator(
       const tbox::Pointer<hier::Variable>& var,
       const std::string& op_name);
 
-   tbox::Pointer<hier::TimeInterpolateOperator> buildTimeInterpolateOperator(
+   tbox::Pointer<hier::TimeInterpolateOperator>
+   buildTimeInterpolateOperator(
       const tbox::Pointer<hier::Variable>& var,
       const std::string& op_name);
 };

@@ -1,11 +1,11 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
  * Description:   Constant refine operator for edge-centered int data on
- *                a  mesh. 
+ *                a  mesh.
  *
  ************************************************************************/
 
@@ -33,59 +33,59 @@ extern "C" {
 #endif
 
 // in conrefine1d.f:
-void F77_FUNC(conrefedgeintg1d, CONREFEDGEINTG1D) (const int &, const int &,
-   const int &, const int &,
-   const int &, const int &,
-   const int &, const int &,
+void F77_FUNC(conrefedgeintg1d, CONREFEDGEINTG1D) (const int&, const int&,
+   const int&, const int&,
+   const int&, const int&,
+   const int&, const int&,
    const int *,
    const int *, int *);
 // in conrefine2d.f:
-void F77_FUNC(conrefedgeintg2d0, CONREFEDGEINTG2D0) (const int &, const int &,
-   const int &, const int &,
-   const int &, const int &, const int &, const int &,
-   const int &, const int &, const int &, const int &,
-   const int &, const int &, const int &, const int &,
+void F77_FUNC(conrefedgeintg2d0, CONREFEDGEINTG2D0) (const int&, const int&,
+   const int&, const int&,
+   const int&, const int&, const int&, const int&,
+   const int&, const int&, const int&, const int&,
+   const int&, const int&, const int&, const int&,
    const int *,
    const int *, int *);
-void F77_FUNC(conrefedgeintg2d1, CONREFEDGEINTG2D1) (const int &, const int &,
-   const int &, const int &,
-   const int &, const int &, const int &, const int &,
-   const int &, const int &, const int &, const int &,
-   const int &, const int &, const int &, const int &,
+void F77_FUNC(conrefedgeintg2d1, CONREFEDGEINTG2D1) (const int&, const int&,
+   const int&, const int&,
+   const int&, const int&, const int&, const int&,
+   const int&, const int&, const int&, const int&,
+   const int&, const int&, const int&, const int&,
    const int *,
    const int *, int *);
 // in conrefine3d.f:
-void F77_FUNC(conrefedgeintg3d0, CONREFEDGEINTG3D0) (const int &, const int &,
-   const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
+void F77_FUNC(conrefedgeintg3d0, CONREFEDGEINTG3D0) (const int&, const int&,
+   const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
    const int *,
    const int *, int *);
-void F77_FUNC(conrefedgeintg3d1, CONREFEDGEINTG3D1) (const int &, const int &,
-   const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
+void F77_FUNC(conrefedgeintg3d1, CONREFEDGEINTG3D1) (const int&, const int&,
+   const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
    const int *,
    const int *, int *);
-void F77_FUNC(conrefedgeintg3d2, CONREFEDGEINTG3D2) (const int &, const int &,
-   const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
+void F77_FUNC(conrefedgeintg3d2, CONREFEDGEINTG3D2) (const int&, const int&,
+   const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
    const int *,
    const int *, int *);
 }

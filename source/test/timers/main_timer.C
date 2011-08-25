@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Test program to demonstrate/test timers. 
+ * Description:   Test program to demonstrate/test timers.
  *
  ************************************************************************/
 
@@ -54,18 +54,18 @@ public:
    {
       d_accesses++;
 
-      static struct timeval _tp;
-      gettimeofday(&_tp, (struct timezone *)0);
-      d_last_start_time = static_cast<double>(_tp.tv_sec)
-         + (1.0e-6) * (_tp.tv_usec);
+      static struct timeval tp;
+      gettimeofday(&tp, (struct timezone *)0);
+      d_last_start_time = static_cast<double>(tp.tv_sec)
+         + (1.0e-6) * (tp.tv_usec);
    }
 
    void stop()
    {
-      static struct timeval _tp;
-      gettimeofday(&_tp, (struct timezone *)0);
-      d_total_time += static_cast<double>(_tp.tv_sec)
-         + (1.0e-6) * (_tp.tv_usec) - d_last_start_time;
+      static struct timeval tp;
+      gettimeofday(&tp, (struct timezone *)0);
+      d_total_time += static_cast<double>(tp.tv_sec)
+         + (1.0e-6) * (tp.tv_usec) - d_last_start_time;
    }
 
    int getNumAccesses() const {
@@ -121,11 +121,11 @@ int main(
 
       if ((argc != 2) && (argc != 4)) {
          tbox::pout << "USAGE:  " << argv[0] << " <input filename> "
-                                             <<
+                    <<
          "<restart dir> <restore number> [options]\n"
-                                             << "  options:\n"
-                                             << "  none at this time"
-                                             << endl;
+                    << "  options:\n"
+                    << "  none at this time"
+                    << endl;
          tbox::SAMRAI_MPI::abort();
          return -1;
       } else {
@@ -359,8 +359,8 @@ int main(
          double access_time2 = tarray2[tcnt]->getTotalWallclockTime();
          tbox::pout.precision(16);
          tbox::pout << "\ntcnt, ntest, accesses = "
-         << tcnt << " , " << ntest << " , "
-         << tarray1[tcnt]->getNumberAccesses() << endl;
+                    << tcnt << " , " << ntest << " , "
+                    << tarray1[tcnt]->getNumberAccesses() << endl;
          tbox::pout << "access_time1 = " << access_time1 << endl;
          tbox::pout << "access_time2 = " << access_time2 << endl;
          double access_time12 = access_time1 - access_time2;
@@ -393,8 +393,8 @@ int main(
          double access_time2 = Ptarray2[tcnt].getTotalTime();
          tbox::pout.precision(16);
          tbox::pout << "\ntcnt, ntest, accesses = "
-         << tcnt << " , " << ntest << " , "
-         << Ptarray1[tcnt].getNumAccesses() << endl;
+                    << tcnt << " , " << ntest << " , "
+                    << Ptarray1[tcnt].getNumAccesses() << endl;
          tbox::pout << "access_time1 = " << access_time1 << endl;
          tbox::pout << "access_time2 = " << access_time2 << endl;
          double access_time12 = access_time1 - access_time2;

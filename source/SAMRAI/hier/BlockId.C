@@ -23,24 +23,22 @@
 namespace SAMRAI {
 namespace hier {
 
-const BlockId BlockId::s_invalid_id(tbox::MathUtilities<int>::getMax());
+const BlockId
+BlockId::s_invalid_id(
+   tbox::MathUtilities<int>::getMax());
 const BlockId BlockId::s_zero_id(0);
 
-
-
 /*
-********************************************************************************
-********************************************************************************
-*/
-std::ostream &operator << (
-   std::ostream &co,
-   const BlockId &r)
+ ********************************************************************************
+ ********************************************************************************
+ */
+std::ostream& operator << (
+   std::ostream& co,
+   const BlockId& r)
 {
    co << r.d_value;
    return co;
 }
-
-
 
 }
 }

@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Manager class for variables used in a SAMRAI application. 
+ * Description:   Manager class for variables used in a SAMRAI application.
  *
  ************************************************************************/
 
@@ -648,9 +648,9 @@ void VariableDatabase::printClassData(
                for (int j = 0; j < nctxts; j++) {
                   if (d_variable_context2index_map[i][j] != idUndefined()) {
                      os << "\n   context id = " << j << ", name = "
-                     << d_contexts[j]->getName()
-                     << " :  patch data id = "
-                     << d_variable_context2index_map[i][j];
+                        << d_contexts[j]->getName()
+                        << " :  patch data id = "
+                        << d_variable_context2index_map[i][j];
                   } else {
                      os << "\n   context id = " << j
                         << " UNDEFINED for this variable";
@@ -880,16 +880,16 @@ void VariableDatabase::addVariablePatchDataIndexPairToDatabase_Private(
 
 void
 VariableDatabase::removeVariable(
-      const std::string& name)
+   const std::string& name)
 {
    /*
     * 1. find the variable in d_variables by looking up variable id by
-    *    given variable name. 
+    *    given variable name.
     *
     * if valid id:
-    * 2. unregister and/or unmap it from collection of user-defined 
+    * 2. unregister and/or unmap it from collection of user-defined
     *    variables in database.
-    * 3. remove each patch data id associated with variable 
+    * 3. remove each patch data id associated with variable
     *    from PatchDescriptor
     * 4. remove variable from collection of variables held by database
     *    (i.e., d_variables array).

@@ -24,10 +24,10 @@ namespace hier {
  * Comparison operators are provided to define sorted ordering of
  * objects.
  */
-class BlockId {
+class BlockId
+{
 
 public:
-
    /*!
     * @brief Default constructor sets the value to invalid.
     */
@@ -36,14 +36,16 @@ public:
    /*!
     * @brief Copy constructor.
     */
-   BlockId(const BlockId &other);
+   BlockId(
+      const BlockId& other);
 
    /*!
     * @brief Construct from a numerical value.
     *
     * This method is explicit to prevent automatic conversion.
     */
-   explicit BlockId(const int &value);
+   explicit BlockId(
+      const int& value);
 
    /*!
     * @brief Default constructor.
@@ -57,34 +59,42 @@ public:
     *
     * @return @c *this
     */
-   BlockId &operator = ( const BlockId& rhs);
+   BlockId&
+   operator = (
+      const BlockId& rhs);
 
    /*!
     * @brief Set to an int value.
     *
     * @param[in] rhs
     */
-   void setId( const int &rhs);
+   void
+   setId(
+      const int& rhs);
 
    /*!
     * @brief Whether the value is valid.
     */
-   bool isValid() const;
+   bool
+   isValid() const;
 
    /*!
     * @brief Access the numerical value.
     */
-   const int &getBlockValue() const;
+   const int&
+   getBlockValue() const;
 
    /*!
     * @brief Get the BlockId with a numerical value of zero.
     */
-   static const BlockId &zero();
+   static const BlockId&
+   zero();
 
    /*!
     * @brief Get the designated invalid value for this class.
     */
-   static const BlockId &invalidId();
+   static const BlockId&
+   invalidId();
 
    //@{
 
@@ -97,7 +107,9 @@ public:
     *
     * @param[in] rhs
     */
-   bool operator == ( const BlockId& rhs) const;
+   bool
+   operator == (
+      const BlockId& rhs) const;
 
    /*!
     * @brief Inequality operator.
@@ -106,7 +118,9 @@ public:
     *
     * @param[in] rhs
     */
-   bool operator != ( const BlockId& rhs) const;
+   bool
+   operator != (
+      const BlockId& rhs) const;
 
    /*!
     * @brief Less-than operator.
@@ -115,7 +129,9 @@ public:
     *
     * @param[in] rhs
     */
-   bool operator < ( const BlockId& rhs) const;
+   bool
+   operator < (
+      const BlockId& rhs) const;
 
    /*!
     * @brief Greater-than operator.
@@ -124,7 +140,9 @@ public:
     *
     * @param[in] rhs
     */
-   bool operator > ( const BlockId& rhs) const;
+   bool
+   operator > (
+      const BlockId& rhs) const;
 
    /*!
     * @brief Less-than-or-equal-to operator.
@@ -133,7 +151,9 @@ public:
     *
     * @param[in] rhs
     */
-   bool operator <= ( const BlockId& rhs) const;
+   bool
+   operator <= (
+      const BlockId& rhs) const;
 
    /*!
     * @brief Greater-thanor-equal-to operator.
@@ -142,10 +162,11 @@ public:
     *
     * @param[in] rhs
     */
-   bool operator >= ( const BlockId& rhs) const;
+   bool
+   operator >= (
+      const BlockId& rhs) const;
 
    //@}
-
 
    //@{
 
@@ -158,7 +179,9 @@ public:
     *
     * @param[in] rhs
     */
-   bool operator == ( const int &rhs) const;
+   bool
+   operator == (
+      const int& rhs) const;
 
    /*!
     * @brief Inequality operator.
@@ -167,7 +190,9 @@ public:
     *
     * @param[in] rhs
     */
-   bool operator != ( const int &rhs) const;
+   bool
+   operator != (
+      const int& rhs) const;
 
    /*!
     * @brief Less-than operator.
@@ -176,7 +201,9 @@ public:
     *
     * @param[in] rhs
     */
-   bool operator < ( const int &rhs) const;
+   bool
+   operator < (
+      const int& rhs) const;
 
    /*!
     * @brief Greater-than operator.
@@ -185,7 +212,9 @@ public:
     *
     * @param[in] rhs
     */
-   bool operator > ( const int &rhs) const;
+   bool
+   operator > (
+      const int& rhs) const;
 
    /*!
     * @brief Less-than-or-equal-to operator.
@@ -194,7 +223,9 @@ public:
     *
     * @param[in] rhs
     */
-   bool operator <= ( const int &rhs) const;
+   bool
+   operator <= (
+      const int& rhs) const;
 
    /*!
     * @brief Greater-thanor-equal-to operator.
@@ -203,10 +234,11 @@ public:
     *
     * @param[in] rhs
     */
-   bool operator >= ( const int &rhs) const;
+   bool
+   operator >= (
+      const int& rhs) const;
 
    //@}
-
 
    /*!
     * @brief Format and insert object into a stream.
@@ -217,7 +249,6 @@ public:
       const BlockId& r);
 
 private:
-
    /*!
     * @brief Numerical value of the identifier.
     */

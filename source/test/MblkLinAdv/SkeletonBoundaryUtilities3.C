@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Utility routines for manipulating 3D Skeleton boundary data 
+ * Description:   Utility routines for manipulating 3D Skeleton boundary data
  *
  ************************************************************************/
 
@@ -29,69 +29,69 @@
 extern "C" {
 
 void F77_FUNC(stufcartbdryloc3d, STUFCARTBDRYLOC3D) (
-   const int &, const int &,
-   const int &, const int &,
-   const int &, const int &,
-   const int &, const int &, const int &, const int &,
-   const int &, const int &, const int &, const int &,
-   const int &, const int &, const int &, const int &,
-   const int &, const int &, const int &, const int &,
-   const int &, const int &, const int &, const int &);
+   const int&, const int&,
+   const int&, const int&,
+   const int&, const int&,
+   const int&, const int&, const int&, const int&,
+   const int&, const int&, const int&, const int&,
+   const int&, const int&, const int&, const int&,
+   const int&, const int&, const int&, const int&,
+   const int&, const int&, const int&, const int&);
 
 void F77_FUNC(stufcartbdrycond3d, STUFCARTBDRYCOND3D) (
-   const int &,
-   const int &, const int &, const int &,
-   const int &,
-   const int &, const int &, const int &,
-   const int &,
-   const int &, const int &, const int &,
-   const int &,
-   const int &, const int &, const int &);
+   const int&,
+   const int&, const int&, const int&,
+   const int&,
+   const int&, const int&, const int&,
+   const int&,
+   const int&, const int&, const int&,
+   const int&,
+   const int&, const int&, const int&);
 
 void F77_FUNC(getcartfacebdry3d, GETCARTFACEBDRY3D) (
-   const int &, const int &,
-   const int &, const int &,
-   const int &, const int &,
-   const int &, const int &,
-   const int &, const int &,
-   const int &, const int &,
-   const int &, const int &, const int &,
+   const int&, const int&,
+   const int&, const int&,
+   const int&, const int&,
+   const int&, const int&,
+   const int&, const int&,
+   const int&, const int&,
+   const int&, const int&, const int&,
    const double *,
-   const int &,
-   const int &,
+   const int&,
+   const int&,
    const double *,
    double *,
-   const int &);
+   const int&);
 
 void F77_FUNC(getcartedgebdry3d, GETCARTEDGEBDRY3D) (
-   const int &, const int &,
-   const int &, const int &,
-   const int &, const int &,
-   const int &, const int &,
-   const int &, const int &,
-   const int &, const int &,
-   const int &, const int &, const int &,
+   const int&, const int&,
+   const int&, const int&,
+   const int&, const int&,
+   const int&, const int&,
+   const int&, const int&,
+   const int&, const int&,
+   const int&, const int&, const int&,
    const double *,
-   const int &,
-   const int &,
+   const int&,
+   const int&,
    const double *,
    double *,
-   const int &);
+   const int&);
 
 void F77_FUNC(getcartnodebdry3d, GETCARTNODEBDRY3D) (
-   const int &, const int &,
-   const int &, const int &,
-   const int &, const int &,
-   const int &, const int &,
-   const int &, const int &,
-   const int &, const int &,
-   const int &, const int &, const int &,
+   const int&, const int&,
+   const int&, const int&,
+   const int&, const int&,
+   const int&, const int&,
+   const int&, const int&,
+   const int&, const int&,
+   const int&, const int&, const int&,
    const double *,
-   const int &,
-   const int &,
+   const int&,
+   const int&,
    const double *,
    double *,
-   const int &);
+   const int&);
 
 }
 using namespace SAMRAI;
@@ -628,9 +628,9 @@ int SkeletonBoundaryUtilities3::checkBdryData(
    } else {
       TBOX_ERROR(
          "Unknown btype " << btype
-         <<
+                          <<
          " passed to SkeletonBoundaryUtilities3::checkBdryData()! "
-         << endl);
+                          << endl);
    }
 
    tbox::plog << "\n\nCHECKING 3D " << bdry_type_str << " BDRY DATA..." << endl;
@@ -663,10 +663,10 @@ int SkeletonBoundaryUtilities3::checkBdryData(
       } else {
          TBOX_ERROR(
             "Unknown bcase " << bcase
-            <<
+                             <<
             " passed to SkeletonBoundaryUtilities3::checkBdryData()"
-            << "\n for " << bdry_type_str
-            << " at location " << bloc << endl);
+                             << "\n for " << bdry_type_str
+                             << " at location " << bloc << endl);
       }
 
    } else if (btype == Bdry::EDGE3D) {
@@ -689,10 +689,10 @@ int SkeletonBoundaryUtilities3::checkBdryData(
       } else {
          TBOX_ERROR(
             "Unknown bcase " << bcase
-            <<
+                             <<
             " passed to SkeletonBoundaryUtilities3::checkBdryData()"
-            << "\n for " << bdry_type_str
-            << " at location " << bloc << endl);
+                             << "\n for " << bdry_type_str
+                             << " at location " << bloc << endl);
       }
 
    } else if (btype == Bdry::NODE3D) {
@@ -715,10 +715,10 @@ int SkeletonBoundaryUtilities3::checkBdryData(
       } else {
          TBOX_ERROR(
             "Unknown bcase " << bcase
-            <<
+                             <<
             " passed to SkeletonBoundaryUtilities3::checkBdryData()"
-            << "\n for " << bdry_type_str
-            << " at location " << bloc << endl);
+                             << "\n for " << bdry_type_str
+                             << " at location " << bloc << endl);
       }
 
    }
@@ -1193,12 +1193,12 @@ void SkeletonBoundaryUtilities3::read3dBdryEdges(
                      if (no_face_data_found) {
                         TBOX_ERROR(
                            "Bdry condition " << bdry_cond_str
-                           << " found for "
-                           << bdry_loc_str
-                           << "\n but no "
-                           << proper_face_data
-                           << " data found for face "
-                           << proper_face << endl);
+                                             << " found for "
+                                             << bdry_loc_str
+                                             << "\n but no "
+                                             << proper_face_data
+                                             << " data found for face "
+                                             << proper_face << endl);
                      }
                   } else {
                      TBOX_ERROR("'boundary_condition' entry missing from "
@@ -1479,12 +1479,12 @@ void SkeletonBoundaryUtilities3::read3dBdryNodes(
                   if (no_face_data_found) {
                      TBOX_ERROR(
                         "Bdry condition " << bdry_cond_str
-                        << " found for "
-                        << bdry_loc_str
-                        << "\n but no "
-                        << proper_face_data
-                        << " data found for face "
-                        << proper_face << endl);
+                                          << " found for "
+                                          << bdry_loc_str
+                                          << "\n but no "
+                                          << proper_face_data
+                                          << " data found for face "
+                                          << proper_face << endl);
                   }
 
                } else {
@@ -1546,10 +1546,10 @@ void SkeletonBoundaryUtilities3::get3dBdryDirectionCheckValues(
       } else {
          TBOX_ERROR(
             "Unknown boundary location " << bloc
-            <<
+                                         <<
             " passed to SkeletonBoundaryUtilities3::checkBdryData()"
-            << "\n for "
-            << bdry_type_str << " boundary " << endl);
+                                         << "\n for "
+                                         << bdry_type_str << " boundary " << endl);
       }
 
    } else if (btype == Bdry::EDGE3D) {
@@ -1597,11 +1597,11 @@ void SkeletonBoundaryUtilities3::get3dBdryDirectionCheckValues(
       if (bad_case) {
          TBOX_ERROR(
             "Unknown or ambigous bcase " << bcase
-            <<
+                                         <<
             " passed to SkeletonBoundaryUtilities3::checkBdryData()"
-            << "\n for " << bdry_type_str
-            << " at location " << bloc
-            << endl);
+                                         << "\n for " << bdry_type_str
+                                         << " at location " << bloc
+                                         << endl);
       }
 
    } else if (btype == Bdry::NODE3D) {
@@ -1640,10 +1640,10 @@ void SkeletonBoundaryUtilities3::get3dBdryDirectionCheckValues(
    } else {
       TBOX_ERROR(
          "Unknown boundary type " << btype
-         <<
+                                  <<
          " passed to SkeletonBoundaryUtilities3::checkBdryData()"
-         << "\n for " << bdry_type_str
-         << " at location " << bloc << endl);
+                                  << "\n for " << bdry_type_str
+                                  << " at location " << bloc << endl);
    }
 
 }

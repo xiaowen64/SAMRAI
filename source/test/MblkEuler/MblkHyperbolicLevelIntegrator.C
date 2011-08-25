@@ -1,11 +1,11 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
  * Description:   Integration routines for single level in AMR hierarchy
- *                (basic hyperbolic systems) 
+ *                (basic hyperbolic systems)
  *
  ************************************************************************/
 
@@ -58,63 +58,63 @@ using namespace std;
 extern "C" {
 // in upfluxsum.m4:
 // for 2D:
-void F77_FUNC(upfluxsumface2d0, UPFLUXSUMFACe2d0) (const int &, const int &,
-   const int &, const int &,
-   const int &, const int &,
-   const int &,
+void F77_FUNC(upfluxsumface2d0, UPFLUXSUMFACe2d0) (const int&, const int&,
+   const int&, const int&,
+   const int&, const int&,
+   const int&,
    const double *, double *);
-void F77_FUNC(upfluxsumface2d1, UPFLUXSUMFACE2D1) (const int &, const int &,
-   const int &, const int &,
-   const int &, const int &,
-   const int &,
+void F77_FUNC(upfluxsumface2d1, UPFLUXSUMFACE2D1) (const int&, const int&,
+   const int&, const int&,
+   const int&, const int&,
+   const int&,
    const double *, double *);
-void F77_FUNC(upfluxsumside2d0, UPFLUXSUMSIDE2D0) (const int &, const int &,
-   const int &, const int &,
-   const int &, const int &,
-   const int &,
+void F77_FUNC(upfluxsumside2d0, UPFLUXSUMSIDE2D0) (const int&, const int&,
+   const int&, const int&,
+   const int&, const int&,
+   const int&,
    const double *, double *);
-void F77_FUNC(upfluxsumside2d1, UPFLUXSUMSIDE2D1) (const int &, const int &,
-   const int &, const int &,
-   const int &, const int &,
-   const int &,
+void F77_FUNC(upfluxsumside2d1, UPFLUXSUMSIDE2D1) (const int&, const int&,
+   const int&, const int&,
+   const int&, const int&,
+   const int&,
    const double *, double *);
 
 // for 3D:
-void F77_FUNC(upfluxsumface3d0, UPFLUXSUMFACE3D0) (const int &, const int &,
-   const int &, const int &,
-   const int &, const int &,
-   const int &, const int &, const int &,
-   const int &,
+void F77_FUNC(upfluxsumface3d0, UPFLUXSUMFACE3D0) (const int&, const int&,
+   const int&, const int&,
+   const int&, const int&,
+   const int&, const int&, const int&,
+   const int&,
    const double *, double *);
-void F77_FUNC(upfluxsumface3d1, UPFLUXSUMFACE3D1) (const int &, const int &,
-   const int &, const int &,
-   const int &, const int &,
-   const int &, const int &, const int &,
-   const int &,
+void F77_FUNC(upfluxsumface3d1, UPFLUXSUMFACE3D1) (const int&, const int&,
+   const int&, const int&,
+   const int&, const int&,
+   const int&, const int&, const int&,
+   const int&,
    const double *, double *);
-void F77_FUNC(upfluxsumface3d2, UPFLUXSUMFACE3D2) (const int &, const int &,
-   const int &, const int &,
-   const int &, const int &,
-   const int &, const int &, const int &,
-   const int &,
+void F77_FUNC(upfluxsumface3d2, UPFLUXSUMFACE3D2) (const int&, const int&,
+   const int&, const int&,
+   const int&, const int&,
+   const int&, const int&, const int&,
+   const int&,
    const double *, double *);
-void F77_FUNC(upfluxsumside3d0, UPFLUXSUMSIDE3D0) (const int &, const int &,
-   const int &, const int &,
-   const int &, const int &,
-   const int &, const int &, const int &,
-   const int &,
+void F77_FUNC(upfluxsumside3d0, UPFLUXSUMSIDE3D0) (const int&, const int&,
+   const int&, const int&,
+   const int&, const int&,
+   const int&, const int&, const int&,
+   const int&,
    const double *, double *);
-void F77_FUNC(upfluxsumside3d1, UPFLUXSUMSIDE3D1) (const int &, const int &,
-   const int &, const int &,
-   const int &, const int &,
-   const int &, const int &, const int &,
-   const int &,
+void F77_FUNC(upfluxsumside3d1, UPFLUXSUMSIDE3D1) (const int&, const int&,
+   const int&, const int&,
+   const int&, const int&,
+   const int&, const int&, const int&,
+   const int&,
    const double *, double *);
-void F77_FUNC(upfluxsumside3d2, UPFLUXSUMSIDE3D2) (const int &, const int &,
-   const int &, const int &,
-   const int &, const int &,
-   const int &, const int &, const int &,
-   const int &,
+void F77_FUNC(upfluxsumside3d2, UPFLUXSUMSIDE3D2) (const int&, const int&,
+   const int&, const int&,
+   const int&, const int&,
+   const int&, const int&, const int&,
+   const int&,
    const double *, double *);
 
 }
@@ -383,7 +383,7 @@ void MblkHyperbolicLevelIntegrator::initializeLevelData(
 
       for (hier::PatchLevel::Iterator mi(mblk_level); mi; mi++) {
          tbox::List<tbox::Pointer<hier::Variable> >::Iterator
-         time_dep_var = d_time_dep_variables.listStart();
+            time_dep_var = d_time_dep_variables.listStart();
          while (time_dep_var) {
             int old_indx =
                variable_db->mapVariableAndContextToIndex(time_dep_var(),
@@ -414,7 +414,6 @@ void MblkHyperbolicLevelIntegrator::initializeLevelData(
          initial_time);
 
       (*mi)->deallocatePatchData(d_temp_var_scratch_data);
-
 
    } // loop over patches
 
@@ -533,7 +532,6 @@ void MblkHyperbolicLevelIntegrator::applyGradientDetector(
          initial_time,
          tag_index,
          uses_richardson_extrapolation_too);
-
 
    } // loop over patches
 
@@ -772,7 +770,6 @@ MblkHyperbolicLevelIntegrator::getLevelDt(
 
          (*mi)->deallocatePatchData(d_temp_var_scratch_data);
 
-
       } // loop over patches
 
       d_patch_strategy->clearDataContext();
@@ -802,7 +799,6 @@ MblkHyperbolicLevelIntegrator::getLevelDt(
          dt = tbox::MathUtilities<double>::Min(dt, patch_dt);
 
          (*mi)->deallocatePatchData(d_temp_var_scratch_data);
-
 
       } // loop over patches
 
@@ -1156,7 +1152,6 @@ MblkHyperbolicLevelIntegrator::advanceLevel(
          at_syncronization);
       t_patch_num_kernel->stop();
 
-
       patch->deallocatePatchData(d_temp_var_scratch_data);
    }
    d_patch_strategy->clearDataContext();
@@ -1210,9 +1205,9 @@ MblkHyperbolicLevelIntegrator::advanceLevel(
             if (d_mblk_bdry_sched_advance_new[level_number].isNull()) {
                TBOX_ERROR(
                   d_object_name << ":  "
-                  <<
+                                <<
                   "Attempt to fill new ghost data for timestep"
-                  <<
+                                <<
                   "computation, but schedule not defined." << std::endl);
             }
 
@@ -1241,7 +1236,6 @@ MblkHyperbolicLevelIntegrator::advanceLevel(
          dt_next = tbox::MathUtilities<double>::Min(dt_next, patch_dt);
 
          (*mi)->deallocatePatchData(d_temp_var_scratch_data);
-
 
       } // loop over patches
 
@@ -1551,7 +1545,6 @@ MblkHyperbolicLevelIntegrator::synchronizeLevelWithCoarser(
          at_syncronization);
       (*mi)->deallocatePatchData(d_temp_var_scratch_data);
 
-
    } // loop over patches
 
    d_patch_strategy->clearDataContext();
@@ -1608,7 +1601,7 @@ void MblkHyperbolicLevelIntegrator::resetTimeDependentData(
    for (hier::PatchLevel::Iterator mi(mblk_level); mi; mi++) {
 
       tbox::List<tbox::Pointer<hier::Variable> >::Iterator
-      time_dep_var = d_time_dep_variables.listStart();
+         time_dep_var = d_time_dep_variables.listStart();
       while (time_dep_var) {
 
          int cur_indx =
@@ -1982,10 +1975,10 @@ void MblkHyperbolicLevelIntegrator::registerVariable(
             if (d_flux_side_registered) {
                TBOX_ERROR(
                   d_object_name << ":  "
-                  <<
+                                <<
                   "Attempt to register FaceVariable when "
-                  << "SideVariable already registered."
-                  << std::endl);
+                                << "SideVariable already registered."
+                                << std::endl);
             }
 
             d_flux_is_face = true;
@@ -1994,10 +1987,10 @@ void MblkHyperbolicLevelIntegrator::registerVariable(
             if (d_flux_face_registered) {
                TBOX_ERROR(
                   d_object_name << ":  "
-                  <<
+                                <<
                   "Attempt to register SideVariable when "
-                  << "FaceVariable already registered."
-                  << std::endl);
+                                << "FaceVariable already registered."
+                                << std::endl);
             }
 
             d_flux_is_face = false;
@@ -2005,7 +1998,7 @@ void MblkHyperbolicLevelIntegrator::registerVariable(
          } else {
             TBOX_ERROR(
                d_object_name << ":  "
-               <<
+                             <<
                "Flux is neither face- or side-centered." << std::endl);
          }
 
@@ -2068,8 +2061,8 @@ void MblkHyperbolicLevelIntegrator::registerVariable(
 
          TBOX_ERROR(
             d_object_name << ":  "
-            << "unknown HYP_VAR_TYPE = " << h_v_type
-            << std::endl);
+                          << "unknown HYP_VAR_TYPE = " << h_v_type
+                          << std::endl);
 
       }
 
@@ -2131,7 +2124,7 @@ void MblkHyperbolicLevelIntegrator::preprocessFluxData(
          for (hier::PatchLevel::Iterator mi(mblk_level); mi; mi++) {
 
             tbox::List<tbox::Pointer<hier::Variable> >::Iterator
-            fs_var = d_fluxsum_variables.listStart();
+               fs_var = d_fluxsum_variables.listStart();
 
             while (fs_var) {
                int fsum_id =
@@ -2210,9 +2203,9 @@ void MblkHyperbolicLevelIntegrator::postprocessFluxData(
       for (hier::PatchLevel::Iterator mi(mblk_level); mi; mi++) {
 
          tbox::List<tbox::Pointer<hier::Variable> >::Iterator
-         flux_var = d_flux_variables.listStart();
+            flux_var = d_flux_variables.listStart();
          tbox::List<tbox::Pointer<hier::Variable> >::Iterator
-         fluxsum_var = d_fluxsum_variables.listStart();
+            fluxsum_var = d_fluxsum_variables.listStart();
 
          const hier::Index& ilo = (*mi)->getBox().lower();
          const hier::Index& ihi = (*mi)->getBox().upper();
@@ -2392,7 +2385,7 @@ void MblkHyperbolicLevelIntegrator::copyTimeDependentData(
       tbox::Pointer<hier::Patch> patch = *ip;
 
       tbox::List<tbox::Pointer<hier::Variable> >::Iterator
-      time_dep_var = d_time_dep_variables.listStart();
+         time_dep_var = d_time_dep_variables.listStart();
       while (time_dep_var) {
          tbox::Pointer<hier::PatchData> src_data =
             patch->getPatchData(time_dep_var(), src_context);
@@ -2514,10 +2507,10 @@ void MblkHyperbolicLevelIntegrator::getFromInput(
                d_use_ghosts_for_dt);
          TBOX_WARNING(
             d_object_name << ":  "
-            <<
+                          <<
             "Key data `use_ghosts_to_compute_dt' not found in input."
-            << "  Using default value "
-            << d_use_ghosts_for_dt << std::endl);
+                          << "  Using default value "
+                          << d_use_ghosts_for_dt << std::endl);
       }
    }
 

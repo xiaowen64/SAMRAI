@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Robin boundary condition support on cartesian grids. 
+ * Description:   Robin boundary condition support on cartesian grids.
  *
  ************************************************************************/
 #ifndef included_solv_CartesianRobinBcHelper_C
@@ -34,46 +34,46 @@ extern "C" {
 
 void F77_FUNC(settype1cells2d, SETTYPE1CELLS2D) (
    double* data,
-   const int & difirst, const int & dilast,
-   const int & djfirst, const int & djlast,
+   const int& difirst, const int& dilast,
+   const int& djfirst, const int& djlast,
    const double* a, const double* b, const double* g,
-   const int & ifirst, const int & ilast,
-   const int & jfirst, const int & jlast,
-   const int & ibeg, const int & iend,
-   const int & jbeg, const int & jend,
-   const int & face, const int & ghos, const int & inte, const int & location,
-   const double & h, const int & zerog);
+   const int& ifirst, const int& ilast,
+   const int& jfirst, const int& jlast,
+   const int& ibeg, const int& iend,
+   const int& jbeg, const int& jend,
+   const int& face, const int& ghos, const int& inte, const int& location,
+   const double& h, const int& zerog);
 void F77_FUNC(settype2cells2d, SETTYPE2CELLS2D) (
    double* data,
-   const int & difirst, const int & dilast,
-   const int & djfirst, const int & djlast,
-   const int* lower, const int* upper, const int & location);
+   const int& difirst, const int& dilast,
+   const int& djfirst, const int& djlast,
+   const int* lower, const int* upper, const int& location);
 void F77_FUNC(settype1cells3d, SETTYPE1CELLS3D) (
    double* data,
-   const int & difirst, const int & dilast,
-   const int & djfirst, const int & djlast,
-   const int & dkfirst, const int & dklast,
+   const int& difirst, const int& dilast,
+   const int& djfirst, const int& djlast,
+   const int& dkfirst, const int& dklast,
    const double* a, const double* b, const double* g,
-   const int & ifirst, const int & ilast,
-   const int & jfirst, const int & jlast,
-   const int & kfirst, const int & klast,
-   const int & ibeg, const int & iend,
-   const int & jbeg, const int & jend,
-   const int & kbeg, const int & kend,
-   const int & face, const int & ghos, const int & inte, const int & location,
-   const double & h, const int & zerog);
+   const int& ifirst, const int& ilast,
+   const int& jfirst, const int& jlast,
+   const int& kfirst, const int& klast,
+   const int& ibeg, const int& iend,
+   const int& jbeg, const int& jend,
+   const int& kbeg, const int& kend,
+   const int& face, const int& ghos, const int& inte, const int& location,
+   const double& h, const int& zerog);
 void F77_FUNC(settype2cells3d, SETTYPE2CELLS3D) (
    double* data,
-   const int & difirst, const int & dilast,
-   const int & djfirst, const int & djlast,
-   const int & dkfirst, const int & dklast,
-   const int* lower, const int* upper, const int & location);
+   const int& difirst, const int& dilast,
+   const int& djfirst, const int& djlast,
+   const int& dkfirst, const int& dklast,
+   const int* lower, const int* upper, const int& location);
 void F77_FUNC(settype3cells3d, SETTYPE3CELLS3D) (
    double* data,
-   const int & difirst, const int & dilast,
-   const int & djfirst, const int & djlast,
-   const int & dkfirst, const int & dklast,
-   const int* lower, const int* upper, const int & location);
+   const int& difirst, const int& dilast,
+   const int& djfirst, const int& djlast,
+   const int& dkfirst, const int& dklast,
+   const int* lower, const int* upper, const int& location);
 }
 
 #ifndef SAMRAI_INLINE
@@ -347,8 +347,8 @@ void CartesianRobinBcHelper::setBoundaryValuesInCells(
                   break;
                default:
                   TBOX_ERROR(d_object_name << ": Invalid location index ("
-                  << location_index << ") in\n"
-                  << "setBoundaryValuesInCells");
+                                           << location_index << ") in\n"
+                                           << "setBoundaryValuesInCells");
             }
          } else if (d_dim == tbox::Dimension(3)) {
             switch (location_index) {
@@ -498,8 +498,8 @@ void CartesianRobinBcHelper::setBoundaryValuesInCells(
                   break;
                default:
                   TBOX_ERROR(d_object_name << ": Invalid location index ("
-                  << location_index << ") in\n"
-                  << "setBoundaryValuesInCells");
+                                           << location_index << ") in\n"
+                                           << "setBoundaryValuesInCells");
             }
          }
       }
@@ -646,11 +646,11 @@ void CartesianRobinBcHelper::setBoundaryValuesAtNodes(
 
    TBOX_ERROR(
       d_object_name << ": Using incomplete implementation"
-      <<
+                    <<
       "CartesianRobinBcHelper::setBoundaryValuesAtNodes"
-      <<
+                    <<
       "is not implemented because there is not a need for it (yet)"
-      << std::endl);
+                    << std::endl);
 }
 
 /*
@@ -765,15 +765,15 @@ void CartesianRobinBcHelper::fillSingularityBoundaryConditions(
    const double fill_time,
    const hier::Box& fill_box,
    const hier::BoundaryBox& boundary_box,
-   const tbox::Pointer<hier::GridGeometry> &grid_geometry)
+   const tbox::Pointer<hier::GridGeometry>& grid_geometry)
 {
-   NULL_USE( patch );
-   NULL_USE( encon_level );
-   NULL_USE( dst_to_encon );
-   NULL_USE( fill_time );
-   NULL_USE( fill_box );
-   NULL_USE( boundary_box );
-   NULL_USE( grid_geometry );
+   NULL_USE(patch);
+   NULL_USE(encon_level);
+   NULL_USE(dst_to_encon);
+   NULL_USE(fill_time);
+   NULL_USE(fill_box);
+   NULL_USE(boundary_box);
+   NULL_USE(grid_geometry);
 }
 
 /*

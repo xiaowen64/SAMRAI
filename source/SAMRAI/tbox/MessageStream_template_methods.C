@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Fixed-size message buffer used in interprocessor communication 
+ * Description:   Fixed-size message buffer used in interprocessor communication
  *
  ************************************************************************/
 
@@ -50,7 +50,7 @@ void MessageStream::pack(
  */
 
 template<typename DATA_TYPE>
-MessageStream & MessageStream::operator << (
+MessageStream& MessageStream::operator << (
    const DATA_TYPE& data)
 {
    TBOX_ASSERT(d_mode == MessageStream::Write);
@@ -94,7 +94,7 @@ void MessageStream::unpack(
  */
 
 template<typename DATA_TYPE>
-MessageStream & MessageStream::operator >> (
+MessageStream& MessageStream::operator >> (
    DATA_TYPE& data)
 {
    TBOX_ASSERT(d_mode == MessageStream::Read);

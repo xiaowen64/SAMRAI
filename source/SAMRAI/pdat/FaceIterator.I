@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Iterator for face centered patch data types 
+ * Description:   Iterator for face centered patch data types
  *
  ************************************************************************/
 
@@ -71,7 +71,7 @@ FaceIterator::operator bool () const
 
 #ifndef LACKS_BOOL_VOID_RESOLUTION
 SAMRAI_INLINE_KEYWORD
-FaceIterator::operator const void* () const
+FaceIterator::operator const void * () const
 {
    return FaceIterator::operator bool () ? this : NULL;
 }

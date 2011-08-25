@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   First layer node fill pattern class 
+ * Description:   First layer node fill pattern class
  *
  ************************************************************************/
 
@@ -21,7 +21,6 @@
 
 namespace SAMRAI {
 namespace pdat {
-
 
 /*!
  * @brief Class FirstLayerNodeVariableFillPattern is a concrete

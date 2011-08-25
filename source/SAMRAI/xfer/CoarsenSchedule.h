@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Coarsening schedule for data transfer between AMR levels 
+ * Description:   Coarsening schedule for data transfer between AMR levels
  *
  ************************************************************************/
 
@@ -97,7 +97,7 @@ public:
     * @param[in] transaction_factory  Pointer to a factory object that will
     *                                 create data transactions.
     * @param[in] patch_strategy  Pointer to a coarsen patch strategy object
-    *                            that provides user-defined coarsen operations. 
+    *                            that provides user-defined coarsen operations.
     *                            This pointer may be null, in which case no
     *                            user-defined coarsen operations will be
     *                            performed.
@@ -110,7 +110,7 @@ public:
       tbox::Pointer<hier::PatchLevel> fine_level,
       const tbox::Pointer<xfer::CoarsenClasses> coarsen_classes,
       tbox::Pointer<xfer::CoarsenTransactionFactory> transaction_factory,
-      xfer::CoarsenPatchStrategy* patch_strategy,
+      xfer::CoarsenPatchStrategy * patch_strategy,
       bool fill_coarse_data);
 
    /*!
@@ -123,8 +123,8 @@ public:
     * @brief Reset this coarsen schedule to perform data transfers asssociated
     * items in the given CoarsenClasses argument.
     *
-    * The schedule will be changed to operate on data given by the 
-    * coarsen_classes argument rather than the data it has previously been 
+    * The schedule will be changed to operate on data given by the
+    * coarsen_classes argument rather than the data it has previously been
     * set to operate on.
     *
     * @param[in] coarsen_classes  Pointer to structure containing patch data and
@@ -332,7 +332,7 @@ private:
     *
     * The restructured neighboorhood sets are added to the output parameter.
     *
-    * @param[out] full_inverted_edges 
+    * @param[out] full_inverted_edges
     * @param[in]  src_to_dst
     */
    void
@@ -363,7 +363,7 @@ private:
     * patch data components have sufficient ghost width.
     *
     * Specifically, the destination data must have a ghost cell width at least
-    * as large as the coarsen item's d_gcw_to_coarsen data member.  The source 
+    * as large as the coarsen item's d_gcw_to_coarsen data member.  The source
     * data must have a ghost cell width at least as large as d_gcw_to_coarsen
     * refined to the source (finer) level index space.  Also, if their are
     * any user-defined coarsening operations provided through the
@@ -379,7 +379,7 @@ private:
    /*
     * @brief Similar to getOverlapConnector() but requires that the
     * Connector is found.
-    * 
+    *
     * @deprecated  Private method doesn't appear to be used.
     */
    const hier::Connector *
@@ -435,7 +435,7 @@ private:
 //   RefinePatchStrategy* d_refine_patch_strategy;
 
    /*!
-    * @brief Factory object used to create data transactions when schedule is 
+    * @brief Factory object used to create data transactions when schedule is
     * constructed.
     */
    tbox::Pointer<CoarsenTransactionFactory> d_transaction_factory;
@@ -489,7 +489,7 @@ private:
    //*}
 
    static tbox::StartupShutdownManager::Handler
-   s_initialize_finalize_handler;
+      s_initialize_finalize_handler;
 
 };
 

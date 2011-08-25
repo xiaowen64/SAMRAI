@@ -1,11 +1,11 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
  * Description:   Conservative linear refine operator for cell-centered float
- *                data on a Cartesian mesh. 
+ *                data on a Cartesian mesh.
  *
  ************************************************************************/
 
@@ -37,33 +37,33 @@ extern "C" {
 #endif
 
 // in cartrefine1d.f:
-void F77_FUNC(cartclinrefcellflot1d, CARTCLINREFCELLFLOT1D) (const int &,
-   const int &,
-   const int &, const int &,
-   const int &, const int &,
-   const int &, const int &,
+void F77_FUNC(cartclinrefcellflot1d, CARTCLINREFCELLFLOT1D) (const int&,
+   const int&,
+   const int&, const int&,
+   const int&, const int&,
+   const int&, const int&,
    const int *, const double *, const double *,
    const float *, float *,
    float *, float *);
 // in cartrefine2d.f:
-void F77_FUNC(cartclinrefcellflot2d, CARTCLINREFCELLFLOT2D) (const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &, const int &,
-   const int &, const int &, const int &, const int &,
-   const int &, const int &, const int &, const int &,
+void F77_FUNC(cartclinrefcellflot2d, CARTCLINREFCELLFLOT2D) (const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&, const int&,
+   const int&, const int&, const int&, const int&,
+   const int&, const int&, const int&, const int&,
    const int *, const double *, const double *,
    const float *, float *,
    float *, float *, float *, float *);
 // in cartrefine3d.f:
-void F77_FUNC(cartclinrefcellflot3d, CARTCLINREFCELLFLOT3D) (const int &,
-   const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
+void F77_FUNC(cartclinrefcellflot3d, CARTCLINREFCELLFLOT3D) (const int&,
+   const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
    const int *, const double *, const double *,
    const float *, float *,
    float *, float *, float *,

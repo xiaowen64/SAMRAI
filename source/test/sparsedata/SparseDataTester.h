@@ -1,7 +1,7 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
  * Description:   Test class for SparseData.
@@ -29,17 +29,26 @@ using namespace SAMRAI;
 class SparseDataTester
 {
 public:
-   SparseDataTester(const SAMRAI::tbox::Dimension& dim);
+   SparseDataTester(
+      const SAMRAI::tbox::Dimension& dim);
    ~SparseDataTester();
 
-   bool testConstruction();
-   bool testAdd();
-   bool testRemove();
-   bool testCopy();
-   bool testCopy2();
-   void testTiming();
-   bool testPackStream();
-   bool testDatabaseInterface();
+   bool
+   testConstruction();
+   bool
+   testAdd();
+   bool
+   testRemove();
+   bool
+   testCopy();
+   bool
+   testCopy2();
+   void
+   testTiming();
+   bool
+   testPackStream();
+   bool
+   testDatabaseInterface();
 
 private:
    static const int DSIZE = 7;
@@ -47,15 +56,29 @@ private:
 
    typedef pdat::SparseData<pdat::CellGeometry> SparseDataType;
 
-   void _fillObject(tbox::Pointer<SparseDataType> sparse_data);
-   void _getDblKeys(std::vector<std::string>& keys);
-   void _getIntKeys(std::vector<std::string>& keys);
-   void _getDblValues(double* values);
-   void _getIntValues(int* values);
-   bool _testCopy(tbox::Pointer<SparseDataType> src,
+   void
+   _fillObject(
+      tbox::Pointer<SparseDataType> sparse_data);
+   void
+   _getDblKeys(
+      std::vector<std::string>& keys);
+   void
+   _getIntKeys(
+      std::vector<std::string>& keys);
+   void
+   _getDblValues(
+      double* values);
+   void
+   _getIntValues(
+      int* values);
+   bool
+   _testCopy(
+      tbox::Pointer<SparseDataType> src,
       tbox::Pointer<SparseDataType> dst);
-   tbox::Pointer<SparseDataType> _createEmptySparseData();
-   hier::Index _getRandomIndex();
+   tbox::Pointer<SparseDataType>
+   _createEmptySparseData();
+   hier::Index
+   _getRandomIndex();
 
    tbox::Pointer<SparseDataType> d_sparse_data;
 

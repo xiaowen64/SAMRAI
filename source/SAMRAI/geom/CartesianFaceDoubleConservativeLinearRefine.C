@@ -1,11 +1,11 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
  * Description:   Conservative linear refine operator for face-centered
- *                double data on a Cartesian mesh. 
+ *                double data on a Cartesian mesh.
  *
  ************************************************************************/
 
@@ -37,67 +37,67 @@ extern "C" {
 #endif
 
 // in cartrefine1d.f:
-void F77_FUNC(cartclinreffacedoub1d, CARTCLINREFFACEDOUB1D) (const int &,
-   const int &,
-   const int &, const int &,
-   const int &, const int &,
-   const int &, const int &,
+void F77_FUNC(cartclinreffacedoub1d, CARTCLINREFFACEDOUB1D) (const int&,
+   const int&,
+   const int&, const int&,
+   const int&, const int&,
+   const int&, const int&,
    const int *, const double *, const double *,
    const double *, double *,
    double *, double *);
 // in cartrefine2d.f:
-void F77_FUNC(cartclinreffacedoub2d0, CARTCLINREFFACEDOUB2D0) (const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &, const int &,
-   const int &, const int &, const int &, const int &,
-   const int &, const int &, const int &, const int &,
+void F77_FUNC(cartclinreffacedoub2d0, CARTCLINREFFACEDOUB2D0) (const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&, const int&,
+   const int&, const int&, const int&, const int&,
+   const int&, const int&, const int&, const int&,
    const int *, const double *, const double *,
    const double *, double *,
    double *, double *, double *, double *);
-void F77_FUNC(cartclinreffacedoub2d1, CARTCLINREFFACEDOUB2D1) (const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &, const int &,
-   const int &, const int &, const int &, const int &,
-   const int &, const int &, const int &, const int &,
+void F77_FUNC(cartclinreffacedoub2d1, CARTCLINREFFACEDOUB2D1) (const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&, const int&,
+   const int&, const int&, const int&, const int&,
+   const int&, const int&, const int&, const int&,
    const int *, const double *, const double *,
    const double *, double *,
    double *, double *, double *, double *);
 // in cartrefine3d.f:
-void F77_FUNC(cartclinreffacedoub3d0, CARTCLINREFFACEDOUB3D0) (const int &,
-   const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
+void F77_FUNC(cartclinreffacedoub3d0, CARTCLINREFFACEDOUB3D0) (const int&,
+   const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
    const int *, const double *, const double *,
    const double *, double *,
    double *, double *, double *,
    double *, double *, double *);
-void F77_FUNC(cartclinreffacedoub3d1, CARTCLINREFFACEDOUB3D1) (const int &,
-   const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
+void F77_FUNC(cartclinreffacedoub3d1, CARTCLINREFFACEDOUB3D1) (const int&,
+   const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
    const int *, const double *, const double *,
    const double *, double *,
    double *, double *, double *,
    double *, double *, double *);
-void F77_FUNC(cartclinreffacedoub3d2, CARTCLINREFFACEDOUB3D2) (const int &,
-   const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
+void F77_FUNC(cartclinreffacedoub3d2, CARTCLINREFFACEDOUB3D2) (const int&,
+   const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
    const int *, const double *, const double *,
    const double *, double *,
    double *, double *, double *,

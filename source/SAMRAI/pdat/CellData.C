@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Templated cell centered patch data type 
+ * Description:   Templated cell centered patch data type
  *
  ************************************************************************/
 
@@ -34,7 +34,8 @@
 namespace SAMRAI {
 namespace pdat {
 
-template<class TYPE> const int CellData<TYPE>::PDAT_CELLDATA_VERSION = 1;
+template<class TYPE>
+const int CellData<TYPE>::PDAT_CELLDATA_VERSION = 1;
 
 /*
  *************************************************************************
@@ -220,7 +221,7 @@ void CellData<TYPE>::copyWithRotation(
    const CellOverlap& overlap)
 {
    TBOX_ASSERT(overlap.getTransformation().getRotation() !=
-               hier::Transformation::NO_ROTATE);
+      hier::Transformation::NO_ROTATE);
 
    const tbox::Dimension& dim(src.getDim());
    const hier::BoxList& overlap_boxes = overlap.getDestinationBoxList();
@@ -253,13 +254,13 @@ void CellData<TYPE>::copyWithRotation(
 
             const pdat::CellIndex& dst_index = ci();
             pdat::CellIndex src_index(dst_index);
-            hier::Transformation::rotateIndex(src_index, back_rotate); 
+            hier::Transformation::rotateIndex(src_index, back_rotate);
             src_index += back_shift;
 
             for (int d = 0; d < depth; d++) {
                d_data(dst_index, d) = src.d_data(src_index, d);
             }
-         } 
+         }
       }
    }
 
@@ -364,7 +365,7 @@ void CellData<TYPE>::packWithRotation(
    const CellOverlap& overlap) const
 {
    TBOX_ASSERT(overlap.getTransformation().getRotation() !=
-               hier::Transformation::NO_ROTATE);
+      hier::Transformation::NO_ROTATE);
 
    const tbox::Dimension& dim(getDim());
    const hier::BoxList& overlap_boxes = overlap.getDestinationBoxList();
@@ -403,7 +404,7 @@ void CellData<TYPE>::packWithRotation(
                CellIndex src_index(ci());
                hier::Transformation::rotateIndex(src_index, back_rotate);
                src_index += back_shift;
-   
+
                buffer[i] = d_data(src_index, d);
                i++;
             }
@@ -413,7 +414,6 @@ void CellData<TYPE>::packWithRotation(
 
    stream.pack(buffer.getPointer(), size);
 }
-
 
 /*
  *************************************************************************

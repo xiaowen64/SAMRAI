@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Base class for geometry management in AMR hierarchy 
+ * Description:   Base class for geometry management in AMR hierarchy
  *
  ************************************************************************/
 
@@ -56,7 +56,7 @@ GridGeometry::getSingularityBoxList(
 }
 
 SAMRAI_INLINE_KEYWORD
-const std::vector<int> &
+const std::vector<int>&
 GridGeometry::getSingularityIndices(
    const BlockId& block_id) const
 {
@@ -85,7 +85,6 @@ int GridGeometry::getNumberOfNeighbors(
 {
    return d_block_neighbors[block_id.getBlockValue()].getNumberOfItems();
 }
-
 
 SAMRAI_INLINE_KEYWORD
 const tbox::List<GridGeometry::Neighbor>&
@@ -138,8 +137,6 @@ bool GridGeometry::hasEnhancedConnectivity() const
 {
    return d_has_enhanced_connectivity;
 }
-
-
 
 }
 }

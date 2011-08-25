@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   A collection of patches at one level of the AMR hierarchy 
+ * Description:   A collection of patches at one level of the AMR hierarchy
  *
  ************************************************************************/
 
@@ -50,7 +50,7 @@ const tbox::Pointer<Patch>& PatchLevel::getPatch(
 
 SAMRAI_INLINE_KEYWORD
 tbox::Pointer<Patch> PatchLevel::getPatch(
-   const BoxId &mapped_box_id) const
+   const BoxId& mapped_box_id) const
 {
    const PatchContainer::const_iterator mi = d_patches.find(mapped_box_id);
 #ifdef DEBUG_CHECK_ASSERTIONS
@@ -143,7 +143,7 @@ void PatchLevel::setRatioToCoarserLevel(
 SAMRAI_INLINE_KEYWORD
 const BoxList& PatchLevel::getBoxes() const
 {
-   if ( ! d_has_globalized_data ) {
+   if (!d_has_globalized_data) {
       initializeGlobalizedMappedBoxLevel();
    }
    return d_boxes;
@@ -152,11 +152,11 @@ const BoxList& PatchLevel::getBoxes() const
 SAMRAI_INLINE_KEYWORD
 void PatchLevel::getBoxes(BoxList& boxes, const BlockId& block_id) const
 {
-   if ( ! d_has_globalized_data ) {
+   if (!d_has_globalized_data) {
       initializeGlobalizedMappedBoxLevel();
    }
 
-   boxes.clearItems(); 
+   boxes.clearItems();
    const BoxSet& global_mapped_boxes =
       d_mapped_box_level->getGlobalizedVersion().getGlobalMappedBoxes();
 
@@ -176,7 +176,7 @@ SAMRAI_INLINE_KEYWORD
 const MappedBoxLevel&
 PatchLevel::getGlobalizedMappedBoxLevel() const
 {
-   if ( ! d_has_globalized_data ) {
+   if (!d_has_globalized_data) {
       initializeGlobalizedMappedBoxLevel();
    }
    return d_mapped_box_level->getGlobalizedVersion();
@@ -195,7 +195,7 @@ const
 SAMRAI_INLINE_KEYWORD
 const ProcessorMapping& PatchLevel::getProcessorMapping() const
 {
-   if ( ! d_has_globalized_data ) {
+   if (!d_has_globalized_data) {
       initializeGlobalizedMappedBoxLevel();
    }
    return d_mapping;
@@ -209,7 +209,7 @@ const tbox::Dimension& PatchLevel::getDim() const
 
 SAMRAI_INLINE_KEYWORD
 int PatchLevel::getMappingForPatch(
-   const BoxId &mapped_box_id) const
+   const BoxId& mapped_box_id) const
 {
    // Note: p is required to be a local index.
    /*
@@ -225,15 +225,15 @@ int PatchLevel::getMappingForPatch(
 
 SAMRAI_INLINE_KEYWORD
 const Box& PatchLevel::getBoxForPatch(
-   const BoxId &mapped_box_id) const
+   const BoxId& mapped_box_id) const
 {
    TBOX_ASSERT(mapped_box_id.getOwnerRank() == d_mapped_box_level->getRank());
-   return getPatch(mapped_box_id)->getBox(); 
+   return getPatch(mapped_box_id)->getBox();
 }
 
 SAMRAI_INLINE_KEYWORD
 bool PatchLevel::patchTouchesRegularBoundary(
-   const BoxId &mapped_box_id) const
+   const BoxId& mapped_box_id) const
 {
    TBOX_ASSERT(mapped_box_id.getOwnerRank() == d_mapped_box_level->getRank());
    bool rval = getPatch(mapped_box_id)->getPatchGeometry()->getTouchesRegularBoundary();
@@ -242,7 +242,7 @@ bool PatchLevel::patchTouchesRegularBoundary(
 
 SAMRAI_INLINE_KEYWORD
 bool PatchLevel::patchTouchesPeriodicBoundary(
-   const BoxId &mapped_box_id) const
+   const BoxId& mapped_box_id) const
 {
    TBOX_ASSERT(mapped_box_id.getOwnerRank() == d_mapped_box_level->getRank());
    bool rval = getPatch(mapped_box_id)->getPatchGeometry()->getTouchesPeriodicBoundary();
@@ -449,7 +449,6 @@ PatchLevel::Iterator::operator bool ()
 
 }
 }
-
 
 #if !defined(__BGL_FAMILY__) && defined(__xlC__)
 /*

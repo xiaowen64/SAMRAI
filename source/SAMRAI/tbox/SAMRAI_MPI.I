@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Simple utility class for interfacing with MPI 
+ * Description:   Simple utility class for interfacing with MPI
  *
  ************************************************************************/
 
@@ -72,8 +72,8 @@ SAMRAI_INLINE_KEYWORD
 void SAMRAI_MPI::freeCommunicator()
 {
 #ifdef HAVE_MPI
-   if ( d_comm != MPI_COMM_NULL ) {
-      TBOX_ASSERT( tbox::SAMRAI_MPI::usingMPI() );
+   if (d_comm != MPI_COMM_NULL) {
+      TBOX_ASSERT(tbox::SAMRAI_MPI::usingMPI());
       Comm_free(&d_comm);
       // d_comm is now set to MPI_COMM_NULL;
    }

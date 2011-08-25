@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Test program for RankGroup with TreeLoadBalancer. 
+ * Description:   Test program for RankGroup with TreeLoadBalancer.
  *
  ************************************************************************/
 #include "SAMRAI/SAMRAI_config.h"
@@ -102,8 +102,8 @@ int main(
 
    if (argc < 2) {
       TBOX_ERROR("USAGE:  " << argv[0] << " <input file> [case name]\n"
-                                       << "  options:\n"
-                                       << "  none at this time" << std::endl);
+                            << "  options:\n"
+                            << "  none at this time" << std::endl);
    } else {
       input_filename = argv[1];
    }
@@ -250,7 +250,7 @@ int main(
       hier::BoxList::Iterator domain_boxes_itr(domain_boxes);
       for (int i = 0; i < domain_boxes.size(); ++i, domain_boxes_itr++) {
          domain_mapped_box_level.addMappedBox(hier::Box(*domain_boxes_itr,
-                                                              hier::LocalId(i), 0));
+               hier::LocalId(i), 0));
       }
 
       /*
@@ -292,7 +292,7 @@ int main(
        * Set up data used by TreeLoadBalancer.
        */
       hier::MappedBoxLevel anchor_mapped_box_level(hier::IntVector(dim, 1),
-         grid_geometry);
+                                                   grid_geometry);
       hier::MappedBoxLevel balance_mapped_box_level(dim);
       hier::Connector balance_to_anchor;
       hier::Connector anchor_to_balance;
@@ -308,13 +308,13 @@ int main(
          const int my_boxes_stop =
             tbox::MathUtilities<int>::Min(my_boxes_start + boxes_per_proc,
                anchor_boxes.size());
-	 hier::BoxList::Iterator anchor_boxes_itr(anchor_boxes);
+         hier::BoxList::Iterator anchor_boxes_itr(anchor_boxes);
          for (int i = 0; i < my_boxes_start; ++i) {
             anchor_boxes_itr++;
          }
          for (int i = my_boxes_start; i < my_boxes_stop; ++i, anchor_boxes_itr++) {
             anchor_mapped_box_level.addBox(*anchor_boxes_itr,
-                                           hier::BlockId::zero());
+               hier::BlockId::zero());
          }
       }
 
@@ -655,8 +655,8 @@ void generatePrebalanceByUserShells(
 
    tbox::Pointer<hier::PatchLevel> tag_level(
       new hier::PatchLevel(anchor_mapped_box_level,
-                           grid_geometry,
-                           vdb->getPatchDescriptor()));
+         grid_geometry,
+         vdb->getPatchDescriptor()));
 
    tbox::Pointer<pdat::CellVariable<int> > tag_variable(
       new pdat::CellVariable<int>(dim, "TagVariable"));
@@ -721,13 +721,13 @@ void generatePrebalanceByUserShells(
     * the anchor_mapped_box_level instead.
     */
    anchor_to_balance.initialize(anchor_mapped_box_level,
-                                balance_mapped_box_level,
-                                anchor_to_balance.getConnectorWidth(),
-                                anchor_to_balance.getNeighborhoodSets());
+      balance_mapped_box_level,
+      anchor_to_balance.getConnectorWidth(),
+      anchor_to_balance.getNeighborhoodSets());
    balance_to_anchor.initialize(balance_mapped_box_level,
-                                anchor_mapped_box_level,
-                                balance_to_anchor.getConnectorWidth(),
-                                balance_to_anchor.getNeighborhoodSets());
+      anchor_mapped_box_level,
+      balance_to_anchor.getConnectorWidth(),
+      balance_to_anchor.getNeighborhoodSets());
 }
 
 /*
@@ -762,7 +762,7 @@ void generatePrebalanceByUserBoxes(
       const int owner = i % initial_owners.size();
       if (owner == balance_mapped_box_level.getRank()) {
          balance_mapped_box_level.addMappedBox(hier::Box(*balance_boxes_itr,
-                                                               hier::LocalId(i), owner));
+               hier::LocalId(i), owner));
       }
    }
    balance_to_anchor.initialize(

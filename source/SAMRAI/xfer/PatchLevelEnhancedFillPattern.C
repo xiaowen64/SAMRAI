@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Abstract fill pattern class to provide interface for stencils 
+ * Description:   Abstract fill pattern class to provide interface for stencils
  *
  ************************************************************************/
 
@@ -111,8 +111,7 @@ void PatchLevelEnhancedFillPattern::computeFillMappedBoxesAndNeighborhoodSets(
                      dst_mapped_box.getBlockId());
 
                   fill_mapped_boxes.insert(fill_mapped_boxes.end(),
-                                           fill_mapped_box);
-
+                     fill_mapped_box);
 
                   fill_nabrs.insert(fill_mapped_box);
 
@@ -123,8 +122,8 @@ void PatchLevelEnhancedFillPattern::computeFillMappedBoxesAndNeighborhoodSets(
       }
 
       d_max_fill_boxes = tbox::MathUtilities<int>::Max(
-                            d_max_fill_boxes,
-                            constructed_fill_boxes.size());
+            d_max_fill_boxes,
+            constructed_fill_boxes.size());
    }
 }
 

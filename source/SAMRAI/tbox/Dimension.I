@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   A smart pointer template class with RTTI 
+ * Description:   A smart pointer template class with RTTI
  *
  ************************************************************************/
 
@@ -14,8 +14,8 @@ namespace SAMRAI {
 namespace tbox {
 
 SAMRAI_INLINE_KEYWORD
-Dimension::Dimension()
-   : d_dim(Dimension::getInvalidDimValue()) 
+Dimension::Dimension():
+   d_dim(Dimension::getInvalidDimValue())
 {
 }
 
@@ -103,17 +103,17 @@ SAMRAI_INLINE_KEYWORD Dimension::operator unsigned short () const {
 #endif
 
 /*
- * The following methods are so constructed in order to get 
- * passed the static initialization order issue.  
+ * The following methods are so constructed in order to get
+ * passed the static initialization order issue.
  * This guarantees that initialization will occur on first access.
  */
-SAMRAI_INLINE_KEYWORD 
-unsigned short 
+SAMRAI_INLINE_KEYWORD
+unsigned short
 Dimension::getMaxDimValue() {
    return SAMRAI_MAXIMUM_DIMENSION;
 }
 
-SAMRAI_INLINE_KEYWORD 
+SAMRAI_INLINE_KEYWORD
 const Dimension&
 Dimension::getMaxDimension() {
    static Dimension dim(SAMRAI_MAXIMUM_DIMENSION);
@@ -121,15 +121,15 @@ Dimension::getMaxDimension() {
 }
 
 SAMRAI_INLINE_KEYWORD
-unsigned short 
+unsigned short
 Dimension::getInvalidDimValue() {
-   static unsigned short invalid = 
+   static unsigned short invalid =
       std::numeric_limits<unsigned short>::max();
    return invalid;
 }
 
 SAMRAI_INLINE_KEYWORD
-const Dimension& 
+const Dimension&
 Dimension::getInvalidDimension()
 {
    static Dimension invalidDim(Dimension::getInvalidDimValue());

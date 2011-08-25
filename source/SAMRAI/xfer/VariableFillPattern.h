@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Abstract fill pattern class to provide interface for stencils 
+ * Description:   Abstract fill pattern class to provide interface for stencils
  *
  ************************************************************************/
 
@@ -28,7 +28,7 @@ namespace xfer {
  * @brief Class VariableFillPattern is an abstract base class that provides an
  * interface to create objects that can calculate overlaps which correspond
  * to a specific stencil.
- * 
+ *
  * If an object of a concrete VariableFillPattern type is provided when
  * registering a refine operation with a RefineAlgorithm, then BoxOverlap
  * calculations associated with that refine operation will use the
@@ -75,7 +75,7 @@ public:
     * @param[in] overwrite_interior  controls whether or not to include the
     *                                destination box interior in the overlap
     * @param[in] transformation  the transformation from source to
-    *                            destination index space.  
+    *                            destination index space.
     *
     * @return                    Pointer to the calculated overlap object
     */
@@ -90,9 +90,9 @@ public:
       const hier::Transformation& transformation) const = 0;
 
    /*!
-    * @brief This pure virtual method provides an interface for computing 
+    * @brief This pure virtual method provides an interface for computing
     * overlaps which define the space to be filled by a refinement operation.
-    * 
+    *
     * Implementations of this method compute a BoxOverlap that covers a
     * desired subset of the space defined by fill_boxes.
     *

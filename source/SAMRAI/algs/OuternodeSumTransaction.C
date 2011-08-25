@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Communication transaction for summing outernode data 
+ * Description:   Communication transaction for summing outernode data
  *
  ************************************************************************/
 
@@ -221,9 +221,9 @@ void OuternodeSumTransaction::printClassData(
    stream << "   source node:            " << d_src_node << std::endl;
    stream << "   refine item id:         " << d_refine_item_id << std::endl;
    stream << "   destination patch data: "
-   << s_refine_items[d_refine_item_id]->d_scratch << std::endl;
+          << s_refine_items[d_refine_item_id]->d_scratch << std::endl;
    stream << "   source patch data:      "
-   << s_refine_items[d_refine_item_id]->d_src << std::endl;
+          << s_refine_items[d_refine_item_id]->d_src << std::endl;
    stream << "   incoming bytes:         " << d_incoming_bytes << std::endl;
    stream << "   outgoing bytes:         " << d_outgoing_bytes << std::endl;
    stream << "   destination level:           "

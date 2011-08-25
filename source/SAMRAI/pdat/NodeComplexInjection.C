@@ -1,11 +1,11 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
  * Description:   Constant averaging operator for node-centered complex data on
- *                a  mesh. 
+ *                a  mesh.
  *
  ************************************************************************/
 
@@ -36,26 +36,26 @@ extern "C" {
 #endif
 
 // in concoarsen1d.f:
-void F77_FUNC(conavgnodecplx1d, CONAVGNODECPLX1D) (const int &, const int &,
-   const int &, const int &,
-   const int &, const int &,
+void F77_FUNC(conavgnodecplx1d, CONAVGNODECPLX1D) (const int&, const int&,
+   const int&, const int&,
+   const int&, const int&,
    const int *,
    const dcomplex *, dcomplex *);
 // in concoarsen2d.f:
-void F77_FUNC(conavgnodecplx2d, CONAVGNODECPLX2D) (const int &, const int &,
-   const int &, const int &,
-   const int &, const int &, const int &, const int &,
-   const int &, const int &, const int &, const int &,
+void F77_FUNC(conavgnodecplx2d, CONAVGNODECPLX2D) (const int&, const int&,
+   const int&, const int&,
+   const int&, const int&, const int&, const int&,
+   const int&, const int&, const int&, const int&,
    const int *,
    const dcomplex *, dcomplex *);
 // in concoarsen3d.f:
-void F77_FUNC(conavgnodecplx3d, CONAVGNODECPLX3D) (const int &, const int &,
-   const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
+void F77_FUNC(conavgnodecplx3d, CONAVGNODECPLX3D) (const int&, const int&,
+   const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
    const int *,
    const dcomplex *, dcomplex *);
 }

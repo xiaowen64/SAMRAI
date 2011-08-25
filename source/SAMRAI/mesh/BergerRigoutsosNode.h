@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Asynchronous Berger-Rigoutsos dendogram 
+ * Description:   Asynchronous Berger-Rigoutsos dendogram
  *
  ************************************************************************/
 #ifndef included_mesh_BergerRigoutsosNode
@@ -365,8 +365,9 @@ private:
     * All such parameters are contained in a single CommonParams
     * object.
     */
-   class CommonParams {
-     public :
+   class CommonParams
+   {
+public:
       CommonParams(
          const tbox::Dimension& dim);
 
@@ -834,7 +835,6 @@ private:
       const std::string& border) const;
    //@}
 
-
    /*!
     * @brief Initialize static objects and register shutdown routine.
     *
@@ -1006,12 +1006,12 @@ private:
 
    //@}
 
-   /* 
+   /*
     * Static initialization and cleanup handler.
     */
 
    static tbox::StartupShutdownManager::Handler
-   s_initialize_handler;
+      s_initialize_handler;
 };
 
 }

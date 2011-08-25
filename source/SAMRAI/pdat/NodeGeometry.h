@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   hier 
+ * Description:   hier
  *
  ************************************************************************/
 
@@ -65,11 +65,13 @@ public:
     * @param[in,out]  normal_direction
     * @param[in]      transformation
     */
-   static void transform(hier::Box& box,
-                         const hier::Transformation& transformation); 
+   static void
+   transform(
+      hier::Box& box,
+      const hier::Transformation& transformation);
 
    /*!
-    * @brief Transform a NodeIndex. 
+    * @brief Transform a NodeIndex.
     *
     * This static method applies a coordinate system transformation to the
     * given NodeIndex.
@@ -77,8 +79,10 @@ public:
     * @param[in,out]  index
     * @param[in]      transformation
     */
-   static void transform(pdat::NodeIndex& index,
-                         const hier::Transformation& transformation);
+   static void
+   transform(
+      pdat::NodeIndex& index,
+      const hier::Transformation& transformation);
 
    /*!
     * @brief Construct the node geometry object given an AMR index
@@ -163,9 +167,10 @@ private:
       const hier::BoxList& dst_restrict_boxes);
 
    static void
-   rotateAboutAxis(pdat::NodeIndex& index,
-                   const int axis,
-                   const int num_rotations);
+   rotateAboutAxis(
+      pdat::NodeIndex& index,
+      const int axis,
+      const int num_rotations);
 
    NodeGeometry(
       const NodeGeometry&);             // not implemented

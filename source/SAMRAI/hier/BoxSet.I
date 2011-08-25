@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Extension of a std 
+ * Description:   Extension of a std
  *
  ************************************************************************/
 #include "SAMRAI/hier/PeriodicShiftCatalog.h"
@@ -43,7 +43,7 @@ SAMRAI_INLINE_KEYWORD
 bool BoxSet::operator == (
    const BoxSet& rhs) const
 {
-   if ( size() != rhs.size() ) {
+   if (size() != rhs.size()) {
       return false;
    }
    return std::equal(d_set.begin(), d_set.end(),
@@ -54,7 +54,7 @@ SAMRAI_INLINE_KEYWORD
 bool BoxSet::operator != (
    const BoxSet& rhs) const
 {
-   return ! this->operator==(rhs);
+   return !this->operator == (rhs);
 }
 
 SAMRAI_INLINE_KEYWORD
@@ -74,8 +74,8 @@ void BoxSet::separatePeriodicImages(
       const Box& first_element(*begin());
 
       const PeriodicId zero_shift_number(PeriodicShiftCatalog::getCatalog(
-                                     first_element.getDim())->
-                                  getZeroShiftNumber());
+                                            first_element.getDim())->
+                                         getZeroShiftNumber());
 
       real_mapped_box_vector.reserve(real_mapped_box_vector.size() + size());
       for (const_iterator ni = begin(); ni != end(); ++ni) {

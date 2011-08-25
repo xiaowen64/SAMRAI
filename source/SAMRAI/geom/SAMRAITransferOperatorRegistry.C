@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Singleton registry for all tranfer operators. 
+ * Description:   Singleton registry for all tranfer operators.
  *
  ************************************************************************/
 
@@ -132,102 +132,78 @@ SAMRAITransferOperatorRegistry::buildCoarsenOperator(
    if (op_name == "CONSERVATIVE_COARSEN") {
       if (!tbox::Pointer<pdat::CellVariable<dcomplex> >(var).isNull()) {
          coarsen_op = tbox::Pointer<hier::CoarsenOperator>(
-            new CartesianCellComplexWeightedAverage(getDim()));
-      }
-      else if (!tbox::Pointer<pdat::CellVariable<double> >(var).isNull()) {
+               new CartesianCellComplexWeightedAverage(getDim()));
+      } else if (!tbox::Pointer<pdat::CellVariable<double> >(var).isNull()) {
          coarsen_op = tbox::Pointer<hier::CoarsenOperator>(
-            new CartesianCellDoubleWeightedAverage(getDim()));
-      }
-      else if (!tbox::Pointer<pdat::CellVariable<float> >(var).isNull()) {
+               new CartesianCellDoubleWeightedAverage(getDim()));
+      } else if (!tbox::Pointer<pdat::CellVariable<float> >(var).isNull()) {
          coarsen_op = tbox::Pointer<hier::CoarsenOperator>(
-            new CartesianCellFloatWeightedAverage(getDim()));
-      }
-      else if (!tbox::Pointer<pdat::EdgeVariable<dcomplex> >(var).isNull()) {
+               new CartesianCellFloatWeightedAverage(getDim()));
+      } else if (!tbox::Pointer<pdat::EdgeVariable<dcomplex> >(var).isNull()) {
          coarsen_op = tbox::Pointer<hier::CoarsenOperator>(
-            new CartesianEdgeComplexWeightedAverage(getDim()));
-      }
-      else if (!tbox::Pointer<pdat::EdgeVariable<double> >(var).isNull()) {
+               new CartesianEdgeComplexWeightedAverage(getDim()));
+      } else if (!tbox::Pointer<pdat::EdgeVariable<double> >(var).isNull()) {
          coarsen_op = tbox::Pointer<hier::CoarsenOperator>(
-            new CartesianEdgeDoubleWeightedAverage(getDim()));
-      }
-      else if (!tbox::Pointer<pdat::EdgeVariable<float> >(var).isNull()) {
+               new CartesianEdgeDoubleWeightedAverage(getDim()));
+      } else if (!tbox::Pointer<pdat::EdgeVariable<float> >(var).isNull()) {
          coarsen_op = tbox::Pointer<hier::CoarsenOperator>(
-            new CartesianEdgeFloatWeightedAverage(getDim()));
-      }
-      else if (!tbox::Pointer<pdat::FaceVariable<dcomplex> >(var).isNull()) {
+               new CartesianEdgeFloatWeightedAverage(getDim()));
+      } else if (!tbox::Pointer<pdat::FaceVariable<dcomplex> >(var).isNull()) {
          coarsen_op = tbox::Pointer<hier::CoarsenOperator>(
-            new CartesianFaceComplexWeightedAverage(getDim()));
-      }
-      else if (!tbox::Pointer<pdat::FaceVariable<double> >(var).isNull()) {
+               new CartesianFaceComplexWeightedAverage(getDim()));
+      } else if (!tbox::Pointer<pdat::FaceVariable<double> >(var).isNull()) {
          coarsen_op = tbox::Pointer<hier::CoarsenOperator>(
-            new CartesianFaceDoubleWeightedAverage(getDim()));
-      }
-      else if (!tbox::Pointer<pdat::FaceVariable<float> >(var).isNull()) {
+               new CartesianFaceDoubleWeightedAverage(getDim()));
+      } else if (!tbox::Pointer<pdat::FaceVariable<float> >(var).isNull()) {
          coarsen_op = tbox::Pointer<hier::CoarsenOperator>(
-            new CartesianFaceFloatWeightedAverage(getDim()));
-      }
-      else if (!tbox::Pointer<pdat::OuterfaceVariable<dcomplex> >(var).isNull()) {
+               new CartesianFaceFloatWeightedAverage(getDim()));
+      } else if (!tbox::Pointer<pdat::OuterfaceVariable<dcomplex> >(var).isNull()) {
          coarsen_op = tbox::Pointer<hier::CoarsenOperator>(
-            new CartesianOuterfaceComplexWeightedAverage(getDim()));
-      }
-      else if (!tbox::Pointer<pdat::OuterfaceVariable<double> >(var).isNull()) {
+               new CartesianOuterfaceComplexWeightedAverage(getDim()));
+      } else if (!tbox::Pointer<pdat::OuterfaceVariable<double> >(var).isNull()) {
          coarsen_op = tbox::Pointer<hier::CoarsenOperator>(
-            new CartesianOuterfaceDoubleWeightedAverage(getDim()));
-      }
-      else if (!tbox::Pointer<pdat::OuterfaceVariable<float> >(var).isNull()) {
+               new CartesianOuterfaceDoubleWeightedAverage(getDim()));
+      } else if (!tbox::Pointer<pdat::OuterfaceVariable<float> >(var).isNull()) {
          coarsen_op = tbox::Pointer<hier::CoarsenOperator>(
-            new CartesianOuterfaceFloatWeightedAverage(getDim()));
-      }
-      else if (!tbox::Pointer<pdat::OutersideVariable<double> >(var).isNull()) {
+               new CartesianOuterfaceFloatWeightedAverage(getDim()));
+      } else if (!tbox::Pointer<pdat::OutersideVariable<double> >(var).isNull()) {
          coarsen_op = tbox::Pointer<hier::CoarsenOperator>(
-            new CartesianOutersideDoubleWeightedAverage(getDim()));
-      }
-      else if (!tbox::Pointer<pdat::SideVariable<dcomplex> >(var).isNull()) {
+               new CartesianOutersideDoubleWeightedAverage(getDim()));
+      } else if (!tbox::Pointer<pdat::SideVariable<dcomplex> >(var).isNull()) {
          coarsen_op = tbox::Pointer<hier::CoarsenOperator>(
-            new CartesianSideComplexWeightedAverage(getDim()));
-      }
-      else if (!tbox::Pointer<pdat::SideVariable<double> >(var).isNull()) {
+               new CartesianSideComplexWeightedAverage(getDim()));
+      } else if (!tbox::Pointer<pdat::SideVariable<double> >(var).isNull()) {
          coarsen_op = tbox::Pointer<hier::CoarsenOperator>(
-            new CartesianSideDoubleWeightedAverage(getDim()));
-      }
-      else if (!tbox::Pointer<pdat::SideVariable<float> >(var).isNull()) {
+               new CartesianSideDoubleWeightedAverage(getDim()));
+      } else if (!tbox::Pointer<pdat::SideVariable<float> >(var).isNull()) {
          coarsen_op = tbox::Pointer<hier::CoarsenOperator>(
-            new CartesianSideFloatWeightedAverage(getDim()));
-      }
-      else {
+               new CartesianSideFloatWeightedAverage(getDim()));
+      } else {
          TBOX_ERROR("Unsupported variable centering for coarsen operator");
       }
-   }
-   else if (op_name == "SKELETON_COARSEN") {
+   } else if (op_name == "SKELETON_COARSEN") {
       coarsen_op = tbox::Pointer<hier::CoarsenOperator>(
-         new SkeletonCoarsen(getDim()));
-   }
-   else if (op_name == "CONSTANT_COARSEN") {
+            new SkeletonCoarsen(getDim()));
+   } else if (op_name == "CONSTANT_COARSEN") {
       if (!tbox::Pointer<pdat::NodeVariable<dcomplex> >(var).isNull()) {
          coarsen_op = tbox::Pointer<hier::CoarsenOperator>(
-            new pdat::NodeComplexInjection(getDim()));
-      }
-      else if (!tbox::Pointer<pdat::NodeVariable<double> >(var).isNull()) {
+               new pdat::NodeComplexInjection(getDim()));
+      } else if (!tbox::Pointer<pdat::NodeVariable<double> >(var).isNull()) {
          coarsen_op = tbox::Pointer<hier::CoarsenOperator>(
-            new pdat::NodeDoubleInjection(getDim()));
-      }
-      else if (!tbox::Pointer<pdat::NodeVariable<float> >(var).isNull()) {
+               new pdat::NodeDoubleInjection(getDim()));
+      } else if (!tbox::Pointer<pdat::NodeVariable<float> >(var).isNull()) {
          coarsen_op = tbox::Pointer<hier::CoarsenOperator>(
-            new pdat::NodeFloatInjection(getDim()));
-      }
-      else if (!tbox::Pointer<pdat::NodeVariable<int> >(var).isNull()) {
+               new pdat::NodeFloatInjection(getDim()));
+      } else if (!tbox::Pointer<pdat::NodeVariable<int> >(var).isNull()) {
          coarsen_op = tbox::Pointer<hier::CoarsenOperator>(
-            new pdat::NodeIntegerInjection(getDim()));
-      }
-      else if (!tbox::Pointer<pdat::OuternodeVariable<double> >(var).isNull()) {
+               new pdat::NodeIntegerInjection(getDim()));
+      } else if (!tbox::Pointer<pdat::OuternodeVariable<double> >(var).isNull()) {
          coarsen_op = tbox::Pointer<hier::CoarsenOperator>(
-            new pdat::OuternodeDoubleConstantCoarsen(getDim()));
-      }
-      else {
+               new pdat::OuternodeDoubleConstantCoarsen(getDim()));
+      } else {
          TBOX_ERROR("Unsupported variable centering for coarsen operator");
       }
-   }
-   else {
+   } else {
       TBOX_ERROR("Unknown coarsen operator name");
    }
    addCoarsenOperator(coarsen_op);
@@ -243,163 +219,124 @@ SAMRAITransferOperatorRegistry::buildRefineOperator(
    if (op_name == "CONSERVATIVE_LINEAR_REFINE") {
       if (!tbox::Pointer<pdat::CellVariable<dcomplex> >(var).isNull()) {
          refine_op = tbox::Pointer<hier::RefineOperator>(
-            new CartesianCellComplexConservativeLinearRefine(getDim()));
-      }
-      else if (!tbox::Pointer<pdat::CellVariable<double> >(var).isNull()) {
+               new CartesianCellComplexConservativeLinearRefine(getDim()));
+      } else if (!tbox::Pointer<pdat::CellVariable<double> >(var).isNull()) {
          refine_op = tbox::Pointer<hier::RefineOperator>(
-            new CartesianCellDoubleConservativeLinearRefine(getDim()));
-      }
-      else if (!tbox::Pointer<pdat::CellVariable<float> >(var).isNull()) {
+               new CartesianCellDoubleConservativeLinearRefine(getDim()));
+      } else if (!tbox::Pointer<pdat::CellVariable<float> >(var).isNull()) {
          refine_op = tbox::Pointer<hier::RefineOperator>(
-            new CartesianCellFloatConservativeLinearRefine(getDim()));
-      }
-      else if (!tbox::Pointer<pdat::EdgeVariable<double> >(var).isNull()) {
+               new CartesianCellFloatConservativeLinearRefine(getDim()));
+      } else if (!tbox::Pointer<pdat::EdgeVariable<double> >(var).isNull()) {
          refine_op = tbox::Pointer<hier::RefineOperator>(
-            new CartesianEdgeDoubleConservativeLinearRefine(getDim()));
-      }
-      else if (!tbox::Pointer<pdat::EdgeVariable<float> >(var).isNull()) {
+               new CartesianEdgeDoubleConservativeLinearRefine(getDim()));
+      } else if (!tbox::Pointer<pdat::EdgeVariable<float> >(var).isNull()) {
          refine_op = tbox::Pointer<hier::RefineOperator>(
-            new CartesianEdgeFloatConservativeLinearRefine(getDim()));
-      }
-      else if (!tbox::Pointer<pdat::FaceVariable<double> >(var).isNull()) {
+               new CartesianEdgeFloatConservativeLinearRefine(getDim()));
+      } else if (!tbox::Pointer<pdat::FaceVariable<double> >(var).isNull()) {
          refine_op = tbox::Pointer<hier::RefineOperator>(
-            new CartesianFaceDoubleConservativeLinearRefine(getDim()));
-      }
-      else if (!tbox::Pointer<pdat::FaceVariable<float> >(var).isNull()) {
+               new CartesianFaceDoubleConservativeLinearRefine(getDim()));
+      } else if (!tbox::Pointer<pdat::FaceVariable<float> >(var).isNull()) {
          refine_op = tbox::Pointer<hier::RefineOperator>(
-            new CartesianFaceFloatConservativeLinearRefine(getDim()));
-      }
-      else if (!tbox::Pointer<pdat::SideVariable<double> >(var).isNull()) {
+               new CartesianFaceFloatConservativeLinearRefine(getDim()));
+      } else if (!tbox::Pointer<pdat::SideVariable<double> >(var).isNull()) {
          refine_op = tbox::Pointer<hier::RefineOperator>(
-            new CartesianSideDoubleConservativeLinearRefine(getDim()));
-      }
-      else if (!tbox::Pointer<pdat::SideVariable<float> >(var).isNull()) {
+               new CartesianSideDoubleConservativeLinearRefine(getDim()));
+      } else if (!tbox::Pointer<pdat::SideVariable<float> >(var).isNull()) {
          refine_op = tbox::Pointer<hier::RefineOperator>(
-            new CartesianSideFloatConservativeLinearRefine(getDim()));
-      }
-      else {
+               new CartesianSideFloatConservativeLinearRefine(getDim()));
+      } else {
          TBOX_ERROR("Unsupported variable centering for refine operator");
       }
-   }
-   else if (op_name == "LINEAR_REFINE") {
+   } else if (op_name == "LINEAR_REFINE") {
       if (!tbox::Pointer<pdat::CellVariable<dcomplex> >(var).isNull()) {
          refine_op = tbox::Pointer<hier::RefineOperator>(
-            new CartesianCellComplexLinearRefine(getDim()));
-      }
-      else if (!tbox::Pointer<pdat::CellVariable<double> >(var).isNull()) {
+               new CartesianCellComplexLinearRefine(getDim()));
+      } else if (!tbox::Pointer<pdat::CellVariable<double> >(var).isNull()) {
          refine_op = tbox::Pointer<hier::RefineOperator>(
-            new CartesianCellDoubleLinearRefine(getDim()));
-      }
-      else if (!tbox::Pointer<pdat::CellVariable<float> >(var).isNull()) {
+               new CartesianCellDoubleLinearRefine(getDim()));
+      } else if (!tbox::Pointer<pdat::CellVariable<float> >(var).isNull()) {
          refine_op = tbox::Pointer<hier::RefineOperator>(
-            new CartesianCellFloatLinearRefine(getDim()));
-      }
-      else if (!tbox::Pointer<pdat::NodeVariable<dcomplex> >(var).isNull()) {
+               new CartesianCellFloatLinearRefine(getDim()));
+      } else if (!tbox::Pointer<pdat::NodeVariable<dcomplex> >(var).isNull()) {
          refine_op = tbox::Pointer<hier::RefineOperator>(
-            new CartesianNodeComplexLinearRefine(getDim()));
-      }
-      else if (!tbox::Pointer<pdat::NodeVariable<double> >(var).isNull()) {
+               new CartesianNodeComplexLinearRefine(getDim()));
+      } else if (!tbox::Pointer<pdat::NodeVariable<double> >(var).isNull()) {
          refine_op = tbox::Pointer<hier::RefineOperator>(
-            new CartesianNodeDoubleLinearRefine(getDim()));
-      }
-      else if (!tbox::Pointer<pdat::NodeVariable<float> >(var).isNull()) {
+               new CartesianNodeDoubleLinearRefine(getDim()));
+      } else if (!tbox::Pointer<pdat::NodeVariable<float> >(var).isNull()) {
          refine_op = tbox::Pointer<hier::RefineOperator>(
-            new CartesianNodeFloatLinearRefine(getDim()));
-      }
-      else {
+               new CartesianNodeFloatLinearRefine(getDim()));
+      } else {
          TBOX_ERROR("Unsupported variable centering for refine operator");
       }
-   }
-   else if (op_name == "SKELETON_REFINE") {
+   } else if (op_name == "SKELETON_REFINE") {
       refine_op = tbox::Pointer<hier::RefineOperator>(
-         new SkeletonRefine(getDim()));
-   }
-   else if (op_name == "CONSTANT_REFINE") {
+            new SkeletonRefine(getDim()));
+   } else if (op_name == "CONSTANT_REFINE") {
       if (!tbox::Pointer<pdat::CellVariable<dcomplex> >(var).isNull()) {
          refine_op = tbox::Pointer<hier::RefineOperator>(
-            new pdat::CellComplexConstantRefine(getDim()));
-      }
-      else if (!tbox::Pointer<pdat::CellVariable<double> >(var).isNull()) {
+               new pdat::CellComplexConstantRefine(getDim()));
+      } else if (!tbox::Pointer<pdat::CellVariable<double> >(var).isNull()) {
          refine_op = tbox::Pointer<hier::RefineOperator>(
-            new pdat::CellDoubleConstantRefine(getDim()));
-      }
-      else if (!tbox::Pointer<pdat::CellVariable<float> >(var).isNull()) {
+               new pdat::CellDoubleConstantRefine(getDim()));
+      } else if (!tbox::Pointer<pdat::CellVariable<float> >(var).isNull()) {
          refine_op = tbox::Pointer<hier::RefineOperator>(
-            new pdat::CellFloatConstantRefine(getDim()));
-      }
-      else if (!tbox::Pointer<pdat::CellVariable<int> >(var).isNull()) {
+               new pdat::CellFloatConstantRefine(getDim()));
+      } else if (!tbox::Pointer<pdat::CellVariable<int> >(var).isNull()) {
          refine_op = tbox::Pointer<hier::RefineOperator>(
-            new pdat::CellIntegerConstantRefine(getDim()));
-      }
-      else if (!tbox::Pointer<pdat::EdgeVariable<dcomplex> >(var).isNull()) {
+               new pdat::CellIntegerConstantRefine(getDim()));
+      } else if (!tbox::Pointer<pdat::EdgeVariable<dcomplex> >(var).isNull()) {
          refine_op = tbox::Pointer<hier::RefineOperator>(
-            new pdat::EdgeComplexConstantRefine(getDim()));
-      }
-      else if (!tbox::Pointer<pdat::EdgeVariable<double> >(var).isNull()) {
+               new pdat::EdgeComplexConstantRefine(getDim()));
+      } else if (!tbox::Pointer<pdat::EdgeVariable<double> >(var).isNull()) {
          refine_op = tbox::Pointer<hier::RefineOperator>(
-            new pdat::EdgeDoubleConstantRefine(getDim()));
-      }
-      else if (!tbox::Pointer<pdat::EdgeVariable<float> >(var).isNull()) {
+               new pdat::EdgeDoubleConstantRefine(getDim()));
+      } else if (!tbox::Pointer<pdat::EdgeVariable<float> >(var).isNull()) {
          refine_op = tbox::Pointer<hier::RefineOperator>(
-            new pdat::EdgeFloatConstantRefine(getDim()));
-      }
-      else if (!tbox::Pointer<pdat::EdgeVariable<int> >(var).isNull()) {
+               new pdat::EdgeFloatConstantRefine(getDim()));
+      } else if (!tbox::Pointer<pdat::EdgeVariable<int> >(var).isNull()) {
          refine_op = tbox::Pointer<hier::RefineOperator>(
-            new pdat::EdgeIntegerConstantRefine(getDim()));
-      }
-      else if (!tbox::Pointer<pdat::FaceVariable<dcomplex> >(var).isNull()) {
+               new pdat::EdgeIntegerConstantRefine(getDim()));
+      } else if (!tbox::Pointer<pdat::FaceVariable<dcomplex> >(var).isNull()) {
          refine_op = tbox::Pointer<hier::RefineOperator>(
-            new pdat::FaceComplexConstantRefine(getDim()));
-      }
-      else if (!tbox::Pointer<pdat::FaceVariable<double> >(var).isNull()) {
+               new pdat::FaceComplexConstantRefine(getDim()));
+      } else if (!tbox::Pointer<pdat::FaceVariable<double> >(var).isNull()) {
          refine_op = tbox::Pointer<hier::RefineOperator>(
-            new pdat::FaceDoubleConstantRefine(getDim()));
-      }
-      else if (!tbox::Pointer<pdat::FaceVariable<float> >(var).isNull()) {
+               new pdat::FaceDoubleConstantRefine(getDim()));
+      } else if (!tbox::Pointer<pdat::FaceVariable<float> >(var).isNull()) {
          refine_op = tbox::Pointer<hier::RefineOperator>(
-            new pdat::FaceFloatConstantRefine(getDim()));
-      }
-      else if (!tbox::Pointer<pdat::FaceVariable<int> >(var).isNull()) {
+               new pdat::FaceFloatConstantRefine(getDim()));
+      } else if (!tbox::Pointer<pdat::FaceVariable<int> >(var).isNull()) {
          refine_op = tbox::Pointer<hier::RefineOperator>(
-            new pdat::FaceIntegerConstantRefine(getDim()));
-      }
-      else if (!tbox::Pointer<pdat::OuterfaceVariable<dcomplex> >(var).isNull()) {
+               new pdat::FaceIntegerConstantRefine(getDim()));
+      } else if (!tbox::Pointer<pdat::OuterfaceVariable<dcomplex> >(var).isNull()) {
          refine_op = tbox::Pointer<hier::RefineOperator>(
-            new pdat::OuterfaceComplexConstantRefine(getDim()));
-      }
-      else if (!tbox::Pointer<pdat::OuterfaceVariable<double> >(var).isNull()) {
+               new pdat::OuterfaceComplexConstantRefine(getDim()));
+      } else if (!tbox::Pointer<pdat::OuterfaceVariable<double> >(var).isNull()) {
          refine_op = tbox::Pointer<hier::RefineOperator>(
-            new pdat::OuterfaceDoubleConstantRefine(getDim()));
-      }
-      else if (!tbox::Pointer<pdat::OuterfaceVariable<float> >(var).isNull()) {
+               new pdat::OuterfaceDoubleConstantRefine(getDim()));
+      } else if (!tbox::Pointer<pdat::OuterfaceVariable<float> >(var).isNull()) {
          refine_op = tbox::Pointer<hier::RefineOperator>(
-            new pdat::OuterfaceFloatConstantRefine(getDim()));
-      }
-      else if (!tbox::Pointer<pdat::OuterfaceVariable<int> >(var).isNull()) {
+               new pdat::OuterfaceFloatConstantRefine(getDim()));
+      } else if (!tbox::Pointer<pdat::OuterfaceVariable<int> >(var).isNull()) {
          refine_op = tbox::Pointer<hier::RefineOperator>(
-            new pdat::OuterfaceIntegerConstantRefine(getDim()));
-      }
-      else if (!tbox::Pointer<pdat::SideVariable<dcomplex> >(var).isNull()) {
+               new pdat::OuterfaceIntegerConstantRefine(getDim()));
+      } else if (!tbox::Pointer<pdat::SideVariable<dcomplex> >(var).isNull()) {
          refine_op = tbox::Pointer<hier::RefineOperator>(
-            new pdat::SideComplexConstantRefine(getDim()));
-      }
-      else if (!tbox::Pointer<pdat::SideVariable<double> >(var).isNull()) {
+               new pdat::SideComplexConstantRefine(getDim()));
+      } else if (!tbox::Pointer<pdat::SideVariable<double> >(var).isNull()) {
          refine_op = tbox::Pointer<hier::RefineOperator>(
-            new pdat::SideDoubleConstantRefine(getDim()));
-      }
-      else if (!tbox::Pointer<pdat::SideVariable<float> >(var).isNull()) {
+               new pdat::SideDoubleConstantRefine(getDim()));
+      } else if (!tbox::Pointer<pdat::SideVariable<float> >(var).isNull()) {
          refine_op = tbox::Pointer<hier::RefineOperator>(
-            new pdat::SideFloatConstantRefine(getDim()));
-      }
-      else if (!tbox::Pointer<pdat::SideVariable<int> >(var).isNull()) {
+               new pdat::SideFloatConstantRefine(getDim()));
+      } else if (!tbox::Pointer<pdat::SideVariable<int> >(var).isNull()) {
          refine_op = tbox::Pointer<hier::RefineOperator>(
-            new pdat::SideIntegerConstantRefine(getDim()));
-      }
-      else {
+               new pdat::SideIntegerConstantRefine(getDim()));
+      } else {
          TBOX_ERROR("Unsupported variable centering for refine operator");
       }
-   }
-   else {
+   } else {
       TBOX_ERROR("Unknown coarsen operator name");
    }
    addRefineOperator(refine_op);
@@ -415,93 +352,71 @@ SAMRAITransferOperatorRegistry::buildTimeInterpolateOperator(
    if (op_name == "STD_LINEAR_TIME_INTERPOLATE") {
       if (!tbox::Pointer<pdat::CellVariable<dcomplex> >(var).isNull()) {
          time_op = tbox::Pointer<hier::TimeInterpolateOperator>(
-            new pdat::CellComplexLinearTimeInterpolateOp());
-      }
-      else if (!tbox::Pointer<pdat::CellVariable<double> >(var).isNull()) {
+               new pdat::CellComplexLinearTimeInterpolateOp());
+      } else if (!tbox::Pointer<pdat::CellVariable<double> >(var).isNull()) {
          time_op = tbox::Pointer<hier::TimeInterpolateOperator>(
-            new pdat::CellDoubleLinearTimeInterpolateOp());
-      }
-      else if (!tbox::Pointer<pdat::CellVariable<float> >(var).isNull()) {
+               new pdat::CellDoubleLinearTimeInterpolateOp());
+      } else if (!tbox::Pointer<pdat::CellVariable<float> >(var).isNull()) {
          time_op = tbox::Pointer<hier::TimeInterpolateOperator>(
-            new pdat::CellFloatLinearTimeInterpolateOp());
-      }
-      else if (!tbox::Pointer<pdat::EdgeVariable<dcomplex> >(var).isNull()) {
+               new pdat::CellFloatLinearTimeInterpolateOp());
+      } else if (!tbox::Pointer<pdat::EdgeVariable<dcomplex> >(var).isNull()) {
          time_op = tbox::Pointer<hier::TimeInterpolateOperator>(
-            new pdat::EdgeComplexLinearTimeInterpolateOp());
-      }
-      else if (!tbox::Pointer<pdat::EdgeVariable<double> >(var).isNull()) {
+               new pdat::EdgeComplexLinearTimeInterpolateOp());
+      } else if (!tbox::Pointer<pdat::EdgeVariable<double> >(var).isNull()) {
          time_op = tbox::Pointer<hier::TimeInterpolateOperator>(
-            new pdat::EdgeDoubleLinearTimeInterpolateOp());
-      }
-      else if (!tbox::Pointer<pdat::EdgeVariable<float> >(var).isNull()) {
+               new pdat::EdgeDoubleLinearTimeInterpolateOp());
+      } else if (!tbox::Pointer<pdat::EdgeVariable<float> >(var).isNull()) {
          time_op = tbox::Pointer<hier::TimeInterpolateOperator>(
-            new pdat::EdgeFloatLinearTimeInterpolateOp());
-      }
-      else if (!tbox::Pointer<pdat::FaceVariable<dcomplex> >(var).isNull()) {
+               new pdat::EdgeFloatLinearTimeInterpolateOp());
+      } else if (!tbox::Pointer<pdat::FaceVariable<dcomplex> >(var).isNull()) {
          time_op = tbox::Pointer<hier::TimeInterpolateOperator>(
-            new pdat::FaceComplexLinearTimeInterpolateOp());
-      }
-      else if (!tbox::Pointer<pdat::FaceVariable<double> >(var).isNull()) {
+               new pdat::FaceComplexLinearTimeInterpolateOp());
+      } else if (!tbox::Pointer<pdat::FaceVariable<double> >(var).isNull()) {
          time_op = tbox::Pointer<hier::TimeInterpolateOperator>(
-            new pdat::FaceDoubleLinearTimeInterpolateOp());
-      }
-      else if (!tbox::Pointer<pdat::FaceVariable<float> >(var).isNull()) {
+               new pdat::FaceDoubleLinearTimeInterpolateOp());
+      } else if (!tbox::Pointer<pdat::FaceVariable<float> >(var).isNull()) {
          time_op = tbox::Pointer<hier::TimeInterpolateOperator>(
-            new pdat::FaceFloatLinearTimeInterpolateOp());
-      }
-      else if (!tbox::Pointer<pdat::NodeVariable<dcomplex> >(var).isNull()) {
+               new pdat::FaceFloatLinearTimeInterpolateOp());
+      } else if (!tbox::Pointer<pdat::NodeVariable<dcomplex> >(var).isNull()) {
          time_op = tbox::Pointer<hier::TimeInterpolateOperator>(
-            new pdat::NodeComplexLinearTimeInterpolateOp());
-      }
-      else if (!tbox::Pointer<pdat::NodeVariable<double> >(var).isNull()) {
+               new pdat::NodeComplexLinearTimeInterpolateOp());
+      } else if (!tbox::Pointer<pdat::NodeVariable<double> >(var).isNull()) {
          time_op = tbox::Pointer<hier::TimeInterpolateOperator>(
-            new pdat::NodeDoubleLinearTimeInterpolateOp());
-      }
-      else if (!tbox::Pointer<pdat::NodeVariable<float> >(var).isNull()) {
+               new pdat::NodeDoubleLinearTimeInterpolateOp());
+      } else if (!tbox::Pointer<pdat::NodeVariable<float> >(var).isNull()) {
          time_op = tbox::Pointer<hier::TimeInterpolateOperator>(
-            new pdat::NodeFloatLinearTimeInterpolateOp());
-      }
-      else if (!tbox::Pointer<pdat::OuterfaceVariable<dcomplex> >(var).isNull()) {
+               new pdat::NodeFloatLinearTimeInterpolateOp());
+      } else if (!tbox::Pointer<pdat::OuterfaceVariable<dcomplex> >(var).isNull()) {
          time_op = tbox::Pointer<hier::TimeInterpolateOperator>(
-            new pdat::OuterfaceComplexLinearTimeInterpolateOp());
-      }
-      else if (!tbox::Pointer<pdat::OuterfaceVariable<double> >(var).isNull()) {
+               new pdat::OuterfaceComplexLinearTimeInterpolateOp());
+      } else if (!tbox::Pointer<pdat::OuterfaceVariable<double> >(var).isNull()) {
          time_op = tbox::Pointer<hier::TimeInterpolateOperator>(
-            new pdat::OuterfaceDoubleLinearTimeInterpolateOp());
-      }
-      else if (!tbox::Pointer<pdat::OuterfaceVariable<float> >(var).isNull()) {
+               new pdat::OuterfaceDoubleLinearTimeInterpolateOp());
+      } else if (!tbox::Pointer<pdat::OuterfaceVariable<float> >(var).isNull()) {
          time_op = tbox::Pointer<hier::TimeInterpolateOperator>(
-            new pdat::OuterfaceFloatLinearTimeInterpolateOp());
-      }
-      else if (!tbox::Pointer<pdat::OutersideVariable<dcomplex> >(var).isNull()) {
+               new pdat::OuterfaceFloatLinearTimeInterpolateOp());
+      } else if (!tbox::Pointer<pdat::OutersideVariable<dcomplex> >(var).isNull()) {
          time_op = tbox::Pointer<hier::TimeInterpolateOperator>(
-            new pdat::OutersideComplexLinearTimeInterpolateOp());
-      }
-      else if (!tbox::Pointer<pdat::OutersideVariable<double> >(var).isNull()) {
+               new pdat::OutersideComplexLinearTimeInterpolateOp());
+      } else if (!tbox::Pointer<pdat::OutersideVariable<double> >(var).isNull()) {
          time_op = tbox::Pointer<hier::TimeInterpolateOperator>(
-            new pdat::OutersideDoubleLinearTimeInterpolateOp());
-      }
-      else if (!tbox::Pointer<pdat::OutersideVariable<float> >(var).isNull()) {
+               new pdat::OutersideDoubleLinearTimeInterpolateOp());
+      } else if (!tbox::Pointer<pdat::OutersideVariable<float> >(var).isNull()) {
          time_op = tbox::Pointer<hier::TimeInterpolateOperator>(
-            new pdat::OutersideFloatLinearTimeInterpolateOp());
-      }
-      else if (!tbox::Pointer<pdat::SideVariable<dcomplex> >(var).isNull()) {
+               new pdat::OutersideFloatLinearTimeInterpolateOp());
+      } else if (!tbox::Pointer<pdat::SideVariable<dcomplex> >(var).isNull()) {
          time_op = tbox::Pointer<hier::TimeInterpolateOperator>(
-            new pdat::SideComplexLinearTimeInterpolateOp());
-      }
-      else if (!tbox::Pointer<pdat::SideVariable<double> >(var).isNull()) {
+               new pdat::SideComplexLinearTimeInterpolateOp());
+      } else if (!tbox::Pointer<pdat::SideVariable<double> >(var).isNull()) {
          time_op = tbox::Pointer<hier::TimeInterpolateOperator>(
-            new pdat::SideDoubleLinearTimeInterpolateOp());
-      }
-      else if (!tbox::Pointer<pdat::SideVariable<float> >(var).isNull()) {
+               new pdat::SideDoubleLinearTimeInterpolateOp());
+      } else if (!tbox::Pointer<pdat::SideVariable<float> >(var).isNull()) {
          time_op = tbox::Pointer<hier::TimeInterpolateOperator>(
-            new pdat::SideFloatLinearTimeInterpolateOp());
-      }
-      else {
+               new pdat::SideFloatLinearTimeInterpolateOp());
+      } else {
          TBOX_ERROR("Unsupported variable centering for time interpolate operator");
       }
-   }
-   else {
+   } else {
       TBOX_ERROR("Unknown time interpolate operator name");
    }
    addTimeInterpolateOperator(time_op);

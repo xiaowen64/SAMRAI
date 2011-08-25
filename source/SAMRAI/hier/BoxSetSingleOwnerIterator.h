@@ -26,10 +26,10 @@ namespace hier {
  * MappedBoxes in the order they appear in the BoxSet, skipping
  * over MappedBoxes that do not have the specified owner rank.
  */
-class BoxSetSingleOwnerIterator {
+class BoxSetSingleOwnerIterator
+{
 
 public:
-
    /*!
     * @brief Constructor
     *
@@ -37,8 +37,8 @@ public:
     * @param [i] owner_rank
     */
    BoxSetSingleOwnerIterator(
-      const BoxSet &container,
-      const int &owner_rank);
+      const BoxSet& container,
+      const int& owner_rank);
 
    //! @brief Destructor
    ~BoxSetSingleOwnerIterator();
@@ -53,28 +53,35 @@ public:
    /*!
     * @brief Dereference operator mimicking a pointer dereference.
     */
-   const Box &operator * () const;
+   const Box&
+   operator * () const;
 
    /*!
     * @brief Dereference operator mimicking a pointer dereference.
     */
-   const Box *operator -> () const;
+   const Box *
+   operator -> () const;
 
    /*!
     * @brief Equality comparison.
     */
-   bool operator == (const BoxSetSingleOwnerIterator& r) const;
+   bool
+   operator == (
+      const BoxSetSingleOwnerIterator& r) const;
 
    /*!
     * @brief Inequality comparison.
     */
-   bool operator != (const BoxSetSingleOwnerIterator& r) const;
+   bool
+   operator != (
+      const BoxSetSingleOwnerIterator& r) const;
 
    /*!
     * @brief Whether the iterator can be dereferenced.  When the
     * iterator reaches its end, this returns false.
     */
-   bool isValid() const;
+   bool
+   isValid() const;
 
    /*!
     * @brief Pre-increment iterator.
@@ -82,7 +89,8 @@ public:
     * Pre-increment increment the iterator and returns the incremented
     * state.
     */
-   BoxSetSingleOwnerIterator &operator ++ ();
+   BoxSetSingleOwnerIterator&
+   operator ++ ();
 
    /*!
     * @brief Post-increment iterator.
@@ -90,10 +98,11 @@ public:
     * Post-increment saves the iterator, increment it and returns the
     * saved iterator.
     */
-   BoxSetSingleOwnerIterator operator ++ (int);
+   BoxSetSingleOwnerIterator
+   operator ++ (
+      int);
 
 private:
-
    /*!
     * @brief BoxSet being iterated through.
     */
@@ -110,7 +119,6 @@ private:
    BoxSet::const_iterator d_iter;
 
 };
-
 
 }
 }

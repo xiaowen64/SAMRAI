@@ -1,11 +1,11 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
  * Description:   Weighted averaging operator for face-centered complex data on
- *                a Cartesian mesh. 
+ *                a Cartesian mesh.
  *
  ************************************************************************/
 
@@ -37,52 +37,52 @@ extern "C" {
 #endif
 
 // in cartcoarsen1d.f:
-void F77_FUNC(cartwgtavgfacecplx1d, CARTWGTAVGFACECPLX1D) (const int &,
-   const int &,
-   const int &, const int &,
-   const int &, const int &,
+void F77_FUNC(cartwgtavgfacecplx1d, CARTWGTAVGFACECPLX1D) (const int&,
+   const int&,
+   const int&, const int&,
+   const int&, const int&,
    const int *, const double *, const double *,
    const dcomplex *, dcomplex *);
 // in cartcoarsen2d.f:
-void F77_FUNC(cartwgtavgfacecplx2d0, CARTWGTAVGFACECPLX2D0) (const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &, const int &,
-   const int &, const int &, const int &, const int &,
+void F77_FUNC(cartwgtavgfacecplx2d0, CARTWGTAVGFACECPLX2D0) (const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&, const int&,
+   const int&, const int&, const int&, const int&,
    const int *, const double *, const double *,
    const dcomplex *, dcomplex *);
 
-void F77_FUNC(cartwgtavgfacecplx2d1, CARTWGTAVGFACECPLX2D1) (const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &, const int &,
-   const int &, const int &, const int &, const int &,
+void F77_FUNC(cartwgtavgfacecplx2d1, CARTWGTAVGFACECPLX2D1) (const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&, const int&,
+   const int&, const int&, const int&, const int&,
    const int *, const double *, const double *,
    const dcomplex *, dcomplex *);
 // in cartcoarsen3d.f:
-void F77_FUNC(cartwgtavgfacecplx3d0, CARTWGTAVGFACECPLX3D0) (const int &,
-   const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
+void F77_FUNC(cartwgtavgfacecplx3d0, CARTWGTAVGFACECPLX3D0) (const int&,
+   const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
    const int *, const double *, const double *,
    const dcomplex *, dcomplex *);
-void F77_FUNC(cartwgtavgfacecplx3d1, CARTWGTAVGFACECPLX3D1) (const int &,
-   const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
+void F77_FUNC(cartwgtavgfacecplx3d1, CARTWGTAVGFACECPLX3D1) (const int&,
+   const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
    const int *, const double *, const double *,
    const dcomplex *, dcomplex *);
-void F77_FUNC(cartwgtavgfacecplx3d2, CARTWGTAVGFACECPLX3D2) (const int &,
-   const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
+void F77_FUNC(cartwgtavgfacecplx3d2, CARTWGTAVGFACECPLX3D2) (const int&,
+   const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
    const int *, const double *, const double *,
    const dcomplex *, dcomplex *);
 }

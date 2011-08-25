@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   SAMRAI interface class for hierarchy node and edge sum test 
+ * Description:   SAMRAI interface class for hierarchy node and edge sum test
  *
  ************************************************************************/
 
@@ -30,36 +30,36 @@
 #include "SAMRAI/hier/CoarseFineBoundary.h"
 
 extern "C" {
-void F77_FUNC(setedges2d, SETEDGES2D) (const int &, const int &,
-   const int &, const int &,
-   const int &, const int &,
-   const int &, const int &,
+void F77_FUNC(setedges2d, SETEDGES2D) (const int&, const int&,
+   const int&, const int&,
+   const int&, const int&,
+   const int&, const int&,
    const double *,
    double *,
    double *);
 
-void F77_FUNC(checkedges2d, CHECKEDGES2D) (const int &, const int &,
-   const int &, const int &,
-   const int &, const int &,
-   const double &,
-   int &,
+void F77_FUNC(checkedges2d, CHECKEDGES2D) (const int&, const int&,
+   const int&, const int&,
+   const int&, const int&,
+   const double&,
+   int&,
    const double *,
    const double *);
-void F77_FUNC(setedges3d, SETEDGES3D) (const int &, const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
+void F77_FUNC(setedges3d, SETEDGES3D) (const int&, const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
    const double *,
    double *,
    double *,
    double *);
 
-void F77_FUNC(checkedges3d, CHECKEDGES3D) (const int &, const int &,
-   const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
-   const double &,
-   int &,
+void F77_FUNC(checkedges3d, CHECKEDGES3D) (const int&, const int&,
+   const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
+   const double&,
+   int&,
    const double *,
    const double *,
    const double *);
@@ -83,9 +83,10 @@ HierSumTest::HierSumTest(
    const tbox::Dimension& dim,
    Pointer<Database> input_db
 #ifdef HAVE_HDF5
-   , Pointer<appu::VisItDataWriter> viz_writer
+   ,
+   Pointer<appu::VisItDataWriter> viz_writer
 #endif
-      ):
+   ):
    d_dim(dim),
    d_node_ghosts(dim),
    d_edge_ghosts(dim)
@@ -870,7 +871,8 @@ void HierSumTest::initializeLevelData(
             cpatch->getPatchData(d_ucell_node_id);
 
          Box cpbox = cpatch->getBox();
-         for (BoxList::Iterator fine_level_itr(fine_level_boxes); fine_level_itr; fine_level_itr++) {
+         for (BoxList::Iterator fine_level_itr(fine_level_boxes); fine_level_itr;
+              fine_level_itr++) {
             Box setbox = cpbox * *fine_level_itr;
             if (!setbox.empty()) {
                ucell_node->fillAll(0.0, setbox);

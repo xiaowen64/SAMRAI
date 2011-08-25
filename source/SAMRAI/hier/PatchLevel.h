@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   A collection of patches at one level of the AMR hierarchy 
+ * Description:   A collection of patches at one level of the AMR hierarchy
  *
  ************************************************************************/
 
@@ -259,7 +259,7 @@ public:
     */
    tbox::Pointer<Patch>
    getPatch(
-      const BoxId &mbid) const;
+      const BoxId& mbid) const;
 
    /*!
     * @brief Get the PatchDescriptor
@@ -406,7 +406,8 @@ public:
    getPhysicalDomainArray() const;
 
    const BoxList&
-   getPhysicalDomain(const hier::BlockId& block_id) const;
+   getPhysicalDomain(
+      const hier::BlockId& block_id) const;
 
    /*!
     * @brief Get the box defining the patches on the level.
@@ -415,7 +416,7 @@ public:
     * dependent on the MappedBoxLevel associated with it, and computed
     * only if getBoxes() is called.  The first call to getBoxes() must be
     * done by all processors as it requires communication.
-
+    *
     * @return a const reference to the box array that defines
     * the patches on the level.
     */
@@ -430,9 +431,11 @@ public:
     *
     * @param[out] boxes
     * @param[in] block_id
-    */ 
+    */
    void
-   getBoxes(BoxList& boxes, const BlockId& block_id) const;
+   getBoxes(
+      BoxList& boxes,
+      const BlockId& block_id) const;
 
    /*!
     * @brief Get the MappedBoxLevel associated with the PatchLevel.
@@ -523,7 +526,7 @@ public:
     */
    int
    getMappingForPatch(
-      const BoxId &mapped_box_id) const;
+      const BoxId& mapped_box_id) const;
 
    /*!
     * @brief Get the box for the specified patch
@@ -534,7 +537,7 @@ public:
     */
    const Box&
    getBoxForPatch(
-      const BoxId &mapped_box_id) const;
+      const BoxId& mapped_box_id) const;
 
    /*!
     * @brief Determine if the patch is adjacent to a non-periodic
@@ -547,7 +550,7 @@ public:
     */
    bool
    patchTouchesRegularBoundary(
-      const BoxId &mapped_box_id) const;
+      const BoxId& mapped_box_id) const;
 
    /*!
     * @brief Determine if the patch is adjacent to a periodic physical
@@ -560,7 +563,7 @@ public:
     */
    bool
    patchTouchesPeriodicBoundary(
-      const BoxId &mapped_box_id) const;
+      const BoxId& mapped_box_id) const;
 
    /*!
     * @brief Allocate the specified component on all patches.
@@ -736,7 +739,7 @@ public:
     */
    class Iterator
    {
-   public:
+public:
       /*!
        * @brief Default constructor.
        */
@@ -772,7 +775,7 @@ public:
        * @param[in]  patch_level
        */
       Iterator(
-         const PatchLevel* patch_level);
+         const PatchLevel * patch_level);
 
       /*!
        * @brief Construct from a PatchLevel.
@@ -807,7 +810,7 @@ public:
        */
       void
       initialize(
-         const PatchLevel* patch_level);
+         const PatchLevel * patch_level);
 
       /*!
        * @brief Assignment operator
@@ -866,7 +869,7 @@ public:
        */
       operator bool ();
 
-   private:
+private:
       /*!
        * @brief The real iterator (this class is basically a wrapper).
        */
@@ -908,7 +911,7 @@ private:
     * @brief Number of blocks that can be represented by this level.
     */
    int d_number_blocks;
- 
+
    /*!
     * Primary metadata describing the PatchLevel.
     */
@@ -1012,7 +1015,7 @@ private:
       void);
 
    static tbox::StartupShutdownManager::Handler
-   s_initialize_finalize_handler;
+      s_initialize_finalize_handler;
 };
 
 }

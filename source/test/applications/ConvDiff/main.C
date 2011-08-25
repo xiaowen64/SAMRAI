@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Main program for SAMRAI convection-diffusion ex. problem. 
+ * Description:   Main program for SAMRAI convection-diffusion ex. problem.
  *
  ************************************************************************/
 
@@ -163,11 +163,11 @@ int main(
 
       if ((argc != 2) && (argc != 4)) {
          tbox::pout << "USAGE:  " << argv[0] << " <input filename> "
-                                             <<
+                    <<
          "<restart dir> <restore number> [options]\n"
-                                             << "  options:\n"
-                                             << "  none at this time"
-                                             << endl;
+                    << "  options:\n"
+                    << "  none at this time"
+                    << endl;
          tbox::SAMRAI_MPI::abort();
          return -1;
       } else {
@@ -398,16 +398,16 @@ int main(
       ****************************************************************/
 
       tbox::Array<int>
-         tag_buffer_array(patch_hierarchy->getMaxNumberOfLevels());
+      tag_buffer_array(patch_hierarchy->getMaxNumberOfLevels());
       for (int il = 0; il < patch_hierarchy->getMaxNumberOfLevels(); il++) {
          tag_buffer_array[il] = main_restart_data->getTagBuffer();
          tbox::pout << "il = " << il << " tag_buffer = "
-         << tag_buffer_array[il]
-         << endl;
+                    << tag_buffer_array[il]
+                    << endl;
       }
 
       tbox::Array<double>
-         regrid_start_time(patch_hierarchy->getMaxNumberOfLevels());
+      regrid_start_time(patch_hierarchy->getMaxNumberOfLevels());
 
       double loop_time = main_restart_data->getLoopTime();
 

@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Simple bit vector. 
+ * Description:   Simple bit vector.
  *
  ************************************************************************/
 
@@ -48,7 +48,7 @@ public:
       const bool flag = false);
 
    /*!
-    * @brief Copy constructor that create a component selector identical 
+    * @brief Copy constructor that create a component selector identical
     * to the argument.
     */
    ComponentSelector(
@@ -75,7 +75,7 @@ public:
       const ComponentSelector& flags);
 
    /*!
-    * @brief Equality operator.  Two ComponentSelector objects are 
+    * @brief Equality operator.  Two ComponentSelector objects are
     * equal when all their bits are the same.
     */
    bool
@@ -83,7 +83,7 @@ public:
       const ComponentSelector& flags) const;
 
    /*!
-    * @brief Inequality operator.  Two ComponentSelector objects are 
+    * @brief Inequality operator.  Two ComponentSelector objects are
     * unequal if any of their bits are different.
     */
    bool
@@ -114,7 +114,7 @@ public:
     * @return The ComponentSelector which is the logical AND of this component.
     */
    ComponentSelector
-   operator & (
+   operator& (
       const ComponentSelector& flags) const;
 
    /*!
@@ -235,7 +235,6 @@ public:
       std::ostream& os = tbox::plog) const;
 
 private:
-
    /*
     *  Default length of std::bitset entries used in bit vector representation.
     */
@@ -252,12 +251,14 @@ private:
       const std::vector<std::bitset<C_BITSET_SIZE> >& bits) const;
    // private function to return the index into the d_bit_vector
    int
-   _index(const int i) const;
+   _index(
+      const int i) const;
 
    // private function to return the element within the d_bit_vector[i]
    // bitset.
-   int 
-   _element(const int i) const;
+   int
+   _element(
+      const int i) const;
 };
 
 }

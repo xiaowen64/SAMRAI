@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Singleton timer manager class. 
+ * Description:   Singleton timer manager class.
  *
  ************************************************************************/
 
@@ -561,7 +561,7 @@ private:
    static const int DEFAULT_NUMBER_OF_TIMERS_INCREMENT = 128;
 
    static StartupShutdownManager::Handler
-   s_finalize_handler;
+      s_finalize_handler;
 };
 
 }

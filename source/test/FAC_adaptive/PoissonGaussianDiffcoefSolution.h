@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   PoissonGaussianDiffcoefSolution class declaration 
+ * Description:   PoissonGaussianDiffcoefSolution class declaration
  *
  ************************************************************************/
 #ifndef included_PoissonGaussianDiffcoefSolution
@@ -75,9 +75,9 @@ public:
       , /*! Input database */
       tbox::Database& database
       , /*! Standard output stream */
-      std::ostream* out_stream = NULL
+      std::ostream * out_stream = NULL
       , /*! Log output stream */
-      std::ostream* log_stream = NULL);
+      std::ostream * log_stream = NULL);
 
    virtual ~PoissonGaussianDiffcoefSolution();
 

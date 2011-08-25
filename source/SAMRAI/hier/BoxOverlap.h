@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Base class that describes intersections between AMR boxes 
+ * Description:   Base class that describes intersections between AMR boxes
  *
  ************************************************************************/
 
@@ -20,23 +20,23 @@ namespace SAMRAI {
 namespace hier {
 
 /*!
- * @brief Class BoxOverlap is an abstract base class used to represent a region 
+ * @brief Class BoxOverlap is an abstract base class used to represent a region
  * where data will be communicated between two AMR patches.
  *
- * The exact form of the overlap will be determined by the subclass, which 
- * will be implemented to handle a particular patch data class.  For example, 
- * the rules for data intersection for face-centered data are different 
+ * The exact form of the overlap will be determined by the subclass, which
+ * will be implemented to handle a particular patch data class.  For example,
+ * the rules for data intersection for face-centered data are different
  * from that for cell-centered data.
  *
  * The BoxOverlap class provides three functions.  First, it serves
  * as a base class that can answer the question whether an intersection
  * is empty, and is therefore useful for determining communication
  * dependencies.  Second, it holds information about any transformation (such
- * as a periodic shift) between a source and destination patch.  Third, it 
- * is a storage location for the exact form of the intersection of the data 
- * residing on two patches, which can be quite complicated (for example, 
- * for face centered data).  To access the information about the intersection, 
- * type-safe type casting should be used to access the subclass and its 
+ * as a periodic shift) between a source and destination patch.  Third, it
+ * is a storage location for the exact form of the intersection of the data
+ * residing on two patches, which can be quite complicated (for example,
+ * for face centered data).  To access the information about the intersection,
+ * type-safe type casting should be used to access the subclass and its
  * member functions.
  *
  * @see hier::BoxGeometry
@@ -56,7 +56,7 @@ public:
    virtual ~BoxOverlap();
 
    /*!
-    * @brief Return true if overlap object represents an empty data 
+    * @brief Return true if overlap object represents an empty data
     * overlap; i.e., there is no data intersection between patches.
     *
     * Note that two patches may communicate even if they do not intersect in

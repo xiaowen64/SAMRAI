@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   For describing coarse-fine boundary interfaces 
+ * Description:   For describing coarse-fine boundary interfaces
  *
  ************************************************************************/
 
@@ -74,11 +74,10 @@ CoarseFineBoundary::CoarseFineBoundary(
             hierarchy.getDomainMappedBoxLevel(),
             max_ghost_width);
       computeFromLevel(level,
-                       level_to_domain,
-                       level_to_level,
-                       max_ghost_width);
-   }
-   else {
+         level_to_domain,
+         level_to_level,
+         max_ghost_width);
+   } else {
       const PatchLevel& level =
          dynamic_cast<const PatchLevel&>(*hierarchy.getPatchLevel(level_num));
       const PatchLevel& level0 =
@@ -103,9 +102,9 @@ CoarseFineBoundary::CoarseFineBoundary(
    TBOX_ASSERT(max_ghost_width > IntVector(d_dim, -1));
 
    computeFromLevel(level,
-                    mapped_box_level_to_domain,
-                    mapped_box_level_to_self,
-                    max_ghost_width);
+      mapped_box_level_to_domain,
+      mapped_box_level_to_self,
+      max_ghost_width);
 
 }
 
@@ -269,7 +268,7 @@ void CoarseFineBoundary::computeFromLevel(
    for (int i = 0; i < nblocks; ++i) {
 
       clear();
- 
+
       BlockId block_id(i);
       /*
        * Construct an iterator which filters only level's boxes in this block.
@@ -360,7 +359,7 @@ void CoarseFineBoundary::computeFromLevel(
                neighbor_boxes_to_add.grow(max_ghost_width);
 
                neighbor_boxes_to_add.intersectBoxes(hier::BoxList(
-                  *neighbor_boxes));
+                     *neighbor_boxes));
 
                adjusted_level_domain_list.unionBoxes(neighbor_boxes_to_add);
             }
@@ -511,7 +510,7 @@ CoarseFineBoundary::getBoundaries(
 
    BoxId mapped_box_id(global_id, block_id);
    std::map<BoxId, PatchBoundaries>::const_iterator
-   mi = d_boundary_boxes.find(mapped_box_id);
+      mi = d_boundary_boxes.find(mapped_box_id);
    TBOX_ASSERT(mi != d_boundary_boxes.end());
    return (*mi).second[boundary_type - 1];
 }
@@ -521,9 +520,9 @@ void CoarseFineBoundary::printClassData(
    os << "\nCoarseFineBoundary::printClassData...";
    for (std::map<BoxId, PatchBoundaries>::const_iterator
         mi = d_boundary_boxes.begin(); mi != d_boundary_boxes.end(); ++mi) {
-      os << "\n	        patch "<< (*mi).first;
+      os << "\n	        patch " << (*mi).first;
       for (unsigned int btype = 0; btype < d_dim.getValue(); ++btype) {
-         os << "\n                type "<< btype;
+         os << "\n                type " << btype;
          const tbox::Array<BoundaryBox>
          & array_of_boxes = (*mi).second[btype];
          int num_boxes = array_of_boxes.getSize();

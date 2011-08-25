@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Utilities for working on DLBG edges. 
+ * Description:   Utilities for working on DLBG edges.
  *
  ************************************************************************/
 #ifndef included_hier_MappedBoxLevelConnectorUtils
@@ -61,7 +61,6 @@ public:
    void
    setSanityCheckMethodPostconditions(
       bool do_check);
-
 
    //@{
 
@@ -184,7 +183,6 @@ public:
       const IntVector& head_margin,
       const BoxTree* domain = NULL) const;
    bool
-
    /*!
     * @brief Multiblock version of baseNestsInHead.
     */
@@ -274,7 +272,7 @@ public:
       Connector& input_to_external,
       const Connector& input_to_reference,
       const IntVector& nesting_width,
-      const MultiblockBoxTree& domain = MultiblockBoxTree() ) const;
+      const MultiblockBoxTree& domain = MultiblockBoxTree()) const;
 
    /*!
     * @brief Compute the parts of one MappedBoxLevel that are internal
@@ -321,7 +319,7 @@ public:
       Connector& input_to_internal,
       const Connector& input_to_reference,
       const IntVector& nesting_width,
-      const MultiblockBoxTree& domain = MultiblockBoxTree() ) const;
+      const MultiblockBoxTree& domain = MultiblockBoxTree()) const;
 
    /*!
     * @brief Compute the parts of one MappedBoxLevel that is internal
@@ -354,7 +352,6 @@ public:
 
    //@}
 
-
    /*!
     * @brief Given a set of MappedBoxes, compute its boundary as a set
     * of boxes located just outside it.
@@ -371,12 +368,12 @@ public:
     * @param simplify_boundary_boxes Whether to simplify the boundary
     * boxes after computing them.
     */
-   void computeBoxesAroundBoundary(
-      std::map<BlockId,BoxList> &boundary,
-      const IntVector &refinement_ratio,
-      const tbox::ConstPointer<GridGeometry> &grid_geometry,
-      const bool simplify_boundary_boxes = true ) const;
-
+   void
+   computeBoxesAroundBoundary(
+      std::map<BlockId, BoxList>& boundary,
+      const IntVector& refinement_ratio,
+      const tbox::ConstPointer<GridGeometry>& grid_geometry,
+      const bool simplify_boundary_boxes = true) const;
 
    //@{
 
@@ -459,7 +456,6 @@ public:
 
    //@}
 
-
    //@{
 
    //! @name Adding periodic images
@@ -485,7 +481,7 @@ public:
    addPeriodicImages(
       MappedBoxLevel& mapped_box_level,
       const BoxTree& domain_search_tree,
-      const IntVector &threshold_distance) const;
+      const IntVector& threshold_distance) const;
 
    /*!
     * @brief Add periodic images to a MappedBoxLevel and add new
@@ -532,15 +528,13 @@ public:
 
    //@}
 
-
-
 private:
-
    /*!
     * @brief Delegated work of computeInternalPartsForMultiblock and
     * computeExternalPartsForMultiblock.
     */
-   void computeInternalOrExternalPartsForMultiblock(
+   void
+   computeInternalOrExternalPartsForMultiblock(
       hier::MappedBoxLevel& parts,
       hier::Connector& input_to_parts,
       char internal_or_external,
@@ -582,7 +576,7 @@ private:
    bool d_sanity_check_postcond;
 
    static tbox::StartupShutdownManager::Handler
-   s_initialize_finalize_handler;
+      s_initialize_finalize_handler;
 
 };
 

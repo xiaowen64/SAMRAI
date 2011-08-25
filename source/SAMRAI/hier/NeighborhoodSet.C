@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Extension of a std 
+ * Description:   Extension of a std
  *
  ************************************************************************/
 #ifndef included_hier_NeighborhoodSet_C
@@ -276,11 +276,11 @@ void NeighborhoodSet::putToDatabase(
          const BoxId& mbid = ei->first;
          const NeighborSet& mapped_boxes = ei->second;
          const std::string set_name =
-            set_db_string +
-            tbox::Utilities::blockToString(mbid.getBlockId().getBlockValue()) +
-            tbox::Utilities::processorToString(mbid.getOwnerRank()) +
-            tbox::Utilities::patchToString(mbid.getLocalId().getValue()) +
-            tbox::Utilities::intToString(mbid.getPeriodicId().getPeriodicValue());
+            set_db_string
+            + tbox::Utilities::blockToString(mbid.getBlockId().getBlockValue())
+            + tbox::Utilities::processorToString(mbid.getOwnerRank())
+            + tbox::Utilities::patchToString(mbid.getLocalId().getValue())
+            + tbox::Utilities::intToString(mbid.getPeriodicId().getPeriodicValue());
          mapped_boxes.putToDatabase(*database.putDatabase(set_name));
       }
 
@@ -312,16 +312,16 @@ void NeighborhoodSet::getFromDatabase(
 
       std::pair<BoxId, NeighborSet> tmp_pair;
       for (size_t i = 0; i < number_of_sets; ++i) {
-         tmp_pair.first.initialize( LocalId(local_indices[i]),
-                                    owners[i],
-                                    BlockId(block_ids[i]),
-                                    PeriodicId(periodic_ids[i]) );
+         tmp_pair.first.initialize(LocalId(local_indices[i]),
+            owners[i],
+            BlockId(block_ids[i]),
+            PeriodicId(periodic_ids[i]));
          const std::string set_name =
-            set_db_string +
-            tbox::Utilities::blockToString(tmp_pair.first.getBlockId().getBlockValue()) +
-            tbox::Utilities::processorToString(tmp_pair.first.getOwnerRank()) +
-            tbox::Utilities::patchToString(tmp_pair.first.getLocalId().getValue()) +
-            tbox::Utilities::intToString(tmp_pair.first.getPeriodicId().getPeriodicValue());
+            set_db_string
+            + tbox::Utilities::blockToString(tmp_pair.first.getBlockId().getBlockValue())
+            + tbox::Utilities::processorToString(tmp_pair.first.getOwnerRank())
+            + tbox::Utilities::patchToString(tmp_pair.first.getLocalId().getValue())
+            + tbox::Utilities::intToString(tmp_pair.first.getPeriodicId().getPeriodicValue());
          iterator mi = insert(end(), tmp_pair);
          mi->second.getFromDatabase(*database.getDatabase(set_name));
       }
@@ -354,7 +354,6 @@ void NeighborhoodSet::recursivePrint(
    }
 }
 
-
 /*
  ***********************************************************************
  * Construct a NeighborhoodSet Outputter with formatting parameters.
@@ -362,16 +361,14 @@ void NeighborhoodSet::recursivePrint(
  */
 
 NeighborhoodSet::Outputter::Outputter(
-   const NeighborhoodSet &neighborhood_set,
+   const NeighborhoodSet& neighborhood_set,
    const std::string& border,
-   int detail_depth )
-   : d_set(neighborhood_set),
-     d_border(border),
-     d_detail_depth(detail_depth)
+   int detail_depth):
+   d_set(neighborhood_set),
+   d_border(border),
+   d_detail_depth(detail_depth)
 {
-   return;
 }
-
 
 /*
  ***********************************************************************
@@ -383,10 +380,9 @@ std::ostream& operator << (
    std::ostream& s,
    const NeighborhoodSet::Outputter& format)
 {
-   format.d_set.recursivePrint( s, format.d_border, format.d_detail_depth );
+   format.d_set.recursivePrint(s, format.d_border, format.d_detail_depth);
    return s;
 }
-
 
 /*
  ***********************************************************************
@@ -396,9 +392,9 @@ std::ostream& operator << (
 
 NeighborhoodSet::Outputter NeighborhoodSet::format(
    const std::string& border,
-   int detail_depth ) const
+   int detail_depth) const
 {
-   return Outputter( *this, border, detail_depth);
+   return Outputter(*this, border, detail_depth);
 }
 
 }

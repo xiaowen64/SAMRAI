@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Class to test usage of boundary utilities 
+ * Description:   Class to test usage of boundary utilities
  *
  ************************************************************************/
 
@@ -313,8 +313,8 @@ void BoundaryDataTester::readVariableInputAndMakeVariables(
             d_variable_name[i] = var_db->getString("name");
          } else {
             TBOX_ERROR(d_object_name << ": "
-               << "Variable input error: No 'name' string found for "
-               << "key = " << var_keys[i] << endl);
+                                     << "Variable input error: No 'name' string found for "
+                                     << "key = " << var_keys[i] << endl);
          }
 
          if (var_db->keyExists("depth")) {
@@ -334,9 +334,11 @@ void BoundaryDataTester::readVariableInputAndMakeVariables(
                d_variable_interior_values[i].getPointer(),
                d_variable_depth[i]);
          } else {
-            TBOX_ERROR(d_object_name << ": "
-               << "Variable input error: No 'interior_values' entry found for "
-               << "key = " << var_keys[i] << endl);
+            TBOX_ERROR(
+               d_object_name << ": "
+                             <<
+               "Variable input error: No 'interior_values' entry found for "
+                             << "key = " << var_keys[i] << endl);
          }
 
       }
@@ -504,9 +506,9 @@ void BoundaryDataTester::readBoundaryDataStateEntry(
          tmp_val = db->getDoubleArray(d_variable_name[iv]);
          if (tmp_val.getSize() < depth) {
             TBOX_ERROR(d_object_name << ": "
-               << "Insufficient number of "
-               << d_variable_name[iv] << " values given in "
-                                      << db_name << " input database." << endl);
+                                     << "Insufficient number of "
+                                     << d_variable_name[iv] << " values given in "
+                                     << db_name << " input database." << endl);
          }
          for (int id = 0; id < depth; id++) {
             d_variable_bc_values[iv][bdry_location_index * depth + id] =
@@ -514,9 +516,9 @@ void BoundaryDataTester::readBoundaryDataStateEntry(
          }
       } else {
          TBOX_ERROR(d_object_name << ": "
-            << d_variable_name[iv]
-            << " entry missing from " << db_name
-            << " input database. " << endl);
+                                  << d_variable_name[iv]
+                                  << " entry missing from " << db_name
+                                  << " input database. " << endl);
       }
 
    }
@@ -566,7 +568,7 @@ void BoundaryDataTester::readBoundaryDataInput(
       } else {
          TBOX_ERROR(
             d_object_name << ": "
-            <<
+                          <<
             "Key data 'Boundary_data' not found in input. " << endl);
       }
 
@@ -782,11 +784,11 @@ void BoundaryDataTester::checkBoundaryData(
             if (num_bad_values > 0) {
                d_fail_count++;
                tbox::perr << "\nBoundary Test FAILED: \n"
-               << "     " << num_bad_values << " bad "
-               << d_variable_name[iv] << " values found for"
-                                      << "     boundary type " << btype
-                                      << " at location "
-                                      << bloc << endl;
+                          << "     " << num_bad_values << " bad "
+                          << d_variable_name[iv] << " values found for"
+                          << "     boundary type " << btype
+                          << " at location "
+                          << bloc << endl;
             }
 #endif
 
@@ -796,9 +798,9 @@ void BoundaryDataTester::checkBoundaryData(
                if (d_dim == tbox::Dimension(2)) {
                   if (btype == Bdry::EDGE2D) {
                      if ((id == 0 && (bloc == BdryLoc::XLO ||
-                          bloc == BdryLoc::XHI)) ||
+                                      bloc == BdryLoc::XHI)) ||
                          (id == 1 && (bloc == BdryLoc::YLO ||
-                          bloc == BdryLoc::YHI))) {
+                                      bloc == BdryLoc::YHI))) {
                         vbcase = bvectorcase;
                      }
                   } else {
@@ -811,11 +813,11 @@ void BoundaryDataTester::checkBoundaryData(
                if (d_dim == tbox::Dimension(3)) {
                   if (btype == Bdry::FACE3D) {
                      if ((id == 0 && (bloc == BdryLoc::XLO ||
-                          bloc == BdryLoc::XHI)) ||
+                                      bloc == BdryLoc::XHI)) ||
                          (id == 1 && (bloc == BdryLoc::YLO ||
-                          bloc == BdryLoc::YHI)) ||
+                                      bloc == BdryLoc::YHI)) ||
                          (id == 2 && (bloc == BdryLoc::ZLO ||
-                          bloc == BdryLoc::ZHI))) {
+                                      bloc == BdryLoc::ZHI))) {
                         vbcase = bvectorcase;
                      }
                   } else {
@@ -855,11 +857,11 @@ void BoundaryDataTester::checkBoundaryData(
                if (num_bad_values > 0) {
                   d_fail_count++;
                   tbox::perr << "\nBoundary Test FAILED: \n"
-                  << "     " << num_bad_values << " bad "
-                  << d_variable_name[iv] << " values found for"
-                                         << "     boundary type " << btype
-                                         << " at location "
-                                         << bloc << endl;
+                             << "     " << num_bad_values << " bad "
+                             << d_variable_name[iv] << " values found for"
+                             << "     boundary type " << btype
+                             << " at location "
+                             << bloc << endl;
                }
 #endif
 
@@ -916,19 +918,19 @@ void BoundaryDataTester::printClassData(
    if (d_dim == tbox::Dimension(2)) {
       for (j = 0; j < d_master_bdry_edge_conds.getSize(); j++) {
          os << "\n       d_master_bdry_edge_conds[" << j << "] = "
-         << d_master_bdry_edge_conds[j] << endl;
+            << d_master_bdry_edge_conds[j] << endl;
          os << "       d_scalar_bdry_edge_conds[" << j << "] = "
-         << d_scalar_bdry_edge_conds[j] << endl;
+            << d_scalar_bdry_edge_conds[j] << endl;
          os << "       d_vector_bdry_edge_conds[" << j << "] = "
-         << d_vector_bdry_edge_conds[j] << endl;
+            << d_vector_bdry_edge_conds[j] << endl;
          if (d_master_bdry_edge_conds[j] == BdryCond::DIRICHLET ||
              d_master_bdry_edge_conds[j] == BdryCond::NEUMANN) {
             for (i = 0; i < d_variable_name.getSize(); i++) {
                os << d_variable_name[i] << " bdry edge value[" << j << "] = "
-               << d_variable_bc_values[i][j * d_variable_depth[i]];
+                  << d_variable_bc_values[i][j * d_variable_depth[i]];
                for (int id = 1; id < d_variable_depth[i]; id++) {
                   os << " , "
-                  << d_variable_bc_values[i][j * d_variable_depth[i] + id];
+                     << d_variable_bc_values[i][j * d_variable_depth[i] + id];
                }
                os << endl;
             }
@@ -937,30 +939,30 @@ void BoundaryDataTester::printClassData(
       os << endl;
       for (j = 0; j < d_master_bdry_node_conds.getSize(); j++) {
          os << "\n       d_master_bdry_node_conds[" << j << "] = "
-         << d_master_bdry_node_conds[j] << endl;
+            << d_master_bdry_node_conds[j] << endl;
          os << "       d_scalar_bdry_node_conds[" << j << "] = "
-         << d_scalar_bdry_node_conds[j] << endl;
+            << d_scalar_bdry_node_conds[j] << endl;
          os << "       d_vector_bdry_node_conds[" << j << "] = "
-         << d_vector_bdry_node_conds[j] << endl;
+            << d_vector_bdry_node_conds[j] << endl;
          os << "       d_node_bdry_edge[" << j << "] = "
-         << d_node_bdry_edge[j] << endl;
+            << d_node_bdry_edge[j] << endl;
       }
    }
    if (d_dim == tbox::Dimension(3)) {
       for (j = 0; j < d_master_bdry_face_conds.getSize(); j++) {
          os << "\n       d_master_bdry_face_conds[" << j << "] = "
-         << d_master_bdry_face_conds[j] << endl;
+            << d_master_bdry_face_conds[j] << endl;
          os << "       d_scalar_bdry_face_conds[" << j << "] = "
-         << d_scalar_bdry_face_conds[j] << endl;
+            << d_scalar_bdry_face_conds[j] << endl;
          os << "       d_vector_bdry_face_conds[" << j << "] = "
-         << d_vector_bdry_face_conds[j] << endl;
+            << d_vector_bdry_face_conds[j] << endl;
          if (d_master_bdry_face_conds[j] == BdryCond::DIRICHLET) {
             for (i = 0; i < d_variable_name.getSize(); i++) {
                os << d_variable_name[i] << " bdry edge value[" << j << "] = "
-               << d_variable_bc_values[i][j * d_variable_depth[i]];
+                  << d_variable_bc_values[i][j * d_variable_depth[i]];
                for (int id = 1; id < d_variable_depth[i]; id++) {
                   os << " , "
-                  << d_variable_bc_values[i][j * d_variable_depth[i] + id];
+                     << d_variable_bc_values[i][j * d_variable_depth[i] + id];
                }
                os << endl;
             }
@@ -969,24 +971,24 @@ void BoundaryDataTester::printClassData(
       os << endl;
       for (j = 0; j < d_master_bdry_edge_conds.getSize(); j++) {
          os << "\n       d_master_bdry_edge_conds[" << j << "] = "
-         << d_master_bdry_edge_conds[j] << endl;
+            << d_master_bdry_edge_conds[j] << endl;
          os << "       d_scalar_bdry_edge_conds[" << j << "] = "
-         << d_scalar_bdry_edge_conds[j] << endl;
+            << d_scalar_bdry_edge_conds[j] << endl;
          os << "       d_vector_bdry_edge_conds[" << j << "] = "
-         << d_vector_bdry_edge_conds[j] << endl;
+            << d_vector_bdry_edge_conds[j] << endl;
          os << "       d_edge_bdry_face[" << j << "] = "
-         << d_edge_bdry_face[j] << endl;
+            << d_edge_bdry_face[j] << endl;
       }
       os << endl;
       for (j = 0; j < d_master_bdry_node_conds.getSize(); j++) {
          os << "\n       d_master_bdry_node_conds[" << j << "] = "
-         << d_master_bdry_node_conds[j] << endl;
+            << d_master_bdry_node_conds[j] << endl;
          os << "       d_scalar_bdry_node_conds[" << j << "] = "
-         << d_scalar_bdry_node_conds[j] << endl;
+            << d_scalar_bdry_node_conds[j] << endl;
          os << "       d_vector_bdry_node_conds[" << j << "] = "
-         << d_vector_bdry_node_conds[j] << endl;
+            << d_vector_bdry_node_conds[j] << endl;
          os << "       d_node_bdry_face[" << j << "] = "
-         << d_node_bdry_face[j] << endl;
+            << d_node_bdry_face[j] << endl;
       }
    }
 

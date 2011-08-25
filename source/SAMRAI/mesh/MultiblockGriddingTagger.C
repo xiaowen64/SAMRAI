@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Strategy interface to user routines for refining AMR data. 
+ * Description:   Strategy interface to user routines for refining AMR data.
  *
  ************************************************************************/
 
@@ -120,7 +120,7 @@ void MultiblockGriddingTagger::fillSingularityBoundaryConditions(
    const double fill_time,
    const hier::Box& fill_box,
    const hier::BoundaryBox& boundary_box,
-   const tbox::Pointer<hier::GridGeometry> &grid_geometry)
+   const tbox::Pointer<hier::GridGeometry>& grid_geometry)
 {
    NULL_USE(fill_time);
    NULL_USE(boundary_box);
@@ -143,7 +143,7 @@ void MultiblockGriddingTagger::fillSingularityBoundaryConditions(
    hier::Box sing_fill_box(tag_data->getGhostBox() * fill_box);
    tag_data->fillAll(0, sing_fill_box);
 
-   if ( grid_geometry->hasEnhancedConnectivity() ) {
+   if (grid_geometry->hasEnhancedConnectivity()) {
 
       const tbox::List<hier::GridGeometry::Neighbor>& neighbors =
          grid_geometry->getNeighbors(patch_blk_id);
@@ -171,7 +171,7 @@ void MultiblockGriddingTagger::fillSingularityBoundaryConditions(
             hier::IntVector offset(dim);
 
             for (tbox::List<hier::GridGeometry::Neighbor>::Iterator
-                    ni(neighbors); ni; ni++) {
+                 ni(neighbors); ni; ni++) {
 
                if (ni().getBlockId() == encon_blk_id) {
                   rotation = ni().getRotationIdentifier();
@@ -206,7 +206,7 @@ void MultiblockGriddingTagger::fillSingularityBoundaryConditions(
                for (pdat::CellIterator ci(encon_fill_box); ci; ci++) {
                   pdat::CellIndex src_index(ci());
                   pdat::CellGeometry::transform(src_index, back_trans);
- 
+
                   (*tag_data)(ci()) += (*sing_data)(src_index);
                }
 

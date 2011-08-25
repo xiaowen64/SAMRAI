@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Simple Skeleton grid geometry for an AMR hierarchy. 
+ * Description:   Simple Skeleton grid geometry for an AMR hierarchy.
  *
  ************************************************************************/
 
@@ -74,8 +74,8 @@ SkeletonGridGeometry::SkeletonGridGeometry(
    tbox::Pointer<tbox::Database> input_db,
    bool register_for_restart):
    hier::GridGeometry(dim, object_name,
-      tbox::Pointer<hier::TransferOperatorRegistry>(
-         new SAMRAITransferOperatorRegistry(dim)))
+                      tbox::Pointer<hier::TransferOperatorRegistry>(
+                         new SAMRAITransferOperatorRegistry(dim)))
 {
    TBOX_ASSERT(!object_name.empty());
    TBOX_ASSERT(!input_db.isNull());
@@ -101,8 +101,8 @@ SkeletonGridGeometry::SkeletonGridGeometry(
    const hier::BoxList& domain,
    bool register_for_restart):
    hier::GridGeometry(domain.getDim(), object_name,
-      tbox::Pointer<hier::TransferOperatorRegistry>(
-         new SAMRAITransferOperatorRegistry(domain.getDim())))
+                      tbox::Pointer<hier::TransferOperatorRegistry>(
+                         new SAMRAITransferOperatorRegistry(domain.getDim())))
 {
    TBOX_ASSERT(!object_name.empty());
 
@@ -203,7 +203,7 @@ SkeletonGridGeometry::makeCoarsenedGridGeometry(
    hier::BoxList::Iterator coarse_domain_itr(coarse_domain);
    for (int ib = 0; ib < nboxes; ib++, fine_domain_itr++, coarse_domain_itr++) {
       hier::Box testbox = hier::Box::refine(*coarse_domain_itr, coarsen_ratio);
-      if (! testbox.isSpatiallyEqual(*fine_domain_itr)) {
+      if (!testbox.isSpatiallyEqual(*fine_domain_itr)) {
          tbox::plog
          << "SkeletonGridGeometry::makeCoarsenedGridGeometry : Box # "
          << ib << std::endl;
@@ -333,13 +333,13 @@ void SkeletonGridGeometry::getFromInput(
          if (domain.getNumberOfBoxes() == 0) {
             TBOX_ERROR(
                getObjectName() << ":  "
-               <<
+                               <<
                "Skeleton `domain_boxes' array found in input.");
          }
       } else {
          TBOX_ERROR(
             getObjectName() << ":  "
-            <<
+                            <<
             "Key data `domain_boxes' not found in input.");
       }
 
@@ -390,7 +390,7 @@ void SkeletonGridGeometry::getFromRestart()
    if (ver != GEOM_SKELETON_GRID_GEOMETRY_VERSION) {
       TBOX_ERROR(
          getObjectName() << ":  "
-         <<
+                         <<
          "Restart file version is different than class version.");
    }
    hier::BoxList domain(db->getDatabaseBoxArray("d_physical_domain"));

@@ -1,7 +1,7 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
  * Description:   SparseDataFactory
@@ -28,8 +28,8 @@ namespace pdat {
  * @see pdat::SparseDataVariable
  * @see hier::PatchDataFactory
  */
-template <typename BOX_GEOMETRY>
-class SparseDataFactory : public hier::PatchDataFactory
+template<typename BOX_GEOMETRY>
+class SparseDataFactory:public hier::PatchDataFactory
 {
 public:
    /*!
@@ -49,15 +49,15 @@ public:
 
    /*!
     * @brief Default destructor
-    */ 
+    */
    ~SparseDataFactory<BOX_GEOMETRY>();
 
    /*!
     * @brief Clone a patch data factory
     *
-    * @return a cloned factory with the same properties which can 
+    * @return a cloned factory with the same properties which can
     * then be changed without modifying the original.
-    * @param [in] ghosts 
+    * @param [in] ghosts
     */
    tbox::Pointer<hier::PatchDataFactory>
    cloneFactory(
@@ -75,7 +75,7 @@ public:
    allocate(
       const hier::Patch& patch) const;
 
-   /*! 
+   /*!
     * @brief Allocate the box geomtry object associated with the patch data.
     *
     * This information will be used in the computation of intersections
@@ -91,8 +91,8 @@ public:
     * @brief Calculate the amount of memory needed to store the sparse data
     * object.
     *
-    * The calculation includes object data, and does not include dynamically 
-    * allocated data.  
+    * The calculation includes object data, and does not include dynamically
+    * allocated data.
     */
    size_t
    getSizeOfMemory(
@@ -102,12 +102,14 @@ public:
     * @brief Returns true
     *
     * Sparse data quantities will always be treated as though fine values
-    * represent tehm on coarse-fine interfaces.  
-    * 
-    * @see SparseDataVariable 
+    * represent tehm on coarse-fine interfaces.
+    *
+    * @see SparseDataVariable
     */
-   bool 
-   fineBoundaryRepresentsVariable() const { return true; }
+   bool
+   fineBoundaryRepresentsVariable() const {
+      return true;
+   }
 
    /*!
     * @brief Returns false.
@@ -115,8 +117,10 @@ public:
     * Sparse data space matches the cell-centered index space for AMR patches,
     * hence sparse data does not live on patch borders.
     */
-   bool 
-   dataLivesOnPatchBorder() const { return false; }
+   bool
+   dataLivesOnPatchBorder() const {
+      return false;
+   }
 
    /*!
     * @brief Returns true if it is valid to copy this SparseDataFactory.
@@ -133,16 +137,16 @@ private:
     * Copy constructor and assignment operator are made private to
     * ensure the compiler does not create a default implementation.
     */
-   SparseDataFactory(const SparseDataFactory<BOX_GEOMETRY>& rhs);
+   SparseDataFactory(
+      const SparseDataFactory<BOX_GEOMETRY>& rhs);
 
    SparseDataFactory<BOX_GEOMETRY>&
-   operator=(
+   operator = (
       const SparseDataFactory<BOX_GEOMETRY>& rhs);
 
    std::vector<std::string> d_dbl_attributes;
    std::vector<std::string> d_int_attributes;
 };
-
 
 } // end namespace pdat
 } // end namespace SAMRAI

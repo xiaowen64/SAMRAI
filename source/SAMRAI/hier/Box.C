@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Box representing a portion of the AMR index space 
+ * Description:   Box representing a portion of the AMR index space
  *
  ************************************************************************/
 
@@ -59,12 +59,12 @@ int Box::s_high_water = 0;
  */
 Box::Box(
    const Box& other,
-   const PeriodicId &periodic_id,
-   const IntVector& refinement_ratio) :
+   const PeriodicId& periodic_id,
+   const IntVector& refinement_ratio):
    d_lo(other.d_lo),
    d_hi(other.d_hi),
-   d_id(other.getLocalId(), other.getOwnerRank(), other.getBlockId(), 
-      periodic_id)
+   d_id(other.getLocalId(), other.getOwnerRank(), other.getBlockId(),
+        periodic_id)
 {
    TBOX_DIM_ASSERT_CHECK_ARGS3(*this, other, refinement_ratio);
 #ifdef BOX_TELEMETRY
@@ -125,7 +125,6 @@ Box::Box(
    }
 }
 
-
 /*
  *********************************************************************************
  * Construct Box from a reference Box and possibly
@@ -141,7 +140,7 @@ Box::Box(
  */
 void Box::initialize(
    const Box& other,
-   const PeriodicId &periodic_id,
+   const PeriodicId& periodic_id,
    const IntVector& refinement_ratio)
 {
    TBOX_DIM_ASSERT_CHECK_ARGS3(*this, other, refinement_ratio);
@@ -197,11 +196,9 @@ void Box::initialize(
    }
 
    d_id.initialize(
-      other.getLocalId(), other.getOwnerRank(), 
+      other.getLocalId(), other.getOwnerRank(),
       other.getBlockId(), periodic_id);
 }
-
-
 
 /*
  *************************************************************************

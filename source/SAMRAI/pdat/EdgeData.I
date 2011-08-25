@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Templated edge centered patch data type 
+ * Description:   Templated edge centered patch data type
  *
  ************************************************************************/
 
@@ -44,7 +44,7 @@ const TYPE * EdgeData<TYPE>::getPointer(
 
 template<class TYPE>
 SAMRAI_INLINE_KEYWORD
-TYPE & EdgeData<TYPE>::operator () (
+TYPE& EdgeData<TYPE>::operator () (
    const EdgeIndex& i,
    int depth)
 {
@@ -60,7 +60,7 @@ TYPE & EdgeData<TYPE>::operator () (
 
 template<class TYPE>
 SAMRAI_INLINE_KEYWORD
-const TYPE &
+const TYPE&
 EdgeData<TYPE>::operator () (
    const EdgeIndex& i,
    int depth) const

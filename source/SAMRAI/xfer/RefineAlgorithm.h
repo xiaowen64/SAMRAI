@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Refine algorithm for data transfer between AMR levels 
+ * Description:   Refine algorithm for data transfer between AMR levels
  *
  ************************************************************************/
 
@@ -37,7 +37,7 @@ namespace xfer {
  *
  * The basic procedure for moving data follows three steps:
  *
- * <ul> 
+ * <ul>
  *    <li> interpolate data (spatial and possibly temporal) from coarser levels
  *    <li> copy data from the same level of refinement
  *    <li> fill physical boundary conditions regions
@@ -65,7 +65,7 @@ namespace xfer {
  * and any physical boundary data that must be filled.  The scratch storage is
  * copied into the destination data space at the end of the communication
  * process.  Thus, copy operations between source, scratch, and destination
- * patch data objects must be defined.  
+ * patch data objects must be defined.
  *
  * In general, the destination and scratch data components may be the same
  * (assuming that the scratch component has a sufficient ghost cells width).
@@ -73,15 +73,15 @@ namespace xfer {
  * interiors of the source space could be changed by the use of the scratch
  * data as temporary work space.
  *
- * It is the user's responsibility to register valid operations with the 
+ * It is the user's responsibility to register valid operations with the
  * refine algorithm so that the data communication can occur.  In particular,
  * communication operations (e.g., data refinement, data copy, etc.) are
  * performed in the order that items are registered for refinement with
  * a refine algorithm object.  Thus, order of registration must repect any
- * dependencies among patch data communicated.  Also, users who use 
- * the preprocessRefine() and postProcessRefine() operations in the patch 
- * strategy object must make sure that all data that is needed in those 
- * operations are registered with the RefineAlgorithm using registerRefine() 
+ * dependencies among patch data communicated.  Also, users who use
+ * the preprocessRefine() and postProcessRefine() operations in the patch
+ * strategy object must make sure that all data that is needed in those
+ * operations are registered with the RefineAlgorithm using registerRefine()
  * whether or not the data is to be refined.
  *
  * Typical usage of a refine algorithm to perform inter-patch communication
@@ -136,7 +136,7 @@ public:
 
    /*!
     * @brief Register a refine operation with the refine algorithm object.
-    * 
+    *
     * This method does not support time interpolation.  Data values will be
     * moved from the source data to the destination data using scratch
     * data as a temporary work space.  The scratch data must have
@@ -166,14 +166,14 @@ public:
       const int scratch,
       tbox::Pointer<hier::RefineOperator> oprefine,
       tbox::Pointer<VariableFillPattern> var_fill_pattern =
-         (tbox::Pointer<BoxGeometryVariableFillPattern>)NULL);
+         (tbox::Pointer<BoxGeometryVariableFillPattern>) NULL);
 
    /*!
     * @brief Register a refine operation with the refine algorithm object.
     *
     * This method supports time interpolation.  Time interpolation will take
     * place between the old and new source data components on coarser levels.
-    * On the destination level, data will be moved from the source data to 
+    * On the destination level, data will be moved from the source data to
     * the destination data using scratch data as a temporary work
     * space.  The scratch data must have sufficient ghost cells to cover
     * the required operator stencil width and any needed physical boundary
@@ -213,7 +213,7 @@ public:
       tbox::Pointer<hier::RefineOperator> oprefine,
       tbox::Pointer<hier::TimeInterpolateOperator> optime,
       tbox::Pointer<VariableFillPattern> var_fill_pattern =
-         (tbox::Pointer<BoxGeometryVariableFillPattern>)NULL);
+         (tbox::Pointer<BoxGeometryVariableFillPattern>) NULL);
 
    /*!
     * @brief Create a communication schedule for communicating data within a
@@ -251,7 +251,7 @@ public:
    tbox::Pointer<xfer::RefineSchedule>
    createSchedule(
       tbox::Pointer<hier::PatchLevel> level,
-      RefinePatchStrategy* patch_strategy =
+      RefinePatchStrategy * patch_strategy =
          ((RefinePatchStrategy *)NULL),
       tbox::Pointer<xfer::RefineTransactionFactory> transaction_factory =
          tbox::Pointer<xfer::RefineTransactionFactory>(NULL));
@@ -267,7 +267,7 @@ public:
    createSchedule(
       tbox::Pointer<PatchLevelFillPattern> fill_pattern,
       tbox::Pointer<hier::PatchLevel> level,
-      RefinePatchStrategy* patch_strategy =
+      RefinePatchStrategy * patch_strategy =
          ((RefinePatchStrategy *)NULL),
       tbox::Pointer<xfer::RefineTransactionFactory> transaction_factory =
          tbox::Pointer<xfer::RefineTransactionFactory>(NULL));
@@ -305,7 +305,7 @@ public:
     *                                     interpolation.
     * @param[in] transaction_factory  Pointer to a refine transaction factory
     *                                 that creates data transactions for the
-    *                                 schedule.  If this pointer is null 
+    *                                 schedule.  If this pointer is null
     *                                 (default state), then a
     *                                 StandardRefineTransactionFactory object
     *                                 will be used.
@@ -314,7 +314,7 @@ public:
    createSchedule(
       tbox::Pointer<hier::PatchLevel> dst_level,
       tbox::Pointer<hier::PatchLevel> src_level,
-      xfer::RefinePatchStrategy* patch_strategy =
+      xfer::RefinePatchStrategy * patch_strategy =
          ((xfer::RefinePatchStrategy *)NULL),
       bool use_time_interpolation = false,
       tbox::Pointer<xfer::RefineTransactionFactory> transaction_factory =
@@ -332,7 +332,7 @@ public:
       tbox::Pointer<PatchLevelFillPattern> fill_pattern,
       tbox::Pointer<hier::PatchLevel> dst_level,
       tbox::Pointer<hier::PatchLevel> src_level,
-      xfer::RefinePatchStrategy* patch_strategy =
+      xfer::RefinePatchStrategy * patch_strategy =
          ((xfer::RefinePatchStrategy *)NULL),
       bool use_time_interpolation = false,
       tbox::Pointer<xfer::RefineTransactionFactory> transaction_factory =
@@ -340,7 +340,7 @@ public:
 
    /*!
     * @brief Create a communication schedule that communicates data within a
-    * single level and interpolates data from coarser hierarchy levels 
+    * single level and interpolates data from coarser hierarchy levels
     * where needed.
     *
     * Data will be communicated from the interiors of the source data on
@@ -409,7 +409,7 @@ public:
       tbox::Pointer<hier::PatchLevel> level,
       const int next_coarser_level,
       tbox::Pointer<hier::PatchHierarchy> hierarchy,
-      xfer::RefinePatchStrategy* patch_strategy =
+      xfer::RefinePatchStrategy * patch_strategy =
          ((xfer::RefinePatchStrategy *)NULL),
       bool use_time_interpolation = false,
       tbox::Pointer<xfer::RefineTransactionFactory> transaction_factory =
@@ -428,7 +428,7 @@ public:
       tbox::Pointer<hier::PatchLevel> level,
       const int next_coarser_level,
       tbox::Pointer<hier::PatchHierarchy> hierarchy,
-      xfer::RefinePatchStrategy* patch_strategy =
+      xfer::RefinePatchStrategy * patch_strategy =
          ((xfer::RefinePatchStrategy *)NULL),
       bool use_time_interpolation = false,
       tbox::Pointer<xfer::RefineTransactionFactory> transaction_factory =
@@ -523,7 +523,7 @@ public:
       tbox::Pointer<hier::PatchLevel> src_level,
       const int next_coarser_level,
       tbox::Pointer<hier::PatchHierarchy> hierarchy,
-      xfer::RefinePatchStrategy* patch_strategy =
+      xfer::RefinePatchStrategy * patch_strategy =
          ((xfer::RefinePatchStrategy *)NULL),
       bool use_time_interpolation = false,
       tbox::Pointer<xfer::RefineTransactionFactory> transaction_factory =
@@ -543,7 +543,7 @@ public:
       tbox::Pointer<hier::PatchLevel> src_level,
       const int next_coarser_level,
       tbox::Pointer<hier::PatchHierarchy> hierarchy,
-      xfer::RefinePatchStrategy* patch_strategy =
+      xfer::RefinePatchStrategy * patch_strategy =
          ((xfer::RefinePatchStrategy *)NULL),
       bool use_time_interpolation = false,
       tbox::Pointer<xfer::RefineTransactionFactory> transaction_factory =

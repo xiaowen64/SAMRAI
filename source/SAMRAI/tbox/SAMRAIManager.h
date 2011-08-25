@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   SAMRAI class to manage package startup and shutdown 
+ * Description:   SAMRAI class to manage package startup and shutdown
  *
  ************************************************************************/
 
@@ -49,7 +49,7 @@ namespace tbox {
  * number of patch data components that can be allowed.
  *
  * @see tbox::SAMRAI_MPI
- * @see tbox::StartupShutdownManager 
+ * @see tbox::StartupShutdownManager
  */
 
 class SAMRAIManager
@@ -151,7 +151,6 @@ public:
       int maxnum);
 
 private:
-
    /*!
     * Flag indicating SAMRAIManager has been initialized.
     */

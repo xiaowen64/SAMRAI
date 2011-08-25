@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Writes data files for visualization by VisIt 
+ * Description:   Writes data files for visualization by VisIt
  *
  ************************************************************************/
 
@@ -1264,11 +1264,11 @@ private:
    static void
    finalizeCallback();
 
-   /* 
+   /*
     * Static initialization and cleanup handler.
     */
    static tbox::StartupShutdownManager::Handler
-   s_initialize_handler;
+      s_initialize_handler;
 
 };
 }

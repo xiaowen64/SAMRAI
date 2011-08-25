@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Writes data files for visualization by VisIt 
+ * Description:   Writes data files for visualization by VisIt
  *
  ************************************************************************/
 
@@ -36,43 +36,43 @@ extern "C" {
 #endif
 
 void F77_FUNC(cpfdat2buf3d, CPFDAT2BUF3D) (
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
-   float *, double *, const int &);
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
+   float *, double *, const int&);
 void F77_FUNC(cpddat2buf3d, CPDDAT2BUF3D) (
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
-   double *, double *, const int &);
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
+   double *, double *, const int&);
 void F77_FUNC(cpidat2buf3d, CPIDAT2BUF3D) (
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
-   int *, double *, const int &);
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
+   int *, double *, const int&);
 }
 extern "C" {
 void F77_FUNC(cpfdat2buf2d, CPFDAT2BUF2D) (
-   const int &, const int &,
-   const int &, const int &,
-   const int &, const int &,
-   const int &, const int &,
-   float *, double *, const int &);
+   const int&, const int&,
+   const int&, const int&,
+   const int&, const int&,
+   const int&, const int&,
+   float *, double *, const int&);
 void F77_FUNC(cpddat2buf2d, CPDDAT2BUF2D) (
-   const int &, const int &,
-   const int &, const int &,
-   const int &, const int &,
-   const int &, const int &,
-   double *, double *, const int &);
+   const int&, const int&,
+   const int&, const int&,
+   const int&, const int&,
+   const int&, const int&,
+   double *, double *, const int&);
 void F77_FUNC(cpidat2buf2d, CPIDAT2BUF2D) (
-   const int &, const int &,
-   const int &, const int &,
-   const int &, const int &,
-   const int &, const int &,
-   int *, double *, const int &);
+   const int&, const int&,
+   const int&, const int&,
+   const int&, const int&,
+   const int&, const int&,
+   int *, double *, const int&);
 }
 
 #if !defined(__BGL_FAMILY__) && defined(__xlC__)
@@ -1662,7 +1662,7 @@ void VisItDataWriter::writeHDFFiles(
       } else {
          // file already created other procs just need to open it
          const bool read_write_mode(true);
-         if (!visit_HDFFilePointer->open(visit_HDFFilename,read_write_mode)) {
+         if (!visit_HDFFilePointer->open(visit_HDFFilename, read_write_mode)) {
             TBOX_ERROR("VisItDataWriter::writeHDFFiles"
                << "\n    data writer with name " << d_object_name
                << "\n    Error attempting to open visit file "
@@ -3176,7 +3176,7 @@ void VisItDataWriter::writeSummaryToHDFFile(
          basic_group_id);
       delete[] dx;
 
-      /* 
+      /*
        * Add mesh xlo information to BASIC group
        */
       key_string = "XLO";
@@ -3707,7 +3707,7 @@ void VisItDataWriter::writeParentChildInfoToSummaryHDFFile(
             hier::Box compare_box(*bi);
             compare_box.refine(ratio);
 
-            std::vector<hier::Box> overlap_mapped_boxes; 
+            std::vector<hier::Box> overlap_mapped_boxes;
 
             child_box_tree->findOverlapBoxes(
                overlap_mapped_boxes,
@@ -3915,10 +3915,10 @@ void VisItDataWriter::packPatchDataIntoDoubleBuffer(
    if (d_dim < tbox::Dimension(2) || d_dim > tbox::Dimension(3)) {
       TBOX_ERROR(
          d_object_name << ":packPatchDataIntoDoubleBuffer()"
-         << "\n  This case has DIM = " << d_dim
-         <<
+                       << "\n  This case has DIM = " << d_dim
+                       <<
          "\n  Dimensions < 2 or > 3 are not supported at"
-         << "\n  this time." << std::endl);
+                       << "\n  this time." << std::endl);
    }
 
    int buf_size = getBufferSize(patch_box,
@@ -4076,8 +4076,8 @@ void VisItDataWriter::packPatchDataIntoDoubleBuffer(
       default: {
          TBOX_ERROR(
             d_object_name << ":packPatchDataIntoDoubleBuffer()"
-            << "\n  Unknown type.  ***Exiting."
-            << std::endl);
+                          << "\n  Unknown type.  ***Exiting."
+                          << std::endl);
       }
    }
 }
@@ -4381,7 +4381,6 @@ void VisItDataWriter::HDFputPatchMapStructArray(
             HOFFSET(patchMapStruct, file_cluster_number),
             H5T_NATIVE_INT);
       TBOX_ASSERT(errf >= 0);
-
 
       errf = H5Tinsert(pm_id,
             "level_number",
@@ -4702,7 +4701,7 @@ void VisItDataWriter::dumpItem(
    int i;
    for (i = 0; i < plotitem.d_depth; i++) {
       os << "   comp_name[" << i << "]: "
-      << plotitem.d_visit_var_name[i] << "\n";
+         << plotitem.d_visit_var_name[i] << "\n";
    }
 
    os << "d_isa_material: " << plotitem.d_isa_material << "\n";
@@ -4712,7 +4711,7 @@ void VisItDataWriter::dumpItem(
       os << "  Species for this material: " << "\n";
       for (i = 0; i < plotitem.d_species_names.getSize(); i++) {
          os << "   species[" << i << "]: "
-         << plotitem.d_species_names[i] << "\n";
+            << plotitem.d_species_names[i] << "\n";
       }
    }
 

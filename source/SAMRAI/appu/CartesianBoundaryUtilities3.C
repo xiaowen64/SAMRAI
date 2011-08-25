@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Utility routines for manipulating 3D Cartesian boundary data 
+ * Description:   Utility routines for manipulating 3D Cartesian boundary data
  *
  ************************************************************************/
 
@@ -34,65 +34,65 @@ extern "C" {
 #pragma warning (disable:1419)
 #endif
 
-void F77_FUNC(stufcartbdryloc3d, STUFCARTBDRYLOC3D) (const int &, const int &,
-   const int &, const int &,
-   const int &, const int &,
-   const int &, const int &, const int &, const int &,
-   const int &, const int &, const int &, const int &,
-   const int &, const int &, const int &, const int &,
-   const int &, const int &, const int &, const int &,
-   const int &, const int &, const int &, const int &);
+void F77_FUNC(stufcartbdryloc3d, STUFCARTBDRYLOC3D) (const int&, const int&,
+   const int&, const int&,
+   const int&, const int&,
+   const int&, const int&, const int&, const int&,
+   const int&, const int&, const int&, const int&,
+   const int&, const int&, const int&, const int&,
+   const int&, const int&, const int&, const int&,
+   const int&, const int&, const int&, const int&);
 
-void F77_FUNC(stufcartbdrycond3d, STUFCARTBDRYCOND3D) (const int &,
-   const int &, const int &, const int &,
-   const int &,
-   const int &, const int &, const int &,
-   const int &,
-   const int &, const int &, const int &,
-   const int &,
-   const int &, const int &, const int &);
+void F77_FUNC(stufcartbdrycond3d, STUFCARTBDRYCOND3D) (const int&,
+   const int&, const int&, const int&,
+   const int&,
+   const int&, const int&, const int&,
+   const int&,
+   const int&, const int&, const int&,
+   const int&,
+   const int&, const int&, const int&);
 
-void F77_FUNC(getcartfacebdry3d, GETCARTFACEBDRY3D) (const int &, const int &,
-   const int &, const int &,
-   const int &, const int &,
-   const int &, const int &,
-   const int &, const int &,
-   const int &, const int &,
-   const int &, const int &, const int &,
+void F77_FUNC(getcartfacebdry3d, GETCARTFACEBDRY3D) (const int&, const int&,
+   const int&, const int&,
+   const int&, const int&,
+   const int&, const int&,
+   const int&, const int&,
+   const int&, const int&,
+   const int&, const int&, const int&,
    const double *,
-   const int &,
-   const int &,
+   const int&,
+   const int&,
    const double *,
    double *,
-   const int &);
+   const int&);
 
-void F77_FUNC(getcartedgebdry3d, GETCARTEDGEBDRY3D) (const int &, const int &,
-   const int &, const int &,
-   const int &, const int &,
-   const int &, const int &,
-   const int &, const int &,
-   const int &, const int &,
-   const int &, const int &, const int &,
+void F77_FUNC(getcartedgebdry3d, GETCARTEDGEBDRY3D) (const int&, const int&,
+   const int&, const int&,
+   const int&, const int&,
+   const int&, const int&,
+   const int&, const int&,
+   const int&, const int&,
+   const int&, const int&, const int&,
    const double *,
-   const int &,
-   const int &,
+   const int&,
+   const int&,
    const double *,
    double *,
-   const int &);
+   const int&);
 
-void F77_FUNC(getcartnodebdry3d, GETCARTNODEBDRY3D) (const int &, const int &,
-   const int &, const int &,
-   const int &, const int &,
-   const int &, const int &,
-   const int &, const int &,
-   const int &, const int &,
-   const int &, const int &, const int &,
+void F77_FUNC(getcartnodebdry3d, GETCARTNODEBDRY3D) (const int&, const int&,
+   const int&, const int&,
+   const int&, const int&,
+   const int&, const int&,
+   const int&, const int&,
+   const int&, const int&,
+   const int&, const int&, const int&,
    const double *,
-   const int &,
-   const int &,
+   const int&,
+   const int&,
    const double *,
    double *,
-   const int &);
+   const int&);
 
 }
 
@@ -220,7 +220,7 @@ void CartesianBoundaryUtilities3::fillFaceBoundaryData(
                                   ghost_fill_width));
 
    const tbox::Array<hier::BoundaryBox>& face_bdry =
-     pgeom->getCodimensionBoundaries(Bdry::FACE3D);
+      pgeom->getCodimensionBoundaries(Bdry::FACE3D);
    for (int i = 0; i < face_bdry.getSize(); i++) {
 
       TBOX_ASSERT(face_bdry[i].getBoundaryType() == Bdry::FACE3D);
@@ -640,9 +640,9 @@ int CartesianBoundaryUtilities3::checkBdryData(
    } else {
       TBOX_ERROR(
          "Unknown btype " << btype
-         <<
+                          <<
          " passed to CartesianBoundaryUtilities3::checkBdryData()! "
-         << std::endl);
+                          << std::endl);
    }
 
    tbox::plog << "\n\nCHECKING 3D " << bdry_type_str << " BDRY DATA..."
@@ -680,10 +680,10 @@ int CartesianBoundaryUtilities3::checkBdryData(
       } else {
          TBOX_ERROR(
             "Unknown bcase " << bcase
-            <<
+                             <<
             " passed to CartesianBoundaryUtilities3::checkBdryData()"
-            << "\n for " << bdry_type_str
-            << " at location " << bloc << std::endl);
+                             << "\n for " << bdry_type_str
+                             << " at location " << bloc << std::endl);
       }
 
    } else if (btype == Bdry::EDGE3D) {
@@ -712,10 +712,10 @@ int CartesianBoundaryUtilities3::checkBdryData(
       } else {
          TBOX_ERROR(
             "Unknown bcase " << bcase
-            <<
+                             <<
             " passed to CartesianBoundaryUtilities3::checkBdryData()"
-            << "\n for " << bdry_type_str
-            << " at location " << bloc << std::endl);
+                             << "\n for " << bdry_type_str
+                             << " at location " << bloc << std::endl);
       }
 
    } else if (btype == Bdry::NODE3D) {
@@ -744,10 +744,10 @@ int CartesianBoundaryUtilities3::checkBdryData(
       } else {
          TBOX_ERROR(
             "Unknown bcase " << bcase
-            <<
+                             <<
             " passed to CartesianBoundaryUtilities3::checkBdryData()"
-            << "\n for " << bdry_type_str
-            << " at location " << bloc << std::endl);
+                             << "\n for " << bdry_type_str
+                             << " at location " << bloc << std::endl);
       }
 
    }
@@ -827,22 +827,22 @@ void CartesianBoundaryUtilities3::read3dBdryFaces(
          std::string bdry_loc_str;
          switch (s) {
             case BdryLoc::XLO: { bdry_loc_str = "boundary_face_xlo";
-                        break;
+                                 break;
             }
             case BdryLoc::XHI: { bdry_loc_str = "boundary_face_xhi";
-                        break;
+                                 break;
             }
             case BdryLoc::YLO: { bdry_loc_str = "boundary_face_ylo";
-                        break;
+                                 break;
             }
             case BdryLoc::YHI: { bdry_loc_str = "boundary_face_yhi";
-                        break;
+                                 break;
             }
             case BdryLoc::ZLO: { bdry_loc_str = "boundary_face_zlo";
-                        break;
+                                 break;
             }
             case BdryLoc::ZHI: { bdry_loc_str = "boundary_face_zhi";
-                        break;
+                                 break;
             }
             default: NULL_STATEMENT;
          }
@@ -931,52 +931,52 @@ void CartesianBoundaryUtilities3::read3dBdryEdges(
          std::string bdry_loc_str;
          switch (s) {
             case EdgeBdyLoc3D::YLO_ZLO: {
-                 bdry_loc_str = "boundary_edge_ylo_zlo";
-                 break;
+               bdry_loc_str = "boundary_edge_ylo_zlo";
+               break;
             }
             case EdgeBdyLoc3D::YHI_ZLO: {
-                 bdry_loc_str = "boundary_edge_yhi_zlo";
-                 break;
+               bdry_loc_str = "boundary_edge_yhi_zlo";
+               break;
             }
             case EdgeBdyLoc3D::YLO_ZHI: {
-                 bdry_loc_str = "boundary_edge_ylo_zhi";
-                 break;
+               bdry_loc_str = "boundary_edge_ylo_zhi";
+               break;
             }
             case EdgeBdyLoc3D::YHI_ZHI: {
-                 bdry_loc_str = "boundary_edge_yhi_zhi";
-                 break;
+               bdry_loc_str = "boundary_edge_yhi_zhi";
+               break;
             }
             case EdgeBdyLoc3D::XLO_ZLO: {
-                 bdry_loc_str = "boundary_edge_xlo_zlo";
-                 break;
+               bdry_loc_str = "boundary_edge_xlo_zlo";
+               break;
             }
             case EdgeBdyLoc3D::XLO_ZHI: {
-                 bdry_loc_str = "boundary_edge_xlo_zhi";
-                 break;
+               bdry_loc_str = "boundary_edge_xlo_zhi";
+               break;
             }
             case EdgeBdyLoc3D::XHI_ZLO: {
-                 bdry_loc_str = "boundary_edge_xhi_zlo";
-                 break;
+               bdry_loc_str = "boundary_edge_xhi_zlo";
+               break;
             }
             case EdgeBdyLoc3D::XHI_ZHI: {
-                 bdry_loc_str = "boundary_edge_xhi_zhi";
-                 break;
+               bdry_loc_str = "boundary_edge_xhi_zhi";
+               break;
             }
             case EdgeBdyLoc3D::XLO_YLO: {
-                 bdry_loc_str = "boundary_edge_xlo_ylo";
-                 break;
+               bdry_loc_str = "boundary_edge_xlo_ylo";
+               break;
             }
             case EdgeBdyLoc3D::XHI_YLO: {
-                 bdry_loc_str = "boundary_edge_xhi_ylo";
-                 break;
+               bdry_loc_str = "boundary_edge_xhi_ylo";
+               break;
             }
             case EdgeBdyLoc3D::XLO_YHI: {
-                 bdry_loc_str = "boundary_edge_xlo_yhi";
-                 break;
+               bdry_loc_str = "boundary_edge_xlo_yhi";
+               break;
             }
             case EdgeBdyLoc3D::XHI_YHI: {
-                 bdry_loc_str = "boundary_edge_xhi_yhi";
-                 break;
+               bdry_loc_str = "boundary_edge_xhi_yhi";
+               break;
             }
             default: NULL_STATEMENT;
          }
@@ -1242,12 +1242,12 @@ void CartesianBoundaryUtilities3::read3dBdryEdges(
                      if (no_face_data_found) {
                         TBOX_ERROR(
                            "Bdry condition " << bdry_cond_str
-                           << " found for "
-                           << bdry_loc_str
-                           << "\n but no "
-                           << proper_face_data
-                           << " data found for face "
-                           << proper_face << std::endl);
+                                             << " found for "
+                                             << bdry_loc_str
+                                             << "\n but no "
+                                             << proper_face_data
+                                             << " data found for face "
+                                             << proper_face << std::endl);
                      }
                   } else {
                      TBOX_ERROR("'boundary_condition' entry missing from "
@@ -1295,36 +1295,36 @@ void CartesianBoundaryUtilities3::read3dBdryNodes(
          std::string bdry_loc_str;
          switch (s) {
             case NodeBdyLoc3D::XLO_YLO_ZLO: {
-                 bdry_loc_str = "boundary_node_xlo_ylo_zlo";
-                 break;
+               bdry_loc_str = "boundary_node_xlo_ylo_zlo";
+               break;
             }
             case NodeBdyLoc3D::XHI_YLO_ZLO: {
-                 bdry_loc_str = "boundary_node_xhi_ylo_zlo";
-                 break;
+               bdry_loc_str = "boundary_node_xhi_ylo_zlo";
+               break;
             }
             case NodeBdyLoc3D::XLO_YHI_ZLO: {
-                 bdry_loc_str = "boundary_node_xlo_yhi_zlo";
-                 break;
+               bdry_loc_str = "boundary_node_xlo_yhi_zlo";
+               break;
             }
             case NodeBdyLoc3D::XHI_YHI_ZLO: {
-                 bdry_loc_str = "boundary_node_xhi_yhi_zlo";
-                 break;
+               bdry_loc_str = "boundary_node_xhi_yhi_zlo";
+               break;
             }
             case NodeBdyLoc3D::XLO_YLO_ZHI: {
-                 bdry_loc_str = "boundary_node_xlo_ylo_zhi";
-                 break;
+               bdry_loc_str = "boundary_node_xlo_ylo_zhi";
+               break;
             }
             case NodeBdyLoc3D::XHI_YLO_ZHI: {
-                 bdry_loc_str = "boundary_node_xhi_ylo_zhi";
-                 break;
+               bdry_loc_str = "boundary_node_xhi_ylo_zhi";
+               break;
             }
             case NodeBdyLoc3D::XLO_YHI_ZHI: {
-                 bdry_loc_str = "boundary_node_xlo_yhi_zhi";
-                 break;
+               bdry_loc_str = "boundary_node_xlo_yhi_zhi";
+               break;
             }
             case NodeBdyLoc3D::XHI_YHI_ZHI: {
-                 bdry_loc_str = "boundary_node_xhi_yhi_zhi";
-                 break;
+               bdry_loc_str = "boundary_node_xhi_yhi_zhi";
+               break;
             }
             default: NULL_STATEMENT;
          }
@@ -1528,12 +1528,12 @@ void CartesianBoundaryUtilities3::read3dBdryNodes(
                   if (no_face_data_found) {
                      TBOX_ERROR(
                         "Bdry condition " << bdry_cond_str
-                        << " found for "
-                        << bdry_loc_str
-                        << "\n but no "
-                        << proper_face_data
-                        << " data found for face "
-                        << proper_face << std::endl);
+                                          << " found for "
+                                          << bdry_loc_str
+                                          << "\n but no "
+                                          << proper_face_data
+                                          << " data found for face "
+                                          << proper_face << std::endl);
                   }
 
                } else {
@@ -1595,10 +1595,10 @@ void CartesianBoundaryUtilities3::get3dBdryDirectionCheckValues(
       } else {
          TBOX_ERROR(
             "Unknown boundary location " << bloc
-            <<
+                                         <<
             " passed to CartesianBoundaryUtilities3::checkBdryData()"
-            << "\n for "
-            << bdry_type_str << " boundary " << std::endl);
+                                         << "\n for "
+                                         << bdry_type_str << " boundary " << std::endl);
       }
 
    } else if (btype == Bdry::EDGE3D) {
@@ -1654,11 +1654,11 @@ void CartesianBoundaryUtilities3::get3dBdryDirectionCheckValues(
       if (bad_case) {
          TBOX_ERROR(
             "Unknown or ambigous bcase " << bcase
-            <<
+                                         <<
             " passed to CartesianBoundaryUtilities3::checkBdryData()"
-            << "\n for " << bdry_type_str
-            << " at location " << bloc
-            << std::endl);
+                                         << "\n for " << bdry_type_str
+                                         << " at location " << bloc
+                                         << std::endl);
       }
 
    } else if (btype == Bdry::NODE3D) {
@@ -1705,11 +1705,11 @@ void CartesianBoundaryUtilities3::get3dBdryDirectionCheckValues(
    } else {
       TBOX_ERROR(
          "Unknown boundary type " << btype
-         <<
+                                  <<
          " passed to CartesianBoundaryUtilities3::checkBdryData()"
-         << "\n for " << bdry_type_str
-         << " at location " << bloc
-         << std::endl);
+                                  << "\n for " << bdry_type_str
+                                  << " at location " << bloc
+                                  << std::endl);
    }
 
 }

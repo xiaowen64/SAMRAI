@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Asynchronous Berger-Rigoutsos algorithm wrapper 
+ * Description:   Asynchronous Berger-Rigoutsos algorithm wrapper
  *
  ************************************************************************/
 #ifndef included_mesh_BergerRigoutsos_C
@@ -98,13 +98,13 @@ BergerRigoutsos::BergerRigoutsos(
       std::string tmp_str;
 
       tmp_str = database->getStringWithDefault("check_min_box_size",
-                                               std::string("WARN"));
+            std::string("WARN"));
       d_check_min_box_size = char(tolower(*tmp_str.c_str()));
       if (d_check_min_box_size != 'i' &&
           d_check_min_box_size != 'w' &&
           d_check_min_box_size != 'e') {
          TBOX_ERROR("BergerRigoutsos: input parameter check_min_box_size\n"
-                    << "can only be \"IGNORE\", \"WARN\" or \"ERROR\"");
+            << "can only be \"IGNORE\", \"WARN\" or \"ERROR\"");
       }
 
       d_barrier_before =
@@ -184,22 +184,21 @@ void BergerRigoutsos::findBoxesContainingTags(
 
    tbox::SAMRAI_MPI mpi(tag_level->getMappedBoxLevel()->getMPI());
 
-   if ( !(bound_box.numberCells() >= min_box) ) {
-      if ( d_check_min_box_size == 'e' ) {
+   if (!(bound_box.numberCells() >= min_box)) {
+      if (d_check_min_box_size == 'e') {
          TBOX_ERROR("BergerRigoutsos::findBoxesContainingTags input error:\n"
-                    <<"Input box " << bound_box << " has size " << bound_box.numberCells()
-                    <<"\nwhich is already smaller than the minimum box size\n"
-                    <<min_box << "\n\n"
-                    <<"To ignore or just issue a warning, see the input parameter\n"
-                    <<"check_min_box_size.\n");
-      }
-      else if ( d_check_min_box_size == 'w' ) {
+            << "Input box " << bound_box << " has size " << bound_box.numberCells()
+            << "\nwhich is already smaller than the minimum box size\n"
+            << min_box << "\n\n"
+            << "To ignore or just issue a warning, see the input parameter\n"
+            << "check_min_box_size.\n");
+      } else if (d_check_min_box_size == 'w') {
          TBOX_WARNING("BergerRigoutsos::findBoxesContainingTags input warning:\n"
-                    <<"Input box " << bound_box << " has size " << bound_box.numberCells()
-                    <<"\nwhich is already smaller than the minimum box size\n"
-                    <<min_box << "\n\n"
-                    <<"To ignore or issue error, see the input parameter\n"
-                    <<"check_min_box_size.\n");
+            << "Input box " << bound_box << " has size " << bound_box.numberCells()
+            << "\nwhich is already smaller than the minimum box size\n"
+            << min_box << "\n\n"
+            << "To ignore or issue error, see the input parameter\n"
+            << "check_min_box_size.\n");
       }
    }
 
@@ -294,9 +293,10 @@ void BergerRigoutsos::findBoxesContainingTags(
 
    if (d_log_cluster) {
       tbox::plog
-         << "New mapped_box_level clustered by BergerRigoutsos:\n" << new_mapped_box_level.format("", 2)
-         << "BergerRigoutsos tag_to_new:\n" << tag_to_new.format("", 2)
-         << "BergerRigoutsos new_to_tag:\n" << new_to_tag.format("", 2);
+      << "New mapped_box_level clustered by BergerRigoutsos:\n" << new_mapped_box_level.format("",
+         2)
+      << "BergerRigoutsos tag_to_new:\n" << tag_to_new.format("", 2)
+      << "BergerRigoutsos new_to_tag:\n" << new_to_tag.format("", 2);
    }
    if (d_log_cluster_summary) {
       /*
@@ -393,10 +393,10 @@ void BergerRigoutsos::sortOutputMappedBoxes(
       false /* don't sequentialize indices globally */);
    if (0) {
       tbox::plog
-         << "tag mapped_box_level:\n" << tag_to_new.getBase().format("", 2)
-         << "tag_to_new:\n" << tag_to_new.format("", 2)
-         << "new_to_tag:\n" << new_to_tag.format("", 2)
-         << "Sorting map:\n" << sorting_map.format("", 2);
+      << "tag mapped_box_level:\n" << tag_to_new.getBase().format("", 2)
+      << "tag_to_new:\n" << tag_to_new.format("", 2)
+      << "new_to_tag:\n" << new_to_tag.format("", 2)
+      << "Sorting map:\n" << sorting_map.format("", 2);
    }
    if (0) {
       // Check sorting_map before using it.
@@ -526,4 +526,3 @@ void BergerRigoutsos::finalizeCallback()
 }
 }
 #endif
-

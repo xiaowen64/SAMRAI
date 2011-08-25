@@ -1,11 +1,11 @@
-/********************************************************************** 
- *
- * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
- *
- * Copyright:     (c) 1997 - 2011 Lawrence Livermore National Security, LLC
- * Description:   pdat
- **********************************************************************/
+/**********************************************************************
+*
+* This file is part of the SAMRAI distribution.  For full copyright
+* information, see COPYRIGHT and COPYING.LESSER.
+*
+* Copyright:     (c) 1997 - 2011 Lawrence Livermore National Security, LLC
+* Description:   pdat
+**********************************************************************/
 #ifndef included_pdat_IntegerAttributeId_h
 #define included_pdat_IntegerAttributeId_h
 
@@ -20,13 +20,22 @@ namespace pdat {
 class IntegerAttributeId
 {
 public:
-   IntegerAttributeId(int value);
-   IntegerAttributeId(const IntegerAttributeId& other);
+   IntegerAttributeId(
+      int value);
+   IntegerAttributeId(
+      const IntegerAttributeId& other);
    ~IntegerAttributeId();
-   IntegerAttributeId& operator= (const IntegerAttributeId& rhs);
-   bool operator==(const IntegerAttributeId& other) const;
-   bool operator!=(const IntegerAttributeId& other) const;
-   int operator()() const;
+   IntegerAttributeId&
+   operator = (
+      const IntegerAttributeId& rhs);
+   bool
+   operator == (
+      const IntegerAttributeId& other) const;
+   bool
+   operator != (
+      const IntegerAttributeId& other) const;
+   int
+   operator () () const;
 
    friend class Attributes;
 private:

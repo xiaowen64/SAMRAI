@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Simple Cartesian grid geometry for an AMR hierarchy. 
+ * Description:   Simple Cartesian grid geometry for an AMR hierarchy.
  *
  ************************************************************************/
 
@@ -166,8 +166,8 @@ CartesianGridGeometry::CartesianGridGeometry(
    tbox::Pointer<tbox::Database> input_db,
    bool register_for_restart):
    hier::GridGeometry(dim, object_name,
-      tbox::Pointer<hier::TransferOperatorRegistry>(
-         new SAMRAITransferOperatorRegistry(dim))),
+                      tbox::Pointer<hier::TransferOperatorRegistry>(
+                         new SAMRAITransferOperatorRegistry(dim))),
    d_domain_box(dim)
 {
    TBOX_ASSERT(!object_name.empty());
@@ -196,8 +196,8 @@ CartesianGridGeometry::CartesianGridGeometry(
    const hier::BoxList& domain,
    bool register_for_restart):
    hier::GridGeometry(domain.getDim(), object_name,
-      tbox::Pointer<hier::TransferOperatorRegistry>(
-         new SAMRAITransferOperatorRegistry(domain.getDim()))),
+                      tbox::Pointer<hier::TransferOperatorRegistry>(
+                         new SAMRAITransferOperatorRegistry(domain.getDim()))),
    d_domain_box(domain.getDim())
 {
    TBOX_ASSERT(!object_name.empty());
@@ -285,7 +285,7 @@ makeCoarsenedGridGeometry(
    hier::BoxList::Iterator coarse_domain_itr(coarse_domain);
    for (int ib = 0; ib < nboxes; ib++, fine_domain_itr++, coarse_domain_itr++) {
       hier::Box testbox = hier::Box::refine(*coarse_domain_itr, coarsen_ratio);
-      if ( !testbox.isSpatiallyEqual(*fine_domain_itr)) {
+      if (!testbox.isSpatiallyEqual(*fine_domain_itr)) {
 #ifdef DEBUG_CHECK_ASSERTIONS
          tbox::plog
          << "CartesianGridGeometry::makeCoarsenedGridGeometry : Box # "

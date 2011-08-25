@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   High-level solver (wrapper) for scalar poisson equation. 
+ * Description:   High-level solver (wrapper) for scalar poisson equation.
  *
  ************************************************************************/
 namespace SAMRAI {
@@ -85,9 +85,9 @@ void CellPoissonFACSolver::setUseSMG(
    if (d_solver_is_initialized) {
       TBOX_ERROR(
          d_object_name << ": setUseSMG(bool) may NOT be called\n"
-         <<
+                       <<
          "while the solver state is initialized, as that\n"
-         << "would lead to a corrupted solver state.\n");
+                       << "would lead to a corrupted solver state.\n");
    }
    d_fac_ops.setUseSMG(use_smg);
 }

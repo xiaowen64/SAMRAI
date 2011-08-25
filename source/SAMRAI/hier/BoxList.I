@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   A list of boxes with basic domain calculus operations 
+ * Description:   A list of boxes with basic domain calculus operations
  *
  ************************************************************************/
 
@@ -19,7 +19,8 @@ BoxList::BoxList():
 }
 
 SAMRAI_INLINE_KEYWORD
-BoxList::BoxList(const tbox::Dimension& dim):
+BoxList::BoxList(
+   const tbox::Dimension& dim):
    tbox::List<Box>(),
    d_dim(dim)
 {

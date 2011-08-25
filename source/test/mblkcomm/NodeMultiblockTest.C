@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   AMR communication tests for node-centered patch data 
+ * Description:   AMR communication tests for node-centered patch data
  *
  ************************************************************************/
 
@@ -51,11 +51,11 @@ NodeMultiblockTest::NodeMultiblockTest(
 
    if (main_input_db->keyExists(geom_name)) {
       getGridGeometry() = new hier::GridGeometry(
-               dim,
-               geom_name,
-               tbox::Pointer<hier::TransferOperatorRegistry>(
-                  new geom::SAMRAITransferOperatorRegistry(dim)),
-               main_input_db->getDatabase(geom_name));
+            dim,
+            geom_name,
+            tbox::Pointer<hier::TransferOperatorRegistry>(
+               new geom::SAMRAITransferOperatorRegistry(dim)),
+            main_input_db->getDatabase(geom_name));
 
    } else {
       TBOX_ERROR("NodeMultiblockTest: could not find entry `"
@@ -300,7 +300,7 @@ void NodeMultiblockTest::fillSingularityBoundaryConditions(
    const hier::Connector& dst_to_encon,
    const hier::Box& fill_box,
    const hier::BoundaryBox& bbox,
-   const tbox::Pointer<hier::GridGeometry> &grid_geometry)
+   const tbox::Pointer<hier::GridGeometry>& grid_geometry)
 {
    const tbox::Dimension& dim = fill_box.getDim();
 
@@ -344,7 +344,7 @@ void NodeMultiblockTest::fillSingularityBoundaryConditions(
 
       int num_encon_used = 0;
 
-      if ( grid_geometry->hasEnhancedConnectivity() ) {
+      if (grid_geometry->hasEnhancedConnectivity()) {
          const hier::NeighborhoodSet& dst_to_encon_nbrhood_set =
             dst_to_encon.getNeighborhoodSets();
 
@@ -369,7 +369,7 @@ void NodeMultiblockTest::fillSingularityBoundaryConditions(
                hier::IntVector offset(dim);
 
                for (tbox::List<hier::GridGeometry::Neighbor>::Iterator
-                       ni(neighbors); ni; ni++) {
+                    ni(neighbors); ni; ni++) {
 
                   if (ni().getBlockId() == encon_blk_id) {
                      rotation = ni().getRotationIdentifier();
@@ -415,7 +415,7 @@ void NodeMultiblockTest::fillSingularityBoundaryConditions(
                         pdat::NodeIndex src_index(ci());
                         pdat::NodeGeometry::transform(src_index, back_trans);
                         for (int d = 0; d < depth; d++) {
-                           (*node_data)(ci(), d) += (*sing_data)(src_index,d);
+                           (*node_data)(ci(), d) += (*sing_data)(src_index, d);
                         }
                      }
                   }
@@ -449,7 +449,6 @@ void NodeMultiblockTest::fillSingularityBoundaryConditions(
           * In cases of reduced connectivity, there are no other blocks
           * from which to acquire data.
           */
-
 
          for (pdat::NodeIterator ci(sing_fill_box); ci; ci++) {
             bool use_index = true;
@@ -535,7 +534,7 @@ bool NodeMultiblockTest::verifyResults(
                tbox::perr << "Test FAILED: ...."
                           << " : node index = " << ci() << endl;
                tbox::perr << "    Variable = " << d_variable_src_name[i]
-               << " : depth index = " << d << endl;
+                          << " : depth index = " << d << endl;
                tbox::perr << "    result = " << result
                           << " : correct = " << correct << endl;
                test_failed = true;
@@ -594,7 +593,7 @@ bool NodeMultiblockTest::verifyResults(
                         tbox::perr << "Test FAILED: ...."
                                    << " : node index = " << ni << endl;
                         tbox::perr << "  Variable = " << d_variable_src_name[i]
-                        << " : depth index = " << d << endl;
+                                   << " : depth index = " << d << endl;
                         tbox::perr << "    result = " << result
                                    << " : correct = " << correct << endl;
                         test_failed = true;
@@ -673,8 +672,8 @@ bool NodeMultiblockTest::verifyResults(
                            tbox::perr << "Test FAILED: ...."
                                       << " : node index = " << ci() << endl;
                            tbox::perr << "  Variable = "
-                           << d_variable_src_name[i]
-                           << " : depth index = " << d << endl;
+                                      << d_variable_src_name[i]
+                                      << " : depth index = " << d << endl;
                            tbox::perr << "    result = " << result
                                       << " : correct = " << correct << endl;
                            test_failed = true;

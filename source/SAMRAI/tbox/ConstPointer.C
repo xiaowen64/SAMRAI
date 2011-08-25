@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   A smart const pointer template class with RTTI 
+ * Description:   A smart const pointer template class with RTTI
  *
  ************************************************************************/
 
@@ -56,7 +56,7 @@ ConstPointer<TYPE>::ConstPointer(
 }
 
 template<class TYPE>
-ConstPointer<TYPE>&ConstPointer<TYPE>::operator = (
+ConstPointer<TYPE>& ConstPointer<TYPE>::operator = (
    const TYPE* ptr)
 {
    if (d_counter && d_counter->deleteReference()) deleteObject();

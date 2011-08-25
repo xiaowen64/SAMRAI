@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Boundary cell struct for embedded boundary implementations 
+ * Description:   Boundary cell struct for embedded boundary implementations
  *
  ************************************************************************/
 
@@ -31,7 +31,8 @@ using namespace SAMRAI;
 class SampleIndexData
 {
 public:
-   SampleIndexData(const tbox::Dimension& d);
+   SampleIndexData(
+      const tbox::Dimension& d);
    /**
     * Copy constructor.
     */
@@ -42,7 +43,7 @@ public:
     * Constructor supplying cell index where data is defined.
     */
    SampleIndexData(
-        const hier::Index& ic);
+      const hier::Index& ic);
 //      const pdat::CellIndex& ic);
 
    /**

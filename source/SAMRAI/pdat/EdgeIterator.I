@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Iterator for edge centered patch data types 
+ * Description:   Iterator for edge centered patch data types
  *
  ************************************************************************/
 
@@ -70,7 +70,7 @@ EdgeIterator::operator bool () const
 
 #ifndef LACKS_BOOL_VOID_RESOLUTION
 SAMRAI_INLINE_KEYWORD
-EdgeIterator::operator const void* () const
+EdgeIterator::operator const void * () const
 {
    return EdgeIterator::operator bool () ? this : NULL;
 }

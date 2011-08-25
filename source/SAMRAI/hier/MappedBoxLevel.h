@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Set of Boxes in the same "level". 
+ * Description:   Set of Boxes in the same "level".
  *
  ************************************************************************/
 #ifndef included_hier_MappedBoxLevel
@@ -33,16 +33,16 @@ namespace hier {
  * @brief A distributed set of Box objects which reside in the
  * same index space.
  *
-   *
-   * TODO: Are we eliminating DLBG terminology?
-   *
+ *
+ * TODO: Are we eliminating DLBG terminology?
+ *
  * This class is a part of the distributed layered box graph (DLBG) for
- * managing SAMR meshes in parallel.  A MappedBoxLevel is a set of 
+ * managing SAMR meshes in parallel.  A MappedBoxLevel is a set of
  * boxes in the same index space. Relationships (e.g., neighbor adjacency)
- * among boxes is contained in a Connector object. Also, each MappedBoxLevel 
- * has an refinement ratio vector describing the relationship of the 
+ * among boxes is contained in a Connector object. Also, each MappedBoxLevel
+ * has an refinement ratio vector describing the relationship of the
  * index space to that of a reference level in a patch hierarchy (typically
- * the coarsest level or level zero).  
+ * the coarsest level or level zero).
  *
  * Like a PatchLevel, a MappedBoxLevel is a parallel object.  The
  * Boxes of a MappedBoxLevel may be distributed across all the
@@ -50,7 +50,7 @@ namespace hier {
  * of two parallel states:
  *
  * - @b DISTRIBUTED: Each MPI process knows only the Boxes in the set
- * that are "owned" by that process.  This is analogous to a PatchLevel 
+ * that are "owned" by that process.  This is analogous to a PatchLevel
  * which owns only the Patches that reside on a process.
  *
  * - @b GLOBALIZED: All processes know all Boxes in the set.
@@ -60,7 +60,7 @@ namespace hier {
  * @par Performance notes
  * <li> The parallel state is changed by calling setParallelState().  Going
  * from DISTRIBUTED to GLOBALIZED state is an expensive operation requiring
- * all-to-all communication.  Using this state can incur a significant 
+ * all-to-all communication.  Using this state can incur a significant
  * performance penalty.
  *
  * <li> The GLOBALIZED state requires more memory.
@@ -75,7 +75,7 @@ namespace hier {
  * <li> the parallel state.
  *
  * Box object uniqueness is based on the Box equality operator,
- * which compares owner MPI ranks and local indices.  Therefore, 
+ * which compares owner MPI ranks and local indices.  Therefore,
  * a valid MappedBoxLevel does not contain two Boxes with the same
  * owner and index.
  */
@@ -135,7 +135,7 @@ public:
    explicit MappedBoxLevel(
       const BoxSet& mapped_boxes,
       const IntVector& ratio,
-      const tbox::ConstPointer<GridGeometry> &grid_geom,
+      const tbox::ConstPointer<GridGeometry>& grid_geom,
       const tbox::SAMRAI_MPI& mpi = tbox::SAMRAI_MPI::getSAMRAIWorld(),
       const ParallelState parallel_state = DISTRIBUTED);
 
@@ -153,7 +153,7 @@ public:
     */
    explicit MappedBoxLevel(
       const IntVector& ratio,
-      const tbox::ConstPointer<GridGeometry> &grid_geom,
+      const tbox::ConstPointer<GridGeometry>& grid_geom,
       const tbox::SAMRAI_MPI& mpi = tbox::SAMRAI_MPI::getSAMRAIWorld(),
       const ParallelState parallel_state = DISTRIBUTED);
 
@@ -199,11 +199,11 @@ public:
    initialize(
       const BoxSet& mapped_boxes,
       const IntVector& ratio,
-      const tbox::ConstPointer<GridGeometry> &grid_geom,
+      const tbox::ConstPointer<GridGeometry>& grid_geom,
       const tbox::SAMRAI_MPI& mpi = tbox::SAMRAI_MPI::getSAMRAIWorld(),
       const ParallelState parallel_state = DISTRIBUTED);
 
-  /*!
+   /*!
     * @brief Initialize the MappedBoxLevel without and Boxes
     *
     * The content and state of the object before calling this function
@@ -221,7 +221,7 @@ public:
    void
    initialize(
       const IntVector& ratio,
-      const tbox::ConstPointer<GridGeometry> &grid_geom,
+      const tbox::ConstPointer<GridGeometry>& grid_geom,
       const tbox::SAMRAI_MPI& mpi = tbox::SAMRAI_MPI::getSAMRAIWorld(),
       const ParallelState parallel_state = DISTRIBUTED);
 
@@ -238,7 +238,7 @@ public:
     *
     * @param[in,out] mapped_boxes On input, this should contain the
     * Boxes to place in the MappedBoxLevel.  On output, it
-    * contains the Boxes that were in the MappedBoxLevel before 
+    * contains the Boxes that were in the MappedBoxLevel before
     * the call.
     *
     * @param[in] mapped_boxes
@@ -251,7 +251,7 @@ public:
    swapInitialize(
       BoxSet& mapped_boxes,
       const IntVector& ratio,
-      const tbox::ConstPointer<GridGeometry> &grid_geom,
+      const tbox::ConstPointer<GridGeometry>& grid_geom,
       const tbox::SAMRAI_MPI& mpi = tbox::SAMRAI_MPI::getSAMRAIWorld(),
       const ParallelState parallel_state = DISTRIBUTED);
 
@@ -275,7 +275,7 @@ public:
     * connectors for data consistency.
     *
     * Most of the time, this method is automatically called by methods
-    * that know when some data is stale and needs to be cleared.  
+    * that know when some data is stale and needs to be cleared.
     * For example, adding a box makes the global number of
     * boxes stale.  However, sometimes it is necessary to call this
     * method manually.  For example, when only some processes add
@@ -285,8 +285,9 @@ public:
     * @param[in] isInvalid A flag indicating that boxes have been (or will
     *            be) removed, thus invalidating the handle.
     */
-   void clearForBoxChanges( bool isInvalid = true );
-
+   void
+   clearForBoxChanges(
+      bool isInvalid = true);
 
    //@{
 
@@ -381,7 +382,6 @@ public:
 
    //@}
 
-
    /*!
     * @brief Assignment operator duplicates all internal data,
     * including parallel mode.
@@ -390,7 +390,7 @@ public:
     * PersistentOverlapConnectors to be cleared.
     *
     * Persistent Connectors are not duplicated.  This
-    * decision was based on expected usage, which is 
+    * decision was based on expected usage, which is
     * that copies are either for short term usage or meant to
     * be changed in some way (thus invalidating current
     * Connectors anyway).
@@ -461,7 +461,6 @@ public:
    operator != (
       const MappedBoxLevel& rhs) const;
 
-
    //@{
    /*!
     * @name Accessors
@@ -502,13 +501,14 @@ public:
     * Throws an unrecoverable assertion if not in GLOBALIZED mode.
     */
    void
-   getGlobalBoxes(BoxList &global_boxes) const;
+   getGlobalBoxes(
+      BoxList& global_boxes) const;
 
    /*
-    * TODO: Why are the following two methods here?  Returning local id 
-    * information like this is dangerous in that it seems to imply that 
-    * they can be used as an integer range, or a count (last - first + 1).  
-    * Since the first method is not used and the second is used in a few 
+    * TODO: Why are the following two methods here?  Returning local id
+    * information like this is dangerous in that it seems to imply that
+    * they can be used as an integer range, or a count (last - first + 1).
+    * Since the first method is not used and the second is used in a few
     * places, wouldn't it be better to just use the previous method?
     */
    /*!
@@ -656,7 +656,8 @@ public:
     * @brief Return bounding box for local Boxes in a block.
     */
    const Box&
-   getLocalBoundingBox( int block_number ) const;
+   getLocalBoundingBox(
+      int block_number) const;
 
    /*!
     * @brief Return bounding box for global Boxes in a block.
@@ -667,19 +668,22 @@ public:
     * communication is needed, call cacheGlobalReducedData() first.
     */
    const Box&
-   getGlobalBoundingBox( int block_number ) const;
+   getGlobalBoundingBox(
+      int block_number) const;
 
    /*!
     * @brief Return size of the largest local Box in a block.
     */
    const IntVector&
-   getLocalMaxBoxSize( int block_number ) const;
+   getLocalMaxBoxSize(
+      int block_number) const;
 
    /*!
     * @brief Return size of the smallest local Box in a block.
     */
    const IntVector&
-   getLocalMinBoxSize( int block_number ) const;
+   getLocalMinBoxSize(
+      int block_number) const;
 
    /*!
     * @brief Return size of the largest Box globally in a block.
@@ -690,7 +694,8 @@ public:
     * communication is needed, call cacheGlobalReducedData() first.
     */
    const IntVector&
-   getGlobalMaxBoxSize( int block_number ) const;
+   getGlobalMaxBoxSize(
+      int block_number) const;
 
    /*!
     * @brief Return size of the smallest Box globally in a block.
@@ -701,7 +706,8 @@ public:
     * communication is needed, call cacheGlobalReducedData() first.
     */
    const IntVector&
-   getGlobalMinBoxSize( int block_number ) const;
+   getGlobalMinBoxSize(
+      int block_number) const;
 
    /*!
     * @brief Return the dimension of this object.
@@ -722,7 +728,6 @@ public:
 
    //@}
 
-
    //@{
 
    //! @name Individual Box methods.
@@ -734,11 +739,10 @@ public:
     * TODO: Why does the first method require "distributed" state and the ones
     * after require GLOBALIZED state for a remote box?  These comments
     * are inconsistent and confusing.  I think it would be best to have the
-    * same pre/post conditions apply to all similar methods (e.g., "add box" 
-    * methods), then describe them once rather than repeat (potentially 
+    * same pre/post conditions apply to all similar methods (e.g., "add box"
+    * methods), then describe them once rather than repeat (potentially
     * inconsistently for each method).
     */
-
 
    /*!
     * @brief Create new local Box from given Box and add it to this
@@ -754,7 +758,7 @@ public:
     * It is faster not to request a vacant index when adding a box.
     *
     * @param[in] box
-    * @param[in] block_id 
+    * @param[in] block_id
     * @param[in] use_vacant_index
     *
     * @return iterator to the new Box
@@ -967,7 +971,7 @@ public:
    hasMappedBox(
       const GlobalId& global_id,
       const BlockId& block_id,
-      const PeriodicId &periodic_id) const;
+      const PeriodicId& periodic_id) const;
 
    /*!
     * @brief Returns true when the object has a Box matching the
@@ -1022,10 +1026,9 @@ public:
    void
    getFromDatabase(
       tbox::Database& database,
-      const tbox::ConstPointer<GridGeometry> &grid_geom);
+      const tbox::ConstPointer<GridGeometry>& grid_geom);
 
    //@}
-
 
    /*!
     * @brief Get the collection of overlap Connectors dedicated to
@@ -1051,7 +1054,7 @@ public:
 
    /*
     * TODO: The following method is "not for general use" and indeed
-    * is only used in two Connector classes.  Would it be better to 
+    * is only used in two Connector classes.  Would it be better to
     * make the method private and make this class a friend of those?
     */
 
@@ -1136,9 +1139,13 @@ public:
     * of outputting its MappedBoxLevel, formatted according to the
     * parameters.
     */
-   class Outputter {
-      friend std::ostream& operator << ( std::ostream& s, const Outputter& f);
-   private:
+   class Outputter
+   {
+      friend std::ostream&
+      operator << (
+         std::ostream& s,
+         const Outputter& f);
+private:
       friend class MappedBoxLevel;
       /*!
        * @brief Construct the Outputter with a MappedBoxLevel and the
@@ -1148,11 +1155,14 @@ public:
        * @param[in] border
        * @param[in] detail_depth
        */
-      Outputter( const MappedBoxLevel &mapped_box_level,
-                 const std::string& border,
-                 int detail_depth = 0);
-      void operator=( const Outputter &r ); // Unimplemented private.
-      const MappedBoxLevel &d_level;
+      Outputter(
+         const MappedBoxLevel& mapped_box_level,
+         const std::string& border,
+         int detail_depth = 0);
+      void
+      operator = (
+         const Outputter& r);               // Unimplemented private.
+      const MappedBoxLevel& d_level;
       const std::string d_border;
       const int d_detail_depth;
    };
@@ -1170,8 +1180,10 @@ public:
     * @param[in] border
     * @param[in] detail_depth
     */
-   Outputter format( const std::string& border=std::string(),
-                     int detail_depth = 0 ) const;
+   Outputter
+   format(
+      const std::string& border = std::string(),
+      int detail_depth = 0) const;
 
    //@}
 
@@ -1306,7 +1318,7 @@ private:
    void
    initializePrivate(
       const IntVector& ratio,
-      const tbox::ConstPointer<GridGeometry> &grid_geom,
+      const tbox::ConstPointer<GridGeometry>& grid_geom,
       const tbox::SAMRAI_MPI& mpi = tbox::SAMRAI_MPI::getSAMRAIWorld(),
       const ParallelState parallel_state = DISTRIBUTED);
 
@@ -1443,7 +1455,7 @@ private:
     * This is mutable because it is redundant data and gets
     * automatically set as needed.
     */
-   mutable MappedBoxLevel const *d_globalized_version;
+   mutable MappedBoxLevel const* d_globalized_version;
 
    /*!
     * @brief Connectors managed by this MappedBoxLevel,
@@ -1455,7 +1467,7 @@ private:
     * by always allocating the PersistentOverlapConnectors in the
     * constructor, but most MappedBoxLevel won't need it at all.
     */
-   mutable PersistentOverlapConnectors * d_persistent_overlap_connectors;
+   mutable PersistentOverlapConnectors* d_persistent_overlap_connectors;
 
    /*!
     * @brief A Handle for Connectors to reference this
@@ -1503,7 +1515,7 @@ private:
    static const LocalId s_negative_one_local_id;
 
    static tbox::StartupShutdownManager::Handler
-   s_initialize_finalize_handler;
+      s_initialize_finalize_handler;
 
 };
 

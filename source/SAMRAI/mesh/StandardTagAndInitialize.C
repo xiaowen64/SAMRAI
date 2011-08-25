@@ -1,11 +1,11 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
  * Description:   Routines for performing cell-tagging and initializing
- *                a new level. 
+ *                a new level.
  *
  ************************************************************************/
 
@@ -46,26 +46,26 @@ extern "C" {
 #pragma warning (disable:1419)
 #endif
 // in coarsentags1d.f:
-void F77_FUNC(coarsentags1d, COARSENTAGS1D) (const int &, const int &,
-   const int &, const int &,
-   const int &, const int &,
+void F77_FUNC(coarsentags1d, COARSENTAGS1D) (const int&, const int&,
+   const int&, const int&,
+   const int&, const int&,
    const int *,
    const int *, int *);
 // in coarsentags2d.f:
-void F77_FUNC(coarsentags2d, COARSENTAGS2D) (const int &, const int &,
-   const int &, const int &,
-   const int &, const int &, const int &, const int &,
-   const int &, const int &, const int &, const int &,
+void F77_FUNC(coarsentags2d, COARSENTAGS2D) (const int&, const int&,
+   const int&, const int&,
+   const int&, const int&, const int&, const int&,
+   const int&, const int&, const int&, const int&,
    const int *,
    const int *, int *);
 // in coarsentags3d.f:
-void F77_FUNC(coarsentags3d, COARSENTAGS3D) (const int &, const int &,
-   const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
+void F77_FUNC(coarsentags3d, COARSENTAGS3D) (const int&, const int&,
+   const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
    const int *,
    const int *, int *);
 }
@@ -124,9 +124,9 @@ StandardTagAndInitialize::StandardTagAndInitialize(
    if (input_db.isNull()) {
       TBOX_WARNING(
          getObjectName() << ":constructor \n"
-         <<
+                         <<
          "no input database specified - NO METHOD IS SPECIFIED TO TAG \n"
-         <<
+                         <<
          "CELLS FOR REFINEMENT so no tagging is performed.");
    } else {
       getFromInput(input_db);
@@ -142,12 +142,12 @@ StandardTagAndInitialize::StandardTagAndInitialize(
       if (tag_strategy == ((mesh::StandardTagAndInitStrategy *)NULL)) {
          TBOX_ERROR(
             getObjectName() << ":constructor "
-            << "\nThe supplied implementation of the "
-            <<
+                            << "\nThe supplied implementation of the "
+                            <<
             "\nStandardTagAndInitStrategy is NULL.  It must be"
-            <<
+                            <<
             "\nnon-NULL to use the GRADIENT_DETECTOR or"
-            <<
+                            <<
             "\nRICHARDSON_EXTRAPOLATION tagging options." << std::endl);
       }
    }
@@ -512,7 +512,7 @@ StandardTagAndInitialize::tagCellsUsingRichardsonExtrapolation(
       tbox::Pointer<hier::Patch> coarse_patch = *ip;
       tbox::Pointer<hier::Patch> fine_patch =
          patch_level->getPatch(coarse_patch->getGlobalId(),
-                               coarse_patch->getMappedBox().getBlockId());
+            coarse_patch->getMappedBox().getBlockId());
       tbox::Pointer<pdat::CellData<int> >
       ftags = fine_patch->getPatchData(tag_index);
       tbox::Pointer<pdat::CellData<int> >
@@ -587,7 +587,7 @@ StandardTagAndInitialize::tagCellsUsingRichardsonExtrapolation(
       tbox::Pointer<hier::Patch> coarse_patch = *ip;
       tbox::Pointer<hier::Patch> fine_patch =
          patch_level->getPatch(coarse_patch->getGlobalId(),
-                               coarse_patch->getMappedBox().getBlockId());
+            coarse_patch->getMappedBox().getBlockId());
       copytags.refine(*fine_patch, *coarse_patch,
          tag_index, tag_index,
          fine_patch->getBox(), coarsen_ratio);
@@ -932,9 +932,9 @@ bool StandardTagAndInitialize::coarsestLevelBoxesOK(
                tbox::perr << "Bad domain box: " << *ib << std::endl;
                TBOX_WARNING(
                   getObjectName() << "At least one box on the \n"
-                  <<
+                                  <<
                   "coarsest level could not be coarsened by the ratio: "
-                  << error_coarsen_ratio);
+                                  << error_coarsen_ratio);
                boxes_ok = false;
             }
          }
@@ -990,24 +990,24 @@ void StandardTagAndInitialize::checkCoarsenRatios(
                gcd = ratio_to_coarser[ln](d);
                TBOX_ERROR(
                   getObjectName() << "\n"
-                  <<
+                                  <<
                   "Unable to perform Richardson extrapolation because\n"
-                  <<
+                                  <<
                   "the error coarsen ratio computed from the\n"
-                  <<
+                                  <<
                   "ratio_to_coarser entries is not constant across all\n"
-                  <<
+                                  <<
                   "levels, in all dimensions, of the hierarchy. In\n"
-                  <<
+                                  <<
                   "order to use Richardson extrapolation, the minimum\n"
-                  <<
+                                  <<
                   "divisor (> 1) of all the ratio_to_coarser entries must\n"
-                  << "be 2 -or- 3:\n"
-                  << "   level 1(0): minimum divisor: "
-                  << error_coarsen_ratio
-                  << "\n   level " << ln << "(" << d
-                  << "):"
-                  << ": ratio_to_coarser = " << gcd);
+                                  << "be 2 -or- 3:\n"
+                                  << "   level 1(0): minimum divisor: "
+                                  << error_coarsen_ratio
+                                  << "\n   level " << ln << "(" << d
+                                  << "):"
+                                  << ": ratio_to_coarser = " << gcd);
             }
          }
       }
@@ -1085,16 +1085,16 @@ void StandardTagAndInitialize::getFromInput(
    if (!found_method) {
       TBOX_WARNING(
          getObjectName() << ":getFromInput \n"
-         <<
+                         <<
          "No `tagging_method' entry specified, so cell tagging \n"
-         <<
+                         <<
          "will NOT be performed.  If you wish to invoke cell \n"
-         <<
+                         <<
          "tagging, you must enter one or more valid tagging \n"
-         << "methods, of type GRADIENT_DETECTOR, "
-         <<
+                         << "methods, of type GRADIENT_DETECTOR, "
+                         <<
          "RICHARDSON_EXTRAPOLATION, or REFINE_BOXES\n"
-         << "See class header for details.\n");
+                         << "See class header for details.\n");
    }
 
    /*

@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   hier 
+ * Description:   hier
  *
  ************************************************************************/
 
@@ -71,13 +71,14 @@ public:
     * @param[in,out]  normal_direction
     * @param[in]      transformation
     */
-   static void transform(hier::Box& box,
-                         int& normal_direction,
-                         const hier::Transformation& transformation);
-
+   static void
+   transform(
+      hier::Box& box,
+      int& normal_direction,
+      const hier::Transformation& transformation);
 
    /*!
-    * @brief Transform a FaceIndex. 
+    * @brief Transform a FaceIndex.
     *
     * This static method applies a coordinate system transformation to the
     * given FaceIndex.
@@ -85,9 +86,10 @@ public:
     * @param[in,out]  index
     * @param[in]      transformation
     */
-   static void transform(FaceIndex& index,
-                         const hier::Transformation& transformation);
-
+   static void
+   transform(
+      FaceIndex& index,
+      const hier::Transformation& transformation);
 
    /*!
     * @brief Construct the face geometry object given an AMR index
@@ -157,9 +159,10 @@ private:
       const hier::BoxList& dst_restrict_boxes);
 
    static void
-   rotateAboutAxis(pdat::FaceIndex& index,
-                   const int axis,
-                   const int num_rotations);
+   rotateAboutAxis(
+      pdat::FaceIndex& index,
+      const int axis,
+      const int num_rotations);
 
    FaceGeometry(
       const FaceGeometry&);             // not implemented

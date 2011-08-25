@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   hier 
+ * Description:   hier
  *
  ************************************************************************/
 
@@ -253,16 +253,16 @@ FaceGeometry::transform(
 
       hier::Box cell_box(dim);
       for (int d = 0; d < dim.getValue(); d++) {
-         int cell_dim = (normal_direction+d) % dim.getValue();
-         cell_box.lower()(cell_dim) = box.lower()(d);
-         cell_box.upper()(cell_dim) = box.upper()(d);
+         int cell_dim = (normal_direction + d) % dim.getValue();
+         cell_box.lower() (cell_dim) = box.lower() (d);
+         cell_box.upper() (cell_dim) = box.upper() (d);
       }
-      cell_box.upper()(normal_direction) -= 1;
+      cell_box.upper() (normal_direction) -= 1;
       transformation.transform(cell_box);
       if (dim.getValue() == 2) {
          const int rotation_num = static_cast<int>(rotation);
          if (rotation_num % 2) {
-            normal_direction = (normal_direction+1)%2;
+            normal_direction = (normal_direction + 1) % 2;
          }
       } else if (dim.getValue() == 3) {
 
@@ -371,12 +371,12 @@ FaceGeometry::transform(
       }
 
       for (int d = 0; d < dim.getValue(); d++) {
-         int cell_dim = (normal_direction+d) % dim.getValue();
-         box.lower()(d) = cell_box.lower()(cell_dim);
-         box.upper()(d) = cell_box.upper()(cell_dim);
+         int cell_dim = (normal_direction + d) % dim.getValue();
+         box.lower() (d) = cell_box.lower() (cell_dim);
+         box.upper() (d) = cell_box.upper() (cell_dim);
       }
 
-      box.upper()(0) += 1;
+      box.upper() (0) += 1;
    }
 }
 
@@ -407,7 +407,7 @@ FaceGeometry::transform(
 
    FaceIndex rotate_index(dim);
    for (int d = 0; d < dim.getValue(); d++) {
-      int rotate_dim = (normal_direction+d) % dim.getValue();
+      int rotate_dim = (normal_direction + d) % dim.getValue();
       rotate_index(rotate_dim) = index(d);
       if (d != 0 && rotate_index(rotate_dim) >= 0) {
          rotate_index(rotate_dim)++;
@@ -562,7 +562,7 @@ FaceGeometry::transform(
 
    rotate_index += transformation.getOffset();
    for (int d = 0; d < dim.getValue(); d++) {
-      int rotate_dim = (new_normal_direction+d) % dim.getValue();
+      int rotate_dim = (new_normal_direction + d) % dim.getValue();
       index(d) = rotate_index(rotate_dim);
    }
 
@@ -589,15 +589,11 @@ FaceGeometry::rotateAboutAxis(pdat::FaceIndex& index,
    int new_normal_direction = index.getAxis();
    if (new_normal_direction != axis) {
       for (int j = 0; j < num_rotations; j++) {
-         new_normal_direction = new_normal_direction == a ? b : a ;
+         new_normal_direction = new_normal_direction == a ? b : a;
       }
    }
    index.setAxis(new_normal_direction);
 }
-
-
-
-
 
 }
 }

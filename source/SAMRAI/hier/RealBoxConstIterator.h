@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Iterator over real MappedBoxes in a BoxSet. 
+ * Description:   Iterator over real MappedBoxes in a BoxSet.
  *
  ************************************************************************/
 #ifndef included_hier_RealBoxConstIterator
@@ -20,9 +20,9 @@ namespace hier {
 /*
  * TODO: Do we really need a separate class for this?  Couldn't we just
  *       add an argument to the BoxSet iterator construction that
- *       (e.g., an enum with values: All (default value), RealOnly, 
+ *       (e.g., an enum with values: All (default value), RealOnly,
  *       PeriodicImagesOnly, etc.  and extend for Multiblock stuff)?
- *       Then, which boxes in the set are selected for iteration would be 
+ *       Then, which boxes in the set are selected for iteration would be
  *       controlled internally.
  */
 /*!
@@ -45,7 +45,6 @@ class RealBoxConstIterator
 {
 
 public:
-
    /*!
     * @brief Construct the iterator for the given BoxSet.
     *
@@ -102,7 +101,8 @@ public:
     * state.
     */
    RealBoxConstIterator
-   &operator ++ ();
+   &
+   operator ++ ();
 
    /*!
     * @brief Post-increment iterator.

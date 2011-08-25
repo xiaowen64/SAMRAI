@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Simple utility class for interfacing with MPI 
+ * Description:   Simple utility class for interfacing with MPI
  *
  ************************************************************************/
 
@@ -25,7 +25,7 @@
  *
  * These are defined in the global namespace, and it does not matter
  * what values these take because they are not used.  (They are just place
- * holders to let code compile without MPI without adding excessive 
+ * holders to let code compile without MPI without adding excessive
  * preprocessor guards to the code.)
  *
  * This is not a complete set.  Developers should add as needed to extend
@@ -69,11 +69,11 @@ namespace tbox {
 /*!
  * @brief Provides C++ wrapper around MPI routines.
  *
- * SAMRAI_MPI provides a single point of access in SAMRAI for using MPI 
- * function calls and for the run-time decision whether to use MPI.  
- * The purpose of having a single point is to facilitate writing code 
- * that is not cluttered by the repetitive logic absorbed into this class.  
- * Codes accessing MPI through this class should work whether SAMRAI is 
+ * SAMRAI_MPI provides a single point of access in SAMRAI for using MPI
+ * function calls and for the run-time decision whether to use MPI.
+ * The purpose of having a single point is to facilitate writing code
+ * that is not cluttered by the repetitive logic absorbed into this class.
+ * Codes accessing MPI through this class should work whether SAMRAI is
  * configured with or without MPI and whether MPI is enabled at run time.
  *
  * This class provides two sets of interfaces:
@@ -101,10 +101,9 @@ class SAMRAI_MPI
 {
 
 public:
-
    /*!
     * @brief Aliases for MPI data type names.
-    * 
+    *
     * Define aliases for MPI types that can be used whether SAMRAI is
     * configured with or without MPI.  Without MPI, these types are "dummies",
     * used to allow the code to be compiled without changes.
@@ -166,7 +165,8 @@ public:
     * This value is intended to be used by other classes as an invalid rank
     * number rather than using a hard-coded "magic" negative integer value.
     */
-   static int getInvalidRank();
+   static int
+   getInvalidRank();
 
    /*!
     * @brief Constructor.
@@ -207,7 +207,7 @@ public:
     * existing communicator.  To manually free communicators, see
     * freeCommunicator().
     *
-    * @param[in] comm 
+    * @param[in] comm
     */
    void
    setCommunicator(
@@ -223,7 +223,7 @@ public:
     * freeCommunicator().
     *
     * @param[in] other  Contains the communicator to be duplicated.
-    *              
+    *
     */
    void
    dupCommunicator(
@@ -248,7 +248,7 @@ public:
 
    /*!
     * @brief Equality comparison operator (compares MPI communicator).
-    * 
+    *
     * @param[in] rhs
     */
    bool
@@ -353,11 +353,11 @@ public:
     * @brief MPI wrappers for methods associated with an MPI communicator.
     *
     * The purpose of these wrappers is to provide a single place for compile-
-    * and run-time toggling of MPI code.  The signatures and return values 
+    * and run-time toggling of MPI code.  The signatures and return values
     * of these methods are identical to the MPI C bindings, except that the
     * communicators are omitted.  The communicator used is that associated
     * with the SAMRAI_MPI object (typically passed to the constructor).
-    * These methods throw an assertion if called while MPI is not enabled, 
+    * These methods throw an assertion if called while MPI is not enabled,
     * except where noted.
     */
 
@@ -539,7 +539,7 @@ public:
     *
     * If MPI_MINLOC or MPI_MAXLOC is given as the operator, the
     * ranks_of_extrema argument must be provided with space allocated for
-    * @c count integers. 
+    * @c count integers.
     *
     * @param[in,out] x   Array of doubles to reduce.
     * @param[in]  count  Number of items in x.
@@ -580,7 +580,7 @@ public:
     * @brief Set flag indicating whether exit or MPI_Abort is called
     * when running with one processor.
     *
-    * Calling this function influences the behavior of calls to 
+    * Calling this function influences the behavior of calls to
     * SAMRAI_MPI::abort().  If the value set is true, it means that
     * system abort() will be called.  Passing false means exit(-1) will be
     * called.
@@ -690,7 +690,6 @@ public:
    finalize();
 
 private:
-
    //@{
 
    /*!

@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Operator class for cell-centered scalar Poisson using FAC 
+ * Description:   Operator class for cell-centered scalar Poisson using FAC
  *
  ************************************************************************/
 #ifndef included_solv_CellPoissonFACOps
@@ -1039,7 +1039,7 @@ private:
    tbox::Pointer<tbox::Timer> t_compute_residual_norm;
 
    static tbox::StartupShutdownManager::Handler
-   s_finalize_handler;
+      s_finalize_handler;
 };
 
 }

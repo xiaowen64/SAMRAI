@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   F77 external declarations for SAMRAI linear advection example. 
+ * Description:   F77 external declarations for SAMRAI linear advection example.
  *
  ************************************************************************/
 
@@ -16,84 +16,84 @@ extern "C" {
 // 2D:
 
 void F77_FUNC(linadvinit, LINADVINIT) (
-   const int &, const double *, const double *, const double *,
-   const int &, const int &,
-   const int &, const int &,
-   const int &,
-   const int &,
+   const int&, const double *, const double *, const double *,
+   const int&, const int&,
+   const int&, const int&,
+   const int&,
+   const int&,
    double *,
-   const int &,
+   const int&,
    const double *, const double *);
 
 void F77_FUNC(linadvinitsine, LINADVINITSINE) (
-   const int &, const double *, const double *,
+   const int&, const double *, const double *,
    const double *, const double *,
-   const int &, const int &,
-   const int &, const int &,
-   const int &,
-   const int &,
+   const int&, const int&,
+   const int&, const int&,
+   const int&,
+   const int&,
    double *,
-   const int &,
+   const int&,
    const double *, const double *,
-   const double &, const double *);
+   const double&, const double *);
 
 void F77_FUNC(initsphere, INITSPHERE) (
-   const int &,
-   const int &, const int &,
-   const int &, const int &,
-   const int &,
-   const int &,
+   const int&,
+   const int&, const int&,
+   const int&, const int&,
+   const int&,
+   const int&,
    double *,
    double *,
-   const double &, const double &,
-   const double *, const double &);
+   const double&, const double&,
+   const double *, const double&);
 
 void F77_FUNC(stabledt, STABLEDT) (
    const double *,
-   const int &, const int &,
-   const int &, const int &,
-   const int &,
-   const int &,
+   const int&, const int&,
+   const int&, const int&,
+   const int&,
+   const int&,
    const double *,
    const double *,
-   double &);
+   double&);
 
 void F77_FUNC(inittraceflux, INITTRACEFLUX) (
-   const int &, const int &,
-   const int &, const int &,
+   const int&, const int&,
+   const int&, const int&,
    const double *,
    double *, double *, double *,
    double *, double *, double *);
 
 void F77_FUNC(chartracing0, CHARTRACING0) (
-   const double &, const int &, const int &,
-   const int &, const int &,
-   const int &, const double &, const double &, const int &,
+   const double&, const int&, const int&,
+   const int&, const int&,
+   const int&, const double&, const double&, const int&,
    const double *,
    double *, double *,
    double *, double *,
    double *, double *);
 
 void F77_FUNC(chartracing1, CHARTRACING1) (
-   const double &, const int &, const int &, const int &, const int &,
-   const int &, const double &, const double &, const int &,
+   const double&, const int&, const int&, const int&, const int&,
+   const int&, const double&, const double&, const int&,
    const double *,
    double *, double *,
    double *, double *,
    double *, double *);
 
 void F77_FUNC(fluxcalculation, FLUXCALCULATION) (
-   const double &, const int &, const int &,
+   const double&, const int&, const int&,
    const double *,
-   const int &, const int &,
-   const int &, const int &,
+   const int&, const int&,
+   const int&, const int&,
    const double *,
    const double *,
    double *, double *, double *,
    double *, double *, double *);
 
 void F77_FUNC(fluxcorrec, FLUXCORREC) (
-   const double &, const int &, const int &, const int &, const int &,
+   const double&, const int&, const int&, const int&, const int&,
    const double *,
    const double *, const double *,
    double *, double *,
@@ -101,57 +101,57 @@ void F77_FUNC(fluxcorrec, FLUXCORREC) (
    double *, double *);
 
 void F77_FUNC(consdiff, CONSDIFF) (
-   const int &, const int &,
-   const int &, const int &,
+   const int&, const int&,
+   const int&, const int&,
    const double *,
    const double *, const double *,
    const double *,
    double *);
 
 void F77_FUNC(getbdry, GETBDRY) (
-   const int &,
-   const int &, const int &, const int &, const int &,
-   const int &, const int &, const int &, const int &,
-   const int &,
-   const int &,
-   const int &,
-   const double *, const double &,
+   const int&,
+   const int&, const int&, const int&, const int&,
+   const int&, const int&, const int&, const int&,
+   const int&,
+   const int&,
+   const int&,
+   const double *, const double&,
    double *,
-   const double *, const double *, const int &);
+   const double *, const double *, const int&);
 
 void F77_FUNC(detectgrad, DETECTGRAD) (
-   const int &, const int &,
-   const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
+   const int&, const int&,
+   const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
    const double *,
-   const double &,
-   const int &, const int &,
+   const double&,
+   const int&, const int&,
    const double *,
    int *, int *);
 
 void F77_FUNC(detectshock, DETECTSHOCK) (
-   const int &, const int &,
-   const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
+   const int&, const int&,
+   const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
    const double *,
-   const double &, const double &,
-   const int &, const int &,
+   const double&, const double&,
+   const int&, const int&,
    const double *,
    int *, int *);
 
 void F77_FUNC(stufprobc, STUFPROBC) (
-   const int &, const int &, const int &,
-   const int &, const int &, const int &, const int &,
-   const int &, const int &, const int &, const int &);
+   const int&, const int&, const int&,
+   const int&, const int&, const int&, const int&,
+   const int&, const int&, const int&, const int&);
 
 // in cartrefine2d.f:
 void F77_FUNC(cartclinrefcelldoub2d, CARTCLINREFCELLDOUB2D) (
-   const int &, const int &, const int &, const int &,
-   const int &, const int &, const int &, const int &,
-   const int &, const int &, const int &, const int &,
-   const int &, const int &, const int &, const int &,
+   const int&, const int&, const int&, const int&,
+   const int&, const int&, const int&, const int&,
+   const int&, const int&, const int&, const int&,
+   const int&, const int&, const int&, const int&,
    const int *, const double *, const double *,
    const double *, double *,
    double *, double *, double *, double *);
@@ -159,100 +159,100 @@ void F77_FUNC(cartclinrefcelldoub2d, CARTCLINREFCELLDOUB2D) (
 // 3D:
 
 void F77_FUNC(linadvinit, LINADVINIT) (
-   const int &, const double *, const double *, const double *,
-   const int &, const int &,
-   const int &, const int &,
-   const int &, const int &,
-   const int &,
-   const int &,
-   const int &,
+   const int&, const double *, const double *, const double *,
+   const int&, const int&,
+   const int&, const int&,
+   const int&, const int&,
+   const int&,
+   const int&,
+   const int&,
    double *,
-   const int &,
+   const int&,
    const double *, const double *);
 
 void F77_FUNC(linadvinitsine, LINADVINITSINE) (
-   const int &, const double *, const double *,
+   const int&, const double *, const double *,
    const double *, const double *,
-   const int &, const int &,
-   const int &, const int &,
-   const int &, const int &,
-   const int &,
-   const int &,
-   const int &,
+   const int&, const int&,
+   const int&, const int&,
+   const int&, const int&,
+   const int&,
+   const int&,
+   const int&,
    double *,
-   const int &,
+   const int&,
    const double *, const double *,
-   const double &, const double *);
+   const double&, const double *);
 
 void F77_FUNC(initsphere, INITSPHERE) (
-   const int &,
-   const int &, const int &,
-   const int &, const int &,
-   const int &, const int &,
-   const int &,
-   const int &,
-   const int &,
+   const int&,
+   const int&, const int&,
+   const int&, const int&,
+   const int&, const int&,
+   const int&,
+   const int&,
+   const int&,
    double *,
    double *,
-   const double &, const double &,
-   const double *, const double &);
+   const double&, const double&,
+   const double *, const double&);
 
 void F77_FUNC(stabledt, STABLEDT) (
    const double *,
-   const int &, const int &,
-   const int &, const int &,
-   const int &, const int &,
-   const int &,
-   const int &,
-   const int &,
+   const int&, const int&,
+   const int&, const int&,
+   const int&, const int&,
+   const int&,
+   const int&,
+   const int&,
    const double *,
    const double *,
-   double &);
+   double&);
 
 void F77_FUNC(inittraceflux, INITTRACEFLUX) (
-   const int &, const int &,
-   const int &, const int &,
-   const int &, const int &,
+   const int&, const int&,
+   const int&, const int&,
+   const int&, const int&,
    const double *,
    double *, double *, double *,
    double *, double *, double *,
    double *, double *, double *);
 
 void F77_FUNC(chartracing0, CHARTRACING0) (
-   const double &, const int &, const int &,
-   const int &, const int &,
-   const int &, const int &,
-   const int &, const double &, const double &, const int &,
+   const double&, const int&, const int&,
+   const int&, const int&,
+   const int&, const int&,
+   const int&, const double&, const double&, const int&,
    const double *,
    double *, double *,
    double *, double *,
    double *, double *);
 
 void F77_FUNC(chartracing1, CHARTRACING1) (
-   const double &, const int &, const int &, const int &, const int &,
-   const int &, const int &,
-   const int &, const double &, const double &, const int &,
+   const double&, const int&, const int&, const int&, const int&,
+   const int&, const int&,
+   const int&, const double&, const double&, const int&,
    const double *,
    double *, double *,
    double *, double *,
    double *, double *);
 
 void F77_FUNC(chartracing2, CHARTRACING2) (
-   const double &, const int &, const int &, const int &, const int &,
-   const int &, const int &,
-   const int &, const double &, const double &, const int &,
+   const double&, const int&, const int&, const int&, const int&,
+   const int&, const int&,
+   const int&, const double&, const double&, const int&,
    const double *,
    double *, double *,
    double *, double *,
    double *, double *);
 
 void F77_FUNC(fluxcalculation, FLUXCALCULATION) (
-   const double &, const int &, const int &,
-   const int &,
+   const double&, const int&, const int&,
+   const int&,
    const double *,
-   const int &, const int &,
-   const int &, const int &,
-   const int &, const int &,
+   const int&, const int&,
+   const int&, const int&,
+   const int&, const int&,
    const double *,
    const double *,
    double *, double *, double *,
@@ -260,9 +260,9 @@ void F77_FUNC(fluxcalculation, FLUXCALCULATION) (
    double *, double *, double *);
 
 void F77_FUNC(fluxcorrec2d, FLUXCORREC2D) (
-   const double &, const int &, const int &, const int &, const int &,
-   const int &, const int &,
-   const double *, const double *, const int &,
+   const double&, const int&, const int&, const int&, const int&,
+   const int&, const int&,
+   const double *, const double *, const int&,
    const double *,
    const double *, const double *, const double *,
    const double *, const double *, const double *,
@@ -271,8 +271,8 @@ void F77_FUNC(fluxcorrec2d, FLUXCORREC2D) (
    double *, double *, double *);
 
 void F77_FUNC(fluxcorrec3d, FLUXCORREC3D) (
-   const double &, const int &, const int &, const int &, const int &,
-   const int &, const int &,
+   const double&, const int&, const int&, const int&, const int&,
+   const int&, const int&,
    const double *, const double *,
    const double *,
    const double *, const double *, const double *,
@@ -281,9 +281,9 @@ void F77_FUNC(fluxcorrec3d, FLUXCORREC3D) (
    double *, double *, double *);
 
 void F77_FUNC(consdiff, CONSDIFF) (
-   const int &, const int &,
-   const int &, const int &,
-   const int &, const int &,
+   const int&, const int&,
+   const int&, const int&,
+   const int&, const int&,
    const double *,
    const double *, const double *,
    const double *,
@@ -291,81 +291,81 @@ void F77_FUNC(consdiff, CONSDIFF) (
    double *);
 
 void F77_FUNC(getbdry, GETBDRY) (
-   const int &,
-   const int &, const int &, const int &, const int &,
-   const int &, const int &, const int &, const int &,
-   const int &, const int &, const int &, const int &,
-   const int &,
-   const int &,
-   const int &,
-   const int &,
-   const double *, const double &,
+   const int&,
+   const int&, const int&, const int&, const int&,
+   const int&, const int&, const int&, const int&,
+   const int&, const int&, const int&, const int&,
+   const int&,
+   const int&,
+   const int&,
+   const int&,
+   const double *, const double&,
    double *,
-   const double *, const double *, const int &);
+   const double *, const double *, const int&);
 
 void F77_FUNC(onethirdstate, ONETHIRDSTATE) (
-   const double &, const double *, const int &,
-   const int &, const int &, const int &, const int &, const int &, const int &,
+   const double&, const double *, const int&,
+   const int&, const int&, const int&, const int&, const int&, const int&,
    const double *, const double *,
    const double *, const double *, const double *,
    double *);
 
 void F77_FUNC(fluxthird, FLUXTHIRD) (
-   const double &, const double *, const int &,
-   const int &, const int &, const int &, const int &, const int &, const int &,
+   const double&, const double *, const int&,
+   const int&, const int&, const int&, const int&, const int&, const int&,
    const double *, const double *,
    const double *,
    double *, double *, double *);
 
 void F77_FUNC(fluxcorrecjt, FLUXCORRECJT) (
-   const double &, const double *, const int &,
-   const int &, const int &, const int &, const int &, const int &, const int &,
+   const double&, const double *, const int&,
+   const int&, const int&, const int&, const int&, const int&, const int&,
    const double *, const double *,
    const double *, const double *, const double *,
    double *, double *, double *,
    double *, double *, double *);
 
 void F77_FUNC(detectgrad, DETECTGRAD) (
-   const int &, const int &,
-   const int &, const int &,
-   const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
+   const int&, const int&,
+   const int&, const int&,
+   const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
    const double *,
-   const double &,
-   const int &, const int &,
+   const double&,
+   const int&, const int&,
    const double *,
    int *, int *);
 
 void F77_FUNC(detectshock, DETECTSHOCK) (
-   const int &, const int &,
-   const int &, const int &,
-   const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
+   const int&, const int&,
+   const int&, const int&,
+   const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
    const double *,
-   const double &, const double &,
-   const int &, const int &,
+   const double&, const double&,
+   const int&, const int&,
    const double *,
    int *, int *);
 
 void F77_FUNC(stufprobc, STUFPROBC) (
-   const int &, const int &, const int &,
-   const int &, const int &, const int &, const int &,
-   const int &, const int &, const int &, const int &);
+   const int&, const int&, const int&,
+   const int&, const int&, const int&, const int&,
+   const int&, const int&, const int&, const int&);
 
 // in cartrefine3d.f:
 void F77_FUNC(cartclinrefcelldoub3d, CARTCLINREFCELLDOUB3D) (
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
    const int *, const double *, const double *,
    const double *, double *,
    double *, double *, double *,

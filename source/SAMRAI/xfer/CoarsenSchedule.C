@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Coarsening schedule for data transfer between AMR levels 
+ * Description:   Coarsening schedule for data transfer between AMR levels
  *
  ************************************************************************/
 
@@ -133,8 +133,8 @@ CoarsenSchedule::CoarsenSchedule(
     * correctness.
     */
 
-   const hier::IntVector &fine(d_fine_level->getRatioToLevelZero());
-   const hier::IntVector &crse(d_crse_level->getRatioToLevelZero());
+   const hier::IntVector& fine(d_fine_level->getRatioToLevelZero());
+   const hier::IntVector& crse(d_crse_level->getRatioToLevelZero());
    int i;
    for (i = 0; i < dim.getValue(); i++) {
       if (fine(i) > 1) {
@@ -325,15 +325,17 @@ void CoarsenSchedule::generateTemporaryLevel()
 
    hier::IntVector min_gcw = getMaxGhostsToGrow();
 
-   const hier::Connector &coarse_to_fine = d_crse_level->getMappedBoxLevel()->getPersistentOverlapConnectors().findConnector(
-      *d_fine_level->getMappedBoxLevel(),
-      Connector::convertHeadWidthToBase(d_crse_level->getMappedBoxLevel()->
-                                        getRefinementRatio(),
-                                        d_fine_level->getMappedBoxLevel()->getRefinementRatio(),
-                                        min_gcw) );
-   const hier::Connector &fine_to_coarse = d_fine_level->getMappedBoxLevel()->getPersistentOverlapConnectors().findConnector(
-      *d_crse_level->getMappedBoxLevel(),
-      min_gcw );
+   const hier::Connector& coarse_to_fine =
+      d_crse_level->getMappedBoxLevel()->getPersistentOverlapConnectors().findConnector(
+         *d_fine_level->getMappedBoxLevel(),
+         Connector::convertHeadWidthToBase(d_crse_level->getMappedBoxLevel()->
+            getRefinementRatio(),
+            d_fine_level->getMappedBoxLevel()->getRefinementRatio(),
+            min_gcw));
+   const hier::Connector& fine_to_coarse =
+      d_fine_level->getMappedBoxLevel()->getPersistentOverlapConnectors().findConnector(
+         *d_crse_level->getMappedBoxLevel(),
+         min_gcw);
 
    hier::OverlapConnectorAlgorithm oca;
 
@@ -385,13 +387,13 @@ void CoarsenSchedule::generateTemporaryLevel()
     * I think.
     */
    tbox::plog
-      << "fine_mapped_box_level:\n" << d_fine_level->getMappedBoxLevel()->format("", 2)
-      << "d_temp_crse_level:\n" << d_temp_crse_level->getMappedBoxLevel()->format("", 2)
-      << "coarse mapped_box_level:\n" << coarse_to_fine.getBase().format("", 2)
-      << "d_temp_to_coarse:\n" << d_temp_to_coarse.format("", 3)
-      << "fine_to_coarse:\n" << fine_to_coarse.format("", 3)
-      << "coarse_to_fine:\n" << coarse_to_fine.format("", 3)
-      << "d_coarse_to_temp:\n" << d_coarse_to_temp.format("", 3);
+   << "fine_mapped_box_level:\n" << d_fine_level->getMappedBoxLevel()->format("", 2)
+   << "d_temp_crse_level:\n" << d_temp_crse_level->getMappedBoxLevel()->format("", 2)
+   << "coarse mapped_box_level:\n" << coarse_to_fine.getBase().format("", 2)
+   << "d_temp_to_coarse:\n" << d_temp_to_coarse.format("", 3)
+   << "fine_to_coarse:\n" << fine_to_coarse.format("", 3)
+   << "coarse_to_fine:\n" << coarse_to_fine.format("", 3)
+   << "d_coarse_to_temp:\n" << d_coarse_to_temp.format("", 3);
 #endif
 #if 0
    oca.assertOverlapCorrectness(d_coarse_to_temp, false, true, false);
@@ -807,7 +809,7 @@ void CoarsenSchedule::constructScheduleTransactions(
    hier::Box transformed_src_box(src_mapped_box);
 
    /*
-    * When needed, transform the source box and determine if src and 
+    * When needed, transform the source box and determine if src and
     * dst touch at an enhance connectivity singularity.
     */
    if (src_mapped_box.getBlockId() != dst_mapped_box.getBlockId()) {
@@ -819,7 +821,7 @@ void CoarsenSchedule::constructScheduleTransactions(
 
       hier::Transformation::RotationIdentifier rotation =
          grid_geometry->getRotationIdentifier(dst_block_id,
-                                              src_block_id);
+            src_block_id);
       hier::IntVector offset(
          grid_geometry->getOffset(dst_block_id, src_block_id));
 
@@ -835,9 +837,9 @@ void CoarsenSchedule::constructScheduleTransactions(
                d_coarsen_classes->getClassRepresentative(nc);
 
             TBOX_ASSERT(rep_item.d_var_fill_pattern->getStencilWidth() ==
-                        hier::IntVector::getZero(dim));
+               hier::IntVector::getZero(dim));
 
-         } 
+         }
       }
 #endif
    }
@@ -946,7 +948,7 @@ void CoarsenSchedule::coarsenSourceData(
       tbox::Pointer<hier::Patch> fine_patch = *p;
       tbox::Pointer<hier::Patch> temp_patch =
          d_temp_crse_level->getPatch(fine_patch->getGlobalId(),
-                                     fine_patch->getMappedBox().getBlockId());
+            fine_patch->getMappedBox().getBlockId());
 
       const hier::Box& box = temp_patch->getBox();
 

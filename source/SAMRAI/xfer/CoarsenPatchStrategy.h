@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Strategy interface to user routines for coarsening AMR data. 
+ * Description:   Strategy interface to user routines for coarsening AMR data.
  *
  ************************************************************************/
 
@@ -31,7 +31,7 @@ namespace xfer {
  * an AMR patch hierarchy.  A concrete subclass must define three member
  * functions to perform the following tasks:
  *
- * <ul> 
+ * <ul>
  *    <li> define maximum stencil width for user-defined coarsen operations
  *    <li> preprocess the coarsening
  *    <li> postprocess the coarsening
@@ -49,7 +49,6 @@ class CoarsenPatchStrategy:
    public virtual tbox::DescribedClass
 {
 public:
-
    /*!
     * @brief Get the maximum stencil width over all CoarsenPatchStrategy objects
     * used in an application.
@@ -149,7 +148,6 @@ public:
    getDim() const;
 
 private:
-
    /*!
     * @brief Get the set of CoarsenPatchStrategy objects that have been
     * registered.

@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Utility class to read and write boxes to an HDF database. 
+ * Description:   Utility class to read and write boxes to an HDF database.
  *
  ************************************************************************/
 
@@ -99,8 +99,8 @@ void BoxIOUtility::getLevelBoxes(
    }
 
    tbox::plog << "Returning BoxList containing "
-   << d_level_boxes[level_number][entry_number].getNumberOfBoxes()
-   << " boxes. " << std::endl;
+              << d_level_boxes[level_number][entry_number].getNumberOfBoxes()
+              << " boxes. " << std::endl;
 
    /*
     * Return BoxList entry for this step.

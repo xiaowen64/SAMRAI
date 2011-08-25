@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   A simple array template class 
+ * Description:   A simple array template class
  *
  ************************************************************************/
 
@@ -42,7 +42,7 @@ Array<TYPE>::~Array()
 
 template<class TYPE>
 SAMRAI_INLINE_KEYWORD
-TYPE & Array<TYPE>::operator [] (
+TYPE& Array<TYPE>::operator [] (
    const int i)
 {
    TBOX_ASSERT((i >= 0) && (i < d_elements));
@@ -52,7 +52,7 @@ TYPE & Array<TYPE>::operator [] (
 
 template<class TYPE>
 SAMRAI_INLINE_KEYWORD
-const TYPE &Array<TYPE>::operator [] (
+const TYPE& Array<TYPE>::operator [] (
    const int i) const
 {
    TBOX_ASSERT((i >= 0) && (i < d_elements));

@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Algorithms for working with overlap Connectors. 
+ * Description:   Algorithms for working with overlap Connectors.
  *
  ************************************************************************/
 #ifndef included_hier_OverlapConnectorAlgorithm
@@ -581,7 +581,6 @@ private:
       const MappedBoxLevel& head,
       const bool ignore_self_overlap = false) const;
 
-
    /*!
     * @brief Set up things for the entire class.
     *
@@ -637,7 +636,7 @@ private:
    bool d_sanity_check_method_postconditions;
 
    static tbox::StartupShutdownManager::Handler
-   s_initialize_finalize_handler;
+      s_initialize_finalize_handler;
 
 };
 

@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Light-weight array class 
+ * Description:   Light-weight array class
  *
  ************************************************************************/
 #ifndef include_MDA_Access_h
@@ -798,18 +798,18 @@ public:
       index_t i0,
       index_t i1) const {
       return (i0 - this->d_start[D0])
-             + (i1 - this->d_start[D1]) *
-               static_cast<index_t>(d_total_size[D0]);
+             + (i1 - this->d_start[D1])
+             * static_cast<index_t>(d_total_size[D0]);
    }
    SAMRAI_INLINE_KEYWORD index_t offset(
       index_t i0,
       index_t i1,
       index_t i2) const {
       return (i0 - this->d_start[D0])
-             + (i1 - this->d_start[D1]) *
-               static_cast<index_t>(d_total_size[D0])
-             + (i2 - this->d_start[D2]) *
-               static_cast<index_t>(d_total_size[D1]);
+             + (i1 - this->d_start[D1])
+             * static_cast<index_t>(d_total_size[D0])
+             + (i2 - this->d_start[D2])
+             * static_cast<index_t>(d_total_size[D1]);
    }
    SAMRAI_INLINE_KEYWORD index_t offset(
       index_t i0,
@@ -863,8 +863,8 @@ private:
       int i = 1;
       for ( ; i < MDA_DIM; ++i) {
          d_total_size[i] = this->d_size[i] * d_total_size[i - 1];
-         d_fixed_offset -= this->d_start[i] *
-                           static_cast<int>(d_total_size[i]);
+         d_fixed_offset -= this->d_start[i]
+            * static_cast<int>(d_total_size[i]);
       }
    }
 /*!
@@ -1044,7 +1044,7 @@ public:
     * @return the data pointer.
     */
    SAMRAI_INLINE_KEYWORD
-   operator value_t* () const {
+   operator value_t * () const {
       return d_ptr;
    }
 

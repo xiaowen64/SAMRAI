@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Set of edges incident from a mapped_box_level of a distributed box graph. 
+ * Description:   Set of edges incident from a mapped_box_level of a distributed box graph.
  *
  ************************************************************************/
 #ifndef included_hier_PeriodicShiftCatalog_C
@@ -107,7 +107,7 @@ void PeriodicShiftCatalog::setShifts(
 {
    getCatalog(dim);  // Causes singleton object creation if it does not yet exist.
 
-   const int dim_index(dim.getValue()-1);
+   const int dim_index(dim.getValue() - 1);
 
    std::vector<IntVector> tmp_shifts;
    s_periodic_shift_catalog_instance[dim_index]->d_opposite_number.clear();
@@ -153,18 +153,18 @@ void PeriodicShiftCatalog::setShifts(
    if (1) {
       // Write out the shift catalog to log file.
       tbox::plog << "\n\nPeriodicShiftCatalog has "
-      << s_periodic_shift_catalog_instance[dim_index]->d_shifts.size()
-      << " shifts:\n";
+                 << s_periodic_shift_catalog_instance[dim_index]->d_shifts.size()
+                 << " shifts:\n";
       tbox::plog << "Shift   Opposite\n";
       tbox::plog << "Number  Shift     Shift\n";
       for (size_t i = 0;
            i < s_periodic_shift_catalog_instance[dim_index]->d_shifts.size();
            ++i) {
          tbox::plog << std::setw(3) << i << "      "
-         << std::setw(3)
-         << s_periodic_shift_catalog_instance[dim_index]->d_opposite_number[i]
-         << "      "
-         << s_periodic_shift_catalog_instance[dim_index]->d_shifts[i] << "\n";
+                    << std::setw(3)
+                    << s_periodic_shift_catalog_instance[dim_index]->d_opposite_number[i]
+                    << "      "
+                    << s_periodic_shift_catalog_instance[dim_index]->d_shifts[i] << "\n";
       }
       tbox::plog << "\n\n";
    }

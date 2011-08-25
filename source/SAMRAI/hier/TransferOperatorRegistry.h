@@ -1,7 +1,7 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
  * Description:   Singleton registry for all tranfer operators.
@@ -71,7 +71,8 @@ public:
     *
     * @param[in]  dim
     */
-  TransferOperatorRegistry(const tbox::Dimension& dim);
+   TransferOperatorRegistry(
+      const tbox::Dimension& dim);
 
    /*!
     * @brief Destructor
@@ -110,7 +111,7 @@ public:
 
    /*!
     * @brief Lookup function for coarsening operator.
-    * 
+    *
     * Search list for the spatial coarsening operator matching the
     * request for the given variable.  If the operator is found, a
     * pointer to it will be returned.  Otherwise, an unrecoverable
@@ -121,13 +122,13 @@ public:
     * @param[in]     op_name The string identifier of the coarsening operator.
     */
    tbox::Pointer<CoarsenOperator>
-      lookupCoarsenOperator(
-         const tbox::Pointer<Variable>& var,
-         const std::string& op_name);
+   lookupCoarsenOperator(
+      const tbox::Pointer<Variable>& var,
+      const std::string& op_name);
 
    /*!
     * @brief Lookup function for refinement operator.
-    * 
+    *
     * Search list for the spatial refinement operator matching the
     * request for the given variable.  If the operator is found, a
     * pointer to it will be returned.  Otherwise, an unrecoverable
@@ -138,13 +139,13 @@ public:
     * @param[in]     op_name The string identifier of the refinement operator.
     */
    tbox::Pointer<RefineOperator>
-      lookupRefineOperator(
-         const tbox::Pointer<Variable>& var,
-         const std::string& op_name);
+   lookupRefineOperator(
+      const tbox::Pointer<Variable>& var,
+      const std::string& op_name);
 
    /*!
     * @brief Lookup function for time interpolation operator.
-    * 
+    *
     * Search list for the time interpolation operator matching the
     * request for the given variable.  If the operator is found, a
     * pointer to it will be returned.  Otherwise, an unrecoverable
@@ -156,10 +157,10 @@ public:
     *                operator.  \b Default: STD_LINEAR_TIME_INTERPOLATE
     */
    tbox::Pointer<TimeInterpolateOperator>
-      lookupTimeInterpolateOperator(
-         const tbox::Pointer<Variable>& var,
-         const std::string& op_name =
-            "STD_LINEAR_TIME_INTERPOLATE");
+   lookupTimeInterpolateOperator(
+      const tbox::Pointer<Variable>& var,
+      const std::string& op_name =
+         "STD_LINEAR_TIME_INTERPOLATE");
 
    /*!
     * @brief Get the max stencil width of all transfer operators.
@@ -220,7 +221,8 @@ protected:
     * SAMRAITransferOperatorRegistry::buildCoarsenOperator to build a SAMRAI
     * libaray CoarsenOperator.
     */
-   virtual tbox::Pointer<CoarsenOperator> buildCoarsenOperator(
+   virtual tbox::Pointer<CoarsenOperator>
+   buildCoarsenOperator(
       const tbox::Pointer<Variable>& var,
       const std::string& op_name) = 0;
 
@@ -232,7 +234,8 @@ protected:
     * SAMRAITransferOperatorRegistry::buildRefineOperator to build a SAMRAI
     * libaray RefineOperator.
     */
-   virtual tbox::Pointer<RefineOperator> buildRefineOperator(
+   virtual tbox::Pointer<RefineOperator>
+   buildRefineOperator(
       const tbox::Pointer<Variable>& var,
       const std::string& op_name) = 0;
 
@@ -245,7 +248,8 @@ protected:
     * SAMRAITransferOperatorRegistry::buildTimeInterpolateOperator to build a
     * SAMRAI libaray TimeInterpolateOperator.
     */
-   virtual tbox::Pointer<TimeInterpolateOperator> buildTimeInterpolateOperator(
+   virtual tbox::Pointer<TimeInterpolateOperator>
+   buildTimeInterpolateOperator(
       const tbox::Pointer<Variable>& var,
       const std::string& op_name) = 0;
 
@@ -294,7 +298,7 @@ private:
     * @brief true if a call to getMaxTransferOpStencilWidth has been made.
     */
    bool d_max_op_stencil_width_req;
-   
+
 };
 
 }

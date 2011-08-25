@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   AMR communication tests for outerface-centered patch data 
+ * Description:   AMR communication tests for outerface-centered patch data
  *
  ************************************************************************/
 
@@ -514,8 +514,8 @@ bool OuterfaceDataTest::verifyResults(
                      tbox::perr << "Test FAILED: ...."
                                 << " : face_data index = " << fi() << endl;
                      tbox::perr << "    hier::Variable = "
-                     << d_variable_src_name[i]
-                     << " : depth index = " << d << endl;
+                                << d_variable_src_name[i]
+                                << " : depth index = " << d << endl;
                      tbox::perr << "    result = " << result
                                 << " : correct = " << correct << endl;
                      test_failed = true;

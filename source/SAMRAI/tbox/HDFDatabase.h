@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   A database structure that stores HDF5 format data. 
+ * Description:   A database structure that stores HDF5 format data.
  *
  ************************************************************************/
 
@@ -436,7 +436,7 @@ public:
    virtual bool
    open(
       const std::string& name,
-      bool read_write_mode=false);
+      bool read_write_mode = false);
 
    /**
     * @brief Attach the Database to an existing HDF file.

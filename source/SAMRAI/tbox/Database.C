@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   An abstract base class for the SAMRAI database objects 
+ * Description:   An abstract base class for the SAMRAI database objects
  *
  ************************************************************************/
 
@@ -540,7 +540,7 @@ dcomplex Database::getComplexWithDefault(
       if (locptr != NULL) {
          retval = *locptr;
       }
-   } 
+   }
    return retval;
 }
 

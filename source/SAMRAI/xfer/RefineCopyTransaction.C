@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Communication transaction for data copies during data refining 
+ * Description:   Communication transaction for data copies during data refining
  *
  ************************************************************************/
 
@@ -73,7 +73,7 @@ RefineCopyTransaction::RefineCopyTransaction(
    tbox::Pointer<hier::BoxOverlap> overlap,
    const hier::Box& dst_mapped_box,
    const hier::Box& src_mapped_box,
-   int refine_item_id) :
+   int refine_item_id):
    d_dst_patch(0),
    d_dst_patch_rank(dst_mapped_box.getOwnerRank()),
    d_src_patch(0),
@@ -96,14 +96,14 @@ RefineCopyTransaction::RefineCopyTransaction(
 
    // Note: s_num_coarsen_items cannot be used at this point!
 
-   if ( d_dst_patch_rank == dst_level->getMappedBoxLevel()->getRank() ) {
-      d_dst_patch = dst_level->getPatch( dst_mapped_box.getGlobalId(),
-                                         dst_mapped_box.getBlockId() );
-   } 
-   if ( d_src_patch_rank == dst_level->getMappedBoxLevel()->getRank() ) {
-      d_src_patch = src_level->getPatch( src_mapped_box.getGlobalId(),
-                                         src_mapped_box.getBlockId() );
-   } 
+   if (d_dst_patch_rank == dst_level->getMappedBoxLevel()->getRank()) {
+      d_dst_patch = dst_level->getPatch(dst_mapped_box.getGlobalId(),
+            dst_mapped_box.getBlockId());
+   }
+   if (d_src_patch_rank == dst_level->getMappedBoxLevel()->getRank()) {
+      d_src_patch = src_level->getPatch(src_mapped_box.getGlobalId(),
+            src_mapped_box.getBlockId());
+   }
 }
 
 RefineCopyTransaction::~RefineCopyTransaction()
@@ -121,14 +121,14 @@ RefineCopyTransaction::~RefineCopyTransaction()
 bool RefineCopyTransaction::canEstimateIncomingMessageSize()
 {
    bool can_estimate = false;
-   if ( !d_src_patch.isNull() ) {
-      can_estimate = 
+   if (!d_src_patch.isNull()) {
+      can_estimate =
          d_src_patch->getPatchData(s_refine_items[d_refine_item_id]->d_src)
-                    ->canEstimateStreamSizeFromBox();
+         ->canEstimateStreamSizeFromBox();
    } else {
       can_estimate =
          d_dst_patch->getPatchData(s_refine_items[d_refine_item_id]->d_scratch)
-                    ->canEstimateStreamSizeFromBox();
+         ->canEstimateStreamSizeFromBox();
    }
    return can_estimate;
 }
@@ -137,7 +137,7 @@ size_t RefineCopyTransaction::computeIncomingMessageSize()
 {
    d_incoming_bytes =
       d_dst_patch->getPatchData(s_refine_items[d_refine_item_id]->d_scratch)
-                 ->getDataStreamSize(*d_overlap);
+      ->getDataStreamSize(*d_overlap);
    return d_incoming_bytes;
 }
 
@@ -145,7 +145,7 @@ size_t RefineCopyTransaction::computeOutgoingMessageSize()
 {
    d_outgoing_bytes =
       d_src_patch->getPatchData(s_refine_items[d_refine_item_id]->d_src)
-                 ->getDataStreamSize(*d_overlap);
+      ->getDataStreamSize(*d_overlap);
    return d_outgoing_bytes;
 }
 
@@ -153,14 +153,14 @@ void RefineCopyTransaction::packStream(
    tbox::MessageStream& stream)
 {
    d_src_patch->getPatchData(s_refine_items[d_refine_item_id]->d_src)
-              ->packStream(stream, *d_overlap);
+   ->packStream(stream, *d_overlap);
 }
 
 void RefineCopyTransaction::unpackStream(
    tbox::MessageStream& stream)
 {
    d_dst_patch->getPatchData(s_refine_items[d_refine_item_id]->d_scratch)
-              ->unpackStream(stream, *d_overlap);
+   ->unpackStream(stream, *d_overlap);
 }
 
 void RefineCopyTransaction::copyLocalData()
@@ -195,9 +195,9 @@ void RefineCopyTransaction::printClassData(
           << std::endl;
    stream << "   refine item id:         " << d_refine_item_id << std::endl;
    stream << "   destination patch data id: "
-   << s_refine_items[d_refine_item_id]->d_scratch << std::endl;
+          << s_refine_items[d_refine_item_id]->d_scratch << std::endl;
    stream << "   source patch data id:      "
-   << s_refine_items[d_refine_item_id]->d_src << std::endl;
+          << s_refine_items[d_refine_item_id]->d_src << std::endl;
    stream << "   incoming bytes:         " << d_incoming_bytes << std::endl;
    stream << "   outgoing bytes:         " << d_outgoing_bytes << std::endl;
    stream << "   destination patch:           "

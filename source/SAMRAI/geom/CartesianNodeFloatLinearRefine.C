@@ -1,11 +1,11 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
  * Description:   Linear refine operator for node-centered float data on
- *                a Cartesian mesh. 
+ *                a Cartesian mesh.
  *
  ************************************************************************/
 
@@ -36,31 +36,31 @@ extern "C" {
 #endif
 
 // in cartrefine1d.f:
-void F77_FUNC(cartlinrefnodeflot1d, CARTLINREFNODEFLOT1D) (const int &,
-   const int &,
-   const int &, const int &,
-   const int &, const int &,
-   const int &, const int &,
+void F77_FUNC(cartlinrefnodeflot1d, CARTLINREFNODEFLOT1D) (const int&,
+   const int&,
+   const int&, const int&,
+   const int&, const int&,
+   const int&, const int&,
    const int *, const double *, const double *,
    const float *, float *);
 // in cartrefine2d.f:
-void F77_FUNC(cartlinrefnodeflot2d, CARTLINREFNODEFLOT2D) (const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &, const int &,
-   const int &, const int &, const int &, const int &,
-   const int &, const int &, const int &, const int &,
+void F77_FUNC(cartlinrefnodeflot2d, CARTLINREFNODEFLOT2D) (const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&, const int&,
+   const int&, const int&, const int&, const int&,
+   const int&, const int&, const int&, const int&,
    const int *, const double *, const double *,
    const float *, float *);
 // in cartrefine3d.f:
-void F77_FUNC(cartlinrefnodeflot3d, CARTLINREFNODEFLOT3D) (const int &,
-   const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
+void F77_FUNC(cartlinrefnodeflot3d, CARTLINREFNODEFLOT3D) (const int&,
+   const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
    const int *, const double *, const double *,
    const float *, float *);
 }

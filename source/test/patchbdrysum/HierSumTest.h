@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   SAMRAI interface class for hierarchy node and edge sum test 
+ * Description:   SAMRAI interface class for hierarchy node and edge sum test
  *
  ************************************************************************/
 
@@ -85,7 +85,8 @@ public:
       const tbox::Dimension& dim,
       Pointer<Database> input_db
 #ifdef HAVE_HDF5
-      , Pointer<appu::VisItDataWriter> viz_writer
+      ,
+      Pointer<appu::VisItDataWriter> viz_writer
 #endif
       );
 

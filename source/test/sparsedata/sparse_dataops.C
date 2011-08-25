@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Main program to test index data operations 
+ * Description:   Main program to test index data operations
  *
  ************************************************************************/
 
@@ -33,31 +33,44 @@
 #include "SAMRAI/pdat/SparseData.h"
 #include "SAMRAI/pdat/SparseDataVariable.h"
 
-
 using namespace SAMRAI;
 
-bool checkIterators(
+bool
+checkIterators(
    const tbox::Pointer<hier::PatchHierarchy> hierarchy,
    const int data_id1);
 
-bool checkCopyOps(
+bool
+checkCopyOps(
    const tbox::Pointer<hier::PatchHierarchy> hierarchy,
-   const int data_id1, const int data_id2);
+   const int data_id1,
+   const int data_id2);
 
-bool checkRemoveOps(
-   const tbox::Pointer<hier::PatchHierarchy> hierarchy, 
-   const int data_id1);     
+bool
+checkRemoveOps(
+   const tbox::Pointer<hier::PatchHierarchy> hierarchy,
+   const int data_id1);
 
-tbox::Pointer<geom::CartesianGridGeometry> getGeometry(
-   hier::BoxList& coarse_domain, 
-   hier::BoxList& fine_domain, 
-   const tbox::Dimension& dim
-   );
+tbox::Pointer<geom::CartesianGridGeometry>
+getGeometry(
+   hier::BoxList& coarse_domain,
+   hier::BoxList& fine_domain,
+   const tbox::Dimension& dim);
 
-void _getDblKeys(std::vector<std::string>& keys);
-void _getDblValues(double* values, int mult=1);
-void _getIntKeys(std::vector<std::string>& keys);
-void _getIntValues(int* values, int mult=1);
+void
+_getDblKeys(
+   std::vector<std::string>& keys);
+void
+_getDblValues(
+   double* values,
+   int mult = 1);
+void
+_getIntKeys(
+   std::vector<std::string>& keys);
+void
+_getIntValues(
+   int* values,
+   int mult = 1);
 
 const int DSIZE = 10;
 const int ISIZE = 4;
@@ -78,8 +91,8 @@ int main(
    // Currently this test only works for 2 dimensions.
    const tbox::Dimension dim(2);
 
-   const std::string log_fn = std::string("sparse_dataops.") +
-      tbox::Utilities::intToString(dim.getValue(), 1) + "d.log";
+   const std::string log_fn = std::string("sparse_dataops.")
+      + tbox::Utilities::intToString(dim.getValue(), 1) + "d.log";
    tbox::PIO::logAllNodes(log_fn);
 
    /*
@@ -90,17 +103,17 @@ int main(
       std::ostream& os = tbox::plog;
 
       /********************************************************************
-       *
-       *   Create a simple 2-level hierarchy to test.
-       *   (NOTE: it is setup to work on at most 2 processors)
-       *
-       ********************************************************************/
+      *
+      *   Create a simple 2-level hierarchy to test.
+      *   (NOTE: it is setup to work on at most 2 processors)
+      *
+      ********************************************************************/
       hier::BoxList coarse_domain(dim);
       hier::BoxList fine_domain(dim);
       hier::IntVector ratio(dim, 2);
 
-      tbox::Pointer<geom::CartesianGridGeometry> geometry 
-         = getGeometry(coarse_domain, fine_domain, dim);
+      tbox::Pointer<geom::CartesianGridGeometry> geometry =
+         getGeometry(coarse_domain, fine_domain, dim);
 
       tbox::Pointer<hier::PatchHierarchy> hierarchy(
          new hier::PatchHierarchy("PatchHierarchy", geometry));
@@ -110,7 +123,7 @@ int main(
 
       const int n_coarse_boxes = coarse_domain.getNumberOfBoxes();
       const int n_fine_boxes = fine_domain.getNumberOfBoxes();
-      
+
       hier::MappedBoxLevel layer0(hier::IntVector(dim, 1), geometry);
       hier::MappedBoxLevel layer1(ratio, geometry);
 
@@ -119,11 +132,11 @@ int main(
          if (nproc > 1) {
             if (ib == layer0.getRank()) {
                layer0.addMappedBox(hier::Box(*coarse_domain_itr,
-                  hier::LocalId(ib), layer0.getRank()));
+                     hier::LocalId(ib), layer0.getRank()));
             }
          } else {
             layer0.addMappedBox(hier::Box(*coarse_domain_itr,
-               hier::LocalId(ib), 0));
+                  hier::LocalId(ib), 0));
          }
       }
 
@@ -132,11 +145,11 @@ int main(
          if (nproc > 1) {
             if (ib == layer1.getRank()) {
                layer1.addMappedBox(hier::Box(*fine_domain_itr,
-                  hier::LocalId(ib), layer1.getRank()));
+                     hier::LocalId(ib), layer1.getRank()));
             }
          } else {
             layer1.addMappedBox(hier::Box(*fine_domain_itr,
-               hier::LocalId(ib), 0));
+                  hier::LocalId(ib), 0));
          }
       }
 
@@ -147,11 +160,11 @@ int main(
        * Create an SparseData<BOX_GEOMETRY> variable and register it with
        * the variable database.
        */
-      hier::VariableDatabase* variable_db = 
+      hier::VariableDatabase* variable_db =
          hier::VariableDatabase::getDatabase();
       tbox::Pointer<hier::VariableContext> cxt = variable_db->getContext(
             "dummy");
-       const hier::IntVector no_ghosts(dim, 0);
+      const hier::IntVector no_ghosts(dim, 0);
 
       typedef pdat::SparseData<pdat::CellGeometry> LSparseData;
       typedef pdat::SparseDataVariable<pdat::CellGeometry> LSparseDataVar;
@@ -162,19 +175,18 @@ int main(
       _getIntKeys(ikeys);
 
       tbox::Pointer<LSparseDataVar> data1(new LSparseDataVar(dim, "sample1",
-         dkeys, ikeys));
+                                             dkeys, ikeys));
       int data_id1 = variable_db->registerVariableAndContext(
             data1, cxt, no_ghosts);
 
       tbox::Pointer<LSparseDataVar> data2(new LSparseDataVar(dim, "sample2",
-         dkeys, ikeys));
+                                             dkeys, ikeys));
       int data_id2 = variable_db->registerVariableAndContext(
             data2, cxt, no_ghosts);
 
       // set us up for restart.
       variable_db->registerPatchDataForRestart(data_id1);
       variable_db->registerPatchDataForRestart(data_id2);
-
 
       for (int i = 0; i < 2; ++i) {
          // allocate "sample" data
@@ -183,22 +195,22 @@ int main(
       }
 
       /*
-       * Loop over hierarchy levels and populate data. 
+       * Loop over hierarchy levels and populate data.
        */
       for (int ln = hierarchy->getFinestLevelNumber(); ln >= 0; ln--) {
          tbox::Pointer<hier::PatchLevel> level = hierarchy->getPatchLevel(ln);
-      
+
          // loop over patches on level
          for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
             tbox::Pointer<hier::Patch> patch = ip();
-      
+
             // access sample data from patch
             tbox::Pointer<LSparseData> sample1(patch->getPatchData(data_id1));
             tbox::Pointer<LSparseData> sample2(patch->getPatchData(data_id2));
 
             // add items to the sparse data objects.
             pdat::CellIterator ic(patch->getBox());
-            for (; ic; ic++) {
+            for ( ; ic; ic++) {
                const hier::Index* idx = &(ic());
                LSparseData::Iterator iter1 = sample1->registerIndex(*idx);
                LSparseData::Iterator iter2 = sample2->registerIndex(*idx);
@@ -219,10 +231,9 @@ int main(
 
             LSparseData::Iterator iter1(sample1);
             LSparseData::Iterator iter2(sample2);
-      
-            for ( ; iter1 != sample1->end() && iter2 != sample2->end(); 
-                    ++iter1, ++iter2)  
-            {
+
+            for ( ; iter1 != sample1->end() && iter2 != sample2->end();
+                  ++iter1, ++iter2) {
                os << iter1;
                os << iter2;
             }
@@ -230,10 +241,10 @@ int main(
       }
 
       /********************************************************************
-       *
-       *   Run the tests
-       *
-       ********************************************************************/
+      *
+      *   Run the tests
+      *
+      ********************************************************************/
       bool check_it = checkIterators(hierarchy, data_id1);
       // Test 1 check iterators
       os << (check_it ? "PASSED: " : "FAILED: ")
@@ -251,7 +262,7 @@ int main(
       os << (remove_ops ? "PASSED: " : "FAILED: ")
          << "Test 3: Remove test"
          << std::endl;
-      
+
       /*
        * Tests Completed.
        */
@@ -270,7 +281,7 @@ int main(
    return 0;
 }
 
-void 
+void
 _getDblKeys(std::vector<std::string>& keys) {
    for (int i = 0; i < DSIZE; ++i) {
       std::stringstream key_name;
@@ -283,11 +294,11 @@ void
 _getDblValues(double* values, int mult)
 {
    for (int i = 0; i < DSIZE; ++i) {
-      values[i] = (double) (i * mult);
+      values[i] = (double)(i * mult);
    }
 }
 
-void 
+void
 _getIntKeys(std::vector<std::string>& keys) {
    for (int i = 0; i < ISIZE; ++i) {
       std::stringstream key_name;
@@ -310,32 +321,31 @@ checkIterators(
    const int data_id1)
 {
    typedef pdat::SparseData<pdat::CellGeometry> LSparseData;
-   
+
    // Test 1 - check the functionality of the SparseData API
    //
    int num_failures(0);
    for (int ln = hierarchy->getFinestLevelNumber(); ln >= 0; ln--) {
       tbox::Pointer<hier::PatchLevel> level = hierarchy->getPatchLevel(ln);
-   
+
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
          tbox::Pointer<hier::Patch> patch = ip();
-   
+
          tbox::Pointer<LSparseData> sample(patch->getPatchData(data_id1));
 
          // Test #1a: check empty.  This should be false.
          if (sample->empty()) {
             num_failures++;
             tbox::perr
-               << "FAILED: - sparse data structure reports empty. "
-               << std::endl;
-         } 
-   
+            << "FAILED: - sparse data structure reports empty. "
+            << std::endl;
+         }
 
          pdat::CellIterator ic(patch->getBox());
-         for (; ic; ic++) {
+         for ( ; ic; ic++) {
             const hier::Index& idx = ic();
             LSparseData::AttributeIterator it = sample->begin(idx);
-            for (; it != sample->end(idx); ++it) {
+            for ( ; it != sample->end(idx); ++it) {
 
                // check element access.
                for (int i = 0; i < DSIZE; ++i) {
@@ -353,13 +363,13 @@ checkIterators(
          } // for (; ic; ic++) ... (cell iterator)
       } // for (hier::PatchLevel::Iterator...
    } // hierarchy iteration
-   
+
    bool it_passed = true;
    if (num_failures > 0) {
       it_passed = false;
       tbox::perr
-         << "FAILED: - Test #1: Check iterator functionality."
-         << std::endl;
+      << "FAILED: - Test #1: Check iterator functionality."
+      << std::endl;
    }
 
    return it_passed;
@@ -380,23 +390,24 @@ bool checkCopyOps(
          tbox::Pointer<LSparseData> control = (patch->getPatchData(data_id1));
          tbox::Pointer<LSparseData> copiedTo = (patch->getPatchData(data_id1));
          tbox::Pointer<LSparseData> copiedFrom = (patch->getPatchData(data_id2));
-   
+
          int edit = copiedTo->size() / 2;
          LSparseData::Iterator ct_it(copiedTo);
-         for (; ct_it != copiedTo->end() && edit > 0; ++ct_it, edit--) { }
+         for ( ; ct_it != copiedTo->end() && edit > 0; ++ct_it, edit--) {
+         }
 
          while (ct_it != copiedTo->end()) {
             copiedTo->remove(ct_it);
          }
          copiedTo->copy(*copiedFrom);
-   
+
          edit = copiedTo->size() / 2;
          ct_it = copiedTo->begin();
-         
+
          LSparseData::Iterator ctrl_it(control);
          bool first_passed = true;
          for (int i = 0; i < edit; ++i) {
-            if (! ct_it.equals(ctrl_it)) {
+            if (!ct_it.equals(ctrl_it)) {
                first_passed = false;
             } else {
                ct_it++;
@@ -408,29 +419,29 @@ bool checkCopyOps(
          for (int i = 0; i < edit; ++i) {
             cf_it++;
          }
-   
+
          bool second_passed = true;
-         if ( *copiedTo != *copiedFrom) {
+         if (*copiedTo != *copiedFrom) {
             second_passed = false;
          }
-   
+
          if (!first_passed) {
             tbox::perr
-               << "FAILED: (first) copy for level " << ln << std::endl;
+            << "FAILED: (first) copy for level " << ln << std::endl;
             copy_passed = false;
-         } 
+         }
          if (!second_passed) {
             tbox::perr
-               << "FAILED: (second) copy for level " << ln << std::endl;
+            << "FAILED: (second) copy for level " << ln << std::endl;
             copy_passed = false;
-         } 
+         }
       }
    }
    return copy_passed;
 }
-   
+
 bool checkRemoveOps(
-   const tbox::Pointer<hier::PatchHierarchy> hierarchy, 
+   const tbox::Pointer<hier::PatchHierarchy> hierarchy,
    const int data_id1)
 {
    typedef pdat::SparseData<pdat::CellGeometry> LSparseData;
@@ -442,33 +453,33 @@ bool checkRemoveOps(
 
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
          tbox::Pointer<hier::Patch> patch = ip();
-         
+
          tbox::Pointer<LSparseData> sample(patch->getPatchData(data_id1));
 
          LSparseData::Iterator it;
          int stop = sample->size() / 2;
-         for (it = sample->begin(); it != sample->end() && stop != 0; 
+         for (it = sample->begin(); it != sample->end() && stop != 0;
               it++, stop--) {
          }
 
          it = sample->end();
          if (it != sample->end()) {
             tbox::perr
-               << "FAILED: - Test 3a: iterator fastforward"
-               << std::endl;
-         } 
+            << "FAILED: - Test 3a: iterator fastforward"
+            << std::endl;
+         }
 
          it = sample->begin();
          if (it != sample->begin()) {
             tbox::perr
-               << "FAILED: - Test 3b: iterator rewind."
-               << std::endl;
-         } 
+            << "FAILED: - Test 3b: iterator rewind."
+            << std::endl;
+         }
 
          // do a clear of the elements
          sample->clear();
 
-         if (! sample->empty()) {
+         if (!sample->empty()) {
             num_failures++;
             remove_passed = false;
             tbox::perr << "sample size is " << sample->size() << std::endl;
@@ -478,22 +489,22 @@ bool checkRemoveOps(
 
    if (!remove_passed) {
       tbox::perr
-         << "FAILED: the container is not empty and it should be."
-         << std::endl;
-   } 
+      << "FAILED: the container is not empty and it should be."
+      << std::endl;
+   }
    return remove_passed;
 }
 
 tbox::Pointer<geom::CartesianGridGeometry>
 getGeometry(
-   hier::BoxList& coarse_domain, 
-   hier::BoxList& fine_domain, 
+   hier::BoxList& coarse_domain,
+   hier::BoxList& fine_domain,
    const tbox::Dimension& dim)
 {
-   double lo[dim.getValue()]; 
+   double lo[dim.getValue()];
    lo[0] = 0.0;
    lo[1] = 0.0;
-   double hi[dim.getValue()]; 
+   double hi[dim.getValue()];
    hi[0] = 1.0;
    hi[1] = 0.5;
 
@@ -508,7 +519,7 @@ getGeometry(
    fine_domain.appendItem(fine0);
    fine_domain.appendItem(fine1);
 
-   tbox::Pointer<geom::CartesianGridGeometry> geometry( 
+   tbox::Pointer<geom::CartesianGridGeometry> geometry(
       new geom::CartesianGridGeometry("CartesianGeometry",
          lo,
          hi,

@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   A simple doubly-linked list template class 
+ * Description:   A simple doubly-linked list template class
  *
  ************************************************************************/
 
@@ -286,8 +286,8 @@ private:
 
    ListNode(
       const TYPE& t,
-      ListNode<TYPE>* n,
-      ListNode<TYPE>* p);
+      ListNode<TYPE> * n,
+      ListNode<TYPE> * p);
    ~ListNode();
 
    void *

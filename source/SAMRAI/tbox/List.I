@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   A simple doubly-linked list template class 
+ * Description:   A simple doubly-linked list template class
  *
  ************************************************************************/
 
@@ -84,28 +84,28 @@ ListIterator<TYPE>::~ListIterator()
 
 template<class TYPE>
 SAMRAI_INLINE_KEYWORD
-TYPE & ListIterator<TYPE>::operator * ()
+TYPE& ListIterator<TYPE>::operator * ()
 {
    return d_node->d_item;
 }
 
 template<class TYPE>
 SAMRAI_INLINE_KEYWORD
-const TYPE &ListIterator<TYPE>::operator * () const
+const TYPE& ListIterator<TYPE>::operator * () const
 {
    return d_node->d_item;
 }
 
 template<class TYPE>
 SAMRAI_INLINE_KEYWORD
-TYPE & ListIterator<TYPE>::operator () ()
+TYPE& ListIterator<TYPE>::operator () ()
 {
    return d_node->d_item;
 }
 
 template<class TYPE>
 SAMRAI_INLINE_KEYWORD
-const TYPE &ListIterator<TYPE>::operator () () const
+const TYPE& ListIterator<TYPE>::operator () () const
 {
    return d_node->d_item;
 }
@@ -120,7 +120,7 @@ ListIterator<TYPE>::operator bool () const
 #ifndef LACKS_BOOL_VOID_RESOLUTION
 template<class TYPE>
 SAMRAI_INLINE_KEYWORD
-ListIterator<TYPE>::operator const void* () const
+ListIterator<TYPE>::operator const void * () const
 {
    return d_node ? this : NULL;
 }

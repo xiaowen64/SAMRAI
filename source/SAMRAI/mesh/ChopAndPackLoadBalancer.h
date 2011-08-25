@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Load balance routines for uniform and non-uniform workloads. 
+ * Description:   Load balance routines for uniform and non-uniform workloads.
  *
  ************************************************************************/
 
@@ -470,7 +470,7 @@ private:
       const hier::IntVector& cut_factor,
       const hier::IntVector& bad_interval,
       const hier::BoxList& physical_domain,
-      const tbox::SAMRAI_MPI &mpi) const;
+      const tbox::SAMRAI_MPI& mpi) const;
 
    /*
     * Chop boxes in list using uniform workload estimate.
@@ -487,7 +487,7 @@ private:
       const hier::IntVector& cut_factor,
       const hier::IntVector& bad_interval,
       const hier::BoxList& physical_domain,
-      const tbox::SAMRAI_MPI &mpi) const;
+      const tbox::SAMRAI_MPI& mpi) const;
 
    /*
     * Chop boxes in list using non-uniform workload estimate.
@@ -506,7 +506,7 @@ private:
       const hier::IntVector& cut_factor,
       const hier::IntVector& bad_interval,
       const hier::BoxList& physical_domain,
-      const tbox::SAMRAI_MPI &mpi) const;
+      const tbox::SAMRAI_MPI& mpi) const;
 
    /*
     * Map boxes to processors using chosen bin pack method.
@@ -534,7 +534,7 @@ private:
       const tbox::Array<double>& weights_in,
       hier::BoxList& box_list_out,
       tbox::Array<double>& weights_out,
-      const tbox::SAMRAI_MPI &mpi) const;
+      const tbox::SAMRAI_MPI& mpi) const;
 
    /*
     * Utility functions to determine parameter values for level.
@@ -620,12 +620,12 @@ private:
    static tbox::Pointer<tbox::Timer> t_bin_pack_boxes_pack;
    static tbox::Pointer<tbox::Timer> t_chop_boxes;
 
-   /* 
+   /*
     * Static initialization and cleanup handler.
     */
 
    static tbox::StartupShutdownManager::Handler
-   s_initialize_handler;
+      s_initialize_handler;
 };
 
 }

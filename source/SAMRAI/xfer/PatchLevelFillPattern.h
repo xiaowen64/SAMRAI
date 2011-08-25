@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Abstract fill pattern class to provide interface for stencils 
+ * Description:   Abstract fill pattern class to provide interface for stencils
  *
  ************************************************************************/
 
@@ -21,7 +21,7 @@ namespace xfer {
 
 /*!
  * @brief Abstract base class for defining regions to fill on a PatchLevel.
- * 
+ *
  * Class PatchLevelFillPattern is an abstract base class that provides
  * an interface used by the RefineSchedule to determine what spatial
  * regions will be filled on a given destination level.  For example,
@@ -31,8 +31,8 @@ namespace xfer {
  * boxes to be filled as well as NeighborhoodSet information that will
  * be later used in the communications that fill those boxes.
  *
- * @see xfer::RefineSchedule  
- * @see hier::NeighborhoodSet  
+ * @see xfer::RefineSchedule
+ * @see hier::NeighborhoodSet
  */
 
 class PatchLevelFillPattern:public tbox::DescribedClass
@@ -91,7 +91,7 @@ public:
     * @brief Return true if source owner can compute destination boxes on its
     * own.
     *
-    * If the fill pattern is such that the source patch owner cannot compute 
+    * If the fill pattern is such that the source patch owner cannot compute
     * fill boxes for all of its destination neighbors using local data, then a
     * communication is needed to acquire this information, and this method
     * should return true.  If the source owner can compute the fill boxes
@@ -182,7 +182,7 @@ public:
    /*!
     * @brief Return true if the fill pattern is specialized for filling
     * at enhanced connectivity block boundaries only, false for all other
-    * cases. 
+    * cases.
     */
    virtual bool
    fillingEnhancedConnectivityOnly() const = 0;

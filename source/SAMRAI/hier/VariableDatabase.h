@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Singleton database class for managing variables and contexts. 
+ * Description:   Singleton database class for managing variables and contexts.
  *
  ************************************************************************/
 
@@ -29,8 +29,8 @@ namespace hier {
 
 /*
  *  TODO: Should we be more explicit in this class documentation to describe
- *  how variables of different dimensions are handled?  For example, this 
- *  places constraints on several methods (i.e., variable dimension must 
+ *  how variables of different dimensions are handled?  For example, this
+ *  places constraints on several methods (i.e., variable dimension must
  *  match the ghost width dimension, etc.).  The Array containers that we use
  *  do not know about the dimension associated with the objects they contain.
  *  Should we manage things more explicitly for each dimension?
@@ -43,7 +43,7 @@ namespace hier {
  * table for the bookkeeping information related to variable storage on a
  * SAMRAI patch hierarchy.  The database may be used to manage the mapping
  * between a Variable or (Variable,VariableContext) pair and the patch data
- * index associated with the data for the Variable or 
+ * index associated with the data for the Variable or
  * (Variable,VariableContext) pair.
  *
  * Typically, numerical routines or solution algorithms manage and access
@@ -60,11 +60,11 @@ namespace hier {
  * concrete implementation (cell-centered, node-centered, etc.) provides
  * the appropriate storage management for that type.
  *
- * <b><em>%VariableContext:</em></b>  A way to consistently address the state 
- * of a variable in multiple contexts.  For example, an application may need 
- * to manage data for "OLD" pressure values as well as "NEW" pressure 
- * values.  The context allows the user to have a single variable in multiple 
- * contexts, without having to create multiple variables.  A context is 
+ * <b><em>%VariableContext:</em></b>  A way to consistently address the state
+ * of a variable in multiple contexts.  For example, an application may need
+ * to manage data for "OLD" pressure values as well as "NEW" pressure
+ * values.  The context allows the user to have a single variable in multiple
+ * contexts, without having to create multiple variables.  A context is
  * optional and a user could create multiple variables; e.g., "pressure_old"
  * and "pressure_new".
  *
@@ -76,7 +76,7 @@ namespace hier {
  *
  * The following example shows the mapping between a PatchData indices
  * and a Variable/VariableContext pair.
- * 
+ *
  * @code
  *    PatchData Index   Variable   Context
  *    ================  ========   =======
@@ -95,31 +95,31 @@ namespace hier {
  * </ol>
  *
  *  @code
- * 
+ *
  *    // other setup including dimension and IntVectors specifying ghosts
- *    ... 
- * 
+ *    ...
+ *
  *    // Get the singleton variable database.
  *    hier::VariableDatabase* var_db = hier::VariableDatabase.getDatabase();
- * 
+ *
  *    // Create the context (or access it if it exists already).
- *    tbox::Pointer<hier::VariableContext> current = 
+ *    tbox::Pointer<hier::VariableContext> current =
  *       var_db->getContext("CURRENT");
- * 
+ *
  *    // Define the variable.
  *    hier::Pointer<pdat::FaceVariable<double> > flux(
  *       new pdat::FaceVariable<double>(dim, "flux", 1));
- * 
+ *
  *    // Register the Variable/VariableContext pair.
- *    // "ghosts" is an IntVector defining the data ghost width for this 
- *    // usage context.  Note that other contexts may have different ghost 
+ *    // "ghosts" is an IntVector defining the data ghost width for this
+ *    // usage context.  Note that other contexts may have different ghost
  *    // widthsi for the same variable.
- *    const int flux_current_id = 
+ *    const int flux_current_id =
  *       var_db->registerVariableAndContext(flux, current, ghosts);
- * 
+ *
  *  @endcode
  *
- * @par 
+ * @par
  * A Variable can also be added to the database using the
  * addVariable() function.  This function does not register a mapping
  * between a Variable and VariableContext, rather it is used when
@@ -135,7 +135,7 @@ namespace hier {
  * The database can be used to maintain a mapping between a single patch data
  * index and a Variable.  This type of mapping is constructed using either the
  * registerPatchDataIndex() function or registerClonedPatchDataIndex() function.
- * 
+ *
  * <ul>
  *   <li> Add variable and index pair to the database via the
  *       addVariablePatchDataIndex() function.   Or, clone an existing
@@ -145,16 +145,16 @@ namespace hier {
  *   <li> Get variable for the index via the mapIndexToVariable() function.
  * </ul>
  *
- * @par 
+ * @par
  * The database is also used in SAMRAI to manage the reading/writing of
  * patch data objects to/from restart files.
- * 
+ *
  * @note
  * <ul>
  *    <li> Variable names are unique in the database
  *    <li> VariableContext names are unique in the database
  *    <li> VariableContext should be generated solely through the use of the
- *         getContext() function to avoid unexpected results; e.g., 
+ *         getContext() function to avoid unexpected results; e.g.,
  *         multiple context objects with the same name.
  *    <li> A Variable can be removed from the database using removeVariable().
  *    <li> The database can free PatchData indices using removepatchDataIndex()
@@ -178,7 +178,7 @@ public:
    /*!
     * @brief Return a pointer to the singleton variable database instance.
     *
-    * @note 
+    * @note
     * When the database is accessed for the first time, the
     * Singleton instance is registered with the StartupShutdownManager
     * class which destroys such objects at program completion.  Thus,
@@ -205,7 +205,7 @@ public:
 
    /*!
     * @brief Get the patch descriptor managed by the database.
-    * 
+    *
     * This descriptor is shared by all patches in the hierarchy.
     */
    virtual
@@ -236,7 +236,7 @@ public:
    /*!
     * @brief Check whether context with given name exists in the database.
     *
-    * @param[in] context_name  
+    * @param[in] context_name
     */
    virtual
    bool
@@ -244,7 +244,7 @@ public:
       const std::string& context_name) const;
 
    /*!
-    * @brief Add the Variable to the database.  
+    * @brief Add the Variable to the database.
     *
     * If the given Variable already exists nothing is done; the same
     * Variable may be added multiple times.  If a Variable exists with
@@ -264,17 +264,17 @@ public:
    /*!
     * @brief Remove the Variable from the database identified by @c name.
     *
-    * @param[in] variable_name 
+    * @param[in] variable_name
     */
    virtual
    void
    removeVariable(
-         const std::string& variable_name);
+      const std::string& variable_name);
 
    /*!
     * @brief Get variable in database with given name string identifier.
     *
-    * @param[in] variable_name  
+    * @param[in] variable_name
     *
     * @return  Variable in the database with given name.
     *          If no such variable exists, a null pointer is returned.
@@ -334,8 +334,8 @@ public:
     * @brief Add given patch data index and variable pair to the database.
     *
     * This registration function is primarily intended for Variable objects
-    * (i.e., DO NOT use for internal SAMRAI variables) that are not 
-    * associated with a VariableContext and for which a patch data index 
+    * (i.e., DO NOT use for internal SAMRAI variables) that are not
+    * associated with a VariableContext and for which a patch data index
     * is already known.
     *
     * @par [Default Case]
@@ -443,17 +443,17 @@ public:
    /*!
     * @brief Register variable and context pair along with the ghost
     * width for the patch data mapped to the (Variable, VariableContext)
-    * pair with the variable database.  
+    * pair with the variable database.
     *
-    * @par 
+    * @par
     * Typically, this function will generate a new patch data
     * index for the variable and ghost width and add the
     * variable-context pair and index to the database.  If the
     * variable-context pair is already mapped to some patch data index
-    * in the database, and the given ghost width matches that of the 
-    * patch data, then that index will be returned and the function will 
-    * do nothing.  However, if the variable-context pair is already mapped 
-    * to some patch data index with a different ghost width, the program 
+    * in the database, and the given ghost width matches that of the
+    * patch data, then that index will be returned and the function will
+    * do nothing.  However, if the variable-context pair is already mapped
+    * to some patch data index with a different ghost width, the program
     * will abort with a descriptive error message.
     *
     * @par
@@ -501,7 +501,7 @@ public:
     * not exist, the context does not exist, or the pair has not been
     * registered), then an invalid patch data index (i.e., < 0) is returned.
     *
-    * @note 
+    * @note
     * For this function to operate as expected, the database mapping
     * information must have been generated using the
     * registerVariableAndContext() function.  If the variable was
@@ -550,9 +550,9 @@ public:
    /*!
     * @brief Map patch data index to variable-context pair associated with
     * the data, if possible, and set the variable and context pointers to
-    * the corresponding database entries.  
+    * the corresponding database entries.
     *
-    * @note 
+    * @note
     * For this function to operate as expected, the database
     * mapping information must have been generated using the
     * registerVariableAndContext() function.  If the variable was
@@ -579,7 +579,7 @@ public:
       tbox::Pointer<hier::VariableContext>& context) const;
 
    /*!
-    * @brief Return copy of component selector that holds information about 
+    * @brief Return copy of component selector that holds information about
     * which patch data entries are written to restart.
     *
     * @return Component selector describing patch data items registered
@@ -687,14 +687,14 @@ public:
    /*!
     * @brief Remove the given index from the variable database if it exists in
     * the database and is associated with an internal SAMRAI variable registered
-    * with the function registerInternalSAMRAIVariable().  
+    * with the function registerInternalSAMRAIVariable().
     *
     * @par
     * Also, remove the given index from the patch descriptor and
     * remove any mapping between the index and a variable from the
     * variable database.
     *
-    * @note 
+    * @note
     * This function does not deallocate
     * any patch data storage associated with the integer index.
     *
@@ -704,7 +704,7 @@ public:
     * called by users for removing patch data indices, or within SAMRAI for
     * removing any patch data indices associated with user-defined variables.
     *
-    * @note 
+    * @note
     * The given index will not be removed if is not associated with
     * an internal SAMRAI variable in the variable database; i.e., a
     * user-defined variable.
@@ -740,12 +740,14 @@ protected:
     * context identifier.  This routine is protected to allow subclasses
     * to be consistent with this database class.
     */
-   static int idUndefined() {return -1;}
+   static int idUndefined() {
+      return -1;
+   }
 
    /**
     * @brief Return integer identifier for first variable found matching given
     * string name identifier (care must be used to avoid adding variables to
-    * database with same name to insure correct behavior), or return an 
+    * database with same name to insure correct behavior), or return an
     * undefined integer index if no such variable exists in the database.
     */
    int
@@ -753,8 +755,8 @@ protected:
       const std::string& name) const;
 
    /**
-    * @brief Initialize Singleton instance with instance of subclass.  This 
-    * function is used to make the singleton object unique when inheriting 
+    * @brief Initialize Singleton instance with instance of subclass.  This
+    * function is used to make the singleton object unique when inheriting
     * from this base class.
     */
    void
@@ -764,7 +766,7 @@ protected:
 private:
    /*!
     * @brief Deallocate the Singleton VariableDatabase instance.
-    * 
+    *
     * It is not necessary to call this function at program termination,
     * since it is automatically called by the StartupShutdownManager class.
     */
@@ -884,7 +886,7 @@ private:
    hier::ComponentSelector d_patchdata_restart_table;
 
    static tbox::StartupShutdownManager::Handler
-   s_shutdown_handler;
+      s_shutdown_handler;
 };
 
 }

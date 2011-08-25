@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   AMR communication tests for edge-centered patch data 
+ * Description:   AMR communication tests for edge-centered patch data
  *
  ************************************************************************/
 
@@ -69,7 +69,7 @@ public:
       const hier::Connector& dst_to_encon,
       const hier::Box& fill_box,
       const hier::BoundaryBox& bbox,
-      const tbox::Pointer<hier::GridGeometry> &grid_geometry);
+      const tbox::Pointer<hier::GridGeometry>& grid_geometry);
 
    /**
     * This function is called from the MultiblockTester constructor.  Its

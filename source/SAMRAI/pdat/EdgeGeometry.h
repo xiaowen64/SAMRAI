@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   hier 
+ * Description:   hier
  *
  ************************************************************************/
 
@@ -69,12 +69,14 @@ public:
     * @param[in,out]  axis_direction
     * @param[in]      transformation
     */
-   static void transform(hier::Box& box,
-                         int& axis_direction,
-                         const hier::Transformation& transformation);
+   static void
+   transform(
+      hier::Box& box,
+      int& axis_direction,
+      const hier::Transformation& transformation);
 
    /*!
-    * @brief Transform an EdgeIndex. 
+    * @brief Transform an EdgeIndex.
     *
     * This static method applies a coordinate system transformation to the
     * given EdgeIndex.
@@ -82,8 +84,10 @@ public:
     * @param[in,out]  index
     * @param[in]      transformation
     */
-   static void transform(EdgeIndex& index,
-                         const hier::Transformation& transformation);
+   static void
+   transform(
+      EdgeIndex& index,
+      const hier::Transformation& transformation);
 
    /*!
     * @brief Construct the edge geometry object given an AMR index
@@ -153,10 +157,10 @@ private:
       const hier::BoxList& dst_restrict_boxes);
 
    static void
-   rotateAboutAxis(pdat::EdgeIndex& index,
-                   const int axis,
-                   const int num_rotations);
-
+   rotateAboutAxis(
+      pdat::EdgeIndex& index,
+      const int axis,
+      const int num_rotations);
 
    EdgeGeometry(
       const EdgeGeometry&);             // not implemented

@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Templated array data structure supporting patch data types 
+ * Description:   Templated array data structure supporting patch data types
  *
  ************************************************************************/
 
@@ -35,7 +35,8 @@
 namespace SAMRAI {
 namespace pdat {
 
-template<class TYPE> const int ArrayData<TYPE>::PDAT_ARRAYDATA_VERSION = 1;
+template<class TYPE>
+const int ArrayData<TYPE>::PDAT_ARRAYDATA_VERSION = 1;
 
 /*
  *************************************************************************

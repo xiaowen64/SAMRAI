@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Binary tree of Boxes for overlap searches. 
+ * Description:   Binary tree of Boxes for overlap searches.
  *
  ************************************************************************/
 
@@ -32,9 +32,9 @@ namespace SAMRAI {
 namespace hier {
 
 tbox::Pointer<tbox::Timer> BoxTree::t_build_tree[tbox::Dimension::
-                                                       MAXIMUM_DIMENSION_VALUE];
+                                                 MAXIMUM_DIMENSION_VALUE];
 tbox::Pointer<tbox::Timer> BoxTree::t_search[tbox::Dimension::
-                                                   MAXIMUM_DIMENSION_VALUE];
+                                             MAXIMUM_DIMENSION_VALUE];
 unsigned int BoxTree::s_num_build[tbox::Dimension::MAXIMUM_DIMENSION_VALUE] =
 { 0 };
 unsigned int BoxTree::s_num_generate[tbox::Dimension::MAXIMUM_DIMENSION_VALUE]
@@ -102,7 +102,7 @@ BoxTree::BoxTree(
    for (BoxSet::const_iterator ni = mapped_boxes.begin();
         ni != mapped_boxes.end();
         ++ni) {
-      TBOX_ASSERT(! ni->empty());
+      TBOX_ASSERT(!ni->empty());
    }
 #endif
 
@@ -124,7 +124,7 @@ BoxTree::BoxTree(
     * Compute the bounding box for the set of mapped boxes.  Also get
     * BlockId from the given mapped_boxes.
     */
-   if ( !mapped_boxes.empty() ) {
+   if (!mapped_boxes.empty()) {
       TBOX_ASSERT(mapped_boxes.begin()->getBlockId() != BlockId::invalidId());
       d_block_id = mapped_boxes.begin()->getBlockId();
    }
@@ -142,8 +142,7 @@ BoxTree::BoxTree(
     */
    if (mapped_boxes.size() <= min_number) {
       d_mapped_boxes.insert(mapped_boxes.begin(), mapped_boxes.end());
-   }
-   else {
+   } else {
 
       /*
        * Partition the boxes into three sets, using the midpoint of
@@ -247,8 +246,7 @@ BoxTree::BoxTree(
          const Box n(*li, ++count, 0, d_block_id);
          d_mapped_boxes.insert(d_mapped_boxes.end(), n);
       }
-   }
-   else {
+   } else {
 
       /*
        * Partition the boxes into three sets, using the midpoint of
@@ -444,7 +442,7 @@ void BoxTree::privateGenerateTree(
 
       BoxSet left_mapped_boxes, right_mapped_boxes;
       for (BoxSet::const_iterator ni = d_mapped_boxes.begin();
-           ni != d_mapped_boxes.end();) {
+           ni != d_mapped_boxes.end(); ) {
          const Box& mapped_box = *ni;
          if (mapped_box.upper(d_partition_dim) <= midpoint) {
             left_mapped_boxes.insert(left_mapped_boxes.end(), mapped_box);
@@ -468,25 +466,22 @@ void BoxTree::privateGenerateTree(
       s_max_lin_search[d_dim.getValue() - 1] =
          static_cast<int>(d_mapped_boxes.size());
    }
-
-   return;
 }
 
-
 /*
-**************************************************************************
-* This method finishes the tree generation by setting up the children
-* branches.  It expects the Boxes be have been split into
-* left_mapped_boxes, right_mapped_boxes, and d_mapped_boxes.  It will
-* generate the d_left_child and d_right_child.  If d_mapped_boxes is
-* big enough, it will generate d_center_child.
-*
-**************************************************************************
-*/
+ **************************************************************************
+ * This method finishes the tree generation by setting up the children
+ * branches.  It expects the Boxes be have been split into
+ * left_mapped_boxes, right_mapped_boxes, and d_mapped_boxes.  It will
+ * generate the d_left_child and d_right_child.  If d_mapped_boxes is
+ * big enough, it will generate d_center_child.
+ *
+ **************************************************************************
+ */
 void BoxTree::setupChildren(
    const size_t min_number,
-   BoxSet &left_mapped_boxes,
-   BoxSet &right_mapped_boxes )
+   BoxSet& left_mapped_boxes,
+   BoxSet& right_mapped_boxes)
 {
    const size_t total_size =
       left_mapped_boxes.size() + right_mapped_boxes.size() + d_mapped_boxes.size();
@@ -514,8 +509,8 @@ void BoxTree::setupChildren(
    /*
     * If d_mapped_boxes is big enough, generate a center child for it.
     */
-   if ( d_mapped_boxes.size() > min_number /* recursion criterion */ &&
-        d_mapped_boxes.size() < total_size /* avoid infinite recursion */ ) {
+   if (d_mapped_boxes.size() > min_number /* recursion criterion */ &&
+       d_mapped_boxes.size() < total_size /* avoid infinite recursion */) {
       d_center_child = new BoxTree(d_dim);
       d_mapped_boxes.swap(d_center_child->d_mapped_boxes);
       d_center_child->privateGenerateTree(min_number);
@@ -535,12 +530,7 @@ void BoxTree::setupChildren(
       right_mapped_boxes.swap(d_right_child->d_mapped_boxes);
       d_right_child->privateGenerateTree(min_number);
    }
-
-   return;
 }
-
-
-
 
 bool BoxTree::hasOverlap(
    const Box& box) const
@@ -612,8 +602,8 @@ void BoxTree::findOverlapBoxes(
 
    if (!recursive_call) {
       t_search[d_dim.getValue() - 1]->stop();
-      num_found_box = static_cast<int>(overlap_mapped_boxes.size()) -
-                      num_found_box;
+      num_found_box = static_cast<int>(overlap_mapped_boxes.size())
+         - num_found_box;
       s_max_found_box[d_dim.getValue() - 1] =
          tbox::MathUtilities<int>::Max(s_max_found_box[d_dim.getValue() - 1],
             num_found_box);
@@ -622,7 +612,7 @@ void BoxTree::findOverlapBoxes(
 }
 
 void BoxTree::findOverlapBoxes(
-   std::vector<const Box*>& overlap_mapped_boxes,
+   std::vector<const Box *>& overlap_mapped_boxes,
    const Box& box,
    bool recursive_call) const
 {
@@ -660,8 +650,8 @@ void BoxTree::findOverlapBoxes(
 
    if (!recursive_call) {
       t_search[d_dim.getValue() - 1]->stop();
-      num_found_box = static_cast<int>(overlap_mapped_boxes.size()) -
-                      num_found_box;
+      num_found_box = static_cast<int>(overlap_mapped_boxes.size())
+         - num_found_box;
       s_max_found_box[d_dim.getValue() - 1] =
          tbox::MathUtilities<int>::Max(s_max_found_box[d_dim.getValue() - 1],
             num_found_box);
@@ -779,8 +769,8 @@ void BoxTree::findOverlapBoxes(
 
    if (!recursive_call) {
       t_search[d_dim.getValue() - 1]->stop();
-      num_found_box = static_cast<int>(overlap_mapped_boxes.size()) -
-                      num_found_box;
+      num_found_box = static_cast<int>(overlap_mapped_boxes.size())
+         - num_found_box;
       s_max_found_box[d_dim.getValue() - 1] =
          tbox::MathUtilities<int>::Max(s_max_found_box[d_dim.getValue() - 1],
             num_found_box);
@@ -848,11 +838,11 @@ tbox::Pointer<BoxTree> BoxTree::createRefinedTree(
 void BoxTree::initializeCallback()
 {
    for (int i = 0; i < tbox::Dimension::MAXIMUM_DIMENSION_VALUE; ++i) {
-      const std::string dim_str( tbox::Utilities::intToString(i+1) );
+      const std::string dim_str(tbox::Utilities::intToString(i + 1));
       t_build_tree[i] = tbox::TimerManager::getManager()->
          getTimer(std::string("hier::BoxTree::build_tree[") + dim_str + "]");
       t_search[i] = tbox::TimerManager::getManager()->
-                  getTimer(std::string("hier::BoxTree::search[") + dim_str + "]");
+         getTimer(std::string("hier::BoxTree::search[") + dim_str + "]");
    }
 }
 
@@ -896,16 +886,16 @@ void BoxTree::printStatistics(
    const tbox::Dimension& dim)
 {
    tbox::plog << "BoxTree local stats:"
-   << "  build=" << s_num_build[dim.getValue() - 1]
-   << "  generate=" << s_num_generate[dim.getValue() - 1]
-   << "  duplicate=" << s_num_duplicate[dim.getValue() - 1]
-   << "  search=" << s_num_search[dim.getValue() - 1]
-   << "  sorted_box=" << s_num_sorted_box[dim.getValue() - 1]
-   << "  found_box=" << s_num_found_box[dim.getValue() - 1]
-   << "  max_sorted_box=" << s_max_sorted_box[dim.getValue() - 1]
-   << "  max_found_box=" << s_max_found_box[dim.getValue() - 1]
-   << "  max_lin_search=" << s_max_lin_search[dim.getValue() - 1]
-   << std::endl;
+              << "  build=" << s_num_build[dim.getValue() - 1]
+              << "  generate=" << s_num_generate[dim.getValue() - 1]
+              << "  duplicate=" << s_num_duplicate[dim.getValue() - 1]
+              << "  search=" << s_num_search[dim.getValue() - 1]
+              << "  sorted_box=" << s_num_sorted_box[dim.getValue() - 1]
+              << "  found_box=" << s_num_found_box[dim.getValue() - 1]
+              << "  max_sorted_box=" << s_max_sorted_box[dim.getValue() - 1]
+              << "  max_found_box=" << s_max_found_box[dim.getValue() - 1]
+              << "  max_lin_search=" << s_max_lin_search[dim.getValue() - 1]
+              << std::endl;
 
    tbox::Statistician* st = tbox::Statistician::getStatistician();
    tbox::Pointer<tbox::Statistic> bdstat = st->getStatistic("num_build",

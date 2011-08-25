@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Box representing a portion of the AMR index space 
+ * Description:   Box representing a portion of the AMR index space
  *
  ************************************************************************/
 
@@ -77,7 +77,8 @@ Box::Box(
 }
 
 SAMRAI_INLINE_KEYWORD
-Box::Box(const Box& box) :
+Box::Box(
+   const Box& box):
    d_lo(box.d_lo),
    d_hi(box.d_hi),
    d_id(box.d_id)
@@ -115,13 +116,13 @@ Box::Box(
 SAMRAI_INLINE_KEYWORD
 Box::Box(
    const hier::Box& box,
-   const LocalId &local_id,
+   const LocalId& local_id,
    const int owner,
-   const BlockId &block_id,
-   const PeriodicId &periodic_id) :
-      d_lo(box.d_lo),
-      d_hi(box.d_hi),
-      d_id(local_id, owner, block_id, periodic_id)
+   const BlockId& block_id,
+   const PeriodicId& periodic_id):
+   d_lo(box.d_lo),
+   d_hi(box.d_hi),
+   d_id(local_id, owner, block_id, periodic_id)
 {
    TBOX_ASSERT(periodic_id.isValid());
    TBOX_ASSERT(periodic_id.getPeriodicValue() <
@@ -140,10 +141,10 @@ Box::Box(
 SAMRAI_INLINE_KEYWORD
 Box::Box(
    const tbox::Dimension& dim,
-   const LocalId &local_id,
+   const LocalId& local_id,
    const int owner,
-   const BlockId &block_id,
-   const PeriodicId &periodic_id):
+   const BlockId& block_id,
+   const PeriodicId& periodic_id):
    d_lo(dim),
    d_hi(dim),
    d_id(local_id, owner, block_id, periodic_id)
@@ -162,13 +163,12 @@ Box::Box(
 #endif
 }
 
-
 SAMRAI_INLINE_KEYWORD
 Box::Box(
    const tbox::Dimension& dim,
    const GlobalId& global_id,
-   const BlockId &block_id,
-   const PeriodicId &periodic_id):
+   const BlockId& block_id,
+   const PeriodicId& periodic_id):
    d_lo(dim),
    d_hi(dim),
    d_id(global_id, block_id, periodic_id)
@@ -190,7 +190,7 @@ Box::Box(
 SAMRAI_INLINE_KEYWORD
 Box::Box(
    const tbox::Dimension& dim,
-   const BoxId& mapped_box_id) :
+   const BoxId& mapped_box_id):
    d_lo(dim),
    d_hi(dim),
    d_id(mapped_box_id)
@@ -213,16 +213,15 @@ Box::Box(
 SAMRAI_INLINE_KEYWORD
 void Box::initialize(
    const hier::Box& box,
-   const LocalId &local_id,
+   const LocalId& local_id,
    const int owner,
-   const BlockId &block_id,
-   const PeriodicId &periodic_id)
+   const BlockId& block_id,
+   const PeriodicId& periodic_id)
 {
    d_lo = box.d_lo;
    d_hi = box.d_hi;
    d_id.initialize(local_id, owner, block_id, periodic_id);
 }
-
 
 SAMRAI_INLINE_KEYWORD
 Box::~Box()
@@ -248,9 +247,8 @@ int Box::getOwnerRank() const
    return d_id.getOwnerRank();
 }
 
-
 SAMRAI_INLINE_KEYWORD
-const LocalId &Box::getLocalId() const
+const LocalId& Box::getLocalId() const
 {
    return d_id.getLocalId();
 }
@@ -260,7 +258,6 @@ const GlobalId& Box::getGlobalId() const
    return d_id.getGlobalId();
 }
 
-
 SAMRAI_INLINE_KEYWORD
 const BlockId& Box::getBlockId() const
 {
@@ -268,11 +265,10 @@ const BlockId& Box::getBlockId() const
 }
 
 SAMRAI_INLINE_KEYWORD
-const PeriodicId &Box::getPeriodicId() const
+const PeriodicId& Box::getPeriodicId() const
 {
    return d_id.getPeriodicId();
 }
-
 
 SAMRAI_INLINE_KEYWORD
 bool Box::isPeriodicImage() const
@@ -281,7 +277,7 @@ bool Box::isPeriodicImage() const
 }
 
 SAMRAI_INLINE_KEYWORD
-bool Box::isIdEqual( const Box& other) const
+bool Box::isIdEqual(const Box& other) const
 {
    return d_id == other.d_id;
 }
@@ -320,9 +316,6 @@ void Box::getFromIntBuffer(
       d_hi(d) = buffer[d * 2 + 1];
    }
 }
-
-
-
 
 SAMRAI_INLINE_KEYWORD
 Box& Box::Box_from_DatabaseBox(
@@ -562,13 +555,13 @@ bool Box::contains(
 }
 
 SAMRAI_INLINE_KEYWORD
-Box::operator tbox::DatabaseBox ()
+Box::operator tbox::DatabaseBox()
 {
    return DatabaseBox_from_Box();
 }
 
 SAMRAI_INLINE_KEYWORD
-Box::operator tbox::DatabaseBox () const
+Box::operator tbox::DatabaseBox() const
 {
    return DatabaseBox_from_Box();
 }
@@ -595,7 +588,7 @@ Box Box::operator * (
 SAMRAI_INLINE_KEYWORD
 void Box::intersect(
    const Box& other,
-   Box &result) const
+   Box& result) const
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, other);
 
@@ -921,7 +914,7 @@ BoxIterator::operator bool () const
 
 #ifndef LACKS_BOOL_VOID_RESOLUTION
 SAMRAI_INLINE_KEYWORD
-BoxIterator::operator const void* () const
+BoxIterator::operator const void * () const
 {
    return BoxIterator::operator bool () ? this : NULL;
 }

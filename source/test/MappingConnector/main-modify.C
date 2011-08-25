@@ -30,7 +30,6 @@
 using namespace SAMRAI;
 using namespace tbox;
 
-
 /*
  * Break up boxes in the given MappedBoxLevel.  This method is meant
  * to create a bunch of small boxes from the user-input boxes in order
@@ -42,42 +41,43 @@ using namespace tbox;
  * The mapped_box_level will be refined by refinement_ratio and
  * partitioned to generate a non-trivial configuration for testing.
  */
-void breakUpBoxes(
-   hier::MappedBoxLevel &mapped_box_level,
-   const hier::MappedBoxLevel &domain_mapped_box_level,
-   const tbox::Pointer<tbox::Database> &database);
+void
+breakUpBoxes(
+   hier::MappedBoxLevel& mapped_box_level,
+   const hier::MappedBoxLevel& domain_mapped_box_level,
+   const tbox::Pointer<tbox::Database>& database);
 
-void alterAndGenerateMapping(
-   hier::MappedBoxLevel &mapped_box_level_c,
-   hier::Connector &b_to_c,
-   hier::Connector &c_to_b,
-   const hier::MappedBoxLevel &mapped_box_level_b,
-   const tbox::Pointer<tbox::Database> &database );
+void
+alterAndGenerateMapping(
+   hier::MappedBoxLevel& mapped_box_level_c,
+   hier::Connector& b_to_c,
+   hier::Connector& c_to_b,
+   const hier::MappedBoxLevel& mapped_box_level_b,
+   const tbox::Pointer<tbox::Database>& database);
 
 /*
-************************************************************************
-*
-* This is an accuracy test for the MappingConnectorAlgorithm class:
-*
-* 1. Read in user-specified GridGeometry.
-*
-* 2. Build a domain MappedBoxLevel from GridGeometry.
-*
-* 3. Build MappedBoxLevel A by refining and partitioning domain.
-*
-* 4. Build MappedBoxLevel B by refining and partitioning domain.
-*    Compute overlap Connectors A<==>B.
-*
-* 5. Build MappedBoxLevel C by changing B based on some simple formula.
-*    Generate mapping Connectors B<==>C.
-*
-* 6. Apply mapping B<==>C to update A<==>B.
-*
-* 7. Check correctness of updated A<==>B.
-*
-*************************************************************************
-*/
-
+ ************************************************************************
+ *
+ * This is an accuracy test for the MappingConnectorAlgorithm class:
+ *
+ * 1. Read in user-specified GridGeometry.
+ *
+ * 2. Build a domain MappedBoxLevel from GridGeometry.
+ *
+ * 3. Build MappedBoxLevel A by refining and partitioning domain.
+ *
+ * 4. Build MappedBoxLevel B by refining and partitioning domain.
+ *    Compute overlap Connectors A<==>B.
+ *
+ * 5. Build MappedBoxLevel C by changing B based on some simple formula.
+ *    Generate mapping Connectors B<==>C.
+ *
+ * 6. Apply mapping B<==>C to update A<==>B.
+ *
+ * 7. Check correctness of updated A<==>B.
+ *
+ *************************************************************************
+ */
 
 int main(
    int argc,
@@ -107,8 +107,8 @@ int main(
 
       if (argc != 2) {
          TBOX_ERROR("USAGE:  " << argv[0] << " <input file> \n"
-                                          << "  options:\n"
-                                          << "  none at this time" << std::endl);
+                               << "  options:\n"
+                               << "  none at this time" << std::endl);
       } else {
          input_filename = argv[1];
       }
@@ -150,23 +150,20 @@ int main(
       plog << "Input database after initialization..." << std::endl;
       input_db->printClassData(plog);
 
-
       /*
        * Generate the GridGeometry.
        */
       tbox::ConstPointer<hier::GridGeometry> grid_geometry;
       if (main_db->keyExists("GridGeometry")) {
          grid_geometry = new hier::GridGeometry(
-            dim,
-            "GridGeometry",
-            tbox::Pointer<hier::TransferOperatorRegistry>(),
-            main_db->getDatabase("GridGeometry"));
+               dim,
+               "GridGeometry",
+               tbox::Pointer<hier::TransferOperatorRegistry>(),
+               main_db->getDatabase("GridGeometry"));
       } else {
          TBOX_ERROR("Multiblock tree search test: could not find entry GridGeometry"
-                    << "\nin input.");
+            << "\nin input.");
       }
-
-
 
       /*
        * Print input database again to fully show usage.
@@ -174,13 +171,13 @@ int main(
       plog << "Input database after running..." << std::endl;
       input_db->printClassData(plog);
 
-      const hier::IntVector &one_vector(hier::IntVector::getOne(dim));
-      const hier::IntVector &zero_vector(hier::IntVector::getZero(dim));
+      const hier::IntVector& one_vector(hier::IntVector::getOne(dim));
+      const hier::IntVector& zero_vector(hier::IntVector::getZero(dim));
 
       hier::BoxSet multiblock_boxes;
       grid_geometry->computePhysicalDomain(
          multiblock_boxes,
-         hier::IntVector::getOne(dim) );
+         hier::IntVector::getOne(dim));
 
       hier::MappedBoxLevel domain_mapped_box_level(
          multiblock_boxes,
@@ -188,7 +185,6 @@ int main(
          grid_geometry,
          tbox::SAMRAI_MPI::getSAMRAIWorld(),
          hier::MappedBoxLevel::GLOBALIZED);
-
 
       /*
        * Generate MappedBoxLevel A from the multiblock domain description
@@ -200,7 +196,6 @@ int main(
       mapped_box_level_a.cacheGlobalReducedData();
       // tbox::pout << "mapped box level a:\n" << mapped_box_level_a.format("A: ",2) << std::endl;
 
-
       /*
        * Generate MappedBoxLevel B from the multiblock domain description
        * using input database MappedBoxLevelB.
@@ -211,7 +206,6 @@ int main(
       mapped_box_level_b.cacheGlobalReducedData();
       // tbox::pout << "mapped box level b:\n" << mapped_box_level_b.format("B: ",2) << std::endl;
 
-
       /*
        * Generate Connector A<==>B, to be modified by the mapping
        * operation.
@@ -219,20 +213,20 @@ int main(
 
       hier::IntVector base_width_a(zero_vector);
       hier::IntVector base_width_b(zero_vector);
-      if ( main_db->isInteger("base_width_a") ) {
+      if (main_db->isInteger("base_width_a")) {
          main_db->getIntegerArray("base_width_a", &base_width_a[0], dim.getValue());
       }
       base_width_b = hier::Connector::convertHeadWidthToBase(
-         mapped_box_level_b.getRefinementRatio(),
-         mapped_box_level_a.getRefinementRatio(),
-         base_width_a );
+            mapped_box_level_b.getRefinementRatio(),
+            mapped_box_level_a.getRefinementRatio(),
+            base_width_a);
 
-      hier::Connector a_to_b( mapped_box_level_a,
-                              mapped_box_level_b,
-                              base_width_a );
-      hier::Connector b_to_a( mapped_box_level_b,
-                              mapped_box_level_a,
-                              base_width_b );
+      hier::Connector a_to_b(mapped_box_level_a,
+                             mapped_box_level_b,
+                             base_width_a);
+      hier::Connector b_to_a(mapped_box_level_b,
+                             mapped_box_level_a,
+                             base_width_b);
 
       hier::OverlapConnectorAlgorithm oca;
       oca.findOverlaps(a_to_b);
@@ -248,7 +242,6 @@ int main(
       oca.checkOverlapCorrectness(b_to_a);
       oca.checkOverlapCorrectness(b_to_a);
 
-
       /*
        * Generate MappedBoxLevel C by altering B based on a simple formula.
        * Generate the mapping Connectors B<==>C.
@@ -263,19 +256,19 @@ int main(
          b_to_c,
          c_to_b,
          mapped_box_level_b,
-         alteration_db );
+         alteration_db);
       mapped_box_level_c.cacheGlobalReducedData();
       // tbox::pout << "mapped box level c:\n" << mapped_box_level_c.format("C: ",2) << std::endl;
       // tbox::pout << "b_to_c:\n" << b_to_c.format("BC: ",2) << std::endl;
       // tbox::pout << "c_to_b:\n" << c_to_b.format("CB: ",2) << std::endl;
 
       hier::MappingConnectorAlgorithm mca;
-      mca.modify( a_to_b,
-                  b_to_a,
-                  b_to_c,
-                  c_to_b,
-                  &mapped_box_level_b,
-                  &mapped_box_level_c );
+      mca.modify(a_to_b,
+         b_to_a,
+         b_to_c,
+         c_to_b,
+         &mapped_box_level_b,
+         &mapped_box_level_c);
       // tbox::pout << "mapped box level b after modify:\n" << mapped_box_level_b.format("B: ",2) << std::endl;
 
       // tbox::pout << "checking a--->b consistency with base:" << std::endl;
@@ -289,25 +282,21 @@ int main(
 
       tbox::pout << "Checking for a--->b errors:" << std::endl;
       const size_t a_to_b_errors = oca.checkOverlapCorrectness(a_to_b);
-      if ( a_to_b_errors ) {
+      if (a_to_b_errors) {
          tbox::pout << "... " << a_to_b_errors << " errors." << std::endl;
-      }
-      else {
+      } else {
          tbox::pout << "... none." << std::endl;
       }
 
       tbox::pout << "Checking for b--->a errors:" << std::endl;
       const size_t b_to_a_errors = oca.checkOverlapCorrectness(b_to_a);
-      if ( b_to_a_errors ) {
+      if (b_to_a_errors) {
          tbox::pout << "... " << b_to_a_errors << " errors." << std::endl;
-      }
-      else {
+      } else {
          tbox::pout << "... none." << std::endl;
       }
 
       fail_count += a_to_b_errors + b_to_a_errors;
-
-
 
       if (fail_count == 0) {
          tbox::pout << "\nPASSED:  Connector modify" << std::endl;
@@ -342,10 +331,6 @@ int main(
    return int(fail_count);
 }
 
-
-
-
-
 /*
  * Break up boxes in the given MappedBoxLevel.  This method is meant
  * to create a bunch of small boxes from the user-input boxes in order
@@ -355,52 +340,52 @@ int main(
  * 2. Partition according to min and max box sizes in the database.
  */
 void breakUpBoxes(
-   hier::MappedBoxLevel &mapped_box_level,
-   const hier::MappedBoxLevel &domain_mapped_box_level,
-   const tbox::Pointer<tbox::Database> &database) {
+   hier::MappedBoxLevel& mapped_box_level,
+   const hier::MappedBoxLevel& domain_mapped_box_level,
+   const tbox::Pointer<tbox::Database>& database) {
 
-   const tbox::Dimension &dim(mapped_box_level.getDim());
+   const tbox::Dimension& dim(mapped_box_level.getDim());
 
    hier::IntVector refinement_ratio(hier::IntVector::getOne(dim));
-   if ( database->isInteger("refinement_ratio") ) {
+   if (database->isInteger("refinement_ratio")) {
       database->getIntegerArray("refinement_ratio", &refinement_ratio[0], dim.getValue());
    }
 
-   if ( refinement_ratio != hier::IntVector::getOne(dim) ) {
-      const hier::BoxSet &mapped_boxes(mapped_box_level.getMappedBoxes());
+   if (refinement_ratio != hier::IntVector::getOne(dim)) {
+      const hier::BoxSet& mapped_boxes(mapped_box_level.getMappedBoxes());
       hier::BoxSet refined_mapped_boxes;
-      for ( hier::BoxSet::const_iterator bi=mapped_boxes.begin();
-            bi!=mapped_boxes.end(); ++bi ) {
+      for (hier::BoxSet::const_iterator bi = mapped_boxes.begin();
+           bi != mapped_boxes.end(); ++bi) {
          hier::Box refined_mapped_box(*bi);
          refined_mapped_box.refine(refinement_ratio);
-         refined_mapped_boxes.insert( refined_mapped_boxes.end(), refined_mapped_box );
+         refined_mapped_boxes.insert(refined_mapped_boxes.end(), refined_mapped_box);
       }
       mapped_box_level.swapInitialize(
          refined_mapped_boxes,
-         mapped_box_level.getRefinementRatio()*refinement_ratio,
+         mapped_box_level.getRefinementRatio() * refinement_ratio,
          mapped_box_level.getGridGeometry(),
-         mapped_box_level.getMPI() );
+         mapped_box_level.getMPI());
    }
 
-   hier::IntVector max_box_size(dim,tbox::MathUtilities<int>::getMax());
-   if ( database->isInteger("max_box_size") ) {
+   hier::IntVector max_box_size(dim, tbox::MathUtilities<int>::getMax());
+   if (database->isInteger("max_box_size")) {
       database->getIntegerArray("max_box_size", &max_box_size[0], dim.getValue());
    }
 
    hier::IntVector min_box_size(hier::IntVector::getOne(dim));
-   if ( database->isInteger("min_box_size") ) {
+   if (database->isInteger("min_box_size")) {
       database->getIntegerArray("min_box_size", &min_box_size[0], dim.getValue());
    }
 
-   mesh::TreeLoadBalancer load_balancer( mapped_box_level.getDim() );
+   mesh::TreeLoadBalancer load_balancer(mapped_box_level.getDim());
 
    const tbox::Pointer<hier::PatchHierarchy> hierarchy;
    const int level_number(0);
 
    hier::Connector dummy_connector;
 
-   const hier::IntVector bad_interval(dim,1);
-   const hier::IntVector cut_factor(dim,1);
+   const hier::IntVector bad_interval(dim, 1);
+   const hier::IntVector cut_factor(dim, 1);
 
    load_balancer.loadBalanceMappedBoxLevel(
       mapped_box_level,
@@ -415,21 +400,18 @@ void breakUpBoxes(
       domain_mapped_box_level,
       bad_interval,
       cut_factor);
-
-   return;
 }
-
 
 /*
  * Generate MappedBoxLevel C by altering B based on a simple formula.
  * Generate the mapping Connectors B<==>C.
  */
 void alterAndGenerateMapping(
-   hier::MappedBoxLevel &mapped_box_level_c,
-   hier::Connector &b_to_c,
-   hier::Connector &c_to_b,
-   const hier::MappedBoxLevel &mapped_box_level_b,
-   const tbox::Pointer<tbox::Database> &database )
+   hier::MappedBoxLevel& mapped_box_level_c,
+   hier::Connector& b_to_c,
+   hier::Connector& c_to_b,
+   const hier::MappedBoxLevel& mapped_box_level_b,
+   const tbox::Pointer<tbox::Database>& database)
 {
    const tbox::Dimension dim(mapped_box_level_b.getDim());
 
@@ -444,32 +426,32 @@ void alterAndGenerateMapping(
    hier::BoxSet mapped_boxes_c;
    hier::NeighborhoodSet b_eto_c;
    hier::NeighborhoodSet c_eto_b;
-   for ( hier::BoxSet::const_iterator bi(mapped_boxes_b.begin());
-         bi!=mapped_boxes_b.end(); ++bi ) {
-      const hier::Box &mapped_box_b(*bi);
+   for (hier::BoxSet::const_iterator bi(mapped_boxes_b.begin());
+        bi != mapped_boxes_b.end(); ++bi) {
+      const hier::Box& mapped_box_b(*bi);
       hier::Box mapped_box_c(mapped_box_b,
-                                   mapped_box_b.getLocalId() + local_id_increment,
-                                   mapped_box_b.getOwnerRank(),
-                                   mapped_box_b.getBlockId(),
-                                   mapped_box_b.getPeriodicId());
+                             mapped_box_b.getLocalId() + local_id_increment,
+                             mapped_box_b.getOwnerRank(),
+                             mapped_box_b.getBlockId(),
+                             mapped_box_b.getPeriodicId());
       mapped_boxes_c.insert(mapped_box_c);
       b_eto_c[mapped_box_b.getId()].insert(mapped_box_c);
       c_eto_b[mapped_box_c.getId()].insert(mapped_box_b);
    }
 
-   mapped_box_level_c.initialize( mapped_boxes_c,
-                                  mapped_box_level_b.getRefinementRatio(),
-                                  mapped_box_level_b.getGridGeometry(),
-                                  mapped_box_level_b.getMPI() );
+   mapped_box_level_c.initialize(mapped_boxes_c,
+      mapped_box_level_b.getRefinementRatio(),
+      mapped_box_level_b.getGridGeometry(),
+      mapped_box_level_b.getMPI());
 
    b_to_c.initialize(mapped_box_level_b,
-                     mapped_box_level_c,
-                     hier::IntVector::getZero(dim),
-                     b_eto_c);
+      mapped_box_level_c,
+      hier::IntVector::getZero(dim),
+      b_eto_c);
    c_to_b.initialize(mapped_box_level_c,
-                     mapped_box_level_b,
-                     hier::IntVector::getZero(dim),
-                     c_eto_b);
+      mapped_box_level_b,
+      hier::IntVector::getZero(dim),
+      c_eto_b);
 
    b_to_c.checkConsistencyWithBase();
    b_to_c.checkConsistencyWithHead();
@@ -479,6 +461,4 @@ void alterAndGenerateMapping(
    hier::MappingConnectorAlgorithm mca;
    mca.assertMappingValidity(b_to_c);
    mca.assertMappingValidity(c_to_b);
-
-   return;
 }

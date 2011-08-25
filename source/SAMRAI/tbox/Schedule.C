@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Schedule of communication transactions between processors 
+ * Description:   Schedule of communication transactions between processors
  *
  ************************************************************************/
 #include "SAMRAI/tbox/Schedule.h"
@@ -39,7 +39,7 @@ const int Schedule::s_default_second_tag = 1;
 const size_t Schedule::s_default_first_message_length = 1000;
 
 const std::string Schedule::s_default_timer_prefix("tbox::Schedule");
-std::map<std::string,Schedule::TimerStruct> Schedule::s_static_timers;
+std::map<std::string, Schedule::TimerStruct> Schedule::s_static_timers;
 
 tbox::StartupShutdownManager::Handler
 Schedule::s_initialize_finalize_handler(
@@ -565,13 +565,12 @@ void Schedule::setFirstMessageLength(
 void Schedule::setTimerPrefix(
    const std::string& timer_prefix)
 {
-   std::map<std::string,TimerStruct>::iterator ti(
+   std::map<std::string, TimerStruct>::iterator ti(
       s_static_timers.find(timer_prefix));
-   if ( ti == s_static_timers.end() ) {
+   if (ti == s_static_timers.end()) {
       d_object_timers = &s_static_timers[timer_prefix];
       getAllTimers(timer_prefix, *d_object_timers);
-   }
-   else {
+   } else {
       d_object_timers = &(ti->second);
    }
    d_com_stage.setCommunicationWaitTimer(d_object_timers->t_MPI_wait);
@@ -583,7 +582,7 @@ void Schedule::setTimerPrefix(
  */
 void Schedule::getAllTimers(
    const std::string& timer_prefix,
-   TimerStruct &timers )
+   TimerStruct& timers)
 {
    timers.t_communicate = tbox::TimerManager::getManager()->
       getTimer(timer_prefix + "::communicate()");
@@ -614,7 +613,7 @@ void Schedule::getAllTimers(
 
 void Schedule::initializeCallback()
 {
-   TimerStruct &timers(s_static_timers[s_default_timer_prefix]);
+   TimerStruct& timers(s_static_timers[s_default_timer_prefix]);
    getAllTimers(s_default_timer_prefix, timers);
 }
 

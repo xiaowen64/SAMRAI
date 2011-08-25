@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Schedule of communication transactions between processors 
+ * Description:   Schedule of communication transactions between processors
  *
  ************************************************************************/
 #ifndef included_tbox_Schedule
@@ -371,26 +371,27 @@ private:
    /*!
     * @brief Static container of timers that have been looked up.
     */
-   static std::map<std::string,TimerStruct> s_static_timers;
+   static std::map<std::string, TimerStruct> s_static_timers;
 
    /*!
     * @brief Structure of timers in s_static_timers, matching this
     * object's timer prefix.
     */
-   TimerStruct *d_object_timers;
+   TimerStruct* d_object_timers;
 
    /*!
     * @brief Get all the timers defined in TimerStruct.  The timers
     * are named with the given prefix.
     */
-   static void getAllTimers(
+   static void
+   getAllTimers(
       const std::string& timer_prefix,
-      TimerStruct &timers );
+      TimerStruct& timers);
 
    //@}
 
    static tbox::StartupShutdownManager::Handler
-   s_initialize_finalize_handler;
+      s_initialize_finalize_handler;
 
 };
 

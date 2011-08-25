@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Fixed-size message buffer used in interprocessor communication 
+ * Description:   Fixed-size message buffer used in interprocessor communication
  *
  ************************************************************************/
 
@@ -45,7 +45,7 @@ void MessageStream::resetIndex()
 }
 
 SAMRAI_INLINE_KEYWORD
-void*
+void *
 MessageStream::getPointerAndAdvanceCursor(const size_t nbytes)
 {
    void* ptr = &d_buffer[d_buffer_index];
@@ -56,7 +56,6 @@ MessageStream::getPointerAndAdvanceCursor(const size_t nbytes)
    d_current_size = d_buffer_index;
    return ptr;
 }
-
 
 }
 }

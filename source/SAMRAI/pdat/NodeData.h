@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Templated node centered patch data type 
+ * Description:   Templated node centered patch data type
  *
  ************************************************************************/
 
@@ -398,11 +398,15 @@ private:
    operator = (
       const NodeData<TYPE>&);                           // not implemented
 
-   void copyWithRotation(const NodeData<TYPE>& src,
-                         const NodeOverlap& overlap);
+   void
+   copyWithRotation(
+      const NodeData<TYPE>& src,
+      const NodeOverlap& overlap);
 
-   void packWithRotation(tbox::MessageStream& stream,
-                         const NodeOverlap& overlap) const;
+   void
+   packWithRotation(
+      tbox::MessageStream& stream,
+      const NodeOverlap& overlap) const;
 
    int d_depth;
    ArrayData<TYPE> d_data;

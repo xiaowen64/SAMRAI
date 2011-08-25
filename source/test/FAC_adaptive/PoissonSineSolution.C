@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   PoissonSineSolution class implementation 
+ * Description:   PoissonSineSolution class implementation
  *
  ************************************************************************/
 #include "SAMRAI/SAMRAI_config.h"
@@ -69,7 +69,7 @@ void PoissonSineSolution::setFromDatabase(
       if (neumann_locations.getSize() > 2 * d_dim.getValue()) {
          TBOX_ERROR(
             "'neumann_locations' should have at most " << 2 * d_dim.getValue()
-            <<
+                                                       <<
             " entries in " << d_dim << "D.\n");
       }
       int i;
@@ -133,7 +133,8 @@ void PoissonSineSolution::setGridData(
    setCellDataToSinusoid(source_data,
       patch,
       d_exact);
-   double npi[tbox::Dimension::MAXIMUM_DIMENSION_VALUE], ppi[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+   double npi[tbox::Dimension::MAXIMUM_DIMENSION_VALUE],
+          ppi[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
    d_exact.getWaveNumbers(npi);
    d_exact.getPhaseAngles(ppi);
    double source_scale = 0.0;

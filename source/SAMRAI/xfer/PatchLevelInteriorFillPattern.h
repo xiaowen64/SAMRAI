@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   fill pattern class for filling interiors only 
+ * Description:   fill pattern class for filling interiors only
  *
  ************************************************************************/
 
@@ -27,7 +27,7 @@ namespace xfer {
  * patch interiors on the destination level only.
  *
  * @see xfer::RefineAlgorithm
- * @see xfer::RefineSchedule 
+ * @see xfer::RefineSchedule
  */
 
 class PatchLevelInteriorFillPattern:public PatchLevelFillPattern
@@ -133,7 +133,6 @@ public:
     */
    bool
    fillingEnhancedConnectivityOnly() const;
-
 
 private:
    PatchLevelInteriorFillPattern(

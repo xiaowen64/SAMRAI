@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Singleton registry for all tranfer operators. 
+ * Description:   Singleton registry for all tranfer operators.
  *
  ************************************************************************/
 
@@ -51,9 +51,11 @@ void TransferOperatorRegistry::addCoarsenOperator(
 {
    if (d_max_op_stencil_width_req &&
        (coarsen_op->getStencilWidth() > getMaxTransferOpStencilWidth())) {
-      TBOX_WARNING("Adding coarsen operator " << coarsen_op->getOperatorName()
-                   << "\nwith stencil width greater than current maximum\n"
-                   << "after call to getMaxTransferOpStencilWidth.\n");
+      TBOX_WARNING(
+         "Adding coarsen operator " << coarsen_op->getOperatorName()
+                                    <<
+         "\nwith stencil width greater than current maximum\n"
+                                    << "after call to getMaxTransferOpStencilWidth.\n");
    }
    d_coarsen_operators.addItem(coarsen_op);
 }
@@ -63,9 +65,11 @@ void TransferOperatorRegistry::addRefineOperator(
 {
    if (d_max_op_stencil_width_req &&
        (refine_op->getStencilWidth() > getMaxTransferOpStencilWidth())) {
-      TBOX_WARNING("Adding refine operator " << refine_op->getOperatorName()
-                   << "\nwith stencil width greater than current maximum\n"
-                   << "after call to getMaxTransferOpStencilWidth.\n");
+      TBOX_WARNING(
+         "Adding refine operator " << refine_op->getOperatorName()
+                                   <<
+         "\nwith stencil width greater than current maximum\n"
+                                   << "after call to getMaxTransferOpStencilWidth.\n");
    }
    d_refine_operators.addItem(refine_op);
 }
@@ -102,7 +106,7 @@ TransferOperatorRegistry::lookupCoarsenOperator(
    } else {
 
       tbox::List<tbox::Pointer<CoarsenOperator> >::Iterator
-      lop = d_coarsen_operators.listStart();
+         lop = d_coarsen_operators.listStart();
 
       while (coarsen_op.isNull() && lop) {
          if (lop()->findCoarsenOperator(var, op_name)) {
@@ -138,7 +142,7 @@ TransferOperatorRegistry::lookupRefineOperator(
    } else {
 
       tbox::List<tbox::Pointer<RefineOperator> >::Iterator
-      lop = d_refine_operators.listStart();
+         lop = d_refine_operators.listStart();
 
       while (refine_op.isNull() && lop) {
          if (lop()->findRefineOperator(var, op_name)) {
@@ -173,7 +177,7 @@ TransferOperatorRegistry::lookupTimeInterpolateOperator(
    } else {
 
       tbox::List<tbox::Pointer<TimeInterpolateOperator> >::Iterator
-      lop = d_time_operators.listStart();
+         lop = d_time_operators.listStart();
 
       while (time_op.isNull() && lop) {
          if (lop()->findTimeInterpolateOperator(var, op_name)) {
@@ -224,7 +228,7 @@ TransferOperatorRegistry::setMinTransferOpStencilWidth(
 
 /*
  *************************************************************************
- *Get the dimension of the hier::GridGeometry object holding this singleton.
+ ******Get the dimension of the hier::GridGeometry object holding this singleton.
  *************************************************************************
  */
 const tbox::Dimension&
@@ -246,12 +250,12 @@ TransferOperatorRegistry::printClassData(
    std::ostream& os) const
 {
    os << "printing TransferOperatorRegistry data..." << std::endl;
-   os << "TransferOperatorRegistry: this = " <<
-      (TransferOperatorRegistry *)this << std::endl;
+   os << "TransferOperatorRegistry: this = "
+      << (TransferOperatorRegistry *)this << std::endl;
 
    os << "Coarsen operator list: " << std::endl;
    tbox::List<tbox::Pointer<CoarsenOperator> >::Iterator
-   cop = d_coarsen_operators.listStart();
+      cop = d_coarsen_operators.listStart();
    while (cop) {
       os << (CoarsenOperator *)cop() << std::endl;
       cop++;
@@ -259,7 +263,7 @@ TransferOperatorRegistry::printClassData(
 
    os << "Refine operator list: " << std::endl;
    tbox::List<tbox::Pointer<RefineOperator> >::Iterator
-   rop = d_refine_operators.listStart();
+      rop = d_refine_operators.listStart();
    while (rop) {
       os << (RefineOperator *)rop() << std::endl;
       rop++;
@@ -267,7 +271,7 @@ TransferOperatorRegistry::printClassData(
 
    os << "Time interpolate operator list: " << std::endl;
    tbox::List<tbox::Pointer<TimeInterpolateOperator> >::Iterator
-   top = d_time_operators.listStart();
+      top = d_time_operators.listStart();
    while (top) {
       os << (TimeInterpolateOperator *)top() << std::endl;
       top++;

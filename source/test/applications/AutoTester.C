@@ -1,11 +1,11 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
  * Description:   (c) 1997-2011 Lawrence Livermore National Security, LLC
- *                Description:   Class used for auto testing applications 
+ *                Description:   Class used for auto testing applications
  *
  ************************************************************************/
 
@@ -24,7 +24,8 @@ AutoTester::AutoTester(
    tbox::Pointer<tbox::Database> input_db):
    d_dim(dim)
 #ifdef HAVE_HDF5
-   , d_hdf_db("AutoTesterDatabase")
+   ,
+   d_hdf_db("AutoTesterDatabase")
 #endif
 {
    const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
@@ -113,7 +114,7 @@ int AutoTester::evalTestData(
                        << "\n   computed result: " << time;
 
             tbox::plog << "\n   specified result = "
-            << d_correct_result[0];
+                       << d_correct_result[0];
          }
          tbox::plog << std::endl;
 
@@ -137,7 +138,7 @@ int AutoTester::evalTestData(
             tbox::plog << "Test 1: Time Refinement Integrator "
                        << "\n   computed result: " << dt;
             tbox::plog << "\n   specified result = "
-            << d_correct_result[1];
+                       << d_correct_result[1];
          }
          tbox::plog << std::endl;
 
@@ -161,7 +162,7 @@ int AutoTester::evalTestData(
                        << "\n   computed result: " << dt;
 
             tbox::plog << "\n   specified result = "
-            << d_correct_result[2];
+                       << d_correct_result[2];
          }
          tbox::plog << std::endl;
 
@@ -320,7 +321,7 @@ int AutoTester::evalTestData(
                     << "\n   computed result: " << time;
          if (d_correct_result.getSize() > 0) {
             tbox::plog << "\n   specified result = "
-            << d_correct_result[0];
+                       << d_correct_result[0];
          }
          tbox::plog << std::endl;
       }
@@ -340,7 +341,7 @@ int AutoTester::evalTestData(
                     << "\n   computed result: " << dt;
          if (d_correct_result.getSize() > 1) {
             tbox::plog << "\n   specified result = "
-            << d_correct_result[1];
+                       << d_correct_result[1];
          }
          tbox::plog << std::endl;
       }

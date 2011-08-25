@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   KINSOL solver for use within a SAMRAI-based application. 
+ * Description:   KINSOL solver for use within a SAMRAI-based application.
  *
  ************************************************************************/
 
@@ -155,7 +155,7 @@ void KINSOL_SAMRAIContext::getFromInput(
       if (db->keyExists("residual_stop_tolerance")) {
          d_residual_stop_tolerance = db->getDouble("residual_stop_tolerance");
          d_KINSOL_solver->
-            setResidualStoppingTolerance(d_residual_stop_tolerance);
+         setResidualStoppingTolerance(d_residual_stop_tolerance);
       }
 
       if (db->keyExists("max_nonlinear_iterations")) {
@@ -183,7 +183,7 @@ void KINSOL_SAMRAIContext::getFromInput(
          d_nonlinear_step_tolerance =
             db->getDouble("nonlinear_step_tolerance");
          d_KINSOL_solver->
-            setNonlinearStepTolerance(d_nonlinear_step_tolerance);
+         setNonlinearStepTolerance(d_nonlinear_step_tolerance);
       }
 
       if (db->keyExists("relative_function_error")) {
@@ -194,7 +194,7 @@ void KINSOL_SAMRAIContext::getFromInput(
       if (db->keyExists("linear_convergence_test")) {
          d_linear_convergence_test = db->getInteger("linear_convergence_test");
          d_KINSOL_solver->
-            setLinearSolverConvergenceTest(d_linear_convergence_test);
+         setLinearSolverConvergenceTest(d_linear_convergence_test);
       }
 
       if (db->keyExists("max_subsetup_calls")) {
@@ -214,7 +214,7 @@ void KINSOL_SAMRAIContext::getFromInput(
          d_residual_monitoring_constant =
             db->getDouble("residual_monitoring_constant");
          d_KINSOL_solver->
-            setResidualMonitoringConstant(d_residual_monitoring_constant);
+         setResidualMonitoringConstant(d_residual_monitoring_constant);
       }
 
       if (db->keyExists("no_min_eps")) {
@@ -226,29 +226,29 @@ void KINSOL_SAMRAIContext::getFromInput(
          db->getDoubleArray("eisenstat_walker_params",
             d_eisenstat_walker_params, 2);
          d_KINSOL_solver->
-            setEisenstatWalkerParameters(d_eisenstat_walker_params[0],
-               d_eisenstat_walker_params[1]);
+         setEisenstatWalkerParameters(d_eisenstat_walker_params[0],
+            d_eisenstat_walker_params[1]);
       }
 
       if (db->keyExists("linear_solver_constant_tolerance")) {
          d_linear_solver_constant_tolerance =
             db->getDouble("linear_solver_constant_tolerance");
          d_KINSOL_solver->
-            setLinearSolverConstantTolerance(d_linear_solver_constant_tolerance);
+         setLinearSolverConstantTolerance(d_linear_solver_constant_tolerance);
       }
 
       if (db->keyExists("max_solves_no_precond_setup")) {
          d_max_solves_no_precond_setup =
             db->getInteger("max_solves_no_precond_setup");
          d_KINSOL_solver->
-            setMaxStepsWithNoPrecondSetup(d_max_solves_no_precond_setup);
+         setMaxStepsWithNoPrecondSetup(d_max_solves_no_precond_setup);
       }
 
       if (db->keyExists("max_linear_solve_restarts")) {
          d_max_linear_solve_restarts =
             db->getInteger("max_linear_solve_restarts");
          d_KINSOL_solver->
-            setMaxLinearSolveRestarts(d_max_linear_solve_restarts);
+         setMaxLinearSolveRestarts(d_max_linear_solve_restarts);
       }
 
       bool set_print_options = false;
@@ -400,8 +400,8 @@ void KINSOL_SAMRAIContext::printClassData(
    os << "\nd_linear_convergence_test = " << d_linear_convergence_test
       << std::endl;
    os << "d_eisenstat_walker_params = "
-   << d_eisenstat_walker_params[0] << " , "
-   << d_eisenstat_walker_params[1] << std::endl;
+      << d_eisenstat_walker_params[0] << " , "
+      << d_eisenstat_walker_params[1] << std::endl;
    os << "d_linear_solver_constant_tolerance = "
       << d_linear_solver_constant_tolerance << std::endl;
    os << "d_precond_setup_flag = " << d_precond_setup_flag << std::endl;

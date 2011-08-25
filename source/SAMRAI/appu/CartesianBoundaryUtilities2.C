@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Utility routines for manipulating 2D Cartesian boundary data 
+ * Description:   Utility routines for manipulating 2D Cartesian boundary data
  *
  ************************************************************************/
 
@@ -33,39 +33,39 @@ extern "C" {
 #pragma warning (disable:1419)
 #endif
 
-void F77_FUNC(stufcartbdryloc2d, STUFCARTBDRYLOC2D) (const int &, const int &,
-   const int &, const int &,
-   const int &, const int &, const int &, const int &);
+void F77_FUNC(stufcartbdryloc2d, STUFCARTBDRYLOC2D) (const int&, const int&,
+   const int&, const int&,
+   const int&, const int&, const int&, const int&);
 
-void F77_FUNC(stufcartbdrycond2d, STUFCARTBDRYCOND2D) (const int &, const int &,
-   const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &);
+void F77_FUNC(stufcartbdrycond2d, STUFCARTBDRYCOND2D) (const int&, const int&,
+   const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&);
 
-void F77_FUNC(getcartedgebdry2d, GETCARTEDGEBDRY2D) (const int &, const int &,
-   const int &, const int &,
-   const int &, const int &,
-   const int &, const int &,
-   const int &, const int &,
+void F77_FUNC(getcartedgebdry2d, GETCARTEDGEBDRY2D) (const int&, const int&,
+   const int&, const int&,
+   const int&, const int&,
+   const int&, const int&,
+   const int&, const int&,
    const double *,
-   const int &,
-   const int &,
+   const int&,
+   const int&,
    const double *,
    double *,
-   const int &);
+   const int&);
 
-void F77_FUNC(getcartnodebdry2d, GETCARTNODEBDRY2D) (const int &, const int &,
-   const int &, const int &,
-   const int &, const int &,
-   const int &, const int &,
-   const int &, const int &,
+void F77_FUNC(getcartnodebdry2d, GETCARTNODEBDRY2D) (const int&, const int&,
+   const int&, const int&,
+   const int&, const int&,
+   const int&, const int&,
+   const int&, const int&,
    const double *,
-   const int &,
-   const int &,
+   const int&,
+   const int&,
    const double *,
    double *,
-   const int &);
+   const int&);
 
 }
 
@@ -404,9 +404,9 @@ int CartesianBoundaryUtilities2::checkBdryData(
    } else {
       TBOX_ERROR(
          "Unknown btype " << btype
-         <<
+                          <<
          " passed to CartesianBoundaryUtilities2::checkBdryData()! "
-         << std::endl);
+                          << std::endl);
    }
 
    tbox::plog << "\n\nCHECKING 2D " << bdry_type_str << " BDRY DATA..."
@@ -444,10 +444,10 @@ int CartesianBoundaryUtilities2::checkBdryData(
       } else {
          TBOX_ERROR(
             "Unknown bcase " << bcase
-            <<
+                             <<
             " passed to CartesianBoundaryUtilities2::checkBdryData()"
-            << "\n for " << bdry_type_str
-            << " at location " << bloc << std::endl);
+                             << "\n for " << bdry_type_str
+                             << " at location " << bloc << std::endl);
       }
 
    } else if (btype == Bdry::NODE2D) {
@@ -472,10 +472,10 @@ int CartesianBoundaryUtilities2::checkBdryData(
       } else {
          TBOX_ERROR(
             "Unknown bcase " << bcase
-            <<
+                             <<
             " passed to CartesianBoundaryUtilities2::checkBdryData()"
-            << "\n for " << bdry_type_str
-            << " at location " << bloc << std::endl);
+                             << "\n for " << bdry_type_str
+                             << " at location " << bloc << std::endl);
       }
 
    }
@@ -557,16 +557,16 @@ void CartesianBoundaryUtilities2::read2dBdryEdges(
          std::string bdry_loc_str;
          switch (s) {
             case BdryLoc::XLO: { bdry_loc_str = "boundary_edge_xlo";
-                        break;
+                                 break;
             }
             case BdryLoc::XHI: { bdry_loc_str = "boundary_edge_xhi";
-                        break;
+                                 break;
             }
             case BdryLoc::YLO: { bdry_loc_str = "boundary_edge_ylo";
-                        break;
+                                 break;
             }
             case BdryLoc::YHI: { bdry_loc_str = "boundary_edge_yhi";
-                        break;
+                                 break;
             }
             default: NULL_STATEMENT;
          }
@@ -653,20 +653,20 @@ void CartesianBoundaryUtilities2::read2dBdryNodes(
          std::string bdry_loc_str;
          switch (s) {
             case NodeBdyLoc2D::XLO_YLO: {
-                 bdry_loc_str = "boundary_node_xlo_ylo";
-                 break;
+               bdry_loc_str = "boundary_node_xlo_ylo";
+               break;
             }
             case NodeBdyLoc2D::XHI_YLO: {
-                 bdry_loc_str = "boundary_node_xhi_ylo";
-                 break;
+               bdry_loc_str = "boundary_node_xhi_ylo";
+               break;
             }
             case NodeBdyLoc2D::XLO_YHI: {
-                 bdry_loc_str = "boundary_node_xlo_yhi";
-                 break;
+               bdry_loc_str = "boundary_node_xlo_yhi";
+               break;
             }
             case NodeBdyLoc2D::XHI_YHI: {
-                 bdry_loc_str = "boundary_node_xhi_yhi";
-                 break;
+               bdry_loc_str = "boundary_node_xhi_yhi";
+               break;
             }
             default: NULL_STATEMENT;
          }
@@ -806,12 +806,12 @@ void CartesianBoundaryUtilities2::read2dBdryNodes(
                   if (no_edge_data_found) {
                      TBOX_ERROR(
                         "Bdry condition " << bdry_cond_str
-                        << " found for "
-                        << bdry_loc_str
-                        << "\n but no "
-                        << proper_edge_data
-                        << " data found for edge "
-                        << proper_edge << std::endl);
+                                          << " found for "
+                                          << bdry_loc_str
+                                          << "\n but no "
+                                          << proper_edge_data
+                                          << " data found for edge "
+                                          << proper_edge << std::endl);
                   }
 
                } else {
@@ -866,10 +866,10 @@ void CartesianBoundaryUtilities2::get2dBdryDirectionCheckValues(
       } else {
          TBOX_ERROR(
             "Unknown boundary location " << bloc
-            <<
+                                         <<
             " passed to CartesianBoundaryUtilities2::checkBdryData()"
-            << "\n for "
-            << bdry_type_str << " boundary " << std::endl);
+                                         << "\n for "
+                                         << bdry_type_str << " boundary " << std::endl);
       }
 
    } else if (btype == Bdry::NODE2D) {
@@ -898,11 +898,11 @@ void CartesianBoundaryUtilities2::get2dBdryDirectionCheckValues(
    } else {
       TBOX_ERROR(
          "Unknown boundary type " << btype
-         <<
+                                  <<
          " passed to CartesianBoundaryUtilities2::checkBdryData()"
-         << "\n for " << bdry_type_str
-         << " at location " << bloc
-         << std::endl);
+                                  << "\n for " << bdry_type_str
+                                  << " at location " << bloc
+                                  << std::endl);
    }
 
 }

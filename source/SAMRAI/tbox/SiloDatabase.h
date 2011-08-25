@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   A database structure that stores Silo format data. 
+ * Description:   A database structure that stores Silo format data.
  *
  ************************************************************************/
 
@@ -437,7 +437,7 @@ public:
    virtual bool
    open(
       const std::string& name,
-      const bool read_write_mode=false);
+      const bool read_write_mode = false);
 
    /**
     * @brief Attach the Database to an existing Silo file.
@@ -453,7 +453,7 @@ public:
     */
    virtual bool
    attachToFile(
-      DBfile* file,
+      DBfile * file,
       const std::string& directory);
 
    /**

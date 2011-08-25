@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Utilities for working on DLBG edges. 
+ * Description:   Utilities for working on DLBG edges.
  *
  ************************************************************************/
 #ifndef included_hier_MappedBoxLevelConnectorUtils_C
@@ -74,10 +74,6 @@ void MappedBoxLevelConnectorUtils::setSanityCheckMethodPostconditions(
    d_sanity_check_postcond = do_check;
 }
 
-
-
-
-
 /*
  ***********************************************************************
  * Given the base and head levels, determine whether the base nests
@@ -101,7 +97,7 @@ bool MappedBoxLevelConnectorUtils::baseNestsInHead(
    TBOX_ASSERT(head.getMPI() == base.getMPI());
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-   const IntVector &zero_vector(IntVector::getZero(dim));
+   const IntVector& zero_vector(IntVector::getZero(dim));
    TBOX_ASSERT(base_swell >= zero_vector);
    TBOX_ASSERT(head_swell >= zero_vector);
    TBOX_ASSERT(head_nesting_margin >= zero_vector);
@@ -141,7 +137,6 @@ bool MappedBoxLevelConnectorUtils::baseNestsInHead(
    return rval;
 }
 
-
 bool MappedBoxLevelConnectorUtils::baseNestsInHeadForMultiblock(
    bool* locally_nests,
    const MappedBoxLevel& base,
@@ -159,7 +154,7 @@ bool MappedBoxLevelConnectorUtils::baseNestsInHeadForMultiblock(
    TBOX_ASSERT(head.getMPI() == base.getMPI());
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-   const IntVector &zero_vector(IntVector::getZero(dim));
+   const IntVector& zero_vector(IntVector::getZero(dim));
    TBOX_ASSERT(base_swell >= zero_vector);
    TBOX_ASSERT(head_swell >= zero_vector);
    TBOX_ASSERT(head_nesting_margin >= zero_vector);
@@ -244,7 +239,7 @@ bool MappedBoxLevelConnectorUtils::baseNestsInHead(
       + (connector.getHeadCoarserFlag() ?
          head_nesting_margin * connector.getRatio() :
          IntVector::ceiling(head_nesting_margin, connector.getRatio()))
-      ;
+   ;
    if (!(connector.getConnectorWidth() >= required_gcw)) {
       TBOX_ERROR("MappedBoxLevelConnectorUtils::baseNestsInHead: connector lacks sufficient\n"
          << "ghost cell width for determining whether its base nests\n"
@@ -319,7 +314,6 @@ bool MappedBoxLevelConnectorUtils::baseNestsInHead(
          head_swell);
    }
 
-
    Connector swelledbase_to_swelledhead;
    swelledbase_to_swelledhead.swapInitialize(
       swelledbase,
@@ -327,8 +321,8 @@ bool MappedBoxLevelConnectorUtils::baseNestsInHead(
       connector.getConnectorWidth() - base_swell,
       swelledbase_eto_swelledhead,
       MappedBoxLevel::DISTRIBUTED);
-   if ( d_sanity_check_precond &&
-        head_swell == IntVector::getZero(dim) ) {
+   if (d_sanity_check_precond &&
+       head_swell == IntVector::getZero(dim)) {
       /*
        * If head was swelled, it may generate undetected overlaps that
        * cannot be compensated for by shrinking the connector width.
@@ -354,7 +348,7 @@ bool MappedBoxLevelConnectorUtils::baseNestsInHead(
          swelledbase_to_external,
          swelledbase_to_swelledhead,
          -head_nesting_margin,
-         BoxTree(dim) );
+         BoxTree(dim));
    }
    if (domain) {
       /*
@@ -400,8 +394,6 @@ bool MappedBoxLevelConnectorUtils::baseNestsInHead(
    return globally_nests;
 }
 
-
-
 bool MappedBoxLevelConnectorUtils::baseNestsInHeadForMultiblock(
    bool* locally_nests,
    const Connector& connector,
@@ -430,7 +422,7 @@ bool MappedBoxLevelConnectorUtils::baseNestsInHeadForMultiblock(
       + (connector.getHeadCoarserFlag() ?
          head_nesting_margin * connector.getRatio() :
          IntVector::ceiling(head_nesting_margin, connector.getRatio()))
-      ;
+   ;
    if (!(connector.getConnectorWidth() >= required_gcw)) {
       TBOX_ERROR("MappedBoxLevelConnectorUtils::baseNestsInHead: connector lacks sufficient\n"
          << "ghost cell width for determining whether its base nests\n"
@@ -505,7 +497,6 @@ bool MappedBoxLevelConnectorUtils::baseNestsInHeadForMultiblock(
          head_swell);
    }
 
-
    Connector swelledbase_to_swelledhead;
    swelledbase_to_swelledhead.swapInitialize(
       swelledbase,
@@ -513,8 +504,8 @@ bool MappedBoxLevelConnectorUtils::baseNestsInHeadForMultiblock(
       connector.getConnectorWidth() - base_swell,
       swelledbase_eto_swelledhead,
       MappedBoxLevel::DISTRIBUTED);
-   if ( d_sanity_check_precond &&
-        head_swell == IntVector::getZero(dim) ) {
+   if (d_sanity_check_precond &&
+       head_swell == IntVector::getZero(dim)) {
       /*
        * If head was swelled, it may generate undetected overlaps that
        * cannot be compensated for by shrinking the connector width.
@@ -540,7 +531,7 @@ bool MappedBoxLevelConnectorUtils::baseNestsInHeadForMultiblock(
          swelledbase_to_external,
          swelledbase_to_swelledhead,
          -head_nesting_margin,
-         MultiblockBoxTree() );
+         MultiblockBoxTree());
    }
    if (domain) {
       /*
@@ -631,7 +622,7 @@ void MappedBoxLevelConnectorUtils::makeSortingMap(
 
    const BoxSet& cur_mapped_boxes =
       unsorted_mapped_box_level.getMappedBoxes();
-   int n_mapped_boxes = 
+   int n_mapped_boxes =
       static_cast<int>(unsorted_mapped_box_level.getLocalNumberOfBoxes());
 
    LocalId last_index = initial_sequential_index - 1;
@@ -687,10 +678,10 @@ void MappedBoxLevelConnectorUtils::makeSortingMap(
 
       const Box& cur_mapped_box = *ni;
       const Box new_mapped_box(cur_mapped_box,
-                                     ++last_index,
-                                     cur_mapped_box.getOwnerRank(),
-                                     cur_mapped_box.getBlockId(),
-                                     cur_mapped_box.getPeriodicId());
+                               ++last_index,
+                               cur_mapped_box.getOwnerRank(),
+                               cur_mapped_box.getBlockId(),
+                               cur_mapped_box.getPeriodicId());
       new_mapped_boxes.insert(new_mapped_boxes.end(), new_mapped_box);
 
       /*
@@ -705,11 +696,11 @@ void MappedBoxLevelConnectorUtils::makeSortingMap(
              ini->getGlobalId() == cur_mapped_box.getGlobalId()) {
          const Box& image_mapped_box = *ini;
          const Box new_image_mapped_box(image_mapped_box,
-                                              new_mapped_box.getLocalId(),
-                                              new_mapped_box.getOwnerRank(),
-                                              new_mapped_box.getBlockId(),
-                                              image_mapped_box.
-                                              getPeriodicId());
+                                        new_mapped_box.getLocalId(),
+                                        new_mapped_box.getOwnerRank(),
+                                        new_mapped_box.getBlockId(),
+                                        image_mapped_box.
+                                        getPeriodicId());
          new_mapped_boxes.insert(new_mapped_boxes.end(), new_image_mapped_box);
          ++ini;
       }
@@ -750,11 +741,12 @@ int MappedBoxLevelConnectorUtils::qsortBoxCompare(
    const void* v,
    const void* w)
 {
-   const Box &mapped_box_v(*(const Box *)v);
-   const Box &mapped_box_w(*(const Box *)w);
+   const Box& mapped_box_v(*(const Box *)v);
+   const Box& mapped_box_w(*(const Box *)w);
 
-   if ( mapped_box_v.getBlockId() > mapped_box_w.getBlockId() ) return  1;
-   if ( mapped_box_v.getBlockId() < mapped_box_w.getBlockId() ) return -1;
+   if (mapped_box_v.getBlockId() > mapped_box_w.getBlockId()) return 1;
+
+   if (mapped_box_v.getBlockId() < mapped_box_w.getBlockId()) return -1;
 
    const tbox::Dimension& dim(mapped_box_v.getDim());
 
@@ -762,6 +754,7 @@ int MappedBoxLevelConnectorUtils::qsortBoxCompare(
    const IntVector& loww = mapped_box_w.lower();
    for (int i = 0; i < dim.getValue(); ++i) {
       if (lowv[i] > loww[i]) return 1;
+
       if (lowv[i] < loww[i]) return -1;
    }
 
@@ -769,6 +762,7 @@ int MappedBoxLevelConnectorUtils::qsortBoxCompare(
    const IntVector& upw = mapped_box_w.upper();
    for (int i = 0; i < dim.getValue(); ++i) {
       if (upv[i] > upw[i]) return 1;
+
       if (upv[i] < upw[i]) return -1;
    }
 
@@ -1027,12 +1021,10 @@ void MappedBoxLevelConnectorUtils::computeExternalParts(
    t_compute_external_parts->stop();
 }
 
-
-
 /*
-*************************************************************************
-*************************************************************************
-*/
+ *************************************************************************
+ *************************************************************************
+ */
 void MappedBoxLevelConnectorUtils::computeExternalPartsForMultiblock(
    MappedBoxLevel& external,
    Connector& input_to_external,
@@ -1052,9 +1044,6 @@ void MappedBoxLevelConnectorUtils::computeExternalPartsForMultiblock(
 
    t_compute_external_parts->stop();
 }
-
-
-
 
 /*
  *************************************************************************
@@ -1128,8 +1117,7 @@ void MappedBoxLevelConnectorUtils::computeInternalParts(
       if (domain.isInitialized()) {
          input_eto_reference.getNeighbors(reference_mapped_box_map[block_id],
             block_id);
-      }
-      else {
+      } else {
          input_eto_reference.getNeighbors(reference_mapped_box_map);
       }
    }
@@ -1142,7 +1130,7 @@ void MappedBoxLevelConnectorUtils::computeInternalParts(
       if (input_to_reference.getHeadCoarserFlag()) {
          for (int b = 0; b < num_blocks; b++) {
             BlockId bid(b);
-            if ( reference_mapped_box_map[bid].size() ) {
+            if (reference_mapped_box_map[bid].size()) {
                reference_mapped_box_map[bid].refine(
                   input_to_reference.getRatio());
             }
@@ -1150,7 +1138,7 @@ void MappedBoxLevelConnectorUtils::computeInternalParts(
       } else {
          for (int b = 0; b < num_blocks; b++) {
             BlockId bid(b);
-            if ( reference_mapped_box_map[bid].size() ) {
+            if (reference_mapped_box_map[bid].size()) {
                reference_mapped_box_map[bid].coarsen(
                   input_to_reference.getRatio());
             }
@@ -1174,7 +1162,7 @@ void MappedBoxLevelConnectorUtils::computeInternalParts(
        * Boxes, which will then represent the internal parts.
        */
       search_tree_represents_internal = true;
-      if ( domain.isInitialized() ) {
+      if (domain.isInitialized()) {
          if (nesting_width != zero_vec) {
             reference_mapped_box_map[block_id].grow(nesting_width);
          }
@@ -1188,14 +1176,12 @@ void MappedBoxLevelConnectorUtils::computeInternalParts(
          for (int b = 0; b < num_blocks; ++b) {
             if (b == block_id.getBlockValue()) {
                search_tree[b] = new BoxTree(dim,
-                  reference_mapped_box_map[block_id], block_id);
-            }
-            else {
+                     reference_mapped_box_map[block_id], block_id);
+            } else {
                search_tree[b] = new BoxTree(dim);
             }
          }
-      }
-      else {
+      } else {
          for (int b = 0; b < num_blocks; b++) {
             BlockId bid(b);
             if (nesting_width != zero_vec) {
@@ -1323,11 +1309,10 @@ void MappedBoxLevelConnectorUtils::computeInternalParts(
    t_compute_internal_parts->stop();
 }
 
-
 /*
-*************************************************************************
-*************************************************************************
-*/
+ *************************************************************************
+ *************************************************************************
+ */
 void MappedBoxLevelConnectorUtils::computeInternalPartsForMultiblock(
    MappedBoxLevel& internal,
    Connector& input_to_internal,
@@ -1348,16 +1333,13 @@ void MappedBoxLevelConnectorUtils::computeInternalPartsForMultiblock(
    t_compute_internal_parts->stop();
 }
 
-
-
-
 /*
-*************************************************************************
-* This version of computeInternalParts does not require a domain.
-* The domain is taken to be big enough that it does not affect
-* the definition of "internal".
-*************************************************************************
-*/
+ *************************************************************************
+ * This version of computeInternalParts does not require a domain.
+ * The domain is taken to be big enough that it does not affect
+ * the definition of "internal".
+ *************************************************************************
+ */
 void MappedBoxLevelConnectorUtils::computeInternalParts(
    MappedBoxLevel& internal,
    Connector& input_to_internal,
@@ -1367,71 +1349,68 @@ void MappedBoxLevelConnectorUtils::computeInternalParts(
    const tbox::Dimension& dim(nesting_width.getDim());
    const BoxTree dummy_domain(dim);
    computeInternalParts(internal,
-                        input_to_internal,
-                        input_to_reference,
-                        nesting_width,
-                        dummy_domain);
-   return;
+      input_to_internal,
+      input_to_reference,
+      nesting_width,
+      dummy_domain);
 }
 
-
-
 /*
-*************************************************************************
-* Methods computeInternalPartsForMultiblock and
-* computeExternalPartsForMultiblock delegates to this method.
-*
-* Compare an input MappedBoxLevel to a "reference" MappedBoxLevel.
-* Identify parts of the input that are internal or external (depending
-* on the value of internal_or_external) to the reference
-* MappedBoxLevel, and store the in/external parts in a MappedBoxLevel.
-* Create the input_to_parts Connector between the input and these
-* parts.
-*
-* For generality, the reference MappedBoxLevel can be grown a
-* specified amount (nesting_width) before comparing.  nesting_width
-* must be in the index space of the input MappedBoxLevel (not the
-* reference MappedBoxLevel, despite the name).  A negative growth
-* indicates shrinking the reference layer at its boundary.
-*
-* As a practical consideration of how this method is used, we do not
-* shrink the reference layer where it touches the domain boundary.
-* This feature can be disabled by specifying an uninitialized domain
-* object.
-*
-* On return, input_to_parts is set to an appropriate mapping for use
-* in MappingConnectorAlgorithm::modify().
-*
-* This method does not require any communication.
-*
-* Formula for computing external parts:
-*
-* Definitions:
-* L = input MappedBoxLevel
-* R = reference MappedBoxLevel
-* g = nesting width (non-negative or non-positive, but not mixed)
-* E = parts of L external to R^g (R^g is R grown by g)
-* I = parts of L internal to R^g (R^g is R grown by g)
-* O = domain (without periodic images).  Universe, if not specified.
-* \ = set theory notation.  x \ y means set x with y removed from it.
-*
-* For non-negative g:
-*
-* E := L \ { (R^g) <intersection> O }
-* I := L <intersection> { (R^g) <intersection> O }
-*
-* For non-positive g:
-*
-* E := L <intersection> { ( ( (R^1) \ R ) <intersection> O )^(-g) }
-* I := L \ { ( ( (R^1) \ R ) <intersection> O )^(-g) }
-*
-* A requirement of the computation for negative g is that input must
-* nest in R^(1-g).  In other words: L \ (R^(1-g)} = <empty>.  If not
-* satisfied, this method may classify some external parts as
-* internal.
-*
-*************************************************************************
-*/
+ *************************************************************************
+ * Methods computeInternalPartsForMultiblock and
+ * computeExternalPartsForMultiblock delegates to this method.
+ *
+ * Compare an input MappedBoxLevel to a "reference" MappedBoxLevel.
+ * Identify parts of the input that are internal or external (depending
+ * on the value of internal_or_external) to the reference
+ * MappedBoxLevel, and store the in/external parts in a MappedBoxLevel.
+ * Create the input_to_parts Connector between the input and these
+ * parts.
+ *
+ * For generality, the reference MappedBoxLevel can be grown a
+ * specified amount (nesting_width) before comparing.  nesting_width
+ * must be in the index space of the input MappedBoxLevel (not the
+ * reference MappedBoxLevel, despite the name).  A negative growth
+ * indicates shrinking the reference layer at its boundary.
+ *
+ * As a practical consideration of how this method is used, we do not
+ * shrink the reference layer where it touches the domain boundary.
+ * This feature can be disabled by specifying an uninitialized domain
+ * object.
+ *
+ * On return, input_to_parts is set to an appropriate mapping for use
+ * in MappingConnectorAlgorithm::modify().
+ *
+ * This method does not require any communication.
+ *
+ * Formula for computing external parts:
+ *
+ * Definitions:
+ * L = input MappedBoxLevel
+ * R = reference MappedBoxLevel
+ * g = nesting width (non-negative or non-positive, but not mixed)
+ * E = parts of L external to R^g (R^g is R grown by g)
+ * I = parts of L internal to R^g (R^g is R grown by g)
+ * O = domain (without periodic images).  Universe, if not specified.
+ * \ = set theory notation.  x \ y means set x with y removed from it.
+ *
+ * For non-negative g:
+ *
+ * E := L \ { (R^g) <intersection> O }
+ * I := L <intersection> { (R^g) <intersection> O }
+ *
+ * For non-positive g:
+ *
+ * E := L <intersection> { ( ( (R^1) \ R ) <intersection> O )^(-g) }
+ * I := L \ { ( ( (R^1) \ R ) <intersection> O )^(-g) }
+ *
+ * A requirement of the computation for negative g is that input must
+ * nest in R^(1-g).  In other words: L \ (R^(1-g)} = <empty>.  If not
+ * satisfied, this method may classify some external parts as
+ * internal.
+ *
+ *************************************************************************
+ */
 void MappedBoxLevelConnectorUtils::computeInternalOrExternalPartsForMultiblock(
    MappedBoxLevel& parts,
    Connector& input_to_parts,
@@ -1442,43 +1421,51 @@ void MappedBoxLevelConnectorUtils::computeInternalOrExternalPartsForMultiblock(
 {
    const MappedBoxLevel& input = input_to_reference.getBase();
 
-   const tbox::ConstPointer<GridGeometry> &grid_geometry(
+   const tbox::ConstPointer<GridGeometry>& grid_geometry(
       input.getGridGeometry());
 
-   const tbox::Dimension &dim(input.getDim());
+   const tbox::Dimension& dim(input.getDim());
    const IntVector& zero_vec(IntVector::getZero(input.getDim()));
    const IntVector& one_vec(IntVector::getOne(dim));
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-   const char *caller = internal_or_external == 'i' ?
+   const char* caller = internal_or_external == 'i' ?
       "computInternalPartsForMultiblock" : "computeExternalpartsForMultiblock";
 
    // Sanity check inputs.
 
    if (!(nesting_width >= zero_vec) && !(nesting_width <= zero_vec)) {
       TBOX_ERROR(
-         "MappedBoxLevelConnectorUtils::computeInternalOrExternalPartsForMultiblock:" << caller << ": error:\n"
-         << "nesting_width may not have mix of positive\n"
-         << "and negative values.");
+         "MappedBoxLevelConnectorUtils::computeInternalOrExternalPartsForMultiblock:" << caller
+                                                                                      <<
+         ": error:\n"
+                                                                                      <<
+         "nesting_width may not have mix of positive\n"
+                                                                                      <<
+         "and negative values.");
    }
 
    if (nesting_width >= zero_vec) {
       if (!(input_to_reference.getConnectorWidth() >=
             nesting_width)) {
          TBOX_ERROR(
-            "MappedBoxLevelConnectorUtils::computeInternalOrExternalPartsForMultiblock:" << caller << ": error:\n"
-            << "nesting_width "
-            << nesting_width << " exceeds\n"
-            << "ghost cell width " << input_to_reference.getConnectorWidth()
+            "MappedBoxLevelConnectorUtils::computeInternalOrExternalPartsForMultiblock:"
+            << caller << ": error:\n"
+            <<
+            "nesting_width "
+            <<
+            nesting_width << " exceeds\n"
+            <<
+            "ghost cell width " << input_to_reference.getConnectorWidth()
             << ",\n"
-            << "which can lead to erroneous results.");
+            <<
+            "which can lead to erroneous results.");
       }
    }
 #endif
 
    parts.initialize(input.getRefinementRatio(),
       input.getGridGeometry(), input.getMPI());
-
 
    /*
     * Get the set of neighboring boxes on the reference
@@ -1498,17 +1485,16 @@ void MappedBoxLevelConnectorUtils::computeInternalOrExternalPartsForMultiblock(
 
       if (input_to_reference.getHeadCoarserFlag()) {
          for (std::map<BlockId, BoxList>::iterator mi = reference_box_list.begin();
-              mi != reference_box_list.end(); ++mi ) {
+              mi != reference_box_list.end(); ++mi) {
             mi->second.refine(input_to_reference.getRatio());
          }
       } else {
          for (std::map<BlockId, BoxList>::iterator mi = reference_box_list.begin();
-              mi != reference_box_list.end(); ++mi ) {
+              mi != reference_box_list.end(); ++mi) {
             mi->second.coarsen(input_to_reference.getRatio());
          }
       }
    }
-
 
    /*
     * Build a search tree containing either the internal or external
@@ -1525,9 +1511,9 @@ void MappedBoxLevelConnectorUtils::computeInternalOrExternalPartsForMultiblock(
 
    if (search_tree_represents_internal) {
 
-      if ( !(nesting_width == zero_vec) ) {
+      if (!(nesting_width == zero_vec)) {
          for (std::map<BlockId, BoxList>::iterator mi = reference_box_list.begin();
-              mi != reference_box_list.end(); ++mi ) {
+              mi != reference_box_list.end(); ++mi) {
             mi->second.grow(nesting_width);
          }
       }
@@ -1541,14 +1527,14 @@ void MappedBoxLevelConnectorUtils::computeInternalOrExternalPartsForMultiblock(
       computeBoxesAroundBoundary(
          reference_box_list,
          input.getRefinementRatio(),
-         grid_geometry );
+         grid_geometry);
       // ... reference_boundary is now ( (R^1) \ R )
 
       if (domain.isInitialized()) {
 
          if (input.getRefinementRatio() == one_vec) {
-            for ( std::map<BlockId,BoxList>::iterator mi=reference_box_list.begin();
-                  mi!=reference_box_list.end(); ++mi ) {
+            for (std::map<BlockId, BoxList>::iterator mi = reference_box_list.begin();
+                 mi != reference_box_list.end(); ++mi) {
                mi->second.intersectBoxes(
                   mi->first,
                   input.getRefinementRatio(),
@@ -1557,8 +1543,8 @@ void MappedBoxLevelConnectorUtils::computeInternalOrExternalPartsForMultiblock(
          } else {
             tbox::Pointer<MultiblockBoxTree> refined_domain =
                domain.createRefinedTree(input.getRefinementRatio());
-            for ( std::map<BlockId,BoxList>::iterator mi=reference_box_list.begin();
-                  mi!=reference_box_list.end(); ++mi ) {
+            for (std::map<BlockId, BoxList>::iterator mi = reference_box_list.begin();
+                 mi != reference_box_list.end(); ++mi) {
                mi->second.intersectBoxes(
                   mi->first,
                   input.getRefinementRatio(),
@@ -1569,8 +1555,8 @@ void MappedBoxLevelConnectorUtils::computeInternalOrExternalPartsForMultiblock(
       }
       // ... reference_boundary is now ( ( (R^1) \ R ) <intersection> O )
 
-      for ( std::map<BlockId,BoxList>::iterator mi=reference_box_list.begin();
-            mi!=reference_box_list.end(); ++mi ) {
+      for (std::map<BlockId, BoxList>::iterator mi = reference_box_list.begin();
+           mi != reference_box_list.end(); ++mi) {
          mi->second.grow(-nesting_width);
       }
       // ... reference_boundary is now ( ( (R^1) \ R ) <intersection> O )^(-g)
@@ -1579,7 +1565,6 @@ void MappedBoxLevelConnectorUtils::computeInternalOrExternalPartsForMultiblock(
    MultiblockBoxTree search_tree(grid_geometry, reference_box_list);
 
    reference_box_list.clear();
-
 
    /*
     * Keep track of last index so we don't give parts an index
@@ -1615,14 +1600,13 @@ void MappedBoxLevelConnectorUtils::computeInternalOrExternalPartsForMultiblock(
           * the input MappedBox does not overlap the reference
           * MappedBoxLevel.
           */
-         if ( compute_overlaps ) {
+         if (compute_overlaps) {
             /*
              * Trying to get the overlapping parts.  Create empty
              * neighbor list to indicate there is no such parts.
              */
             input_eto_parts[input_mapped_box.getId()];
-         }
-         else {
+         } else {
             /*
              * Trying to get the non-overlapping parts.
              * Non-overlapping parts is the whole box.
@@ -1656,16 +1640,15 @@ void MappedBoxLevelConnectorUtils::computeInternalOrExternalPartsForMultiblock(
                input_mapped_box.getBlockId(),
                input.getRefinementRatio(),
                search_tree,
-               true /* Count singularity neighbors */ );
+               true /* Count singularity neighbors */);
          } else {
             parts_list.removeIntersections(
                input_mapped_box.getBlockId(),
                input.getRefinementRatio(),
                search_tree,
-               true /* Count singularity neighbors */ );
+               true /* Count singularity neighbors */);
          }
          t_compute_internal_parts_intersection->stop();
-
 
          /*
           * Make Boxes from parts_list and create
@@ -1704,7 +1687,6 @@ void MappedBoxLevelConnectorUtils::computeInternalOrExternalPartsForMultiblock(
 
    } // Loop through input_mapped_boxes
 
-
 #ifdef DEBUG_CHECK_ASSERTIONS
    if (parts.getMappedBoxes().empty()) {
       /*
@@ -1713,12 +1695,13 @@ void MappedBoxLevelConnectorUtils::computeInternalOrExternalPartsForMultiblock(
        * to the definition of a map in MappingConnectorAlgorithm::modify().
        */
       if (input_eto_parts.size() != input.getLocalNumberOfBoxes()) {
-         tbox::perr <<"MappedBoxLevelConnectorUtils::" << caller << ": library error:\n"
-                    <<"There are no parts, so input MappedBoxLevel should be completely mapped away.\n"
-                    <<"However, not all input Boxes have been mapped.\n"
-                    <<"input MappedBoxLevel:\n" << input.format("",2)
-                    <<"input_eto_parts:\n" << input_eto_parts.format("",2)
-            ;
+         tbox::perr << "MappedBoxLevelConnectorUtils::" << caller << ": library error:\n"
+                    <<
+         "There are no parts, so input MappedBoxLevel should be completely mapped away.\n"
+                    << "However, not all input Boxes have been mapped.\n"
+                    << "input MappedBoxLevel:\n" << input.format("", 2)
+                    << "input_eto_parts:\n" << input_eto_parts.format("", 2)
+         ;
          TBOX_ERROR("Library error\n");
       }
       for (NeighborhoodSet::const_iterator ci = input_eto_parts.begin();
@@ -1741,35 +1724,31 @@ void MappedBoxLevelConnectorUtils::computeInternalOrExternalPartsForMultiblock(
       MappedBoxLevel::DISTRIBUTED);
 
    TBOX_ASSERT(input_to_parts.isLocal());
-
-   return;
 }
 
-
-
 /*
-*************************************************************************
-Given a BoxSet, compute its boundary as a set of boxes located
-just outside it.
-
-Given a set of boxes R, the boundary is computed as (R^1)\R.
-R^1 means grown boxes in R by a width of one.
-*************************************************************************
-*/
+ *************************************************************************
+ * Given a BoxSet, compute its boundary as a set of boxes located
+ * just outside it.
+ *
+ * Given a set of boxes R, the boundary is computed as (R^1)\R.
+ * R^1 means grown boxes in R by a width of one.
+ *************************************************************************
+ */
 void MappedBoxLevelConnectorUtils::computeBoxesAroundBoundary(
-   std::map<BlockId,BoxList> &boundary,
-   const IntVector &refinement_ratio,
-   const tbox::ConstPointer<GridGeometry> &grid_geometry,
-   const bool simplify_boundary_boxes ) const
+   std::map<BlockId, BoxList>& boundary,
+   const IntVector& refinement_ratio,
+   const tbox::ConstPointer<GridGeometry>& grid_geometry,
+   const bool simplify_boundary_boxes) const
 {
-   const tbox::Dimension &dim(grid_geometry->getDim());
+   const tbox::Dimension& dim(grid_geometry->getDim());
    const IntVector& one_vec(IntVector::getOne(dim));
 
    const std::map<BlockId, BoxList> box_list_map(boundary);
    // ... boundary is now R
 
-   for ( std::map<BlockId,BoxList>::iterator mi=boundary.begin();
-         mi!=boundary.end(); ++mi ) {
+   for (std::map<BlockId, BoxList>::iterator mi = boundary.begin();
+        mi != boundary.end(); ++mi) {
       mi->second.grow(one_vec);
    }
    // ... boundary is now (R^1)
@@ -1777,10 +1756,10 @@ void MappedBoxLevelConnectorUtils::computeBoxesAroundBoundary(
    MultiblockBoxTree reference_mapped_boxes_tree(
       grid_geometry,
       box_list_map);
-   for ( std::map<BlockId,BoxList>::iterator mi=boundary.begin();
-         mi!=boundary.end(); ++mi ) {
-      const BlockId &block_id(mi->first);
-      BoxList &box_list(mi->second);
+   for (std::map<BlockId, BoxList>::iterator mi = boundary.begin();
+        mi != boundary.end(); ++mi) {
+      const BlockId& block_id(mi->first);
+      BoxList& box_list(mi->second);
       /*
        * Leave boundary boxes in singularity neighbor blocks.
        * These are specially handled in the following if-block.
@@ -1790,11 +1769,11 @@ void MappedBoxLevelConnectorUtils::computeBoxesAroundBoundary(
          block_id,
          refinement_ratio,
          reference_mapped_boxes_tree,
-         include_singularity_neighbors );
+         include_singularity_neighbors);
    }
    // ... boundary is now ( (R^1) \ R )
 
-   if ( grid_geometry->getNumberOfBlockSingularities() > 0 ) {
+   if (grid_geometry->getNumberOfBlockSingularities() > 0) {
       /*
        * The boundary obtained by the formula (R^1)\R can have
        * errors at multiblock singularities.  Fix it here.
@@ -1839,8 +1818,7 @@ void MappedBoxLevelConnectorUtils::computeBoxesAroundBoundary(
       for (std::map<BlockId, BoxList>::iterator bi = boundary.begin();
            bi != boundary.end(); ++bi) {
 
-         const BlockId &block_id(bi->first);
-   
+         const BlockId& block_id(bi->first);
 
          /*
           * Compute a version of singularity boxes for reduced
@@ -1852,26 +1830,25 @@ void MappedBoxLevelConnectorUtils::computeBoxesAroundBoundary(
           */
          BoxList reduced_connectivity_singularity_boxes =
             grid_geometry->getSingularityBoxList(block_id);
-         const tbox::List<GridGeometry::Neighbor> &neighbors(
+         const tbox::List<GridGeometry::Neighbor>& neighbors(
             grid_geometry->getNeighbors(block_id));
 
-         for ( tbox::List<GridGeometry::Neighbor>::Iterator ni(neighbors);
-               ni; ni++ ) {
-            const GridGeometry::Neighbor &neighbor(*ni);
-            if ( neighbor.isSingularity() ) {
+         for (tbox::List<GridGeometry::Neighbor>::Iterator ni(neighbors);
+              ni; ni++) {
+            const GridGeometry::Neighbor& neighbor(*ni);
+            if (neighbor.isSingularity()) {
                reduced_connectivity_singularity_boxes.removeIntersections(
                   neighbor.getTransformedDomain());
             }
          }
 
-         if ( ! reduced_connectivity_singularity_boxes.isEmpty() ) {
-            if ( refinement_ratio != one_vec ) {
+         if (!reduced_connectivity_singularity_boxes.isEmpty()) {
+            if (refinement_ratio != one_vec) {
                reduced_connectivity_singularity_boxes.refine(refinement_ratio);
             }
             //boundary[block_id].removeIntersections(reduced_connectivity_singularity_boxes);
             bi->second.removeIntersections(reduced_connectivity_singularity_boxes);
          }
-   
 
          /*
           * Intersect singularity_boxes with Boxes from each
@@ -1883,29 +1860,29 @@ void MappedBoxLevelConnectorUtils::computeBoxesAroundBoundary(
           */
          BoxList singularity_boxes =
             grid_geometry->getSingularityBoxList(block_id);
-         if ( refinement_ratio != one_vec ) {
+         if (refinement_ratio != one_vec) {
             singularity_boxes.refine(refinement_ratio);
          }
 
-         for ( tbox::List<GridGeometry::Neighbor>::Iterator ni(neighbors);
-               ni; ni++ ) {
-            const GridGeometry::Neighbor &neighbor(*ni);
+         for (tbox::List<GridGeometry::Neighbor>::Iterator ni(neighbors);
+              ni; ni++) {
+            const GridGeometry::Neighbor& neighbor(*ni);
             const BlockId neighbor_block_id(neighbor.getBlockId());
-            if ( neighbor.isSingularity() &&
-                 reference_mapped_boxes_tree.hasBoxInBlock(neighbor_block_id) ) {
+            if (neighbor.isSingularity() &&
+                reference_mapped_boxes_tree.hasBoxInBlock(neighbor_block_id)) {
 
                grid_geometry->transformBoxList(singularity_boxes,
-                                               refinement_ratio,
-                                               neighbor_block_id,
-                                               block_id);
+                  refinement_ratio,
+                  neighbor_block_id,
+                  block_id);
 
                singularity_boxes.intersectBoxes(
                   reference_mapped_boxes_tree.getSingleBlockBoxTree(neighbor_block_id));
 
                grid_geometry->transformBoxList(singularity_boxes,
-                                               refinement_ratio,
-                                               block_id,
-                                               neighbor_block_id);
+                  refinement_ratio,
+                  block_id,
+                  neighbor_block_id);
             }
          }
 
@@ -1915,16 +1892,13 @@ void MappedBoxLevelConnectorUtils::computeBoxesAroundBoundary(
       } // for std::map<BlockId, ...
    } // grid_geometry->getNumberOfBlockSingularities() > 0
 
-   if ( simplify_boundary_boxes ) {
-      for ( std::map<BlockId,BoxList>::iterator mi=boundary.begin();
-            mi!=boundary.end(); ++mi ) {
+   if (simplify_boundary_boxes) {
+      for (std::map<BlockId, BoxList>::iterator mi = boundary.begin();
+           mi != boundary.end(); ++mi) {
          mi->second.simplifyBoxes();
       }
    }
-
-   return;
 }
-
 
 /*
  *************************************************************************
@@ -2041,7 +2015,7 @@ void MappedBoxLevelConnectorUtils::makeRemainderMap(
                          orig_node.getBlockId());
             remainder_nodes.insert(remainder_nodes.end(), new_node);
             remaining_parts_neighbors.insert(remaining_parts_neighbors.end(),
-                                             new_node);
+               new_node);
          }
       }
 
@@ -2076,7 +2050,7 @@ void MappedBoxLevelConnectorUtils::makeRemainderMap(
 void MappedBoxLevelConnectorUtils::addPeriodicImages(
    MappedBoxLevel& mapped_box_level,
    const BoxTree& domain_search_tree,
-   const IntVector &threshold_distance) const
+   const IntVector& threshold_distance) const
 {
    const PeriodicShiftCatalog* shift_catalog =
       PeriodicShiftCatalog::getCatalog(mapped_box_level.getDim());
@@ -2225,15 +2199,21 @@ void MappedBoxLevelConnectorUtils::addPeriodicImagesAndRelationships(
             }
          }
          if (d_sanity_check_precond) {
-            if ( images_added &&
-                 ( !mapped_box_level_to_anchor.hasNeighborSet(mapped_box.getId()) ||
-                   mapped_box_level_to_anchor.getNeighborSet(mapped_box.getId()).empty() ) ) {
-               TBOX_WARNING("MappedBoxLevelConnectorUtils::addPeriodicImages: Box " << mapped_box
-                            <<"\nhas periodic images in or close to the domain\n"
-                            <<"but it does not have any neighbors in the anchor MappedBoxLevel.\n"
-                            <<"This will lead to missing neighbors in the output.\n"
-                            <<"If post-condition checking is enabled, this will\n"
-                            <<"result in an error.\n");
+            if (images_added &&
+                (!mapped_box_level_to_anchor.hasNeighborSet(mapped_box.getId()) ||
+                 mapped_box_level_to_anchor.getNeighborSet(mapped_box.getId()).empty())) {
+               TBOX_WARNING(
+                  "MappedBoxLevelConnectorUtils::addPeriodicImages: Box " << mapped_box
+                                                                          <<
+                  "\nhas periodic images in or close to the domain\n"
+                                                                          <<
+                  "but it does not have any neighbors in the anchor MappedBoxLevel.\n"
+                                                                          <<
+                  "This will lead to missing neighbors in the output.\n"
+                                                                          <<
+                  "If post-condition checking is enabled, this will\n"
+                                                                          <<
+                  "result in an error.\n");
             }
          }
 
@@ -2247,8 +2227,10 @@ void MappedBoxLevelConnectorUtils::addPeriodicImagesAndRelationships(
       tbox::plog << "Before bridging for periodic edges:\n"
                  << "anchor_to_anchor:\n" << anchor_to_anchor.format("DBG-> ", 3)
                  << "anchor_to_anchor:\n" << anchor_to_anchor.format("DBG-> ", 3)
-                 << "mapped_box_level_to_anchor:\n" << mapped_box_level_to_anchor.format("DBG-> ", 3)
-                 << "anchor_to_mapped_box_level:\n" << anchor_to_mapped_box_level.format("DBG-> ", 3);
+                 << "mapped_box_level_to_anchor:\n" << mapped_box_level_to_anchor.format("DBG-> ",
+         3)
+                 << "anchor_to_mapped_box_level:\n" << anchor_to_mapped_box_level.format("DBG-> ",
+         3);
    }
 
    Connector new_anchor_to_mapped_box_level;
@@ -2307,8 +2289,10 @@ void MappedBoxLevelConnectorUtils::addPeriodicImagesAndRelationships(
             << "anchor:\n" << anchor.format("ERR-> ", 3)
             << "mapped_box_level:\n" << mapped_box_level.format("ERR-> ", 3)
             << "anchor_to_anchor:\n" << anchor_to_anchor.format("ERR-> ", 3)
-            << "new_anchor_to_mapped_box_level:\n" << new_anchor_to_mapped_box_level.format("ERR-> ", 3)
-            << "new_mapped_box_level_to_anchor:\n" << new_mapped_box_level_to_anchor.format("ERR-> ", 3));
+            << "new_anchor_to_mapped_box_level:\n"
+            << new_anchor_to_mapped_box_level.format("ERR-> ", 3)
+            << "new_mapped_box_level_to_anchor:\n"
+            << new_mapped_box_level_to_anchor.format("ERR-> ", 3));
       }
    }
    if (d_sanity_check_postcond) {
@@ -2340,8 +2324,10 @@ void MappedBoxLevelConnectorUtils::addPeriodicImagesAndRelationships(
             << "anchor_to_anchor:\n" << anchor_to_anchor.format("ERR-> ", 3)
             << "anchor_to_mapped_box_level:\n" << anchor_to_mapped_box_level.format("ERR-> ", 3)
             << "mapped_box_level_to_anchor:\n" << mapped_box_level_to_anchor.format("ERR-> ", 3)
-            << "new_anchor_to_mapped_box_level:\n" << new_anchor_to_mapped_box_level.format("ERR-> ", 3)
-            << "new_mapped_box_level_to_anchor:\n" << new_mapped_box_level_to_anchor.format("ERR-> ", 3));
+            << "new_anchor_to_mapped_box_level:\n"
+            << new_anchor_to_mapped_box_level.format("ERR-> ", 3)
+            << "new_mapped_box_level_to_anchor:\n"
+            << new_mapped_box_level_to_anchor.format("ERR-> ", 3));
       }
    }
 

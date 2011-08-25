@@ -43,7 +43,6 @@ class BoxId
 {
 
 public:
-
    /*!
     * @brief Default constructor uses the default constructors for the
     * BlockId, GlobalId and PeriodicId.
@@ -64,10 +63,10 @@ public:
     * @param[in] periodic_id
     */
    explicit BoxId(
-      const LocalId &local_id,
+      const LocalId& local_id,
       const int owner_rank,
-      const BlockId &block_id = BlockId::zero(),
-      const PeriodicId &periodic_id = PeriodicId::zero());
+      const BlockId& block_id = BlockId::zero(),
+      const PeriodicId& periodic_id = PeriodicId::zero());
 
    /*!
     * @brief Initializing constructor.
@@ -80,8 +79,8 @@ public:
     */
    explicit BoxId(
       const GlobalId& id,
-      const BlockId &block_id = BlockId::zero(),
-      const PeriodicId &periodic_id = PeriodicId::zero());
+      const BlockId& block_id = BlockId::zero(),
+      const PeriodicId& periodic_id = PeriodicId::zero());
 
    /*!
     * @brief Copy constructor.
@@ -109,10 +108,10 @@ public:
     */
    void
    initialize(
-      const LocalId &local_id,
+      const LocalId& local_id,
       const int owner_rank,
-      const BlockId &block_id = BlockId::zero(),
-      const PeriodicId &periodic_id = PeriodicId::zero());
+      const BlockId& block_id = BlockId::zero(),
+      const PeriodicId& periodic_id = PeriodicId::zero());
 
    /*!
     * @brief Access the GlobalId.
@@ -130,18 +129,19 @@ public:
     * @brief Access the LocalId.
     */
    const LocalId
-   &getLocalId() const;
+   &
+   getLocalId() const;
 
    /*!
     * @brief Access the BlockId.
     */
-   const BlockId &
+   const BlockId&
    getBlockId() const;
 
    /*!
     * @brief Access the PeriodicId.
     */
-   const PeriodicId &
+   const PeriodicId&
    getPeriodicId() const;
 
    /*!
@@ -150,7 +150,6 @@ public:
     */
    bool
    isPeriodicImage() const;
-
 
    //@{
 
@@ -213,7 +212,6 @@ public:
 
    //@}
 
-
    //@{
 
    //! @name Support for message passing
@@ -235,7 +233,7 @@ public:
     */
    void
    putToIntBuffer(
-      int* buffer) const;
+      int * buffer) const;
 
    /*!
     * @brief Set attributes according to data in int buffer.
@@ -245,10 +243,9 @@ public:
     */
    void
    getFromIntBuffer(
-      const int* buffer);
+      const int * buffer);
 
    //@}
-
 
    /*!
     * @brief Format and insert the object into a stream.

@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   AMR hierarchy generation and regridding routines. 
+ * Description:   AMR hierarchy generation and regridding routines.
  *
  ************************************************************************/
 
@@ -47,9 +47,9 @@ namespace SAMRAI {
 namespace mesh {
 
 /*!
- * @brief Class GriddingAlgorithm manages AMR patch hierarchy construction 
- * operations in SAMRAI.  Specifically, it provides AMR patch hierarchy 
- * generation and regridding routines that may be used with a variety 
+ * @brief Class GriddingAlgorithm manages AMR patch hierarchy construction
+ * operations in SAMRAI.  Specifically, it provides AMR patch hierarchy
+ * generation and regridding routines that may be used with a variety
  * of AMR solution algorithms and application codes.
  *
  * The three main functions provided by this class are:
@@ -84,25 +84,25 @@ namespace mesh {
  *
  * Other objects passed to the
  * constructor provide the gridding algorithm with particular operations
- * needed during meshing operations.  Operations that tag cells for 
+ * needed during meshing operations.  Operations that tag cells for
  * refinement on a patch level and initialize data on new levels are
- * provided by the TagAndInitializeStrategy argument.  Operations that 
- * cluster tagged cells into a boxes are provided by the 
- * BoxGeneratorStrategy argument.  Routines that load balance patches 
+ * provided by the TagAndInitializeStrategy argument.  Operations that
+ * cluster tagged cells into a boxes are provided by the
+ * BoxGeneratorStrategy argument.  Routines that load balance patches
  * on a level are provided by the LoadBalanceStrategy constructor argument.
  *
  * Initialization of a GriddingAlgorithm object is performed via a
- * combination of default parameters and values read from an input 
+ * combination of default parameters and values read from an input
  * database.  Data read from input is summarized as follows:
  *
  * Optional input keys, data types, and defaults:
  *
  *   - \b    efficiency_tolerance
  *      An array of double values, each of which specifies the minimum
- *      fraction of tagged cells to total cells in boxes used to 
- *      construct patches on a new level.  If the ratio is below the 
- *      tolerance value, the box may be split into smaller boxes and 
- *      pieces removed until the ratio becomes greater than or equal to 
+ *      fraction of tagged cells to total cells in boxes used to
+ *      construct patches on a new level.  If the ratio is below the
+ *      tolerance value, the box may be split into smaller boxes and
+ *      pieces removed until the ratio becomes greater than or equal to
  *      the tolerance.  This tolerance helps users control the amount
  *      of extra refined cells created (beyond those tagged explicitly)
  *      that is typical in patch-based AMR computations.
@@ -122,7 +122,7 @@ namespace mesh {
  *      for the ratio of the total number of cells in two boxes into which
  *      a box may be split and the number of cells in the original box.
  *      If that ratio is greater than the combine efficiency, the box will not
- *      be split.  This tolerance helps users avoids splitting up portions 
+ *      be split.  This tolerance helps users avoids splitting up portions
  *      of the domain into into very small patches which can increase
  *      the overhead of AMR operations.
  *      If no input values are given, a default of 0.8 is
@@ -152,12 +152,12 @@ namespace mesh {
  *      code will continue anyway.
  *      @b "ERROR" - violations will cause an unrecoverable
  *      assertion.
- *      The default is "ERROR".  We highly recommend making boundary 
- *      proximity violation an error.  The code may work anyway, but there 
+ *      The default is "ERROR".  We highly recommend making boundary
+ *      proximity violation an error.  The code may work anyway, but there
  *      are no guarantees.
  *
  *   - \b    check_nonrefined_tags
- *      A flag to control how to resolve user-specified tags that violate 
+ *      A flag to control how to resolve user-specified tags that violate
  *      proper nesting.
  *
  *      If a tag violates the nesting requirements, its location in index space
@@ -217,13 +217,13 @@ namespace mesh {
  */
 
 class GriddingAlgorithm:
-      public GriddingAlgorithmStrategy,
-      public tbox::Serializable
+   public GriddingAlgorithmStrategy,
+   public tbox::Serializable
 {
 public:
    /*!
     * @brief The constructor for GriddingAlgorithm configures the
-    * gridding algorithm with the patch hierarchy and concrete algorithm 
+    * gridding algorithm with the patch hierarchy and concrete algorithm
     * strategy objects in the argument list.
     *
     * Gridding parameters are initialized from values provided in the
@@ -258,7 +258,7 @@ public:
     * @param[in] register_for_restart
     */
    GriddingAlgorithm(
-      const tbox::Pointer<hier::PatchHierarchy> &hierarchy,
+      const tbox::Pointer<hier::PatchHierarchy>& hierarchy,
       const std::string& object_name,
       tbox::Pointer<tbox::Database> input_db,
       tbox::Pointer<TagAndInitializeStrategy> level_strategy,
@@ -536,12 +536,12 @@ private:
    /*
     * @brief Tagging stuff before recursive regrid, called from regridFinerLevel.
     */
-   void regridFinerLevel_doTaggingBeforeRecursiveRegrid(
+   void
+   regridFinerLevel_doTaggingBeforeRecursiveRegrid(
       const int tag_ln,
       const bool level_is_coarsest_sync_level,
-      const tbox::Array<double> &regrid_start_time,
+      const tbox::Array<double>& regrid_start_time,
       const double regrid_time);
-
 
    /*
     * @brief Tagging stuff after recursive regrid, called from regridFinerLevel.
@@ -550,27 +550,25 @@ private:
     * between the tag level (number tag_ln) and the finer level
     * (number tag_ln+2) if the finer level exists in the hierarchy.
     */
-   void regridFinerLevel_doTaggingAfterRecursiveRegrid(
-      hier::Connector &tag_to_finer,
-      hier::Connector &finer_to_tag,
+   void
+   regridFinerLevel_doTaggingAfterRecursiveRegrid(
+      hier::Connector& tag_to_finer,
+      hier::Connector& finer_to_tag,
       const int tag_ln,
       const tbox::Array<int>& tag_buffer);
-
 
    /*
     * @brief Given the metadata describing the new level, this method
     * creates and installs new PatchLevel in the hierarchy.
     */
-   void regridFinerLevel_createAndInstallNewLevel(
+   void
+   regridFinerLevel_createAndInstallNewLevel(
       const int tag_ln,
       const double regrid_time,
-      const hier::Connector &tag_to_new,
-      const hier::Connector &new_to_tag,
-      const hier::Connector &tag_to_finer,
-      const hier::Connector &finer_to_tag);
-
-
-
+      const hier::Connector& tag_to_new,
+      const hier::Connector& new_to_tag,
+      const hier::Connector& tag_to_finer,
+      const hier::Connector& finer_to_tag);
 
    /*
     * @brief Set all tags on a level to a given value.
@@ -581,7 +579,8 @@ private:
     *
     * @param[in] tag_index
     */
-   void fillTags(
+   void
+   fillTags(
       const int tag_value,
       const tbox::Pointer<hier::PatchLevel> tag_level,
       const int tag_index) const;
@@ -646,7 +645,7 @@ private:
       const hier::MappedBoxLevel& unnested_mapped_box_level,
       const hier::Connector& tag_to_unnested,
       const hier::Connector& unnested_to_tag,
-      const int unnested_ln ) const;
+      const int unnested_ln) const;
 
    /*
     * @brief Make a map that, when applied to a MappedBoxLevel that
@@ -668,10 +667,10 @@ private:
       hier::MappedBoxLevel& nested_mapped_box_level,
       hier::Connector& unnested_to_nested,
       const hier::MappedBoxLevel& unnested_mapped_box_level,
-      const hier::Connector& unnested_to_reference ) const;
+      const hier::Connector& unnested_to_reference) const;
 
    /*!
-    * @brief Make a map from a MappedBoxLevel to parts of that MappedBoxLevel 
+    * @brief Make a map from a MappedBoxLevel to parts of that MappedBoxLevel
     * that violate proper nesting.
     *
     * @param[in] candidate MappedBoxLevel being examined for nesting violation.
@@ -717,7 +716,7 @@ private:
       hier::Connector& tag_to_new,
       hier::Connector& new_to_tag,
       const hier::BoxList& physical_domain_list,
-      const hier::IntVector& extend_ghosts ) const;
+      const hier::IntVector& extend_ghosts) const;
 
    /*!
     * @brief Precompute data used to define proper nesting.
@@ -746,7 +745,8 @@ private:
     *
     * @param[in] tag_ln Level number of the tag level.
     */
-   void growBoxesWithinNestingDomain(
+   void
+   growBoxesWithinNestingDomain(
       hier::MappedBoxLevel& new_mapped_box_level,
       hier::Connector& tag_to_new,
       hier::Connector& new_to_tag,
@@ -886,14 +886,17 @@ private:
    /*!
     * @brief Check domain boxes for violations of certain constraints.
     */
-   void checkDomainBoxes(const hier::BoxList &domain_boxes) const;
+   void
+   checkDomainBoxes(
+      const hier::BoxList& domain_boxes) const;
 
    /*!
     * @brief Check for non-nesting user-specified boxes.
     */
-   void checkNonnestingUserBoxes(
-      const hier::Connector &new_to_tag,
-      const hier::IntVector &nesting_buffer ) const;
+   void
+   checkNonnestingUserBoxes(
+      const hier::Connector& new_to_tag,
+      const hier::IntVector& nesting_buffer) const;
 
    /*!
     * @brief Check for boxes that are too close to the physical
@@ -921,9 +924,10 @@ private:
     * Compute the allowable distance from boxes in new_mapped_box_level
     * to domain boundary and delegate the checking.
     */
-   void checkBoundaryProximityViolation(
+   void
+   checkBoundaryProximityViolation(
       const int tag_ln,
-      const hier::MappedBoxLevel &new_mapped_box_level ) const;
+      const hier::MappedBoxLevel& new_mapped_box_level) const;
 
    /*!
     * @brief Check for user tags that violate proper nesting.
@@ -1012,8 +1016,8 @@ private:
     * Static members for managing shared tag data among multiple
     * GriddingAlgorithm objects.
     */
-   static tbox::Array<int>* s_tag_indx;
-   static tbox::Array<int>* s_buf_tag_indx;
+   static tbox::Array<int> * s_tag_indx;
+   static tbox::Array<int> * s_buf_tag_indx;
 
    const tbox::Dimension d_dim;
 
@@ -1043,7 +1047,7 @@ private:
     *
     * @see setMultiblockGriddingTagger().
     */
-   MultiblockGriddingTagger* d_mb_tagger_strategy;
+   MultiblockGriddingTagger * d_mb_tagger_strategy;
 
    /*
     * Cell-centered integer variables use to tag cells for refinement.
@@ -1252,13 +1256,13 @@ private:
     * Static initialization and cleanup handler.
     */
    static tbox::StartupShutdownManager::Handler
-   s_initialize_handler;
+      s_initialize_handler;
 
    /*
     *
     */
    static tbox::StartupShutdownManager::Handler
-   s_startup_shutdown_handler;
+      s_startup_shutdown_handler;
 
 };
 

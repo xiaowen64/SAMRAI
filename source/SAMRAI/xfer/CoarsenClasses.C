@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Simple structure for managing coarsening data in equivalence classes. 
+ * Description:   Simple structure for managing coarsening data in equivalence classes.
  *
  ************************************************************************/
 
@@ -243,8 +243,8 @@ bool CoarsenClasses::classesMatch(
       pd = hier::VariableDatabase::getDatabase()->getPatchDescriptor();
    }
 
-   if ( getNumberOfEquivalenceClasses() !=
-        test_classes->getNumberOfEquivalenceClasses() ) {
+   if (getNumberOfEquivalenceClasses() !=
+       test_classes->getNumberOfEquivalenceClasses()) {
 
       items_match = false;
 
@@ -262,9 +262,9 @@ bool CoarsenClasses::classesMatch(
          } else {
 
             const CoarsenClasses::Data& my_item =
-                  getClassRepresentative(eq_index);
+               getClassRepresentative(eq_index);
             const CoarsenClasses::Data& test_item =
-                  test_classes->getClassRepresentative(eq_index);
+               test_classes->getClassRepresentative(eq_index);
 
             items_match = itemsAreEquivalent(my_item, test_item);
 
@@ -283,8 +283,8 @@ bool CoarsenClasses::classesMatch(
 /*
  *************************************************************************
  *                                                                       *
- * Return true if data items are equivalent; false otherwise.            * 
- * This routine defines coarsen item equivalence.                        *     
+ * Return true if data items are equivalent; false otherwise.            *
+ * This routine defines coarsen item equivalence.                        *
  *                                                                       *
  *************************************************************************
  */
@@ -321,7 +321,6 @@ bool CoarsenClasses::itemsAreEquivalent(
       equivalent &= (typeid(*(data1.d_var_fill_pattern)) ==
                      typeid(*(data2.d_var_fill_pattern)));
    }
-
 
    return equivalent;
 }
@@ -470,11 +469,11 @@ int CoarsenClasses::getEquivalenceClassIndex(
    while (!class_found && check_index < getNumberOfEquivalenceClasses()) {
 
       const CoarsenClasses::Data& class_rep =
-            getClassRepresentative(check_index);
+         getClassRepresentative(check_index);
 
       class_found = itemsAreEquivalent(data, class_rep);
 
-      if ( class_found ) {
+      if (class_found) {
          eq_index = check_index;
       }
 

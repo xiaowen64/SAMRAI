@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Lookup table to aid in BoundaryBox construction 
+ * Description:   Lookup table to aid in BoundaryBox construction
  *
  ************************************************************************/
 
@@ -46,7 +46,7 @@ public:
     * @brief Return pointer to singleton instance of the boundary
     * lookup table.
     *
-    * Following the Singleton design pattern, users of this class 
+    * Following the Singleton design pattern, users of this class
     * do not explicitly allocate or deallocate the Singleton instance.
     *
     * @param   dim   Dimension of the object.
@@ -68,7 +68,7 @@ public:
     *
     * @param loc   integer location index of boundary region
     * @param codim integer codimension of boundary region
-
+    *
     * @return  const reference to integer array of length codim
     *          containing the active directions for this boundary case.
     */
@@ -197,7 +197,7 @@ private:
                    int codim,
                    int ibeg,
                    int(&work)[tbox::Dimension::MAXIMUM_DIMENSION_VALUE],
-                   int & lvl,
+                   int& lvl,
                    int * & ptr);
 
    /*!
@@ -256,7 +256,7 @@ private:
    tbox::Array<tbox::Array<hier::IntVector> > d_bdry_dirs;
 
    static tbox::StartupShutdownManager::Handler
-   s_finalize_handler;
+      s_finalize_handler;
 
 };
 

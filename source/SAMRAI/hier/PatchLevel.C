@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   A collection of patches at one level of the AMR hierarchy 
+ * Description:   A collection of patches at one level of the AMR hierarchy
  *
  ************************************************************************/
 
@@ -133,7 +133,7 @@ PatchLevel::PatchLevel(
       for (int i = 0; i < getDim().getValue(); i++) {
          TBOX_ASSERT((mapped_box_level.getRefinementRatio() (i)
                       * mapped_box_level.getRefinementRatio() ((i
-                                                                 + 1)
+                                                                + 1)
                          % getDim().getValue()) > 0)
             || (mapped_box_level.getRefinementRatio() (i) == 1)
             || (mapped_box_level.getRefinementRatio() ((i + 1) % getDim().getValue()) ==
@@ -163,7 +163,7 @@ PatchLevel::PatchLevel(
    const BoxSet& mapped_boxes = d_mapped_box_level->getMappedBoxes();
    for (RealBoxConstIterator ni(mapped_boxes); ni.isValid(); ++ni) {
       const Box& mapped_box = *ni;
-      const BoxId &ip = mapped_box.getId();
+      const BoxId& ip = mapped_box.getId();
       tbox::Pointer<Patch>& patch = d_patches[ip];
       patch = d_factory->allocate(mapped_box, d_descriptor);
       patch->setPatchLevelNumber(d_level_number);
@@ -834,8 +834,8 @@ void PatchLevel::getFromDatabase(
 
    d_physical_domain.resizeArray(d_number_blocks, BoxList(d_dim));
    for (int nb = 0; nb < d_number_blocks; nb++) {
-      std::string domain_name = "d_physical_domain_" +
-                                tbox::Utilities::blockToString(nb);
+      std::string domain_name = "d_physical_domain_"
+         + tbox::Utilities::blockToString(nb);
       d_physical_domain[nb] = database->getDatabaseBoxArray(domain_name);
    }
 
@@ -864,15 +864,15 @@ void PatchLevel::getFromDatabase(
    tbox::Pointer<tbox::Database> patch_database;
    for (RealBoxConstIterator ni(mapped_boxes); ni.isValid(); ++ni) {
       const Box& mapped_box = *ni;
-      const LocalId &local_id = mapped_box.getLocalId();
-      const BoxId &mapped_box_id = mapped_box.getId();
+      const LocalId& local_id = mapped_box.getLocalId();
+      const BoxId& mapped_box_id = mapped_box.getId();
 
       std::string patch_name = "level_" + tbox::Utilities::levelToString(
             d_level_number)
          + "-patch_" + tbox::Utilities::patchToString(local_id.getValue())
          + "-block_"
          + tbox::Utilities::blockToString(
-              mapped_box_id.getBlockId().getBlockValue());
+            mapped_box_id.getBlockId().getBlockValue());
       if (!(database->isDatabase(patch_name))) {
          TBOX_ERROR("PatchLevel::getFromDatabase() error...\n"
             << "   patch name " << patch_name
@@ -932,8 +932,8 @@ void PatchLevel::putToDatabase(
 
    for (int nb = 0; nb < d_number_blocks; nb++) {
       tbox::Array<tbox::DatabaseBox> temp_domain = d_physical_domain[nb];
-      std::string domain_name = "d_physical_domain_" +
-                                tbox::Utilities::blockToString(nb);
+      std::string domain_name = "d_physical_domain_"
+         + tbox::Utilities::blockToString(nb);
       database->putDatabaseBoxArray(domain_name, temp_domain);
    }
    database->putInteger("d_level_number", d_level_number);
@@ -962,7 +962,7 @@ void PatchLevel::putToDatabase(
          + tbox::Utilities::patchToString(ip->getLocalId().getValue())
          + "-block_"
          + tbox::Utilities::blockToString(
-              ip->getMappedBox().getBlockId().getBlockValue());
+            ip->getMappedBox().getBlockId().getBlockValue());
 
       patch_database = database->putDatabase(patch_name);
 
@@ -987,7 +987,7 @@ int PatchLevel::recursivePrint(
    os << border << "Local/Global number of patches and cells = "
       << getLocalNumberOfPatches() << "/" << getGlobalNumberOfPatches() << "  "
       << getLocalNumberOfCells() << "/" << getGlobalNumberOfCells() << "\n";
-   os << getMappedBoxLevel()->format(border,2) << std::endl;
+   os << getMappedBoxLevel()->format(border, 2) << std::endl;
 
    if (depth > 0) {
       for (Iterator pi(this); pi; pi++) {
@@ -1007,9 +1007,9 @@ int PatchLevel::recursivePrint(
  */
 void PatchLevel::initializeGlobalizedMappedBoxLevel() const
 {
-   if ( !d_has_globalized_data ) {
+   if (!d_has_globalized_data) {
 
-      const MappedBoxLevel &globalized_mapped_box_level(
+      const MappedBoxLevel& globalized_mapped_box_level(
          d_mapped_box_level->getGlobalizedVersion());
 
       const int nboxes = globalized_mapped_box_level.getGlobalNumberOfBoxes();

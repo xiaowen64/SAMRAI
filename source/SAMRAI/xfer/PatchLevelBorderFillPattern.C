@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Abstract fill pattern class to provide interface for stencils 
+ * Description:   Abstract fill pattern class to provide interface for stencils
  *
  ************************************************************************/
 
@@ -94,13 +94,13 @@ void PatchLevelBorderFillPattern::computeFillMappedBoxesAndNeighborhoodSets(
 
             const hier::BlockId& dst_block_id = dst_mapped_box.getBlockId();
             const hier::BlockId& nbr_block_id = na->getBlockId();
-         
+
             TBOX_ASSERT(grid_geometry->areNeighbors(dst_block_id,
-                                                    nbr_block_id));
+                  nbr_block_id));
 
             hier::Transformation::RotationIdentifier rotation =
                grid_geometry->getRotationIdentifier(dst_block_id,
-                                                    nbr_block_id);
+                  nbr_block_id);
             hier::IntVector offset(
                grid_geometry->getOffset(dst_block_id, nbr_block_id));
 
@@ -108,7 +108,7 @@ void PatchLevelBorderFillPattern::computeFillMappedBoxesAndNeighborhoodSets(
 
             hier::Transformation transformation(rotation, offset);
 
-            hier::Box nbr_box(*na); 
+            hier::Box nbr_box(*na);
             transformation.transform(nbr_box);
 
             fill_boxes.removeIntersections(nbr_box);
@@ -121,9 +121,9 @@ void PatchLevelBorderFillPattern::computeFillMappedBoxesAndNeighborhoodSets(
          NeighborSet& fill_nabrs = dst_to_fill_edges[dst_mapped_box.getId()];
          for (hier::BoxList::Iterator li(fill_boxes); li; li++) {
             hier::Box fill_mapped_box(*li,
-                                            ++last_id,
-                                            dst_mapped_box.getOwnerRank(),
-                                            dst_mapped_box.getBlockId());
+                                      ++last_id,
+                                      dst_mapped_box.getOwnerRank(),
+                                      dst_mapped_box.getBlockId());
             fill_mapped_boxes.insert(fill_mapped_boxes.end(), fill_mapped_box);
             fill_nabrs.insert(fill_mapped_box);
          }

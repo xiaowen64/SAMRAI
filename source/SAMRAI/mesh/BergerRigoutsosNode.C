@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Node in asynchronous Berger-Rigoutsos dendogram 
+ * Description:   Node in asynchronous Berger-Rigoutsos dendogram
  *
  ************************************************************************/
 #ifndef included_mesh_BergerRigoutsosNode_C
@@ -129,8 +129,8 @@ BergerRigoutsosNode::BergerRigoutsosNode(
    d_dim(parent->d_dim),
    d_pos((parent->d_pos > 0 && parent->d_pos <
           tbox::MathUtilities<int>::getMax() / 2) ?
-         2 * parent->d_pos + child_number:
-            (child_number == 0 ? -1:-2)),
+         2 * parent->d_pos + child_number :
+         (child_number == 0 ? -1 : -2)),
    d_common(common_params),
    d_parent(parent),
    d_lft_child(NULL),
@@ -348,7 +348,7 @@ void BergerRigoutsosNode::clusterAndComputeRelationships()
     *     These relationships are organized around the tagged nodes.
     *     They do not need to be shared with the owners of the
     *     new nodes.
-
+    *
     * If compute_relationships == 2:
     *   - Compute relationships as in compute_relationships == 1 case.
     *   - Owners of new relationships send new relationship data to owners
@@ -377,7 +377,6 @@ void BergerRigoutsosNode::clusterAndComputeRelationships()
 
    }
 
-
    TBOX_ASSERT(d_common->algo_advance_mode == ADVANCE_SOME ||
       d_common->algo_advance_mode == ADVANCE_ANY ||
       d_common->algo_advance_mode == SYNCHRONOUS);            // No other supported currently.
@@ -392,7 +391,7 @@ void BergerRigoutsosNode::clusterAndComputeRelationships()
 
          d_common->t_compute->start();
          while (!d_common->relaunch_queue.empty()) {
-            BergerRigoutsosNode* node_for_relaunch =  d_common->relaunch_queue.front();
+            BergerRigoutsosNode* node_for_relaunch = d_common->relaunch_queue.front();
             d_common->relaunch_queue.pop_front();
             if (0) {
                tbox::plog << "Continuing from queue ";
@@ -636,9 +635,9 @@ BergerRigoutsosNode::continueAlgorithm()
     * which is specified by the wait phase variable.
     */
    switch (d_wait_phase) {
-      case for_data_only :
+      case for_data_only:
          TBOX_ERROR("Library error: Attempt to execute data-only node.");
-      case to_be_launched :
+      case to_be_launched:
          goto TO_BE_LAUNCHED;
       case reduce_histogram:
          goto REDUCE_HISTOGRAM;
@@ -708,7 +707,7 @@ TO_BE_LAUNCHED:
           * For the global group, MPI collective functions are presumably
           * faster than the peer-to-peer collective implementation in
           * AsyncCommGroup.
-
+          *
           * Enable this mode only for the root node.  Child nodes are
           * not guaranteed to execute the communication operation at
           * the same point on all processors (even if all proccessors
@@ -1415,7 +1414,7 @@ bool BergerRigoutsosNode::broadcastAcceptability_check()
          d_mapped_box = hier::Box(d_box, node_local_id, d_owner, d_block_id);
 #ifdef DEBUG_CHECK_ASSERTIONS
          TBOX_ASSERT(d_mapped_box.getLocalId() >= 0);
-         if ( d_parent != NULL ) {
+         if (d_parent != NULL) {
             /*
              * Do not check for min_box violation in root node.  That
              * check should be done outside of this class in order to
@@ -1655,7 +1654,7 @@ bool BergerRigoutsosNode::broadcastToDropouts_check()
          const hier::LocalId local_id(d_recv_msg[1]);
          getBoxFromBuffer(d_box, &d_recv_msg[2]);
 #ifdef DEBUG_CHECK_ASSERTIONS
-         if ( d_parent != NULL ) {
+         if (d_parent != NULL) {
             /*
              * Do not check for min_box violation in root node.  That
              * check should be done outside of this class in order to
@@ -1773,9 +1772,9 @@ void BergerRigoutsosNode::computeMinimalBoundingBoxForTags()
    const hier::Box new_box(new_lower, new_upper);
    const hier::IntVector new_size = new_box.numberCells();
 
-   if (! new_box.isSpatiallyEqual(d_box)) {
+   if (!new_box.isSpatiallyEqual(d_box)) {
 #ifdef DEBUG_CHECK_ASSERTIONS
-      if ( d_parent != NULL ) {
+      if (d_parent != NULL) {
          /*
           * Do not check for min_box violation in root node.  That
           * check should be done outside of this class in order to
@@ -1837,7 +1836,7 @@ void BergerRigoutsosNode::acceptOrSplitBox()
     * - it has a high enough fraction of tagged cells, or
     * - it cannot be split without breaking the minimum
     *   box requirement, or
-
+    *
     * If d_box has no tags:
     * - set d_box_acceptance = hasnotag_by_owner
     * If accepting d_box:
@@ -1847,7 +1846,7 @@ void BergerRigoutsosNode::acceptOrSplitBox()
     * - create left and right children
     * - set children boxes
     * - claim MPI tags for communication by children nodes
-
+    *
     * Instead of writing from scratch,
     * the code to find the split plane was copied
     * from mesh::BergerRigoutsos<DIM>::splitTagBoundBox()
@@ -2164,9 +2163,9 @@ void BergerRigoutsosNode::cutAtLaplacian(
    /*
     * New implementation prefers and possibly restricts the Laplace cut
     * to the center part of the box.
-
+    *
     * The cuts refer to face indices, not cell indices.
-
+    *
     * Note that we work in the index space centered on the box's lower
     * cell and add the box lower cell index at the end.
     */
@@ -2253,7 +2252,7 @@ void BergerRigoutsosNode::cutAtLaplacian(
  ********************************************************************
  * Create a DLBG Box in d_common->new_mapped_box_set,
  * where the output boxes of the algorithm is saved.
-
+ *
  * Only the owner should create the mapped_box_level node this way.
  * Other processes build mapped_box_level node using data from owner.
  ********************************************************************
@@ -2268,8 +2267,8 @@ void BergerRigoutsosNode::createMappedBox()
       d_common->new_mapped_box_set.rbegin()->getLocalId();
 
    d_mapped_box_iterator = d_common->new_mapped_box_set.insert(
-      d_common->new_mapped_box_set.end(),
-      hier::Box(d_box, last_index+1, d_common->rank, d_block_id) );
+         d_common->new_mapped_box_set.end(),
+         hier::Box(d_box, last_index + 1, d_common->rank, d_block_id));
 
    d_mapped_box = *d_mapped_box_iterator;
 }
@@ -2297,7 +2296,7 @@ void BergerRigoutsosNode::countOverlapWithLocalPatches()
 {
    /*
     * Count overlaps for the left and right sides.
-
+    *
     * Remove the child if it has zero overlap.
     */
    hier::Box lft_grown_box = d_lft_child->d_box;
@@ -2499,7 +2498,7 @@ void BergerRigoutsosNode::computeNewNeighborhoodSets()
    TBOX_ASSERT(d_mapped_box.getLocalId() >= 0);
    TBOX_ASSERT(boxAccepted());
    TBOX_ASSERT(d_box_acceptance != accepted_by_dropout_bcast);
-   if ( d_parent != NULL ) {
+   if (d_parent != NULL) {
       /*
        * Do not check for min_box violation in root node.  That
        * check should be done outside of this class in order to
@@ -2536,7 +2535,7 @@ void BergerRigoutsosNode::computeNewNeighborhoodSets()
        * graph node d_mapped_box.
        * Label the id of the new node and the (yet unknown) number
        * of relationship found for it.
-
+       *
        * The message to be sent to owner is appended the following
        * data:
        * - index of new node
@@ -3309,7 +3308,6 @@ void BergerRigoutsosNode::finalizeCallback()
    CommonParams::t_bcast_child_groups.setNull();
    CommonParams::t_bcast_to_dropouts.setNull();
 }
-
 
 }
 }

@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   AMR communication tests for face-centered patch data 
+ * Description:   AMR communication tests for face-centered patch data
  *
  ************************************************************************/
 
@@ -194,7 +194,7 @@ void FaceDataTest::setConservativeData(
    tbox::Pointer<hier::PatchLevel> level = hierarchy->getPatchLevel(
          level_number);
 
-   const hier::BoxList &domain =
+   const hier::BoxList& domain =
       level->getPhysicalDomain(hier::BlockId::zero());
    int ncells = 0;
    for (hier::BoxList::Iterator i(domain); i; i++) {
@@ -604,8 +604,8 @@ bool FaceDataTest::verifyResults(
                      tbox::perr << "Test FAILED: ...."
                                 << " : face_data index = " << si() << endl;
                      tbox::perr << "    hier::Variable = "
-                     << d_variable_src_name[i]
-                     << " : depth index = " << d << endl;
+                                << d_variable_src_name[i]
+                                << " : depth index = " << d << endl;
                      tbox::perr << "    result = " << result
                                 << " : correct = " << correct << endl;
                   }

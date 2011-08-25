@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Test program for asynchronous BR implementation 
+ * Description:   Test program for asynchronous BR implementation
  *
  ************************************************************************/
 #ifdef HAVE_CONFIG_H
@@ -69,8 +69,8 @@ int main(
    tbox::SAMRAI_MPI::init(&argc, &argv);
    if (get_input_filename(&argc, argv, input_filename) == 1) {
       cout << "Usage: " << argv[0]
-      << " <input file>."
-      << endl;
+           << " <input file>."
+           << endl;
       tbox::SAMRAI_MPI::finalize();
       return 0;
    }
@@ -203,7 +203,7 @@ int main(
          grid_geometry->printClassData(tbox::plog);
          patch_hierarchy =
             new hier::PatchHierarchy("Patch Hierarchy", grid_geometry,
-                                     input_db->getDatabase("PatchHierarchy"));
+               input_db->getDatabase("PatchHierarchy"));
       }
 
       /*

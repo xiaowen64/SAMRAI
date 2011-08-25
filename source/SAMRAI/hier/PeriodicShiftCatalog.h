@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Utility for cataloging periodic shift directions. 
+ * Description:   Utility for cataloging periodic shift directions.
  *
  ************************************************************************/
 #ifndef included_hier_PeriodicShiftCatalog
@@ -30,7 +30,7 @@ namespace hier {
  * location to the image.
  *
  * This class catalogs all possible shifts for a periodic
- * configuration and assigns an integer index to each shift.  A shift 
+ * configuration and assigns an integer index to each shift.  A shift
  * can be referenced by a single "shift number" rather than its IntVector
  * distance.
  *
@@ -59,7 +59,7 @@ public:
     */
    const IntVector&
    shiftNumberToShiftDistance(
-      const PeriodicId &shift_number) const;
+      const PeriodicId& shift_number) const;
 
    /*!
     * @brief Return the shift number corresponding to the given shift
@@ -86,9 +86,9 @@ public:
     *
     * @param[in] shift_number
     */
-   const PeriodicId &
+   const PeriodicId&
    getOppositeShiftNumber(
-      const PeriodicId &shift_number) const;
+      const PeriodicId& shift_number) const;
 
    /*!
     * @brief Determine whether there is any periodicity.
@@ -105,7 +105,8 @@ public:
    /*!
     * @brief Return the shift number corresponding to no shift.
     */
-   const PeriodicId &getZeroShiftNumber() const;
+   const PeriodicId&
+   getZeroShiftNumber() const;
 
    /*!
     * @brief Compute all possible shifts for periodicity along the
@@ -177,7 +178,7 @@ private:
    static PeriodicShiftCatalog* s_periodic_shift_catalog_instance[tbox::
                                                                   Dimension::
                                                                   MAXIMUM_DIMENSION_VALUE
-      ];
+   ];
 
    std::vector<IntVector> d_shifts;
 
@@ -195,7 +196,7 @@ private:
    unsigned int d_zero_shift_number;
 
    static tbox::StartupShutdownManager::Handler
-   s_finalize_handler;
+      s_finalize_handler;
 };
 
 }

@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Patch container class for patch data objects 
+ * Description:   Patch container class for patch data objects
  *
  ************************************************************************/
 
@@ -78,8 +78,8 @@ public:
    /*!
     * @brief Get the box over which the patch is defined.
     *
-    * Note that the patch data objects on a patch are free to interpret 
-    * this box as appropriate for the "geometry" of their data 
+    * Note that the patch data objects on a patch are free to interpret
+    * this box as appropriate for the "geometry" of their data
     * (e.g., face-centered, node-centered, etc.)
     *
     * @return The box over which this patch is defined.
@@ -118,7 +118,8 @@ public:
     *
     * @return The LocalId of this patch.
     */
-   const LocalId &getLocalId() const;
+   const LocalId&
+   getLocalId() const;
 
    /*!
     * @brief Get the patch descriptor.

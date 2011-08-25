@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Class containing numerical routines for modified Bratu problem 
+ * Description:   Class containing numerical routines for modified Bratu problem
  *
  ************************************************************************/
 
@@ -188,7 +188,7 @@ ModifiedBratuProblem::ModifiedBratuProblem(
          d_nghosts);
 
    /*
-    *hier::Variable to weight solution vector entries on a composite grid.
+    * *hier::Variable to weight solution vector entries on a composite grid.
     */
 
    d_weight = new pdat::CellVariable<double>(d_dim, d_object_name + "weight", 1);

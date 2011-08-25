@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Interface for the AMR Index object 
+ * Description:   Interface for the AMR Index object
  *
  ************************************************************************/
 
@@ -280,7 +280,6 @@ public:
       const IntVector& ratio);
 
 private:
-
    friend class std::vector<Index>;
 
    /**
@@ -318,7 +317,7 @@ private:
    static Index* s_mins[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
 
    static tbox::StartupShutdownManager::Handler
-   s_initialize_finalize_handler;
+      s_initialize_finalize_handler;
 
 };
 

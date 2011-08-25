@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   A memory database structure that stores (key,value) pairs in memory 
+ * Description:   A memory database structure that stores (key,value) pairs in memory
  *
  ************************************************************************/
 
@@ -87,7 +87,7 @@ public:
    virtual bool
    open(
       const std::string& name,
-      const bool read_write_mode=false);
+      const bool read_write_mode = false);
 
    /**
     * Close the database.
@@ -245,7 +245,7 @@ public:
    virtual void
    getBoolArray(
       const std::string& key,
-      bool* data,
+      bool * data,
       const int nelements);
 
    /**
@@ -328,7 +328,7 @@ public:
    virtual void
    getDatabaseBoxArray(
       const std::string& key,
-      DatabaseBox* data,
+      DatabaseBox * data,
       const int nelements);
 
    /**
@@ -411,7 +411,7 @@ public:
    virtual void
    getCharArray(
       const std::string& key,
-      char* data,
+      char * data,
       const int nelements);
 
    /**
@@ -499,7 +499,7 @@ public:
    virtual void
    getComplexArray(
       const std::string& key,
-      dcomplex* data,
+      dcomplex * data,
       const int nelements);
 
    /**
@@ -586,7 +586,7 @@ public:
    virtual void
    getDoubleArray(
       const std::string& key,
-      double* data,
+      double * data,
       const int nelements);
 
    /**
@@ -675,7 +675,7 @@ public:
    virtual void
    getFloatArray(
       const std::string& key,
-      float* data,
+      float * data,
       const int nelements);
 
    /**
@@ -758,7 +758,7 @@ public:
    virtual void
    getIntegerArray(
       const std::string& key,
-      int* data,
+      int * data,
       const int nelements);
 
    /**
@@ -841,7 +841,7 @@ public:
    virtual void
    getStringArray(
       const std::string& key,
-      std::string* data,
+      std::string * data,
       const int nelements);
 
    /**

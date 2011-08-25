@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Registry of MappedBoxLevelHandles incident from a common MappedBoxLevel. 
+ * Description:   Registry of MappedBoxLevelHandles incident from a common MappedBoxLevel.
  *
  ************************************************************************/
 #ifndef included_hier_MappedBoxLevelHandle_C
@@ -17,9 +17,9 @@ namespace SAMRAI {
 namespace hier {
 
 /*
-************************************************************************
-************************************************************************
-*/
+ ************************************************************************
+ ************************************************************************
+ */
 MappedBoxLevelHandle::MappedBoxLevelHandle(
    const MappedBoxLevel* mapped_box_level):
    d_mapped_box_level(mapped_box_level)
@@ -27,27 +27,27 @@ MappedBoxLevelHandle::MappedBoxLevelHandle(
 }
 
 /*
-************************************************************************
-************************************************************************
-*/
+ ************************************************************************
+ ************************************************************************
+ */
 MappedBoxLevelHandle::~MappedBoxLevelHandle()
 {
    detachMyMappedBoxLevel();
 }
 
 /*
-************************************************************************
-************************************************************************
-*/
+ ************************************************************************
+ ************************************************************************
+ */
 bool MappedBoxLevelHandle::isAttached() const
 {
    return d_mapped_box_level != NULL;
 }
 
 /*
-************************************************************************
-************************************************************************
-*/
+ ************************************************************************
+ ************************************************************************
+ */
 const MappedBoxLevel& MappedBoxLevelHandle::getMappedBoxLevel() const
 {
    if (d_mapped_box_level == NULL) {
@@ -68,12 +68,12 @@ const MappedBoxLevel& MappedBoxLevelHandle::getMappedBoxLevel() const
 }
 
 /*
-************************************************************************
-* To be called by the object's MappedBoxLevel when the
-* MappedBoxLevel changes in a way that can invalidate the
-* Connector data.
-************************************************************************
-*/
+ ************************************************************************
+ * To be called by the object's MappedBoxLevel when the
+ * MappedBoxLevel changes in a way that can invalidate the
+ * Connector data.
+ ************************************************************************
+ */
 void MappedBoxLevelHandle::detachMyMappedBoxLevel()
 {
    d_mapped_box_level = NULL;

@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   A database structure that stores HDF5 format data. 
+ * Description:   A database structure that stores HDF5 format data.
  *
  ************************************************************************/
 
@@ -93,23 +93,23 @@ namespace tbox {
  *                                                                       *
  *************************************************************************
  */
-const int HDFDatabase::KEY_DATABASE       = 0;
-const int HDFDatabase::KEY_BOOL_ARRAY     = 1;
-const int HDFDatabase::KEY_BOX_ARRAY      = 2;
-const int HDFDatabase::KEY_CHAR_ARRAY     = 3;
-const int HDFDatabase::KEY_COMPLEX_ARRAY  = 4;
-const int HDFDatabase::KEY_DOUBLE_ARRAY   = 5;
-const int HDFDatabase::KEY_FLOAT_ARRAY    = 6;
-const int HDFDatabase::KEY_INT_ARRAY      = 7;
-const int HDFDatabase::KEY_STRING_ARRAY   = 8;
-const int HDFDatabase::KEY_BOOL_SCALAR    = -1;
-const int HDFDatabase::KEY_BOX_SCALAR     = -2;
-const int HDFDatabase::KEY_CHAR_SCALAR    = -3;
+const int HDFDatabase::KEY_DATABASE = 0;
+const int HDFDatabase::KEY_BOOL_ARRAY = 1;
+const int HDFDatabase::KEY_BOX_ARRAY = 2;
+const int HDFDatabase::KEY_CHAR_ARRAY = 3;
+const int HDFDatabase::KEY_COMPLEX_ARRAY = 4;
+const int HDFDatabase::KEY_DOUBLE_ARRAY = 5;
+const int HDFDatabase::KEY_FLOAT_ARRAY = 6;
+const int HDFDatabase::KEY_INT_ARRAY = 7;
+const int HDFDatabase::KEY_STRING_ARRAY = 8;
+const int HDFDatabase::KEY_BOOL_SCALAR = -1;
+const int HDFDatabase::KEY_BOX_SCALAR = -2;
+const int HDFDatabase::KEY_CHAR_SCALAR = -3;
 const int HDFDatabase::KEY_COMPLEX_SCALAR = -4;
-const int HDFDatabase::KEY_DOUBLE_SCALAR  = -5;
-const int HDFDatabase::KEY_FLOAT_SCALAR   = -6;
-const int HDFDatabase::KEY_INT_SCALAR     = -7;
-const int HDFDatabase::KEY_STRING_SCALAR  = -8;
+const int HDFDatabase::KEY_DOUBLE_SCALAR = -5;
+const int HDFDatabase::KEY_FLOAT_SCALAR = -6;
+const int HDFDatabase::KEY_INT_SCALAR = -7;
+const int HDFDatabase::KEY_STRING_SCALAR = -8;
 
 /*
  *************************************************************************
@@ -2264,7 +2264,7 @@ bool HDFDatabase::create(
 
 bool HDFDatabase::open(
    const std::string& name,
-   const bool read_write_mode ) {
+   const bool read_write_mode) {
    TBOX_ASSERT(!name.empty());
 
    bool status = false;
@@ -2272,8 +2272,8 @@ bool HDFDatabase::open(
    hid_t file_id = 0;
 
    file_id = H5Fopen(name.c_str(),
-                     read_write_mode ? H5F_ACC_RDWR : H5F_ACC_RDONLY,
-                     H5P_DEFAULT);
+         read_write_mode ? H5F_ACC_RDWR : H5F_ACC_RDONLY,
+         H5P_DEFAULT);
    if (file_id < 0) {
       TBOX_ERROR("Unable to open HDF5 file " << name << "\n");
       status = false;

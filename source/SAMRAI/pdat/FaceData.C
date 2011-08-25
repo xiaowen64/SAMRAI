@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Templated face centered patch data type 
+ * Description:   Templated face centered patch data type
  *
  ************************************************************************/
 
@@ -28,7 +28,8 @@
 namespace SAMRAI {
 namespace pdat {
 
-template<class TYPE> const int FaceData<TYPE>::PDAT_FACEDATA_VERSION = 1;
+template<class TYPE>
+const int FaceData<TYPE>::PDAT_FACEDATA_VERSION = 1;
 
 /*
  *************************************************************************
@@ -220,7 +221,7 @@ void FaceData<TYPE>::copyWithRotation(
    const FaceOverlap& overlap)
 {
    TBOX_ASSERT(overlap.getTransformation().getRotation() !=
-               hier::Transformation::NO_ROTATE);
+      hier::Transformation::NO_ROTATE);
 
    const tbox::Dimension& dim(src.getDim());
    const hier::Transformation::RotationIdentifier rotate =
@@ -256,7 +257,7 @@ void FaceData<TYPE>::copyWithRotation(
                                getDepth() : src.getDepth());
 
             for (hier::Box::Iterator ci(copybox); ci; ci++) {
-   
+
                FaceIndex dst_index(ci(), 0, 0);
                dst_index.setAxis(i);
                FaceIndex src_index(dst_index);
@@ -270,7 +271,6 @@ void FaceData<TYPE>::copyWithRotation(
       }
    }
 }
-
 
 /*
  *************************************************************************
@@ -382,7 +382,7 @@ void FaceData<TYPE>::packWithRotation(
    const FaceOverlap& overlap) const
 {
    TBOX_ASSERT(overlap.getTransformation().getRotation() !=
-               hier::Transformation::NO_ROTATE);
+      hier::Transformation::NO_ROTATE);
 
    const tbox::Dimension& dim(getDim());
    const hier::Transformation::RotationIdentifier rotate =
@@ -430,7 +430,7 @@ void FaceData<TYPE>::packWithRotation(
                   FaceGeometry::transform(src_index, back_trans);
 
                   buffer[buf_count] = (*this)(src_index, d);
-                  buf_count++; 
+                  buf_count++;
                }
             }
          }
@@ -438,8 +438,6 @@ void FaceData<TYPE>::packWithRotation(
       stream.pack(buffer.getPointer(), size);
    }
 }
-
-
 
 template<class TYPE>
 void FaceData<TYPE>::unpackStream(
@@ -620,7 +618,7 @@ void FaceData<TYPE>::printAxis(
    os.precision(prec);
    for (FaceIterator i(box, face_normal); i; i++) {
       os << "array" << i() << " = "
-      << d_data[face_normal](i(), depth) << std::endl << std::flush;
+         << d_data[face_normal](i(), depth) << std::endl << std::flush;
    }
 }
 

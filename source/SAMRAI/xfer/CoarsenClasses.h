@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Simple structure for managing coarsening data in equivalence classes. 
+ * Description:   Simple structure for managing coarsening data in equivalence classes.
  *
  ************************************************************************/
 
@@ -27,27 +27,26 @@ namespace xfer {
 /*!
  * @brief Maintain a collection of coarsen items and organize them
  * into equivalence classes.
- * 
+ *
  * CoarsenClasses is used by the CoarsenSchedule and CoarsenAlgorithm
- * classes to manage coarsen data items that describe coarsening of 
- * patch data between two levels in an AMR hierarchy.  Specifically, this 
- * class organizes these items into equivalence clases, so that items are 
- * grouped together if they have the same data communication dependencies.   
- * See documentation for the method itemsAreEquivalent() for definition  
+ * classes to manage coarsen data items that describe coarsening of
+ * patch data between two levels in an AMR hierarchy.  Specifically, this
+ * class organizes these items into equivalence clases, so that items are
+ * grouped together if they have the same data communication dependencies.
+ * See documentation for the method itemsAreEquivalent() for definition
  * of equivalence.
  */
 
 class CoarsenClasses:public tbox::DescribedClass
 {
 public:
-
    /*!
     * @brief Nested class used to describe a coarsening operation
     * between patch data components on an AMR hierarchy.
     */
    class Data
    {
-   public:  
+public:
       /*!
        * @brief Destination patch data component
        */
@@ -107,8 +106,8 @@ public:
          d_gcw_to_coarsen(dim) {
       }
 
-   private:
-      Data();  //not implemented 
+private:
+      Data();  //not implemented
    };
 
    /*!
@@ -196,7 +195,7 @@ public:
     * equivalence class.
     *
     * If the item belongs in an existing equivalence class, it will be added
-    * to that class. Otherwise, a new equivalence class will be created for 
+    * to that class. Otherwise, a new equivalence class will be created for
     * this item.  The integer class index in the data item will set to the
     * index of the equivalence class into which it is inserted.
     *
@@ -246,10 +245,10 @@ public:
     *        return true if they match, else false.
     *
     * This method checks whether all equivalence classes match between this
-    * CoarsenClasses object and the argument object.  To match, the number of 
+    * CoarsenClasses object and the argument object.  To match, the number of
     * equivalence classes held by the objects must be the same and each
-    * equivalence class in this object must match the class with the same 
-    * equivalence class number in the argument object.  Two classes match if 
+    * equivalence class in this object must match the class with the same
+    * equivalence class number in the argument object.  Two classes match if
     * they have the same number of items and their representative items are
     * equialvent as defined by the method itemsAreEquivalent().
     *
@@ -301,7 +300,7 @@ public:
       const CoarsenClasses::Data& data1,
       const CoarsenClasses::Data& data2,
       tbox::Pointer<hier::PatchDescriptor> descriptor =
-         tbox::Pointer<hier::PatchDescriptor>(NULL)) const; 
+         tbox::Pointer<hier::PatchDescriptor>(NULL)) const;
 
    /*!
     * @brief Get the size that has been allocated for the array storing coarsen
@@ -358,7 +357,7 @@ private:
       const CoarsenClasses&);                     // not implemented
 
    /*!
-    * @brief Check two patch data items (with given descriptor indices) 
+    * @brief Check two patch data items (with given descriptor indices)
     * to see whether they match.
     *
     * Two patch data items match if the are of the same patch data type and
@@ -377,7 +376,7 @@ private:
       tbox::Pointer<hier::PatchDescriptor> pd) const;
 
    /*!
-    * @brief Determine the equivalence class index of given 
+    * @brief Determine the equivalence class index of given
     * CoarsenClasses::Data object.
     *
     * The coarsen data item is compared with existing equivalence classes to

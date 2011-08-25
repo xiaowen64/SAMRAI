@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Abstract fill pattern class to provide interface for stencils 
+ * Description:   Abstract fill pattern class to provide interface for stencils
  *
  ************************************************************************/
 
@@ -23,7 +23,7 @@ namespace xfer {
  * boundaries.
  *
  * For documentation on this interface see @ref xfer::PatchLevelFillPattern
- * 
+ *
  * The fill boxes will consist of the ghost regions lying outside of
  * the level interior--in other words the ghost regions at physical
  * and coarse-fine boundaries.
@@ -112,7 +112,6 @@ public:
     */
    bool
    fillingEnhancedConnectivityOnly() const;
-
 
 private:
    PatchLevelBorderFillPattern(

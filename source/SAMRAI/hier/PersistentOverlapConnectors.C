@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Registry of PersistentOverlapConnectorss incident from a common MappedBoxLevel. 
+ * Description:   Registry of PersistentOverlapConnectorss incident from a common MappedBoxLevel.
  *
  ************************************************************************/
 #ifndef included_hier_PersistentOverlapConnectors_C
@@ -49,7 +49,7 @@ PersistentOverlapConnectors::PersistentOverlapConnectors(
 
          s_always_create_missing_connector =
             rsdb->getBoolWithDefault("always_create_missing_connector",
-                                     s_always_create_missing_connector);
+               s_always_create_missing_connector);
       }
 
    }
@@ -82,7 +82,7 @@ const Connector& PersistentOverlapConnectors::createConnector(
           d_cons_from_me[i]->getConnectorWidth() == connector_width) {
          TBOX_ERROR(
             "PersistentOverlapConnectors::createConnector:\n"
-            <<"Cannot create duplicate Connectors.");
+            << "Cannot create duplicate Connectors.");
       }
    }
 
@@ -131,7 +131,7 @@ const Connector& PersistentOverlapConnectors::createConnector(
           d_cons_from_me[i]->getConnectorWidth() == connector_width) {
          TBOX_ERROR(
             "PersistentOverlapConnectors::createConnector:\n"
-            <<"Cannot create duplicate Connectors.");
+            << "Cannot create duplicate Connectors.");
       }
    }
 
@@ -164,7 +164,7 @@ const Connector& PersistentOverlapConnectors::findConnector(
    const IntVector& min_connector_width,
    bool exact_width_only)
 {
-   if ( s_always_create_missing_connector ) {
+   if (s_always_create_missing_connector) {
       return findOrCreateConnector(head, min_connector_width, exact_width_only);
    }
 
@@ -188,7 +188,7 @@ const Connector& PersistentOverlapConnectors::findConnector(
          getMappedBoxLevel());
 
       if (&(d_cons_from_me[i]->getHead()) == &head) {
-         if ( d_cons_from_me[i]->getConnectorWidth() >= min_connector_width ) {
+         if (d_cons_from_me[i]->getConnectorWidth() >= min_connector_width) {
             if (found == NULL) {
                found = d_cons_from_me[i];
             } else {
@@ -227,8 +227,8 @@ const Connector& PersistentOverlapConnectors::findConnector(
          << "To automatically create the missing\n"
          << "connector, use findOrCreateConnector.");
 
-   } else if ( exact_width_only &&
-               found->getConnectorWidth() != min_connector_width ) {
+   } else if (exact_width_only &&
+              found->getConnectorWidth() != min_connector_width) {
 
       /*
        * Found a sufficient Connector, but it is too wide.  Extract
@@ -236,16 +236,16 @@ const Connector& PersistentOverlapConnectors::findConnector(
        * width.  This is scalable!
        */
 
-      const hier::NeighborhoodSet &wider_neighborhoods
+      const hier::NeighborhoodSet& wider_neighborhoods
          (found->getNeighborhoodSets());
       hier::NeighborhoodSet exact_neighborhoods;
 
-      for ( hier::NeighborhoodSet::const_iterator ni(wider_neighborhoods.begin());
-            ni!=wider_neighborhoods.end(); ++ni ) {
-         oca.extractNeighbors( exact_neighborhoods[ni->first],
-                               *found,
-                               ni->first,
-                               min_connector_width );
+      for (hier::NeighborhoodSet::const_iterator ni(wider_neighborhoods.begin());
+           ni != wider_neighborhoods.end(); ++ni) {
+         oca.extractNeighbors(exact_neighborhoods[ni->first],
+            *found,
+            ni->first,
+            min_connector_width);
       }
 
       Connector* new_connector = new Connector;
@@ -253,7 +253,7 @@ const Connector& PersistentOverlapConnectors::findConnector(
          d_my_mapped_box_level,
          head,
          min_connector_width,
-         exact_neighborhoods );
+         exact_neighborhoods);
       /*
        * Remove empty neighborhood sets.  They are not essential to an
        * overlap Connector.
@@ -307,7 +307,7 @@ const Connector& PersistentOverlapConnectors::findOrCreateConnector(
          getMappedBoxLevel());
 
       if (&(d_cons_from_me[i]->getHead()) == &head) {
-         if ( d_cons_from_me[i]->getConnectorWidth() >= min_connector_width ) {
+         if (d_cons_from_me[i]->getConnectorWidth() >= min_connector_width) {
             if (found == NULL) {
                found = d_cons_from_me[i];
             } else {
@@ -348,8 +348,8 @@ const Connector& PersistentOverlapConnectors::findOrCreateConnector(
       head.getPersistentOverlapConnectors().d_cons_to_me.push_back(
          new_connector);
 
-   } else if ( exact_width_only &&
-               found->getConnectorWidth() != min_connector_width ) {
+   } else if (exact_width_only &&
+              found->getConnectorWidth() != min_connector_width) {
 
       /*
        * Found a sufficient Connector, but it is too wide.  Extract
@@ -357,16 +357,16 @@ const Connector& PersistentOverlapConnectors::findOrCreateConnector(
        * width.  This is scalable!
        */
 
-      const hier::NeighborhoodSet &wider_neighborhoods
+      const hier::NeighborhoodSet& wider_neighborhoods
          (found->getNeighborhoodSets());
       hier::NeighborhoodSet exact_neighborhoods;
 
-      for ( hier::NeighborhoodSet::const_iterator ni(wider_neighborhoods.begin());
-            ni!=wider_neighborhoods.end(); ++ni ) {
-         oca.extractNeighbors( exact_neighborhoods[ni->first],
-                               *found,
-                               ni->first,
-                               min_connector_width );
+      for (hier::NeighborhoodSet::const_iterator ni(wider_neighborhoods.begin());
+           ni != wider_neighborhoods.end(); ++ni) {
+         oca.extractNeighbors(exact_neighborhoods[ni->first],
+            *found,
+            ni->first,
+            min_connector_width);
       }
 
       Connector* new_connector = new Connector;
@@ -374,7 +374,7 @@ const Connector& PersistentOverlapConnectors::findOrCreateConnector(
          d_my_mapped_box_level,
          head,
          min_connector_width,
-         exact_neighborhoods );
+         exact_neighborhoods);
       /*
        * Remove empty neighborhood sets.  They are not essential to an
        * overlap Connector.

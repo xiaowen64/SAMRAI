@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   A simple array template class 
+ * Description:   A simple array template class
  *
  ************************************************************************/
 
@@ -82,7 +82,7 @@ Array<TYPE>::Array(
 }
 
 template<class TYPE>
-Array<TYPE>&Array<TYPE>::operator = (
+Array<TYPE>& Array<TYPE>::operator = (
    const Array<TYPE>& rhs)
 {
    if (this != &rhs) {

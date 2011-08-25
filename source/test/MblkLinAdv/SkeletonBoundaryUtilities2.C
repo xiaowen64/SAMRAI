@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Utility routines for manipulating 2D Skeleton boundary data 
+ * Description:   Utility routines for manipulating 2D Skeleton boundary data
  *
  ************************************************************************/
 
@@ -29,37 +29,37 @@
 extern "C" {
 
 void F77_FUNC(stufskelbdryloc2d, STUFSKELBDRYLOC2D) (
-   const int &, const int &, const int &, const int &,
-   const int &, const int &, const int &, const int &);
+   const int&, const int&, const int&, const int&,
+   const int&, const int&, const int&, const int&);
 
 void F77_FUNC(stufskelbdrycond2d, STUFSKELBDRYCOND2D) (
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &);
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&);
 
 void F77_FUNC(getskeledgebdry2d, GETSKELEDGEBDRY2D) (
-   const int &, const int &,
-   const int &, const int &,
-   const int &, const int &,
-   const int &, const int &,
-   const int &, const int &,
-   const int &,
-   const int &,
+   const int&, const int&,
+   const int&, const int&,
+   const int&, const int&,
+   const int&, const int&,
+   const int&, const int&,
+   const int&,
+   const int&,
    const double *,
    double *,
-   const int &);
+   const int&);
 
 void F77_FUNC(getskelnodebdry2d, GETSKELNODEBDRY2D) (
-   const int &, const int &,
-   const int &, const int &,
-   const int &, const int &,
-   const int &, const int &,
-   const int &, const int &,
-   const int &,
-   const int &,
+   const int&, const int&,
+   const int&, const int&,
+   const int&, const int&,
+   const int&, const int&,
+   const int&, const int&,
+   const int&,
+   const int&,
    const double *,
    double *,
-   const int &);
+   const int&);
 
 }
 
@@ -397,9 +397,9 @@ int SkeletonBoundaryUtilities2::checkBdryData(
    } else {
       TBOX_ERROR(
          "Unknown btype " << btype
-         <<
+                          <<
          " passed to SkeletonBoundaryUtilities2::checkBdryData()! "
-         << endl);
+                          << endl);
    }
 
    tbox::plog << "\n\nCHECKING 2D " << bdry_type_str << " BDRY DATA..." << endl;
@@ -432,10 +432,10 @@ int SkeletonBoundaryUtilities2::checkBdryData(
       } else {
          TBOX_ERROR(
             "Unknown bcase " << bcase
-            <<
+                             <<
             " passed to SkeletonBoundaryUtilities2::checkBdryData()"
-            << "\n for " << bdry_type_str
-            << " at location " << bloc << endl);
+                             << "\n for " << bdry_type_str
+                             << " at location " << bloc << endl);
       }
 
    } else if (btype == Bdry::NODE2D) {
@@ -456,10 +456,10 @@ int SkeletonBoundaryUtilities2::checkBdryData(
       } else {
          TBOX_ERROR(
             "Unknown bcase " << bcase
-            <<
+                             <<
             " passed to SkeletonBoundaryUtilities2::checkBdryData()"
-            << "\n for " << bdry_type_str
-            << " at location " << bloc << endl);
+                             << "\n for " << bdry_type_str
+                             << " at location " << bloc << endl);
       }
 
    }
@@ -759,12 +759,12 @@ void SkeletonBoundaryUtilities2::read2dBdryNodes(
                   if (no_edge_data_found) {
                      TBOX_ERROR(
                         "Bdry condition " << bdry_cond_str
-                        << " found for "
-                        << bdry_loc_str
-                        << "\n but no "
-                        << proper_edge_data
-                        << " data found for edge "
-                        << proper_edge << endl);
+                                          << " found for "
+                                          << bdry_loc_str
+                                          << "\n but no "
+                                          << proper_edge_data
+                                          << " data found for edge "
+                                          << proper_edge << endl);
                   }
 
                } else {
@@ -819,10 +819,10 @@ void SkeletonBoundaryUtilities2::get2dBdryDirectionCheckValues(
       } else {
          TBOX_ERROR(
             "Unknown boundary location " << bloc
-            <<
+                                         <<
             " passed to SkeletonBoundaryUtilities2::checkBdryData()"
-            << "\n for "
-            << bdry_type_str << " boundary " << endl);
+                                         << "\n for "
+                                         << bdry_type_str << " boundary " << endl);
       }
 
    } else if (btype == Bdry::NODE2D) {
@@ -852,10 +852,10 @@ void SkeletonBoundaryUtilities2::get2dBdryDirectionCheckValues(
    } else {
       TBOX_ERROR(
          "Unknown boundary type " << btype
-         <<
+                                  <<
          " passed to SkeletonBoundaryUtilities2::checkBdryData()"
-         << "\n for " << bdry_type_str
-         << " at location " << bloc << endl);
+                                  << "\n for " << bdry_type_str
+                                  << " at location " << bloc << endl);
    }
 
 }

@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   An AMR hierarchy of patch levels 
+ * Description:   An AMR hierarchy of patch levels
  *
  ************************************************************************/
 
@@ -37,12 +37,12 @@ namespace hier {
  * define the AMR hierarchy.
  *
  * The following describes the input file keys and data types. For each
- * input key that involves input for levels in the hierarchy, assume that 
- * we have N levels, numbered coarsest to finest as 0,..., N-1.  For such 
+ * input key that involves input for levels in the hierarchy, assume that
+ * we have N levels, numbered coarsest to finest as 0,..., N-1.  For such
  * input, the value for a level must be given as ``level_n = value'' where
- * n is the level number.  When more values are given than needed for the 
- * maximum number of levels, extra values are ignored.  When fewer values 
- * are given, the last value provided will be used on each level without a 
+ * n is the level number.  When more values are given than needed for the
+ * maximum number of levels, extra values are ignored.  When fewer values
+ * are given, the last value provided will be used on each level without a
  * specified input value.  See example input below.
  *
  *   - \b    max_levels
@@ -50,53 +50,53 @@ namespace hier {
  *      allowed in the AMR patch hierarchy.
  *
  *   - \b    ratio_to_coarser
- *      A set of max_levels - 1 integer vectors (each has length = DIM), 
- *      each of which indicates the ratio of the index space of a patch 
- *      level to that of the next coarser level in the hierarchy.  The 
- *      input is given for each level n, where n (= 1, 2,..., N-1) is the 
- *      level number. 
+ *      A set of max_levels - 1 integer vectors (each has length = DIM),
+ *      each of which indicates the ratio of the index space of a patch
+ *      level to that of the next coarser level in the hierarchy.  The
+ *      input is given for each level n, where n (= 1, 2,..., N-1) is the
+ *      level number.
  *
  *   - \b    largest_patch_size
  *      A set of max_levels integer vectors (each has length = DIM) each of
- *      which indicates the dimensions of largest patch allowed on the level 
- *      in the hierarchy.  Non-positive values for patch size corresponds to 
- *      no upper limit on patch size.  The input is given for each level n, 
+ *      which indicates the dimensions of largest patch allowed on the level
+ *      in the hierarchy.  Non-positive values for patch size corresponds to
+ *      no upper limit on patch size.  The input is given for each level n,
  *      where n (= 0, 1,..., N-1) is the level number.
  *
  *   - \b    smallest_patch_size
  *      A set of max_levels integer vectors (each has length = DIM) each of
- *      which indicates the dimensions of smallest patch allowed on the level 
- *      in the hierarchy.  The smallest patch allowed must be at least as 
+ *      which indicates the dimensions of smallest patch allowed on the level
+ *      in the hierarchy.  The smallest patch allowed must be at least as
  *      large as the maximum ghost cell width for all variables in the problem.
- *      If some smaller patch size is given in input, then it will be 
- *      overridden by the maximum ghost width.  If no input is given, a 
+ *      If some smaller patch size is given in input, then it will be
+ *      overridden by the maximum ghost width.  If no input is given, a
  *      default of the maximum ghost cell width over all variables is used.
- *      The input is given for each level n, where n (= 0, 1,..., N-1) is 
+ *      The input is given for each level n, where n (= 0, 1,..., N-1) is
  *      the level number.
  *
  *   - \b    proper_nesting_buffer
- *      A set of max_levels - 1 integer values specifying the number of 
- *      coarse cells by which the next finer level is nested within the 
+ *      A set of max_levels - 1 integer values specifying the number of
+ *      coarse cells by which the next finer level is nested within the
  *      interior of the union of the patches on the next coarser level.
- *      The input is given for each level n, where n (= 0, 1,..., N-2) is 
+ *      The input is given for each level n, where n (= 0, 1,..., N-2) is
  *      the level number.
  *
  *    - \b    allow_patches_smaller_than_ghostwidth
  *      A boolean value ("TRUE" or "FALSE") indicating whether patches
- *      are allowed that are smaller than the maximum variable ghost width 
- *      along some coordinate direction.  Recall that when a smallest 
- *      patch size provided in the input file is smaller than the maximum 
- *      ghost width of all the registered variables, then by default the 
- *      smallest patch size will be set to the maximum ghost width.  Set this 
- *      flag to TRUE to override this default behavior and to allow the 
- *      smallest patch size given in the input to remain in effect.  
+ *      are allowed that are smaller than the maximum variable ghost width
+ *      along some coordinate direction.  Recall that when a smallest
+ *      patch size provided in the input file is smaller than the maximum
+ *      ghost width of all the registered variables, then by default the
+ *      smallest patch size will be set to the maximum ghost width.  Set this
+ *      flag to TRUE to override this default behavior and to allow the
+ *      smallest patch size given in the input to remain in effect.
  *      The default value is FALSE.
  *
  *    - \b    allow_patches_smaller_than_minimum_size_to_prevent_overlaps
  *      A boolean value ("TRUE" or "FALSE") indicating whether patches
  *      are allowed to be smaller than the minimum patch size to prevent
- *      overlapping patches.  In order to enforce minimum patch size 
- *      restrictions, boxes may be grown during adaptive gridding operations.  
+ *      overlapping patches.  In order to enforce minimum patch size
+ *      restrictions, boxes may be grown during adaptive gridding operations.
  *      This may lead to patches whose boxes overlap.  This may be a problem
  *      for some applications. If overlaps are undesirable and you are
  *      willing to relax the minimum size constraints, set this parameter
@@ -141,20 +141,19 @@ namespace hier {
  * @see hier::PatchDescriptor
  */
 
-class PatchHierarchy : public tbox::Serializable
+class PatchHierarchy:public tbox::Serializable
 {
 public:
-
    /*
     *  TODO: There must be a better way to do what this base class
     *  provides.  If not, then we need to make this documentation clearer.
-    *  Specifically, it is not clear how one actually determines the 
+    *  Specifically, it is not clear how one actually determines the
     *  correct width information to provide.  Also, the documentation
     *  alludes to usage that is internal to SAMRAI (e.g., the stuff about
-    *  GriddingAlgorithm) so it is not clear what a user needs to do 
-    *  and what she does not. 
+    *  GriddingAlgorithm) so it is not clear what a user needs to do
+    *  and what she does not.
     *
-    *  The notion of "connector width" does not appear to be defined 
+    *  The notion of "connector width" does not appear to be defined
     *  anywhere.  If is is, where is the definition?
     */
    /*!
@@ -163,8 +162,8 @@ public:
     *
     * The hierarchy needs to know that Connector width constraints
     * must be applied so it can provide correct connector width information
-    * to mesh generation operations so that they can generate Connectors 
-    * with sufficient widths.  It is most efficient (scales better) to 
+    * to mesh generation operations so that they can generate Connectors
+    * with sufficient widths.  It is most efficient (scales better) to
     * generate overlap Connectors when the mesh is built rather than searching
     * for overlaps later.  If the required widths are not set up this way,
     * or if the code building the hierarchy does not provide Connectors
@@ -172,7 +171,7 @@ public:
     * well.  The mechanism for generating missing Connectors as needed
     * is in the class PersistentOverlapConnector.
     *
-    * The user of a PatchHierarchy object registers implementations of 
+    * The user of a PatchHierarchy object registers implementations of
     * this strategy class with the PatchHierarchy.  See
     * PatchHierarchy::registerConnectorWidthRequestor().
     * By default, requesters implemented by the SAMRAI library will be
@@ -182,7 +181,7 @@ public:
     * TODO: The following paragraph is more confusing than helpful.
     * It exposes internal SAMRAI implementation details and confuses
     * what a user needs to do.
-    * 
+    *
     * When the hierarchy is first asked for any required width, it
     * uses the registered implementations to compute all required
     * widths.  After that, no further registration is allowed.
@@ -198,22 +197,24 @@ public:
     * and RefineSchedule.  This strategy should therefore be
     * implemented by GriddingAlgorithm and RefineSchedule.
     */
-   class ConnectorWidthRequestorStrategy {
-   public:
-    /*
-     * TODO: As a general rule in SAMRAI, we provide a default ctor
-     * explicitly (at least).
-     */
+   class ConnectorWidthRequestorStrategy
+   {
+public:
+      /*
+       * TODO: As a general rule in SAMRAI, we provide a default ctor
+       * explicitly (at least).
+       */
 
       /*!
        * @brief Destructor
        */
-      virtual ~ConnectorWidthRequestorStrategy() {}
+      virtual ~ConnectorWidthRequestorStrategy() {
+      }
 
-    /*
-     * TODO: How is a developer supposed to know what IntVector values 
-     * are needed when she implements this routine?
-     */
+      /*
+       * TODO: How is a developer supposed to know what IntVector values
+       * are needed when she implements this routine?
+       */
       /*!
        * @brief Provide Connector widths the child class requires in
        * order to work properly on a given hierarchy.
@@ -235,35 +236,35 @@ public:
        *
        * @param[in]  patch_hierarchy
        */
-      virtual void computeRequiredConnectorWidths(
+      virtual void
+      computeRequiredConnectorWidths(
          std::vector<hier::IntVector>& self_connector_widths,
          std::vector<hier::IntVector>& fine_connector_widths,
-         const PatchHierarchy &patch_hierarchy) const = 0;
+         const PatchHierarchy& patch_hierarchy) const = 0;
    };
-
 
 /*
  * TODO: How does the hierarchy get properly initialized if the input
- * database argument is a null pointer? 
+ * database argument is a null pointer?
  */
-   /*!
-    * @brief Constructor initializing the state of PatchHierarchy.
-    *
-    * The constructor for the PatchHierarchy initializes the number of
-    * levels to zero, sets the geometry for the PatchHierarchy, and
-    * registers the PatchHierarchy for restart with the specified name
-    * by default.
-    *
-    * @par Errors/Assertions
-    * Passing in an empty std::string or a null grid geometry pointer
-    * will result in an unrecoverable assertion when assertion checking is
-    * active.
-    *
-    * @param[in]  object_name
-    * @param[in]  geometry
-    * @param[in]  database Database specifying hierarchy parameters.
-    * @param[in]  register_for_restart @b Default: true
-    */
+/*!
+ * @brief Constructor initializing the state of PatchHierarchy.
+ *
+ * The constructor for the PatchHierarchy initializes the number of
+ * levels to zero, sets the geometry for the PatchHierarchy, and
+ * registers the PatchHierarchy for restart with the specified name
+ * by default.
+ *
+ * @par Errors/Assertions
+ * Passing in an empty std::string or a null grid geometry pointer
+ * will result in an unrecoverable assertion when assertion checking is
+ * active.
+ *
+ * @param[in]  object_name
+ * @param[in]  geometry
+ * @param[in]  database Database specifying hierarchy parameters.
+ * @param[in]  register_for_restart @b Default: true
+ */
    explicit PatchHierarchy(
       const std::string& object_name,
       tbox::Pointer<GridGeometry> geometry,
@@ -337,15 +338,15 @@ public:
  * TODO: Is it an error to call this method when a level with the given
  * level number already exists?  Are some preconditions assumed?
  */
-   /*!
-    * @brief Construct new PatchLevel in hierarchy at given level number.
-    *
-    * Boxes, their mappings and the refinement ratio are obtained from
-    * @c new_mapped_box_level.
-    *
-    * @param[in]  level_number
-    * @param[in]  new_mapped_box_level
-    */
+/*!
+ * @brief Construct new PatchLevel in hierarchy at given level number.
+ *
+ * Boxes, their mappings and the refinement ratio are obtained from
+ * @c new_mapped_box_level.
+ *
+ * @param[in]  level_number
+ * @param[in]  new_mapped_box_level
+ */
    void
    makeNewPatchLevel(
       const int level_number,
@@ -386,7 +387,7 @@ public:
    /*!
     * @brief Check if the level exists
     *
-    * @return True if the hierarchy contains a patch level with the given 
+    * @return True if the hierarchy contains a patch level with the given
     * level number; otherwise false.
     *
     * @param[in]  level
@@ -398,7 +399,7 @@ public:
    /*!
     * @brief Check if a finer level exists.
     *
-    * @return True if the hierarchy contains a patch level with level 
+    * @return True if the hierarchy contains a patch level with level
     * number level + 1 (i.e., finer than level with given number);
     * otherwise, false.
     *
@@ -444,7 +445,8 @@ public:
     * @param[in]  level
     */
    const tbox::ConstPointer<MappedBoxLevel>&
-   getMappedBoxLevel( const int level ) const;
+   getMappedBoxLevel(
+      const int level) const;
 
    /*!
     * @brief Get the connector between two levels
@@ -487,8 +489,9 @@ public:
     *
     * @param[in]  cwrs The connector width requester strategy instance.
     */
-   void registerConnectorWidthRequestor(
-      const ConnectorWidthRequestorStrategy &cwrs );
+   void
+   registerConnectorWidthRequestor(
+      const ConnectorWidthRequestorStrategy& cwrs);
 
    /*!
     * @brief Get the width required of the Connector from the base to
@@ -513,8 +516,9 @@ public:
     *
     * @param[in] cwrs   ConnectorWidthRequestorStrategy to be registered.
     */
-   static void registerAutoConnectorWidthRequestorStrategy(
-      const ConnectorWidthRequestorStrategy &cwrs );
+   static void
+   registerAutoConnectorWidthRequestorStrategy(
+      const ConnectorWidthRequestorStrategy& cwrs);
 
    //@}
 
@@ -523,15 +527,16 @@ public:
  * be moved to the GridGeometry class.  It makes the role of this class
  * too divergent by having it here.
  */
-   /*!
-    * @brief Access the domain description as a MappedBoxLevel.
-    *
-    * The domain MappedBoxLevel is maintained in Globalized mode with
-    * processor 0 owning all mapped boxes.
-    *
-    * @return The domain description as a MappedBoxLevel
-    */
-   const MappedBoxLevel& getDomainMappedBoxLevel() const;
+/*!
+ * @brief Access the domain description as a MappedBoxLevel.
+ *
+ * The domain MappedBoxLevel is maintained in Globalized mode with
+ * processor 0 owning all mapped boxes.
+ *
+ * @return The domain description as a MappedBoxLevel
+ */
+   const MappedBoxLevel&
+   getDomainMappedBoxLevel() const;
 
    /*!
     * @brief Returns the SAMRAI_MPI communicator over which the domain
@@ -549,17 +554,19 @@ public:
     *
     * @return The multiblock domain description as a search tree.
     */
-   const hier::MultiblockBoxTree& getDomainSearchTree() const;
+   const hier::MultiblockBoxTree&
+   getDomainSearchTree() const;
 
    /*!
     * @brief Access the domain description without periodic images.
     *
     * @param[in] block_id
-    * 
+    *
     * @return The domain description as a search tree.
     */
    const hier::BoxTree&
-   getDomainSearchTree(const BlockId& block_id) const;
+   getDomainSearchTree(
+      const BlockId& block_id) const;
 
    /*!
     * @brief Access the multiblock domain description with periodic
@@ -580,7 +587,8 @@ public:
     * images (if any).
     */
    const hier::BoxTree&
-   getPeriodicDomainSearchTree(const BlockId& block_id) const;
+   getPeriodicDomainSearchTree(
+      const BlockId& block_id) const;
 
    //@{
 
@@ -598,7 +606,9 @@ public:
     *
     * @param[in]  max_levels
     */
-   void setMaxNumberOfLevels( int max_levels );
+   void
+   setMaxNumberOfLevels(
+      int max_levels);
 
    /*!
     * @brief Get the maximum number of levels allowed on the hierarchy.
@@ -616,8 +626,10 @@ public:
     * @param[in]  ratio   Refinement ratio in each direction
     * @param[in]  level
     */
-   void setRatioToCoarserLevel( const IntVector &ratio,
-                                int level);
+   void
+   setRatioToCoarserLevel(
+      const IntVector& ratio,
+      int level);
 
    /*!
     * @brief Get the ratio between specified level and next coarser level
@@ -626,7 +638,9 @@ public:
     *
     * @param[in]  level
     */
-   const IntVector &getRatioToCoarserLevel( int level ) const;
+   const IntVector&
+   getRatioToCoarserLevel(
+      int level) const;
 
    /*!
     * @brief Set the smallest patch size on the given level.
@@ -634,8 +648,10 @@ public:
     * @param[in]  size   Smallest size in each direction
     * @param[in]  level
     */
-   void setSmallestPatchSize( const IntVector &size,
-                              int level );
+   void
+   setSmallestPatchSize(
+      const IntVector& size,
+      int level);
 
    /*!
     * @brief Get the smallest patch size on the given level.
@@ -644,7 +660,9 @@ public:
     *
     * @param[in]  level
     */
-   const IntVector &getSmallestPatchSize( int level ) const;
+   const IntVector&
+   getSmallestPatchSize(
+      int level) const;
 
    /*!
     * @brief Set the largest patch size on the given level.
@@ -652,17 +670,21 @@ public:
     * @param[in]  size   Largest size in each direction.
     * @param[in]  level
     */
-   void setLargestPatchSize( const IntVector &size,
-                             int level );
+   void
+   setLargestPatchSize(
+      const IntVector& size,
+      int level);
 
    /*!
     * @brief Get the largest patch size.
     *
-    * @return The largest patch size allowed on the given level. 
+    * @return The largest patch size allowed on the given level.
     *
     * @param[in]  level
     */
-   const IntVector &getLargestPatchSize( int level ) const;
+   const IntVector&
+   getLargestPatchSize(
+      int level) const;
 
    /*!
     * @brief Get the proper nesting buffer for a specific level.
@@ -678,18 +700,22 @@ public:
     *
     * @param[in]  level
     */
-   int getProperNestingBuffer( int ln ) const;
+   int
+   getProperNestingBuffer(
+      int ln) const;
 
    /*!
     * @brief Get flag for allowing patches smaller than ghost width.
     */
-   bool allowPatchesSmallerThanGhostWidth() const;
+   bool
+   allowPatchesSmallerThanGhostWidth() const;
 
    /*!
     * @brief Get flag for allowing patches smaller than user-provided minimum
     * size.
     */
-   bool allowPatchesSmallerThanMinimumSize() const;
+   bool
+   allowPatchesSmallerThanMinimumSize() const;
 
    //@}
 
@@ -697,14 +723,14 @@ public:
  * TODO: Since we have really never used the patch factory and patch
  * level factory concepts beyond their defaults, should we remove them?
  */
-   /*!
-    * @brief Set the factory used to create patch objects.
-    *
-    * If a factory is not specified, then the default factory will create
-    * patch objects of type Patch.
-    *
-    * @param[in]  factory
-    */
+/*!
+ * @brief Set the factory used to create patch objects.
+ *
+ * If a factory is not specified, then the default factory will create
+ * patch objects of type Patch.
+ *
+ * @param[in]  factory
+ */
    void
    setPatchFactory(
       tbox::Pointer<PatchFactory> factory);
@@ -877,15 +903,15 @@ private:
 /*
  * TODO: This should be moved to the GridGeometry class.  See earlier comments.
  */
-   /*!
-    * @brief Set the various physical domain description in various
-    * forms.
-    *
-    * PatchHierarchy saves the global physical domain on every
-    * processor.  Many loops look through the entire global boxes
-    * defining the domain.  For best performance, simplify the
-    * physical domain as much as possible before setting it.
-    */
+/*!
+ * @brief Set the various physical domain description in various
+ * forms.
+ *
+ * PatchHierarchy saves the global physical domain on every
+ * processor.  Many loops look through the entire global boxes
+ * defining the domain.  For best performance, simplify the
+ * physical domain as much as possible before setting it.
+ */
    void
    setupDomainData();
 
@@ -912,7 +938,7 @@ private:
 
    /*!
     * @brief Dimension of the object
-    */ 
+    */
    const tbox::Dimension d_dim;
 
    /*!
@@ -946,9 +972,9 @@ private:
  * TODO: Since we have really never used the patch factory and patch
  * level factory concepts beyond their defaults, should we remove them?
  */
-   /*!
-    * @brief Factory used to create patches on the hierarchy
-    */
+/*!
+ * @brief Factory used to create patches on the hierarchy
+ */
    tbox::Pointer<PatchFactory> d_patch_factory;
 
    /*!
@@ -999,7 +1025,7 @@ private:
     * to increase this value.
     */
    std::vector<int> d_proper_nesting_buffer;
- 
+
    /*!
     * @brief Smallest patch sizes for each level.
     */
@@ -1016,7 +1042,7 @@ private:
     * ghost width.
     */
    bool d_allow_patches_smaller_than_ghostwidth;
- 
+
    /*!
     * @brief Whether to allow patches smaller than d_smallest_patch_size
     * in order to prevent overlaping patches.
@@ -1063,7 +1089,7 @@ private:
     * using registerConnectorWidthRequestor().  It is
     * different from the strategies in s_class_cwrs.
     */
-   std::vector<const ConnectorWidthRequestorStrategy*> d_individual_cwrs;
+   std::vector<const ConnectorWidthRequestorStrategy *> d_individual_cwrs;
 
    /*!
     * @brief All ConnectorWidthRequestorStrategy registered with
@@ -1072,13 +1098,13 @@ private:
     * These are the implementations registered for the entire class,
     * using registerAutoConnectorWidthRequestorStrategy().
     */
-   static std::vector<const ConnectorWidthRequestorStrategy*> s_class_cwrs;
+   static std::vector<const ConnectorWidthRequestorStrategy *> s_class_cwrs;
 
    /*!
     * @brief Shutdown handler for clearing out static registry.
     */
    static tbox::StartupShutdownManager::Handler
-   s_initialize_finalize_handler;
+      s_initialize_finalize_handler;
 
    //@}
 
@@ -1087,7 +1113,7 @@ private:
    //! @name Domain-related objects.
 
 /*
- * TODO: These things (if really needed) should be moved to the GridGeometry 
+ * TODO: These things (if really needed) should be moved to the GridGeometry
  * class.  See earlier comments.
  */
 

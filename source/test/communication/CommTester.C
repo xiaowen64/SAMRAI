@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Manager class for patch data communication tests. 
+ * Description:   Manager class for patch data communication tests.
  *
  ************************************************************************/
 
@@ -642,8 +642,8 @@ void CommTester::setupHierarchy(
 
    d_patch_hierarchy =
       new hier::PatchHierarchy("PatchHierarchy",
-                               d_data_test_strategy->getGridGeometry(),
-                               main_input_db->getDatabase("PatchHierarchy"));
+         d_data_test_strategy->getGridGeometry(),
+         main_input_db->getDatabase("PatchHierarchy"));
 
    tbox::Pointer<mesh::BergerRigoutsos> box_generator(new mesh::BergerRigoutsos(
                                                          d_dim));
@@ -679,7 +679,7 @@ void CommTester::setupHierarchy(
     * the communication schedules can work properly in the mode where
     * there are no precomputed Connectors.
     */
-   for ( int ln=0; ln<d_patch_hierarchy->getNumberOfLevels(); ++ln ) {
+   for (int ln = 0; ln < d_patch_hierarchy->getNumberOfLevels(); ++ln) {
       tbox::Pointer<hier::PatchLevel> level(d_patch_hierarchy->getPatchLevel(ln));
       level->getMappedBoxLevel()->getPersistentOverlapConnectors().clear();
    }

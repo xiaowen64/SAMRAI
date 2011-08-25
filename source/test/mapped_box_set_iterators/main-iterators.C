@@ -50,10 +50,10 @@ int main(
       const int num_owners = 10;
 
       // Build the BoxSet.
-      for ( int i=0; i<num_boxes; ++i ) {
+      for (int i = 0; i < num_boxes; ++i) {
 
          int owner(i % num_owners);
-         hier::BlockId bid(i/num_blocks);
+         hier::BlockId bid(i / num_blocks);
          hier::LocalId lid(i);
          hier::BoxId mbid(lid, owner, bid);
 
@@ -64,14 +64,14 @@ int main(
 
       // Test 1: Block iterator.
 
-      for ( int b=0; b<num_blocks; ++b ) {
+      for (int b = 0; b < num_blocks; ++b) {
 
          const hier::BlockId bid(b);
 
-         for ( hier::BoxSetSingleBlockIterator bi(mboxes,hier::BlockId(b));
-               bi.isValid(); ++bi ) {
+         for (hier::BoxSetSingleBlockIterator bi(mboxes, hier::BlockId(b));
+              bi.isValid(); ++bi) {
 
-            if ( bi->getBlockId() != bid ) {
+            if (bi->getBlockId() != bid) {
                tbox::perr << "FAILED: - Test #1: box id " << bi->getBlockId()
                           << " should have BlockId " << bid << endl;
                fail_count++;
@@ -82,12 +82,12 @@ int main(
 
       // Test 2: Owner iterator.
 
-      for ( int owner_rank=0; owner_rank<num_owners; ++owner_rank ) {
+      for (int owner_rank = 0; owner_rank < num_owners; ++owner_rank) {
 
-         for ( hier::BoxSetSingleOwnerIterator bi(mboxes,owner_rank);
-               bi.isValid(); ++bi ) {
+         for (hier::BoxSetSingleOwnerIterator bi(mboxes, owner_rank);
+              bi.isValid(); ++bi) {
 
-            if ( bi->getOwnerRank() != owner_rank ) {
+            if (bi->getOwnerRank() != owner_rank) {
                tbox::perr << "FAILED: - Test #2: box id " << bi->getBlockId()
                           << " should have rank " << owner_rank << endl;
                fail_count++;
@@ -95,7 +95,6 @@ int main(
 
          }
       }
-
 
       if (fail_count == 0) {
          tbox::pout << "\nPASSED:  testmappedboxsetiterator" << endl;

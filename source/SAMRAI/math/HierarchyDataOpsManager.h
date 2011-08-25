@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Singleton manager for hierarchy data operation objects. 
+ * Description:   Singleton manager for hierarchy data operation objects.
  *
  ************************************************************************/
 
@@ -168,7 +168,6 @@ protected:
       HierarchyDataOpsManager* subclass_instance);
 
 private:
-
    /**
     * Deallocate the HierarchyDataOpsManager instance.  It is not
     * necessary to explicitly call freeManager() at program termination,
@@ -176,7 +175,6 @@ private:
     */
    static void
    shutdownCallback();
-
 
    static HierarchyDataOpsManager* s_pdat_op_manager_instance;
 
@@ -227,7 +225,7 @@ private:
    //@}
 
    static tbox::StartupShutdownManager::Handler
-   s_shutdown_handler;
+      s_shutdown_handler;
 
 };
 

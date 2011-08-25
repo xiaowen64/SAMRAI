@@ -1,11 +1,11 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
  * Description:   Constant averaging operator for node-centered float data on
- *                a  mesh. 
+ *                a  mesh.
  *
  ************************************************************************/
 
@@ -35,26 +35,26 @@ extern "C" {
 #endif
 
 // in concoarsen1d.f:
-void F77_FUNC(conavgnodeflot1d, CONAVGNODEFLOT1D) (const int &, const int &,
-   const int &, const int &,
-   const int &, const int &,
+void F77_FUNC(conavgnodeflot1d, CONAVGNODEFLOT1D) (const int&, const int&,
+   const int&, const int&,
+   const int&, const int&,
    const int *,
    const float *, float *);
 // in concoarsen2d.f:
-void F77_FUNC(conavgnodeflot2d, CONAVGNODEFLOT2D) (const int &, const int &,
-   const int &, const int &,
-   const int &, const int &, const int &, const int &,
-   const int &, const int &, const int &, const int &,
+void F77_FUNC(conavgnodeflot2d, CONAVGNODEFLOT2D) (const int&, const int&,
+   const int&, const int&,
+   const int&, const int&, const int&, const int&,
+   const int&, const int&, const int&, const int&,
    const int *,
    const float *, float *);
 // in concoarsen3d.f:
-void F77_FUNC(conavgnodeflot3d, CONAVGNODEFLOT3D) (const int &, const int &,
-   const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
+void F77_FUNC(conavgnodeflot3d, CONAVGNODEFLOT3D) (const int&, const int&,
+   const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
    const int *,
    const float *, float *);
 }

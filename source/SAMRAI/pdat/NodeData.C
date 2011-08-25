@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Templated node centered patch data type 
+ * Description:   Templated node centered patch data type
  *
  ************************************************************************/
 
@@ -24,7 +24,8 @@
 namespace SAMRAI {
 namespace pdat {
 
-template<class TYPE> const int NodeData<TYPE>::PDAT_NODEDATA_VERSION = 1;
+template<class TYPE>
+const int NodeData<TYPE>::PDAT_NODEDATA_VERSION = 1;
 
 /*
  *************************************************************************
@@ -192,7 +193,7 @@ void NodeData<TYPE>::copyWithRotation(
    const NodeOverlap& overlap)
 {
    TBOX_ASSERT(overlap.getTransformation().getRotation() !=
-               hier::Transformation::NO_ROTATE);
+      hier::Transformation::NO_ROTATE);
 
    const tbox::Dimension& dim(src.getDim());
    const hier::BoxList& overlap_boxes = overlap.getDestinationBoxList();
@@ -325,7 +326,7 @@ void NodeData<TYPE>::packWithRotation(
    const NodeOverlap& overlap) const
 {
    TBOX_ASSERT(overlap.getTransformation().getRotation() !=
-               hier::Transformation::NO_ROTATE);
+      hier::Transformation::NO_ROTATE);
 
    const tbox::Dimension& dim(getDim());
    const hier::BoxList& overlap_boxes = overlap.getDestinationBoxList();

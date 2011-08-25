@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Communication transaction for time interpolation during data refining 
+ * Description:   Communication transaction for time interpolation during data refining
  *
  ************************************************************************/
 
@@ -111,11 +111,11 @@ RefineTimeTransaction::RefineTimeTransaction(
 
    // Note: s_num_coarsen_items cannot be used at this point!
 
-   if ( d_dst_patch_rank == dst_level->getMappedBoxLevel()->getRank() ) {
-      d_dst_patch = dst_level->getPatch( dst_mapped_box.getId() );
+   if (d_dst_patch_rank == dst_level->getMappedBoxLevel()->getRank()) {
+      d_dst_patch = dst_level->getPatch(dst_mapped_box.getId());
    }
-   if ( d_src_patch_rank == dst_level->getMappedBoxLevel()->getRank() ) {
-      d_src_patch = src_level->getPatch( src_mapped_box.getId() );
+   if (d_src_patch_rank == dst_level->getMappedBoxLevel()->getRank()) {
+      d_src_patch = src_level->getPatch(src_mapped_box.getId());
    }
 }
 
@@ -134,7 +134,7 @@ RefineTimeTransaction::~RefineTimeTransaction()
 bool RefineTimeTransaction::canEstimateIncomingMessageSize()
 {
    bool can_estimate = false;
-   if ( !d_src_patch.isNull() ) {
+   if (!d_src_patch.isNull()) {
       can_estimate =
          d_src_patch->getPatchData(s_refine_items[d_refine_item_id]->
             d_src_told)
@@ -195,7 +195,7 @@ void RefineTimeTransaction::unpackStream(
    tbox::MessageStream& stream)
 {
    d_dst_patch->getPatchData(s_refine_items[d_refine_item_id]->d_scratch)
-              ->unpackStream(stream, *d_overlap);
+   ->unpackStream(stream, *d_overlap);
 }
 
 void RefineTimeTransaction::copyLocalData()
@@ -206,8 +206,8 @@ void RefineTimeTransaction::copyLocalData()
     * time interpolate into a temporary patchdata and copy the result
     * to the destination patchdata.
     */
-   if ( d_overlap->getSourceOffset() == 
-        hier::IntVector::getZero(d_box.getDim()) ) {
+   if (d_overlap->getSourceOffset() ==
+       hier::IntVector::getZero(d_box.getDim())) {
 
       timeInterpolate(
          d_dst_patch->getPatchData(s_refine_items[d_refine_item_id]->
@@ -242,7 +242,7 @@ void RefineTimeTransaction::copyLocalData()
             d_src_tnew));
 
       d_dst_patch->getPatchData(s_refine_items[d_refine_item_id]->d_scratch)
-                 ->copy(*temp, *d_overlap);
+      ->copy(*temp, *d_overlap);
 
    }
 
@@ -296,13 +296,13 @@ void RefineTimeTransaction::printClassData(
    stream << "   time interpolation box:  " << d_box << std::endl;
    stream << "   refine item id:          " << d_refine_item_id << std::endl;
    stream << "   destination patch data id:  "
-   << s_refine_items[d_refine_item_id]->d_scratch << std::endl;
+          << s_refine_items[d_refine_item_id]->d_scratch << std::endl;
    stream << "   source (old) patch data id: "
-   << s_refine_items[d_refine_item_id]->d_src_told << std::endl;
+          << s_refine_items[d_refine_item_id]->d_src_told << std::endl;
    stream << "   source (new) patch data id: "
-   << s_refine_items[d_refine_item_id]->d_src_tnew << std::endl;
+          << s_refine_items[d_refine_item_id]->d_src_tnew << std::endl;
    stream << "   time interpolation name id: "
-   << typeid(*s_refine_items[d_refine_item_id]->d_optime).name() << std::endl;
+          << typeid(*s_refine_items[d_refine_item_id]->d_optime).name() << std::endl;
    stream << "   incoming bytes:          " << d_incoming_bytes << std::endl;
    stream << "   outgoing bytes:          " << d_outgoing_bytes << std::endl;
    stream << "   destination patch:           "

@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   ABRTest class implementation 
+ * Description:   ABRTest class implementation
  *
  ************************************************************************/
 #ifdef HAVE_CONFIG_H
@@ -34,7 +34,7 @@ ABRTest::ABRTest(
    d_tagger(object_name + ":tagger",
             dim,
             database->isDatabase("sine_tagger") ?
-            database->getDatabase("sine_tagger").getPointer():NULL),
+            database->getDatabase("sine_tagger").getPointer() : NULL),
    d_time(0.5)
 {
    d_tagger.resetHierarchyConfiguration(d_hierarchy, 0, 0);
@@ -104,7 +104,7 @@ bool ABRTest::packDerivedDataIntoDoubleBuffer(
       // Did not register this name.
       TBOX_ERROR(
          "Unregistered variable name '" << variable_name << "' in\n"
-         <<
+                                        <<
          "ABRTest::packDerivedPatchDataIntoDoubleBuffer");
    }
 

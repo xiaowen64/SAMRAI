@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Templated array data looping operations supporting patch data types 
+ * Description:   Templated array data looping operations supporting patch data types
  *
  ************************************************************************/
 
@@ -87,7 +87,7 @@ public:
    static void
    doArrayDataBufferOperationOnBox(
       const ArrayData<TYPE>& arraydata,
-      const TYPE* buffer,
+      const TYPE * buffer,
       const hier::Box& opbox,
       bool src_is_buffer,
       const OP& op);

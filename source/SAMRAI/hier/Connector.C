@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Set of edges incident from a mapped_box_level of a distributed box graph. 
+ * Description:   Set of edges incident from a mapped_box_level of a distributed box graph.
  *
  ************************************************************************/
 #ifndef included_hier_Connector_C
@@ -112,8 +112,8 @@ Connector::Connector(
    const MappedBoxLevel& head_mapped_box_level,
    const IntVector& base_width,
    const NeighborhoodSet& relationships,
-   const MappedBoxLevel::ParallelState parallel_state)
-   :d_base_width(base_width.getDim(), 0),
+   const MappedBoxLevel::ParallelState parallel_state):
+   d_base_width(base_width.getDim(), 0),
    d_ratio(base_width.getDim(), 0),
    d_head_coarser(false),
    d_relationships(),
@@ -146,8 +146,8 @@ Connector::Connector(
    const MappedBoxLevel& base_mapped_box_level,
    const MappedBoxLevel& head_mapped_box_level,
    const IntVector& base_width,
-   const MappedBoxLevel::ParallelState parallel_state)
-   :d_base_width(base_width.getDim(), 0),
+   const MappedBoxLevel::ParallelState parallel_state):
+   d_base_width(base_width.getDim(), 0),
    d_ratio(base_width.getDim(), 0),
    d_head_coarser(false),
    d_relationships(),
@@ -288,12 +288,10 @@ void Connector::removePeriodicRelationships()
    d_relationships.removePeriodicNeighbors(tmp_edges);
    d_relationships.swap(tmp_edges);
 
-   if ( d_parallel_state == MappedBoxLevel::GLOBALIZED ) {
+   if (d_parallel_state == MappedBoxLevel::GLOBALIZED) {
       d_global_relationships.removePeriodicNeighbors(tmp_edges);
       d_global_relationships.swap(tmp_edges);
    }
-
-   return;
 }
 
 /*
@@ -354,7 +352,7 @@ void Connector::acquireRemoteNeighborhoods()
     * sub-message into send_mesg.
     */
    acquireRemoteNeighborhoods_pack(send_mesg,
-                                   static_cast<int>(send_mesg.size()));
+      static_cast<int>(send_mesg.size()));
    int send_mesg_size = static_cast<int>(send_mesg.size());
 
    /*
@@ -520,12 +518,14 @@ void Connector::setParallelState(
          << "an uninitialized Connector.  See Connector::initialize()");
    }
 #endif
-   if (parallel_state != MappedBoxLevel::DISTRIBUTED && parallel_state != MappedBoxLevel::GLOBALIZED) {
+   if (parallel_state != MappedBoxLevel::DISTRIBUTED && parallel_state !=
+       MappedBoxLevel::GLOBALIZED) {
       TBOX_ERROR("Connector::setParallelState: Invalid distribution state: "
          << parallel_state << "\n");
    }
 
-   if (d_parallel_state == MappedBoxLevel::DISTRIBUTED && parallel_state == MappedBoxLevel::GLOBALIZED) {
+   if (d_parallel_state == MappedBoxLevel::DISTRIBUTED && parallel_state ==
+       MappedBoxLevel::GLOBALIZED) {
       acquireRemoteNeighborhoods();
    } else if (d_parallel_state == MappedBoxLevel::GLOBALIZED && parallel_state ==
               MappedBoxLevel::DISTRIBUTED) {
@@ -650,7 +650,9 @@ void Connector::initializePrivate(
 
 #ifdef DEBUG_CHECK_ASSERTIONS
    bool errf = false;
-   for (NeighborhoodSet::const_iterator ci = d_relationships.begin(); ci != d_relationships.end(); ++ci) {
+   for (NeighborhoodSet::const_iterator ci = d_relationships.begin();
+        ci != d_relationships.end();
+        ++ci) {
       if (!base.hasMappedBox((*ci).first)) {
          const NeighborSet& nabrs = (*ci).second;
          tbox::perr << "\nConnector::initializePrivate: NeighborhoodSet "
@@ -684,11 +686,11 @@ void Connector::initializePrivate(
    if (baseRefinementRatio <= headRefinementRatio) {
       d_ratio = headRefinementRatio / baseRefinementRatio;
       d_head_coarser = false;
-      d_ratio_is_exact = ( d_ratio * baseRefinementRatio ) == headRefinementRatio;
+      d_ratio_is_exact = (d_ratio * baseRefinementRatio) == headRefinementRatio;
    } else {
       d_ratio = baseRefinementRatio / headRefinementRatio;
       d_head_coarser = true;
-      d_ratio_is_exact = ( d_ratio * headRefinementRatio ) == baseRefinementRatio;
+      d_ratio_is_exact = (d_ratio * headRefinementRatio) == baseRefinementRatio;
    }
    if (baseRefinementRatio * headRefinementRatio <
        IntVector::getZero(base_width.getDim())) {
@@ -969,7 +971,9 @@ size_t Connector::getLocalNumberOfRelationships() const
    // FIXME:  BUG
    TBOX_ASSERT(isInitialized());
    size_t local_number_of_relationships = 0;
-   for (NeighborhoodSet::const_iterator ei(d_relationships.begin()); ei != d_relationships.end(); ++ei) {
+   for (NeighborhoodSet::const_iterator ei(d_relationships.begin());
+        ei != d_relationships.end();
+        ++ei) {
       d_global_number_of_relationships += static_cast<int>(ei->second.size());
    }
    return local_number_of_relationships;
@@ -1165,13 +1169,13 @@ void Connector::recursivePrint(
             NeighborSet::const_iterator i_nabr;
             for (i_nabr = nabrs.begin(); i_nabr != nabrs.end(); ++i_nabr) {
                hier::Box ovlap = *i_nabr;
-               if ( ni->getBlockId() != i_nabr->getBlockId() ) {
+               if (ni->getBlockId() != i_nabr->getBlockId()) {
                   d_base_handle->getMappedBoxLevel().getGridGeometry()->
-                     transformBox(
-                        ovlap,
-                        d_head_handle->getMappedBoxLevel().getRefinementRatio(),
-                        ni->getBlockId(),
-                        i_nabr->getBlockId());
+                  transformBox(
+                     ovlap,
+                     d_head_handle->getMappedBoxLevel().getRefinementRatio(),
+                     ni->getBlockId(),
+                     i_nabr->getBlockId());
                }
                if (head_coarser) ovlap.refine(d_ratio);
                else if (d_ratio != 1) ovlap.coarsen(d_ratio);
@@ -1339,13 +1343,13 @@ void Connector::printNeighborStats(
    "                               local        min               max           sum/N    sum/P\n";
    for (int i = 0; i < k; ++i) {
       os << border << std::setw(27) << std::left << names[i]
-      << ' ' << std::setw(8) << std::right << loc_num[i]
-      << ' ' << std::setw(8) << std::right << min_num[i] << " @ " << std::setw(
+         << ' ' << std::setw(8) << std::right << loc_num[i]
+         << ' ' << std::setw(8) << std::right << min_num[i] << " @ " << std::setw(
          6) << std::left << rank_of_min[i]
-      << ' ' << std::setw(8) << std::right << max_num[i] << " @ " << std::setw(
+         << ' ' << std::setw(8) << std::right << max_num[i] << " @ " << std::setw(
          6) << std::left << rank_of_max[i]
-      << ' ' << std::setw(8) << std::right
-      << (getBase().getGlobalNumberOfBoxes() > 0 ? static_cast<float>(sum_num[i]
+         << ' ' << std::setw(8) << std::right
+         << (getBase().getGlobalNumberOfBoxes() > 0 ? static_cast<float>(sum_num[i]
                                                                       / getBase().
                                                                       getGlobalNumberOfBoxes()) :
           0.0)
@@ -1368,15 +1372,15 @@ void Connector::printNeighborStats(
       mpi.AllReduce(&sum_local_relationship_fraction, 1, MPI_SUM);
    }
    os << border << std::setw(27) << std::left << "local_relationship_fraction"
-   << ' ' << std::setw(8) << std::right << local_relationship_fraction
-   << ' ' << std::setw(8) << std::right << min_local_relationship_fraction << " @ "
-   << std::setw(6) << std::left << rank_of_min[0]
-   << ' ' << std::setw(8) << std::right << max_local_relationship_fraction << " @ "
-   << std::setw(6) << std::left << rank_of_max[0]
-   << ' ' << std::setw(8) << std::right
-   << (sum_num[k_sum_relationships] ==
+      << ' ' << std::setw(8) << std::right << local_relationship_fraction
+      << ' ' << std::setw(8) << std::right << min_local_relationship_fraction << " @ "
+      << std::setw(6) << std::left << rank_of_min[0]
+      << ' ' << std::setw(8) << std::right << max_local_relationship_fraction << " @ "
+      << std::setw(6) << std::left << rank_of_max[0]
+      << ' ' << std::setw(8) << std::right
+      << (sum_num[k_sum_relationships] ==
        0 ? 0.0 : (double)sum_num[k_sum_local_relationships] / sum_num[k_sum_relationships])
-   << '\n';
+      << '\n';
    double local_ovlap_fraction = loc_num[k_sum_ovlap_size] ==
       0 ? 0.0 : (double)loc_num[k_sum_local_ovlap_size]
       / loc_num[k_sum_ovlap_size];
@@ -1389,18 +1393,17 @@ void Connector::printNeighborStats(
       mpi.AllReduce(&sum_local_ovlap_fraction, 1, MPI_SUM);
    }
    os << border << std::setw(27) << std::left << "local_ovlap_fraction"
-   << ' ' << std::setw(8) << std::right << local_ovlap_fraction
-   << ' ' << std::setw(8) << std::right << min_local_ovlap_fraction << " @ "
-   << std::setw(6) << std::left << rank_of_min[0]
-   << ' ' << std::setw(8) << std::right << max_local_ovlap_fraction << " @ "
-   << std::setw(6) << std::left << rank_of_max[0]
-   << ' ' << std::setw(8) << std::right
-   << (sum_num[k_sum_ovlap_size] ==
+      << ' ' << std::setw(8) << std::right << local_ovlap_fraction
+      << ' ' << std::setw(8) << std::right << min_local_ovlap_fraction << " @ "
+      << std::setw(6) << std::left << rank_of_min[0]
+      << ' ' << std::setw(8) << std::right << max_local_ovlap_fraction << " @ "
+      << std::setw(6) << std::left << rank_of_max[0]
+      << ' ' << std::setw(8) << std::right
+      << (sum_num[k_sum_ovlap_size] ==
        0 ? 0.0 : (double)sum_num[k_sum_local_ovlap_size]
        / sum_num[k_sum_ovlap_size])
    << '\n';
 }
-
 
 /*
  ***********************************************************************
@@ -1409,16 +1412,14 @@ void Connector::printNeighborStats(
  */
 
 Connector::Outputter::Outputter(
-   const Connector &connector,
+   const Connector& connector,
    const std::string& border,
-   int detail_depth )
-   : d_conn(connector),
-     d_border(border),
-     d_detail_depth(detail_depth)
+   int detail_depth):
+   d_conn(connector),
+   d_border(border),
+   d_detail_depth(detail_depth)
 {
-   return;
 }
-
 
 /*
  ***********************************************************************
@@ -1430,10 +1431,9 @@ std::ostream& operator << (
    std::ostream& os,
    const Connector::Outputter& format)
 {
-   format.d_conn.recursivePrint( os, format.d_border, format.d_detail_depth );
+   format.d_conn.recursivePrint(os, format.d_border, format.d_detail_depth);
    return os;
 }
-
 
 /*
  ***********************************************************************
@@ -1443,11 +1443,10 @@ std::ostream& operator << (
 
 Connector::Outputter Connector::format(
    const std::string& border,
-   int detail_depth ) const
+   int detail_depth) const
 {
-   return Outputter( *this, border, detail_depth);
+   return Outputter(*this, border, detail_depth);
 }
-
 
 /*
  ***********************************************************************
@@ -1510,7 +1509,7 @@ size_t Connector::checkTransposeCorrectness(
       (input_transpose.d_parallel_state == MappedBoxLevel::GLOBALIZED) ?
       &input_transpose : makeGlobalizedCopy(input_transpose);
 
-   const MappedBoxLevel &head = getHead().getGlobalizedVersion();
+   const MappedBoxLevel& head = getHead().getGlobalizedVersion();
 
    const PeriodicShiftCatalog* shift_catalog =
       PeriodicShiftCatalog::getCatalog(dim);
@@ -1559,9 +1558,9 @@ size_t Connector::checkTransposeCorrectness(
 
          if (cn == tran_relationships.end()) {
             tbox::perr << "\nConnector::checkTransposeCorrectness:\n"
-                       << "Local mapped_box " << mapped_box
-                       << " has relationship to " << nabr
-                       << " but " << nabr << " has no relationship container.\n";
+            << "Local mapped_box " << mapped_box
+            << " has relationship to " << nabr
+            << " but " << nabr << " has no relationship container.\n";
             ++err_count_for_current_index;
             continue;
          }
@@ -1583,12 +1582,12 @@ size_t Connector::checkTransposeCorrectness(
 
          if (nabr_ni == nabr_nabrs.end()) {
             tbox::perr << "\nConnector::checkTransposeCorrectness:\n"
-                       << "Local mapped_box " << mapped_box;
+            << "Local mapped_box " << mapped_box;
             if (nabr.isPeriodicImage()) {
                tbox::perr << " (shifted version " << shifted_mapped_box << ")";
             }
             tbox::perr << " has relationship to " << nabr << " but "
-                       << nabr << " does not have the reverse relationship.\n"
+            << nabr << " does not have the reverse relationship.\n"
             ;
             tbox::perr << "Neighbors of " << nabr << " are:\n";
             for (NeighborSet::const_iterator nj = nabr_nabrs.begin();
@@ -1603,8 +1602,8 @@ size_t Connector::checkTransposeCorrectness(
 
       if (err_count_for_current_index > 0) {
          tbox::perr << "Mapped_box " << mapped_box << " had "
-                    << err_count_for_current_index
-                    << " errors.  Neighbors are:\n";
+         << err_count_for_current_index
+         << " errors.  Neighbors are:\n";
          for (NeighborSet::const_iterator nj = nabrs.begin();
               nj != nabrs.end(); ++nj) {
             tbox::perr << *nj << std::endl;
@@ -1648,12 +1647,12 @@ size_t Connector::checkTransposeCorrectness(
 
             if (!getBase().hasMappedBox(nabr)) {
                tbox::perr << "\nConnector::checkTransposeCorrectness:\n"
-                          << "Head mapped_box " << head_mapped_box
-                          << " has neighbor " << nabr << "\n"
-                          << " but the neighbor does not exist "
-                          << "in the base mapped_box_level.\n";
+               << "Head mapped_box " << head_mapped_box
+               << " has neighbor " << nabr << "\n"
+               << " but the neighbor does not exist "
+               << "in the base mapped_box_level.\n";
                tbox::perr << "Neighbors of head mapped_box "
-                          << mapped_box_id << " are:\n";
+               << mapped_box_id << " are:\n";
                for (NeighborSet::const_iterator nj = nabrs.begin();
                     nj != nabrs.end(); ++nj) {
                   tbox::perr << *nj << std::endl;
@@ -1676,14 +1675,14 @@ size_t Connector::checkTransposeCorrectness(
 
             if (nabr_nabrs_ == this_relationships.end()) {
                tbox::perr << "\nConnector::checkTransposeCorrectness:\n"
-                          << "Head mapped_box " << head_mapped_box << "\n"
-                          << " has base mapped_box "
-                          << base_mapped_box << " as a neighbor.\n"
-                          << "But " << base_mapped_box
-                          << " has no neighbor container.\n";
+               << "Head mapped_box " << head_mapped_box << "\n"
+               << " has base mapped_box "
+               << base_mapped_box << " as a neighbor.\n"
+               << "But " << base_mapped_box
+               << " has no neighbor container.\n";
                tbox::perr << "Neighbors of head mapped_box " << BoxId(
                   mapped_box_id)
-                          << ":" << std::endl;
+               << ":" << std::endl;
                for (NeighborSet::const_iterator nj = nabrs.begin();
                     nj != nabrs.end(); ++nj) {
                   tbox::perr << *nj << std::endl;
@@ -1695,24 +1694,24 @@ size_t Connector::checkTransposeCorrectness(
             const NeighborSet& nabr_nabrs = nabr_nabrs_->second;
 
             const Box nabr_nabr(dim, mapped_box_id.getGlobalId(),
-                                      head_mapped_box.getBlockId(),
-                                      shift_catalog->getOppositeShiftNumber(
-                                         base_mapped_box.getPeriodicId()));
+                                head_mapped_box.getBlockId(),
+                                shift_catalog->getOppositeShiftNumber(
+                                   base_mapped_box.getPeriodicId()));
 
             NeighborSet::const_iterator found_nabr_ =
                nabr_nabrs.find(nabr_nabr);
 
             if (found_nabr_ == nabr_nabrs.end()) {
                tbox::perr << "\nConnector::checkTransposeCorrectness:\n"
-                          << "Head mapped_box " << head_mapped_box << "\n"
-                          << " has base mapped_box " << base_mapped_box
-                          << " as a neighbor.\n"
-                          << "But base mapped_box " << base_mapped_box
-                          << " does not have a mapped_box indexed "
-                          << nabr_nabr.getId()
-                          << " in its neighbor list." << std::endl;
+               << "Head mapped_box " << head_mapped_box << "\n"
+               << " has base mapped_box " << base_mapped_box
+               << " as a neighbor.\n"
+               << "But base mapped_box " << base_mapped_box
+               << " does not have a mapped_box indexed "
+               << nabr_nabr.getId()
+               << " in its neighbor list." << std::endl;
                tbox::perr << "Neighbors of head mapped_box " << nabr_nabr.getId()
-                          << ":" << std::endl;
+               << ":" << std::endl;
                for (NeighborSet::const_iterator
                     nj = nabrs.begin(); nj != nabrs.end(); ++nj) {
                   tbox::perr << *nj << std::endl;
@@ -1761,15 +1760,17 @@ size_t Connector::checkConsistencyWithBase() const
    size_t num_errors = 0;
    const NeighborhoodSet& relationships = getNeighborhoodSets();
    NeighborhoodSet::const_iterator i_relationships;
-   for (i_relationships = relationships.begin(); i_relationships != relationships.end(); ++i_relationships) {
+   for (i_relationships = relationships.begin();
+        i_relationships != relationships.end();
+        ++i_relationships) {
       const BoxId& mapped_box_id = (*i_relationships).first;
       if (!getBase().hasMappedBox(mapped_box_id)) {
          ++num_errors;
          tbox::plog << "ERROR->"
-                    <<
+         <<
          "Connector::assertConsistencyWithBase: Neighbor data given "
-                    << "\nfor mapped_box " << mapped_box_id
-                    << " but the mapped_box does not exist.\n";
+         << "\nfor mapped_box " << mapped_box_id
+         << " but the mapped_box does not exist.\n";
       }
    }
    return num_errors;
@@ -1801,7 +1802,7 @@ void Connector::computeNeighborhoodDifferences(
 {
    if (0) {
       tbox::plog << "Computing relationship differences, a:\n" << left.format(dbgbord, 3)
-                 << "Computing relationship differences, b:\n" << right.format(dbgbord, 3);
+      << "Computing relationship differences, b:\n" << right.format(dbgbord, 3);
    }
    left_minus_right.initialize(left.d_base_handle->getMappedBoxLevel(),
       left.d_head_handle->getMappedBoxLevel(),
@@ -1863,7 +1864,7 @@ void Connector::assertConsistencyWithHead() const
 
 size_t Connector::checkConsistencyWithHead() const
 {
-   const MappedBoxLevel &globalized_head = getHead().getGlobalizedVersion();
+   const MappedBoxLevel& globalized_head = getHead().getGlobalizedVersion();
 
    const int number_of_inconsistencies =
       static_cast<int>(
@@ -1914,9 +1915,9 @@ size_t Connector::checkConsistencyWithHead(
 
          if (na_in_head == head_mapped_boxes.end()) {
             tbox::perr << "\nConnector::checkConsistencyWithHead:\n"
-                       << "Neighbor list for mapped_box " << mapped_box_id << "\n"
-                       << "referenced nonexistent neighbor "
-                       << nabr << "\n";
+            << "Neighbor list for mapped_box " << mapped_box_id << "\n"
+            << "referenced nonexistent neighbor "
+            << nabr << "\n";
             tbox::perr << "Neighbors of mapped_box " << mapped_box_id << ":\n";
             for (BoxSet::const_iterator nb = nabrs.begin();
                  nb != nabrs.end(); ++nb) {
@@ -1927,15 +1928,15 @@ size_t Connector::checkConsistencyWithHead(
          }
 
          const Box& nabr_in_head = *na_in_head;
-         if (! unshifted_nabr.isIdEqual(nabr_in_head) ||
+         if (!unshifted_nabr.isIdEqual(nabr_in_head) ||
              !unshifted_nabr.isSpatiallyEqual(nabr_in_head)) {
             tbox::perr << "\nConnector::checkConsistencyWithHead:\n"
-                       << "Inconsistent mapped_box data at mapped_box "
-                       << mapped_box_id << "\n"
-                       << "Neighbor " << nabr << "(unshifted to "
-                       << unshifted_nabr << ") does not match "
-                       << "head mapped_box " << nabr_in_head
-                       << "\n";
+            << "Inconsistent mapped_box data at mapped_box "
+            << mapped_box_id << "\n"
+            << "Neighbor " << nabr << "(unshifted to "
+            << unshifted_nabr << ") does not match "
+            << "head mapped_box " << nabr_in_head
+            << "\n";
             ++number_of_inconsistencies;
          }
 

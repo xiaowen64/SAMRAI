@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Base class for patch data test operations. 
+ * Description:   Base class for patch data test operations.
  *
  ************************************************************************/
 
@@ -222,7 +222,7 @@ public:
       const hier::Connector& dst_to_encon,
       const hier::Box& fill_box,
       const hier::BoundaryBox& boundary_box,
-      const tbox::Pointer<hier::GridGeometry> &grid_geometry)
+      const tbox::Pointer<hier::GridGeometry>& grid_geometry)
    {
       NULL_USE(patch);
       NULL_USE(encon_level);

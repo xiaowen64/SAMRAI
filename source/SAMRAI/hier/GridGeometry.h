@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Base class for geometry management in AMR hierarchy 
+ * Description:   Base class for geometry management in AMR hierarchy
  *
  ************************************************************************/
 
@@ -67,8 +67,8 @@ class BoxTree;
  * takes an input database):
  *
  *    - @b    periodic_dimension
- *       An array of integer values (expected number of values is equal to 
- *       the spatial dimension of the mesh) representing the directions in 
+ *       An array of integer values (expected number of values is equal to
+ *       the spatial dimension of the mesh) representing the directions in
  *       which the physical domain is periodic.  A non-zero value indicates
  *       that the direction is periodic.  A zero value indicates that
  *       the direction is not periodic.  If no values are specified, then
@@ -85,7 +85,7 @@ class BoxTree;
  *       integers for the full set of BlockNeighbors keys must be a
  *       continuous sequence beginning with 0.
  *
- *    - @b  Singularity*        
+ *    - @b  Singularity*
  *
  *       When there is a reduced or enhanced connectivity singularity,
  *       this key must be used to identify which blocks touch the
@@ -272,7 +272,7 @@ public:
     *
     * TODO:  The confusing coordination and sequence of calls between
     *        grid geometry classes and patch geometry classes should
-    *        be reworked, including simplification of the data we're 
+    *        be reworked, including simplification of the data we're
     *        passing around.  Part of the issue is tied to the fact that
     *        we are inheriting implementation here as well as providing
     *        a concrete implementation of an interface.
@@ -296,7 +296,7 @@ public:
     */
    /*
     * TODO:  really input param?  If so, should be const qualified.
-    * 
+    *
     * TODO:  See the second TODO item for the previous method.
     */
    void
@@ -351,7 +351,7 @@ public:
     * @brief Compute the BoxSet describing the complete physical
     * domain for all blocks.
     *
-    * The domain description includes periodic images, if any exist. 
+    * The domain description includes periodic images, if any exist.
     *
     * If any entry of the ratio vector is negative, the index space is
     * coarsened with respect to the physical domain description.
@@ -387,7 +387,8 @@ public:
     * @param[in]   block_id
     */
    const BoxList&
-   getPhysicalDomain(const hier::BlockId& block_id) const;
+   getPhysicalDomain(
+      const hier::BlockId& block_id) const;
 
    /*!
     * @brief returns whether the physical domain for a block managed by this
@@ -399,7 +400,8 @@ public:
     * @param[in]   block_id
     */
    bool
-   getDomainIsSingleBox(const hier::BlockId& block_id) const;
+   getDomainIsSingleBox(
+      const hier::BlockId& block_id) const;
 
    /*!
     * @brief Initialize the periodic shift on the coarsest level.
@@ -439,7 +441,8 @@ public:
    /*!
     * @brief Get the number of blocks in the geometry.
     */
-   int getNumberBlocks() const;
+   int
+   getNumberBlocks() const;
 
    /*!
     * @brief Get the max stencil width of all transfer operators.
@@ -505,7 +508,7 @@ public:
     * @param[in]        touches_periodic_bdry Array storing which patches touch
     *                   periodic boundaries.
     */
-   /* 
+   /*
     * TODO:  See the second TODO item for the setGeometryOnPatches() method.
     */
    virtual void
@@ -588,22 +591,22 @@ public:
       const IntVector& ghosts,
       const IntVector& periodic_shift) const;
 
-  /*!
-   * @brief Adjust boundary data of a level to be consistent with the
-   * multiblock nature of the domain.
-   *
-   * In a multiblock problem, the PatchLevels contain patches that were
-   * constructed independent of any knowledge of the multiblock nature of the
-   * complete domain.  Thus the patches will contain boundary data that
-   * recognizes no difference between a physical domain boundary and a block
-   * boundary.  Calling this method will adjust the boundary data on all
-   * patches in the given level such that the true boundaries of the domain
-   * are represented.
-   *
-   * @param[in,out] patch_level Level where boundaries need to be adjusted.
-   * TODO:  Incorporate into regular boundary box computation once
-   * PatchLevel is multiblock-aware.
-   */
+   /*!
+    * @brief Adjust boundary data of a level to be consistent with the
+    * multiblock nature of the domain.
+    *
+    * In a multiblock problem, the PatchLevels contain patches that were
+    * constructed independent of any knowledge of the multiblock nature of the
+    * complete domain.  Thus the patches will contain boundary data that
+    * recognizes no difference between a physical domain boundary and a block
+    * boundary.  Calling this method will adjust the boundary data on all
+    * patches in the given level such that the true boundaries of the domain
+    * are represented.
+    *
+    * @param[in,out] patch_level Level where boundaries need to be adjusted.
+    * TODO:  Incorporate into regular boundary box computation once
+    * PatchLevel is multiblock-aware.
+    */
    void
    adjustMultiblockPatchLevelBoundaries(
       PatchLevel& patch_level);
@@ -640,7 +643,7 @@ public:
 
    /*!
     * @brief Lookup function for coarsening operator.
-    * 
+    *
     * Search list for the spatial coarsening operator matching the
     * request for the given variable.  If the operator is found, a
     * pointer to it will be returned.  Otherwise, an unrecoverable
@@ -651,13 +654,13 @@ public:
     * @param[in]     op_name The string identifier of the coarsening operator.
     */
    tbox::Pointer<CoarsenOperator>
-      lookupCoarsenOperator(
-         const tbox::Pointer<Variable>& var,
-         const std::string& op_name);
+   lookupCoarsenOperator(
+      const tbox::Pointer<Variable>& var,
+      const std::string& op_name);
 
    /*!
     * @brief Lookup function for refinement operator.
-    * 
+    *
     * Search list for the spatial refinement operator matching the
     * request for the given variable.  If the operator is found, a
     * pointer to it will be returned.  Otherwise, an unrecoverable
@@ -668,13 +671,13 @@ public:
     * @param[in]     op_name The string identifier of the refinement operator.
     */
    tbox::Pointer<RefineOperator>
-      lookupRefineOperator(
-         const tbox::Pointer<Variable>& var,
-         const std::string& op_name);
+   lookupRefineOperator(
+      const tbox::Pointer<Variable>& var,
+      const std::string& op_name);
 
    /*!
     * @brief Lookup function for time interpolation operator.
-    * 
+    *
     * Search list for the time interpolation operator matching the
     * request for the given variable.  If the operator is found, a
     * pointer to it will be returned.  Otherwise, an unrecoverable
@@ -686,10 +689,10 @@ public:
     *                operator.  \b Default: STD_LINEAR_TIME_INTERPOLATE
     */
    tbox::Pointer<TimeInterpolateOperator>
-      lookupTimeInterpolateOperator(
-         const tbox::Pointer<Variable>& var,
-         const std::string& op_name =
-            "STD_LINEAR_TIME_INTERPOLATE");
+   lookupTimeInterpolateOperator(
+      const tbox::Pointer<Variable>& var,
+      const std::string& op_name =
+         "STD_LINEAR_TIME_INTERPOLATE");
 
    /*!
     * @brief Set a minimum value on the value returned by
@@ -741,7 +744,7 @@ public:
        * @param[in] shift      The shift needed to shift the neighboring block
        *                       to its correct position in the current index
        *                       space.
-       * @param[in] is_singularity True if the current block and the 
+       * @param[in] is_singularity True if the current block and the
        *                           neighboring block abut at a reduced
        *                           or enhanced connectivity singularity
        */
@@ -759,38 +762,42 @@ public:
       /*!
        * @brief Get the block number of the neighboring block.
        */
-      const BlockId&  getBlockId() const;
+      const BlockId&
+      getBlockId() const;
 
       /*!
        * @brief Get the neighboring block's domain in the current block's
        * index space.
        */
-      const BoxList& getTransformedDomain() const;
+      const BoxList&
+      getTransformedDomain() const;
 
       /*!
        * @brief Get the Transformation for the neighbor relationship.
        */
-      const Transformation& getTransformation() const;
+      const Transformation&
+      getTransformation() const;
 
       /*!
        * @brief Get the rotation identifier for the neighbor relationship.
        */
-      Transformation::RotationIdentifier getRotationIdentifier() const;
+      Transformation::RotationIdentifier
+      getRotationIdentifier() const;
 
       /*!
        * @brief Get the shift for the neighbor relationship.
        */
-      const IntVector& getShift() const;
+      const IntVector&
+      getShift() const;
 
       /*!
        * @brief Tell if the neighboring block touch each other at an
        * enhanced connectivity singularity.
        */
-      bool isSingularity() const;
-
+      bool
+      isSingularity() const;
 
 private:
-
       /*!
        * @brief The block number of the neighboring block
        */
@@ -859,7 +866,8 @@ private:
     * @brief Return the number of block singularities in the block
     * configuration.
     */
-   int getNumberOfBlockSingularities() const;
+   int
+   getNumberOfBlockSingularities() const;
 
    /*!
     * @brief Return a BoxList that describes all of the singularities
@@ -887,8 +895,9 @@ private:
     *
     * @param[i] block_id
     */
-   const std::vector<int> &
-   getSingularityIndices(const BlockId& block_id) const;
+   const std::vector<int>&
+   getSingularityIndices(
+      const BlockId& block_id) const;
 
    /*!
     * @brief Tell if block represented by block_id touches
@@ -925,8 +934,8 @@ private:
    transformBox(
       Box& box,
       const IntVector& ratio,
-      const BlockId &output_block,
-      const BlockId &input_block) const;
+      const BlockId& output_block,
+      const BlockId& input_block) const;
 
    /*!
     * @brief Modify boxes by rotating and shifting from the index space of
@@ -950,14 +959,14 @@ private:
    transformBoxList(
       BoxList& boxes,
       const IntVector& ratio,
-      const BlockId &output_block,
-      const BlockId &input_block) const;
+      const BlockId& output_block,
+      const BlockId& input_block) const;
 
    /*!
     * @brief Get a box array that describes the coarse-level domain of the
     * transformed_block in terms of the index space of base_block.
     *
-    * @param[out] block_boxes The coarse-level domain of the block 
+    * @param[out] block_boxes The coarse-level domain of the block
     *                         identified by transformed_block, represented
     *                         in the index space of the block identified by
     *                         base_block
@@ -1003,30 +1012,40 @@ private:
    /*!
     * @brief Tell if the given BlockIds represent neighboring blocks.
     */
-   bool areNeighbors(const BlockId& block_a, const BlockId& block_b) const;
+   bool
+   areNeighbors(
+      const BlockId& block_a,
+      const BlockId& block_b) const;
 
    /*!
     * @brief Tell if the given BlockIds represent neighboring blocks.
     */
-   bool areSingularityNeighbors(const BlockId& block_a,
-                                const BlockId& block_b) const;
+   bool
+   areSingularityNeighbors(
+      const BlockId& block_a,
+      const BlockId& block_b) const;
 
    /*!
     * @brief Get the rotation identifier to rotate from src to dst.
     */
    Transformation::RotationIdentifier
-   getRotationIdentifier(const BlockId& dst, const BlockId& src) const;
+   getRotationIdentifier(
+      const BlockId& dst,
+      const BlockId& src) const;
 
    /*!
     * @brief Get the offset to shift from src to dst after rotation.
     */
-   const IntVector& 
-   getOffset(const BlockId& dst, const BlockId& src) const;
+   const IntVector&
+   getOffset(
+      const BlockId& dst,
+      const BlockId& src) const;
 
    /*!
     * @brief Query if the geometry has enhanced connectivity.
     */
-   bool hasEnhancedConnectivity() const; 
+   bool
+   hasEnhancedConnectivity() const;
 
    /*!
     * @brief Print object data to the specified output stream.
@@ -1050,7 +1069,6 @@ private:
       tbox::Pointer<tbox::Database> db);
 
 protected:
-
    /*!
     * @brief Construct a new GridGeometry object in its default state.
     *
@@ -1061,7 +1079,7 @@ protected:
     *
     * @param[in]  dim
     * @param[in]  object_name
-    */ 
+    */
    explicit GridGeometry(
       const tbox::Dimension& dim,
       const std::string& object_name,
@@ -1072,17 +1090,18 @@ protected:
     *
     * @param[in] input_db
     */
-   void readBlockDataFromInput(
+   void
+   readBlockDataFromInput(
       const tbox::Pointer<tbox::Database>& input_db);
 
 private:
-
    /*!
     * @brief Reset domain BoxSet after data it depends on has changed.
     * TODO:  Remove block_id
     */
    void
-   resetDomainBoxSet(const hier::BlockId& block_id);
+   resetDomainBoxSet(
+      const hier::BlockId& block_id);
 
    /*!
     * @brief Check that the domain is valid for periodic boundary conditions
@@ -1148,18 +1167,18 @@ private:
    /*!
     * @brief Reads in data from the specified input database.
     *
-    * If the simulation is from restart, these values are taken from restart 
+    * If the simulation is from restart, these values are taken from restart
     * and newly specified values in the input database are ignored.
-    * 
+    *
     * @param[in] db  input database, must not be NULL pointer
-    * @param[in] is_from_restart  set to true if simulation is from restart 
+    * @param[in] is_from_restart  set to true if simulation is from restart
     */
    void
    getFromInput(
       tbox::Pointer<tbox::Database> db,
       bool is_from_restart);
 
-   /*! 
+   /*!
     * @brief Read object state from the restart file and initialize class data
     * members.
     *
@@ -1302,11 +1321,11 @@ private:
    static tbox::Pointer<tbox::Timer> t_compute_boundary_boxes_on_level;
    static tbox::Pointer<tbox::Timer> t_get_boundary_boxes;
 
-   /* 
+   /*
     * Static initialization and cleanup handler.
     */
    static tbox::StartupShutdownManager::Handler
-   s_initialize_handler;
+      s_initialize_handler;
 
 };
 

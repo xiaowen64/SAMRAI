@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Timer class to track elapsed time in portions of a program. 
+ * Description:   Timer class to track elapsed time in portions of a program.
  *
  ************************************************************************/
 
@@ -28,7 +28,6 @@ extern "C" {
 
 namespace SAMRAI {
 namespace tbox {
-
 
 const int Timer::DEFAULT_NUMBER_OF_TIMERS_INCREMENT = 128;
 const int Timer::TBOX_TIMER_VERSION = 1;
@@ -268,8 +267,10 @@ double Timer::computeLoadBalanceEfficiency()
       eff = 100. * (sum / (double)nprocs) / d_max_wallclock;
    }
    return eff;
+
 #else
    return 100.0;
+
 #endif // ENABLE_SAMRAI_TIMERS
 }
 

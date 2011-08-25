@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Templated side centered patch data type 
+ * Description:   Templated side centered patch data type
  *
  ************************************************************************/
 
@@ -53,7 +53,7 @@ const TYPE * SideData<TYPE>::getPointer(
 
 template<class TYPE>
 SAMRAI_INLINE_KEYWORD
-TYPE & SideData<TYPE>::operator () (
+TYPE& SideData<TYPE>::operator () (
    const SideIndex& i,
    int depth)
 {
@@ -70,7 +70,7 @@ TYPE & SideData<TYPE>::operator () (
 
 template<class TYPE>
 SAMRAI_INLINE_KEYWORD
-const TYPE &
+const TYPE&
 SideData<TYPE>::operator () (
    const SideIndex& i,
    int depth) const

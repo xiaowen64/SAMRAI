@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Main program for SAMRAI Linear Advection example problem. 
+ * Description:   Main program for SAMRAI Linear Advection example problem.
  *
  ************************************************************************/
 
@@ -193,11 +193,11 @@ int main(
 
       if ((argc != 2) && (argc != 3) && (argc != 4)) {
          tbox::pout << "USAGE:\n"
-         << argv[0] << " <input filename> "
-         << "or\n"
-         << argv[0] << " <input filename> <case name>"
-         << "or\n"
-         << argv[0] << " <input filename> "
+                    << argv[0] << " <input filename> "
+                    << "or\n"
+                    << argv[0] << " <input filename> <case name>"
+                    << "or\n"
+                    << argv[0] << " <input filename> "
                     << "  <restart dir> <restore number> [options]\n"
                     << "  options:\n"
                     << "  none at this time"

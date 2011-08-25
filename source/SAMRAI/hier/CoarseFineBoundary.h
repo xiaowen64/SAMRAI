@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   For describing coarse-fine boundary interfaces 
+ * Description:   For describing coarse-fine boundary interfaces
  *
  ************************************************************************/
 
@@ -45,7 +45,6 @@ namespace hier {
  * such objects.
  */
 
-
 class CoarseFineBoundary:public tbox::DescribedClass
 {
 public:
@@ -72,7 +71,7 @@ public:
     * @note If level number is zero, the coarse-fine boundary will be empty.
     *
     * @param[in] hierarchy
-    * @param[in] level_num  
+    * @param[in] level_num
     * @param[in] max_ghost_width The ghost width determines the extent of the
     *                            boundary boxes along the level domain boundary,
     *                            similar to regular domain boundary boxes.  Note
@@ -100,7 +99,7 @@ public:
     * @param[in] mapped_box_level_to_self
     * @param[in] max_ghost_width The ghost width determines the extent of the
     *                            boundary boxes along the level domain boundary,
-    *                            similar to regular domain boundary boxes.  Note    
+    *                            similar to regular domain boundary boxes.  Note
     *                            that as in the case of regular boundary boxes,
     *                            each box will always be one cell wide in the
     *                            direction perpendicular to the patch boundary.
@@ -117,7 +116,7 @@ public:
    ~CoarseFineBoundary();
 
    /*!
-    * @brief Clear all boundary data or clear boundary data for a given block 
+    * @brief Clear all boundary data or clear boundary data for a given block
     * for multiblock.
     *
     * @param[in] block_number  Optional argument for use in multiblock.
@@ -182,7 +181,7 @@ public:
 
    /*!
     * @brief Get an array of face boundary boxes for a specified patch.
-    *		
+    *
     * @see hier::BoundaryBox for more information.
     *
     * Note that face boxes are only meaningful if the dimension is > 2.
@@ -236,7 +235,7 @@ private:
     * @param[in] mapped_box_level_to_self
     * @param[in] max_ghost_width The ghost width determines the extent of the
     *                            boundary boxes along the level domain boundary,
-    *                            similar to regular domain boundary boxes.  Note   
+    *                            similar to regular domain boundary boxes.  Note
     *                            that as in the case of regular boundary boxes,
     *                            each box will always be one cell wide in the
     *                            direction perpendicular to the patch boundary.
@@ -261,7 +260,7 @@ private:
     * @param[in] level0
     * @param[in] max_ghost_width The ghost width determines the extent of the
     *                            boundary boxes along the level domain boundary,
-    *                            similar to regular domain boundary boxes.  Note   
+    *                            similar to regular domain boundary boxes.  Note
     *                            that as in the case of regular boundary boxes,
     *                            each box will always be one cell wide in the
     *                            direction perpendicular to the patch boundary.
@@ -298,13 +297,11 @@ private:
     */
    const tbox::Dimension d_dim;
 
-
    /*!
     * @brief Whether the boundary boxes have been computed.  One entry on the
     * vector for each block in a multiblock grid.
     */
    std::vector<bool> d_initialized;
-
 
    /*!
     * @brief Patch boundary boxes describing the coarse-fine boundary.

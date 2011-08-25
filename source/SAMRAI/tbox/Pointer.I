@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   A smart pointer template class with RTTI 
+ * Description:   A smart pointer template class with RTTI
  *
  ************************************************************************/
 
@@ -13,7 +13,7 @@ namespace tbox {
 
 template<class TYPE>
 SAMRAI_INLINE_KEYWORD
-Pointer<TYPE>::Pointer() :
+Pointer<TYPE>::Pointer():
    d_object(0),
    d_counter(0)
 {
@@ -54,7 +54,7 @@ Pointer<TYPE>::~Pointer()
 
 template<class TYPE>
 SAMRAI_INLINE_KEYWORD
-Pointer<TYPE>&Pointer<TYPE>::operator = (
+Pointer<TYPE>& Pointer<TYPE>::operator = (
    const Pointer<TYPE>& ptr)
 {
    if (this != &ptr) {
@@ -100,14 +100,14 @@ TYPE * Pointer<TYPE>::operator -> () const
 
 template<class TYPE>
 SAMRAI_INLINE_KEYWORD
-TYPE & Pointer<TYPE>::operator * () const
+TYPE& Pointer<TYPE>::operator * () const
 {
    return *d_object;
 }
 
 template<class TYPE>
 SAMRAI_INLINE_KEYWORD
-Pointer<TYPE>::operator TYPE* () const
+Pointer<TYPE>::operator TYPE * () const
 {
    return d_object;
 }
@@ -161,7 +161,6 @@ ReferenceCounter * Pointer<TYPE>::getSubclassReferenceCounter() const
 {
    return (ReferenceCounter *)d_counter;
 }
-
 
 }
 }

@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Strategy interface to user routines for refining AMR data. 
+ * Description:   Strategy interface to user routines for refining AMR data.
  *
  ************************************************************************/
 
@@ -59,7 +59,6 @@ class RefinePatchStrategy:
    public virtual tbox::DescribedClass
 {
 public:
-
    /*!
     * @brief Get the maximum stencil width over all RefinePatchStrategy objects
     * used in an application.
@@ -96,7 +95,7 @@ public:
     * Set data in ghost regions at patch boundaries that touch the
     * physical domain boundary.  The specific data values set in physical
     * boundary ghost regions are determined by the boundary conditions needed
-    * by the user application.  The patch data components that should be set 
+    * by the user application.  The patch data components that should be set
     * in this function correspond to the "scratch" components specified in calls
     * to the registerRefine() function in the RefineAlgorithm class.
     *
@@ -144,7 +143,7 @@ public:
       const double fill_time,
       const hier::Box& fill_box,
       const hier::BoundaryBox& boundary_box,
-      const tbox::Pointer<hier::GridGeometry> &grid_geometry)
+      const tbox::Pointer<hier::GridGeometry>& grid_geometry)
    {
       NULL_USE(patch);
       NULL_USE(encon_level);
@@ -217,7 +216,7 @@ public:
    /*!
     * Perform user-defined patch data refinement operations on a list of boxes.
     *
-    * This member function is called before standard refining operations 
+    * This member function is called before standard refining operations
     * (expressed using concrete subclasses of the RefineOperator base class).
     *
     * The default implementation of this virtual function loops over the
@@ -227,7 +226,7 @@ public:
     * @param[in] coarse  Coarse patch containing source data.
     * @param[in] fine_boxes  List of box regions on fine patch into which data
     *                        is refined.
-    * @param[in] ratio     Refinement ratio between coarse and fine patches. 
+    * @param[in] ratio     Refinement ratio between coarse and fine patches.
     */
    virtual void
    preprocessRefineBoxes(
@@ -265,7 +264,6 @@ public:
    getDim() const;
 
 private:
-
    /*!
     * @brief Get the set of RefinePatchStrategy objects that have been
     * registered.

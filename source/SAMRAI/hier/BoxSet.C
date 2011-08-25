@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Extension of a std 
+ * Description:   Extension of a std
  *
  ************************************************************************/
 #ifndef included_hier_BoxSet_C
@@ -49,7 +49,7 @@ bool BoxSet::isLocallyEqual(
    BoxSetSingleOwnerIterator other_iter(other, rank);
 
    while (this_iter.isValid() && other_iter.isValid()) {
-      if (! (*this_iter).isIdEqual((*other_iter))) {
+      if (!(*this_iter).isIdEqual((*other_iter))) {
          is_equal = false;
          break;
       }
@@ -59,7 +59,7 @@ bool BoxSet::isLocallyEqual(
 
    if (is_equal && (this_iter.isValid() != other_iter.isValid())) {
       // local count in this is different from local count in other.
-      is_equal = false; 
+      is_equal = false;
    }
 
    return is_equal;
@@ -287,8 +287,8 @@ void BoxSet::unshiftPeriodicImageMappedBoxes(
       const Box& first_element(*begin());
 
       const PeriodicId zero_shift_number(PeriodicShiftCatalog::getCatalog(
-                                     first_element.getDim())->
-                                  getZeroShiftNumber());
+                                            first_element.getDim())->
+                                         getZeroShiftNumber());
 
       for (const_iterator na = begin(); na != end(); ++na) {
          if (na->isPeriodicImage()) {
@@ -349,7 +349,6 @@ void BoxSet::recursivePrint(
    }
 }
 
-
 /*
  ***********************************************************************
  * Construct a BoxSet Outputter with formatting parameters.
@@ -357,16 +356,14 @@ void BoxSet::recursivePrint(
  */
 
 BoxSet::Outputter::Outputter(
-   const BoxSet &mapped_box_set,
+   const BoxSet& mapped_box_set,
    const std::string& border,
-   int detail_depth )
-   : d_set(mapped_box_set),
-     d_border(border),
-     d_detail_depth(detail_depth)
+   int detail_depth):
+   d_set(mapped_box_set),
+   d_border(border),
+   d_detail_depth(detail_depth)
 {
-   return;
 }
-
 
 /*
  ***********************************************************************
@@ -378,10 +375,9 @@ std::ostream& operator << (
    std::ostream& s,
    const BoxSet::Outputter& format)
 {
-   format.d_set.recursivePrint( s, format.d_border, format.d_detail_depth );
+   format.d_set.recursivePrint(s, format.d_border, format.d_detail_depth);
    return s;
 }
-
 
 /*
  ***********************************************************************
@@ -391,9 +387,9 @@ std::ostream& operator << (
 
 BoxSet::Outputter BoxSet::format(
    const std::string& border,
-   int detail_depth ) const
+   int detail_depth) const
 {
-   return Outputter( *this, border, detail_depth);
+   return Outputter(*this, border, detail_depth);
 }
 
 }

@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Test program for asynchromous peer communication classes 
+ * Description:   Test program for asynchromous peer communication classes
  *
  ************************************************************************/
 #include "SAMRAI/SAMRAI_config.h"
@@ -211,10 +211,10 @@ void TypeIndependentTester<TYPE>::runTest(
          if (completed_comm_index < group_size) {
             // completed_comm is a sender.  No accuracy checks needed.
             plog << "comm_peer[" << std::setw(3) << completed_comm_index
-            << "] finished send # " << std::setw(3)
-            << completion_counter[completed_comm_index]
-            << " to " << std::setw(3) << completed_comm.getPeerRank() << "."
-            << std::endl;
+                 << "] finished send # " << std::setw(3)
+                 << completion_counter[completed_comm_index]
+                 << " to " << std::setw(3) << completed_comm.getPeerRank() << "."
+                 << std::endl;
          } else {
             // completed_comm is a receiver.  Do accuracy check on received data.
             std::string size_correct, data_correct;
@@ -226,12 +226,12 @@ void TypeIndependentTester<TYPE>::runTest(
                   size_correct,
                   data_correct);
             plog << "comm_peer[" << std::setw(3) << completed_comm_index
-            << "] finished recv # " << std::setw(3)
-            << completion_counter[completed_comm_index]
-            << " fr " << std::setw(3) << completed_comm.getPeerRank() << ": "
-            << std::setw(5) << size_correct << ' '
-            << std::setw(5) << data_correct << ' '
-            << std::endl;
+                 << "] finished recv # " << std::setw(3)
+                 << completion_counter[completed_comm_index]
+                 << " fr " << std::setw(3) << completed_comm.getPeerRank() << ": "
+                 << std::setw(5) << size_correct << ' '
+                 << std::setw(5) << data_correct << ' '
+                 << std::endl;
             if (fail) ++fail_count;
             else ++pass_count;
          }
@@ -272,11 +272,11 @@ void TypeIndependentTester<TYPE>::runTest(
                 */
                if (peer_comm.isDone()) {
                   plog << "comm_peer[" << std::setw(3) << i
-                  << "] finished send # " << std::setw(3)
-                  << completion_counter[i]
-                  << " items of size " << sizeof(TYPE) << " to "
-                  << std::setw(3) << peer_comm.getPeerRank() << "."
-                  << std::endl;
+                       << "] finished send # " << std::setw(3)
+                       << completion_counter[i]
+                       << " items of size " << sizeof(TYPE) << " to "
+                       << std::setw(3) << peer_comm.getPeerRank() << "."
+                       << std::endl;
                   ++completion_counter[i];
                   ++count;
                }
@@ -299,13 +299,13 @@ void TypeIndependentTester<TYPE>::runTest(
                         size_correct,
                         data_correct);
                   plog << "comm_peer[" << std::setw(3) << i
-                  << "] finished recv # " << std::setw(3)
-                  << completion_counter[i]
-                  << " items of size " << sizeof(TYPE) << " fr "
-                  << std::setw(3) << peer_comm.getPeerRank() << ": "
-                  << std::setw(5) << size_correct << ' '
-                  << std::setw(5) << data_correct << ' '
-                  << std::endl;
+                       << "] finished recv # " << std::setw(3)
+                       << completion_counter[i]
+                       << " items of size " << sizeof(TYPE) << " fr "
+                       << std::setw(3) << peer_comm.getPeerRank() << ": "
+                       << std::setw(5) << size_correct << ' '
+                       << std::setw(5) << data_correct << ' '
+                       << std::endl;
                   if (fail) ++fail_count;
                   else ++pass_count;
                   ++completion_counter[i];
@@ -366,8 +366,8 @@ int main(
 
       if (argc != 2) {
          TBOX_ERROR("USAGE:  " << argv[0] << " <input file> \n"
-                                          << "  options:\n"
-                                          << "  none at this time" << std::endl);
+                               << "  options:\n"
+                               << "  none at this time" << std::endl);
       } else {
          input_filename = argv[1];
       }
@@ -384,7 +384,7 @@ int main(
        * by SAMRAI library.
        */
       tbox::SAMRAI_MPI::Comm isolated_communicator(MPI_COMM_NULL);
-      if ( tbox::SAMRAI_MPI::usingMPI() ) {
+      if (tbox::SAMRAI_MPI::usingMPI()) {
          tbox::SAMRAI_MPI::getSAMRAIWorld().Comm_dup(&isolated_communicator);
       }
       tbox::SAMRAI_MPI isolated_mpi(isolated_communicator);

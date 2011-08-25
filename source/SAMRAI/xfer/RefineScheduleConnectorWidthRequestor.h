@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   RefineSchedule's implementation of PatchHierarchy 
+ * Description:   RefineSchedule's implementation of PatchHierarchy
  *
  ************************************************************************/
 
@@ -18,18 +18,17 @@
 namespace SAMRAI {
 namespace xfer {
 
-
 /*!
  * @brief Implementation of the strategy class
  * hier::PatchHierarchy::ConnectorWidthRequestorStrategy to tell the
  * hier::PatchHierarchy how wide RefineSchedule needs Connectors
  * between hierarchy levels to be.
  */
-class RefineScheduleConnectorWidthRequestor
-   : public hier::PatchHierarchy::ConnectorWidthRequestorStrategy {
+class RefineScheduleConnectorWidthRequestor:
+   public hier::PatchHierarchy::ConnectorWidthRequestorStrategy
+{
 
 public:
-
    /*!
     * @brief Constructor.
     */
@@ -50,7 +49,8 @@ public:
     *
     * @param[in]  patch_hierarchy
     */
-   void computeRequiredConnectorWidths(
+   void
+   computeRequiredConnectorWidths(
       std::vector<hier::IntVector>& self_connector_widths,
       std::vector<hier::IntVector>& fine_connector_widths,
       const hier::PatchHierarchy& patch_hierarchy) const;
@@ -73,10 +73,11 @@ public:
     *
     * @param[in] factor By default, @c factor=1.
     */
-   void setGhostCellWidthFactor( int factor );
+   void
+   setGhostCellWidthFactor(
+      int factor);
 
 private:
-
    /*!
     * @brief Set up things for the entire class.
     *
@@ -98,10 +99,10 @@ private:
     * by default.
     */
    static RefineScheduleConnectorWidthRequestor
-   s_auto_registered_connector_width_requestor;
+      s_auto_registered_connector_width_requestor;
 
    static tbox::StartupShutdownManager::Handler
-   s_initialize_finalize_handler;
+      s_initialize_finalize_handler;
 
    /*
     * @brief The factor by which the ghost data widths in the

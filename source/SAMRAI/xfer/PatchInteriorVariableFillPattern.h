@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Fill pattern class that fills PatchInteriors only 
+ * Description:   Fill pattern class that fills PatchInteriors only
  *
  ************************************************************************/
 
@@ -43,7 +43,6 @@ class PatchInteriorVariableFillPattern:
    public VariableFillPattern
 {
 public:
-
    /*!
     * @brief Constructor
     *
@@ -122,7 +121,7 @@ public:
 
    /*!
     * @brief Implementation of interface to get stencil width.
-    * 
+    *
     * @return    Zero IntVector since this fills patch interiors only.
     */
    const hier::IntVector&

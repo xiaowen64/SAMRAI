@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Templated face centered patch data type 
+ * Description:   Templated face centered patch data type
  *
  ************************************************************************/
 
@@ -44,7 +44,7 @@ const TYPE * FaceData<TYPE>::getPointer(
 
 template<class TYPE>
 SAMRAI_INLINE_KEYWORD
-TYPE & FaceData<TYPE>::operator () (
+TYPE& FaceData<TYPE>::operator () (
    const FaceIndex& i,
    int depth)
 {
@@ -60,7 +60,7 @@ TYPE & FaceData<TYPE>::operator () (
 
 template<class TYPE>
 SAMRAI_INLINE_KEYWORD
-const TYPE &
+const TYPE&
 FaceData<TYPE>::operator () (
    const FaceIndex& i,
    int depth) const

@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   FAC algorithm for solving linear equations on a hierarchy 
+ * Description:   FAC algorithm for solving linear equations on a hierarchy
  *
  ************************************************************************/
 
@@ -248,7 +248,7 @@ bool FACPreconditioner::checkVectorStateCompatibility(
    if (!d_patch_hierarchy) {
       TBOX_ERROR(
          d_object_name << ": cannot check vector-state\n"
-         <<
+                       <<
          "compatibility when the state is uninitialized.\n");
    }
    bool rvalue = true;

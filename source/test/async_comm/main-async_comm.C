@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Test program for asynchromous communication classes 
+ * Description:   Test program for asynchromous communication classes
  *
  ************************************************************************/
 #include "SAMRAI/SAMRAI_config.h"
@@ -66,8 +66,8 @@ int main(
 
       if (argc != 2) {
          TBOX_ERROR("USAGE:  " << argv[0] << " <input file> \n"
-                                          << "  options:\n"
-                                          << "  none at this time" << std::endl);
+                               << "  options:\n"
+                               << "  none at this time" << std::endl);
       } else {
          input_filename = argv[1];
       }
@@ -84,7 +84,7 @@ int main(
        * by SAMRAI library.
        */
       tbox::SAMRAI_MPI::Comm isolated_communicator(MPI_COMM_NULL);
-      if ( tbox::SAMRAI_MPI::usingMPI() ) {
+      if (tbox::SAMRAI_MPI::usingMPI()) {
          tbox::SAMRAI_MPI::getSAMRAIWorld().Comm_dup(&isolated_communicator);
       }
       tbox::SAMRAI_MPI isolated_mpi(isolated_communicator);
@@ -248,10 +248,10 @@ int main(
          plog << " ID  size owner members...\n";
          for (int n = 0; n < num_groups; ++n) {
             plog << std::setw(3) << n
-            << std::setw(5) << group_ids[n].size()
-            << std::setw(4) << owners[n]
-            << (active_flags[n] ? '*' : ' ')
-            << (owners[n] == rank ? '*' : ' ') << ':';
+                 << std::setw(5) << group_ids[n].size()
+                 << std::setw(4) << owners[n]
+                 << (active_flags[n] ? '*' : ' ')
+                 << (owners[n] == rank ? '*' : ' ') << ':';
             for (int i = 0; i < group_ids[n].size(); ++i) {
                plog << "  " << group_ids[n][i];
             }
@@ -331,12 +331,12 @@ int main(
                TBOX_ASSERT(comm_group.isDone());
                gi = active_groups[ai];
                plog << std::setw(3) << ai
-               << std::setw(5) << gi
-               << std::setw(8) << bcdata[ai]
-               << std::setw(8) << correct_bcdata[ai]
+                    << std::setw(5) << gi
+                    << std::setw(8) << bcdata[ai]
+                    << std::setw(8) << correct_bcdata[ai]
                ;
                plog << "  Bcast difference = "
-               << bcdata[ai] - correct_bcdata[ai];
+                    << bcdata[ai] - correct_bcdata[ai];
                if (bcdata[ai] != correct_bcdata[ai]) {
                   plog << "  Error!";
                   tbox::pout << "Error in bcast result for group "
@@ -368,13 +368,13 @@ int main(
                TBOX_ASSERT(comm_group.isDone());
                gi = active_groups[ai];
                plog << std::setw(3) << ai
-               << std::setw(5) << gi
-               << std::setw(8) << sum[ai]
-               << std::setw(8) << correct_sum[ai]
+                    << std::setw(5) << gi
+                    << std::setw(8) << sum[ai]
+                    << std::setw(8) << correct_sum[ai]
                ;
                if (rank == owners[gi]) {
                   plog << "  Sum reduce difference = "
-                  << sum[ai] - correct_sum[ai];
+                       << sum[ai] - correct_sum[ai];
                   if (sum[ai] != correct_sum[ai]) {
                      plog << "  Error!";
                      tbox::pout << "Error in sum reduce result for group "
@@ -425,12 +425,12 @@ int main(
                   ai = static_cast<int>(completed_group - comm_groups);
                   gi = active_groups[ai];
                   plog << std::setw(3) << ai
-                  << std::setw(5) << gi
-                  << std::setw(8) << bcdata[ai]
-                  << std::setw(8) << correct_bcdata[ai]
+                       << std::setw(5) << gi
+                       << std::setw(8) << bcdata[ai]
+                       << std::setw(8) << correct_bcdata[ai]
                   ;
                   plog << "  Bcast difference = "
-                  << bcdata[ai] - correct_bcdata[ai];
+                       << bcdata[ai] - correct_bcdata[ai];
                   if (bcdata[ai] != correct_bcdata[ai]) {
                      plog << "  Error!";
                      tbox::pout << "Error in bcast result for group "
@@ -480,13 +480,13 @@ int main(
                   ai = static_cast<int>(completed_group - comm_groups);
                   gi = active_groups[ai];
                   plog << std::setw(3) << ai
-                  << std::setw(5) << gi
-                  << std::setw(8) << sum[ai]
-                  << std::setw(8) << correct_sum[ai]
+                       << std::setw(5) << gi
+                       << std::setw(8) << sum[ai]
+                       << std::setw(8) << correct_sum[ai]
                   ;
                   if (rank == owners[gi]) {
                      plog << "  Sum reduce difference = "
-                     << sum[ai] - correct_sum[ai];
+                          << sum[ai] - correct_sum[ai];
                      if (sum[ai] != correct_sum[ai]) {
                         plog << "  Error!";
                         tbox::pout << "Error in sum reduce result for group "
@@ -535,12 +535,12 @@ int main(
                   ai = static_cast<int>(completed_group - comm_groups);
                   gi = active_groups[ai];
                   plog << std::setw(3) << ai
-                  << std::setw(5) << gi
-                  << std::setw(8) << bcdata[ai]
-                  << std::setw(8) << correct_bcdata[ai]
+                       << std::setw(5) << gi
+                       << std::setw(8) << bcdata[ai]
+                       << std::setw(8) << correct_bcdata[ai]
                   ;
                   plog << "  Bcast difference = "
-                  << bcdata[ai] - correct_bcdata[ai];
+                       << bcdata[ai] - correct_bcdata[ai];
                   if (bcdata[ai] != correct_bcdata[ai]) {
                      plog << "  Error!";
                      tbox::pout << "Error in bcast result for group "
@@ -585,13 +585,13 @@ int main(
                   ai = static_cast<int>(completed_group - comm_groups);
                   gi = active_groups[ai];
                   plog << std::setw(3) << ai
-                  << std::setw(5) << gi
-                  << std::setw(8) << sum[ai]
-                  << std::setw(8) << correct_sum[ai]
+                       << std::setw(5) << gi
+                       << std::setw(8) << sum[ai]
+                       << std::setw(8) << correct_sum[ai]
                   ;
                   if (rank == owners[gi]) {
                      plog << "  Sum reduce difference = "
-                     << sum[ai] - correct_sum[ai];
+                          << sum[ai] - correct_sum[ai];
                      if (sum[ai] != correct_sum[ai]) {
                         plog << "  Error!";
                         tbox::pout << "Error in sum reduce result for group "
@@ -605,7 +605,7 @@ int main(
                   TBOX_ASSERT(comm_groups[ai].isDone());
                }
                num_complete = static_cast<int>(
-                  comm_stage.advanceSome(completed));
+                     comm_stage.advanceSome(completed));
             } while (num_complete != 0);
             for (ai = 0; ai < num_active_groups; ++ai) {
                TBOX_ASSERT(comm_groups[ai].isDone());

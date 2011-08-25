@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Manager for startup and shutdown routines to be called at program start and exit 
+ * Description:   Manager for startup and shutdown routines to be called at program start and exit
  *
  ************************************************************************/
 #ifndef included_tbox_StartupShutdownManager
@@ -68,7 +68,8 @@ public:
       /*!
        * @brief Virtual destructor since class has virtual methods.
        */
-      virtual ~AbstractHandler() { }
+      virtual ~AbstractHandler() {
+      }
 
       /*!
        * @brief Method that is invoked on initialize.
@@ -316,7 +317,6 @@ public:
       }
 
 private:
-
       /*!
        * @brief Default constructor is private.
        *
@@ -461,7 +461,6 @@ private:
    {
 
 public:
-
       /*!
        * @brief Constructor.
        */
@@ -478,7 +477,7 @@ public:
 
       /*!
        * @brief Next element of the list.
-       */ 
+       */
       ListElement* next;
 
    };

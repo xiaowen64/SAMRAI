@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Binary tree of Boxes for overlap searches. 
+ * Description:   Binary tree of Boxes for overlap searches.
  *
  ************************************************************************/
 
@@ -169,7 +169,6 @@ public:
 
    //@}
 
-
    //@{
 
    //! @name Overlap checks
@@ -243,7 +242,7 @@ public:
     */
    void
    findOverlapBoxes(
-      std::vector<const Box*>& overlap_mapped_boxes,
+      std::vector<const Box *>& overlap_mapped_boxes,
       const Box& box,
       bool recursive_call = false) const;
 
@@ -289,7 +288,9 @@ public:
     * @brief Get the BlockId.
     */
    const BlockId& getBlockId() const
-   { return d_block_id; }
+   {
+      return d_block_id;
+   }
 
    /*!
     * @brief Assignment operator.
@@ -321,7 +322,6 @@ public:
       const tbox::Dimension& dim);
 
 private:
-
    /*!
     * @brief Default constructor is private to disallow user access.
     * Objects are normally constructed with at least a dimension.
@@ -358,7 +358,8 @@ private:
     *
     * @param[in,out] right_mapped_boxes
     */
-   void setupChildren(
+   void
+   setupChildren(
       const size_t min_number,
       BoxSet& left_mapped_boxes,
       BoxSet& right_mapped_boxes);
@@ -439,7 +440,7 @@ private:
    static unsigned int s_max_lin_search[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
 
    static tbox::StartupShutdownManager::Handler
-   s_initialize_finalize_handler;
+      s_initialize_finalize_handler;
 
 };
 

@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Set of relationships incident from a mapped_box_level of a distributed box graph. 
+ * Description:   Set of relationships incident from a mapped_box_level of a distributed box graph.
  *
  ************************************************************************/
 #include "SAMRAI/hier/Connector.h"
@@ -117,8 +117,8 @@ bool Connector::hasNeighborSet(
    const NeighborhoodSet& relationships = d_parallel_state == MappedBoxLevel::DISTRIBUTED ?
       d_relationships : d_global_relationships;
    BoxId non_per_id(mapped_box_id.getGlobalId(),
-                          mapped_box_id.getBlockId(),
-                          PeriodicId::zero());
+                    mapped_box_id.getBlockId(),
+                    PeriodicId::zero());
    NeighborhoodSet::const_iterator ei = relationships.find(non_per_id);
    return ei != relationships.end();
 }
@@ -137,8 +137,8 @@ const Connector::NeighborSet& Connector::getNeighborSet(
    const NeighborhoodSet& relationships = d_parallel_state == MappedBoxLevel::DISTRIBUTED ?
       d_relationships : d_global_relationships;
    BoxId non_per_id(mapped_box_id.getGlobalId(),
-                          mapped_box_id.getBlockId(),
-                          PeriodicId::zero());
+                    mapped_box_id.getBlockId(),
+                    PeriodicId::zero());
    NeighborhoodSet::const_iterator ei = relationships.find(non_per_id);
    if (ei == relationships.end()) {
       TBOX_ERROR("Connector::getNeighborSet: No neighbor set exists for\n"

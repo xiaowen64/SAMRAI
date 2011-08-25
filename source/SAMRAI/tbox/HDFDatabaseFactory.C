@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   An abstract base class for a HDFDatabaseFactory 
+ * Description:   An abstract base class for a HDFDatabaseFactory
  *
  ************************************************************************/
 
@@ -24,10 +24,11 @@ Pointer<Database> HDFDatabaseFactory::allocate(
    return database;
 
 #else
-   (void) name;
+   (void)name;
    TBOX_WARNING("HDF5DatabaseFactory: Cannot allocate an HDFDatabase.\n"
       << "SAMRAI was not configured with HDF.");
    return Pointer<Database>(NULL);
+
 #endif
 }
 

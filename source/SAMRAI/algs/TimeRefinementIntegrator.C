@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Time integration manager for AMR with local time stepping. 
+ * Description:   Time integration manager for AMR with local time stepping.
  *
  ************************************************************************/
 
@@ -50,7 +50,6 @@ TimeRefinementIntegrator::s_initialize_handler(
 tbox::Pointer<tbox::Timer> TimeRefinementIntegrator::t_initialize_hier;
 tbox::Pointer<tbox::Timer> TimeRefinementIntegrator::t_advance_hier;
 tbox::Pointer<tbox::Timer> TimeRefinementIntegrator::t_advance_level;
-
 
 /*
  *************************************************************************
@@ -153,9 +152,9 @@ TimeRefinementIntegrator::TimeRefinementIntegrator(
                } else {
                   TBOX_ERROR(
                      d_object_name << ":  "
-                     <<
+                                   <<
                      " integrator cannot set regrid interval"
-                     <<
+                                   <<
                      " based on ratios between levels.");
                }
             }
@@ -755,11 +754,11 @@ void TimeRefinementIntegrator::advanceRecursivelyForRefinedTimestepping(
       tbox::plog << "\nAdvancing level number = " << level_number << std::endl;
       tbox::plog << "step number = " << d_step_level[level_number] << std::endl;
       tbox::plog << "max steps = " << d_max_steps_level[level_number]
-      << std::endl;
+                 << std::endl;
       tbox::plog << "current time = " << d_level_sim_time[level_number]
-      << std::endl;
+                 << std::endl;
       tbox::plog << "dt used = " << d_dt_actual_level[level_number]
-      << std::endl;
+                 << std::endl;
       tbox::plog << "new level time = " << new_level_time << std::endl;
       tbox::plog << "dt max = " << d_dt_max_level[level_number] << std::endl;
       tbox::plog << "end time = " << end_time << std::endl;
@@ -947,20 +946,22 @@ void TimeRefinementIntegrator::advanceRecursivelyForRefinedTimestepping(
 
             } else {
 
-               if (d_gridding_algorithm->getTagAndInitializeStrategy()->getErrorCoarsenRatio() == 2) {
+               if (d_gridding_algorithm->getTagAndInitializeStrategy()->getErrorCoarsenRatio() ==
+                   2) {
                   regrid_start_time = d_level_old_time;
-               } else if (d_gridding_algorithm->getTagAndInitializeStrategy()->getErrorCoarsenRatio() == 3) {
+               } else if (d_gridding_algorithm->getTagAndInitializeStrategy()->getErrorCoarsenRatio()
+                          == 3) {
                   regrid_start_time = d_level_old_old_time;
                } else {
                   TBOX_ERROR(
                      d_object_name << ": the supplied gridding "
-                     <<
+                                   <<
                      "algorithm uses an error coarsen ratio of "
-                     << d_gridding_algorithm->
+                                   << d_gridding_algorithm->
                      getTagAndInitializeStrategy()->getErrorCoarsenRatio()
-                     <<
+                                   <<
                      " which is not supported in this class"
-                     << std::endl);
+                                   << std::endl);
                }
 
             }
@@ -1209,17 +1210,18 @@ double TimeRefinementIntegrator::advanceForSynchronizedTimestepping(
 
          if (d_gridding_algorithm->getTagAndInitializeStrategy()->getErrorCoarsenRatio() == 2) {
             regrid_start_time = d_level_old_time;
-         } else if (d_gridding_algorithm->getTagAndInitializeStrategy()->getErrorCoarsenRatio() == 3) {
+         } else if (d_gridding_algorithm->getTagAndInitializeStrategy()->getErrorCoarsenRatio() ==
+                    3) {
             regrid_start_time = d_level_old_old_time;
          } else {
             TBOX_ERROR(
                d_object_name << ": the supplied gridding "
-               <<
+                             <<
                "algorithm uses an error coarsen ratio of "
-               << d_gridding_algorithm->
+                             << d_gridding_algorithm->
                getTagAndInitializeStrategy()->getErrorCoarsenRatio()
-               << " which is not supported in this class"
-               << std::endl);
+                             << " which is not supported in this class"
+                             << std::endl);
          }
 
       }
@@ -1352,15 +1354,15 @@ bool TimeRefinementIntegrator::findNextDtAndStepsRemaining(
       if (d_step_level[level_number] >= d_max_steps_level[level_number]) {
          TBOX_ERROR(
             d_object_name << ":  "
-            <<
+                          <<
             "no steps left to divide remaining time ...\n"
-            << "level_number = " << level_number
-            << std::endl
-            << "time_remaining = " << time_remaining
-            << "\ndt_bound = " << dt_bound
-            << "\nnumber_steps_remaining = "
-            << number_steps_remaining
-            << std::endl);
+                          << "level_number = " << level_number
+                          << std::endl
+                          << "time_remaining = " << time_remaining
+                          << "\ndt_bound = " << dt_bound
+                          << "\nnumber_steps_remaining = "
+                          << number_steps_remaining
+                          << std::endl);
       }
 
       /*
@@ -1479,19 +1481,19 @@ void TimeRefinementIntegrator::printDataForLevel(
 #endif
    os << "\nTimeRefinementIntegrator::printDataForLevel..." << std::endl;
    os << "\nd_level_sim_time[" << level_number << "] = "
-   << d_level_sim_time[level_number] << std::endl;
+      << d_level_sim_time[level_number] << std::endl;
    os << "\nd_level_old_time[" << level_number << "] = "
-   << d_level_old_time[level_number] << std::endl;
+      << d_level_old_time[level_number] << std::endl;
    os << "\nd_level_old_old_time[" << level_number << "] = "
-   << d_level_old_old_time[level_number] << std::endl;
+      << d_level_old_old_time[level_number] << std::endl;
    os << "\nd_dt_max_level[" << level_number << "] = "
-   << d_dt_max_level[level_number] << std::endl;
+      << d_dt_max_level[level_number] << std::endl;
    os << "\nd_dt_actual_level[" << level_number << "] = "
-   << d_dt_actual_level[level_number] << std::endl;
+      << d_dt_actual_level[level_number] << std::endl;
    os << "\nd_step_level[" << level_number << "] = "
-   << d_step_level[level_number] << std::endl;
+      << d_step_level[level_number] << std::endl;
    os << "\nd_max_steps_level[" << level_number << "] = "
-   << d_max_steps_level[level_number] << std::endl;
+      << d_max_steps_level[level_number] << std::endl;
 }
 
 /*
@@ -1595,7 +1597,7 @@ void TimeRefinementIntegrator::getFromInput(
       } else {
          TBOX_ERROR(
             d_object_name << ":  "
-            <<
+                          <<
             "Key data `start_time' not found in input.");
       }
 
@@ -1618,7 +1620,7 @@ void TimeRefinementIntegrator::getFromInput(
       } else {
          TBOX_ERROR(
             d_object_name << ":  "
-            <<
+                          <<
             "Key data `max_integrator_steps' not found in input.");
       }
 
@@ -1646,9 +1648,9 @@ void TimeRefinementIntegrator::getFromInput(
 
          TBOX_WARNING(
             d_object_name << ":  "
-            <<
+                          <<
             "Key data `tag_buffer' not found in input.  "
-            <<
+                          <<
             "Default values used.  See class header for details.");
       }
 
@@ -1691,7 +1693,7 @@ void TimeRefinementIntegrator::getFromRestart()
    if (ver != ALGS_TIME_REFINEMENT_INTEGRATOR_VERSION) {
       TBOX_ERROR(
          d_object_name << ":  "
-         <<
+                       <<
          "Restart file version different than class version.");
    }
 
@@ -1732,7 +1734,6 @@ void TimeRefinementIntegrator::finalizeCallback()
    t_advance_hier.setNull();
    t_advance_level.setNull();
 }
-
 
 }
 }

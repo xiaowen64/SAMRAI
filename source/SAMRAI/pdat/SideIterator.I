@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Iterator for side centered patch data types 
+ * Description:   Iterator for side centered patch data types
  *
  ************************************************************************/
 
@@ -70,7 +70,7 @@ SideIterator::operator bool () const
 
 #ifndef LACKS_BOOL_VOID_RESOLUTION
 SAMRAI_INLINE_KEYWORD
-SideIterator::operator const void* () const
+SideIterator::operator const void * () const
 {
    return SideIterator::operator bool () ? this : NULL;
 }

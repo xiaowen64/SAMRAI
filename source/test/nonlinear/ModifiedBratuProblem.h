@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Class containing numerical routines for modified Bratu problem 
+ * Description:   Class containing numerical routines for modified Bratu problem
  *
  ************************************************************************/
 
@@ -515,7 +515,7 @@ private:
    double d_input_dt;    // time increment
 
    /*
-    *hier::Variable data management.
+    * *hier::Variable data management.
     *
     * Contexts are labels to describe the way variables are used.
     */

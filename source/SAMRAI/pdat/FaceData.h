@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Templated face centered patch data type 
+ * Description:   Templated face centered patch data type
  *
  ************************************************************************/
 
@@ -473,11 +473,15 @@ private:
    operator = (
       const FaceData<TYPE>&);                           // not implemented
 
-   void copyWithRotation(const FaceData<TYPE>& src,
-                         const FaceOverlap& overlap);
+   void
+   copyWithRotation(
+      const FaceData<TYPE>& src,
+      const FaceOverlap& overlap);
 
-   void packWithRotation(tbox::MessageStream& stream,
-                         const FaceOverlap& overlap) const;
+   void
+   packWithRotation(
+      tbox::MessageStream& stream,
+      const FaceOverlap& overlap) const;
 
    int d_depth;
    ArrayData<TYPE> d_data[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];

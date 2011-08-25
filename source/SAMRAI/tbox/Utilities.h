@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Utility functions for error reporting, file manipulation, etc. 
+ * Description:   Utility functions for error reporting, file manipulation, etc.
  *
  ************************************************************************/
 
@@ -210,7 +210,7 @@ private:
  */
 #ifdef DEBUG_CHECK_ASSERTIONS
 
-#define TBOX_ASSERT_MSG(EXP, MSG)		  \
+#define TBOX_ASSERT_MSG(EXP, MSG)                 \
    do {                                   \
       if (!(EXP)) {                                           \
          std::ostringstream tboxos;                             \

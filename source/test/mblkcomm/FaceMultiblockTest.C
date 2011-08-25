@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   AMR communication tests for face-centered patch data 
+ * Description:   AMR communication tests for face-centered patch data
  *
  ************************************************************************/
 
@@ -52,11 +52,11 @@ FaceMultiblockTest::FaceMultiblockTest(
 
    if (main_input_db->keyExists(geom_name)) {
       getGridGeometry() = new hier::GridGeometry(
-               dim,
-               geom_name,
-               tbox::Pointer<hier::TransferOperatorRegistry>(
-                  new geom::SAMRAITransferOperatorRegistry(dim)),
-               main_input_db->getDatabase(geom_name));
+            dim,
+            geom_name,
+            tbox::Pointer<hier::TransferOperatorRegistry>(
+               new geom::SAMRAITransferOperatorRegistry(dim)),
+            main_input_db->getDatabase(geom_name));
 
    } else {
       TBOX_ERROR("FaceMultiblockTest: could not find entry `"
@@ -311,7 +311,7 @@ void FaceMultiblockTest::fillSingularityBoundaryConditions(
    const hier::Connector& dst_to_encon,
    const hier::Box& fill_box,
    const hier::BoundaryBox& bbox,
-   const tbox::Pointer<hier::GridGeometry> &grid_geometry)
+   const tbox::Pointer<hier::GridGeometry>& grid_geometry)
 {
    const tbox::Dimension& dim = fill_box.getDim();
 
@@ -358,7 +358,7 @@ void FaceMultiblockTest::fillSingularityBoundaryConditions(
 
       int num_encon_used = 0;
 
-      if ( grid_geometry->hasEnhancedConnectivity() ) {
+      if (grid_geometry->hasEnhancedConnectivity()) {
          const hier::NeighborhoodSet& dst_to_encon_nbrhood_set =
             dst_to_encon.getNeighborhoodSets();
 
@@ -382,7 +382,7 @@ void FaceMultiblockTest::fillSingularityBoundaryConditions(
                hier::IntVector offset(dim);
 
                for (tbox::List<hier::GridGeometry::Neighbor>::Iterator
-                       ni(neighbors); ni; ni++) {
+                    ni(neighbors); ni; ni++) {
 
                   if (ni().getBlockId() == encon_blk_id) {
                      rotation = ni().getRotationIdentifier();
@@ -485,7 +485,6 @@ void FaceMultiblockTest::fillSingularityBoundaryConditions(
           * from which to acquire data.
           */
 
-
          for (int axis = 0; axis < d_dim.getValue(); axis++) {
 
             hier::Box pbox =
@@ -580,7 +579,7 @@ bool FaceMultiblockTest::verifyResults(
                   tbox::perr << "Test FAILED: ...."
                              << " : face index = " << ci() << endl;
                   tbox::perr << "    Variable = " << d_variable_src_name[i]
-                  << " : depth index = " << d << endl;
+                             << " : depth index = " << d << endl;
                   tbox::perr << "    result = " << result
                              << " : correct = " << correct << endl;
                   test_failed = true;
@@ -623,7 +622,7 @@ bool FaceMultiblockTest::verifyResults(
 
                for (hier::BoxIterator ci(ng()); ci; ci++) {
                   pdat::FaceIndex fi(ci(), 0, 0);
-                  fi.setAxis(axis); 
+                  fi.setAxis(axis);
                   if (!patch_face_box.contains(fi)) {
                      for (int d = 0; d < depth; d++) {
                         double result = (*face_data)(fi, d);
@@ -633,8 +632,8 @@ bool FaceMultiblockTest::verifyResults(
                            tbox::perr << "Test FAILED: ...."
                                       << " : face index = " << fi << endl;
                            tbox::perr << "  Variable = "
-                           << d_variable_src_name[i]
-                           << " : depth index = " << d << endl;
+                                      << d_variable_src_name[i]
+                                      << " : depth index = " << d << endl;
                            tbox::perr << "    result = " << result
                                       << " : correct = " << correct << endl;
                            test_failed = true;
@@ -722,8 +721,8 @@ bool FaceMultiblockTest::verifyResults(
                               tbox::perr << "Test FAILED: ...."
                                          << " : face index = " << ci() << endl;
                               tbox::perr << "  Variable = "
-                              << d_variable_src_name[i]
-                              << " : depth index = " << d << endl;
+                                         << d_variable_src_name[i]
+                                         << " : depth index = " << d << endl;
                               tbox::perr << "    result = " << result
                                          << " : correct = " << correct << endl;
                               test_failed = true;

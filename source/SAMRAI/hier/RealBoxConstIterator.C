@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Iterator over real MappedBoxes in a BoxSet. 
+ * Description:   Iterator over real MappedBoxes in a BoxSet.
  *
  ************************************************************************/
 #ifndef included_hier_RealBoxConstIterator_C
@@ -73,7 +73,7 @@ bool RealBoxConstIterator::operator != (
  ****************************************************************************
  */
 
-RealBoxConstIterator &RealBoxConstIterator::operator ++ ()
+RealBoxConstIterator& RealBoxConstIterator::operator ++ ()
 {
    do {
       ++d_ni;

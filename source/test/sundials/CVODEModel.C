@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:    
+ * Description:
  *
  ************************************************************************/
 
@@ -61,35 +61,35 @@
 
 extern "C" {
 void F77_FUNC(comprhs2d, COMPRHS2D) (
-   const int &, const int &,
-   const int &, const int &,
-   const int &, const int &,
+   const int&, const int&,
+   const int&, const int&,
+   const int&, const int&,
    const double *,
    const double *,
    const double *, const double *,
    double *);
 #ifdef USE_FAC_PRECONDITIONER
 void F77_FUNC(setneufluxvalues2d, SETNEUFLUXVALUES2D) (
-   const int &, const int &,
-   const int &, const int &,
+   const int&, const int&,
+   const int&, const int&,
    const int *, const double *,
    int *, int *, int *, int *,
    double *, double *, double *, double *);
 #endif
 void F77_FUNC(comprhs3d, COMPRHS3D) (
-   const int &, const int &,
-   const int &, const int &,
-   const int &, const int &,
-   const int &, const int &, const int &,
+   const int&, const int&,
+   const int&, const int&,
+   const int&, const int&,
+   const int&, const int&, const int&,
    const double *,
    const double *,
    const double *, const double *, const double *,
    double *);
 #ifdef USE_FAC_PRECONDITIONER
 void F77_FUNC(setneufluxvalues3d, SETNEUFLUXVALUES3D) (
-   const int &, const int &,
-   const int &, const int &,
-   const int &, const int &,
+   const int&, const int&,
+   const int&, const int&,
+   const int&, const int&,
    const int *, const double *,
    int *, int *, int *, int *, int *, int *,
    double *, double *, double *, double *, double *, double *);
@@ -1336,7 +1336,7 @@ CVODEModel::getFromInput(
    } else {
       TBOX_WARNING(
          d_object_name << ": "
-         <<
+                       <<
          "Key data `Boundary_data' not found in input. " << endl);
    }
 
@@ -1413,7 +1413,7 @@ void CVODEModel::getFromRestart()
    if (ver != CVODE_MODEL_VERSION) {
       TBOX_ERROR(
          d_object_name << ":  "
-         <<
+                       <<
          "Restart file version different than class version.");
    }
 
@@ -1536,42 +1536,42 @@ void CVODEModel::printClassData(
    if (d_dim == tbox::Dimension(2)) {
       for (j = 0; j < d_scalar_bdry_edge_conds.getSize(); j++) {
          os << "       d_scalar_bdry_edge_conds[" << j << "] = "
-         << d_scalar_bdry_edge_conds[j] << endl;
+            << d_scalar_bdry_edge_conds[j] << endl;
          if (d_scalar_bdry_edge_conds[j] == BdryCond::DIRICHLET) {
             os << "         d_bdry_edge_val[" << j << "] = "
-            << d_bdry_edge_val[j] << endl;
+               << d_bdry_edge_val[j] << endl;
          }
       }
       os << endl;
       for (j = 0; j < d_scalar_bdry_node_conds.getSize(); j++) {
          os << "       d_scalar_bdry_node_conds[" << j << "] = "
-         << d_scalar_bdry_node_conds[j] << endl;
+            << d_scalar_bdry_node_conds[j] << endl;
          os << "       d_node_bdry_edge[" << j << "] = "
-         << d_node_bdry_edge[j] << endl;
+            << d_node_bdry_edge[j] << endl;
       }
    }
    if (d_dim == tbox::Dimension(3)) {
       for (j = 0; j < d_scalar_bdry_face_conds.getSize(); j++) {
          os << "       d_scalar_bdry_face_conds[" << j << "] = "
-         << d_scalar_bdry_face_conds[j] << endl;
+            << d_scalar_bdry_face_conds[j] << endl;
          if (d_scalar_bdry_face_conds[j] == BdryCond::DIRICHLET) {
             os << "         d_bdry_face_val[" << j << "] = "
-            << d_bdry_face_val[j] << endl;
+               << d_bdry_face_val[j] << endl;
          }
       }
       os << endl;
       for (j = 0; j < d_scalar_bdry_edge_conds.getSize(); j++) {
          os << "       d_scalar_bdry_edge_conds[" << j << "] = "
-         << d_scalar_bdry_edge_conds[j] << endl;
+            << d_scalar_bdry_edge_conds[j] << endl;
          os << "       d_edge_bdry_face[" << j << "] = "
-         << d_edge_bdry_face[j] << endl;
+            << d_edge_bdry_face[j] << endl;
       }
       os << endl;
       for (j = 0; j < d_scalar_bdry_node_conds.getSize(); j++) {
          os << "       d_scalar_bdry_node_conds[" << j << "] = "
-         << d_scalar_bdry_node_conds[j] << endl;
+            << d_scalar_bdry_node_conds[j] << endl;
          os << "       d_node_bdry_face[" << j << "] = "
-         << d_node_bdry_face[j] << endl;
+            << d_node_bdry_face[j] << endl;
       }
    }
 

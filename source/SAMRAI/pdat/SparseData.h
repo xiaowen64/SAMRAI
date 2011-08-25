@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   pdat 
+ * Description:   pdat
  *
  ************************************************************************/
 #ifndef included_pdat_SparseData_h
@@ -28,15 +28,21 @@ namespace SAMRAI {
 namespace pdat {
 
 // forward declarations
-template <typename BOX_GEOMETRY> class SparseDataIterator;
-template <typename BOX_GEOMETRY> class SparseDataAttributeIterator;
+template<typename BOX_GEOMETRY>
+class SparseDataIterator;
+template<typename BOX_GEOMETRY>
+class SparseDataAttributeIterator;
 
-template <typename BOX_GEOMETRY>
-std::ostream& operator << (std::ostream& out, 
+template<typename BOX_GEOMETRY>
+std::ostream&
+operator << (
+   std::ostream& out,
    SparseDataIterator<BOX_GEOMETRY>& sparse_data_iterator);
 
-template <typename BOX_GEOMETRY>
-std::ostream& operator << (std::ostream& out, 
+template<typename BOX_GEOMETRY>
+std::ostream&
+operator << (
+   std::ostream& out,
    SparseDataAttributeIterator<BOX_GEOMETRY>& attr_iterator);
 
 /*!
@@ -44,20 +50,20 @@ std::ostream& operator << (std::ostream& out,
  *
  * SparseData is a PatchData type that allows storage of a collection
  * of attributes at an Index location.  Each SparseData object is initialized
- * with the attributes that it will support (unique to each instance).  
+ * with the attributes that it will support (unique to each instance).
  * Each Index can have any number of attribute collections associated with it.
  *
- * Attributes names are registered when the object is created.  Once created, 
+ * Attributes names are registered when the object is created.  Once created,
  * no additional attributes names can be registered for that instance.  The
  * names have a unique associated identifier which allows for operator[]
  * access to the individual attribute.
  *
- * Access to the Indexed elements is done through the SparseData iterator. 
+ * Access to the Indexed elements is done through the SparseData iterator.
  * Clients should use the SparseData<BOX_GEOMETRY>::Iterator interface.
  *
  * Access to an Index's attribute list is done through the AttributeIterator.
- * Individual elements within an attribute are then accessed through the 
- * operator[].  
+ * Individual elements within an attribute are then accessed through the
+ * operator[].
  *
  * <code>
  * SparseData<BOX_GEOMETRY>::Iterator index_iter = sparse_data.begin();
@@ -82,17 +88,17 @@ std::ostream& operator << (std::ostream& out,
  *
  * <code>
  * SparseData<BOX_GEOMETRY>::AttributeIterator attributes(sparse_data, index);
- * </code>   
+ * </code>
  *
  * Access to the individual elements is done through the iterator's operator[].
- * 
- * For copy operations (between similar SparseData (PatchData) types, 
+ *
+ * For copy operations (between similar SparseData (PatchData) types,
  * see copy() and copy2() methods.
  *
  * To remove a single element from the SparseData list, you must use
  * the Iterator interface to erase it.
  *
- * To erase all elements in the list, use the clear() method.  
+ * To erase all elements in the list, use the clear() method.
  *
  * Since SparseData is derived from hier::PatchData, its interface conforms
  * to the standard interface that PatchData defines.
@@ -112,8 +118,8 @@ std::ostream& operator << (std::ostream& out,
  * @see pdat::SparseDataFactory
  * @see pdat::SparseDataVariable
  */
-template <typename BOX_GEOMETRY>
-class SparseData : public hier::PatchData
+template<typename BOX_GEOMETRY>
+class SparseData:public hier::PatchData
 {
 private:
    class Attributes;
@@ -123,24 +129,24 @@ public:
    /*!
     * @brief Iterator access through SparseData<BOX_GEOMETRY>::Iterator
     */
-   typedef SparseDataIterator<BOX_GEOMETRY>           Iterator;
+   typedef SparseDataIterator<BOX_GEOMETRY> Iterator;
 
    /*!
-    * @brief AttributeIterator access through 
+    * @brief AttributeIterator access through
     * SparseData<BOX_GEOMETRY>::AttributeIterator
     */
-   typedef SparseDataAttributeIterator<BOX_GEOMETRY>  AttributeIterator;
+   typedef SparseDataAttributeIterator<BOX_GEOMETRY> AttributeIterator;
 
-    /*!
+   /*!
     * @brief Construct a SparseData object.
     *
     * SparseData objects are constructed as normal PatchData objects,
     * and adds the addition of two string vectors which specify the names
     * of the attributes for both double values and integer values that
-    * will be stored in Index attributes in this instance.  Once the 
+    * will be stored in Index attributes in this instance.  Once the
     * instance is constructed, no other attribute (names) can be added.
-    * 
-    * ASSERTIONS: 
+    *
+    * ASSERTIONS:
     *    The dimensions must be valid and equal between the box
     * and ghosts.
     *
@@ -166,7 +172,7 @@ public:
     * @brief A fast copy between source and destination.
     *
     * All data is copied from the source into the destination where there is
-    * overlap in the index space. 
+    * overlap in the index space.
     *
     * ASSERTIONS:
     *    The dimensions of the src and <tt>this</tt> must be the same and
@@ -175,13 +181,15 @@ public:
     *
     * @param [in] src The source PatchData from which to copy.
     */
-   void copy(const hier::PatchData& src);
+   void
+   copy(
+      const hier::PatchData& src);
 
    /*!
     * @brief A fast copy between source and destination.
     *
     * All data is copied from the source into the destination where there is
-    * overlap in the index space.  This copy does not change the state of 
+    * overlap in the index space.  This copy does not change the state of
     * <tt>this</tt>
     *
     * ASSERTIONS:
@@ -190,7 +198,9 @@ public:
     *
     * @param [in] dst The destination PatchData
     */
-   void copy2(hier::PatchData& dst) const;
+   void
+   copy2(
+      hier::PatchData& dst) const;
 
    /*!
     * @brief Copy data from the source using the designated overlap descriptor.
@@ -200,9 +210,12 @@ public:
     *    valid.  <tt>src</tt> and <tt>overlap</tt> must not be NULL.
     *
     * @param [in] src The source PatchData from which to copy.
-    * @param [in] overlap The overlap description 
+    * @param [in] overlap The overlap description
     */
-   void copy(const hier::PatchData& src, const hier::BoxOverlap& overlap);
+   void
+   copy(
+      const hier::PatchData& src,
+      const hier::BoxOverlap& overlap);
 
    /*!
     * @brief Copy data to the destination using the overlap descriptor.
@@ -213,27 +226,33 @@ public:
     *
     * All data is copied from <tt>this</tt> to the destination, without
     * changing the state of <tt>this</tt>.
-    * @param [in] dst The destination PatchData 
-    * @param [in] overlap The overlap description 
+    * @param [in] dst The destination PatchData
+    * @param [in] overlap The overlap description
     */
-   void copy2(hier::PatchData& dst, const hier::BoxOverlap& overlap) const;
+   void
+   copy2(
+      hier::PatchData& dst,
+      const hier::BoxOverlap& overlap) const;
 
    /*!
     * @brief Return true if the patch data object can estimate the
     * stream size required to fit its data using only index
     * space information (i.e., a box); else false.
     */
-   bool canEstimateStreamSizeFromBox() const;
+   bool
+   canEstimateStreamSizeFromBox() const;
 
    /*!
     * @brief Calculate the number of bytes needed to stream the data.
     *
     * ASSERTION
     *    <tt>overlap</tt> must not be NULL.
-    * 
+    *
     * @param [in] overlap
     */
-   int getDataStreamSize(const hier::BoxOverlap& overlap) const;
+   int
+   getDataStreamSize(
+      const hier::BoxOverlap& overlap) const;
 
    /*!
     * @brief Pack data residing on the specified index space.
@@ -242,9 +261,11 @@ public:
     *    <tt>overlap</tt> must not be NULL.
     *
     * @param [out] stream The message stream
-    * @param [in] overlap 
+    * @param [in] overlap
     */
-   void packStream(tbox::MessageStream& stream,
+   void
+   packStream(
+      tbox::MessageStream& stream,
       const hier::BoxOverlap& overlap) const;
 
    /*!
@@ -256,34 +277,40 @@ public:
     * @param [in,out] stream The message stream
     * @param [in] overlap
     */
-   void unpackStream(tbox::MessageStream& stream,
+   void
+   unpackStream(
+      tbox::MessageStream& stream,
       const hier::BoxOverlap& overlap);
 
-   /*! 
+   /*!
     * @brief Obtain the specific information for this SparseData object
     *        from the Database.
     *
     * The parent PatchData part of this class will call this function
     * to get the parts of it specified within this concrete child.  It
-    * will check the version number of this instance to ensure that 
+    * will check the version number of this instance to ensure that
     * it is valid.
     *
-    * ASSERTIONS: 
+    * ASSERTIONS:
     *    The database must be a non-null pointer.
     *    The version must match with the class-specified version
     */
-   void getSpecializedFromDatabase(tbox::Pointer<tbox::Database> database);
+   void
+   getSpecializedFromDatabase(
+      tbox::Pointer<tbox::Database> database);
 
-   /*! 
+   /*!
     * @brief Write out the specialized data to the Database.
     *
     * A version number is written out as well, in order to maintain
     * validity across runs.
     *
-    * ASSERTION: 
+    * ASSERTION:
     *    The database must be a non-null pointer.
     */
-   void putSpecializedToDatabase(tbox::Pointer<tbox::Database> database);
+   void
+   putSpecializedToDatabase(
+      tbox::Pointer<tbox::Database> database);
 
    /*!
     * @brief Returns the attribute ID associated with the named
@@ -291,14 +318,15 @@ public:
     *
     * The attribute ID is unique for this instance.
     *
-    * ASSERTIONS: 
+    * ASSERTIONS:
     *    An assertion will occur if double attributes have not been
     * registered.
     *
     * ERRORS: A TBOX_ERROR occurs if the attribute does not
     * exist in the list of registered attributes.
     */
-   const DoubleAttributeId getDblAttributeId(
+   const DoubleAttributeId
+   getDblAttributeId(
       const std::string& attribute) const;
 
    /*!
@@ -314,7 +342,8 @@ public:
     * ERRORS: A TBOX_ERROR occurs if the attribute does not
     * exist in the list of registered attributes.
     */
-   const IntegerAttributeId getIntAttributeId(
+   const IntegerAttributeId
+   getIntAttributeId(
       const std::string& attribute) const;
 
    /*!
@@ -322,9 +351,10 @@ public:
     *
     * ASSERTIONS:  This must be a valid (created) SparseData object.
     */
-   bool empty();
+   bool
+   empty();
 
-   /*! 
+   /*!
     * @brief Registers a new set of Index-Attributes items to this
     *        SparseData.
     *
@@ -335,7 +365,9 @@ public:
     *
     * @return The iterator pointing to the index item just added
     */
-   Iterator registerIndex(const hier::Index& index);
+   Iterator
+   registerIndex(
+      const hier::Index& index);
 
    /*!
     * @brief Remove this Index and its associated attributes
@@ -352,43 +384,52 @@ public:
     *       ++iter;
     *    }
     * }
-    * </code> 
-    * 
-    * "remove" will automatically increment the iterator such that the 
+    * </code>
+    *
+    * "remove" will automatically increment the iterator such that the
     * next test of the loop will occur correctly.
     */
-   void remove(Iterator& iter);
+   void
+   remove(
+      Iterator& iter);
 
    /*!
-    * @brief Erases all elements within the object.  
+    * @brief Erases all elements within the object.
     *
-    * NOTE:  If this is the last reference to the items added with 
+    * NOTE:  If this is the last reference to the items added with
     * addItem, the underlying item will be cleaned up as well.
     */
-   void clear();
+   void
+   clear();
 
    /*!
-    * @brief Provides the number of Index elements contained within this 
+    * @brief Provides the number of Index elements contained within this
     * SparseData.
     *
     * ASSERTIONS:  This must be a valid (created) SparseData object.
     */
-   int size();
+   int
+   size();
 
    /*!
     * @brief Returns true if the id is valid.
     */
-   bool isValid(const DoubleAttributeId& id) const; 
+   bool
+   isValid(
+      const DoubleAttributeId& id) const;
 
    /*!
     * @brief Returns true if the id is valid.
     */
-   bool isValid(const IntegerAttributeId& id) const;
+   bool
+   isValid(
+      const IntegerAttributeId& id) const;
 
    /*!
     * @brief Provides an iterator to the first SparseData item.
     */
-   Iterator begin();
+   Iterator
+   begin();
 
    /*!
     * @brief Provides an iterator to indicate the end of the SparseData items.
@@ -396,121 +437,142 @@ public:
     * This iterator is a special value, and should never be considered to
     * contain any valid data.
     */
-   Iterator end();
+   Iterator
+   end();
 
    /*!
-    * @brief Provides an iterator to the first attribute item in 
+    * @brief Provides an iterator to the first attribute item in
     * the list associated with the Index.
-    * 
+    *
     */
-   AttributeIterator begin(const hier::Index& index);
+   AttributeIterator
+   begin(
+      const hier::Index& index);
 
    /*!
     * @brief Provides an iterator to the last attribute item in
     * the list associated with the Index.
     */
-   AttributeIterator end(const hier::Index& index);
-   
+   AttributeIterator
+   end(
+      const hier::Index& index);
+
    /*!
     * @brief Print the names of the attributes and their ID
-    */ 
-   void printNames(std::ostream& out) const;
+    */
+   void
+   printNames(
+      std::ostream& out) const;
 
    /*!
     * @brief Print the Index-Attributes for this sparse data object.
     */
-   void printAttributes(std::ostream& out) const;
+   void
+   printAttributes(
+      std::ostream& out) const;
 
    /*!
     * @brief equality operator
     */
-   bool operator==(const SparseData<BOX_GEOMETRY>& rhs) const;
-   bool operator!=(const SparseData<BOX_GEOMETRY>& rhs) const;
+   bool
+   operator == (
+      const SparseData<BOX_GEOMETRY>& rhs) const;
+   bool
+   operator != (
+      const SparseData<BOX_GEOMETRY>& rhs) const;
 
    // friends.
    friend class SparseDataIterator<BOX_GEOMETRY>;
    friend class SparseDataAttributeIterator<BOX_GEOMETRY>;
 private:
-
    // Internal typedefs
-   typedef std::list<Attributes>                         AttributeList;
+   typedef std::list<Attributes> AttributeList;
    typedef boost::unordered_map<
-      hier::Index, AttributeList, index_hash>            IndexMap;
+      hier::Index, AttributeList, index_hash> IndexMap;
    typedef boost::unordered_map<
-      std::string, DoubleAttributeId>                    DoubleAttrNameMap;
+      std::string, DoubleAttributeId> DoubleAttrNameMap;
    typedef boost::unordered_map<
-      std::string, IntegerAttributeId>                   IntAttrNameMap;
+      std::string, IntegerAttributeId> IntAttrNameMap;
 
    /*
     * Copy c'tor and assignment operator are private to prevent
     * the compiler from generating a default
     */
-   SparseData(const SparseData& rhs);
-   SparseData& operator= (const SparseData& rhs);
+   SparseData(
+      const SparseData& rhs);
+   SparseData&
+   operator = (
+      const SparseData& rhs);
 
    /*
     * The dimension
     */
-   const tbox::Dimension   d_dim;
+   const tbox::Dimension d_dim;
 
    /*
     * The map of index to attributes.  See typedef above
     */
-   IndexMap                d_index_to_attribute_map;
+   IndexMap d_index_to_attribute_map;
 
    /*
     * Registered name to ID maps.  See typedef above
     */
-   DoubleAttrNameMap       d_dbl_names;
-   IntAttrNameMap          d_int_names;
+   DoubleAttrNameMap d_dbl_names;
+   IntAttrNameMap d_int_names;
 
    // cached values.
-   int                     d_dbl_attr_size;
-   int                     d_int_attr_size;
+   int d_dbl_attr_size;
+   int d_int_attr_size;
 
-   /* 
+   /*
     * Unique version number for this patch data for restart purposes.
     */
-   static const int        PDAT_SPARSEDATA_VERSION;
+   static const int PDAT_SPARSEDATA_VERSION;
 
    /*
     * Invalid attributes ID.
     */
-   static const int        INVALID_ID;
+   static const int INVALID_ID;
 
-   
-   /********************************************************************** 
+   /**********************************************************************
     * Private methods for this class
-    *********************************************************************/  
-   
+    *********************************************************************/
+
    /*
     * Get the attribute list for this index.
     *
     * ASSERTION: Dimensions of the <tt>index</tt> and this must be the same.
     */
-   //std::list<Attributes>& _get(const hier::Index& index) const; 
-   AttributeList& _get(const hier::Index& index) const; 
+   //std::list<Attributes>& _get(const hier::Index& index) const;
+   AttributeList&
+   _get(
+      const hier::Index& index) const;
 
    /*
     * Add this item to the index to attribute map
     */
-   void _add(const typename IndexMap::const_iterator& item_to_add);
+   void
+   _add(
+      const typename IndexMap::const_iterator& item_to_add);
 
    /*
     * iterate through the index elements in this object, and if
-    * the index is contained within the box, remove it from the 
+    * the index is contained within the box, remove it from the
     * d_list.
     */
-   void _removeInsideBox(const hier::Box& box);
+   void
+   _removeInsideBox(
+      const hier::Box& box);
 
    /*
     * The index hash function for adding elements to the boost::unordered_map's
     * buckets.
     */
-   struct index_hash :
-      std::unary_function<hier::Index, std::size_t>
-   {
-      std::size_t operator() (const hier::Index& index) const;
+   struct index_hash:
+      std::unary_function<hier::Index, std::size_t>{
+      std::size_t
+      operator () (
+         const hier::Index& index) const;
    };
 
    /*
@@ -520,77 +582,109 @@ private:
     * This is intentionally kept as simple an implementation as possible.
     * We will add complexity if it becomes necessary.
     */
-   class Attributes 
+   class Attributes
    {
-   public:
-         
-      /********************************************************************** 
-       * Constructors, assignment, destructor
-       **********************************************************************/ 
-      Attributes(const int dsize, const int isize);
-      Attributes(const Attributes& other);
-      Attributes& operator= (const Attributes& rhs);
+public:
+      /**********************************************************************
+      * Constructors, assignment, destructor
+      **********************************************************************/
+      Attributes(
+         const int dsize,
+         const int isize);
+      Attributes(
+         const Attributes& other);
+      Attributes&
+      operator = (
+         const Attributes& rhs);
       ~Attributes();
 
-      /********************************************************************** 
-       * modifiers
-       **********************************************************************/ 
-      void add(const double* dvals, const int* ivals);
-      void add(const std::vector<double>& dvals, 
+      /**********************************************************************
+      * modifiers
+      **********************************************************************/
+      void
+      add(
+         const double* dvals,
+         const int* ivals);
+      void
+      add(
+         const std::vector<double>& dvals,
          const std::vector<int>& ivals);
 
-      /********************************************************************** 
-       * non-modifying operations
-       **********************************************************************/ 
-      const double* getDoubleAttributes() const { return &d_dbl_attrs[0]; }
-      const int* getIntAttributes() const { return &d_int_attrs[0]; }
-   
+      /**********************************************************************
+      * non-modifying operations
+      **********************************************************************/
+      const double *getDoubleAttributes() const {
+         return &d_dbl_attrs[0];
+      }
+      const int *getIntAttributes() const {
+         return &d_int_attrs[0];
+      }
 
-      /********************************************************************** 
-       * operators (modifying and non-modifying
-       **********************************************************************/ 
-      double& operator[](const DoubleAttributeId& id);
-      const double& operator[](const DoubleAttributeId& id) const;
-      int& operator[](const IntegerAttributeId& id);
-      const int& operator[](const IntegerAttributeId& id) const;
+      /**********************************************************************
+      * operators (modifying and non-modifying
+      **********************************************************************/
+      double&
+      operator [] (
+         const DoubleAttributeId& id);
+      const double&
+      operator [] (
+         const DoubleAttributeId& id) const;
+      int&
+      operator [] (
+         const IntegerAttributeId& id);
+      const int&
+      operator [] (
+         const IntegerAttributeId& id) const;
 
-      bool operator==(const Attributes& rhs) const;
-   
-      /********************************************************************** 
-       * output
-       **********************************************************************/ 
-      void printAttributes(std::ostream& out) const;
-   private:
+      bool
+      operator == (
+         const Attributes& rhs) const;
 
+      /**********************************************************************
+      * output
+      **********************************************************************/
+      void
+      printAttributes(
+         std::ostream& out) const;
+private:
       // internal typedefs
       typedef std::vector<double>::const_iterator dbl_iterator;
       typedef std::vector<int>::const_iterator int_iterator;
 
       // data members
-      std::vector<double>  d_dbl_attrs;
-      std::vector<int>     d_int_attrs;
+      std::vector<double> d_dbl_attrs;
+      std::vector<int> d_int_attrs;
    };  // end class Attributes
 
 };
 
-/********************************************************************** 
+/**********************************************************************
  * Iterate over all sparse data items.
- *********************************************************************/  
-template <typename BOX_GEOMETRY>
+ *********************************************************************/
+template<typename BOX_GEOMETRY>
 class SparseDataIterator
 {
 public:
-
-   template <typename T>
-      friend
-      std::ostream& operator << (std::ostream& out, 
-         SparseDataIterator<T>& sparse_data_iterator);
+   template<typename T>
+   friend
+   std::ostream&
+   operator << (
+      std::ostream& out,
+      SparseDataIterator<T>& sparse_data_iterator);
 
    /*!
     * @brief Constructs a default SparseDataIterator
     */
    SparseDataIterator();
 
+   /*!
+    * @brief Constructs a SparseDataIterator from a SparseData<BOX_GEOMETRY>
+    * object.
+    *
+    * @param [in] sparse_data the SparseData oject
+    */
+   SparseDataIterator(
+      SparseData<BOX_GEOMETRY>& sparse_data);
 
    /*!
     * @brief Constructs a SparseDataIterator from a SparseData<BOX_GEOMETRY>
@@ -598,29 +692,25 @@ public:
     *
     * @param [in] sparse_data the SparseData oject
     */
-   SparseDataIterator(SparseData<BOX_GEOMETRY>& sparse_data);
-
-   /*!
-    * @brief Constructs a SparseDataIterator from a SparseData<BOX_GEOMETRY>
-    * object.
-    *
-    * @param [in] sparse_data the SparseData oject
-    */
-   SparseDataIterator(SparseData<BOX_GEOMETRY>* sparse_data);
+   SparseDataIterator(
+      SparseData<BOX_GEOMETRY> * sparse_data);
 
    /*!
     * @brief Copy constructor
     *
     * @param [in] other
     */
-   SparseDataIterator(const SparseDataIterator& other);
+   SparseDataIterator(
+      const SparseDataIterator& other);
 
    /*!
     * @brief Assignment operator
     *
     * @param [in] rhs
     */
-   SparseDataIterator& operator=(const SparseDataIterator& rhs);
+   SparseDataIterator&
+   operator = (
+      const SparseDataIterator& rhs);
 
    /*!
     * @brief  Destructor
@@ -632,30 +722,37 @@ public:
     *
     * @param[in] rhs
     */
-   bool operator==(const SparseDataIterator& rhs) const;
+   bool
+   operator == (
+      const SparseDataIterator& rhs) const;
 
    /*!
-    * @brief Inequality operator 
+    * @brief Inequality operator
     *
     * @param [in] rhs
     */
-   bool operator!=(const SparseDataIterator& rhs) const;
+   bool
+   operator != (
+      const SparseDataIterator& rhs) const;
 
    /*!
     * @brief pre-increment operator
     */
-   void operator++();
+   void
+   operator ++ ();
 
    /*!
     * @brief post-increment operator
     */
-   void operator++(int);
-
+   void
+   operator ++ (
+      int);
 
    /*!
     * @brief returns the index of this iterator
     */
-   const hier::Index& getIndex() const;
+   const hier::Index&
+   getIndex() const;
 
    /*!
     * @brief Insert a collection of attributes into the Attribute list
@@ -663,11 +760,14 @@ public:
     *
     * NOTE:  The order of the elements is assumed to be the order of the
     * attribute names provided during registration of the Index element.
-    * 
+    *
     * @param [in] dvals The array of double attribute values
     * @param [in] ivals The array of integer attribute values
     */
-   void insert(const double* dvals, const int* ivals);
+   void
+   insert(
+      const double* dvals,
+      const int* ivals);
 
    /*!
     * @brief Insert a collection of attributes into the Attribute list
@@ -675,22 +775,25 @@ public:
     *
     * NOTE:  The order of the elements is assumed to be the order of the
     * attribute names provided during registration of the Index element.
-    * 
+    *
     * @param [in] dvals The vector of double attribute values
     * @param [in] ivals The vector of integer attribute values
     */
-   void insert(const std::vector<double>& dvals, 
-               const std::vector<int>& ivals);
+   void
+   insert(
+      const std::vector<double>& dvals,
+      const std::vector<int>& ivals);
 
    /*!
     * @brief Checks equality of the contents of this interator against
     * the <tt>other</tt> iterator.
-    * 
+    *
     * @param [in] other
     * @return True if the contents are the same.
     */
-   bool equals(const SparseDataIterator& other) const;
-   
+   bool
+   equals(
+      const SparseDataIterator& other) const;
 
    /*!
     * @brief Move the attributes of this iterator to the given Index's list.
@@ -708,26 +811,30 @@ public:
     * into.
     *
     */
-   void move(const hier::Index& toIndex);
+   void
+   move(
+      const hier::Index& toIndex);
 
 private:
    friend class SparseData<BOX_GEOMETRY>;
 
    typedef typename SparseData<BOX_GEOMETRY>::AttributeList AttributeList;
-   /********************************************************************** 
-    * Data members
-    **********************************************************************/ 
+   /**********************************************************************
+   * Data members
+   **********************************************************************/
    SparseData<BOX_GEOMETRY>* d_data;
    typename SparseData<BOX_GEOMETRY>::IndexMap::iterator d_iterator;
 
-   /********************************************************************** 
-    * private  methods for internal use only since they expose 
-    * implementation.
-    **********************************************************************/ 
-   SparseDataIterator(SparseData<BOX_GEOMETRY>& sparse_data, 
+   /**********************************************************************
+   * private  methods for internal use only since they expose
+   * implementation.
+   **********************************************************************/
+   SparseDataIterator(
+      SparseData<BOX_GEOMETRY>& sparse_data,
       typename SparseData<BOX_GEOMETRY>::IndexMap::iterator iterator);
 
-   void _insert(
+   void
+   _insert(
       const typename SparseData<BOX_GEOMETRY>::Attributes& attributes);
 
    /*!
@@ -735,9 +842,10 @@ private:
     *
     * @param [out] out The output stream
     */
-   void printIterator(std::ostream& out) const;
+   void
+   printIterator(
+      std::ostream& out) const;
 };
-
 
 /*!
  * @brief Iterator for attributes in an attribute list associated with an
@@ -746,16 +854,18 @@ private:
  * Each Index in a SparseData element has zero or more attributes collections
  * associated with it.  Each iterator element consists of a object representing
  * this collection.  The Iterator acts as both an iterator and an individual
- * element (located at the index associated with it).  
+ * element (located at the index associated with it).
  */
-template <typename BOX_GEOMETRY>
+template<typename BOX_GEOMETRY>
 class SparseDataAttributeIterator
 {
 public:
-   template <typename T> 
-      friend
-      std::ostream& operator << (std::ostream& out, 
-         SparseDataAttributeIterator<T>& attr_iterator);
+   template<typename T>
+   friend
+   std::ostream&
+   operator << (
+      std::ostream& out,
+      SparseDataAttributeIterator<T>& attr_iterator);
 
    /*!
     * @brief Constructor
@@ -764,7 +874,7 @@ public:
     * @param [in] index
     */
    SparseDataAttributeIterator(
-      const SparseData<BOX_GEOMETRY>& sparse_data, 
+      const SparseData<BOX_GEOMETRY>& sparse_data,
       const hier::Index& index);
 
    /*!
@@ -772,51 +882,67 @@ public:
     *
     * @param [in] other
     */
-   SparseDataAttributeIterator(const SparseDataAttributeIterator& other);
+   SparseDataAttributeIterator(
+      const SparseDataAttributeIterator& other);
 
    /*!
-    * @brief Iterator equality.  
+    * @brief Iterator equality.
     *
     * @param [in] rhs
     */
-   bool           operator==(const SparseDataAttributeIterator& rhs) const;
+   bool
+   operator == (
+      const SparseDataAttributeIterator& rhs) const;
 
    /*!
-    * @brief Iterator inequality.  
+    * @brief Iterator inequality.
     *
     * @param [in] rhs
     */
-   bool           operator!=(const SparseDataAttributeIterator& rhs) const;
+   bool
+   operator != (
+      const SparseDataAttributeIterator& rhs) const;
 
    /*!
     * @brief pre-increment operator
     */
-   void           operator++();
+   void
+   operator ++ ();
 
    /*!
     * @brief post-increment operator
     */
-   void           operator++(int);
+   void
+   operator ++ (
+      int);
 
    /*!
     * @brief double attribute element access operator
     */
-   double&        operator[](const DoubleAttributeId& id);
+   double&
+   operator [] (
+      const DoubleAttributeId& id);
 
    /*!
     * @brief const double attribute element access operator
     */
-   const double&  operator[](const DoubleAttributeId& id) const;
+   const double&
+   operator [] (
+      const DoubleAttributeId& id) const;
 
    /*!
     * @brief integer attribute element access operator
     */
-   int&           operator[](const IntegerAttributeId& id);
+   int&
+   operator [] (
+      const IntegerAttributeId& id);
 
    /*!
     * @brief const integer attribute element access operator
     */
-   const int&     operator[](const IntegerAttributeId& id) const;
+   const int&
+   operator [] (
+      const IntegerAttributeId& id) const;
 
 private:
    friend class SparseData<BOX_GEOMETRY>;
@@ -827,15 +953,16 @@ private:
       const AttributeList& attributes,
       const typename AttributeList::iterator& iterator);
 
-   AttributeList                             d_list;
-   typename AttributeList::iterator          d_list_iterator;
+   AttributeList d_list;
+   typename AttributeList::iterator d_list_iterator;
 
    /*!
     * @brief print the attributes.  Called from the ostream<< operator.
     */
-   void printAttribute(std::ostream& out) const; 
+   void
+   printAttribute(
+      std::ostream& out) const;
 };
-
 
 } // namespace pdat
 } // namespace SAMRAI

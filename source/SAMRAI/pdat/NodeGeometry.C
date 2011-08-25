@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   hier 
+ * Description:   hier
  *
  ************************************************************************/
 
@@ -229,7 +229,6 @@ NodeGeometry::transform(
    }
 }
 
-
 /*
  *************************************************************************
  *                                                                       *
@@ -282,7 +281,7 @@ NodeGeometry::transform(
          case hier::Transformation::IDOWN_KUP_JUP:
             rotateAboutAxis(index, 1, 2);
             rotateAboutAxis(index, 0, 3);
-            break; 
+            break;
 
          case hier::Transformation::KUP_JUP_IDOWN:
             rotateAboutAxis(index, 1, 3);

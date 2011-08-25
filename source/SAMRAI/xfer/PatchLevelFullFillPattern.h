@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Abstract fill pattern class to provide interface for stencils 
+ * Description:   Abstract fill pattern class to provide interface for stencils
  *
  ************************************************************************/
 
@@ -24,7 +24,7 @@ namespace xfer {
  * ghost.
  *
  * For documentation on this interface see @ref xfer::PatchLevelFillPattern
- * 
+ *
  * The fill boxes for this "All" PatchLevelFillPattern will consist of
  * the entire region of the destination level that can be filled, both
  * interior and ghost regions.
@@ -33,9 +33,9 @@ namespace xfer {
  * RefineAlgorithm::createSchedule which takes no
  * PatchLevelFillPattern argument, this class will be used as the
  * default PatchLevelFillPattern.
- * 
+ *
  * @see xfer::RefineAlgorithm
- * @see xfer::RefineSchedule 
+ * @see xfer::RefineSchedule
  */
 
 class PatchLevelFullFillPattern:public PatchLevelFillPattern
@@ -119,7 +119,6 @@ public:
     */
    bool
    fillingEnhancedConnectivityOnly() const;
-
 
 private:
    PatchLevelFullFillPattern(

@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   MathUtilities routines to set up handlers and get signaling NaNs 
+ * Description:   MathUtilities routines to set up handlers and get signaling NaNs
  *
  ************************************************************************/
 
@@ -395,8 +395,12 @@ TYPE round_internal(
    }
 }
 
-template float round_internal<float>(float x);
-template double round_internal<double>(double x);
+template float round_internal<float
+                              >(
+   float x);
+template double round_internal<double
+                               >(
+   double x);
 
 template<>
 float MathUtilities<float>::round(

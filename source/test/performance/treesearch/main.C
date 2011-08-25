@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Test program for performance of tree search algorithm. 
+ * Description:   Test program for performance of tree search algorithm.
  *
  ************************************************************************/
 #include "SAMRAI/SAMRAI_config.h"
@@ -79,8 +79,8 @@ int main(
 
       if (argc != 2) {
          TBOX_ERROR("USAGE:  " << argv[0] << " <input file> \n"
-                                          << "  options:\n"
-                                          << "  none at this time" << std::endl);
+                               << "  options:\n"
+                               << "  none at this time" << std::endl);
       } else {
          input_filename = argv[1];
       }
@@ -133,7 +133,7 @@ int main(
          main_db->getStringWithDefault("box_gen_method", "UNIFORM");
 
       tbox::TimerManager * tm(tbox::TimerManager::getManager());
-      const std::string dim_str( tbox::Utilities::intToString(dim.getValue()) );
+      const std::string dim_str(tbox::Utilities::intToString(dim.getValue()));
       tbox::Pointer<tbox::Timer> t_build_tree =
          tm->getTimer("apps::main::build_tree[" + dim_str + "]");
       tbox::Pointer<tbox::Timer> t_search_tree_for_set =
@@ -195,7 +195,7 @@ int main(
              * Shift distance is less than number of bounding boxes in shift_dir
              * in order to generate some non-trivial overlaps.
              */
-            int shift_distance = int(0.91*bounding_box.numberCells(shift_dir));
+            int shift_distance = int(0.91 * bounding_box.numberCells(shift_dir));
 
             const size_t old_size = boxes.size();
             boxes.insert(boxes.end(), boxes.begin(), boxes.end());
@@ -280,8 +280,8 @@ int main(
           * Output normalized timer to plog.
           */
          tbox::plog << t_build_tree->getName() << " = "
-                    << t_build_tree->getTotalWallclockTime() /
-                       static_cast<double>(node_count)
+                    << t_build_tree->getTotalWallclockTime()
+         / static_cast<double>(node_count)
                     << std::endl;
          tbox::plog << t_search_tree_for_set->getName() << " = "
                     << t_search_tree_for_set->getTotalWallclockTime()

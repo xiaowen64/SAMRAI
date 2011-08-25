@@ -36,7 +36,6 @@ class BoxSet
 {
 
 public:
-
    /*!
     * @brief Default constructor creates an empty container.
     */
@@ -53,7 +52,6 @@ public:
    //! @brief Destructor.
    virtual ~BoxSet();
 
-
    //@{
 
    //! @name Types defined by std::set.
@@ -69,7 +67,6 @@ public:
    typedef std::set<Box, Box::id_less>::const_reference const_reference;
 
    //@}
-
 
    //@{
 
@@ -112,7 +109,6 @@ public:
       return d_set.rend();
    }
 
-
    iterator insert(
       iterator i,
       const value_type& v) {
@@ -147,7 +143,6 @@ public:
       d_set.erase(first, last);
    }
 
-
    size_t size() const {
       return d_set.size();
    }
@@ -159,7 +154,6 @@ public:
    void clear() {
       d_set.clear();
    }
-
 
    iterator find(
       const key_type& k) {
@@ -180,7 +174,6 @@ public:
       const key_type& k) const {
       return d_set.find(k);
    }
-
 
    BoxSet&
    operator = (
@@ -205,7 +198,6 @@ public:
 
    //@}
 
-
    /*!
     * @brief Whether the subsets of MappedBoxes owned by a given
     * process are the same between this and another BoxSet.
@@ -220,7 +212,8 @@ public:
     * in the requested block.
     */
    tbox::Pointer<BoxList>
-   getSingleBlockBoxList(const tbox::Dimension& dim,
+   getSingleBlockBoxList(
+      const tbox::Dimension& dim,
       const BlockId& which_block) const;
 
    /*!
@@ -237,7 +230,8 @@ public:
     * @param[in] ratio Ratio in the refinement operation.
     */
    void
-   refine(BoxSet& output_mapped_boxes,
+   refine(
+      BoxSet& output_mapped_boxes,
       const IntVector& ratio) const;
 
    /*!
@@ -254,7 +248,8 @@ public:
     * @param[in] ratio Ratio in the coarsen operation.
     */
    void
-   coarsen(BoxSet& output_mapped_boxes,
+   coarsen(
+      BoxSet& output_mapped_boxes,
       const IntVector& ratio) const;
 
    /*!
@@ -271,7 +266,8 @@ public:
     * @param[in] growth Grow boxes by this amount.
     */
    void
-   grow(BoxSet& output_mapped_boxes,
+   grow(
+      BoxSet& output_mapped_boxes,
       const IntVector& growth) const;
 
    /*!
@@ -345,7 +341,6 @@ public:
       std::vector<Box>& real_mapped_box_vector,
       std::vector<Box>& periodic_image_mapped_box_vector) const;
 
-
    //@{
    /*!
     * @name IO support.
@@ -365,31 +360,36 @@ public:
    getFromDatabase(
       tbox::Database& database);
 
-
    /*!
     * @brief Intermediary between BoxSet and output streams,
     * adding ability to control the output.  See
     * BoxSet::format().
     */
-   class Outputter {
+   class Outputter
+   {
 
-      friend std::ostream& operator << ( std::ostream& s, const Outputter& f);
+      friend std::ostream&
+      operator << (
+         std::ostream& s,
+         const Outputter& f);
 
-   private:
-
+private:
       friend class BoxSet;
 
       /*!
        * @brief Construct the Outputter with a BoxSet and the
        * parameters needed to output the BoxSet to a stream.
        */
-      Outputter( const BoxSet &mapped_box_set,
-                 const std::string& border,
-                 int detail_depth = 0);
+      Outputter(
+         const BoxSet& mapped_box_set,
+         const std::string& border,
+         int detail_depth = 0);
 
-      void operator=( const Outputter &rhs ); // Unimplemented private.
+      void
+      operator = (
+         const Outputter& rhs);               // Unimplemented private.
 
-      const BoxSet &d_set;
+      const BoxSet& d_set;
 
       const std::string d_border;
 
@@ -409,8 +409,10 @@ public:
     *
     * @param[in] detail_depth How much detail to print.
     */
-   Outputter format( const std::string& border=std::string(),
-                     int detail_depth = 0 ) const;
+   Outputter
+   format(
+      const std::string& border = std::string(),
+      int detail_depth = 0) const;
 
    /*!
     * @brief Print the contents of the object recursively.

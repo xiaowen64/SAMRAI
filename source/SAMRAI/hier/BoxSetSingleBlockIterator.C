@@ -17,7 +17,7 @@ namespace hier {
 
 BoxSetSingleBlockIterator::BoxSetSingleBlockIterator(
    const BoxSet& mapped_boxes,
-   const BlockId &block_id):
+   const BlockId& block_id):
    d_mapped_boxes(&mapped_boxes),
    d_block_id(block_id)
 {
@@ -34,10 +34,9 @@ BoxSetSingleBlockIterator::~BoxSetSingleBlockIterator()
 
 bool BoxSetSingleBlockIterator::isValid() const
 {
-   return
-      d_mapped_boxes != NULL &&
-      d_iter != d_mapped_boxes->end() &&
-      d_iter->getBlockId() == d_block_id;
+   return d_mapped_boxes != NULL &&
+          d_iter != d_mapped_boxes->end() &&
+          d_iter->getBlockId() == d_block_id;
 }
 
 BoxSetSingleBlockIterator& BoxSetSingleBlockIterator::operator = (
@@ -62,19 +61,17 @@ const Box *BoxSetSingleBlockIterator::operator -> () const
 bool BoxSetSingleBlockIterator::operator == (
    const BoxSetSingleBlockIterator& r) const
 {
-   return
-      d_mapped_boxes == r.d_mapped_boxes &&
-      d_block_id == r.d_block_id &&
-      d_iter == r.d_iter;
+   return d_mapped_boxes == r.d_mapped_boxes &&
+          d_block_id == r.d_block_id &&
+          d_iter == r.d_iter;
 }
 
 bool BoxSetSingleBlockIterator::operator != (
    const BoxSetSingleBlockIterator& r) const
 {
-   return
-      d_mapped_boxes != r.d_mapped_boxes ||
-      d_block_id != r.d_block_id ||
-      d_iter != r.d_iter;
+   return d_mapped_boxes != r.d_mapped_boxes ||
+          d_block_id != r.d_block_id ||
+          d_iter != r.d_iter;
 }
 
 /*
@@ -83,7 +80,7 @@ bool BoxSetSingleBlockIterator::operator != (
  ****************************************************************************
  */
 
-BoxSetSingleBlockIterator &BoxSetSingleBlockIterator::operator ++ ()
+BoxSetSingleBlockIterator& BoxSetSingleBlockIterator::operator ++ ()
 {
    do {
       ++d_iter;

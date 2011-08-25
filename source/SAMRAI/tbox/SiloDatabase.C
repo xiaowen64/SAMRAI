@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   A database structure that stores Silo format data. 
+ * Description:   A database structure that stores Silo format data.
  *
  ************************************************************************/
 
@@ -211,8 +211,8 @@ bool SiloDatabase::open(
    }
 
    d_file = DBOpen(name.c_str(),
-                   DB_UNKNOWN,
-                   read_write_mode ? DB_APPEND : DB_READ);
+         DB_UNKNOWN,
+         read_write_mode ? DB_APPEND : DB_READ);
 
    if (d_file == NULL) {
 
@@ -739,7 +739,7 @@ void SiloDatabase::putDatabaseBoxArray(
    if (err < 0) {
       TBOX_ERROR(
          "SiloDatabase: DBPutCompoundarray failed " << d_directory
-         << std::endl);
+                                                    << std::endl);
    }
 
 }
@@ -942,7 +942,7 @@ void SiloDatabase::putComplexArray(
    if (err < 0) {
       TBOX_ERROR(
          "SiloDatabase DBPutCompoundarray failed " << d_directory
-         << std::endl);
+                                                   << std::endl);
    }
 
 }
@@ -1270,7 +1270,7 @@ void SiloDatabase::putStringArray(
    if (err < 0) {
       TBOX_ERROR(
          "SiloDatabase DBPutCompoundarray failed " << d_directory
-         << std::endl);
+                                                   << std::endl);
    }
 
 }
@@ -1345,58 +1345,58 @@ void SiloDatabase::printClassData(
       switch (getArrayType(keys[i])) {
          case Database::SAMRAI_INVALID: {
             os << "   Data entry `" << keys[i] << "' is"
-                                               << " invalid" << std::endl;
+               << " invalid" << std::endl;
             break;
          }
          case Database::SAMRAI_DATABASE: {
             os << "   Data entry `" << keys[i] << "' is"
-                                               << " a database" << std::endl;
+               << " a database" << std::endl;
             break;
          }
          case Database::SAMRAI_BOOL: {
             os << "   Data entry `" << keys[i] << "' is"
-                                               << " a boolean array"
-                                               << std::endl;
+               << " a boolean array"
+               << std::endl;
             break;
          }
          case Database::SAMRAI_CHAR: {
             os << "   Data entry `" << keys[i] << "' is"
-                                               << " a char array" << std::endl;
+               << " a char array" << std::endl;
             break;
          }
          case Database::SAMRAI_INT: {
             os << "   Data entry `" << keys[i] << "' is"
-                                               << " a integer array"
-                                               << std::endl;
+               << " a integer array"
+               << std::endl;
             break;
          }
          case Database::SAMRAI_COMPLEX: {
             os << "   Data entry `" << keys[i] << "' is"
-                                               << " a complex array"
-                                               << std::endl;
+               << " a complex array"
+               << std::endl;
             break;
          }
          case Database::SAMRAI_DOUBLE: {
             os << "   Data entry `" << keys[i] << "' is"
-                                               << " a complex array"
-                                               << std::endl;
+               << " a complex array"
+               << std::endl;
             break;
          }
          case Database::SAMRAI_FLOAT: {
             os << "   Data entry `" << keys[i] << "' is"
-                                               << " a float array" << std::endl;
+               << " a float array" << std::endl;
             break;
          }
          case Database::SAMRAI_STRING: {
             os << "   Data entry `" << keys[i] << "' is"
-                                               << " a string array"
-                                               << std::endl;
+               << " a string array"
+               << std::endl;
             break;
          }
          case Database::SAMRAI_BOX: {
             os << "   Data entry `" << keys[i] << "' is"
-                                               << " a datbase box array"
-                                               << std::endl;
+               << " a datbase box array"
+               << std::endl;
             break;
          }
 

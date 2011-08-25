@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   spatial key used for generating space-filling curves. 
+ * Description:   spatial key used for generating space-filling curves.
  *
  ************************************************************************/
 
@@ -162,7 +162,6 @@ private:
     * Static integer constant.
     */
    static const int BITS_PER_HEX_CHAR;
-
 
    /*
     * Mix in one index space coordinate into the spatial

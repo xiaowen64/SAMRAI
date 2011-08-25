@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   A container of boxes with basic domain calculus operations 
+ * Description:   A container of boxes with basic domain calculus operations
  *
  ************************************************************************/
 
@@ -74,7 +74,7 @@ BoxContainer& BoxContainer::operator = (
 BoxContainer::BoxContainer(
    const tbox::Array<tbox::DatabaseBox>& other):
    d_dim(other.size() == 0 ? tbox::Dimension::getInvalidDimension() :
-                             other[0].getDim())
+         other[0].getDim())
 {
    const int n = other.size();
    for (int j = 0; j < n; j++) {
@@ -90,8 +90,7 @@ void BoxContainer::insertAfter(Iterator iter, const Box& item)
    ++tmp;
    if (tmp == end()) {
       pushBack(item);
-   }
-   else {
+   } else {
       insertBefore(tmp, item);
    }
 }
@@ -142,7 +141,7 @@ void BoxContainer::simplify()
             if (!tryMe.empty()) {
                bool combineDaPuppies = false;
                Iterator l(*this);
-               for (; l; l++) {
+               for ( ; l; l++) {
                   const Box andMe = l();
 
                   const Index& al = andMe.lower();
@@ -160,8 +159,7 @@ void BoxContainer::simplify()
                   if (combineDaPuppies) {
                      if ((bl(d) > ah(d) + 1) || (bh(d) < al(d) - 1)) {
                         combineDaPuppies = false;
-                     }
-                     else {
+                     } else {
                         for (int dl = 0; dl < d; dl++) {
                            if ((bl(dl) > ah(dl)) || (bh(dl) < al(dl))) {
                               combineDaPuppies = false;
@@ -181,8 +179,7 @@ void BoxContainer::simplify()
 
                if (!combineDaPuppies) {
                   pushBack(tryMe);
-               }
-               else {
+               } else {
                   Box andMe = l();
                   erase(l);
                   const Index& bl = tryMe.lower();
@@ -254,8 +251,7 @@ void BoxContainer::coalesce()
 
       if (found_match) {
          tb = begin();
-      }
-      else {
+      } else {
          tb++;
       }
    }
@@ -342,8 +338,7 @@ Box BoxContainer::getBoundingBox() const
       const tbox::Dimension dim(tbox::Dimension::getInvalidDimension());
       Box empty(dim);
       return empty;
-   }
-   else {
+   } else {
       Box bbox(d_dim);
       for (ConstIterator i(*this); i; i++) {
          bbox += i();
@@ -368,8 +363,8 @@ bool BoxContainer::boxesIntersect() const
    ConstIterator whatAboutMe(*this);
    whatAboutMe++;
    while (!intersections && tryMe) {
-      while(!intersections && whatAboutMe) {
-         if (!((tryMe()*whatAboutMe()).size() == 0)) {
+      while (!intersections && whatAboutMe) {
+         if (!((tryMe() * whatAboutMe()).size() == 0)) {
             intersections = true;
          }
          whatAboutMe++;
@@ -399,11 +394,10 @@ void BoxContainer::removeIntersections(
    const unsigned short dim = takeaway.getDim().getValue();
    Iterator insertion_pt(*this);
    while (insertion_pt) {
-      Box &tryme = *insertion_pt;
+      Box& tryme = *insertion_pt;
       if (!tryme.intersects(takeaway)) {
          insertion_pt++;
-      }
-      else {
+      } else {
          Iterator tmp = insertion_pt;
          burstBoxes(tryme, takeaway, dim, insertion_pt);
          insertion_pt++;
@@ -432,15 +426,14 @@ void BoxContainer::removeIntersections(
       return;
    }
 
-   std::vector<const Box*> overlap_mapped_boxes;
+   std::vector<const Box *> overlap_mapped_boxes;
    Iterator itr(*this);
    while (itr) {
       const Box& tryme = *itr;
       takeaway.findOverlapBoxes(overlap_mapped_boxes, tryme);
       if (overlap_mapped_boxes.empty()) {
          itr++;
-      }
-      else {
+      } else {
          Iterator sublist_start = itr;
          Iterator sublist_end = sublist_start;
          sublist_end++;
@@ -462,8 +455,8 @@ void BoxContainer::removeIntersections(
 
 #ifdef MB_BOXTREE_EXISTS
 void BoxContainer::removeIntersections(
-   const BlockId &block_id,
-   const IntVector &refinement_ratio,
+   const BlockId& block_id,
+   const IntVector& refinement_ratio,
    const MultiblockBoxTree& takeaway,
    bool include_singularity_block_neighbors)
 {
@@ -472,17 +465,17 @@ void BoxContainer::removeIntersections(
    }
 
    const tbox::ConstPointer<hier::GridGeometry>
-      &grid_geometry(takeaway.getGridGeometry());
+   & grid_geometry(takeaway.getGridGeometry());
 
-   std::vector<const Box*> overlap_mapped_boxes;
+   std::vector<const Box *> overlap_mapped_boxes;
    Iterator itr(*this);
    while (itr) {
       const Box& tryme = *itr;
       takeaway.findOverlapBoxes(overlap_mapped_boxes,
-                                tryme,
-                                block_id,
-                                refinement_ratio,
-                                include_singularity_block_neighbors);
+         tryme,
+         block_id,
+         refinement_ratio,
+         include_singularity_block_neighbors);
       if (overlap_mapped_boxes.empty()) {
          itr++;
       } else {
@@ -493,21 +486,20 @@ void BoxContainer::removeIntersections(
               i < overlap_mapped_boxes.size() && sublist_start != sublist_end;
               ++i) {
             Iterator insertion_pt = sublist_start;
-            const BlockId &overlap_box_block_id =
+            const BlockId& overlap_box_block_id =
                overlap_mapped_boxes[i]->getBlockId();
-            if ( overlap_box_block_id != block_id ) {
+            if (overlap_box_block_id != block_id) {
                Box overlap_box = *overlap_mapped_boxes[i];
-               grid_geometry->transformBox( overlap_box,
-                                            refinement_ratio,
-                                            block_id,
-                                            overlap_box_block_id );
+               grid_geometry->transformBox(overlap_box,
+                  refinement_ratio,
+                  block_id,
+                  overlap_box_block_id);
                removeIntersectionsFromSublist(
                   overlap_box,
                   sublist_start,
                   sublist_end,
                   insertion_pt);
-            }
-            else {
+            } else {
                removeIntersectionsFromSublist(
                   *overlap_mapped_boxes[i],
                   sublist_start,
@@ -537,8 +529,7 @@ void BoxContainer::removeIntersections(
 
    if (box.intersects(takeaway)) {
       burstBoxes(box, takeaway, box.getDim().getValue());
-   }
-   else {
+   } else {
       pushBack(box);
    }
 
@@ -553,11 +544,10 @@ void BoxContainer::removeIntersectionsFromSublist(
    const unsigned short dim = takeaway.getDim().getValue();
    Iterator itr = sublist_start;
    while (itr != sublist_end) {
-      Box &tryme = *itr;
+      Box& tryme = *itr;
       if (!tryme.intersects(takeaway)) {
          itr++;
-      }
-      else {
+      } else {
          burstBoxes(tryme, takeaway, dim, insertion_pt);
          Iterator tmp = itr;
          itr++;
@@ -588,13 +578,12 @@ void BoxContainer::intersectBoxes(
    Iterator i(*this);
    Box overlap(i().getDim());
    while (i) {
-      Box &tryMe = *i;
+      Box& tryMe = *i;
       tryMe.intersect(keep, overlap);
       if (!overlap.empty()) {
          tryMe = overlap;
          i++;
-      }
-      else {
+      } else {
          Iterator tmp = i;
          i++;
          erase(tmp);
@@ -613,7 +602,7 @@ void BoxContainer::intersectBoxes(
    Box overlap(insertion_pt().getDim());
    while (insertion_pt) {
       Iterator tmp = insertion_pt;
-      const Box &tryme = *insertion_pt;
+      const Box& tryme = *insertion_pt;
       for (ConstIterator i(keep); i; i++) {
          tryme.intersect(i(), overlap);
          if (!overlap.empty()) {
@@ -633,7 +622,7 @@ void BoxContainer::intersectBoxes(
       return;
    }
 
-   std::vector<const Box*> overlap_mapped_boxes;
+   std::vector<const Box *> overlap_mapped_boxes;
    Box overlap(front().getDim());
    Iterator itr(*this);
    Iterator insertion_pt = itr;
@@ -657,8 +646,8 @@ void BoxContainer::intersectBoxes(
 
 #ifdef MB_BOXTREE_EXISTS
 void BoxContainer::intersectBoxes(
-   const BlockId &block_id,
-   const IntVector &refinement_ratio,
+   const BlockId& block_id,
+   const IntVector& refinement_ratio,
    const MultiblockBoxTree& keep,
    bool include_singularity_block_neighbors)
 {
@@ -667,35 +656,34 @@ void BoxContainer::intersectBoxes(
    }
 
    const tbox::ConstPointer<hier::GridGeometry>
-      &grid_geometry(keep.getGridGeometry());
+   & grid_geometry(keep.getGridGeometry());
 
-   std::vector<const Box*> overlap_mapped_boxes;
+   std::vector<const Box *> overlap_mapped_boxes;
    Box overlap(front().getDim());
    Iterator itr(*this);
    Iterator insertion_pt = itr;
    while (itr) {
       const Box& tryme = *itr;
       keep.findOverlapBoxes(overlap_mapped_boxes,
-                            tryme,
-                            block_id,
-                            refinement_ratio,
-                            include_singularity_block_neighbors);
+         tryme,
+         block_id,
+         refinement_ratio,
+         include_singularity_block_neighbors);
       for (size_t i = 0; i < overlap_mapped_boxes.size(); ++i) {
-         const BlockId &overlap_box_block_id =
+         const BlockId& overlap_box_block_id =
             overlap_mapped_boxes[i]->getBlockId();
-         if ( overlap_box_block_id != block_id ) {
+         if (overlap_box_block_id != block_id) {
             Box overlap_box = *overlap_mapped_boxes[i];
-            grid_geometry->transformBox( overlap_box,
-                                         refinement_ratio,
-                                         block_id,
-                                         overlap_box_block_id );
+            grid_geometry->transformBox(overlap_box,
+               refinement_ratio,
+               block_id,
+               overlap_box_block_id);
             tryme.intersect(overlap_box, overlap);
             if (!overlap.empty()) {
                insertAfter(insertion_pt, overlap);
                insertion_pt++;
             }
-         }
-         else {
+         } else {
             tryme.intersect(*overlap_mapped_boxes[i], overlap);
             if (!overlap.empty()) {
                insertAfter(insertion_pt, overlap);
@@ -807,7 +795,7 @@ void BoxContainer::burstBoxes(
    const Box& bursty,
    const Box& solid,
    const int dimension,
-   Iterator &insertion_pt)
+   Iterator& insertion_pt)
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(bursty, solid);
    TBOX_ASSERT(dimension <= bursty.getDim().getValue());

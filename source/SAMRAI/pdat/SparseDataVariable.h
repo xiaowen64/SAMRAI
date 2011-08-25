@@ -1,7 +1,7 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
  * Description:   SparseDataVariable
@@ -24,14 +24,14 @@ namespace pdat {
  *
  * In reality, this class can only be used for cell-centered and node-centered
  * box geoemtries because of the internal calling semantics of the underlying
- * overlap operations. 
+ * overlap operations.
  *
  * @see SparseData
  * @see SparseDataFactory
  * @see Variable
  */
-template <typename BOX_GEOMETRY>
-class SparseDataVariable : public hier::Variable
+template<typename BOX_GEOMETRY>
+class SparseDataVariable:public hier::Variable
 {
 public:
    /*!
@@ -39,7 +39,7 @@ public:
     *
     * The creation of the variable creates a "default" SparseDataFactory
     * with ghost width set to zero.
-    * 
+    *
     * @param [in] dim
     * @param [in] name
     */
@@ -59,25 +59,29 @@ public:
     *        or node-centered index spaces and this covers all cases.
     */
    bool
-   fineBoundaryRepresentsVariable() const { return true; }
+   fineBoundaryRepresentsVariable() const {
+      return true;
+   }
 
    /*!
     * @brief Returns true since this class can be used for either cell-centered
     *        or node-centered index spaces and this covers all cases.
     */
    bool
-   dataLivesOnPatchBorder() const { return true; }
+   dataLivesOnPatchBorder() const {
+      return true;
+   }
 
 private:
    /*
     * copy c'tor and assignment operator are private to prevent the
     * compiler from generating a default.
-    */ 
-    SparseDataVariable(
+    */
+   SparseDataVariable(
       const SparseDataVariable<BOX_GEOMETRY>& rhs);
 
-    SparseDataVariable<BOX_GEOMETRY>&
-    operator=(
+   SparseDataVariable<BOX_GEOMETRY>&
+   operator = (
       const SparseDataVariable<BOX_GEOMETRY>& rhs);
 
 }; // end class SparseDataVariable.

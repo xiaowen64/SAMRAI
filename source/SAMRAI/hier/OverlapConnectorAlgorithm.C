@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Algorithms for working with overlap Connectors. 
+ * Description:   Algorithms for working with overlap Connectors.
  *
  ************************************************************************/
 #ifndef included_hier_OverlapConnectorAlgorithm_C
@@ -148,10 +148,14 @@ void OverlapConnectorAlgorithm::extractNeighbors(
       std::string dbgbord;
       TBOX_ERROR(
          "\nConnector::extractNeighbors: mapped_box_id " << mapped_box_id
-         << " is not in the base of the mapped_box_level.\n"
-         << "base:\n" << connector.getBase().format(dbgbord, 2)
-         << "head:\n" << connector.getHead().format(dbgbord, 2)
-         << "connector:\n" << connector.format(dbgbord, 2));
+                                                         <<
+         " is not in the base of the mapped_box_level.\n"
+                                                         << "base:\n"
+                                                         << connector.getBase().format(dbgbord, 2)
+                                                         << "head:\n"
+                                                         << connector.getHead().format(dbgbord, 2)
+                                                         << "connector:\n"
+                                                         << connector.format(dbgbord, 2));
    }
 #endif
 
@@ -162,10 +166,10 @@ void OverlapConnectorAlgorithm::extractNeighbors(
     */
    TBOX_ASSERT(mapped_box_id.getOwnerRank() == connector.getRank());
 
-   const tbox::ConstPointer<hier::GridGeometry> &grid_geom(connector.getBase().getGridGeometry());
+   const tbox::ConstPointer<hier::GridGeometry>& grid_geom(connector.getBase().getGridGeometry());
 
    const Box& mapped_box(*connector.getBase().getMappedBox(Box(dim,
-                                     mapped_box_id)));
+                               mapped_box_id)));
    NeighborhoodSet::const_iterator ins = connector.getNeighborhoodSets().find(mapped_box_id);
    if (ins == connector.getNeighborhoodSets().end()) {
       neighbors.clear();
@@ -182,13 +186,13 @@ void OverlapConnectorAlgorithm::extractNeighbors(
          }
          for (NeighborSet::const_iterator ni = superset.begin();
               ni != superset.end(); ++ni) {
-            const Box &neighbor(*ni);
+            const Box& neighbor(*ni);
             Box nabr_box(neighbor);
-            if ( neighbor.getBlockId() != mapped_box.getBlockId() ) {
+            if (neighbor.getBlockId() != mapped_box.getBlockId()) {
                grid_geom->transformBox(nabr_box,
-                                       connector.getHead().getRefinementRatio(),
-                                       mapped_box.getBlockId(),
-                                       neighbor.getBlockId() );
+                  connector.getHead().getRefinementRatio(),
+                  mapped_box.getBlockId(),
+                  neighbor.getBlockId());
             }
             if (connector.getHeadCoarserFlag() == true) {
                nabr_box.refine(connector.getRatio());
@@ -211,8 +215,8 @@ void OverlapConnectorAlgorithm::findOverlaps(
    const bool ignore_self_overlap) const
 {
    findOverlaps(connector,
-                connector.getHead().getGlobalizedVersion(),
-                ignore_self_overlap);
+      connector.getHead().getGlobalizedVersion(),
+      ignore_self_overlap);
 }
 
 /*
@@ -270,7 +274,7 @@ void OverlapConnectorAlgorithm::findOverlaps_rbbt(
     * The nomenclature "base" refers to the *this mapped_box_level
     * and "head" refer to the mapped_box_level in the argument.
     */
-   const hier::MappedBoxLevel &base(connector.getBase());
+   const hier::MappedBoxLevel& base(connector.getBase());
 
    /*
     * Determine relationship between base and head index spaces.
@@ -287,7 +291,7 @@ void OverlapConnectorAlgorithm::findOverlaps_rbbt(
     * to generate the search tree.
     */
    hier::MultiblockBoxTree rbbt(head.getGridGeometry(),
-      head.getGlobalMappedBoxes());
+                                head.getGlobalMappedBoxes());
 
    /*
     * A neighbor of a Box would be discarded if
@@ -323,17 +327,16 @@ void OverlapConnectorAlgorithm::findOverlaps_rbbt(
       box.grow(connector.getConnectorWidth());
       if (head_is_finer) {
          box.refine(connector.getRatio());
-      }
-      else if (base_is_finer) {
+      } else if (base_is_finer) {
          box.coarsen(connector.getRatio());
       }
 
       // Add found overlaps to neighbor set for mapped_box.
       rbbt.findOverlapBoxes(nabrs_for_box,
-                            box,
-                            base_mapped_box.getBlockId(),
-                            head.getRefinementRatio(),
-                            true);
+         box,
+         base_mapped_box.getBlockId(),
+         head.getRefinementRatio(),
+         true);
       if (discard_self_overlap) {
          nabrs_for_box.erase(base_mapped_box);
       }
@@ -393,7 +396,7 @@ void OverlapConnectorAlgorithm::shrinkConnectorWidth(
       connector.getBase().getRefinementRatio() !=
       connector.getHead().getRefinementRatio();
 
-   const tbox::ConstPointer<hier::GridGeometry> &grid_geom(connector.getBase().getGridGeometry());
+   const tbox::ConstPointer<hier::GridGeometry>& grid_geom(connector.getBase().getGridGeometry());
 
    for (NeighborhoodSet::iterator ei = neighborhood_set.begin();
         ei != neighborhood_set.end(); ++ei) {
@@ -410,11 +413,11 @@ void OverlapConnectorAlgorithm::shrinkConnectorWidth(
            na != nabrs.end(); /* incremented in loop */) {
          const Box& nabr = *na;
          hier::Box nabr_box = nabr;
-         if ( nabr.getBlockId() != mapped_box.getBlockId() ) {
+         if (nabr.getBlockId() != mapped_box.getBlockId()) {
             grid_geom->transformBox(nabr_box,
-                                    connector.getHead().getRefinementRatio(),
-                                    mapped_box.getBlockId(),
-                                    nabr.getBlockId() );
+               connector.getHead().getRefinementRatio(),
+               mapped_box.getBlockId(),
+               nabr.getBlockId());
          }
          if (head_coarser) nabr_box.refine(connector.getRatio());
          if (!mapped_box_box.intersects(nabr_box)) {
@@ -432,7 +435,6 @@ void OverlapConnectorAlgorithm::shrinkConnectorWidth(
       neighborhood_set,
       MappedBoxLevel::DISTRIBUTED);
 }
-
 
 /*
  ***********************************************************************
@@ -464,7 +466,6 @@ void OverlapConnectorAlgorithm::bridge(
       connector_width_limit);
 }
 
-
 /*
  ***********************************************************************
  ***********************************************************************
@@ -494,7 +495,6 @@ void OverlapConnectorAlgorithm::bridgeWithNesting(
       connector_width_limit);
 }
 
-
 /*
  ***********************************************************************
  ***********************************************************************
@@ -524,7 +524,6 @@ void OverlapConnectorAlgorithm::bridge(
       connector_width_limit);
 }
 
-
 /*
  ***********************************************************************
  ***********************************************************************
@@ -552,7 +551,6 @@ void OverlapConnectorAlgorithm::bridge(
       zero_vector,
       connector_width_limit);
 }
-
 
 /*
  ***********************************************************************
@@ -694,13 +692,13 @@ void OverlapConnectorAlgorithm::privateBridge(
    if (s_print_bridge_steps == 'y') {
       std::string dbgbord("bridge->  ");
       tbox::plog
-         << "bridge west:\n" << west_to_cent.getBase().format(dbgbord, 3)
-         << "bridge east:\n" << east_to_cent.getBase().format(dbgbord, 3)
-         << "bridge center:\n" << cent_to_west.getBase().format(dbgbord, 3)
-         << "bridge west_to_cent:\n" << west_to_cent.format(dbgbord, 3)
-         << "bridge cent_to_west:\n" << cent_to_west.format(dbgbord, 3)
-         << "bridge cent_to_east:\n" << cent_to_east.format(dbgbord, 3)
-         << "bridge east_to_cent:\n" << cent_to_east.format(dbgbord, 3);
+      << "bridge west:\n" << west_to_cent.getBase().format(dbgbord, 3)
+      << "bridge east:\n" << east_to_cent.getBase().format(dbgbord, 3)
+      << "bridge center:\n" << cent_to_west.getBase().format(dbgbord, 3)
+      << "bridge west_to_cent:\n" << west_to_cent.format(dbgbord, 3)
+      << "bridge cent_to_west:\n" << cent_to_west.format(dbgbord, 3)
+      << "bridge cent_to_east:\n" << cent_to_east.format(dbgbord, 3)
+      << "bridge east_to_cent:\n" << cent_to_east.format(dbgbord, 3);
    }
 
    /* End sanity checks.  Begin work. */
@@ -818,7 +816,7 @@ void OverlapConnectorAlgorithm::privateBridge(
 #endif
    }
 
-   if ( cent.getGridGeometry()->getNumberBlocks() > 1 ) {
+   if (cent.getGridGeometry()->getNumberBlocks() > 1) {
       /*
        * Temporary work-around for multiblock: Until we get bridge
        * working for multiblock, we use the simple but unscalable
@@ -869,7 +867,7 @@ void OverlapConnectorAlgorithm::privateBridge(
    tbox::AsyncCommStage comm_stage;
    comm_stage.setCommunicationWaitTimer(t_bridge_MPI_wait);
    const int n_comm = static_cast<int>(
-      outgoing_ranks.size() + incoming_ranks.size());
+         outgoing_ranks.size() + incoming_ranks.size());
    tbox::AsyncCommPeer<int>* comm_peer =
       new tbox::AsyncCommPeer<int>[n_comm];
 
@@ -1484,8 +1482,7 @@ void OverlapConnectorAlgorithm::findOverlapsForOneProcess(
       base_box.grow(bridging_connector.getConnectorWidth());
       if (refine_base) {
          base_box.refine(bridging_connector.getRatio());
-      }
-      else if (coarsen_base) {
+      } else if (coarsen_base) {
          base_box.coarsen(bridging_connector.getRatio());
       }
       found_nabrs.clear();
@@ -1506,8 +1503,8 @@ void OverlapConnectorAlgorithm::findOverlapsForOneProcess(
          if (owner_rank != bridging_connector.getRank()) {
             // Pack up info for sending.
             ++send_mesg[remote_mapped_box_counter_index];
-            const int subsize = 3 +
-               BoxId::commBufferSize() * static_cast<int>(found_nabrs.size());
+            const int subsize = 3
+               + BoxId::commBufferSize() * static_cast<int>(found_nabrs.size());
             send_mesg.insert(send_mesg.end(), subsize, -1);
             int* submesg = &send_mesg[send_mesg.size() - subsize];
             *(submesg++) = base_mapped_box.getLocalId().getValue();
@@ -1548,8 +1545,7 @@ void OverlapConnectorAlgorithm::findOverlapsForOneProcess(
       if (s_print_bridge_steps == 'y') {
          if (base_ni == visible_base_nabrs.end()) {
             tbox::plog << "Next base nabr: end" << std::endl;
-         }
-         else {
+         } else {
             tbox::plog << "Next base nabr: " << *base_ni << std::endl;
          }
       }
@@ -1662,7 +1658,6 @@ void OverlapConnectorAlgorithm::findOverlapErrors(
    }
 #endif
 
-
    /*
     * Rebuild the overlap Connector for checking.
     */
@@ -1671,7 +1666,6 @@ void OverlapConnectorAlgorithm::findOverlapErrors(
       connector.getHead(),
       connector.getConnectorWidth());
    findOverlaps_rbbt(rebuilt, head, ignore_self_overlap);
-
 
    /*
     * Check that the rebuilt overlaps match the existing overlaps.
@@ -1692,8 +1686,6 @@ void OverlapConnectorAlgorithm::findOverlapErrors(
       connector);
    TBOX_ASSERT(&missing.getBase() == &connector.getBase());
    TBOX_ASSERT(&missing.getHead() == &connector.getHead());
-
-   return;
 }
 
 /*
@@ -1776,7 +1768,7 @@ size_t OverlapConnectorAlgorithm::checkOverlapCorrectness(
 
       BoxId mapped_box_id(ei->first);
 
-      TBOX_ASSERT(mapped_box_id.getPeriodicId().getPeriodicValue() == 0); 
+      TBOX_ASSERT(mapped_box_id.getPeriodicId().getPeriodicValue() == 0);
 
    }
 
@@ -1860,8 +1852,7 @@ size_t OverlapConnectorAlgorithm::checkOverlapCorrectness(
                hier::Box nabr_box = nabr;
                if (connector.getHeadCoarserFlag()) {
                   nabr_box.refine(connector.getRatio());
-               }
-               else if (connector.getRatio() != 1) {
+               } else if (connector.getRatio() != 1) {
                   nabr_box.coarsen(connector.getRatio());
                }
                hier::Box ovlap = ghost_box * nabr_box;
@@ -1882,8 +1873,7 @@ size_t OverlapConnectorAlgorithm::checkOverlapCorrectness(
                hier::Box nabr_box = nabr;
                if (connector.getHeadCoarserFlag()) {
                   nabr_box.refine(connector.getRatio());
-               }
-               else if (connector.getRatio() != 1) {
+               } else if (connector.getRatio() != 1) {
                   nabr_box.coarsen(connector.getRatio());
                }
                hier::Box ovlap = ghost_box * nabr_box;
@@ -1904,8 +1894,7 @@ size_t OverlapConnectorAlgorithm::checkOverlapCorrectness(
                hier::Box nabr_box = nabr;
                if (connector.getHeadCoarserFlag()) {
                   nabr_box.refine(connector.getRatio());
-               }
-               else if (connector.getRatio() != 1) {
+               } else if (connector.getRatio() != 1) {
                   nabr_box.coarsen(connector.getRatio());
                }
                hier::Box ovlap = ghost_box * nabr_box;
@@ -1945,8 +1934,7 @@ size_t OverlapConnectorAlgorithm::checkOverlapCorrectness(
                hier::Box nabr_box = nabr;
                if (connector.getHeadCoarserFlag()) {
                   nabr_box.refine(connector.getRatio());
-               }
-               else if (connector.getRatio() != 1) {
+               } else if (connector.getRatio() != 1) {
                   nabr_box.coarsen(connector.getRatio());
                }
                hier::Box ovlap = ghost_box * nabr_box;
@@ -1967,8 +1955,7 @@ size_t OverlapConnectorAlgorithm::checkOverlapCorrectness(
                hier::Box nabr_box = nabr;
                if (connector.getHeadCoarserFlag()) {
                   nabr_box.refine(connector.getRatio());
-               }
-               else if (connector.getRatio() != 1) {
+               } else if (connector.getRatio() != 1) {
                   nabr_box.coarsen(connector.getRatio());
                }
                hier::Box ovlap = ghost_box * nabr_box;
@@ -2005,8 +1992,7 @@ size_t OverlapConnectorAlgorithm::checkOverlapCorrectness(
                hier::Box nabr_box = nabr;
                if (connector.getHeadCoarserFlag()) {
                   nabr_box.refine(connector.getRatio());
-               }
-               else if (connector.getRatio() != 1) {
+               } else if (connector.getRatio() != 1) {
                   nabr_box.coarsen(connector.getRatio());
                }
                hier::Box ovlap = ghost_box * nabr_box;
@@ -2027,8 +2013,7 @@ size_t OverlapConnectorAlgorithm::checkOverlapCorrectness(
                hier::Box nabr_box = nabr;
                if (connector.getHeadCoarserFlag()) {
                   nabr_box.refine(connector.getRatio());
-               }
-               else if (connector.getRatio() != 1) {
+               } else if (connector.getRatio() != 1) {
                   nabr_box.coarsen(connector.getRatio());
                }
                hier::Box ovlap = ghost_box * nabr_box;
@@ -2044,7 +2029,6 @@ size_t OverlapConnectorAlgorithm::checkOverlapCorrectness(
 
    return missing.getNeighborhoodSets().size() + extra.getNeighborhoodSets().size();
 }
-
 
 /*
  ***********************************************************************

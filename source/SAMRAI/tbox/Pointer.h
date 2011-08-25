@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   A smart pointer template class with RTTI 
+ * Description:   A smart pointer template class with RTTI
  *
  ************************************************************************/
 
@@ -63,7 +63,7 @@ public:
     * using the standard new operator.
     */
    explicit Pointer(
-      TYPE* ptr,
+      TYPE * ptr,
       const bool managed = true);
 
    /**
@@ -103,7 +103,7 @@ public:
     */
    Pointer<TYPE>&
    operator = (
-      TYPE* ptr);
+      TYPE * ptr);
 
    /**
     * Attempt to convert the argument pointer to a Pointer<TYPE>.
@@ -170,7 +170,7 @@ public:
     */
    void
    reset(
-      TYPE* ptr);
+      TYPE * ptr);
 
    /**
     * Check whether the smart pointer points to NULL.

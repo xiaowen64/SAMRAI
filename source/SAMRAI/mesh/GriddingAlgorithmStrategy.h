@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   AMR hierarchy generation and regridding routines. 
+ * Description:   AMR hierarchy generation and regridding routines.
  *
  ************************************************************************/
 
@@ -37,12 +37,14 @@ public:
    /*!
     * @brief Constructor
     */
-   GriddingAlgorithmStrategy() {}
+   GriddingAlgorithmStrategy() {
+   }
 
    /*!
     * @brief Virtual destructor for GriddingAlgorithmStrategy.
     */
-   virtual ~GriddingAlgorithmStrategy() {}
+   virtual ~GriddingAlgorithmStrategy() {
+   }
 
    /*!
     * @brief Construct the coarsest level in the hierarchy (i.e., level 0).
@@ -50,7 +52,8 @@ public:
     * @param level_time Simulation time when level is constructed
     */
    virtual void
-   makeCoarsestLevel(const double level_time) = 0;
+   makeCoarsestLevel(
+      const double level_time) = 0;
 
    /*!
     * @brief Attempts to create a new level in the hierarchy finer

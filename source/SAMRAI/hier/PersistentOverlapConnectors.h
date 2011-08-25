@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Manager of Connectors incident from a common MappedBoxLevel. 
+ * Description:   Manager of Connectors incident from a common MappedBoxLevel.
  *
  ************************************************************************/
 #ifndef included_hier_PersistentOverlapConnectors
@@ -69,9 +69,9 @@ class PersistentOverlapConnectors
 {
 
 public:
-	/*!
-	 * @brief Deletes all Connectors to and from this object
-	 */
+   /*!
+    * @brief Deletes all Connectors to and from this object
+    */
    ~PersistentOverlapConnectors();
 
    /*!
@@ -120,7 +120,7 @@ public:
     *
     * If multiple Connectors fit the criteria, the one with the
     * smallest ghost cell width (based on the algebraic sum of the
-    * components) is selected.  
+    * components) is selected.
     *
     * TODO: The criterion for selecting a single Connector is
     * arbitrary and should be re-examined.
@@ -152,7 +152,7 @@ public:
     *
     * If multiple Connectors fit the criteria, the one with the
     * smallest ghost cell width (based on the algebraic sum of the
-    * components) is selected.  
+    * components) is selected.
     *
     * TODO: The criterion for selecting a
     * single Connector is arbitrary and should be re-examined.

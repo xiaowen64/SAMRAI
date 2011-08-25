@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   hier 
+ * Description:   hier
  *
  ************************************************************************/
 
@@ -57,7 +57,7 @@ NodeIndex::NodeIndex(
    const Corner corner):
    hier::Index(rhs.getDim())
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
+   TBOX_DIM_ASSERT_CHECK_ARGS2(* this, rhs);
 
    setOffsets();
    hier::IntVector::operator = (

@@ -1,11 +1,11 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
  * Description:   Constant averaging operator for node-centered integer data on
- *                a  mesh. 
+ *                a  mesh.
  *
  ************************************************************************/
 
@@ -35,26 +35,26 @@ extern "C" {
 #endif
 
 // in concoarsen1d.f:
-void F77_FUNC(conavgnodeintg1d, CONAVGNODEINTG1D) (const int &, const int &,
-   const int &, const int &,
-   const int &, const int &,
+void F77_FUNC(conavgnodeintg1d, CONAVGNODEINTG1D) (const int&, const int&,
+   const int&, const int&,
+   const int&, const int&,
    const int *,
    const int *, int *);
 // in concoarsen2d.f:
-void F77_FUNC(conavgnodeintg2d, CONAVGNODEINTG2D) (const int &, const int &,
-   const int &, const int &,
-   const int &, const int &, const int &, const int &,
-   const int &, const int &, const int &, const int &,
+void F77_FUNC(conavgnodeintg2d, CONAVGNODEINTG2D) (const int&, const int&,
+   const int&, const int&,
+   const int&, const int&, const int&, const int&,
+   const int&, const int&, const int&, const int&,
    const int *,
    const int *, int *);
 // in concoarsen3d.f:
-void F77_FUNC(conavgnodeintg3d, CONAVGNODEINTG3D) (const int &, const int &,
-   const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
+void F77_FUNC(conavgnodeintg3d, CONAVGNODEINTG3D) (const int&, const int&,
+   const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
    const int *,
    const int *, int *);
 }

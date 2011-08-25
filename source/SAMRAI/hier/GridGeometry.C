@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Base class for geometry management in AMR hierarchy 
+ * Description:   Base class for geometry management in AMR hierarchy
  *
  ************************************************************************/
 
@@ -149,7 +149,6 @@ GridGeometry::GridGeometry(
 
 }
 
-
 GridGeometry::GridGeometry(
    const std::string& object_name,
    const tbox::Array<BoxList>& domain,
@@ -187,8 +186,6 @@ GridGeometry::GridGeometry(
    setPhysicalDomain(domain);
 
 }
-
-
 
 /*
  *************************************************************************
@@ -252,7 +249,7 @@ void GridGeometry::computeBoundaryBoxesOnLevel(
       if (patch->getPatchGeometry()->getTouchesRegularBoundary() ||
           do_all_patches) {
 
-         const Box &box(patch->getBox());
+         const Box& box(patch->getBox());
 
          /*
           * patch_boundaries is an array of DIM BoxLists for each patch.
@@ -263,7 +260,6 @@ void GridGeometry::computeBoundaryBoxesOnLevel(
           * type.
           */
 
-
          /*
           * Create new map element if one does not exist.
           * Note can't use [] as this requires a default ctor which we do
@@ -273,7 +269,7 @@ void GridGeometry::computeBoundaryBoxesOnLevel(
             boundaries.find(patch_id));
          if (iter == boundaries.end()) {
             std::pair<BoxId, PatchBoundaries> new_boundaries(patch_id,
-               PatchBoundaries(d_dim));
+                                                             PatchBoundaries(d_dim));
             iter = boundaries.insert(iter, new_boundaries);
          }
          getBoundaryBoxes((*iter).second, box, domain[block_num],
@@ -344,7 +340,7 @@ void GridGeometry::findPatchesTouchingBoundaries(
    t_touching_boundaries_loop->start();
    for (PatchLevel::Iterator ip(&level); ip; ip++) {
       tbox::Pointer<Patch> patch = *ip;
-      const Box &box(patch->getBox());
+      const Box& box(patch->getBox());
       const int block_number = patch->getMappedBox().getBlockId().getBlockValue();
 
       std::map<BoxId, TwoDimBool>::iterator iter_touches_regular_bdry(
@@ -603,7 +599,6 @@ const
 
 }
 
-
 /*
  *************************************************************************
  *                                                                       *
@@ -629,7 +624,7 @@ GridGeometry::makeCoarsenedGridGeometry(
    tbox::Array<BoxList> coarse_domain(d_number_blocks, BoxList(dim));
 
    for (int b = 0; b < d_number_blocks; b++) {
-      BlockId block_id(b); 
+      BlockId block_id(b);
       coarse_domain[b] = getPhysicalDomain(block_id);
       coarse_domain[b].coarsen(coarsen_ratio);
 
@@ -642,7 +637,7 @@ GridGeometry::makeCoarsenedGridGeometry(
       BoxList::Iterator fine_domain_itr(fine_domain);
       for (int ib = 0; ib < nboxes; ib++, coarse_domain_itr++, fine_domain_itr++) {
          Box testbox = Box::refine(*coarse_domain_itr, coarsen_ratio);
-         if (! testbox.isSpatiallyEqual(*fine_domain_itr)) {
+         if (!testbox.isSpatiallyEqual(*fine_domain_itr)) {
 #ifdef DEBUG_CHECK_ASSERTIONS
             tbox::plog
             << "GridGeometry::makeCoarsenedGridGeometry : Box # "
@@ -742,7 +737,7 @@ void GridGeometry::getFromRestart()
    if (ver != HIER_GRID_GEOMETRY_VERSION) {
       TBOX_ERROR(
          getObjectName() << ":  "
-         <<
+                         <<
          "Restart file version is different than class version.");
    }
 
@@ -757,9 +752,9 @@ void GridGeometry::getFromRestart()
          domain[b] = db->getDatabaseBoxArray(domain_name);
       } else {
          TBOX_ERROR(
-            getObjectName() << ":  " <<
-            "No '" << domain_name << "' restart data found for " <<
-            "Block " << b << " physical domain. ");
+            getObjectName() << ":  "
+                            << "No '" << domain_name << "' restart data found for "
+                            << "Block " << b << " physical domain. ");
       }
    }
    setPhysicalDomain(domain);
@@ -808,13 +803,13 @@ void GridGeometry::getFromInput(
             if (domain[b].getNumberOfBoxes() == 0) {
                TBOX_ERROR(
                   getObjectName() << ":  "
-                  << "No boxes for " << domain_name <<
-                  " array found in input.");
+                                  << "No boxes for " << domain_name
+                                  << " array found in input.");
             }
          } else {
             TBOX_ERROR(
                getObjectName() << ":  "
-               <<
+                               <<
                "Key data '" << domain_name << "' not found in input.");
          }
       }
@@ -873,8 +868,6 @@ void GridGeometry::putToDatabase(
 
    db->putBool("d_has_enhanced_connectivity", d_has_enhanced_connectivity);
 }
-
-
 
 /*
  * ************************************************************************
@@ -1305,7 +1298,7 @@ void GridGeometry::computePhysicalDomain(
 #endif
 
    for (int nb = 0; nb < d_number_blocks; nb++) {
-      BoxSet block_domain_boxes = d_domain_mapped_box_sets[nb]; 
+      BoxSet block_domain_boxes = d_domain_mapped_box_sets[nb];
 
       if (ratio_to_level_zero != IntVector::getOne(d_dim)) {
          bool coarsen = false;
@@ -1328,7 +1321,7 @@ void GridGeometry::computePhysicalDomain(
            bi != block_domain_boxes.end(); ++bi) {
 
          domain_mapped_boxes.insert(*bi);
- 
+
       }
    }
 }
@@ -1353,7 +1346,7 @@ void GridGeometry::setPhysicalDomain(
    d_physical_domain.resizeArray(number_blocks, BoxList(d_dim));
    d_domain_tree.resizeArray(number_blocks);
    d_domain_mapped_box_sets.resizeArray(number_blocks, BoxSet());
-   d_number_blocks = number_blocks; 
+   d_number_blocks = number_blocks;
 
    for (int b = 0; b < number_blocks; b++) {
 
@@ -1391,9 +1384,9 @@ void GridGeometry::setPhysicalDomain(
 
 void GridGeometry::resetDomainBoxSet(const BlockId& block_id)
 {
-  const int& block_number = block_id.getBlockValue();
-  BoxList::Iterator itr(d_physical_domain[block_number]);
-  for (LocalId i(0); i < d_physical_domain[block_number].size(); ++i, itr++) {
+   const int& block_number = block_id.getBlockValue();
+   BoxList::Iterator itr(d_physical_domain[block_number]);
+   for (LocalId i(0); i < d_physical_domain[block_number].size(); ++i, itr++) {
       Box mapped_box(*itr, i, 0, BlockId(block_number));
       d_domain_mapped_box_sets[block_number].insert(mapped_box);
    }
@@ -1487,7 +1480,7 @@ void GridGeometry::initializePeriodicShift(
       }
    } else {
       TBOX_ASSERT(directions == IntVector::getZero(d_dim));
-   }   
+   }
 
    for (int b = 0; b < d_physical_domain.size(); b++) {
       resetDomainBoxSet(BlockId(b));
@@ -1642,7 +1635,7 @@ bool GridGeometry::checkBoundaryBox(
 
    bool return_val = true;
 
-   const Box &bbox = boundary_box.getBox();
+   const Box& bbox = boundary_box.getBox();
 
    /*
     * Test to see that the box is of size 1 in at least 1 direction.
@@ -1667,7 +1660,7 @@ bool GridGeometry::checkBoundaryBox(
 
    grow_patch_box.grow(IntVector::getOne(d_dim));
 
-   if (! grow_patch_box.isSpatiallyEqual((grow_patch_box + bbox))) {
+   if (!grow_patch_box.isSpatiallyEqual((grow_patch_box + bbox))) {
       bool valid_box = false;
       grow_patch_box = patch_box;
       for (int j = 0; j < d_dim.getValue(); j++) {
@@ -1820,7 +1813,7 @@ void GridGeometry::readBlockDataFromInput(
 
    }
 
-   if (d_number_blocks > 1) { 
+   if (d_number_blocks > 1) {
       for (int b = 0; b < d_number_blocks; b++) {
          BoxList pseudo_domain;
          getDomainOutsideBlock(pseudo_domain, BlockId(b));
@@ -1861,9 +1854,9 @@ GridGeometry::getDomainOutsideBlock(
 
 /*
  * ************************************************************************
- * 
+ *
  * Register a neighbor relationship between two blocks.
- * 
+ *
  * ************************************************************************
  */
 
@@ -1876,8 +1869,8 @@ void GridGeometry::registerNeighbors(
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, shift);
 
-   const int& a = block_a.getBlockValue(); 
-   const int& b = block_b.getBlockValue(); 
+   const int& a = block_a.getBlockValue();
+   const int& b = block_b.getBlockValue();
    BoxList b_domain_in_a_space(d_physical_domain[b]);
    BoxList a_domain_in_b_space(d_physical_domain[a]);
 
@@ -1937,13 +1930,13 @@ bool
 GridGeometry::transformBox(
    Box& box,
    const IntVector& ratio,
-   const BlockId &output_block,
-   const BlockId &input_block) const
+   const BlockId& output_block,
+   const BlockId& input_block) const
 {
    TBOX_DIM_ASSERT_CHECK_ARGS3(*this, box, ratio);
 
    for (tbox::List<Neighbor>::Iterator
-           ni(d_block_neighbors[output_block.getBlockValue()]); ni; ni++) {
+        ni(d_block_neighbors[output_block.getBlockValue()]); ni; ni++) {
       if (ni().getBlockId() == input_block) {
          IntVector refined_shift = (ni().getShift()) * (ratio);
          box.rotate(ni().getRotationIdentifier());
@@ -1968,13 +1961,13 @@ bool
 GridGeometry::transformBoxList(
    BoxList& boxes,
    const IntVector& ratio,
-   const BlockId &output_block,
-   const BlockId &input_block) const
+   const BlockId& output_block,
+   const BlockId& input_block) const
 {
    TBOX_DIM_ASSERT_CHECK_ARGS3(*this, boxes, ratio);
 
    for (tbox::List<Neighbor>::Iterator
-           ni(d_block_neighbors[output_block.getBlockValue()]); ni; ni++) {
+        ni(d_block_neighbors[output_block.getBlockValue()]); ni; ni++) {
       if (ni().getBlockId() == input_block) {
          IntVector refined_shift = (ni().getShift()) * (ratio);
          boxes.rotate(ni().getRotationIdentifier());
@@ -2053,7 +2046,7 @@ void GridGeometry::adjustMultiblockPatchLevelBoundaries(
          pseudo_domain.unionBoxes(singularity);
          pseudo_domain.coalesceBoxes();
 
-         BoxSetSingleBlockIterator mbi(d_mapped_boxes, block_id); 
+         BoxSetSingleBlockIterator mbi(d_mapped_boxes, block_id);
 
          for ( ; mbi.isValid(); mbi++) {
             const BoxId& mapped_box_id = (*mbi).getId();
@@ -2184,7 +2177,6 @@ GridGeometry::getOffset(const BlockId& dst,
    return IntVector::getOne(d_dim);
 }
 
-
 /*
  *************************************************************************
  *                                                                       *
@@ -2228,8 +2220,6 @@ bool GridGeometry::areSingularityNeighbors(const BlockId& block_a,
 
    return are_sing_neighbors;
 }
-
-
 
 /*
  *************************************************************************
@@ -2335,7 +2325,7 @@ void GridGeometry::printClassData(
           << (GridGeometry *)this << std::endl;
    stream << "d_object_name = " << d_object_name << std::endl;
 
-   for (int b = 0; b < d_physical_domain.size(); b++) { 
+   for (int b = 0; b < d_physical_domain.size(); b++) {
       const int n = d_physical_domain[b].getNumberOfBoxes();
       stream << "Block number " << b << std::endl;
       stream << "Number of boxes describing physical domain = " << n << std::endl;
@@ -2349,30 +2339,29 @@ void GridGeometry::printClassData(
 
    stream << "Block neighbor data:\n";
 
-   for ( int bn=0; bn<d_number_blocks; ++bn ) {
+   for (int bn = 0; bn < d_number_blocks; ++bn) {
 
       stream << "   Block " << bn << '\n';
 
       const BlockId block_id(bn);
-      const tbox::List<Neighbor> &block_neighbors(getNeighbors(block_id));
+      const tbox::List<Neighbor>& block_neighbors(getNeighbors(block_id));
 
-      const BoxList &singularity_boxlist(getSingularityBoxList(block_id));
+      const BoxList& singularity_boxlist(getSingularityBoxList(block_id));
 
-      for ( tbox::List<Neighbor>::Iterator li(block_neighbors); li; li++ ) {
-         const Neighbor &neighbor(*li);
+      for (tbox::List<Neighbor>::Iterator li(block_neighbors); li; li++) {
+         const Neighbor& neighbor(*li);
          stream << "      neighbor block " << neighbor.getBlockId() << ':';
          stream << " singularity = " << neighbor.isSingularity() << '\n';
       }
 
       stream << "      singularity Boxes (" << singularity_boxlist.size() << ")\n";
-      for ( BoxList::Iterator bi(singularity_boxlist); bi; bi++ ) {
+      for (BoxList::Iterator bi(singularity_boxlist); bi; bi++) {
          stream << "         " << *bi << '\n';
       }
 
    }
 
 }
-
 
 /*
  * ************************************************************************
@@ -2381,30 +2370,30 @@ void GridGeometry::printClassData(
 
 void GridGeometry::initializeCallback()
 {
-      t_find_patches_touching_boundaries = tbox::TimerManager::getManager()->
-         getTimer("hier::GridGeometry::findPatchesTouchingBoundaries()");
-      TBOX_ASSERT(!t_find_patches_touching_boundaries.isNull());
-      t_touching_boundaries_init = tbox::TimerManager::getManager()->
-         getTimer("hier::GridGeometry::...TouchingBoundaries()_init");
-      TBOX_ASSERT(!t_touching_boundaries_init.isNull());
-      t_touching_boundaries_loop = tbox::TimerManager::getManager()->
-         getTimer("hier::GridGeometry::...TouchingBoundaries()_loop");
-      TBOX_ASSERT(!t_touching_boundaries_loop.isNull());
-      t_set_geometry_on_patches = tbox::TimerManager::getManager()->
-         getTimer("hier::GridGeometry::setGeometryOnPatches()");
-      TBOX_ASSERT(!t_set_geometry_on_patches.isNull());
-      t_set_boundary_boxes = tbox::TimerManager::getManager()->
-         getTimer("hier::GridGeometry::setBoundaryBoxes()");
-      TBOX_ASSERT(!t_set_boundary_boxes.isNull());
-      t_set_geometry_data_on_patches = tbox::TimerManager::getManager()->
-         getTimer("hier::GridGeometry::set_geometry_data_on_patches");
-      TBOX_ASSERT(!t_set_geometry_data_on_patches.isNull());
-      t_compute_boundary_boxes_on_level = tbox::TimerManager::getManager()->
-         getTimer("hier::GridGeometry::computeBoundaryBoxesOnLevel()");
-      TBOX_ASSERT(!t_compute_boundary_boxes_on_level.isNull());
-      t_get_boundary_boxes = tbox::TimerManager::getManager()->
-         getTimer("hier::GridGeometry::getBoundaryBoxes()");
-      TBOX_ASSERT(!t_get_boundary_boxes.isNull());
+   t_find_patches_touching_boundaries = tbox::TimerManager::getManager()->
+      getTimer("hier::GridGeometry::findPatchesTouchingBoundaries()");
+   TBOX_ASSERT(!t_find_patches_touching_boundaries.isNull());
+   t_touching_boundaries_init = tbox::TimerManager::getManager()->
+      getTimer("hier::GridGeometry::...TouchingBoundaries()_init");
+   TBOX_ASSERT(!t_touching_boundaries_init.isNull());
+   t_touching_boundaries_loop = tbox::TimerManager::getManager()->
+      getTimer("hier::GridGeometry::...TouchingBoundaries()_loop");
+   TBOX_ASSERT(!t_touching_boundaries_loop.isNull());
+   t_set_geometry_on_patches = tbox::TimerManager::getManager()->
+      getTimer("hier::GridGeometry::setGeometryOnPatches()");
+   TBOX_ASSERT(!t_set_geometry_on_patches.isNull());
+   t_set_boundary_boxes = tbox::TimerManager::getManager()->
+      getTimer("hier::GridGeometry::setBoundaryBoxes()");
+   TBOX_ASSERT(!t_set_boundary_boxes.isNull());
+   t_set_geometry_data_on_patches = tbox::TimerManager::getManager()->
+      getTimer("hier::GridGeometry::set_geometry_data_on_patches");
+   TBOX_ASSERT(!t_set_geometry_data_on_patches.isNull());
+   t_compute_boundary_boxes_on_level = tbox::TimerManager::getManager()->
+      getTimer("hier::GridGeometry::computeBoundaryBoxesOnLevel()");
+   TBOX_ASSERT(!t_compute_boundary_boxes_on_level.isNull());
+   t_get_boundary_boxes = tbox::TimerManager::getManager()->
+      getTimer("hier::GridGeometry::getBoundaryBoxes()");
+   TBOX_ASSERT(!t_get_boundary_boxes.isNull());
 }
 
 /*
@@ -2423,7 +2412,6 @@ void GridGeometry::finalizeCallback()
    t_compute_boundary_boxes_on_level.setNull();
    t_get_boundary_boxes.setNull();
 }
-
 
 }
 }

@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   A null database that does nothing for all database methods. 
+ * Description:   A null database that does nothing for all database methods.
  *
  ************************************************************************/
 
@@ -68,7 +68,7 @@ public:
    virtual bool
    open(
       const std::string& name,
-      const bool read_write_mode=false);
+      const bool read_write_mode = false);
 
    /**
     * Close the database.

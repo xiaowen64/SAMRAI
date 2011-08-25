@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   All-to-one and one-to-all communication using a tree. 
+ * Description:   All-to-one and one-to-all communication using a tree.
  *
  ************************************************************************/
 #include "SAMRAI/tbox/Utilities.h"
@@ -137,8 +137,8 @@ int AsyncCommGroup::toPosition(
    if (index < 0 || index >= d_group_size) {
       TBOX_ERROR(
          "Invalid index " << index << "\n"
-         << "should be in [0," << d_group_size - 1
-         << "].");
+                          << "should be in [0," << d_group_size - 1
+                          << "].");
    }
 #endif
    const int position = index == 0 ? d_root_idx :
@@ -159,8 +159,8 @@ int AsyncCommGroup::toIndex(
    if (position < 0 || position >= d_group_size) {
       TBOX_ERROR(
          "Invalid parent position " << position
-         << " should be in [" << 0 << ','
-         << d_group_size - 1 << "].");
+                                    << " should be in [" << 0 << ','
+                                    << d_group_size - 1 << "].");
    }
 #endif
    const int index = position == 0 ? d_root_idx :
@@ -182,8 +182,8 @@ int AsyncCommGroup::toChildPosition(
    if (parent_pos < 0 || parent_pos >= d_group_size) {
       TBOX_ERROR(
          "Invalid parent position " << parent_pos
-         << " should be in [" << 0 << ','
-         << d_group_size - 1 << "].");
+                                    << " should be in [" << 0 << ','
+                                    << d_group_size - 1 << "].");
    }
 #endif
    return parent_pos * static_cast<int>(d_nchild) + 1 + child;
@@ -201,8 +201,8 @@ int AsyncCommGroup::toOldest(
    if (parent_pos < 0 || parent_pos >= d_group_size) {
       TBOX_ERROR(
          "Invalid parent position " << parent_pos
-         << " should be in [" << 0 << ','
-         << d_group_size - 1 << "].");
+                                    << " should be in [" << 0 << ','
+                                    << d_group_size - 1 << "].");
    }
 #endif
    return parent_pos * static_cast<int>(d_nchild) + 1;
@@ -220,8 +220,8 @@ int AsyncCommGroup::toYoungest(
    if (parent_pos < 0 || parent_pos >= d_group_size) {
       TBOX_ERROR(
          "Invalid parent position " << parent_pos
-         << " should be in [" << 0 << ','
-         << d_group_size - 1 << "].");
+                                    << " should be in [" << 0 << ','
+                                    << d_group_size - 1 << "].");
    }
 #endif
    return (parent_pos + 1) * static_cast<int>(d_nchild);

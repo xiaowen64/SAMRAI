@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Main program for testing Sundials/SAMRAI interface. 
+ * Description:   Main program for testing Sundials/SAMRAI interface.
  *
  ************************************************************************/
 
@@ -436,7 +436,7 @@ int main(
          tbox::perr << "Correct number precond setups:  "
                     << correct_precond_setups << endl;
          tbox::perr << "Number precond setups computed: " << counters[1]
-         << endl;
+                    << endl;
       }
 
       if (counters[2] == correct_precond_solves) {
@@ -446,16 +446,16 @@ int main(
          tbox::perr << "Correct number precond solves:  "
                     << correct_precond_solves << endl;
          tbox::perr << "Number precond solves computed: " << counters[2]
-         << endl;
+                    << endl;
       }
 #endif
 
       if (solution_logging) {
          tbox::plog << "\n\nEnd Timesteps - final time = " << final_time
-         << "\n\tTotal number of RHS evaluations = " << counters[0]
-         << "\n\tTotal number of precond setups = " << counters[1]
-         << "\n\tTotal number of precond solves = " << counters[2]
-         << endl;
+                    << "\n\tTotal number of RHS evaluations = " << counters[0]
+                    << "\n\tTotal number of precond setups = " << counters[1]
+                    << "\n\tTotal number of precond solves = " << counters[2]
+                    << endl;
 
          /*
           * Write out timestep sequence information
@@ -471,8 +471,8 @@ int main(
             tbox::pout << "  " << time[interval] << "  \t";
             tbox::pout.precision(6);
             tbox::pout << "  " << maxnorm[interval] << "  \t"
-            << "  " << l1norm[interval] << "  \t"
-            << "  " << l2norm[interval] << endl;
+                       << "  " << l1norm[interval] << "  \t"
+                       << "  " << l2norm[interval] << endl;
          }
       }
 

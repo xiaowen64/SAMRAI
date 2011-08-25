@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Numerical routines for single patch in linear advection ex. 
+ * Description:   Numerical routines for single patch in linear advection ex.
  *
  ************************************************************************/
 #include "LinAdv.h"
@@ -249,9 +249,9 @@ LinAdv::LinAdv(
    } else {
       TBOX_ERROR(
          d_object_name << ": "
-         << "Unknown d_data_problem string = "
-         << d_data_problem
-         << " encountered in constructor" << endl);
+                       << "Unknown d_data_problem string = "
+                       << d_data_problem
+                       << " encountered in constructor" << endl);
    }
 
    /*
@@ -261,7 +261,7 @@ LinAdv::LinAdv(
     */
    if (d_dim == tbox::Dimension(2)) {
       for (int i = 0; i < NUM_2D_EDGES; i++) {
-	if (d_scalar_bdry_edge_conds[i] == BdryCond::REFLECT) {
+         if (d_scalar_bdry_edge_conds[i] == BdryCond::REFLECT) {
             d_scalar_bdry_edge_conds[i] = BdryCond::FLOW;
          }
       }
@@ -433,9 +433,9 @@ void LinAdv::setupLoadBalancer(
       } else {
          TBOX_WARNING(
             d_object_name << ": "
-            <<
+                          <<
             "  Unknown load balancer used in gridding algorithm."
-            <<
+                          <<
             "  Ignoring request for nonuniform load balancing." << endl);
          d_use_nonuniform_workload = false;
       }
@@ -1485,7 +1485,9 @@ void LinAdv::boundaryReset(
       }
       if (bdry_case == BdryCond::REFLECT) {
          for (pdat::CellIterator ic(ib()); ic; ic++) {
-            for (hier::BoxList::Iterator domain_boxes_itr(domain_boxes); domain_boxes_itr; domain_boxes_itr++) {
+            for (hier::BoxList::Iterator domain_boxes_itr(domain_boxes);
+                 domain_boxes_itr;
+                 domain_boxes_itr++) {
                if (domain_boxes_itr().contains(ic()))
                   bdry_cell = false;
             }
@@ -1506,7 +1508,9 @@ void LinAdv::boundaryReset(
       }
       if (bdry_case == BdryCond::REFLECT) {
          for (pdat::CellIterator ic(ib()); ic; ic++) {
-            for (hier::BoxList::Iterator domain_boxes_itr(domain_boxes); domain_boxes_itr; domain_boxes_itr++) {
+            for (hier::BoxList::Iterator domain_boxes_itr(domain_boxes);
+                 domain_boxes_itr;
+                 domain_boxes_itr++) {
                if (domain_boxes_itr().contains(ic()))
                   bdry_cell = false;
             }
@@ -2130,42 +2134,42 @@ void LinAdv::printClassData(
    if (d_dim == tbox::Dimension(2)) {
       for (j = 0; j < d_scalar_bdry_edge_conds.getSize(); j++) {
          os << "       d_scalar_bdry_edge_conds[" << j << "] = "
-         << d_scalar_bdry_edge_conds[j] << endl;
+            << d_scalar_bdry_edge_conds[j] << endl;
          if (d_scalar_bdry_edge_conds[j] == BdryCond::DIRICHLET) {
             os << "         d_bdry_edge_uval[" << j << "] = "
-            << d_bdry_edge_uval[j] << endl;
+               << d_bdry_edge_uval[j] << endl;
          }
       }
       os << endl;
       for (j = 0; j < d_scalar_bdry_node_conds.getSize(); j++) {
          os << "       d_scalar_bdry_node_conds[" << j << "] = "
-         << d_scalar_bdry_node_conds[j] << endl;
+            << d_scalar_bdry_node_conds[j] << endl;
          os << "       d_node_bdry_edge[" << j << "] = "
-         << d_node_bdry_edge[j] << endl;
+            << d_node_bdry_edge[j] << endl;
       }
    }
    if (d_dim == tbox::Dimension(3)) {
       for (j = 0; j < d_scalar_bdry_face_conds.getSize(); j++) {
          os << "       d_scalar_bdry_face_conds[" << j << "] = "
-         << d_scalar_bdry_face_conds[j] << endl;
+            << d_scalar_bdry_face_conds[j] << endl;
          if (d_scalar_bdry_face_conds[j] == BdryCond::DIRICHLET) {
             os << "         d_bdry_face_uval[" << j << "] = "
-            << d_bdry_face_uval[j] << endl;
+               << d_bdry_face_uval[j] << endl;
          }
       }
       os << endl;
       for (j = 0; j < d_scalar_bdry_edge_conds.getSize(); j++) {
          os << "       d_scalar_bdry_edge_conds[" << j << "] = "
-         << d_scalar_bdry_edge_conds[j] << endl;
+            << d_scalar_bdry_edge_conds[j] << endl;
          os << "       d_edge_bdry_face[" << j << "] = "
-         << d_edge_bdry_face[j] << endl;
+            << d_edge_bdry_face[j] << endl;
       }
       os << endl;
       for (j = 0; j < d_scalar_bdry_node_conds.getSize(); j++) {
          os << "       d_scalar_bdry_node_conds[" << j << "] = "
-         << d_scalar_bdry_node_conds[j] << endl;
+            << d_scalar_bdry_node_conds[j] << endl;
          os << "       d_node_bdry_face[" << j << "] = "
-         << d_node_bdry_face[j] << endl;
+            << d_node_bdry_face[j] << endl;
       }
    }
 
@@ -2173,76 +2177,76 @@ void LinAdv::printClassData(
 
    for (j = 0; j < d_refinement_criteria.getSize(); j++) {
       os << "       d_refinement_criteria[" << j << "] = "
-      << d_refinement_criteria[j] << endl;
+         << d_refinement_criteria[j] << endl;
    }
    os << endl;
    for (j = 0; j < d_dev_tol.getSize(); j++) {
       os << "       d_dev_tol[" << j << "] = "
-      << d_dev_tol[j] << endl;
+         << d_dev_tol[j] << endl;
    }
    for (j = 0; j < d_dev.getSize(); j++) {
       os << "       d_dev[" << j << "] = "
-      << d_dev[j] << endl;
+         << d_dev[j] << endl;
    }
    os << endl;
    for (j = 0; j < d_dev_time_max.getSize(); j++) {
       os << "       d_dev_time_max[" << j << "] = "
-      << d_dev_time_max[j] << endl;
+         << d_dev_time_max[j] << endl;
    }
    os << endl;
    for (j = 0; j < d_dev_time_min.getSize(); j++) {
       os << "       d_dev_time_min[" << j << "] = "
-      << d_dev_time_min[j] << endl;
+         << d_dev_time_min[j] << endl;
    }
    os << endl;
    for (j = 0; j < d_grad_tol.getSize(); j++) {
       os << "       d_grad_tol[" << j << "] = "
-      << d_grad_tol[j] << endl;
+         << d_grad_tol[j] << endl;
    }
    os << endl;
    for (j = 0; j < d_grad_time_max.getSize(); j++) {
       os << "       d_grad_time_max[" << j << "] = "
-      << d_grad_time_max[j] << endl;
+         << d_grad_time_max[j] << endl;
    }
    os << endl;
    for (j = 0; j < d_grad_time_min.getSize(); j++) {
       os << "       d_grad_time_min[" << j << "] = "
-      << d_grad_time_min[j] << endl;
+         << d_grad_time_min[j] << endl;
    }
    os << endl;
    for (j = 0; j < d_shock_onset.getSize(); j++) {
       os << "       d_shock_onset[" << j << "] = "
-      << d_shock_onset[j] << endl;
+         << d_shock_onset[j] << endl;
    }
    os << endl;
    for (j = 0; j < d_shock_tol.getSize(); j++) {
       os << "       d_shock_tol[" << j << "] = "
-      << d_shock_tol[j] << endl;
+         << d_shock_tol[j] << endl;
    }
    os << endl;
    for (j = 0; j < d_shock_time_max.getSize(); j++) {
       os << "       d_shock_time_max[" << j << "] = "
-      << d_shock_time_max[j] << endl;
+         << d_shock_time_max[j] << endl;
    }
    os << endl;
    for (j = 0; j < d_shock_time_min.getSize(); j++) {
       os << "       d_shock_time_min[" << j << "] = "
-      << d_shock_time_min[j] << endl;
+         << d_shock_time_min[j] << endl;
    }
    os << endl;
    for (j = 0; j < d_rich_tol.getSize(); j++) {
       os << "       d_rich_tol[" << j << "] = "
-      << d_rich_tol[j] << endl;
+         << d_rich_tol[j] << endl;
    }
    os << endl;
    for (j = 0; j < d_rich_time_max.getSize(); j++) {
       os << "       d_rich_time_max[" << j << "] = "
-      << d_rich_time_max[j] << endl;
+         << d_rich_time_max[j] << endl;
    }
    os << endl;
    for (j = 0; j < d_rich_time_min.getSize(); j++) {
       os << "       d_rich_time_min[" << j << "] = "
-      << d_rich_time_min[j] << endl;
+         << d_rich_time_min[j] << endl;
    }
    os << endl;
 
@@ -2285,7 +2289,7 @@ void LinAdv::getFromInput(
    } else {
       TBOX_ERROR(
          d_object_name << ":  "
-         <<
+                       <<
          "Key data `advection_velocity' not found in input.");
    }
 
@@ -2296,7 +2300,7 @@ void LinAdv::getFromInput(
           (d_godunov_order != 4)) {
          TBOX_ERROR(
             d_object_name << ": "
-            <<
+                          <<
             "`godunov_order' in input must be 1, 2, or 4." << endl);
       }
    } else {
@@ -2310,9 +2314,9 @@ void LinAdv::getFromInput(
           (d_corner_transport != "CORNER_TRANSPORT_2")) {
          TBOX_ERROR(
             d_object_name << ": "
-            <<
+                          <<
             "`corner_transport' in input must be either string"
-            <<
+                          <<
             " 'CORNER_TRANSPORT_1' or 'CORNER_TRANSPORT_2'." << endl);
       }
    } else {
@@ -2332,9 +2336,9 @@ void LinAdv::getFromInput(
       } else {
          TBOX_WARNING(
             d_object_name << ": "
-            <<
+                          <<
             "No key `refine_criteria' found in data for"
-            <<
+                          <<
             " RefinementData. No refinement will occur." << endl);
       }
 
@@ -2354,9 +2358,9 @@ void LinAdv::getFromInput(
                   error_key == "UVAL_RICHARDSON")) {
                TBOX_ERROR(
                   d_object_name << ": "
-                  << "Unknown refinement criteria: "
-                  << error_key
-                  << "\nin input." << endl);
+                                << "Unknown refinement criteria: "
+                                << error_key
+                                << "\nin input." << endl);
             } else {
                error_db = refine_db->getDatabase(error_key);
                ref_keys_defined[def_key_cnt] = error_key;
@@ -2371,9 +2375,9 @@ void LinAdv::getFromInput(
                } else {
                   TBOX_ERROR(
                      d_object_name << ": "
-                     <<
+                                   <<
                      "No key `dev_tol' found in data for "
-                     << error_key << endl);
+                                   << error_key << endl);
                }
 
                if (error_db->keyExists("uval_dev")) {
@@ -2382,9 +2386,9 @@ void LinAdv::getFromInput(
                } else {
                   TBOX_ERROR(
                      d_object_name << ": "
-                     <<
+                                   <<
                      "No key `uval_dev' found in data for "
-                     << error_key << endl);
+                                   << error_key << endl);
                }
 
                if (error_db->keyExists("time_max")) {
@@ -2413,9 +2417,9 @@ void LinAdv::getFromInput(
                } else {
                   TBOX_ERROR(
                      d_object_name << ": "
-                     <<
+                                   <<
                      "No key `grad_tol' found in data for "
-                     << error_key << endl);
+                                   << error_key << endl);
                }
 
                if (error_db->keyExists("time_max")) {
@@ -2444,9 +2448,9 @@ void LinAdv::getFromInput(
                } else {
                   TBOX_ERROR(
                      d_object_name << ": "
-                     <<
+                                   <<
                      "No key `shock_onset' found in data for "
-                     << error_key << endl);
+                                   << error_key << endl);
                }
 
                if (error_db->keyExists("shock_tol")) {
@@ -2455,9 +2459,9 @@ void LinAdv::getFromInput(
                } else {
                   TBOX_ERROR(
                      d_object_name << ": "
-                     <<
+                                   <<
                      "No key `shock_tol' found in data for "
-                     << error_key << endl);
+                                   << error_key << endl);
                }
 
                if (error_db->keyExists("time_max")) {
@@ -2486,9 +2490,9 @@ void LinAdv::getFromInput(
                } else {
                   TBOX_ERROR(
                      d_object_name << ": "
-                     <<
+                                   <<
                      "No key `rich_tol' found in data for "
-                     << error_key << endl);
+                                   << error_key << endl);
                }
 
                if (error_db->keyExists("time_max")) {
@@ -2526,8 +2530,8 @@ void LinAdv::getFromInput(
 
          if (!key_found) {
             TBOX_ERROR(d_object_name << ": "
-               << "No input found for specified refine criteria: "
-               << d_refinement_criteria[k0] << endl);
+                                     << "No input found for specified refine criteria: "
+                                     << d_refinement_criteria[k0] << endl);
          }
       }
 
@@ -2540,8 +2544,8 @@ void LinAdv::getFromInput(
       } else {
          TBOX_ERROR(
             d_object_name << ": "
-            << "`data_problem' value not found in input."
-            << endl);
+                          << "`data_problem' value not found in input."
+                          << endl);
       }
 
       tbox::Pointer<tbox::Database> init_data_db;
@@ -2550,7 +2554,7 @@ void LinAdv::getFromInput(
       } else {
          TBOX_ERROR(
             d_object_name << ": "
-            <<
+                          <<
             "No `Initial_data' database found in input." << endl);
       }
 
@@ -2563,7 +2567,7 @@ void LinAdv::getFromInput(
          } else {
             TBOX_ERROR(
                d_object_name << ": "
-               <<
+                             <<
                "`radius' input required for SPHERE problem." << endl);
          }
          if (init_data_db->keyExists("center")) {
@@ -2571,7 +2575,7 @@ void LinAdv::getFromInput(
          } else {
             TBOX_ERROR(
                d_object_name << ": "
-               <<
+                             <<
                "`center' input required for SPHERE problem." << endl);
          }
          if (init_data_db->keyExists("uval_inside")) {
@@ -2606,8 +2610,8 @@ void LinAdv::getFromInput(
             if (d_dim < tbox::Dimension(2)) {
                TBOX_ERROR(
                   d_object_name << ": `PIECEWISE_CONSTANT_Y' "
-                  << "problem invalid in 1 dimension."
-                  << endl);
+                                << "problem invalid in 1 dimension."
+                                << endl);
             }
             idir = 1;
          }
@@ -2616,7 +2620,7 @@ void LinAdv::getFromInput(
             if (d_dim < tbox::Dimension(3)) {
                TBOX_ERROR(
                   d_object_name << ": `PIECEWISE_CONSTANT_Z' "
-                  <<
+                                <<
                   "problem invalid in 1 or 2 dimensions." << endl);
             }
             idir = 2;
@@ -2659,8 +2663,8 @@ void LinAdv::getFromInput(
                   d_interval_uval[i] = interval_db->getDouble("uval");
                } else {
                   TBOX_ERROR(d_object_name << ": "
-                     << "`uval' data missing in input for key = "
-                     << init_data_keys[nkey] << endl);
+                                           << "`uval' data missing in input for key = "
+                                           << init_data_keys[nkey] << endl);
                }
                i++;
 
@@ -2683,7 +2687,7 @@ void LinAdv::getFromInput(
             } else {
                TBOX_ERROR(
                   d_object_name << ": "
-                  <<
+                                <<
                   "`frequency' input required for SINE problem." << endl);
             }
          }
@@ -2691,10 +2695,10 @@ void LinAdv::getFromInput(
          if (!found_interval_data) {
             TBOX_ERROR(
                d_object_name << ": "
-               <<
+                             <<
                "Insufficient interval data given in input"
-               << " for PIECEWISE_CONSTANT_*problem."
-               << endl);
+                             << " for PIECEWISE_CONSTANT_*problem."
+                             << endl);
          }
 
          found_problem_data = true;
@@ -2738,7 +2742,7 @@ void LinAdv::getFromInput(
    } else {
       TBOX_ERROR(
          d_object_name << ": "
-         <<
+                       <<
          "Key data `Boundary_data' not found in input. " << endl);
    }
 
@@ -2854,7 +2858,7 @@ void LinAdv::getFromRestart()
    if (ver != LINADV_VERSION) {
       TBOX_ERROR(
          d_object_name << ":  "
-         <<
+                       <<
          "Restart file version different than class version.");
    }
 
@@ -2868,7 +2872,7 @@ void LinAdv::getFromRestart()
    if (!(d_nghosts == CELLG)) {
       TBOX_ERROR(
          d_object_name << ": "
-         <<
+                       <<
          "Key data `d_nghosts' in restart file != CELLG." << endl);
    }
    int* tmp_fluxghosts = &d_fluxghosts[0];
@@ -2876,7 +2880,7 @@ void LinAdv::getFromRestart()
    if (!(d_fluxghosts == FLUXG)) {
       TBOX_ERROR(
          d_object_name << ": "
-         <<
+                       <<
          "Key data `d_fluxghosts' in restart file != FLUXG." << endl);
    }
 

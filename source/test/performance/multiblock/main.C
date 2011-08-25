@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Main program for SAMRAI Linear Advection example problem. 
+ * Description:   Main program for SAMRAI Linear Advection example problem.
  *
  ************************************************************************/
 
@@ -167,7 +167,7 @@ int main(
    tbox::SAMRAI_MPI::init(&argc, &argv);
    tbox::SAMRAIManager::initialize();
 
-   for(int run = 0; run < 1; run++) {
+   for (int run = 0; run < 1; run++) {
 
       tbox::SAMRAIManager::startup();
       const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
@@ -180,11 +180,11 @@ int main(
 
       if ((argc != 2) && (argc != 4)) {
          tbox::pout << "USAGE:  " << argv[0] << " <input filename> "
-                                             <<
+                    <<
          "<restart dir> <restore number> [options]\n"
-                                             << "  options:\n"
-                                             << "  none at this time"
-                                             << endl;
+                    << "  options:\n"
+                    << "  none at this time"
+                    << endl;
          tbox::SAMRAI_MPI::abort();
          return -1;
       } else {
@@ -493,7 +493,7 @@ int main(
 
          iteration_num = time_integrator->getIntegratorStep() + 1;
 
-         if ((iteration_num-1) % 25 == 0) {
+         if ((iteration_num - 1) % 25 == 0) {
             tbox::pout << "+++++++++++++++++++++++++++++++++++++++++" << endl;
             tbox::pout << "At begining of timestep # " << iteration_num - 1
                        << endl;
@@ -505,7 +505,7 @@ int main(
          loop_time += dt_now;
          dt_now = dt_new;
 
-         if ((iteration_num-1) % 25 == 0) {
+         if ((iteration_num - 1) % 25 == 0) {
             tbox::pout << "At end of timestep # " << iteration_num - 1 << endl;
             tbox::pout << "Simulation time is " << loop_time << endl;
             tbox::pout << "+++++++++++++++++++++++++++++++++++++++++" << endl;
@@ -538,94 +538,92 @@ int main(
          }
 
 #if (TESTING == 1)
-            /*
-             * If we are doing autotests, check result...
-             */
-            autotester.evalTestData(iteration_num,
-               patch_hierarchy,
-               time_integrator,
-               hyp_level_integrator,
-               gridding_algorithm);
+         /*
+          * If we are doing autotests, check result...
+          */
+         autotester.evalTestData(iteration_num,
+            patch_hierarchy,
+            time_integrator,
+            hyp_level_integrator,
+            gridding_algorithm);
 #endif
 
-         }
+      }
 
-         /*
-          * Output timer results.
-          */
+      /*
+       * Output timer results.
+       */
 #if (TESTING != 1)
-         tbox::TimerManager::getManager()->print(tbox::plog);
+      tbox::TimerManager::getManager()->print(tbox::plog);
 #endif
 
-         /*
-          * At conclusion of simulation, deallocate objects.
-          */
+      /*
+       * At conclusion of simulation, deallocate objects.
+       */
 
 #ifdef HAVE_HDF5
-         visit_data_writer.setNull();
+      visit_data_writer.setNull();
 #endif
 
-         time_integrator.setNull();
-         mblk_gridding_algorithm.setNull();
-         load_balancer.setNull();
-         box_generator.setNull();
-         error_detector.setNull();
-         mblk_hyp_level_integrator.setNull();
+      time_integrator.setNull();
+      mblk_gridding_algorithm.setNull();
+      load_balancer.setNull();
+      box_generator.setNull();
+      error_detector.setNull();
+      mblk_hyp_level_integrator.setNull();
 
-         if (linear_advection_model) {
-	    delete linear_advection_model;
-	 }
-
-         mblk_patch_hierarchy.setNull();
-         geom.setNull();
-
-         input_db.setNull();
-         main_db.setNull();
-
-
-
-	 tbox::SAMRAIManager::shutdown();
+      if (linear_advection_model) {
+         delete linear_advection_model;
       }
 
-      tbox::SAMRAIManager::finalize();
-      tbox::SAMRAI_MPI::finalize();
+      mblk_patch_hierarchy.setNull();
+      geom.setNull();
 
-      tbox::pout << "\nPASSED:  MblkLinAdv" << endl;
+      input_db.setNull();
+      main_db.setNull();
 
-      return 0;
+      tbox::SAMRAIManager::shutdown();
    }
 
-   void setupHierarchy(
-      tbox::Pointer<tbox::Database> main_input_db,
-      const tbox::Dimension& dim,
-      tbox::Pointer<hier::GridGeometry>& geometry,
-      tbox::Pointer<hier::PatchHierarchy>& mblk_hierarchy)
-   {
+   tbox::SAMRAIManager::finalize();
+   tbox::SAMRAI_MPI::finalize();
+
+   tbox::pout << "\nPASSED:  MblkLinAdv" << endl;
+
+   return 0;
+}
+
+void setupHierarchy(
+   tbox::Pointer<tbox::Database> main_input_db,
+   const tbox::Dimension& dim,
+   tbox::Pointer<hier::GridGeometry>& geometry,
+   tbox::Pointer<hier::PatchHierarchy>& mblk_hierarchy)
+{
 #ifdef DEBUG_CHECK_ASSERTIONS
-      TBOX_ASSERT(!main_input_db.isNull());
+   TBOX_ASSERT(!main_input_db.isNull());
 #endif
 
-      tbox::Pointer<tbox::Database> mult_db =
-         main_input_db->getDatabase("PatchHierarchy");
+   tbox::Pointer<tbox::Database> mult_db =
+      main_input_db->getDatabase("PatchHierarchy");
 
-      char geom_name[32];
+   char geom_name[32];
 
-      sprintf(geom_name, "BlockGeometry");
-      if (main_input_db->keyExists(geom_name)) {
-         geometry =
-            new hier::GridGeometry(
-               dim,
-               geom_name,
-               tbox::Pointer<hier::TransferOperatorRegistry>(
-                  new geom::SAMRAITransferOperatorRegistry(dim)),
-               main_input_db->getDatabase(geom_name));
-      } else {
-         TBOX_ERROR("main::setupHierarchy(): could not find entry `"
-            << geom_name << "' in input.");
-      }
-
-      mblk_hierarchy =
-         new hier::PatchHierarchy("PatchHierarchy",
-            geometry, mult_db, true);
-
+   sprintf(geom_name, "BlockGeometry");
+   if (main_input_db->keyExists(geom_name)) {
+      geometry =
+         new hier::GridGeometry(
+            dim,
+            geom_name,
+            tbox::Pointer<hier::TransferOperatorRegistry>(
+               new geom::SAMRAITransferOperatorRegistry(dim)),
+            main_input_db->getDatabase(geom_name));
+   } else {
+      TBOX_ERROR("main::setupHierarchy(): could not find entry `"
+         << geom_name << "' in input.");
    }
+
+   mblk_hierarchy =
+      new hier::PatchHierarchy("PatchHierarchy",
+         geometry, mult_db, true);
+
+}

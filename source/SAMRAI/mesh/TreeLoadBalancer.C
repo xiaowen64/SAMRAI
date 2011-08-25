@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Scalable load balancer using tree algorithm. 
+ * Description:   Scalable load balancer using tree algorithm.
  *
  ************************************************************************/
 
@@ -56,12 +56,12 @@
 namespace SAMRAI {
 namespace mesh {
 
-const int TreeLoadBalancer::TreeLoadBalancer_LOADTAG0     = 12120001;
-const int TreeLoadBalancer::TreeLoadBalancer_LOADTAG1     = 12120002;
-const int TreeLoadBalancer::TreeLoadBalancer_EDGETAG0     = 12120003;
-const int TreeLoadBalancer::TreeLoadBalancer_EDGETAG1     = 12120004;
-const int TreeLoadBalancer::TreeLoadBalancer_PREBALANCE0  = 12120005;
-const int TreeLoadBalancer::TreeLoadBalancer_PREBALANCE1  = 12120006;
+const int TreeLoadBalancer::TreeLoadBalancer_LOADTAG0 = 12120001;
+const int TreeLoadBalancer::TreeLoadBalancer_LOADTAG1 = 12120002;
+const int TreeLoadBalancer::TreeLoadBalancer_EDGETAG0 = 12120003;
+const int TreeLoadBalancer::TreeLoadBalancer_EDGETAG1 = 12120004;
+const int TreeLoadBalancer::TreeLoadBalancer_PREBALANCE0 = 12120005;
+const int TreeLoadBalancer::TreeLoadBalancer_PREBALANCE1 = 12120006;
 const int TreeLoadBalancer::TreeLoadBalancer_FIRSTDATALEN = 1000;
 
 const int TreeLoadBalancer::d_default_data_id = -1;
@@ -149,9 +149,9 @@ void TreeLoadBalancer::setWorkloadPatchDataIndex(
    if (datafact.isNull()) {
       TBOX_ERROR(
          d_object_name << " error: "
-         << "\n   data_id " << data_id << " passed to "
-         << "setWorkloadPatchDataIndex()"
-         <<
+                       << "\n   data_id " << data_id << " passed to "
+                       << "setWorkloadPatchDataIndex()"
+                       <<
          " does not refer to cell-centered double patch data. " << std::endl);
    }
 
@@ -202,9 +202,9 @@ void TreeLoadBalancer::loadBalanceMappedBoxLevel(
    NULL_USE(attractor_to_balance);
    NULL_USE(hierarchy);
    NULL_USE(level_number);
-   TBOX_ASSERT( anchor_to_balance.isInitialized() ==
-                balance_to_anchor.isInitialized() );
-   if ( anchor_to_balance.isInitialized() ) {
+   TBOX_ASSERT(anchor_to_balance.isInitialized() ==
+      balance_to_anchor.isInitialized());
+   if (anchor_to_balance.isInitialized()) {
       TBOX_ASSERT(anchor_to_balance.isTransposeOf(balance_to_anchor));
    }
    TBOX_DIM_ASSERT_CHECK_DIM_ARGS6(d_dim,
@@ -256,7 +256,7 @@ void TreeLoadBalancer::loadBalanceMappedBoxLevel(
          balance_mapped_box_level.getGridGeometry(),
          balance_mapped_box_level.getMPI());
 
-      if ( balance_to_anchor.isInitialized() ) {
+      if (balance_to_anchor.isInitialized()) {
          hier::NeighborhoodSet tmp_edges;
          anchor_to_balance.getNeighborhoodSets().removePeriodicNeighbors(
             tmp_edges);
@@ -454,29 +454,38 @@ void TreeLoadBalancer::loadBalanceMappedBoxLevel(
       t_get_map->stop();
 
       t_use_map->start();
-      if ( anchor_to_balance.isInitialized() ) {
+      if (anchor_to_balance.isInitialized()) {
          if (0) {
-            tbox::plog << "loadBalanceMappedBoxLevel: unbalanced:\n" << balance_mapped_box_level.format("--> ", 3)
-                       << "loadBalanceMappedBoxLevel: balanced:\n" << tmp_mapped_box_level.format("--> ", 3)
-                       << "loadBalanceMappedBoxLevel: unbalanced_to_balanced:\n" << balance_to_tmp.format("--> ", 3)
-                       << "loadBalanceMappedBoxLevel: balanced_to_unbalanced:\n" << tmp_to_balance.format("--> ", 3);
+            tbox::plog << "loadBalanceMappedBoxLevel: unbalanced:\n"
+                       << balance_mapped_box_level.format("--> ", 3)
+                       << "loadBalanceMappedBoxLevel: balanced:\n" << tmp_mapped_box_level.format(
+               "--> ",
+               3)
+            << "loadBalanceMappedBoxLevel: unbalanced_to_balanced:\n"
+            << balance_to_tmp.format("--> ", 3)
+            << "loadBalanceMappedBoxLevel: balanced_to_unbalanced:\n"
+            << tmp_to_balance.format("--> ", 3);
          }
          const hier::MappingConnectorAlgorithm mca;
          mca.modify(anchor_to_balance,
-                    balance_to_anchor,
-                    balance_to_tmp,
-                    tmp_to_balance,
-                    &balance_mapped_box_level,
-                    &tmp_mapped_box_level);
+            balance_to_anchor,
+            balance_to_tmp,
+            tmp_to_balance,
+            &balance_mapped_box_level,
+            &tmp_mapped_box_level);
          if (0) {
-            tbox::plog << "loadBalanceMappedBoxLevel: anchor:\n" << anchor_to_balance.getBase().format("--> ", 3)
-                       << "loadBalanceMappedBoxLevel: balanced:\n" << tmp_mapped_box_level.format("--> ", 3)
-                       << "loadBalanceMappedBoxLevel: balance_to_anchor:\n" << balance_to_anchor.format("--> ", 3)
-                       << "loadBalanceMappedBoxLevel: anchor_to_balance:\n" << anchor_to_balance.format("--> ", 3);
+            tbox::plog << "loadBalanceMappedBoxLevel: anchor:\n"
+                       << anchor_to_balance.getBase().format("--> ", 3)
+                       << "loadBalanceMappedBoxLevel: balanced:\n" << tmp_mapped_box_level.format(
+               "--> ",
+               3)
+            << "loadBalanceMappedBoxLevel: balance_to_anchor:\n"
+            << balance_to_anchor.format("--> ", 3)
+            << "loadBalanceMappedBoxLevel: anchor_to_balance:\n"
+            << anchor_to_balance.format("--> ", 3);
          }
-      }
-      else {
-         MappedBoxLevel::swap( balance_mapped_box_level, tmp_mapped_box_level );
+      } else {
+         MappedBoxLevel::swap(balance_mapped_box_level, tmp_mapped_box_level);
       }
       if (d_barrier_after) {
          t_barrier_after->start();
@@ -499,16 +508,15 @@ void TreeLoadBalancer::loadBalanceMappedBoxLevel(
          balance_mapped_box_level,
          tmp_mapped_box_level,
          unconstrained_to_constrained);
-      if ( anchor_to_balance.isInitialized() ) {
+      if (anchor_to_balance.isInitialized()) {
          const hier::MappingConnectorAlgorithm mca;
          mca.modify(anchor_to_balance,
-                    balance_to_anchor,
-                    unconstrained_to_constrained,
-                    &balance_mapped_box_level,
-                    &tmp_mapped_box_level);
-      }
-      else {
-         MappedBoxLevel::swap( balance_mapped_box_level, tmp_mapped_box_level );
+            balance_to_anchor,
+            unconstrained_to_constrained,
+            &balance_mapped_box_level,
+            &tmp_mapped_box_level);
+      } else {
+         MappedBoxLevel::swap(balance_mapped_box_level, tmp_mapped_box_level);
       }
       t_constrain_size->stop();
       if (d_print_steps) {
@@ -536,7 +544,7 @@ void TreeLoadBalancer::loadBalanceMappedBoxLevel(
       t_report_loads->stop();
    }
 
-   if (d_check_connectivity && anchor_to_balance.isInitialized() ) {
+   if (d_check_connectivity && anchor_to_balance.isInitialized()) {
       tbox::plog << "TreeLoadBalancer checking balance-anchor connectivity."
                  << std::endl;
       int errs = 0;
@@ -643,9 +651,9 @@ void TreeLoadBalancer::mapOversizedBoxes(
                const hier::Box new_box = *li;
 
                const hier::Box new_mapped_box(new_box,
-                                   next_available_index++,
-                                   d_rank,
-                                   (*ni).getBlockId());
+                                              next_available_index++,
+                                              d_rank,
+                                              (*ni).getBlockId());
 
                if (d_print_break_steps) {
                   tbox::plog << "  " << new_mapped_box
@@ -762,8 +770,8 @@ void TreeLoadBalancer::loadBalanceMappedBoxLevel_rootCycle(
       group_loads[g_id] = local_load;
       if (mpi.getSize() > 1) {
          mpi.AllReduce(&group_loads[0],
-                       static_cast<int>(group_loads.size()),
-                       MPI_SUM);
+            static_cast<int>(group_loads.size()),
+            MPI_SUM);
       }
       group_sum_load = group_loads[g_id];
       switch (cycle_number) {
@@ -1008,7 +1016,8 @@ void TreeLoadBalancer::loadBalanceMappedBoxLevel_rootCycle(
           * Semilocal edges are created by final owner
           * and sent back.
           */
-         if (mapped_box_in_transit.mapped_box.getLocalId() != mapped_box_in_transit.orig_mapped_box.getLocalId()) {
+         if (mapped_box_in_transit.mapped_box.getLocalId() !=
+             mapped_box_in_transit.orig_mapped_box.getLocalId()) {
             balanced_eto_unbalanced[mapped_box_in_transit.mapped_box.getId()].insert(
                mapped_box_in_transit.orig_mapped_box);
             unbalanced_eto_balanced[mapped_box_in_transit.orig_mapped_box.getId()].insert(
@@ -1063,15 +1072,15 @@ void TreeLoadBalancer::loadBalanceMappedBoxLevel_rootCycle(
             int(group_avg_load * child_load_data[cindex].num_procs + 0.5);
          if (d_print_steps) {
             TransitSet::const_iterator
-            ni = unassigned.begin();
+               ni = unassigned.begin();
             for (int ii = 0; ii < old_size; ++ii) {
                ++ni;
             }
             if (d_print_steps) {
                tbox::plog << "    Got " << unassigned.size() - old_size
-               << " boxes (" << child_load_data[cindex].load_imported
-               << " units) from child "
-               << peer_comm->getPeerRank() << ":";
+                          << " boxes (" << child_load_data[cindex].load_imported
+                          << " units) from child "
+                          << peer_comm->getPeerRank() << ":";
                for ( ; ni != unassigned.end(); ++ni) {
                   const MappedBoxInTransit& mapped_box_in_transit = *ni;
                   tbox::plog << "  " << mapped_box_in_transit;
@@ -1100,12 +1109,12 @@ void TreeLoadBalancer::loadBalanceMappedBoxLevel_rootCycle(
       tbox::plog << "Received children subtree data." << std::endl;
       for (int c = 0; c < num_children; ++c) {
          tbox::plog << "Child " << child_comms[c].getPeerRank()
-         << " subtree data: " << child_load_data[c].total_work
-         << "/" << child_load_data[c].ideal_work
-         << " for " << child_load_data[c].num_procs << " procs averaging "
-         << child_load_data[c].total_work / child_load_data[c].num_procs
-         << " after sending up " << child_load_data[c].load_imported
-         << std::endl;
+                    << " subtree data: " << child_load_data[c].total_work
+                    << "/" << child_load_data[c].ideal_work
+                    << " for " << child_load_data[c].num_procs << " procs averaging "
+                    << child_load_data[c].total_work / child_load_data[c].num_procs
+                    << " after sending up " << child_load_data[c].load_imported
+                    << std::endl;
       }
       tbox::plog << "Initial subtree data: " << my_load_data.total_work
                  << " / " << my_load_data.ideal_work
@@ -1209,7 +1218,7 @@ void TreeLoadBalancer::loadBalanceMappedBoxLevel_rootCycle(
 
       if (d_print_steps) {
          TransitSet::const_iterator
-         ni = unassigned.begin();
+            ni = unassigned.begin();
          for (int i = 0; i < old_size; ++i) {
             ++ni;
          }
@@ -1272,8 +1281,8 @@ void TreeLoadBalancer::loadBalanceMappedBoxLevel_rootCycle(
          int actual_transfer = 0;
          if (d_print_steps) {
             tbox::plog << "  Attempting to reassign " << ideal_transfer
-            << " of unassigned load to child "
-            << child_comms[c].getPeerRank() << "\n";
+                       << " of unassigned load to child "
+                       << child_comms[c].getPeerRank() << "\n";
          }
          if (ideal_transfer > 0) {
             remaining_num_procs -= recip_data.num_procs;
@@ -1288,11 +1297,11 @@ void TreeLoadBalancer::loadBalanceMappedBoxLevel_rootCycle(
 
          if (d_print_steps) {
             tbox::plog << "  Giving " << recip_data.for_export.size()
-            << " boxes (" << actual_transfer << " / " << ideal_transfer
-            << " units) to child " << c << ':'
-            << child_comms[c].getPeerRank() << " for "
-                                            << recip_data.num_procs
-                                            << " procs:";
+                       << " boxes (" << actual_transfer << " / " << ideal_transfer
+                       << " units) to child " << c << ':'
+                       << child_comms[c].getPeerRank() << " for "
+                       << recip_data.num_procs
+                       << " procs:";
             for (TransitSet::const_iterator
                  ni = recip_data.for_export.begin();
                  ni != recip_data.for_export.end(); ++ni) {
@@ -1329,9 +1338,10 @@ void TreeLoadBalancer::loadBalanceMappedBoxLevel_rootCycle(
         ni != unassigned.end(); /* incremented in loop */) {
       const MappedBoxInTransit& mapped_box_in_transit = *ni;
       balanced_mapped_box_level.addMappedBox(mapped_box_in_transit.mapped_box);
-      if ( ! mapped_box_in_transit.mapped_box.isIdEqual(mapped_box_in_transit.orig_mapped_box)) {
+      if (!mapped_box_in_transit.mapped_box.isIdEqual(mapped_box_in_transit.orig_mapped_box)) {
          // Create relationship for changed Box.
-         balanced_eto_unbalanced[mapped_box_in_transit.mapped_box.getId()].insert(mapped_box_in_transit.orig_mapped_box);
+         balanced_eto_unbalanced[mapped_box_in_transit.mapped_box.getId()].insert(
+            mapped_box_in_transit.orig_mapped_box);
          ++ni;
       } else {
          // Remove unchanged mapped_box_in_transit so packedgeMessages
@@ -1755,9 +1765,9 @@ void TreeLoadBalancer::unpackSubtreeLoadData(
       MappedBoxInTransit received_mapped_box_in_transit(d_dim);
       received_mapped_box_in_transit.getFromIntBuffer(received_data);
       MappedBoxInTransit renamed_mapped_box_in_transit(received_mapped_box_in_transit,
-                                 received_mapped_box_in_transit.getBox(),
-                                 d_rank,
-                                 next_available_index);
+                                                       received_mapped_box_in_transit.getBox(),
+                                                       d_rank,
+                                                       next_available_index);
       next_available_index += 2 + d_degree;
       receiving_bin.insert(renamed_mapped_box_in_transit);
       received_data += received_mapped_box_in_transit.commBufferSize();
@@ -1831,13 +1841,14 @@ void TreeLoadBalancer::packNeighborhoodSetMessages(
          // Pack mapped_box_in_transit into msg.
          if (d_print_edge_steps) {
             tbox::plog << "Pack edge to "
-            << (source_i < num_children ? "child " : "parent ")
-            << (source_i < num_children ? child_ranks[source_i] : parent_rank)
-            << ": " << mapped_box_in_transit
-            << std::endl;
+                       << (source_i < num_children ? "child " : "parent ")
+                       << (source_i < num_children ? child_ranks[source_i] : parent_rank)
+                       << ": " << mapped_box_in_transit
+                       << std::endl;
          }
          msg.insert(msg.end(), mapped_box_in_transit.commBufferSize(), 0);
-         mapped_box_in_transit.putToIntBuffer(&msg[msg.size() - mapped_box_in_transit.commBufferSize()]);
+         mapped_box_in_transit.putToIntBuffer(&msg[msg.size()
+                                                   - mapped_box_in_transit.commBufferSize()]);
       }
 
    }
@@ -1926,13 +1937,14 @@ void TreeLoadBalancer::unpackAndRouteNeighborhoodSets(
          // Pack mapped_box_in_transit into msg.
          if (d_print_edge_steps) {
             tbox::plog << "Pack edge to "
-            << (source_i < num_children ? "child " : "parent ")
-            << (source_i < num_children ? child_ranks[source_i] : parent_rank)
-            << ": " << mapped_box_in_transit
-            << std::endl;
+                       << (source_i < num_children ? "child " : "parent ")
+                       << (source_i < num_children ? child_ranks[source_i] : parent_rank)
+                       << ": " << mapped_box_in_transit
+                       << std::endl;
          }
          msg.insert(msg.end(), mapped_box_in_transit.commBufferSize(), 0);
-         mapped_box_in_transit.putToIntBuffer(&msg[msg.size() - mapped_box_in_transit.commBufferSize()]);
+         mapped_box_in_transit.putToIntBuffer(&msg[msg.size()
+                                                   - mapped_box_in_transit.commBufferSize()]);
       }
    }
    unbalanced_to_balanced.swapInitialize(
@@ -1953,9 +1965,9 @@ void TreeLoadBalancer::unpackAndRouteNeighborhoodSets(
 void TreeLoadBalancer::setSAMRAI_MPI(
    const tbox::SAMRAI_MPI& samrai_mpi)
 {
-   if ( samrai_mpi.getCommunicator() == tbox::SAMRAI_MPI::commNull ) {
+   if (samrai_mpi.getCommunicator() == tbox::SAMRAI_MPI::commNull) {
       TBOX_ERROR("TreeLoadBalancer::setMPICommunicator error: Given\n"
-                 <<"communicator is invalid.");
+         << "communicator is invalid.");
    }
 
    d_mpi_dup.freeCommunicator();
@@ -2469,7 +2481,8 @@ bool TreeLoadBalancer::shiftLoadsByBreaking(
                *bi,
                d_rank,
                next_available_index);
-            give_mapped_box_in_transit.load = (int)computeLoad(give_mapped_box_in_transit.orig_mapped_box,
+            give_mapped_box_in_transit.load = (int)computeLoad(
+                  give_mapped_box_in_transit.orig_mapped_box,
                   give_mapped_box_in_transit.getBox());
             next_available_index += 2 + d_degree;
             trial_dst.insert(give_mapped_box_in_transit);
@@ -2488,7 +2501,8 @@ bool TreeLoadBalancer::shiftLoadsByBreaking(
                *bi,
                d_rank,
                next_available_index);
-            keep_mapped_box_in_transit.load = (int)computeLoad(keep_mapped_box_in_transit.orig_mapped_box,
+            keep_mapped_box_in_transit.load = (int)computeLoad(
+                  keep_mapped_box_in_transit.orig_mapped_box,
                   keep_mapped_box_in_transit.getBox());
             next_available_index += 2 + d_degree;
             trial_src.insert(keep_mapped_box_in_transit);
@@ -3503,7 +3517,7 @@ double TreeLoadBalancer::computeSurfacePenalty(
         ++bi) {
       surface_area += computeBoxSurfaceArea(*bi);
    }
-   double surface_penalty = pow(surface_area, (double)(d_dim) / (d_dim.getValue() - 1)));
+   double surface_penalty = pow(surface_area, (double)(d_dim) / (d_dim.getValue() - 1));
    return surface_penalty;
 
 #elif TreeLoadBalancer_SurfacePenaltyType == 2
@@ -3524,7 +3538,7 @@ double TreeLoadBalancer::computeSurfacePenalty(
       total_volume += boxvol;
    }
    double best_surface = 2 * d_dim * pow(total_volume,
-                                         (double)(d_dim.getValue() - 1)) / d_dim);
+                                         (double)(d_dim.getValue() - 1) / d_dim);
    double surface_penalty = surface_area / best_surface - 1.0;
    return surface_penalty;
 
@@ -3537,7 +3551,7 @@ double TreeLoadBalancer::computeSurfacePenalty(
       int boxvol = bi->size();
       double surface_area = computeBoxSurfaceArea(*bi);
       double best_surface = 2 * d_dim * pow((double)boxvol,
-                                            (double)(d_dim.getValue() - 1)) / d_dim);
+                                            (double)(d_dim.getValue() - 1) / d_dim);
       surface_penalty += surface_area / best_surface - 1.0;
       total_volume += boxvol;
    }
@@ -3547,7 +3561,7 @@ double TreeLoadBalancer::computeSurfacePenalty(
       int boxvol = bi->size();
       double surface_area = computeBoxSurfaceArea(*bi);
       double best_surface = 2 * d_dim * pow((double)boxvol,
-                                            (double)(d_dim.getValue() - 1)) / d_dim);
+                                            (double)(d_dim.getValue() - 1) / d_dim);
       surface_penalty += surface_area / best_surface - 1.0;
       total_volume += boxvol;
    }
@@ -3593,7 +3607,7 @@ double TreeLoadBalancer::computeSurfacePenalty(
    for (TransitSet::const_iterator bi = b.begin(); bi != b.end(); ++bi) {
       surface_area += computeBoxSurfaceArea(bi->mapped_box);
    }
-   double surface_penalty = pow(surface_area, (double)(d_dim) / (d_dim.getValue() - 1)));
+   double surface_penalty = pow(surface_area, (double)(d_dim) / (d_dim.getValue() - 1));
    return surface_penalty;
 
 #elif TreeLoadBalancer_SurfacePenaltyType == 2
@@ -3610,7 +3624,7 @@ double TreeLoadBalancer::computeSurfacePenalty(
       total_volume += boxvol;
    }
    double best_surface = 2 * d_dim * pow(total_volume,
-                                         (double)(d_dim.getValue() - 1)) / d_dim);
+                                         (double)(d_dim.getValue() - 1) / d_dim);
    double surface_penalty = surface_area / best_surface - 1.0;
    return surface_penalty;
 
@@ -3621,7 +3635,7 @@ double TreeLoadBalancer::computeSurfacePenalty(
       int boxvol = bi->mapped_box.size();
       double surface_area = computeBoxSurfaceArea(bi->mapped_box);
       double best_surface = 2 * d_dim * pow((double)boxvol,
-                                            (double)(d_dim.getValue() - 1)) / d_dim);
+                                            (double)(d_dim.getValue() - 1) / d_dim);
       surface_penalty += surface_area / best_surface - 1.0;
       total_volume += boxvol;
    }
@@ -3629,7 +3643,7 @@ double TreeLoadBalancer::computeSurfacePenalty(
       int boxvol = bi->mapped_box.size();
       double surface_area = computeBoxSurfaceArea(bi->mapped_box);
       double best_surface = 2 * d_dim * pow((double)boxvol,
-                                            (double)(d_dim.getValue() - 1)) / d_dim);
+                                            (double)(d_dim.getValue() - 1) / d_dim);
       surface_penalty += surface_area / best_surface - 1.0;
       total_volume += boxvol;
    }
@@ -3664,17 +3678,17 @@ double TreeLoadBalancer::computeSurfacePenalty(
 {
 #if TreeLoadBalancer_SurfacePenaltyType == 1
    double surface_area = computeBoxSurfaceArea(a);
-   double surface_penalty = pow(surface_area, (double)(d_dim) / (d_dim.getValue() - 1)));
+   double surface_penalty = pow(surface_area, (double)(d_dim) / (d_dim.getValue() - 1));
    return surface_penalty;
 
 #elif TreeLoadBalancer_SurfacePenaltyType == 2
-   if (d_dim == tbox::Dimension(1)) ) {
+   if (d_dim == tbox::Dimension(1)) {
          return 0.0;
       }
       double surface_area = computeBoxSurfaceArea(a);
    int total_volume = a.size();
    double best_surface = 2 * d_dim * pow(total_volume,
-                                         (double)(d_dim.getValue() - 1)) / d_dim);
+                                         (double)(d_dim.getValue() - 1) / d_dim);
    double surface_penalty = surface_area / best_surface - 1.0;
    return surface_penalty;
 
@@ -3682,7 +3696,7 @@ double TreeLoadBalancer::computeSurfacePenalty(
    int boxvol = a.size();
    double surface_area = computeBoxSurfaceArea(a);
    double best_surface = 2 * d_dim * pow((double)boxvol,
-                                         (double)(d_dim.getValue() - 1)) / d_dim);
+                                         (double)(d_dim.getValue() - 1) / d_dim);
    double surface_penalty = surface_area / best_surface - 1.0;
    double total_volume = boxvol;
    double relative_importance = d_global_avg_load / total_volume;
@@ -3920,7 +3934,7 @@ void TreeLoadBalancer::burstBox(
 
    boxes.clear();
    hier::Box cutme = bursty;
-   while (! cutme.isSpatiallyEqual(solid)) {
+   while (!cutme.isSpatiallyEqual(solid)) {
 
       int cut_dir = 999999;
       bool cut_above_solid = false; // Whether to slice off the piece above solid (vs below).
@@ -4072,7 +4086,7 @@ void TreeLoadBalancer::printClassData(
    os << "d_workload_data_id..." << std::endl;
    for (ln = 0; ln < d_workload_data_id.getSize(); ln++) {
       os << "    d_workload_data_id[" << ln << "] = "
-      << d_workload_data_id[ln] << std::endl;
+         << d_workload_data_id[ln] << std::endl;
    }
 }
 
@@ -4763,7 +4777,7 @@ void TreeLoadBalancer::prebalanceMappedBoxLevel(
 {
    hier::OverlapConnectorAlgorithm oca;
 
-   if ( balance_to_anchor.isInitialized() ) {
+   if (balance_to_anchor.isInitialized()) {
       TBOX_ASSERT(anchor_to_balance.checkTransposeCorrectness(balance_to_anchor) == 0);
       TBOX_ASSERT(balance_to_anchor.checkTransposeCorrectness(anchor_to_balance) == 0);
    }
@@ -4899,7 +4913,7 @@ void TreeLoadBalancer::prebalanceMappedBoxLevel(
    if (is_sending_rank) {
       const hier::BoxSet& sending_mapped_boxes =
          balance_mapped_box_level.getMappedBoxes();
-      const int num_sending_boxes = 
+      const int num_sending_boxes =
          static_cast<int>(sending_mapped_boxes.size());
 
       int* buffer = new int[buf_size * num_sending_boxes];
@@ -4944,7 +4958,7 @@ void TreeLoadBalancer::prebalanceMappedBoxLevel(
 
                   hier::BoxSet::iterator tmp_iter =
                      tmp_mapped_box_level.addBox(mapped_box,
-                                                 mapped_box.getBlockId());
+                        mapped_box.getBlockId());
 
                   hier::BoxId tmp_mapped_box_id = (*tmp_iter).getId();
 
@@ -5014,7 +5028,7 @@ void TreeLoadBalancer::prebalanceMappedBoxLevel(
                                   hier::IntVector::getZero(d_dim),
                                   tmp_to_balance_edges);
 
-   if ( anchor_to_balance.isInitialized() ) {
+   if (anchor_to_balance.isInitialized()) {
       /*
        * This modify operation copies tmp_mapped_box_level to
        * balance_mapped_box_level, and changes anchor_to_balance and
@@ -5023,16 +5037,15 @@ void TreeLoadBalancer::prebalanceMappedBoxLevel(
        */
       const hier::MappingConnectorAlgorithm mca;
       mca.modify(anchor_to_balance,
-                 balance_to_anchor,
-                 balance_to_tmp,
-                 tmp_to_balance,
-                 &balance_mapped_box_level,
-                 &tmp_mapped_box_level);
+         balance_to_anchor,
+         balance_to_tmp,
+         tmp_to_balance,
+         &balance_mapped_box_level,
+         &tmp_mapped_box_level);
 
       TBOX_ASSERT(anchor_to_balance.checkTransposeCorrectness(balance_to_anchor) == 0);
       TBOX_ASSERT(balance_to_anchor.checkTransposeCorrectness(anchor_to_balance) == 0);
-   }
-   else {
+   } else {
       hier::MappedBoxLevel::swap(balance_mapped_box_level, tmp_mapped_box_level);
    }
 
@@ -5054,14 +5067,14 @@ std::ostream& operator << (
    const MappedBoxInTransit& r)
 {
    co << r.mapped_box
-      << r.mapped_box.numberCells() << '|'
-      << r.mapped_box.numberCells().getProduct();
+   << r.mapped_box.numberCells() << '|'
+   << r.mapped_box.numberCells().getProduct();
    for (int i = static_cast<int>(r.proc_hist.size()) - 1; i >= 0; --i) {
       co << '-' << r.proc_hist[i];
    }
    co << '-' << r.orig_mapped_box
-      << r.mapped_box.numberCells() << '|'
-      << r.mapped_box.numberCells().getProduct();
+   << r.mapped_box.numberCells() << '|'
+   << r.mapped_box.numberCells().getProduct();
    return co;
 }
 

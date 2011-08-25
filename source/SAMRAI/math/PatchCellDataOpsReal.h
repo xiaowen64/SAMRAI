@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Templated operations for real cell-centered patch data. 
+ * Description:   Templated operations for real cell-centered patch data.
  *
  ************************************************************************/
 
@@ -62,7 +62,8 @@ public:
     */
    PatchCellDataOpsReal();
 
-   virtual ~PatchCellDataOpsReal<TYPE>() {}
+   virtual ~PatchCellDataOpsReal<TYPE>() {
+   }
 
    /**
     * Copy dst data to src data over given box.

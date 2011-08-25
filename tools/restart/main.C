@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Main program restart-redistribute tool. 
+ * Description:   Main program restart-redistribute tool.
  *
  ************************************************************************/
 
@@ -45,7 +45,8 @@ using namespace SAMRAI;
 #include <windows.h>
 #include <stdlib.h>
 
-struct dirent { char d_name[1];
+struct dirent {
+   char d_name[1];
 };
 
 int scandir(
@@ -98,7 +99,7 @@ int scandir(
          if (nDir == NDir) {
             struct dirent** tempDir =
                (struct dirent **)calloc(sizeof(struct dirent *), NDir + 33);
-            if (NDir) memcpy(tempDir, dir, sizeof(struct dirent *)* NDir);
+            if (NDir) memcpy(tempDir, dir, sizeof(struct dirent *) * NDir);
             if (dir) free(dir);
             dir = tempDir;
             NDir += 32;
@@ -151,9 +152,9 @@ int main(
 
    if ((argc != 5)) {
       tbox::pout << "USAGE:  " << argv[0] << " input-dir "
-                                          <<
+                 <<
       "output-dir restore-number num-output-files\n"
-                                          << endl;
+                 << endl;
       exit(-1);
       return -1;
    } else {

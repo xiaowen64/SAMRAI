@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Timing wrapper for various routines. 
+ * Description:   Timing wrapper for various routines.
  *
  ************************************************************************/
 
@@ -89,8 +89,10 @@ SAMRAI_INLINE_KEYWORD bool Timer::isActive() const
 {
 #ifdef ENABLE_SAMRAI_TIMERS
    return d_is_active;
+
 #else
    return false;
+
 #endif // ENABLE_SAMRAI_TIMERS
 }
 
@@ -98,8 +100,10 @@ SAMRAI_INLINE_KEYWORD bool Timer::isRunning() const
 {
 #ifdef ENABLE_SAMRAI_TIMERS
    return d_is_running;
+
 #else
    return false;
+
 #endif // ENABLE_SAMRAI_TIMERS
 }
 
@@ -107,8 +111,10 @@ SAMRAI_INLINE_KEYWORD double Timer::getTotalUserTime() const
 {
 #ifdef ENABLE_SAMRAI_TIMERS
    return d_user_total / Clock::getClockCycle();
+
 #else
    return 0.0;
+
 #endif // ENABLE_SAMRAI_TIMERS
 }
 
@@ -116,8 +122,10 @@ SAMRAI_INLINE_KEYWORD double Timer::getTotalSystemTime() const
 {
 #ifdef ENABLE_SAMRAI_TIMERS
    return d_system_total / Clock::getClockCycle();
+
 #else
    return 0.0;
+
 #endif // ENABLE_SAMRAI_TIMERS
 }
 
@@ -125,8 +133,10 @@ SAMRAI_INLINE_KEYWORD double Timer::getTotalWallclockTime() const
 {
 #ifdef ENABLE_SAMRAI_TIMERS
    return d_wallclock_total;
+
 #else
    return 0.0;
+
 #endif // ENABLE_SAMRAI_TIMERS
 }
 
@@ -134,8 +144,10 @@ SAMRAI_INLINE_KEYWORD double Timer::getMaxWallclockTime() const
 {
 #ifdef ENABLE_SAMRAI_TIMERS
    return d_max_wallclock;
+
 #else
    return 0.0;
+
 #endif // ENABLE_SAMRAI_TIMERS
 }
 
@@ -143,8 +155,10 @@ SAMRAI_INLINE_KEYWORD double Timer::getExclusiveUserTime() const
 {
 #ifdef ENABLE_SAMRAI_TIMERS
    return d_user_exclusive / Clock::getClockCycle();
+
 #else
    return 0.0;
+
 #endif // ENABLE_SAMRAI_TIMERS
 }
 
@@ -152,8 +166,10 @@ SAMRAI_INLINE_KEYWORD double Timer::getExclusiveSystemTime() const
 {
 #ifdef ENABLE_SAMRAI_TIMERS
    return d_system_exclusive / Clock::getClockCycle();
+
 #else
    return 0.0;
+
 #endif // ENABLE_SAMRAI_TIMERS
 }
 
@@ -161,8 +177,10 @@ SAMRAI_INLINE_KEYWORD double Timer::getExclusiveWallclockTime() const
 {
 #ifdef ENABLE_SAMRAI_TIMERS
    return d_wallclock_exclusive;
+
 #else
    return 0.0;
+
 #endif // ENABLE_SAMRAI_TIMERS
 }
 
@@ -196,8 +214,10 @@ SAMRAI_INLINE_KEYWORD int Timer::getNumberAccesses() const
 {
 #ifdef ENABLE_SAMRAI_TIMERS
    return d_accesses;
+
 #else
    return 0;
+
 #endif // ENABLE_SAMRAI_TIMERS
 }
 

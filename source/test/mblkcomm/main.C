@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Main program for patch data communication tests. 
+ * Description:   Main program for patch data communication tests.
  *
  ************************************************************************/
 
@@ -188,8 +188,8 @@ int main(
 
       if (argc != 2) {
          TBOX_ERROR("USAGE:  " << argv[0] << " <input file> \n"
-                                          << "  options:\n"
-                                          << "  none at this time" << endl);
+                               << "  options:\n"
+                               << "  none at this time" << endl);
       } else {
          input_filename = argv[1];
       }
@@ -249,7 +249,7 @@ int main(
       }
 
 #if 1
-      if(0) {
+      if (0) {
          /*
           * For some reason, static members of GriddingAlgorithm* classes
           * don't get created without this no-op block.  BTNG.
@@ -261,7 +261,7 @@ int main(
                tbox::Pointer<tbox::Database>(),
                tbox::Pointer<mesh::TagAndInitializeStrategy>(),
                tbox::Pointer<mesh::BoxGeneratorStrategy>(),
-               tbox::Pointer<mesh::LoadBalanceStrategy>() ));
+               tbox::Pointer<mesh::LoadBalanceStrategy>()));
       }
 #endif
       /*

@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   AMR hierarchy generation and regridding routines. 
+ * Description:   AMR hierarchy generation and regridding routines.
  *
  ************************************************************************/
 
@@ -46,9 +46,8 @@ GriddingAlgorithm::setEfficiencyTolerance(
    const int level_number)
 {
    TBOX_ASSERT((level_number >= 0) && (level_number < d_hierarchy->getMaxNumberOfLevels()));
-   TBOX_ASSERT( (efficiency_tolerance >= 0) && (efficiency_tolerance <= 1.0) );
+   TBOX_ASSERT((efficiency_tolerance >= 0) && (efficiency_tolerance <= 1.0));
    d_efficiency_tolerance[level_number] = efficiency_tolerance;
-   return;
 }
 
 SAMRAI_INLINE_KEYWORD
@@ -86,9 +85,8 @@ GriddingAlgorithm::setCombineEfficiency(
    const int level_number)
 {
    TBOX_ASSERT((level_number >= 0) && (level_number < d_hierarchy->getMaxNumberOfLevels()));
-   TBOX_ASSERT( (combine_efficiency >= 0) && (combine_efficiency <= 1.0) );
+   TBOX_ASSERT((combine_efficiency >= 0) && (combine_efficiency <= 1.0));
    d_combine_efficiency[level_number] = combine_efficiency;
-   return;
 }
 
 }

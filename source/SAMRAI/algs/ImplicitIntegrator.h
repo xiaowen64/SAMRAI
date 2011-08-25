@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Implicit time integration manager class. 
+ * Description:   Implicit time integration manager class.
  *
  ************************************************************************/
 
@@ -88,8 +88,8 @@ public:
    ImplicitIntegrator(
       const std::string& object_name,
       tbox::Pointer<tbox::Database> input_db,
-      ImplicitEquationStrategy* implicit_equations,
-      solv::NonlinearSolverStrategy* nonlinear_solver,
+      ImplicitEquationStrategy * implicit_equations,
+      solv::NonlinearSolverStrategy * nonlinear_solver,
       const tbox::Pointer<hier::PatchHierarchy> hierarchy);
 
    /**
@@ -271,8 +271,8 @@ private:
     * hierarchy.  The strategies provide nonlinear equation and solver
     * routines for treating the nonlinear problem on the hierarchy.
     */
-   ImplicitEquationStrategy* d_implicit_equations;
-   solv::NonlinearSolverStrategy* d_nonlinear_solver;
+   ImplicitEquationStrategy * d_implicit_equations;
+   solv::NonlinearSolverStrategy * d_nonlinear_solver;
    tbox::Pointer<hier::PatchHierarchy> d_patch_hierarchy;
 
    int d_finest_level;

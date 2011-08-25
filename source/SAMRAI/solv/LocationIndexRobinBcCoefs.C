@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Robin boundary condition support on cartesian grids. 
+ * Description:   Robin boundary condition support on cartesian grids.
  *
  ************************************************************************/
 #ifndef included_solv_LocationIndexRobinBcCoefs_C
@@ -90,8 +90,8 @@ void LocationIndexRobinBcCoefs::getFromInput(
                if (specs.size() > 3) d_g_map[i] = atof(specs[3].c_str());
             } else {
                TBOX_ERROR(d_object_name << ": Bad boundary specifier\n"
-                  << "'" << specs[0] << "'.  Use either 'value'\n"
-                                     << "'slope' or 'coefficients'.\n");
+                                        << "'" << specs[0] << "'.  Use either 'value'\n"
+                                        << "'slope' or 'coefficients'.\n");
             }
          }
       }

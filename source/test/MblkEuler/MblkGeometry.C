@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   set geometry for multiblock domain 
+ * Description:   set geometry for multiblock domain
  *
  ************************************************************************/
 
@@ -345,8 +345,8 @@ void MblkGeometry::getFromInput(
    if (!found) {
       TBOX_ERROR(
          d_object_name << ": Could not identify problem.\n"
-         << d_geom_problem << " is not a valid input."
-         << std::endl);
+                       << d_geom_problem << " is not a valid input."
+                       << std::endl);
    }
 
    // ------------------------------
@@ -385,8 +385,8 @@ void MblkGeometry::getFromInput(
          } else {
             TBOX_ERROR(
                d_object_name << ": input entry `"
-               << block_name << "' does not exist."
-               << std::endl);
+                             << block_name << "' does not exist."
+                             << std::endl);
          }
       }
    }
@@ -954,9 +954,9 @@ void MblkGeometry::buildSShellGridOnPatch(
       if (!found) {
          TBOX_ERROR(
             d_object_name << ": "
-            << "spherical shell nodal positions for "
-            << d_sshell_type
-            << " not found" << std::endl);
+                          << "spherical shell nodal positions for "
+                          << d_sshell_type
+                          << " not found" << std::endl);
       }
 
    }

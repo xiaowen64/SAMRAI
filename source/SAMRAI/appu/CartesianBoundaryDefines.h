@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Defines for boundary condition integer constants 
+ * Description:   Defines for boundary condition integer constants
  *
  ************************************************************************/
 
@@ -18,18 +18,18 @@
 //@{
 //! @name Definitions for boundary types in 1d, 2d, and 3d:
 namespace Bdry {
-   enum Type {
-      UNDEFINED = -1,
+enum Type {
+   UNDEFINED = -1,
 
-      FACE3D = 1,
-      EDGE3D = 2,
-      NODE3D = 3,
+   FACE3D = 1,
+   EDGE3D = 2,
+   NODE3D = 3,
 
-      EDGE2D = 1,
-      NODE2D = 2,
+   EDGE2D = 1,
+   NODE2D = 2,
 
-      NODE1D = 1
-   };
+   NODE1D = 1
+};
 }
 //@}
 
@@ -61,14 +61,14 @@ const int NUM_3D_NODES = 8;
 //@{
 //! @name Definitions for Face, Edge, and Node boundary locations (see source code for more information):
 namespace BdryLoc {
-  enum Type {
-     XLO = 0,
-     XHI = 1,
-     YLO = 2,
-     YHI = 3,
-     ZLO = 4,
-     ZHI = 5
-  };
+enum Type {
+   XLO = 0,
+   XHI = 1,
+   YLO = 2,
+   YHI = 3,
+   ZLO = 4,
+   ZHI = 5
+};
 }
 //@}
 
@@ -79,12 +79,12 @@ namespace BdryLoc {
 //@{
 //! @name Definitions for Node boundary locations in 2d:
 namespace NodeBdyLoc2D {
-   enum Type {
-      XLO_YLO = 0,
-      XHI_YLO = 1,
-      XLO_YHI = 2,
-      XHI_YHI = 3
-   };
+enum Type {
+   XLO_YLO = 0,
+   XHI_YLO = 1,
+   XLO_YHI = 2,
+   XHI_YHI = 3
+};
 }
 //@}
 
@@ -95,20 +95,20 @@ namespace NodeBdyLoc2D {
 //@{
 //! @name Definitions for Edge boundary locations in 3d:
 namespace EdgeBdyLoc3D {
-   enum Type {
-      XLO_YLO = 0,
-      XHI_YLO = 1,
-      XLO_YHI = 2,
-      XHI_YHI = 3,
-      XLO_ZLO = 4,
-      XHI_ZLO = 5,
-      XLO_ZHI = 6,
-      XHI_ZHI = 7,
-      YLO_ZLO = 8,
-      YHI_ZLO = 9,
-      YLO_ZHI = 10,
-      YHI_ZHI = 11
-   };
+enum Type {
+   XLO_YLO = 0,
+   XHI_YLO = 1,
+   XLO_YHI = 2,
+   XHI_YHI = 3,
+   XLO_ZLO = 4,
+   XHI_ZLO = 5,
+   XLO_ZHI = 6,
+   XHI_ZHI = 7,
+   YLO_ZLO = 8,
+   YHI_ZLO = 9,
+   YLO_ZHI = 10,
+   YHI_ZHI = 11
+};
 }
 //@}
 
@@ -119,16 +119,16 @@ namespace EdgeBdyLoc3D {
 //@{
 //! @name Definitions for Node boundary locations in 3d:
 namespace NodeBdyLoc3D {
-   enum Type {
-      XLO_YLO_ZLO = 0,
-      XHI_YLO_ZLO = 1,
-      XLO_YHI_ZLO = 2,
-      XHI_YHI_ZLO = 3,
-      XLO_YLO_ZHI = 4,
-      XHI_YLO_ZHI = 5,
-      XLO_YHI_ZHI = 6,
-      XHI_YHI_ZHI = 7
-   };
+enum Type {
+   XLO_YLO_ZLO = 0,
+   XHI_YLO_ZLO = 1,
+   XLO_YHI_ZLO = 2,
+   XHI_YHI_ZLO = 3,
+   XLO_YLO_ZHI = 4,
+   XHI_YLO_ZHI = 5,
+   XLO_YHI_ZHI = 6,
+   XHI_YHI_ZHI = 7
+};
 }
 //@}
 
@@ -139,7 +139,7 @@ namespace NodeBdyLoc3D {
  * - Node boundary conditions in 1d, or
  * - Edge boundary conditions in 2d, or
  * - Face boundary conditions in 3d.
-
+ *
  * Note that [X, Y, Z]FLOW, [X, Y, Z]REFLECT, [X, Y, Z]DIRICHLET, and
  * [X, Y, Z]NEUMANN are used only for:
  * - Node boundary conditions in 2d (X and Y cases only), or
@@ -149,24 +149,24 @@ namespace NodeBdyLoc3D {
 //@{
 //! @name Definitions for Face, Edge, and Node boundary conditions (see source code for more information):
 namespace BdryCond {
-   enum Type {
-      FLOW      = 90,
-      REFLECT   = 91,
-      DIRICHLET = 92,
-      NEUMANN   = 93,
-      XFLOW      = 900,
-      YFLOW      = 901,
-      ZFLOW      = 902,
-      XREFLECT   = 910,
-      YREFLECT   = 911,
-      ZREFLECT   = 912,
-      XDIRICHLET = 920,
-      YDIRICHLET = 921,
-      ZDIRICHLET = 922,
-      XNEUMANN   = 930,
-      YNEUMANN   = 931,
-      ZNEUMANN   = 932
-   };
+enum Type {
+   FLOW = 90,
+   REFLECT = 91,
+   DIRICHLET = 92,
+   NEUMANN = 93,
+   XFLOW = 900,
+   YFLOW = 901,
+   ZFLOW = 902,
+   XREFLECT = 910,
+   YREFLECT = 911,
+   ZREFLECT = 912,
+   XDIRICHLET = 920,
+   YDIRICHLET = 921,
+   ZDIRICHLET = 922,
+   XNEUMANN = 930,
+   YNEUMANN = 931,
+   ZNEUMANN = 932
+};
 }
 //@}
 

@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Describes boundaries for a patch 
+ * Description:   Describes boundaries for a patch
  *
  ************************************************************************/
 
@@ -34,66 +34,75 @@ namespace hier {
  * @brief Class PatchBoundaries is a container class for storing
  * BoundaryBox objects for a single patch.
  *
- * @see hier::BoundaryBox 
+ * @see hier::BoundaryBox
  */
 
 class PatchBoundaries
 {
 public:
-
    /*!
     * @brief Explicit constructor requires dimension argument.
     *
     * @param[in] dim
     */
-   explicit PatchBoundaries(const tbox::Dimension& dim); 
+   explicit PatchBoundaries(
+      const tbox::Dimension& dim);
 
    /*!
     * @brief Copy constructor.
     *
     * @param[in] r  Patchboundaries object to be copied in constructor.
     */
-   PatchBoundaries(const PatchBoundaries& r);
+   PatchBoundaries(
+      const PatchBoundaries& r);
 
    /*!
     * @brief Assignment operator.
     *
     * @param[in] r  Patchboundaries object to be copied in assignment.
     */
-   const PatchBoundaries& operator = (const PatchBoundaries& r);
+   const PatchBoundaries&
+   operator = (
+      const PatchBoundaries& r);
 
    /*!
     * @brief Array access operator.
     *
     * @param[in] i  Array index.
     */
-   tbox::Array<hier::BoundaryBox>& operator [] (unsigned int i);
+   tbox::Array<hier::BoundaryBox>&
+   operator [] (
+      unsigned int i);
 
    /*!
     * @brief Const Array access operator.
     *
     * @param[in] i  Array index.
     */
-   const tbox::Array<hier::BoundaryBox>& operator [] (unsigned int i) const;
+   const tbox::Array<hier::BoundaryBox>&
+   operator [] (
+      unsigned int i) const;
 
    /*!
     * @brief Get copy of the internal arrays.
     *
     * @return  Copy of the internal arrays.
     */
-   tbox::Array<tbox::Array<hier::BoundaryBox> > getArrays();
+   tbox::Array<tbox::Array<hier::BoundaryBox> >
+   getArrays();
 
    /*!
     * @brief Get const copy of the internal arrays.
     *
     * @return  Const copy of the internal arrays.
     */
-   const tbox::Array<tbox::Array<hier::BoundaryBox> > getArrays() const;
+   const tbox::Array<tbox::Array<hier::BoundaryBox> >
+   getArrays() const;
 
    /*!
     * @brief friend declaration
     */
-   friend class ::std::map<int, SAMRAI::hier::PatchBoundaries>;
+   friend class::std::map<int, SAMRAI::hier::PatchBoundaries>;
 
 private:
    /*!
@@ -105,7 +114,7 @@ private:
    PatchBoundaries();
 
    /*!
-    * @brief Dimension of the object. 
+    * @brief Dimension of the object.
     */
    const tbox::Dimension d_dim;
 

@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Box representing a portion of the AMR index space 
+ * Description:   Box representing a portion of the AMR index space
  *
  ************************************************************************/
 
@@ -23,12 +23,12 @@ namespace hier {
  * Objects of this type are held by a PatchGeometry object.
  * The BoundaryBox consists of a Box, a boundary type (codimension), and a
  * location index.  The Box is one cell wide in at least one direction and is
- * located just outside of a patch boundary.  For example, a bondary box 
+ * located just outside of a patch boundary.  For example, a bondary box
  * along a patch face is one cell wide in the coordinate direction normal
  * to the patch face.  The boundary type identifies the type of patch bounadry:
  * face, edge, or corner (node).  The location index specifies the location
- * of the boundary box in relation to the patch boundary.  
- * See the getBoundaryType() and getLocationIndex() methods for more 
+ * of the boundary box in relation to the patch boundary.
+ * See the getBoundaryType() and getLocationIndex() methods for more
  * information.
  *
  * @see hier::Box
@@ -59,7 +59,7 @@ public:
     *
     * @param[in] box
     * @param[in] bdry_type
-    * @param[in] location_index  
+    * @param[in] location_index
     */
    explicit BoundaryBox(
       const Box& box,
@@ -120,7 +120,7 @@ public:
     *
     * The location index is an integer which indicates the location of the
     * the boundary box in relation to the location of the associated patch.
-    * The conventions for the location index depend on the dimension of 
+    * The conventions for the location index depend on the dimension of
     * the problem and the boundary type (codimentsion) of the BoundaryBox.
     *
     * \verbatim
@@ -223,10 +223,10 @@ public:
     * @brief Enumerated type BoundaryOrientation is used to indicate where a
     * boundary box is located relative to a patch in a particular coordinate
     * direction.  MIDDLE means a boundary box is neither on the upper or lower
-    * side of a patch in the given coordinate direction.  For example, an edge 
+    * side of a patch in the given coordinate direction.  For example, an edge
     * boundary box on the right side of a patch in 2d is neither on the upper
-    * or lower side of the patch in the J coordinate direction, so its 
-    * BoundaryOrientation value would be MIDDLE.  The same boundary box 
+    * or lower side of the patch in the J coordinate direction, so its
+    * BoundaryOrientation value would be MIDDLE.  The same boundary box
     * would be UPPER in the I coordinate direction.
     */
    enum BoundaryOrientation {

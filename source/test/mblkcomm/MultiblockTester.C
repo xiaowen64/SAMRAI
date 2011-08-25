@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Manager class for patch data communication tests. 
+ * Description:   Manager class for patch data communication tests.
  *
  ************************************************************************/
 
@@ -346,10 +346,10 @@ void MultiblockTester::createCoarsenSchedule(
  *                                             this);
  *    } else {
  *       TBOX_ERROR("The following must be replaced with the DLBG version.");
- #if 0
+ *****#if 0
  *    d_coarsen_schedule[level_number] =
  *       d_coarsen_algorithm->createSchedule(coarser_level, level, this);
- #endif
+ *****#endif
  *    }
  *
  * }
@@ -523,7 +523,6 @@ void MultiblockTester::initializeLevelData(
       }
    }
 
-
 }
 
 void MultiblockTester::resetHierarchyConfiguration(
@@ -606,7 +605,7 @@ void MultiblockTester::fillSingularityBoundaryConditions(
    const double time,
    const hier::Box& fill_box,
    const hier::BoundaryBox& boundary_box,
-   const tbox::Pointer<hier::GridGeometry> &grid_geometry)
+   const tbox::Pointer<hier::GridGeometry>& grid_geometry)
 {
    NULL_USE(grid_geometry);
    (void)time;
@@ -614,7 +613,7 @@ void MultiblockTester::fillSingularityBoundaryConditions(
       d_data_test_strategy->getDataContext();
 
 //   if (d_filling_coarse_scratch) {
-      d_data_test_strategy->setDataContext(d_refine_scratch);
+   d_data_test_strategy->setDataContext(d_refine_scratch);
 //   } else {
 //      d_data_test_strategy->setDataContext(d_destination);
 //   }
@@ -732,7 +731,7 @@ void MultiblockTester::setupHierarchy(
    }
 
    tbox::plog << "\n\nHierarchy:\n";
-   d_patch_hierarchy->recursivePrint(tbox::plog,"",2);
+   d_patch_hierarchy->recursivePrint(tbox::plog, "", 2);
 
    for (int ln = 1; ln < d_patch_hierarchy->getNumberOfLevels(); ln++) {
       hier::CoarseFineBoundary cf_bndry(*d_patch_hierarchy, ln,

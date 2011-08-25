@@ -1,11 +1,11 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
  * Description:   Numerical routines for single patch in convection
- *                diffusion example. 
+ *                diffusion example.
  *
  ************************************************************************/
 
@@ -110,7 +110,7 @@ ConvDiff::ConvDiff(
    int k;
 
    /*
-    *hier::Variable quantities that define state of convection diffusion
+    * *hier::Variable quantities that define state of convection diffusion
     * problem.
     *
     *     dU/dt + alpha dU/dx = mu d^2U/dx^2 + gamma
@@ -207,9 +207,9 @@ ConvDiff::ConvDiff(
    } else {
       TBOX_ERROR(
          d_object_name << ": "
-         << "Unknown d_data_problem string = "
-         << d_data_problem
-         << " encountered in constructor" << endl);
+                       << "Unknown d_data_problem string = "
+                       << d_data_problem
+                       << " encountered in constructor" << endl);
    }
 
    /*
@@ -358,10 +358,10 @@ void ConvDiff::registerModelVariables(
       if (d_visit_writer.isNull()) {
          TBOX_WARNING(
             d_object_name << ": registerModelVariables()\n"
-            <<
+                          <<
             "Visit data writer was not registered.\n"
-            << "Consequently, no plot data will\n"
-            << "be written." << endl);
+                          << "Consequently, no plot data will\n"
+                          << "be written." << endl);
       }
 #endif
 
@@ -812,7 +812,7 @@ void ConvDiff::printClassData(
 
    os << "Coefficients..." << endl;
    for (j = 0; j < d_dim.getValue(); j++) os << "d_convection_coeff[" << j << "] = "
-      << d_convection_coeff[j] << endl;
+                                             << d_convection_coeff[j] << endl;
    os << "d_diffusion_coeff = " << d_diffusion_coeff << endl;
    os << "d_source_coeff = " << d_source_coeff << endl;
 
@@ -834,42 +834,42 @@ void ConvDiff::printClassData(
    if (d_dim == tbox::Dimension(2)) {
       for (j = 0; j < d_scalar_bdry_edge_conds.getSize(); j++) {
          os << "       d_scalar_bdry_edge_conds[" << j << "] = "
-         << d_scalar_bdry_edge_conds[j] << endl;
+            << d_scalar_bdry_edge_conds[j] << endl;
          if (d_scalar_bdry_edge_conds[j] == BdryCond::DIRICHLET) {
             os << "         d_bdry_edge_val[" << j << "] = "
-            << d_bdry_edge_val[j] << endl;
+               << d_bdry_edge_val[j] << endl;
          }
       }
       os << endl;
       for (j = 0; j < d_scalar_bdry_node_conds.getSize(); j++) {
          os << "       d_scalar_bdry_node_conds[" << j << "] = "
-         << d_scalar_bdry_node_conds[j] << endl;
+            << d_scalar_bdry_node_conds[j] << endl;
          os << "       d_node_bdry_edge[" << j << "] = "
-         << d_node_bdry_edge[j] << endl;
+            << d_node_bdry_edge[j] << endl;
       }
    }
    if (d_dim == tbox::Dimension(3)) {
       for (j = 0; j < d_scalar_bdry_face_conds.getSize(); j++) {
          os << "       d_scalar_bdry_face_conds[" << j << "] = "
-         << d_scalar_bdry_face_conds[j] << endl;
+            << d_scalar_bdry_face_conds[j] << endl;
          if (d_scalar_bdry_face_conds[j] == BdryCond::DIRICHLET) {
             os << "         d_bdry_face_val[" << j << "] = "
-            << d_bdry_face_val[j] << endl;
+               << d_bdry_face_val[j] << endl;
          }
       }
       os << endl;
       for (j = 0; j < d_scalar_bdry_edge_conds.getSize(); j++) {
          os << "       d_scalar_bdry_edge_conds[" << j << "] = "
-         << d_scalar_bdry_edge_conds[j] << endl;
+            << d_scalar_bdry_edge_conds[j] << endl;
          os << "       d_edge_bdry_face[" << j << "] = "
-         << d_edge_bdry_face[j] << endl;
+            << d_edge_bdry_face[j] << endl;
       }
       os << endl;
       for (j = 0; j < d_scalar_bdry_node_conds.getSize(); j++) {
          os << "       d_scalar_bdry_node_conds[" << j << "] = "
-         << d_scalar_bdry_node_conds[j] << endl;
+            << d_scalar_bdry_node_conds[j] << endl;
          os << "       d_node_bdry_face[" << j << "] = "
-         << d_node_bdry_face[j] << endl;
+            << d_node_bdry_face[j] << endl;
       }
    }
 
@@ -899,7 +899,7 @@ void ConvDiff::getFromInput(
    } else {
       TBOX_ERROR(
          d_object_name << ":  "
-         <<
+                       <<
          "Key data `convection_coeff' not found in input.");
    }
    if (db->keyExists("diffusion_coeff")) {
@@ -907,7 +907,7 @@ void ConvDiff::getFromInput(
    } else {
       TBOX_ERROR(
          d_object_name << ":  "
-         <<
+                       <<
          "Key data `diffusion_coeff' not found in input.");
    }
    if (db->keyExists("source_coeff")) {
@@ -925,7 +925,7 @@ void ConvDiff::getFromInput(
    } else {
       TBOX_ERROR(
          d_object_name << ":  "
-         <<
+                       <<
          "Key data `cell_tagging_tolerance' not found in input.");
    }
 
@@ -936,8 +936,8 @@ void ConvDiff::getFromInput(
       } else {
          TBOX_ERROR(
             d_object_name << ": "
-            << "`data_problem' value not found in input."
-            << endl);
+                          << "`data_problem' value not found in input."
+                          << endl);
       }
 
       tbox::Pointer<tbox::Database> init_data_db;
@@ -946,7 +946,7 @@ void ConvDiff::getFromInput(
       } else {
          TBOX_ERROR(
             d_object_name << ": "
-            <<
+                          <<
             "No `Initial_data' database found in input." << endl);
       }
 
@@ -959,7 +959,7 @@ void ConvDiff::getFromInput(
          } else {
             TBOX_ERROR(
                d_object_name << ": "
-               <<
+                             <<
                "`radius' input required for SPHERE problem." << endl);
          }
          if (init_data_db->keyExists("center")) {
@@ -967,7 +967,7 @@ void ConvDiff::getFromInput(
          } else {
             TBOX_ERROR(
                d_object_name << ": "
-               <<
+                             <<
                "`center' input required for SPHERE problem." << endl);
          }
          if (init_data_db->keyExists("val_inside")) {
@@ -992,8 +992,8 @@ void ConvDiff::getFromInput(
       if (!found_problem_data) {
          TBOX_ERROR(
             d_object_name << ": "
-            << "Bad data in `Initial_data' database."
-            << endl);
+                          << "Bad data in `Initial_data' database."
+                          << endl);
       }
 
       const hier::IntVector one_vec = hier::IntVector::getOne(d_dim);
@@ -1026,9 +1026,9 @@ void ConvDiff::getFromInput(
       } else {
          TBOX_WARNING(
             d_object_name << ": "
-            <<
+                          <<
             "Key data `Boundary_data' not found in input. "
-            <<
+                          <<
             "Using default FLOW boundary conditions." << endl);
       }
    }
@@ -1102,7 +1102,7 @@ void ConvDiff::getFromRestart()
    if (ver != CONV_DIFF_VERSION) {
       TBOX_ERROR(
          d_object_name << ":  "
-         <<
+                       <<
          "Restart file version different than class version.");
    }
 

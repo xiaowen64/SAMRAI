@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   RefineSchedule's implementation of PatchHierarchy 
+ * Description:   RefineSchedule's implementation of PatchHierarchy
  *
  ************************************************************************/
 
@@ -42,11 +42,9 @@ RefineScheduleConnectorWidthRequestor::s_auto_registered_connector_width_request
  **************************************************************************
  */
 RefineScheduleConnectorWidthRequestor::RefineScheduleConnectorWidthRequestor(
-   ) : d_gcw_factor(1)
+   ):d_gcw_factor(1)
 {
-   return;
 }
-
 
 /*
  **************************************************************************
@@ -55,11 +53,9 @@ RefineScheduleConnectorWidthRequestor::RefineScheduleConnectorWidthRequestor(
 void RefineScheduleConnectorWidthRequestor::setGhostCellWidthFactor(
    int gcw_factor)
 {
-   TBOX_ASSERT( gcw_factor >= 0 );
+   TBOX_ASSERT(gcw_factor >= 0);
    d_gcw_factor = gcw_factor;
-   return;
 }
-
 
 /*
  **************************************************************************
@@ -106,8 +102,8 @@ void RefineScheduleConnectorWidthRequestor::computeRequiredConnectorWidths(
    self_connector_widths.resize(max_levels, max_data_gcw);
 
    fine_connector_widths.clear();
-   if ( max_levels > 1 ) {
-      fine_connector_widths.resize(max_levels-1, zero_vector); // to be computed below.
+   if (max_levels > 1) {
+      fine_connector_widths.resize(max_levels - 1, zero_vector); // to be computed below.
    }
 
    /*
@@ -123,8 +119,8 @@ void RefineScheduleConnectorWidthRequestor::computeRequiredConnectorWidths(
       hier::IntVector width_for_refining_recursively = max_data_gcw;
       for (int lnc = ln - 1; lnc > -1; --lnc) {
 
-         const hier::IntVector &ratio_to_coarser =
-            patch_hierarchy.getRatioToCoarserLevel(lnc+1);
+         const hier::IntVector& ratio_to_coarser =
+            patch_hierarchy.getRatioToCoarserLevel(lnc + 1);
          width_for_refining_recursively.ceiling(ratio_to_coarser);
 
          /*
@@ -160,7 +156,6 @@ void RefineScheduleConnectorWidthRequestor::initializeCallback()
 void RefineScheduleConnectorWidthRequestor::finalizeCallback()
 {
 }
-
 
 }
 }

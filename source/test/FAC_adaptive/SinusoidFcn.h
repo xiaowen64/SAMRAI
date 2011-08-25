@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Sinusoidal function functor in FAC solver test. 
+ * Description:   Sinusoidal function functor in FAC solver test.
  *
  ************************************************************************/
 #ifndef included_SinusoidFcn_h
@@ -60,7 +60,7 @@ public:
     */
    int
    setWaveNumbers(
-      const double* npi);
+      const double * npi);
 
    /*!
     * @brief Set all phase angles.
@@ -69,7 +69,7 @@ public:
     */
    int
    setPhaseAngles(
-      const double* ppi);
+      const double * ppi);
 
    /*!
     * @brief Get wave numbers.
@@ -78,7 +78,7 @@ public:
     */
    int
    getWaveNumbers(
-      double* npi) const;
+      double * npi) const;
 
    /*!
     * @brief Get phase angles.
@@ -87,7 +87,7 @@ public:
     */
    int
    getPhaseAngles(
-      double* ppi) const;
+      double * ppi) const;
 
    //@{
 

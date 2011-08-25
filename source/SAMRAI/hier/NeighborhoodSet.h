@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Extension of a std 
+ * Description:   Extension of a std
  *
  ************************************************************************/
 #ifndef included_hier_NeighborhoodSet
@@ -29,8 +29,8 @@ class Connector;
  * @brief A wrapper around std::map<BoxId,BoxSet>.
  *
  * A neighborhood is defined as a Box and its "neighbors" which
- * are related to it via Connector relationships.  For example, 
- * a NeighborhoodSet is used to group the set of Box neighbors 
+ * are related to it via Connector relationships.  For example,
+ * a NeighborhoodSet is used to group the set of Box neighbors
  * for each BoxId (corresponding to a Box).
  *
  * This is little more than a dumb container of neighbor data
@@ -65,7 +65,6 @@ public:
    virtual ~NeighborhoodSet(
       void);
 
-
    //@{
 
    //! @name Types defined by std::map.
@@ -78,7 +77,6 @@ public:
    typedef std::map<BoxId, NeighborSet>::size_type size_type;
 
    //@}
-
 
    //@{
 
@@ -105,7 +103,6 @@ public:
       return d_map.end();
    }
 
-
    reverse_iterator rbegin() {
       return d_map.rbegin();
    }
@@ -113,7 +110,6 @@ public:
    reverse_iterator rend() {
       return d_map.rend();
    }
-
 
    iterator insert(
       iterator i,
@@ -138,7 +134,6 @@ public:
       d_map.erase(first, last);
    }
 
-
    size_t size() const {
       return d_map.size();
    }
@@ -151,13 +146,11 @@ public:
       d_map.clear();
    }
 
-
    NeighborSet& operator [] (
       const key_type& k) {
       TBOX_ASSERT(k.getPeriodicId().getPeriodicValue() == 0);
       return d_map[k];
    }
-
 
    iterator find(
       const key_type& k) {
@@ -170,7 +163,6 @@ public:
       TBOX_ASSERT(k.getPeriodicId().getPeriodicValue() == 0);
       return d_map.find(k);
    }
-
 
    NeighborhoodSet&
    operator = (
@@ -188,9 +180,7 @@ public:
    swap(
       NeighborhoodSet& other);
 
-
    //@}
-
 
    //@{
 
@@ -201,7 +191,7 @@ public:
     *
     * A Range has two members, first and second.  it denotes the
     * subset [first,second), which includes first and everything up to
-    * but not including second.  An empty range is designated by 
+    * but not including second.  An empty range is designated by
     * first == second.
     */
    typedef std::pair<iterator, iterator> Range;
@@ -211,7 +201,7 @@ public:
     *
     * A Range has two members, first and second.  it denotes the
     * subset [first,second), which includes first and everything up to
-    * but not including second.  An empty range is designated by 
+    * but not including second.  An empty range is designated by
     * first == second.
     */
    typedef std::pair<const_iterator, const_iterator> ConstRange;
@@ -376,32 +366,36 @@ public:
 
    //@}
 
-
-
    /*!
     * @brief Intermediary between NeighborhoodSet and output streams,
     * adding ability to control the output.  See
     * NeighborhoodSet::format().
     */
-   class Outputter {
+   class Outputter
+   {
 
-      friend std::ostream& operator << ( std::ostream& s, const Outputter& f);
+      friend std::ostream&
+      operator << (
+         std::ostream& s,
+         const Outputter& f);
 
-   private:
-
+private:
       friend class NeighborhoodSet;
 
       /*!
        * @brief Construct the Outputter with a NeighborhoodSet and the
        * parameters needed to output the NeighborhoodSet to a stream.
        */
-      Outputter( const NeighborhoodSet &neighborhood_set,
-                 const std::string& border,
-                 int detail_depth = 0);
+      Outputter(
+         const NeighborhoodSet& neighborhood_set,
+         const std::string& border,
+         int detail_depth = 0);
 
-      void operator=( const Outputter &rhs ); // Unimplemented private.
+      void
+      operator = (
+         const Outputter& rhs);               // Unimplemented private.
 
-      const NeighborhoodSet &d_set;
+      const NeighborhoodSet& d_set;
 
       const std::string d_border;
 
@@ -421,8 +415,10 @@ public:
     *
     * @param[in] detail_depth How much detail to print.
     */
-   Outputter format( const std::string& border=std::string(),
-                     int detail_depth = 0 ) const;
+   Outputter
+   format(
+      const std::string& border = std::string(),
+      int detail_depth = 0) const;
 
    /*!
     * @brief Print the contents of the object recursively.

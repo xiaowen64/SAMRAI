@@ -1,11 +1,11 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
  * Description:   Weighted averaging operator for edge-centered float data on
- *                a Cartesian mesh. 
+ *                a Cartesian mesh.
  *
  ************************************************************************/
 
@@ -36,52 +36,52 @@ extern "C" {
 #endif
 
 // in cartcoarsen1d.f:
-void F77_FUNC(cartwgtavgedgeflot1d, CARTWGTAVGEDGEFLOT1D) (const int &,
-   const int &,
-   const int &, const int &,
-   const int &, const int &,
+void F77_FUNC(cartwgtavgedgeflot1d, CARTWGTAVGEDGEFLOT1D) (const int&,
+   const int&,
+   const int&, const int&,
+   const int&, const int&,
    const int *, const double *, const double *,
    const float *, float *);
 // in cartcoarsen2d.f:
-void F77_FUNC(cartwgtavgedgeflot2d0, CARTWGTAVGEDGEFLOT2D0) (const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &, const int &,
-   const int &, const int &, const int &, const int &,
+void F77_FUNC(cartwgtavgedgeflot2d0, CARTWGTAVGEDGEFLOT2D0) (const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&, const int&,
+   const int&, const int&, const int&, const int&,
    const int *, const double *, const double *,
    const float *, float *);
 
-void F77_FUNC(cartwgtavgedgeflot2d1, CARTWGTAVGEDGEFLOT2D1) (const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &, const int &,
-   const int &, const int &, const int &, const int &,
+void F77_FUNC(cartwgtavgedgeflot2d1, CARTWGTAVGEDGEFLOT2D1) (const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&, const int&,
+   const int&, const int&, const int&, const int&,
    const int *, const double *, const double *,
    const float *, float *);
 // in cartcoarsen3d.f:
-void F77_FUNC(cartwgtavgedgeflot3d0, CARTWGTAVGEDGEFLOT3D0) (const int &,
-   const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
+void F77_FUNC(cartwgtavgedgeflot3d0, CARTWGTAVGEDGEFLOT3D0) (const int&,
+   const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
    const int *, const double *, const double *,
    const float *, float *);
-void F77_FUNC(cartwgtavgedgeflot3d1, CARTWGTAVGEDGEFLOT3D1) (const int &,
-   const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
+void F77_FUNC(cartwgtavgedgeflot3d1, CARTWGTAVGEDGEFLOT3D1) (const int&,
+   const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
    const int *, const double *, const double *,
    const float *, float *);
-void F77_FUNC(cartwgtavgedgeflot3d2, CARTWGTAVGEDGEFLOT3D2) (const int &,
-   const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
-   const int &, const int &, const int &,
+void F77_FUNC(cartwgtavgedgeflot3d2, CARTWGTAVGEDGEFLOT3D2) (const int&,
+   const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
    const int *, const double *, const double *,
    const float *, float *);
 }

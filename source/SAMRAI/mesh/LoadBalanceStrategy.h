@@ -197,7 +197,6 @@ public:
       std::ostream& output_stream = tbox::plog) const;
 
 protected:
-
    /*!
     * @brief Write load data to log for postprocessing later.
     *

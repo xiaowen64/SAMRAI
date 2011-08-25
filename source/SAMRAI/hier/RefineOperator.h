@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Abstract base class for spatial refinement operators. 
+ * Description:   Abstract base class for spatial refinement operators.
  *
  ************************************************************************/
 
@@ -193,7 +193,7 @@ private:
    static std::multimap<std::string, RefineOperator *> s_lookup_table;
 
    static tbox::StartupShutdownManager::Handler
-   s_finalize_handler;
+      s_finalize_handler;
 
 };
 

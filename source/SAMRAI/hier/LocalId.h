@@ -28,10 +28,10 @@ namespace hier {
  * Comparison operators are provided to define the sorted ordering of
  * objects.
  */
-class LocalId {
+class LocalId
+{
 
 public:
-
    /*!
     * @brief Default constructor.
     */
@@ -40,14 +40,16 @@ public:
    /*!
     * @brief Copy constructor.
     */
-   LocalId(const LocalId &other);
+   LocalId(
+      const LocalId& other);
 
    /*!
     * @brief Construct from a numerical value.
     *
     * This method is explicit to prevent automatic conversion.
     */
-   explicit LocalId(const int &value);
+   explicit LocalId(
+      const int& value);
 
    /*!
     * @brief Default constructor.
@@ -61,7 +63,9 @@ public:
     *
     * @return @c *this
     */
-   LocalId &operator = ( const LocalId& rhs);
+   LocalId&
+   operator = (
+      const LocalId& rhs);
 
    /*!
     * @brief Assignment operator.
@@ -70,28 +74,33 @@ public:
     *
     * @return @c *this
     */
-   LocalId &operator = ( const int &rhs);
+   LocalId&
+   operator = (
+      const int& rhs);
 
    /*!
     * @brief Access the numerical value.
     */
-   int &getValue();
+   int&
+   getValue();
 
    /*!
     * @brief Access the numerical value.
     */
-   const int &getValue() const;
+   const int&
+   getValue() const;
 
    /*!
     * @brief Get the LocalId with a numerical value of zero.
     */
-   static const LocalId &getZero();
+   static const LocalId&
+   getZero();
 
    /*!
     * @brief Get the designated invalid value for this class.
     */
-   static const LocalId &getInvalidId();
-
+   static const LocalId&
+   getInvalidId();
 
    //@{
 
@@ -103,7 +112,8 @@ public:
     * Pre-increment increments the value and returns the incremented
     * state.
     */
-   LocalId operator ++ ();
+   LocalId
+   operator ++ ();
 
    /*!
     * @brief Post-increment iterator.
@@ -111,111 +121,137 @@ public:
     * Post-increment saves the value, increment it and returns an
     * object with the saved value.
     */
-   LocalId operator ++ (int);
-
+   LocalId
+   operator ++ (
+      int);
 
    /*!
     * @brief Addition.
     *
     * @param[in] rhs
     */
-   LocalId operator+(const LocalId &rhs) const;
+   LocalId
+   operator + (
+      const LocalId& rhs) const;
 
    /*!
     * @brief Subtraction.
     *
     * @param[in] rhs
     */
-   LocalId operator-(const LocalId &rhs) const;
+   LocalId
+   operator - (
+      const LocalId& rhs) const;
 
    /*!
     * @brief Multiplication.
     *
     * @param[in] rhs
     */
-   LocalId operator*(const LocalId &rhs) const;
+   LocalId
+   operator * (
+      const LocalId& rhs) const;
 
    /*!
     * @brief Division.
     *
     * @param[in] rhs
     */
-   LocalId operator/(const LocalId &rhs) const;
+   LocalId
+   operator / (
+      const LocalId& rhs) const;
 
    /*!
     * @brief Modulus.
     *
     * @param[in] rhs
     */
-   LocalId operator%(const LocalId &rhs) const;
+   LocalId
+   operator % (
+      const LocalId& rhs) const;
 
    /*!
     * @brief Addition and assignment.
     *
     * @param[in] rhs
     */
-   LocalId &operator+=(const LocalId &rhs);
+   LocalId&
+   operator += (
+      const LocalId& rhs);
 
    /*!
     * @brief Subtraction and assignment.
     *
     * @param[in] rhs
     */
-   LocalId &operator-=(const LocalId &rhs);
-
+   LocalId&
+   operator -= (
+      const LocalId& rhs);
 
    /*!
     * @brief Integer addition.
     *
     * @param[in] rhs
     */
-   LocalId operator+(const int &rhs) const;
+   LocalId
+   operator + (
+      const int& rhs) const;
 
    /*!
     * @brief Integer subtraction.
     *
     * @param[in] rhs
     */
-   LocalId operator-(const int &rhs) const;
+   LocalId
+   operator - (
+      const int& rhs) const;
 
    /*!
     * @brief Integer multiplication.
     *
     * @param[in] rhs
     */
-   LocalId operator*(const int &rhs) const;
+   LocalId
+   operator * (
+      const int& rhs) const;
 
    /*!
     * @brief Integer division.
     *
     * @param[in] rhs
     */
-   LocalId operator/(const int &rhs) const;
+   LocalId
+   operator / (
+      const int& rhs) const;
 
    /*!
     * @brief Integer modulus.
     *
     * @param[in] rhs
     */
-   LocalId operator%(const int &rhs) const;
+   LocalId
+   operator % (
+      const int& rhs) const;
 
    /*!
     * @brief Integer addition and assignment.
     *
     * @param[in] rhs
     */
-   LocalId &operator+=(const int &rhs);
+   LocalId&
+   operator += (
+      const int& rhs);
 
    /*!
     * @brief Integer subtraction and assignment.
     *
     * @param[in] rhs
     */
-   LocalId &operator-=(const int &rhs);
-
+   LocalId&
+   operator -= (
+      const int& rhs);
 
    //@}
-
 
    //@{
 
@@ -228,7 +264,9 @@ public:
     *
     * @param[in] rhs
     */
-   bool operator == ( const LocalId& rhs) const;
+   bool
+   operator == (
+      const LocalId& rhs) const;
 
    /*!
     * @brief Inequality operator.
@@ -237,7 +275,9 @@ public:
     *
     * @param[in] rhs
     */
-   bool operator != ( const LocalId& rhs) const;
+   bool
+   operator != (
+      const LocalId& rhs) const;
 
    /*!
     * @brief Less-than operator.
@@ -246,7 +286,9 @@ public:
     *
     * @param[in] rhs
     */
-   bool operator < ( const LocalId& rhs) const;
+   bool
+   operator < (
+      const LocalId& rhs) const;
 
    /*!
     * @brief Greater-than operator.
@@ -255,7 +297,9 @@ public:
     *
     * @param[in] rhs
     */
-   bool operator > ( const LocalId& rhs) const;
+   bool
+   operator > (
+      const LocalId& rhs) const;
 
    /*!
     * @brief Less-than-or-equal-to operator.
@@ -264,7 +308,9 @@ public:
     *
     * @param[in] rhs
     */
-   bool operator <= ( const LocalId& rhs) const;
+   bool
+   operator <= (
+      const LocalId& rhs) const;
 
    /*!
     * @brief Greater-thanor-equal-to operator.
@@ -273,10 +319,11 @@ public:
     *
     * @param[in] rhs
     */
-   bool operator >= ( const LocalId& rhs) const;
+   bool
+   operator >= (
+      const LocalId& rhs) const;
 
    //@}
-
 
    //@{
 
@@ -289,7 +336,9 @@ public:
     *
     * @param[in] rhs
     */
-   bool operator == ( const int &rhs) const;
+   bool
+   operator == (
+      const int& rhs) const;
 
    /*!
     * @brief Inequality operator.
@@ -298,7 +347,9 @@ public:
     *
     * @param[in] rhs
     */
-   bool operator != ( const int &rhs) const;
+   bool
+   operator != (
+      const int& rhs) const;
 
    /*!
     * @brief Less-than operator.
@@ -307,7 +358,9 @@ public:
     *
     * @param[in] rhs
     */
-   bool operator < ( const int &rhs) const;
+   bool
+   operator < (
+      const int& rhs) const;
 
    /*!
     * @brief Greater-than operator.
@@ -316,7 +369,9 @@ public:
     *
     * @param[in] rhs
     */
-   bool operator > ( const int &rhs) const;
+   bool
+   operator > (
+      const int& rhs) const;
 
    /*!
     * @brief Less-than-or-equal-to operator.
@@ -325,7 +380,9 @@ public:
     *
     * @param[in] rhs
     */
-   bool operator <= ( const int &rhs) const;
+   bool
+   operator <= (
+      const int& rhs) const;
 
    /*!
     * @brief Greater-thanor-equal-to operator.
@@ -334,10 +391,11 @@ public:
     *
     * @param[in] rhs
     */
-   bool operator >= ( const int &rhs) const;
+   bool
+   operator >= (
+      const int& rhs) const;
 
    //@}
-
 
    /*!
     * @brief Format and insert object into a stream.
@@ -348,7 +406,6 @@ public:
       const LocalId& r);
 
 private:
-
    /*!
     * @brief Numerical value of the identifier.
     */

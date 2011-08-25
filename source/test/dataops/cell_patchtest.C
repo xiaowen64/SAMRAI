@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Main program to test cell patch data operations. 
+ * Description:   Main program to test cell patch data operations.
  *
  ************************************************************************/
 
@@ -143,7 +143,7 @@ int main(
       int cdvindx[3];
 
       /*
-       *Register cell-centered double variable and 3 contexts with
+       * *Register cell-centered double variable and 3 contexts with
        * hier::VariableDatabase.
        */
       cdvindx[0] =
@@ -344,7 +344,7 @@ int main(
       }
 
       // Test #2: Check state of hier::Patch before allocating storage
-      if (! tpatch->getBox().isSpatiallyEqual(patch_box)) {
+      if (!tpatch->getBox().isSpatiallyEqual(patch_box)) {
          num_failures++;
          tbox::perr << "FAILED: - Test #2a: hier::Patch box incorrectly set\n"
                     << "Expected: d_box = " << patch_box << "\n"
@@ -380,7 +380,7 @@ int main(
       tpatch->allocatePatchData(patch_components);
 
       // Test #3: Check state of hier::Patch after allocating storage
-      if (! tpatch->getBox().isSpatiallyEqual(patch_box)) {
+      if (!tpatch->getBox().isSpatiallyEqual(patch_box)) {
          num_failures++;
          tbox::perr << "FAILED: - Test #3a: hier::Patch box incorrectly set\n"
                     << "Expected: d_box = " << patch_box << "\n"
@@ -1055,7 +1055,7 @@ int main(
       }
 
       // Test #26: Check state of hier::Patch before deallocating storage
-      if (! tpatch->getBox().isSpatiallyEqual(patch_box)) {
+      if (!tpatch->getBox().isSpatiallyEqual(patch_box)) {
          num_failures++;
          tbox::perr << "FAILED: - Test #26a: hier::Patch box incorrectly set\n"
                     << "Expected: d_box = " << patch_box << "\n"
@@ -1208,7 +1208,7 @@ int main(
       tpatch->deallocatePatchData(patch_components);
 
       // Test #27: Check state of hier::Patch after deallocating storage
-      if (! tpatch->getBox().isSpatiallyEqual(patch_box)) {
+      if (!tpatch->getBox().isSpatiallyEqual(patch_box)) {
          num_failures++;
          tbox::perr << "FAILED: - Test #27a: hier::Patch box incorrectly set\n"
                     << "Expected: d_box = " << patch_box << "\n"

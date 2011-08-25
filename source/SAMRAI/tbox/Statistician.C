@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Singleton manager class for statistic objects. 
+ * Description:   Singleton manager class for statistic objects.
  *
  ************************************************************************/
 
@@ -577,7 +577,7 @@ void Statistician::printGlobalProcStatData(
       os.precision(precision);
 
       os << "\n   " << proc_stat_id << ":    "
-      << d_proc_statistics[proc_stat_id]->getName() << std::endl;
+         << d_proc_statistics[proc_stat_id]->getName() << std::endl;
 
       int nnodes = mpi.getSize();
       const Array<Array<double> >& sdata =
@@ -595,7 +595,7 @@ void Statistician::printGlobalProcStatData(
             if (!(MathUtilities<double>::equalEps(sdata[ipsl][ip],
                      Statistic::s_empty_seq_tag_entry))) {
                os << "         " << ip << "    : " << sdata[ipsl][ip]
-               << std::endl;
+                  << std::endl;
             }
          }
       }
@@ -1594,7 +1594,7 @@ void Statistician::printGlobalPatchStatData(
       os.precision(precision);
 
       os << "\n   " << patch_stat_id << ":    "
-      << d_patch_statistics[patch_stat_id]->getName() << std::endl;
+         << d_patch_statistics[patch_stat_id]->getName() << std::endl;
 
       const Array<Array<double> >& sdata =
          d_global_patch_stat_data[patch_stat_id];
@@ -1612,7 +1612,7 @@ void Statistician::printGlobalPatchStatData(
             if (!(MathUtilities<double>::equalEps(sdata[ipsl][ip],
                      Statistic::s_empty_seq_tag_entry))) {
                os << "         " << ip << "    [" << spmap[ipsl][ip]
-               << "]:    " << sdata[ipsl][ip] << std::endl;
+                  << "]:    " << sdata[ipsl][ip] << std::endl;
             }
          }
       }
@@ -2643,9 +2643,9 @@ void StatisticRestartDatabase::getFromRestart()
       TBOX_WARNING(
          d_object_name << ":  "
          "Restart file version different than class version. \n"
-         <<
+                       <<
          "Cannot read statistic information from restart file so"
-         << "all statistics will be reset.");
+                       << "all statistics will be reset.");
    }
 
    int number_of_procstats = db->getInteger("number_of_procstats");

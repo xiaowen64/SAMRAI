@@ -39,11 +39,10 @@ class GridGeometry;
  * - findOverlapBoxes requires refinement_ratio.
  */
 
-class MultiblockBoxTree : public tbox::DescribedClass
+class MultiblockBoxTree:public tbox::DescribedClass
 {
 
 public:
-
    /*!
     * @brief Constructs a MultiblockBoxTree from set of Boxes.
     *
@@ -60,7 +59,7 @@ public:
     * searching slower, and vice versa.  @b Default: 10
     */
    explicit MultiblockBoxTree(
-      const tbox::ConstPointer<GridGeometry> &grid_geometry,
+      const tbox::ConstPointer<GridGeometry>& grid_geometry,
       const BoxSet& mapped_boxes,
       size_t min_number = 10);
 
@@ -76,7 +75,7 @@ public:
     * @param[in] min_number.  @b Default: 10
     */
    explicit MultiblockBoxTree(
-      const tbox::ConstPointer<GridGeometry> &grid_geometry,
+      const tbox::ConstPointer<GridGeometry>& grid_geometry,
       const std::vector<Box>& mapped_boxes,
       size_t min_number = 10);
 
@@ -91,7 +90,7 @@ public:
     * @param[in] min_number.  @b Default: 10
     */
    explicit MultiblockBoxTree(
-      const tbox::ConstPointer<GridGeometry> &grid_geometry,
+      const tbox::ConstPointer<GridGeometry>& grid_geometry,
       const std::map<BlockId, BoxList>& boxes,
       size_t min_number = 10);
 
@@ -122,7 +121,7 @@ public:
     */
    void
    generateTree(
-      const tbox::ConstPointer<GridGeometry> &grid_geometry,
+      const tbox::ConstPointer<GridGeometry>& grid_geometry,
       const std::vector<Box>& mapped_boxes,
       size_t min_number = 10);
 
@@ -142,7 +141,7 @@ public:
     */
    void
    generateTree(
-      const tbox::ConstPointer<GridGeometry> &grid_geometry,
+      const tbox::ConstPointer<GridGeometry>& grid_geometry,
       const std::map<BlockId, BoxList>& boxes,
       size_t min_number = 10);
 
@@ -154,8 +153,9 @@ public:
     * will throw an unrecoverable error if this method returns false
     * for the given BlockId.
     */
-   bool hasBoxInBlock(
-      const BlockId &block_id ) const;
+   bool
+   hasBoxInBlock(
+      const BlockId& block_id) const;
 
    /*!
     * @brief Return the tree for a single block.
@@ -166,8 +166,9 @@ public:
     * unrecoverable error.  To check for the existance of the tree,
     * use hasBoxInBlock().
     */
-   const BoxTree &getSingleBlockBoxTree(
-      const BlockId &block_id ) const;
+   const BoxTree&
+   getSingleBlockBoxTree(
+      const BlockId& block_id) const;
 
    /*!
     * @brief Reset to uninitialized state.
@@ -189,8 +190,8 @@ public:
     * @brief Return the GridGeometry object for the multiblock
     * environment.
     */
-   const tbox::ConstPointer<GridGeometry> &getGridGeometry() const;
-
+   const tbox::ConstPointer<GridGeometry>&
+   getGridGeometry() const;
 
    //@{
 
@@ -215,7 +216,7 @@ public:
    bool
    hasOverlap(
       const Box& box,
-      const BlockId &block_id,
+      const BlockId& block_id,
       bool include_singularity_block_neighbors = false) const;
 
    /*!
@@ -245,8 +246,8 @@ public:
    findOverlapBoxes(
       BoxSet& overlap_mapped_boxes,
       const Box& box,
-      const BlockId &block_id,
-      const IntVector &refinement_ratio,
+      const BlockId& block_id,
+      const IntVector& refinement_ratio,
       bool include_singularity_block_neighbors = false) const;
 
    /*!
@@ -276,8 +277,8 @@ public:
    findOverlapBoxes(
       std::vector<Box>& overlap_mapped_boxes,
       const Box& box,
-      const BlockId &block_id,
-      const IntVector &refinement_ratio,
+      const BlockId& block_id,
+      const IntVector& refinement_ratio,
       bool include_singularity_block_neighbors = false) const;
 
    /*!
@@ -308,10 +309,10 @@ public:
     */
    void
    findOverlapBoxes(
-      std::vector<const Box*>& overlap_mapped_boxes,
+      std::vector<const Box *>& overlap_mapped_boxes,
       const Box& box,
-      const BlockId &block_id,
-      const IntVector &refinement_ratio,
+      const BlockId& block_id,
+      const IntVector& refinement_ratio,
       bool include_singularity_block_neighbors = false) const;
 
    /*!
@@ -339,8 +340,8 @@ public:
    findOverlapBoxes(
       BoxList& overlap_boxes,
       const Box& box,
-      const BlockId &block_id,
-      const IntVector &refinement_ratio,
+      const BlockId& block_id,
+      const IntVector& refinement_ratio,
       bool include_singularity_block_neighbors = false) const;
 
    /*!
@@ -371,7 +372,6 @@ public:
    //@}
 
 private:
-
    /*!
     * @brief Container of single-block BoxTrees.
     *

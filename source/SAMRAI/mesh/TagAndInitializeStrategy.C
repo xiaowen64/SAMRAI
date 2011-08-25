@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Strategy interface for params, tagging, init for gridding. 
+ * Description:   Strategy interface for params, tagging, init for gridding.
  *
  ************************************************************************/
 
@@ -136,8 +136,8 @@ bool TagAndInitializeStrategy::getUserSuppliedRefineBoxes(
 
       TBOX_WARNING(
          d_object_name << ": getRefineBoxes\n"
-         << "No refine boxes specified for level "
-         << level_num);
+                       << "No refine boxes specified for level "
+                       << level_num);
       refine_boxes = empty_boxes;
 
    } else if (d_refine_boxes[level_num].getSize() <= seq_num) {
@@ -145,17 +145,17 @@ bool TagAndInitializeStrategy::getUserSuppliedRefineBoxes(
       if (d_refine_boxes_use_times[level_num]) {
          TBOX_WARNING(
             d_object_name << ": getRefineBoxes\n"
-            <<
+                          <<
             "No refine boxes specified for time sequence "
-            << seq_num << " on level " << level_num
-            << ".\n No refinement will be performed.");
+                          << seq_num << " on level " << level_num
+                          << ".\n No refinement will be performed.");
       } else {
          TBOX_WARNING(
             d_object_name << ": getRefineBoxes\n"
-            <<
+                          <<
             "No refine boxes specified for step sequence "
-            << seq_num << " on level " << level_num
-            << ".\n No refinement will be performed.");
+                          << seq_num << " on level " << level_num
+                          << ".\n No refinement will be performed.");
       }
       refine_boxes = empty_boxes;
 
@@ -309,24 +309,24 @@ void TagAndInitializeStrategy::getFromInput(
          if (!refine_box_db->keyExists(level_boxes_name)) {
             TBOX_ERROR(
                d_object_name << "\n"
-               <<
+                             <<
                ": Expected sub-database level entries in the\n"
-               <<
+                             <<
                " 'RefineBoxes' database to specify boxes for\n"
-               <<
+                             <<
                "  different time or cycle sequences: \n"
-               <<
+                             <<
                "  e.g.  Level0 { boxes_0 = <box array> \n"
-               <<
+                             <<
                "                 boxes_1 = <box array> \n"
-               << "                 ...} \n"
-               <<
+                             << "                 ...} \n"
+                             <<
                "        Level1 { boxes_0 = <box array> \n"
-               << "                 ...} \n"
-               <<
+                             << "                 ...} \n"
+                             <<
                "See header for this class for further discussion\n"
-               << "of the expected input format."
-               << std::endl);
+                             << "of the expected input format."
+                             << std::endl);
          }
          tbox::Pointer<tbox::Database> level_refine_box_db =
             refine_box_db->getDatabase(level_boxes_name);
@@ -354,11 +354,11 @@ void TagAndInitializeStrategy::getFromInput(
             if (use_cycles) {
                TBOX_WARNING(
                   d_object_name << ": You have entries for "
-                  <<
+                                <<
                   "both 'cycles' and 'times' for level " << ln
-                  <<
+                                <<
                   ".\n Because 'times' takes precedence, the "
-                  <<
+                                <<
                   "'cycles' entries will be ignored." << std::endl);
             }
          } else {

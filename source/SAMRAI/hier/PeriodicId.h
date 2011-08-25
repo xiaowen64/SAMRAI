@@ -24,10 +24,10 @@ namespace hier {
  * Comparison operators are provided to define sorted ordering of
  * objects.
  */
-class PeriodicId {
+class PeriodicId
+{
 
 public:
-
    /*!
     * @brief Default constructor.
     */
@@ -36,14 +36,16 @@ public:
    /*!
     * @brief Copy constructor.
     */
-   PeriodicId(const PeriodicId &other);
+   PeriodicId(
+      const PeriodicId& other);
 
    /*!
     * @brief Construct from a numerical value.
     *
     * This method is explicit to prevent automatic conversion.
     */
-   explicit PeriodicId(const int &value);
+   explicit PeriodicId(
+      const int& value);
 
    /*!
     * @brief Default constructor.
@@ -57,7 +59,9 @@ public:
     *
     * @return @c *this
     */
-   PeriodicId &operator = ( const PeriodicId& rhs);
+   PeriodicId&
+   operator = (
+      const PeriodicId& rhs);
 
    /*!
     * @brief Assignment operator.
@@ -66,28 +70,33 @@ public:
     *
     * @return @c *this
     */
-   PeriodicId &operator = ( const int &rhs);
+   PeriodicId&
+   operator = (
+      const int& rhs);
 
    /*!
     * @brief Access the numerical value.
     */
-   const int &getPeriodicValue() const;
+   const int&
+   getPeriodicValue() const;
 
    /*!
     * @brief Get the PeriodicId with a numerical value of zero.
     */
-   static const PeriodicId &zero();
+   static const PeriodicId&
+   zero();
 
    /*!
     * @brief Return the invalid value for PeriodicId.
     */
-   static const PeriodicId &invalidId();
+   static const PeriodicId&
+   invalidId();
 
    /*!
     * @brief Returns True if the value is valid.
     */
-   bool isValid() const;
-
+   bool
+   isValid() const;
 
    //@{
 
@@ -100,7 +109,9 @@ public:
     *
     * @param[in] rhs
     */
-   bool operator == ( const PeriodicId& rhs) const;
+   bool
+   operator == (
+      const PeriodicId& rhs) const;
 
    /*!
     * @brief Inequality operator.
@@ -109,7 +120,9 @@ public:
     *
     * @param[in] rhs
     */
-   bool operator != ( const PeriodicId& rhs) const;
+   bool
+   operator != (
+      const PeriodicId& rhs) const;
 
    /*!
     * @brief Less-than operator.
@@ -118,7 +131,9 @@ public:
     *
     * @param[in] rhs
     */
-   bool operator < ( const PeriodicId& rhs) const;
+   bool
+   operator < (
+      const PeriodicId& rhs) const;
 
    /*!
     * @brief Greater-than operator.
@@ -127,7 +142,9 @@ public:
     *
     * @param[in] rhs
     */
-   bool operator > ( const PeriodicId& rhs) const;
+   bool
+   operator > (
+      const PeriodicId& rhs) const;
 
    /*!
     * @brief Less-than-or-equal-to operator.
@@ -136,7 +153,9 @@ public:
     *
     * @param[in] rhs
     */
-   bool operator <= ( const PeriodicId& rhs) const;
+   bool
+   operator <= (
+      const PeriodicId& rhs) const;
 
    /*!
     * @brief Greater-thanor-equal-to operator.
@@ -145,7 +164,9 @@ public:
     *
     * @param[in] rhs
     */
-   bool operator >= ( const PeriodicId& rhs) const;
+   bool
+   operator >= (
+      const PeriodicId& rhs) const;
 
    //@}
 
@@ -158,7 +179,6 @@ public:
       const PeriodicId& r);
 
 private:
-
    /*!
     * @brief Numerical value of the identifier.
     */

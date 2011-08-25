@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Refine schedule for data transfer between AMR levels 
+ * Description:   Refine schedule for data transfer between AMR levels
  *
  ************************************************************************/
 
@@ -109,7 +109,7 @@ public:
     *                            occur.
     * @param[in] use_time_interpolation  Boolean flag indicating whether to
     *                                    use time interpolation when setting
-    *                                    data on the destination level. 
+    *                                    data on the destination level.
     *                                    Default is no time interpolation.
     */
    explicit RefineSchedule(
@@ -118,7 +118,7 @@ public:
       tbox::Pointer<hier::PatchLevel> src_level,
       const tbox::Pointer<xfer::RefineClasses> refine_classes,
       tbox::Pointer<xfer::RefineTransactionFactory> transaction_factory,
-      xfer::RefinePatchStrategy* patch_strategy,
+      xfer::RefinePatchStrategy * patch_strategy,
       bool use_time_interpolation = false);
 
    /*!
@@ -185,7 +185,7 @@ public:
       tbox::Pointer<hier::PatchHierarchy> hierarchy,
       const tbox::Pointer<xfer::RefineClasses> refine_classes,
       tbox::Pointer<xfer::RefineTransactionFactory> transaction_factory,
-      xfer::RefinePatchStrategy* patch_strategy,
+      xfer::RefinePatchStrategy * patch_strategy,
       bool use_time_refinement = false);
 
    /*!
@@ -369,7 +369,7 @@ private:
     * @param[in] dst_level  A temporary level that is used during
     *                       interpolation.
     * @param[in] src_level  A level from the hierarchy that is of the
-    *                       same resolution as dst_level 
+    *                       same resolution as dst_level
     * @param[in] next_coarser_level  Level number of next coarser level in
     *                                AMR patch hierarchy relative to the
     *                                destination level.  Note that when the
@@ -397,8 +397,8 @@ private:
       int next_coarser_level,
       tbox::Pointer<hier::PatchHierarchy> hierarchy,
       const hier::IntVector& src_growth_to_nest_dst,
-      const hier::Connector &dst_to_src,
-      const hier::Connector &src_to_dst,
+      const hier::Connector& dst_to_src,
+      const hier::Connector& src_to_dst,
       const tbox::Pointer<xfer::RefineClasses> refine_classes,
       tbox::Pointer<xfer::RefineTransactionFactory> transaction_factory,
       xfer::RefinePatchStrategy* patch_strategy);
@@ -502,7 +502,7 @@ private:
     * @param[in] coarse_level        Coarse level source of interpolation
     * @param[in] coarse_to_fine      Connector coarse to fine
     * @param[in] coarse_to_unfilled  Connector coarse to level representing
-    *                                boxes that need to be filled. 
+    *                                boxes that need to be filled.
     */
    void
    refineScratchData(
@@ -511,7 +511,7 @@ private:
       const Connector& coarse_to_fine,
       const Connector& coarse_to_unfilled,
       const tbox::List<tbox::Array<tbox::Pointer<hier::BoxOverlap> > >&
-         overlaps) const;
+      overlaps) const;
 
    /*!
     * @brief Compute and store the BoxOverlaps that will be needed by
@@ -619,7 +619,9 @@ private:
     *
     * @param[in] fill_gcw Width to extend across the block boundary
     */
-   void createEnconLevel(const hier::IntVector& fill_gcw);
+   void
+   createEnconLevel(
+      const hier::IntVector& fill_gcw);
 
    /*
     * @brief Find the fill boxes that are at enhanced connectivity.
@@ -632,7 +634,8 @@ private:
     * @param[in]   fill_boxes_list
     * @param[in]   dst_block_id
     */
-   void findEnconFillBoxes(
+   void
+   findEnconFillBoxes(
       hier::BoxList& encon_fill_boxes,
       const hier::BoxList& fill_boxes_list,
       const hier::BlockId& dst_block_id);
@@ -645,7 +648,7 @@ private:
     * level_encon_unfilled_boxes, and edges are added to
     * encon_to_unfilled_encon_nbrhood_set.
     *
-    * The source level is the head level from the connector dst_to_src. 
+    * The source level is the head level from the connector dst_to_src.
     *
     * @param[out]  level_encon_unfilled_boxes  set of encon unfilled boxes
     *                                          for the dst level
@@ -657,8 +660,9 @@ private:
     * @param[in]  dst_mapped_box  The destination box
     * @param[in]  dst_to_src
     * @param[in]  encon_fill_boxes
-    */ 
-   void findEnconUnfilledBoxes(
+    */
+   void
+   findEnconUnfilledBoxes(
       hier::BoxSet& level_encon_unfilled_boxes,
       hier::NeighborhoodSet& encon_to_unfilled_encon_nbrhood_set,
       hier::LocalId& last_unfilled_local_id,
@@ -674,7 +678,8 @@ private:
     * @param[in]  hiercoarse_level  Level on hierarchy one level coarser than
     *                               the destination level
     */
-   void createEnconFillSchedule(
+   void
+   createEnconFillSchedule(
       const tbox::Pointer<hier::PatchHierarchy>& hierarchy,
       const tbox::Pointer<hier::PatchLevel>& hiercoarse_level,
       const bool dst_is_supplemental_level,
@@ -710,10 +715,11 @@ private:
     *
     * @param[in,out] dst_to_unfilled
     */
-   void finishScheduleConstruction_shearUnfilledBoxesOutsideNonperiodicBoundaries(
-      hier::MappedBoxLevel &unfilled,
-      hier::Connector &dst_to_unfilled,
-      const tbox::Pointer<hier::PatchHierarchy> &hierarchy);
+   void
+   finishScheduleConstruction_shearUnfilledBoxesOutsideNonperiodicBoundaries(
+      hier::MappedBoxLevel& unfilled,
+      hier::Connector& dst_to_unfilled,
+      const tbox::Pointer<hier::PatchHierarchy>& hierarchy);
 
    /*!
     * @brief Set up the supplemental MappedBoxLevel and related data.
@@ -727,10 +733,11 @@ private:
     *
     * @param[in] dst_to_unfilled
     */
-   void finishScheduleConstruction_setupSupplementalMappedBoxLevel(
-      hier::MappedBoxLevel &supp_mapped_box_level,
-      const hier::MappedBoxLevel &hiercoarse_mapped_box_level,
-      const hier::Connector &dst_to_unfilled);
+   void
+   finishScheduleConstruction_setupSupplementalMappedBoxLevel(
+      hier::MappedBoxLevel& supp_mapped_box_level,
+      const hier::MappedBoxLevel& hiercoarse_mapped_box_level,
+      const hier::Connector& dst_to_unfilled);
 
    /*!
     * @brief Compute the Connectors between the supplemental level
@@ -750,15 +757,16 @@ private:
     * @param[in] next_coarser_ln Level number of hiercoarse (the
     * coarser level on the hierarchy
     */
-   void finishScheduleConstruction_connectSuppToHiercoarse(
-      hier::Connector &supp_to_hiercoarse,
-      hier::Connector &hiercoarse_to_supp,
-      hier::MappedBoxLevel &supp_mapped_box_level,
-      const tbox::Pointer<hier::PatchHierarchy> &hierarchy,
+   void
+   finishScheduleConstruction_connectSuppToHiercoarse(
+      hier::Connector& supp_to_hiercoarse,
+      hier::Connector& hiercoarse_to_supp,
+      hier::MappedBoxLevel& supp_mapped_box_level,
+      const tbox::Pointer<hier::PatchHierarchy>& hierarchy,
       const int next_coarser_ln,
-      const hier::Connector &dst_to_src,
-      const hier::Connector &src_to_dst,
-      const bool dst_is_supplemental_level );
+      const hier::Connector& dst_to_src,
+      const hier::Connector& src_to_dst,
+      const bool dst_is_supplemental_level);
 
    /*!
     * @brief Sanity check to try to catch library errors before
@@ -768,10 +776,11 @@ private:
     * the supplemental MappedBoxLevel sufficiently nests inside
     * the hiercoarse.
     */
-   void sanityCheckSupplementalAndHiercoarseLevels(
-      const hier::Connector &supp_to_hiercoarse,
-      const hier::Connector &hiercoarse_to_supp,
-      const tbox::Pointer<hier::PatchHierarchy> &hierarchy,
+   void
+   sanityCheckSupplementalAndHiercoarseLevels(
+      const hier::Connector& supp_to_hiercoarse,
+      const hier::Connector& hiercoarse_to_supp,
+      const tbox::Pointer<hier::PatchHierarchy>& hierarchy,
       const int next_coarser_ln);
 
    /*!
@@ -1060,14 +1069,14 @@ private:
    /*!
     * @brief Stores the BoxOverlaps needed by refineScratchData()
     */
-   tbox::List< tbox::Array<tbox::Pointer<hier::BoxOverlap> > >
+   tbox::List<tbox::Array<tbox::Pointer<hier::BoxOverlap> > >
    d_refine_overlaps;
 
    /*!
     * @brief Stores the BoxOverlaps needed by refineScratchData() for
     * unfilled boxes at enhanced connectivity
     */
-   tbox::List< tbox::Array<tbox::Pointer<hier::BoxOverlap> > >
+   tbox::List<tbox::Array<tbox::Pointer<hier::BoxOverlap> > >
    d_encon_refine_overlaps;
 
    /*!
@@ -1185,7 +1194,7 @@ private:
    //@}
 
    static tbox::StartupShutdownManager::Handler
-   s_initialize_finalize_handler;
+      s_initialize_finalize_handler;
 };
 
 }

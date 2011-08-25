@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Factory class for patch data objects that live on a patch 
+ * Description:   Factory class for patch data objects that live on a patch
  *
  ************************************************************************/
 
@@ -198,9 +198,9 @@ void PatchDescriptor::printClassData(
       stream << "Patch Data Index=" << i << std::endl;
       if (!d_factories[i].isNull()) {
          stream << "   Patch Data Factory Name = "
-         << d_names[i] << std::endl;
+                << d_names[i] << std::endl;
          stream << "   Patch Data Factory = "
-         << typeid(*d_factories[i]).name() << std::endl;
+                << typeid(*d_factories[i]).name() << std::endl;
       } else {
          stream << "   Patch Data Factory = NULL" << std::endl;
       }

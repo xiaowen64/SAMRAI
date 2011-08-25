@@ -30,15 +30,15 @@
 using namespace SAMRAI;
 using namespace tbox;
 
-
 /*
  * Break up boxes in the given MappedBoxLevel.  This method is meant
  * to create a bunch of small boxes from the user-input boxes in order
  * to set up a non-trivial mesh configuration.
  */
-void breakUpBoxes(
-   hier::MappedBoxLevel &mapped_box_level,
-   const hier::IntVector &max_box_size);
+void
+breakUpBoxes(
+   hier::MappedBoxLevel& mapped_box_level,
+   const hier::IntVector& max_box_size);
 
 /*
  * Find overlapping MappedBoxes using an exhaustive search.
@@ -46,12 +46,13 @@ void breakUpBoxes(
  * Intended as an alternate way of finding overlaps, for verifying
  * results from tree search.
  */
-void exhaustiveFindOverlapMappedBoxes(
+void
+exhaustiveFindOverlapMappedBoxes(
    hier::BoxSet& overlap_mapped_boxes,
    const hier::Box& mapped_box,
-   const hier::IntVector &refinement_ratio,
-   const tbox::ConstPointer<hier::GridGeometry> &grid_geometry,
-   const hier::BoxSet& search_mapped_boxes );
+   const hier::IntVector& refinement_ratio,
+   const tbox::ConstPointer<hier::GridGeometry>& grid_geometry,
+   const hier::BoxSet& search_mapped_boxes);
 
 /*
  ************************************************************************
@@ -68,7 +69,6 @@ void exhaustiveFindOverlapMappedBoxes(
  *************************************************************************
  */
 
-
 int main(
    int argc,
    char* argv[])
@@ -81,7 +81,7 @@ int main(
    SAMRAIManager::initialize();
    SAMRAIManager::startup();
    tbox::SAMRAI_MPI mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
-   if ( mpi.getSize() != 1 ) {
+   if (mpi.getSize() != 1) {
       TBOX_ERROR("mbtree test is intended to run on just one processor.");
    }
 
@@ -100,8 +100,8 @@ int main(
 
       if (argc != 2) {
          TBOX_ERROR("USAGE:  " << argv[0] << " <input file> \n"
-                                          << "  options:\n"
-                                          << "  none at this time" << std::endl);
+                               << "  options:\n"
+                               << "  none at this time" << std::endl);
       } else {
          input_filename = argv[1];
       }
@@ -150,22 +150,20 @@ int main(
       plog << "Input database after initialization..." << std::endl;
       input_db->printClassData(plog);
 
-
       /*
        * Generate the GridGeometry.
        */
       tbox::ConstPointer<hier::GridGeometry> grid_geometry;
       if (main_db->keyExists("GridGeometry")) {
          grid_geometry = new hier::GridGeometry(
-            dim,
-            "GridGeometry",
-            tbox::Pointer<hier::TransferOperatorRegistry>(),
-            main_db->getDatabase("GridGeometry"));
+               dim,
+               "GridGeometry",
+               tbox::Pointer<hier::TransferOperatorRegistry>(),
+               main_db->getDatabase("GridGeometry"));
       } else {
          TBOX_ERROR("Multiblock tree search test: could not find entry GridGeometry"
-                    << "\nin input.");
+            << "\nin input.");
       }
-
 
       /*
        * Baseline stuff:
@@ -184,12 +182,11 @@ int main(
       tbox::Pointer<tbox::HDFDatabase> baseline_db(new tbox::HDFDatabase("mbtree baseline"));
       tbox::Pointer<tbox::Database> mapped_box_level_db;
       tbox::Pointer<tbox::Database> connector_db;
-      if ( generate_baseline ) {
+      if (generate_baseline) {
          baseline_db->create(baseline_filename);
          mapped_box_level_db = baseline_db->putDatabase("MappedBoxLevel");
          connector_db = baseline_db->putDatabase("Connector");
-      }
-      else {
+      } else {
          baseline_db->open(baseline_filename);
          mapped_box_level_db = baseline_db->getDatabase("MappedBoxLevel");
          connector_db = baseline_db->getDatabase("Connector");
@@ -201,12 +198,12 @@ int main(
       plog << "Input database after running..." << std::endl;
       input_db->printClassData(plog);
 
-      const hier::IntVector &one_vector(hier::IntVector::getOne(dim));
+      const hier::IntVector& one_vector(hier::IntVector::getOne(dim));
 
       hier::BoxSet multiblock_boxes;
       grid_geometry->computePhysicalDomain(
          multiblock_boxes,
-         hier::IntVector::getOne(dim) );
+         hier::IntVector::getOne(dim));
 
       hier::MappedBoxLevel mapped_box_level(
          multiblock_boxes,
@@ -217,8 +214,8 @@ int main(
       /*
        * Generate boxes from the multiblock domain description.
        */
-      hier::IntVector max_box_size(dim,tbox::MathUtilities<int>::getMax());
-      if ( main_db->isInteger("max_box_size") ) {
+      hier::IntVector max_box_size(dim, tbox::MathUtilities<int>::getMax());
+      if (main_db->isInteger("max_box_size")) {
          main_db->getIntegerArray("max_box_size", &max_box_size[0], dim.getValue());
       }
       breakUpBoxes(mapped_box_level, max_box_size);
@@ -228,13 +225,12 @@ int main(
        * the same as the one in the baseline database.  The regression
        * test is invalid of we don't have the same MappedBoxLevel.
        */
-      if ( generate_baseline ) {
+      if (generate_baseline) {
          tbox::pout << "\nMappedBoxLevel for review:\n"
-                    << mapped_box_level.format("REVIEW: ",2)
+                    << mapped_box_level.format("REVIEW: ", 2)
                     << std::endl;
          mapped_box_level.putToDatabase(*mapped_box_level_db);
-      }
-      else {
+      } else {
          /*
           * Get the baselined MappedBoxLevel and compare.
           */
@@ -242,15 +238,15 @@ int main(
          baseline_mapped_box_level.getFromDatabase(
             *mapped_box_level_db,
             grid_geometry);
-         if ( mapped_box_level != baseline_mapped_box_level ) {
-            tbox::perr <<"MultiblockBoxTree test problem:\n"
-                       <<"the MappedBoxLevel generated is different\n"
-                       <<"from the one in the database.  Thus the check\n"
-                       <<"cannot be done.\n";
+         if (mapped_box_level != baseline_mapped_box_level) {
+            tbox::perr << "MultiblockBoxTree test problem:\n"
+                       << "the MappedBoxLevel generated is different\n"
+                       << "from the one in the database.  Thus the check\n"
+                       << "cannot be done.\n";
             ++fail_count;
-            tbox::pout << mapped_box_level.format("M: ",2)
+            tbox::pout << mapped_box_level.format("M: ", 2)
                        << std::endl
-                       << baseline_mapped_box_level.format("B: ",2);
+                       << baseline_mapped_box_level.format("B: ", 2);
          }
       }
 
@@ -265,21 +261,21 @@ int main(
       /*
        * Find overlaps.
        */
-      hier::IntVector connector_width(dim,1);
-      if ( main_db->isInteger("connector_width") ) {
+      hier::IntVector connector_width(dim, 1);
+      if (main_db->isInteger("connector_width")) {
          main_db->getIntegerArray("connector_width", &connector_width[0], dim.getValue());
       }
 
       hier::NeighborhoodSet neighborhood_set;
 
-      const hier::IntVector &refinement_ratio(one_vector);
+      const hier::IntVector& refinement_ratio(one_vector);
 
-      for ( hier::BoxSet::iterator bi=mapped_box_level.getMappedBoxes().begin();
-            bi!=mapped_box_level.getMappedBoxes().end(); ++bi ) {
+      for (hier::BoxSet::iterator bi = mapped_box_level.getMappedBoxes().begin();
+           bi != mapped_box_level.getMappedBoxes().end(); ++bi) {
 
-         const hier::Box &mapped_box(*bi);
+         const hier::Box& mapped_box(*bi);
 
-         hier::BoxSet &neighbors(neighborhood_set[mapped_box.getId()]);
+         hier::BoxSet& neighbors(neighborhood_set[mapped_box.getId()]);
 
          hier::Box grown_box(mapped_box);
          grown_box.grow(connector_width);
@@ -299,23 +295,22 @@ int main(
          connector_width,
          neighborhood_set);
 
-
       /*
        * Write the baseline NeighborhoodSet or check against it.
        */
-      if ( generate_baseline ) {
+      if (generate_baseline) {
 
          /*
           * If writing baseline, verify the results against the
           * exhaustive search method first.
           */
          hier::NeighborhoodSet neighborhood_set_from_exhaustive_search;
-         for ( hier::BoxSet::iterator bi=mapped_box_level.getMappedBoxes().begin();
-               bi!=mapped_box_level.getMappedBoxes().end(); ++bi ) {
+         for (hier::BoxSet::iterator bi = mapped_box_level.getMappedBoxes().begin();
+              bi != mapped_box_level.getMappedBoxes().end(); ++bi) {
 
-            const hier::Box &mapped_box(*bi);
+            const hier::Box& mapped_box(*bi);
 
-            hier::BoxSet &neighbors(neighborhood_set_from_exhaustive_search[mapped_box.getId()]);
+            hier::BoxSet& neighbors(neighborhood_set_from_exhaustive_search[mapped_box.getId()]);
 
             hier::Box grown_mapped_box(mapped_box);
             grown_mapped_box.grow(connector_width);
@@ -335,18 +330,18 @@ int main(
             connector_width,
             neighborhood_set_from_exhaustive_search);
 
-         if ( connector.getNeighborhoodSets() !=
-              connector_from_exhaustive_search.getNeighborhoodSets() ) {
+         if (connector.getNeighborhoodSets() !=
+             connector_from_exhaustive_search.getNeighborhoodSets()) {
 
-            tbox::perr <<"Failed verification in baseline generation:\n"
-                       <<"Neighborhoods from the tree search do not match\n"
-                       <<"neighborhoods from exhaustive search.\n"
-                       <<"You should determine the cause and fix the mismatch\n"
-                       <<"before generating the baseline.\n"
-                       <<"Connector from tree search:\n"
-                       << connector.format("TREE: ",2)
-                       <<"Connector from exhautive search:\n"
-                       << connector_from_exhaustive_search.format("EXHAUSTIVE: ",2)
+            tbox::perr << "Failed verification in baseline generation:\n"
+                       << "Neighborhoods from the tree search do not match\n"
+                       << "neighborhoods from exhaustive search.\n"
+                       << "You should determine the cause and fix the mismatch\n"
+                       << "before generating the baseline.\n"
+                       << "Connector from tree search:\n"
+                       << connector.format("TREE: ", 2)
+                       << "Connector from exhautive search:\n"
+                       << connector_from_exhaustive_search.format("EXHAUSTIVE: ", 2)
                        << std::endl;
 
             hier::Connector exhaustive_minus_tree, tree_minus_exhaustive;
@@ -358,53 +353,52 @@ int main(
                tree_minus_exhaustive,
                connector,
                connector_from_exhaustive_search);
-            tbox::perr <<"What's found by exhaustive search but not by tree search:\n"
-                       <<exhaustive_minus_tree.format("",2)
-                       <<"\nWhat's found by tree search but not by exhaustive search:\n"
-                       <<tree_minus_exhaustive.format("",2)
+            tbox::perr << "What's found by exhaustive search but not by tree search:\n"
+                       << exhaustive_minus_tree.format("", 2)
+                       << "\nWhat's found by tree search but not by exhaustive search:\n"
+                       << tree_minus_exhaustive.format("", 2)
                        << std::endl;
 
-            tbox::perr <<"Baseline was NOT generated due to the above problem!"
-                       <<std::endl;
+            tbox::perr << "Baseline was NOT generated due to the above problem!"
+                       << std::endl;
             ++fail_count;
-         }
-         else {
+         } else {
 
             connector.getNeighborhoodSets().putToDatabase(*connector_db);
             tbox::pout << "Connector for review:\n"
-                       << connector.format("REVIEW: ",2)
-                       <<"This data has been verified by comparing against the results\n"
-                       <<"of an exhaustive search and a new baseline has been written.\n"
-                       <<"However, you may wan to manually verify\n"
-                       <<"it before using the new baseline.\n"
+                       << connector.format("REVIEW: ", 2)
+                       << "This data has been verified by comparing against the results\n"
+                       << "of an exhaustive search and a new baseline has been written.\n"
+                       << "However, you may wan to manually verify\n"
+                       << "it before using the new baseline.\n"
                        << std::endl;
          }
 
-      }
-      else {
+      } else {
          /*
           * Get the baseline Connector NeighborhoodSet and compare.
           */
          hier::NeighborhoodSet baseline_neighborhoods;
          baseline_neighborhoods.getFromDatabase(*connector_db);
-         if ( baseline_neighborhoods != connector.getNeighborhoodSets() ) {
-            tbox::perr<<"MultiblockBoxTree test problem:\n"
-                      <<"the NeighborhoodSets generated is different\n"
-                      <<"from the one in the database.\n"
-                      <<"computed neighborhood set:\n"
-                      <<connector.getNeighborhoodSets().format("COMPUTED:  ",2)
-                      <<"baseline neighborhood set\n"
-                      <<baseline_neighborhoods.format("BASELINE:  ",2);
-         ++fail_count;
+         if (baseline_neighborhoods != connector.getNeighborhoodSets()) {
+            tbox::perr << "MultiblockBoxTree test problem:\n"
+                       << "the NeighborhoodSets generated is different\n"
+                       << "from the one in the database.\n"
+                       << "computed neighborhood set:\n"
+                       << connector.getNeighborhoodSets().format("COMPUTED:  ", 2)
+                       << "baseline neighborhood set\n"
+                       << baseline_neighborhoods.format("BASELINE:  ", 2);
+            ++fail_count;
          }
       }
 
       /*
        * Remind user to manually check the new baseline.
        */
-      if ( generate_baseline ) {
+      if (generate_baseline) {
          tbox::pout << "NEW BASELINE GENERATED!\n"
-                    << "Please manually review the output for accuracy before using the baseline.\n"
+                    <<
+         "Please manually review the output for accuracy before using the baseline.\n"
                     << "If it is correct, accept it by setting generate_baseline = FALSE\n"
                     << "in input file."
                     << std::endl;
@@ -443,33 +437,29 @@ int main(
    return fail_count;
 }
 
-
-
-
-
 /*
  * Break up boxes in the given MappedBoxLevel.  This method is meant
  * to create a bunch of small boxes from the user-input boxes in order
  * to set up a non-trivial mesh configuration.
  */
 void breakUpBoxes(
-   hier::MappedBoxLevel &mapped_box_level,
-   const hier::IntVector &max_box_size) {
+   hier::MappedBoxLevel& mapped_box_level,
+   const hier::IntVector& max_box_size) {
 
-   const tbox::Dimension &dim(mapped_box_level.getDim());
+   const tbox::Dimension& dim(mapped_box_level.getDim());
 
    hier::MappedBoxLevel domain_mapped_box_level(mapped_box_level);
    domain_mapped_box_level.setParallelState(hier::MappedBoxLevel::GLOBALIZED);
 
-   mesh::TreeLoadBalancer load_balancer( mapped_box_level.getDim() );
+   mesh::TreeLoadBalancer load_balancer(mapped_box_level.getDim());
 
    const tbox::Pointer<hier::PatchHierarchy> hierarchy;
 
    hier::Connector dummy_connector;
 
-   const hier::IntVector min_size(dim,2);
-   const hier::IntVector bad_interval(dim,1);
-   const hier::IntVector cut_factor(dim,1);
+   const hier::IntVector min_size(dim, 2);
+   const hier::IntVector bad_interval(dim, 1);
+   const hier::IntVector cut_factor(dim, 1);
 
    load_balancer.loadBalanceMappedBoxLevel(
       mapped_box_level,
@@ -484,12 +474,7 @@ void breakUpBoxes(
       domain_mapped_box_level,
       bad_interval,
       cut_factor);
-
-   return;
 }
-
-
-
 
 /*
  * Find overlapping MappedBoxes using an exhaustive search.
@@ -500,18 +485,18 @@ void breakUpBoxes(
 void exhaustiveFindOverlapMappedBoxes(
    hier::BoxSet& overlap_mapped_boxes,
    const hier::Box& mapped_box,
-   const hier::IntVector &refinement_ratio,
-   const tbox::ConstPointer<hier::GridGeometry> &grid_geometry,
-   const hier::BoxSet& search_mapped_boxes )
+   const hier::IntVector& refinement_ratio,
+   const tbox::ConstPointer<hier::GridGeometry>& grid_geometry,
+   const hier::BoxSet& search_mapped_boxes)
 {
 
    hier::Box transformed_box(mapped_box);
    hier::BlockId transformed_block_id(mapped_box.getBlockId());
 
-   for ( hier::BoxSet::const_iterator bi=search_mapped_boxes.begin();
-         bi!=search_mapped_boxes.end(); ++bi ) {
+   for (hier::BoxSet::const_iterator bi = search_mapped_boxes.begin();
+        bi != search_mapped_boxes.end(); ++bi) {
 
-      const hier::Box &search_mapped_box(*bi);
+      const hier::Box& search_mapped_box(*bi);
 
       /*
        * Get transformed_box in coordinate of search_mapped_box, if
@@ -519,24 +504,22 @@ void exhaustiveFindOverlapMappedBoxes(
        * neighbors, there can't be any overlap between mapped_box and
        * search_mapped_box.
        */
-      if ( transformed_block_id != search_mapped_box.getBlockId() ) {
+      if (transformed_block_id != search_mapped_box.getBlockId()) {
          transformed_box = mapped_box;
          bool transformed = grid_geometry->transformBox(transformed_box,
-                                                        refinement_ratio,
-                                                        search_mapped_box.getBlockId(),
-                                                        mapped_box.getBlockId());
+               refinement_ratio,
+               search_mapped_box.getBlockId(),
+               mapped_box.getBlockId());
          transformed_block_id = transformed ?
             search_mapped_box.getBlockId() :
             mapped_box.getBlockId();
       }
 
-      if ( transformed_block_id == search_mapped_box.getBlockId() ) {
-         if ( transformed_box.intersects(search_mapped_box) ) {
+      if (transformed_block_id == search_mapped_box.getBlockId()) {
+         if (transformed_box.intersects(search_mapped_box)) {
             overlap_mapped_boxes.insert(search_mapped_box);
          }
       }
 
    }
-
-   return;
 }

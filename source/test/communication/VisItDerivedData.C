@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   VisItDerivedData class to write patch owner value. 
+ * Description:   VisItDerivedData class to write patch owner value.
  *
  ************************************************************************/
 #ifdef HAVE_CONFIG_H
@@ -45,7 +45,7 @@ bool VisItDerivedData::packDerivedDataIntoDoubleBuffer(
       // Did not register this name.
       TBOX_ERROR(
          "Unregistered variable name '" << variable_name << "' in\n"
-         <<
+                                        <<
          "VisItDerivedData::packDerivedPatchDataIntoDoubleBuffer");
    }
 

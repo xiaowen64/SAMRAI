@@ -1,13 +1,12 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
  * Description:   Run multiblock Euler AMR
  *
  ************************************************************************/
-
 
 #include "SAMRAI/SAMRAI_config.h"
 
@@ -77,11 +76,11 @@ int main(
 
    if ((argc != 2) && (argc != 4)) {
       tbox::pout << "USAGE:  " << argv[0] << " <input filename> "
-                                          <<
+                 <<
       "<restart dir> <restore number> [options]\n"
-                                          << "  options:\n"
-                                          << "  none at this time"
-                                          << endl;
+                 << "  options:\n"
+                 << "  none at this time"
+                 << endl;
       tbox::SAMRAI_MPI::abort();
       return -1;
    } else {

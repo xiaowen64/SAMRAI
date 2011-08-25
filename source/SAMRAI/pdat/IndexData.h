@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   hier 
+ * Description:   hier
  *
  ************************************************************************/
 
@@ -205,7 +205,7 @@ public:
    void
    appendItemPointer(
       const hier::Index& index,
-      TYPE* item);
+      TYPE * item);
 
    /**
     * Add a new item to the head of the irregular index set
@@ -230,7 +230,7 @@ public:
    void
    addItemPointer(
       const hier::Index& index,
-      TYPE* item);
+      TYPE * item);
 
    /**
     * Remove (deallocate) the item in the irregular index set located at
@@ -260,7 +260,7 @@ public:
    void
    replaceAddItemPointer(
       const hier::Index& index,
-      TYPE* item);
+      TYPE * item);
 
    /**
     * Remove (deallocate) the item in the irregular index set located at
@@ -290,7 +290,7 @@ public:
    void
    replaceAppendItemPointer(
       const hier::Index& index,
-      TYPE* item);
+      TYPE * item);
 
    /**
     * Remove (deallocate) the item in the irregular index set located at
@@ -422,7 +422,7 @@ private:
     */
    void
    removeNodeFromList(
-      IndexDataNode<TYPE, BOX_GEOMETRY>* node);
+      IndexDataNode<TYPE, BOX_GEOMETRY> * node);
 
    IndexData(
       const IndexData<TYPE, BOX_GEOMETRY>&);       // not implemented

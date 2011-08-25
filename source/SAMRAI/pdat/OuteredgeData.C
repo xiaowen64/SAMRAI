@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Templated outeredge centered patch data type 
+ * Description:   Templated outeredge centered patch data type
  *
  ************************************************************************/
 
@@ -30,7 +30,8 @@
 namespace SAMRAI {
 namespace pdat {
 
-template<class TYPE> const int OuteredgeData<TYPE>::PDAT_OUTEREDGEDATA_VERSION = 1;
+template<class TYPE>
+const int OuteredgeData<TYPE>::PDAT_OUTEREDGEDATA_VERSION = 1;
 
 /*
  *************************************************************************
@@ -1237,7 +1238,7 @@ void OuteredgeData<TYPE>::printAxisSide(
          edgebox * d_data[axis][face_normal][side].getBox();
       for (hier::Box::Iterator ii(region); ii; ii++) {
          os << "array" << ii() << " = "
-         << d_data[axis][face_normal][side](ii(), depth) << std::endl;
+            << d_data[axis][face_normal][side](ii(), depth) << std::endl;
          os << std::flush;
       }
 

@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   A box structure representing a portion of the AMR index space 
+ * Description:   A box structure representing a portion of the AMR index space
  *
  ************************************************************************/
 
@@ -67,8 +67,8 @@ public:
     */
    DatabaseBox(
       const tbox::Dimension& dim,
-      const int* lower,
-      const int* upper);
+      const int * lower,
+      const int * upper);
 
    /**
     * The copy constructor copies the index space of the argument box.

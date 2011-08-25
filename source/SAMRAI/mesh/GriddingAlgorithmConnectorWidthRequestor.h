@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   GriddingAlgorihtm's implementation of PatchHierarchy 
+ * Description:   GriddingAlgorihtm's implementation of PatchHierarchy
  *
  ************************************************************************/
 
@@ -18,18 +18,17 @@
 namespace SAMRAI {
 namespace mesh {
 
-
 /*!
  * @brief Implementation of the strategy class
  * hier::PatchHierarchy::ConnectorWidthRequestorStrategy to tell the
  * hier::PatchHierarchy how wide GriddingAlgorithm needs Connectors
  * between hierarchy levels to be.
  */
-class GriddingAlgorithmConnectorWidthRequestor
-   : public hier::PatchHierarchy::ConnectorWidthRequestorStrategy {
+class GriddingAlgorithmConnectorWidthRequestor:
+   public hier::PatchHierarchy::ConnectorWidthRequestorStrategy
+{
 
 public:
-
    /*!
     * @brief Constructor.
     */
@@ -50,13 +49,13 @@ public:
     *
     * @param[in]  patch_hierarchy
     */
-   void computeRequiredConnectorWidths(
+   void
+   computeRequiredConnectorWidths(
       std::vector<hier::IntVector>& self_connector_widths,
       std::vector<hier::IntVector>& fine_connector_widths,
       const hier::PatchHierarchy& patch_hierarchy) const;
 
 private:
-
    /*!
     * @brief Compute the Connector widths needed at a given level
     * number to support generating given Connector width at finer

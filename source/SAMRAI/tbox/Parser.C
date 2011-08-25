@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Parser that reads the input database grammar 
+ * Description:   Parser that reads the input database grammar
  *
  ************************************************************************/
 
@@ -334,9 +334,9 @@ int Parser::yyinput(
    int byte = 0;
    if (mpi.getRank() == 0) {
       byte = static_cast<int>(fread(buffer,
-                                    1,
-                                    max_size,
-                                    d_parse_stack.getFirstItem().d_fstream));
+                                 1,
+                                 max_size,
+                                 d_parse_stack.getFirstItem().d_fstream));
    }
    mpi.Bcast(&byte, 1, MPI_INT, 0);
    if (byte > 0) {

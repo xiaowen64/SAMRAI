@@ -1,16 +1,15 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Describes boundaries for a patch 
+ * Description:   Describes boundaries for a patch
  *
  ************************************************************************/
 
 namespace SAMRAI {
 namespace hier {
-
 
 /*
  *************************************************************************
@@ -20,9 +19,9 @@ namespace hier {
  *************************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-PatchBoundaries::PatchBoundaries()
-: d_dim(tbox::Dimension::getInvalidDimension()),
-  d_array_of_bboxes(0)
+PatchBoundaries::PatchBoundaries():
+   d_dim(tbox::Dimension::getInvalidDimension()),
+   d_array_of_bboxes(0)
 {
 }
 

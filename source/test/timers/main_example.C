@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Example program to demonstrate timers. 
+ * Description:   Example program to demonstrate timers.
  *
  ************************************************************************/
 
@@ -40,9 +40,9 @@ int main(
 
       if ((argc != 2)) {
          tbox::pout << "USAGE:  " << argv[0] << " <input filename> "
-                                             << "  options:\n"
-                                             << "  none at this time"
-                                             << endl;
+                    << "  options:\n"
+                    << "  none at this time"
+                    << endl;
          tbox::SAMRAI_MPI::abort();
          return -1;
       }

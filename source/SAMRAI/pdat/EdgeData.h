@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Templated edge centered patch data type 
+ * Description:   Templated edge centered patch data type
  *
  ************************************************************************/
 
@@ -469,11 +469,15 @@ private:
    operator = (
       const EdgeData<TYPE>&);                           // not implemented
 
-   void copyWithRotation(const EdgeData<TYPE>& src,
-                         const EdgeOverlap& overlap);
+   void
+   copyWithRotation(
+      const EdgeData<TYPE>& src,
+      const EdgeOverlap& overlap);
 
-   void packWithRotation(tbox::MessageStream& stream,
-                         const EdgeOverlap& overlap) const;
+   void
+   packWithRotation(
+      tbox::MessageStream& stream,
+      const EdgeOverlap& overlap) const;
 
    int d_depth;
    ArrayData<TYPE> d_data[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];

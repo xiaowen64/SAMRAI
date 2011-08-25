@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Class to record statistics during program execution. 
+ * Description:   Class to record statistics during program execution.
  *
  ************************************************************************/
 
@@ -380,7 +380,7 @@ void Statistic::printClassData(
    if (d_stat_type == PROC_STAT) {
       for (is = 0; is < d_seq_counter; is++) {
          stream << "     sequence[" << is
-         << "] : value = " << d_proc_array[is].value << std::endl;
+                << "] : value = " << d_proc_array[is].value << std::endl;
       }
    } else {
       for (is = 0; is < d_seq_counter; is++) {

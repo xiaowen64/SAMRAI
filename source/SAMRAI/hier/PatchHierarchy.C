@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   An AMR hierarchy of patch levels 
+ * Description:   An AMR hierarchy of patch levels
  *
  ************************************************************************/
 
@@ -31,7 +31,7 @@ namespace hier {
 
 const int PatchHierarchy::HIER_PATCH_HIERARCHY_VERSION = 3;
 
-std::vector<const PatchHierarchy::ConnectorWidthRequestorStrategy*>
+std::vector<const PatchHierarchy::ConnectorWidthRequestorStrategy *>
 PatchHierarchy::s_class_cwrs;
 
 tbox::StartupShutdownManager::Handler
@@ -60,10 +60,10 @@ PatchHierarchy::PatchHierarchy(
    d_dim(geometry->getDim()),
 
    d_max_levels(1),
-   d_ratio_to_coarser(1, hier::IntVector(d_dim,1)),
-   d_proper_nesting_buffer(d_max_levels-1, 1),
-   d_smallest_patch_size(1, hier::IntVector(d_dim,1)),
-   d_largest_patch_size(1, hier::IntVector(d_dim,tbox::MathUtilities<int>::getMax())),
+   d_ratio_to_coarser(1, hier::IntVector(d_dim, 1)),
+   d_proper_nesting_buffer(d_max_levels - 1, 1),
+   d_smallest_patch_size(1, hier::IntVector(d_dim, 1)),
+   d_largest_patch_size(1, hier::IntVector(d_dim, tbox::MathUtilities<int>::getMax())),
    d_allow_patches_smaller_than_ghostwidth(false),
    d_allow_patches_smaller_than_minimum_size_to_prevent_overlaps(false),
    d_self_connector_widths(),
@@ -89,10 +89,9 @@ PatchHierarchy::PatchHierarchy(
 
    d_individual_cwrs = s_class_cwrs;
 
-   if ( !database.isNull() ) {
+   if (!database.isNull()) {
       getFromInput(database);
-   }
-   else {
+   } else {
       /*
        * Without input database, the default is single-level with no
        * patch size constraints.
@@ -141,97 +140,92 @@ void PatchHierarchy::getFromInput(
 
    d_max_levels = db->getIntegerWithDefault("max_levels", d_max_levels);
 
-   if ( d_max_levels != int(d_ratio_to_coarser.size()) ) {
-      d_ratio_to_coarser.resize( d_max_levels, d_ratio_to_coarser.back() );
-      d_smallest_patch_size.resize( d_max_levels, d_smallest_patch_size.back() );
-      d_largest_patch_size.resize( d_max_levels, d_largest_patch_size.back() );
+   if (d_max_levels != int(d_ratio_to_coarser.size())) {
+      d_ratio_to_coarser.resize(d_max_levels, d_ratio_to_coarser.back());
+      d_smallest_patch_size.resize(d_max_levels, d_smallest_patch_size.back());
+      d_largest_patch_size.resize(d_max_levels, d_largest_patch_size.back());
    }
 
    std::vector<std::string> level_names(d_max_levels, std::string("level_"));
-   for ( int ln=0; ln<d_max_levels; ++ln ) {
+   for (int ln = 0; ln < d_max_levels; ++ln) {
       level_names[ln] += tbox::Utilities::intToString(ln);
    }
 
    // Read in ratio_to_coarser.
-   if ( db->isDatabase("ratio_to_coarser") ) {
+   if (db->isDatabase("ratio_to_coarser")) {
       const tbox::Pointer<tbox::Database>
-         tmp_db(db->getDatabase("ratio_to_coarser"));
-      for ( int ln=1; ln<d_max_levels; ++ln ) {
-         if ( tmp_db->isInteger(level_names[ln]) ) {
+      tmp_db(db->getDatabase("ratio_to_coarser"));
+      for (int ln = 1; ln < d_max_levels; ++ln) {
+         if (tmp_db->isInteger(level_names[ln])) {
             tmp_db->getIntegerArray(level_names[ln],
-                                    &d_ratio_to_coarser[ln][0],
-                                    d_dim.getValue());
-         }
-         else {
-            d_ratio_to_coarser[ln] = d_ratio_to_coarser[ln-1];
+               &d_ratio_to_coarser[ln][0],
+               d_dim.getValue());
+         } else {
+            d_ratio_to_coarser[ln] = d_ratio_to_coarser[ln - 1];
          }
       }
    }
 
    // Read in smallest_patch_size.
-   if ( db->isDatabase("smallest_patch_size") ) {
+   if (db->isDatabase("smallest_patch_size")) {
       const tbox::Pointer<tbox::Database>
-         tmp_db(db->getDatabase("smallest_patch_size"));
-      for ( int ln=0; ln<d_max_levels; ++ln ) {
-         if ( tmp_db->isInteger(level_names[ln]) ) {
+      tmp_db(db->getDatabase("smallest_patch_size"));
+      for (int ln = 0; ln < d_max_levels; ++ln) {
+         if (tmp_db->isInteger(level_names[ln])) {
             tmp_db->getIntegerArray(level_names[ln],
-                                    &d_smallest_patch_size[ln][0],
-                                    d_dim.getValue());
-         }
-         else {
-            d_smallest_patch_size[ln] = d_smallest_patch_size[ln-1];
+               &d_smallest_patch_size[ln][0],
+               d_dim.getValue());
+         } else {
+            d_smallest_patch_size[ln] = d_smallest_patch_size[ln - 1];
          }
       }
    }
 
    // Read in largest_patch_size.
-   if ( db->isDatabase("largest_patch_size") ) {
+   if (db->isDatabase("largest_patch_size")) {
       const tbox::Pointer<tbox::Database>
-         tmp_db(db->getDatabase("largest_patch_size"));
-      for ( int ln=0; ln<d_max_levels; ++ln ) {
-         if ( tmp_db->isInteger(level_names[ln]) ) {
+      tmp_db(db->getDatabase("largest_patch_size"));
+      for (int ln = 0; ln < d_max_levels; ++ln) {
+         if (tmp_db->isInteger(level_names[ln])) {
             tmp_db->getIntegerArray(level_names[ln],
-                                    &d_largest_patch_size[ln][0],
-                                    d_dim.getValue());
-         }
-         else {
-            d_largest_patch_size[ln] = d_largest_patch_size[ln-1];
+               &d_largest_patch_size[ln][0],
+               d_dim.getValue());
+         } else {
+            d_largest_patch_size[ln] = d_largest_patch_size[ln - 1];
          }
       }
    }
 
-   tbox::Array<int> proper_nesting_buffer(1,1);
+   tbox::Array<int> proper_nesting_buffer(1, 1);
    if (db->isInteger("proper_nesting_buffer")) {
       proper_nesting_buffer = db->getIntegerArray("proper_nesting_buffer");
    }
    d_proper_nesting_buffer.clear();
-   for ( int ln=0; ln<d_max_levels-1; ++ln ) {
-      if ( ln < proper_nesting_buffer.size() ) {
+   for (int ln = 0; ln < d_max_levels - 1; ++ln) {
+      if (ln < proper_nesting_buffer.size()) {
          d_proper_nesting_buffer.push_back(int(proper_nesting_buffer[ln]));
-      }
-      else {
-         d_proper_nesting_buffer.push_back(int(d_proper_nesting_buffer[ln-1]));
+      } else {
+         d_proper_nesting_buffer.push_back(int(d_proper_nesting_buffer[ln - 1]));
       }
    }
    for (size_t ln = 0; ln < d_proper_nesting_buffer.size(); ln++) {
       if (d_proper_nesting_buffer[ln] < 0) {
          TBOX_ERROR(
             d_object_name << ":  "
-            <<
+                          <<
             "Key data `proper_nesting_buffer' has values < 0.");
       }
       if (d_proper_nesting_buffer[ln] == 0) {
          TBOX_WARNING(
             d_object_name << ":  "
-            <<
+                          <<
             "Using zero `proper_nesting_buffer' values.");
       }
    }
 
-
    d_allow_patches_smaller_than_ghostwidth =
       db->getBoolWithDefault("allow_patches_smaller_than_ghostwidth",
-                             d_allow_patches_smaller_than_ghostwidth);
+         d_allow_patches_smaller_than_ghostwidth);
 
    d_allow_patches_smaller_than_minimum_size_to_prevent_overlaps =
       db->getBoolWithDefault(
@@ -240,13 +234,13 @@ void PatchHierarchy::getFromInput(
    if (d_allow_patches_smaller_than_minimum_size_to_prevent_overlaps) {
       TBOX_WARNING(
          d_object_name << ":  "
-         <<
+                       <<
          "Allowing patches smaller than the given "
-         <<
+                       <<
          "smallest patch size.  Note:  If periodic "
-         <<
+                       <<
          "boundary conditions are used, this flag is "
-         << "ignored in the periodic directions.");
+                       << "ignored in the periodic directions.");
    }
 
 }
@@ -258,23 +252,23 @@ void PatchHierarchy::getFromInput(
  *************************************************************************
  */
 void PatchHierarchy::registerConnectorWidthRequestor(
-   const ConnectorWidthRequestorStrategy &cwrs )
+   const ConnectorWidthRequestorStrategy& cwrs)
 {
-   if ( d_connector_widths_are_computed ) {
+   if (d_connector_widths_are_computed) {
       TBOX_ERROR("PatchHierarchy::registerConnectorWidthRequestor:\n"
-                 <<"Registering a new ConnectorWidthRequestorStrategy after\n"
-                 <<"calling getRequiredConnectorWidth() is disallowed because\n"
-                 <<"it may cause getRequiredConnectorWidth() to return\n"
-                 <<"conflicting requirements.");
+         << "Registering a new ConnectorWidthRequestorStrategy after\n"
+         << "calling getRequiredConnectorWidth() is disallowed because\n"
+         << "it may cause getRequiredConnectorWidth() to return\n"
+         << "conflicting requirements.");
    }
 
    size_t i;
-   for ( i=0; i<d_individual_cwrs.size(); ++i ) {
-      if ( d_individual_cwrs[i] == &cwrs ) {
+   for (i = 0; i < d_individual_cwrs.size(); ++i) {
+      if (d_individual_cwrs[i] == &cwrs) {
          break;
       }
    }
-   if ( i == d_individual_cwrs.size() ) {
+   if (i == d_individual_cwrs.size()) {
       d_individual_cwrs.push_back(&cwrs);
    }
 }
@@ -288,15 +282,15 @@ void PatchHierarchy::registerConnectorWidthRequestor(
  *************************************************************************
  */
 void PatchHierarchy::registerAutoConnectorWidthRequestorStrategy(
-   const ConnectorWidthRequestorStrategy &cwrs )
+   const ConnectorWidthRequestorStrategy& cwrs)
 {
    size_t i;
-   for ( i=0; i<s_class_cwrs.size(); ++i ) {
-      if ( s_class_cwrs[i] == &cwrs ) {
+   for (i = 0; i < s_class_cwrs.size(); ++i) {
+      if (s_class_cwrs[i] == &cwrs) {
          break;
       }
    }
-   if ( i == s_class_cwrs.size() ) {
+   if (i == s_class_cwrs.size()) {
       s_class_cwrs.push_back(&cwrs);
    }
 }
@@ -309,7 +303,7 @@ void PatchHierarchy::registerAutoConnectorWidthRequestorStrategy(
 void PatchHierarchy::initializeCallback()
 {
    /*
-    * No-op.  This class doesn't 
+    * No-op.  This class doesn't
     */
 }
 
@@ -321,7 +315,7 @@ void PatchHierarchy::initializeCallback()
 
 void PatchHierarchy::finalizeCallback()
 {
-   for ( int i=0; i<int(s_class_cwrs.size()); ++i ) {
+   for (int i = 0; i < int(s_class_cwrs.size()); ++i) {
       s_class_cwrs[i] = NULL;
    }
    s_class_cwrs.clear();
@@ -345,18 +339,18 @@ IntVector PatchHierarchy::getRequiredConnectorWidth(
    TBOX_ASSERT(base_ln >= 0);
    TBOX_ASSERT(base_ln < d_max_levels);
 
-   if ( !d_connector_widths_are_computed ) {
+   if (!d_connector_widths_are_computed) {
 
-      const IntVector &zero_vector(IntVector::getZero(d_dim));
+      const IntVector& zero_vector(IntVector::getZero(d_dim));
       d_self_connector_widths.clear();
-      d_self_connector_widths.insert( d_self_connector_widths.begin(),
-                                      d_max_levels,
-                                      zero_vector );
+      d_self_connector_widths.insert(d_self_connector_widths.begin(),
+         d_max_levels,
+         zero_vector);
       d_fine_connector_widths.clear();
-      if ( d_max_levels > 1 ) {
-         d_fine_connector_widths.insert( d_fine_connector_widths.begin(),
-                                         d_max_levels-1,
-                                         zero_vector );
+      if (d_max_levels > 1) {
+         d_fine_connector_widths.insert(d_fine_connector_widths.begin(),
+            d_max_levels - 1,
+            zero_vector);
       }
 
       /*
@@ -366,17 +360,17 @@ IntVector PatchHierarchy::getRequiredConnectorWidth(
 
       std::vector<hier::IntVector> self_connector_widths;
       std::vector<hier::IntVector> fine_connector_widths;
-      for ( size_t i=0; i<d_individual_cwrs.size(); ++i ) {
+      for (size_t i = 0; i < d_individual_cwrs.size(); ++i) {
          d_individual_cwrs[i]->computeRequiredConnectorWidths(
             self_connector_widths,
             fine_connector_widths,
             *this);
-         TBOX_ASSERT( self_connector_widths.size() == static_cast<unsigned int>(d_max_levels) );
-         TBOX_ASSERT( fine_connector_widths.size() == static_cast<unsigned int>(d_max_levels-1) );
-         for ( int ln=0; ln<d_max_levels; ++ln ) {
+         TBOX_ASSERT(self_connector_widths.size() == static_cast<unsigned int>(d_max_levels));
+         TBOX_ASSERT(fine_connector_widths.size() == static_cast<unsigned int>(d_max_levels - 1));
+         for (int ln = 0; ln < d_max_levels; ++ln) {
             d_self_connector_widths[ln].max(self_connector_widths[ln]);
          }
-         for ( int ln=0; ln<d_max_levels-1; ++ln ) {
+         for (int ln = 0; ln < d_max_levels - 1; ++ln) {
             d_fine_connector_widths[ln].max(fine_connector_widths[ln]);
          }
       }
@@ -390,13 +384,13 @@ IntVector PatchHierarchy::getRequiredConnectorWidth(
        * cannot be expected know about fine_connector_width
        * requirements of other width requestors.
        */
-      for ( int ln=0; ln<d_max_levels-1; ++ln ) {
+      for (int ln = 0; ln < d_max_levels - 1; ++ln) {
          d_self_connector_widths[ln].max(d_fine_connector_widths[ln]);
       }
       d_connector_widths_are_computed = true;
    }
 
-   if ( base_ln != head_ln ) {
+   if (base_ln != head_ln) {
       if (head_ln == base_ln + 1) {
          // Width is for fine Connector.
          return d_fine_connector_widths[base_ln];
@@ -405,8 +399,8 @@ IntVector PatchHierarchy::getRequiredConnectorWidth(
          return d_fine_connector_widths[head_ln] * d_ratio_to_coarser[base_ln];
       }
       TBOX_ERROR("PatchHierarchy::getRequiredConnectorWidth: base_ln and\n"
-                 <<"head_ln should differ by at most 1.\n"
-                 <<"base_ln=" << base_ln << "  head_ln=" << head_ln);
+         << "head_ln should differ by at most 1.\n"
+         << "base_ln=" << base_ln << "  head_ln=" << head_ln);
    }
    return d_self_connector_widths[base_ln];
 }
@@ -422,18 +416,18 @@ IntVector PatchHierarchy::getRequiredConnectorWidth(
  * with that width from the PatchLevels' MappedBoxLevels.
  *************************************************************************
  */
-const Connector &PatchHierarchy::getConnector(
+const Connector& PatchHierarchy::getConnector(
    const int base_ln,
    const int head_ln) const
 {
-   TBOX_ASSERT( base_ln >= 0 );
-   TBOX_ASSERT( base_ln < d_number_levels );
-   TBOX_ASSERT( head_ln >= 0 );
-   TBOX_ASSERT( head_ln < d_number_levels );
-   const MappedBoxLevel &base(*d_patch_levels[base_ln]->getMappedBoxLevel());
-   const MappedBoxLevel &head(*d_patch_levels[head_ln]->getMappedBoxLevel());
-   const IntVector width(getRequiredConnectorWidth(base_ln,head_ln));
-   const Connector &con = base.getPersistentOverlapConnectors().
+   TBOX_ASSERT(base_ln >= 0);
+   TBOX_ASSERT(base_ln < d_number_levels);
+   TBOX_ASSERT(head_ln >= 0);
+   TBOX_ASSERT(head_ln < d_number_levels);
+   const MappedBoxLevel& base(*d_patch_levels[base_ln]->getMappedBoxLevel());
+   const MappedBoxLevel& head(*d_patch_levels[head_ln]->getMappedBoxLevel());
+   const IntVector width(getRequiredConnectorWidth(base_ln, head_ln));
+   const Connector& con = base.getPersistentOverlapConnectors().
       findConnector(head, width);
    return con;
 }
@@ -466,10 +460,9 @@ PatchHierarchy::makeRefinedPatchHierarchy(
 
    hier::PatchHierarchy* fine_hierarchy =
       new hier::PatchHierarchy(fine_hierarchy_name,
-                               fine_geometry,
-                               tbox::Pointer<tbox::Database>(NULL),
-                               register_for_restart);
-
+         fine_geometry,
+         tbox::Pointer<tbox::Database>(NULL),
+         register_for_restart);
 
    // Set hierarchy parameters.
 
@@ -479,8 +472,10 @@ PatchHierarchy::makeRefinedPatchHierarchy(
    fine_hierarchy->d_largest_patch_size = d_largest_patch_size;
    fine_hierarchy->d_individual_cwrs = d_individual_cwrs;
    fine_hierarchy->d_proper_nesting_buffer = d_proper_nesting_buffer;
-   fine_hierarchy->d_allow_patches_smaller_than_ghostwidth = d_allow_patches_smaller_than_ghostwidth;
-   fine_hierarchy->d_allow_patches_smaller_than_minimum_size_to_prevent_overlaps = d_allow_patches_smaller_than_minimum_size_to_prevent_overlaps;
+   fine_hierarchy->d_allow_patches_smaller_than_ghostwidth =
+      d_allow_patches_smaller_than_ghostwidth;
+   fine_hierarchy->d_allow_patches_smaller_than_minimum_size_to_prevent_overlaps =
+      d_allow_patches_smaller_than_minimum_size_to_prevent_overlaps;
 
    for (int ln = 0; ln < d_number_levels; ln++) {
 
@@ -535,10 +530,9 @@ PatchHierarchy::makeCoarsenedPatchHierarchy(
 
    hier::PatchHierarchy* coarse_hierarchy =
       new hier::PatchHierarchy(coarse_hierarchy_name,
-                               coarse_geometry,
-                               tbox::Pointer<tbox::Database>(NULL),
-                               register_for_restart);
-
+         coarse_geometry,
+         tbox::Pointer<tbox::Database>(NULL),
+         register_for_restart);
 
    // Set hierarchy parameters.
 
@@ -596,24 +590,23 @@ void PatchHierarchy::makeNewPatchLevel(
     * for the hierarchy.  We are not (yet) checking everything we
     * should.
     */
-   if ( ln >= d_max_levels ) {
+   if (ln >= d_max_levels) {
       TBOX_ERROR("PatchHierarchy::makeNewPatchLevel: Cannot make\n"
-                 <<"level " << ln << " in a PatchHierarchy with a\n"
-                 <<"max of " << d_max_levels << ".\n"
-                 <<"Use setMaxNumberOfLevels() to change the max.\n");
+         << "level " << ln << " in a PatchHierarchy with a\n"
+         << "max of " << d_max_levels << ".\n"
+         << "Use setMaxNumberOfLevels() to change the max.\n");
    }
-   if ( ln > 0 ) {
+   if (ln > 0) {
       const IntVector expected_ratio(
-         d_ratio_to_coarser[ln]*(d_patch_levels[ln-1]->getRatioToLevelZero()));
-      if ( ln > 0 &&
-           ( new_mapped_box_level.getRefinementRatio() != expected_ratio ) ) {
+         d_ratio_to_coarser[ln] * (d_patch_levels[ln - 1]->getRatioToLevelZero()));
+      if (ln > 0 &&
+          (new_mapped_box_level.getRefinementRatio() != expected_ratio)) {
          TBOX_ERROR("PatchHierarchy::makeNewPatchLevel: patch level "
-                    << ln <<" has refinement ratio "
-                    << new_mapped_box_level.getRefinementRatio()
-                    <<", it should be " << expected_ratio );
+            << ln << " has refinement ratio "
+            << new_mapped_box_level.getRefinementRatio()
+            << ", it should be " << expected_ratio);
       }
    }
-
 
    if (ln >= d_number_levels) {
       d_number_levels = ln + 1;
@@ -621,8 +614,8 @@ void PatchHierarchy::makeNewPatchLevel(
    }
 
    d_patch_levels[ln] = d_patch_level_factory->allocate(
-      new_mapped_box_level,
-      d_grid_geometry, d_patch_descriptor, d_patch_factory);
+         new_mapped_box_level,
+         d_grid_geometry, d_patch_descriptor, d_patch_factory);
    d_patch_levels[ln]->getMappedBoxLevel()->cacheGlobalReducedData();
 
    d_patch_levels[ln]->setLevelNumber(ln);
@@ -672,25 +665,24 @@ void PatchHierarchy::setupDomainData()
     * GridGeometry and set up domain data dependent on it.
     */
    tbox::Array<BoxSet> domain_mapped_boxes(d_number_blocks);
-   for (int nb = 0; nb < d_number_blocks; nb++ ) {
+   for (int nb = 0; nb < d_number_blocks; nb++) {
       d_grid_geometry->computePhysicalDomain(domain_mapped_boxes[nb],
          IntVector::getOne(d_dim), BlockId(nb));
    }
 
    // Initialize the multiblock domain.
-   if ( d_number_blocks == 1 ) {
+   if (d_number_blocks == 1) {
       d_domain_mapped_box_level.initialize(
          domain_mapped_boxes[0],
          IntVector::getOne(d_dim),
          getGridGeometry(),
          tbox::SAMRAI_MPI::getSAMRAIWorld(),
          MappedBoxLevel::GLOBALIZED);
-   }
-   else {
+   } else {
       BoxSet all_domain_mapped_boxes;
       for (int nb = 0; nb < d_number_blocks; nb++) {
          all_domain_mapped_boxes.insert(domain_mapped_boxes[nb].begin(),
-                                        domain_mapped_boxes[nb].end());
+            domain_mapped_boxes[nb].end());
       }
       d_domain_mapped_box_level.initialize(
          all_domain_mapped_boxes,
@@ -706,30 +698,27 @@ void PatchHierarchy::setupDomainData()
       multiblock_mapped_boxes.insert(
          multiblock_mapped_boxes.end(),
          domain_mapped_boxes[nb].begin(),
-         domain_mapped_boxes[nb].end() );
+         domain_mapped_boxes[nb].end());
    }
    d_domain_search_tree_periodic.generateTree(
       d_grid_geometry,
       multiblock_mapped_boxes);
 
-
    // Generate the non-periodic multiblock domain search tree.
-   if ( PeriodicShiftCatalog::getCatalog(d_dim)->isPeriodic() ) {
+   if (PeriodicShiftCatalog::getCatalog(d_dim)->isPeriodic()) {
       std::vector<Box> multiblock_mapped_boxes_noperiodic;
-      for ( std::vector<Box>::const_iterator ni=multiblock_mapped_boxes.begin();
-            ni!=multiblock_mapped_boxes.end(); ++ni ) {
-         if ( !ni->isPeriodicImage() ) {
+      for (std::vector<Box>::const_iterator ni = multiblock_mapped_boxes.begin();
+           ni != multiblock_mapped_boxes.end(); ++ni) {
+         if (!ni->isPeriodicImage()) {
             multiblock_mapped_boxes_noperiodic.push_back(*ni);
          }
       }
       d_domain_search_tree.generateTree(
          d_grid_geometry,
-         multiblock_mapped_boxes_noperiodic );
-   }
-   else {
+         multiblock_mapped_boxes_noperiodic);
+   } else {
       d_domain_search_tree = d_domain_search_tree_periodic;
    }
-
 
    std::map<BlockId, BoxList> multiblock_complement_boxes;
 
@@ -748,8 +737,6 @@ void PatchHierarchy::setupDomainData()
    d_complement_searchtree.generateTree(
       d_grid_geometry,
       multiblock_complement_boxes);
-
-   return;
 }
 
 /*
@@ -802,7 +789,7 @@ void PatchHierarchy::putToDatabase(
 
    std::vector<std::string> level_names(d_max_levels);
    const std::string prefix("level_");
-   for ( int ln=0; ln<d_max_levels; ++ln ) {
+   for (int ln = 0; ln < d_max_levels; ++ln) {
       level_names[ln] = prefix + tbox::Utilities::levelToString(ln);
    }
 
@@ -810,12 +797,14 @@ void PatchHierarchy::putToDatabase(
     * Write hierarchy parameters.
     */
    database->putInteger("d_max_levels", d_max_levels);
-   database->putBool("d_allow_patches_smaller_than_ghostwidth", d_allow_patches_smaller_than_ghostwidth);
-   database->putBool("d_allow_patches_smaller_than_minimum_size_to_prevent_overlaps", d_allow_patches_smaller_than_minimum_size_to_prevent_overlaps);
-   if ( d_max_levels > 1 ) {
+   database->putBool("d_allow_patches_smaller_than_ghostwidth",
+      d_allow_patches_smaller_than_ghostwidth);
+   database->putBool("d_allow_patches_smaller_than_minimum_size_to_prevent_overlaps",
+      d_allow_patches_smaller_than_minimum_size_to_prevent_overlaps);
+   if (d_max_levels > 1) {
       database->putIntegerArray("d_proper_nesting_buffer",
-                                &d_proper_nesting_buffer[0],
-                                static_cast<int>(d_proper_nesting_buffer.size()) );
+         &d_proper_nesting_buffer[0],
+         static_cast<int>(d_proper_nesting_buffer.size()));
    }
 
    tbox::Pointer<tbox::Database> ratio_to_coarser_db =
@@ -823,7 +812,7 @@ void PatchHierarchy::putToDatabase(
    for (unsigned int ln = 0; ln < d_ratio_to_coarser.size(); ln++) {
       int* tmp_array = &d_ratio_to_coarser[ln][0];
       ratio_to_coarser_db->putIntegerArray(level_names[ln], tmp_array,
-                                           d_dim.getValue());
+         d_dim.getValue());
    }
 
    tbox::Pointer<tbox::Database> largest_patch_db =
@@ -831,7 +820,7 @@ void PatchHierarchy::putToDatabase(
    for (unsigned int ln = 0; ln < d_largest_patch_size.size(); ln++) {
       int* tmp_array = &d_largest_patch_size[ln][0];
       largest_patch_db->putIntegerArray(level_names[ln], tmp_array,
-                                        d_dim.getValue());
+         d_dim.getValue());
    }
 
    tbox::Pointer<tbox::Database> smallest_patch_db =
@@ -839,7 +828,7 @@ void PatchHierarchy::putToDatabase(
    for (unsigned int ln = 0; ln < d_smallest_patch_size.size(); ln++) {
       int* tmp_array = &d_smallest_patch_size[ln][0];
       smallest_patch_db->putIntegerArray(level_names[ln], tmp_array,
-                                         d_dim.getValue());
+         d_dim.getValue());
    }
 
    tbox::Pointer<tbox::Database> self_connector_widths_db =
@@ -847,7 +836,7 @@ void PatchHierarchy::putToDatabase(
    for (unsigned int ln = 0; ln < d_self_connector_widths.size(); ln++) {
       int* tmp_array = &d_self_connector_widths[ln][0];
       self_connector_widths_db->putIntegerArray(level_names[ln], tmp_array,
-                                                d_dim.getValue());
+         d_dim.getValue());
    }
 
    tbox::Pointer<tbox::Database> fine_connector_widths_db =
@@ -855,10 +844,8 @@ void PatchHierarchy::putToDatabase(
    for (unsigned int ln = 0; ln < d_fine_connector_widths.size(); ln++) {
       int* tmp_array = &d_fine_connector_widths[ln][0];
       fine_connector_widths_db->putIntegerArray(level_names[ln], tmp_array,
-                                                d_dim.getValue());
+         d_dim.getValue());
    }
-
-
 
    for (int i = 0; i < d_number_levels; i++) {
 
@@ -906,7 +893,7 @@ void PatchHierarchy::getFromRestart()
 
    getFromDatabase(
       database,
-      VariableDatabase::getDatabase()->getPatchDataRestartTable() );
+      VariableDatabase::getDatabase()->getPatchDataRestartTable());
 }
 
 void PatchHierarchy::getFromDatabase(
@@ -923,32 +910,35 @@ void PatchHierarchy::getFromDatabase(
    }
 
    d_number_levels = tbox::MathUtilities<int>::Min(d_number_levels,
-                                                   d_max_levels);
+         d_max_levels);
 
    d_patch_levels.resizeArray(d_number_levels);
 
    std::vector<std::string> level_names(d_max_levels);
    const std::string prefix("level_");
-   for ( int ln=0; ln<d_max_levels; ++ln ) {
+   for (int ln = 0; ln < d_max_levels; ++ln) {
       level_names[ln] = prefix + tbox::Utilities::levelToString(ln);
    }
 
    /*
     * Read hierarchy paremeters.
     */
-   if ( d_max_levels > 0 ) {
+   if (d_max_levels > 0) {
       d_max_levels = tbox::MathUtilities<int>::Min(
-         d_max_levels, database->getInteger("d_max_levels") );
-   }
-   else {
+            d_max_levels, database->getInteger("d_max_levels"));
+   } else {
       d_max_levels = database->getInteger("d_max_levels");
    }
 
-   d_allow_patches_smaller_than_ghostwidth = database->getBool("d_allow_patches_smaller_than_ghostwidth");
-   d_allow_patches_smaller_than_minimum_size_to_prevent_overlaps = database->getBool("d_allow_patches_smaller_than_minimum_size_to_prevent_overlaps");
-   d_proper_nesting_buffer.resize(d_max_levels-1, 0);
-   if ( d_max_levels > 1 ) {
-      database->getIntegerArray("d_proper_nesting_buffer", &d_proper_nesting_buffer[0], d_max_levels-1);
+   d_allow_patches_smaller_than_ghostwidth = database->getBool(
+         "d_allow_patches_smaller_than_ghostwidth");
+   d_allow_patches_smaller_than_minimum_size_to_prevent_overlaps = database->getBool(
+         "d_allow_patches_smaller_than_minimum_size_to_prevent_overlaps");
+   d_proper_nesting_buffer.resize(d_max_levels - 1, 0);
+   if (d_max_levels > 1) {
+      database->getIntegerArray("d_proper_nesting_buffer",
+         &d_proper_nesting_buffer[0],
+         d_max_levels - 1);
    }
 
    tbox::Pointer<tbox::Database> ratio_to_coarser_db =
@@ -956,7 +946,7 @@ void PatchHierarchy::getFromDatabase(
    for (unsigned int ln = 0; ln < d_ratio_to_coarser.size(); ln++) {
       int* tmp_array = &d_ratio_to_coarser[ln][0];
       ratio_to_coarser_db->getIntegerArray(level_names[ln], tmp_array,
-                                           d_dim.getValue());
+         d_dim.getValue());
    }
 
    tbox::Pointer<tbox::Database> largest_patch_db =
@@ -964,7 +954,7 @@ void PatchHierarchy::getFromDatabase(
    for (unsigned int ln = 0; ln < d_largest_patch_size.size(); ln++) {
       int* tmp_array = &d_largest_patch_size[ln][0];
       largest_patch_db->getIntegerArray(level_names[ln], tmp_array,
-                                        d_dim.getValue());
+         d_dim.getValue());
    }
 
    tbox::Pointer<tbox::Database> smallest_patch_db =
@@ -972,7 +962,7 @@ void PatchHierarchy::getFromDatabase(
    for (unsigned int ln = 0; ln < d_smallest_patch_size.size(); ln++) {
       int* tmp_array = &d_smallest_patch_size[ln][0];
       smallest_patch_db->getIntegerArray(level_names[ln], tmp_array,
-                                         d_dim.getValue());
+         d_dim.getValue());
    }
 
    tbox::Pointer<tbox::Database> self_connector_widths_db =
@@ -980,7 +970,7 @@ void PatchHierarchy::getFromDatabase(
    for (unsigned int ln = 0; ln < d_self_connector_widths.size(); ln++) {
       int* tmp_array = &d_self_connector_widths[ln][0];
       self_connector_widths_db->getIntegerArray(level_names[ln], tmp_array,
-                                                d_dim.getValue());
+         d_dim.getValue());
    }
 
    tbox::Pointer<tbox::Database> fine_connector_widths_db =
@@ -988,7 +978,7 @@ void PatchHierarchy::getFromDatabase(
    for (unsigned int ln = 0; ln < d_fine_connector_widths.size(); ln++) {
       int* tmp_array = &d_fine_connector_widths[ln][0];
       fine_connector_widths_db->getIntegerArray(level_names[ln], tmp_array,
-                                                d_dim.getValue());
+         d_dim.getValue());
    }
 
    for (int i = 0; i < d_number_levels; i++) {
@@ -1031,7 +1021,7 @@ int PatchHierarchy::recursivePrint(
    int totl_npatches = 0;
    int totl_ncells = 0;
    int nlevels = getNumberOfLevels();
-   os << border << "Domain of hierarchy:\n" << d_domain_mapped_box_level.format(border,2) << '\n'
+   os << border << "Domain of hierarchy:\n" << d_domain_mapped_box_level.format(border, 2) << '\n'
       << border << "Number of levels = " << nlevels << '\n';
    if (depth > 0) {
       int ln;

@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   AMR communication tests for edge-centered patch data 
+ * Description:   AMR communication tests for edge-centered patch data
  *
  ************************************************************************/
 
@@ -47,16 +47,15 @@ EdgeMultiblockTest::EdgeMultiblockTest(
 
    char geom_name[32];
 
-
    sprintf(geom_name, "BlockGridGeometry");
 
    if (main_input_db->keyExists(geom_name)) {
       getGridGeometry() = new hier::GridGeometry(
-               dim,
-               geom_name,
-               tbox::Pointer<hier::TransferOperatorRegistry>(
-                  new geom::SAMRAITransferOperatorRegistry(dim)),
-               main_input_db->getDatabase(geom_name));
+            dim,
+            geom_name,
+            tbox::Pointer<hier::TransferOperatorRegistry>(
+               new geom::SAMRAITransferOperatorRegistry(dim)),
+            main_input_db->getDatabase(geom_name));
 
    } else {
       TBOX_ERROR("EdgeMultiblockTest: could not find entry `"
@@ -309,7 +308,7 @@ void EdgeMultiblockTest::fillSingularityBoundaryConditions(
    const hier::Connector& dst_to_encon,
    const hier::Box& fill_box,
    const hier::BoundaryBox& bbox,
-   const tbox::Pointer<hier::GridGeometry> &grid_geometry)
+   const tbox::Pointer<hier::GridGeometry>& grid_geometry)
 {
    const tbox::Dimension& dim = fill_box.getDim();
 
@@ -356,7 +355,7 @@ void EdgeMultiblockTest::fillSingularityBoundaryConditions(
 
       int num_encon_used = 0;
 
-      if ( grid_geometry->hasEnhancedConnectivity() ) {
+      if (grid_geometry->hasEnhancedConnectivity()) {
 
          const hier::NeighborhoodSet& dst_to_encon_nbrhood_set =
             dst_to_encon.getNeighborhoodSets();
@@ -382,7 +381,7 @@ void EdgeMultiblockTest::fillSingularityBoundaryConditions(
                hier::IntVector offset(dim);
 
                for (tbox::List<hier::GridGeometry::Neighbor>::Iterator
-                       ni(neighbors); ni; ni++) {
+                    ni(neighbors); ni; ni++) {
                   if (ni().getBlockId() == encon_blk_id) {
                      rotation = ni().getRotationIdentifier();
                      offset = ni().getShift();
@@ -437,7 +436,7 @@ void EdgeMultiblockTest::fillSingularityBoundaryConditions(
                            pdat::EdgeGeometry::transform(src_index, back_trans);
 
                            for (int d = 0; d < depth; d++) {
-                              (*edge_data)(ci(), d) += (*sing_data)(src_index,d);
+                              (*edge_data)(ci(), d) += (*sing_data)(src_index, d);
                            }
                         }
                      }
@@ -579,7 +578,7 @@ bool EdgeMultiblockTest::verifyResults(
                   tbox::perr << "Test FAILED: ...."
                              << " : edge index = " << ci() << endl;
                   tbox::perr << "    Variable = " << d_variable_src_name[i]
-                  << " : depth index = " << d << endl;
+                             << " : depth index = " << d << endl;
                   tbox::perr << "    result = " << result
                              << " : correct = " << correct << endl;
                   test_failed = true;
@@ -643,8 +642,8 @@ bool EdgeMultiblockTest::verifyResults(
                            tbox::perr << "Test FAILED: ...."
                                       << " : edge index = " << ei << endl;
                            tbox::perr << "  Variable = "
-                           << d_variable_src_name[i]
-                           << " : depth index = " << d << endl;
+                                      << d_variable_src_name[i]
+                                      << " : depth index = " << d << endl;
                            tbox::perr << "    result = " << result
                                       << " : correct = " << correct << endl;
                            test_failed = true;
@@ -733,8 +732,8 @@ bool EdgeMultiblockTest::verifyResults(
                               tbox::perr << "Test FAILED: ...."
                                          << " : edge index = " << ci() << endl;
                               tbox::perr << "  Variable = "
-                              << d_variable_src_name[i]
-                              << " : depth index = " << d << endl;
+                                         << d_variable_src_name[i]
+                                         << " : depth index = " << d << endl;
                               tbox::perr << "    result = " << result
                                          << " : correct = " << correct << endl;
                               test_failed = true;

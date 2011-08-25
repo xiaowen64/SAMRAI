@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   $Description 
+ * Description:   $Description
  *
  ************************************************************************/
 
@@ -79,8 +79,8 @@ void RedistributedRestartUtility::writeRedistributedRestartFiles(
          if (open_success < 0) {
             TBOX_ERROR(
                "Failed to open output file " << output_filename
-               << "  HDF return code:  "
-               << open_success);
+                                             << "  HDF return code:  "
+                                             << open_success);
          }
 
       }
@@ -118,8 +118,8 @@ void RedistributedRestartUtility::writeRedistributedRestartFiles(
          if (open_success < 0) {
             TBOX_ERROR(
                "Failed to open input file " << restart_filename
-               << "  HDF return code:  "
-               << open_success);
+                                            << "  HDF return code:  "
+                                            << open_success);
          }
 
          //Get the array of input keys.
@@ -384,7 +384,7 @@ void RedistributedRestartUtility::readAndWriteRestartData(
 
       TBOX_ERROR(
          "The key " << key
-         << " is invalid or not associated with a supported datatype.");
+                    << " is invalid or not associated with a supported datatype.");
 
    }
 }
@@ -430,8 +430,8 @@ void RedistributedRestartUtility::readAndWritePatchLevelRestartData(
    int number_blocks = level_in_dbs[0]->getInteger("d_number_blocks");
    tbox::Array<tbox::Array<tbox::DatabaseBox> > physical_domain(number_blocks);
    for (int nb = 0; nb < number_blocks; nb++) {
-      std::string domain_name = "d_physical_domain_" +
-                                tbox::Utilities::blockToString(nb);
+      std::string domain_name = "d_physical_domain_"
+         + tbox::Utilities::blockToString(nb);
       physical_domain[nb] =
          level_in_dbs[0]->getDatabaseBoxArray(domain_name);
    }
@@ -455,8 +455,8 @@ void RedistributedRestartUtility::readAndWritePatchLevelRestartData(
          ratio_to_zero);
       level_out_dbs[i]->putInteger("d_number_blocks", number_blocks);
       for (int nb = 0; nb < number_blocks; nb++) {
-         std::string domain_name = "d_physical_domain_" +
-                                   tbox::Utilities::blockToString(nb);
+         std::string domain_name = "d_physical_domain_"
+            + tbox::Utilities::blockToString(nb);
          level_out_dbs[i]->putDatabaseBoxArray(domain_name,
             physical_domain[nb]);
       }
@@ -640,7 +640,7 @@ void RedistributedRestartUtility::readAndWritePatchLevelRestartData(
          ilp++;
          olp++;
          ilb++;
-         olb++; 
+         olb++;
       }
    }
 

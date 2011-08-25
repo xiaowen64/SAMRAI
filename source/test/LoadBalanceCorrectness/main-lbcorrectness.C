@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Test program for performance and quality of TreeLoadBalancer. 
+ * Description:   Test program for performance and quality of TreeLoadBalancer.
  *
  ************************************************************************/
 #include "SAMRAI/SAMRAI_config.h"
@@ -84,7 +84,8 @@ sortNodes(
  *
  * @return number of errors found.
  */
-int checkBalanceCorrectness(
+int
+checkBalanceCorrectness(
    const hier::MappedBoxLevel& prebalance,
    const hier::MappedBoxLevel& postbalance);
 
@@ -114,8 +115,8 @@ int main(
 
    if (argc < 2) {
       TBOX_ERROR("USAGE:  " << argv[0] << " <input file> [case name]\n"
-                                       << "  options:\n"
-                                       << "  none at this time" << std::endl);
+                            << "  options:\n"
+                            << "  none at this time" << std::endl);
    } else {
       input_filename = argv[1];
    }
@@ -217,7 +218,6 @@ int main(
 
       hier::OverlapConnectorAlgorithm oca;
 
-
       /*
        * Set up hierarchy.
        *
@@ -240,7 +240,7 @@ int main(
 
       hierarchy->setMaxNumberOfLevels(2);
 
-      const hier::MappedBoxLevel &domain_mapped_box_level(hierarchy->getDomainMappedBoxLevel());
+      const hier::MappedBoxLevel& domain_mapped_box_level(hierarchy->getDomainMappedBoxLevel());
 
       /*
        * Set up the load balancers.
@@ -277,7 +277,6 @@ int main(
             << "\"ChopAndPackLoadBalancer\" or \"TreeLoadBalancer\".");
       }
 
-
       /*
        * Baseline stuff:
        *
@@ -285,8 +284,10 @@ int main(
        * If generating a baseline, the tests are NOT checked!
        */
 
-      const std::string baseline_dirname = main_db->getStringWithDefault("baseline_dirname", "test_inputs");
-      const std::string baseline_filename = baseline_dirname + "/" + base_name + ".baselinedb." + tbox::Utilities::processorToString(mpi.getRank());
+      const std::string baseline_dirname = main_db->getStringWithDefault("baseline_dirname",
+            "test_inputs");
+      const std::string baseline_filename = baseline_dirname + "/" + base_name + ".baselinedb."
+         + tbox::Utilities::processorToString(mpi.getRank());
       tbox::HDFDatabase basline_db(baseline_filename);
 
       /*
@@ -296,28 +297,27 @@ int main(
        */
       const bool generate_baseline =
          main_db->getBoolWithDefault("generate_baseline", false);
-      tbox::Pointer<tbox::HDFDatabase> baseline_db(new tbox::HDFDatabase("LoadBalanceCorrectness baseline"));
+      tbox::Pointer<tbox::HDFDatabase> baseline_db(new tbox::HDFDatabase(
+                                                      "LoadBalanceCorrectness baseline"));
 
       tbox::Pointer<tbox::Database> prebalance_mapped_box_level_db;
       tbox::Pointer<tbox::Database> postbalance_mapped_box_level_db;
 
-      if ( generate_baseline ) {
+      if (generate_baseline) {
          baseline_db->create(baseline_filename);
          prebalance_mapped_box_level_db = baseline_db->putDatabase("prebalance MappedBoxLevel");
          postbalance_mapped_box_level_db = baseline_db->putDatabase("postbalance MappedBoxLevel");
-      }
-      else {
+      } else {
          baseline_db->open(baseline_filename);
          prebalance_mapped_box_level_db = baseline_db->getDatabase("prebalance MappedBoxLevel");
          postbalance_mapped_box_level_db = baseline_db->getDatabase("postbalance MappedBoxLevel");
       }
 
-
       /*
        * Set up data used by TreeLoadBalancer.
        */
       hier::MappedBoxLevel
-         anchor_mapped_box_level(hier::IntVector(dim, 1), grid_geometry);
+      anchor_mapped_box_level(hier::IntVector(dim, 1), grid_geometry);
       hier::MappedBoxLevel balance_mapped_box_level(dim);
       hier::Connector balance_to_anchor;
       hier::Connector anchor_to_balance;
@@ -340,7 +340,6 @@ int main(
             anchor_mapped_box_level.addBox(*anchor_boxes_itr, hier::BlockId::zero());
          }
       }
-
 
       {
          /*
@@ -380,8 +379,8 @@ int main(
             bad_interval,
             cut_factor);
 
-         oca.assertOverlapCorrectness(anchor_to_domain,false,true,true);
-         oca.assertOverlapCorrectness(domain_to_anchor,false,true,true);
+         oca.assertOverlapCorrectness(anchor_to_domain, false, true, true);
+         oca.assertOverlapCorrectness(domain_to_anchor, false, true, true);
 
          sortNodes(anchor_mapped_box_level,
             domain_to_anchor,
@@ -454,7 +453,7 @@ int main(
                     << anchor_to_balance.format("AB-> ");
       }
 
-      if ( generate_baseline ) {
+      if (generate_baseline) {
          balance_mapped_box_level.putToDatabase(*prebalance_mapped_box_level_db);
       }
 
@@ -497,22 +496,22 @@ int main(
             balance_mapped_box_level.getMPI());
 
          tbox::plog << "Balance mapped_box_level:\n"
-		<< balance_mapped_box_level.format( "BL-> ", 2);
+                    << balance_mapped_box_level.format("BL-> ", 2);
 
          tbox::plog << "balance_to_anchor:\n"
-		<< balance_to_anchor.format( "BA-> ");
+                    << balance_to_anchor.format("BA-> ");
 
          tbox::plog << "anchor_to_balance:\n"
-		<< anchor_to_balance.format( "AB-> ");
+                    << anchor_to_balance.format("AB-> ");
       }
 
-      if ( generate_baseline ) {
+      if (generate_baseline) {
          balance_mapped_box_level.putToDatabase(*postbalance_mapped_box_level_db);
       }
 
 #ifdef HAVE_HDF5
-      hierarchy->makeNewPatchLevel( 0, anchor_mapped_box_level);
-      hierarchy->makeNewPatchLevel( 1, balance_mapped_box_level);
+      hierarchy->makeNewPatchLevel(0, anchor_mapped_box_level);
+      hierarchy->makeNewPatchLevel(1, balance_mapped_box_level);
 
       if ((dim == tbox::Dimension(2)) || (dim == tbox::Dimension(3))) {
          /*
@@ -537,7 +536,7 @@ int main(
       error_count +=
          checkBalanceCorrectness(prebalance_mapped_box_level, balance_mapped_box_level);
 
-      if ( !generate_baseline ) {
+      if (!generate_baseline) {
 
          /*
           * Compare the prebalance_mapped_box_level against its baseline.
@@ -547,16 +546,16 @@ int main(
             *prebalance_mapped_box_level_db,
             grid_geometry);
 
-         if ( prebalance_mapped_box_level != baseline_prebalance_mapped_box_level ) {
-            tbox::perr <<"LoadBalanceCorrectness test regression:\n"
-                       <<"the prebalance MappedBoxLevel generated is different\n"
-                       <<"from the baseline in the database.  The load balancing\n"
-                       <<"may be correct, but it failed against regression.\n"
-                       <<"Writing the MappedBoxLevels in log files.\n";
+         if (prebalance_mapped_box_level != baseline_prebalance_mapped_box_level) {
+            tbox::perr << "LoadBalanceCorrectness test regression:\n"
+                       << "the prebalance MappedBoxLevel generated is different\n"
+                       << "from the baseline in the database.  The load balancing\n"
+                       << "may be correct, but it failed against regression.\n"
+                       << "Writing the MappedBoxLevels in log files.\n";
             ++error_count;
-            tbox::plog << prebalance_mapped_box_level.format("Generated prebalance: ",2)
+            tbox::plog << prebalance_mapped_box_level.format("Generated prebalance: ", 2)
                        << std::endl
-                       << baseline_prebalance_mapped_box_level.format("Baseline prebalance: ",2);
+                       << baseline_prebalance_mapped_box_level.format("Baseline prebalance: ", 2);
          }
 
          /*
@@ -567,16 +566,16 @@ int main(
             *postbalance_mapped_box_level_db,
             grid_geometry);
 
-         if ( balance_mapped_box_level != baseline_postbalance_mapped_box_level ) {
-            tbox::perr <<"LoadBalanceCorrectness test regression:\n"
-                       <<"the postbalance MappedBoxLevel generated is different\n"
-                       <<"from the baseline in the database.  The load balancing\n"
-                       <<"may be correct, but it failed against regression.\n"
-                       <<"Writing the MappedBoxLevels in log files.\n";
+         if (balance_mapped_box_level != baseline_postbalance_mapped_box_level) {
+            tbox::perr << "LoadBalanceCorrectness test regression:\n"
+                       << "the postbalance MappedBoxLevel generated is different\n"
+                       << "from the baseline in the database.  The load balancing\n"
+                       << "may be correct, but it failed against regression.\n"
+                       << "Writing the MappedBoxLevels in log files.\n";
             ++error_count;
-            tbox::plog << balance_mapped_box_level.format("Generated postbalance: ",2)
+            tbox::plog << balance_mapped_box_level.format("Generated postbalance: ", 2)
                        << std::endl
-                       << baseline_postbalance_mapped_box_level.format("Baseline postbalance: ",2);
+                       << baseline_postbalance_mapped_box_level.format("Baseline postbalance: ", 2);
          }
       }
 
@@ -588,13 +587,12 @@ int main(
    plog << "Input database after running..." << std::endl;
    tbox::InputManager::getManager()->getInputDatabase()->printClassData(plog);
 
-   mpi.AllReduce( &error_count, 1, MPI_SUM );
+   mpi.AllReduce(&error_count, 1, MPI_SUM);
 
-   if ( mpi.getRank() == 0 ) {
-      if ( error_count == 0 ) {
+   if (mpi.getRank() == 0) {
+      if (error_count == 0) {
          tbox::pout << "\nPASSED:  LoadBalanceCorrectness" << std::endl;
-      }
-      else {
+      } else {
          tbox::perr << "\nFAILED:  LoadBalanceCorrectness" << std::endl;
       }
    }
@@ -677,8 +675,8 @@ void generatePrebalanceByUserShells(
 
    tbox::Pointer<hier::PatchLevel> tag_level(
       new hier::PatchLevel(anchor_mapped_box_level,
-                           grid_geometry,
-                           vdb->getPatchDescriptor()) );
+         grid_geometry,
+         vdb->getPatchDescriptor()));
 
    tbox::Pointer<pdat::CellVariable<int> > tag_variable(
       new pdat::CellVariable<int>(dim, "TagVariable"));
@@ -743,13 +741,13 @@ void generatePrebalanceByUserShells(
     * the anchor_mapped_box_level instead.
     */
    anchor_to_balance.initialize(anchor_mapped_box_level,
-                                balance_mapped_box_level,
-                                anchor_to_balance.getConnectorWidth(),
-                                anchor_to_balance.getNeighborhoodSets());
+      balance_mapped_box_level,
+      anchor_to_balance.getConnectorWidth(),
+      anchor_to_balance.getNeighborhoodSets());
    balance_to_anchor.initialize(balance_mapped_box_level,
-                                anchor_mapped_box_level,
-                                balance_to_anchor.getConnectorWidth(),
-                                balance_to_anchor.getNeighborhoodSets());
+      anchor_mapped_box_level,
+      balance_to_anchor.getConnectorWidth(),
+      balance_to_anchor.getNeighborhoodSets());
 }
 
 /*
@@ -784,7 +782,7 @@ void generatePrebalanceByUserBoxes(
       const int owner = i % initial_owners.size();
       if (owner == balance_mapped_box_level.getRank()) {
          balance_mapped_box_level.addMappedBox(hier::Box(*balance_boxes_itr,
-                                                         hier::LocalId(i), owner));
+               hier::LocalId(i), owner));
       }
    }
 
@@ -841,7 +839,7 @@ int checkBalanceCorrectness(
 {
    int error_count(0);
 
-   if ( postbalance.getGlobalNumberOfCells() != postbalance.getGlobalNumberOfCells() ) {
+   if (postbalance.getGlobalNumberOfCells() != postbalance.getGlobalNumberOfCells()) {
       tbox::plog << "Error - unmatched global number of cells:\n"
                  << "  prebalance has " << prebalance.getGlobalNumberOfCells() << '\n'
                  << "  postbalance has " << postbalance.getGlobalNumberOfCells()
@@ -849,38 +847,37 @@ int checkBalanceCorrectness(
       ++error_count;
    }
 
-   const hier::MappedBoxLevel &globalized_prebalance =
+   const hier::MappedBoxLevel& globalized_prebalance =
       prebalance.getGlobalizedVersion();
 
-   const hier::BoxSet &globalized_prebalance_mapped_box_set =
+   const hier::BoxSet& globalized_prebalance_mapped_box_set =
       globalized_prebalance.getGlobalMappedBoxes();
 
    const hier::MultiblockBoxTree globalized_prebalance_mapped_box_tree(
       prebalance.getGridGeometry(),
       globalized_prebalance_mapped_box_set);
 
-
-   const hier::MappedBoxLevel &globalized_postbalance =
+   const hier::MappedBoxLevel& globalized_postbalance =
       postbalance.getGlobalizedVersion();
 
-   const hier::BoxSet &globalized_postbalance_mapped_box_set =
+   const hier::BoxSet& globalized_postbalance_mapped_box_set =
       globalized_postbalance.getGlobalMappedBoxes();
 
    const hier::MultiblockBoxTree globalized_postbalance_mapped_box_tree(
       postbalance.getGridGeometry(),
       globalized_postbalance_mapped_box_set);
 
-
    // Check for prebalance indices absent in postbalance.
-   for ( hier::BoxSet::const_iterator bi=globalized_prebalance_mapped_box_set.begin();
-         bi!=globalized_prebalance_mapped_box_set.end(); ++bi ) {
+   for (hier::BoxSet::const_iterator bi = globalized_prebalance_mapped_box_set.begin();
+        bi != globalized_prebalance_mapped_box_set.end(); ++bi) {
       hier::BoxList box_container(*bi);
-      box_container.removeIntersections( bi->getBlockId(),
-                                         prebalance.getRefinementRatio(),
-                                         globalized_postbalance_mapped_box_tree );
-      if ( ! box_container.isEmpty() ) {
-         tbox::plog << "Prebalance Box " << *bi << " has " << box_container.size() << " parts absent in postbalance:\n";
-         for ( hier::BoxList::Iterator bj(box_container); bj; bj++ ) {
+      box_container.removeIntersections(bi->getBlockId(),
+         prebalance.getRefinementRatio(),
+         globalized_postbalance_mapped_box_tree);
+      if (!box_container.isEmpty()) {
+         tbox::plog << "Prebalance Box " << *bi << " has " << box_container.size()
+                    << " parts absent in postbalance:\n";
+         for (hier::BoxList::Iterator bj(box_container); bj; bj++) {
             tbox::plog << "  " << *bj << std::endl;
          }
          ++error_count;
@@ -888,15 +885,16 @@ int checkBalanceCorrectness(
    }
 
    // Check for postbalance indices absent in prebalance.
-   for ( hier::BoxSet::const_iterator bi=globalized_postbalance_mapped_box_set.begin();
-         bi!=globalized_postbalance_mapped_box_set.end(); ++bi ) {
+   for (hier::BoxSet::const_iterator bi = globalized_postbalance_mapped_box_set.begin();
+        bi != globalized_postbalance_mapped_box_set.end(); ++bi) {
       hier::BoxList box_container(*bi);
-      box_container.removeIntersections( bi->getBlockId(),
-                                         postbalance.getRefinementRatio(),
-                                         globalized_prebalance_mapped_box_tree );
-      if ( ! box_container.isEmpty() ) {
-         tbox::plog << "Postbalance Box " << *bi << " has " << box_container.size() << " parts absent in prebalance:\n";
-         for ( hier::BoxList::Iterator bj(box_container); bj; bj++ ) {
+      box_container.removeIntersections(bi->getBlockId(),
+         postbalance.getRefinementRatio(),
+         globalized_prebalance_mapped_box_tree);
+      if (!box_container.isEmpty()) {
+         tbox::plog << "Postbalance Box " << *bi << " has " << box_container.size()
+                    << " parts absent in prebalance:\n";
+         for (hier::BoxList::Iterator bj(box_container); bj; bj++) {
             tbox::plog << "  " << *bj << std::endl;
          }
          ++error_count;

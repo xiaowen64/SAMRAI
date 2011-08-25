@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   StandardTagAndInitialize's implementation of PatchHierarchy 
+ * Description:   StandardTagAndInitialize's implementation of PatchHierarchy
  *
  ************************************************************************/
 
@@ -17,7 +17,6 @@
 
 namespace SAMRAI {
 namespace mesh {
-
 
 /*!
  * @brief Implementation of the strategy class
@@ -32,11 +31,11 @@ namespace mesh {
  * StandardTagAndInitialize will request Connectors based on the width
  * of the coarsened level.
  */
-class StandardTagAndInitializeConnectorWidthRequestor
-   : public hier::PatchHierarchy::ConnectorWidthRequestorStrategy {
+class StandardTagAndInitializeConnectorWidthRequestor:
+   public hier::PatchHierarchy::ConnectorWidthRequestorStrategy
+{
 
 public:
-
    /*!
     * @brief Constructor.
     */
@@ -57,13 +56,13 @@ public:
     *
     * @param[in]  patch_hierarchy
     */
-   void computeRequiredConnectorWidths(
+   void
+   computeRequiredConnectorWidths(
       std::vector<hier::IntVector>& self_connector_widths,
       std::vector<hier::IntVector>& fine_connector_widths,
       const hier::PatchHierarchy& patch_hierarchy) const;
 
 private:
-
    /*!
     * @brief Return the coarsen ratio to be used with Richardson
     * extrapolation on the PatchHierarchy.
@@ -72,7 +71,8 @@ private:
     * @c ratios_to_coarser[ln] is the ratio between level ln and level
     * ln-1.
     */
-   int computeCoarsenRatio(
+   int
+   computeCoarsenRatio(
       const tbox::Array<hier::IntVector>& ratio_to_coarser) const;
 
 };
