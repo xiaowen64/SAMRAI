@@ -226,7 +226,7 @@ TransferOperatorRegistry::setMinTransferOpStencilWidth(
 
 /*
  *************************************************************************
- *******Get the dimension of the hier::GridGeometry object holding this singleton.
+ * Get the dimension of the hier::GridGeometry object holding this singleton.
  *************************************************************************
  */
 const tbox::Dimension&
