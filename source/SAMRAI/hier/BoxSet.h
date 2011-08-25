@@ -7,8 +7,8 @@
  * Description:   Extension of a std
  *
  ************************************************************************/
-#ifndef included_hier_MappedBoxSet
-#define included_hier_MappedBoxSet
+#ifndef included_hier_BoxSet
+#define included_hier_BoxSet
 
 #include "SAMRAI/SAMRAI_config.h"
 
@@ -32,7 +32,7 @@ class BoxList;
  * - Database reading/writing
  * - printing
  */
-class MappedBoxSet
+class BoxSet
 {
 
 public:
@@ -40,18 +40,18 @@ public:
    /*!
     * @brief Default constructor creates an empty container.
     */
-   MappedBoxSet();
+   BoxSet();
 
    /*!
     * @brief Copy constructor.
     *
     * @param[in] other
     */
-   MappedBoxSet(
-      const MappedBoxSet& other);
+   BoxSet(
+      const BoxSet& other);
 
    //! @brief Destructor.
-   virtual ~MappedBoxSet();
+   virtual ~BoxSet();
 
 
    //@{
@@ -182,41 +182,41 @@ public:
    }
 
 
-   MappedBoxSet&
+   BoxSet&
    operator = (
-      const MappedBoxSet& rhs);
+      const BoxSet& rhs);
 
    bool
    operator == (
-      const MappedBoxSet& rhs) const;
+      const BoxSet& rhs) const;
 
    bool
    operator != (
-      const MappedBoxSet& rhs) const;
+      const BoxSet& rhs) const;
 
    void
    swap(
-      MappedBoxSet& other);
+      BoxSet& other);
 
    static void
    swap(
-      MappedBoxSet& a,
-      MappedBoxSet& b);
+      BoxSet& a,
+      BoxSet& b);
 
    //@}
 
 
    /*!
     * @brief Whether the subsets of MappedBoxes owned by a given
-    * process are the same between this and another MappedBoxSet.
+    * process are the same between this and another BoxSet.
     */
    bool
    isLocallyEqual(
-      const MappedBoxSet& other,
+      const BoxSet& other,
       int rank) const;
 
    /*!
-    * @brief Returns the BoxList containing the Boxes from this MappedBoxSet
+    * @brief Returns the BoxList containing the Boxes from this BoxSet
     * in the requested block.
     */
    tbox::Pointer<BoxList>
@@ -224,7 +224,7 @@ public:
       const BlockId& which_block) const;
 
    /*!
-    * @brief Refine the boxes in a MappedBoxSet.
+    * @brief Refine the boxes in a BoxSet.
     *
     * Put the results in the output container.  For flexibility and
     * efficiency, the output container is NOT cleared first, so you
@@ -237,7 +237,7 @@ public:
     * @param[in] ratio Ratio in the refinement operation.
     */
    void
-   refine(MappedBoxSet& output_mapped_boxes,
+   refine(BoxSet& output_mapped_boxes,
       const IntVector& ratio) const;
 
    /*!
@@ -254,11 +254,11 @@ public:
     * @param[in] ratio Ratio in the coarsen operation.
     */
    void
-   coarsen(MappedBoxSet& output_mapped_boxes,
+   coarsen(BoxSet& output_mapped_boxes,
       const IntVector& ratio) const;
 
    /*!
-    * @brief Grow the boxes in a MappedBoxSet.
+    * @brief Grow the boxes in a BoxSet.
     *
     * Put the results in the output container.  For flexibility and
     * efficiency, the output container is NOT cleared first, so you
@@ -271,11 +271,11 @@ public:
     * @param[in] growth Grow boxes by this amount.
     */
    void
-   grow(MappedBoxSet& output_mapped_boxes,
+   grow(BoxSet& output_mapped_boxes,
       const IntVector& growth) const;
 
    /*!
-    * @brief Unshift periodic image MappedBoxes from a MappedBoxSet.
+    * @brief Unshift periodic image MappedBoxes from a BoxSet.
     *
     * Change periodic image MappedBoxes to their unshifted position.
     *
@@ -292,11 +292,11 @@ public:
     */
    void
    unshiftPeriodicImageMappedBoxes(
-      MappedBoxSet& output_mapped_boxes,
+      BoxSet& output_mapped_boxes,
       const IntVector& refinement_ratio) const;
 
    /*!
-    * @brief Remove periodic image MappedBoxes from a MappedBoxSet.
+    * @brief Remove periodic image MappedBoxes from a BoxSet.
     *
     * Put the results in the output container.  For flexibility and
     * efficiency, the output container is NOT cleared first, so you
@@ -306,10 +306,10 @@ public:
     */
    void
    removePeriodicImageMappedBoxes(
-      MappedBoxSet& output_mapped_boxes) const;
+      BoxSet& output_mapped_boxes) const;
 
    /*!
-    * @brief Remove from a BoxList its intersections with a MappedBoxSet.
+    * @brief Remove from a BoxList its intersections with a BoxSet.
     *
     *
     * @param[in, out] boxes
@@ -328,7 +328,7 @@ public:
       std::set<int>& owners) const;
 
    /*!
-    * @brief Split a MappedBoxSet into two vector<Box>
+    * @brief Split a BoxSet into two vector<Box>
     * objects, one containing real MappedBoxes and one containing their
     * periodic images.
     *
@@ -352,14 +352,14 @@ public:
     */
 
    /*!
-    * @brief Write the MappedBoxSet to a database.
+    * @brief Write the BoxSet to a database.
     */
    void
    putToDatabase(
       tbox::Database& database) const;
 
    /*!
-    * @brief Read the MappedBoxSet from a database.
+    * @brief Read the BoxSet from a database.
     */
    void
    getFromDatabase(
@@ -367,9 +367,9 @@ public:
 
 
    /*!
-    * @brief Intermediary between MappedBoxSet and output streams,
+    * @brief Intermediary between BoxSet and output streams,
     * adding ability to control the output.  See
-    * MappedBoxSet::format().
+    * BoxSet::format().
     */
    class Outputter {
 
@@ -377,19 +377,19 @@ public:
 
    private:
 
-      friend class MappedBoxSet;
+      friend class BoxSet;
 
       /*!
-       * @brief Construct the Outputter with a MappedBoxSet and the
-       * parameters needed to output the MappedBoxSet to a stream.
+       * @brief Construct the Outputter with a BoxSet and the
+       * parameters needed to output the BoxSet to a stream.
        */
-      Outputter( const MappedBoxSet &mapped_box_set,
+      Outputter( const BoxSet &mapped_box_set,
                  const std::string& border,
                  int detail_depth = 0);
 
       void operator=( const Outputter &rhs ); // Unimplemented private.
 
-      const MappedBoxSet &d_set;
+      const BoxSet &d_set;
 
       const std::string d_border;
 
@@ -397,7 +397,7 @@ public:
    };
 
    /*!
-    * @brief Return a object to that can format the MappedBoxSet for
+    * @brief Return a object to that can format the BoxSet for
     * inserting into output streams.
     *
     * Usage example (printing with a tab indentation):
@@ -433,7 +433,7 @@ private:
    /*
     * Static integer constant describing class's version number.
     */
-   static const int HIER_MAPPED_BOX_SET_VERSION;
+   static const int HIER_BOX_SET_VERSION;
 
    std::set<Box, Box::id_less> d_set;
 
@@ -443,7 +443,7 @@ private:
 }
 
 #ifdef SAMRAI_INLINE
-#include "SAMRAI/hier/MappedBoxSet.I"
+#include "SAMRAI/hier/BoxSet.I"
 #endif
 
-#endif  // included_hier_MappedBoxSet
+#endif  // included_hier_BoxSet

@@ -66,7 +66,7 @@ public:
     */
    void
    computeFillMappedBoxesAndNeighborhoodSets(
-      hier::MappedBoxSet& fill_mapped_boxes,
+      hier::BoxSet& fill_mapped_boxes,
       hier::NeighborhoodSet& dst_to_fill_edges,
       const hier::MappedBoxLevel& dst_mapped_box_level,
       const hier::Connector& dst_to_dst,

@@ -38,6 +38,10 @@ DEPENDS_0:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxSet.I				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxSet.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxSetSingleBlockIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxSetSingleOwnerIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.h			\
@@ -58,10 +62,6 @@ DEPENDS_0:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxLevel.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxLevel.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxLevelHandle.h		\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSetSingleBlockIterator.h	\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSetSingleOwnerIterator.h	\
 	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockDataTranslator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/NeighborhoodSet.I			\
@@ -93,7 +93,7 @@ DEPENDS_0:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/PersistentOverlapConnectors.h	\
 	$(INCLUDE_SAM)/SAMRAI/hier/ProcessorMapping.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/ProcessorMapping.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/RealMappedBoxConstIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/RealBoxConstIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/RefineOperator.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/RefineOperator.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/TimeInterpolateOperator.h		\
@@ -229,6 +229,10 @@ DEPENDS_1:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxSet.I				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxSet.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxSetSingleBlockIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxSetSingleOwnerIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.I			\
@@ -252,10 +256,6 @@ DEPENDS_1:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxLevelConnectorUtils.I	\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxLevelConnectorUtils.h	\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxLevelHandle.h		\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.I			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSet.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSetSingleBlockIterator.h	\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappedBoxSetSingleOwnerIterator.h	\
 	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/NeighborhoodSet.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/NeighborhoodSet.h			\
@@ -286,7 +286,7 @@ DEPENDS_1:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/PersistentOverlapConnectors.h	\
 	$(INCLUDE_SAM)/SAMRAI/hier/ProcessorMapping.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/ProcessorMapping.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/RealMappedBoxConstIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/RealBoxConstIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/RefineOperator.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/RefineOperator.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/TimeInterpolateOperator.h		\

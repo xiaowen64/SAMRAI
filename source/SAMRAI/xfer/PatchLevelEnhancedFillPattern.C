@@ -12,7 +12,7 @@
 #define included_xfer_PatchLevelEnhancedFillPattern_C
 
 #include "SAMRAI/xfer/PatchLevelEnhancedFillPattern.h"
-#include "SAMRAI/hier/RealMappedBoxConstIterator.h"
+#include "SAMRAI/hier/RealBoxConstIterator.h"
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/tbox/MathUtilities.h"
 
@@ -56,7 +56,7 @@ PatchLevelEnhancedFillPattern::~PatchLevelEnhancedFillPattern()
  *************************************************************************
  */
 void PatchLevelEnhancedFillPattern::computeFillMappedBoxesAndNeighborhoodSets(
-   hier::MappedBoxSet& fill_mapped_boxes,
+   hier::BoxSet& fill_mapped_boxes,
    hier::NeighborhoodSet& dst_to_fill_edges,
    const hier::MappedBoxLevel& dst_mapped_box_level,
    const hier::Connector& dst_to_dst,
@@ -72,11 +72,11 @@ void PatchLevelEnhancedFillPattern::computeFillMappedBoxesAndNeighborhoodSets(
    tbox::ConstPointer<hier::GridGeometry> grid_geometry(
       dst_mapped_box_level.getGridGeometry());
 
-   const hier::MappedBoxSet& dst_mapped_boxes =
+   const hier::BoxSet& dst_mapped_boxes =
       dst_mapped_box_level.getMappedBoxes();
 
    hier::LocalId last_id = dst_mapped_box_level.getLastLocalId();
-   for (hier::RealMappedBoxConstIterator ni(dst_mapped_boxes);
+   for (hier::RealBoxConstIterator ni(dst_mapped_boxes);
         ni.isValid(); ++ni) {
       const hier::Box& dst_mapped_box = *ni;
       hier::BoxList fill_boxes(dst_mapped_box);

@@ -671,7 +671,7 @@ void PatchHierarchy::setupDomainData()
     * Grab the physical domain (including periodic images) from the
     * GridGeometry and set up domain data dependent on it.
     */
-   tbox::Array<MappedBoxSet> domain_mapped_boxes(d_number_blocks);
+   tbox::Array<BoxSet> domain_mapped_boxes(d_number_blocks);
    for (int nb = 0; nb < d_number_blocks; nb++ ) {
       d_grid_geometry->computePhysicalDomain(domain_mapped_boxes[nb],
          IntVector::getOne(d_dim), BlockId(nb));
@@ -687,7 +687,7 @@ void PatchHierarchy::setupDomainData()
          MappedBoxLevel::GLOBALIZED);
    }
    else {
-      MappedBoxSet all_domain_mapped_boxes;
+      BoxSet all_domain_mapped_boxes;
       for (int nb = 0; nb < d_number_blocks; nb++) {
          all_domain_mapped_boxes.insert(domain_mapped_boxes[nb].begin(),
                                         domain_mapped_boxes[nb].end());

@@ -48,14 +48,14 @@ OBJS = 	\
 	MappedBoxLevelHandle.o \
 	BoxIOUtility.o \
 	PeriodicShiftCatalog.o \
-	RealMappedBoxConstIterator.o \
-	MappedBoxSetSingleBlockIterator.o \
-	MappedBoxSetSingleOwnerIterator.o \
+	RealBoxConstIterator.o \
+	BoxSetSingleBlockIterator.o \
+	BoxSetSingleOwnerIterator.o \
 	BoxTree.o \
 	MultiblockBoxTree.o \
 	MappedBoxLevel.o \
 	PersistentOverlapConnectors.o \
-	MappedBoxSet.o \
+	BoxSet.o \
 	NeighborhoodSet.o \
 	BoxOverlap.o \
 	BoxGeometry.o \

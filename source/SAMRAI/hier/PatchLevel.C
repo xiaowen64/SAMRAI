@@ -16,7 +16,7 @@
 #include "SAMRAI/tbox/MathUtilities.h"
 #include "SAMRAI/tbox/TimerManager.h"
 #include "SAMRAI/hier/GridGeometry.h"
-#include "SAMRAI/hier/RealMappedBoxConstIterator.h"
+#include "SAMRAI/hier/RealBoxConstIterator.h"
 
 #include <cstdio>
 
@@ -160,8 +160,8 @@ PatchLevel::PatchLevel(
       d_factory = new hier::PatchFactory();
    }
 
-   const MappedBoxSet& mapped_boxes = d_mapped_box_level->getMappedBoxes();
-   for (RealMappedBoxConstIterator ni(mapped_boxes); ni.isValid(); ++ni) {
+   const BoxSet& mapped_boxes = d_mapped_box_level->getMappedBoxes();
+   for (RealBoxConstIterator ni(mapped_boxes); ni.isValid(); ++ni) {
       const Box& mapped_box = *ni;
       const BoxId &ip = mapped_box.getId();
       tbox::Pointer<Patch>& patch = d_patches[ip];
@@ -502,7 +502,7 @@ void PatchLevel::setRefinedPatchLevel(
    d_boxes.refine(refine_ratio);
 
    {
-      MappedBoxSet mapped_boxes;
+      BoxSet mapped_boxes;
       coarse_level->d_mapped_box_level->getMappedBoxes().refine(
          mapped_boxes,
          refine_ratio);
@@ -531,8 +531,8 @@ void PatchLevel::setRefinedPatchLevel(
    // d_patch_touches_periodic_boundary.resizeArray(d_global_number_patches);
    // d_shifts.resizeArray(d_global_number_patches);
 
-   const MappedBoxSet& mapped_boxes = d_mapped_box_level->getMappedBoxes();
-   for (RealMappedBoxConstIterator ni(mapped_boxes); ni.isValid(); ++ni) {
+   const BoxSet& mapped_boxes = d_mapped_box_level->getMappedBoxes();
+   for (RealBoxConstIterator ni(mapped_boxes); ni.isValid(); ++ni) {
       const Box& mapped_box = *ni;
       const BoxId& mapped_box_id = mapped_box.getId();
       d_patches[mapped_box_id] = d_factory->allocate(mapped_box, d_descriptor);
@@ -690,7 +690,7 @@ void PatchLevel::setCoarsenedPatchLevel(
     */
    const MappedBoxLevel& fine_mapped_box_level =
       *fine_level->d_mapped_box_level;
-   MappedBoxSet coarsened_mapped_boxes;
+   BoxSet coarsened_mapped_boxes;
    fine_level->d_mapped_box_level->getMappedBoxes().coarsen(
       coarsened_mapped_boxes,
       coarsen_ratio);
@@ -718,8 +718,8 @@ void PatchLevel::setCoarsenedPatchLevel(
    // d_patch_touches_periodic_boundary.resizeArray(d_global_number_patches);
    // d_shifts.resizeArray(d_global_number_patches);
 
-   const MappedBoxSet& mapped_boxes = d_mapped_box_level->getMappedBoxes();
-   for (RealMappedBoxConstIterator ni(mapped_boxes); ni.isValid(); ++ni) {
+   const BoxSet& mapped_boxes = d_mapped_box_level->getMappedBoxes();
+   for (RealBoxConstIterator ni(mapped_boxes); ni.isValid(); ++ni) {
       const Box& mapped_box = *ni;
       const BoxId& mapped_box_id = mapped_box.getId();
       d_patches[mapped_box_id] = d_factory->allocate(mapped_box, d_descriptor);
@@ -860,9 +860,9 @@ void PatchLevel::getFromDatabase(
 
    d_patches.clear();
 
-   const MappedBoxSet& mapped_boxes = d_mapped_box_level->getMappedBoxes();
+   const BoxSet& mapped_boxes = d_mapped_box_level->getMappedBoxes();
    tbox::Pointer<tbox::Database> patch_database;
-   for (RealMappedBoxConstIterator ni(mapped_boxes); ni.isValid(); ++ni) {
+   for (RealBoxConstIterator ni(mapped_boxes); ni.isValid(); ++ni) {
       const Box& mapped_box = *ni;
       const LocalId &local_id = mapped_box.getLocalId();
       const BoxId &mapped_box_id = mapped_box.getId();
@@ -1026,9 +1026,9 @@ void PatchLevel::initializeGlobalizedMappedBoxLevel() const
        * global sequential index.
        */
       int count = 0;
-      const MappedBoxSet& mapped_boxes =
+      const BoxSet& mapped_boxes =
          globalized_mapped_box_level.getGlobalMappedBoxes();
-      for (hier::RealMappedBoxConstIterator ni(mapped_boxes);
+      for (hier::RealBoxConstIterator ni(mapped_boxes);
            ni.isValid();
            ++ni) {
          d_mapping.setProcessorAssignment(count, ni->getOwnerRank());

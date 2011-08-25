@@ -13,7 +13,7 @@
 #include "SAMRAI/SAMRAI_config.h"
 
 #include "SAMRAI/hier/BoxId.h"
-#include "SAMRAI/hier/MappedBoxSet.h"
+#include "SAMRAI/hier/BoxSet.h"
 #include "SAMRAI/tbox/Database.h"
 
 #include <iostream>
@@ -26,7 +26,7 @@ namespace hier {
 class Connector;
 
 /*!
- * @brief A wrapper around std::map<BoxId,MappedBoxSet>.
+ * @brief A wrapper around std::map<BoxId,BoxSet>.
  *
  * A neighborhood is defined as a Box and its "neighbors" which
  * are related to it via Connector relationships.  For example, 
@@ -40,7 +40,7 @@ class Connector;
  *
  * The NeighborhoodSet @c m maps a BoxId @c i to a set of Boxes @c
  * m[i], usually its "neighbors".  (The neighbor are stored in a
- * MappedBoxSet.)
+ * BoxSet.)
  */
 
 class NeighborhoodSet
@@ -48,7 +48,7 @@ class NeighborhoodSet
 
 public:
    //! @brief NeighborSet is a clarifying typedef.
-   typedef MappedBoxSet NeighborSet;
+   typedef BoxSet NeighborSet;
 
    //! @brief Default constructor creates an empty container.
    NeighborhoodSet();

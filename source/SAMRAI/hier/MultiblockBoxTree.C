@@ -39,7 +39,7 @@ namespace hier {
 
 MultiblockBoxTree::MultiblockBoxTree(
    const tbox::ConstPointer<GridGeometry> &grid_geometry,
-   const MappedBoxSet& mapped_boxes,
+   const BoxSet& mapped_boxes,
    size_t min_number ):
    d_grid_geometry(grid_geometry)
 {
@@ -52,15 +52,15 @@ MultiblockBoxTree::MultiblockBoxTree(
     * create a tree for each BlockId.
     */
 
-   std::map<BlockId, MappedBoxSet> mapped_boxes_by_block;
-   for ( MappedBoxSet::const_iterator bi = mapped_boxes.begin();
+   std::map<BlockId, BoxSet> mapped_boxes_by_block;
+   for ( BoxSet::const_iterator bi = mapped_boxes.begin();
          bi != mapped_boxes.end(); ++bi ) {
       mapped_boxes_by_block[bi->getBlockId()].insert(
          mapped_boxes_by_block[bi->getBlockId()].end(),
          *bi);
    }
 
-   for ( std::map<BlockId, MappedBoxSet>::iterator blocki = mapped_boxes_by_block.begin();
+   for ( std::map<BlockId, BoxSet>::iterator blocki = mapped_boxes_by_block.begin();
          blocki != mapped_boxes_by_block.end(); ++blocki ) {
 
       TBOX_ASSERT( blocki->first.getBlockValue() >= 0 &&
@@ -153,7 +153,7 @@ void MultiblockBoxTree::generateTree(
     * Group Boxes by their BlockId and create a tree for each
     * BlockId.
     */
-   std::map<BlockId, MappedBoxSet> mapped_boxes_by_block;
+   std::map<BlockId, BoxSet> mapped_boxes_by_block;
    for ( std::vector<Box>::const_iterator bi = mapped_boxes.begin();
          bi != mapped_boxes.end(); ++bi ) {
       mapped_boxes_by_block[bi->getBlockId()].insert(
@@ -161,7 +161,7 @@ void MultiblockBoxTree::generateTree(
          *bi);
    }
 
-   for ( std::map<BlockId, MappedBoxSet>::iterator blocki = mapped_boxes_by_block.begin();
+   for ( std::map<BlockId, BoxSet>::iterator blocki = mapped_boxes_by_block.begin();
          blocki != mapped_boxes_by_block.end(); ++blocki ) {
 
       TBOX_ASSERT( blocki->first.getBlockValue() >= 0 &&
@@ -295,7 +295,7 @@ const BoxTree& MultiblockBoxTree::getSingleBlockBoxTree(
 */
 
 void MultiblockBoxTree::findOverlapBoxes(
-   MappedBoxSet& overlap_mapped_boxes,
+   BoxSet& overlap_mapped_boxes,
    const Box& box,
    const BlockId &block_id,
    const IntVector &refinement_ratio,

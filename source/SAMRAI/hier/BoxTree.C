@@ -82,7 +82,7 @@ BoxTree::BoxTree(
 
 BoxTree::BoxTree(
    const tbox::Dimension& dim,
-   const MappedBoxSet& mapped_boxes,
+   const BoxSet& mapped_boxes,
    size_t min_number):
    d_dim(dim),
    d_bounding_box(dim),
@@ -99,7 +99,7 @@ BoxTree::BoxTree(
 
 #ifdef DEBUG_CHECK_ASSERTIONS
    // Catch empty boxes so sorting logic does not have to.
-   for (MappedBoxSet::const_iterator ni = mapped_boxes.begin();
+   for (BoxSet::const_iterator ni = mapped_boxes.begin();
         ni != mapped_boxes.end();
         ++ni) {
       TBOX_ASSERT(! ni->empty());
@@ -116,7 +116,7 @@ BoxTree::BoxTree(
     *
     * However, this extra copy slows things down about 30%.
     * So we live with the repetitious code to do the same thing
-    * that privateGenerateTree, except with a MappedBoxSet instead of a
+    * that privateGenerateTree, except with a BoxSet instead of a
     * std::vector<Box >.
     */
 
@@ -128,7 +128,7 @@ BoxTree::BoxTree(
       TBOX_ASSERT(mapped_boxes.begin()->getBlockId() != BlockId::invalidId());
       d_block_id = mapped_boxes.begin()->getBlockId();
    }
-   for (MappedBoxSet::const_iterator ni = mapped_boxes.begin();
+   for (BoxSet::const_iterator ni = mapped_boxes.begin();
         ni != mapped_boxes.end(); ++ni) {
       d_bounding_box += (*ni);
       TBOX_ASSERT(ni->getBlockId() == d_block_id);
@@ -171,8 +171,8 @@ BoxTree::BoxTree(
          (d_bounding_box.lower(d_partition_dim)
           + d_bounding_box.upper(d_partition_dim)) / 2;
 
-      MappedBoxSet left_mapped_boxes, right_mapped_boxes;
-      for (MappedBoxSet::const_iterator ni = mapped_boxes.begin();
+      BoxSet left_mapped_boxes, right_mapped_boxes;
+      for (BoxSet::const_iterator ni = mapped_boxes.begin();
            ni != mapped_boxes.end(); ++ni) {
          const Box& mapped_box = *ni;
          if (mapped_box.upper(d_partition_dim) <= midpoint) {
@@ -276,7 +276,7 @@ BoxTree::BoxTree(
          (d_bounding_box.lower(d_partition_dim)
           + d_bounding_box.upper(d_partition_dim)) / 2;
 
-      MappedBoxSet left_mapped_boxes, right_mapped_boxes;
+      BoxSet left_mapped_boxes, right_mapped_boxes;
       LocalId count(-1);
       for (BoxList::Iterator li(boxes); li; li++) {
          const Box mapped_box(*li, ++count, 0, d_block_id);
@@ -344,7 +344,7 @@ BoxTree& BoxTree::operator = (
  *************************************************************************
  */
 void BoxTree::generateTree(
-   MappedBoxSet& mapped_boxes,
+   BoxSet& mapped_boxes,
    size_t min_number)
 {
    t_build_tree[d_dim.getValue() - 1]->start();
@@ -358,7 +358,7 @@ void BoxTree::generateTree(
 #ifdef DEBUG_CHECK_ASSERTIONS
    // Catch empty boxes so sorting logic does not have to.
    // Ensure all Boxes are all in the same block.
-   for (MappedBoxSet::const_iterator ni = mapped_boxes.begin();
+   for (BoxSet::const_iterator ni = mapped_boxes.begin();
         ni != mapped_boxes.end();
         ++ni) {
       TBOX_ASSERT(!ni->empty());
@@ -404,7 +404,7 @@ void BoxTree::privateGenerateTree(
     * Compute this tree's domain, which is the bounding box for the
     * constituent boxes.
     */
-   for (MappedBoxSet::const_iterator ni = d_mapped_boxes.begin();
+   for (BoxSet::const_iterator ni = d_mapped_boxes.begin();
         ni != d_mapped_boxes.end(); ++ni) {
       d_bounding_box += *ni;
    }
@@ -442,18 +442,18 @@ void BoxTree::privateGenerateTree(
          (d_bounding_box.lower(d_partition_dim)
           + d_bounding_box.upper(d_partition_dim)) / 2;
 
-      MappedBoxSet left_mapped_boxes, right_mapped_boxes;
-      for (MappedBoxSet::const_iterator ni = d_mapped_boxes.begin();
+      BoxSet left_mapped_boxes, right_mapped_boxes;
+      for (BoxSet::const_iterator ni = d_mapped_boxes.begin();
            ni != d_mapped_boxes.end();) {
          const Box& mapped_box = *ni;
          if (mapped_box.upper(d_partition_dim) <= midpoint) {
             left_mapped_boxes.insert(left_mapped_boxes.end(), mapped_box);
-            MappedBoxSet::const_iterator curr = ni;
+            BoxSet::const_iterator curr = ni;
             ++ni;
             d_mapped_boxes.erase(curr);
          } else if (mapped_box.lower(d_partition_dim) > midpoint) {
             right_mapped_boxes.insert(right_mapped_boxes.end(), mapped_box);
-            MappedBoxSet::const_iterator curr = ni;
+            BoxSet::const_iterator curr = ni;
             ++ni;
             d_mapped_boxes.erase(curr);
          } else {
@@ -485,8 +485,8 @@ void BoxTree::privateGenerateTree(
 */
 void BoxTree::setupChildren(
    const size_t min_number,
-   MappedBoxSet &left_mapped_boxes,
-   MappedBoxSet &right_mapped_boxes )
+   BoxSet &left_mapped_boxes,
+   BoxSet &right_mapped_boxes )
 {
    const size_t total_size =
       left_mapped_boxes.size() + right_mapped_boxes.size() + d_mapped_boxes.size();
@@ -552,7 +552,7 @@ bool BoxTree::hasOverlap(
       if (d_center_child) {
          has_overlap = d_center_child->hasOverlap(box);
       } else {
-         for (MappedBoxSet::const_iterator ni = d_mapped_boxes.begin();
+         for (BoxSet::const_iterator ni = d_mapped_boxes.begin();
               ni != d_mapped_boxes.end(); ++ni) {
             const Box& mapped_box = *ni;
             if (box.intersects(mapped_box)) {
@@ -592,7 +592,7 @@ void BoxTree::findOverlapBoxes(
       if (d_center_child) {
          d_center_child->findOverlapBoxes(overlap_mapped_boxes, box, true);
       } else {
-         for (MappedBoxSet::const_iterator ni = d_mapped_boxes.begin();
+         for (BoxSet::const_iterator ni = d_mapped_boxes.begin();
               ni != d_mapped_boxes.end(); ++ni) {
             const Box& mapped_box = *ni;
             if (box.intersects(mapped_box)) {
@@ -640,7 +640,7 @@ void BoxTree::findOverlapBoxes(
       if (d_center_child) {
          d_center_child->findOverlapBoxes(overlap_mapped_boxes, box, true);
       } else {
-         for (MappedBoxSet::const_iterator ni = d_mapped_boxes.begin();
+         for (BoxSet::const_iterator ni = d_mapped_boxes.begin();
               ni != d_mapped_boxes.end(); ++ni) {
             const Box& mapped_box = *ni;
             if (box.intersects(mapped_box)) {
@@ -688,7 +688,7 @@ void BoxTree::findOverlapBoxes(
       if (d_center_child) {
          d_center_child->findOverlapBoxes(overlap_boxes, box, true);
       } else {
-         for (MappedBoxSet::const_iterator ni = d_mapped_boxes.begin();
+         for (BoxSet::const_iterator ni = d_mapped_boxes.begin();
               ni != d_mapped_boxes.end(); ++ni) {
             const Box& this_box = *ni;
             if (box.intersects(this_box)) {
@@ -741,7 +741,7 @@ const tbox::Dimension& BoxTree::getDim() const
 }
 
 void BoxTree::findOverlapBoxes(
-   MappedBoxSet& overlap_mapped_boxes,
+   BoxSet& overlap_mapped_boxes,
    const Box& box,
    bool recursive_call) const
 {
@@ -759,7 +759,7 @@ void BoxTree::findOverlapBoxes(
       if (d_center_child) {
          d_center_child->findOverlapBoxes(overlap_mapped_boxes, box, true);
       } else {
-         for (MappedBoxSet::const_iterator ni = d_mapped_boxes.begin();
+         for (BoxSet::const_iterator ni = d_mapped_boxes.begin();
               ni != d_mapped_boxes.end(); ++ni) {
             const Box& mapped_box = *ni;
             if (box.intersects(mapped_box)) {
@@ -821,7 +821,7 @@ tbox::Pointer<BoxTree> BoxTree::createRefinedTree(
    rval->d_bounding_box = d_bounding_box;
    rval->d_bounding_box.refine(ratio);
 
-   for (MappedBoxSet::iterator ni = d_mapped_boxes.begin();
+   for (BoxSet::iterator ni = d_mapped_boxes.begin();
         ni != d_mapped_boxes.end(); ++ni) {
       Box refined_box = *ni;
       refined_box.refine(ratio);

@@ -13,7 +13,7 @@
 #include "SAMRAI/hier/MappingConnectorAlgorithm.h"
 #include "SAMRAI/hier/OverlapConnectorAlgorithm.h"
 #include "SAMRAI/tbox/InputManager.h"
-#include "SAMRAI/hier/RealMappedBoxConstIterator.h"
+#include "SAMRAI/hier/RealBoxConstIterator.h"
 #include "SAMRAI/tbox/AsyncCommStage.h"
 #include "SAMRAI/tbox/AsyncCommPeer.h"
 #include "SAMRAI/tbox/SAMRAI_MPI.h"
@@ -1146,7 +1146,7 @@ void MappingConnectorAlgorithm::privateModify_discoverAndSend(
     * owners first.  Note the comparator MappedBoxOwnerFirst used to
     * achieve this ordering.
     */
-   MappedBoxSet visible_anchor_nabrs, visible_new_nabrs;
+   BoxSet visible_anchor_nabrs, visible_new_nabrs;
    InvertedNeighborhoodSet anchor_eto_old, new_eto_old;
    for (NeighborhoodSet::const_iterator ei = old_eto_anchor.begin();
         ei != old_eto_anchor.end(); ++ei) {
@@ -1312,8 +1312,8 @@ void MappingConnectorAlgorithm::privateModify_discoverAndSend(
       send_mesg.insert(send_mesg.end(), 3, 0);
 
       // Mapped_boxes referenced in the message, used when adding ref section.
-      MappedBoxSet referenced_anchor_nabrs; // Referenced neighbors in anchor.
-      MappedBoxSet referenced_new_nabrs; // Referenced neighbors in new.
+      BoxSet referenced_anchor_nabrs; // Referenced neighbors in anchor.
+      BoxSet referenced_new_nabrs; // Referenced neighbors in new.
 
       /*
        * Find locally visible new neighbors for all anchor
@@ -1548,13 +1548,13 @@ void MappingConnectorAlgorithm::privateModify_discoverAndSend(
          int* ptr = &send_mesg[offset];
          *(ptr++) = static_cast<int>(referenced_anchor_nabrs.size());
          *(ptr++) = static_cast<int>(referenced_new_nabrs.size());
-         for (MappedBoxSet::const_iterator ni = referenced_anchor_nabrs.begin();
+         for (BoxSet::const_iterator ni = referenced_anchor_nabrs.begin();
               ni != referenced_anchor_nabrs.end(); ++ni) {
             const Box& mapped_box = *ni;
             mapped_box.putToIntBuffer(ptr);
             ptr += Box::commBufferSize(dim);
          }
-         for (MappedBoxSet::const_iterator ni = referenced_new_nabrs.begin();
+         for (BoxSet::const_iterator ni = referenced_new_nabrs.begin();
               ni != referenced_new_nabrs.end(); ++ni) {
             const Box& mapped_box = *ni;
             mapped_box.putToIntBuffer(ptr);
@@ -1931,8 +1931,8 @@ size_t MappingConnectorAlgorithm::findMappingErrors(
     * the new MappedBoxLevel.  There should be a mapping for each
     * Box that changed or disappeared.
     */
-   const MappedBoxSet& old_mapped_boxes = connector.getBase().getMappedBoxes();
-   for (RealMappedBoxConstIterator ni(old_mapped_boxes); ni.isValid();
+   const BoxSet& old_mapped_boxes = connector.getBase().getMappedBoxes();
+   for (RealBoxConstIterator ni(old_mapped_boxes); ni.isValid();
         ++ni) {
       const Box& old_mapped_box = *ni;
       if (!new_mapped_box_level.hasMappedBox(old_mapped_box)) {

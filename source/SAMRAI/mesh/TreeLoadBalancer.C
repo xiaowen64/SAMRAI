@@ -16,7 +16,7 @@
 #include "SAMRAI/tbox/StartupShutdownManager.h"
 
 #include "SAMRAI/hier/MappingConnectorAlgorithm.h"
-#include "SAMRAI/hier/MappedBoxSet.h"
+#include "SAMRAI/hier/BoxSet.h"
 #include "SAMRAI/hier/OverlapConnectorAlgorithm.h"
 #include "SAMRAI/hier/BoxUtilities.h"
 #include "SAMRAI/hier/PatchDescriptor.h"
@@ -247,7 +247,7 @@ void TreeLoadBalancer::loadBalanceMappedBoxLevel(
        * all periodic edges in anchor<==>balance.
        */
 
-      hier::MappedBoxSet tmp_mapped_boxes;
+      hier::BoxSet tmp_mapped_boxes;
       balance_mapped_box_level.getMappedBoxes().removePeriodicImageMappedBoxes(
          tmp_mapped_boxes);
       balance_mapped_box_level.swapInitialize(
@@ -601,11 +601,11 @@ void TreeLoadBalancer::mapOversizedBoxes(
       unconstrained.getMPI());
    hier::NeighborhoodSet unconstrained_eto_constrained;
 
-   const hier::MappedBoxSet& unconstrained_mapped_boxes = unconstrained.getMappedBoxes();
+   const hier::BoxSet& unconstrained_mapped_boxes = unconstrained.getMappedBoxes();
 
    hier::LocalId next_available_index = unconstrained.getLastLocalId() + 1;
 
-   for (hier::MappedBoxSet::const_iterator ni = unconstrained_mapped_boxes.begin();
+   for (hier::BoxSet::const_iterator ni = unconstrained_mapped_boxes.begin();
         ni != unconstrained_mapped_boxes.end(); ++ni) {
 
       const hier::Box& mapped_box = *ni;
@@ -634,7 +634,7 @@ void TreeLoadBalancer::mapOversizedBoxes(
 
          if (true || chopped.size() != 1) {
 
-            hier::MappedBoxSet& constrained_nabrs =
+            hier::BoxSet& constrained_nabrs =
                unconstrained_eto_constrained[mapped_box.getId()];
 
             for (hier::BoxList::Iterator li(chopped);
@@ -828,7 +828,7 @@ void TreeLoadBalancer::loadBalanceMappedBoxLevel_rootCycle(
    }
 #endif
 
-   const hier::MappedBoxSet& unbalanced_mapped_boxes =
+   const hier::BoxSet& unbalanced_mapped_boxes =
       unbalanced_mapped_box_level.getMappedBoxes();
 
    /*
@@ -951,7 +951,7 @@ void TreeLoadBalancer::loadBalanceMappedBoxLevel_rootCycle(
        * Local process is underloaded, so put all of unbalanced_mapped_box_level into
        * the balanced mapped_box_level (and add more later).
        */
-      for (hier::MappedBoxSet::const_iterator ni = unbalanced_mapped_boxes.begin();
+      for (hier::BoxSet::const_iterator ni = unbalanced_mapped_boxes.begin();
            ni != unbalanced_mapped_boxes.end(); ++ni) {
          const hier::Box& mapped_box = *ni;
          balanced_mapped_box_level.addMappedBox(mapped_box);
@@ -4007,8 +4007,8 @@ double TreeLoadBalancer::computeLocalLoads(
 {
    // Count up workload.
    double load = 0.0;
-   const hier::MappedBoxSet& mapped_boxes = mapped_box_level.getMappedBoxes();
-   for (hier::MappedBoxSet::const_iterator ni = mapped_boxes.begin();
+   const hier::BoxSet& mapped_boxes = mapped_box_level.getMappedBoxes();
+   for (hier::BoxSet::const_iterator ni = mapped_boxes.begin();
         ni != mapped_boxes.end();
         ++ni) {
       double mapped_box_load = computeLoad(*ni);
@@ -4879,10 +4879,10 @@ void TreeLoadBalancer::prebalanceMappedBoxLevel(
     * move them directly to tmp_mapped_box_level.
     */
    if (!is_sending_rank) {
-      const hier::MappedBoxSet& unchanged_mapped_boxes =
+      const hier::BoxSet& unchanged_mapped_boxes =
          balance_mapped_box_level.getMappedBoxes();
 
-      for (hier::MappedBoxSet::const_iterator ni =
+      for (hier::BoxSet::const_iterator ni =
               unchanged_mapped_boxes.begin();
            ni != unchanged_mapped_boxes.end(); ++ni) {
 
@@ -4897,14 +4897,14 @@ void TreeLoadBalancer::prebalanceMappedBoxLevel(
     * On sending ranks, pack the MappedBoxes into buffers and send.
     */
    if (is_sending_rank) {
-      const hier::MappedBoxSet& sending_mapped_boxes =
+      const hier::BoxSet& sending_mapped_boxes =
          balance_mapped_box_level.getMappedBoxes();
       const int num_sending_boxes = 
          static_cast<int>(sending_mapped_boxes.size());
 
       int* buffer = new int[buf_size * num_sending_boxes];
       int box_count = 0;
-      for (hier::MappedBoxSet::const_iterator ni = sending_mapped_boxes.begin();
+      for (hier::BoxSet::const_iterator ni = sending_mapped_boxes.begin();
            ni != sending_mapped_boxes.end(); ++ni) {
 
          const hier::Box& mapped_box = *ni;
@@ -4942,7 +4942,7 @@ void TreeLoadBalancer::prebalanceMappedBoxLevel(
 
                   mapped_box.getFromIntBuffer(&buffer[b * buf_size]);
 
-                  hier::MappedBoxSet::iterator tmp_iter =
+                  hier::BoxSet::iterator tmp_iter =
                      tmp_mapped_box_level.addBox(mapped_box,
                                                  mapped_box.getBlockId());
 
@@ -4981,12 +4981,12 @@ void TreeLoadBalancer::prebalanceMappedBoxLevel(
       }
       const int* buffer = id_recv->getRecvData();
 
-      const hier::MappedBoxSet& sending_mapped_boxes =
+      const hier::BoxSet& sending_mapped_boxes =
          balance_mapped_box_level.getMappedBoxes();
       TBOX_ASSERT(static_cast<unsigned int>(id_recv->getRecvSize()) == sending_mapped_boxes.size());
 
       int box_count = 0;
-      for (hier::MappedBoxSet::const_iterator ni =
+      for (hier::BoxSet::const_iterator ni =
               sending_mapped_boxes.begin();
            ni != sending_mapped_boxes.end(); ++ni) {
 

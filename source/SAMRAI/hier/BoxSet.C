@@ -7,24 +7,24 @@
  * Description:   Extension of a std 
  *
  ************************************************************************/
-#ifndef included_hier_MappedBoxSet_C
-#define included_hier_MappedBoxSet_C
+#ifndef included_hier_BoxSet_C
+#define included_hier_BoxSet_C
 
-#include "SAMRAI/hier/MappedBoxSet.h"
+#include "SAMRAI/hier/BoxSet.h"
 
 #include "SAMRAI/hier/BoxList.h"
-#include "SAMRAI/hier/MappedBoxSetSingleBlockIterator.h"
-#include "SAMRAI/hier/MappedBoxSetSingleOwnerIterator.h"
+#include "SAMRAI/hier/BoxSetSingleBlockIterator.h"
+#include "SAMRAI/hier/BoxSetSingleOwnerIterator.h"
 #include "SAMRAI/hier/PeriodicShiftCatalog.h"
 
 #ifndef SAMRAI_INLINE
-#include "SAMRAI/hier/MappedBoxSet.I"
+#include "SAMRAI/hier/BoxSet.I"
 #endif
 
 namespace SAMRAI {
 namespace hier {
 
-const int MappedBoxSet::HIER_MAPPED_BOX_SET_VERSION = 0;
+const int BoxSet::HIER_BOX_SET_VERSION = 0;
 
 #if !defined(__BGL_FAMILY__) && defined(__xlC__)
 /*
@@ -38,15 +38,15 @@ const int MappedBoxSet::HIER_MAPPED_BOX_SET_VERSION = 0;
  ***********************************************************************
  ***********************************************************************
  */
-bool MappedBoxSet::isLocallyEqual(
-   const MappedBoxSet& other,
+bool BoxSet::isLocallyEqual(
+   const BoxSet& other,
    int rank) const
 {
    if (this == &other) return true;
 
    bool is_equal = true;
-   MappedBoxSetSingleOwnerIterator this_iter(*this, rank);
-   MappedBoxSetSingleOwnerIterator other_iter(other, rank);
+   BoxSetSingleOwnerIterator this_iter(*this, rank);
+   BoxSetSingleOwnerIterator other_iter(other, rank);
 
    while (this_iter.isValid() && other_iter.isValid()) {
       if (! (*this_iter).isIdEqual((*other_iter))) {
@@ -68,14 +68,14 @@ bool MappedBoxSet::isLocallyEqual(
 
 /*
  ***********************************************************************
- * Write the MappedBoxSet to a database.
+ * Write the BoxSet to a database.
  ***********************************************************************
  */
-void MappedBoxSet::putToDatabase(
+void BoxSet::putToDatabase(
    tbox::Database& database) const
 {
    database.putInteger(
-      "HIER_MAPPED_BOX_SET_VERSION", HIER_MAPPED_BOX_SET_VERSION);
+      "HIER_BOX_SET_VERSION", HIER_BOX_SET_VERSION);
 
    const int mbs_size = size();
    database.putInteger("mapped_box_set_size", mbs_size);
@@ -93,7 +93,7 @@ void MappedBoxSet::putToDatabase(
       tbox::Array<tbox::DatabaseBox> db_box_array(mbs_size);
 
       int counter = -1;
-      for (MappedBoxSet::const_iterator ni = begin();
+      for (BoxSet::const_iterator ni = begin();
            ni != end(); ++ni) {
          local_ids.push_back(ni->getLocalId().getValue());
          ranks.push_back(ni->getOwnerRank());
@@ -117,10 +117,10 @@ void MappedBoxSet::putToDatabase(
 
 /*
  ***********************************************************************
- * Read the MappedBoxSet from a database.
+ * Read the BoxSet from a database.
  ***********************************************************************
  */
-void MappedBoxSet::getFromDatabase(
+void BoxSet::getFromDatabase(
    tbox::Database& database)
 {
    const unsigned int mbs_size = database.getInteger("mapped_box_set_size");
@@ -157,16 +157,16 @@ void MappedBoxSet::getFromDatabase(
 
 /*
  ***********************************************************************
- * Construct the BoxList consisting of the Boxes in this MappedBoxSet
+ * Construct the BoxList consisting of the Boxes in this BoxSet
  * in the requested block.
  ***********************************************************************
  */
 tbox::Pointer<BoxList>
-MappedBoxSet::getSingleBlockBoxList(
+BoxSet::getSingleBlockBoxList(
    const tbox::Dimension& dim,
    const BlockId& which_block) const
 {
-   MappedBoxSetSingleBlockIterator itr(*this, which_block);
+   BoxSetSingleBlockIterator itr(*this, which_block);
    BoxList* boxes_in_block = new BoxList(dim);
    while (itr.isValid()) {
       const Box& mapped_box = *itr;
@@ -179,11 +179,11 @@ MappedBoxSet::getSingleBlockBoxList(
 
 /*
  ***********************************************************************
- * Refine the boxes of a MappedBoxSet.
+ * Refine the boxes of a BoxSet.
  ***********************************************************************
  */
-void MappedBoxSet::refine(
-   MappedBoxSet& output_mapped_boxes,
+void BoxSet::refine(
+   BoxSet& output_mapped_boxes,
    const IntVector& ratio) const
 {
    if (this != &output_mapped_boxes) {
@@ -193,7 +193,7 @@ void MappedBoxSet::refine(
          output_mapped_boxes.insert(output_mapped_boxes.end(), n);
       }
    } else {
-      MappedBoxSet tmp_mapped_boxes;
+      BoxSet tmp_mapped_boxes;
       for (const_iterator na = begin(); na != end(); ++na) {
          Box n = *na;
          n.refine(ratio);
@@ -205,11 +205,11 @@ void MappedBoxSet::refine(
 
 /*
  ***********************************************************************
- * Coarsen the boxes of a MappedBoxSet.
+ * Coarsen the boxes of a BoxSet.
  ***********************************************************************
  */
-void MappedBoxSet::coarsen(
-   MappedBoxSet& output_mapped_boxes,
+void BoxSet::coarsen(
+   BoxSet& output_mapped_boxes,
    const IntVector& ratio) const
 {
    if (this != &output_mapped_boxes) {
@@ -219,7 +219,7 @@ void MappedBoxSet::coarsen(
          output_mapped_boxes.insert(output_mapped_boxes.end(), n);
       }
    } else {
-      MappedBoxSet tmp_mapped_boxes;
+      BoxSet tmp_mapped_boxes;
       for (const_iterator na = begin(); na != end(); ++na) {
          Box n = *na;
          n.coarsen(ratio);
@@ -231,11 +231,11 @@ void MappedBoxSet::coarsen(
 
 /*
  ***********************************************************************
- * Grow the boxes of a MappedBoxSet.
+ * Grow the boxes of a BoxSet.
  ***********************************************************************
  */
-void MappedBoxSet::grow(
-   MappedBoxSet& output_mapped_boxes,
+void BoxSet::grow(
+   BoxSet& output_mapped_boxes,
    const IntVector& growth) const
 {
    if (this != &output_mapped_boxes) {
@@ -245,7 +245,7 @@ void MappedBoxSet::grow(
          output_mapped_boxes.insert(output_mapped_boxes.end(), n);
       }
    } else {
-      MappedBoxSet tmp_mapped_boxes;
+      BoxSet tmp_mapped_boxes;
       for (const_iterator na = begin(); na != end(); ++na) {
          Box n = *na;
          n.grow(growth);
@@ -257,11 +257,11 @@ void MappedBoxSet::grow(
 
 /*
  ***********************************************************************
- * Remove periodic image MappedBoxes from a MappedBoxSet.
+ * Remove periodic image MappedBoxes from a BoxSet.
  ***********************************************************************
  */
-void MappedBoxSet::removePeriodicImageMappedBoxes(
-   MappedBoxSet& output_mapped_boxes) const
+void BoxSet::removePeriodicImageMappedBoxes(
+   BoxSet& output_mapped_boxes) const
 {
    iterator hint = output_mapped_boxes.begin();
    for (const_iterator na = begin(); na != end(); ++na) {
@@ -274,11 +274,11 @@ void MappedBoxSet::removePeriodicImageMappedBoxes(
 
 /*
  ***********************************************************************
- * Unshift periodic image MappedBoxes from a MappedBoxSet.
+ * Unshift periodic image MappedBoxes from a BoxSet.
  ***********************************************************************
  */
-void MappedBoxSet::unshiftPeriodicImageMappedBoxes(
-   MappedBoxSet& output_mapped_boxes,
+void BoxSet::unshiftPeriodicImageMappedBoxes(
+   BoxSet& output_mapped_boxes,
    const IntVector& refinement_ratio) const
 {
    iterator hint = output_mapped_boxes.begin();
@@ -304,10 +304,10 @@ void MappedBoxSet::unshiftPeriodicImageMappedBoxes(
 
 /*
  ***********************************************************************
- * Remove from a BoxList its intersection with a MappedBoxSet.
+ * Remove from a BoxList its intersection with a BoxSet.
  ***********************************************************************
  */
-void MappedBoxSet::removeBoxListIntersections(
+void BoxSet::removeBoxListIntersections(
    BoxList& boxes) const
 {
    for (const_iterator na = begin(); na != end(); ++na) {
@@ -321,7 +321,7 @@ void MappedBoxSet::removeBoxListIntersections(
  * Insert Box owners into a single set container.
  ***********************************************************************
  */
-void MappedBoxSet::getOwners(
+void BoxSet::getOwners(
    std::set<int>& owners) const
 {
    for (const_iterator i_nabr = begin(); i_nabr != end(); ++i_nabr) {
@@ -335,7 +335,7 @@ void MappedBoxSet::getOwners(
  * Avoid communication in this method.  It is often used for debugging.
  ***********************************************************************
  */
-void MappedBoxSet::recursivePrint(
+void BoxSet::recursivePrint(
    std::ostream& co,
    const std::string& border,
    int detail_depth) const
@@ -352,12 +352,12 @@ void MappedBoxSet::recursivePrint(
 
 /*
  ***********************************************************************
- * Construct a MappedBoxSet Outputter with formatting parameters.
+ * Construct a BoxSet Outputter with formatting parameters.
  ***********************************************************************
  */
 
-MappedBoxSet::Outputter::Outputter(
-   const MappedBoxSet &mapped_box_set,
+BoxSet::Outputter::Outputter(
+   const BoxSet &mapped_box_set,
    const std::string& border,
    int detail_depth )
    : d_set(mapped_box_set),
@@ -370,13 +370,13 @@ MappedBoxSet::Outputter::Outputter(
 
 /*
  ***********************************************************************
- * Print out a MappedBoxSet according to settings in the Outputter.
+ * Print out a BoxSet according to settings in the Outputter.
  ***********************************************************************
  */
 
 std::ostream& operator << (
    std::ostream& s,
-   const MappedBoxSet::Outputter& format)
+   const BoxSet::Outputter& format)
 {
    format.d_set.recursivePrint( s, format.d_border, format.d_detail_depth );
    return s;
@@ -385,11 +385,11 @@ std::ostream& operator << (
 
 /*
  ***********************************************************************
- * Return a Outputter that can dump the MappedBoxSet to a stream.
+ * Return a Outputter that can dump the BoxSet to a stream.
  ***********************************************************************
  */
 
-MappedBoxSet::Outputter MappedBoxSet::format(
+BoxSet::Outputter BoxSet::format(
    const std::string& border,
    int detail_depth ) const
 {

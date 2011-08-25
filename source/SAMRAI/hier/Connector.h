@@ -56,7 +56,7 @@ public:
    /*!
     * @brief NeighborsSet is a clarifying typedef.
     */
-   typedef MappedBoxSet NeighborSet;
+   typedef BoxSet NeighborSet;
 
 
    /// TODO:  Possible refactor?  Since Connectors do not imply relationship

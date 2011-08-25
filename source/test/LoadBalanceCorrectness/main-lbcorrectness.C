@@ -231,7 +231,7 @@ int main(
             "GridGeometry",
             input_db->getDatabase("CartesianGridGeometry")));
 
-      const hier::BoxList domain_boxes(grid_geometry->getPhysicalDomain(0));
+      const hier::BoxList domain_boxes(grid_geometry->getPhysicalDomain(hier::BlockId(0)));
 
       tbox::Pointer<hier::PatchHierarchy> hierarchy(
          new hier::PatchHierarchy(
@@ -852,7 +852,7 @@ int checkBalanceCorrectness(
    const hier::MappedBoxLevel &globalized_prebalance =
       prebalance.getGlobalizedVersion();
 
-   const hier::MappedBoxSet &globalized_prebalance_mapped_box_set =
+   const hier::BoxSet &globalized_prebalance_mapped_box_set =
       globalized_prebalance.getGlobalMappedBoxes();
 
    const hier::MultiblockBoxTree globalized_prebalance_mapped_box_tree(
@@ -863,7 +863,7 @@ int checkBalanceCorrectness(
    const hier::MappedBoxLevel &globalized_postbalance =
       postbalance.getGlobalizedVersion();
 
-   const hier::MappedBoxSet &globalized_postbalance_mapped_box_set =
+   const hier::BoxSet &globalized_postbalance_mapped_box_set =
       globalized_postbalance.getGlobalMappedBoxes();
 
    const hier::MultiblockBoxTree globalized_postbalance_mapped_box_tree(
@@ -872,7 +872,7 @@ int checkBalanceCorrectness(
 
 
    // Check for prebalance indices absent in postbalance.
-   for ( hier::MappedBoxSet::const_iterator bi=globalized_prebalance_mapped_box_set.begin();
+   for ( hier::BoxSet::const_iterator bi=globalized_prebalance_mapped_box_set.begin();
          bi!=globalized_prebalance_mapped_box_set.end(); ++bi ) {
       hier::BoxList box_container(*bi);
       box_container.removeIntersections( bi->getBlockId(),
@@ -888,7 +888,7 @@ int checkBalanceCorrectness(
    }
 
    // Check for postbalance indices absent in prebalance.
-   for ( hier::MappedBoxSet::const_iterator bi=globalized_postbalance_mapped_box_set.begin();
+   for ( hier::BoxSet::const_iterator bi=globalized_postbalance_mapped_box_set.begin();
          bi!=globalized_postbalance_mapped_box_set.end(); ++bi ) {
       hier::BoxList box_container(*bi);
       box_container.removeIntersections( bi->getBlockId(),

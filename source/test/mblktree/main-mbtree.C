@@ -47,11 +47,11 @@ void breakUpBoxes(
  * results from tree search.
  */
 void exhaustiveFindOverlapMappedBoxes(
-   hier::MappedBoxSet& overlap_mapped_boxes,
+   hier::BoxSet& overlap_mapped_boxes,
    const hier::Box& mapped_box,
    const hier::IntVector &refinement_ratio,
    const tbox::ConstPointer<hier::GridGeometry> &grid_geometry,
-   const hier::MappedBoxSet& search_mapped_boxes );
+   const hier::BoxSet& search_mapped_boxes );
 
 /*
  ************************************************************************
@@ -203,7 +203,7 @@ int main(
 
       const hier::IntVector &one_vector(hier::IntVector::getOne(dim));
 
-      hier::MappedBoxSet multiblock_boxes;
+      hier::BoxSet multiblock_boxes;
       grid_geometry->computePhysicalDomain(
          multiblock_boxes,
          hier::IntVector::getOne(dim) );
@@ -274,12 +274,12 @@ int main(
 
       const hier::IntVector &refinement_ratio(one_vector);
 
-      for ( hier::MappedBoxSet::iterator bi=mapped_box_level.getMappedBoxes().begin();
+      for ( hier::BoxSet::iterator bi=mapped_box_level.getMappedBoxes().begin();
             bi!=mapped_box_level.getMappedBoxes().end(); ++bi ) {
 
          const hier::Box &mapped_box(*bi);
 
-         hier::MappedBoxSet &neighbors(neighborhood_set[mapped_box.getId()]);
+         hier::BoxSet &neighbors(neighborhood_set[mapped_box.getId()]);
 
          hier::Box grown_box(mapped_box);
          grown_box.grow(connector_width);
@@ -310,12 +310,12 @@ int main(
           * exhaustive search method first.
           */
          hier::NeighborhoodSet neighborhood_set_from_exhaustive_search;
-         for ( hier::MappedBoxSet::iterator bi=mapped_box_level.getMappedBoxes().begin();
+         for ( hier::BoxSet::iterator bi=mapped_box_level.getMappedBoxes().begin();
                bi!=mapped_box_level.getMappedBoxes().end(); ++bi ) {
 
             const hier::Box &mapped_box(*bi);
 
-            hier::MappedBoxSet &neighbors(neighborhood_set_from_exhaustive_search[mapped_box.getId()]);
+            hier::BoxSet &neighbors(neighborhood_set_from_exhaustive_search[mapped_box.getId()]);
 
             hier::Box grown_mapped_box(mapped_box);
             grown_mapped_box.grow(connector_width);
@@ -498,17 +498,17 @@ void breakUpBoxes(
  * results from tree search.
  */
 void exhaustiveFindOverlapMappedBoxes(
-   hier::MappedBoxSet& overlap_mapped_boxes,
+   hier::BoxSet& overlap_mapped_boxes,
    const hier::Box& mapped_box,
    const hier::IntVector &refinement_ratio,
    const tbox::ConstPointer<hier::GridGeometry> &grid_geometry,
-   const hier::MappedBoxSet& search_mapped_boxes )
+   const hier::BoxSet& search_mapped_boxes )
 {
 
    hier::Box transformed_box(mapped_box);
    hier::BlockId transformed_block_id(mapped_box.getBlockId());
 
-   for ( hier::MappedBoxSet::const_iterator bi=search_mapped_boxes.begin();
+   for ( hier::BoxSet::const_iterator bi=search_mapped_boxes.begin();
          bi!=search_mapped_boxes.end(); ++bi ) {
 
       const hier::Box &search_mapped_box(*bi);

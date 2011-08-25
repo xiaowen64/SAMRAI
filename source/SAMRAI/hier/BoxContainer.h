@@ -20,7 +20,7 @@
 #include <iostream>
 #include <list>
 
-#define MB_MAPPEDBOXTREE_EXISTS
+#define MB_BOXTREE_EXISTS
 
 namespace SAMRAI {
 namespace hier {

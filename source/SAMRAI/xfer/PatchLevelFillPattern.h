@@ -40,7 +40,7 @@ class PatchLevelFillPattern:public tbox::DescribedClass
 public:
    typedef std::vector<hier::Box> BoxVector;
    typedef std::vector<hier::Box> MappedBoxVector;
-   typedef std::map<hier::BoxId, hier::MappedBoxSet> FillSet;
+   typedef std::map<hier::BoxId, hier::BoxSet> FillSet;
 
    /*!
     * @brief Default constructor
@@ -62,7 +62,7 @@ public:
     * patch interiors, ghost regions, or some combination thereof) will be
     * specified in the concrete implementations of this class.  Implementations
     * of this method should store the desired regions to be filled in the
-    * MappedBoxSet fill_mapped_boxes, and should compute a NeighborhoodSet
+    * BoxSet fill_mapped_boxes, and should compute a NeighborhoodSet
     * describing the relationship between dst_mapped_box_level and
     * fill_mapped_boxes.
     *
@@ -79,7 +79,7 @@ public:
     */
    virtual void
    computeFillMappedBoxesAndNeighborhoodSets(
-      hier::MappedBoxSet& fill_mapped_boxes,
+      hier::BoxSet& fill_mapped_boxes,
       hier::NeighborhoodSet& dst_to_fill_edges,
       const hier::MappedBoxLevel& dst_mapped_box_level,
       const hier::Connector& dst_to_dst,

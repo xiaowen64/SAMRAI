@@ -19,7 +19,7 @@
 #include "SAMRAI/hier/MappedBoxLevelConnectorUtils.h"
 #include "SAMRAI/hier/MultiblockBoxTree.h"
 #include "SAMRAI/hier/PatchLevel.h"
-#include "SAMRAI/hier/RealMappedBoxConstIterator.h"
+#include "SAMRAI/hier/RealBoxConstIterator.h"
 #include "SAMRAI/hier/VariableDatabase.h"
 #include "SAMRAI/pdat/CellDataFactory.h"
 #include "SAMRAI/pdat/NodeDataFactory.h"
@@ -3653,7 +3653,7 @@ void VisItDataWriter::writeParentChildInfoToSummaryHDFFile(
       tbox::Pointer<hier::PatchLevel> patch_level =
          hierarchy->getPatchLevel(ln);
 
-      const hier::MappedBoxSet& coarser_mapped_boxes =
+      const hier::BoxSet& coarser_mapped_boxes =
          patch_level->getMappedBoxLevel()->getGlobalizedVersion().getGlobalMappedBoxes();
 
       tbox::Pointer<hier::MultiblockBoxTree> child_box_tree;
@@ -3664,7 +3664,7 @@ void VisItDataWriter::writeParentChildInfoToSummaryHDFFile(
             hierarchy->getPatchLevel(ln + 1);
          ratio = child_patch_level->getRatioToCoarserLevel();
 
-         const hier::MappedBoxSet& global_child_boxes =
+         const hier::BoxSet& global_child_boxes =
             child_patch_level->getMappedBoxLevel()->
             getGlobalizedVersion().getGlobalMappedBoxes();
 
@@ -3675,8 +3675,8 @@ void VisItDataWriter::writeParentChildInfoToSummaryHDFFile(
           */
          if (hierarchy->getGridGeometry()->getNumberBlocks() == 1) {
 
-            hier::MappedBoxSet non_per_child_boxes;
-            for (hier::RealMappedBoxConstIterator gi(global_child_boxes);
+            hier::BoxSet non_per_child_boxes;
+            for (hier::RealBoxConstIterator gi(global_child_boxes);
                  gi.isValid(); ++gi) {
                non_per_child_boxes.insert(*gi);
             }
@@ -3696,7 +3696,7 @@ void VisItDataWriter::writeParentChildInfoToSummaryHDFFile(
          }
       }
 
-      for (hier::RealMappedBoxConstIterator bi(coarser_mapped_boxes);
+      for (hier::RealBoxConstIterator bi(coarser_mapped_boxes);
            bi.isValid(); ++bi) {
 
          if (ln == finest_level) {

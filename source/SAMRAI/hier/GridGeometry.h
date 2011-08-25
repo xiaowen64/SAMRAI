@@ -326,7 +326,7 @@ public:
       const BlockId& block_id) const;
 
    /*!
-    * @brief Compute the MappedBoxedSet describing the index space for a
+    * @brief Compute the BoxSet describing the index space for a
     * given block of the physical domain.
     *
     * The domain description includes periodic images, if any exist.
@@ -336,19 +336,19 @@ public:
     * negative, the index space is coarsened with respect to the physical
     * domain description.  Otherwise, the index space is refined.
     *
-    * @param[out]    domain_mapped_boxes The MappedBoxSet containing all
+    * @param[out]    domain_mapped_boxes The BoxSet containing all
     *                Boxes describing the index space
     * @param[in]     ratio_to_level_zero ratio to the coarsest level
     * @param[in]     block_id
     */
    void
    computePhysicalDomain(
-      MappedBoxSet& domain_mapped_boxes,
+      BoxSet& domain_mapped_boxes,
       const IntVector& ratio_to_level_zero,
       const BlockId& block_id) const;
 
    /*!
-    * @brief Compute the MappedBoxSet describing the complete physical
+    * @brief Compute the BoxSet describing the complete physical
     * domain for all blocks.
     *
     * The domain description includes periodic images, if any exist. 
@@ -357,13 +357,13 @@ public:
     * coarsened with respect to the physical domain description.
     * Otherwise, the index space is refined.
     *
-    * @param[out]    domain_mapped_boxes The MappedBoxSet containing all
+    * @param[out]    domain_mapped_boxes The BoxSet containing all
     *                Boxes describing the physical domain
     * @param[in]     ratio_to_level_zero ratio to the coarsest level
     */
    void
    computePhysicalDomain(
-      MappedBoxSet& domain_mapped_boxes,
+      BoxSet& domain_mapped_boxes,
       const IntVector& ratio_to_level_zero) const;
 
    /*!
@@ -1078,11 +1078,11 @@ protected:
 private:
 
    /*!
-    * @brief Reset domain MappedBoxSet after data it depends on has changed.
+    * @brief Reset domain BoxSet after data it depends on has changed.
     * TODO:  Remove block_id
     */
    void
-   resetDomainMappedBoxSet(const hier::BlockId& block_id);
+   resetDomainBoxSet(const hier::BlockId& block_id);
 
    /*!
     * @brief Check that the domain is valid for periodic boundary conditions
@@ -1223,10 +1223,10 @@ private:
    tbox::Array<bool> d_domain_is_single_box;
 
    /*!
-    * @brief MappedBoxSet representation of the physical domain, including
+    * @brief BoxSet representation of the physical domain, including
     * its periodic image Boxes.
     */
-   tbox::Array<MappedBoxSet> d_domain_mapped_box_sets;
+   tbox::Array<BoxSet> d_domain_mapped_box_sets;
 
    /*!
     * Integer array vector describing periodic shift coarsest level.

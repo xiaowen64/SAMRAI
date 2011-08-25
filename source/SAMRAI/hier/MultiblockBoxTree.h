@@ -13,7 +13,7 @@
 
 #include "SAMRAI/SAMRAI_config.h"
 
-#include "SAMRAI/hier/MappedBoxSet.h"
+#include "SAMRAI/hier/BoxSet.h"
 #include "SAMRAI/hier/BoxTree.h"
 #include "SAMRAI/tbox/ConstPointer.h"
 #include "SAMRAI/tbox/DescribedClass.h"
@@ -61,13 +61,13 @@ public:
     */
    explicit MultiblockBoxTree(
       const tbox::ConstPointer<GridGeometry> &grid_geometry,
-      const MappedBoxSet& mapped_boxes,
+      const BoxSet& mapped_boxes,
       size_t min_number = 10);
 
    /*!
     * @brief Constructs a MultiblockBoxTree from vector of Boxes.
     *
-    * See MultiblockBoxTree( const tbox::Dimension& , const MappedBoxSet& , size_t min_number );
+    * See MultiblockBoxTree( const tbox::Dimension& , const BoxSet& , size_t min_number );
     *
     * @param[in] grid_geometry
     *
@@ -243,7 +243,7 @@ public:
     */
    void
    findOverlapBoxes(
-      MappedBoxSet& overlap_mapped_boxes,
+      BoxSet& overlap_mapped_boxes,
       const Box& box,
       const BlockId &block_id,
       const IntVector &refinement_ratio,

@@ -16,7 +16,7 @@
 #include "SAMRAI/hier/BoxGeometry.h"
 #include "SAMRAI/hier/BoxOverlap.h"
 #include "SAMRAI/hier/IntVector.h"
-#include "SAMRAI/hier/MappedBoxSet.h"
+#include "SAMRAI/hier/BoxSet.h"
 #include "SAMRAI/hier/OverlapConnectorAlgorithm.h"
 #include "SAMRAI/hier/Patch.h"
 #include "SAMRAI/hier/PatchDataFactory.h"
@@ -567,14 +567,14 @@ void CoarsenSchedule::generateScheduleDLBG()
        * contribute data to coarse_mapped_box.
        */
       const hier::Box& coarse_mapped_box = ei->first;
-      const hier::MappedBoxSet& local_temp_mapped_boxes = ei->second;
+      const hier::BoxSet& local_temp_mapped_boxes = ei->second;
       TBOX_ASSERT(!coarse_mapped_box.isPeriodicImage());
 
       /*
        * Construct transactions for data going from local source mapped_boxes
        * to remote coarse mapped_boxes.
        */
-      for (hier::MappedBoxSet::const_iterator ni =
+      for (hier::BoxSet::const_iterator ni =
               local_temp_mapped_boxes.begin();
            ni != local_temp_mapped_boxes.end(); ++ni) {
          const hier::Box& temp_mapped_box = *ni;
@@ -606,8 +606,8 @@ void CoarsenSchedule::generateScheduleDLBG()
       const hier::Box& dst_mapped_box =
          *coarse_mapped_box_level.getMappedBoxStrict(dst_gid);
 
-      const hier::MappedBoxSet& src_mapped_boxes = ei->second;
-      for (hier::MappedBoxSet::const_iterator ni = src_mapped_boxes.begin();
+      const hier::BoxSet& src_mapped_boxes = ei->second;
+      for (hier::BoxSet::const_iterator ni = src_mapped_boxes.begin();
            ni != src_mapped_boxes.end(); ++ni) {
          const hier::Box& src_mapped_box = *ni;
 

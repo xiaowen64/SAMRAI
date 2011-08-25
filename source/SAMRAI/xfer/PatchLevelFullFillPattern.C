@@ -12,7 +12,7 @@
 #define included_xfer_PatchLevelFullFillPattern_C
 
 #include "SAMRAI/xfer/PatchLevelFullFillPattern.h"
-#include "SAMRAI/hier/RealMappedBoxConstIterator.h"
+#include "SAMRAI/hier/RealBoxConstIterator.h"
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/tbox/MathUtilities.h"
 
@@ -65,7 +65,7 @@ PatchLevelFullFillPattern::~PatchLevelFullFillPattern()
  */
 
 void PatchLevelFullFillPattern::computeFillMappedBoxesAndNeighborhoodSets(
-   hier::MappedBoxSet& fill_mapped_boxes,
+   hier::BoxSet& fill_mapped_boxes,
    hier::NeighborhoodSet& dst_to_fill_edges,
    const hier::MappedBoxLevel& dst_mapped_box_level,
    const hier::Connector& dst_to_dst,
@@ -78,10 +78,10 @@ void PatchLevelFullFillPattern::computeFillMappedBoxesAndNeighborhoodSets(
    NULL_USE(src_to_dst);
    TBOX_DIM_ASSERT_CHECK_ARGS2(dst_mapped_box_level, fill_ghost_width);
 
-   const hier::MappedBoxSet& dst_mapped_boxes =
+   const hier::BoxSet& dst_mapped_boxes =
       dst_mapped_box_level.getMappedBoxes();
 
-   for (hier::RealMappedBoxConstIterator ni(dst_mapped_boxes);
+   for (hier::RealBoxConstIterator ni(dst_mapped_boxes);
         ni.isValid(); ++ni) {
       const hier::Box& dst_mapped_box = *ni;
       hier::Box fill_mapped_box(dst_mapped_box);
@@ -125,7 +125,7 @@ void PatchLevelFullFillPattern::computeDestinationFillBoxesOnSourceProc(
    tmp_nabrs.clear();
    for (NeighborSet::const_iterator na = all_dst_nabrs.begin();
         na != all_dst_nabrs.end(); ++na) {
-      hier::MappedBoxSet& fill_boxes = dst_fill_boxes_on_src_proc[na->getId()];
+      hier::BoxSet& fill_boxes = dst_fill_boxes_on_src_proc[na->getId()];
       hier::Box fill_box(*na);
       fill_box.grow(fill_ghost_width);
       fill_boxes.insert(fill_box);

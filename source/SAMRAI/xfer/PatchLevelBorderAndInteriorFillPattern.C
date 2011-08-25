@@ -57,7 +57,7 @@ PatchLevelBorderAndInteriorFillPattern::~PatchLevelBorderAndInteriorFillPattern(
  */
 void
 PatchLevelBorderAndInteriorFillPattern::computeFillMappedBoxesAndNeighborhoodSets(
-   hier::MappedBoxSet& fill_mapped_boxes,
+   hier::BoxSet& fill_mapped_boxes,
    hier::NeighborhoodSet& dst_to_fill_edges,
    const hier::MappedBoxLevel& dst_mapped_box_level,
    const hier::Connector& dst_to_dst,
@@ -69,7 +69,7 @@ PatchLevelBorderAndInteriorFillPattern::computeFillMappedBoxesAndNeighborhoodSet
    NULL_USE(src_to_dst);
    TBOX_DIM_ASSERT_CHECK_ARGS2(dst_mapped_box_level, fill_ghost_width);
 
-   const hier::MappedBoxSet& dst_mapped_boxes =
+   const hier::BoxSet& dst_mapped_boxes =
       dst_mapped_box_level.getMappedBoxes();
 
    /*
@@ -79,7 +79,7 @@ PatchLevelBorderAndInteriorFillPattern::computeFillMappedBoxesAndNeighborhoodSet
     * normally filled by coarser mapped_box_level.)
     */
    hier::LocalId last_id = dst_mapped_box_level.getLastLocalId();
-   for (hier::MappedBoxSet::const_iterator ni = dst_mapped_boxes.begin();
+   for (hier::BoxSet::const_iterator ni = dst_mapped_boxes.begin();
         ni != dst_mapped_boxes.end(); ++ni) {
 
       const hier::BoxId& gid(ni->getId());

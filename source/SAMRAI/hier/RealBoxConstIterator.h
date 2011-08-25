@@ -4,22 +4,22 @@
  * information, see COPYRIGHT and COPYING.LESSER. 
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Iterator over real MappedBoxes in a MappedBoxSet. 
+ * Description:   Iterator over real MappedBoxes in a BoxSet. 
  *
  ************************************************************************/
-#ifndef included_hier_RealMappedBoxConstIterator
-#define included_hier_RealMappedBoxConstIterator
+#ifndef included_hier_RealBoxConstIterator
+#define included_hier_RealBoxConstIterator
 
 #include "SAMRAI/SAMRAI_config.h"
 
-#include "SAMRAI/hier/MappedBoxSet.h"
+#include "SAMRAI/hier/BoxSet.h"
 
 namespace SAMRAI {
 namespace hier {
 
 /*
  * TODO: Do we really need a separate class for this?  Couldn't we just
- *       add an argument to the MappedBoxSet iterator construction that
+ *       add an argument to the BoxSet iterator construction that
  *       (e.g., an enum with values: All (default value), RealOnly, 
  *       PeriodicImagesOnly, etc.  and extend for Multiblock stuff)?
  *       Then, which boxes in the set are selected for iteration would be 
@@ -27,47 +27,47 @@ namespace hier {
  */
 /*!
  * @brief Iterator through real MappedBoxes (not periodic images) in a
- * const MappedBoxSet.
+ * const BoxSet.
  *
- * RealMappedBoxConstIterator is an iterator that provides methods for
- * stepping through a MappedBoxSet, skipping periodic images.
+ * RealBoxConstIterator is an iterator that provides methods for
+ * stepping through a BoxSet, skipping periodic images.
  *
  * Example usage:
  * @verbatim
- *  MappedBoxSet mapped_boxes;
+ *  BoxSet mapped_boxes;
  *  // fill in mapped_boxes
- *  for ( RealMappedBoxConstIterator ni(mapped_boxes); ni.isValid(); ++ni ) {
+ *  for ( RealBoxConstIterator ni(mapped_boxes); ni.isValid(); ++ni ) {
  *    TBOX_ASSERT( ! ni->isPeriodicImage() );
  *  }
  * @endverbatim
  */
-class RealMappedBoxConstIterator
+class RealBoxConstIterator
 {
 
 public:
 
    /*!
-    * @brief Construct the iterator for the given MappedBoxSet.
+    * @brief Construct the iterator for the given BoxSet.
     *
     * The iterator will iterate through the items in mapped_boxes.
     *
     * @param[in] mapped_boxes
     */
-   explicit RealMappedBoxConstIterator(
-      const MappedBoxSet& mapped_boxes);
+   explicit RealBoxConstIterator(
+      const BoxSet& mapped_boxes);
 
    /*!
     * @brief Destructor.
     */
-   virtual ~RealMappedBoxConstIterator(
+   virtual ~RealBoxConstIterator(
       void);
 
    /*!
     * @brief Assignment operator.
     */
-   RealMappedBoxConstIterator&
+   RealBoxConstIterator&
    operator = (
-      const RealMappedBoxConstIterator& r);
+      const RealBoxConstIterator& r);
 
    /*!
     * @brief Dereference operator mimicking a pointer dereference.
@@ -86,14 +86,14 @@ public:
     */
    bool
    operator == (
-      const RealMappedBoxConstIterator& r) const;
+      const RealBoxConstIterator& r) const;
 
    /*!
     * @brief Inequality comparison.
     */
    bool
    operator != (
-      const RealMappedBoxConstIterator& r) const;
+      const RealBoxConstIterator& r) const;
 
    /*!
     * @brief Pre-increment iterator.
@@ -101,7 +101,7 @@ public:
     * Pre-increment increment the iterator and returns the incremented
     * state.
     */
-   RealMappedBoxConstIterator
+   RealBoxConstIterator
    &operator ++ ();
 
    /*!
@@ -110,7 +110,7 @@ public:
     * Post-increment saves the iterator, increment it and returns the
     * saved iterator.
     */
-   RealMappedBoxConstIterator
+   RealBoxConstIterator
    operator ++ (
       int);
 
@@ -123,18 +123,18 @@ public:
 
 private:
    /*!
-    * @brief MappedBoxSet being iterated through.
+    * @brief BoxSet being iterated through.
     */
-   const MappedBoxSet* d_mapped_boxes;
+   const BoxSet* d_mapped_boxes;
 
    /*!
     * @brief The iterator.
     */
-   MappedBoxSet::const_iterator d_ni;
+   BoxSet::const_iterator d_ni;
 
 };
 
 }
 }
 
-#endif  // included_hier_RealMappedBoxConstIterator
+#endif  // included_hier_RealBoxConstIterator

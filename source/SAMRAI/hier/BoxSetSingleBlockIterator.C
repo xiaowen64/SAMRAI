@@ -4,19 +4,19 @@
  * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Special iterator for MappedBoxSet.
+ * Description:   Special iterator for BoxSet.
  *
  ************************************************************************/
-#ifndef included_hier_MappedBoxSetSingleBlockIterator_C
-#define included_hier_MappedBoxSetSingleBlockIterator_C
+#ifndef included_hier_BoxSetSingleBlockIterator_C
+#define included_hier_BoxSetSingleBlockIterator_C
 
-#include "SAMRAI/hier/MappedBoxSetSingleBlockIterator.h"
+#include "SAMRAI/hier/BoxSetSingleBlockIterator.h"
 
 namespace SAMRAI {
 namespace hier {
 
-MappedBoxSetSingleBlockIterator::MappedBoxSetSingleBlockIterator(
-   const MappedBoxSet& mapped_boxes,
+BoxSetSingleBlockIterator::BoxSetSingleBlockIterator(
+   const BoxSet& mapped_boxes,
    const BlockId &block_id):
    d_mapped_boxes(&mapped_boxes),
    d_block_id(block_id)
@@ -27,12 +27,12 @@ MappedBoxSetSingleBlockIterator::MappedBoxSetSingleBlockIterator(
    }
 }
 
-MappedBoxSetSingleBlockIterator::~MappedBoxSetSingleBlockIterator()
+BoxSetSingleBlockIterator::~BoxSetSingleBlockIterator()
 {
    d_mapped_boxes = NULL;
 }
 
-bool MappedBoxSetSingleBlockIterator::isValid() const
+bool BoxSetSingleBlockIterator::isValid() const
 {
    return
       d_mapped_boxes != NULL &&
@@ -40,8 +40,8 @@ bool MappedBoxSetSingleBlockIterator::isValid() const
       d_iter->getBlockId() == d_block_id;
 }
 
-MappedBoxSetSingleBlockIterator& MappedBoxSetSingleBlockIterator::operator = (
-   const MappedBoxSetSingleBlockIterator& r)
+BoxSetSingleBlockIterator& BoxSetSingleBlockIterator::operator = (
+   const BoxSetSingleBlockIterator& r)
 {
    d_mapped_boxes = r.d_mapped_boxes;
    d_iter = r.d_iter;
@@ -49,18 +49,18 @@ MappedBoxSetSingleBlockIterator& MappedBoxSetSingleBlockIterator::operator = (
    return *this;
 }
 
-const Box& MappedBoxSetSingleBlockIterator::operator * () const
+const Box& BoxSetSingleBlockIterator::operator * () const
 {
    return *d_iter;
 }
 
-const Box *MappedBoxSetSingleBlockIterator::operator -> () const
+const Box *BoxSetSingleBlockIterator::operator -> () const
 {
    return &(*d_iter);
 }
 
-bool MappedBoxSetSingleBlockIterator::operator == (
-   const MappedBoxSetSingleBlockIterator& r) const
+bool BoxSetSingleBlockIterator::operator == (
+   const BoxSetSingleBlockIterator& r) const
 {
    return
       d_mapped_boxes == r.d_mapped_boxes &&
@@ -68,8 +68,8 @@ bool MappedBoxSetSingleBlockIterator::operator == (
       d_iter == r.d_iter;
 }
 
-bool MappedBoxSetSingleBlockIterator::operator != (
-   const MappedBoxSetSingleBlockIterator& r) const
+bool BoxSetSingleBlockIterator::operator != (
+   const BoxSetSingleBlockIterator& r) const
 {
    return
       d_mapped_boxes != r.d_mapped_boxes ||
@@ -83,7 +83,7 @@ bool MappedBoxSetSingleBlockIterator::operator != (
  ****************************************************************************
  */
 
-MappedBoxSetSingleBlockIterator &MappedBoxSetSingleBlockIterator::operator ++ ()
+BoxSetSingleBlockIterator &BoxSetSingleBlockIterator::operator ++ ()
 {
    do {
       ++d_iter;
@@ -98,10 +98,10 @@ MappedBoxSetSingleBlockIterator &MappedBoxSetSingleBlockIterator::operator ++ ()
  ****************************************************************************
  */
 
-MappedBoxSetSingleBlockIterator MappedBoxSetSingleBlockIterator::operator ++ (
+BoxSetSingleBlockIterator BoxSetSingleBlockIterator::operator ++ (
    int)
 {
-   MappedBoxSetSingleBlockIterator saved = *this;
+   BoxSetSingleBlockIterator saved = *this;
    do {
       ++d_iter;
    } while (d_iter != d_mapped_boxes->end() &&
@@ -109,10 +109,10 @@ MappedBoxSetSingleBlockIterator MappedBoxSetSingleBlockIterator::operator ++ (
    return saved;
 }
 
-int MappedBoxSetSingleBlockIterator::count() const
+int BoxSetSingleBlockIterator::count() const
 {
    int ct = 0;
-   MappedBoxSetSingleBlockIterator iter(*d_mapped_boxes, d_block_id);
+   BoxSetSingleBlockIterator iter(*d_mapped_boxes, d_block_id);
    while (iter.isValid()) {
       ++ct;
       ++iter;

@@ -14,34 +14,34 @@ namespace SAMRAI {
 namespace hier {
 
 SAMRAI_INLINE_KEYWORD
-MappedBoxSet::MappedBoxSet():
+BoxSet::BoxSet():
    d_set()
 {
 }
 
 SAMRAI_INLINE_KEYWORD
-MappedBoxSet::MappedBoxSet(
-   const MappedBoxSet& other):
+BoxSet::BoxSet(
+   const BoxSet& other):
    d_set(other.d_set)
 {
 }
 
 SAMRAI_INLINE_KEYWORD
-MappedBoxSet::~MappedBoxSet()
+BoxSet::~BoxSet()
 {
 }
 
 SAMRAI_INLINE_KEYWORD
-MappedBoxSet& MappedBoxSet::operator = (
-   const MappedBoxSet& rhs)
+BoxSet& BoxSet::operator = (
+   const BoxSet& rhs)
 {
    d_set = rhs.d_set;
    return *this;
 }
 
 SAMRAI_INLINE_KEYWORD
-bool MappedBoxSet::operator == (
-   const MappedBoxSet& rhs) const
+bool BoxSet::operator == (
+   const BoxSet& rhs) const
 {
    if ( size() != rhs.size() ) {
       return false;
@@ -51,21 +51,21 @@ bool MappedBoxSet::operator == (
 }
 
 SAMRAI_INLINE_KEYWORD
-bool MappedBoxSet::operator != (
-   const MappedBoxSet& rhs) const
+bool BoxSet::operator != (
+   const BoxSet& rhs) const
 {
    return ! this->operator==(rhs);
 }
 
 SAMRAI_INLINE_KEYWORD
-void MappedBoxSet::swap(
-   MappedBoxSet& other)
+void BoxSet::swap(
+   BoxSet& other)
 {
    d_set.swap(other.d_set);
 }
 
 SAMRAI_INLINE_KEYWORD
-void MappedBoxSet::separatePeriodicImages(
+void BoxSet::separatePeriodicImages(
    std::vector<Box>& real_mapped_box_vector,
    std::vector<Box>& periodic_image_mapped_box_vector) const
 {

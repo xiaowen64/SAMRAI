@@ -4,19 +4,19 @@
  * information, see COPYRIGHT and COPYING.LESSER. 
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Iterator over real MappedBoxes in a MappedBoxSet. 
+ * Description:   Iterator over real MappedBoxes in a BoxSet. 
  *
  ************************************************************************/
-#ifndef included_hier_RealMappedBoxConstIterator_C
-#define included_hier_RealMappedBoxConstIterator_C
+#ifndef included_hier_RealBoxConstIterator_C
+#define included_hier_RealBoxConstIterator_C
 
-#include "SAMRAI/hier/RealMappedBoxConstIterator.h"
+#include "SAMRAI/hier/RealBoxConstIterator.h"
 
 namespace SAMRAI {
 namespace hier {
 
-RealMappedBoxConstIterator::RealMappedBoxConstIterator(
-   const MappedBoxSet& mapped_boxes):
+RealBoxConstIterator::RealBoxConstIterator(
+   const BoxSet& mapped_boxes):
    d_mapped_boxes(&mapped_boxes)
 {
    d_ni = d_mapped_boxes->begin();
@@ -25,44 +25,44 @@ RealMappedBoxConstIterator::RealMappedBoxConstIterator(
    }
 }
 
-RealMappedBoxConstIterator::~RealMappedBoxConstIterator()
+RealBoxConstIterator::~RealBoxConstIterator()
 {
    d_mapped_boxes = NULL;
 }
 
-bool RealMappedBoxConstIterator::isValid() const
+bool RealBoxConstIterator::isValid() const
 {
    return d_mapped_boxes != NULL &&
           d_ni != d_mapped_boxes->end() &&
           !d_ni->isPeriodicImage();
 }
 
-RealMappedBoxConstIterator& RealMappedBoxConstIterator::operator = (
-   const RealMappedBoxConstIterator& r)
+RealBoxConstIterator& RealBoxConstIterator::operator = (
+   const RealBoxConstIterator& r)
 {
    d_mapped_boxes = r.d_mapped_boxes;
    d_ni = r.d_ni;
    return *this;
 }
 
-const Box& RealMappedBoxConstIterator::operator * () const
+const Box& RealBoxConstIterator::operator * () const
 {
    return *d_ni;
 }
 
-const Box *RealMappedBoxConstIterator::operator -> () const
+const Box *RealBoxConstIterator::operator -> () const
 {
    return &(*d_ni);
 }
 
-bool RealMappedBoxConstIterator::operator == (
-   const RealMappedBoxConstIterator& r) const
+bool RealBoxConstIterator::operator == (
+   const RealBoxConstIterator& r) const
 {
    return d_mapped_boxes == r.d_mapped_boxes && d_ni == r.d_ni;
 }
 
-bool RealMappedBoxConstIterator::operator != (
-   const RealMappedBoxConstIterator& r) const
+bool RealBoxConstIterator::operator != (
+   const RealBoxConstIterator& r) const
 {
    return d_mapped_boxes != r.d_mapped_boxes || d_ni != r.d_ni;
 }
@@ -73,7 +73,7 @@ bool RealMappedBoxConstIterator::operator != (
  ****************************************************************************
  */
 
-RealMappedBoxConstIterator &RealMappedBoxConstIterator::operator ++ ()
+RealBoxConstIterator &RealBoxConstIterator::operator ++ ()
 {
    do {
       ++d_ni;
@@ -87,10 +87,10 @@ RealMappedBoxConstIterator &RealMappedBoxConstIterator::operator ++ ()
  ****************************************************************************
  */
 
-RealMappedBoxConstIterator RealMappedBoxConstIterator::operator ++ (
+RealBoxConstIterator RealBoxConstIterator::operator ++ (
    int)
 {
-   RealMappedBoxConstIterator saved = *this;
+   RealBoxConstIterator saved = *this;
    do {
       ++d_ni;
    } while (d_ni != d_mapped_boxes->end() && d_ni->isPeriodicImage());

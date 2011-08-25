@@ -126,7 +126,7 @@ Box::Box(
    TBOX_ASSERT(periodic_id.isValid());
    TBOX_ASSERT(periodic_id.getPeriodicValue() <
       PeriodicShiftCatalog::getCatalog(box.getDim())->getNumberOfShifts());
-#if BOX_TELEMETRY
+#ifdef BOX_TELEMETRY
    // Increment the cumulative constructed count, active mapped box count and
    // reset the high water mark of active mapped boxes if necessary.
    ++s_cumulative_constructed_ct;
@@ -151,7 +151,7 @@ Box::Box(
    TBOX_ASSERT(periodic_id.isValid());
    TBOX_ASSERT(periodic_id.getPeriodicValue() < PeriodicShiftCatalog::getCatalog(
          dim)->getNumberOfShifts());
-#if BOX_TELEMETRY
+#ifdef BOX_TELEMETRY
    // Increment the cumulative constructed count, active mapped box count and
    // reset the high water mark of active mapped boxes if necessary.
    ++s_cumulative_constructed_ct;
@@ -176,7 +176,7 @@ Box::Box(
    TBOX_ASSERT(periodic_id.isValid());
    TBOX_ASSERT(periodic_id.getPeriodicValue() < PeriodicShiftCatalog::getCatalog(
          dim)->getNumberOfShifts());
-#if BOX_TELEMETRY
+#ifdef BOX_TELEMETRY
    // Increment the cumulative constructed count, active mapped box count and
    // reset the high water mark of active mapped boxes if necessary.
    ++s_cumulative_constructed_ct;
@@ -199,7 +199,7 @@ Box::Box(
    TBOX_ASSERT(
       mapped_box_id.getPeriodicId().getPeriodicValue() <
       PeriodicShiftCatalog::getCatalog(dim)->getNumberOfShifts());
-#if BOX_TELEMETRY
+#ifdef BOX_TELEMETRY
    // Increment the cumulative constructed count, active mapped box count and
    // reset the high water mark of active mapped boxes if necessary.
    ++s_cumulative_constructed_ct;

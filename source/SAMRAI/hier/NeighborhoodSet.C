@@ -12,7 +12,7 @@
 
 #include "SAMRAI/hier/NeighborhoodSet.h"
 #include "SAMRAI/hier/Connector.h"
-#include "SAMRAI/hier/MappedBoxSetSingleBlockIterator.h"
+#include "SAMRAI/hier/BoxSetSingleBlockIterator.h"
 
 #include "SAMRAI/tbox/Utilities.h"
 
@@ -174,7 +174,7 @@ NeighborhoodSet::getNeighbors(
 {
    NeighborSet tmp_nabrs;
    getNeighbors(tmp_nabrs);
-   for (MappedBoxSet::const_iterator ei = tmp_nabrs.begin();
+   for (BoxSet::const_iterator ei = tmp_nabrs.begin();
         ei != tmp_nabrs.end(); ++ei) {
       all_nabrs.appendItem(*ei);
    }
@@ -192,7 +192,7 @@ NeighborhoodSet::getNeighbors(
 {
    NeighborSet tmp_nabrs;
    getNeighbors(tmp_nabrs);
-   for (MappedBoxSetSingleBlockIterator ei(tmp_nabrs, block_id);
+   for (BoxSetSingleBlockIterator ei(tmp_nabrs, block_id);
         ei.isValid(); ++ei) {
       all_nabrs.appendItem(*ei);
    }
@@ -209,7 +209,7 @@ NeighborhoodSet::getNeighbors(
 {
    NeighborSet tmp_nabrs;
    getNeighbors(tmp_nabrs);
-   for (MappedBoxSet::const_iterator ei = tmp_nabrs.begin();
+   for (BoxSet::const_iterator ei = tmp_nabrs.begin();
         ei != tmp_nabrs.end(); ++ei) {
       all_nabrs[ei->getBlockId()].appendItem(*ei);
    }

@@ -11,11 +11,11 @@
 #define included_hier_MappedBoxLevelConnectorUtils_C
 
 #include "SAMRAI/hier/MappedBoxLevelConnectorUtils.h"
-#include "SAMRAI/hier/MappedBoxSetSingleBlockIterator.h"
+#include "SAMRAI/hier/BoxSetSingleBlockIterator.h"
 #include "SAMRAI/hier/MappingConnectorAlgorithm.h"
 #include "SAMRAI/hier/OverlapConnectorAlgorithm.h"
 #include "SAMRAI/hier/PeriodicShiftCatalog.h"
-#include "SAMRAI/hier/RealMappedBoxConstIterator.h"
+#include "SAMRAI/hier/RealBoxConstIterator.h"
 #include "SAMRAI/tbox/StartupShutdownManager.h"
 #include "SAMRAI/tbox/TimerManager.h"
 
@@ -276,9 +276,9 @@ bool MappedBoxLevelConnectorUtils::baseNestsInHead(
    if (base_swell == IntVector::getZero(dim)) {
       swelledbase = base;
    } else {
-      const MappedBoxSet& base_mapped_boxes = base.getMappedBoxes();
-      MappedBoxSet swelledbase_mapped_boxes;
-      for (MappedBoxSet::const_iterator ni = base_mapped_boxes.begin();
+      const BoxSet& base_mapped_boxes = base.getMappedBoxes();
+      BoxSet swelledbase_mapped_boxes;
+      for (BoxSet::const_iterator ni = base_mapped_boxes.begin();
            ni != base_mapped_boxes.end(); ++ni) {
          Box swelledbase_mapped_box = *ni;
          swelledbase_mapped_box.grow(base_swell);
@@ -297,11 +297,11 @@ bool MappedBoxLevelConnectorUtils::baseNestsInHead(
       swelledhead = head;
       swelledbase_eto_swelledhead = connector.getNeighborhoodSets();
    } else {
-      const MappedBoxSet& head_mapped_boxes = head.getMappedBoxes();
+      const BoxSet& head_mapped_boxes = head.getMappedBoxes();
 
-      MappedBoxSet swelledhead_mapped_boxes;
+      BoxSet swelledhead_mapped_boxes;
 
-      for (MappedBoxSet::const_iterator ni = head_mapped_boxes.begin();
+      for (BoxSet::const_iterator ni = head_mapped_boxes.begin();
            ni != head_mapped_boxes.end(); ++ni) {
          Box swelledhead_mapped_box = *ni;
 
@@ -462,9 +462,9 @@ bool MappedBoxLevelConnectorUtils::baseNestsInHeadForMultiblock(
    if (base_swell == IntVector::getZero(dim)) {
       swelledbase = base;
    } else {
-      const MappedBoxSet& base_mapped_boxes = base.getMappedBoxes();
-      MappedBoxSet swelledbase_mapped_boxes;
-      for (MappedBoxSet::const_iterator ni = base_mapped_boxes.begin();
+      const BoxSet& base_mapped_boxes = base.getMappedBoxes();
+      BoxSet swelledbase_mapped_boxes;
+      for (BoxSet::const_iterator ni = base_mapped_boxes.begin();
            ni != base_mapped_boxes.end(); ++ni) {
          Box swelledbase_mapped_box = *ni;
          swelledbase_mapped_box.grow(base_swell);
@@ -483,11 +483,11 @@ bool MappedBoxLevelConnectorUtils::baseNestsInHeadForMultiblock(
       swelledhead = head;
       swelledbase_eto_swelledhead = connector.getNeighborhoodSets();
    } else {
-      const MappedBoxSet& head_mapped_boxes = head.getMappedBoxes();
+      const BoxSet& head_mapped_boxes = head.getMappedBoxes();
 
-      MappedBoxSet swelledhead_mapped_boxes;
+      BoxSet swelledhead_mapped_boxes;
 
-      for (MappedBoxSet::const_iterator ni = head_mapped_boxes.begin();
+      for (BoxSet::const_iterator ni = head_mapped_boxes.begin();
            ni != head_mapped_boxes.end(); ++ni) {
          Box swelledhead_mapped_box = *ni;
 
@@ -629,7 +629,7 @@ void MappedBoxLevelConnectorUtils::makeSortingMap(
 
    t_make_sorting_map->start();
 
-   const MappedBoxSet& cur_mapped_boxes =
+   const BoxSet& cur_mapped_boxes =
       unsorted_mapped_box_level.getMappedBoxes();
    int n_mapped_boxes = 
       static_cast<int>(unsorted_mapped_box_level.getLocalNumberOfBoxes());
@@ -679,7 +679,7 @@ void MappedBoxLevelConnectorUtils::makeSortingMap(
       }
    }
 
-   MappedBoxSet new_mapped_boxes;
+   BoxSet new_mapped_boxes;
    NeighborhoodSet edges;
 
    for (std::vector<Box>::const_iterator ni = real_mapped_box_vector.begin();
@@ -696,9 +696,9 @@ void MappedBoxLevelConnectorUtils::makeSortingMap(
       /*
        * Now, add cur_mapped_box's periodic images, but give them cur_mapped_box's
        * new LocalId.  In finding the image mapped_boxes, we use the fact
-       * that a real mapped_box's image follows the real mapped_box in a MappedBoxSet.
+       * that a real mapped_box's image follows the real mapped_box in a BoxSet.
        */
-      MappedBoxSet::const_iterator ini = cur_mapped_boxes.find(cur_mapped_box);
+      BoxSet::const_iterator ini = cur_mapped_boxes.find(cur_mapped_box);
       TBOX_ASSERT(ini != cur_mapped_boxes.end());
       ++ini; // Skip the real mapped_box to look for its image mapped_boxes.
       while (ini != cur_mapped_boxes.end() &&
@@ -908,7 +908,7 @@ void MappedBoxLevelConnectorUtils::computeExternalParts(
 
    reference_box_list.clearItems();
 
-   const MappedBoxSet& input_mapped_boxes = input.getMappedBoxes();
+   const BoxSet& input_mapped_boxes = input.getMappedBoxes();
 
    NeighborhoodSet input_eto_external;
 
@@ -917,7 +917,7 @@ void MappedBoxLevelConnectorUtils::computeExternalParts(
     * search tree to compute its external parts.
     */
 
-   for (RealMappedBoxConstIterator ni(input_mapped_boxes); ni.isValid();
+   for (RealBoxConstIterator ni(input_mapped_boxes); ni.isValid();
         ++ni) {
 
       const Box& input_mapped_box = *ni;
@@ -1210,7 +1210,7 @@ void MappedBoxLevelConnectorUtils::computeInternalParts(
          "For lack of need, this method is not currently supporting non-positive g.");
    }
 
-   const MappedBoxSet& input_mapped_boxes = input.getMappedBoxes();
+   const BoxSet& input_mapped_boxes = input.getMappedBoxes();
 
    NeighborhoodSet input_eto_internal;
 
@@ -1219,7 +1219,7 @@ void MappedBoxLevelConnectorUtils::computeInternalParts(
     * search tree to compute its internal parts.
     */
 
-   for (RealMappedBoxConstIterator ni(input_mapped_boxes); ni.isValid();
+   for (RealBoxConstIterator ni(input_mapped_boxes); ni.isValid();
         ++ni) {
 
       const Box& input_mapped_box = *ni;
@@ -1600,9 +1600,9 @@ void MappedBoxLevelConnectorUtils::computeInternalOrExternalPartsForMultiblock(
     * compute its overlapping (or non-overlapping) parts.
     */
 
-   const MappedBoxSet& input_mapped_boxes = input.getMappedBoxes();
+   const BoxSet& input_mapped_boxes = input.getMappedBoxes();
 
-   for (RealMappedBoxConstIterator ni(input_mapped_boxes); ni.isValid();
+   for (RealBoxConstIterator ni(input_mapped_boxes); ni.isValid();
         ++ni) {
 
       const Box& input_mapped_box = *ni;
@@ -1749,7 +1749,7 @@ void MappedBoxLevelConnectorUtils::computeInternalOrExternalPartsForMultiblock(
 
 /*
 *************************************************************************
-Given a MappedBoxSet, compute its boundary as a set of boxes located
+Given a BoxSet, compute its boundary as a set of boxes located
 just outside it.
 
 Given a set of boxes R, the boundary is computed as (R^1)\R.
@@ -1952,9 +1952,9 @@ void MappedBoxLevelConnectorUtils::makeRemainderMap(
     */
 
    const MappedBoxLevel& orig = orig_to_rejection.getBase();
-   const MappedBoxSet& orig_nodes = orig.getMappedBoxes();
+   const BoxSet& orig_nodes = orig.getMappedBoxes();
    const int rank = orig.getRank();
-   MappedBoxSet remainder_nodes = orig_nodes;
+   BoxSet remainder_nodes = orig_nodes;
 
    /*
     * Track last used index to ensure we use unique indices for new
@@ -1967,7 +1967,7 @@ void MappedBoxLevelConnectorUtils::makeRemainderMap(
 
    const NeighborhoodSet& orig_eto_rejection = orig_to_rejection.getNeighborhoodSets();
 
-   for (MappedBoxSet::const_iterator ni = orig_nodes.begin();
+   for (BoxSet::const_iterator ni = orig_nodes.begin();
         ni != orig_nodes.end(); ++ni) {
 
       const Box& orig_node = *ni;
@@ -2093,7 +2093,7 @@ void MappedBoxLevelConnectorUtils::addPeriodicImages(
 
    const IntVector& mapped_box_level_growth = threshold_distance;
 
-   for (RealMappedBoxConstIterator ni(mapped_box_level.getMappedBoxes());
+   for (RealBoxConstIterator ni(mapped_box_level.getMappedBoxes());
         ni.isValid(); ++ni) {
 
       const Box& mapped_box = *ni;
@@ -2206,7 +2206,7 @@ void MappedBoxLevelConnectorUtils::addPeriodicImagesAndRelationships(
       const IntVector& mapped_box_level_growth =
          mapped_box_level_to_anchor.getConnectorWidth();
 
-      for (RealMappedBoxConstIterator ni(mapped_box_level.getMappedBoxes());
+      for (RealBoxConstIterator ni(mapped_box_level.getMappedBoxes());
            ni.isValid(); ++ni) {
 
          const Box& mapped_box = *ni;

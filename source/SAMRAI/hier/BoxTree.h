@@ -15,7 +15,7 @@
 
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/hier/Box.h"
-#include "SAMRAI/hier/MappedBoxSet.h"
+#include "SAMRAI/hier/BoxSet.h"
 #include "SAMRAI/tbox/DescribedClass.h"
 #include "SAMRAI/tbox/Pointer.h"
 #include "SAMRAI/tbox/Timer.h"
@@ -78,13 +78,13 @@ public:
     */
    explicit BoxTree(
       const tbox::Dimension& dim,
-      const MappedBoxSet& mapped_boxes,
+      const BoxSet& mapped_boxes,
       size_t min_number = 10);
 
    /*!
     * @brief Constructs a BoxTree from a list of Boxes.
     *
-    * See BoxTree( const tbox::Dimension& , const MappedBoxSet& , size_t min_number );
+    * See BoxTree( const tbox::Dimension& , const BoxSet& , size_t min_number );
     *
     * @param[in] dim
     *
@@ -120,7 +120,7 @@ public:
     */
    void
    generateTree(
-      MappedBoxSet& mapped_boxes,
+      BoxSet& mapped_boxes,
       size_t min_number = 10);
 
    /*!
@@ -201,7 +201,7 @@ public:
     */
    void
    findOverlapBoxes(
-      MappedBoxSet& overlap_mapped_boxes,
+      BoxSet& overlap_mapped_boxes,
       const Box& box,
       bool recursive_call = false) const;
 
@@ -360,8 +360,8 @@ private:
     */
    void setupChildren(
       const size_t min_number,
-      MappedBoxSet& left_mapped_boxes,
-      MappedBoxSet& right_mapped_boxes);
+      BoxSet& left_mapped_boxes,
+      BoxSet& right_mapped_boxes);
 
    /*!
     * @brief Set up static class members.
@@ -412,7 +412,7 @@ private:
     * that this tree represents.  When we have a small number of boxes
     * that do not warant the overhead of a child tree, the boxes go here.
     */
-   MappedBoxSet d_mapped_boxes;
+   BoxSet d_mapped_boxes;
 
    /*!
     * @brief Dimension along which the input box triples are

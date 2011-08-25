@@ -4,16 +4,16 @@
  * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Main program for testing MappedBoxSet iterators
+ * Description:   Main program for testing BoxSet iterators
  *
  ************************************************************************/
 
 #include "SAMRAI/SAMRAI_config.h"
 
 #include "SAMRAI/hier/Box.h"
-#include "SAMRAI/hier/MappedBoxSet.h"
-#include "SAMRAI/hier/MappedBoxSetSingleBlockIterator.h"
-#include "SAMRAI/hier/MappedBoxSetSingleOwnerIterator.h"
+#include "SAMRAI/hier/BoxSet.h"
+#include "SAMRAI/hier/BoxSetSingleBlockIterator.h"
+#include "SAMRAI/hier/BoxSetSingleOwnerIterator.h"
 #include "SAMRAI/tbox/SAMRAIManager.h"
 #include "SAMRAI/tbox/SAMRAI_MPI.h"
 #include "SAMRAI/tbox/PIO.h"
@@ -43,13 +43,13 @@ int main(
 
       const tbox::Dimension dim(2);
 
-      hier::MappedBoxSet mboxes;
+      hier::BoxSet mboxes;
 
       const int num_boxes = 100;
       const int num_blocks = 5;
       const int num_owners = 10;
 
-      // Build the MappedBoxSet.
+      // Build the BoxSet.
       for ( int i=0; i<num_boxes; ++i ) {
 
          int owner(i % num_owners);
@@ -68,7 +68,7 @@ int main(
 
          const hier::BlockId bid(b);
 
-         for ( hier::MappedBoxSetSingleBlockIterator bi(mboxes,hier::BlockId(b));
+         for ( hier::BoxSetSingleBlockIterator bi(mboxes,hier::BlockId(b));
                bi.isValid(); ++bi ) {
 
             if ( bi->getBlockId() != bid ) {
@@ -84,7 +84,7 @@ int main(
 
       for ( int owner_rank=0; owner_rank<num_owners; ++owner_rank ) {
 
-         for ( hier::MappedBoxSetSingleOwnerIterator bi(mboxes,owner_rank);
+         for ( hier::BoxSetSingleOwnerIterator bi(mboxes,owner_rank);
                bi.isValid(); ++bi ) {
 
             if ( bi->getOwnerRank() != owner_rank ) {

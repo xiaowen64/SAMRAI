@@ -157,10 +157,10 @@ void PatchLevel::getBoxes(BoxList& boxes, const BlockId& block_id) const
    }
 
    boxes.clearItems(); 
-   const MappedBoxSet& global_mapped_boxes =
+   const BoxSet& global_mapped_boxes =
       d_mapped_box_level->getGlobalizedVersion().getGlobalMappedBoxes();
 
-   for (MappedBoxSetSingleBlockIterator gi(global_mapped_boxes, block_id);
+   for (BoxSetSingleBlockIterator gi(global_mapped_boxes, block_id);
         gi.isValid(); gi++) {
       boxes.appendItem(*gi);
    }

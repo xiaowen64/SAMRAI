@@ -64,7 +64,7 @@ PatchLevelInteriorFillPattern::~PatchLevelInteriorFillPattern()
  */
 
 void PatchLevelInteriorFillPattern::computeFillMappedBoxesAndNeighborhoodSets(
-   hier::MappedBoxSet& fill_mapped_boxes,
+   hier::BoxSet& fill_mapped_boxes,
    hier::NeighborhoodSet& dst_to_fill_edges,
    const hier::MappedBoxLevel& dst_mapped_box_level,
    const hier::Connector& dst_to_dst,
@@ -78,13 +78,13 @@ void PatchLevelInteriorFillPattern::computeFillMappedBoxesAndNeighborhoodSets(
    NULL_USE(fill_ghost_width);
    TBOX_DIM_ASSERT_CHECK_ARGS2(dst_mapped_box_level, fill_ghost_width);
 
-   const hier::MappedBoxSet& dst_mapped_boxes =
+   const hier::BoxSet& dst_mapped_boxes =
       dst_mapped_box_level.getMappedBoxes();
 
    /*
     * Fill just the interior.  Disregard gcw.
     */
-   for (hier::MappedBoxSet::const_iterator ni = dst_mapped_boxes.begin();
+   for (hier::BoxSet::const_iterator ni = dst_mapped_boxes.begin();
         ni != dst_mapped_boxes.end(); ++ni) {
       const hier::BoxId& gid = ni->getId();
       const hier::Box& dst_mapped_box =
@@ -128,7 +128,7 @@ void PatchLevelInteriorFillPattern::computeDestinationFillBoxesOnSourceProc(
    tmp_nabrs.clear();
    for (NeighborSet::const_iterator na = all_dst_nabrs.begin();
         na != all_dst_nabrs.end(); ++na) {
-      hier::MappedBoxSet& fill_boxes = dst_fill_boxes_on_src_proc[na->getId()];
+      hier::BoxSet& fill_boxes = dst_fill_boxes_on_src_proc[na->getId()];
       fill_boxes.insert(*na);
       d_max_fill_boxes = tbox::MathUtilities<int>::Max(d_max_fill_boxes,
             static_cast<int>(fill_boxes.size()));

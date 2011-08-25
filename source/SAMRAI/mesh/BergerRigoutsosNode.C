@@ -16,7 +16,7 @@
 
 #include "SAMRAI/mesh/BergerRigoutsosNode.h"
 #include "SAMRAI/pdat/CellData.h"
-#include "SAMRAI/hier/RealMappedBoxConstIterator.h"
+#include "SAMRAI/hier/RealBoxConstIterator.h"
 #include "SAMRAI/tbox/MathUtilities.h"
 #include "SAMRAI/tbox/SAMRAI_MPI.h"
 #include "SAMRAI/tbox/TimerManager.h"
@@ -94,7 +94,7 @@ BergerRigoutsosNode::BergerRigoutsosNode(
 {
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-   d_mapped_box_iterator = MappedBoxSet().end();
+   d_mapped_box_iterator = BoxSet().end();
 #endif
 
    ++(d_common->num_nodes_owned);
@@ -164,7 +164,7 @@ BergerRigoutsosNode::BergerRigoutsosNode(
 #endif
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-   d_mapped_box_iterator = MappedBoxSet().end();
+   d_mapped_box_iterator = BoxSet().end();
 #endif
 
    ++(d_common->num_nodes_allocated);
@@ -363,9 +363,9 @@ void BergerRigoutsosNode::clusterAndComputeRelationships()
        * As new nodes are finalized, they will be added to
        * these lists.
        */
-      const MappedBoxSet& tag_mapped_boxes =
+      const BoxSet& tag_mapped_boxes =
          d_common->tag_mapped_box_level->getMappedBoxes();
-      for (hier::RealMappedBoxConstIterator ni(tag_mapped_boxes); ni.isValid();
+      for (hier::RealBoxConstIterator ni(tag_mapped_boxes); ni.isValid();
            ++ni) {
          d_common->tag_eto_new[ni->getId()];
       }
@@ -2288,7 +2288,7 @@ void BergerRigoutsosNode::eraseMappedBox()
       d_common->new_mapped_box_set.erase(d_mapped_box_iterator);
    }
 #ifdef DEBUG_CHECK_ASSERTIONS
-   d_mapped_box_iterator = MappedBoxSet().end();
+   d_mapped_box_iterator = BoxSet().end();
    d_mapped_box = hier::Box(d_dim);
 #endif
 }
@@ -2552,10 +2552,10 @@ void BergerRigoutsosNode::computeNewNeighborhoodSets()
       (relationship_message != NULL ? static_cast<int>(relationship_message->size()) : 0) - 1;
    const int ints_per_node = hier::Box::commBufferSize(d_dim);
 
-   const MappedBoxSet& tag_mapped_boxes =
+   const BoxSet& tag_mapped_boxes =
       d_common->tag_mapped_box_level->getMappedBoxes();
 
-   for (hier::RealMappedBoxConstIterator ni(tag_mapped_boxes); ni.isValid(); ++ni) {
+   for (hier::RealBoxConstIterator ni(tag_mapped_boxes); ni.isValid(); ++ni) {
 
       const hier::Box& tag_mapped_box = *ni;
 

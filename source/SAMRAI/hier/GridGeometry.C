@@ -20,12 +20,12 @@
 #include "SAMRAI/hier/BoxList.h"
 #include "SAMRAI/hier/MappedBoxLevel.h"
 #include "SAMRAI/hier/IntVector.h"
-#include "SAMRAI/hier/MappedBoxSetSingleBlockIterator.h"
+#include "SAMRAI/hier/BoxSetSingleBlockIterator.h"
 #include "SAMRAI/hier/Patch.h"
 #include "SAMRAI/hier/PatchDescriptor.h"
 #include "SAMRAI/hier/PatchLevel.h"
 #include "SAMRAI/hier/PeriodicShiftCatalog.h"
-#include "SAMRAI/hier/RealMappedBoxConstIterator.h"
+#include "SAMRAI/hier/RealBoxConstIterator.h"
 #include "SAMRAI/tbox/SAMRAI_MPI.h"
 #include "SAMRAI/tbox/Pointer.h"
 #include "SAMRAI/tbox/RestartManager.h"
@@ -90,7 +90,7 @@ GridGeometry::GridGeometry(
    d_object_name(object_name),
    d_physical_domain(1, BoxList(d_dim)),
    d_domain_tree(0),
-   d_domain_mapped_box_sets(1, MappedBoxSet()),
+   d_domain_mapped_box_sets(1, BoxSet()),
    d_periodic_shift(IntVector::getZero(d_dim)),
    d_max_data_ghost_width(IntVector(d_dim, -1)),
    d_has_enhanced_connectivity(false),
@@ -131,7 +131,7 @@ GridGeometry::GridGeometry(
    d_object_name(object_name),
    d_physical_domain(1, BoxList(d_dim)),
    d_domain_tree(0),
-   d_domain_mapped_box_sets(1, MappedBoxSet()),
+   d_domain_mapped_box_sets(1, BoxSet()),
    d_periodic_shift(IntVector::getZero(d_dim)),
    d_max_data_ghost_width(IntVector(d_dim, -1)),
    d_number_blocks(1),
@@ -159,7 +159,7 @@ GridGeometry::GridGeometry(
    d_object_name(object_name),
    d_physical_domain(domain),
    d_domain_tree(0),
-   d_domain_mapped_box_sets(1, MappedBoxSet()),
+   d_domain_mapped_box_sets(1, BoxSet()),
    d_periodic_shift(IntVector::getZero(d_dim)),
    d_max_data_ghost_width(IntVector(d_dim, -1)),
    d_number_of_block_singularities(0),
@@ -1235,7 +1235,7 @@ void GridGeometry::computePhysicalDomain(
  */
 
 void GridGeometry::computePhysicalDomain(
-   MappedBoxSet& domain_mapped_boxes,
+   BoxSet& domain_mapped_boxes,
    const IntVector& ratio_to_level_zero,
    const BlockId& block_id) const
 {
@@ -1269,7 +1269,7 @@ void GridGeometry::computePhysicalDomain(
          if (ratio_to_level_zero(id) < 0) coarsen = true;
          tmp_rat(id) = abs(ratio_to_level_zero(id));
       }
-      MappedBoxSet tmp_mapped_boxes;
+      BoxSet tmp_mapped_boxes;
       if (coarsen) {
          domain_mapped_boxes.coarsen(tmp_mapped_boxes, tmp_rat);
       } else {
@@ -1280,7 +1280,7 @@ void GridGeometry::computePhysicalDomain(
 }
 
 void GridGeometry::computePhysicalDomain(
-   MappedBoxSet& domain_mapped_boxes,
+   BoxSet& domain_mapped_boxes,
    const IntVector& ratio_to_level_zero) const
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, ratio_to_level_zero);
@@ -1305,7 +1305,7 @@ void GridGeometry::computePhysicalDomain(
 #endif
 
    for (int nb = 0; nb < d_number_blocks; nb++) {
-      MappedBoxSet block_domain_boxes = d_domain_mapped_box_sets[nb]; 
+      BoxSet block_domain_boxes = d_domain_mapped_box_sets[nb]; 
 
       if (ratio_to_level_zero != IntVector::getOne(d_dim)) {
          bool coarsen = false;
@@ -1314,7 +1314,7 @@ void GridGeometry::computePhysicalDomain(
             if (ratio_to_level_zero(id) < 0) coarsen = true;
             tmp_rat(id) = abs(ratio_to_level_zero(id));
          }
-         MappedBoxSet tmp_mapped_boxes;
+         BoxSet tmp_mapped_boxes;
          if (coarsen) {
             block_domain_boxes.coarsen(tmp_mapped_boxes, tmp_rat);
          } else {
@@ -1323,7 +1323,7 @@ void GridGeometry::computePhysicalDomain(
          block_domain_boxes.swap(tmp_mapped_boxes);
       }
 
-      MappedBoxSet::const_iterator bi;
+      BoxSet::const_iterator bi;
       for (bi = block_domain_boxes.begin();
            bi != block_domain_boxes.end(); ++bi) {
 
@@ -1352,7 +1352,7 @@ void GridGeometry::setPhysicalDomain(
    d_domain_is_single_box.resizeArray(number_blocks);
    d_physical_domain.resizeArray(number_blocks, BoxList(d_dim));
    d_domain_tree.resizeArray(number_blocks);
-   d_domain_mapped_box_sets.resizeArray(number_blocks, MappedBoxSet());
+   d_domain_mapped_box_sets.resizeArray(number_blocks, BoxSet());
    d_number_blocks = number_blocks; 
 
    for (int b = 0; b < number_blocks; b++) {
@@ -1372,7 +1372,7 @@ void GridGeometry::setPhysicalDomain(
          d_physical_domain[b] = domain[b];
       }
 
-      resetDomainMappedBoxSet(block_id);
+      resetDomainBoxSet(block_id);
 
       d_domain_tree[b] = new BoxTree(d_dim,
             d_physical_domain[b],
@@ -1383,13 +1383,13 @@ void GridGeometry::setPhysicalDomain(
 /*
  *************************************************************************
  *
- * Reset the domain MappedBoxSet based on current definition of
+ * Reset the domain BoxSet based on current definition of
  * physical domain and periodic shift.
  *
  *************************************************************************
  */
 
-void GridGeometry::resetDomainMappedBoxSet(const BlockId& block_id)
+void GridGeometry::resetDomainBoxSet(const BlockId& block_id)
 {
   const int& block_number = block_id.getBlockValue();
   BoxList::Iterator itr(d_physical_domain[block_number]);
@@ -1414,9 +1414,9 @@ void GridGeometry::resetDomainMappedBoxSet(const BlockId& block_id)
 
       // Add periodic images of the domain d_domain_mapped_box_sets.
       std::vector<IntVector> shifts;
-      const MappedBoxSet& mapped_boxes =
+      const BoxSet& mapped_boxes =
          d_domain_mapped_box_sets[block_number];
-      for (RealMappedBoxConstIterator ni(mapped_boxes); ni.isValid(); ++ni) {
+      for (RealBoxConstIterator ni(mapped_boxes); ni.isValid(); ++ni) {
          const Box& mapped_box = *ni;
          computeShiftsForBox(shifts,
             mapped_box,
@@ -1490,7 +1490,7 @@ void GridGeometry::initializePeriodicShift(
    }   
 
    for (int b = 0; b < d_physical_domain.size(); b++) {
-      resetDomainMappedBoxSet(BlockId(b));
+      resetDomainBoxSet(BlockId(b));
    }
 }
 
@@ -2028,7 +2028,7 @@ void GridGeometry::adjustMultiblockPatchLevelBoundaries(
 
    if (d_number_blocks > 1) {
 
-      const MappedBoxSet& d_mapped_boxes =
+      const BoxSet& d_mapped_boxes =
          patch_level.getMappedBoxLevel()->getMappedBoxes();
 
       IntVector gcw(patch_level.getPatchDescriptor()->getMaxGhostWidth(d_dim));
@@ -2053,7 +2053,7 @@ void GridGeometry::adjustMultiblockPatchLevelBoundaries(
          pseudo_domain.unionBoxes(singularity);
          pseudo_domain.coalesceBoxes();
 
-         MappedBoxSetSingleBlockIterator mbi(d_mapped_boxes, block_id); 
+         BoxSetSingleBlockIterator mbi(d_mapped_boxes, block_id); 
 
          for ( ; mbi.isValid(); mbi++) {
             const BoxId& mapped_box_id = (*mbi).getId();

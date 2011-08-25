@@ -16,7 +16,7 @@
 #include "SAMRAI/tbox/ConstPointer.h"
 #include "SAMRAI/hier/BoxList.h"
 #include "SAMRAI/hier/MappedBoxLevel.h"
-#include "SAMRAI/hier/MappedBoxSetSingleBlockIterator.h"
+#include "SAMRAI/hier/BoxSetSingleBlockIterator.h"
 #include "SAMRAI/hier/PatchFactory.h"
 #include "SAMRAI/hier/ProcessorMapping.h"
 

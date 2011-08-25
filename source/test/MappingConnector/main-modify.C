@@ -177,7 +177,7 @@ int main(
       const hier::IntVector &one_vector(hier::IntVector::getOne(dim));
       const hier::IntVector &zero_vector(hier::IntVector::getZero(dim));
 
-      hier::MappedBoxSet multiblock_boxes;
+      hier::BoxSet multiblock_boxes;
       grid_geometry->computePhysicalDomain(
          multiblock_boxes,
          hier::IntVector::getOne(dim) );
@@ -367,9 +367,9 @@ void breakUpBoxes(
    }
 
    if ( refinement_ratio != hier::IntVector::getOne(dim) ) {
-      const hier::MappedBoxSet &mapped_boxes(mapped_box_level.getMappedBoxes());
-      hier::MappedBoxSet refined_mapped_boxes;
-      for ( hier::MappedBoxSet::const_iterator bi=mapped_boxes.begin();
+      const hier::BoxSet &mapped_boxes(mapped_box_level.getMappedBoxes());
+      hier::BoxSet refined_mapped_boxes;
+      for ( hier::BoxSet::const_iterator bi=mapped_boxes.begin();
             bi!=mapped_boxes.end(); ++bi ) {
          hier::Box refined_mapped_box(*bi);
          refined_mapped_box.refine(refinement_ratio);
@@ -440,11 +440,11 @@ void alterAndGenerateMapping(
    const int local_id_increment =
       database->getIntegerWithDefault("local_id_increment", 0);
 
-   const hier::MappedBoxSet mapped_boxes_b(mapped_box_level_b.getMappedBoxes());
-   hier::MappedBoxSet mapped_boxes_c;
+   const hier::BoxSet mapped_boxes_b(mapped_box_level_b.getMappedBoxes());
+   hier::BoxSet mapped_boxes_c;
    hier::NeighborhoodSet b_eto_c;
    hier::NeighborhoodSet c_eto_b;
-   for ( hier::MappedBoxSet::const_iterator bi(mapped_boxes_b.begin());
+   for ( hier::BoxSet::const_iterator bi(mapped_boxes_b.begin());
          bi!=mapped_boxes_b.end(); ++bi ) {
       const hier::Box &mapped_box_b(*bi);
       hier::Box mapped_box_c(mapped_box_b,

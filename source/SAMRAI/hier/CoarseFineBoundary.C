@@ -14,7 +14,7 @@
 #include "SAMRAI/hier/CoarseFineBoundary.h"
 
 #include "SAMRAI/hier/Connector.h"
-#include "SAMRAI/hier/MappedBoxSetSingleBlockIterator.h"
+#include "SAMRAI/hier/BoxSetSingleBlockIterator.h"
 #include "SAMRAI/hier/PatchLevel.h"
 
 #if !defined(__BGL_FAMILY__) && defined(__xlC__)
@@ -250,9 +250,9 @@ void CoarseFineBoundary::computeFromLevel(
    /*
     * Get all the boxes on level and level0.  These will be used later.
     */
-   const MappedBoxSet& all_boxes_on_level =
+   const BoxSet& all_boxes_on_level =
       level.getMappedBoxLevel()->getGlobalizedVersion().getGlobalMappedBoxes();
-   const MappedBoxSet& all_boxes_on_level0 =
+   const BoxSet& all_boxes_on_level0 =
       level0.getMappedBoxLevel()->getGlobalizedVersion().getGlobalMappedBoxes();
 
    /*
@@ -274,7 +274,7 @@ void CoarseFineBoundary::computeFromLevel(
       /*
        * Construct an iterator which filters only level's boxes in this block.
        */
-      MappedBoxSetSingleBlockIterator itr(all_boxes_on_level, block_id);
+      BoxSetSingleBlockIterator itr(all_boxes_on_level, block_id);
 
       /*
        * Only do work if there any boxes in this block.

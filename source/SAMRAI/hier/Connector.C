@@ -12,7 +12,7 @@
 
 #include "SAMRAI/hier/Connector.h"
 #include "SAMRAI/hier/PeriodicShiftCatalog.h"
-#include "SAMRAI/hier/RealMappedBoxConstIterator.h"
+#include "SAMRAI/hier/RealBoxConstIterator.h"
 #include "SAMRAI/tbox/StartupShutdownManager.h"
 #include "SAMRAI/tbox/TimerManager.h"
 #include "SAMRAI/tbox/SAMRAI_MPI.h"
@@ -826,7 +826,7 @@ void Connector::initializeToLocalTranspose(
         ci != r_relationships.end(); ++ci) {
 
       const BoxId& mapped_box_id = ci->first;
-      const MappedBoxSet::const_iterator ni = getHead().getMappedBox(mapped_box_id);
+      const BoxSet::const_iterator ni = getHead().getMappedBox(mapped_box_id);
       if (ni == getHead().getMappedBoxes().end()) {
          TBOX_ERROR(
             "Connector::initializeToLocalTranspose: mapped_box index\n"
@@ -938,8 +938,8 @@ bool Connector::isLocal() const
 {
    for (NeighborhoodSet::const_iterator ei = d_relationships.begin(); ei != d_relationships.end();
         ++ei) {
-      const MappedBoxSet& nabrs = ei->second;
-      for (MappedBoxSet::const_iterator na = nabrs.begin();
+      const BoxSet& nabrs = ei->second;
+      for (BoxSet::const_iterator na = nabrs.begin();
            na != nabrs.end();
            ++na) {
          if (na->getOwnerRank() != d_rank) {
@@ -1143,7 +1143,7 @@ void Connector::recursivePrint(
       os << border << "Mapped_boxes with neighbors:\n";
       for (NeighborhoodSet::const_iterator ei = relationships.begin(); ei != relationships.end();
            ++ei) {
-         MappedBoxSet::const_iterator ni = getBase().getMappedBox(ei->first);
+         BoxSet::const_iterator ni = getBase().getMappedBox(ei->first);
          if (ni != getBase().getMappedBoxes().end()) {
             os << border << "  "
                << (*ni) << "_"
@@ -1886,7 +1886,7 @@ size_t Connector::checkConsistencyWithHead(
    TBOX_ASSERT(head_mapped_box_level.getParallelState() ==
       MappedBoxLevel::GLOBALIZED);
 
-   const MappedBoxSet& head_mapped_boxes =
+   const BoxSet& head_mapped_boxes =
       head_mapped_box_level.getGlobalMappedBoxes();
 
    size_t number_of_inconsistencies = 0;
@@ -1909,7 +1909,7 @@ size_t Connector::checkConsistencyWithHead(
          const Box unshifted_nabr(
             nabr, PeriodicId::zero(), head_mapped_box_level.getRefinementRatio());
 
-         MappedBoxSet::const_iterator na_in_head =
+         BoxSet::const_iterator na_in_head =
             head_mapped_boxes.find(unshifted_nabr);
 
          if (na_in_head == head_mapped_boxes.end()) {
@@ -1918,7 +1918,7 @@ size_t Connector::checkConsistencyWithHead(
                        << "referenced nonexistent neighbor "
                        << nabr << "\n";
             tbox::perr << "Neighbors of mapped_box " << mapped_box_id << ":\n";
-            for (MappedBoxSet::const_iterator nb = nabrs.begin();
+            for (BoxSet::const_iterator nb = nabrs.begin();
                  nb != nabrs.end(); ++nb) {
                tbox::perr << "    " << *nb << '\n';
             }

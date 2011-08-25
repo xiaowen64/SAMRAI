@@ -4,29 +4,29 @@
  * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Special iterator for MappedBoxSet.
+ * Description:   Special iterator for BoxSet.
  *
  ************************************************************************/
-#ifndef included_hier_MappedBoxSetSingleOwnerIterator
-#define included_hier_MappedBoxSetSingleOwnerIterator
+#ifndef included_hier_BoxSetSingleOwnerIterator
+#define included_hier_BoxSetSingleOwnerIterator
 
 #include "SAMRAI/SAMRAI_config.h"
 
-#include "SAMRAI/hier/MappedBoxSet.h"
+#include "SAMRAI/hier/BoxSet.h"
 
 namespace SAMRAI {
 namespace hier {
 
 /*!
- * @brief MappedBoxSet iterator picking items with a specified
+ * @brief BoxSet iterator picking items with a specified
  * owner rank.
  *
- * This iterator runs through all MappedBoxes in a MappedBoxSet that
+ * This iterator runs through all MappedBoxes in a BoxSet that
  * has the given owner rank.  The iterator runs through the
- * MappedBoxes in the order they appear in the MappedBoxSet, skipping
+ * MappedBoxes in the order they appear in the BoxSet, skipping
  * over MappedBoxes that do not have the specified owner rank.
  */
-class MappedBoxSetSingleOwnerIterator {
+class BoxSetSingleOwnerIterator {
 
 public:
 
@@ -36,19 +36,19 @@ public:
     * @param [i] container
     * @param [i] owner_rank
     */
-   MappedBoxSetSingleOwnerIterator(
-      const MappedBoxSet &container,
+   BoxSetSingleOwnerIterator(
+      const BoxSet &container,
       const int &owner_rank);
 
    //! @brief Destructor
-   ~MappedBoxSetSingleOwnerIterator();
+   ~BoxSetSingleOwnerIterator();
 
    /*!
     * @brief Assignment operator.
     */
-   MappedBoxSetSingleOwnerIterator&
+   BoxSetSingleOwnerIterator&
    operator = (
-      const MappedBoxSetSingleOwnerIterator& r);
+      const BoxSetSingleOwnerIterator& r);
 
    /*!
     * @brief Dereference operator mimicking a pointer dereference.
@@ -63,12 +63,12 @@ public:
    /*!
     * @brief Equality comparison.
     */
-   bool operator == (const MappedBoxSetSingleOwnerIterator& r) const;
+   bool operator == (const BoxSetSingleOwnerIterator& r) const;
 
    /*!
     * @brief Inequality comparison.
     */
-   bool operator != (const MappedBoxSetSingleOwnerIterator& r) const;
+   bool operator != (const BoxSetSingleOwnerIterator& r) const;
 
    /*!
     * @brief Whether the iterator can be dereferenced.  When the
@@ -82,7 +82,7 @@ public:
     * Pre-increment increment the iterator and returns the incremented
     * state.
     */
-   MappedBoxSetSingleOwnerIterator &operator ++ ();
+   BoxSetSingleOwnerIterator &operator ++ ();
 
    /*!
     * @brief Post-increment iterator.
@@ -90,14 +90,14 @@ public:
     * Post-increment saves the iterator, increment it and returns the
     * saved iterator.
     */
-   MappedBoxSetSingleOwnerIterator operator ++ (int);
+   BoxSetSingleOwnerIterator operator ++ (int);
 
 private:
 
    /*!
-    * @brief MappedBoxSet being iterated through.
+    * @brief BoxSet being iterated through.
     */
-   const MappedBoxSet* d_mapped_boxes;
+   const BoxSet* d_mapped_boxes;
 
    /*!
     * @brief The owner_rank.
@@ -107,7 +107,7 @@ private:
    /*!
     * @brief The iterator.
     */
-   MappedBoxSet::const_iterator d_iter;
+   BoxSet::const_iterator d_iter;
 
 };
 
@@ -116,7 +116,7 @@ private:
 }
 
 #ifdef SAMRAI_INLINE
-// #include "SAMRAI/hier/MappedBoxSetSingleOwnerIterator.I"
+// #include "SAMRAI/hier/BoxSetSingleOwnerIterator.I"
 #endif
 
-#endif  // included_hier_MappedBoxSetSingleOwnerIterator
+#endif  // included_hier_BoxSetSingleOwnerIterator

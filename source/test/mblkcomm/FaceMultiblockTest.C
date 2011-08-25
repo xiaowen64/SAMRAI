@@ -367,9 +367,9 @@ void FaceMultiblockTest::fillSingularityBoundaryConditions(
 
          if (ni != dst_to_encon_nbrhood_set.end()) {
 
-            const hier::MappedBoxSet& encon_nbrs = ni->second;
+            const hier::BoxSet& encon_nbrs = ni->second;
 
-            for (hier::MappedBoxSet::const_iterator ei = encon_nbrs.begin();
+            for (hier::BoxSet::const_iterator ei = encon_nbrs.begin();
                  ei != encon_nbrs.end(); ++ei) {
 
                tbox::Pointer<hier::Patch> encon_patch(

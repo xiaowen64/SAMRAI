@@ -67,7 +67,7 @@ Box::Box(
       periodic_id)
 {
    TBOX_DIM_ASSERT_CHECK_ARGS3(*this, other, refinement_ratio);
-#if BOX_TELEMETRY
+#ifdef BOX_TELEMETRY
    // Increment the cumulative constructed count, active mapped box count and
    // reset the high water mark of active mapped boxes if necessary.
    ++s_cumulative_constructed_ct;

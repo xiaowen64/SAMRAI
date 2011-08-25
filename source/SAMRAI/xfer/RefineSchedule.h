@@ -353,8 +353,8 @@ private:
    typedef std::vector<hier::Box> BoxVector;
    //! @brief Shorthand typedef.
    typedef std::vector<hier::Box> MappedBoxVector;
-   //! @brief Similar to NeighborhoodSet but maps to BoxVector instead of MappedBoxSet.
-   typedef std::map<hier::BoxId, hier::MappedBoxSet> FillSet;
+   //! @brief Similar to NeighborhoodSet but maps to BoxVector instead of BoxSet.
+   typedef std::map<hier::BoxId, hier::BoxSet> FillSet;
    //! @brief Mapping from a (potentially remote) Box to a set of neighbors.
    typedef std::map<hier::Box, NeighborSet, hier::Box::id_less> FullNeighborhoodSet;
 
@@ -659,7 +659,7 @@ private:
     * @param[in]  encon_fill_boxes
     */ 
    void findEnconUnfilledBoxes(
-      hier::MappedBoxSet& level_encon_unfilled_boxes,
+      hier::BoxSet& level_encon_unfilled_boxes,
       hier::NeighborhoodSet& encon_to_unfilled_encon_nbrhood_set,
       hier::LocalId& last_unfilled_local_id,
       const hier::Box& dst_mapped_box,
@@ -808,7 +808,7 @@ private:
     */
    void
    constructScheduleTransactions(
-      const hier::MappedBoxSet& fill_boxes,
+      const hier::BoxSet& fill_boxes,
       const hier::Box& dst_mapped_box,
       const hier::Box& src_mapped_box,
       const bool use_time_interpolation);
