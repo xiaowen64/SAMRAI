@@ -79,8 +79,7 @@ void CoarsenAlgorithm::registerCoarsen(
       TBOX_ERROR(
          "CoarsenAlgorithm::registerCoarsen error..."
          << "\nCannot call registerCoarsen with this coarsen algorithm"
-         <<
-         "\nobject since it has already been used to create a coarsen schedule."
+         << "\nobject since it has already been used to create a coarsen schedule."
          << std::endl);
    }
 

@@ -45,8 +45,7 @@ bool VisItDerivedData::packDerivedDataIntoDoubleBuffer(
       // Did not register this name.
       TBOX_ERROR(
          "Unregistered variable name '" << variable_name << "' in\n"
-                                        <<
-         "VisItDerivedData::packDerivedPatchDataIntoDoubleBuffer");
+                                        << "VisItDerivedData::packDerivedPatchDataIntoDoubleBuffer");
    }
 
    return true;

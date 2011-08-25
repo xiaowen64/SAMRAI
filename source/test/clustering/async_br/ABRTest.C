@@ -104,8 +104,7 @@ bool ABRTest::packDerivedDataIntoDoubleBuffer(
       // Did not register this name.
       TBOX_ERROR(
          "Unregistered variable name '" << variable_name << "' in\n"
-                                        <<
-         "ABRTest::packDerivedPatchDataIntoDoubleBuffer");
+                                        << "ABRTest::packDerivedPatchDataIntoDoubleBuffer");
    }
 
    return false;

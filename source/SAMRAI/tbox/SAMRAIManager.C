@@ -158,10 +158,8 @@ void SAMRAIManager::setMaxNumberPatchDataEntries(
    if (s_max_patch_data_entries_accessed) {
       TBOX_ERROR(
          "SAMRAIManager::setMaxNumberPatchDataEntries() error..."
-         <<
-         "\nThe max patch data entries value has already been accessed and cannot"
-         <<
-         "\nbe reset after that point by calling this method -- program abort!"
+         << "\nThe max patch data entries value has already been accessed and cannot"
+         << "\nbe reset after that point by calling this method -- program abort!"
          << std::endl);
    } else {
       s_max_patch_data_entries = MathUtilities<int>::Max(maxnum,

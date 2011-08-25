@@ -106,8 +106,7 @@ int main(
        */
 
       tbox::plog
-      <<
-      "\n\nPrintout #1 of hier::Variable tbox::Database (after initial registration)..."
+      << "\n\nPrintout #1 of hier::Variable tbox::Database (after initial registration)..."
       << endl;
       var_db->printClassData(tbox::plog);
 
@@ -119,8 +118,7 @@ int main(
       if (!var_db->checkContextExists("SCRATCH")) {
          fail_count++;
          tbox::perr
-         <<
-         "FAILED: - Test #1a: hier::VariableDatabase::checkContextExists()\n"
+         << "FAILED: - Test #1a: hier::VariableDatabase::checkContextExists()\n"
          << "SCRATCH context added to var_db, but not found" << endl;
       }
 
@@ -130,8 +128,7 @@ int main(
       if (!var_db->checkContextExists("CURRENT")) {
          fail_count++;
          tbox::perr
-         <<
-         "FAILED: - Test #1b: hier::VariableDatabase::checkContextExists()\n"
+         << "FAILED: - Test #1b: hier::VariableDatabase::checkContextExists()\n"
          << "CURRENT context added to var_db, but not found" << endl;
       }
 
@@ -141,8 +138,7 @@ int main(
       if (var_db->checkContextExists("dummy")) {
          fail_count++;
          tbox::perr
-         <<
-         "FAILED: - Test #1c: hier::VariableDatabase::checkContextExists()\n"
+         << "FAILED: - Test #1c: hier::VariableDatabase::checkContextExists()\n"
          << "dummy context not added to var_db, but found" << endl;
       }
 
@@ -161,8 +157,7 @@ int main(
       if (!var_db->checkContextExists("dummy")) {
          fail_count++;
          tbox::perr
-         <<
-         "FAILED: - Test #1d: hier::VariableDatabase::checkContextExists()\n"
+         << "FAILED: - Test #1d: hier::VariableDatabase::checkContextExists()\n"
          << "dummy context added to var_db, but not found" << endl;
       }
 
@@ -174,8 +169,7 @@ int main(
       if (!var_db->checkVariableExists("uval")) {
          fail_count++;
          tbox::perr
-         <<
-         "FAILED: - Test #2a: hier::VariableDatabase::checkVariableExists()\n"
+         << "FAILED: - Test #2a: hier::VariableDatabase::checkVariableExists()\n"
          << "uval variable added to var_db, but not found" << endl;
       }
 
@@ -185,8 +179,7 @@ int main(
       if (!var_db->checkVariableExists("flux")) {
          fail_count++;
          tbox::perr
-         <<
-         "FAILED: - Test #2b: hier::VariableDatabase::checkVariableExists()\n"
+         << "FAILED: - Test #2b: hier::VariableDatabase::checkVariableExists()\n"
          << "flux variable added to var_db, but not found" << endl;
       }
 
@@ -196,8 +189,7 @@ int main(
       if (!var_db->checkVariableExists("fluxsum")) {
          fail_count++;
          tbox::perr
-         <<
-         "FAILED: - Test #2c: hier::VariableDatabase::checkVariableExists()\n"
+         << "FAILED: - Test #2c: hier::VariableDatabase::checkVariableExists()\n"
          << "fluxsum variable added to var_db, but not found"
          << endl;
       }
@@ -208,8 +200,7 @@ int main(
       if (var_db->checkVariableExists("dummy")) {
          fail_count++;
          tbox::perr
-         <<
-         "FAILED: - Test #2d: hier::VariableDatabase::checkVariableExists()\n"
+         << "FAILED: - Test #2d: hier::VariableDatabase::checkVariableExists()\n"
          << "dummy variable not added to var_db, but found" << endl;
       }
 
@@ -259,8 +250,7 @@ int main(
          fail_count++;
          tbox::perr
          << "FAILED: - Test #3d: hier::VariableDatabase::getVariable()\n"
-         <<
-         "dummy variable not added to var_db, but not returning NULL"
+         << "dummy variable not added to var_db, but not returning NULL"
          << endl;
       }
 
@@ -326,10 +316,8 @@ int main(
       if (ti != 0) {
          fail_count++;
          tbox::perr
-         <<
-         "FAILED: - Test #6a: hier::VariableDatabase::mapVariableAndContextToIndex()\n"
-         <<
-         "(uval,CURRENT) should be mapped to 0, but is mapped to "
+         << "FAILED: - Test #6a: hier::VariableDatabase::mapVariableAndContextToIndex()\n"
+         << "(uval,CURRENT) should be mapped to 0, but is mapped to "
          << ti << endl;
       }
 
@@ -344,10 +332,8 @@ int main(
       if (ti != -1) {
          fail_count++;
          tbox::perr
-         <<
-         "FAILED: - Test #6b: hier::VariableDatabase::mapVariableAndContextToIndex()\n"
-         <<
-         "(uval,SCRATCH) should be mapped to -1, but is mapped to "
+         << "FAILED: - Test #6b: hier::VariableDatabase::mapVariableAndContextToIndex()\n"
+         << "(uval,SCRATCH) should be mapped to -1, but is mapped to "
          << ti << endl;
       }
 
@@ -362,10 +348,8 @@ int main(
       if (ti != -1) {
          fail_count++;
          tbox::perr
-         <<
-         "FAILED: - Test #6c: hier::VariableDatabase::mapVariableAndContextToIndex()\n"
-         <<
-         "(dummy,SCRATCH) should be mapped to -1, but is mapped to "
+         << "FAILED: - Test #6c: hier::VariableDatabase::mapVariableAndContextToIndex()\n"
+         << "(dummy,SCRATCH) should be mapped to -1, but is mapped to "
          << ti << endl;
       }
 
@@ -380,10 +364,8 @@ int main(
       if (ti != -1) {
          fail_count++;
          tbox::perr
-         <<
-         "FAILED: - Test #6d: hier::VariableDatabase::mapVariableAndContextToIndex()\n"
-         <<
-         "(uval,RANDOM) should be mapped to -1, but is mapped to "
+         << "FAILED: - Test #6d: hier::VariableDatabase::mapVariableAndContextToIndex()\n"
+         << "(uval,RANDOM) should be mapped to -1, but is mapped to "
          << ti << endl;
       }
 
@@ -402,24 +384,20 @@ int main(
              search_id, search_var, search_ctxt)) {
          fail_count++;
          tbox::perr
-         <<
-         "FAILED: - Test #7a.1: hier::VariableDatabase::mapIndexToVariableAndContext()\n"
-         <<
-         "Problem finding a (variable,context) pair for index = 2"
+         << "FAILED: - Test #7a.1: hier::VariableDatabase::mapIndexToVariableAndContext()\n"
+         << "Problem finding a (variable,context) pair for index = 2"
          << endl;
          if (search_var->getName() != flux_variable) {
             fail_count++;
             tbox::perr
-            <<
-            "FAILED: - Test #7a.2: hier::VariableDatabase::mapIndexToVariableAndContext()\n"
+            << "FAILED: - Test #7a.2: hier::VariableDatabase::mapIndexToVariableAndContext()\n"
             << "Returned var name should be \"flux\" but is "
             << search_var->getName() << endl;
          }
          if (search_ctxt->getName() != scratch_variable) {
             fail_count++;
             tbox::perr
-            <<
-            "FAILED: - Test #7a.3: hier::VariableDatabase::mapIndexToVariableAndContext()\n"
+            << "FAILED: - Test #7a.3: hier::VariableDatabase::mapIndexToVariableAndContext()\n"
             << "Returned context name should be \"SCRATCH\" but is "
             << search_ctxt->getName() << endl;
          }
@@ -443,8 +421,7 @@ int main(
              search_id, search_var, search_ctxt)) {
          fail_count++;
          tbox::perr
-         <<
-         "FAILED: - Test #7b.1: hier::VariableDatabase::mapIndexToVariableAndContext()\n"
+         << "FAILED: - Test #7b.1: hier::VariableDatabase::mapIndexToVariableAndContext()\n"
          << "Something maps to index = 20 when nothing should.\n"
          << "Variable name: " << search_var->getName() << "\n"
          << "Context name: " << search_ctxt->getName()
@@ -454,15 +431,13 @@ int main(
          if (!search_var.isNull()) {
             fail_count++;
             tbox::perr
-            <<
-            "FAILED: - Test #7b.2: hier::VariableDatabase::mapIndexToVariableAndContext()\n"
+            << "FAILED: - Test #7b.2: hier::VariableDatabase::mapIndexToVariableAndContext()\n"
             << "search_var should be NULL" << endl;
          }
          if (!search_ctxt.isNull()) {
             fail_count++;
             tbox::perr
-            <<
-            "FAILED: - Test #7b.3: hier::VariableDatabase::mapIndexToVariableAndContext()\n"
+            << "FAILED: - Test #7b.3: hier::VariableDatabase::mapIndexToVariableAndContext()\n"
             << "search_ctxt should be NULL" << endl;
          }
 
@@ -477,15 +452,13 @@ int main(
       if (!var_db->mapIndexToVariable(search_id, search_var)) {
          fail_count++;
          tbox::perr
-         <<
-         "FAILED: - Test #7c.1: hier::VariableDatabase::mapIndexToVariable()\n"
+         << "FAILED: - Test #7c.1: hier::VariableDatabase::mapIndexToVariable()\n"
          << "Problem finding a (variable) for index = 2"
          << endl;
          if (search_var->getName() != flux_variable) {
             fail_count++;
             tbox::perr
-            <<
-            "FAILED: - Test #7c.2: hier::VariableDatabase::mapIndexToVariable()\n"
+            << "FAILED: - Test #7c.2: hier::VariableDatabase::mapIndexToVariable()\n"
             << "Returned var name should be \"flux\" but is "
             << search_var->getName() << endl;
          }
@@ -500,8 +473,7 @@ int main(
       if (var_db->mapIndexToVariable(search_id, search_var)) {
          fail_count++;
          tbox::perr
-         <<
-         "FAILED: - Test #7d.1: hier::VariableDatabase::mapIndexToVariable()\n"
+         << "FAILED: - Test #7d.1: hier::VariableDatabase::mapIndexToVariable()\n"
          << "Something maps to index = 20 when nothing should.\n"
          << "Variable name: " << search_var->getName() << "\n"
          << endl;
@@ -510,8 +482,7 @@ int main(
          if (!search_var.isNull()) {
             fail_count++;
             tbox::perr
-            <<
-            "FAILED: - Test #7d.2: hier::VariableDatabase::mapIndexToVariable()\n"
+            << "FAILED: - Test #7d.2: hier::VariableDatabase::mapIndexToVariable()\n"
             << "search_var should be NULL" << endl;
          }
 
@@ -522,8 +493,7 @@ int main(
 
       tbox::plog
       << "\nPrintout #2 of hier::Variable tbox::Database (after tests 1-7."
-      <<
-      "\n Only difference with previous printout should be addition"
+      << "\n Only difference with previous printout should be addition"
       << "\n of \"dummy\" context).....\n";
       var_db->printClassData(tbox::plog);
 

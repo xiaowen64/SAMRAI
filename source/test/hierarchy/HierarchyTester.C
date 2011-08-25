@@ -501,8 +501,7 @@ int HierarchyTester::runHierarchyTestAndVerify()
              test_patch->getLocalId()) {
             fail_count++;
             tbox::perr << "FAILED: - Test #15: for level number " << ln
-                       <<
-            " initial and test level patches have different patch "
+                       << " initial and test level patches have different patch "
                        << "numbers for patch with index " << tip->getLocalId() << std::endl;
          }
 
@@ -511,8 +510,7 @@ int HierarchyTester::runHierarchyTestAndVerify()
              test_patch->getPatchLevelNumber()) {
             fail_count++;
             tbox::perr << "FAILED: - Test #16: for level number " << ln
-                       <<
-            " initial and test level patches have different patch "
+                       << " initial and test level patches have different patch "
                        << "level numbers for patch number " << tip->getLocalId()
                        << std::endl;
          }

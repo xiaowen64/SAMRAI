@@ -108,7 +108,7 @@ public:
     *
     * Stream extract function reads input in the format used
     * by the stream insert function (see
-    * opertor<<(std::ostream&, GaussianFcn &).
+    * opertor<< (std::ostream&, GaussianFcn &).
     * Except for allowing for missing centers (set to zero)
     * and lambda (set to 1), this function requires the correct
     * syntax or the result is undefined.

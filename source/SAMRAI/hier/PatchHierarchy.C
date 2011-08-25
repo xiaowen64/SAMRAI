@@ -212,14 +212,12 @@ void PatchHierarchy::getFromInput(
       if (d_proper_nesting_buffer[ln] < 0) {
          TBOX_ERROR(
             d_object_name << ":  "
-                          <<
-            "Key data `proper_nesting_buffer' has values < 0.");
+                          << "Key data `proper_nesting_buffer' has values < 0.");
       }
       if (d_proper_nesting_buffer[ln] == 0) {
          TBOX_WARNING(
             d_object_name << ":  "
-                          <<
-            "Using zero `proper_nesting_buffer' values.");
+                          << "Using zero `proper_nesting_buffer' values.");
       }
    }
 
@@ -234,12 +232,9 @@ void PatchHierarchy::getFromInput(
    if (d_allow_patches_smaller_than_minimum_size_to_prevent_overlaps) {
       TBOX_WARNING(
          d_object_name << ":  "
-                       <<
-         "Allowing patches smaller than the given "
-                       <<
-         "smallest patch size.  Note:  If periodic "
-                       <<
-         "boundary conditions are used, this flag is "
+                       << "Allowing patches smaller than the given "
+                       << "smallest patch size.  Note:  If periodic "
+                       << "boundary conditions are used, this flag is "
                        << "ignored in the periodic directions.");
    }
 

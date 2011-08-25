@@ -556,10 +556,8 @@ void Euler::setupLoadBalancer(
       } else {
          TBOX_WARNING(
             d_object_name << ": "
-                          <<
-            "  Unknown load balancer used in gridding algorithm."
-                          <<
-            "  Ignoring request for nonuniform load balancing." << endl);
+                          << "  Unknown load balancer used in gridding algorithm."
+                          << "  Ignoring request for nonuniform load balancing." << endl);
          d_use_nonuniform_workload = false;
       }
    } else {
@@ -3429,10 +3427,8 @@ void Euler::getFromInput(
           (d_riemann_solve != "HLLC_RIEM_SOLVE")) {
          TBOX_ERROR(
             d_object_name << ": "
-                          <<
-            "`riemann_solve' in input must be either string "
-                          <<
-            "'APPROX_RIEM_SOLVE', 'EXACT_RIEM_SOLVE', "
+                          << "`riemann_solve' in input must be either string "
+                          << "'APPROX_RIEM_SOLVE', 'EXACT_RIEM_SOLVE', "
                           << "'HLLC_RIEM_SOLVE'." << endl);
 
       }
@@ -3448,8 +3444,7 @@ void Euler::getFromInput(
           (d_godunov_order != 4)) {
          TBOX_ERROR(
             d_object_name << ": "
-                          <<
-            "`godunov_order' in input must be 1, 2, or 4." << endl);
+                          << "`godunov_order' in input must be 1, 2, or 4." << endl);
 
       }
    } else {
@@ -3463,10 +3458,8 @@ void Euler::getFromInput(
           (d_corner_transport != "CORNER_TRANSPORT_2")) {
          TBOX_ERROR(
             d_object_name << ": "
-                          <<
-            "`corner_transport' in input must be either string"
-                          <<
-            " 'CORNER_TRANSPORT_1' or 'CORNER_TRANSPORT_2'." << endl);
+                          << "`corner_transport' in input must be either string"
+                          << " 'CORNER_TRANSPORT_1' or 'CORNER_TRANSPORT_2'." << endl);
       }
    } else {
       d_corner_transport = db->getStringWithDefault("corner_transport",
@@ -3485,10 +3478,8 @@ void Euler::getFromInput(
       } else {
          TBOX_WARNING(
             d_object_name << ": "
-                          <<
-            "No key `refine_criteria' found in data for"
-                          <<
-            " RefinementData. No refinement will occur." << endl);
+                          << "No key `refine_criteria' found in data for"
+                          << " RefinementData. No refinement will occur." << endl);
       }
 
       tbox::Array<string> ref_keys_defined(num_keys);
@@ -3528,8 +3519,7 @@ void Euler::getFromInput(
                } else {
                   TBOX_ERROR(
                      d_object_name << ": "
-                                   <<
-                     "No key `dev_tol' found in data for "
+                                   << "No key `dev_tol' found in data for "
                                    << error_key << endl);
                }
 
@@ -3539,8 +3529,7 @@ void Euler::getFromInput(
                } else {
                   TBOX_ERROR(
                      d_object_name << ": "
-                                   <<
-                     "No key `density_dev' found in data for "
+                                   << "No key `density_dev' found in data for "
                                    << error_key << endl);
                }
 
@@ -3571,8 +3560,7 @@ void Euler::getFromInput(
                } else {
                   TBOX_ERROR(
                      d_object_name << ": "
-                                   <<
-                     "No key `grad_tol' found in data for "
+                                   << "No key `grad_tol' found in data for "
                                    << error_key << endl);
                }
 
@@ -3603,8 +3591,7 @@ void Euler::getFromInput(
                } else {
                   TBOX_ERROR(
                      d_object_name << ": "
-                                   <<
-                     "No key `shock_onset' found in data for "
+                                   << "No key `shock_onset' found in data for "
                                    << error_key << endl);
                }
 
@@ -3614,8 +3601,7 @@ void Euler::getFromInput(
                } else {
                   TBOX_ERROR(
                      d_object_name << ": "
-                                   <<
-                     "No key `shock_tol' found in data for "
+                                   << "No key `shock_tol' found in data for "
                                    << error_key << endl);
                }
 
@@ -3646,8 +3632,7 @@ void Euler::getFromInput(
                } else {
                   TBOX_ERROR(
                      d_object_name << ": "
-                                   <<
-                     "No key `rich_tol' found in data for "
+                                   << "No key `rich_tol' found in data for "
                                    << error_key << endl);
                }
 
@@ -3678,8 +3663,7 @@ void Euler::getFromInput(
                } else {
                   TBOX_ERROR(
                      d_object_name << ": "
-                                   <<
-                     "No key `dev_tol' found in data for "
+                                   << "No key `dev_tol' found in data for "
                                    << error_key << endl);
                }
 
@@ -3689,8 +3673,7 @@ void Euler::getFromInput(
                } else {
                   TBOX_ERROR(
                      d_object_name << ": "
-                                   <<
-                     "No key `pressure_dev' found in data for "
+                                   << "No key `pressure_dev' found in data for "
                                    << error_key << endl);
                }
 
@@ -3721,8 +3704,7 @@ void Euler::getFromInput(
                } else {
                   TBOX_ERROR(
                      d_object_name << ": "
-                                   <<
-                     "No key `grad_tol' found in data for "
+                                   << "No key `grad_tol' found in data for "
                                    << error_key << endl);
                }
 
@@ -3753,8 +3735,7 @@ void Euler::getFromInput(
                } else {
                   TBOX_ERROR(
                      d_object_name << ": "
-                                   <<
-                     "No key `shock_onset' found in data for "
+                                   << "No key `shock_onset' found in data for "
                                    << error_key << endl);
                }
 
@@ -3764,8 +3745,7 @@ void Euler::getFromInput(
                } else {
                   TBOX_ERROR(
                      d_object_name << ": "
-                                   <<
-                     "No key `shock_tol' found in data for "
+                                   << "No key `shock_tol' found in data for "
                                    << error_key << endl);
                }
 
@@ -3796,8 +3776,7 @@ void Euler::getFromInput(
                } else {
                   TBOX_ERROR(
                      d_object_name << ": "
-                                   <<
-                     "No key `rich_tol' found in data for "
+                                   << "No key `rich_tol' found in data for "
                                    << error_key << endl);
                }
 
@@ -3861,8 +3840,7 @@ void Euler::getFromInput(
       } else {
          TBOX_ERROR(
             d_object_name << ": "
-                          <<
-            "No `Initial_data' database found in input." << endl);
+                          << "No `Initial_data' database found in input." << endl);
       }
 
       bool found_problem_data = false;
@@ -3874,16 +3852,14 @@ void Euler::getFromInput(
          } else {
             TBOX_ERROR(
                d_object_name << ": "
-                             <<
-               "`radius' input required for SPHERE problem." << endl);
+                             << "`radius' input required for SPHERE problem." << endl);
          }
          if (init_data_db->keyExists("center")) {
             init_data_db->getDoubleArray("center", d_center, d_dim.getValue());
          } else {
             TBOX_ERROR(
                d_object_name << ": "
-                             <<
-               "`center' input required for SPHERE problem." << endl);
+                             << "`center' input required for SPHERE problem." << endl);
          }
          if (init_data_db->keyExists("density_inside")) {
             d_density_inside = init_data_db->getDouble("density_inside");
@@ -3920,8 +3896,7 @@ void Euler::getFromInput(
          } else {
             TBOX_ERROR(
                d_object_name << ": "
-                             <<
-               "`velocity_outside' input required for "
+                             << "`velocity_outside' input required for "
                              << "SPHERE problem." << endl);
          }
          if (init_data_db->keyExists("pressure_outside")) {
@@ -3929,8 +3904,7 @@ void Euler::getFromInput(
          } else {
             TBOX_ERROR(
                d_object_name << ": "
-                             <<
-               "`pressure_outside' input required for "
+                             << "`pressure_outside' input required for "
                              << "SPHERE problem." << endl);
          }
 
@@ -4014,10 +3988,8 @@ void Euler::getFromInput(
          if (!found_interval_data) {
             TBOX_ERROR(
                d_object_name << ": "
-                             <<
-               "Insufficient interval data given in input"
-                             <<
-               " for PIECEWISE_CONSTANT_* or STEP problem." << endl);
+                             << "Insufficient interval data given in input"
+                             << " for PIECEWISE_CONSTANT_* or STEP problem." << endl);
          }
 
          found_problem_data = true;
@@ -4065,8 +4037,7 @@ void Euler::getFromInput(
       } else {
          TBOX_ERROR(
             d_object_name << ": "
-                          <<
-            "Key data `Boundary_data' not found in input. " << endl);
+                          << "Key data `Boundary_data' not found in input. " << endl);
       }
 
    }
@@ -4248,8 +4219,7 @@ void Euler::getFromRestart()
    if (ver != EULER_VERSION) {
       TBOX_ERROR(
          d_object_name << ": "
-                       <<
-         "Restart file version different than class version." << endl);
+                       << "Restart file version different than class version." << endl);
    }
 
    d_gamma = db->getDouble("d_gamma");
@@ -4264,8 +4234,7 @@ void Euler::getFromRestart()
       if (d_nghosts(i) != CELLG) {
          TBOX_ERROR(
             d_object_name << ": "
-                          <<
-            "Key data `d_nghosts' in restart file != CELLG." << endl);
+                          << "Key data `d_nghosts' in restart file != CELLG." << endl);
       }
    }
    int* tmp_fluxghosts = &d_fluxghosts[0];
@@ -4274,8 +4243,7 @@ void Euler::getFromRestart()
       if (d_fluxghosts(i) != FLUXG) {
          TBOX_ERROR(
             d_object_name << ": "
-                          <<
-            "Key data `d_fluxghosts' in restart file != FLUXG." << endl);
+                          << "Key data `d_fluxghosts' in restart file != FLUXG." << endl);
       }
    }
 

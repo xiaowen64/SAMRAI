@@ -386,8 +386,7 @@ int main(
       if (!tbox::MathUtilities<double>::equalEps(norm, 0.5)) {
          num_failures++;
          tbox::perr
-         <<
-         "FAILED: - Test #1: math::HierarchyNodeDataOpsComplex::sumControlVolumes()\n"
+         << "FAILED: - Test #1: math::HierarchyNodeDataOpsComplex::sumControlVolumes()\n"
          << "Expected value = 0.5 , Computed value = "
          << norm << std::endl;
       }
@@ -398,8 +397,7 @@ int main(
       if (num_data_points != 121) {
          num_failures++;
          tbox::perr
-         <<
-         "FAILED: - Test #2: math::HierarchyNodeDataOpsComplex::numberOfEntries()\n"
+         << "FAILED: - Test #2: math::HierarchyNodeDataOpsComplex::numberOfEntries()\n"
          << "Expected value = 121 , Computed value = "
          << num_data_points << std::endl;
       }
@@ -411,8 +409,7 @@ int main(
       if (!complexDataSameAsValue(nvindx[0], val0, hierarchy)) {
          num_failures++;
          tbox::perr
-         <<
-         "FAILED: - Test #3a: math::HierarchyNodeDataOpsComplex::setToScalar()\n"
+         << "FAILED: - Test #3a: math::HierarchyNodeDataOpsComplex::setToScalar()\n"
          << "Expected: v0 = " << val0 << std::endl;
          node_ops->printData(nvindx[0], tbox::plog);
       }
@@ -424,8 +421,7 @@ int main(
       if (!complexDataSameAsValue(nvindx[1], val1, hierarchy)) {
          num_failures++;
          tbox::perr
-         <<
-         "FAILED: - Test #3b: math::HierarchyNodeDataOpsComplex::setToScalar()\n"
+         << "FAILED: - Test #3b: math::HierarchyNodeDataOpsComplex::setToScalar()\n"
          << "Expected: v1 = " << val1 << std::endl;
          node_ops->printData(nvindx[1], tbox::plog);
       }
@@ -436,8 +432,7 @@ int main(
       if (!complexDataSameAsValue(nvindx[2], val1, hierarchy)) {
          num_failures++;
          tbox::perr
-         <<
-         "FAILED: - Test #4: math::HierarchyNodeDataOpsComplex::copyData()\n"
+         << "FAILED: - Test #4: math::HierarchyNodeDataOpsComplex::copyData()\n"
          << "Expected: v2 = " << val1 << std::endl;
          node_ops->printData(nvindx[2], tbox::plog);
       }
@@ -448,16 +443,14 @@ int main(
       if (!complexDataSameAsValue(nvindx[0], val1, hierarchy)) {
          num_failures++;
          tbox::perr
-         <<
-         "FAILED: - Test #5a: math::HierarchyNodeDataOpsComplex::swapData()\n"
+         << "FAILED: - Test #5a: math::HierarchyNodeDataOpsComplex::swapData()\n"
          << "Expected: v0 = " << val1 << std::endl;
          node_ops->printData(nvindx[0], tbox::plog);
       }
       if (!complexDataSameAsValue(nvindx[1], val0, hierarchy)) {
          num_failures++;
          tbox::perr
-         <<
-         "FAILED: - Test #5b: math::HierarchyNodeDataOpsComplex::swapData()\n"
+         << "FAILED: - Test #5b: math::HierarchyNodeDataOpsComplex::swapData()\n"
          << "Expected: v1 = " << val0 << std::endl;
          node_ops->printData(nvindx[1], tbox::plog);
       }
@@ -496,8 +489,7 @@ int main(
       if (!complexDataSameAsValue(nvindx[1], val_sub, hierarchy)) {
          num_failures++;
          tbox::perr
-         <<
-         "FAILED: - Test #8: math::HierarchyNodeDataOpsComplex::subtract()\n"
+         << "FAILED: - Test #8: math::HierarchyNodeDataOpsComplex::subtract()\n"
          << "Expected: v1 = " << val_sub << std::endl;
          node_ops->printData(nvindx[1], tbox::plog);
       }
@@ -509,8 +501,7 @@ int main(
       if (!complexDataSameAsValue(nvindx[1], val_addScalar, hierarchy)) {
          num_failures++;
          tbox::perr
-         <<
-         "FAILED: - Test #9a: math::HierarchyNodeDataOpsComplex::addScalar()\n"
+         << "FAILED: - Test #9a: math::HierarchyNodeDataOpsComplex::addScalar()\n"
          << "Expected: v1 = " << val_addScalar << std::endl;
          node_ops->printData(nvindx[1], tbox::plog);
       }
@@ -522,8 +513,7 @@ int main(
       if (!complexDataSameAsValue(nvindx[2], val_addScalar, hierarchy)) {
          num_failures++;
          tbox::perr
-         <<
-         "FAILED: - Test #9b: math::HierarchyNodeDataOpsComplex::addScalar()\n"
+         << "FAILED: - Test #9b: math::HierarchyNodeDataOpsComplex::addScalar()\n"
          << "Expected: v2 = " << val_addScalar << std::endl;
          node_ops->printData(nvindx[2], tbox::plog);
       }
@@ -535,8 +525,7 @@ int main(
       if (!complexDataSameAsValue(nvindx[2], val_addScalar, hierarchy)) {
          num_failures++;
          tbox::perr
-         <<
-         "FAILED: - Test #9c: math::HierarchyNodeDataOpsComplex::addScalar()\n"
+         << "FAILED: - Test #9c: math::HierarchyNodeDataOpsComplex::addScalar()\n"
          << "Expected: v2 = " << val_addScalar << std::endl;
          node_ops->printData(nvindx[2], tbox::plog);
       }
@@ -551,8 +540,7 @@ int main(
       if (!complexDataSameAsValue(nvindx[1], val_mult, hierarchy)) {
          num_failures++;
          tbox::perr
-         <<
-         "FAILED: - Test #10: math::HierarchyNodeDataOpsComplex::multiply()\n"
+         << "FAILED: - Test #10: math::HierarchyNodeDataOpsComplex::multiply()\n"
          << "Expected: v1 = " << val_mult << std::endl;
          node_ops->printData(nvindx[1], tbox::plog);
       }
@@ -576,8 +564,7 @@ int main(
       if (!complexDataSameAsValue(nvindx[1], val_rec, hierarchy)) {
          num_failures++;
          tbox::perr
-         <<
-         "FAILED: - Test #12: math::HierarchyNodeDataOpsComplex::reciprocal()\n"
+         << "FAILED: - Test #12: math::HierarchyNodeDataOpsComplex::reciprocal()\n"
          << "Expected: v1 = " << val_rec << std::endl;
          node_ops->printData(nvindx[1], tbox::plog);
       }
@@ -714,8 +701,7 @@ int main(
       if (!complexDataSameAsValue(nvindx[3], val_linearSum, hierarchy)) {
          num_failures++;
          tbox::perr
-         <<
-         "FAILED: - Test #19: math::HierarchyNodeDataOpsComplex::linearSum()\n"
+         << "FAILED: - Test #19: math::HierarchyNodeDataOpsComplex::linearSum()\n"
          << "Expected: v3 = " << val_linearSum << std::endl;
          node_ops->printData(nvindx[3], tbox::plog);
       }

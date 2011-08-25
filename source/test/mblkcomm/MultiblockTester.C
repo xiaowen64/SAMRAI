@@ -346,10 +346,10 @@ void MultiblockTester::createCoarsenSchedule(
  *                                             this);
  *    } else {
  *       TBOX_ERROR("The following must be replaced with the DLBG version.");
- *****#if 0
+ ******#if 0
  *    d_coarsen_schedule[level_number] =
  *       d_coarsen_algorithm->createSchedule(coarser_level, level, this);
- *****#endif
+ ******#endif
  *    }
  *
  * }

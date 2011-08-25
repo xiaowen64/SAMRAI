@@ -53,8 +53,7 @@ void TransferOperatorRegistry::addCoarsenOperator(
        (coarsen_op->getStencilWidth() > getMaxTransferOpStencilWidth())) {
       TBOX_WARNING(
          "Adding coarsen operator " << coarsen_op->getOperatorName()
-                                    <<
-         "\nwith stencil width greater than current maximum\n"
+                                    << "\nwith stencil width greater than current maximum\n"
                                     << "after call to getMaxTransferOpStencilWidth.\n");
    }
    d_coarsen_operators.addItem(coarsen_op);
@@ -67,8 +66,7 @@ void TransferOperatorRegistry::addRefineOperator(
        (refine_op->getStencilWidth() > getMaxTransferOpStencilWidth())) {
       TBOX_WARNING(
          "Adding refine operator " << refine_op->getOperatorName()
-                                   <<
-         "\nwith stencil width greater than current maximum\n"
+                                   << "\nwith stencil width greater than current maximum\n"
                                    << "after call to getMaxTransferOpStencilWidth.\n");
    }
    d_refine_operators.addItem(refine_op);
@@ -228,7 +226,7 @@ TransferOperatorRegistry::setMinTransferOpStencilWidth(
 
 /*
  *************************************************************************
- ******Get the dimension of the hier::GridGeometry object holding this singleton.
+ *******Get the dimension of the hier::GridGeometry object holding this singleton.
  *************************************************************************
  */
 const tbox::Dimension&

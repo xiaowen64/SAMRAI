@@ -752,13 +752,10 @@ void CellPoissonFACOps::initializeOperatorState(
        */
       TBOX_ERROR(
          d_object_name << ": No physical bc object in\n"
-                       <<
-         "CellPoissonFACOps::initializeOperatorState\n"
+                       << "CellPoissonFACOps::initializeOperatorState\n"
                        << "You must use "
-                       <<
-         "CellPoissonFACOps::setPhysicalBcCoefObject\n"
-                       <<
-         "to set one before calling initializeOperatorState\n");
+                       << "CellPoissonFACOps::setPhysicalBcCoefObject\n"
+                       << "to set one before calling initializeOperatorState\n");
    }
 
    if (solution.getNumberOfComponents() != 1) {
@@ -1042,8 +1039,7 @@ void CellPoissonFACOps::initializeOperatorState(
       if (!d_ghostfill_nocoarse_refine_schedules[dest_ln]) {
          TBOX_ERROR(
             d_object_name
-            <<
-            ": Cannot create a refine schedule for ghost filling on bottom level!\n");
+            << ": Cannot create a refine schedule for ghost filling on bottom level!\n");
       }
    }
    for (int dest_ln = d_ln_min; dest_ln < d_ln_max; ++dest_ln) {
@@ -1079,8 +1075,7 @@ void CellPoissonFACOps::initializeOperatorState(
    if (!d_ghostfill_nocoarse_refine_schedules[d_ln_min]) {
       TBOX_ERROR(
          d_object_name
-         <<
-         ": Cannot create a refine schedule for ghost filling on bottom level!\n");
+         << ": Cannot create a refine schedule for ghost filling on bottom level!\n");
    }
 }
 
@@ -1671,8 +1666,7 @@ int CellPoissonFACOps::solveCoarsestLevel(
       TBOX_ERROR(
          d_object_name << ": Bad coarse level solver choice '"
                        << d_coarse_solver_choice
-                       <<
-         "' in scapCellPoissonOps::solveCoarsestLevel.");
+                       << "' in scapCellPoissonOps::solveCoarsestLevel.");
    }
 
    xeqScheduleGhostFillNoCoarse(data.getComponentDescriptorIndex(0),

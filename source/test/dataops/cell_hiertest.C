@@ -306,8 +306,7 @@ int main(
       if (!tbox::MathUtilities<double>::equalEps(norm, 0.5)) {
          num_failures++;
          tbox::perr
-         <<
-         "FAILED: - Test #1b: math::HierarchyCellDataOpsReal::sumControlVolumes()\n"
+         << "FAILED: - Test #1b: math::HierarchyCellDataOpsReal::sumControlVolumes()\n"
          << "Expected value = 0.5 , Computed value = "
          << norm << std::endl;
       }
@@ -318,8 +317,7 @@ int main(
       if (num_data_points != ((dim == tbox::Dimension(2)) ? 90 : 660)) {
          num_failures++;
          tbox::perr
-         <<
-         "FAILED: - Test #2: math::HierarchyCellDataOpsReal::numberOfEntries()\n"
+         << "FAILED: - Test #2: math::HierarchyCellDataOpsReal::numberOfEntries()\n"
          << "Expected value = " << ((dim == tbox::Dimension(2)) ? 90 : 660)
          << " , Computed value = " << num_data_points << std::endl;
       }
@@ -331,8 +329,7 @@ int main(
       if (!doubleDataSameAsValue(cvindx[0], val0, hierarchy)) {
          num_failures++;
          tbox::perr
-         <<
-         "FAILED: - Test #3a: math::HierarchyCellDataOpsReal::setToScalar()\n"
+         << "FAILED: - Test #3a: math::HierarchyCellDataOpsReal::setToScalar()\n"
          << "Expected: v0 = " << val0 << std::endl;
          cell_ops->printData(cvindx[0], tbox::pout);
       }
@@ -344,8 +341,7 @@ int main(
       if (!doubleDataSameAsValue(cvindx[1], val1, hierarchy)) {
          num_failures++;
          tbox::perr
-         <<
-         "FAILED: - Test #3b: math::HierarchyCellDataOpsReal::setToScalar()\n"
+         << "FAILED: - Test #3b: math::HierarchyCellDataOpsReal::setToScalar()\n"
          << "Expected: v1 = " << val1 << std::endl;
          cell_ops->printData(cvindx[1], tbox::pout);
       }
@@ -488,8 +484,7 @@ int main(
       if (!doubleDataSameAsValue(cvindx[1], val_rec, hierarchy)) {
          num_failures++;
          tbox::perr
-         <<
-         "FAILED: - Test #12: math::HierarchyCellDataOpsReal::reciprocal()\n"
+         << "FAILED: - Test #12: math::HierarchyCellDataOpsReal::reciprocal()\n"
          << "Expected: v1 = " << val_rec << std::endl;
          cell_ops->printData(cvindx[1], tbox::pout);
       }
@@ -663,8 +658,7 @@ int main(
       if (!tbox::MathUtilities<double>::equalEps(cdot, 8.75)) {
          num_failures++;
          tbox::perr
-         <<
-         "FAILED: - Test #22a: math::HierarchyCellDataOpsReal::dot() - (ind2) * (ind1)\n"
+         << "FAILED: - Test #22a: math::HierarchyCellDataOpsReal::dot() - (ind2) * (ind1)\n"
          << "Expected Value = 8.75, Computed Value = "
          << cdot << std::endl;
       }
@@ -675,8 +669,7 @@ int main(
       if (!tbox::MathUtilities<double>::equalEps(cdot, 8.75)) {
          num_failures++;
          tbox::perr
-         <<
-         "FAILED: - Test #22b: math::HierarchyCellDataOpsReal::dot() - (ind1) * (ind2)\n"
+         << "FAILED: - Test #22b: math::HierarchyCellDataOpsReal::dot() - (ind1) * (ind2)\n"
          << "Expected Value = 8.75, Computed Value = "
          << cdot << std::endl;
       }

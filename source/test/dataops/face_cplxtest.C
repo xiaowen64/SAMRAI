@@ -354,8 +354,7 @@ int main(
       if (!tbox::MathUtilities<double>::equalEps(norm, 1.0)) {
          num_failures++;
          tbox::perr
-         <<
-         "FAILED: - Test #1b: math::HierarchyFaceDataOpsComplex::sumControlVolumes()\n"
+         << "FAILED: - Test #1b: math::HierarchyFaceDataOpsComplex::sumControlVolumes()\n"
          << "Expected value = 1.0 , Computed value = "
          << norm << std::endl;
       }
@@ -366,8 +365,7 @@ int main(
       if (num_data_points != 209) {
          num_failures++;
          tbox::perr
-         <<
-         "FAILED: - Test #2: math::HierarchyFaceDataOpsComplex::numberOfEntries()\n"
+         << "FAILED: - Test #2: math::HierarchyFaceDataOpsComplex::numberOfEntries()\n"
          << "Expected value = 209 , Computed value = "
          << num_data_points << std::endl;
       }
@@ -379,8 +377,7 @@ int main(
       if (!complexDataSameAsValue(fvindx[0], val0, hierarchy)) {
          num_failures++;
          tbox::perr
-         <<
-         "FAILED: - Test #3a: math::HierarchyFaceDataOpsComplex::setToScalar()\n"
+         << "FAILED: - Test #3a: math::HierarchyFaceDataOpsComplex::setToScalar()\n"
          << "Expected: v0 = " << val0 << std::endl;
          face_ops->printData(fvindx[0], tbox::plog);
       }
@@ -392,8 +389,7 @@ int main(
       if (!complexDataSameAsValue(fvindx[1], val1, hierarchy)) {
          num_failures++;
          tbox::perr
-         <<
-         "FAILED: - Test #3b: math::HierarchyFaceDataOpsComplex::setToScalar()\n"
+         << "FAILED: - Test #3b: math::HierarchyFaceDataOpsComplex::setToScalar()\n"
          << "Expected: v1 = " << val1 << std::endl;
          face_ops->printData(fvindx[1], tbox::plog);
       }
@@ -404,8 +400,7 @@ int main(
       if (!complexDataSameAsValue(fvindx[2], val1, hierarchy)) {
          num_failures++;
          tbox::perr
-         <<
-         "FAILED: - Test #3b: math::HierarchyFaceDataOpsComplex::copyData()\n"
+         << "FAILED: - Test #3b: math::HierarchyFaceDataOpsComplex::copyData()\n"
          << "Expected: v2 = v1 = " << val1 << std::endl;
          face_ops->printData(fvindx[2], tbox::plog);
       }
@@ -416,16 +411,14 @@ int main(
       if (!complexDataSameAsValue(fvindx[0], val1, hierarchy)) {
          num_failures++;
          tbox::perr
-         <<
-         "FAILED: - Test #5a: math::HierarchyFaceDataOpsComplex::swapData()\n"
+         << "FAILED: - Test #5a: math::HierarchyFaceDataOpsComplex::swapData()\n"
          << "Expected: v0 = " << val1 << std::endl;
          face_ops->printData(fvindx[0], tbox::plog);
       }
       if (!complexDataSameAsValue(fvindx[1], val0, hierarchy)) {
          num_failures++;
          tbox::perr
-         <<
-         "FAILED: - Test #5b: math::HierarchyFaceDataOpsComplex::swapData()\n"
+         << "FAILED: - Test #5b: math::HierarchyFaceDataOpsComplex::swapData()\n"
          << "Expected: v1 = " << val0 << std::endl;
          face_ops->printData(fvindx[1], tbox::plog);
       }
@@ -464,8 +457,7 @@ int main(
       if (!complexDataSameAsValue(fvindx[1], val_sub, hierarchy)) {
          num_failures++;
          tbox::perr
-         <<
-         "FAILED: - Test #8: math::HierarchyFaceDataOpsComplex::subtract()\n"
+         << "FAILED: - Test #8: math::HierarchyFaceDataOpsComplex::subtract()\n"
          << "Expected: v1 = " << val_sub << std::endl;
          face_ops->printData(fvindx[1], tbox::plog);
       }
@@ -477,8 +469,7 @@ int main(
       if (!complexDataSameAsValue(fvindx[1], val_addScalar, hierarchy)) {
          num_failures++;
          tbox::perr
-         <<
-         "FAILED: - Test #9a: math::HierarchyFaceDataOpsComplex::addScalar()\n"
+         << "FAILED: - Test #9a: math::HierarchyFaceDataOpsComplex::addScalar()\n"
          << "Expected: v1 = " << val_addScalar << std::endl;
          face_ops->printData(fvindx[1], tbox::plog);
       }
@@ -490,8 +481,7 @@ int main(
       if (!complexDataSameAsValue(fvindx[2], val_addScalar, hierarchy)) {
          num_failures++;
          tbox::perr
-         <<
-         "FAILED: - Test #9b: math::HierarchyFaceDataOpsComplex::addScalar()\n"
+         << "FAILED: - Test #9b: math::HierarchyFaceDataOpsComplex::addScalar()\n"
          << "Expected: v2 = " << val_addScalar << std::endl;
          face_ops->printData(fvindx[2], tbox::plog);
       }
@@ -503,8 +493,7 @@ int main(
       if (!complexDataSameAsValue(fvindx[2], val_addScalar, hierarchy)) {
          num_failures++;
          tbox::perr
-         <<
-         "FAILED: - Test #9c: math::HierarchyFaceDataOpsComplex::addScalar()\n"
+         << "FAILED: - Test #9c: math::HierarchyFaceDataOpsComplex::addScalar()\n"
          << "Expected: v2 = " << val_addScalar << std::endl;
          face_ops->printData(fvindx[2], tbox::plog);
       }
@@ -519,8 +508,7 @@ int main(
       if (!complexDataSameAsValue(fvindx[1], val_mult, hierarchy)) {
          num_failures++;
          tbox::perr
-         <<
-         "FAILED: - Test #10: math::HierarchyFaceDataOpsComplex::multiply()\n"
+         << "FAILED: - Test #10: math::HierarchyFaceDataOpsComplex::multiply()\n"
          << "Expected: v1 = " << val_mult << std::endl;
          face_ops->printData(fvindx[1], tbox::plog);
       }
@@ -544,8 +532,7 @@ int main(
       if (!complexDataSameAsValue(fvindx[1], val_rec, hierarchy)) {
          num_failures++;
          tbox::perr
-         <<
-         "FAILED: - Test #12: math::HierarchyFaceDataOpsComplex::reciprocal()\n"
+         << "FAILED: - Test #12: math::HierarchyFaceDataOpsComplex::reciprocal()\n"
          << "Expected: v1 = " << val_rec << std::endl;
          face_ops->printData(fvindx[1], tbox::plog);
       }
@@ -705,8 +692,7 @@ int main(
       if (!complexDataSameAsValue(fvindx[3], val_linearSum, hierarchy)) {
          num_failures++;
          tbox::perr
-         <<
-         "FAILED: - Test #19: math::HierarchyFaceDataOpsComplex::linearSum()\n"
+         << "FAILED: - Test #19: math::HierarchyFaceDataOpsComplex::linearSum()\n"
          << "Expected: v3 = " << val_linearSum << std::endl;
          face_ops->printData(fvindx[3], tbox::plog);
       }

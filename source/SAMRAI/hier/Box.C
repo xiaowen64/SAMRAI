@@ -119,8 +119,7 @@ Box::Box(
       TBOX_ERROR(
          "Box::Box: Invalid refinement ratio "
          << refinement_ratio
-         <<
-         "\nRefinement ratio must be completely positive or negative.");
+         << "\nRefinement ratio must be completely positive or negative.");
 
    }
 }
@@ -190,8 +189,7 @@ void Box::initialize(
       TBOX_ERROR(
          "Box::initialize: Invalid refinement ratio "
          << refinement_ratio
-         <<
-         "\nRefinement ratio must be completely positive or negative.");
+         << "\nRefinement ratio must be completely positive or negative.");
 
    }
 

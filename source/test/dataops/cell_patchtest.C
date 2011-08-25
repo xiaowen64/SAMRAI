@@ -416,8 +416,7 @@ int main(
                       typeid(pdat::CellData<double>)) {
                      num_failures++;
                      tbox::perr
-                     <<
-                     "FAILED: - Test #3c.0.a: hier::Patch Data name incorrect\n"
+                     << "FAILED: - Test #3c.0.a: hier::Patch Data name incorrect\n"
                      << "Expected: pdat::CellData<double >\n"
                      << "Actual: " << patch_data_name << std::endl;
                   }
@@ -435,8 +434,7 @@ int main(
                       typeid(pdat::CellData<double>)) {
                      num_failures++;
                      tbox::perr
-                     <<
-                     "FAILED: - Test #3c.1.a: hier::Patch Data name incorrect\n"
+                     << "FAILED: - Test #3c.1.a: hier::Patch Data name incorrect\n"
                      << "Expected: pdat::CellData<double >\n"
                      << "Actual: " << patch_data_name << std::endl;
                   }
@@ -454,8 +452,7 @@ int main(
                       typeid(pdat::CellData<double>)) {
                      num_failures++;
                      tbox::perr
-                     <<
-                     "FAILED: - Test #3c.2.a: hier::Patch Data name incorrect\n"
+                     << "FAILED: - Test #3c.2.a: hier::Patch Data name incorrect\n"
                      << "Expected: pdat::CellData<double >\n"
                      << "Actual: " << patch_data_name << std::endl;
                   }
@@ -473,8 +470,7 @@ int main(
                       typeid(pdat::CellData<double>)) {
                      num_failures++;
                      tbox::perr
-                     <<
-                     "FAILED: - Test #3c.3.a: hier::Patch Data name incorrect\n"
+                     << "FAILED: - Test #3c.3.a: hier::Patch Data name incorrect\n"
                      << "Expected: pdat::CellData<double >\n"
                      << "Actual: " << patch_data_name << std::endl;
                   }
@@ -492,8 +488,7 @@ int main(
                       typeid(pdat::CellData<int>)) {
                      num_failures++;
                      tbox::perr
-                     <<
-                     "FAILED: - Test #3c.4.a: hier::Patch Data name incorrect\n"
+                     << "FAILED: - Test #3c.4.a: hier::Patch Data name incorrect\n"
                      << "Expected: pdat::CellData<int >\n"
                      << "Actual: " << patch_data_name << std::endl;
                   }
@@ -511,8 +506,7 @@ int main(
                       typeid(pdat::CellData<int>)) {
                      num_failures++;
                      tbox::perr
-                     <<
-                     "FAILED: - Test #3c.5.a: hier::Patch Data name incorrect\n"
+                     << "FAILED: - Test #3c.5.a: hier::Patch Data name incorrect\n"
                      << "Expected: pdat::CellData<int >\n"
                      << "Actual: " << patch_data_name << std::endl;
                   }
@@ -639,8 +633,7 @@ int main(
       if (!subtract_inbox_test_passed) {
          num_failures++;
          tbox::perr
-         <<
-         "FAILED: - Test #6: math::PatchCellDataOpsReal::subtract() on [(3,1),(5,2)]\n"
+         << "FAILED: - Test #6: math::PatchCellDataOpsReal::subtract() on [(3,1),(5,2)]\n"
          << "Expected: cddata0 = 1.0 in [(3,1),(5,2)]\n"
          << "          cddata0 = 3.0 outside box\n" << std::endl;
          cdops_double.printData(cddata0, tpatch->getBox(), tbox::plog);
@@ -699,8 +692,7 @@ int main(
       if (!divide_inbox_test_passed) {
          num_failures++;
          tbox::perr
-         <<
-         "FAILED: - Test #9: math::PatchCellDataOpsReal::divide() on [(3,1),(5,2)]\n"
+         << "FAILED: - Test #9: math::PatchCellDataOpsReal::divide() on [(3,1),(5,2)]\n"
          << "Expected: cddata0 = 1.0 in [(3,1),(5,2)]\n"
          << "          cddata0 = 3.0 outside box\n" << std::endl;
          cdops_double.printData(cddata0, tpatch->getBox(), tbox::plog);
@@ -848,8 +840,7 @@ int main(
       if (!setToScalar_onBox_test_passed) {
          num_failures++;
          tbox::perr
-         <<
-         "FAILED: - Test #13: math::PatchCellDataOpsReal::setToScalar() on box\n"
+         << "FAILED: - Test #13: math::PatchCellDataOpsReal::setToScalar() on box\n"
          << "Expected: cddata1 = 0.0003 in [(3,1),(3,2)]\n"
          << "          cddata1 = 12345.0 in [(1,2),(1,2)]\n"
          << "          cddata1 = 21.0 in [(5,3),(5,4)]\n"
@@ -865,8 +856,7 @@ int main(
       if (!tbox::MathUtilities<double>::equalEps(lmax, 21.0)) {
          num_failures++;
          tbox::perr
-         <<
-         "FAILED: - Test #14: math::PatchCellDataOpsReal::max() on box [(3,1),(7,4)]\n"
+         << "FAILED: - Test #14: math::PatchCellDataOpsReal::max() on box [(3,1),(7,4)]\n"
          << "Expected value = 21.0, Computed value = "
          << lmax << std::endl;
       }
@@ -877,8 +867,7 @@ int main(
       if (!tbox::MathUtilities<double>::equalEps(lmax, 12345.0)) {
          num_failures++;
          tbox::perr
-         <<
-         "FAILED: - Test #15: math::PatchCellDataOpsReal::max() in box [(0,0),(9,4)]\n"
+         << "FAILED: - Test #15: math::PatchCellDataOpsReal::max() in box [(0,0),(9,4)]\n"
          << "Expected value = 12345.0, Computed value = "
          << lmax << std::endl;
       }
@@ -924,8 +913,7 @@ int main(
       if (!tbox::MathUtilities<double>::equalEps(lsum, 0.5)) {
          num_failures++;
          tbox::perr
-         <<
-         "FAILED: - Test #18a: math::PatchCellDataOpsReal::sumControlVolumes() for cddata1\n"
+         << "FAILED: - Test #18a: math::PatchCellDataOpsReal::sumControlVolumes() for cddata1\n"
          << "Expected value = 0.5, Computed value = "
          << lsum << std::endl;
       }
@@ -936,8 +924,7 @@ int main(
       if (!tbox::MathUtilities<double>::equalEps(lsum, 0.5)) {
          num_failures++;
          tbox::perr
-         <<
-         "FAILED: - Test #18b: math::PatchCellDataOpsReal::sumControlVolumes() for cddata2\n"
+         << "FAILED: - Test #18b: math::PatchCellDataOpsReal::sumControlVolumes() for cddata2\n"
          << "Expected value = 0.5, Computed value = "
          << lsum << std::endl;
       }
@@ -948,8 +935,7 @@ int main(
       if (!tbox::MathUtilities<double>::equalEps(l1norm, 0.5)) {
          num_failures++;
          tbox::perr
-         <<
-         "FAILED: - Test #19a: math::PatchCellDataOpsReal::L1norm() for cddata1\n"
+         << "FAILED: - Test #19a: math::PatchCellDataOpsReal::L1norm() for cddata1\n"
          << "Expected value = 0.5, Computed value = "
          << l1norm << std::endl;
       }
@@ -960,8 +946,7 @@ int main(
       if (!tbox::MathUtilities<double>::equalEps(l1norm, 1.0)) {
          num_failures++;
          tbox::perr
-         <<
-         "FAILED: - Test #19b: math::PatchCellDataOpsReal::L1norm() for cddata2\n"
+         << "FAILED: - Test #19b: math::PatchCellDataOpsReal::L1norm() for cddata2\n"
          << "Expected value = 1.0, Computed value = "
          << l1norm << std::endl;
       }
@@ -972,10 +957,8 @@ int main(
       if (!tbox::MathUtilities<double>::equalEps(l2norm, 1.4142135623731)) {
          num_failures++;
          tbox::perr
-         <<
-         "FAILED: - Test #20: math::PatchCellDataOpsReal::L2norm() for cddata2\n"
-         <<
-         "Expected value = sqrt(2) = 1.4142135623731, Computed value = "
+         << "FAILED: - Test #20: math::PatchCellDataOpsReal::L2norm() for cddata2\n"
+         << "Expected value = sqrt(2) = 1.4142135623731, Computed value = "
          << std::setprecision(12) << l2norm << std::endl;
       }
 
@@ -991,10 +974,8 @@ int main(
       if (!tbox::MathUtilities<double>::equalEps(wl2norm, 0.70710678118655)) {
          num_failures++;
          tbox::perr
-         <<
-         "FAILED: - Test #21: math::PatchCellDataOpsReal::weightedL2norm() for cddata2\n"
-         <<
-         "Expected value = sqrt(0.5) = 0.70710678118655, Computed value = "
+         << "FAILED: - Test #21: math::PatchCellDataOpsReal::weightedL2norm() for cddata2\n"
+         << "Expected value = sqrt(0.5) = 0.70710678118655, Computed value = "
          << wl2norm << std::endl;
       }
 
@@ -1004,8 +985,7 @@ int main(
       if (!tbox::MathUtilities<double>::equalEps(rmsnorm, 2.0)) {
          num_failures++;
          tbox::perr
-         <<
-         "FAILED: - Test #22: math::PatchCellDataOpsReal::RMSNorm() for cddata2\n"
+         << "FAILED: - Test #22: math::PatchCellDataOpsReal::RMSNorm() for cddata2\n"
          << "Expected value = L2-Norm/sqrt(control volume) = 2.0, "
          << "Computed value = " << rmsnorm << std::endl;
       }
@@ -1019,10 +999,8 @@ int main(
       if (!tbox::MathUtilities<double>::equalEps(wrmsnorm, 1.0)) {
          num_failures++;
          tbox::perr
-         <<
-         "FAILED: - Test #23: math::PatchCellDataOpsReal::weightedRMSNorm() for cddata2\n"
-         <<
-         "Expected value = Weighted L2-Norm/sqrt(control volume) = 1.0, "
+         << "FAILED: - Test #23: math::PatchCellDataOpsReal::weightedRMSNorm() for cddata2\n"
+         << "Expected value = Weighted L2-Norm/sqrt(control volume) = 1.0, "
          << "Computed value = " << wrmsnorm << std::endl;
       }
 
@@ -1032,8 +1010,7 @@ int main(
       if (!tbox::MathUtilities<double>::equalEps(maxnorm, 2.0)) {
          num_failures++;
          tbox::perr
-         <<
-         "FAILED: - Test #24: math::PatchCellDataOpsReal::maxNorm() for cddata2\n"
+         << "FAILED: - Test #24: math::PatchCellDataOpsReal::maxNorm() for cddata2\n"
          << "Expected value = 2.0, Computed value = "
          << maxnorm << std::endl;
       }
@@ -1048,8 +1025,7 @@ int main(
       if (!tbox::MathUtilities<double>::equalEps(dotp, 7.5)) {
          num_failures++;
          tbox::perr
-         <<
-         "FAILED: - Test #25: math::PatchCellDataOpsReal::dotp() - (cddata1) * (cddata2)\n"
+         << "FAILED: - Test #25: math::PatchCellDataOpsReal::dotp() - (cddata1) * (cddata2)\n"
          << "Expected value = 7.5, Computed value = "
          << dotp << std::endl;
       }
@@ -1091,8 +1067,7 @@ int main(
                       typeid(pdat::CellData<double>)) {
                      num_failures++;
                      tbox::perr
-                     <<
-                     "FAILED: - Test #26c.0.a: hier::Patch Data name incorrect\n"
+                     << "FAILED: - Test #26c.0.a: hier::Patch Data name incorrect\n"
                      << "Expected: pdat::CellData<double >\n"
                      << "Actual: " << patch_data_name << std::endl;
                   }
@@ -1110,8 +1085,7 @@ int main(
                       typeid(pdat::CellData<double>)) {
                      num_failures++;
                      tbox::perr
-                     <<
-                     "FAILED: - Test #26c.1.a: hier::Patch Data name incorrect\n"
+                     << "FAILED: - Test #26c.1.a: hier::Patch Data name incorrect\n"
                      << "Expected: pdat::CellData<double >\n"
                      << "Actual: " << patch_data_name << std::endl;
                   }
@@ -1129,8 +1103,7 @@ int main(
                       typeid(pdat::CellData<double>)) {
                      num_failures++;
                      tbox::perr
-                     <<
-                     "FAILED: - Test #26c.2.a: hier::Patch Data name incorrect\n"
+                     << "FAILED: - Test #26c.2.a: hier::Patch Data name incorrect\n"
                      << "Expected: pdat::CellData<double >\n"
                      << "Actual: " << patch_data_name << std::endl;
                   }
@@ -1148,8 +1121,7 @@ int main(
                       typeid(pdat::CellData<double>)) {
                      num_failures++;
                      tbox::perr
-                     <<
-                     "FAILED: - Test #26c.3.a: hier::Patch Data name incorrect\n"
+                     << "FAILED: - Test #26c.3.a: hier::Patch Data name incorrect\n"
                      << "Expected: pdat::CellData<double >\n"
                      << "Actual: " << patch_data_name << std::endl;
                   }
@@ -1167,8 +1139,7 @@ int main(
                       typeid(pdat::CellData<int>)) {
                      num_failures++;
                      tbox::perr
-                     <<
-                     "FAILED: - Test #26c.4.a: hier::Patch Data name incorrect\n"
+                     << "FAILED: - Test #26c.4.a: hier::Patch Data name incorrect\n"
                      << "Expected: pdat::CellData<int >\n"
                      << "Actual: " << patch_data_name << std::endl;
                   }
@@ -1186,8 +1157,7 @@ int main(
                       typeid(pdat::CellData<int>)) {
                      num_failures++;
                      tbox::perr
-                     <<
-                     "FAILED: - Test #26c.5.a: hier::Patch Data name incorrect\n"
+                     << "FAILED: - Test #26c.5.a: hier::Patch Data name incorrect\n"
                      << "Expected: pdat::CellData<int >\n"
                      << "Actual: " << patch_data_name << std::endl;
                   }

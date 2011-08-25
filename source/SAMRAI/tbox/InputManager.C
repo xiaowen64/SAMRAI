@@ -171,8 +171,7 @@ void InputManager::parseInputFile(
    if (warnings > 0) {
       TBOX_WARNING(
          "InputManager: Warnings  = " << warnings
-                                      <<
-         "\n when parsing input file = " << filename << std::endl);
+                                      << "\n when parsing input file = " << filename << std::endl);
    }
 
    /*

@@ -569,8 +569,7 @@ int AutoTester::checkHierarchyBoxes(
                  << std::endl << std::endl;
    } else {
       tbox::perr << "Test 4: FAILED: Level " << level_number
-                 <<
-      " hier::MappedBoxLevel configuration doesn't match at step " << iter
+                 << " hier::MappedBoxLevel configuration doesn't match at step " << iter
                  << std::endl << std::endl;
       num_failures++;
    }

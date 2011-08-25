@@ -151,8 +151,7 @@ void TreeLoadBalancer::setWorkloadPatchDataIndex(
          d_object_name << " error: "
                        << "\n   data_id " << data_id << " passed to "
                        << "setWorkloadPatchDataIndex()"
-                       <<
-         " does not refer to cell-centered double patch data. " << std::endl);
+                       << " does not refer to cell-centered double patch data. " << std::endl);
    }
 
    if (level_number >= 0) {
@@ -3683,9 +3682,9 @@ double TreeLoadBalancer::computeSurfacePenalty(
 
 #elif TreeLoadBalancer_SurfacePenaltyType == 2
    if (d_dim == tbox::Dimension(1)) {
-         return 0.0;
-      }
-      double surface_area = computeBoxSurfaceArea(a);
+      return 0.0;
+   }
+   double surface_area = computeBoxSurfaceArea(a);
    int total_volume = a.size();
    double best_surface = 2 * d_dim * pow(total_volume,
                                          (double)(d_dim.getValue() - 1) / d_dim);

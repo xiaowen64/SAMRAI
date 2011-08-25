@@ -452,8 +452,7 @@ MappedBoxLevel::getMappedBoxStrict(
          TBOX_ERROR(
             "BoxSet::getMappedBoxStrict: requested mapped_box "
             << mapped_box
-            <<
-            " does not exist in the mapped_box_level.");
+            << " does not exist in the mapped_box_level.");
       }
    } else {
 #ifdef DEBUG_CHECK_ASSERTIONS
@@ -468,8 +467,7 @@ MappedBoxLevel::getMappedBoxStrict(
          TBOX_ERROR(
             "BoxSet::getMappedBoxStrict: requested mapped_box "
             << mapped_box
-            <<
-            " does not exist in the mapped_box_level.");
+            << " does not exist in the mapped_box_level.");
       }
    }
    return ni;
@@ -502,8 +500,7 @@ MappedBoxLevel::getMappedBoxStrict(
          TBOX_ERROR(
             "BoxSet::getMappedBoxStrict: requested mapped_box "
             << mapped_box
-            <<
-            " does not exist in the mapped_box_level.");
+            << " does not exist in the mapped_box_level.");
       }
    } else {
       ni = d_global_mapped_boxes.find(mapped_box);
@@ -511,8 +508,7 @@ MappedBoxLevel::getMappedBoxStrict(
          TBOX_ERROR(
             "BoxSet::getMappedBoxStrict: requested mapped_box "
             << mapped_box
-            <<
-            " does not exist in the mapped_box_level.");
+            << " does not exist in the mapped_box_level.");
       }
    }
    return ni;

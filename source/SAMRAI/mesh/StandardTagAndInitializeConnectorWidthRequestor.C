@@ -169,18 +169,12 @@ int StandardTagAndInitializeConnectorWidthRequestor::computeCoarsenRatio(
             gcd = ratios_to_coarser[ln](d);
             TBOX_ERROR(
                "StandardTagAndInitialize::ConnectorWidthRequestor::computeCoarsenRatio:\n"
-               <<
-               "Unable to perform Richardson extrapolation because\n"
-               <<
-               "the error coarsen ratio computed from the\n"
-               <<
-               "ratios_to_coarser entries is not constant across all\n"
-               <<
-               "levels, in all dimensions, of the hierarchy. In\n"
-               <<
-               "order to use Richardson extrapolation, the minimum\n"
-               <<
-               "divisor (> 1) of all the ratios_to_coarser entries must\n"
+               << "Unable to perform Richardson extrapolation because\n"
+               << "the error coarsen ratio computed from the\n"
+               << "ratios_to_coarser entries is not constant across all\n"
+               << "levels, in all dimensions, of the hierarchy. In\n"
+               << "order to use Richardson extrapolation, the minimum\n"
+               << "divisor (> 1) of all the ratios_to_coarser entries must\n"
                << "be 2 -or- 3:\n"
                << "   level 1(0): minimum divisor: "
                << error_coarsen_ratio

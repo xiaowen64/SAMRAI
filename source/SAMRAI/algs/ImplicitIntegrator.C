@@ -298,8 +298,7 @@ void ImplicitIntegrator::getFromInput(
                if (d_max_integrator_steps < d_integrator_step) {
                   TBOX_ERROR(
                      d_object_name << " -- Error in input data "
-                                   <<
-                     "max_integrator_steps < current integrator step.");
+                                   << "max_integrator_steps < current integrator step.");
                }
             }
 

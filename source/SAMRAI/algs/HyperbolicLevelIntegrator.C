@@ -1223,10 +1223,8 @@ double HyperbolicLevelIntegrator::advanceLevel(
             if (d_bdry_sched_advance_new[level_number].isNull()) {
                TBOX_ERROR(
                   d_object_name << ":  "
-                                <<
-                  "Attempt to fill new ghost data for timestep"
-                                <<
-                  "computation, but schedule not defined." << std::endl);
+                                << "Attempt to fill new ghost data for timestep"
+                                << "computation, but schedule not defined." << std::endl);
             }
 
             d_patch_strategy->setDataContext(d_scratch);
@@ -1975,8 +1973,7 @@ void HyperbolicLevelIntegrator::registerVariable(
             if (d_flux_side_registered) {
                TBOX_ERROR(
                   d_object_name << ":  "
-                                <<
-                  "Attempt to register FaceVariable when "
+                                << "Attempt to register FaceVariable when "
                                 << "SideVariable already registered."
                                 << std::endl);
             }
@@ -1987,8 +1984,7 @@ void HyperbolicLevelIntegrator::registerVariable(
             if (d_flux_face_registered) {
                TBOX_ERROR(
                   d_object_name << ":  "
-                                <<
-                  "Attempt to register SideVariable when "
+                                << "Attempt to register SideVariable when "
                                 << "FaceVariable already registered."
                                 << std::endl);
             }
@@ -1998,8 +1994,7 @@ void HyperbolicLevelIntegrator::registerVariable(
          } else {
             TBOX_ERROR(
                d_object_name << ":  "
-                             <<
-               "Flux is neither face- or side-centered." << std::endl);
+                             << "Flux is neither face- or side-centered." << std::endl);
          }
 
          d_flux_variables.appendItem(var);
@@ -2578,8 +2573,7 @@ void HyperbolicLevelIntegrator::printClassData(
    os << "d_patch_strategy = "
       << (HyperbolicPatchStrategy *)d_patch_strategy << std::endl;
    os
-   <<
-   "NOTE: Not printing variable arrays, ComponentSelectors, communication schedules, etc."
+   << "NOTE: Not printing variable arrays, ComponentSelectors, communication schedules, etc."
    << std::endl;
 }
 
@@ -2670,8 +2664,7 @@ void HyperbolicLevelIntegrator::getFromInput(
       } else {
          TBOX_WARNING(
             d_object_name << ":  "
-                          <<
-            "Key data `use_ghosts_to_compute_dt' not found in input."
+                          << "Key data `use_ghosts_to_compute_dt' not found in input."
                           << "  Using default value "
                           << d_use_ghosts_for_dt << std::endl);
       }

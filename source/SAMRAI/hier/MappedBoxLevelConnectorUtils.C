@@ -1451,15 +1451,11 @@ void MappedBoxLevelConnectorUtils::computeInternalOrExternalPartsForMultiblock(
          TBOX_ERROR(
             "MappedBoxLevelConnectorUtils::computeInternalOrExternalPartsForMultiblock:"
             << caller << ": error:\n"
-            <<
-            "nesting_width "
-            <<
-            nesting_width << " exceeds\n"
-            <<
-            "ghost cell width " << input_to_reference.getConnectorWidth()
+            << "nesting_width "
+            << nesting_width << " exceeds\n"
+            << "ghost cell width " << input_to_reference.getConnectorWidth()
             << ",\n"
-            <<
-            "which can lead to erroneous results.");
+            << "which can lead to erroneous results.");
       }
    }
 #endif
@@ -2143,8 +2139,7 @@ void MappedBoxLevelConnectorUtils::addPeriodicImagesAndRelationships(
          anchor_to_mapped_box_level.getConnectorWidth())) {
       TBOX_ERROR("MappedBoxLevelConnectorUtils::addPeriodicImages: anchor_to_anchor width\n"
          << anchor_to_anchor.getConnectorWidth() << " is insufficient for\n"
-         <<
-         "generating periodic edges for anchor_to_mapped_box_level's width of "
+         << "generating periodic edges for anchor_to_mapped_box_level's width of "
          << anchor_to_mapped_box_level.getConnectorWidth() << ".\n");
    }
 
@@ -2258,29 +2253,25 @@ void MappedBoxLevelConnectorUtils::addPeriodicImagesAndRelationships(
       if (err1) {
          tbox::perr << "OverlapConnectorAlgorithm found " << err1
                     << " edge-base consistency errors in\n"
-                    <<
-         "anchor_to_mapped_box_level after computing periodic images.\n";
+                    << "anchor_to_mapped_box_level after computing periodic images.\n";
       }
       size_t err2 = new_mapped_box_level_to_anchor.checkConsistencyWithBase();
       if (err2) {
          tbox::perr << "OverlapConnectorAlgorithm found " << err2
                     << " edge-base consistency errors in\n"
-                    <<
-         "mapped_box_level_to_anchor after computing periodic images.\n";
+                    << "mapped_box_level_to_anchor after computing periodic images.\n";
       }
       size_t err3 = new_anchor_to_mapped_box_level.checkConsistencyWithHead();
       if (err3) {
          tbox::perr << "OverlapConnectorAlgorithm found " << err3
                     << " edge-mapped_box consistency errors in\n"
-                    <<
-         "anchor_to_mapped_box_level after computing periodic images.\n";
+                    << "anchor_to_mapped_box_level after computing periodic images.\n";
       }
       size_t err4 = new_mapped_box_level_to_anchor.checkConsistencyWithHead();
       if (err4) {
          tbox::perr << "OverlapConnectorAlgorithm found " << err4
                     << " edge-mapped_box consistency errors in\n"
-                    <<
-         "mapped_box_level_to_anchor after computing periodic images.\n";
+                    << "mapped_box_level_to_anchor after computing periodic images.\n";
       }
       if (err1 + err2 + err3 + err4) {
          TBOX_ERROR(

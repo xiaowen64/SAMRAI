@@ -262,8 +262,7 @@ int main(
       double norm = cell_ops->sumControlVolumes(cvindx[0], cwgt_id);
       if (!tbox::MathUtilities<double>::equalEps(norm, 0.5)) {
          tbox::perr
-         <<
-         "FAILED: - Test #1b: HierarchyCellDataOpsReal2::sumControlVolumes()\n"
+         << "FAILED: - Test #1b: HierarchyCellDataOpsReal2::sumControlVolumes()\n"
          << "Expected value = 0.5 , Computed value = "
          << norm << endl;
       }
@@ -584,8 +583,7 @@ int main(
       double cdot = cell_ops->dot(cvindx[2], cvindx[1], cwgt_id);
       if (!tbox::MathUtilities<double>::equalEps(cdot, 8.75)) {
          tbox::perr
-         <<
-         "FAILED: - Test #22a: HierarchyCellDataOpsReal2::dot() - (ind2) * (ind1)\n"
+         << "FAILED: - Test #22a: HierarchyCellDataOpsReal2::dot() - (ind2) * (ind1)\n"
          << "Expected Value = 8.75, Computed Value = "
          << cdot << endl;
       }
@@ -595,8 +593,7 @@ int main(
       cdot = cell_ops->dot(cvindx[1], cvindx[2], cwgt_id);
       if (!tbox::MathUtilities<double>::equalEps(cdot, 8.75)) {
          tbox::perr
-         <<
-         "FAILED: - Test #22b: HierarchyCellDataOpsReal2::dot() - (ind1) * (ind2)\n"
+         << "FAILED: - Test #22b: HierarchyCellDataOpsReal2::dot() - (ind1) * (ind2)\n"
          << "Expected Value = 8.75, Computed Value = "
          << cdot << endl;
       }

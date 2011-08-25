@@ -492,12 +492,9 @@ void CellPoissonHypreSolver::allocateHypreData()
                if (tmpi > domain_bound.numberCells(d)) {
                   TBOX_ERROR(
                      d_object_name << ": Hypre currently requires\n"
-                                   <<
-                     "that grid size in periodic directions be\n"
-                                   <<
-                     "powers of two.  (This requirement may go\n"
-                                   <<
-                     "away in future versions of hypre.)\n"
+                                   << "that grid size in periodic directions be\n"
+                                   << "powers of two.  (This requirement may go\n"
+                                   << "away in future versions of hypre.)\n"
                                    << "Size problem in direction "
                                    << d << "\n"
                                    << "Domain bound is "
@@ -726,10 +723,8 @@ void CellPoissonHypreSolver::setMatrixCoefficients(
    if (d_physical_bc_coef_strategy == NULL) {
       TBOX_ERROR(
          d_object_name << ": No BC coefficient strategy object!\n"
-                       <<
-         "Use either setBoundaries or setPhysicalBcCoefObject\n"
-                       <<
-         "to specify the boundary conidition.  Do it before\n"
+                       << "Use either setBoundaries or setPhysicalBcCoefObject\n"
+                       << "to specify the boundary conidition.  Do it before\n"
                        << "calling setMatrixCoefficients.");
    }
 
@@ -793,8 +788,7 @@ void CellPoissonHypreSolver::setMatrixCoefficients(
          if (D_data.isNull()) {
             TBOX_ERROR(d_object_name << ": Invalid cell variable index "
                                      << spec.getDPatchDataId()
-                                     <<
-               " for diffusion coefficient.  It is not\n"
+                                     << " for diffusion coefficient.  It is not\n"
                                      << "side-centered double data.");
          }
       }
@@ -887,8 +881,7 @@ void CellPoissonHypreSolver::setMatrixCoefficients(
             if (boundary_box.getBoundaryType() != 1) {
                TBOX_ERROR(
                   d_object_name << ": Illegal boundary type in "
-                                <<
-                  "CellPoissonHypreSolver::setMatrixCoefficients\n");
+                                << "CellPoissonHypreSolver::setMatrixCoefficients\n");
             }
             const hier::BoundaryBoxUtils bbu(boundary_box);
             const int location_index = boundary_box.getLocationIndex();
@@ -949,8 +942,7 @@ void CellPoissonHypreSolver::setMatrixCoefficients(
             if (boundary_box.getBoundaryType() != 1) {
                TBOX_ERROR(
                   d_object_name << ": Illegal boundary type in "
-                                <<
-                  "CellPoissonHypreSolver::setMatrixCoefficients\n");
+                                << "CellPoissonHypreSolver::setMatrixCoefficients\n");
             }
             const int location_index = boundary_box.getLocationIndex();
             const hier::BoundaryBoxUtils bbu(boundary_box);
@@ -1241,10 +1233,8 @@ int CellPoissonHypreSolver::solveSystem(
    if (d_physical_bc_coef_strategy == NULL) {
       TBOX_ERROR(
          d_object_name << ": No BC coefficient strategy object!\n"
-                       <<
-         "Use either setBoundaries or setPhysicalBcCoefObject\n"
-                       <<
-         "to specify the boundary conidition.  Do it before\n"
+                       << "Use either setBoundaries or setPhysicalBcCoefObject\n"
+                       << "to specify the boundary conidition.  Do it before\n"
                        << "calling solveSystem.");
    }
    // Tracer t("CellPoissonHypreSolver::solveSystem");

@@ -130,8 +130,7 @@ void FACPreconditioner::setAlgorithmChoice(
        ) {
       TBOX_ERROR(
          d_object_name << ": algorithm should be set to one of\n"
-                       <<
-         "'default' (recommended), 'mccormick-s4.3' or 'pernice'\n");
+                       << "'default' (recommended), 'mccormick-s4.3' or 'pernice'\n");
    }
 #endif
    d_algorithm_choice = lower;

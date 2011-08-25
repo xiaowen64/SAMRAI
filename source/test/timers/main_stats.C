@@ -183,8 +183,7 @@ int main(
       if (tval != 3) {
          fail_count++;
          tbox::perr
-         <<
-         "FAILED: - Test #1a: tbox::Statistician::getNumberProcessorStats()\n"
+         << "FAILED: - Test #1a: tbox::Statistician::getNumberProcessorStats()\n"
          << "incorrect number of processor statistics found" << endl;
       } else {
          tbox::plog << "Test #1a successful" << endl;
@@ -211,8 +210,7 @@ int main(
          if (tstat->getName() != "procstat2") {
             fail_count++;
             tbox::perr
-            <<
-            "FAILED: - Test #2b: tbox::Statistician::checkStatisticExists()\n"
+            << "FAILED: - Test #2b: tbox::Statistician::checkStatisticExists()\n"
             << "name of procstat2 does not match statistician entry"
             << endl;
          } else {
@@ -231,10 +229,8 @@ int main(
          if (tstat->getName() != "patchstat1") {
             fail_count++;
             tbox::perr
-            <<
-            "FAILED: - Test #2d: tbox::Statistician::checkStatisticExists()\n"
-            <<
-            "name of patchstat1 does not match statistician entry" << endl;
+            << "FAILED: - Test #2d: tbox::Statistician::checkStatisticExists()\n"
+            << "name of patchstat1 does not match statistician entry" << endl;
          } else {
             tbox::plog << "Test #2c successful" << endl;
          }
@@ -850,8 +846,7 @@ int main(
                 patchstat2->getInstanceId(), 0) != nnodes - 1) {
             fail_count++;
             tbox::perr << "FAILED: - Test #10e: "
-                       <<
-            "Statistician::getGlobalPatchStatProcessorSumMaxId()\n"
+                       << "Statistician::getGlobalPatchStatProcessorSumMaxId()\n"
                        << "incorrect value returned." << endl;
          } else {
             tbox::plog << "Test #10e successful" << endl;
@@ -860,8 +855,7 @@ int main(
                 patchstat2->getInstanceId(), 1) != nnodes - 1) {
             fail_count++;
             tbox::perr << "FAILED: - Test #10f: "
-                       <<
-            "Statistician::getGlobalPatchStatProcessorSumMaxId()\n"
+                       << "Statistician::getGlobalPatchStatProcessorSumMaxId()\n"
                        << "incorrect value returned." << endl;
          } else {
             tbox::plog << "Test #10f successful" << endl;
@@ -894,8 +888,7 @@ int main(
                 patchstat2->getInstanceId(), 0) != 0) {
             fail_count++;
             tbox::perr << "FAILED: - Test #10i: "
-                       <<
-            "Statistician::getGlobalPatchStatProcessorSumMinId()\n"
+                       << "Statistician::getGlobalPatchStatProcessorSumMinId()\n"
                        << "incorrect value returned." << endl;
          } else {
             tbox::plog << "Test #10i successful" << endl;
@@ -904,8 +897,7 @@ int main(
                 patchstat2->getInstanceId(), 1) != 0) {
             fail_count++;
             tbox::perr << "FAILED: - Test #10j: "
-                       <<
-            "Statistician::getGlobalPatchStatProcessorSumMinId()\n"
+                       << "Statistician::getGlobalPatchStatProcessorSumMinId()\n"
                        << "incorrect value returned." << endl;
          } else {
             tbox::plog << "Test #10j successful" << endl;

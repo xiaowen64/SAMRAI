@@ -92,8 +92,7 @@ void GhostCellRobinBcCoefs::setGhostDataId(
       if (!cell_variable_ptr) {
          TBOX_ERROR(
             d_object_name << ": hier::Index " << ghost_data_id
-                          <<
-            " does not correspond to a cell-double variable.");
+                          << " does not correspond to a cell-double variable.");
       }
    }
 }

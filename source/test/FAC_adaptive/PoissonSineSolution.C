@@ -69,8 +69,7 @@ void PoissonSineSolution::setFromDatabase(
       if (neumann_locations.getSize() > 2 * d_dim.getValue()) {
          TBOX_ERROR(
             "'neumann_locations' should have at most " << 2 * d_dim.getValue()
-                                                       <<
-            " entries in " << d_dim << "D.\n");
+                                                       << " entries in " << d_dim << "D.\n");
       }
       int i;
       for (i = 0; i < neumann_locations.getSize(); ++i) {

@@ -362,8 +362,7 @@ int main(
       if (!tbox::MathUtilities<double>::equalEps(norm, 1.0)) {
          num_failures++;
          tbox::perr
-         <<
-         "FAILED: - Test #1b: math::HierarchySideDataOpsReal::sumControlVolumes()\n"
+         << "FAILED: - Test #1b: math::HierarchySideDataOpsReal::sumControlVolumes()\n"
          << "Expected value = 1.0 , Computed value = "
          << norm << std::endl;
       }
@@ -374,8 +373,7 @@ int main(
       if (num_data_points != 209) {
          num_failures++;
          tbox::perr
-         <<
-         "FAILED: - Test #2: math::HierarchySideDataOpsReal::numberOfEntries()\n"
+         << "FAILED: - Test #2: math::HierarchySideDataOpsReal::numberOfEntries()\n"
          << "Expected value = 209 , Computed value = "
          << num_data_points << std::endl;
       }
@@ -387,8 +385,7 @@ int main(
       if (!doubleDataSameAsValue(svindx[0], val0, hierarchy)) {
          num_failures++;
          tbox::perr
-         <<
-         "FAILED: - Test #3a: math::HierarchySideDataOpsReal::setToScalar()\n"
+         << "FAILED: - Test #3a: math::HierarchySideDataOpsReal::setToScalar()\n"
          << "Expected: v0 = " << val0 << std::endl;
          side_ops->printData(svindx[0], tbox::plog);
       }
@@ -400,8 +397,7 @@ int main(
       if (!doubleDataSameAsValue(svindx[1], val1, hierarchy)) {
          num_failures++;
          tbox::perr
-         <<
-         "FAILED: - Test #3b: math::HierarchySideDataOpsReal::setToScalar()\n"
+         << "FAILED: - Test #3b: math::HierarchySideDataOpsReal::setToScalar()\n"
          << "Expected: v1 = " << val1 << std::endl;
          side_ops->printData(svindx[1], tbox::plog);
       }
@@ -733,8 +729,7 @@ int main(
       if (!tbox::MathUtilities<double>::equalEps(cdot, 17.5)) {
          num_failures++;
          tbox::perr
-         <<
-         "FAILED: - Test #22a: math::HierarchySideDataOpsReal::dot() - (ind2) * (ind1)\n"
+         << "FAILED: - Test #22a: math::HierarchySideDataOpsReal::dot() - (ind2) * (ind1)\n"
          << "Expected Value = 17.5, Computed Value = "
          << cdot << std::endl;
       }
@@ -745,8 +740,7 @@ int main(
       if (!tbox::MathUtilities<double>::equalEps(cdot, 17.5)) {
          num_failures++;
          tbox::perr
-         <<
-         "FAILED: - Test #22b: math::HierarchySideDataOpsReal::dot() - (ind2) * (ind1)\n"
+         << "FAILED: - Test #22b: math::HierarchySideDataOpsReal::dot() - (ind2) * (ind1)\n"
          << "Expected Value = 17.5, Computed Value = "
          << cdot << std::endl;
       }

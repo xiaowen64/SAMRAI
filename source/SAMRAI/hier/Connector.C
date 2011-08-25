@@ -1359,8 +1359,7 @@ void Connector::printNeighborStats(
 
    // Write statistics that cannot be expressed as average over P processors or N Boxes.
    os << border
-      <<
-   "                               local        min               max             avg\n";
+      << "                               local        min               max             avg\n";
    double local_relationship_fraction = loc_num[k_sum_relationships] ==
       0 ? 0.0 : (double)loc_num[k_sum_local_relationships] / loc_num[k_sum_relationships];
    double min_local_relationship_fraction = local_relationship_fraction;
@@ -1767,8 +1766,7 @@ size_t Connector::checkConsistencyWithBase() const
       if (!getBase().hasMappedBox(mapped_box_id)) {
          ++num_errors;
          tbox::plog << "ERROR->"
-         <<
-         "Connector::assertConsistencyWithBase: Neighbor data given "
+         << "Connector::assertConsistencyWithBase: Neighbor data given "
          << "\nfor mapped_box " << mapped_box_id
          << " but the mapped_box does not exist.\n";
       }

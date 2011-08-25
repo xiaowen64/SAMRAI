@@ -254,8 +254,7 @@ void CellPoissonFACSolver::initializeSolverState(
    if (d_bc_object == NULL) {
       TBOX_ERROR(
          d_object_name << ": No BC coefficient strategy object!\n"
-                       <<
-         "Use either setBoundaries or setPhysicalBcCoefObject\n"
+                       << "Use either setBoundaries or setPhysicalBcCoefObject\n"
                        << "to specify the boundary conidition.\n");
    }
 
@@ -368,8 +367,7 @@ void CellPoissonFACSolver::setBoundaries(
    if (d_bc_object != NULL && d_bc_object != &d_simple_bc) {
       TBOX_ERROR(
          d_object_name << ": Bad attempt to set boundary condition\n"
-                       <<
-         "by using default bc object after it has been overriden.\n");
+                       << "by using default bc object after it has been overriden.\n");
    }
 #endif
    d_simple_bc.setBoundaries(boundary_type,
@@ -414,12 +412,9 @@ bool CellPoissonFACSolver::solveSystem(
    if (!d_solver_is_initialized) {
       TBOX_ERROR(
          d_object_name << ".solveSystem(int,int): uninitialized\n"
-                       <<
-         "solver state.  You must call initializeSolverState()\n"
-                       <<
-         "before using this function.  Or you can use\n"
-                       <<
-         "solveSystem(int,int,...) to initialize the solver,\n"
+                       << "solver state.  You must call initializeSolverState()\n"
+                       << "before using this function.  Or you can use\n"
+                       << "solveSystem(int,int,...) to initialize the solver,\n"
                        << "solve and deallocate the solver.\n");
    }
    if (u < 0 || f < 0) {
@@ -485,12 +480,9 @@ bool CellPoissonFACSolver::solveSystem(
    if (d_solver_is_initialized) {
       TBOX_ERROR(
          d_object_name << ".solveSystem(int,int,...): initialized\n"
-                       <<
-         "solver state.  This function can only used when the\n"
-                       <<
-         "solver state is uninitialized.  You should deallocate\n"
-                       <<
-         "the solver state or use solveSystem(int,int).\n");
+                       << "solver state.  This function can only used when the\n"
+                       << "solver state is uninitialized.  You should deallocate\n"
+                       << "the solver state or use solveSystem(int,int).\n");
    }
    if (!hierarchy) {
       TBOX_ERROR(d_object_name << ".solveSystem(): Null hierarchy\n"

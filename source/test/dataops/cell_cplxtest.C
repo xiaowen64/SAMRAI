@@ -323,8 +323,7 @@ int main(
       if (!tbox::MathUtilities<double>::equalEps(norm, 0.5)) {
          num_failures++;
          tbox::perr
-         <<
-         "FAILED: - Test #1b: math::HierarchyCellDataOpsComplex::sumControlVolumes()\n"
+         << "FAILED: - Test #1b: math::HierarchyCellDataOpsComplex::sumControlVolumes()\n"
          << "Expected value = 0.5 , Computed value = "
          << norm << std::endl;
       }
@@ -343,8 +342,7 @@ int main(
          if (num_data_points != compare) {
             num_failures++;
             tbox::perr
-            <<
-            "FAILED: - Test #2: math::HierarchyCellDataOpsReal::numberOfEntries()\n"
+            << "FAILED: - Test #2: math::HierarchyCellDataOpsReal::numberOfEntries()\n"
             << "Expected value = " << compare
             << ", Computed value = "
             << num_data_points << std::endl;
@@ -358,8 +356,7 @@ int main(
       if (!complexDataSameAsValue(cvindx[0], val0, hierarchy)) {
          num_failures++;
          tbox::perr
-         <<
-         "FAILED: - Test #3a: math::HierarchyCellDataOpsComplex::setToScalar()\n"
+         << "FAILED: - Test #3a: math::HierarchyCellDataOpsComplex::setToScalar()\n"
          << "Expected: v0 = " << val0 << std::endl;
          cell_ops->printData(cvindx[0], tbox::plog);
       }
@@ -371,8 +368,7 @@ int main(
       if (!complexDataSameAsValue(cvindx[1], val1, hierarchy)) {
          num_failures++;
          tbox::perr
-         <<
-         "FAILED: - Test #3b: math::HierarchyCellDataOpsComplex::setToScalar()\n"
+         << "FAILED: - Test #3b: math::HierarchyCellDataOpsComplex::setToScalar()\n"
          << "Expected: v1 = " << val1 << std::endl;
          cell_ops->printData(cvindx[1], tbox::plog);
       }
@@ -383,8 +379,7 @@ int main(
       if (!complexDataSameAsValue(cvindx[2], val1, hierarchy)) {
          num_failures++;
          tbox::perr
-         <<
-         "FAILED: - Test #4: math::HierarchyCellDataOpsComplex::copyData()\n"
+         << "FAILED: - Test #4: math::HierarchyCellDataOpsComplex::copyData()\n"
          << "Expected: v2 = v1 = " << val1 << std::endl;
          cell_ops->printData(cvindx[2], tbox::plog);
       }
@@ -395,16 +390,14 @@ int main(
       if (!complexDataSameAsValue(cvindx[0], val1, hierarchy)) {
          num_failures++;
          tbox::perr
-         <<
-         "FAILED: - Test #5a: math::HierarchyCellDataOpsComplex::swapData()\n"
+         << "FAILED: - Test #5a: math::HierarchyCellDataOpsComplex::swapData()\n"
          << "Expected: v0 = " << val1 << std::endl;
          cell_ops->printData(cvindx[0], tbox::plog);
       }
       if (!complexDataSameAsValue(cvindx[1], val0, hierarchy)) {
          num_failures++;
          tbox::perr
-         <<
-         "FAILED: - Test #5b: math::HierarchyCellDataOpsComplex::swapData()\n"
+         << "FAILED: - Test #5b: math::HierarchyCellDataOpsComplex::swapData()\n"
          << "Expected: v1 = " << val0 << std::endl;
          cell_ops->printData(cvindx[1], tbox::plog);
       }
@@ -443,8 +436,7 @@ int main(
       if (!complexDataSameAsValue(cvindx[1], val_sub, hierarchy)) {
          num_failures++;
          tbox::perr
-         <<
-         "FAILED: - Test #8: math::HierarchyCellDataOpsComplex::subtract()\n"
+         << "FAILED: - Test #8: math::HierarchyCellDataOpsComplex::subtract()\n"
          << "Expected: v1 = " << val_sub << std::endl;
          cell_ops->printData(cvindx[1], tbox::plog);
       }
@@ -456,8 +448,7 @@ int main(
       if (!complexDataSameAsValue(cvindx[1], val_addScalar, hierarchy)) {
          num_failures++;
          tbox::perr
-         <<
-         "FAILED: - Test #9a: math::HierarchyCellDataOpsComplex::addScalar()\n"
+         << "FAILED: - Test #9a: math::HierarchyCellDataOpsComplex::addScalar()\n"
          << "Expected: v1 = " << val_addScalar << std::endl;
          cell_ops->printData(cvindx[1], tbox::plog);
       }
@@ -469,8 +460,7 @@ int main(
       if (!complexDataSameAsValue(cvindx[2], val_addScalar, hierarchy)) {
          num_failures++;
          tbox::perr
-         <<
-         "FAILED: - Test #9c: math::HierarchyCellDataOpsComplex::addScalar()\n"
+         << "FAILED: - Test #9c: math::HierarchyCellDataOpsComplex::addScalar()\n"
          << "Expected: v2 = " << val_addScalar << std::endl;
          cell_ops->printData(cvindx[2], tbox::plog);
       }
@@ -482,8 +472,7 @@ int main(
       if (!complexDataSameAsValue(cvindx[2], val_addScalar, hierarchy)) {
          num_failures++;
          tbox::perr
-         <<
-         "FAILED: - Test #9d: math::HierarchyCellDataOpsComplex::addScalar()\n"
+         << "FAILED: - Test #9d: math::HierarchyCellDataOpsComplex::addScalar()\n"
          << "Expected: v2 = " << val_addScalar << std::endl;
          cell_ops->printData(cvindx[2], tbox::plog);
       }
@@ -498,8 +487,7 @@ int main(
       if (!complexDataSameAsValue(cvindx[1], val_mult, hierarchy)) {
          num_failures++;
          tbox::perr
-         <<
-         "FAILED: - Test #10: math::HierarchyCellDataOpsComplex::multiply()\n"
+         << "FAILED: - Test #10: math::HierarchyCellDataOpsComplex::multiply()\n"
          << "Expected: v1 = " << val_mult << std::endl;
          cell_ops->printData(cvindx[1], tbox::plog);
       }
@@ -523,8 +511,7 @@ int main(
       if (!complexDataSameAsValue(cvindx[1], val_rec, hierarchy)) {
          num_failures++;
          tbox::perr
-         <<
-         "FAILED: - Test #12: math::HierarchyCellDataOpsComplex::reciprocal()\n"
+         << "FAILED: - Test #12: math::HierarchyCellDataOpsComplex::reciprocal()\n"
          << "Expected: v1 = " << val_rec << std::endl;
          cell_ops->printData(cvindx[1], tbox::plog);
       }
@@ -609,8 +596,7 @@ int main(
          if (!tbox::MathUtilities<double>::equalEps(bogus_l1_norm, compare)) {
             num_failures++;
             tbox::perr
-            <<
-            "FAILED: - Test #14: math::HierarchyCellDataOpsComplex::L1Norm()"
+            << "FAILED: - Test #14: math::HierarchyCellDataOpsComplex::L1Norm()"
             << " - w/o control weight\n"
             << "Expected value = " << compare
             << ", Computed value = "
@@ -678,8 +664,7 @@ int main(
       if (!complexDataSameAsValue(cvindx[3], val_linearSum, hierarchy)) {
          num_failures++;
          tbox::perr
-         <<
-         "FAILED: - Test #19: math::HierarchyCellDataOpsComplex::linearSum()\n"
+         << "FAILED: - Test #19: math::HierarchyCellDataOpsComplex::linearSum()\n"
          << "Expected: v3 = " << val_linearSum << std::endl;
          cell_ops->printData(cvindx[3], tbox::plog);
       }

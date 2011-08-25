@@ -152,8 +152,7 @@ int main(
 
    if ((argc != 5)) {
       tbox::pout << "USAGE:  " << argv[0] << " input-dir "
-                 <<
-      "output-dir restore-number num-output-files\n"
+                 << "output-dir restore-number num-output-files\n"
                  << endl;
       exit(-1);
       return -1;

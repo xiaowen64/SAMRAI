@@ -385,8 +385,7 @@ void MappingConnectorAlgorithm::modify(
    if (&anchor_to_mapped.getHead() != &old_to_new.getBase()) {
       TBOX_ERROR(
          "Bad input for MappingConnectorAlgorithm::modify:\n"
-         <<
-         "Input MappingConnectorAlgorithm do not agree on what the old mapped_box_level is.\n"
+         << "Input MappingConnectorAlgorithm do not agree on what the old mapped_box_level is.\n"
          << "anchor_to_mapped is  TO  " << &anchor_to_mapped.getHead() << "\n"
          << "old_to_new is FROM " << &old_to_new.getBase()
          << "\n"
@@ -1001,8 +1000,7 @@ void MappingConnectorAlgorithm::privateModify_receiveAndUnpack(
                const Box mapped_box_gone(dim, id_gone, sender, block_id_gone);
                if (s_print_modify_steps == 'y') tbox::plog << "Box "
                                                            << mapped_box_gone
-                                                           <<
-                  " removed, affecting "
+                                                           << " removed, affecting "
                                                            << number_affected
                                                            << " mapped_boxes."
                                                            << std::endl;

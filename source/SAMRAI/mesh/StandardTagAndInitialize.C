@@ -124,10 +124,8 @@ StandardTagAndInitialize::StandardTagAndInitialize(
    if (input_db.isNull()) {
       TBOX_WARNING(
          getObjectName() << ":constructor \n"
-                         <<
-         "no input database specified - NO METHOD IS SPECIFIED TO TAG \n"
-                         <<
-         "CELLS FOR REFINEMENT so no tagging is performed.");
+                         << "no input database specified - NO METHOD IS SPECIFIED TO TAG \n"
+                         << "CELLS FOR REFINEMENT so no tagging is performed.");
    } else {
       getFromInput(input_db);
    }
@@ -143,12 +141,9 @@ StandardTagAndInitialize::StandardTagAndInitialize(
          TBOX_ERROR(
             getObjectName() << ":constructor "
                             << "\nThe supplied implementation of the "
-                            <<
-            "\nStandardTagAndInitStrategy is NULL.  It must be"
-                            <<
-            "\nnon-NULL to use the GRADIENT_DETECTOR or"
-                            <<
-            "\nRICHARDSON_EXTRAPOLATION tagging options." << std::endl);
+                            << "\nStandardTagAndInitStrategy is NULL.  It must be"
+                            << "\nnon-NULL to use the GRADIENT_DETECTOR or"
+                            << "\nRICHARDSON_EXTRAPOLATION tagging options." << std::endl);
       }
    }
 }
@@ -932,8 +927,7 @@ bool StandardTagAndInitialize::coarsestLevelBoxesOK(
                tbox::perr << "Bad domain box: " << *ib << std::endl;
                TBOX_WARNING(
                   getObjectName() << "At least one box on the \n"
-                                  <<
-                  "coarsest level could not be coarsened by the ratio: "
+                                  << "coarsest level could not be coarsened by the ratio: "
                                   << error_coarsen_ratio);
                boxes_ok = false;
             }
@@ -990,18 +984,12 @@ void StandardTagAndInitialize::checkCoarsenRatios(
                gcd = ratio_to_coarser[ln](d);
                TBOX_ERROR(
                   getObjectName() << "\n"
-                                  <<
-                  "Unable to perform Richardson extrapolation because\n"
-                                  <<
-                  "the error coarsen ratio computed from the\n"
-                                  <<
-                  "ratio_to_coarser entries is not constant across all\n"
-                                  <<
-                  "levels, in all dimensions, of the hierarchy. In\n"
-                                  <<
-                  "order to use Richardson extrapolation, the minimum\n"
-                                  <<
-                  "divisor (> 1) of all the ratio_to_coarser entries must\n"
+                                  << "Unable to perform Richardson extrapolation because\n"
+                                  << "the error coarsen ratio computed from the\n"
+                                  << "ratio_to_coarser entries is not constant across all\n"
+                                  << "levels, in all dimensions, of the hierarchy. In\n"
+                                  << "order to use Richardson extrapolation, the minimum\n"
+                                  << "divisor (> 1) of all the ratio_to_coarser entries must\n"
                                   << "be 2 -or- 3:\n"
                                   << "   level 1(0): minimum divisor: "
                                   << error_coarsen_ratio
@@ -1042,8 +1030,7 @@ void StandardTagAndInitialize::getFromInput(
       TBOX_ERROR(getObjectName() << ":getFromInput\n"
                                  << tagging_method.getSize()
                                  << "entries specified"
-                                 <<
-         "in `tagging_method' input.  Maximum allowable is 3.");
+                                 << "in `tagging_method' input.  Maximum allowable is 3.");
    }
 
    d_use_gradient_detector = false;
@@ -1085,15 +1072,11 @@ void StandardTagAndInitialize::getFromInput(
    if (!found_method) {
       TBOX_WARNING(
          getObjectName() << ":getFromInput \n"
-                         <<
-         "No `tagging_method' entry specified, so cell tagging \n"
-                         <<
-         "will NOT be performed.  If you wish to invoke cell \n"
-                         <<
-         "tagging, you must enter one or more valid tagging \n"
+                         << "No `tagging_method' entry specified, so cell tagging \n"
+                         << "will NOT be performed.  If you wish to invoke cell \n"
+                         << "tagging, you must enter one or more valid tagging \n"
                          << "methods, of type GRADIENT_DETECTOR, "
-                         <<
-         "RICHARDSON_EXTRAPOLATION, or REFINE_BOXES\n"
+                         << "RICHARDSON_EXTRAPOLATION, or REFINE_BOXES\n"
                          << "See class header for details.\n");
    }
 

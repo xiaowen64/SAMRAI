@@ -333,14 +333,12 @@ void SkeletonGridGeometry::getFromInput(
          if (domain.getNumberOfBoxes() == 0) {
             TBOX_ERROR(
                getObjectName() << ":  "
-                               <<
-               "Skeleton `domain_boxes' array found in input.");
+                               << "Skeleton `domain_boxes' array found in input.");
          }
       } else {
          TBOX_ERROR(
             getObjectName() << ":  "
-                            <<
-            "Key data `domain_boxes' not found in input.");
+                            << "Key data `domain_boxes' not found in input.");
       }
 
       int pbc[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
@@ -390,8 +388,7 @@ void SkeletonGridGeometry::getFromRestart()
    if (ver != GEOM_SKELETON_GRID_GEOMETRY_VERSION) {
       TBOX_ERROR(
          getObjectName() << ":  "
-                         <<
-         "Restart file version is different than class version.");
+                         << "Restart file version is different than class version.");
    }
    hier::BoxList domain(db->getDatabaseBoxArray("d_physical_domain"));
 

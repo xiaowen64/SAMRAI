@@ -2643,8 +2643,7 @@ void StatisticRestartDatabase::getFromRestart()
       TBOX_WARNING(
          d_object_name << ":  "
          "Restart file version different than class version. \n"
-                       <<
-         "Cannot read statistic information from restart file so"
+                       << "Cannot read statistic information from restart file so"
                        << "all statistics will be reset.");
    }
 

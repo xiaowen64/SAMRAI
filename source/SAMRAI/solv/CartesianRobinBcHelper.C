@@ -646,10 +646,8 @@ void CartesianRobinBcHelper::setBoundaryValuesAtNodes(
 
    TBOX_ERROR(
       d_object_name << ": Using incomplete implementation"
-                    <<
-      "CartesianRobinBcHelper::setBoundaryValuesAtNodes"
-                    <<
-      "is not implemented because there is not a need for it (yet)"
+                    << "CartesianRobinBcHelper::setBoundaryValuesAtNodes"
+                    << "is not implemented because there is not a need for it (yet)"
                     << std::endl);
 }
 

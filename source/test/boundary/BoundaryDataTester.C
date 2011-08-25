@@ -336,8 +336,7 @@ void BoundaryDataTester::readVariableInputAndMakeVariables(
          } else {
             TBOX_ERROR(
                d_object_name << ": "
-                             <<
-               "Variable input error: No 'interior_values' entry found for "
+                             << "Variable input error: No 'interior_values' entry found for "
                              << "key = " << var_keys[i] << endl);
          }
 
@@ -568,8 +567,7 @@ void BoundaryDataTester::readBoundaryDataInput(
       } else {
          TBOX_ERROR(
             d_object_name << ": "
-                          <<
-            "Key data 'Boundary_data' not found in input. " << endl);
+                          << "Key data 'Boundary_data' not found in input. " << endl);
       }
 
    }

@@ -248,8 +248,7 @@ bool FACPreconditioner::checkVectorStateCompatibility(
    if (!d_patch_hierarchy) {
       TBOX_ERROR(
          d_object_name << ": cannot check vector-state\n"
-                       <<
-         "compatibility when the state is uninitialized.\n");
+                       << "compatibility when the state is uninitialized.\n");
    }
    bool rvalue = true;
    const SAMRAIVectorReal<double>& error = *d_error_vector;

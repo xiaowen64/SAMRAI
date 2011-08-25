@@ -397,8 +397,7 @@ int SkeletonBoundaryUtilities2::checkBdryData(
    } else {
       TBOX_ERROR(
          "Unknown btype " << btype
-                          <<
-         " passed to SkeletonBoundaryUtilities2::checkBdryData()! "
+                          << " passed to SkeletonBoundaryUtilities2::checkBdryData()! "
                           << endl);
    }
 
@@ -432,8 +431,7 @@ int SkeletonBoundaryUtilities2::checkBdryData(
       } else {
          TBOX_ERROR(
             "Unknown bcase " << bcase
-                             <<
-            " passed to SkeletonBoundaryUtilities2::checkBdryData()"
+                             << " passed to SkeletonBoundaryUtilities2::checkBdryData()"
                              << "\n for " << bdry_type_str
                              << " at location " << bloc << endl);
       }
@@ -456,8 +454,7 @@ int SkeletonBoundaryUtilities2::checkBdryData(
       } else {
          TBOX_ERROR(
             "Unknown bcase " << bcase
-                             <<
-            " passed to SkeletonBoundaryUtilities2::checkBdryData()"
+                             << " passed to SkeletonBoundaryUtilities2::checkBdryData()"
                              << "\n for " << bdry_type_str
                              << " at location " << bloc << endl);
       }
@@ -852,8 +849,7 @@ void SkeletonBoundaryUtilities2::get2dBdryDirectionCheckValues(
    } else {
       TBOX_ERROR(
          "Unknown boundary type " << btype
-                                  <<
-         " passed to SkeletonBoundaryUtilities2::checkBdryData()"
+                                  << " passed to SkeletonBoundaryUtilities2::checkBdryData()"
                                   << "\n for " << bdry_type_str
                                   << " at location " << bloc << endl);
    }

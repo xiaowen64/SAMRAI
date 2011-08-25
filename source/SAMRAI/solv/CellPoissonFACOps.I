@@ -24,8 +24,7 @@ void CellPoissonFACOps::setUseSMG(
    if (d_hierarchy) {
       TBOX_ERROR(
          d_object_name << ": setUseSMG(bool) may NOT be called\n"
-                       <<
-         "while the solver state is initialized, as that\n"
+                       << "while the solver state is initialized, as that\n"
                        << "would lead to a corrupted solver state.\n");
    }
    d_hypre_solver.setUseSMG(use_smg);
@@ -132,8 +131,7 @@ void CellPoissonFACOps::setCoarsestLevelSolverChoice(
       TBOX_ERROR(
          d_object_name << ": Bad coarse level solver choice '"
                        << choice
-                       <<
-         "' in scapCellPoissonOpsX::setCoarseLevelSolver.");
+                       << "' in scapCellPoissonOpsX::setCoarseLevelSolver.");
    }
 }
 
@@ -179,8 +177,7 @@ void CellPoissonFACOps::setCoarseFineDiscretization(
    if (d_hierarchy) {
       TBOX_ERROR(
          d_object_name << ": Cannot change coarse-fine\n"
-                       <<
-         "discretization method while operator state\n"
+                       << "discretization method while operator state\n"
                        << "is initialized because that causes a\n"
                        << "corruption in the state.\n");
    }
@@ -201,8 +198,7 @@ void CellPoissonFACOps::setProlongationMethod(
    if (d_hierarchy) {
       TBOX_ERROR(
          d_object_name << ": Cannot change prolongation method\n"
-                       <<
-         "while operator state is initialized because that\n"
+                       << "while operator state is initialized because that\n"
                        << "causes a corruption in the state.\n");
    }
 #endif

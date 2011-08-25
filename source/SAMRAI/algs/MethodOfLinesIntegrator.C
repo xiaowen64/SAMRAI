@@ -711,8 +711,7 @@ void MethodOfLinesIntegrator::getFromInput(
             if (d_order < 0) {
                TBOX_ERROR(
                   d_object_name << ":  "
-                                <<
-                  "Negative `order' value specified in input.");
+                                << "Negative `order' value specified in input.");
             }
 
          }
@@ -727,10 +726,8 @@ void MethodOfLinesIntegrator::getFromInput(
       } else {
          TBOX_WARNING(
             d_object_name << ":  "
-                          <<
-            "Key data `alpha_1' not found in input.  "
-                          <<
-            "Using default values.  See class header.");
+                          << "Key data `alpha_1' not found in input.  "
+                          << "Using default values.  See class header.");
       }
 
       if (input_db->keyExists("alpha_2")) {
@@ -738,10 +735,8 @@ void MethodOfLinesIntegrator::getFromInput(
       } else {
          TBOX_WARNING(
             d_object_name << ":  "
-                          <<
-            "Key data `alpha_2' not found in input.  "
-                          <<
-            "Using default values.  See class header.");
+                          << "Key data `alpha_2' not found in input.  "
+                          << "Using default values.  See class header.");
       }
 
       if (input_db->keyExists("beta")) {
@@ -750,8 +745,7 @@ void MethodOfLinesIntegrator::getFromInput(
          TBOX_WARNING(
             d_object_name << ":  "
                           << "Key data `beta' not found in input.  "
-                          <<
-            "Using default values.  See class header.");
+                          << "Using default values.  See class header.");
       }
 
    }
@@ -760,16 +754,14 @@ void MethodOfLinesIntegrator::getFromInput(
        d_alpha_2.getSize() != d_beta.getSize()) {
       TBOX_ERROR(
          d_object_name << ":  "
-                       <<
-         "The number of alpha_1, alpha_2, and beta values "
+                       << "The number of alpha_1, alpha_2, and beta values "
                        << "specified in input is not consistent");
    }
 
    if (d_alpha_1.getSize() != d_order) {
       TBOX_WARNING(
          d_object_name << ":  "
-                       <<
-         "The number of alpha values specified in input "
+                       << "The number of alpha values specified in input "
                        << "does not equal the Runga-Kutta order");
       d_order = d_alpha_1.getSize();
    }
@@ -805,8 +797,7 @@ void MethodOfLinesIntegrator::getFromRestart()
    if (ver != ALGS_METHOD_OF_LINES_INTEGRATOR_VERSION) {
       TBOX_ERROR(
          d_object_name << ":  "
-                       <<
-         "Restart file version different than class version.");
+                       << "Restart file version different than class version.");
    }
 
    d_order = restart_db->getInteger("d_order");
@@ -817,8 +808,7 @@ void MethodOfLinesIntegrator::getFromRestart()
    if (d_alpha_1.getSize() != d_order) {
       TBOX_ERROR(
          d_object_name << ":  "
-                       <<
-         "The number of alpha values read from restart "
+                       << "The number of alpha values read from restart "
                        << "does not equal the Runga-Kutta order");
    }
 

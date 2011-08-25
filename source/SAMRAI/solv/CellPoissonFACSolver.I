@@ -85,8 +85,7 @@ void CellPoissonFACSolver::setUseSMG(
    if (d_solver_is_initialized) {
       TBOX_ERROR(
          d_object_name << ": setUseSMG(bool) may NOT be called\n"
-                       <<
-         "while the solver state is initialized, as that\n"
+                       << "while the solver state is initialized, as that\n"
                        << "would lead to a corrupted solver state.\n");
    }
    d_fac_ops.setUseSMG(use_smg);

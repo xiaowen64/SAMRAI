@@ -116,8 +116,7 @@ bool DLBGTest::packDerivedDataIntoDoubleBuffer(
       // Did not register this name.
       TBOX_ERROR(
          "Unregistered variable name '" << variable_name << "' in\n"
-                                        <<
-         "DLBGTest::packDerivedPatchDataIntoDoubleBuffer");
+                                        << "DLBGTest::packDerivedPatchDataIntoDoubleBuffer");
    }
 
    return true;

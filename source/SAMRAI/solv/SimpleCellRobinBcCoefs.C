@@ -149,8 +149,7 @@ void SimpleCellRobinBcCoefs::setBoundaries(
    } else {
       TBOX_ERROR(
          d_object_name << ": Non-existing case of\n"
-                       <<
-         "boundary_type in PoissonSolver<DIM>::setBoundaries()");
+                       << "boundary_type in PoissonSolver<DIM>::setBoundaries()");
    }
 
 }
@@ -222,8 +221,7 @@ void SimpleCellRobinBcCoefs::setBcCoefs(
             TBOX_ERROR(
                d_object_name << ": patch is not in any hierarchy.\n"
                              << "SimpleCellRobinBcCoefs can only set\n"
-                             <<
-               "boundary coefficients for patches in\n"
+                             << "boundary coefficients for patches in\n"
                              << "the same hierarchy as cached\n"
                              << "Dirichlet coefficients.");
          }
@@ -233,8 +231,7 @@ void SimpleCellRobinBcCoefs::setBcCoefs(
                d_object_name << ": patch is not in the hierarchy\n"
                              << "of cached boundary data.\n"
                              << "SimpleCellRobinBcCoefs can only set\n"
-                             <<
-               "boundary coefficients for patches in\n"
+                             << "boundary coefficients for patches in\n"
                              << "the same hierarchy as cached\n"
                              << "Dirichlet coefficients.");
          }
@@ -327,10 +324,8 @@ void SimpleCellRobinBcCoefs::setBcCoefs(
          if (bn == codim1_boxes.getSize()) {
             TBOX_ERROR(
                d_object_name << " cannot find cached Dirichlet data.\n"
-                             <<
-               "This is most likely caused by not calling\n"
-                             <<
-               "SimpleCellRobinBcCoefs::cacheDirichletData()\n"
+                             << "This is most likely caused by not calling\n"
+                             << "SimpleCellRobinBcCoefs::cacheDirichletData()\n"
                              << "after the hierarchy changed.\n");
          }
 #endif
@@ -433,10 +428,8 @@ void SimpleCellRobinBcCoefs::setBcCoefs(
          if (bn == codim1_boxes.getSize()) {
             TBOX_ERROR(
                d_object_name << " cannot find cached Dirichlet data.\n"
-                             <<
-               "This is most likely caused by not calling\n"
-                             <<
-               "SimpleCellRobinBcCoefs::cacheDirichletData() after the\n"
+                             << "This is most likely caused by not calling\n"
+                             << "SimpleCellRobinBcCoefs::cacheDirichletData() after the\n"
                              << "hierarchy changed.\n");
          }
 #endif
@@ -514,8 +507,7 @@ void SimpleCellRobinBcCoefs::cacheDirichletData(
    if (!d_hierarchy) {
       TBOX_ERROR(
          d_object_name << ": hierarchy has not been set.\n"
-                       <<
-         "use setHierarchy() to set the hierarchy before\n"
+                       << "use setHierarchy() to set the hierarchy before\n"
                        << "caching boundary ghost cell data.\n");
    }
 #endif

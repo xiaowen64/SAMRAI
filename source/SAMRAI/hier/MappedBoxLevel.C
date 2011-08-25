@@ -728,8 +728,7 @@ void MappedBoxLevel::setParallelState(
    if (!isInitialized()) {
       TBOX_ERROR(
          "MappedBoxLevel::setParallelState: Cannot change the parallel state of\n"
-         <<
-         "an uninitialized MappedBoxLevel.  See MappedBoxLevel::initialize()");
+         << "an uninitialized MappedBoxLevel.  See MappedBoxLevel::initialize()");
    }
 #endif
    if (parallel_state != DISTRIBUTED && parallel_state != GLOBALIZED) {
@@ -1070,10 +1069,8 @@ MappedBoxLevel::addPeriodicMappedBox(
       TBOX_ERROR(
          "MappedBoxLevel::addPeriodicMappedBox: cannot add periodic image Box "
          << image_mapped_box
-         <<
-         "\nwithout the real Box (" << real_mapped_box
-         <<
-         ") already in the MappedBoxLevel.\n");
+         << "\nwithout the real Box (" << real_mapped_box
+         << ") already in the MappedBoxLevel.\n");
    }
 #endif
 
@@ -1121,18 +1118,15 @@ MappedBoxLevel::addMappedBox(
          TBOX_ERROR(
             "MappedBoxLevel::addMappedBox: cannot add periodic image MappedBox "
             << mapped_box
-            <<
-            "\nwithout the real MappedBox (" << real_mapped_box
-            <<
-            ") already in the MappedBoxLevel.\n");
+            << "\nwithout the real MappedBox (" << real_mapped_box
+            << ") already in the MappedBoxLevel.\n");
       }
       if (d_global_mapped_boxes.find(mapped_box) !=
           d_global_mapped_boxes.end()) {
          TBOX_ERROR(
             "MappedBoxLevel::addMappedBox: cannot add MappedBox "
             << mapped_box
-            <<
-            "\nbecause it already exists ("
+            << "\nbecause it already exists ("
             << *mapped_boxes.find(mapped_box) << "\n");
       }
    }

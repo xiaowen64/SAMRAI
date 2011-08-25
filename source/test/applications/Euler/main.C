@@ -208,8 +208,7 @@ int main(
 
       if ((argc != 2) && (argc != 4)) {
          tbox::pout << "USAGE:  " << argv[0] << " <input filename> "
-                    <<
-         "<restart dir> <restore number> [options]\n"
+                    << "<restart dir> <restore number> [options]\n"
                     << "  options:\n"
                     << "  none at this time"
                     << endl;

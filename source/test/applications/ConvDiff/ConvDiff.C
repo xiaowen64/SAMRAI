@@ -358,8 +358,7 @@ void ConvDiff::registerModelVariables(
       if (d_visit_writer.isNull()) {
          TBOX_WARNING(
             d_object_name << ": registerModelVariables()\n"
-                          <<
-            "Visit data writer was not registered.\n"
+                          << "Visit data writer was not registered.\n"
                           << "Consequently, no plot data will\n"
                           << "be written." << endl);
       }
@@ -899,16 +898,14 @@ void ConvDiff::getFromInput(
    } else {
       TBOX_ERROR(
          d_object_name << ":  "
-                       <<
-         "Key data `convection_coeff' not found in input.");
+                       << "Key data `convection_coeff' not found in input.");
    }
    if (db->keyExists("diffusion_coeff")) {
       d_diffusion_coeff = db->getDouble("diffusion_coeff");
    } else {
       TBOX_ERROR(
          d_object_name << ":  "
-                       <<
-         "Key data `diffusion_coeff' not found in input.");
+                       << "Key data `diffusion_coeff' not found in input.");
    }
    if (db->keyExists("source_coeff")) {
       d_source_coeff = db->getDouble("source_coeff");
@@ -925,8 +922,7 @@ void ConvDiff::getFromInput(
    } else {
       TBOX_ERROR(
          d_object_name << ":  "
-                       <<
-         "Key data `cell_tagging_tolerance' not found in input.");
+                       << "Key data `cell_tagging_tolerance' not found in input.");
    }
 
    if (!is_from_restart) {
@@ -946,8 +942,7 @@ void ConvDiff::getFromInput(
       } else {
          TBOX_ERROR(
             d_object_name << ": "
-                          <<
-            "No `Initial_data' database found in input." << endl);
+                          << "No `Initial_data' database found in input." << endl);
       }
 
       bool found_problem_data = false;
@@ -959,16 +954,14 @@ void ConvDiff::getFromInput(
          } else {
             TBOX_ERROR(
                d_object_name << ": "
-                             <<
-               "`radius' input required for SPHERE problem." << endl);
+                             << "`radius' input required for SPHERE problem." << endl);
          }
          if (init_data_db->keyExists("center")) {
             init_data_db->getDoubleArray("center", d_center, d_dim.getValue());
          } else {
             TBOX_ERROR(
                d_object_name << ": "
-                             <<
-               "`center' input required for SPHERE problem." << endl);
+                             << "`center' input required for SPHERE problem." << endl);
          }
          if (init_data_db->keyExists("val_inside")) {
             init_data_db->getDoubleArray("val_inside", d_val_inside, NEQU);
@@ -1026,10 +1019,8 @@ void ConvDiff::getFromInput(
       } else {
          TBOX_WARNING(
             d_object_name << ": "
-                          <<
-            "Key data `Boundary_data' not found in input. "
-                          <<
-            "Using default FLOW boundary conditions." << endl);
+                          << "Key data `Boundary_data' not found in input. "
+                          << "Using default FLOW boundary conditions." << endl);
       }
    }
 }
@@ -1102,8 +1093,7 @@ void ConvDiff::getFromRestart()
    if (ver != CONV_DIFF_VERSION) {
       TBOX_ERROR(
          d_object_name << ":  "
-                       <<
-         "Restart file version different than class version.");
+                       << "Restart file version different than class version.");
    }
 
    d_diffusion_coeff = db->getDouble("d_diffusion_coeff");

@@ -1304,12 +1304,10 @@ void GriddingAlgorithm::regridFinerLevel(
          if (d_print_steps) {
             if (new_mapped_box_level.isInitialized()) {
                tbox::plog
-               <<
-               "GriddingAlgorithm::regridFinerLevel got inititalized new_mapped_box_level\n";
+               << "GriddingAlgorithm::regridFinerLevel got inititalized new_mapped_box_level\n";
             } else {
                tbox::plog
-               <<
-               "GriddingAlgorithm::regridFinerLevel got un-inititalized new_mapped_box_level\n";
+               << "GriddingAlgorithm::regridFinerLevel got un-inititalized new_mapped_box_level\n";
             }
          }
 
@@ -2946,8 +2944,7 @@ void GriddingAlgorithm::findRefinementBoxes(
       {
          if (d_print_steps) {
             tbox::plog
-            <<
-            "GriddingAlgorithm::findRefinementBoxes: enforcing overflow nesting\n";
+            << "GriddingAlgorithm::findRefinementBoxes: enforcing overflow nesting\n";
          }
 
          if (d_barrier_and_time) {
@@ -3024,8 +3021,7 @@ void GriddingAlgorithm::findRefinementBoxes(
 
          if (d_print_steps) {
             tbox::plog
-            <<
-            "GriddingAlgorithm::findRefinementBoxes: enforcing proper nesting\n";
+            << "GriddingAlgorithm::findRefinementBoxes: enforcing proper nesting\n";
          }
          if (d_barrier_and_time) {
             t_enforce_nesting->barrierAndStart();
@@ -4454,8 +4450,7 @@ void GriddingAlgorithm::getFromRestart()
    if (ver != ALGS_GRIDDING_ALGORITHM_VERSION) {
       TBOX_ERROR(
          d_object_name << ":  "
-                       <<
-         "Restart file version different than class version.");
+                       << "Restart file version different than class version.");
    }
 
    d_proper_nesting_complement.resize(d_hierarchy->getMaxNumberOfLevels(),

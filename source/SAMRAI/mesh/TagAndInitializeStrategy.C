@@ -145,15 +145,13 @@ bool TagAndInitializeStrategy::getUserSuppliedRefineBoxes(
       if (d_refine_boxes_use_times[level_num]) {
          TBOX_WARNING(
             d_object_name << ": getRefineBoxes\n"
-                          <<
-            "No refine boxes specified for time sequence "
+                          << "No refine boxes specified for time sequence "
                           << seq_num << " on level " << level_num
                           << ".\n No refinement will be performed.");
       } else {
          TBOX_WARNING(
             d_object_name << ": getRefineBoxes\n"
-                          <<
-            "No refine boxes specified for step sequence "
+                          << "No refine boxes specified for step sequence "
                           << seq_num << " on level " << level_num
                           << ".\n No refinement will be performed.");
       }
@@ -309,22 +307,15 @@ void TagAndInitializeStrategy::getFromInput(
          if (!refine_box_db->keyExists(level_boxes_name)) {
             TBOX_ERROR(
                d_object_name << "\n"
-                             <<
-               ": Expected sub-database level entries in the\n"
-                             <<
-               " 'RefineBoxes' database to specify boxes for\n"
-                             <<
-               "  different time or cycle sequences: \n"
-                             <<
-               "  e.g.  Level0 { boxes_0 = <box array> \n"
-                             <<
-               "                 boxes_1 = <box array> \n"
+                             << ": Expected sub-database level entries in the\n"
+                             << " 'RefineBoxes' database to specify boxes for\n"
+                             << "  different time or cycle sequences: \n"
+                             << "  e.g.  Level0 { boxes_0 = <box array> \n"
+                             << "                 boxes_1 = <box array> \n"
                              << "                 ...} \n"
-                             <<
-               "        Level1 { boxes_0 = <box array> \n"
+                             << "        Level1 { boxes_0 = <box array> \n"
                              << "                 ...} \n"
-                             <<
-               "See header for this class for further discussion\n"
+                             << "See header for this class for further discussion\n"
                              << "of the expected input format."
                              << std::endl);
          }
@@ -354,12 +345,9 @@ void TagAndInitializeStrategy::getFromInput(
             if (use_cycles) {
                TBOX_WARNING(
                   d_object_name << ": You have entries for "
-                                <<
-                  "both 'cycles' and 'times' for level " << ln
-                                <<
-                  ".\n Because 'times' takes precedence, the "
-                                <<
-                  "'cycles' entries will be ignored." << std::endl);
+                                << "both 'cycles' and 'times' for level " << ln
+                                << ".\n Because 'times' takes precedence, the "
+                                << "'cycles' entries will be ignored." << std::endl);
             }
          } else {
             d_refine_boxes_times[ln].resizeArray(1);

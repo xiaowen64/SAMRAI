@@ -404,8 +404,7 @@ int main(
       if (!tbox::MathUtilities<double>::equalEps(norm, 0.5)) {
          num_failures++;
          tbox::perr
-         <<
-         "FAILED: - Test #1b: math::HierarchyNodeDataOpsReal::sumControlVolumes()\n"
+         << "FAILED: - Test #1b: math::HierarchyNodeDataOpsReal::sumControlVolumes()\n"
          << "Expected value = 0.5 , Computed value = "
          << norm << std::endl;
       }
@@ -416,8 +415,7 @@ int main(
       if (num_data_points != 121) {
          num_failures++;
          tbox::perr
-         <<
-         "FAILED: - Test #2: math::HierarchyNodeDataOpsReal::numberOfEntries()\n"
+         << "FAILED: - Test #2: math::HierarchyNodeDataOpsReal::numberOfEntries()\n"
          << "Expected value = 121 , Computed value = "
          << num_data_points << std::endl;
       }
@@ -429,8 +427,7 @@ int main(
       if (!doubleDataSameAsValue(nvindx[0], val0, hierarchy)) {
          num_failures++;
          tbox::perr
-         <<
-         "FAILED: - Test #3a: math::HierarchyNodeDataOpsReal::setToScalar()\n"
+         << "FAILED: - Test #3a: math::HierarchyNodeDataOpsReal::setToScalar()\n"
          << "Expected: v0 = " << val0 << std::endl;
          node_ops->printData(nvindx[0], tbox::plog);
       }
@@ -442,8 +439,7 @@ int main(
       if (!doubleDataSameAsValue(nvindx[1], val1, hierarchy)) {
          num_failures++;
          tbox::perr
-         <<
-         "FAILED: - Test #3b: math::HierarchyNodeDataOpsReal::setToScalar()\n"
+         << "FAILED: - Test #3b: math::HierarchyNodeDataOpsReal::setToScalar()\n"
          << "Expected: v1 = " << val1 << std::endl;
          node_ops->printData(nvindx[1], tbox::plog);
       }
@@ -454,8 +450,7 @@ int main(
       if (!doubleDataSameAsValue(nvindx[2], val1, hierarchy)) {
          num_failures++;
          tbox::perr
-         <<
-         "FAILED: - Test #4: math::HierarchyNodeDataOpsReal::setToScalar()\n"
+         << "FAILED: - Test #4: math::HierarchyNodeDataOpsReal::setToScalar()\n"
          << "Expected: v2 = " << val1 << std::endl;
          node_ops->printData(nvindx[2], tbox::plog);
       }
@@ -466,16 +461,14 @@ int main(
       if (!doubleDataSameAsValue(nvindx[0], val1, hierarchy)) {
          num_failures++;
          tbox::perr
-         <<
-         "FAILED: - Test #5a: math::HierarchyNodeDataOpsReal::setToScalar()\n"
+         << "FAILED: - Test #5a: math::HierarchyNodeDataOpsReal::setToScalar()\n"
          << "Expected: v0 = " << val1 << std::endl;
          node_ops->printData(nvindx[0], tbox::plog);
       }
       if (!doubleDataSameAsValue(nvindx[1], val0, hierarchy)) {
          num_failures++;
          tbox::perr
-         <<
-         "FAILED: - Test #5b: math::HierarchyNodeDataOpsReal::setToScalar()\n"
+         << "FAILED: - Test #5b: math::HierarchyNodeDataOpsReal::setToScalar()\n"
          << "Expected: v1 = " << val0 << std::endl;
          node_ops->printData(nvindx[1], tbox::plog);
       }
@@ -589,8 +582,7 @@ int main(
       if (!doubleDataSameAsValue(nvindx[1], val_rec, hierarchy)) {
          num_failures++;
          tbox::perr
-         <<
-         "FAILED: - Test #12: math::HierarchyNodeDataOpsReal::reciprocal()\n"
+         << "FAILED: - Test #12: math::HierarchyNodeDataOpsReal::reciprocal()\n"
          << "Expected: v1 = " << val_rec << std::endl;
          node_ops->printData(nvindx[1], tbox::plog);
       }
@@ -763,8 +755,7 @@ int main(
       if (!tbox::MathUtilities<double>::equalEps(cdot, 8.75)) {
          num_failures++;
          tbox::perr
-         <<
-         "FAILED: - Test #22a: math::HierarchyNodeDataOpsReal::dot() - (ind2) * (ind1)\n"
+         << "FAILED: - Test #22a: math::HierarchyNodeDataOpsReal::dot() - (ind2) * (ind1)\n"
          << "Expected Value = 8.75, Computed Value = "
          << cdot << std::endl;
       }
@@ -775,8 +766,7 @@ int main(
       if (!tbox::MathUtilities<double>::equalEps(cdot, 8.75)) {
          num_failures++;
          tbox::perr
-         <<
-         "FAILED: - Test #22a: math::HierarchyNodeDataOpsReal::dot() - (ind1) * (ind2)\n"
+         << "FAILED: - Test #22a: math::HierarchyNodeDataOpsReal::dot() - (ind1) * (ind2)\n"
          << "Expected Value = 8.75, Computed Value = "
          << cdot << std::endl;
       }

@@ -1178,12 +1178,10 @@ void CoarsenSchedule::printClassData(
 
    if (d_fill_coarse_data) {
       stream
-      <<
-      "Printing pre-coarsen refine algorithm that fills data before coarsening...\n";
+      << "Printing pre-coarsen refine algorithm that fills data before coarsening...\n";
       d_precoarsen_refine_algorithm->printClassData(stream);
       stream
-      <<
-      "Printing pre-coarsen refine schedule that fills data before coarsening...\n";
+      << "Printing pre-coarsen refine schedule that fills data before coarsening...\n";
       d_precoarsen_refine_schedule->printClassData(stream);
    }
 }

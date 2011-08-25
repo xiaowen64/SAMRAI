@@ -373,8 +373,7 @@ int main(
       if (!tbox::MathUtilities<double>::equalEps(norm, 1.0)) {
          num_failures++;
          tbox::perr
-         <<
-         "FAILED: - Test #1b: math::HierarchyEdgeDataOpsComplex::sumControlVolumes()\n"
+         << "FAILED: - Test #1b: math::HierarchyEdgeDataOpsComplex::sumControlVolumes()\n"
          << "Expected value = 1.0 , Computed value = "
          << norm << std::endl;
       }
@@ -385,8 +384,7 @@ int main(
       if (num_data_points != 209) {
          num_failures++;
          tbox::perr
-         <<
-         "FAILED: - Test #2: math::HierarchyEdgeDataOpsComplex::numberOfEntries()\n"
+         << "FAILED: - Test #2: math::HierarchyEdgeDataOpsComplex::numberOfEntries()\n"
          << "Expected value = 209 , Computed value = "
          << num_data_points << std::endl;
       }
@@ -398,8 +396,7 @@ int main(
       if (!complexDataSameAsValue(svindx[0], val0, hierarchy)) {
          num_failures++;
          tbox::perr
-         <<
-         "FAILED: - Test #3a: math::HierarchyEdgeDataOpsComplex::setToScalar()\n"
+         << "FAILED: - Test #3a: math::HierarchyEdgeDataOpsComplex::setToScalar()\n"
          << "Expected: v0 = " << val0 << std::endl;
          edge_ops->printData(svindx[0], tbox::plog);
       }
@@ -411,8 +408,7 @@ int main(
       if (!complexDataSameAsValue(svindx[1], val1, hierarchy)) {
          num_failures++;
          tbox::perr
-         <<
-         "FAILED: - Test #3b: math::HierarchyEdgeDataOpsComplex::setToScalar()\n"
+         << "FAILED: - Test #3b: math::HierarchyEdgeDataOpsComplex::setToScalar()\n"
          << "Expected: v1 = " << val1 << std::endl;
          edge_ops->printData(svindx[1], tbox::plog);
       }
@@ -423,8 +419,7 @@ int main(
       if (!complexDataSameAsValue(svindx[2], val1, hierarchy)) {
          num_failures++;
          tbox::perr
-         <<
-         "FAILED: - Test #4: math::HierarchyEdgeDataOpsComplex::copyData()\n"
+         << "FAILED: - Test #4: math::HierarchyEdgeDataOpsComplex::copyData()\n"
          << "Expected: v2 = " << val1 << std::endl;
          edge_ops->printData(svindx[2], tbox::plog);
       }
@@ -435,16 +430,14 @@ int main(
       if (!complexDataSameAsValue(svindx[0], val1, hierarchy)) {
          num_failures++;
          tbox::perr
-         <<
-         "FAILED: - Test #5a: math::HierarchyEdgeDataOpsComplex::swapData()\n"
+         << "FAILED: - Test #5a: math::HierarchyEdgeDataOpsComplex::swapData()\n"
          << "Expected: v0 = " << val1 << std::endl;
          edge_ops->printData(svindx[0], tbox::plog);
       }
       if (!complexDataSameAsValue(svindx[1], val0, hierarchy)) {
          num_failures++;
          tbox::perr
-         <<
-         "FAILED: - Test #5b: math::HierarchyEdgeDataOpsComplex::swapData()\n"
+         << "FAILED: - Test #5b: math::HierarchyEdgeDataOpsComplex::swapData()\n"
          << "Expected: v1 = " << val0 << std::endl;
          edge_ops->printData(svindx[1], tbox::plog);
       }
@@ -483,8 +476,7 @@ int main(
       if (!complexDataSameAsValue(svindx[1], val_sub, hierarchy)) {
          num_failures++;
          tbox::perr
-         <<
-         "FAILED: - Test #8: math::HierarchyEdgeDataOpsComplex::subtract()\n"
+         << "FAILED: - Test #8: math::HierarchyEdgeDataOpsComplex::subtract()\n"
          << "Expected: v1 = " << val_sub << std::endl;
          edge_ops->printData(svindx[1], tbox::plog);
       }
@@ -496,8 +488,7 @@ int main(
       if (!complexDataSameAsValue(svindx[1], val_addScalar, hierarchy)) {
          num_failures++;
          tbox::perr
-         <<
-         "FAILED: - Test #9a: math::HierarchyEdgeDataOpsComplex::addScalar()\n"
+         << "FAILED: - Test #9a: math::HierarchyEdgeDataOpsComplex::addScalar()\n"
          << "Expected: v1 = " << val_addScalar << std::endl;
          edge_ops->printData(svindx[1], tbox::plog);
       }
@@ -509,8 +500,7 @@ int main(
       if (!complexDataSameAsValue(svindx[2], val_addScalar, hierarchy)) {
          num_failures++;
          tbox::perr
-         <<
-         "FAILED: - Test #9b: math::HierarchyEdgeDataOpsComplex::addScalar()\n"
+         << "FAILED: - Test #9b: math::HierarchyEdgeDataOpsComplex::addScalar()\n"
          << "Expected: v2 = " << val_addScalar << std::endl;
          edge_ops->printData(svindx[2], tbox::plog);
       }
@@ -522,8 +512,7 @@ int main(
       if (!complexDataSameAsValue(svindx[2], val_addScalar, hierarchy)) {
          num_failures++;
          tbox::perr
-         <<
-         "FAILED: - Test #9c: math::HierarchyEdgeDataOpsComplex::addScalar()\n"
+         << "FAILED: - Test #9c: math::HierarchyEdgeDataOpsComplex::addScalar()\n"
          << "Expected: v2 = " << val_addScalar << std::endl;
          edge_ops->printData(svindx[2], tbox::plog);
       }
@@ -538,8 +527,7 @@ int main(
       if (!complexDataSameAsValue(svindx[1], val_mult, hierarchy)) {
          num_failures++;
          tbox::perr
-         <<
-         "FAILED: - Test #10: math::HierarchyEdgeDataOpsComplex::multiply()\n"
+         << "FAILED: - Test #10: math::HierarchyEdgeDataOpsComplex::multiply()\n"
          << "Expected: v1 = " << val_mult << std::endl;
          edge_ops->printData(svindx[1], tbox::plog);
       }
@@ -563,8 +551,7 @@ int main(
       if (!complexDataSameAsValue(svindx[1], val_rec, hierarchy)) {
          num_failures++;
          tbox::perr
-         <<
-         "FAILED: - Test #12: math::HierarchyEdgeDataOpsComplex::reciprocal()\n"
+         << "FAILED: - Test #12: math::HierarchyEdgeDataOpsComplex::reciprocal()\n"
          << "Expected: v1 = " << val_rec << std::endl;
          edge_ops->printData(svindx[1], tbox::plog);
       }
@@ -724,8 +711,7 @@ int main(
       if (!complexDataSameAsValue(svindx[3], val_linearSum, hierarchy)) {
          num_failures++;
          tbox::perr
-         <<
-         "FAILED: - Test #19: math::HierarchyEdgeDataOpsComplex::linearSum()\n"
+         << "FAILED: - Test #19: math::HierarchyEdgeDataOpsComplex::linearSum()\n"
          << "Expected: v3 = " << val_linearSum << std::endl;
          edge_ops->printData(svindx[3], tbox::plog);
       }
@@ -749,8 +735,7 @@ int main(
       if (!tbox::MathUtilities<dcomplex>::equalEps(cdot, ans_2_dot_1)) {
          num_failures++;
          tbox::perr
-         <<
-         "FAILED: - Test #21a: math::HierarchyEdgeDataOpsComplex::dot() - (ind2) * (ind1)\n"
+         << "FAILED: - Test #21a: math::HierarchyEdgeDataOpsComplex::dot() - (ind2) * (ind1)\n"
          << "Expected value = (17.5,-21.0), Computed value = "
          << cdot << std::endl;
       }
@@ -762,8 +747,7 @@ int main(
       if (!tbox::MathUtilities<dcomplex>::equalEps(cdot2, ans_1_dot_2)) {
          num_failures++;
          tbox::perr
-         <<
-         "FAILED: - Test #21b: math::HierarchyEdgeDataOpsComplex::dot() - (ind1) * (ind2)\n"
+         << "FAILED: - Test #21b: math::HierarchyEdgeDataOpsComplex::dot() - (ind1) * (ind2)\n"
          << "Expected value = (17.5,21.0), Computed value = "
          << cdot2 << std::endl;
       }

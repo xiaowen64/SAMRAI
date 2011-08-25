@@ -254,8 +254,7 @@ void MblkEuler::registerModelVariables(
       TBOX_WARNING(
          d_object_name << ": registerModelVariables()"
                        << "\nVisit data writer was"
-                       <<
-         "\nregistered.  Consequently, no plot data will"
+                       << "\nregistered.  Consequently, no plot data will"
                        << "\nbe written." << endl);
    }
 
@@ -2775,8 +2774,7 @@ void MblkEuler::getFromInput(
       } else {
          TBOX_ERROR(
             d_object_name << ":  "
-                          <<
-            "Key data `advection_velocity' not found in input.");
+                          << "Key data `advection_velocity' not found in input.");
       }
    }
 
@@ -2952,10 +2950,8 @@ void MblkEuler::getFromInput(
       } else {
          TBOX_WARNING(
             d_object_name << ": "
-                          <<
-            "No key `refine_criteria' found in data for"
-                          <<
-            " RefinementData. No refinement will occur." << endl);
+                          << "No key `refine_criteria' found in data for"
+                          << " RefinementData. No refinement will occur." << endl);
       }
 
       tbox::Array<string> ref_keys_defined(num_keys);
@@ -3094,8 +3090,7 @@ void MblkEuler::getFromRestart()
    if (ver != MBLKEULER_VERSION) {
       TBOX_ERROR(
          d_object_name << ":  "
-                       <<
-         "Restart file version different than class version.");
+                       << "Restart file version different than class version.");
    }
 
    d_data_problem = db->getString("d_data_problem");

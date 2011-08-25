@@ -488,8 +488,7 @@ void MblkGeometry::getDx(
    if (!d_metrics_set[level_number]) {
       TBOX_ERROR(
          d_object_name << ":metrics have not been set.\n"
-                       <<
-         "Use the alternative 'getDx()' method call that "
+                       << "Use the alternative 'getDx()' method call that "
                        << "takes in the domain." << std::endl);
    }
 

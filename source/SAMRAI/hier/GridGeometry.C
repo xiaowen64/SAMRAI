@@ -737,8 +737,7 @@ void GridGeometry::getFromRestart()
    if (ver != HIER_GRID_GEOMETRY_VERSION) {
       TBOX_ERROR(
          getObjectName() << ":  "
-                         <<
-         "Restart file version is different than class version.");
+                         << "Restart file version is different than class version.");
    }
 
    d_number_blocks = db->getInteger("d_number_blocks");
@@ -809,8 +808,7 @@ void GridGeometry::getFromInput(
          } else {
             TBOX_ERROR(
                getObjectName() << ":  "
-                               <<
-               "Key data '" << domain_name << "' not found in input.");
+                               << "Key data '" << domain_name << "' not found in input.");
          }
       }
 

@@ -152,10 +152,8 @@ TimeRefinementIntegrator::TimeRefinementIntegrator(
                } else {
                   TBOX_ERROR(
                      d_object_name << ":  "
-                                   <<
-                     " integrator cannot set regrid interval"
-                                   <<
-                     " based on ratios between levels.");
+                                   << " integrator cannot set regrid interval"
+                                   << " based on ratios between levels.");
                }
             }
          }
@@ -955,12 +953,10 @@ void TimeRefinementIntegrator::advanceRecursivelyForRefinedTimestepping(
                } else {
                   TBOX_ERROR(
                      d_object_name << ": the supplied gridding "
-                                   <<
-                     "algorithm uses an error coarsen ratio of "
+                                   << "algorithm uses an error coarsen ratio of "
                                    << d_gridding_algorithm->
                      getTagAndInitializeStrategy()->getErrorCoarsenRatio()
-                                   <<
-                     " which is not supported in this class"
+                                   << " which is not supported in this class"
                                    << std::endl);
                }
 
@@ -1216,8 +1212,7 @@ double TimeRefinementIntegrator::advanceForSynchronizedTimestepping(
          } else {
             TBOX_ERROR(
                d_object_name << ": the supplied gridding "
-                             <<
-               "algorithm uses an error coarsen ratio of "
+                             << "algorithm uses an error coarsen ratio of "
                              << d_gridding_algorithm->
                getTagAndInitializeStrategy()->getErrorCoarsenRatio()
                              << " which is not supported in this class"
@@ -1354,8 +1349,7 @@ bool TimeRefinementIntegrator::findNextDtAndStepsRemaining(
       if (d_step_level[level_number] >= d_max_steps_level[level_number]) {
          TBOX_ERROR(
             d_object_name << ":  "
-                          <<
-            "no steps left to divide remaining time ...\n"
+                          << "no steps left to divide remaining time ...\n"
                           << "level_number = " << level_number
                           << std::endl
                           << "time_remaining = " << time_remaining
@@ -1597,8 +1591,7 @@ void TimeRefinementIntegrator::getFromInput(
       } else {
          TBOX_ERROR(
             d_object_name << ":  "
-                          <<
-            "Key data `start_time' not found in input.");
+                          << "Key data `start_time' not found in input.");
       }
 
       if (db->keyExists("end_time")) {
@@ -1620,8 +1613,7 @@ void TimeRefinementIntegrator::getFromInput(
       } else {
          TBOX_ERROR(
             d_object_name << ":  "
-                          <<
-            "Key data `max_integrator_steps' not found in input.");
+                          << "Key data `max_integrator_steps' not found in input.");
       }
 
       if (db->keyExists("tag_buffer")) {
@@ -1648,10 +1640,8 @@ void TimeRefinementIntegrator::getFromInput(
 
          TBOX_WARNING(
             d_object_name << ":  "
-                          <<
-            "Key data `tag_buffer' not found in input.  "
-                          <<
-            "Default values used.  See class header for details.");
+                          << "Key data `tag_buffer' not found in input.  "
+                          << "Default values used.  See class header for details.");
       }
 
       d_barrier_and_time =
@@ -1693,8 +1683,7 @@ void TimeRefinementIntegrator::getFromRestart()
    if (ver != ALGS_TIME_REFINEMENT_INTEGRATOR_VERSION) {
       TBOX_ERROR(
          d_object_name << ":  "
-                       <<
-         "Restart file version different than class version.");
+                       << "Restart file version different than class version.");
    }
 
    d_start_time = db->getDouble("d_start_time");

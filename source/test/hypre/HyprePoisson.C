@@ -316,10 +316,8 @@ int HyprePoisson::registerVariablesWithPlotter(
    if (d_hierarchy.isNull()) {
       TBOX_ERROR(
          d_object_name << ": No hierarchy in\n"
-                       <<
-         " HyprePoisson::registerVariablesWithPlotter\n"
-                       <<
-         "The hierarchy must be built before calling\n"
+                       << " HyprePoisson::registerVariablesWithPlotter\n"
+                       << "The hierarchy must be built before calling\n"
                        << "this function.\n");
    }
    /*
@@ -384,8 +382,7 @@ bool HyprePoisson::packDerivedDataIntoDoubleBuffer(
       // Did not register this name.
       TBOX_ERROR(
          "Unregistered variable name '" << variable_name << "' in\n"
-                                        <<
-         "HyprePoissonX::writeDerivedDataToStream");
+                                        << "HyprePoissonX::writeDerivedDataToStream");
 
    }
    return true;

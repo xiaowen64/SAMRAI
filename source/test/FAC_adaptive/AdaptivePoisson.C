@@ -632,8 +632,7 @@ bool AdaptivePoisson::packDerivedDataIntoDoubleBuffer(
       // Did not register this name.
       TBOX_ERROR(
          "Unregistered variable name '" << variable_name << "' in\n"
-                                        <<
-         "AdaptivePoisson::packDerivedPatchDataIntoDoubleBuffer");
+                                        << "AdaptivePoisson::packDerivedPatchDataIntoDoubleBuffer");
    }
 
    // Return TRUE if this patch has derived data on it.

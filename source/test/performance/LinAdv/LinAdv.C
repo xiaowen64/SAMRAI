@@ -453,10 +453,8 @@ void LinAdv::setupLoadBalancer(
       } else {
          TBOX_WARNING(
             d_object_name << ": "
-                          <<
-            "  Unknown load balancer used in gridding algorithm."
-                          <<
-            "  Ignoring request for nonuniform load balancing." << endl);
+                          << "  Unknown load balancer used in gridding algorithm."
+                          << "  Ignoring request for nonuniform load balancing." << endl);
          d_use_nonuniform_workload = false;
       }
    } else {
@@ -2150,8 +2148,7 @@ bool LinAdv::packDerivedDataIntoDoubleBuffer(
       // Did not register this name.
       TBOX_ERROR(
          "Unregistered variable name '" << variable_name << "' in\n"
-                                        <<
-         "DLBGTest<DIM>::packDerivedPatchDataIntoDoubleBuffer");
+                                        << "DLBGTest<DIM>::packDerivedPatchDataIntoDoubleBuffer");
    }
 
    return true;
@@ -2366,8 +2363,7 @@ void LinAdv::getFromInput(
    } else {
       TBOX_ERROR(
          d_object_name << ":  "
-                       <<
-         "Key data `advection_velocity' not found in input.");
+                       << "Key data `advection_velocity' not found in input.");
    }
 
    if (db->keyExists("godunov_order")) {
@@ -2377,8 +2373,7 @@ void LinAdv::getFromInput(
           (d_godunov_order != 4)) {
          TBOX_ERROR(
             d_object_name << ": "
-                          <<
-            "`godunov_order' in input must be 1, 2, or 4." << endl);
+                          << "`godunov_order' in input must be 1, 2, or 4." << endl);
       }
    } else {
       d_godunov_order = db->getIntegerWithDefault("d_godunov_order",
@@ -2391,10 +2386,8 @@ void LinAdv::getFromInput(
           (d_corner_transport != "CORNER_TRANSPORT_2")) {
          TBOX_ERROR(
             d_object_name << ": "
-                          <<
-            "`corner_transport' in input must be either string"
-                          <<
-            " 'CORNER_TRANSPORT_1' or 'CORNER_TRANSPORT_2'." << endl);
+                          << "`corner_transport' in input must be either string"
+                          << " 'CORNER_TRANSPORT_1' or 'CORNER_TRANSPORT_2'." << endl);
       }
    } else {
       d_corner_transport = db->getStringWithDefault("corner_transport",
@@ -2413,10 +2406,8 @@ void LinAdv::getFromInput(
       } else {
          TBOX_WARNING(
             d_object_name << ": "
-                          <<
-            "No key `refine_criteria' found in data for"
-                          <<
-            " RefinementData. No refinement will occur." << endl);
+                          << "No key `refine_criteria' found in data for"
+                          << " RefinementData. No refinement will occur." << endl);
       }
 
       tbox::Array<string> ref_keys_defined(num_keys);
@@ -2452,8 +2443,7 @@ void LinAdv::getFromInput(
                } else {
                   TBOX_ERROR(
                      d_object_name << ": "
-                                   <<
-                     "No key `dev_tol' found in data for "
+                                   << "No key `dev_tol' found in data for "
                                    << error_key << endl);
                }
 
@@ -2463,8 +2453,7 @@ void LinAdv::getFromInput(
                } else {
                   TBOX_ERROR(
                      d_object_name << ": "
-                                   <<
-                     "No key `uval_dev' found in data for "
+                                   << "No key `uval_dev' found in data for "
                                    << error_key << endl);
                }
 
@@ -2494,8 +2483,7 @@ void LinAdv::getFromInput(
                } else {
                   TBOX_ERROR(
                      d_object_name << ": "
-                                   <<
-                     "No key `grad_tol' found in data for "
+                                   << "No key `grad_tol' found in data for "
                                    << error_key << endl);
                }
 
@@ -2525,8 +2513,7 @@ void LinAdv::getFromInput(
                } else {
                   TBOX_ERROR(
                      d_object_name << ": "
-                                   <<
-                     "No key `shock_onset' found in data for "
+                                   << "No key `shock_onset' found in data for "
                                    << error_key << endl);
                }
 
@@ -2536,8 +2523,7 @@ void LinAdv::getFromInput(
                } else {
                   TBOX_ERROR(
                      d_object_name << ": "
-                                   <<
-                     "No key `shock_tol' found in data for "
+                                   << "No key `shock_tol' found in data for "
                                    << error_key << endl);
                }
 
@@ -2567,8 +2553,7 @@ void LinAdv::getFromInput(
                } else {
                   TBOX_ERROR(
                      d_object_name << ": "
-                                   <<
-                     "No key `rich_tol' found in data for "
+                                   << "No key `rich_tol' found in data for "
                                    << error_key << endl);
                }
 
@@ -2631,8 +2616,7 @@ void LinAdv::getFromInput(
       } else {
          TBOX_ERROR(
             d_object_name << ": "
-                          <<
-            "No `Initial_data' database found in input." << endl);
+                          << "No `Initial_data' database found in input." << endl);
       }
 
       bool found_problem_data = false;
@@ -2644,16 +2628,14 @@ void LinAdv::getFromInput(
          } else {
             TBOX_ERROR(
                d_object_name << ": "
-                             <<
-               "`radius' input required for SPHERE problem." << endl);
+                             << "`radius' input required for SPHERE problem." << endl);
          }
          if (init_data_db->keyExists("center")) {
             init_data_db->getDoubleArray("center", d_center, d_dim.getValue());
          } else {
             TBOX_ERROR(
                d_object_name << ": "
-                             <<
-               "`center' input required for SPHERE problem." << endl);
+                             << "`center' input required for SPHERE problem." << endl);
          }
          if (init_data_db->keyExists("uval_inside")) {
             d_uval_inside = init_data_db->getDouble("uval_inside");
@@ -2697,8 +2679,7 @@ void LinAdv::getFromInput(
             if (d_dim < tbox::Dimension(3)) {
                TBOX_ERROR(
                   d_object_name << ": `PIECEWISE_CONSTANT_Z' "
-                                <<
-                  "problem invalid in 1 or 2 dimensions." << endl);
+                                << "problem invalid in 1 or 2 dimensions." << endl);
             }
             idir = 2;
          }
@@ -2764,16 +2745,14 @@ void LinAdv::getFromInput(
             } else {
                TBOX_ERROR(
                   d_object_name << ": "
-                                <<
-                  "`period' input required for SINE problem." << endl);
+                                << "`period' input required for SINE problem." << endl);
             }
          }
 
          if (!found_interval_data) {
             TBOX_ERROR(
                d_object_name << ": "
-                             <<
-               "Insufficient interval data given in input"
+                             << "Insufficient interval data given in input"
                              << " for PIECEWISE_CONSTANT_*problem."
                              << endl);
          }
@@ -2820,8 +2799,7 @@ void LinAdv::getFromInput(
    } else {
       TBOX_ERROR(
          d_object_name << ": "
-                       <<
-         "Key data `Boundary_data' not found in input. " << endl);
+                       << "Key data `Boundary_data' not found in input. " << endl);
    }
 
 }
@@ -2936,8 +2914,7 @@ void LinAdv::getFromRestart()
    if (ver != LINADV_VERSION) {
       TBOX_ERROR(
          d_object_name << ":  "
-                       <<
-         "Restart file version different than class version.");
+                       << "Restart file version different than class version.");
    }
 
    db->getDoubleArray("d_advection_velocity", d_advection_velocity, d_dim.getValue());
@@ -2950,16 +2927,14 @@ void LinAdv::getFromRestart()
    if (!(d_nghosts == CELLG)) {
       TBOX_ERROR(
          d_object_name << ": "
-                       <<
-         "Key data `d_nghosts' in restart file != CELLG." << endl);
+                       << "Key data `d_nghosts' in restart file != CELLG." << endl);
    }
    int* tmp_fluxghosts = &d_fluxghosts[0];
    db->getIntegerArray("d_fluxghosts", tmp_fluxghosts, d_dim.getValue());
    if (!(d_fluxghosts == FLUXG)) {
       TBOX_ERROR(
          d_object_name << ": "
-                       <<
-         "Key data `d_fluxghosts' in restart file != FLUXG." << endl);
+                       << "Key data `d_fluxghosts' in restart file != FLUXG." << endl);
    }
 
    d_data_problem = db->getString("d_data_problem");

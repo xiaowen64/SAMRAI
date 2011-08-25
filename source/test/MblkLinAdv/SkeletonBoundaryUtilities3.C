@@ -628,8 +628,7 @@ int SkeletonBoundaryUtilities3::checkBdryData(
    } else {
       TBOX_ERROR(
          "Unknown btype " << btype
-                          <<
-         " passed to SkeletonBoundaryUtilities3::checkBdryData()! "
+                          << " passed to SkeletonBoundaryUtilities3::checkBdryData()! "
                           << endl);
    }
 
@@ -663,8 +662,7 @@ int SkeletonBoundaryUtilities3::checkBdryData(
       } else {
          TBOX_ERROR(
             "Unknown bcase " << bcase
-                             <<
-            " passed to SkeletonBoundaryUtilities3::checkBdryData()"
+                             << " passed to SkeletonBoundaryUtilities3::checkBdryData()"
                              << "\n for " << bdry_type_str
                              << " at location " << bloc << endl);
       }
@@ -689,8 +687,7 @@ int SkeletonBoundaryUtilities3::checkBdryData(
       } else {
          TBOX_ERROR(
             "Unknown bcase " << bcase
-                             <<
-            " passed to SkeletonBoundaryUtilities3::checkBdryData()"
+                             << " passed to SkeletonBoundaryUtilities3::checkBdryData()"
                              << "\n for " << bdry_type_str
                              << " at location " << bloc << endl);
       }
@@ -715,8 +712,7 @@ int SkeletonBoundaryUtilities3::checkBdryData(
       } else {
          TBOX_ERROR(
             "Unknown bcase " << bcase
-                             <<
-            " passed to SkeletonBoundaryUtilities3::checkBdryData()"
+                             << " passed to SkeletonBoundaryUtilities3::checkBdryData()"
                              << "\n for " << bdry_type_str
                              << " at location " << bloc << endl);
       }
@@ -1640,8 +1636,7 @@ void SkeletonBoundaryUtilities3::get3dBdryDirectionCheckValues(
    } else {
       TBOX_ERROR(
          "Unknown boundary type " << btype
-                                  <<
-         " passed to SkeletonBoundaryUtilities3::checkBdryData()"
+                                  << " passed to SkeletonBoundaryUtilities3::checkBdryData()"
                                   << "\n for " << bdry_type_str
                                   << " at location " << bloc << endl);
    }

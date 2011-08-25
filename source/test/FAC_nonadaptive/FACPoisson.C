@@ -366,8 +366,7 @@ bool FACPoisson::packDerivedDataIntoDoubleBuffer(
       // Did not register this name.
       TBOX_ERROR(
          "Unregistered variable name '" << variable_name << "' in\n"
-                                        <<
-         "FACPoissonX::packDerivedDataIntoDoubleBuffer");
+                                        << "FACPoissonX::packDerivedDataIntoDoubleBuffer");
 
    }
    // Return true if this patch has derived data on it.

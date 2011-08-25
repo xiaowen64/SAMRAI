@@ -1361,12 +1361,9 @@ void VisItDataWriter::writePlotData(
       if (!d_is_multiblock && sorted_mapped_box_level != unsorted_mapped_box_level) {
          TBOX_ERROR(
             "VisItDataWriter: Encountered existing limitation of VisItDataWriter\n"
-            <<
-            "This class cannot write files unless all patch levels have\n"
-            <<
-            "globally sequentialized nodes.  This can be accomplished\n"
-            <<
-            "by the sequentialize_patch_indices = TRUE input flag in\n"
+            << "This class cannot write files unless all patch levels have\n"
+            << "globally sequentialized nodes.  This can be accomplished\n"
+            << "by the sequentialize_patch_indices = TRUE input flag in\n"
             << "GriddingAlgorithm.  This problem can (and should\n"
             << "be fixed soon.");
 
@@ -3916,8 +3913,7 @@ void VisItDataWriter::packPatchDataIntoDoubleBuffer(
       TBOX_ERROR(
          d_object_name << ":packPatchDataIntoDoubleBuffer()"
                        << "\n  This case has DIM = " << d_dim
-                       <<
-         "\n  Dimensions < 2 or > 3 are not supported at"
+                       << "\n  Dimensions < 2 or > 3 are not supported at"
                        << "\n  this time." << std::endl);
    }
 

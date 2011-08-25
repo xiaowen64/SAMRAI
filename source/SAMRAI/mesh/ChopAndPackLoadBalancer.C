@@ -196,8 +196,7 @@ void ChopAndPackLoadBalancer::setWorkloadPatchDataIndex(
          d_object_name << " error: "
                        << "\n   data_id " << data_id << " passed to "
                        << "setWorkloadPatchDataIndex()"
-                       <<
-         " does not refer to cell-centered double patch data. " << std::endl);
+                       << " does not refer to cell-centered double patch data. " << std::endl);
    }
 
    if (level_number >= 0) {
@@ -787,8 +786,7 @@ void ChopAndPackLoadBalancer::chopBoxesWithUniformWorkload(
    if (tmp_box_list.getNumberOfItems() != tmp_work_list.getNumberOfItems()) {
       TBOX_ERROR(
          d_object_name << ": "
-                       <<
-         "Number of boxes generated != number of workload values generated."
+                       << "Number of boxes generated != number of workload values generated."
                        << std::endl);
    }
 
@@ -977,8 +975,7 @@ void ChopAndPackLoadBalancer::chopBoxesWithNonuniformWorkload(
    if (tmp_box_list.getNumberOfItems() != tmp_work_list.getNumberOfItems()) {
       TBOX_ERROR(
          d_object_name << ": "
-                       <<
-         "Number of boxes generated != number of workload values generated."
+                       << "Number of boxes generated != number of workload values generated."
                        << std::endl);
    }
 
@@ -1208,8 +1205,7 @@ void ChopAndPackLoadBalancer::getFromInput(
             d_object_name << ": "
                           << "Unknown 'bin_pack_method' "
                           << d_master_bin_pack_method
-                          <<
-            " found in input. \nDefault 'GREEDY' will be used." << std::endl);
+                          << " found in input. \nDefault 'GREEDY' will be used." << std::endl);
          d_master_bin_pack_method = "GREEDY";
       }
 
@@ -1262,10 +1258,8 @@ void ChopAndPackLoadBalancer::getFromInput(
          if (totprocs != mpi.getSize()) {
             TBOX_WARNING(
                d_object_name << ": "
-                             <<
-               "Input values for 'processor_layout' are inconsistent with"
-                             <<
-               "\nnumber of processors.  Processor layout information will"
+                             << "Input values for 'processor_layout' are inconsistent with"
+                             << "\nnumber of processors.  Processor layout information will"
                              << "\nbe generated when needed."
                              << std::endl);
          } else {

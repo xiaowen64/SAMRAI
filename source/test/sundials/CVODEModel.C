@@ -1336,8 +1336,7 @@ CVODEModel::getFromInput(
    } else {
       TBOX_WARNING(
          d_object_name << ": "
-                       <<
-         "Key data `Boundary_data' not found in input. " << endl);
+                       << "Key data `Boundary_data' not found in input. " << endl);
    }
 
 #ifdef USE_FAC_PRECONDITIONER
@@ -1413,8 +1412,7 @@ void CVODEModel::getFromRestart()
    if (ver != CVODE_MODEL_VERSION) {
       TBOX_ERROR(
          d_object_name << ":  "
-                       <<
-         "Restart file version different than class version.");
+                       << "Restart file version different than class version.");
    }
 
    d_initial_value = db->getDouble("d_initial_value");

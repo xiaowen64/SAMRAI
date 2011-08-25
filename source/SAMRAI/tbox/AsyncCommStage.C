@@ -516,12 +516,9 @@ size_t AsyncCommStage::advanceSome(
                   << "MPI_REQUEST_NULL = " << MPI_REQUEST_NULL << '\n'
                   << "number of requests = "
                   << d_member_to_req[d_members.size()] << '\n'
-                  <<
-                  "d_req.size() = " << d_req.size() << '\n'
-                  <<
-                  "n_req_completed = " << n_req_completed << '\n'
-                  <<
-                  "i = " << i << '\n'
+                  << "d_req.size() = " << d_req.size() << '\n'
+                  << "n_req_completed = " << n_req_completed << '\n'
+                  << "i = " << i << '\n'
                   );
             }
          }

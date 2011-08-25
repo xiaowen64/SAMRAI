@@ -139,14 +139,14 @@ bool RestartManager::openRestartFile(
       if (!database->open(restart_filename)) {
          TBOX_ERROR(
             "Error attempting to open restart file " << restart_filename
-                                                     <<
-            "\n   No restart file for processor: " << proc_num
-                                                     <<
-            "\n   restart directory name = " << root_dirname
-                                                     <<
-            "\n   number of processors   = " << num_nodes
-                                                     <<
-            "\n   restore number         = " << restore_num << std::endl);
+                                                     << "\n   No restart file for processor: "
+                                                     << proc_num
+                                                     << "\n   restart directory name = "
+                                                     << root_dirname
+                                                     << "\n   number of processors   = "
+                                                     << num_nodes
+                                                     << "\n   restore number         = "
+                                                     << restore_num << std::endl);
          open_successful = false;
       } else {
          /* set d_database root and d_is_from_restart */
