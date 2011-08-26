@@ -317,7 +317,7 @@ private:
    /*
     * Static integer constant describing the largest possible ghost cell width.
     */
-   static const int BIG_GHOST_CELL_WIDTH;
+   static const int BIG_GHOST_CELL_WIDTH = 10;
 
    RefineSchedule(
       const RefineSchedule&);                   // not implemented
@@ -418,8 +418,8 @@ private:
     *                        in constructor.
     * @param[in] src_to_dst  Connector between src and dst levels given
     *                        in constructor.
-    * @param[in] dst_is_supplemental_level  Tells if the destination level
-    *                                       is a temporary supplemental level
+    * @param[in] dst_is_coarse_interp_level  Tells if the destination level
+    *                                       is a temporary coarse interpolation level
     *                                       used for interpolation.
     * @param[in] src_growth_to_nest_dst  The minimum amount that the source
     *                                    level has to grow in order to nest the
@@ -447,7 +447,7 @@ private:
       tbox::Pointer<hier::PatchHierarchy> hierarchy,
       const Connector& dst_to_src,
       const Connector& src_to_dst,
-      const bool dst_is_supplemental_level,
+      const bool dst_is_coarse_interp_level,
       const hier::IntVector& src_growth_to_nest_dst,
       const MappedBoxLevel& fill_mapped_box_level,
       const Connector& dst_to_fill,
@@ -682,7 +682,7 @@ private:
    createEnconFillSchedule(
       const tbox::Pointer<hier::PatchHierarchy>& hierarchy,
       const tbox::Pointer<hier::PatchLevel>& hiercoarse_level,
-      const bool dst_is_supplemental_level,
+      const bool dst_is_coarse_interp_level,
       const hier::IntVector& src_growth_to_nest_dst,
       const hier::Connector& encon_to_unfilled_encon);
 
@@ -716,41 +716,41 @@ private:
     * @param[in,out] dst_to_unfilled
     */
    void
-   finishScheduleConstruction_shearUnfilledBoxesOutsideNonperiodicBoundaries(
+   shearUnfilledBoxesOutsideNonperiodicBoundaries(
       hier::MappedBoxLevel& unfilled,
       hier::Connector& dst_to_unfilled,
       const tbox::Pointer<hier::PatchHierarchy>& hierarchy);
 
    /*!
-    * @brief Set up the supplemental MappedBoxLevel and related data.
+    * @brief Set up the coarse interpolation MappedBoxLevel and related data.
     *
-    * Also sets up d_dst_to_supp, d_supp_to_dst and d_supp_to_unfilled.
+    * Also sets up d_dst_to_coarse_interp, d_coarse_interp_to_dst and d_coarse_interp_to_unfilled.
     *
-    * @param[out] supp_mapped_box_level
+    * @param[out] coarse_interp_mapped_box_level
     *
     * @param[in] hiercoarse_mapped_box_level The MappedBoxLevel on the
-    * hierarchy at the resolution that supp_mapped_box_level is to have.
+    * hierarchy at the resolution that coarse_interp_mapped_box_level is to have.
     *
     * @param[in] dst_to_unfilled
     */
    void
-   finishScheduleConstruction_setupSupplementalMappedBoxLevel(
-      hier::MappedBoxLevel& supp_mapped_box_level,
+   setupCoarseInterpMappedBoxLevel(
+      hier::MappedBoxLevel& coarse_interp_mapped_box_level,
       const hier::MappedBoxLevel& hiercoarse_mapped_box_level,
       const hier::Connector& dst_to_unfilled);
 
    /*!
-    * @brief Compute the Connectors between the supplemental level
+    * @brief Create the coarse interpolation PatchLevel and compute the Connectors between the coarse interpolation level
     * and the hiercoarse level.
     *
-    * @param[in] supp_to_hiercoarse
+    * @param[out] coarse_interp_to_hiercoarse
     *
-    * @param[out] hiercoarse_to_supp
+    * @param[out] hiercoarse_to_coarse_interp
     *
-    * @param[in,out] supp_mapped_box_level This method will add
-    * periodic images to supp_mapped_box_level, if needed.
+    * @param[in,out] coarse_interp_mapped_box_level This method will add
+    * periodic images to coarse_interp_mapped_box_level, if needed.
     *
-    * @param[in] dst_is_supplemental_level
+    * @param[in] dst_is_coarse_interp_level
     *
     * @param[in] hierarchy
     *
@@ -758,28 +758,26 @@ private:
     * coarser level on the hierarchy
     */
    void
-   finishScheduleConstruction_connectSuppToHiercoarse(
-      hier::Connector& supp_to_hiercoarse,
-      hier::Connector& hiercoarse_to_supp,
-      hier::MappedBoxLevel& supp_mapped_box_level,
+   createCoarseInterpPatchLevel(
+      tbox::Pointer<hier::Connector>& coarse_interp_to_hiercoarse,
+      tbox::Pointer<hier::Connector>& hiercoarse_to_coarse_interp,
+      hier::MappedBoxLevel& coarse_interp_mapped_box_level,
       const tbox::Pointer<hier::PatchHierarchy>& hierarchy,
       const int next_coarser_ln,
       const hier::Connector& dst_to_src,
       const hier::Connector& src_to_dst,
-      const bool dst_is_supplemental_level);
+      const bool dst_is_coarse_interp_level);
 
    /*!
-    * @brief Sanity check to try to catch library errors before
-    * they create more elusive bugs.
-    *
-    * Check that the two Connectors are proper transposes and that
-    * the supplemental MappedBoxLevel sufficiently nests inside
-    * the hiercoarse.
+    * @brief Check that the Connectors between the coarse
+    * interpolation and hiercoarse levels are transposes and that that
+    * the coarse interpolation MappedBoxLevel sufficiently nests
+    * inside the hiercoarse.
     */
    void
-   sanityCheckSupplementalAndHiercoarseLevels(
-      const hier::Connector& supp_to_hiercoarse,
-      const hier::Connector& hiercoarse_to_supp,
+   sanityCheckCoarseInterpAndHiercoarseLevels(
+      const hier::Connector& coarse_interp_to_hiercoarse,
+      const hier::Connector& hiercoarse_to_coarse_interp,
       const tbox::Pointer<hier::PatchHierarchy>& hierarchy,
       const int next_coarser_ln);
 
@@ -994,52 +992,52 @@ private:
    tbox::Pointer<tbox::Schedule> d_fine_priority_level_schedule;
 
    /*!
-    * @brief The supplemental level is an internal level created to
+    * @brief The coarse interpolation level is an internal level created to
     * hold data required for interpolating into the fill boxes of the
     * destination that could not be filled directly from the source
     * level.
     *
-    * Once d_supp_level is filled (by executing d_supp_schedule)
+    * Once d_coarse_interp_level is filled (by executing d_coarse_interp_schedule)
     * interpolating data into the corresponding fill boxes of the
     * destination is a local operation.
     *
-    * This coarser level is filled by the d_supp_schedule.  If
+    * This coarser level is filled by the d_coarse_interp_schedule.  If
     * no coarser level data is needed, then this pointer will be NULL.
-    * Note that the supplemental level may not have the same mapping
+    * Note that the coarse interpolation level may not have the same mapping
     * as the destination level.
     */
-   tbox::Pointer<hier::PatchLevel> d_supp_level;
+   tbox::Pointer<hier::PatchLevel> d_coarse_interp_level;
 
    /*!
-    * @brief The supplemental encon level is an internal level created
+    * @brief The coarse interpolation encon level is an internal level created
     * to hold data used for interpolating into unfilled boxes at
     * enhanced connectivity block boundaries.
     *
-    * d_supp_encon_level will be filled by d_supp_encon_schedule.  Once it
+    * d_coarse_interp_encon_level will be filled by d_coarse_interp_encon_schedule.  Once it
     * is filled, the interpolation of data to patches in d_encon_level will
     * be a local operation.
     */
-   tbox::Pointer<hier::PatchLevel> d_supp_encon_level;
+   tbox::Pointer<hier::PatchLevel> d_coarse_interp_encon_level;
 
    /*!
-    * @brief Schedule to recursively fill the supplemental level using
+    * @brief Schedule to recursively fill the coarse interpolation level using
     * the next coarser hierarchy level.
     *
-    * This schedule describes how to fill the supplemental level so
+    * This schedule describes how to fill the coarse interpolation level so
     * that the coarse data can be interpolated into the fine fill
     * boxes on the destination.
     */
-   tbox::Pointer<xfer::RefineSchedule> d_supp_schedule;
+   tbox::Pointer<xfer::RefineSchedule> d_coarse_interp_schedule;
 
    /*!
-    * @brief Schedule to recursively fill d_supp_encon_level using
+    * @brief Schedule to recursively fill d_coarse_interp_encon_level using
     * the next coarser hierarchy level.
     *
-    * This schedule fills d_supp_encon_level so that it can be used to
+    * This schedule fills d_coarse_interp_encon_level so that it can be used to
     * interpolate data onto d_encon_level in fill boxes that could not be
     * filled from the source level.
     */
-   tbox::Pointer<xfer::RefineSchedule> d_supp_encon_schedule;
+   tbox::Pointer<xfer::RefineSchedule> d_coarse_interp_encon_schedule;
 
    /*!
     * @brief Internal level representing ghost regions of destination patches
@@ -1055,14 +1053,14 @@ private:
    /*!
     * @brief Describes remaining unfilled boxes after attempting to
     * fill from the source level.  These remaining boxes must be
-    * filled using a supplemental schedule, d_supp_schedule.
+    * filled using a coarse interpolation schedule, d_coarse_interp_schedule.
     */
    tbox::Pointer<MappedBoxLevel> d_unfilled_mapped_box_level;
 
    /*!
     * @brief Describes remaining unfilled boxes of d_encon_level after
     * attempting to fill from the source level.  These remaining boxes must
-    * be filled using a supplemental schedule, d_supp_encon_schedule.
+    * be filled using a coarse interpolation schedule, d_coarse_interp_encon_schedule.
     */
    tbox::Pointer<MappedBoxLevel> d_unfilled_encon_box_level;
 
@@ -1080,29 +1078,29 @@ private:
    d_encon_refine_overlaps;
 
    /*!
-    * @brief Connector from the supplemental level to the destination.
+    * @brief Connector from the coarse interpolation level to the destination.
     */
-   Connector d_supp_to_dst;
+   Connector d_coarse_interp_to_dst;
 
    /*!
-    * @brief Connector from the destination level to the supplemental.
+    * @brief Connector from the destination level to the coarse interpolation.
     */
-   Connector d_dst_to_supp;
+   Connector d_dst_to_coarse_interp;
 
    /*!
-    * @brief Connector from d_encon_level to d_supp_encon_level.
+    * @brief Connector from d_encon_level to d_coarse_interp_encon_level.
     */
-   Connector d_encon_to_supp_encon;
+   Connector d_encon_to_coarse_interp_encon;
 
    /*!
-    * @brief Connector d_supp_level to d_unfilled_mapped_box_level.
+    * @brief Connector d_coarse_interp_level to d_unfilled_mapped_box_level.
     *
     * Cached for use during schedule filling.
     */
-   Connector d_supp_to_unfilled;
+   Connector d_coarse_interp_to_unfilled;
 
-   Connector d_supp_encon_to_unfilled_encon;
-   Connector d_supp_encon_to_encon;
+   Connector d_coarse_interp_encon_to_unfilled_encon;
+   Connector d_coarse_interp_encon_to_encon;
 
    Connector d_dst_to_encon;
    Connector d_src_to_encon;
@@ -1181,12 +1179,12 @@ private:
    static tbox::Pointer<tbox::Timer> t_barrier_and_time;
    static tbox::Pointer<tbox::Timer> t_get_global_mapped_box_count;
    static tbox::Pointer<tbox::Timer> t_coarse_shear;
-   static tbox::Pointer<tbox::Timer> t_setup_supp_mapped_box_level;
+   static tbox::Pointer<tbox::Timer> t_setup_coarse_interp_mapped_box_level;
    static tbox::Pointer<tbox::Timer> t_misc2;
-   static tbox::Pointer<tbox::Timer> t_bridge_supp_hiercoarse;
+   static tbox::Pointer<tbox::Timer> t_bridge_coarse_interp_hiercoarse;
    static tbox::Pointer<tbox::Timer> t_bridge_dst_hiercoarse;
-   static tbox::Pointer<tbox::Timer> t_make_supp_level;
-   static tbox::Pointer<tbox::Timer> t_make_supp_to_unfilled;
+   static tbox::Pointer<tbox::Timer> t_make_coarse_interp_level;
+   static tbox::Pointer<tbox::Timer> t_make_coarse_interp_to_unfilled;
    static tbox::Pointer<tbox::Timer> t_invert_edges;
    static tbox::Pointer<tbox::Timer> t_construct_send_trans;
    static tbox::Pointer<tbox::Timer> t_construct_recv_trans;

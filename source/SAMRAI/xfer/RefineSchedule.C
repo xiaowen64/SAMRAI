@@ -50,8 +50,6 @@
 namespace SAMRAI {
 namespace xfer {
 
-const int RefineSchedule::BIG_GHOST_CELL_WIDTH = 10;
-
 static const std::string logbord;
 static const std::string errbord("E-> ");
 
@@ -72,12 +70,12 @@ tbox::Pointer<tbox::Timer> RefineSchedule::t_misc1;
 tbox::Pointer<tbox::Timer> RefineSchedule::t_barrier_and_time;
 tbox::Pointer<tbox::Timer> RefineSchedule::t_get_global_mapped_box_count;
 tbox::Pointer<tbox::Timer> RefineSchedule::t_coarse_shear;
-tbox::Pointer<tbox::Timer> RefineSchedule::t_setup_supp_mapped_box_level;
+tbox::Pointer<tbox::Timer> RefineSchedule::t_setup_coarse_interp_mapped_box_level;
 tbox::Pointer<tbox::Timer> RefineSchedule::t_misc2;
-tbox::Pointer<tbox::Timer> RefineSchedule::t_bridge_supp_hiercoarse;
+tbox::Pointer<tbox::Timer> RefineSchedule::t_bridge_coarse_interp_hiercoarse;
 tbox::Pointer<tbox::Timer> RefineSchedule::t_bridge_dst_hiercoarse;
-tbox::Pointer<tbox::Timer> RefineSchedule::t_make_supp_level;
-tbox::Pointer<tbox::Timer> RefineSchedule::t_make_supp_to_unfilled;
+tbox::Pointer<tbox::Timer> RefineSchedule::t_make_coarse_interp_level;
+tbox::Pointer<tbox::Timer> RefineSchedule::t_make_coarse_interp_to_unfilled;
 tbox::Pointer<tbox::Timer> RefineSchedule::t_invert_edges;
 tbox::Pointer<tbox::Timer> RefineSchedule::t_construct_send_trans;
 tbox::Pointer<tbox::Timer> RefineSchedule::t_construct_recv_trans;
@@ -162,8 +160,8 @@ RefineSchedule::RefineSchedule(
    d_coarse_priority_level_schedule->setTimerPrefix("xfer::RefineSchedule");
    d_fine_priority_level_schedule->setTimerPrefix("xfer::RefineSchedule");
 
-   d_supp_schedule.setNull();
-   d_supp_level.setNull();
+   d_coarse_interp_schedule.setNull();
+   d_coarse_interp_level.setNull();
 
    d_max_fill_boxes = 0;
 
@@ -251,20 +249,20 @@ RefineSchedule::RefineSchedule(
       use_time_refinement,
       create_transactions);
 
-   if (!d_supp_level.isNull()) {
+   if (!d_coarse_interp_level.isNull()) {
       computeRefineOverlaps(d_refine_overlaps,
          d_dst_level,
-         d_supp_level,
-         d_supp_to_dst,
-         d_supp_to_unfilled);
+         d_coarse_interp_level,
+         d_coarse_interp_to_dst,
+         d_coarse_interp_to_unfilled);
    }
 
-   if (!d_supp_encon_level.isNull()) {
+   if (!d_coarse_interp_encon_level.isNull()) {
       computeRefineOverlaps(d_encon_refine_overlaps,
          d_encon_level,
-         d_supp_encon_level,
-         d_supp_encon_to_encon,
-         d_supp_encon_to_unfilled_encon);
+         d_coarse_interp_encon_level,
+         d_coarse_interp_encon_to_encon,
+         d_coarse_interp_encon_to_unfilled_encon);
    }
 
 }
@@ -354,8 +352,8 @@ RefineSchedule::RefineSchedule(
    d_coarse_priority_level_schedule.setNull();
    d_fine_priority_level_schedule.setNull();
 
-   d_supp_schedule.setNull();
-   d_supp_level.setNull();
+   d_coarse_interp_schedule.setNull();
+   d_coarse_interp_level.setNull();
 
    d_max_fill_boxes = 0;
 
@@ -418,7 +416,7 @@ RefineSchedule::RefineSchedule(
       !d_dst_level_fill_pattern->doesSourceLevelCommunicateToDestination();
 
    const hier::IntVector dummy_intvector(dim, -1);
-   const bool dst_is_supplemental_level = false;
+   const bool dst_is_coarse_interp_level = false;
 
    /*
     * finishScheduleConstruction sets up all transactions to communicate
@@ -430,7 +428,7 @@ RefineSchedule::RefineSchedule(
       hierarchy,
       *dst_to_src,
       *src_to_dst,
-      dst_is_supplemental_level,
+      dst_is_coarse_interp_level,
       dummy_intvector,
       fill_mapped_box_level,
       dst_to_fill,
@@ -442,20 +440,20 @@ RefineSchedule::RefineSchedule(
     * Compute the BoxOverlap objects that will be used to refine the
     * data from coarser levels onto the destination.
     */
-   if (!d_supp_schedule.isNull()) {
+   if (!d_coarse_interp_schedule.isNull()) {
       computeRefineOverlaps(d_refine_overlaps,
          d_dst_level,
-         d_supp_level,
-         d_supp_to_dst,
-         d_supp_to_unfilled);
+         d_coarse_interp_level,
+         d_coarse_interp_to_dst,
+         d_coarse_interp_to_unfilled);
    }
 
-   if (!d_supp_encon_schedule.isNull()) {
+   if (!d_coarse_interp_encon_schedule.isNull()) {
       computeRefineOverlaps(d_encon_refine_overlaps,
          d_encon_level,
-         d_supp_encon_level,
-         d_supp_encon_to_encon,
-         d_supp_encon_to_unfilled_encon);
+         d_coarse_interp_encon_level,
+         d_coarse_interp_encon_to_encon,
+         d_coarse_interp_encon_to_unfilled_encon);
    }
 
 }
@@ -535,8 +533,8 @@ RefineSchedule::RefineSchedule(
    d_coarse_priority_level_schedule.setNull();
    d_fine_priority_level_schedule.setNull();
 
-   d_supp_schedule.setNull();
-   d_supp_level.setNull();
+   d_coarse_interp_schedule.setNull();
+   d_coarse_interp_level.setNull();
 
    d_max_fill_boxes = 0;
 
@@ -552,11 +550,11 @@ RefineSchedule::RefineSchedule(
 
    /*
     * Note that we cannot assert dst<==>src are complete, because they
-    * are supp<==>hiercoarse from the recursion.
-    * finishScheduleConstruction should ensure that supp<==>hiercoarse
+    * are coarse_interp<==>hiercoarse from the recursion.
+    * finishScheduleConstruction should ensure that coarse_interp<==>hiercoarse
     * are complete enough to fill dst and connect the unfilled portion
     * to the next hierarchy coarser level.  finishScheduleConstruction
-    * does not (cannot) guarantee that supp<==>hiercoarse is complete.
+    * does not (cannot) guarantee that coarse_interp<==>hiercoarse is complete.
     */
    TBOX_ASSERT(!src_level.isNull());
    TBOX_ASSERT(dst_to_src.isInitialized());
@@ -568,7 +566,7 @@ RefineSchedule::RefineSchedule(
    /*
     * Create fill_mapped_box_level, representing all parts of the
     * destination level, including ghost regions if desired, that this
-    * schedule will fill.  Here, the destination is always a supplemental
+    * schedule will fill.  Here, the destination is always a coarse interpolation
     * level constructed by coarsening another RefineSchedule's unfilled
     * boxes.  As the destination will be used as a coarse level in a
     * refinement operation, the fill_mapped_box_level will be the boxes
@@ -589,7 +587,7 @@ RefineSchedule::RefineSchedule(
       d_max_stencil_width);
 
    bool use_time_refinement = true;
-   const bool dst_is_supplemental_level = true;
+   const bool dst_is_coarse_interp_level = true;
 
    /*
     * finishSchedule construction sets up all transactions to communicate
@@ -602,7 +600,7 @@ RefineSchedule::RefineSchedule(
       hierarchy,
       dst_to_src,
       src_to_dst,
-      dst_is_supplemental_level,
+      dst_is_coarse_interp_level,
       src_growth_to_nest_dst,
       fill_mapped_box_level,
       dst_to_fill,
@@ -614,20 +612,20 @@ RefineSchedule::RefineSchedule(
     * data from coarser levels onto the destination.
     */
 
-   if (!d_supp_schedule.isNull()) {
+   if (!d_coarse_interp_schedule.isNull()) {
       computeRefineOverlaps(d_refine_overlaps,
          d_dst_level,
-         d_supp_level,
-         d_supp_to_dst,
-         d_supp_to_unfilled);
+         d_coarse_interp_level,
+         d_coarse_interp_to_dst,
+         d_coarse_interp_to_unfilled);
    }
 
-   if (!d_supp_encon_schedule.isNull()) {
+   if (!d_coarse_interp_encon_schedule.isNull()) {
       computeRefineOverlaps(d_encon_refine_overlaps,
          d_encon_level,
-         d_supp_encon_level,
-         d_supp_encon_to_encon,
-         d_supp_encon_to_unfilled_encon);
+         d_coarse_interp_encon_level,
+         d_coarse_interp_encon_to_encon,
+         d_coarse_interp_encon_to_unfilled_encon);
    }
 
 }
@@ -648,8 +646,8 @@ RefineSchedule::~RefineSchedule()
    d_coarse_priority_level_schedule.setNull();
    d_fine_priority_level_schedule.setNull();
 
-   d_supp_schedule.setNull();
-   d_supp_level.setNull();
+   d_coarse_interp_schedule.setNull();
+   d_coarse_interp_level.setNull();
 }
 
 /*
@@ -666,11 +664,11 @@ void RefineSchedule::reset(
    TBOX_ASSERT(!refine_classes.isNull());
 
    setRefineItems(refine_classes);
-   if (!d_supp_schedule.isNull()) {
-      d_supp_schedule->reset(refine_classes);
+   if (!d_coarse_interp_schedule.isNull()) {
+      d_coarse_interp_schedule->reset(refine_classes);
    }
-   if (!d_supp_encon_schedule.isNull()) {
-      d_supp_encon_schedule->reset(refine_classes);
+   if (!d_coarse_interp_encon_schedule.isNull()) {
+      d_coarse_interp_encon_schedule->reset(refine_classes);
    }
 }
 
@@ -706,9 +704,9 @@ RefineSchedule::getBoundaryFillGhostWidth() const
  * enhanced connectivity block boundaries.
  *
  * If there are any unfilled boxes, we coarsen them to create a
- * supplemental level and set up a recursive schedule for filling the
- * supplemental level.  The idea is to interpolate data from the
- * supplemental level to fill the unfilled boxes.
+ * coarse interpolation level and set up a recursive schedule for filling the
+ * coarse interpolation level.  The idea is to interpolate data from the
+ * coarse interpolation level to fill the unfilled boxes.
  ************************************************************************
  */
 
@@ -717,7 +715,7 @@ void RefineSchedule::finishScheduleConstruction(
    tbox::Pointer<hier::PatchHierarchy> hierarchy,
    const Connector& dst_to_src,
    const Connector& src_to_dst,
-   const bool dst_is_supplemental_level,
+   const bool dst_is_coarse_interp_level,
    const hier::IntVector& src_growth_to_nest_dst,
    const MappedBoxLevel& fill_mapped_box_level,
    const Connector& dst_to_fill,
@@ -735,6 +733,8 @@ void RefineSchedule::finishScheduleConstruction(
                  << recursion_level << " next_coarser_ln=" << next_coarser_ln
                  << std::endl;
    }
+
+   // Get data that will be used below.
 
    const tbox::Dimension& dim(hierarchy->getDim());
 
@@ -823,12 +823,11 @@ void RefineSchedule::finishScheduleConstruction(
     * through a user call-back method.
     */
 
-   if (!fully_periodic) {
-      finishScheduleConstruction_shearUnfilledBoxesOutsideNonperiodicBoundaries(
-         *d_unfilled_mapped_box_level,
-         *dst_to_unfilled,
-         hierarchy);
-   }
+   shearUnfilledBoxesOutsideNonperiodicBoundaries(
+      *d_unfilled_mapped_box_level,
+      *dst_to_unfilled,
+      hierarchy);
+
 
    t_get_global_mapped_box_count->barrierAndStart();
 
@@ -839,24 +838,25 @@ void RefineSchedule::finishScheduleConstruction(
       grid_geometry->hasEnhancedConnectivity() &&
       (d_unfilled_encon_box_level->getGlobalNumberOfBoxes() > 0);
 
-   t_get_global_mapped_box_count->stop();
+   t_get_global_mapped_box_count->barrierAndStop();
+
 
    /*
     * If there remain boxes to be filled from coarser levels, then set
     * up data for recursive schedule generation:
     *
-    * 1. Generate a supplemental MappedBoxLevel
-    * (supp_mapped_box_level) by coarsening the unfilled boxes.
+    * 1. Generate a coarse interpolation MappedBoxLevel
+    * (coarse_interp_mapped_box_level) by coarsening the unfilled boxes.
     *
-    * 2. Connect supp_mapped_box_level to the next coarser level on
+    * 2. Connect coarse_interp_mapped_box_level to the next coarser level on
     * the hierarchy.
     *
-    * 3: Construct the supplemental PatchLevel (d_supp_level) and
-    * construct d_supp_schedule to fill d_supp_level.  The coarser
+    * 3: Construct the coarse interpolation PatchLevel (d_coarse_interp_level) and
+    * construct d_coarse_interp_schedule to fill d_coarse_interp_level.  The coarser
     * level on the hierarchy will be the source for filling
-    * d_supp_level, which is why we need step 2..
+    * d_coarse_interp_level, which is why we need step 2..
     *
-    * The idea is that once d_supp_level is filled, we can refine its
+    * The idea is that once d_coarse_interp_level is filled, we can refine its
     * data to fill the current unfilled boxes.
     */
 
@@ -898,7 +898,7 @@ void RefineSchedule::finishScheduleConstruction(
 
       /*
        * hiercoarse is the coarse level on the hierarchy.  It is to be
-       * differentiated from the supplemental (supp) level, which is at
+       * differentiated from the coarse interpolation (coarse_interp) level, which is at
        * the same resolution and level number but is not on the hierarchy.
        */
       const tbox::Pointer<hier::PatchLevel> hiercoarse_level =
@@ -915,78 +915,48 @@ void RefineSchedule::finishScheduleConstruction(
          / hiercoarse_level->getRatioToLevelZero());
 
       /*
-       * Set up the supplemental MappedBoxLevel and also set up
-       * d_dst_to_supp, d_supp_to_dst and d_supp_to_unfilled.  These
+       * Set up the coarse interpolation MappedBoxLevel and also set up
+       * d_dst_to_coarse_interp, d_coarse_interp_to_dst and d_coarse_interp_to_unfilled.  These
        * Connectors are easily generated using dst_to_unfilled.
        */
 
-      hier::MappedBoxLevel supp_mapped_box_level(dim);
-      finishScheduleConstruction_setupSupplementalMappedBoxLevel(
-         supp_mapped_box_level,
+      hier::MappedBoxLevel coarse_interp_mapped_box_level(dim);
+      setupCoarseInterpMappedBoxLevel(
+         coarse_interp_mapped_box_level,
          hiercoarse_mapped_box_level,
          *dst_to_unfilled);
 
       /*
-       * Connect the supplemental MappedBoxLevel (the next recursion's
-       * dst) to the hiercoarse MappedBoxLevel (the next recursion's
-       * src).
+       * Create the coarse interpolation PatchLevel and connect its
+       * MappedBoxLevel (the next recursion's dst) to the hiercoarse
+       * MappedBoxLevel (the next recursion's src).
        */
 
-      Connector supp_to_hiercoarse;
-      Connector hiercoarse_to_supp;
+      tbox::Pointer<Connector> coarse_interp_to_hiercoarse;
+      tbox::Pointer<Connector> hiercoarse_to_coarse_interp;
 
-      finishScheduleConstruction_connectSuppToHiercoarse(
-         supp_to_hiercoarse,
-         hiercoarse_to_supp,
-         supp_mapped_box_level,
+      createCoarseInterpPatchLevel(
+         coarse_interp_to_hiercoarse,
+         hiercoarse_to_coarse_interp,
+         coarse_interp_mapped_box_level,
          hierarchy,
          next_coarser_ln,
          dst_to_src,
          src_to_dst,
-         dst_is_supplemental_level);
+         dst_is_coarse_interp_level);
+
 
       /*
-       * Construct the supplemental PatchLevel and reset
-       * supp<==>hiercoarse connectors to use the PatchLevel's
-       * MappedBoxLevel.  Note that supp<==>hiercoarse is not
-       * guaranteed to be complete, so we cannot put them into
-       * PersistentOverlapConnectors.
-       */
-
-      t_make_supp_level->start();
-      d_supp_level = new hier::PatchLevel(
-            supp_mapped_box_level,
-            hiercoarse_level->getGridGeometry(),
-            hiercoarse_level->getPatchDescriptor());
-      t_make_supp_level->stop();
-      d_supp_level->setLevelNumber(next_coarser_ln);
-      d_supp_level->setNextCoarserHierarchyLevelNumber(next_coarser_ln - 1);
-
-      if (hiercoarse_level->getGridGeometry()->getNumberBlocks() > 1) {
-         hiercoarse_level->getGridGeometry()->
-         adjustMultiblockPatchLevelBoundaries(*d_supp_level);
-      }
-
-      supp_to_hiercoarse.initialize(*d_supp_level->getMappedBoxLevel(),
-         supp_to_hiercoarse.getHead(),
-         supp_to_hiercoarse.getConnectorWidth(),
-         supp_to_hiercoarse.getNeighborhoodSets());
-      hiercoarse_to_supp.initialize(hiercoarse_to_supp.getBase(),
-         *d_supp_level->getMappedBoxLevel(),
-         hiercoarse_to_supp.getConnectorWidth(),
-         hiercoarse_to_supp.getNeighborhoodSets());
-
-      /*
-       * Compute how much hiercoarse has to grow to nest supp, a
+       * Compute how much hiercoarse would have to grow to nest coarse_interp, a
        * required parameter in the private constructor.
        *
-       * If dst is a supplemental level (generated by RefineSchedule),
+       * If dst is a coarse interpolation level (generated by RefineSchedule),
        * we have the info to compute the growth.  If not, we make some
        * assumptions about where dst came from in order to determine
        * how its fill boxes nest in hiercoarse.
        */
-      hier::IntVector hiercoarse_growth_to_nest_supp(dim);
-      if (dst_is_supplemental_level) {
+      hier::IntVector hiercoarse_growth_to_nest_coarse_interp(dim);
+      if (dst_is_coarse_interp_level) {
          /*
           * Assume that src barely nests in hiercoarse.  (In most
           * places, it nests by a margin equal to the nesting buffer,
@@ -995,12 +965,12 @@ void RefineSchedule::finishScheduleConstruction(
           * has to grow as much as the src does, plus the ghost width
           * of the fill.
           *
-          * FIXME: We may in fact be able to count on the nesting
+          * REMARK: We may in fact be able to count on the nesting
           * buffer because extending boxes to physical boundaries do
           * not create any extra relationships.  However, we don't
           * currently have access to the size of the nesting buffer.
           */
-         hiercoarse_growth_to_nest_supp =
+         hiercoarse_growth_to_nest_coarse_interp =
             src_growth_to_nest_dst + dst_to_fill.getConnectorWidth();
       } else {
          /*
@@ -1015,19 +985,19 @@ void RefineSchedule::finishScheduleConstruction(
           * To nest dst and its fill boxes, hiercoarse just has to grow by
           * the ghost width of the fill.
           */
-         hiercoarse_growth_to_nest_supp = dst_to_fill.getConnectorWidth();
+         hiercoarse_growth_to_nest_coarse_interp = dst_to_fill.getConnectorWidth();
       }
-      hiercoarse_growth_to_nest_supp.ceiling(dst_hiercoarse_ratio);
+      hiercoarse_growth_to_nest_coarse_interp.ceiling(dst_hiercoarse_ratio);
 
       t_finish_sched_const_recurse->stop();
 
       /*
-       * We now have all the data for building the supplemental
+       * We now have all the data for building the coarse interpolation
        * schedule using the private constructor.
        *
        * We need to make sure that the coarse schedule uses
        * BoxGeometryVariableFillPattern, so that it fills all needed
-       * parts of d_supp_level
+       * parts of d_coarse_interp_level
        */
       tbox::Pointer<BoxGeometryVariableFillPattern> bg_fill_pattern(
          new BoxGeometryVariableFillPattern());
@@ -1050,17 +1020,17 @@ void RefineSchedule::finishScheduleConstruction(
          const std::string dbgbord;
          tbox::plog << "finishScheduleConstruction in recursion_level="
                     << recursion_level << " next_coarser_ln=" << next_coarser_ln
-                    << " creating coarse schedule to fill supp\n"
-                    << "supp_mapped_box_level:\n"
-                    << supp_mapped_box_level.format(dbgbord, 2);
+                    << " creating coarse schedule to fill coase_interp\n"
+                    << "coarse_interp_mapped_box_level:\n"
+                    << coarse_interp_mapped_box_level.format(dbgbord, 2);
       }
-      d_supp_schedule = new RefineSchedule(d_supp_level,
+      d_coarse_interp_schedule = new RefineSchedule(d_coarse_interp_level,
             hiercoarse_level,
             next_coarser_ln - 1,
             hierarchy,
-            hiercoarse_growth_to_nest_supp,
-            supp_to_hiercoarse,
-            hiercoarse_to_supp,
+            hiercoarse_growth_to_nest_coarse_interp,
+            *coarse_interp_to_hiercoarse,
+            *hiercoarse_to_coarse_interp,
             coarse_schedule_refine_classes,
             d_transaction_factory,
             d_refine_patch_strategy);
@@ -1081,7 +1051,7 @@ void RefineSchedule::finishScheduleConstruction(
       createEnconFillSchedule(
          hierarchy,
          hiercoarse_level,
-         dst_is_supplemental_level,
+         dst_is_coarse_interp_level,
          src_growth_to_nest_dst,
          *encon_to_unfilled_encon);
    }
@@ -1098,16 +1068,16 @@ void RefineSchedule::finishScheduleConstruction(
  ***********************************************************************
  * Create schedule for filling unfilled boxes at enhanced connectivity
  *
- * d_supp_encon_level is created by coarsening d_unfilled_encon_level.
- * d_supp_encon_schedule is created to communicate data from the
- * hierarchy to fill d_supp_encon_level.
+ * d_coarse_interp_encon_level is created by coarsening d_unfilled_encon_level.
+ * d_coarse_interp_encon_schedule is created to communicate data from the
+ * hierarchy to fill d_coarse_interp_encon_level.
  ***********************************************************************
  */
 void
 RefineSchedule::createEnconFillSchedule(
    const tbox::Pointer<hier::PatchHierarchy>& hierarchy,
    const tbox::Pointer<hier::PatchLevel>& hiercoarse_level,
-   const bool dst_is_supplemental_level,
+   const bool dst_is_coarse_interp_level,
    const hier::IntVector& src_growth_to_nest_dst,
    const hier::Connector& encon_to_unfilled_encon)
 {
@@ -1115,13 +1085,13 @@ RefineSchedule::createEnconFillSchedule(
 
    const int next_coarser_ln = hiercoarse_level->getLevelNumber();
 
-   hier::MappedBoxLevel supp_encon_box_level(
+   hier::MappedBoxLevel coarse_interp_encon_box_level(
       hiercoarse_level->getRatioToLevelZero(),
       hiercoarse_level->getGridGeometry(),
       d_unfilled_mapped_box_level->getMPI());
 
-   hier::NeighborhoodSet encon_to_supp_encon_nbrhood_set;
-   hier::NeighborhoodSet supp_encon_to_unfilled_nbrhood_set;
+   hier::NeighborhoodSet encon_to_coarse_interp_encon_nbrhood_set;
+   hier::NeighborhoodSet coarse_interp_encon_to_unfilled_nbrhood_set;
 
    const hier::IntVector dst_hiercoarse_ratio(
       d_dst_level->getRatioToLevelZero()
@@ -1142,31 +1112,31 @@ RefineSchedule::createEnconFillSchedule(
       const NeighborSet& encon_unfilled_parts = ei->second;
 
       /*
-       * For each unfilled box, coarsen and add to supp_encon_box_level.
+       * For each unfilled box, coarsen and add to coarse_interp_encon_box_level.
        */
       for (hier::BoxSet::const_iterator ni =
               encon_unfilled_parts.begin();
            ni != encon_unfilled_parts.end(); ++ni) {
 
          const hier::Box& unfilled_mapped_box = *ni;
-         hier::Box supp_box(unfilled_mapped_box);
-         supp_box.coarsen(dst_hiercoarse_ratio);
+         hier::Box coarse_interp_box(unfilled_mapped_box);
+         coarse_interp_box.coarsen(dst_hiercoarse_ratio);
 
-         const hier::Box& supp_mapped_box =
-            *supp_encon_box_level.addBox(supp_box, (*ni).getBlockId());
+         const hier::Box& coarse_interp_mapped_box =
+            *coarse_interp_encon_box_level.addBox(coarse_interp_box, (*ni).getBlockId());
 
          /*
-          * Set up neighbor relationships for supp_encon_box_level
+          * Set up neighbor relationships for coarse_interp_encon_box_level
           */
-         NeighborSet& encon_to_supp_encon_nabrs =
-            encon_to_supp_encon_nbrhood_set[encon_mapped_box_mbid];
-         encon_to_supp_encon_nabrs.insert(supp_mapped_box);
+         NeighborSet& encon_to_coarse_interp_encon_nabrs =
+            encon_to_coarse_interp_encon_nbrhood_set[encon_mapped_box_mbid];
+         encon_to_coarse_interp_encon_nabrs.insert(coarse_interp_mapped_box);
 
-         const hier::BoxId& supp_mapped_box_id =
-            supp_mapped_box.getId();
-         NeighborSet& supp_encon_to_unfilled_nabrs =
-            supp_encon_to_unfilled_nbrhood_set[supp_mapped_box_id];
-         supp_encon_to_unfilled_nabrs.insert(unfilled_mapped_box);
+         const hier::BoxId& coarse_interp_mapped_box_id =
+            coarse_interp_mapped_box.getId();
+         NeighborSet& coarse_interp_encon_to_unfilled_nabrs =
+            coarse_interp_encon_to_unfilled_nbrhood_set[coarse_interp_mapped_box_id];
+         coarse_interp_encon_to_unfilled_nabrs.insert(unfilled_mapped_box);
       }
    }
 
@@ -1175,40 +1145,40 @@ RefineSchedule::createEnconFillSchedule(
    /*
     * Initialize Connectors
     */
-   d_encon_to_supp_encon.swapInitialize(
+   d_encon_to_coarse_interp_encon.swapInitialize(
       *(d_encon_level->getMappedBoxLevel()),
-      supp_encon_box_level,
+      coarse_interp_encon_box_level,
       hier::IntVector::getZero(dim),
-      encon_to_supp_encon_nbrhood_set);
+      encon_to_coarse_interp_encon_nbrhood_set);
 
-   d_supp_encon_to_unfilled_encon.initialize(
-      supp_encon_box_level,
+   d_coarse_interp_encon_to_unfilled_encon.initialize(
+      coarse_interp_encon_box_level,
       *d_unfilled_encon_box_level,
       hier::IntVector::getZero(dim),
-      supp_encon_to_unfilled_nbrhood_set);
+      coarse_interp_encon_to_unfilled_nbrhood_set);
 
-   if (d_encon_to_supp_encon.isInitialized()) {
-      d_supp_encon_to_encon.initializeToLocalTranspose(
-         d_encon_to_supp_encon);
+   if (d_encon_to_coarse_interp_encon.isInitialized()) {
+      d_coarse_interp_encon_to_encon.initializeToLocalTranspose(
+         d_encon_to_coarse_interp_encon);
    }
 
    /*
     * hiercoarse_level is the level in the hierarchy that is one level
-    * coarser than d_dst_level.  It will be uses as the source of data
-    * to fill the supplemental encon level.
+    * coarser than d_dst_level.  It will be used as the source of data
+    * to fill the coarse interpolation encon level.
     */
    const hier::MappedBoxLevel& hiercoarse_mapped_box_level(
       *hiercoarse_level->getMappedBoxLevel());
 
    /*
-    * The computation of Connectors between supp_encon and hiercoarse is
-    * done the same way as the Connectors between supp and hiercoarse
+    * The computation of Connectors between coarse_interp_encon and hiercoarse is
+    * done the same way as the Connectors between coarse_interp and hiercoarse
     * above.
     *
     * TODO: Merge replicated code into a single private method?
     */
-   Connector supp_encon_to_hiercoarse;
-   Connector hiercoarse_to_supp_encon;
+   Connector coarse_interp_encon_to_hiercoarse;
+   Connector hiercoarse_to_coarse_interp_encon;
    {
 
       hier::OverlapConnectorAlgorithm oca;
@@ -1343,8 +1313,8 @@ RefineSchedule::createEnconFillSchedule(
       } // End block bridging for encon<==>hiercoarse.
 
       /*
-       * Compute supp_encon<==>hiercoarse by bridging
-       * supp_encon<==>encon<==>hiercoarse.
+       * Compute coarse_interp_encon<==>hiercoarse by bridging
+       * coarse_interp_encon<==>encon<==>hiercoarse.
        */
 
       /*
@@ -1355,60 +1325,60 @@ RefineSchedule::createEnconFillSchedule(
        * hiercoarse Box.
        */
       oca.bridge(
-         supp_encon_to_hiercoarse,
-         hiercoarse_to_supp_encon,
-         d_supp_encon_to_encon,
+         coarse_interp_encon_to_hiercoarse,
+         hiercoarse_to_coarse_interp_encon,
+         d_coarse_interp_encon_to_encon,
          *encon_to_hiercoarse,
          *hiercoarse_to_encon,
-         d_encon_to_supp_encon,
+         d_encon_to_coarse_interp_encon,
          fine_connector_widths[next_coarser_ln]);
 
    }
 
    /*
-    * Create d_supp_encon_level
+    * Create d_coarse_interp_encon_level
     */
-   d_supp_encon_level = new hier::PatchLevel(
-         supp_encon_box_level,
+   d_coarse_interp_encon_level = new hier::PatchLevel(
+         coarse_interp_encon_box_level,
          d_dst_level->getGridGeometry(),
          hiercoarse_level->getPatchDescriptor());
-   d_supp_encon_level->setLevelNumber(next_coarser_ln);
-   d_supp_encon_level->getGridGeometry()->
-   adjustMultiblockPatchLevelBoundaries(*d_supp_encon_level);
+   d_coarse_interp_encon_level->setLevelNumber(next_coarser_ln);
+   d_coarse_interp_encon_level->getGridGeometry()->
+   adjustMultiblockPatchLevelBoundaries(*d_coarse_interp_encon_level);
 
    /*
-    * Reset supp_encon<==>hiercoarse connectors to use the PatchLevel's
+    * Reset coarse_interp_encon<==>hiercoarse connectors to use the PatchLevel's
     * MappedBoxLevel.
     */
-   supp_encon_to_hiercoarse.initialize(
-      *d_supp_encon_level->getMappedBoxLevel(),
-      supp_encon_to_hiercoarse.getHead(),
-      supp_encon_to_hiercoarse.getConnectorWidth(),
-      supp_encon_to_hiercoarse.getNeighborhoodSets());
-   hiercoarse_to_supp_encon.initialize(
-      hiercoarse_to_supp_encon.getBase(),
-      *d_supp_encon_level->getMappedBoxLevel(),
-      hiercoarse_to_supp_encon.getConnectorWidth(),
-      hiercoarse_to_supp_encon.getNeighborhoodSets());
+   coarse_interp_encon_to_hiercoarse.initialize(
+      *d_coarse_interp_encon_level->getMappedBoxLevel(),
+      coarse_interp_encon_to_hiercoarse.getHead(),
+      coarse_interp_encon_to_hiercoarse.getConnectorWidth(),
+      coarse_interp_encon_to_hiercoarse.getNeighborhoodSets());
+   hiercoarse_to_coarse_interp_encon.initialize(
+      hiercoarse_to_coarse_interp_encon.getBase(),
+      *d_coarse_interp_encon_level->getMappedBoxLevel(),
+      hiercoarse_to_coarse_interp_encon.getConnectorWidth(),
+      hiercoarse_to_coarse_interp_encon.getNeighborhoodSets());
 
    /*
-    * Compute this nesting value the same as for supp
+    * Compute this nesting value the same as for coarse_interp.
     */
-   hier::IntVector hiercoarse_growth_to_nest_supp_encon(dim);
-   if (dst_is_supplemental_level) {
-      hiercoarse_growth_to_nest_supp_encon =
+   hier::IntVector hiercoarse_growth_to_nest_coarse_interp_encon(dim);
+   if (dst_is_coarse_interp_level) {
+      hiercoarse_growth_to_nest_coarse_interp_encon =
          src_growth_to_nest_dst + encon_to_unfilled_encon.getConnectorWidth();
-      hiercoarse_growth_to_nest_supp_encon.ceiling(dst_hiercoarse_ratio);
+      hiercoarse_growth_to_nest_coarse_interp_encon.ceiling(dst_hiercoarse_ratio);
    } else {
-      hiercoarse_growth_to_nest_supp_encon =
+      hiercoarse_growth_to_nest_coarse_interp_encon =
          encon_to_unfilled_encon.getConnectorWidth();
-      hiercoarse_growth_to_nest_supp_encon.ceiling(dst_hiercoarse_ratio);
+      hiercoarse_growth_to_nest_coarse_interp_encon.ceiling(dst_hiercoarse_ratio);
    }
 
    /*
     * We need to make sure that the coarse schedule uses
     * BoxGeometryVariableFillPattern, so that it fills all needed parts of
-    * d_supp_encon_level
+    * d_coarse_interp_encon_level
     */
    tbox::Pointer<BoxGeometryVariableFillPattern> bg_fill_pattern(
       new BoxGeometryVariableFillPattern());
@@ -1426,15 +1396,15 @@ RefineSchedule::createEnconFillSchedule(
    }
 
    /*
-    * Schedule to fill d_supp_encon_level
+    * Schedule to fill d_coarse_interp_encon_level
     */
-   d_supp_encon_schedule = new RefineSchedule(d_supp_encon_level,
+   d_coarse_interp_encon_schedule = new RefineSchedule(d_coarse_interp_encon_level,
          hiercoarse_level,
          next_coarser_ln - 1,
          hierarchy,
-         hiercoarse_growth_to_nest_supp_encon,
-         supp_encon_to_hiercoarse,
-         hiercoarse_to_supp_encon,
+         hiercoarse_growth_to_nest_coarse_interp_encon,
+         coarse_interp_encon_to_hiercoarse,
+         hiercoarse_to_coarse_interp_encon,
          coarse_schedule_refine_classes,
          d_transaction_factory,
          d_refine_patch_strategy);
@@ -1452,7 +1422,7 @@ RefineSchedule::createEnconFillSchedule(
  **************************************************************************
  */
 
-void RefineSchedule::finishScheduleConstruction_shearUnfilledBoxesOutsideNonperiodicBoundaries(
+void RefineSchedule::shearUnfilledBoxesOutsideNonperiodicBoundaries(
    hier::MappedBoxLevel& unfilled,
    hier::Connector& dst_to_unfilled,
    const tbox::Pointer<hier::PatchHierarchy>& hierarchy)
@@ -1500,7 +1470,7 @@ void RefineSchedule::finishScheduleConstruction_shearUnfilledBoxesOutsideNonperi
 
 /*
  **************************************************************************
- * Set up the supplemental MappedBoxLevel.  The supp_mapped_box_level
+ * Set up the coarse interpolation MappedBoxLevel.  The coarse_interp_mapped_box_level
  * represents parts of the fill boxes that cannot be filled by
  * d_src_level (d_unfilled_mapped_box_level).  It will be filled by
  * appealing to coarser levels in the hierarchy.
@@ -1510,22 +1480,22 @@ void RefineSchedule::finishScheduleConstruction_shearUnfilledBoxesOutsideNonperi
  * - Shear off parts outside non-periodic boundaries or extend to boundary,
  *   if needed for conforming to gridding restrictions at boundary.
  *
- * Build Connectors d_dst_to_supp, d_supp_to_dst and
- * d_supp_to_unfilled.  The ghost data to be filled on the supp level
+ * Build Connectors d_dst_to_coarse_interp, d_coarse_interp_to_dst and
+ * d_coarse_interp_to_unfilled.  The ghost data to be filled on the coarse interpolation level
  * will be the max stencil width.
  *
- * We set d_dst_to_supp's width big enough so each dst Box, grown by
- * this width, nests its potential supp MappedBoxes.  Note that
- * d_dst_to_supp is incomplete because each dst Box only has edges to
- * supp MappedBoxes it generated.
+ * We set d_dst_to_coarse_interp's width big enough so each dst Box, grown by
+ * this width, nests its potential coarse interpolation MappedBoxes.  Note that
+ * d_dst_to_coarse_interp is incomplete because each dst Box only has edges to
+ * coarse interpolation MappedBoxes it generated.
  **************************************************************************
  */
-void RefineSchedule::finishScheduleConstruction_setupSupplementalMappedBoxLevel(
-   hier::MappedBoxLevel& supp_mapped_box_level,
+void RefineSchedule::setupCoarseInterpMappedBoxLevel(
+   hier::MappedBoxLevel& coarse_interp_mapped_box_level,
    const hier::MappedBoxLevel& hiercoarse_mapped_box_level,
    const hier::Connector& dst_to_unfilled)
 {
-   t_setup_supp_mapped_box_level->start();
+   t_setup_coarse_interp_mapped_box_level->start();
 
    const tbox::Dimension& dim(dst_to_unfilled.getBase().getDim());
 
@@ -1565,10 +1535,10 @@ void RefineSchedule::finishScheduleConstruction_setupSupplementalMappedBoxLevel(
 
       do_coarse_shearing[b] = (!fully_periodic && !d_domain_is_one_box[b]);
 
-      coarser_shear_domain[b] = coarser_physical_domain[b];
-
       if (do_coarse_shearing[b]) {
          t_coarse_shear->start();
+
+         coarser_shear_domain[b] = coarser_physical_domain[b];
 
          if (d_num_periodic_directions > 0) {
             coarser_shear_domain[b].grow(big_grow_vector);
@@ -1580,16 +1550,16 @@ void RefineSchedule::finishScheduleConstruction_setupSupplementalMappedBoxLevel(
       }
    }
 
-   supp_mapped_box_level.initialize(
+   coarse_interp_mapped_box_level.initialize(
       hiercoarse_mapped_box_level.getRefinementRatio(),
       grid_geometry,
       d_unfilled_mapped_box_level->getMPI());
 
-   hier::NeighborhoodSet dst_eto_supp, supp_eto_unfilled;
+   hier::NeighborhoodSet dst_eto_coarse_interp, coarse_interp_eto_unfilled;
 
    /*
-    * This loop builds up supp_mapped_box_level.  It also builds up the
-    * neighborhood sets dst_eto_supp and supp_eto_unfilled using simple
+    * This loop builds up coarse_interp_mapped_box_level.  It also builds up the
+    * neighborhood sets dst_eto_coarse_interp and coarse_interp_eto_unfilled using simple
     * associations in dst_to_unfilled.
     */
    for (hier::NeighborhoodSet::const_iterator ei = dst_eto_unfilled.begin();
@@ -1604,39 +1574,39 @@ void RefineSchedule::finishScheduleConstruction_setupSupplementalMappedBoxLevel(
            ni != dst_unfilled_parts.end(); ++ni) {
 
          /*
-          * Build the supplemental box by coarsening the unfilled box.
+          * Build the coarse interpolation box by coarsening the unfilled box.
           * The box is sheared at the physical boundary or extended to
           * the physical boundary to conform to normal gridding
           * restrictions.
           */
          const hier::Box& unfilled_mapped_box = *ni;
-         hier::Box supp_box(unfilled_mapped_box);
-         supp_box.coarsen(dst_hiercoarse_ratio);
+         hier::Box coarse_interp_box(unfilled_mapped_box);
+         coarse_interp_box.coarsen(dst_hiercoarse_ratio);
 
-         hier::BoxList sheared_supp_boxes(supp_box);
+         hier::BoxList sheared_coarse_interp_boxes(coarse_interp_box);
 
          if (do_coarse_shearing[dst_blk] &&
              (d_dst_level->patchTouchesRegularBoundary(
                  dst_mapped_box_mbid))) {
-            sheared_supp_boxes.intersectBoxes(coarser_shear_domain[dst_blk]);
-            sheared_supp_boxes.simplifyBoxes();
+            sheared_coarse_interp_boxes.intersectBoxes(coarser_shear_domain[dst_blk]);
+            sheared_coarse_interp_boxes.simplifyBoxes();
          }
 
          (void)hier::BoxUtilities::extendBoxesToDomainBoundary(
-            sheared_supp_boxes,
+            sheared_coarse_interp_boxes,
             coarser_physical_domain[dst_blk],
             d_max_stencil_width);
 
-         if (sheared_supp_boxes.size() > 0) {
+         if (sheared_coarse_interp_boxes.size() > 0) {
 
-            NeighborSet& supp_nabrs = dst_eto_supp[dst_mapped_box_mbid];
+            NeighborSet& coarse_interp_nabrs = dst_eto_coarse_interp[dst_mapped_box_mbid];
 
-            for (hier::BoxList::Iterator b(sheared_supp_boxes); b; b++) {
-               const hier::Box& supp_mapped_box =
-                  *supp_mapped_box_level.addBox(*b, (*ni).getBlockId());
-               supp_nabrs.insert(supp_mapped_box);
+            for (hier::BoxList::Iterator b(sheared_coarse_interp_boxes); b; b++) {
+               const hier::Box& coarse_interp_mapped_box =
+                  *coarse_interp_mapped_box_level.addBox(*b, (*ni).getBlockId());
+               coarse_interp_nabrs.insert(coarse_interp_mapped_box);
 
-               supp_eto_unfilled[supp_mapped_box.getId()].insert(
+               coarse_interp_eto_unfilled[coarse_interp_mapped_box.getId()].insert(
                   unfilled_mapped_box);
             }
 
@@ -1646,102 +1616,102 @@ void RefineSchedule::finishScheduleConstruction_setupSupplementalMappedBoxLevel(
    }
 
    /*
-    * Width of dst-->supp is
+    * Width of dst-->coarse_interp is
     *
     * - width of dst-->fill, but rounded up so it extends
-    *   the growth of supp caused by coarsening unfilled.
+    *   the growth of coarse_interp caused by coarsening unfilled.
     *
-    * - extended by the stencil width, where supp has its ghost data.
+    * - extended by the stencil width, where coarse_interp has its ghost data.
     *
     * This width states that each dst box sees all of its
-    * supplemental boxes, including the ghost cells in the
-    * supplemental boxes.
+    * coarse interpolation boxes, including the ghost cells in the
+    * coarse interpolation boxes.
     */
-   const hier::IntVector dst_to_supp_width =
+   const hier::IntVector dst_to_coarse_interp_width =
       (hier::IntVector::ceiling(dst_to_unfilled.getConnectorWidth(),
           dst_hiercoarse_ratio) + d_max_stencil_width)
       * dst_hiercoarse_ratio;
 
-   d_dst_to_supp.swapInitialize(
+   d_dst_to_coarse_interp.swapInitialize(
       dst_to_unfilled.getBase(),
-      supp_mapped_box_level,
-      dst_to_supp_width,
-      dst_eto_supp);
+      coarse_interp_mapped_box_level,
+      dst_to_coarse_interp_width,
+      dst_eto_coarse_interp);
 
-   d_supp_to_unfilled.swapInitialize(
-      supp_mapped_box_level,
+   d_coarse_interp_to_unfilled.swapInitialize(
+      coarse_interp_mapped_box_level,
       *d_unfilled_mapped_box_level,
       hier::IntVector::getZero(dim),
-      supp_eto_unfilled);
+      coarse_interp_eto_unfilled);
 
    /*
-    * Get the transpose of d_dst_to_supp, which is simple to compute
+    * Get the transpose of d_dst_to_coarse_interp, which is simple to compute
     * because we know the edges are all local.
     */
    t_misc2->start();
-   d_supp_to_dst.initializeToLocalTranspose(d_dst_to_supp);
+   d_coarse_interp_to_dst.initializeToLocalTranspose(d_dst_to_coarse_interp);
    t_misc2->stop();
 
    if (s_extra_debug) {
       /*
-       * We have set up supp to nest in dst^dst_to_supp_width to
-       * ensure dst sees all of supp and also supp's ghosts.  Note
-       * that supp's relevant ghost data width is
+       * We have set up coarse_interp to nest in dst^dst_to_coarse_interp_width to
+       * ensure dst sees all of coarse_interp and also coarse_interp's ghosts.  Note
+       * that coarse_interp's relevant ghost data width is
        * d_max_stencil_width.
        *
-       * The nesting assures that when bridging across dst<==>supp
-       * for supp<==>hiercoarse, we get a complete overlap
+       * The nesting assures that when bridging across dst<==>coarse_interp
+       * for coarse_interp<==>hiercoarse, we get a complete overlap
        * Connectors.
        */
-      const tbox::Dimension& dim(supp_mapped_box_level.getDim());
+      const tbox::Dimension& dim(coarse_interp_mapped_box_level.getDim());
       const hier::IntVector& zero_vector(hier::IntVector::getZero(dim));
       hier::MappedBoxLevelConnectorUtils mblc_utils;
       mblc_utils.setSanityCheckMethodPreconditions(false);
       mblc_utils.setSanityCheckMethodPostconditions(false);
-      tbox::plog << "\nsupp_mapped_box_level:\n" << supp_mapped_box_level.format("S-> ", 2)
-                 << "\ndst_mapped_box_level:\n" << d_dst_to_supp.getBase().format("D-> ", 2)
-                 << "\nd_dst_to_supp:\n" << d_dst_to_supp.format("DS-> ", 2)
-                 << "\nd_supp_to_dst:\n" << d_supp_to_dst.format("SD-> ", 2)
+      tbox::plog << "\ncoarse_interp_mapped_box_level:\n" << coarse_interp_mapped_box_level.format("S-> ", 2)
+                 << "\ndst_mapped_box_level:\n" << d_dst_to_coarse_interp.getBase().format("D-> ", 2)
+                 << "\nd_dst_to_coarse_interp:\n" << d_dst_to_coarse_interp.format("DS-> ", 2)
+                 << "\nd_coarse_interp_to_dst:\n" << d_coarse_interp_to_dst.format("SD-> ", 2)
                  << std::endl;
       bool locally_nests;
       if (!mblc_utils.baseNestsInHeadForMultiblock(
              &locally_nests,
-             supp_mapped_box_level,
-             d_dst_to_supp.getBase(),
+             coarse_interp_mapped_box_level,
+             d_dst_to_coarse_interp.getBase(),
              zero_vector,
-             d_dst_to_supp.getConnectorWidth(),
+             d_dst_to_coarse_interp.getConnectorWidth(),
              zero_vector,
              NULL)) {
-         TBOX_ERROR("RefineSchedule::finishScheduleConstruction: supp does\n"
+         TBOX_ERROR("RefineSchedule::finishScheduleConstruction: coarse_interp does\n"
             << "to nest in dst.\n");
       }
 
-      TBOX_ASSERT(d_supp_to_dst.checkTransposeCorrectness(d_dst_to_supp) == 0);
-      TBOX_ASSERT(d_dst_to_supp.checkTransposeCorrectness(d_supp_to_dst) == 0);
+      TBOX_ASSERT(d_coarse_interp_to_dst.checkTransposeCorrectness(d_dst_to_coarse_interp) == 0);
+      TBOX_ASSERT(d_dst_to_coarse_interp.checkTransposeCorrectness(d_coarse_interp_to_dst) == 0);
    }
 
-   t_setup_supp_mapped_box_level->stop();
+   t_setup_coarse_interp_mapped_box_level->stop();
 }
 
 /*
  **************************************************************************
- * Build the Connectors between the supplementary MappedBoxLevel and the
- * coarser level on the hierarchy.  The coarser level on the hierarchy
- * at the same resolution as the supplementary and will be used as the
- * source for filling the supplementary level.
+ * Create the coarse interpolation PatchLevel and build the Connectors
+ * between the it and the coarser level on the hierarchy.
  *
- * Also add periodic images and relationships if needed.
+ * The coarser level on the hierarchy at the same resolution as the
+ * coarse interpolation level and will be used as the source for
+ * filling the coarse interpolation level.
  **************************************************************************
  */
-void RefineSchedule::finishScheduleConstruction_connectSuppToHiercoarse(
-   hier::Connector& supp_to_hiercoarse,
-   hier::Connector& hiercoarse_to_supp,
-   hier::MappedBoxLevel& supp_mapped_box_level,
+void RefineSchedule::createCoarseInterpPatchLevel(
+   tbox::Pointer<hier::Connector>& coarse_interp_to_hiercoarse,
+   tbox::Pointer<hier::Connector>& hiercoarse_to_coarse_interp,
+   hier::MappedBoxLevel& coarse_interp_mapped_box_level,
    const tbox::Pointer<hier::PatchHierarchy>& hierarchy,
    const int next_coarser_ln,
    const hier::Connector& dst_to_src,
    const hier::Connector& src_to_dst,
-   const bool dst_is_supplemental_level)
+   const bool dst_is_coarse_interp_level)
 {
    const tbox::Dimension& dim(hierarchy->getDim());
    const hier::IntVector& zero_vector(hier::IntVector::getZero(dim));
@@ -1768,18 +1738,20 @@ void RefineSchedule::finishScheduleConstruction_connectSuppToHiercoarse(
       *hiercoarse_level->getMappedBoxLevel());
 
    /*
-    * To compute supp<==>hiercoarse, we will perform this bridge:
-    * supp<==>dst<==>hiercoarse.
+    * To compute coarse_interp<==>hiercoarse, we will perform this bridge:
+    * coarse_interp<==>dst<==>hiercoarse.
     *
     * First, we need dst<==>hiercoarse.
     *
-    * If dst is a supplemental level, we know that src is on the
+    * If dst is a coarse interpolation level, we know that src is on the
     * hierarchy.  Get the cached src<==>hiercoarse and bridge
     * dst<==>src<==>hiercoarse.
     *
-    * If dst is not a supplemental level, hopefully what ever
-    * generated dst also computed and cached the Connectors for us to
-    * look up.
+    * If dst is not a coarse interpolation level, we expect that what
+    * ever generated dst also computed and cached the Connectors for
+    * us to look up.  If not, then the PersistentOverlapConnectors
+    * look-up mechanism can generate the Connectors at the cost of
+    * scalability.
     */
 
    const Connector* dst_to_hiercoarse = NULL;
@@ -1787,7 +1759,7 @@ void RefineSchedule::finishScheduleConstruction_connectSuppToHiercoarse(
    Connector bridged_dst_to_hiercoarse;
    Connector bridged_hiercoarse_to_dst;
 
-   if (dst_is_supplemental_level) {
+   if (dst_is_coarse_interp_level) {
 
       const hier::MappedBoxLevel& src_mapped_box_level =
          dst_to_src.getHead();
@@ -1863,7 +1835,7 @@ void RefineSchedule::finishScheduleConstruction_connectSuppToHiercoarse(
       dst_to_hiercoarse = &bridged_dst_to_hiercoarse;
       hiercoarse_to_dst = &bridged_hiercoarse_to_dst;
 
-   } else { /* !dst_is_supplemental_level */
+   } else { /* !dst_is_coarse_interp_level */
 
       const hier::IntVector& hiercoarse_to_dst_width(fine_connector_widths[next_coarser_ln]);
       const hier::IntVector dst_to_hiercoarse_width(
@@ -1883,82 +1855,123 @@ void RefineSchedule::finishScheduleConstruction_connectSuppToHiercoarse(
    }
 
    /*
-    * Compute supp<==>hiercoarse by bridging
-    * supp<==>dst<==>hiercoarse.
+    * Compute coarse_interp<==>hiercoarse by bridging
+    * coarse_interp<==>dst<==>hiercoarse.
     */
 
    if (s_barrier_and_time) {
-      t_bridge_supp_hiercoarse->barrierAndStart();
+      t_bridge_coarse_interp_hiercoarse->barrierAndStart();
    }
+   coarse_interp_to_hiercoarse = new Connector;
+   hiercoarse_to_coarse_interp = new Connector;
    oca.bridge(
-      supp_to_hiercoarse,
-      hiercoarse_to_supp,
-      d_supp_to_dst,
+      *coarse_interp_to_hiercoarse,
+      *hiercoarse_to_coarse_interp,
+      d_coarse_interp_to_dst,
       *dst_to_hiercoarse,
       *hiercoarse_to_dst,
-      d_dst_to_supp,
+      d_dst_to_coarse_interp,
       fine_connector_widths[next_coarser_ln]);
    if (s_barrier_and_time) {
-      t_bridge_supp_hiercoarse->stop();
+      t_bridge_coarse_interp_hiercoarse->stop();
    }
 
    if (d_num_periodic_directions > 0) {
       /*
        * Remove periodic relationships added by bridging.  Some of
-       * them may be extraneous because supp may have parts outside
-       * the domain boundary.  Then add periodic images for supp and
-       * periodic relationships in supp<==>hiercoarse.
+       * them may be extraneous because coarse_interp may have parts outside
+       * the domain boundary.  Then add periodic images for coarse_interp and
+       * periodic relationships in coarse_interp<==>hiercoarse.
        */
-      supp_to_hiercoarse.removePeriodicRelationships();
-      hiercoarse_to_supp.removePeriodicRelationships();
+      coarse_interp_to_hiercoarse->removePeriodicRelationships();
+      hiercoarse_to_coarse_interp->removePeriodicRelationships();
 
       const hier::Connector& hiercoarse_to_hiercoarse =
          hiercoarse_level->getMappedBoxLevel()->
          getPersistentOverlapConnectors().
          findConnector(*hiercoarse_level->getMappedBoxLevel(),
-            hiercoarse_to_supp.getConnectorWidth());
+            hiercoarse_to_coarse_interp->getConnectorWidth());
       edge_utils.addPeriodicImagesAndRelationships(
-         supp_mapped_box_level,
-         supp_to_hiercoarse,
-         hiercoarse_to_supp,
+         coarse_interp_mapped_box_level,
+         *coarse_interp_to_hiercoarse,
+         *hiercoarse_to_coarse_interp,
          hierarchy->getDomainSearchTree(hier::BlockId(0)),
          hiercoarse_to_hiercoarse);
 
    }
 
    if (s_extra_debug) {
-      sanityCheckSupplementalAndHiercoarseLevels(
-         supp_to_hiercoarse,
-         hiercoarse_to_supp,
+      sanityCheckCoarseInterpAndHiercoarseLevels(
+         *coarse_interp_to_hiercoarse,
+         *hiercoarse_to_coarse_interp,
          hierarchy,
          next_coarser_ln);
    }
+
+   /*
+    * Construct the coarse interpolation PatchLevel and reset
+    * coarse_interp<==>hiercoarse connectors to use the PatchLevel's
+    * MappedBoxLevel.  Note that coarse_interp<==>hiercoarse is not
+    * guaranteed to be complete, so we cannot put them into
+    * PersistentOverlapConnectors.
+    */
+
+   t_make_coarse_interp_level->start();
+   d_coarse_interp_level = new hier::PatchLevel(
+      coarse_interp_mapped_box_level,
+      hiercoarse_level->getGridGeometry(),
+      hiercoarse_level->getPatchDescriptor());
+   t_make_coarse_interp_level->stop();
+   d_coarse_interp_level->setLevelNumber(next_coarser_ln);
+   d_coarse_interp_level->setNextCoarserHierarchyLevelNumber(next_coarser_ln - 1);
+
+   if (hiercoarse_level->getGridGeometry()->getNumberBlocks() > 1) {
+      hiercoarse_level->getGridGeometry()->
+         adjustMultiblockPatchLevelBoundaries(*d_coarse_interp_level);
+   }
+
+   coarse_interp_to_hiercoarse =
+      new Connector(*d_coarse_interp_level->getMappedBoxLevel(),
+                    coarse_interp_to_hiercoarse->getHead(),
+                    coarse_interp_to_hiercoarse->getConnectorWidth(),
+                    coarse_interp_to_hiercoarse->getNeighborhoodSets());
+   hiercoarse_to_coarse_interp =
+      new Connector(hiercoarse_to_coarse_interp->getBase(),
+                    *d_coarse_interp_level->getMappedBoxLevel(),
+                    hiercoarse_to_coarse_interp->getConnectorWidth(),
+                    hiercoarse_to_coarse_interp->getNeighborhoodSets());
+
+   return;
 }
 
 /*
  **************************************************************************
+ * @brief Check that the Connectors between the coarse
+ * interpolation and hiercoarse levels are transposes and that that
+ * the coarse interpolation MappedBoxLevel sufficiently nests
+ * inside the hiercoarse.
  **************************************************************************
  */
-void RefineSchedule::sanityCheckSupplementalAndHiercoarseLevels(
-   const hier::Connector& supp_to_hiercoarse,
-   const hier::Connector& hiercoarse_to_supp,
+void RefineSchedule::sanityCheckCoarseInterpAndHiercoarseLevels(
+   const hier::Connector& coarse_interp_to_hiercoarse,
+   const hier::Connector& hiercoarse_to_coarse_interp,
    const tbox::Pointer<hier::PatchHierarchy>& hierarchy,
    const int next_coarser_ln)
 {
 
    /*
-    * supp_to_hiercoarse and hiercoarse_to_supp should be proper
+    * coarse_interp_to_hiercoarse and hiercoarse_to_coarse_interp should be proper
     * transposes.
     */
-   size_t err1 = supp_to_hiercoarse.checkTransposeCorrectness(
-         hiercoarse_to_supp);
+   size_t err1 = coarse_interp_to_hiercoarse.checkTransposeCorrectness(
+         hiercoarse_to_coarse_interp);
    if (err1) tbox::perr
-      << "supp_to_hiercoarse failed transpose correctness."
+      << "coarse_interp_to_hiercoarse failed transpose correctness."
       << std::endl;
-   size_t err2 = hiercoarse_to_supp.checkTransposeCorrectness(
-         supp_to_hiercoarse);
+   size_t err2 = hiercoarse_to_coarse_interp.checkTransposeCorrectness(
+         coarse_interp_to_hiercoarse);
    if (err2) tbox::perr
-      << "hiercoarse_to_supp failed transpose correctness."
+      << "hiercoarse_to_coarse_interp failed transpose correctness."
       << std::endl;
 
    /*
@@ -1976,48 +1989,51 @@ void RefineSchedule::sanityCheckSupplementalAndHiercoarseLevels(
 
    /*
     * To work properly, we must ensure that
-    * supplemental^d_max_stencil_width nests in hiercoarse^fine_connector_width.
+    * coarse_interp^d_max_stencil_width nests in hiercoarse^fine_connector_width.
     *
     * The nesting guarantees that the Connectors sees enough of its
     * surroundings to generate all the necessary relationships in
     * further RefineSchedule recursions.  We know that
-    * supp_to_hiercoarse and hiercoarse_to_supp are not complete, but
+    * coarse_interp_to_hiercoarse and hiercoarse_to_coarse_interp are not complete, but
     * this nesting guarantees we still have enough relationships to
     * avoid miss any relationships when we use these Connectors in
     * bridge operations.
     */
-   Connector complete_supp_to_hiercoarse(
-      supp_to_hiercoarse.getBase(),
-      supp_to_hiercoarse.getHead(),
-      supp_to_hiercoarse.getConnectorWidth());
+   Connector complete_coarse_interp_to_hiercoarse(
+      coarse_interp_to_hiercoarse.getBase(),
+      coarse_interp_to_hiercoarse.getHead(),
+      coarse_interp_to_hiercoarse.getConnectorWidth());
    hier::OverlapConnectorAlgorithm oca;
-   oca.findOverlaps(complete_supp_to_hiercoarse);
-   MappedBoxLevel external(hiercoarse_to_supp.getBase().getDim());
-   Connector supp_to_external;
+   oca.findOverlaps(complete_coarse_interp_to_hiercoarse);
+
+   MappedBoxLevel external(hiercoarse_to_coarse_interp.getBase().getDim());
+   Connector coarse_interp_to_external;
    hier::MappedBoxLevelConnectorUtils edge_utils;
    edge_utils.computeExternalParts(
       external,
-      supp_to_external,
-      complete_supp_to_hiercoarse,
+      coarse_interp_to_external,
+      complete_coarse_interp_to_hiercoarse,
       fine_connector_widths[next_coarser_ln] - d_max_stencil_width,
       hierarchy->getPeriodicDomainSearchTree(hier::BlockId(0)));
-   supp_to_external.eraseEmptyNeighborSets();
-   int err3 = supp_to_external.getGlobalNumberOfRelationships();
+   coarse_interp_to_external.eraseEmptyNeighborSets();
+
+   int err3 = coarse_interp_to_external.getGlobalNumberOfRelationships();
    if (err3) {
-      tbox::perr << "Some parts of supp lies outside of where we\n"
+      tbox::perr << "Some parts of coarse_interp lies outside of where we\n"
                  << "guarantee support for recursive RefineSchedule.\n"
-                 << supp_to_external.format("SE: ", 2);
+                 << coarse_interp_to_external.format("SE: ", 2);
    }
 
    if (err1 || err2 || err3) {
       TBOX_ERROR(
-         "supp<==>hiercoarse have problems as reported above.\n"
-         << "supp:\n" << supp_to_hiercoarse.getBase().format("SUPP->", 2)
-         << "hiercoarse:\n" << supp_to_hiercoarse.getHead().format("HCRS->", 2)
-         << "dst_to_supp:\n" << d_dst_to_supp.format("DS->", 2)
-         << "supp_to_hiercoarse:\n" << supp_to_hiercoarse.format("SH->", 2)
-         << "hiercoarse_to_supp:\n" << hiercoarse_to_supp.format("HS->", 2));
+         "coarse_interp<==>hiercoarse have problems as reported above.\n"
+         << "coarse_interp:\n" << coarse_interp_to_hiercoarse.getBase().format("SUPP->", 2)
+         << "hiercoarse:\n" << coarse_interp_to_hiercoarse.getHead().format("HCRS->", 2)
+         << "dst_to_coarse_interp:\n" << d_dst_to_coarse_interp.format("DS->", 2)
+         << "coarse_interp_to_hiercoarse:\n" << coarse_interp_to_hiercoarse.format("SH->", 2)
+         << "hiercoarse_to_coarse_interp:\n" << hiercoarse_to_coarse_interp.format("HS->", 2));
    }
+
 }
 
 /*
@@ -2138,7 +2154,7 @@ void RefineSchedule::recursiveFill(
     */
 
    const int num_blocks = d_dst_level->getGridGeometry()->getNumberBlocks();
-   if (!d_supp_schedule.isNull()) {
+   if (!d_coarse_interp_schedule.isNull()) {
 
       /*
        * Allocate data on the coarser level and keep track of the allocated
@@ -2146,12 +2162,12 @@ void RefineSchedule::recursiveFill(
        */
 
       hier::ComponentSelector allocate_vector;
-      allocateScratchSpace(allocate_vector, d_supp_level, fill_time);
+      allocateScratchSpace(allocate_vector, d_coarse_interp_level, fill_time);
 
       hier::ComponentSelector encon_allocate_vector;
       if (d_dst_level->getGridGeometry()->hasEnhancedConnectivity()) {
          allocateScratchSpace(encon_allocate_vector,
-            d_supp_schedule->d_encon_level,
+            d_coarse_interp_schedule->d_encon_level,
             fill_time);
       }
 
@@ -2160,33 +2176,33 @@ void RefineSchedule::recursiveFill(
        * boxes on the coarser level.
        */
 
-      d_supp_schedule->recursiveFill(fill_time, do_physical_boundary_fill);
+      d_coarse_interp_schedule->recursiveFill(fill_time, do_physical_boundary_fill);
 
       /*
-       * d_supp_level should now be filled.  Now interpolate
+       * d_coarse_interp_level should now be filled.  Now interpolate
        * data from the coarse grid into the fine grid.
        */
 
       refineScratchData(d_dst_level,
-         d_supp_level,
-         d_supp_to_dst,
-         d_supp_to_unfilled,
+         d_coarse_interp_level,
+         d_coarse_interp_to_dst,
+         d_coarse_interp_to_unfilled,
          d_refine_overlaps);
 
       /*
        * Deallocate the scratch data from the coarse grid.
        */
 
-      d_supp_level->deallocatePatchData(allocate_vector);
+      d_coarse_interp_level->deallocatePatchData(allocate_vector);
 
       if (d_dst_level->getGridGeometry()->hasEnhancedConnectivity()) {
-         d_supp_schedule->d_encon_level->deallocatePatchData(
+         d_coarse_interp_schedule->d_encon_level->deallocatePatchData(
             encon_allocate_vector);
       }
 
    }
 
-   if (!d_supp_encon_schedule.isNull()) {
+   if (!d_coarse_interp_encon_schedule.isNull()) {
 
       /*
        * Allocate data on the coarser level and keep track of the allocated
@@ -2194,12 +2210,12 @@ void RefineSchedule::recursiveFill(
        */
 
       hier::ComponentSelector allocate_vector;
-      allocateScratchSpace(allocate_vector, d_supp_encon_level, fill_time);
+      allocateScratchSpace(allocate_vector, d_coarse_interp_encon_level, fill_time);
 
       hier::ComponentSelector encon_allocate_vector;
       if (d_dst_level->getGridGeometry()->hasEnhancedConnectivity()) {
          allocateScratchSpace(encon_allocate_vector,
-            d_supp_encon_schedule->d_encon_level,
+            d_coarse_interp_encon_schedule->d_encon_level,
             fill_time);
       }
 
@@ -2208,27 +2224,27 @@ void RefineSchedule::recursiveFill(
        * boxes on the coarser level.
        */
 
-      d_supp_encon_schedule->recursiveFill(fill_time, do_physical_boundary_fill);
+      d_coarse_interp_encon_schedule->recursiveFill(fill_time, do_physical_boundary_fill);
 
       /*
-       * d_supp_encon_level should now be filled.  Now interpolate
+       * d_coarse_interp_encon_level should now be filled.  Now interpolate
        * data from the coarse grid into the fine grid.
        */
 
       refineScratchData(d_encon_level,
-         d_supp_encon_level,
-         d_supp_encon_to_encon,
-         d_supp_encon_to_unfilled_encon,
+         d_coarse_interp_encon_level,
+         d_coarse_interp_encon_to_encon,
+         d_coarse_interp_encon_to_unfilled_encon,
          d_encon_refine_overlaps);
 
       /*
        * Deallocate the scratch data from the coarse grid.
        */
 
-      d_supp_encon_level->deallocatePatchData(allocate_vector);
+      d_coarse_interp_encon_level->deallocatePatchData(allocate_vector);
 
       if (d_dst_level->getGridGeometry()->hasEnhancedConnectivity()) {
-         d_supp_encon_schedule->d_encon_level->deallocatePatchData(
+         d_coarse_interp_encon_schedule->d_encon_level->deallocatePatchData(
             encon_allocate_vector);
       }
 
@@ -4592,9 +4608,9 @@ void RefineSchedule::printClassData(
    stream << "Printing fine priority refine schedule...\n";
    d_fine_priority_level_schedule->printClassData(stream);
 
-   if (!d_supp_schedule.isNull()) {
-      stream << "Printing supplemental refine schedule...\n";
-      d_supp_schedule->printClassData(stream);
+   if (!d_coarse_interp_schedule.isNull()) {
+      stream << "Printing coarse interpolation refine schedule...\n";
+      d_coarse_interp_schedule->printClassData(stream);
    }
 }
 /*
@@ -4643,18 +4659,18 @@ void RefineSchedule::initializeCallback()
          "xfer::RefineSchedule::finish...()_get_global_mapped_box_count");
    t_coarse_shear = tbox::TimerManager::getManager()->
       getTimer("xfer::RefineSchedule::finish...()_coarse_shear");
-   t_setup_supp_mapped_box_level = tbox::TimerManager::getManager()->
-      getTimer("xfer::RefineSchedule::setupSupplementalMappedBoxLevel()");
+   t_setup_coarse_interp_mapped_box_level = tbox::TimerManager::getManager()->
+      getTimer("xfer::RefineSchedule::setupCoarseInterpMappedBoxLevel()");
    t_misc2 = tbox::TimerManager::getManager()->
       getTimer("xfer::RefineSchedule::finish...()_misc2");
-   t_bridge_supp_hiercoarse = tbox::TimerManager::getManager()->
-      getTimer("xfer::RefineSchedule::finish...()_bridge_supp_hiercoarse");
+   t_bridge_coarse_interp_hiercoarse = tbox::TimerManager::getManager()->
+      getTimer("xfer::RefineSchedule::finish...()_bridge_coarse_interp_hiercoarse");
    t_bridge_dst_hiercoarse = tbox::TimerManager::getManager()->
       getTimer("xfer::RefineSchedule::finish...()_bridge_dst_hiercoarse");
-   t_make_supp_level = tbox::TimerManager::getManager()->
-      getTimer("xfer::RefineSchedule::finish...()_make_supp_level");
-   t_make_supp_to_unfilled = tbox::TimerManager::getManager()->
-      getTimer("xfer::RefineSchedule::finish...()_make_supp_to_unfilled");
+   t_make_coarse_interp_level = tbox::TimerManager::getManager()->
+      getTimer("xfer::RefineSchedule::finish...()_make_coarse_interp_level");
+   t_make_coarse_interp_to_unfilled = tbox::TimerManager::getManager()->
+      getTimer("xfer::RefineSchedule::finish...()_make_coarse_interp_to_unfilled");
    t_invert_edges = tbox::TimerManager::getManager()->
       getTimer("xfer::RefineSchedule::generate...()_invert_edges");
    t_construct_send_trans = tbox::TimerManager::getManager()->
@@ -4686,12 +4702,12 @@ void RefineSchedule::finalizeCallback()
    t_barrier_and_time.setNull();
    t_get_global_mapped_box_count.setNull();
    t_coarse_shear.setNull();
-   t_setup_supp_mapped_box_level.setNull();
+   t_setup_coarse_interp_mapped_box_level.setNull();
    t_misc2.setNull();
-   t_bridge_supp_hiercoarse.setNull();
+   t_bridge_coarse_interp_hiercoarse.setNull();
    t_bridge_dst_hiercoarse.setNull();
-   t_make_supp_level.setNull();
-   t_make_supp_to_unfilled.setNull();
+   t_make_coarse_interp_level.setNull();
+   t_make_coarse_interp_to_unfilled.setNull();
    t_invert_edges.setNull();
    t_construct_send_trans.setNull();
    t_construct_recv_trans.setNull();
