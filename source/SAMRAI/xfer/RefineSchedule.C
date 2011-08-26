@@ -726,14 +726,6 @@ void RefineSchedule::finishScheduleConstruction(
    t_finish_sched_const->start();
    TBOX_ASSERT((next_coarser_ln == -1) || !hierarchy.isNull());
 
-   static int recursion_level = -1;
-   ++recursion_level;
-   if (s_extra_debug) {
-      tbox::plog << "finishScheduleConstruction entered recursion_level="
-                 << recursion_level << " next_coarser_ln=" << next_coarser_ln
-                 << std::endl;
-   }
-
    // Get data that will be used below.
 
    const tbox::Dimension& dim(hierarchy->getDim());
@@ -747,19 +739,6 @@ void RefineSchedule::finishScheduleConstruction(
    if (!d_src_level.isNull()) {
       // Should never have a source without connection from destination.
       TBOX_ASSERT(dst_to_src.isInitialized());
-   }
-
-   if (s_extra_debug) {
-      tbox::plog << "finishScheduleConstruction in recursion_level="
-                 << recursion_level << " next_coarser_ln=" << next_coarser_ln
-                 << " before computing unfilled boxes."
-                 << "\ndst_mapped_box_level:\n"
-                 << dst_mapped_box_level.format("D->", 2)
-                 << "\nfill_mapped_box_level:\n"
-                 << fill_mapped_box_level.format("F->", 2)
-                 << "\ndst_to_fill:\n"
-                 << dst_to_fill.format("DF->", 2)
-                 << std::endl;
    }
 
    const int nblocks = d_dst_level->getGridGeometry()->getNumberBlocks();
@@ -798,23 +777,6 @@ void RefineSchedule::finishScheduleConstruction(
       dst_to_fill_on_src_proc,
       use_time_interpolation,
       create_transactions);
-
-   if (s_extra_debug) {
-      tbox::plog << "finishScheduleConstruction in recursion_level="
-                 << recursion_level << " next_coarser_ln=" << next_coarser_ln
-                 << " after computing unfilled boxes."
-                 << "\nd_unfilled_mapped_box_level:\n"
-                 << d_unfilled_mapped_box_level->format("UF->", 2)
-                 << "\ndst_to_unfilled:\n"
-                 << dst_to_unfilled->format("DUF->", 2)
-                 << std::endl;
-   }
-#ifdef DEBUG_CHECK_ASSERTIONS
-   for (int bn = 0; bn < nblocks; ++bn) {
-      TBOX_ASSERT(fill_mapped_box_level.getLocalBoundingBox(bn).contains(
-            d_unfilled_mapped_box_level->getLocalBoundingBox(bn)));
-   }
-#endif
 
    /*
     * d_unfilled_mapped_box_level may include ghost cells that lie
@@ -863,13 +825,6 @@ void RefineSchedule::finishScheduleConstruction(
    if (need_to_fill) {
 
       t_finish_sched_const_recurse->start();
-
-      if (s_extra_debug) {
-         tbox::plog << "finishScheduleConstruction in recursion_level="
-                    << recursion_level << " next_coarser_ln=" << next_coarser_ln
-                    << " needs to recurse"
-                    << std::endl;
-      }
 
       /*
        * If there are no coarser levels in the hierarchy or the
@@ -1016,14 +971,6 @@ void RefineSchedule::finishScheduleConstruction(
 
       t_finish_sched_const->stop();
 
-      if (s_extra_debug) {
-         const std::string dbgbord;
-         tbox::plog << "finishScheduleConstruction in recursion_level="
-                    << recursion_level << " next_coarser_ln=" << next_coarser_ln
-                    << " creating coarse schedule to fill coase_interp\n"
-                    << "coarse_interp_mapped_box_level:\n"
-                    << coarse_interp_mapped_box_level.format(dbgbord, 2);
-      }
       d_coarse_interp_schedule = new RefineSchedule(d_coarse_interp_level,
             hiercoarse_level,
             next_coarser_ln - 1,
@@ -1038,6 +985,7 @@ void RefineSchedule::finishScheduleConstruction(
    } else {
       t_finish_sched_const->stop();
    }
+
 
    if (need_to_fill_encon) {
 
@@ -1056,12 +1004,6 @@ void RefineSchedule::finishScheduleConstruction(
          *encon_to_unfilled_encon);
    }
 
-   if (s_extra_debug) {
-      tbox::plog << "finishScheduleConstruction exiting recursion_level="
-                 << recursion_level << " next_coarser_ln=" << next_coarser_ln
-                 << std::endl;
-      --recursion_level;
-   }
 }
 
 /*
@@ -1648,47 +1590,7 @@ void RefineSchedule::setupCoarseInterpMappedBoxLevel(
     * Get the transpose of d_dst_to_coarse_interp, which is simple to compute
     * because we know the edges are all local.
     */
-   t_misc2->start();
    d_coarse_interp_to_dst.initializeToLocalTranspose(d_dst_to_coarse_interp);
-   t_misc2->stop();
-
-   if (s_extra_debug) {
-      /*
-       * We have set up coarse_interp to nest in dst^dst_to_coarse_interp_width to
-       * ensure dst sees all of coarse_interp and also coarse_interp's ghosts.  Note
-       * that coarse_interp's relevant ghost data width is
-       * d_max_stencil_width.
-       *
-       * The nesting assures that when bridging across dst<==>coarse_interp
-       * for coarse_interp<==>hiercoarse, we get a complete overlap
-       * Connectors.
-       */
-      const tbox::Dimension& dim(coarse_interp_mapped_box_level.getDim());
-      const hier::IntVector& zero_vector(hier::IntVector::getZero(dim));
-      hier::MappedBoxLevelConnectorUtils mblc_utils;
-      mblc_utils.setSanityCheckMethodPreconditions(false);
-      mblc_utils.setSanityCheckMethodPostconditions(false);
-      tbox::plog << "\ncoarse_interp_mapped_box_level:\n" << coarse_interp_mapped_box_level.format("S-> ", 2)
-                 << "\ndst_mapped_box_level:\n" << d_dst_to_coarse_interp.getBase().format("D-> ", 2)
-                 << "\nd_dst_to_coarse_interp:\n" << d_dst_to_coarse_interp.format("DS-> ", 2)
-                 << "\nd_coarse_interp_to_dst:\n" << d_coarse_interp_to_dst.format("SD-> ", 2)
-                 << std::endl;
-      bool locally_nests;
-      if (!mblc_utils.baseNestsInHeadForMultiblock(
-             &locally_nests,
-             coarse_interp_mapped_box_level,
-             d_dst_to_coarse_interp.getBase(),
-             zero_vector,
-             d_dst_to_coarse_interp.getConnectorWidth(),
-             zero_vector,
-             NULL)) {
-         TBOX_ERROR("RefineSchedule::finishScheduleConstruction: coarse_interp does\n"
-            << "to nest in dst.\n");
-      }
-
-      TBOX_ASSERT(d_coarse_interp_to_dst.checkTransposeCorrectness(d_dst_to_coarse_interp) == 0);
-      TBOX_ASSERT(d_dst_to_coarse_interp.checkTransposeCorrectness(d_coarse_interp_to_dst) == 0);
-   }
 
    t_setup_coarse_interp_mapped_box_level->stop();
 }
@@ -1767,10 +1669,6 @@ void RefineSchedule::createCoarseInterpPatchLevel(
           &src_mapped_box_level) {
          TBOX_ERROR("Missing dst<==>hiercoarse connector and\n"
             << "src is not from hierarchy.");
-      }
-      if (s_extra_debug) {
-         TBOX_WARNING(
-            "RefineSchedule::finishScheduleConstruction bridging through src for dst<==>hiercoarse\n");
       }
 
       const hier::IntVector& hiercoarse_to_src_width =
