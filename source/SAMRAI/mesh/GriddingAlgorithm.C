@@ -809,7 +809,7 @@ void GriddingAlgorithm::makeFinerLevel(
 
                bool locally_nests = false;
                const bool new_nests_in_tag =
-                  dlbg_edge_utils.baseNestsInHeadForMultiblock(
+                  dlbg_edge_utils.baseNestsInHead(
                      &locally_nests,
                      new_mapped_box_level,
                      *d_hierarchy->getBoxLevel(tag_ln),
@@ -823,7 +823,7 @@ void GriddingAlgorithm::makeFinerLevel(
                   hier::Connector new_to_violator;
                   hier::BoxLevelConnectorUtils edge_utils;
                   t_compute_external_parts->start();
-                  edge_utils.computeExternalPartsForMultiblock(
+                  edge_utils.computeExternalParts(
                      violator,
                      new_to_violator,
                      new_to_tag,
@@ -1705,7 +1705,7 @@ void GriddingAlgorithm::regridFinerLevel_createAndInstallNewLevel(
 
          bool locally_nests = false;
          const bool finer_nests_in_new =
-            mblc_utils.baseNestsInHeadForMultiblock(
+            mblc_utils.baseNestsInHead(
                &locally_nests,
                *d_hierarchy->getBoxLevel(new_ln + 1),
                new_mapped_box_level,
@@ -1741,7 +1741,7 @@ void GriddingAlgorithm::regridFinerLevel_createAndInstallNewLevel(
             const hier::OverlapConnectorAlgorithm oca;
             oca.findOverlaps(finer_to_new);
             tbox::plog << "Finer to new:\n" << finer_to_new.format("FN->", 3);
-            mblc_utils.computeExternalPartsForMultiblock(
+            mblc_utils.computeExternalParts(
                external,
                finer_to_external,
                finer_to_new,
@@ -2046,7 +2046,7 @@ void GriddingAlgorithm::checkNonnestingUserBoxes(
    hier::Connector new_to_violating_parts;
 
    hier::BoxLevelConnectorUtils mblc_utils;
-   mblc_utils.computeExternalPartsForMultiblock(
+   mblc_utils.computeExternalParts(
       violating_parts,
       new_to_violating_parts,
       new_to_tag,
@@ -2997,7 +2997,7 @@ void GriddingAlgorithm::findRefinementBoxes(
                           << std::endl;
             }
             bool locally_nested = false;
-            bool nested = dlbg_edge_utils.baseNestsInHeadForMultiblock(
+            bool nested = dlbg_edge_utils.baseNestsInHead(
                   &locally_nested,
                   new_mapped_box_level,
                   tag_mapped_box_level,
@@ -3074,7 +3074,7 @@ void GriddingAlgorithm::findRefinementBoxes(
             }
             bool locally_nests = false;
             const bool new_nests_in_tag =
-               dlbg_edge_utils.baseNestsInHeadForMultiblock(
+               dlbg_edge_utils.baseNestsInHead(
                   &locally_nests,
                   new_mapped_box_level,
                   tag_mapped_box_level,
@@ -3105,7 +3105,7 @@ void GriddingAlgorithm::findRefinementBoxes(
                oca.findOverlaps(tmp_new_to_tag);
                tbox::plog << "tmp_new_to_tag:\n" << tmp_new_to_tag.format("NT->", 3);
                hier::Connector new_to_external;
-               dlbg_edge_utils.computeExternalPartsForMultiblock(
+               dlbg_edge_utils.computeExternalParts(
                   external,
                   new_to_external,
                   tmp_new_to_tag,
@@ -3507,7 +3507,7 @@ void GriddingAlgorithm::makeOverflowNestingMap(
    t_make_overflow_map_compute->start();
    hier::BoxLevelConnectorUtils edge_utils;
    t_compute_external_parts->start();
-   edge_utils.computeExternalPartsForMultiblock(
+   edge_utils.computeExternalParts(
       violator_mapped_box_level,
       unnested_to_violator,
       unnested_to_reference,
@@ -3632,7 +3632,7 @@ void GriddingAlgorithm::computeNestingViolator(
       d_from_nesting_complement[tag_ln],
       hierarchy_to_candidate);
 
-   edge_utils.computeInternalPartsForMultiblock(
+   edge_utils.computeInternalParts(
       violator,
       candidate_to_violator,
       candidate_to_complement,
@@ -3739,7 +3739,7 @@ void GriddingAlgorithm::computeProperNestingData(
       const hier::Connector& self_connector =
          d_hierarchy->getConnector(ln, ln);
 
-      edge_utils.computeExternalPartsForMultiblock(
+      edge_utils.computeExternalParts(
          proper_nesting_complement,
          d_to_nesting_complement[ln],
          self_connector,

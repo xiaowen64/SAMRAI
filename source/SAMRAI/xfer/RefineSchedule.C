@@ -1394,7 +1394,7 @@ void RefineSchedule::shearUnfilledBoxesOutsideNonperiodicBoundaries(
    BoxLevel sheared_mapped_box_level(dim);
 
    hier::BoxLevelConnectorUtils edge_utils;
-   edge_utils.computeInternalPartsForMultiblock(
+   edge_utils.computeInternalParts(
       sheared_mapped_box_level,
       unfilled_to_sheared,
       unfilled_to_periodic_domain,
@@ -1908,7 +1908,7 @@ void RefineSchedule::sanityCheckCoarseInterpAndHiercoarseLevels(
    BoxLevel external(hiercoarse_to_coarse_interp.getBase().getDim());
    Connector coarse_interp_to_external;
    hier::BoxLevelConnectorUtils edge_utils;
-   edge_utils.computeExternalPartsForMultiblock(
+   edge_utils.computeExternalParts(
       external,
       coarse_interp_to_external,
       complete_coarse_interp_to_hiercoarse,

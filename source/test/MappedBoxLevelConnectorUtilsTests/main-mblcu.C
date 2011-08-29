@@ -65,8 +65,8 @@ refineBoxLevel(
  ************************************************************************
  *
  * This is an correctness test for the
- * computeExternalPartsForMultiblock and
- * computeExternalPartsForMultiblock method in
+ * computeExternalParts and
+ * computeExternalParts method in
  * BoxLevelConnectorUtils.
  *
  * 1. Set up GridGeometry.
@@ -395,10 +395,10 @@ int main(
          /*
           * small_mapped_box_level nests inside big_mapped_box_level
           * by the shrinkage amount.  Verify that
-          * computeInternalPartsForMultiblock finds all
+          * computeInternalParts finds all
           * small_mapped_box_level to be internal to
           * big_mapped_box_level and that
-          * computeExternalPartsForMultiblock finds none of
+          * computeExternalParts finds none of
           * small_mapped_box_level to be external to
           * big_mapped_box_level.
           *
@@ -413,13 +413,13 @@ int main(
           */
          hier::BoxLevel everything(dim), nothing(dim);
          hier::Connector small_to_everything, small_to_nothing;
-         mblcu.computeExternalPartsForMultiblock(
+         mblcu.computeExternalParts(
             nothing,
             small_to_nothing,
             small_to_big,
             -shrinkage,
             domain_mapped_box_tree);
-         mblcu.computeInternalPartsForMultiblock(
+         mblcu.computeInternalParts(
             everything,
             small_to_everything,
             small_to_big,
@@ -497,7 +497,7 @@ int main(
 
          hier::BoxLevel internal_mapped_box_level(dim);
          hier::Connector big_to_internal;
-         mblcu.computeInternalPartsForMultiblock(
+         mblcu.computeInternalParts(
             internal_mapped_box_level,
             big_to_internal,
             big_to_small,
@@ -564,7 +564,7 @@ int main(
           */
          hier::BoxLevel external_mapped_box_level(dim);
          hier::Connector big_to_external;
-         mblcu.computeExternalPartsForMultiblock(
+         mblcu.computeExternalParts(
             external_mapped_box_level,
             big_to_external,
             big_to_small,

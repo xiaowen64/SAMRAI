@@ -83,7 +83,7 @@ void BoxLevelConnectorUtils::setSanityCheckMethodPostconditions(
  * nests in the head.
  ***********************************************************************
  */
-bool BoxLevelConnectorUtils::baseNestsInHeadForMultiblock(
+bool BoxLevelConnectorUtils::baseNestsInHead(
    bool* locally_nests,
    const BoxLevel& base,
    const BoxLevel& head,
@@ -129,7 +129,7 @@ bool BoxLevelConnectorUtils::baseNestsInHeadForMultiblock(
    OverlapConnectorAlgorithm oca;
    oca.findOverlaps(base_to_head);
 
-   bool rval = baseNestsInHeadForMultiblock(
+   bool rval = baseNestsInHead(
          locally_nests,
          base_to_head,
          base_swell,
@@ -160,7 +160,7 @@ bool BoxLevelConnectorUtils::baseNestsInHeadForMultiblock(
  * the domain.
  ***********************************************************************
  */
-bool BoxLevelConnectorUtils::baseNestsInHeadForMultiblock(
+bool BoxLevelConnectorUtils::baseNestsInHead(
    bool* locally_nests,
    const Connector& connector,
    const IntVector& base_swell,
@@ -285,14 +285,14 @@ bool BoxLevelConnectorUtils::baseNestsInHeadForMultiblock(
    BoxLevel external(dim);
    Connector swelledbase_to_external;
    if (domain) {
-      computeExternalPartsForMultiblock(
+      computeExternalParts(
          external,
          swelledbase_to_external,
          swelledbase_to_swelledhead,
          -head_nesting_margin,
          *domain);
    } else {
-      computeExternalPartsForMultiblock(
+      computeExternalParts(
          external,
          swelledbase_to_external,
          swelledbase_to_swelledhead,
@@ -323,7 +323,7 @@ bool BoxLevelConnectorUtils::baseNestsInHeadForMultiblock(
       oca.findOverlaps(external_to_domain);
       BoxLevel finalexternal(dim);
       Connector external_to_finalexternal;
-      computeInternalPartsForMultiblock(
+      computeInternalParts(
          finalexternal,
          external_to_finalexternal,
          external_to_domain,
@@ -542,7 +542,7 @@ int BoxLevelConnectorUtils::qsortBoxCompare(
  *************************************************************************
  *************************************************************************
  */
-void BoxLevelConnectorUtils::computeExternalPartsForMultiblock(
+void BoxLevelConnectorUtils::computeExternalParts(
    BoxLevel& external,
    Connector& input_to_external,
    const Connector& input_to_reference,
@@ -551,7 +551,7 @@ void BoxLevelConnectorUtils::computeExternalPartsForMultiblock(
 {
    t_compute_external_parts->start();
 
-   computeInternalOrExternalPartsForMultiblock(
+   computeInternalOrExternalParts(
       external,
       input_to_external,
       'e',
@@ -569,7 +569,7 @@ void BoxLevelConnectorUtils::computeExternalPartsForMultiblock(
  *************************************************************************
  *************************************************************************
  */
-void BoxLevelConnectorUtils::computeInternalPartsForMultiblock(
+void BoxLevelConnectorUtils::computeInternalParts(
    BoxLevel& internal,
    Connector& input_to_internal,
    const Connector& input_to_reference,
@@ -578,7 +578,7 @@ void BoxLevelConnectorUtils::computeInternalPartsForMultiblock(
 {
    t_compute_internal_parts->start();
 
-   computeInternalOrExternalPartsForMultiblock(
+   computeInternalOrExternalParts(
       internal,
       input_to_internal,
       'i',
@@ -594,8 +594,8 @@ void BoxLevelConnectorUtils::computeInternalPartsForMultiblock(
 
 /*
  *************************************************************************
- * Methods computeInternalPartsForMultiblock and
- * computeExternalPartsForMultiblock delegates to this method.
+ * Methods computeInternalParts and
+ * computeExternalParts delegates to this method.
  *
  * Compare an input BoxLevel to a "reference" BoxLevel.
  * Identify parts of the input that are internal or external (depending
@@ -648,7 +648,7 @@ void BoxLevelConnectorUtils::computeInternalPartsForMultiblock(
  *
  *************************************************************************
  */
-void BoxLevelConnectorUtils::computeInternalOrExternalPartsForMultiblock(
+void BoxLevelConnectorUtils::computeInternalOrExternalParts(
    BoxLevel& parts,
    Connector& input_to_parts,
    char internal_or_external,
@@ -667,13 +667,13 @@ void BoxLevelConnectorUtils::computeInternalOrExternalPartsForMultiblock(
 
 #ifdef DEBUG_CHECK_ASSERTIONS
    const char* caller = internal_or_external == 'i' ?
-      "computInternalPartsForMultiblock" : "computeExternalpartsForMultiblock";
+      "computInternalParts" : "computeExternalparts";
 
    // Sanity check inputs.
 
    if (!(nesting_width >= zero_vec) && !(nesting_width <= zero_vec)) {
       TBOX_ERROR(
-         "BoxLevelConnectorUtils::computeInternalOrExternalPartsForMultiblock:" << caller
+         "BoxLevelConnectorUtils::computeInternalOrExternalParts:" << caller
                                                                                       <<
          ": error:\n"
                                                                                       <<
@@ -686,7 +686,7 @@ void BoxLevelConnectorUtils::computeInternalOrExternalPartsForMultiblock(
       if (!(input_to_reference.getConnectorWidth() >=
             nesting_width)) {
          TBOX_ERROR(
-            "BoxLevelConnectorUtils::computeInternalOrExternalPartsForMultiblock:"
+            "BoxLevelConnectorUtils::computeInternalOrExternalParts:"
             << caller << ": error:\n"
             << "nesting_width "
             << nesting_width << " exceeds\n"

@@ -105,7 +105,7 @@ public:
     * otherwise False.
     */
    bool
-   baseNestsInHeadForMultiblock(
+   baseNestsInHead(
       bool* locally_nests,
       const Connector& connector,
       const IntVector& base_swell,
@@ -151,7 +151,7 @@ public:
     * @return Whether the given base BoxLevel nests in the head.
     */
    bool
-   baseNestsInHeadForMultiblock(
+   baseNestsInHead(
       bool* locally_nests,
       const BoxLevel& base,
       const BoxLevel& head,
@@ -201,7 +201,7 @@ public:
     * reference BoxLevel where it touches the domain boundary.
     */
    void
-   computeExternalPartsForMultiblock(
+   computeExternalParts(
       BoxLevel& external,
       Connector& input_to_external,
       const Connector& input_to_reference,
@@ -248,7 +248,7 @@ public:
     * reference BoxLevel where it touches the domain boundary.
     */
    void
-   computeInternalPartsForMultiblock(
+   computeInternalParts(
       BoxLevel& internal,
       Connector& input_to_internal,
       const Connector& input_to_reference,
@@ -435,11 +435,11 @@ public:
 
 private:
    /*!
-    * @brief Delegated work of computeInternalPartsForMultiblock and
-    * computeExternalPartsForMultiblock.
+    * @brief Delegated work of computeInternalParts and
+    * computeExternalParts.
     */
    void
-   computeInternalOrExternalPartsForMultiblock(
+   computeInternalOrExternalParts(
       hier::BoxLevel& parts,
       hier::Connector& input_to_parts,
       char internal_or_external,
