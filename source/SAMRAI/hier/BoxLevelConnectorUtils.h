@@ -105,18 +105,6 @@ public:
     * otherwise False.
     */
    bool
-   baseNestsInHead(
-      bool* locally_nests,
-      const Connector& connector,
-      const IntVector& base_swell,
-      const IntVector& head_swell,
-      const IntVector& head_nesting_margin,
-      const BoxTree* domain = NULL) const;
-
-   /*!
-    * @brief Multiblock version of baseNestsInHead.
-    */
-   bool
    baseNestsInHeadForMultiblock(
       bool* locally_nests,
       const Connector& connector,
@@ -130,23 +118,12 @@ public:
     * to which the base nests in the head.
     *
     * This method is similar to the version taking a Connector instead
-    * of the base and head BoxLevels, except that it will build
-    * the overlap Connector from the base to the head.  It should be
-    * used when you don't have a pre-built Connector or don't have one
-    * with sufficient width.
-    *
-    * This method simply builds a Connector from head to base with
-    * sufficient width and calls baseNestsInHead().  Building of the
-    * Connector is not scalable.  If you already have such a
-    * Connector, you should call baseNestsInHead(bool*, const Connector&,
-    * const IntVector&, const IntVector&, const IntVector&,
-    * const BoxTree*) directly.
-    *
-    * TODO: Is this method really needed now that we can automatically
-    * build the base--->head Connector automatically using
-    * PersistentOverlapConnectors?  Using PersistentOverlapConnector
-    * does have the side-effect that the generated Connector persists
-    * longer than the immediate need.
+    * of the base and head MappedBoxLevels, except that it will use
+    * the base MappedBoxLevel's PersistentOverlapConnectors object to
+    * get the base--->head Connector.  If such a Connector does not
+    * exist, the PersistentOverlapConnectors object will create it, an
+    * unscalable operation possibly requiring collective
+    * communication.
     *
     * @param domain Domain description, in reference index space, in
     * search tree format.
@@ -174,18 +151,6 @@ public:
     * @return Whether the given base BoxLevel nests in the head.
     */
    bool
-   baseNestsInHead(
-      bool* locally_nests,
-      const BoxLevel& base,
-      const BoxLevel& head,
-      const IntVector& base_swell,
-      const IntVector& head_swell,
-      const IntVector& head_margin,
-      const BoxTree* domain = NULL) const;
-   bool
-   /*!
-    * @brief Multiblock version of baseNestsInHead.
-    */
    baseNestsInHeadForMultiblock(
       bool* locally_nests,
       const BoxLevel& base,
@@ -195,37 +160,6 @@ public:
       const IntVector& head_margin,
       const MultiblockBoxTree* domain = NULL) const;
 
-   /*!
-    * @brief Compute the parts of one BoxLevel that are external
-    * to another BoxLevel.
-    *
-    * This is the singleblock version of computeExternalPartsForMultiblock.
-    *
-    * @see computeExternalPartsForMultiblock
-    */
-   void
-   computeExternalParts(
-      BoxLevel& external,
-      Connector& input_to_external,
-      const Connector& input_to_reference,
-      const IntVector& nesting_width,
-      const BoxTree& domain) const;
-
-   /*!
-    * @brief Compute the parts of one BoxLevel that are internal
-    * to another BoxLevel.
-    *
-    * This is the singleblock version of computeInternalPartsForMultiblock.
-    *
-    * @see computeInternalPartsForMultiblock
-    */
-   void
-   computeInternalParts(
-      BoxLevel& internal,
-      Connector& input_to_internal,
-      const Connector& input_to_reference,
-      const IntVector& nesting_width,
-      const BoxTree& domain) const;
 
    /*!
     * @brief Compute the parts of one BoxLevel that are external
@@ -320,35 +254,6 @@ public:
       const Connector& input_to_reference,
       const IntVector& nesting_width,
       const MultiblockBoxTree& domain = MultiblockBoxTree()) const;
-
-   /*!
-    * @brief Compute the parts of one BoxLevel that is internal
-    * to another BoxLevel.
-    *
-    * This version of computeInternalParts() does not require a domain.
-    * The domain is taken to be big enough that it does not affect
-    * the definition of "internal".
-    * @see computeInternalParts(BoxLevel&,Connector&,const Connector&,const IntVector&,const BoxTree&)const
-    *
-    * @param[out] internal Any internal part is owned by the process
-    * owning the input Box that generated it.
-    *
-    * @param[out] input_to_internal Relationships from input
-    * MapppedBoxes to their internal parts.  This is a local map.
-    *
-    * @param[in] input_to_reference Overlap Connector from input to
-    * reference BoxLevel.
-    *
-    * @param[in] nesting_width Growth of the reference BoxLevel
-    * for the purpose of comparing to input.  Must be in coordinate
-    * system of input.
-    */
-   void
-   computeInternalParts(
-      BoxLevel& internal,
-      Connector& input_to_internal,
-      const Connector& input_to_reference,
-      const IntVector& nesting_width) const;
 
    //@}
 

@@ -1908,12 +1908,12 @@ void RefineSchedule::sanityCheckCoarseInterpAndHiercoarseLevels(
    BoxLevel external(hiercoarse_to_coarse_interp.getBase().getDim());
    Connector coarse_interp_to_external;
    hier::BoxLevelConnectorUtils edge_utils;
-   edge_utils.computeExternalParts(
+   edge_utils.computeExternalPartsForMultiblock(
       external,
       coarse_interp_to_external,
       complete_coarse_interp_to_hiercoarse,
       fine_connector_widths[next_coarser_ln] - d_max_stencil_width,
-      hierarchy->getPeriodicDomainSearchTree(hier::BlockId(0)));
+      hierarchy->getPeriodicDomainSearchTree());
    coarse_interp_to_external.eraseEmptyNeighborSets();
 
    int err3 = coarse_interp_to_external.getGlobalNumberOfRelationships();
