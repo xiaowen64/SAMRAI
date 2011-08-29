@@ -139,12 +139,12 @@ void OverlapConnectorAlgorithm::extractNeighbors(
       TBOX_ERROR("Connector::extractNeighbors cannot provide neighbors for\n"
          << "a wider ghost cell width that used to initialize it.\n");
    }
-   if (connector.getParallelState() != MappedBoxLevel::GLOBALIZED &&
+   if (connector.getParallelState() != BoxLevel::GLOBALIZED &&
        mapped_box_id.getOwnerRank() != connector.getRank()) {
       TBOX_ERROR("Connector::extractNeighbors cannot get neighbor data\n"
          << "for a remote mapped_box unless in GLOBALIZED mode.\n");
    }
-   if (!connector.getBase().hasMappedBox(mapped_box_id)) {
+   if (!connector.getBase().hasBox(mapped_box_id)) {
       std::string dbgbord;
       TBOX_ERROR(
          "\nConnector::extractNeighbors: mapped_box_id " << mapped_box_id
@@ -168,7 +168,7 @@ void OverlapConnectorAlgorithm::extractNeighbors(
 
    const tbox::ConstPointer<hier::GridGeometry>& grid_geom(connector.getBase().getGridGeometry());
 
-   const Box& mapped_box(*connector.getBase().getMappedBox(Box(dim,
+   const Box& mapped_box(*connector.getBase().getBox(Box(dim,
                                mapped_box_id)));
    NeighborhoodSet::const_iterator ins = connector.getNeighborhoodSets().find(mapped_box_id);
    if (ins == connector.getNeighborhoodSets().end()) {
@@ -226,7 +226,7 @@ void OverlapConnectorAlgorithm::findOverlaps(
 
 void OverlapConnectorAlgorithm::findOverlaps(
    Connector& connector,
-   const MappedBoxLevel& globalized_head,
+   const BoxLevel& globalized_head,
    const bool ignore_self_overlap) const
 {
    findOverlaps_rbbt(connector, globalized_head, ignore_self_overlap);
@@ -244,7 +244,7 @@ void OverlapConnectorAlgorithm::findOverlaps(
 
 void OverlapConnectorAlgorithm::findOverlaps_rbbt(
    Connector& connector,
-   const MappedBoxLevel& head,
+   const BoxLevel& head,
    const bool ignore_self_overlap) const
 {
    const tbox::Dimension dim(head.getDim());
@@ -253,7 +253,7 @@ void OverlapConnectorAlgorithm::findOverlaps_rbbt(
 
    /*
     * Finding overlaps for this object, using
-    * an externally provided head MappedBoxLevel
+    * an externally provided head BoxLevel
     * meant to represent d_head.  We allow the
     * substitution of an external head because
     * we require the head is GLOBALIZED.  The
@@ -265,7 +265,7 @@ void OverlapConnectorAlgorithm::findOverlaps_rbbt(
     * so they can be quickly searched to see which intersects the
     * boxes in this object.
     */
-   if (head.getParallelState() != MappedBoxLevel::GLOBALIZED) {
+   if (head.getParallelState() != BoxLevel::GLOBALIZED) {
       TBOX_ERROR("OverlapConnectorAlgorithm::findOverlaps_rbbt() requires given head\n"
          << "to be GLOBALIZED.\n");
    }
@@ -274,7 +274,7 @@ void OverlapConnectorAlgorithm::findOverlaps_rbbt(
     * The nomenclature "base" refers to the *this mapped_box_level
     * and "head" refer to the mapped_box_level in the argument.
     */
-   const hier::MappedBoxLevel& base(connector.getBase());
+   const hier::BoxLevel& base(connector.getBase());
 
    /*
     * Determine relationship between base and head index spaces.
@@ -291,7 +291,7 @@ void OverlapConnectorAlgorithm::findOverlaps_rbbt(
     * to generate the search tree.
     */
    hier::MultiblockBoxTree rbbt(head.getGridGeometry(),
-                                head.getGlobalMappedBoxes());
+                                head.getGlobalBoxes());
 
    /*
     * A neighbor of a Box would be discarded if
@@ -317,7 +317,7 @@ void OverlapConnectorAlgorithm::findOverlaps_rbbt(
     * Use BoxTree to find local base boxes intersecting head mapped_boxes.
     */
    NeighborSet nabrs_for_box;
-   const BoxSet& base_mapped_boxes = base.getMappedBoxes();
+   const BoxSet& base_mapped_boxes = base.getBoxes();
    for (RealBoxConstIterator ni(base_mapped_boxes); ni.isValid(); ++ni) {
 
       const Box& base_mapped_box = *ni;
@@ -377,7 +377,7 @@ void OverlapConnectorAlgorithm::shrinkConnectorWidth(
    }
 
    // Have not yet written this for GLOBALIZED mode.
-   TBOX_ASSERT(connector.getParallelState() == MappedBoxLevel::DISTRIBUTED);
+   TBOX_ASSERT(connector.getParallelState() == BoxLevel::DISTRIBUTED);
 
    /*
     * Remove overlaps that disappeared given the new GCW.
@@ -388,7 +388,7 @@ void OverlapConnectorAlgorithm::shrinkConnectorWidth(
       connector.getHead(),
       connector.getConnectorWidth(),
       neighborhood_set,
-      MappedBoxLevel::DISTRIBUTED);
+      BoxLevel::DISTRIBUTED);
 
    const bool head_coarser = connector.getHeadCoarserFlag();
    const bool base_coarser =
@@ -402,7 +402,7 @@ void OverlapConnectorAlgorithm::shrinkConnectorWidth(
         ei != neighborhood_set.end(); ++ei) {
       const BoxId& mapped_box_id = ei->first;
       NeighborSet& nabrs = ei->second;
-      const Box& mapped_box = *connector.getBase().getMappedBoxStrict(
+      const Box& mapped_box = *connector.getBase().getBoxStrict(
             mapped_box_id);
       hier::Box mapped_box_box = mapped_box;
       mapped_box_box.grow(new_width);
@@ -433,7 +433,7 @@ void OverlapConnectorAlgorithm::shrinkConnectorWidth(
       connector.getHead(),
       new_width,
       neighborhood_set,
-      MappedBoxLevel::DISTRIBUTED);
+      BoxLevel::DISTRIBUTED);
 }
 
 /*
@@ -623,10 +623,10 @@ void OverlapConnectorAlgorithm::privateBridge(
    const IntVector& zero_vector(
       hier::IntVector::getZero(cent_to_east.getConnectorWidth().getDim()));
 
-   const MappedBoxLevel& cent = cent_to_west.getBase();
+   const BoxLevel& cent = cent_to_west.getBase();
 
 #if defined(DEBUG_CHECK_ASSERTIONS) || \
-   defined(CONNECTOR_CheckBridgeMappedBoxLevelIdentities)
+   defined(CONNECTOR_CheckBridgeBoxLevelIdentities)
    /*
     * Ensure that Connectors incident to and from the center agree on
     * what the center is.  This can be an expensive (though still
@@ -703,8 +703,8 @@ void OverlapConnectorAlgorithm::privateBridge(
 
    /* End sanity checks.  Begin work. */
 
-   const MappedBoxLevel& west = cent_to_west.getHead();
-   const MappedBoxLevel& east = cent_to_east.getHead();
+   const BoxLevel& west = cent_to_west.getHead();
+   const BoxLevel& east = cent_to_east.getHead();
    const IntVector& cent_ratio = cent.getRefinementRatio();
    const IntVector& west_ratio = west.getRefinementRatio();
    const IntVector& east_ratio = east.getRefinementRatio();
@@ -716,7 +716,7 @@ void OverlapConnectorAlgorithm::privateBridge(
     * Using the bridge theorem, compute the largest bridge width for
     * which we can guarantee discovering all the overlaps (when
     * nesting is satisfied).  If either the east or west
-    * MappedBoxLevel's nesting in the center is known, compute the
+    * BoxLevel's nesting in the center is known, compute the
     * output width by the bridge theorem, and use the bigger one.  If
     * neither is known, we assume that both east and west nest in
     * center, and just to do something reasonable.
@@ -735,7 +735,7 @@ void OverlapConnectorAlgorithm::privateBridge(
             output_width2 >= zero_vector)) {
          TBOX_ERROR("OverlapConnectorAlgorithm::privateBridge:\n"
             << "Useless nesting specifications!\n"
-            << "Neither west nor east MappedBoxLevel nest with enough\n"
+            << "Neither west nor east BoxLevel nest with enough\n"
             << "margin to guarantee finding all overlaps.\n"
             << "To ensure you understand completness is not guaranteed,\n"
             << "this is considered an error.  To proceed anyway and live\n"
@@ -1624,7 +1624,7 @@ void OverlapConnectorAlgorithm::findOverlapErrors(
    /*
     * Obtain a globalized version of the head for checking.
     */
-   const MappedBoxLevel& head = connector.getHead().getGlobalizedVersion();
+   const BoxLevel& head = connector.getHead().getGlobalizedVersion();
 
 #ifdef DEBUG_CHECK_ASSERTIONS
    /*
@@ -1832,7 +1832,7 @@ size_t OverlapConnectorAlgorithm::checkOverlapCorrectness(
           * error for this Box.
           */
 
-         const Box& mapped_box = *connector.getBase().getMappedBoxStrict(
+         const Box& mapped_box = *connector.getBase().getBoxStrict(
                global_id_missing);
          tbox::perr << "Found " << im->second.size() << " missing and "
                     << ie->second.size() << " extra overlaps for "
@@ -1914,7 +1914,7 @@ size_t OverlapConnectorAlgorithm::checkOverlapCorrectness(
           * errors for the Box at im.
           */
 
-         const Box& mapped_box = *connector.getBase().getMappedBoxStrict(
+         const Box& mapped_box = *connector.getBase().getBoxStrict(
                global_id_missing);
          tbox::perr << "Found " << im->second.size()
                     << " missing overlaps for " << mapped_box << std::endl;
@@ -1973,7 +1973,7 @@ size_t OverlapConnectorAlgorithm::checkOverlapCorrectness(
           * errors for the Box at ie.
           */
 
-         const Box& mapped_box = *connector.getBase().getMappedBoxStrict(
+         const Box& mapped_box = *connector.getBase().getBoxStrict(
                global_id_extra);
          tbox::perr << "Found " << ie->second.size()
                     << " extra overlaps for " << mapped_box << std::endl;

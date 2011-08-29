@@ -15,7 +15,7 @@
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/hier/Connector.h"
 #include "SAMRAI/hier/BoxTree.h"
-#include "SAMRAI/hier/MappedBoxLevel.h"
+#include "SAMRAI/hier/BoxLevel.h"
 #include "SAMRAI/tbox/AsyncCommPeer.h"
 #include "SAMRAI/tbox/AsyncCommStage.h"
 #include "SAMRAI/tbox/SAMRAI_MPI.h"
@@ -62,7 +62,7 @@ public:
     *
     * If the Connector's head is not GLOBALIZED, a copy is made and
     * globalized.  Once a globalized head is obtained, this method
-    * simply calls findOverlaps(const MappedBoxLevel &globalized_head).
+    * simply calls findOverlaps(const BoxLevel &globalized_head).
     *
     * @param[in,out] connector
     * @param[in] ignore_self_overlap
@@ -88,7 +88,7 @@ public:
    void
    findOverlaps(
       Connector& connector,
-      const MappedBoxLevel& globalized_head,
+      const BoxLevel& globalized_head,
       const bool ignore_self_overlap = false) const;
 
    /*!
@@ -116,11 +116,11 @@ public:
       const IntVector& connector_width) const;
 
    /*!
-    * @brief Compute the overlap Connectors between MappedBoxLevels
+    * @brief Compute the overlap Connectors between BoxLevels
     * efficiently by using information from existing overlap
     * Connectors.
     *
-    * Let east, west and center be MappedBoxLevels.  Given
+    * Let east, west and center be BoxLevels.  Given
     * overlap Connectors between center and east and between center and
     * west, compute overlap Connectors between east and west.
     *
@@ -149,9 +149,9 @@ public:
     *
     * Preconditions:
     *
-    * - Four input Connectors refer to the center MappedBoxLevel, two
+    * - Four input Connectors refer to the center BoxLevel, two
     * refer to the west, and two refer to the east.  The center, east
-    * and west MappedBoxLevels must be the same regardless of what
+    * and west BoxLevels must be the same regardless of what
     * Connector is used to get them.  For example, <tt>
     * &center_to_west.getHead() == &west_to_center.getBase() </tt> must
     * be true.
@@ -190,7 +190,7 @@ public:
     * center_growth_to_nest_east.  Nesting is not checked, because
     * checking requires an iterative non-scalable computation.
     * Nesting is best determined by the code that created the
-    * MappedBoxLevels involved.  Bridging is meant to be fast and
+    * BoxLevels involved.  Bridging is meant to be fast and
     * scalable.
     *
     * @li Periodic relationships are automatically generated if a head
@@ -202,7 +202,7 @@ public:
     * the head or when parts of east or west lie outside the domain
     * extents.  They can be discarded using
     * Connector::removePeriodicRelationships and properly regenerated
-    * using MappedBoxLevelConnectorUtils.
+    * using BoxLevelConnectorUtils.
     *
     * @param[out] west_to_east
     * @param[out] east_to_west
@@ -212,14 +212,14 @@ public:
     * @param[in] center_to_west
     *
     * @param center_growth_to_nest_west The amount by which the center
-    * MappedBoxLevel must grow to nest the west MappedBoxLevel.
+    * BoxLevel must grow to nest the west BoxLevel.
     * Bridging guarantees completeness if the width of @b
     * center_to_east exceeds this amount.  If unknown, set to negative
     * value if unknown so it won't be considered when computing the
     * output Connector widths.
     *
     * @param center_growth_to_nest_east The amount by which the center
-    * MappedBoxLevel must grow to nest the east MappedBoxLevel.
+    * BoxLevel must grow to nest the east BoxLevel.
     * Bridging guarantees completeness if the width of @b
     * center_to_west exceeds this amount.  If unknown, set to negative
     * value if unknown so it won't be considered when computing the
@@ -248,8 +248,8 @@ public:
    /*!
     * @brief A version of bridge without any guarantee of nesting.
     *
-    * The east and west MappedBoxLevels are assumed
-    * to nest in the center MappedBoxLevel.  If they do not,
+    * The east and west BoxLevels are assumed
+    * to nest in the center BoxLevel.  If they do not,
     * the results are not guaranteed to be complete.
     *
     * The output Connector widths are the greater of the widths of @c
@@ -481,8 +481,8 @@ private:
     * @param west_nesting_is_known Whether we know how west nests in
     * center.
     *
-    * @param cent_growth_to_nest_west Amount center MappedBoxLevel has
-    * to grow to nest west MappedBoxLevel (if known).
+    * @param cent_growth_to_nest_west Amount center BoxLevel has
+    * to grow to nest west BoxLevel (if known).
     *
     * @param west_nesting_is_known Whether we known how much center
     * level has to grow to nest west level.
@@ -493,8 +493,8 @@ private:
     * @param east_nesting_is_known Whether we known how much center
     * level has to grow to nest east level.
     *
-    * @param cent_growth_to_nest_east Amount center MappedBoxLevel has
-    * to grow to nest east MappedBoxLevel (if known).
+    * @param cent_growth_to_nest_east Amount center BoxLevel has
+    * to grow to nest east BoxLevel (if known).
     *
     * @param connector_width_limit specifies the maximum Connector
     * width to compute overlaps for (negative if unlimited).  If
@@ -578,7 +578,7 @@ private:
    void
    findOverlaps_rbbt(
       Connector& connector,
-      const MappedBoxLevel& head,
+      const BoxLevel& head,
       const bool ignore_self_overlap = false) const;
 
    /*!

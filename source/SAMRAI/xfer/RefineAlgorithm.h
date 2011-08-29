@@ -22,7 +22,7 @@
 #include "SAMRAI/xfer/VariableFillPattern.h"
 #include "SAMRAI/hier/Connector.h"
 #include "SAMRAI/hier/Box.h"
-#include "SAMRAI/hier/MappedBoxLevel.h"
+#include "SAMRAI/hier/BoxLevel.h"
 #include "SAMRAI/hier/PatchHierarchy.h"
 #include "SAMRAI/hier/PatchLevel.h"
 #include "SAMRAI/tbox/Pointer.h"
@@ -632,7 +632,7 @@ private:
    //! @brief Shorthand typedef.
    typedef hier::Box MBox;
    //! @brief Shorthand typedef.
-   typedef hier::MappedBoxLevel MappedBoxLevel;
+   typedef hier::BoxLevel BoxLevel;
    //! @brief Shorthand typedef.
    typedef hier::Connector::NeighborSet NeighborSet;
 

@@ -205,7 +205,7 @@ public:
     *
     * The optional argument is only to be used for a special case
     * where the user wishes to manually specify a decomposition for
-    * the coarsest level of the hierarchy.  The MappedBoxLevel
+    * the coarsest level of the hierarchy.  The BoxLevel
     * argument must be a decomposition of the the coarsest level, and
     * must exactly fill the index space of the physical domain of the
     * hierarchy.  If omitted or given an uninitialized

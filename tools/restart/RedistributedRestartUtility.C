@@ -12,7 +12,7 @@
 
 #ifdef HAVE_HDF5
 
-#include "SAMRAI/hier/MappedBoxLevel.h"
+#include "SAMRAI/hier/BoxLevel.h"
 #include "SAMRAI/tbox/List.h"
 #include "SAMRAI/tbox/Utilities.h"
 #include "SAMRAI/tbox/MathUtilities.h"
@@ -248,7 +248,7 @@ void RedistributedRestartUtility::readAndWriteRestartData(
             input_proc_nums = (*file_mapping)[num_files_written];
          }
 
-         readAndWriteMappedBoxLevelRestartData(output_dbs, level_in_dbs,
+         readAndWriteBoxLevelRestartData(output_dbs, level_in_dbs,
             key,
             num_files_written,
             input_proc_nums,
@@ -644,7 +644,7 @@ void RedistributedRestartUtility::readAndWritePatchLevelRestartData(
       }
    }
 
-   readAndWriteMappedBoxLevelRestartData(
+   readAndWriteBoxLevelRestartData(
       level_out_dbs, mapped_box_level_dbs_in,
       "mapped_box_level", num_files_written,
       input_proc_nums, total_output_files);
@@ -685,11 +685,11 @@ void RedistributedRestartUtility::readAndWritePatchRestartData(
 
 /*
  **************************************************************************
- * readAndWriteMappedBoxLevelRestartData                                  *
+ * readAndWriteBoxLevelRestartData                                  *
  **************************************************************************
  */
 
-void RedistributedRestartUtility::readAndWriteMappedBoxLevelRestartData(
+void RedistributedRestartUtility::readAndWriteBoxLevelRestartData(
    tbox::Array<tbox::Pointer<tbox::Database> >& output_dbs,
    const tbox::Array<tbox::Pointer<tbox::Database> >& level_in_dbs,
    const string& key,

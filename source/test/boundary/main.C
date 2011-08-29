@@ -20,7 +20,7 @@ using namespace std;
 #include "SAMRAI/hier/BoxUtilities.h"
 #include "SAMRAI/geom/CartesianGridGeometry.h"
 #include "SAMRAI/tbox/Database.h"
-#include "SAMRAI/hier/MappedBoxLevelConnectorUtils.h"
+#include "SAMRAI/hier/BoxLevelConnectorUtils.h"
 #include "SAMRAI/hier/PatchHierarchy.h"
 #include "SAMRAI/hier/ProcessorMapping.h"
 #include "SAMRAI/tbox/InputManager.h"
@@ -193,11 +193,11 @@ int main(
 
 #else
 
-      hier::MappedBoxLevelConnectorUtils edge_utils;
-      hier::MappedBoxLevel layer0(hier::IntVector(dim, 1), grid_geometry);
+      hier::BoxLevelConnectorUtils edge_utils;
+      hier::BoxLevel layer0(hier::IntVector(dim, 1), grid_geometry);
       hier::BoxList::Iterator domain_boxes(domain);
       for (hier::LocalId ib(0); ib < patch_boxes.getNumberOfBoxes(); ib++, domain_boxes++) {
-         layer0.addMappedBox(hier::Box(domain_boxes(), ib, 0));
+         layer0.addBox(hier::Box(domain_boxes(), ib, 0));
       }
       edge_utils.addPeriodicImages(
          layer0,
@@ -208,9 +208,9 @@ int main(
 
       // Add Connector required for schedule construction.
       tbox::Pointer<hier::PatchLevel> level0 = patch_hierarchy->getPatchLevel(0);
-      level0->getMappedBoxLevel()->getPersistentOverlapConnectors().
+      level0->getBoxLevel()->getPersistentOverlapConnectors().
       createConnector(
-         *level0->getMappedBoxLevel(),
+         *level0->getBoxLevel(),
          hier::IntVector(dim, 2));
 
 #endif

@@ -66,7 +66,7 @@ Connector::Connector():
    d_head_coarser(false),
    d_relationships(),
    d_global_relationships(),
-   d_parallel_state(MappedBoxLevel::DISTRIBUTED),
+   d_parallel_state(BoxLevel::DISTRIBUTED),
    d_global_number_of_neighbor_sets(0),
    d_global_number_of_relationships(0),
    d_global_data_up_to_date(false),
@@ -108,17 +108,17 @@ Connector::Connector(
  */
 
 Connector::Connector(
-   const MappedBoxLevel& base_mapped_box_level,
-   const MappedBoxLevel& head_mapped_box_level,
+   const BoxLevel& base_mapped_box_level,
+   const BoxLevel& head_mapped_box_level,
    const IntVector& base_width,
    const NeighborhoodSet& relationships,
-   const MappedBoxLevel::ParallelState parallel_state):
+   const BoxLevel::ParallelState parallel_state):
    d_base_width(base_width.getDim(), 0),
    d_ratio(base_width.getDim(), 0),
    d_head_coarser(false),
    d_relationships(),
    d_global_relationships(),
-   d_parallel_state(MappedBoxLevel::DISTRIBUTED),
+   d_parallel_state(BoxLevel::DISTRIBUTED),
    d_global_number_of_neighbor_sets(0),
    d_global_number_of_relationships(0),
    d_global_data_up_to_date(false),
@@ -143,16 +143,16 @@ Connector::Connector(
  */
 
 Connector::Connector(
-   const MappedBoxLevel& base_mapped_box_level,
-   const MappedBoxLevel& head_mapped_box_level,
+   const BoxLevel& base_mapped_box_level,
+   const BoxLevel& head_mapped_box_level,
    const IntVector& base_width,
-   const MappedBoxLevel::ParallelState parallel_state):
+   const BoxLevel::ParallelState parallel_state):
    d_base_width(base_width.getDim(), 0),
    d_ratio(base_width.getDim(), 0),
    d_head_coarser(false),
    d_relationships(),
    d_global_relationships(),
-   d_parallel_state(MappedBoxLevel::DISTRIBUTED),
+   d_parallel_state(BoxLevel::DISTRIBUTED),
    d_global_number_of_neighbor_sets(0),
    d_global_number_of_relationships(0),
    d_global_data_up_to_date(true),
@@ -201,7 +201,7 @@ const NeighborhoodSet
 & Connector::getGlobalNeighborhoodSets() const
 {
    TBOX_ASSERT(isInitialized());
-   if (d_parallel_state == MappedBoxLevel::DISTRIBUTED) {
+   if (d_parallel_state == BoxLevel::DISTRIBUTED) {
       TBOX_ERROR("Global connectivity unavailable in DISTRIBUTED state.");
    }
    return d_global_relationships;
@@ -216,12 +216,12 @@ void Connector::insertNeighbors(
    const BoxId& mapped_box_id)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   if (d_parallel_state == MappedBoxLevel::DISTRIBUTED &&
+   if (d_parallel_state == BoxLevel::DISTRIBUTED &&
        mapped_box_id.getOwnerRank() != d_rank) {
       TBOX_ERROR("Connector::insertNeighbors error: Cannot work on remote\n"
          << "data in DISTRIBUTED mode.");
    }
-   if (!getBase().hasMappedBox(mapped_box_id)) {
+   if (!getBase().hasBox(mapped_box_id)) {
       TBOX_ERROR(
          "Exiting due to above reported error."
          << "Connector::insertNeighbors: Cannot access neighbors for\n"
@@ -230,7 +230,7 @@ void Connector::insertNeighbors(
          << "base:\n" << getBase().format("", 2));
    }
 #endif
-   if (d_parallel_state == MappedBoxLevel::GLOBALIZED) {
+   if (d_parallel_state == BoxLevel::GLOBALIZED) {
       d_global_relationships[mapped_box_id].insert(neighbors.begin(),
          neighbors.end());
    }
@@ -249,12 +249,12 @@ void Connector::eraseNeighbor(
    const BoxId& mapped_box_id)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   if (d_parallel_state == MappedBoxLevel::DISTRIBUTED &&
+   if (d_parallel_state == BoxLevel::DISTRIBUTED &&
        mapped_box_id.getOwnerRank() != d_rank) {
       TBOX_ERROR("Connector::insertNeighbors error: Cannot work on remote\n"
          << "data in DISTRIBUTED mode.");
    }
-   if (!getBase().hasMappedBox(mapped_box_id)) {
+   if (!getBase().hasBox(mapped_box_id)) {
       TBOX_ERROR(
          "Connector::eraseNeighbors: Cannot access neighbors for\n"
          << "id " << mapped_box_id << " because it does not "
@@ -262,7 +262,7 @@ void Connector::eraseNeighbor(
          << "base:\n" << getBase().format("", 2));
    }
 #endif
-   if (d_parallel_state == MappedBoxLevel::GLOBALIZED) {
+   if (d_parallel_state == BoxLevel::GLOBALIZED) {
       NeighborhoodSet::iterator mi(d_global_relationships.find(mapped_box_id));
       if (mi != d_global_relationships.end()) {
          mi->second.erase(neighbor);
@@ -288,7 +288,7 @@ void Connector::removePeriodicRelationships()
    d_relationships.removePeriodicNeighbors(tmp_edges);
    d_relationships.swap(tmp_edges);
 
-   if (d_parallel_state == MappedBoxLevel::GLOBALIZED) {
+   if (d_parallel_state == BoxLevel::GLOBALIZED) {
       d_global_relationships.removePeriodicNeighbors(tmp_edges);
       d_global_relationships.swap(tmp_edges);
    }
@@ -304,12 +304,12 @@ void Connector::swapNeighbors(
 {
    TBOX_ASSERT(mapped_box_id.getPeriodicId() == PeriodicId::zero());
 #ifdef DEBUG_CHECK_ASSERTIONS
-   if (d_parallel_state == MappedBoxLevel::DISTRIBUTED &&
+   if (d_parallel_state == BoxLevel::DISTRIBUTED &&
        mapped_box_id.getOwnerRank() != d_rank) {
       TBOX_ERROR("Connector::insertNeighbors error: Cannot work on remote\n"
          << "data in DISTRIBUTED mode.");
    }
-   if (!getBase().hasMappedBox(mapped_box_id)) {
+   if (!getBase().hasBox(mapped_box_id)) {
       TBOX_ERROR(
          "Exiting due to above reported error."
          << "Connector::swapNeighbors: Cannot access neighbors for\n"
@@ -319,11 +319,11 @@ void Connector::swapNeighbors(
    }
 #endif
    if (mapped_box_id.getOwnerRank() == d_rank) {
-      if (d_parallel_state == MappedBoxLevel::GLOBALIZED) {
+      if (d_parallel_state == BoxLevel::GLOBALIZED) {
          d_global_relationships[mapped_box_id] = neighbors;
       }
       d_relationships[mapped_box_id].swap(neighbors);
-   } else if (d_parallel_state == MappedBoxLevel::GLOBALIZED) {
+   } else if (d_parallel_state == BoxLevel::GLOBALIZED) {
       d_global_relationships[mapped_box_id].swap(neighbors);
    }
 }
@@ -509,7 +509,7 @@ void Connector::acquireRemoteNeighborhoods_unpack(
  */
 
 void Connector::setParallelState(
-   const MappedBoxLevel::ParallelState parallel_state)
+   const BoxLevel::ParallelState parallel_state)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    if (!isInitialized()) {
@@ -518,17 +518,17 @@ void Connector::setParallelState(
          << "an uninitialized Connector.  See Connector::initialize()");
    }
 #endif
-   if (parallel_state != MappedBoxLevel::DISTRIBUTED && parallel_state !=
-       MappedBoxLevel::GLOBALIZED) {
+   if (parallel_state != BoxLevel::DISTRIBUTED && parallel_state !=
+       BoxLevel::GLOBALIZED) {
       TBOX_ERROR("Connector::setParallelState: Invalid distribution state: "
          << parallel_state << "\n");
    }
 
-   if (d_parallel_state == MappedBoxLevel::DISTRIBUTED && parallel_state ==
-       MappedBoxLevel::GLOBALIZED) {
+   if (d_parallel_state == BoxLevel::DISTRIBUTED && parallel_state ==
+       BoxLevel::GLOBALIZED) {
       acquireRemoteNeighborhoods();
-   } else if (d_parallel_state == MappedBoxLevel::GLOBALIZED && parallel_state ==
-              MappedBoxLevel::DISTRIBUTED) {
+   } else if (d_parallel_state == BoxLevel::GLOBALIZED && parallel_state ==
+              BoxLevel::DISTRIBUTED) {
       d_global_relationships.clear();
    }
    d_parallel_state = parallel_state;
@@ -540,11 +540,11 @@ void Connector::setParallelState(
  */
 
 void Connector::initialize(
-   const MappedBoxLevel& base,
-   const MappedBoxLevel& head,
+   const BoxLevel& base,
+   const BoxLevel& head,
    const IntVector& base_width,
    const NeighborhoodSet& relationships,
-   const MappedBoxLevel::ParallelState parallel_state)
+   const BoxLevel::ParallelState parallel_state)
 {
    if (&relationships != &d_relationships) {
       d_relationships = relationships;
@@ -552,8 +552,8 @@ void Connector::initialize(
    initializePrivate(base,
       head,
       base_width,
-      base.getMappedBoxLevelHandle()->getMappedBoxLevel().getRefinementRatio(),
-      head.getMappedBoxLevelHandle()->getMappedBoxLevel().getRefinementRatio(),
+      base.getBoxLevelHandle()->getBoxLevel().getRefinementRatio(),
+      head.getBoxLevelHandle()->getBoxLevel().getRefinementRatio(),
       parallel_state);
 }
 
@@ -563,10 +563,10 @@ void Connector::initialize(
  */
 
 void Connector::initialize(
-   const MappedBoxLevel& base,
-   const MappedBoxLevel& head,
+   const BoxLevel& base,
+   const BoxLevel& head,
    const IntVector& base_width,
-   const MappedBoxLevel::ParallelState parallel_state)
+   const BoxLevel::ParallelState parallel_state)
 {
    NeighborhoodSet dummy_relationships;
    swapInitialize(base, head, base_width, dummy_relationships, parallel_state);
@@ -578,11 +578,11 @@ void Connector::initialize(
  */
 
 void Connector::swapInitialize(
-   const MappedBoxLevel& base,
-   const MappedBoxLevel& head,
+   const BoxLevel& base,
+   const BoxLevel& head,
    const IntVector& base_width,
    NeighborhoodSet& relationships,
-   const MappedBoxLevel::ParallelState parallel_state)
+   const BoxLevel::ParallelState parallel_state)
 {
    TBOX_ASSERT(&relationships != &d_relationships);   // Library error if this fails.
    d_relationships.swap(relationships);
@@ -600,12 +600,12 @@ void Connector::swapInitialize(
  */
 
 void Connector::initializePrivate(
-   const MappedBoxLevel& base,
-   const MappedBoxLevel& head,
+   const BoxLevel& base,
+   const BoxLevel& head,
    const IntVector& base_width,
    const IntVector& baseRefinementRatio,
    const IntVector& headRefinementRatio,
-   const MappedBoxLevel::ParallelState parallel_state)
+   const BoxLevel::ParallelState parallel_state)
 {
    t_initialize_private->start();
    /*
@@ -615,12 +615,12 @@ void Connector::initializePrivate(
        !head.isInitialized()) {
       TBOX_ERROR("Connector::initializePrivate():\n"
          << "Connector may not be initialized with\n"
-         << "an uninitialized MappedBoxLevel.");
+         << "an uninitialized BoxLevel.");
    }
    if (base.getGridGeometry() != head.getGridGeometry()) {
       TBOX_ERROR("Connector::initializePrivate():\n"
          << "Connector must be initialized with\n"
-         << "MappedBoxLevels using the same GridGeometry.");
+         << "BoxLevels using the same GridGeometry.");
    }
    if (!(base.getRefinementRatio() >=
          head.getRefinementRatio() ||
@@ -640,10 +640,10 @@ void Connector::initializePrivate(
          << "Invalid ghost cell width: "
          << base_width << "\n");
    }
-   if (parallel_state == MappedBoxLevel::GLOBALIZED &&
-       base.getParallelState() != MappedBoxLevel::GLOBALIZED) {
+   if (parallel_state == BoxLevel::GLOBALIZED &&
+       base.getParallelState() != BoxLevel::GLOBALIZED) {
       TBOX_ERROR(
-         "Connector::initializePrivate: base MappedBoxLevel must be in\n"
+         "Connector::initializePrivate: base BoxLevel must be in\n"
          << "GLOBALIZED state before initializing the Connector to\n"
          << "GLOBALIZED state.");
    }
@@ -653,7 +653,7 @@ void Connector::initializePrivate(
    for (NeighborhoodSet::const_iterator ci = d_relationships.begin();
         ci != d_relationships.end();
         ++ci) {
-      if (!base.hasMappedBox((*ci).first)) {
+      if (!base.hasBox((*ci).first)) {
          const NeighborSet& nabrs = (*ci).second;
          tbox::perr << "\nConnector::initializePrivate: NeighborhoodSet "
                     << "provided for non-existent mapped_box " << ci->first
@@ -678,8 +678,8 @@ void Connector::initializePrivate(
    d_nproc = base.getNproc();
    d_rank = base.getRank();
 
-   d_base_handle = base.getMappedBoxLevelHandle();
-   d_head_handle = head.getMappedBoxLevelHandle();
+   d_base_handle = base.getBoxLevelHandle();
+   d_head_handle = head.getBoxLevelHandle();
 
    d_base_width = base_width;
 
@@ -699,7 +699,7 @@ void Connector::initializePrivate(
       d_ratio_is_exact = true;
    }
 
-   if (parallel_state == MappedBoxLevel::DISTRIBUTED) {
+   if (parallel_state == BoxLevel::DISTRIBUTED) {
       d_global_relationships.clear();
    } else {
       if (&d_relationships != &d_global_relationships) {
@@ -742,7 +742,7 @@ void Connector::clear()
       d_base_handle.setNull();
       d_head_handle.setNull();
       d_base_width(0) = d_ratio(0) = 0;
-      d_parallel_state = MappedBoxLevel::DISTRIBUTED;
+      d_parallel_state = BoxLevel::DISTRIBUTED;
       d_rank = d_nproc = BAD_INT;
    }
 }
@@ -758,11 +758,11 @@ void Connector::swap(
 {
 
    if (&a != &b) {
-      tbox::Pointer<MappedBoxLevelHandle> tmplayer;
+      tbox::Pointer<BoxLevelHandle> tmplayer;
       int tmpint;
       bool tmpbool;
       IntVector tmpvec(a.getBase().getDim());
-      MappedBoxLevel::ParallelState tmpstate;
+      BoxLevel::ParallelState tmpstate;
 
       tmplayer = a.d_base_handle;
       a.d_base_handle = b.d_base_handle;
@@ -812,10 +812,10 @@ void Connector::initializeToLocalTranspose(
          connector.getConnectorWidth());
 
    initialize(
-      connector.d_head_handle->getMappedBoxLevel(),
-      connector.d_base_handle->getMappedBoxLevel(),
+      connector.d_head_handle->getBoxLevel(),
+      connector.d_base_handle->getBoxLevel(),
       my_gcw,
-      MappedBoxLevel::DISTRIBUTED);
+      BoxLevel::DISTRIBUTED);
    TBOX_ASSERT(isTransposeOf(connector));
 
    const tbox::Dimension dim(my_gcw.getDim());
@@ -828,8 +828,8 @@ void Connector::initializeToLocalTranspose(
         ci != r_relationships.end(); ++ci) {
 
       const BoxId& mapped_box_id = ci->first;
-      const BoxSet::const_iterator ni = getHead().getMappedBox(mapped_box_id);
-      if (ni == getHead().getMappedBoxes().end()) {
+      const BoxSet::const_iterator ni = getHead().getBox(mapped_box_id);
+      if (ni == getHead().getBoxes().end()) {
          TBOX_ERROR(
             "Connector::initializeToLocalTranspose: mapped_box index\n"
             << mapped_box_id
@@ -857,7 +857,7 @@ void Connector::initializeToLocalTranspose(
                shift_catalog->getOppositeShiftNumber(
                   my_base_mapped_box.getPeriodicId()),
                getHead().getRefinementRatio());
-            if (getHead().hasMappedBox(my_shifted_head_mapped_box)) {
+            if (getHead().hasBox(my_shifted_head_mapped_box)) {
                hier::BoxId base_non_per_id(
                   my_base_mapped_box.getGlobalId(),
                   my_base_mapped_box.getBlockId(),
@@ -1019,7 +1019,7 @@ void Connector::cacheGlobalReducedData() const
 
    tbox::SAMRAI_MPI mpi(getMPI());
 
-   if (d_parallel_state == MappedBoxLevel::GLOBALIZED) {
+   if (d_parallel_state == BoxLevel::GLOBALIZED) {
       d_global_number_of_relationships = 0;
       for (NeighborhoodSet::const_iterator ei(d_global_relationships.begin());
            ei != d_global_relationships.end();
@@ -1126,14 +1126,14 @@ void Connector::recursivePrint(
          getBase().getRefinementRatio(),
          d_base_width);
    os << border << "Parallel state     : "
-      << (getParallelState() == MappedBoxLevel::DISTRIBUTED ? "DIST" : "GLOB")
+      << (getParallelState() == BoxLevel::DISTRIBUTED ? "DIST" : "GLOB")
       << '\n'
       << border << "Rank,nproc         : " << d_rank << ", " << d_nproc << '\n'
       << border << "Base,head objects  :"
       << " ("
       << (d_base_handle == d_head_handle ? "same" : "different") << ") "
-      << (void *)&d_base_handle->getMappedBoxLevel() << ", "
-      << (void *)&d_head_handle->getMappedBoxLevel() << "\n"
+      << (void *)&d_base_handle->getBoxLevel() << ", "
+      << (void *)&d_head_handle->getBoxLevel() << "\n"
       << border << "Base,head,/ ratios : "
       << getBase().getRefinementRatio() << ", "
       << getHead().getRefinementRatio() << ", "
@@ -1147,8 +1147,8 @@ void Connector::recursivePrint(
       os << border << "Mapped_boxes with neighbors:\n";
       for (NeighborhoodSet::const_iterator ei = relationships.begin(); ei != relationships.end();
            ++ei) {
-         BoxSet::const_iterator ni = getBase().getMappedBox(ei->first);
-         if (ni != getBase().getMappedBoxes().end()) {
+         BoxSet::const_iterator ni = getBase().getBox(ei->first);
+         if (ni != getBase().getBoxes().end()) {
             os << border << "  "
                << (*ni) << "_"
                << (*ni).numberCells() << '\n';
@@ -1170,10 +1170,10 @@ void Connector::recursivePrint(
             for (i_nabr = nabrs.begin(); i_nabr != nabrs.end(); ++i_nabr) {
                hier::Box ovlap = *i_nabr;
                if (ni->getBlockId() != i_nabr->getBlockId()) {
-                  d_base_handle->getMappedBoxLevel().getGridGeometry()->
+                  d_base_handle->getBoxLevel().getGridGeometry()->
                   transformBox(
                      ovlap,
-                     d_head_handle->getMappedBoxLevel().getRefinementRatio(),
+                     d_head_handle->getBoxLevel().getRefinementRatio(),
                      ni->getBlockId(),
                      i_nabr->getBlockId());
                }
@@ -1236,7 +1236,7 @@ void Connector::printNeighborStats(
         ni != relationships.end(); ++ni) {
 
       ++sum_nabr_sets;
-      const Box& mapped_box = *getBase().getMappedBoxStrict(ni->first);
+      const Box& mapped_box = *getBase().getBoxStrict(ni->first);
       sum_cells += mapped_box.size();
       Box base_ghost_box = mapped_box;
       base_ghost_box.grow(d_base_width);
@@ -1456,10 +1456,10 @@ Connector *Connector::makeGlobalizedCopy(
    const Connector& other) const
 {
    // Prevent wasteful accidental use when this method is not needed.
-   TBOX_ASSERT(other.getParallelState() != MappedBoxLevel::GLOBALIZED);
+   TBOX_ASSERT(other.getParallelState() != BoxLevel::GLOBALIZED);
 
    Connector* copy = new Connector(other);
-   copy->setParallelState(MappedBoxLevel::GLOBALIZED);
+   copy->setParallelState(BoxLevel::GLOBALIZED);
    return copy;
 }
 
@@ -1505,10 +1505,10 @@ size_t Connector::checkTransposeCorrectness(
    const tbox::Dimension dim(getBase().getDim());
 
    const Connector* transpose =
-      (input_transpose.d_parallel_state == MappedBoxLevel::GLOBALIZED) ?
+      (input_transpose.d_parallel_state == BoxLevel::GLOBALIZED) ?
       &input_transpose : makeGlobalizedCopy(input_transpose);
 
-   const MappedBoxLevel& head = getHead().getGlobalizedVersion();
+   const BoxLevel& head = getHead().getGlobalizedVersion();
 
    const PeriodicShiftCatalog* shift_catalog =
       PeriodicShiftCatalog::getCatalog(dim);
@@ -1528,7 +1528,7 @@ size_t Connector::checkTransposeCorrectness(
         ci != this_relationships.end(); ++ci) {
 
       const BoxId& mapped_box_id = ci->first;
-      const Box& mapped_box = *getBase().getMappedBox(mapped_box_id);
+      const Box& mapped_box = *getBase().getBox(mapped_box_id);
 
       size_t err_count_for_current_index = 0;
 
@@ -1628,10 +1628,10 @@ size_t Connector::checkTransposeCorrectness(
 
       size_t err_count_for_current_index = 0;
 
-      if (!head.hasMappedBox(mapped_box_id)) {
-         TBOX_ASSERT(head.hasMappedBox(mapped_box_id));
+      if (!head.hasBox(mapped_box_id)) {
+         TBOX_ASSERT(head.hasBox(mapped_box_id));
       }
-      const Box& head_mapped_box = *head.getMappedBoxStrict(mapped_box_id);
+      const Box& head_mapped_box = *head.getBoxStrict(mapped_box_id);
 
       for (NeighborSet::const_iterator na = nabrs.begin();
            na != nabrs.end(); ++na) {
@@ -1644,7 +1644,7 @@ size_t Connector::checkTransposeCorrectness(
                continue;
             }
 
-            if (!getBase().hasMappedBox(nabr)) {
+            if (!getBase().hasBox(nabr)) {
                tbox::perr << "\nConnector::checkTransposeCorrectness:\n"
                << "Head mapped_box " << head_mapped_box
                << " has neighbor " << nabr << "\n"
@@ -1660,7 +1660,7 @@ size_t Connector::checkTransposeCorrectness(
                continue;
             }
 
-            const Box& base_mapped_box = *getBase().getMappedBoxStrict(
+            const Box& base_mapped_box = *getBase().getBoxStrict(
                   nabr);
 
             /*
@@ -1763,7 +1763,7 @@ size_t Connector::checkConsistencyWithBase() const
         i_relationships != relationships.end();
         ++i_relationships) {
       const BoxId& mapped_box_id = (*i_relationships).first;
-      if (!getBase().hasMappedBox(mapped_box_id)) {
+      if (!getBase().hasBox(mapped_box_id)) {
          ++num_errors;
          tbox::plog << "ERROR->"
          << "Connector::assertConsistencyWithBase: Neighbor data given "
@@ -1802,8 +1802,8 @@ void Connector::computeNeighborhoodDifferences(
       tbox::plog << "Computing relationship differences, a:\n" << left.format(dbgbord, 3)
       << "Computing relationship differences, b:\n" << right.format(dbgbord, 3);
    }
-   left_minus_right.initialize(left.d_base_handle->getMappedBoxLevel(),
-      left.d_head_handle->getMappedBoxLevel(),
+   left_minus_right.initialize(left.d_base_handle->getBoxLevel(),
+      left.d_head_handle->getBoxLevel(),
       left.d_base_width,
       left.getParallelState());
    const NeighborhoodSet& arelationships = left.getNeighborhoodSets();
@@ -1862,7 +1862,7 @@ void Connector::assertConsistencyWithHead() const
 
 size_t Connector::checkConsistencyWithHead() const
 {
-   const MappedBoxLevel& globalized_head = getHead().getGlobalizedVersion();
+   const BoxLevel& globalized_head = getHead().getGlobalizedVersion();
 
    const int number_of_inconsistencies =
       static_cast<int>(
@@ -1880,13 +1880,13 @@ size_t Connector::checkConsistencyWithHead() const
 
 size_t Connector::checkConsistencyWithHead(
    const NeighborhoodSet& relationships,
-   const MappedBoxLevel& head_mapped_box_level)
+   const BoxLevel& head_mapped_box_level)
 {
    TBOX_ASSERT(head_mapped_box_level.getParallelState() ==
-      MappedBoxLevel::GLOBALIZED);
+      BoxLevel::GLOBALIZED);
 
    const BoxSet& head_mapped_boxes =
-      head_mapped_box_level.getGlobalMappedBoxes();
+      head_mapped_box_level.getGlobalBoxes();
 
    size_t number_of_inconsistencies = 0;
 

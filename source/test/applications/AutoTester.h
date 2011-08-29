@@ -93,7 +93,7 @@ public:
    checkHierarchyBoxes(
       const tbox::Pointer<hier::PatchHierarchy> hierarchy,
       int ln,
-      const hier::MappedBoxLevel& correct_mapped_box_level,
+      const hier::BoxLevel& correct_mapped_box_level,
       int iter);
 
 private:
@@ -129,10 +129,10 @@ private:
 #ifdef HAVE_HDF5
    /*!
     * @brief Database containing correct results for the
-    * MappedBoxLevels generated, for comparison check.
+    * BoxLevels generated, for comparison check.
     *
     * Database /step_number_SN/level_number_LN is the correct result
-    * for the MappedBoxLevel level number LN at the sequence number
+    * for the BoxLevel level number LN at the sequence number
     * SN.
     */
    tbox::HDFDatabase d_hdf_db;

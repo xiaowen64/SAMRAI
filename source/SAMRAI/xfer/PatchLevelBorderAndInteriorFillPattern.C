@@ -51,15 +51,15 @@ PatchLevelBorderAndInteriorFillPattern::~PatchLevelBorderAndInteriorFillPattern(
 /*
  *************************************************************************
  *                                                                       *
- * computeFillMappedBoxesAndNeighborhoodSets                             *
+ * computeFillBoxesAndNeighborhoodSets                                   *
  *                                                                       *
  *************************************************************************
  */
 void
-PatchLevelBorderAndInteriorFillPattern::computeFillMappedBoxesAndNeighborhoodSets(
+PatchLevelBorderAndInteriorFillPattern::computeFillBoxesAndNeighborhoodSets(
    hier::BoxSet& fill_mapped_boxes,
    hier::NeighborhoodSet& dst_to_fill_edges,
-   const hier::MappedBoxLevel& dst_mapped_box_level,
+   const hier::BoxLevel& dst_mapped_box_level,
    const hier::Connector& dst_to_dst,
    const hier::Connector& dst_to_src,
    const hier::Connector& src_to_dst,
@@ -70,7 +70,7 @@ PatchLevelBorderAndInteriorFillPattern::computeFillMappedBoxesAndNeighborhoodSet
    TBOX_DIM_ASSERT_CHECK_ARGS2(dst_mapped_box_level, fill_ghost_width);
 
    const hier::BoxSet& dst_mapped_boxes =
-      dst_mapped_box_level.getMappedBoxes();
+      dst_mapped_box_level.getBoxes();
 
    /*
     * Grow each patch box and remove the level from it, except the
@@ -84,7 +84,7 @@ PatchLevelBorderAndInteriorFillPattern::computeFillMappedBoxesAndNeighborhoodSet
 
       const hier::BoxId& gid(ni->getId());
       const hier::Box& dst_mapped_box =
-         *dst_mapped_box_level.getMappedBox(gid);
+         *dst_mapped_box_level.getBox(gid);
       hier::BoxList fill_boxes(dst_mapped_box);
       fill_boxes.getFirstItem().grow(fill_ghost_width);
       const NeighborSet& nabrs =

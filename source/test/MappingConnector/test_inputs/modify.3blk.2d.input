@@ -63,13 +63,13 @@ GridGeometry {
 
 }
 
-MappedBoxLevelA {
+BoxLevelA {
   refinement_ratio = 3,3 // Refinement of the domain description to get this level.
   min_box_size = 1,1
   max_box_size = 90,110
 }
 
-MappedBoxLevelB {
+BoxLevelB {
   refinement_ratio = 6,6 // Refinement of the domain description to get this level.
   min_box_size = 1,1
   max_box_size = 80,100

@@ -39,7 +39,6 @@ class PatchLevelFillPattern:public tbox::DescribedClass
 {
 public:
    typedef std::vector<hier::Box> BoxVector;
-   typedef std::vector<hier::Box> MappedBoxVector;
    typedef std::map<hier::BoxId, hier::BoxSet> FillSet;
 
    /*!
@@ -66,7 +65,7 @@ public:
     * describing the relationship between dst_mapped_box_level and
     * fill_mapped_boxes.
     *
-    * @param[out] fill_mapped_boxes    MappedBoxes to be filled
+    * @param[out] fill_mapped_boxes    Boxes to be filled
     * @param[out] dst_to_fill_edges    NeighborhoodSet between
     *                                  dst_mapped_box_level and
     *                                  and fill_mapped_boxes
@@ -78,10 +77,10 @@ public:
     *                                  schedule
     */
    virtual void
-   computeFillMappedBoxesAndNeighborhoodSets(
+   computeFillBoxesAndNeighborhoodSets(
       hier::BoxSet& fill_mapped_boxes,
       hier::NeighborhoodSet& dst_to_fill_edges,
-      const hier::MappedBoxLevel& dst_mapped_box_level,
+      const hier::BoxLevel& dst_mapped_box_level,
       const hier::Connector& dst_to_dst,
       const hier::Connector& dst_to_src,
       const hier::Connector& src_to_dst,
@@ -129,7 +128,7 @@ public:
    virtual void
    computeDestinationFillBoxesOnSourceProc(
       FillSet& dst_fill_boxes_on_src_proc,
-      const hier::MappedBoxLevel& dst_mapped_box_level,
+      const hier::BoxLevel& dst_mapped_box_level,
       const hier::Connector& src_to_dst,
       const hier::IntVector& fill_ghost_width);
 

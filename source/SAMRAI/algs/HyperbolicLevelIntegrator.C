@@ -329,7 +329,7 @@ void HyperbolicLevelIntegrator::initializeLevelData(
    tbox::Pointer<hier::PatchLevel> level(
       hierarchy->getPatchLevel(level_number));
 
-   const tbox::SAMRAI_MPI& mpi(level->getMappedBoxLevel()->getMPI());
+   const tbox::SAMRAI_MPI& mpi(level->getBoxLevel()->getMPI());
    mpi.Barrier();
    t_initialize_level_data->start();
 
@@ -349,7 +349,7 @@ void HyperbolicLevelIntegrator::initializeLevelData(
    /*
     * Create schedules for filling new level and fill data.
     */
-   level->getMappedBoxLevel()->getMPI().Barrier();
+   level->getBoxLevel()->getMPI().Barrier();
 
    if ((level_number > 0) || !old_level.isNull()) {
       t_init_level_create_sched->start();
@@ -527,7 +527,7 @@ void HyperbolicLevelIntegrator::applyGradientDetector(
 
    d_patch_strategy->setDataContext(d_scratch);
 
-   const tbox::SAMRAI_MPI& mpi(level->getMappedBoxLevel()->getMPI());
+   const tbox::SAMRAI_MPI& mpi(level->getBoxLevel()->getMPI());
 
    t_error_bdry_fill_comm->start();
    d_bdry_sched_advance[level_number]->fillData(error_data_time);
@@ -644,13 +644,13 @@ void HyperbolicLevelIntegrator::coarsenDataForRichardsonExtrapolation(
          level_number,
          level_number);
 
-   coarse_level->getMappedBoxLevel()->getPersistentOverlapConnectors().
+   coarse_level->getBoxLevel()->getPersistentOverlapConnectors().
    findOrCreateConnector(
-      *hier_level->getMappedBoxLevel(),
+      *hier_level->getBoxLevel(),
       hier::IntVector::ceiling(peer_gcw, coarsen_ratio));
-   hier_level->getMappedBoxLevel()->getPersistentOverlapConnectors().
+   hier_level->getBoxLevel()->getPersistentOverlapConnectors().
    findOrCreateConnector(
-      *coarse_level->getMappedBoxLevel(),
+      *coarse_level->getBoxLevel(),
       peer_gcw);
 #endif
 
@@ -807,7 +807,7 @@ double HyperbolicLevelIntegrator::getLevelDt(
 
    tbox::Pointer<hier::PatchLevel> patch_level(level);
 
-   const tbox::SAMRAI_MPI& mpi(patch_level->getMappedBoxLevel()->getMPI());
+   const tbox::SAMRAI_MPI& mpi(patch_level->getBoxLevel()->getMPI());
 
    t_get_level_dt->start();
 

@@ -40,12 +40,12 @@ OBJS = 	\
 	Patch.o \
 	PatchGeometry.o \
 	PatchData.o \
-	MappedBoxLevelConnectorUtils.o \
+	BoxLevelConnectorUtils.o \
 	BoxContainerUtils.o \
 	OverlapConnectorAlgorithm.o \
 	MappingConnectorAlgorithm.o \
 	Connector.o \
-	MappedBoxLevelHandle.o \
+	BoxLevelHandle.o \
 	BoxIOUtility.o \
 	PeriodicShiftCatalog.o \
 	RealBoxConstIterator.o \
@@ -53,7 +53,7 @@ OBJS = 	\
 	BoxSetSingleOwnerIterator.o \
 	BoxTree.o \
 	MultiblockBoxTree.o \
-	MappedBoxLevel.o \
+	BoxLevel.o \
 	PersistentOverlapConnectors.o \
 	BoxSet.o \
 	NeighborhoodSet.o \

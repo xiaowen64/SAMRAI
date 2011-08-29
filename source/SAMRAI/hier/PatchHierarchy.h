@@ -16,7 +16,7 @@
 #include "SAMRAI/tbox/Array.h"
 #include "SAMRAI/hier/ComponentSelector.h"
 #include "SAMRAI/hier/GridGeometry.h"
-#include "SAMRAI/hier/MappedBoxLevel.h"
+#include "SAMRAI/hier/BoxLevel.h"
 #include "SAMRAI/hier/MultiblockBoxTree.h"
 #include "SAMRAI/hier/PatchDescriptor.h"
 #include "SAMRAI/hier/PatchFactory.h"
@@ -350,7 +350,7 @@ public:
    void
    makeNewPatchLevel(
       const int level_number,
-      const MappedBoxLevel& new_mapped_box_level);
+      const BoxLevel& new_mapped_box_level);
 
    /*!
     * @brief Remove a patch level
@@ -438,20 +438,20 @@ public:
       const int level_number) const;
 
    /*!
-    * @brief Return a pointer to the specified MappedBoxLevel.
+    * @brief Return a pointer to the specified BoxLevel.
     *
-    * @return The MappedBoxLevel owned by PatchLevel number @c level.
+    * @return The BoxLevel owned by PatchLevel number @c level.
     *
     * @param[in]  level
     */
-   const tbox::ConstPointer<MappedBoxLevel>&
-   getMappedBoxLevel(
+   const tbox::ConstPointer<BoxLevel>&
+   getBoxLevel(
       const int level) const;
 
    /*!
     * @brief Get the connector between two levels
     *
-    * Get const access to the Connector between two given MappedBoxLevels
+    * Get const access to the Connector between two given BoxLevels
     * between two given levels in the hierarchy.
     *
     * @return Connector between the two given level numbers.
@@ -523,24 +523,24 @@ public:
    //@}
 
 /*
- * TODO: This DomainMappedBoxLevel, etc. stuff (if it is really needed) should
+ * TODO: This DomainBoxLevel, etc. stuff (if it is really needed) should
  * be moved to the GridGeometry class.  It makes the role of this class
  * too divergent by having it here.
  */
 /*!
- * @brief Access the domain description as a MappedBoxLevel.
+ * @brief Access the domain description as a BoxLevel.
  *
- * The domain MappedBoxLevel is maintained in Globalized mode with
+ * The domain BoxLevel is maintained in Globalized mode with
  * processor 0 owning all mapped boxes.
  *
- * @return The domain description as a MappedBoxLevel
+ * @return The domain description as a BoxLevel
  */
-   const MappedBoxLevel&
-   getDomainMappedBoxLevel() const;
+   const BoxLevel&
+   getDomainBoxLevel() const;
 
    /*!
     * @brief Returns the SAMRAI_MPI communicator over which the domain
-    * MappedBoxLevel is distributed.
+    * BoxLevel is distributed.
     */
    const tbox::SAMRAI_MPI&
    getMPI() const;
@@ -1118,15 +1118,15 @@ private:
  */
 
    /*!
-    * @brief Physical domain MappedBoxLevel.
+    * @brief Physical domain BoxLevel.
     *
     * All mapped_boxes in the domain
-    * MappedBoxLevel are owned by process 0.
+    * BoxLevel are owned by process 0.
     *
-    * The physical domain MappedBoxLevel is maintained in GLOBALIZED
+    * The physical domain BoxLevel is maintained in GLOBALIZED
     * mode with processor 0 owning all mapped boxes.
     */
-   MappedBoxLevel d_domain_mapped_box_level;
+   BoxLevel d_domain_mapped_box_level;
 
    /*!
     * @brief The domain, excluding periodic images, in
@@ -1136,7 +1136,7 @@ private:
 
    /*!
     * @brief The same as d_domain_search_tree, but with periodic
-    * MappedBoxes.
+    * Boxes.
     *
     * For non-periodic domains, this tree is identical to
     * d_domain_search_tree.

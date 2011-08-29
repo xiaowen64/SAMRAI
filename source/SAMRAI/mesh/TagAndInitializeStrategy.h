@@ -16,7 +16,7 @@
 #include "SAMRAI/hier/IntVector.h"
 #include "SAMRAI/hier/PatchHierarchy.h"
 #include "SAMRAI/hier/PatchLevel.h"
-#include "SAMRAI/hier/MappedBoxLevel.h"
+#include "SAMRAI/hier/BoxLevel.h"
 #include "SAMRAI/tbox/Array.h"
 #include "SAMRAI/tbox/Pointer.h"
 

@@ -15,7 +15,7 @@
 
 #include "SAMRAI/tbox/ConstPointer.h"
 #include "SAMRAI/hier/BoxList.h"
-#include "SAMRAI/hier/MappedBoxLevel.h"
+#include "SAMRAI/hier/BoxLevel.h"
 #include "SAMRAI/hier/BoxSetSingleBlockIterator.h"
 #include "SAMRAI/hier/PatchFactory.h"
 #include "SAMRAI/hier/ProcessorMapping.h"
@@ -58,13 +58,13 @@ public:
       const tbox::Dimension& dim);
 
    /*!
-    * @brief Construct a new patch level given a MappedBoxLevel.
+    * @brief Construct a new patch level given a BoxLevel.
     *
-    * The MappedBoxLevel provides refinement ratio information, establishing
+    * The BoxLevel provides refinement ratio information, establishing
     * the ratio between the index space of the new level and some reference
     * level (typically level zero) in some patch hierarchy.
     *
-    * The ratio information provided by the MappedBoxLevel is also used
+    * The ratio information provided by the BoxLevel is also used
     * by the grid geometry instance to initialize geometry information
     * of both the level and the patches on that level.
     *
@@ -85,7 +85,7 @@ public:
     *
     */
    explicit PatchLevel(
-      const MappedBoxLevel& mapped_box_level,
+      const BoxLevel& mapped_box_level,
       const tbox::Pointer<GridGeometry> grid_geometry,
       const tbox::Pointer<PatchDescriptor> descriptor,
       tbox::Pointer<PatchFactory> factory = tbox::Pointer<PatchFactory>(NULL),
@@ -413,7 +413,7 @@ public:
     * @brief Get the box defining the patches on the level.
     *
     * The internal state of PatchLevel (where boxes are concern) is
-    * dependent on the MappedBoxLevel associated with it, and computed
+    * dependent on the BoxLevel associated with it, and computed
     * only if getBoxes() is called.  The first call to getBoxes() must be
     * done by all processors as it requires communication.
     *
@@ -438,27 +438,27 @@ public:
       const BlockId& block_id) const;
 
    /*!
-    * @brief Get the MappedBoxLevel associated with the PatchLevel.
+    * @brief Get the BoxLevel associated with the PatchLevel.
     *
-    * @return a reference to a ConstPointer to the MappedBoxLevel
+    * @return a reference to a ConstPointer to the BoxLevel
     * associated with the PatchLevel.
     */
-   const tbox::ConstPointer<MappedBoxLevel>&
-   getMappedBoxLevel() const;
+   const tbox::ConstPointer<BoxLevel>&
+   getBoxLevel() const;
 
    /*!
-    * @brief Get the globalized version of the MappedBoxLevel associated
+    * @brief Get the globalized version of the BoxLevel associated
     * with the PatchLevel.
     * @note
     * The first time this method is used, a global communication is
     * done.  Thus all processors must use this method the first time
     * any processor uses it.
     *
-    * @return The globalized version of the MappedBoxLevel associated
+    * @return The globalized version of the BoxLevel associated
     * with the PatchLevel.
     */
-   const MappedBoxLevel&
-   getGlobalizedMappedBoxLevel() const;
+   const BoxLevel&
+   getGlobalizedBoxLevel() const;
 
    /*!
     * @brief Get the shifts for the patches on the level.
@@ -900,7 +900,7 @@ private:
    finalizeCallback();
 
    void
-   initializeGlobalizedMappedBoxLevel() const;
+   initializeGlobalizedBoxLevel() const;
 
    /*!
     * @brief Dimension of the object
@@ -915,7 +915,7 @@ private:
    /*!
     * Primary metadata describing the PatchLevel.
     */
-   tbox::ConstPointer<MappedBoxLevel> d_mapped_box_level;
+   tbox::ConstPointer<BoxLevel> d_mapped_box_level;
 
    /*
     * Whether we have a globalized version of d_mapped_box_level.

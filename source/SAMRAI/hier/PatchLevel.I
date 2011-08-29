@@ -144,7 +144,7 @@ SAMRAI_INLINE_KEYWORD
 const BoxList& PatchLevel::getBoxes() const
 {
    if (!d_has_globalized_data) {
-      initializeGlobalizedMappedBoxLevel();
+      initializeGlobalizedBoxLevel();
    }
    return d_boxes;
 }
@@ -153,12 +153,12 @@ SAMRAI_INLINE_KEYWORD
 void PatchLevel::getBoxes(BoxList& boxes, const BlockId& block_id) const
 {
    if (!d_has_globalized_data) {
-      initializeGlobalizedMappedBoxLevel();
+      initializeGlobalizedBoxLevel();
    }
 
    boxes.clearItems();
    const BoxSet& global_mapped_boxes =
-      d_mapped_box_level->getGlobalizedVersion().getGlobalMappedBoxes();
+      d_mapped_box_level->getGlobalizedVersion().getGlobalBoxes();
 
    for (BoxSetSingleBlockIterator gi(global_mapped_boxes, block_id);
         gi.isValid(); gi++) {
@@ -167,17 +167,17 @@ void PatchLevel::getBoxes(BoxList& boxes, const BlockId& block_id) const
 }
 
 SAMRAI_INLINE_KEYWORD
-const tbox::ConstPointer<MappedBoxLevel>& PatchLevel::getMappedBoxLevel() const
+const tbox::ConstPointer<BoxLevel>& PatchLevel::getBoxLevel() const
 {
    return d_mapped_box_level;
 }
 
 SAMRAI_INLINE_KEYWORD
-const MappedBoxLevel&
-PatchLevel::getGlobalizedMappedBoxLevel() const
+const BoxLevel&
+PatchLevel::getGlobalizedBoxLevel() const
 {
    if (!d_has_globalized_data) {
-      initializeGlobalizedMappedBoxLevel();
+      initializeGlobalizedBoxLevel();
    }
    return d_mapped_box_level->getGlobalizedVersion();
 }
@@ -196,7 +196,7 @@ SAMRAI_INLINE_KEYWORD
 const ProcessorMapping& PatchLevel::getProcessorMapping() const
 {
    if (!d_has_globalized_data) {
-      initializeGlobalizedMappedBoxLevel();
+      initializeGlobalizedBoxLevel();
    }
    return d_mapping;
 }
@@ -217,7 +217,7 @@ int PatchLevel::getMappingForPatch(
     * index, the mapping is always to d_mapped_box_level->getRank().
     * Here is the old code:
     *
-    * return d_mapped_box_level->getMappedBoxStrict(p)->getOwnerRank();
+    * return d_mapped_box_level->getBoxStrict(p)->getOwnerRank();
     */
    NULL_USE(mapped_box_id);
    return d_mapped_box_level->getRank();

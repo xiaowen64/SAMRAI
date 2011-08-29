@@ -9,7 +9,7 @@
  ************************************************************************/
 #include "SAMRAI/hier/Connector.h"
 
-#include "SAMRAI/hier/MappedBoxLevelHandle.h"
+#include "SAMRAI/hier/BoxLevelHandle.h"
 
 namespace SAMRAI {
 namespace hier {
@@ -23,8 +23,8 @@ bool Connector::isInitialized() const
     * been initialized when this object was initialized.
     * They should remain initialized as long as they are
     * referenced by a Connector.  Because this check may
-    * occur when the base and head MappedBoxLevels are in
-    * transition, we don't require that the MappedBoxLevels
+    * occur when the base and head BoxLevels are in
+    * transition, we don't require that the BoxLevels
     * themselves be initialized.
     */
    if (d_nproc != BAD_INT) {
@@ -36,7 +36,7 @@ bool Connector::isInitialized() const
 }
 
 SAMRAI_INLINE_KEYWORD
-MappedBoxLevel::ParallelState Connector::getParallelState() const
+BoxLevel::ParallelState Connector::getParallelState() const
 {
    return d_parallel_state;
 }
@@ -46,7 +46,7 @@ const tbox::SAMRAI_MPI& Connector::getMPI() const
 {
    TBOX_ASSERT(isInitialized());
 
-   return d_base_handle->getMappedBoxLevel().getMPI();
+   return d_base_handle->getBoxLevel().getMPI();
 }
 
 SAMRAI_INLINE_KEYWORD
@@ -69,17 +69,17 @@ const hier::IntVector& Connector::getConnectorWidth() const
 }
 
 SAMRAI_INLINE_KEYWORD
-const hier::MappedBoxLevel& Connector::getBase() const
+const hier::BoxLevel& Connector::getBase() const
 {
    TBOX_ASSERT(isInitialized());
-   return d_base_handle->getMappedBoxLevel();
+   return d_base_handle->getBoxLevel();
 }
 
 SAMRAI_INLINE_KEYWORD
-const hier::MappedBoxLevel& Connector::getHead() const
+const hier::BoxLevel& Connector::getHead() const
 {
    TBOX_ASSERT(isInitialized());
-   return d_head_handle->getMappedBoxLevel();
+   return d_head_handle->getBoxLevel();
 }
 
 SAMRAI_INLINE_KEYWORD
@@ -111,10 +111,10 @@ SAMRAI_INLINE_KEYWORD
 bool Connector::hasNeighborSet(
    const BoxId& mapped_box_id) const
 {
-   if (d_parallel_state == MappedBoxLevel::DISTRIBUTED) {
+   if (d_parallel_state == BoxLevel::DISTRIBUTED) {
       TBOX_ASSERT(mapped_box_id.getOwnerRank() == d_rank);
    }
-   const NeighborhoodSet& relationships = d_parallel_state == MappedBoxLevel::DISTRIBUTED ?
+   const NeighborhoodSet& relationships = d_parallel_state == BoxLevel::DISTRIBUTED ?
       d_relationships : d_global_relationships;
    BoxId non_per_id(mapped_box_id.getGlobalId(),
                     mapped_box_id.getBlockId(),
@@ -131,10 +131,10 @@ SAMRAI_INLINE_KEYWORD
 const Connector::NeighborSet& Connector::getNeighborSet(
    const BoxId& mapped_box_id) const
 {
-   if (d_parallel_state == MappedBoxLevel::DISTRIBUTED) {
+   if (d_parallel_state == BoxLevel::DISTRIBUTED) {
       TBOX_ASSERT(mapped_box_id.getOwnerRank() == d_rank);
    }
-   const NeighborhoodSet& relationships = d_parallel_state == MappedBoxLevel::DISTRIBUTED ?
+   const NeighborhoodSet& relationships = d_parallel_state == BoxLevel::DISTRIBUTED ?
       d_relationships : d_global_relationships;
    BoxId non_per_id(mapped_box_id.getGlobalId(),
                     mapped_box_id.getBlockId(),
@@ -200,12 +200,12 @@ bool Connector::operator == (
    if (d_base_width != rhs.d_base_width) {
       return false;
    }
-   if (d_base_handle->getMappedBoxLevel() !=
-       rhs.d_base_handle->getMappedBoxLevel()) {
+   if (d_base_handle->getBoxLevel() !=
+       rhs.d_base_handle->getBoxLevel()) {
       return false;
    }
-   if (d_head_handle->getMappedBoxLevel() !=
-       rhs.d_head_handle->getMappedBoxLevel()) {
+   if (d_head_handle->getBoxLevel() !=
+       rhs.d_head_handle->getBoxLevel()) {
       return false;
    }
    if (getNeighborhoodSets() != rhs.getNeighborhoodSets()) {
@@ -241,12 +241,12 @@ bool Connector::operator != (
    if (d_base_width != rhs.d_base_width) {
       return true;
    }
-   if (d_base_handle->getMappedBoxLevel() !=
-       rhs.d_base_handle->getMappedBoxLevel()) {
+   if (d_base_handle->getBoxLevel() !=
+       rhs.d_base_handle->getBoxLevel()) {
       return true;
    }
-   if (d_head_handle->getMappedBoxLevel() !=
-       rhs.d_head_handle->getMappedBoxLevel()) {
+   if (d_head_handle->getBoxLevel() !=
+       rhs.d_head_handle->getBoxLevel()) {
       return true;
    }
    if (getNeighborhoodSets() != rhs.getNeighborhoodSets()) {

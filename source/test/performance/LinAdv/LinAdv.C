@@ -1480,7 +1480,7 @@ void LinAdv::boundaryReset(
    hier::BoxList domain_boxes(d_dim);
    d_grid_geometry->computePhysicalDomain(domain_boxes,
       patch_geom->getRatio(),
-      patch.getMappedBox().getBlockId());
+      patch.getBox().getBlockId());
 
    pdat::CellIndex icell(ifirst);
    hier::BoxList bdrybox(d_dim);

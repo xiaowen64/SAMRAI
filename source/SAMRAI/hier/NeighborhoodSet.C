@@ -144,7 +144,7 @@ NeighborhoodSet::removePeriodicNeighbors(
    NeighborhoodSet& output_edges) const
 {
    for (const_iterator ei = begin(); ei != end(); ++ei) {
-      ei->second.removePeriodicImageMappedBoxes(output_edges[ei->first]);
+      ei->second.removePeriodicImageBoxes(output_edges[ei->first]);
    }
 }
 

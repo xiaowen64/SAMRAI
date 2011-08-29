@@ -18,7 +18,7 @@
 #include "SAMRAI/hier/BoundaryLookupTable.h"
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/hier/BoxList.h"
-#include "SAMRAI/hier/MappedBoxLevel.h"
+#include "SAMRAI/hier/BoxLevel.h"
 #include "SAMRAI/hier/IntVector.h"
 #include "SAMRAI/hier/BoxSetSingleBlockIterator.h"
 #include "SAMRAI/hier/Patch.h"
@@ -243,7 +243,7 @@ void GridGeometry::computeBoundaryBoxesOnLevel(
 
    for (PatchLevel::Iterator ip(&level); ip; ip++) {
       tbox::Pointer<Patch> patch = *ip;
-      const BoxId& patch_id = patch->getMappedBox().getId();
+      const BoxId& patch_id = patch->getBox().getId();
       const int block_num = patch_id.getBlockId().getBlockValue();
 
       if (patch->getPatchGeometry()->getTouchesRegularBoundary() ||
@@ -341,22 +341,22 @@ void GridGeometry::findPatchesTouchingBoundaries(
    for (PatchLevel::Iterator ip(&level); ip; ip++) {
       tbox::Pointer<Patch> patch = *ip;
       const Box& box(patch->getBox());
-      const int block_number = patch->getMappedBox().getBlockId().getBlockValue();
+      const int block_number = patch->getBox().getBlockId().getBlockValue();
 
       std::map<BoxId, TwoDimBool>::iterator iter_touches_regular_bdry(
-         touches_regular_bdry.find(ip->getMappedBox().getId()));
+         touches_regular_bdry.find(ip->getBox().getId()));
       if (iter_touches_regular_bdry == touches_regular_bdry.end()) {
          iter_touches_regular_bdry = touches_regular_bdry.insert(
                iter_touches_regular_bdry,
-               std::pair<BoxId, TwoDimBool>(ip->getMappedBox().getId(), TwoDimBool(d_dim)));
+               std::pair<BoxId, TwoDimBool>(ip->getBox().getId(), TwoDimBool(d_dim)));
       }
 
       std::map<BoxId, TwoDimBool>::iterator iter_touches_periodic_bdry(
-         touches_periodic_bdry.find(ip->getMappedBox().getId()));
+         touches_periodic_bdry.find(ip->getBox().getId()));
       if (iter_touches_periodic_bdry == touches_periodic_bdry.end()) {
          iter_touches_periodic_bdry = touches_periodic_bdry.insert(
                iter_touches_periodic_bdry,
-               std::pair<BoxId, TwoDimBool>(ip->getMappedBox().getId(), TwoDimBool(d_dim)));
+               std::pair<BoxId, TwoDimBool>(ip->getBox().getId(), TwoDimBool(d_dim)));
       }
 
       computeBoxTouchingBoundaries((*iter_touches_regular_bdry).second,
@@ -491,8 +491,8 @@ void GridGeometry::setGeometryOnPatches(
    for (PatchLevel::Iterator ip(&level); ip; ip++) {
       tbox::Pointer<Patch> patch = *ip;
       setGeometryDataOnPatch(*patch, ratio_to_level_zero,
-         (*touches_regular_bdry.find(ip->getMappedBox().getId())).second,
-         (*touches_periodic_bdry.find(ip->getMappedBox().getId())).second);
+         (*touches_regular_bdry.find(ip->getBox().getId())).second,
+         (*touches_periodic_bdry.find(ip->getBox().getId())).second);
    }
    t_set_geometry_data_on_patches->stop();
 
@@ -2020,7 +2020,7 @@ void GridGeometry::adjustMultiblockPatchLevelBoundaries(
    if (d_number_blocks > 1) {
 
       const BoxSet& d_mapped_boxes =
-         patch_level.getMappedBoxLevel()->getMappedBoxes();
+         patch_level.getBoxLevel()->getBoxes();
 
       IntVector gcw(patch_level.getPatchDescriptor()->getMaxGhostWidth(d_dim));
 

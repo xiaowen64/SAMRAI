@@ -200,7 +200,7 @@ private:
    //! @brief Shorthand typedef.
    typedef hier::LocalId LocalId;
    //! @brief Shorthand typedef.
-   typedef hier::MappedBoxLevel MappedBoxLevel;
+   typedef hier::BoxLevel BoxLevel;
    //! @brief Shorthand typedef.
    typedef hier::Connector Connector;
    //! @brief Shorthand typedef.
@@ -384,8 +384,8 @@ private:
     */
    const hier::Connector *
    getOverlapConnector_strict(
-      const hier::MappedBoxLevel& base,
-      const hier::MappedBoxLevel& head,
+      const hier::BoxLevel& base,
+      const hier::BoxLevel& head,
       const hier::IntVector& min_gcw) const;
 
    /*!

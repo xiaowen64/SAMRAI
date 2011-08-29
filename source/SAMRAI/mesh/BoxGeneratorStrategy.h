@@ -15,7 +15,7 @@
 
 #include "SAMRAI/tbox/DescribedClass.h"
 #include "SAMRAI/hier/GridGeometry.h"
-#include "SAMRAI/hier/MappedBoxLevel.h"
+#include "SAMRAI/hier/BoxLevel.h"
 #include "SAMRAI/hier/PatchLevel.h"
 
 namespace SAMRAI {
@@ -47,7 +47,7 @@ public:
     */
    virtual void
    findBoxesContainingTags(
-      hier::MappedBoxLevel& new_mapped_box_level,
+      hier::BoxLevel& new_mapped_box_level,
       hier::Connector& tag_to_new,
       hier::Connector& new_to_tag,
       const tbox::Pointer<hier::PatchLevel> tag_level,

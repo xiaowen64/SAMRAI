@@ -4,7 +4,7 @@
  * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Set of distributed box-graph relationships from one MappedBoxLevel to another.
+ * Description:   Set of distributed box-graph relationships from one BoxLevel to another.
  *
  ************************************************************************/
 #ifndef included_hier_Connector
@@ -12,7 +12,7 @@
 
 #include "SAMRAI/SAMRAI_config.h"
 
-#include "SAMRAI/hier/MappedBoxLevel.h"
+#include "SAMRAI/hier/BoxLevel.h"
 #include "SAMRAI/hier/NeighborhoodSet.h"
 #include "SAMRAI/tbox/Timer.h"
 
@@ -22,15 +22,15 @@
 namespace SAMRAI {
 namespace hier {
 
-class MappedBoxLevelHandle;
+class BoxLevelHandle;
 class NeighborhoodSet;
 
 /*!
  * @brief A container which holds relationship connections between two
- * MappedBoxLevels.
+ * BoxLevels.
  *
  * Connectors have a notion of a "base" and a "head", representing a
- * directional relationship between two MappedBoxLevels.  The relationships
+ * directional relationship between two BoxLevels.  The relationships
  * are a collection of Boxes in the head, pointed to by a Box in
  * the base.   The association between base and head relationships is
  * 1 .. 0-many.  That is, one Box in the base can be related to zero or
@@ -42,7 +42,7 @@ class NeighborhoodSet;
  * # A Box in the base has no related NeighborSet.  In this case,
  *   the Box in the base will exist as-is in the head.
  * # A Box in the base has NeighborSet which is empty.  In this case, the
- *   Box from the base will not exist in the head MappedBoxLevel.
+ *   Box from the base will not exist in the head BoxLevel.
  * # A Box in the base has a corresponding NeighborSet which in
  *   non-empty.  In this case, the NeighborSet contains the set of Boxes
  *   to which the Box in the base is related.
@@ -129,11 +129,11 @@ public:
     * @param[in] parallel_state
     */
    explicit Connector(
-      const MappedBoxLevel& base_mapped_box_level,
-      const MappedBoxLevel& head_mapped_box_level,
+      const BoxLevel& base_mapped_box_level,
+      const BoxLevel& head_mapped_box_level,
       const IntVector& base_width,
       const NeighborhoodSet& relationships,
-      const MappedBoxLevel::ParallelState parallel_state = MappedBoxLevel::DISTRIBUTED);
+      const BoxLevel::ParallelState parallel_state = BoxLevel::DISTRIBUTED);
 
    /*!
     * @brief Initialize a Connector with no defined relationships.
@@ -146,10 +146,10 @@ public:
     * @param[in] parallel_state
     */
    explicit Connector(
-      const MappedBoxLevel& base_mapped_box_level,
-      const MappedBoxLevel& head_mapped_box_level,
+      const BoxLevel& base_mapped_box_level,
+      const BoxLevel& head_mapped_box_level,
       const IntVector& base_width,
-      const MappedBoxLevel::ParallelState parallel_state = MappedBoxLevel::DISTRIBUTED);
+      const BoxLevel::ParallelState parallel_state = BoxLevel::DISTRIBUTED);
 
    /*!
     * @brief Destructor.
@@ -186,11 +186,11 @@ public:
     */
    void
    initialize(
-      const MappedBoxLevel& base,
-      const MappedBoxLevel& head,
+      const BoxLevel& base,
+      const BoxLevel& head,
       const IntVector& base_width,
       const NeighborhoodSet& relationships,
-      const MappedBoxLevel::ParallelState parallel_state = MappedBoxLevel::DISTRIBUTED);
+      const BoxLevel::ParallelState parallel_state = BoxLevel::DISTRIBUTED);
 
    /*!
     * @brief Initializes the Connector without any relationships.
@@ -209,10 +209,10 @@ public:
     */
    void
    initialize(
-      const MappedBoxLevel& base,
-      const MappedBoxLevel& head,
+      const BoxLevel& base,
+      const BoxLevel& head,
       const IntVector& base_width,
-      const MappedBoxLevel::ParallelState parallel_state = MappedBoxLevel::DISTRIBUTED);
+      const BoxLevel::ParallelState parallel_state = BoxLevel::DISTRIBUTED);
 
    /*!
     * @brief Set data defining the relationship set.
@@ -230,11 +230,11 @@ public:
     */
    void
    swapInitialize(
-      const MappedBoxLevel& base,
-      const MappedBoxLevel& head,
+      const BoxLevel& base,
+      const BoxLevel& head,
       const IntVector& base_width,
       NeighborhoodSet& relationships,
-      const MappedBoxLevel::ParallelState parallel_state = MappedBoxLevel::DISTRIBUTED);
+      const BoxLevel::ParallelState parallel_state = BoxLevel::DISTRIBUTED);
 
    /*!
     * @brief Clear the Connector, putting it into an uninitialized state.
@@ -355,20 +355,20 @@ public:
    //@}
 
    /*!
-    * @brief Return a reference to the base MappedBoxLevel.
+    * @brief Return a reference to the base BoxLevel.
     */
-   const MappedBoxLevel&
+   const BoxLevel&
    getBase() const;
 
    /*!
-    * @brief Return a reference to the head MappedBoxLevel.
+    * @brief Return a reference to the head BoxLevel.
     */
-   const MappedBoxLevel&
+   const BoxLevel&
    getHead() const;
 
    /*!
     * @brief Get the refinement ratio between the base and head
-    * MappedBoxLevels.
+    * BoxLevels.
     *
     * The ratio is the same regardless of which is the coarser of the two.
     * Use getHeadCoarserFlag() to determine which is coarser.  If the ratio
@@ -387,8 +387,8 @@ public:
    ratioIsExact() const;
 
    /*!
-    * @brief Return true if head MappedBoxLevel is coarser than base
-    * MappedBoxLevel.
+    * @brief Return true if head BoxLevel is coarser than base
+    * BoxLevel.
     */
    bool
    getHeadCoarserFlag() const;
@@ -473,8 +473,8 @@ public:
     * @brief Set the parallel distribution state.
     *
     * Before a Connector can be in a GLOBALIZED state, The base
-    * MappedBoxLevel given in initialize() must already be in
-    * GLOBALIZED mode.  The base MappedBoxLevel should remain in
+    * BoxLevel given in initialize() must already be in
+    * GLOBALIZED mode.  The base BoxLevel should remain in
     * GLOBALIZED mode for compatibility with the Connector.
     *
     * This method is not necessarily trivial.  More memory is required
@@ -488,17 +488,17 @@ public:
     */
    void
    setParallelState(
-      const MappedBoxLevel::ParallelState parallel_state);
+      const BoxLevel::ParallelState parallel_state);
 
    /*!
     * @brief Return the current parallel state.
     */
-   MappedBoxLevel::ParallelState
+   BoxLevel::ParallelState
    getParallelState() const;
 
    /*!
     * @brief Returns the MPI communication object, which is always
-    * that of the base MappedBoxLevel.
+    * that of the base BoxLevel.
     */
    const tbox::SAMRAI_MPI&
    getMPI() const;
@@ -574,9 +574,9 @@ public:
     * other, their Connector widths and base refinement ratios must be
     * such that an relationship in one set also appears in the other set.
     * A transpose set must have
-    * @li base and head MappedBoxLevels reversed from the untransposed set.
+    * @li base and head BoxLevels reversed from the untransposed set.
     * @li the same Connector width, although it is described in the index
-    *     space of a different base MappedBoxLevel.
+    *     space of a different base BoxLevel.
     *
     * @param[in] other
     */
@@ -637,7 +637,7 @@ public:
 
    /*!
     * @brief Check that the neighbors specified by the relationships exist in
-    * the head MappedBoxLevel.
+    * the head BoxLevel.
     *
     * If the head is not GLOBALIZED, a temporary copy is made and
     * globalized for checking, triggering communication.
@@ -658,7 +658,7 @@ public:
 
    /*!
     * @brief Check that Boxes referenced by the given NeighborhoodSet
-    * match those in the given MappedBoxLevel.
+    * match those in the given BoxLevel.
     *
     * This method is static so users can check data without having to
     * put it in a Connector object.  Connectors prohibit initializing
@@ -672,7 +672,7 @@ public:
    static size_t
    checkConsistencyWithHead(
       const NeighborhoodSet& relationships,
-      const MappedBoxLevel& head_mapped_box_level);
+      const BoxLevel& head_mapped_box_level);
 
    /*!
     * @brief Compute the differences between two relationship sets.
@@ -893,12 +893,12 @@ private:
     */
    void
    initializePrivate(
-      const MappedBoxLevel& base,
-      const MappedBoxLevel& head,
+      const BoxLevel& base,
+      const BoxLevel& head,
       const IntVector& base_width,
       const IntVector& baseRefinementRatio,
       const IntVector& headRefinementRatio,
-      const MappedBoxLevel::ParallelState parallel_state = MappedBoxLevel::DISTRIBUTED);
+      const BoxLevel::ParallelState parallel_state = BoxLevel::DISTRIBUTED);
 
    /*!
     * @brief Set up things for the entire class.
@@ -921,26 +921,26 @@ private:
    //@}
 
    /*!
-    * @brief Handle for access to the base MappedBoxLevel.
+    * @brief Handle for access to the base BoxLevel.
     *
-    * We don't use a pointer to the MappedBoxLevel, because it would
-    * become dangling when the MappedBoxLevel goes out of scope.
+    * We don't use a pointer to the BoxLevel, because it would
+    * become dangling when the BoxLevel goes out of scope.
     */
-   tbox::Pointer<MappedBoxLevelHandle> d_base_handle;
+   tbox::Pointer<BoxLevelHandle> d_base_handle;
 
    /*!
-    * @brief Handle for access to the base MappedBoxLevel.
+    * @brief Handle for access to the base BoxLevel.
     *
-    * We don't use a pointer to the MappedBoxLevel, because it would
-    * become dangling when the MappedBoxLevel goes out of scope.
+    * We don't use a pointer to the BoxLevel, because it would
+    * become dangling when the BoxLevel goes out of scope.
     */
-   tbox::Pointer<MappedBoxLevelHandle> d_head_handle;
+   tbox::Pointer<BoxLevelHandle> d_head_handle;
 
    /*!
-    * @brief Connector width for the base MappedBoxLevel.
+    * @brief Connector width for the base BoxLevel.
     *
-    * This is the amount of growth applied to a mapped_box in the base MappedBoxLevel
-    * before checking if the mapped_box overlaps a mapped_box in the head MappedBoxLevel.
+    * This is the amount of growth applied to a mapped_box in the base BoxLevel
+    * before checking if the mapped_box overlaps a mapped_box in the head BoxLevel.
     */
    IntVector d_base_width;
 
@@ -953,26 +953,26 @@ private:
     * from base to head.
     *
     * This is redundant information.  You can compute it
-    * from the base and head MappedBoxLevels.
+    * from the base and head BoxLevels.
     */
    IntVector d_ratio;
 
    /*!
     * @brief Whether the ratio between the base and head
-    * MappedBoxLevel refinement ratios are exactly as given by
+    * BoxLevel refinement ratios are exactly as given by
     * d_ratio.  It can only be exact if it can be represented as an
     * IntVector.
     */
    bool d_ratio_is_exact;
 
    /*!
-    * @brief Whether the base MappedBoxLevel is at a finer index space.
+    * @brief Whether the base BoxLevel is at a finer index space.
     *
     * When this is true, d_ratio is the refinement ratio going
     * from the head to the base.
     *
     * This is redundant information.  You can compute it
-    * from the base and head MappedBoxLevels.
+    * from the base and head BoxLevels.
     */
    bool d_head_coarser;
 
@@ -991,7 +991,7 @@ private:
     *
     * Modified by setParallelState().
     */
-   MappedBoxLevel::ParallelState d_parallel_state;
+   BoxLevel::ParallelState d_parallel_state;
 
    /*!
     * @brief Number of NeighborSets in d_relationships globally.

@@ -112,7 +112,7 @@ bool
 OuteredgeSumTransaction::canEstimateIncomingMessageSize()
 {
    bool can_estimate = false;
-   if (d_src_node.getOwnerRank() == d_src_level->getMappedBoxLevel()->getMPI().getRank()) {
+   if (d_src_node.getOwnerRank() == d_src_level->getBoxLevel()->getMPI().getRank()) {
       can_estimate =
          d_src_level->getPatch(d_src_node.getGlobalId(), d_src_node.getBlockId())
          ->getPatchData(s_refine_items[d_refine_item_id]->

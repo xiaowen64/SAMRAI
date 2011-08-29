@@ -139,8 +139,8 @@ void GriddingAlgorithmConnectorWidthRequestor::computeCoarserLevelConnectorWidth
       hier::IntVector::ceiling(fine_to_fine_width, fine_to_coarse_ratio);
    /*
     * Coarse-to-fine width must be big enough for the [ln] -> [ln+1]
-    * Connector to see all the [ln+1] MappedBoxes that are used to add
-    * tags to [ln-1] MappedBoxes for ensuring [ln] properly nests
+    * Connector to see all the [ln+1] Boxes that are used to add
+    * tags to [ln-1] Boxes for ensuring [ln] properly nests
     * [ln+1] when [ln] is being regenerated.
     *
     * The rationale for this adjustment is illustrated by the following

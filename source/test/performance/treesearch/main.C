@@ -30,9 +30,9 @@ using namespace tbox;
  * This is a performance test for the tree search algorithm
  * in BoxTree:
  *
- * 1. Generate a set of MappedBoxes.
+ * 1. Generate a set of Boxes.
  *
- * 2. Sort the MappedBoxes into trees using layerNodeTree.
+ * 2. Sort the Boxes into trees using layerNodeTree.
  *
  * 3. Search for overlaps.
  *

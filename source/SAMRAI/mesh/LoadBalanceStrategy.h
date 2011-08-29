@@ -66,16 +66,16 @@ public:
       int level_number) const = 0;
 
    /*!
-    * @brief Given a MappedBoxLevel, representing the domain of a specified
-    * level in the AMR hierarchy, generate a new MappedBoxLevel from which the
+    * @brief Given a BoxLevel, representing the domain of a specified
+    * level in the AMR hierarchy, generate a new BoxLevel from which the
     * patches for the level may be formed and update two Connectors
-    * incident on the changed MappedBoxLevel.
+    * incident on the changed BoxLevel.
     *
     * The union of the boxes in the balance_mapped_box_level is the same
     * before and after the the method call.
     *
-    * @param[in,out] balance_mapped_box_level Input MappedBoxLevel.  On input, this is the pre-balance
-    *  MappedBoxLevel.  On output, it is the balanced MappedBoxLevel.
+    * @param[in,out] balance_mapped_box_level Input BoxLevel.  On input, this is the pre-balance
+    *  BoxLevel.  On output, it is the balanced BoxLevel.
     *
     * @param[in,out] balance_to_anchor Connector between the balance_mapped_box_level and
     *  some given "anchor mapped_box_level".
@@ -91,7 +91,7 @@ public:
     * distribution data lives.
     *
     * @param[in] unbalanced_to_attractor Connector between the
-    * balance_mapped_box_level and an "attractor" MappedBoxLevel.
+    * balance_mapped_box_level and an "attractor" BoxLevel.
     * This data may be used to indicate preference for data locality.
     * The implementation should try to maximize overlaps between
     * attractor and balance cells owned by the same process.
@@ -133,8 +133,8 @@ public:
     *  child classes may not make use of this argument.
     */
    virtual void
-   loadBalanceMappedBoxLevel(
-      hier::MappedBoxLevel& balance_mapped_box_level,
+   loadBalanceBoxLevel(
+      hier::BoxLevel& balance_mapped_box_level,
       hier::Connector& balance_to_anchor,
       hier::Connector& anchor_to_balance,
       const tbox::Pointer<hier::PatchHierarchy> hierarchy,
@@ -143,7 +143,7 @@ public:
       const hier::Connector& attractor_to_unbalanced,
       const hier::IntVector& min_size,
       const hier::IntVector& max_size,
-      const hier::MappedBoxLevel& domain_mapped_box_level,
+      const hier::BoxLevel& domain_mapped_box_level,
       const hier::IntVector& bad_interval,
       const hier::IntVector& cut_factor, // Default v 2.x.x = hier::IntVector::getOne(tbox::Dimension(DIM))
       const tbox::RankGroup& rank_group = tbox::RankGroup()) const;

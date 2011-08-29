@@ -587,7 +587,7 @@ private:
 
    /*
     * @brief Set integer tags to specified value on intersection
-    * between patch level and a MappedBoxLevel
+    * between patch level and a BoxLevel
     *
     * The index value corresponds to the patch descriptor entry of the
     * cell-centered integer tag array.  The boolean flag indicates
@@ -601,7 +601,7 @@ private:
     * @param[in] index
     *
     * @param[in] level_to_fill_mapped_box_level Connector from the
-    * level with the tags to the MappedBoxLevel describing where to
+    * level with the tags to the BoxLevel describing where to
     * fill.
     *
     * @param[in] interior_only
@@ -610,7 +610,7 @@ private:
     * them to tag.  Must be in index space of level holding fill boxes.
     */
    void
-   fillTagsFromMappedBoxLevel(
+   fillTagsFromBoxLevel(
       const int tag_value,
       const tbox::Pointer<hier::PatchLevel> tag_level,
       const int index,
@@ -620,13 +620,13 @@ private:
 
    /*
     * @brief Make a map that, when applied to an improperly nested
-    * MappedBoxLevel, removes the nonnesting parts.
+    * BoxLevel, removes the nonnesting parts.
     *
     * @param[out] nested_mapped_box_level  The nesting parts of the
-    * unnested MappedBoxLevel.
+    * unnested BoxLevel.
     *
     * @param[out] unnested_to_nested  The mapping from the unnested
-    * MappedBoxLevel to the nested MappedBoxLevel.
+    * BoxLevel to the nested BoxLevel.
     *
     * @param[in] unnested_mapped_box_level
     *
@@ -640,23 +640,23 @@ private:
     */
    void
    makeProperNestingMap(
-      hier::MappedBoxLevel& nested_mapped_box_level,
+      hier::BoxLevel& nested_mapped_box_level,
       hier::Connector& unnested_to_nested,
-      const hier::MappedBoxLevel& unnested_mapped_box_level,
+      const hier::BoxLevel& unnested_mapped_box_level,
       const hier::Connector& tag_to_unnested,
       const hier::Connector& unnested_to_tag,
       const int unnested_ln) const;
 
    /*
-    * @brief Make a map that, when applied to a MappedBoxLevel that
-    * extends outside of a reference MappedBoxLevel, removes those
+    * @brief Make a map that, when applied to a BoxLevel that
+    * extends outside of a reference BoxLevel, removes those
     * outside parts.
     *
     * @param[out] nested_mapped_box_level  The nesting parts of the
-    * unnested MappedBoxLevel.
+    * unnested BoxLevel.
     *
     * @param[out] unnested_to_nested  The mapping from the unnested
-    * MappedBoxLevel to the nested MappedBoxLevel.
+    * BoxLevel to the nested BoxLevel.
     *
     * @param[in] unnested_mapped_box_level
     *
@@ -664,18 +664,18 @@ private:
     */
    void
    makeOverflowNestingMap(
-      hier::MappedBoxLevel& nested_mapped_box_level,
+      hier::BoxLevel& nested_mapped_box_level,
       hier::Connector& unnested_to_nested,
-      const hier::MappedBoxLevel& unnested_mapped_box_level,
+      const hier::BoxLevel& unnested_mapped_box_level,
       const hier::Connector& unnested_to_reference) const;
 
    /*!
-    * @brief Make a map from a MappedBoxLevel to parts of that MappedBoxLevel
+    * @brief Make a map from a BoxLevel to parts of that BoxLevel
     * that violate proper nesting.
     *
-    * @param[in] candidate MappedBoxLevel being examined for nesting violation.
+    * @param[in] candidate BoxLevel being examined for nesting violation.
     *
-    * @param[out] violator MappedBoxLevel containing violating parts of candidate.
+    * @param[out] violator BoxLevel containing violating parts of candidate.
     *
     * @param[in] tag_ln Level number of the level that candidate should nest in.
     *
@@ -687,15 +687,15 @@ private:
     */
    void
    computeNestingViolator(
-      hier::MappedBoxLevel& violator,
+      hier::BoxLevel& violator,
       hier::Connector& candidate_to_violator,
-      const hier::MappedBoxLevel& candidate,
+      const hier::BoxLevel& candidate,
       const hier::Connector& candidate_to_hierarchy,
       const hier::Connector& hierarchy_to_candidate,
       const int tag_ln) const;
 
    /*
-    * @brief Extend MappedBoxes to domain boundary if they they are too close.
+    * @brief Extend Boxes to domain boundary if they they are too close.
     *
     * See hier::BoxUtilities::extendBoxToDomainBoundary().
     *
@@ -711,8 +711,8 @@ private:
     * they less than extend_ghosts cells from the boundary.
     */
    void
-   extendMappedBoxesToDomainBoundary(
-      hier::MappedBoxLevel& new_mapped_box_level,
+   extendBoxesToDomainBoundary(
+      hier::BoxLevel& new_mapped_box_level,
       hier::Connector& tag_to_new,
       hier::Connector& new_to_tag,
       const hier::BoxList& physical_domain_list,
@@ -734,7 +734,7 @@ private:
     * @brief Attempt to fix boxes that are too small by growing them
     * within the nesting-restricted domain.
     *
-    * @param[in,out] new_mapped_box_level MappedBoxLevel being formed
+    * @param[in,out] new_mapped_box_level BoxLevel being formed
     * into the new new level.
     *
     * @param[in,out] tag_to_new  Connector to be updated.
@@ -747,17 +747,17 @@ private:
     */
    void
    growBoxesWithinNestingDomain(
-      hier::MappedBoxLevel& new_mapped_box_level,
+      hier::BoxLevel& new_mapped_box_level,
       hier::Connector& tag_to_new,
       hier::Connector& new_to_tag,
       const hier::IntVector& min_size,
       const int tag_ln) const;
 
    /*
-    * @brief Refine a MappedBoxLevel from the resolution of the tag
+    * @brief Refine a BoxLevel from the resolution of the tag
     * level to the resolution of the level being created.
     *
-    * @param[in,out] new_mapped_box_level MappedBoxLevel being formed
+    * @param[in,out] new_mapped_box_level BoxLevel being formed
     * into the new new level.
     *
     * @param[in,out] tag_to_new  Connector to be updated.
@@ -767,17 +767,17 @@ private:
     * @param[in] ratio
     */
    void
-   refineNewMappedBoxLevel(
-      hier::MappedBoxLevel& new_mapped_box_level,
+   refineNewBoxLevel(
+      hier::BoxLevel& new_mapped_box_level,
       hier::Connector& tag_to_new,
       hier::Connector& new_to_tag,
       const hier::IntVector& ratio) const;
 
    /*
-    * @brief Renumber MappedBoxes in a MappedBoxLevel.
+    * @brief Renumber Boxes in a BoxLevel.
     *
-    * This method renumbers MappedBoxes to give them globally
-    * sequential LocalIds and/or sorts the MappedBoxes by their
+    * This method renumbers Boxes to give them globally
+    * sequential LocalIds and/or sorts the Boxes by their
     * coordinates.  Sequentializing the global indices numbers them
     * sequentially, like Patch numbering in the traditional SAMR
     * approach.  Sorting by box coordinates removes the randomness in
@@ -795,7 +795,7 @@ private:
     */
    void
    renumberBoxes(
-      hier::MappedBoxLevel& new_mapped_box_level,
+      hier::BoxLevel& new_mapped_box_level,
       hier::Connector& tag_to_new,
       hier::Connector& new_to_tag,
       bool sort_by_corners,
@@ -825,7 +825,7 @@ private:
     */
    void
    readLevelBoxes(
-      hier::MappedBoxLevel& new_mapped_box_level,
+      hier::BoxLevel& new_mapped_box_level,
       hier::Connector& coarser_to_new,
       hier::Connector& new_to_coarser,
       const int level_number,
@@ -834,7 +834,7 @@ private:
 
    /*
     * @brief Given the number for the level where cells are tagged for
-    * refinement, compute a MappedBoxLevel from which a refinement of
+    * refinement, compute a BoxLevel from which a refinement of
     * the level may be constructed.
     *
     * It is assumed that the integer tags that identify cells for
@@ -845,7 +845,7 @@ private:
     */
    void
    findRefinementBoxes(
-      hier::MappedBoxLevel& new_mapped_box_level,
+      hier::BoxLevel& new_mapped_box_level,
       hier::Connector& tag_to_new,
       hier::Connector& new_to_tag,
       const int tag_ln) const;
@@ -914,7 +914,7 @@ private:
     */
    size_t
    checkBoundaryProximityViolation(
-      const hier::MappedBoxLevel& mapped_box_level,
+      const hier::BoxLevel& mapped_box_level,
       const hier::IntVector& extend_ghosts) const;
 
    /*!
@@ -927,7 +927,7 @@ private:
    void
    checkBoundaryProximityViolation(
       const int tag_ln,
-      const hier::MappedBoxLevel& new_mapped_box_level) const;
+      const hier::BoxLevel& new_mapped_box_level) const;
 
    /*!
     * @brief Check for user tags that violate proper nesting.
@@ -1104,7 +1104,7 @@ private:
     * Has length d_hierarchy->getMaxNumberOfLevels().  The objects are
     * initialized only during gridding/regridding.
     */
-   std::vector<SAMRAI::hier::MappedBoxLevel> d_proper_nesting_complement;
+   std::vector<SAMRAI::hier::BoxLevel> d_proper_nesting_complement;
 
    /*
     * @brief Connectors from the hierarchy to d_proper_nesting_complement.

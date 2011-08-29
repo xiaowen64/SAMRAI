@@ -7,27 +7,27 @@
  * Description:   Utilities for working on DLBG edges.
  *
  ************************************************************************/
-#ifndef included_hier_MappedBoxLevelConnectorUtils
-#define included_hier_MappedBoxLevelConnectorUtils
+#ifndef included_hier_BoxLevelConnectorUtils
+#define included_hier_BoxLevelConnectorUtils
 
 #include "SAMRAI/SAMRAI_config.h"
 
 #include "SAMRAI/hier/Connector.h"
-#include "SAMRAI/hier/MappedBoxLevel.h"
+#include "SAMRAI/hier/BoxLevel.h"
 #include "SAMRAI/hier/MultiblockBoxTree.h"
 
 namespace SAMRAI {
 namespace hier {
 
 /*!
- * @brief Utilities for common operating on MappedBoxLevels.
+ * @brief Utilities for common operating on BoxLevels.
  *
  * Objects of this class can be set to perform certain sanity checks
  * on the pre and post conditions of the methods.  See
  * setSanityCheckMethodPreconditions() and
  * setSanityCheckMethodPostconditions().
  */
-class MappedBoxLevelConnectorUtils
+class BoxLevelConnectorUtils
 {
 
 public:
@@ -38,7 +38,7 @@ public:
     * setSanityCheckMethodPreconditions() and
     * setSanityCheckMethodPostconditions().
     */
-   MappedBoxLevelConnectorUtils();
+   BoxLevelConnectorUtils();
 
    /*!
     * @brief Set whether to run expensive sanity checks on input parameters.
@@ -64,7 +64,7 @@ public:
 
    //@{
 
-   //! @name Comparing boxes of two MappedBoxLevels
+   //! @name Comparing boxes of two BoxLevels
 
    /*!
     * @brief Given an overlap Connector, determine the extent to which
@@ -101,7 +101,7 @@ public:
     * @param[in] domain Domain description, in reference index space,
     * in search tree format.
     *
-    * @return True if the given base MappedBoxLevel nests in the head,
+    * @return True if the given base BoxLevel nests in the head,
     * otherwise False.
     */
    bool
@@ -126,11 +126,11 @@ public:
       const MultiblockBoxTree* domain = NULL) const;
 
    /*!
-    * @brief Given base and head MappedBoxLevels, determine the extent
+    * @brief Given base and head BoxLevels, determine the extent
     * to which the base nests in the head.
     *
     * This method is similar to the version taking a Connector instead
-    * of the base and head MappedBoxLevels, except that it will build
+    * of the base and head BoxLevels, except that it will build
     * the overlap Connector from the base to the head.  It should be
     * used when you don't have a pre-built Connector or don't have one
     * with sufficient width.
@@ -151,7 +151,7 @@ public:
     * @param domain Domain description, in reference index space, in
     * search tree format.
     *
-    * @return Whether the given base MappedBoxLevel nests in the head.
+    * @return Whether the given base BoxLevel nests in the head.
     *
     * @param[out] locally_nests Whether the local parts of the base
     * nests in the head.  This output may vary among the processes.
@@ -171,13 +171,13 @@ public:
     * @param[in] domain Domain description, in reference index space,
     * in search tree format.
     *
-    * @return Whether the given base MappedBoxLevel nests in the head.
+    * @return Whether the given base BoxLevel nests in the head.
     */
    bool
    baseNestsInHead(
       bool* locally_nests,
-      const MappedBoxLevel& base,
-      const MappedBoxLevel& head,
+      const BoxLevel& base,
+      const BoxLevel& head,
       const IntVector& base_swell,
       const IntVector& head_swell,
       const IntVector& head_margin,
@@ -188,16 +188,16 @@ public:
     */
    baseNestsInHeadForMultiblock(
       bool* locally_nests,
-      const MappedBoxLevel& base,
-      const MappedBoxLevel& head,
+      const BoxLevel& base,
+      const BoxLevel& head,
       const IntVector& base_swell,
       const IntVector& head_swell,
       const IntVector& head_margin,
       const MultiblockBoxTree* domain = NULL) const;
 
    /*!
-    * @brief Compute the parts of one MappedBoxLevel that are external
-    * to another MappedBoxLevel.
+    * @brief Compute the parts of one BoxLevel that are external
+    * to another BoxLevel.
     *
     * This is the singleblock version of computeExternalPartsForMultiblock.
     *
@@ -205,15 +205,15 @@ public:
     */
    void
    computeExternalParts(
-      MappedBoxLevel& external,
+      BoxLevel& external,
       Connector& input_to_external,
       const Connector& input_to_reference,
       const IntVector& nesting_width,
       const BoxTree& domain) const;
 
    /*!
-    * @brief Compute the parts of one MappedBoxLevel that are internal
-    * to another MappedBoxLevel.
+    * @brief Compute the parts of one BoxLevel that are internal
+    * to another BoxLevel.
     *
     * This is the singleblock version of computeInternalPartsForMultiblock.
     *
@@ -221,19 +221,19 @@ public:
     */
    void
    computeInternalParts(
-      MappedBoxLevel& internal,
+      BoxLevel& internal,
       Connector& input_to_internal,
       const Connector& input_to_reference,
       const IntVector& nesting_width,
       const BoxTree& domain) const;
 
    /*!
-    * @brief Compute the parts of one MappedBoxLevel that are external
-    * to another MappedBoxLevel.
+    * @brief Compute the parts of one BoxLevel that are external
+    * to another BoxLevel.
     *
-    * Compare an input MappedBoxLevel to a "reference" MappedBoxLevel.
+    * Compare an input BoxLevel to a "reference" BoxLevel.
     * Compute the parts of the input that are external to the
-    * reference.  Build the "external" MappedBoxLevel representing the
+    * reference.  Build the "external" BoxLevel representing the
     * external parts.  Build a mapping Connector with the input as its
     * base and the external as its head.
     *
@@ -254,34 +254,34 @@ public:
     * discarded.
     *
     * @param[in] input_to_reference Overlap Connector from input to
-    * reference MappedBoxLevel.
+    * reference BoxLevel.
     *
-    * @param[in] nesting_width Growth of the reference MappedBoxLevel
+    * @param[in] nesting_width Growth of the reference BoxLevel
     * for the purpose of comparing to input.  Must be in resolution of
-    * input MappedBoxLevel.  Must be either non-negative or
+    * input BoxLevel.  Must be either non-negative or
     * non-positive but not mixed.
     *
     * @param[in] domain The domain representation, without periodic
     * images, in search tree form.  These boxes should be in the
     * reference index space.  If domain is given, do not shrink the
-    * reference MappedBoxLevel where it touches the domain boundary.
+    * reference BoxLevel where it touches the domain boundary.
     */
    void
    computeExternalPartsForMultiblock(
-      MappedBoxLevel& external,
+      BoxLevel& external,
       Connector& input_to_external,
       const Connector& input_to_reference,
       const IntVector& nesting_width,
       const MultiblockBoxTree& domain = MultiblockBoxTree()) const;
 
    /*!
-    * @brief Compute the parts of one MappedBoxLevel that are internal
-    * to another MappedBoxLevel.
+    * @brief Compute the parts of one BoxLevel that are internal
+    * to another BoxLevel.
     *
-    * Compare an input MappedBoxLevel to a "reference" mapped_box_level.
+    * Compare an input BoxLevel to a "reference" mapped_box_level.
     * Identify parts of the input that are internal to the reference
-    * MappedBoxLevel, and store the internal parts in a
-    * MappedBoxLevel.  Set up a mapping Connector between the input
+    * BoxLevel, and store the internal parts in a
+    * BoxLevel.  Set up a mapping Connector between the input
     * and its internal parts.
     *
     * A partially internal input cell (possible when input is coarser
@@ -301,51 +301,51 @@ public:
     * discarded.
     *
     * @param[in] input_to_reference Overlap Connector from input to
-    * reference MappedBoxLevel.
+    * reference BoxLevel.
     *
-    * @param[in] nesting_width Growth of the reference MappedBoxLevel
+    * @param[in] nesting_width Growth of the reference BoxLevel
     * for the purpose of comparing to input.  Must be in resolution of
-    * input MappedBoxLevel.  Must be either non-negative or
+    * input BoxLevel.  Must be either non-negative or
     * non-positive but not mixed.
     *
     * @param[in] domain The domain representation, without periodic
     * images, in search tree form.  These boxes should be in the
     * reference index space.  If domain is given, do not shrink the
-    * reference MappedBoxLevel where it touches the domain boundary.
+    * reference BoxLevel where it touches the domain boundary.
     */
    void
    computeInternalPartsForMultiblock(
-      MappedBoxLevel& internal,
+      BoxLevel& internal,
       Connector& input_to_internal,
       const Connector& input_to_reference,
       const IntVector& nesting_width,
       const MultiblockBoxTree& domain = MultiblockBoxTree()) const;
 
    /*!
-    * @brief Compute the parts of one MappedBoxLevel that is internal
-    * to another MappedBoxLevel.
+    * @brief Compute the parts of one BoxLevel that is internal
+    * to another BoxLevel.
     *
     * This version of computeInternalParts() does not require a domain.
     * The domain is taken to be big enough that it does not affect
     * the definition of "internal".
-    * @see computeInternalParts(MappedBoxLevel&,Connector&,const Connector&,const IntVector&,const BoxTree&)const
+    * @see computeInternalParts(BoxLevel&,Connector&,const Connector&,const IntVector&,const BoxTree&)const
     *
     * @param[out] internal Any internal part is owned by the process
-    * owning the input MappedBox that generated it.
+    * owning the input Box that generated it.
     *
     * @param[out] input_to_internal Relationships from input
     * MapppedBoxes to their internal parts.  This is a local map.
     *
     * @param[in] input_to_reference Overlap Connector from input to
-    * reference MappedBoxLevel.
+    * reference BoxLevel.
     *
-    * @param[in] nesting_width Growth of the reference MappedBoxLevel
+    * @param[in] nesting_width Growth of the reference BoxLevel
     * for the purpose of comparing to input.  Must be in coordinate
     * system of input.
     */
    void
    computeInternalParts(
-      MappedBoxLevel& internal,
+      BoxLevel& internal,
       Connector& input_to_internal,
       const Connector& input_to_reference,
       const IntVector& nesting_width) const;
@@ -353,13 +353,13 @@ public:
    //@}
 
    /*!
-    * @brief Given a set of MappedBoxes, compute its boundary as a set
+    * @brief Given a set of Boxes, compute its boundary as a set
     * of boxes located just outside it.
     *
     * @param boundary_boxes[o] Boundary boxes, sorted into BoxLists
     * according to the BlockId.
     *
-    * @param mapped_boxes[i] MappedBoxes to find the boundary for.
+    * @param mapped_boxes[i] Boxes to find the boundary for.
     *
     * @param refinement_ratio[i] Refinement ratio of mapped_boxes.
     *
@@ -380,25 +380,25 @@ public:
    //! @name Setting up common mapping Connectors
 
    /*
-    * @brief Sort the MappedBoxes in MappedBoxLevel and make a mapping
-    * Connector from the unsorted MappedBoxLevel to the sorted one.
-    * The sorting can renumber the LocalIndices of the MappedBoxes
-    * or put the MappedBoxes in spatial ordering, or both.
+    * @brief Sort the Boxes in BoxLevel and make a mapping
+    * Connector from the unsorted BoxLevel to the sorted one.
+    * The sorting can renumber the LocalIndices of the Boxes
+    * or put the Boxes in spatial ordering, or both.
     *
-    * The Connector map created is local (no MappedBox is mapped to a new
+    * The Connector map created is local (no Box is mapped to a new
     * owner).
     *
     * If @c sort_mapped_boxes_by_corner is true, the map will reorder
-    * local MappedBoxes by their box corners.  This is useful for
+    * local Boxes by their box corners.  This is useful for
     * making random box ordering into something deterministic.
     *
     * If @c sequentialize_global_indices is true, determine the lowest
     * index the local processor should use for the output
-    * MappedBoxLevel so that the global set of MappedBoxes have
+    * BoxLevel so that the global set of Boxes have
     * sequential indices.  (This requires communication.)  If false,
     * each processor start numbering with LocalIndex zero.  If true,
     * @c initial_sequential_index can specify the first index of first
-    * MappedBox of the lowest rank processor.
+    * Box of the lowest rank processor.
     *
     * For more information on mapping Connectors, see
     * MappingConnectorAlgorithm.
@@ -412,45 +412,45 @@ public:
     * @param[in] unsorted_mapped_box_level
     *
     * @param[in] sort_mapped_boxes_by_corner Whether to sort local
-    * MappedBoxes by their indices to make their ordering solely a
+    * Boxes by their indices to make their ordering solely a
     * function of box positions.
     *
     * @param[in] sequentialize_global_indices Whether to renumber the
     * LocalIndices into a globally sequential numbering.
     *
     * @param[in] initial_sequential_index The first index of first
-    * MappedBox of the lowest rank process.  This parameter is
+    * Box of the lowest rank process.  This parameter is
     * disregarded when not globally sequentializing the indices.
     */
    void
    makeSortingMap(
-      MappedBoxLevel& sorted_mapped_box_level,
+      BoxLevel& sorted_mapped_box_level,
       Connector& output_map,
-      const MappedBoxLevel& unsorted_mapped_box_level,
+      const BoxLevel& unsorted_mapped_box_level,
       bool sort_mapped_boxes_by_corner = true,
       bool sequentialize_global_indices = true,
       LocalId initial_sequential_index = LocalId::getZero()) const;
 
    /*
-    * @brief Given a mapping from an original MappedBoxLevel to parts
-    * to be removed (rejected), construct the remainder MappedBoxLevel
+    * @brief Given a mapping from an original BoxLevel to parts
+    * to be removed (rejected), construct the remainder BoxLevel
     * and the mapping from the original to a remainder.
     *
     * @see MappingConnectorAlgorithm.
     *
-    * @param[out] remainder The new MappedBoxLevel resulting from
-    * removing the rejected parts from the original MappedBoxLevel.
+    * @param[out] remainder The new BoxLevel resulting from
+    * removing the rejected parts from the original BoxLevel.
     *
     * @param[out] orig_to_remainder The output mapping.  This is a
     * local map.
     *
     * @param[in] orig_to_rejections Mapping from original
-    * MappedBoxLevel to its parts that should be be removed.  This
+    * BoxLevel to its parts that should be be removed.  This
     * must be a local map.
     */
    void
    makeRemainderMap(
-      MappedBoxLevel& remainder,
+      BoxLevel& remainder,
       Connector& orig_to_remainder,
       const Connector& orig_to_rejections) const;
 
@@ -461,7 +461,7 @@ public:
    //! @name Adding periodic images
 
    /*!
-    * @brief Add periodic images to a MappedBoxLevel.
+    * @brief Add periodic images to a BoxLevel.
     *
     * This method is a no-op in the case of non-periodic domains.
     *
@@ -469,8 +469,8 @@ public:
     * added, Those farther out are not added.  The threshold distance
     * is @c threshold_distance.
     *
-    * @param[in,out] mapped_box_level MappedBoxLevel subject to the
-    * addition of periodic MappedBoxes.
+    * @param[in,out] mapped_box_level BoxLevel subject to the
+    * addition of periodic Boxes.
     *
     * @param[in] domain_search_tree Domain description in the reference
     * index space.  This tree must NOT include periodic images.
@@ -479,12 +479,12 @@ public:
     */
    void
    addPeriodicImages(
-      MappedBoxLevel& mapped_box_level,
+      BoxLevel& mapped_box_level,
       const BoxTree& domain_search_tree,
       const IntVector& threshold_distance) const;
 
    /*!
-    * @brief Add periodic images to a MappedBoxLevel and add new
+    * @brief Add periodic images to a BoxLevel and add new
     * relationships to the periodic images.
     *
     * This method is a no-op in the case of non-periodic domains.
@@ -494,15 +494,15 @@ public:
     * the width of the Connector @c mapped_box_level_to_anchor.
     *
     * This method updates the overlap Connectors between the
-    * MappedBoxLevel getting new periodic MappedBoxes and an "anchor"
-    * MappedBoxLevel.  New periodic overlap relationships generated
+    * BoxLevel getting new periodic Boxes and an "anchor"
+    * BoxLevel.  New periodic overlap relationships generated
     * are added to the overlap Connector @c
     * mapped_box_level_to_anchor.  If you don't need to have a
     * Connector updated, use addPeriodicImages() instead of this
     * method.
     *
-    * @param[in,out] mapped_box_level MappedBoxLevel subject to the
-    * addition of periodic MappedBoxes.
+    * @param[in,out] mapped_box_level BoxLevel subject to the
+    * addition of periodic Boxes.
     *
     * @param[in,out] mapped_box_level_to_anchor Overlap Connector to
     * be updated with new relationships.
@@ -515,12 +515,12 @@ public:
     * images.
     *
     * @param[in] anchor_to_anchor Self overlap Connector for anchor
-    * MappedBoxLevel.  Must be a complete overlap Connector with
+    * BoxLevel.  Must be a complete overlap Connector with
     * periodic relationships.
     */
    void
    addPeriodicImagesAndRelationships(
-      MappedBoxLevel& mapped_box_level,
+      BoxLevel& mapped_box_level,
       Connector& mapped_box_level_to_anchor,
       Connector& anchor_to_mapped_box_level,
       const BoxTree& domain_search_tree,
@@ -535,7 +535,7 @@ private:
     */
    void
    computeInternalOrExternalPartsForMultiblock(
-      hier::MappedBoxLevel& parts,
+      hier::BoxLevel& parts,
       hier::Connector& input_to_parts,
       char internal_or_external,
       const hier::Connector& input_to_reference,
@@ -584,7 +584,7 @@ private:
 }
 
 #ifdef SAMRAI_INLINE
-#include "SAMRAI/hier/MappedBoxLevelConnectorUtils.I"
+#include "SAMRAI/hier/BoxLevelConnectorUtils.I"
 #endif
 
-#endif  // included_hier_MappedBoxLevelConnectorUtils
+#endif  // included_hier_BoxLevelConnectorUtils

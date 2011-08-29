@@ -1658,7 +1658,7 @@ double BalanceUtilities::computeLoadBalanceEfficiency(
 #endif
 
    NULL_USE(os);
-   const tbox::SAMRAI_MPI& mpi(level->getMappedBoxLevel()->getMPI());
+   const tbox::SAMRAI_MPI& mpi(level->getBoxLevel()->getMPI());
 
    int i;
 

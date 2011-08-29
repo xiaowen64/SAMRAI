@@ -47,8 +47,8 @@ LoadBalanceStrategy::~LoadBalanceStrategy()
 {
 }
 
-void LoadBalanceStrategy::loadBalanceMappedBoxLevel(
-   hier::MappedBoxLevel& balance_mapped_box_level,
+void LoadBalanceStrategy::loadBalanceBoxLevel(
+   hier::BoxLevel& balance_mapped_box_level,
    hier::Connector& balance_to_anchor,
    hier::Connector& anchor_to_balance,
    const tbox::Pointer<hier::PatchHierarchy> hierarchy,
@@ -57,7 +57,7 @@ void LoadBalanceStrategy::loadBalanceMappedBoxLevel(
    const hier::Connector& attractor_to_unbalanced,
    const hier::IntVector& min_size,
    const hier::IntVector& max_size,
-   const hier::MappedBoxLevel& domain_mapped_box_level,
+   const hier::BoxLevel& domain_mapped_box_level,
    const hier::IntVector& bad_interval,
    const hier::IntVector& cut_factor,
    const tbox::RankGroup& rank_group) const
@@ -76,7 +76,7 @@ void LoadBalanceStrategy::loadBalanceMappedBoxLevel(
    NULL_USE(cut_factor);
    NULL_USE(rank_group);
    TBOX_ERROR(
-      "Unusable base method LoadBalanceStrategy::loadBalanceMappedBoxLevel used.");
+      "Unusable base method LoadBalanceStrategy::loadBalanceBoxLevel used.");
 }
 
 /*

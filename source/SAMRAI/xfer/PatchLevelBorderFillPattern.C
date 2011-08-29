@@ -52,14 +52,14 @@ PatchLevelBorderFillPattern::~PatchLevelBorderFillPattern()
 /*
  *************************************************************************
  *                                                                       *
- * computeFillMappedBoxesAndNeighborhoodSets                             *
+ * computeFillBoxesAndNeighborhoodSets                                   *
  *                                                                       *
  *************************************************************************
  */
-void PatchLevelBorderFillPattern::computeFillMappedBoxesAndNeighborhoodSets(
+void PatchLevelBorderFillPattern::computeFillBoxesAndNeighborhoodSets(
    hier::BoxSet& fill_mapped_boxes,
    hier::NeighborhoodSet& dst_to_fill_edges,
-   const hier::MappedBoxLevel& dst_mapped_box_level,
+   const hier::BoxLevel& dst_mapped_box_level,
    const hier::Connector& dst_to_dst,
    const hier::Connector& dst_to_src,
    const hier::Connector& src_to_dst,
@@ -70,7 +70,7 @@ void PatchLevelBorderFillPattern::computeFillMappedBoxesAndNeighborhoodSets(
    TBOX_DIM_ASSERT_CHECK_ARGS2(dst_mapped_box_level, fill_ghost_width);
 
    const hier::BoxSet& dst_mapped_boxes =
-      dst_mapped_box_level.getMappedBoxes();
+      dst_mapped_box_level.getBoxes();
 
    /*
     * To get the level border, grow each patch box and remove

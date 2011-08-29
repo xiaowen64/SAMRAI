@@ -439,7 +439,7 @@ bool MultiblockTester::verifyCommunicationResults() const
 
          success = d_data_test_strategy->verifyResults(
                **mi, d_patch_hierarchy, ln,
-               mi->getMappedBox().getBlockId());
+               mi->getBox().getBlockId());
       }
 
    }
@@ -486,7 +486,7 @@ void MultiblockTester::initializeLevelData(
 
    for (hier::PatchLevel::Iterator p(level); p; p++) {
       tbox::Pointer<hier::Patch> patch = *p;
-      const hier::BlockId& block_id = patch->getMappedBox().getBlockId();
+      const hier::BlockId& block_id = patch->getBox().getBlockId();
 
       int level_num = level->getLevelNumber();
 

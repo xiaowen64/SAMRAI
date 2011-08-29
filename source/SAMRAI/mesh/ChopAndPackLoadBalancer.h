@@ -309,7 +309,7 @@ public:
     * based on parameters set via input or member functions above.  This
     * function is pure virtual in the LoadBalanceStrategy base class.
     *
-    * The load balancing algorithm should ignore any periodic image MappedBoxes
+    * The load balancing algorithm should ignore any periodic image Boxes
     * in the input balance_mapped_box_level.
     *
     * @param out_boxes       Output box array for generating patches on level.
@@ -352,8 +352,8 @@ public:
     *                        This argument is ignored.
     */
    void
-   loadBalanceMappedBoxLevel(
-      hier::MappedBoxLevel& balance_mapped_box_level,
+   loadBalanceBoxLevel(
+      hier::BoxLevel& balance_mapped_box_level,
       hier::Connector& balance_to_anchor,
       hier::Connector& anchor_to_balance,
       const tbox::Pointer<hier::PatchHierarchy> hierarchy,
@@ -362,7 +362,7 @@ public:
       const hier::Connector& attractor_to_unbalanced,
       const hier::IntVector& min_size,
       const hier::IntVector& max_size,
-      const hier::MappedBoxLevel& domain_mapped_box_level,
+      const hier::BoxLevel& domain_mapped_box_level,
       const hier::IntVector& bad_interval,
       const hier::IntVector& cut_factor, // Default v2.x.x = hier::IntVector::getOne(tbox::Dimension(DIM))
       const tbox::RankGroup& rank_group = tbox::RankGroup()) const;

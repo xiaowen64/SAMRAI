@@ -17,7 +17,7 @@
 #include "SAMRAI/hier/MappingConnectorAlgorithm.h"
 #include "SAMRAI/hier/OverlapConnectorAlgorithm.h"
 #include "SAMRAI/mesh/BergerRigoutsosNode.h"
-#include "SAMRAI/hier/MappedBoxLevelConnectorUtils.h"
+#include "SAMRAI/hier/BoxLevelConnectorUtils.h"
 #include "SAMRAI/tbox/MathUtilities.h"
 #include "SAMRAI/tbox/SAMRAI_MPI.h"
 #include "SAMRAI/tbox/StartupShutdownManager.h"
@@ -156,14 +156,14 @@ void BergerRigoutsos::setMPI(
  * using the ABR implementation, then run it.                           *
  *                                                                      *
  * The output boxes from the dendogram root is in the form of a         *
- * MappedBoxLevel.  This method postprocess that data to                         *
+ * BoxLevel.  This method postprocess that data to                         *
  * convert the output to the box list form required by the              *
  * box clustering strategy interface.                                   *
  *                                                                      *
  ************************************************************************
  */
 void BergerRigoutsos::findBoxesContainingTags(
-   hier::MappedBoxLevel& new_mapped_box_level,
+   hier::BoxLevel& new_mapped_box_level,
    hier::Connector& tag_to_new,
    hier::Connector& new_to_tag,
    const tbox::Pointer<hier::PatchLevel> tag_level,
@@ -182,7 +182,7 @@ void BergerRigoutsos::findBoxesContainingTags(
       min_box,
       max_gcw);
 
-   tbox::SAMRAI_MPI mpi(tag_level->getMappedBoxLevel()->getMPI());
+   tbox::SAMRAI_MPI mpi(tag_level->getBoxLevel()->getMPI());
 
    if (!(bound_box.numberCells() >= min_box)) {
       if (d_check_min_box_size == 'e') {
@@ -212,8 +212,8 @@ void BergerRigoutsos::findBoxesContainingTags(
       TBOX_ERROR("BergerRigoutsos: empty bounding box not allowed.");
    }
 
-   const hier::MappedBoxLevel& tag_mapped_box_level =
-      *tag_level->getMappedBoxLevel();
+   const hier::BoxLevel& tag_mapped_box_level =
+      *tag_level->getBoxLevel();
 
    /*
     * If using a duplicate MPI communicator, check that the duplicate
@@ -276,7 +276,7 @@ void BergerRigoutsos::findBoxesContainingTags(
        * clustering algorithm is non-deterministic because
        * it depends on the order of asynchronous messages.)
        */
-      sortOutputMappedBoxes(new_mapped_box_level,
+      sortOutputBoxes(new_mapped_box_level,
          tag_to_new,
          new_to_tag);
    }
@@ -348,8 +348,8 @@ void BergerRigoutsos::findBoxesContainingTags(
  ***********************************************************************
  ***********************************************************************
  */
-void BergerRigoutsos::sortOutputMappedBoxes(
-   hier::MappedBoxLevel& new_mapped_box_level,
+void BergerRigoutsos::sortOutputBoxes(
+   hier::BoxLevel& new_mapped_box_level,
    hier::Connector& tag_to_new,
    hier::Connector& new_to_tag) const
 {
@@ -383,8 +383,8 @@ void BergerRigoutsos::sortOutputMappedBoxes(
     * Sort local indices by corners to make the output deterministic.
     */
    hier::Connector sorting_map;
-   hier::MappedBoxLevel sorted_mapped_box_level(d_dim);
-   hier::MappedBoxLevelConnectorUtils dlbg_edge_utils;
+   hier::BoxLevel sorted_mapped_box_level(d_dim);
+   hier::BoxLevelConnectorUtils dlbg_edge_utils;
    dlbg_edge_utils.makeSortingMap(
       sorted_mapped_box_level,
       sorting_map,

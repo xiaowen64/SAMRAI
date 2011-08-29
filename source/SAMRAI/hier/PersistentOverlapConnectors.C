@@ -4,7 +4,7 @@
  * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Registry of PersistentOverlapConnectorss incident from a common MappedBoxLevel.
+ * Description:   Registry of PersistentOverlapConnectorss incident from a common BoxLevel.
  *
  ************************************************************************/
 #ifndef included_hier_PersistentOverlapConnectors_C
@@ -12,7 +12,7 @@
 
 #include "SAMRAI/hier/PersistentOverlapConnectors.h"
 #include "SAMRAI/hier/Connector.h"
-#include "SAMRAI/hier/MappedBoxLevel.h"
+#include "SAMRAI/hier/BoxLevel.h"
 #include "SAMRAI/hier/NeighborhoodSet.h"
 #include "SAMRAI/hier/OverlapConnectorAlgorithm.h"
 #include "SAMRAI/tbox/InputManager.h"
@@ -27,11 +27,11 @@ bool PersistentOverlapConnectors::s_always_create_missing_connector(true);
 /*
  ************************************************************************
  * This private constructor can only be used by the friend
- * class MappedBoxLevel.
+ * class BoxLevel.
  ************************************************************************
  */
 PersistentOverlapConnectors::PersistentOverlapConnectors(
-   const MappedBoxLevel& my_mapped_box_level):
+   const BoxLevel& my_mapped_box_level):
    d_my_mapped_box_level(my_mapped_box_level)
 {
    if (s_check_created_connectors == '\0') {
@@ -71,7 +71,7 @@ PersistentOverlapConnectors::~PersistentOverlapConnectors()
  ************************************************************************
  */
 const Connector& PersistentOverlapConnectors::createConnector(
-   const MappedBoxLevel& head,
+   const BoxLevel& head,
    const IntVector& connector_width)
 {
    TBOX_ASSERT(d_my_mapped_box_level.isInitialized());
@@ -90,7 +90,7 @@ const Connector& PersistentOverlapConnectors::createConnector(
          d_my_mapped_box_level,
          head,
          connector_width,
-         MappedBoxLevel::DISTRIBUTED);
+         BoxLevel::DISTRIBUTED);
    OverlapConnectorAlgorithm oca;
    oca.findOverlaps(*new_connector, head.getGlobalizedVersion());
 
@@ -106,7 +106,7 @@ const Connector& PersistentOverlapConnectors::createConnector(
  ************************************************************************
  */
 const Connector& PersistentOverlapConnectors::createConnector(
-   const MappedBoxLevel& head,
+   const BoxLevel& head,
    const IntVector& connector_width,
    const NeighborhoodSet& relationships)
 {
@@ -118,15 +118,15 @@ const Connector& PersistentOverlapConnectors::createConnector(
       TBOX_ASSERT(d_cons_from_me[i]->getBase().isInitialized());
       TBOX_ASSERT(d_cons_from_me[i]->getHead().isInitialized());
       TBOX_ASSERT(
-         !d_cons_from_me[i]->getBase().getMappedBoxLevelHandle().isNull());
+         !d_cons_from_me[i]->getBase().getBoxLevelHandle().isNull());
       TBOX_ASSERT(
-         !d_cons_from_me[i]->getHead().getMappedBoxLevelHandle().isNull());
+         !d_cons_from_me[i]->getHead().getBoxLevelHandle().isNull());
       TBOX_ASSERT(&d_cons_from_me[i]->getBase() ==
-         &d_cons_from_me[i]->getBase().getMappedBoxLevelHandle()->
-         getMappedBoxLevel());
+         &d_cons_from_me[i]->getBase().getBoxLevelHandle()->
+         getBoxLevel());
       TBOX_ASSERT(&d_cons_from_me[i]->getHead() ==
-         &d_cons_from_me[i]->getHead().getMappedBoxLevelHandle()->
-         getMappedBoxLevel());
+         &d_cons_from_me[i]->getHead().getBoxLevelHandle()->
+         getBoxLevel());
       if (&(d_cons_from_me[i]->getHead()) == &head &&
           d_cons_from_me[i]->getConnectorWidth() == connector_width) {
          TBOX_ERROR(
@@ -140,7 +140,7 @@ const Connector& PersistentOverlapConnectors::createConnector(
          head,
          connector_width,
          relationships,
-         MappedBoxLevel::DISTRIBUTED);
+         BoxLevel::DISTRIBUTED);
    if (s_check_created_connectors == 'y') {
       // Check correctness.
       OverlapConnectorAlgorithm oca;
@@ -160,7 +160,7 @@ const Connector& PersistentOverlapConnectors::createConnector(
  ************************************************************************
  */
 const Connector& PersistentOverlapConnectors::findConnector(
-   const MappedBoxLevel& head,
+   const BoxLevel& head,
    const IntVector& min_connector_width,
    bool exact_width_only)
 {
@@ -177,15 +177,15 @@ const Connector& PersistentOverlapConnectors::findConnector(
       TBOX_ASSERT(d_cons_from_me[i]->getBase().isInitialized());
       TBOX_ASSERT(d_cons_from_me[i]->getHead().isInitialized());
       TBOX_ASSERT(
-         !d_cons_from_me[i]->getBase().getMappedBoxLevelHandle().isNull());
+         !d_cons_from_me[i]->getBase().getBoxLevelHandle().isNull());
       TBOX_ASSERT(
-         !d_cons_from_me[i]->getHead().getMappedBoxLevelHandle().isNull());
+         !d_cons_from_me[i]->getHead().getBoxLevelHandle().isNull());
       TBOX_ASSERT(&d_cons_from_me[i]->getBase() ==
-         &d_cons_from_me[i]->getBase().getMappedBoxLevelHandle()->
-         getMappedBoxLevel());
+         &d_cons_from_me[i]->getBase().getBoxLevelHandle()->
+         getBoxLevel());
       TBOX_ASSERT(&d_cons_from_me[i]->getHead() ==
-         &d_cons_from_me[i]->getHead().getMappedBoxLevelHandle()->
-         getMappedBoxLevel());
+         &d_cons_from_me[i]->getHead().getBoxLevelHandle()->
+         getBoxLevel());
 
       if (&(d_cons_from_me[i]->getHead()) == &head) {
          if (d_cons_from_me[i]->getConnectorWidth() >= min_connector_width) {
@@ -283,7 +283,7 @@ const Connector& PersistentOverlapConnectors::findConnector(
  ************************************************************************
  */
 const Connector& PersistentOverlapConnectors::findOrCreateConnector(
-   const MappedBoxLevel& head,
+   const BoxLevel& head,
    const IntVector& min_connector_width,
    bool exact_width_only)
 {
@@ -296,15 +296,15 @@ const Connector& PersistentOverlapConnectors::findOrCreateConnector(
       TBOX_ASSERT(d_cons_from_me[i]->getBase().isInitialized());
       TBOX_ASSERT(d_cons_from_me[i]->getHead().isInitialized());
       TBOX_ASSERT(
-         !d_cons_from_me[i]->getBase().getMappedBoxLevelHandle().isNull());
+         !d_cons_from_me[i]->getBase().getBoxLevelHandle().isNull());
       TBOX_ASSERT(
-         !d_cons_from_me[i]->getHead().getMappedBoxLevelHandle().isNull());
+         !d_cons_from_me[i]->getHead().getBoxLevelHandle().isNull());
       TBOX_ASSERT(&d_cons_from_me[i]->getBase() ==
-         &d_cons_from_me[i]->getBase().getMappedBoxLevelHandle()->
-         getMappedBoxLevel());
+         &d_cons_from_me[i]->getBase().getBoxLevelHandle()->
+         getBoxLevel());
       TBOX_ASSERT(&d_cons_from_me[i]->getHead() ==
-         &d_cons_from_me[i]->getHead().getMappedBoxLevelHandle()->
-         getMappedBoxLevel());
+         &d_cons_from_me[i]->getHead().getBoxLevelHandle()->
+         getBoxLevel());
 
       if (&(d_cons_from_me[i]->getHead()) == &head) {
          if (d_cons_from_me[i]->getConnectorWidth() >= min_connector_width) {
@@ -340,7 +340,7 @@ const Connector& PersistentOverlapConnectors::findOrCreateConnector(
             d_my_mapped_box_level,
             head,
             min_connector_width,
-            MappedBoxLevel::DISTRIBUTED);
+            BoxLevel::DISTRIBUTED);
       oca.findOverlaps(*new_connector, head.getGlobalizedVersion());
       found = new_connector;
 
@@ -404,7 +404,7 @@ const Connector& PersistentOverlapConnectors::findOrCreateConnector(
  ************************************************************************
  */
 bool PersistentOverlapConnectors::hasConnector(
-   const MappedBoxLevel& head,
+   const BoxLevel& head,
    const IntVector& min_connector_width,
    bool exact_width_only) const
 {

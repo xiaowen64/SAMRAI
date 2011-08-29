@@ -264,7 +264,7 @@ void BergerRigoutsosNode::setClusteringParameters(
  ********************************************************************
  */
 void BergerRigoutsosNode::clusterAndComputeRelationships(
-   hier::MappedBoxLevel& new_mapped_box_level,
+   hier::BoxLevel& new_mapped_box_level,
    hier::Connector& tag_to_new,
    hier::Connector& new_to_tag,
    const hier::Box& bound_box,
@@ -278,7 +278,7 @@ void BergerRigoutsosNode::clusterAndComputeRelationships(
       *tag_level);
 
    d_common->tag_level = tag_level;
-   d_common->tag_mapped_box_level = tag_level->getMappedBoxLevel().getPointer();
+   d_common->tag_mapped_box_level = tag_level->getBoxLevel().getPointer();
 
    setMPI(mpi_object);
 
@@ -297,23 +297,23 @@ void BergerRigoutsosNode::clusterAndComputeRelationships(
       d_common->tag_level->getRatioToLevelZero(),
       d_common->tag_level->getGridGeometry(),
       d_common->tag_mapped_box_level->getMPI(),
-      hier::MappedBoxLevel::DISTRIBUTED);
+      hier::BoxLevel::DISTRIBUTED);
 
    if (d_common->compute_relationships >= 1) {
       tag_to_new.swapInitialize(
-         *tag_level->getMappedBoxLevel(),
+         *tag_level->getBoxLevel(),
          new_mapped_box_level,
          d_common->max_gcw,
          d_common->tag_eto_new,
-         hier::MappedBoxLevel::DISTRIBUTED);
+         hier::BoxLevel::DISTRIBUTED);
    }
    if (d_common->compute_relationships >= 2) {
       new_to_tag.swapInitialize(
          new_mapped_box_level,
-         *tag_level->getMappedBoxLevel(),
+         *tag_level->getBoxLevel(),
          d_common->max_gcw,
          d_common->new_eto_tag,
-         hier::MappedBoxLevel::DISTRIBUTED);
+         hier::BoxLevel::DISTRIBUTED);
    }
 
    /*
@@ -364,7 +364,7 @@ void BergerRigoutsosNode::clusterAndComputeRelationships()
        * these lists.
        */
       const BoxSet& tag_mapped_boxes =
-         d_common->tag_mapped_box_level->getMappedBoxes();
+         d_common->tag_mapped_box_level->getBoxes();
       for (hier::RealBoxConstIterator ni(tag_mapped_boxes); ni.isValid();
            ++ni) {
          d_common->tag_eto_new[ni->getId()];
@@ -500,7 +500,7 @@ void BergerRigoutsosNode::setMPI(
 #if defined(DEBUG_CHECK_ASSERTIONS)
       /*
        * If user supply a communicator to use, make sure it is
-       * compatible with the MappedBoxLevel involved.
+       * compatible with the BoxLevel involved.
        */
       tbox::SAMRAI_MPI mpi1(mpi_object);
       tbox::SAMRAI_MPI mpi2(d_common->tag_mapped_box_level->getMPI());
@@ -780,7 +780,7 @@ REDUCE_HISTOGRAM:
              * of the children.  The node would be erased later if
              * it is not finally accepted.
              */
-            createMappedBox();
+            createBox();
          }
       }
 
@@ -1184,13 +1184,13 @@ bool BergerRigoutsosNode::runChildren_check()
       }
 
       if (d_lft_child->d_owner == d_common->rank) {
-         d_lft_child->eraseMappedBox();
+         d_lft_child->eraseBox();
          d_lft_child->d_box_acceptance = rejected_by_recombination;
          --(d_common->num_boxes_generated);
       }
 
       if (d_rht_child->d_owner == d_common->rank) {
-         d_rht_child->eraseMappedBox();
+         d_rht_child->eraseBox();
          d_rht_child->d_box_acceptance = rejected_by_recombination;
          --(d_common->num_boxes_generated);
       }
@@ -1204,7 +1204,7 @@ bool BergerRigoutsosNode::runChildren_check()
       // Accept childrens' results, discarding graph node.
 
       if (d_owner == d_common->rank) {
-         eraseMappedBox();
+         eraseBox();
       }
       if (d_common->compute_relationships > 0) {
          if (d_lft_child->boxAccepted() &&
@@ -1697,7 +1697,7 @@ void BergerRigoutsosNode::makeLocalTagHistogram()
    for (hier::PatchLevel::Iterator ip(tag_level); ip; ip++) {
       hier::Patch& patch = **ip;
 
-      const hier::BlockId& block_id = patch.getMappedBox().getBlockId();
+      const hier::BlockId& block_id = patch.getBox().getBlockId();
 
       if (block_id == d_block_id) {
          const hier::Box intersection = patch.getBox() * d_box;
@@ -2257,7 +2257,7 @@ void BergerRigoutsosNode::cutAtLaplacian(
  * Other processes build mapped_box_level node using data from owner.
  ********************************************************************
  */
-void BergerRigoutsosNode::createMappedBox()
+void BergerRigoutsosNode::createBox()
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(d_common->rank == d_owner);
@@ -2281,7 +2281,7 @@ void BergerRigoutsosNode::createMappedBox()
  * the node and its iterator are set to unusable values.
  ********************************************************************
  */
-void BergerRigoutsosNode::eraseMappedBox()
+void BergerRigoutsosNode::eraseBox()
 {
    if (d_common->rank == d_owner) {
       d_common->new_mapped_box_set.erase(d_mapped_box_iterator);
@@ -2310,7 +2310,7 @@ void BergerRigoutsosNode::countOverlapWithLocalPatches()
    const hier::PatchLevel& tag_level = *d_common->tag_level;
    for (hier::PatchLevel::Iterator ip(tag_level); ip; ip++) {
 
-      const hier::BlockId& block_id = (*ip)->getMappedBox().getBlockId();
+      const hier::BlockId& block_id = (*ip)->getBox().getBlockId();
 
       if (block_id == d_block_id) {
          const hier::Box& patch_box = (*ip)->getBox();
@@ -2552,7 +2552,7 @@ void BergerRigoutsosNode::computeNewNeighborhoodSets()
    const int ints_per_node = hier::Box::commBufferSize(d_dim);
 
    const BoxSet& tag_mapped_boxes =
-      d_common->tag_mapped_box_level->getMappedBoxes();
+      d_common->tag_mapped_box_level->getBoxes();
 
    for (hier::RealBoxConstIterator ni(tag_mapped_boxes); ni.isValid(); ++ni) {
 

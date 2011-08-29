@@ -344,7 +344,7 @@ bool SingleLevelTestCase(
                                                  hier::PatchHierarchy("hier",
                                                     geom));
 
-   hier::MappedBoxLevel mblevel(hier::IntVector(dim, 1), geom);
+   hier::BoxLevel mblevel(hier::IntVector(dim, 1), geom);
 
    const int num_nodes = mpi.getSize();
    const int num_boxes = level_boxes.size();
@@ -361,7 +361,7 @@ bool SingleLevelTestCase(
       }
 
       if (proc == mpi.getRank()) {
-         mblevel.addMappedBox(hier::Box(*level_boxes_itr, local_id, proc));
+         mblevel.addBox(hier::Box(*level_boxes_itr, local_id, proc));
          local_id++;
       }
 
@@ -401,7 +401,7 @@ bool SingleLevelTestCase(
          tbox::Pointer<pdat::CellData<int> > cdata =
             patch->getPatchData(data_id);
 
-         int data_txt_id = patch->getMappedBox().getLocalId().getValue();
+         int data_txt_id = patch->getBox().getLocalId().getValue();
          if (mpi.getRank() == 1) {
             data_txt_id += (num_boxes / num_nodes);
          }
@@ -417,7 +417,7 @@ bool SingleLevelTestCase(
          tbox::Pointer<pdat::NodeData<int> > ndata =
             patch->getPatchData(data_id);
 
-         int data_txt_id = patch->getMappedBox().getLocalId().getValue();
+         int data_txt_id = patch->getBox().getLocalId().getValue();
          if (mpi.getRank() == 1) {
             data_txt_id += (num_boxes / num_nodes);
          }
@@ -428,9 +428,9 @@ bool SingleLevelTestCase(
    }
 
    // Cache Connector required for the schedule generation.
-   level->getMappedBoxLevel()->getPersistentOverlapConnectors().
+   level->getBoxLevel()->getPersistentOverlapConnectors().
    findOrCreateConnector(
-      *(level->getMappedBoxLevel()),
+      *(level->getBoxLevel()),
       hier::IntVector(dim, 2));
 
    // Create and run comm schedule
@@ -450,7 +450,7 @@ bool SingleLevelTestCase(
                                       cdata->getDepth(),
                                       ghost_cell_width);
 
-         int data_txt_id = patch->getMappedBox().getLocalId().getValue();
+         int data_txt_id = patch->getBox().getLocalId().getValue();
          if (mpi.getRank() == 1) {
             data_txt_id += (num_boxes / num_nodes);
          }
@@ -477,7 +477,7 @@ bool SingleLevelTestCase(
                                       ndata->getDepth(),
                                       ghost_cell_width);
 
-         int data_txt_id = patch->getMappedBox().getLocalId().getValue();
+         int data_txt_id = patch->getBox().getLocalId().getValue();
          if (mpi.getRank() == 1) {
             data_txt_id += (num_boxes / num_nodes);
          }

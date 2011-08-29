@@ -326,15 +326,15 @@ void CoarsenSchedule::generateTemporaryLevel()
    hier::IntVector min_gcw = getMaxGhostsToGrow();
 
    const hier::Connector& coarse_to_fine =
-      d_crse_level->getMappedBoxLevel()->getPersistentOverlapConnectors().findConnector(
-         *d_fine_level->getMappedBoxLevel(),
-         Connector::convertHeadWidthToBase(d_crse_level->getMappedBoxLevel()->
+      d_crse_level->getBoxLevel()->getPersistentOverlapConnectors().findConnector(
+         *d_fine_level->getBoxLevel(),
+         Connector::convertHeadWidthToBase(d_crse_level->getBoxLevel()->
             getRefinementRatio(),
-            d_fine_level->getMappedBoxLevel()->getRefinementRatio(),
+            d_fine_level->getBoxLevel()->getRefinementRatio(),
             min_gcw));
    const hier::Connector& fine_to_coarse =
-      d_fine_level->getMappedBoxLevel()->getPersistentOverlapConnectors().findConnector(
-         *d_crse_level->getMappedBoxLevel(),
+      d_fine_level->getBoxLevel()->getPersistentOverlapConnectors().findConnector(
+         *d_crse_level->getBoxLevel(),
          min_gcw);
 
    hier::OverlapConnectorAlgorithm oca;
@@ -347,7 +347,7 @@ void CoarsenSchedule::generateTemporaryLevel()
       d_crse_level->getLevelNumber());
 
    /*
-    * Generate temporary MappedBoxLevel and Connectors.
+    * Generate temporary BoxLevel and Connectors.
     */
 
    /*
@@ -363,18 +363,18 @@ void CoarsenSchedule::generateTemporaryLevel()
       d_ratio_between_levels);
    d_coarse_to_temp.swapInitialize(
       coarse_to_fine.getBase(),
-      *d_temp_crse_level->getMappedBoxLevel(),
+      *d_temp_crse_level->getBoxLevel(),
       coarse_to_fine.getConnectorWidth(),
       coarse_eto_temp,
-      hier::MappedBoxLevel::DISTRIBUTED);
+      hier::BoxLevel::DISTRIBUTED);
    d_coarse_to_temp.setConnectorType(hier::Connector::BASE_GENERATED);
    coarse_eto_temp.clear();
    d_temp_to_coarse.initialize(
-      *d_temp_crse_level->getMappedBoxLevel(),
+      *d_temp_crse_level->getBoxLevel(),
       coarse_to_fine.getBase(),
       coarse_to_fine.getConnectorWidth(),
       fine_to_coarse.getNeighborhoodSets(),
-      hier::MappedBoxLevel::DISTRIBUTED);
+      hier::BoxLevel::DISTRIBUTED);
    d_temp_to_coarse.setConnectorType(hier::Connector::BASE_GENERATED);
    const hier::IntVector one_vector(dim, 1);
    oca.shrinkConnectorWidth(d_coarse_to_temp, one_vector);
@@ -387,8 +387,8 @@ void CoarsenSchedule::generateTemporaryLevel()
     * I think.
     */
    tbox::plog
-   << "fine_mapped_box_level:\n" << d_fine_level->getMappedBoxLevel()->format("", 2)
-   << "d_temp_crse_level:\n" << d_temp_crse_level->getMappedBoxLevel()->format("", 2)
+   << "fine_mapped_box_level:\n" << d_fine_level->getBoxLevel()->format("", 2)
+   << "d_temp_crse_level:\n" << d_temp_crse_level->getBoxLevel()->format("", 2)
    << "coarse mapped_box_level:\n" << coarse_to_fine.getBase().format("", 2)
    << "d_temp_to_coarse:\n" << d_temp_to_coarse.format("", 3)
    << "fine_to_coarse:\n" << fine_to_coarse.format("", 3)
@@ -599,14 +599,14 @@ void CoarsenSchedule::generateScheduleDLBG()
    /*
     * Construct receiving transactions for local dst mapped_boxes.
     */
-   const MappedBoxLevel& coarse_mapped_box_level = *d_crse_level->getMappedBoxLevel();
+   const BoxLevel& coarse_mapped_box_level = *d_crse_level->getBoxLevel();
    const hier::NeighborhoodSet& coarse_eto_temp = d_coarse_to_temp.getNeighborhoodSets();
    for (hier::NeighborhoodSet::const_iterator ei = coarse_eto_temp.begin();
         ei != coarse_eto_temp.end(); ++ei) {
 
       const hier::BoxId& dst_gid = ei->first;
       const hier::Box& dst_mapped_box =
-         *coarse_mapped_box_level.getMappedBoxStrict(dst_gid);
+         *coarse_mapped_box_level.getBoxStrict(dst_gid);
 
       const hier::BoxSet& src_mapped_boxes = ei->second;
       for (hier::BoxSet::const_iterator ni = src_mapped_boxes.begin();
@@ -650,7 +650,7 @@ void CoarsenSchedule::restructureNeighborhoodSetsByDstNodes(
    const hier::PeriodicShiftCatalog* shift_catalog =
       hier::PeriodicShiftCatalog::getCatalog(dim);
    const hier::NeighborhoodSet& edges = src_to_dst.getNeighborhoodSets();
-   const MappedBoxLevel& src_mapped_box_level = src_to_dst.getBase();
+   const BoxLevel& src_mapped_box_level = src_to_dst.getBase();
    const hier::IntVector& src_ratio(src_to_dst.getBase().getRefinementRatio());
    const hier::IntVector& dst_ratio(src_to_dst.getHead().getRefinementRatio());
 
@@ -664,7 +664,7 @@ void CoarsenSchedule::restructureNeighborhoodSetsByDstNodes(
         ci != edges.end();
         ++ci) {
       const hier::Box& mapped_box =
-         *src_mapped_box_level.getMappedBoxStrict(ci->first);
+         *src_mapped_box_level.getBoxStrict(ci->first);
       const NeighborSet& nabrs = ci->second;
       for (NeighborSet::const_iterator na = nabrs.begin();
            na != nabrs.end(); ++na) {
@@ -948,7 +948,7 @@ void CoarsenSchedule::coarsenSourceData(
       tbox::Pointer<hier::Patch> fine_patch = *p;
       tbox::Pointer<hier::Patch> temp_patch =
          d_temp_crse_level->getPatch(fine_patch->getGlobalId(),
-            fine_patch->getMappedBox().getBlockId());
+            fine_patch->getBox().getBlockId());
 
       const hier::Box& box = temp_patch->getBox();
 
@@ -1138,14 +1138,14 @@ void CoarsenSchedule::clearCoarsenItems()
 /*
  **************************************************************************
  * Private utility function to access overlap connectors between two
- * MappedBoxLevels.  The Connector must be appropriately registered and
+ * BoxLevels.  The Connector must be appropriately registered and
  * be unique.
  **************************************************************************
  */
 
 const hier::Connector *CoarsenSchedule::getOverlapConnector_strict(
-   const hier::MappedBoxLevel& base,
-   const hier::MappedBoxLevel& head,
+   const hier::BoxLevel& base,
+   const hier::BoxLevel& head,
    const hier::IntVector& min_gcw) const
 {
    const Connector* found =

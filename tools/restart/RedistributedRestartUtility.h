@@ -91,12 +91,12 @@ private:
       const int total_output_files);
 
 /*
- * Reads and writes data in a Database that represents a MappedBoxLevel.
+ * Reads and writes data in a Database that represents a BoxLevel.
  * Global data are written to every output database, and data representing
- * MappedBoxes are written to only one output database.
+ * Boxes are written to only one output database.
  */
    static void
-   readAndWriteMappedBoxLevelRestartData(
+   readAndWriteBoxLevelRestartData(
       tbox::Array<tbox::Pointer<tbox::Database> >& output_dbs,
       const tbox::Array<tbox::Pointer<tbox::Database> >& level_in_dbs,
       const string& key,

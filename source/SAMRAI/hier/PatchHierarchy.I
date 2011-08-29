@@ -22,9 +22,9 @@ PatchHierarchy::getPatchLevel(
 }
 
 SAMRAI_INLINE_KEYWORD
-const tbox::ConstPointer<MappedBoxLevel>& PatchHierarchy::getMappedBoxLevel(int level) const
+const tbox::ConstPointer<BoxLevel>& PatchHierarchy::getBoxLevel(int level) const
 {
-   return d_patch_levels[level]->getMappedBoxLevel();
+   return d_patch_levels[level]->getBoxLevel();
 }
 
 SAMRAI_INLINE_KEYWORD
@@ -34,8 +34,8 @@ PatchHierarchy::getPatchDescriptor() const
    return d_patch_descriptor;
 }
 
-SAMRAI_INLINE_KEYWORD const MappedBoxLevel&
-PatchHierarchy::getDomainMappedBoxLevel() const
+SAMRAI_INLINE_KEYWORD const BoxLevel&
+PatchHierarchy::getDomainBoxLevel() const
 {
    return d_domain_mapped_box_level;
 }

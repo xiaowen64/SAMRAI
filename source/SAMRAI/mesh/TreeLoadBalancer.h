@@ -34,17 +34,17 @@ namespace mesh {
  * @brief Data to save for each Box that gets passed along the
  * tree edges.
  *
- * The purpose of the MappedBoxInTransit is to associate extra data
+ * The purpose of the BoxInTransit is to associate extra data
  * with a Box as the it is broken up and passed from processor
- * to processor.  A MappedBoxInTransit is a Box going through
+ * to processor.  A BoxInTransit is a Box going through
  * these changes.  It has a current work load and an orginating
  * Box.  It is passed from process to process and keeps a
  * history of the processes it passed through.  It is assigned a
  * LocalId on every process it passes through, but the LocalId history
  * is not kept.
  */
-struct MappedBoxInTransit {
-   typedef hier::Box MappedBox;
+struct BoxInTransit {
+   typedef hier::Box Box;
    typedef hier::LocalId LocalId;
 
    /*!
@@ -52,7 +52,7 @@ struct MappedBoxInTransit {
     *
     * @param[in] dim
     */
-   MappedBoxInTransit(
+   BoxInTransit(
       const tbox::Dimension& dim):
       mapped_box(dim),
       orig_mapped_box(dim)
@@ -60,11 +60,11 @@ struct MappedBoxInTransit {
    }
 
    /*!
-    * @brief Construct a newly birthed MappedBoxInTransit.
+    * @brief Construct a newly birthed BoxInTransit.
     *
     * @param[in] other
     */
-   MappedBoxInTransit(
+   BoxInTransit(
       const hier::Box& other):
       mapped_box(other),
       orig_mapped_box(other),
@@ -85,8 +85,8 @@ struct MappedBoxInTransit {
     *
     * @param[in] local_id
     */
-   MappedBoxInTransit(
-      const MappedBoxInTransit& other,
+   BoxInTransit(
+      const BoxInTransit& other,
       const hier::Box& box,
       int rank,
       LocalId local_id):
@@ -105,8 +105,8 @@ struct MappedBoxInTransit {
     *
     * @param[in] other
     */
-   const MappedBoxInTransit& operator = (
-      const MappedBoxInTransit& other) {
+   const BoxInTransit& operator = (
+      const BoxInTransit& other) {
       mapped_box = other.mapped_box;
       orig_mapped_box = other.orig_mapped_box;
       load = other.load;
@@ -204,17 +204,17 @@ struct MappedBoxInTransit {
    friend std::ostream&
    operator << (
       std::ostream& co,
-      const MappedBoxInTransit& r);
+      const BoxInTransit& r);
 };
 
 /*!
- * @brief Comparison functor for sorting MappedBoxInTransit
+ * @brief Comparison functor for sorting BoxInTransit
  * from bigger to smaller boxes.
  */
-struct MappedBoxInTransitMoreLoad {
+struct BoxInTransitMoreLoad {
    bool operator () (
-      const MappedBoxInTransit& a,
-      const MappedBoxInTransit& b) const {
+      const BoxInTransit& a,
+      const BoxInTransit& b) const {
       if (a.getBox().size() != b.getBox().size()) {
          return a.load > b.load;
       }
@@ -295,10 +295,10 @@ public:
     * object won't accidentally interact with other communications.
     *
     * If the duplicate MPI communicator it is set, the
-    * TreeLoadBalancer will only balance MappedBoxLevels with
+    * TreeLoadBalancer will only balance BoxLevels with
     * congruent SAMRAI_MPI objects and will use the duplicate
     * communicator for communications.  Otherwise, the communicator of
-    * the MappedBoxLevel will be used.  The duplicate MPI communicator
+    * the BoxLevel will be used.  The duplicate MPI communicator
     * is freed when the object is destructed, or freeMPICommunicator()
     * is called.
     *
@@ -373,14 +373,14 @@ public:
       int level_number) const;
 
    /*!
-    * @copydoc LoadBalanceStrategy::loadBalanceMappedBoxLevel()
+    * @copydoc LoadBalanceStrategy::loadBalanceBoxLevel()
     *
     * Note: This implementation does not yet support non-uniform load
     * balancing.
     */
    void
-   loadBalanceMappedBoxLevel(
-      hier::MappedBoxLevel& balance_mapped_box_level,
+   loadBalanceBoxLevel(
+      hier::BoxLevel& balance_mapped_box_level,
       hier::Connector& balance_to_anchor,
       hier::Connector& anchor_to_balance,
       const tbox::Pointer<hier::PatchHierarchy> hierarchy,
@@ -389,7 +389,7 @@ public:
       const hier::Connector& attractor_to_unbalanced,
       const hier::IntVector& min_size,
       const hier::IntVector& max_size,
-      const hier::MappedBoxLevel& domain_mapped_box_level,
+      const hier::BoxLevel& domain_mapped_box_level,
       const hier::IntVector& bad_interval,
       const hier::IntVector& cut_factor,
       const tbox::RankGroup& = tbox::RankGroup()) const;
@@ -434,13 +434,13 @@ private:
    static const int TreeLoadBalancer_PREBALANCE1;
    static const int TreeLoadBalancer_FIRSTDATALEN;
 
-   typedef hier::Box MappedBox;
+   typedef hier::Box Box;
 
    typedef hier::LocalId LocalId;
 
-   typedef hier::MappedBoxLevel MappedBoxLevel;
+   typedef hier::BoxLevel BoxLevel;
 
-   typedef mesh::MappedBoxInTransitMoreLoad MappedBoxInTransitMoreLoad;
+   typedef mesh::BoxInTransitMoreLoad BoxInTransitMoreLoad;
 
    // The following are not implemented, but are provided here for
    // dumb compilers.
@@ -453,9 +453,9 @@ private:
       const TreeLoadBalancer&);
 
    /*!
-    * @brief A set of MappedBoxInTransit, sorted from highest load to lowest load.
+    * @brief A set of BoxInTransit, sorted from highest load to lowest load.
     */
-   typedef std::set<MappedBoxInTransit, MappedBoxInTransitMoreLoad> TransitSet;
+   typedef std::set<BoxInTransit, BoxInTransitMoreLoad> TransitSet;
 
    /*!
     * @brief Data to save for each processor.
@@ -519,13 +519,13 @@ private:
       const hier::IntVector& vector) const;
 
    /*!
-    * Move MappedBoxes in balance_mapped_box_level from ranks outside of
+    * Move Boxes in balance_mapped_box_level from ranks outside of
     * rank_group to ranks inside rank_group.  Modify the given connectors
     * to make them correct following this moving of boxes.
     */
    void
-   prebalanceMappedBoxLevel(
-      hier::MappedBoxLevel& balance_mapped_box_level,
+   prebalanceBoxLevel(
+      hier::BoxLevel& balance_mapped_box_level,
       hier::Connector& balance_to_anchor,
       hier::Connector& anchor_to_balance,
       const tbox::RankGroup& rank_group) const;
@@ -540,7 +540,7 @@ private:
     * transfer load from src to dst (if negative, from dst to src).
     *
     * @param next_available_index Index for guaranteeing new
-    * MappedBoxes are uniquely numbered.
+    * Boxes are uniquely numbered.
     */
    void
    reassignLoads(
@@ -551,7 +551,7 @@ private:
       hier::LocalId& next_available_index) const;
 
    /*
-    * @brief Shift load from src to dst by swapping MappedBoxInTransit
+    * @brief Shift load from src to dst by swapping BoxInTransit
     * between them.
     *
     * @param ideal_transfer Amount of load to reassign from src to
@@ -581,7 +581,7 @@ private:
     * transfer load from src to dst (if negative, from dst to src).
     *
     * @param next_available_index Index for guaranteeing new
-    * MappedBoxes are uniquely numbered.
+    * Boxes are uniquely numbered.
     */
    bool
    shiftLoadsByBreaking(
@@ -773,20 +773,20 @@ private:
     */
    double
    computeLocalLoads(
-      const hier::MappedBoxLevel& mapped_box_level) const;
+      const hier::BoxLevel& mapped_box_level) const;
 
    /*!
     * @brief Load balance within a subset of the communicator.
     */
    void
-   loadBalanceMappedBoxLevel_rootCycle(
+   loadBalanceBoxLevel_rootCycle(
       const int cycle_number,
       const int number_of_cycles,
       const double local_load,
       const double global_sum_load,
-      const hier::MappedBoxLevel& unbalanced_mapped_box_level,
+      const hier::BoxLevel& unbalanced_mapped_box_level,
       const tbox::RankGroup& rank_group,
-      hier::MappedBoxLevel& balanced_mapped_box_level,
+      hier::BoxLevel& balanced_mapped_box_level,
       hier::Connector& unbalanced_to_balanced,
       hier::Connector& balanced_to_unbalanced) const;
 
@@ -797,8 +797,8 @@ private:
     */
    void
    mapOversizedBoxes(
-      const hier::MappedBoxLevel& unconstrained,
-      hier::MappedBoxLevel& constrained,
+      const hier::BoxLevel& unconstrained,
+      hier::BoxLevel& constrained,
       hier::Connector& unconstrained_to_constrained) const;
 
    /*!
@@ -830,7 +830,7 @@ private:
    setShadowData(
       const hier::IntVector& min_size,
       const hier::IntVector& max_size,
-      const hier::MappedBoxLevel& domain_mapped_box_level,
+      const hier::BoxLevel& domain_mapped_box_level,
       const hier::IntVector& bad_interval,
       const hier::IntVector& cut_factor,
       const hier::IntVector& refinement_ratio) const;

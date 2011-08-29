@@ -201,7 +201,7 @@ HierSumTest::setInitialNodeValues(
          // output initial cell values
          int level_number = level->getLevelNumber();
          tbox::plog << "INITIAL Cell values for NODE - Level: " << level_number
-                    << "\tPatch: " << patch->getMappedBox() << endl;
+                    << "\tPatch: " << patch->getBox() << endl;
          ucell->print(ucell->getGhostBox(), plog);
 
          // loop over nodes of patch
@@ -303,7 +303,7 @@ HierSumTest::setInitialNodeValues(
 
          // output initial node values
          tbox::plog << "INITIAL Node values - Level: " << level->getLevelNumber()
-                    << "\tPatch: " << patch->getMappedBox() << endl;
+                    << "\tPatch: " << patch->getBox() << endl;
          unode->print(unode->getGhostBox(), plog);
 
       } // loop over patches
@@ -341,7 +341,7 @@ HierSumTest::setInitialEdgeValues(
       // output initial cell values
       int level_number = level->getLevelNumber();
       tbox::plog << "INITIAL Cell values for EDGE - Level: " << level_number
-                 << "\tPatch: " << patch->getMappedBox() << endl;
+                 << "\tPatch: " << patch->getBox() << endl;
       ucell->print(ucell->getGhostBox(), plog);
 
       const Index ifirst(patch->getBox().lower());
@@ -410,7 +410,7 @@ HierSumTest::setInitialEdgeValues(
                tbox::perr
                << "PatchBdrySum Edge test FAILED:  Errors on Level: "
                << level->getLevelNumber()
-               << "\t Patch: " << patch->getMappedBox()
+               << "\t Patch: " << patch->getBox()
                << "\nAll edges are not correct value." << endl;
             } else {
 #if (TESTING == 1)
@@ -419,7 +419,7 @@ HierSumTest::setInitialEdgeValues(
                tbox::pout
 #endif
                << "All edges on Level: " << level->getLevelNumber()
-               << "\t Patch: " << patch->getMappedBox()
+               << "\t Patch: " << patch->getBox()
                << "\tare correct." << endl;
             }
          }
@@ -428,7 +428,7 @@ HierSumTest::setInitialEdgeValues(
 
 #if (TESTING == 1)
       tbox::plog << "INITIAL Edge values - Level: " << level->getLevelNumber()
-                 << "\tPatch: " << patch->getMappedBox() << endl;
+                 << "\tPatch: " << patch->getBox() << endl;
       uedge->print(uedge->getGhostBox(), plog);
 #endif
 
@@ -593,7 +593,7 @@ int HierSumTest::checkNodeResult(
                   if (!node_correct) {
                      tbox::pout << "BAD NODE = " << node_val << " at index "
                                 << i()
-                                << " in L" << ln << " " << patch->getMappedBox()
+                                << " in L" << ln << " " << patch->getBox()
                                 << " depth = " << d << " should be "
                                 << correct_val << endl;
                      all_correct = false;
@@ -607,7 +607,7 @@ int HierSumTest::checkNodeResult(
             fail_count++;
             tbox::perr << "PatchBdrySum Node test FAILED:  Errors on Level: "
                        << level->getLevelNumber()
-                       << "\t Patch: " << patch->getMappedBox()
+                       << "\t Patch: " << patch->getBox()
                        << "\nAll nodes are not correct value." << endl;
          } else {
 #if (TESTING == 1)
@@ -616,7 +616,7 @@ int HierSumTest::checkNodeResult(
             tbox::pout
 #endif
             << "All nodes on Level: " << level->getLevelNumber()
-            << "\t Patch: " << patch->getMappedBox()
+            << "\t Patch: " << patch->getBox()
             << "\tare correct." << endl;
          }
 
@@ -626,11 +626,11 @@ int HierSumTest::checkNodeResult(
 #if (TESTING == 1)
          tbox::plog << "FINAL Cell values for NODE - Level: "
                     << level->getLevelNumber()
-                    << "\tPatch: " << patch->getMappedBox() << endl;
+                    << "\tPatch: " << patch->getBox() << endl;
          ucell_node->print(ucell_node->getGhostBox(), plog);
 
          tbox::plog << "FINAL Node values - Level: " << level->getLevelNumber()
-                    << "\tPatch " << patch->getMappedBox()
+                    << "\tPatch " << patch->getBox()
                     << endl;
          unode->print(unode->getBox(), plog);
 #endif
@@ -710,7 +710,7 @@ int HierSumTest::checkEdgeResult(
             fail_count++;
             tbox::perr << "PatchBdrySum Edge test FAILED:  Errors on Level: "
                        << level->getLevelNumber()
-                       << "\t Patch: " << patch->getMappedBox()
+                       << "\t Patch: " << patch->getBox()
                        << "\nAll edges are not correct value." << endl;
          } else {
 #if (TESTING == 1)
@@ -719,7 +719,7 @@ int HierSumTest::checkEdgeResult(
             tbox::pout
 #endif
             << "All edges on Level: " << level->getLevelNumber()
-            << "\t Patch: " << patch->getMappedBox()
+            << "\t Patch: " << patch->getBox()
             << "\tare correct." << endl;
          }
 
@@ -731,12 +731,12 @@ int HierSumTest::checkEdgeResult(
 #if (TESTING == 1)
       tbox::plog << "FINAL Cell values for EDGE - Level: "
                  << level->getLevelNumber()
-                 << "\tPatch: " << patch->getMappedBox() << endl;
+                 << "\tPatch: " << patch->getBox() << endl;
       ucell_edge->print(ucell_edge->getGhostBox(), plog);
 
       tbox::plog << "FINAL Edge values - Level: "
                  << level->getLevelNumber()
-                 << "\tPatch: " << patch->getMappedBox() << endl;
+                 << "\tPatch: " << patch->getBox() << endl;
       uedge->print(uedge->getGhostBox(), plog);
 #endif
 

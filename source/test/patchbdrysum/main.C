@@ -312,7 +312,7 @@ int main(
          tbox::plog << "\n PRINTING PATCHES ON LEVEL " << pln << endl;
 
          for (PatchLevel::Iterator ip(level); ip; ip++) {
-            tbox::plog << "patch # " << ip->getMappedBox().getId() << " : "
+            tbox::plog << "patch # " << ip->getBox().getId() << " : "
                        << ip->getBox() << endl;
          }
       }

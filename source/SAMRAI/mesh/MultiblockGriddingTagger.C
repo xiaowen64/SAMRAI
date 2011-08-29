@@ -130,7 +130,7 @@ void MultiblockGriddingTagger::fillSingularityBoundaryConditions(
 
    const tbox::Dimension& dim = fill_box.getDim();
 
-   const hier::BoxId& dst_mb_id = patch.getMappedBox().getId();
+   const hier::BoxId& dst_mb_id = patch.getBox().getId();
 
    const hier::BlockId& patch_blk_id = dst_mb_id.getBlockId();
 

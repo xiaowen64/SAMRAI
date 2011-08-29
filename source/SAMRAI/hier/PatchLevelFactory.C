@@ -25,7 +25,7 @@ PatchLevelFactory::~PatchLevelFactory()
 }
 
 tbox::Pointer<PatchLevel> PatchLevelFactory::allocate(
-   const MappedBoxLevel& mapped_box_level,
+   const BoxLevel& mapped_box_level,
    const tbox::Pointer<GridGeometry> grid_geometry,
    const tbox::Pointer<PatchDescriptor> descriptor,
    tbox::Pointer<PatchFactory> factory) const

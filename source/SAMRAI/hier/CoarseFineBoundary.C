@@ -64,14 +64,14 @@ CoarseFineBoundary::CoarseFineBoundary(
       const PatchLevel& level =
          dynamic_cast<const PatchLevel&>(*hierarchy.getPatchLevel(level_num));
       const Connector& level_to_level =
-         level.getMappedBoxLevel()->getPersistentOverlapConnectors().
+         level.getBoxLevel()->getPersistentOverlapConnectors().
          findOrCreateConnector(
-            *level.getMappedBoxLevel(),
+            *level.getBoxLevel(),
             max_ghost_width);
       const Connector& level_to_domain =
-         level.getMappedBoxLevel()->getPersistentOverlapConnectors().
+         level.getBoxLevel()->getPersistentOverlapConnectors().
          findOrCreateConnector(
-            hierarchy.getDomainMappedBoxLevel(),
+            hierarchy.getDomainBoxLevel(),
             max_ghost_width);
       computeFromLevel(level,
          level_to_domain,
@@ -130,7 +130,7 @@ void CoarseFineBoundary::computeFromLevel(
 
    clear();
 
-   const MappedBoxLevel& mapped_box_level = *level.getMappedBoxLevel();
+   const BoxLevel& mapped_box_level = *level.getBoxLevel();
    const IntVector& ratio = level.getRatioToLevelZero();
 
    tbox::Pointer<GridGeometry> grid_geometry = level.getGridGeometry();
@@ -180,7 +180,7 @@ void CoarseFineBoundary::computeFromLevel(
    // Add physical boundaries to the fake domain.
    for (NeighborhoodSet::const_iterator ei = mapped_box_level_eto_domain.begin();
         ei != mapped_box_level_eto_domain.end(); ++ei) {
-      const Box& mapped_box = *mapped_box_level.getMappedBoxStrict(
+      const Box& mapped_box = *mapped_box_level.getBoxStrict(
             ei->first);
       const NeighborhoodSet::NeighborSet& domain_nabrs = ei->second;
       NeighborhoodSet::NeighborSet refined_domain_nabrs;
@@ -250,9 +250,9 @@ void CoarseFineBoundary::computeFromLevel(
     * Get all the boxes on level and level0.  These will be used later.
     */
    const BoxSet& all_boxes_on_level =
-      level.getMappedBoxLevel()->getGlobalizedVersion().getGlobalMappedBoxes();
+      level.getBoxLevel()->getGlobalizedVersion().getGlobalBoxes();
    const BoxSet& all_boxes_on_level0 =
-      level0.getMappedBoxLevel()->getGlobalizedVersion().getGlobalMappedBoxes();
+      level0.getBoxLevel()->getGlobalizedVersion().getGlobalBoxes();
 
    /*
     * Get the dimension and number of blocks from the GridGeometry.
@@ -321,7 +321,7 @@ void CoarseFineBoundary::computeFromLevel(
          BoxList adjusted_level_domain_list(*level_domain);
 
          for (PatchLevel::Iterator p(level); p; ++p) {
-            if ((*p)->getMappedBox().getBlockId() == i &&
+            if ((*p)->getBox().getBlockId() == i &&
                 (*p)->getPatchGeometry()->getTouchesRegularBoundary()) {
 
                const Box& patch_box = (*p)->getBox();

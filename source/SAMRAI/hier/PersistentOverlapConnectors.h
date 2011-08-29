@@ -4,7 +4,7 @@
  * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Manager of Connectors incident from a common MappedBoxLevel.
+ * Description:   Manager of Connectors incident from a common BoxLevel.
  *
  ************************************************************************/
 #ifndef included_hier_PersistentOverlapConnectors
@@ -19,17 +19,17 @@ namespace SAMRAI {
 namespace hier {
 
 class Connector;
-class MappedBoxLevel;
+class BoxLevel;
 class NeighborhoodSet;
 
 /*!
  * @brief A managager of overlap Connectors incident from a
- * MappedBoxLevel, used to store and, if needed, generate overlap
- * Connectors in MappedBoxLevel.
+ * BoxLevel, used to store and, if needed, generate overlap
+ * Connectors in BoxLevel.
  *
  * PersistantOverlapConnectors provides a mechanism for objects using
- * the MappedBoxLevel to look up overlap Connectors for the
- * MappedBoxLevel.  Connectors created or returned by this class are
+ * the BoxLevel to look up overlap Connectors for the
+ * BoxLevel.  Connectors created or returned by this class are
  * complete overlap Connectors that always contain the correct overlap
  * neighbor data.
  *
@@ -78,7 +78,7 @@ public:
     * @brief Create an overlap Connector, computing relationships by
     * globalizing data.
     *
-    * The base will be the MappedBoxLevel that owns this object.
+    * The base will be the BoxLevel that owns this object.
     * Find Connector relationships using a (non-scalable) global search.
     *
     * @see hier::Connector
@@ -91,7 +91,7 @@ public:
     */
    const Connector&
    createConnector(
-      const MappedBoxLevel& head,
+      const BoxLevel& head,
       const IntVector& connector_width);
 
    /*!
@@ -99,7 +99,7 @@ public:
     * computed relationships.
     *
     * Create the Connector initialized with the arguments.
-    * The base will be the MappedBoxLevel that owns this object.
+    * The base will be the BoxLevel that owns this object.
     *
     * @see hier::Connector
     * @see hier::Connector::initialize()
@@ -110,7 +110,7 @@ public:
     */
    const Connector&
    createConnector(
-      const MappedBoxLevel& head,
+      const BoxLevel& head,
       const IntVector& connector_width,
       const NeighborhoodSet& relationships);
 
@@ -142,7 +142,7 @@ public:
     */
    const Connector&
    findConnector(
-      const MappedBoxLevel& head,
+      const BoxLevel& head,
       const IntVector& min_connector_width,
       bool exact_width_only = false);
 
@@ -168,7 +168,7 @@ public:
     */
    const Connector&
    findOrCreateConnector(
-      const MappedBoxLevel& head,
+      const BoxLevel& head,
       const IntVector& min_connector_width,
       bool exact_width_only = false);
 
@@ -193,7 +193,7 @@ public:
     */
    bool
    hasConnector(
-      const MappedBoxLevel& head,
+      const BoxLevel& head,
       const IntVector& min_connector_width,
       bool exact_width_only = false) const;
 
@@ -204,26 +204,26 @@ public:
    clear();
 
 private:
-   //@{ @name Methods meant only for MappedBoxLevel to use.
+   //@{ @name Methods meant only for BoxLevel to use.
 
    /*!
-    * @brief Constructor, to be called from the MappedBoxLevel
+    * @brief Constructor, to be called from the BoxLevel
     * allocating the object.
     *
-    * @param my_mapped_box_level The MappedBoxLevel served by this
+    * @param my_mapped_box_level The BoxLevel served by this
     * object.
     */
    PersistentOverlapConnectors(
-      const MappedBoxLevel& my_mapped_box_level);
+      const BoxLevel& my_mapped_box_level);
 
    //@}
 
    //@{
    /*!
-    * @brief Only MappedBoxLevels are allowed to construct a
+    * @brief Only BoxLevels are allowed to construct a
     * PersistentOverlapConnectors.
     */
-   friend class MappedBoxLevel;
+   friend class BoxLevel;
    //@}
 
    typedef tbox::Array<const Connector *> ConVect;
@@ -239,9 +239,9 @@ private:
    ConVect d_cons_to_me;
 
    /*!
-    * @brief Reference to the MappedBoxLevel served by this object.
+    * @brief Reference to the BoxLevel served by this object.
     */
-   const MappedBoxLevel& d_my_mapped_box_level;
+   const BoxLevel& d_my_mapped_box_level;
 
    /*!
     * @brief Whether to check overlap Connectors when they are created.

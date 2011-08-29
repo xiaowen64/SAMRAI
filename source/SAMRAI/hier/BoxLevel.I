@@ -8,7 +8,7 @@
  *
  ************************************************************************/
 #include "SAMRAI/hier/RealBoxConstIterator.h"
-#include "SAMRAI/hier/MappedBoxLevelHandle.h"
+#include "SAMRAI/hier/BoxLevelHandle.h"
 #include "SAMRAI/hier/BoxSetSingleOwnerIterator.h"
 
 #if !defined(__BGL_FAMILY__) && defined(__xlC__)
@@ -23,20 +23,20 @@ namespace SAMRAI {
 namespace hier {
 
 SAMRAI_INLINE_KEYWORD
-const tbox::Dimension& MappedBoxLevel::getDim() const
+const tbox::Dimension& BoxLevel::getDim() const
 {
    return d_ratio.getDim();
 }
 
 SAMRAI_INLINE_KEYWORD
-bool MappedBoxLevel::isInitialized() const
+bool BoxLevel::isInitialized() const
 {
    return d_ratio(0) != 0;
 }
 
 SAMRAI_INLINE_KEYWORD
-MappedBoxLevel::ParallelState
-MappedBoxLevel::getParallelState() const
+BoxLevel::ParallelState
+BoxLevel::getParallelState() const
 {
    return d_parallel_state;
 }
@@ -46,33 +46,33 @@ MappedBoxLevel::getParallelState() const
  * Detach this object from the handle it has been using.
  *
  * Postcondition: Object that cached the handle would no longer
- * be able to access this MappedBoxLevel from the handle.
+ * be able to access this BoxLevel from the handle.
  ***********************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-void MappedBoxLevel::detachMyHandle() const
+void BoxLevel::detachMyHandle() const
 {
    if (!d_handle.isNull()) {
-      d_handle->detachMyMappedBoxLevel();
+      d_handle->detachMyBoxLevel();
       d_handle.setNull();
    }
 }
 
 SAMRAI_INLINE_KEYWORD
-const BoxSet& MappedBoxLevel::getMappedBoxes() const
+const BoxSet& BoxLevel::getBoxes() const
 {
    return d_mapped_boxes;
 }
 
 SAMRAI_INLINE_KEYWORD
-const BoxSet& MappedBoxLevel::getGlobalMappedBoxes() const
+const BoxSet& BoxLevel::getGlobalBoxes() const
 {
    return d_global_mapped_boxes;
 }
 
 SAMRAI_INLINE_KEYWORD
-bool MappedBoxLevel::operator == (
-   const MappedBoxLevel& r) const
+bool BoxLevel::operator == (
+   const BoxLevel& r) const
 {
    if (this == &r) return true;
 
@@ -80,14 +80,14 @@ bool MappedBoxLevel::operator == (
 
    if (d_mpi != r.d_mpi) return false;
 
-   if (getMappedBoxes() != r.getMappedBoxes()) return false;
+   if (getBoxes() != r.getBoxes()) return false;
 
    return true;
 }
 
 SAMRAI_INLINE_KEYWORD
-bool MappedBoxLevel::operator != (
-   const MappedBoxLevel& r) const
+bool BoxLevel::operator != (
+   const BoxLevel& r) const
 {
    if (this == &r) return false;
 
@@ -95,7 +95,7 @@ bool MappedBoxLevel::operator != (
 
    if (d_mpi != r.d_mpi) return true;
 
-   if (getMappedBoxes() != r.getMappedBoxes()) return true;
+   if (getBoxes() != r.getBoxes()) return true;
 
    return false;
 }
@@ -105,7 +105,7 @@ bool MappedBoxLevel::operator != (
  ***********************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-void MappedBoxLevel::clearPersistentOverlapConnectors()
+void BoxLevel::clearPersistentOverlapConnectors()
 {
    if (d_persistent_overlap_connectors != NULL) {
       d_persistent_overlap_connectors->clear();
@@ -117,7 +117,7 @@ void MappedBoxLevel::clearPersistentOverlapConnectors()
  ****************************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-void MappedBoxLevel::deallocateGlobalizedVersion() const
+void BoxLevel::deallocateGlobalizedVersion() const
 {
    if (d_globalized_version != NULL) {
       TBOX_ASSERT(d_globalized_version->getParallelState() == GLOBALIZED);
@@ -132,7 +132,7 @@ void MappedBoxLevel::deallocateGlobalizedVersion() const
  ****************************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-void MappedBoxLevel::clearForBoxChanges(bool isInvalid)
+void BoxLevel::clearForBoxChanges(bool isInvalid)
 {
    deallocateGlobalizedVersion();
    clearPersistentOverlapConnectors();
@@ -152,8 +152,8 @@ void MappedBoxLevel::clearForBoxChanges(bool isInvalid)
  ***********************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-MappedBoxLevel& MappedBoxLevel::operator = (
-   const MappedBoxLevel& rhs)
+BoxLevel& BoxLevel::operator = (
+   const BoxLevel& rhs)
 {
    if (&rhs != this) {
       /*
@@ -196,11 +196,11 @@ MappedBoxLevel& MappedBoxLevel::operator = (
 }
 
 SAMRAI_INLINE_KEYWORD
-LocalId MappedBoxLevel::getFirstLocalId() const
+LocalId BoxLevel::getFirstLocalId() const
 {
    TBOX_ASSERT(isInitialized());
 
-   const BoxSet& mapped_boxes = getMappedBoxes();
+   const BoxSet& mapped_boxes = getBoxes();
    if (mapped_boxes.empty()) {
       return s_negative_one_local_id;
    }
@@ -213,11 +213,11 @@ LocalId MappedBoxLevel::getFirstLocalId() const
 }
 
 SAMRAI_INLINE_KEYWORD
-LocalId MappedBoxLevel::getLastLocalId() const
+LocalId BoxLevel::getLastLocalId() const
 {
    TBOX_ASSERT(isInitialized());
 
-   const BoxSet& mapped_boxes = getMappedBoxes();
+   const BoxSet& mapped_boxes = getBoxes();
    if (mapped_boxes.empty()) {
       return s_negative_one_local_id;
    }
@@ -232,13 +232,13 @@ LocalId MappedBoxLevel::getLastLocalId() const
 }
 
 SAMRAI_INLINE_KEYWORD
-const IntVector& MappedBoxLevel::getRefinementRatio() const
+const IntVector& BoxLevel::getRefinementRatio() const
 {
    return d_ratio;
 }
 
 SAMRAI_INLINE_KEYWORD
-size_t MappedBoxLevel::getLocalNumberOfBoxes() const
+size_t BoxLevel::getLocalNumberOfBoxes() const
 {
    TBOX_ASSERT(isInitialized());
 
@@ -246,7 +246,7 @@ size_t MappedBoxLevel::getLocalNumberOfBoxes() const
 }
 
 SAMRAI_INLINE_KEYWORD
-size_t MappedBoxLevel::getLocalNumberOfBoxes(
+size_t BoxLevel::getLocalNumberOfBoxes(
    int rank) const
 {
    TBOX_ASSERT(isInitialized());
@@ -274,7 +274,7 @@ size_t MappedBoxLevel::getLocalNumberOfBoxes(
 }
 
 SAMRAI_INLINE_KEYWORD
-size_t MappedBoxLevel::getLocalNumberOfCells() const
+size_t BoxLevel::getLocalNumberOfCells() const
 {
    TBOX_ASSERT(isInitialized());
 
@@ -282,7 +282,7 @@ size_t MappedBoxLevel::getLocalNumberOfCells() const
 }
 
 SAMRAI_INLINE_KEYWORD
-size_t MappedBoxLevel::getLocalNumberOfCells(
+size_t BoxLevel::getLocalNumberOfCells(
    int rank) const
 {
    TBOX_ASSERT(isInitialized());
@@ -314,7 +314,7 @@ size_t MappedBoxLevel::getLocalNumberOfCells(
  ***********************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-bool MappedBoxLevel::hasMappedBox(
+bool BoxLevel::hasBox(
    const Box& mapped_box) const
 {
    if (mapped_box.getOwnerRank() == d_rank) {
@@ -325,9 +325,9 @@ bool MappedBoxLevel::hasMappedBox(
    } else {
 #ifdef DEBUG_CHECK_ASSERTIONS
       if (d_parallel_state == DISTRIBUTED) {
-         TBOX_ERROR("MappedBoxLevel: Cannot check on remote Box "
+         TBOX_ERROR("BoxLevel: Cannot check on remote Box "
             << mapped_box << " while in DISTRIBUTED mode.\n"
-            << "See MappedBoxLevel::setParallelState().");
+            << "See BoxLevel::setParallelState().");
       }
 #endif
       BoxSet::const_iterator ni = d_global_mapped_boxes.find(mapped_box);
@@ -340,7 +340,7 @@ bool MappedBoxLevel::hasMappedBox(
  ***********************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-bool MappedBoxLevel::hasMappedBox(
+bool BoxLevel::hasBox(
    const GlobalId& global_id,
    const BlockId& block_id,
    const PeriodicId& periodic_id) const
@@ -350,7 +350,7 @@ bool MappedBoxLevel::hasMappedBox(
       global_id,
       block_id,
       periodic_id);
-   return hasMappedBox(mapped_box);
+   return hasBox(mapped_box);
 }
 
 /*
@@ -358,27 +358,27 @@ bool MappedBoxLevel::hasMappedBox(
  ***********************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-bool MappedBoxLevel::hasMappedBox(
+bool BoxLevel::hasBox(
    const BoxId& mapped_box_id) const
 {
    const Box mapped_box(getDim(), mapped_box_id);
-   return hasMappedBox(mapped_box);
+   return hasBox(mapped_box);
 }
 
 SAMRAI_INLINE_KEYWORD
-const tbox::SAMRAI_MPI& MappedBoxLevel::getMPI() const
+const tbox::SAMRAI_MPI& BoxLevel::getMPI() const
 {
    return d_mpi;
 }
 
 SAMRAI_INLINE_KEYWORD
-int MappedBoxLevel::getRank() const
+int BoxLevel::getRank() const
 {
    return d_rank;
 }
 
 SAMRAI_INLINE_KEYWORD
-int MappedBoxLevel::getNproc() const
+int BoxLevel::getNproc() const
 {
    return d_nproc;
 }
@@ -389,7 +389,7 @@ int MappedBoxLevel::getNproc() const
  */
 SAMRAI_INLINE_KEYWORD
 BoxSet::const_iterator
-MappedBoxLevel::getMappedBox(
+BoxLevel::getBox(
    const Box& mapped_box) const
 {
    BoxSet::const_iterator ni;
@@ -399,7 +399,7 @@ MappedBoxLevel::getMappedBox(
 #ifdef DEBUG_CHECK_ASSERTIONS
       if (d_parallel_state != GLOBALIZED) {
          TBOX_ERROR(
-            "MappedBoxLevel::getMappedBox: cannot get remote mapped_box "
+            "BoxLevel::getBox: cannot get remote mapped_box "
             << mapped_box << " without being in globalized state.");
       }
 #endif
@@ -414,7 +414,7 @@ MappedBoxLevel::getMappedBox(
  */
 SAMRAI_INLINE_KEYWORD
 BoxSet::const_iterator
-MappedBoxLevel::getMappedBox(
+BoxLevel::getBox(
    const BoxId& mapped_box_id) const
 {
 
@@ -427,7 +427,7 @@ MappedBoxLevel::getMappedBox(
 #ifdef DEBUG_CHECK_ASSERTIONS
       if (d_parallel_state != GLOBALIZED) {
          TBOX_ERROR(
-            "MappedBoxLevel::getMappedBox: cannot get remote mapped_box "
+            "BoxLevel::getBox: cannot get remote mapped_box "
             << mapped_box << " without being in globalized state.");
       }
 #endif
@@ -442,7 +442,7 @@ MappedBoxLevel::getMappedBox(
  */
 SAMRAI_INLINE_KEYWORD
 BoxSet::const_iterator
-MappedBoxLevel::getMappedBoxStrict(
+BoxLevel::getBoxStrict(
    const Box& mapped_box) const
 {
    BoxSet::const_iterator ni;
@@ -450,7 +450,7 @@ MappedBoxLevel::getMappedBoxStrict(
       ni = d_mapped_boxes.find(mapped_box);
       if (ni == d_mapped_boxes.end()) {
          TBOX_ERROR(
-            "BoxSet::getMappedBoxStrict: requested mapped_box "
+            "BoxSet::getBoxStrict: requested mapped_box "
             << mapped_box
             << " does not exist in the mapped_box_level.");
       }
@@ -458,14 +458,14 @@ MappedBoxLevel::getMappedBoxStrict(
 #ifdef DEBUG_CHECK_ASSERTIONS
       if (d_parallel_state != GLOBALIZED) {
          TBOX_ERROR(
-            "MappedBoxLevel::getMappedBox: cannot get remote mapped_box "
+            "BoxLevel::getBox: cannot get remote mapped_box "
             << mapped_box << " without being in globalized state.");
       }
 #endif
       ni = d_global_mapped_boxes.find(mapped_box);
       if (ni == d_global_mapped_boxes.end()) {
          TBOX_ERROR(
-            "BoxSet::getMappedBoxStrict: requested mapped_box "
+            "BoxSet::getBoxStrict: requested mapped_box "
             << mapped_box
             << " does not exist in the mapped_box_level.");
       }
@@ -479,13 +479,13 @@ MappedBoxLevel::getMappedBoxStrict(
  */
 SAMRAI_INLINE_KEYWORD
 BoxSet::const_iterator
-MappedBoxLevel::getMappedBoxStrict(
+BoxLevel::getBoxStrict(
    const BoxId& mapped_box_id) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    if (mapped_box_id.getOwnerRank() != d_rank && d_parallel_state != GLOBALIZED) {
       TBOX_ERROR(
-         "MappedBoxLevel::getMappedBoxStrict: cannot get remote mapped_box " << mapped_box_id
+         "BoxLevel::getBoxStrict: cannot get remote mapped_box " << mapped_box_id
                                                                              <<
          " without being in globalized state.");
    }
@@ -498,7 +498,7 @@ MappedBoxLevel::getMappedBoxStrict(
       ni = d_mapped_boxes.find(mapped_box);
       if (ni == d_mapped_boxes.end()) {
          TBOX_ERROR(
-            "BoxSet::getMappedBoxStrict: requested mapped_box "
+            "BoxSet::getBoxStrict: requested mapped_box "
             << mapped_box
             << " does not exist in the mapped_box_level.");
       }
@@ -506,7 +506,7 @@ MappedBoxLevel::getMappedBoxStrict(
       ni = d_global_mapped_boxes.find(mapped_box);
       if (ni == d_global_mapped_boxes.end()) {
          TBOX_ERROR(
-            "BoxSet::getMappedBoxStrict: requested mapped_box "
+            "BoxSet::getBoxStrict: requested mapped_box "
             << mapped_box
             << " does not exist in the mapped_box_level.");
       }
@@ -520,7 +520,7 @@ MappedBoxLevel::getMappedBoxStrict(
  */
 SAMRAI_INLINE_KEYWORD
 const tbox::ConstPointer<GridGeometry>&
-MappedBoxLevel::getGridGeometry() const
+BoxLevel::getGridGeometry() const
 {
    return d_grid_geometry;
 }
@@ -530,14 +530,14 @@ MappedBoxLevel::getGridGeometry() const
  ***********************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-const tbox::Pointer<MappedBoxLevelHandle>& MappedBoxLevel::
-getMappedBoxLevelHandle() const
+const tbox::Pointer<BoxLevelHandle>& BoxLevel::
+getBoxLevelHandle() const
 {
    if (d_handle.isNull()) {
       /*
        * No handle yet.  Generate one attached to this object.
        */
-      tbox::Pointer<MappedBoxLevelHandle> ptr(new MappedBoxLevelHandle(this));
+      tbox::Pointer<BoxLevelHandle> ptr(new BoxLevelHandle(this));
       d_handle = ptr;
    }
    if (d_handle->d_mapped_box_level != this) {
@@ -545,7 +545,7 @@ getMappedBoxLevelHandle() const
        * Sanity check: The handle for this object should be attached
        * to this object.
        */
-      TBOX_ERROR("Library error in MappedBoxLevelHandle::getMappedBoxLevel");
+      TBOX_ERROR("Library error in BoxLevelHandle::getBoxLevel");
    }
    return d_handle;
 }

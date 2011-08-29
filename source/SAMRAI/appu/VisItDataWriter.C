@@ -16,7 +16,7 @@
 #ifdef HAVE_HDF5
 
 #include "SAMRAI/tbox/TimerManager.h"
-#include "SAMRAI/hier/MappedBoxLevelConnectorUtils.h"
+#include "SAMRAI/hier/BoxLevelConnectorUtils.h"
 #include "SAMRAI/hier/MultiblockBoxTree.h"
 #include "SAMRAI/hier/PatchLevel.h"
 #include "SAMRAI/hier/RealBoxConstIterator.h"
@@ -1343,14 +1343,14 @@ void VisItDataWriter::writePlotData(
     * Currently, this class does not work unless the nodes
     * have globally sequentialized indices.  Check for these.
     */
-   hier::MappedBoxLevelConnectorUtils dlbg_edge_utils;
+   hier::BoxLevelConnectorUtils dlbg_edge_utils;
 
    for (int ln = 0; ln < hierarchy->getNumberOfLevels(); ++ln) {
       tbox::Pointer<hier::PatchLevel> level =
          hierarchy->getPatchLevel(ln);
-      const hier::MappedBoxLevel& unsorted_mapped_box_level =
-         *level->getMappedBoxLevel();
-      hier::MappedBoxLevel sorted_mapped_box_level(d_dim);
+      const hier::BoxLevel& unsorted_mapped_box_level =
+         *level->getBoxLevel();
+      hier::BoxLevel sorted_mapped_box_level(d_dim);
       hier::Connector unused_sorting_map;
       dlbg_edge_utils.makeSortingMap(
          sorted_mapped_box_level,
@@ -3651,7 +3651,7 @@ void VisItDataWriter::writeParentChildInfoToSummaryHDFFile(
          hierarchy->getPatchLevel(ln);
 
       const hier::BoxSet& coarser_mapped_boxes =
-         patch_level->getMappedBoxLevel()->getGlobalizedVersion().getGlobalMappedBoxes();
+         patch_level->getBoxLevel()->getGlobalizedVersion().getGlobalBoxes();
 
       tbox::Pointer<hier::MultiblockBoxTree> child_box_tree;
       hier::IntVector ratio(d_dim);
@@ -3662,11 +3662,11 @@ void VisItDataWriter::writeParentChildInfoToSummaryHDFFile(
          ratio = child_patch_level->getRatioToCoarserLevel();
 
          const hier::BoxSet& global_child_boxes =
-            child_patch_level->getMappedBoxLevel()->
-            getGlobalizedVersion().getGlobalMappedBoxes();
+            child_patch_level->getBoxLevel()->
+            getGlobalizedVersion().getGlobalBoxes();
 
          /*
-          * We need to strip out periodic MappedBoxes.  This is only
+          * We need to strip out periodic Boxes.  This is only
           * necessary in single block case, as multiblock case can never
           * have periodic conditions.
           */

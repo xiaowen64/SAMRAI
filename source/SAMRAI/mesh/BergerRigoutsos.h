@@ -14,7 +14,7 @@
 
 #include "SAMRAI/mesh/BoxGeneratorStrategy.h"
 #include "SAMRAI/hier/Connector.h"
-#include "SAMRAI/hier/MappedBoxLevel.h"
+#include "SAMRAI/hier/BoxLevel.h"
 #include "SAMRAI/hier/PatchLevel.h"
 #include "SAMRAI/tbox/Database.h"
 #include "SAMRAI/tbox/Pointer.h"
@@ -144,7 +144,7 @@ public:
     */
    void
    findBoxesContainingTags(
-      hier::MappedBoxLevel& new_mapped_box_level,
+      hier::BoxLevel& new_mapped_box_level,
       hier::Connector& tag_to_new,
       hier::Connector& new_to_tag,
       const tbox::Pointer<hier::PatchLevel> tag_level,
@@ -164,8 +164,8 @@ private:
    assertNoMessageForPrivateCommunicator() const;
 
    void
-   sortOutputMappedBoxes(
-      hier::MappedBoxLevel& new_mapped_box_level,
+   sortOutputBoxes(
+      hier::BoxLevel& new_mapped_box_level,
       hier::Connector& tag_to_new,
       hier::Connector& new_to_tag) const;
 

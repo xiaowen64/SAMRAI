@@ -14,7 +14,7 @@
 
 #include "SAMRAI/hier/Connector.h"
 #include "SAMRAI/hier/Box.h"
-#include "SAMRAI/hier/MappedBoxLevel.h"
+#include "SAMRAI/hier/BoxLevel.h"
 #include "SAMRAI/tbox/AsyncCommPeer.h"
 #include "SAMRAI/tbox/SAMRAI_MPI.h"
 
@@ -26,7 +26,7 @@ namespace hier {
 
 /*!
  * @brief Algorithms for using Connectors representing changes
- * to a MappedBoxLevel.
+ * to a BoxLevel.
  *
  * MappingConnectorAlgorithm objects check and apply mappings.
  */
@@ -78,14 +78,14 @@ public:
    /*!
     * @brief Most general version for modifying Connectors using
     * mapping Connectors.  Modification is the changing of existing
-    * Connectors when mapped_boxes in a MappedBoxLevel changes according to specified
+    * Connectors when mapped_boxes in a BoxLevel changes according to specified
     * mapping connectors.
     *
     * The change is represented by a the mapper @c old_to_new
     * and its transpose @c new_to_old.  The Connectors to be
     * modified are @c anchor_to_mapped and @c mapped_to_anchor, which
-    * on input, go between a anchor (not mapped) MappedBoxLevel and the old
-    * MappedBoxLevel.  On output, these Connectors will go from the anchor mapped_box_level
+    * on input, go between a anchor (not mapped) BoxLevel and the old
+    * BoxLevel.  On output, these Connectors will go from the anchor mapped_box_level
     * to the new mapped_box_level.
     *
     * @code
@@ -113,9 +113,9 @@ public:
     *
     * @endcode
     *
-    * The MappedBoxLevels before and after the mapping are represented
-    * by the base and head of the mapping.  No MappedBoxLevel is modified,
-    * other than the "mutable" MappedBoxLevels in the argument.
+    * The BoxLevels before and after the mapping are represented
+    * by the base and head of the mapping.  No BoxLevel is modified,
+    * other than the "mutable" BoxLevels in the argument.
     *
     * An important constraint in the old_to_new Connectors is
     * that this method cannot handle multiple maps at once.  For
@@ -125,8 +125,8 @@ public:
     * mapped_box_level are considered entirely different mapped_boxes.
     *
     * After modifying, the output Connectors that had referenced old
-    * MappedBoxLevels will be reset to reference the new
-    * MappedBoxedLevel.  This is the end of the modify operation.
+    * BoxLevels will be reset to reference the new
+    * BoxLevel.  This is the end of the modify operation.
     *
     * The following "in-place" modification is provided for users'
     * convenience.  Often times, the "new" level is a temporary object
@@ -136,25 +136,25 @@ public:
     * @li reset Connectors using old in place of new.
     *
     * The modify methods support these optional steps as follows: If
-    * mutable versions of some MappedBoxLevel are given, the output
+    * mutable versions of some BoxLevel are given, the output
     * Connectors can be reset to reference these versions instead.
     *
-    * If mutable_new points to the old MappedBoxLevel and mutable_old
+    * If mutable_new points to the old BoxLevel and mutable_old
     * points to the new, then do an in-place switch as follows:
-    * @li Swap the mutable_old and mutable_new MappedBoxLevels.
-    * @li Use mutable_old (which actually the new MappedBoxLevel after
-    *    the swap) as the mapped MappedBoxLevel in the output Connectors.
+    * @li Swap the mutable_old and mutable_new BoxLevels.
+    * @li Use mutable_old (which actually the new BoxLevel after
+    *    the swap) as the mapped BoxLevel in the output Connectors.
     * Otherwise:
     * @li If mutable_new is non-NULL, set it equal to new and use
-    *    it as the mapped MappedBoxLevel in the output Connectors.
-    * @li If mutable_old is non-NULL, set it equal to the old MappedBoxLevel.
+    *    it as the mapped BoxLevel in the output Connectors.
+    * @li If mutable_old is non-NULL, set it equal to the old BoxLevel.
     *
     * @param[in,out] anchor_to_mapped Connector to be modified.  On input, this
-    *   points to the MappedBoxLevel being mapped.
+    *   points to the BoxLevel being mapped.
     * @param[in,out] mapped_to_anchor Reverse (transpose) of anchor_to_mapped.
-    *   points to the MappedBoxLevel being mapped.
-    * @param[in] old_to_new Mapping from the old MappedBoxLevel to the
-    *   new MappedBoxLevel.
+    *   points to the BoxLevel being mapped.
+    * @param[in] old_to_new Mapping from the old BoxLevel to the
+    *   new BoxLevel.
     *   The width of old-->new should indicate the maximum amount of box
     *   growth caused by the change.  A value of zero means no growth.
     * @param[in] new_to_old Reverse (transpose) of old_to_new.
@@ -167,8 +167,8 @@ public:
       Connector& mapped_to_anchor,
       const Connector& old_to_new,
       const Connector& new_to_old,
-      MappedBoxLevel* mutable_new = NULL,
-      MappedBoxLevel* mutable_old = NULL) const;
+      BoxLevel* mutable_new = NULL,
+      BoxLevel* mutable_old = NULL) const;
 
    /*!
     * @brief Version of modify requiring only the forward map
@@ -203,25 +203,25 @@ public:
     * @endcode
     *
     * The modify methods support these optional steps as follows: If
-    * mutable versions of some MappedBoxLevel are given, the output
+    * mutable versions of some BoxLevel are given, the output
     * Connectors can be reset to reference these versions instead.
     *
-    * If mutable_new points to the old MappedBoxLevel and mutable_old
+    * If mutable_new points to the old BoxLevel and mutable_old
     * points to the new, then do an in-place switch as follows:
-    * @li Swap the mutable_old and mutable_new MappedBoxLevels.
-    * @li Use mutable_old (which actually the new MappedBoxLevel after
-    *    the swap) as the mapped MappedBoxLevel in the output Connectors.
+    * @li Swap the mutable_old and mutable_new BoxLevels.
+    * @li Use mutable_old (which actually the new BoxLevel after
+    *    the swap) as the mapped BoxLevel in the output Connectors.
     * Otherwise:
     * @li If mutable_new is non-NULL, set it equal to new and use
-    *    it as the mapped MappedBoxLevel in the output Connectors.
-    * @li If mutable_old is non-NULL, set it equal to the old MappedBoxLevel.
+    *    it as the mapped BoxLevel in the output Connectors.
+    * @li If mutable_old is non-NULL, set it equal to the old BoxLevel.
     *
     * @param[in,out] anchor_to_mapped Connector to be modified.  On input, this
-    *   points to the MappedBoxLevel being mapped.
+    *   points to the BoxLevel being mapped.
     * @param[in,out] mapped_to_anchor Reverse (transpose) of anchor_to_mapped.
-    *   points to the MappedBoxLevel being mapped.
-    * @param[in] old_to_new Mapping from the old MappedBoxLevel to the
-    *   new MappedBoxLevel.
+    *   points to the BoxLevel being mapped.
+    * @param[in] old_to_new Mapping from the old BoxLevel to the
+    *   new BoxLevel.
     *   The width of old-->new should indicate the maximum amount of box
     *   growth caused by the change.  A value of zero means no growth.
     * @param[in,out] mutable_new See comments.
@@ -232,13 +232,13 @@ public:
       Connector& anchor_to_mapped,
       Connector& mapped_to_anchor,
       const Connector& old_to_new,
-      MappedBoxLevel* mutable_new = NULL,
-      MappedBoxLevel* mutable_old = NULL) const;
+      BoxLevel* mutable_new = NULL,
+      BoxLevel* mutable_old = NULL) const;
 
    /*!
     * @brief Version of modify requiring only the forward map
-    * and does not set the Connector from the mapped MappedBoxLevel back
-    * to the anchor MappedBoxLevel.
+    * and does not set the Connector from the mapped BoxLevel back
+    * to the anchor BoxLevel.
     *
     * This version does not require the reverse mapping,
     * but the forward mapping must be totally local, e.g.
@@ -274,20 +274,20 @@ public:
     * @endcode
     *
     *
-    * If mutable_new points to the old MappedBoxLevel and mutable_old
+    * If mutable_new points to the old BoxLevel and mutable_old
     * points to the new, then do an in-place switch as follows:
-    * @li Swap the mutable_old and mutable_new MappedBoxLevels.
-    * @li Use mutable_old (which actually the new MappedBoxLevel after
-    *    the swap) as the mapped MappedBoxLevel in the output Connectors.
+    * @li Swap the mutable_old and mutable_new BoxLevels.
+    * @li Use mutable_old (which actually the new BoxLevel after
+    *    the swap) as the mapped BoxLevel in the output Connectors.
     * Otherwise:
     * @li If mutable_new is non-NULL, set it equal to new and use
-    *    it as the mapped MappedBoxLevel in the output Connectors.
-    * @li If mutable_old is non-NULL, set it equal to the old MappedBoxLevel.
+    *    it as the mapped BoxLevel in the output Connectors.
+    * @li If mutable_old is non-NULL, set it equal to the old BoxLevel.
     *
     * @param[in,out] anchor_to_mapped Connector to be modified.  On input, this
-    *   points to the MappedBoxLevel being mapped.
+    *   points to the BoxLevel being mapped.
     * @param[in,out] mapped_to_anchor Reverse (transpose) of anchor_to_mapped.
-    *   points to the MappedBoxLevel being mapped.
+    *   points to the BoxLevel being mapped.
     * @param[in] new_to_old Reverse (transpose) of old_to_new.
     * @param[in,out] mutable_new See comments.
     * @param[in,out] mutable_old See comments.
@@ -296,15 +296,15 @@ public:
    modify(
       Connector& anchor_to_mapped,
       const Connector& old_to_new,
-      MappedBoxLevel* mutable_new = NULL,
-      MappedBoxLevel* mutable_old = NULL) const;
+      BoxLevel* mutable_new = NULL,
+      BoxLevel* mutable_old = NULL) const;
 
    /*
     * @brief Set whether to check for trivial mappings in modify
     * operations.
     *
     * Many common maps describe small (possibly zero) changes to a
-    * bigger MappedBoxLevel.  If @c do_shortcut is set, we check whether
+    * bigger BoxLevel.  If @c do_shortcut is set, we check whether
     * the mapping is globally empty.  (This costs a global reduction
     * unless it is already cached in the mapping Connector.)  If
     * empty, the shortcut improves performance.
@@ -383,15 +383,15 @@ private:
     * If new_to_old is uninitialized, treat it as a dummy
     * and assume that all mappings are local.
     *
-    * If mutable_new points to the old MappedBoxLevel and mutable_new
+    * If mutable_new points to the old BoxLevel and mutable_new
     * points to the new, then do an in-place switch as follows:
-    * -# Swap the old and new MappedBoxLevels.
-    * -# Use mutable_old (which actually the new MappedBoxLevel after
-    *    the swap) as the mapped MappedBoxLevel in the output Connectors.
+    * -# Swap the old and new BoxLevels.
+    * -# Use mutable_old (which actually the new BoxLevel after
+    *    the swap) as the mapped BoxLevel in the output Connectors.
     * Otherwise:
     * -# If mutable_new is non-NULL, set it equal to new and use
-    *    it as the mapped MappedBoxLevel in the output Connectors.
-    * -# If mutable_old is non-NULL, set it equal to the old MappedBoxLevel.
+    *    it as the mapped BoxLevel in the output Connectors.
+    * -# If mutable_old is non-NULL, set it equal to the old BoxLevel.
     */
    void
    privateModify(
@@ -399,8 +399,8 @@ private:
       Connector& mapped_to_anchor,
       const Connector& old_to_new,
       const Connector& new_to_old,
-      MappedBoxLevel* mutable_new,
-      MappedBoxLevel* mutable_old) const;
+      BoxLevel* mutable_new,
+      BoxLevel* mutable_old) const;
 
    /*!
     * @brief Set up communication objects for use in privateModify.

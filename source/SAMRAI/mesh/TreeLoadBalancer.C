@@ -182,8 +182,8 @@ void TreeLoadBalancer::setUniformWorkload(
  *************************************************************************
  *************************************************************************
  */
-void TreeLoadBalancer::loadBalanceMappedBoxLevel(
-   hier::MappedBoxLevel& balance_mapped_box_level,
+void TreeLoadBalancer::loadBalanceBoxLevel(
+   hier::BoxLevel& balance_mapped_box_level,
    hier::Connector& balance_to_anchor,
    hier::Connector& anchor_to_balance,
    const tbox::Pointer<hier::PatchHierarchy> hierarchy,
@@ -192,7 +192,7 @@ void TreeLoadBalancer::loadBalanceMappedBoxLevel(
    const hier::Connector& attractor_to_balance,
    const hier::IntVector& min_size,
    const hier::IntVector& max_size,
-   const hier::MappedBoxLevel& domain_mapped_box_level,
+   const hier::BoxLevel& domain_mapped_box_level,
    const hier::IntVector& bad_interval,
    const hier::IntVector& cut_factor,
    const tbox::RankGroup& rank_group) const
@@ -226,7 +226,7 @@ void TreeLoadBalancer::loadBalanceMappedBoxLevel(
 
    if (d_print_steps ||
        d_print_break_steps) {
-      tbox::plog << "TreeLoadBalancer::loadBalanceMappedBoxLevel called with:"
+      tbox::plog << "TreeLoadBalancer::loadBalanceBoxLevel called with:"
                  << "\n  min_size = " << min_size
                  << "\n  max_size = " << max_size
                  << "\n  bad_interval = " << bad_interval
@@ -247,7 +247,7 @@ void TreeLoadBalancer::loadBalanceMappedBoxLevel(
        */
 
       hier::BoxSet tmp_mapped_boxes;
-      balance_mapped_box_level.getMappedBoxes().removePeriodicImageMappedBoxes(
+      balance_mapped_box_level.getBoxes().removePeriodicImageBoxes(
          tmp_mapped_boxes);
       balance_mapped_box_level.swapInitialize(
          tmp_mapped_boxes,
@@ -264,7 +264,7 @@ void TreeLoadBalancer::loadBalanceMappedBoxLevel(
             balance_mapped_box_level,
             anchor_to_balance.getConnectorWidth(),
             tmp_edges,
-            hier::MappedBoxLevel::DISTRIBUTED);
+            hier::BoxLevel::DISTRIBUTED);
          tmp_edges.clear();
          balance_to_anchor.getNeighborhoodSets().removePeriodicNeighbors(
             tmp_edges);
@@ -273,7 +273,7 @@ void TreeLoadBalancer::loadBalanceMappedBoxLevel(
             balance_to_anchor.getHead(),
             balance_to_anchor.getConnectorWidth(),
             tmp_edges,
-            hier::MappedBoxLevel::DISTRIBUTED);
+            hier::BoxLevel::DISTRIBUTED);
       }
    }
 
@@ -286,7 +286,7 @@ void TreeLoadBalancer::loadBalanceMappedBoxLevel(
    }
 
    if (!rank_group.containsAllRanks()) {
-      prebalanceMappedBoxLevel(balance_mapped_box_level,
+      prebalanceBoxLevel(balance_mapped_box_level,
          balance_to_anchor,
          anchor_to_balance,
          rank_group);
@@ -317,11 +317,11 @@ void TreeLoadBalancer::loadBalanceMappedBoxLevel(
       if (&balance_mapped_box_level != &balance_to_attractor.getBase() &&
           !(balance_mapped_box_level == balance_to_attractor.getBase())) {
          TBOX_ERROR(
-            "TreeLoadBalancer::loadBalanceMappedBoxLevel: balance_mapped_box_level\n"
+            "TreeLoadBalancer::loadBalanceBoxLevel: balance_mapped_box_level\n"
             << "does not match the base of balance_to_attractor.");
       }
       if (!balance_to_attractor.isTransposeOf(attractor_to_balance)) {
-         TBOX_ERROR("TreeLoadBalancer::loadBalanceMappedBoxLevel:\n"
+         TBOX_ERROR("TreeLoadBalancer::loadBalanceBoxLevel:\n"
             << "attractor_to_balance and balance_to_attractor\n"
             << "are not transposes of each other.");
       }
@@ -359,7 +359,7 @@ void TreeLoadBalancer::loadBalanceMappedBoxLevel(
       }
       t_compute_global_load->stop();
       if (d_print_steps) {
-         tbox::plog << "TreeLoadBalancer::loadBalanceMappedBoxLevel balancing "
+         tbox::plog << "TreeLoadBalancer::loadBalanceBoxLevel balancing "
                     << global_sum_load << " (initially born on "
                     << nproc_with_initial_load << " procs) across all "
                     << d_nproc
@@ -391,7 +391,7 @@ void TreeLoadBalancer::loadBalanceMappedBoxLevel(
    }
 
    // Temporary object.
-   hier::MappedBoxLevel tmp_mapped_box_level(d_dim);
+   hier::BoxLevel tmp_mapped_box_level(d_dim);
 
    for (int n = 0; n < number_of_cycles; ++n) {
 
@@ -404,7 +404,7 @@ void TreeLoadBalancer::loadBalanceMappedBoxLevel(
       if (d_report_load_balance) {
          // Debugging: check overall load balance at intermediate cycles.
          tbox::plog
-         << "TreeLoadBalancer::loadBalanceMappedBoxLevel results before cycle "
+         << "TreeLoadBalancer::loadBalanceBoxLevel results before cycle "
          << n << ":" << std::endl;
          TreeLoadBalancer::gatherAndReportLoadBalance(
             local_load,
@@ -421,7 +421,7 @@ void TreeLoadBalancer::loadBalanceMappedBoxLevel(
       hier::Connector balance_to_tmp, tmp_to_balance;
       t_get_map->start();
       if (using_this_rank) {
-         loadBalanceMappedBoxLevel_rootCycle(n,
+         loadBalanceBoxLevel_rootCycle(n,
             number_of_cycles,
             local_load,
             global_sum_load,
@@ -455,14 +455,14 @@ void TreeLoadBalancer::loadBalanceMappedBoxLevel(
       t_use_map->start();
       if (anchor_to_balance.isInitialized()) {
          if (0) {
-            tbox::plog << "loadBalanceMappedBoxLevel: unbalanced:\n"
+            tbox::plog << "loadBalanceBoxLevel: unbalanced:\n"
                        << balance_mapped_box_level.format("--> ", 3)
-                       << "loadBalanceMappedBoxLevel: balanced:\n" << tmp_mapped_box_level.format(
+                       << "loadBalanceBoxLevel: balanced:\n" << tmp_mapped_box_level.format(
                "--> ",
                3)
-            << "loadBalanceMappedBoxLevel: unbalanced_to_balanced:\n"
+            << "loadBalanceBoxLevel: unbalanced_to_balanced:\n"
             << balance_to_tmp.format("--> ", 3)
-            << "loadBalanceMappedBoxLevel: balanced_to_unbalanced:\n"
+            << "loadBalanceBoxLevel: balanced_to_unbalanced:\n"
             << tmp_to_balance.format("--> ", 3);
          }
          const hier::MappingConnectorAlgorithm mca;
@@ -473,18 +473,18 @@ void TreeLoadBalancer::loadBalanceMappedBoxLevel(
             &balance_mapped_box_level,
             &tmp_mapped_box_level);
          if (0) {
-            tbox::plog << "loadBalanceMappedBoxLevel: anchor:\n"
+            tbox::plog << "loadBalanceBoxLevel: anchor:\n"
                        << anchor_to_balance.getBase().format("--> ", 3)
-                       << "loadBalanceMappedBoxLevel: balanced:\n" << tmp_mapped_box_level.format(
+                       << "loadBalanceBoxLevel: balanced:\n" << tmp_mapped_box_level.format(
                "--> ",
                3)
-            << "loadBalanceMappedBoxLevel: balance_to_anchor:\n"
+            << "loadBalanceBoxLevel: balance_to_anchor:\n"
             << balance_to_anchor.format("--> ", 3)
-            << "loadBalanceMappedBoxLevel: anchor_to_balance:\n"
+            << "loadBalanceBoxLevel: anchor_to_balance:\n"
             << anchor_to_balance.format("--> ", 3);
          }
       } else {
-         MappedBoxLevel::swap(balance_mapped_box_level, tmp_mapped_box_level);
+         BoxLevel::swap(balance_mapped_box_level, tmp_mapped_box_level);
       }
       if (d_barrier_after) {
          t_barrier_after->start();
@@ -515,7 +515,7 @@ void TreeLoadBalancer::loadBalanceMappedBoxLevel(
             &balance_mapped_box_level,
             &tmp_mapped_box_level);
       } else {
-         MappedBoxLevel::swap(balance_mapped_box_level, tmp_mapped_box_level);
+         BoxLevel::swap(balance_mapped_box_level, tmp_mapped_box_level);
       }
       t_constrain_size->stop();
       if (d_print_steps) {
@@ -531,12 +531,12 @@ void TreeLoadBalancer::loadBalanceMappedBoxLevel(
    local_load = computeLocalLoads(balance_mapped_box_level);
    d_load_stat.push_back(local_load);
    d_box_count_stat.push_back(
-      static_cast<int>(balance_mapped_box_level.getMappedBoxes().size()));
+      static_cast<int>(balance_mapped_box_level.getBoxes().size()));
 
    if (d_report_load_balance) {
       t_report_loads->start();
       tbox::plog
-      << "TreeLoadBalancer::loadBalanceMappedBoxLevel results after "
+      << "TreeLoadBalancer::loadBalanceBoxLevel results after "
       << number_of_cycles << " cycles:" << std::endl;
       TreeLoadBalancer::gatherAndReportLoadBalance(local_load,
          balance_mapped_box_level.getMPI());
@@ -587,8 +587,8 @@ void TreeLoadBalancer::loadBalanceMappedBoxLevel(
  *************************************************************************
  */
 void TreeLoadBalancer::mapOversizedBoxes(
-   const hier::MappedBoxLevel& unconstrained,
-   hier::MappedBoxLevel& constrained,
+   const hier::BoxLevel& unconstrained,
+   hier::BoxLevel& constrained,
    hier::Connector& unconstrained_to_constrained) const
 {
    TBOX_DIM_ASSERT_CHECK_DIM_ARGS2(d_dim, unconstrained, constrained);
@@ -597,7 +597,7 @@ void TreeLoadBalancer::mapOversizedBoxes(
 
    if (d_print_break_steps) {
       tbox::plog << "Mapping oversized boxes starting with "
-                 << unconstrained.getMappedBoxes().size() << " boxes."
+                 << unconstrained.getBoxes().size() << " boxes."
                  << std::endl;
    }
 
@@ -608,7 +608,7 @@ void TreeLoadBalancer::mapOversizedBoxes(
       unconstrained.getMPI());
    hier::NeighborhoodSet unconstrained_eto_constrained;
 
-   const hier::BoxSet& unconstrained_mapped_boxes = unconstrained.getMappedBoxes();
+   const hier::BoxSet& unconstrained_mapped_boxes = unconstrained.getBoxes();
 
    hier::LocalId next_available_index = unconstrained.getLastLocalId() + 1;
 
@@ -624,7 +624,7 @@ void TreeLoadBalancer::mapOversizedBoxes(
             tbox::plog << "    Not oversized: " << mapped_box
                        << mapped_box.numberCells() << "\n";
          }
-         constrained.addMappedBox(mapped_box);
+         constrained.addBox(mapped_box);
       } else {
 
          if (d_print_break_steps) {
@@ -659,7 +659,7 @@ void TreeLoadBalancer::mapOversizedBoxes(
                              << new_mapped_box.numberCells();
                }
 
-               constrained.addMappedBox(new_mapped_box);
+               constrained.addBox(new_mapped_box);
 
                constrained_nabrs.insert(constrained_nabrs.end(),
                   new_mapped_box);
@@ -674,7 +674,7 @@ void TreeLoadBalancer::mapOversizedBoxes(
             if (d_print_break_steps) {
                tbox::plog << " Unbreakable!" << "\n";
             }
-            constrained.addMappedBox(mapped_box);
+            constrained.addBox(mapped_box);
          }
 
       }
@@ -703,14 +703,14 @@ void TreeLoadBalancer::mapOversizedBoxes(
  *
  *************************************************************************
  */
-void TreeLoadBalancer::loadBalanceMappedBoxLevel_rootCycle(
+void TreeLoadBalancer::loadBalanceBoxLevel_rootCycle(
    const int cycle_number,
    const int number_of_cycles,
    const double local_load,
    const double global_sum_load,
-   const hier::MappedBoxLevel& unbalanced_mapped_box_level,
+   const hier::BoxLevel& unbalanced_mapped_box_level,
    const tbox::RankGroup& rank_group,
-   hier::MappedBoxLevel& balanced_mapped_box_level,
+   hier::BoxLevel& balanced_mapped_box_level,
    hier::Connector& unbalanced_to_balanced,
    hier::Connector& balanced_to_unbalanced) const
 {
@@ -836,7 +836,7 @@ void TreeLoadBalancer::loadBalanceMappedBoxLevel_rootCycle(
 #endif
 
    const hier::BoxSet& unbalanced_mapped_boxes =
-      unbalanced_mapped_box_level.getMappedBoxes();
+      unbalanced_mapped_box_level.getBoxes();
 
    /*
     * Outline for load balancing:
@@ -853,7 +853,7 @@ void TreeLoadBalancer::loadBalanceMappedBoxLevel_rootCycle(
     * 6. For each child:
     * Send additional work (if any).
     *
-    * Outline for connecting pre-balance and post-balance MappedBoxes:
+    * Outline for connecting pre-balance and post-balance Boxes:
     */
 
    tbox::AsyncCommStage::MemberVec completed;
@@ -885,13 +885,13 @@ void TreeLoadBalancer::loadBalanceMappedBoxLevel_rootCycle(
 
    /*
     * For tracking available indices that can be assigned to newly
-    * created MappedBoxes: The indices for MappedBoxes from this proc
+    * created Boxes: The indices for Boxes from this proc
     * and those from children procs are interlaced to remove results'
     * dependence on which message arrives first.
     *
     * Nodes from the first child start with the first unused index
     * divisible by (2+d_degree).  Nodes from child c start with the
-    * same number plus c.  Locally created MappedBoxes start with the
+    * same number plus c.  Locally created Boxes start with the
     * same number plus d_degree.  Nodes from parent start with the
     * same number plus d_degree+1.
     *
@@ -925,7 +925,7 @@ void TreeLoadBalancer::loadBalanceMappedBoxLevel_rootCycle(
    t_misc3->start();
 
    /*
-    * Unassigned NodeInTransit.  First set to local excess MappedBox
+    * Unassigned NodeInTransit.  First set to local excess Box
     * (if any).  If children send up excess NodeInTransit, add them.  Result
     * should be taken by local proc and sent down the tree to children
     * (if needed).  The rest (if any) are sent up to parent.
@@ -933,7 +933,7 @@ void TreeLoadBalancer::loadBalanceMappedBoxLevel_rootCycle(
    TransitSet unassigned;
 
    /*
-    * Compute local proc's MappedBoxes and loads and store in
+    * Compute local proc's Boxes and loads and store in
     * my_load_data.  This really should store data for the subtree.
     * Wwe will add the rest of the subtree's work when we receive that
     * data from the children.
@@ -961,7 +961,7 @@ void TreeLoadBalancer::loadBalanceMappedBoxLevel_rootCycle(
       for (hier::BoxSet::const_iterator ni = unbalanced_mapped_boxes.begin();
            ni != unbalanced_mapped_boxes.end(); ++ni) {
          const hier::Box& mapped_box = *ni;
-         balanced_mapped_box_level.addMappedBox(mapped_box);
+         balanced_mapped_box_level.addBox(mapped_box);
       }
    } else {
       /*
@@ -971,17 +971,17 @@ void TreeLoadBalancer::loadBalanceMappedBoxLevel_rootCycle(
        * - put remainder in balanced_mapped_box_level.
        *
        * Note: This algorithm would also work if we put all local
-       * MappedBoxes into unassigned (instead of just the excess load).
+       * Boxes into unassigned (instead of just the excess load).
        * In the end,
-       * all remaining unassigned MappedBoxes get assigned to the local
-       * process anyway.  In fact, having more MappedBoxes in unassigned
+       * all remaining unassigned Boxes get assigned to the local
+       * process anyway.  In fact, having more Boxes in unassigned
        * may let reassignLoads do a better job in reassigning loads
        * to children and parents, because it would have more choices.
        * The reason we place only the excess load into unassigned
        * is to help preserve locality, assuming that current local
-       * MappedBoxes may have more local neighbors.  However, practical
+       * Boxes may have more local neighbors.  However, practical
        * evidence so far suggest that locality is not that
-       * important to performance.  Transfering all local MappedBoxes
+       * important to performance.  Transfering all local Boxes
        * into unassigned at the start may affect the performance
        * of this algorithms though, because it bypasses one
        * reassignLoads call but makes the unassigned Box set
@@ -1007,11 +1007,11 @@ void TreeLoadBalancer::loadBalanceMappedBoxLevel_rootCycle(
          next_available_index[d_degree]);
       for (TransitSet::const_iterator
            ni = sorted_loads.begin(); ni != sorted_loads.end(); ++ni) {
-         const MappedBoxInTransit& mapped_box_in_transit = *ni;
-         balanced_mapped_box_level.addMappedBox(mapped_box_in_transit.mapped_box);
+         const BoxInTransit& mapped_box_in_transit = *ni;
+         balanced_mapped_box_level.addBox(mapped_box_in_transit.mapped_box);
          /*
           * Create local edges only if mapped_box_in_transit changes.
-          * Unchanged MappedBoxes should not have edges.
+          * Unchanged Boxes should not have edges.
           * Semilocal edges are created by final owner
           * and sent back.
           */
@@ -1041,7 +1041,7 @@ void TreeLoadBalancer::loadBalanceMappedBoxLevel_rootCycle(
 
    /*
     * Complete load communications with children.
-    * Add imported MappedBoxInTransit to unassigned bin.
+    * Add imported BoxInTransit to unassigned bin.
     */
    t_get_load_from_children->start();
    do {
@@ -1081,7 +1081,7 @@ void TreeLoadBalancer::loadBalanceMappedBoxLevel_rootCycle(
                           << " units) from child "
                           << peer_comm->getPeerRank() << ":";
                for ( ; ni != unassigned.end(); ++ni) {
-                  const MappedBoxInTransit& mapped_box_in_transit = *ni;
+                  const BoxInTransit& mapped_box_in_transit = *ni;
                   tbox::plog << "  " << mapped_box_in_transit;
                }
                tbox::plog << std::endl;
@@ -1227,7 +1227,7 @@ void TreeLoadBalancer::loadBalanceMappedBoxLevel_rootCycle(
                        << " units) from parent "
                        << parent_recv->getPeerRank() << ":";
             for ( ; ni != unassigned.end(); ++ni) {
-               const MappedBoxInTransit& mapped_box_in_transit = *ni;
+               const BoxInTransit& mapped_box_in_transit = *ni;
                tbox::plog << "  " << mapped_box_in_transit;
             }
             tbox::plog << std::endl;
@@ -1319,13 +1319,13 @@ void TreeLoadBalancer::loadBalanceMappedBoxLevel_rootCycle(
    t_send_load_to_children->stop();
 
    /*
-    * Unassigned MappedBoxInTransit that differ from their orig_mapped_box
-    * are imported or left-overs from breaking.  These MappedBoxes
+    * Unassigned BoxInTransit that differ from their orig_mapped_box
+    * are imported or left-overs from breaking.  These Boxes
     * should have relationships.
     *
-    * Unassigned MappedBoxInTransit that are identical to their
-    * orig_mapped_box are MappedBoxes that were intended for export but
-    * never exported.  These MappedBoxes should NOT have edges.
+    * Unassigned BoxInTransit that are identical to their
+    * orig_mapped_box are Boxes that were intended for export but
+    * never exported.  These Boxes should NOT have edges.
     *
     * We build mapping relationships for the former, but the latter
     * should not have relationships.
@@ -1335,8 +1335,8 @@ void TreeLoadBalancer::loadBalanceMappedBoxLevel_rootCycle(
    for (TransitSet::iterator
         ni = unassigned.begin();
         ni != unassigned.end(); /* incremented in loop */) {
-      const MappedBoxInTransit& mapped_box_in_transit = *ni;
-      balanced_mapped_box_level.addMappedBox(mapped_box_in_transit.mapped_box);
+      const BoxInTransit& mapped_box_in_transit = *ni;
+      balanced_mapped_box_level.addBox(mapped_box_in_transit.mapped_box);
       if (!mapped_box_in_transit.mapped_box.isIdEqual(mapped_box_in_transit.orig_mapped_box)) {
          // Create relationship for changed Box.
          balanced_eto_unbalanced[mapped_box_in_transit.mapped_box.getId()].insert(
@@ -1367,9 +1367,9 @@ void TreeLoadBalancer::loadBalanceMappedBoxLevel_rootCycle(
    t_local_balancing->stop();
 
    /*
-    * Now that unchanged MappedBoxInTransit have been removed from
+    * Now that unchanged BoxInTransit have been removed from
     * unassigned, call it "changed", for clarity.  Changed
-    * MappedBoxInTransit need to have edges built.
+    * BoxInTransit need to have edges built.
     */
    TransitSet& changed = unassigned;
 
@@ -1410,21 +1410,21 @@ void TreeLoadBalancer::loadBalanceMappedBoxLevel_rootCycle(
 #endif
 
    /*
-    * Determine edges from unbalanced to balanced MappedBoxLevels
-    * by sending balanced MappedBoxes back to the owners of
-    * the unbalanced MappedBoxes that originated them.  Use
-    * the proc_hist data from the balanced MappedBoxInTransit
+    * Determine edges from unbalanced to balanced BoxLevels
+    * by sending balanced Boxes back to the owners of
+    * the unbalanced Boxes that originated them.  Use
+    * the proc_hist data from the balanced BoxInTransit
     * to send along the tree.
     *
     * Post receives for edge data sent from children.
-    * Pack relationship data for locally owned MappedBoxes.
+    * Pack relationship data for locally owned Boxes.
     * Then complete receives  from children and send
     * data up to parents.
     *
     * Four steps for passing relationship data to the owners of
-    * originating MappedBoxes:
+    * originating Boxes:
     * 1. Receive relationships from all children to whom we exported work.
-    * 1a. Note relationships to local MappedBoxes on balanced_mapped_box_level.
+    * 1a. Note relationships to local Boxes on balanced_mapped_box_level.
     * 2. Send relationship data to parent if we imported work from parent.
     * 3. Receive relationship data from parent if we exported work to parent.
     * 4. Send relationships to children from whom we imported work.
@@ -1491,7 +1491,7 @@ void TreeLoadBalancer::loadBalanceMappedBoxLevel_rootCycle(
 
    if (my_load_data.load_imported > 0) {
       /*
-       * We have received MappedBoxInTransit from the parent,
+       * We have received BoxInTransit from the parent,
        * so the parent is expecting relationship data.
        */
       t_send_edge_to_parent->start();
@@ -1503,7 +1503,7 @@ void TreeLoadBalancer::loadBalanceMappedBoxLevel_rootCycle(
       t_send_edge_to_parent->stop();
    } else if (my_load_data.load_exported > 0) {
       /*
-       * We have sent MappedBoxInTransit to the parent,
+       * We have sent BoxInTransit to the parent,
        * so the parent will send back relationship data.
        */
       t_get_edge_from_parent->start();
@@ -1561,12 +1561,12 @@ void TreeLoadBalancer::loadBalanceMappedBoxLevel_rootCycle(
       const hier::MappingConnectorAlgorithm mca;
       if (mca.findMappingErrors(unbalanced_to_balanced) != 0) {
          TBOX_ERROR(
-            "TreeLoadBalancer::loadBalanceMappedBoxLevel_rootCycle Mapping errors found in unbalanced_to_balanced!");
+            "TreeLoadBalancer::loadBalanceBoxLevel_rootCycle Mapping errors found in unbalanced_to_balanced!");
       }
       if (unbalanced_to_balanced.checkTransposeCorrectness(
              balanced_to_unbalanced)) {
          TBOX_ERROR(
-            "TreeLoadBalancer::loadBalanceMappedBoxLevel_rootCycle Transpose errors found!");
+            "TreeLoadBalancer::loadBalanceBoxLevel_rootCycle Transpose errors found!");
       }
    }
 
@@ -1595,14 +1595,14 @@ void TreeLoadBalancer::loadBalanceMappedBoxLevel_rootCycle(
  *************************************************************************
  *
  * The tree load balancer's reassignment method, essentially a two-bin
- * load balancer.  Given two sets of MappedBoxInTransit (the bins) and
+ * load balancer.  Given two sets of BoxInTransit (the bins) and
  * an amount of work to move from one set to the other, this method
  * makes a best effort to effect the work transfer between the two
- * bins.  This can move MappedBoxInTransit between given sets and, if
+ * bins.  This can move BoxInTransit between given sets and, if
  * needed, breaking some NodeInTransit up to move part of the work.
  *
- * Reassign some MappedBoxInTransit from one set into another by moving
- * them between src and dst containers of MappedBoxInTransit objects.
+ * Reassign some BoxInTransit from one set into another by moving
+ * them between src and dst containers of BoxInTransit objects.
  * This method is purely local, doing no actual communications.
  *
  * Effectiveness of reassignLoads is key to getting good balance.
@@ -1635,9 +1635,9 @@ void TreeLoadBalancer::reassignLoads(
 
    /*
     * The algorithm cycles through a do-loop.  Each time around, we try
-    * to swap some MappedBoxInTransit between src and dst until we cannot improve the
-    * actual_transfer any further.  Then, we try breaking up some MappedBoxInTransit to
-    * improve the results.  If we break some MappedBoxInTransit, we generate some more
+    * to swap some BoxInTransit between src and dst until we cannot improve the
+    * actual_transfer any further.  Then, we try breaking up some BoxInTransit to
+    * improve the results.  If we break some BoxInTransit, we generate some more
     * swapping options that were not there before, so we loop back to
     * try swapping again.
     *
@@ -1669,7 +1669,7 @@ void TreeLoadBalancer::reassignLoads(
                     << balance_penalty
                     << ", needs " << (ideal_transfer - actual_transfer)
                     << " more with " << src.size() << " source and "
-                    << dst.size() << " dst MappedBoxes remaining."
+                    << dst.size() << " dst Boxes remaining."
                     << std::endl;
       }
 
@@ -1677,7 +1677,7 @@ void TreeLoadBalancer::reassignLoads(
 
       /*
        * Assuming that we did the best we could, swapping
-       * some MappedBoxInTransit without breaking any, we now break up a MappedBox
+       * some BoxInTransit without breaking any, we now break up a Box
        * in the overloaded side for partial transfer to the
        * underloaded side.
        */
@@ -1698,7 +1698,7 @@ void TreeLoadBalancer::reassignLoads(
                     << balance_penalty
                     << ", needs " << (ideal_transfer - actual_transfer)
                     << " more with " << src.size() << " source and "
-                    << dst.size() << " dst MappedBoxes remaining."
+                    << dst.size() << " dst Boxes remaining."
                     << std::endl;
       }
       if (brk_transfer == 0) {
@@ -1735,7 +1735,7 @@ void TreeLoadBalancer::packSubtreeLoadData(
    msg.insert(msg.end(), static_cast<int>(for_export.size()));
    for (TransitSet::const_iterator
         ni = for_export.begin(); ni != for_export.end(); ++ni) {
-      const MappedBoxInTransit& mapped_box_in_transit = *ni;
+      const BoxInTransit& mapped_box_in_transit = *ni;
       int i0 = static_cast<int>(msg.size());
       msg.insert(msg.end(), mapped_box_in_transit.commBufferSize(), 0);
       mapped_box_in_transit.putToIntBuffer(&msg[i0]);
@@ -1761,9 +1761,9 @@ void TreeLoadBalancer::unpackSubtreeLoadData(
    load_data.load_imported = *(received_data++);
    const int num_transits = *(received_data++);
    for (int i = 0; i < num_transits; ++i) {
-      MappedBoxInTransit received_mapped_box_in_transit(d_dim);
+      BoxInTransit received_mapped_box_in_transit(d_dim);
       received_mapped_box_in_transit.getFromIntBuffer(received_data);
-      MappedBoxInTransit renamed_mapped_box_in_transit(received_mapped_box_in_transit,
+      BoxInTransit renamed_mapped_box_in_transit(received_mapped_box_in_transit,
                                                        received_mapped_box_in_transit.getBox(),
                                                        d_rank,
                                                        next_available_index);
@@ -1800,7 +1800,7 @@ void TreeLoadBalancer::packNeighborhoodSetMessages(
    for (TransitSet::const_iterator
         ni = mapped_boxes_in_transit.begin(); ni != mapped_boxes_in_transit.end(); ++ni) {
 
-      MappedBoxInTransit mapped_box_in_transit = *ni;
+      BoxInTransit mapped_box_in_transit = *ni;
 
       // If there is no process history, then local process must be originator.
       if (mapped_box_in_transit.proc_hist.empty()) {
@@ -1888,7 +1888,7 @@ void TreeLoadBalancer::unpackAndRouteNeighborhoodSets(
 
    while (beg < end) {
 
-      MappedBoxInTransit mapped_box_in_transit(d_dim);
+      BoxInTransit mapped_box_in_transit(d_dim);
       mapped_box_in_transit.getFromIntBuffer(beg);
       beg += mapped_box_in_transit.commBufferSize();
       if (d_print_edge_steps) {
@@ -2377,8 +2377,8 @@ bool TreeLoadBalancer::shiftLoadsByBreaking(
       tbox::plog << "    shiftLoadsByBreaking asked to break off "
                  << ideal_transfer
                  << " from one of " << src.size()
-                 << " source MappedBoxes to add to set of " << dst.size()
-                 << " MappedBoxes."
+                 << " source Boxes to add to set of " << dst.size()
+                 << " Boxes."
                  << std::endl;
    }
 
@@ -2425,7 +2425,7 @@ bool TreeLoadBalancer::shiftLoadsByBreaking(
         si != src.end() &&
         (!found_breakage || si->load >= ideal_transfer); ++si) {
 
-      const MappedBoxInTransit& candidate = *si;
+      const BoxInTransit& candidate = *si;
 
       breakOffLoad(
          candidate.mapped_box,
@@ -2436,7 +2436,7 @@ bool TreeLoadBalancer::shiftLoadsByBreaking(
 
       if (!breakoff.empty()) {
 
-         const MappedBoxInTransit& brk_mapped_box_in_transit = *si;
+         const BoxInTransit& brk_mapped_box_in_transit = *si;
 
          const bool improves_balance =
             tbox::MathUtilities<double>::Abs(
@@ -2445,8 +2445,8 @@ bool TreeLoadBalancer::shiftLoadsByBreaking(
 
          if (d_print_steps) {
             tbox::plog << "    Potential to replace " << brk_mapped_box_in_transit << " with "
-                       << breakoff.size() << " breakoff MappedBoxes and "
-                       << leftover.size() << " leftover MappedBoxes."
+                       << breakoff.size() << " breakoff Boxes and "
+                       << leftover.size() << " leftover Boxes."
                        << "  improves_balance=" << improves_balance
                        << std::endl;
          }
@@ -2475,7 +2475,7 @@ bool TreeLoadBalancer::shiftLoadsByBreaking(
          for (std::vector<hier::Box>::const_iterator bi = breakoff.begin();
               bi != breakoff.end();
               ++bi) {
-            MappedBoxInTransit give_mapped_box_in_transit(
+            BoxInTransit give_mapped_box_in_transit(
                brk_mapped_box_in_transit,
                *bi,
                d_rank,
@@ -2495,7 +2495,7 @@ bool TreeLoadBalancer::shiftLoadsByBreaking(
          for (std::vector<hier::Box>::const_iterator bi = leftover.begin();
               bi != leftover.end();
               ++bi) {
-            MappedBoxInTransit keep_mapped_box_in_transit(
+            BoxInTransit keep_mapped_box_in_transit(
                brk_mapped_box_in_transit,
                *bi,
                d_rank,
@@ -2580,8 +2580,8 @@ bool TreeLoadBalancer::shiftLoadsByBreaking(
  * Attempt to swap some NodesInTransit between 2 sets of
  * NodesInTransit (src and dst) to shift ideal_transfer work units.
  *
- * Transfering a MappedBoxInTransit from one TransitSet to another
- * is considered a degenerate "swap" (a MappedBoxInTransit is
+ * Transfering a BoxInTransit from one TransitSet to another
+ * is considered a degenerate "swap" (a BoxInTransit is
  * swapped for nothing) handled by this function.
  * The reason we do not handle degenerate case
  * in another function is that even if we guarantee
@@ -2680,13 +2680,13 @@ bool TreeLoadBalancer::shiftLoadsBySwapping(
 
 /*
  *************************************************************************
- * Find a MappedBoxInTransit in src and a MappedBoxInTransit in dst which when swapped
+ * Find a BoxInTransit in src and a BoxInTransit in dst which when swapped
  * results in shifting close to ideal_shift from src to dst.
  * Return whether a swap pair was found.
  *
  * If isrc is set but idst is not, it means that isrc should
  * be moved to dst, but no dst should be moved back.  This is
- * the degenerate case of swapping isrc for a MappedBoxInTransit with zero
+ * the degenerate case of swapping isrc for a BoxInTransit with zero
  * load.
  *************************************************************************
  */
@@ -2715,8 +2715,8 @@ bool TreeLoadBalancer::findLoadSwapPair(
    if (d_print_steps) {
       tbox::plog << "  findLoadSwapPair looking for transfer of "
                  << ideal_transfer
-                 << " between " << src.size() << "-MappedBoxInTransit src and "
-                 << dst.size() << "-MappedBoxInTransit dst." << std::endl;
+                 << " between " << src.size() << "-BoxInTransit src and "
+                 << dst.size() << "-BoxInTransit dst." << std::endl;
    }
    if (d_print_swap_steps) {
       tbox::plog << "    src (" << src.size() << "):" << std::endl;
@@ -2764,9 +2764,9 @@ bool TreeLoadBalancer::findLoadSwapPair(
    TransitSet::iterator jsrc_loside = src.end();
    TransitSet::iterator jdst_loside = dst.end();
 
-   // A dummy MappedBoxInTransit for set searches.
+   // A dummy BoxInTransit for set searches.
    hier::Box dummy_box(d_dim);
-   MappedBoxInTransit dummy_search_target(d_dim);
+   BoxInTransit dummy_search_target(d_dim);
 
    // Distance between ideal and candidate, >= 0
    int imbalance_loside = tbox::MathUtilities<int>::getMax();
@@ -2774,11 +2774,11 @@ bool TreeLoadBalancer::findLoadSwapPair(
 
    if (dst.empty()) {
       /*
-       * There is no dst MappedBoxInTransit, so the swap would
-       * degnerate to moving a src MappedBoxInTransit to dst.  Find
-       * the best src MappedBoxInTransit to move.
+       * There is no dst BoxInTransit, so the swap would
+       * degnerate to moving a src BoxInTransit to dst.  Find
+       * the best src BoxInTransit to move.
        */
-      dummy_search_target = MappedBoxInTransit(hier::Box(dummy_box, hier::LocalId::getZero(), 0));
+      dummy_search_target = BoxInTransit(hier::Box(dummy_box, hier::LocalId::getZero(), 0));
       dummy_search_target.load = ideal_transfer;
       TransitSet::iterator jsrc = src.lower_bound(dummy_search_target);
 
@@ -2813,7 +2813,7 @@ bool TreeLoadBalancer::findLoadSwapPair(
 
       /*
        * Start search through src beginning with the NodeInTransit
-       * whose load exceed the biggest dst MappedBoxInTransit by at
+       * whose load exceed the biggest dst BoxInTransit by at
        * least ideal_transfer.
        */
       dummy_search_target = *dst.begin();
@@ -2827,7 +2827,7 @@ bool TreeLoadBalancer::findLoadSwapPair(
           * Look for a load less than the load of jsrc by
           * ideal_transfer.
           */
-         dummy_search_target = MappedBoxInTransit(hier::Box(dummy_box, hier::LocalId::getZero(), 0));
+         dummy_search_target = BoxInTransit(hier::Box(dummy_box, hier::LocalId::getZero(), 0));
          dummy_search_target.load = tbox::MathUtilities<int>::Max(
                (*jsrc).load - ideal_transfer,
                0);
@@ -2839,7 +2839,7 @@ bool TreeLoadBalancer::findLoadSwapPair(
              * lower_bound returns jdst that gives >= ideal_transfer
              * when swapped with jsrc.  Check transfererence between
              * jsrc and two dst NodeInTransit on either side of the
-             * ideal dst MappedBoxInTransit to swap.
+             * ideal dst BoxInTransit to swap.
              */
             int tmp_miss = ((*jsrc).load - (*jdst).load) - ideal_transfer;
             TBOX_ASSERT(tmp_miss >= 0);
@@ -2878,8 +2878,8 @@ bool TreeLoadBalancer::findLoadSwapPair(
 
             /*
              * The ideal dst to swap is smaller than the smallest dst
-             * MappedBoxInTransit.  Check the transfererence between
-             * jsrc and smallest MappedBoxInTransit, the case of
+             * BoxInTransit.  Check the transfererence between
+             * jsrc and smallest BoxInTransit, the case of
              * moving jsrc in whole.
              */
             if ((*jsrc).load > ideal_transfer) {
@@ -4016,11 +4016,11 @@ void TreeLoadBalancer::burstBox(
  *************************************************************************
  */
 double TreeLoadBalancer::computeLocalLoads(
-   const hier::MappedBoxLevel& mapped_box_level) const
+   const hier::BoxLevel& mapped_box_level) const
 {
    // Count up workload.
    double load = 0.0;
-   const hier::BoxSet& mapped_boxes = mapped_box_level.getMappedBoxes();
+   const hier::BoxSet& mapped_boxes = mapped_box_level.getBoxes();
    for (hier::BoxSet::const_iterator ni = mapped_boxes.begin();
         ni != mapped_boxes.end();
         ++ni) {
@@ -4733,7 +4733,7 @@ bool TreeLoadBalancer::breakOffLoad_cubic1(
 void TreeLoadBalancer::setShadowData(
    const hier::IntVector& min_size,
    const hier::IntVector& max_size,
-   const hier::MappedBoxLevel& domain_mapped_box_level,
+   const hier::BoxLevel& domain_mapped_box_level,
    const hier::IntVector& bad_interval,
    const hier::IntVector& cut_factor,
    const hier::IntVector& refinement_ratio) const
@@ -4753,7 +4753,7 @@ void TreeLoadBalancer::setShadowData(
     */
    TBOX_ASSERT(
       domain_mapped_box_level.getParallelState() ==
-      hier::MappedBoxLevel::GLOBALIZED);
+      hier::BoxLevel::GLOBALIZED);
 
    d_domain_boxes.clearItems();
    domain_mapped_box_level.getGlobalBoxes(d_domain_boxes);
@@ -4768,8 +4768,8 @@ void TreeLoadBalancer::unsetShadowData() const {
    d_cut_factor = hier::IntVector(d_dim, -1);
 }
 
-void TreeLoadBalancer::prebalanceMappedBoxLevel(
-   hier::MappedBoxLevel& balance_mapped_box_level,
+void TreeLoadBalancer::prebalanceBoxLevel(
+   hier::BoxLevel& balance_mapped_box_level,
    hier::Connector& balance_to_anchor,
    hier::Connector& anchor_to_balance,
    const tbox::RankGroup& rank_group) const
@@ -4786,7 +4786,7 @@ void TreeLoadBalancer::prebalanceMappedBoxLevel(
     * balance_mapped_box_level, but all will live on the processors
     * specified in rank_group.
     */
-   hier::MappedBoxLevel tmp_mapped_box_level(d_dim);
+   hier::BoxLevel tmp_mapped_box_level(d_dim);
    tmp_mapped_box_level.initialize(
       balance_mapped_box_level.getRefinementRatio(),
       balance_mapped_box_level.getGridGeometry(),
@@ -4794,7 +4794,7 @@ void TreeLoadBalancer::prebalanceMappedBoxLevel(
 
    /*
     * If a rank is not in rank_group it is called a "sending" rank, as
-    * it will send any MappedBoxes it has to a rank in rank_group.
+    * it will send any Boxes it has to a rank in rank_group.
     */
    bool is_sending_rank = rank_group.isMember(d_rank) ? false : true;
 
@@ -4810,8 +4810,8 @@ void TreeLoadBalancer::prebalanceMappedBoxLevel(
    tbox::AsyncCommPeer<int>* id_recv = NULL;
 
    /*
-    * A sending rank will send its MappedBoxes to a receiving rank, and
-    * that receiving processor will add it to its local set of MappedBoxes.
+    * A sending rank will send its Boxes to a receiving rank, and
+    * that receiving processor will add it to its local set of Boxes.
     * When the box is added on the receiving processor, it will receive
     * a new LocalId.  This LocalId value needs to be sent back to
     * the sending processor, in order to construct the mapping connectors.
@@ -4888,30 +4888,30 @@ void TreeLoadBalancer::prebalanceMappedBoxLevel(
    hier::NeighborhoodSet tmp_to_balance_edges;
 
    /*
-    * Where MappedBoxes already exist on ranks in rank_group,
+    * Where Boxes already exist on ranks in rank_group,
     * move them directly to tmp_mapped_box_level.
     */
    if (!is_sending_rank) {
       const hier::BoxSet& unchanged_mapped_boxes =
-         balance_mapped_box_level.getMappedBoxes();
+         balance_mapped_box_level.getBoxes();
 
       for (hier::BoxSet::const_iterator ni =
               unchanged_mapped_boxes.begin();
            ni != unchanged_mapped_boxes.end(); ++ni) {
 
          const hier::Box& mapped_box = *ni;
-         tmp_mapped_box_level.addMappedBox(mapped_box);
+         tmp_mapped_box_level.addBox(mapped_box);
       }
    }
 
    const int buf_size = hier::Box::commBufferSize(d_dim);
 
    /*
-    * On sending ranks, pack the MappedBoxes into buffers and send.
+    * On sending ranks, pack the Boxes into buffers and send.
     */
    if (is_sending_rank) {
       const hier::BoxSet& sending_mapped_boxes =
-         balance_mapped_box_level.getMappedBoxes();
+         balance_mapped_box_level.getBoxes();
       const int num_sending_boxes =
          static_cast<int>(sending_mapped_boxes.size());
 
@@ -4995,7 +4995,7 @@ void TreeLoadBalancer::prebalanceMappedBoxLevel(
       const int* buffer = id_recv->getRecvData();
 
       const hier::BoxSet& sending_mapped_boxes =
-         balance_mapped_box_level.getMappedBoxes();
+         balance_mapped_box_level.getBoxes();
       TBOX_ASSERT(static_cast<unsigned int>(id_recv->getRecvSize()) == sending_mapped_boxes.size());
 
       int box_count = 0;
@@ -5045,7 +5045,7 @@ void TreeLoadBalancer::prebalanceMappedBoxLevel(
       TBOX_ASSERT(anchor_to_balance.checkTransposeCorrectness(balance_to_anchor) == 0);
       TBOX_ASSERT(balance_to_anchor.checkTransposeCorrectness(anchor_to_balance) == 0);
    } else {
-      hier::MappedBoxLevel::swap(balance_mapped_box_level, tmp_mapped_box_level);
+      hier::BoxLevel::swap(balance_mapped_box_level, tmp_mapped_box_level);
    }
 
    /*
@@ -5063,7 +5063,7 @@ void TreeLoadBalancer::prebalanceMappedBoxLevel(
 
 std::ostream& operator << (
    std::ostream& co,
-   const MappedBoxInTransit& r)
+   const BoxInTransit& r)
 {
    co << r.mapped_box
    << r.mapped_box.numberCells() << '|'
@@ -5089,7 +5089,7 @@ void TreeLoadBalancer::setTimers()
     */
    if (t_load_balance_mapped_box_level.isNull()) {
       t_load_balance_mapped_box_level = tbox::TimerManager::getManager()->
-         getTimer(d_object_name + "::loadBalanceMappedBoxLevel()");
+         getTimer(d_object_name + "::loadBalanceBoxLevel()");
       t_get_map = tbox::TimerManager::getManager()->
          getTimer(d_object_name + "::get_map");
       t_use_map = tbox::TimerManager::getManager()->

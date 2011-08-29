@@ -35,7 +35,6 @@ class MultiblockBoxTree;
 /*!
  * @brief A generic container for Boxes.
  *
- * Boxes (unlike MappedBoxes) do not have any intrinsic notion of ordering.
  * This container makes use of the semantics of a list which implies ordering.
  * The ordering of the Boxes in the container is determined by the user of the
  * container.  Specifically, the ordering is explicitly determined by how the

@@ -24,7 +24,7 @@ namespace hier {
  * @brief A locally determined, globally unique identifier.
  *
  * GlobalIds are used as object identifiers in distributed sets of
- * objects, such as Patches and MappedBoxes.  GlobalIds allow objects
+ * objects, such as Patches and Boxes.  GlobalIds allow objects
  * to be created in parallel while maintaining globally-unique
  * identifiers for those objects.
  *

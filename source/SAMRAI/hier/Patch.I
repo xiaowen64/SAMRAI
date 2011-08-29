@@ -15,7 +15,7 @@ namespace SAMRAI {
 namespace hier {
 
 SAMRAI_INLINE_KEYWORD
-const Box& Patch::getMappedBox() const
+const Box& Patch::getBox() const
 {
    return d_mapped_box;
 }
@@ -24,12 +24,6 @@ SAMRAI_INLINE_KEYWORD
 const GlobalId& Patch::getGlobalId() const
 {
    return d_mapped_box.getGlobalId();
-}
-
-SAMRAI_INLINE_KEYWORD
-const Box& Patch::getBox() const
-{
-   return d_mapped_box;
 }
 
 SAMRAI_INLINE_KEYWORD

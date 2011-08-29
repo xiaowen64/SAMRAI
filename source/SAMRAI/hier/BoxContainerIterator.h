@@ -21,7 +21,7 @@ class BoxContainer;
 
 /**
  * A mutable iterator over the boxes in a BoxContainer or the underlying boxes
- * in a MappedBoxContainer.
+ * in a BoxContainer.
  *
  * @see hier::BoxContainer
  */
@@ -152,8 +152,8 @@ private:
     */
    std::list<Box>::iterator d_list_iter;
 
-   // Add pointer to MappedBoxContainer and underlying iterator for
-   // MappedBoxContainer here.
+   // Add pointer to BoxContainer and underlying iterator for
+   // BoxContainer here.
 };
 
 }

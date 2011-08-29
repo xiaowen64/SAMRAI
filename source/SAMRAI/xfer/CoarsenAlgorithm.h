@@ -307,7 +307,7 @@ private:
    //! @brief Shorthand typedef.
    typedef hier::Box MBox;
    //! @brief Shorthand typedef.
-   typedef hier::MappedBoxLevel MappedBoxLevel;
+   typedef hier::BoxLevel BoxLevel;
    //! @brief Shorthand typedef.
    typedef hier::Connector Edges;
    //! @brief Shorthand typedef.

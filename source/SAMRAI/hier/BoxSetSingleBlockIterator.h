@@ -22,10 +22,10 @@ namespace hier {
  * @brief BoxSet iterator picking items with a specified
  * BlockId.
  *
- * This iterator runs through all MappedBoxes in a BoxSet that
- * has the given BlockId.  The iterator runs through the MappedBoxes
+ * This iterator runs through all Boxes in a BoxSet that
+ * has the given BlockId.  The iterator runs through the Boxes
  * in the order they appear in the BoxSet, skipping over
- * MappedBoxes that do not have the specified owner rank.
+ * Boxes that do not have the specified owner rank.
  */
 class BoxSetSingleBlockIterator
 {

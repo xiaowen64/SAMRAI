@@ -160,18 +160,18 @@ int main(
       const int n_coarse_boxes = coarse_domain.getNumberOfBoxes();
       const int n_fine_boxes = fine_boxes.getNumberOfBoxes();
 
-      hier::MappedBoxLevel layer0(hier::IntVector(dim, 1), geometry);
-      hier::MappedBoxLevel layer1(ratio, geometry);
+      hier::BoxLevel layer0(hier::IntVector(dim, 1), geometry);
+      hier::BoxLevel layer1(ratio, geometry);
 
       hier::BoxList::Iterator coarse_itr(coarse_domain);
       for (int ib = 0; ib < n_coarse_boxes; ib++, coarse_itr++) {
          if (nproc > 1) {
             if (ib == layer0.getRank()) {
-               layer0.addMappedBox(hier::MappedBox(coarse_itr(), ib,
+               layer0.addBox(hier::Box(coarse_itr(), ib,
                      layer0.getRank()));
             }
          } else {
-            layer0.addMappedBox(hier::MappedBox(coarse_itr(), ib, 0));
+            layer0.addBox(hier::Box(coarse_itr(), ib, 0));
          }
       }
 
@@ -179,11 +179,11 @@ int main(
       for (int ib = 0; ib < n_fine_boxes; ib++, fine_itr++) {
          if (nproc > 1) {
             if (ib == layer1.getRank()) {
-               layer1.addMappedBox(hier::MappedBox(fine_itr(), ib,
+               layer1.addBox(hier::Box(fine_itr(), ib,
                      layer1.getRank()));
             }
          } else {
-            layer1.addMappedBox(hier::MappedBox(fine_itr(), ib, 0));
+            layer1.addBox(hier::Box(fine_itr(), ib, 0));
          }
       }
 

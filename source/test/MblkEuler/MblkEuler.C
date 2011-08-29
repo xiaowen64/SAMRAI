@@ -1596,7 +1596,7 @@ void MblkEuler::setPhysicalBoundaryConditions(
    const hier::IntVector& ghost_width_to_fill)
 {
 
-   const int block_number = patch.getMappedBox().getBlockId().getBlockValue();
+   const int block_number = patch.getBox().getBlockId().getBlockValue();
 
    markPhysicalBoundaryConditions(patch, ghost_width_to_fill);
 
@@ -1626,7 +1626,7 @@ void MblkEuler::setPhysicalBoundaryConditions(
    const hier::IntVector ratio = patch_geom->getRatio();
    hier::BoxList domain_boxes(d_dim);
    d_grid_geometry->computePhysicalDomain(domain_boxes, ratio,
-      patch.getMappedBox().getBlockId());
+      patch.getBox().getBlockId());
 
    const hier::IntVector& periodic =
       d_grid_geometry->getPeriodicShift(
@@ -1637,7 +1637,7 @@ void MblkEuler::setPhysicalBoundaryConditions(
 
    d_mblk_geometry->buildLocalBlocks(patch_box,
       domain_box,
-      patch.getMappedBox().getBlockId().getBlockValue(),
+      patch.getBox().getBlockId().getBlockValue(),
       d_dom_local_blocks);
    //
    // loop over the dimensions, filling in boundary conditions where needed
@@ -2469,7 +2469,7 @@ void MblkEuler::tagGradientDetectorCells(
 
          hier::BoxList refine_boxes(d_dim);
          if (d_mblk_geometry->getRefineBoxes(refine_boxes,
-                patch.getMappedBox().getBlockId().getBlockValue(),
+                patch.getBox().getBlockId().getBlockValue(),
                 level_number)) {
             for (hier::BoxList::Iterator b(refine_boxes); b; b++) {
                hier::Box intersect = pbox * b();
@@ -2540,7 +2540,7 @@ void MblkEuler::setMappedGridOnPatch(
    hier::IntVector ratio = patch_geom->getRatio();
    hier::BoxList domain_boxes(d_dim);
    d_grid_geometry->computePhysicalDomain(domain_boxes, ratio,
-      patch.getMappedBox().getBlockId());
+      patch.getBox().getBlockId());
 
    //
    // statistics on the level domain
@@ -2575,7 +2575,7 @@ void MblkEuler::setMappedGridOnPatch(
    d_mblk_geometry->buildGridOnPatch(patch,
       domain_boxes.getFirstItem(),
       xyz_id,
-      patch.getMappedBox().getBlockId().getBlockValue(),
+      patch.getBox().getBlockId().getBlockValue(),
       d_dom_local_blocks);
 }
 

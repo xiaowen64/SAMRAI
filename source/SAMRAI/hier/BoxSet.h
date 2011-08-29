@@ -27,7 +27,7 @@ class BoxList;
  * @brief A wrapper around std::set<Box>.
  *
  * This is little more than a std::set<Box>, a sorted container
- * of MappedBoxes.  It adds a few additional "features" such as:
+ * of Boxes.  It adds a few additional "features" such as:
  *
  * - Database reading/writing
  * - printing
@@ -199,7 +199,7 @@ public:
    //@}
 
    /*!
-    * @brief Whether the subsets of MappedBoxes owned by a given
+    * @brief Whether the subsets of Boxes owned by a given
     * process are the same between this and another BoxSet.
     */
    bool
@@ -271,9 +271,9 @@ public:
       const IntVector& growth) const;
 
    /*!
-    * @brief Unshift periodic image MappedBoxes from a BoxSet.
+    * @brief Unshift periodic image Boxes from a BoxSet.
     *
-    * Change periodic image MappedBoxes to their unshifted position.
+    * Change periodic image Boxes to their unshifted position.
     *
     * Put the results in the output container.  For flexibility and
     * efficiency, the output container is NOT cleared first, so you
@@ -287,12 +287,12 @@ public:
     * live.
     */
    void
-   unshiftPeriodicImageMappedBoxes(
+   unshiftPeriodicImageBoxes(
       BoxSet& output_mapped_boxes,
       const IntVector& refinement_ratio) const;
 
    /*!
-    * @brief Remove periodic image MappedBoxes from a BoxSet.
+    * @brief Remove periodic image Boxes from a BoxSet.
     *
     * Put the results in the output container.  For flexibility and
     * efficiency, the output container is NOT cleared first, so you
@@ -301,7 +301,7 @@ public:
     * @param[out] output_mapped_boxes
     */
    void
-   removePeriodicImageMappedBoxes(
+   removePeriodicImageBoxes(
       BoxSet& output_mapped_boxes) const;
 
    /*!
@@ -325,7 +325,7 @@ public:
 
    /*!
     * @brief Split a BoxSet into two vector<Box>
-    * objects, one containing real MappedBoxes and one containing their
+    * objects, one containing real Boxes and one containing their
     * periodic images.
     *
     * Put the results in the output container.  For flexibility and

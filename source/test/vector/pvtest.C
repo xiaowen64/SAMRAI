@@ -197,14 +197,14 @@ int main(
       hierarchy->makeNewPatchLevel(1, ratio, fine_boxes, mapping1);
 #else
 
-      hier::MappedBoxLevel layer0(hier::IntVector(dim3d, 1), geometry);
-      hier::MappedBoxLevel layer1(ratio, geometry);
+      hier::BoxLevel layer0(hier::IntVector(dim3d, 1), geometry);
+      hier::BoxLevel layer1(ratio, geometry);
 
       hier::BoxList::Iterator coarse_domain_itr(coarse_domain);
       if (nproc > 1) {
          if (layer0.getRank() == 0) {
             for (int ib = 0; ib < n_coarse_boxes / 2; ib++, coarse_domain_itr++) {
-               layer0.addMappedBox(hier::Box(*coarse_domain_itr,
+               layer0.addBox(hier::Box(*coarse_domain_itr,
                      hier::LocalId(ib),
                      layer0.getRank()));
             }
@@ -213,7 +213,7 @@ int main(
                coarse_domain_itr++;
             }
             for (int ib = n_coarse_boxes / 2; ib < n_coarse_boxes; ib++, coarse_domain_itr++) {
-               layer0.addMappedBox(hier::Box(*coarse_domain_itr,
+               layer0.addBox(hier::Box(*coarse_domain_itr,
                      hier::LocalId(ib),
                      layer0.getRank()));
             }
@@ -222,7 +222,7 @@ int main(
       } else {
 
          for (int ib = 0; ib < n_coarse_boxes; ib++, coarse_domain_itr++) {
-            layer0.addMappedBox(hier::Box(*coarse_domain_itr,
+            layer0.addBox(hier::Box(*coarse_domain_itr,
                   hier::LocalId(ib),
                   layer0.getRank()));
          }
@@ -234,7 +234,7 @@ int main(
 
          if (layer1.getRank() == 0) {
             for (int ib = 0; ib < n_fine_boxes / 2; ib++, fine_boxes_itr++) {
-               layer1.addMappedBox(hier::Box(*fine_boxes_itr,
+               layer1.addBox(hier::Box(*fine_boxes_itr,
                      hier::LocalId(ib),
                      layer1.getRank()));
             }
@@ -243,7 +243,7 @@ int main(
                fine_boxes_itr++;
             }
             for (int ib = n_fine_boxes / 2; ib < n_fine_boxes; ib++, fine_boxes_itr++) {
-               layer1.addMappedBox(hier::Box(*fine_boxes_itr,
+               layer1.addBox(hier::Box(*fine_boxes_itr,
                      hier::LocalId(ib),
                      layer1.getRank()));
             }
@@ -252,7 +252,7 @@ int main(
       } else {
 
          for (int ib = 0; ib < n_fine_boxes; ib++, fine_boxes_itr++) {
-            layer1.addMappedBox(hier::Box(*fine_boxes_itr,
+            layer1.addBox(hier::Box(*fine_boxes_itr,
                   hier::LocalId(ib),
                   layer1.getRank()));
          }

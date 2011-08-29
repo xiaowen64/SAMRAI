@@ -479,8 +479,8 @@ static int createAndTestDLBG(
 
    int ln;
 
-   tbox::Array<MappedBoxLevel> mapped_box_levels(
-      patch_hierarchy.getNumberOfLevels(), MappedBoxLevel(dim));
+   tbox::Array<BoxLevel> mapped_box_levels(
+      patch_hierarchy.getNumberOfLevels(), BoxLevel(dim));
    if (build_peer_edge) {
       peer_connectors = new Connector[patch_hierarchy.getNumberOfLevels()];
    }
@@ -495,14 +495,14 @@ static int createAndTestDLBG(
    for (ln = 0; ln < patch_hierarchy.getNumberOfLevels(); ++ln) {
       Pointer<PatchLevel> level_ptr = patch_hierarchy.getPatchLevel(ln);
       PatchLevel& level = *level_ptr;
-      mapped_box_levels[ln] = *level.getMappedBoxLevel();
+      mapped_box_levels[ln] = *level.getBoxLevel();
       plog << "****************************************\n";
       plog << "mapped_box_levels[" << ln << "]:\n";
       plog << "****************************************\n";
       mapped_box_levels[ln].recursivePrint(plog, "", node_log_detail);
       if (globalize_mapped_box_levels) {
          pout << "Globalizing BoxSet " << ln << ".\n";
-         mapped_box_levels[ln].setParallelState(MappedBoxLevel::GLOBALIZED);
+         mapped_box_levels[ln].setParallelState(BoxLevel::GLOBALIZED);
       }
       pout << "BoxSet " << ln << " done.\n";
    }

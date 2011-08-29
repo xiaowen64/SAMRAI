@@ -48,7 +48,7 @@ namespace hier {
  * of components can be created or destroyed via patch member functions.
  *
  * @see hier::Box
- * @see hier::MappedBox
+ * @see hier::Box
  * @see hier::PatchDescriptor
  * @see hier::PatchData
  * @see hier::PatchDataFactory
@@ -98,17 +98,6 @@ public:
     */
    const GlobalId&
    getGlobalId() const;
-
-   /*!
-    * @brief Get the Box from which this patch is defined.
-    *
-    * The box corresponding to this Box is the same as that
-    * given by getBox();
-    *
-    * @return the Box from which patch is defined.
-    */
-   const Box&
-   getMappedBox() const;
 
    /*!
     * @brief Get the patch's LocalId.

@@ -760,7 +760,7 @@ void MblkLinAdv::initializeDataOnPatch(
    /*
     * Build the mapped grid on the patch.
     */
-   int block_number = patch.getMappedBox().getBlockId().getBlockValue();
+   int block_number = patch.getBox().getBlockId().getBlockValue();
    int level_number = patch.getPatchLevelNumber();
    setMappedGridOnPatch(patch, level_number, block_number);
 
@@ -1886,7 +1886,7 @@ void MblkLinAdv::preprocessRefine(
    int xyz_id = hier::VariableDatabase::getDatabase()->
       mapVariableAndContextToIndex(d_xyz, getDataContext());
 
-   int block_number = fine.getMappedBox().getBlockId().getBlockValue();
+   int block_number = fine.getBox().getBlockId().getBlockValue();
    if (coarse.checkAllocated(xyz_id)) {
       setMappedGridOnPatch(coarse, cln, block_number);
    }
@@ -1938,7 +1938,7 @@ void MblkLinAdv::preprocessCoarsen(
    int xyz_id = hier::VariableDatabase::getDatabase()->
       mapVariableAndContextToIndex(d_xyz, getDataContext());
 
-   int block_number = coarse.getMappedBox().getBlockId().getBlockValue();
+   int block_number = coarse.getBox().getBlockId().getBlockValue();
    if (coarse.checkAllocated(xyz_id)) {
       setMappedGridOnPatch(coarse, cln, block_number);
    }

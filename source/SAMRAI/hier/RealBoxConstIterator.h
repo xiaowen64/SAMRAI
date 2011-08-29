@@ -4,7 +4,7 @@
  * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Iterator over real MappedBoxes in a BoxSet.
+ * Description:   Iterator over real Boxes in a BoxSet.
  *
  ************************************************************************/
 #ifndef included_hier_RealBoxConstIterator
@@ -26,7 +26,7 @@ namespace hier {
  *       controlled internally.
  */
 /*!
- * @brief Iterator through real MappedBoxes (not periodic images) in a
+ * @brief Iterator through real Boxes (not periodic images) in a
  * const BoxSet.
  *
  * RealBoxConstIterator is an iterator that provides methods for

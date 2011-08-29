@@ -49,7 +49,7 @@ public:
     * @brief Compute the mapped boxes representing the region that will
     *        be filled by a RefineSchedule.
     *
-    * This is currently unimplemented until MappedBoxLevel is
+    * This is currently unimplemented until BoxLevel is
     * multiblock-aware.  An error will occur if this is called.
     *
     * @param[in] dst_mapped_box_level  destination level
@@ -58,16 +58,16 @@ public:
     * @param[in] src_to_dst            Connector of source to destination
     * @param[in] fill_ghost_width      Ghost width being filled by refine
     *                                  schedule
-    * @param[out] fill_mapped_boxes    Output set of MappedBoxes to be filled
+    * @param[out] fill_mapped_boxes    Output set of Boxes to be filled
     * @param[out] dst_to_fill_edges    Output NeighborhoodSet between
     *                                  dst_mapped_box_level and
     *                                  and fill_mapped_boxes
     */
    void
-   computeFillMappedBoxesAndNeighborhoodSets(
+   computeFillBoxesAndNeighborhoodSets(
       hier::BoxSet& fill_mapped_boxes,
       hier::NeighborhoodSet& dst_to_fill_edges,
-      const hier::MappedBoxLevel& dst_mapped_box_level,
+      const hier::BoxLevel& dst_mapped_box_level,
       const hier::Connector& dst_to_dst,
       const hier::Connector& dst_to_src,
       const hier::Connector& src_to_dst,
@@ -100,7 +100,7 @@ public:
     * @brief Return the maximum number of fill boxes.
     *
     * This will not return a valid value until
-    * computeFillMappedBoxesAndNeighborhoodSets is fully implemented.  An
+    * computeFillBoxesAndNeighborhoodSets is fully implemented.  An
     * error will occur if this method is called
     */
    int

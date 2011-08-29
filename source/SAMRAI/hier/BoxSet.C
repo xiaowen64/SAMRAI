@@ -257,10 +257,10 @@ void BoxSet::grow(
 
 /*
  ***********************************************************************
- * Remove periodic image MappedBoxes from a BoxSet.
+ * Remove periodic image Boxes from a BoxSet.
  ***********************************************************************
  */
-void BoxSet::removePeriodicImageMappedBoxes(
+void BoxSet::removePeriodicImageBoxes(
    BoxSet& output_mapped_boxes) const
 {
    iterator hint = output_mapped_boxes.begin();
@@ -274,10 +274,10 @@ void BoxSet::removePeriodicImageMappedBoxes(
 
 /*
  ***********************************************************************
- * Unshift periodic image MappedBoxes from a BoxSet.
+ * Unshift periodic image Boxes from a BoxSet.
  ***********************************************************************
  */
-void BoxSet::unshiftPeriodicImageMappedBoxes(
+void BoxSet::unshiftPeriodicImageBoxes(
    BoxSet& output_mapped_boxes,
    const IntVector& refinement_ratio) const
 {

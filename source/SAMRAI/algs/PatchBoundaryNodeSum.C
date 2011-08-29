@@ -548,23 +548,23 @@ void PatchBoundaryNodeSum::setupSum(
                fine_level_num).getConnectorWidth();
          // Create persistent overlap Connectors for use in schedule construction.
          // FIXME: There are faster ways to get these edges.  BTNG.
-         d_cfbdry_tmp_level[fine_level_num]->getMappedBoxLevel()->
+         d_cfbdry_tmp_level[fine_level_num]->getBoxLevel()->
          getPersistentOverlapConnectors().createConnector(
-            *crse_level->getMappedBoxLevel(),
+            *crse_level->getBoxLevel(),
             crse_tmp_gcw);
-         crse_level->getMappedBoxLevel()->getPersistentOverlapConnectors().
+         crse_level->getBoxLevel()->getPersistentOverlapConnectors().
          createConnector(
-            *d_cfbdry_tmp_level[fine_level_num]->getMappedBoxLevel(),
+            *d_cfbdry_tmp_level[fine_level_num]->getBoxLevel(),
             crse_tmp_gcw);
          const hier::Connector& crse_to_domain =
-            d_cfbdry_tmp_level[fine_level_num]->getMappedBoxLevel()->
+            d_cfbdry_tmp_level[fine_level_num]->getBoxLevel()->
             getPersistentOverlapConnectors().createConnector(
-               d_hierarchy->getDomainMappedBoxLevel(),
+               d_hierarchy->getDomainBoxLevel(),
                hier::IntVector::getZero(dim));
          const hier::Connector& crse_to_crse =
-            d_cfbdry_tmp_level[fine_level_num]->getMappedBoxLevel()->
+            d_cfbdry_tmp_level[fine_level_num]->getBoxLevel()->
             getPersistentOverlapConnectors().createConnector(
-               *d_cfbdry_tmp_level[fine_level_num]->getMappedBoxLevel(),
+               *d_cfbdry_tmp_level[fine_level_num]->getBoxLevel(),
                hier::IntVector::getOne(dim));
 
          d_cfbdry_copy_schedule[fine_level_num] =
@@ -779,7 +779,7 @@ void PatchBoundaryNodeSum::doLocalCoarseFineBoundarySum(
          tbox::Pointer<hier::Patch> fpatch = *ip;
          tbox::Pointer<hier::Patch> cfpatch =
             coarsened_fine_level->getPatch(fpatch->getGlobalId(),
-               fpatch->getMappedBox().getBlockId());
+               fpatch->getBox().getBlockId());
 
          const hier::Index& filo = fpatch->getBox().lower();
          const hier::Index& fihi = fpatch->getBox().upper();

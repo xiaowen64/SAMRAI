@@ -507,7 +507,7 @@ StandardTagAndInitialize::tagCellsUsingRichardsonExtrapolation(
       tbox::Pointer<hier::Patch> coarse_patch = *ip;
       tbox::Pointer<hier::Patch> fine_patch =
          patch_level->getPatch(coarse_patch->getGlobalId(),
-            coarse_patch->getMappedBox().getBlockId());
+            coarse_patch->getBox().getBlockId());
       tbox::Pointer<pdat::CellData<int> >
       ftags = fine_patch->getPatchData(tag_index);
       tbox::Pointer<pdat::CellData<int> >
@@ -582,7 +582,7 @@ StandardTagAndInitialize::tagCellsUsingRichardsonExtrapolation(
       tbox::Pointer<hier::Patch> coarse_patch = *ip;
       tbox::Pointer<hier::Patch> fine_patch =
          patch_level->getPatch(coarse_patch->getGlobalId(),
-            coarse_patch->getMappedBox().getBlockId());
+            coarse_patch->getBox().getBlockId());
       copytags.refine(*fine_patch, *coarse_patch,
          tag_index, tag_index,
          fine_patch->getBox(), coarsen_ratio);
@@ -762,37 +762,37 @@ StandardTagAndInitialize::preprocessRichardsonExtrapolation(
          level_number);
 
    const hier::Connector level_to_level =
-      patch_level->getMappedBoxLevel()->getPersistentOverlapConnectors().
+      patch_level->getBoxLevel()->getPersistentOverlapConnectors().
       findConnector(
-         *patch_level->getMappedBoxLevel(),
+         *patch_level->getBoxLevel(),
          level_to_level_gcw);
 
    const hier::Connector coarsened_to_level(
-      *coarsened_level->getMappedBoxLevel(),
-      *patch_level->getMappedBoxLevel(),
+      *coarsened_level->getBoxLevel(),
+      *patch_level->getBoxLevel(),
       hier::IntVector::ceiling(level_to_level_gcw, coarsen_ratio),
       level_to_level.getNeighborhoodSets(),
-      hier::MappedBoxLevel::DISTRIBUTED);
+      hier::BoxLevel::DISTRIBUTED);
 
    hier::NeighborhoodSet new_edges;
    level_to_level.getNeighborhoodSets().coarsenNeighbors(
       new_edges,
       coarsen_ratio);
 
-   const tbox::ConstPointer<hier::MappedBoxLevel>& mapped_box_level_ptr =
-      patch_level->getMappedBoxLevel();
-   const hier::MappedBoxLevel& mapped_box_level = *mapped_box_level_ptr;
+   const tbox::ConstPointer<hier::BoxLevel>& mapped_box_level_ptr =
+      patch_level->getBoxLevel();
+   const hier::BoxLevel& mapped_box_level = *mapped_box_level_ptr;
    hier::PersistentOverlapConnectors& persistent_overlap_connectors =
       mapped_box_level.getPersistentOverlapConnectors();
    const hier::Connector& level_to_coarsened =
       persistent_overlap_connectors.createConnector(
-         *coarsened_level->getMappedBoxLevel(),
+         *coarsened_level->getBoxLevel(),
          level_to_level_gcw,
          new_edges);
 
-   coarsened_level->getMappedBoxLevel()->getPersistentOverlapConnectors().
+   coarsened_level->getBoxLevel()->getPersistentOverlapConnectors().
    createConnector(
-      *coarsened_level->getMappedBoxLevel(),
+      *coarsened_level->getBoxLevel(),
       hier::IntVector::ceiling(level_to_level_gcw, coarsen_ratio),
       new_edges);
 
@@ -807,15 +807,15 @@ StandardTagAndInitialize::preprocessRichardsonExtrapolation(
       tbox::Pointer<hier::PatchLevel> coarser_level = hierarchy->getPatchLevel(
             level_number - 1);
       const hier::Connector& level_to_coarser =
-         patch_level->getMappedBoxLevel()->getPersistentOverlapConnectors().
+         patch_level->getBoxLevel()->getPersistentOverlapConnectors().
          findConnector(
-            *coarser_level->getMappedBoxLevel(),
+            *coarser_level->getBoxLevel(),
             hierarchy->getRequiredConnectorWidth(
                level_number, level_number - 1));
       const hier::Connector& coarser_to_level =
-         coarser_level->getMappedBoxLevel()->getPersistentOverlapConnectors()
+         coarser_level->getBoxLevel()->getPersistentOverlapConnectors()
          .findConnector(
-            *patch_level->getMappedBoxLevel(),
+            *patch_level->getBoxLevel(),
             hierarchy->getRequiredConnectorWidth(
                level_number - 1, level_number));
       hier::OverlapConnectorAlgorithm oca;
@@ -825,14 +825,14 @@ StandardTagAndInitialize::preprocessRichardsonExtrapolation(
          level_to_coarser,
          coarser_to_level,
          level_to_coarsened);
-      coarsened_level->getMappedBoxLevel()->getPersistentOverlapConnectors().
+      coarsened_level->getBoxLevel()->getPersistentOverlapConnectors().
       createConnector(
-         *coarser_level->getMappedBoxLevel(),
+         *coarser_level->getBoxLevel(),
          coarsened_to_coarser.getConnectorWidth(),
          coarsened_to_coarser.getNeighborhoodSets());
-      coarser_level->getMappedBoxLevel()->getPersistentOverlapConnectors().
+      coarser_level->getBoxLevel()->getPersistentOverlapConnectors().
       createConnector(
-         *coarsened_level->getMappedBoxLevel(),
+         *coarsened_level->getBoxLevel(),
          coarser_to_coarsened.getConnectorWidth(),
          coarser_to_coarsened.getNeighborhoodSets());
    }

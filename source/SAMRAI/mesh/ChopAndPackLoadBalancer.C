@@ -282,8 +282,8 @@ ChopAndPackLoadBalancer::setIgnoreLevelDomainIsSingleBox(
  *************************************************************************
  *************************************************************************
  */
-void ChopAndPackLoadBalancer::loadBalanceMappedBoxLevel(
-   hier::MappedBoxLevel& balance_mapped_box_level,
+void ChopAndPackLoadBalancer::loadBalanceBoxLevel(
+   hier::BoxLevel& balance_mapped_box_level,
    hier::Connector& balance_to_anchor,
    hier::Connector& anchor_to_balance,
    const tbox::Pointer<hier::PatchHierarchy> hierarchy,
@@ -292,7 +292,7 @@ void ChopAndPackLoadBalancer::loadBalanceMappedBoxLevel(
    const hier::Connector& attractor_to_balance,
    const hier::IntVector& min_size,
    const hier::IntVector& max_size,
-   const hier::MappedBoxLevel& domain_mapped_box_level,
+   const hier::BoxLevel& domain_mapped_box_level,
    const hier::IntVector& bad_interval,
    const hier::IntVector& cut_factor,
    const tbox::RankGroup& rank_group) const
@@ -315,14 +315,14 @@ void ChopAndPackLoadBalancer::loadBalanceMappedBoxLevel(
       }
    }
 
-   hier::MappedBoxLevel globalized_input_mapped_box_level(
+   hier::BoxLevel globalized_input_mapped_box_level(
       balance_mapped_box_level);
    globalized_input_mapped_box_level.setParallelState(
-      hier::MappedBoxLevel::GLOBALIZED);
+      hier::BoxLevel::GLOBALIZED);
 
    hier::BoxList in_boxes;
    const hier::BoxSet globalized_input_mapped_boxes(
-      globalized_input_mapped_box_level.getGlobalMappedBoxes());
+      globalized_input_mapped_box_level.getGlobalBoxes());
    for (hier::RealBoxConstIterator bi(globalized_input_mapped_boxes);
         bi.isValid(); ++bi) {
       in_boxes.appendItem(*bi);
@@ -352,12 +352,12 @@ void ChopAndPackLoadBalancer::loadBalanceMappedBoxLevel(
       balance_mapped_box_level.getRefinementRatio(),
       balance_mapped_box_level.getGridGeometry(),
       balance_mapped_box_level.getMPI(),
-      hier::MappedBoxLevel::GLOBALIZED);
+      hier::BoxLevel::GLOBALIZED);
    int i = 0;
    for (hier::BoxList::Iterator itr(out_boxes); itr; itr++, ++i) {
       hier::Box node(*itr, hier::LocalId(i),
                      mapping.getProcessorAssignment(i));
-      balance_mapped_box_level.addMappedBox(node);
+      balance_mapped_box_level.addBox(node);
    }
    // Reinitialize Connectors due to changed balance_mapped_box_level.
    balance_to_anchor.initialize(
@@ -372,7 +372,7 @@ void ChopAndPackLoadBalancer::loadBalanceMappedBoxLevel(
    oca.findOverlaps(balance_to_anchor);
    oca.findOverlaps(anchor_to_balance, balance_mapped_box_level);
 
-   balance_mapped_box_level.setParallelState(hier::MappedBoxLevel::DISTRIBUTED);
+   balance_mapped_box_level.setParallelState(hier::BoxLevel::DISTRIBUTED);
 }
 
 /*
@@ -874,16 +874,16 @@ void ChopAndPackLoadBalancer::chopBoxesWithNonuniformWorkload(
       tmp_level_workloads,
       "GREEDY");
 
-   tbox::Pointer<hier::MappedBoxLevel> tmp_mapped_box_level(
-      new hier::MappedBoxLevel(ratio_to_hierarchy_level_zero,
+   tbox::Pointer<hier::BoxLevel> tmp_mapped_box_level(
+      new hier::BoxLevel(ratio_to_hierarchy_level_zero,
          hierarchy->getGridGeometry(),
          mpi,
-         hier::MappedBoxLevel::GLOBALIZED));
+         hier::BoxLevel::GLOBALIZED));
    idx = 0;
    for (hier::BoxList::Iterator i(tmp_level_boxes); i; i++, ++idx) {
       hier::Box node(*i, hier::LocalId(idx),
                      tmp_level_mapping.getProcessorAssignment(idx));
-      tmp_mapped_box_level->addMappedBox(node);
+      tmp_mapped_box_level->addBox(node);
    }
 
    tbox::Pointer<hier::PatchLevel> tmp_level(
@@ -912,18 +912,18 @@ void ChopAndPackLoadBalancer::chopBoxesWithNonuniformWorkload(
    coarse_level = hierarchy->getPatchLevel(level_number - 1);
    hier::Connector tmp_to_current(
       *tmp_mapped_box_level,
-      *current_level->getMappedBoxLevel(),
+      *current_level->getBoxLevel(),
       hier::IntVector::getZero(d_dim));
    hier::Connector current_to_tmp(
-      *current_level->getMappedBoxLevel(),
+      *current_level->getBoxLevel(),
       *tmp_mapped_box_level,
       hier::IntVector::getZero(d_dim));
    hier::Connector tmp_to_coarse(
       *tmp_mapped_box_level,
-      *coarse_level->getMappedBoxLevel(),
+      *coarse_level->getBoxLevel(),
       hier::IntVector::getZero(d_dim));
    hier::Connector coarse_to_tmp(
-      *coarse_level->getMappedBoxLevel(),
+      *coarse_level->getBoxLevel(),
       *tmp_mapped_box_level,
       hier::IntVector::getZero(d_dim));
    hier::OverlapConnectorAlgorithm oca;

@@ -344,15 +344,13 @@ private:
    //! @brief Shorthand typedef.
    typedef hier::LocalId LocalId;
    //! @brief Shorthand typedef.
-   typedef hier::MappedBoxLevel MappedBoxLevel;
+   typedef hier::BoxLevel BoxLevel;
    //! @brief Shorthand typedef.
    typedef hier::Connector Connector;
    //! @brief Shorthand typedef.
    typedef hier::Connector::NeighborSet NeighborSet;
    //! @brief Shorthand typedef.
    typedef std::vector<hier::Box> BoxVector;
-   //! @brief Shorthand typedef.
-   typedef std::vector<hier::Box> MappedBoxVector;
    //! @brief Similar to NeighborhoodSet but maps to BoxVector instead of BoxSet.
    typedef std::map<hier::BoxId, hier::BoxSet> FillSet;
    //! @brief Mapping from a (potentially remote) Box to a set of neighbors.
@@ -449,7 +447,7 @@ private:
       const Connector& src_to_dst,
       const bool dst_is_coarse_interp_level,
       const hier::IntVector& src_growth_to_nest_dst,
-      const MappedBoxLevel& fill_mapped_box_level,
+      const BoxLevel& fill_mapped_box_level,
       const Connector& dst_to_fill,
       const FillSet& src_owner_dst_to_fill,
       bool use_time_interpolation,
@@ -564,9 +562,9 @@ private:
     */
    void
    generateCommunicationSchedule(
-      tbox::Pointer<MappedBoxLevel>& unfilled_mapped_box_level,
+      tbox::Pointer<BoxLevel>& unfilled_mapped_box_level,
       tbox::Pointer<Connector>& dst_to_unfilled,
-      tbox::Pointer<MappedBoxLevel>& unfilled_encon_box_level,
+      tbox::Pointer<BoxLevel>& unfilled_encon_box_level,
       tbox::Pointer<Connector>& encon_to_unfilled_encon,
       const Connector& dst_to_src,
       const Connector& src_to_dst,
@@ -604,11 +602,11 @@ private:
     * @param[in] fill_gcw  Maximum ghost width to be filled by the schedule.
     */
    void
-   setDefaultFillMappedBoxLevel(
-      MappedBoxLevel& fill_mapped_box_level,
+   setDefaultFillBoxLevel(
+      BoxLevel& fill_mapped_box_level,
       Connector& dst_to_fill,
       FillSet& src_owner_dst_to_fill,
-      const hier::MappedBoxLevel& dst_mapped_box_level,
+      const hier::BoxLevel& dst_mapped_box_level,
       const hier::Connector* dst_to_src,
       const hier::Connector* src_to_dst,
       const hier::IntVector& fill_gcw);
@@ -717,26 +715,26 @@ private:
     */
    void
    shearUnfilledBoxesOutsideNonperiodicBoundaries(
-      hier::MappedBoxLevel& unfilled,
+      hier::BoxLevel& unfilled,
       hier::Connector& dst_to_unfilled,
       const tbox::Pointer<hier::PatchHierarchy>& hierarchy);
 
    /*!
-    * @brief Set up the coarse interpolation MappedBoxLevel and related data.
+    * @brief Set up the coarse interpolation BoxLevel and related data.
     *
     * Also sets up d_dst_to_coarse_interp, d_coarse_interp_to_dst and d_coarse_interp_to_unfilled.
     *
     * @param[out] coarse_interp_mapped_box_level
     *
-    * @param[in] hiercoarse_mapped_box_level The MappedBoxLevel on the
+    * @param[in] hiercoarse_mapped_box_level The BoxLevel on the
     * hierarchy at the resolution that coarse_interp_mapped_box_level is to have.
     *
     * @param[in] dst_to_unfilled
     */
    void
-   setupCoarseInterpMappedBoxLevel(
-      hier::MappedBoxLevel& coarse_interp_mapped_box_level,
-      const hier::MappedBoxLevel& hiercoarse_mapped_box_level,
+   setupCoarseInterpBoxLevel(
+      hier::BoxLevel& coarse_interp_mapped_box_level,
+      const hier::BoxLevel& hiercoarse_mapped_box_level,
       const hier::Connector& dst_to_unfilled);
 
    /*!
@@ -761,7 +759,7 @@ private:
    createCoarseInterpPatchLevel(
       tbox::Pointer<hier::Connector>& coarse_interp_to_hiercoarse,
       tbox::Pointer<hier::Connector>& hiercoarse_to_coarse_interp,
-      hier::MappedBoxLevel& coarse_interp_mapped_box_level,
+      hier::BoxLevel& coarse_interp_mapped_box_level,
       const tbox::Pointer<hier::PatchHierarchy>& hierarchy,
       const int next_coarser_ln,
       const hier::Connector& dst_to_src,
@@ -771,7 +769,7 @@ private:
    /*!
     * @brief Check that the Connectors between the coarse
     * interpolation and hiercoarse levels are transposes and that that
-    * the coarse interpolation MappedBoxLevel sufficiently nests
+    * the coarse interpolation BoxLevel sufficiently nests
     * inside the hiercoarse.
     */
    void
@@ -1055,14 +1053,14 @@ private:
     * fill from the source level.  These remaining boxes must be
     * filled using a coarse interpolation schedule, d_coarse_interp_schedule.
     */
-   tbox::Pointer<MappedBoxLevel> d_unfilled_mapped_box_level;
+   tbox::Pointer<BoxLevel> d_unfilled_mapped_box_level;
 
    /*!
     * @brief Describes remaining unfilled boxes of d_encon_level after
     * attempting to fill from the source level.  These remaining boxes must
     * be filled using a coarse interpolation schedule, d_coarse_interp_encon_schedule.
     */
-   tbox::Pointer<MappedBoxLevel> d_unfilled_encon_box_level;
+   tbox::Pointer<BoxLevel> d_unfilled_encon_box_level;
 
    /*!
     * @brief Stores the BoxOverlaps needed by refineScratchData()

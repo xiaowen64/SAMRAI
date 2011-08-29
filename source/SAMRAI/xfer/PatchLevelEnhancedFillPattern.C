@@ -38,9 +38,9 @@ PatchLevelEnhancedFillPattern::PatchLevelEnhancedFillPattern():
 
 /*
  *************************************************************************
- *									*
+ *                                                                       *
  * Destructor                                                            *
- *									*
+ *                                                                       *
  *************************************************************************
  */
 
@@ -51,14 +51,14 @@ PatchLevelEnhancedFillPattern::~PatchLevelEnhancedFillPattern()
 /*
  *************************************************************************
  *                                                                       *
- * computeFillMappedBoxesAndNeighborhoodSets                             *
+ * computeFillBoxesAndNeighborhoodSets                                   *
  *                                                                       *
  *************************************************************************
  */
-void PatchLevelEnhancedFillPattern::computeFillMappedBoxesAndNeighborhoodSets(
+void PatchLevelEnhancedFillPattern::computeFillBoxesAndNeighborhoodSets(
    hier::BoxSet& fill_mapped_boxes,
    hier::NeighborhoodSet& dst_to_fill_edges,
-   const hier::MappedBoxLevel& dst_mapped_box_level,
+   const hier::BoxLevel& dst_mapped_box_level,
    const hier::Connector& dst_to_dst,
    const hier::Connector& dst_to_src,
    const hier::Connector& src_to_dst,
@@ -73,7 +73,7 @@ void PatchLevelEnhancedFillPattern::computeFillMappedBoxesAndNeighborhoodSets(
       dst_mapped_box_level.getGridGeometry());
 
    const hier::BoxSet& dst_mapped_boxes =
-      dst_mapped_box_level.getMappedBoxes();
+      dst_mapped_box_level.getBoxes();
 
    hier::LocalId last_id = dst_mapped_box_level.getLastLocalId();
    for (hier::RealBoxConstIterator ni(dst_mapped_boxes);

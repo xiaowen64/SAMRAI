@@ -12,13 +12,13 @@
 #include <iomanip>
 
 #include "SAMRAI/mesh/BergerRigoutsos.h"
-#include "SAMRAI/hier/MappedBoxLevel.h"
+#include "SAMRAI/hier/BoxLevel.h"
 #include "SAMRAI/hier/IntVector.h"
 #include "SAMRAI/geom/CartesianGridGeometry.h"
 #include "SAMRAI/pdat/CellData.h"
 #include "SAMRAI/pdat/CellVariable.h"
 #include "SAMRAI/hier/Connector.h"
-#include "SAMRAI/hier/MappedBoxLevelConnectorUtils.h"
+#include "SAMRAI/hier/BoxLevelConnectorUtils.h"
 #include "SAMRAI/hier/OverlapConnectorAlgorithm.h"
 #include "SAMRAI/hier/MappingConnectorAlgorithm.h"
 #include "SAMRAI/mesh/TreeLoadBalancer.h"
@@ -51,8 +51,8 @@ generatePrebalanceByUserBoxes(
    const tbox::Pointer<hier::PatchHierarchy>& hierarchy,
    const hier::IntVector& min_size,
    const hier::IntVector& connector_width,
-   hier::MappedBoxLevel& balance_mapped_box_level,
-   const hier::MappedBoxLevel& anchor_mapped_box_level,
+   hier::BoxLevel& balance_mapped_box_level,
+   const hier::BoxLevel& anchor_mapped_box_level,
    hier::Connector& anchor_to_balance,
    hier::Connector& balacne_to_anchor);
 
@@ -62,14 +62,14 @@ generatePrebalanceByUserShells(
    const tbox::Pointer<hier::PatchHierarchy>& hierarchy,
    const hier::IntVector& min_size,
    const hier::IntVector& connector_width,
-   hier::MappedBoxLevel& balance_mapped_box_level,
-   const hier::MappedBoxLevel& anchor_mapped_box_level,
+   hier::BoxLevel& balance_mapped_box_level,
+   const hier::BoxLevel& anchor_mapped_box_level,
    hier::Connector& anchor_to_balance,
    hier::Connector& balance_to_anchor);
 
 void
 sortNodes(
-   hier::MappedBoxLevel& new_mapped_box_level,
+   hier::BoxLevel& new_mapped_box_level,
    hier::Connector& tag_to_new,
    hier::Connector& new_to_tag,
    bool sort_by_corners,
@@ -235,14 +235,14 @@ int main(
 
       hierarchy->setMaxNumberOfLevels(2);
 
-      hier::MappedBoxLevel domain_mapped_box_level(
+      hier::BoxLevel domain_mapped_box_level(
          hier::IntVector(dim, 1),
          grid_geometry,
          tbox::SAMRAI_MPI::getSAMRAIWorld(),
-         hier::MappedBoxLevel::GLOBALIZED);
+         hier::BoxLevel::GLOBALIZED);
       hier::BoxList::Iterator domain_boxes_itr(domain_boxes);
       for (int i = 0; i < domain_boxes.size(); ++i, domain_boxes_itr++) {
-         domain_mapped_box_level.addMappedBox(hier::Box(*domain_boxes_itr,
+         domain_mapped_box_level.addBox(hier::Box(*domain_boxes_itr,
                hier::LocalId(i), 0));
       }
 
@@ -284,9 +284,9 @@ int main(
       /*
        * Set up data used by TreeLoadBalancer.
        */
-      hier::MappedBoxLevel
+      hier::BoxLevel
       anchor_mapped_box_level(hier::IntVector(dim, 1), grid_geometry);
-      hier::MappedBoxLevel balance_mapped_box_level(dim);
+      hier::BoxLevel balance_mapped_box_level(dim);
       hier::Connector balance_to_anchor;
       hier::Connector anchor_to_balance;
       hier::Connector balance_to_balance;
@@ -312,7 +312,7 @@ int main(
 
       {
          /*
-          * Load balance the anchor MappedBoxLevel, using the domain as its anchor.
+          * Load balance the anchor BoxLevel, using the domain as its anchor.
           *
           * This is not a part of the performance test because does not
           * reflect the load balancer use in real apps.  We just neeed a
@@ -334,7 +334,7 @@ int main(
             (double)anchor_mapped_box_level.getLocalNumberOfCells(),
             anchor_mapped_box_level.getMPI());
 
-         lb->loadBalanceMappedBoxLevel(
+         lb->loadBalanceBoxLevel(
             anchor_mapped_box_level,
             anchor_to_domain,
             domain_to_anchor,
@@ -405,12 +405,12 @@ int main(
             balance_mapped_box_level.getMPI());
 
          tbox::plog << "Anchor mapped_box_level node stats:\n";
-         anchor_mapped_box_level.printMappedBoxStats(tbox::plog, "AL-> ");
+         anchor_mapped_box_level.printBoxStats(tbox::plog, "AL-> ");
          tbox::plog << "Anchor mapped_box_level:\n";
          anchor_mapped_box_level.recursivePrint(tbox::plog, "AL-> ", 2);
 
          tbox::plog << "Balance mapped_box_level node stats:\n";
-         balance_mapped_box_level.printMappedBoxStats(tbox::plog, "BL-> ");
+         balance_mapped_box_level.printBoxStats(tbox::plog, "BL-> ");
          tbox::plog << "Balance mapped_box_level:\n";
          balance_mapped_box_level.recursivePrint(tbox::plog, "BL-> ", 2);
 
@@ -429,7 +429,7 @@ int main(
          /*
           * Load balance the unbalanced mapped_box_level.
           */
-         lb->loadBalanceMappedBoxLevel(
+         lb->loadBalanceBoxLevel(
             balance_mapped_box_level,
             balance_to_anchor,
             anchor_to_balance,
@@ -474,7 +474,7 @@ int main(
             balance_mapped_box_level.getMPI());
 
          tbox::plog << "Balance mapped_box_level node stats:\n";
-         balance_mapped_box_level.printMappedBoxStats(tbox::plog, "BL-> ");
+         balance_mapped_box_level.printBoxStats(tbox::plog, "BL-> ");
          tbox::plog << "Balance mapped_box_level:\n";
          balance_mapped_box_level.recursivePrint(tbox::plog, "BL-> ", 2);
 
@@ -499,7 +499,7 @@ int main(
             balance_mapped_box_level.getMPI(),
             tbox::plog);
          tbox::plog << "Balance mapped_box_level node stats:\n";
-         balance_mapped_box_level.printMappedBoxStats(tbox::plog, "BL-> ");
+         balance_mapped_box_level.printBoxStats(tbox::plog, "BL-> ");
          tbox::plog << "balance_to_balance edge stats:\n";
          balance_to_balance.printNeighborStats(tbox::plog, "BB-> ");
       }
@@ -567,8 +567,8 @@ void generatePrebalanceByUserShells(
    const tbox::Pointer<hier::PatchHierarchy>& hierarchy,
    const hier::IntVector& min_size,
    const hier::IntVector& connector_width,
-   hier::MappedBoxLevel& balance_mapped_box_level,
-   const hier::MappedBoxLevel& anchor_mapped_box_level,
+   hier::BoxLevel& balance_mapped_box_level,
+   const hier::BoxLevel& anchor_mapped_box_level,
    hier::Connector& anchor_to_balance,
    hier::Connector& balance_to_anchor)
 {
@@ -608,7 +608,7 @@ void generatePrebalanceByUserShells(
    tbox::Pointer<geom::CartesianGridGeometry> grid_geometry =
       hierarchy->getGridGeometry();
 
-   const tbox::ConstPointer<hier::MappedBoxLevel>
+   const tbox::ConstPointer<hier::BoxLevel>
    anchor_mapped_box_level_ptr(&anchor_mapped_box_level, false);
 
    tbox::Pointer<hier::PatchLevel> tag_level(
@@ -674,8 +674,8 @@ void generatePrebalanceByUserShells(
 
    /*
     * The clustering step generated Connectors to/from the temporary
-    * tag_level->getMappedBoxLevel(), which is not the same as the
-    * anchor MappedBoxLevel.  We need to reset the Connectors to use
+    * tag_level->getBoxLevel(), which is not the same as the
+    * anchor BoxLevel.  We need to reset the Connectors to use
     * the anchor_mapped_box_level instead.
     */
    anchor_to_balance.initialize(anchor_mapped_box_level,
@@ -697,8 +697,8 @@ void generatePrebalanceByUserBoxes(
    const tbox::Pointer<hier::PatchHierarchy>& hierarchy,
    const hier::IntVector& min_size,
    const hier::IntVector& connector_width,
-   hier::MappedBoxLevel& balance_mapped_box_level,
-   const hier::MappedBoxLevel& anchor_mapped_box_level,
+   hier::BoxLevel& balance_mapped_box_level,
+   const hier::BoxLevel& anchor_mapped_box_level,
    hier::Connector& anchor_to_balance,
    hier::Connector& balance_to_anchor)
 {
@@ -719,7 +719,7 @@ void generatePrebalanceByUserBoxes(
    for (int i = 0; i < balance_boxes.size(); ++i, balance_boxes_itr++) {
       const int owner = i % initial_owners.size();
       if (owner == balance_mapped_box_level.getRank()) {
-         balance_mapped_box_level.addMappedBox(hier::Box(*balance_boxes_itr,
+         balance_mapped_box_level.addBox(hier::Box(*balance_boxes_itr,
                hier::LocalId(i), owner));
       }
    }
@@ -743,7 +743,7 @@ void generatePrebalanceByUserBoxes(
  ***********************************************************************
  */
 void sortNodes(
-   hier::MappedBoxLevel& new_mapped_box_level,
+   hier::BoxLevel& new_mapped_box_level,
    hier::Connector& tag_to_new,
    hier::Connector& new_to_tag,
    bool sort_by_corners,
@@ -752,8 +752,8 @@ void sortNodes(
    const hier::MappingConnectorAlgorithm mca;
 
    hier::Connector sorting_map;
-   hier::MappedBoxLevel seq_mapped_box_level(new_mapped_box_level.getDim());
-   hier::MappedBoxLevelConnectorUtils dlbg_edge_utils;
+   hier::BoxLevel seq_mapped_box_level(new_mapped_box_level.getDim());
+   hier::BoxLevelConnectorUtils dlbg_edge_utils;
    dlbg_edge_utils.makeSortingMap(
       seq_mapped_box_level,
       sorting_map,

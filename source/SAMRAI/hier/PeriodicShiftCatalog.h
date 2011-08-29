@@ -24,7 +24,7 @@ namespace hier {
  * @brief Singleton for cataloging periodic shifts and assigning
  * each one a unique "shift number".
  *
- * In a periodic domain, a MappedBox location (or rather its images)
+ * In a periodic domain, a Box location (or rather its images)
  * can appear to be in many places.  We define the "shift distance" as
  * the IntVector distance in index space from the original grid
  * location to the image.

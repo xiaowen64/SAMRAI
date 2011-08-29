@@ -15,7 +15,7 @@
 
 #include "SAMRAI/tbox/DescribedClass.h"
 #include "SAMRAI/tbox/Dimension.h"
-#include "SAMRAI/hier/MappedBoxLevel.h"
+#include "SAMRAI/hier/BoxLevel.h"
 #include "SAMRAI/hier/PatchHierarchy.h"
 
 namespace SAMRAI {

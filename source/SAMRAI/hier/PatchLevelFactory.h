@@ -13,7 +13,7 @@
 
 #include "SAMRAI/SAMRAI_config.h"
 #include "SAMRAI/hier/GridGeometry.h"
-#include "SAMRAI/hier/MappedBoxLevel.h"
+#include "SAMRAI/hier/BoxLevel.h"
 #include "SAMRAI/hier/PatchDescriptor.h"
 #include "SAMRAI/hier/PatchFactory.h"
 #include "SAMRAI/hier/PatchLevel.h"
@@ -59,7 +59,7 @@ public:
     */
    virtual tbox::Pointer<PatchLevel>
    allocate(
-      const MappedBoxLevel& mapped_box_level,
+      const BoxLevel& mapped_box_level,
       const tbox::Pointer<GridGeometry> grid_geometry,
       const tbox::Pointer<PatchDescriptor> descriptor,
       tbox::Pointer<PatchFactory> factory =

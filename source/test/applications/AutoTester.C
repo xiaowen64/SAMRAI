@@ -229,7 +229,7 @@ int AutoTester::evalTestData(
                std::string("level_number_") + tbox::Utilities::levelToString(ln);
             tbox::Pointer<tbox::Database> level_db =
                step_db->getDatabase(level_name);
-            hier::MappedBoxLevel correct_mapped_box_level(d_dim);
+            hier::BoxLevel correct_mapped_box_level(d_dim);
             tbox::ConstPointer<hier::GridGeometry> grid_geometry(hierarchy->getGridGeometry());
             correct_mapped_box_level.getFromDatabase(*level_db,
                grid_geometry);
@@ -260,7 +260,7 @@ int AutoTester::evalTestData(
                std::string("level_number_") + tbox::Utilities::levelToString(ln);
             tbox::Pointer<tbox::Database> level_db =
                step_db->putDatabase(level_name);
-            level->getMappedBoxLevel()->putToDatabase(*level_db);
+            level->getBoxLevel()->putToDatabase(*level_db);
          }
 
          if (d_output_correct) {
@@ -398,7 +398,7 @@ int AutoTester::evalTestData(
                std::string("level_number_") + tbox::Utilities::levelToString(ln);
             tbox::Pointer<tbox::Database> level_db =
                step_db->getDatabase(level_name);
-            hier::MappedBoxLevel correct_mapped_box_level(d_dim);
+            hier::BoxLevel correct_mapped_box_level(d_dim);
             tbox::ConstPointer<hier::GridGeometry> grid_geometry(hierarchy->getGridGeometry());
             correct_mapped_box_level.getFromDatabase(*level_db,
                grid_geometry);
@@ -433,7 +433,7 @@ int AutoTester::evalTestData(
                std::string("level_number_") + tbox::Utilities::levelToString(ln);
             tbox::Pointer<tbox::Database> level_db =
                step_db->putDatabase(level_name);
-            level->getMappedBoxLevel()->putToDatabase(*level_db);
+            level->getBoxLevel()->putToDatabase(*level_db);
          }
 
       }
@@ -537,15 +537,15 @@ void AutoTester::getFromInput(
 int AutoTester::checkHierarchyBoxes(
    const tbox::Pointer<hier::PatchHierarchy> hierarchy,
    int level_number,
-   const hier::MappedBoxLevel& correct_mapped_box_level,
+   const hier::BoxLevel& correct_mapped_box_level,
    int iter)
 {
    const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
 
    const tbox::Pointer<hier::PatchLevel> patch_level =
       hierarchy->getPatchLevel(level_number);
-   const hier::MappedBoxLevel& mapped_box_level =
-      *patch_level->getMappedBoxLevel();
+   const hier::BoxLevel& mapped_box_level =
+      *patch_level->getBoxLevel();
 
    const int local_exact_match =
       mapped_box_level == correct_mapped_box_level;
@@ -556,7 +556,7 @@ int AutoTester::checkHierarchyBoxes(
    }
 
    /*
-    * Check to make sure hierarchy's MappedBoxLevel and
+    * Check to make sure hierarchy's BoxLevel and
     * correct_mapped_box_level are identical.  If not, write an error
     * message.
     */
@@ -565,11 +565,11 @@ int AutoTester::checkHierarchyBoxes(
 
    if (local_exact_match && global_exact_match) {
       tbox::plog << "Test 4: Level " << level_number
-                 << " MappedBoxLevel check successful for step " << iter
+                 << " BoxLevel check successful for step " << iter
                  << std::endl << std::endl;
    } else {
       tbox::perr << "Test 4: FAILED: Level " << level_number
-                 << " hier::MappedBoxLevel configuration doesn't match at step " << iter
+                 << " hier::BoxLevel configuration doesn't match at step " << iter
                  << std::endl << std::endl;
       num_failures++;
    }
@@ -588,9 +588,9 @@ int AutoTester::checkHierarchyBoxes(
          tbox::pout << "GLOBAL MAPPED BOX LEVEL DOES NOT MATCH "
                     << "ON LEVEL: " << level_number << std::endl;
       }
-      tbox::pout << "MappedBoxLevel: " << std::endl;
+      tbox::pout << "BoxLevel: " << std::endl;
       mapped_box_level.recursivePrint(tbox::pout, "", 3);
-      tbox::pout << "correct MappedBoxLevel: " << std::endl;
+      tbox::pout << "correct BoxLevel: " << std::endl;
       correct_mapped_box_level.recursivePrint(tbox::pout, "", 3);
 
       tbox::pout << "-------------------------------------------------------"

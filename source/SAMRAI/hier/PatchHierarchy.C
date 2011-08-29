@@ -408,7 +408,7 @@ IntVector PatchHierarchy::getRequiredConnectorWidth(
  *
  * This is primarily a convenience.  Its functionality can be duplicated
  * by getting the required Connector widths and getting the Connector
- * with that width from the PatchLevels' MappedBoxLevels.
+ * with that width from the PatchLevels' BoxLevels.
  *************************************************************************
  */
 const Connector& PatchHierarchy::getConnector(
@@ -419,8 +419,8 @@ const Connector& PatchHierarchy::getConnector(
    TBOX_ASSERT(base_ln < d_number_levels);
    TBOX_ASSERT(head_ln >= 0);
    TBOX_ASSERT(head_ln < d_number_levels);
-   const MappedBoxLevel& base(*d_patch_levels[base_ln]->getMappedBoxLevel());
-   const MappedBoxLevel& head(*d_patch_levels[head_ln]->getMappedBoxLevel());
+   const BoxLevel& base(*d_patch_levels[base_ln]->getBoxLevel());
+   const BoxLevel& head(*d_patch_levels[head_ln]->getBoxLevel());
    const IntVector width(getRequiredConnectorWidth(base_ln, head_ln));
    const Connector& con = base.getPersistentOverlapConnectors().
       findConnector(head, width);
@@ -569,7 +569,7 @@ PatchHierarchy::makeCoarsenedPatchHierarchy(
 
 void PatchHierarchy::makeNewPatchLevel(
    const int ln,
-   const MappedBoxLevel& new_mapped_box_level)
+   const BoxLevel& new_mapped_box_level)
 {
    TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(d_dim, new_mapped_box_level);
 #ifdef DEBUG_CHECK_ASSERTIONS
@@ -611,7 +611,7 @@ void PatchHierarchy::makeNewPatchLevel(
    d_patch_levels[ln] = d_patch_level_factory->allocate(
          new_mapped_box_level,
          d_grid_geometry, d_patch_descriptor, d_patch_factory);
-   d_patch_levels[ln]->getMappedBoxLevel()->cacheGlobalReducedData();
+   d_patch_levels[ln]->getBoxLevel()->cacheGlobalReducedData();
 
    d_patch_levels[ln]->setLevelNumber(ln);
    d_patch_levels[ln]->setNextCoarserHierarchyLevelNumber(ln - 1);
@@ -672,7 +672,7 @@ void PatchHierarchy::setupDomainData()
          IntVector::getOne(d_dim),
          getGridGeometry(),
          tbox::SAMRAI_MPI::getSAMRAIWorld(),
-         MappedBoxLevel::GLOBALIZED);
+         BoxLevel::GLOBALIZED);
    } else {
       BoxSet all_domain_mapped_boxes;
       for (int nb = 0; nb < d_number_blocks; nb++) {
@@ -684,7 +684,7 @@ void PatchHierarchy::setupDomainData()
          IntVector::getOne(d_dim),
          getGridGeometry(),
          tbox::SAMRAI_MPI::getSAMRAIWorld(),
-         MappedBoxLevel::GLOBALIZED);
+         BoxLevel::GLOBALIZED);
    }
 
    // Initialize the multiblock domain search tree.
@@ -998,9 +998,9 @@ void PatchHierarchy::getFromDatabase(
       for (int j = i - 1; j <= i + 1; ++j) {
          if (j >= 0 && j < d_number_levels) {
             const IntVector connector_width = getRequiredConnectorWidth(i, j);
-            d_patch_levels[i]->getMappedBoxLevel()->
+            d_patch_levels[i]->getBoxLevel()->
             getPersistentOverlapConnectors().findOrCreateConnector(
-               *d_patch_levels[j]->getMappedBoxLevel(),
+               *d_patch_levels[j]->getBoxLevel(),
                connector_width);
          }
       }
@@ -1025,7 +1025,7 @@ int PatchHierarchy::recursivePrint(
          tbox::Pointer<PatchLevel> level = getPatchLevel(ln);
          level->recursivePrint(os, border + "\t", depth - 1);
          totl_npatches += level->getGlobalNumberOfPatches();
-         totl_ncells += level->getMappedBoxLevel()->getGlobalNumberOfCells();
+         totl_ncells += level->getBoxLevel()->getGlobalNumberOfCells();
       }
       os << border << "Total number of patches = " << totl_npatches << "\n";
       os << border << "Total number of cells = " << totl_ncells << "\n";

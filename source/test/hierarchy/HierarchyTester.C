@@ -388,18 +388,18 @@ int HierarchyTester::runHierarchyTestAndVerify()
          init_connector_width = test_connector_width * d_ratio;
       }
       const Connector& init_connector =
-         init_level->getMappedBoxLevel()->getPersistentOverlapConnectors().findOrCreateConnector(
-            d_initial_patch_hierarchy->getDomainMappedBoxLevel(),
+         init_level->getBoxLevel()->getPersistentOverlapConnectors().findOrCreateConnector(
+            d_initial_patch_hierarchy->getDomainBoxLevel(),
             init_connector_width,
             true /* exact width only */);
       const Connector& test_connector =
-         test_level->getMappedBoxLevel()->getPersistentOverlapConnectors().findConnector(
-            d_test_patch_hierarchy->getDomainMappedBoxLevel(),
+         test_level->getBoxLevel()->getPersistentOverlapConnectors().findConnector(
+            d_test_patch_hierarchy->getDomainBoxLevel(),
             test_connector_width,
             true /* exact width only */);
 
       for (hier::PatchLevel::Iterator ip(test_level); ip; ip++) {
-         const BoxId& mapped_box_id = ip->getMappedBox().getId();
+         const BoxId& mapped_box_id = ip->getBox().getId();
          // Test #9:
          if (d_do_refine_test) {
             if (!Box::refine(init_level->getBoxForPatch(mapped_box_id),
@@ -468,7 +468,7 @@ int HierarchyTester::runHierarchyTestAndVerify()
        **************************************************************
        */
       for (PatchLevel::Iterator tip(test_level); tip; tip++) {
-         const BoxId& mapped_box_id = tip->getMappedBox().getId();
+         const BoxId& mapped_box_id = tip->getBox().getId();
          Pointer<Patch> test_patch = test_level->getPatch(mapped_box_id);
          Pointer<Patch> init_patch = init_level->getPatch(mapped_box_id);
 

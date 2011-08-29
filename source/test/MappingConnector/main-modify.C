@@ -12,7 +12,7 @@
 #include "SAMRAI/hier/Connector.h"
 #include "SAMRAI/hier/GridGeometry.h"
 #include "SAMRAI/hier/Box.h"
-#include "SAMRAI/hier/MappedBoxLevel.h"
+#include "SAMRAI/hier/BoxLevel.h"
 #include "SAMRAI/hier/MappingConnectorAlgorithm.h"
 #include "SAMRAI/hier/OverlapConnectorAlgorithm.h"
 #include "SAMRAI/hier/TransferOperatorRegistry.h"
@@ -31,7 +31,7 @@ using namespace SAMRAI;
 using namespace tbox;
 
 /*
- * Break up boxes in the given MappedBoxLevel.  This method is meant
+ * Break up boxes in the given BoxLevel.  This method is meant
  * to create a bunch of small boxes from the user-input boxes in order
  * to set up a non-trivial mesh configuration.
  *
@@ -43,16 +43,16 @@ using namespace tbox;
  */
 void
 breakUpBoxes(
-   hier::MappedBoxLevel& mapped_box_level,
-   const hier::MappedBoxLevel& domain_mapped_box_level,
+   hier::BoxLevel& mapped_box_level,
+   const hier::BoxLevel& domain_mapped_box_level,
    const tbox::Pointer<tbox::Database>& database);
 
 void
 alterAndGenerateMapping(
-   hier::MappedBoxLevel& mapped_box_level_c,
+   hier::BoxLevel& mapped_box_level_c,
    hier::Connector& b_to_c,
    hier::Connector& c_to_b,
-   const hier::MappedBoxLevel& mapped_box_level_b,
+   const hier::BoxLevel& mapped_box_level_b,
    const tbox::Pointer<tbox::Database>& database);
 
 /*
@@ -62,14 +62,14 @@ alterAndGenerateMapping(
  *
  * 1. Read in user-specified GridGeometry.
  *
- * 2. Build a domain MappedBoxLevel from GridGeometry.
+ * 2. Build a domain BoxLevel from GridGeometry.
  *
- * 3. Build MappedBoxLevel A by refining and partitioning domain.
+ * 3. Build BoxLevel A by refining and partitioning domain.
  *
- * 4. Build MappedBoxLevel B by refining and partitioning domain.
+ * 4. Build BoxLevel B by refining and partitioning domain.
  *    Compute overlap Connectors A<==>B.
  *
- * 5. Build MappedBoxLevel C by changing B based on some simple formula.
+ * 5. Build BoxLevel C by changing B based on some simple formula.
  *    Generate mapping Connectors B<==>C.
  *
  * 6. Apply mapping B<==>C to update A<==>B.
@@ -179,29 +179,29 @@ int main(
          multiblock_boxes,
          hier::IntVector::getOne(dim));
 
-      hier::MappedBoxLevel domain_mapped_box_level(
+      hier::BoxLevel domain_mapped_box_level(
          multiblock_boxes,
          one_vector,
          grid_geometry,
          tbox::SAMRAI_MPI::getSAMRAIWorld(),
-         hier::MappedBoxLevel::GLOBALIZED);
+         hier::BoxLevel::GLOBALIZED);
 
       /*
-       * Generate MappedBoxLevel A from the multiblock domain description
-       * using input database MappedBoxLevelA.
+       * Generate BoxLevel A from the multiblock domain description
+       * using input database BoxLevelA.
        */
-      hier::MappedBoxLevel mapped_box_level_a(domain_mapped_box_level);
-      Pointer<Database> a_db = main_db->getDatabase("MappedBoxLevelA");
+      hier::BoxLevel mapped_box_level_a(domain_mapped_box_level);
+      Pointer<Database> a_db = main_db->getDatabase("BoxLevelA");
       breakUpBoxes(mapped_box_level_a, domain_mapped_box_level, a_db);
       mapped_box_level_a.cacheGlobalReducedData();
       // tbox::pout << "mapped box level a:\n" << mapped_box_level_a.format("A: ",2) << std::endl;
 
       /*
-       * Generate MappedBoxLevel B from the multiblock domain description
-       * using input database MappedBoxLevelB.
+       * Generate BoxLevel B from the multiblock domain description
+       * using input database BoxLevelB.
        */
-      hier::MappedBoxLevel mapped_box_level_b(domain_mapped_box_level);
-      Pointer<Database> b_db = main_db->getDatabase("MappedBoxLevelB");
+      hier::BoxLevel mapped_box_level_b(domain_mapped_box_level);
+      Pointer<Database> b_db = main_db->getDatabase("BoxLevelB");
       breakUpBoxes(mapped_box_level_b, domain_mapped_box_level, b_db);
       mapped_box_level_b.cacheGlobalReducedData();
       // tbox::pout << "mapped box level b:\n" << mapped_box_level_b.format("B: ",2) << std::endl;
@@ -243,11 +243,11 @@ int main(
       oca.checkOverlapCorrectness(b_to_a);
 
       /*
-       * Generate MappedBoxLevel C by altering B based on a simple formula.
+       * Generate BoxLevel C by altering B based on a simple formula.
        * Generate the mapping Connectors B<==>C.
        */
 
-      hier::MappedBoxLevel mapped_box_level_c(dim);
+      hier::BoxLevel mapped_box_level_c(dim);
       hier::Connector b_to_c, c_to_b;
       Pointer<Database> alteration_db = main_db->getDatabase("Alteration");
 
@@ -332,7 +332,7 @@ int main(
 }
 
 /*
- * Break up boxes in the given MappedBoxLevel.  This method is meant
+ * Break up boxes in the given BoxLevel.  This method is meant
  * to create a bunch of small boxes from the user-input boxes in order
  * to set up a non-trivial mesh configuration.
  *
@@ -340,8 +340,8 @@ int main(
  * 2. Partition according to min and max box sizes in the database.
  */
 void breakUpBoxes(
-   hier::MappedBoxLevel& mapped_box_level,
-   const hier::MappedBoxLevel& domain_mapped_box_level,
+   hier::BoxLevel& mapped_box_level,
+   const hier::BoxLevel& domain_mapped_box_level,
    const tbox::Pointer<tbox::Database>& database) {
 
    const tbox::Dimension& dim(mapped_box_level.getDim());
@@ -352,7 +352,7 @@ void breakUpBoxes(
    }
 
    if (refinement_ratio != hier::IntVector::getOne(dim)) {
-      const hier::BoxSet& mapped_boxes(mapped_box_level.getMappedBoxes());
+      const hier::BoxSet& mapped_boxes(mapped_box_level.getBoxes());
       hier::BoxSet refined_mapped_boxes;
       for (hier::BoxSet::const_iterator bi = mapped_boxes.begin();
            bi != mapped_boxes.end(); ++bi) {
@@ -387,7 +387,7 @@ void breakUpBoxes(
    const hier::IntVector bad_interval(dim, 1);
    const hier::IntVector cut_factor(dim, 1);
 
-   load_balancer.loadBalanceMappedBoxLevel(
+   load_balancer.loadBalanceBoxLevel(
       mapped_box_level,
       dummy_connector,
       dummy_connector,
@@ -403,14 +403,14 @@ void breakUpBoxes(
 }
 
 /*
- * Generate MappedBoxLevel C by altering B based on a simple formula.
+ * Generate BoxLevel C by altering B based on a simple formula.
  * Generate the mapping Connectors B<==>C.
  */
 void alterAndGenerateMapping(
-   hier::MappedBoxLevel& mapped_box_level_c,
+   hier::BoxLevel& mapped_box_level_c,
    hier::Connector& b_to_c,
    hier::Connector& c_to_b,
-   const hier::MappedBoxLevel& mapped_box_level_b,
+   const hier::BoxLevel& mapped_box_level_b,
    const tbox::Pointer<tbox::Database>& database)
 {
    const tbox::Dimension dim(mapped_box_level_b.getDim());
@@ -422,7 +422,7 @@ void alterAndGenerateMapping(
    const int local_id_increment =
       database->getIntegerWithDefault("local_id_increment", 0);
 
-   const hier::BoxSet mapped_boxes_b(mapped_box_level_b.getMappedBoxes());
+   const hier::BoxSet mapped_boxes_b(mapped_box_level_b.getBoxes());
    hier::BoxSet mapped_boxes_c;
    hier::NeighborhoodSet b_eto_c;
    hier::NeighborhoodSet c_eto_b;

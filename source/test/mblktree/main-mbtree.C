@@ -12,7 +12,7 @@
 #include "SAMRAI/hier/Connector.h"
 #include "SAMRAI/hier/GridGeometry.h"
 #include "SAMRAI/hier/Box.h"
-#include "SAMRAI/hier/MappedBoxLevel.h"
+#include "SAMRAI/hier/BoxLevel.h"
 #include "SAMRAI/hier/MultiblockBoxTree.h"
 #include "SAMRAI/hier/TransferOperatorRegistry.h"
 #include "SAMRAI/mesh/TreeLoadBalancer.h"
@@ -31,23 +31,23 @@ using namespace SAMRAI;
 using namespace tbox;
 
 /*
- * Break up boxes in the given MappedBoxLevel.  This method is meant
+ * Break up boxes in the given BoxLevel.  This method is meant
  * to create a bunch of small boxes from the user-input boxes in order
  * to set up a non-trivial mesh configuration.
  */
 void
 breakUpBoxes(
-   hier::MappedBoxLevel& mapped_box_level,
+   hier::BoxLevel& mapped_box_level,
    const hier::IntVector& max_box_size);
 
 /*
- * Find overlapping MappedBoxes using an exhaustive search.
+ * Find overlapping Boxes using an exhaustive search.
  *
  * Intended as an alternate way of finding overlaps, for verifying
  * results from tree search.
  */
 void
-exhaustiveFindOverlapMappedBoxes(
+exhaustiveFindOverlapBoxes(
    hier::BoxSet& overlap_mapped_boxes,
    const hier::Box& mapped_box,
    const hier::IntVector& refinement_ratio,
@@ -60,9 +60,9 @@ exhaustiveFindOverlapMappedBoxes(
  * This is accuracy test for the multiblock tree search algorithm
  * in MultiblockBoxTree:
  *
- * 1. Generate a set of MappedBoxes.
+ * 1. Generate a set of Boxes.
  *
- * 2. Sort the MappedBoxes into trees using MultiblockBoxTree.
+ * 2. Sort the Boxes into trees using MultiblockBoxTree.
  *
  * 3. Search for overlaps.
  *
@@ -205,7 +205,7 @@ int main(
          multiblock_boxes,
          hier::IntVector::getOne(dim));
 
-      hier::MappedBoxLevel mapped_box_level(
+      hier::BoxLevel mapped_box_level(
          multiblock_boxes,
          one_vector,
          grid_geometry,
@@ -221,26 +221,26 @@ int main(
       breakUpBoxes(mapped_box_level, max_box_size);
 
       /*
-       * Write the baseline MappedBoxLevel or check to ensure it is
+       * Write the baseline BoxLevel or check to ensure it is
        * the same as the one in the baseline database.  The regression
-       * test is invalid of we don't have the same MappedBoxLevel.
+       * test is invalid of we don't have the same BoxLevel.
        */
       if (generate_baseline) {
-         tbox::pout << "\nMappedBoxLevel for review:\n"
+         tbox::pout << "\nBoxLevel for review:\n"
                     << mapped_box_level.format("REVIEW: ", 2)
                     << std::endl;
          mapped_box_level.putToDatabase(*mapped_box_level_db);
       } else {
          /*
-          * Get the baselined MappedBoxLevel and compare.
+          * Get the baselined BoxLevel and compare.
           */
-         hier::MappedBoxLevel baseline_mapped_box_level(dim);
+         hier::BoxLevel baseline_mapped_box_level(dim);
          baseline_mapped_box_level.getFromDatabase(
             *mapped_box_level_db,
             grid_geometry);
          if (mapped_box_level != baseline_mapped_box_level) {
             tbox::perr << "MultiblockBoxTree test problem:\n"
-                       << "the MappedBoxLevel generated is different\n"
+                       << "the BoxLevel generated is different\n"
                        << "from the one in the database.  Thus the check\n"
                        << "cannot be done.\n";
             ++fail_count;
@@ -256,7 +256,7 @@ int main(
 
       hier::MultiblockBoxTree multiblock_mapped_box_tree(
          grid_geometry,
-         mapped_box_level.getMappedBoxes());
+         mapped_box_level.getBoxes());
 
       /*
        * Find overlaps.
@@ -270,8 +270,8 @@ int main(
 
       const hier::IntVector& refinement_ratio(one_vector);
 
-      for (hier::BoxSet::iterator bi = mapped_box_level.getMappedBoxes().begin();
-           bi != mapped_box_level.getMappedBoxes().end(); ++bi) {
+      for (hier::BoxSet::iterator bi = mapped_box_level.getBoxes().begin();
+           bi != mapped_box_level.getBoxes().end(); ++bi) {
 
          const hier::Box& mapped_box(*bi);
 
@@ -305,8 +305,8 @@ int main(
           * exhaustive search method first.
           */
          hier::NeighborhoodSet neighborhood_set_from_exhaustive_search;
-         for (hier::BoxSet::iterator bi = mapped_box_level.getMappedBoxes().begin();
-              bi != mapped_box_level.getMappedBoxes().end(); ++bi) {
+         for (hier::BoxSet::iterator bi = mapped_box_level.getBoxes().begin();
+              bi != mapped_box_level.getBoxes().end(); ++bi) {
 
             const hier::Box& mapped_box(*bi);
 
@@ -315,12 +315,12 @@ int main(
             hier::Box grown_mapped_box(mapped_box);
             grown_mapped_box.grow(connector_width);
 
-            exhaustiveFindOverlapMappedBoxes(
+            exhaustiveFindOverlapBoxes(
                neighbors,
                grown_mapped_box,
                refinement_ratio,
                grid_geometry,
-               mapped_box_level.getMappedBoxes());
+               mapped_box_level.getBoxes());
             // tbox::pout << "overlaps for " << mapped_box << ":\n" << neighbors.format() << std::endl;
 
          }
@@ -438,18 +438,18 @@ int main(
 }
 
 /*
- * Break up boxes in the given MappedBoxLevel.  This method is meant
+ * Break up boxes in the given BoxLevel.  This method is meant
  * to create a bunch of small boxes from the user-input boxes in order
  * to set up a non-trivial mesh configuration.
  */
 void breakUpBoxes(
-   hier::MappedBoxLevel& mapped_box_level,
+   hier::BoxLevel& mapped_box_level,
    const hier::IntVector& max_box_size) {
 
    const tbox::Dimension& dim(mapped_box_level.getDim());
 
-   hier::MappedBoxLevel domain_mapped_box_level(mapped_box_level);
-   domain_mapped_box_level.setParallelState(hier::MappedBoxLevel::GLOBALIZED);
+   hier::BoxLevel domain_mapped_box_level(mapped_box_level);
+   domain_mapped_box_level.setParallelState(hier::BoxLevel::GLOBALIZED);
 
    mesh::TreeLoadBalancer load_balancer(mapped_box_level.getDim());
 
@@ -461,7 +461,7 @@ void breakUpBoxes(
    const hier::IntVector bad_interval(dim, 1);
    const hier::IntVector cut_factor(dim, 1);
 
-   load_balancer.loadBalanceMappedBoxLevel(
+   load_balancer.loadBalanceBoxLevel(
       mapped_box_level,
       dummy_connector,
       dummy_connector,
@@ -477,12 +477,12 @@ void breakUpBoxes(
 }
 
 /*
- * Find overlapping MappedBoxes using an exhaustive search.
+ * Find overlapping Boxes using an exhaustive search.
  *
  * Intended as an alternate way of finding overlaps, for verifying
  * results from tree search.
  */
-void exhaustiveFindOverlapMappedBoxes(
+void exhaustiveFindOverlapBoxes(
    hier::BoxSet& overlap_mapped_boxes,
    const hier::Box& mapped_box,
    const hier::IntVector& refinement_ratio,

@@ -46,9 +46,9 @@ PatchLevelFullFillPattern::PatchLevelFullFillPattern():
 
 /*
  *************************************************************************
- *									*
+ *                                                                       *
  * Destructor                                                            *
- *									*
+ *                                                                       *
  *************************************************************************
  */
 
@@ -59,15 +59,15 @@ PatchLevelFullFillPattern::~PatchLevelFullFillPattern()
 /*
  *************************************************************************
  *                                                                       *
- * computeFillMappedBoxesAndNeighborhoodSets                                        *
+ * computeFillBoxesAndNeighborhoodSets                                   *
  *                                                                       *
  *************************************************************************
  */
 
-void PatchLevelFullFillPattern::computeFillMappedBoxesAndNeighborhoodSets(
+void PatchLevelFullFillPattern::computeFillBoxesAndNeighborhoodSets(
    hier::BoxSet& fill_mapped_boxes,
    hier::NeighborhoodSet& dst_to_fill_edges,
-   const hier::MappedBoxLevel& dst_mapped_box_level,
+   const hier::BoxLevel& dst_mapped_box_level,
    const hier::Connector& dst_to_dst,
    const hier::Connector& dst_to_src,
    const hier::Connector& src_to_dst,
@@ -79,7 +79,7 @@ void PatchLevelFullFillPattern::computeFillMappedBoxesAndNeighborhoodSets(
    TBOX_DIM_ASSERT_CHECK_ARGS2(dst_mapped_box_level, fill_ghost_width);
 
    const hier::BoxSet& dst_mapped_boxes =
-      dst_mapped_box_level.getMappedBoxes();
+      dst_mapped_box_level.getBoxes();
 
    for (hier::RealBoxConstIterator ni(dst_mapped_boxes);
         ni.isValid(); ++ni) {
@@ -102,7 +102,7 @@ void PatchLevelFullFillPattern::computeFillMappedBoxesAndNeighborhoodSets(
 
 void PatchLevelFullFillPattern::computeDestinationFillBoxesOnSourceProc(
    FillSet& dst_fill_boxes_on_src_proc,
-   const hier::MappedBoxLevel& dst_mapped_box_level,
+   const hier::BoxLevel& dst_mapped_box_level,
    const hier::Connector& src_to_dst,
    const hier::IntVector& fill_ghost_width)
 {
@@ -119,7 +119,7 @@ void PatchLevelFullFillPattern::computeDestinationFillBoxesOnSourceProc(
     */
    NeighborSet tmp_nabrs, all_dst_nabrs;
    src_to_dst.getNeighborhoodSets().getNeighbors(tmp_nabrs);
-   tmp_nabrs.unshiftPeriodicImageMappedBoxes(
+   tmp_nabrs.unshiftPeriodicImageBoxes(
       all_dst_nabrs,
       dst_mapped_box_level.getRefinementRatio());
    tmp_nabrs.clear();

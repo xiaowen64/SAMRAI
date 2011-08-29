@@ -4,14 +4,14 @@
  * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Registry of MappedBoxLevelHandles incident from a common MappedBoxLevel.
+ * Description:   Registry of BoxLevelHandles incident from a common BoxLevel.
  *
  ************************************************************************/
-#ifndef included_hier_MappedBoxLevelHandle_C
-#define included_hier_MappedBoxLevelHandle_C
+#ifndef included_hier_BoxLevelHandle_C
+#define included_hier_BoxLevelHandle_C
 
-#include "SAMRAI/hier/MappedBoxLevelHandle.h"
-#include "SAMRAI/hier/MappedBoxLevel.h"
+#include "SAMRAI/hier/BoxLevelHandle.h"
+#include "SAMRAI/hier/BoxLevel.h"
 
 namespace SAMRAI {
 namespace hier {
@@ -20,8 +20,8 @@ namespace hier {
  ************************************************************************
  ************************************************************************
  */
-MappedBoxLevelHandle::MappedBoxLevelHandle(
-   const MappedBoxLevel* mapped_box_level):
+BoxLevelHandle::BoxLevelHandle(
+   const BoxLevel* mapped_box_level):
    d_mapped_box_level(mapped_box_level)
 {
 }
@@ -30,16 +30,16 @@ MappedBoxLevelHandle::MappedBoxLevelHandle(
  ************************************************************************
  ************************************************************************
  */
-MappedBoxLevelHandle::~MappedBoxLevelHandle()
+BoxLevelHandle::~BoxLevelHandle()
 {
-   detachMyMappedBoxLevel();
+   detachMyBoxLevel();
 }
 
 /*
  ************************************************************************
  ************************************************************************
  */
-bool MappedBoxLevelHandle::isAttached() const
+bool BoxLevelHandle::isAttached() const
 {
    return d_mapped_box_level != NULL;
 }
@@ -48,20 +48,20 @@ bool MappedBoxLevelHandle::isAttached() const
  ************************************************************************
  ************************************************************************
  */
-const MappedBoxLevel& MappedBoxLevelHandle::getMappedBoxLevel() const
+const BoxLevel& BoxLevelHandle::getBoxLevel() const
 {
    if (d_mapped_box_level == NULL) {
       TBOX_ERROR(
-         "MappedBoxLevelHandle::getMappedBoxLevel Attempted to access a MappedBoxLevel\n"
+         "BoxLevelHandle::getBoxLevel Attempted to access a BoxLevel\n"
          << "that has been detached from its handle.  Detachment happens\n"
-         << "when the MappedBoxLevel changes in a way that can invalidate\n"
+         << "when the BoxLevel changes in a way that can invalidate\n"
          << "Connector data.  Therefore, Connectors should not attempt\n"
-         << "to access the MappedBoxLevel using a detatched handle.");
+         << "to access the BoxLevel using a detatched handle.");
    }
 #ifdef DEBUG_CHECK_ASSERTIONS
-   // Sanity check: the MappedBoxLevel's handle should be this handle.
-   if (d_mapped_box_level->getMappedBoxLevelHandle().getPointer() != this) {
-      TBOX_ERROR("Library error in MappedBoxLevelHandle::getMappedBoxLevel");
+   // Sanity check: the BoxLevel's handle should be this handle.
+   if (d_mapped_box_level->getBoxLevelHandle().getPointer() != this) {
+      TBOX_ERROR("Library error in BoxLevelHandle::getBoxLevel");
    }
 #endif
    return *d_mapped_box_level;
@@ -69,12 +69,12 @@ const MappedBoxLevel& MappedBoxLevelHandle::getMappedBoxLevel() const
 
 /*
  ************************************************************************
- * To be called by the object's MappedBoxLevel when the
- * MappedBoxLevel changes in a way that can invalidate the
+ * To be called by the object's BoxLevel when the
+ * BoxLevel changes in a way that can invalidate the
  * Connector data.
  ************************************************************************
  */
-void MappedBoxLevelHandle::detachMyMappedBoxLevel()
+void BoxLevelHandle::detachMyBoxLevel()
 {
    d_mapped_box_level = NULL;
 }

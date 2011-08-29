@@ -681,7 +681,7 @@ void CommTester::setupHierarchy(
     */
    for (int ln = 0; ln < d_patch_hierarchy->getNumberOfLevels(); ++ln) {
       tbox::Pointer<hier::PatchLevel> level(d_patch_hierarchy->getPatchLevel(ln));
-      level->getMappedBoxLevel()->getPersistentOverlapConnectors().clear();
+      level->getBoxLevel()->getPersistentOverlapConnectors().clear();
    }
 
    if (0) {

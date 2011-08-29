@@ -12,8 +12,8 @@
 #include "SAMRAI/hier/Connector.h"
 #include "SAMRAI/hier/GridGeometry.h"
 #include "SAMRAI/hier/Box.h"
-#include "SAMRAI/hier/MappedBoxLevel.h"
-#include "SAMRAI/hier/MappedBoxLevelConnectorUtils.h"
+#include "SAMRAI/hier/BoxLevel.h"
+#include "SAMRAI/hier/BoxLevelConnectorUtils.h"
 #include "SAMRAI/hier/BoxSetSingleBlockIterator.h"
 #include "SAMRAI/hier/MultiblockBoxTree.h"
 #include "SAMRAI/hier/TransferOperatorRegistry.h"
@@ -32,33 +32,33 @@ using namespace SAMRAI;
 using namespace tbox;
 
 /*
- * Partition boxes in the given MappedBoxLevel.  This method is meant
+ * Partition boxes in the given BoxLevel.  This method is meant
  * to partition and also to create a bunch of small boxes from the
  * user-input boxes in order to set up a non-trivial mesh
  * configuration.
  */
 void
 partitionBoxes(
-   hier::MappedBoxLevel& mapped_box_level,
+   hier::BoxLevel& mapped_box_level,
    const hier::IntVector& max_box_size,
    const hier::IntVector& min_box_size);
 
 /*
- * Shrink a MappedBoxLevel by the given amount.
+ * Shrink a BoxLevel by the given amount.
  */
 void
-shrinkMappedBoxLevel(
-   hier::MappedBoxLevel& small_mapped_box_level,
-   const hier::MappedBoxLevel& big_mapped_box_level,
+shrinkBoxLevel(
+   hier::BoxLevel& small_mapped_box_level,
+   const hier::BoxLevel& big_mapped_box_level,
    const hier::IntVector& shrinkage,
    const tbox::Array<int>& unshrunken_blocks);
 
 /*
- * Refine a MappedBoxLevel by the given ratio.
+ * Refine a BoxLevel by the given ratio.
  */
 void
-refineMappedBoxLevel(
-   hier::MappedBoxLevel& mapped_box_level,
+refineBoxLevel(
+   hier::BoxLevel& mapped_box_level,
    const hier::IntVector& ratio);
 
 /*
@@ -67,18 +67,18 @@ refineMappedBoxLevel(
  * This is an correctness test for the
  * computeExternalPartsForMultiblock and
  * computeExternalPartsForMultiblock method in
- * MappedBoxLevelConnectorUtils.
+ * BoxLevelConnectorUtils.
  *
  * 1. Set up GridGeometry.
  *
- * 2. Build a big MappedBoxLevel.
+ * 2. Build a big BoxLevel.
  *
- * 3. Build a small MappedBoxLevel by shrinking the big one slightly.
+ * 3. Build a small BoxLevel by shrinking the big one slightly.
  *
- * 4. Partition the two MappedBoxLevels.
+ * 4. Partition the two BoxLevels.
  *
  * 5. Check the internal and external parts the big and small
- *    MappedBoxLevels with respect to each other.
+ *    BoxLevels with respect to each other.
  *
  * Inputs:
  *
@@ -98,17 +98,17 @@ refineMappedBoxLevel(
  *      max_box_size = 7, 7
  *      min_box_size = 2, 2
  *
- *      // Index space to exclude from the big MappedBoxLevel.
+ *      // Index space to exclude from the big BoxLevel.
  *      exclude2 = [(0,0,4), (19,19,7)]
  *
- *      // Blocks not to be shrunken when generating small MappedBoxLevel
+ *      // Blocks not to be shrunken when generating small BoxLevel
  *      // This allows some small blocks to touch the domain boundary.
  *      unshrunken_boxes = 1, 3
  *
- *      // Refinement ratio of big MappedBoxLevel.
+ *      // Refinement ratio of big BoxLevel.
  *      big_refinement_ratio = 2, 2
  *
- *      // Refinement ratio of small MappedBoxLevel.
+ *      // Refinement ratio of small BoxLevel.
  *      small_refinement_ratio = 6, 6
  *   }
  */
@@ -192,13 +192,13 @@ int main(
                tbox::Pointer<hier::TransferOperatorRegistry>(),
                input_db->getDatabase("GridGeometry"));
       } else {
-         TBOX_ERROR("MappedBoxLevelConnectorUtils test: could not find entry GridGeometry"
+         TBOX_ERROR("BoxLevelConnectorUtils test: could not find entry GridGeometry"
             << "\nin input.");
       }
       grid_geometry->printClassData(tbox::plog);
 
       /*
-       * Empty blocks are blocks not to have any MappedBoxes.
+       * Empty blocks are blocks not to have any Boxes.
        */
       tbox::Array<int> empty_blocks;
       if (main_db->isInteger("empty_blocks")) {
@@ -206,8 +206,8 @@ int main(
       }
 
       /*
-       * Unshrunken blocks are blocks in which the small MappedBoxLevel
-       * has the same index space as the big MappedBoxLevel.
+       * Unshrunken blocks are blocks in which the small BoxLevel
+       * has the same index space as the big BoxLevel.
        */
       tbox::Array<int> unshrunken_blocks;
       if (main_db->isInteger("unshrunken_blocks")) {
@@ -221,11 +221,11 @@ int main(
       const hier::IntVector& zero_vector(hier::IntVector::getZero(dim));
 
       /*
-       * How much to shrink the big MappedBoxLevel to get the small one.
+       * How much to shrink the big BoxLevel to get the small one.
        */
       const hier::IntVector shrinkage(dim, 1);
 
-      hier::MappedBoxLevelConnectorUtils mblcu;
+      hier::BoxLevelConnectorUtils mblcu;
 
       /*
        * Set up the domain.
@@ -292,32 +292,32 @@ int main(
          }
 
       }
-      hier::MappedBoxLevel big_mapped_box_level(
+      hier::BoxLevel big_mapped_box_level(
          big_mapped_boxes,
          one_vector,
          grid_geometry,
          tbox::SAMRAI_MPI::getSAMRAIWorld());
 
       const hier::BoxSet& big_mapped_box_set(
-         big_mapped_box_level.getMappedBoxes());
+         big_mapped_box_level.getBoxes());
 
       /*
-       * Generate the "small" MappedBoxLevel by shrinking the big one
+       * Generate the "small" BoxLevel by shrinking the big one
        * back at its boundary.
        */
-      hier::MappedBoxLevel small_mapped_box_level(dim);
-      shrinkMappedBoxLevel(small_mapped_box_level,
+      hier::BoxLevel small_mapped_box_level(dim);
+      shrinkBoxLevel(small_mapped_box_level,
          big_mapped_box_level,
          shrinkage,
          unshrunken_blocks);
 
       /*
-       * Refine MappedBoxlevels as user specified.
+       * Refine Boxlevels as user specified.
        */
       if (main_db->isInteger("big_refinement_ratio")) {
          hier::IntVector big_refinement_ratio(dim);
          main_db->getIntegerArray("big_refinement_ratio", &big_refinement_ratio[0], dim.getValue());
-         refineMappedBoxLevel(big_mapped_box_level,
+         refineBoxLevel(big_mapped_box_level,
             big_refinement_ratio);
       }
 
@@ -326,12 +326,12 @@ int main(
          main_db->getIntegerArray("small_refinement_ratio",
             &small_refinement_ratio[0],
             dim.getValue());
-         refineMappedBoxLevel(small_mapped_box_level,
+         refineBoxLevel(small_mapped_box_level,
             small_refinement_ratio);
       }
 
       /*
-       * Partition the big and small MappedBoxLevels.
+       * Partition the big and small BoxLevels.
        *
        * Limit box sizes to make the configuration more complex than
        * the domain description.  Default is not to limit box size.
@@ -358,14 +358,14 @@ int main(
                  << '\n'
       ;
 
-      const hier::BoxSet& small_mapped_box_set(small_mapped_box_level.getMappedBoxes());
+      const hier::BoxSet& small_mapped_box_set(small_mapped_box_level.getBoxes());
 
       const hier::MultiblockBoxTree small_box_tree(grid_geometry,
                                                    small_mapped_box_level.getGlobalizedVersion().
-                                                   getGlobalMappedBoxes());
+                                                   getGlobalBoxes());
 
       /*
-       * Connectors between big and small MappedBoxLevels.
+       * Connectors between big and small BoxLevels.
        */
 
       const hier::Connector& small_to_big(
@@ -411,7 +411,7 @@ int main(
           * nothing.  Thus small_to_nothing should map
           * small_mapped_box_level to nothing.
           */
-         hier::MappedBoxLevel everything(dim), nothing(dim);
+         hier::BoxLevel everything(dim), nothing(dim);
          hier::Connector small_to_everything, small_to_nothing;
          mblcu.computeExternalPartsForMultiblock(
             nothing,
@@ -495,14 +495,14 @@ int main(
           * parts of big_mapped_box_level have the same index space.
           */
 
-         hier::MappedBoxLevel internal_mapped_box_level(dim);
+         hier::BoxLevel internal_mapped_box_level(dim);
          hier::Connector big_to_internal;
          mblcu.computeInternalPartsForMultiblock(
             internal_mapped_box_level,
             big_to_internal,
             big_to_small,
             zero_vector);
-         const hier::BoxSet& internal_mapped_box_set(internal_mapped_box_level.getMappedBoxes());
+         const hier::BoxSet& internal_mapped_box_set(internal_mapped_box_level.getBoxes());
          tbox::plog << "internal_mapped_box_level:\n"
                     << internal_mapped_box_level.format("", 2)
                     << '\n'
@@ -511,7 +511,7 @@ int main(
 
          hier::MultiblockBoxTree internal_box_tree(
             grid_geometry,
-            internal_mapped_box_level.getGlobalizedVersion().getGlobalMappedBoxes());
+            internal_mapped_box_level.getGlobalizedVersion().getGlobalBoxes());
 
          for (hier::BoxSet::const_iterator ni = small_mapped_box_set.begin();
               ni != small_mapped_box_set.end(); ++ni) {
@@ -562,7 +562,7 @@ int main(
           * - check that big_mapped_box_level \ { small_mapped_box_level, external parts }
           *   is empty.
           */
-         hier::MappedBoxLevel external_mapped_box_level(dim);
+         hier::BoxLevel external_mapped_box_level(dim);
          hier::Connector big_to_external;
          mblcu.computeExternalPartsForMultiblock(
             external_mapped_box_level,
@@ -570,7 +570,7 @@ int main(
             big_to_small,
             zero_vector,
             hier::MultiblockBoxTree());
-         const hier::BoxSet& external_mapped_box_set(external_mapped_box_level.getMappedBoxes());
+         const hier::BoxSet& external_mapped_box_set(external_mapped_box_level.getBoxes());
          tbox::plog << "\nexternal_mapped_box_level:\n"
                     << external_mapped_box_level.format("", 2)
                     << '\n'
@@ -579,7 +579,7 @@ int main(
 
          hier::MultiblockBoxTree external_box_tree(
             grid_geometry,
-            external_mapped_box_level.getGlobalizedVersion().getGlobalMappedBoxes());
+            external_mapped_box_level.getGlobalizedVersion().getGlobalBoxes());
 
          for (hier::BoxSet::const_iterator ni = external_mapped_box_set.begin();
               ni != external_mapped_box_set.end(); ++ni) {
@@ -636,7 +636,7 @@ int main(
                external_box_tree);
             if (tmp_box_list.size() > 0) {
                tbox::perr << "Big box " << *ni << " should not be inside "
-                          << "the small MappedBoxLevel and the external parts but is not.\n"
+                          << "the small BoxLevel and the external parts but is not.\n"
                           << "Outside parts:\n";
                tmp_box_list.print(tbox::perr);
                tbox::perr << std::endl;
@@ -680,20 +680,20 @@ int main(
 }
 
 /*
- * Partition boxes in the given MappedBoxLevel.  This method is meant
+ * Partition boxes in the given BoxLevel.  This method is meant
  * to partition and also to create a bunch of small boxes from the
  * user-input boxes in order to set up a non-trivial mesh
  * configuration.
  */
 void partitionBoxes(
-   hier::MappedBoxLevel& mapped_box_level,
+   hier::BoxLevel& mapped_box_level,
    const hier::IntVector& max_box_size,
    const hier::IntVector& min_box_size) {
 
    const tbox::Dimension& dim(mapped_box_level.getDim());
 
-   hier::MappedBoxLevel domain_mapped_box_level(mapped_box_level);
-   domain_mapped_box_level.setParallelState(hier::MappedBoxLevel::GLOBALIZED);
+   hier::BoxLevel domain_mapped_box_level(mapped_box_level);
+   domain_mapped_box_level.setParallelState(hier::BoxLevel::GLOBALIZED);
 
    mesh::TreeLoadBalancer load_balancer(mapped_box_level.getDim());
 
@@ -704,7 +704,7 @@ void partitionBoxes(
    const hier::IntVector bad_interval(dim, 1);
    const hier::IntVector cut_factor(dim, 1);
 
-   load_balancer.loadBalanceMappedBoxLevel(
+   load_balancer.loadBalanceBoxLevel(
       mapped_box_level,
       dummy_connector,
       dummy_connector,
@@ -719,9 +719,9 @@ void partitionBoxes(
       cut_factor);
 }
 
-void shrinkMappedBoxLevel(
-   hier::MappedBoxLevel& small_mapped_box_level,
-   const hier::MappedBoxLevel& big_mapped_box_level,
+void shrinkBoxLevel(
+   hier::BoxLevel& small_mapped_box_level,
+   const hier::BoxLevel& big_mapped_box_level,
    const hier::IntVector& shrinkage,
    const tbox::Array<int>& unshrunken_blocks)
 {
@@ -730,7 +730,7 @@ void shrinkMappedBoxLevel(
 
    const int local_rank = big_mapped_box_level.getMPI().getRank();
 
-   const hier::BoxSet& big_mapped_box_set(big_mapped_box_level.getMappedBoxes());
+   const hier::BoxSet& big_mapped_box_set(big_mapped_box_level.getBoxes());
 
    const hier::Connector& big_to_big(
       big_mapped_box_level.getPersistentOverlapConnectors().createConnector(
@@ -755,14 +755,14 @@ void shrinkMappedBoxLevel(
       grid_geometry,
       visible_mapped_boxes);
 
-   hier::MappedBoxLevelConnectorUtils mblcu;
+   hier::BoxLevelConnectorUtils mblcu;
 
    mblcu.computeBoxesAroundBoundary(
       boundary_boxes,
       big_mapped_box_level.getRefinementRatio(),
       big_mapped_box_level.getGridGeometry());
 
-   tbox::plog << "shrinkMappedBoxLevel: Boundary plain boxes:\n";
+   tbox::plog << "shrinkBoxLevel: Boundary plain boxes:\n";
    for (std::map<hier::BlockId, hier::BoxList>::iterator mi = boundary_boxes.begin();
         mi != boundary_boxes.end(); ++mi) {
       tbox::plog << "Block " << mi->first << '\n';
@@ -855,11 +855,11 @@ void shrinkMappedBoxLevel(
  ***********************************************************************
  ***********************************************************************
  */
-void refineMappedBoxLevel(hier::MappedBoxLevel& mapped_box_level,
-                          const hier::IntVector& ratio)
+void refineBoxLevel(hier::BoxLevel& mapped_box_level,
+                    const hier::IntVector& ratio)
 {
    hier::BoxSet refined_mapped_boxes;
-   mapped_box_level.getMappedBoxes().refine(refined_mapped_boxes, ratio);
+   mapped_box_level.getBoxes().refine(refined_mapped_boxes, ratio);
    mapped_box_level.swapInitialize(
       refined_mapped_boxes,
       ratio * mapped_box_level.getRefinementRatio(),
