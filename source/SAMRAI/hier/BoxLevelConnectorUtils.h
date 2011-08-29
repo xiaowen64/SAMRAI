@@ -160,7 +160,6 @@ public:
       const IntVector& head_margin,
       const MultiblockBoxTree* domain = NULL) const;
 
-
    /*!
     * @brief Compute the parts of one BoxLevel that are external
     * to another BoxLevel.

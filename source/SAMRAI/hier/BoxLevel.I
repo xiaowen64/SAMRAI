@@ -486,7 +486,7 @@ BoxLevel::getBoxStrict(
    if (mapped_box_id.getOwnerRank() != d_rank && d_parallel_state != GLOBALIZED) {
       TBOX_ERROR(
          "BoxLevel::getBoxStrict: cannot get remote mapped_box " << mapped_box_id
-                                                                             <<
+                                                                 <<
          " without being in globalized state.");
    }
 #endif

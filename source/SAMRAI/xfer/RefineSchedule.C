@@ -790,7 +790,6 @@ void RefineSchedule::finishScheduleConstruction(
       *dst_to_unfilled,
       hierarchy);
 
-
    t_get_global_mapped_box_count->barrierAndStart();
 
    const bool need_to_fill =
@@ -801,7 +800,6 @@ void RefineSchedule::finishScheduleConstruction(
       (d_unfilled_encon_box_level->getGlobalNumberOfBoxes() > 0);
 
    t_get_global_mapped_box_count->barrierAndStop();
-
 
    /*
     * If there remain boxes to be filled from coarser levels, then set
@@ -901,7 +899,6 @@ void RefineSchedule::finishScheduleConstruction(
          src_to_dst,
          dst_is_coarse_interp_level);
 
-
       /*
        * Compute how much hiercoarse would have to grow to nest coarse_interp, a
        * required parameter in the private constructor.
@@ -986,7 +983,6 @@ void RefineSchedule::finishScheduleConstruction(
    } else {
       t_finish_sched_const->stop();
    }
-
 
    if (need_to_fill_encon) {
 
@@ -1817,30 +1813,28 @@ void RefineSchedule::createCoarseInterpPatchLevel(
 
    t_make_coarse_interp_level->start();
    d_coarse_interp_level = new hier::PatchLevel(
-      coarse_interp_mapped_box_level,
-      hiercoarse_level->getGridGeometry(),
-      hiercoarse_level->getPatchDescriptor());
+         coarse_interp_mapped_box_level,
+         hiercoarse_level->getGridGeometry(),
+         hiercoarse_level->getPatchDescriptor());
    t_make_coarse_interp_level->stop();
    d_coarse_interp_level->setLevelNumber(next_coarser_ln);
    d_coarse_interp_level->setNextCoarserHierarchyLevelNumber(next_coarser_ln - 1);
 
    if (hiercoarse_level->getGridGeometry()->getNumberBlocks() > 1) {
       hiercoarse_level->getGridGeometry()->
-         adjustMultiblockPatchLevelBoundaries(*d_coarse_interp_level);
+      adjustMultiblockPatchLevelBoundaries(*d_coarse_interp_level);
    }
 
    coarse_interp_to_hiercoarse =
       new Connector(*d_coarse_interp_level->getBoxLevel(),
-                    coarse_interp_to_hiercoarse->getHead(),
-                    coarse_interp_to_hiercoarse->getConnectorWidth(),
-                    coarse_interp_to_hiercoarse->getNeighborhoodSets());
+         coarse_interp_to_hiercoarse->getHead(),
+         coarse_interp_to_hiercoarse->getConnectorWidth(),
+         coarse_interp_to_hiercoarse->getNeighborhoodSets());
    hiercoarse_to_coarse_interp =
       new Connector(hiercoarse_to_coarse_interp->getBase(),
-                    *d_coarse_interp_level->getBoxLevel(),
-                    hiercoarse_to_coarse_interp->getConnectorWidth(),
-                    hiercoarse_to_coarse_interp->getNeighborhoodSets());
-
-   return;
+         *d_coarse_interp_level->getBoxLevel(),
+         hiercoarse_to_coarse_interp->getConnectorWidth(),
+         hiercoarse_to_coarse_interp->getNeighborhoodSets());
 }
 
 /*

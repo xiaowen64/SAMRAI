@@ -292,7 +292,7 @@ int main(
        * Set up data used by TreeLoadBalancer.
        */
       hier::BoxLevel anchor_mapped_box_level(hier::IntVector(dim, 1),
-                                                   grid_geometry);
+                                             grid_geometry);
       hier::BoxLevel balance_mapped_box_level(dim);
       hier::Connector balance_to_anchor;
       hier::Connector anchor_to_balance;

@@ -74,9 +74,6 @@ void BoxLevelConnectorUtils::setSanityCheckMethodPostconditions(
    d_sanity_check_postcond = do_check;
 }
 
-
-
-
 /*
  ***********************************************************************
  * Given the base and head levels, determine whether the base nests
@@ -139,9 +136,6 @@ bool BoxLevelConnectorUtils::baseNestsInHead(
 
    return rval;
 }
-
-
-
 
 /*
  ***********************************************************************
@@ -535,9 +529,6 @@ int BoxLevelConnectorUtils::qsortBoxCompare(
    return 0;
 }
 
-
-
-
 /*
  *************************************************************************
  *************************************************************************
@@ -562,9 +553,6 @@ void BoxLevelConnectorUtils::computeExternalParts(
    t_compute_external_parts->stop();
 }
 
-
-
-
 /*
  *************************************************************************
  *************************************************************************
@@ -588,9 +576,6 @@ void BoxLevelConnectorUtils::computeInternalParts(
 
    t_compute_internal_parts->stop();
 }
-
-
-
 
 /*
  *************************************************************************
@@ -674,11 +659,11 @@ void BoxLevelConnectorUtils::computeInternalOrExternalParts(
    if (!(nesting_width >= zero_vec) && !(nesting_width <= zero_vec)) {
       TBOX_ERROR(
          "BoxLevelConnectorUtils::computeInternalOrExternalParts:" << caller
-                                                                                      <<
+                                                                   <<
          ": error:\n"
-                                                                                      <<
+                                                                   <<
          "nesting_width may not have mix of positive\n"
-                                                                                      <<
+                                                                   <<
          "and negative values.");
    }
 
@@ -1436,15 +1421,15 @@ void BoxLevelConnectorUtils::addPeriodicImagesAndRelationships(
                  mapped_box_level_to_anchor.getNeighborSet(mapped_box.getId()).empty())) {
                TBOX_WARNING(
                   "BoxLevelConnectorUtils::addPeriodicImages: Box " << mapped_box
-                                                                          <<
+                                                                    <<
                   "\nhas periodic images in or close to the domain\n"
-                                                                          <<
+                                                                    <<
                   "but it does not have any neighbors in the anchor BoxLevel.\n"
-                                                                          <<
+                                                                    <<
                   "This will lead to missing neighbors in the output.\n"
-                                                                          <<
+                                                                    <<
                   "If post-condition checking is enabled, this will\n"
-                                                                          <<
+                                                                    <<
                   "result in an error.\n");
             }
          }

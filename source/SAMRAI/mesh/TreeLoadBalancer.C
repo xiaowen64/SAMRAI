@@ -1764,9 +1764,9 @@ void TreeLoadBalancer::unpackSubtreeLoadData(
       BoxInTransit received_mapped_box_in_transit(d_dim);
       received_mapped_box_in_transit.getFromIntBuffer(received_data);
       BoxInTransit renamed_mapped_box_in_transit(received_mapped_box_in_transit,
-                                                       received_mapped_box_in_transit.getBox(),
-                                                       d_rank,
-                                                       next_available_index);
+                                                 received_mapped_box_in_transit.getBox(),
+                                                 d_rank,
+                                                 next_available_index);
       next_available_index += 2 + d_degree;
       receiving_bin.insert(renamed_mapped_box_in_transit);
       received_data += received_mapped_box_in_transit.commBufferSize();
