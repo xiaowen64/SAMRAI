@@ -1097,7 +1097,7 @@ IntVector Connector::convertHeadWidthToBase(
 
    const IntVector base_width =
       (base_refinement_ratio >= head_refinement_ratio) ?
-      (head_gcw * ratio) : IntVector::ceiling(head_gcw, ratio);
+      (head_gcw * ratio) : IntVector::ceilingDivide(head_gcw, ratio);
 
    return base_width;
 }

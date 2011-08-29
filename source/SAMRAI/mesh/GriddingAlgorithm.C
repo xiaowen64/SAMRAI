@@ -2459,7 +2459,7 @@ void GriddingAlgorithm::readLevelBoxes(
       new_to_coarser.initialize(
          new_mapped_box_level,
          coarser_mapped_box_level,
-         hier::IntVector::ceiling(d_hierarchy->getRequiredConnectorWidth(tag_ln + 1,
+         hier::IntVector::ceilingDivide(d_hierarchy->getRequiredConnectorWidth(tag_ln + 1,
                tag_ln), ratio));
       const hier::OverlapConnectorAlgorithm oca;
       oca.findOverlaps(coarser_to_new);
@@ -2591,7 +2591,7 @@ void GriddingAlgorithm::fillTagsFromBoxLevel(
    const hier::IntVector& ratio = tag_level_to_fill_mapped_box_level.getRatio();
 
    const hier::IntVector growth_in_tag_resolution =
-      hier::IntVector::ceiling(fill_box_growth,
+      hier::IntVector::ceilingDivide(fill_box_growth,
          tag_level_to_fill_mapped_box_level.getRatio());
 
    for (hier::PatchLevel::Iterator ip(tag_level); ip; ip++) {
@@ -2810,12 +2810,12 @@ void GriddingAlgorithm::findRefinementBoxes(
       true);
 
    const hier::IntVector smallest_patch_in_tag_space =
-      hier::IntVector::ceiling(smallest_patch,
+      hier::IntVector::ceilingDivide(smallest_patch,
          d_hierarchy->getRatioToCoarserLevel(new_ln));
    const hier::IntVector largest_patch_in_tag_space =
       largest_patch / d_hierarchy->getRatioToCoarserLevel(new_ln);
    const hier::IntVector extend_ghosts_in_tag_space =
-      hier::IntVector::ceiling(extend_ghosts,
+      hier::IntVector::ceilingDivide(extend_ghosts,
          d_hierarchy->getRatioToCoarserLevel(new_ln));
 
    tbox::Pointer<hier::PatchLevel> level =
@@ -4128,7 +4128,7 @@ void GriddingAlgorithm::getGriddingParameters(
        * sz = max ghosts on Richardson-coarsened level_number+1, as
        * seen on level_number.
        */
-      const hier::IntVector sz(hier::IntVector::ceiling(max_ghosts, den));
+      const hier::IntVector sz(hier::IntVector::ceilingDivide(max_ghosts, den));
       smallest_box_to_refine.max(sz);
 
    } else {

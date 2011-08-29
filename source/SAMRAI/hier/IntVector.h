@@ -208,17 +208,17 @@ public:
       const IntVector& rhs);
 
    /**
-    * Component-wise ceiling quotient (integer divide with rounding up).
+    * Component-wise ceilingDivide quotient (integer divide with rounding up).
     */
    void
-   ceiling(
+   ceilingDivide(
       const IntVector& denominator);
 
    /**
-    * Component-wise ceiling quotient (integer divide with rounding up).
+    * Component-wise ceilingDivide quotient (integer divide with rounding up).
     */
    static IntVector
-   ceiling(
+   ceilingDivide(
       const IntVector& numerator,
       const IntVector& denominator);
 

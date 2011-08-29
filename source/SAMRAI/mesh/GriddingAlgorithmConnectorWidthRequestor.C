@@ -136,7 +136,7 @@ void GriddingAlgorithmConnectorWidthRequestor::computeCoarserLevelConnectorWidth
     * width.
     */
    coarse_to_fine_width =
-      hier::IntVector::ceiling(fine_to_fine_width, fine_to_coarse_ratio);
+      hier::IntVector::ceilingDivide(fine_to_fine_width, fine_to_coarse_ratio);
    /*
     * Coarse-to-fine width must be big enough for the [ln] -> [ln+1]
     * Connector to see all the [ln+1] Boxes that are used to add
@@ -165,7 +165,7 @@ void GriddingAlgorithmConnectorWidthRequestor::computeCoarserLevelConnectorWidth
     * be have at least a 2-cell GCW (in L2 index space).
     */
    coarse_to_fine_width.max(
-      hier::IntVector::ceiling(nesting_buffer_at_fine, fine_to_coarse_ratio));
+      hier::IntVector::ceilingDivide(nesting_buffer_at_fine, fine_to_coarse_ratio));
 
    /*
     * Coarse-to-coarse Connectors must cover all data that the finer

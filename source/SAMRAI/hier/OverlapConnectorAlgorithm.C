@@ -778,9 +778,9 @@ void OverlapConnectorAlgorithm::privateBridge(
    }
 
    const IntVector west_to_east_width =
-      IntVector::ceiling(output_width_in_finest_ratio, finest_ratio / west_ratio);
+      IntVector::ceilingDivide(output_width_in_finest_ratio, finest_ratio / west_ratio);
    const IntVector east_to_west_width =
-      IntVector::ceiling(output_width_in_finest_ratio, finest_ratio / east_ratio);
+      IntVector::ceilingDivide(output_width_in_finest_ratio, finest_ratio / east_ratio);
 
    /*
     * Compute the reverse bridge (east_to_west) if it is given and is

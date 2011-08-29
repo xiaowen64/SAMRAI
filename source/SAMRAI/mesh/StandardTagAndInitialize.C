@@ -770,7 +770,7 @@ StandardTagAndInitialize::preprocessRichardsonExtrapolation(
    const hier::Connector coarsened_to_level(
       *coarsened_level->getBoxLevel(),
       *patch_level->getBoxLevel(),
-      hier::IntVector::ceiling(level_to_level_gcw, coarsen_ratio),
+      hier::IntVector::ceilingDivide(level_to_level_gcw, coarsen_ratio),
       level_to_level.getNeighborhoodSets(),
       hier::BoxLevel::DISTRIBUTED);
 
@@ -793,7 +793,7 @@ StandardTagAndInitialize::preprocessRichardsonExtrapolation(
    coarsened_level->getBoxLevel()->getPersistentOverlapConnectors().
    createConnector(
       *coarsened_level->getBoxLevel(),
-      hier::IntVector::ceiling(level_to_level_gcw, coarsen_ratio),
+      hier::IntVector::ceilingDivide(level_to_level_gcw, coarsen_ratio),
       new_edges);
 
    new_edges.clear();

@@ -943,7 +943,7 @@ void RefineSchedule::finishScheduleConstruction(
           */
          hiercoarse_growth_to_nest_coarse_interp = dst_to_fill.getConnectorWidth();
       }
-      hiercoarse_growth_to_nest_coarse_interp.ceiling(dst_hiercoarse_ratio);
+      hiercoarse_growth_to_nest_coarse_interp.ceilingDivide(dst_hiercoarse_ratio);
 
       t_finish_sched_const_recurse->stop();
 
@@ -1311,11 +1311,11 @@ RefineSchedule::createEnconFillSchedule(
    if (dst_is_coarse_interp_level) {
       hiercoarse_growth_to_nest_coarse_interp_encon =
          src_growth_to_nest_dst + encon_to_unfilled_encon.getConnectorWidth();
-      hiercoarse_growth_to_nest_coarse_interp_encon.ceiling(dst_hiercoarse_ratio);
+      hiercoarse_growth_to_nest_coarse_interp_encon.ceilingDivide(dst_hiercoarse_ratio);
    } else {
       hiercoarse_growth_to_nest_coarse_interp_encon =
          encon_to_unfilled_encon.getConnectorWidth();
-      hiercoarse_growth_to_nest_coarse_interp_encon.ceiling(dst_hiercoarse_ratio);
+      hiercoarse_growth_to_nest_coarse_interp_encon.ceilingDivide(dst_hiercoarse_ratio);
    }
 
    /*
@@ -1571,7 +1571,7 @@ void RefineSchedule::setupCoarseInterpBoxLevel(
     * coarse interpolation boxes.
     */
    const hier::IntVector dst_to_coarse_interp_width =
-      (hier::IntVector::ceiling(dst_to_unfilled.getConnectorWidth(),
+      (hier::IntVector::ceilingDivide(dst_to_unfilled.getConnectorWidth(),
           dst_hiercoarse_ratio) + d_max_stencil_width)
       * dst_hiercoarse_ratio;
 
@@ -3946,7 +3946,7 @@ void RefineSchedule::constructScheduleTransactions(
       src_shift = (d_src_level->getRatioToLevelZero() >
                    constant_zero_intvector) ?
          (src_shift * d_src_level->getRatioToLevelZero()) :
-         hier::IntVector::ceiling(src_shift,
+         hier::IntVector::ceilingDivide(src_shift,
             -d_src_level->getRatioToLevelZero());
       unshifted_src_box.shift(-src_shift);
    }
@@ -3957,7 +3957,7 @@ void RefineSchedule::constructScheduleTransactions(
       dst_shift = (d_dst_level->getRatioToLevelZero() >
                    constant_zero_intvector) ?
          (dst_shift * d_dst_level->getRatioToLevelZero()) :
-         hier::IntVector::ceiling(dst_shift,
+         hier::IntVector::ceilingDivide(dst_shift,
             -d_dst_level->getRatioToLevelZero());
       unshifted_dst_box.shift(-dst_shift);
    }

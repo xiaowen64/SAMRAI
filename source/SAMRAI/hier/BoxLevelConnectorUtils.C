@@ -111,7 +111,7 @@ bool BoxLevelConnectorUtils::baseNestsInHead(
    } else if (head.getRefinementRatio() >= base.getRefinementRatio()) {
       const IntVector ratio = head.getRefinementRatio()
          / base.getRefinementRatio();
-      required_gcw += IntVector::ceiling((head_swell + head_nesting_margin), ratio);
+      required_gcw += IntVector::ceilingDivide((head_swell + head_nesting_margin), ratio);
    } else {
       TBOX_ERROR("BoxLevelConnectorUtils::baseNestsInHead: head index space\n"
          << "must be either a refinement or a coarsening of\n"
@@ -168,7 +168,7 @@ bool BoxLevelConnectorUtils::baseNestsInHeadForMultiblock(
    } else if (head.getRefinementRatio() >= base.getRefinementRatio()) {
       const IntVector ratio = head.getRefinementRatio()
          / base.getRefinementRatio();
-      required_gcw += IntVector::ceiling((head_swell + head_nesting_margin), ratio);
+      required_gcw += IntVector::ceilingDivide((head_swell + head_nesting_margin), ratio);
    } else {
       TBOX_ERROR("BoxLevelConnectorUtils::baseNestsInHead: head index space\n"
          << "must be either a refinement or a coarsening of\n"
@@ -235,10 +235,10 @@ bool BoxLevelConnectorUtils::baseNestsInHead(
       base_swell
       + (connector.getHeadCoarserFlag() ?
          head_swell * connector.getRatio() :
-         IntVector::ceiling(head_swell, connector.getRatio()))
+         IntVector::ceilingDivide(head_swell, connector.getRatio()))
       + (connector.getHeadCoarserFlag() ?
          head_nesting_margin * connector.getRatio() :
-         IntVector::ceiling(head_nesting_margin, connector.getRatio()))
+         IntVector::ceilingDivide(head_nesting_margin, connector.getRatio()))
    ;
    if (!(connector.getConnectorWidth() >= required_gcw)) {
       TBOX_ERROR("BoxLevelConnectorUtils::baseNestsInHead: connector lacks sufficient\n"
@@ -418,10 +418,10 @@ bool BoxLevelConnectorUtils::baseNestsInHeadForMultiblock(
       base_swell
       + (connector.getHeadCoarserFlag() ?
          head_swell * connector.getRatio() :
-         IntVector::ceiling(head_swell, connector.getRatio()))
+         IntVector::ceilingDivide(head_swell, connector.getRatio()))
       + (connector.getHeadCoarserFlag() ?
          head_nesting_margin * connector.getRatio() :
-         IntVector::ceiling(head_nesting_margin, connector.getRatio()))
+         IntVector::ceilingDivide(head_nesting_margin, connector.getRatio()))
    ;
    if (!(connector.getConnectorWidth() >= required_gcw)) {
       TBOX_ERROR("BoxLevelConnectorUtils::baseNestsInHead: connector lacks sufficient\n"

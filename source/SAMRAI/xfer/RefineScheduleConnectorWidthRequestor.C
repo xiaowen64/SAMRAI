@@ -121,7 +121,7 @@ void RefineScheduleConnectorWidthRequestor::computeRequiredConnectorWidths(
 
          const hier::IntVector& ratio_to_coarser =
             patch_hierarchy.getRatioToCoarserLevel(lnc + 1);
-         width_for_refining_recursively.ceiling(ratio_to_coarser);
+         width_for_refining_recursively.ceilingDivide(ratio_to_coarser);
 
          /*
           * Data in the supplemental level in RefineSchedule may have ghost

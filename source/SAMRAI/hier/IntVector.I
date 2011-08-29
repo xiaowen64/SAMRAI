@@ -340,7 +340,7 @@ IntVector& IntVector::operator /= (
 }
 
 SAMRAI_INLINE_KEYWORD
-void IntVector::ceiling(
+void IntVector::ceilingDivide(
    const IntVector& denominator)
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, denominator);
@@ -348,10 +348,10 @@ void IntVector::ceiling(
    for (int i = 0; i < getDim().getValue(); i++) {
       /*
        * This is the formula for integer divide, rounding away from
-       * zero.  It is meant as an extension of the ceiling quotient of
+       * zero.  It is meant as an extension of the ceilingDivide quotient of
        * 2 positive integers.
        *
-       * The ceiling is the integer divide plus 0, -1 or 1 representing
+       * The ceilingDivide is the integer divide plus 0, -1 or 1 representing
        * the results of rounding.
        * - Add zero if there's no remainder to round.
        * - Round remainder to 1 if numerator and denominator has same sign.
@@ -364,7 +364,7 @@ void IntVector::ceiling(
 }
 
 SAMRAI_INLINE_KEYWORD
-IntVector IntVector::ceiling(
+IntVector IntVector::ceilingDivide(
    const IntVector& numerator,
    const IntVector& denominator)
 {
@@ -374,10 +374,10 @@ IntVector IntVector::ceiling(
    for (int i = 0; i < numerator.getDim().getValue(); i++) {
       /*
        * This is the formula for integer divide, rounding away from
-       * zero.  It is meant as an extension of the ceiling quotient of
+       * zero.  It is meant as an extension of the ceilingDivide quotient of
        * 2 positive integers.
        *
-       * The ceiling is the integer divide plus 0, -1 or 1 representing
+       * The ceilingDivide is the integer divide plus 0, -1 or 1 representing
        * the results of rounding.
        * - Add zero if there's no remainder to round.
        * - Round remainder to 1 if numerator and denominator has same sign.
