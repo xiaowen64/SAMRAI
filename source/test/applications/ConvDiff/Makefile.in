@@ -74,6 +74,7 @@ clean-check:
 
 clean:		clean-check
 	$(RM) *.f main
+	$(RM) -rf test*restart
 
 redo:
 	$(RM) core main*d

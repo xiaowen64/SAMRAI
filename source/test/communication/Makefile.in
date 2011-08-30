@@ -73,6 +73,7 @@ clean-check:
 
 clean:		clean-check
 	$(RM) main
+	$(RM) -rf *visit
 
 include $(SRCDIR)/Makefile.depend
 
