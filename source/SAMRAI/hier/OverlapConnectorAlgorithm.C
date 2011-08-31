@@ -261,7 +261,7 @@ void OverlapConnectorAlgorithm::findOverlaps_rbbt(
     * in which case we want to avoid the expense
     * of creating a temporary GLOBALIZED version.
     *
-    * Global mapped_boxes provided by head are sorted in a hier::BoxTree
+    * Global mapped_boxes provided by head are sorted in a MultiblockBoxTree
     * so they can be quickly searched to see which intersects the
     * boxes in this object.
     */
@@ -314,7 +314,7 @@ void OverlapConnectorAlgorithm::findOverlaps_rbbt(
       connector.getConnectorWidth());
 
    /*
-    * Use BoxTree to find local base boxes intersecting head mapped_boxes.
+    * Use BoxTree to find local base Boxes intersecting head Boxes.
     */
    NeighborSet nabrs_for_box;
    const BoxSet& base_mapped_boxes = base.getBoxes();
@@ -705,12 +705,12 @@ void OverlapConnectorAlgorithm::privateBridge(
 
    const BoxLevel& west = cent_to_west.getHead();
    const BoxLevel& east = cent_to_east.getHead();
-   const IntVector& cent_ratio = cent.getRefinementRatio();
-   const IntVector& west_ratio = west.getRefinementRatio();
-   const IntVector& east_ratio = east.getRefinementRatio();
+   const IntVector& cent_refinement_ratio = cent.getRefinementRatio();
+   const IntVector& west_refinement_ratio = west.getRefinementRatio();
+   const IntVector& east_refinement_ratio = east.getRefinementRatio();
 
-   const IntVector finest_ratio =
-      IntVector::max(cent_ratio, IntVector::max(west_ratio, east_ratio));
+   const IntVector finest_refinement_ratio =
+      IntVector::max(cent_refinement_ratio, IntVector::max(west_refinement_ratio, east_refinement_ratio));
 
    /*
     * Using the bridge theorem, compute the largest bridge width for
@@ -748,8 +748,8 @@ void OverlapConnectorAlgorithm::privateBridge(
       output_width1 = cent_to_east.getConnectorWidth();
       output_width2 = cent_to_west.getConnectorWidth();
    }
-   IntVector output_width_in_finest_ratio =
-      IntVector::max(output_width1, output_width2) * finest_ratio / cent_ratio;
+   IntVector output_width_in_finest_refinement_ratio =
+      IntVector::max(output_width1, output_width2) * finest_refinement_ratio / cent_refinement_ratio;
 
    /*
     * Reduce the output width to the user-specified width limit.  Note
@@ -757,10 +757,10 @@ void OverlapConnectorAlgorithm::privateBridge(
     * west refinement ratios.
     */
    if (connector_width_limit >= IntVector::getZero(dim)) {
-      const IntVector coarser_ratio = IntVector::min(west_ratio, east_ratio);
-      const IntVector width_limit_in_finest_ratio(
-         connector_width_limit * finest_ratio / coarser_ratio);
-      if (width_limit_in_finest_ratio > output_width_in_finest_ratio) {
+      const IntVector coarser_refinement_ratio = IntVector::min(west_refinement_ratio, east_refinement_ratio);
+      const IntVector width_limit_in_finest_refinement_ratio(
+         connector_width_limit * finest_refinement_ratio / coarser_refinement_ratio);
+      if (width_limit_in_finest_refinement_ratio > output_width_in_finest_refinement_ratio) {
          /*
           * If user specifies a width limit, he is probably assuming
           * that the bridge's allowable width is bigger.  If that is
@@ -770,17 +770,17 @@ void OverlapConnectorAlgorithm::privateBridge(
           */
          TBOX_ERROR("OverlapConnectorAlgorithm::privateBridge found input error:\n"
             << "The given connector width limit, " << connector_width_limit
-            << " (" << width_limit_in_finest_ratio << " in finest index space)\n"
+            << " (" << width_limit_in_finest_refinement_ratio << " in finest index space)\n"
             << "is smaller than the width of the bridge, "
-            << output_width_in_finest_ratio << " (in finest index space).");
+            << output_width_in_finest_refinement_ratio << " (in finest index space).");
       }
-      output_width_in_finest_ratio.min(width_limit_in_finest_ratio);
+      output_width_in_finest_refinement_ratio.min(width_limit_in_finest_refinement_ratio);
    }
 
    const IntVector west_to_east_width =
-      IntVector::ceilingDivide(output_width_in_finest_ratio, finest_ratio / west_ratio);
+      IntVector::ceilingDivide(output_width_in_finest_refinement_ratio, finest_refinement_ratio / west_refinement_ratio);
    const IntVector east_to_west_width =
-      IntVector::ceilingDivide(output_width_in_finest_ratio, finest_ratio / east_ratio);
+      IntVector::ceilingDivide(output_width_in_finest_refinement_ratio, finest_refinement_ratio / east_refinement_ratio);
 
    /*
     * Compute the reverse bridge (east_to_west) if it is given and is
@@ -803,12 +803,12 @@ void OverlapConnectorAlgorithm::privateBridge(
          west,
          east_to_west_width);
 #ifdef DEBUG_CHECK_ASSERTIONS
-      if (west_ratio / east_ratio * east_ratio == west_ratio ||
-          east_ratio / west_ratio * west_ratio == east_ratio) {
+      if (west_refinement_ratio / east_refinement_ratio * east_refinement_ratio == west_refinement_ratio ||
+          east_refinement_ratio / west_refinement_ratio * west_refinement_ratio == east_refinement_ratio) {
          /*
           * If it's possible to make west<==>east transposes, it
-          * should happen.  The requirement is that one refinement
-          * ratio is an IntVector times the other.
+          * should happen.  The requirement is that one refinement ratio is
+          * an IntVector times the other.
           */
          west_to_east.isTransposeOf(*east_to_west);
          east_to_west->isTransposeOf(west_to_east);
@@ -816,32 +816,10 @@ void OverlapConnectorAlgorithm::privateBridge(
 #endif
    }
 
-   if (cent.getGridGeometry()->getNumberBlocks() > 1) {
-      /*
-       * Temporary work-around for multiblock: Until we get bridge
-       * working for multiblock, we use the simple but unscalable
-       * findOverlaps method.
-       *
-       * FIXME: Extend bridge methods to multiblock.
-       */
-      findOverlaps(west_to_east);
-      if (compute_reverse) {
-         findOverlaps(*east_to_west);
-      }
-      if (d_sanity_check_method_postconditions) {
-         west_to_east.assertConsistencyWithBase();
-         west_to_east.assertConsistencyWithHead();
-         if (compute_reverse) {
-            east_to_west->assertConsistencyWithBase();
-            east_to_west->assertConsistencyWithHead();
-            east_to_west->assertTransposeCorrectness(west_to_east, true);
-         }
-      }
-      return;
-   }
 
    const int rank = cent_to_west.getRank();
    const int nproc = cent_to_west.getNproc();
+
 
    /*
     * Owners we have to exchange information with are the ones
@@ -857,13 +835,16 @@ void OverlapConnectorAlgorithm::privateBridge(
    outgoing_ranks.erase(rank);
    incoming_ranks.erase(rank);
 
-   t_bridge_share->start();
-   t_bridge_comm_init->start();
+
    /*
     * Set up communication mechanism and post receives.
     * Note that in comm_peer, all the outgoing_comm come
     * first, the incoming_comm later.
     */
+
+   t_bridge_share->start();
+   t_bridge_comm_init->start();
+
    tbox::AsyncCommStage comm_stage;
    comm_stage.setCommunicationWaitTimer(t_bridge_MPI_wait);
    const int n_comm = static_cast<int>(
@@ -914,8 +895,11 @@ void OverlapConnectorAlgorithm::privateBridge(
                     << std::endl;
       }
    }
+
    t_bridge_comm_init->stop();
    t_bridge_share->stop();
+
+
 
    /*
     * Create search trees for visible east and west neighbors.  First,
@@ -944,9 +928,11 @@ void OverlapConnectorAlgorithm::privateBridge(
                     << std::endl;
       }
 
+      const tbox::ConstPointer<hier::GridGeometry> &grid_geometry(cent.getGridGeometry());
+
       t_bridge_discover_form_rbbt->start();
-      const BoxTree west_rbbt(dim, visible_west_nabrs);
-      const BoxTree east_rbbt(dim, visible_east_nabrs);
+      const MultiblockBoxTree west_rbbt(grid_geometry, visible_west_nabrs);
+      const MultiblockBoxTree east_rbbt(grid_geometry, visible_east_nabrs);
       t_bridge_discover_form_rbbt->stop();
 
       /*
@@ -1445,9 +1431,11 @@ void OverlapConnectorAlgorithm::findOverlapsForOneProcess(
    std::vector<int>& send_mesg,
    const size_t remote_mapped_box_counter_index,
    Connector& bridging_connector,
-   const BoxTree& head_rbbt,
+   const MultiblockBoxTree& head_rbbt,
    NeighborSet& referenced_head_nabrs) const
 {
+   const IntVector &head_refinement_ratio(bridging_connector.getHead().getRefinementRatio());
+
    bool refine_base = false;
    bool coarsen_base = false;
    if (bridging_connector.getHead().getRefinementRatio() ==
@@ -1486,7 +1474,9 @@ void OverlapConnectorAlgorithm::findOverlapsForOneProcess(
          base_box.coarsen(bridging_connector.getRatio());
       }
       found_nabrs.clear();
-      head_rbbt.findOverlapBoxes(found_nabrs, base_box);
+      head_rbbt.findOverlapBoxes(found_nabrs, base_box, base_box.getBlockId(),
+                                 head_refinement_ratio,
+                                 true /* include singularity block neighbors */ );
       if (s_print_bridge_steps == 'y') {
          tbox::plog << "Found " << found_nabrs.size() << " neighbors:";
          hier::BoxContainerUtils::recursivePrintBoxVector(found_nabrs, tbox::plog, "\n ");
