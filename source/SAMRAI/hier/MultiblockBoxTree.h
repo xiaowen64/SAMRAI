@@ -259,6 +259,9 @@ public:
     *
     * Output is unsorted.
     *
+    * REMARK: Now that Box has a BlockId, the block_id argument is
+    * obsolete.
+    *
     * @param[out] overlap_mapped_boxes
     *
     * @param[in] box
