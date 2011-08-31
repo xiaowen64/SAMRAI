@@ -342,11 +342,11 @@ bool AsyncCommPeer<TYPE>::checkSend()
             t_send_timer->start();
 
             // SGS
-//	    FlexData *sgs_temp = new FlexData[first_chunk_count + 3];
-//	    memcpy(sgs_temp, d_internal_buf, (first_chunk_count + 3) * sizeof(FlexData));
-//	    delete [] sgs_temp;
+//          FlexData *sgs_temp = new FlexData[first_chunk_count + 3];
+//          memcpy(sgs_temp, d_internal_buf, (first_chunk_count + 3) * sizeof(FlexData));
+//          delete [] sgs_temp;
 
-//	    free(d_internal_buf);
+//          free(d_internal_buf);
 
             d_mpi_err = d_mpi.Isend(d_internal_buf,
                   static_cast<int>(sizeof(FlexData) * (first_chunk_count + 2)),

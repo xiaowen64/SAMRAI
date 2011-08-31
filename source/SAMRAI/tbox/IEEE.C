@@ -43,9 +43,9 @@ namespace tbox {
 
 /*
  *************************************************************************
- * Set up the IEEE exception handlers so that normal IEEE exceptions	*
- * will cause a program abort.  How this is done varies wildly from	*
- * architecture to architecture.                                        *
+ * Set up the IEEE exception handlers so that normal IEEE exceptions     *
+ * will cause a program abort.  How this is done varies wildly from      *
+ * architecture to architecture.                                         *
  *************************************************************************
  */
 
@@ -78,9 +78,9 @@ void IEEE::setupFloatingPointExceptionHandlers()
 
 /*
  *************************************************************************
- *									*
+ *                                                                       *
  * Routines to initialize arrays to signaling NaNs.                      *
- *									*
+ *                                                                       *
  *************************************************************************
  */
 

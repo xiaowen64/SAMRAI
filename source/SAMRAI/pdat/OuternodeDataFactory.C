@@ -132,10 +132,10 @@ size_t OuternodeDataFactory<TYPE>::getSizeOfMemory(
 
 /*
  *************************************************************************
- *									*
+ *                                                                       *
  * Determine whether this is a valid copy operation to/from OuternodeData*
  * between the supplied datatype.                                        *
- *									*
+ *                                                                       *
  *************************************************************************
  */
 

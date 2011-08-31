@@ -30,9 +30,9 @@ const int Patch::HIER_PATCH_VERSION = 2;
 
 /*
  *************************************************************************
- *									*
- * Allocate a patch container but do not instantiate any components.	*
- *									*
+ *                                                                       *
+ * Allocate a patch container but do not instantiate any components.     *
+ *                                                                       *
  *************************************************************************
  */
 
@@ -50,10 +50,10 @@ Patch::Patch(
 
 /*
  *************************************************************************
- *									*
- * The virtual destructor does nothing; all memory deallocation is	*
- * managed automatically by the pointer and array classes.		*
- *									*
+ *                                                                       *
+ * The virtual destructor does nothing; all memory deallocation is       *
+ * managed automatically by the pointer and array classes.               *
+ *                                                                       *
  *************************************************************************
  */
 
@@ -63,11 +63,11 @@ Patch::~Patch()
 
 /*
  *************************************************************************
- *									*
- * Calculate the amount of memory space required to allocate the		*
- * specified component(s).  This information can then be used by a	*
- * fixed-size memory allocator.						*
- *									*
+ *                                                                       *
+ * Calculate the amount of memory space required to allocate the         *
+ * specified component(s).  This information can then be used by a       *
+ * fixed-size memory allocator.                                          *
+ *                                                                       *
  *************************************************************************
  */
 
@@ -142,9 +142,9 @@ void Patch::allocatePatchData(
 
 /*
  *************************************************************************
- *									*
- * Deallocate (or set to null) the specified component(s).		*
- *									*
+ *                                                                       *
+ * Deallocate (or set to null) the specified component(s).               *
+ *                                                                       *
  *************************************************************************
  */
 
@@ -172,9 +172,9 @@ void Patch::deallocatePatchData(
 
 /*
  *************************************************************************
- *									*
- * Set the time stamp for the specified components in the patch.		*
- *									*
+ *                                                                       *
+ * Set the time stamp for the specified components in the patch.         *
+ *                                                                       *
  *************************************************************************
  */
 
@@ -203,11 +203,11 @@ void Patch::setTime(
 
 /*
  *************************************************************************
- *									*
+ *                                                                       *
  * Checks that class and restart file version numbers are equal.  If so, *
- * reads in data from database and have each patch_data item read       *
- * itself in from the database						*
- *									*
+ * reads in data from database and have each patch_data item read        *
+ * itself in from the database                                           *
+ *                                                                       *
  *************************************************************************
  */
 
@@ -285,12 +285,12 @@ void Patch::getFromDatabase(
 
 /*
  *************************************************************************
- *									*
- * Write out the class version number to database.  Then,		*
- * writes out data to database and have each patch_data item write      *
+ *                                                                       *
+ * Write out the class version number to database.  Then,                *
+ * writes out data to database and have each patch_data item write       *
  * itself out to the database.  The following data                       *
- * members are written out: d_mapped_box, d_patch_number,
- * d_patch_level_number,
+ * members are written out: d_mapped_box, d_patch_number,                *
+ * d_patch_level_number,                                                 *
  * d_patch_in_hierarchy, d_patch_data[].                                 *
  * The database key for all data members is identical to the             *
  * name of the data member except for the d_patch_data.  These have      *
@@ -300,7 +300,7 @@ void Patch::getFromDatabase(
  * items saved ("namelist_count") are also written to the database.      *
  * The patchdata_write_table determines which patchdata are written to   *
  * the database.                                                         *
- *									*
+ *                                                                       *
  *************************************************************************
  */
 void Patch::putToDatabase(
@@ -350,9 +350,9 @@ void Patch::putToDatabase(
 
 /*
  *************************************************************************
- *									*
- * Print information about the patch.					*
- *									*
+ *                                                                       *
+ * Print information about the patch.                                    *
+ *                                                                       *
  *************************************************************************
  */
 

@@ -27,9 +27,9 @@ namespace pdat {
 
 /*
  *************************************************************************
- *									*
- * The constructor simply caches the default ghost cell width and depth.	*
- *									*
+ *                                                                       *
+ * The constructor simply caches the default ghost cell width and depth. *
+ *                                                                       *
  *************************************************************************
  */
 
@@ -57,9 +57,9 @@ NodeDataFactory<TYPE>::~NodeDataFactory()
 
 /*
  *************************************************************************
- *									*
- * Clone the factory and copy the default parameters to the new factory.	*
- *									*
+ *                                                                       *
+ * Clone the factory and copy the default parameters to the new factory. *
+ *                                                                       *
  *************************************************************************
  */
 
@@ -98,9 +98,9 @@ NodeDataFactory<TYPE>::allocate(
 
 /*
  *************************************************************************
- *									*
- * Return the box geometry type for node data objects.			*
- *									*
+ *                                                                       *
+ * Return the box geometry type for node data objects.                   *
+ *                                                                       *
  *************************************************************************
  */
 
@@ -117,9 +117,9 @@ NodeDataFactory<TYPE>::getBoxGeometry(
 
 /*
  *************************************************************************
- *									*
- * Calculate the amount of memory needed to allocate the data object.	*
- *									*
+ *                                                                       *
+ * Calculate the amount of memory needed to allocate the data object.    *
+ *                                                                       *
  *************************************************************************
  */
 
@@ -138,10 +138,10 @@ size_t NodeDataFactory<TYPE>::getSizeOfMemory(
 
 /*
  *************************************************************************
- *									*
+ *                                                                       *
  * Determine whether this is a valid copy operation to/from NodeData     *
  * between the supplied datatype.                                        *
- *									*
+ *                                                                       *
  *************************************************************************
  */
 

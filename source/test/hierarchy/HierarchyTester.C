@@ -28,10 +28,10 @@ namespace SAMRAI {
 
 /*
  *************************************************************************
- *									*
+ *                                                                       *
  * The constructor initializes object state.                             *
  * The destructor deallocates object storage.                            *
- *									*
+ *                                                                       *
  *************************************************************************
  */
 

@@ -2253,8 +2253,8 @@ void LinAdv::printClassData(
 /*
  *************************************************************************
  *                                                                       *
- * Read data members from input.  All values set from restart can be	*
- * overridden by values in the input database.
+ * Read data members from input.  All values set from restart can be     *
+ * overridden by values in the input database.                           *
  *                                                                       *
  *************************************************************************
  */

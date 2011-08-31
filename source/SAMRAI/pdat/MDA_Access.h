@@ -108,8 +108,8 @@ public:
     */
    SAMRAI_INLINE_KEYWORD
    MDA_IndexRange(
-      /*! Array sizes		*/const size_t* sz = ((size_t *)0),
-      /*! Array starting indices	*/const index_t* st = ((index_t *)0))
+      /*! Array sizes                   */const size_t* sz = ((size_t *)0),
+      /*! Array starting indices        */const index_t* st = ((index_t *)0))
    {
       dim_t i;
       if (st) {
@@ -145,8 +145,8 @@ public:
     */
    SAMRAI_INLINE_KEYWORD
    MDA_IndexRange(
-      /*! Array of initial indices	*/const index_t* si,
-      /*! Array of final indices	*/const index_t* sf)
+      /*! Array of initial indices      */const index_t* si,
+      /*! Array of final indices        */const index_t* sf)
    {
       index_t i;
       if (si) {
@@ -174,8 +174,8 @@ public:
     */
    SAMRAI_INLINE_KEYWORD
    void setSizeAndStart(
-      /*! Array sizes (NULL for no change)		*/const size_t* sz = ((size_t *)0),
-      /*! Starting indices (NULL for no change)	*/ const index_t* st =
+      /*! Array sizes (NULL for no change)      */ const size_t* sz = ((size_t *)0),
+      /*! Starting indices (NULL for no change) */ const index_t* st =
          ((index_t *)0))
    {
       if (sz) for (dim_t i = 0; i < MDA_DIM; ++i) d_size[i] = sz[i];
@@ -188,9 +188,9 @@ public:
     */
    SAMRAI_INLINE_KEYWORD
    void setInclusiveRange(
-      /*! First valid indices (NULL for no change)	*/const index_t first[
+      /*! First valid indices (NULL for no change) */ const index_t first[
          MDA_DIM],
-      /*! Final valid indices (NULL for no change)	*/const index_t final[
+      /*! Final valid indices (NULL for no change) */ const index_t final[
          MDA_DIM])
    {
       if (first) for (dim_t i = 0; i < MDA_DIM; ++i) d_start[i] = first[i];
@@ -214,9 +214,9 @@ public:
     */
    SAMRAI_INLINE_KEYWORD
    const MDA_IndexRange& adjustDim(
-      /*! Dimension to adjust	*/dim_t d,
-      /*! Increment to first index	*/index_t first,
-      /*! Increment to final index	*/index_t final)
+      /*! Dimension to adjust      */ dim_t d,
+      /*! Increment to first index */ index_t first,
+      /*! Increment to final index */ index_t final)
    {
       if (d >= MDA_DIM) {
          dim_t i;
@@ -444,16 +444,16 @@ public:
    //! @brief Similar to MDA_IndexRange constructor.
    SAMRAI_INLINE_KEYWORD
    MDA_OrderRowMajor(
-      /*! Array sizes		*/const size_t* sz = ((size_t *)0),
-      /*! Array starting indices	*/const index_t* st = ((index_t *)0)):
+      /*! Array sizes            */ const size_t* sz = ((size_t *)0),
+      /*! Array starting indices */ const index_t* st = ((index_t *)0)):
       MDA_IndexRange<MDA_DIM>(sz, st) {
       computeSizeDependentData();
    }
    //! @brief Similar to MDA_IndexRange constructor.
    SAMRAI_INLINE_KEYWORD
    MDA_OrderRowMajor(
-      /*! Array of initial indices	*/const index_t* si,
-      /*! Array of final indices	*/const index_t* sf):
+      /*! Array of initial indices */ const index_t* si,
+      /*! Array of final indices   */ const index_t* sf):
       MDA_IndexRange<MDA_DIM>(si, sf) {
       computeSizeDependentData();
    }
@@ -463,7 +463,7 @@ public:
     */
    SAMRAI_INLINE_KEYWORD
    MDA_OrderRowMajor(
-      /*! Array index object	*/const range_t& r):
+      /*! Array index object */ const range_t& r):
       MDA_IndexRange<MDA_DIM>(r) {
       computeSizeDependentData();
    }
@@ -682,16 +682,16 @@ public:
    //! @brief Similar to MDA_IndexRange constructor.
    SAMRAI_INLINE_KEYWORD
    MDA_OrderColMajor(
-      /*! Array sizes		*/const size_t* sz = ((size_t *)0),
-      /*! Array starting indices	*/const index_t* st = ((index_t *)0)):
+      /*! Array sizes            */ const size_t* sz = ((size_t *)0),
+      /*! Array starting indices */ const index_t* st = ((index_t *)0)):
       MDA_IndexRange<MDA_DIM>(sz, st) {
       computeSizeDependentData();
    }
    //! @brief Similar to MDA_IndexRange constructor.
    SAMRAI_INLINE_KEYWORD
    MDA_OrderColMajor(
-      /*! Array of initial indices	*/const index_t* si,
-      /*! Array of final indices	*/const index_t* sf):
+      /*! Array of initial indices */ const index_t* si,
+      /*! Array of final indices   */ const index_t* sf):
       MDA_IndexRange<MDA_DIM>(si, sf) {
       computeSizeDependentData();
    }
@@ -701,7 +701,7 @@ public:
     */
    SAMRAI_INLINE_KEYWORD
    MDA_OrderColMajor(
-      /*! Array index object	*/const range_t& r):
+      /*! Array index object */ const range_t& r):
       MDA_IndexRange<MDA_DIM>(r) {
       computeSizeDependentData();
    }
@@ -962,9 +962,9 @@ public:
     */
    SAMRAI_INLINE_KEYWORD
    MDA_Access(
-      /*! Pointer to data		*/value_t* p = ((value_t *)0),
-      /*! Array sizes		*/const size_t* sz = ((size_t *)0),
-      /*! Array starting indices	*/const index_t* st = ((index_t *)0)):
+      /*! Pointer to data        */ value_t* p = ((value_t *)0),
+      /*! Array sizes            */ const size_t* sz = ((size_t *)0),
+      /*! Array starting indices */ const index_t* st = ((index_t *)0)):
       d_ptr(p),
       d_order(sz, st) {
       setPtr1();
@@ -990,9 +990,9 @@ public:
     */
    SAMRAI_INLINE_KEYWORD
    MDA_Access(
-      /*! Pointer to data		*/value_t* p,
-      /*! Array of initial indices	*/const index_t* si,
-      /*! Array of final indices	*/const index_t* sf):
+      /*! Pointer to data          */ value_t* p,
+      /*! Array of initial indices */ const index_t* si,
+      /*! Array of final indices   */ const index_t* sf):
       d_ptr(p),
       d_order(si, sf) {
       setPtr1();
@@ -1003,8 +1003,8 @@ public:
     */
    SAMRAI_INLINE_KEYWORD
    MDA_Access(
-      /*! Pointer to data		*/value_t* p,
-      /*! Array index object	*/const order_t& r):
+      /*! Pointer to data    */ value_t* p,
+      /*! Array index object */ const order_t& r):
       d_ptr(p),
       d_order(r) {
       setPtr1();
@@ -1015,7 +1015,7 @@ public:
     */
    SAMRAI_INLINE_KEYWORD
    MDA_Access(
-      /*! Copyee object		*/const MDA_Access& r):
+      /*! Copyee object */ const MDA_Access& r):
       d_ptr(r.d_ptr),
       d_order(r.d_order) {
       setPtr1();
@@ -1053,7 +1053,7 @@ public:
     */
    SAMRAI_INLINE_KEYWORD
    void setPointer(
-      /*! Pointer value	*/ value_t* p) {
+      /*! Pointer value */ value_t* p) {
       d_ptr = p;
       setPtr1();
    }
@@ -1065,8 +1065,8 @@ public:
     */
    SAMRAI_INLINE_KEYWORD
    void setSizeAndStart(
-      /*! Array sizes (NULL for no change)		*/const size_t* sz = ((size_t *)0),
-      /*! Starting indices (NULL for no change)	*/ const index_t* st =
+      /*! Array sizes (NULL for no change)      */ const size_t* sz = ((size_t *)0),
+      /*! Starting indices (NULL for no change) */ const index_t* st =
          ((index_t *)0))
    {
       d_order.setSizeAndStart(sz, st);
@@ -1080,9 +1080,9 @@ public:
     */
    SAMRAI_INLINE_KEYWORD
    void setInclusiveRange(
-      /*! First valid indices (NULL for no change)	*/const index_t first[
+      /*! First valid indices (NULL for no change) */ const index_t first[
          MDA_DIM],
-      /*! Final valid indices (NULL for no change)	*/const index_t final[
+      /*! Final valid indices (NULL for no change) */ const index_t final[
          MDA_DIM])
    {
       d_order.setInclusiveRange(first, final);
@@ -1096,9 +1096,9 @@ public:
     */
    SAMRAI_INLINE_KEYWORD
    const range_t& adjustDim(
-      /*! Dimension to adjust	*/dim_t d,
-      /*! Increment to first index	*/index_t first,
-      /*! Increment to final index	*/index_t final)
+      /*! Dimension to adjust      */ dim_t d,
+      /*! Increment to first index */ index_t first,
+      /*! Increment to final index */ index_t final)
    {
       d_order.adjustDim(d, first, final);
       setPtr1();
@@ -1357,9 +1357,9 @@ public:
     */
    SAMRAI_INLINE_KEYWORD
    MDA_AccessConst(
-      /*! Pointer to data		*/value_t* p = ((MDA_TYPE *)0),
-      /*! Array sizes		*/const size_t* sz = ((size_t *)0),
-      /*! Array starting indices	*/const index_t* st = ((index_t *)0)):
+      /*! Pointer to data        */ value_t* p = ((MDA_TYPE *)0),
+      /*! Array sizes            */ const size_t* sz = ((size_t *)0),
+      /*! Array starting indices */ const index_t* st = ((index_t *)0)):
       MDA_Access<const MDA_TYPE, MDA_DIM, OrderType>(p, sz, st)
    {
    }
@@ -1369,9 +1369,9 @@ public:
     */
    SAMRAI_INLINE_KEYWORD
    MDA_AccessConst(
-      /*! Pointer to data		*/value_t* p,
-      /*! Array of initial indices	*/const index_t* si,
-      /*! Array of final indices	*/const index_t* sf):
+      /*! Pointer to data          */ value_t* p,
+      /*! Array of initial indices */ const index_t* si,
+      /*! Array of final indices   */ const index_t* sf):
       MDA_Access<const MDA_TYPE, MDA_DIM, OrderType>(p, si, sf)
    {
    }
@@ -1381,8 +1381,8 @@ public:
     */
    SAMRAI_INLINE_KEYWORD
    MDA_AccessConst(
-      /*! Pointer to data		*/value_t* p,
-      /*! Array index object	*/const MDA_IndexRange<MDA_DIM>& r):
+      /*! Pointer to data    */ value_t* p,
+      /*! Array index object */ const MDA_IndexRange<MDA_DIM>& r):
       MDA_Access<const MDA_TYPE, MDA_DIM, OrderType>(p, r)
    {
    }

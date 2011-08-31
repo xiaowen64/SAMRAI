@@ -23,9 +23,9 @@ namespace pdat {
 
 /*
  *************************************************************************
- *									*
- * The constructor simply caches the default ghost cell width.		*
- *									*
+ *                                                                       *
+ * The constructor simply caches the default ghost cell width.           *
+ *                                                                       *
  *************************************************************************
  */
 
@@ -43,9 +43,9 @@ IndexDataFactory<TYPE, BOX_GEOMETRY>::~IndexDataFactory()
 
 /*
  *************************************************************************
- *									*
- * Clone the factory and copy the default parameters to the new factory.	*
- *									*
+ *                                                                       *
+ * Clone the factory and copy the default parameters to the new factory. *
+ *                                                                       *
  *************************************************************************
  */
 
@@ -82,9 +82,9 @@ IndexDataFactory<TYPE, BOX_GEOMETRY>::allocate(
 
 /*
  *************************************************************************
- *									*
- * Return the box geometry type for index data objects.			*
- *									*
+ *                                                                       *
+ * Return the box geometry type for index data objects.                  *
+ *                                                                       *
  *************************************************************************
  */
 
@@ -101,9 +101,9 @@ IndexDataFactory<TYPE, BOX_GEOMETRY>::getBoxGeometry(
 
 /*
  *************************************************************************
- *									*
- * Calculate the amount of memory needed to allocate the object.		*
- *									*
+ *                                                                       *
+ * Calculate the amount of memory needed to allocate the object.         *
+ *                                                                       *
  *************************************************************************
  */
 
@@ -119,10 +119,10 @@ size_t IndexDataFactory<TYPE, BOX_GEOMETRY>::getSizeOfMemory(
 
 /*
  *************************************************************************
- *									*
+ *                                                                       *
  * Determine whether this is a valid copy operation to/from IndexData    *
  * between the supplied datatype.                                        *
- *									*
+ *                                                                       *
  *************************************************************************
  */
 

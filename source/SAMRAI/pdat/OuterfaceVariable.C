@@ -20,9 +20,9 @@ namespace pdat {
 
 /*
  *************************************************************************
- *									*
- * Constructor and destructor for face variable objects			*
- *									*
+ *                                                                       *
+ * Constructor and destructor for face variable objects                  *
+ *                                                                       *
  *************************************************************************
  */
 
@@ -55,11 +55,11 @@ int OuterfaceVariable<TYPE>::getDepth() const
 
 /*
  *************************************************************************
- *									*
- * These are private and should not be used.  They are defined here	*
- * because some template instantiation methods fail if some member	*
- * functions are left undefined.						*
- *									*
+ *                                                                       *
+ * These are private and should not be used.  They are defined here      *
+ * because some template instantiation methods fail if some member       *
+ * functions are left undefined.                                         *
+ *                                                                       *
  *************************************************************************
  */
 

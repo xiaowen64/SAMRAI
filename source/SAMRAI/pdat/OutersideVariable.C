@@ -20,9 +20,9 @@ namespace pdat {
 
 /*
  *************************************************************************
- *									*
- * Constructor and destructor for side variable objects			*
- *									*
+ *                                                                       *
+ * Constructor and destructor for side variable objects                  *
+ *                                                                       *
  *************************************************************************
  */
 
@@ -56,11 +56,11 @@ int OutersideVariable<TYPE>::getDepth() const
 
 /*
  *************************************************************************
- *									*
- * These are private and should not be used.  They are defined here	*
- * because some template instantiation methods fail if some member	*
- * functions are left undefined.						*
- *									*
+ *                                                                       *
+ * These are private and should not be used.  They are defined here      *
+ * because some template instantiation methods fail if some member       *
+ * functions are left undefined.                                         *
+ *                                                                       *
  *************************************************************************
  */
 

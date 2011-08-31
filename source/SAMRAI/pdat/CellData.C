@@ -39,10 +39,10 @@ const int CellData<TYPE>::PDAT_CELLDATA_VERSION = 1;
 
 /*
  *************************************************************************
- *									*
- * Calculate the amount of memory space needed to represent the data	*
- * for a cell centered grid.						*
- *									*
+ *                                                                       *
+ * Calculate the amount of memory space needed to represent the data     *
+ * for a cell centered grid.                                             *
+ *                                                                       *
  *************************************************************************
  */
 
@@ -61,10 +61,10 @@ size_t CellData<TYPE>::getSizeOfData(
 
 /*
  *************************************************************************
- *									*
- * Constructor and destructor for cell data objects.  The constructor	*
- * simply initializes data variables and sets up the array data.		*
- *									*
+ *                                                                       *
+ * Constructor and destructor for cell data objects.  The constructor    *
+ * simply initializes data variables and sets up the array data.         *
+ *                                                                       *
  *************************************************************************
  */
 
@@ -91,11 +91,11 @@ CellData<TYPE>::~CellData()
 
 /*
  *************************************************************************
- *									*
- * The following are private and cannot be used, but they are defined	*
- * here for compilers that require that every template declaration have	*
- * a definition (a stupid requirement, if you ask me).			*
- *									*
+ *                                                                       *
+ * The following are private and cannot be used, but they are defined    *
+ * here for compilers that require that every template declaration have  *
+ * a definition (a stupid requirement, if you ask me).                   *
+ *                                                                       *
  *************************************************************************
  */
 
@@ -117,10 +117,10 @@ void CellData<TYPE>::operator = (
 
 /*
  *************************************************************************
- *									*
- * Perform a fast copy between two cell centered arrays where their	*
- * index spaces overlap.							*
- *									*
+ *                                                                       *
+ * Perform a fast copy between two cell centered arrays where their      *
+ * index spaces overlap.                                                 *
+ *                                                                       *
  *************************************************************************
  */
 
@@ -160,10 +160,10 @@ void CellData<TYPE>::copy2(
 
 /*
  *************************************************************************
- *									*
- * Copy data from the source into the destination according to the	*
- * overlap descriptor.							*
- *									*
+ *                                                                       *
+ * Copy data from the source into the destination according to the       *
+ * overlap descriptor.                                                   *
+ *                                                                       *
  *************************************************************************
  */
 
@@ -268,10 +268,10 @@ void CellData<TYPE>::copyWithRotation(
 
 /*
  *************************************************************************
- *									*
+ *                                                                       *
  * Perform a fast copy between two arrays at the                         *
- * specified depths, where their	index spaces overlap.			*
- *									*
+ * specified depths, where their index spaces overlap.                   *
+ *                                                                       *
  *************************************************************************
  */
 
@@ -291,10 +291,10 @@ void CellData<TYPE>::copyDepth(
 
 /*
  *************************************************************************
- *									*
- * Calculate the buffer space needed to pack/unpack messages on the box	*
- * region using the overlap descriptor.					*
- *									*
+ *                                                                       *
+ * Calculate the buffer space needed to pack/unpack messages on the box  *
+ * region using the overlap descriptor.                                  *
+ *                                                                       *
  *************************************************************************
  */
 
@@ -319,10 +319,10 @@ int CellData<TYPE>::getDataStreamSize(
 
 /*
  *************************************************************************
- *									*
- * Pack/unpack data into/out of the message streams using the index	*
- * space in the overlap descriptor.					*
- *									*
+ *                                                                       *
+ * Pack/unpack data into/out of the message streams using the index      *
+ * space in the overlap descriptor.                                      *
+ *                                                                       *
  *************************************************************************
  */
 
@@ -417,10 +417,10 @@ void CellData<TYPE>::packWithRotation(
 
 /*
  *************************************************************************
- *									*
+ *                                                                       *
  * Print cell centered data.  Note:  makes call to specialized print     *
- * routine in CellDataSpecialized.C                                     *
- *									*
+ * routine in CellDataSpecialized.C                                      *
+ *                                                                       *
  *************************************************************************
  */
 
@@ -459,11 +459,11 @@ void CellData<TYPE>::print(
 
 /*
  *************************************************************************
- *									*
- * Checks that class version and restart file version are equal.  If so,	*
- * reads in the d_depth data member to the database.  Then tells		*
- * d_data to read itself in from the database.				*
- *									*
+ *                                                                       *
+ * Checks that class version and restart file version are equal.  If so, *
+ * reads in the d_depth data member to the database.  Then tells         *
+ * d_data to read itself in from the database.                           *
+ *                                                                       *
  *************************************************************************
  */
 
@@ -489,10 +489,10 @@ void CellData<TYPE>::getSpecializedFromDatabase(
 
 /*
  *************************************************************************
- *									*
- * Write out the class version number, d_depth data member to the	*
- * database.  Then tells d_data to write itself to the database.		*
- *									*
+ *                                                                       *
+ * Write out the class version number, d_depth data member to the        *
+ * database.  Then tells d_data to write itself to the database.         *
+ *                                                                       *
  *************************************************************************
  */
 

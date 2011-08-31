@@ -38,9 +38,9 @@ PatchLevelBorderAndInteriorFillPattern::PatchLevelBorderAndInteriorFillPattern()
 
 /*
  *************************************************************************
- *									*
- * Destructor                                                           *
- *									*
+ *                                                                       *
+ * Destructor                                                            *
+ *                                                                       *
  *************************************************************************
  */
 

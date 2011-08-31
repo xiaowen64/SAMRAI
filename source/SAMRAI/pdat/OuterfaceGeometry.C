@@ -25,9 +25,9 @@ namespace pdat {
 
 /*
  *************************************************************************
- *									*
- * Create a face geometry object given the box and ghost cell width.	*
- *									*
+ *                                                                       *
+ * Create a face geometry object given the box and ghost cell width.     *
+ *                                                                       *
  *************************************************************************
  */
 
@@ -46,16 +46,16 @@ OuterfaceGeometry::~OuterfaceGeometry()
 
 /*
  *************************************************************************
- *									*
- * Attempt to calculate the intersection between two outerface centered	*
- * box geometries.  The calculateOverlap() checks whether both arguments	*
- * are outerface geometries; if so, it compuates the intersection.  If	*
- * not, then it calls calculateOverlap() on the source object (if retry	*
- * is true) to allow the source a chance to calculate the intersection.	*
- * See the hier::BoxGeometry base class for more information about  *
+ *                                                                       *
+ * Attempt to calculate the intersection between two outerface centered  *
+ * box geometries.  The calculateOverlap() checks whether both arguments *
+ * are outerface geometries; if so, it compuates the intersection.  If   *
+ * not, then it calls calculateOverlap() on the source object (if retry  *
+ * is true) to allow the source a chance to calculate the intersection.  *
+ * See the hier::BoxGeometry base class for more information about       *
  * the protocol.  A pointer to null is returned if the intersection      *
  * cannot be computed.                                                   *
- *                                                                      *
+ *                                                                       *
  *************************************************************************
  */
 
@@ -90,12 +90,12 @@ tbox::Pointer<hier::BoxOverlap> OuterfaceGeometry::calculateOverlap(
 
 /*
  *************************************************************************
- *									*
- * Compute the overlap between a face geometry destination box and an	*
- * outerface geometry source box.  The intersection algorithm is similar	*
- * the face geometry algorithm except that only the borders of source	*
- * are used in the intersection computation.				*
- *									*
+ *                                                                       *
+ * Compute the overlap between a face geometry destination box and an    *
+ * outerface geometry source box.  The intersection algorithm is similar *
+ * the face geometry algorithm except that only the borders of source    *
+ * are used in the intersection computation.                             *
+ *                                                                       *
  *************************************************************************
  */
 

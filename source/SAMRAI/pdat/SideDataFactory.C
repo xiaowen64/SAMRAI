@@ -27,9 +27,9 @@ namespace pdat {
 
 /*
  *************************************************************************
- *									*
- * The constructor simply caches the default ghost cell width and depth.	*
- *									*
+ *                                                                       *
+ * The constructor simply caches the default ghost cell width and depth. *
+ *                                                                       *
  *************************************************************************
  */
 
@@ -82,9 +82,9 @@ SideDataFactory<TYPE>::~SideDataFactory()
 
 /*
  *************************************************************************
- *									*
- * Clone the factory and copy the default parameters to the new factory.	*
- *									*
+ *                                                                       *
+ * Clone the factory and copy the default parameters to the new factory. *
+ *                                                                       *
  *************************************************************************
  */
 
@@ -127,9 +127,9 @@ SideDataFactory<TYPE>::allocate(
 
 /*
  *************************************************************************
- *									*
- * Return the box geometry type for side data objects.			*
- *									*
+ *                                                                       *
+ * Return the box geometry type for side data objects.                   *
+ *                                                                       *
  *************************************************************************
  */
 
@@ -148,9 +148,9 @@ SideDataFactory<TYPE>::getBoxGeometry(
 
 /*
  *************************************************************************
- *									*
- * Calculate the amount of memory needed to allocate the data object.	*
- *									*
+ *                                                                       *
+ * Calculate the amount of memory needed to allocate the data object.    *
+ *                                                                       *
  *************************************************************************
  */
 
@@ -169,10 +169,10 @@ size_t SideDataFactory<TYPE>::getSizeOfMemory(
 
 /*
  *************************************************************************
- *									*
+ *                                                                       *
  * Determine whether this is a valid copy operation to/from SideData     *
  * between the supplied datatype.                                        *
- *									*
+ *                                                                       *
  *************************************************************************
  */
 

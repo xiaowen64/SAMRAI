@@ -32,10 +32,10 @@ int LoadBalanceStrategy::s_sequence_number = 0;
 
 /*
  *************************************************************************
- *									*
- * The constructor and destructor for LoadBalanceStrategy do        *
- * nothing that could be considered even remotely interesting.		*
- *									*
+ *                                                                       *
+ * The constructor and destructor for LoadBalanceStrategy do             *
+ * nothing that could be considered even remotely interesting.           *
+ *                                                                       *
  *************************************************************************
  */
 

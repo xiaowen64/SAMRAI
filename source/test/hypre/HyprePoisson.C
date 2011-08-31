@@ -282,9 +282,9 @@ bool HyprePoisson::solvePoisson()
     * Present data on the solve.
     */
    tbox::plog << "\t" << (solver_ret ? "" : "NOT ") << "converged " << "\n"
-              << "	iterations: "<< d_poisson_hypre.getNumberOfIterations()
+              << "      iterations: "<< d_poisson_hypre.getNumberOfIterations()
               << "\n"
-              << "	residual: "<< d_poisson_hypre.getRelativeResidualNorm()
+              << "      residual: "<< d_poisson_hypre.getRelativeResidualNorm()
               << "\n"
               << std::flush;
 

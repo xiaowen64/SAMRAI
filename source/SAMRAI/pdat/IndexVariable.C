@@ -21,9 +21,9 @@ namespace pdat {
 
 /*
  *************************************************************************
- *									*
- * Constructor and destructor for irregular index variable objects	*
- *									*
+ *                                                                       *
+ * Constructor and destructor for irregular index variable objects       *
+ *                                                                       *
  *************************************************************************
  */
 
@@ -46,11 +46,11 @@ IndexVariable<TYPE, BOX_GEOMETRY>::~IndexVariable()
 
 /*
  *************************************************************************
- *									*
- * These are private and should not be used.  They are defined here	*
- * because some template instantiation methods fail if some member	*
- * functions are left undefined.						*
- *									*
+ *                                                                       *
+ * These are private and should not be used.  They are defined here      *
+ * because some template instantiation methods fail if some member       *
+ * functions are left undefined.                                         *
+ *                                                                       *
  *************************************************************************
  */
 

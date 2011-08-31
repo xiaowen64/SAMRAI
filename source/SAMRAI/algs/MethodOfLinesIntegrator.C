@@ -35,9 +35,9 @@ const int MethodOfLinesIntegrator::ALGS_METHOD_OF_LINES_INTEGRATOR_VERSION = 2;
 
 /*
  *************************************************************************
- *									*
- * The constructor and destructor for MethodOfLinesIntegrator.     *
- *									*
+ *                                                                       *
+ * The constructor and destructor for MethodOfLinesIntegrator.           *
+ *                                                                       *
  *************************************************************************
  */
 
@@ -109,10 +109,10 @@ MethodOfLinesIntegrator::MethodOfLinesIntegrator(
 
 /*
  *************************************************************************
- *									*
- * Destructor tells tbox::RestartManager to remove this object from the   *
+ *                                                                       *
+ * Destructor tells tbox::RestartManager to remove this object from the  *
  * list of restart items.                                                *
- *									*
+ *                                                                       *
  *************************************************************************
  */
 
@@ -162,10 +162,10 @@ void MethodOfLinesIntegrator::initializeIntegrator(
 }
 /*
  *************************************************************************
- *									*
+ *                                                                       *
  * Calculate the stable time increment by taking the minimum over        *
  * all patches on all levels in the hierarchy.                           *
- *									*
+ *                                                                       *
  *************************************************************************
  */
 
@@ -556,10 +556,10 @@ void MethodOfLinesIntegrator::initializeLevelData(
 
 /*
  *************************************************************************
- *									*
+ *                                                                       *
  * Re-generate communication schedule after changes to the specified     *
  * range of levels in the hierarchy.                                     *
- *									*
+ *                                                                       *
  *************************************************************************
  */
 void MethodOfLinesIntegrator::resetHierarchyConfiguration(
@@ -667,8 +667,8 @@ void MethodOfLinesIntegrator::applyGradientDetector(
 /*
  *************************************************************************
  *                                                                       *
- * Writes the class version number, order, and				*
- * alpha array to the database.						*
+ * Writes the class version number, order, and                           *
+ * alpha array to the database.                                          *
  *                                                                       *
  *************************************************************************
  */
@@ -690,9 +690,9 @@ void MethodOfLinesIntegrator::putToDatabase(
 /*
  *************************************************************************
  *                                                                       *
- * Reads in paramemters from the database overriding any values		*
- * read in from the restart database. Also checks to make sure that	*
- * number of alpha values specified equals order of Runga-Kutta scheme.	*
+ * Reads in paramemters from the database overriding any values          *
+ * read in from the restart database. Also checks to make sure that      *
+ * number of alpha values specified equals order of Runga-Kutta scheme.  *
  *                                                                       *
  *************************************************************************
  */
@@ -772,9 +772,9 @@ void MethodOfLinesIntegrator::getFromInput(
  *************************************************************************
  *                                                                       *
  * Checks that class and restart file version numbers are equal.  If so, *
- * reads in d_order and d_alpha from the database.  Also, does a        *
- * consistency check to make sure that the number of alpha values       *
- * specified equals the order of the Runga-Kutta scheme.			*
+ * reads in d_order and d_alpha from the database.  Also, does a         *
+ * consistency check to make sure that the number of alpha values        *
+ * specified equals the order of the Runga-Kutta scheme.                 *
  *                                                                       *
  *************************************************************************
  */
@@ -887,7 +887,7 @@ void MethodOfLinesIntegrator::copyScratchToCurrent(
 /*
  *************************************************************************
  *                                                                       *
- * Print all class data members for MethodOfLinesIntegrator object.*
+ * Print all class data members for MethodOfLinesIntegrator object.      *
  *                                                                       *
  *************************************************************************
  */

@@ -2449,8 +2449,8 @@ void MblkHyperbolicLevelIntegrator::printClassData(
 /*
  *************************************************************************
  *                                                                       *
- * Writes out the class version number, d_cfl, d_cfl_init,              *
- * d_lag_dt_computation, and d_use_ghosts_for_dt to the database.	*
+ * Writes out the class version number, d_cfl, d_cfl_init,               *
+ * d_lag_dt_computation, and d_use_ghosts_for_dt to the database.        *
  *                                                                       *
  *************************************************************************
  */
@@ -2474,10 +2474,10 @@ void MblkHyperbolicLevelIntegrator::putToDatabase(
 /*
  *************************************************************************
  *                                                                       *
- * Reads in cfl, cfl_init, lag_dt_computation, and                      *
- * use_ghosts_to_compute_dt from the input database.                    *
- * Note all restart values are overriden with values from the input	*
- * database.								*
+ * Reads in cfl, cfl_init, lag_dt_computation, and                       *
+ * use_ghosts_to_compute_dt from the input database.                     *
+ * Note all restart values are overriden with values from the input      *
+ * database.                                                             *
  *                                                                       *
  *************************************************************************
  */
@@ -2545,9 +2545,9 @@ void MblkHyperbolicLevelIntegrator::getFromInput(
  * sure that the version number of the class matches the version number  *
  * of the restart file.  If they match, then d_cfl, d_cfl_init,          *
  * d_lag_dt_computation, and d_use_ghosts_to_compute_dt are read from    *
- * restart database.                                                    *
- * Note all restart values can be overriden with values from the input	*
- * database.								*
+ * restart database.                                                     *
+ * Note all restart values can be overriden with values from the input   *
+ * database.                                                             *
  *                                                                       *
  *************************************************************************
  */

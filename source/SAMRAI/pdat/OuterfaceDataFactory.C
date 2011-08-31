@@ -51,9 +51,9 @@ OuterfaceDataFactory<TYPE>::~OuterfaceDataFactory()
 
 /*
  *************************************************************************
- *									*
- * Clone the factory and copy the default parameters to the new factory.	*
- *									*
+ *                                                                       *
+ * Clone the factory and copy the default parameters to the new factory. *
+ *                                                                       *
  *************************************************************************
  */
 
@@ -90,9 +90,9 @@ OuterfaceDataFactory<TYPE>::allocate(
 
 /*
  *************************************************************************
- *									*
- * Return the box geometry type for outerface data objects.		*
- *									*
+ *                                                                       *
+ * Return the box geometry type for outerface data objects.              *
+ *                                                                       *
  *************************************************************************
  */
 
@@ -111,9 +111,9 @@ OuterfaceDataFactory<TYPE>::getBoxGeometry(
 
 /*
  *************************************************************************
- *									*
- * Calculate the amount of memory needed to allocate the data object.	*
- *									*
+ *                                                                       *
+ * Calculate the amount of memory needed to allocate the data object.    *
+ *                                                                       *
  *************************************************************************
  */
 
@@ -130,10 +130,10 @@ size_t OuterfaceDataFactory<TYPE>::getSizeOfMemory(
 
 /*
  *************************************************************************
- *									*
+ *                                                                       *
  * Determine whether this is a valid copy operation to/from OuterfaceData*
  * between the supplied datatype.                                        *
- *									*
+ *                                                                       *
  *************************************************************************
  */
 

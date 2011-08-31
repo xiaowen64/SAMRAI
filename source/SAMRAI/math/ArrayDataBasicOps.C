@@ -32,11 +32,11 @@ ArrayDataBasicOps<TYPE>::~ArrayDataBasicOps()
 
 /*
  *************************************************************************
- *									*
- * The const constructor and assignment operator are not actually used	*
- * but are defined here for compilers that require an implementation for	*
- * every declaration.							*
- *									*
+ *                                                                       *
+ * The const constructor and assignment operator are not actually used   *
+ * but are defined here for compilers that require an implementation for *
+ * every declaration.                                                    *
+ *                                                                       *
  *************************************************************************
  */
 
@@ -56,9 +56,9 @@ void ArrayDataBasicOps<TYPE>::operator = (
 
 /*
  *************************************************************************
- *									*
+ *                                                                       *
  * General templated operations for array data.                          *
- *									*
+ *                                                                       *
  *************************************************************************
  */
 

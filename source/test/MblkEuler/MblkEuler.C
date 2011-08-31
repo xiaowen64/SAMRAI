@@ -2716,8 +2716,8 @@ void MblkEuler::printClassData(
 /*
  *************************************************************************
  *                                                                       *
- * Read data members from input.  All values set from restart can be	*
- * overridden by values in the input database.
+ * Read data members from input.  All values set from restart can be     *
+ * overridden by values in the input database.                           *
  *                                                                       *
  *************************************************************************
  */
@@ -2901,7 +2901,7 @@ void MblkEuler::getFromInput(
 //     //double *tmp = new double[llen];
 //    tbox::Array<double> tmp(llen);
 //   for ( int ii = 0 ; ii < llen ; ii++ ) {
-//	 tmp[ii] = FLT_MAX;
+//       tmp[ii] = FLT_MAX;
 //     }
 
       d_state_ic.resizeArray(d_number_of_regions);

@@ -47,9 +47,9 @@ const int MemoryDatabase::SSTREAM_BUFFER = 4096;
 
 /*
  *************************************************************************
- *									*
- * The virtual destructor deallocates database data.			*
- *									*
+ *                                                                       *
+ * The virtual destructor deallocates database data.                     *
+ *                                                                       *
  *************************************************************************
  */
 
@@ -115,9 +115,9 @@ bool MemoryDatabase::close()
 
 /*
  *************************************************************************
- *									*
- * Return whether the key exists in the database.			*
- *									*
+ *                                                                       *
+ * Return whether the key exists in the database.                        *
+ *                                                                       *
  *************************************************************************
  */
 
@@ -129,9 +129,9 @@ bool MemoryDatabase::keyExists(
 
 /*
  *************************************************************************
- *									*
- * Return all of the keys in the database.				*
- *									*
+ *                                                                       *
+ * Return all of the keys in the database.                               *
+ *                                                                       *
  *************************************************************************
  */
 
@@ -150,9 +150,9 @@ Array<std::string> MemoryDatabase::getAllKeys()
 
 /*
  *************************************************************************
- *									*
- * Get the type of the array entry associated with the specified key	*
- *									*
+ *                                                                       *
+ * Get the type of the array entry associated with the specified key     *
+ *                                                                       *
  *************************************************************************
  */
 enum Database::DataType MemoryDatabase::getArrayType(
@@ -168,10 +168,10 @@ enum Database::DataType MemoryDatabase::getArrayType(
 
 /*
  *************************************************************************
- *									*
- * Get the size of the array entry associated with the specified key;	*
- * return 0 if the key does not exist.					*
- *									*
+ *                                                                       *
+ * Get the size of the array entry associated with the specified key;    *
+ * return 0 if the key does not exist.                                   *
+ *                                                                       *
  *************************************************************************
  */
 
@@ -188,9 +188,9 @@ int MemoryDatabase::getArraySize(
 
 /*
  *************************************************************************
- *									*
- * Member functions that manage the database values within the database.	*
- *									*
+ *                                                                       *
+ * Member functions that manage the database values within the database. *
+ *                                                                       *
  *************************************************************************
  */
 
@@ -229,9 +229,9 @@ Pointer<Database> MemoryDatabase::getDatabase(
 
 /*
  *************************************************************************
- *									*
- * Member functions that manage boolean values within the database.	*
- *									*
+ *                                                                       *
+ * Member functions that manage boolean values within the database.      *
+ *                                                                       *
  *************************************************************************
  */
 
@@ -334,9 +334,9 @@ void MemoryDatabase::getBoolArray(
 
 /*
  *************************************************************************
- *									*
- * Member functions that manage box values within the database.		*
- *									*
+ *                                                                       *
+ * Member functions that manage box values within the database.          *
+ *                                                                       *
  *************************************************************************
  */
 
@@ -439,9 +439,9 @@ void MemoryDatabase::getDatabaseBoxArray(
 
 /*
  *************************************************************************
- *									*
- * Member functions that manage character values within the database.	*
- *									*
+ *                                                                       *
+ * Member functions that manage character values within the database.    *
+ *                                                                       *
  *************************************************************************
  */
 
@@ -544,11 +544,11 @@ void MemoryDatabase::getCharArray(
 
 /*
  *************************************************************************
- *									*
- * Member functions that manage complex values within the database.	*
- * Note that complex numbers may be promoted from integers, floats,	*
- * and doubles.								*
- *									*
+ *                                                                       *
+ * Member functions that manage complex values within the database.      *
+ * Note that complex numbers may be promoted from integers, floats,      *
+ * and doubles.                                                          *
+ *                                                                       *
  *************************************************************************
  */
 
@@ -699,10 +699,10 @@ void MemoryDatabase::getComplexArray(
 
 /*
  *************************************************************************
- *									*
- * Member functions that manage double values within the database.	*
- * Note that doubles may be promoted from integers or floats.		*
- *									*
+ *                                                                       *
+ * Member functions that manage double values within the database.       *
+ * Note that doubles may be promoted from integers or floats.            *
+ *                                                                       *
  *************************************************************************
  */
 
@@ -843,11 +843,11 @@ void MemoryDatabase::getDoubleArray(
 
 /*
  *************************************************************************
- *									*
- * Member functions that manage float values within the database.	*
- * Note that floats may be promoted from integers or truncated from	*
- * doubles (without a warning).						*
- *									*
+ *                                                                       *
+ * Member functions that manage float values within the database.        *
+ * Note that floats may be promoted from integers or truncated from      *
+ * doubles (without a warning).                                          *
+ *                                                                       *
  *************************************************************************
  */
 
@@ -993,9 +993,9 @@ void MemoryDatabase::getFloatArray(
 
 /*
  *************************************************************************
- *									*
- * Member functions that manage integer values within the database.	*
- *									*
+ *                                                                       *
+ * Member functions that manage integer values within the database.      *
+ *                                                                       *
  *************************************************************************
  */
 
@@ -1098,9 +1098,9 @@ void MemoryDatabase::getIntegerArray(
 
 /*
  *************************************************************************
- *									*
- * Member functions that manage string values within the database.	*
- *									*
+ *                                                                       *
+ * Member functions that manage string values within the database.       *
+ *                                                                       *
  *************************************************************************
  */
 
@@ -1209,11 +1209,11 @@ std::string MemoryDatabase::getName(
 
 /*
  *************************************************************************
- *									*
- * Search the current database for a matching key.  If found, delete	*
- * that key and return true.  If the key does not exist, then return	*
- * false.								*
- *									*
+ *                                                                       *
+ * Search the current database for a matching key.  If found, delete     *
+ * that key and return true.  If the key does not exist, then return     *
+ * false.                                                                *
+ *                                                                       *
  *************************************************************************
  */
 
@@ -1231,10 +1231,10 @@ bool MemoryDatabase::deleteKeyIfFound(
 
 /*
  *************************************************************************
- *									*
- * Find the key data associated with the specified key and return a	*
- * pointer to the record.  If no such key data exists, then return NULL.	*
- *									*
+ *                                                                       *
+ * Find the key data associated with the specified key and return a      *
+ * pointer to the record.  If no such key data exists, then return NULL. *
+ *                                                                       *
  *************************************************************************
  */
 
@@ -1250,11 +1250,11 @@ MemoryDatabase::findKeyData(
 
 /*
  *************************************************************************
- *									*
- * Find the key data associated with the specified key and return a	*
- * pointer to the record.  If no such key data exists, then exit with	*
- * an error message.							*
- *									*
+ *                                                                       *
+ * Find the key data associated with the specified key and return a      *
+ * pointer to the record.  If no such key data exists, then exit with    *
+ * an error message.                                                     *
+ *                                                                       *
  *************************************************************************
  */
 
@@ -1271,9 +1271,9 @@ MemoryDatabase::findKeyDataOrExit(
 
 /*
  *************************************************************************
- *									*
- * Print the entire database to the specified output stream.	        *
- *									*
+ *                                                                       *
+ * Print the entire database to the specified output stream.             *
+ *                                                                       *
  *************************************************************************
  */
 
@@ -1285,9 +1285,9 @@ void MemoryDatabase::printClassData(
 
 /*
  *************************************************************************
- *									*
- * Print unused database keys to the specified output stream.	        *
- *									*
+ *                                                                       *
+ * Print unused database keys to the specified output stream.            *
+ *                                                                       *
  *************************************************************************
  */
 
@@ -1299,9 +1299,9 @@ void MemoryDatabase::printUnusedKeys(
 
 /*
  *************************************************************************
- *									*
- * Print default database keys to the specified output stream.          *
- *									*
+ *                                                                       *
+ * Print default database keys to the specified output stream.           *
+ *                                                                       *
  *************************************************************************
  */
 
@@ -1313,9 +1313,9 @@ void MemoryDatabase::printDefaultKeys(
 
 /*
  *************************************************************************
- *									*
- * Indent the output stream by the specified indentation factor.		*
- *									*
+ *                                                                       *
+ * Indent the output stream by the specified indentation factor.         *
+ *                                                                       *
  *************************************************************************
  */
 
@@ -1330,9 +1330,9 @@ void MemoryDatabase::indentStream(
 
 /*
  *************************************************************************
- *									*
- * Print database data to the specified output stream.			*
- *									*
+ *                                                                       *
+ * Print database data to the specified output stream.                   *
+ *                                                                       *
  *************************************************************************
  */
 

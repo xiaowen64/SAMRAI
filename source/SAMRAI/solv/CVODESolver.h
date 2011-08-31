@@ -744,8 +744,8 @@ public:
     *
     *
     *
-    *	 -
-    *	    precondition_type must be one of NONE, LEFT, RIGHT, or BOTH.
+    *    -
+    *       precondition_type must be one of NONE, LEFT, RIGHT, or BOTH.
     *
     *
     *
@@ -766,8 +766,8 @@ public:
     *
     *
     *
-    *	 -
-    *	    gs_type must be one of CLASSICAL_GS or MODIFIED_GS.
+    *    -
+    *       gs_type must be one of CLASSICAL_GS or MODIFIED_GS.
     *
     *
     *
@@ -787,8 +787,8 @@ public:
     *
     *
     *
-    *	 -
-    *	    max_krylov_dim must be nonnegative
+    *    -
+    *       max_krylov_dim must be nonnegative
     *
     *
     *
@@ -809,8 +809,8 @@ public:
     *
     *
     *
-    *	 -
-    *	    tol_scale_factor must be nonnegative
+    *    -
+    *       tol_scale_factor must be nonnegative
     *
     *
     *

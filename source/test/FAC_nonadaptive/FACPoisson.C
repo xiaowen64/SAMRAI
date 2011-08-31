@@ -289,12 +289,12 @@ int FACPoisson::solvePoisson()
    double avg_factor, final_factor;
    d_poisson_fac_solver.getConvergenceFactors(avg_factor, final_factor);
    tbox::plog << "\t" << (solver_ret ? "" : "NOT ") << "converged " << "\n"
-              << "	iterations: "
+              << "      iterations: "
               << d_poisson_fac_solver.getNumberOfIterations() << "\n"
-              << "	residual: "<< d_poisson_fac_solver.getResidualNorm()
+              << "      residual: "<< d_poisson_fac_solver.getResidualNorm()
               << "\n"
-              << "	average convergence: "<< avg_factor << "\n"
-              << "	final convergence: "<< final_factor << "\n"
+              << "      average convergence: "<< avg_factor << "\n"
+              << "      final convergence: "<< final_factor << "\n"
               << std::flush;
 
    d_poisson_fac_solver.deallocateSolverState();

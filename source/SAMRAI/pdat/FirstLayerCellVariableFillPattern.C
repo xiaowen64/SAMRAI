@@ -38,8 +38,8 @@ FirstLayerCellVariableFillPattern::FirstLayerCellVariableFillPattern(
 
 /*
  *************************************************************************
- *									*
- * Destructor								*
+ *                                                                       *
+ * Destructor                                                            *
  *                                                                       *
  *************************************************************************
  */

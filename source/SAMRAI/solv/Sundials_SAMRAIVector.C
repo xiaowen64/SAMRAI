@@ -94,7 +94,7 @@ Sundials_SAMRAIVector::~Sundials_SAMRAIVector()
 /*
  *************************************************************************
  *                                                                       *
- * Other miscellaneous member functions					*
+ * Other miscellaneous member functions                                  *
  *                                                                       *
  *************************************************************************
  */

@@ -26,9 +26,9 @@ namespace pdat {
 
 /*
  *************************************************************************
- *									*
- * Create a side geometry object given the box and ghost cell width.	*
- *									*
+ *                                                                       *
+ * Create a side geometry object given the box and ghost cell width.     *
+ *                                                                       *
  *************************************************************************
  */
 
@@ -50,16 +50,16 @@ OutersideGeometry::~OutersideGeometry()
 
 /*
  *************************************************************************
- *									*
- * Attempt to calculate the intersection between two outerside centered	*
- * box geometries.  The calculateOverlap() checks whether both arguments	*
- * are outerside geometries; if so, it compuates the intersection.  If	*
- * not, then it calls calculateOverlap() on the source object (if retry	*
- * is true) to allow the source a chance to calculate the intersection.	*
- * See the hier::BoxGeometry base class for more information about the	*
- * protocol.  A pointer to null is returned if the intersection canot be	*
- * computed.								*
- *                                                                      *
+ *                                                                       *
+ * Attempt to calculate the intersection between two outerside centered  *
+ * box geometries.  The calculateOverlap() checks whether both arguments *
+ * are outerside geometries; if so, it compuates the intersection.  If   *
+ * not, then it calls calculateOverlap() on the source object (if retry  *
+ * is true) to allow the source a chance to calculate the intersection.  *
+ * See the hier::BoxGeometry base class for more information about the   *
+ * protocol.  A pointer to null is returned if the intersection canot be *
+ * computed.                                                             *
+ *                                                                       *
  *************************************************************************
  */
 
@@ -94,12 +94,12 @@ tbox::Pointer<hier::BoxOverlap> OutersideGeometry::calculateOverlap(
 
 /*
  *************************************************************************
- *									*
- * Compute the overlap between a side geometry destination box and an	*
- * outerside geometry source box.  The intersection algorithm is similar	*
- * the side geometry algorithm except that only the borders of source	*
- * are used in the intersection computation.				*
- *									*
+ *                                                                       *
+ * Compute the overlap between a side geometry destination box and an    *
+ * outerside geometry source box.  The intersection algorithm is similar *
+ * the side geometry algorithm except that only the borders of source    *
+ * are used in the intersection computation.                             *
+ *                                                                       *
  *************************************************************************
  */
 

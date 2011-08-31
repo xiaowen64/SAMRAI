@@ -86,8 +86,8 @@ void CoarsenSchedule::setScheduleGenerationMethod(
  * Create a coarsening schedule that transfers data from the source       *
  * patch data components of the fine level into the destination patch     *
  * data components of the coarse level.  If the coarsening operators      *
- * require data in ghost cells on the source level, then those ghost	  *
- * cells must be filled before this call.				  *
+ * require data in ghost cells on the source level, then those ghost      *
+ * cells must be filled before this call.                                 *
  *                                                                        *
  * ************************************************************************
  */
@@ -239,18 +239,18 @@ CoarsenSchedule::getEquivalenceClasses() const
 /*
  * ************************************************************************
  *                                                                        *
- * Execute the stored communication schedule that copies data into the	  *
- * the destination patch data components of the destination level from	  *
- * the source patch data components of the source level.  The steps	  *
- * to the algorithm are as follows:					  *
- *									  *
- *	(1) Allocate the source space on the temporary patch level.	  *
- *	(2) Coarsen the data from the fine patch level to the temporary	  *
- *	    patch level (local operation).				  *
- *	(3) Copy data from the source space of the temporary patch	  *
- *	    level into the destination space of the destination patch	  *
- *	    level (requires interprocessor communication).		  *
- *	(4) Deallocate the source space on the temporary patch level.	  *
+ * Execute the stored communication schedule that copies data into the    *
+ * the destination patch data components of the destination level from    *
+ * the source patch data components of the source level.  The steps       *
+ * to the algorithm are as follows:                                       *
+ *                                                                        *
+ *      (1) Allocate the source space on the temporary patch level.       *
+ *      (2) Coarsen the data from the fine patch level to the temporary   *
+ *          patch level (local operation).                                *
+ *      (3) Copy data from the source space of the temporary patch        *
+ *          level into the destination space of the destination patch     *
+ *          level (requires interprocessor communication).                *
+ *      (4) Deallocate the source space on the temporary patch level.     *
  *                                                                        *
  * ************************************************************************
  */
@@ -312,9 +312,9 @@ void CoarsenSchedule::coarsenData() const
 /*
  * ************************************************************************
  *                                                                        *
- * Generate the temporary coarse level by coarsening the fine patch	  *
+ * Generate the temporary coarse level by coarsening the fine patch       *
  * level boxes.  Note that no patch data components are allocated until   *
- * they are needed during the coarsening operation.			  *
+ * they are needed during the coarsening operation.                       *
  *                                                                        *
  * ************************************************************************
  */
@@ -436,8 +436,8 @@ void CoarsenSchedule::setupRefineAlgorithm()
  *                                                                        *
  * Generate communication schedule that copies source patch data          *
  * from the temporary level into the destination patch data of the        *
- * destination (coarse) level.  The source and destination	          *
- * spaces may be the same.						  *
+ * destination (coarse) level.  The source and destination                *
+ * spaces may be the same.                                                *
  *                                                                        *
  * ************************************************************************
  */
@@ -931,8 +931,8 @@ void CoarsenSchedule::constructScheduleTransactions(
 /*
  * ************************************************************************
  *                                                                        *
- * Coarsen data from the source space on the fine patch level into the	  *
- * source space on the coarse temporary patch level.			  *
+ * Coarsen data from the source space on the fine patch level into the    *
+ * source space on the coarse temporary patch level.                      *
  *                                                                        *
  * ************************************************************************
  */
@@ -1158,8 +1158,8 @@ const hier::Connector *CoarsenSchedule::getOverlapConnector_strict(
 /*
  * ************************************************************************
  *                                                                        *
- * Print coarsen schedule data to the specified output stream.		  *
- *									  *
+ * Print coarsen schedule data to the specified output stream.            *
+ *                                                                        *
  * ************************************************************************
  */
 

@@ -54,7 +54,7 @@ tbox::Pointer<tbox::Timer> TimeRefinementIntegrator::t_advance_level;
 /*
  *************************************************************************
  *                                                                       *
- * The constructor for TimeRefinementIntegrator checks for valid   *
+ * The constructor for TimeRefinementIntegrator checks for valid         *
  * input data, initializes time stepping data to undefined values,       *
  * and forces certain parameters in the level strategy, regridding       *
  * algorithm to be consistent with this object's data members.  This     *
@@ -199,7 +199,7 @@ TimeRefinementIntegrator::TimeRefinementIntegrator(
 /*
  *************************************************************************
  *                                                                       *
- * Destructor tells tbox::RestartManager to remove this object from the   *
+ * Destructor tells tbox::RestartManager to remove this object from the  *
  * list of restart items.                                                *
  *                                                                       *
  *************************************************************************
@@ -1526,7 +1526,7 @@ void TimeRefinementIntegrator::putToDatabase(
  *                                                                       *
  * If simulation is not from restart, read in all data members from      *
  * the input database.  Otherwise, only override end_time, grow_dt       *
- * max_integrator_steps, and tag_buffer from the input database.		*
+ * max_integrator_steps, and tag_buffer from the input database.         *
  *                                                                       *
  *************************************************************************
  */

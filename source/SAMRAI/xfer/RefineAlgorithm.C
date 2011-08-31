@@ -28,7 +28,7 @@ namespace xfer {
 /*
  *************************************************************************
  *                                                                       *
- * Default constructor creates a new RefineClasses object.         *
+ * Default constructor creates a new RefineClasses object.               *
  *                                                                       *
  *************************************************************************
  */
@@ -43,10 +43,10 @@ RefineAlgorithm::RefineAlgorithm(
 
 /*
  *************************************************************************
- *									*
- * The destructor implicitly deletes the list storage associated with	*
- * the refine algorithm.							*
- *									*
+ *                                                                       *
+ * The destructor implicitly deletes the list storage associated with    *
+ * the refine algorithm.                                                 *
+ *                                                                       *
  *************************************************************************
  */
 
@@ -56,9 +56,9 @@ RefineAlgorithm::~RefineAlgorithm()
 
 /*
  *************************************************************************
- *									*
- * Register a refine operation that will not require time interpolation.	*
- *									*
+ *                                                                       *
+ * Register a refine operation that will not require time interpolation. *
+ *                                                                       *
  *************************************************************************
  */
 
@@ -107,9 +107,9 @@ void RefineAlgorithm::registerRefine(
 
 /*
  *************************************************************************
- *									*
- * Register a refine operation that will require time interpolation.	*
- *									*
+ *                                                                       *
+ * Register a refine operation that will require time interpolation.     *
+ *                                                                       *
  *************************************************************************
  */
 
@@ -157,11 +157,11 @@ void RefineAlgorithm::registerRefine(
 
 /*
  *************************************************************************
- *									*
+ *                                                                       *
  * Create a communication schedule that will copy data from the          *
  * interiors of the specified level into the ghost cells and             *
  * interiors of the same level.                                          *
- *									*
+ *                                                                       *
  *************************************************************************
  */
 
@@ -202,11 +202,11 @@ RefineAlgorithm::createSchedule(
 
 /*
  *************************************************************************
- *									*
+ *                                                                       *
  * Create a communication schedule that will copy data from the          *
  * interiors of the specified level into the ghost cells and             *
  * interiors of the same level.                                          *
- *									*
+ *                                                                       *
  *************************************************************************
  */
 
@@ -245,11 +245,11 @@ RefineAlgorithm::createSchedule(
 
 /*
  *************************************************************************
- *									*
+ *                                                                       *
  * Create a communication schedule that will copy data from the          *
  * interiors of the source level into the ghost cell and interiors       *
- * of the destination level.						*
- *									*
+ * of the destination level.                                             *
+ *                                                                       *
  *************************************************************************
  */
 
@@ -299,11 +299,11 @@ RefineAlgorithm::createSchedule(
 
 /*
  *************************************************************************
- *									*
+ *                                                                       *
  * Create a communication schedule that will copy data from the          *
  * interiors of the source level into the ghost cell and interiors       *
- * of the destination level.						*
- *									*
+ * of the destination level.                                             *
+ *                                                                       *
  *************************************************************************
  */
 
@@ -348,11 +348,11 @@ RefineAlgorithm::createSchedule(
 
 /*
  *************************************************************************
- *									*
- * Create a communication schedule that copies data from the interiors	*
- * of the same level and coarser levels into the interior and boundary	*
- * cells of the given level.						*
- *									*
+ *                                                                       *
+ * Create a communication schedule that copies data from the interiors   *
+ * of the same level and coarser levels into the interior and boundary   *
+ * cells of the given level.                                             *
+ *                                                                       *
  *************************************************************************
  */
 
@@ -405,11 +405,11 @@ RefineAlgorithm::createSchedule(
 
 /*
  *************************************************************************
- *									*
- * Create a communication schedule that copies data from the interiors	*
- * of the same level and coarser levels into the interior and boundary	*
- * cells of the given level.						*
- *									*
+ *                                                                       *
+ * Create a communication schedule that copies data from the interiors   *
+ * of the same level and coarser levels into the interior and boundary   *
+ * cells of the given level.                                             *
+ *                                                                       *
  *************************************************************************
  */
 
@@ -460,11 +460,11 @@ RefineAlgorithm::createSchedule(
 
 /*
  *************************************************************************
- *									*
- * Create a communication schedule that copies data from the interiors	*
- * of the old level and coarser levels into the ghost cells and interior	*
- * cells of the given new level.						*
- *									*
+ *                                                                       *
+ * Create a communication schedule that copies data from the interiors   *
+ * of the old level and coarser levels into the ghost cells and interior *
+ * cells of the given new level.                                         *
+ *                                                                       *
  *************************************************************************
  */
 
@@ -526,11 +526,11 @@ RefineAlgorithm::createSchedule(
 
 /*
  *************************************************************************
- *									*
- * Create a communication schedule that copies data from the interiors	*
- * of the old level and coarser levels into the ghost cells and interior	*
- * cells of the given new level.						*
- *									*
+ *                                                                       *
+ * Create a communication schedule that copies data from the interiors   *
+ * of the old level and coarser levels into the ghost cells and interior *
+ * cells of the given new level.                                         *
+ *                                                                       *
  *************************************************************************
  */
 

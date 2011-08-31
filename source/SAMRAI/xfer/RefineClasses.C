@@ -46,10 +46,10 @@ RefineClasses::RefineClasses():
 
 /*
  *************************************************************************
- *									*
- * The destructor implicitly deletes the item storage associated with	*
- * the equivalence classes (and also the refine algorithm).		*
- *									*
+ *                                                                       *
+ * The destructor implicitly deletes the item storage associated with    *
+ * the equivalence classes (and also the refine algorithm).              *
+ *                                                                       *
  *************************************************************************
  */
 
@@ -96,9 +96,9 @@ RefineClasses::getIterator(
 
 /*
  *************************************************************************
- *								         *
+ *                                                                       *
  * Insert a data item into the proper equivalence class.                 *
- *									 *
+ *                                                                       *
  *************************************************************************
  */
 
@@ -437,9 +437,9 @@ void RefineClasses::increaseRefineItemArraySize(
 
 /*
  *************************************************************************
- *									*
+ *                                                                       *
  * Print the data in the refine item lists to the specified stream.      *
- *									*
+ *                                                                       *
  *************************************************************************
  */
 

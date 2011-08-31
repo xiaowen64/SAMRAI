@@ -42,7 +42,7 @@ const int CVODESolver::STAT_OUTPUT_BUFFER_SIZE = 256;
  *************************************************************************
  *                                                                       *
  * Static member functions that provide linkage with CVODE package.      *
- * See header file for CVODEAbstractFunctions for more information. *
+ * See header file for CVODEAbstractFunctions for more information.      *
  *                                                                       *
  *************************************************************************
  */
@@ -60,7 +60,7 @@ int CVODESolver::CVODERHSFuncEval(
 /*
  *************************************************************************
  *                                                                       *
- * Static member functions that provide linkage with CVSpgmr package.	*
+ * Static member functions that provide linkage with CVSpgmr package.    *
  *                                                                       *
  *************************************************************************
  */

@@ -51,10 +51,10 @@ CoarsenClasses::CoarsenClasses(
 
 /*
  *************************************************************************
- *									*
- * The destructor implicitly deletes the item storage associated with	*
- * the equivalence classes (and also the coarsen algorithm).		*
- *									*
+ *                                                                       *
+ * The destructor implicitly deletes the item storage associated with    *
+ * the equivalence classes (and also the coarsen algorithm).             *
+ *                                                                       *
  *************************************************************************
  */
 
@@ -83,7 +83,7 @@ CoarsenClasses::getClassRepresentative(
 /*
  *************************************************************************
  *                                                                       *
- * Return iterator for list of coarsen items for given equivalence class  *
+ * Return iterator for list of coarsen items for given equivalence class *
  *                                                                       *
  *************************************************************************
  */
@@ -100,9 +100,9 @@ CoarsenClasses::getIterator(
 
 /*
  *************************************************************************
- *									 *
+ *                                                                       *
  * Insert a data item into the proper equivalence class.                 *
- *									 *
+ *                                                                       *
  *************************************************************************
  */
 
@@ -344,9 +344,9 @@ void CoarsenClasses::increaseCoarsenItemArraySize(
 
 /*
  *************************************************************************
- *									*
+ *                                                                       *
  * Print the data in the coarsen item lists to the specified stream.     *
- *									*
+ *                                                                       *
  *************************************************************************
  */
 

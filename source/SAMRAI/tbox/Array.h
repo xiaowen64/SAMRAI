@@ -96,9 +96,9 @@ public:
     * \Example
     * \code
     * for(int i = 0; i < d_elements; i++) {
-    *	    void *p = &d_objects[i];
-    *	    (void) new (p) TYPE(arg1, arg2);
-    *	 }
+    *       void *p = &d_objects[i];
+    *       (void) new (p) TYPE(arg1, arg2);
+    *    }
     *
     * \endcode
     *

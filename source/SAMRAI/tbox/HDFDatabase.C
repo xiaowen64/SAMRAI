@@ -410,9 +410,9 @@ Array<std::string> HDFDatabase::getAllKeys()
 
 /*
  *************************************************************************
- *									*
- * Get the type of the array entry associated with the specified key	*
- *									*
+ *                                                                       *
+ * Get the type of the array entry associated with the specified key     *
+ *                                                                       *
  *************************************************************************
  */
 enum Database::DataType HDFDatabase::getArrayType(

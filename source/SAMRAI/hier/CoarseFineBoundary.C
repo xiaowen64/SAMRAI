@@ -520,7 +520,7 @@ void CoarseFineBoundary::printClassData(
    os << "\nCoarseFineBoundary::printClassData...";
    for (std::map<BoxId, PatchBoundaries>::const_iterator
         mi = d_boundary_boxes.begin(); mi != d_boundary_boxes.end(); ++mi) {
-      os << "\n	        patch " << (*mi).first;
+      os << "\n         patch " << (*mi).first;
       for (unsigned int btype = 0; btype < d_dim.getValue(); ++btype) {
          os << "\n                type " << btype;
          const tbox::Array<BoundaryBox>

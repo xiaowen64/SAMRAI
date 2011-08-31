@@ -124,9 +124,9 @@ int main(
       tbox::Pointer<tbox::Database> global_db =
          input_db->getDatabase("GlobalInputs");
 //      if (global_db->keyExists("tag_clustering_method")) {
-//	 string tag_clustering_method =
-//	    global_db->getString("tag_clustering_method");
-//	 mesh::BergerRigoutsos::setClusteringOption(tag_clustering_method);
+//       string tag_clustering_method =
+//          global_db->getString("tag_clustering_method");
+//       mesh::BergerRigoutsos::setClusteringOption(tag_clustering_method);
 //     }
       if (global_db->keyExists("call_abort_in_serial_instead_of_exit")) {
          bool flag = global_db->

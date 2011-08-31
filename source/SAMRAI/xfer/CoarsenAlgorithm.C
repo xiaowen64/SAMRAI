@@ -25,7 +25,7 @@ namespace xfer {
 /*
  *************************************************************************
  *                                                                       *
- * The constructor creates a new CoarsenClasses object             *
+ * The constructor creates a new CoarsenClasses object                   *
  * and caches a boolean indiating whether to copy data to the            *
  * destination space on the coarse level before coarsening.              *
  *                                                                       *
@@ -44,9 +44,9 @@ CoarsenAlgorithm::CoarsenAlgorithm(
 
 /*
  *************************************************************************
- *									*
+ *                                                                       *
  * The destructor implicitly deallocates the list data.                  *
- *									*
+ *                                                                       *
  *************************************************************************
  */
 
@@ -56,9 +56,9 @@ CoarsenAlgorithm::~CoarsenAlgorithm()
 
 /*
  *************************************************************************
- *									*
+ *                                                                       *
  * Register a coarsening operation with the coarsening algorithm.        *
- *									*
+ *                                                                       *
  *************************************************************************
  */
 
@@ -114,10 +114,10 @@ void CoarsenAlgorithm::registerCoarsen(
 
 /*
  *************************************************************************
- *									*
+ *                                                                       *
  * Create a communication schedule that will coarsen data from fine      *
  * patch level to the coarse patch level.                                *
- *									*
+ *                                                                       *
  *************************************************************************
  */
 
@@ -183,9 +183,9 @@ void CoarsenAlgorithm::resetSchedule(
 
 /*
  *************************************************************************
- *									*
- * Print coarsen algorithm data to the specified output stream.		*
- *									*
+ *                                                                       *
+ * Print coarsen algorithm data to the specified output stream.          *
+ *                                                                       *
  *************************************************************************
  */
 
