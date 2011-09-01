@@ -64,7 +64,7 @@ MappingConnectorAlgorithm::s_initialize_finalize_handler(
 MappingConnectorAlgorithm::MappingConnectorAlgorithm():
    d_sanity_check_inputs(false),
    d_sanity_check_outputs(false),
-   d_shortcut_trivial_maps(true)
+   d_shortcut_trivial_maps(false)
 {
    /*
     * While we figure out how to use multiple communicators in SAMRAI,
