@@ -430,7 +430,6 @@ RefineSchedule::RefineSchedule(
       *src_to_dst,
       dst_is_coarse_interp_level,
       dummy_intvector,
-      fill_mapped_box_level,
       dst_to_fill,
       dst_to_fill_on_src_proc,
       use_time_refinement,
@@ -602,7 +601,6 @@ RefineSchedule::RefineSchedule(
       src_to_dst,
       dst_is_coarse_interp_level,
       src_growth_to_nest_dst,
-      fill_mapped_box_level,
       dst_to_fill,
       dst_to_fill_on_src_proc,
       use_time_refinement);
@@ -717,7 +715,6 @@ void RefineSchedule::finishScheduleConstruction(
    const Connector& src_to_dst,
    const bool dst_is_coarse_interp_level,
    const hier::IntVector& src_growth_to_nest_dst,
-   const BoxLevel& fill_mapped_box_level,
    const Connector& dst_to_fill,
    const FillSet& dst_to_fill_on_src_proc,
    bool use_time_interpolation,
@@ -730,8 +727,6 @@ void RefineSchedule::finishScheduleConstruction(
 
    const tbox::Dimension& dim(hierarchy->getDim());
 
-   const bool fully_periodic = d_num_periodic_directions == dim.getValue();
-
    hier::BoxLevelConnectorUtils edge_utils;
    hier::OverlapConnectorAlgorithm oca;
 
@@ -741,7 +736,6 @@ void RefineSchedule::finishScheduleConstruction(
       TBOX_ASSERT(dst_to_src.isInitialized());
    }
 
-   const int nblocks = d_dst_level->getGridGeometry()->getNumberBlocks();
 
    d_coarse_priority_level_schedule = new tbox::Schedule();
    d_fine_priority_level_schedule = new tbox::Schedule();
@@ -1612,8 +1606,6 @@ void RefineSchedule::createCoarseInterpPatchLevel(
    const hier::Connector& src_to_dst,
    const bool dst_is_coarse_interp_level)
 {
-   const tbox::Dimension& dim(hierarchy->getDim());
-   const hier::IntVector& zero_vector(hier::IntVector::getZero(dim));
    hier::OverlapConnectorAlgorithm oca;
    hier::BoxLevelConnectorUtils edge_utils;
 
@@ -1626,9 +1618,6 @@ void RefineSchedule::createCoarseInterpPatchLevel(
    rscwri.computeRequiredConnectorWidths(self_connector_widths,
       fine_connector_widths,
       *hierarchy);
-
-   const hier::BoxLevel& dst_mapped_box_level(
-      *d_dst_level->getBoxLevel());
 
    const tbox::Pointer<hier::PatchLevel> hiercoarse_level(
       hierarchy->getPatchLevel(next_coarser_ln));
@@ -1970,7 +1959,6 @@ void RefineSchedule::fillData(
    hier::ComponentSelector allocate_vector;
    allocateScratchSpace(allocate_vector, d_dst_level, fill_time);
 
-   const int num_blocks = d_dst_level->getGridGeometry()->getNumberBlocks();
    hier::ComponentSelector encon_allocate_vector;
    if (d_dst_level->getGridGeometry()->hasEnhancedConnectivity()) {
       allocateScratchSpace(encon_allocate_vector, d_encon_level, fill_time);
@@ -2046,7 +2034,6 @@ void RefineSchedule::recursiveFill(
     * need to get data from a coarser grid level.
     */
 
-   const int num_blocks = d_dst_level->getGridGeometry()->getNumberBlocks();
    if (!d_coarse_interp_schedule.isNull()) {
 
       /*
@@ -2676,18 +2663,6 @@ void RefineSchedule::generateCommunicationSchedule(
    const BoxLevel& dst_mapped_box_level = dst_to_fill.getBase();
 
    if (create_transactions) {
-      /*
-       * We invert the edges so that the src transactions on the local
-       * process are created in the same order the dst transactions
-       * are created on remote processes.  The ordering is how the
-       * source and destination transactions are matched up on the
-       * receiving process.  We chose to order the transactions
-       * dst-major (all the transactions for one dst Box are
-       * grouped together, then all transactions for the next
-       * dst Box, and so on).
-       */
-      const hier::NeighborhoodSet& dst_to_src_edges =
-         dst_to_src.getNeighborhoodSets();
 
       /*
        * Reorder the src_to_dst edge data to arrange neighbors by the

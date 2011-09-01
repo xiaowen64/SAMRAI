@@ -422,14 +422,12 @@ private:
     * @param[in] src_growth_to_nest_dst  The minimum amount that the source
     *                                    level has to grow in order to nest the
     *                                    destination level.
-    * @param[in] fill_mapped_box_level  Contains mapped boxes representing
-    *                                   the region desired to be filled.
-    * @param[in] dst_to_fill  Connector from the destination level
-    *                         to fill_mapped_box_level.
+    * @param[in] dst_to_fill  Connector describing the boxes to fill for each
+    *                         destination patch.
     * @param[in] src_owner_dst_to_fill  A FillSet that maps each local
     *                                   mapped box on the source level to
     *                                   a BoxVector that indicates what parts
-    *                                   of fill_mapped_box_level can be filled
+    *                                   of the destination fill boxes can be filled
     *                                   by that source box.
     * @param[in] use_time_interpolation  Boolean flag indicating whether to
     *                                    use time interpolation when setting
@@ -447,7 +445,6 @@ private:
       const Connector& src_to_dst,
       const bool dst_is_coarse_interp_level,
       const hier::IntVector& src_growth_to_nest_dst,
-      const BoxLevel& fill_mapped_box_level,
       const Connector& dst_to_fill,
       const FillSet& src_owner_dst_to_fill,
       bool use_time_interpolation,
