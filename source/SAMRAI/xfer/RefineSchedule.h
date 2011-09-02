@@ -672,6 +672,9 @@ private:
     * @param[in]  hierarchy         The patch hierarchy
     * @param[in]  hiercoarse_level  Level on hierarchy one level coarser than
     *                               the destination level
+    * @param[in]  dst_is_coarse_interp_level
+    * @param[in]  src_growth_to_nest_dst
+    * @param[in]  encon_to_unfilled_encon
     */
    void
    createEnconFillSchedule(
@@ -717,26 +720,39 @@ private:
       const tbox::Pointer<hier::PatchHierarchy>& hierarchy);
 
    /*!
-    * @brief Set up the coarse interpolation BoxLevel and related data.
+    * @brief Set up a coarse interpolation BoxLevel and related data.
     *
-    * Also sets up d_dst_to_coarse_interp, d_coarse_interp_to_dst and d_coarse_interp_to_unfilled.
+    * Also sets up dst_to_coarse_interp, coarse_interp_to_dst and
+    * coarse_interp_to_unfilled.
     *
     * @param[out] coarse_interp_mapped_box_level
     *
+    * @param[out] dst_to_coarse_interp
+    *
+    * @param[out] coarse_interp_to_dst
+    *
+    * @param[out] coarse_interp_to_unfilled
+    *
     * @param[in] hiercoarse_mapped_box_level The BoxLevel on the
-    * hierarchy at the resolution that coarse_interp_mapped_box_level is to have.
+    * hierarchy at the resolution that coarse_interp_mapped_box_level is to
+    * have.
     *
     * @param[in] dst_to_unfilled
     */
-   void
-   setupCoarseInterpBoxLevel(
-      hier::BoxLevel& coarse_interp_mapped_box_level,
-      const hier::BoxLevel& hiercoarse_mapped_box_level,
-      const hier::Connector& dst_to_unfilled);
+   void setupCoarseInterpBoxLevel(
+      hier::BoxLevel &coarse_interp_mapped_box_level,
+      hier::Connector &dst_to_coarse_interp,
+      hier::Connector &coarse_interp_to_dst,
+      hier::Connector &coarse_interp_to_unfilled,
+      const hier::BoxLevel &hiercoarse_mapped_box_level,
+      const hier::Connector &dst_to_unfilled);
 
    /*!
-    * @brief Create the coarse interpolation PatchLevel and compute the Connectors between the coarse interpolation level
+    * @brief Create a coarse interpolation PatchLevel and compute the
+    * Connectors between the coarse interpolation level
     * and the hiercoarse level.
+    *
+    * @param[out] coarse_interp_level
     *
     * @param[out] coarse_interp_to_hiercoarse
     *
@@ -745,23 +761,37 @@ private:
     * @param[in,out] coarse_interp_mapped_box_level This method will add
     * periodic images to coarse_interp_mapped_box_level, if needed.
     *
-    * @param[in] dst_is_coarse_interp_level
-    *
     * @param[in] hierarchy
     *
     * @param[in] next_coarser_ln Level number of hiercoarse (the
     * coarser level on the hierarchy
+    *
+    * @param[in] dst_to_src
+    *
+    * @param[in] src_to_dst
+    *
+    * @param[in] coarse_interp_to_dst
+    *
+    * @param[in] dst_to_coarse_interp
+    *
+    * @param[in] dst_level
+    *
+    * @param[in] dst_is_coarse_interp_level
     */
    void
    createCoarseInterpPatchLevel(
+      tbox::Pointer<hier::PatchLevel>& coarse_interp_level,
       tbox::Pointer<hier::Connector>& coarse_interp_to_hiercoarse,
       tbox::Pointer<hier::Connector>& hiercoarse_to_coarse_interp,
       hier::BoxLevel& coarse_interp_mapped_box_level,
       const tbox::Pointer<hier::PatchHierarchy>& hierarchy,
       const int next_coarser_ln,
-      const hier::Connector& dst_to_src,
-      const hier::Connector& src_to_dst,
-      const bool dst_is_coarse_interp_level);
+      const hier::Connector &dst_to_src,
+      const hier::Connector &src_to_dst,
+      const hier::Connector &coarse_interp_to_dst,
+      const hier::Connector &dst_to_coarse_interp,
+      const tbox::Pointer<hier::PatchLevel> &dst_level,
+      const bool dst_is_coarse_interp_level );
 
    /*!
     * @brief Check that the Connectors between the coarse
