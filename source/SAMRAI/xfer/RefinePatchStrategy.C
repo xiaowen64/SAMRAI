@@ -35,6 +35,7 @@ RefinePatchStrategy::RefinePatchStrategy(
 
 RefinePatchStrategy::~RefinePatchStrategy()
 {
+   unregisterObject();
 }
 
 /*
@@ -88,7 +89,21 @@ void RefinePatchStrategy::registerObject()
 {
    std::set<RefinePatchStrategy *>& current_objects =
       RefinePatchStrategy::getCurrentObjects();
+   TBOX_DIM_ASSERT_CHECK_DIM(d_dim);
    current_objects.insert(this);
+}
+
+/*
+ *************************************************************************
+ * Unregister this from the static registry.
+ *************************************************************************
+ */
+void RefinePatchStrategy::unregisterObject()
+{
+   std::set<RefinePatchStrategy *>& current_objects =
+      RefinePatchStrategy::getCurrentObjects();
+   TBOX_DIM_ASSERT_CHECK_DIM(d_dim);
+   current_objects.erase(this);
 }
 
 /*

@@ -283,6 +283,12 @@ private:
    void
    registerObject();
 
+   /*!
+    * @brief Unregister the object.
+    */
+   void
+   unregisterObject();
+
 };
 
 }
