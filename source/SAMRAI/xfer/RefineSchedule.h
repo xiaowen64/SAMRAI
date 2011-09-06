@@ -377,8 +377,6 @@ private:
     * @param[in] hierarchy   Pointer to patch hierarchy.
     * @param[in] src_growth_to_nest_dst  The minimum amount that src_level has
     *                                    to grow in order to nest dst.
-    * @param[in] dst_to_src  Connector from dst_level to src_level.
-    * @param[in] src_to_dst  Connector from src_level to dst_level.
     * @param[in] refine_classes  Holds refine equivalence classes to be used
     *                            by this schedule.
     * @param[in] transaction_factory  Pointer to a factory object that will
@@ -395,8 +393,6 @@ private:
       int next_coarser_level,
       tbox::Pointer<hier::PatchHierarchy> hierarchy,
       const hier::IntVector& src_growth_to_nest_dst,
-      const hier::Connector& dst_to_src,
-      const hier::Connector& src_to_dst,
       const tbox::Pointer<xfer::RefineClasses> refine_classes,
       tbox::Pointer<xfer::RefineTransactionFactory> transaction_factory,
       xfer::RefinePatchStrategy* patch_strategy);
@@ -754,10 +750,6 @@ private:
     *
     * @param[out] coarse_interp_level
     *
-    * @param[out] coarse_interp_to_hiercoarse
-    *
-    * @param[out] hiercoarse_to_coarse_interp
-    *
     * @param[in,out] coarse_interp_mapped_box_level This method will add
     * periodic images to coarse_interp_mapped_box_level, if needed.
     *
@@ -781,8 +773,6 @@ private:
    void
    createCoarseInterpPatchLevel(
       tbox::Pointer<hier::PatchLevel>& coarse_interp_level,
-      tbox::Pointer<hier::Connector>& coarse_interp_to_hiercoarse,
-      tbox::Pointer<hier::Connector>& hiercoarse_to_coarse_interp,
       hier::BoxLevel& coarse_interp_mapped_box_level,
       const tbox::Pointer<hier::PatchHierarchy>& hierarchy,
       const int next_coarser_ln,

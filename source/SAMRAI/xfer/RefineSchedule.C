@@ -473,8 +473,6 @@ RefineSchedule::RefineSchedule(
    int next_coarser_ln,
    tbox::Pointer<hier::PatchHierarchy> hierarchy,
    const hier::IntVector& src_growth_to_nest_dst,
-   const hier::Connector& dst_to_src,
-   const hier::Connector& src_to_dst,
    const tbox::Pointer<xfer::RefineClasses> refine_classes,
    tbox::Pointer<xfer::RefineTransactionFactory> transaction_factory,
    xfer::RefinePatchStrategy* patch_strategy):
@@ -488,6 +486,7 @@ RefineSchedule::RefineSchedule(
    d_constructing_internal_schedule(true)
 {
    TBOX_ASSERT(!dst_level.isNull());
+   TBOX_ASSERT(!src_level.isNull());
    TBOX_ASSERT((next_coarser_ln == -1) || !hierarchy.isNull());
    TBOX_ASSERT(!refine_classes.isNull());
 #ifdef DEBUG_CHECK_DIM_ASSERTIONS
@@ -547,20 +546,22 @@ RefineSchedule::RefineSchedule(
    bool recursive_schedule = true;
    initializeDomainAndGhostInformation(recursive_schedule);
 
-   /*
-    * Note that we cannot assert dst<==>src are complete, because they
-    * are coarse_interp<==>hiercoarse from the recursion.
-    * finishScheduleConstruction should ensure that coarse_interp<==>hiercoarse
-    * are complete enough to fill dst and connect the unfilled portion
-    * to the next hierarchy coarser level.  finishScheduleConstruction
-    * does not (cannot) guarantee that coarse_interp<==>hiercoarse is complete.
-    */
-   TBOX_ASSERT(!src_level.isNull());
-   TBOX_ASSERT(dst_to_src.isInitialized());
-   TBOX_ASSERT(src_to_dst.isInitialized());
-   TBOX_ASSERT(dst_to_src.getConnectorWidth() >= d_max_stencil_width);
+   const hier::Connector &src_to_dst(
+      src_level->getBoxLevel()->getPersistentOverlapConnectors().
+      findConnector( *dst_level->getBoxLevel(), d_max_stencil_width ) );
+   const hier::Connector &dst_to_src(
+      dst_level->getBoxLevel()->getPersistentOverlapConnectors().
+      findConnector( *src_level->getBoxLevel(), d_max_stencil_width ) );
+
    TBOX_ASSERT(dst_to_src.getBase() == *dst_level->getBoxLevel());
    TBOX_ASSERT(src_to_dst.getHead() == *dst_level->getBoxLevel());
+
+   if ( s_extra_debug ) {
+      hier::OverlapConnectorAlgorithm oca;
+      oca.assertOverlapCorrectness(src_to_dst);
+      oca.assertOverlapCorrectness(dst_to_src);
+   }
+
 
    /*
     * Create fill_mapped_box_level, representing all parts of the
@@ -888,8 +889,6 @@ void RefineSchedule::finishScheduleConstruction(
 
       createCoarseInterpPatchLevel(
          d_coarse_interp_level,
-         coarse_interp_to_hiercoarse,
-         hiercoarse_to_coarse_interp,
          coarse_interp_mapped_box_level,
          hierarchy,
          next_coarser_ln,
@@ -975,8 +974,6 @@ void RefineSchedule::finishScheduleConstruction(
             next_coarser_ln - 1,
             hierarchy,
             hiercoarse_growth_to_nest_coarse_interp,
-            *coarse_interp_to_hiercoarse,
-            *hiercoarse_to_coarse_interp,
             coarse_schedule_refine_classes,
             d_transaction_factory,
             d_refine_patch_strategy);
@@ -1051,8 +1048,6 @@ RefineSchedule::createEnconFillSchedule(
 
    createCoarseInterpPatchLevel(
       d_coarse_interp_encon_level,
-      coarse_interp_encon_to_hiercoarse,
-      hiercoarse_to_coarse_interp_encon,
       coarse_interp_encon_box_level,
       hierarchy,
       next_coarser_ln,
@@ -1107,8 +1102,6 @@ RefineSchedule::createEnconFillSchedule(
       next_coarser_ln - 1,
       hierarchy,
       hiercoarse_growth_to_nest_coarse_interp_encon,
-      *coarse_interp_encon_to_hiercoarse,
-      *hiercoarse_to_coarse_interp_encon,
       coarse_schedule_refine_classes,
       d_transaction_factory,
       d_refine_patch_strategy);
@@ -1374,8 +1367,6 @@ void RefineSchedule::setupCoarseInterpBoxLevel(
  */
 void RefineSchedule::createCoarseInterpPatchLevel(
    tbox::Pointer<hier::PatchLevel>& coarse_interp_level,
-   tbox::Pointer<hier::Connector>& coarse_interp_to_hiercoarse,
-   tbox::Pointer<hier::Connector>& hiercoarse_to_coarse_interp,
    hier::BoxLevel& coarse_interp_mapped_box_level,
    const tbox::Pointer<hier::PatchHierarchy>& hierarchy,
    const int next_coarser_ln,
@@ -1526,16 +1517,28 @@ void RefineSchedule::createCoarseInterpPatchLevel(
    if (s_barrier_and_time) {
       t_bridge_coarse_interp_hiercoarse->barrierAndStart();
    }
-   coarse_interp_to_hiercoarse = new Connector;
-   hiercoarse_to_coarse_interp = new Connector;
-   oca.bridge(
+   const tbox::Pointer<hier::Connector> coarse_interp_to_hiercoarse(new hier::Connector);
+   const tbox::Pointer<hier::Connector> hiercoarse_to_coarse_interp(new hier::Connector);
+
+   const hier::IntVector neg1(-hier::IntVector::getOne(hierarchy->getDim()));
+   const hier::IntVector dst_growth_to_nest_coarse_interp =
+      dst_to_coarse_interp.getConnectorWidth() -
+      (d_max_stencil_width * dst_to_hiercoarse->getRatio());
+
+   oca.bridgeWithNesting(
       *coarse_interp_to_hiercoarse,
       *hiercoarse_to_coarse_interp,
       coarse_interp_to_dst,
       *dst_to_hiercoarse,
       *hiercoarse_to_dst,
       dst_to_coarse_interp,
-      fine_connector_widths[next_coarser_ln]);
+      dst_growth_to_nest_coarse_interp,
+      neg1,
+      neg1);
+   TBOX_ASSERT( coarse_interp_to_hiercoarse->getConnectorWidth() >= d_max_stencil_width );
+   TBOX_ASSERT( hiercoarse_to_coarse_interp->getConnectorWidth() >= d_max_stencil_width );
+   coarse_interp_to_hiercoarse->removePeriodicRelationships();
+   hiercoarse_to_coarse_interp->removePeriodicRelationships();
    if (s_barrier_and_time) {
       t_bridge_coarse_interp_hiercoarse->stop();
    }
@@ -1575,9 +1578,7 @@ void RefineSchedule::createCoarseInterpPatchLevel(
    /*
     * Construct the coarse interpolation PatchLevel and reset
     * coarse_interp<==>hiercoarse connectors to use the PatchLevel's
-    * BoxLevel.  Note that coarse_interp<==>hiercoarse is not
-    * guaranteed to be complete, so we cannot put them into
-    * PersistentOverlapConnectors.
+    * BoxLevel.
     */
 
    t_make_coarse_interp_level->start();
@@ -1594,16 +1595,14 @@ void RefineSchedule::createCoarseInterpPatchLevel(
       adjustMultiblockPatchLevelBoundaries(*coarse_interp_level);
    }
 
-   coarse_interp_to_hiercoarse =
-      new Connector(*coarse_interp_level->getBoxLevel(),
-         coarse_interp_to_hiercoarse->getHead(),
-         coarse_interp_to_hiercoarse->getConnectorWidth(),
-         coarse_interp_to_hiercoarse->getNeighborhoodSets());
-   hiercoarse_to_coarse_interp =
-      new Connector(hiercoarse_to_coarse_interp->getBase(),
-         *coarse_interp_level->getBoxLevel(),
-         hiercoarse_to_coarse_interp->getConnectorWidth(),
-         hiercoarse_to_coarse_interp->getNeighborhoodSets());
+   coarse_interp_level->getBoxLevel()->getPersistentOverlapConnectors().
+      createConnector( *hiercoarse_level->getBoxLevel(),
+                       coarse_interp_to_hiercoarse->getConnectorWidth(),
+                       coarse_interp_to_hiercoarse->getNeighborhoodSets() );
+   hiercoarse_level->getBoxLevel()->getPersistentOverlapConnectors().
+      createConnector( *coarse_interp_level->getBoxLevel(),
+                       hiercoarse_to_coarse_interp->getConnectorWidth(),
+                       hiercoarse_to_coarse_interp->getNeighborhoodSets() );
 }
 
 /*
@@ -1649,6 +1648,12 @@ void RefineSchedule::sanityCheckCoarseInterpAndHiercoarseLevels(
       fine_connector_widths,
       *hierarchy);
 
+   hier::OverlapConnectorAlgorithm oca;
+
+   // Check completeness of coarse_interp<==>hiercoarse Connectors.
+   oca.assertOverlapCorrectness( coarse_interp_to_hiercoarse );
+   oca.assertOverlapCorrectness( hiercoarse_to_coarse_interp );
+
    /*
     * To work properly, we must ensure that
     * coarse_interp^d_max_stencil_width nests in hiercoarse^fine_connector_width.
@@ -1661,12 +1666,12 @@ void RefineSchedule::sanityCheckCoarseInterpAndHiercoarseLevels(
     * avoid miss any relationships when we use these Connectors in
     * bridge operations.
     */
-   Connector complete_coarse_interp_to_hiercoarse(
+   Connector wider_coarse_interp_to_hiercoarse(
       coarse_interp_to_hiercoarse.getBase(),
       coarse_interp_to_hiercoarse.getHead(),
-      coarse_interp_to_hiercoarse.getConnectorWidth());
-   hier::OverlapConnectorAlgorithm oca;
-   oca.findOverlaps(complete_coarse_interp_to_hiercoarse);
+      fine_connector_widths[next_coarser_ln] - d_max_stencil_width);
+   oca.findOverlaps(wider_coarse_interp_to_hiercoarse);
+
 
    BoxLevel external(hiercoarse_to_coarse_interp.getBase().getDim());
    Connector coarse_interp_to_external;
@@ -1674,7 +1679,7 @@ void RefineSchedule::sanityCheckCoarseInterpAndHiercoarseLevels(
    edge_utils.computeExternalParts(
       external,
       coarse_interp_to_external,
-      complete_coarse_interp_to_hiercoarse,
+      wider_coarse_interp_to_hiercoarse,
       fine_connector_widths[next_coarser_ln] - d_max_stencil_width,
       hierarchy->getPeriodicDomainSearchTree());
    coarse_interp_to_external.eraseEmptyNeighborSets();
