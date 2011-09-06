@@ -12,6 +12,7 @@
 #define included_xfer_RefineScheduleConnectorWidthRequestor_C
 
 #include "SAMRAI/xfer/RefineScheduleConnectorWidthRequestor.h"
+#include "SAMRAI/xfer/RefinePatchStrategy.h"
 
 #include "SAMRAI/tbox/Utilities.h"
 
@@ -76,7 +77,9 @@ void RefineScheduleConnectorWidthRequestor::computeRequiredConnectorWidths(
       patch_hierarchy.getPatchDescriptor()->getMaxGhostWidth(dim) * d_gcw_factor);
 
    const hier::IntVector max_stencil_width(
-      patch_hierarchy.getGridGeometry()->getMaxTransferOpStencilWidth());
+      hier::IntVector::max(
+         patch_hierarchy.getGridGeometry()->getMaxTransferOpStencilWidth(),
+         RefinePatchStrategy::getMaxRefineOpStencilWidth(dim)));
 
    const hier::IntVector& zero_vector(hier::IntVector::getZero(dim));
 
