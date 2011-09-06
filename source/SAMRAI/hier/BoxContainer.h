@@ -44,6 +44,9 @@ class MultiblockBoxTree;
  */
 class BoxContainer
 {
+friend class BoxContainerIterator;
+friend class BoxContainerConstIterator;
+
 public:
    // Typedefs.
 

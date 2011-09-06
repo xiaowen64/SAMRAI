@@ -25,8 +25,8 @@ BoxContainerIterator::BoxContainerIterator(
    BoxContainer& container,
    bool from_start):
    d_box_container(&container),
-   d_list_iter(from_start ? container.begin().d_list_iter :
-               container.end().d_list_iter)
+   d_list_iter(from_start ? container.d_list.begin() :
+               container.d_list.end())
 {
 }
 
