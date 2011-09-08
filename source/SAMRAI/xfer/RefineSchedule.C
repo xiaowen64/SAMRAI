@@ -3340,13 +3340,33 @@ void RefineSchedule::createEnconLevel(const hier::IntVector& fill_gcw)
          *(d_src_level->getBoxLevel()),
          hier::IntVector::getZero(dim));
 
+
+      const Connector& dst_to_src =
+         d_dst_level->getBoxLevel()->getPersistentOverlapConnectors().
+            findConnector(
+               *d_src_level->getBoxLevel(),
+               hier::IntVector::getZero(dim));
+
+      const Connector& src_to_dst =
+         d_src_level->getBoxLevel()->getPersistentOverlapConnectors().
+            findConnector(
+               *d_dst_level->getBoxLevel(),
+               hier::IntVector::getZero(dim));
+
+      Connector encon_to_dst;
+      encon_to_dst.initializeToLocalTranspose(d_dst_to_encon);
+
       hier::OverlapConnectorAlgorithm oca;
 
-      /*
-       * TODO:  Replace with a bridge.
-       */
-      oca.findOverlaps(d_src_to_encon);
-      oca.findOverlaps(d_encon_to_src);
+      oca.bridge(
+         d_src_to_encon,
+         d_encon_to_src,
+         src_to_dst, 
+         d_dst_to_encon,
+         encon_to_dst,
+         dst_to_src,
+         hier::IntVector::getZero(dim));
+
    }
 }
 
@@ -3829,6 +3849,7 @@ void RefineSchedule::constructScheduleTransactions(
 
          const NeighborSet& encon_nbrs = ei->second;
 
+         hier::BoxList encon_nbr_choices(dim);
          for (NeighborSet::const_iterator ni = encon_nbrs.begin();
               ni != encon_nbrs.end(); ++ni) {
             if (ni->getOwnerRank() == dst_mapped_box.getOwnerRank()) {
@@ -3836,8 +3857,19 @@ void RefineSchedule::constructScheduleTransactions(
                transformation.transform(encon_box);
 
                if (test_dst_box.contains(encon_box)) {
-                  TBOX_ASSERT(transaction_dst_mapped_box.empty());
-                  transaction_dst_mapped_box = *ni;
+                  encon_nbr_choices.appendItem(*ni);
+               }
+            }
+         }
+         if (encon_nbr_choices.size() == 0) {
+            transaction_dst_mapped_box.setEmpty();
+         } else {
+            int max_nbr_size = 0;
+            for (hier::BoxList::Iterator en(encon_nbr_choices); en; en++) {
+               const int box_size = (*en).size();
+               if (box_size > max_nbr_size) {
+                  max_nbr_size = box_size;
+                  transaction_dst_mapped_box = *en;
                }
             }
          }
