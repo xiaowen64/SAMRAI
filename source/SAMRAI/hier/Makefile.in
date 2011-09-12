@@ -57,6 +57,7 @@ OBJS = 	\
 	PersistentOverlapConnectors.o \
 	BoxSet.o \
 	NeighborhoodSet.o \
+	BoxNeighborhoodCollection.o \
 	BoxOverlap.o \
 	BoxGeometry.o \
 	BoundaryBoxUtils.o \
