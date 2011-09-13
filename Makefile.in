@@ -21,24 +21,16 @@ INCLUDE_SAM = @top_srcdir@/source/SAMRAI
 INSTALL	    = sh @srcdir@/config/install-sh
 INSTDIR	    = @INSTDIR@
 
-# SGS TODO These lists should be cleaned up
+#
+# GNUMake script to reverse strings.  This is recursive.
+#
+reverse = $(if $(1),$(call reverse,$(wordlist 2,$(words $(1)),$(1)))) $(firstword $(1))
+
 #
 # List of packages to process. 
-# tbox is not included since all of it's object files go into libSAMRAI.a (.so)
 # 
 PACKAGES=appu algs solv geom mesh math pdat xfer hier tbox
-PACKAGES_R=tbox hier xfer pdat math mesh geom solv algs appu  
-
-#
-# List of all packages, including tbox
-#
-ALL_PACKAGES=appu algs solv geom mesh math pdat xfer hier tbox
-
-#
-# List of libraries that will be created.
-#
-LIBRARIES=appu algs solv geom mesh math pdat xfer hier tbox
-LIBRARIES_R=tbox hier xfer pdat math mesh geom solv algs appu
+PACKAGES_R=$(call reverse,$(PACKAGES))
 
 #
 # Package to directory name mapping
@@ -107,7 +99,7 @@ archive_gather_obj_names: archive_remove_obj_names
 
 # Remove temporary lists of object files
 archive_remove_obj_names:
-	@for i in $(LIBRARIES); \
+	@for i in $(PACKAGES); \
 	do \
 	   $(RM) obj.$$i; \
 	done
@@ -123,7 +115,7 @@ archive_remove_obj_names:
 archive_lib_standard:
 	@if test ! -d lib; then mkdir lib; fi
 	$(MAKE) archive_gather_obj_names
-	@for i in $(LIBRARIES); \
+	@for i in $(PACKAGES); \
 	do \
 	   echo "Creating archive lib/libSAMRAI_$$i$(LIB_SUFFIX)"; \
 	   $(RM) lib/libSAMRAI_$$i$(LIB_SUFFIX); \
@@ -139,7 +131,7 @@ archive_lib_standard:
 archive_lib_noxargs:
 	@if test ! -d lib; then mkdir lib; fi
 	$(MAKE) archive_gather_obj_names
-	@for i in $(LIBRARIES); \
+	@for i in $(PACKAGES); \
 	do \
 	   echo "Creating archive lib/libSAMRAI_$$i$(LIB_SUFFIX)"; \
 	   $(RM) lib/libSAMRAI_$$i$(LIB_SUFFIX); \
@@ -156,7 +148,7 @@ archive_lib_shared:
 	@if test ! -d lib; then mkdir lib; fi
 	$(MAKE) archive_gather_obj_names
 	@LIBLIST=""; \
-	for i in $(LIBRARIES_R); \
+	for i in $(PACKAGES_R); \
 	do \
 	   echo "Creating archive lib/libSAMRAI_$$i$(LIB_SUFFIX)"; \
 	   $(RM) lib/libSAMRAI_$$i$(LIB_SUFFIX); \
@@ -176,7 +168,7 @@ install: library tools
 	$(INSTALL) -c -m 644 config/Makefile.config $(INSTDIR)/config
 	cat config/Makefile.config.install >> $(INSTDIR)/config/Makefile.config 
 	$(INSTALL) -c -m 644 include/SAMRAI/SAMRAI_config.h $(INSTDIR)/include/SAMRAI/
-	@for i in $(ALL_PACKAGES); \
+	@for i in $(PACKAGES); \
 	do \
            $(INSTALL) -d -m 755 $(INSTDIR)/include/SAMRAI/$$i;                    \
            for f in $(INCLUDE_SAM)/$$i/*.[hICi]; do                               \
