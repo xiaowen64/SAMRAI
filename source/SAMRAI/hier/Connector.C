@@ -968,13 +968,12 @@ size_t Connector::getLocalNumberOfNeighborSets() const
  */
 size_t Connector::getLocalNumberOfRelationships() const
 {
-   // FIXME:  BUG
    TBOX_ASSERT(isInitialized());
    size_t local_number_of_relationships = 0;
    for (NeighborhoodSet::const_iterator ei(d_relationships.begin());
         ei != d_relationships.end();
         ++ei) {
-      d_global_number_of_relationships += static_cast<int>(ei->second.size());
+      local_number_of_relationships += static_cast<int>(ei->second.size());
    }
    return local_number_of_relationships;
 }
