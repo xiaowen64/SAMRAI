@@ -17,7 +17,7 @@ default: library
 
 include $(OBJECT)/config/Makefile.config
 
-SUBDIRS = tbox hier xfer pdat math mesh geom solv algs appu
+SUBDIRS = $(SAMRAI_LIBRARIES_R)
 
 library:
 	for DIR in $(SUBDIRS); do if test -d $$DIR; then (cd $$DIR && $(MAKE) $@) ; fi || exit 1; done

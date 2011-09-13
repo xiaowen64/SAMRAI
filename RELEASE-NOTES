@@ -41,6 +41,8 @@ descriptions of items in the following list are provided below.
 
 (1) Boost is now required for building SAMRAI.
 
+(2) Configure option allows building selected parts of SAMRAI.
+
 
 
 -----------------------------------------------------------------------------
@@ -67,6 +69,18 @@ Boost is available at www.boost.org.
 
 Use the --with-boost=<directory> configure option to specify the path to 
 the boost install.
+
+(2) Configure option allows building selected parts of SAMRAI.
+
+A new option to configure is provide to enable selectively picking the 
+libraries that will be built.   This enables a smaller SAMRAI build if one does 
+not need a particular library.   For example to build just the tbox and hier 
+libraries configure with:
+
+./configure --with-libraries="hier tbox"
+
+Leaving off a needed library dependency will result in link failures so use 
+this with caution.  For example, SAMRAI will not work without tbox.
 
 -----------------------------------------------------------------------------
                 Details about what's changed
