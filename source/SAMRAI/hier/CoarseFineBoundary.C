@@ -114,9 +114,9 @@ CoarseFineBoundary::~CoarseFineBoundary()
 
 /*
  ************************************************************************
- * Use grid_geometry.computeBoundaryGeometry function,                  *
- * setting up the arguments in a way that will generate                 *
- * the coarse-fine boundary (instead of the domain boundary).           *
+ * Use grid_geometry.computeBoundaryGeometry function,
+ * setting up the arguments in a way that will generate
+ * the coarse-fine boundary (instead of the domain boundary).
  ************************************************************************
  */
 void CoarseFineBoundary::computeFromLevel(

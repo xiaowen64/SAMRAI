@@ -430,8 +430,8 @@ void PoissonMultigaussianSolution::setBcCoefs(
 
 /*
  ***********************************************************************
- * This class uses analytical boundary condition, so it can            *
- * an unlimited number of extensions past the corner of a patch.       *
+ * This class uses analytical boundary condition, so it can
+ * an unlimited number of extensions past the corner of a patch.
  ***********************************************************************
  */
 hier::IntVector PoissonMultigaussianSolution::numberOfExtensionsFillable()

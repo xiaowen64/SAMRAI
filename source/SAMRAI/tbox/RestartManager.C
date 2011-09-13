@@ -41,10 +41,10 @@ RestartManager::s_shutdown_handler(
 
 /*
  *************************************************************************
- *                                                                       *
- * Basic singleton classes to create, set, and destroy the manager       *
- * instance.                                                             *
- *                                                                       *
+ *
+ * Basic singleton classes to create, set, and destroy the manager
+ * instance.
+ *
  *************************************************************************
  */
 
@@ -79,10 +79,10 @@ void RestartManager::registerSingletonSubclassInstance(
 
 /*
  *************************************************************************
- *                                                                       *
- * The constructor and destructor are protected and call only be called  *
- * by the singleton class or its subclasses.                             *
- *                                                                       *
+ *
+ * The constructor and destructor are protected and call only be called
+ * by the singleton class or its subclasses.
+ *
  *************************************************************************
  */
 
@@ -100,11 +100,11 @@ RestartManager::RestartManager()
 
 /*
  *************************************************************************
- *                                                                       *
- * Mount restart_file to the empty database created in the               *
- * constructor and sets d_is_from_restart to true.                       *
- * Return d_database_root.                                               *
- *                                                                       *
+ *
+ * Mount restart_file to the empty database created in the
+ * constructor and sets d_is_from_restart to true.
+ * Return d_database_root.
+ *
  *************************************************************************
  */
 
@@ -163,10 +163,10 @@ bool RestartManager::openRestartFile(
 
 /*
  *************************************************************************
- *                                                                       *
- * Closes the restart file by unmounting d_database_root and setting it  *
- * to be a NullDatabase.                                            *
- *                                                                       *
+ *
+ * Closes the restart file by unmounting d_database_root and setting it
+ * to be a NullDatabase.
+ *
  *************************************************************************
  */
 
@@ -182,10 +182,10 @@ void RestartManager::closeRestartFile()
 
 /*
  *************************************************************************
- *                                                                       *
- * Registers the object for restart by adding it to                      *
- * d_restart_items_list.                                                 *
- *                                                                       *
+ *
+ * Registers the object for restart by adding it to
+ * d_restart_items_list.
+ *
  *************************************************************************
  */
 void RestartManager::registerRestartItem(
@@ -228,9 +228,9 @@ void RestartManager::registerRestartItem(
 
 /*
  *************************************************************************
- *                                                                       *
- * Removes the object with the specified name from d_restart_items_list. *
- *                                                                       *
+ *
+ * Removes the object with the specified name from d_restart_items_list.
+ *
  *************************************************************************
  */
 void RestartManager::unregisterRestartItem(
@@ -252,9 +252,9 @@ void RestartManager::unregisterRestartItem(
 
 /*
  *************************************************************************
- *                                                                       *
- * Remove all items from the restart item list.                          *
- *                                                                       *
+ *
+ * Remove all items from the restart item list.
+ *
  *************************************************************************
  */
 void RestartManager::clearRestartItems()
@@ -264,11 +264,11 @@ void RestartManager::clearRestartItems()
 
 /*
  *************************************************************************
- *                                                                       *
- * Creates a new file with the given name and writes out the current     *
- * simulation state to the file by invoking the writeRestartFile()       *
- * method for all objects contained in d_restart_objects_list.           *
- *                                                                       *
+ *
+ * Creates a new file with the given name and writes out the current
+ * simulation state to the file by invoking the writeRestartFile()
+ * method for all objects contained in d_restart_objects_list.
+ *
  *************************************************************************
  */
 void RestartManager::writeRestartFile(
@@ -309,9 +309,9 @@ void RestartManager::writeRestartFile(
 
 /*
  *************************************************************************
- *                                                                       *
- * Write simulation state to supplied database.                          *
- *                                                                       *
+ *
+ * Write simulation state to supplied database.
+ *
  *************************************************************************
  */
 void RestartManager::writeRestartFile(
@@ -329,9 +329,9 @@ void RestartManager::writeRestartFile(
 
 /*
  *************************************************************************
- *                                                                       *
- * Write simulation state to root database                               *
- *                                                                       *
+ *
+ * Write simulation state to root database
+ *
  *************************************************************************
  */
 void RestartManager::writeRestartToDatabase()
@@ -346,10 +346,10 @@ void RestartManager::writeRestartToDatabase()
 
 /*
  *************************************************************************
- *                                                                       *
- * Creates the directory structure for the data files if they have not   *
- * already been created.                                                 *
- *                                                                       *
+ *
+ * Creates the directory structure for the data files if they have not
+ * already been created.
+ *
  *************************************************************************
  */
 

@@ -24,9 +24,9 @@ clock_t Clock::s_null_clock_t;
 
 /*
  *************************************************************************
- *                                                                       *
- * Initialize clock.                                                     *
- *                                                                       *
+ *
+ * Initialize clock.
+ *
  *************************************************************************
  */
 void Clock::initialize(
@@ -45,9 +45,9 @@ void Clock::initialize(
 
 /*
  *************************************************************************
- *                                                                       *
- * Timestamp the provided structures with current system clock readings. *
- *                                                                       *
+ *
+ * Timestamp the provided structures with current system clock readings.
+ *
  *************************************************************************
  */
 
@@ -66,10 +66,10 @@ void Clock::timestamp(
 
 /*
  *************************************************************************
- *                                                                       *
- * Get the clock cycle used by the system (time is then computed         *
- * as measured_time/clock_cycle)                                         *
- *                                                                       *
+ *
+ * Get the clock cycle used by the system (time is then computed
+ * as measured_time/clock_cycle)
+ *
  *************************************************************************
  */
 double Clock::getClockCycle()

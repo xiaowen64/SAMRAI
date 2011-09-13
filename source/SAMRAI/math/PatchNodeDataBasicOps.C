@@ -30,11 +30,11 @@ PatchNodeDataBasicOps<TYPE>::~PatchNodeDataBasicOps()
 
 /*
  *************************************************************************
- *                                                                       *
- * The const constructor and assignment operator are not actually used   *
- * but are defined here for compilers that require an implementation for *
- * every declaration.                                                    *
- *                                                                       *
+ *
+ * The const constructor and assignment operator are not actually used
+ * but are defined here for compilers that require an implementation for
+ * every declaration.
+ *
  *************************************************************************
  */
 
@@ -54,9 +54,9 @@ void PatchNodeDataBasicOps<TYPE>::operator = (
 
 /*
  *************************************************************************
- *                                                                       *
- * Generic basic templated operations for node-centered patch data.      *
- *                                                                       *
+ *
+ * Generic basic templated operations for node-centered patch data.
+ *
  *************************************************************************
  */
 

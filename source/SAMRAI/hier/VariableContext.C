@@ -25,12 +25,12 @@ int VariableContext::s_instance_counter = 0;
 
 /*
  *************************************************************************
- *                                                                       *
- * The constructor copies the name of the variable context, obtains      *
- * a unique instance number, and increments the number of global         *
- * instances.  The destructor releases the name storage but does not     *
- * decrease the instance count; instance numbers are not recycled.       *
- *                                                                       *
+ *
+ * The constructor copies the name of the variable context, obtains
+ * a unique instance number, and increments the number of global
+ * instances.  The destructor releases the name storage but does not
+ * decrease the instance count; instance numbers are not recycled.
+ *
  *************************************************************************
  */
 

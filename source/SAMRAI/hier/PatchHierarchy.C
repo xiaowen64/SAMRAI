@@ -44,10 +44,10 @@ PatchHierarchy::s_initialize_finalize_handler(
 
 /*
  *************************************************************************
- *                                                                       *
- * Instantiate the patch hierarchy and set default values.               *
- * Initialize from restart if necessary.                                 *
- *                                                                       *
+ *
+ * Instantiate the patch hierarchy and set default values.
+ * Initialize from restart if necessary.
+ *
  *************************************************************************
  */
 
@@ -106,11 +106,11 @@ PatchHierarchy::PatchHierarchy(
 
 /*
  **************************************************************************
- *                                                                        *
- * The destructor tells the tbox::RestartManager to remove this hierarchy *
- * from the list of restart items and automatically deletes all           *
- * allocated resources through smart pointers and arrays.                 *
- *                                                                        *
+ *
+ * The destructor tells the tbox::RestartManager to remove this hierarchy
+ * from the list of restart items and automatically deletes all
+ * allocated resources through smart pointers and arrays.
+ *
  **************************************************************************
  */
 
@@ -429,10 +429,10 @@ const Connector& PatchHierarchy::getConnector(
 
 /*
  *************************************************************************
- *                                                                       *
- * Create a copy of this patch hierarchy with each level refined by      *
- * the given ratio and return a pointer to it.                           *
- *                                                                       *
+ *
+ * Create a copy of this patch hierarchy with each level refined by
+ * the given ratio and return a pointer to it.
+ *
  *************************************************************************
  */
 
@@ -736,16 +736,16 @@ void PatchHierarchy::setupDomainData()
 
 /*
  *************************************************************************
- *                                                                       *
- * Writes out the class version number and the number of levels in the   *
- * hierarchy and has each patch_level write itself out.                  *
- * The database keys for the patch levels are given by                   *
- * "level#" where # is the level number for the patch_level.             *
- * The patchdata that are written to the database are determined by      *
- * which those bits in the VariableDatabase restart table.               *
- *                                                                       *
- * Asserts that the database pointer passed in is not NULL.              *
- *                                                                       *
+ *
+ * Writes out the class version number and the number of levels in the
+ * hierarchy and has each patch_level write itself out.
+ * The database keys for the patch levels are given by
+ * "level#" where # is the level number for the patch_level.
+ * The patchdata that are written to the database are determined by
+ * which those bits in the VariableDatabase restart table.
+ *
+ * Asserts that the database pointer passed in is not NULL.
+ *
  *************************************************************************
  */
 
@@ -758,17 +758,17 @@ void PatchHierarchy::putToDatabase(
 
 /*
  *************************************************************************
- *                                                                       *
- * Writes out the class version number and the number of levels in the   *
- * hierarchy and has each patch_level write itself out.                  *
- * The database keys for the patch levels are given by                   *
- * "level#" where # is the level number for the patch_level.             *
- * The patchdata that are written to the database are determined by      *
- * which those bits in the specified ComponentSelector that are          *
- * set.                                                                  *
- *                                                                       *
- * Asserts that the database pointer passed in is not NULL.              *
- *                                                                       *
+ *
+ * Writes out the class version number and the number of levels in the
+ * hierarchy and has each patch_level write itself out.
+ * The database keys for the patch levels are given by
+ * "level#" where # is the level number for the patch_level.
+ * The patchdata that are written to the database are determined by
+ * which those bits in the specified ComponentSelector that are
+ * set.
+ *
+ * Asserts that the database pointer passed in is not NULL.
+ *
  *************************************************************************
  */
 
@@ -853,14 +853,14 @@ void PatchHierarchy::putToDatabase(
 
 /*
  *************************************************************************
- *                                                                       *
- * Gets the database in the root database that corresponds to the object *
- * name.  This method then checks the class version against restart      *
- * file version.  If they match, it creates each hierarchy level and     *
- * reads in the level data.   The number of levels read from restart is  *
- * the minimum of the argument max levels and the number of levels in    *
- * the restart file.                                                     *
- *                                                                       *
+ *
+ * Gets the database in the root database that corresponds to the object
+ * name.  This method then checks the class version against restart
+ * file version.  If they match, it creates each hierarchy level and
+ * reads in the level data.   The number of levels read from restart is
+ * the minimum of the argument max levels and the number of levels in
+ * the restart file.
+ *
  *************************************************************************
  */
 void PatchHierarchy::getFromRestart()

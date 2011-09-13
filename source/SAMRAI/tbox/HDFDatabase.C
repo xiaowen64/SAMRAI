@@ -44,10 +44,10 @@
 
 /*
  *************************************************************************
- *                                                                       *
- * Macros to suppress the HDF5 messages sent to standard i/o; handle     *
- * errors explicity within this code.                                    *
- *                                                                       *
+ *
+ * Macros to suppress the HDF5 messages sent to standard i/o; handle
+ * errors explicity within this code.
+ *
  *************************************************************************
  */
 
@@ -86,11 +86,11 @@ namespace tbox {
 
 /*
  *************************************************************************
- *                                                                       *
- * Integer keys for identifying types in HDF5 database.  Negative        *
- * entries are used to distinguish arrays from scalars when printing     *
- * key information.                                                      *
- *                                                                       *
+ *
+ * Integer keys for identifying types in HDF5 database.  Negative
+ * entries are used to distinguish arrays from scalars when printing
+ * key information.
+ *
  *************************************************************************
  */
 const int HDFDatabase::KEY_DATABASE = 0;
@@ -113,10 +113,10 @@ const int HDFDatabase::KEY_STRING_SCALAR = -8;
 
 /*
  *************************************************************************
- *                                                                       *
- * Static member function to iterate through the hdf5 data file and      *
- * assemble a list of desired (key, type) pairs.                         *
- *                                                                       *
+ *
+ * Static member function to iterate through the hdf5 data file and
+ * assemble a list of desired (key, type) pairs.
+ *
  *************************************************************************
  */
 
@@ -235,10 +235,10 @@ herr_t HDFDatabase::iterateKeys(
 
 /*
  *************************************************************************
- *                                                                       *
- * Static member function to add key to list for database associated     *
- * with void* argument.                                                  *
- *                                                                       *
+ *
+ * Static member function to add key to list for database associated
+ * with void* argument.
+ *
  *************************************************************************
  */
 
@@ -259,11 +259,11 @@ void HDFDatabase::addKeyToList(
 
 /*
  *************************************************************************
- *                                                                       *
- * Public HDF database constructor creates an empty database with the    *
- * specified name.  It sets the group_ID to a default value of -1.       *
- * This data is used by member functions to track parent databases.      *
- *                                                                       *
+ *
+ * Public HDF database constructor creates an empty database with the
+ * specified name.  It sets the group_ID to a default value of -1.
+ * This data is used by member functions to track parent databases.
+ *
  *************************************************************************
  */
 
@@ -284,11 +284,11 @@ HDFDatabase::HDFDatabase(
 
 /*
  *************************************************************************
- *                                                                       *
- * Private HDF database constructor creates an empty database with the   *
- * specified name.  The group_ID is used privately within                *
- * the member functions to track parent databases.                       *
- *                                                                       *
+ *
+ * Private HDF database constructor creates an empty database with the
+ * specified name.  The group_ID is used privately within
+ * the member functions to track parent databases.
+ *
  *************************************************************************
  */
 
@@ -308,9 +308,9 @@ HDFDatabase::HDFDatabase(
 
 /*
  *************************************************************************
- *                                                                       *
- * The database destructor closes the opened file or group.              *
- *                                                                       *
+ *
+ * The database destructor closes the opened file or group.
+ *
  *************************************************************************
  */
 
@@ -332,9 +332,9 @@ HDFDatabase::~HDFDatabase()
 
 /*
  *************************************************************************
- *                                                                       *
- * Return true if the key exists within the database; false otherwise.   *
- *                                                                       *
+ *
+ * Return true if the key exists within the database; false otherwise.
+ *
  *************************************************************************
  */
 
@@ -385,9 +385,9 @@ bool HDFDatabase::keyExists(
 
 /*
  *************************************************************************
- *                                                                       *
- * Return all keys in the database.                                      *
- *                                                                       *
+ *
+ * Return all keys in the database.
+ *
  *************************************************************************
  */
 
@@ -410,9 +410,9 @@ Array<std::string> HDFDatabase::getAllKeys()
 
 /*
  *************************************************************************
- *                                                                       *
- * Get the type of the array entry associated with the specified key     *
- *                                                                       *
+ *
+ * Get the type of the array entry associated with the specified key
+ *
  *************************************************************************
  */
 enum Database::DataType HDFDatabase::getArrayType(
@@ -504,12 +504,12 @@ enum Database::DataType HDFDatabase::getArrayType(
 
 /*
  *************************************************************************
- *                                                                       *
- * Return the size of the array associated with the key.  If the key     *
- * does not exist, then zero is returned.                                *
- * Array size is set based on the number of elements (points) within     *
- * the dataspace defined by the named dataset (or key).                  *
- *                                                                       *
+ *
+ * Return the size of the array associated with the key.  If the key
+ * does not exist, then zero is returned.
+ * Array size is set based on the number of elements (points) within
+ * the dataspace defined by the named dataset (or key).
+ *
  *************************************************************************
  */
 
@@ -558,12 +558,12 @@ int HDFDatabase::getArraySize(
 
 /*
  *************************************************************************
- *                                                                       *
- * Return true or false depending on whether the specified key           *
- * represents a database entry.  If the key does not exist, then false   *
- * is returned.  The key represents a database (or hdf group) if the     *
- * H5Gopen function on the key is successful.                            *
- *                                                                       *
+ *
+ * Return true or false depending on whether the specified key
+ * represents a database entry.  If the key does not exist, then false
+ * is returned.  The key represents a database (or hdf group) if the
+ * H5Gopen function on the key is successful.
+ *
  *************************************************************************
  */
 
@@ -596,9 +596,9 @@ bool HDFDatabase::isDatabase(
 
 /*
  *************************************************************************
- *                                                                       *
- * Create a new database with the specified key name.                    *
- *                                                                       *
+ *
+ * Create a new database with the specified key name.
+ *
  *************************************************************************
  */
 
@@ -624,9 +624,9 @@ HDFDatabase::putDatabase(
 
 /*
  ************************************************************************
- *                                                                      *
- * Get the database with the specified key name.                        *
- *                                                                      *
+ *
+ * Get the database with the specified key name.
+ *
  ************************************************************************
  */
 
@@ -656,11 +656,11 @@ HDFDatabase::getDatabase(
 
 /*
  *************************************************************************
- *                                                                       *
- * Return true or false depending on whether the specified key           *
- * represents a boolean entry.  If the key does not exist, then false    *
- * is returned.                                                          *
- *                                                                       *
+ *
+ * Return true or false depending on whether the specified key
+ * represents a boolean entry.  If the key does not exist, then false
+ * is returned.
+ *
  *************************************************************************
  */
 
@@ -695,10 +695,10 @@ bool HDFDatabase::isBool(
 
 /*
  *************************************************************************
- *                                                                       *
- * Create a boolean array entry in the database with the specified       *
- * key name.                                                             *
- *                                                                       *
+ *
+ * Create a boolean array entry in the database with the specified
+ * key name.
+ *
  *************************************************************************
  */
 
@@ -764,12 +764,12 @@ void HDFDatabase::putBoolArray(
 
 /*
  ************************************************************************
- *                                                                      *
- * Two routines to get boolean arrays from the database with the        *
- * specified key name. In any case, an error message is printed and     *
- * the program exits if the specified key does not exist in the         *
- * database or is not associated with a boolean type.                   *
- *                                                                      *
+ *
+ * Two routines to get boolean arrays from the database with the
+ * specified key name. In any case, an error message is printed and
+ * the program exits if the specified key does not exist in the
+ * database or is not associated with a boolean type.
+ *
  ************************************************************************
  */
 
@@ -836,11 +836,11 @@ Array<bool> HDFDatabase::getBoolArray(
 
 /*
  *************************************************************************
- *                                                                       *
- * Return true or false depending on whether the specified key           *
- * represents a box entry.  If the key does not exist, then false        *
- * is returned.                                                          *
- *                                                                       *
+ *
+ * Return true or false depending on whether the specified key
+ * represents a box entry.  If the key does not exist, then false
+ * is returned.
+ *
  *************************************************************************
  */
 
@@ -875,9 +875,9 @@ bool HDFDatabase::isDatabaseBox(
 
 /*
  *************************************************************************
- *                                                                       *
- * Create a box array entry in the database with the specified key name. *
- *                                                                       *
+ *
+ * Create a box array entry in the database with the specified key name.
+ *
  *************************************************************************
  */
 
@@ -940,12 +940,12 @@ void HDFDatabase::putDatabaseBoxArray(
 
 /*
  ************************************************************************
- *                                                                      *
- * Two routines to get box arrays from the database with the            *
- * specified key name. In any case, an error message is printed and     *
- * the program exits if the specified key does not exist in the         *
- * database or is not associated with a box type.                       *
- *                                                                      *
+ *
+ * Two routines to get box arrays from the database with the
+ * specified key name. In any case, an error message is printed and
+ * the program exits if the specified key does not exist in the
+ * database or is not associated with a box type.
+ *
  ************************************************************************
  */
 
@@ -1047,11 +1047,11 @@ hid_t HDFDatabase::createCompoundDatabaseBox(
 
 /*
  *************************************************************************
- *                                                                       *
- * Return true or false depending on whether the specified key           *
- * represents a char entry.  If the key does not exist, then false       *
- * is returned.                                                          *
- *                                                                       *
+ *
+ * Return true or false depending on whether the specified key
+ * represents a char entry.  If the key does not exist, then false
+ * is returned.
+ *
  *************************************************************************
  */
 
@@ -1087,10 +1087,10 @@ bool HDFDatabase::isChar(
 
 /*
  *************************************************************************
- *                                                                       *
- * Create a char array entry in the database with the specified          *
- * key name. The charentry is defined by the hdf type H5T_C_S1.          *
- *                                                                       *
+ *
+ * Create a char array entry in the database with the specified
+ * key name. The charentry is defined by the hdf type H5T_C_S1.
+ *
  *************************************************************************
  */
 
@@ -1164,12 +1164,12 @@ void HDFDatabase::putCharArray(
 
 /*
  ************************************************************************
- *                                                                      *
- * Two routines to get char arrays from the database with the           *
- * specified key name. In any case, an error message is printed and     *
- * the program exits if the specified key does not exist in the         *
- * database or is not associated with a char type.                      *
- *                                                                      *
+ *
+ * Two routines to get char arrays from the database with the
+ * specified key name. In any case, an error message is printed and
+ * the program exits if the specified key does not exist in the
+ * database or is not associated with a char type.
+ *
  ************************************************************************
  */
 
@@ -1226,11 +1226,11 @@ Array<char> HDFDatabase::getCharArray(
 
 /*
  *************************************************************************
- *                                                                       *
- * Return true or false depending on whether the specified key           *
- * represents a complex entry.  If the key does not exist, then false    *
- * is returned.                                                          *
- *                                                                       *
+ *
+ * Return true or false depending on whether the specified key
+ * represents a complex entry.  If the key does not exist, then false
+ * is returned.
+ *
  *************************************************************************
  */
 
@@ -1265,11 +1265,11 @@ bool HDFDatabase::isComplex(
 
 /*
  *************************************************************************
- *                                                                       *
- * Create a complex array entry in the database with the specified       *
- * key name.  The complex array is a compound type based on the hdf      *
- * type H5T_NATIVE_DOUBLE (for real and imag parts).                     *
- *                                                                       *
+ *
+ * Create a complex array entry in the database with the specified
+ * key name.  The complex array is a compound type based on the hdf
+ * type H5T_NATIVE_DOUBLE (for real and imag parts).
+ *
  *************************************************************************
  */
 
@@ -1334,12 +1334,12 @@ void HDFDatabase::putComplexArray(
 
 /*
  ************************************************************************
- *                                                                      *
- * Two routines to get complex arrays from the database with the        *
- * specified key name. In any case, an error message is printed and     *
- * the program exits if the specified key does not exist in the         *
- * database or is not associated with a complex type.                   *
- *                                                                      *
+ *
+ * Two routines to get complex arrays from the database with the
+ * specified key name. In any case, an error message is printed and
+ * the program exits if the specified key does not exist in the
+ * database or is not associated with a complex type.
+ *
  ************************************************************************
  */
 
@@ -1430,11 +1430,11 @@ hid_t HDFDatabase::createCompoundComplex(
 
 /*
  *************************************************************************
- *                                                                       *
- * Return true or false depending on whether the specified key           *
- * represents a double entry.  If the key does not exist, then false     *
- * is returned.                                                          *
- *                                                                       *
+ *
+ * Return true or false depending on whether the specified key
+ * represents a double entry.  If the key does not exist, then false
+ * is returned.
+ *
  *************************************************************************
  */
 
@@ -1470,10 +1470,10 @@ bool HDFDatabase::isDouble(
 
 /*
  *************************************************************************
- *                                                                       *
- * Create a double array entry in the database with the specified        *
- * key name.  The array type is based on the hdf type H5T_NATIVE_HDOUBLE.*
- *                                                                       *
+ *
+ * Create a double array entry in the database with the specified
+ * key name.  The array type is based on the hdf type H5T_NATIVE_HDOUBLE.
+ *
  *************************************************************************
  */
 
@@ -1526,12 +1526,12 @@ void HDFDatabase::putDoubleArray(
 
 /*
  ************************************************************************
- *                                                                      *
- * Two routines to get double arrays from the database with the         *
- * specified key name. In any case, an error message is printed and     *
- * the program exits if the specified key does not exist in the         *
- * database or is not associated with a double type.                    *
- *                                                                      *
+ *
+ * Two routines to get double arrays from the database with the
+ * specified key name. In any case, an error message is printed and
+ * the program exits if the specified key does not exist in the
+ * database or is not associated with a double type.
+ *
  ************************************************************************
  */
 
@@ -1584,11 +1584,11 @@ Array<double> HDFDatabase::getDoubleArray(
 
 /*
  *************************************************************************
- *                                                                       *
- * Return true or false depending on whether the specified key           *
- * represents a float entry.  If the key does not exist, then false      *
- * is returned.                                                          *
- *                                                                       *
+ *
+ * Return true or false depending on whether the specified key
+ * represents a float entry.  If the key does not exist, then false
+ * is returned.
+ *
  *************************************************************************
  */
 
@@ -1623,10 +1623,10 @@ bool HDFDatabase::isFloat(
 
 /*
  *************************************************************************
- *                                                                       *
- * Create a float array entry in the database with the specified         *
- * key name.  The array type is based on the hdf type H5T_NATIVE_HFLOAT. *
- *                                                                       *
+ *
+ * Create a float array entry in the database with the specified
+ * key name.  The array type is based on the hdf type H5T_NATIVE_HFLOAT.
+ *
  *************************************************************************
  */
 
@@ -1680,12 +1680,12 @@ void HDFDatabase::putFloatArray(
 
 /*
  ************************************************************************
- *                                                                      *
- * Two routines to get float arrays from the database with the          *
- * specified key name. In any case, an error message is printed and     *
- * the program exits if the specified key does not exist in the         *
- * database or is not associated with a float type.                     *
- *                                                                      *
+ *
+ * Two routines to get float arrays from the database with the
+ * specified key name. In any case, an error message is printed and
+ * the program exits if the specified key does not exist in the
+ * database or is not associated with a float type.
+ *
  ************************************************************************
  */
 
@@ -1739,11 +1739,11 @@ Array<float> HDFDatabase::getFloatArray(
 
 /*
  *************************************************************************
- *                                                                       *
- * Return true or false depending on whether the specified key           *
- * represents a integer entry.  If the key does not exist, then false    *
- * is returned.                                                          *
- *                                                                       *
+ *
+ * Return true or false depending on whether the specified key
+ * represents a integer entry.  If the key does not exist, then false
+ * is returned.
+ *
  *************************************************************************
  */
 
@@ -1779,10 +1779,10 @@ bool HDFDatabase::isInteger(
 
 /*
  *************************************************************************
- *                                                                       *
- * Create an integer array entry in the database with the specified      *
- * key name.  The array type is based on the hdf type H5T_NATIVE_HINT.   *
- *                                                                       *
+ *
+ * Create an integer array entry in the database with the specified
+ * key name.  The array type is based on the hdf type H5T_NATIVE_HINT.
+ *
  *************************************************************************
  */
 
@@ -1835,12 +1835,12 @@ void HDFDatabase::putIntegerArray(
 
 /*
  ************************************************************************
- *                                                                      *
- * Two routines to get integer arrays from the database with the        *
- * specified key name. In any case, an error message is printed and     *
- * the program exits if the specified key does not exist in the         *
- * database or is not associated with a integer type.                   *
- *                                                                      *
+ *
+ * Two routines to get integer arrays from the database with the
+ * specified key name. In any case, an error message is printed and
+ * the program exits if the specified key does not exist in the
+ * database or is not associated with a integer type.
+ *
  ************************************************************************
  */
 
@@ -1894,11 +1894,11 @@ Array<int> HDFDatabase::getIntegerArray(
 
 /*
  *************************************************************************
- *                                                                       *
- * Return true or false depending on whether the specified key           *
- * represents a string entry.  If the key does not exist, then false     *
- * is returned.                                                          *
- *                                                                       *
+ *
+ * Return true or false depending on whether the specified key
+ * represents a string entry.  If the key does not exist, then false
+ * is returned.
+ *
  *************************************************************************
  */
 
@@ -1933,10 +1933,10 @@ bool HDFDatabase::isString(
 
 /*
  *************************************************************************
- *                                                                       *
- * Create a double array entry in the database with the specified        *
- * key name.  The array type is based on the hdf type H5T_C_S1.          *
- *                                                                       *
+ *
+ * Create a double array entry in the database with the specified
+ * key name.  The array type is based on the hdf type H5T_C_S1.
+ *
  *************************************************************************
  */
 
@@ -2021,12 +2021,12 @@ void HDFDatabase::putStringArray(
 
 /*
  ************************************************************************
- *                                                                      *
- * Two routines to get string arrays from the database with the         *
- * specified key name. In any case, an error message is printed and     *
- * the program exits if the specified key does not exist in the         *
- * database or is not associated with a string type.                    *
- *                                                                      *
+ *
+ * Two routines to get string arrays from the database with the
+ * specified key name. In any case, an error message is printed and
+ * the program exits if the specified key does not exist in the
+ * database or is not associated with a string type.
+ *
  ************************************************************************
  */
 
@@ -2140,11 +2140,11 @@ int HDFDatabase::readAttribute(
 
 /*
  *************************************************************************
- *                                                                       *
- * Print contents of current database to the specified output stream.    *
- * Note that contents of subdatabases will not be printed.  This must    *
- * be done by iterating through all the subdatabases individually.       *
- *                                                                       *
+ *
+ * Print contents of current database to the specified output stream.
+ * Note that contents of subdatabases will not be printed.  This must
+ * be done by iterating through all the subdatabases individually.
+ *
  *************************************************************************
  */
 
@@ -2224,9 +2224,9 @@ void HDFDatabase::printClassData(
 
 /*
  *************************************************************************
- *                                                                       *
- * Create HDF data file specified by name.                               *
- *                                                                       *
+ *
+ * Create HDF data file specified by name.
+ *
  *************************************************************************
  */
 
@@ -2256,9 +2256,9 @@ bool HDFDatabase::create(
 
 /*
  *************************************************************************
- *                                                                       *
- * Open HDF data file specified by name                                  *
- *                                                                       *
+ *
+ * Open HDF data file specified by name
+ *
  *************************************************************************
  */
 
@@ -2290,9 +2290,9 @@ bool HDFDatabase::open(
 
 /*
  *************************************************************************
- *                                                                       *
- * Close the open HDF data file specified by d_file_id.                  *
- *                                                                       *
+ *
+ * Close the open HDF data file specified by d_file_id.
+ *
  *************************************************************************
  */
 
@@ -2321,11 +2321,11 @@ bool HDFDatabase::close()
 
 /*
  *************************************************************************
- *                                                                       *
- * Private helper function for writing arrays in HDF5.  This function    *
- * was deprecated in HDF5 1.4.  We replicate it here since it makes      *
- * arrays easier to use in this database class.                          *
- *                                                                       *
+ *
+ * Private helper function for writing arrays in HDF5.  This function
+ * was deprecated in HDF5 1.4.  We replicate it here since it makes
+ * arrays easier to use in this database class.
+ *
  *************************************************************************
  */
 
@@ -2379,9 +2379,9 @@ void HDFDatabase::insertArray(
 
 /*
  *************************************************************************
- *                                                                       *
- * Private helper function for searching database keys.                  *
- *                                                                       *
+ *
+ * Private helper function for searching database keys.
+ *
  *************************************************************************
  */
 
@@ -2443,10 +2443,10 @@ bool HDFDatabase::attachToFile(
 
 /*
  *************************************************************************
- *                                                                       *
- * Public method to return the group_id so VisIt can access an           *
- * object's HDF database.                                                *
- *                                                                       *
+ *
+ * Public method to return the group_id so VisIt can access an
+ * object's HDF database.
+ *
  *************************************************************************
  */
 hid_t HDFDatabase::getGroupId()

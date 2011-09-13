@@ -417,9 +417,9 @@ OuternodeGeometry::doOverlap(
 
 /*
  *************************************************************************
- *                                                                       *
- * Set up a NodeOverlap oject using the given boxes and offset           *
- *                                                                       *
+ *
+ * Set up a NodeOverlap oject using the given boxes and offset
+ *
  *************************************************************************
  */
 tbox::Pointer<hier::BoxOverlap>

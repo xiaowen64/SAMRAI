@@ -30,9 +30,9 @@ namespace xfer {
 
 /*
  *************************************************************************
- *                                                                       *
- * Initialization, set/unset functions for static array of refine items. *
- *                                                                       *
+ *
+ * Initialization, set/unset functions for static array of refine items.
+ *
  *************************************************************************
  */
 
@@ -61,9 +61,9 @@ void RefineCopyTransaction::unsetRefineItems()
 
 /*
  *************************************************************************
- *                                                                       *
- * Constructor sets state of transaction.                                *
- *                                                                       *
+ *
+ * Constructor sets state of transaction.
+ *
  *************************************************************************
  */
 
@@ -112,9 +112,9 @@ RefineCopyTransaction::~RefineCopyTransaction()
 
 /*
  *************************************************************************
- *                                                                       *
- * Functions overridden in tbox::Transaction base class.                 *
- *                                                                       *
+ *
+ * Functions overridden in tbox::Transaction base class.
+ *
  *************************************************************************
  */
 
@@ -176,9 +176,9 @@ void RefineCopyTransaction::copyLocalData()
 
 /*
  *************************************************************************
- *                                                                       *
- * Function to print state of transaction.                               *
- *                                                                       *
+ *
+ * Function to print state of transaction.
+ *
  *************************************************************************
  */
 

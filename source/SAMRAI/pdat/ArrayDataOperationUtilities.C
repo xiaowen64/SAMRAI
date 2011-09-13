@@ -20,11 +20,11 @@ namespace pdat {
 
 /*
  *************************************************************************
- *                                                                       *
- * Function that performs specified operation involving source and       *
- * destination array data objects and puts result in destination array   *
- * data object using explicit dimension-generic looping constructs.      *
- *                                                                       *
+ *
+ * Function that performs specified operation involving source and
+ * destination array data objects and puts result in destination array
+ * data object using explicit dimension-generic looping constructs.
+ *
  *************************************************************************
  */
 
@@ -161,11 +161,11 @@ void ArrayDataOperationUtilities<TYPE, OP>::doArrayDataOperationOnBox(
 
 /*
  *************************************************************************
- *                                                                       *
- * Function that performs specified operation involving source and       *
- * destination data pointers and puts result in destination array        *
- * data object using explicit dimension-generic looping constructs.      *
- *                                                                       *
+ *
+ * Function that performs specified operation involving source and
+ * destination data pointers and puts result in destination array
+ * data object using explicit dimension-generic looping constructs.
+ *
  *************************************************************************
  */
 

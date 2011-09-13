@@ -26,9 +26,9 @@ using namespace std;
 
 /*
  *************************************************************************
- *                                                                       *
- * The constructor initializes object state.  The destructor is empty.   *
- *                                                                       *
+ *
+ * The constructor initializes object state.  The destructor is empty.
+ *
  *************************************************************************
  */
 
@@ -108,9 +108,9 @@ CommTester::~CommTester()
 
 /*
  *************************************************************************
- *                                                                       *
- * Add variable with associated attributes to set of test variables.     *
- *                                                                       *
+ *
+ * Add variable with associated attributes to set of test variables.
+ *
  *************************************************************************
  */
 
@@ -257,9 +257,9 @@ void CommTester::registerVariableForReset(
 
 /*
  *************************************************************************
- *                                                                       *
- * Create refine and coarsen communication schedules for hierarchy.      *
- *                                                                       *
+ *
+ * Create refine and coarsen communication schedules for hierarchy.
+ *
  *************************************************************************
  */
 
@@ -385,9 +385,9 @@ void CommTester::resetCoarsenSchedule(
 
 /*
  *************************************************************************
- *                                                                       *
- * Perform data refine and coarsen operations.                           *
- *                                                                       *
+ *
+ * Perform data refine and coarsen operations.
+ *
  *************************************************************************
  */
 
@@ -430,9 +430,9 @@ void CommTester::performCoarsenOperations(
 
 /*
  *************************************************************************
- *                                                                       *
- * Verify results of communication operations.                           *
- *                                                                       *
+ *
+ * Verify results of communication operations.
+ *
  *************************************************************************
  */
 
@@ -463,11 +463,11 @@ bool CommTester::verifyCommunicationResults() const
 
 /*
  *************************************************************************
- *                                                                       *
- * Cell tagging and patch level data initialization routines declared    *
- * in the GradientDetectorStrategy interface.  They are used to          *
- * construct the hierarchy initially.                                    *
- *                                                                       *
+ *
+ * Cell tagging and patch level data initialization routines declared
+ * in the GradientDetectorStrategy interface.  They are used to
+ * construct the hierarchy initially.
+ *
  *************************************************************************
  */
 
@@ -557,11 +557,11 @@ void CommTester::resetHierarchyConfiguration(
 
 /*
  *************************************************************************
- *                                                                       *
- * Physical boundary condition and user-defined coarsen and refine       *
- * operations declared in RefinePatchStrategy and CoarsenPatchStrategy.  *
- * They are passed off to patch data test object.                        *
- *                                                                       *
+ *
+ * Physical boundary condition and user-defined coarsen and refine
+ * operations declared in RefinePatchStrategy and CoarsenPatchStrategy.
+ * They are passed off to patch data test object.
+ *
  *************************************************************************
  */
 
@@ -624,11 +624,11 @@ void CommTester::postprocessCoarsen(
 
 /*
  *************************************************************************
- *                                                                       *
- * Create and configure gridding objects used to build the hierarchy.    *
- * Then, create hierarchy and initialize data.  Note this routine        *
- * must be called after variables are registered with this tester object.*
- *                                                                       *
+ *
+ * Create and configure gridding objects used to build the hierarchy.
+ * Then, create hierarchy and initialize data.  Note this routine
+ * must be called after variables are registered with this tester object.
+ *
  *************************************************************************
  */
 

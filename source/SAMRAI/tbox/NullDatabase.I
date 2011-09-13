@@ -18,9 +18,9 @@ NullDatabase::NullDatabase()
 
 /*
  *************************************************************************
- *                                                                       *
- * The virtual destructor deallocates database data.                     *
- *                                                                       *
+ *
+ * The virtual destructor deallocates database data.
+ *
  *************************************************************************
  */
 
@@ -31,9 +31,9 @@ NullDatabase::~NullDatabase()
 
 /*
  *************************************************************************
- *                                                                       *
- * Create memory data file specified by name.                            *
- *                                                                       *
+ *
+ * Create memory data file specified by name.
+ *
  *************************************************************************
  */
 
@@ -47,9 +47,9 @@ bool NullDatabase::create(
 
 /*
  *************************************************************************
- *                                                                       *
- * Open memory data file specified by name                               *
- *                                                                       *
+ *
+ * Open memory data file specified by name
+ *
  *************************************************************************
  */
 
@@ -65,9 +65,9 @@ bool NullDatabase::open(
 
 /*
  *************************************************************************
- *                                                                       *
- * Close the open data file.                                             *
- *                                                                       *
+ *
+ * Close the open data file.
+ *
  *************************************************************************
  */
 
@@ -79,9 +79,9 @@ bool NullDatabase::close()
 
 /*
  *************************************************************************
- *                                                                       *
- * Always returns true.                                                  *
- *                                                                       *
+ *
+ * Always returns true.
+ *
  *************************************************************************
  */
 
@@ -95,9 +95,9 @@ bool NullDatabase::keyExists(
 
 /*
  *************************************************************************
- *                                                                       *
- * Return an empty Array<std::string>.                                   *
- *                                                                       *
+ *
+ * Return an empty Array<std::string>.
+ *
  *************************************************************************
  */
 
@@ -110,9 +110,9 @@ Array<std::string> NullDatabase::getAllKeys()
 
 /*
  *************************************************************************
- *                                                                       *
- * Always returns INVALID.                                               *
- *                                                                       *
+ *
+ * Always returns INVALID.
+ *
  *************************************************************************
  */
 
@@ -126,9 +126,9 @@ Database::DataType NullDatabase::getArrayType(
 
 /*
  *************************************************************************
- *                                                                       *
- * Always returns 0.                                                     *
- *                                                                       *
+ *
+ * Always returns 0.
+ *
  *************************************************************************
  */
 
@@ -142,9 +142,9 @@ int NullDatabase::getArraySize(
 
 /*
  *************************************************************************
- *                                                                       *
- * Member functions that manage the database values within the database. *
- *                                                                       *
+ *
+ * Member functions that manage the database values within the database.
+ *
  *************************************************************************
  */
 
@@ -175,9 +175,9 @@ Pointer<Database> NullDatabase::getDatabase(
 
 /*
  *************************************************************************
- *                                                                       *
- * Member functions that manage boolean values within the database.      *
- *                                                                       *
+ *
+ * Member functions that manage boolean values within the database.
+ *
  *************************************************************************
  */
 
@@ -211,9 +211,9 @@ Array<bool> NullDatabase::getBoolArray(
 
 /*
  *************************************************************************
- *                                                                       *
- * Member functions that manage box values within the database.          *
- *                                                                       *
+ *
+ * Member functions that manage box values within the database.
+ *
  *************************************************************************
  */
 
@@ -248,9 +248,9 @@ Array<DatabaseBox> NullDatabase::getDatabaseBoxArray(
 
 /*
  *************************************************************************
- *                                                                       *
- * Member functions that manage character values within the database.    *
- *                                                                       *
+ *
+ * Member functions that manage character values within the database.
+ *
  *************************************************************************
  */
 
@@ -285,11 +285,11 @@ Array<char> NullDatabase::getCharArray(
 
 /*
  *************************************************************************
- *                                                                       *
- * Member functions that manage complex values within the database.      *
- * Note that complex numbers may be promoted from integers, floats,      *
- * and doubles.                                                          *
- *                                                                       *
+ *
+ * Member functions that manage complex values within the database.
+ * Note that complex numbers may be promoted from integers, floats,
+ * and doubles.
+ *
  *************************************************************************
  */
 
@@ -324,10 +324,10 @@ Array<dcomplex> NullDatabase::getComplexArray(
 
 /*
  *************************************************************************
- *                                                                       *
- * Member functions that manage double values within the database.       *
- * Note that doubles may be promoted from integers or floats.            *
- *                                                                       *
+ *
+ * Member functions that manage double values within the database.
+ * Note that doubles may be promoted from integers or floats.
+ *
  *************************************************************************
  */
 
@@ -361,11 +361,11 @@ Array<double> NullDatabase::getDoubleArray(
 
 /*
  *************************************************************************
- *                                                                       *
- * Member functions that manage float values within the database.        *
- * Note that floats may be promoted from integers or truncated from      *
- * doubles (without a warning).                                          *
- *                                                                       *
+ *
+ * Member functions that manage float values within the database.
+ * Note that floats may be promoted from integers or truncated from
+ * doubles (without a warning).
+ *
  *************************************************************************
  */
 
@@ -400,9 +400,9 @@ Array<float> NullDatabase::getFloatArray(
 
 /*
  *************************************************************************
- *                                                                       *
- * Member functions that manage integer values within the database.      *
- *                                                                       *
+ *
+ * Member functions that manage integer values within the database.
+ *
  *************************************************************************
  */
 
@@ -437,9 +437,9 @@ Array<int> NullDatabase::getIntegerArray(
 
 /*
  *************************************************************************
- *                                                                       *
- * Member functions that manage string values within the database.       *
- *                                                                       *
+ *
+ * Member functions that manage string values within the database.
+ *
  *************************************************************************
  */
 
@@ -480,9 +480,9 @@ std::string NullDatabase::getName(
 
 /*
  *************************************************************************
- *                                                                       *
- * Does nothing.                                                         *
- *                                                                       *
+ *
+ * Does nothing.
+ *
  *************************************************************************
  */
 

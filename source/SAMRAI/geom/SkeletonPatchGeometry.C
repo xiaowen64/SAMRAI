@@ -20,10 +20,10 @@ namespace geom {
 
 /*
  *************************************************************************
- *                                                                       *
- * Constructor for SkeletonPatchGeometry.                           *
- * variable.                                                             *
- *                                                                       *
+ *
+ * Constructor for SkeletonPatchGeometry.
+ * variable.
+ *
  *************************************************************************
  */
 SkeletonPatchGeometry::SkeletonPatchGeometry(
@@ -38,9 +38,9 @@ SkeletonPatchGeometry::SkeletonPatchGeometry(
 
 /*
  *************************************************************************
- *                                                                       *
- * Destructor for SkeletonPatchGeometry.                            *
- *                                                                       *
+ *
+ * Destructor for SkeletonPatchGeometry.
+ *
  *************************************************************************
  */
 SkeletonPatchGeometry::~SkeletonPatchGeometry()
@@ -49,9 +49,9 @@ SkeletonPatchGeometry::~SkeletonPatchGeometry()
 
 /*
  *************************************************************************
- *                                                                       *
- * Print SkeletonPatchGeometry class data.                          *
- *                                                                       *
+ *
+ * Print SkeletonPatchGeometry class data.
+ *
  *************************************************************************
  */
 void SkeletonPatchGeometry::printClassData(

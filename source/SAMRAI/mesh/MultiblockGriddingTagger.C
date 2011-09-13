@@ -32,10 +32,10 @@ namespace mesh {
 
 /*
  *************************************************************************
- *                                                                       *
- * The default constructor and virtual destructor do nothing             *
- * particularly interesting.                                             *
- *                                                                       *
+ *
+ * The default constructor and virtual destructor do nothing
+ * particularly interesting.
+ *
  *************************************************************************
  */
 

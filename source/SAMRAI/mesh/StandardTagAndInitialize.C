@@ -33,11 +33,11 @@
 
 /*
  *************************************************************************
- *                                                                       *
- * External declarations for FORTRAN 77 routines used in Richardson      *
- * extrapolation algorithm to coarsen tagged cells from fine to coarse   *
- * level.                                                                *
- *                                                                       *
+ *
+ * External declarations for FORTRAN 77 routines used in Richardson
+ * extrapolation algorithm to coarsen tagged cells from fine to coarse
+ * level.
+ *
  *************************************************************************
  */
 
@@ -80,9 +80,9 @@ namespace mesh {
 
 /*
  *************************************************************************
- *                                                                       *
- * Static function that computes greatest common divisor.                *
- *                                                                       *
+ *
+ * Static function that computes greatest common divisor.
+ *
  *************************************************************************
  */
 
@@ -93,9 +93,9 @@ GCD(
 
 /*
  *************************************************************************
- *                                                                       *
- * Constructors and destructor for StandardTagAndInitialize.        *
- *                                                                       *
+ *
+ * Constructors and destructor for StandardTagAndInitialize.
+ *
  *************************************************************************
  */
 
@@ -154,11 +154,11 @@ StandardTagAndInitialize::~StandardTagAndInitialize()
 
 /*
  *************************************************************************
- *                                                                       *
- * Pass requests to initialize level data, reset hierarchy information,  *
- * and apply an application-specific gradient detector to                *
- * the subclass of the StandardTagAndInitStrategX data member.      *
- *                                                                       *
+ *
+ * Pass requests to initialize level data, reset hierarchy information,
+ * and apply an application-specific gradient detector to
+ * the subclass of the StandardTagAndInitStrategX data member.
+ *
  *************************************************************************
  */
 
@@ -196,10 +196,10 @@ void StandardTagAndInitialize::initializeLevelData(
 
 /*
  *************************************************************************
- *                                                                       *
- * Reset hierarchy configuration information where the range of new      *
- * hierarchy levels is specified.                                        *
- *                                                                       *
+ *
+ * Reset hierarchy configuration information where the range of new
+ * hierarchy levels is specified.
+ *
  *************************************************************************
  */
 
@@ -230,21 +230,21 @@ void StandardTagAndInitialize::resetHierarchyConfiguration(
 
 /*
  *************************************************************************
- *                                                                       *
- * Tag cells on level where refinement should occur.   The method can    *
- * tag cells using either of three options:                              *
- *                                                                       *
- *    1) Richardson extrapolation                                        *
- *    2) gradient detection                                              *
- *    3) user supplied refine boxes.                                     *
- *                                                                       *
- * These options may be used individually or in combination.  If used in *
- * combination,  it is IMPORTANT TO PRESERVE THE ORDER of the calls      *
- * (Richardson extrapolation 1st, gradient detection 2nd, user-supplied  *
- * refine boxes 3rd) in this method because users may have logic in      *
- * their code to compare how cells are tagged and changing the order     *
- * could destroy this logic.                                             *
- *                                                                       *
+ *
+ * Tag cells on level where refinement should occur.   The method can
+ * tag cells using either of three options:
+ *
+ *    1) Richardson extrapolation
+ *    2) gradient detection
+ *    3) user supplied refine boxes.
+ *
+ * These options may be used individually or in combination.  If used in
+ * combination,  it is IMPORTANT TO PRESERVE THE ORDER of the calls
+ * (Richardson extrapolation 1st, gradient detection 2nd, user-supplied
+ * refine boxes 3rd) in this method because users may have logic in
+ * their code to compare how cells are tagged and changing the order
+ * could destroy this logic.
+ *
  *************************************************************************
  */
 
@@ -330,61 +330,61 @@ void StandardTagAndInitialize::tagCellsForRefinement(
 
 /*
  *************************************************************************
- *                                                                       *
- * The Richardson extrapolation error estimation tags cells according    *
- * to differences in the solution computed on two different levels of    *
- * refinement.  The preprocessRichardsonExtrapolation method advanced    *
- * data on a COARSENED VERSION of the hierarchy level where regridding   *
- * is applied.  This method advances data on the level itself and        *
- * compares the solutions on the level and the coarsened version of the  *
- * level at the advanced time.                                           *
- *                                                                       *
- * The steps are summarized as follows:                                  *
- *                                                                       *
- * 0) Advance data on the level                                          *
- *    0a) if (initial_time) {                                            *
- *           advance level for ErrorCoarsenRatio steps with time         *
- *           increment dt                                                *
- *        } else {                                                       *
- *           advance level by 1 step (see discussion                     *
- *           under 2b for reasons for the difference).                   *
- *        }                                                              *
- *        NOTE: The "first_step" argument in the                         *
- *        tag_strategy->advanceLevel() method sets the conditions of     *
- *        the advance.  The following conditions define the state of     *
- *        "first_step":                                                  *
- *           - first_step is always true at the initial time.            *
- *           - at subsequent times, it is true only if:                  *
- *                    level <=  finest level that has not been regridded *
- *              -AND- the level is the coarsest used in flux syncs       *
- *    0b) reset the time dependent data for all but the last step.  The  *
- *        reason we don't do it on the last step is that we are going to *
- *        use the allocated space for step 4.                            *
- *                                                                       *
- * 1) Coarsen data computed on the level to the coarsened version of the *
- *    level.  Apply the                                                  *
- *    tag_strategy->coarsenDataForRichardsonExtrapolation() method again.*
- *    This time, before_advance set to false since data has already been *
- *    advanced on both levels.                                           *
- *                                                                       *
- * 2) Allocate tags and apply the                                        *
- *    tag_strategy->applyRichardsonExtrapolation() method.  This method  *
- *    sets tags on the COARSENED VERSION of the level according to the   *
- *    criteria set in the tag_strategy.                                  *
- *                                                                       *
- * 3) Refine tags from the coarsened version of the level to the level   *
- *    where tagging is performed.                                        *
- *                                                                       *
- * 4) Put data back into the state it was before calling the RE routine. *
- *    4a) Apply the d_tag_strategy->resetDataToPreAdvanceState() to take *
- *        care of resetting data after the last advance step (see 3b     *
- *        discussion).                                                   *
- *    4b) Reset the timestamp of the data if we are at the initial time  *
- *        by calling the initializeLevelData() method with               *
- *        "allocate_data"                                                *
- *        set to false. We have already allocated and operated on the    *
- *        initialized data, we just want to reset the timestamp of it.   *
- *                                                                       *
+ *
+ * The Richardson extrapolation error estimation tags cells according
+ * to differences in the solution computed on two different levels of
+ * refinement.  The preprocessRichardsonExtrapolation method advanced
+ * data on a COARSENED VERSION of the hierarchy level where regridding
+ * is applied.  This method advances data on the level itself and
+ * compares the solutions on the level and the coarsened version of the
+ * level at the advanced time.
+ *
+ * The steps are summarized as follows:
+ *
+ * 0) Advance data on the level
+ *    0a) if (initial_time) {
+ *           advance level for ErrorCoarsenRatio steps with time
+ *           increment dt
+ *        } else {
+ *           advance level by 1 step (see discussion
+ *           under 2b for reasons for the difference).
+ *        }
+ *        NOTE: The "first_step" argument in the
+ *        tag_strategy->advanceLevel() method sets the conditions of
+ *        the advance.  The following conditions define the state of
+ *        "first_step":
+ *           - first_step is always true at the initial time.
+ *           - at subsequent times, it is true only if:
+ *                    level <=  finest level that has not been regridded
+ *              -AND- the level is the coarsest used in flux syncs
+ *    0b) reset the time dependent data for all but the last step.  The
+ *        reason we don't do it on the last step is that we are going to
+ *        use the allocated space for step 4.
+ *
+ * 1) Coarsen data computed on the level to the coarsened version of the
+ *    level.  Apply the
+ *    tag_strategy->coarsenDataForRichardsonExtrapolation() method again.
+ *    This time, before_advance set to false since data has already been
+ *    advanced on both levels.
+ *
+ * 2) Allocate tags and apply the
+ *    tag_strategy->applyRichardsonExtrapolation() method.  This method
+ *    sets tags on the COARSENED VERSION of the level according to the
+ *    criteria set in the tag_strategy.
+ *
+ * 3) Refine tags from the coarsened version of the level to the level
+ *    where tagging is performed.
+ *
+ * 4) Put data back into the state it was before calling the RE routine.
+ *    4a) Apply the d_tag_strategy->resetDataToPreAdvanceState() to take
+ *        care of resetting data after the last advance step (see 3b
+ *        discussion).
+ *    4b) Reset the timestamp of the data if we are at the initial time
+ *        by calling the initializeLevelData() method with
+ *        "allocate_data"
+ *        set to false. We have already allocated and operated on the
+ *        initialized data, we just want to reset the timestamp of it.
+ *
  *************************************************************************
  */
 
@@ -605,11 +605,11 @@ StandardTagAndInitialize::tagCellsUsingRichardsonExtrapolation(
 
 /*
  *************************************************************************
- *                                                                       *
- * Preprocess data before cell tagging, if appropriate.  For the options *
- * provided in this class, only Richardson extrapolation requires        *
- * any pre-processing.                                                   *
- *                                                                       *
+ *
+ * Preprocess data before cell tagging, if appropriate.  For the options
+ * provided in this class, only Richardson extrapolation requires
+ * any pre-processing.
+ *
  *************************************************************************
  */
 
@@ -638,36 +638,36 @@ StandardTagAndInitialize::preprocessErrorEstimation(
 
 /*
  *************************************************************************
- *                                                                       *
- * The preprocess method for Richardson extrapolation error estimation   *
- * creates a coarsened version of a level in the hierarchy and advances  *
- * data on the coarsened level to a prescribed time.                     *
- *                                                                       *
- * The steps are summarized as follows:                                  *
- *                                                                       *
- * 0) Create a coarser version of the patch level where tagging is       *
- *    being performed. The coarser level is coarsened by the             *
- *    "error coarsen ratio", which is the greatest common divisor of the *
- *    refinement ratio (e.g. GCD of ratio 4 refinement would be 2).      *
- *                                                                       *
- * 1) Initialize data on the coarser level by applying the               *
- *    tag_strategy->coarsenDataForRichardsonExtrapolation() method.      *
- *    Note that "before_advance" is set true in this call since we have  *
- *    not yet advanced data on the coarser level.                        *
- *                                                                       *
- * 2) Advance data on the coarsened version of the level:                *
- *    2a) get timestep (dt) for level where tagging is performed         *
- *    2b) if (initial_time) {                                            *
- *          Advance coarse level by ErrorCoarsenRatio*dt                 *
- *        } else {                                                       *
- *          Advance coarse level by dt                                   *
- *        }                                                              *
- *    2c) reset the time dependent data on the coarser level by calling  *
- *        the tag_strategy's resetTimeDependentData() function.          *
- *                                                                       *
- * The constructed coarsened levels are stored and used in the           *
- * tagCellsUsingRichardsonExtrapolation() method.                        *
- *                                                                       *
+ *
+ * The preprocess method for Richardson extrapolation error estimation
+ * creates a coarsened version of a level in the hierarchy and advances
+ * data on the coarsened level to a prescribed time.
+ *
+ * The steps are summarized as follows:
+ *
+ * 0) Create a coarser version of the patch level where tagging is
+ *    being performed. The coarser level is coarsened by the
+ *    "error coarsen ratio", which is the greatest common divisor of the
+ *    refinement ratio (e.g. GCD of ratio 4 refinement would be 2).
+ *
+ * 1) Initialize data on the coarser level by applying the
+ *    tag_strategy->coarsenDataForRichardsonExtrapolation() method.
+ *    Note that "before_advance" is set true in this call since we have
+ *    not yet advanced data on the coarser level.
+ *
+ * 2) Advance data on the coarsened version of the level:
+ *    2a) get timestep (dt) for level where tagging is performed
+ *    2b) if (initial_time) {
+ *          Advance coarse level by ErrorCoarsenRatio*dt
+ *        } else {
+ *          Advance coarse level by dt
+ *        }
+ *    2c) reset the time dependent data on the coarser level by calling
+ *        the tag_strategy's resetTimeDependentData() function.
+ *
+ * The constructed coarsened levels are stored and used in the
+ * tagCellsUsingRichardsonExtrapolation() method.
+ *
  *************************************************************************
  */
 
@@ -902,11 +902,11 @@ StandardTagAndInitialize::preprocessRichardsonExtrapolation(
 
 /*
  *************************************************************************
- *                                                                       *
- * Boxes on the coarsest level must be able to be coarsened by the       *
- * error coarsen ratio to apply Richardson Extrapolation.  This method   *
- * simply checks that this is the case.                                  *
- *                                                                       *
+ *
+ * Boxes on the coarsest level must be able to be coarsened by the
+ * error coarsen ratio to apply Richardson Extrapolation.  This method
+ * simply checks that this is the case.
+ *
  *************************************************************************
  */
 
@@ -940,13 +940,13 @@ bool StandardTagAndInitialize::coarsestLevelBoxesOK(
 
 /*
  *************************************************************************
- *                                                                       *
- * Compute Error coarsen ratio for Richardson extrapolation. For a given *
- * level, the error coarsen ratio should be the greatest common divisor  *
- * (GCD) of the refinement ratio applied to the level.  This value       *
- * should generally be 2 or 3 (e.g. refinement ratio=2 gives GCD=2;      *
- * rr=3 gives GCD=3; rr=4 gives GCD=2; etc.).                            *
- *                                                                       *
+ *
+ * Compute Error coarsen ratio for Richardson extrapolation. For a given
+ * level, the error coarsen ratio should be the greatest common divisor
+ * (GCD) of the refinement ratio applied to the level.  This value
+ * should generally be 2 or 3 (e.g. refinement ratio=2 gives GCD=2;
+ * rr=3 gives GCD=3; rr=4 gives GCD=2; etc.).
+ *
  *************************************************************************
  */
 
@@ -1008,9 +1008,9 @@ void StandardTagAndInitialize::checkCoarsenRatios(
 
 /*
  *************************************************************************
- *                                                                       *
- * Read cell tagging option and, if required, specified refinement boxes.*
- *                                                                       *
+ *
+ * Read cell tagging option and, if required, specified refinement boxes.
+ *
  *************************************************************************
  */
 

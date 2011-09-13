@@ -30,9 +30,9 @@ StandardTagAndInitStrategy::~StandardTagAndInitStrategy()
 
 /*
  *************************************************************************
- *                                                                       *
- * Default virtual function implementations.                             *
- *                                                                       *
+ *
+ * Default virtual function implementations.
+ *
  *************************************************************************
  */
 

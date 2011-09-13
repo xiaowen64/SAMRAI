@@ -23,9 +23,9 @@ const std::string PatchInteriorVariableFillPattern::s_name_id =
 
 /*
  *************************************************************************
- *                                                                       *
- * Default contructor only sets the string name identifier               *
- *                                                                       *
+ *
+ * Default contructor only sets the string name identifier
+ *
  *************************************************************************
  */
 
@@ -37,9 +37,9 @@ PatchInteriorVariableFillPattern::PatchInteriorVariableFillPattern(
 
 /*
  *************************************************************************
- *                                                                       *
- * Destructor                                                            *
- *                                                                       *
+ *
+ * Destructor
+ *
  *************************************************************************
  */
 
@@ -49,10 +49,10 @@ PatchInteriorVariableFillPattern::~PatchInteriorVariableFillPattern()
 
 /*
  *************************************************************************
- *                                                                       *
- * Calculate the overlap using the implemented calculateOverlap() method *
- * for the destination geometry.                                         *
- *                                                                       *
+ *
+ * Calculate the overlap using the implemented calculateOverlap() method
+ * for the destination geometry.
+ *
  *************************************************************************
  */
 
@@ -77,9 +77,9 @@ PatchInteriorVariableFillPattern::calculateOverlap(
 
 /*
  *************************************************************************
- *                                                                       *
- * Return the string name identifier.                                    *
- *                                                                       *
+ *
+ * Return the string name identifier.
+ *
  *************************************************************************
  */
 const std::string& PatchInteriorVariableFillPattern::getPatternName() const
@@ -89,10 +89,10 @@ const std::string& PatchInteriorVariableFillPattern::getPatternName() const
 
 /*
  *************************************************************************
- *                                                                       *
- * getStencilWidth() throws an error if called.  Only overridding        *
- * versions of this method in concrete subclasses should be called.      *
- *                                                                       *
+ *
+ * getStencilWidth() throws an error if called.  Only overridding
+ * versions of this method in concrete subclasses should be called.
+ *
  *************************************************************************
  */
 const hier::IntVector& PatchInteriorVariableFillPattern::getStencilWidth()
@@ -102,10 +102,10 @@ const hier::IntVector& PatchInteriorVariableFillPattern::getStencilWidth()
 
 /*
  *************************************************************************
- *                                                                       *
- * Compute BoxOverlap that specifies data to be filled by refinement     *
- * operator.                                                             *
- *                                                                       *
+ *
+ * Compute BoxOverlap that specifies data to be filled by refinement
+ * operator.
+ *
  *************************************************************************
  */
 tbox::Pointer<hier::BoxOverlap>

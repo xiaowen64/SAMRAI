@@ -43,20 +43,20 @@ double MemoryUtilities::s_max_memory = 0.;
 
 /*
  *************************************************************************
- *                                                                       *
- * Prints memory usage to specified output stream.  Each time this       *
- * method is called, it prints in the format:                            *
- *                                                                       *
- *    253.0MB (265334688) in 615 allocs, 253.9MB reserved (871952 unused)*
- *                                                                       *
- * where                                                                 *
- *                                                                       *
- *    253.0MB is how many megabytes your current allocation has malloced.*
- *    2653346688 is the precise size (in bytes) of your current alloc.   *
- *    615 is the number of items allocated with malloc.                  *
- *    253.9MB is the current memory reserved by the system for mallocs.  *
- *    871952 is the bytes currently not used in this reserved memory.    *
- *                                                                       *
+ *
+ * Prints memory usage to specified output stream.  Each time this
+ * method is called, it prints in the format:
+ *
+ *    253.0MB (265334688) in 615 allocs, 253.9MB reserved (871952 unused)
+ *
+ * where
+ *
+ *    253.0MB is how many megabytes your current allocation has malloced.
+ *    2653346688 is the precise size (in bytes) of your current alloc.
+ *    615 is the number of items allocated with malloc.
+ *    253.9MB is the current memory reserved by the system for mallocs.
+ *    871952 is the bytes currently not used in this reserved memory.
+ *
  *************************************************************************
  */
 void MemoryUtilities::printMemoryInfo(
@@ -100,10 +100,10 @@ void MemoryUtilities::printMemoryInfo(
 
 /*
  *************************************************************************
- *                                                                       *
- * Records memory usage to user-defined event in TAU.  Note that if TAU  *
- * is not included, this method does nothing.                            *
- *                                                                       *
+ *
+ * Records memory usage to user-defined event in TAU.  Note that if TAU
+ * is not included, this method does nothing.
+ *
  *************************************************************************
  */
 
@@ -150,11 +150,11 @@ void MemoryUtilities::recordMemoryInfo(
 
 /*
  *************************************************************************
- *                                                                       *
- * Prints maximum memory used (i.e. high-water mark).  The max is        *
- * determined each time the "printMemoryInfo" or "recordMemoryInfo"      *
- * functions are called.                                                 *
- *                                                                       *
+ *
+ * Prints maximum memory used (i.e. high-water mark).  The max is
+ * determined each time the "printMemoryInfo" or "recordMemoryInfo"
+ * functions are called.
+ *
  *************************************************************************
  */
 void MemoryUtilities::printMaxMemory(

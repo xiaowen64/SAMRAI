@@ -27,9 +27,9 @@ using namespace SAMRAI;
 
 /*
  *************************************************************************
- *                                                                       *
- * The constructor and destructor.                                       *
- *                                                                       *
+ *
+ * The constructor and destructor.
+ *
  *************************************************************************
  */
 
@@ -52,9 +52,9 @@ PatchMultiblockTestStrategy::~PatchMultiblockTestStrategy()
 
 /*
  *************************************************************************
- *                                                                       *
- * Routines for reading variable and refinement data from input.         *
- *                                                                       *
+ *
+ * Routines for reading variable and refinement data from input.
+ *
  *************************************************************************
  */
 
@@ -145,9 +145,9 @@ void PatchMultiblockTestStrategy::readRefinementInput(
 
 /*
  *************************************************************************
- *                                                                       *
- * Tag cells on level specified in input box array for refinement.       *
- *                                                                       *
+ *
+ * Tag cells on level specified in input box array for refinement.
+ *
  *************************************************************************
  */
 
@@ -178,10 +178,10 @@ void PatchMultiblockTestStrategy::tagCellsInInputBoxes(
 
 /*
  *************************************************************************
- *                                                                       *
- * Blank physical boundary and pre/postprocess coarsen/refine operations *
- * so tester isn't required to implement them when not needed.           *
- *                                                                       *
+ *
+ * Blank physical boundary and pre/postprocess coarsen/refine operations
+ * so tester isn't required to implement them when not needed.
+ *
  *************************************************************************
  */
 

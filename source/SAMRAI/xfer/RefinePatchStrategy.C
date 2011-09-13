@@ -19,10 +19,10 @@ namespace xfer {
 
 /*
  *************************************************************************
- *                                                                       *
- * The default constructor and virtual destructor do nothing             *
- * particularly interesting.                                             *
- *                                                                       *
+ *
+ * The default constructor and virtual destructor do nothing
+ * particularly interesting.
+ *
  *************************************************************************
  */
 
@@ -40,9 +40,9 @@ RefinePatchStrategy::~RefinePatchStrategy()
 
 /*
  *************************************************************************
- *                                                                       *
- * Loop over all fill boxes and call the user-defined preprocesses.      *
- *                                                                       *
+ *
+ * Loop over all fill boxes and call the user-defined preprocesses.
+ *
  *************************************************************************
  */
 
@@ -61,9 +61,9 @@ void RefinePatchStrategy::preprocessRefineBoxes(
 
 /*
  *************************************************************************
- *                                                                       *
- * Loop over all fill boxes and call the user-defined postprocesses.     *
- *                                                                       *
+ *
+ * Loop over all fill boxes and call the user-defined postprocesses.
+ *
  *************************************************************************
  */
 

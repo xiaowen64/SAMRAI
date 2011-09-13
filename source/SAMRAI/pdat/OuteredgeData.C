@@ -35,11 +35,11 @@ const int OuteredgeData<TYPE>::PDAT_OUTEREDGEDATA_VERSION = 1;
 
 /*
  *************************************************************************
- *                                                                       *
- * Constructor and destructor for outeredge data objects.  The           *
- * constructor simply initializes data variables and sets up the         *
- * array data.                                                           *
- *                                                                       *
+ *
+ * Constructor and destructor for outeredge data objects.  The
+ * constructor simply initializes data variables and sets up the
+ * array data.
+ *
  *************************************************************************
  */
 
@@ -91,11 +91,11 @@ OuteredgeData<TYPE>::~OuteredgeData()
 
 /*
  *************************************************************************
- *                                                                       *
- * The following are private and cannot be used, but they are defined    *
- * here for compilers that require that every template declaration have  *
- * a definition (a stupid requirement, if you ask me).                   *
- *                                                                       *
+ *
+ * The following are private and cannot be used, but they are defined
+ * here for compilers that require that every template declaration have
+ * a definition (a stupid requirement, if you ask me).
+ *
  *************************************************************************
  */
 
@@ -116,10 +116,10 @@ void OuteredgeData<TYPE>::operator = (
 
 /*
  *************************************************************************
- *                                                                       *
- * Perform a fast copy between an outeredge patch data type (source) and *
- * a edge patch data type (destination) where the index spaces overlap.  *
- *                                                                       *
+ *
+ * Perform a fast copy between an outeredge patch data type (source) and
+ * a edge patch data type (destination) where the index spaces overlap.
+ *
  *************************************************************************
  */
 
@@ -172,10 +172,10 @@ void OuteredgeData<TYPE>::copy2(
 
 /*
  *************************************************************************
- *                                                                       *
- * Copy data from the source into the destination according to the       *
- * overlap descriptor.                                                   *
- *                                                                       *
+ *
+ * Copy data from the source into the destination according to the
+ * overlap descriptor.
+ *
  *************************************************************************
  */
 
@@ -241,10 +241,10 @@ void OuteredgeData<TYPE>::copy2(
 
 /*
  *************************************************************************
- *                                                                       *
- * Perform a fast copy from an edge data object to this outeredge data   *
- * object at the specified depths, where their index spaces overlap.     *
- *                                                                       *
+ *
+ * Perform a fast copy from an edge data object to this outeredge data
+ * object at the specified depths, where their index spaces overlap.
+ *
  *************************************************************************
  */
 
@@ -292,10 +292,10 @@ void OuteredgeData<TYPE>::copyDepth(
 
 /*
  *************************************************************************
- *                                                                       *
- * Perform a fast copy to an edge data object from this outeredge data   *
- * object at the specified depths, where their index spaces overlap.     *
- *                                                                       *
+ *
+ * Perform a fast copy to an edge data object from this outeredge data
+ * object at the specified depths, where their index spaces overlap.
+ *
  *************************************************************************
  */
 
@@ -337,9 +337,9 @@ void OuteredgeData<TYPE>::copyDepth2(
 
 /*
  *************************************************************************
- *                                                                       *
- * Add source data to the destination according to overlap descriptor.   *
- *                                                                       *
+ *
+ * Add source data to the destination according to overlap descriptor.
+ *
  *************************************************************************
  */
 
@@ -430,10 +430,10 @@ void OuteredgeData<TYPE>::sum(
 
 /*
  *************************************************************************
- *                                                                       *
- * Calculate the buffer space needed to pack/unpack messages on the box  *
- * region using the overlap descriptor.                                  *
- *                                                                       *
+ *
+ * Calculate the buffer space needed to pack/unpack messages on the box
+ * region using the overlap descriptor.
+ *
  *************************************************************************
  */
 
@@ -487,10 +487,10 @@ int OuteredgeData<TYPE>::getDataStreamSize(
 
 /*
  *************************************************************************
- *                                                                       *
- * Pack/unpack data into/out of the message streams using the index      *
- * space in the overlap descriptor.                                      *
- *                                                                       *
+ *
+ * Pack/unpack data into/out of the message streams using the index
+ * space in the overlap descriptor.
+ *
  *************************************************************************
  */
 
@@ -599,10 +599,10 @@ void OuteredgeData<TYPE>::unpackStream(
 
 /*
  *************************************************************************
- *                                                                       *
- * Unpack data from the message stream and add to this outeredge data    *
- * object using the index space in the overlap descriptor.               *
- *                                                                       *
+ *
+ * Unpack data from the message stream and add to this outeredge data
+ * object using the index space in the overlap descriptor.
+ *
  *************************************************************************
  */
 
@@ -658,10 +658,10 @@ void OuteredgeData<TYPE>::unpackStreamAndSum(
 
 /*
  *************************************************************************
- *                                                                       *
- * Calculate the amount of memory space needed to represent the data     *
- * for a  outeredge centered grid.                                       *
- *                                                                       *
+ *
+ * Calculate the amount of memory space needed to represent the data
+ * for a  outeredge centered grid.
+ *
  *************************************************************************
  */
 
@@ -704,10 +704,10 @@ size_t OuteredgeData<TYPE>::getSizeOfData(
 
 /*
  *************************************************************************
- *                                                                       *
- * Compute the box of valid edge indices given values of                 *
- * dimension and side designating the set of data indices.               *
- *                                                                       *
+ *
+ * Compute the box of valid edge indices given values of
+ * dimension and side designating the set of data indices.
+ *
  *************************************************************************
  */
 
@@ -727,9 +727,9 @@ OuteredgeData<TYPE>::getDataBox(
 
 /*
  *************************************************************************
- *                                                                       *
- * Fill the outeredge centered box with the given value.                 *
- *                                                                       *
+ *
+ * Fill the outeredge centered box with the given value.
+ *
  *************************************************************************
  */
 
@@ -855,10 +855,10 @@ void OuteredgeData<TYPE>::fillAll(
 
 /*
  *************************************************************************
- *                                                                       *
- * Perform a fast copy between an outeredge patch data type (source) and *
- * a edge patch data type (destination) where the index spaces overlap.  *
- *                                                                       *
+ *
+ * Perform a fast copy between an outeredge patch data type (source) and
+ * a edge patch data type (destination) where the index spaces overlap.
+ *
  *************************************************************************
  */
 
@@ -928,10 +928,10 @@ void OuteredgeData<TYPE>::copyToEdge(
 
 /*
  *************************************************************************
- *                                                                       *
- * Copy data from the source into the destination according to the       *
- * overlap descriptor.                                                   *
- *                                                                       *
+ *
+ * Copy data from the source into the destination according to the
+ * overlap descriptor.
+ *
  *************************************************************************
  */
 
@@ -1135,9 +1135,9 @@ void OuteredgeData<TYPE>::copyToOuteredge(
 
 /*
  *************************************************************************
- *                                                                       *
- * Print routines for outeredge centered arrays.                         *
- *                                                                       *
+ *
+ * Print routines for outeredge centered arrays.
+ *
  *************************************************************************
  */
 
@@ -1248,11 +1248,11 @@ void OuteredgeData<TYPE>::printAxisSide(
 
 /*
  *************************************************************************
- *                                                                       *
- * Checks that class version and restart file version are equal.         *
- * If so, reads in d_depth from the database.                            *
- * Then has each item in d_data read in its data from the database.      *
- *                                                                       *
+ *
+ * Checks that class version and restart file version are equal.
+ * If so, reads in d_depth from the database.
+ * Then has each item in d_data read in its data from the database.
+ *
  *************************************************************************
  */
 
@@ -1299,10 +1299,10 @@ void OuteredgeData<TYPE>::getSpecializedFromDatabase(
 
 /*
  *************************************************************************
- *                                                                       *
- * Writes out class version number, d_depth to the database.             *
- * Then has each item in d_data write out its data to the database.      *
- *                                                                       *
+ *
+ * Writes out class version number, d_depth to the database.
+ * Then has each item in d_data write out its data to the database.
+ *
  *************************************************************************
  */
 

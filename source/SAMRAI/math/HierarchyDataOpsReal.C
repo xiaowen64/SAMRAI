@@ -28,11 +28,11 @@ HierarchyDataOpsReal<TYPE>::~HierarchyDataOpsReal()
 
 /*
  *************************************************************************
- *                                                                       *
- * The following are private and cannot be used, but they are defined    *
- * here for compilers that require that every template declaration have  *
- * a definition (a stupid requirement, if you ask me).                   *
- *                                                                       *
+ *
+ * The following are private and cannot be used, but they are defined
+ * here for compilers that require that every template declaration have
+ * a definition (a stupid requirement, if you ask me).
+ *
  *************************************************************************
  */
 

@@ -34,10 +34,10 @@
 
 /*
  *************************************************************************
- *                                                                       *
- * External declarations for FORTRAN 77 routines used to sum node and    *
- * outernode data.                                                       *
- *                                                                       *
+ *
+ * External declarations for FORTRAN 77 routines used to sum node and
+ * outernode data.
+ *
  *************************************************************************
  */
 
@@ -46,9 +46,9 @@ namespace algs {
 
 /*
  *************************************************************************
- *                                                                       *
- * Initialize the static data members.                                   *
- *                                                                       *
+ *
+ * Initialize the static data members.
+ *
  *************************************************************************
  */
 
@@ -63,10 +63,10 @@ MblkPatchBoundaryNodeSum::s_onode_dst_id_array =
 
 /*
  *************************************************************************
- *                                                                       *
- * Constructor patch boundary node sum objects initializes data members  *
- * to default (undefined) states.                                        *
- *                                                                       *
+ *
+ * Constructor patch boundary node sum objects initializes data members
+ * to default (undefined) states.
+ *
  *************************************************************************
  */
 
@@ -96,10 +96,10 @@ MblkPatchBoundaryNodeSum::MblkPatchBoundaryNodeSum(
 
 /*
  *************************************************************************
- *                                                                       *
- * Destructor removes temporary outernode patch data ids from            *
- * variable database, if defined.                                        *
- *                                                                       *
+ *
+ * Destructor removes temporary outernode patch data ids from
+ * variable database, if defined.
+ *
  *************************************************************************
  */
 
@@ -142,9 +142,9 @@ MblkPatchBoundaryNodeSum::~MblkPatchBoundaryNodeSum()
 
 /*
  *************************************************************************
- *                                                                       *
- * Register node patch data index for summation.                         *
- *                                                                       *
+ *
+ * Register node patch data index for summation.
+ *
  *************************************************************************
  */
 
@@ -289,10 +289,10 @@ void MblkPatchBoundaryNodeSum::registerSum(
 
 /*
  *************************************************************************
- *                                                                       *
- * Set up schedule to sum node data around patch boundaries              *
- * on a single level.                                                    *
- *                                                                       *
+ *
+ * Set up schedule to sum node data around patch boundaries
+ * on a single level.
+ *
  *************************************************************************
  */
 
@@ -345,30 +345,30 @@ void MblkPatchBoundaryNodeSum::setupSum(
 
 /*
  *************************************************************************
- *                                                                       *
- * Perform patch boundary node sum across single level or multiple       *
- * hierarchy levels depending on how object was initialized.  In the     *
- * single level case, values at shared nodes are summed.  In the         *
- * multiple-level case, the algorithm involves the following steps:      *
- *                                                                       *
- *    1) Sum values at shared nodes on each level.                       *
- *    2) Set node values at coarse-fine boundary on each finer level     *
- *       to sum of fine level values and coarse level values at all      *
- *       nodes that are shared between the coarse and fine level.        *
- *                                                                       *
- *       2a) Copy coarser level node values to finer level (outer)node   *
- *           values at nodes on boundary of patches on a temporary       *
- *           level that represents the finer level coarsened to the      *
- *           index space of the coarser level.                           *
- *       2b) Sum (outer)node values at patch boundaries on finer level   *
- *           and (outer)node values at patch boundaries on coarsened     *
- *           finer level and set values on finer level to sum.  Note     *
- *           that the hanging nodes on the finer level may be treated    *
- *           at this point if specified to do so by the user.            *
- *                                                                       *
- *    3) Inject (outer)node values around each finer level patch         *
- *       boundary to corresponding node values on each coarser level.    *
- *                                                                       *
+ *
+ * Perform patch boundary node sum across single level or multiple
+ * hierarchy levels depending on how object was initialized.  In the
+ * single level case, values at shared nodes are summed.  In the
+ * multiple-level case, the algorithm involves the following steps:
+ *
+ *    1) Sum values at shared nodes on each level.
+ *    2) Set node values at coarse-fine boundary on each finer level
+ *       to sum of fine level values and coarse level values at all
+ *       nodes that are shared between the coarse and fine level.
+ *
+ *       2a) Copy coarser level node values to finer level (outer)node
+ *           values at nodes on boundary of patches on a temporary
+ *           level that represents the finer level coarsened to the
+ *           index space of the coarser level.
+ *       2b) Sum (outer)node values at patch boundaries on finer level
+ *           and (outer)node values at patch boundaries on coarsened
+ *           finer level and set values on finer level to sum.  Note
+ *           that the hanging nodes on the finer level may be treated
+ *           at this point if specified to do so by the user.
+ *
+ *    3) Inject (outer)node values around each finer level patch
+ *       boundary to corresponding node values on each coarser level.
+ *
  *************************************************************************
  */
 
@@ -393,13 +393,13 @@ void MblkPatchBoundaryNodeSum::computeSum(
 
 /*
  *************************************************************************
- *                                                                       *
- * Private member function that performs node sum across single level.   *
- *                                                                       *
- * 1. Copy node data to local outernode data.                            *
- * 2. Transfer and sum outernode data.                                   *
- * 3. Copy outernode data back to node data.                             *
- *                                                                       *
+ *
+ * Private member function that performs node sum across single level.
+ *
+ * 1. Copy node data to local outernode data.
+ * 2. Transfer and sum outernode data.
+ * 3. Copy outernode data back to node data.
+ *
  *************************************************************************
  */
 
@@ -428,10 +428,10 @@ void MblkPatchBoundaryNodeSum::doLevelSum(
 
 /*
  *************************************************************************
- *                                                                       *
- * Private member functions to copy between node and outernode data      *
- * over an entire level.                                                 *
- *                                                                       *
+ *
+ * Private member functions to copy between node and outernode data
+ * over an entire level.
+ *
  *************************************************************************
  */
 

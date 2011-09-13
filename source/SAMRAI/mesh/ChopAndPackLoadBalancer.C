@@ -62,9 +62,9 @@ tbox::Pointer<tbox::Timer> ChopAndPackLoadBalancer::t_chop_boxes;
 
 /*
  *************************************************************************
- *                                                                       *
- * Constructors and destructor for ChopAndPackLoadBalancer.              *
- *                                                                       *
+ *
+ * Constructors and destructor for ChopAndPackLoadBalancer.
+ *
  *************************************************************************
  */
 
@@ -122,9 +122,9 @@ ChopAndPackLoadBalancer::~ChopAndPackLoadBalancer()
 
 /*
  *************************************************************************
- *                                                                       *
- * Accessory functions to get/set load balancing parameters.             *
- *                                                                       *
+ *
+ * Accessory functions to get/set load balancing parameters.
+ *
  *************************************************************************
  */
 
@@ -377,53 +377,53 @@ void ChopAndPackLoadBalancer::loadBalanceBoxLevel(
 
 /*
  *************************************************************************
- *                                                                       *
- * This main load balance routine performs either uniform or             *
- * non-uniform load balancing operations on the given level depending    *
- * on user specifications.   In either case, the goal is to produce      *
- * a set of boxes and a mapping of those boxes to processors so that     *
- * the workload on each processor is close to the average workload.      *
- * The average workload is the total computational workload divided      *
- * by the number of processors.  In the uniform load balance case        *
- * (default), the workload is the number of cells in each box.  In the   *
- * non-uniform case, the workload is computed using weight data on the   *
- * grid hierarchy (i.e., a cell-centered double array on each patch.     *
- *                                                                       *
- * Typically, any box whose load is larger than the average is chopped.  *
- * A user can prescribe a parameter (the 'max workload factor') to alter *
- * average load used in this computation. Chopping is done using the     *
- * BalanceUtilities::recursiveBisection()) method which is similar *
- * to the Berger-Rigoutsos algorithm.                                    *
- *                                                                       *
- * Once the boxes are chopped into a collection os smaller boxes, they   *
- * are assigned to processors by a bin packing algorithm.                *
- *                                                                       *
+ *
+ * This main load balance routine performs either uniform or
+ * non-uniform load balancing operations on the given level depending
+ * on user specifications.   In either case, the goal is to produce
+ * a set of boxes and a mapping of those boxes to processors so that
+ * the workload on each processor is close to the average workload.
+ * The average workload is the total computational workload divided
+ * by the number of processors.  In the uniform load balance case
+ * (default), the workload is the number of cells in each box.  In the
+ * non-uniform case, the workload is computed using weight data on the
+ * grid hierarchy (i.e., a cell-centered double array on each patch.
+ *
+ * Typically, any box whose load is larger than the average is chopped.
+ * A user can prescribe a parameter (the 'max workload factor') to alter
+ * average load used in this computation. Chopping is done using the
+ * BalanceUtilities::recursiveBisection()) method which is similar
+ * to the Berger-Rigoutsos algorithm.
+ *
+ * Once the boxes are chopped into a collection os smaller boxes, they
+ * are assigned to processors by a bin packing algorithm.
+ *
  * The algorithm is summarized as follows:
- *                                                                       *
- * 1) Compute the estimated workload associated with each box.  In the   *
- *    uniform workload case, the load in each box region is the number   *
- *    of cells in the region.  Otherwise, the workload is computed using *
- *    patch data defined by the d_workload_data_id array set by the user.*
- *                                                                       *
- * 2) Compute the maximum workload allowed on any box.  This quantity is *
- *    by default the total workload divided by the number of processors. *
- *    The user may provide a maximum workload factor, either through the *
- *    input file or through a member function, which can alter the       *
- *    average workload used in this computation.                         *
- *                                                                       *
- * 3) Chop each box whose workload is more than the max allowed into a   *
- *    smaller set of boxes.                                              *
- *                                                                       *
- * 4) Check constraints placed on the boxes by the problem - i.e.        *
- *    verify boxes are within the maximum and minimum box size           *
- *    constraints and maintain a correct cut factor.                     *
- *                                                                       *
- * 5) Sort boxes largest to smallest and form an array.  Also form an    *
- *    array of the workloads associated with each box.                   *
- *                                                                       *
- * 6) Use a bin packing procedure to construct a processor mapping for   *
- *    the set of boxes.                                                  *
- *                                                                       *
+ *
+ * 1) Compute the estimated workload associated with each box.  In the
+ *    uniform workload case, the load in each box region is the number
+ *    of cells in the region.  Otherwise, the workload is computed using
+ *    patch data defined by the d_workload_data_id array set by the user.
+ *
+ * 2) Compute the maximum workload allowed on any box.  This quantity is
+ *    by default the total workload divided by the number of processors.
+ *    The user may provide a maximum workload factor, either through the
+ *    input file or through a member function, which can alter the
+ *    average workload used in this computation.
+ *
+ * 3) Chop each box whose workload is more than the max allowed into a
+ *    smaller set of boxes.
+ *
+ * 4) Check constraints placed on the boxes by the problem - i.e.
+ *    verify boxes are within the maximum and minimum box size
+ *    constraints and maintain a correct cut factor.
+ *
+ * 5) Sort boxes largest to smallest and form an array.  Also form an
+ *    array of the workloads associated with each box.
+ *
+ * 6) Use a bin packing procedure to construct a processor mapping for
+ *    the set of boxes.
+ *
  *************************************************************************
  */
 
@@ -629,12 +629,12 @@ void ChopAndPackLoadBalancer::loadBalanceBoxes(
 
 /*
  *************************************************************************
- *                                                                       *
- * Private function that chops a single box into a set of boxes          *
- * that will map to the array of processors as uniformly as possible.    *
- * The routine assumes a spatially-uniform workload distribution.        *
- * Note that no error checking is done.                                  *
- *                                                                       *
+ *
+ * Private function that chops a single box into a set of boxes
+ * that will map to the array of processors as uniformly as possible.
+ * The routine assumes a spatially-uniform workload distribution.
+ * Note that no error checking is done.
+ *
  *************************************************************************
  */
 
@@ -715,12 +715,12 @@ void ChopAndPackLoadBalancer::chopUniformSingleBox(
 
 /*
  *************************************************************************
- *                                                                       *
- * Private function that chops boxes on a list into another list of      *
- * boxes all of which have approximately or less than an average         *
- * workload estimate.  The routine assumes a spatially-uniform           *
- * workload distribution.   Note that no error checking is done.         *
- *                                                                       *
+ *
+ * Private function that chops boxes on a list into another list of
+ * boxes all of which have approximately or less than an average
+ * workload estimate.  The routine assumes a spatially-uniform
+ * workload distribution.   Note that no error checking is done.
+ *
  *************************************************************************
  */
 
@@ -807,12 +807,12 @@ void ChopAndPackLoadBalancer::chopBoxesWithUniformWorkload(
 
 /*
  *************************************************************************
- *                                                                       *
- * Private function that chops boxes on a list into another list of      *
- * boxes all of which have approximately or less than an average         *
- * workload estimate.  The routine assumes a spatially-nonuniform        *
- * workload distribution.  Note that no error checking is done.          *
- *                                                                       *
+ *
+ * Private function that chops boxes on a list into another list of
+ * boxes all of which have approximately or less than an average
+ * workload estimate.  The routine assumes a spatially-nonuniform
+ * workload distribution.  Note that no error checking is done.
+ *
  *************************************************************************
  */
 
@@ -1127,9 +1127,9 @@ void ChopAndPackLoadBalancer::exchangeBoxListsAndWeightArrays(
 
 /*
  *************************************************************************
- *                                                                       *
- * Print out all attributes of class instance for debugging.             *
- *                                                                       *
+ *
+ * Print out all attributes of class instance for debugging.
+ *
  *************************************************************************
  */
 
@@ -1182,9 +1182,9 @@ void ChopAndPackLoadBalancer::printClassData(
 
 /*
  *************************************************************************
- *                                                                       *
- * Read values (described in the class header) from input database.      *
- *                                                                       *
+ *
+ * Read values (described in the class header) from input database.
+ *
  *************************************************************************
  */
 
@@ -1280,10 +1280,10 @@ void ChopAndPackLoadBalancer::getFromInput(
 
 /*
  *************************************************************************
- *                                                                       *
- * Private utility function to map boxes to processors.                  *
- * Note that no error checking is done.                                  *
- *                                                                       *
+ *
+ * Private utility function to map boxes to processors.
+ * Note that no error checking is done.
+ *
  *************************************************************************
  */
 
@@ -1339,9 +1339,9 @@ void ChopAndPackLoadBalancer::binPackBoxes(
 
 /*
  *************************************************************************
- *                                                                       *
- * Private utility functions to determine parameter values for level.    *
- *                                                                       *
+ *
+ * Private utility functions to determine parameter values for level.
+ *
  *************************************************************************
  */
 

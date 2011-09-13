@@ -173,7 +173,7 @@ int BoundaryBoxUtils::normalDir() const
 
 /*
  ************************************************************************
- * Make surface box on boundary using standard boundary box             *
+ * Make surface box on boundary using standard boundary box
  ************************************************************************
  */
 
@@ -198,8 +198,8 @@ hier::Box BoundaryBoxUtils::getSurfaceBoxFromBoundaryBox() const
 
 /*
  ************************************************************************
- * Trim a boundary box so it does not stick out past the corners of a   *
- * patch.                                                               *
+ * Trim a boundary box so it does not stick out past the corners of a
+ * patch.
  ************************************************************************
  */
 

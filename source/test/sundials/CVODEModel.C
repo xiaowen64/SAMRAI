@@ -396,11 +396,11 @@ CVODEModel::resetHierarchyConfiguration(
 
 /*
  *************************************************************************
- *                                                                       *
- * Cell tagging and patch level data initialization routines declared    *
- * in the GradientDetectorStrategy interface.  They are used to          *
- * construct the hierarchy initially.                                    *
- *                                                                       *
+ *
+ * Cell tagging and patch level data initialization routines declared
+ * in the GradientDetectorStrategy interface.  They are used to
+ * construct the hierarchy initially.
+ *
  *************************************************************************
  */
 
@@ -946,12 +946,12 @@ int CVODEModel::CVSpgmrPrecondSet(
 
 /*
  *************************************************************************
- *                                                                       *
- * Apply preconditioner where right-hand-side is "r" and "z" is the      *
- * solution.   This routine assumes that the preconditioner setup call   *
- * has already been invoked.  Return 0 if preconditioner fails;          *
- * return 1 otherwise.                                                   *
- *                                                                       *
+ *
+ * Apply preconditioner where right-hand-side is "r" and "z" is the
+ * solution.   This routine assumes that the preconditioner setup call
+ * has already been invoked.  Return 0 if preconditioner fails;
+ * return 1 otherwise.
+ *
  *************************************************************************
  */
 
@@ -1226,8 +1226,8 @@ CVODEModel::getSolutionVector(
 /*
  *************************************************************************
  *
- * Set initial conditions for CVODE solver                               *
- *                                                                       *
+ * Set initial conditions for CVODE solver
+ *
  *************************************************************************
  */
 void
@@ -1271,14 +1271,14 @@ CVODEModel::setInitialConditions(
 
 /*
  *************************************************************************
- *                                                                       *
- * Return array of program counters.  Currently, the array holds the     *
- * following entries:                                                    *
- *    1) number of RHS evaluations                                       *
- *    2) number of precond setup calls                                   *
- *    3) number of precond solve calls                                   *
- * More counters may be added, as desired.                               *
- *                                                                       *
+ *
+ * Return array of program counters.  Currently, the array holds the
+ * following entries:
+ *    1) number of RHS evaluations
+ *    2) number of precond setup calls
+ *    3) number of precond solve calls
+ * More counters may be added, as desired.
+ *
  *************************************************************************
  */
 void
@@ -1294,8 +1294,8 @@ CVODEModel::getCounters(
 /*
  *************************************************************************
  *
- * Get data from input database.                                         *
- *                                                                       *
+ * Get data from input database.
+ *
  *************************************************************************
  */
 void
@@ -1359,8 +1359,8 @@ CVODEModel::getFromInput(
 /*
  *************************************************************************
  *
- * Write data to  restart database.                                      *
- *                                                                       *
+ * Write data to  restart database.
+ *
  *************************************************************************
  */
 void CVODEModel::putToDatabase(
@@ -1390,8 +1390,8 @@ void CVODEModel::putToDatabase(
 /*
  *************************************************************************
  *
- * Read data from restart database.                                      *
- *                                                                       *
+ * Read data from restart database.
+ *
  *************************************************************************
  */
 void CVODEModel::getFromRestart()
@@ -1433,9 +1433,9 @@ void CVODEModel::getFromRestart()
 
 /*
  *************************************************************************
- *                                                                       *
- * Routines to read boundary data from input database.                   *
- *                                                                       *
+ *
+ * Routines to read boundary data from input database.
+ *
  *************************************************************************
  */
 
@@ -1509,9 +1509,9 @@ void CVODEModel::readStateDataEntry(
 }
 /*
  *************************************************************************
- *                                                                       *
- * Prints class data - writes out info in class if assertion is thrown   *
- *                                                                       *
+ *
+ * Prints class data - writes out info in class if assertion is thrown
+ *
  *************************************************************************
  */
 

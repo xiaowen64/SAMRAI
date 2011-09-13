@@ -31,9 +31,9 @@ PatchSideDataNormOpsComplex::~PatchSideDataNormOpsComplex()
 
 /*
  *************************************************************************
- *                                                                       *
- * Compute the number of data entries on a patch in the given box.       *
- *                                                                       *
+ *
+ * Compute the number of data entries on a patch in the given box.
+ *
  *************************************************************************
  */
 
@@ -60,9 +60,9 @@ int PatchSideDataNormOpsComplex::numberOfEntries(
 
 /*
  *************************************************************************
- *                                                                       *
- * Norm operations for complex side-centered data.                       *
- *                                                                       *
+ *
+ * Norm operations for complex side-centered data.
+ *
  *************************************************************************
  */
 

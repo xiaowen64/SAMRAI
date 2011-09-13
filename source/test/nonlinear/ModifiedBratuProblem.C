@@ -71,42 +71,42 @@ tbox::Pointer<tbox::Timer> ModifiedBratuProblem::s_pc_timer;
 
 /*
  *************************************************************************
- *                                                                       *
- * Constructor and destructor for Modified Bratu Problem class.          *
- *                                                                       *
- * The problem we solve is:                                              *
- *                                                                       *
- *     du/dt = div( D(x,t)*grad(u) ) + lambda * exp(u) + f(u,x,t).       *
- *                                                                       *
- * The unknown u is a cell-centered variable.  The time discretization   *
- * uses the backward Euler strategy.  We use a standard 7-point stencil  *
- * (based on the finite volume meethod) for the div(D*grad(u)) term.     *
- *                                                                       *
- * The variables used here to manage data for the discrete problem are:  *
- *                                                                       *
- *    solution ........... unknown quantity "u"                          *
- *    source_term ........ source term "f"                               *
- *    exponential_term ... product "lambda * exp(u)"                     *
- *    diffusion_coef ..... diffusion coefficient "D"                     *
- *                                                                       *
- * Other quantities used in the solution process:                        *
- *                                                                       *
- *    weight.............. weights for solution vector entries on grid   *
- *    flux................ side-centered fluxes "D * grad(u)"            *
- *    coarse_fine_flux.... fluxes at coarse-fine interfaces              *
- *    jacobian_a.......... Jacobian entries for FAC solver               *
- *    jacobian_b.......... Jacobian entries for FAC solver               *
- *                                                                       *
- * The constructor creates these variables to represent the solution     *
- * and other quantities on the patch hierarchy.  The solution quantity   *
- * is managed using three variable contexts, "CURRENT", "NEW", and       *
- * "SCRATCH".  CURRENT and NEW represent the current and new values of   *
- * the solution, respectively.  They have no ghost cells.  The SCRATCH   *
- * context is where most of the computations involving the spatial       *
- * discretization stencil occur.  This storage has a ghost cell width    *
- * of one.  All other quantities are managed using only the SCRATCH      *
- * context.  However, they all have zero ghost cell widths.              *
- *                                                                       *
+ *
+ * Constructor and destructor for Modified Bratu Problem class.
+ *
+ * The problem we solve is:
+ *
+ *     du/dt = div( D(x,t)*grad(u) ) + lambda * exp(u) + f(u,x,t).
+ *
+ * The unknown u is a cell-centered variable.  The time discretization
+ * uses the backward Euler strategy.  We use a standard 7-point stencil
+ * (based on the finite volume meethod) for the div(D*grad(u)) term.
+ *
+ * The variables used here to manage data for the discrete problem are:
+ *
+ *    solution ........... unknown quantity "u"
+ *    source_term ........ source term "f"
+ *    exponential_term ... product "lambda * exp(u)"
+ *    diffusion_coef ..... diffusion coefficient "D"
+ *
+ * Other quantities used in the solution process:
+ *
+ *    weight.............. weights for solution vector entries on grid
+ *    flux................ side-centered fluxes "D * grad(u)"
+ *    coarse_fine_flux.... fluxes at coarse-fine interfaces
+ *    jacobian_a.......... Jacobian entries for FAC solver
+ *    jacobian_b.......... Jacobian entries for FAC solver
+ *
+ * The constructor creates these variables to represent the solution
+ * and other quantities on the patch hierarchy.  The solution quantity
+ * is managed using three variable contexts, "CURRENT", "NEW", and
+ * "SCRATCH".  CURRENT and NEW represent the current and new values of
+ * the solution, respectively.  They have no ghost cells.  The SCRATCH
+ * context is where most of the computations involving the spatial
+ * discretization stencil occur.  This storage has a ghost cell width
+ * of one.  All other quantities are managed using only the SCRATCH
+ * context.  However, they all have zero ghost cell widths.
+ *
  *************************************************************************
  */
 
@@ -367,9 +367,9 @@ ModifiedBratuProblem::ModifiedBratuProblem(
 
 /*
  *************************************************************************
- *                                                                       *
- * The destructor does nothing interesting.                              *
- *                                                                       *
+ *
+ * The destructor does nothing interesting.
+ *
  *************************************************************************
  */
 
@@ -382,11 +382,11 @@ ModifiedBratuProblem::~ModifiedBratuProblem()
 
 /*
  *************************************************************************
- *                                                                       *
- * The vector used in the nonlinear iteration to advance the data        *
- * includes only the "NEW" solution values.  In other words, we          *
- * know the "CURRENT" solution and we advance to the "NEW" solution.     *
- *                                                                       *
+ *
+ * The vector used in the nonlinear iteration to advance the data
+ * includes only the "NEW" solution values.  In other words, we
+ * know the "CURRENT" solution and we advance to the "NEW" solution.
+ *
  *************************************************************************
  */
 
@@ -490,14 +490,14 @@ void ModifiedBratuProblem::setVectorWeights(
 
 /*
  *************************************************************************
- *                                                                       *
- * Set the initial guess for the nonlinear iteration.  If we are at the  *
- * first step on the current hierarchy configuration, we initialize the  *
- * the new solution with the current soltuion values.  Note that we do   *
- * the same if we are not at the first step on the current hierarchy     *
- * configuration.  In the future, we may employ a more sophisticated     *
- * strategy involving some sort of extrapolation.                        *
- *                                                                       *
+ *
+ * Set the initial guess for the nonlinear iteration.  If we are at the
+ * first step on the current hierarchy configuration, we initialize the
+ * the new solution with the current soltuion values.  Note that we do
+ * the same if we are not at the first step on the current hierarchy
+ * configuration.  In the future, we may employ a more sophisticated
+ * strategy involving some sort of extrapolation.
+ *
  *************************************************************************
  */
 
@@ -648,9 +648,9 @@ void ModifiedBratuProblem::setInitialGuess(
 
 /*
  *************************************************************************
- *                                                                       *
- * Return the time increment used for the first solution advance step.   *
- *                                                                       *
+ *
+ * Return the time increment used for the first solution advance step.
+ *
  *************************************************************************
  */
 
@@ -661,26 +661,26 @@ double ModifiedBratuProblem::getInitialDt()
 
 /*
  *************************************************************************
- *                                                                       *
- * Compute and return the next time increment through which to advance   *
- * the solution.  Note that good_solution is the value returned by the   *
- * preceeding call to checkNewSolution().  The integer solver_retcode    *
- * is the return code generated by the nonlinear solver.                 *
- *                                                                       *
- * In the future, we will have a more intelligent strategy.  When        *
- * good_solution is true, we would like to take the largest timestep     *
- * possible.   When good_solution is false, we will cut the timestep     *
- * depending on the solver return code.  In this case, if the code       *
- * indicates that that nonlinear iteration converged, we will cut the    *
- * timestep by some amount since the temporal error is probably too      *
- * large.  For a first order method like BE, determining a suitable      *
- * timestep can be based on an estimate of the second time derivative    *
- * of the solution.  See somments before checkNewSolution() below.       *
- * If the nonlinear iteration did not converge, we will have to try      *
- * another approach.                                                     *
- *                                                                       *
- * At this time, we always return a constant time step read from input.  *
- *                                                                       *
+ *
+ * Compute and return the next time increment through which to advance
+ * the solution.  Note that good_solution is the value returned by the
+ * preceeding call to checkNewSolution().  The integer solver_retcode
+ * is the return code generated by the nonlinear solver.
+ *
+ * In the future, we will have a more intelligent strategy.  When
+ * good_solution is true, we would like to take the largest timestep
+ * possible.   When good_solution is false, we will cut the timestep
+ * depending on the solver return code.  In this case, if the code
+ * indicates that that nonlinear iteration converged, we will cut the
+ * timestep by some amount since the temporal error is probably too
+ * large.  For a first order method like BE, determining a suitable
+ * timestep can be based on an estimate of the second time derivative
+ * of the solution.  See somments before checkNewSolution() below.
+ * If the nonlinear iteration did not converge, we will have to try
+ * another approach.
+ *
+ * At this time, we always return a constant time step read from input.
+ *
  *************************************************************************
  */
 
@@ -696,22 +696,22 @@ double ModifiedBratuProblem::getNextDt(
 
 /*
  *************************************************************************
- *                                                                       *
- * Check the computed solution and return a boolean value of true if it  *
- * is acceptable; otherwise return false.  The integer solver_retcode    *
- * is the return code generated by the nonlinear solver.  This value     *
- * must be interpreted in a manner consistant with the solver in use.    *
- *                                                                       *
- * Ordinarily we would estimate the temporal error in the solution       *
- * before accepting it.  For backward Euler, this is straightforward.    *
- * For example, if we had both (d_solution, d_current) and (d_solution,  *
- * d_old), we could evaluate dy/dt at these two timesteps by evaluating  *
- * the rhs at these values.  Then the second derivative in the solution  *
- * can be estimated by using finite differences and compared to some     *
- * prescribed tolerance.  Other heuristics may be possible.              *
- *                                                                       *
- * For now, we accept every solution we compute.                         *
- *                                                                       *
+ *
+ * Check the computed solution and return a boolean value of true if it
+ * is acceptable; otherwise return false.  The integer solver_retcode
+ * is the return code generated by the nonlinear solver.  This value
+ * must be interpreted in a manner consistant with the solver in use.
+ *
+ * Ordinarily we would estimate the temporal error in the solution
+ * before accepting it.  For backward Euler, this is straightforward.
+ * For example, if we had both (d_solution, d_current) and (d_solution,
+ * d_old), we could evaluate dy/dt at these two timesteps by evaluating
+ * the rhs at these values.  Then the second derivative in the solution
+ * can be estimated by using finite differences and compared to some
+ * prescribed tolerance.  Other heuristics may be possible.
+ *
+ * For now, we accept every solution we compute.
+ *
  *************************************************************************
  */
 
@@ -789,14 +789,14 @@ bool ModifiedBratuProblem::checkNewSolution(
 
 /*
  *************************************************************************
- *                                                                       *
- * Update soltution quantities after computing an acceptable time        *
- * advanced solution.   The new_time value is the new solution time.     *
- *                                                                       *
- * Since we have no dependent variables in this problem and our memory   *
- * management is extremely simple, we just copy new into current.        *
- * Then, we synchronize the times for each set of solution vlaues.       *
- *                                                                       *
+ *
+ * Update soltution quantities after computing an acceptable time
+ * advanced solution.   The new_time value is the new solution time.
+ *
+ * Since we have no dependent variables in this problem and our memory
+ * management is extremely simple, we just copy new into current.
+ * Then, we synchronize the times for each set of solution vlaues.
+ *
  *************************************************************************
  */
 
@@ -840,15 +840,15 @@ void ModifiedBratuProblem::updateSolution(
 
 /*
  *************************************************************************
- *                                                                       *
- * Allocate and initialize data for a new level in the patch hierarchy.  *
- *                                                                       *
- * At initial time only, we initialize the solution to zero.  At all     *
- * other times the solution is either copied from an old level or        *
- * interpolated from coarser levels.  The cell weights and diffusion     *
- * coefficients are always set here since they live as long as a         *
- * patch and are not time dependent.                                     *
- *                                                                       *
+ *
+ * Allocate and initialize data for a new level in the patch hierarchy.
+ *
+ * At initial time only, we initialize the solution to zero.  At all
+ * other times the solution is either copied from an old level or
+ * interpolated from coarser levels.  The cell weights and diffusion
+ * coefficients are always set here since they live as long as a
+ * patch and are not time dependent.
+ *
  *************************************************************************
  */
 void ModifiedBratuProblem::initializeLevelData(
@@ -952,15 +952,15 @@ void ModifiedBratuProblem::initializeLevelData(
 
 /*
  *************************************************************************
- *                                                                       *
- * After hierarchy levels whose numbers lie in the given range have      *
- * been either added or changed in the hierarchy, this routine is        *
- * called.  Typically, it is used to reset any data members that         *
- * remain constant until the levels change again via adaptive gridding   *
- * (e.g., communication schedules), thus allowing some efficiencies to   *
- * be achieved.  Here, we do nothing, since the function evalutation     *
- * and Jacobian-vector product routines have indeterminate data ids.     *
- *                                                                       *
+ *
+ * After hierarchy levels whose numbers lie in the given range have
+ * been either added or changed in the hierarchy, this routine is
+ * called.  Typically, it is used to reset any data members that
+ * remain constant until the levels change again via adaptive gridding
+ * (e.g., communication schedules), thus allowing some efficiencies to
+ * be achieved.  Here, we do nothing, since the function evalutation
+ * and Jacobian-vector product routines have indeterminate data ids.
+ *
  *************************************************************************
  */
 
@@ -1041,9 +1041,9 @@ void ModifiedBratuProblem::resetHierarchyConfiguration(
 
 /*
  *************************************************************************
- *                                                                       *
- * KINSOL interface for user-supplied routines.                          *
- *                                                                       *
+ *
+ * KINSOL interface for user-supplied routines.
+ *
  *************************************************************************
  */
 
@@ -1146,9 +1146,9 @@ ModifiedBratuProblem::jacobianTimesVector(
 
 /*
  *************************************************************************
- *                                                                       *
- * PETSc/SNES interface for user-supplied routines.                      *
- *                                                                       *
+ *
+ * PETSc/SNES interface for user-supplied routines.
+ *
  *************************************************************************
  */
 
@@ -1234,24 +1234,24 @@ int ModifiedBratuProblem::applyPreconditioner(
 
 /*
  *************************************************************************
- *                                                                       *
- * Generic user-supplied functions.  Here the interfaces are expressed   *
- * in terms of generic SAMRAIVectors.  These methods are invoked from    *
- * within a nonlinear solver package (through an appropriate interface). *
- * Since we have no control over the vectors that appear as actual       *
- * arguments, each of these methods must create communication algorithms *
- * and schedules to fill ghost cells before stencil operations can be    *
- * applied.                                                              *
- *                                                                       *
+ *
+ * Generic user-supplied functions.  Here the interfaces are expressed
+ * in terms of generic SAMRAIVectors.  These methods are invoked from
+ * within a nonlinear solver package (through an appropriate interface).
+ * Since we have no control over the vectors that appear as actual
+ * arguments, each of these methods must create communication algorithms
+ * and schedules to fill ghost cells before stencil operations can be
+ * applied.
+ *
  *************************************************************************
  */
 
 /*
  *************************************************************************
- *                                                                       *
- * Evaluate nonlinear residual at the vector "x" and place the result in *
- * the vector "f".                                                       *
- *                                                                       *
+ *
+ * Evaluate nonlinear residual at the vector "x" and place the result in
+ * the vector "f".
+ *
  *************************************************************************
  */
 
@@ -1661,10 +1661,10 @@ void ModifiedBratuProblem::evaluateBratuFunction(
 
 /*
  *************************************************************************
- *                                                                       *
- * Evaluate Jacobian-vector product on input vector "v" and place the    *
- * result in the vector "Jv".                                            *
- *                                                                       *
+ *
+ * Evaluate Jacobian-vector product on input vector "v" and place the
+ * result in the vector "Jv".
+ *
  *************************************************************************
  */
 
@@ -2076,17 +2076,17 @@ ModifiedBratuProblem::jacobianTimesVector(
 
 /*
  *************************************************************************
- *                                                                       *
- * Set up FAC hierarchy preconditioner for Jacobian system.  Here we     *
- * use the FAC hierarchy solver in SAMRAI which automatically sets       *
- * up the composite grid system and uses hypre as a solver on each       *
- * level.  Fortunately, the FAC hierarchy solver suits the problem       *
- * we are solving, as the Jacobian matrix arises by discretizing:        *
- *                                                                       *
- *    div( D(x,t)*grad(u) ) + 1/dt - lambda * exp(u) - df/du             *
- *                                                                       *
- * evaluated at some iterate of the solution u.                          *
- *                                                                       *
+ *
+ * Set up FAC hierarchy preconditioner for Jacobian system.  Here we
+ * use the FAC hierarchy solver in SAMRAI which automatically sets
+ * up the composite grid system and uses hypre as a solver on each
+ * level.  Fortunately, the FAC hierarchy solver suits the problem
+ * we are solving, as the Jacobian matrix arises by discretizing:
+ *
+ *    div( D(x,t)*grad(u) ) + 1/dt - lambda * exp(u) - df/du
+ *
+ * evaluated at some iterate of the solution u.
+ *
  *************************************************************************
  */
 
@@ -2310,12 +2310,12 @@ void ModifiedBratuProblem::setupBratuPreconditioner(
 
 /*
  *************************************************************************
- *                                                                       *
- * Apply preconditioner where right-hand-side is "r" and "z" is the      *
- * solution.   This routine assumes that the preconditioner setup call   *
- * has already been invoked.  Return 0 if preconditioner fails;          *
- * return 1 otherwise.                                                   *
- *                                                                       *
+ *
+ * Apply preconditioner where right-hand-side is "r" and "z" is the
+ * solution.   This routine assumes that the preconditioner setup call
+ * has already been invoked.  Return 0 if preconditioner fails;
+ * return 1 otherwise.
+ *
  *************************************************************************
  */
 
@@ -2417,9 +2417,9 @@ int ModifiedBratuProblem::applyBratuPreconditioner(
 
 /*
  *************************************************************************
- *                                                                       *
- * Evaluate the Jacobian matrix A(x) for a given solution x.             *
- *                                                                       *
+ *
+ * Evaluate the Jacobian matrix A(x) for a given solution x.
+ *
  *************************************************************************
  */
 
@@ -2563,9 +2563,9 @@ void ModifiedBratuProblem::evaluateBratuJacobian(
 
 /*
  *************************************************************************
- *                                                                       *
- * Set physical boundary conditions for patch at a given time.           *
- *                                                                       *
+ *
+ * Set physical boundary conditions for patch at a given time.
+ *
  *************************************************************************
  */
 
@@ -2648,9 +2648,9 @@ void ModifiedBratuProblem::setPhysicalBoundaryConditions(
 
 /*
  *************************************************************************
- *                                                                       *
- * Read data from input database.                                        *
- *                                                                       *
+ *
+ * Read data from input database.
+ *
  *************************************************************************
  */
 
@@ -2709,9 +2709,9 @@ void ModifiedBratuProblem::getFromInput(
 
 /*
  *************************************************************************
- *                                                                       *
- * Put class version number and data members in database.                *
- *                                                                       *
+ *
+ * Put class version number and data members in database.
+ *
  *************************************************************************
  */
 
@@ -2733,9 +2733,9 @@ void ModifiedBratuProblem::putToDatabase(
 
 /*
  *************************************************************************
- *                                                                       *
- * Print all class data members to given output stream.                  *
- *                                                                       *
+ *
+ * Print all class data members to given output stream.
+ *
  *************************************************************************
  */
 

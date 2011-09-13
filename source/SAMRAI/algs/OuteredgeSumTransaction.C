@@ -33,9 +33,9 @@ namespace algs {
 
 /*
  *************************************************************************
- *                                                                       *
- * Initialization, set/unset functions for static array of refine items. *
- *                                                                       *
+ *
+ * Initialization, set/unset functions for static array of refine items.
+ *
  *************************************************************************
  */
 
@@ -63,9 +63,9 @@ void OuteredgeSumTransaction::unsetRefineItems()
 
 /*
  *************************************************************************
- *                                                                       *
- * Constructor sets state of transaction.                                *
- *                                                                       *
+ *
+ * Constructor sets state of transaction.
+ *
  *************************************************************************
  */
 
@@ -102,9 +102,9 @@ OuteredgeSumTransaction::~OuteredgeSumTransaction()
 
 /*
  *************************************************************************
- *                                                                       *
- * Functions overridden in tbox::Transaction base class.                 *
- *                                                                       *
+ *
+ * Functions overridden in tbox::Transaction base class.
+ *
  *************************************************************************
  */
 
@@ -202,9 +202,9 @@ OuteredgeSumTransaction::copyLocalData()
 
 /*
  *************************************************************************
- *                                                                       *
- * Function to print state of transaction.                               *
- *                                                                       *
+ *
+ * Function to print state of transaction.
+ *
  *************************************************************************
  */
 

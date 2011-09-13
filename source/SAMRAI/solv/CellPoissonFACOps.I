@@ -33,7 +33,7 @@ void CellPoissonFACOps::setUseSMG(
 
 /*
  ********************************************************************
- * Set the physical boundary condition object.                      *
+ * Set the physical boundary condition object.
  ********************************************************************
  */
 
@@ -50,7 +50,7 @@ void CellPoissonFACOps::setPhysicalBcCoefObject(
 
 /*
  ********************************************************************
- * Set the object specifying the parameters of the Poisson equation *
+ * Set the object specifying the parameters of the Poisson equation
  ********************************************************************
  */
 
@@ -75,7 +75,7 @@ void CellPoissonFACOps::enableLogging(
 
 /*
  ********************************************************************
- * Set the patch data id for the flux.                              *
+ * Set the patch data id for the flux.
  ********************************************************************
  */
 
@@ -90,7 +90,7 @@ void CellPoissonFACOps::setFluxId(
 
 /*
  ********************************************************************
- * Set the choice for smoothing algorithm.                          *
+ * Set the choice for smoothing algorithm.
  ********************************************************************
  */
 
@@ -110,7 +110,7 @@ void CellPoissonFACOps::setSmoothingChoice(
 
 /*
  ********************************************************************
- * Set the choice for the coarse level solver.                      *
+ * Set the choice for the coarse level solver.
  ********************************************************************
  */
 
@@ -137,7 +137,7 @@ void CellPoissonFACOps::setCoarsestLevelSolverChoice(
 
 /*
  ********************************************************************
- * Set the tolerance for the coarse level solver.                   *
+ * Set the tolerance for the coarse level solver.
  ********************************************************************
  */
 
@@ -149,7 +149,7 @@ void CellPoissonFACOps::setCoarsestLevelSolverTolerance(
 
 /*
  ********************************************************************
- * Set the tolerance for the coarse level solver.                   *
+ * Set the tolerance for the coarse level solver.
  ********************************************************************
  */
 
@@ -166,7 +166,7 @@ void CellPoissonFACOps::setCoarsestLevelSolverMaxIterations(
 
 /*
  ********************************************************************
- * Set the coarse-fine discretization method.                       *
+ * Set the coarse-fine discretization method.
  ********************************************************************
  */
 
@@ -187,7 +187,7 @@ void CellPoissonFACOps::setCoarseFineDiscretization(
 
 /*
  ********************************************************************
- * Set the prolongation method                                      *
+ * Set the prolongation method
  ********************************************************************
  */
 

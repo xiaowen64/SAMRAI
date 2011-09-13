@@ -21,9 +21,9 @@ namespace xfer {
 
 /*
  *************************************************************************
- *                                                                       *
- * Default constructor and destructor.                                   *
- *                                                                       *
+ *
+ * Default constructor and destructor.
+ *
  *************************************************************************
  */
 
@@ -37,9 +37,9 @@ StandardCoarsenTransactionFactory::~StandardCoarsenTransactionFactory()
 
 /*
  *************************************************************************
- *                                                                       *
- * Set/unset information for transactions managed by this factory class. *
- *                                                                       *
+ *
+ * Set/unset information for transactions managed by this factory class.
+ *
  *************************************************************************
  */
 
@@ -62,9 +62,9 @@ void StandardCoarsenTransactionFactory::unsetCoarsenItems()
 
 /*
  *************************************************************************
- *                                                                       *
- * Allocate appropriate transaction object.                              *
- *                                                                       *
+ *
+ * Allocate appropriate transaction object.
+ *
  *************************************************************************
  */
 

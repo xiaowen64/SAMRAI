@@ -53,9 +53,9 @@ HierarchyCellDataOpsInteger::~HierarchyCellDataOpsInteger()
 
 /*
  *************************************************************************
- *                                                                       *
- * Routines to set the hierarchy and level information.                  *
- *                                                                       *
+ *
+ * Routines to set the hierarchy and level information.
+ *
  *************************************************************************
  */
 
@@ -90,9 +90,9 @@ HierarchyCellDataOpsInteger::getPatchHierarchy() const
 
 /*
  *************************************************************************
- *                                                                       *
- * Basic generic operations.                                             *
- *                                                                       *
+ *
+ * Basic generic operations.
+ *
  *************************************************************************
  */
 
@@ -256,9 +256,9 @@ void HierarchyCellDataOpsInteger::setToScalar(
 
 /*
  *************************************************************************
- *                                                                       *
- * Basic generic arithmetic operations.                                  *
- *                                                                       *
+ *
+ * Basic generic arithmetic operations.
+ *
  *************************************************************************
  */
 

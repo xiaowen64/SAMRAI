@@ -32,9 +32,9 @@ int RefineClasses::s_default_refine_item_array_size = 20;
 
 /*
  *************************************************************************
- *                                                                       *
- * Default constructor.                                                  *
- *                                                                       *
+ *
+ * Default constructor.
+ *
  *************************************************************************
  */
 
@@ -46,10 +46,10 @@ RefineClasses::RefineClasses():
 
 /*
  *************************************************************************
- *                                                                       *
- * The destructor implicitly deletes the item storage associated with    *
- * the equivalence classes (and also the refine algorithm).              *
- *                                                                       *
+ *
+ * The destructor implicitly deletes the item storage associated with
+ * the equivalence classes (and also the refine algorithm).
+ *
  *************************************************************************
  */
 
@@ -59,9 +59,9 @@ RefineClasses::~RefineClasses()
 
 /*
  *************************************************************************
- *                                                                       *
- * Return representative item for given equivalence class (first in list)*
- *                                                                       *
+ *
+ * Return representative item for given equivalence class (first in list)
+ *
  *************************************************************************
  */
 
@@ -77,9 +77,9 @@ RefineClasses::getClassRepresentative(
 
 /*
  *************************************************************************
- *                                                                       *
- * Return iterator for list of refine items for given equivalence class  *
- *                                                                       *
+ *
+ * Return iterator for list of refine items for given equivalence class
+ *
  *************************************************************************
  */
 
@@ -96,9 +96,9 @@ RefineClasses::getIterator(
 
 /*
  *************************************************************************
- *                                                                       *
- * Insert a data item into the proper equivalence class.                 *
- *                                                                       *
+ *
+ * Insert a data item into the proper equivalence class.
+ *
  *************************************************************************
  */
 
@@ -140,15 +140,15 @@ void RefineClasses::insertEquivalenceClassItem(
 
 /*
  *************************************************************************
- *                                                                       *
- * Check for valid patch data ids, patch data types, and that scratch    *
- * data entry has at least as many ghost cells as destination data entry *
- * and stencil width of operator.  If so, return true; else return false.*
- * A descriptive error message is sent to TBOX_ERROR when a problem      *
- * appears.  If a null patch descriptor argument is passed, the          *
- * descriptor associated with the variable database Singleton object     *
- * will be used.                                                         *
- *                                                                       *
+ *
+ * Check for valid patch data ids, patch data types, and that scratch
+ * data entry has at least as many ghost cells as destination data entry
+ * and stencil width of operator.  If so, return true; else return false.
+ * A descriptive error message is sent to TBOX_ERROR when a problem
+ * appears.  If a null patch descriptor argument is passed, the
+ * descriptor associated with the variable database Singleton object
+ * will be used.
+ *
  *************************************************************************
  */
 
@@ -304,18 +304,18 @@ bool RefineClasses::itemIsValid(
 
 /*
  *************************************************************************
- *                                                                       *
- * Compare the equivalence classes in this refine classes object against *
- * those in the argument refine classes object.  Return true if both     *
- * object contain the same number of classes and the classes with the    *
- * class number match.  Two equivalence classes match if their           *
- * representatives are equivalent as defined by the method               *
- * itemsAreEquivalent().                                                 *
- *                                                                       *
- * If a null patch descriptor argument is passed, the                    *
- * descriptor associated with the variable database Singleton object     *
- * will be used.                                                         *
- *                                                                       *
+ *
+ * Compare the equivalence classes in this refine classes object against
+ * those in the argument refine classes object.  Return true if both
+ * object contain the same number of classes and the classes with the
+ * class number match.  Two equivalence classes match if their
+ * representatives are equivalent as defined by the method
+ * itemsAreEquivalent().
+ *
+ * If a null patch descriptor argument is passed, the
+ * descriptor associated with the variable database Singleton object
+ * will be used.
+ *
  *************************************************************************
  */
 
@@ -370,10 +370,10 @@ bool RefineClasses::classesMatch(
 
 /*
  *************************************************************************
- *                                                                       *
- * Return true if data items are equivalent; false otherwise.            *
- * This routine defines refine item equivalence.                         *
- *                                                                       *
+ *
+ * Return true if data items are equivalent; false otherwise.
+ * This routine defines refine item equivalence.
+ *
  *************************************************************************
  */
 
@@ -421,9 +421,9 @@ bool RefineClasses::itemsAreEquivalent(
 
 /*
  *************************************************************************
- *                                                                       *
- * Increase the data items array to the specified size.                  *
- *                                                                       *
+ *
+ * Increase the data items array to the specified size.
+ *
  *************************************************************************
  */
 
@@ -437,9 +437,9 @@ void RefineClasses::increaseRefineItemArraySize(
 
 /*
  *************************************************************************
- *                                                                       *
- * Print the data in the refine item lists to the specified stream.      *
- *                                                                       *
+ *
+ * Print the data in the refine item lists to the specified stream.
+ *
  *************************************************************************
  */
 
@@ -518,10 +518,10 @@ void RefineClasses::printRefineItem(
 
 /*
  *************************************************************************
- *                                                                       *
- * Private member function to determine whether two patch data items     *
- * match (are same type and have same ghost width.)                      *
- *                                                                       *
+ *
+ * Private member function to determine whether two patch data items
+ * match (are same type and have same ghost width.)
+ *
  *************************************************************************
  */
 
@@ -555,11 +555,11 @@ bool RefineClasses::patchDataMatch(
 
 /*
  *************************************************************************
- *                                                                       *
- * Private member function to determine equivalence class index for      *
- * given data item.  Return value of -1 indicates no match found; else   *
- * return value is index of match.                                       *
- *                                                                       *
+ *
+ * Private member function to determine equivalence class index for
+ * given data item.  Return value of -1 indicates no match found; else
+ * return value is index of match.
+ *
  *************************************************************************
  */
 

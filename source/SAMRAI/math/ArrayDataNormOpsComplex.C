@@ -29,9 +29,9 @@ ArrayDataNormOpsComplex::~ArrayDataNormOpsComplex()
 
 /*
  *************************************************************************
- *                                                                       *
- * Norm operations for complex array data.                               *
- *                                                                       *
+ *
+ * Norm operations for complex array data.
+ *
  *************************************************************************
  */
 

@@ -16,9 +16,9 @@ namespace solv {
 
 /*
  *************************************************************************
- *                                                                       *
- * Utility routines to get information about solver.                     *
- *                                                                       *
+ *
+ * Utility routines to get information about solver.
+ *
  *************************************************************************
  */
 
@@ -138,9 +138,9 @@ void FACPreconditioner::setAlgorithmChoice(
 
 /*
  *************************************************************************
- *                                                                       *
- * Functions to set logging parameters.                                  *
- *                                                                       *
+ *
+ * Functions to set logging parameters.
+ *
  *************************************************************************
  */
 SAMRAI_INLINE_KEYWORD

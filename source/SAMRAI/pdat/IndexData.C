@@ -38,10 +38,10 @@ const int IndexData<TYPE, BOX_GEOMETRY>::PDAT_INDEXDATA_VERSION = 1;
 
 /*
  *************************************************************************
- *                                                                       *
- * The constructor for the irregular grid object simply initializes the  *
- * irregular data list to be null (this is done implicitly).             *
- *                                                                       *
+ *
+ * The constructor for the irregular grid object simply initializes the
+ * irregular data list to be null (this is done implicitly).
+ *
  *************************************************************************
  */
 
@@ -67,11 +67,11 @@ IndexData<TYPE, BOX_GEOMETRY>::~IndexData()
 
 /*
  *************************************************************************
- *                                                                       *
- * The following are private and cannot be used, but they are defined    *
- * here for compilers that require that every template declaration have  *
- * a definition (a stupid requirement, if you ask me).                   *
- *                                                                       *
+ *
+ * The following are private and cannot be used, but they are defined
+ * here for compilers that require that every template declaration have
+ * a definition (a stupid requirement, if you ask me).
+ *
  *************************************************************************
  */
 
@@ -95,9 +95,9 @@ void IndexData<TYPE, BOX_GEOMETRY>::operator = (
 
 /*
  *************************************************************************
- *                                                                       *
- * Copy into dst where src overlaps on interiors.                        *
- *                                                                       *
+ *
+ * Copy into dst where src overlaps on interiors.
+ *
  *************************************************************************
  */
 template<class TYPE, class BOX_GEOMETRY>
@@ -134,10 +134,10 @@ void IndexData<TYPE, BOX_GEOMETRY>::copy2(
 
 /*
  *************************************************************************
- *                                                                       *
- * Copy data from the source into the destination according to the       *
- * overlap descriptor.                                                   *
- *                                                                       *
+ *
+ * Copy data from the source into the destination according to the
+ * overlap descriptor.
+ *
  *************************************************************************
  */
 
@@ -192,10 +192,10 @@ void IndexData<TYPE, BOX_GEOMETRY>::copy2(
 
 /*
  *************************************************************************
- *                                                                       *
- * Calculate the buffer space needed to pack/unpack messages on the box  *
- * region using the overlap descriptor.                                  *
- *                                                                       *
+ *
+ * Calculate the buffer space needed to pack/unpack messages on the box
+ * region using the overlap descriptor.
+ *
  *************************************************************************
  */
 
@@ -234,10 +234,10 @@ int IndexData<TYPE, BOX_GEOMETRY>::getDataStreamSize(
 
 /*
  *************************************************************************
- *                                                                       *
- * Pack/unpack data into/out of the message streams using the index      *
- * space in the overlap descriptor.                                      *
- *                                                                       *
+ *
+ * Pack/unpack data into/out of the message streams using the index
+ * space in the overlap descriptor.
+ *
  *************************************************************************
  */
 
@@ -318,9 +318,9 @@ void IndexData<TYPE, BOX_GEOMETRY>::unpackStream(
 
 /*
  *************************************************************************
- *                                                                       *
- * tbox::List manipulation stuff.                                        *
- *                                                                       *
+ *
+ * tbox::List manipulation stuff.
+ *
  *************************************************************************
  */
 
@@ -698,10 +698,10 @@ bool IndexData<TYPE, BOX_GEOMETRY>::isElement(
 
 /*
  *************************************************************************
- *                                                                       *
- * Just checks to make sure that the class version is the same           *
- * as the restart file version number.                                   *
- *                                                                       *
+ *
+ * Just checks to make sure that the class version is the same
+ * as the restart file version number.
+ *
  *************************************************************************
  */
 
@@ -753,9 +753,9 @@ void IndexData<TYPE, BOX_GEOMETRY>::getSpecializedFromDatabase(
 
 /*
  *************************************************************************
- *                                                                       *
- * Just writes out the class version number to the database.             *
- *                                                                       *
+ *
+ * Just writes out the class version number to the database.
+ *
  *************************************************************************
  */
 

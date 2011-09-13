@@ -61,11 +61,11 @@ const int SkeletonGridGeometry::GEOM_SKELETON_GRID_GEOMETRY_VERSION = 2;
 
 /*
  *************************************************************************
- *                                                                       *
- * Constructors for SkeletonGridGeometry.  Both set up operator     *
- * handlers.  However, one initializes data members based on arguments.  *
- * The other initializes the object based on input file information.     *
- *                                                                       *
+ *
+ * Constructors for SkeletonGridGeometry.  Both set up operator
+ * handlers.  However, one initializes data members based on arguments.
+ * The other initializes the object based on input file information.
+ *
  *************************************************************************
  */
 SkeletonGridGeometry::SkeletonGridGeometry(
@@ -120,9 +120,9 @@ SkeletonGridGeometry::SkeletonGridGeometry(
 
 /*
  *************************************************************************
- *                                                                       *
- * Destructor for SkeletonGridGeometry deallocates grid storage.         *
- *                                                                       *
+ *
+ * Destructor for SkeletonGridGeometry deallocates grid storage.
+ *
  *************************************************************************
  */
 
@@ -135,10 +135,10 @@ SkeletonGridGeometry::~SkeletonGridGeometry()
 
 /*
  *************************************************************************
- *                                                                       *
- * Create and return pointer to refined version of this Cartesian        *
- * grid geometry object refined by the given ratio.                      *
- *                                                                       *
+ *
+ * Create and return pointer to refined version of this Cartesian
+ * grid geometry object refined by the given ratio.
+ *
  *************************************************************************
  */
 
@@ -171,10 +171,10 @@ SkeletonGridGeometry::makeRefinedGridGeometry(
 
 /*
  *************************************************************************
- *                                                                       *
- * Create and return pointer to coarsened version of this Cartesian      *
- * grid geometry object coarsened by the given ratio.                    *
- *                                                                       *
+ *
+ * Create and return pointer to coarsened version of this Cartesian
+ * grid geometry object coarsened by the given ratio.
+ *
  *************************************************************************
  */
 
@@ -232,10 +232,10 @@ SkeletonGridGeometry::makeCoarsenedGridGeometry(
 
 /*
  *************************************************************************
- *                                                                       *
- * Create SkeletonPatchGeometry geometry object, initializing its   *
- * boundary and assigning it to the given patch.                         *
- *                                                                       *
+ *
+ * Create SkeletonPatchGeometry geometry object, initializing its
+ * boundary and assigning it to the given patch.
+ *
  *************************************************************************
  */
 
@@ -279,9 +279,9 @@ void SkeletonGridGeometry::setGeometryDataOnPatch(
 
 /*
  *************************************************************************
- *                                                                       *
- * Writes out version number and data members for the class.             *
- *                                                                       *
+ *
+ * Writes out version number and data members for the class.
+ *
  *************************************************************************
  */
 
@@ -308,12 +308,12 @@ void SkeletonGridGeometry::putToDatabase(
 
 /*
  *************************************************************************
- *                                                                       *
- * Data is read from input only if the simulation is not from restart.   *
- * Otherwise, all values specifed in the input database are ignored.     *
- * In this method data from the database are read to local               *
- * variables and the setPhysicalDomain() method is called.               *
- *                                                                       *
+ *
+ * Data is read from input only if the simulation is not from restart.
+ * Otherwise, all values specifed in the input database are ignored.
+ * In this method data from the database are read to local
+ * variables and the setPhysicalDomain() method is called.
+ *
  *************************************************************************
  */
 
@@ -360,12 +360,12 @@ void SkeletonGridGeometry::getFromInput(
 
 /*
  *************************************************************************
- *                                                                       *
- * Checks to see if the version number for the class is the same as      *
- * as the version number of the restart file.                            *
- * If they are equal, then the data from the database are read to local  *
- * variables and the setPhysicalDomain() method is called.               *
- *                                                                       *
+ *
+ * Checks to see if the version number for the class is the same as
+ * as the version number of the restart file.
+ * If they are equal, then the data from the database are read to local
+ * variables and the setPhysicalDomain() method is called.
+ *
  *************************************************************************
  */
 void SkeletonGridGeometry::getFromRestart()
@@ -405,9 +405,9 @@ void SkeletonGridGeometry::getFromRestart()
 
 /*
  *************************************************************************
- *                                                                       *
- * Print SkeletonGridGeometry class data.                           *
- *                                                                       *
+ *
+ * Print SkeletonGridGeometry class data.
+ *
  *************************************************************************
  */
 

@@ -35,10 +35,10 @@ namespace xfer {
 
 /*
  *************************************************************************
- *                                                                       *
- * Initialization, set/unset functions for static array of refine items  *
- * and interpolation time.                                               *
- *                                                                       *
+ *
+ * Initialization, set/unset functions for static array of refine items
+ * and interpolation time.
+ *
  *************************************************************************
  */
 
@@ -75,9 +75,9 @@ void RefineTimeTransaction::unsetRefineItems()
 
 /*
  *************************************************************************
- *                                                                       *
- * Constructor sets state of transaction.                                *
- *                                                                       *
+ *
+ * Constructor sets state of transaction.
+ *
  *************************************************************************
  */
 
@@ -125,9 +125,9 @@ RefineTimeTransaction::~RefineTimeTransaction()
 
 /*
  *************************************************************************
- *                                                                       *
- * Functions overridden in tbox::Transaction base class.                 *
- *                                                                       *
+ *
+ * Functions overridden in tbox::Transaction base class.
+ *
  *************************************************************************
  */
 
@@ -275,9 +275,9 @@ void RefineTimeTransaction::timeInterpolate(
 
 /*
  *************************************************************************
- *                                                                       *
- * Function to print state of transaction.                               *
- *                                                                       *
+ *
+ * Function to print state of transaction.
+ *
  *************************************************************************
  */
 

@@ -38,16 +38,16 @@ TagAndInitializeStrategy::~TagAndInitializeStrategy()
 
 /*
  *************************************************************************
- *                                                                       *
- * Sets refine boxes for case where refine region is specified by the    *
- * user.  The bool return value specifies whether or not the refine      *
- * boxes have been reset from the last time the method was called        *
- * (true = they are reset, false = they have NOT changed).               *
- *                                                                       *
- * Note that if any method which invokes tagging is performed there      *
- * is always potential that the boxes have changed so this method will   *
- * always return true in this case.                                      *
- *                                                                       *
+ *
+ * Sets refine boxes for case where refine region is specified by the
+ * user.  The bool return value specifies whether or not the refine
+ * boxes have been reset from the last time the method was called
+ * (true = they are reset, false = they have NOT changed).
+ *
+ * Note that if any method which invokes tagging is performed there
+ * is always potential that the boxes have changed so this method will
+ * always return true in this case.
+ *
  *************************************************************************
  */
 bool TagAndInitializeStrategy::getUserSuppliedRefineBoxes(
@@ -203,9 +203,9 @@ bool TagAndInitializeStrategy::getUserSuppliedRefineBoxes(
 
 /*
  *************************************************************************
- *                                                                       *
- * Resets refine boxes for specified level.                              *
- *                                                                       *
+ *
+ * Resets refine boxes for specified level.
+ *
  *************************************************************************
  */
 
@@ -233,9 +233,9 @@ void TagAndInitializeStrategy::resetRefineBoxes(
 
 /*
  *************************************************************************
- *                                                                       *
- * Read specified refinement boxes, if any.                              *
- *                                                                       *
+ *
+ * Read specified refinement boxes, if any.
+ *
  *************************************************************************
  */
 

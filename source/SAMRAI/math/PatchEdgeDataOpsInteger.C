@@ -30,9 +30,9 @@ PatchEdgeDataOpsInteger::~PatchEdgeDataOpsInteger()
 
 /*
  *************************************************************************
- *                                                                       *
- * Compute the number of data entries on a patch in the given box.       *
- *                                                                       *
+ *
+ * Compute the number of data entries on a patch in the given box.
+ *
  *************************************************************************
  */
 
@@ -56,9 +56,9 @@ int PatchEdgeDataOpsInteger::numberOfEntries(
 
 /*
  *************************************************************************
- *                                                                       *
- * General operations for integer edge-centered patch data.              *
- *                                                                       *
+ *
+ * General operations for integer edge-centered patch data.
+ *
  *************************************************************************
  */
 

@@ -35,24 +35,24 @@ using namespace SAMRAI;
 
 /*
  ************************************************************************
- *                                                                      *
- * This is the driver program to demonstrate                            *
- * how to use the FAC Poisson solver.                                   *
- *                                                                      *
- * We set up the simple problem                                         *
- *          u + div(grad(u)) = sin(x)*sin(y)                            *
- * in the domain [0:1]x[0:1], with u=0 on the                           *
- * boundary.                                                            *
- *                                                                      *
- * FACPoisson is the primary object used to                             *
- * set up and solve the system.  It maintains                           *
- * the data for the computed solution u, the                            *
- * exact solution, and the right hand side.                             *
- *                                                                      *
- * The hierarchy created to solve this problem                          *
- * has only one level.  (The FAC Poisson solver                         *
- * is a single-level solver.)                                           *
- *                                                                      *
+ *
+ * This is the driver program to demonstrate
+ * how to use the FAC Poisson solver.
+ *
+ * We set up the simple problem
+ *          u + div(grad(u)) = sin(x)*sin(y)
+ * in the domain [0:1]x[0:1], with u=0 on the
+ * boundary.
+ *
+ * FACPoisson is the primary object used to
+ * set up and solve the system.  It maintains
+ * the data for the computed solution u, the
+ * exact solution, and the right hand side.
+ *
+ * The hierarchy created to solve this problem
+ * has only one level.  (The FAC Poisson solver
+ * is a single-level solver.)
+ *
  *************************************************************************
  */
 

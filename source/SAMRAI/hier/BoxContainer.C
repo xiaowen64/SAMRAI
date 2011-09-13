@@ -96,29 +96,29 @@ void BoxContainer::insertAfter(Iterator iter, const Box& item)
 }
 
 /*************************************************************************
- *                                                                       *
- * Function simplify() takes the complicated container of boxes and      *
- * coalesces regions together where possible.                            *
- *                                                                       *
- * The canonical ordering for boxes is defined such that boxes which     *
- * lie next to each other in higher dimensions are coalesced together    *
- * before boxes which lie next to each other in lower dimensions.        *
- * Thus, we try to coalesce two boxes together on the higher             *
- * dimensions first.                                                     *
- *                                                                       *
- * Assuming that two boxes a and b of dimension DIM are in canonical     *
- * order for dimensions d+1, ..., D, we can coalesce them together on    *
- * dimension d if:                                                       *
- *                                                                       *
- *      (1) the lower and upper bounds for a and b agree for all         *
- *          dimensions greater than d                                    *
- *      (2) boxes a and b overlap or are next to each other in           *
- *          dimension d                                                  *
- *      (3) boxes a and b overlap for all dimensions less than d         *
- *                                                                       *
- * If these conditions hold, then we break up the two boxes and put      *
- * them into the container of non-canonical boxes.                       *
- *                                                                       *
+ *
+ * Function simplify() takes the complicated container of boxes and
+ * coalesces regions together where possible.
+ *
+ * The canonical ordering for boxes is defined such that boxes which
+ * lie next to each other in higher dimensions are coalesced together
+ * before boxes which lie next to each other in lower dimensions.
+ * Thus, we try to coalesce two boxes together on the higher
+ * dimensions first.
+ *
+ * Assuming that two boxes a and b of dimension DIM are in canonical
+ * order for dimensions d+1, ..., D, we can coalesce them together on
+ * dimension d if:
+ *
+ *      (1) the lower and upper bounds for a and b agree for all
+ *          dimensions greater than d
+ *      (2) boxes a and b overlap or are next to each other in
+ *          dimension d
+ *      (3) boxes a and b overlap for all dimensions less than d
+ *
+ * If these conditions hold, then we break up the two boxes and put
+ * them into the container of non-canonical boxes.
+ *
  *************************************************************************
  */
 void BoxContainer::simplify()
@@ -215,18 +215,18 @@ void BoxContainer::simplify()
 
 /*
  *************************************************************************
- *                                                                       *
- * Coalesce boxes in the container where possible.  The resulting box    *
- * container will contain a non-overlapping set of boxes covering the    *
- * identical region of index space covered by the original container.    *
- * Two boxes may be coalesced if their union is a box (recall that union *
- * is not closed over boxes), and they have a non-empty intersection or  *
- * they are adjacent to each other in index space.  Empty boxes in the   *
- * container are removed during this process.  Also, the boxes are       *
- * coalesced in the order in which they appear in the container.  No     *
- * attempt is made to coalesce boxes in any particular way (e.g., to     *
- * achieve the smallest number of boxes).                                *
- *                                                                       *
+ *
+ * Coalesce boxes in the container where possible.  The resulting box
+ * container will contain a non-overlapping set of boxes covering the
+ * identical region of index space covered by the original container.
+ * Two boxes may be coalesced if their union is a box (recall that union
+ * is not closed over boxes), and they have a non-empty intersection or
+ * they are adjacent to each other in index space.  Empty boxes in the
+ * container are removed during this process.  Also, the boxes are
+ * coalesced in the order in which they appear in the container.  No
+ * attempt is made to coalesce boxes in any particular way (e.g., to
+ * achieve the smallest number of boxes).
+ *
  *************************************************************************
  */
 void BoxContainer::coalesce()
@@ -326,9 +326,9 @@ bool BoxContainer::contains(
 
 /*
  *************************************************************************
- *                                                                       *
- * Return the bounding box for all boxes in the BoxContainer.            *
- *                                                                       *
+ *
+ * Return the bounding box for all boxes in the BoxContainer.
+ *
  *************************************************************************
  */
 Box BoxContainer::getBoundingBox() const
@@ -350,9 +350,9 @@ Box BoxContainer::getBoundingBox() const
 
 /*
  *************************************************************************
- *                                                                       *
- * Test the box container for intersections among its boxes.             *
- *                                                                       *
+ *
+ * Test the box container for intersections among its boxes.
+ *
  *************************************************************************
  */
 bool BoxContainer::boxesIntersect() const
@@ -378,10 +378,10 @@ bool BoxContainer::boxesIntersect() const
 
 /*
  *************************************************************************
- *                                                                       *
- * Return the current container without the portions that intersect      *
- * takeaway.                                                             *
- *                                                                       *
+ *
+ * Return the current container without the portions that intersect
+ * takeaway.
+ *
  *************************************************************************
  */
 void BoxContainer::removeIntersections(
@@ -562,10 +562,10 @@ void BoxContainer::removeIntersectionsFromSublist(
 
 /*
  *************************************************************************
- *                                                                       *
- * Return the boxes in the current container that intersect the index    *
- * space of the argument.                                                *
- *                                                                       *
+ *
+ * Return the boxes in the current container that intersect the index
+ * space of the argument.
+ *
  *************************************************************************
  */
 void BoxContainer::intersectBoxes(
@@ -702,10 +702,10 @@ void BoxContainer::intersectBoxes(
 
 /*
  *************************************************************************
- *                                                                       *
- * Type conversion from a BoxContainer to an Array of                    *
- * tbox::DatabaseBoxes.                                                  *
- *                                                                       *
+ *
+ * Type conversion from a BoxContainer to an Array of
+ * tbox::DatabaseBoxes.
+ *
  *************************************************************************
  */
 BoxContainer::operator tbox::Array<tbox::DatabaseBox>() const
@@ -722,9 +722,9 @@ BoxContainer::operator tbox::Array<tbox::DatabaseBox>() const
 
 /*
  *************************************************************************
- *                                                                       *
- * Print boxes in container.                                             *
- *                                                                       *
+ *
+ * Print boxes in container.
+ *
  *************************************************************************
  */
 void BoxContainer::print(
@@ -739,12 +739,12 @@ void BoxContainer::print(
 
 /*
  *************************************************************************
- *                                                                       *
- * Break up box bursty against box solid and adds the pieces to          *
- * container.  The bursting is done on dimensions 0 through dimension-1, *
- * starting with lowest dimensions first to try to maintain the          *
- * canonical representation for the bursted domains.                     *
- *                                                                       *
+ *
+ * Break up box bursty against box solid and adds the pieces to
+ * container.  The bursting is done on dimensions 0 through dimension-1,
+ * starting with lowest dimensions first to try to maintain the
+ * canonical representation for the bursted domains.
+ *
  *************************************************************************
  */
 void BoxContainer::burstBoxes(
@@ -782,13 +782,13 @@ void BoxContainer::burstBoxes(
 
 /*
  *************************************************************************
- *                                                                       *
- * Break up box bursty against box solid and adds the pieces to          *
- * container starting at the location pointed to by the supplied         *
- * iterator.  The bursting is done on dimensions 0 through dimension-1,  *
- * starting with lowest dimensions first to try to maintain the          *
- * canonical representation for the bursted domains.                     *
- *                                                                       *
+ *
+ * Break up box bursty against box solid and adds the pieces to
+ * container starting at the location pointed to by the supplied
+ * iterator.  The bursting is done on dimensions 0 through dimension-1,
+ * starting with lowest dimensions first to try to maintain the
+ * canonical representation for the bursted domains.
+ *
  *************************************************************************
  */
 void BoxContainer::burstBoxes(

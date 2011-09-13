@@ -21,9 +21,9 @@ namespace pdat {
 
 /*
  *************************************************************************
- *                                                                       *
- * Constructor and destructor for cell variable objects                  *
- *                                                                       *
+ *
+ * Constructor and destructor for cell variable objects
+ *
  *************************************************************************
  */
 
@@ -55,11 +55,11 @@ int CellVariable<TYPE>::getDepth() const
 
 /*
  *************************************************************************
- *                                                                       *
- * These are private and should not be used.  They are defined here      *
- * because some template instantiation methods fail if some member       *
- * functions are left undefined.                                         *
- *                                                                       *
+ *
+ * These are private and should not be used.  They are defined here
+ * because some template instantiation methods fail if some member
+ * functions are left undefined.
+ *
  *************************************************************************
  */
 

@@ -25,9 +25,9 @@ namespace pdat {
 
 /*
  *************************************************************************
- *                                                                       *
- * Create a edge geometry object given the box and ghost cell width.     *
- *                                                                       *
+ *
+ * Create a edge geometry object given the box and ghost cell width.
+ *
  *************************************************************************
  */
 
@@ -47,15 +47,15 @@ EdgeGeometry::~EdgeGeometry()
 
 /*
  *************************************************************************
- *                                                                       *
- * Attempt to calculate the intersection between two edge centered box   *
- * geometries.  The calculateOverlap() checks whether both arguments are *
- * edge geometries; if so, it compuates the intersection.  If not, then  *
- * it calls calculateOverlap() on the source object (if retry is true)   *
- * to allow the source a chance to calculate the intersection.  See the  *
- * hier::BoxGeometry base class for more information about the protocol. *
- * A pointer to null is returned if the intersection cannot be computed. *
- *                                                                       *
+ *
+ * Attempt to calculate the intersection between two edge centered box
+ * geometries.  The calculateOverlap() checks whether both arguments are
+ * edge geometries; if so, it compuates the intersection.  If not, then
+ * it calls calculateOverlap() on the source object (if retry is true)
+ * to allow the source a chance to calculate the intersection.  See the
+ * hier::BoxGeometry base class for more information about the protocol.
+ * A pointer to null is returned if the intersection cannot be computed.
+ *
  *************************************************************************
  */
 
@@ -92,10 +92,10 @@ tbox::Pointer<hier::BoxOverlap> EdgeGeometry::calculateOverlap(
 
 /*
  *************************************************************************
- *                                                                       *
- * Convert an AMR-index space hier::Box into a edge-index space box by a *
- * cyclic shift of indices.                                              *
- *                                                                       *
+ *
+ * Convert an AMR-index space hier::Box into a edge-index space box by a
+ * cyclic shift of indices.
+ *
  *************************************************************************
  */
 
@@ -123,15 +123,15 @@ hier::Box EdgeGeometry::toEdgeBox(
 
 /*
  *************************************************************************
- *                                                                       *
- * Compute the overlap between two edge centered boxes.  The algorithm   *
- * is fairly straight-forward.  First, we perform a quick-and-dirty      *
- * intersection to see if the boxes might overlap.  If that intersection *
- * is not empty, then we need to do a better job calculating the overlap *
- * for each dimension.  Note that the AMR index space boxes must be      *
- * shifted into the edge centered space before we calculate the proper   *
- * intersections.                                                        *
- *                                                                       *
+ *
+ * Compute the overlap between two edge centered boxes.  The algorithm
+ * is fairly straight-forward.  First, we perform a quick-and-dirty
+ * intersection to see if the boxes might overlap.  If that intersection
+ * is not empty, then we need to do a better job calculating the overlap
+ * for each dimension.  Note that the AMR index space boxes must be
+ * shifted into the edge centered space before we calculate the proper
+ * intersections.
+ *
  *************************************************************************
  */
 
@@ -205,9 +205,9 @@ tbox::Pointer<hier::BoxOverlap> EdgeGeometry::doOverlap(
 
 /*
  *************************************************************************
- *                                                                       *
- * Set up a EdgeOverlap oject using the given boxes and offset           *
- *                                                                       *
+ *
+ * Set up a EdgeOverlap oject using the given boxes and offset
+ *
  *************************************************************************
  */
 tbox::Pointer<hier::BoxOverlap>
@@ -233,9 +233,9 @@ EdgeGeometry::setUpOverlap(
 
 /*
  *************************************************************************
- *                                                                       *
- * Transform a box                                                       *
- *                                                                       *
+ *
+ * Transform a box
+ *
  *************************************************************************
  */
 
@@ -384,9 +384,9 @@ EdgeGeometry::transform(
 
 /*
  *************************************************************************
- *                                                                       *
- * Transform an EdgeIndex                                                *
- *                                                                       *
+ *
+ * Transform an EdgeIndex
+ *
  *************************************************************************
  */
 

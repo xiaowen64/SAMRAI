@@ -156,9 +156,9 @@ SiloDatabase::~SiloDatabase()
 
 /*
  *************************************************************************
- *                                                                       *
- * Create Silo data file specified by name.                              *
- *                                                                       *
+ *
+ * Create Silo data file specified by name.
+ *
  *************************************************************************
  */
 
@@ -192,9 +192,9 @@ bool SiloDatabase::create(
 
 /*
  *************************************************************************
- *                                                                       *
- * Open Silo data file specified by name                                 *
- *                                                                       *
+ *
+ * Open Silo data file specified by name
+ *
  *************************************************************************
  */
 
@@ -231,9 +231,9 @@ bool SiloDatabase::open(
 
 /*
  *************************************************************************
- *                                                                       *
- * Close the open Silo data file specified by d_file_id.                 *
- *                                                                       *
+ *
+ * Close the open Silo data file specified by d_file_id.
+ *
  *************************************************************************
  */
 
@@ -293,9 +293,9 @@ bool SiloDatabase::attachToFile(
 
 /*
  *************************************************************************
- *                                                                       *
- * Return true if the key exists within the database; false otherwise.   *
- *                                                                       *
+ *
+ * Return true if the key exists within the database; false otherwise.
+ *
  *************************************************************************
  */
 
@@ -318,9 +318,9 @@ bool SiloDatabase::keyExists(
 
 /*
  *************************************************************************
- *                                                                       *
- * Return all keys in the database.                                      *
- *                                                                       *
+ *
+ * Return all keys in the database.
+ *
  *************************************************************************
  */
 
@@ -362,9 +362,9 @@ Array<std::string> SiloDatabase::getAllKeys()
 
 /*
  *************************************************************************
- *                                                                       *
- * Get the type of the array entry associated with the specified key     *
- *                                                                       *
+ *
+ * Get the type of the array entry associated with the specified key
+ *
  *************************************************************************
  */
 enum Database::DataType SiloDatabase::getArrayType(
@@ -434,13 +434,13 @@ enum Database::DataType SiloDatabase::getArrayType(
 
 /*
  *************************************************************************
- *                                                                       *
- * Return the size of the array associated with the key.  If the key     *
- * does not exist, then zero is returned.                                *
- * Array size is set based on the number of elements (points) within     *
- * the dataspace defined by the named dataset (or key).                  *
- *                                                                       *
- *                                                                       *
+ *
+ * Return the size of the array associated with the key.  If the key
+ * does not exist, then zero is returned.
+ * Array size is set based on the number of elements (points) within
+ * the dataspace defined by the named dataset (or key).
+ *
+ *
  *************************************************************************
  */
 
@@ -495,10 +495,10 @@ int SiloDatabase::getArraySize(
 
 /*
  *************************************************************************
- *                                                                       *
- * Return true or false depending on whether the specified key           *
- * represents a database entry.  If the key does not exist, then false   *
- * is returned.                                                          *
+ *
+ * Return true or false depending on whether the specified key
+ * represents a database entry.  If the key does not exist, then false
+ * is returned.
  *************************************************************************
  */
 
@@ -512,9 +512,9 @@ bool SiloDatabase::isDatabase(
 
 /*
  *************************************************************************
- *                                                                       *
- * Create a new database with the specified key name.                    *
- *                                                                       *
+ *
+ * Create a new database with the specified key name.
+ *
  *************************************************************************
  */
 
@@ -536,9 +536,9 @@ SiloDatabase::putDatabase(
 
 /*
  ************************************************************************
- *                                                                      *
- * Get the database with the specified key name.                        *
- *                                                                      *
+ *
+ * Get the database with the specified key name.
+ *
  ************************************************************************
  */
 
@@ -564,11 +564,11 @@ SiloDatabase::getDatabase(
 
 /*
  *************************************************************************
- *                                                                       *
- * Return true or false depending on whether the specified key           *
- * represents a boolean entry.  If the key does not exist, then false    *
- * is returned.                                                          *
- *                                                                       *
+ *
+ * Return true or false depending on whether the specified key
+ * represents a boolean entry.  If the key does not exist, then false
+ * is returned.
+ *
  *************************************************************************
  */
 
@@ -580,10 +580,10 @@ bool SiloDatabase::isBool(
 
 /*
  *************************************************************************
- *                                                                       *
- * Create a boolean array entry in the database with the specified       *
- * key name.                                                             *
- *                                                                       *
+ *
+ * Create a boolean array entry in the database with the specified
+ * key name.
+ *
  *************************************************************************
  */
 
@@ -606,12 +606,12 @@ void SiloDatabase::putBoolArray(
 
 /*
  ************************************************************************
- *                                                                      *
- * Two routines to get boolean arrays from the database with the        *
- * specified key name. In any case, an error message is printed and     *
- * the program exits if the specified key does not exist in the         *
- * database or is not associated with a boolean type.                   *
- *                                                                      *
+ *
+ * Two routines to get boolean arrays from the database with the
+ * specified key name. In any case, an error message is printed and
+ * the program exits if the specified key does not exist in the
+ * database or is not associated with a boolean type.
+ *
  ************************************************************************
  */
 
@@ -641,11 +641,11 @@ Array<bool> SiloDatabase::getBoolArray(
 
 /*
  *************************************************************************
- *                                                                       *
- * Return true or false depending on whether the specified key           *
- * represents a box entry.  If the key does not exist, then false        *
- * is returned.                                                          *
- *                                                                       *
+ *
+ * Return true or false depending on whether the specified key
+ * represents a box entry.  If the key does not exist, then false
+ * is returned.
+ *
  *************************************************************************
  */
 
@@ -680,9 +680,9 @@ bool SiloDatabase::isDatabaseBox(
 
 /*
  *************************************************************************
- *                                                                       *
- * Create a box array entry in the database with the specified key name. *
- *                                                                       *
+ *
+ * Create a box array entry in the database with the specified key name.
+ *
  *************************************************************************
  */
 void SiloDatabase::putDatabaseBoxArray(
@@ -746,12 +746,12 @@ void SiloDatabase::putDatabaseBoxArray(
 
 /*
  ************************************************************************
- *                                                                      *
- * Two routines to get box arrays from the database with the            *
- * specified key name. In any case, an error message is printed and     *
- * the program exits if the specified key does not exist in the         *
- * database or is not associated with a box type.                       *
- *                                                                      *
+ *
+ * Two routines to get box arrays from the database with the
+ * specified key name. In any case, an error message is printed and
+ * the program exits if the specified key does not exist in the
+ * database or is not associated with a box type.
+ *
  ************************************************************************
  */
 
@@ -790,11 +790,11 @@ Array<DatabaseBox> SiloDatabase::getDatabaseBoxArray(
 
 /*
  *************************************************************************
- *                                                                       *
- * Return true or false depending on whether the specified key           *
- * represents a char entry.  If the key does not exist, then false       *
- * is returned.                                                          *
- *                                                                       *
+ *
+ * Return true or false depending on whether the specified key
+ * represents a char entry.  If the key does not exist, then false
+ * is returned.
+ *
  *************************************************************************
  */
 
@@ -806,10 +806,10 @@ bool SiloDatabase::isChar(
 
 /*
  *************************************************************************
- *                                                                       *
- * Create a char array entry in the database with the specified          *
- * key name.                                                             *
- *                                                                       *
+ *
+ * Create a char array entry in the database with the specified
+ * key name.
+ *
  *************************************************************************
  */
 
@@ -826,12 +826,12 @@ void SiloDatabase::putCharArray(
 
 /*
  ************************************************************************
- *                                                                      *
- * Two routines to get char arrays from the database with the           *
- * specified key name. In any case, an error message is printed and     *
- * the program exits if the specified key does not exist in the         *
- * database or is not associated with a char type.                      *
- *                                                                      *
+ *
+ * Two routines to get char arrays from the database with the
+ * specified key name. In any case, an error message is printed and
+ * the program exits if the specified key does not exist in the
+ * database or is not associated with a char type.
+ *
  ************************************************************************
  */
 
@@ -855,11 +855,11 @@ Array<char> SiloDatabase::getCharArray(
 
 /*
  *************************************************************************
- *                                                                       *
- * Return true or false depending on whether the specified key           *
- * represents a complex entry.  If the key does not exist, then false    *
- * is returned.                                                          *
- *                                                                       *
+ *
+ * Return true or false depending on whether the specified key
+ * represents a complex entry.  If the key does not exist, then false
+ * is returned.
+ *
  *************************************************************************
  */
 
@@ -894,10 +894,10 @@ bool SiloDatabase::isComplex(
 
 /*
  *************************************************************************
- *                                                                       *
- * Create a complex array entry in the database with the specified       *
- * key name.                                                             *
- *                                                                       *
+ *
+ * Create a complex array entry in the database with the specified
+ * key name.
+ *
  *************************************************************************
  */
 
@@ -948,12 +948,12 @@ void SiloDatabase::putComplexArray(
 }
 /*
  ************************************************************************
- *                                                                      *
- * Two routines to get complex arrays from the database with the        *
- * specified key name. In any case, an error message is printed and     *
- * the program exits if the specified key does not exist in the         *
- * database or is not associated with a complex type.                   *
- *                                                                      *
+ *
+ * Two routines to get complex arrays from the database with the
+ * specified key name. In any case, an error message is printed and
+ * the program exits if the specified key does not exist in the
+ * database or is not associated with a complex type.
+ *
  ************************************************************************
  */
 
@@ -987,11 +987,11 @@ Array<dcomplex> SiloDatabase::getComplexArray(
 
 /*
  *************************************************************************
- *                                                                       *
- * Return true or false depending on whether the specified key           *
- * represents a double entry.  If the key does not exist, then false     *
- * is returned.                                                          *
- *                                                                       *
+ *
+ * Return true or false depending on whether the specified key
+ * represents a double entry.  If the key does not exist, then false
+ * is returned.
+ *
  *************************************************************************
  */
 
@@ -1003,10 +1003,10 @@ bool SiloDatabase::isDouble(
 
 /*
  *************************************************************************
- *                                                                       *
- * Create a double array entry in the database with the specified        *
- * key name.                                                             *
- *                                                                       *
+ *
+ * Create a double array entry in the database with the specified
+ * key name.
+ *
  *************************************************************************
  */
 
@@ -1023,12 +1023,12 @@ void SiloDatabase::putDoubleArray(
 
 /*
  ************************************************************************
- *                                                                      *
- * Two routines to get double arrays from the database with the         *
- * specified key name. In any case, an error message is printed and     *
- * the program exits if the specified key does not exist in the         *
- * database or is not associated with a double type.                    *
- *                                                                      *
+ *
+ * Two routines to get double arrays from the database with the
+ * specified key name. In any case, an error message is printed and
+ * the program exits if the specified key does not exist in the
+ * database or is not associated with a double type.
+ *
  ************************************************************************
  */
 
@@ -1052,11 +1052,11 @@ Array<double> SiloDatabase::getDoubleArray(
 
 /*
  *************************************************************************
- *                                                                       *
- * Return true or false depending on whether the specified key           *
- * represents a float entry.  If the key does not exist, then false      *
- * is returned.                                                          *
- *                                                                       *
+ *
+ * Return true or false depending on whether the specified key
+ * represents a float entry.  If the key does not exist, then false
+ * is returned.
+ *
  *************************************************************************
  */
 
@@ -1068,10 +1068,10 @@ bool SiloDatabase::isFloat(
 
 /*
  *************************************************************************
- *                                                                       *
- * Create a float array entry in the database with the specified         *
- * key name.                                                             *
- *                                                                       *
+ *
+ * Create a float array entry in the database with the specified
+ * key name.
+ *
  *************************************************************************
  */
 
@@ -1088,12 +1088,12 @@ void SiloDatabase::putFloatArray(
 
 /*
  ************************************************************************
- *                                                                      *
- * Two routines to get float arrays from the database with the          *
- * specified key name. In any case, an error message is printed and     *
- * the program exits if the specified key does not exist in the         *
- * database or is not associated with a float type.                     *
- *                                                                      *
+ *
+ * Two routines to get float arrays from the database with the
+ * specified key name. In any case, an error message is printed and
+ * the program exits if the specified key does not exist in the
+ * database or is not associated with a float type.
+ *
  ************************************************************************
  */
 
@@ -1118,11 +1118,11 @@ Array<float> SiloDatabase::getFloatArray(
 
 /*
  *************************************************************************
- *                                                                       *
- * Return true or false depending on whether the specified key           *
- * represents a integer entry.  If the key does not exist, then false    *
- * is returned.                                                          *
- *                                                                       *
+ *
+ * Return true or false depending on whether the specified key
+ * represents a integer entry.  If the key does not exist, then false
+ * is returned.
+ *
  *************************************************************************
  */
 
@@ -1134,10 +1134,10 @@ bool SiloDatabase::isInteger(
 
 /*
  *************************************************************************
- *                                                                       *
- * Create an integer array entry in the database with the specified      *
- * key name.                                                             *
- *                                                                       *
+ *
+ * Create an integer array entry in the database with the specified
+ * key name.
+ *
  *************************************************************************
  */
 
@@ -1154,12 +1154,12 @@ void SiloDatabase::putIntegerArray(
 
 /*
  ************************************************************************
- *                                                                      *
- * Two routines to get integer arrays from the database with the        *
- * specified key name. In any case, an error message is printed and     *
- * the program exits if the specified key does not exist in the         *
- * database or is not associated with a integer type.                   *
- *                                                                      *
+ *
+ * Two routines to get integer arrays from the database with the
+ * specified key name. In any case, an error message is printed and
+ * the program exits if the specified key does not exist in the
+ * database or is not associated with a integer type.
+ *
  ************************************************************************
  */
 
@@ -1183,11 +1183,11 @@ Array<int> SiloDatabase::getIntegerArray(
 
 /*
  *************************************************************************
- *                                                                       *
- * Return true or false depending on whether the specified key           *
- * represents a string entry.  If the key does not exist, then false     *
- * is returned.                                                          *
- *                                                                       *
+ *
+ * Return true or false depending on whether the specified key
+ * represents a string entry.  If the key does not exist, then false
+ * is returned.
+ *
  *************************************************************************
  */
 
@@ -1222,10 +1222,10 @@ bool SiloDatabase::isString(
 
 /*
  *************************************************************************
- *                                                                       *
- * Create a double array entry in the database with the specified        *
- * key name.                                                             *
- *                                                                       *
+ *
+ * Create a double array entry in the database with the specified
+ * key name.
+ *
  *************************************************************************
  */
 
@@ -1277,12 +1277,12 @@ void SiloDatabase::putStringArray(
 
 /*
  ************************************************************************
- *                                                                      *
- * Two routines to get string arrays from the database with the         *
- * specified key name. In any case, an error message is printed and     *
- * the program exits if the specified key does not exist in the         *
- * database or is not associated with a string type.                    *
- *                                                                      *
+ *
+ * Two routines to get string arrays from the database with the
+ * specified key name. In any case, an error message is printed and
+ * the program exits if the specified key does not exist in the
+ * database or is not associated with a string type.
+ *
  ************************************************************************
  */
 
@@ -1319,11 +1319,11 @@ Array<std::string> SiloDatabase::getStringArray(
 
 /*
  *************************************************************************
- *                                                                       *
- * Print contents of current database to the specified output stream.    *
- * Note that contents of subdatabases will not be printed.  This must    *
- * be done by iterating through all the subdatabases individually.       *
- *                                                                       *
+ *
+ * Print contents of current database to the specified output stream.
+ * Note that contents of subdatabases will not be printed.  This must
+ * be done by iterating through all the subdatabases individually.
+ *
  *************************************************************************
  */
 

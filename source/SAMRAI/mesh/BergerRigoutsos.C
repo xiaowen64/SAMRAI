@@ -43,8 +43,8 @@ BergerRigoutsos::s_initialize_finalize_handler(
 
 /*
  ************************************************************************
- * Constructor stores parameters of options for ussing                  *
- * the asynchronous Berger-Rigoutsos implementation.                    *
+ * Constructor stores parameters of options for ussing
+ * the asynchronous Berger-Rigoutsos implementation.
  ************************************************************************
  */
 BergerRigoutsos::BergerRigoutsos(
@@ -148,18 +148,18 @@ void BergerRigoutsos::setMPI(
 
 /*
  ************************************************************************
- *                                                                      *
- * Implement the BoxGeneratorStrategy interface method using            *
- * the asynchronous Berger-Rigoutsos implementation.                    *
- *                                                                      *
- * Create objects for using the ABR recursion tree, set options for     *
- * using the ABR implementation, then run it.                           *
- *                                                                      *
- * The output boxes from the dendogram root is in the form of a         *
- * BoxLevel.  This method postprocess that data to                         *
- * convert the output to the box list form required by the              *
- * box clustering strategy interface.                                   *
- *                                                                      *
+ *
+ * Implement the BoxGeneratorStrategy interface method using
+ * the asynchronous Berger-Rigoutsos implementation.
+ *
+ * Create objects for using the ABR recursion tree, set options for
+ * using the ABR implementation, then run it.
+ *
+ * The output boxes from the dendogram root is in the form of a
+ * BoxLevel.  This method postprocess that data to
+ * convert the output to the box list form required by the
+ * box clustering strategy interface.
+ *
  ************************************************************************
  */
 void BergerRigoutsos::findBoxesContainingTags(
@@ -444,7 +444,7 @@ void BergerRigoutsos::sortOutputBoxes(
 
 /*
  ***************************************************************************
- *                                                                         *
+ *
  ***************************************************************************
  */
 void BergerRigoutsos::assertNoMessageForPrivateCommunicator() const
@@ -507,10 +507,10 @@ void BergerRigoutsos::initializeCallback()
 
 /*
  ***************************************************************************
- *                                                                         *
- * Release static timers.  To be called by shutdown registry to make sure  *
- * memory for timers does not leak.                                        *
- *                                                                         *
+ *
+ * Release static timers.  To be called by shutdown registry to make sure
+ * memory for timers does not leak.
+ *
  ***************************************************************************
  */
 void BergerRigoutsos::finalizeCallback()

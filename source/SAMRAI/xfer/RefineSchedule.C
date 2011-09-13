@@ -2131,10 +2131,10 @@ void RefineSchedule::initializeSourceVector(
 
 /*
  * ************************************************************************
- *                                                                        *
- * Fill the component selector argument with the components needed to     *
- * allocate destination data.                                             *
- *                                                                        *
+ *
+ * Fill the component selector argument with the components needed to
+ * allocate destination data.
+ *
  * ************************************************************************
  */
 

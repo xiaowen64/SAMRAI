@@ -56,7 +56,7 @@ class BoxTree;
  *       Integer value specifying the number of blocks in the multiblock
  *       mesh configuration.
  *
- *    - @b    domain_boxes_*
+ *    - @b    domain_boxes_
  *       For each block, an array of boxes representing the index space for the
  *       entire domain within a block (on the coarsest mesh level; i.e., level
  *       zero).  The key must have an integer value as a suffix
@@ -77,7 +77,7 @@ class BoxTree;
  *       single block mesh), as periodic boundaries are not supported for
  *       multiblock meshes.
  *
- *    - @b   BlockNeighbors*
+ *    - @b   BlockNeighbors
  *
  *       For multiblock grids, a BlockNeighbors entry must be given for
  *       every pair of blocks that touch each other in any way.  The key
@@ -85,7 +85,7 @@ class BoxTree;
  *       integers for the full set of BlockNeighbors keys must be a
  *       continuous sequence beginning with 0.
  *
- *    - @b  Singularity*
+ *    - @b  Singularity
  *
  *       When there is a reduced or enhanced connectivity singularity,
  *       this key must be used to identify which blocks touch the
@@ -93,7 +93,7 @@ class BoxTree;
  *       each block's index space.  Like BlockNeighbors, each entry must
  *       have a trailing integer beginning with 0.
  *
- * A description of the input format for BlockNeighbors* and Singularity*
+ * A description of the input format for BlockNeighbors* and Singularity
  * is included in the Multiblock.pdf document in the docs/userdocs
  * directory of the SAMRAI distribution.
  *

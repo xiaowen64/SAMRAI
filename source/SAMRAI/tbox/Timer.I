@@ -13,24 +13,24 @@ namespace tbox {
 
 /*
  ***************************************************************************
- *                                                                         *
- * Exclusive start and stop routines for timers.                           *
- *                                                                         *
- * For wallclock time: If we have MPI, we use MPI_Wtime to set the         *
- *                     start/stop point.  If we don't have MPI but do      *
- *                     have access to timer utilities in sys/times.h,      *
- *                     we use the time() utility to set the start/start    *
- *                     point.  If we have neither, we set the wallclock    *
- *                     start/stop time to zero.                            *
- *                                                                         *
- * For user time:      If we have access to timer utilities in sys/times.h,*
- *                     we use the times() utility to compute user and      *
- *                     system start/stop point (passing in the tms struct).*
- *                     If we don't have these utilities, we simply set the *
- *                     user and start/stop times to zero.                  *
- *                                                                         *
- * The timer manager manipulates the exclusive time information;  i.e.     *
- * when the timer's startExclusive and stopExclusive routines are called.  *
+ *
+ * Exclusive start and stop routines for timers.
+ *
+ * For wallclock time: If we have MPI, we use MPI_Wtime to set the
+ *                     start/stop point.  If we don't have MPI but do
+ *                     have access to timer utilities in sys/times.h,
+ *                     we use the time() utility to set the start/start
+ *                     point.  If we have neither, we set the wallclock
+ *                     start/stop time to zero.
+ *
+ * For user time:      If we have access to timer utilities in sys/times.h,
+ *                     we use the times() utility to compute user and
+ *                     system start/stop point (passing in the tms struct).
+ *                     If we don't have these utilities, we simply set the
+ *                     user and start/stop times to zero.
+ *
+ * The timer manager manipulates the exclusive time information;  i.e.
+ * when the timer's startExclusive and stopExclusive routines are called.
  *
  ***************************************************************************
  */
@@ -74,9 +74,9 @@ SAMRAI_INLINE_KEYWORD void Timer::stopExclusive()
 
 /*
  ***************************************************************************
- *                                                                         *
- * Simple utility routines to manipulate timers.                           *
- *                                                                         *
+ *
+ * Simple utility routines to manipulate timers.
+ *
  ***************************************************************************
  */
 
@@ -223,9 +223,9 @@ SAMRAI_INLINE_KEYWORD int Timer::getNumberAccesses() const
 
 /*
  ***************************************************************************
- *                                                                         *
- * Private utility routines to manipulate timers in database.              *
- *                                                                         *
+ *
+ * Private utility routines to manipulate timers in database.
+ *
  ***************************************************************************
  */
 

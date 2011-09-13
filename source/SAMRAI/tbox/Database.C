@@ -29,12 +29,12 @@ Database::Serializable::~Serializable()
 
 /*
  ************************************************************************
- *                                                                      *
- * Get database entry from the database with the specified key          *
- * name. An error message is printed and the program exits if the       *
- * specified key does not exist in the database or is not associated    *
- * with a database type.                                                *
- *                                                                      *
+ *
+ * Get database entry from the database with the specified key
+ * name. An error message is printed and the program exits if the
+ * specified key does not exist in the database or is not associated
+ * with a database type.
+ *
  ************************************************************************
  */
 
@@ -186,10 +186,10 @@ void Database::putArray(
 
 /*
  *************************************************************************
- *                                                                       *
- * Create a box entry in the database with the specified                 *
- * key name.  A box entry is an array of one.                            *
- *                                                                       *
+ *
+ * Create a box entry in the database with the specified
+ * key name.  A box entry is an array of one.
+ *
  *************************************************************************
  */
 
@@ -204,9 +204,9 @@ void Database::putDatabaseBox(
 
 /*
  *************************************************************************
- *                                                                       *
- * Create a box array entry in the database with the specified key name. *
- *                                                                       *
+ *
+ * Create a box array entry in the database with the specified key name.
+ *
  *************************************************************************
  */
 
@@ -228,12 +228,12 @@ void Database::putDatabaseBoxArray(
 
 /*
  ************************************************************************
- *                                                                      *
- * Get box scalar entry from the database with the specified key        *
- * name. An error message is printed and the program exits if the       *
- * specified key does not exist in the database or is not associated    *
- * with a box type.                                                     *
- *                                                                      *
+ *
+ * Get box scalar entry from the database with the specified key
+ * name. An error message is printed and the program exits if the
+ * specified key does not exist in the database or is not associated
+ * with a box type.
+ *
  ************************************************************************
  */
 
@@ -250,12 +250,12 @@ DatabaseBox Database::getDatabaseBox(
 
 /*
  ************************************************************************
- *                                                                      *
- * Get box scalar entry from the database with the specified key        *
- * name. An error message is printed and the program exits if the       *
- * specified key does not exist in the database or is not associated    *
- * with a box type.                                                     *
- *                                                                      *
+ *
+ * Get box scalar entry from the database with the specified key
+ * name. An error message is printed and the program exits if the
+ * specified key does not exist in the database or is not associated
+ * with a box type.
+ *
  ************************************************************************
  */
 
@@ -304,10 +304,10 @@ void Database::getDatabaseBoxArray(
 
 /*
  *************************************************************************
- *                                                                       *
- * Create a char scalar entry in the database with the specified         *
- * key name.  A scalar entry is an array of one.                         *
- *                                                                       *
+ *
+ * Create a char scalar entry in the database with the specified
+ * key name.  A scalar entry is an array of one.
+ *
  *************************************************************************
  */
 
@@ -323,10 +323,10 @@ void Database::putChar(
 
 /*
  *************************************************************************
- *                                                                       *
- * Create a char array entry in the database with the specified          *
- * key name.                                                             *
- *                                                                       *
+ *
+ * Create a char array entry in the database with the specified
+ * key name.
+ *
  *************************************************************************
  */
 
@@ -348,12 +348,12 @@ void Database::putCharArray(
 
 /*
  ************************************************************************
- *                                                                      *
- * Get char scalar entry from the database with the specified key       *
- * name. An error message is printed and the program exits if the       *
- * specified key does not exist in the database or is not associated    *
- * with a char type.                                                    *
- *                                                                      *
+ *
+ * Get char scalar entry from the database with the specified key
+ * name. An error message is printed and the program exits if the
+ * specified key does not exist in the database or is not associated
+ * with a char type.
+ *
  ************************************************************************
  */
 
@@ -370,12 +370,12 @@ char Database::getChar(
 
 /*
  ************************************************************************
- *                                                                      *
- * Get char scalar entry from the database with the specified key       *
- * name. An error message is printed and the program exits if the       *
- * specified key does not exist in the database or is not associated    *
- * with a char type.                                                    *
- *                                                                      *
+ *
+ * Get char scalar entry from the database with the specified key
+ * name. An error message is printed and the program exits if the
+ * specified key does not exist in the database or is not associated
+ * with a char type.
+ *
  ************************************************************************
  */
 
@@ -452,10 +452,10 @@ void Database::putArray(
 
 /*
  *************************************************************************
- *                                                                       *
- * Create a complex scalar entry in the database with the specified      *
- * key name.  A scalar entry is an array of one.                         *
- *                                                                       *
+ *
+ * Create a complex scalar entry in the database with the specified
+ * key name.  A scalar entry is an array of one.
+ *
  *************************************************************************
  */
 
@@ -470,10 +470,10 @@ void Database::putComplex(
 
 /*
  *************************************************************************
- *                                                                       *
- * Create a complex array entry in the database with the specified       *
- * key name.                                                             *
- *                                                                       *
+ *
+ * Create a complex array entry in the database with the specified
+ * key name.
+ *
  *************************************************************************
  */
 
@@ -495,12 +495,12 @@ void Database::putComplexArray(
 
 /*
  ************************************************************************
- *                                                                      *
- * Get complex scalar entry from the database with the specified key    *
- * name. An error message is printed and the program exits if the       *
- * specified key does not exist in the database or is not associated    *
- * with a complex type.                                                 *
- *                                                                      *
+ *
+ * Get complex scalar entry from the database with the specified key
+ * name. An error message is printed and the program exits if the
+ * specified key does not exist in the database or is not associated
+ * with a complex type.
+ *
  ************************************************************************
  */
 
@@ -517,12 +517,12 @@ dcomplex Database::getComplex(
 
 /*
  ************************************************************************
- *                                                                      *
- * Get complex scalar entry from the database with the specified key    *
- * name. An error message is printed and the program exits if the       *
- * specified key does not exist in the database or is not associated    *
- * with a complex type.                                                 *
- *                                                                      *
+ *
+ * Get complex scalar entry from the database with the specified key
+ * name. An error message is printed and the program exits if the
+ * specified key does not exist in the database or is not associated
+ * with a complex type.
+ *
  ************************************************************************
  */
 
@@ -601,10 +601,10 @@ void Database::putArray(
 
 /*
  *************************************************************************
- *                                                                       *
- * Create a float scalar entry in the database with the specified        *
- * key name.  A scalar entry is an array of one.                         *
- *                                                                       *
+ *
+ * Create a float scalar entry in the database with the specified
+ * key name.  A scalar entry is an array of one.
+ *
  *************************************************************************
  */
 
@@ -619,10 +619,10 @@ void Database::putFloat(
 
 /*
  *************************************************************************
- *                                                                       *
- * Create a float array entry in the database with the specified         *
- * key name.                                                             *
- *                                                                       *
+ *
+ * Create a float array entry in the database with the specified
+ * key name.
+ *
  *************************************************************************
  */
 
@@ -645,12 +645,12 @@ void Database::putFloatArray(
 
 /*
  ************************************************************************
- *                                                                      *
- * Get float scalar entry from the database with the specified key      *
- * name. An error message is printed and the program exits if the       *
- * specified key does not exist in the database or is not associated    *
- * with a float type.                                                   *
- *                                                                      *
+ *
+ * Get float scalar entry from the database with the specified key
+ * name. An error message is printed and the program exits if the
+ * specified key does not exist in the database or is not associated
+ * with a float type.
+ *
  ************************************************************************
  */
 
@@ -667,12 +667,12 @@ float Database::getFloat(
 
 /*
  ************************************************************************
- *                                                                      *
- * Get float scalar entry from the database with the specified key      *
- * name. An error message is printed and the program exits if the       *
- * specified key does not exist in the database or is not associated    *
- * with a float type.                                                   *
- *                                                                      *
+ *
+ * Get float scalar entry from the database with the specified key
+ * name. An error message is printed and the program exits if the
+ * specified key does not exist in the database or is not associated
+ * with a float type.
+ *
  ************************************************************************
  */
 
@@ -749,10 +749,10 @@ void Database::putArray(
 
 /*
  *************************************************************************
- *                                                                       *
- * Create a double scalar entry in the database with the specified       *
- * key name.  A scalar entry is an array of one.                         *
- *                                                                       *
+ *
+ * Create a double scalar entry in the database with the specified
+ * key name.  A scalar entry is an array of one.
+ *
  *************************************************************************
  */
 
@@ -767,10 +767,10 @@ void Database::putDouble(
 
 /*
  *************************************************************************
- *                                                                       *
- * Create a double array entry in the database with the specified        *
- * key name.                                                             *
- *                                                                       *
+ *
+ * Create a double array entry in the database with the specified
+ * key name.
+ *
  *************************************************************************
  */
 
@@ -792,12 +792,12 @@ void Database::putDoubleArray(
 
 /*
  ************************************************************************
- *                                                                      *
- * Get double scalar entry from the database with the specified key     *
- * name. An error message is printed and the program exits if the       *
- * specified key does not exist in the database or is not associated    *
- * with a double type.                                                  *
- *                                                                      *
+ *
+ * Get double scalar entry from the database with the specified key
+ * name. An error message is printed and the program exits if the
+ * specified key does not exist in the database or is not associated
+ * with a double type.
+ *
  ************************************************************************
  */
 
@@ -814,12 +814,12 @@ double Database::getDouble(
 
 /*
  ************************************************************************
- *                                                                      *
- * Get double scalar entry from the database with the specified key     *
- * name. An error message is printed and the program exits if the       *
- * specified key does not exist in the database or is not associated    *
- * with a double type.                                                  *
- *                                                                      *
+ *
+ * Get double scalar entry from the database with the specified key
+ * name. An error message is printed and the program exits if the
+ * specified key does not exist in the database or is not associated
+ * with a double type.
+ *
  ************************************************************************
  */
 
@@ -895,10 +895,10 @@ void Database::putArray(
 
 /*
  *************************************************************************
- *                                                                       *
- * Create a integer scalar entry in the database with the specified      *
- * key name.  A scalar entry is an array of one.                         *
- *                                                                       *
+ *
+ * Create a integer scalar entry in the database with the specified
+ * key name.  A scalar entry is an array of one.
+ *
  *************************************************************************
  */
 
@@ -913,10 +913,10 @@ void Database::putInteger(
 
 /*
  *************************************************************************
- *                                                                       *
- * Create an integer array entry in the database with the specified      *
- * key name.                                                             *
- *                                                                       *
+ *
+ * Create an integer array entry in the database with the specified
+ * key name.
+ *
  *************************************************************************
  */
 
@@ -938,12 +938,12 @@ void Database::putIntegerArray(
 
 /*
  ************************************************************************
- *                                                                      *
- * Get integer scalar entry from the database with the specified key    *
- * name. An error message is printed and the program exits if the       *
- * specified key does not exist in the database or is not associated    *
- * with a integer type.                                                 *
- *                                                                      *
+ *
+ * Get integer scalar entry from the database with the specified key
+ * name. An error message is printed and the program exits if the
+ * specified key does not exist in the database or is not associated
+ * with a integer type.
+ *
  ************************************************************************
  */
 
@@ -960,12 +960,12 @@ int Database::getInteger(
 
 /*
  ************************************************************************
- *                                                                      *
- * Get integer scalar entry from the database with the specified key    *
- * name. An error message is printed and the program exits if the       *
- * specified key does not exist in the database or is not associated    *
- * with a integer type.                                                 *
- *                                                                      *
+ *
+ * Get integer scalar entry from the database with the specified key
+ * name. An error message is printed and the program exits if the
+ * specified key does not exist in the database or is not associated
+ * with a integer type.
+ *
  ************************************************************************
  */
 
@@ -1042,10 +1042,10 @@ void Database::putArray(
 
 /*
  *************************************************************************
- *                                                                       *
- * Create a string scalar entry in the database with the specified       *
- * key name.  A scalar entry is an array of one.                         *
- *                                                                       *
+ *
+ * Create a string scalar entry in the database with the specified
+ * key name.  A scalar entry is an array of one.
+ *
  *************************************************************************
  */
 
@@ -1060,10 +1060,10 @@ void Database::putString(
 
 /*
  *************************************************************************
- *                                                                       *
- * Create a string array entry in the database with the specified        *
- * key name.                                                             *
- *                                                                       *
+ *
+ * Create a string array entry in the database with the specified
+ * key name.
+ *
  *************************************************************************
  */
 
@@ -1085,12 +1085,12 @@ void Database::putStringArray(
 
 /*
  ************************************************************************
- *                                                                      *
- * Get string scalar entry from the database with the specified key     *
- * name. An error message is printed and the program exits if the       *
- * specified key does not exist in the database or is not associated    *
- * with a string type.                                                  *
- *                                                                      *
+ *
+ * Get string scalar entry from the database with the specified key
+ * name. An error message is printed and the program exits if the
+ * specified key does not exist in the database or is not associated
+ * with a string type.
+ *
  ************************************************************************
  */
 
@@ -1107,12 +1107,12 @@ std::string Database::getString(
 
 /*
  ************************************************************************
- *                                                                      *
- * Get string scalar entry from the database with the specified key     *
- * name. An error message is printed and the program exits if the       *
- * specified key does not exist in the database or is not associated    *
- * with a string type.                                                  *
- *                                                                      *
+ *
+ * Get string scalar entry from the database with the specified key
+ * name. An error message is printed and the program exits if the
+ * specified key does not exist in the database or is not associated
+ * with a string type.
+ *
  ************************************************************************
  */
 

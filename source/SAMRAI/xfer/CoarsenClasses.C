@@ -32,10 +32,10 @@ int CoarsenClasses::s_default_coarsen_item_array_size = 20;
 
 /*
  *************************************************************************
- *                                                                       *
- * Constructor sets boolean for filling coarse data and creates new      *
- * array of equivalence classes.                                         *
- *                                                                       *
+ *
+ * Constructor sets boolean for filling coarse data and creates new
+ * array of equivalence classes.
+ *
  *************************************************************************
  */
 
@@ -51,10 +51,10 @@ CoarsenClasses::CoarsenClasses(
 
 /*
  *************************************************************************
- *                                                                       *
- * The destructor implicitly deletes the item storage associated with    *
- * the equivalence classes (and also the coarsen algorithm).             *
- *                                                                       *
+ *
+ * The destructor implicitly deletes the item storage associated with
+ * the equivalence classes (and also the coarsen algorithm).
+ *
  *************************************************************************
  */
 
@@ -64,9 +64,9 @@ CoarsenClasses::~CoarsenClasses()
 
 /*
  *************************************************************************
- *                                                                       *
- * Return representative item for given equivalence class (first in list)*
- *                                                                       *
+ *
+ * Return representative item for given equivalence class (first in list)
+ *
  *************************************************************************
  */
 
@@ -82,9 +82,9 @@ CoarsenClasses::getClassRepresentative(
 
 /*
  *************************************************************************
- *                                                                       *
- * Return iterator for list of coarsen items for given equivalence class *
- *                                                                       *
+ *
+ * Return iterator for list of coarsen items for given equivalence class
+ *
  *************************************************************************
  */
 
@@ -100,9 +100,9 @@ CoarsenClasses::getIterator(
 
 /*
  *************************************************************************
- *                                                                       *
- * Insert a data item into the proper equivalence class.                 *
- *                                                                       *
+ *
+ * Insert a data item into the proper equivalence class.
+ *
  *************************************************************************
  */
 
@@ -144,15 +144,15 @@ void CoarsenClasses::insertEquivalenceClassItem(
 
 /*
  *************************************************************************
- *                                                                       *
- * Check for valid patch data ids, patch data types, and that source and *
- * destination data entries have sufficient ghost cells to satisfy the   *
- * coarsen operator and necessary copy operations.  If so, return true;  *
- * else return false.  A descriptive error message is sent to TBOX_ERROR *
- * when a problem appears.  If a null patch descriptor argument is       *
- * passed, the descriptor associated with the variable database          *
- * Singleton object will be used.                                        *
- *                                                                       *
+ *
+ * Check for valid patch data ids, patch data types, and that source and
+ * destination data entries have sufficient ghost cells to satisfy the
+ * coarsen operator and necessary copy operations.  If so, return true;
+ * else return false.  A descriptive error message is sent to TBOX_ERROR
+ * when a problem appears.  If a null patch descriptor argument is
+ * passed, the descriptor associated with the variable database
+ * Singleton object will be used.
+ *
  *************************************************************************
  */
 
@@ -216,18 +216,18 @@ bool CoarsenClasses::itemIsValid(
 
 /*
  *************************************************************************
- *                                                                       *
- * Compare the equivalence classes in this coarsen classes object against*
- * those in the argument coarsen classes object.  Return true if both    *
- * object contain the same number of classes and the classes with the    *
- * class number match.  Two equivalence classes match if their           *
- * representatives are equivalent as defined by the method               *
- * itemsAreEquivalent().                                                 *
- *                                                                       *
- * If a null patch descriptor argument is passed, the                    *
- * descriptor associated with the variable database Singleton object     *
- * will be used.                                                         *
- *                                                                       *
+ *
+ * Compare the equivalence classes in this coarsen classes object against
+ * those in the argument coarsen classes object.  Return true if both
+ * object contain the same number of classes and the classes with the
+ * class number match.  Two equivalence classes match if their
+ * representatives are equivalent as defined by the method
+ * itemsAreEquivalent().
+ *
+ * If a null patch descriptor argument is passed, the
+ * descriptor associated with the variable database Singleton object
+ * will be used.
+ *
  *************************************************************************
  */
 
@@ -282,10 +282,10 @@ bool CoarsenClasses::classesMatch(
 
 /*
  *************************************************************************
- *                                                                       *
- * Return true if data items are equivalent; false otherwise.            *
- * This routine defines coarsen item equivalence.                        *
- *                                                                       *
+ *
+ * Return true if data items are equivalent; false otherwise.
+ * This routine defines coarsen item equivalence.
+ *
  *************************************************************************
  */
 
@@ -327,9 +327,9 @@ bool CoarsenClasses::itemsAreEquivalent(
 
 /*
  *************************************************************************
- *                                                                       *
- * Increase the data items array to the specified size.                  *
- *                                                                       *
+ *
+ * Increase the data items array to the specified size.
+ *
  *************************************************************************
  */
 
@@ -344,9 +344,9 @@ void CoarsenClasses::increaseCoarsenItemArraySize(
 
 /*
  *************************************************************************
- *                                                                       *
- * Print the data in the coarsen item lists to the specified stream.     *
- *                                                                       *
+ *
+ * Print the data in the coarsen item lists to the specified stream.
+ *
  *************************************************************************
  */
 
@@ -407,10 +407,10 @@ void CoarsenClasses::printCoarsenItem(
 
 /*
  *************************************************************************
- *                                                                       *
- * Private member function to determine whether two patch data items     *
- * match (are same type and have same ghost width).                      *
- *                                                                       *
+ *
+ * Private member function to determine whether two patch data items
+ * match (are same type and have same ghost width).
+ *
  *************************************************************************
  */
 
@@ -444,11 +444,11 @@ bool CoarsenClasses::patchDataMatch(
 
 /*
  *************************************************************************
- *                                                                       *
- * Private member function to determine equivalence class for            *
- * given data item.  Return value of -1 indicates no match found; else   *
- * return value is index of match.                                       *
- *                                                                       *
+ *
+ * Private member function to determine equivalence class for
+ * given data item.  Return value of -1 indicates no match found; else
+ * return value is index of match.
+ *
  *************************************************************************
  */
 

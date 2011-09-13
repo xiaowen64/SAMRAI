@@ -20,9 +20,9 @@ namespace hier {
 
 /*
  *************************************************************************
- *                                                                       *
- * Constructor and destructor for TransferOperatorRegistry objects.      *
- *                                                                       *
+ *
+ * Constructor and destructor for TransferOperatorRegistry objects.
+ *
  *************************************************************************
  */
 
@@ -40,9 +40,9 @@ TransferOperatorRegistry::~TransferOperatorRegistry()
 
 /*
  *************************************************************************
- *                                                                       *
- * Add operator to appropriate lookup list.                              *
- *                                                                       *
+ *
+ * Add operator to appropriate lookup list.
+ *
  *************************************************************************
  */
 
@@ -80,9 +80,9 @@ void TransferOperatorRegistry::addTimeInterpolateOperator(
 
 /*
  *************************************************************************
- *                                                                       *
- * Search operator lists for operator matching request.                  *
- *                                                                       *
+ *
+ * Search operator lists for operator matching request.
+ *
  *************************************************************************
  */
 
@@ -237,9 +237,9 @@ TransferOperatorRegistry::getDim() const
 
 /*
  *************************************************************************
- *                                                                       *
- * Print CartesianGridGeometry class data.                               *
- *                                                                       *
+ *
+ * Print CartesianGridGeometry class data.
+ *
  *************************************************************************
  */
 

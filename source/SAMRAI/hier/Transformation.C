@@ -610,9 +610,9 @@ Transformation::calculateReverseShift(
 
 /*
  *************************************************************************
- *                                                                       *
- * Determines the patch data type and calls the appropriate routine      *
- *                                                                       *
+ *
+ * Determines the patch data type and calls the appropriate routine
+ *
  *************************************************************************
  */
 
@@ -668,9 +668,9 @@ void Transformation::translateAndFillData(
 
 /*
  *************************************************************************
- *                                                                       *
- * rotate an index around the origin.                                    *
- *                                                                       *
+ *
+ * rotate an index around the origin.
+ *
  *************************************************************************
  */
 
@@ -763,9 +763,9 @@ void Transformation::rotateIndex(
 
 /*
  *************************************************************************
- *                                                                       *
- * Rotate an index around the origin.                                    *
- *                                                                       *
+ *
+ * Rotate an index around the origin.
+ *
  *************************************************************************
  */
 
@@ -778,9 +778,9 @@ void Transformation::rotateIndex(
 
 /*
  *************************************************************************
- *                                                                       *
- * Private routine to rotate an index about an axis.                     *
- *                                                                       *
+ *
+ * Private routine to rotate an index about an axis.
+ *
  *************************************************************************
  */
 

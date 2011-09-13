@@ -53,9 +53,9 @@ TimerManager::s_finalize_handler(
 
 /*
  *************************************************************************
- *                                                                       *
- * Static timer manager member functions.                                *
- *                                                                       *
+ *
+ * Static timer manager member functions.
+ *
  *************************************************************************
  */
 
@@ -115,9 +115,9 @@ void TimerManager::registerSingletonSubclassInstance(
 
 /*
  *************************************************************************
- *                                                                       *
- * Protected timer manager constructor and destructor.                   *
- *                                                                       *
+ *
+ * Protected timer manager constructor and destructor.
+ *
  *************************************************************************
  */
 
@@ -183,23 +183,23 @@ TimerManager::~TimerManager()
 
 /*
  *************************************************************************
- *                                                                       *
- * Utility functions for creating timers, adding them to the manager     *
- * database, and checking whether a particular timer exists.             *
- *                                                                       *
- *    o checkTimerExistsInArray is private.  It returns true if a timer  *
- *      matching the name string exists in the array and returns false   *
- *      otherwise.  If such a timer exists, the pointer is set to that   *
- *      timer; otherwise the pointer is null.                            *
- *                                                                       *
- *    o getTimer returns a timer with the given name.  It will be active *
- *      if its name appears in the input file, or if it is added with    *
- *      a `true' argument.  Otherwise the timer will be inactive.        *
- *                                                                       *
- *    o checkTimerExists returns true if a timer matching the name       *
- *      string exists and false otherwise.  If such a timer exists,      *
- *      the pointer is set to that timer; otherwise the pointer is null. *
- *                                                                       *
+ *
+ * Utility functions for creating timers, adding them to the manager
+ * database, and checking whether a particular timer exists.
+ *
+ *    o checkTimerExistsInArray is private.  It returns true if a timer
+ *      matching the name string exists in the array and returns false
+ *      otherwise.  If such a timer exists, the pointer is set to that
+ *      timer; otherwise the pointer is null.
+ *
+ *    o getTimer returns a timer with the given name.  It will be active
+ *      if its name appears in the input file, or if it is added with
+ *      a `true' argument.  Otherwise the timer will be inactive.
+ *
+ *    o checkTimerExists returns true if a timer matching the name
+ *      string exists and false otherwise.  If such a timer exists,
+ *      the pointer is set to that timer; otherwise the pointer is null.
+ *
  *************************************************************************
  */
 
@@ -327,10 +327,10 @@ bool TimerManager::checkTimerExists(
 
 /*
  *************************************************************************
- *                                                                       *
- * Utility functions to check whether timer is running and to reset      *
- * all active timers.                                                    *
- *                                                                       *
+ *
+ * Utility functions to check whether timer is running and to reset
+ * all active timers.
+ *
  *************************************************************************
  */
 
@@ -367,9 +367,9 @@ void TimerManager::resetAllTimers()
 
 /*
  *************************************************************************
- *                                                                       *
- * Protected start and stop routines for exclusive timer management.     *
- *                                                                       *
+ *
+ * Protected start and stop routines for exclusive timer management.
+ *
  *************************************************************************
  */
 
@@ -423,9 +423,9 @@ void TimerManager::stopTime(
 
 /*
  *************************************************************************
- *                                                                       *
- * Parser to see if Timer has been registered or not.                    *
- *                                                                       *
+ *
+ * Parser to see if Timer has been registered or not.
+ *
  *************************************************************************
  */
 
@@ -678,9 +678,9 @@ bool TimerManager::checkTimerInNameLists(
 
 /*
  *************************************************************************
- *                                                                       *
- * Print timer information from each processor.                          *
- *                                                                       *
+ *
+ * Print timer information from each processor.
+ *
  *************************************************************************
  */
 
@@ -2007,9 +2007,9 @@ void TimerManager::buildTimerArrays(
 
 /*
  *************************************************************************
- *                                                                       *
- * Build ordered_list which specifies order of timers - max to min.      *
- *                                                                       *
+ *
+ * Build ordered_list which specifies order of timers - max to min.
+ *
  *************************************************************************
  */
 void TimerManager::buildOrderedList(
@@ -2039,9 +2039,9 @@ void TimerManager::buildOrderedList(
 
 /*
  *************************************************************************
- *                                                                       *
- * Sort array a largest to smallest using quicksort algorithm.           *
- *                                                                       *
+ *
+ * Sort array a largest to smallest using quicksort algorithm.
+ *
  *************************************************************************
  */
 void TimerManager::quicksort(
@@ -2085,11 +2085,11 @@ void TimerManager::quicksort(
 
 /*
  *************************************************************************
- *                                                                       *
- * Operation performed many times throughout print routines. We have     *
- * to have some safety checks to avoid divide-by-zero errors in some     *
- * cases.  Thus, I just made it a function.                              *
- *                                                                       *
+ *
+ * Operation performed many times throughout print routines. We have
+ * to have some safety checks to avoid divide-by-zero errors in some
+ * cases.  Thus, I just made it a function.
+ *
  *************************************************************************
  */
 int TimerManager::computePercentageInt(
@@ -2132,9 +2132,9 @@ double TimerManager::computePercentageDouble(
 
 /*
  *************************************************************************
- *                                                                       *
- * Private member function for processing input data.                    *
- *                                                                       *
+ *
+ * Private member function for processing input data.
+ *
  *************************************************************************
  */
 
@@ -2284,9 +2284,9 @@ void TimerManager::addTimerToNameLists(
              * At this point, we know the entry has a "::" but wasn't
              * identified as a package.  There are several options that
              * might make Foo a class entry:
-             *  1) Foo::*
-             *  2) *::Foo::*
-             *  3) Package::Foo::*
+             *  1) Foo::
+             *  2) *::Foo::
+             *  3) Package::Foo::
              *  4) *::Foo
              * Parse these as follows:  First, look for existence of "::*"
              * at the end of the entry.  This will identify the first 3

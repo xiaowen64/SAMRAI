@@ -46,124 +46,124 @@ using namespace SAMRAI;
 
 /*
  ************************************************************************
- *                                                                      *
- * This is the driver program to test and time patch data               *
- * communication operations on an SAMR patch hierarchy using            *
- * SAMRAI.  CommTester is the primary object used in these              *
- * processes.  It constructs the patch hierarchy based on               *
- * input file information and invokes the communcation operations       *
- * specified in the input file.  The implementation of data type        *
- * specific operations (defining variables, initializing data,          *
- * defining coarsen/refine operations, and verifying the results)       *
- * are provided in a class implemented for the test to be performed.    *
- * This test-specific class is derived from the PatchDataTestStrategy   *
- * base class which declares the interface between the CommTester       *
- * and the test.                                                        *
- *                                                                      *
- * Input data file sections and keys are defined as follows:            *
- *                                                                      *
- *    o Main program...                                                 *
- *                                                                      *
- *      Main {                                                          *
- *         log_file_name  = <string> [name of log file]                 *
- *                          (optional - "component_test.log" is default)*
- *         log_all_nodes  = <bool> [log all nodes or node 0 only?]      *
- *                          (optional - FALSE is default)               *
- *         ntimes_run     = <int> [how many times to perform test]      *
- *                          (optional - 1 is default)                   *
- *         test_to_run    = <string> [name of test] (required)          *
- *            Available tests are:                                      *
- *               "CellDataTest"                                         *
- *               "EdgeDataTest"                                         *
- *               "FaceDataTest"                                         *
- *               "NodeDataTest"                                         *
- *               "OuterodeDataTest"                                     *
- *               "SideDataTest"                                         *
- *               "MultiVariableDataTest"                                *
- *         do_refine      = <bool> [test refine operation?]             *
- *                          (optional - FALSE is default)               *
- *         do_coarsen     = <bool> [test coarsen operation?]            *
- *                          (optional - FALSE is default)               *
- *         NOTE: Only refine or coarsen test can be run, but not both.  *
- *               If both are TRUE, only refine operations will execute. *
- *         refine_option  = <string> [how interior of destination       *
- *                                    level is filled during refine]    *
- *            Options are:                                              *
- *               "INTERIOR_FROM_SAME_LEVEL"                             *
- *               "INTERIOR_FROM_COARSER_LEVEL"                          *
- *               (default is "INTERIOR_FROM_SAME_LEVEL")                *
- *      }                                                               *
- *                                                                      *
- *    o Timers...                                                       *
- *                                                                      *
- *      tbox::TimerManager {                                                  *
- *         timer_list = <string array> [names of timers to run]         *
- *            Available timers are:                                     *
- *               "test::main::createRefineSchedule"                     *
- *               "test::main::performRefineOperations"                  *
- *               "test::main::createCoarsenSchedule"                    *
- *               "test::main::performCoarsenOperations"                 *
- *      }                                                               *
- *                                                                      *
- *    o hier::Patch data tests...                                             *
- *                                                                      *
- *      Each test defines the input parameters it needs.  Consult the   *
- *      documentation in each class for details.  Default operations    *
- *      for reading variable data and mesh refinement information       *
- *      for data tests are provided in the PatchDataTestStrategy        *
- *      base class.  These input are typically read from the input      *
- *      file section for each test.  In this case, the input data       *
- *      keys are similar to the following example:                      *
- *                                                                      *
- *      VariableData {  // The variable sub-database                    *
- *                      // (key name VariableData not optional)         *
- *                                                                      *
- *         variable_1 { // sub-database for first variable              *
- *                      // (Key name for each variable can be anything. *
- *                      //  Key names for variable parameters are       *
- *                      //  not optional. However, only name data is    *
- *                      //  required)                                   *
- *            name = "var1"    // <string> variable name (required)     *
- *            depth = 1        // <int> variable depth (opt. - def is 1)*
- *            src_ghosts = 0,0,0 // <int array> for ghost width of      *
- *                                  source data (opt. - def is 0,0,0)   *
- *            dst_ghosts = 1,1,1 // <int array> for ghost width of      *
- *                                  dest data (opt. - def is 0,0,0)     *
- *            coarsen_operator = "CONSERVATIVE_COARSEN"                 *
- *            refine_operator = "LINEAR_REFINE"                         *
- *            // Interlevel transfer operator name strings are optional *
- *            // Default are "NO_COARSEN", and "NO_REFINE", resp.       *
- *         }                                                            *
- *                                                                      *
- *         // data for other variables as needed...                     *
- *                                                                      *
- *      }                                                               *
- *                                                                      *
- *      RefinementData {  // The variable sub-database                  *
- *                        // (key name RefinementData not optional)     *
- *                                                                      *
- *         // Lists of boxes to refine on each level.  Names of box     *
- *         // arrays may be anything.  For example,                     *
- *                                                                      *
- *           level0_boxes = [ (1,2,3) , (3,3,5) ]                       *
- *           level1_boxes = [ (8,10,6) , (10,10,12) ]                   *
- *           // other level box information as needed...                *
- *      }                                                               *
- *                                                                      *
- *  NOTES:                                                              *
- *                                                                      *
- *     o The CommTester uses the mesh::GriddingAlgorithm, and     *
- *       mesh::LoadBalancer class to construct the patch hierarchy*
- *       Appropriate input sections must be provided for these objects  *
- *       as needed.                                                     *
- *                                                                      *
- *     o Each test must register a hier::GridGeometry object      *
- *       with the                                                       *
- *       PatchDataTestStrategy base class so the hierarchy can be       *
- *       constructed.  Consult the constructor of each test class       *
- *       for inforamation about which geomteyr object is constructed,   *
- *       and thus which input data is required to initialize the geom.  *
- *                                                                      *
+ *
+ * This is the driver program to test and time patch data
+ * communication operations on an SAMR patch hierarchy using
+ * SAMRAI.  CommTester is the primary object used in these
+ * processes.  It constructs the patch hierarchy based on
+ * input file information and invokes the communcation operations
+ * specified in the input file.  The implementation of data type
+ * specific operations (defining variables, initializing data,
+ * defining coarsen/refine operations, and verifying the results)
+ * are provided in a class implemented for the test to be performed.
+ * This test-specific class is derived from the PatchDataTestStrategy
+ * base class which declares the interface between the CommTester
+ * and the test.
+ *
+ * Input data file sections and keys are defined as follows:
+ *
+ *    o Main program...
+ *
+ *      Main {
+ *         log_file_name  = <string> [name of log file]
+ *                          (optional - "component_test.log" is default)
+ *         log_all_nodes  = <bool> [log all nodes or node 0 only?]
+ *                          (optional - FALSE is default)
+ *         ntimes_run     = <int> [how many times to perform test]
+ *                          (optional - 1 is default)
+ *         test_to_run    = <string> [name of test] (required)
+ *            Available tests are:
+ *               "CellDataTest"
+ *               "EdgeDataTest"
+ *               "FaceDataTest"
+ *               "NodeDataTest"
+ *               "OuterodeDataTest"
+ *               "SideDataTest"
+ *               "MultiVariableDataTest"
+ *         do_refine      = <bool> [test refine operation?]
+ *                          (optional - FALSE is default)
+ *         do_coarsen     = <bool> [test coarsen operation?]
+ *                          (optional - FALSE is default)
+ *         NOTE: Only refine or coarsen test can be run, but not both.
+ *               If both are TRUE, only refine operations will execute.
+ *         refine_option  = <string> [how interior of destination
+ *                                    level is filled during refine]
+ *            Options are:
+ *               "INTERIOR_FROM_SAME_LEVEL"
+ *               "INTERIOR_FROM_COARSER_LEVEL"
+ *               (default is "INTERIOR_FROM_SAME_LEVEL")
+ *      }
+ *
+ *    o Timers...
+ *
+ *      tbox::TimerManager {
+ *         timer_list = <string array> [names of timers to run]
+ *            Available timers are:
+ *               "test::main::createRefineSchedule"
+ *               "test::main::performRefineOperations"
+ *               "test::main::createCoarsenSchedule"
+ *               "test::main::performCoarsenOperations"
+ *      }
+ *
+ *    o hier::Patch data tests...
+ *
+ *      Each test defines the input parameters it needs.  Consult the
+ *      documentation in each class for details.  Default operations
+ *      for reading variable data and mesh refinement information
+ *      for data tests are provided in the PatchDataTestStrategy
+ *      base class.  These input are typically read from the input
+ *      file section for each test.  In this case, the input data
+ *      keys are similar to the following example:
+ *
+ *      VariableData {  // The variable sub-database
+ *                      // (key name VariableData not optional)
+ *
+ *         variable_1 { // sub-database for first variable
+ *                      // (Key name for each variable can be anything.
+ *                      //  Key names for variable parameters are
+ *                      //  not optional. However, only name data is
+ *                      //  required)
+ *            name = "var1"    // <string> variable name (required)
+ *            depth = 1        // <int> variable depth (opt. - def is 1)
+ *            src_ghosts = 0,0,0 // <int array> for ghost width of
+ *                                  source data (opt. - def is 0,0,0)
+ *            dst_ghosts = 1,1,1 // <int array> for ghost width of
+ *                                  dest data (opt. - def is 0,0,0)
+ *            coarsen_operator = "CONSERVATIVE_COARSEN"
+ *            refine_operator = "LINEAR_REFINE"
+ *            // Interlevel transfer operator name strings are optional
+ *            // Default are "NO_COARSEN", and "NO_REFINE", resp.
+ *         }
+ *
+ *         // data for other variables as needed...
+ *
+ *      }
+ *
+ *      RefinementData {  // The variable sub-database
+ *                        // (key name RefinementData not optional)
+ *
+ *         // Lists of boxes to refine on each level.  Names of box
+ *         // arrays may be anything.  For example,
+ *
+ *           level0_boxes = [ (1,2,3) , (3,3,5) ]
+ *           level1_boxes = [ (8,10,6) , (10,10,12) ]
+ *           // other level box information as needed...
+ *      }
+ *
+ *  NOTES:
+ *
+ *     o The CommTester uses the mesh::GriddingAlgorithm, and
+ *       mesh::LoadBalancer class to construct the patch hierarchy
+ *       Appropriate input sections must be provided for these objects
+ *       as needed.
+ *
+ *     o Each test must register a hier::GridGeometry object
+ *       with the
+ *       PatchDataTestStrategy base class so the hierarchy can be
+ *       constructed.  Consult the constructor of each test class
+ *       for inforamation about which geomteyr object is constructed,
+ *       and thus which input data is required to initialize the geom.
+ *
  ************************************************************************
  */
 

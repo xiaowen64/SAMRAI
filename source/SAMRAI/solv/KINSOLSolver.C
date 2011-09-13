@@ -30,10 +30,10 @@ namespace solv {
 
 /*
  *************************************************************************
- *                                                                       *
- * Static member functions that provide linkage with KINSOL package.     *
- * See header file for KINSOLAbstractFunctions for more information.*
- *                                                                       *
+ *
+ * Static member functions that provide linkage with KINSOL package.
+ * See header file for KINSOLAbstractFunctions for more information.
+ *
  *************************************************************************
  */
 int KINSOLSolver::KINSOLFuncEval(
@@ -123,9 +123,9 @@ int KINSOLSolver::KINSOLJacobianTimesVector(
 
 /*
  *************************************************************************
- *                                                                       *
- * KINSOLSolver constructor and destructor.                         *
- *                                                                       *
+ *
+ * KINSOLSolver constructor and destructor.
+ *
  *************************************************************************
  */
 KINSOLSolver::KINSOLSolver(
@@ -238,9 +238,9 @@ KINSOLSolver::~KINSOLSolver()
 
 /*
  *************************************************************************
- *                                                                       *
- * Functions to initialize nonlinear solver and reset KINSOL structure.  *
- *                                                                       *
+ *
+ * Functions to initialize nonlinear solver and reset KINSOL structure.
+ *
  *************************************************************************
  */
 
@@ -434,9 +434,9 @@ void KINSOLSolver::initializeKINSOL()
 
 /*
  *************************************************************************
- *                                                                       *
- * Solve nonlinear system; re-initialize KINSOL solver, if necessary.    *
- *                                                                       *
+ *
+ * Solve nonlinear system; re-initialize KINSOL solver, if necessary.
+ *
  *************************************************************************
  */
 int KINSOLSolver::solve()
@@ -482,9 +482,9 @@ int KINSOLSolver::solve()
 
 /*
  *************************************************************************
- *                                                                       *
- * Setting KINSOL log file name and print flag for KINSOL statistics.    *
- *                                                                       *
+ *
+ * Setting KINSOL log file name and print flag for KINSOL statistics.
+ *
  *************************************************************************
  */
 
@@ -509,9 +509,9 @@ void KINSOLSolver::setLogFileData(
 
 /*
  *************************************************************************
- *                                                                       *
- * Accessory functions for setting user-defined function information.    *
- *                                                                       *
+ *
+ * Accessory functions for setting user-defined function information.
+ *
  *************************************************************************
  */
 
@@ -552,9 +552,9 @@ KINSOLAbstractFunctions *KINSOLSolver::getKINSOLFunctions() const
 
 /*
  *************************************************************************
- *                                                                       *
- * Accessory function for setting constraints for nonlinear system.      *
- *                                                                       *
+ *
+ * Accessory function for setting constraints for nonlinear system.
+ *
  *************************************************************************
  */
 
@@ -566,9 +566,9 @@ void KINSOLSolver::setConstraintVector(
 
 /*
  *************************************************************************
- *                                                                       *
- * Accessory function for setting nonlinear solver parameters.           *
- *                                                                       *
+ *
+ * Accessory function for setting nonlinear solver parameters.
+ *
  *************************************************************************
  */
 
@@ -757,9 +757,9 @@ void KINSOLSolver::setMaxBetaFails(
 
 /*
  *************************************************************************
- *                                                                       *
- * Accessory function for setting preconditioner parameters.             *
- *                                                                       *
+ *
+ * Accessory function for setting preconditioner parameters.
+ *
  *************************************************************************
  */
 
@@ -833,9 +833,9 @@ double KINSOLSolver::getNewtonStepLength() const
 
 /*
  *************************************************************************
- *                                                                       *
- * Print KINSOLSolver object data to given output stream.        *
- *                                                                       *
+ *
+ * Print KINSOLSolver object data to given output stream.
+ *
  *************************************************************************
  */
 void KINSOLSolver::printClassData(

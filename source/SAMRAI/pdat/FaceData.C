@@ -33,10 +33,10 @@ const int FaceData<TYPE>::PDAT_FACEDATA_VERSION = 1;
 
 /*
  *************************************************************************
- *                                                                       *
- * Constructor and destructor for face data objects.  The constructor    *
- * simply initializes data variables and sets up the array data.         *
- *                                                                       *
+ *
+ * Constructor and destructor for face data objects.  The constructor
+ * simply initializes data variables and sets up the array data.
+ *
  *************************************************************************
  */
 
@@ -65,11 +65,11 @@ FaceData<TYPE>::~FaceData()
 
 /*
  *************************************************************************
- *                                                                       *
- * The following are private and cannot be used, but they are defined    *
- * here for compilers that require that every template declaration have  *
- * a definition (a stupid requirement, if you ask me).                   *
- *                                                                       *
+ *
+ * The following are private and cannot be used, but they are defined
+ * here for compilers that require that every template declaration have
+ * a definition (a stupid requirement, if you ask me).
+ *
  *************************************************************************
  */
 
@@ -90,10 +90,10 @@ void FaceData<TYPE>::operator = (
 
 /*
  *************************************************************************
- *                                                                       *
- * Perform a fast copy between two face centered arrays where their      *
- * index spaces overlap.                                                 *
- *                                                                       *
+ *
+ * Perform a fast copy between two face centered arrays where their
+ * index spaces overlap.
+ *
  *************************************************************************
  */
 
@@ -139,10 +139,10 @@ void FaceData<TYPE>::copy2(
 
 /*
  *************************************************************************
- *                                                                       *
- * Copy data from the source into the destination according to the       *
- * overlap descriptor.                                                   *
- *                                                                       *
+ *
+ * Copy data from the source into the destination according to the
+ * overlap descriptor.
+ *
  *************************************************************************
  */
 
@@ -274,10 +274,10 @@ void FaceData<TYPE>::copyWithRotation(
 
 /*
  *************************************************************************
- *                                                                       *
- * Perform a fast copy between two arrays at the                         *
- * specified depths, where their index spaces overlap.                   *
- *                                                                       *
+ *
+ * Perform a fast copy between two arrays at the
+ * specified depths, where their index spaces overlap.
+ *
  *************************************************************************
  */
 
@@ -299,10 +299,10 @@ void FaceData<TYPE>::copyDepth(
 
 /*
  *************************************************************************
- *                                                                       *
- * Calculate the buffer space needed to pack/unpack messages on the box  *
- * region using the overlap descriptor.                                  *
- *                                                                       *
+ *
+ * Calculate the buffer space needed to pack/unpack messages on the box
+ * region using the overlap descriptor.
+ *
  *************************************************************************
  */
 
@@ -339,10 +339,10 @@ int FaceData<TYPE>::getDataStreamSize(
 
 /*
  *************************************************************************
- *                                                                       *
- * Pack/unpack data into/out of the message streams using the index      *
- * space in the overlap descriptor.                                      *
- *                                                                       *
+ *
+ * Pack/unpack data into/out of the message streams using the index
+ * space in the overlap descriptor.
+ *
  *************************************************************************
  */
 
@@ -466,10 +466,10 @@ void FaceData<TYPE>::unpackStream(
 
 /*
  *************************************************************************
- *                                                                       *
- * Calculate the amount of memory space needed to represent the data     *
- * for a  face centered grid.                                            *
- *                                                                       *
+ *
+ * Calculate the amount of memory space needed to represent the data
+ * for a  face centered grid.
+ *
  *************************************************************************
  */
 
@@ -494,9 +494,9 @@ size_t FaceData<TYPE>::getSizeOfData(
 
 /*
  *************************************************************************
- *                                                                       *
- * Fill the face centered box with the given value.                      *
- *                                                                       *
+ *
+ * Fill the face centered box with the given value.
+ *
  *************************************************************************
  */
 
@@ -550,10 +550,10 @@ void FaceData<TYPE>::fillAll(
 
 /*
  *************************************************************************
- *                                                                       *
- * Print face centered data.  Note:  makes call to specialized printAxis *
- * routine in FaceDataSpecialized.C                                      *
- *                                                                       *
+ *
+ * Print face centered data.  Note:  makes call to specialized printAxis
+ * routine in FaceDataSpecialized.C
+ *
  *************************************************************************
  */
 
@@ -624,11 +624,11 @@ void FaceData<TYPE>::printAxis(
 
 /*
  *************************************************************************
- *                                                                       *
- * Checks that class version and restart file version are equal.  If so, *
- * reads in the d_depth data member to the database.  Then tells         *
- * d_data to read itself in from the database.                           *
- *                                                                       *
+ *
+ * Checks that class version and restart file version are equal.  If so,
+ * reads in the d_depth data member to the database.  Then tells
+ * d_data to read itself in from the database.
+ *
  *************************************************************************
  */
 
@@ -656,10 +656,10 @@ void FaceData<TYPE>::getSpecializedFromDatabase(
 
 /*
  *************************************************************************
- *                                                                       *
- * Write out the class version number, d_depth data member to the        *
- * database.  Then tells d_data to write itself to the database.         *
- *                                                                       *
+ *
+ * Write out the class version number, d_depth data member to the
+ * database.  Then tells d_data to write itself to the database.
+ *
  *************************************************************************
  */
 

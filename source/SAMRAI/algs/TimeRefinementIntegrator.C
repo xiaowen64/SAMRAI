@@ -53,14 +53,14 @@ tbox::Pointer<tbox::Timer> TimeRefinementIntegrator::t_advance_level;
 
 /*
  *************************************************************************
- *                                                                       *
- * The constructor for TimeRefinementIntegrator checks for valid         *
- * input data, initializes time stepping data to undefined values,       *
- * and forces certain parameters in the level strategy, regridding       *
- * algorithm to be consistent with this object's data members.  This     *
- * constructor also invokes the variable registration process in the     *
- * level strategy object.                                                *
- *                                                                       *
+ *
+ * The constructor for TimeRefinementIntegrator checks for valid
+ * input data, initializes time stepping data to undefined values,
+ * and forces certain parameters in the level strategy, regridding
+ * algorithm to be consistent with this object's data members.  This
+ * constructor also invokes the variable registration process in the
+ * level strategy object.
+ *
  *************************************************************************
  */
 
@@ -198,10 +198,10 @@ TimeRefinementIntegrator::TimeRefinementIntegrator(
 
 /*
  *************************************************************************
- *                                                                       *
- * Destructor tells tbox::RestartManager to remove this object from the  *
- * list of restart items.                                                *
- *                                                                       *
+ *
+ * Destructor tells tbox::RestartManager to remove this object from the
+ * list of restart items.
+ *
  *************************************************************************
  */
 
@@ -214,15 +214,15 @@ TimeRefinementIntegrator::~TimeRefinementIntegrator()
 
 /*
  *************************************************************************
- *                                                                       *
- * Create patch level and patches for coarsest level in AMR hierarchy    *
- * at initial simulation time.  Then, set time stepping data and set     *
- * initial patch data on the coarsest level.  The actual level data      *
- * initialization process is invoked by the recursive private member     *
- * function initialize().  This function will create and initialize      *
- * successively finer hierarchy levels until either the maximum number   *
- * allowable level is reached or no further refinement is needed.        *
- *                                                                       *
+ *
+ * Create patch level and patches for coarsest level in AMR hierarchy
+ * at initial simulation time.  Then, set time stepping data and set
+ * initial patch data on the coarsest level.  The actual level data
+ * initialization process is invoked by the recursive private member
+ * function initialize().  This function will create and initialize
+ * successively finer hierarchy levels until either the maximum number
+ * allowable level is reached or no further refinement is needed.
+ *
  *************************************************************************
  */
 
@@ -286,14 +286,14 @@ double TimeRefinementIntegrator::initializeHierarchy()
 
 /*
  *************************************************************************
- *                                                                       *
- * Advance all levels in hierarchy through specified time interval dt    *
- * by invoking the recursive timestepping process at the coarsest        *
- * hierarchy level (level 0).  If synchronized timestepping is used,     *
- * then loop through each level advance and then synchronize all levels. *
- * The return value is the proper time increment for a subsequent        *
- * advance of level 0.                                                   *
- *                                                                       *
+ *
+ * Advance all levels in hierarchy through specified time interval dt
+ * by invoking the recursive timestepping process at the coarsest
+ * hierarchy level (level 0).  If synchronized timestepping is used,
+ * then loop through each level advance and then synchronize all levels.
+ * The return value is the proper time increment for a subsequent
+ * advance of level 0.
+ *
  *************************************************************************
  */
 
@@ -342,19 +342,19 @@ double TimeRefinementIntegrator::advanceHierarchy(
 
 /*
  *************************************************************************
- *                                                                       *
- * Initialize data on given level.  Then, invoke regridding and          *
- * recursively initialize finer levels, if necessary.  The coarsest      *
- * level (i.e., level 0) is created by initializeHierarchy().  Each      *
- * finer level is constructed by calls this function.  The gridding      *
- * algorithm data member build finer each level and its patches.         *
- *                                                                       *
- * This function assumes that the patch level and patches exist before   *
- * it is called.  Upon leaving this routine, initial data is set         *
- * according to the methods in the level integration routines, which     *
- * are generally invoked from the gridding algorithm class.  Also,       *
- * basic time increment data is set for each level.                      *
- *                                                                       *
+ *
+ * Initialize data on given level.  Then, invoke regridding and
+ * recursively initialize finer levels, if necessary.  The coarsest
+ * level (i.e., level 0) is created by initializeHierarchy().  Each
+ * finer level is constructed by calls this function.  The gridding
+ * algorithm data member build finer each level and its patches.
+ *
+ * This function assumes that the patch level and patches exist before
+ * it is called.  Upon leaving this routine, initial data is set
+ * according to the methods in the level integration routines, which
+ * are generally invoked from the gridding algorithm class.  Also,
+ * basic time increment data is set for each level.
+ *
  *************************************************************************
  */
 
@@ -619,45 +619,45 @@ TimeRefinementIntegrator::initializeSynchronizedTimesteppingLevelData(
 
 /*
  *************************************************************************
- *                                                                       *
- * Advance data on level to specified time.  Then, advance each finer    *
- * hierarchy level to the same end time using recursive function calls.  *
- * It is assumed that when this function is called, only the data needed *
- * for initialization exists on the level.  Also, the solutions on       *
- * specified level and all finer levels are synchronized at the the      *
- * current simulation time on level level_number-1.  The integration     *
- * process implemented in this function is outlined as follows:          *
- *                                                                       *
- *    1) Initialize timestep count, simulation time, time step increment *
- *       for level level_number.                                         *
- *    2) Adjust time first time increment if necessary and estimate      *
- *       number of timesteps required to advance the level to end time.  *
- *    3) Iterate over sequence of timesteps for level level_number:      *
- *       a) Set end time for current step, record current time for       *
- *          synchronization.                                             *
- *       b) Advance solution on level using given time increment.        *
- *          Note that the level strategy performs the advance.           *
- *       c) Increment step count information.                            *
- *       d) If finer level exists, advance finer level to end time of    *
- *          most recent time step using recursive function call.         *
- *       e) Synchronize data between levels as necessary.  Note that     *
- *          new solution on level level_number as well as each finer     *
- *          level corresponds to the same time.  Also, synchronization   *
- *          involves several levels, typically, including all levels     *
- *          finer than level_number, level level_number itself, and the  *
- *          possibly level level_number-1.  Which levels synchronize     *
- *          here depends on when regridding occurs.  Note that the       *
- *          level strategy performs the data synchronization.            *
- *       f) Increment the simulation time and determine the size of the  *
- *          next timestep for the level and estimate the number of       *
- *          timesteps needed to advance the level to end time.           *
- *       g) If appropriate, regrid all finer levels.                     *
- *          Note that the gridding algorithm regrids the mesh.           *
- *       h) Synchronize all levels involved in the regridding process,   *
- *          if it occurred.  The sync is performed by level strategy.    *
- *       i) If regridding did not occur, then reset current and new      *
- *          solution data on the level.                                  *
- *                                                                       *
+ *
+ * Advance data on level to specified time.  Then, advance each finer
+ * hierarchy level to the same end time using recursive function calls.
+ * It is assumed that when this function is called, only the data needed
+ * for initialization exists on the level.  Also, the solutions on
+ * specified level and all finer levels are synchronized at the the
+ * current simulation time on level level_number-1.  The integration
+ * process implemented in this function is outlined as follows:
+ *
+ *    1) Initialize timestep count, simulation time, time step increment
+ *       for level level_number.
+ *    2) Adjust time first time increment if necessary and estimate
+ *       number of timesteps required to advance the level to end time.
+ *    3) Iterate over sequence of timesteps for level level_number:
+ *       a) Set end time for current step, record current time for
+ *          synchronization.
+ *       b) Advance solution on level using given time increment.
+ *          Note that the level strategy performs the advance.
+ *       c) Increment step count information.
+ *       d) If finer level exists, advance finer level to end time of
+ *          most recent time step using recursive function call.
+ *       e) Synchronize data between levels as necessary.  Note that
+ *          new solution on level level_number as well as each finer
+ *          level corresponds to the same time.  Also, synchronization
+ *          involves several levels, typically, including all levels
+ *          finer than level_number, level level_number itself, and the
+ *          possibly level level_number-1.  Which levels synchronize
+ *          here depends on when regridding occurs.  Note that the
+ *          level strategy performs the data synchronization.
+ *       f) Increment the simulation time and determine the size of the
+ *          next timestep for the level and estimate the number of
+ *          timesteps needed to advance the level to end time.
+ *       g) If appropriate, regrid all finer levels.
+ *          Note that the gridding algorithm regrids the mesh.
+ *       h) Synchronize all levels involved in the regridding process,
+ *          if it occurred.  The sync is performed by level strategy.
+ *       i) If regridding did not occur, then reset current and new
+ *          solution data on the level.
+ *
  *************************************************************************
  */
 
@@ -1025,11 +1025,11 @@ void TimeRefinementIntegrator::advanceRecursivelyForRefinedTimestepping(
 
 /*
  *************************************************************************
- *                                                                       *
- * Advance data on all hierarchy levels through specified time increment *
- * using the same timesteps on each level.  Synchronization and          *
- * regridding are performed as needed.                                   *
- *                                                                       *
+ *
+ * Advance data on all hierarchy levels through specified time increment
+ * using the same timesteps on each level.  Synchronization and
+ * regridding are performed as needed.
+ *
  *************************************************************************
  */
 
@@ -1254,27 +1254,27 @@ double TimeRefinementIntegrator::advanceForSynchronizedTimestepping(
 
 /*
  *************************************************************************
- *                                                                       *
- * Compute time step data for given level and estimate the number of     *
- * time steps needed in current step sequence on that level.  The        *
- * boolean return value indicates whether the next step taken will       *
- * be the last in the step sequence on the level.  The outline of the    *
- * procedure is as follows:                                              *
- *                                                                       *
- *    1) Determine maximum time increment allowed, permitting time step  *
- *       growth if appropriate.                                          *
- *    2) If time steps remain in current step sequence:                  *
- *       a) Estimate the number of timesteps left in the sequence based  *
- *          on the time remaining.                                       *
- *       b) Possibly increase the number of time steps remaining so      *
- *          that total step count remains consistent with regridding     *
- *          sequence.  Note that the total number of steps must be an    *
- *          integer multiple of the regrid interval for the level.       *
- *       c) Compute time increment by dividing number of steps left      *
- *          into remaining time.                                         *
- *    3) If no steps remain on the level in the current sequence, the    *
- *       next time increment is set to the current maximum increment.    *
- *                                                                       *
+ *
+ * Compute time step data for given level and estimate the number of
+ * time steps needed in current step sequence on that level.  The
+ * boolean return value indicates whether the next step taken will
+ * be the last in the step sequence on the level.  The outline of the
+ * procedure is as follows:
+ *
+ *    1) Determine maximum time increment allowed, permitting time step
+ *       growth if appropriate.
+ *    2) If time steps remain in current step sequence:
+ *       a) Estimate the number of timesteps left in the sequence based
+ *          on the time remaining.
+ *       b) Possibly increase the number of time steps remaining so
+ *          that total step count remains consistent with regridding
+ *          sequence.  Note that the total number of steps must be an
+ *          integer multiple of the regrid interval for the level.
+ *       c) Compute time increment by dividing number of steps left
+ *          into remaining time.
+ *    3) If no steps remain on the level in the current sequence, the
+ *       next time increment is set to the current maximum increment.
+ *
  *************************************************************************
  */
 
@@ -1380,10 +1380,10 @@ bool TimeRefinementIntegrator::findNextDtAndStepsRemaining(
 
 /*
  *************************************************************************
- *                                                                       *
- * Return true if the level can be remeshed at the current step.         *
- * regrid step interval.  Otherwise, return false.                       *
- *                                                                       *
+ *
+ * Return true if the level can be remeshed at the current step.
+ * regrid step interval.  Otherwise, return false.
+ *
  *************************************************************************
  */
 
@@ -1405,10 +1405,10 @@ bool TimeRefinementIntegrator::atRegridPoint(
 
 /*
  *************************************************************************
- *                                                                       *
- * Return true if the specified level can be regridded and the the next  *
- * coarser level can be regridded too.  Otherwise, false is returned.    *
- *                                                                       *
+ *
+ * Return true if the specified level can be regridded and the the next
+ * coarser level can be regridded too.  Otherwise, false is returned.
+ *
  *************************************************************************
  */
 
@@ -1424,9 +1424,9 @@ bool TimeRefinementIntegrator::coarserLevelRegridsToo(
 
 /*
  *************************************************************************
- *                                                                       *
- * Print all data member for TimeRefinementIntegrator object.            *
- *                                                                       *
+ *
+ * Print all data member for TimeRefinementIntegrator object.
+ *
  *************************************************************************
  */
 
@@ -1459,9 +1459,9 @@ void TimeRefinementIntegrator::printClassData(
 
 /*
  *************************************************************************
- *                                                                       *
- * Print all level-specific data for TimeRefinementIntegrator object.    *
- *                                                                       *
+ *
+ * Print all level-specific data for TimeRefinementIntegrator object.
+ *
  *************************************************************************
  */
 
@@ -1492,9 +1492,9 @@ void TimeRefinementIntegrator::printDataForLevel(
 
 /*
  *************************************************************************
- *                                                                       *
- * Write the class version number and data members to database object.   *
- *                                                                       *
+ *
+ * Write the class version number and data members to database object.
+ *
  *************************************************************************
  */
 
@@ -1523,11 +1523,11 @@ void TimeRefinementIntegrator::putToDatabase(
 
 /*
  *************************************************************************
- *                                                                       *
- * If simulation is not from restart, read in all data members from      *
- * the input database.  Otherwise, only override end_time, grow_dt       *
- * max_integrator_steps, and tag_buffer from the input database.         *
- *                                                                       *
+ *
+ * If simulation is not from restart, read in all data members from
+ * the input database.  Otherwise, only override end_time, grow_dt
+ * max_integrator_steps, and tag_buffer from the input database.
+ *
  *************************************************************************
  */
 
@@ -1651,17 +1651,17 @@ void TimeRefinementIntegrator::getFromInput(
 
 /*
  *************************************************************************
- *                                                                       *
- * Gets the database in the restart root database that corresponds to    *
- * the object name.  This method then checks to make sure that the class *
- * version number and the restart version number are the same.  If they  *
- * are, then reads in the objects data members from the restart          *
- * database.                                                             *
- *                                                                       *
- * Data read from restart database: d_start_time, d_end_time, d_grow_dt, *
- * d_max_integrator_step, d_regrid_interval, d_tag_buffer,               *
- * d_integrator_step, d_dt_max_level, d_dt_actual_level.                 *
- *                                                                       *
+ *
+ * Gets the database in the restart root database that corresponds to
+ * the object name.  This method then checks to make sure that the class
+ * version number and the restart version number are the same.  If they
+ * are, then reads in the objects data members from the restart
+ * database.
+ *
+ * Data read from restart database: d_start_time, d_end_time, d_grow_dt,
+ * d_max_integrator_step, d_regrid_interval, d_tag_buffer,
+ * d_integrator_step, d_dt_max_level, d_dt_actual_level.
+ *
  *************************************************************************
  */
 

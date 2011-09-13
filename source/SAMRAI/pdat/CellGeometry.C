@@ -25,9 +25,9 @@ namespace pdat {
 
 /*
  *************************************************************************
- *                                                                       *
- * Create a cell geometry object given the box and ghost cell width.     *
- *                                                                       *
+ *
+ * Create a cell geometry object given the box and ghost cell width.
+ *
  *************************************************************************
  */
 
@@ -47,15 +47,15 @@ CellGeometry::~CellGeometry()
 
 /*
  *************************************************************************
- *                                                                       *
- * Attempt to calculate the intersection between two cell centered box   *
- * geometries.  The calculateOverlap() checks whether both arguments are *
- * cell geometries; if so, it computes the intersection.  If not, then   *
- * it calls calculateOverlap() on the source object (if retry is true)   *
- * to allow the source a chance to calculate the intersection.  See the  *
- * hier::BoxGeometry base class for more information about the protocol. *
- * A pointer to null is returned if the intersection cannot be computed. *
- *                                                                       *
+ *
+ * Attempt to calculate the intersection between two cell centered box
+ * geometries.  The calculateOverlap() checks whether both arguments are
+ * cell geometries; if so, it computes the intersection.  If not, then
+ * it calls calculateOverlap() on the source object (if retry is true)
+ * to allow the source a chance to calculate the intersection.  See the
+ * hier::BoxGeometry base class for more information about the protocol.
+ * A pointer to null is returned if the intersection cannot be computed.
+ *
  *************************************************************************
  */
 
@@ -91,11 +91,11 @@ tbox::Pointer<hier::BoxOverlap> CellGeometry::calculateOverlap(
 
 /*
  *************************************************************************
- *                                                                       *
- * Compute the overlap between two cell centered boxes.  The two boxes   *
- * are intersected and, if necessary, the interior section is removed    *
- * from the destination box.                                             *
- *                                                                       *
+ *
+ * Compute the overlap between two cell centered boxes.  The two boxes
+ * are intersected and, if necessary, the interior section is removed
+ * from the destination box.
+ *
  *************************************************************************
  */
 
@@ -125,9 +125,9 @@ tbox::Pointer<hier::BoxOverlap> CellGeometry::doOverlap(
 
 /*
  *************************************************************************
- *                                                                       *
- * Compute the boxes that will be used to contstruct an overlap object   *
- *                                                                       *
+ *
+ * Compute the boxes that will be used to contstruct an overlap object
+ *
  *************************************************************************
  */
 
@@ -173,9 +173,9 @@ void CellGeometry::computeDestinationBoxes(
 
 /*
  *************************************************************************
- *                                                                       *
- * Set up a CellOverlap oject using the given boxes and offset           *
- *                                                                       *
+ *
+ * Set up a CellOverlap oject using the given boxes and offset
+ *
  *************************************************************************
  */
 
@@ -192,9 +192,9 @@ CellGeometry::setUpOverlap(
 
 /*
  *************************************************************************
- *                                                                       *
- * Transform a CellIndex                                                 *
- *                                                                       *
+ *
+ * Transform a CellIndex
+ *
  *************************************************************************
  */
 

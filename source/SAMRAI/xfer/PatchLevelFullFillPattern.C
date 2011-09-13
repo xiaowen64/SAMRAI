@@ -33,9 +33,9 @@ namespace xfer {
 
 /*
  *************************************************************************
- *                                                                       *
- * Default constructor                                                   *
- *                                                                       *
+ *
+ * Default constructor
+ *
  *************************************************************************
  */
 
@@ -46,9 +46,9 @@ PatchLevelFullFillPattern::PatchLevelFullFillPattern():
 
 /*
  *************************************************************************
- *                                                                       *
- * Destructor                                                            *
- *                                                                       *
+ *
+ * Destructor
+ *
  *************************************************************************
  */
 
@@ -58,9 +58,9 @@ PatchLevelFullFillPattern::~PatchLevelFullFillPattern()
 
 /*
  *************************************************************************
- *                                                                       *
- * computeFillBoxesAndNeighborhoodSets                                   *
- *                                                                       *
+ *
+ * computeFillBoxesAndNeighborhoodSets
+ *
  *************************************************************************
  */
 
@@ -94,9 +94,9 @@ void PatchLevelFullFillPattern::computeFillBoxesAndNeighborhoodSets(
 
 /*
  *************************************************************************
- *                                                                       *
- * computeDestinationFillBoxesOnSourceProc                               *
- *                                                                       *
+ *
+ * computeDestinationFillBoxesOnSourceProc
+ *
  *************************************************************************
  */
 

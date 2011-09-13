@@ -47,8 +47,8 @@ namespace SAMRAI {
 
 /*
  *************************************************************************
- * Constructor creates a unique context for the object and register      *
- * all its internal variables with the variable database.                *
+ * Constructor creates a unique context for the object and register
+ * all its internal variables with the variable database.
  *************************************************************************
  */
 FACPoisson::FACPoisson(
@@ -123,7 +123,7 @@ FACPoisson::FACPoisson(
 
 /*
  *************************************************************************
- * Destructor does nothing interesting                                   *
+ * Destructor does nothing interesting
  *************************************************************************
  */
 FACPoisson::~FACPoisson()
@@ -132,10 +132,10 @@ FACPoisson::~FACPoisson()
 
 /*
  *************************************************************************
- * Initialize data on a level.                                           *
- *                                                                       *
- * Allocate the solution, exact solution and rhs memory.                 *
- * Fill the rhs and exact solution.                                      *
+ * Initialize data on a level.
+ *
+ * Allocate the solution, exact solution and rhs memory.
+ * Fill the rhs and exact solution.
  *************************************************************************
  */
 void FACPoisson::initializeLevelData(
@@ -218,7 +218,7 @@ void FACPoisson::initializeLevelData(
 
 /*
  *************************************************************************
- * Reset the hierarchy-dependent internal information.                   *
+ * Reset the hierarchy-dependent internal information.
  *************************************************************************
  */
 void FACPoisson::resetHierarchyConfiguration(
@@ -234,9 +234,9 @@ void FACPoisson::resetHierarchyConfiguration(
 
 /*
  *************************************************************************
- * Set up the initial guess and problem parameters                       *
- * and solve the Poisson problem.  We explicitly initialize and          *
- * deallocate the solver state in this example.                          *
+ * Set up the initial guess and problem parameters
+ * and solve the Poisson problem.  We explicitly initialize and
+ * deallocate the solver state in this example.
  *************************************************************************
  */
 int FACPoisson::solvePoisson()
@@ -305,8 +305,8 @@ int FACPoisson::solvePoisson()
 #ifdef HAVE_HDF5
 /*
  *************************************************************************
- * Set up external plotter to plot internal data from this class.        *
- * Register variables appropriate for plotting.                          *
+ * Set up external plotter to plot internal data from this class.
+ * Register variables appropriate for plotting.
  *************************************************************************
  */
 int FACPoisson::setupPlotter(
@@ -336,7 +336,7 @@ int FACPoisson::setupPlotter(
 
 /*
  *************************************************************************
- * Write derived data to the given stream.                               *
+ * Write derived data to the given stream.
  *************************************************************************
  */
 bool FACPoisson::packDerivedDataIntoDoubleBuffer(

@@ -24,11 +24,11 @@ namespace xfer {
 
 /*
  *************************************************************************
- *                                                                       *
- * The constructor creates a new CoarsenClasses object                   *
- * and caches a boolean indiating whether to copy data to the            *
- * destination space on the coarse level before coarsening.              *
- *                                                                       *
+ *
+ * The constructor creates a new CoarsenClasses object
+ * and caches a boolean indiating whether to copy data to the
+ * destination space on the coarse level before coarsening.
+ *
  *************************************************************************
  */
 
@@ -44,9 +44,9 @@ CoarsenAlgorithm::CoarsenAlgorithm(
 
 /*
  *************************************************************************
- *                                                                       *
- * The destructor implicitly deallocates the list data.                  *
- *                                                                       *
+ *
+ * The destructor implicitly deallocates the list data.
+ *
  *************************************************************************
  */
 
@@ -56,9 +56,9 @@ CoarsenAlgorithm::~CoarsenAlgorithm()
 
 /*
  *************************************************************************
- *                                                                       *
- * Register a coarsening operation with the coarsening algorithm.        *
- *                                                                       *
+ *
+ * Register a coarsening operation with the coarsening algorithm.
+ *
  *************************************************************************
  */
 
@@ -114,10 +114,10 @@ void CoarsenAlgorithm::registerCoarsen(
 
 /*
  *************************************************************************
- *                                                                       *
- * Create a communication schedule that will coarsen data from fine      *
- * patch level to the coarse patch level.                                *
- *                                                                       *
+ *
+ * Create a communication schedule that will coarsen data from fine
+ * patch level to the coarse patch level.
+ *
  *************************************************************************
  */
 
@@ -150,9 +150,9 @@ CoarsenAlgorithm::createSchedule(
 
 /*
  **************************************************************************
- *                                                                        *
- * Reconfigure coarsen schedule to perform operations in this algorithm.  *
- *                                                                        *
+ *
+ * Reconfigure coarsen schedule to perform operations in this algorithm.
+ *
  **************************************************************************
  */
 
@@ -183,9 +183,9 @@ void CoarsenAlgorithm::resetSchedule(
 
 /*
  *************************************************************************
- *                                                                       *
- * Print coarsen algorithm data to the specified output stream.          *
- *                                                                       *
+ *
+ * Print coarsen algorithm data to the specified output stream.
+ *
  *************************************************************************
  */
 

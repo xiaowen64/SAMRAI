@@ -54,9 +54,9 @@ HierarchyEdgeDataOpsInteger::~HierarchyEdgeDataOpsInteger()
 
 /*
  *************************************************************************
- *                                                                       *
- * Rotuines to set the hierarchy and level information.                  *
- *                                                                       *
+ *
+ * Rotuines to set the hierarchy and level information.
+ *
  *************************************************************************
  */
 
@@ -112,9 +112,9 @@ HierarchyEdgeDataOpsInteger::getPatchHierarchy() const
 
 /*
  *************************************************************************
- *                                                                       *
- * Basic generic operations.                                             *
- *                                                                       *
+ *
+ * Basic generic operations.
+ *
  *************************************************************************
  */
 
@@ -312,9 +312,9 @@ void HierarchyEdgeDataOpsInteger::setToScalar(
 
 /*
  *************************************************************************
- *                                                                       *
- * Basic generic arithmetic operations.                                  *
- *                                                                       *
+ *
+ * Basic generic arithmetic operations.
+ *
  *************************************************************************
  */
 

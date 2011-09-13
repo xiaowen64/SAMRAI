@@ -26,9 +26,9 @@ namespace xfer {
 
 /*
  *************************************************************************
- *                                                                       *
- * Default constructor                                                   *
- *                                                                       *
+ *
+ * Default constructor
+ *
  *************************************************************************
  */
 
@@ -39,9 +39,9 @@ PatchLevelBorderFillPattern::PatchLevelBorderFillPattern():
 
 /*
  *************************************************************************
- *                                                                       *
- * Destructor                                                            *
- *                                                                       *
+ *
+ * Destructor
+ *
  *************************************************************************
  */
 
@@ -51,9 +51,9 @@ PatchLevelBorderFillPattern::~PatchLevelBorderFillPattern()
 
 /*
  *************************************************************************
- *                                                                       *
- * computeFillBoxesAndNeighborhoodSets                                   *
- *                                                                       *
+ *
+ * computeFillBoxesAndNeighborhoodSets
+ *
  *************************************************************************
  */
 void PatchLevelBorderFillPattern::computeFillBoxesAndNeighborhoodSets(

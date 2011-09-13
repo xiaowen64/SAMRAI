@@ -15,7 +15,7 @@ namespace solv {
 
 /*
  *******************************************************************
- * Default constructor                                             *
+ * Default constructor
  *******************************************************************
  */
 
@@ -31,7 +31,7 @@ PoissonSpecifications::PoissonSpecifications(
 
 /*
  *******************************************************************
- * Copy constructor                                                *
+ * Copy constructor
  *******************************************************************
  */
 
@@ -48,7 +48,7 @@ PoissonSpecifications::PoissonSpecifications(
 
 /*
  *******************************************************************
- * Destructor (does nothing).                                      *
+ * Destructor (does nothing).
  *******************************************************************
  */
 SAMRAI_INLINE_KEYWORD
@@ -57,7 +57,7 @@ PoissonSpecifications::~PoissonSpecifications() {
 
 /*
  *******************************************************************
- * Assignment operator                                             *
+ * Assignment operator
  *******************************************************************
  */
 
@@ -75,7 +75,7 @@ const PoissonSpecifications
 
 /*
  *******************************************************************
- * Set the patch data index for variable D.                        *
+ * Set the patch data index for variable D.
  *******************************************************************
  */
 SAMRAI_INLINE_KEYWORD
@@ -92,7 +92,7 @@ void PoissonSpecifications::setDPatchDataId(
 
 /*
  *******************************************************************
- * Set the constant value variable D.                              *
+ * Set the constant value variable D.
  *******************************************************************
  */
 SAMRAI_INLINE_KEYWORD
@@ -104,7 +104,7 @@ void PoissonSpecifications::setDConstant(
 
 /*
  *******************************************************************
- * Whether D is variable.                                          *
+ * Whether D is variable.
  *******************************************************************
  */
 SAMRAI_INLINE_KEYWORD
@@ -114,7 +114,7 @@ bool PoissonSpecifications::dIsVariable() const {
 
 /*
  *******************************************************************
- * Whether D is constant.                                          *
+ * Whether D is constant.
  *******************************************************************
  */
 SAMRAI_INLINE_KEYWORD
@@ -124,7 +124,7 @@ bool PoissonSpecifications::dIsConstant() const {
 
 /*
  *******************************************************************
- * Get the patch data index for variable D.                        *
+ * Get the patch data index for variable D.
  *******************************************************************
  */
 SAMRAI_INLINE_KEYWORD
@@ -139,7 +139,7 @@ int PoissonSpecifications::getDPatchDataId() const {
 
 /*
  *******************************************************************
- * Get the constant D value.                                       *
+ * Get the constant D value.
  *******************************************************************
  */
 SAMRAI_INLINE_KEYWORD
@@ -154,7 +154,7 @@ double PoissonSpecifications::getDConstant() const {
 
 /*
  *******************************************************************
- * Set the constant value variable C.                              *
+ * Set the constant value variable C.
  *******************************************************************
  */
 SAMRAI_INLINE_KEYWORD
@@ -172,7 +172,7 @@ void PoissonSpecifications::setCPatchDataId(
 
 /*
  *******************************************************************
- * Set the patch data index for variable C.                        *
+ * Set the patch data index for variable C.
  *******************************************************************
  */
 SAMRAI_INLINE_KEYWORD
@@ -185,7 +185,7 @@ void PoissonSpecifications::setCConstant(
 
 /*
  *******************************************************************
- * Set the value of C to zero.                                     *
+ * Set the value of C to zero.
  *******************************************************************
  */
 SAMRAI_INLINE_KEYWORD
@@ -197,7 +197,7 @@ void PoissonSpecifications::setCZero() {
 
 /*
  *******************************************************************
- * Whether C is variable.                                          *
+ * Whether C is variable.
  *******************************************************************
  */
 SAMRAI_INLINE_KEYWORD
@@ -207,7 +207,7 @@ bool PoissonSpecifications::cIsVariable() const {
 
 /*
  *******************************************************************
- * Whether C is zero.                                              *
+ * Whether C is zero.
  *******************************************************************
  */
 SAMRAI_INLINE_KEYWORD
@@ -217,7 +217,7 @@ bool PoissonSpecifications::cIsZero() const {
 
 /*
  *******************************************************************
- * Whether C is constant.                                          *
+ * Whether C is constant.
  *******************************************************************
  */
 SAMRAI_INLINE_KEYWORD
@@ -227,7 +227,7 @@ bool PoissonSpecifications::cIsConstant() const {
 
 /*
  *******************************************************************
- * Get the patch data index for variable C.                        *
+ * Get the patch data index for variable C.
  *******************************************************************
  */
 SAMRAI_INLINE_KEYWORD
@@ -242,7 +242,7 @@ int PoissonSpecifications::getCPatchDataId() const {
 
 /*
  *******************************************************************
- * Get the constant C value.                                       *
+ * Get the constant C value.
  *******************************************************************
  */
 SAMRAI_INLINE_KEYWORD
@@ -257,7 +257,7 @@ double PoissonSpecifications::getCConstant() const {
 
 /*
  *******************************************************************
- * Get the object's name.                                          *
+ * Get the object's name.
  *******************************************************************
  */
 SAMRAI_INLINE_KEYWORD

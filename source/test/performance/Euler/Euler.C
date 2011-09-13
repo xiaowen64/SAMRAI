@@ -112,16 +112,16 @@ tbox::Pointer<tbox::Timer> Euler::t_taggradient;
 
 /*
  *************************************************************************
- *                                                                       *
- * The constructor for Euler class sets data members to defualt values,  *
- * creates variables that define the solution state for the Euler        *
- * equations.                                                            *
- *                                                                       *
- * After default values are set, this routine calls getFromRestart()     *
- * if execution from a restart file is specified.  Finally,              *
- * getFromInput() is called to read values from the given input          *
- * database (potentially overriding those found in the restart file).    *
- *                                                                       *
+ *
+ * The constructor for Euler class sets data members to defualt values,
+ * creates variables that define the solution state for the Euler
+ * equations.
+ *
+ * After default values are set, this routine calls getFromRestart()
+ * if execution from a restart file is specified.  Finally,
+ * getFromInput() is called to read values from the given input
+ * database (potentially overriding those found in the restart file).
+ *
  *************************************************************************
  */
 
@@ -418,9 +418,9 @@ Euler::Euler(
 
 /*
  *************************************************************************
- *                                                                       *
- * Empty destructor for Euler class.                                     *
- *                                                                       *
+ *
+ * Empty destructor for Euler class.
+ *
  *************************************************************************
  */
 
@@ -440,7 +440,7 @@ Euler::~Euler()
  * Register density, velocity, pressure (i.e., solution state variables),
  * and flux variables with hyperbolic integrator that manages storage
  * for those quantities.  Also, register plot data with the vis tool
- * or Visit).           *                                                                       *
+ * or Visit).           *
  * Note that density coarsening/refining uses standard conservative
  * operations provided in SAMRAI library.   Velocity and pressure
  * are not conserved.  The Euler code provides operations to coarsen/
@@ -523,9 +523,9 @@ void Euler::registerModelVariables(
 
 /*
  *************************************************************************
- *                                                                       *
- * Set up parameters for nonuniform load balancing, if used.             *
- *                                                                       *
+ *
+ * Set up parameters for nonuniform load balancing, if used.
+ *
  *************************************************************************
  */
 
@@ -565,14 +565,14 @@ void Euler::setupLoadBalancer(
 
 /*
  *************************************************************************
- *                                                                       *
- * Set initial data for solution variables on patch interior.            *
- * This routine is called whenever a new patch is introduced to the      *
- * AMR patch hierarchy.  Note that the routine does nothing unless       *
- * we are at the initial time.  In all other cases, conservative         *
- * interpolation from coarser levels and copies from patches at the      *
- * same mesh resolution are sufficient to set data.                      *
- *                                                                       *
+ *
+ * Set initial data for solution variables on patch interior.
+ * This routine is called whenever a new patch is introduced to the
+ * AMR patch hierarchy.  Note that the routine does nothing unless
+ * we are at the initial time.  In all other cases, conservative
+ * interpolation from coarser levels and copies from patches at the
+ * same mesh resolution are sufficient to set data.
+ *
  *************************************************************************
  */
 
@@ -683,9 +683,9 @@ void Euler::initializeDataOnPatch(
 
 /*
  *************************************************************************
- *                                                                       *
- * Compute stable time increment for patch.  Return this value.          *
- *                                                                       *
+ *
+ * Compute stable time increment for patch.  Return this value.
+ *
  *************************************************************************
  */
 
@@ -748,11 +748,11 @@ double Euler::computeStableDtOnPatch(
 
 /*
  *************************************************************************
- *                                                                       *
- * Compute time integral of numerical fluxes for finite difference       *
- * at each cell face on patch.  When NDIM == 3, there are two options    *
- * for the transverse flux correction.  Otherwise, there is only one.    *
- *                                                                       *
+ *
+ * Compute time integral of numerical fluxes for finite difference
+ * at each cell face on patch.  When NDIM == 3, there are two options
+ * for the transverse flux correction.  Otherwise, there is only one.
+ *
  *************************************************************************
  */
 
@@ -966,11 +966,11 @@ void Euler::computeFluxesOnPatch(
 
 /*
  *************************************************************************
- *                                                                       *
- * Compute numerical approximations to flux terms using an extension     *
- * to three dimensions of Collella's corner transport upwind approach.   *
- * I.E. input value corner_transport = "CORNER_TRANSPORT_1"              *
- *                                                                       *
+ *
+ * Compute numerical approximations to flux terms using an extension
+ * to three dimensions of Collella's corner transport upwind approach.
+ * I.E. input value corner_transport = "CORNER_TRANSPORT_1"
+ *
  *************************************************************************
  */
 
@@ -1311,12 +1311,12 @@ void Euler::compute3DFluxesWithCornerTransport1(
 
 /*
  *************************************************************************
- *                                                                       *
- * Compute numerical approximations to flux terms using John             *
- * Trangenstein's interpretation of the three-dimensional version of     *
- * Collella's corner transport upwind approach.                          *
- * I.E. input value corner_transport = "CORNER_TRANSPORT_2"              *
- *                                                                       *
+ *
+ * Compute numerical approximations to flux terms using John
+ * Trangenstein's interpretation of the three-dimensional version of
+ * Collella's corner transport upwind approach.
+ * I.E. input value corner_transport = "CORNER_TRANSPORT_2"
+ *
  *************************************************************************
  */
 
@@ -1584,13 +1584,13 @@ void Euler::compute3DFluxesWithCornerTransport2(
 
 /*
  *************************************************************************
- *                                                                       *
- * Update Euler solution variables by performing a conservative          *
- * difference with the fluxes calculated in computeFluxesOnPatch().      *
- * Although, "primitive" variables are maintained (i.e., density,        *
- * velocity, pressure), "conserved" variables (i.e., density,            *
- * momentum, total energy) are conserved.                                *
- *                                                                       *
+ *
+ * Update Euler solution variables by performing a conservative
+ * difference with the fluxes calculated in computeFluxesOnPatch().
+ * Although, "primitive" variables are maintained (i.e., density,
+ * velocity, pressure), "conserved" variables (i.e., density,
+ * momentum, total energy) are conserved.
+ *
  *************************************************************************
  */
 
@@ -1661,11 +1661,11 @@ void Euler::conservativeDifferenceOnPatch(
 
 /*
  *************************************************************************
- *                                                                       *
- * Reset physical boundary values for special cases, such as those       *
- * involving reflective boundary conditions and when the "STEP"          *
- * problem is run.                                                       *
- *                                                                       *
+ *
+ * Reset physical boundary values for special cases, such as those
+ * involving reflective boundary conditions and when the "STEP"
+ * problem is run.
+ *
  *************************************************************************
  */
 
@@ -1761,10 +1761,10 @@ void Euler::boundaryReset(
 
 /*
  *************************************************************************
- *                                                                       *
- * Refine velocity and pressure by conservatively refining               *
- * momentum and total energy.                                            *
- *                                                                       *
+ *
+ * Refine velocity and pressure by conservatively refining
+ * momentum and total energy.
+ *
  *************************************************************************
  */
 
@@ -1936,10 +1936,10 @@ void Euler::postprocessRefine(
 
 /*
  *************************************************************************
- *                                                                       *
- * Coarsen velocity and pressure by conservatively coarsening            *
- * momentum and total energy.                                            *
- *                                                                       *
+ *
+ * Coarsen velocity and pressure by conservatively coarsening
+ * momentum and total energy.
+ *
  *************************************************************************
  */
 
@@ -2046,12 +2046,12 @@ void Euler::postprocessCoarsen(
 
 /*
  *************************************************************************
- *                                                                       *
- * Set the data in ghost cells corresponding to physical boundary        *
- * conditions.  Note that boundary geometry configuration information    *
- * (i.e., faces, edges, and nodes) is obtained from the patch geometry   *
- * object owned by the patch.                                            *
- *                                                                       *
+ *
+ * Set the data in ghost cells corresponding to physical boundary
+ * conditions.  Note that boundary geometry configuration information
+ * (i.e., faces, edges, and nodes) is obtained from the patch geometry
+ * object owned by the patch.
+ *
  *************************************************************************
  */
 
@@ -2270,10 +2270,10 @@ void Euler::setPhysicalBoundaryConditions(
 
 /*
  *************************************************************************
- *                                                                       *
- * Tag cells for refinement using gradient detector.  Tagging criteria   *
- * defined in input.                                                     *
- *                                                                       *
+ *
+ * Tag cells for refinement using gradient detector.  Tagging criteria
+ * defined in input.
+ *
  *************************************************************************
  */
 
@@ -2577,10 +2577,10 @@ void Euler::tagGradientDetectorCells(
 
 /*
  *************************************************************************
- *                                                                       *
- * Tag cells for refinement using Richardson extrapolation.  Criteria    *
- * defined in input.                                                     *
- *                                                                       *
+ *
+ * Tag cells for refinement using Richardson extrapolation.  Criteria
+ * defined in input.
+ *
  *************************************************************************
  */
 
@@ -2773,10 +2773,10 @@ void Euler::tagRichardsonExtrapolationCells(
 
 /*
  *************************************************************************
- *                                                                       *
- * Register VisIt data writer to write data to plot files that may       *
- * be postprocessed by the VisIt tool.                                   *
- *                                                                       *
+ *
+ * Register VisIt data writer to write data to plot files that may
+ * be postprocessed by the VisIt tool.
+ *
  *************************************************************************
  */
 
@@ -2793,10 +2793,10 @@ void Euler::registerVisItDataWriter(
 
 /*
  *************************************************************************
- *                                                                       *
- * Pack "total energy" and "momentum" (derived Vis plot quantities)      *
- * for the patch into a double precision buffer.                         *
- *                                                                       *
+ *
+ * Pack "total energy" and "momentum" (derived Vis plot quantities)
+ * for the patch into a double precision buffer.
+ *
  *************************************************************************
  */
 
@@ -2922,10 +2922,10 @@ bool Euler::packDerivedDataIntoDoubleBuffer(
 
 /*
  *************************************************************************
- *                                                                       *
- * Write 1d data intersection of patch and pencil box to file            *
- * with given name for plotting with Matlab.                             *
- *                                                                       *
+ *
+ * Write 1d data intersection of patch and pencil box to file
+ * with given name for plotting with Matlab.
+ *
  *************************************************************************
  */
 
@@ -3005,9 +3005,9 @@ void Euler::writeData1dPencil(
 
 /*
  *************************************************************************
- *                                                                       *
- * Write all class data members to specified output stream.              *
- *                                                                       *
+ *
+ * Write all class data members to specified output stream.
+ *
  *************************************************************************
  */
 
@@ -3303,10 +3303,10 @@ void Euler::printClassData(
 
 /*
  *************************************************************************
- *                                                                       *
- * Read data members from input.  Note all values set from restart       *
- * can be overridden by values in the input database.                    *
- *                                                                       *
+ *
+ * Read data members from input.  Note all values set from restart
+ * can be overridden by values in the input database.
+ *
  *************************************************************************
  */
 
@@ -3962,9 +3962,9 @@ void Euler::getFromInput(
 
 /*
  *************************************************************************
- *                                                                       *
- * Routines to put/get data members to/from from restart database.       *
- *                                                                       *
+ *
+ * Routines to put/get data members to/from from restart database.
+ *
  *************************************************************************
  */
 
@@ -4299,9 +4299,9 @@ void Euler::getFromRestart()
 
 /*
  *************************************************************************
- *                                                                       *
- * Routines to read boundary data from input database.                   *
- *                                                                       *
+ *
+ * Routines to read boundary data from input database.
+ *
  *************************************************************************
  */
 
@@ -4385,9 +4385,9 @@ void Euler::readStateDataEntry(
 
 /*
  *************************************************************************
- *                                                                       *
- * Routine to check boundary data when debugging.                        *
- *                                                                       *
+ *
+ * Routine to check boundary data when debugging.
+ *
  *************************************************************************
  */
 

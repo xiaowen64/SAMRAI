@@ -23,7 +23,7 @@
 
 /*
  **************************************************************************
- * writeRedistributedRestartFiles                                         *
+ * writeRedistributedRestartFiles
  **************************************************************************
  */
 
@@ -162,7 +162,7 @@ void RedistributedRestartUtility::writeRedistributedRestartFiles(
 
 /*
  **************************************************************************
- * readAndWriteRestartData                                                *
+ * readAndWriteRestartData
  **************************************************************************
  */
 
@@ -391,7 +391,7 @@ void RedistributedRestartUtility::readAndWriteRestartData(
 
 /*
  **************************************************************************
- * readAndWritePatchLevelRestartData                                      *
+ * readAndWritePatchLevelRestartData
  **************************************************************************
  */
 
@@ -653,7 +653,7 @@ void RedistributedRestartUtility::readAndWritePatchLevelRestartData(
 
 /*
  **************************************************************************
- * readAndWritePatchRestartData                                           *
+ * readAndWritePatchRestartData
  **************************************************************************
  */
 
@@ -685,7 +685,7 @@ void RedistributedRestartUtility::readAndWritePatchRestartData(
 
 /*
  **************************************************************************
- * readAndWriteBoxLevelRestartData                                  *
+ * readAndWriteBoxLevelRestartData
  **************************************************************************
  */
 

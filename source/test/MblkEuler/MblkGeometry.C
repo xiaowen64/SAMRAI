@@ -27,9 +27,9 @@
 
 /*
  *************************************************************************
- *                                                                       *
+ *
  * This class creates mapped multi-block grid geometrys
- *                                                                       *
+ *
  *************************************************************************
  */
 MblkGeometry::MblkGeometry(
@@ -55,9 +55,9 @@ MblkGeometry::MblkGeometry(
 
 /*
  *************************************************************************
- *                                                                       *
- * Empty destructor.                                    *
- *                                                                       *
+ *
+ * Empty destructor.
+ *
  *************************************************************************
  */
 MblkGeometry::~MblkGeometry()
@@ -66,9 +66,9 @@ MblkGeometry::~MblkGeometry()
 
 /*
  *************************************************************************
- *                                                                       *
+ *
  * Return the geometry (CARTESIAN, WEDGE, TRILINEAR or SPHERICAL_SHELL)
- *                                                                       *
+ *
  *************************************************************************
  */
 std::string MblkGeometry::getGeometryType()
@@ -78,11 +78,11 @@ std::string MblkGeometry::getGeometryType()
 
 /*
  *************************************************************************
- *                                                                       *
+ *
  * Return the user-specified refine boxes for a particular block/level
  * number.  If no boxes exist, it returns false.  If they do exist, it
  * returns true and sets the refine boxes argument.
- *                                                                       *
+ *
  *************************************************************************
  */
 bool MblkGeometry::getRefineBoxes(
@@ -102,10 +102,10 @@ bool MblkGeometry::getRefineBoxes(
 
 /*
  *************************************************************************
- *                                                                       *
- * Read data members from input.  All values set from restart can be     *
- * overridden by values in the input database.                           *
- *                                                                       *
+ *
+ * Read data members from input.  All values set from restart can be
+ * overridden by values in the input database.
+ *
  *************************************************************************
  */
 void MblkGeometry::getFromInput(
@@ -395,9 +395,9 @@ void MblkGeometry::getFromInput(
 
 /*
  *************************************************************************
- *                                                                       *
+ *
  * build the array of local blocks
- *                                                                       *
+ *
  *************************************************************************
  */
 
@@ -469,9 +469,9 @@ void MblkGeometry::buildLocalBlocks(
 
 /*
  *************************************************************************
- *                                                                       *
+ *
  * Build grid on patch for supplied inputs for different goemetries
- *                                                                       *
+ *
  *************************************************************************
  */
 
@@ -514,9 +514,9 @@ void MblkGeometry::buildGridOnPatch(
 
 /*
  *************************************************************************
- *                                                                       *
+ *
  * Build the Cartesian grid
- *                                                                       *
+ *
  *************************************************************************
  */
 
@@ -587,9 +587,9 @@ void MblkGeometry::buildCartesianGridOnPatch(
 
 /*
  *************************************************************************
- *                                                                       *
+ *
  * Build the Wedge grid
- *                                                                       *
+ *
  *************************************************************************
  */
 
@@ -667,9 +667,9 @@ void MblkGeometry::buildWedgeGridOnPatch(
 
 /*
  *************************************************************************
- *                                                                       *
+ *
  * Build the Trilinear grid
- *                                                                       *
+ *
  *************************************************************************
  */
 
@@ -796,9 +796,9 @@ void MblkGeometry::buildTrilinearGridOnPatch(
 
 /*
  *************************************************************************
- *                                                                       *
+ *
  * Build the spherical shell grid
- *                                                                       *
+ *
  *************************************************************************
  */
 
@@ -965,14 +965,14 @@ void MblkGeometry::buildSShellGridOnPatch(
 
 /*
  *************************************************************************
- *                                                                       *
+ *
  * For a given j, k, compute the position on the unit sphere with
  * the supplied block number.  "nth" is the number of cells in the theta
  * direction (it should be the same for all blocks).  The three faces
  * "xface", "yface", "zface" are the different block faces.  The
  * code that performs this operation is in Dave's dispOctant.m matlab
  * code.
- *                                                                       *
+ *
  *************************************************************************
  */
 void MblkGeometry::computeUnitSphereOctant(
@@ -1139,10 +1139,10 @@ void MblkGeometry::computeUnitSphereOctant(
 
 /*
  *************************************************************************
- *                                                                       *
+ *
  * Compute the rotations for the particular block number.  The
  * "local_blocks" argument is basically saying who is the ne
- *                                                                       *
+ *
  *************************************************************************
  */
 void computeBlocksOctant(

@@ -32,9 +32,9 @@ namespace algs {
 
 /*
  *************************************************************************
- *                                                                       *
- * Initialize the static data members.                                   *
- *                                                                       *
+ *
+ * Initialize the static data members.
+ *
  *************************************************************************
  */
 
@@ -49,10 +49,10 @@ PatchBoundaryEdgeSum::s_oedge_dst_id_array =
 
 /*
  *************************************************************************
- *                                                                       *
- * Static functions to determine number of patch data slots needed       *
- * for PatchBoundaryEdgeSum objects.                                     *
- *                                                                       *
+ *
+ * Static functions to determine number of patch data slots needed
+ * for PatchBoundaryEdgeSum objects.
+ *
  *************************************************************************
  */
 
@@ -79,10 +79,10 @@ PatchBoundaryEdgeSum::getNumUniquePatchDataSlots(
 
 /*
  *************************************************************************
- *                                                                       *
- * Constructor patch boundary edge sum objects initializes data members  *
- * to default (undefined) states.                                        *
- *                                                                       *
+ *
+ * Constructor patch boundary edge sum objects initializes data members
+ * to default (undefined) states.
+ *
  *************************************************************************
  */
 
@@ -105,10 +105,10 @@ PatchBoundaryEdgeSum::PatchBoundaryEdgeSum(
 
 /*
  *************************************************************************
- *                                                                       *
- * Destructor removes temporary outeredge patch data ids from            *
- * variable database, if defined.                                        *
- *                                                                       *
+ *
+ * Destructor removes temporary outeredge patch data ids from
+ * variable database, if defined.
+ *
  *************************************************************************
  */
 
@@ -148,9 +148,9 @@ PatchBoundaryEdgeSum::~PatchBoundaryEdgeSum()
 
 /*
  *************************************************************************
- *                                                                       *
- * Register edge patch data index for summation.                         *
- *                                                                       *
+ *
+ * Register edge patch data index for summation.
+ *
  *************************************************************************
  */
 
@@ -299,10 +299,10 @@ void PatchBoundaryEdgeSum::registerSum(
 
 /*
  *************************************************************************
- *                                                                       *
- * Set up schedule to sum edge data around patch boundaries              *
- * on a single level.                                                    *
- *                                                                       *
+ *
+ * Set up schedule to sum edge data around patch boundaries
+ * on a single level.
+ *
  *************************************************************************
  */
 
@@ -337,10 +337,10 @@ void PatchBoundaryEdgeSum::setupSum(
 
 /*
  *************************************************************************
- *                                                                       *
- * Perform patch boundary edge sum across single level or multiple       *
- * hierarchy levels depending on how object was initialized.             *
- *                                                                       *
+ *
+ * Perform patch boundary edge sum across single level or multiple
+ * hierarchy levels depending on how object was initialized.
+ *
  *************************************************************************
  */
 
@@ -358,13 +358,13 @@ void PatchBoundaryEdgeSum::computeSum() const
 
 /*
  *************************************************************************
- *                                                                       *
- * Private member function that performs edge sum across single level.   *
- *                                                                       *
- * 1. Copy edge data to local outeredge data.                            *
- * 2. Transfer and sum outeredge data.                                   *
- * 3. Copy outeredge data back to edge data.                             *
- *                                                                       *
+ *
+ * Private member function that performs edge sum across single level.
+ *
+ * 1. Copy edge data to local outeredge data.
+ * 2. Transfer and sum outeredge data.
+ * 3. Copy outeredge data back to edge data.
+ *
  *************************************************************************
  */
 

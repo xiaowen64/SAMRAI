@@ -18,9 +18,9 @@ namespace mesh {
 
 /*
  *************************************************************************
- *                                                                       *
- * Default constructor and destructor for BoxGeneratorStrategy.    *
- *                                                                       *
+ *
+ * Default constructor and destructor for BoxGeneratorStrategy.
+ *
  *************************************************************************
  */
 

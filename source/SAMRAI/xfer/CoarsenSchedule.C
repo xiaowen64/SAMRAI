@@ -35,9 +35,9 @@ namespace xfer {
 
 /*
  *************************************************************************
- *                                                                       *
- * Initialization for static data members.                               *
- *                                                                       *
+ *
+ * Initialization for static data members.
+ *
  *************************************************************************
  */
 
@@ -59,9 +59,9 @@ CoarsenSchedule::s_initialize_finalize_handler(
 
 /*
  * ************************************************************************
- *                                                                        *
- * Static function to set box intersection algorithm for schedules.       *
- *                                                                        *
+ *
+ * Static function to set box intersection algorithm for schedules.
+ *
  * ************************************************************************
  */
 
@@ -82,13 +82,13 @@ void CoarsenSchedule::setScheduleGenerationMethod(
 
 /*
  * ************************************************************************
- *                                                                        *
- * Create a coarsening schedule that transfers data from the source       *
- * patch data components of the fine level into the destination patch     *
- * data components of the coarse level.  If the coarsening operators      *
- * require data in ghost cells on the source level, then those ghost      *
- * cells must be filled before this call.                                 *
- *                                                                        *
+ *
+ * Create a coarsening schedule that transfers data from the source
+ * patch data components of the fine level into the destination patch
+ * data components of the coarse level.  If the coarsening operators
+ * require data in ghost cells on the source level, then those ghost
+ * cells must be filled before this call.
+ *
  * ************************************************************************
  */
 
@@ -176,10 +176,10 @@ CoarsenSchedule::CoarsenSchedule(
 
 /*
  * ************************************************************************
- *                                                                        *
- * The destructor for the coarsen schedule class implicitly deallocates   *
- * all of the data associated with the communication schedule.            *
- *                                                                        *
+ *
+ * The destructor for the coarsen schedule class implicitly deallocates
+ * all of the data associated with the communication schedule.
+ *
  * ************************************************************************
  */
 
@@ -200,9 +200,9 @@ CoarsenSchedule::~CoarsenSchedule()
 
 /*
  * ***********************************************************************
- *                                                                       *
- * Reset schedule with new set of coarsen items.                         *
- *                                                                       *
+ *
+ * Reset schedule with new set of coarsen items.
+ *
  * ***********************************************************************
  */
 
@@ -224,9 +224,9 @@ void CoarsenSchedule::reset(
 
 /*
  * ************************************************************************
- *                                                                        *
- * Return const pointer to equivalence classes used in schedule.          *
- *                                                                        *
+ *
+ * Return const pointer to equivalence classes used in schedule.
+ *
  * ************************************************************************
  */
 
@@ -238,20 +238,20 @@ CoarsenSchedule::getEquivalenceClasses() const
 
 /*
  * ************************************************************************
- *                                                                        *
- * Execute the stored communication schedule that copies data into the    *
- * the destination patch data components of the destination level from    *
- * the source patch data components of the source level.  The steps       *
- * to the algorithm are as follows:                                       *
- *                                                                        *
- *      (1) Allocate the source space on the temporary patch level.       *
- *      (2) Coarsen the data from the fine patch level to the temporary   *
- *          patch level (local operation).                                *
- *      (3) Copy data from the source space of the temporary patch        *
- *          level into the destination space of the destination patch     *
- *          level (requires interprocessor communication).                *
- *      (4) Deallocate the source space on the temporary patch level.     *
- *                                                                        *
+ *
+ * Execute the stored communication schedule that copies data into the
+ * the destination patch data components of the destination level from
+ * the source patch data components of the source level.  The steps
+ * to the algorithm are as follows:
+ *
+ *      (1) Allocate the source space on the temporary patch level.
+ *      (2) Coarsen the data from the fine patch level to the temporary
+ *          patch level (local operation).
+ *      (3) Copy data from the source space of the temporary patch
+ *          level into the destination space of the destination patch
+ *          level (requires interprocessor communication).
+ *      (4) Deallocate the source space on the temporary patch level.
+ *
  * ************************************************************************
  */
 
@@ -311,11 +311,11 @@ void CoarsenSchedule::coarsenData() const
 
 /*
  * ************************************************************************
- *                                                                        *
- * Generate the temporary coarse level by coarsening the fine patch       *
- * level boxes.  Note that no patch data components are allocated until   *
- * they are needed during the coarsening operation.                       *
- *                                                                        *
+ *
+ * Generate the temporary coarse level by coarsening the fine patch
+ * level boxes.  Note that no patch data components are allocated until
+ * they are needed during the coarsening operation.
+ *
  * ************************************************************************
  */
 
@@ -403,11 +403,11 @@ void CoarsenSchedule::generateTemporaryLevel()
 
 /*
  * ************************************************************************
- *                                                                        *
- * Set up refine algorithms to transfer coarsened data and to fill        *
- * temporary coarse level before performing coarsening operations,        *
- * if necessary.                                                          *
- *                                                                        *
+ *
+ * Set up refine algorithms to transfer coarsened data and to fill
+ * temporary coarse level before performing coarsening operations,
+ * if necessary.
+ *
  * ************************************************************************
  */
 
@@ -433,12 +433,12 @@ void CoarsenSchedule::setupRefineAlgorithm()
 
 /*
  * ************************************************************************
- *                                                                        *
- * Generate communication schedule that copies source patch data          *
- * from the temporary level into the destination patch data of the        *
- * destination (coarse) level.  The source and destination                *
- * spaces may be the same.                                                *
- *                                                                        *
+ *
+ * Generate communication schedule that copies source patch data
+ * from the temporary level into the destination patch data of the
+ * destination (coarse) level.  The source and destination
+ * spaces may be the same.
+ *
  * ************************************************************************
  */
 
@@ -483,13 +483,13 @@ void CoarsenSchedule::generateSchedule()
 
 /*
  *************************************************************************
- *                                                                       *
- * This version of the schedule generation procedure uses the original   *
- * SAMRAI N^2 algorithms to construct communication schedules.  Here,    *
- * we loop over all of the patches on the source and destination levels. *
- * check to see whether source or destination is local to this processor.*
- * If not, then skip over schedule construction operations.              *
- *                                                                       *
+ *
+ * This version of the schedule generation procedure uses the original
+ * SAMRAI N^2 algorithms to construct communication schedules.  Here,
+ * we loop over all of the patches on the source and destination levels.
+ * check to see whether source or destination is local to this processor.
+ * If not, then skip over schedule construction operations.
+ *
  *************************************************************************
  */
 
@@ -727,11 +727,11 @@ hier::IntVector CoarsenSchedule::getMaxGhostsToGrow() const
 
 /*
  *************************************************************************
- *                                                                       *
- * Private utility function that constructs schedule transactions that   *
- * move data from source patch on source level to destination patch      *
- * on destination level.                                                 *
- *                                                                       *
+ *
+ * Private utility function that constructs schedule transactions that
+ * move data from source patch on source level to destination patch
+ * on destination level.
+ *
  *************************************************************************
  */
 
@@ -930,10 +930,10 @@ void CoarsenSchedule::constructScheduleTransactions(
 
 /*
  * ************************************************************************
- *                                                                        *
- * Coarsen data from the source space on the fine patch level into the    *
- * source space on the coarse temporary patch level.                      *
- *                                                                        *
+ *
+ * Coarsen data from the source space on the fine patch level into the
+ * source space on the coarse temporary patch level.
+ *
  * ************************************************************************
  */
 
@@ -983,9 +983,9 @@ void CoarsenSchedule::coarsenSourceData(
 
 /*
  * ***********************************************************************
- *                                                                       *
- * Private utility function to set up local array of coarsen items.      *
- *                                                                       *
+ *
+ * Private utility function to set up local array of coarsen items.
+ *
  * ***********************************************************************
  */
 
@@ -1028,18 +1028,18 @@ void CoarsenSchedule::setCoarsenItems(
 
 /*
  * ***********************************************************************
- *                                                                       *
- * Private utility function to check coarsen items in initial setup to   *
- * see whether source and destination patch data components have         *
- * sufficient ghost cell widths to satisfy the "ghost width to coarsen"  *
- * functionality described in the CoarsenAlgorithm class header.         *
- * Specifically, the destination data must have a ghost cell width at    *
- * least as large as the ghost cell width to coarsen.  The source data   *
- * must have a ghost cell width at least as large as the ghost cell      *
- * width to coarsen refined to the source (finer) level index space.     *
- * Other checks are also performed here by calling the                   *
- * CoarsenClasses::itemIsValid() routine.                                *
- *                                                                       *
+ *
+ * Private utility function to check coarsen items in initial setup to
+ * see whether source and destination patch data components have
+ * sufficient ghost cell widths to satisfy the "ghost width to coarsen"
+ * functionality described in the CoarsenAlgorithm class header.
+ * Specifically, the destination data must have a ghost cell width at
+ * least as large as the ghost cell width to coarsen.  The source data
+ * must have a ghost cell width at least as large as the ghost cell
+ * width to coarsen refined to the source (finer) level index space.
+ * Other checks are also performed here by calling the
+ * CoarsenClasses::itemIsValid() routine.
+ *
  * ***********************************************************************
  */
 
@@ -1117,9 +1117,9 @@ void CoarsenSchedule::initialCheckCoarsenClassItems() const
 
 /*
  * ************************************************************************
- *                                                                        *
- * Private utility function to clear array of coarsen items.              *
- *                                                                        *
+ *
+ * Private utility function to clear array of coarsen items.
+ *
  * ************************************************************************
  */
 
@@ -1157,9 +1157,9 @@ const hier::Connector *CoarsenSchedule::getOverlapConnector_strict(
 
 /*
  * ************************************************************************
- *                                                                        *
- * Print coarsen schedule data to the specified output stream.            *
- *                                                                        *
+ *
+ * Print coarsen schedule data to the specified output stream.
+ *
  * ************************************************************************
  */
 

@@ -20,10 +20,10 @@ namespace pdat {
 
 /*
  *************************************************************************
- *                                                                       *
- * Constructor and destructor do nothing, as all member functions in     *
- * this class are static.                                                *
- *                                                                       *
+ *
+ * Constructor and destructor do nothing, as all member functions in
+ * this class are static.
+ *
  *************************************************************************
  */
 
@@ -39,9 +39,9 @@ MultiblockNodeDataTranslator<TYPE>::~MultiblockNodeDataTranslator()
 
 /*
  *************************************************************************
- *                                                                       *
- * Translation and copy for node data                                    *
- *                                                                       *
+ *
+ * Translation and copy for node data
+ *
  *************************************************************************
  */
 

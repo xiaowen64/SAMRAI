@@ -38,10 +38,10 @@ const int SpatialKey::BITS_PER_HEX_CHAR = 4;
 
 /*
  ****************************************************************************
- *                                                                          *
- * Default Constructor.  Creates a spatial key with value 0 for all         *
- * entries in d_key.                                                        *
- *                                                                          *
+ *
+ * Default Constructor.  Creates a spatial key with value 0 for all
+ * entries in d_key.
+ *
  ****************************************************************************
  */
 SpatialKey::SpatialKey()
@@ -52,10 +52,10 @@ SpatialKey::SpatialKey()
 
 /*
  ****************************************************************************
- *                                                                          *
- * Creates a spatial key from the i,j,k coordinates by invoking             *
- * setKey().                                                                *
- *                                                                          *
+ *
+ * Creates a spatial key from the i,j,k coordinates by invoking
+ * setKey().
+ *
  ****************************************************************************
  */
 SpatialKey::SpatialKey(
@@ -70,10 +70,10 @@ SpatialKey::SpatialKey(
 
 /*
  ****************************************************************************
- *                                                                          *
- * Creates a SpatialKey by copying the value from a pre-existing       *
- * SpatialKey.                                                         *
- *                                                                          *
+ *
+ * Creates a SpatialKey by copying the value from a pre-existing
+ * SpatialKey.
+ *
  ****************************************************************************
  */
 SpatialKey::SpatialKey(
@@ -87,9 +87,9 @@ SpatialKey::SpatialKey(
 
 /*
  ****************************************************************************
- *                                                                          *
- * The destructor for a spatial key does nothing interesting.               *
- *                                                                          *
+ *
+ * The destructor for a spatial key does nothing interesting.
+ *
  ****************************************************************************
  */
 SpatialKey::~SpatialKey()
@@ -98,11 +98,11 @@ SpatialKey::~SpatialKey()
 
 /*
  ****************************************************************************
- *                                                                          *
- * Less than operator for spatial keys.  Returns true if the first          *
- * integer in the d_key arrays that differs is such that                    *
- * this.d_key[i] < spatial_key.d_key[i].                                    *
- *                                                                          *
+ *
+ * Less than operator for spatial keys.  Returns true if the first
+ * integer in the d_key arrays that differs is such that
+ * this.d_key[i] < spatial_key.d_key[i].
+ *
  ****************************************************************************
  */
 bool SpatialKey::operator < (
@@ -125,10 +125,10 @@ bool SpatialKey::operator < (
 
 /*
  ****************************************************************************
- *                                                                          *
- * Less than or equal operator for spatial keys.  Returns true if           *
- * this key is less or equal to the argument key.                           *
- *                                                                          *
+ *
+ * Less than or equal operator for spatial keys.  Returns true if
+ * this key is less or equal to the argument key.
+ *
  ****************************************************************************
  */
 bool SpatialKey::operator <= (
@@ -139,10 +139,10 @@ bool SpatialKey::operator <= (
 
 /*
  ****************************************************************************
- *                                                                          *
- * Greater than operator for spatial keys. Returns true if this key is      *
- * is greater than the argument key.                                        *
- *                                                                          *
+ *
+ * Greater than operator for spatial keys. Returns true if this key is
+ * is greater than the argument key.
+ *
  ****************************************************************************
  */
 bool SpatialKey::operator > (
@@ -153,10 +153,10 @@ bool SpatialKey::operator > (
 
 /*
  ****************************************************************************
- *                                                                          *
- * Greater than or equal operator for spatial keys.  Returns true if this   *
- * key is greater than or equal to the argument key.                        *
- *                                                                          *
+ *
+ * Greater than or equal operator for spatial keys.  Returns true if this
+ * key is greater than or equal to the argument key.
+ *
  ****************************************************************************
  */
 bool SpatialKey::operator >= (
@@ -167,14 +167,14 @@ bool SpatialKey::operator >= (
 
 /*
  ****************************************************************************
- *                                                                          *
- * Write a spatial key to an output stream.  The spatial key is             *
- * output in hex to avoid the binary to decimal conversion of the           *
- * extended integer key.                                                    *
- *                                                                          *
- * Uses sprintf() to create std::string because the behavior of C++ stream       *
- * manipulators not standardized yet.                                       *
- *                                                                          *
+ *
+ * Write a spatial key to an output stream.  The spatial key is
+ * output in hex to avoid the binary to decimal conversion of the
+ * extended integer key.
+ *
+ * Uses sprintf() to create std::string because the behavior of C++ stream
+ * manipulators not standardized yet.
+ *
  ****************************************************************************
  */
 std::ostream& operator << (
@@ -198,11 +198,11 @@ std::ostream& operator << (
 
 /*
  ****************************************************************************
- *                                                                          *
- * Blends one coordinate into the spatial key.  coord is the                *
- * value of the coordinate and coord_offset is the offset for the           *
- * coordinate being  blended in.                                            *
- *                                                                          *
+ *
+ * Blends one coordinate into the spatial key.  coord is the
+ * value of the coordinate and coord_offset is the offset for the
+ * coordinate being  blended in.
+ *
  ****************************************************************************
  */
 void SpatialKey::blendOneCoord(
@@ -231,15 +231,15 @@ void SpatialKey::blendOneCoord(
 
 /*
  ****************************************************************************
- *                                                                          *
- * setKey() takes the index space coordinates and the level number          *
- * and sets the value of the spatial key.  If the coordinates have          *
- * binary representation given by                                           *
- * (i32)(i31)...(i1)(i0), etc., the resulting spatial key                   *
- * has the following form:                                                  *
- * (i32)(j32)(k32)(ln32)(i31)(j31)(k31)(ln31)...(i0)(j0)(k0)(ln0).          *
- * This result is stored as an array of four unsigned integers.             *
- *                                                                          *
+ *
+ * setKey() takes the index space coordinates and the level number
+ * and sets the value of the spatial key.  If the coordinates have
+ * binary representation given by
+ * (i32)(i31)...(i1)(i0), etc., the resulting spatial key
+ * has the following form:
+ * (i32)(j32)(k32)(ln32)(i31)(j31)(k31)(ln31)...(i0)(j0)(k0)(ln0).
+ * This result is stored as an array of four unsigned integers.
+ *
  ****************************************************************************
  */
 void SpatialKey::setKey(

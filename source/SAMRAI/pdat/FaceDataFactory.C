@@ -27,9 +27,9 @@ namespace pdat {
 
 /*
  *************************************************************************
- *                                                                       *
- * The constructor simply caches the default ghost cell width and depth. *
- *                                                                       *
+ *
+ * The constructor simply caches the default ghost cell width and depth.
+ *
  *************************************************************************
  */
 
@@ -58,9 +58,9 @@ FaceDataFactory<TYPE>::~FaceDataFactory()
 
 /*
  *************************************************************************
- *                                                                       *
- * Clone the factory and copy the default parameters to the new factory. *
- *                                                                       *
+ *
+ * Clone the factory and copy the default parameters to the new factory.
+ *
  *************************************************************************
  */
 
@@ -99,9 +99,9 @@ FaceDataFactory<TYPE>::allocate(
 
 /*
  *************************************************************************
- *                                                                       *
- * Return the box geometry type for face data objects.                   *
- *                                                                       *
+ *
+ * Return the box geometry type for face data objects.
+ *
  *************************************************************************
  */
 
@@ -118,9 +118,9 @@ FaceDataFactory<TYPE>::getBoxGeometry(
 
 /*
  *************************************************************************
- *                                                                       *
- * Calculate the amount of memory needed to allocate the data object.    *
- *                                                                       *
+ *
+ * Calculate the amount of memory needed to allocate the data object.
+ *
  *************************************************************************
  */
 
@@ -139,10 +139,10 @@ size_t FaceDataFactory<TYPE>::getSizeOfMemory(
 
 /*
  *************************************************************************
- *                                                                       *
- * Determine whether this is a valid copy operation to/from FaceData     *
- * between the supplied datatype.                                        *
- *                                                                       *
+ *
+ * Determine whether this is a valid copy operation to/from FaceData
+ * between the supplied datatype.
+ *
  *************************************************************************
  */
 

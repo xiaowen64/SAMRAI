@@ -36,9 +36,9 @@ namespace solv {
 
 /*
  *************************************************************************
- *                                                                       *
- * Construct an unitialized boundary specification.                      *
- *                                                                       *
+ *
+ * Construct an unitialized boundary specification.
+ *
  *************************************************************************
  */
 
@@ -156,25 +156,25 @@ void SimpleCellRobinBcCoefs::setBoundaries(
 
 /*
  ************************************************************************
- *                                                                      *
- * Set the bc coefficients according to information received in the     *
- * call to setBoundaries.                                               *
- *                                                                      *
- * Do a lot of error checking before hand.                              *
- *                                                                      *
- * For Dirichlet, we need the Dirichlet boundary                        *
- * values stored in the ghost cells of the solution.                    *
- *                                                                      *
- * For Neumann bc, we need the flux data and the                        *
- * diffusion coefficient to determine the required                      *
- * normal gradient of the solution.  However, the                       *
- * diffusion coefficient is assumed to be 1.0 if                        *
- * left unspecified.                                                    *
- *                                                                      *
- * For mixed bc, we need the flag stating whether                       *
- * Dirichlet or Neumann at any face, in addition to                     *
- * Dirichlet and Neumann data.                                          *
- *                                                                      *
+ *
+ * Set the bc coefficients according to information received in the
+ * call to setBoundaries.
+ *
+ * Do a lot of error checking before hand.
+ *
+ * For Dirichlet, we need the Dirichlet boundary
+ * values stored in the ghost cells of the solution.
+ *
+ * For Neumann bc, we need the flux data and the
+ * diffusion coefficient to determine the required
+ * normal gradient of the solution.  However, the
+ * diffusion coefficient is assumed to be 1.0 if
+ * left unspecified.
+ *
+ * For mixed bc, we need the flag stating whether
+ * Dirichlet or Neumann at any face, in addition to
+ * Dirichlet and Neumann data.
+ *
  ************************************************************************
  */
 
@@ -467,10 +467,10 @@ void SimpleCellRobinBcCoefs::setBcCoefs(
 
 /*
  ***********************************************************************
- * This class cannot set coefficients for boundary boxes that extend   *
- * past the patch in the direction parallel to the boundary,           *
- * because it relies on data, such as pdat::OutersideData<DIM>,             *
- * that does not extend.                                               *
+ * This class cannot set coefficients for boundary boxes that extend
+ * past the patch in the direction parallel to the boundary,
+ * because it relies on data, such as pdat::OutersideData<DIM>,
+ * that does not extend.
  ***********************************************************************
  */
 hier::IntVector SimpleCellRobinBcCoefs::numberOfExtensionsFillable() const
@@ -480,24 +480,24 @@ hier::IntVector SimpleCellRobinBcCoefs::numberOfExtensionsFillable() const
 
 /*
  ************************************************************************
- *                                                                      *
- * Copy and save cell-centered Dirichlet data in ghost cells.           *
- * For each boundary box in the hierarchy, we create a pdat::ArrayData<DIM>  *
- * object indexed on the side indices corresponding to boundary boxes.  *
- * The ghost-cell-centered data is shifted to the side indices and      *
- * saved in the pdat::ArrayData<DIM> objects.                                *
- *                                                                      *
- * First, loop through the hierarchy to compute how many                *
- * pdat::ArrayData<DIM> objects we need and the position of each one.        *
- *                                                                      *
- * Second, allocate the pdat::ArrayData<DIM> objects.                        *
- *                                                                      *
- * Third, loop through the hierarchy again to allocate the data in each *
- * pdat::ArrayData<DIM> object and cache the ghost data.                     *
- *                                                                      *
- * The position of the appropriate boundary box bn of patch pn          *
- * of level ln is d_dirichlet_data_pos[ln][pn]+bn                       *
- *                                                                      *
+ *
+ * Copy and save cell-centered Dirichlet data in ghost cells.
+ * For each boundary box in the hierarchy, we create a pdat::ArrayData<DIM>
+ * object indexed on the side indices corresponding to boundary boxes.
+ * The ghost-cell-centered data is shifted to the side indices and
+ * saved in the pdat::ArrayData<DIM> objects.
+ *
+ * First, loop through the hierarchy to compute how many
+ * pdat::ArrayData<DIM> objects we need and the position of each one.
+ *
+ * Second, allocate the pdat::ArrayData<DIM> objects.
+ *
+ * Third, loop through the hierarchy again to allocate the data in each
+ * pdat::ArrayData<DIM> object and cache the ghost data.
+ *
+ * The position of the appropriate boundary box bn of patch pn
+ * of level ln is d_dirichlet_data_pos[ln][pn]+bn
+ *
  ************************************************************************
  */
 void SimpleCellRobinBcCoefs::cacheDirichletData(
@@ -569,12 +569,12 @@ void SimpleCellRobinBcCoefs::cacheDirichletData(
 
 /*
  ************************************************************************
- *                                                                      *
- * Reverse action of cacheDirichletData by copying cached data back     *
- * into the ghost cells.                                                *
- *                                                                      *
- * The cached data is not deallocated.                                  *
- *                                                                      *
+ *
+ * Reverse action of cacheDirichletData by copying cached data back
+ * into the ghost cells.
+ *
+ * The cached data is not deallocated.
+ *
  ************************************************************************
  */
 void SimpleCellRobinBcCoefs::restoreDirichletData(
@@ -635,7 +635,7 @@ void SimpleCellRobinBcCoefs::setDiffusionCoefConstant(
 
 /*
  ************************************************************************
- * Make surface box on boundary using standard boundary box             *
+ * Make surface box on boundary using standard boundary box
  ************************************************************************
  */
 

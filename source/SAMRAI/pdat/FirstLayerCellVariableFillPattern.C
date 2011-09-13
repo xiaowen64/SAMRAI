@@ -24,9 +24,9 @@ const std::string FirstLayerCellVariableFillPattern::s_name_id =
 
 /*
  *************************************************************************
- *                                                                       *
- * Constructor                                                           *
- *                                                                       *
+ *
+ * Constructor
+ *
  *************************************************************************
  */
 
@@ -38,9 +38,9 @@ FirstLayerCellVariableFillPattern::FirstLayerCellVariableFillPattern(
 
 /*
  *************************************************************************
- *                                                                       *
- * Destructor                                                            *
- *                                                                       *
+ *
+ * Destructor
+ *
  *************************************************************************
  */
 
@@ -50,9 +50,9 @@ FirstLayerCellVariableFillPattern::~FirstLayerCellVariableFillPattern()
 
 /*
  *************************************************************************
- *                                                                       *
- * Calculate the overlap according to the desired pattern                *
- *                                                                       *
+ *
+ * Calculate the overlap according to the desired pattern
+ *
  *************************************************************************
  */
 tbox::Pointer<hier::BoxOverlap>
@@ -81,9 +81,9 @@ FirstLayerCellVariableFillPattern::calculateOverlap(
 
 /*
  *************************************************************************
- *                                                                       *
- * Return the stencil width (1)                                          *
- *                                                                       *
+ *
+ * Return the stencil width (1)
+ *
  *************************************************************************
  */
 const hier::IntVector& FirstLayerCellVariableFillPattern::getStencilWidth()
@@ -93,9 +93,9 @@ const hier::IntVector& FirstLayerCellVariableFillPattern::getStencilWidth()
 
 /*
  *************************************************************************
- *                                                                       *
- * Return the string name identifier                                     *
- *                                                                       *
+ *
+ * Return the string name identifier
+ *
  *************************************************************************
  */
 const std::string& FirstLayerCellVariableFillPattern::getPatternName() const
@@ -105,9 +105,9 @@ const std::string& FirstLayerCellVariableFillPattern::getPatternName() const
 
 /*
  *************************************************************************
- *                                                                       *
- * Compute the boxes for the stencil around a given patch box            *
- *                                                                       *
+ *
+ * Compute the boxes for the stencil around a given patch box
+ *
  *************************************************************************
  */
 void FirstLayerCellVariableFillPattern::computeStencilBoxes(
@@ -124,10 +124,10 @@ void FirstLayerCellVariableFillPattern::computeStencilBoxes(
 
 /*
  *************************************************************************
- *                                                                       *
- * Compute BoxOverlap that specifies data to be filled by refinement     *
- * operator.                                                             *
- *                                                                       *
+ *
+ * Compute BoxOverlap that specifies data to be filled by refinement
+ * operator.
+ *
  *************************************************************************
  */
 tbox::Pointer<hier::BoxOverlap>

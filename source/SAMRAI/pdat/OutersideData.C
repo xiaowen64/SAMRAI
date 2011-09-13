@@ -32,11 +32,11 @@ const int OutersideData<TYPE>::PDAT_OUTERSIDEDATA_VERSION = 1;
 
 /*
  *************************************************************************
- *                                                                       *
- * Constructor and destructor for outerside data objects.  The           *
- * constructor simply initializes data variables and sets up the         *
- * array data.                                                           *
- *                                                                       *
+ *
+ * Constructor and destructor for outerside data objects.  The
+ * constructor simply initializes data variables and sets up the
+ * array data.
+ *
  *************************************************************************
  */
 
@@ -68,11 +68,11 @@ OutersideData<TYPE>::~OutersideData()
 
 /*
  *************************************************************************
- *                                                                       *
- * The following are private and cannot be used, but they are defined    *
- * here for compilers that require that every template declaration have  *
- * a definition (a stupid requirement, if you ask me).                   *
- *                                                                       *
+ *
+ * The following are private and cannot be used, but they are defined
+ * here for compilers that require that every template declaration have
+ * a definition (a stupid requirement, if you ask me).
+ *
  *************************************************************************
  */
 
@@ -93,10 +93,10 @@ void OutersideData<TYPE>::operator = (
 
 /*
  *************************************************************************
- *                                                                       *
- * Perform a fast copy between an outerside patch data type (source) and *
- * a side patch data type (destination) where the index spaces overlap.  *
- *                                                                       *
+ *
+ * Perform a fast copy between an outerside patch data type (source) and
+ * a side patch data type (destination) where the index spaces overlap.
+ *
  *************************************************************************
  */
 
@@ -140,10 +140,10 @@ void OutersideData<TYPE>::copy2(
 
 /*
  *************************************************************************
- *                                                                       *
- * Copy data from the source into the destination according to the       *
- * overlap descriptor.                                                   *
- *                                                                       *
+ *
+ * Copy data from the source into the destination according to the
+ * overlap descriptor.
+ *
  *************************************************************************
  */
 
@@ -183,10 +183,10 @@ void OutersideData<TYPE>::copy2(
 
 /*
  *************************************************************************
- *                                                                       *
- * Perform a fast copy from a side data object to this outerside data    *
- * object at the specified depths, where their index spaces overlap.     *
- *                                                                       *
+ *
+ * Perform a fast copy from a side data object to this outerside data
+ * object at the specified depths, where their index spaces overlap.
+ *
  *************************************************************************
  */
 
@@ -212,10 +212,10 @@ void OutersideData<TYPE>::copyDepth(
 
 /*
  *************************************************************************
- *                                                                       *
- * Perform a fast copy to a side data object from this outerside data    *
- * object at the specified depths, where their index spaces overlap.     *
- *                                                                       *
+ *
+ * Perform a fast copy to a side data object from this outerside data
+ * object at the specified depths, where their index spaces overlap.
+ *
  *************************************************************************
  */
 
@@ -241,10 +241,10 @@ void OutersideData<TYPE>::copyDepth2(
 
 /*
  *************************************************************************
- *                                                                       *
- * Calculate the buffer space needed to pack/unpack messages on the box  *
- * region using the overlap descriptor.                                  *
- *                                                                       *
+ *
+ * Calculate the buffer space needed to pack/unpack messages on the box
+ * region using the overlap descriptor.
+ *
  *************************************************************************
  */
 
@@ -276,10 +276,10 @@ int OutersideData<TYPE>::getDataStreamSize(
 
 /*
  *************************************************************************
- *                                                                       *
- * Pack/unpack data into/out of the message streams using the index      *
- * space in the overlap descriptor.                                      *
- *                                                                       *
+ *
+ * Pack/unpack data into/out of the message streams using the index
+ * space in the overlap descriptor.
+ *
  *************************************************************************
  */
 
@@ -336,10 +336,10 @@ void OutersideData<TYPE>::unpackStream(
 
 /*
  *************************************************************************
- *                                                                       *
- * Calculate the amount of memory space needed to represent the data     *
- * for a  outerside centered grid.                                       *
- *                                                                       *
+ *
+ * Calculate the amount of memory space needed to represent the data
+ * for a  outerside centered grid.
+ *
  *************************************************************************
  */
 
@@ -364,9 +364,9 @@ size_t OutersideData<TYPE>::getSizeOfData(
 
 /*
  *************************************************************************
- *                                                                       *
- * Fill the outerside centered box with the given value.                 *
- *                                                                       *
+ *
+ * Fill the outerside centered box with the given value.
+ *
  *************************************************************************
  */
 
@@ -423,9 +423,9 @@ void OutersideData<TYPE>::fillAll(
 
 /*
  *************************************************************************
- *                                                                       *
- * Print routines for outerside centered arrays.                         *
- *                                                                       *
+ *
+ * Print routines for outerside centered arrays.
+ *
  *************************************************************************
  */
 
@@ -507,11 +507,11 @@ void OutersideData<TYPE>::printAxisSide(
 
 /*
  *************************************************************************
- *                                                                       *
- * Checks that class version and restart file version are equal.  If so, *
- * reads in d_depth from the database.  Then has each item in d_data     *
- * read in its data from the database.                                   *
- *                                                                       *
+ *
+ * Checks that class version and restart file version are equal.  If so,
+ * reads in d_depth from the database.  Then has each item in d_data
+ * read in its data from the database.
+ *
  *************************************************************************
  */
 
@@ -544,10 +544,10 @@ void OutersideData<TYPE>::getSpecializedFromDatabase(
 
 /*
  *************************************************************************
- *                                                                       *
- * Writes out class version number, d_depth to the database.             *
- * Then has each item in d_data write out its data to the database.      *
- *                                                                       *
+ *
+ * Writes out class version number, d_depth to the database.
+ * Then has each item in d_data write out its data to the database.
+ *
  *************************************************************************
  */
 

@@ -30,9 +30,9 @@ PatchNodeDataOpsInteger::~PatchNodeDataOpsInteger()
 
 /*
  *************************************************************************
- *                                                                       *
- * Compute the number of data entries on a patch in the given box.       *
- *                                                                       *
+ *
+ * Compute the number of data entries on a patch in the given box.
+ *
  *************************************************************************
  */
 
@@ -51,9 +51,9 @@ int PatchNodeDataOpsInteger::numberOfEntries(
 
 /*
  *************************************************************************
- *                                                                       *
- * General operations for integer node-centered patch data.              *
- *                                                                       *
+ *
+ * General operations for integer node-centered patch data.
+ *
  *************************************************************************
  */
 

@@ -668,11 +668,11 @@ private:
 
    /*
     *************************************************************************
-    *                                                                       *
-    * Integer keys for identifying types in HDF5 database.  Negative        *
-    * entries are used to distinguish arrays from scalars when printing     *
-    * key information.                                                      *
-    *                                                                       *
+    *
+    * Integer keys for identifying types in HDF5 database.  Negative
+    * entries are used to distinguish arrays from scalars when printing
+    * key information.
+    *
     *************************************************************************
     */
    static const int KEY_DATABASE;

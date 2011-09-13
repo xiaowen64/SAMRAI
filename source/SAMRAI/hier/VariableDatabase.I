@@ -13,9 +13,9 @@ namespace hier {
 
 /*
  *************************************************************************
- *                                                                       *
- * Inline accessory functions to retrieve data members.                  *
- *                                                                       *
+ *
+ * Inline accessory functions to retrieve data members.
+ *
  *************************************************************************
  */
 
@@ -42,9 +42,9 @@ int VariableDatabase::getNumberOfRegisteredVariableContexts() const
 
 /*
  *************************************************************************
- *                                                                       *
- * Inline accessory functions to manage patch data ids for restart.      *
- *                                                                       *
+ *
+ * Inline accessory functions to manage patch data ids for restart.
+ *
  *************************************************************************
  */
 

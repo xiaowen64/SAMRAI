@@ -45,9 +45,9 @@ namespace math {
 
 /*
  *************************************************************************
- *                                                                       *
- * Static members for Singleton hierarchy operation manager class.       *
- *                                                                       *
+ *
+ * Static members for Singleton hierarchy operation manager class.
+ *
  *************************************************************************
  */
 
@@ -91,9 +91,9 @@ void HierarchyDataOpsManager::registerSingletonSubclassInstance(
 
 /*
  *************************************************************************
- *                                                                       *
- * Empty constructor and destructor for hierarchy operation manager.     *
- *                                                                       *
+ *
+ * Empty constructor and destructor for hierarchy operation manager.
+ *
  *************************************************************************
  */
 

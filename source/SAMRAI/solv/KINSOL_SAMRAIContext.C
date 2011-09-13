@@ -30,13 +30,13 @@ const int KINSOL_SAMRAIContext::SOLV_KINSOL_SAMRAI_CONTEXT_VERSION = 1;
 
 /*
  *************************************************************************
- *                                                                       *
- * Constructor and destructor for KINSOL_SAMRAIContext.  The       *
- * constructor sets default values for data members, then overrides      *
- * them with values read from input or restart.  The C++ wrapper for     *
- * KINSOL is also created in the constructor.  The destructor destroys   *
- * the wrappers for KINSOL and the solution vector.                      *
- *                                                                       *
+ *
+ * Constructor and destructor for KINSOL_SAMRAIContext.  The
+ * constructor sets default values for data members, then overrides
+ * them with values read from input or restart.  The C++ wrapper for
+ * KINSOL is also created in the constructor.  The destructor destroys
+ * the wrappers for KINSOL and the solution vector.
+ *
  *************************************************************************
  */
 
@@ -111,9 +111,9 @@ KINSOL_SAMRAIContext::~KINSOL_SAMRAIContext()
 
 /*
  *************************************************************************
- *                                                                       *
- * Routines to initialize KINSOL solver and solve nonlinear system.      *
- *                                                                       *
+ *
+ * Routines to initialize KINSOL solver and solve nonlinear system.
+ *
  *************************************************************************
  */
 
@@ -140,11 +140,11 @@ KINSOLSolver *KINSOL_SAMRAIContext::getKINSOLSolver()
 
 /*
  *************************************************************************
- *                                                                       *
- * Initialize KINSOL solver and solve nonlinear system from input.       *
- * Note that all restart values for parameters may be overridden with    *
- * input values.                                                         *
- *                                                                       *
+ *
+ * Initialize KINSOL solver and solve nonlinear system from input.
+ * Note that all restart values for parameters may be overridden with
+ * input values.
+ *
  *************************************************************************
  */
 
@@ -279,9 +279,9 @@ void KINSOL_SAMRAIContext::getFromInput(
 
 /*
  *************************************************************************
- *                                                                       *
- * Read data members from restart database.                              *
- *                                                                       *
+ *
+ * Read data members from restart database.
+ *
  *************************************************************************
  */
 
@@ -330,9 +330,9 @@ void KINSOL_SAMRAIContext::getFromRestart()
 
 /*
  *************************************************************************
- *                                                                       *
- * Write data members to database.                                       *
- *                                                                       *
+ *
+ * Write data members to database.
+ *
  *************************************************************************
  */
 
@@ -369,9 +369,9 @@ void KINSOL_SAMRAIContext::putToDatabase(
 
 /*
  *************************************************************************
- *                                                                       *
- * Write all class data members to specified output stream.              *
- *                                                                       *
+ *
+ * Write all class data members to specified output stream.
+ *
  *************************************************************************
  */
 

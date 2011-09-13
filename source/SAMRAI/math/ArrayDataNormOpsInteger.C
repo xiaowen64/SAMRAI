@@ -30,9 +30,9 @@ ArrayDataNormOpsInteger::~ArrayDataNormOpsInteger()
 
 /*
  *************************************************************************
- *                                                                       *
- * Norm operations for integer array data.                               *
- *                                                                       *
+ *
+ * Norm operations for integer array data.
+ *
  *************************************************************************
  */
 

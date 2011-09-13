@@ -54,9 +54,9 @@ HierarchySideDataOpsInteger::~HierarchySideDataOpsInteger()
 
 /*
  *************************************************************************
- *                                                                       *
- * Rotuines to set the hierarchy and level information.                  *
- *                                                                       *
+ *
+ * Rotuines to set the hierarchy and level information.
+ *
  *************************************************************************
  */
 
@@ -112,9 +112,9 @@ HierarchySideDataOpsInteger::getPatchHierarchy() const
 
 /*
  *************************************************************************
- *                                                                       *
- * Basic generic operations.                                             *
- *                                                                       *
+ *
+ * Basic generic operations.
+ *
  *************************************************************************
  */
 
@@ -316,9 +316,9 @@ void HierarchySideDataOpsInteger::setToScalar(
 
 /*
  *************************************************************************
- *                                                                       *
- * Basic generic arithmetic operations.                                  *
- *                                                                       *
+ *
+ * Basic generic arithmetic operations.
+ *
  *************************************************************************
  */
 

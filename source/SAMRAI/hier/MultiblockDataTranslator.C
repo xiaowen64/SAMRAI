@@ -18,10 +18,10 @@ namespace hier {
 
 /*
  *************************************************************************
- *                                                                       *
- * The default constructor and virtual destructor do nothing             *
- * particularly interesting.                                             *
- *                                                                       *
+ *
+ * The default constructor and virtual destructor do nothing
+ * particularly interesting.
+ *
  *************************************************************************
  */
 

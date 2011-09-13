@@ -152,12 +152,12 @@ const int CartesianGridGeometry::GEOM_CARTESIAN_GRID_GEOMETRY_VERSION = 2;
 
 /*
  *************************************************************************
- *                                                                       *
- * Constructors for CartesianGridGeometry.  Both set up operator    *
- * handlers and register the geometry object with the RestartManager.    *
- * However, one initializes data members based on arguments.             *
- * The other initializes the object based on input file information.     *
- *                                                                       *
+ *
+ * Constructors for CartesianGridGeometry.  Both set up operator
+ * handlers and register the geometry object with the RestartManager.
+ * However, one initializes data members based on arguments.
+ * The other initializes the object based on input file information.
+ *
  *************************************************************************
  */
 CartesianGridGeometry::CartesianGridGeometry(
@@ -217,10 +217,10 @@ CartesianGridGeometry::CartesianGridGeometry(
 
 /*
  *************************************************************************
- *                                                                       *
- * Create and return pointer to refined version of this Cartesian        *
- * grid geometry object refined by the given ratio.                      *
- *                                                                       *
+ *
+ * Create and return pointer to refined version of this Cartesian
+ * grid geometry object refined by the given ratio.
+ *
  *************************************************************************
  */
 
@@ -254,10 +254,10 @@ CartesianGridGeometry::makeRefinedGridGeometry(
 
 /*
  *************************************************************************
- *                                                                       *
- * Create and return pointer to coarsened version of this Cartesian      *
- * grid geometry object coarsened by the given ratio.                    *
- *                                                                       *
+ *
+ * Create and return pointer to coarsened version of this Cartesian
+ * grid geometry object coarsened by the given ratio.
+ *
  *************************************************************************
  */
 
@@ -317,9 +317,9 @@ makeCoarsenedGridGeometry(
 
 /*
  *************************************************************************
- *                                                                       *
- * Destructor for CartesianGridGeometry deallocates grid storage.        *
- *                                                                       *
+ *
+ * Destructor for CartesianGridGeometry deallocates grid storage.
+ *
  *************************************************************************
  */
 
@@ -332,9 +332,9 @@ CartesianGridGeometry::~CartesianGridGeometry()
 
 /*
  *************************************************************************
- *                                                                       *
- * Set data members for this geometry object based on arguments.         *
- *                                                                       *
+ *
+ * Set data members for this geometry object based on arguments.
+ *
  *************************************************************************
  */
 
@@ -372,10 +372,10 @@ void CartesianGridGeometry::setGeometryData(
 
 /*
  *************************************************************************
- *                                                                       *
- * Create CartesianPatchGeometry geometry object, initializing its  *
- * boundary and grid information and assign it to the given patch.       *
- *                                                                       *
+ *
+ * Create CartesianPatchGeometry geometry object, initializing its
+ * boundary and grid information and assign it to the given patch.
+ *
  *************************************************************************
  */
 
@@ -450,9 +450,9 @@ void CartesianGridGeometry::setGeometryDataOnPatch(
 
 /*
  *************************************************************************
- *                                                                       *
- * Print CartesianGridGeometry class data.                          *
- *                                                                       *
+ *
+ * Print CartesianGridGeometry class data.
+ *
  *************************************************************************
  */
 
@@ -489,9 +489,9 @@ void CartesianGridGeometry::printClassData(
 
 /*
  *************************************************************************
- *                                                                       *
- * Write class version number and object state to database.              *
- *                                                                       *
+ *
+ * Write class version number and object state to database.
+ *
  *************************************************************************
  */
 
@@ -520,13 +520,13 @@ void CartesianGridGeometry::putToDatabase(
 
 /*
  *************************************************************************
- *                                                                       *
- * Data is read from input only if the simulation is not from restart.   *
- * Otherwise, all values specifed in the input database are ignored.     *
- * In this method data from the database are read to local               *
- * variables and the setGeometryData() method is called to               *
- * initialize the data members.                                          *
- *                                                                       *
+ *
+ * Data is read from input only if the simulation is not from restart.
+ * Otherwise, all values specifed in the input database are ignored.
+ * In this method data from the database are read to local
+ * variables and the setGeometryData() method is called to
+ * initialize the data members.
+ *
  *************************************************************************
  */
 
@@ -592,13 +592,13 @@ void CartesianGridGeometry::getFromInput(
 
 /*
  *************************************************************************
- *                                                                       *
- * Checks to see if the version number for the class is the same as      *
- * as the version number of the restart file.                            *
- * If they are equal, then the data from the database are read to local  *
- * variables and the setGeometryData() method is called to               *
- * initialize the data members.                                          *
- *                                                                       *
+ *
+ * Checks to see if the version number for the class is the same as
+ * as the version number of the restart file.
+ * If they are equal, then the data from the database are read to local
+ * variables and the setGeometryData() method is called to
+ * initialize the data members.
+ *
  *************************************************************************
  */
 void CartesianGridGeometry::getFromRestart()

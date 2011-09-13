@@ -28,9 +28,9 @@ namespace hier {
 
 /*
  *************************************************************************
- *                                                                       *
- * Constructor and destructor for BoxIOUtility.                    *
- *                                                                       *
+ *
+ * Constructor and destructor for BoxIOUtility.
+ *
  *************************************************************************
  */
 
@@ -55,9 +55,9 @@ BoxIOUtility::BoxIOUtility(
 
 /*
  *************************************************************************
- *                                                                       *
- * Destructor writes refine boxes to HDF database.                       *
- *                                                                       *
+ *
+ * Destructor writes refine boxes to HDF database.
+ *
  *************************************************************************
  */
 BoxIOUtility::~BoxIOUtility()
@@ -66,9 +66,9 @@ BoxIOUtility::~BoxIOUtility()
 
 /*
  *************************************************************************
- *                                                                       *
- * Read information from the storage arrays.                             *
- *                                                                       *
+ *
+ * Read information from the storage arrays.
+ *
  *************************************************************************
  */
 void BoxIOUtility::getLevelBoxes(
@@ -110,9 +110,9 @@ void BoxIOUtility::getLevelBoxes(
 
 /*
  *************************************************************************
- *                                                                       *
- * Pack information into storage arrays.                                 *
- *                                                                       *
+ *
+ * Pack information into storage arrays.
+ *
  *************************************************************************
  */
 void BoxIOUtility::putLevelBoxes(
@@ -149,9 +149,9 @@ void BoxIOUtility::putLevelBoxes(
 
 /*
  *************************************************************************
- *                                                                       *
- * Return number of levels in the Database.                              *
- *                                                                       *
+ *
+ * Return number of levels in the Database.
+ *
  *************************************************************************
  */
 int BoxIOUtility::getNumberOfLevels()
@@ -161,9 +161,9 @@ int BoxIOUtility::getNumberOfLevels()
 
 /*
  *************************************************************************
- *                                                                       *
- * Return number of entries for a particular level.                      *
- *                                                                       *
+ *
+ * Return number of entries for a particular level.
+ *
  *************************************************************************
  */
 int BoxIOUtility::getNumberOfEntries(
@@ -183,9 +183,9 @@ int BoxIOUtility::getNumberOfEntries(
 
 /*
  *************************************************************************
- *                                                                       *
- * Opens an HDF5 database which we will either write to or read from.    *
- *                                                                       *
+ *
+ * Opens an HDF5 database which we will either write to or read from.
+ *
  *************************************************************************
  */
 void BoxIOUtility::readLevelBoxesDatabase()
@@ -258,9 +258,9 @@ void BoxIOUtility::readLevelBoxesDatabase()
 
 /*
  *************************************************************************
- *                                                                       *
- * Writes level box information to HDF5 database                         *
- *                                                                       *
+ *
+ * Writes level box information to HDF5 database
+ *
  *************************************************************************
  */
 void BoxIOUtility::writeLevelBoxesDatabase()
@@ -325,9 +325,9 @@ void BoxIOUtility::writeLevelBoxesDatabase()
 
 /*
  *************************************************************************
- *                                                                       *
- * Print the boxes stored om the database to the specified IO stream.    *
- *                                                                       *
+ *
+ * Print the boxes stored om the database to the specified IO stream.
+ *
  *************************************************************************
  */
 void BoxIOUtility::printBoxes(

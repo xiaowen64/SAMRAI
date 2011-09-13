@@ -22,9 +22,9 @@ namespace hier {
 
 /*
  *************************************************************************
- *                                                                       *
- * Constructor leaves the arrays empty.                                  *
- *                                                                       *
+ *
+ * Constructor leaves the arrays empty.
+ *
  *************************************************************************
  */
 PatchBoundaries::PatchBoundaries(
@@ -36,9 +36,9 @@ PatchBoundaries::PatchBoundaries(
 
 /*
  *************************************************************************
- *                                                                       *
- * Copy constructor                                                      *
- *                                                                       *
+ *
+ * Copy constructor
+ *
  *************************************************************************
  */
 PatchBoundaries::PatchBoundaries(
@@ -53,9 +53,9 @@ PatchBoundaries::PatchBoundaries(
 
 /*
  *************************************************************************
- *                                                                       *
- * Assignment operator                                                   *
- *                                                                       *
+ *
+ * Assignment operator
+ *
  *************************************************************************
  */
 const PatchBoundaries&

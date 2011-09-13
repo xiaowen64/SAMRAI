@@ -32,11 +32,11 @@ const int OuternodeData<TYPE>::PDAT_OUTERNODEDATA_VERSION = 1;
 
 /*
  *************************************************************************
- *                                                                       *
- * Constructor and destructor for outernode data objects.  The           *
- * constructor simply initializes data variables and sets up the         *
- * array data.                                                           *
- *                                                                       *
+ *
+ * Constructor and destructor for outernode data objects.  The
+ * constructor simply initializes data variables and sets up the
+ * array data.
+ *
  *************************************************************************
  */
 
@@ -96,11 +96,11 @@ OuternodeData<TYPE>::~OuternodeData()
 
 /*
  *************************************************************************
- *                                                                       *
- * The following are private and cannot be used, but they are defined    *
- * here for compilers that require that every template declaration have  *
- * a definition (a stupid requirement, if you ask me).                   *
- *                                                                       *
+ *
+ * The following are private and cannot be used, but they are defined
+ * here for compilers that require that every template declaration have
+ * a definition (a stupid requirement, if you ask me).
+ *
  *************************************************************************
  */
 
@@ -122,10 +122,10 @@ void OuternodeData<TYPE>::operator = (
 
 /*
  *************************************************************************
- *                                                                       *
- * Perform a fast copy between an outernode patch data type (source) and *
- * a node patch data type (destination) where the index spaces overlap.  *
- *                                                                       *
+ *
+ * Perform a fast copy between an outernode patch data type (source) and
+ * a node patch data type (destination) where the index spaces overlap.
+ *
  *************************************************************************
  */
 
@@ -178,10 +178,10 @@ void OuternodeData<TYPE>::copy2(
 
 /*
  *************************************************************************
- *                                                                       *
- * Copy data from the source into the destination according to the       *
- * overlap descriptor.                                                   *
- *                                                                       *
+ *
+ * Copy data from the source into the destination according to the
+ * overlap descriptor.
+ *
  *************************************************************************
  */
 
@@ -247,10 +247,10 @@ void OuternodeData<TYPE>::copy2(
 
 /*
  *************************************************************************
- *                                                                       *
- * Perform a fast copy from a node data object to this outernode data    *
- * object at the specified depths, where their index spaces overlap.     *
- *                                                                       *
+ *
+ * Perform a fast copy from a node data object to this outernode data
+ * object at the specified depths, where their index spaces overlap.
+ *
  *************************************************************************
  */
 
@@ -276,10 +276,10 @@ void OuternodeData<TYPE>::copyDepth(
 
 /*
  *************************************************************************
- *                                                                       *
- * Perform a fast copy to a node data object from this outernode data    *
- * object at the specified depths, where their index spaces overlap.     *
- *                                                                       *
+ *
+ * Perform a fast copy to a node data object from this outernode data
+ * object at the specified depths, where their index spaces overlap.
+ *
  *************************************************************************
  */
 
@@ -305,9 +305,9 @@ void OuternodeData<TYPE>::copyDepth2(
 
 /*
  *************************************************************************
- *                                                                       *
- * Add source data to the destination according to overlap descriptor.   *
- *                                                                       *
+ *
+ * Add source data to the destination according to overlap descriptor.
+ *
  *************************************************************************
  */
 
@@ -366,10 +366,10 @@ void OuternodeData<TYPE>::sum(
 
 /*
  *************************************************************************
- *                                                                       *
- * Calculate the buffer space needed to pack/unpack messages on the box  *
- * region using the overlap descriptor.                                  *
- *                                                                       *
+ *
+ * Calculate the buffer space needed to pack/unpack messages on the box
+ * region using the overlap descriptor.
+ *
  *************************************************************************
  */
 
@@ -400,10 +400,10 @@ int OuternodeData<TYPE>::getDataStreamSize(
 
 /*
  *************************************************************************
- *                                                                       *
- * Pack/unpack data into/out of the message streams using the index      *
- * space in the overlap descriptor.                                      *
- *                                                                       *
+ *
+ * Pack/unpack data into/out of the message streams using the index
+ * space in the overlap descriptor.
+ *
  *************************************************************************
  */
 
@@ -464,10 +464,10 @@ void OuternodeData<TYPE>::unpackStream(
 
 /*
  *************************************************************************
- *                                                                       *
- * Unpack data from the message stream and add to this outernode data    *
- * object using the index space in the overlap descriptor.               *
- *                                                                       *
+ *
+ * Unpack data from the message stream and add to this outernode data
+ * object using the index space in the overlap descriptor.
+ *
  *************************************************************************
  */
 
@@ -499,10 +499,10 @@ void OuternodeData<TYPE>::unpackStreamAndSum(
 
 /*
  *************************************************************************
- *                                                                       *
- * Calculate the amount of memory space needed to represent the data     *
- * for a  outernode centered grid.                                       *
- *                                                                       *
+ *
+ * Calculate the amount of memory space needed to represent the data
+ * for a  outernode centered grid.
+ *
  *************************************************************************
  */
 
@@ -541,10 +541,10 @@ size_t OuternodeData<TYPE>::getSizeOfData(
 
 /*
  *************************************************************************
- *                                                                       *
- * Compute the box of valid node indices given values of                 *
- * dimension and side designating the set of data indices.               *
- *                                                                       *
+ *
+ * Compute the box of valid node indices given values of
+ * dimension and side designating the set of data indices.
+ *
  *************************************************************************
  */
 
@@ -590,9 +590,9 @@ OuternodeData<TYPE>::getDataBox(
 
 /*
  *************************************************************************
- *                                                                       *
- * Fill the outernode centered box with the given value.                 *
- *                                                                       *
+ *
+ * Fill the outernode centered box with the given value.
+ *
  *************************************************************************
  */
 
@@ -665,10 +665,10 @@ void OuternodeData<TYPE>::fillAll(
 
 /*
  *************************************************************************
- *                                                                       *
- * Perform a fast copy between an outernode patch data type (source) and *
- * a node patch data type (destination) where the index spaces overlap.  *
- *                                                                       *
+ *
+ * Perform a fast copy between an outernode patch data type (source) and
+ * a node patch data type (destination) where the index spaces overlap.
+ *
  *************************************************************************
  */
 
@@ -707,10 +707,10 @@ void OuternodeData<TYPE>::copyToNode(
 
 /*
  *************************************************************************
- *                                                                       *
- * Copy data from the source into the destination according to the       *
- * overlap descriptor.                                                   *
- *                                                                       *
+ *
+ * Copy data from the source into the destination according to the
+ * overlap descriptor.
+ *
  *************************************************************************
  */
 
@@ -850,9 +850,9 @@ void OuternodeData<TYPE>::copyToOuternode(
 
 /*
  *************************************************************************
- *                                                                       *
- * Print routines for outernode centered arrays.                         *
- *                                                                       *
+ *
+ * Print routines for outernode centered arrays.
+ *
  *************************************************************************
  */
 
@@ -931,11 +931,11 @@ void OuternodeData<TYPE>::printAxisSide(
 
 /*
  *************************************************************************
- *                                                                       *
- * Checks that class version and restart file version are equal.         *
- * If so, reads in d_depth from the database.                            *
- * Then has each item in d_data read in its data from the database.      *
- *                                                                       *
+ *
+ * Checks that class version and restart file version are equal.
+ * If so, reads in d_depth from the database.
+ * Then has each item in d_data read in its data from the database.
+ *
  *************************************************************************
  */
 
@@ -972,10 +972,10 @@ void OuternodeData<TYPE>::getSpecializedFromDatabase(
 
 /*
  *************************************************************************
- *                                                                       *
- * Writes out class version number, d_depth to the database.             *
- * Then has each item in d_data write out its data to the database.      *
- *                                                                       *
+ *
+ * Writes out class version number, d_depth to the database.
+ * Then has each item in d_data write out its data to the database.
+ *
  *************************************************************************
  */
 

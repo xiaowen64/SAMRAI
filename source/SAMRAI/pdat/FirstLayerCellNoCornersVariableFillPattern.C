@@ -24,9 +24,9 @@ const std::string FirstLayerCellNoCornersVariableFillPattern::s_name_id =
 
 /*
  *************************************************************************
- *                                                                       *
- * Constructor                                                           *
- *                                                                       *
+ *
+ * Constructor
+ *
  *************************************************************************
  */
 
@@ -39,9 +39,9 @@ FirstLayerCellNoCornersVariableFillPattern(
 
 /*
  *************************************************************************
- *                                                                       *
- * Destructor                                                            *
- *                                                                       *
+ *
+ * Destructor
+ *
  *************************************************************************
  */
 
@@ -52,9 +52,9 @@ FirstLayerCellNoCornersVariableFillPattern()
 
 /*
  *************************************************************************
- *                                                                       *
- * Calculate the overlap according to the desired pattern                *
- *                                                                       *
+ *
+ * Calculate the overlap according to the desired pattern
+ *
  *************************************************************************
  */
 
@@ -83,9 +83,9 @@ FirstLayerCellNoCornersVariableFillPattern::calculateOverlap(
 
 /*
  *************************************************************************
- *                                                                       *
- * Return the stencil width (1)                                          *
- *                                                                       *
+ *
+ * Return the stencil width (1)
+ *
  *************************************************************************
  */
 
@@ -97,9 +97,9 @@ getStencilWidth()
 
 /*
  *************************************************************************
- *                                                                       *
- * Return the string name identifier                                     *
- *                                                                       *
+ *
+ * Return the string name identifier
+ *
  *************************************************************************
  */
 
@@ -111,9 +111,9 @@ const
 
 /*
  *************************************************************************
- *                                                                       *
- * Compute the boxes for the stencil around a given patch box            *
- *                                                                       *
+ *
+ * Compute the boxes for the stencil around a given patch box
+ *
  *************************************************************************
  */
 void FirstLayerCellNoCornersVariableFillPattern::computeStencilBoxes(
@@ -139,10 +139,10 @@ void FirstLayerCellNoCornersVariableFillPattern::computeStencilBoxes(
 
 /*
  *************************************************************************
- *                                                                       *
- * Compute BoxOverlap that specifies data to be filled by refinement     *
- * operator.                                                             *
- *                                                                       *
+ *
+ * Compute BoxOverlap that specifies data to be filled by refinement
+ * operator.
+ *
  *************************************************************************
  */
 tbox::Pointer<hier::BoxOverlap>

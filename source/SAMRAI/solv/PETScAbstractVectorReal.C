@@ -30,9 +30,9 @@ namespace solv {
 
 /*
  *************************************************************************
- *                                                                       *
- * PETScAbstractVectorReal constructor and destructor.              *
- *                                                                       *
+ *
+ * PETScAbstractVectorReal constructor and destructor.
+ *
  *************************************************************************
  */
 

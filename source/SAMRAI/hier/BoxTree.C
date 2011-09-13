@@ -848,8 +848,8 @@ void BoxTree::initializeCallback()
 
 /*
  ***************************************************************************
- * Release static timers.  To be called by shutdown registry to make sure  *
- * memory for timers does not leak.                                        *
+ * Release static timers.  To be called by shutdown registry to make sure
+ * memory for timers does not leak.
  ***************************************************************************
  */
 void BoxTree::finalizeCallback()

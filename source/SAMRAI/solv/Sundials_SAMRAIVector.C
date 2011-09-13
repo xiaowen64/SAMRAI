@@ -24,9 +24,9 @@ namespace solv {
 
 /*
  *************************************************************************
- *                                                                       *
- * Static public member functions.                                       *
- *                                                                       *
+ *
+ * Static public member functions.
+ *
  *************************************************************************
  */
 
@@ -74,9 +74,9 @@ Sundials_SAMRAIVector::getSAMRAIVector(
 
 /*
  *************************************************************************
- *                                                                       *
- * Constructor and destructor for Sundials_SAMRAIVector.          *
- *                                                                       *
+ *
+ * Constructor and destructor for Sundials_SAMRAIVector.
+ *
  *************************************************************************
  */
 
@@ -93,9 +93,9 @@ Sundials_SAMRAIVector::~Sundials_SAMRAIVector()
 
 /*
  *************************************************************************
- *                                                                       *
- * Other miscellaneous member functions                                  *
- *                                                                       *
+ *
+ * Other miscellaneous member functions
+ *
  *************************************************************************
  */
 

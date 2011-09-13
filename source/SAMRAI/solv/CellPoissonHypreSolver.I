@@ -31,8 +31,8 @@ void CellPoissonHypreSolver::setUseSMG(
 
 /*
  ********************************************************************
- * Specify bc using the default internal bc coefficient object.     *
- * Clear up data supporting external bc coefficient setter.         *
+ * Specify bc using the default internal bc coefficient object.
+ * Clear up data supporting external bc coefficient setter.
  ********************************************************************
  */
 
@@ -53,7 +53,7 @@ void CellPoissonHypreSolver::setBoundaries(
 
 /*
  ********************************************************************
- * Set the physical boundary condition object.                      *
+ * Set the physical boundary condition object.
  ********************************************************************
  */
 

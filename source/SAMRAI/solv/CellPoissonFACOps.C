@@ -552,7 +552,7 @@ void F77_FUNC(ewingfixfluxcondc3d, EWINGFIXFLUXCONDC3D) (
 
 /*
  ********************************************************************
- * Constructor.                                                     *
+ * Constructor.
  ********************************************************************
  */
 CellPoissonFACOps::CellPoissonFACOps(
@@ -717,10 +717,10 @@ CellPoissonFACOps::~CellPoissonFACOps(
 
 /*
  ************************************************************************
- * FACOperatorStrategy virtual initializeOperatorState function.  *
- *                                                                      *
- * Set internal variables to correspond to the solution passed in.      *
- * Look up transfer operators.                                          *
+ * FACOperatorStrategy virtual initializeOperatorState function.
+ *
+ * Set internal variables to correspond to the solution passed in.
+ * Look up transfer operators.
  ************************************************************************
  */
 
@@ -1081,9 +1081,9 @@ void CellPoissonFACOps::initializeOperatorState(
 
 /*
  ********************************************************************
- * FACOperatorStrategy virtual deallocateOperatorState        *
- * function.  Deallocate internal hierarchy-dependent data.         *
- * State is allocated iff hierarchy is set.                         *
+ * FACOperatorStrategy virtual deallocateOperatorState
+ * function.  Deallocate internal hierarchy-dependent data.
+ * State is allocated iff hierarchy is set.
  ********************************************************************
  */
 
@@ -1126,7 +1126,7 @@ void CellPoissonFACOps::deallocateOperatorState()
 
 /*
  ********************************************************************
- * FACOperatorStrategy virtual postprocessOneCycle function.  *
+ * FACOperatorStrategy virtual postprocessOneCycle function.
  ********************************************************************
  */
 
@@ -1159,9 +1159,9 @@ void CellPoissonFACOps::postprocessOneCycle(
 
 /*
  ********************************************************************
- * FACOperatorStrategy virtual restrictSolution function.     *
- * After restricting solution, update ghost cells of the affected   *
- * level.                                                           *
+ * FACOperatorStrategy virtual restrictSolution function.
+ * After restricting solution, update ghost cells of the affected
+ * level.
  ********************************************************************
  */
 
@@ -1192,7 +1192,7 @@ void CellPoissonFACOps::restrictSolution(
 
 /*
  ********************************************************************
- * FACOperatorStrategy virtual restrictresidual function.     *
+ * FACOperatorStrategy virtual restrictresidual function.
  ********************************************************************
  */
 
@@ -1212,10 +1212,10 @@ void CellPoissonFACOps::restrictResidual(
 
 /*
  ***********************************************************************
- * FACOperatorStrategy virtual prolongErrorAndCorrect function.  *
- * After the prolongation, we set the physical boundary condition      *
- * for the correction, which is zero.  Other ghost cell values,        *
- * which are preset to zero, need not be set.                          *
+ * FACOperatorStrategy virtual prolongErrorAndCorrect function.
+ * After the prolongation, we set the physical boundary condition
+ * for the correction, which is zero.  Other ghost cell values,
+ * which are preset to zero, need not be set.
  ***********************************************************************
  */
 
@@ -1305,8 +1305,8 @@ void CellPoissonFACOps::smoothError(
 
 /*
  ********************************************************************
- * Workhorse function to smooth error using red-black               *
- * Gauss-Seidel iterations.                                         *
+ * Workhorse function to smooth error using red-black
+ * Gauss-Seidel iterations.
  ********************************************************************
  */
 
@@ -1481,8 +1481,8 @@ void CellPoissonFACOps::smoothErrorByRedBlack(
 
 /*
  ********************************************************************
- * Fix flux on coarse-fine boundaries computed from a               *
- * constant-refine interpolation of coarse level data.              *
+ * Fix flux on coarse-fine boundaries computed from a
+ * constant-refine interpolation of coarse level data.
  ********************************************************************
  */
 
@@ -1623,8 +1623,8 @@ void CellPoissonFACOps::ewingFixFlux(
 
 /*
  ********************************************************************
- * FACOperatorStrategy virtual solveCoarsestLevel             *
- * function                                                         *
+ * FACOperatorStrategy virtual solveCoarsestLevel
+ * function
  ********************************************************************
  */
 
@@ -1680,8 +1680,8 @@ int CellPoissonFACOps::solveCoarsestLevel(
 #ifdef HAVE_HYPRE
 /*
  ********************************************************************
- * Solve coarsest level using Hypre                                 *
- * We only solve for the error, so we always use homogeneous bc.    *
+ * Solve coarsest level using Hypre
+ * We only solve for the error, so we always use homogeneous bc.
  ********************************************************************
  */
 
@@ -1729,8 +1729,8 @@ int CellPoissonFACOps::solveCoarsestLevel_HYPRE(
 
 /*
  ********************************************************************
- * FACOperatorStrategy virtual                                *
- * computeCompositeResidualOnLevel function                         *
+ * FACOperatorStrategy virtual
+ * computeCompositeResidualOnLevel function
  ********************************************************************
  */
 
@@ -1888,8 +1888,8 @@ void CellPoissonFACOps::computeCompositeResidualOnLevel(
 
 /*
  ********************************************************************
- * FACOperatorStrategy virtual computeResidualNorm             *
- * function                                                         *
+ * FACOperatorStrategy virtual computeResidualNorm
+ * function
  ********************************************************************
  */
 
@@ -1926,8 +1926,8 @@ double CellPoissonFACOps::computeResidualNorm(
 
 /*
  ********************************************************************
- * Compute the vector weight and put it at a specified patch data   *
- * index.                                                           *
+ * Compute the vector weight and put it at a specified patch data
+ * index.
  ********************************************************************
  */
 
@@ -2025,7 +2025,7 @@ void CellPoissonFACOps::computeVectorWeights(
 
 /*
  ********************************************************************
- * Check the validity and correctness of input data for this class. *
+ * Check the validity and correctness of input data for this class.
  ********************************************************************
  */
 
@@ -2067,9 +2067,9 @@ void CellPoissonFACOps::checkInputPatchDataIndices() const {
 
 /*
  *******************************************************************
- *                                                                 *
- * AMR-unaware patch-centered computational kernels.               *
- *                                                                 *
+ *
+ * AMR-unaware patch-centered computational kernels.
+ *
  *******************************************************************
  */
 

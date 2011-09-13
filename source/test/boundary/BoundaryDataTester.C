@@ -34,9 +34,9 @@
 
 /*
  *************************************************************************
- *                                                                       *
- * The constructor and destructor.                                       *
- *                                                                       *
+ *
+ * The constructor and destructor.
+ *
  *************************************************************************
  */
 
@@ -75,9 +75,9 @@ BoundaryDataTester::~BoundaryDataTester()
 
 /*
  *************************************************************************
- *                                                                       *
- * Set physical boundary values for each variable acording to input data.*
- *                                                                       *
+ *
+ * Set physical boundary values for each variable acording to input data.
+ *
  *************************************************************************
  */
 
@@ -169,9 +169,9 @@ void BoundaryDataTester::setPhysicalBoundaryConditions(
 
 /*
  *************************************************************************
- *                                                                       *
- * Set data for each variable on patch interior acording to input data.  *
- *                                                                       *
+ *
+ * Set data for each variable on patch interior acording to input data.
+ *
  *************************************************************************
  */
 
@@ -225,16 +225,16 @@ void BoundaryDataTester::initializeDataOnPatchInteriors(
 
 /*
  *************************************************************************
- *                                                                       *
- * Run boundary test:                                                    *
- *                                                                       *
- *  1) register boundary filling operation for each variable             *
- *     with refine algorithm.                                            *
- *                                                                       *
- *  2) create communication schedule and fill data.                      *
- *                                                                       *
- *  3) check all patch boundary values for correctness.                  *
- *                                                                       *
+ *
+ * Run boundary test:
+ *
+ *  1) register boundary filling operation for each variable
+ *     with refine algorithm.
+ *
+ *  2) create communication schedule and fill data.
+ *
+ *  3) check all patch boundary values for correctness.
+ *
  *************************************************************************
  */
 
@@ -275,10 +275,10 @@ int BoundaryDataTester::runBoundaryTest(
 
 /*
  *************************************************************************
- *                                                                       *
- * Read variable data from input, create variables,                      *
- * and map variables into variable database.                             *
- *                                                                       *
+ *
+ * Read variable data from input, create variables,
+ * and map variables into variable database.
+ *
  *************************************************************************
  */
 
@@ -365,9 +365,9 @@ void BoundaryDataTester::readVariableInputAndMakeVariables(
 
 /*
  *************************************************************************
- *                                                                       *
- * Set all boundary data to bogus default values for error checking.     *
- *                                                                       *
+ *
+ * Set all boundary data to bogus default values for error checking.
+ *
  *************************************************************************
  */
 
@@ -453,9 +453,9 @@ void BoundaryDataTester::setBoundaryDataDefaults()
 
 /*
  *************************************************************************
- *                                                                       *
- * Functions to read boundary information from input database.           *
- *                                                                       *
+ *
+ * Functions to read boundary information from input database.
+ *
  *************************************************************************
  */
 
@@ -576,10 +576,10 @@ void BoundaryDataTester::readBoundaryDataInput(
 
 /*
  *************************************************************************
- *                                                                       *
- * Postprocess boundary data from input values                           *
- * to make setting and checking easier.                                  *
- *                                                                       *
+ *
+ * Postprocess boundary data from input values
+ * to make setting and checking easier.
+ *
  *************************************************************************
  */
 
@@ -669,9 +669,9 @@ void BoundaryDataTester::postprocessBoundaryInput()
 
 /*
  *************************************************************************
- *                                                                       *
- * Check boundary values on patch for correctness.                       *
- *                                                                       *
+ *
+ * Check boundary values on patch for correctness.
+ *
  *************************************************************************
  */
 
@@ -875,9 +875,9 @@ void BoundaryDataTester::checkBoundaryData(
 
 /*
  *************************************************************************
- *                                                                       *
- * Write all class data members to specified output stream.              *
- *                                                                       *
+ *
+ * Write all class data members to specified output stream.
+ *
  *************************************************************************
  */
 

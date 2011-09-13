@@ -23,9 +23,9 @@
 
 /*
  *************************************************************************
- *                                                                       *
- * External declarations for FORTRAN 77 routines.                        *
- *                                                                       *
+ *
+ * External declarations for FORTRAN 77 routines.
+ *
  *************************************************************************
  */
 extern "C" {

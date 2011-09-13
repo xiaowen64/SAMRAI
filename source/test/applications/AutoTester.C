@@ -68,11 +68,11 @@ AutoTester::~AutoTester()
 
 /*
  ******************************************************************
- *                                                                *
- *  Method "evalTestData" compares the result of the run with     *
- *  the correct result for runs with the TimeRefinementIntegrator *
- *  and HyperbolicLevelIntegrator.                                *
- *                                                                *
+ *
+ *  Method "evalTestData" compares the result of the run with
+ *  the correct result for runs with the TimeRefinementIntegrator
+ *  and HyperbolicLevelIntegrator.
+ *
  ******************************************************************
  */
 int AutoTester::evalTestData(
@@ -278,10 +278,10 @@ int AutoTester::evalTestData(
 
 /*
  ******************************************************************
- *                                                                *
- *  Method "evalTestData" compares the result of the run with     *
- *  the correct result for runs with the MethodOfLinesIntegrator. *
- *                                                                *
+ *
+ *  Method "evalTestData" compares the result of the run with
+ *  the correct result for runs with the MethodOfLinesIntegrator.
+ *
  ******************************************************************
  */
 int AutoTester::evalTestData(
@@ -448,9 +448,9 @@ int AutoTester::evalTestData(
 
 /*
  ******************************************************************
- *                                                                *
- *  Get test parameters from input.                               *
- *                                                                *
+ *
+ *  Get test parameters from input.
+ *
  ******************************************************************
  */
 

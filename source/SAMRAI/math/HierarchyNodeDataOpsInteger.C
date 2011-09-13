@@ -54,9 +54,9 @@ HierarchyNodeDataOpsInteger::~HierarchyNodeDataOpsInteger()
 
 /*
  *************************************************************************
- *                                                                       *
- * Routines to set the hierarchy and level information.                  *
- *                                                                       *
+ *
+ * Routines to set the hierarchy and level information.
+ *
  *************************************************************************
  */
 
@@ -105,9 +105,9 @@ HierarchyNodeDataOpsInteger::getPatchHierarchy() const
 
 /*
  *************************************************************************
- *                                                                       *
- * Basic generic operations.                                             *
- *                                                                       *
+ *
+ * Basic generic operations.
+ *
  *************************************************************************
  */
 
@@ -300,9 +300,9 @@ void HierarchyNodeDataOpsInteger::setToScalar(
 
 /*
  *************************************************************************
- *                                                                       *
- * Basic generic arithmetic operations.                                  *
- *                                                                       *
+ *
+ * Basic generic arithmetic operations.
+ *
  *************************************************************************
  */
 
