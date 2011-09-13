@@ -134,9 +134,6 @@ void MultiblockGriddingTagger::fillSingularityBoundaryConditions(
 
    const hier::BlockId& patch_blk_id = dst_mb_id.getBlockId();
 
-   const tbox::List<hier::GridGeometry::Neighbor>& neighbors =
-      grid_geometry->getNeighbors(patch_blk_id);
-
    const tbox::Pointer<pdat::CellData<int> > tag_data =
       patch.getPatchData(d_buf_tag_indx);
 
