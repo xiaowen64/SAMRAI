@@ -283,14 +283,9 @@ void Connector::eraseNeighbor(
 void Connector::removePeriodicRelationships()
 {
    TBOX_ASSERT(isInitialized());
-   hier::NeighborhoodSet tmp_edges;
-
-   d_relationships.removePeriodicNeighbors(tmp_edges);
-   d_relationships.swap(tmp_edges);
-
+   d_relationships.removePeriodicNeighbors();
    if (d_parallel_state == BoxLevel::GLOBALIZED) {
-      d_global_relationships.removePeriodicNeighbors(tmp_edges);
-      d_global_relationships.swap(tmp_edges);
+      d_global_relationships.removePeriodicNeighbors();
    }
 }
 

@@ -54,6 +54,8 @@ descriptions of items in the following list are provided below.
 
 (1) The ceiling methods in IntVector have been renamed ceilingDivide.
 
+(2) Operations to remove periodic image boxes now work on this.
+
 
 *****************************************************************************
 
@@ -89,6 +91,13 @@ this with caution.  For example, SAMRAI will not work without tbox.
 (1) The ceiling methods in IntVector have been renamed ceilingDivide.
 
 Renaming was meant to show the divide part of the operation.
+
+(2) Operations to remove periodic image boxes now work on this.
+
+Old behavior: Take an output box container copy the non-periodic image
+there.  The method is const.
+
+New behavior: Remove periodic images from this.  The method is non-const.
 
 =============================================================================
 =============================================================================

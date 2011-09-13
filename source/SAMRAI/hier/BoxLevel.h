@@ -262,6 +262,12 @@ public:
    isInitialized() const;
 
    /*!
+    * @brief Remove all the periodic image boxes in the BoxLevel.
+    */
+   void
+   removePeriodicImageBoxes();
+
+   /*!
     * @brief Clear the internal state of the BoxLevel.
     *
     * The BoxLevel will be in an uninitialized state

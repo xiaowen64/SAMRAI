@@ -246,34 +246,23 @@ void TreeLoadBalancer::loadBalanceBoxLevel(
        * all periodic edges in anchor<==>balance.
        */
 
-      hier::BoxSet tmp_mapped_boxes;
-      balance_mapped_box_level.getBoxes().removePeriodicImageBoxes(
-         tmp_mapped_boxes);
-      balance_mapped_box_level.swapInitialize(
-         tmp_mapped_boxes,
-         balance_mapped_box_level.getRefinementRatio(),
-         balance_mapped_box_level.getGridGeometry(),
-         balance_mapped_box_level.getMPI());
-
+      balance_mapped_box_level.removePeriodicImageBoxes();
       if (balance_to_anchor.isInitialized()) {
-         hier::NeighborhoodSet tmp_edges;
-         anchor_to_balance.getNeighborhoodSets().removePeriodicNeighbors(
-            tmp_edges);
-         anchor_to_balance.swapInitialize(
+
+         anchor_to_balance.removePeriodicRelationships();
+         anchor_to_balance.initialize(
             anchor_to_balance.getBase(),
             balance_mapped_box_level,
             anchor_to_balance.getConnectorWidth(),
-            tmp_edges,
-            hier::BoxLevel::DISTRIBUTED);
-         tmp_edges.clear();
-         balance_to_anchor.getNeighborhoodSets().removePeriodicNeighbors(
-            tmp_edges);
-         balance_to_anchor.swapInitialize(
+            anchor_to_balance.getNeighborhoodSets());
+
+         balance_to_anchor.removePeriodicRelationships();
+         balance_to_anchor.initialize(
             balance_mapped_box_level,
             balance_to_anchor.getHead(),
             balance_to_anchor.getConnectorWidth(),
-            tmp_edges,
-            hier::BoxLevel::DISTRIBUTED);
+            balance_to_anchor.getNeighborhoodSets());
+
       }
    }
 

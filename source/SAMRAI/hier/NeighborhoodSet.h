@@ -290,8 +290,7 @@ public:
     * @param[out] output_neighborhood_set
     */
    void
-   removePeriodicNeighbors(
-      NeighborhoodSet& output_neighborhood_set) const;
+   removePeriodicNeighbors();
 
    /*!
     * @brief Insert all neighbors from a NeighborhoodSet into a

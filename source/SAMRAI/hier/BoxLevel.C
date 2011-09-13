@@ -356,6 +356,25 @@ void BoxLevel::initializePrivate(
  * already shut down.
  ***********************************************************************
  */
+void BoxLevel::removePeriodicImageBoxes()
+{
+   if (isInitialized()) {
+      clearForBoxChanges();
+      d_mapped_boxes.removePeriodicImageBoxes();
+      if ( d_parallel_state == GLOBALIZED ) {
+         d_global_mapped_boxes.removePeriodicImageBoxes();
+      }
+   }
+}
+
+/*
+ ***********************************************************************
+ * Clear data and reset them to unusuable values.
+ *
+ * Note: don't use IntVector::getOne here, because SAMRAI may have
+ * already shut down.
+ ***********************************************************************
+ */
 void BoxLevel::clear()
 {
    if (isInitialized()) {

@@ -260,14 +260,14 @@ void BoxSet::grow(
  * Remove periodic image Boxes from a BoxSet.
  ***********************************************************************
  */
-void BoxSet::removePeriodicImageBoxes(
-   BoxSet& output_mapped_boxes) const
+void BoxSet::removePeriodicImageBoxes()
 {
-   iterator hint = output_mapped_boxes.begin();
-   for (const_iterator na = begin(); na != end(); ++na) {
-      const Box& n = *na;
-      if (!n.isPeriodicImage()) {
-         hint = output_mapped_boxes.insert(hint, n);
+   for (iterator na = begin(); na != end(); ) {
+      if (na->isPeriodicImage()) {
+         erase(na++);
+      }
+      else {
+         ++na;
       }
    }
 }

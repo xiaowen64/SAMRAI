@@ -301,8 +301,7 @@ public:
     * @param[out] output_mapped_boxes
     */
    void
-   removePeriodicImageBoxes(
-      BoxSet& output_mapped_boxes) const;
+   removePeriodicImageBoxes();
 
    /*!
     * @brief Remove from a BoxList its intersections with a BoxSet.

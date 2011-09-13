@@ -140,11 +140,10 @@ NeighborhoodSet::growNeighbors(
  ***********************************************************************
  */
 void
-NeighborhoodSet::removePeriodicNeighbors(
-   NeighborhoodSet& output_edges) const
+NeighborhoodSet::removePeriodicNeighbors()
 {
-   for (const_iterator ei = begin(); ei != end(); ++ei) {
-      ei->second.removePeriodicImageBoxes(output_edges[ei->first]);
+   for (iterator ei = begin(); ei != end(); ++ei) {
+      ei->second.removePeriodicImageBoxes();
    }
 }
 
