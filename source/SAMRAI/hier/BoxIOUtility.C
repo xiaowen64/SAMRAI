@@ -99,7 +99,7 @@ void BoxIOUtility::getLevelBoxes(
    }
 
    tbox::plog << "Returning BoxList containing "
-              << d_level_boxes[level_number][entry_number].getNumberOfBoxes()
+              << d_level_boxes[level_number][entry_number].size()
               << " boxes. " << std::endl;
 
    /*
@@ -301,7 +301,7 @@ void BoxIOUtility::writeLevelBoxesDatabase()
       int nentries = d_level_boxes[ln].getSize();
       tbox::Array<int> number_of_boxes(nentries);
       for (i = 0; i < nentries; i++) {
-         number_of_boxes[i] = d_level_boxes[ln][i].getNumberOfBoxes();
+         number_of_boxes[i] = d_level_boxes[ln][i].size();
       }
       std::string s1 = "nboxes[" + tbox::Utilities::intToString(ln) + "]";
       db->putIntegerArray(s1, number_of_boxes);

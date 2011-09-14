@@ -14,6 +14,7 @@
 #include "SAMRAI/pdat/OuterfaceData.h"
 
 #include "SAMRAI/hier/Box.h"
+#include "SAMRAI/hier/BoxContainerConstIterator.h"
 #include "SAMRAI/hier/BoxList.h"
 #include "SAMRAI/pdat/FaceData.h"
 #include "SAMRAI/pdat/FaceGeometry.h"
@@ -315,7 +316,7 @@ void OuterfaceData<TYPE>::packStream(
          }
       }
 
-      for (hier::BoxList::Iterator b(boxes); b; b++) {
+      for (hier::BoxList::ConstIterator b(boxes); b; b++) {
          const hier::Box src_box = hier::Box::shift(b(), -face_offset);
          for (int f = 0; f < 2; f++) {
             const hier::Box intersect = src_box * d_data[d][f].getBox();
@@ -350,7 +351,7 @@ void OuterfaceData<TYPE>::unpackStream(
          }
       }
 
-      for (hier::BoxList::Iterator b(boxes); b; b++) {
+      for (hier::BoxList::ConstIterator b(boxes); b; b++) {
          for (int f = 0; f < 2; f++) {
             const hier::Box intersect = b() * d_data[d][f].getBox();
             if (!intersect.empty()) {

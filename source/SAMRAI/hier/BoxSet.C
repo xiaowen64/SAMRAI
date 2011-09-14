@@ -171,7 +171,7 @@ BoxSet::getSingleBlockBoxList(
    while (itr.isValid()) {
       const Box& mapped_box = *itr;
       TBOX_ASSERT(dim == mapped_box.getDim());
-      boxes_in_block->appendItem(mapped_box);
+      boxes_in_block->pushBack(mapped_box);
       ++itr;
    }
    return tbox::Pointer<BoxList>(boxes_in_block);

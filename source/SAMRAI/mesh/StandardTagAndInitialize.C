@@ -17,6 +17,7 @@
 #include "SAMRAI/pdat/CellIntegerConstantRefine.h"
 #include "SAMRAI/pdat/CellData.h"
 #include "SAMRAI/hier/Box.h"
+#include "SAMRAI/hier/BoxContainerIterator.h"
 #include "SAMRAI/hier/NeighborhoodSet.h"
 #include "SAMRAI/hier/OverlapConnectorAlgorithm.h"
 #include "SAMRAI/hier/Patch.h"
@@ -914,12 +915,12 @@ bool StandardTagAndInitialize::coarsestLevelBoxesOK(
    const hier::BoxList& boxes) const
 {
    TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(getDim(), boxes);
-   TBOX_ASSERT(boxes.getNumberOfBoxes() > 0);
+   TBOX_ASSERT(boxes.size() > 0);
 
    bool boxes_ok = true;
    if (d_use_richardson_extrapolation) {
 
-      for (hier::BoxList::Iterator ib(boxes); ib; ib++) {
+      for (hier::BoxList::ConstIterator ib(boxes); ib; ib++) {
          hier::IntVector n_cells = ib().numberCells();
          for (int i = 0; i < getDim().getValue(); i++) {
             int error_coarsen_ratio = getErrorCoarsenRatio();

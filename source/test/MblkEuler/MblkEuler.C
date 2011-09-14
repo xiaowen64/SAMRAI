@@ -37,6 +37,7 @@ using namespace std;
 #include "SAMRAI/tbox/PIO.h"
 #include "SAMRAI/tbox/RestartManager.h"
 #include "SAMRAI/tbox/Utilities.h"
+#include "SAMRAI/hier/BoxContainerIterator.h"
 #include "SAMRAI/hier/BoxList.h"
 #include "SAMRAI/hier/VariableDatabase.h"
 #include "SAMRAI/pdat/CellDoubleLinearTimeInterpolateOp.h"
@@ -1632,7 +1633,7 @@ void MblkEuler::setPhysicalBoundaryConditions(
       d_grid_geometry->getPeriodicShift(
          hier::IntVector(d_dim, 1));
 
-   const hier::Box& domain_box = domain_boxes.getFirstItem();
+   const hier::Box& domain_box = domain_boxes.front();
    // domain_box.refine(patch_geom->getRatio());
 
    d_mblk_geometry->buildLocalBlocks(patch_box,
@@ -2545,7 +2546,7 @@ void MblkEuler::setMappedGridOnPatch(
    //
    // statistics on the level domain
    //
-   d_dom_current_nboxes = domain_boxes.getNumberOfBoxes();
+   d_dom_current_nboxes = domain_boxes.size();
 
    hier::BoxList::Iterator itr(domain_boxes);
    d_dom_current_bounds[0] = itr().lower(0);
@@ -2573,7 +2574,7 @@ void MblkEuler::setMappedGridOnPatch(
       mapVariableAndContextToIndex(d_xyz, getDataContext());
 
    d_mblk_geometry->buildGridOnPatch(patch,
-      domain_boxes.getFirstItem(),
+      domain_boxes.front(),
       xyz_id,
       patch.getBox().getBlockId().getBlockValue(),
       d_dom_local_blocks);

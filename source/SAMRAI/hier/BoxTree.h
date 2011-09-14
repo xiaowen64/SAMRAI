@@ -26,7 +26,8 @@
 namespace SAMRAI {
 namespace hier {
 
-class BoxList;
+class BoxContainer;
+typedef BoxContainer BoxList;
 
 /*!
  * @brief Utility sorting Boxes into tree-like form for finding

@@ -12,6 +12,7 @@
 #define included_xfer_PatchLevelEnhancedFillPattern_C
 
 #include "SAMRAI/xfer/PatchLevelEnhancedFillPattern.h"
+#include "SAMRAI/hier/BoxContainerIterator.h"
 #include "SAMRAI/hier/RealBoxConstIterator.h"
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/tbox/MathUtilities.h"
@@ -80,7 +81,7 @@ void PatchLevelEnhancedFillPattern::computeFillBoxesAndNeighborhoodSets(
         ni.isValid(); ++ni) {
       const hier::Box& dst_mapped_box = *ni;
       hier::BoxList fill_boxes(dst_mapped_box);
-      fill_boxes.getFirstItem().grow(fill_ghost_width);
+      fill_boxes.front().grow(fill_ghost_width);
 
       const tbox::List<hier::GridGeometry::Neighbor>& neighbors =
          grid_geometry->getNeighbors(dst_mapped_box.getBlockId());
@@ -115,7 +116,7 @@ void PatchLevelEnhancedFillPattern::computeFillBoxesAndNeighborhoodSets(
 
                   fill_nabrs.insert(fill_mapped_box);
 
-                  constructed_fill_boxes.appendItem(*ei);
+                  constructed_fill_boxes.pushBack(*ei);
                }
             }
          }

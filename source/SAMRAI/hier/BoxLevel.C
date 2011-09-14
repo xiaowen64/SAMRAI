@@ -1292,7 +1292,7 @@ void BoxLevel::getGlobalBoxes(BoxList& global_boxes) const
 {
    for (BoxSet::const_iterator itr = d_global_mapped_boxes.begin();
         itr != d_global_mapped_boxes.end(); itr++) {
-      global_boxes.appendItem(*itr);
+      global_boxes.pushBack(*itr);
    }
 }
 

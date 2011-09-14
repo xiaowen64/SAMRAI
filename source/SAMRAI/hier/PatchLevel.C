@@ -1013,7 +1013,7 @@ void PatchLevel::initializeGlobalizedBoxLevel() const
          d_mapped_box_level->getGlobalizedVersion());
 
       const int nboxes = globalized_mapped_box_level.getGlobalNumberOfBoxes();
-      d_boxes.clearItems();
+      d_boxes.clear();
       d_mapping.setMappingSize(nboxes);
 
       /*
@@ -1032,7 +1032,7 @@ void PatchLevel::initializeGlobalizedBoxLevel() const
            ni.isValid();
            ++ni) {
          d_mapping.setProcessorAssignment(count, ni->getOwnerRank());
-         d_boxes.appendItem(*ni);
+         d_boxes.pushBack(*ni);
          ++count;
       }
 

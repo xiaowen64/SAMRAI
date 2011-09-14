@@ -14,6 +14,7 @@
 #include "SAMRAI/tbox/MessageStream.h"
 #include "SAMRAI/tbox/Utilities.h"
 #include "SAMRAI/tbox/MathUtilities.h"
+#include "SAMRAI/hier/BoxContainerConstIterator.h"
 #include "SAMRAI/hier/BoxList.h"
 #include "SAMRAI/pdat/ArrayData.h"
 #include "SAMRAI/pdat/ArrayDataOperationUtilities.h"
@@ -296,7 +297,7 @@ void ArrayData<TYPE>::copy(
    const hier::BoxList& boxes,
    const hier::IntVector& src_shift)
 {
-   for (hier::BoxList::Iterator b(boxes); b; b++) {
+   for (hier::BoxList::ConstIterator b(boxes); b; b++) {
       this->copy(src, b(), src_shift);
    }
 }
@@ -494,7 +495,7 @@ void ArrayData<TYPE>::sum(
    const hier::BoxList& boxes,
    const hier::IntVector& src_shift)
 {
-   for (hier::BoxList::Iterator b(boxes); b; b++) {
+   for (hier::BoxList::ConstIterator b(boxes); b; b++) {
       this->sum(src, b(), src_shift);
    }
 }
@@ -539,7 +540,7 @@ void ArrayData<TYPE>::packStream(
    tbox::Array<TYPE> buffer(size);
 
    int ptr = 0;
-   for (hier::BoxList::Iterator b(dest_boxes); b; b++) {
+   for (hier::BoxList::ConstIterator b(dest_boxes); b; b++) {
       packBuffer(buffer.getPointer(ptr),
          hier::Box::shift(b(), -src_shift));
       ptr += d_depth * b().size();
@@ -595,7 +596,7 @@ void ArrayData<TYPE>::unpackStream(
    stream.unpack(buffer.getPointer(), size);
 
    int ptr = 0;
-   for (hier::BoxList::Iterator b(dest_boxes); b; b++) {
+   for (hier::BoxList::ConstIterator b(dest_boxes); b; b++) {
       unpackBuffer(buffer.getPointer(ptr), b());
       ptr += d_depth * b().size();
    }
@@ -647,7 +648,7 @@ void ArrayData<TYPE>::unpackStreamAndSum(
    stream.unpack(buffer.getPointer(), size);
 
    int ptr = 0;
-   for (hier::BoxList::Iterator b(dest_boxes); b; b++) {
+   for (hier::BoxList::ConstIterator b(dest_boxes); b; b++) {
       unpackBufferAndSum(buffer.getPointer(ptr), b());
       ptr += d_depth * b().size();
    }

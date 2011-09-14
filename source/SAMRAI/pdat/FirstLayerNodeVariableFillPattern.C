@@ -13,6 +13,7 @@
 
 #include "SAMRAI/pdat/FirstLayerNodeVariableFillPattern.h"
 
+#include "SAMRAI/hier/BoxContainerIterator.h"
 #include "SAMRAI/pdat/NodeGeometry.h"
 #include "SAMRAI/tbox/Utilities.h"
 
@@ -68,10 +69,10 @@ FirstLayerNodeVariableFillPattern::calculateOverlap(
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(dst_patch_box, src_mask);
 
-   hier::BoxList stencil_boxes;
+   hier::BoxList stencil_boxes(dst_patch_box.getDim());
    computeStencilBoxes(stencil_boxes, dst_patch_box);
 
-   hier::BoxList dst_boxes;
+   hier::BoxList dst_boxes(dst_patch_box.getDim());
 
    const NodeGeometry* t_dst =
       dynamic_cast<const NodeGeometry *>(&dst_geometry);
@@ -158,7 +159,7 @@ FirstLayerNodeVariableFillPattern::computeFillBoxesOverlap(
 
    const tbox::Dimension& dim = patch_box.getDim();
 
-   hier::BoxList stencil_boxes;
+   hier::BoxList stencil_boxes(dim);
    computeStencilBoxes(stencil_boxes, patch_box);
 
    hier::BoxList overlap_boxes(fill_boxes);
@@ -182,7 +183,7 @@ FirstLayerNodeVariableFillPattern::computeFillBoxesOverlap(
     * communication.
     */
 
-   overlap_boxes.coalesceBoxes();
+   overlap_boxes.coalesce();
 
    hier::BoxOverlap* overlap =
       new pdat::NodeOverlap(

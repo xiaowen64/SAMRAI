@@ -13,6 +13,8 @@
 
 #include "SAMRAI/pdat/CellOverlap.h"
 
+#include "SAMRAI/hier/BoxContainerConstIterator.h"
+
 #ifndef SAMRAI_INLINE
 #include "SAMRAI/pdat/CellOverlap.I"
 #endif
@@ -42,7 +44,7 @@ void CellOverlap::print(
    std::ostream& os) const
 {
    os << "CellOverlap boxes:";
-   for (hier::BoxList::Iterator b(d_dst_boxes); b; b++) {
+   for (hier::BoxList::ConstIterator b(d_dst_boxes); b; b++) {
       const hier::Box& box = b();
       os << "  " << box << std::endl;
    }

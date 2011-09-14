@@ -125,6 +125,8 @@
 
 #include "SAMRAI/hier/BoundaryLookupTable.h"
 #include "SAMRAI/hier/Box.h"
+#include "SAMRAI/hier/BoxContainerConstIterator.h"
+#include "SAMRAI/hier/BoxContainerIterator.h"
 #include "SAMRAI/hier/BoxList.h"
 #include "SAMRAI/hier/Index.h"
 #include "SAMRAI/hier/IntVector.h"
@@ -280,8 +282,8 @@ makeCoarsenedGridGeometry(
     * Need to check that domain can be coarsened by given ratio.
     */
    const hier::BoxList& fine_domain = this->getPhysicalDomain(hier::BlockId(0));
-   const int nboxes = fine_domain.getNumberOfBoxes();
-   hier::BoxList::Iterator fine_domain_itr(fine_domain);
+   const int nboxes = fine_domain.size();
+   hier::BoxList::ConstIterator fine_domain_itr(fine_domain);
    hier::BoxList::Iterator coarse_domain_itr(coarse_domain);
    for (int ib = 0; ib < nboxes; ib++, fine_domain_itr++, coarse_domain_itr++) {
       hier::Box testbox = hier::Box::refine(*coarse_domain_itr, coarsen_ratio);
@@ -358,7 +360,7 @@ void CartesianGridGeometry::setGeometryData(
    this->setPhysicalDomain(domain_array);
 
    hier::Box bigbox(dim);
-   for (hier::BoxList::Iterator k(getPhysicalDomain(hier::BlockId(0))); k; k++)
+   for (hier::BoxList::ConstIterator k(getPhysicalDomain(hier::BlockId(0))); k; k++)
       bigbox += *k;
 
    d_domain_box = bigbox;
@@ -543,7 +545,7 @@ void CartesianGridGeometry::getFromInput(
       hier::BoxList domain(dim);
       if (db->keyExists("domain_boxes")) {
          domain = db->getDatabaseBoxArray("domain_boxes");
-         if (domain.getNumberOfBoxes() == 0) {
+         if (domain.size() == 0) {
             TBOX_ERROR(
                "CartesianGridGeometry::getFromInput() error...\n"
                << "    geometry object with name = " << getObjectName()

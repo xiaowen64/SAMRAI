@@ -13,6 +13,7 @@
 
 #include "SAMRAI/hier/CoarseFineBoundary.h"
 
+#include "SAMRAI/hier/BoxContainerIterator.h"
 #include "SAMRAI/hier/Connector.h"
 #include "SAMRAI/hier/BoxSetSingleBlockIterator.h"
 #include "SAMRAI/hier/PatchLevel.h"
@@ -190,7 +191,7 @@ void CoarseFineBoundary::computeFromLevel(
       BoxList physical_boundary_portion(box);
       refined_domain_nabrs.removeBoxListIntersections(
          physical_boundary_portion);
-      fake_domain_list.copyItems(physical_boundary_portion);
+      fake_domain_list.spliceBack(physical_boundary_portion);
    }
 
    // Add fine-fine boundaries to the fake domain.
@@ -307,7 +308,7 @@ void CoarseFineBoundary::computeFromLevel(
             BoxList neighbor_domain(ni().getTransformedDomain());
             neighbor_domain.refine(ratio);
 
-            pseudo_domain.unionBoxes(neighbor_domain);
+            pseudo_domain.spliceFront(neighbor_domain);
 
          }
 
@@ -329,7 +330,7 @@ void CoarseFineBoundary::computeFromLevel(
                BoxList no_shift_boxes(patch_box);
                no_shift_boxes.grow(max_ghost_width);
                no_shift_boxes.removeIntersections(pseudo_domain);
-               adjusted_level_domain_list.unionBoxes(no_shift_boxes);
+               adjusted_level_domain_list.spliceFront(no_shift_boxes);
             }
          }
 
@@ -361,7 +362,7 @@ void CoarseFineBoundary::computeFromLevel(
                neighbor_boxes_to_add.intersectBoxes(hier::BoxList(
                      *neighbor_boxes));
 
-               adjusted_level_domain_list.unionBoxes(neighbor_boxes_to_add);
+               adjusted_level_domain_list.spliceFront(neighbor_boxes_to_add);
             }
          }
 
@@ -413,9 +414,9 @@ void CoarseFineBoundary::addPeriodicImageBoxes(
    const tbox::Array<tbox::List<IntVector> >& shifts)
 {
    TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(d_dim, boxes);
-   TBOX_ASSERT(shifts.size() == boxes.getNumberOfBoxes());
+   TBOX_ASSERT(shifts.size() == boxes.size());
 
-   int current_size = boxes.getNumberOfBoxes();
+   int current_size = boxes.size();
 
    TBOX_ERROR("Code disabled because getShiftsForLevel is gone.");
 
@@ -438,7 +439,7 @@ void CoarseFineBoundary::addPeriodicImageBoxes(
     */
    const int old_size = current_size;
 
-   BoxList::Iterator itr(boxes);
+   BoxContainer::Iterator itr(boxes);
    for (int ip = 0; ip < old_size; ++ip, itr++) {
       const Box& unshifted_box = *itr;
       const tbox::List<IntVector>& shifts_list = shifts[ip];
@@ -447,7 +448,7 @@ void CoarseFineBoundary::addPeriodicImageBoxes(
          for (sh = shifts_list.listStart(); sh; sh++) {
             Box shifted_box(unshifted_box);
             shifted_box.shift((*sh));
-            boxes.appendItem(shifted_box);
+            boxes.pushBack(shifted_box);
             ++current_size;
          }
       }

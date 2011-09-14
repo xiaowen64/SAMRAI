@@ -702,10 +702,10 @@ int HierarchyEdgeDataOpsReal<TYPE>::numberOfEntries(
          }
 #endif
          for (int il = 0; il < npatches; il++) {
-            tbox::List<hier::Box>::Iterator lb;
 
             for (int eb = 0; eb < dim.getValue(); eb++) {
-               lb = ((d_nonoverlapping_edge_boxes[eb][ln])[il]).listStart();
+               hier::BoxList::ConstIterator lb = 
+                  ((d_nonoverlapping_edge_boxes[eb][ln])[il]).begin();
                for ( ; lb; lb++) {
                   entries += lb().size();
                }

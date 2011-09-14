@@ -109,7 +109,7 @@ public:
       const Box& fill_box,
       const bool overwrite_interior,
       const Transformation& transformation,
-      const BoxList& dst_restrict_boxes = BoxList()) const;
+      const BoxList& dst_restrict_boxes = BoxList(tbox::Dimension(1))) const;
 
    /**
     * Calculate the overlap between two box geometry objects given the
@@ -136,7 +136,7 @@ public:
       const bool overwrite_interior,
       const Transformation& src_offset,
       const bool retry,
-      const BoxList& dst_restrict_boxes = BoxList()) const = 0;
+      const BoxList& dst_restrict_boxes = BoxList(tbox::Dimension(1))) const = 0;
 
    /**
     * Set up a BoxOverlap object that consists simply of the given boxes

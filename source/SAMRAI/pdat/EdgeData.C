@@ -14,6 +14,7 @@
 #include "SAMRAI/pdat/EdgeData.h"
 
 #include "SAMRAI/hier/Box.h"
+#include "SAMRAI/hier/BoxContainerConstIterator.h"
 #include "SAMRAI/hier/BoxList.h"
 #include "SAMRAI/pdat/EdgeGeometry.h"
 #include "SAMRAI/pdat/EdgeOverlap.h"
@@ -234,7 +235,7 @@ void EdgeData<TYPE>::copyWithRotation(
 
       hier::Box edge_rotatebox(EdgeGeometry::toEdgeBox(rotatebox, i));
 
-      for (hier::BoxList::Iterator bi(overlap_boxes); bi; bi++) {
+      for (hier::BoxList::ConstIterator bi(overlap_boxes); bi; bi++) {
          const hier::Box& overlap_box = bi();
 
          const hier::Box copybox(edge_rotatebox * overlap_box);
@@ -343,7 +344,7 @@ void EdgeData<TYPE>::packStream(
       const hier::IntVector& offset = t_overlap->getSourceOffset();
       for (int d = 0; d < getDim().getValue(); d++) {
          const hier::BoxList& boxes = t_overlap->getDestinationBoxList(d);
-         if (boxes.getNumberOfItems() > 0) {
+         if (boxes.size() > 0) {
             d_data[d].packStream(stream, boxes, offset);
          }
       }
@@ -390,7 +391,7 @@ void EdgeData<TYPE>::packWithRotation(
       hier::Box edge_rotatebox(EdgeGeometry::toEdgeBox(rotatebox, i));
 
       int buf_count = 0;
-      for (hier::BoxList::Iterator bi(overlap_boxes); bi; bi++) {
+      for (hier::BoxList::ConstIterator bi(overlap_boxes); bi; bi++) {
          const hier::Box& overlap_box = bi();
 
          const hier::Box copybox(edge_rotatebox * overlap_box);
@@ -428,7 +429,7 @@ void EdgeData<TYPE>::unpackStream(
    const hier::IntVector& offset = t_overlap->getSourceOffset();
    for (int d = 0; d < getDim().getValue(); d++) {
       const hier::BoxList& boxes = t_overlap->getDestinationBoxList(d);
-      if (boxes.getNumberOfItems() > 0) {
+      if (boxes.size() > 0) {
          d_data[d].unpackStream(stream, boxes, offset);
       }
    }

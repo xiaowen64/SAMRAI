@@ -15,6 +15,7 @@
 
 #include "SAMRAI/tbox/IEEE.h"
 #include "SAMRAI/tbox/RestartManager.h"
+#include "SAMRAI/hier/BoxContainerIterator.h"
 #include "SAMRAI/hier/BoxUtilities.h"
 #include "SAMRAI/hier/BoxLevelConnectorUtils.h"
 #include "SAMRAI/hier/MappingConnectorAlgorithm.h"
@@ -1971,7 +1972,7 @@ void GriddingAlgorithm::checkDomainBoxes(const hier::BoxList& domain_boxes) cons
     * Check minimum size violations.
     */
    int i = 0;
-   for (hier::BoxList::Iterator itr(domain_boxes); itr; itr++, ++i) {
+   for (hier::BoxList::ConstIterator itr(domain_boxes); itr; itr++, ++i) {
 
       hier::Box test_box = *itr;
       for (int dir = 0; dir < d_dim.getValue(); dir++) {
@@ -2418,7 +2419,7 @@ void GriddingAlgorithm::readLevelBoxes(
     */
 
    if (d_load_balancer->getLoadBalanceDependsOnPatchData(fine_level_number)
-       && boxes_to_refine.getNumberOfBoxes() > 0) {
+       && boxes_to_refine.size() > 0) {
       compute_load_balanced_level_boxes = true;
       remove_old_fine_level = true;
    }
@@ -2429,7 +2430,7 @@ void GriddingAlgorithm::readLevelBoxes(
     * constructed.  In this case, avoid load balance steps and
     * specify that we want to remove the old fine level.
     */
-   if (boxes_to_refine.getNumberOfBoxes() == 0) {
+   if (boxes_to_refine.size() == 0) {
       compute_load_balanced_level_boxes = false;
       remove_old_fine_level = true;
    }
@@ -3979,7 +3980,7 @@ void GriddingAlgorithm::growBoxesWithinNestingDomain(
          continue;
       }
 
-      hier::BoxList nesting_domain;
+      hier::BoxList nesting_domain(d_dim);
 
       refined_domain_search_tree->findOverlapBoxes(
          nesting_domain,

@@ -20,6 +20,7 @@
 #include "SAMRAI/pdat/SecondLayerNodeVariableFillPattern.h"
 #include "SAMRAI/pdat/SecondLayerNodeNoCornersVariableFillPattern.h"
 #include "SAMRAI/xfer/RefineAlgorithm.h"
+#include "SAMRAI/hier/BoxContainerIterator.h"
 #include "SAMRAI/hier/BoxList.h"
 #include "SAMRAI/hier/OverlapConnectorAlgorithm.h"
 #include "SAMRAI/hier/PatchHierarchy.h"
@@ -160,7 +161,7 @@ void txt2boxes(
             }
          }
 
-         boxes.appendItem(smallest_box);
+         boxes.pushBack(smallest_box);
       }
 
    }

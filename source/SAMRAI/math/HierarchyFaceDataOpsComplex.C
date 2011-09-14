@@ -12,6 +12,7 @@
 #define included_math_HierarchyFaceDataOpsComplex_C
 
 #include "SAMRAI/math/HierarchyFaceDataOpsComplex.h"
+#include "SAMRAI/hier/BoxContainerIterator.h"
 #include "SAMRAI/hier/BoxUtilities.h"
 #include "SAMRAI/hier/PatchDescriptor.h"
 #include "SAMRAI/pdat/FaceDataFactory.h"
@@ -655,9 +656,9 @@ int HierarchyFaceDataOpsComplex::numberOfEntries(
          }
 #endif
          for (int il = 0; il < npatches; il++) {
-            tbox::List<hier::Box>::Iterator lb;
             for (int eb = 0; eb < dim.getValue(); eb++) {
-               lb = ((d_nonoverlapping_face_boxes[eb][ln])[il]).listStart();
+               hier::BoxList::ConstIterator lb =
+                  ((d_nonoverlapping_face_boxes[eb][ln])[il]).begin();
                for ( ; lb; lb++) {
                   entries += lb().size();
                }

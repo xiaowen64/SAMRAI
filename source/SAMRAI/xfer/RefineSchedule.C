@@ -18,6 +18,8 @@
 #include "SAMRAI/xfer/RefinePatchStrategy.h"
 #include "SAMRAI/xfer/RefineScheduleConnectorWidthRequestor.h"
 #include "SAMRAI/xfer/RefineTimeTransaction.h"
+#include "SAMRAI/hier/BoxContainerConstIterator.h"
+#include "SAMRAI/hier/BoxContainerIterator.h"
 #include "SAMRAI/hier/BoxGeometry.h"
 #include "SAMRAI/hier/BoxOverlap.h"
 #include "SAMRAI/hier/BoxUtilities.h"
@@ -1246,7 +1248,7 @@ void RefineSchedule::setupCoarseInterpBoxLevel(
             coarser_shear_domain[b].grow(big_grow_vector);
          }
 
-         coarser_shear_domain[b].simplifyBoxes();
+         coarser_shear_domain[b].simplify();
 
          t_coarse_shear->stop();
       }
@@ -1291,7 +1293,7 @@ void RefineSchedule::setupCoarseInterpBoxLevel(
              (d_dst_level->patchTouchesRegularBoundary(
                  dst_mapped_box_mbid))) {
             sheared_coarse_interp_boxes.intersectBoxes(coarser_shear_domain[dst_blk]);
-            sheared_coarse_interp_boxes.simplifyBoxes();
+            sheared_coarse_interp_boxes.simplify();
          }
 
          (void)hier::BoxUtilities::extendBoxesToDomainBoundary(
@@ -1992,7 +1994,7 @@ void RefineSchedule::fillSingularityBoundaries(
 
             hier::BlockId block_id(bn);
 
-            for (hier::BoxList::Iterator sb(
+            for (hier::BoxList::ConstIterator sb(
                     grid_geometry->getSingularityBoxList(block_id)); sb; sb++) {
 
                hier::Box singularity(sb());
@@ -2540,7 +2542,7 @@ void RefineSchedule::generateCommunicationSchedule(
       hier::BoxList fill_boxes_list(dim);
       for (hier::BoxSet::iterator bi = fill_nabrs.begin();
            bi != fill_nabrs.end(); ++bi) {
-         fill_boxes_list.appendItem(*bi);
+         fill_boxes_list.pushBack(*bi);
       }
 
       /*
@@ -2726,7 +2728,8 @@ void RefineSchedule::findEnconFillBoxes(
         ni(neighbors); ni; ni++) {
 
       if (ni().isSingularity()) {
-         encon_fill_boxes.unionBoxes(ni().getTransformedDomain());
+         hier::BoxList transformed_domain(ni().getTransformedDomain());  
+         encon_fill_boxes.spliceFront(transformed_domain);
       }
 
    }
@@ -2735,7 +2738,7 @@ void RefineSchedule::findEnconFillBoxes(
 
    encon_fill_boxes.intersectBoxes(fill_boxes_list);
 
-   encon_fill_boxes.coalesceBoxes();
+   encon_fill_boxes.coalesce();
 }
 
 /*
@@ -2778,13 +2781,23 @@ void RefineSchedule::findEnconUnfilledBoxes(
       if (ni().isSingularity()) {
          const hier::BlockId nbr_block_id(ni().getBlockId());
 
-         unfilled_encon_nbr_boxes[nbr_block_id].unionBoxes(
-            ni().getTransformedDomain());
+         hier::BoxList neighbor_boxes(ni().getTransformedDomain());
+         neighbor_boxes.refine(d_dst_level->getRatioToLevelZero());
+         neighbor_boxes.intersectBoxes(encon_fill_boxes);
+         unfilled_encon_nbr_boxes.insert(
+            std::pair<hier::BlockId, hier::BoxList>(nbr_block_id, neighbor_boxes));
+/*
+
+         hier::BoxList transformed_domain(ni().getTransformedDomain());
+         
+         unfilled_encon_nbr_boxes[nbr_block_id].spliceFront(
+            transformed_domain);
          unfilled_encon_nbr_boxes[nbr_block_id].refine(
             d_dst_level->getRatioToLevelZero());
          unfilled_encon_nbr_boxes[nbr_block_id].intersectBoxes(
             encon_fill_boxes);
-      }
+*/ 
+     }
    }
 
    const hier::NeighborhoodSet& dst_to_src_edges =
@@ -2823,8 +2836,14 @@ void RefineSchedule::findEnconUnfilledBoxes(
                   dst_block_id,
                   src_block_id);
 
-               unfilled_encon_nbr_boxes[src_block_id].removeIntersections(
-                  transformed_src_box);
+               std::map<hier::BlockId, hier::BoxList>::iterator encon_iter =
+                  unfilled_encon_nbr_boxes.find(src_block_id);
+               if (encon_iter != unfilled_encon_nbr_boxes.end()) {
+                  encon_iter->second.removeIntersections(transformed_src_box);
+               }
+
+//               unfilled_encon_nbr_boxes[src_block_id].removeIntersections(
+//                  transformed_src_box);
 
             }
          }
@@ -2858,8 +2877,15 @@ void RefineSchedule::findEnconUnfilledBoxes(
             NeighborSet& unfilled_nabrs =
                encon_to_unfilled_encon_nbrhood_set[encon_mapped_box_id];
 
+            std::map<hier::BlockId, hier::BoxList>::iterator encon_iter =
+               unfilled_encon_nbr_boxes.find(nbr_block_id);
+
             const hier::BoxList& unfilled_boxes =
-               unfilled_encon_nbr_boxes[nbr_block_id];
+               encon_iter != unfilled_encon_nbr_boxes.end() ?
+               encon_iter->second :
+               hier::BoxList(dst_mapped_box.getDim());
+//            const hier::BoxList& unfilled_boxes =
+//               unfilled_encon_nbr_boxes[nbr_block_id];
 
             if (unfilled_boxes.size() > 0) {
 
@@ -2870,7 +2896,7 @@ void RefineSchedule::findEnconUnfilledBoxes(
                 * added to the output containers.
                 */
 
-               for (hier::BoxList::Iterator bi(unfilled_boxes);
+               for (hier::BoxList::ConstIterator bi(unfilled_boxes);
                     bi; bi++) {
 
                   hier::Box unfilled_box(bi());
@@ -3244,7 +3270,7 @@ void RefineSchedule::createEnconLevel(const hier::IntVector& fill_gcw)
 
                         if (encon_test_list.size() > 0) {
 
-                           encon_test_list.coalesceBoxes();
+                           encon_test_list.coalesce();
                            TBOX_ASSERT(encon_test_list.size() == 1);
 
                            /*
@@ -3671,10 +3697,10 @@ void RefineSchedule::constructScheduleTransactions(
     */
    int max_overlap_array_size = d_max_fill_boxes;
 
-   if (d_src_masks.getNumberOfBoxes() < max_overlap_array_size) {
-      for (int i = d_src_masks.getNumberOfBoxes();
+   if (d_src_masks.size() < max_overlap_array_size) {
+      for (int i = d_src_masks.size();
            i < max_overlap_array_size; ++i) {
-         d_src_masks.appendItem(hier::Box(dim));
+         d_src_masks.pushBack(hier::Box(dim));
       }
    }
 
@@ -3857,7 +3883,7 @@ void RefineSchedule::constructScheduleTransactions(
                transformation.transform(encon_box);
 
                if (test_dst_box.contains(encon_box)) {
-                  encon_nbr_choices.appendItem(*ni);
+                  encon_nbr_choices.pushBack(*ni);
                }
             }
          }

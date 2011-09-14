@@ -13,6 +13,7 @@
 
 #include "SAMRAI/xfer/CoarsenSchedule.h"
 #include "SAMRAI/hier/Box.h"
+#include "SAMRAI/hier/BoxContainerConstIterator.h"
 #include "SAMRAI/hier/BoxGeometry.h"
 #include "SAMRAI/hier/BoxOverlap.h"
 #include "SAMRAI/hier/IntVector.h"
@@ -506,7 +507,7 @@ void CoarsenSchedule::generateScheduleNSquared()
    const hier::ProcessorMapping& src_mapping =
       d_temp_crse_level->getProcessorMapping();
 
-   hier::BoxList::Iterator crse_itr_dp(d_crse_level->getBoxes());
+   hier::BoxList::ConstIterator crse_itr_dp(d_crse_level->getBoxes());
    for (int dp = 0; dp < dst_npatches; dp++, crse_itr_dp++) {
 
       const hier::Box dst_mapped_box(*crse_itr_dp,
@@ -514,7 +515,7 @@ void CoarsenSchedule::generateScheduleNSquared()
                                      d_crse_level->getProcessorMapping().
                                      getProcessorAssignment(dp));
 
-      hier::BoxList::Iterator crse_itr_sp(d_temp_crse_level->getBoxes());
+      hier::BoxList::ConstIterator crse_itr_sp(d_temp_crse_level->getBoxes());
       for (int sp = 0; sp < src_npatches; sp++, crse_itr_sp++) {
 
          const hier::Box src_mapped_box(*crse_itr_sp,

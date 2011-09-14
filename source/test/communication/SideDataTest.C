@@ -207,7 +207,7 @@ void SideDataTest::setConservativeData(
    const hier::BoxList& domain =
       level->getPhysicalDomain(hier::BlockId::zero());
    int ncells = 0;
-   for (hier::BoxList::Iterator i(domain); i; i++) {
+   for (hier::BoxList::ConstIterator i(domain); i; i++) {
       ncells += i().size();
    }
 

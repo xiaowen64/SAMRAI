@@ -36,6 +36,7 @@ using namespace std;
 #include "SAMRAI/tbox/RestartManager.h"
 #include "SAMRAI/hier/PatchGeometry.h"
 #include "SAMRAI/hier/BoundaryBox.h"
+#include "SAMRAI/hier/BoxContainerIterator.h"
 #include "SAMRAI/hier/BoxList.h"
 #include "SAMRAI/hier/VariableDatabase.h"
 #include "SAMRAI/pdat/CellIndex.h"
@@ -2453,7 +2454,7 @@ void MblkLinAdv::setMappedGridOnPatch(
    hier::BoxList domain_boxes(d_dim);
    d_grid_geometry->computePhysicalDomain(domain_boxes, ratio,
       hier::BlockId(block_number));
-   int num_domain_boxes = domain_boxes.getNumberOfBoxes();
+   int num_domain_boxes = domain_boxes.size();
 
    if (num_domain_boxes > 1) {
       TBOX_ERROR("Sorry, cannot handle non-rectangular domains..." << endl);
@@ -2463,7 +2464,7 @@ void MblkLinAdv::setMappedGridOnPatch(
       mapVariableAndContextToIndex(d_xyz, getDataContext());
 
    d_mblk_geometry->buildGridOnPatch(patch,
-      domain_boxes.getFirstItem(),
+      domain_boxes.front(),
       xyz_id,
       level_number,
       block_number);

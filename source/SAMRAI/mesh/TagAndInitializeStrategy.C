@@ -132,7 +132,7 @@ bool TagAndInitializeStrategy::getUserSuppliedRefineBoxes(
     */
    hier::BoxList empty_boxes(d_dim);
    if ((d_refine_boxes.getSize() <= level_num) ||
-       (d_refine_boxes[level_num][seq_num].getNumberOfBoxes() == 0)) {
+       (d_refine_boxes[level_num][seq_num].size() == 0)) {
 
       TBOX_WARNING(
          d_object_name << ": getRefineBoxes\n"

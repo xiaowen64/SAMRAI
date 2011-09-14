@@ -12,6 +12,7 @@
 #define included_pdat_OuternodeGeometry_C
 
 #include "SAMRAI/pdat/OuternodeGeometry.h"
+#include "SAMRAI/hier/BoxContainerConstIterator.h"
 #include "SAMRAI/hier/BoxList.h"
 #include "SAMRAI/pdat/NodeGeometry.h"
 #include "SAMRAI/pdat/NodeOverlap.h"
@@ -130,7 +131,7 @@ OuternodeGeometry::doOverlap(
 
    const tbox::Dimension& dim(src_mask.getDim());
 
-   hier::BoxList dst_boxes;
+   hier::BoxList dst_boxes(dim);
 
    // Perform a quick-and-dirty intersection to see if the boxes might overlap
 
@@ -168,14 +169,22 @@ OuternodeGeometry::doOverlap(
          // Add lower side intersection (if any) to the box list
          hier::Box low_node_box(trimmed_src_node_box);
          low_node_box.upper(d) = low_node_box.lower(d);
-         dst_boxes.unionBoxes(low_node_box * msk_node_box * dst_node_box
+
+         hier::Box low_overlap(low_node_box * msk_node_box * dst_node_box
             * fill_node_box);
+         if (!low_overlap.empty()) {
+            dst_boxes.pushBack(low_overlap);
+         }
 
          // Add upper side intersection (if any) to the box list
          hier::Box hig_node_box(trimmed_src_node_box);
          hig_node_box.lower(d) = hig_node_box.upper(d);
-         dst_boxes.unionBoxes(hig_node_box * msk_node_box * dst_node_box
+
+         hier::Box hig_overlap(hig_node_box * msk_node_box * dst_node_box
             * fill_node_box);
+         if (!hig_overlap.empty()) {
+            dst_boxes.pushBack(hig_overlap);
+         }
 
          // Take away the interior if over_write interior is not set
 
@@ -187,9 +196,9 @@ OuternodeGeometry::doOverlap(
       }  // loop over dim
 
       if (dst_restrict_boxes.size() && dst_boxes.size()) {
-         hier::BoxList node_restrict_boxes;
-         for (hier::BoxList::Iterator b(dst_restrict_boxes); b; b++) {
-            node_restrict_boxes.appendItem(NodeGeometry::toNodeBox(b()));
+         hier::BoxList node_restrict_boxes(dim);
+         for (hier::BoxList::ConstIterator b(dst_restrict_boxes); b; b++) {
+            node_restrict_boxes.pushBack(NodeGeometry::toNodeBox(b()));
          }
          dst_boxes.intersectBoxes(node_restrict_boxes);
       }
@@ -228,7 +237,7 @@ OuternodeGeometry::doOverlap(
 
    const tbox::Dimension& dim(src_mask.getDim());
 
-   hier::BoxList src_boxes;
+   hier::BoxList src_boxes(dim);
 
    // Perform a quick-and-dirty intersection to see if the boxes might overlap
 
@@ -267,12 +276,20 @@ OuternodeGeometry::doOverlap(
          // Add lower side intersection (if any) to the box list
          hier::Box low_node_box(trimmed_dst_node_box);
          low_node_box.upper(d) = low_node_box.lower(d);
-         src_boxes.unionBoxes(low_node_box * msk_node_box * src_node_box);
+
+         hier::Box low_overlap(low_node_box * msk_node_box * src_node_box);
+         if (!low_overlap.empty()) {
+            src_boxes.pushBack(low_overlap);
+         }
 
          // Add upper side intersection (if any) to the box list
          hier::Box hig_node_box(trimmed_dst_node_box);
          hig_node_box.lower(d) = hig_node_box.upper(d);
-         src_boxes.unionBoxes(hig_node_box * msk_node_box * src_node_box);
+
+         hier::Box hig_overlap(hig_node_box * msk_node_box * src_node_box);
+         if (!hig_overlap.empty()) {
+            src_boxes.pushBack(hig_overlap);
+         }
 
          // Take away the interior of over_write interior is not set
 
@@ -284,9 +301,9 @@ OuternodeGeometry::doOverlap(
       }  // loop over dim
 
       if (dst_restrict_boxes.size() && src_boxes.size()) {
-         hier::BoxList node_restrict_boxes;
-         for (hier::BoxList::Iterator b(dst_restrict_boxes); b; b++) {
-            node_restrict_boxes.appendItem(NodeGeometry::toNodeBox(b()));
+         hier::BoxList node_restrict_boxes(dim);
+         for (hier::BoxList::ConstIterator b(dst_restrict_boxes); b; b++) {
+            node_restrict_boxes.pushBack(NodeGeometry::toNodeBox(b()));
          }
          src_boxes.intersectBoxes(node_restrict_boxes);
       }
@@ -325,7 +342,7 @@ OuternodeGeometry::doOverlap(
 
    const tbox::Dimension& dim(src_mask.getDim());
 
-   hier::BoxList dst_boxes;
+   hier::BoxList dst_boxes(dim);
 
    // Perform a quick-and-dirty intersection to see if the boxes might overlap
 
@@ -378,14 +395,29 @@ OuternodeGeometry::doOverlap(
             hier::Box hi_src_node_box = trimmed_src_node_box;
             hi_src_node_box.lower(src_d) = hi_src_node_box.upper(src_d);
 
-            dst_boxes.unionBoxes(
+            hier::Box lo_lo_box(
                lo_src_node_box * msk_node_box * lo_dst_node_box);
-            dst_boxes.unionBoxes(
+            if (!lo_lo_box.empty()) {
+               dst_boxes.pushBack(lo_lo_box);
+            }
+
+            hier::Box hi_lo_box(
                hi_src_node_box * msk_node_box * lo_dst_node_box);
-            dst_boxes.unionBoxes(
+            if (!lo_lo_box.empty()) {
+               dst_boxes.pushBack(lo_lo_box);
+            }
+
+            hier::Box lo_hi_box(
                lo_src_node_box * msk_node_box * hi_dst_node_box);
-            dst_boxes.unionBoxes(
+            if (!lo_hi_box.empty()) {
+               dst_boxes.pushBack(lo_hi_box);
+            }
+
+            hier::Box hi_hi_box(
                hi_src_node_box * msk_node_box * hi_dst_node_box);
+            if (!hi_hi_box.empty()) {
+               dst_boxes.pushBack(hi_hi_box);
+            }
 
             // Take away the interior of over_write interior is not set
 
@@ -399,9 +431,9 @@ OuternodeGeometry::doOverlap(
       }  // loop over dst dim
 
       if (dst_restrict_boxes.size() && dst_boxes.size()) {
-         hier::BoxList node_restrict_boxes;
-         for (hier::BoxList::Iterator b(dst_restrict_boxes); b; b++) {
-            node_restrict_boxes.appendItem(NodeGeometry::toNodeBox(b()));
+         hier::BoxList node_restrict_boxes(dim);
+         for (hier::BoxList::ConstIterator b(dst_restrict_boxes); b; b++) {
+            node_restrict_boxes.pushBack(NodeGeometry::toNodeBox(b()));
          }
          dst_boxes.intersectBoxes(node_restrict_boxes);
       }
@@ -427,11 +459,11 @@ OuternodeGeometry::setUpOverlap(
    const hier::BoxList& boxes,
    const hier::Transformation& transformation) const
 {
-   hier::BoxList dst_boxes;
+   hier::BoxList dst_boxes(boxes.getDim());
 
-   for (hier::BoxList::Iterator b(boxes); b; b++) {
+   for (hier::BoxList::ConstIterator b(boxes); b; b++) {
       hier::Box node_box(NodeGeometry::toNodeBox(b()));
-      dst_boxes.appendItem(node_box);
+      dst_boxes.pushBack(node_box);
    }
 
    // Create the node overlap data object using the boxes and source shift

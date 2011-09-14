@@ -108,7 +108,7 @@ tbox::Pointer<hier::BoxOverlap> CellGeometry::doOverlap(
    const hier::Transformation& transformation,
    const hier::BoxList& dst_restrict_boxes)
 {
-   hier::BoxList dst_boxes;
+   hier::BoxList dst_boxes(src_mask.getDim());
    dst_geometry.computeDestinationBoxes(dst_boxes,
       src_geometry,
       src_mask,
@@ -162,7 +162,7 @@ void CellGeometry::computeDestinationBoxes(
          const hier::Box int_cell(toCellBox(d_box));
          dst_boxes.removeIntersections(together, int_cell);
       } else {
-         dst_boxes.appendItem(together);
+         dst_boxes.pushBack(together);
       }
    }
 

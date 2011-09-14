@@ -34,6 +34,7 @@ using namespace std;
 
 #include "SAMRAI/tbox/Array.h"
 #include "SAMRAI/hier/BoundaryBox.h"
+#include "SAMRAI/hier/BoxContainerIterator.h"
 #include "SAMRAI/hier/BoxList.h"
 #include "SAMRAI/geom/CartesianPatchGeometry.h"
 #include "SAMRAI/pdat/CellData.h"
@@ -1465,11 +1466,11 @@ void LinAdv::boundaryReset(
    for (idir = 0; idir < d_dim.getValue(); idir++) {
       ibfirst(idir) = ifirst(idir) - 1;
       iblast(idir) = ifirst(idir) - 1;
-      bdrybox.appendItem(hier::Box(ibfirst, iblast));
+      bdrybox.pushBack(hier::Box(ibfirst, iblast));
 
       ibfirst(idir) = ilast(idir) + 1;
       iblast(idir) = ilast(idir) + 1;
-      bdrybox.appendItem(hier::Box(ibfirst, iblast));
+      bdrybox.pushBack(hier::Box(ibfirst, iblast));
    }
 
    hier::BoxList::Iterator ib(bdrybox);

@@ -10,7 +10,7 @@
 
 namespace SAMRAI {
 namespace hier {
-
+#if 0
 SAMRAI_INLINE_KEYWORD
 BoxList::BoxList():
    tbox::List<Box>(),
@@ -64,6 +64,6 @@ SAMRAI_INLINE_KEYWORD
 BoxList::~BoxList()
 {
 }
-
+#endif
 }
 }

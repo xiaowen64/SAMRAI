@@ -111,7 +111,7 @@ void CellFloatConstantRefine::refine(
    TBOX_ASSERT(t_overlap != NULL);
 
    const hier::BoxList& boxes = t_overlap->getDestinationBoxList();
-   for (hier::BoxList::Iterator b(boxes); b; b++) {
+   for (hier::BoxList::ConstIterator b(boxes); b; b++) {
       refine(fine,
          coarse,
          dst_component,

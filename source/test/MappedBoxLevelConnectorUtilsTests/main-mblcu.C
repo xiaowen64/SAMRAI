@@ -12,6 +12,7 @@
 #include "SAMRAI/hier/Connector.h"
 #include "SAMRAI/hier/GridGeometry.h"
 #include "SAMRAI/hier/Box.h"
+#include "SAMRAI/hier/BoxContainerIterator.h"
 #include "SAMRAI/hier/BoxLevel.h"
 #include "SAMRAI/hier/BoxLevelConnectorUtils.h"
 #include "SAMRAI/hier/BoxSetSingleBlockIterator.h"
@@ -443,10 +444,10 @@ int main(
                const hier::BoxSet& neighbors = small_to_everything.getNeighborSet(
                      small_mapped_box.getId());
 
-               hier::BoxList neighbor_box_list;
+               hier::BoxList neighbor_box_list(dim);
                for (hier::BoxSet::const_iterator na = neighbors.begin();
                     na != neighbors.end(); ++na) {
-                  neighbor_box_list.unionBoxes(*na);
+                  neighbor_box_list.pushBack(*na);
                   if (!small_mapped_box.contains(*na)) {
                      tbox::perr << "Mapping small_to_everyting erroneously mapped "
                                 << small_mapped_box << " to:\n" << *na
@@ -748,7 +749,19 @@ void shrinkBoxLevel(
    std::map<hier::BlockId, hier::BoxList> boundary_boxes;
    for (hier::BoxSet::const_iterator si = visible_mapped_boxes.begin();
         si != visible_mapped_boxes.end(); ++si) {
-      boundary_boxes[si->getBlockId()].appendItem(*si);
+
+      std::map<hier::BlockId, hier::BoxList>::iterator bdry_iter =
+         boundary_boxes.find(si->getBlockId());
+
+      if (bdry_iter != boundary_boxes.end()) {
+         bdry_iter->second.pushBack(*si);
+      } else {
+         hier::BoxList bdry_list(*si);
+         boundary_boxes.insert(
+            std::pair<hier::BlockId, hier::BoxList>(si->getBlockId(),
+                                                    bdry_list));
+      }
+
    }
 
    hier::MultiblockBoxTree visible_box_tree(
@@ -829,7 +842,7 @@ void shrinkBoxLevel(
          shrunken_boxes.removeIntersections(mapped_box.getBlockId(),
             big_mapped_box_level.getRefinementRatio(),
             complement_mapped_box_tree);
-         shrunken_boxes.simplifyBoxes();
+         shrunken_boxes.simplify();
 
          for (hier::BoxList::Iterator li(shrunken_boxes); li; li++) {
             const hier::Box shrunken_mapped_box(

@@ -176,7 +176,7 @@ NeighborhoodSet::getNeighbors(
    getNeighbors(tmp_nabrs);
    for (BoxSet::const_iterator ei = tmp_nabrs.begin();
         ei != tmp_nabrs.end(); ++ei) {
-      all_nabrs.appendItem(*ei);
+      all_nabrs.pushBack(*ei);
    }
 }
 
@@ -194,7 +194,7 @@ NeighborhoodSet::getNeighbors(
    getNeighbors(tmp_nabrs);
    for (BoxSetSingleBlockIterator ei(tmp_nabrs, block_id);
         ei.isValid(); ++ei) {
-      all_nabrs.appendItem(*ei);
+      all_nabrs.pushBack(*ei);
    }
 }
 
@@ -211,7 +211,17 @@ NeighborhoodSet::getNeighbors(
    getNeighbors(tmp_nabrs);
    for (BoxSet::const_iterator ei = tmp_nabrs.begin();
         ei != tmp_nabrs.end(); ++ei) {
-      all_nabrs[ei->getBlockId()].appendItem(*ei);
+      std::map<BlockId, BoxList>::iterator iter =
+         all_nabrs.find(ei->getBlockId());
+
+      if (iter != all_nabrs.end()) {
+         iter->second.pushBack(*ei);
+      } else {
+         BoxList nabr_list(*ei);
+         all_nabrs.insert(std::pair<BlockId, BoxList>(ei->getBlockId(),
+                                                      nabr_list));
+      }
+//      all_nabrs[ei->getBlockId()].pushBack(*ei);
    }
 }
 

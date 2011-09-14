@@ -482,7 +482,7 @@ int main(
 
          IntVector src_offset(dim, 0);
          BoxList boxes(box_src);
-         boxes.addItem(box_dst);
+         boxes.pushFront(box_dst);
          BoxList intersection(box_src * box_dst);
          CellOverlap overlap(intersection, hier::Transformation(src_offset));
 

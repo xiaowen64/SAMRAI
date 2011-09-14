@@ -12,6 +12,7 @@
 #include <iomanip>
 
 #include "SAMRAI/mesh/BergerRigoutsos.h"
+#include "SAMRAI/hier/BoxContainerIterator.h"
 #include "SAMRAI/hier/BoxList.h"
 #include "SAMRAI/hier/BoxLevel.h"
 #include "SAMRAI/hier/IntVector.h"

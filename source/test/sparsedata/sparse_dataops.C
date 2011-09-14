@@ -12,6 +12,7 @@
 
 #include "SAMRAI/tbox/SAMRAIManager.h"
 #include "SAMRAI/hier/Box.h"
+#include "SAMRAI/hier/BoxContainerIterator.h"
 #include "SAMRAI/hier/BoxList.h"
 #include "SAMRAI/hier/Index.h"
 
@@ -121,8 +122,8 @@ int main(
       hierarchy->setMaxNumberOfLevels(2);
       hierarchy->setRatioToCoarserLevel(ratio, 1);
 
-      const int n_coarse_boxes = coarse_domain.getNumberOfBoxes();
-      const int n_fine_boxes = fine_domain.getNumberOfBoxes();
+      const int n_coarse_boxes = coarse_domain.size();
+      const int n_fine_boxes = fine_domain.size();
 
       hier::BoxLevel layer0(hier::IntVector(dim, 1), geometry);
       hier::BoxLevel layer1(ratio, geometry);
@@ -514,10 +515,10 @@ getGeometry(
    hier::Box fine0(hier::Index(4, 4), hier::Index(7, 7));
    hier::Box fine1(hier::Index(8, 4), hier::Index(13, 7));
 
-   coarse_domain.appendItem(coarse0);
-   coarse_domain.appendItem(coarse1);
-   fine_domain.appendItem(fine0);
-   fine_domain.appendItem(fine1);
+   coarse_domain.pushBack(coarse0);
+   coarse_domain.pushBack(coarse1);
+   fine_domain.pushBack(fine0);
+   fine_domain.pushBack(fine1);
 
    tbox::Pointer<geom::CartesianGridGeometry> geometry(
       new geom::CartesianGridGeometry("CartesianGeometry",

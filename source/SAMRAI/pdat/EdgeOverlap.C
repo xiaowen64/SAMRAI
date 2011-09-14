@@ -26,8 +26,8 @@ EdgeOverlap::EdgeOverlap(
    d_is_overlap_empty(true),
    d_transformation(transformation)
 {
-
-   d_dst_boxes.resizeArray(boxes.getSize());
+   const tbox::Dimension dim(transformation.getOffset().getDim());
+   d_dst_boxes.resizeArray(boxes.getSize(), hier::BoxList(dim));
 
    for (int d = 0; d < boxes.getSize(); d++) {
       d_dst_boxes[d] = boxes[d];

@@ -14,6 +14,7 @@
 #include "SAMRAI/pdat/SideData.h"
 
 #include "SAMRAI/hier/Box.h"
+#include "SAMRAI/hier/BoxContainerConstIterator.h"
 #include "SAMRAI/hier/BoxList.h"
 #include "SAMRAI/pdat/SideGeometry.h"
 #include "SAMRAI/pdat/SideOverlap.h"
@@ -291,7 +292,7 @@ void SideData<TYPE>::copyWithRotation(
 
          hier::Box side_rotatebox(SideGeometry::toSideBox(rotatebox, i));
 
-         for (hier::BoxList::Iterator bi(overlap_boxes); bi; bi++) {
+         for (hier::BoxList::ConstIterator bi(overlap_boxes); bi; bi++) {
             const hier::Box& overlap_box = bi();
 
             const hier::Box copybox(side_rotatebox * overlap_box);
@@ -408,7 +409,7 @@ void SideData<TYPE>::packStream(
       for (int d = 0; d < getDim().getValue(); d++) {
          if (d_directions(d)) {
             const hier::BoxList& boxes = t_overlap->getDestinationBoxList(d);
-            if (boxes.getNumberOfItems() > 0) {
+            if (boxes.size() > 0) {
                d_data[d].packStream(stream, boxes, offset);
             }
          }
@@ -457,7 +458,7 @@ void SideData<TYPE>::packWithRotation(
          hier::Box side_rotatebox(SideGeometry::toSideBox(rotatebox, i));
 
          int buf_count = 0;
-         for (hier::BoxList::Iterator bi(overlap_boxes); bi; bi++) {
+         for (hier::BoxList::ConstIterator bi(overlap_boxes); bi; bi++) {
             const hier::Box& overlap_box = bi();
 
             const hier::Box copybox(side_rotatebox * overlap_box);
@@ -497,7 +498,7 @@ void SideData<TYPE>::unpackStream(
    for (int d = 0; d < getDim().getValue(); d++) {
       if (d_directions(d)) {
          const hier::BoxList& boxes = t_overlap->getDestinationBoxList(d);
-         if (boxes.getNumberOfItems() > 0) {
+         if (boxes.size() > 0) {
             d_data[d].unpackStream(stream, boxes, offset);
          }
       }

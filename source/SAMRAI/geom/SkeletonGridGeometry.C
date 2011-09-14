@@ -45,6 +45,8 @@
 #include "SAMRAI/pdat/SideDoubleLinearTimeInterpolateOp.h"
 #include "SAMRAI/hier/PatchLevel.h"
 #include "SAMRAI/hier/BoundaryLookupTable.h"
+#include "SAMRAI/hier/BoxContainerConstIterator.h"
+#include "SAMRAI/hier/BoxContainerIterator.h"
 #include "SAMRAI/hier/VariableDatabase.h"
 #include "SAMRAI/tbox/RestartManager.h"
 #include "SAMRAI/tbox/Utilities.h"
@@ -198,8 +200,8 @@ SkeletonGridGeometry::makeCoarsenedGridGeometry(
     * Need to check that domain can be coarsened by given ratio.
     */
    const hier::BoxList& fine_domain = this->getPhysicalDomain(hier::BlockId(0));
-   const int nboxes = fine_domain.getNumberOfBoxes();
-   hier::BoxList::Iterator fine_domain_itr(fine_domain);
+   const int nboxes = fine_domain.size();
+   hier::BoxList::ConstIterator fine_domain_itr(fine_domain);
    hier::BoxList::Iterator coarse_domain_itr(coarse_domain);
    for (int ib = 0; ib < nboxes; ib++, fine_domain_itr++, coarse_domain_itr++) {
       hier::Box testbox = hier::Box::refine(*coarse_domain_itr, coarsen_ratio);
@@ -330,7 +332,7 @@ void SkeletonGridGeometry::getFromInput(
       hier::BoxList domain(dim);
       if (db->keyExists("domain_boxes")) {
          domain = db->getDatabaseBoxArray("domain_boxes");
-         if (domain.getNumberOfBoxes() == 0) {
+         if (domain.size() == 0) {
             TBOX_ERROR(
                getObjectName() << ":  "
                                << "Skeleton `domain_boxes' array found in input.");

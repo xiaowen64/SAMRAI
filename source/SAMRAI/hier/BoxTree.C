@@ -12,6 +12,8 @@
 #define included_hier_BoxTree_C
 
 #include "SAMRAI/hier/BoxTree.h"
+
+#include "SAMRAI/hier/BoxContainerConstIterator.h"
 #include "SAMRAI/hier/BoxList.h"
 #include "SAMRAI/tbox/MathUtilities.h"
 #include "SAMRAI/tbox/SAMRAI_MPI.h"
@@ -221,7 +223,7 @@ BoxTree::BoxTree(
 
 #ifdef DEBUG_CHECK_ASSERTIONS
    // Catch empty boxes so sorting logic does not have to.
-   for (BoxList::Iterator ni(boxes); ni; ni++) {
+   for (BoxList::ConstIterator ni(boxes); ni; ni++) {
       TBOX_ASSERT(!(*ni).empty());
    }
 #endif
@@ -230,7 +232,7 @@ BoxTree::BoxTree(
     * Compute this mapped_box's domain, which is the bounding box
     * for the list of boxes.
     */
-   for (BoxList::Iterator li(boxes); li; li++) {
+   for (BoxList::ConstIterator li(boxes); li; li++) {
       d_bounding_box += *li;
    }
 
@@ -242,7 +244,7 @@ BoxTree::BoxTree(
     */
    if ((size_t)boxes.size() <= min_number) {
       LocalId count(-1);
-      for (BoxList::Iterator li(boxes); li; li++) {
+      for (BoxList::ConstIterator li(boxes); li; li++) {
          const Box n(*li, ++count, 0, d_block_id);
          d_mapped_boxes.insert(d_mapped_boxes.end(), n);
       }
@@ -276,7 +278,7 @@ BoxTree::BoxTree(
 
       BoxSet left_mapped_boxes, right_mapped_boxes;
       LocalId count(-1);
-      for (BoxList::Iterator li(boxes); li; li++) {
+      for (BoxList::ConstIterator li(boxes); li; li++) {
          const Box mapped_box(*li, ++count, 0, d_block_id);
          if (mapped_box.upper(d_partition_dim) <= midpoint) {
             left_mapped_boxes.insert(left_mapped_boxes.end(), mapped_box);
@@ -682,7 +684,7 @@ void BoxTree::findOverlapBoxes(
               ni != d_mapped_boxes.end(); ++ni) {
             const Box& this_box = *ni;
             if (box.intersects(this_box)) {
-               overlap_boxes.appendItem(this_box);
+               overlap_boxes.pushBack(this_box);
             }
          }
       }

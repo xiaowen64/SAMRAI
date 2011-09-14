@@ -29,6 +29,7 @@
 
 // Headers for basic SAMRAI objects
 
+#include "SAMRAI/hier/BoxContainerIterator.h"
 #include "SAMRAI/hier/BoxList.h"
 #include "SAMRAI/hier/Index.h"
 #include "SAMRAI/hier/PatchLevel.h"
@@ -750,7 +751,7 @@ static void dumpMatlabData1dPencil(
       }
    }
 
-   tbox::Array<hier::BoxList> outboxes(nlevels);
+   tbox::Array<hier::BoxList> outboxes(nlevels, hier::BoxList(dim));
 
    for (int l1 = 0; l1 < nlevels; l1++) {
       tbox::Pointer<hier::PatchLevel> level = hierarchy->getPatchLevel(l1);

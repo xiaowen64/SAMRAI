@@ -595,9 +595,9 @@ bool EdgeMultiblockTest::verifyResults(
 
          hier::BoxList tested_neighbors(d_dim);
 
-         hier::BoxList sing_edge_boxlist;
+         hier::BoxList sing_edge_boxlist(d_dim);
          for (hier::BoxList::Iterator si(singularity); si; si++) {
-            sing_edge_boxlist.addItem(
+            sing_edge_boxlist.pushFront(
                pdat::EdgeGeometry::toEdgeBox(si(), axis));
          }
 
@@ -610,12 +610,12 @@ bool EdgeMultiblockTest::verifyResults(
 
             hier::BoxList neighbor_ghost(ne().getTransformedDomain());
 
-            hier::BoxList neighbor_edge_ghost;
+            hier::BoxList neighbor_edge_ghost(d_dim);
             for (hier::BoxList::Iterator nn(neighbor_ghost); nn; nn++) {
                hier::Box neighbor_ghost_interior(
                   pdat::EdgeGeometry::toEdgeBox(nn(), axis));
                neighbor_ghost_interior.grow(-hier::IntVector::getOne(d_dim));
-               neighbor_edge_ghost.addItem(neighbor_ghost_interior);
+               neighbor_edge_ghost.pushFront(neighbor_ghost_interior);
             }
 
             neighbor_edge_ghost.refine(ratio);
@@ -653,7 +653,7 @@ bool EdgeMultiblockTest::verifyResults(
                }
             }
 
-            tested_neighbors.unionBoxes(neighbor_edge_ghost);
+            tested_neighbors.spliceBack(neighbor_edge_ghost);
          }
       }
 

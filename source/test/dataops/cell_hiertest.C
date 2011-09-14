@@ -22,6 +22,7 @@
 #include "SAMRAI/tbox/Pointer.h"
 
 #include "SAMRAI/hier/Box.h"
+#include "SAMRAI/hier/BoxContainerIterator.h"
 #include "SAMRAI/hier/BoxList.h"
 #include "SAMRAI/geom/CartesianGridGeometry.h"
 #include "SAMRAI/geom/CartesianPatchGeometry.h"
@@ -132,10 +133,10 @@ int main(
 
       hier::BoxList coarse_domain(dim);
       hier::BoxList fine_boxes(dim);
-      coarse_domain.appendItem(coarse0);
-      coarse_domain.appendItem(coarse1);
-      fine_boxes.appendItem(fine0);
-      fine_boxes.appendItem(fine1);
+      coarse_domain.pushBack(coarse0);
+      coarse_domain.pushBack(coarse1);
+      fine_boxes.pushBack(fine0);
+      fine_boxes.pushBack(fine1);
 
       tbox::Pointer<geom::CartesianGridGeometry> geometry(
          new geom::CartesianGridGeometry("CartesianGeometry",
@@ -153,8 +154,8 @@ int main(
       const int nproc = mpi.getSize();
       TBOX_ASSERT(nproc < 3);
 
-      const int n_coarse_boxes = coarse_domain.getNumberOfBoxes();
-      const int n_fine_boxes = fine_boxes.getNumberOfBoxes();
+      const int n_coarse_boxes = coarse_domain.size();
+      const int n_fine_boxes = fine_boxes.size();
 
       hier::BoxLevel layer0(hier::IntVector(dim, 1), geometry);
       hier::BoxLevel layer1(ratio, geometry);

@@ -12,6 +12,8 @@
 #define included_xfer_PatchLevelBorderFillPattern_C
 
 #include "SAMRAI/xfer/PatchLevelBorderFillPattern.h"
+
+#include "SAMRAI/hier/BoxContainerIterator.h"
 #include "SAMRAI/hier/BoxList.h"
 #include "SAMRAI/hier/RealBoxConstIterator.h"
 #include "SAMRAI/hier/Box.h"
@@ -81,7 +83,7 @@ void PatchLevelBorderFillPattern::computeFillBoxesAndNeighborhoodSets(
         ni.isValid(); ++ni) {
       const hier::Box& dst_mapped_box = *ni;
       hier::BoxList fill_boxes(dst_mapped_box);
-      fill_boxes.getFirstItem().grow(fill_ghost_width);
+      fill_boxes.front().grow(fill_ghost_width);
       const NeighborSet& nabrs =
          dst_to_dst.getNeighborSet(dst_mapped_box.getId());
       for (NeighborSet::const_iterator na = nabrs.begin();

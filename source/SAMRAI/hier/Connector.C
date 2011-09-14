@@ -1955,7 +1955,7 @@ void Connector::getNeighborBoxes(
    const NeighborSet& nbr_mapped_boxes = getNeighborSet(mapped_box_id);
    for (NeighborSet::const_iterator ni = nbr_mapped_boxes.begin();
         ni != nbr_mapped_boxes.end(); ni++) {
-      nbr_boxes.appendItem(*ni);
+      nbr_boxes.pushBack(*ni);
    }
 }
 

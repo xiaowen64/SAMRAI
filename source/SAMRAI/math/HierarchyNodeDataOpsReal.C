@@ -673,8 +673,8 @@ int HierarchyNodeDataOpsReal<TYPE>::numberOfEntries(
          TBOX_ASSERT(npatches == d_nonoverlapping_node_boxes[ln].getSize());
 #endif
          for (int il = 0; il < npatches; il++) {
-            tbox::List<hier::Box>::Iterator lb =
-               ((d_nonoverlapping_node_boxes[ln])[il]).listStart();
+            hier::BoxList::ConstIterator lb =
+               ((d_nonoverlapping_node_boxes[ln])[il]).begin();
             for ( ; lb; lb++) {
                entries += lb().size();
             }

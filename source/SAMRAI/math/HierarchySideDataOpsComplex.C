@@ -12,6 +12,7 @@
 #define included_math_HierarchySideDataOpsComplex_C
 
 #include "SAMRAI/math/HierarchySideDataOpsComplex.h"
+#include "SAMRAI/hier/BoxContainerIterator.h"
 #include "SAMRAI/hier/BoxUtilities.h"
 #include "SAMRAI/hier/PatchDescriptor.h"
 #include "SAMRAI/pdat/SideDataFactory.h"
@@ -661,7 +662,8 @@ int HierarchySideDataOpsComplex::numberOfEntries(
             tbox::List<hier::Box>::Iterator lb;
             for (int eb = 0; eb < dim.getValue(); eb++) {
                if (directions(eb)) {
-                  lb = ((d_nonoverlapping_side_boxes[eb][ln])[il]).listStart();
+                  hier::BoxList::ConstIterator lb =
+                     ((d_nonoverlapping_side_boxes[eb][ln])[il]).begin();
                   for ( ; lb; lb++) {
                      entries += lb().size();
                   }

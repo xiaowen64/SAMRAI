@@ -160,7 +160,7 @@ void IndexData<TYPE, BOX_GEOMETRY>::copy(
    const hier::BoxList& box_list = t_overlap->getDestinationBoxList();
    const hier::Box& src_ghost_box = t_src->getGhostBox();
 
-   for (hier::BoxList::Iterator b(box_list); b; b++) {
+   for (hier::BoxList::ConstIterator b(box_list); b; b++) {
       const hier::Box& dst_box = b();
       const hier::Box src_box(hier::Box::shift(b(), -src_offset));
       removeInsideBox(dst_box);
@@ -216,7 +216,7 @@ int IndexData<TYPE, BOX_GEOMETRY>::getDataStreamSize(
    size_t bytes = 0;
    int num_items = 0;
    const hier::BoxList& boxes = t_overlap->getDestinationBoxList();
-   for (hier::BoxList::Iterator b(boxes); b; b++) {
+   for (hier::BoxList::ConstIterator b(boxes); b; b++) {
       hier::Box box = hier::PatchData::getBox()
          * hier::Box::shift(b(), -(t_overlap->getSourceOffset()));
       for (hier::Box::Iterator index(box); index; index++) {
@@ -252,7 +252,7 @@ void IndexData<TYPE, BOX_GEOMETRY>::packStream(
 
    const hier::BoxList& boxes = t_overlap->getDestinationBoxList();
    int num_items = 0;
-   for (hier::BoxList::Iterator b(boxes); b; b++) {
+   for (hier::BoxList::ConstIterator b(boxes); b; b++) {
       hier::Box box = hier::PatchData::getBox()
          * hier::Box::shift(b(), -(t_overlap->getSourceOffset()));
       for (typename IndexData<TYPE, BOX_GEOMETRY>::Iterator s(*this); s; s++) {
@@ -264,7 +264,7 @@ void IndexData<TYPE, BOX_GEOMETRY>::packStream(
 
    stream << num_items;
 
-   for (hier::BoxList::Iterator c(boxes); c; c++) {
+   for (hier::BoxList::ConstIterator c(boxes); c; c++) {
       hier::Box box = hier::PatchData::getBox()
          * hier::Box::shift(c(), -(t_overlap->getSourceOffset()));
       for (typename IndexData<TYPE, BOX_GEOMETRY>::Iterator t(*this); t; t++) {
@@ -297,7 +297,7 @@ void IndexData<TYPE, BOX_GEOMETRY>::unpackStream(
    stream >> num_items;
 
    const hier::BoxList& boxes = t_overlap->getDestinationBoxList();
-   for (hier::BoxList::Iterator b(boxes); b; b++) {
+   for (hier::BoxList::ConstIterator b(boxes); b; b++) {
       removeInsideBox(b());
    }
 

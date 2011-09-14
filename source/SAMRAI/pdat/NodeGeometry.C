@@ -13,6 +13,7 @@
 
 #include "SAMRAI/pdat/NodeGeometry.h"
 #include "SAMRAI/pdat/NodeOverlap.h"
+#include "SAMRAI/hier/BoxContainerConstIterator.h"
 #include "SAMRAI/hier/BoxList.h"
 #include "SAMRAI/tbox/Utilities.h"
 
@@ -110,7 +111,7 @@ tbox::Pointer<hier::BoxOverlap> NodeGeometry::doOverlap(
    const hier::Transformation& transformation,
    const hier::BoxList& dst_restrict_boxes)
 {
-   hier::BoxList dst_boxes;
+   hier::BoxList dst_boxes(src_mask.getDim());
    dst_geometry.computeDestinationBoxes(dst_boxes,
       src_geometry,
       src_mask,
@@ -166,14 +167,14 @@ void NodeGeometry::computeDestinationBoxes(
          const hier::Box int_node(toNodeBox(d_box));
          dst_boxes.removeIntersections(together, int_node);
       } else {
-         dst_boxes.appendItem(together);
+         dst_boxes.pushBack(together);
       }
    }
 
    if (dst_restrict_boxes.size() && dst_boxes.size()) {
-      hier::BoxList node_restrict_boxes;
-      for (hier::BoxList::Iterator b(dst_restrict_boxes); b; b++) {
-         node_restrict_boxes.appendItem(toNodeBox(b()));
+      hier::BoxList node_restrict_boxes(src_mask.getDim());
+      for (hier::BoxList::ConstIterator b(dst_restrict_boxes); b; b++) {
+         node_restrict_boxes.pushBack(toNodeBox(b()));
       }
       dst_boxes.intersectBoxes(node_restrict_boxes);
    }
@@ -191,11 +192,11 @@ NodeGeometry::setUpOverlap(
    const hier::BoxList& boxes,
    const hier::Transformation& transformation) const
 {
-   hier::BoxList dst_boxes;
+   hier::BoxList dst_boxes(boxes.getDim());
 
-   for (hier::BoxList::Iterator b(boxes); b; b++) {
+   for (hier::BoxList::ConstIterator b(boxes); b; b++) {
       hier::Box node_box(NodeGeometry::toNodeBox(b()));
-      dst_boxes.appendItem(node_box);
+      dst_boxes.pushBack(node_box);
    }
 
    // Create the node overlap data object using the boxes and source shift

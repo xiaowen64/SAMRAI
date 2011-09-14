@@ -13,6 +13,7 @@
 
 #include "SAMRAI/SAMRAI_config.h"
 #include "SAMRAI/hier/Box.h"
+#include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/hier/IntVector.h"
 #include "SAMRAI/hier/MultiblockBoxTree.h"
 #include "SAMRAI/tbox/Array.h"
@@ -24,6 +25,9 @@
 namespace SAMRAI {
 namespace hier {
 
+typedef BoxContainer BoxList;
+
+#if 0
 class BoxTree;
 
 /**
@@ -399,7 +403,7 @@ private:
    tbox::Dimension d_dim;
 
 };
-
+#endif
 }
 }
 

@@ -21,7 +21,8 @@
 namespace SAMRAI {
 namespace hier {
 
-class BoxList;
+class BoxContainer;
+typedef BoxContainer BoxList;
 
 /*!
  * @brief A wrapper around std::set<Box>.

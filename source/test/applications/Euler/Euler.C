@@ -33,6 +33,7 @@ using namespace std;
 #include <cmath>
 #include <cfloat>
 
+#include "SAMRAI/hier/BoxContainerIterator.h"
 #include "SAMRAI/hier/BoxList.h"
 #include "SAMRAI/geom/CartesianPatchGeometry.h"
 #include "SAMRAI/pdat/CellData.h"
@@ -1734,11 +1735,11 @@ void Euler::boundaryReset(
    for (idir = 0; idir < d_dim.getValue(); idir++) {
       ibfirst(idir) = ifirst(idir) - 1;
       iblast(idir) = ifirst(idir) - 1;
-      bdrybox.appendItem(hier::Box(ibfirst, iblast));
+      bdrybox.pushBack(hier::Box(ibfirst, iblast));
 
       ibfirst(idir) = ilast(idir) + 1;
       iblast(idir) = ilast(idir) + 1;
-      bdrybox.appendItem(hier::Box(ibfirst, iblast));
+      bdrybox.pushBack(hier::Box(ibfirst, iblast));
    }
 
    hier::BoxList::Iterator ib(bdrybox);

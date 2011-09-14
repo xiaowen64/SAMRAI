@@ -13,6 +13,7 @@
 
 #include "SAMRAI/hier/BoxContainer.h"
 
+//#include "SAMRAI/hier/BoxContainerSetIterator.h"
 #include "SAMRAI/hier/Index.h"
 #ifdef MB_BOXTREE_EXISTS
 #include "SAMRAI/hier/GridGeometry.h"
@@ -289,6 +290,73 @@ void BoxContainer::coarsen(
    }
 }
 
+void BoxContainer::makeSet()
+{
+   for (Iterator i(*this); i; i++) {
+      d_set.insert(&(i()));
+   }
+}
+#if 0
+BoxContainerSetIterator BoxContainer::setBegin() {
+   BoxContainerSetIterator iter(*this);
+
+   iter.d_set_iter = d_set.begin();
+
+   return iter;
+}
+
+BoxContainerSetIterator BoxContainer::setEnd() {
+   BoxContainerSetIterator iter(*this);
+
+   iter.d_set_iter = d_set.end();
+
+   return iter;
+}
+
+BoxContainerSetIterator BoxContainer::find(Box& box) {
+   BoxContainerSetIterator iter(*this);
+
+   iter.d_set_iter = d_set.find(&box);
+
+   return iter;
+}
+
+void BoxContainer::erase(BoxContainerSetIterator iter)
+{
+   d_set.erase(iter.d_set_iter);
+   //TODO:: Linear search to erase from d_list? 
+}
+
+int BoxContainer::erase(Box& box)
+{
+   return d_set.erase(&box);
+   //TODO:: Linear search to erase from d_list? 
+}
+
+void BoxContainer::erase(BoxContainerSetIterator first,
+                         BoxContainerSetIterator last)
+{
+   d_set.erase(first.d_set_iter, last.d_set_iter);
+   //TODO:: Linear search to erase from d_list? 
+}
+
+BoxContainerSetIterator BoxContainer::lower_bound(Box& box) {
+   BoxContainerSetIterator iter(*this);
+
+   iter.d_set_iter = d_set.lower_bound(&box);
+
+   return iter;
+}
+
+BoxContainerSetIterator BoxContainer::upper_bound(Box& box) {
+   BoxContainerSetIterator iter(*this);
+
+   iter.d_set_iter = d_set.upper_bound(&box);
+
+   return iter;
+}
+
+#endif
 void BoxContainer::rotate(
    const Transformation::RotationIdentifier rotation_ident)
 {

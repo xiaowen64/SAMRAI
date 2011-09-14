@@ -575,7 +575,7 @@ void BoxNeighborhoodCollection::getNeighbors(
    getNeighbors(tmp_nbrs);
    for (BoxSet::const_iterator itr(tmp_nbrs.begin());
         itr != tmp_nbrs.end(); ++itr) {
-      neighbors.appendItem(*itr);
+      neighbors.pushBack(*itr);
    }
    return;
 }
@@ -595,7 +595,7 @@ void BoxNeighborhoodCollection::getNeighbors(
    getNeighbors(tmp_nbrs);
    for (BoxSetSingleBlockIterator itr(tmp_nbrs, block_id);
         itr.isValid(); ++itr) {
-      neighbors.appendItem(*itr);
+      neighbors.pushBack(*itr);
    }
    return;
 }
@@ -613,7 +613,7 @@ void BoxNeighborhoodCollection::getNeighbors(
    getNeighbors(tmp_nbrs);
    for (BoxSet::const_iterator itr(tmp_nbrs.begin());
         itr != tmp_nbrs.end(); ++itr) {
-      neighbors[itr->getBlockId()].appendItem(*itr);
+      neighbors[itr->getBlockId()].pushBack(*itr);
    }
    return;
 }

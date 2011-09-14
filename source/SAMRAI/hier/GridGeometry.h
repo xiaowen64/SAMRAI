@@ -860,7 +860,7 @@ private:
    void
    getDomainOutsideBlock(
       BoxList& domain_outside_block,
-      const BlockId& block_id);
+      const BlockId& block_id) const;
 
    /*!
     * @brief Return the number of block singularities in the block

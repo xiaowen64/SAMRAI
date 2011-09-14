@@ -14,6 +14,7 @@
 #include "SAMRAI/pdat/NodeData.h"
 
 #include "SAMRAI/hier/Box.h"
+#include "SAMRAI/hier/BoxContainerConstIterator.h"
 #include "SAMRAI/hier/BoxList.h"
 #include "SAMRAI/pdat/NodeOverlap.h"
 #include "SAMRAI/tbox/Utilities.h"
@@ -217,7 +218,7 @@ void NodeData<TYPE>::copyWithRotation(
 
    hier::Transformation back_trans(back_rotate, back_shift);
 
-   for (hier::BoxList::Iterator bi(overlap_boxes); bi; bi++) {
+   for (hier::BoxList::ConstIterator bi(overlap_boxes); bi; bi++) {
       const hier::Box& overlap_box = bi();
 
       const hier::Box copybox(node_rotatebox * overlap_box);
@@ -356,7 +357,7 @@ void NodeData<TYPE>::packWithRotation(
    tbox::Array<TYPE> buffer(size);
 
    int i = 0;
-   for (hier::BoxList::Iterator bi(overlap_boxes); bi; bi++) {
+   for (hier::BoxList::ConstIterator bi(overlap_boxes); bi; bi++) {
       const hier::Box& overlap_box = bi();
 
       const hier::Box copybox(node_rotatebox * overlap_box);

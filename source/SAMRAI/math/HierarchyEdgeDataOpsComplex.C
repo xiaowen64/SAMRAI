@@ -12,6 +12,7 @@
 #define included_math_HierarchyEdgeDataOpsComplex_C
 
 #include "SAMRAI/math/HierarchyEdgeDataOpsComplex.h"
+#include "SAMRAI/hier/BoxContainerIterator.h"
 #include "SAMRAI/hier/BoxUtilities.h"
 #include "SAMRAI/hier/PatchDescriptor.h"
 #include "SAMRAI/pdat/EdgeDataFactory.h"
@@ -658,7 +659,8 @@ int HierarchyEdgeDataOpsComplex::numberOfEntries(
             tbox::List<hier::Box>::Iterator lb;
 
             for (int eb = 0; eb < dim.getValue(); eb++) {
-               lb = ((d_nonoverlapping_edge_boxes[eb][ln])[il]).listStart();
+               hier::BoxList::ConstIterator lb =
+                  ((d_nonoverlapping_edge_boxes[eb][ln])[il]).begin();
                for ( ; lb; lb++) {
                   entries += lb().size();
                }

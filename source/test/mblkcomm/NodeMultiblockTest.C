@@ -550,9 +550,9 @@ bool NodeMultiblockTest::verifyResults(
       hier::Box patch_node_box =
          pdat::NodeGeometry::toNodeBox(pbox);
 
-      hier::BoxList sing_node_boxlist;
+      hier::BoxList sing_node_boxlist(d_dim);
       for (hier::BoxList::Iterator si(singularity); si; si++) {
-         sing_node_boxlist.addItem(pdat::NodeGeometry::toNodeBox(si()));
+         sing_node_boxlist.pushFront(pdat::NodeGeometry::toNodeBox(si()));
       }
 
       hier::BoxList tested_neighbors(d_dim);
@@ -564,12 +564,12 @@ bool NodeMultiblockTest::verifyResults(
 
          hier::BoxList neighbor_ghost(ne().getTransformedDomain());
 
-         hier::BoxList neighbor_node_ghost;
+         hier::BoxList neighbor_node_ghost(d_dim);
          for (hier::BoxList::Iterator nn(neighbor_ghost); nn; nn++) {
             hier::Box neighbor_ghost_interior(
                pdat::NodeGeometry::toNodeBox(nn()));
             neighbor_ghost_interior.grow(-hier::IntVector::getOne(d_dim));
-            neighbor_node_ghost.addItem(neighbor_ghost_interior);
+            neighbor_node_ghost.pushFront(neighbor_ghost_interior);
          }
 
          neighbor_node_ghost.refine(ratio);
@@ -602,7 +602,7 @@ bool NodeMultiblockTest::verifyResults(
                }
             }
          }
-         tested_neighbors.unionBoxes(neighbor_node_ghost);
+         tested_neighbors.spliceBack(neighbor_node_ghost);
       }
 
       for (int b = 0; b < d_dim.getValue(); b++) {

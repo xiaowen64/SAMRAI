@@ -19,6 +19,7 @@
 #include "SAMRAI/hier/PatchHierarchy.h"
 #include "SAMRAI/hier/PatchLevel.h"
 #include "SAMRAI/hier/BoundaryBox.h"
+#include "SAMRAI/hier/BoxContainerIterator.h"
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/hier/ComponentSelector.h"
 #include "SAMRAI/xfer/CoarsenAlgorithm.h"

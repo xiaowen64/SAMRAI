@@ -11,6 +11,8 @@
 #define included_hier_BoxLevelConnectorUtils_C
 
 #include "SAMRAI/hier/BoxLevelConnectorUtils.h"
+
+#include "SAMRAI/hier/BoxContainerIterator.h"
 #include "SAMRAI/hier/BoxSetSingleBlockIterator.h"
 #include "SAMRAI/hier/MappingConnectorAlgorithm.h"
 #include "SAMRAI/hier/OverlapConnectorAlgorithm.h"
@@ -873,7 +875,7 @@ void BoxLevelConnectorUtils::computeInternalOrExternalParts(
           * Connector from input.
           */
          if (parts_list.size() == 1 &&
-             parts_list.getFirstItem().isSpatiallyEqual(input_mapped_box)) {
+             parts_list.front().isSpatiallyEqual(input_mapped_box)) {
 
             /*
              * The entire input_mapped_box is the part we want.
@@ -1113,7 +1115,7 @@ void BoxLevelConnectorUtils::computeBoxesAroundBoundary(
    if (simplify_boundary_boxes) {
       for (std::map<BlockId, BoxList>::iterator mi = boundary.begin();
            mi != boundary.end(); ++mi) {
-         mi->second.simplifyBoxes();
+         mi->second.simplify();
       }
    }
 }
@@ -1215,7 +1217,7 @@ void BoxLevelConnectorUtils::makeRemainderMap(
           * length of remaining_parts_list to be very small.
           */
          if (remaining_parts_list.size() > 1) {
-            remaining_parts_list.coalesceBoxes();
+            remaining_parts_list.coalesce();
          }
 
          /*

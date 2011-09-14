@@ -601,12 +601,12 @@ bool SideMultiblockTest::verifyResults(
             correct = ne().getBlockId().getBlockValue();
 
             hier::BoxList neighbor_ghost(ne().getTransformedDomain());
-            hier::BoxList neighbor_side_ghost;
+            hier::BoxList neighbor_side_ghost(d_dim);
             for (hier::BoxList::Iterator nn(neighbor_ghost); nn; nn++) {
                hier::Box neighbor_ghost_interior(
                   pdat::SideGeometry::toSideBox(nn(), axis));
                neighbor_ghost_interior.grow(-hier::IntVector::getOne(d_dim));
-               neighbor_side_ghost.addItem(neighbor_ghost_interior);
+               neighbor_side_ghost.pushFront(neighbor_ghost_interior);
             }
 
             neighbor_side_ghost.refine(ratio);
@@ -639,7 +639,7 @@ bool SideMultiblockTest::verifyResults(
                   }
                }
             }
-            tested_neighbors.unionBoxes(neighbor_side_ghost);
+            tested_neighbors.spliceBack(neighbor_side_ghost);
          }
       }
 

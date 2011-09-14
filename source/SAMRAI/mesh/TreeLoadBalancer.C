@@ -12,6 +12,7 @@
 #define included_mesh_TreeLoadBalancer_C
 
 #include "SAMRAI/mesh/TreeLoadBalancer.h"
+#include "SAMRAI/hier/BoxContainerIterator.h"
 #include "SAMRAI/hier/BoxUtilities.h"
 #include "SAMRAI/tbox/StartupShutdownManager.h"
 
@@ -4002,7 +4003,7 @@ void TreeLoadBalancer::burstBox(
    for (std::vector<hier::Box>::const_iterator bi = boxes.begin();
         bi != boxes.end();
         bi++) {
-      l2.addItem(*bi);
+      l2.pushFront(*bi);
    }
    l1.removeIntersections(l2);
    TBOX_ASSERT(l1.size() == 0);
@@ -4755,7 +4756,7 @@ void TreeLoadBalancer::setShadowData(
       domain_mapped_box_level.getParallelState() ==
       hier::BoxLevel::GLOBALIZED);
 
-   d_domain_boxes.clearItems();
+   d_domain_boxes.clear();
    domain_mapped_box_level.getGlobalBoxes(d_domain_boxes);
    d_domain_boxes.refine(refinement_ratio);
 }
@@ -4763,7 +4764,7 @@ void TreeLoadBalancer::setShadowData(
 void TreeLoadBalancer::unsetShadowData() const {
    d_min_size = hier::IntVector(d_dim, -1);
    d_max_size = hier::IntVector(d_dim, -1);
-   d_domain_boxes.clearItems();
+   d_domain_boxes.clear();
    d_bad_interval = hier::IntVector(d_dim, -1);
    d_cut_factor = hier::IntVector(d_dim, -1);
 }

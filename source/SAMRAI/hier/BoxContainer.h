@@ -19,6 +19,7 @@
 
 #include <iostream>
 #include <list>
+#include <set>
 
 #define MB_BOXTREE_EXISTS
 
@@ -27,6 +28,7 @@ namespace hier {
 
 class BoxContainerIterator;
 class BoxContainerConstIterator;
+//class BoxContainerSetIterator;
 class BoxTree;
 #ifdef MB_BOXTREE_EXISTS
 class MultiblockBoxTree;
@@ -46,6 +48,7 @@ class BoxContainer
 {
 friend class BoxContainerIterator;
 friend class BoxContainerConstIterator;
+//friend class BoxContainerSetIterator;
 
 public:
    // Typedefs.
@@ -332,6 +335,32 @@ public:
     */
    void
    clear();
+
+/*******************************************************/
+// set methods
+
+   void makeSet(); 
+
+//   BoxContainerSetIterator setBegin();
+//   BoxContainerSetIterator setEnd();
+
+   bool insert(const Box& box)
+   {
+      const std::list<Box>::iterator& iter = d_list.insert(d_list.end(), box);
+      return d_set.insert(&(*iter)).second;
+   }
+#if 0
+   BoxContainerSetIterator find(Box& box);
+   BoxContainerSetIterator lower_bound(Box& box);
+   BoxContainerSetIterator upper_bound(Box& box);
+   void erase(BoxContainerSetIterator iter);
+   int erase(Box& box);
+   void erase(BoxContainerSetIterator first,
+              BoxContainerSetIterator last);
+ 
+#endif
+// end set methods
+/**********************************************************/
 
    // Equivalence.
 
@@ -723,6 +752,8 @@ private:
     * The underlying container representation.  This class is a wrapper.
     */
    std::list<Box> d_list;
+
+   std::set<Box*, Box::id_less> d_set;
 };
 
 }

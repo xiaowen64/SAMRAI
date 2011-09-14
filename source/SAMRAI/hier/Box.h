@@ -288,6 +288,11 @@ public:
       {
          return b1.getId() < b2.getId();
       }
+
+      bool operator () (const Box* b1, const Box* b2) const
+      {
+         return b1->getId() < b2->getId();
+      }
    };
 
    /*!

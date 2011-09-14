@@ -13,6 +13,7 @@
 
 #include "SAMRAI/pdat/SecondLayerNodeVariableFillPattern.h"
 
+#include "SAMRAI/hier/BoxContainerIterator.h"
 #include "SAMRAI/pdat/NodeGeometry.h"
 #include "SAMRAI/tbox/Utilities.h"
 
@@ -76,23 +77,23 @@ SecondLayerNodeVariableFillPattern::calculateOverlap(
    bool corner_overlap = ((dst_node_box * src_node_mask).size() == 1)
       ? true : false;
 
-   hier::BoxList stencil_boxes;
+   hier::BoxList stencil_boxes(dim);
    computeStencilBoxes(stencil_boxes, dst_patch_box);
    if (corner_overlap) {
       hier::IntVector grow_vec(dim, 0);
       hier::Box grow_box(dim);
-      hier::BoxList remove_list;
+      hier::BoxList remove_list(dim);
       for (unsigned int i = 0; i < dim.getValue(); i++) {
          grow_box = dst_node_box;
          grow_vec(i) = 1;
          grow_box.grow(grow_vec);
-         remove_list.addItem(grow_box);
+         remove_list.pushFront(grow_box);
          grow_vec(i) = 0;
       }
       stencil_boxes.removeIntersections(remove_list);
    }
 
-   hier::BoxList dst_boxes;
+   hier::BoxList dst_boxes(dim);
 
    const NodeGeometry* t_dst =
       dynamic_cast<const NodeGeometry *>(&dst_geometry);
@@ -179,7 +180,7 @@ SecondLayerNodeVariableFillPattern::computeFillBoxesOverlap(
 
    const tbox::Dimension& dim = patch_box.getDim();
 
-   hier::BoxList stencil_boxes;
+   hier::BoxList stencil_boxes(dim);
    computeStencilBoxes(stencil_boxes, patch_box);
 
    hier::BoxList overlap_boxes(fill_boxes);
@@ -197,7 +198,7 @@ SecondLayerNodeVariableFillPattern::computeFillBoxesOverlap(
 
    overlap_boxes.intersectBoxes(stencil_boxes);
 
-   overlap_boxes.coalesceBoxes();
+   overlap_boxes.coalesce();
 
    hier::BoxOverlap* overlap =
       new pdat::NodeOverlap(

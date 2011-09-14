@@ -723,10 +723,17 @@ void PatchHierarchy::setupDomainData()
        * Set up the search tree for the domain's complement.
        */
       BlockId block_id(nb);
-      multiblock_complement_boxes[block_id].appendItem(
-         hier::Box::getUniverse(d_dim));
-      multiblock_complement_boxes[block_id].removeIntersections(
+      hier::BoxList complement_boxes(hier::Box::getUniverse(d_dim));
+      complement_boxes.removeIntersections(
          d_domain_search_tree_periodic.getSingleBlockBoxTree(block_id));
+
+      multiblock_complement_boxes.insert(
+         std::pair<BlockId, BoxList>(block_id, complement_boxes));
+
+//      multiblock_complement_boxes[block_id].pushBack(
+//         hier::Box::getUniverse(d_dim));
+//      multiblock_complement_boxes[block_id].removeIntersections(
+//         d_domain_search_tree_periodic.getSingleBlockBoxTree(block_id));
    }
 
    d_complement_searchtree.generateTree(

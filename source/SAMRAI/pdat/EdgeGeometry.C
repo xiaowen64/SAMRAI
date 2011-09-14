@@ -13,6 +13,7 @@
 
 #include "SAMRAI/pdat/EdgeGeometry.h"
 #include "SAMRAI/pdat/EdgeOverlap.h"
+#include "SAMRAI/hier/BoxContainerConstIterator.h"
 #include "SAMRAI/hier/BoxList.h"
 #include "SAMRAI/tbox/Utilities.h"
 
@@ -146,7 +147,7 @@ tbox::Pointer<hier::BoxOverlap> EdgeGeometry::doOverlap(
 {
    const tbox::Dimension& dim(src_mask.getDim());
 
-   tbox::Array<hier::BoxList> dst_boxes(dim.getValue());
+   tbox::Array<hier::BoxList> dst_boxes(dim.getValue(), hier::BoxList(dim));
 
    // Perform a quick-and-dirty intersection to see if the boxes might overlap
 
@@ -176,20 +177,20 @@ tbox::Pointer<hier::BoxOverlap> EdgeGeometry::doOverlap(
 
          if (!together.empty()) {
 
-            dst_boxes[d].unionBoxes(together);
+            dst_boxes[d].pushBack(together);
             if (!overwrite_interior) {
                const hier::Box int_edge(toEdgeBox(dst_geometry.d_box, d));
                dst_boxes[d].removeIntersections(together, int_edge);
             } else {
-               dst_boxes[d].appendItem(together);
+               dst_boxes[d].pushBack(together);
             }
 
          }  // if (!together.empty())
 
          if (dst_restrict_boxes.size() && dst_boxes[d].size()) {
-            hier::BoxList edge_restrict_boxes;
-            for (hier::BoxList::Iterator b(dst_restrict_boxes); b; b++) {
-               edge_restrict_boxes.appendItem(toEdgeBox(b(), d));
+            hier::BoxList edge_restrict_boxes(dim);
+            for (hier::BoxList::ConstIterator b(dst_restrict_boxes); b; b++) {
+               edge_restrict_boxes.pushBack(toEdgeBox(b(), d));
             }
             dst_boxes[d].intersectBoxes(edge_restrict_boxes);
          }
@@ -216,12 +217,12 @@ EdgeGeometry::setUpOverlap(
    const hier::Transformation& transformation) const
 {
    const tbox::Dimension& dim(transformation.getOffset().getDim());
-   tbox::Array<hier::BoxList> dst_boxes(dim.getValue());
+   tbox::Array<hier::BoxList> dst_boxes(dim.getValue(), hier::BoxList(dim));
 
-   for (hier::BoxList::Iterator b(boxes); b; b++) {
+   for (hier::BoxList::ConstIterator b(boxes); b; b++) {
       for (int d = 0; d < dim.getValue(); d++) {
          hier::Box edge_box(EdgeGeometry::toEdgeBox(b(), d));
-         dst_boxes[d].appendItem(edge_box);
+         dst_boxes[d].pushBack(edge_box);
       }
    }
 
