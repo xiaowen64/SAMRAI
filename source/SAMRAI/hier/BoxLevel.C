@@ -651,7 +651,7 @@ void BoxLevel::cacheGlobalReducedData() const
 
    d_global_data_up_to_date = true;
 
-   t_cache_global_reduced_data->barrierAndStop();
+   t_cache_global_reduced_data->stop();
 }
 
 int BoxLevel::getGlobalNumberOfBoxes() const

@@ -434,7 +434,7 @@ void CoarsenSchedule::setupRefineAlgorithm()
             tbox::Pointer<xfer::VariableFillPattern>(NULL));
       }
 
-      t_coarse_data_fill->barrierAndStop();
+      t_coarse_data_fill->stop();
    }
 
 }
@@ -467,7 +467,7 @@ void CoarsenSchedule::generateSchedule()
       d_precoarsen_refine_schedule =
          d_precoarsen_refine_algorithm->createSchedule(d_temp_crse_level,
             d_crse_level, NULL);
-      t_coarse_data_fill->barrierAndStop();
+      t_coarse_data_fill->stop();
    }
 
    d_schedule = new tbox::Schedule();

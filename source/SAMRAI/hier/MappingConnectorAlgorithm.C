@@ -884,7 +884,7 @@ void MappingConnectorAlgorithm::privateModify(
    }
    t_modify_misc->stop();
 
-   t_modify->barrierAndStop();
+   t_modify->stop();
 }
 
 /*

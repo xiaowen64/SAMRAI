@@ -1204,7 +1204,7 @@ void OverlapConnectorAlgorithm::privateBridge(
       }
    }
 
-   t_bridge->barrierAndStop();
+   t_bridge->stop();
 }
 
 /*

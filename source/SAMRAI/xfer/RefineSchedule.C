@@ -794,7 +794,7 @@ void RefineSchedule::finishScheduleConstruction(
       grid_geometry->hasEnhancedConnectivity() &&
       (d_unfilled_encon_box_level->getGlobalNumberOfBoxes() > 0);
 
-   t_get_global_mapped_box_count->barrierAndStop();
+   t_get_global_mapped_box_count->stop();
 
    /*
     * If there remain boxes to be filled from coarser levels, then set
