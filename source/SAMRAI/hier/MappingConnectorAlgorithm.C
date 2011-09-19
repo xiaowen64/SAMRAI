@@ -36,6 +36,7 @@ tbox::Pointer<tbox::Timer> MappingConnectorAlgorithm::t_modify_remove_and_cache;
 tbox::Pointer<tbox::Timer> MappingConnectorAlgorithm::t_modify_discover_and_send;
 tbox::Pointer<tbox::Timer> MappingConnectorAlgorithm::t_modify_receive_and_unpack;
 tbox::Pointer<tbox::Timer> MappingConnectorAlgorithm::t_modify_MPI_wait;
+tbox::Pointer<tbox::Timer> MappingConnectorAlgorithm::t_modify_misc;
 
 const std::string MappingConnectorAlgorithm::s_dbgbord;
 
@@ -511,6 +512,7 @@ void MappingConnectorAlgorithm::privateModify(
    BoxLevel* mutable_old) const
 {
    t_modify->barrierAndStart();
+   t_modify_misc->start();
 
    if (s_print_modify_steps == 'y') {
       tbox::plog
@@ -607,6 +609,8 @@ void MappingConnectorAlgorithm::privateModify(
          anchor.getRefinementRatio(),
          anchor_to_new_width);
 
+   t_modify_misc->stop();
+
    bool do_shortcut(false);
    if (d_shortcut_trivial_maps) {
       t_modify_shortcut->start();
@@ -658,6 +662,8 @@ void MappingConnectorAlgorithm::privateModify(
        * The essential modify algorithm is in this block.
        */
 
+      t_modify_misc->start();
+
       /*
        * Initialize the output connectors with the correct new
        * BoxLevel.  (As inputs, they were referencing the old
@@ -704,6 +710,8 @@ void MappingConnectorAlgorithm::privateModify(
       tbox::AsyncCommStage comm_stage;
       tbox::AsyncCommPeer<int> * all_comms(NULL);
       tbox::AsyncCommStage::MemberVec completed;
+
+      t_modify_misc->stop();
 
       /*
        * Set up communication mechanism (and post receives).
@@ -784,6 +792,8 @@ void MappingConnectorAlgorithm::privateModify(
          dim,
          mpi);
 
+      t_modify_misc->start();
+
       delete[] all_comms;
 
       TBOX_ASSERT(anchor_to_new.getNeighborhoodSets().empty());
@@ -817,6 +827,8 @@ void MappingConnectorAlgorithm::privateModify(
       TBOX_ASSERT(anchor_eto_new.empty());
       TBOX_ASSERT(new_eto_anchor.empty());
 
+      t_modify_misc->stop();
+
    }
 
    /*
@@ -830,6 +842,7 @@ void MappingConnectorAlgorithm::privateModify(
     * BoxLevel, this method initializes it to the new
     * BoxLevel and uses it in the output Connectors.
     */
+   t_modify_misc->start();
    if (mutable_new == &old_to_new.getBase() &&
        mutable_old == &old_to_new.getHead()) {
       /*
@@ -869,6 +882,7 @@ void MappingConnectorAlgorithm::privateModify(
          *mutable_old = old_to_new.getBase();
       }
    }
+   t_modify_misc->stop();
 
    t_modify->barrierAndStop();
 }
@@ -2066,6 +2080,8 @@ void MappingConnectorAlgorithm::initializeCallback()
       getTimer("hier::MappingConnectorAlgorithm::privateModify_receiveAndUnpack()");
    t_modify_MPI_wait = tbox::TimerManager::getManager()->
       getTimer("hier::MappingConnectorAlgorithm::privateModify()_MPI_wait");
+   t_modify_misc = tbox::TimerManager::getManager()->
+      getTimer("hier::MappingConnectorAlgorithm::privateModify()_misc");
 }
 
 /*
@@ -2083,6 +2099,7 @@ void MappingConnectorAlgorithm::finalizeCallback()
    t_modify_discover_and_send.setNull();
    t_modify_receive_and_unpack.setNull();
    t_modify_MPI_wait.setNull();
+   t_modify_misc.setNull();
 
    if (s_class_mpi.getCommunicator() != tbox::SAMRAI_MPI::commNull) {
       s_class_mpi.freeCommunicator();

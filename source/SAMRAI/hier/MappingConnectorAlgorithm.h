@@ -17,6 +17,7 @@
 #include "SAMRAI/hier/BoxLevel.h"
 #include "SAMRAI/tbox/AsyncCommPeer.h"
 #include "SAMRAI/tbox/SAMRAI_MPI.h"
+#include "SAMRAI/tbox/Timer.h"
 
 #include <map>
 #include <string>
@@ -517,6 +518,7 @@ private:
    static tbox::Pointer<tbox::Timer> t_modify_discover_and_send;
    static tbox::Pointer<tbox::Timer> t_modify_receive_and_unpack;
    static tbox::Pointer<tbox::Timer> t_modify_MPI_wait;
+   static tbox::Pointer<tbox::Timer> t_modify_misc;
 
    bool d_sanity_check_inputs;
    bool d_sanity_check_outputs;

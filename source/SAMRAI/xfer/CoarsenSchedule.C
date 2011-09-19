@@ -48,6 +48,7 @@ tbox::Pointer<tbox::Timer> CoarsenSchedule::t_coarsen_data;
 tbox::Pointer<tbox::Timer> CoarsenSchedule::t_gen_sched_n_squared;
 tbox::Pointer<tbox::Timer> CoarsenSchedule::t_gen_sched_dlbg;
 tbox::Pointer<tbox::Timer> CoarsenSchedule::t_invert_edges;
+tbox::Pointer<tbox::Timer> CoarsenSchedule::t_coarse_data_fill;
 
 tbox::StartupShutdownManager::Handler
 CoarsenSchedule::s_initialize_finalize_handler(
@@ -216,8 +217,10 @@ void CoarsenSchedule::reset(
    setupRefineAlgorithm();
 
    if (d_fill_coarse_data) {
+      t_coarse_data_fill->start();
       d_precoarsen_refine_algorithm->
       resetSchedule(d_precoarsen_refine_schedule);
+      t_coarse_data_fill->stop();
    }
 
 }
@@ -257,7 +260,7 @@ CoarsenSchedule::getEquivalenceClasses() const
 
 void CoarsenSchedule::coarsenData() const
 {
-   t_coarsen_data->start();
+   t_coarsen_data->barrierAndStart();
 
    /*
     * Set the coarsen items for all transactions.  These items are
@@ -276,7 +279,9 @@ void CoarsenSchedule::coarsenData() const
    d_temp_crse_level->allocatePatchData(d_sources, 0.0);
 
    if (d_fill_coarse_data) {
+      t_coarse_data_fill->start();
       d_precoarsen_refine_schedule->fillData(0.0);
+      t_coarse_data_fill->stop();
    }
 
    /*
@@ -416,6 +421,7 @@ void CoarsenSchedule::setupRefineAlgorithm()
    const tbox::Dimension& dim(d_crse_level->getDim());
 
    if (d_fill_coarse_data) {
+      t_coarse_data_fill->barrierAndStart();
 
       d_precoarsen_refine_algorithm.setNull();
       d_precoarsen_refine_algorithm = new RefineAlgorithm(dim);
@@ -427,6 +433,8 @@ void CoarsenSchedule::setupRefineAlgorithm()
             src_id,
             tbox::Pointer<xfer::VariableFillPattern>(NULL));
       }
+
+      t_coarse_data_fill->barrierAndStop();
    }
 
 }
@@ -455,9 +463,11 @@ void CoarsenSchedule::generateSchedule()
    generateTemporaryLevel();
 
    if (d_fill_coarse_data) {
+      t_coarse_data_fill->barrierAndStart();
       d_precoarsen_refine_schedule =
          d_precoarsen_refine_algorithm->createSchedule(d_temp_crse_level,
             d_crse_level, NULL);
+      t_coarse_data_fill->barrierAndStop();
    }
 
    d_schedule = new tbox::Schedule();
@@ -1201,6 +1211,8 @@ void CoarsenSchedule::initializeCallback()
       getTimer("xfer::CoarsenSchedule::generateScheduleDLBG()");
    t_invert_edges = tbox::TimerManager::getManager()->
       getTimer("xfer::CoarsenSchedule::generate...()_invert_edges");
+   t_coarse_data_fill = tbox::TimerManager::getManager()->
+      getTimer("xfer::CoarsenSchedule::coarse_data_fill");
 }
 
 /*

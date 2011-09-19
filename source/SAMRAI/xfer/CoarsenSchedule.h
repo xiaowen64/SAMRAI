@@ -485,6 +485,7 @@ private:
    static tbox::Pointer<tbox::Timer> t_gen_sched_n_squared;
    static tbox::Pointer<tbox::Timer> t_gen_sched_dlbg;
    static tbox::Pointer<tbox::Timer> t_invert_edges;
+   static tbox::Pointer<tbox::Timer> t_coarse_data_fill;
 
    //*}
 
