@@ -183,13 +183,15 @@ public:
       const Comm& comm);
 
    /*!
-    * @brief Get the local process rank from the internal communicator.
+    * @brief Get the local process rank from the last time the
+    * internal communicator was set.
     */
    int
    getRank() const;
 
    /*!
-    * @brief Get the size (number of processes) of the internal communicator.
+    * @brief Get the size (number of processes) of the internal
+    * communicator the last time it was set.
     */
    int
    getSize() const;
