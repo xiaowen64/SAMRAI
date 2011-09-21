@@ -748,10 +748,10 @@ void Connector::swap(
 
    if (&a != &b) {
       tbox::Pointer<BoxLevelHandle> tmplayer;
-      int tmpint;
       bool tmpbool;
       IntVector tmpvec(a.getBase().getDim());
       BoxLevel::ParallelState tmpstate;
+      tbox::SAMRAI_MPI tmpmpi(a.d_mpi);
 
       tmplayer = a.d_base_handle;
       a.d_base_handle = b.d_base_handle;
@@ -760,6 +760,9 @@ void Connector::swap(
       tmplayer = a.d_head_handle;
       a.d_head_handle = b.d_head_handle;
       b.d_head_handle = tmplayer;
+
+      a.d_mpi = b.d_mpi;
+      b.d_mpi = tmpmpi;
 
       a.d_relationships.swap(b.d_relationships);
       a.d_global_relationships.swap(b.d_global_relationships);

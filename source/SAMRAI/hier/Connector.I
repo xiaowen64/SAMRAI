@@ -136,6 +136,7 @@ const Connector& Connector::operator = (
       d_global_number_of_relationships = rhs.d_global_number_of_relationships;
       d_relationships = rhs.d_relationships;
       d_global_relationships = rhs.d_global_relationships;
+      d_mpi = rhs.d_mpi;
       d_base_width = rhs.d_base_width;
       d_ratio = rhs.d_ratio;
       d_head_coarser = rhs.d_head_coarser;
