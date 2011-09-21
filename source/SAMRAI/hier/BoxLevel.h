@@ -370,22 +370,6 @@ public:
    const tbox::SAMRAI_MPI&
    getMPI() const;
 
-   /*
-    * TODO: Why are these methods here? Shouldn't we get this information
-    * from the SAMRAI_MPI object (method above).
-    */
-   /*!
-    * @brief Return the processor rank for the internal MPI communicator.
-    */
-   int
-   getRank() const;
-
-   /*!
-    * @brief Return the number of processes for the internal MPI communicator.
-    */
-   int
-   getNproc() const;
-
    //@}
 
    /*!
@@ -1497,18 +1481,6 @@ private:
    static tbox::Pointer<tbox::Timer> t_initialize_private;
    static tbox::Pointer<tbox::Timer> t_acquire_remote_mapped_boxes;
    static tbox::Pointer<tbox::Timer> t_cache_global_reduced_data;
-
-   /*!
-    * @brief Process rank (id),
-    * for convenience and data management use after MPI_Finalize.
-    */
-   int d_rank;
-
-   /*!
-    * @brief Number of processes,
-    * for convenience and data management use after MPI_Finalize.
-    */
-   int d_nproc;
 
    /*!
     * @brief Pointer to the GridGeometry associated with this object.

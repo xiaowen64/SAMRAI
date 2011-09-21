@@ -17,22 +17,7 @@ namespace hier {
 SAMRAI_INLINE_KEYWORD
 bool Connector::isInitialized() const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
-   /*
-    * The base and head mapped_box_level handles should have
-    * been initialized when this object was initialized.
-    * They should remain initialized as long as they are
-    * referenced by a Connector.  Because this check may
-    * occur when the base and head BoxLevels are in
-    * transition, we don't require that the BoxLevels
-    * themselves be initialized.
-    */
-   if (d_nproc != BAD_INT) {
-      TBOX_ASSERT(!d_base_handle.isNull());
-      TBOX_ASSERT(!d_head_handle.isNull());
-   }
-#endif
-   return d_nproc != BAD_INT;
+   return !d_base_handle.isNull();
 }
 
 SAMRAI_INLINE_KEYWORD
@@ -47,18 +32,6 @@ const tbox::SAMRAI_MPI& Connector::getMPI() const
    TBOX_ASSERT(isInitialized());
 
    return d_base_handle->getBoxLevel().getMPI();
-}
-
-SAMRAI_INLINE_KEYWORD
-int Connector::getRank() const
-{
-   return d_rank;
-}
-
-SAMRAI_INLINE_KEYWORD
-int Connector::getNproc() const
-{
-   return d_nproc;
 }
 
 SAMRAI_INLINE_KEYWORD
@@ -112,7 +85,7 @@ bool Connector::hasNeighborSet(
    const BoxId& mapped_box_id) const
 {
    if (d_parallel_state == BoxLevel::DISTRIBUTED) {
-      TBOX_ASSERT(mapped_box_id.getOwnerRank() == d_rank);
+      TBOX_ASSERT(mapped_box_id.getOwnerRank() == d_mpi.getRank());
    }
    const NeighborhoodSet& relationships = d_parallel_state == BoxLevel::DISTRIBUTED ?
       d_relationships : d_global_relationships;
@@ -132,7 +105,7 @@ const Connector::NeighborSet& Connector::getNeighborSet(
    const BoxId& mapped_box_id) const
 {
    if (d_parallel_state == BoxLevel::DISTRIBUTED) {
-      TBOX_ASSERT(mapped_box_id.getOwnerRank() == d_rank);
+      TBOX_ASSERT(mapped_box_id.getOwnerRank() == d_mpi.getRank());
    }
    const NeighborhoodSet& relationships = d_parallel_state == BoxLevel::DISTRIBUTED ?
       d_relationships : d_global_relationships;
@@ -167,8 +140,6 @@ const Connector& Connector::operator = (
       d_ratio = rhs.d_ratio;
       d_head_coarser = rhs.d_head_coarser;
       d_parallel_state = rhs.d_parallel_state;
-      d_nproc = rhs.d_nproc;
-      d_rank = rhs.d_rank;
       d_connector_type = rhs.d_connector_type;
    }
    return *this;

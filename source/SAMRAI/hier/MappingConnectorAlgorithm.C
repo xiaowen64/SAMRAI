@@ -276,7 +276,7 @@ void MappingConnectorAlgorithm::modify(
       const NeighborSet& new_nabrs = (*ci).second;
       for (NeighborSet::const_iterator na = new_nabrs.begin();
            na != new_nabrs.end(); ++na) {
-         if ((*na).getOwnerRank() != old_to_new.getRank()) {
+         if ((*na).getOwnerRank() != old_to_new.getMPI().getRank()) {
             const Box& mapped_box(
                *old_to_new.getBase().getBoxes().
                find(Box(na->getDim(), (*ci).first)));
@@ -409,7 +409,7 @@ void MappingConnectorAlgorithm::modify(
       const NeighborSet& new_nabrs = (*ci).second;
       for (NeighborSet::const_iterator na = new_nabrs.begin();
            na != new_nabrs.end(); ++na) {
-         if ((*na).getOwnerRank() != old_to_new.getRank()) {
+         if ((*na).getOwnerRank() != old_to_new.getMPI().getRank()) {
             const Box& mapped_box(
                *old_to_new.getBase().getBoxes().
                find(Box(na->getDim(), (*ci).first)));
@@ -1906,7 +1906,7 @@ size_t MappingConnectorAlgorithm::findMappingErrors(
             const NeighborSet& nabrs = (*ei).second;
             for (NeighborSet::const_iterator ni = nabrs.begin();
                  ni != nabrs.end(); ++ni) {
-               if ((*ni).getOwnerRank() != connector.getRank()) {
+               if ((*ni).getOwnerRank() != connector.getMPI().getRank()) {
                   is_local_map = 'n';
                   break;
                }

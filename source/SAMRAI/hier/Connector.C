@@ -66,12 +66,11 @@ Connector::Connector():
    d_head_coarser(false),
    d_relationships(),
    d_global_relationships(),
+   d_mpi(tbox::SAMRAI_MPI::commNull),
    d_parallel_state(BoxLevel::DISTRIBUTED),
    d_global_number_of_neighbor_sets(0),
    d_global_number_of_relationships(0),
    d_global_data_up_to_date(false),
-   d_rank(BAD_INT),
-   d_nproc(BAD_INT),
    d_connector_type(UNKNOWN)
 {
 }
@@ -92,12 +91,11 @@ Connector::Connector(
    d_head_coarser(other.d_head_coarser),
    d_relationships(other.d_relationships),
    d_global_relationships(other.d_global_relationships),
+   d_mpi(other.d_mpi),
    d_parallel_state(other.d_parallel_state),
    d_global_number_of_neighbor_sets(other.d_global_number_of_neighbor_sets),
    d_global_number_of_relationships(other.d_global_number_of_relationships),
    d_global_data_up_to_date(other.d_global_data_up_to_date),
-   d_rank(other.d_rank),
-   d_nproc(other.d_nproc),
    d_connector_type(other.d_connector_type)
 {
 }
@@ -118,12 +116,11 @@ Connector::Connector(
    d_head_coarser(false),
    d_relationships(),
    d_global_relationships(),
+   d_mpi(base_mapped_box_level.getMPI()),
    d_parallel_state(BoxLevel::DISTRIBUTED),
    d_global_number_of_neighbor_sets(0),
    d_global_number_of_relationships(0),
    d_global_data_up_to_date(false),
-   d_rank(BAD_INT),
-   d_nproc(BAD_INT),
    d_connector_type(UNKNOWN)
 {
    TBOX_DIM_ASSERT_CHECK_ARGS3(base_mapped_box_level,
@@ -152,12 +149,11 @@ Connector::Connector(
    d_head_coarser(false),
    d_relationships(),
    d_global_relationships(),
+   d_mpi(base_mapped_box_level.getMPI()),
    d_parallel_state(BoxLevel::DISTRIBUTED),
    d_global_number_of_neighbor_sets(0),
    d_global_number_of_relationships(0),
    d_global_data_up_to_date(true),
-   d_rank(BAD_INT),
-   d_nproc(BAD_INT),
    d_connector_type(UNKNOWN)
 {
    TBOX_DIM_ASSERT_CHECK_ARGS3(base_mapped_box_level,
@@ -217,7 +213,7 @@ void Connector::insertNeighbors(
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    if (d_parallel_state == BoxLevel::DISTRIBUTED &&
-       mapped_box_id.getOwnerRank() != d_rank) {
+       mapped_box_id.getOwnerRank() != getBase().getMPI().getRank()) {
       TBOX_ERROR("Connector::insertNeighbors error: Cannot work on remote\n"
          << "data in DISTRIBUTED mode.");
    }
@@ -234,7 +230,7 @@ void Connector::insertNeighbors(
       d_global_relationships[mapped_box_id].insert(neighbors.begin(),
          neighbors.end());
    }
-   if (mapped_box_id.getOwnerRank() == d_rank) {
+   if (mapped_box_id.getOwnerRank() == getBase().getMPI().getRank()) {
       d_relationships[mapped_box_id].insert(neighbors.begin(),
          neighbors.end());
    }
@@ -250,7 +246,7 @@ void Connector::eraseNeighbor(
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    if (d_parallel_state == BoxLevel::DISTRIBUTED &&
-       mapped_box_id.getOwnerRank() != d_rank) {
+       mapped_box_id.getOwnerRank() != getBase().getMPI().getRank()) {
       TBOX_ERROR("Connector::insertNeighbors error: Cannot work on remote\n"
          << "data in DISTRIBUTED mode.");
    }
@@ -268,7 +264,7 @@ void Connector::eraseNeighbor(
          mi->second.erase(neighbor);
       }
    }
-   if (mapped_box_id.getOwnerRank() == d_rank) {
+   if (mapped_box_id.getOwnerRank() == getBase().getMPI().getRank()) {
       NeighborhoodSet::iterator mi(d_relationships.find(mapped_box_id));
       if (mi != d_relationships.end()) {
          mi->second.erase(neighbor);
@@ -300,7 +296,7 @@ void Connector::swapNeighbors(
    TBOX_ASSERT(mapped_box_id.getPeriodicId() == PeriodicId::zero());
 #ifdef DEBUG_CHECK_ASSERTIONS
    if (d_parallel_state == BoxLevel::DISTRIBUTED &&
-       mapped_box_id.getOwnerRank() != d_rank) {
+       mapped_box_id.getOwnerRank() != getBase().getMPI().getRank()) {
       TBOX_ERROR("Connector::insertNeighbors error: Cannot work on remote\n"
          << "data in DISTRIBUTED mode.");
    }
@@ -313,7 +309,7 @@ void Connector::swapNeighbors(
          << "base:\n" << getBase().format("", 2));
    }
 #endif
-   if (mapped_box_id.getOwnerRank() == d_rank) {
+   if (mapped_box_id.getOwnerRank() == getBase().getMPI().getRank()) {
       if (d_parallel_state == BoxLevel::GLOBALIZED) {
          d_global_relationships[mapped_box_id] = neighbors;
       }
@@ -354,7 +350,7 @@ void Connector::acquireRemoteNeighborhoods()
     * Send and receive the data.
     */
 
-   std::vector<int> recv_mesg_size(d_nproc);
+   std::vector<int> recv_mesg_size(getBase().getMPI().getSize());
    mpi.Allgather(&send_mesg_size,
       1,
       MPI_INT,
@@ -362,9 +358,9 @@ void Connector::acquireRemoteNeighborhoods()
       1,
       MPI_INT);
 
-   std::vector<int> proc_offset(d_nproc);
+   std::vector<int> proc_offset(getBase().getMPI().getSize());
    int totl_size = 0;
-   for (int n = 0; n < d_nproc; ++n) {
+   for (int n = 0; n < getBase().getMPI().getSize(); ++n) {
       proc_offset[n] = totl_size;
       totl_size += recv_mesg_size[n];
    }
@@ -470,9 +466,9 @@ void Connector::acquireRemoteNeighborhoods_unpack(
 
    d_global_relationships = d_relationships;
 
-   for (int n = 0; n < d_nproc; ++n) {
+   for (int n = 0; n < getBase().getMPI().getSize(); ++n) {
 
-      if (n != d_rank) {
+      if (n != getBase().getMPI().getRank()) {
 
          const int* ptr = &recv_mesg[0] + proc_offset[n];
          const int num_nabr_lists = *(ptr++);
@@ -670,11 +666,9 @@ void Connector::initializePrivate(
    }
 #endif
 
-   d_nproc = base.getNproc();
-   d_rank = base.getRank();
-
    d_base_handle = base.getBoxLevelHandle();
    d_head_handle = head.getBoxLevelHandle();
+   d_mpi = base.getMPI();
 
    d_base_width = base_width;
 
@@ -704,16 +698,16 @@ void Connector::initializePrivate(
 
    // Erase remote relationships, if any, from d_relationships.
    if (!d_relationships.empty()) {
-      if (d_relationships.begin()->first.getOwnerRank() != d_rank ||
-          d_relationships.rbegin()->first.getOwnerRank() != d_rank) {
-         NeighborhoodSet::Range range = d_relationships.findRanksRange(d_rank);
+      if (d_relationships.begin()->first.getOwnerRank() != getBase().getMPI().getRank() ||
+          d_relationships.rbegin()->first.getOwnerRank() != getBase().getMPI().getRank()) {
+         NeighborhoodSet::Range range = d_relationships.findRanksRange(getBase().getMPI().getRank());
          if (range.first == range.second) {
             // No relationship belongs to local process.
             d_relationships.clear();
          } else {
-            // Erase relationships belonging to remote process < d_rank.
+            // Erase relationships belonging to remote process < getBase().getMPI().getRank().
             d_relationships.erase(d_relationships.begin(), range.first);
-            // Erase relationships belonging to remote process > d_rank.
+            // Erase relationships belonging to remote process > getBase().getMPI().getRank().
             d_relationships.erase(range.second, d_relationships.end());
          }
       }
@@ -731,14 +725,14 @@ void Connector::initializePrivate(
 
 void Connector::clear()
 {
-   if (d_nproc != BAD_INT) {
+   if ( !d_base_handle.isNull() ) {
       d_relationships.clear();
       d_global_relationships.clear();
+      d_mpi.setCommunicator(tbox::SAMRAI_MPI::commNull);
       d_base_handle.setNull();
       d_head_handle.setNull();
       d_base_width(0) = d_ratio(0) = 0;
       d_parallel_state = BoxLevel::DISTRIBUTED;
-      d_rank = d_nproc = BAD_INT;
    }
 }
 
@@ -781,14 +775,6 @@ void Connector::swap(
       tmpstate = a.d_parallel_state;
       a.d_parallel_state = b.d_parallel_state;
       b.d_parallel_state = tmpstate;
-
-      tmpint = a.d_nproc;
-      a.d_nproc = b.d_nproc;
-      b.d_nproc = tmpint;
-
-      tmpint = a.d_rank;
-      a.d_rank = b.d_rank;
-      b.d_rank = tmpint;
 
    }
 }
@@ -838,7 +824,7 @@ void Connector::initializeToLocalTranspose(
       for (NeighborSet::const_iterator na = my_base_subset.begin();
            na != my_base_subset.end(); ++na) {
          const Box& my_base_mapped_box = *na;
-         if (my_base_mapped_box.getOwnerRank() != d_rank) {
+         if (my_base_mapped_box.getOwnerRank() != getBase().getMPI().getRank()) {
             TBOX_ERROR(
                "Connector::initializeToLocalTranspose: base mapped_box "
                << my_head_mapped_box << "\n"
@@ -908,7 +894,8 @@ Connector::isTransposeOf(
    const Connector& other) const
 {
    bool rval = false;
-   if (d_base_handle == other.d_head_handle && d_head_handle == other.d_base_handle) {
+   if (d_base_handle == other.d_head_handle &&
+       d_head_handle == other.d_base_handle) {
       if (d_head_coarser) {
          IntVector transpose_base_width = convertHeadWidthToBase(
                getHead().getRefinementRatio(),
@@ -939,7 +926,7 @@ bool Connector::isLocal() const
       for (BoxSet::const_iterator na = nabrs.begin();
            na != nabrs.end();
            ++na) {
-         if (na->getOwnerRank() != d_rank) {
+         if (na->getOwnerRank() != getBase().getMPI().getRank()) {
             return false;
          }
       }
@@ -1122,7 +1109,7 @@ void Connector::recursivePrint(
    os << border << "Parallel state     : "
       << (getParallelState() == BoxLevel::DISTRIBUTED ? "DIST" : "GLOB")
       << '\n'
-      << border << "Rank,nproc         : " << d_rank << ", " << d_nproc << '\n'
+      << border << "Rank,nproc         : " << getBase().getMPI().getRank() << ", " << getBase().getMPI().getSize() << '\n'
       << border << "Base,head objects  :"
       << " ("
       << (d_base_handle == d_head_handle ? "same" : "different") << ") "
@@ -1257,7 +1244,7 @@ void Connector::printNeighborStats(
          ++sum_relationships;
          sum_ovlap_size += overlap_size;
 
-         if (nabr.getOwnerRank() == d_rank) {
+         if (nabr.getOwnerRank() == getBase().getMPI().getRank()) {
             ++sum_local_relationships;
             sum_local_ovlap_size += overlap_size;
             sum_local_owners = 1;
@@ -1319,7 +1306,7 @@ void Connector::printNeighborStats(
                loc_num[i];
    int rank_of_min[number_of_stats],
        rank_of_max[number_of_stats];
-   if (d_nproc > 1) {
+   if (getBase().getMPI().getSize() > 1) {
       mpi.AllReduce(min_num, k, MPI_MINLOC, rank_of_min);
       mpi.AllReduce(max_num, k, MPI_MAXLOC, rank_of_max);
       mpi.AllReduce(sum_num, k, MPI_SUM);
@@ -1347,7 +1334,7 @@ void Connector::printNeighborStats(
                                                                       / getBase().
                                                                       getGlobalNumberOfBoxes()) :
           0.0)
-      << ' ' << std::setw(8) << std::right << static_cast<float>(sum_num[i] / d_nproc)
+      << ' ' << std::setw(8) << std::right << static_cast<float>(sum_num[i] / getBase().getMPI().getSize())
       << '\n';
    }
 
@@ -1632,7 +1619,7 @@ size_t Connector::checkTransposeCorrectness(
 
          const Box nabr = *na;
 
-         if (nabr.getOwnerRank() == d_rank) {
+         if (nabr.getOwnerRank() == getBase().getMPI().getRank()) {
 
             if (ignore_periodic_relationships && nabr.isPeriodicImage()) {
                continue;

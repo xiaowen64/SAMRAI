@@ -130,9 +130,9 @@ int main(
       hier::BoxList::Iterator coarse_domain_itr(coarse_domain);
       for (int ib = 0; ib < n_coarse_boxes; ib++, coarse_domain_itr++) {
          if (nproc > 1) {
-            if (ib == layer0.getRank()) {
+            if (ib == layer0.getMPI().getRank()) {
                layer0.addBox(hier::Box(*coarse_domain_itr,
-                     hier::LocalId(ib), layer0.getRank()));
+                     hier::LocalId(ib), layer0.getMPI().getRank()));
             }
          } else {
             layer0.addBox(hier::Box(*coarse_domain_itr,
@@ -143,9 +143,9 @@ int main(
       hier::BoxList::Iterator fine_domain_itr(fine_domain);
       for (int ib = 0; ib < n_fine_boxes; ib++, fine_domain_itr++) {
          if (nproc > 1) {
-            if (ib == layer1.getRank()) {
+            if (ib == layer1.getMPI().getRank()) {
                layer1.addBox(hier::Box(*fine_domain_itr,
-                     hier::LocalId(ib), layer1.getRank()));
+                     hier::LocalId(ib), layer1.getMPI().getRank()));
             }
          } else {
             layer1.addBox(hier::Box(*fine_domain_itr,

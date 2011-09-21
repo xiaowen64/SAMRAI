@@ -905,8 +905,6 @@ private:
    //@{
    //! @name Data shared with private methods during balancing.
    mutable tbox::SAMRAI_MPI d_mpi;
-   mutable int d_rank;
-   mutable int d_nproc;
    mutable hier::IntVector d_min_size;
    mutable hier::IntVector d_max_size;
    mutable hier::BoxList d_domain_boxes;

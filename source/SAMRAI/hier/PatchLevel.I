@@ -220,14 +220,14 @@ int PatchLevel::getMappingForPatch(
     * return d_mapped_box_level->getBoxStrict(p)->getOwnerRank();
     */
    NULL_USE(mapped_box_id);
-   return d_mapped_box_level->getRank();
+   return d_mapped_box_level->getMPI().getRank();
 }
 
 SAMRAI_INLINE_KEYWORD
 const Box& PatchLevel::getBoxForPatch(
    const BoxId& mapped_box_id) const
 {
-   TBOX_ASSERT(mapped_box_id.getOwnerRank() == d_mapped_box_level->getRank());
+   TBOX_ASSERT(mapped_box_id.getOwnerRank() == d_mapped_box_level->getMPI().getRank());
    return getPatch(mapped_box_id)->getBox();
 }
 
@@ -235,7 +235,7 @@ SAMRAI_INLINE_KEYWORD
 bool PatchLevel::patchTouchesRegularBoundary(
    const BoxId& mapped_box_id) const
 {
-   TBOX_ASSERT(mapped_box_id.getOwnerRank() == d_mapped_box_level->getRank());
+   TBOX_ASSERT(mapped_box_id.getOwnerRank() == d_mapped_box_level->getMPI().getRank());
    bool rval = getPatch(mapped_box_id)->getPatchGeometry()->getTouchesRegularBoundary();
    return rval;
 }
@@ -244,7 +244,7 @@ SAMRAI_INLINE_KEYWORD
 bool PatchLevel::patchTouchesPeriodicBoundary(
    const BoxId& mapped_box_id) const
 {
-   TBOX_ASSERT(mapped_box_id.getOwnerRank() == d_mapped_box_level->getRank());
+   TBOX_ASSERT(mapped_box_id.getOwnerRank() == d_mapped_box_level->getMPI().getRank());
    bool rval = getPatch(mapped_box_id)->getPatchGeometry()->getTouchesPeriodicBoundary();
    return rval;
 }

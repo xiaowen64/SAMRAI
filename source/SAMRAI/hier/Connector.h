@@ -504,24 +504,6 @@ public:
    getMPI() const;
 
    /*!
-    * @return Processor rank in the internal MPI communicator.
-    *
-    * This is redundant information.  You can obtain it from the MPI
-    * Communicator.
-    */
-   int
-   getRank() const;
-
-   /*!
-    * @return Number of processes for the internal MPI communicator.
-    *
-    * This is redundant information.  You can obtain it from the MPI
-    * Communicator.
-    */
-   int
-   getNproc() const;
-
-   /*!
     * @brief Return the Connector width associated with the relationships.
     *
     * For overlap Connectors, an relationship exists between a base and head
@@ -987,6 +969,15 @@ private:
    NeighborhoodSet d_global_relationships;
 
    /*!
+    * @brief SAMRAI_MPI object.
+    *
+    * This is a copy of the getBase().getMPI().  We maintain a copy to
+    * allow continued limited functionality should the base detaches
+    * itself.
+    */
+   tbox::SAMRAI_MPI d_mpi;
+
+   /*!
     * @brief State flag.
     *
     * Modified by setParallelState().
@@ -1008,19 +999,6 @@ private:
     * recomputing using cacheGlobalReducedData().
     */
    mutable bool d_global_data_up_to_date;
-
-   /*!
-    * @brief Process rank (id),
-    * for convenience and data management use after MPI_Finalize.
-    */
-   int d_rank;
-   /*!
-    * @brief Number of processes,
-    * for convenience and data management use after MPI_Finalize.
-    *
-    * If d_nproc == BAD_INT, the object is in uninitialized state.
-    */
-   int d_nproc;
 
    ConnectorType d_connector_type;
 

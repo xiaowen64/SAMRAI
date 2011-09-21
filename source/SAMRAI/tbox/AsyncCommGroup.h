@@ -628,20 +628,6 @@ private:
    int d_mpi_tag;
    SAMRAI_MPI d_mpi;
 
-   /*!
-    * @brief Number of processors in d_mpi_communicator.
-    *
-    * Redundant data maintained for convenience.
-    */
-   int d_nproc;
-
-   /*!
-    * @brief Rank processors in d_mpi_communicator.
-    *
-    * Redundant data maintained for convenience.
-    */
-   int d_rank;
-
    bool d_use_mpi_collective_for_full_groups;
    bool d_use_blocking_send_to_children;
    bool d_use_blocking_send_to_parent;

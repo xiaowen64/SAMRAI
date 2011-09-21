@@ -314,10 +314,6 @@ private:
     */
    SAMRAI_MPI d_mpi;
    /*!
-    * @brief Local MPI rank.
-    */
-   int d_rank;
-   /*!
     * @brief Tag value for first message in schedule execution.
     *
     * See setMPITag().

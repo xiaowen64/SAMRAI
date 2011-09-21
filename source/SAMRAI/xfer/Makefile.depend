@@ -2630,6 +2630,7 @@ DEPENDS_19:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h				\
+	$(INCLUDE_SAM)/SAMRAI/xfer/RefinePatchStrategy.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineScheduleConnectorWidthRequestor.h\
 	RefineScheduleConnectorWidthRequestor.C
 
