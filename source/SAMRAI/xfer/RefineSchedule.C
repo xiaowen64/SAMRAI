@@ -797,7 +797,7 @@ void RefineSchedule::finishScheduleConstruction(
       grid_geometry->hasEnhancedConnectivity() &&
       (d_unfilled_encon_box_level->getGlobalNumberOfBoxes() > 0);
 
-   t_get_global_mapped_box_count->barrierAndStop();
+   t_get_global_mapped_box_count->stop();
 
    /*
     * If there remain boxes to be filled from coarser levels, then set
@@ -3442,11 +3442,11 @@ void RefineSchedule::communicateFillBoxes(
 
    std::set<int> src_owners;
    dst_to_src.getNeighborhoodSets().getOwners(src_owners);
-   src_owners.erase(dst_to_fill.getBase().getRank());
+   src_owners.erase(dst_to_fill.getBase().getMPI().getRank());
 
    std::set<int> dst_owners;
    src_to_dst.getNeighborhoodSets().getOwners(dst_owners);
-   dst_owners.erase(dst_to_fill.getBase().getRank());
+   dst_owners.erase(dst_to_fill.getBase().getMPI().getRank());
 
    std::map<int, std::vector<int> > send_mesgs;
    std::map<int, std::vector<int> > recv_mesgs;
@@ -3681,7 +3681,7 @@ void RefineSchedule::constructScheduleTransactions(
    TBOX_ASSERT(!dst_mapped_box.isPeriodicImage()); // src absorbs the shift, if any.
 
    const tbox::Dimension& dim(d_dst_level->getDim());
-   const int my_rank = d_dst_level->getBoxLevel()->getRank();
+   const int my_rank = d_dst_level->getBoxLevel()->getMPI().getRank();
 
    const bool dst_is_local = (dst_mapped_box.getOwnerRank() == my_rank);
    const bool src_is_local = (src_mapped_box.getOwnerRank() == my_rank);

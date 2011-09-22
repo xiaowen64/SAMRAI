@@ -142,7 +142,7 @@ void OverlapConnectorAlgorithm::extractNeighbors(
          << "a wider ghost cell width that used to initialize it.\n");
    }
    if (connector.getParallelState() != BoxLevel::GLOBALIZED &&
-       mapped_box_id.getOwnerRank() != connector.getRank()) {
+       mapped_box_id.getOwnerRank() != connector.getMPI().getRank()) {
       TBOX_ERROR("Connector::extractNeighbors cannot get neighbor data\n"
          << "for a remote mapped_box unless in GLOBALIZED mode.\n");
    }
@@ -166,7 +166,7 @@ void OverlapConnectorAlgorithm::extractNeighbors(
     * method functionality is not much used and prrobably should be
     * removed.
     */
-   TBOX_ASSERT(mapped_box_id.getOwnerRank() == connector.getRank());
+   TBOX_ASSERT(mapped_box_id.getOwnerRank() == connector.getMPI().getRank());
 
    const tbox::ConstPointer<hier::GridGeometry>& grid_geom(connector.getBase().getGridGeometry());
 
@@ -819,8 +819,8 @@ void OverlapConnectorAlgorithm::privateBridge(
    }
 
 
-   const int rank = cent_to_west.getRank();
-   const int nproc = cent_to_west.getNproc();
+   const int rank = cent_to_west.getMPI().getRank();
+   const int nproc = cent_to_west.getMPI().getSize();
 
 
    /*
@@ -1206,7 +1206,7 @@ void OverlapConnectorAlgorithm::privateBridge(
       }
    }
 
-   t_bridge->barrierAndStop();
+   t_bridge->stop();
 }
 
 /*
@@ -1296,7 +1296,7 @@ void OverlapConnectorAlgorithm::unpackDiscoveryMessage(
     * given exclude boxes.  Refer to reference data to get the
     * box info.
     */
-   const int rank = west_to_east.getRank();
+   const int rank = west_to_east.getMPI().getRank();
    ptr = incoming_comm->getRecvData() + 3;
    NeighborSet east_nabrs(dim);
    for (int ii = 0; ii < n_west_mapped_boxes; ++ii) {
@@ -1494,7 +1494,7 @@ void OverlapConnectorAlgorithm::findOverlapsForOneProcess(
                scratch_found_nabrs,
                bridging_connector.getHead().getRefinementRatio());
          }
-         if (owner_rank != bridging_connector.getRank()) {
+         if (owner_rank != bridging_connector.getMPI().getRank()) {
             // Pack up info for sending.
             ++send_mesg[remote_mapped_box_counter_index];
             const int subsize = 3

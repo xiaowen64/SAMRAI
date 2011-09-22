@@ -393,8 +393,8 @@ void BoxLevelConnectorUtils::makeSortingMap(
 
    if (sequentialize_global_indices) {
 
-      const int nproc = unsorted_mapped_box_level.getNproc();
-      const int rank = unsorted_mapped_box_level.getRank();
+      const int nproc = unsorted_mapped_box_level.getMPI().getSize();
+      const int rank = unsorted_mapped_box_level.getMPI().getRank();
 
       std::vector<int> all_n_mapped_boxes(nproc);
       tbox::SAMRAI_MPI mpi(unsorted_mapped_box_level.getMPI());
@@ -1149,7 +1149,7 @@ void BoxLevelConnectorUtils::makeRemainderMap(
 
    const BoxLevel& orig = orig_to_rejection.getBase();
    const BoxSet& orig_nodes = orig.getBoxes();
-   const int rank = orig.getRank();
+   const int rank = orig.getMPI().getRank();
    BoxSet remainder_nodes = orig_nodes;
 
    /*

@@ -171,8 +171,6 @@ BoxLevel& BoxLevel::operator = (
 
       d_parallel_state = rhs.d_parallel_state;
       d_mpi = rhs.d_mpi;
-      d_nproc = rhs.d_nproc;
-      d_rank = rhs.d_rank;
       d_ratio = rhs.d_ratio;
 
       d_local_number_of_cells = rhs.d_local_number_of_cells;
@@ -253,14 +251,14 @@ size_t BoxLevel::getLocalNumberOfBoxes(
 {
    TBOX_ASSERT(isInitialized());
 #ifdef DEBUG_CHECK_ASSERTIONS
-   if (d_parallel_state == DISTRIBUTED && rank != d_rank) {
+   if (d_parallel_state == DISTRIBUTED && rank != d_mpi.getRank()) {
       TBOX_ERROR(
          "Non-local mapped_boxes are not available in DISTRIBUTED mode.");
    }
-   TBOX_ASSERT(rank >= 0 && rank < d_nproc);
+   TBOX_ASSERT(rank >= 0 && rank < d_mpi.getSize());
 #endif
 
-   if (rank == d_rank) {
+   if (rank == d_mpi.getRank()) {
       return d_local_number_of_mapped_boxes;
    } else {
       size_t count = 0;
@@ -289,14 +287,14 @@ size_t BoxLevel::getLocalNumberOfCells(
 {
    TBOX_ASSERT(isInitialized());
 #ifdef DEBUG_CHECK_ASSERTIONS
-   if (d_parallel_state == DISTRIBUTED && rank != d_rank) {
+   if (d_parallel_state == DISTRIBUTED && rank != d_mpi.getRank()) {
       TBOX_ERROR(
          "Non-local mapped_boxes are not available in DISTRIBUTED mode.");
    }
-   TBOX_ASSERT(rank >= 0 && rank < d_nproc);
+   TBOX_ASSERT(rank >= 0 && rank < d_mpi.getSize());
 #endif
 
-   if (rank == d_rank) {
+   if (rank == d_mpi.getRank()) {
       return d_local_number_of_cells;
    } else {
       size_t count = 0;
@@ -319,7 +317,7 @@ SAMRAI_INLINE_KEYWORD
 bool BoxLevel::hasBox(
    const Box& mapped_box) const
 {
-   if (mapped_box.getOwnerRank() == d_rank) {
+   if (mapped_box.getOwnerRank() == d_mpi.getRank()) {
 
       BoxSet::SetConstIterator ni = d_mapped_boxes.find(mapped_box);
       return ni != d_mapped_boxes.setEnd();
@@ -373,18 +371,6 @@ const tbox::SAMRAI_MPI& BoxLevel::getMPI() const
    return d_mpi;
 }
 
-SAMRAI_INLINE_KEYWORD
-int BoxLevel::getRank() const
-{
-   return d_rank;
-}
-
-SAMRAI_INLINE_KEYWORD
-int BoxLevel::getNproc() const
-{
-   return d_nproc;
-}
-
 /*
  ***********************************************************************
  ***********************************************************************
@@ -394,7 +380,7 @@ BoxSet::SetConstIterator
 BoxLevel::getBox(
    const Box& mapped_box) const
 {
-   if (mapped_box.getOwnerRank() == d_rank) {
+   if (mapped_box.getOwnerRank() == d_mpi.getRank()) {
       return d_mapped_boxes.find(mapped_box);
    } else {
 #ifdef DEBUG_CHECK_ASSERTIONS
@@ -420,7 +406,7 @@ BoxLevel::getBox(
 
    const Box mapped_box(getDim(),
                         mapped_box_id);
-   if (mapped_box.getOwnerRank() == d_rank) {
+   if (mapped_box.getOwnerRank() == d_mpi.getRank()) {
       return d_mapped_boxes.find(mapped_box);
    } else {
 #ifdef DEBUG_CHECK_ASSERTIONS
@@ -443,7 +429,7 @@ BoxSet::SetConstIterator
 BoxLevel::getBoxStrict(
    const Box& mapped_box) const
 {
-   if (mapped_box.getOwnerRank() == d_rank) {
+   if (mapped_box.getOwnerRank() == d_mpi.getRank()) {
       BoxSet::SetConstIterator ni = d_mapped_boxes.find(mapped_box);
       if (ni == d_mapped_boxes.setEnd()) {
          TBOX_ERROR(
@@ -483,7 +469,7 @@ BoxLevel::getBoxStrict(
    const BoxId& mapped_box_id) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   if (mapped_box_id.getOwnerRank() != d_rank && d_parallel_state != GLOBALIZED) {
+   if (mapped_box_id.getOwnerRank() != d_mpi.getRank() && d_parallel_state != GLOBALIZED) {
       TBOX_ERROR(
          "BoxLevel::getBoxStrict: cannot get remote mapped_box " << mapped_box_id
                                                                  <<
@@ -493,7 +479,7 @@ BoxLevel::getBoxStrict(
 
    Box mapped_box(getDim(),
                   mapped_box_id);
-   if (mapped_box.getOwnerRank() == d_rank) {
+   if (mapped_box.getOwnerRank() == d_mpi.getRank()) {
       BoxSet::SetConstIterator ni = d_mapped_boxes.find(mapped_box);
       if (ni == d_mapped_boxes.setEnd()) {
          TBOX_ERROR(

@@ -58,12 +58,10 @@ Schedule::Schedule():
    d_coms(NULL),
    d_com_stage(),
    d_mpi(tbox::SAMRAI_MPI::getSAMRAIWorld()),
-   d_rank(-1),
    d_first_tag(s_default_first_tag),
    d_second_tag(s_default_second_tag),
    d_first_message_length(s_default_first_message_length)
 {
-   d_rank = d_mpi.getRank();
    setTimerPrefix("tbox::Schedule");
 }
 
@@ -94,12 +92,12 @@ void Schedule::addTransaction(
    const int src_id = transaction->getSourceProcessor();
    const int dst_id = transaction->getDestinationProcessor();
 
-   if ((d_rank == src_id) && (d_rank == dst_id)) {
+   if ((d_mpi.getRank() == src_id) && (d_mpi.getRank() == dst_id)) {
       d_local_set.addItem(transaction);
    } else {
-      if (d_rank == dst_id) {
+      if (d_mpi.getRank() == dst_id) {
          d_recv_sets[src_id].addItem(transaction);
-      } else if (d_rank == src_id) {
+      } else if (d_mpi.getRank() == src_id) {
          d_send_sets[dst_id].addItem(transaction);
       }
    }
@@ -118,12 +116,12 @@ void Schedule::appendTransaction(
    const int src_id = transaction->getSourceProcessor();
    const int dst_id = transaction->getDestinationProcessor();
 
-   if ((d_rank == src_id) && (d_rank == dst_id)) {
+   if ((d_mpi.getRank() == src_id) && (d_mpi.getRank() == dst_id)) {
       d_local_set.appendItem(transaction);
    } else {
-      if (d_rank == dst_id) {
+      if (d_mpi.getRank() == dst_id) {
          d_recv_sets[src_id].appendItem(transaction);
-      } else if (d_rank == src_id) {
+      } else if (d_mpi.getRank() == src_id) {
          d_send_sets[dst_id].appendItem(transaction);
       }
    }
@@ -461,7 +459,6 @@ void Schedule::setMPI(
    const SAMRAI_MPI& mpi)
 {
    d_mpi = mpi;
-   d_rank = mpi.getRank();
 }
 
 /*

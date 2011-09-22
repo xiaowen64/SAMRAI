@@ -296,6 +296,12 @@ DEPENDS_5:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstIterator.I	\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstIterator.h	\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstReverseIterator.I\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstReverseIterator.h\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
@@ -306,6 +312,7 @@ DEPENDS_5:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxSet.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxSet.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxSetSingleBlockIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.h			\
@@ -387,7 +394,8 @@ DEPENDS_5:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h BoxContainer.C
+	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h BoxContainer.C		\
+	BoxContainer.h
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_5 +=\
@@ -415,141 +423,10 @@ DEPENDS_6:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/Index.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/Index.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicId.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicShiftCatalog.I		\
-	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicShiftCatalog.h		\
-	$(INCLUDE_SAM)/SAMRAI/hier/Transformation.I			\
-	$(INCLUDE_SAM)/SAMRAI/hier/Transformation.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Array.I				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Complex.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointerBase.I			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointerBase.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Database.I				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Database.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/DatabaseBox.I			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/DatabaseBox.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/DescribedClass.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.I				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/IOStream.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.I			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.I				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/PointerBase.I			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/PointerBase.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.I			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.I				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h				\
-	BoxContainerConstIterator.C
-
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_6 +=\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Database_template_methods.C		\
-	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.C
-endif
-
-${FILE_6:X.o=${NDIM}.o}: ${DEPENDS_6}
-
-FILE_7=BoxContainerIterator.o
-DEPENDS_7:=\
-	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/Box.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.I			\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.I		\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/Index.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/Index.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicId.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicShiftCatalog.I		\
-	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicShiftCatalog.h		\
-	$(INCLUDE_SAM)/SAMRAI/hier/Transformation.I			\
-	$(INCLUDE_SAM)/SAMRAI/hier/Transformation.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Array.I				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Complex.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointerBase.I			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointerBase.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Database.I				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Database.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/DatabaseBox.I			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/DatabaseBox.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/DescribedClass.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.I				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/IOStream.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.I			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.I				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/PointerBase.I			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/PointerBase.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.I			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.I				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h BoxContainerIterator.C
-
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_7 +=\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Database_template_methods.C		\
-	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.C
-endif
-
-${FILE_7:X.o=${NDIM}.o}: ${DEPENDS_7}
-
-FILE_8=BoxContainerSetIterator.o
-DEPENDS_8:=\
-	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/Box.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.I			\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.I		\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstIterator.I	\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstIterator.h	\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstReverseIterator.I\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstReverseIterator.h\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetIterator.I		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
@@ -594,7 +471,156 @@ DEPENDS_8:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h BoxContainerSetIterator.C
+	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h BoxContainer.h		\
+	BoxContainerConstIterator.C
+
+ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
+DEPENDS_6 +=\
+	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/Database_template_methods.C		\
+	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C			\
+	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.C
+endif
+
+${FILE_6:X.o=${NDIM}.o}: ${DEPENDS_6}
+
+FILE_7=BoxContainerIterator.o
+DEPENDS_7:=\
+	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.I				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/Box.I				\
+	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.I			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstIterator.I	\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstIterator.h	\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstReverseIterator.I\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstReverseIterator.h\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.I				\
+	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/Index.I				\
+	$(INCLUDE_SAM)/SAMRAI/hier/Index.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.I				\
+	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
+	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicId.I				\
+	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicId.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicShiftCatalog.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicShiftCatalog.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/Transformation.I			\
+	$(INCLUDE_SAM)/SAMRAI/hier/Transformation.h			\
+	$(INCLUDE_SAM)/SAMRAI/tbox/Array.I				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/Complex.h				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointerBase.I			\
+	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointerBase.h			\
+	$(INCLUDE_SAM)/SAMRAI/tbox/Database.I				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/Database.h				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/DatabaseBox.I			\
+	$(INCLUDE_SAM)/SAMRAI/tbox/DatabaseBox.h			\
+	$(INCLUDE_SAM)/SAMRAI/tbox/DescribedClass.h			\
+	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.I				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.h				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/IOStream.h				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.h				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.I			\
+	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.h			\
+	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.h				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.I				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.h				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/PointerBase.I			\
+	$(INCLUDE_SAM)/SAMRAI/tbox/PointerBase.h			\
+	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.I			\
+	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.h			\
+	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.I				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.h				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
+	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h BoxContainer.h		\
+	BoxContainerIterator.C
+
+ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
+DEPENDS_7 +=\
+	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/Database_template_methods.C		\
+	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C			\
+	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.C
+endif
+
+${FILE_7:X.o=${NDIM}.o}: ${DEPENDS_7}
+
+FILE_8=BoxContainerSetConstIterator.o
+DEPENDS_8:=\
+	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.I				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/Box.I				\
+	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.I			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstIterator.I	\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstIterator.h	\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstReverseIterator.I\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstReverseIterator.h\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.I				\
+	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/Index.I				\
+	$(INCLUDE_SAM)/SAMRAI/hier/Index.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.I				\
+	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
+	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicId.I				\
+	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicId.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicShiftCatalog.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicShiftCatalog.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/Transformation.I			\
+	$(INCLUDE_SAM)/SAMRAI/hier/Transformation.h			\
+	$(INCLUDE_SAM)/SAMRAI/tbox/Array.I				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/Complex.h				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointerBase.I			\
+	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointerBase.h			\
+	$(INCLUDE_SAM)/SAMRAI/tbox/Database.I				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/Database.h				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/DatabaseBox.I			\
+	$(INCLUDE_SAM)/SAMRAI/tbox/DatabaseBox.h			\
+	$(INCLUDE_SAM)/SAMRAI/tbox/DescribedClass.h			\
+	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.I				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.h				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/IOStream.h				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.h				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.I			\
+	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.h			\
+	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.h				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.I				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.h				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/PointerBase.I			\
+	$(INCLUDE_SAM)/SAMRAI/tbox/PointerBase.h			\
+	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.I			\
+	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.h			\
+	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.I				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.h				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
+	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h BoxContainer.h		\
+	BoxContainerSetConstIterator.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_8 +=\
@@ -606,8 +632,156 @@ endif
 
 ${FILE_8:X.o=${NDIM}.o}: ${DEPENDS_8}
 
-FILE_9=BoxContainerUtils.o
+FILE_9=BoxContainerSetConstReverseIterator.o
 DEPENDS_9:=\
+	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.I				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/Box.I				\
+	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.I			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstIterator.I	\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstIterator.h	\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstReverseIterator.I\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstReverseIterator.h\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.I				\
+	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/Index.I				\
+	$(INCLUDE_SAM)/SAMRAI/hier/Index.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.I				\
+	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
+	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicId.I				\
+	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicId.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicShiftCatalog.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicShiftCatalog.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/Transformation.I			\
+	$(INCLUDE_SAM)/SAMRAI/hier/Transformation.h			\
+	$(INCLUDE_SAM)/SAMRAI/tbox/Array.I				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/Complex.h				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointerBase.I			\
+	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointerBase.h			\
+	$(INCLUDE_SAM)/SAMRAI/tbox/Database.I				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/Database.h				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/DatabaseBox.I			\
+	$(INCLUDE_SAM)/SAMRAI/tbox/DatabaseBox.h			\
+	$(INCLUDE_SAM)/SAMRAI/tbox/DescribedClass.h			\
+	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.I				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.h				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/IOStream.h				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.h				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.I			\
+	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.h			\
+	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.h				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.I				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.h				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/PointerBase.I			\
+	$(INCLUDE_SAM)/SAMRAI/tbox/PointerBase.h			\
+	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.I			\
+	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.h			\
+	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.I				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.h				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
+	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h BoxContainer.h		\
+	BoxContainerSetConstReverseIterator.C
+
+ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
+DEPENDS_9 +=\
+	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/Database_template_methods.C		\
+	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C			\
+	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.C
+endif
+
+${FILE_9:X.o=${NDIM}.o}: ${DEPENDS_9}
+
+FILE_10=BoxContainerSetIterator.o
+DEPENDS_10:=\
+	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.I				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/Box.I				\
+	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.I			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstIterator.I	\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstIterator.h	\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstReverseIterator.I\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstReverseIterator.h\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.I				\
+	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/Index.I				\
+	$(INCLUDE_SAM)/SAMRAI/hier/Index.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.I				\
+	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
+	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicId.I				\
+	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicId.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicShiftCatalog.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicShiftCatalog.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/Transformation.I			\
+	$(INCLUDE_SAM)/SAMRAI/hier/Transformation.h			\
+	$(INCLUDE_SAM)/SAMRAI/tbox/Array.I				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/Complex.h				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointerBase.I			\
+	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointerBase.h			\
+	$(INCLUDE_SAM)/SAMRAI/tbox/Database.I				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/Database.h				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/DatabaseBox.I			\
+	$(INCLUDE_SAM)/SAMRAI/tbox/DatabaseBox.h			\
+	$(INCLUDE_SAM)/SAMRAI/tbox/DescribedClass.h			\
+	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.I				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.h				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/IOStream.h				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.h				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.I			\
+	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.h			\
+	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.h				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.I				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.h				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/PointerBase.I			\
+	$(INCLUDE_SAM)/SAMRAI/tbox/PointerBase.h			\
+	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.I			\
+	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.h			\
+	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.I				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.h				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
+	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h BoxContainer.h		\
+	BoxContainerSetIterator.C
+
+ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
+DEPENDS_10 +=\
+	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/Database_template_methods.C		\
+	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C			\
+	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.C
+endif
+
+${FILE_10:X.o=${NDIM}.o}: ${DEPENDS_10}
+
+FILE_11=BoxContainerUtils.o
+DEPENDS_11:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
@@ -623,6 +797,12 @@ DEPENDS_9:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstIterator.I	\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstIterator.h	\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstReverseIterator.I\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstReverseIterator.h\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerUtils.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerUtils.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.I			\
@@ -727,10 +907,11 @@ DEPENDS_9:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/TimerManager.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h BoxContainerUtils.C
+	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h BoxContainer.h		\
+	BoxContainerUtils.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_9 +=\
+DEPENDS_11 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database_template_methods.C		\
@@ -740,10 +921,10 @@ DEPENDS_9 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.C
 endif
 
-${FILE_9:X.o=${NDIM}.o}: ${DEPENDS_9}
+${FILE_11:X.o=${NDIM}.o}: ${DEPENDS_11}
 
-FILE_10=BoxGeometry.o
-DEPENDS_10:=\
+FILE_12=BoxGeometry.o
+DEPENDS_12:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
@@ -755,6 +936,12 @@ DEPENDS_10:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstIterator.I	\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstIterator.h	\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstReverseIterator.I\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstReverseIterator.h\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
@@ -814,10 +1001,11 @@ DEPENDS_10:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h BoxGeometry.C
+	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h BoxContainer.h		\
+	BoxGeometry.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_10 +=\
+DEPENDS_12 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database_template_methods.C		\
@@ -826,10 +1014,10 @@ DEPENDS_10 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.C
 endif
 
-${FILE_10:X.o=${NDIM}.o}: ${DEPENDS_10}
+${FILE_12:X.o=${NDIM}.o}: ${DEPENDS_12}
 
-FILE_11=BoxIOUtility.o
-DEPENDS_11:=\
+FILE_13=BoxIOUtility.o
+DEPENDS_13:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
@@ -841,6 +1029,12 @@ DEPENDS_11:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstIterator.I	\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstIterator.h	\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstReverseIterator.I\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstReverseIterator.h\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxIOUtility.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.h				\
@@ -898,10 +1092,11 @@ DEPENDS_11:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h BoxIOUtility.C
+	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h BoxContainer.h		\
+	BoxIOUtility.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_11 +=\
+DEPENDS_13 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database_template_methods.C		\
@@ -910,10 +1105,10 @@ DEPENDS_11 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.C
 endif
 
-${FILE_11:X.o=${NDIM}.o}: ${DEPENDS_11}
+${FILE_13:X.o=${NDIM}.o}: ${DEPENDS_13}
 
-FILE_12=BoxId.o
-DEPENDS_12:=\
+FILE_14=BoxId.o
+DEPENDS_14:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
@@ -947,16 +1142,16 @@ DEPENDS_12:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h BoxId.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_12 +=\
+DEPENDS_14 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.C
 endif
 
-${FILE_12:X.o=${NDIM}.o}: ${DEPENDS_12}
+${FILE_14:X.o=${NDIM}.o}: ${DEPENDS_14}
 
-FILE_13=BoxLevel.o
-DEPENDS_13:=\
+FILE_15=BoxLevel.o
+DEPENDS_15:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
@@ -972,6 +1167,12 @@ DEPENDS_13:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstIterator.I	\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstIterator.h	\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstReverseIterator.I\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstReverseIterator.h\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
@@ -1070,10 +1271,10 @@ DEPENDS_13:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/TimerManager.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h BoxLevel.C
+	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h BoxContainer.h BoxLevel.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_13 +=\
+DEPENDS_15 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database_template_methods.C		\
@@ -1083,10 +1284,10 @@ DEPENDS_13 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.C
 endif
 
-${FILE_13:X.o=${NDIM}.o}: ${DEPENDS_13}
+${FILE_15:X.o=${NDIM}.o}: ${DEPENDS_15}
 
-FILE_14=BoxLevelConnectorUtils.o
-DEPENDS_14:=\
+FILE_16=BoxLevelConnectorUtils.o
+DEPENDS_16:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
@@ -1102,6 +1303,12 @@ DEPENDS_14:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstIterator.I	\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstIterator.h	\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstReverseIterator.I\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstReverseIterator.h\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
@@ -1212,10 +1419,11 @@ DEPENDS_14:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/TimerManager.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h BoxLevelConnectorUtils.C
+	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h BoxContainer.h		\
+	BoxLevelConnectorUtils.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_14 +=\
+DEPENDS_16 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/AsyncCommPeer.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.C			\
@@ -1226,10 +1434,10 @@ DEPENDS_14 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.C
 endif
 
-${FILE_14:X.o=${NDIM}.o}: ${DEPENDS_14}
+${FILE_16:X.o=${NDIM}.o}: ${DEPENDS_16}
 
-FILE_15=BoxLevelHandle.o
-DEPENDS_15:=\
+FILE_17=BoxLevelHandle.o
+DEPENDS_17:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
@@ -1245,6 +1453,12 @@ DEPENDS_15:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstIterator.I	\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstIterator.h	\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstReverseIterator.I\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstReverseIterator.h\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
@@ -1342,10 +1556,11 @@ DEPENDS_15:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h BoxLevelHandle.C
+	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h BoxContainer.h		\
+	BoxLevelHandle.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_15 +=\
+DEPENDS_17 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database_template_methods.C		\
@@ -1355,10 +1570,10 @@ DEPENDS_15 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.C
 endif
 
-${FILE_15:X.o=${NDIM}.o}: ${DEPENDS_15}
+${FILE_17:X.o=${NDIM}.o}: ${DEPENDS_17}
 
-FILE_16=BoxList.o
-DEPENDS_16:=\
+FILE_18=BoxList.o
+DEPENDS_18:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
@@ -1374,6 +1589,12 @@ DEPENDS_16:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstIterator.I	\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstIterator.h	\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstReverseIterator.I\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstReverseIterator.h\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
@@ -1465,10 +1686,10 @@ DEPENDS_16:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h BoxList.C
+	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h BoxContainer.h BoxList.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_16 +=\
+DEPENDS_18 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database_template_methods.C		\
@@ -1478,10 +1699,10 @@ DEPENDS_16 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.C
 endif
 
-${FILE_16:X.o=${NDIM}.o}: ${DEPENDS_16}
+${FILE_18:X.o=${NDIM}.o}: ${DEPENDS_18}
 
-FILE_17=BoxNeighborhoodCollection.o
-DEPENDS_17:=\
+FILE_19=BoxNeighborhoodCollection.o
+DEPENDS_19:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
@@ -1493,6 +1714,12 @@ DEPENDS_17:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstIterator.I	\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstIterator.h	\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstReverseIterator.I\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstReverseIterator.h\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.I				\
@@ -1551,11 +1778,11 @@ DEPENDS_17:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h BoxContainer.h		\
 	BoxNeighborhoodCollection.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_17 +=\
+DEPENDS_19 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database_template_methods.C		\
@@ -1564,10 +1791,10 @@ DEPENDS_17 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.C
 endif
 
-${FILE_17:X.o=${NDIM}.o}: ${DEPENDS_17}
+${FILE_19:X.o=${NDIM}.o}: ${DEPENDS_19}
 
-FILE_18=BoxOverlap.o
-DEPENDS_18:=\
+FILE_20=BoxOverlap.o
+DEPENDS_20:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
@@ -1579,6 +1806,12 @@ DEPENDS_18:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstIterator.I	\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstIterator.h	\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstReverseIterator.I\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstReverseIterator.h\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.I				\
@@ -1636,10 +1869,11 @@ DEPENDS_18:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h BoxOverlap.C
+	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h BoxContainer.h		\
+	BoxOverlap.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_18 +=\
+DEPENDS_20 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database_template_methods.C		\
@@ -1648,10 +1882,10 @@ DEPENDS_18 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.C
 endif
 
-${FILE_18:X.o=${NDIM}.o}: ${DEPENDS_18}
+${FILE_20:X.o=${NDIM}.o}: ${DEPENDS_20}
 
-FILE_19=BoxSet.o
-DEPENDS_19:=\
+FILE_21=BoxSet.o
+DEPENDS_21:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
@@ -1663,6 +1897,12 @@ DEPENDS_19:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstIterator.I	\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstIterator.h	\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstReverseIterator.I\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstReverseIterator.h\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.I				\
@@ -1720,10 +1960,10 @@ DEPENDS_19:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h BoxSet.C
+	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h BoxContainer.h BoxSet.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_19 +=\
+DEPENDS_21 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database_template_methods.C		\
@@ -1732,15 +1972,27 @@ DEPENDS_19 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.C
 endif
 
-${FILE_19:X.o=${NDIM}.o}: ${DEPENDS_19}
+${FILE_21:X.o=${NDIM}.o}: ${DEPENDS_21}
 
-FILE_20=BoxSetSingleBlockIterator.o
-DEPENDS_20:=\
+FILE_22=BoxSetSingleBlockIterator.o
+DEPENDS_22:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.I			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstIterator.I	\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstIterator.h	\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstReverseIterator.I\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstReverseIterator.h\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxSet.I				\
@@ -1786,26 +2038,38 @@ DEPENDS_20:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h BoxContainer.h		\
 	BoxSetSingleBlockIterator.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_20 +=\
+DEPENDS_22 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database_template_methods.C		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.C
 endif
 
-${FILE_20:X.o=${NDIM}.o}: ${DEPENDS_20}
+${FILE_22:X.o=${NDIM}.o}: ${DEPENDS_22}
 
-FILE_21=BoxSetSingleOwnerIterator.o
-DEPENDS_21:=\
+FILE_23=BoxSetSingleOwnerIterator.o
+DEPENDS_23:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.I			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstIterator.I	\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstIterator.h	\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstReverseIterator.I\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstReverseIterator.h\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxSet.I				\
@@ -1851,21 +2115,21 @@ DEPENDS_21:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h BoxContainer.h		\
 	BoxSetSingleOwnerIterator.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_21 +=\
+DEPENDS_23 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database_template_methods.C		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.C
 endif
 
-${FILE_21:X.o=${NDIM}.o}: ${DEPENDS_21}
+${FILE_23:X.o=${NDIM}.o}: ${DEPENDS_23}
 
-FILE_22=BoxTree.o
-DEPENDS_22:=\
+FILE_24=BoxTree.o
+DEPENDS_24:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
@@ -1877,6 +2141,12 @@ DEPENDS_22:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstIterator.I	\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstIterator.h	\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstReverseIterator.I\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstReverseIterator.h\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.I				\
@@ -1941,10 +2211,10 @@ DEPENDS_22:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/TimerManager.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h BoxTree.C
+	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h BoxContainer.h BoxTree.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_22 +=\
+DEPENDS_24 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database_template_methods.C		\
@@ -1954,10 +2224,10 @@ DEPENDS_22 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.C
 endif
 
-${FILE_22:X.o=${NDIM}.o}: ${DEPENDS_22}
+${FILE_24:X.o=${NDIM}.o}: ${DEPENDS_24}
 
-FILE_23=BoxUtilities.o
-DEPENDS_23:=\
+FILE_25=BoxUtilities.o
+DEPENDS_25:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
@@ -1969,6 +2239,12 @@ DEPENDS_23:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstIterator.I	\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstIterator.h	\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstReverseIterator.I\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstReverseIterator.h\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.I				\
@@ -2025,10 +2301,11 @@ DEPENDS_23:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h BoxUtilities.C
+	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h BoxContainer.h		\
+	BoxUtilities.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_23 +=\
+DEPENDS_25 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database_template_methods.C		\
@@ -2037,10 +2314,10 @@ DEPENDS_23 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.C
 endif
 
-${FILE_23:X.o=${NDIM}.o}: ${DEPENDS_23}
+${FILE_25:X.o=${NDIM}.o}: ${DEPENDS_25}
 
-FILE_24=CoarseFineBoundary.o
-DEPENDS_24:=\
+FILE_26=CoarseFineBoundary.o
+DEPENDS_26:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
@@ -2056,6 +2333,12 @@ DEPENDS_24:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstIterator.I	\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstIterator.h	\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstReverseIterator.I\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstReverseIterator.h\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
@@ -2169,10 +2452,11 @@ DEPENDS_24:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h CoarseFineBoundary.C
+	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h BoxContainer.h		\
+	CoarseFineBoundary.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_24 +=\
+DEPENDS_26 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database_template_methods.C		\
@@ -2182,10 +2466,10 @@ DEPENDS_24 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.C
 endif
 
-${FILE_24:X.o=${NDIM}.o}: ${DEPENDS_24}
+${FILE_26:X.o=${NDIM}.o}: ${DEPENDS_26}
 
-FILE_25=CoarsenOperator.o
-DEPENDS_25:=\
+FILE_27=CoarsenOperator.o
+DEPENDS_27:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
@@ -2201,6 +2485,12 @@ DEPENDS_25:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstIterator.I	\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstIterator.h	\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstReverseIterator.I\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstReverseIterator.h\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
@@ -2285,10 +2575,11 @@ DEPENDS_25:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h CoarsenOperator.C
+	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h BoxContainer.h		\
+	CoarsenOperator.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_25 +=\
+DEPENDS_27 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database_template_methods.C		\
@@ -2298,10 +2589,10 @@ DEPENDS_25 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.C
 endif
 
-${FILE_25:X.o=${NDIM}.o}: ${DEPENDS_25}
+${FILE_27:X.o=${NDIM}.o}: ${DEPENDS_27}
 
-FILE_26=ComponentSelector.o
-DEPENDS_26:=\
+FILE_28=ComponentSelector.o
+DEPENDS_28:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/ComponentSelector.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/ComponentSelector.h			\
@@ -2335,17 +2626,17 @@ DEPENDS_26:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h ComponentSelector.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_26 +=\
+DEPENDS_28 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database_template_methods.C		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.C
 endif
 
-${FILE_26:X.o=${NDIM}.o}: ${DEPENDS_26}
+${FILE_28:X.o=${NDIM}.o}: ${DEPENDS_28}
 
-FILE_27=Connector.o
-DEPENDS_27:=\
+FILE_29=Connector.o
+DEPENDS_29:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
@@ -2361,6 +2652,12 @@ DEPENDS_27:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstIterator.I	\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstIterator.h	\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstReverseIterator.I\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstReverseIterator.h\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
@@ -2463,10 +2760,11 @@ DEPENDS_27:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/TimerManager.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h Connector.C
+	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h BoxContainer.h		\
+	Connector.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_27 +=\
+DEPENDS_29 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database_template_methods.C		\
@@ -2476,10 +2774,10 @@ DEPENDS_27 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.C
 endif
 
-${FILE_27:X.o=${NDIM}.o}: ${DEPENDS_27}
+${FILE_29:X.o=${NDIM}.o}: ${DEPENDS_29}
 
-FILE_28=GlobalId.o
-DEPENDS_28:=\
+FILE_30=GlobalId.o
+DEPENDS_30:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.h				\
@@ -2507,16 +2805,16 @@ DEPENDS_28:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h GlobalId.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_28 +=\
+DEPENDS_30 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.C
 endif
 
-${FILE_28:X.o=${NDIM}.o}: ${DEPENDS_28}
+${FILE_30:X.o=${NDIM}.o}: ${DEPENDS_30}
 
-FILE_29=GridGeometry.o
-DEPENDS_29:=\
+FILE_31=GridGeometry.o
+DEPENDS_31:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
@@ -2532,6 +2830,12 @@ DEPENDS_29:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstIterator.I	\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstIterator.h	\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstReverseIterator.I\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstReverseIterator.h\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
@@ -2640,10 +2944,11 @@ DEPENDS_29:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/TimerManager.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h GridGeometry.C
+	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h BoxContainer.h		\
+	GridGeometry.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_29 +=\
+DEPENDS_31 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database_template_methods.C		\
@@ -2653,10 +2958,10 @@ DEPENDS_29 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.C
 endif
 
-${FILE_29:X.o=${NDIM}.o}: ${DEPENDS_29}
+${FILE_31:X.o=${NDIM}.o}: ${DEPENDS_31}
 
-FILE_30=Index.o
-DEPENDS_30:=\
+FILE_32=Index.o
+DEPENDS_32:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/Index.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Index.h				\
@@ -2689,17 +2994,17 @@ DEPENDS_30:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h Index.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_30 +=\
+DEPENDS_32 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database_template_methods.C		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.C
 endif
 
-${FILE_30:X.o=${NDIM}.o}: ${DEPENDS_30}
+${FILE_32:X.o=${NDIM}.o}: ${DEPENDS_32}
 
-FILE_31=IntVector.o
-DEPENDS_31:=\
+FILE_33=IntVector.o
+DEPENDS_33:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
@@ -2730,17 +3035,17 @@ DEPENDS_31:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h IntVector.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_31 +=\
+DEPENDS_33 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database_template_methods.C		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.C
 endif
 
-${FILE_31:X.o=${NDIM}.o}: ${DEPENDS_31}
+${FILE_33:X.o=${NDIM}.o}: ${DEPENDS_33}
 
-FILE_32=LocalId.o
-DEPENDS_32:=\
+FILE_34=LocalId.o
+DEPENDS_34:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
@@ -2764,16 +3069,16 @@ DEPENDS_32:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h LocalId.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_32 +=\
+DEPENDS_34 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.C
 endif
 
-${FILE_32:X.o=${NDIM}.o}: ${DEPENDS_32}
+${FILE_34:X.o=${NDIM}.o}: ${DEPENDS_34}
 
-FILE_33=MappingConnectorAlgorithm.o
-DEPENDS_33:=\
+FILE_35=MappingConnectorAlgorithm.o
+DEPENDS_35:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
@@ -2789,6 +3094,12 @@ DEPENDS_33:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstIterator.I	\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstIterator.h	\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstReverseIterator.I\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstReverseIterator.h\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
@@ -2900,11 +3211,11 @@ DEPENDS_33:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/TimerManager.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h BoxContainer.h		\
 	MappingConnectorAlgorithm.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_33 +=\
+DEPENDS_35 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/AsyncCommPeer.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.C			\
@@ -2915,10 +3226,10 @@ DEPENDS_33 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.C
 endif
 
-${FILE_33:X.o=${NDIM}.o}: ${DEPENDS_33}
+${FILE_35:X.o=${NDIM}.o}: ${DEPENDS_35}
 
-FILE_34=MultiblockBoxTree.o
-DEPENDS_34:=\
+FILE_36=MultiblockBoxTree.o
+DEPENDS_36:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
@@ -2934,6 +3245,12 @@ DEPENDS_34:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstIterator.I	\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstIterator.h	\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstReverseIterator.I\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstReverseIterator.h\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
@@ -3030,10 +3347,11 @@ DEPENDS_34:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/TimerManager.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h MultiblockBoxTree.C
+	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h BoxContainer.h		\
+	MultiblockBoxTree.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_34 +=\
+DEPENDS_36 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database_template_methods.C		\
@@ -3043,10 +3361,10 @@ DEPENDS_34 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.C
 endif
 
-${FILE_34:X.o=${NDIM}.o}: ${DEPENDS_34}
+${FILE_36:X.o=${NDIM}.o}: ${DEPENDS_36}
 
-FILE_35=MultiblockDataTranslator.o
-DEPENDS_35:=\
+FILE_37=MultiblockDataTranslator.o
+DEPENDS_37:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
@@ -3062,6 +3380,12 @@ DEPENDS_35:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstIterator.I	\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstIterator.h	\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstReverseIterator.I\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstReverseIterator.h\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
@@ -3154,11 +3478,11 @@ DEPENDS_35:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h BoxContainer.h		\
 	MultiblockDataTranslator.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_35 +=\
+DEPENDS_37 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database_template_methods.C		\
@@ -3168,10 +3492,10 @@ DEPENDS_35 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.C
 endif
 
-${FILE_35:X.o=${NDIM}.o}: ${DEPENDS_35}
+${FILE_37:X.o=${NDIM}.o}: ${DEPENDS_37}
 
-FILE_36=NeighborhoodSet.o
-DEPENDS_36:=\
+FILE_38=NeighborhoodSet.o
+DEPENDS_38:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
@@ -3187,6 +3511,12 @@ DEPENDS_36:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstIterator.I	\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstIterator.h	\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstReverseIterator.I\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstReverseIterator.h\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
@@ -3289,10 +3619,11 @@ DEPENDS_36:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h NeighborhoodSet.C
+	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h BoxContainer.h		\
+	NeighborhoodSet.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_36 +=\
+DEPENDS_38 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database_template_methods.C		\
@@ -3302,10 +3633,10 @@ DEPENDS_36 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.C
 endif
 
-${FILE_36:X.o=${NDIM}.o}: ${DEPENDS_36}
+${FILE_38:X.o=${NDIM}.o}: ${DEPENDS_38}
 
-FILE_37=OverlapConnectorAlgorithm.o
-DEPENDS_37:=\
+FILE_39=OverlapConnectorAlgorithm.o
+DEPENDS_39:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
@@ -3321,6 +3652,12 @@ DEPENDS_37:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstIterator.I	\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstIterator.h	\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstReverseIterator.I\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstReverseIterator.h\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerUtils.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerUtils.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.I			\
@@ -3433,11 +3770,11 @@ DEPENDS_37:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/TimerManager.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h BoxContainer.h		\
 	OverlapConnectorAlgorithm.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_37 +=\
+DEPENDS_39 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/AsyncCommPeer.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.C			\
@@ -3448,10 +3785,10 @@ DEPENDS_37 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.C
 endif
 
-${FILE_37:X.o=${NDIM}.o}: ${DEPENDS_37}
+${FILE_39:X.o=${NDIM}.o}: ${DEPENDS_39}
 
-FILE_38=Patch.o
-DEPENDS_38:=\
+FILE_40=Patch.o
+DEPENDS_40:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
@@ -3467,6 +3804,12 @@ DEPENDS_38:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstIterator.I	\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstIterator.h	\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstReverseIterator.I\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstReverseIterator.h\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
@@ -3549,10 +3892,10 @@ DEPENDS_38:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h Patch.C
+	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h BoxContainer.h Patch.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_38 +=\
+DEPENDS_40 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database_template_methods.C		\
@@ -3562,10 +3905,10 @@ DEPENDS_38 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.C
 endif
 
-${FILE_38:X.o=${NDIM}.o}: ${DEPENDS_38}
+${FILE_40:X.o=${NDIM}.o}: ${DEPENDS_40}
 
-FILE_39=PatchBoundaries.o
-DEPENDS_39:=\
+FILE_41=PatchBoundaries.o
+DEPENDS_41:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
@@ -3622,17 +3965,17 @@ DEPENDS_39:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h PatchBoundaries.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_39 +=\
+DEPENDS_41 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database_template_methods.C		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.C
 endif
 
-${FILE_39:X.o=${NDIM}.o}: ${DEPENDS_39}
+${FILE_41:X.o=${NDIM}.o}: ${DEPENDS_41}
 
-FILE_40=PatchData.o
-DEPENDS_40:=\
+FILE_42=PatchData.o
+DEPENDS_42:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
@@ -3644,6 +3987,12 @@ DEPENDS_40:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstIterator.I	\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstIterator.h	\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstReverseIterator.I\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstReverseIterator.h\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.I				\
@@ -3705,10 +4054,11 @@ DEPENDS_40:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h PatchData.C
+	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h BoxContainer.h		\
+	PatchData.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_40 +=\
+DEPENDS_42 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database_template_methods.C		\
@@ -3718,10 +4068,10 @@ DEPENDS_40 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.C
 endif
 
-${FILE_40:X.o=${NDIM}.o}: ${DEPENDS_40}
+${FILE_42:X.o=${NDIM}.o}: ${DEPENDS_42}
 
-FILE_41=PatchDataFactory.o
-DEPENDS_41:=\
+FILE_43=PatchDataFactory.o
+DEPENDS_43:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
@@ -3733,6 +4083,12 @@ DEPENDS_41:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstIterator.I	\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstIterator.h	\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstReverseIterator.I\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstReverseIterator.h\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
@@ -3798,10 +4154,11 @@ DEPENDS_41:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h PatchDataFactory.C
+	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h BoxContainer.h		\
+	PatchDataFactory.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_41 +=\
+DEPENDS_43 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database_template_methods.C		\
@@ -3811,10 +4168,10 @@ DEPENDS_41 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.C
 endif
 
-${FILE_41:X.o=${NDIM}.o}: ${DEPENDS_41}
+${FILE_43:X.o=${NDIM}.o}: ${DEPENDS_43}
 
-FILE_42=PatchDescriptor.o
-DEPENDS_42:=\
+FILE_44=PatchDescriptor.o
+DEPENDS_44:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
@@ -3826,6 +4183,12 @@ DEPENDS_42:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstIterator.I	\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstIterator.h	\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstReverseIterator.I\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstReverseIterator.h\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
@@ -3894,10 +4257,11 @@ DEPENDS_42:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h PatchDescriptor.C
+	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h BoxContainer.h		\
+	PatchDescriptor.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_42 +=\
+DEPENDS_44 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database_template_methods.C		\
@@ -3907,10 +4271,10 @@ DEPENDS_42 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.C
 endif
 
-${FILE_42:X.o=${NDIM}.o}: ${DEPENDS_42}
+${FILE_44:X.o=${NDIM}.o}: ${DEPENDS_44}
 
-FILE_43=PatchFactory.o
-DEPENDS_43:=\
+FILE_45=PatchFactory.o
+DEPENDS_45:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
@@ -3926,6 +4290,12 @@ DEPENDS_43:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstIterator.I	\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstIterator.h	\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstReverseIterator.I\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstReverseIterator.h\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
@@ -4010,10 +4380,11 @@ DEPENDS_43:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h PatchFactory.C
+	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h BoxContainer.h		\
+	PatchFactory.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_43 +=\
+DEPENDS_45 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database_template_methods.C		\
@@ -4023,10 +4394,10 @@ DEPENDS_43 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.C
 endif
 
-${FILE_43:X.o=${NDIM}.o}: ${DEPENDS_43}
+${FILE_45:X.o=${NDIM}.o}: ${DEPENDS_45}
 
-FILE_44=PatchGeometry.o
-DEPENDS_44:=\
+FILE_46=PatchGeometry.o
+DEPENDS_46:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
@@ -4087,7 +4458,7 @@ DEPENDS_44:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h PatchGeometry.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_44 +=\
+DEPENDS_46 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database_template_methods.C		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/List.C				\
@@ -4095,10 +4466,10 @@ DEPENDS_44 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.C
 endif
 
-${FILE_44:X.o=${NDIM}.o}: ${DEPENDS_44}
+${FILE_46:X.o=${NDIM}.o}: ${DEPENDS_46}
 
-FILE_45=PatchHierarchy.o
-DEPENDS_45:=\
+FILE_47=PatchHierarchy.o
+DEPENDS_47:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
@@ -4114,6 +4485,12 @@ DEPENDS_45:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstIterator.I	\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstIterator.h	\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstReverseIterator.I\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstReverseIterator.h\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
@@ -4234,10 +4611,11 @@ DEPENDS_45:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/TimerManager.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h PatchHierarchy.C
+	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h BoxContainer.h		\
+	PatchHierarchy.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_45 +=\
+DEPENDS_47 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/AsyncCommPeer.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.C			\
@@ -4248,10 +4626,10 @@ DEPENDS_45 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.C
 endif
 
-${FILE_45:X.o=${NDIM}.o}: ${DEPENDS_45}
+${FILE_47:X.o=${NDIM}.o}: ${DEPENDS_47}
 
-FILE_46=PatchLevel.o
-DEPENDS_46:=\
+FILE_48=PatchLevel.o
+DEPENDS_48:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
@@ -4267,6 +4645,12 @@ DEPENDS_46:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstIterator.I	\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstIterator.h	\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstReverseIterator.I\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstReverseIterator.h\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
@@ -4372,10 +4756,11 @@ DEPENDS_46:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/TimerManager.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h PatchLevel.C
+	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h BoxContainer.h		\
+	PatchLevel.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_46 +=\
+DEPENDS_48 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database_template_methods.C		\
@@ -4385,10 +4770,10 @@ DEPENDS_46 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.C
 endif
 
-${FILE_46:X.o=${NDIM}.o}: ${DEPENDS_46}
+${FILE_48:X.o=${NDIM}.o}: ${DEPENDS_48}
 
-FILE_47=PatchLevelFactory.o
-DEPENDS_47:=\
+FILE_49=PatchLevelFactory.o
+DEPENDS_49:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
@@ -4404,6 +4789,12 @@ DEPENDS_47:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstIterator.I	\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstIterator.h	\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstReverseIterator.I\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstReverseIterator.h\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
@@ -4510,10 +4901,11 @@ DEPENDS_47:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h PatchLevelFactory.C
+	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h BoxContainer.h		\
+	PatchLevelFactory.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_47 +=\
+DEPENDS_49 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database_template_methods.C		\
@@ -4523,23 +4915,23 @@ DEPENDS_47 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.C
 endif
 
-${FILE_47:X.o=${NDIM}.o}: ${DEPENDS_47}
+${FILE_49:X.o=${NDIM}.o}: ${DEPENDS_49}
 
-FILE_48=PeriodicId.o
-DEPENDS_48:=\
+FILE_50=PeriodicId.o
+DEPENDS_50:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicId.h PeriodicId.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_48 +=\
+DEPENDS_50 +=\
 	
 endif
 
-${FILE_48:X.o=${NDIM}.o}: ${DEPENDS_48}
+${FILE_50:X.o=${NDIM}.o}: ${DEPENDS_50}
 
-FILE_49=PeriodicShiftCatalog.o
-DEPENDS_49:=\
+FILE_51=PeriodicShiftCatalog.o
+DEPENDS_51:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
@@ -4574,17 +4966,17 @@ DEPENDS_49:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h PeriodicShiftCatalog.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_49 +=\
+DEPENDS_51 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database_template_methods.C		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.C
 endif
 
-${FILE_49:X.o=${NDIM}.o}: ${DEPENDS_49}
+${FILE_51:X.o=${NDIM}.o}: ${DEPENDS_51}
 
-FILE_50=PersistentOverlapConnectors.o
-DEPENDS_50:=\
+FILE_52=PersistentOverlapConnectors.o
+DEPENDS_52:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
@@ -4600,6 +4992,12 @@ DEPENDS_50:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstIterator.I	\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstIterator.h	\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstReverseIterator.I\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstReverseIterator.h\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
@@ -4710,11 +5108,11 @@ DEPENDS_50:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/TimerManager.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h BoxContainer.h		\
 	PersistentOverlapConnectors.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_50 +=\
+DEPENDS_52 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/AsyncCommPeer.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.C			\
@@ -4725,10 +5123,10 @@ DEPENDS_50 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.C
 endif
 
-${FILE_50:X.o=${NDIM}.o}: ${DEPENDS_50}
+${FILE_52:X.o=${NDIM}.o}: ${DEPENDS_52}
 
-FILE_51=ProcessorMapping.o
-DEPENDS_51:=\
+FILE_53=ProcessorMapping.o
+DEPENDS_53:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/ProcessorMapping.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/ProcessorMapping.h			\
@@ -4760,21 +5158,33 @@ DEPENDS_51:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h ProcessorMapping.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_51 +=\
+DEPENDS_53 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database_template_methods.C		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.C
 endif
 
-${FILE_51:X.o=${NDIM}.o}: ${DEPENDS_51}
+${FILE_53:X.o=${NDIM}.o}: ${DEPENDS_53}
 
-FILE_52=RealBoxConstIterator.o
-DEPENDS_52:=\
+FILE_54=RealBoxConstIterator.o
+DEPENDS_54:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.I			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstIterator.I	\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstIterator.h	\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstReverseIterator.I\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstReverseIterator.h\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxSet.I				\
@@ -4820,20 +5230,21 @@ DEPENDS_52:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h RealBoxConstIterator.C
+	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h BoxContainer.h		\
+	RealBoxConstIterator.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_52 +=\
+DEPENDS_54 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database_template_methods.C		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.C
 endif
 
-${FILE_52:X.o=${NDIM}.o}: ${DEPENDS_52}
+${FILE_54:X.o=${NDIM}.o}: ${DEPENDS_54}
 
-FILE_53=RefineOperator.o
-DEPENDS_53:=\
+FILE_55=RefineOperator.o
+DEPENDS_55:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
@@ -4849,6 +5260,12 @@ DEPENDS_53:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstIterator.I	\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstIterator.h	\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstReverseIterator.I\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstReverseIterator.h\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
@@ -4933,10 +5350,11 @@ DEPENDS_53:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h RefineOperator.C
+	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h BoxContainer.h		\
+	RefineOperator.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_53 +=\
+DEPENDS_55 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database_template_methods.C		\
@@ -4946,10 +5364,10 @@ DEPENDS_53 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.C
 endif
 
-${FILE_53:X.o=${NDIM}.o}: ${DEPENDS_53}
+${FILE_55:X.o=${NDIM}.o}: ${DEPENDS_55}
 
-FILE_54=TimeInterpolateOperator.o
-DEPENDS_54:=\
+FILE_56=TimeInterpolateOperator.o
+DEPENDS_56:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
@@ -4961,6 +5379,12 @@ DEPENDS_54:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstIterator.I	\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstIterator.h	\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstReverseIterator.I\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstReverseIterator.h\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
@@ -5029,10 +5453,11 @@ DEPENDS_54:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h TimeInterpolateOperator.C
+	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h BoxContainer.h		\
+	TimeInterpolateOperator.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_54 +=\
+DEPENDS_56 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database_template_methods.C		\
@@ -5042,10 +5467,10 @@ DEPENDS_54 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.C
 endif
 
-${FILE_54:X.o=${NDIM}.o}: ${DEPENDS_54}
+${FILE_56:X.o=${NDIM}.o}: ${DEPENDS_56}
 
-FILE_55=TransferOperatorRegistry.o
-DEPENDS_55:=\
+FILE_57=TransferOperatorRegistry.o
+DEPENDS_57:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
@@ -5061,6 +5486,12 @@ DEPENDS_55:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstIterator.I	\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstIterator.h	\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstReverseIterator.I\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstReverseIterator.h\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
@@ -5149,11 +5580,11 @@ DEPENDS_55:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h BoxContainer.h		\
 	TransferOperatorRegistry.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_55 +=\
+DEPENDS_57 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database_template_methods.C		\
@@ -5163,10 +5594,10 @@ DEPENDS_55 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.C
 endif
 
-${FILE_55:X.o=${NDIM}.o}: ${DEPENDS_55}
+${FILE_57:X.o=${NDIM}.o}: ${DEPENDS_57}
 
-FILE_56=Transformation.o
-DEPENDS_56:=\
+FILE_58=Transformation.o
+DEPENDS_58:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
@@ -5182,6 +5613,12 @@ DEPENDS_56:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstIterator.I	\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstIterator.h	\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstReverseIterator.I\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstReverseIterator.h\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
@@ -5274,10 +5711,11 @@ DEPENDS_56:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h Transformation.C
+	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h BoxContainer.h		\
+	Transformation.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_56 +=\
+DEPENDS_58 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database_template_methods.C		\
@@ -5287,10 +5725,10 @@ DEPENDS_56 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.C
 endif
 
-${FILE_56:X.o=${NDIM}.o}: ${DEPENDS_56}
+${FILE_58:X.o=${NDIM}.o}: ${DEPENDS_58}
 
-FILE_57=Variable.o
-DEPENDS_57:=\
+FILE_59=Variable.o
+DEPENDS_59:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
@@ -5302,6 +5740,12 @@ DEPENDS_57:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstIterator.I	\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstIterator.h	\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstReverseIterator.I\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstReverseIterator.h\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
@@ -5369,10 +5813,10 @@ DEPENDS_57:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h Variable.C
+	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h BoxContainer.h Variable.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_57 +=\
+DEPENDS_59 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database_template_methods.C		\
@@ -5382,10 +5826,10 @@ DEPENDS_57 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.C
 endif
 
-${FILE_57:X.o=${NDIM}.o}: ${DEPENDS_57}
+${FILE_59:X.o=${NDIM}.o}: ${DEPENDS_59}
 
-FILE_58=VariableContext.o
-DEPENDS_58:=\
+FILE_60=VariableContext.o
+DEPENDS_60:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/VariableContext.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/VariableContext.h			\
@@ -5404,14 +5848,14 @@ DEPENDS_58:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h VariableContext.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_58 +=\
+DEPENDS_60 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.C
 endif
 
-${FILE_58:X.o=${NDIM}.o}: ${DEPENDS_58}
+${FILE_60:X.o=${NDIM}.o}: ${DEPENDS_60}
 
-FILE_59=VariableDatabase.o
-DEPENDS_59:=\
+FILE_61=VariableDatabase.o
+DEPENDS_61:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
@@ -5423,6 +5867,12 @@ DEPENDS_59:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstIterator.I	\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstIterator.h	\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstReverseIterator.I\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetConstReverseIterator.h\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSetIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
@@ -5499,10 +5949,11 @@ DEPENDS_59:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h VariableDatabase.C
+	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h BoxContainer.h		\
+	VariableDatabase.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_59 +=\
+DEPENDS_61 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database_template_methods.C		\
@@ -5512,5 +5963,5 @@ DEPENDS_59 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.C
 endif
 
-${FILE_59:X.o=${NDIM}.o}: ${DEPENDS_59}
+${FILE_61:X.o=${NDIM}.o}: ${DEPENDS_61}
 

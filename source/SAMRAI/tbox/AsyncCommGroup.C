@@ -302,7 +302,7 @@ bool AsyncCommGroup::beginBcast(
    d_external_size = size;
    d_base_op = bcast;
 
-   if (d_use_mpi_collective_for_full_groups && d_group_size == d_nproc) {
+   if (d_use_mpi_collective_for_full_groups && d_group_size == d_mpi.getSize()) {
       return bcastByMpiCollective();
    }
 
@@ -534,7 +534,7 @@ bool AsyncCommGroup::beginGather(
    d_external_buf = buffer;
    d_external_size = size;
 
-   if (d_use_mpi_collective_for_full_groups && d_group_size == d_nproc) {
+   if (d_use_mpi_collective_for_full_groups && d_group_size == d_mpi.getSize()) {
       return gatherByMpiCollective();
    }
 
@@ -858,7 +858,7 @@ bool AsyncCommGroup::reduceByMpiCollective()
  */
 bool AsyncCommGroup::beginReduce()
 {
-   if (d_use_mpi_collective_for_full_groups && d_group_size == d_nproc) {
+   if (d_use_mpi_collective_for_full_groups && d_group_size == d_mpi.getSize()) {
       return reduceByMpiCollective();
    }
 
@@ -1168,28 +1168,11 @@ void AsyncCommGroup::setGroupAndRootIndex(
 
    d_mpi = mpi;
 
-   d_mpi_err = mpi.Comm_size(&d_nproc);
-#ifdef DEBUG_CHECK_ASSERTIONS
-   if (d_mpi_err != MPI_SUCCESS) {
-      TBOX_ERROR("Error in MPI_Comm_size.\n"
-         << "mpi_communicator = " << d_mpi.getCommunicator() << '\n'
-         << "mpi_tag = " << d_mpi_tag << '\n');
-   }
-#endif
-   d_mpi_err = mpi.Comm_rank(&d_rank);
-#ifdef DEBUG_CHECK_ASSERTIONS
-   if (d_mpi_err != MPI_SUCCESS) {
-      TBOX_ERROR("Error in MPI_Comm_size.\n"
-         << "mpi_communicator = " << d_mpi.getCommunicator() << '\n'
-         << "mpi_tag = " << d_mpi_tag << '\n');
-   }
-#endif
-
    // Set the index for local and root processes.
    d_group_size = group_size;
    d_idx = -1;
    for (int i = 0; i < d_group_size; ++i) {
-      if (group_ranks[i] == d_rank) {
+      if (group_ranks[i] == d_mpi.getRank()) {
          d_idx = i;
          break;
       }
@@ -1199,7 +1182,7 @@ void AsyncCommGroup::setGroupAndRootIndex(
 
 #ifdef DEBUG_CHECK_ASSERTIONS
    // Set d_group_ranks and do some sanity checks.
-   if (d_group_size > d_nproc) {
+   if (d_group_size > d_mpi.getSize()) {
       TBOX_ERROR("Group size must not be greater than the size of\n"
          << "the MPI communicator group.\n"
          << "mpi_communicator = " << d_mpi.getCommunicator() << '\n'
@@ -1209,7 +1192,7 @@ void AsyncCommGroup::setGroupAndRootIndex(
    TBOX_ASSERT(d_group_size > 0);
    if (d_idx == -1) {
       TBOX_ERROR(
-         "The local process (" << d_rank
+         "The local process (" << d_mpi.getRank()
                                << ") MUST be in the communication group.\n"
                                << "mpi_communicator = "
                                << d_mpi.getCommunicator() << '\n'
@@ -1219,7 +1202,7 @@ void AsyncCommGroup::setGroupAndRootIndex(
    d_group_ranks.insert(d_group_ranks.end(), d_group_size, -1);
    int dup = 0;
    for (int i = 0; i < d_group_size; ++i) {
-      if (group_ranks[i] < 0 || group_ranks[i] >= d_nproc) {
+      if (group_ranks[i] < 0 || group_ranks[i] >= d_mpi.getSize()) {
          TBOX_ERROR(
             "Rank " << group_ranks[i] << " is not in the current\n"
                     << "MPI communicator.\n"
@@ -1228,7 +1211,7 @@ void AsyncCommGroup::setGroupAndRootIndex(
                     << "mpi_tag = " << d_mpi_tag
                     << '\n');
       }
-      if (group_ranks[i] == d_rank) ++dup;
+      if (group_ranks[i] == d_mpi.getRank()) ++dup;
       d_group_ranks[i] = group_ranks[i];
    }
    if (dup != 1) {

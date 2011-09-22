@@ -96,11 +96,11 @@ RefineCopyTransaction::RefineCopyTransaction(
 
    // Note: s_num_coarsen_items cannot be used at this point!
 
-   if (d_dst_patch_rank == dst_level->getBoxLevel()->getRank()) {
+   if (d_dst_patch_rank == dst_level->getBoxLevel()->getMPI().getRank()) {
       d_dst_patch = dst_level->getPatch(dst_mapped_box.getGlobalId(),
             dst_mapped_box.getBlockId());
    }
-   if (d_src_patch_rank == dst_level->getBoxLevel()->getRank()) {
+   if (d_src_patch_rank == dst_level->getBoxLevel()->getMPI().getRank()) {
       d_src_patch = src_level->getPatch(src_mapped_box.getGlobalId(),
             src_mapped_box.getBlockId());
    }

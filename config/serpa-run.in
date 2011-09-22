@@ -185,7 +185,7 @@ elif echo "${HOST}" | grep '^tc2k' > /dev/null ; then
     return ${?}
   }
 
-elif echo "${HOST}" | egrep '^(atlas|zeus|alastor)[0-9]' > /dev/null ; then
+elif echo "${HOST}" | egrep '^(atlas|rzzeus|rzalastor)[0-9]' > /dev/null ; then
 
   # For LC Linux clusters using srun.
   run_multiproc () {
@@ -202,7 +202,7 @@ elif echo "${HOST}" | egrep '^(atlas|zeus|alastor)[0-9]' > /dev/null ; then
     return ${?}
   }
 
-elif echo "${HOSTNAME}" | egrep '^(ubgl|bgl|dawn|dawndev)[0-9]' > /dev/null ; then
+elif echo "${HOSTNAME}" | egrep '^(ubgl|bgl|dawn|rzdawndev)[0-9]' > /dev/null ; then
 
   # ubgl has a different way to use mpirun (contributed by Susan Hazlett)
   run_multiproc() {

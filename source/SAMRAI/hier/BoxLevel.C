@@ -82,8 +82,6 @@ BoxLevel::BoxLevel():
    d_globalized_version(NULL),
    d_persistent_overlap_connectors(NULL),
    d_handle(NULL),
-   d_rank(BAD_INT),
-   d_nproc(BAD_INT),
    d_grid_geometry(tbox::ConstPointer<GridGeometry>(NULL))
 {
    // This ctor should never be invoked.
@@ -122,8 +120,6 @@ BoxLevel::BoxLevel(
    d_globalized_version(NULL),
    d_persistent_overlap_connectors(NULL),
    d_handle(NULL),
-   d_rank(BAD_INT),
-   d_nproc(BAD_INT),
    d_grid_geometry(tbox::ConstPointer<GridGeometry>(NULL))
 {
 }
@@ -160,8 +156,6 @@ BoxLevel::BoxLevel(
    d_globalized_version(NULL),
    d_persistent_overlap_connectors(NULL),
    d_handle(NULL),
-   d_rank(rhs.d_rank),
-   d_nproc(rhs.d_nproc),
    d_grid_geometry(rhs.d_grid_geometry)
 {
    // This cannot be the first constructor call, so no need to set timers.
@@ -202,8 +196,6 @@ BoxLevel::BoxLevel(
    d_globalized_version(NULL),
    d_persistent_overlap_connectors(NULL),
    d_handle(NULL),
-   d_rank(BAD_INT),
-   d_nproc(BAD_INT),
    d_grid_geometry(tbox::ConstPointer<GridGeometry>(NULL))
 {
    initialize(mapped_boxes, ratio, grid_geom, mpi, parallel_state);
@@ -243,8 +235,6 @@ BoxLevel::BoxLevel(
    d_globalized_version(NULL),
    d_persistent_overlap_connectors(NULL),
    d_handle(NULL),
-   d_rank(BAD_INT),
-   d_nproc(BAD_INT),
    d_grid_geometry(tbox::ConstPointer<GridGeometry>(NULL))
 {
    BoxSet dummy_mapped_boxes(ratio.getDim());
@@ -317,8 +307,6 @@ void BoxLevel::initializePrivate(
    clearForBoxChanges();
 
    d_mpi = mpi;
-   d_rank = mpi.getRank();
-   d_nproc = mpi.getSize();
    d_grid_geometry = grid_geom;
 
    if (parallel_state == DISTRIBUTED) {
@@ -330,7 +318,7 @@ void BoxLevel::initializePrivate(
    // Erase non-local Boxes, if any, from d_mapped_boxes.
    for (BoxSet::SetIterator mbi(d_mapped_boxes.setBegin());
         mbi != d_mapped_boxes.setEnd(); /* incremented in loop */) {
-      if (mbi->getOwnerRank() != d_rank) {
+      if (mbi->getOwnerRank() != d_mpi.getRank()) {
          d_mapped_boxes.erase(mbi++);
       } else {
          ++mbi;
@@ -396,8 +384,6 @@ void BoxLevel::clear()
       d_global_max_box_size.clear();
       d_global_min_box_size.clear();
       d_parallel_state = DISTRIBUTED;
-      d_rank = BAD_INT;
-      d_nproc = BAD_INT;
       d_grid_geometry = tbox::ConstPointer<GridGeometry>(NULL);
    }
 }
@@ -444,14 +430,6 @@ void BoxLevel::swap(
       tmpmpi = level_a.d_mpi;
       level_a.d_mpi = level_b.d_mpi;
       level_b.d_mpi = tmpmpi;
-
-      tmpint = level_a.d_nproc;
-      level_a.d_nproc = level_b.d_nproc;
-      level_b.d_nproc = tmpint;
-
-      tmpint = level_a.d_rank;
-      level_a.d_rank = level_b.d_rank;
-      level_b.d_rank = tmpint;
 
       tmpvec = level_a.d_ratio;
       level_a.d_ratio = level_b.d_ratio;
@@ -651,7 +629,7 @@ void BoxLevel::cacheGlobalReducedData() const
 
    d_global_data_up_to_date = true;
 
-   t_cache_global_reduced_data->barrierAndStop();
+   t_cache_global_reduced_data->stop();
 }
 
 int BoxLevel::getGlobalNumberOfBoxes() const
@@ -828,7 +806,7 @@ void BoxLevel::acquireRemoteBoxes(
     * Send and receive the data.
     */
 
-   std::vector<int> recv_mesg_size(d_nproc);
+   std::vector<int> recv_mesg_size(d_mpi.getSize());
    d_mpi.Allgather(&send_mesg_size,
       1,
       MPI_INT,
@@ -836,9 +814,9 @@ void BoxLevel::acquireRemoteBoxes(
       1,
       MPI_INT);
 
-   std::vector<int> proc_offset(d_nproc);
+   std::vector<int> proc_offset(d_mpi.getSize());
    int totl_size = 0;
-   for (n = 0; n < d_nproc; ++n) {
+   for (n = 0; n < d_mpi.getSize(); ++n) {
       proc_offset[n] = totl_size;
       totl_size += recv_mesg_size[n];
    }
@@ -924,12 +902,12 @@ void BoxLevel::acquireRemoteBoxes_unpack(
    int n;
    int mapped_box_com_buf_size = Box::commBufferSize(dim);
 
-   for (n = 0; n < d_nproc; ++n) {
-      if (n != d_rank) {
+   for (n = 0; n < d_mpi.getSize(); ++n) {
+      if (n != d_mpi.getRank()) {
 
          const int* ptr = &recv_mesg[0] + proc_offset[n];
          const int n_self_mapped_boxes = *(ptr++);
-         proc_offset[d_rank] += (n_self_mapped_boxes) * mapped_box_com_buf_size;
+         proc_offset[d_mpi.getRank()] += (n_self_mapped_boxes) * mapped_box_com_buf_size;
 
          int i;
          Box mapped_box(dim);
@@ -992,7 +970,7 @@ BoxSet::SetIterator BoxLevel::addBox(
       Box new_mapped_box =
          Box(box,
             LocalId::getZero(),
-            d_rank,
+            d_mpi.getRank(),
             block_id,
             PeriodicShiftCatalog::getCatalog(dim)->getZeroShiftNumber());
       new_iterator = d_mapped_boxes.insert(d_mapped_boxes.setEnd(), new_mapped_box);
@@ -1028,7 +1006,7 @@ BoxSet::SetIterator BoxLevel::addBox(
       }
 
       const Box new_mapped_box =
-         Box(box, new_index, d_rank, block_id);
+         Box(box, new_index, d_mpi.getRank(), block_id);
       new_iterator = d_mapped_boxes.insert(ni, new_mapped_box);
    }
 
@@ -1060,7 +1038,7 @@ BoxLevel::addPeriodicBox(
          "BoxLevel::addPeriodicBox cannot be used to add regular mapped_box.");
    }
    if (d_parallel_state != GLOBALIZED && ref_mapped_box.getOwnerRank() !=
-       d_rank) {
+       d_mpi.getRank()) {
       TBOX_ERROR(
          "BoxLevel::addPeriodicBox: Cannot add remote Box\n"
          << "(owned by rank " << ref_mapped_box.getOwnerRank() << ")\n"
@@ -1099,7 +1077,7 @@ BoxLevel::addPeriodicBox(
    if (d_parallel_state == GLOBALIZED) {
       d_global_mapped_boxes.insert(image_mapped_box);
    }
-   if (image_mapped_box.getOwnerRank() == d_rank) {
+   if (image_mapped_box.getOwnerRank() == d_mpi.getRank()) {
       d_mapped_boxes.insert(image_mapped_box);
    }
 }
@@ -1113,7 +1091,7 @@ BoxLevel::addBox(
    const Box& mapped_box)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   if (d_parallel_state != GLOBALIZED && mapped_box.getOwnerRank() != d_rank) {
+   if (d_parallel_state != GLOBALIZED && mapped_box.getOwnerRank() != d_mpi.getRank()) {
       TBOX_ERROR("BoxLevel::addBox: Cannot add remote Box\n"
          << "(owned by rank " << mapped_box.getOwnerRank() << ")\n"
          << "when not in GLOBALIZED state.");
@@ -1135,7 +1113,7 @@ BoxLevel::addBox(
                           PeriodicShiftCatalog::getCatalog(
                              getDim())->getZeroShiftNumber());
       BoxSet& mapped_boxes = mapped_box.getOwnerRank() ==
-         d_rank ? d_mapped_boxes : d_global_mapped_boxes;
+         d_mpi.getRank() ? d_mapped_boxes : d_global_mapped_boxes;
       if (mapped_boxes.find(real_mapped_box) == mapped_boxes.setEnd()) {
          TBOX_ERROR(
             "BoxLevel::addBox: cannot add periodic image Box "
@@ -1156,7 +1134,7 @@ BoxLevel::addBox(
 
    // Update counters.
    if (!mapped_box.isPeriodicImage()) {
-      if (mapped_box.getOwnerRank() == d_rank) {
+      if (mapped_box.getOwnerRank() == d_mpi.getRank()) {
          const IntVector box_size(mapped_box.numberCells());
          ++d_local_number_of_mapped_boxes;
          d_local_number_of_cells += mapped_box.size();
@@ -1176,7 +1154,7 @@ BoxLevel::addBox(
    if (d_parallel_state == GLOBALIZED) {
       d_global_mapped_boxes.insert(mapped_box);
    }
-   if (mapped_box.getOwnerRank() == d_rank) {
+   if (mapped_box.getOwnerRank() == d_mpi.getRank()) {
       d_mapped_boxes.insert(mapped_box);
    }
 }
@@ -1332,8 +1310,8 @@ void BoxLevel::putToDatabase(
    database.putBool("d_is_mapped_box_level", true);
    database.putInteger(
       "HIER_MAPPED_BOX_LEVEL_VERSION", HIER_MAPPED_BOX_LEVEL_VERSION);
-   database.putInteger("d_nproc", d_nproc);
-   database.putInteger("d_rank", d_rank);
+   database.putInteger("d_nproc", d_mpi.getSize());
+   database.putInteger("d_rank", d_mpi.getRank());
    database.putInteger("dim", d_ratio.getDim().getValue());
    database.putIntegerArray("d_ratio", &d_ratio[0], d_ratio.getDim().getValue());
    getBoxes().putToDatabase(*database.putDatabase("mapped_boxes"));
@@ -1389,8 +1367,8 @@ void BoxLevel::getFromDatabase(
     * database for the number of processors or we are reading another
     * processor's data.
     */
-   TBOX_ASSERT(nproc == d_nproc);
-   TBOX_ASSERT(rank == d_rank);
+   TBOX_ASSERT(nproc == d_mpi.getSize());
+   TBOX_ASSERT(rank == d_mpi.getRank());
 
    d_mapped_boxes.getFromDatabase(*database.getDatabase("mapped_boxes"));
    computeLocalRedundantData();
@@ -1469,8 +1447,8 @@ void BoxLevel::recursivePrint(
    << border << "Bounding box   : " << getLocalBoundingBox(0) << ", "
    << (d_global_data_up_to_date ? getGlobalBoundingBox(0) : Box(getDim()))
    << '\n'
-   << border << "Comm,rank,nproc: " << d_mpi.getCommunicator() << ", " << d_rank
-   << ", " << d_nproc << '\n'
+   << border << "Comm,rank,nproc: " << d_mpi.getCommunicator() << ", " << d_mpi.getRank()
+   << ", " << d_mpi.getSize() << '\n'
    ;
    if (detail_depth > 0) {
       co << border << "Mapped_boxes:\n";
@@ -1523,7 +1501,7 @@ void BoxLevel::printBoxStats(
    cacheGlobalReducedData();
 
    double ideal_surfarea =
-      pow((double)getGlobalNumberOfCells() / d_nproc, double(dim.getValue() - 1) / dim.getValue());
+      pow((double)getGlobalNumberOfCells() / d_mpi.getSize(), double(dim.getValue() - 1) / dim.getValue());
 
    // Per-processor statistics.
    double has_mapped_box = (double)(getLocalNumberOfBoxes() > 0);
@@ -1599,7 +1577,7 @@ void BoxLevel::printBoxStats(
                   loc_dbl[i];
       int rank_of_min[MAPPED_BOX_LEVEL_NUMBER_OF_STATS],
           rank_of_max[MAPPED_BOX_LEVEL_NUMBER_OF_STATS];
-      if (d_nproc > 1) {
+      if (d_mpi.getSize() > 1) {
          d_mpi.AllReduce(min_dbl, k, MPI_MINLOC, rank_of_min);
          d_mpi.AllReduce(max_dbl, k, MPI_MAXLOC, rank_of_max);
          d_mpi.AllReduce(sum_dbl, k, MPI_SUM);
@@ -1623,7 +1601,7 @@ void BoxLevel::printBoxStats(
          << ' ' << std::setw(8) << std::right << max_dbl[i] << " @ "
          << std::setw(6) << std::left << rank_of_max[i]
          << ' ' << std::setw(8) << std::right << sum_dbl[i] / getGlobalNumberOfBoxes()
-         << ' ' << std::setw(8) << std::right << sum_dbl[i] / d_nproc
+         << ' ' << std::setw(8) << std::right << sum_dbl[i] / d_mpi.getSize()
          << '\n';
       }
    }

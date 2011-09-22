@@ -202,11 +202,11 @@ int main(
 
       hier::BoxList::Iterator coarse_domain_itr(coarse_domain);
       if (nproc > 1) {
-         if (layer0.getRank() == 0) {
+         if (layer0.getMPI().getRank() == 0) {
             for (int ib = 0; ib < n_coarse_boxes / 2; ib++, coarse_domain_itr++) {
                layer0.addBox(hier::Box(*coarse_domain_itr,
                      hier::LocalId(ib),
-                     layer0.getRank()));
+                     layer0.getMPI().getRank()));
             }
          } else {
             for (int ib = 0; ib < n_coarse_boxes / 2; ib++) {
@@ -215,7 +215,7 @@ int main(
             for (int ib = n_coarse_boxes / 2; ib < n_coarse_boxes; ib++, coarse_domain_itr++) {
                layer0.addBox(hier::Box(*coarse_domain_itr,
                      hier::LocalId(ib),
-                     layer0.getRank()));
+                     layer0.getMPI().getRank()));
             }
          }
 
@@ -224,7 +224,7 @@ int main(
          for (int ib = 0; ib < n_coarse_boxes; ib++, coarse_domain_itr++) {
             layer0.addBox(hier::Box(*coarse_domain_itr,
                   hier::LocalId(ib),
-                  layer0.getRank()));
+                  layer0.getMPI().getRank()));
          }
 
       }
@@ -232,11 +232,11 @@ int main(
       hier::BoxList::Iterator fine_boxes_itr(fine_boxes);
       if (nproc > 1) {
 
-         if (layer1.getRank() == 0) {
+         if (layer1.getMPI().getRank() == 0) {
             for (int ib = 0; ib < n_fine_boxes / 2; ib++, fine_boxes_itr++) {
                layer1.addBox(hier::Box(*fine_boxes_itr,
                      hier::LocalId(ib),
-                     layer1.getRank()));
+                     layer1.getMPI().getRank()));
             }
          } else {
             for (int ib = 0; ib < n_fine_boxes / 2; ib++) {
@@ -245,7 +245,7 @@ int main(
             for (int ib = n_fine_boxes / 2; ib < n_fine_boxes; ib++, fine_boxes_itr++) {
                layer1.addBox(hier::Box(*fine_boxes_itr,
                      hier::LocalId(ib),
-                     layer1.getRank()));
+                     layer1.getMPI().getRank()));
             }
          }
 
@@ -254,7 +254,7 @@ int main(
          for (int ib = 0; ib < n_fine_boxes; ib++, fine_boxes_itr++) {
             layer1.addBox(hier::Box(*fine_boxes_itr,
                   hier::LocalId(ib),
-                  layer1.getRank()));
+                  layer1.getMPI().getRank()));
          }
 
       }

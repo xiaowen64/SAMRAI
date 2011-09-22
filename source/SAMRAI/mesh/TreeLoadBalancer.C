@@ -92,8 +92,6 @@ TreeLoadBalancer::TreeLoadBalancer(
    d_precut_penalty_wt(1.0),
    // Data shared during balancing.
    d_mpi(tbox::SAMRAI_MPI::commNull),
-   d_rank(tbox::MathUtilities<int>::getMax()),
-   d_nproc(tbox::MathUtilities<int>::getMax()),
    d_min_size(d_dim),
    d_max_size(d_dim),
    d_domain_boxes(d_dim),
@@ -223,9 +221,6 @@ void TreeLoadBalancer::loadBalanceBoxLevel(
       d_mpi_dup.getCommunicator() == tbox::SAMRAI_MPI::commNull ?
       balance_mapped_box_level.getMPI() : d_mpi_dup;
 
-   d_nproc = d_mpi.getSize();
-   d_rank = d_mpi.getRank();
-
    if (d_print_steps ||
        d_print_break_steps) {
       tbox::plog << "TreeLoadBalancer::loadBalanceBoxLevel called with:"
@@ -353,9 +348,9 @@ void TreeLoadBalancer::loadBalanceBoxLevel(
          tbox::plog << "TreeLoadBalancer::loadBalanceBoxLevel balancing "
                     << global_sum_load << " (initially born on "
                     << nproc_with_initial_load << " procs) across all "
-                    << d_nproc
-                    << " procs, averaging " << global_sum_load / d_nproc
-                    << " or " << pow(global_sum_load / d_nproc, 1.0 / d_dim.getValue())
+                    << d_mpi.getSize()
+                    << " procs, averaging " << global_sum_load / d_mpi.getSize()
+                    << " or " << pow(global_sum_load / d_mpi.getSize(), 1.0 / d_dim.getValue())
                     << "^" << d_dim << " per proc." << std::endl;
       }
    }
@@ -372,9 +367,9 @@ void TreeLoadBalancer::loadBalanceBoxLevel(
        * sqrt(nproc)) processors own the initial load.  Exception: use
        * 1 cycle if nproc is small.
        */
-      if (balance_mapped_box_level.getNproc() < 64 ||
+      if (balance_mapped_box_level.getMPI().getSize() < 64 ||
           int(nproc_with_initial_load * nproc_with_initial_load) >
-          balance_mapped_box_level.getNproc()) {
+          balance_mapped_box_level.getMPI().getSize()) {
          number_of_cycles = 1;
       } else {
          number_of_cycles = 2;
@@ -402,7 +397,7 @@ void TreeLoadBalancer::loadBalanceBoxLevel(
             balance_mapped_box_level.getMPI());
       }
 
-      bool using_this_rank = rank_group.isMember(d_rank);
+      bool using_this_rank = rank_group.isMember(d_mpi.getRank());
 
       /*
        * 1.  Rebalance balance_mapped_box_level and store in temporary tmp_mapped_box_level.
@@ -570,7 +565,6 @@ void TreeLoadBalancer::loadBalanceBoxLevel(
    }
 
    d_mpi.setCommunicator(tbox::SAMRAI_MPI::commNull);
-   d_nproc = d_rank = tbox::MathUtilities<int>::getMax();
 }
 
 /*
@@ -643,7 +637,7 @@ void TreeLoadBalancer::mapOversizedBoxes(
 
                const hier::Box new_mapped_box(new_box,
                                               next_available_index++,
-                                              d_rank,
+                                              d_mpi.getRank(),
                                               (*ni).getBlockId());
 
                if (d_print_break_steps) {
@@ -1761,7 +1755,7 @@ void TreeLoadBalancer::unpackSubtreeLoadData(
       received_mapped_box_in_transit.getFromIntBuffer(received_data);
       BoxInTransit renamed_mapped_box_in_transit(received_mapped_box_in_transit,
                                                  received_mapped_box_in_transit.getBox(),
-                                                 d_rank,
+                                                 d_mpi.getRank(),
                                                  next_available_index);
       next_available_index += 2 + d_degree;
       receiving_bin.insert(renamed_mapped_box_in_transit);
@@ -1804,14 +1798,14 @@ void TreeLoadBalancer::packNeighborhoodSetMessages(
          if (d_print_edge_steps) {
             tbox::plog << "Keeping edge " << mapped_box_in_transit << std::endl;
          }
-         TBOX_ASSERT(mapped_box_in_transit.orig_mapped_box.getOwnerRank() == d_rank);
+         TBOX_ASSERT(mapped_box_in_transit.orig_mapped_box.getOwnerRank() == d_mpi.getRank());
          unbalanced_eto_balanced.insertNeighbor(
             mapped_box_in_transit.orig_mapped_box.getId(),
             mapped_box_in_transit.mapped_box);
 
       } else {
 
-         TBOX_ASSERT(mapped_box_in_transit.orig_mapped_box.getOwnerRank() != d_rank);
+         TBOX_ASSERT(mapped_box_in_transit.orig_mapped_box.getOwnerRank() != d_mpi.getRank());
 
          // Remember the previous owner and remove it from the proc_hist.
          const int prev_owner = mapped_box_in_transit.proc_hist.back();
@@ -1900,7 +1894,7 @@ void TreeLoadBalancer::unpackAndRouteNeighborhoodSets(
             tbox::plog << "Keeping edge " << mapped_box_in_transit << std::endl;
          }
 
-         TBOX_ASSERT(mapped_box_in_transit.orig_mapped_box.getOwnerRank() == d_rank);
+         TBOX_ASSERT(mapped_box_in_transit.orig_mapped_box.getOwnerRank() == d_mpi.getRank());
 
          unbalanced_eto_balanced.insertNeighbor(
             mapped_box_in_transit.orig_mapped_box.getId(),
@@ -1908,7 +1902,7 @@ void TreeLoadBalancer::unpackAndRouteNeighborhoodSets(
 
       } else {
 
-         TBOX_ASSERT(mapped_box_in_transit.orig_mapped_box.getOwnerRank() != d_rank);
+         TBOX_ASSERT(mapped_box_in_transit.orig_mapped_box.getOwnerRank() != d_mpi.getRank());
 
          // Remember the previous owner and remove it from the proc_hist.
          const int prev_owner = mapped_box_in_transit.proc_hist.back();
@@ -1990,10 +1984,10 @@ void TreeLoadBalancer::freeMPICommunicator()
 
 /*
  *************************************************************************
- * Divide all d_nproc ranks into groups.  With each cycle,
+ * Divide all ranks into groups.  With each cycle,
  * the group size grows geometrically while the number of groups
  * shrink geometrically.
- * The last cycle_number has a single group of d_nproc processors.
+ * The last cycle_number has a single group of d_mpi.getSize() processors.
  *
  * Let m = number of cycles
  * i = cycle number, [0,m)
@@ -2052,10 +2046,10 @@ void TreeLoadBalancer::createBalanceSubgroups(
    tbox::AsyncCommPeer<int> *& parent_recv,
    tbox::AsyncCommStage& comm_stage) const
 {
-   if (d_nproc == 1) {
+   if (d_mpi.getSize() == 1) {
       child_comms = parent_send = parent_recv = NULL;
       g_count = 1;
-      g_nproc = d_nproc;
+      g_nproc = d_mpi.getSize();
       g_id = 0;
       g_rank = 0;
       return;
@@ -2079,8 +2073,8 @@ void TreeLoadBalancer::createBalanceSubgroups(
     */
    const bool interlace_groups = cycle_number < number_of_cycles - 1;
 
-   TBOX_ASSERT(rank_group.isMember(d_rank));
-   int my_output_id = rank_group.getMapIndex(d_rank);
+   TBOX_ASSERT(rank_group.isMember(d_mpi.getRank()));
+   int my_output_id = rank_group.getMapIndex(d_mpi.getRank());
    int output_nproc = rank_group.size();
 
    /*
@@ -2206,7 +2200,7 @@ void TreeLoadBalancer::createBalanceSubgroups(
    for (num_children = 0; num_children < d_degree; ++num_children) {
       const int child_g_rank = d_degree * (g_rank + 1) + num_children - 1;
       const int child_true_rank = child_g_rank * g_count + g_id;
-      if (child_true_rank >= d_nproc) break;
+      if (child_true_rank >= d_mpi.getSize()) break;
    }
    child_comms = new tbox::AsyncCommPeer<int>[num_children];
    for (int i = 0; i < num_children; ++i) {
@@ -2215,8 +2209,8 @@ void TreeLoadBalancer::createBalanceSubgroups(
       if (interlace_groups) {
          child_true_rank = child_g_rank * g_count + g_id;
       } else {
-         int nominal_g_nproc = d_nproc / g_count;
-         int first_nominal_group = d_nproc % g_count;
+         int nominal_g_nproc = d_mpi.getSize() / g_count;
+         int first_nominal_group = d_mpi.getSize() % g_count;
          // int first_nominal_rank = first_nominal_group*(1+nominal_g_nproc);
          int group_first_rank = g_id < first_nominal_group ?
             g_id * (1 + nominal_g_nproc) :
@@ -2239,8 +2233,8 @@ void TreeLoadBalancer::createBalanceSubgroups(
       if (interlace_groups) {
          parent_true_rank = parent_g_rank * g_count + g_id;
       } else {
-         int nominal_g_nproc = d_nproc / g_count;
-         int first_nominal_group = d_nproc % g_count;
+         int nominal_g_nproc = d_mpi.getSize() / g_count;
+         int first_nominal_group = d_mpi.getSize() % g_count;
          // int first_nominal_rank = first_nominal_group*(1+nominal_g_nproc);
          int group_first_rank = g_id < first_nominal_group ?
             g_id * (1 + nominal_g_nproc) :
@@ -2294,7 +2288,7 @@ void TreeLoadBalancer::destroyBalanceSubgroups(
    tbox::AsyncCommPeer<int> *& parent_send,
    tbox::AsyncCommPeer<int> *& parent_recv) const
 {
-   if (d_nproc == 1) {
+   if (d_mpi.getSize() == 1) {
       TBOX_ASSERT(child_comms == NULL);
       TBOX_ASSERT(parent_send == NULL);
       TBOX_ASSERT(parent_recv == NULL);
@@ -2476,7 +2470,7 @@ bool TreeLoadBalancer::shiftLoadsByBreaking(
             BoxInTransit give_mapped_box_in_transit(
                brk_mapped_box_in_transit,
                *bi,
-               d_rank,
+               d_mpi.getRank(),
                next_available_index);
             give_mapped_box_in_transit.load = (int)computeLoad(
                   give_mapped_box_in_transit.orig_mapped_box,
@@ -2496,7 +2490,7 @@ bool TreeLoadBalancer::shiftLoadsByBreaking(
             BoxInTransit keep_mapped_box_in_transit(
                brk_mapped_box_in_transit,
                *bi,
-               d_rank,
+               d_mpi.getRank(),
                next_available_index);
             keep_mapped_box_in_transit.load = (int)computeLoad(
                   keep_mapped_box_in_transit.orig_mapped_box,
@@ -4794,7 +4788,7 @@ void TreeLoadBalancer::prebalanceBoxLevel(
     * If a rank is not in rank_group it is called a "sending" rank, as
     * it will send any Boxes it has to a rank in rank_group.
     */
-   bool is_sending_rank = rank_group.isMember(d_rank) ? false : true;
+   bool is_sending_rank = rank_group.isMember(d_mpi.getRank()) ? false : true;
 
    int output_nproc = rank_group.size();
 
@@ -4823,17 +4817,17 @@ void TreeLoadBalancer::prebalanceBoxLevel(
    if (is_sending_rank) {
       box_send = new tbox::AsyncCommPeer<int>;
       box_send->initialize(&comm_stage);
-      box_send->setPeerRank(rank_group.getMappedRank(d_rank % output_nproc));
+      box_send->setPeerRank(rank_group.getMappedRank(d_mpi.getRank() % output_nproc));
       box_send->setMPI(d_mpi);
-      box_send->setMPITag(TreeLoadBalancer_PREBALANCE0 + 2 * d_rank,
-         TreeLoadBalancer_PREBALANCE1 + 2 * d_rank);
+      box_send->setMPITag(TreeLoadBalancer_PREBALANCE0 + 2 * d_mpi.getRank(),
+         TreeLoadBalancer_PREBALANCE1 + 2 * d_mpi.getRank());
 
       id_recv = new tbox::AsyncCommPeer<int>;
       id_recv->initialize(&comm_stage);
-      id_recv->setPeerRank(rank_group.getMappedRank(d_rank % output_nproc));
+      id_recv->setPeerRank(rank_group.getMappedRank(d_mpi.getRank() % output_nproc));
       id_recv->setMPI(d_mpi);
-      id_recv->setMPITag(TreeLoadBalancer_PREBALANCE0 + 2 * d_rank,
-         TreeLoadBalancer_PREBALANCE1 + 2 * d_rank);
+      id_recv->setMPITag(TreeLoadBalancer_PREBALANCE0 + 2 * d_mpi.getRank(),
+         TreeLoadBalancer_PREBALANCE1 + 2 * d_mpi.getRank());
    }
 
    /*
@@ -4841,11 +4835,11 @@ void TreeLoadBalancer::prebalanceBoxLevel(
     * and sending LocalIdes.
     */
    int num_recvs = 0;
-   if (rank_group.isMember(d_rank)) {
+   if (rank_group.isMember(d_mpi.getRank())) {
       tbox::List<int> recv_ranks;
-      for (int i = 0; i < d_nproc; i++) {
+      for (int i = 0; i < d_mpi.getSize(); i++) {
          if (!rank_group.isMember(i) &&
-             rank_group.getMappedRank(i % output_nproc) == d_rank) {
+             rank_group.getMappedRank(i % output_nproc) == d_mpi.getRank()) {
             recv_ranks.appendItem(i);
          }
       }
@@ -5005,7 +4999,7 @@ void TreeLoadBalancer::prebalanceBoxLevel(
          hier::Box new_mapped_box(
             (*ni),
             (hier::LocalId)buffer[box_count],
-            rank_group.getMappedRank(d_rank % output_nproc),
+            rank_group.getMappedRank(d_mpi.getRank() % output_nproc),
             (*ni).getBlockId());
 
          balance_to_tmp_edges.insertNeighbor((*ni).getId(), new_mapped_box);

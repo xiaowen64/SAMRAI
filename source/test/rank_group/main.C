@@ -302,9 +302,9 @@ int main(
       {
          hier::BoxList anchor_boxes(main_db->getDatabaseBoxArray("anchor_boxes"));
          const int boxes_per_proc =
-            (anchor_boxes.size() + anchor_mapped_box_level.getNproc()
-             - 1) / anchor_mapped_box_level.getNproc();
-         const int my_boxes_start = anchor_mapped_box_level.getRank()
+            (anchor_boxes.size() + anchor_mapped_box_level.getMPI().getSize()
+             - 1) / anchor_mapped_box_level.getMPI().getSize();
+         const int my_boxes_start = anchor_mapped_box_level.getMPI().getRank()
             * boxes_per_proc;
          const int my_boxes_stop =
             tbox::MathUtilities<int>::Min(my_boxes_start + boxes_per_proc,
@@ -761,7 +761,7 @@ void generatePrebalanceByUserBoxes(
    hier::BoxList::Iterator balance_boxes_itr(balance_boxes);
    for (int i = 0; i < balance_boxes.size(); ++i, balance_boxes_itr++) {
       const int owner = i % initial_owners.size();
-      if (owner == balance_mapped_box_level.getRank()) {
+      if (owner == balance_mapped_box_level.getMPI().getRank()) {
          balance_mapped_box_level.addBox(hier::Box(*balance_boxes_itr,
                hier::LocalId(i), owner));
       }

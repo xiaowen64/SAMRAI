@@ -605,7 +605,7 @@ void GriddingAlgorithm::makeCoarsestLevel(
    }
    d_tag_init_strategy->resetHierarchyConfiguration(d_hierarchy, ln, ln);
    if (d_barrier_and_time) {
-      t_reset_hier->barrierAndStop();
+      t_reset_hier->stop();
    }
 
 #ifdef GA_RECORD_STATS
@@ -962,7 +962,7 @@ void GriddingAlgorithm::makeFinerLevel(
          d_tag_init_strategy->resetHierarchyConfiguration(d_hierarchy,
             new_ln,
             new_ln);
-         t_reset_hier->barrierAndStop();
+         t_reset_hier->stop();
          t_make_finer_create->stop();
       }
 
@@ -971,7 +971,7 @@ void GriddingAlgorithm::makeFinerLevel(
    }  // if level cannot be refined, the routine drops through...
 
    if (d_barrier_and_time) {
-      t_make_finer->barrierAndStop();
+      t_make_finer->stop();
    }
 
 }
@@ -1086,7 +1086,7 @@ void GriddingAlgorithm::regridAllFinerLevels(
             level_number + 1,
             d_hierarchy->getFinestLevelNumber());
          if (d_barrier_and_time) {
-            t_reset_hier->barrierAndStop();
+            t_reset_hier->stop();
          }
       }
 
@@ -1108,7 +1108,7 @@ void GriddingAlgorithm::regridAllFinerLevels(
    t_misc5->stop();
 
    if (d_barrier_and_time) {
-      t_regrid_all_finer->barrierAndStop();
+      t_regrid_all_finer->stop();
    }
 
    if (d_print_hierarchy) {
@@ -1223,7 +1223,7 @@ void GriddingAlgorithm::regridFinerLevel(
       hier::Connector new_to_tag;
 
       if (d_barrier_and_time) {
-         t_misc4->barrierAndStop();
+         t_misc4->stop();
       }
 
       /*
@@ -1322,7 +1322,7 @@ void GriddingAlgorithm::regridFinerLevel(
          d_bdry_sched_tags[tag_ln].setNull();
 
          if (d_barrier_and_time) {
-            t_misc3->barrierAndStop();
+            t_misc3->stop();
          }
 
       } else { /* do_tagging == false */
@@ -1468,7 +1468,7 @@ void GriddingAlgorithm::regridFinerLevel_doTaggingBeforeRecursiveRegrid(
    }
 
    if (d_barrier_and_time) {
-      t_misc1->barrierAndStop();
+      t_misc1->stop();
    }
 
    if (d_barrier_and_time) {
@@ -1484,7 +1484,7 @@ void GriddingAlgorithm::regridFinerLevel_doTaggingBeforeRecursiveRegrid(
       d_hierarchy->levelCanBeRefined(tag_ln),
       level_regrid_start_time);
    if (d_barrier_and_time) {
-      t_tag_cells_for_refinement->barrierAndStop();
+      t_tag_cells_for_refinement->stop();
    }
 
    /*
@@ -1590,7 +1590,7 @@ void GriddingAlgorithm::regridFinerLevel_doTaggingAfterRecursiveRegrid(
          nesting_buffer);
 
       if (d_barrier_and_time) {
-         t_second_finer_tagging->barrierAndStop();
+         t_second_finer_tagging->stop();
       }
 
    } // End tagging under level new_ln+1.
@@ -1884,7 +1884,7 @@ void GriddingAlgorithm::regridFinerLevel_createAndInstallNewLevel(
     */
    old_fine_level.setNull();
    if (d_barrier_and_time) {
-      t_regrid_finer_create->barrierAndStop();
+      t_regrid_finer_create->stop();
    }
 }
 
