@@ -19,10 +19,10 @@ BoxSetSingleOwnerIterator::BoxSetSingleOwnerIterator(
    const BoxSet& mapped_boxes,
    const int& owner_rank):
    d_mapped_boxes(&mapped_boxes),
-   d_owner_rank(owner_rank)
+   d_owner_rank(owner_rank),
+   d_iter(d_mapped_boxes->setBegin())
 {
-   d_iter = d_mapped_boxes->begin();
-   while (d_iter != d_mapped_boxes->end() && d_iter->getOwnerRank() != d_owner_rank) {
+   while (d_iter != d_mapped_boxes->setEnd() && d_iter->getOwnerRank() != d_owner_rank) {
       ++d_iter;
    }
 }
@@ -35,7 +35,7 @@ BoxSetSingleOwnerIterator::~BoxSetSingleOwnerIterator()
 bool BoxSetSingleOwnerIterator::isValid() const
 {
    return d_mapped_boxes != NULL &&
-          d_iter != d_mapped_boxes->end() &&
+          d_iter != d_mapped_boxes->setEnd() &&
           d_iter->getOwnerRank() == d_owner_rank;
 }
 
@@ -84,7 +84,7 @@ BoxSetSingleOwnerIterator& BoxSetSingleOwnerIterator::operator ++ ()
 {
    do {
       ++d_iter;
-   } while (d_iter != d_mapped_boxes->end() &&
+   } while (d_iter != d_mapped_boxes->setEnd() &&
             d_iter->getOwnerRank() != d_owner_rank);
    return *this;
 }
@@ -101,7 +101,7 @@ BoxSetSingleOwnerIterator BoxSetSingleOwnerIterator::operator ++ (
    BoxSetSingleOwnerIterator saved = *this;
    do {
       ++d_iter;
-   } while (d_iter != d_mapped_boxes->end() &&
+   } while (d_iter != d_mapped_boxes->setEnd() &&
             d_iter->getOwnerRank() != d_owner_rank);
    return saved;
 }

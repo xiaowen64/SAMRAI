@@ -35,10 +35,10 @@ StartupShutdownManager::Handler InputManager::s_finalize_handler(
 
 /*
  *************************************************************************
- *                                                                       *
- * Basic singleton classes to create, set, and destroy the manager       *
- * instance.                                                             *
- *                                                                       *
+ *
+ * Basic singleton classes to create, set, and destroy the manager
+ * instance.
+ *
  *************************************************************************
  */
 
@@ -71,10 +71,10 @@ void InputManager::finalizeCallback()
 
 /*
  *************************************************************************
- *                                                                       *
- * The constructor and destructor are protected and call only be called  *
- * by the singleton class or its subclasses.                             *
- *                                                                       *
+ *
+ * The constructor and destructor are protected and call only be called
+ * by the singleton class or its subclasses.
+ *
  *************************************************************************
  */
 
@@ -88,9 +88,9 @@ InputManager::~InputManager()
 
 /*
  *************************************************************************
- *                                                                       *
- * Return whether or not the manager contains an valid input database.   *
- *                                                                       *
+ *
+ * Return whether or not the manager contains an valid input database.
+ *
  *************************************************************************
  */
 
@@ -101,9 +101,9 @@ bool InputManager::inputDatabaseExists()
 
 /*
  *************************************************************************
- *                                                                       *
- * Parse the specified input file and return the new database.           *
- *                                                                       *
+ *
+ * Parse the specified input file and return the new database.
+ *
  *************************************************************************
  */
 
@@ -118,9 +118,9 @@ InputManager::parseInputFile(
 
 /*
  *************************************************************************
- *                                                                       *
- * Accessor method for InputManger's root input database.                *
- *                                                                       *
+ *
+ * Accessor method for InputManger's root input database.
+ *
  *************************************************************************
  */
 Pointer<Database> InputManager::getInputDatabase()
@@ -130,9 +130,9 @@ Pointer<Database> InputManager::getInputDatabase()
 
 /*
  *************************************************************************
- *                                                                       *
- * Parse the specified input file into the given database.               *
- *                                                                       *
+ *
+ * Parse the specified input file into the given database.
+ *
  *************************************************************************
  */
 

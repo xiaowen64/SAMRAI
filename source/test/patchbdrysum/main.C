@@ -86,13 +86,13 @@ int main(
       tbox::plog << "input_filename = " << input_filename << endl;
 
       /****************************************************************
-      *                                                              *
-      *  PROBLEM SETUP                                               *
-      *                                                              *
+      *
+      *  PROBLEM SETUP
+      *
       ****************************************************************
-      *                                                              *
-      *  Read data from input file and initialize SAMRAI classes     *
-      *                                                              *
+      *
+      *  Read data from input file and initialize SAMRAI classes
+      *
       ****************************************************************/
 
       /*
@@ -258,21 +258,21 @@ int main(
       VariableDatabase::getDatabase()->printClassData(plog);
 
       /****************************************************************
-      *                                                              *
-      *  INITIALIZE DATA ON PATCHES                                  *
-      *                                                              *
+      *
+      *  INITIALIZE DATA ON PATCHES
+      *
       ****************************************************************
-      *                                                              *
-      *  Build patch hierarchy and initialize the data on the patches*
+      *
+      *  Build patch hierarchy and initialize the data on the patches
       *  in the hierarchy.
-      *  1) Create a "tag_buffer" for each level in the Hierarchy.   *
-      *  2) Create the coarse (i.e. level 0) grid.                   *
-      *  3) Cycle through levels 1-max_levels, initializing data     *
-      *     on each.  The makeFinerLevel method calls the error      *
-      *     estimator (remember, it was registered with the          *
-      *     gridding algorithm object) and tags cells for refinement *
-      *     as it generates patches on the finer levels.             *
-      *                                                              *
+      *  1) Create a "tag_buffer" for each level in the Hierarchy.
+      *  2) Create the coarse (i.e. level 0) grid.
+      *  3) Cycle through levels 1-max_levels, initializing data
+      *     on each.  The makeFinerLevel method calls the error
+      *     estimator (remember, it was registered with the
+      *     gridding algorithm object) and tags cells for refinement
+      *     as it generates patches on the finer levels.
+      *
       ****************************************************************/
 
       double loop_time = 0.;
@@ -319,15 +319,15 @@ int main(
       tbox::plog << endl;
 
       /*******************************************************************
-       *                                                                 *
-       * Test hier sum operation                                         *
-       *                                                                 *
+       *
+       * Test hier sum operation
+       *
        *******************************************************************
-       *                                                                 *
-       *  1) Set node values (initial)                                   *
-       *  2) Do hierarchy sum operation                                  *
-       *  3) Check result                                                *
-       *                                                                 *
+       *
+       *  1) Set node values (initial)
+       *  2) Do hierarchy sum operation
+       *  3) Check result
+       *
        ******************************************************************/
 
       /*

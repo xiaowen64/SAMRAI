@@ -22,9 +22,9 @@ namespace tbox {
 
 /*
  *************************************************************************
- *                                                                       *
- * Routines to initialize arrays to signaling NaNs.                      *
- *                                                                       *
+ *
+ * Routines to initialize arrays to signaling NaNs.
+ *
  *************************************************************************
  */
 
@@ -49,9 +49,9 @@ void MathUtilities<TYPE>::setArrayToSignalingNaN(
 
 /*
  *************************************************************************
- *                                                                       *
- * Routines to initialize arrays to max value for type.                  *
- *                                                                       *
+ *
+ * Routines to initialize arrays to max value for type.
+ *
  *************************************************************************
  */
 
@@ -76,9 +76,9 @@ void MathUtilities<TYPE>::setArrayToMax(
 
 /*
  *************************************************************************
- *                                                                       *
- * Routines to initialize arrays to min value for type.                  *
- *                                                                       *
+ *
+ * Routines to initialize arrays to min value for type.
+ *
  *************************************************************************
  */
 
@@ -103,9 +103,9 @@ void MathUtilities<TYPE>::setArrayToMin(
 
 /*
  *************************************************************************
- *                                                                       *
- * Routines to initialize arrays to epsilon value for type.              *
- *                                                                       *
+ *
+ * Routines to initialize arrays to epsilon value for type.
+ *
  *************************************************************************
  */
 

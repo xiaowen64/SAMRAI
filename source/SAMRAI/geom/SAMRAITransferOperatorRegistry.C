@@ -107,9 +107,9 @@ namespace geom {
 
 /*
  *************************************************************************
- *                                                                       *
- * Constructor and destructor for TransferOperatorRegistry objects.      *
- *                                                                       *
+ *
+ * Constructor and destructor for TransferOperatorRegistry objects.
+ *
  *************************************************************************
  */
 

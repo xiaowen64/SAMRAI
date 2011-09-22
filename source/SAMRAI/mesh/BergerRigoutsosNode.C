@@ -16,6 +16,9 @@
 
 #include "SAMRAI/mesh/BergerRigoutsosNode.h"
 #include "SAMRAI/pdat/CellData.h"
+#include "SAMRAI/hier/BoxContainer.h"
+#include "SAMRAI/hier/BoxContainerSetIterator.h"
+#include "SAMRAI/hier/BoxContainerSetConstReverseIterator.h"
 #include "SAMRAI/hier/RealBoxConstIterator.h"
 #include "SAMRAI/tbox/MathUtilities.h"
 #include "SAMRAI/tbox/SAMRAI_MPI.h"
@@ -83,7 +86,7 @@ BergerRigoutsosNode::BergerRigoutsosNode(
    d_overlap(-1),
    d_box_acceptance(undetermined),
    d_mapped_box(d_dim),
-   d_mapped_box_iterator(),
+   d_mapped_box_iterator(hier::BoxContainer(d_dim).setEnd()),
    d_wait_phase(to_be_launched),
    d_send_msg(),
    d_recv_msg(),
@@ -92,10 +95,6 @@ BergerRigoutsosNode::BergerRigoutsosNode(
    d_generation(1),
    d_n_cont(0)
 {
-
-#ifdef DEBUG_CHECK_ASSERTIONS
-   d_mapped_box_iterator = BoxSet().end();
-#endif
 
    ++(d_common->num_nodes_owned);
    ++(d_common->max_nodes_owned);
@@ -142,7 +141,7 @@ BergerRigoutsosNode::BergerRigoutsosNode(
    d_overlap(-1),
    d_box_acceptance(undetermined),
    d_mapped_box(d_dim),
-   d_mapped_box_iterator(),
+   d_mapped_box_iterator(hier::BoxContainer(d_dim).setEnd()),
    d_wait_phase(for_data_only),
    d_send_msg(),
    d_recv_msg(),
@@ -164,7 +163,7 @@ BergerRigoutsosNode::BergerRigoutsosNode(
 #endif
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-   d_mapped_box_iterator = BoxSet().end();
+   d_mapped_box_iterator = BoxSet(d_dim).setEnd();
 #endif
 
    ++(d_common->num_nodes_allocated);
@@ -367,7 +366,7 @@ void BergerRigoutsosNode::clusterAndComputeRelationships()
          d_common->tag_mapped_box_level->getBoxes();
       for (hier::RealBoxConstIterator ni(tag_mapped_boxes); ni.isValid();
            ++ni) {
-         d_common->tag_eto_new[ni->getId()];
+         d_common->tag_eto_new.getNeighborSet(ni->getId(), d_dim);
       }
 #ifdef DEBUG_CHECK_ASSERTIONS
       TBOX_ASSERT(
@@ -1247,8 +1246,9 @@ BergerRigoutsosNode::CommonParams::CommonParams(
    d_dim(dim),
    tag_level(NULL),
    tag_mapped_box_level(NULL),
-   new_mapped_box_set(),
-   tag_eto_new(),
+   new_mapped_box_set(d_dim),
+   tag_eto_new(d_dim),
+   new_eto_tag(d_dim),
    relationship_senders(),
    relationship_messages(),
    // Parameters not from clustering algorithm interface ...
@@ -2263,11 +2263,11 @@ void BergerRigoutsosNode::createBox()
    TBOX_ASSERT(d_common->rank == d_owner);
 #endif
    hier::LocalId last_index =
-      d_common->new_mapped_box_set.empty() ? hier::LocalId::getZero() :
-      d_common->new_mapped_box_set.rbegin()->getLocalId();
+      d_common->new_mapped_box_set.isEmpty() ? hier::LocalId::getZero() :
+      d_common->new_mapped_box_set.setRBegin()->getLocalId();
 
    d_mapped_box_iterator = d_common->new_mapped_box_set.insert(
-         d_common->new_mapped_box_set.end(),
+         d_common->new_mapped_box_set.setEnd(),
          hier::Box(d_box, last_index + 1, d_common->rank, d_block_id));
 
    d_mapped_box = *d_mapped_box_iterator;
@@ -2287,7 +2287,7 @@ void BergerRigoutsosNode::eraseBox()
       d_common->new_mapped_box_set.erase(d_mapped_box_iterator);
    }
 #ifdef DEBUG_CHECK_ASSERTIONS
-   d_mapped_box_iterator = BoxSet().end();
+   d_mapped_box_iterator = BoxSet(d_dim).setEnd();
    d_mapped_box = hier::Box(d_dim);
 #endif
 }
@@ -2524,7 +2524,8 @@ void BergerRigoutsosNode::computeNewNeighborhoodSets()
     */
    GraphNeighborSet* nabrs_of_new_node = NULL;
    if (d_common->rank == d_owner) {
-      nabrs_of_new_node = &(d_common->new_eto_tag[d_mapped_box.getId()]);
+      nabrs_of_new_node =
+         &(d_common->new_eto_tag.getNeighborSet(d_mapped_box.getId(), d_dim));
    }
 
    // Data to send to d_owner regarding new relationships found by local process.
@@ -2564,7 +2565,7 @@ void BergerRigoutsosNode::computeNewNeighborhoodSets()
 
          // Add d_mapped_box as a neighbor of tag_mapped_box.
          GraphNeighborSet& new_nabrs_of_tag_mapped_box =
-            d_common->tag_eto_new[tag_mapped_box.getId()];
+            d_common->tag_eto_new.getNeighborSet(tag_mapped_box.getId(), d_dim);
          new_nabrs_of_tag_mapped_box.insert(d_mapped_box);
 
          if (nabrs_of_new_node != NULL) {

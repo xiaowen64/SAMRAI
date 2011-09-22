@@ -30,9 +30,9 @@ PatchSideDataOpsComplex::~PatchSideDataOpsComplex()
 
 /*
  *************************************************************************
- *                                                                       *
- * General operations for complex side-centered patch data.              *
- *                                                                       *
+ *
+ * General operations for complex side-centered patch data.
+ *
  *************************************************************************
  */
 

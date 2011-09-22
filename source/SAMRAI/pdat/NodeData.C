@@ -30,10 +30,10 @@ const int NodeData<TYPE>::PDAT_NODEDATA_VERSION = 1;
 
 /*
  *************************************************************************
- *                                                                       *
- * Constructor and destructor for node data objects.  The constructor    *
- * simply initializes data variables and sets up the array data.         *
- *                                                                       *
+ *
+ * Constructor and destructor for node data objects.  The constructor
+ * simply initializes data variables and sets up the array data.
+ *
  *************************************************************************
  */
 
@@ -61,11 +61,11 @@ NodeData<TYPE>::~NodeData()
 
 /*
  *************************************************************************
- *                                                                       *
- * The following are private and cannot be used, but they are defined    *
- * here for compilers that require that every template declaration have  *
- * a definition (a stupid requirement, if you ask me).                   *
- *                                                                       *
+ *
+ * The following are private and cannot be used, but they are defined
+ * here for compilers that require that every template declaration have
+ * a definition (a stupid requirement, if you ask me).
+ *
  *************************************************************************
  */
 
@@ -86,10 +86,10 @@ void NodeData<TYPE>::operator = (
 
 /*
  *************************************************************************
- *                                                                       *
- * Perform a fast copy between two node centered arrays where their      *
- * index spaces overlap.                                                 *
- *                                                                       *
+ *
+ * Perform a fast copy between two node centered arrays where their
+ * index spaces overlap.
+ *
  *************************************************************************
  */
 
@@ -130,10 +130,10 @@ void NodeData<TYPE>::copy2(
 
 /*
  *************************************************************************
- *                                                                       *
- * Copy data from the source into the destination according to the       *
- * overlap descriptor.                                                   *
- *                                                                       *
+ *
+ * Copy data from the source into the destination according to the
+ * overlap descriptor.
+ *
  *************************************************************************
  */
 
@@ -243,10 +243,10 @@ void NodeData<TYPE>::copyWithRotation(
 
 /*
  *************************************************************************
- *                                                                       *
- * Perform a fast copy from a node data object to this node data         *
- * object at the specified depths, where their index spaces overlap.     *
- *                                                                       *
+ *
+ * Perform a fast copy from a node data object to this node data
+ * object at the specified depths, where their index spaces overlap.
+ *
  *************************************************************************
  */
 
@@ -266,10 +266,10 @@ void NodeData<TYPE>::copyDepth(
 
 /*
  *************************************************************************
- *                                                                       *
- * Calculate the buffer space needed to pack/unpack messages on the box  *
- * region using the overlap descriptor.                                  *
- *                                                                       *
+ *
+ * Calculate the buffer space needed to pack/unpack messages on the box
+ * region using the overlap descriptor.
+ *
  *************************************************************************
  */
 
@@ -294,10 +294,10 @@ int NodeData<TYPE>::getDataStreamSize(
 
 /*
  *************************************************************************
- *                                                                       *
- * Pack/unpack data into/out of the message streams using the index      *
- * space in the overlap descriptor.                                      *
- *                                                                       *
+ *
+ * Pack/unpack data into/out of the message streams using the index
+ * space in the overlap descriptor.
+ *
  *************************************************************************
  */
 
@@ -397,10 +397,10 @@ void NodeData<TYPE>::unpackStream(
 
 /*
  *************************************************************************
- *                                                                       *
- * Calculate the amount of memory space needed to represent the data     *
- * for a node centered grid.                                             *
- *                                                                       *
+ *
+ * Calculate the amount of memory space needed to represent the data
+ * for a node centered grid.
+ *
  *************************************************************************
  */
 
@@ -420,9 +420,9 @@ size_t NodeData<TYPE>::getSizeOfData(
 
 /*
  *************************************************************************
- *                                                                       *
- * Print node-centered data.                                             *
- *                                                                       *
+ *
+ * Print node-centered data.
+ *
  *************************************************************************
  */
 
@@ -459,11 +459,11 @@ void NodeData<TYPE>::print(
 
 /*
  *************************************************************************
- *                                                                       *
- * Checks to make sure that the class version and restart file           *
- * version are equal.  If so, reads in d_depth and has d_data            *
- * retrieve its own data from the database.                              *
- *                                                                       *
+ *
+ * Checks to make sure that the class version and restart file
+ * version are equal.  If so, reads in d_depth and has d_data
+ * retrieve its own data from the database.
+ *
  *************************************************************************
  */
 
@@ -488,10 +488,10 @@ void NodeData<TYPE>::getSpecializedFromDatabase(
 
 /*
  *************************************************************************
- *                                                                       *
- * Writes out the class version number and d_depth, Then has d_data      *
- * write its own data to the database.                                   *
- *                                                                       *
+ *
+ * Writes out the class version number and d_depth, Then has d_data
+ * write its own data to the database.
+ *
  *************************************************************************
  */
 

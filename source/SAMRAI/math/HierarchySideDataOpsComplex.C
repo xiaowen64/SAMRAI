@@ -54,9 +54,9 @@ HierarchySideDataOpsComplex::~HierarchySideDataOpsComplex()
 
 /*
  *************************************************************************
- *                                                                       *
- * Routines to set the hierarchy and level information.                  *
- *                                                                       *
+ *
+ * Routines to set the hierarchy and level information.
+ *
  *************************************************************************
  */
 
@@ -112,9 +112,9 @@ HierarchySideDataOpsComplex::getPatchHierarchy() const
 
 /*
  *************************************************************************
- *                                                                       *
- * Basic generic operations.                                             *
- *                                                                       *
+ *
+ * Basic generic operations.
+ *
  *************************************************************************
  */
 
@@ -244,9 +244,9 @@ void HierarchySideDataOpsComplex::setToScalar(
 
 /*
  *************************************************************************
- *                                                                       *
- * Basic generic arithmetic operations.                                  *
- *                                                                       *
+ *
+ * Basic generic arithmetic operations.
+ *
  *************************************************************************
  */
 
@@ -620,9 +620,9 @@ void HierarchySideDataOpsComplex::setRandomValues(
 
 /*
  *************************************************************************
- *                                                                       *
- * Generic norm and order operations.                                    *
- *                                                                       *
+ *
+ * Generic norm and order operations.
+ *
  *************************************************************************
  */
 

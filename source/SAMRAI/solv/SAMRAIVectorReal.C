@@ -42,9 +42,9 @@ namespace solv {
 
 /*
  *************************************************************************
- *                                                                       *
- * Initialize the static operators and counters.                         *
- *                                                                       *
+ *
+ * Initialize the static operators and counters.
+ *
  *************************************************************************
  */
 
@@ -70,10 +70,10 @@ s_side_ops[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
 
 /*
  *************************************************************************
- *                                                                       *
- * The constructor for SAMRAIVectorReal objects initializes        *
- * vector structure.                                                     *
- *                                                                       *
+ *
+ * The constructor for SAMRAIVectorReal objects initializes
+ * vector structure.
+ *
  *************************************************************************
  */
 
@@ -109,10 +109,10 @@ SAMRAIVectorReal<TYPE>::SAMRAIVectorReal(
 
 /*
  *************************************************************************
- *                                                                       *
- * Destructor for SAMRAIVectorReal.                                *
- * Component data storage is not deallocated here.                       *
- *                                                                       *
+ *
+ * Destructor for SAMRAIVectorReal.
+ * Component data storage is not deallocated here.
+ *
  *************************************************************************
  */
 template<class TYPE>
@@ -154,11 +154,11 @@ SAMRAIVectorReal<TYPE>::~SAMRAIVectorReal()
 
 /*
  *************************************************************************
- *                                                                       *
- * The following are private and cannot be used, but they are defined    *
- * here for compilers that require that every template declaration have  *
- * a definition (a stupid requirement, if you ask me).                   *
- *                                                                       *
+ *
+ * The following are private and cannot be used, but they are defined
+ * here for compilers that require that every template declaration have
+ * a definition (a stupid requirement, if you ask me).
+ *
  *************************************************************************
  */
 
@@ -178,9 +178,9 @@ void SAMRAIVectorReal<TYPE>::operator = (
 
 /*
  *************************************************************************
- *                                                                       *
- * Set name string identifier for this vector object.                    *
- *                                                                       *
+ *
+ * Set name string identifier for this vector object.
+ *
  *************************************************************************
  */
 
@@ -193,9 +193,9 @@ void SAMRAIVectorReal<TYPE>::setName(
 
 /*
  *************************************************************************
- *                                                                       *
- * Reset vector levels and data operations.                              *
- *                                                                       *
+ *
+ * Reset vector levels and data operations.
+ *
  *************************************************************************
  */
 
@@ -210,9 +210,9 @@ void SAMRAIVectorReal<TYPE>::resetLevels(
 
 /*
  *************************************************************************
- *                                                                       *
- * Create new vector with same structure as this and return new vector.  *
- *                                                                       *
+ *
+ * Create new vector with same structure as this and return new vector.
+ *
  *************************************************************************
  */
 
@@ -251,9 +251,9 @@ SAMRAIVectorReal<TYPE>::cloneVector(
 
 /*
  *************************************************************************
- *                                                                       *
- * Deallocate vector data storage and remove data indices from database. *
- *                                                                       *
+ *
+ * Deallocate vector data storage and remove data indices from database.
+ *
  *************************************************************************
  */
 
@@ -284,11 +284,11 @@ void SAMRAIVectorReal<TYPE>::freeVectorComponents()
 
 /*
  *************************************************************************
- *                                                                       *
- * Add new component to vector structure given a variable and the        *
- * patch descriptor indices for its data and an appropriate              *
- * control volume.                                                       *
- *                                                                       *
+ *
+ * Add new component to vector structure given a variable and the
+ * patch descriptor indices for its data and an appropriate
+ * control volume.
+ *
  *************************************************************************
  */
 
@@ -351,9 +351,9 @@ void SAMRAIVectorReal<TYPE>::addComponent(
 
 /*
  *************************************************************************
- *                                                                       *
- * Routines to allocate and deallocate data for all vector components.   *
- *                                                                       *
+ *
+ * Routines to allocate and deallocate data for all vector components.
+ *
  *************************************************************************
  */
 template<class TYPE>
@@ -397,9 +397,9 @@ void SAMRAIVectorReal<TYPE>::deallocateVectorData()
 
 /*
  *************************************************************************
- *                                                                       *
- * Print Vector attributes and data.                                     *
- *                                                                       *
+ *
+ * Print Vector attributes and data.
+ *
  *************************************************************************
  */
 
@@ -427,11 +427,11 @@ void SAMRAIVectorReal<TYPE>::print(
 
 /*
  *************************************************************************
- *                                                                       *
- * Private member functions to set the number of vector components       *
- * to set individual components.   These routines are used when cloning  *
- * vectors and/or adding components.                                     *
- *                                                                       *
+ *
+ * Private member functions to set the number of vector components
+ * to set individual components.   These routines are used when cloning
+ * vectors and/or adding components.
+ *
  *************************************************************************
  */
 
@@ -545,11 +545,11 @@ void SAMRAIVectorReal<TYPE>::setComponent(
 
 /*
  *************************************************************************
- *                                                                       *
- * The remaining functions are basic vector kernel routines.             *
- * The operation for each component is performed by its hierarchy        *
- * data operation object.                                                *
- *                                                                       *
+ *
+ * The remaining functions are basic vector kernel routines.
+ * The operation for each component is performed by its hierarchy
+ * data operation object.
+ *
  *************************************************************************
  */
 

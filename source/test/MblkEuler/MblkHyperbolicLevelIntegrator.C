@@ -48,10 +48,10 @@ using namespace std;
 
 /*
  *************************************************************************
- *                                                                       *
- * External declarations for FORTRAN 77 routines used in flux            *
- * synchronization process between hierarchy levels.                     *
- *                                                                       *
+ *
+ * External declarations for FORTRAN 77 routines used in flux
+ * synchronization process between hierarchy levels.
+ *
  *************************************************************************
  */
 
@@ -130,13 +130,13 @@ using namespace algs;
 
 /*
  *************************************************************************
- *                                                                       *
- * This constructor sets the HyperbolicPatchStrategy pointer and   *
- * initializes integration parameters to default values.  Communication  *
- * algorithms are created here too.  Other data members are read in     *
- * from the input database or from the restart database corresponding    *
- * to the specified object_name.                                         *
- *                                                                       *
+ *
+ * This constructor sets the HyperbolicPatchStrategy pointer and
+ * initializes integration parameters to default values.  Communication
+ * algorithms are created here too.  Other data members are read in
+ * from the input database or from the restart database corresponding
+ * to the specified object_name.
+ *
  *************************************************************************
  */
 
@@ -277,10 +277,10 @@ MblkHyperbolicLevelIntegrator::MblkHyperbolicLevelIntegrator(
 
 /*
  *************************************************************************
- *                                                                       *
- * Destructor tells the tbox::RestartManager to remove this object from   *
- * the list of restart items.                                            *
- *                                                                       *
+ *
+ * Destructor tells the tbox::RestartManager to remove this object from
+ * the list of restart items.
+ *
  *************************************************************************
  */
 MblkHyperbolicLevelIntegrator::~MblkHyperbolicLevelIntegrator()
@@ -292,21 +292,21 @@ MblkHyperbolicLevelIntegrator::~MblkHyperbolicLevelIntegrator()
 
 /*
  *************************************************************************
- *                                                                       *
- * Initialize integration data on all patches on level.  This process    *
- * is used at the start of the simulation to set the initial hierarchy   *
- * data and after adaptive regridding.  In the second case, the old      *
- * level pointer points to the level that existed in the hierarchy       *
- * before regridding.  This pointer may be null, in which case it is     *
- * ignored.  If it is non-null, then data is copied from the old level   *
- * to the new level before the old level is discarded.                   *
- *                                                                       *
- * Note that we also allocate flux storage for the coarsest AMR          *
- * hierarchy level here (i.e., level 0).  The time step sequence on      *
- * level 0 is dictated by the user code; so to avoid any memory          *
- * management errors, flux storage on level 0 persists as long as the    *
+ *
+ * Initialize integration data on all patches on level.  This process
+ * is used at the start of the simulation to set the initial hierarchy
+ * data and after adaptive regridding.  In the second case, the old
+ * level pointer points to the level that existed in the hierarchy
+ * before regridding.  This pointer may be null, in which case it is
+ * ignored.  If it is non-null, then data is copied from the old level
+ * to the new level before the old level is discarded.
+ *
+ * Note that we also allocate flux storage for the coarsest AMR
+ * hierarchy level here (i.e., level 0).  The time step sequence on
+ * level 0 is dictated by the user code; so to avoid any memory
+ * management errors, flux storage on level 0 persists as long as the
  * level does.
- *                                                                       *
+ *
  *************************************************************************
  */
 void MblkHyperbolicLevelIntegrator::initializeLevelData(
@@ -424,11 +424,11 @@ void MblkHyperbolicLevelIntegrator::initializeLevelData(
 
 /*
  *************************************************************************
- *                                                                       *
- * Reset hierarchy configuration information where the range of new      *
- * hierarchy levels is specified.   The information updated involves     *
- * the cached communication schedules maintained by the algorithm.       *
- *                                                                       *
+ *
+ * Reset hierarchy configuration information where the range of new
+ * hierarchy levels is specified.   The information updated involves
+ * the cached communication schedules maintained by the algorithm.
+ *
  *************************************************************************
  */
 
@@ -486,10 +486,10 @@ MblkHyperbolicLevelIntegrator::resetHierarchyConfiguration(
 
 /*
  *************************************************************************
- *                                                                       *
- * Call patch routines to tag cells near large gradients.                *
- * These cells will be refined.                                          *
- *                                                                       *
+ *
+ * Call patch routines to tag cells near large gradients.
+ * These cells will be refined.
+ *
  *************************************************************************
  */
 
@@ -545,30 +545,30 @@ void MblkHyperbolicLevelIntegrator::applyGradientDetector(
 
 /*
  *************************************************************************
- *                                                                       *
- * The Richardson extrapolation algorithm requires a coarsened version   *
- * of the level on which error estiamtion is performed.  This routine    *
- * is used to coarsen data from a level in the AMR hierarchy to some     *
- * coarsened version of it.  Note that this routine will be called twice *
- * The init_coarse_level boolean argument indicates whether data is    *
- * set on the coarse level by coarsening the "old" time level solution   *
- * or by coarsening the "new" solution on the fine level (i.e., after    *
- * it has been advanced).                                                *
- *                                                                       *
- * The contexts used for coarsening old data depends on the number of    *
- * time levels.  We always want to use data at the oldest time on the    *
- * fine level, coarsened to the CURRENT context on the coarse level.     *
- * Thus, if the problem uses two time levels, we coarsen data from       *
- * CURRENT on fine level (since CURRENT is the oldest time maintained)   *
- * to CURRENT on the coarse level.  If the problem uses three time       *
- * levels, we coarsen from OLD on the fine level (since OLD is the       *
- * time maintained) to CURRENT on the coarse level.                      *
- *                                                                       *
- * When the boolean is false, indicating we are operating at the new     *
- * time, we coarsen the time advanced solution at the NEW context on     *
- * the fine level to the NEW context on the coarse level so that they    *
- * may be compared later.                                                *
- *                                                                       *
+ *
+ * The Richardson extrapolation algorithm requires a coarsened version
+ * of the level on which error estiamtion is performed.  This routine
+ * is used to coarsen data from a level in the AMR hierarchy to some
+ * coarsened version of it.  Note that this routine will be called twice
+ * The init_coarse_level boolean argument indicates whether data is
+ * set on the coarse level by coarsening the "old" time level solution
+ * or by coarsening the "new" solution on the fine level (i.e., after
+ * it has been advanced).
+ *
+ * The contexts used for coarsening old data depends on the number of
+ * time levels.  We always want to use data at the oldest time on the
+ * fine level, coarsened to the CURRENT context on the coarse level.
+ * Thus, if the problem uses two time levels, we coarsen data from
+ * CURRENT on fine level (since CURRENT is the oldest time maintained)
+ * to CURRENT on the coarse level.  If the problem uses three time
+ * levels, we coarsen from OLD on the fine level (since OLD is the
+ * time maintained) to CURRENT on the coarse level.
+ *
+ * When the boolean is false, indicating we are operating at the new
+ * time, we coarsen the time advanced solution at the NEW context on
+ * the fine level to the NEW context on the coarse level so that they
+ * may be compared later.
+ *
  *************************************************************************
  */
 
@@ -632,14 +632,14 @@ MblkHyperbolicLevelIntegrator::coarsenDataForRichardsonExtrapolation(
 
 /*
  *************************************************************************
- *                                                                       *
- * Call patch routines to tag cells for refinement using Richardson      *
- * extrapolation.    Richardson extrapolation requires two copies of     *
- * the solution to compare.  The NEW context holds the solution          *
- * computed on the fine level and coarsened, whereas the CURRENT         *
- * context holds the solution integrated on the coarse level after       *
- * coarsening the initial data from the fine level.                      *
- *                                                                       *
+ *
+ * Call patch routines to tag cells for refinement using Richardson
+ * extrapolation.    Richardson extrapolation requires two copies of
+ * the solution to compare.  The NEW context holds the solution
+ * computed on the fine level and coarsened, whereas the CURRENT
+ * context holds the solution integrated on the coarse level after
+ * coarsening the initial data from the fine level.
+ *
  *************************************************************************
  */
 
@@ -686,13 +686,13 @@ MblkHyperbolicLevelIntegrator::applyRichardsonExtrapolation(
 
 /*
  *************************************************************************
- *                                                                       *
- * Initialize level integrator by:                                       *
- *                                                                       *
- *   (1) Setting the number of time data levels based on needs of        *
- *       the gridding algorithm                                          *
- *   (2) Invoking variable registration in patch strategy.               *
- *                                                                       *
+ *
+ * Initialize level integrator by:
+ *
+ *   (1) Setting the number of time data levels based on needs of
+ *       the gridding algorithm
+ *   (2) Invoking variable registration in patch strategy.
+ *
  *************************************************************************
  */
 
@@ -727,14 +727,14 @@ MblkHyperbolicLevelIntegrator::initializeLevelIntegrator(
 
 /*
  *************************************************************************
- *                                                                       *
- * Invoke dt calculation routines in patch strategy and take a min       *
- * over all patches on the level.  The result will be the max of the     *
- * next timestep on the level. If the boolean recompute_dt is true,      *
- * the max timestep on the level will be computed.  If it is false,      *
- * the method will simply access the latest dt stored in the time        *
- * refinement integrator.                                                *
- *                                                                       *
+ *
+ * Invoke dt calculation routines in patch strategy and take a min
+ * over all patches on the level.  The result will be the max of the
+ * next timestep on the level. If the boolean recompute_dt is true,
+ * the max timestep on the level will be computed.  If it is false,
+ * the method will simply access the latest dt stored in the time
+ * refinement integrator.
+ *
  *************************************************************************
  */
 
@@ -851,11 +851,11 @@ MblkHyperbolicLevelIntegrator::getLevelDt(
 
 /*
  *************************************************************************
- *                                                                       *
- * For the standard explicit integration algorithm for hyperbolic        *
- * conservation laws, the fine time increment is the coarse increment    *
- * divided by the maximum mesh ratio (independent of level number).      *
- *                                                                       *
+ *
+ * For the standard explicit integration algorithm for hyperbolic
+ * conservation laws, the fine time increment is the coarse increment
+ * divided by the maximum mesh ratio (independent of level number).
+ *
  *************************************************************************
  */
 
@@ -876,77 +876,77 @@ MblkHyperbolicLevelIntegrator::getMaxFinerLevelDt(
 
 /*
  *************************************************************************
- *                                                                       *
- * Integrate data on all patches in patch level from current time        *
- * to new time (new_time) using a single time step.  Before the advance  *
- * can occur, proper ghost cell information is obtained for all patches  *
- * on the level.  Then, local patches are advanced sequentially in the   *
- * loop over patches.  The details of the routine are as follows:        *
- *                                                                       *
- *  0) Allocate storage for new time level data. Also, allocate          *
- *     necessary FLUX and flux integral storage if needed                *
- *     (i.e., if regrid_advance is false, first_step is true, and        *
- *     coarser or finer level than current level exists in hierarchy.)   *
- *                                                                       *
- *  1) Scratch space is filled so that, for each patch, interior data    *
- *     and ghost cell bdry data correspond to specified time.            *
- *                                                                       *
- *  1a) Call user routines to pre-process advance data, if needed.       *
- *                                                                       *
- *  2) Compute explicit fluxes in scratch space using data on            *
- *     patch + ghosts at given time.                                     *
- *                                                                       *
- *  3) Apply conservative difference in scratch space to advance patch   *
- *     interior data to time = new_time.                                 *
- *                                                                       *
- *  3a) Call user routines to post-process advance data, if needed.      *
- *                                                                       *
- *  4) Compute next stable time increment for subsequent level advances: *
- *                                                                       *
- *     4a) If (d_lag_dt_computation == true) {                           *
- *            DO NOT RECOMPUTE characteristic data after advancing       *
- *            data on patch. Use characteristic data corresponding       *
- *            to current time level, computed prior to flux computation, *
- *            in dt calculation.                                         *
- *            If (d_use_ghosts_for_dt == true)                           *
- *               - Compute dt using data on patch+ghosts at time.        *
- *            Else                                                       *
- *               - Compute dt using data on patch interior ONLY.         *
- *         }                                                             *
- *                                                                       *
- *     4b) Copy data from scratch space patch interior to new data       *
- *         storage for patch (i.e., at time = new_time).                 *
- *                                                                       *
- *     4a) If (d_lag_dt_computation == false) {                          *
- *            RECOMPUTE characteristic data after advancing data on      *
- *            patch. Use characteristic data corresponding to new time   *
- *            level in dt calculation.                                   *
- *            If (d_use_ghosts_for_dt == true)                           *
- *               - Refill scratch space with new interior patch data     *
- *                 and ghost cell bdry data correspond to new time.      *
- *                 (NOTE: This requires a new boundary schedule.)        *
- *               - Compute dt using data on patch+ghosts at new_time.    *
- *            Else                                                       *
- *               - Compute dt using data on patch interior ONLY.         *
- *                 (using patch interior data at new_time)               *
- *         }                                                             *
- *                                                                       *
- *  5) If (ln > 0), update flux integrals by adding patch bdry FLUXes    *
- *     to flux sums.                                                     *
- *                                                                       *
- * Important Notes:                                                      *
- *    1) In order to advance finer levels (if they exist), both old      *
- *       and new data for each patch on the level must be maintained.    *
- *    2) If the timestep is the first in the timestep loop on the level  *
- *       (indicated by first_step), then time interpolation is           *
- *       is unnecessary to fill ghost cells from the next coarser level. *
- *    3) The new dt is not calculated if regrid_advance is true.         *
- *       If this is the case, it is assumed that the results of the      *
- *       advance and the timestep calculation will be discarded          *
- *       (e.g., during regridding, or initialization).  Also, allocation *
- *       and post-processing of FLUX/flux integral data is not performed *
- *       in this case.                                                   *
- *                                                                       *
+ *
+ * Integrate data on all patches in patch level from current time
+ * to new time (new_time) using a single time step.  Before the advance
+ * can occur, proper ghost cell information is obtained for all patches
+ * on the level.  Then, local patches are advanced sequentially in the
+ * loop over patches.  The details of the routine are as follows:
+ *
+ *  0) Allocate storage for new time level data. Also, allocate
+ *     necessary FLUX and flux integral storage if needed
+ *     (i.e., if regrid_advance is false, first_step is true, and
+ *     coarser or finer level than current level exists in hierarchy.)
+ *
+ *  1) Scratch space is filled so that, for each patch, interior data
+ *     and ghost cell bdry data correspond to specified time.
+ *
+ *  1a) Call user routines to pre-process advance data, if needed.
+ *
+ *  2) Compute explicit fluxes in scratch space using data on
+ *     patch + ghosts at given time.
+ *
+ *  3) Apply conservative difference in scratch space to advance patch
+ *     interior data to time = new_time.
+ *
+ *  3a) Call user routines to post-process advance data, if needed.
+ *
+ *  4) Compute next stable time increment for subsequent level advances:
+ *
+ *     4a) If (d_lag_dt_computation == true) {
+ *            DO NOT RECOMPUTE characteristic data after advancing
+ *            data on patch. Use characteristic data corresponding
+ *            to current time level, computed prior to flux computation,
+ *            in dt calculation.
+ *            If (d_use_ghosts_for_dt == true)
+ *               - Compute dt using data on patch+ghosts at time.
+ *            Else
+ *               - Compute dt using data on patch interior ONLY.
+ *         }
+ *
+ *     4b) Copy data from scratch space patch interior to new data
+ *         storage for patch (i.e., at time = new_time).
+ *
+ *     4a) If (d_lag_dt_computation == false) {
+ *            RECOMPUTE characteristic data after advancing data on
+ *            patch. Use characteristic data corresponding to new time
+ *            level in dt calculation.
+ *            If (d_use_ghosts_for_dt == true)
+ *               - Refill scratch space with new interior patch data
+ *                 and ghost cell bdry data correspond to new time.
+ *                 (NOTE: This requires a new boundary schedule.)
+ *               - Compute dt using data on patch+ghosts at new_time.
+ *            Else
+ *               - Compute dt using data on patch interior ONLY.
+ *                 (using patch interior data at new_time)
+ *         }
+ *
+ *  5) If (ln > 0), update flux integrals by adding patch bdry FLUXes
+ *     to flux sums.
+ *
+ * Important Notes:
+ *    1) In order to advance finer levels (if they exist), both old
+ *       and new data for each patch on the level must be maintained.
+ *    2) If the timestep is the first in the timestep loop on the level
+ *       (indicated by first_step), then time interpolation is
+ *       is unnecessary to fill ghost cells from the next coarser level.
+ *    3) The new dt is not calculated if regrid_advance is true.
+ *       If this is the case, it is assumed that the results of the
+ *       advance and the timestep calculation will be discarded
+ *       (e.g., during regridding, or initialization).  Also, allocation
+ *       and post-processing of FLUX/flux integral data is not performed
+ *       in this case.
+ *
  *************************************************************************
  */
 
@@ -1276,10 +1276,10 @@ MblkHyperbolicLevelIntegrator::advanceLevel(
 
 /*
  *************************************************************************
- *                                                                       *
- * Synchronize data between patch levels according to the standard       *
- * hyperbolic flux correction algorithm.                                 *
- *                                                                       *
+ *
+ * Synchronize data between patch levels according to the standard
+ * hyperbolic flux correction algorithm.
+ *
  *************************************************************************
  */
 
@@ -1361,21 +1361,21 @@ MblkHyperbolicLevelIntegrator::standardLevelSynchronization(
 
 /*
  *************************************************************************
- *                                                                       *
- * Coarsen current solution data from finest hierarchy level specified   *
- * down through the coarsest hierarchy level specified, if initial_time  *
- * is true (i.e., hierarchy is being constructed at initial simulation   *
- * time).  After data is coarsened, the user's initialization routine    *
- * is called to reset data (as needed by the application) before         *
- * that solution is further coarsened to the next coarser level in the   *
- * hierarchy.  If initial_time is false, then this routine does nothing  *
- * In that case, interpolation of data from coarser levels is sufficient *
- * to set data on new levels in the hierarchy during regridding.         *
- *                                                                       *
- * NOTE: The fact that this routine does nothing when called at any      *
- *       time later than when the AMR hierarchy is constructed initially *
- *        may need to change at some point based on application needs.   *
- *                                                                       *
+ *
+ * Coarsen current solution data from finest hierarchy level specified
+ * down through the coarsest hierarchy level specified, if initial_time
+ * is true (i.e., hierarchy is being constructed at initial simulation
+ * time).  After data is coarsened, the user's initialization routine
+ * is called to reset data (as needed by the application) before
+ * that solution is further coarsened to the next coarser level in the
+ * hierarchy.  If initial_time is false, then this routine does nothing
+ * In that case, interpolation of data from coarser levels is sufficient
+ * to set data on new levels in the hierarchy during regridding.
+ *
+ * NOTE: The fact that this routine does nothing when called at any
+ *       time later than when the AMR hierarchy is constructed initially
+ *        may need to change at some point based on application needs.
+ *
  *************************************************************************
  */
 
@@ -1454,19 +1454,19 @@ void MblkHyperbolicLevelIntegrator::synchronizeNewLevels(
 
 /*
  *************************************************************************
- *                                                                       *
- * Synchronize data between coarse and fine patch levels according to    *
- * the standard hyperbolic flux correction algorithm.  The steps of      *
- * the algorithm are:                                                    *
- *                                                                       *
- *    (1) Replace coarse time-space flux integrals at coarse-fine        *
- *        boundaries with time-space flux integrals computed on fine     *
- *        level.                                                         *
- *    (2) Repeat conservative difference on coarse level with corrected  *
- *        fluxes.                                                        *
- *    (3) Conservatively coarsen solution on interior of fine level to   *
- *        coarse level.                                                  *
- *                                                                       *
+ *
+ * Synchronize data between coarse and fine patch levels according to
+ * the standard hyperbolic flux correction algorithm.  The steps of
+ * the algorithm are:
+ *
+ *    (1) Replace coarse time-space flux integrals at coarse-fine
+ *        boundaries with time-space flux integrals computed on fine
+ *        level.
+ *    (2) Repeat conservative difference on coarse level with corrected
+ *        fluxes.
+ *    (3) Conservatively coarsen solution on interior of fine level to
+ *        coarse level.
+ *
  *************************************************************************
  */
 
@@ -1573,11 +1573,11 @@ MblkHyperbolicLevelIntegrator::synchronizeLevelWithCoarser(
 
 /*
  *************************************************************************
- *                                                                       *
- * Reset time-dependent data on patch level by replacing current data    *
- * with new.  The boolean argument is used for odd refinement ratios     *
- * (in particular 3 used in certain applications).                       *
- *                                                                       *
+ *
+ * Reset time-dependent data on patch level by replacing current data
+ * with new.  The boolean argument is used for odd refinement ratios
+ * (in particular 3 used in certain applications).
+ *
  *************************************************************************
  */
 
@@ -1655,10 +1655,10 @@ void MblkHyperbolicLevelIntegrator::resetTimeDependentData(
 
 /*
  *************************************************************************
- *                                                                       *
- * Discard new data on level.  This is used primarily to reset patch     *
- * data after error estimation (e.g., Richardson extrapolation.)         *
- *                                                                       *
+ *
+ * Discard new data on level.  This is used primarily to reset patch
+ * data after error estimation (e.g., Richardson extrapolation.)
+ *
  *************************************************************************
  */
 
@@ -1679,71 +1679,71 @@ MblkHyperbolicLevelIntegrator::resetDataToPreadvanceState(
 
 /*
  *************************************************************************
- *                                                                       *
- * Register given variable with algorithm according to specified         *
- * algorithm role (i.e., HYP_VAR_TYPE).  Assignment of descriptor        *
- * indices to variable lists, component selectors, and communication     *
- * algorithms takes place here.  The different cases are:                *
- *                                                                       *
- * TIME_DEP:                                                             *
- *            The number of factories depends on the number of time      *
- *            levels of data that must be stored on patches to satisfy   *
- *            regridding reqs.  Currently, there are two possibilities:  *
- *                                                                       *
- *            (1) If the coarsen ratios between levels are even, the     *
- *                error coarsening ratio will be two and so only two     *
- *                time levels of data must be maintained on every level  *
- *                but the finest as usual.                               *
- *                                                                       *
- *            (2) If the coarsen ratios between levels are three, and    *
- *                time integration is used during regridding (e.g., Rich-*
- *                ardson extrapolation), then three time levels of data  *
- *                must be maintained on every level but the finest so    *
- *                that error estimation can be executed properly.        *
- *                                                                       *
- *            In case (1), three factories are needed:                   *
- *                         SCRATCH, CURRENT, NEW.                        *
- *            In case (2), four factories are needed:                    *
- *                         SCRATCH, OLD, CURRENT, NEW.                   *
- *                                                                       *
- *            SCRATCH index is added to d_saved_var_scratch_data.        *
- *            CURRENT index is added to d_new_patch_init_data.           *
- *            NEW index is added to d_new_time_dep_data.                 *
- *                                                                       *
- * INPUT:                                                                *
- *            Only one time level of data is maintained and once values  *
- *            are set on patches, they do not change in time.            *
- *                                                                       *
- *            Two factories are needed: SCRATCH, CURRENT.                *
- *                                                                       *
- *            SCRATCH index is added to d_saved_var_scratch_data.        *
- *            CURRENT index is added to d_new_patch_init_data.           *
- *                                                                       *
- * NO_FILL:                                                              *
- *            Only one time level of data is stored and no scratch space *
- *            is used.  Data may be set and manipulated at will in user  *
- *            routines.  Data (including ghost values) is never touched  *
- *            outside of user routines.                                  *
- *                                                                       *
- *            Two factories are needed: CURRENT, SCRATCH.                *
- *                                                                       *
- *            CURRENT index is added to d_new_patch_init_data.           *
- *            SCRATCH index is needed only for temporary work space to   *
- *            fill new patch levels.                                     *
- *                                                                       *
- * FLUX:                                                                 *
- *            One factory is needed: SCRATCH.                            *
- *                                                                       *
- *            SCRATCH index is added to d_flux_var_data.                 *
- *                                                                       *
- *            Additionally, a variable for flux integral data is created *
- *            for each FLUX variable. It has a single factory, SCRATCH,  *
- *            which is added to d_fluxsum_data.                          *
- *                                                                       *
- * TEMPORARY:                                                            *
- *            One factory needed: SCRATCH.                               *
- *            SCRATCH index is added to d_temp_var_scratch_data.         *
- *                                                                       *
+ *
+ * Register given variable with algorithm according to specified
+ * algorithm role (i.e., HYP_VAR_TYPE).  Assignment of descriptor
+ * indices to variable lists, component selectors, and communication
+ * algorithms takes place here.  The different cases are:
+ *
+ * TIME_DEP:
+ *            The number of factories depends on the number of time
+ *            levels of data that must be stored on patches to satisfy
+ *            regridding reqs.  Currently, there are two possibilities:
+ *
+ *            (1) If the coarsen ratios between levels are even, the
+ *                error coarsening ratio will be two and so only two
+ *                time levels of data must be maintained on every level
+ *                but the finest as usual.
+ *
+ *            (2) If the coarsen ratios between levels are three, and
+ *                time integration is used during regridding (e.g., Rich-
+ *                ardson extrapolation), then three time levels of data
+ *                must be maintained on every level but the finest so
+ *                that error estimation can be executed properly.
+ *
+ *            In case (1), three factories are needed:
+ *                         SCRATCH, CURRENT, NEW.
+ *            In case (2), four factories are needed:
+ *                         SCRATCH, OLD, CURRENT, NEW.
+ *
+ *            SCRATCH index is added to d_saved_var_scratch_data.
+ *            CURRENT index is added to d_new_patch_init_data.
+ *            NEW index is added to d_new_time_dep_data.
+ *
+ * INPUT:
+ *            Only one time level of data is maintained and once values
+ *            are set on patches, they do not change in time.
+ *
+ *            Two factories are needed: SCRATCH, CURRENT.
+ *
+ *            SCRATCH index is added to d_saved_var_scratch_data.
+ *            CURRENT index is added to d_new_patch_init_data.
+ *
+ * NO_FILL:
+ *            Only one time level of data is stored and no scratch space
+ *            is used.  Data may be set and manipulated at will in user
+ *            routines.  Data (including ghost values) is never touched
+ *            outside of user routines.
+ *
+ *            Two factories are needed: CURRENT, SCRATCH.
+ *
+ *            CURRENT index is added to d_new_patch_init_data.
+ *            SCRATCH index is needed only for temporary work space to
+ *            fill new patch levels.
+ *
+ * FLUX:
+ *            One factory is needed: SCRATCH.
+ *
+ *            SCRATCH index is added to d_flux_var_data.
+ *
+ *            Additionally, a variable for flux integral data is created
+ *            for each FLUX variable. It has a single factory, SCRATCH,
+ *            which is added to d_fluxsum_data.
+ *
+ * TEMPORARY:
+ *            One factory needed: SCRATCH.
+ *            SCRATCH index is added to d_temp_var_scratch_data.
+ *
  *************************************************************************
  */
 
@@ -2066,14 +2066,14 @@ void MblkHyperbolicLevelIntegrator::registerVariable(
 
 /*
  *************************************************************************
- *                                                                       *
- * Process FLUX and FLUX INTEGRAL data before integration on the level.  *
- *                                                                       *
- * We allocate FLUX storage if appropriate.                              *
- *                                                                       *
- * If the advance is not temporary, we also zero out the FLUX INTEGRALS  *
- * on the first step of any level finer than level zero.                 *
- *                                                                       *
+ *
+ * Process FLUX and FLUX INTEGRAL data before integration on the level.
+ *
+ * We allocate FLUX storage if appropriate.
+ *
+ * If the advance is not temporary, we also zero out the FLUX INTEGRALS
+ * on the first step of any level finer than level zero.
+ *
  *************************************************************************
  */
 
@@ -2159,23 +2159,23 @@ void MblkHyperbolicLevelIntegrator::preprocessFluxData(
 
 /*
  *************************************************************************
- *                                                                       *
- * Process FLUX and FLUX INTEGRAL data after advancing the solution on   *
- * the level.  During normal integration steps, the flux integrals are   *
- * updated for subsequent synchronization by adding FLUX values to       *
- * flux integrals.                                                       *
- *                                                                       *
- * If the advance is not temporary (regular integration step):           *
- * 1) If the level is the finest in the hierarchy, FLUX data is          *
- *    deallocated.  It is not used during synchronization, and is only   *
- *    maintained if needed for the advance.                              *
- *                                                                       *
- * 2) If the level is not the coarsest in the hierarchy, update the      *
- *    flux integrals for later synchronization by adding FLUX values to  *
- *    flux integrals.                                                    *
- *                                                                       *
- * If the advance is temporary, deallocate the flux data if first step.  *
- *                                                                       *
+ *
+ * Process FLUX and FLUX INTEGRAL data after advancing the solution on
+ * the level.  During normal integration steps, the flux integrals are
+ * updated for subsequent synchronization by adding FLUX values to
+ * flux integrals.
+ *
+ * If the advance is not temporary (regular integration step):
+ * 1) If the level is the finest in the hierarchy, FLUX data is
+ *    deallocated.  It is not used during synchronization, and is only
+ *    maintained if needed for the advance.
+ *
+ * 2) If the level is not the coarsest in the hierarchy, update the
+ *    flux integrals for later synchronization by adding FLUX values to
+ *    flux integrals.
+ *
+ * If the advance is temporary, deallocate the flux data if first step.
+ *
  *************************************************************************
  */
 
@@ -2359,9 +2359,9 @@ void MblkHyperbolicLevelIntegrator::postprocessFluxData(
 
 /*
  *************************************************************************
- *                                                                       *
- * Copy time-dependent data from source to destination on level.         *
- *                                                                       *
+ *
+ * Copy time-dependent data from source to destination on level.
+ *
  *************************************************************************
  */
 
@@ -2397,9 +2397,9 @@ void MblkHyperbolicLevelIntegrator::copyTimeDependentData(
 
 /*
  *************************************************************************
- *                                                                       *
- * Print all class data for MblkHyperbolicLevelIntegrator object.      *
- *                                                                       *
+ *
+ * Print all class data for MblkHyperbolicLevelIntegrator object.
+ *
  *************************************************************************
  */
 
@@ -2424,10 +2424,10 @@ void MblkHyperbolicLevelIntegrator::printClassData(
 
 /*
  *************************************************************************
- *                                                                       *
- * Writes out the class version number, d_cfl, d_cfl_init,               *
- * d_lag_dt_computation, and d_use_ghosts_for_dt to the database.        *
- *                                                                       *
+ *
+ * Writes out the class version number, d_cfl, d_cfl_init,
+ * d_lag_dt_computation, and d_use_ghosts_for_dt to the database.
+ *
  *************************************************************************
  */
 
@@ -2449,12 +2449,12 @@ void MblkHyperbolicLevelIntegrator::putToDatabase(
 
 /*
  *************************************************************************
- *                                                                       *
- * Reads in cfl, cfl_init, lag_dt_computation, and                       *
- * use_ghosts_to_compute_dt from the input database.                     *
- * Note all restart values are overriden with values from the input      *
- * database.                                                             *
- *                                                                       *
+ *
+ * Reads in cfl, cfl_init, lag_dt_computation, and
+ * use_ghosts_to_compute_dt from the input database.
+ * Note all restart values are overriden with values from the input
+ * database.
+ *
  *************************************************************************
  */
 
@@ -2515,16 +2515,16 @@ void MblkHyperbolicLevelIntegrator::getFromInput(
 
 /*
  *************************************************************************
- *                                                                       *
- * First, gets the database corresponding to the object_name from the    *
- * restart file.   If this database exists, this method checks to make   *
- * sure that the version number of the class matches the version number  *
- * of the restart file.  If they match, then d_cfl, d_cfl_init,          *
- * d_lag_dt_computation, and d_use_ghosts_to_compute_dt are read from    *
- * restart database.                                                     *
- * Note all restart values can be overriden with values from the input   *
- * database.                                                             *
- *                                                                       *
+ *
+ * First, gets the database corresponding to the object_name from the
+ * restart file.   If this database exists, this method checks to make
+ * sure that the version number of the class matches the version number
+ * of the restart file.  If they match, then d_cfl, d_cfl_init,
+ * d_lag_dt_computation, and d_use_ghosts_to_compute_dt are read from
+ * restart database.
+ * Note all restart values can be overriden with values from the input
+ * database.
+ *
  *************************************************************************
  */
 void MblkHyperbolicLevelIntegrator::getFromRestart()
@@ -2556,9 +2556,9 @@ void MblkHyperbolicLevelIntegrator::getFromRestart()
 
 /*
  *************************************************************************
- *                                                                       *
- * Utility routines to retrieve variable contexts used by integrator.    *
- *                                                                       *
+ *
+ * Utility routines to retrieve variable contexts used by integrator.
+ *
  *************************************************************************
  */
 

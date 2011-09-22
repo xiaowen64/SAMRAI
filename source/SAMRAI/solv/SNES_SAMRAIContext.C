@@ -31,10 +31,10 @@ const int SNES_SAMRAIContext::SOLV_SNES_SAMRAI_CONTEXT_VERSION = 1;
 
 /*
  *************************************************************************
- *                                                                       *
- * Static member functions that provide linkage with PETSc/SNES package. *
- * See header file for SNESAbstractFunctions for more information.  *
- *                                                                       *
+ *
+ * Static member functions that provide linkage with PETSc/SNES package.
+ * See header file for SNESAbstractFunctions for more information.
+ *
  *************************************************************************
  */
 int SNES_SAMRAIContext::SNESFuncEval(
@@ -112,12 +112,12 @@ int SNES_SAMRAIContext::SNESapplyPreconditioner(
 
 /*
  *************************************************************************
- *                                                                       *
- * Constructor and destructor for SNES_SAMRAIContext.  The         *
- * constructor sets default values for data members, then overrides      *
- * them with values read from input or restart.  The destructor destroys *
- * the SNES object.                                                      *
- *                                                                       *
+ *
+ * Constructor and destructor for SNES_SAMRAIContext.  The
+ * constructor sets default values for data members, then overrides
+ * them with values read from input or restart.  The destructor destroys
+ * the SNES object.
+ *
  *************************************************************************
  */
 SNES_SAMRAIContext::SNES_SAMRAIContext(
@@ -223,9 +223,9 @@ SNES_SAMRAIContext::~SNES_SAMRAIContext()
 
 /*
  *************************************************************************
- *                                                                       *
- * Access functions for PETSc objects, and user-supplied functions.      *
- *                                                                       *
+ *
+ * Access functions for PETSc objects, and user-supplied functions.
+ *
  *************************************************************************
  */
 SNES SNES_SAMRAIContext::getSNESSolver() const
@@ -250,9 +250,9 @@ Mat SNES_SAMRAIContext::getJacobianMatrix() const
 
 /*
  *************************************************************************
- *                                                                       *
- *  Access functions for parameters that control solver behavior.        *
- *                                                                       *
+ *
+ *  Access functions for parameters that control solver behavior.
+ *
  *************************************************************************
  */
 double SNES_SAMRAIContext::getAbsoluteTolerance() const
@@ -538,9 +538,9 @@ void SNES_SAMRAIContext::setFunctionEvaluationError(
 
 /*
  *************************************************************************
- *                                                                       *
- * Routines to initialize PETSc/SNES solver and solve nonlinear system.  *
- *                                                                       *
+ *
+ * Routines to initialize PETSc/SNES solver and solve nonlinear system.
+ *
  *************************************************************************
  */
 void SNES_SAMRAIContext::initialize(
@@ -569,9 +569,9 @@ void SNES_SAMRAIContext::initialize(
 
 /*
  *************************************************************************
- *                                                                       *
- * Reset the state of the nonlinear solver.                              *
- *                                                                       *
+ *
+ * Reset the state of the nonlinear solver.
+ *
  *************************************************************************
  */
 void SNES_SAMRAIContext::resetSolver(
@@ -599,9 +599,9 @@ void SNES_SAMRAIContext::resetSolver(
 
 /*
  *************************************************************************
- *                                                                       *
- * Solve the nonlinear system.                                           *
- *                                                                       *
+ *
+ * Solve the nonlinear system.
+ *
  *************************************************************************
  */
 int SNES_SAMRAIContext::solve()
@@ -638,9 +638,9 @@ int SNES_SAMRAIContext::solve()
 
 /*
  *************************************************************************
- *                                                                       *
- * Get the number of nonlinear iterations used in last solve.            *
- *                                                                       *
+ *
+ * Get the number of nonlinear iterations used in last solve.
+ *
  *************************************************************************
  */
 int SNES_SAMRAIContext::getNumberOfNonlinearIterations() const
@@ -650,9 +650,9 @@ int SNES_SAMRAIContext::getNumberOfNonlinearIterations() const
 
 /*
  *************************************************************************
- *                                                                       *
- * Get the total number of linear iterations used in last solve.         *
- *                                                                       *
+ *
+ * Get the total number of linear iterations used in last solve.
+ *
  *************************************************************************
  */
 int SNES_SAMRAIContext::getTotalNumberOfLinearIterations() const
@@ -666,11 +666,11 @@ int SNES_SAMRAIContext::getTotalNumberOfLinearIterations() const
 
 /*
  *************************************************************************
- *                                                                       *
- *  Report the reason for termination of nonlinear iterations.  SNES     *
- *  return codes are translated here, and a message is placed in the     *
- *  specified output stream.  Test only on relevant completion codes.    *
- *                                                                       *
+ *
+ *  Report the reason for termination of nonlinear iterations.  SNES
+ *  return codes are translated here, and a message is placed in the
+ *  specified output stream.  Test only on relevant completion codes.
+ *
  *************************************************************************
  */
 void SNES_SAMRAIContext::reportCompletionCode(
@@ -706,9 +706,9 @@ void SNES_SAMRAIContext::reportCompletionCode(
 
 /*
  *************************************************************************
- *                                                                       *
- * Create needed Petsc objects and cache a pointer to them.              *
- *                                                                       *
+ *
+ * Create needed Petsc objects and cache a pointer to them.
+ *
  *************************************************************************
  */
 void SNES_SAMRAIContext::createPetscObjects()
@@ -761,9 +761,9 @@ void SNES_SAMRAIContext::createPetscObjects()
 
 /*
  *************************************************************************
- *                                                                       *
- * Initialize the state of cached Petsc objects from cached information. *
- *                                                                       *
+ *
+ * Initialize the state of cached Petsc objects from cached information.
+ *
  *************************************************************************
  */
 void SNES_SAMRAIContext::initializePetscObjects()
@@ -944,9 +944,9 @@ void SNES_SAMRAIContext::initializePetscObjects()
 
 /*
  *************************************************************************
- *                                                                       *
- * Destroy cached Petsc objects.                                         *
- *                                                                       *
+ *
+ * Destroy cached Petsc objects.
+ *
  *************************************************************************
  */
 void SNES_SAMRAIContext::destroyPetscObjects()
@@ -966,9 +966,9 @@ void SNES_SAMRAIContext::destroyPetscObjects()
 
 /*
  *************************************************************************
- *                                                                       *
- * Read parameters from input that are cached in this object.            *
- *                                                                       *
+ *
+ * Read parameters from input that are cached in this object.
+ *
  *************************************************************************
  */
 
@@ -1077,9 +1077,9 @@ void SNES_SAMRAIContext::getFromInput(
 
 /*
  *************************************************************************
- *                                                                       *
- * Routines to read/write from/to restart/database.                      *
- *                                                                       *
+ *
+ * Routines to read/write from/to restart/database.
+ *
  *************************************************************************
  */
 
@@ -1201,9 +1201,9 @@ void SNES_SAMRAIContext::putToDatabase(
 
 /*
  *************************************************************************
- *                                                                       *
- * Write all class data members to specified output stream.              *
- *                                                                       *
+ *
+ * Write all class data members to specified output stream.
+ *
  *************************************************************************
  */
 

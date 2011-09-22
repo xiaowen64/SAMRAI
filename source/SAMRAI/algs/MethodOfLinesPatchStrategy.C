@@ -20,10 +20,10 @@ namespace algs {
 
 /*
  *************************************************************************
- *                                                                       *
- * Note: hier::Variable contexts should be consistent with those in            *
- *       MethodOfLinesIntegrator class.                            *
- *                                                                       *
+ *
+ * Note: hier::Variable contexts should be consistent with those in
+ *       MethodOfLinesIntegrator class.
+ *
  *************************************************************************
  */
 

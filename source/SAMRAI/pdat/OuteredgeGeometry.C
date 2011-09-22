@@ -28,9 +28,9 @@ namespace pdat {
 
 /*
  *************************************************************************
- *                                                                       *
- * Create an outeredge geometry object given box and ghost cell width.   *
- *                                                                       *
+ *
+ * Create an outeredge geometry object given box and ghost cell width.
+ *
  *************************************************************************
  */
 
@@ -51,15 +51,15 @@ OuteredgeGeometry::~OuteredgeGeometry()
 
 /*
  *************************************************************************
- *                                                                       *
- * Attempt to calculate the intersection between two edge centered box   *
- * geometries.  The calculateOverlap() checks whether both arguments are *
- * edge geometries; if so, it compuates the intersection.  If not, then  *
- * it calls calculateOverlap() on the source object (if retry is true)   *
- * to allow the source a chance to calculate the intersection.  See the  *
- * hier::BoxGeometry base class for more information about the protocol. *
- * A pointer to null is returned if the intersection cannot be computed. *
- *                                                                       *
+ *
+ * Attempt to calculate the intersection between two edge centered box
+ * geometries.  The calculateOverlap() checks whether both arguments are
+ * edge geometries; if so, it compuates the intersection.  If not, then
+ * it calls calculateOverlap() on the source object (if retry is true)
+ * to allow the source a chance to calculate the intersection.  See the
+ * hier::BoxGeometry base class for more information about the protocol.
+ * A pointer to null is returned if the intersection cannot be computed.
+ *
  *************************************************************************
  */
 
@@ -104,11 +104,11 @@ OuteredgeGeometry::calculateOverlap(
 
 /*
  *************************************************************************
- *                                                                       *
- * Compute the overlap between an edge and an outeredge centered boxes.  *
- * The algorithm is similar to the standard edge intersection algorithm  *
- * except we operate only on the boundaries of the source box.           *
- *                                                                       *
+ *
+ * Compute the overlap between an edge and an outeredge centered boxes.
+ * The algorithm is similar to the standard edge intersection algorithm
+ * except we operate only on the boundaries of the source box.
+ *
  *************************************************************************
  */
 tbox::Pointer<hier::BoxOverlap>
@@ -208,11 +208,11 @@ OuteredgeGeometry::doOverlap(
 
 /*
  *************************************************************************
- *                                                                       *
- * Compute the overlap between two outeredge centered boxes.             *
- * The algorithm is similar to the standard edge intersection algorithm  *
- * except we operate only on the boundaries of the source box.           *
- *                                                                       *
+ *
+ * Compute the overlap between two outeredge centered boxes.
+ * The algorithm is similar to the standard edge intersection algorithm
+ * except we operate only on the boundaries of the source box.
+ *
  *************************************************************************
  */
 
@@ -361,10 +361,10 @@ OuteredgeGeometry::doOverlap(
 
 /*
  *************************************************************************
- *                                                                       *
- * Convert an AMR-index space hier::Box into a edge-index space box      *
- * for an outeredge region.                                              *
- *                                                                       *
+ *
+ * Convert an AMR-index space hier::Box into a edge-index space box
+ * for an outeredge region.
+ *
  *************************************************************************
  */
 
@@ -429,9 +429,9 @@ hier::Box OuteredgeGeometry::toOuteredgeBox(
 
 /*
  *************************************************************************
- *                                                                       *
- * Set up a EdgeOverlap oject using the given boxes and offset           *
- *                                                                       *
+ *
+ * Set up a EdgeOverlap oject using the given boxes and offset
+ *
  *************************************************************************
  */
 tbox::Pointer<hier::BoxOverlap>

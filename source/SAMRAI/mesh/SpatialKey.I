@@ -13,9 +13,9 @@ namespace mesh {
 
 /*
  ****************************************************************************
- *                                                                          *
- * Copies the spatial key.                                                  *
- *                                                                          *
+ *
+ * Copies the spatial key.
+ *
  ****************************************************************************
  */
 SAMRAI_INLINE_KEYWORD
@@ -30,10 +30,10 @@ SpatialKey& SpatialKey::operator = (
 
 /*
  ****************************************************************************
- *                                                                          *
- * Compare two spatial keys for equality.  All values in d_key must be      *
- * equal for this to return true.                                           *
- *                                                                          *
+ *
+ * Compare two spatial keys for equality.  All values in d_key must be
+ * equal for this to return true.
+ *
  ****************************************************************************
  */
 SAMRAI_INLINE_KEYWORD
@@ -49,10 +49,10 @@ bool SpatialKey::operator == (
 
 /*
  ****************************************************************************
- *                                                                          *
- * Compare two spatial keys for inequality.  Returns true if the keys are   *
- * not equal.                                                               *
- *                                                                          *
+ *
+ * Compare two spatial keys for inequality.  Returns true if the keys are
+ * not equal.
+ *
  ****************************************************************************
  */
 SAMRAI_INLINE_KEYWORD
@@ -64,9 +64,9 @@ bool SpatialKey::operator != (
 
 /*
  ****************************************************************************
- *                                                                          *
- * Zeroes key by setting all values in d_key to 0.                          *
- *                                                                          *
+ *
+ * Zeroes key by setting all values in d_key to 0.
+ *
  ****************************************************************************
  */
 SAMRAI_INLINE_KEYWORD

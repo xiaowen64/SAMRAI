@@ -29,9 +29,9 @@ PatchCellDataOpsComplex::~PatchCellDataOpsComplex()
 
 /*
  *************************************************************************
- *                                                                       *
- * General operations for complex cell-centered patch data.              *
- *                                                                       *
+ *
+ * General operations for complex cell-centered patch data.
+ *
  *************************************************************************
  */
 

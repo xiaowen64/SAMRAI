@@ -26,9 +26,9 @@ namespace pdat {
 
 /*
  *************************************************************************
- *                                                                       *
- * Create a node geometry object given the box and ghost cell width.     *
- *                                                                       *
+ *
+ * Create a node geometry object given the box and ghost cell width.
+ *
  *************************************************************************
  */
 
@@ -48,16 +48,16 @@ NodeGeometry::~NodeGeometry()
 
 /*
  *************************************************************************
- *                                                                       *
- * Attempt to calculate the intersection between two node centered box   *
- * geometries.  The calculateOverlap() checks whether both arguments are *
- * node geometries; if so, it computes the intersection.  If not, then   *
- * it calls calculateOverlap() on the source object (if retry is true)   *
- * to allow the source a chance to calculate the intersection.  See the  *
- * hier::BoxGeometry base class for more information about the           *
- * protocol. A pointer to null is returned if the intersection cannot    *
- * be computed.                                                          *
- *                                                                       *
+ *
+ * Attempt to calculate the intersection between two node centered box
+ * geometries.  The calculateOverlap() checks whether both arguments are
+ * node geometries; if so, it computes the intersection.  If not, then
+ * it calls calculateOverlap() on the source object (if retry is true)
+ * to allow the source a chance to calculate the intersection.  See the
+ * hier::BoxGeometry base class for more information about the
+ * protocol. A pointer to null is returned if the intersection cannot
+ * be computed.
+ *
  *************************************************************************
  */
 
@@ -93,12 +93,12 @@ tbox::Pointer<hier::BoxOverlap> NodeGeometry::calculateOverlap(
 
 /*
  *************************************************************************
- *                                                                       *
- * Compute the overlap between two node centered boxes.  The algorithm   *
- * is fairly straight-forward.  First, the two boxes are converted into  *
- * node coordinates.  Then, the boxes are intersected and, if necessary, *
- * the interior section is removed from the destination box.             *
- *                                                                       *
+ *
+ * Compute the overlap between two node centered boxes.  The algorithm
+ * is fairly straight-forward.  First, the two boxes are converted into
+ * node coordinates.  Then, the boxes are intersected and, if necessary,
+ * the interior section is removed from the destination box.
+ *
  *************************************************************************
  */
 
@@ -128,9 +128,9 @@ tbox::Pointer<hier::BoxOverlap> NodeGeometry::doOverlap(
 
 /*
  *************************************************************************
- *                                                                       *
- * Compute the boxes that will be used to contstruct an overlap object   *
- *                                                                       *
+ *
+ * Compute the boxes that will be used to contstruct an overlap object
+ *
  *************************************************************************
  */
 
@@ -182,9 +182,9 @@ void NodeGeometry::computeDestinationBoxes(
 
 /*
  *************************************************************************
- *                                                                       *
- * Set up a NodeOverlap oject using the given boxes and offset           *
- *                                                                       *
+ *
+ * Set up a NodeOverlap oject using the given boxes and offset
+ *
  *************************************************************************
  */
 tbox::Pointer<hier::BoxOverlap>
@@ -207,9 +207,9 @@ NodeGeometry::setUpOverlap(
 
 /*
  *************************************************************************
- *                                                                       *
- * Transform a box                                                       *
- *                                                                       *
+ *
+ * Transform a box
+ *
  *************************************************************************
  */
 
@@ -232,9 +232,9 @@ NodeGeometry::transform(
 
 /*
  *************************************************************************
- *                                                                       *
- * Transform a NodeIndex                                                 *
- *                                                                       *
+ *
+ * Transform a NodeIndex
+ *
  *************************************************************************
  */
 

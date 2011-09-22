@@ -29,9 +29,9 @@ PatchCellDataOpsInteger::~PatchCellDataOpsInteger()
 
 /*
  *************************************************************************
- *                                                                       *
- * Compute the number of data entries on a patch in the given box.       *
- *                                                                       *
+ *
+ * Compute the number of data entries on a patch in the given box.
+ *
  *************************************************************************
  */
 
@@ -49,9 +49,9 @@ int PatchCellDataOpsInteger::numberOfEntries(
 
 /*
  *************************************************************************
- *                                                                       *
- * General operations for integer cell-centered patch data.              *
- *                                                                       *
+ *
+ * General operations for integer cell-centered patch data.
+ *
  *************************************************************************
  */
 

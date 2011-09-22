@@ -41,9 +41,9 @@ Statistician::s_finalize_handler(
 
 /*
  *************************************************************************
- *                                                                       *
- * Static statistician member functions.                                 *
- *                                                                       *
+ *
+ * Static statistician member functions.
+ *
  *************************************************************************
  */
 
@@ -102,9 +102,9 @@ void Statistician::registerSingletonSubclassInstance(
 
 /*
  *************************************************************************
- *                                                                       *
- * Protected statistician constructor and destructor.                    *
- *                                                                       *
+ *
+ * Protected statistician constructor and destructor.
+ *
  *************************************************************************
  */
 
@@ -135,9 +135,9 @@ Statistician::~Statistician()
 
 /*
  *************************************************************************
- *                                                                       *
- * Private members for creating and managing the singleton instance.     *
- *                                                                       *
+ *
+ * Private members for creating and managing the singleton instance.
+ *
  *************************************************************************
  */
 
@@ -172,10 +172,10 @@ void Statistician::initRestartDatabase(
 
 /*
  *************************************************************************
- *                                                                       *
- * Utility functions for getting statistics, adding them to the          *
- * database, checking whether a particular statistic exists, resetting.  *
- *                                                                       *
+ *
+ * Utility functions for getting statistics, adding them to the
+ * database, checking whether a particular statistic exists, resetting.
+ *
  *************************************************************************
  */
 
@@ -324,10 +324,10 @@ void Statistician::resetStatistics()
 
 /*
  *************************************************************************
- *                                                                       *
- * Utility functions to retrieve global statistic data from              *
- * statistician database.                                                *
- *                                                                       *
+ *
+ * Utility functions to retrieve global statistic data from
+ * statistician database.
+ *
  *************************************************************************
  */
 
@@ -1705,9 +1705,9 @@ void Statistician::printGlobalPatchStatDataFormatted(
 
 /*
  *************************************************************************
- *                                                                       *
- * Gather all statistic data to processor zero for analysis.             *
- *                                                                       *
+ *
+ * Gather all statistic data to processor zero for analysis.
+ *
  *************************************************************************
  */
 
@@ -2088,13 +2088,13 @@ void Statistician::reduceGlobalStatistics()
 
 /*
  *************************************************************************
- *                                                                       *
- * Check statistic information on all processors for consistency.        *
- * If the number of patch statistics is non-zero, the array will be      *
- * resized to the sum of sequence lengths over all patch statistics.     *
- * Then, each entry will be the total number of global patches for       *
- * that particular patch stat sequence.                                  *
- *                                                                       *
+ *
+ * Check statistic information on all processors for consistency.
+ * If the number of patch statistics is non-zero, the array will be
+ * resized to the sum of sequence lengths over all patch statistics.
+ * Then, each entry will be the total number of global patches for
+ * that particular patch stat sequence.
+ *
  *************************************************************************
  */
 
@@ -2230,9 +2230,9 @@ void Statistician::checkStatsForConsistency(
 
 /*
  *************************************************************************
- *                                                                       *
- * Utility functions for retrieving statistic data from statistician.    *
- *                                                                       *
+ *
+ * Utility functions for retrieving statistic data from statistician.
+ *
  *************************************************************************
  */
 
@@ -2248,10 +2248,10 @@ int Statistician::getNumberPatchStats() const
 
 /*
  *************************************************************************
- *                                                                       *
- * Utility functions to print local statistic information and global     *
- * statistic information (after calling finalize()).                     *
- *                                                                       *
+ *
+ * Utility functions to print local statistic information and global
+ * statistic information (after calling finalize()).
+ *
  *************************************************************************
  */
 
@@ -2326,9 +2326,9 @@ void Statistician::printAllGlobalStatData(
 
 /*
  *************************************************************************
- *                                                                       *
- * Print global summed output for all statistics to the specified file.  *
- *                                                                       *
+ *
+ * Print global summed output for all statistics to the specified file.
+ *
  *************************************************************************
  */
 void Statistician::printAllSummedGlobalStatData(
@@ -2384,16 +2384,16 @@ void Statistician::printAllSummedGlobalStatData(
 
 /*
  *************************************************************************
- *                                                                       *
- * Print formatted Statistician information to formatted output that     *
- * may be read by Excel, or other spreadsheet type programs. Each        *
- * processor statistic is printed to the file "<statname>-proc.txt",     *
- * where <statname> is the name of the statistic.  Likewise, each patch  *
- * statistic is written to the file "<statname>-patch.txt".  If a        *
- * directory name is supplied, the method will create the directory and  *
- * the put the files in it.  If no directory name is supplied, the files *
- * will be written to the directory where the application is run.        *
- *                                                                       *
+ *
+ * Print formatted Statistician information to formatted output that
+ * may be read by Excel, or other spreadsheet type programs. Each
+ * processor statistic is printed to the file "<statname>-proc.txt",
+ * where <statname> is the name of the statistic.  Likewise, each patch
+ * statistic is written to the file "<statname>-patch.txt".  If a
+ * directory name is supplied, the method will create the directory and
+ * the put the files in it.  If no directory name is supplied, the files
+ * will be written to the directory where the application is run.
+ *
  *************************************************************************
  */
 
@@ -2458,13 +2458,13 @@ void Statistician::printSpreadSheetOutput(
 
 /*
  *************************************************************************
- *                                                                       *
- * Print formatted Statistician information to formatted output that     *
- * may be read by Excel, or other spreadsheet type programs. This method *
- * prints statistic information from only a single specified processor   *
- * which may be useful for information that is the same across all       *
- * processors.                                                           *
- *                                                                       *
+ *
+ * Print formatted Statistician information to formatted output that
+ * may be read by Excel, or other spreadsheet type programs. This method
+ * prints statistic information from only a single specified processor
+ * which may be useful for information that is the same across all
+ * processors.
+ *
  *************************************************************************
  */
 
@@ -2527,9 +2527,9 @@ void Statistician::printSpreadSheetOutputForProcessor(
 
 /*
  *************************************************************************
- *                                                                       *
- * Implementation of StatisticRestartDatabase class.                *
- *                                                                       *
+ *
+ * Implementation of StatisticRestartDatabase class.
+ *
  *************************************************************************
  */
 

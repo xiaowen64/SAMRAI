@@ -56,9 +56,9 @@ HierarchyFaceDataOpsReal<TYPE>::~HierarchyFaceDataOpsReal()
 
 /*
  *************************************************************************
- *                                                                       *
- * Routines to set the hierarchy and level informtation.                 *
- *                                                                       *
+ *
+ * Routines to set the hierarchy and level informtation.
+ *
  *************************************************************************
  */
 
@@ -117,11 +117,11 @@ HierarchyFaceDataOpsReal<TYPE>::getPatchHierarchy() const
 
 /*
  *************************************************************************
- *                                                                       *
- * The following are private and cannot be used, but they are defined    *
- * here for compilers that require that every template declaration have  *
- * a definition (a stupid requirement, if you ask me).                   *
- *                                                                       *
+ *
+ * The following are private and cannot be used, but they are defined
+ * here for compilers that require that every template declaration have
+ * a definition (a stupid requirement, if you ask me).
+ *
  *************************************************************************
  */
 
@@ -142,9 +142,9 @@ void HierarchyFaceDataOpsReal<TYPE>::operator = (
 
 /*
  *************************************************************************
- *                                                                       *
- * Basic generic operations.                                             *
- *                                                                       *
+ *
+ * Basic generic operations.
+ *
  *************************************************************************
  */
 
@@ -276,9 +276,9 @@ void HierarchyFaceDataOpsReal<TYPE>::setToScalar(
 
 /*
  *************************************************************************
- *                                                                       *
- * Basic generic arithmetic operations.                                  *
- *                                                                       *
+ *
+ * Basic generic arithmetic operations.
+ *
  *************************************************************************
  */
 
@@ -664,9 +664,9 @@ void HierarchyFaceDataOpsReal<TYPE>::setRandomValues(
 
 /*
  *************************************************************************
- *                                                                       *
- * Generic norm and order operations.                                    *
- *                                                                       *
+ *
+ * Generic norm and order operations.
+ *
  *************************************************************************
  */
 
@@ -1057,9 +1057,9 @@ TYPE HierarchyFaceDataOpsReal<TYPE>::integral(
 
 /*
  *************************************************************************
- *                                                                       *
- * Generic miscellaneous operations for real data.                       *
- *                                                                       *
+ *
+ * Generic miscellaneous operations for real data.
+ *
  *************************************************************************
  */
 

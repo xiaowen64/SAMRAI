@@ -171,6 +171,8 @@ const Connector& PersistentOverlapConnectors::findConnector(
    TBOX_ASSERT(d_my_mapped_box_level.isInitialized());
    TBOX_ASSERT(head.isInitialized());
 
+   const tbox::Dimension& dim = min_connector_width.getDim();
+
    const Connector* found = NULL;
    for (int i = 0; i < d_cons_from_me.size(); ++i) {
       TBOX_ASSERT(d_cons_from_me[i]->isInitialized());
@@ -238,11 +240,11 @@ const Connector& PersistentOverlapConnectors::findConnector(
 
       const hier::NeighborhoodSet& wider_neighborhoods
          (found->getNeighborhoodSets());
-      hier::NeighborhoodSet exact_neighborhoods;
+      hier::NeighborhoodSet exact_neighborhoods(dim);
 
       for (hier::NeighborhoodSet::const_iterator ni(wider_neighborhoods.begin());
            ni != wider_neighborhoods.end(); ++ni) {
-         oca.extractNeighbors(exact_neighborhoods[ni->first],
+         oca.extractNeighbors(exact_neighborhoods.getNeighborSet(ni->first, dim),
             *found,
             ni->first,
             min_connector_width);
@@ -289,6 +291,8 @@ const Connector& PersistentOverlapConnectors::findOrCreateConnector(
 {
    TBOX_ASSERT(d_my_mapped_box_level.isInitialized());
    TBOX_ASSERT(head.isInitialized());
+
+   const tbox::Dimension& dim = min_connector_width.getDim();
 
    const Connector* found = NULL;
    for (int i = 0; i < d_cons_from_me.size(); ++i) {
@@ -359,11 +363,11 @@ const Connector& PersistentOverlapConnectors::findOrCreateConnector(
 
       const hier::NeighborhoodSet& wider_neighborhoods
          (found->getNeighborhoodSets());
-      hier::NeighborhoodSet exact_neighborhoods;
+      hier::NeighborhoodSet exact_neighborhoods(dim);
 
       for (hier::NeighborhoodSet::const_iterator ni(wider_neighborhoods.begin());
            ni != wider_neighborhoods.end(); ++ni) {
-         oca.extractNeighbors(exact_neighborhoods[ni->first],
+         oca.extractNeighbors(exact_neighborhoods.getNeighborSet(ni->first, dim),
             *found,
             ni->first,
             min_connector_width);

@@ -25,6 +25,7 @@ OBJS = 	\
 	LocalId.o \
 	BlockId.o \
 	PeriodicId.o \
+	BoxContainer.o \
 	CoarseFineBoundary.o \
 	GridGeometry.o \
 	PatchBoundaries.o \
@@ -78,9 +79,11 @@ OBJS = 	\
 	RefineOperator.o \
 	TimeInterpolateOperator.o \
 	Transformation.o \
-	BoxContainer.o \
 	BoxContainerIterator.o \
-	BoxContainerConstIterator.o
+	BoxContainerConstIterator.o \
+	BoxContainerSetConstIterator.o \
+	BoxContainerSetConstReverseIterator.o \
+	BoxContainerSetIterator.o
 
 library: $(OBJS)
 	for DIR in $(SUBDIRS); do if test -d $$DIR; then (cd $$DIR && $(MAKE) $@) ; fi || exit 1; done

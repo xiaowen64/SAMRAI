@@ -1243,9 +1243,9 @@ class BoxNeighborhoodCollection
        *
        * @param neighbors
        */
-      void
-      getNeighbors(
-         BoxList& neighbors) const;
+//      void
+//      getNeighbors(
+//         BoxList& neighbors) const;
 
       /*!
        * @brief Fill the supplied BoxList with the neighbors having the

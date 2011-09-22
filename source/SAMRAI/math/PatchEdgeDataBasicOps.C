@@ -31,11 +31,11 @@ PatchEdgeDataBasicOps<TYPE>::~PatchEdgeDataBasicOps()
 
 /*
  *************************************************************************
- *                                                                       *
- * The const constructor and assignment operator are not actually used   *
- * but are defined here for compilers that require an implementation for *
- * every declaration.                                                    *
- *                                                                       *
+ *
+ * The const constructor and assignment operator are not actually used
+ * but are defined here for compilers that require an implementation for
+ * every declaration.
+ *
  *************************************************************************
  */
 
@@ -55,9 +55,9 @@ void PatchEdgeDataBasicOps<TYPE>::operator = (
 
 /*
  *************************************************************************
- *                                                                       *
- * General basic templated operations for edge data.                     *
- *                                                                       *
+ *
+ * General basic templated operations for edge data.
+ *
  *************************************************************************
  */
 

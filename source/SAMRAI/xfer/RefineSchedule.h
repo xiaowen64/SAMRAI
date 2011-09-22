@@ -352,7 +352,7 @@ private:
    //! @brief Shorthand typedef.
    typedef std::vector<hier::Box> BoxVector;
    //! @brief Similar to NeighborhoodSet but maps to BoxVector instead of BoxSet.
-   typedef std::map<hier::BoxId, hier::BoxSet> FillSet;
+   typedef hier::NeighborhoodSet FillSet;
    //! @brief Mapping from a (potentially remote) Box to a set of neighbors.
    typedef std::map<hier::Box, NeighborSet, hier::Box::id_less> FullNeighborhoodSet;
 

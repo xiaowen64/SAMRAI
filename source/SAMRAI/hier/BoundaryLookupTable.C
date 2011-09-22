@@ -43,9 +43,9 @@ BoundaryLookupTable::s_finalize_handler(
 
 /*
  *************************************************************************
- *                                                                       *
- * Lookup table constructor and destructor.                              *
- *                                                                       *
+ *
+ * Lookup table constructor and destructor.
+ *
  *************************************************************************
  */
 
@@ -94,10 +94,10 @@ BoundaryLookupTable::~BoundaryLookupTable()
 
 /*
  *************************************************************************
- *                                                                       *
- * Recursive function that computes the combinations in the lookup       *
- * table.                                                                *
- *                                                                       *
+ *
+ * Recursive function that computes the combinations in the lookup
+ * table.
+ *
  *************************************************************************
  */
 
@@ -128,10 +128,10 @@ void BoundaryLookupTable::buildTable(
 
 /*
  *************************************************************************
- *                                                                       *
- * Build table of IntVectors indication locations of boundaries relative *
- * to a patch.                                                           *
- *                                                                       *
+ *
+ * Build table of IntVectors indication locations of boundaries relative
+ * to a patch.
+ *
  *************************************************************************
  */
 

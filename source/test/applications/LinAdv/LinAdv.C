@@ -100,16 +100,16 @@ using namespace std;
 
 /*
  *************************************************************************
- *                                                                       *
- * The constructor for LinAdv class sets data members to defualt values, *
- * creates variables that define the solution state for the linear       *
+ *
+ * The constructor for LinAdv class sets data members to defualt values,
+ * creates variables that define the solution state for the linear
  * advection equation.
- *                                                                       *
- * After default values are set, this routine calls getFromRestart()     *
- * if execution from a restart file is specified.  Finally,              *
- * getFromInput() is called to read values from the given input          *
- * database (potentially overriding those found in the restart file).    *
- *                                                                       *
+ *
+ * After default values are set, this routine calls getFromRestart()
+ * if execution from a restart file is specified.  Finally,
+ * getFromInput() is called to read values from the given input
+ * database (potentially overriding those found in the restart file).
+ *
  *************************************************************************
  */
 
@@ -336,9 +336,9 @@ LinAdv::LinAdv(
 
 /*
  *************************************************************************
- *                                                                       *
- * Empty destructor for LinAdv class.                                    *
- *                                                                       *
+ *
+ * Empty destructor for LinAdv class.
+ *
  *************************************************************************
  */
 
@@ -401,9 +401,9 @@ void LinAdv::registerModelVariables(
 
 /*
  *************************************************************************
- *                                                                       *
- * Set up parameters for nonuniform load balancing, if used.             *
- *                                                                       *
+ *
+ * Set up parameters for nonuniform load balancing, if used.
+ *
  *************************************************************************
  */
 
@@ -446,14 +446,14 @@ void LinAdv::setupLoadBalancer(
 
 /*
  *************************************************************************
- *                                                                       *
- * Set initial data for solution variables on patch interior.            *
- * This routine is called whenever a new patch is introduced to the      *
- * AMR patch hierarchy.  Note that the routine does nothing unless       *
- * we are at the initial time.  In all other cases, conservative         *
- * interpolation from coarser levels and copies from patches at the      *
- * same mesh resolution are sufficient to set data.                      *
- *                                                                       *
+ *
+ * Set initial data for solution variables on patch interior.
+ * This routine is called whenever a new patch is introduced to the
+ * AMR patch hierarchy.  Note that the routine does nothing unless
+ * we are at the initial time.  In all other cases, conservative
+ * interpolation from coarser levels and copies from patches at the
+ * same mesh resolution are sufficient to set data.
+ *
  *************************************************************************
  */
 void LinAdv::initializeDataOnPatch(
@@ -599,9 +599,9 @@ void LinAdv::initializeDataOnPatch(
 
 /*
  *************************************************************************
- *                                                                       *
- * Compute stable time increment for patch.  Return this value.          *
- *                                                                       *
+ *
+ * Compute stable time increment for patch.  Return this value.
+ *
  *************************************************************************
  */
 
@@ -657,11 +657,11 @@ double LinAdv::computeStableDtOnPatch(
 
 /*
  *************************************************************************
- *                                                                       *
- * Compute time integral of numerical fluxes for finite difference       *
- * at each cell face on patch.  When d_dim == tbox::Dimension(3)), there are two options    *
- * for the transverse flux correction.  Otherwise, there is only one.    *
- *                                                                       *
+ *
+ * Compute time integral of numerical fluxes for finite difference
+ * at each cell face on patch.  When d_dim == tbox::Dimension(3)), there are two options
+ * for the transverse flux correction.  Otherwise, there is only one.
+ *
  *************************************************************************
  */
 
@@ -846,11 +846,11 @@ void LinAdv::computeFluxesOnPatch(
 
 /*
  *************************************************************************
- *                                                                       *
- * Compute numerical approximations to flux terms using an extension     *
- * to three dimensions of Collella's corner transport upwind approach.   *
- * I.E. input value corner_transport = CORNER_TRANSPORT_1                *
- *                                                                       *
+ *
+ * Compute numerical approximations to flux terms using an extension
+ * to three dimensions of Collella's corner transport upwind approach.
+ * I.E. input value corner_transport = CORNER_TRANSPORT_1
+ *
  *************************************************************************
  */
 void LinAdv::compute3DFluxesWithCornerTransport1(
@@ -1145,12 +1145,12 @@ void LinAdv::compute3DFluxesWithCornerTransport1(
 
 /*
  *************************************************************************
- *                                                                       *
- * Compute numerical approximations to flux terms using John             *
- * Trangenstein's interpretation of the three-dimensional version of     *
- * Collella's corner transport upwind approach.                          *
- * I.E. input value corner_transport = CORNER_TRANSPORT_2                *
- *                                                                       *
+ *
+ * Compute numerical approximations to flux terms using John
+ * Trangenstein's interpretation of the three-dimensional version of
+ * Collella's corner transport upwind approach.
+ * I.E. input value corner_transport = CORNER_TRANSPORT_2
+ *
  *************************************************************************
  */
 void LinAdv::compute3DFluxesWithCornerTransport2(
@@ -1376,10 +1376,10 @@ void LinAdv::compute3DFluxesWithCornerTransport2(
 
 /*
  *************************************************************************
- *                                                                       *
- * Update solution variables by performing a conservative                *
- * difference with the fluxes calculated in computeFluxesOnPatch().      *
- *                                                                       *
+ *
+ * Update solution variables by performing a conservative
+ * difference with the fluxes calculated in computeFluxesOnPatch().
+ *
  *************************************************************************
  */
 
@@ -1434,11 +1434,11 @@ void LinAdv::conservativeDifferenceOnPatch(
 
 /*
  *************************************************************************
- *                                                                       *
- * Reset physical boundary values for special cases, such as those       *
- * involving symmetric (i.e., reflective) boundary conditions and        *
- * when the "STEP" problem is run.                                       *
- *                                                                       *
+ *
+ * Reset physical boundary values for special cases, such as those
+ * involving symmetric (i.e., reflective) boundary conditions and
+ * when the "STEP" problem is run.
+ *
  *************************************************************************
  */
 void LinAdv::boundaryReset(
@@ -1525,12 +1525,12 @@ void LinAdv::boundaryReset(
 
 /*
  *************************************************************************
- *                                                                       *
- * Set the data in ghost cells corresponding to physical boundary        *
- * conditions.  Note that boundary geometry configuration information    *
- * (i.e., faces, edges, and nodes) is obtained from the patch geometry   *
- * object owned by the patch.                                            *
- *                                                                       *
+ *
+ * Set the data in ghost cells corresponding to physical boundary
+ * conditions.  Note that boundary geometry configuration information
+ * (i.e., faces, edges, and nodes) is obtained from the patch geometry
+ * object owned by the patch.
+ *
  *************************************************************************
  */
 
@@ -1650,10 +1650,10 @@ void LinAdv::setPhysicalBoundaryConditions(
 
 /*
  *************************************************************************
- *                                                                       *
- * Tag cells for refinement using Richardson extrapolation.  Criteria    *
- * defined in input.                                                     *
- *                                                                       *
+ *
+ * Tag cells for refinement using Richardson extrapolation.  Criteria
+ * defined in input.
+ *
  *************************************************************************
  */
 void LinAdv::tagRichardsonExtrapolationCells(
@@ -1820,10 +1820,10 @@ void LinAdv::tagRichardsonExtrapolationCells(
 
 /*
  *************************************************************************
- *                                                                       *
- * Tag cells for refinement using gradient detector.  Tagging criteria   *
- * defined in input.                                                     *
- *                                                                       *
+ *
+ * Tag cells for refinement using gradient detector.  Tagging criteria
+ * defined in input.
+ *
  *************************************************************************
  */
 
@@ -2061,10 +2061,10 @@ void LinAdv::tagGradientDetectorCells(
 
 /*
  *************************************************************************
- *                                                                       *
- * Register VisIt data writer to write data to plot files that may       *
- * be postprocessed by the VisIt tool.                                   *
- *                                                                       *
+ *
+ * Register VisIt data writer to write data to plot files that may
+ * be postprocessed by the VisIt tool.
+ *
  *************************************************************************
  */
 
@@ -2081,9 +2081,9 @@ void LinAdv::registerVisItDataWriter(
 
 /*
  *************************************************************************
- *                                                                       *
- * Write LinAdv object state to specified stream.                        *
- *                                                                       *
+ *
+ * Write LinAdv object state to specified stream.
+ *
  *************************************************************************
  */
 
@@ -2253,10 +2253,10 @@ void LinAdv::printClassData(
 
 /*
  *************************************************************************
- *                                                                       *
- * Read data members from input.  All values set from restart can be     *
- * overridden by values in the input database.                           *
- *                                                                       *
+ *
+ * Read data members from input.  All values set from restart can be
+ * overridden by values in the input database.
+ *
  *************************************************************************
  */
 void LinAdv::getFromInput(
@@ -2730,9 +2730,9 @@ void LinAdv::getFromInput(
 
 /*
  *************************************************************************
- *                                                                       *
- * Routines to put/get data members to/from restart database.            *
- *                                                                       *
+ *
+ * Routines to put/get data members to/from restart database.
+ *
  *************************************************************************
  */
 
@@ -2816,9 +2816,9 @@ void LinAdv::putToDatabase(
 
 /*
  *************************************************************************
- *                                                                       *
- *    Access class information from restart database.                    *
- *                                                                       *
+ *
+ *    Access class information from restart database.
+ *
  *************************************************************************
  */
 void LinAdv::getFromRestart()
@@ -2926,9 +2926,9 @@ void LinAdv::getFromRestart()
 
 /*
  *************************************************************************
- *                                                                       *
- * Routines to read boundary data from input database.                   *
- *                                                                       *
+ *
+ * Routines to read boundary data from input database.
+ *
  *************************************************************************
  */
 
@@ -2980,9 +2980,9 @@ void LinAdv::readStateDataEntry(
 
 /*
  *************************************************************************
- *                                                                       *
- * Routine to check boundary data when debugging.                        *
- *                                                                       *
+ *
+ * Routine to check boundary data when debugging.
+ *
  *************************************************************************
  */
 

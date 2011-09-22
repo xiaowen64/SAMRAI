@@ -31,11 +31,11 @@ PatchFaceDataMiscellaneousOpsReal<TYPE>::~PatchFaceDataMiscellaneousOpsReal()
 
 /*
  *************************************************************************
- *                                                                       *
- * The const constructor and assignment operator are not actually used   *
- * but are defined here for compilers that require an implementation for *
- * every declaration.                                                    *
- *                                                                       *
+ *
+ * The const constructor and assignment operator are not actually used
+ * but are defined here for compilers that require an implementation for
+ * every declaration.
+ *
  *************************************************************************
  */
 
@@ -55,9 +55,9 @@ void PatchFaceDataMiscellaneousOpsReal<TYPE>::operator = (
 
 /*
  *************************************************************************
- *                                                                       *
- * Templated miscellaneous opertions for real face-centered data.        *
- *                                                                       *
+ *
+ * Templated miscellaneous opertions for real face-centered data.
+ *
  *************************************************************************
  */
 

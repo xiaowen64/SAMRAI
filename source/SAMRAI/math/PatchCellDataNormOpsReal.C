@@ -29,11 +29,11 @@ PatchCellDataNormOpsReal<TYPE>::~PatchCellDataNormOpsReal()
 
 /*
  *************************************************************************
- *                                                                       *
- * The const constructor and assignment operator are not actually used   *
- * but are defined here for compilers that require an implementation for *
- * every declaration.                                                    *
- *                                                                       *
+ *
+ * The const constructor and assignment operator are not actually used
+ * but are defined here for compilers that require an implementation for
+ * every declaration.
+ *
  *************************************************************************
  */
 
@@ -53,9 +53,9 @@ void PatchCellDataNormOpsReal<TYPE>::operator = (
 
 /*
  *************************************************************************
- *                                                                       *
- * Compute the number of data entries on a patch in the given box.       *
- *                                                                       *
+ *
+ * Compute the number of data entries on a patch in the given box.
+ *
  *************************************************************************
  */
 
@@ -74,9 +74,9 @@ int PatchCellDataNormOpsReal<TYPE>::numberOfEntries(
 
 /*
  *************************************************************************
- *                                                                       *
- * Templated norm operations for real cell-centered data.                *
- *                                                                       *
+ *
+ * Templated norm operations for real cell-centered data.
+ *
  *************************************************************************
  */
 

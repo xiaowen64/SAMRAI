@@ -13,7 +13,7 @@
 
 #include "SAMRAI/hier/BoxContainer.h"
 
-//#include "SAMRAI/hier/BoxContainerSetIterator.h"
+#include "SAMRAI/hier/BoxSetSingleBlockIterator.h"
 #include "SAMRAI/hier/Index.h"
 #ifdef MB_BOXTREE_EXISTS
 #include "SAMRAI/hier/GridGeometry.h"
@@ -37,11 +37,15 @@
 namespace SAMRAI {
 namespace hier {
 
+const int BoxContainer::HIER_BOX_CONTAINER_VERSION = 0;
+
+
 BoxContainer::BoxContainer(
    Iterator first,
    Iterator last):
    d_dim(first().getDim()),
-   d_list()
+   d_list(),
+   d_set_created(false)
 {
    while (first != last) {
       d_list.push_back(first());
@@ -55,6 +59,9 @@ BoxContainer& BoxContainer::operator = (
    TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(d_dim, rhs);
    if (this != &rhs) {
       d_list = rhs.d_list;
+      if (rhs.d_set_created) { 
+         makeSet();
+      }
    }
    return *this;
 }
@@ -69,13 +76,16 @@ BoxContainer& BoxContainer::operator = (
       TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(d_dim, rhs[j]);
       pushBack(Box(rhs[j]));
    }
+   d_set_created = false;
+
    return *this;
 }
 
 BoxContainer::BoxContainer(
    const tbox::Array<tbox::DatabaseBox>& other):
    d_dim(other.size() == 0 ? tbox::Dimension::getInvalidDimension() :
-         other[0].getDim())
+         other[0].getDim()),
+   d_set_created(false)
 {
    const int n = other.size();
    for (int j = 0; j < n; j++) {
@@ -97,35 +107,40 @@ void BoxContainer::insertAfter(Iterator iter, const Box& item)
 }
 
 /*************************************************************************
- *                                                                       *
- * Function simplify() takes the complicated container of boxes and      *
- * coalesces regions together where possible.                            *
- *                                                                       *
- * The canonical ordering for boxes is defined such that boxes which     *
- * lie next to each other in higher dimensions are coalesced together    *
- * before boxes which lie next to each other in lower dimensions.        *
- * Thus, we try to coalesce two boxes together on the higher             *
- * dimensions first.                                                     *
- *                                                                       *
- * Assuming that two boxes a and b of dimension DIM are in canonical     *
- * order for dimensions d+1, ..., D, we can coalesce them together on    *
- * dimension d if:                                                       *
- *                                                                       *
- *      (1) the lower and upper bounds for a and b agree for all         *
- *          dimensions greater than d                                    *
- *      (2) boxes a and b overlap or are next to each other in           *
- *          dimension d                                                  *
- *      (3) boxes a and b overlap for all dimensions less than d         *
- *                                                                       *
- * If these conditions hold, then we break up the two boxes and put      *
- * them into the container of non-canonical boxes.                       *
- *                                                                       *
+ *
+ * Function simplify() takes the complicated container of boxes and
+ * coalesces regions together where possible.
+ *
+ * The canonical ordering for boxes is defined such that boxes which
+ * lie next to each other in higher dimensions are coalesced together
+ * before boxes which lie next to each other in lower dimensions.
+ * Thus, we try to coalesce two boxes together on the higher
+ * dimensions first.
+ *
+ * Assuming that two boxes a and b of dimension DIM are in canonical
+ * order for dimensions d+1, ..., D, we can coalesce them together on
+ * dimension d if:
+ *
+ *      (1) the lower and upper bounds for a and b agree for all
+ *          dimensions greater than d
+ *      (2) boxes a and b overlap or are next to each other in
+ *          dimension d
+ *      (3) boxes a and b overlap for all dimensions less than d
+ *
+ * If these conditions hold, then we break up the two boxes and put
+ * them into the container of non-canonical boxes.
+ *
  *************************************************************************
  */
 void BoxContainer::simplify()
 {
    // Start coalescing on the highest dimension of the containers and work down
    // While there are non-canonical boxes, pick somebody out of the container.
+
+   if (d_set_created) {
+      d_set.clear();
+      d_set_created = false;
+   }
 
    if (!isEmpty()) {
 
@@ -216,22 +231,27 @@ void BoxContainer::simplify()
 
 /*
  *************************************************************************
- *                                                                       *
- * Coalesce boxes in the container where possible.  The resulting box    *
- * container will contain a non-overlapping set of boxes covering the    *
- * identical region of index space covered by the original container.    *
- * Two boxes may be coalesced if their union is a box (recall that union *
- * is not closed over boxes), and they have a non-empty intersection or  *
- * they are adjacent to each other in index space.  Empty boxes in the   *
- * container are removed during this process.  Also, the boxes are       *
- * coalesced in the order in which they appear in the container.  No     *
- * attempt is made to coalesce boxes in any particular way (e.g., to     *
- * achieve the smallest number of boxes).                                *
- *                                                                       *
+ *
+ * Coalesce boxes in the container where possible.  The resulting box
+ * container will contain a non-overlapping set of boxes covering the
+ * identical region of index space covered by the original container.
+ * Two boxes may be coalesced if their union is a box (recall that union
+ * is not closed over boxes), and they have a non-empty intersection or
+ * they are adjacent to each other in index space.  Empty boxes in the
+ * container are removed during this process.  Also, the boxes are
+ * coalesced in the order in which they appear in the container.  No
+ * attempt is made to coalesce boxes in any particular way (e.g., to
+ * achieve the smallest number of boxes).
+ *
  *************************************************************************
  */
 void BoxContainer::coalesce()
 {
+   if (d_set_created) {
+      d_set.clear();
+      d_set_created = false;
+   }
+
    Iterator tb(*this);
    while (tb) {
 
@@ -292,55 +312,117 @@ void BoxContainer::coarsen(
 
 void BoxContainer::makeSet()
 {
+   d_set.clear();
    for (Iterator i(*this); i; i++) {
       d_set.insert(&(i()));
    }
-}
-#if 0
-BoxContainerSetIterator BoxContainer::setBegin() {
-   BoxContainerSetIterator iter(*this);
-
-   iter.d_set_iter = d_set.begin();
-
-   return iter;
+   d_set_created = true;
 }
 
-BoxContainerSetIterator BoxContainer::setEnd() {
-   BoxContainerSetIterator iter(*this);
+BoxContainerSetIterator
+BoxContainer::insert(BoxContainerSetIterator position,
+       const Box& box)
+{
+   if (!d_set_created) {
+      makeSet();
+   }
+   const std::list<Box>::iterator& iter = d_list.insert(d_list.end(), box);
 
-   iter.d_set_iter = d_set.end();
-
-   return iter;
+   BoxContainerSetIterator insert_iter(*this);
+   int old_size = d_set.size();
+   insert_iter.d_set_iter = d_set.insert(position.d_set_iter, &(*iter));
+   if (d_set.size() == old_size) {
+      d_list.erase(iter);
+   }
+   return insert_iter;
 }
 
-BoxContainerSetIterator BoxContainer::find(Box& box) {
-   BoxContainerSetIterator iter(*this);
+void BoxContainer::insert ( BoxContainerSetConstIterator first,
+                            BoxContainerSetConstIterator last )
+{
+   if (!d_set_created) {
+      makeSet();
+   }
 
+   for (std::set<const Box*>::const_iterator set_iter = first.d_set_iter;
+        set_iter != last.d_set_iter; ++set_iter) {
+      const std::list<Box>::iterator& iter = d_list.insert(d_list.end(), **set_iter);
+      if (!d_set.insert(&(*iter)).second) {
+         d_list.erase(iter); 
+      }
+   }
+
+}
+
+BoxContainerSetIterator BoxContainer::find(const Box& box) const
+{
+   BoxContainerSetIterator iter(*this);
    iter.d_set_iter = d_set.find(&box);
 
    return iter;
 }
 
+void
+BoxContainer::swap(BoxContainer& other)
+{
+   d_list.swap(other.d_list);
+   d_set.swap(other.d_set);
+
+   bool other_set_created = other.d_set_created;
+   other.d_set_created = d_set_created;
+   d_set_created = other_set_created;
+}
+
+void
+BoxContainer::removePeriodicImageBoxes()
+{
+   for (SetIterator na = setBegin(); na != setEnd(); ) {
+      if (na->isPeriodicImage()) {
+         erase(na++);
+      }
+      else {
+         ++na;
+      }
+   }
+}
+
+
 void BoxContainer::erase(BoxContainerSetIterator iter)
 {
+   const Box& box = **(iter.d_set_iter);
    d_set.erase(iter.d_set_iter);
-   //TODO:: Linear search to erase from d_list? 
+
+   for (std::list<Box>::iterator bi = d_list.begin(); bi != d_list.end(); ++bi) {
+      if (bi->getId() == box.getId() && bi->isSpatiallyEqual(box)) {
+         d_list.erase(bi);
+         break;
+      }
+   }
+
 }
 
-int BoxContainer::erase(Box& box)
+int BoxContainer::erase(const Box& box)
 {
-   return d_set.erase(&box);
-   //TODO:: Linear search to erase from d_list? 
+   bool ret = d_set.erase(&box);
+   for (std::list<Box>::iterator bi = d_list.begin(); bi != d_list.end(); ) {
+      if (bi->getId() == box.getId() && bi->isSpatiallyEqual(box)) {
+         d_list.erase(bi++);
+      }
+   }
+
+   return ret;
 }
 
+#if 0
 void BoxContainer::erase(BoxContainerSetIterator first,
                          BoxContainerSetIterator last)
 {
    d_set.erase(first.d_set_iter, last.d_set_iter);
    //TODO:: Linear search to erase from d_list? 
 }
-
-BoxContainerSetIterator BoxContainer::lower_bound(Box& box) {
+#endif
+BoxContainerSetIterator BoxContainer::lower_bound(const Box& box) const
+{
    BoxContainerSetIterator iter(*this);
 
    iter.d_set_iter = d_set.lower_bound(&box);
@@ -348,7 +430,8 @@ BoxContainerSetIterator BoxContainer::lower_bound(Box& box) {
    return iter;
 }
 
-BoxContainerSetIterator BoxContainer::upper_bound(Box& box) {
+BoxContainerSetIterator BoxContainer::upper_bound(const Box& box) const
+{
    BoxContainerSetIterator iter(*this);
 
    iter.d_set_iter = d_set.upper_bound(&box);
@@ -356,7 +439,6 @@ BoxContainerSetIterator BoxContainer::upper_bound(Box& box) {
    return iter;
 }
 
-#endif
 void BoxContainer::rotate(
    const Transformation::RotationIdentifier rotation_ident)
 {
@@ -375,9 +457,15 @@ void BoxContainer::rotate(
 int BoxContainer::getTotalSizeOfBoxes() const
 {
    int size = 0;
-   for (ConstIterator i(*this); i; i++) {
-      size += i().size();
-   }
+   if (!d_set_created) {
+      for (ConstIterator i(*this); i; i++) {
+         size += i().size();
+      }
+   } else {
+      for (SetConstIterator i(*this); i; i++) {
+         size += i().size(); 
+      }
+   } 
    return size;
 }
 
@@ -394,9 +482,9 @@ bool BoxContainer::contains(
 
 /*
  *************************************************************************
- *                                                                       *
- * Return the bounding box for all boxes in the BoxContainer.            *
- *                                                                       *
+ *
+ * Return the bounding box for all boxes in the BoxContainer.
+ *
  *************************************************************************
  */
 Box BoxContainer::getBoundingBox() const
@@ -418,9 +506,9 @@ Box BoxContainer::getBoundingBox() const
 
 /*
  *************************************************************************
- *                                                                       *
- * Test the box container for intersections among its boxes.             *
- *                                                                       *
+ *
+ * Test the box container for intersections among its boxes.
+ *
  *************************************************************************
  */
 bool BoxContainer::boxesIntersect() const
@@ -446,10 +534,10 @@ bool BoxContainer::boxesIntersect() const
 
 /*
  *************************************************************************
- *                                                                       *
- * Return the current container without the portions that intersect      *
- * takeaway.                                                             *
- *                                                                       *
+ *
+ * Return the current container without the portions that intersect
+ * takeaway.
+ *
  *************************************************************************
  */
 void BoxContainer::removeIntersections(
@@ -457,6 +545,11 @@ void BoxContainer::removeIntersections(
 {
    if (isEmpty()) {
       return;
+   }
+
+   if (d_set_created) {
+      d_set.clear();
+      d_set_created = false;
    }
 
    const unsigned short dim = takeaway.getDim().getValue();
@@ -481,6 +574,11 @@ void BoxContainer::removeIntersections(
       return;
    }
 
+   if (d_set_created) {
+      d_set.clear();
+      d_set_created = false;
+   }
+
    for (ConstIterator remove(takeaway); remove; remove++) {
       const Box& byebye = remove();
       removeIntersections(byebye);
@@ -492,6 +590,11 @@ void BoxContainer::removeIntersections(
 {
    if (isEmpty()) {
       return;
+   }
+
+   if (d_set_created) {
+      d_set.clear();
+      d_set_created = false;
    }
 
    std::vector<const Box *> overlap_mapped_boxes;
@@ -530,6 +633,11 @@ void BoxContainer::removeIntersections(
 {
    if (isEmpty()) {
       return;
+   }
+
+   if (d_set_created) {
+      d_set.clear();
+      d_set_created = false;
    }
 
    const tbox::ConstPointer<hier::GridGeometry>
@@ -586,6 +694,11 @@ void BoxContainer::removeIntersections(
    const Box& box,
    const Box& takeaway)
 {
+   if (d_set_created) {
+      d_set.clear();
+      d_set_created = false;
+   }
+
    /*
     * The box container MUST be empty to use this function (see comments
     * in header file for discussion of why). If the two boxes intersect,
@@ -609,6 +722,11 @@ void BoxContainer::removeIntersectionsFromSublist(
    Iterator& sublist_end,
    Iterator& insertion_pt)
 {
+   if (d_set_created) {
+      d_set.clear();
+      d_set_created = false;
+   }
+
    const unsigned short dim = takeaway.getDim().getValue();
    Iterator itr = sublist_start;
    while (itr != sublist_end) {
@@ -630,10 +748,10 @@ void BoxContainer::removeIntersectionsFromSublist(
 
 /*
  *************************************************************************
- *                                                                       *
- * Return the boxes in the current container that intersect the index    *
- * space of the argument.                                                *
- *                                                                       *
+ *
+ * Return the boxes in the current container that intersect the index
+ * space of the argument.
+ *
  *************************************************************************
  */
 void BoxContainer::intersectBoxes(
@@ -641,6 +759,11 @@ void BoxContainer::intersectBoxes(
 {
    if (isEmpty()) {
       return;
+   }
+
+   if (d_set_created) {
+      d_set.clear();
+      d_set_created = false;
    }
 
    Iterator i(*this);
@@ -664,6 +787,11 @@ void BoxContainer::intersectBoxes(
 {
    if (isEmpty()) {
       return;
+   }
+
+   if (d_set_created) {
+      d_set.clear();
+      d_set_created = false;
    }
 
    Iterator insertion_pt(*this);
@@ -770,10 +898,10 @@ void BoxContainer::intersectBoxes(
 
 /*
  *************************************************************************
- *                                                                       *
- * Type conversion from a BoxContainer to an Array of                    *
- * tbox::DatabaseBoxes.                                                  *
- *                                                                       *
+ *
+ * Type conversion from a BoxContainer to an Array of
+ * tbox::DatabaseBoxes.
+ *
  *************************************************************************
  */
 BoxContainer::operator tbox::Array<tbox::DatabaseBox>() const
@@ -790,9 +918,9 @@ BoxContainer::operator tbox::Array<tbox::DatabaseBox>() const
 
 /*
  *************************************************************************
- *                                                                       *
- * Print boxes in container.                                             *
- *                                                                       *
+ *
+ * Print boxes in container.
+ *
  *************************************************************************
  */
 void BoxContainer::print(
@@ -807,12 +935,12 @@ void BoxContainer::print(
 
 /*
  *************************************************************************
- *                                                                       *
- * Break up box bursty against box solid and adds the pieces to          *
- * container.  The bursting is done on dimensions 0 through dimension-1, *
- * starting with lowest dimensions first to try to maintain the          *
- * canonical representation for the bursted domains.                     *
- *                                                                       *
+ *
+ * Break up box bursty against box solid and adds the pieces to
+ * container.  The bursting is done on dimensions 0 through dimension-1,
+ * starting with lowest dimensions first to try to maintain the
+ * canonical representation for the bursted domains.
+ *
  *************************************************************************
  */
 void BoxContainer::burstBoxes(
@@ -850,13 +978,13 @@ void BoxContainer::burstBoxes(
 
 /*
  *************************************************************************
- *                                                                       *
- * Break up box bursty against box solid and adds the pieces to          *
- * container starting at the location pointed to by the supplied         *
- * iterator.  The bursting is done on dimensions 0 through dimension-1,  *
- * starting with lowest dimensions first to try to maintain the          *
- * canonical representation for the bursted domains.                     *
- *                                                                       *
+ *
+ * Break up box bursty against box solid and adds the pieces to
+ * container starting at the location pointed to by the supplied
+ * iterator.  The bursting is done on dimensions 0 through dimension-1,
+ * starting with lowest dimensions first to try to maintain the
+ * canonical representation for the bursted domains.
+ *
  *************************************************************************
  */
 void BoxContainer::burstBoxes(
@@ -894,6 +1022,230 @@ void BoxContainer::burstBoxes(
       }
    }
 }
+
+/*
+ ***********************************************************************
+ * Construct a BoxContainer consisting of the Boxes in this BoxContainer
+ * in the requested block.
+ ***********************************************************************
+ */
+tbox::Pointer<BoxContainer>
+BoxContainer::getSingleBlockBoxContainer(
+   const tbox::Dimension& dim,
+   const BlockId& which_block) const
+{
+   BoxSetSingleBlockIterator itr(*this, which_block);
+   BoxContainer* boxes_in_block = new BoxContainer(dim);
+   while (itr.isValid()) {
+      const Box& mapped_box = *itr;
+      TBOX_ASSERT(dim == mapped_box.getDim());
+      boxes_in_block->pushBack(mapped_box);
+      ++itr;
+   }
+   return tbox::Pointer<BoxContainer>(boxes_in_block);
+}
+
+/*
+ ***********************************************************************
+ * Insert Box owners into a single set container.
+ ***********************************************************************
+ */
+void BoxContainer::getOwners(
+   std::set<int>& owners) const
+{
+   for (BoxContainerSetConstIterator i_nabr = setBegin();
+        i_nabr != setEnd(); ++i_nabr) {
+      const int owner = (*i_nabr).getOwnerRank();
+      owners.insert(owner);
+   }
+}
+
+/*
+ ***********************************************************************
+ * Unshift periodic image Boxes from a BoxContainer.
+ ***********************************************************************
+ */
+void BoxContainer::unshiftPeriodicImageBoxes(
+   BoxContainer& output_mapped_boxes,
+   const IntVector& refinement_ratio) const
+{
+   BoxContainerSetIterator hint = output_mapped_boxes.setBegin();
+
+   if (!isEmpty()) {
+      const Box& first_element(*begin());
+
+      const PeriodicId zero_shift_number(PeriodicShiftCatalog::getCatalog(
+                                            first_element.getDim())->
+                                         getZeroShiftNumber());
+
+      for (BoxContainerSetConstIterator na = setBegin(); na != setEnd(); ++na) {
+         if (na->isPeriodicImage()) {
+            const Box unshifted_mapped_box(
+               *na, zero_shift_number, refinement_ratio);
+            hint = output_mapped_boxes.insert(hint, unshifted_mapped_box);
+         } else {
+            hint = output_mapped_boxes.insert(hint, *na);
+         }
+      }
+   }
+}
+
+/*
+ ***********************************************************************
+ * Write the BoxContainer to a database.
+ ***********************************************************************
+ */
+void BoxContainer::putToDatabase(
+   tbox::Database& database) const
+{
+   database.putInteger(
+      "HIER_BOX_CONTAINER_VERSION", HIER_BOX_CONTAINER_VERSION);
+
+   const int mbs_size = size();
+   database.putInteger("mapped_box_set_size", mbs_size);
+   if (mbs_size > 0) {
+
+      std::vector<int> local_ids;
+      std::vector<int> ranks;
+      std::vector<int> block_ids;
+      std::vector<int> periodic_ids;
+      local_ids.reserve(mbs_size);
+      ranks.reserve(mbs_size);
+      block_ids.reserve(mbs_size);
+      periodic_ids.reserve(mbs_size);
+
+      tbox::Array<tbox::DatabaseBox> db_box_array(mbs_size);
+
+      int counter = -1;
+      for (BoxContainer::SetConstIterator ni = setBegin();
+           ni != setEnd(); ++ni) {
+         local_ids.push_back(ni->getLocalId().getValue());
+         ranks.push_back(ni->getOwnerRank());
+         block_ids.push_back(ni->getBlockId().getBlockValue());
+         periodic_ids.push_back(ni->getPeriodicId().getPeriodicValue());
+         db_box_array[++counter] = *ni;
+      }
+
+      database.putIntegerArray(
+         "local_indices", &local_ids[0], mbs_size);
+      database.putIntegerArray(
+         "ranks", &ranks[0], mbs_size);
+      database.putIntegerArray(
+         "block_ids", &block_ids[0], mbs_size);
+      database.putIntegerArray(
+         "periodic_ids", &periodic_ids[0], mbs_size);
+      database.putDatabaseBoxArray(
+         "boxes", &db_box_array[0], mbs_size);
+   }
+}
+
+
+/*
+ ***********************************************************************
+ * Read the BoxContainer from a database.
+ ***********************************************************************
+ */
+void BoxContainer::getFromDatabase(
+   tbox::Database& database)
+{
+   const unsigned int mbs_size = database.getInteger("mapped_box_set_size");
+   if (mbs_size > 0) {
+      std::vector<int> local_ids(mbs_size);
+      std::vector<int> ranks(mbs_size);
+      std::vector<int> block_ids(mbs_size);
+      std::vector<int> periodic_ids(mbs_size);
+      tbox::Array<tbox::DatabaseBox> db_box_array(mbs_size);
+
+      database.getIntegerArray(
+         "local_indices", &local_ids[0], mbs_size);
+      database.getIntegerArray(
+         "ranks", &ranks[0], mbs_size);
+      database.getIntegerArray(
+         "block_ids", &block_ids[0], mbs_size);
+      database.getIntegerArray(
+         "periodic_ids", &periodic_ids[0], mbs_size);
+      database.getDatabaseBoxArray(
+         "boxes", &db_box_array[0], mbs_size);
+
+      for (unsigned int i = 0; i < mbs_size; ++i) {
+         Box box(db_box_array[i]);
+         Box mapped_box(
+            box,
+            LocalId(local_ids[i]),
+            ranks[i],
+            BlockId(block_ids[i]),
+            PeriodicId(periodic_ids[i]));
+         insert(setEnd(), mapped_box);
+      }
+   }
+}
+
+
+/*
+ ***********************************************************************
+ * Avoid communication in this method.  It is often used for debugging.
+ ***********************************************************************
+ */
+void BoxContainer::recursivePrint(
+   std::ostream& co,
+   const std::string& border,
+   int detail_depth) const
+{
+   NULL_USE(detail_depth);
+   for (ConstIterator bi = begin(); bi != end(); ++bi) {
+      Box mapped_box(*bi);
+      co << border << "    "
+         << mapped_box << "   "
+         << mapped_box.numberCells() << '\n';
+   }
+}
+
+/*
+ ***********************************************************************
+ * Construct a BoxContainer Outputter with formatting parameters.
+ ***********************************************************************
+ */
+
+BoxContainer::Outputter::Outputter(
+   const BoxContainer& mapped_box_set,
+   const std::string& border,
+   int detail_depth):
+   d_set(mapped_box_set),
+   d_border(border),
+   d_detail_depth(detail_depth)
+{
+}
+
+/*
+ ***********************************************************************
+ * Print out a BoxContainer according to settings in the Outputter.
+ ***********************************************************************
+ */
+
+std::ostream& operator << (
+   std::ostream& s,
+   const BoxContainer::Outputter& format)
+{
+   format.d_set.recursivePrint(s, format.d_border, format.d_detail_depth);
+   return s;
+}
+
+
+/*
+ ***********************************************************************
+ * Return a Outputter that can dump the BoxContainer to a stream.
+ ***********************************************************************
+ */
+
+BoxContainer::Outputter BoxContainer::format(
+   const std::string& border,
+   int detail_depth) const
+{
+   return Outputter(*this, border, detail_depth);
+}
+
+
+
 
 }
 }

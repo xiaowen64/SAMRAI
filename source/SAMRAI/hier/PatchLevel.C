@@ -55,9 +55,9 @@ PatchLevel::s_initialize_finalize_handler(
 
 /*
  *************************************************************************
- *                                                                       *
- * Default patch level constructor sets default (non-usable) state.      *
- *                                                                       *
+ *
+ * Default patch level constructor sets default (non-usable) state.
+ *
  *************************************************************************
  */
 
@@ -88,12 +88,12 @@ PatchLevel::PatchLevel(
 
 /*
  *************************************************************************
- *                                                                       *
- * Create a new patch level using the specified boxes and processor      *
- * mapping.  Only those patches that are local to the processor are      *
- * allocated.  Allocate patches using the specified patch factory or     *
- * the standard patch factory if none is explicitly specified.           *
- *                                                                       *
+ *
+ * Create a new patch level using the specified boxes and processor
+ * mapping.  Only those patches that are local to the processor are
+ * allocated.  Allocate patches using the specified patch factory or
+ * the standard patch factory if none is explicitly specified.
+ *
  *************************************************************************
  */
 
@@ -209,9 +209,9 @@ PatchLevel::PatchLevel(
 
 /*
  *************************************************************************
- *                                                                       *
- * Create a new patch level from information in the given database.      *
- *                                                                       *
+ *
+ * Create a new patch level from information in the given database.
+ *
  *************************************************************************
  */
 
@@ -340,9 +340,9 @@ void PatchLevel::deallocatePatchData(
 
 /*
  * ************************************************************************
- *                                                                        *
- * Set the simulation time for all patches in the patch level.            *
- *                                                                        *
+ *
+ * Set the simulation time for all patches in the patch level.
+ *
  * ************************************************************************
  */
 
@@ -374,10 +374,10 @@ void PatchLevel::setTime(
 
 /*
  * ************************************************************************
- *                                                                        *
- * Set level numbers relating this level to "level", a level in           *
- * a hierarchy                                                            *
- *                                                                        *
+ *
+ * Set level numbers relating this level to "level", a level in
+ * a hierarchy
+ *
  * ************************************************************************
  */
 
@@ -404,9 +404,9 @@ void PatchLevel::setNextCoarserHierarchyLevelNumber(
 
 /*
  * ************************************************************************
- *                                                                       *
- * Set whether this level resides in a hierarchy.                        *
- *                                                                       *
+ *
+ * Set whether this level resides in a hierarchy.
+ *
  * ************************************************************************
  */
 
@@ -422,10 +422,10 @@ void PatchLevel::setLevelInHierarchy(
 
 /*
  * ************************************************************************
- *                                                                       *
- * Set data members of this patch level by refining information on       *
- * the argument level by the given ratio.                                *
- *                                                                       *
+ *
+ * Set data members of this patch level by refining information on
+ * the argument level by the given ratio.
+ *
  * ************************************************************************
  */
 
@@ -502,10 +502,8 @@ void PatchLevel::setRefinedPatchLevel(
    d_boxes.refine(refine_ratio);
 
    {
-      BoxSet mapped_boxes;
-      coarse_level->d_mapped_box_level->getBoxes().refine(
-         mapped_boxes,
-         refine_ratio);
+      BoxSet mapped_boxes(coarse_level->d_mapped_box_level->getBoxes());
+      mapped_boxes.refine(refine_ratio); 
       d_mapped_box_level = new BoxLevel(
             mapped_boxes,
             d_ratio_to_level_zero,
@@ -600,10 +598,10 @@ void PatchLevel::setRefinedPatchLevel(
 
 /*
  * ************************************************************************
- *                                                                       *
- * Set data members of this patch level by coarsening information on     *
- * the argument level by the given ratio.                                *
- *                                                                       *
+ *
+ * Set data members of this patch level by coarsening information on
+ * the argument level by the given ratio.
+ *
  * ************************************************************************
  */
 
@@ -690,10 +688,8 @@ void PatchLevel::setCoarsenedPatchLevel(
     */
    const BoxLevel& fine_mapped_box_level =
       *fine_level->d_mapped_box_level;
-   BoxSet coarsened_mapped_boxes;
-   fine_level->d_mapped_box_level->getBoxes().coarsen(
-      coarsened_mapped_boxes,
-      coarsen_ratio);
+   BoxSet coarsened_mapped_boxes(fine_level->d_mapped_box_level->getBoxes());
+   coarsened_mapped_boxes.coarsen(coarsen_ratio);
    d_mapped_box_level = new BoxLevel(
          coarsened_mapped_boxes,
          d_ratio_to_level_zero,
@@ -787,10 +783,10 @@ void PatchLevel::setCoarsenedPatchLevel(
 
 /*
  * ************************************************************************
- *                                                                        *
- * Call the geometry routine to create and set boundary boxes, if they    *
- * have not already been created.                                         *
- *                                                                        *
+ *
+ * Call the geometry routine to create and set boundary boxes, if they
+ * have not already been created.
+ *
  * ************************************************************************
  */
 
@@ -804,10 +800,10 @@ void PatchLevel::setBoundaryBoxes()
 
 /*
  * ************************************************************************
- *                                                                        *
- *  Check that class version and restart file number are the same.  If    *
- *  so, read in data from database and build patch level from data.       *
- *                                                                        *
+ *
+ *  Check that class version and restart file number are the same.  If
+ *  so, read in data from database and build patch level from data.
+ *
  * ************************************************************************
  */
 
@@ -891,18 +887,18 @@ void PatchLevel::getFromDatabase(
 
 /*
  * ************************************************************************
- *                           *
- *  Write out class version number and patch_level data members to the    *
- *  database, then has each patch on the local processor write itself    *
- *  to the database.   The following are written out to the database:    *
- *  d_physical_domain, d_ratio_to_level_zero, d_boxes, d_mapping,        *
- *  d_global_number_patches, d_level_number, d_next_coarser_level_number,       *
- *  d_in_hierarchy, d_patches[].                                         *
- *  The database key for all data members except for d_patches is        *
- *  the same as the variable name.  For the patches, the database keys   *
- *  are "level_Xpatch_Y" where X is the level number and Y is the index  *
- *  position of the patch in the patch in d_patches.                     *
- *                           *
+ *
+ *  Write out class version number and patch_level data members to the
+ *  database, then has each patch on the local processor write itself
+ *  to the database.   The following are written out to the database:
+ *  d_physical_domain, d_ratio_to_level_zero, d_boxes, d_mapping,
+ *  d_global_number_patches, d_level_number, d_next_coarser_level_number,
+ *  d_in_hierarchy, d_patches[].
+ *  The database key for all data members except for d_patches is
+ *  the same as the variable name.  For the patches, the database keys
+ *  are "level_Xpatch_Y" where X is the level number and Y is the index
+ *  position of the patch in the patch in d_patches.
+ *
  * ************************************************************************
  */
 void PatchLevel::putToDatabase(
@@ -1079,10 +1075,10 @@ void PatchLevel::initializeCallback()
 
 /*
  ***************************************************************************
- *                                                                         *
- * Release static timers.  To be called by shutdown registry to make sure  *
- * memory for timers does not leak.                                        *
- *                                                                         *
+ *
+ * Release static timers.  To be called by shutdown registry to make sure
+ * memory for timers does not leak.
+ *
  ***************************************************************************
  */
 

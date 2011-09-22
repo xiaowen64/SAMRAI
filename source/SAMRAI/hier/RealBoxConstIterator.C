@@ -17,10 +17,10 @@ namespace hier {
 
 RealBoxConstIterator::RealBoxConstIterator(
    const BoxSet& mapped_boxes):
-   d_mapped_boxes(&mapped_boxes)
+   d_mapped_boxes(&mapped_boxes),
+   d_ni(d_mapped_boxes->setBegin())
 {
-   d_ni = d_mapped_boxes->begin();
-   while (d_ni != d_mapped_boxes->end() && d_ni->isPeriodicImage()) {
+   while (d_ni != d_mapped_boxes->setEnd() && d_ni->isPeriodicImage()) {
       ++d_ni;
    }
 }
@@ -33,7 +33,7 @@ RealBoxConstIterator::~RealBoxConstIterator()
 bool RealBoxConstIterator::isValid() const
 {
    return d_mapped_boxes != NULL &&
-          d_ni != d_mapped_boxes->end() &&
+          d_ni != d_mapped_boxes->setEnd() &&
           !d_ni->isPeriodicImage();
 }
 
@@ -77,7 +77,7 @@ RealBoxConstIterator& RealBoxConstIterator::operator ++ ()
 {
    do {
       ++d_ni;
-   } while (d_ni != d_mapped_boxes->end() && d_ni->isPeriodicImage());
+   } while (d_ni != d_mapped_boxes->setEnd() && d_ni->isPeriodicImage());
    return *this;
 }
 
@@ -93,7 +93,7 @@ RealBoxConstIterator RealBoxConstIterator::operator ++ (
    RealBoxConstIterator saved = *this;
    do {
       ++d_ni;
-   } while (d_ni != d_mapped_boxes->end() && d_ni->isPeriodicImage());
+   } while (d_ni != d_mapped_boxes->setEnd() && d_ni->isPeriodicImage());
    return saved;
 }
 

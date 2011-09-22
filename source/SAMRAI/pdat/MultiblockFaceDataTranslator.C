@@ -20,10 +20,10 @@ namespace pdat {
 
 /*
  *************************************************************************
- *                                                                       *
- * Constructor and destructor do nothing, as all member functions in     *
- * this class are static.                                                *
- *                                                                       *
+ *
+ * Constructor and destructor do nothing, as all member functions in
+ * this class are static.
+ *
  *************************************************************************
  */
 
@@ -39,9 +39,9 @@ MultiblockFaceDataTranslator<TYPE>::~MultiblockFaceDataTranslator()
 
 /*
  *************************************************************************
- *                                                                       *
- * Translation and copy for face data                                    *
- *                                                                       *
+ *
+ * Translation and copy for face data
+ *
  *************************************************************************
  */
 
@@ -402,9 +402,9 @@ void MultiblockFaceDataTranslator<TYPE>::translateAndCopyData(
 
 /*
  *************************************************************************
- *                                                                       *
- * Translation and copy for array data                                   *
- *                                                                       *
+ *
+ * Translation and copy for array data
+ *
  *************************************************************************
  */
 

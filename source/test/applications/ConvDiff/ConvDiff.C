@@ -75,16 +75,16 @@ using namespace std;
 
 /*
  *************************************************************************
- *                                                                       *
- * The constructor for ConvDiff class sets data members to defualt       *
- * values, creates variables that define the solution state for the      *
+ *
+ * The constructor for ConvDiff class sets data members to defualt
+ * values, creates variables that define the solution state for the
  * convection diffusion equation.
- *                                                                       *
- * After default values are set, this routine calls getFromRestart()     *
- * if execution from a restart file is specified.  Finally,              *
- * getFromInput() is called to read values from the given input          *
- * database (potentially overriding those found in the restart file).    *
- *                                                                       *
+ *
+ * After default values are set, this routine calls getFromRestart()
+ * if execution from a restart file is specified.  Finally,
+ * getFromInput() is called to read values from the given input
+ * database (potentially overriding those found in the restart file).
+ *
  *************************************************************************
  */
 
@@ -372,14 +372,14 @@ void ConvDiff::registerModelVariables(
 
 /*
  *************************************************************************
- *                                                                       *
- * Set initial data for solution variables on patch interior.            *
- * This routine is called whenever a new patch is introduced to the      *
- * AMR patch hierarchy.  Note that the routine does nothing unless       *
- * we are at the initial time.  In all other cases, conservative         *
- * interpolation from coarser levels and copies from patches at the      *
- * same mesh resolution are sufficient to set data.                      *
- *                                                                       *
+ *
+ * Set initial data for solution variables on patch interior.
+ * This routine is called whenever a new patch is introduced to the
+ * AMR patch hierarchy.  Note that the routine does nothing unless
+ * we are at the initial time.  In all other cases, conservative
+ * interpolation from coarser levels and copies from patches at the
+ * same mesh resolution are sufficient to set data.
+ *
  *************************************************************************
  */
 void ConvDiff::initializeDataOnPatch(
@@ -444,10 +444,10 @@ void ConvDiff::initializeDataOnPatch(
 
 /*
  *************************************************************************
- *                                                                       *
- * Compute stable time increment for patch.  Return this value.          *
- * (See Hirsch, Vol 1, pp 448 for description of stability analysis)     *
- *                                                                       *
+ *
+ * Compute stable time increment for patch.  Return this value.
+ * (See Hirsch, Vol 1, pp 448 for description of stability analysis)
+ *
  *************************************************************************
  */
 double ConvDiff::computeStableDtOnPatch(
@@ -498,10 +498,10 @@ double ConvDiff::computeStableDtOnPatch(
 
 /*
  *************************************************************************
- *                                                                       *
- * Perform a single Runge-Kutta sub-iteration using the passed-in        *
- * alpha.                                                                *
- *                                                                       *
+ *
+ * Perform a single Runge-Kutta sub-iteration using the passed-in
+ * alpha.
+ *
  *************************************************************************
  */
 void ConvDiff::singleStep(
@@ -600,10 +600,10 @@ void ConvDiff::singleStep(
 
 /*
  *************************************************************************
- *                                                                       *
- *  Cell tagging routine - tag cells that require refinement based on    *
- *  a provided condition.                                                *
- *                                                                       *
+ *
+ *  Cell tagging routine - tag cells that require refinement based on
+ *  a provided condition.
+ *
  *************************************************************************
  */
 void ConvDiff::tagGradientDetectorCells(
@@ -650,12 +650,12 @@ void ConvDiff::tagGradientDetectorCells(
 
 /*
  *************************************************************************
- *                                                                       *
- * Set the data in ghost cells corresponding to physical boundary        *
- * conditions.  Note that boundary geometry configuration information    *
- * (i.e., faces, edges, and nodes) is obtained from the patch geometry   *
- * object owned by the patch.                                            *
- *                                                                       *
+ *
+ * Set the data in ghost cells corresponding to physical boundary
+ * conditions.  Note that boundary geometry configuration information
+ * (i.e., faces, edges, and nodes) is obtained from the patch geometry
+ * object owned by the patch.
+ *
  *************************************************************************
  */
 void ConvDiff::setPhysicalBoundaryConditions(
@@ -773,10 +773,10 @@ void ConvDiff::setPhysicalBoundaryConditions(
 
 /*
  *************************************************************************
- *                                                                       *
- * Register VisIt data writer to write data to plot files that may       *
- * be postprocessed by the VisIt tool.                                   *
- *                                                                       *
+ *
+ * Register VisIt data writer to write data to plot files that may
+ * be postprocessed by the VisIt tool.
+ *
  *************************************************************************
  */
 
@@ -793,9 +793,9 @@ void ConvDiff::registerVisItDataWriter(
 
 /*
  *************************************************************************
- *                                                                       *
- * Prints class data - writes out info in class if assertion is thrown   *
- *                                                                       *
+ *
+ * Prints class data - writes out info in class if assertion is thrown
+ *
  *************************************************************************
  */
 
@@ -880,8 +880,8 @@ void ConvDiff::printClassData(
 
 /*
  *************************************************************************
- *                                                                       *
- *                                                                       *
+ *
+ *
  *************************************************************************
  */
 void ConvDiff::getFromInput(
@@ -1027,9 +1027,9 @@ void ConvDiff::getFromInput(
 
 /*
  *************************************************************************
- *                                                                       *
- * Routines to put/get data members to/from restart database.            *
- *                                                                       *
+ *
+ * Routines to put/get data members to/from restart database.
+ *
  *************************************************************************
  */
 
@@ -1071,8 +1071,8 @@ void ConvDiff::putToDatabase(
 
 /*
  *************************************************************************
- *                                                                       *
- *                                                                       *
+ *
+ *
  *************************************************************************
  */
 void ConvDiff::getFromRestart()
@@ -1126,9 +1126,9 @@ void ConvDiff::getFromRestart()
 
 /*
  *************************************************************************
- *                                                                       *
- * Routines to read boundary data from input database.                   *
- *                                                                       *
+ *
+ * Routines to read boundary data from input database.
+ *
  *************************************************************************
  */
 
@@ -1203,9 +1203,9 @@ void ConvDiff::readStateDataEntry(
 
 /*
  *************************************************************************
- *                                                                       *
- * Routine to check boundary data when debugging.                        *
- *                                                                       *
+ *
+ * Routine to check boundary data when debugging.
+ *
  *************************************************************************
  */
 

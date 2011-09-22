@@ -33,7 +33,7 @@ namespace solv {
 
 /*
  ************************************************************************
- * Constructor                                                          *
+ * Constructor
  ************************************************************************
  */
 
@@ -52,7 +52,7 @@ GhostCellRobinBcCoefs::GhostCellRobinBcCoefs(
 
 /*
  ************************************************************************
- * Destructor                                                           *
+ * Destructor
  ************************************************************************
  */
 
@@ -62,7 +62,7 @@ GhostCellRobinBcCoefs::~GhostCellRobinBcCoefs(
 
 /*
  ************************************************************************
- * Set the index of the data providing ghost cell values                *
+ * Set the index of the data providing ghost cell values
  ************************************************************************
  */
 
@@ -99,11 +99,11 @@ void GhostCellRobinBcCoefs::setGhostDataId(
 
 /*
  ************************************************************************
- * Set the bc coefficients reflect the value at the ghost cell centers. *
- * The factor 1.0/(1+0.5*h) appears in a and g.  This factor comes      *
- * from a linear approximation of the data through the patch boundary,  *
- * going through the centers of the first interior and ghost cells      *
- * and having the specified values there.                               *
+ * Set the bc coefficients reflect the value at the ghost cell centers.
+ * The factor 1.0/(1+0.5*h) appears in a and g.  This factor comes
+ * from a linear approximation of the data through the patch boundary,
+ * going through the centers of the first interior and ghost cells
+ * and having the specified values there.
  ************************************************************************
  */
 
@@ -204,8 +204,8 @@ void GhostCellRobinBcCoefs::setBcCoefs(
 
 /*
  ***********************************************************************
- * This class can only set coeficients for boundary boxes that extend  *
- * no more than what the data it uses provides.                        *
+ * This class can only set coeficients for boundary boxes that extend
+ * no more than what the data it uses provides.
  ***********************************************************************
  */
 hier::IntVector GhostCellRobinBcCoefs::numberOfExtensionsFillable()
@@ -216,7 +216,7 @@ const
 
 /*
  ************************************************************************
- * Make surface box on boundary using standard boundary box             *
+ * Make surface box on boundary using standard boundary box
  ************************************************************************
  */
 

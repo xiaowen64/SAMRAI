@@ -273,7 +273,7 @@ tbox::StartupShutdownManager::Handler CellPoissonHypreSolver::s_finalize_handler
 
 /*
  *************************************************************************
- * Constructor                                                           *
+ * Constructor
  *************************************************************************
  */
 
@@ -335,7 +335,7 @@ CellPoissonHypreSolver::CellPoissonHypreSolver(
 
 /*
  ********************************************************************
- * Set state from database                                          *
+ * Set state from database
  ********************************************************************
  */
 
@@ -381,11 +381,11 @@ void CellPoissonHypreSolver::getFromInput(
 
 /*
  ********************************************************************
- * Initialize internal data for a given hierarchy level             *
- * After setting internal data, propagate the information           *
- * to the major algorithm objects.  Allocate data for               *
- * storing boundary condition-dependent quantities for              *
- * adding to souce term before solving.                             *
+ * Initialize internal data for a given hierarchy level
+ * After setting internal data, propagate the information
+ * to the major algorithm objects.  Allocate data for
+ * storing boundary condition-dependent quantities for
+ * adding to souce term before solving.
  ********************************************************************
  */
 
@@ -416,7 +416,7 @@ void CellPoissonHypreSolver::initializeSolverState(
 
 /*
  ********************************************************************
- * Deallocate data initialized by initializeSolverState             *
+ * Deallocate data initialized by initializeSolverState
  ********************************************************************
  */
 
@@ -434,10 +434,10 @@ void CellPoissonHypreSolver::deallocateSolverState()
 
 /*
  *************************************************************************
- *                                                                       *
- * Allocate the HYPRE data structures that depend only on the level      *
- * and will not change (grid, stencil, matrix, and vectors).             *
- *                                                                       *
+ *
+ * Allocate the HYPRE data structures that depend only on the level
+ * and will not change (grid, stencil, matrix, and vectors).
+ *
  *************************************************************************
  */
 void CellPoissonHypreSolver::allocateHypreData()
@@ -605,9 +605,9 @@ void CellPoissonHypreSolver::allocateHypreData()
 
 /*
  *************************************************************************
- *                                                                       *
- * The destructor deallocates solver data.                               *
- *                                                                       *
+ *
+ * The destructor deallocates solver data.
+ *
  *************************************************************************
  */
 
@@ -626,12 +626,12 @@ CellPoissonHypreSolver::~CellPoissonHypreSolver()
 
 /*
  *************************************************************************
- *                                                                       *
- * Deallocate HYPRE data and solver.  HYPRE requires that we             *
- * check whether HYPRE has already deallocated this data.                *
- * Note that the HYPRE solver, d_mg_data, was created at                 *
- * the end of setMatrixCoefficients.                                     *
- *                                                                       *
+ *
+ * Deallocate HYPRE data and solver.  HYPRE requires that we
+ * check whether HYPRE has already deallocated this data.
+ * Note that the HYPRE solver, d_mg_data, was created at
+ * the end of setMatrixCoefficients.
+ *
  *************************************************************************
  */
 
@@ -662,9 +662,9 @@ void CellPoissonHypreSolver::deallocateHypreData()
 
 /*
  *************************************************************************
- *                                                                       *
- * Copy data into the HYPRE vector structures.                           *
- *                                                                       *
+ *
+ * Copy data into the HYPRE vector structures.
+ *
  *************************************************************************
  */
 
@@ -684,9 +684,9 @@ void CellPoissonHypreSolver::copyToHypre(
 
 /*
  *************************************************************************
- *                                                                       *
- * Copy data out of the HYPRE vector structures.                         *
- *                                                                       *
+ *
+ * Copy data out of the HYPRE vector structures.
+ *
  *************************************************************************
  */
 
@@ -708,12 +708,12 @@ void CellPoissonHypreSolver::copyFromHypre(
 
 /*
  *************************************************************************
- *                                                                       *
- * Set the matrix coefficients for the linear system.                    *
- * The matrix coefficients are dependent on the problem                  *
- * specification described by the PoissonSpecificiations            *
- * object and by the boundary condition.                                 *
- *                                                                       *
+ *
+ * Set the matrix coefficients for the linear system.
+ * The matrix coefficients are dependent on the problem
+ * specification described by the PoissonSpecificiations
+ * object and by the boundary condition.
+ *
  *************************************************************************
  */
 
@@ -1051,9 +1051,9 @@ void CellPoissonHypreSolver::setMatrixCoefficients(
 
 /*
  **********************************************************************
- * Add g*A*k0(a) from physical boundaries to rhs.                     *
- * This operation is done for physical as well as cf boundaries,      *
- * so it is placed in a function.                                     *
+ * Add g*A*k0(a) from physical boundaries to rhs.
+ * This operation is done for physical as well as cf boundaries,
+ * so it is placed in a function.
  **********************************************************************
  */
 
@@ -1165,7 +1165,7 @@ void CellPoissonHypreSolver::add_gAk0_toRhs(
 
 /*
  *************************************************************************
- * Create the hypre solver and set it according to the current state.    *
+ * Create the hypre solver and set it according to the current state.
  *************************************************************************
  */
 void CellPoissonHypreSolver::setupHypreSolver()
@@ -1218,10 +1218,10 @@ void CellPoissonHypreSolver::destroyHypreSolver()
 
 /*
  *************************************************************************
- *                                                                       *
- * Solve the linear system.  This routine assumes that the boundary      *
- * conditions and the matrix coefficients have been specified.           *
- *                                                                       *
+ *
+ * Solve the linear system.  This routine assumes that the boundary
+ * conditions and the matrix coefficients have been specified.
+ *
  *************************************************************************
  */
 

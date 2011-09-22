@@ -13,6 +13,8 @@
 #include "SAMRAI/hier/BoxLevelConnectorUtils.h"
 
 #include "SAMRAI/hier/BoxContainerIterator.h"
+#include "SAMRAI/hier/BoxContainerSetIterator.h"
+#include "SAMRAI/hier/BoxContainerSetConstIterator.h"
 #include "SAMRAI/hier/BoxSetSingleBlockIterator.h"
 #include "SAMRAI/hier/MappingConnectorAlgorithm.h"
 #include "SAMRAI/hier/OverlapConnectorAlgorithm.h"
@@ -217,13 +219,13 @@ bool BoxLevelConnectorUtils::baseNestsInHead(
       swelledbase = base;
    } else {
       const BoxSet& base_mapped_boxes = base.getBoxes();
-      BoxSet swelledbase_mapped_boxes;
-      for (BoxSet::const_iterator ni = base_mapped_boxes.begin();
-           ni != base_mapped_boxes.end(); ++ni) {
-         Box swelledbase_mapped_box = *ni;
+      BoxSet swelledbase_mapped_boxes(dim);
+      for (BoxSet::SetConstIterator ni = base_mapped_boxes.setBegin();
+           ni != base_mapped_boxes.setEnd(); ++ni) {
+         Box swelledbase_mapped_box(*ni);
          swelledbase_mapped_box.grow(base_swell);
          swelledbase_mapped_boxes.insert(
-            swelledbase_mapped_boxes.end(), swelledbase_mapped_box);
+            swelledbase_mapped_boxes.setEnd(), swelledbase_mapped_box);
       }
       swelledbase.swapInitialize(swelledbase_mapped_boxes,
          base.getRefinementRatio(),
@@ -232,22 +234,22 @@ bool BoxLevelConnectorUtils::baseNestsInHead(
    }
 
    BoxLevel swelledhead(dim);
-   NeighborhoodSet swelledbase_eto_swelledhead;
+   NeighborhoodSet swelledbase_eto_swelledhead(dim);
    if (head_swell == IntVector::getZero(dim)) {
       swelledhead = head;
       swelledbase_eto_swelledhead = connector.getNeighborhoodSets();
    } else {
       const BoxSet& head_mapped_boxes = head.getBoxes();
 
-      BoxSet swelledhead_mapped_boxes;
+      BoxSet swelledhead_mapped_boxes(dim);
 
-      for (BoxSet::const_iterator ni = head_mapped_boxes.begin();
-           ni != head_mapped_boxes.end(); ++ni) {
+      for (BoxSet::SetConstIterator ni = head_mapped_boxes.setBegin();
+           ni != head_mapped_boxes.setEnd(); ++ni) {
          Box swelledhead_mapped_box = *ni;
 
          swelledhead_mapped_box.grow(head_swell);
          swelledhead_mapped_boxes.insert(
-            swelledhead_mapped_boxes.end(), swelledhead_mapped_box);
+            swelledhead_mapped_boxes.setEnd(), swelledhead_mapped_box);
       }
       swelledhead.swapInitialize(swelledhead_mapped_boxes,
          head.getRefinementRatio(),
@@ -417,7 +419,7 @@ void BoxLevelConnectorUtils::makeSortingMap(
 
    std::vector<Box> real_mapped_box_vector;
    std::vector<Box> periodic_image_mapped_box_vector;
-   if (!cur_mapped_boxes.empty()) {
+   if (!cur_mapped_boxes.isEmpty()) {
       /*
        * Bypass qsort if we have no mapped_boxes (else there is a memory warning).
        */
@@ -432,8 +434,8 @@ void BoxLevelConnectorUtils::makeSortingMap(
       }
    }
 
-   BoxSet new_mapped_boxes;
-   NeighborhoodSet edges;
+   BoxSet new_mapped_boxes(dim);
+   NeighborhoodSet edges(dim);
 
    for (std::vector<Box>::const_iterator ni = real_mapped_box_vector.begin();
         ni != real_mapped_box_vector.end(); ++ni) {
@@ -444,17 +446,17 @@ void BoxLevelConnectorUtils::makeSortingMap(
                                cur_mapped_box.getOwnerRank(),
                                cur_mapped_box.getBlockId(),
                                cur_mapped_box.getPeriodicId());
-      new_mapped_boxes.insert(new_mapped_boxes.end(), new_mapped_box);
+      new_mapped_boxes.insert(new_mapped_boxes.setEnd(), new_mapped_box);
 
       /*
        * Now, add cur_mapped_box's periodic images, but give them cur_mapped_box's
        * new LocalId.  In finding the image mapped_boxes, we use the fact
        * that a real mapped_box's image follows the real mapped_box in a BoxSet.
        */
-      BoxSet::const_iterator ini = cur_mapped_boxes.find(cur_mapped_box);
-      TBOX_ASSERT(ini != cur_mapped_boxes.end());
+      BoxSet::SetConstIterator ini = cur_mapped_boxes.find(cur_mapped_box);
+      TBOX_ASSERT(ini != cur_mapped_boxes.setEnd());
       ++ini; // Skip the real mapped_box to look for its image mapped_boxes.
-      while (ini != cur_mapped_boxes.end() &&
+      while (ini != cur_mapped_boxes.setEnd() &&
              ini->getGlobalId() == cur_mapped_box.getGlobalId()) {
          const Box& image_mapped_box = *ini;
          const Box new_image_mapped_box(image_mapped_box,
@@ -463,7 +465,7 @@ void BoxLevelConnectorUtils::makeSortingMap(
                                         new_mapped_box.getBlockId(),
                                         image_mapped_box.
                                         getPeriodicId());
-         new_mapped_boxes.insert(new_mapped_boxes.end(), new_image_mapped_box);
+         new_mapped_boxes.insert(new_mapped_boxes.setEnd(), new_image_mapped_box);
          ++ini;
       }
 
@@ -473,7 +475,7 @@ void BoxLevelConnectorUtils::makeSortingMap(
        * edges unless there is a change.
        */
       if (cur_mapped_box.getLocalId() != new_mapped_box.getLocalId()) {
-         edges[cur_mapped_box.getId()].insert(new_mapped_box);
+         edges.insertNeighbor(cur_mapped_box.getId(), new_mapped_box);
       }
    }
 
@@ -795,7 +797,7 @@ void BoxLevelConnectorUtils::computeInternalOrExternalParts(
     */
    LocalId last_used_index = input.getLastLocalId();
 
-   NeighborhoodSet input_eto_parts;
+   NeighborhoodSet input_eto_parts(dim);
 
    const bool compute_overlaps =
       search_tree_represents_internal == (internal_or_external == 'i');
@@ -825,7 +827,7 @@ void BoxLevelConnectorUtils::computeInternalOrExternalParts(
              * Trying to get the overlapping parts.  Create empty
              * neighbor list to indicate there is no such parts.
              */
-            input_eto_parts[input_mapped_box.getId()];
+            input_eto_parts.getNeighborSet(input_mapped_box.getId(), dim);
          } else {
             /*
              * Trying to get the non-overlapping parts.
@@ -887,8 +889,8 @@ void BoxLevelConnectorUtils::computeInternalOrExternalParts(
 
          } else {
 
-            Connector::NeighborSet
-            & replacements = input_eto_parts[input_mapped_box.getId()];
+            Connector::NeighborSet& replacements = 
+               input_eto_parts.getNeighborSet(input_mapped_box.getId(), dim);
             for (BoxList::Iterator bi(parts_list); bi; bi++) {
                const Box
                parts_mapped_box((*bi),
@@ -908,7 +910,7 @@ void BoxLevelConnectorUtils::computeInternalOrExternalParts(
    } // Loop through input_mapped_boxes
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-   if (parts.getBoxes().empty()) {
+   if (parts.getBoxes().isEmpty()) {
       /*
        * If there are no parts, then all in input
        * should be mapped to empty neighbor containers according
@@ -926,7 +928,7 @@ void BoxLevelConnectorUtils::computeInternalOrExternalParts(
       }
       for (NeighborhoodSet::const_iterator ci = input_eto_parts.begin();
            ci != input_eto_parts.end(); ++ci) {
-         TBOX_ASSERT((*ci).second.empty());
+         TBOX_ASSERT((*ci).second.isEmpty());
       }
    }
 #endif
@@ -1157,12 +1159,12 @@ void BoxLevelConnectorUtils::makeRemainderMap(
     */
    LocalId last_used_index = orig.getLastLocalId();
 
-   NeighborhoodSet orig_eto_remainder;
+   NeighborhoodSet orig_eto_remainder(dim);
 
    const NeighborhoodSet& orig_eto_rejection = orig_to_rejection.getNeighborhoodSets();
 
-   for (BoxSet::const_iterator ni = orig_nodes.begin();
-        ni != orig_nodes.end(); ++ni) {
+   for (BoxSet::SetConstIterator ni = orig_nodes.setBegin();
+        ni != orig_nodes.setEnd(); ++ni) {
 
       const Box& orig_node = *ni;
       const BoxId mapped_box_id = orig_node.getId();
@@ -1183,8 +1185,8 @@ void BoxLevelConnectorUtils::makeRemainderMap(
          TBOX_ASSERT(orig_eto_remainder.find(
                mapped_box_id) == orig_eto_remainder.end());
 
-         orig_eto_remainder[mapped_box_id];
-      } else if (ci->second.empty()) {
+         orig_eto_remainder.getNeighborSet(mapped_box_id, dim);
+      } else if (ci->second.isEmpty()) {
          /*
           * By the definition of a mapping Connector, empty mapping
           * means entire orig_node remains.
@@ -1207,8 +1209,8 @@ void BoxLevelConnectorUtils::makeRemainderMap(
 
          BoxList remaining_parts_list(orig_node);
 
-         for (Connector::NeighborSet::const_iterator
-              vi = rejections.begin(); vi != rejections.end(); ++vi) {
+         for (Connector::NeighborSet::SetConstIterator
+              vi = rejections.setBegin(); vi != rejections.setEnd(); ++vi) {
             remaining_parts_list.removeIntersections((*vi));
          }
          /*
@@ -1225,7 +1227,8 @@ void BoxLevelConnectorUtils::makeRemainderMap(
           * is empty because its existence defines the required mapping from
           * the orig node to a (possibly empty) container of nesting parts.
           */
-         Connector::NeighborSet& remaining_parts_neighbors = orig_eto_remainder[mapped_box_id];
+         Connector::NeighborSet& remaining_parts_neighbors =
+            orig_eto_remainder.getNeighborSet(mapped_box_id, dim);
          for (BoxList::Iterator bi(remaining_parts_list);
               bi; bi++) {
             Box new_box = (*bi);
@@ -1233,8 +1236,8 @@ void BoxLevelConnectorUtils::makeRemainderMap(
                          ++last_used_index,
                          rank,
                          orig_node.getBlockId());
-            remainder_nodes.insert(remainder_nodes.end(), new_node);
-            remaining_parts_neighbors.insert(remaining_parts_neighbors.end(),
+            remainder_nodes.insert(remainder_nodes.setEnd(), new_node);
+            remaining_parts_neighbors.insert(remaining_parts_neighbors.setEnd(),
                new_node);
          }
       }
@@ -1420,7 +1423,7 @@ void BoxLevelConnectorUtils::addPeriodicImagesAndRelationships(
          if (d_sanity_check_precond) {
             if (images_added &&
                 (!mapped_box_level_to_anchor.hasNeighborSet(mapped_box.getId()) ||
-                 mapped_box_level_to_anchor.getNeighborSet(mapped_box.getId()).empty())) {
+                 mapped_box_level_to_anchor.getNeighborSet(mapped_box.getId()).isEmpty())) {
                TBOX_WARNING(
                   "BoxLevelConnectorUtils::addPeriodicImages: Box " << mapped_box
                                                                     <<
@@ -1572,8 +1575,8 @@ void BoxLevelConnectorUtils::initializeCallback()
 
 /*
  ***************************************************************************
- * * Release static timers.  To be called by shutdown registry to make sure  *
- * * memory for timers does not leak.                                        *
+ * * Release static timers.  To be called by shutdown registry to make sure
+ * * memory for timers does not leak.
  ***************************************************************************
  */
 

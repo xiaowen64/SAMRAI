@@ -95,8 +95,8 @@ NeighborhoodSet::coarsenNeighbors(
 {
    for (const_iterator ei = begin(); ei != end(); ++ei) {
       const BoxId& mapped_box_id = (*ei).first;
-      const NeighborSet& orig_nabrs = (*ei).second;
-      orig_nabrs.coarsen(output_edges[mapped_box_id], ratio);
+      output_edges.d_map[mapped_box_id] = (*ei).second; 
+      output_edges.d_map[mapped_box_id].coarsen(ratio);
    }
 }
 
@@ -112,8 +112,8 @@ NeighborhoodSet::refineNeighbors(
 {
    for (const_iterator ei = begin(); ei != end(); ++ei) {
       const BoxId& mapped_box_id = (*ei).first;
-      const NeighborSet& orig_nabrs = (*ei).second;
-      orig_nabrs.refine(output_edges[mapped_box_id], ratio);
+      output_edges.d_map[mapped_box_id] = (*ei).second;
+      output_edges.d_map[mapped_box_id].refine(ratio);
    }
 }
 
@@ -129,8 +129,8 @@ NeighborhoodSet::growNeighbors(
 {
    for (const_iterator ei = begin(); ei != end(); ++ei) {
       const BoxId& mapped_box_id = (*ei).first;
-      const NeighborSet& orig_nabrs = (*ei).second;
-      orig_nabrs.grow(output_edges[mapped_box_id], growth);
+      output_edges.d_map[mapped_box_id] = (*ei).second;
+      output_edges.d_map[mapped_box_id].grow(growth);
    }
 }
 
@@ -140,11 +140,10 @@ NeighborhoodSet::growNeighbors(
  ***********************************************************************
  */
 void
-NeighborhoodSet::removePeriodicNeighbors(
-   NeighborhoodSet& output_edges) const
+NeighborhoodSet::removePeriodicNeighbors()
 {
-   for (const_iterator ei = begin(); ei != end(); ++ei) {
-      ei->second.removePeriodicImageBoxes(output_edges[ei->first]);
+   for (iterator ei = begin(); ei != end(); ++ei) {
+      ei->second.removePeriodicImageBoxes();
    }
 }
 
@@ -159,7 +158,7 @@ NeighborhoodSet::getNeighbors(
 {
    for (const_iterator ei = begin(); ei != end(); ++ei) {
       const NeighborSet& nabrs = (*ei).second;
-      all_nabrs.insert(nabrs.begin(), nabrs.end());
+      all_nabrs.insert(nabrs.setBegin(), nabrs.setEnd());
    }
 }
 
@@ -168,6 +167,7 @@ NeighborhoodSet::getNeighbors(
  * Insert all neighbors from a NeighborhoodSet into a single NeighborSet.
  ***********************************************************************
  */
+#if 0
 void
 NeighborhoodSet::getNeighbors(
    BoxList& all_nabrs) const
@@ -179,7 +179,7 @@ NeighborhoodSet::getNeighbors(
       all_nabrs.pushBack(*ei);
    }
 }
-
+#endif
 /*!
  ***********************************************************************
  * Insert all neighbors from a NeighborhoodSet into a single NeighborSet.
@@ -190,7 +190,7 @@ NeighborhoodSet::getNeighbors(
    BoxList& all_nabrs,
    const BlockId& block_id) const
 {
-   NeighborSet tmp_nabrs;
+   NeighborSet tmp_nabrs(all_nabrs.getDim());
    getNeighbors(tmp_nabrs);
    for (BoxSetSingleBlockIterator ei(tmp_nabrs, block_id);
         ei.isValid(); ++ei) {
@@ -200,13 +200,38 @@ NeighborhoodSet::getNeighbors(
 
 /*!
  ***********************************************************************
- * Insert all neighbors from a NeighborhoodSet into a single NeighborSet.
+ * Insert all neighbors from a NeighborhoodSet into a map of containers
+ * keyed by BlockId.
  ***********************************************************************
  */
 void
 NeighborhoodSet::getNeighbors(
    std::map<BlockId, BoxList>& all_nabrs) const
 {
+
+   for (const_iterator ei = begin(); ei != end(); ++ei) {
+      const NeighborSet& nabrs = (*ei).second;
+
+      for (BoxSet::SetConstIterator ni = nabrs.setBegin();
+         ni != nabrs.setEnd(); ++ni) {
+
+         std::map<BlockId, BoxList>::iterator iter =
+            all_nabrs.find(ni->getBlockId());
+
+         if (iter != all_nabrs.end()) { 
+//            iter->second.pushBack(*ni);
+            iter->second.insert(*ni);
+         } else {
+            BoxContainer nabr_container(*ni);
+            nabr_container.makeSet();
+            all_nabrs.insert(std::pair<BlockId, BoxContainer>(ni->getBlockId(),
+                                                              nabr_container));
+         }
+      }
+   }
+
+/*
+
    NeighborSet tmp_nabrs;
    getNeighbors(tmp_nabrs);
    for (BoxSet::const_iterator ei = tmp_nabrs.begin();
@@ -223,6 +248,8 @@ NeighborhoodSet::getNeighbors(
       }
 //      all_nabrs[ei->getBlockId()].pushBack(*ei);
    }
+*/
+
 }
 
 /*!
@@ -235,10 +262,16 @@ void
 NeighborhoodSet::getOwners(
    std::set<int>& owners) const
 {
-   for (const_iterator i_nabrhood = begin(); i_nabrhood != end(); ++i_nabrhood) {
-      const value_type& nabrhood = *i_nabrhood;
-      const NeighborSet& nabr = nabrhood.second;
-      nabr.getOwners(owners);
+
+   for (const_iterator ei = begin(); ei != end(); ++ei) {
+      const NeighborSet& nabrs = (*ei).second;
+
+      for (BoxSet::SetConstIterator ni = nabrs.setBegin();
+         ni != nabrs.setEnd(); ++ni) {
+
+         const int rank = ni->getOwnerRank();
+         owners.insert(rank);
+      }
    }
 }
 
@@ -320,19 +353,21 @@ void NeighborhoodSet::getFromDatabase(
 
       const std::string set_db_string("set_for_local_id_");
 
-      std::pair<BoxId, NeighborSet> tmp_pair;
+//      std::pair<BoxId, NeighborSet> tmp_pair;
       for (size_t i = 0; i < number_of_sets; ++i) {
-         tmp_pair.first.initialize(LocalId(local_indices[i]),
+         BoxId box_id(LocalId(local_indices[i]),
             owners[i],
             BlockId(block_ids[i]),
             PeriodicId(periodic_ids[i]));
          const std::string set_name =
             set_db_string
-            + tbox::Utilities::blockToString(tmp_pair.first.getBlockId().getBlockValue())
-            + tbox::Utilities::processorToString(tmp_pair.first.getOwnerRank())
-            + tbox::Utilities::patchToString(tmp_pair.first.getLocalId().getValue())
-            + tbox::Utilities::intToString(tmp_pair.first.getPeriodicId().getPeriodicValue());
-         iterator mi = insert(end(), tmp_pair);
+            + tbox::Utilities::blockToString(box_id.getBlockId().getBlockValue())
+            + tbox::Utilities::processorToString(box_id.getOwnerRank())
+            + tbox::Utilities::patchToString(box_id.getLocalId().getValue())
+            + tbox::Utilities::intToString(box_id.getPeriodicId().getPeriodicValue());
+         iterator mi =
+            insert(end(),
+                   std::pair<BoxId, BoxContainer>(box_id, BoxContainer(d_dim)));
          mi->second.getFromDatabase(*database.getDatabase(set_name));
       }
 

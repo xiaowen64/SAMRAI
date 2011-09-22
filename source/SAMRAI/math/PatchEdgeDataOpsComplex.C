@@ -30,9 +30,9 @@ PatchEdgeDataOpsComplex::~PatchEdgeDataOpsComplex()
 
 /*
  *************************************************************************
- *                                                                       *
- * General operations for complex edge-centered patch data.              *
- *                                                                       *
+ *
+ * General operations for complex edge-centered patch data.
+ *
  *************************************************************************
  */
 

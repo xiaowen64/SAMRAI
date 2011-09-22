@@ -29,9 +29,9 @@ PatchCellDataNormOpsComplex::~PatchCellDataNormOpsComplex()
 
 /*
  *************************************************************************
- *                                                                       *
- * Compute the number of data entries on a patch in the given box.       *
- *                                                                       *
+ *
+ * Compute the number of data entries on a patch in the given box.
+ *
  *************************************************************************
  */
 
@@ -49,9 +49,9 @@ int PatchCellDataNormOpsComplex::numberOfEntries(
 
 /*
  *************************************************************************
- *                                                                       *
- * Norm operations for complex cell-centered data.                       *
- *                                                                       *
+ *
+ * Norm operations for complex cell-centered data.
+ *
  *************************************************************************
  */
 

@@ -55,9 +55,9 @@ HierarchyFaceDataOpsInteger::~HierarchyFaceDataOpsInteger()
 
 /*
  *************************************************************************
- *                                                                       *
- * Rotuines to set the hierarchy and level information.                  *
- *                                                                       *
+ *
+ * Rotuines to set the hierarchy and level information.
+ *
  *************************************************************************
  */
 
@@ -113,9 +113,9 @@ HierarchyFaceDataOpsInteger::getPatchHierarchy() const
 
 /*
  *************************************************************************
- *                                                                       *
- * Basic generic operations.                                             *
- *                                                                       *
+ *
+ * Basic generic operations.
+ *
  *************************************************************************
  */
 
@@ -312,9 +312,9 @@ void HierarchyFaceDataOpsInteger::setToScalar(
 
 /*
  *************************************************************************
- *                                                                       *
- * Basic generic arithmetic operations.                                  *
- *                                                                       *
+ *
+ * Basic generic arithmetic operations.
+ *
  *************************************************************************
  */
 

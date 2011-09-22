@@ -34,12 +34,12 @@ const int ImplicitIntegrator::ALGS_IMPLICIT_INTEGRATOR_VERSION = 1;
 
 /*
  *************************************************************************
- *                                                                       *
- * Constructor and destructor for ImplicitIntegrator.  The         *
- * constructor sets default values for data members, then overrides      *
- * them with values read from input or restart.  The destructor does     *
- * nothing interesting.                                                  *
- *                                                                       *
+ *
+ * Constructor and destructor for ImplicitIntegrator.  The
+ * constructor sets default values for data members, then overrides
+ * them with values read from input or restart.  The destructor does
+ * nothing interesting.
+ *
  *************************************************************************
  */
 
@@ -96,15 +96,15 @@ ImplicitIntegrator::~ImplicitIntegrator()
 
 /*
  *************************************************************************
- *                                                                       *
- * Initialize integrator and nonlinear solver:                           *
- *                                                                       *
- * (1) Create vector containing solution state advanced in time.         *
- *                                                                       *
- * (2) Equation class registers data components with solution vector.    *
- *                                                                       *
- * (3) Initialize nonlinear solver.                                      *
- *                                                                       *
+ *
+ * Initialize integrator and nonlinear solver:
+ *
+ * (1) Create vector containing solution state advanced in time.
+ *
+ * (2) Equation class registers data components with solution vector.
+ *
+ * (3) Initialize nonlinear solver.
+ *
  *************************************************************************
  */
 
@@ -127,20 +127,20 @@ void ImplicitIntegrator::initialize()
 
 /*
  *************************************************************************
- *                                                                       *
- * Integrate solution through given time increment:                      *
- *                                                                       *
- * (1) If number of levels in hierarchy has changed since last advance   *
- *     due to regridding, the range of levels in the vectors is reset.   *
- *                                                                       *
- * (2) Construct initial guess at new solution by extrapolation.         *
- *                                                                       *
- * (3) Call the equation advance set up routine.                         *
- *                                                                       *
- * (4) Compute the new solution using the nonlinear solver.              *
- *                                                                       *
- * (5) Return integer return code define by nonlinear solver.            *
- *                                                                       *
+ *
+ * Integrate solution through given time increment:
+ *
+ * (1) If number of levels in hierarchy has changed since last advance
+ *     due to regridding, the range of levels in the vectors is reset.
+ *
+ * (2) Construct initial guess at new solution by extrapolation.
+ *
+ * (3) Call the equation advance set up routine.
+ *
+ * (4) Compute the new solution using the nonlinear solver.
+ *
+ * (5) Return integer return code define by nonlinear solver.
+ *
  *************************************************************************
  */
 
@@ -180,16 +180,16 @@ int ImplicitIntegrator::advanceSolution(
 
 /*
  *************************************************************************
- *                                                                       *
- * Get next dt from user-supplied equation class.  Timestep selection    *
- * is generally based on whether the nonlinear solution iteration        *
- * converged and, if so, whether the solution meets some user-defined    *
- * criteria.  It is assumed that, before this routine is called, the     *
- * routine checkNewSolution() has been called.  The boolean argument     *
- * is the return value from that call.  The integer argument is          *
- * that which is returned by the particular nonlinear solver package     *
- * that generated the solution.                                          *
- *                                                                       *
+ *
+ * Get next dt from user-supplied equation class.  Timestep selection
+ * is generally based on whether the nonlinear solution iteration
+ * converged and, if so, whether the solution meets some user-defined
+ * criteria.  It is assumed that, before this routine is called, the
+ * routine checkNewSolution() has been called.  The boolean argument
+ * is the return value from that call.  The integer argument is
+ * that which is returned by the particular nonlinear solver package
+ * that generated the solution.
+ *
  *************************************************************************
  */
 
@@ -215,11 +215,11 @@ double ImplicitIntegrator::getNextDt(
 
 /*
  *************************************************************************
- *                                                                       *
- * Check whether time advanced solution is acceptable.  Note that the    *
- * user-supplied solution checking routine must interpret the integer    *
- * return code generated by the nonlinear solver correctly.              *
- *                                                                       *
+ *
+ * Check whether time advanced solution is acceptable.  Note that the
+ * user-supplied solution checking routine must interpret the integer
+ * return code generated by the nonlinear solver correctly.
+ *
  *************************************************************************
  */
 
@@ -241,11 +241,11 @@ bool ImplicitIntegrator::checkNewSolution(
 
 /*
  *************************************************************************
- *                                                                       *
- * Assuming an acceptable time advanced solution is found, update        *
- * solution quantities and time information state of integrator.         *
- * Return the current simulation time.                                   *
- *                                                                       *
+ *
+ * Assuming an acceptable time advanced solution is found, update
+ * solution quantities and time information state of integrator.
+ * Return the current simulation time.
+ *
  *************************************************************************
  */
 
@@ -262,11 +262,11 @@ double ImplicitIntegrator::updateSolution()
 
 /*
  *************************************************************************
- *                                                                       *
- * If simulation is not from restart, read data from input database.     *
- * Otherwise, override restart values for a subset of the data members   *
- * with those found in input.                                            *
- *                                                                       *
+ *
+ * If simulation is not from restart, read data from input database.
+ * Otherwise, override restart values for a subset of the data members
+ * with those found in input.
+ *
  *************************************************************************
  */
 
@@ -342,9 +342,9 @@ void ImplicitIntegrator::getFromInput(
 
 /*
  *************************************************************************
- *                                                                       *
- * Write out class version number and data members to database.          *
- *                                                                       *
+ *
+ * Write out class version number and data members to database.
+ *
  *************************************************************************
  */
 
@@ -371,11 +371,11 @@ void ImplicitIntegrator::putToDatabase(
 
 /*
  *************************************************************************
- *                                                                       *
- * Check to make sure that the version number of the class is that same  *
- * as the version number in the restart file.  If these values are equal *
- * then read values for data members from the restart file.              *
- *                                                                       *
+ *
+ * Check to make sure that the version number of the class is that same
+ * as the version number in the restart file.  If these values are equal
+ * then read values for data members from the restart file.
+ *
  *************************************************************************
  */
 
@@ -413,9 +413,9 @@ void ImplicitIntegrator::getFromRestart()
 
 /*
  *************************************************************************
- *                                                                       *
- * Print class data members to given output stream.                      *
- *                                                                       *
+ *
+ * Print class data members to given output stream.
+ *
  *************************************************************************
  */
 

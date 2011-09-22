@@ -28,12 +28,12 @@ namespace hier {
 
 /*
  *************************************************************************
- *                                                                       *
- * This static private member function is called by findBadCutPoints(),  *
- * and the findBadCutPointsForDirection() member functions.  It sets bad *
- * cut points near the lower and upper ends of the border box in the     *
- * given coordinate direction.                                           *
- *                                                                       *
+ *
+ * This static private member function is called by findBadCutPoints(),
+ * and the findBadCutPointsForDirection() member functions.  It sets bad
+ * cut points near the lower and upper ends of the border box in the
+ * given coordinate direction.
+ *
  *************************************************************************
  */
 
@@ -104,14 +104,14 @@ void BoxUtilities::findBadCutPointsForBorderAndDirection(
 
 /*
  *************************************************************************
- *                                                                       *
- * Check min size, cut factor, and physical domain constraints for       *
- * given box.  If a patch is generated from a box that violates any      *
- * of these constraints, then some other routine (e.g., ghost cell       *
- * filling, or inter-patch communication) may fail.  Thus, an error      *
- * message will be generated describing the violation and the program    *
- * will abort.                                                           *
- *                                                                       *
+ *
+ * Check min size, cut factor, and physical domain constraints for
+ * given box.  If a patch is generated from a box that violates any
+ * of these constraints, then some other routine (e.g., ghost cell
+ * filling, or inter-patch communication) may fail.  Thus, an error
+ * message will be generated describing the violation and the program
+ * will abort.
+ *
  *************************************************************************
  */
 
@@ -294,30 +294,30 @@ void BoxUtilities::checkBoxConstraints(
 
 /*
  *************************************************************************
- *                                                                       *
- * Replace each box in the list that is too large with a list of         *
- * nonoverlapping smaller boxes whose union covers the same region of    *
- * index space as the original box.  The resulting boxes will obey the   *
- * minimum size, and cut factor restrictions if the original box does.   *
- * However, the maximum size restriction may be sacrified if the box     *
- * cannot be chopped at appropriate points.                              *
- *                                                                       *
- * For each box in the list, we perform the following operations         *
- *                                                                       *
- *    (1) Determine a set of cut points for each coordinate direction.   *
- *        The ideal cuts satisfy all min, max, and factor restrictions   *
- *        assuming the box does too.                                     *
- *                                                                       *
- *    (2) If step (1) finds that the box may be chopped, we determine    *
- *        the bad cut points for the box and adjust the original cut     *
- *        points if necessary.  Note that this operation uses the        *
- *        physical domain and the bad interval information.              *
- *                                                                       *
- *    (3) The box is chopped if this is still possible after (1) and (2).*
- *                                                                       *
- *    (4) If the box is chopped, set the box list to the resulting       *
- *        boxes.  Otherwise, put the original box on the list.           *
- *                                                                       *
+ *
+ * Replace each box in the list that is too large with a list of
+ * nonoverlapping smaller boxes whose union covers the same region of
+ * index space as the original box.  The resulting boxes will obey the
+ * minimum size, and cut factor restrictions if the original box does.
+ * However, the maximum size restriction may be sacrified if the box
+ * cannot be chopped at appropriate points.
+ *
+ * For each box in the list, we perform the following operations
+ *
+ *    (1) Determine a set of cut points for each coordinate direction.
+ *        The ideal cuts satisfy all min, max, and factor restrictions
+ *        assuming the box does too.
+ *
+ *    (2) If step (1) finds that the box may be chopped, we determine
+ *        the bad cut points for the box and adjust the original cut
+ *        points if necessary.  Note that this operation uses the
+ *        physical domain and the bad interval information.
+ *
+ *    (3) The box is chopped if this is still possible after (1) and (2).
+ *
+ *    (4) If the box is chopped, set the box list to the resulting
+ *        boxes.  Otherwise, put the original box on the list.
+ *
  *************************************************************************
  */
 
@@ -398,11 +398,11 @@ void BoxUtilities::chopBoxes(
 
 /*
  *************************************************************************
- *                                                                       *
- * Chop given box into a collection of boxes according to the collection *
- * of cut points specified along each coordinate direction.   This box   *
- * list is formed from the resulting boxes.                              *
- *                                                                       *
+ *
+ * Chop given box into a collection of boxes according to the collection
+ * of cut points specified along each coordinate direction.   This box
+ * list is formed from the resulting boxes.
+ *
  *************************************************************************
  */
 
@@ -476,20 +476,20 @@ void BoxUtilities::chopBox(
 
 /*
  *************************************************************************
- *                                                                       *
- * Test each box in this box list for its intersection with the physical *
- * domain boundary when it is grown by the given ghost width.  If the    *
- * ghost box lies entirely within the domain, or if all of its ghost     *
- * cells intersect the domain boundary appropriately, then the box will  *
- * not be changed.  Otherwise, the box is removed from the list and is   *
- * replaced by a new box formed by growing the original box to boundary. *
- * This process eliminates domain boundary intersections which are       *
- * deemed unacceptable.  Intersections that are disallowed are those in  *
- * which a portion of the domain boundary is parallel to a box face and  *
- * lies strictly in the interior of the ghost cell mapped_box_level adjacent to     *
- * that face.  In other words, we eliminate ghost cell regions residing  *
- * outside of the domain and which are narrower than the ghost width.    *
- *                                                                       *
+ *
+ * Test each box in this box list for its intersection with the physical
+ * domain boundary when it is grown by the given ghost width.  If the
+ * ghost box lies entirely within the domain, or if all of its ghost
+ * cells intersect the domain boundary appropriately, then the box will
+ * not be changed.  Otherwise, the box is removed from the list and is
+ * replaced by a new box formed by growing the original box to boundary.
+ * This process eliminates domain boundary intersections which are
+ * deemed unacceptable.  Intersections that are disallowed are those in
+ * which a portion of the domain boundary is parallel to a box face and
+ * lies strictly in the interior of the ghost cell mapped_box_level adjacent to
+ * that face.  In other words, we eliminate ghost cell regions residing
+ * outside of the domain and which are narrower than the ghost width.
+ *
  *************************************************************************
  */
 
@@ -596,14 +596,14 @@ bool BoxUtilities::extendBoxToDomainBoundary(
 
 /*
  *************************************************************************
- *                                                                       *
- * Grow each box in the list that is smaller than the specified minimum  *
- * size.  Each box that is grown must remain within the union of the     *
- * boxes of the given domain.  If the specified domain is an empty box   *
- * list, then each box will be grown to be as large as the minimum size  *
- * with no particular restrictions applied.  Note that this operation    *
- * may produce overlap regions among boxes on the list in either case.   *
- *                                                                       *
+ *
+ * Grow each box in the list that is smaller than the specified minimum
+ * size.  Each box that is grown must remain within the union of the
+ * boxes of the given domain.  If the specified domain is an empty box
+ * list, then each box will be grown to be as large as the minimum size
+ * with no particular restrictions applied.  Note that this operation
+ * may produce overlap regions among boxes on the list in either case.
+ *
  *************************************************************************
  */
 
@@ -713,12 +713,12 @@ void BoxUtilities::growBoxesWithinDomain(
 
 /*
  *************************************************************************
- *                                                                       *
- * Grow each box in the list that is smaller than the specified minimum  *
- * size.  Each box that is grown must remain within the union of the     *
- * boxes of the given domain.  The domain is defined by the complement   *
- * of the local portion of the domain.                                   *
- *                                                                       *
+ *
+ * Grow each box in the list that is smaller than the specified minimum
+ * size.  Each box that is grown must remain within the union of the
+ * boxes of the given domain.  The domain is defined by the complement
+ * of the local portion of the domain.
+ *
  *************************************************************************
  */
 
@@ -801,19 +801,19 @@ void BoxUtilities::growBoxWithinDomain(
 
 /*
  *************************************************************************
- *                                                                       *
- * Determine whether this box can be chopped according to specified      *
- * max, min, and factor constraints.  If the box may be chopped along    *
- * any face, true is returned.  Otherwise, false is returned.  For those *
- * directions along which the box may be chopped, the cut points are     *
- * computed.  The procedure is as follows:                               *
- *                                                                       *
- *    (1) Determine which directions chopping is allowed.                *
- *    (2) For each direction to chop, determine list of cut points.      *
- *                                                                       *
- * Important note: By convention, each integer cut point that is         *
- * computed corresponds to the cell index to the right of cut point.     *
- *                                                                       *
+ *
+ * Determine whether this box can be chopped according to specified
+ * max, min, and factor constraints.  If the box may be chopped along
+ * any face, true is returned.  Otherwise, false is returned.  For those
+ * directions along which the box may be chopped, the cut points are
+ * computed.  The procedure is as follows:
+ *
+ *    (1) Determine which directions chopping is allowed.
+ *    (2) For each direction to chop, determine list of cut points.
+ *
+ * Important note: By convention, each integer cut point that is
+ * computed corresponds to the cell index to the right of cut point.
+ *
  *************************************************************************
  */
 
@@ -854,20 +854,20 @@ bool BoxUtilities::findBestCutPointsGivenMax(
 
 /*
  *************************************************************************
- *                                                                       *
- * Determine whether this box can be chopped according to specified      *
- * max, min, and factor constraints along given coordinate direction.    *
- * If the box may be chopped, true is returned; otherwise, false is      *
- * returned.  The procedure for determining the cuts is as follows:      *
- *                                                                       *
- *    (1) Adjust min and max values so that they are integer             *
- *        multiples of the cut factor.                                   *
- *    (2) Determine number of boxes, min and max box widths.             *
- *    (3) Determine list of cut points.                                  *
- *                                                                       *
- * Important note: By convention, each integer cut point that is         *
- * computed corresponds to the cell index to the right of cut point.     *
- *                                                                       *
+ *
+ * Determine whether this box can be chopped according to specified
+ * max, min, and factor constraints along given coordinate direction.
+ * If the box may be chopped, true is returned; otherwise, false is
+ * returned.  The procedure for determining the cuts is as follows:
+ *
+ *    (1) Adjust min and max values so that they are integer
+ *        multiples of the cut factor.
+ *    (2) Determine number of boxes, min and max box widths.
+ *    (3) Determine list of cut points.
+ *
+ * Important note: By convention, each integer cut point that is
+ * computed corresponds to the cell index to the right of cut point.
+ *
  *************************************************************************
  */
 
@@ -956,19 +956,19 @@ bool BoxUtilities::findBestCutPointsForDirectionGivenMax(
 
 /*
  *************************************************************************
- *                                                                       *
- * Determine whether this box may be chopped according to requested      *
- * number of cuts along each side.  If the box may be chopped along any  *
- * coordinate direction, true is returned.  Otherwise, false is          *
- * returned.  For those directions along which the box may be chopped,   *
- * the cut points are computed.  The procedure is as follows:            *
- *                                                                       *
- *    (1) Determine for which directions shopping is allowed.            *
- *    (2) For each direction to chop, determine list of cut points.      *
- *                                                                       *
- * Important note: By convention, each integer cut point that is         *
- * computed corresponds to the cell index to the right of cut point.     *
- *                                                                       *
+ *
+ * Determine whether this box may be chopped according to requested
+ * number of cuts along each side.  If the box may be chopped along any
+ * coordinate direction, true is returned.  Otherwise, false is
+ * returned.  For those directions along which the box may be chopped,
+ * the cut points are computed.  The procedure is as follows:
+ *
+ *    (1) Determine for which directions shopping is allowed.
+ *    (2) For each direction to chop, determine list of cut points.
+ *
+ * Important note: By convention, each integer cut point that is
+ * computed corresponds to the cell index to the right of cut point.
+ *
  *************************************************************************
  */
 
@@ -1028,20 +1028,20 @@ bool BoxUtilities::findBestCutPointsGivenNumber(
 
 /*
  *************************************************************************
- *                                                                       *
- * Determine whether this box may be chopped according to requested      *
- * number of cuts along given direction.  If the box may be chopped,     *
- * true is returned; otherwise, false is returned.  The procedure for    *
- * determining the cuts is as follows:                                   *
- *                                                                       *
- *    (1) Adjust min value so that it is an integer multiple of          *
- *        the cut factor.                                                *
- *    (2) Determine number of boxes, min and max box widths.             *
- *    (3) Determine list of cut points.                                  *
- *                                                                       *
- * Important note: By convention, each integer cut point that is         *
- * computed corresponds to the cell index to the right of cut point.     *
- *                                                                       *
+ *
+ * Determine whether this box may be chopped according to requested
+ * number of cuts along given direction.  If the box may be chopped,
+ * true is returned; otherwise, false is returned.  The procedure for
+ * determining the cuts is as follows:
+ *
+ *    (1) Adjust min value so that it is an integer multiple of
+ *        the cut factor.
+ *    (2) Determine number of boxes, min and max box widths.
+ *    (3) Determine list of cut points.
+ *
+ * Important note: By convention, each integer cut point that is
+ * computed corresponds to the cell index to the right of cut point.
+ *
  *************************************************************************
  */
 
@@ -1115,14 +1115,14 @@ bool BoxUtilities::findBestCutPointsForDirectionGivenNumber(
 
 /*
  *************************************************************************
- *                                                                       *
- * Return true if the box may have bad cut points, potentially.          *
- * Otherwise, return false.  Information about which directions may      *
- * have bad cut points is returned in the integer vector.  An entry of   *
- * zero indicates that there are no bad cut points for the box along     *
- * that coordinate direction.  An entry of one indicates that there      *
+ *
+ * Return true if the box may have bad cut points, potentially.
+ * Otherwise, return false.  Information about which directions may
+ * have bad cut points is returned in the integer vector.  An entry of
+ * zero indicates that there are no bad cut points for the box along
+ * that coordinate direction.  An entry of one indicates that there
  * may be a bad cut point along that direction.
- *                                                                       *
+ *
  *************************************************************************
  */
 
@@ -1157,10 +1157,10 @@ bool BoxUtilities::checkBoxForBadCutPoints(
 
 /*
  *************************************************************************
- *                                                                       *
- * Return true if the box may have bad cut points along the given        *
+ *
+ * Return true if the box may have bad cut points along the given
  * coordinate direction, potentially.  Otherwise, return false.
- *                                                                       *
+ *
  *************************************************************************
  */
 
@@ -1245,16 +1245,16 @@ bool BoxUtilities::checkBoxForBadCutPointsInDirection(
 
 /*
  *************************************************************************
- *                                                                       *
- * Determine bad cut points for box based on the specified physical      *
- * domain and bad interval.   The cut information is returned as an      *
- * array (size = dim) of arrays (size = number of cells along edge      *
- * of the box) of boolean values.  A value of false indicates a          *
- * good cut point, a true value indicates that the cut is bad.           *
- *                                                                       *
- * Important notes: By convention, each integer cut point that is        *
- * computed corresponds to the cell index to the right of cut point.     *
- *                                                                       *
+ *
+ * Determine bad cut points for box based on the specified physical
+ * domain and bad interval.   The cut information is returned as an
+ * array (size = dim) of arrays (size = number of cells along edge
+ * of the box) of boolean values.  A value of false indicates a
+ * good cut point, a true value indicates that the cut is bad.
+ *
+ * Important notes: By convention, each integer cut point that is
+ * computed corresponds to the cell index to the right of cut point.
+ *
  *************************************************************************
  */
 
@@ -1280,20 +1280,20 @@ void BoxUtilities::findBadCutPoints(
 
 /*
  *************************************************************************
- *                                                                       *
- * Determine bad cut points for box for given coordinate direction       *
- * based on the specified physical domain and bad interval.  The cut     *
- * information is returned as an array of integer values (size = number  *
- * of cells along edge of box.  A value of zero (0) indicates a good     *
- * cut point, a non-zero value indicates that the cut is bad.  The       *
- * process works as follows:                                             *
- *                                                                       *
- *    (1) Initialize all cut points to zero (zero = good).               *
- *    (2) Determine bad cut points based on domain configuration.        *
- *                                                                       *
- * Important notes: By convention, each integer cut point that is        *
- * computed corresponds to the cell index to the right of cut point.     *
- *                                                                       *
+ *
+ * Determine bad cut points for box for given coordinate direction
+ * based on the specified physical domain and bad interval.  The cut
+ * information is returned as an array of integer values (size = number
+ * of cells along edge of box.  A value of zero (0) indicates a good
+ * cut point, a non-zero value indicates that the cut is bad.  The
+ * process works as follows:
+ *
+ *    (1) Initialize all cut points to zero (zero = good).
+ *    (2) Determine bad cut points based on domain configuration.
+ *
+ * Important notes: By convention, each integer cut point that is
+ * computed corresponds to the cell index to the right of cut point.
+ *
  *************************************************************************
  */
 
@@ -1425,9 +1425,9 @@ void BoxUtilities::findBadCutPointsForDirection(
 
 /*
  *************************************************************************
- *                                                                       *
- * Adjust cut points if they coincide with bad cut points.               *
- *                                                                       *
+ *
+ * Adjust cut points if they coincide with bad cut points.
+ *
  *************************************************************************
  */
 
@@ -1468,17 +1468,17 @@ void BoxUtilities::fixBadCutPoints(
 
 /*
  *************************************************************************
- *                                                                       *
- * For specified coordinate direction, adjust cut points if they         *
- * coincide with bad cut points.  This routine processes cut points      *
- * from the beginning of the list and the end of the list simultaneously.*
- * When a bad cut is found when processing from the list beginning,      *
- * a good cut point is searched for by moving toward the lower end of    *
- * the box.  The opposite holds when processing from list end.  The      *
- * In either case, a new cut point will be inserted in the list if one   *
- * is found.  Otherwise, there will be one less cut point along the box  *
- * side.  This routine may be made more robust in the future.            *
- *                                                                       *
+ *
+ * For specified coordinate direction, adjust cut points if they
+ * coincide with bad cut points.  This routine processes cut points
+ * from the beginning of the list and the end of the list simultaneously.
+ * When a bad cut is found when processing from the list beginning,
+ * a good cut point is searched for by moving toward the lower end of
+ * the box.  The opposite holds when processing from list end.  The
+ * In either case, a new cut point will be inserted in the list if one
+ * is found.  Otherwise, there will be one less cut point along the box
+ * side.  This routine may be made more robust in the future.
+ *
  *************************************************************************
  */
 
@@ -1702,11 +1702,11 @@ void BoxUtilities::fixBadCutPointsForDirection(
 
 /*
  *************************************************************************
- *                                                                       *
- * Decompose each box in this box array into a list of non overlapping   *
- * boxes.  Moreover, the regions of index space formed by composing the  *
- * union of boxes on each box list are mutually disjoint.                *
- *                                                                       *
+ *
+ * Decompose each box in this box array into a list of non overlapping
+ * boxes.  Moreover, the regions of index space formed by composing the
+ * union of boxes on each box list are mutually disjoint.
+ *
  *************************************************************************
  */
 

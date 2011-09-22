@@ -14,6 +14,7 @@
 #include "SAMRAI/xfer/PatchLevelBorderFillPattern.h"
 
 #include "SAMRAI/hier/BoxContainerIterator.h"
+#include "SAMRAI/hier/BoxContainerSetIterator.h"
 #include "SAMRAI/hier/BoxList.h"
 #include "SAMRAI/hier/RealBoxConstIterator.h"
 #include "SAMRAI/hier/Box.h"
@@ -28,9 +29,9 @@ namespace xfer {
 
 /*
  *************************************************************************
- *                                                                       *
- * Default constructor                                                   *
- *                                                                       *
+ *
+ * Default constructor
+ *
  *************************************************************************
  */
 
@@ -41,9 +42,9 @@ PatchLevelBorderFillPattern::PatchLevelBorderFillPattern():
 
 /*
  *************************************************************************
- *                                                                       *
- * Destructor                                                            *
- *                                                                       *
+ *
+ * Destructor
+ *
  *************************************************************************
  */
 
@@ -53,9 +54,9 @@ PatchLevelBorderFillPattern::~PatchLevelBorderFillPattern()
 
 /*
  *************************************************************************
- *                                                                       *
- * computeFillBoxesAndNeighborhoodSets                                   *
- *                                                                       *
+ *
+ * computeFillBoxesAndNeighborhoodSets
+ *
  *************************************************************************
  */
 void PatchLevelBorderFillPattern::computeFillBoxesAndNeighborhoodSets(
@@ -86,8 +87,8 @@ void PatchLevelBorderFillPattern::computeFillBoxesAndNeighborhoodSets(
       fill_boxes.front().grow(fill_ghost_width);
       const NeighborSet& nabrs =
          dst_to_dst.getNeighborSet(dst_mapped_box.getId());
-      for (NeighborSet::const_iterator na = nabrs.begin();
-           na != nabrs.end(); ++na) {
+      for (NeighborSet::SetConstIterator na = nabrs.setBegin();
+           na != nabrs.setEnd(); ++na) {
          if (dst_mapped_box.getBlockId() == na->getBlockId()) {
             fill_boxes.removeIntersections(*na);
          } else {
@@ -120,13 +121,14 @@ void PatchLevelBorderFillPattern::computeFillBoxesAndNeighborhoodSets(
       if (!fill_boxes.isEmpty()) {
          d_max_fill_boxes = tbox::MathUtilities<int>::Max(d_max_fill_boxes,
                fill_boxes.size());
-         NeighborSet& fill_nabrs = dst_to_fill_edges[dst_mapped_box.getId()];
+         NeighborSet& fill_nabrs = dst_to_fill_edges.getNeighborSet(
+            dst_mapped_box.getId(), dst_mapped_box.getDim());
          for (hier::BoxList::Iterator li(fill_boxes); li; li++) {
             hier::Box fill_mapped_box(*li,
                                       ++last_id,
                                       dst_mapped_box.getOwnerRank(),
                                       dst_mapped_box.getBlockId());
-            fill_mapped_boxes.insert(fill_mapped_boxes.end(), fill_mapped_box);
+            fill_mapped_boxes.insert(fill_mapped_boxes.setEnd(), fill_mapped_box);
             fill_nabrs.insert(fill_mapped_box);
          }
       }

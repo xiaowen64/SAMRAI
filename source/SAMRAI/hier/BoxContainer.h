@@ -28,7 +28,9 @@ namespace hier {
 
 class BoxContainerIterator;
 class BoxContainerConstIterator;
-//class BoxContainerSetIterator;
+class BoxContainerSetIterator;
+class BoxContainerSetConstIterator;
+class BoxContainerSetConstReverseIterator;
 class BoxTree;
 #ifdef MB_BOXTREE_EXISTS
 class MultiblockBoxTree;
@@ -48,7 +50,9 @@ class BoxContainer
 {
 friend class BoxContainerIterator;
 friend class BoxContainerConstIterator;
-//friend class BoxContainerSetIterator;
+friend class BoxContainerSetIterator;
+friend class BoxContainerSetConstIterator;
+friend class BoxContainerSetConstReverseIterator;
 
 public:
    // Typedefs.
@@ -62,6 +66,9 @@ public:
     * @brief The const iterator for class BoxContainer.
     */
    typedef BoxContainerConstIterator ConstIterator;
+   typedef BoxContainerSetIterator SetIterator;
+   typedef BoxContainerSetConstIterator SetConstIterator;
+   typedef BoxContainerSetConstReverseIterator SetConstReverseIterator;
 
    // Constructors.
 
@@ -74,6 +81,12 @@ public:
    explicit BoxContainer(
       const tbox::Dimension& dim,
       const int n = 0);
+
+   explicit BoxContainer() : d_dim(tbox::Dimension::getInvalidDimension())
+   {
+      TBOX_ASSERT(false);
+   }
+     
 
    /*!
     * @brief Create container containing members from another container.
@@ -339,26 +352,191 @@ public:
 /*******************************************************/
 // set methods
 
-   void makeSet(); 
+   void makeSet();
+   bool hasSetSemantics() const
+   {
+      return d_set_created;
+   }
 
-//   BoxContainerSetIterator setBegin();
-//   BoxContainerSetIterator setEnd();
+   SetConstIterator setBegin() const;
+   SetConstIterator setEnd() const;
+   SetConstReverseIterator setRBegin() const;
+   SetConstReverseIterator setREnd() const;
+   SetIterator setBegin();
+   SetIterator setEnd();
 
    bool insert(const Box& box)
    {
+      if (!d_set_created) {
+         makeSet();
+      }
+
       const std::list<Box>::iterator& iter = d_list.insert(d_list.end(), box);
-      return d_set.insert(&(*iter)).second;
+      Box* box_ptr(&(*iter));
+      if (d_set.insert(box_ptr).second) {
+         return true;
+      } else {
+         d_list.erase(iter);
+         return false;
+      }
    }
-#if 0
-   BoxContainerSetIterator find(Box& box);
-   BoxContainerSetIterator lower_bound(Box& box);
-   BoxContainerSetIterator upper_bound(Box& box);
+
+   BoxContainerSetIterator insert ( BoxContainerSetIterator position,
+                                    const Box& box );
+
+   void insert ( BoxContainerSetConstIterator first,
+                 BoxContainerSetConstIterator last );
+
+   BoxContainerSetIterator find(const Box& box) const;
+   BoxContainerSetIterator lower_bound(const Box& box) const;
+   BoxContainerSetIterator upper_bound(const Box& box) const;
    void erase(BoxContainerSetIterator iter);
-   int erase(Box& box);
+   int erase(const Box& box);
    void erase(BoxContainerSetIterator first,
               BoxContainerSetIterator last);
+
+   void
+   swap(BoxContainer& other);
+
+   /*!
+    * @brief Insert Box owners into a single set container.
+    *
+    * @param[out] owners
+    */
+   void
+   getOwners(
+      std::set<int>& owners) const;
+
+
+   /*!
+    * @brief Split a BoxContainer into two vector<Box>
+    * objects, one containing real Boxes and one containing their
+    * periodic images.
+    *
+    * Put the results in the output container.  For flexibility and
+    * efficiency, the output container is NOT cleared first, so you
+    * may want to clear it before calling this method.
+    *
+    * @param[out] real_mapped_box_vector
+    *
+    * @param[out] periodic_image_mapped_box_vector
+    */
+   void
+   separatePeriodicImages(
+      std::vector<Box>& real_mapped_box_vector,
+      std::vector<Box>& periodic_image_mapped_box_vector) const;
+
+   /*!
+    * @brief Remove periodic image Boxes.
+    */
+   void
+   removePeriodicImageBoxes();
+
+   /*!
+    * @brief Unshift periodic image Boxes
+    *
+    * Change periodic image Boxes to their unshifted position.
+    *
+    * Put the results in the output container.  For flexibility and
+    * efficiency, the output container is NOT cleared first, so you
+    * may want to clear it before calling this method.
+    *
+    * @param[out] output_mapped_boxes
+    *
+    * @param[in] refinement_ratio Refinement ratio where the boxes
+    * live.
+    */
+   void
+   unshiftPeriodicImageBoxes(
+      BoxContainer& output_mapped_boxes,
+      const IntVector& refinement_ratio) const;
+
+   /*!
+    * @brief Write the BoxSet to a database.
+    */
+   void
+   putToDatabase(
+      tbox::Database& database) const;
+
+   /*!
+    * @brief Read the BoxSet from a database.
+    */
+   void
+   getFromDatabase(
+      tbox::Database& database);
+
+
+   /*!
+    * @brief Intermediary between BoxContainer and output streams,
+    * adding ability to control the output.  See
+    * BoxContainer::format().
+    */
+   class Outputter
+   {
+
+      friend std::ostream&
+      operator << (
+         std::ostream& s,
+         const Outputter& f);
+
+private:
+      friend class BoxContainer;
+
+      /*!
+       * @brief Construct the Outputter with a BoxContainer and the
+       * parameters needed to output the BoxContainer to a stream.
+       */
+      Outputter(
+         const BoxContainer& mapped_box_set,
+         const std::string& border,
+         int detail_depth = 0);
+
+      void
+      operator = (
+         const Outputter& rhs);               // Unimplemented private.
+
+      const BoxContainer& d_set;
+
+      const std::string d_border;
+
+      const int d_detail_depth;
+   };
+
+   /*!
+    * @brief Return a object to that can format the BoxContainer for
+    * inserting into output streams.
+    *
+    * Usage example (printing with a tab indentation):
+    * @verbatim
+    *    cout << "my mapped_boxes:\n" << mapped_boxes.format("\t") << endl;
+    * @endverbatim
+    *
+    * @param[in] border Left border of the output
+    *
+    * @param[in] detail_depth How much detail to print.
+    */
+   Outputter
+   format(
+      const std::string& border = std::string(),
+      int detail_depth = 0) const;
+
+   /*!
+    * @brief Print the contents of the object recursively.
+    *
+    * @param[in] output_stream
+    *
+    * @param[in] border Left border of the output
+    *
+    * @param[in] detail_depth How much detail to print.
+    */
+   void
+   recursivePrint(
+      std::ostream& output_stream,
+      const std::string& left_border,
+      int detail_depth) const;
+
  
-#endif
+
 // end set methods
 /**********************************************************/
 
@@ -666,6 +844,15 @@ public:
       bool include_singularity_block_neighbors = false);
 #endif
 
+   /*!
+    * @brief Returns a BoxContainer containing the Boxes from this container 
+    * in the requested block.
+    */
+   tbox::Pointer<BoxContainer>
+   getSingleBlockBoxContainer(
+      const tbox::Dimension& dim,
+      const BlockId& which_block) const;
+
    // Database I/O.
 
    /*!
@@ -685,10 +872,16 @@ public:
       std::ostream& os = tbox::plog) const;
 
 private:
+
+   /*
+    * Static integer constant describing class's version number.
+    */
+   static const int HIER_BOX_CONTAINER_VERSION;
+
    /*
     * Default constructor just to be clear that there is none.
     */
-   BoxContainer();
+//   BoxContainer();
 
    /*!
     * @brief Break up bursty against solid and adds the pieces to container.
@@ -753,7 +946,9 @@ private:
     */
    std::list<Box> d_list;
 
-   std::set<Box*, Box::id_less> d_set;
+   std::set<const Box*, Box::id_less> d_set;
+
+   bool d_set_created;
 };
 
 }

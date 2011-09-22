@@ -25,9 +25,9 @@ const std::string SecondLayerNodeVariableFillPattern::s_name_id =
 
 /*
  *************************************************************************
- *                                                                       *
- * Constructor                                                           *
- *                                                                       *
+ *
+ * Constructor
+ *
  *************************************************************************
  */
 
@@ -39,9 +39,9 @@ SecondLayerNodeVariableFillPattern::SecondLayerNodeVariableFillPattern(
 
 /*
  *************************************************************************
- *                                                                       *
- * Destructor                                                            *
- *                                                                       *
+ *
+ * Destructor
+ *
  *************************************************************************
  */
 
@@ -51,9 +51,9 @@ SecondLayerNodeVariableFillPattern::~SecondLayerNodeVariableFillPattern()
 
 /*
  *************************************************************************
- *                                                                       *
- * Calculate the overlap according to the desired pattern                *
- *                                                                       *
+ *
+ * Calculate the overlap according to the desired pattern
+ *
  *************************************************************************
  */
 
@@ -115,9 +115,9 @@ SecondLayerNodeVariableFillPattern::calculateOverlap(
 
 /*
  *************************************************************************
- *                                                                       *
- * Return the stencil width (1)                                          *
- *                                                                       *
+ *
+ * Return the stencil width (1)
+ *
  *************************************************************************
  */
 
@@ -128,9 +128,9 @@ const hier::IntVector& SecondLayerNodeVariableFillPattern::getStencilWidth()
 
 /*
  *************************************************************************
- *                                                                       *
- * Return the string name identifier                                     *
- *                                                                       *
+ *
+ * Return the string name identifier
+ *
  *************************************************************************
  */
 
@@ -141,9 +141,9 @@ const std::string& SecondLayerNodeVariableFillPattern::getPatternName() const
 
 /*
  *************************************************************************
- *                                                                       *
- * Compute the boxes for the stencil around a given patch box            *
- *                                                                       *
+ *
+ * Compute the boxes for the stencil around a given patch box
+ *
  *************************************************************************
  */
 
@@ -162,10 +162,10 @@ void SecondLayerNodeVariableFillPattern::computeStencilBoxes(
 
 /*
  *************************************************************************
- *                                                                       *
- * Compute BoxOverlap that specifies data to be filled by refinement     *
- * operator.                                                             *
- *                                                                       *
+ *
+ * Compute BoxOverlap that specifies data to be filled by refinement
+ * operator.
+ *
  *************************************************************************
  */
 

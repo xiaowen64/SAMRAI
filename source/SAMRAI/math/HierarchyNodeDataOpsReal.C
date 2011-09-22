@@ -57,9 +57,9 @@ HierarchyNodeDataOpsReal<TYPE>::~HierarchyNodeDataOpsReal()
 
 /*
  *************************************************************************
- *                                                                       *
- * Routines to set the hierarchy and level informtation.                 *
- *                                                                       *
+ *
+ * Routines to set the hierarchy and level informtation.
+ *
  *************************************************************************
  */
 
@@ -108,11 +108,11 @@ HierarchyNodeDataOpsReal<TYPE>::getPatchHierarchy() const
 
 /*
  *************************************************************************
- *                                                                       *
- * The following are private and cannot be used, but they are defined    *
- * here for compilers that require that every template declaration have  *
- * a definition (a stupid requirement, if you ask me).                   *
- *                                                                       *
+ *
+ * The following are private and cannot be used, but they are defined
+ * here for compilers that require that every template declaration have
+ * a definition (a stupid requirement, if you ask me).
+ *
  *************************************************************************
  */
 
@@ -133,9 +133,9 @@ void HierarchyNodeDataOpsReal<TYPE>::operator = (
 
 /*
  *************************************************************************
- *                                                                       *
- * Basic generic operations.                                             *
- *                                                                       *
+ *
+ * Basic generic operations.
+ *
  *************************************************************************
  */
 
@@ -259,9 +259,9 @@ void HierarchyNodeDataOpsReal<TYPE>::setToScalar(
 
 /*
  *************************************************************************
- *                                                                       *
- * Basic generic arithmetic operations.                                  *
- *                                                                       *
+ *
+ * Basic generic arithmetic operations.
+ *
  *************************************************************************
  */
 
@@ -637,9 +637,9 @@ void HierarchyNodeDataOpsReal<TYPE>::setRandomValues(
 
 /*
  *************************************************************************
- *                                                                       *
- * Generic norm and order operations.                                    *
- *                                                                       *
+ *
+ * Generic norm and order operations.
+ *
  *************************************************************************
  */
 
@@ -1023,9 +1023,9 @@ TYPE HierarchyNodeDataOpsReal<TYPE>::integral(
 
 /*
  *************************************************************************
- *                                                                       *
- * Generic miscellaneous operations for real data.                       *
- *                                                                       *
+ *
+ * Generic miscellaneous operations for real data.
+ *
  *************************************************************************
  */
 

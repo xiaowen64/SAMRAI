@@ -21,9 +21,9 @@ namespace algs {
 
 /*
  *************************************************************************
- *                                                                       *
- * Default constructor and destructor.                                   *
- *                                                                       *
+ *
+ * Default constructor and destructor.
+ *
  *************************************************************************
  */
 
@@ -37,9 +37,9 @@ OuternodeSumTransactionFactory::~OuternodeSumTransactionFactory()
 
 /*
  *************************************************************************
- *                                                                       *
- * Set/unset information for transactions managed by this factory class. *
- *                                                                       *
+ *
+ * Set/unset information for transactions managed by this factory class.
+ *
  *************************************************************************
  */
 
@@ -62,9 +62,9 @@ void OuternodeSumTransactionFactory::unsetRefineItems()
 
 /*
  *************************************************************************
- *                                                                       *
- * Allocate outernode sum transaction object.                            *
- *                                                                       *
+ *
+ * Allocate outernode sum transaction object.
+ *
  *************************************************************************
  */
 
@@ -117,9 +117,9 @@ OuternodeSumTransactionFactory::allocate(
 
 /*
  *************************************************************************
- *                                                                       *
- * Initialize (to 0.0) scratch storage for sum transactions.             *
- *                                                                       *
+ *
+ * Initialize (to 0.0) scratch storage for sum transactions.
+ *
  *************************************************************************
  */
 

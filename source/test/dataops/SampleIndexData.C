@@ -18,9 +18,9 @@
 
 /*
  *************************************************************************
- *                                                                       *
- * Constructor providing cell index.                                     *
- *                                                                       *
+ *
+ * Constructor providing cell index.
+ *
  *************************************************************************
  */
 
@@ -42,9 +42,9 @@ SampleIndexData::SampleIndexData(
 
 /*
  *************************************************************************
- *                                                                       *
- * Copy Constructor                                                     *
- *                                                                       *
+ *
+ * Copy Constructor
+ *
  *************************************************************************
  */
 
@@ -58,9 +58,9 @@ SampleIndexData::SampleIndexData(
 
 /*
  *************************************************************************
- *                                                                       *
- * Assignment operator                                                   *
- *                                                                       *
+ *
+ * Assignment operator
+ *
  *************************************************************************
  */
 
@@ -74,9 +74,9 @@ SampleIndexData& SampleIndexData::operator = (
 
 /*
  *************************************************************************
- *                                                                       *
+ *
  * Destructor
- *                                                                       *
+ *
  *************************************************************************
  */
 
@@ -88,7 +88,7 @@ SampleIndexData::~SampleIndexData()
  *************************************************************************
  *
  * Set dummy int data
- *                                                                       *
+ *
  *************************************************************************
  */
 void SampleIndexData::setInt(
@@ -107,7 +107,7 @@ void SampleIndexData::setIndex(
  *************************************************************************
  *
  *  Return dummy int data
- *                                                                       *
+ *
  *************************************************************************
  */
 int SampleIndexData::getInt() const
@@ -119,7 +119,7 @@ int SampleIndexData::getInt() const
  *************************************************************************
  *
  *  Return index
- *                                              *
+ *
  *************************************************************************
  */
 const hier::Index& SampleIndexData::getIndex() const
@@ -131,7 +131,7 @@ const hier::Index& SampleIndexData::getIndex() const
  *************************************************************************
  *
  *  Print contents
- *                                              *
+ *
  *************************************************************************
  */
 void SampleIndexData::printClassData(
@@ -145,7 +145,7 @@ void SampleIndexData::printClassData(
  *
  * The copySourceItem() method allows SampleIndexData to be a templated
  * data type for IndexData - i.e. IndexData<SampleIndexData>.
- *                                                                       *
+ *
  *************************************************************************
  */
 void SampleIndexData::copySourceItem(
@@ -158,13 +158,13 @@ void SampleIndexData::copySourceItem(
 
 /*
  *************************************************************************
- *                                                                       *
+ *
  * The getDataStreamSize(), packStream(), and unpackStream() methods
  * are required to template SampleIndexData as IndexData type - i.e.
  * IndexData<SampleIndexData>.  They are used to communicate SampleIndexData,
  * specifying how many bytes will be packed during the "packStream()"
  * method.
- *                                                                       *
+ *
  *************************************************************************
  */
 
@@ -220,12 +220,12 @@ void SampleIndexData::unpackStream(
 
 /*
  *************************************************************************
- *                                                                       *
+ *
  * The putToDatabase() and getFromDatabase() methods
  * are required to template SampleIndexData as IndexData type - i.e.
  * IndexData<SampleIndexData>.  They are used to write/read SampleIndexData,
  * data to/from the restart database.
- *                                                                       *
+ *
  *************************************************************************
  */
 

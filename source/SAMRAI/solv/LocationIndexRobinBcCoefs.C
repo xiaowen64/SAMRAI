@@ -51,7 +51,7 @@ LocationIndexRobinBcCoefs::LocationIndexRobinBcCoefs(
 
 /*
  ************************************************************************
- * Destructor                                                           *
+ * Destructor
  ************************************************************************
  */
 
@@ -61,7 +61,7 @@ LocationIndexRobinBcCoefs::~LocationIndexRobinBcCoefs(
 
 /*
  ********************************************************************
- * Set state from input database                                    *
+ * Set state from input database
  ********************************************************************
  */
 
@@ -100,7 +100,7 @@ void LocationIndexRobinBcCoefs::getFromInput(
 
 /*
  ************************************************************************
- * Set the boundary value for a Dirichlet boundary condition.           *
+ * Set the boundary value for a Dirichlet boundary condition.
  ************************************************************************
  */
 
@@ -119,7 +119,7 @@ void LocationIndexRobinBcCoefs::setBoundaryValue(
 
 /*
  ************************************************************************
- * Set the slpe for a Neumann boundary condition.                       *
+ * Set the slpe for a Neumann boundary condition.
  ************************************************************************
  */
 
@@ -138,7 +138,7 @@ void LocationIndexRobinBcCoefs::setBoundarySlope(
 
 /*
  ************************************************************************
- * Set the raw bc coefficients.                                         *
+ * Set the raw bc coefficients.
  ************************************************************************
  */
 
@@ -159,7 +159,7 @@ void LocationIndexRobinBcCoefs::setRawCoefficients(
 
 /*
  ************************************************************************
- * Set the bc coefficients to their mapped values.                      *
+ * Set the bc coefficients to their mapped values.
  ************************************************************************
  */
 
@@ -221,7 +221,7 @@ void LocationIndexRobinBcCoefs::getCoefficients(
 
 /*
  ************************************************************************
- * Assignment operator                                                  *
+ * Assignment operator
  ************************************************************************
  */
 

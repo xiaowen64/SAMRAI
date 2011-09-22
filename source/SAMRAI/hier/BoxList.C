@@ -35,11 +35,11 @@ namespace hier {
 #if 0
 /*
  *************************************************************************
- *                                                                       *
- * Implement the various constructors and the assignment operator for    *
- * the list of boxes.  Note that none of these routines modify their     *
- * arguments.                                                            *
- *                                                                       *
+ *
+ * Implement the various constructors and the assignment operator for
+ * the list of boxes.  Note that none of these routines modify their
+ * arguments.
+ *
  *************************************************************************
  */
 
@@ -111,29 +111,29 @@ BoxList& BoxList::operator = (
 }
 
 /*************************************************************************
- *                                                                       *
- * Function simplifyBoxes() takes the complicated list of boxes and      *
- * coalesces regions together where possible.                            *
- *                                                                       *
- * The canonical ordering for boxes is defined such that boxes which     *
- * 1* lie next to each other in higher dimensions are coalesced together *
- * before boxes which lie next to each other in lower dimensions.        *
- * Thus, we try to coalesce two boxes together on the higher             *
- * dimensions first.                                                     *
- *                                                                       *
- * Assuming that two boxes a and b of dimension DIM are in canonical     *
- * order for dimensions d+1, ..., D, we can coalesce them together on    *
- * dimension d if:                                                       *
- *                                                                       *
- *      (1) the lower and upper bounds for a and b agree for all         *
- *          dimensions greater than d                                    *
- *      (2) boxes a and b overlap or are next to each other in           *
- *          dimension d                                                  *
- *      (3) boxes a and b overlap for all dimensions less than d         *
- *                                                                       *
- * If these conditions hold, then we break up the two boxes and put      *
- * them onto the list of non-canonical boxes.                            *
- *                                                                       *
+ *
+ * Function simplifyBoxes() takes the complicated list of boxes and
+ * coalesces regions together where possible.
+ *
+ * The canonical ordering for boxes is defined such that boxes which
+ * 1* lie next to each other in higher dimensions are coalesced together
+ * before boxes which lie next to each other in lower dimensions.
+ * Thus, we try to coalesce two boxes together on the higher
+ * dimensions first.
+ *
+ * Assuming that two boxes a and b of dimension DIM are in canonical
+ * order for dimensions d+1, ..., D, we can coalesce them together on
+ * dimension d if:
+ *
+ *      (1) the lower and upper bounds for a and b agree for all
+ *          dimensions greater than d
+ *      (2) boxes a and b overlap or are next to each other in
+ *          dimension d
+ *      (3) boxes a and b overlap for all dimensions less than d
+ *
+ * If these conditions hold, then we break up the two boxes and put
+ * them onto the list of non-canonical boxes.
+ *
  *************************************************************************
  */
 
@@ -221,12 +221,12 @@ void BoxList::simplifyBoxes()
 
 /*
  *************************************************************************
- *                                                                       *
- * Break up box bursty against box solid and adds the pieces to list.    *
- * The bursting is done on dimensions 0 through dimension-1, starting    *
- * with lowest dimensions first to try to maintain the canonical         *
- * representation for the bursted domains.                               *
- *                                                                       *
+ *
+ * Break up box bursty against box solid and adds the pieces to list.
+ * The bursting is done on dimensions 0 through dimension-1, starting
+ * with lowest dimensions first to try to maintain the canonical
+ * representation for the bursted domains.
+ *
  *************************************************************************
  */
 
@@ -265,12 +265,12 @@ void BoxList::burstBoxes(
 
 /*
  *************************************************************************
- *                                                                       *
- * Break up box bursty against box solid and adds the pieces to list.    *
- * The bursting is done on dimensions 0 through dimension-1, starting    *
- * with lowest dimensions first to try to maintain the canonical         *
- * representation for the bursted domains.                               *
- *                                                                       *
+ *
+ * Break up box bursty against box solid and adds the pieces to list.
+ * The bursting is done on dimensions 0 through dimension-1, starting
+ * with lowest dimensions first to try to maintain the canonical
+ * representation for the bursted domains.
+ *
  *************************************************************************
  */
 
@@ -312,9 +312,9 @@ void BoxList::burstBoxes(
 
 /*
  *************************************************************************
- *                                                                       *
- * Return the current list without the portions that intersect takeaway. *
- *                                                                       *
+ *
+ * Return the current list without the portions that intersect takeaway.
+ *
  *************************************************************************
  */
 
@@ -577,10 +577,10 @@ void BoxList::intersectBoxes(
 
 /*
  *************************************************************************
- *                                                                       *
- * Return the boxes in the current list that intersect the index space   *
- * of the argument.                                                      *
- *                                                                       *
+ *
+ * Return the boxes in the current list that intersect the index space
+ * of the argument.
+ *
  *************************************************************************
  */
 
@@ -633,18 +633,18 @@ void BoxList::intersectBoxes(
 
 /*
  *************************************************************************
- *                                                                       *
- * Coalesce boxes on the list where possible.  The resulting box list    *
- * will contain a non-overlapping set of boxes covering the identical    *
- * region of index space covered by the original list.  Two boxes may be *
- * coalesced if their union is a box (recall that union is not closed    *
- * over boxes), and they have a non-empty intersection or they are       *
- * adjacent to each other in index space.  Empty boxes on the list are   *
- * removed during this process.  Also, the boxes are coalesced in the    *
- * order in which they appear on the list.  No attempt is made to        *
- * coalesce boxes in any particular way (e.g., to achieve the smallest   *
- * number of boxes).                                                     *
- *                                                                       *
+ *
+ * Coalesce boxes on the list where possible.  The resulting box list
+ * will contain a non-overlapping set of boxes covering the identical
+ * region of index space covered by the original list.  Two boxes may be
+ * coalesced if their union is a box (recall that union is not closed
+ * over boxes), and they have a non-empty intersection or they are
+ * adjacent to each other in index space.  Empty boxes on the list are
+ * removed during this process.  Also, the boxes are coalesced in the
+ * order in which they appear on the list.  No attempt is made to
+ * coalesce boxes in any particular way (e.g., to achieve the smallest
+ * number of boxes).
+ *
  *************************************************************************
  */
 
@@ -678,9 +678,9 @@ void BoxList::coalesceBoxes()
 
 /*
  *************************************************************************
- *                                                                       *
- * Sort boxes in list from largest to smallest in size with a heap sort. *
- *                                                                       *
+ *
+ * Sort boxes in list from largest to smallest in size with a heap sort.
+ *
  *************************************************************************
  */
 
@@ -704,9 +704,9 @@ void BoxList::heapify(
 
 /*
  *************************************************************************
- *                                                                       *
- * Count the total size of all of the boxes in the boxlist.              *
- *                                                                       *
+ *
+ * Count the total size of all of the boxes in the boxlist.
+ *
  *************************************************************************
  */
 
@@ -721,11 +721,11 @@ int BoxList::getTotalSizeOfBoxes() const
 
 /*
  *************************************************************************
- *                                                                       *
- * Perform simple operations (contains, grow, shift, refine, coarsen)    *
- * on all elements in the box list.  These functions simply iterate over *
- * all list boxes and apply the operation to each box.                   *
- *                                                                       *
+ *
+ * Perform simple operations (contains, grow, shift, refine, coarsen)
+ * on all elements in the box list.  These functions simply iterate over
+ * all list boxes and apply the operation to each box.
+ *
  *************************************************************************
  */
 
@@ -787,9 +787,9 @@ void BoxList::coarsen(
 
 /*
  *************************************************************************
- *                                                                       *
- * Test the box list for intersections among its boxes.                  *
- *                                                                       *
+ *
+ * Test the box list for intersections among its boxes.
+ *
  *************************************************************************
  */
 
@@ -816,9 +816,9 @@ bool BoxList::boxesIntersect() const
 
 /*
  *************************************************************************
- *                                                                       *
- * Return the bounding box for all boxes in the box list.                *
- *                                                                       *
+ *
+ * Return the bounding box for all boxes in the box list.
+ *
  *************************************************************************
  */
 
@@ -844,9 +844,9 @@ Box BoxList::getBoundingBox() const
 
 /*
  *************************************************************************
- *                                                                       *
- * Print boxes in list.                                                  *
- *                                                                       *
+ *
+ * Print boxes in list.
+ *
  *************************************************************************
  */
 

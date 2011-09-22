@@ -30,9 +30,9 @@ PatchNodeDataOpsComplex::~PatchNodeDataOpsComplex()
 
 /*
  *************************************************************************
- *                                                                       *
- * General operations for complex node-centered patch data.              *
- *                                                                       *
+ *
+ * General operations for complex node-centered patch data.
+ *
  *************************************************************************
  */
 

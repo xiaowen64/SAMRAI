@@ -13,9 +13,9 @@ namespace hier {
 
 /*
  *************************************************************************
- *                                                                       *
- * Default constructor                                                   *
- *                                                                       *
+ *
+ * Default constructor
+ *
  *************************************************************************
  */
 SAMRAI_INLINE_KEYWORD
@@ -27,9 +27,9 @@ PatchBoundaries::PatchBoundaries():
 
 /*
  *************************************************************************
- *                                                                       *
- * Array access operator                                                 *
- *                                                                       *
+ *
+ * Array access operator
+ *
  *************************************************************************
  */
 SAMRAI_INLINE_KEYWORD
@@ -42,9 +42,9 @@ PatchBoundaries::operator [] (unsigned int i)
 
 /*
  *************************************************************************
- *                                                                       *
- * Array access operator                                                 *
- *                                                                       *
+ *
+ * Array access operator
+ *
  *************************************************************************
  */
 SAMRAI_INLINE_KEYWORD
@@ -57,9 +57,9 @@ PatchBoundaries::operator [] (unsigned int i) const
 
 /*
  *************************************************************************
- *                                                                       *
- * Get copy of arrays                                                    *
- *                                                                       *
+ *
+ * Get copy of arrays
+ *
  *************************************************************************
  */
 SAMRAI_INLINE_KEYWORD
@@ -71,9 +71,9 @@ PatchBoundaries::getArrays()
 
 /*
  *************************************************************************
- *                                                                       *
- * Get copy of arrays                                                    *
- *                                                                       *
+ *
+ * Get copy of arrays
+ *
  *************************************************************************
  */
 SAMRAI_INLINE_KEYWORD

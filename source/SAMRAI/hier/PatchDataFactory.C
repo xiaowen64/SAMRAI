@@ -30,7 +30,7 @@ PatchDataFactory::getGhostCellWidth() const
 }
 
 /**********************************************************************
-* Default implementation                                             *
+* Default implementation
 **********************************************************************/
 
 MultiblockDataTranslator *

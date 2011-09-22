@@ -19,9 +19,9 @@ namespace xfer {
 
 /*
  *************************************************************************
- *                                                                       *
- * Default constructor and destructor.                                   *
- *                                                                       *
+ *
+ * Default constructor and destructor.
+ *
  *************************************************************************
  */
 
@@ -68,9 +68,9 @@ RefineTransactionFactory::allocate(
 
 /*
  *************************************************************************
- *                                                                       *
- * Default no-op implementations of optional virtual functions.          *
- *                                                                       *
+ *
+ * Default no-op implementations of optional virtual functions.
+ *
  *************************************************************************
  */
 

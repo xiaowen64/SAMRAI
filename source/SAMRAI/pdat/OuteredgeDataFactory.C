@@ -52,9 +52,9 @@ OuteredgeDataFactory<TYPE>::~OuteredgeDataFactory()
 
 /*
  *************************************************************************
- *                                                                       *
- * Clone the factory and copy the default parameters to the new factory. *
- *                                                                       *
+ *
+ * Clone the factory and copy the default parameters to the new factory.
+ *
  *************************************************************************
  */
 
@@ -91,9 +91,9 @@ OuteredgeDataFactory<TYPE>::allocate(
 
 /*
  *************************************************************************
- *                                                                       *
- * Return the box geometry type for outeredge data objects.              *
- *                                                                       *
+ *
+ * Return the box geometry type for outeredge data objects.
+ *
  *************************************************************************
  */
 
@@ -112,9 +112,9 @@ OuteredgeDataFactory<TYPE>::getBoxGeometry(
 
 /*
  *************************************************************************
- *                                                                       *
- * Calculate the amount of memory needed to allocate the data object.    *
- *                                                                       *
+ *
+ * Calculate the amount of memory needed to allocate the data object.
+ *
  *************************************************************************
  */
 
@@ -132,10 +132,10 @@ size_t OuteredgeDataFactory<TYPE>::getSizeOfMemory(
 
 /*
  *************************************************************************
- *                                                                       *
- * Determine whether this is a valid copy operation to/from EdgeData     *
- * between the supplied datatype.                                        *
- *                                                                       *
+ *
+ * Determine whether this is a valid copy operation to/from EdgeData
+ * between the supplied datatype.
+ *
  *************************************************************************
  */
 

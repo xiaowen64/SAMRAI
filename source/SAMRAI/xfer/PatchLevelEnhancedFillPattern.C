@@ -13,6 +13,7 @@
 
 #include "SAMRAI/xfer/PatchLevelEnhancedFillPattern.h"
 #include "SAMRAI/hier/BoxContainerIterator.h"
+#include "SAMRAI/hier/BoxContainerSetIterator.h"
 #include "SAMRAI/hier/RealBoxConstIterator.h"
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/tbox/MathUtilities.h"
@@ -26,9 +27,9 @@ namespace xfer {
 
 /*
  *************************************************************************
- *                                                                       *
- * Default constructor                                                   *
- *                                                                       *
+ *
+ * Default constructor
+ *
  *************************************************************************
  */
 
@@ -39,9 +40,9 @@ PatchLevelEnhancedFillPattern::PatchLevelEnhancedFillPattern():
 
 /*
  *************************************************************************
- *                                                                       *
- * Destructor                                                            *
- *                                                                       *
+ *
+ * Destructor
+ *
  *************************************************************************
  */
 
@@ -51,9 +52,9 @@ PatchLevelEnhancedFillPattern::~PatchLevelEnhancedFillPattern()
 
 /*
  *************************************************************************
- *                                                                       *
- * computeFillBoxesAndNeighborhoodSets                                   *
- *                                                                       *
+ *
+ * computeFillBoxesAndNeighborhoodSets
+ *
  *************************************************************************
  */
 void PatchLevelEnhancedFillPattern::computeFillBoxesAndNeighborhoodSets(
@@ -101,7 +102,8 @@ void PatchLevelEnhancedFillPattern::computeFillBoxesAndNeighborhoodSets(
             if (encon_boxes.size()) {
 
                NeighborSet& fill_nabrs =
-                  dst_to_fill_edges[dst_mapped_box.getId()];
+                  dst_to_fill_edges.getNeighborSet(dst_mapped_box.getId(),
+                                                   dst_mapped_box.getDim());
 
                for (hier::BoxList::Iterator ei(encon_boxes); ei; ei++) {
 
@@ -111,7 +113,7 @@ void PatchLevelEnhancedFillPattern::computeFillBoxesAndNeighborhoodSets(
                      dst_mapped_box.getOwnerRank(),
                      dst_mapped_box.getBlockId());
 
-                  fill_mapped_boxes.insert(fill_mapped_boxes.end(),
+                  fill_mapped_boxes.insert(fill_mapped_boxes.setEnd(),
                      fill_mapped_box);
 
                   fill_nabrs.insert(fill_mapped_box);

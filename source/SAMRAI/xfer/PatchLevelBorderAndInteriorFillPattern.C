@@ -13,6 +13,8 @@
 
 #include "SAMRAI/xfer/PatchLevelBorderAndInteriorFillPattern.h"
 #include "SAMRAI/hier/BoxContainerIterator.h"
+#include "SAMRAI/hier/BoxContainerSetIterator.h"
+#include "SAMRAI/hier/BoxContainerSetConstIterator.h"
 #include "SAMRAI/hier/BoxList.h"
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/tbox/MathUtilities.h"
@@ -26,9 +28,9 @@ namespace xfer {
 
 /*
  *************************************************************************
- *                                                                       *
- * Default constructor                                                   *
- *                                                                       *
+ *
+ * Default constructor
+ *
  *************************************************************************
  */
 
@@ -39,9 +41,9 @@ PatchLevelBorderAndInteriorFillPattern::PatchLevelBorderAndInteriorFillPattern()
 
 /*
  *************************************************************************
- *                                                                       *
- * Destructor                                                            *
- *                                                                       *
+ *
+ * Destructor
+ *
  *************************************************************************
  */
 
@@ -51,9 +53,9 @@ PatchLevelBorderAndInteriorFillPattern::~PatchLevelBorderAndInteriorFillPattern(
 
 /*
  *************************************************************************
- *                                                                       *
- * computeFillBoxesAndNeighborhoodSets                                   *
- *                                                                       *
+ *
+ * computeFillBoxesAndNeighborhoodSets
+ *
  *************************************************************************
  */
 void
@@ -70,6 +72,8 @@ PatchLevelBorderAndInteriorFillPattern::computeFillBoxesAndNeighborhoodSets(
    NULL_USE(src_to_dst);
    TBOX_DIM_ASSERT_CHECK_ARGS2(dst_mapped_box_level, fill_ghost_width);
 
+   const tbox::Dimension& dim = fill_ghost_width.getDim();
+
    const hier::BoxSet& dst_mapped_boxes =
       dst_mapped_box_level.getBoxes();
 
@@ -80,8 +84,8 @@ PatchLevelBorderAndInteriorFillPattern::computeFillBoxesAndNeighborhoodSets(
     * normally filled by coarser mapped_box_level.)
     */
    hier::LocalId last_id = dst_mapped_box_level.getLastLocalId();
-   for (hier::BoxSet::const_iterator ni = dst_mapped_boxes.begin();
-        ni != dst_mapped_boxes.end(); ++ni) {
+   for (hier::BoxSet::SetConstIterator ni = dst_mapped_boxes.setBegin();
+        ni != dst_mapped_boxes.setEnd(); ++ni) {
 
       const hier::BoxId& gid(ni->getId());
       const hier::Box& dst_mapped_box =
@@ -91,8 +95,8 @@ PatchLevelBorderAndInteriorFillPattern::computeFillBoxesAndNeighborhoodSets(
       const NeighborSet& nabrs =
          dst_to_dst.getNeighborSet(dst_mapped_box.getId());
 
-      for (NeighborSet::const_iterator na = nabrs.begin();
-           na != nabrs.end(); ++na) {
+      for (NeighborSet::SetConstIterator na = nabrs.setBegin();
+           na != nabrs.setEnd(); ++na) {
          if (!ni->isSpatiallyEqual(*na)) {
             if (dst_mapped_box.getBlockId() == na->getBlockId()) {
                fill_boxes.removeIntersections(*na);
@@ -130,13 +134,13 @@ PatchLevelBorderAndInteriorFillPattern::computeFillBoxesAndNeighborhoodSets(
          d_max_fill_boxes = tbox::MathUtilities<int>::Max(d_max_fill_boxes,
                fill_boxes.size());
 
-         NeighborSet& fill_nabrs = dst_to_fill_edges[gid];
+         NeighborSet& fill_nabrs = dst_to_fill_edges.getNeighborSet(gid, dim);
          for (hier::BoxList::Iterator li(fill_boxes); li; li++) {
             hier::Box fill_mapped_box(*li,
                                       ++last_id,
                                       dst_mapped_box.getOwnerRank(),
                                       dst_mapped_box.getBlockId());
-            fill_mapped_boxes.insert(fill_mapped_boxes.end(), fill_mapped_box);
+            fill_mapped_boxes.insert(fill_mapped_boxes.setEnd(), fill_mapped_box);
             fill_nabrs.insert(fill_mapped_box);
          }
       }

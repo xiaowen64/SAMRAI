@@ -199,11 +199,11 @@ public:
     * The box is assumed to be in same index space as those in the
     * tree.
     */
-   void
-   findOverlapBoxes(
-      BoxSet& overlap_mapped_boxes,
-      const Box& box,
-      bool recursive_call = false) const;
+//   void
+//   findOverlapBoxes(
+//      BoxSet& overlap_mapped_boxes,
+//      const Box& box,
+//      bool recursive_call = false) const;
 
    /*!
     * @brief Find all boxes that overlap the given \b box.

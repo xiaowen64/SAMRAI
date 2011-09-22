@@ -29,9 +29,9 @@ using namespace std;
 
 /*
  *************************************************************************
- *                                                                       *
- * The constructor and destructor.                                       *
- *                                                                       *
+ *
+ * The constructor and destructor.
+ *
  *************************************************************************
  */
 
@@ -54,9 +54,9 @@ PatchDataTestStrategy::~PatchDataTestStrategy()
 
 /*
  *************************************************************************
- *                                                                       *
- * Routines for reading variable and refinement data from input.         *
- *                                                                       *
+ *
+ * Routines for reading variable and refinement data from input.
+ *
  *************************************************************************
  */
 
@@ -147,10 +147,10 @@ void PatchDataTestStrategy::readRefinementInput(
 
 /*
  *************************************************************************
- *                                                                       *
- * Blank physical boundary and pre/postprocess coarsen/refine operations *
- * so tester isn't required to implement them when not needed.           *
- *                                                                       *
+ *
+ * Blank physical boundary and pre/postprocess coarsen/refine operations
+ * so tester isn't required to implement them when not needed.
+ *
  *************************************************************************
  */
 

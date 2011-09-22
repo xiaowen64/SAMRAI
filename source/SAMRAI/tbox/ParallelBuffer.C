@@ -31,10 +31,10 @@ const int ParallelBuffer::DEFAULT_BUFFER_SIZE = 128;
 
 /*
  *************************************************************************
- *                                                                       *
- * Construct a parallel buffer object.  The object will require further  *
- * initialization to set up I/O streams and the prefix string.           *
- *                                                                       *
+ *
+ * Construct a parallel buffer object.  The object will require further
+ * initialization to set up I/O streams and the prefix string.
+ *
  *************************************************************************
  */
 
@@ -51,10 +51,10 @@ ParallelBuffer::ParallelBuffer()
 
 /*
  *************************************************************************
- *                                                                       *
- * The destructor deallocates internal data buffer.  It does not modify  *
- * the output streams.                                                   *
- *                                                                       *
+ *
+ * The destructor deallocates internal data buffer.  It does not modify
+ * the output streams.
+ *
  *************************************************************************
  */
 
@@ -65,10 +65,10 @@ ParallelBuffer::~ParallelBuffer()
 
 /*
  *************************************************************************
- *                                                                       *
- * Activate or deactivate the output stream.  If the stream has been     *
- * deactivated, then deallocate the internal data buffer.                *
- *                                                                       *
+ *
+ * Activate or deactivate the output stream.  If the stream has been
+ * deactivated, then deallocate the internal data buffer.
+ *
  *************************************************************************
  */
 
@@ -86,9 +86,9 @@ void ParallelBuffer::setActive(
 
 /*
  *************************************************************************
- *                                                                       *
- * Set the prefix that begins every new output line.                     *
- *                                                                       *
+ *
+ * Set the prefix that begins every new output line.
+ *
  *************************************************************************
  */
 
@@ -100,9 +100,9 @@ void ParallelBuffer::setPrefixString(
 
 /*
  *************************************************************************
- *                                                                       *
- * Set the primary output stream.                                        *
- *                                                                       *
+ *
+ * Set the primary output stream.
+ *
  *************************************************************************
  */
 
@@ -114,9 +114,9 @@ void ParallelBuffer::setOutputStream1(
 
 /*
  *************************************************************************
- *                                                                       *
- * Set the secondary output stream.                                      *
- *                                                                       *
+ *
+ * Set the secondary output stream.
+ *
  *************************************************************************
  */
 
@@ -128,10 +128,10 @@ void ParallelBuffer::setOutputStream2(
 
 /*
  *************************************************************************
- *                                                                       *
- * Output a string to the output stream by invoking the                  *
- * outputString(string,length) method.                                   *
- *                                                                       *
+ *
+ * Output a string to the output stream by invoking the
+ * outputString(string,length) method.
+ *
  *************************************************************************
  */
 
@@ -143,11 +143,11 @@ void ParallelBuffer::outputString(
 
 /*
  *************************************************************************
- *                                                                       *
- * Write a text string of the specified length to the output stream.     *
- * Note that the string data is accumulated into the internal output     *
- * buffer until an end-of-line is detected.                              *
- *                                                                       *
+ *
+ * Write a text string of the specified length to the output stream.
+ * Note that the string data is accumulated into the internal output
+ * buffer until an end-of-line is detected.
+ *
  *************************************************************************
  */
 
@@ -207,11 +207,11 @@ void ParallelBuffer::outputString(
 
 /*
  *************************************************************************
- *                                                                       *
- * Copy data from the text string into the internal output buffer.       *
- * If the internal buffer is not large enough to hold all of the string  *
- * data, then allocate a new internal buffer.                            *
- *                                                                       *
+ *
+ * Copy data from the text string into the internal output buffer.
+ * If the internal buffer is not large enough to hold all of the string
+ * data, then allocate a new internal buffer.
+ *
  *************************************************************************
  */
 
@@ -249,10 +249,10 @@ void ParallelBuffer::copyToBuffer(
 
 /*
  *************************************************************************
- *                                                                       *
- * Output buffered stream data to the active output streams and reset    *
- * the buffer pointer to its empty state.                                *
- *                                                                       *
+ *
+ * Output buffered stream data to the active output streams and reset
+ * the buffer pointer to its empty state.
+ *
  *************************************************************************
  */
 
@@ -273,10 +273,10 @@ void ParallelBuffer::outputBuffer()
 
 /*
  *************************************************************************
- *                                                                       *
- * Synchronize the parallel buffer and write string data.  This routine  *
- * is called from streambuf.                                             *
- *                                                                       *
+ *
+ * Synchronize the parallel buffer and write string data.  This routine
+ * is called from streambuf.
+ *
  *************************************************************************
  */
 
@@ -289,14 +289,14 @@ int ParallelBuffer::sync()
 
 /*
  *************************************************************************
- *                                                                       *
- * Write the specified number of characters into the output stream.      *
- * This routine is called from streambuf.  If this routine is not        *
- * provided, then overflow() is called instead for each character.       *
- *                                                                       *
- * Note that this routine is not required; it only                       *
- * offers some efficiency over overflow().                               *
- *                                                                       *
+ *
+ * Write the specified number of characters into the output stream.
+ * This routine is called from streambuf.  If this routine is not
+ * provided, then overflow() is called instead for each character.
+ *
+ * Note that this routine is not required; it only
+ * offers some efficiency over overflow().
+ *
  *************************************************************************
  */
 
@@ -313,10 +313,10 @@ std::streamsize ParallelBuffer::xsputn(
 
 /*
  *************************************************************************
- *                                                                       *
- * Write a single character into the parallel buffer.  This routine is   *
- * called from streambuf.                                                *
- *                                                                       *
+ *
+ * Write a single character into the parallel buffer.  This routine is
+ * called from streambuf.
+ *
  *************************************************************************
  */
 

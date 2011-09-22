@@ -52,9 +52,9 @@ OuternodeDataFactory<TYPE>::~OuternodeDataFactory()
 
 /*
  *************************************************************************
- *                                                                       *
- * Clone the factory and copy the default parameters to the new factory. *
- *                                                                       *
+ *
+ * Clone the factory and copy the default parameters to the new factory.
+ *
  *************************************************************************
  */
 
@@ -91,9 +91,9 @@ OuternodeDataFactory<TYPE>::allocate(
 
 /*
  *************************************************************************
- *                                                                       *
- * Return the box geometry type for outernode data objects.              *
- *                                                                       *
+ *
+ * Return the box geometry type for outernode data objects.
+ *
  *************************************************************************
  */
 
@@ -112,9 +112,9 @@ OuternodeDataFactory<TYPE>::getBoxGeometry(
 
 /*
  *************************************************************************
- *                                                                       *
- * Calculate the amount of memory needed to allocate the data object.    *
- *                                                                       *
+ *
+ * Calculate the amount of memory needed to allocate the data object.
+ *
  *************************************************************************
  */
 
@@ -132,10 +132,10 @@ size_t OuternodeDataFactory<TYPE>::getSizeOfMemory(
 
 /*
  *************************************************************************
- *                                                                       *
- * Determine whether this is a valid copy operation to/from OuternodeData*
- * between the supplied datatype.                                        *
- *                                                                       *
+ *
+ * Determine whether this is a valid copy operation to/from OuternodeData
+ * between the supplied datatype.
+ *
  *************************************************************************
  */
 

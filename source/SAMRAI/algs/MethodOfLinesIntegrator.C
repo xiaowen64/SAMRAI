@@ -35,9 +35,9 @@ const int MethodOfLinesIntegrator::ALGS_METHOD_OF_LINES_INTEGRATOR_VERSION = 2;
 
 /*
  *************************************************************************
- *                                                                       *
- * The constructor and destructor for MethodOfLinesIntegrator.           *
- *                                                                       *
+ *
+ * The constructor and destructor for MethodOfLinesIntegrator.
+ *
  *************************************************************************
  */
 
@@ -109,10 +109,10 @@ MethodOfLinesIntegrator::MethodOfLinesIntegrator(
 
 /*
  *************************************************************************
- *                                                                       *
- * Destructor tells tbox::RestartManager to remove this object from the  *
- * list of restart items.                                                *
- *                                                                       *
+ *
+ * Destructor tells tbox::RestartManager to remove this object from the
+ * list of restart items.
+ *
  *************************************************************************
  */
 
@@ -162,10 +162,10 @@ void MethodOfLinesIntegrator::initializeIntegrator(
 }
 /*
  *************************************************************************
- *                                                                       *
- * Calculate the stable time increment by taking the minimum over        *
- * all patches on all levels in the hierarchy.                           *
- *                                                                       *
+ *
+ * Calculate the stable time increment by taking the minimum over
+ * all patches on all levels in the hierarchy.
+ *
  *************************************************************************
  */
 
@@ -205,24 +205,24 @@ double MethodOfLinesIntegrator::getTimestep(
 
 /*
  *************************************************************************
- *                                                                       *
- * Advance the solution through the specified time increment using the   *
- * general RK algorithm.  Each of the following steps is performed over  *
- * all hierarchy levels.                                                 *
- *                                                                       *
- * (1) Copy solution values from current context to scratch context.     *
- *                                                                       *
- * (2) RK multistep loop for d(U)/dt = F(U):                             *
- *                                                                       *
- *    do i = 1, order                                                    *
- *       U_i = U_n + alpha_i * dt/(order) * F(U_i)                       *
- *    end do                                                             *
- *                                                                       *
- * (3) Copy last update of scratch solution to current context.          *
- *                                                                       *
- * Note that each update is performed by the concrete patch strategy     *
- * in which the numerical routines are defined.                          *
- *                                                                       *
+ *
+ * Advance the solution through the specified time increment using the
+ * general RK algorithm.  Each of the following steps is performed over
+ * all hierarchy levels.
+ *
+ * (1) Copy solution values from current context to scratch context.
+ *
+ * (2) RK multistep loop for d(U)/dt = F(U):
+ *
+ *    do i = 1, order
+ *       U_i = U_n + alpha_i * dt/(order) * F(U_i)
+ *    end do
+ *
+ * (3) Copy last update of scratch solution to current context.
+ *
+ * Note that each update is performed by the concrete patch strategy
+ * in which the numerical routines are defined.
+ *
  *************************************************************************
  */
 
@@ -322,39 +322,39 @@ void MethodOfLinesIntegrator::advanceHierarchy(
 
 /*
  *************************************************************************
- *                                                                       *
- * Register the variables with the method of lines solution algorithm    *
- * according to specified algorithm role (i.e., MOL_VAR_TYPE).           *
- *                                                                       *
- *       du/dt = F(u)                                                    *
- *           u  - defined as "solution"                                  *
- *         F(u) - defined as "right-hand-side"                           *
- *                                                                       *
- * Assignment of descriptor indices to variable lists, component         *
- * selectors, and communication  algorithms takes place here.            *
- *                                                                       *
- * The different cases are:                                              *
- *                                                                       *
- * SOLN:                                                                 *
- *            One time level of data is maintained for the current       *
- *            solution and a "scratch" copy is used during the update    *
- *            process.                                                   *
- *                                                                       *
- *            Two factories are needed: SCRATCH, CURRENT.                *
- *                                                                       *
- *            SCRATCH index is added to d_scratch_data.                  *
- *            CURRENT index is added to d_current_data.                  *
- *                                                                       *
- * RHS:                                                                  *
- *            Only one time level of data is stored and no scratch space *
- *            is used.  Data may be set and manipulated at will in user  *
- *            routines.  Data (including ghost values) is never touched  *
- *            outside of user routines.                                  *
- *                                                                       *
- *            One factory needed: CURRENT.                               *
- *                                                                       *
- *            CURRENT index is added to d_current_data.                  *
- *                                                                       *
+ *
+ * Register the variables with the method of lines solution algorithm
+ * according to specified algorithm role (i.e., MOL_VAR_TYPE).
+ *
+ *       du/dt = F(u)
+ *           u  - defined as "solution"
+ *         F(u) - defined as "right-hand-side"
+ *
+ * Assignment of descriptor indices to variable lists, component
+ * selectors, and communication  algorithms takes place here.
+ *
+ * The different cases are:
+ *
+ * SOLN:
+ *            One time level of data is maintained for the current
+ *            solution and a "scratch" copy is used during the update
+ *            process.
+ *
+ *            Two factories are needed: SCRATCH, CURRENT.
+ *
+ *            SCRATCH index is added to d_scratch_data.
+ *            CURRENT index is added to d_current_data.
+ *
+ * RHS:
+ *            Only one time level of data is stored and no scratch space
+ *            is used.  Data may be set and manipulated at will in user
+ *            routines.  Data (including ghost values) is never touched
+ *            outside of user routines.
+ *
+ *            One factory needed: CURRENT.
+ *
+ *            CURRENT index is added to d_current_data.
+ *
  *************************************************************************
  */
 
@@ -487,14 +487,14 @@ void MethodOfLinesIntegrator::registerVariable(
 
 /*
  *************************************************************************
- *                                                                       *
- * Allocate data for new level in hierarchy and initialize that data.    *
- * If the new level replaces a pre-existing level in the hierarchy,      *
- * data is copied from that level to the new level on their intersection.*
- * Other data on the new level is set by interpolating from coarser      *
- * levels in the hierarchy.  Then, user-defined initialization routines  *
- * are called.                                                           *
- *                                                                       *
+ *
+ * Allocate data for new level in hierarchy and initialize that data.
+ * If the new level replaces a pre-existing level in the hierarchy,
+ * data is copied from that level to the new level on their intersection.
+ * Other data on the new level is set by interpolating from coarser
+ * levels in the hierarchy.  Then, user-defined initialization routines
+ * are called.
+ *
  *************************************************************************
  */
 
@@ -556,10 +556,10 @@ void MethodOfLinesIntegrator::initializeLevelData(
 
 /*
  *************************************************************************
- *                                                                       *
- * Re-generate communication schedule after changes to the specified     *
- * range of levels in the hierarchy.                                     *
- *                                                                       *
+ *
+ * Re-generate communication schedule after changes to the specified
+ * range of levels in the hierarchy.
+ *
  *************************************************************************
  */
 void MethodOfLinesIntegrator::resetHierarchyConfiguration(
@@ -611,10 +611,10 @@ void MethodOfLinesIntegrator::resetHierarchyConfiguration(
 
 /*
  *************************************************************************
- *                                                                       *
- * Fill ghost cells for patches on level and call application-specific   *
- * cell tagging routines.                                                *
- *                                                                       *
+ *
+ * Fill ghost cells for patches on level and call application-specific
+ * cell tagging routines.
+ *
  *************************************************************************
  */
 
@@ -666,10 +666,10 @@ void MethodOfLinesIntegrator::applyGradientDetector(
 
 /*
  *************************************************************************
- *                                                                       *
- * Writes the class version number, order, and                           *
- * alpha array to the database.                                          *
- *                                                                       *
+ *
+ * Writes the class version number, order, and
+ * alpha array to the database.
+ *
  *************************************************************************
  */
 
@@ -689,11 +689,11 @@ void MethodOfLinesIntegrator::putToDatabase(
 
 /*
  *************************************************************************
- *                                                                       *
- * Reads in paramemters from the database overriding any values          *
- * read in from the restart database. Also checks to make sure that      *
- * number of alpha values specified equals order of Runga-Kutta scheme.  *
- *                                                                       *
+ *
+ * Reads in paramemters from the database overriding any values
+ * read in from the restart database. Also checks to make sure that
+ * number of alpha values specified equals order of Runga-Kutta scheme.
+ *
  *************************************************************************
  */
 
@@ -770,12 +770,12 @@ void MethodOfLinesIntegrator::getFromInput(
 
 /*
  *************************************************************************
- *                                                                       *
- * Checks that class and restart file version numbers are equal.  If so, *
- * reads in d_order and d_alpha from the database.  Also, does a         *
- * consistency check to make sure that the number of alpha values        *
- * specified equals the order of the Runga-Kutta scheme.                 *
- *                                                                       *
+ *
+ * Checks that class and restart file version numbers are equal.  If so,
+ * reads in d_order and d_alpha from the database.  Also, does a
+ * consistency check to make sure that the number of alpha values
+ * specified equals the order of the Runga-Kutta scheme.
+ *
  *************************************************************************
  */
 
@@ -816,9 +816,9 @@ void MethodOfLinesIntegrator::getFromRestart()
 
 /*
  *************************************************************************
- *                                                                       *
- * Copy all solution data from current context to scratch context.       *
- *                                                                       *
+ *
+ * Copy all solution data from current context to scratch context.
+ *
  *************************************************************************
  */
 
@@ -851,9 +851,9 @@ void MethodOfLinesIntegrator::copyCurrentToScratch(
 
 /*
  *************************************************************************
- *                                                                       *
- * Copy all solution data from scratch context to current context.       *
- *                                                                       *
+ *
+ * Copy all solution data from scratch context to current context.
+ *
  *************************************************************************
  */
 
@@ -886,9 +886,9 @@ void MethodOfLinesIntegrator::copyScratchToCurrent(
 
 /*
  *************************************************************************
- *                                                                       *
- * Print all class data members for MethodOfLinesIntegrator object.      *
- *                                                                       *
+ *
+ * Print all class data members for MethodOfLinesIntegrator object.
+ *
  *************************************************************************
  */
 

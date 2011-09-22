@@ -36,15 +36,15 @@ const int PatchDescriptor::INDEX_UNDEFINED = -1;
 
 /*
  *************************************************************************
- *                                                                       *
- * The constructor sets the max number of registered components to zero  *
- * and allocates the factory and name arrays to the fixed length set     *
- * by the SAMRAIManager utility.  The free list of indices               *
- * is initialized to the full set of potentially used indices.           *
- *                                                                       *
- * The destructor clears the free index list and implicitly              *
- * deallocates the arrays of name strings and factory pointers.          *
- *                                                                       *
+ *
+ * The constructor sets the max number of registered components to zero
+ * and allocates the factory and name arrays to the fixed length set
+ * by the SAMRAIManager utility.  The free list of indices
+ * is initialized to the full set of potentially used indices.
+ *
+ * The destructor clears the free index list and implicitly
+ * deallocates the arrays of name strings and factory pointers.
+ *
  *************************************************************************
  */
 
@@ -71,10 +71,10 @@ PatchDescriptor::~PatchDescriptor()
 
 /*
  *************************************************************************
- *                                                                       *
- * Add the new factory to the list of patch data factories and assign    *
- * it an integer index identifier.  Use a free list item if possible.    *
- *                                                                       *
+ *
+ * Add the new factory to the list of patch data factories and assign
+ * it an integer index identifier.  Use a free list item if possible.
+ *
  *************************************************************************
  */
 
@@ -107,10 +107,10 @@ int PatchDescriptor::definePatchDataComponent(
 
 /*
  *************************************************************************
- *                                                                       *
- * Remove the specified patch data factory index and place the index on  *
- * the list of free indices.                                             *
- *                                                                       *
+ *
+ * Remove the specified patch data factory index and place the index on
+ * the list of free indices.
+ *
  *************************************************************************
  */
 
@@ -131,10 +131,10 @@ PatchDescriptor::removePatchDataComponent(
 
 /*
  *************************************************************************
- *                                                                       *
- * Look up the factory by name; if no matching factory exists, then a    *
- * pointer to null is returned.  The first matching factory is returned. *
- *                                                                       *
+ *
+ * Look up the factory by name; if no matching factory exists, then a
+ * pointer to null is returned.  The first matching factory is returned.
+ *
  *************************************************************************
  */
 
@@ -152,10 +152,10 @@ PatchDescriptor::getPatchDataFactory(
 
 /*
  *************************************************************************
- *                                                                       *
- * Search the factory list for a match and return the associated         *
- * factory.  If no match exists, return a negative identifier.           *
- *                                                                       *
+ *
+ * Search the factory list for a match and return the associated
+ * factory.  If no match exists, return a negative identifier.
+ *
  *************************************************************************
  */
 
@@ -177,9 +177,9 @@ PatchDescriptor::mapNameToIndex(
 
 /*
  *************************************************************************
- *                                                                       *
- * Print index, name, and factory data for the patch descriptor.         *
- *                                                                       *
+ *
+ * Print index, name, and factory data for the patch descriptor.
+ *
  *************************************************************************
  */
 

@@ -36,11 +36,11 @@ math::PatchCellDataNormOpsReal<double> BalanceUtilities::s_norm_ops;
 
 /*
  *************************************************************************
- *                                                                       *
- * Two internal functions for heap sorting an array of doubles           *
- * and an array of spatial key information.  See any standard sorting    *
- * references for more information about heapsort.                       *
- *                                                                       *
+ *
+ * Two internal functions for heap sorting an array of doubles
+ * and an array of spatial key information.  See any standard sorting
+ * references for more information about heapsort.
+ *
  *************************************************************************
  */
 
@@ -88,10 +88,10 @@ void BalanceUtilities::privateHeapify(
 
 /*
  *************************************************************************
- *                                                                       *
- * Internal functions that recursively assigns weights to                *
- * processors (used in the spatial bin packing procedure).               *
- *                                                                       *
+ *
+ * Internal functions that recursively assigns weights to
+ * processors (used in the spatial bin packing procedure).
+ *
  *************************************************************************
  */
 void BalanceUtilities::privateRecursiveProcAssign(
@@ -176,17 +176,17 @@ void BalanceUtilities::privateRecursiveProcAssign(
 
 /*
  *************************************************************************
- *                                                                       *
- * Two internal functions for computing arrays of prime numbers.         *
- *                                                                       *
- * The first computes a prime factorization of N and stores the primes   *
- * in the array p.  The factorization algorithm uses trial division      *
- * described by Donald E. Knuth, The Art of Computer Programming,        *
- * 3rd edition, volume 2 Seminumerical Algorithms (Addison-Wesley,       *
- * 1998), section 4.5.4 (Factoring Into Primes), pp. 380-381.            *
- *                                                                       *
- * The second resets an array of primes by removing all instances of "1".*
- *                                                                       *
+ *
+ * Two internal functions for computing arrays of prime numbers.
+ *
+ * The first computes a prime factorization of N and stores the primes
+ * in the array p.  The factorization algorithm uses trial division
+ * described by Donald E. Knuth, The Art of Computer Programming,
+ * 3rd edition, volume 2 Seminumerical Algorithms (Addison-Wesley,
+ * 1998), section 4.5.4 (Factoring Into Primes), pp. 380-381.
+ *
+ * The second resets an array of primes by removing all instances of "1".
+ *
  *************************************************************************
  */
 
@@ -291,10 +291,10 @@ void BalanceUtilities::privateResetPrimesArray(
 
 /*
  *************************************************************************
- *                                                                       *
- * Internal function to determine whether bad cut points exist for       *
- * domain.  Note that no error checking is done.                         *
- *                                                                       *
+ *
+ * Internal function to determine whether bad cut points exist for
+ * domain.  Note that no error checking is done.
+ *
  *************************************************************************
  */
 
@@ -310,11 +310,11 @@ bool BalanceUtilities::privateBadCutPointsExist(
 
 /*
  *************************************************************************
- *                                                                       *
- * Internal function to initialize bad cut points along each coordinate  *
- * direction of given box based on relation to domain boundary.          *
- * Note that no error checking is done.                                  *
- *                                                                       *
+ *
+ * Internal function to initialize bad cut points along each coordinate
+ * direction of given box based on relation to domain boundary.
+ * Note that no error checking is done.
+ *
  *************************************************************************
  */
 
@@ -376,15 +376,15 @@ void BalanceUtilities::privateInitializeBadCutPointsForBox(
 
 /*
  *************************************************************************
- *                                                                       *
- * Internal function to determine best cut dimension for a box based     *
- * on constraints and adjust bad cut points as needed.  Return           *
- * value is true if some dimension can be cut; false, otherwise.         *
- * If the box can be cut along some dimension, then cut_dim_out is       *
- * set to the longest box dimension that can be cut; otherwise,          *
- * cut_dim_out is set to -1 (an invalid box dimension.                   *
- * Note no error checking is done.                                       *
- *                                                                       *
+ *
+ * Internal function to determine best cut dimension for a box based
+ * on constraints and adjust bad cut points as needed.  Return
+ * value is true if some dimension can be cut; false, otherwise.
+ * If the box can be cut along some dimension, then cut_dim_out is
+ * set to the longest box dimension that can be cut; otherwise,
+ * cut_dim_out is set to -1 (an invalid box dimension.
+ * Note no error checking is done.
+ *
  *************************************************************************
  */
 
@@ -475,11 +475,11 @@ bool BalanceUtilities::privateFindBestCutDimension(
 
 /*
  *************************************************************************
- *                                                                       *
- * Internal function to determine cut point for a single dimension       *
- * given min cut, ideal workload, bad cut point constraints.             *
- * Note no error checking is done.                                       *
- *                                                                       *
+ *
+ * Internal function to determine cut point for a single dimension
+ * given min cut, ideal workload, bad cut point constraints.
+ * Note no error checking is done.
+ *
  *************************************************************************
  */
 
@@ -559,14 +559,14 @@ int BalanceUtilities::privateFindCutPoint(
 
 /*
  *************************************************************************
- *                                                                       *
- * Internal function to cut box in two at given cut point along given    *
- * dimension.  box_lo, box_hi will be new disjoint boxes whose union     *
- * is the box to be cut (in_box).  bad_cut_points_for_boxlo, and         *
- * bad_cut_points_for_boxhi are associated arrays of bad cut points      *
- * defined by given bad cut point arrays for in_box.                     *
- * Note no error checking is done.                                       *
- *                                                                       *
+ *
+ * Internal function to cut box in two at given cut point along given
+ * dimension.  box_lo, box_hi will be new disjoint boxes whose union
+ * is the box to be cut (in_box).  bad_cut_points_for_boxlo, and
+ * bad_cut_points_for_boxhi are associated arrays of bad cut points
+ * defined by given bad cut point arrays for in_box.
+ * Note no error checking is done.
+ *
  *************************************************************************
  */
 
@@ -626,12 +626,12 @@ void BalanceUtilities::privateCutBoxesAndSetBadCutPoints(
 
 /*
  *************************************************************************
- *                                                                       *
- * Internal recursive function to chop a single box into two             *
- * boxes, if possible, based on uniform workload estimates.  It is       *
- * assumed that the bad-cut-point arrays are set properly according      *
- * to the physical domain constraints.  Note no error checking is done.  *
- *                                                                       *
+ *
+ * Internal recursive function to chop a single box into two
+ * boxes, if possible, based on uniform workload estimates.  It is
+ * assumed that the bad-cut-point arrays are set properly according
+ * to the physical domain constraints.  Note no error checking is done.
+ *
  *************************************************************************
  */
 
@@ -761,12 +761,12 @@ void BalanceUtilities::privateRecursiveBisectionUniformSingleBox(
 
 /*
  *************************************************************************
- *                                                                       *
- * Internal recursive function to chop a single box into two             *
- * boxes, if possible, based on nonuniform workload estimates.  It is    *
- * assumed that the bad-cut-point arrays are set properly according      *
- * to the physical domain constraints.  Note no error checking is done.  *
- *                                                                       *
+ *
+ * Internal recursive function to chop a single box into two
+ * boxes, if possible, based on nonuniform workload estimates.  It is
+ * assumed that the bad-cut-point arrays are set properly according
+ * to the physical domain constraints.  Note no error checking is done.
+ *
  *************************************************************************
  */
 
@@ -909,9 +909,9 @@ void BalanceUtilities::privateRecursiveBisectionNonuniformSingleBox(
 
 /*
  *************************************************************************
- *                                                                       *
- * Compute workload in box region of patch.                              *
- *                                                                       *
+ *
+ * Compute workload in box region of patch.
+ *
  *************************************************************************
  */
 
@@ -933,11 +933,11 @@ double BalanceUtilities::computeNonUniformWorkload(
 
 /*
  *************************************************************************
- *                                                                       *
- * Construct a processor mapping using the collection of weights and     *
- * the number of processors.  The return value provides an estimate of   *
- * the load balance efficiency from zero through one hundred.            *
- *                                                                       *
+ *
+ * Construct a processor mapping using the collection of weights and
+ * the number of processors.  The return value provides an estimate of
+ * the load balance efficiency from zero through one hundred.
+ *
  *************************************************************************
  */
 
@@ -1011,16 +1011,16 @@ double BalanceUtilities::binPack(
 
 /*
  *************************************************************************
- *                                                                       *
- * Construct a processor mapping using the collection of weights,        *
- * the number of processors, and the spatial distribution of the boxes.  *
- * The algorithm has two steps: (1) order the boxes based on the         *
- * location of the center of the box and (2) partition the boxes in      *
- * order so that the workload is fairly evenly distributed over the      *
- * processors.                                                           *
- * The return value provides an estimate of the load balance efficiency  *
- * from zero through one hundred percent.                                *
- *                                                                       *
+ *
+ * Construct a processor mapping using the collection of weights,
+ * the number of processors, and the spatial distribution of the boxes.
+ * The algorithm has two steps: (1) order the boxes based on the
+ * location of the center of the box and (2) partition the boxes in
+ * order so that the workload is fairly evenly distributed over the
+ * processors.
+ * The return value provides an estimate of the load balance efficiency
+ * from zero through one hundred percent.
+ *
  *************************************************************************
  */
 
@@ -1184,12 +1184,12 @@ double BalanceUtilities::spatialBinPack(
 
 /*
  **************************************************************************
- *                                                                        *
- * Recursively chops boxes in input list until all pieces have workload   *
- * less than the prescribed ideal workload or no more chopping is allowed *
- * by the given constraints.   A spatially-uniform workload is assumed;   *
- * i.e., all cells are weighted equally.                                  *
- *                                                                        *
+ *
+ * Recursively chops boxes in input list until all pieces have workload
+ * less than the prescribed ideal workload or no more chopping is allowed
+ * by the given constraints.   A spatially-uniform workload is assumed;
+ * i.e., all cells are weighted equally.
+ *
  **************************************************************************
  */
 
@@ -1267,13 +1267,13 @@ void BalanceUtilities::recursiveBisectionUniform(
 
 /*
  **************************************************************************
- *                                                                        *
- * Recursively chops boxes described by patches in input patch level      *
- * until all pieces have workload less than the prescribed ideal workload *
- * or no more chopping is allowed by the given constraints.  A spatially- *
- * nonuniform workload is assumed; i.e., cell weights are given by the    *
- * patch data defined by the weight patch data id.                        *
- *                                                                        *
+ *
+ * Recursively chops boxes described by patches in input patch level
+ * until all pieces have workload less than the prescribed ideal workload
+ * or no more chopping is allowed by the given constraints.  A spatially-
+ * nonuniform workload is assumed; i.e., cell weights are given by the
+ * patch data defined by the weight patch data id.
+ *
  **************************************************************************
  */
 
@@ -1567,10 +1567,10 @@ void BalanceUtilities::computeDomainIndependentProcessorLayout(
 
 /*
  *************************************************************************
- *                                                                       *
- * Sort box work loads in decreasing order using a heapsort.  Both       *
- * the box array and the work array will be returned in sorted order.    *
- *                                                                       *
+ *
+ * Sort box work loads in decreasing order using a heapsort.  Both
+ * the box array and the work array will be returned in sorted order.
+ *
  *************************************************************************
  */
 
@@ -1643,9 +1643,9 @@ void BalanceUtilities::sortDescendingBoxWorkloads(
 
 /*
  **************************************************************************
- *                                                                        *
- * Compute and return load balance efficiency for a level.                *
- *                                                                        *
+ *
+ * Compute and return load balance efficiency for a level.
+ *
  **************************************************************************
  */
 

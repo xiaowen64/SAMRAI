@@ -30,11 +30,11 @@ ArrayDataMiscellaneousOpsReal<TYPE>::~ArrayDataMiscellaneousOpsReal()
 
 /*
  *************************************************************************
- *                                                                       *
- * The const constructor and assignment operator are not actually used   *
- * but are defined here for compilers that require an implementation for *
- * every declaration.                                                    *
- *                                                                       *
+ *
+ * The const constructor and assignment operator are not actually used
+ * but are defined here for compilers that require an implementation for
+ * every declaration.
+ *
  *************************************************************************
  */
 
@@ -54,9 +54,9 @@ void ArrayDataMiscellaneousOpsReal<TYPE>::operator = (
 
 /*
  *************************************************************************
- *                                                                       *
- * General templated miscellaneous operations for array data.            *
- *                                                                       *
+ *
+ * General templated miscellaneous operations for array data.
+ *
  *************************************************************************
  */
 

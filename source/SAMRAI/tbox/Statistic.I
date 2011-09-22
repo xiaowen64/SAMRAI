@@ -15,9 +15,9 @@ namespace tbox {
 
 /*
  *************************************************************************
- *                                                                       *
- * Utility functions to retrieve statistic name and type information.    *
- *                                                                       *
+ *
+ * Utility functions to retrieve statistic name and type information.
+ *
  *************************************************************************
  */
 
@@ -48,9 +48,9 @@ SAMRAI_INLINE_KEYWORD void Statistic::reset() {
 
 /*
  *************************************************************************
- *                                                                       *
- * Protected utility functions to retrieve statistic record data.        *
- *                                                                       *
+ *
+ * Protected utility functions to retrieve statistic record data.
+ *
  *************************************************************************
  */
 
@@ -68,10 +68,10 @@ Statistic::getPatchStatSeqArray() const
 
 /*
  *************************************************************************
- *                                                                       *
- * Return false indicating that statistic data size cannot be computed   *
- * on each processor a priori.  This can probably be optimized later.    *
- *                                                                       *
+ *
+ * Return false indicating that statistic data size cannot be computed
+ * on each processor a priori.  This can probably be optimized later.
+ *
  *************************************************************************
  */
 

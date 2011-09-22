@@ -1317,8 +1317,8 @@ void HierSumTest::zeroOutPhysicalBoundaryCellsAtCoarseFineBoundary(
 /*
  *************************************************************************
  *
- * Get data from input database.                                         *
- *                                                                       *
+ * Get data from input database.
+ *
  *************************************************************************
  */
 void

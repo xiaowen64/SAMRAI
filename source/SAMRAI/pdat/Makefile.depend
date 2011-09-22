@@ -18,6 +18,12 @@ DEPENDS_0:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.I			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.I				\
@@ -111,6 +117,12 @@ DEPENDS_1:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.I			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.I				\
@@ -269,6 +281,12 @@ DEPENDS_3:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.I			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.I				\
@@ -367,6 +385,12 @@ DEPENDS_4:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoundaryLookupTable.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.I			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
@@ -519,6 +543,12 @@ DEPENDS_5:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoundaryLookupTable.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.I			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
@@ -667,6 +697,12 @@ DEPENDS_6:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.I			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
@@ -781,6 +817,12 @@ DEPENDS_7:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoundaryLookupTable.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.I			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
@@ -929,6 +971,12 @@ DEPENDS_8:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoundaryLookupTable.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.I			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
@@ -1081,6 +1129,12 @@ DEPENDS_9:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoundaryLookupTable.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.I			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
@@ -1233,6 +1287,12 @@ DEPENDS_10:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoundaryLookupTable.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.I			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
@@ -1384,6 +1444,12 @@ DEPENDS_11:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoundaryLookupTable.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.I			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
@@ -1532,6 +1598,12 @@ DEPENDS_12:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.I			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
@@ -1667,6 +1739,12 @@ DEPENDS_14:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoundaryLookupTable.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.I			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
@@ -1815,6 +1893,12 @@ DEPENDS_15:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.I			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
@@ -1903,6 +1987,12 @@ DEPENDS_16:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.I			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.I				\
@@ -1987,6 +2077,12 @@ DEPENDS_17:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoundaryLookupTable.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.I			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
@@ -2165,6 +2261,12 @@ DEPENDS_20:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoundaryLookupTable.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.I			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
@@ -2325,6 +2427,12 @@ DEPENDS_21:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoundaryLookupTable.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.I			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
@@ -2481,6 +2589,12 @@ DEPENDS_22:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.I			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
@@ -2595,6 +2709,12 @@ DEPENDS_23:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoundaryLookupTable.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.I			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
@@ -2751,6 +2871,12 @@ DEPENDS_24:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoundaryLookupTable.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.I			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
@@ -2911,6 +3037,12 @@ DEPENDS_25:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoundaryLookupTable.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.I			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
@@ -3071,6 +3203,12 @@ DEPENDS_26:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoundaryLookupTable.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.I			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
@@ -3230,6 +3368,12 @@ DEPENDS_27:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoundaryLookupTable.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.I			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
@@ -3386,6 +3530,12 @@ DEPENDS_28:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.I			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
@@ -3521,6 +3671,12 @@ DEPENDS_30:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoundaryLookupTable.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.I			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
@@ -3677,6 +3833,12 @@ DEPENDS_31:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.I			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
@@ -3765,6 +3927,12 @@ DEPENDS_32:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.I			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.I				\
@@ -3849,6 +4017,12 @@ DEPENDS_33:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoundaryLookupTable.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.I			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
@@ -4007,6 +4181,12 @@ DEPENDS_34:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoundaryLookupTable.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.I			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
@@ -4167,6 +4347,12 @@ DEPENDS_35:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoundaryLookupTable.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.I			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
@@ -4323,6 +4509,12 @@ DEPENDS_36:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.I			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
@@ -4437,6 +4629,12 @@ DEPENDS_37:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoundaryLookupTable.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.I			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
@@ -4593,6 +4791,12 @@ DEPENDS_38:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoundaryLookupTable.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.I			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
@@ -4753,6 +4957,12 @@ DEPENDS_39:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoundaryLookupTable.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.I			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
@@ -4913,6 +5123,12 @@ DEPENDS_40:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoundaryLookupTable.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.I			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
@@ -5072,6 +5288,12 @@ DEPENDS_41:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoundaryLookupTable.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.I			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
@@ -5228,6 +5450,12 @@ DEPENDS_42:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.I			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
@@ -5363,6 +5591,12 @@ DEPENDS_44:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoundaryLookupTable.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.I			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
@@ -5519,6 +5753,12 @@ DEPENDS_45:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.I			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
@@ -5607,6 +5847,12 @@ DEPENDS_46:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.I			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.I				\
@@ -5691,6 +5937,12 @@ DEPENDS_47:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoundaryLookupTable.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.I			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
@@ -5845,6 +6097,12 @@ DEPENDS_48:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.I			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
@@ -5941,6 +6199,12 @@ DEPENDS_49:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.I			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
@@ -6037,6 +6301,12 @@ DEPENDS_50:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.I			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
@@ -6133,6 +6403,12 @@ DEPENDS_51:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.I			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.I				\
@@ -6223,6 +6499,12 @@ DEPENDS_52:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoundaryLookupTable.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.I			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
@@ -6337,6 +6619,12 @@ DEPENDS_53:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoundaryLookupTable.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.I			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
@@ -6467,6 +6755,12 @@ DEPENDS_55:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoundaryLookupTable.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.I			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
@@ -6613,6 +6907,12 @@ DEPENDS_56:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoundaryLookupTable.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.I			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
@@ -6759,6 +7059,12 @@ DEPENDS_57:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoundaryLookupTable.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.I			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
@@ -6905,6 +7211,12 @@ DEPENDS_58:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoundaryLookupTable.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.I			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
@@ -7051,6 +7363,12 @@ DEPENDS_59:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoundaryLookupTable.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.I			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
@@ -7197,6 +7515,12 @@ DEPENDS_60:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoundaryLookupTable.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.I			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
@@ -7356,6 +7680,12 @@ DEPENDS_61:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoundaryLookupTable.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.I			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
@@ -7512,6 +7842,12 @@ DEPENDS_62:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.I			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
@@ -7626,6 +7962,12 @@ DEPENDS_63:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoundaryLookupTable.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.I			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
@@ -7782,6 +8124,12 @@ DEPENDS_64:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoundaryLookupTable.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.I			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
@@ -7941,6 +8289,12 @@ DEPENDS_65:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoundaryLookupTable.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.I			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
@@ -8101,6 +8455,12 @@ DEPENDS_66:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoundaryLookupTable.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.I			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
@@ -8260,6 +8620,12 @@ DEPENDS_67:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoundaryLookupTable.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.I			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
@@ -8416,6 +8782,12 @@ DEPENDS_68:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.I			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
@@ -8551,6 +8923,12 @@ DEPENDS_70:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoundaryLookupTable.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.I			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
@@ -8706,6 +9084,12 @@ DEPENDS_71:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.I			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
@@ -8794,6 +9178,12 @@ DEPENDS_72:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.I			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.I				\
@@ -8878,6 +9268,12 @@ DEPENDS_73:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoundaryLookupTable.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.I			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
@@ -9032,6 +9428,12 @@ DEPENDS_74:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.I			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
@@ -9151,6 +9553,12 @@ DEPENDS_75:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoundaryLookupTable.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.I			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
@@ -9303,6 +9711,12 @@ DEPENDS_76:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.I			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
@@ -9395,6 +9809,12 @@ DEPENDS_77:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoundaryLookupTable.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.I			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
@@ -9553,6 +9973,12 @@ DEPENDS_78:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoundaryLookupTable.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.I			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
@@ -9713,6 +10139,12 @@ DEPENDS_79:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoundaryLookupTable.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.I			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
@@ -9869,6 +10301,12 @@ DEPENDS_80:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.I			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
@@ -9986,6 +10424,12 @@ DEPENDS_81:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoundaryLookupTable.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.I			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
@@ -10142,6 +10586,12 @@ DEPENDS_82:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoundaryLookupTable.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.I			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
@@ -10302,6 +10752,12 @@ DEPENDS_83:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoundaryLookupTable.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.I			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
@@ -10462,6 +10918,12 @@ DEPENDS_84:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoundaryLookupTable.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.I			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
@@ -10622,6 +11084,12 @@ DEPENDS_85:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoundaryLookupTable.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.I			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
@@ -10778,6 +11246,12 @@ DEPENDS_86:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.I			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
@@ -10870,6 +11344,12 @@ DEPENDS_87:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoundaryLookupTable.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.I			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
@@ -11030,6 +11510,12 @@ DEPENDS_88:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoundaryLookupTable.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.I			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
@@ -11184,6 +11670,12 @@ DEPENDS_89:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.I			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
@@ -11301,6 +11793,12 @@ DEPENDS_90:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoundaryLookupTable.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.I			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
@@ -11457,6 +11955,12 @@ DEPENDS_91:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoundaryLookupTable.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.I			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
@@ -11613,6 +12117,12 @@ DEPENDS_92:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.I			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
@@ -11705,6 +12215,12 @@ DEPENDS_93:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoundaryLookupTable.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.I			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
@@ -11863,6 +12379,12 @@ DEPENDS_94:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoundaryLookupTable.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.I			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
@@ -12019,6 +12541,12 @@ DEPENDS_95:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.I			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
@@ -12136,6 +12664,12 @@ DEPENDS_96:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoundaryLookupTable.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.I			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
@@ -12292,6 +12826,12 @@ DEPENDS_97:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoundaryLookupTable.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.I			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
@@ -12452,6 +12992,12 @@ DEPENDS_98:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoundaryLookupTable.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.I			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
@@ -12608,6 +13154,12 @@ DEPENDS_99:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.I			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
@@ -12700,6 +13252,12 @@ DEPENDS_100:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoundaryLookupTable.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.I			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
@@ -12854,6 +13412,12 @@ DEPENDS_101:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.I			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
@@ -12950,6 +13514,12 @@ DEPENDS_102:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.I			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
@@ -13050,6 +13620,12 @@ DEPENDS_103:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoundaryLookupTable.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.I			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
@@ -13210,6 +13786,12 @@ DEPENDS_104:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoundaryLookupTable.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.I			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
@@ -13366,6 +13948,12 @@ DEPENDS_105:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.I			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
@@ -13480,6 +14068,12 @@ DEPENDS_106:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoundaryLookupTable.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.I			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
@@ -13636,6 +14230,12 @@ DEPENDS_107:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoundaryLookupTable.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.I			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
@@ -13796,6 +14396,12 @@ DEPENDS_108:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoundaryLookupTable.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.I			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
@@ -13956,6 +14562,12 @@ DEPENDS_109:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoundaryLookupTable.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.I			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
@@ -14115,6 +14727,12 @@ DEPENDS_110:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoundaryLookupTable.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.I			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
@@ -14271,6 +14889,12 @@ DEPENDS_111:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.I			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
@@ -14406,6 +15030,12 @@ DEPENDS_113:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoundaryLookupTable.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.I			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
@@ -14562,6 +15192,12 @@ DEPENDS_114:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.I			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
@@ -14650,6 +15286,12 @@ DEPENDS_115:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.I			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.I				\
@@ -14734,6 +15376,12 @@ DEPENDS_116:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoundaryLookupTable.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.I			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
@@ -14888,6 +15536,12 @@ DEPENDS_117:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.I			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.I				\
@@ -14983,6 +15637,12 @@ DEPENDS_118:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoundaryLookupTable.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.I			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
@@ -15102,6 +15762,12 @@ DEPENDS_119:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoundaryLookupTable.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.I			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\

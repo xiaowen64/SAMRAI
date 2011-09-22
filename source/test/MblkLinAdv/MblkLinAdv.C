@@ -551,16 +551,16 @@ SAMRAI_INLINE_KEYWORD void my_slopes(
 
 /*
  *************************************************************************
- *                                                                       *
- * The constructor for MblkLinAdv class sets data members to defualt values, *
- * creates variables that define the solution state for the linear       *
+ *
+ * The constructor for MblkLinAdv class sets data members to defualt values,
+ * creates variables that define the solution state for the linear
  * advection equation.
- *                                                                       *
- * After default values are set, this routine calls getFromRestart()     *
- * if execution from a restart file is specified.  Finally,              *
- * getFromInput() is called to read values from the given input          *
- * database (potentially overriding those found in the restart file).    *
- *                                                                       *
+ *
+ * After default values are set, this routine calls getFromRestart()
+ * if execution from a restart file is specified.  Finally,
+ * getFromInput() is called to read values from the given input
+ * database (potentially overriding those found in the restart file).
+ *
  *************************************************************************
  */
 
@@ -791,9 +791,9 @@ MblkLinAdv::MblkLinAdv(
 
 /*
  *************************************************************************
- *                                                                       *
- * Empty destructor for MblkLinAdv class.                                    *
- *                                                                       *
+ *
+ * Empty destructor for MblkLinAdv class.
+ *
  *************************************************************************
  */
 
@@ -803,11 +803,11 @@ MblkLinAdv::~MblkLinAdv() {
 
 /*
  *************************************************************************
- *                                                                       *
- * Register conserved variable (u) (i.e., solution state variable) and   *
- * flux variable with hyperbolic integrator that manages storage for     *
- * those quantities.  Also, register plot data with Vizamrai or VisIt.   *
- *                                                                       *
+ *
+ * Register conserved variable (u) (i.e., solution state variable) and
+ * flux variable with hyperbolic integrator that manages storage for
+ * those quantities.  Also, register plot data with Vizamrai or VisIt.
+ *
  *************************************************************************
  */
 
@@ -890,14 +890,14 @@ void MblkLinAdv::registerModelVariables(
 
 /*
  *************************************************************************
- *                                                                       *
- * Set initial data for solution variables on patch interior.            *
- * This routine is called whenever a new patch is introduced to the      *
- * AMR patch hierarchy.  Note that the routine does nothing unless       *
- * we are at the initial time.  In all other cases, conservative         *
- * interpolation from coarser levels and copies from patches at the      *
- * same mesh resolution are sufficient to set data.                      *
- *                                                                       *
+ *
+ * Set initial data for solution variables on patch interior.
+ * This routine is called whenever a new patch is introduced to the
+ * AMR patch hierarchy.  Note that the routine does nothing unless
+ * we are at the initial time.  In all other cases, conservative
+ * interpolation from coarser levels and copies from patches at the
+ * same mesh resolution are sufficient to set data.
+ *
  *************************************************************************
  */
 void MblkLinAdv::initializeDataOnPatch(
@@ -1063,9 +1063,9 @@ void MblkLinAdv::initializeDataOnPatch(
 
 /*
  *************************************************************************
- *                                                                       *
- * Compute stable time increment for patch.  Return this value.          *
- *                                                                       *
+ *
+ * Compute stable time increment for patch.  Return this value.
+ *
  *************************************************************************
  */
 
@@ -1228,11 +1228,11 @@ double MblkLinAdv::computeStableDtOnPatch(
 
 /*
  *************************************************************************
- *                                                                       *
- * Compute time integral of numerical fluxes for finite difference       *
- * at each cell face on patch.  When d_dim == tbox::Dimension(3)), there are two options    *
- * for the transverse flux correction.  Otherwise, there is only one.    *
- *                                                                       *
+ *
+ * Compute time integral of numerical fluxes for finite difference
+ * at each cell face on patch.  When d_dim == tbox::Dimension(3)), there are two options
+ * for the transverse flux correction.  Otherwise, there is only one.
+ *
  *************************************************************************
  */
 
@@ -1499,10 +1499,10 @@ void MblkLinAdv::computeFluxesOnPatch(
 
 /*
  *************************************************************************
- *                                                                       *
- * Update solution variables by performing a conservative                *
- * difference with the fluxes calculated in computeFluxesOnPatch().      *
- *                                                                       *
+ *
+ * Update solution variables by performing a conservative
+ * difference with the fluxes calculated in computeFluxesOnPatch().
+ *
  *************************************************************************
  */
 
@@ -1520,12 +1520,12 @@ void MblkLinAdv::conservativeDifferenceOnPatch(
 
 /*
  *************************************************************************
- *                                                                       *
- * Set the data in ghost cells corresponding to physical boundary        *
- * conditions.  Note that boundary geometry configuration information    *
- * (i.e., faces, edges, and nodes) is obtained from the patch geometry   *
- * object owned by the patch.                                            *
- *                                                                       *
+ *
+ * Set the data in ghost cells corresponding to physical boundary
+ * conditions.  Note that boundary geometry configuration information
+ * (i.e., faces, edges, and nodes) is obtained from the patch geometry
+ * object owned by the patch.
+ *
  *************************************************************************
  */
 
@@ -1612,9 +1612,9 @@ void MblkLinAdv::setPhysicalBoundaryConditions(
 
 /*
  *************************************************************************
- *                                                                       *
+ *
  * Refine operations
- *                                                                       *
+ *
  *************************************************************************
  */
 
@@ -1875,9 +1875,9 @@ void MblkLinAdv::postprocessRefine(
 
 /*
  *************************************************************************
- *                                                                       *
+ *
  * Coarsen operations
- *                                                                       *
+ *
  *************************************************************************
  */
 void MblkLinAdv::preprocessCoarsen(
@@ -2088,10 +2088,10 @@ void MblkLinAdv::postprocessCoarsen(
 
 /*
  *************************************************************************
- *                                                                       *
- * Tag cells for refinement using gradient detector.  Tagging criteria   *
- * defined in input.                                                     *
- *                                                                       *
+ *
+ * Tag cells for refinement using gradient detector.  Tagging criteria
+ * defined in input.
+ *
  *************************************************************************
  */
 

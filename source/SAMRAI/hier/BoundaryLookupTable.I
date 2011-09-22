@@ -16,9 +16,9 @@ namespace hier {
 
 /*
  *************************************************************************
- *                                                                       *
- * Static lookup table member functions.                                 *
- *                                                                       *
+ *
+ * Static lookup table member functions.
+ *
  *************************************************************************
  */
 
@@ -34,9 +34,9 @@ BoundaryLookupTable *BoundaryLookupTable::getLookupTable(
 
 /*
  *************************************************************************
- *                                                                       *
- * Inline accessory functions to retrieve data members.                  *
- *                                                                       *
+ *
+ * Inline accessory functions to retrieve data members.
+ *
  *************************************************************************
  */
 
@@ -86,10 +86,10 @@ bool BoundaryLookupTable::isLower(
 
 /*
  *************************************************************************
- *                                                                       *
- * Get array of IntVectors indication location of a boundary relative    *
- * to a patch.                                                           *
- *                                                                       *
+ *
+ * Get array of IntVectors indication location of a boundary relative
+ * to a patch.
+ *
  *************************************************************************
  */
 

@@ -128,7 +128,7 @@ public:
 
    /**
     * Return discrete weighted \f$L_2\f$-norm of the data.  That is, the return
-    * value is the sum \f$\sqrt{ \sum_i ( (data_i * wgt_i) *
+    * value is the sum \f$\sqrt{ \sum_i ( (data_i * wgt_i)
     * \bar{(data_i * wgt_i)} cvol_i ) }\f$.
     */
    double

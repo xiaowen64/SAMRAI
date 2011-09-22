@@ -47,10 +47,10 @@ bool Parser::s_static_tables_initialized = 0;
 
 /*
  *************************************************************************
- *                                                                       *
- * The constructor creates an unitialized parser object.  All of the     *
- * interesting work is done by member function parse().                  *
- *                                                                       *
+ *
+ * The constructor creates an unitialized parser object.  All of the
+ * interesting work is done by member function parse().
+ *
  *************************************************************************
  */
 
@@ -64,9 +64,9 @@ Parser::Parser()
 
 /*
  *************************************************************************
- *                                                                       *
- * The destructor automatically deallocates the parser object data.      *
- *                                                                       *
+ *
+ * The destructor automatically deallocates the parser object data.
+ *
  *************************************************************************
  */
 
@@ -76,10 +76,10 @@ Parser::~Parser()
 
 /*
  *************************************************************************
- *                                                                       *
- * Begin parsing the input database file.  Return the number of errors   *
- * encountered in the parse.                                             *
- *                                                                       *
+ *
+ * Begin parsing the input database file.  Return the number of errors
+ * encountered in the parse.
+ *
  *************************************************************************
  */
 
@@ -126,9 +126,9 @@ int Parser::parse(
 
 /*
  *************************************************************************
- *                                                                       *
- * Advance the cursor to the next line in the current input file.        *
- *                                                                       *
+ *
+ * Advance the cursor to the next line in the current input file.
+ *
  *************************************************************************
  */
 
@@ -143,10 +143,10 @@ void Parser::advanceLine(
 
 /*
  *************************************************************************
- *                                                                       *
- * Advance the cursor position by the token in the specified string.     *
- * Tabs are expanded assuming tab stops at eight character markers.      *
- *                                                                       *
+ *
+ * Advance the cursor position by the token in the specified string.
+ * Tabs are expanded assuming tab stops at eight character markers.
+ *
  *************************************************************************
  */
 
@@ -166,9 +166,9 @@ void Parser::advanceCursor(
 
 /*
  *************************************************************************
- *                                                                       *
- * Print out errors to pout and track the number of errors.              *
- *                                                                       *
+ *
+ * Print out errors to pout and track the number of errors.
+ *
  *************************************************************************
  */
 
@@ -192,9 +192,9 @@ void Parser::error(
 
 /*
  *************************************************************************
- *                                                                       *
- * Print out warnings to pout and track the number of warnings.          *
- *                                                                       *
+ *
+ * Print out warnings to pout and track the number of warnings.
+ *
  *************************************************************************
  */
 
@@ -218,9 +218,9 @@ void Parser::warning(
 
 /*
  *************************************************************************
- *                                                                       *
- * Set the input line which is currently being parsed.                   *
- *                                                                       *
+ *
+ * Set the input line which is currently being parsed.
+ *
  *************************************************************************
  */
 
@@ -233,10 +233,10 @@ void Parser::setLine(
 
 /*
  *************************************************************************
- *                                                                       *
- * Iterate through the database scopes, looking for the first match on   *
- * the key value.                                                        *
- *                                                                       *
+ *
+ * Iterate through the database scopes, looking for the first match on
+ * the key value.
+ *
  *************************************************************************
  */
 
@@ -252,10 +252,10 @@ Pointer<Database> Parser::getDatabaseWithKey(
 
 /*
  *************************************************************************
- *                                                                       *
- * Create a new parse state on the parse stack and open the specified    *
- * new file for reading.                                                 *
- *                                                                       *
+ *
+ * Create a new parse state on the parse stack and open the specified
+ * new file for reading.
+ *
  *************************************************************************
  */
 
@@ -303,9 +303,9 @@ bool Parser::pushIncludeFile(
 
 /*
  *************************************************************************
- *                                                                       *
- * Close the current input file and pop the parse stack.                 *
- *                                                                       *
+ *
+ * Close the current input file and pop the parse stack.
+ *
  *************************************************************************
  */
 
@@ -318,11 +318,11 @@ void Parser::popIncludeFile()
 
 /*
  *************************************************************************
- *                                                                       *
- * Manage the input reading for the flex scanner.  If running with MPI,  *
- * the node zero reads the data and broadcasts the length and the data   *
- * to all processors.                                                    *
- *                                                                       *
+ *
+ * Manage the input reading for the flex scanner.  If running with MPI,
+ * the node zero reads the data and broadcasts the length and the data
+ * to all processors.
+ *
  *************************************************************************
  */
 

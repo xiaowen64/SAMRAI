@@ -29,9 +29,9 @@ MblkHyperbolicPatchStrategy::~MblkHyperbolicPatchStrategy()
 
 /*
  *************************************************************************
- *                                                                       *
- * Default virtual function implementations.                             *
- *                                                                       *
+ *
+ * Default virtual function implementations.
+ *
  *************************************************************************
  */
 

@@ -40,10 +40,10 @@ const int CVODESolver::STAT_OUTPUT_BUFFER_SIZE = 256;
 
 /*
  *************************************************************************
- *                                                                       *
- * Static member functions that provide linkage with CVODE package.      *
- * See header file for CVODEAbstractFunctions for more information.      *
- *                                                                       *
+ *
+ * Static member functions that provide linkage with CVODE package.
+ * See header file for CVODEAbstractFunctions for more information.
+ *
  *************************************************************************
  */
 
@@ -59,9 +59,9 @@ int CVODESolver::CVODERHSFuncEval(
 
 /*
  *************************************************************************
- *                                                                       *
- * Static member functions that provide linkage with CVSpgmr package.    *
- *                                                                       *
+ *
+ * Static member functions that provide linkage with CVSpgmr package.
+ *
  *************************************************************************
  */
 
@@ -123,9 +123,9 @@ int CVODESolver::CVSpgmrPrecondSolve(
 
 /*
  *************************************************************************
- *                                                                       *
- * CVODESolver constructor and destructor.                         *
- *                                                                       *
+ *
+ * CVODESolver constructor and destructor.
+ *
  *************************************************************************
  */
 CVODESolver::CVODESolver(
@@ -206,9 +206,9 @@ CVODESolver::~CVODESolver()
 
 /*
  *************************************************************************
- *                                                                       *
- * Functions to initialize linear solver and reset CVODE structure.      *
- *                                                                       *
+ *
+ * Functions to initialize linear solver and reset CVODE structure.
+ *
  *************************************************************************
  */
 
@@ -371,10 +371,10 @@ void CVODESolver::initializeCVODE()
 
 /*
  *************************************************************************
- *                                                                       *
- * Integrate system of ODEs to d_t_f.  If necessary, re-initialize       *
- * CVODE.                                                                *
- *                                                                       *
+ *
+ * Integrate system of ODEs to d_t_f.  If necessary, re-initialize
+ * CVODE.
+ *
  *************************************************************************
  */
 int CVODESolver::solve()
@@ -408,9 +408,9 @@ int CVODESolver::solve()
 
 /*
  *************************************************************************
- *                                                                       *
- * Setting CVODE log file name and print flag for CVODE statistics.    *
- *                                                                       *
+ *
+ * Setting CVODE log file name and print flag for CVODE statistics.
+ *
  *************************************************************************
  */
 
@@ -428,9 +428,9 @@ void CVODESolver::setLogFileData(
 
 /*
  *************************************************************************
- *                                                                       *
- * Accessor functions for user-defined function and linear solver.       *
- *                                                                       *
+ *
+ * Accessor functions for user-defined function and linear solver.
+ *
  *************************************************************************
  */
 
@@ -453,9 +453,9 @@ CVODEAbstractFunctions *CVODESolver::getCVODEFunctions() const
 }
 /*
  *************************************************************************
- *                                                                       *
- * Accessor functions for CVODE integration parameters.                  *
- *                                                                       *
+ *
+ * Accessor functions for CVODE integration parameters.
+ *
  *************************************************************************
  */
 void CVODESolver::setLinearMultistepMethod(
@@ -625,9 +625,9 @@ void CVODESolver::setMinimumAbsoluteStepSize(
 
 /*
  *************************************************************************
- *                                                                       *
- * Accessor functions for CVSpgmr parameters.                            *
- *                                                                       *
+ *
+ * Accessor functions for CVSpgmr parameters.
+ *
  *************************************************************************
  */
 void CVODESolver::setPreconditioningType(
@@ -676,9 +676,9 @@ void CVODESolver::setCVSpgmrToleranceScaleFactor(
 
 /*
  *************************************************************************
- *                                                                       *
- * Accessor functions for results of CVODE integration step.             *
- *                                                                       *
+ *
+ * Accessor functions for results of CVODE integration step.
+ *
  *************************************************************************
  */
 SundialsAbstractVector *CVODESolver::getSolutionVector() const
@@ -705,9 +705,9 @@ double CVODESolver::getActualFinalValueOfIndependentVariable() const
 
 /*
  *************************************************************************
- *                                                                       *
- * Access methods for CVODE statistics.                                  *
- *                                                                       *
+ *
+ * Access methods for CVODE statistics.
+ *
  *************************************************************************
  */
 
@@ -872,9 +872,9 @@ double CVODESolver::getCVODESuggestedToleranceScalingFactor() const
 
 /*
  *************************************************************************
- *                                                                       *
- * Access methods for CVSpgmr statistics.                                *
- *                                                                       *
+ *
+ * Access methods for CVSpgmr statistics.
+ *
  *************************************************************************
  */
 
@@ -963,9 +963,9 @@ int CVODESolver::getCVSpgmrMemoryUsageForIntegers() const
 
 /*
  *************************************************************************
- *                                                                       *
- * Print CVODESolver object data to given output stream.            *
- *                                                                       *
+ *
+ * Print CVODESolver object data to given output stream.
+ *
  *************************************************************************
  */
 void CVODESolver::printClassData(

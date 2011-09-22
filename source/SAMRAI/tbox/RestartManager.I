@@ -13,9 +13,9 @@ namespace tbox {
 
 /*
  *************************************************************************
- *                                                                       *
- * Destructor                                                            *
- *                                                                       *
+ *
+ * Destructor
+ *
  *************************************************************************
  */
 SAMRAI_INLINE_KEYWORD
@@ -25,9 +25,9 @@ RestartManager::~RestartManager()
 
 /*
  *************************************************************************
- *                                                                       *
- * Returns d_is_from_restart.                                            *
- *                                                                       *
+ *
+ * Returns d_is_from_restart.
+ *
  *************************************************************************
  */
 
@@ -39,10 +39,10 @@ bool RestartManager::isFromRestart()
 
 /*
  *************************************************************************
- *                                                                       *
- * Returns the root of the restart database which was opened at the      *
- * start of the simulation.                                              *
- *                                                                       *
+ *
+ * Returns the root of the restart database which was opened at the
+ * start of the simulation.
+ *
  *************************************************************************
  */
 SAMRAI_INLINE_KEYWORD
@@ -53,9 +53,9 @@ Pointer<Database> RestartManager::getRootDatabase()
 
 /*
  *************************************************************************
- *                                                                       *
- * Sets the root database                                                *
- *                                                                       *
+ *
+ * Sets the root database
+ *
  *************************************************************************
  */
 SAMRAI_INLINE_KEYWORD
@@ -73,9 +73,9 @@ void RestartManager::setRootDatabase(
 
 /*
  *************************************************************************
- *                                                                       *
- * Sets the database factory                                             *
- *                                                                       *
+ *
+ * Sets the database factory
+ *
  *************************************************************************
  */
 SAMRAI_INLINE_KEYWORD
@@ -87,9 +87,9 @@ void RestartManager::setDatabaseFactory(
 
 /*
  *************************************************************************
- *                                                                       *
- * writeRestartFile                                                      *
- *                                                                       *
+ *
+ * writeRestartFile
+ *
  *************************************************************************
  */
 SAMRAI_INLINE_KEYWORD

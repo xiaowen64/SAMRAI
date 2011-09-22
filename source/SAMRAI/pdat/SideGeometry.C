@@ -26,10 +26,10 @@ namespace pdat {
 
 /*
  *************************************************************************
- *                                                                       *
- * Create a side geometry object given the box, ghost cell width, and    *
- * direction information.                                                *
- *                                                                       *
+ *
+ * Create a side geometry object given the box, ghost cell width, and
+ * direction information.
+ *
  *************************************************************************
  */
 
@@ -53,15 +53,15 @@ SideGeometry::~SideGeometry()
 
 /*
  *************************************************************************
- *                                                                       *
- * Attempt to calculate the intersection between two side centered box   *
- * geometries.  The calculateOverlap() checks whether both arguments are *
- * side geometries; if so, it compuates the intersection.  If not, then  *
- * it calls calculateOverlap() on the source object (if retry is true)   *
- * to allow the source a chance to calculate the intersection.  See the  *
- * hier::BoxGeometry base class for more information about the protocol. *
- * A pointer to null is returned if the intersection cannot be computed. *
- *                                                                       *
+ *
+ * Attempt to calculate the intersection between two side centered box
+ * geometries.  The calculateOverlap() checks whether both arguments are
+ * side geometries; if so, it compuates the intersection.  If not, then
+ * it calls calculateOverlap() on the source object (if retry is true)
+ * to allow the source a chance to calculate the intersection.  See the
+ * hier::BoxGeometry base class for more information about the protocol.
+ * A pointer to null is returned if the intersection cannot be computed.
+ *
  *************************************************************************
  */
 
@@ -97,10 +97,10 @@ tbox::Pointer<hier::BoxOverlap> SideGeometry::calculateOverlap(
 
 /*
  *************************************************************************
- *                                                                       *
- * Convert an AMR-index space hier::Box into a side-index space box by a *
- * increasing the index size by one in the axis direction.               *
- *                                                                       *
+ *
+ * Convert an AMR-index space hier::Box into a side-index space box by a
+ * increasing the index size by one in the axis direction.
+ *
  *************************************************************************
  */
 
@@ -124,15 +124,15 @@ hier::Box SideGeometry::toSideBox(
 
 /*
  *************************************************************************
- *                                                                       *
- * Compute the overlap between two side centered boxes.  The algorithm   *
- * is fairly straight-forward.  First, we perform a quick-and-dirty      *
- * intersection to see if the boxes might overlap.  If that intersection *
- * is not empty, then we need to do a better job calculating the overlap *
- * for each dimension.  Note that the AMR index space boxes must be      *
- * shifted into the side centered space before we calculate the proper   *
- * intersections.                                                        *
- *                                                                       *
+ *
+ * Compute the overlap between two side centered boxes.  The algorithm
+ * is fairly straight-forward.  First, we perform a quick-and-dirty
+ * intersection to see if the boxes might overlap.  If that intersection
+ * is not empty, then we need to do a better job calculating the overlap
+ * for each dimension.  Note that the AMR index space boxes must be
+ * shifted into the side centered space before we calculate the proper
+ * intersections.
+ *
  *************************************************************************
  */
 
@@ -210,9 +210,9 @@ tbox::Pointer<hier::BoxOverlap> SideGeometry::doOverlap(
 
 /*
  *************************************************************************
- *                                                                       *
- * Set up a SideOverlap oject using the given boxes and offset           *
- *                                                                       *
+ *
+ * Set up a SideOverlap oject using the given boxes and offset
+ *
  *************************************************************************
  */
 tbox::Pointer<hier::BoxOverlap>
@@ -238,9 +238,9 @@ SideGeometry::setUpOverlap(
 
 /*
  *************************************************************************
- *                                                                       *
- * Transform a box                                                       *
- *                                                                       *
+ *
+ * Transform a box
+ *
  *************************************************************************
  */
 
@@ -381,9 +381,9 @@ SideGeometry::transform(
 
 /*
  *************************************************************************
- *                                                                       *
- * Transform a SideIndex                                                 *
- *                                                                       *
+ *
+ * Transform a SideIndex
+ *
  *************************************************************************
  */
 

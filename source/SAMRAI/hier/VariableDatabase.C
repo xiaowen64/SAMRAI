@@ -41,9 +41,9 @@ VariableDatabase::s_shutdown_handler(
 
 /*
  *************************************************************************
- *                                                                       *
- * Static database member functions.                                     *
- *                                                                       *
+ *
+ * Static database member functions.
+ *
  *************************************************************************
  */
 
@@ -65,10 +65,10 @@ void VariableDatabase::shutdownCallback()
 
 /*
  *************************************************************************
- *                                                                       *
- * Protected VariableDatabase constructor, destructor, and function to   *
- * register Singleton subclass instance for inheritance.                 *
- *                                                                       *
+ *
+ * Protected VariableDatabase constructor, destructor, and function to
+ * register Singleton subclass instance for inheritance.
+ *
  *************************************************************************
  */
 
@@ -103,10 +103,10 @@ void VariableDatabase::registerSingletonSubclassInstance(
 
 /*
  *************************************************************************
- *                                                                       *
- * Return the context in the database with the given name, or add a      *
- * context to the database with that name if no such context exists.     *
- *                                                                       *
+ *
+ * Return the context in the database with the given name, or add a
+ * context to the database with that name if no such context exists.
+ *
  *************************************************************************
  */
 
@@ -134,10 +134,10 @@ VariableDatabase::getContext(
 
 /*
  *************************************************************************
- *                                                                       *
- * Return true if context with given name exists in database;            *
- * otherwise return false.                                               *
- *                                                                       *
+ *
+ * Return true if context with given name exists in database;
+ * otherwise return false.
+ *
  *************************************************************************
  */
 
@@ -151,10 +151,10 @@ bool VariableDatabase::checkContextExists(
 
 /*
  *************************************************************************
- *                                                                       *
- * Add user-defined variable to database if it doesn't already exist in  *
- * the database.                                                         *
- *                                                                       *
+ *
+ * Add user-defined variable to database if it doesn't already exist in
+ * the database.
+ *
  *************************************************************************
  */
 
@@ -178,10 +178,10 @@ void VariableDatabase::addVariable(
 
 /*
  *************************************************************************
- *                                                                       *
- * Return variable in database with given name.  If no such variable     *
- * resides in database, return a null pointer.                           *
- *                                                                       *
+ *
+ * Return variable in database with given name.  If no such variable
+ * resides in database, return a null pointer.
+ *
  *************************************************************************
  */
 
@@ -202,10 +202,10 @@ VariableDatabase::getVariable(
 
 /*
  *************************************************************************
- *                                                                       *
- * Return true if variable with given name exists in database.           *
- * Otherwise, return false.                                              *
- *                                                                       *
+ *
+ * Return true if variable with given name exists in database.
+ * Otherwise, return false.
+ *
  *************************************************************************
  */
 
@@ -219,15 +219,15 @@ bool VariableDatabase::checkVariableExists(
 
 /*
  *************************************************************************
- *                                                                       *
- * Create new patch data index index by cloning factory for variable     *
- * at the old index and return index of new factory.   Note that the     *
- * function checkVariablePatchDataIndex() checks type of variable        *
- * against given patch data index.   If these types match, then add      *
- * variable and new patch data index to database.  If the types do not   *
- * match, the program will abort with an error message in the private    *
- * routine checkVariablePatchDataIndex().                                *
- *                                                                       *
+ *
+ * Create new patch data index index by cloning factory for variable
+ * at the old index and return index of new factory.   Note that the
+ * function checkVariablePatchDataIndex() checks type of variable
+ * against given patch data index.   If these types match, then add
+ * variable and new patch data index to database.  If the types do not
+ * match, the program will abort with an error message in the private
+ * routine checkVariablePatchDataIndex().
+ *
  *************************************************************************
  */
 
@@ -279,16 +279,16 @@ int VariableDatabase::registerClonedPatchDataIndex(
 
 /*
  *************************************************************************
- *                                                                       *
- * Add patch data index and variable pair to the database.  Note         *
- * that the function checkVariablePatchDataIndex() checks type of        *
- * variable against given patch data index.  If the types do not match,  *
- * the program will abort with an error message in the private routine   *
- * checkVariablePatchDataIndex().   If the input index is undefined,     *
- * we clone the default variable factory and add this new index to the   *
- * database.  In any case, the index of the index-variable pair that     *
- * is added to the database is returned.                                 *
- *                                                                       *
+ *
+ * Add patch data index and variable pair to the database.  Note
+ * that the function checkVariablePatchDataIndex() checks type of
+ * variable against given patch data index.  If the types do not match,
+ * the program will abort with an error message in the private routine
+ * checkVariablePatchDataIndex().   If the input index is undefined,
+ * we clone the default variable factory and add this new index to the
+ * database.  In any case, the index of the index-variable pair that
+ * is added to the database is returned.
+ *
  *************************************************************************
  */
 
@@ -340,10 +340,10 @@ int VariableDatabase::registerPatchDataIndex(
 
 /*
  *************************************************************************
- *                                                                       *
- * Remove the given patch data index from the database.  Also, clear     *
- * the index from the patch descriptor if the index is in the database.  *
- *                                                                       *
+ *
+ * Remove the given patch data index from the database.  Also, clear
+ * the index from the patch descriptor if the index is in the database.
+ *
  *************************************************************************
  */
 
@@ -393,10 +393,10 @@ void VariableDatabase::removePatchDataIndex(
 
 /*
  *************************************************************************
- *                                                                       *
- * Return true if the given variable is mapped to the given patch data   *
- * index.  Otherwise, return false.                                      *
- *                                                                       *
+ *
+ * Return true if the given variable is mapped to the given patch data
+ * index.  Otherwise, return false.
+ *
  *************************************************************************
  */
 
@@ -427,10 +427,10 @@ bool VariableDatabase::checkVariablePatchDataIndex(
 
 /*
  *************************************************************************
- *                                                                       *
- * Return true if the type of the variable matches the type of the       *
- * patch data at the given patch data index.  Otherwise, return false.   *
- *                                                                       *
+ *
+ * Return true if the type of the variable matches the type of the
+ * patch data at the given patch data index.  Otherwise, return false.
+ *
  *************************************************************************
  */
 
@@ -461,10 +461,10 @@ bool VariableDatabase::checkVariablePatchDataIndexType(
 
 /*
  *************************************************************************
- *                                                                       *
- * Register variable-context pair with the database and return           *
- * patch daya index corresponding to this pair and given ghost width.    *
- *                                                                       *
+ *
+ * Register variable-context pair with the database and return
+ * patch daya index corresponding to this pair and given ghost width.
+ *
  *************************************************************************
  */
 
@@ -487,11 +487,11 @@ int VariableDatabase::registerVariableAndContext(
 
 /*
  *************************************************************************
- *                                                                       *
- * Return patch data index that is mapped to given variable-context      *
- * pair.  If variable-context pair does not exist in database, return    *
- * an undefined patch data index of idUndefined().                       *
- *                                                                       *
+ *
+ * Return patch data index that is mapped to given variable-context
+ * pair.  If variable-context pair does not exist in database, return
+ * an undefined patch data index of idUndefined().
+ *
  *************************************************************************
  */
 
@@ -520,11 +520,11 @@ int VariableDatabase::mapVariableAndContextToIndex(
 
 /*
  *************************************************************************
- *                                                                       *
- * Return true if given patch data index is mapped to some variable      *
- * in the database and set the variable pointer to that variable.        *
- * Otherwise, return false and set the variable pointer to null.         *
- *                                                                       *
+ *
+ * Return true if given patch data index is mapped to some variable
+ * in the database and set the variable pointer to that variable.
+ * Otherwise, return false and set the variable pointer to null.
+ *
  *************************************************************************
  */
 
@@ -543,11 +543,11 @@ bool VariableDatabase::mapIndexToVariable(
 
 /*
  *************************************************************************
- *                                                                       *
- * Return true if specified index is mapped to some variable-context     *
- * pair in the database and set the variable and context pointers        *
- * appropriately.  Otherwise, return false and set the pointers to null. *
- *                                                                       *
+ *
+ * Return true if specified index is mapped to some variable-context
+ * pair in the database and set the variable and context pointers
+ * appropriately.  Otherwise, return false and set the pointers to null.
+ *
  *************************************************************************
  */
 
@@ -588,10 +588,10 @@ bool VariableDatabase::mapIndexToVariableAndContext(
 
 /*
  *************************************************************************
- *                                                                       *
- * Print all context, variable, and patch data index data                *
- * contained in database to given output stream.                         *
- *                                                                       *
+ *
+ * Print all context, variable, and patch data index data
+ * contained in database to given output stream.
+ *
  *************************************************************************
  */
 
@@ -696,14 +696,14 @@ void VariableDatabase::printClassData(
 
 /*
  *************************************************************************
- *                                                                       *
- * Register internal SAMRAI variable with database using internal        *
- * SAMRAI variable context.                                              *
- *                                                                       *
- * If the variable is already registered with the database as a user-    *
- * defined variable, then an unrecoverable error results.  This avoids   *
- * potential naming conflicts with user variables.                       *
- *                                                                       *
+ *
+ * Register internal SAMRAI variable with database using internal
+ * SAMRAI variable context.
+ *
+ * If the variable is already registered with the database as a user-
+ * defined variable, then an unrecoverable error results.  This avoids
+ * potential naming conflicts with user variables.
+ *
  *************************************************************************
  */
 
@@ -744,11 +744,11 @@ int VariableDatabase::registerInternalSAMRAIVariable(
 
 /*
  *************************************************************************
- *                                                                       *
- * Remove the given patch data index from the database if it has been    *
- * generated as an internal SAMRAI variable patch data index.  Also,     *
- * clear the index from the patch descriptor.                            *
- *                                                                       *
+ *
+ * Remove the given patch data index from the database if it has been
+ * generated as an internal SAMRAI variable patch data index.  Also,
+ * clear the index from the patch descriptor.
+ *
  *************************************************************************
  */
 
@@ -770,9 +770,9 @@ void VariableDatabase::removeInternalSAMRAIVariablePatchDataIndex(
 
 /*
  *************************************************************************
- *                                                                       *
- * Protected member function to get variable id by string name.          *
- *                                                                       *
+ *
+ * Protected member function to get variable id by string name.
+ *
  *************************************************************************
  */
 
@@ -796,10 +796,10 @@ int VariableDatabase::getVariableId(
 
 /*
  *************************************************************************
- *                                                                       *
- * Private member functions to add contexts to database and to look up   *
- * context by string name.                                               *
- *                                                                       *
+ *
+ * Private member functions to add contexts to database and to look up
+ * context by string name.
+ *
  *************************************************************************
  */
 
@@ -839,10 +839,10 @@ void VariableDatabase::addContext_Private(
 
 /*
  *************************************************************************
- *                                                                       *
- * Private member functions to add mapping from data index to variable   *
- * to the database.  Note that no error checking is done.                *
- *                                                                       *
+ *
+ * Private member functions to add mapping from data index to variable
+ * to the database.  Note that no error checking is done.
+ *
  *************************************************************************
  */
 
@@ -921,12 +921,12 @@ VariableDatabase::removeVariable(
 
 /*
  *************************************************************************
- *                                                                       *
- * Add variable to database if it doesn't already exist in the database. *
- * If variable already exists in the database, do nothing.  Note that    *
- * we check ensure that no two distinct user-defined variables can exist *
- * in the database with the same name.                                   *
- *                                                                       *
+ *
+ * Add variable to database if it doesn't already exist in the database.
+ * If variable already exists in the database, do nothing.  Note that
+ * we check ensure that no two distinct user-defined variables can exist
+ * in the database with the same name.
+ *
  *************************************************************************
  */
 
@@ -984,37 +984,37 @@ bool VariableDatabase::addVariable_Private(
 
 /*
  *************************************************************************
- *                                                                       *
- * Private member function to register variable-context pair with the    *
- * database and return patch data index corresponding to this pair and   *
- * given ghost width. The steps are:                                     *
- *                                                                       *
- * (1) Check whether variable-context pair maps to a valid patch data    *
- *     index in the database.  If it does, then check whether the        *
- *     index is null in the patch descriptor.  If it is, then we will    *
- *     create a new patch data index.  If the index is not null in       *
- *     the patch descriptor, the we check to see if the ghost width of   *
- *     that patch data index matches that in the argument list.  If the  *
- *     ghost width does not match, then we report an error and abort.    *
- *                                                                       *
- * (2) If we find a matching patch data index in step 1, we are done.    *
- *     We return the index.                                              *
- *                                                                       *
- * (3) If we need to create a new patch data index, do the following:    *
- *                                                                       *
- *     (3a) Create a new patch data factory, add it to the patch         *
- *          descriptor, and record the index.                            *
- *                                                                       *
- *     (3b) We add the context to the database, if not already there.    *
- *                                                                       *
- *     (3c) We add the variable, and index to variable map to the        *
- *          database, if not already there.                              *
- *                                                                       *
- *     (3d) We add the variable-context to index map to the database.    *
- *                                                                       *
- * (4) In the end, we return the patch data index for the                *
- *     variable-context pair.                                            *
- *                                                                       *
+ *
+ * Private member function to register variable-context pair with the
+ * database and return patch data index corresponding to this pair and
+ * given ghost width. The steps are:
+ *
+ * (1) Check whether variable-context pair maps to a valid patch data
+ *     index in the database.  If it does, then check whether the
+ *     index is null in the patch descriptor.  If it is, then we will
+ *     create a new patch data index.  If the index is not null in
+ *     the patch descriptor, the we check to see if the ghost width of
+ *     that patch data index matches that in the argument list.  If the
+ *     ghost width does not match, then we report an error and abort.
+ *
+ * (2) If we find a matching patch data index in step 1, we are done.
+ *     We return the index.
+ *
+ * (3) If we need to create a new patch data index, do the following:
+ *
+ *     (3a) Create a new patch data factory, add it to the patch
+ *          descriptor, and record the index.
+ *
+ *     (3b) We add the context to the database, if not already there.
+ *
+ *     (3c) We add the variable, and index to variable map to the
+ *          database, if not already there.
+ *
+ *     (3d) We add the variable-context to index map to the database.
+ *
+ * (4) In the end, we return the patch data index for the
+ *     variable-context pair.
+ *
  *************************************************************************
  */
 

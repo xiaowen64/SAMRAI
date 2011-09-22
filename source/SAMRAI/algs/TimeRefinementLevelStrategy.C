@@ -18,9 +18,9 @@ namespace algs {
 
 /*
  *************************************************************************
- *                                                                       *
- * Constructor and destructor for TimeRefinementLevelStrategy.     *
- *                                                                       *
+ *
+ * Constructor and destructor for TimeRefinementLevelStrategy.
+ *
  *************************************************************************
  */
 

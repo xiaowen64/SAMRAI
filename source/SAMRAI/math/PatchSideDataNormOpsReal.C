@@ -31,11 +31,11 @@ PatchSideDataNormOpsReal<TYPE>::~PatchSideDataNormOpsReal()
 
 /*
  *************************************************************************
- *                                                                       *
- * The const constructor and assignment operator are not actually used   *
- * but are defined here for compilers that require an implementation for *
- * every declaration.                                                    *
- *                                                                       *
+ *
+ * The const constructor and assignment operator are not actually used
+ * but are defined here for compilers that require an implementation for
+ * every declaration.
+ *
  *************************************************************************
  */
 
@@ -55,9 +55,9 @@ void PatchSideDataNormOpsReal<TYPE>::operator = (
 
 /*
  *************************************************************************
- *                                                                       *
- * Compute the number of data entries on a patch in the given box.       *
- *                                                                       *
+ *
+ * Compute the number of data entries on a patch in the given box.
+ *
  *************************************************************************
  */
 
@@ -85,9 +85,9 @@ int PatchSideDataNormOpsReal<TYPE>::numberOfEntries(
 
 /*
  *************************************************************************
- *                                                                       *
- * Templated norm operations for real side-centered data.                *
- *                                                                       *
+ *
+ * Templated norm operations for real side-centered data.
+ *
  *************************************************************************
  */
 

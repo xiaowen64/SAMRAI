@@ -25,9 +25,9 @@ namespace pdat {
 
 /*
  *************************************************************************
- *                                                                       *
- * Create a face geometry object given the box and ghost cell width.     *
- *                                                                       *
+ *
+ * Create a face geometry object given the box and ghost cell width.
+ *
  *************************************************************************
  */
 
@@ -47,15 +47,15 @@ FaceGeometry::~FaceGeometry()
 
 /*
  *************************************************************************
- *                                                                       *
- * Attempt to calculate the intersection between two face centered box   *
- * geometries.  The calculateOverlap() checks whether both arguments are *
- * face geometries; if so, it compuates the intersection.  If not, then  *
- * it calls calculateOverlap() on the source object (if retry is true)   *
- * to allow the source a chance to calculate the intersection.  See the  *
- * hier::BoxGeometry base class for more information about the protocol. *
- * A pointer to null is returned if the intersection cannot be computed. *
- *                                                                       *
+ *
+ * Attempt to calculate the intersection between two face centered box
+ * geometries.  The calculateOverlap() checks whether both arguments are
+ * face geometries; if so, it compuates the intersection.  If not, then
+ * it calls calculateOverlap() on the source object (if retry is true)
+ * to allow the source a chance to calculate the intersection.  See the
+ * hier::BoxGeometry base class for more information about the protocol.
+ * A pointer to null is returned if the intersection cannot be computed.
+ *
  *************************************************************************
  */
 
@@ -91,10 +91,10 @@ tbox::Pointer<hier::BoxOverlap> FaceGeometry::calculateOverlap(
 
 /*
  *************************************************************************
- *                                                                       *
- * Convert an AMR-index space hier::Box into a face-index space box by a *
- * cyclic shift of indices.                                              *
- *                                                                       *
+ *
+ * Convert an AMR-index space hier::Box into a face-index space box by a
+ * cyclic shift of indices.
+ *
  *************************************************************************
  */
 
@@ -125,15 +125,15 @@ FaceGeometry::toFaceBox(
 
 /*
  *************************************************************************
- *                                                                       *
- * Compute the overlap between two face centered boxes.  The algorithm   *
- * is fairly straight-forward.  First, we perform a quick-and-dirty      *
- * intersection to see if the boxes might overlap.  If that intersection *
- * is not empty, then we need to do a better job calculating the overlap *
- * for each dimension.  Note that the AMR index space boxes must be      *
- * shifted into the face centered space before we calculate the proper   *
- * intersections.                                                        *
- *                                                                       *
+ *
+ * Compute the overlap between two face centered boxes.  The algorithm
+ * is fairly straight-forward.  First, we perform a quick-and-dirty
+ * intersection to see if the boxes might overlap.  If that intersection
+ * is not empty, then we need to do a better job calculating the overlap
+ * for each dimension.  Note that the AMR index space boxes must be
+ * shifted into the face centered space before we calculate the proper
+ * intersections.
+ *
  *************************************************************************
  */
 
@@ -201,9 +201,9 @@ tbox::Pointer<hier::BoxOverlap> FaceGeometry::doOverlap(
 
 /*
  *************************************************************************
- *                                                                       *
- * Set up a FaceOverlap oject using the given boxes and offset           *
- *                                                                       *
+ *
+ * Set up a FaceOverlap oject using the given boxes and offset
+ *
  *************************************************************************
  */
 tbox::Pointer<hier::BoxOverlap>
@@ -229,9 +229,9 @@ FaceGeometry::setUpOverlap(
 
 /*
  *************************************************************************
- *                                                                       *
- * Transform a box                                                       *
- *                                                                       *
+ *
+ * Transform a box
+ *
  *************************************************************************
  */
 
@@ -383,9 +383,9 @@ FaceGeometry::transform(
 
 /*
  *************************************************************************
- *                                                                       *
- * Transform a FaceIndex                                                 *
- *                                                                       *
+ *
+ * Transform a FaceIndex
+ *
  *************************************************************************
  */
 

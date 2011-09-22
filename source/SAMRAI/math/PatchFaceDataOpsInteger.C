@@ -30,9 +30,9 @@ PatchFaceDataOpsInteger::~PatchFaceDataOpsInteger()
 
 /*
  *************************************************************************
- *                                                                       *
- * Compute the number of data entries on a patch in the given box.       *
- *                                                                       *
+ *
+ * Compute the number of data entries on a patch in the given box.
+ *
  *************************************************************************
  */
 
@@ -56,9 +56,9 @@ int PatchFaceDataOpsInteger::numberOfEntries(
 
 /*
  *************************************************************************
- *                                                                       *
- * General operations for integer face-centered patch data.              *
- *                                                                       *
+ *
+ * General operations for integer face-centered patch data.
+ *
  *************************************************************************
  */
 

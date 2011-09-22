@@ -34,9 +34,9 @@ const int Timer::TBOX_TIMER_VERSION = 1;
 
 /*
  *************************************************************************
- *                                                                       *
- * The constructor sets the timer name and initializes timer state.      *
- *                                                                       *
+ *
+ * The constructor sets the timer name and initializes timer state.
+ *
  *************************************************************************
  */
 
@@ -98,26 +98,26 @@ Timer::~Timer()
 
 /*
  ***************************************************************************
- *                                                                         *
- * Start and stop routines for timers.                                     *
- *                                                                         *
- * For wallclock time: If we have MPI, we use MPI_Wtime to set the         *
- *                     start/stop point.  If we don't have MPI but do      *
- *                     have access to timer utilities in sys/times.h,      *
- *                     we use the time() utility to set the start/start    *
- *                     point.  If we have neither, we set the wallclock    *
- *                     start/stop time to zero.                            *
- *                                                                         *
- * For user time:      If we have access to timer utilities in sys/times.h,*
- *                     we use the times() utility to compute user and      *
- *                     system start/stop point (passing in the tms struct).*
- *                     If we don't have these utilities, we simply set the *
- *                     user and start/stop times to zero.                  *
- *                                                                         *
- * Note that the stop routine increments the elapsed time information.     *
- * Also, the timer manager manipulates the exclusive time information      *
- * the timers when start and stop are called.                              *
- *                                                                         *
+ *
+ * Start and stop routines for timers.
+ *
+ * For wallclock time: If we have MPI, we use MPI_Wtime to set the
+ *                     start/stop point.  If we don't have MPI but do
+ *                     have access to timer utilities in sys/times.h,
+ *                     we use the time() utility to set the start/start
+ *                     point.  If we have neither, we set the wallclock
+ *                     start/stop time to zero.
+ *
+ * For user time:      If we have access to timer utilities in sys/times.h,
+ *                     we use the times() utility to compute user and
+ *                     system start/stop point (passing in the tms struct).
+ *                     If we don't have these utilities, we simply set the
+ *                     user and start/stop times to zero.
+ *
+ * Note that the stop routine increments the elapsed time information.
+ * Also, the timer manager manipulates the exclusive time information
+ * the timers when start and stop are called.
+ *
  ***************************************************************************
  */
 
@@ -238,17 +238,17 @@ void Timer::reset()
 
 /*
  ***************************************************************************
- *                                                                         *
- * Compute the load balance efficiency based the wallclock time on each    *
- * processor, using the formula:                                           *
- *                                                                         *
- *      eff = (sum(time summed across processors)/#processors) /           *
- *             max(time across all processors)                             *
- *                                                                         *
- * This formula corresponds to that used to compute load balance           *
- * efficiency based on the processor distribution of the the number of     *
- * cells (i.e. in BalanceUtilities::computeLoadBalanceEfficiency).         *
- *                                                                         *
+ *
+ * Compute the load balance efficiency based the wallclock time on each
+ * processor, using the formula:
+ *
+ *      eff = (sum(time summed across processors)/#processors) /
+ *             max(time across all processors)
+ *
+ * This formula corresponds to that used to compute load balance
+ * efficiency based on the processor distribution of the the number of
+ * cells (i.e. in BalanceUtilities::computeLoadBalanceEfficiency).
+ *
  ***************************************************************************
  */
 double Timer::computeLoadBalanceEfficiency()

@@ -25,10 +25,10 @@ namespace geom {
 
 /*
  *************************************************************************
- *                                                                       *
- * Constructor for CartesianPatchGeometry allocates and sets        *
- * patch coordinate system information.                                  *
- *                                                                       *
+ *
+ * Constructor for CartesianPatchGeometry allocates and sets
+ * patch coordinate system information.
+ *
  *************************************************************************
  */
 CartesianPatchGeometry::CartesianPatchGeometry(
@@ -59,9 +59,9 @@ CartesianPatchGeometry::CartesianPatchGeometry(
 
 /*
  *************************************************************************
- *                                                                       *
- * Destructor for CartesianPatchGeometry deallocates dx array.      *
- *                                                                       *
+ *
+ * Destructor for CartesianPatchGeometry deallocates dx array.
+ *
  *************************************************************************
  */
 CartesianPatchGeometry::~CartesianPatchGeometry()
@@ -70,9 +70,9 @@ CartesianPatchGeometry::~CartesianPatchGeometry()
 
 /*
  *************************************************************************
- *                                                                       *
- * Print CartesianPatchGeometry class data.                         *
- *                                                                       *
+ *
+ * Print CartesianPatchGeometry class data.
+ *
  *************************************************************************
  */
 void CartesianPatchGeometry::printClassData(

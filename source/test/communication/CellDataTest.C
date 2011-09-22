@@ -520,10 +520,10 @@ void CellDataTest::setPhysicalBoundaryConditions(
 
 /*
  *************************************************************************
- *                                                                       *
- * Verify results of communication operations.  This test must be        *
- * consistent with data initialization and boundary operations above.    *
- *                                                                       *
+ *
+ * Verify results of communication operations.  This test must be
+ * consistent with data initialization and boundary operations above.
+ *
  *************************************************************************
  */
 bool CellDataTest::verifyResults(

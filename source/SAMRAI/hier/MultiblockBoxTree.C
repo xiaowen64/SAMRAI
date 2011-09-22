@@ -13,6 +13,8 @@
 
 #include "SAMRAI/hier/MultiblockBoxTree.h"
 #include "SAMRAI/hier/GridGeometry.h"
+#include "SAMRAI/hier/BoxContainerSetConstIterator.h"
+#include "SAMRAI/hier/BoxContainerSetIterator.h"
 #include "SAMRAI/hier/BoxList.h"
 #include "SAMRAI/tbox/MathUtilities.h"
 #include "SAMRAI/tbox/SAMRAI_MPI.h"
@@ -53,11 +55,22 @@ MultiblockBoxTree::MultiblockBoxTree(
     */
 
    std::map<BlockId, BoxSet> mapped_boxes_by_block;
-   for (BoxSet::const_iterator bi = mapped_boxes.begin();
-        bi != mapped_boxes.end(); ++bi) {
-      mapped_boxes_by_block[bi->getBlockId()].insert(
-         mapped_boxes_by_block[bi->getBlockId()].end(),
-         *bi);
+   for (BoxSet::SetConstIterator bi = mapped_boxes.setBegin();
+        bi != mapped_boxes.setEnd(); ++bi) {
+
+      const BlockId& block_id = bi->getBlockId();
+
+      std::map<BlockId, BoxSet>::iterator iter =
+         mapped_boxes_by_block.find(block_id);
+
+      if (iter != mapped_boxes_by_block.end()) {
+         iter->second.insert(iter->second.setEnd(), *bi);
+      } else {
+         hier::BoxContainer boxes(*bi);
+         boxes.makeSet();
+         mapped_boxes_by_block.insert(
+            std::pair<BlockId, BoxContainer>(block_id, boxes)); 
+      }
    }
 
    for (std::map<BlockId, BoxSet>::iterator blocki = mapped_boxes_by_block.begin();
@@ -86,16 +99,16 @@ MultiblockBoxTree::MultiblockBoxTree(
  *************************************************************************
  *************************************************************************
  */
-
+#if 0
 MultiblockBoxTree::MultiblockBoxTree(
    const tbox::ConstPointer<GridGeometry>& grid_geometry,
-   const std::vector<Box>& mapped_boxes,
+   const BoxSet& mapped_boxes,
    size_t min_number):
    d_grid_geometry(grid_geometry)
 {
    generateTree(grid_geometry, mapped_boxes, min_number);
 }
-
+#endif
 /*
  *************************************************************************
  *************************************************************************
@@ -137,7 +150,7 @@ MultiblockBoxTree::~MultiblockBoxTree()
  */
 void MultiblockBoxTree::generateTree(
    const tbox::ConstPointer<GridGeometry>& grid_geometry,
-   const std::vector<Box>& mapped_boxes,
+   const BoxSet& mapped_boxes,
    size_t min_number)
 {
    NULL_USE(min_number);
@@ -149,11 +162,21 @@ void MultiblockBoxTree::generateTree(
     * BlockId.
     */
    std::map<BlockId, BoxSet> mapped_boxes_by_block;
-   for (std::vector<Box>::const_iterator bi = mapped_boxes.begin();
-        bi != mapped_boxes.end(); ++bi) {
-      mapped_boxes_by_block[bi->getBlockId()].insert(
-         mapped_boxes_by_block[bi->getBlockId()].end(),
-         *bi);
+   for (BoxSet::SetConstIterator bi = mapped_boxes.setBegin();
+        bi != mapped_boxes.setEnd(); ++bi) {
+
+      const BlockId& block_id = bi->getBlockId();
+
+      std::map<BlockId, BoxSet>::iterator iter =
+         mapped_boxes_by_block.find(block_id);
+
+      if (iter != mapped_boxes_by_block.end()) {
+         iter->second.insert(iter->second.setEnd(), *bi);
+      } else {
+         hier::BoxContainer boxes(*bi);
+         mapped_boxes_by_block.insert(
+            std::pair<BlockId, BoxContainer>(block_id, boxes));
+      }
    }
 
    for (std::map<BlockId, BoxSet>::iterator blocki = mapped_boxes_by_block.begin();
@@ -284,7 +307,7 @@ const BoxTree& MultiblockBoxTree::getSingleBlockBoxTree(
  *************************************************************************
  *************************************************************************
  */
-
+#if 0
 void MultiblockBoxTree::findOverlapBoxes(
    BoxSet& overlap_mapped_boxes,
    const Box& box,
@@ -342,7 +365,7 @@ void MultiblockBoxTree::findOverlapBoxes(
 
    }
 }
-
+#endif
 /*
  *************************************************************************
  *************************************************************************

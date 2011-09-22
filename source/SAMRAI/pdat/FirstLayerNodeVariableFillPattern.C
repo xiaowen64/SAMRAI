@@ -25,9 +25,9 @@ const std::string FirstLayerNodeVariableFillPattern::s_name_id =
 
 /*
  *************************************************************************
- *                                                                       *
- * Constructor                                                           *
- *                                                                       *
+ *
+ * Constructor
+ *
  *************************************************************************
  */
 
@@ -39,9 +39,9 @@ FirstLayerNodeVariableFillPattern::FirstLayerNodeVariableFillPattern(
 
 /*
  *************************************************************************
- *                                                                       *
- * Destructor                                                            *
- *                                                                       *
+ *
+ * Destructor
+ *
  *************************************************************************
  */
 
@@ -51,9 +51,9 @@ FirstLayerNodeVariableFillPattern::~FirstLayerNodeVariableFillPattern()
 
 /*
  *************************************************************************
- *                                                                       *
- * Calculate the overlap according to the desired pattern                *
- *                                                                       *
+ *
+ * Calculate the overlap according to the desired pattern
+ *
  *************************************************************************
  */
 
@@ -94,9 +94,9 @@ FirstLayerNodeVariableFillPattern::calculateOverlap(
 
 /*
  *************************************************************************
- *                                                                       *
- * Return the stencil width (0)                                          *
- *                                                                       *
+ *
+ * Return the stencil width (0)
+ *
  *************************************************************************
  */
 
@@ -107,9 +107,9 @@ const hier::IntVector& FirstLayerNodeVariableFillPattern::getStencilWidth()
 
 /*
  *************************************************************************
- *                                                                       *
- * Return the string name identifier                                     *
- *                                                                       *
+ *
+ * Return the string name identifier
+ *
  *************************************************************************
  */
 
@@ -120,9 +120,9 @@ const std::string& FirstLayerNodeVariableFillPattern::getPatternName() const
 
 /*
  *************************************************************************
- *                                                                       *
- * Compute the boxes for the stencil around a given patch box            *
- *                                                                       *
+ *
+ * Compute the boxes for the stencil around a given patch box
+ *
  *************************************************************************
  */
 
@@ -141,10 +141,10 @@ void FirstLayerNodeVariableFillPattern::computeStencilBoxes(
 
 /*
  *************************************************************************
- *                                                                       *
- * Compute BoxOverlap that specifies data to be filled by refinement     *
- * operator.                                                             *
- *                                                                       *
+ *
+ * Compute BoxOverlap that specifies data to be filled by refinement
+ * operator.
+ *
  *************************************************************************
  */
 

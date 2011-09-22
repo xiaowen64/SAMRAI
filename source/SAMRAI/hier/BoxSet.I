@@ -12,7 +12,7 @@
 
 namespace SAMRAI {
 namespace hier {
-
+#if 0
 SAMRAI_INLINE_KEYWORD
 BoxSet::BoxSet():
    d_set()
@@ -93,6 +93,6 @@ void BoxSet::separatePeriodicImages(
  ***********************************************************************
  ***********************************************************************
  */
-
+#endif
 }
 }

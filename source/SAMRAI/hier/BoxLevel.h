@@ -262,6 +262,12 @@ public:
    isInitialized() const;
 
    /*!
+    * @brief Remove all the periodic image boxes in the BoxLevel.
+    */
+   void
+   removePeriodicImageBoxes();
+
+   /*!
     * @brief Clear the internal state of the BoxLevel.
     *
     * The BoxLevel will be in an uninitialized state
@@ -763,7 +769,7 @@ public:
     *
     * @return iterator to the new Box
     */
-   BoxSet::iterator
+   BoxSet::SetIterator
    addBox(
       const Box& box,
       const BlockId& block_id,
@@ -847,7 +853,7 @@ public:
     */
    void
    eraseBox(
-      BoxSet::iterator& ibox);
+      BoxSet::SetIterator& ibox);
 
    /*!
     * @brief Erase the Box matching the one given.
@@ -881,7 +887,7 @@ public:
     * @return Iterator to the mapped_box, or @c
     * getBoxes(owner).end() if mapped_box does not exist in set.
     */
-   BoxSet::const_iterator
+   BoxSet::SetConstIterator
    getBox(
       const Box& mapped_box) const;
 
@@ -896,7 +902,7 @@ public:
     * @return Iterator to the mapped_box, or @c
     * getBoxes(owner).end() if mapped_box does not exist in set.
     */
-   BoxSet::const_iterator
+   BoxSet::SetConstIterator
    getBox(
       const BoxId& mapped_box_id) const;
 
@@ -926,7 +932,7 @@ public:
     *
     * @return Iterator to the mapped_box.
     */
-   BoxSet::const_iterator
+   BoxSet::SetConstIterator
    getBoxStrict(
       const Box& mapped_box) const;
 
@@ -945,7 +951,7 @@ public:
     *
     * @return Iterator to the mapped_box.
     */
-   BoxSet::const_iterator
+   BoxSet::SetConstIterator
    getBoxStrict(
       const BoxId& mapped_box_id) const;
 

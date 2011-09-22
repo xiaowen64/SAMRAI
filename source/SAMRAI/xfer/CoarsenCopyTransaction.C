@@ -31,9 +31,9 @@ namespace xfer {
 
 /*
  *************************************************************************
- *                                                                       *
- * Initialization, set/unset functions for static array of coarsen items.*
- *                                                                       *
+ *
+ * Initialization, set/unset functions for static array of coarsen items.
+ *
  *************************************************************************
  */
 
@@ -61,9 +61,9 @@ void CoarsenCopyTransaction::unsetCoarsenItems()
 
 /*
  *************************************************************************
- *                                                                       *
- * Constructor sets state of transaction.                                *
- *                                                                       *
+ *
+ * Constructor sets state of transaction.
+ *
  *************************************************************************
  */
 
@@ -112,9 +112,9 @@ CoarsenCopyTransaction::~CoarsenCopyTransaction()
 
 /*
  *************************************************************************
- *                                                                       *
- * Functions overridden in tbox::Transaction base class.                  *
- *                                                                       *
+ *
+ * Functions overridden in tbox::Transaction base class.
+ *
  *************************************************************************
  */
 
@@ -176,9 +176,9 @@ void CoarsenCopyTransaction::copyLocalData()
 
 /*
  *************************************************************************
- *                                                                       *
- * Function to print state of transaction.                               *
- *                                                                       *
+ *
+ * Function to print state of transaction.
+ *
  *************************************************************************
  */
 

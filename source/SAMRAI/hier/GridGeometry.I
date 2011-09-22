@@ -73,10 +73,10 @@ GridGeometry::reducedConnectivityExists(
 
 /*
  * ************************************************************************
- *                                                                        *
- * Returns the number of neighbors a specific block of the multiblock     *
- * domain has.                                                            *
- *                                                                        *
+ *
+ * Returns the number of neighbors a specific block of the multiblock
+ * domain has.
+ *
  * ************************************************************************
  */
 SAMRAI_INLINE_KEYWORD

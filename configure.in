@@ -244,6 +244,50 @@ else
    AC_MSG_ERROR([dimension must be an integer greater than 0, not \"$with_maxdim\"])   
 fi
 
+SAMRAI_ALL_LIBRARIES="appu algs solv geom mesh math pdat xfer hier tbox"
+
+AC_ARG_WITH([libraries],
+[AS_HELP_STRING([--with-libraries=List of libraries],
+   [Specify explicit list of SAMRAI libraries to build.  Default is to compile all libraries.
+   This is for advanced users only. Available libraries are : appu algs solv geom mesh math pdat xfer hier tbox])],
+,with_libraries='all')
+
+if test "$with_libraries" = all; then
+   SAMRAI_LIBRARIES="$SAMRAI_ALL_LIBRARIES"
+else
+   for j in $with_libraries
+   do
+      invalid_library=1
+      for i in $SAMRAI_ALL_LIBRARIES
+      do
+         if test "$i" = "$j" 
+         then
+	   invalid_library=0
+	   break
+         fi
+      done
+      if test $invalid_library -eq 1
+      then
+	  AC_MSG_ERROR([Invalid SAMRAI library specified : $j])
+      fi
+   done
+
+   SAMRAI_LIBRARIES=""
+   for i in $SAMRAI_ALL_LIBRARIES
+   do
+      for j in $with_libraries
+      do
+         if test "$i" = "$j" 
+         then
+	   SAMRAI_LIBRARIES="$SAMRAI_LIBRARIES $i"
+	   break
+         fi
+      done
+   done
+fi
+AC_SUBST(SAMRAI_LIBRARIES)
+
+
 dnl
 dnl Since we removed the all-CAPS options and replaced them with
 dnl lowercase options, some people still use the all-CAPS options

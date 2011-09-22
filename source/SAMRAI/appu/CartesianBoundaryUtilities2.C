@@ -19,10 +19,10 @@
 
 /*
  *************************************************************************
- *                                                                       *
- * External declarations for FORTRAN 77 routines used in                 *
- * boundary condition implementation.                                    *
- *                                                                       *
+ *
+ * External declarations for FORTRAN 77 routines used in
+ * boundary condition implementation.
+ *
  *************************************************************************
  */
 

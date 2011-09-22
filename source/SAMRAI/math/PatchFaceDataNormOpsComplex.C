@@ -31,9 +31,9 @@ PatchFaceDataNormOpsComplex::~PatchFaceDataNormOpsComplex()
 
 /*
  *************************************************************************
- *                                                                       *
- * Compute the number of data entries on a patch in the given box.       *
- *                                                                       *
+ *
+ * Compute the number of data entries on a patch in the given box.
+ *
  *************************************************************************
  */
 
@@ -57,9 +57,9 @@ int PatchFaceDataNormOpsComplex::numberOfEntries(
 
 /*
  *************************************************************************
- *                                                                       *
- * Norm operations for complex face-centered data.                       *
- *                                                                       *
+ *
+ * Norm operations for complex face-centered data.
+ *
  *************************************************************************
  */
 

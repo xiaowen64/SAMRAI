@@ -31,9 +31,9 @@ namespace solv {
 
 /*
  *************************************************************************
- *                                                                       *
- * Constructor checks arguments and sets uninitialized solver state.     *
- *                                                                       *
+ *
+ * Constructor checks arguments and sets uninitialized solver state.
+ *
  *************************************************************************
  */
 
@@ -76,9 +76,9 @@ FACPreconditioner::FACPreconditioner(
 
 /*
  *************************************************************************
- *                                                                       *
- * Destructor for FACPreconditioner.                               *
- *                                                                       *
+ *
+ * Destructor for FACPreconditioner.
+ *
  *************************************************************************
  */
 
@@ -89,7 +89,7 @@ FACPreconditioner::~FACPreconditioner()
 
 /*
  ********************************************************************
- * Set state from database                                          *
+ * Set state from database
  ********************************************************************
  */
 
@@ -127,9 +127,9 @@ void FACPreconditioner::getFromInput(
 
 /*
  *************************************************************************
- *                                                                       *
- * Functions for setting up and deallocating solver state.               *
- *                                                                       *
+ *
+ * Functions for setting up and deallocating solver state.
+ *
  *************************************************************************
  */
 void FACPreconditioner::deallocateSolverState()
@@ -276,9 +276,9 @@ bool FACPreconditioner::checkVectorStateCompatibility(
 
 /*
  *************************************************************************
- *                                                                       *
- * Solve the linear system and report whether itertion converged.        *
- *                                                                       *
+ *
+ * Solve the linear system and report whether itertion converged.
+ *
  *************************************************************************
  */
 
@@ -462,9 +462,9 @@ bool FACPreconditioner::solveSystem(
 
 /*
  *************************************************************************
- *                                                                       *
- * Recursive version of FAC cycling.                                     *
- *                                                                       *
+ *
+ * Recursive version of FAC cycling.
+ *
  *************************************************************************
  */
 void FACPreconditioner::facCycle_Recursive(
@@ -527,11 +527,11 @@ void FACPreconditioner::facCycle_Recursive(
 
 /*
  *************************************************************************
- *                                                                       *
- * Implementation of Steve McCormick's V-cycle form of FAC               *
- * as described in Section 4.3 of "Multilevel Adaptive Methods for       *
- * Partial Differential Equations".                                      *
- *                                                                       *
+ *
+ * Implementation of Steve McCormick's V-cycle form of FAC
+ * as described in Section 4.3 of "Multilevel Adaptive Methods for
+ * Partial Differential Equations".
+ *
  *************************************************************************
  */
 
@@ -678,11 +678,11 @@ void FACPreconditioner::facCycle_McCormick(
 
 /*
  *************************************************************************
- *                                                                       *
- * Reimplementation of the FAC cycle Michael Pernice coded up            *
- * in the first version of FACPreconditioner (the version          *
- * that did not separate out the operators.                              *
- *                                                                       *
+ *
+ * Reimplementation of the FAC cycle Michael Pernice coded up
+ * in the first version of FACPreconditioner (the version
+ * that did not separate out the operators.
+ *
  *************************************************************************
  */
 void FACPreconditioner::facCycle(
@@ -770,10 +770,10 @@ void FACPreconditioner::facCycle(
 
 /*
  *************************************************************************
- *                                                                       *
- * Private member function to compute the composite residual on all      *
- * levels and return residual norm.                                      *
- *                                                                       *
+ *
+ * Private member function to compute the composite residual on all
+ * levels and return residual norm.
+ *
  *************************************************************************
  */
 
@@ -820,9 +820,9 @@ double FACPreconditioner::computeFullCompositeResidual(
 
 /*
  *************************************************************************
- *                                                                       *
- * Print internal data, mostly for debugging.                            *
- *                                                                       *
+ *
+ * Print internal data, mostly for debugging.
+ *
  *************************************************************************
  */
 void FACPreconditioner::printClassData(

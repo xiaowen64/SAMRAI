@@ -11,6 +11,10 @@
 #define included_hier_Connector_C
 
 #include "SAMRAI/hier/Connector.h"
+
+#include "SAMRAI/hier/BoxContainerConstIterator.h"
+#include "SAMRAI/hier/BoxContainerSetConstIterator.h"
+#include "SAMRAI/hier/BoxContainerSetIterator.h"
 #include "SAMRAI/hier/PeriodicShiftCatalog.h"
 #include "SAMRAI/hier/RealBoxConstIterator.h"
 #include "SAMRAI/tbox/StartupShutdownManager.h"
@@ -64,8 +68,8 @@ Connector::Connector():
    d_ratio(tbox::Dimension::getInvalidDimension()),
    d_ratio_is_exact(false),
    d_head_coarser(false),
-   d_relationships(),
-   d_global_relationships(),
+   d_relationships(tbox::Dimension::getInvalidDimension()),
+   d_global_relationships(tbox::Dimension::getInvalidDimension()),
    d_parallel_state(BoxLevel::DISTRIBUTED),
    d_global_number_of_neighbor_sets(0),
    d_global_number_of_relationships(0),
@@ -116,8 +120,8 @@ Connector::Connector(
    d_base_width(base_width.getDim(), 0),
    d_ratio(base_width.getDim(), 0),
    d_head_coarser(false),
-   d_relationships(),
-   d_global_relationships(),
+   d_relationships(base_width.getDim()),
+   d_global_relationships(base_width.getDim()),
    d_parallel_state(BoxLevel::DISTRIBUTED),
    d_global_number_of_neighbor_sets(0),
    d_global_number_of_relationships(0),
@@ -150,8 +154,8 @@ Connector::Connector(
    d_base_width(base_width.getDim(), 0),
    d_ratio(base_width.getDim(), 0),
    d_head_coarser(false),
-   d_relationships(),
-   d_global_relationships(),
+   d_relationships(base_width.getDim()),
+   d_global_relationships(base_width.getDim()),
    d_parallel_state(BoxLevel::DISTRIBUTED),
    d_global_number_of_neighbor_sets(0),
    d_global_number_of_relationships(0),
@@ -230,13 +234,18 @@ void Connector::insertNeighbors(
          << "base:\n" << getBase().format("", 2));
    }
 #endif
+   const tbox::Dimension& dim = d_ratio.getDim();
    if (d_parallel_state == BoxLevel::GLOBALIZED) {
-      d_global_relationships[mapped_box_id].insert(neighbors.begin(),
-         neighbors.end());
+      NeighborSet& global_nabrs =
+         d_global_relationships.getNeighborSet(
+            mapped_box_id, dim);
+      global_nabrs.insert(neighbors.setBegin(),
+                          neighbors.setEnd());
    }
    if (mapped_box_id.getOwnerRank() == d_rank) {
-      d_relationships[mapped_box_id].insert(neighbors.begin(),
-         neighbors.end());
+      NeighborSet& nabrs = d_relationships.getNeighborSet(mapped_box_id, dim);
+      nabrs.insert(neighbors.setBegin(),
+                   neighbors.setEnd());
    }
 }
 
@@ -283,14 +292,9 @@ void Connector::eraseNeighbor(
 void Connector::removePeriodicRelationships()
 {
    TBOX_ASSERT(isInitialized());
-   hier::NeighborhoodSet tmp_edges;
-
-   d_relationships.removePeriodicNeighbors(tmp_edges);
-   d_relationships.swap(tmp_edges);
-
+   d_relationships.removePeriodicNeighbors();
    if (d_parallel_state == BoxLevel::GLOBALIZED) {
-      d_global_relationships.removePeriodicNeighbors(tmp_edges);
-      d_global_relationships.swap(tmp_edges);
+      d_global_relationships.removePeriodicNeighbors();
    }
 }
 
@@ -318,13 +322,19 @@ void Connector::swapNeighbors(
          << "base:\n" << getBase().format("", 2));
    }
 #endif
+   const tbox::Dimension& dim = d_ratio.getDim();
    if (mapped_box_id.getOwnerRank() == d_rank) {
       if (d_parallel_state == BoxLevel::GLOBALIZED) {
-         d_global_relationships[mapped_box_id] = neighbors;
+         d_global_relationships.clearNeighborSet(mapped_box_id);
+         d_global_relationships.insertNeighborSet(mapped_box_id, neighbors);
       }
-      d_relationships[mapped_box_id].swap(neighbors);
+      NeighborSet& rel_nabrs = d_relationships.getNeighborSet(mapped_box_id, dim);
+      rel_nabrs.swap(neighbors);
    } else if (d_parallel_state == BoxLevel::GLOBALIZED) {
-      d_global_relationships[mapped_box_id].swap(neighbors);
+      NeighborSet& global_nabrs = d_global_relationships.getNeighborSet(
+         mapped_box_id,
+         dim);
+      global_nabrs.swap(neighbors);
    }
 }
 
@@ -446,8 +456,8 @@ void Connector::acquireRemoteNeighborhoods_pack(
       send_mesg[imesg++] = mapped_box_id.getBlockId().getBlockValue();
       send_mesg[imesg++] = static_cast<int>(nabrs.size());
 
-      for (NeighborSet::const_iterator ni = nabrs.begin();
-           ni != nabrs.end(); ++ni) {
+      for (NeighborSet::SetConstIterator ni = nabrs.setBegin();
+           ni != nabrs.setEnd(); ++ni) {
          (*ni).putToIntBuffer(&send_mesg[imesg]);
          imesg += Box::commBufferSize(dim);
       }
@@ -489,11 +499,12 @@ void Connector::acquireRemoteNeighborhoods_unpack(
             const int num_nabrs = (*ptr++);
             const BoxId mapped_box_id(local_id, n, block_id);
 
-            NeighborSet& nabrs = d_global_relationships[mapped_box_id];
+            NeighborSet& nabrs =
+               d_global_relationships.getNeighborSet(mapped_box_id, dim);
             Box nabr(dim);
             for (int nn = 0; nn < num_nabrs; ++nn) {
                nabr.getFromIntBuffer(ptr);
-               nabrs.insert(nabrs.end(), nabr);
+               nabrs.insert(nabrs.setEnd(), nabr);
                ptr += mapped_box_com_buf_size;
             }
 
@@ -568,7 +579,7 @@ void Connector::initialize(
    const IntVector& base_width,
    const BoxLevel::ParallelState parallel_state)
 {
-   NeighborhoodSet dummy_relationships;
+   NeighborhoodSet dummy_relationships(base_width.getDim());
    swapInitialize(base, head, base_width, dummy_relationships, parallel_state);
 }
 
@@ -658,8 +669,8 @@ void Connector::initializePrivate(
          tbox::perr << "\nConnector::initializePrivate: NeighborhoodSet "
                     << "provided for non-existent mapped_box " << ci->first
                     << "\n" << "Neighbors (" << nabrs.size() << "):\n";
-         for (NeighborSet::const_iterator na = nabrs.begin();
-              na != nabrs.end(); ++na) {
+         for (NeighborSet::SetConstIterator na = nabrs.setBegin();
+              na != nabrs.setEnd(); ++na) {
             tbox::perr << (*na) << "\n";
          }
          errf = true;
@@ -828,8 +839,8 @@ void Connector::initializeToLocalTranspose(
         ci != r_relationships.end(); ++ci) {
 
       const BoxId& mapped_box_id = ci->first;
-      const BoxSet::const_iterator ni = getHead().getBox(mapped_box_id);
-      if (ni == getHead().getBoxes().end()) {
+      const BoxSet::SetConstIterator ni = getHead().getBox(mapped_box_id);
+      if (ni == getHead().getBoxes().setEnd()) {
          TBOX_ERROR(
             "Connector::initializeToLocalTranspose: mapped_box index\n"
             << mapped_box_id
@@ -840,8 +851,8 @@ void Connector::initializeToLocalTranspose(
       const Box& my_head_mapped_box = *ni;
 
       const NeighborSet& my_base_subset = ci->second;
-      for (NeighborSet::const_iterator na = my_base_subset.begin();
-           na != my_base_subset.end(); ++na) {
+      for (NeighborSet::SetConstIterator na = my_base_subset.setBegin();
+           na != my_base_subset.setEnd(); ++na) {
          const Box& my_base_mapped_box = *na;
          if (my_base_mapped_box.getOwnerRank() != d_rank) {
             TBOX_ERROR(
@@ -862,11 +873,12 @@ void Connector::initializeToLocalTranspose(
                   my_base_mapped_box.getGlobalId(),
                   my_base_mapped_box.getBlockId(),
                   PeriodicId::zero());
-               d_relationships[base_non_per_id].insert(
-                  my_shifted_head_mapped_box);
+               d_relationships.insertNeighbor(base_non_per_id,
+                                              my_shifted_head_mapped_box);
             }
          } else {
-            d_relationships[my_base_mapped_box.getId()].insert(my_head_mapped_box);
+            d_relationships.insertNeighbor(my_base_mapped_box.getId(),
+                                           my_head_mapped_box);
          }
       }
 
@@ -894,7 +906,7 @@ void Connector::eraseEmptyNeighborSets()
 {
    for (NeighborhoodSet::iterator ei = d_relationships.begin();
         ei != d_relationships.end(); ) {
-      if ((*ei).second.empty()) {
+      if ((*ei).second.isEmpty()) {
          d_relationships.erase(ei++);
       } else {
          ++ei;
@@ -941,10 +953,10 @@ bool Connector::isLocal() const
    for (NeighborhoodSet::const_iterator ei = d_relationships.begin(); ei != d_relationships.end();
         ++ei) {
       const BoxSet& nabrs = ei->second;
-      for (BoxSet::const_iterator na = nabrs.begin();
+      for (BoxSet::ConstIterator na = nabrs.begin();
            na != nabrs.end();
            ++na) {
-         if (na->getOwnerRank() != d_rank) {
+         if ((*na).getOwnerRank() != d_rank) {
             return false;
          }
       }
@@ -968,13 +980,12 @@ size_t Connector::getLocalNumberOfNeighborSets() const
  */
 size_t Connector::getLocalNumberOfRelationships() const
 {
-   // FIXME:  BUG
    TBOX_ASSERT(isInitialized());
    size_t local_number_of_relationships = 0;
    for (NeighborhoodSet::const_iterator ei(d_relationships.begin());
         ei != d_relationships.end();
         ++ei) {
-      d_global_number_of_relationships += static_cast<int>(ei->second.size());
+      local_number_of_relationships += static_cast<int>(ei->second.size());
    }
    return local_number_of_relationships;
 }
@@ -1147,8 +1158,8 @@ void Connector::recursivePrint(
       os << border << "Mapped_boxes with neighbors:\n";
       for (NeighborhoodSet::const_iterator ei = relationships.begin(); ei != relationships.end();
            ++ei) {
-         BoxSet::const_iterator ni = getBase().getBox(ei->first);
-         if (ni != getBase().getBoxes().end()) {
+         BoxSet::SetConstIterator ni = getBase().getBox(ei->first);
+         if (ni != getBase().getBoxes().setEnd()) {
             os << border << "  "
                << (*ni) << "_"
                << (*ni).numberCells() << '\n';
@@ -1166,8 +1177,8 @@ void Connector::recursivePrint(
          os << border << "    Neighbors (" << nabrs.size() << "):"
             << ((detail_depth > 1) ? "\n" : " ...\n");
          if (detail_depth > 1) {
-            NeighborSet::const_iterator i_nabr;
-            for (i_nabr = nabrs.begin(); i_nabr != nabrs.end(); ++i_nabr) {
+            NeighborSet::SetConstIterator i_nabr = nabrs.setBegin();
+            for ( ; i_nabr != nabrs.setEnd(); ++i_nabr) {
                hier::Box ovlap = *i_nabr;
                if (ni->getBlockId() != i_nabr->getBlockId()) {
                   d_base_handle->getBoxLevel().getGridGeometry()->
@@ -1246,8 +1257,8 @@ void Connector::printNeighborStats(
       max_nabrs = tbox::MathUtilities<int>::Max(max_nabrs, (int)nabrs.size());
       min_nabrs = tbox::MathUtilities<int>::Min(min_nabrs, (int)nabrs.size());
 
-      for (NeighborSet::const_iterator na = nabrs.begin();
-           na != nabrs.end(); ++na) {
+      for (NeighborSet::SetConstIterator na = nabrs.setBegin();
+           na != nabrs.setEnd(); ++na) {
 
          const Box& nabr = *na;
 
@@ -1534,8 +1545,8 @@ size_t Connector::checkTransposeCorrectness(
 
       const NeighborSet& nabrs = ci->second;
 
-      for (NeighborSet::const_iterator ni = nabrs.begin();
-           ni != nabrs.end(); ++ni) {
+      for (NeighborSet::SetConstIterator ni = nabrs.setBegin();
+           ni != nabrs.setEnd(); ++ni) {
 
          if (ignore_periodic_relationships && ni->isPeriodicImage()) {
             continue;
@@ -1567,7 +1578,7 @@ size_t Connector::checkTransposeCorrectness(
          TBOX_ASSERT(cn->first == non_per_nabr_id);
          const NeighborSet& nabr_nabrs = cn->second;
 
-         NeighborSet::const_iterator nabr_ni;
+         NeighborSet::SetConstIterator nabr_ni(nabr_nabrs);
 
          if (nabr.isPeriodicImage()) {
             shifted_mapped_box.initialize(
@@ -1579,7 +1590,7 @@ size_t Connector::checkTransposeCorrectness(
             nabr_ni = nabr_nabrs.find(mapped_box);
          }
 
-         if (nabr_ni == nabr_nabrs.end()) {
+         if (nabr_ni == nabr_nabrs.setEnd()) {
             tbox::perr << "\nConnector::checkTransposeCorrectness:\n"
             << "Local mapped_box " << mapped_box;
             if (nabr.isPeriodicImage()) {
@@ -1589,8 +1600,8 @@ size_t Connector::checkTransposeCorrectness(
             << nabr << " does not have the reverse relationship.\n"
             ;
             tbox::perr << "Neighbors of " << nabr << " are:\n";
-            for (NeighborSet::const_iterator nj = nabr_nabrs.begin();
-                 nj != nabr_nabrs.end(); ++nj) {
+            for (NeighborSet::SetConstIterator nj = nabr_nabrs.setBegin();
+                 nj != nabr_nabrs.setEnd(); ++nj) {
                tbox::perr << *nj << std::endl;
             }
             ++err_count_for_current_index;
@@ -1603,8 +1614,8 @@ size_t Connector::checkTransposeCorrectness(
          tbox::perr << "Mapped_box " << mapped_box << " had "
          << err_count_for_current_index
          << " errors.  Neighbors are:\n";
-         for (NeighborSet::const_iterator nj = nabrs.begin();
-              nj != nabrs.end(); ++nj) {
+         for (NeighborSet::SetConstIterator nj = nabrs.setBegin();
+              nj != nabrs.setEnd(); ++nj) {
             tbox::perr << *nj << std::endl;
          }
          err_count += err_count_for_current_index;
@@ -1633,8 +1644,8 @@ size_t Connector::checkTransposeCorrectness(
       }
       const Box& head_mapped_box = *head.getBoxStrict(mapped_box_id);
 
-      for (NeighborSet::const_iterator na = nabrs.begin();
-           na != nabrs.end(); ++na) {
+      for (NeighborSet::SetConstIterator na = nabrs.setBegin();
+           na != nabrs.setEnd(); ++na) {
 
          const Box nabr = *na;
 
@@ -1652,8 +1663,8 @@ size_t Connector::checkTransposeCorrectness(
                << "in the base mapped_box_level.\n";
                tbox::perr << "Neighbors of head mapped_box "
                << mapped_box_id << " are:\n";
-               for (NeighborSet::const_iterator nj = nabrs.begin();
-                    nj != nabrs.end(); ++nj) {
+               for (NeighborSet::SetConstIterator nj = nabrs.setBegin();
+                    nj != nabrs.setEnd(); ++nj) {
                   tbox::perr << *nj << std::endl;
                }
                ++err_count_for_current_index;
@@ -1682,8 +1693,8 @@ size_t Connector::checkTransposeCorrectness(
                tbox::perr << "Neighbors of head mapped_box " << BoxId(
                   mapped_box_id)
                << ":" << std::endl;
-               for (NeighborSet::const_iterator nj = nabrs.begin();
-                    nj != nabrs.end(); ++nj) {
+               for (NeighborSet::SetConstIterator nj = nabrs.setBegin();
+                    nj != nabrs.setEnd(); ++nj) {
                   tbox::perr << *nj << std::endl;
                }
                ++err_count_for_current_index;
@@ -1697,10 +1708,10 @@ size_t Connector::checkTransposeCorrectness(
                                 shift_catalog->getOppositeShiftNumber(
                                    base_mapped_box.getPeriodicId()));
 
-            NeighborSet::const_iterator found_nabr_ =
+            NeighborSet::SetConstIterator found_nabr_ =
                nabr_nabrs.find(nabr_nabr);
 
-            if (found_nabr_ == nabr_nabrs.end()) {
+            if (found_nabr_ == nabr_nabrs.setEnd()) {
                tbox::perr << "\nConnector::checkTransposeCorrectness:\n"
                << "Head mapped_box " << head_mapped_box << "\n"
                << " has base mapped_box " << base_mapped_box
@@ -1711,8 +1722,8 @@ size_t Connector::checkTransposeCorrectness(
                << " in its neighbor list." << std::endl;
                tbox::perr << "Neighbors of head mapped_box " << nabr_nabr.getId()
                << ":" << std::endl;
-               for (NeighborSet::const_iterator
-                    nj = nabrs.begin(); nj != nabrs.end(); ++nj) {
+               for (NeighborSet::SetConstIterator
+                    nj = nabrs.setBegin(); nj != nabrs.setEnd(); ++nj) {
                   tbox::perr << *nj << std::endl;
                }
                tbox::perr << "Neighbors of base mapped_box ";
@@ -1724,8 +1735,8 @@ size_t Connector::checkTransposeCorrectness(
                   tbox::perr << unshifted_mapped_box;
                }
                tbox::perr << ":" << std::endl;
-               for (NeighborSet::const_iterator nj = nabr_nabrs.begin();
-                    nj != nabr_nabrs.end(); ++nj) {
+               for (NeighborSet::SetConstIterator nj = nabr_nabrs.setBegin();
+                    nj != nabr_nabrs.setEnd(); ++nj) {
                   tbox::perr << *nj << std::endl;
                }
                ++err_count_for_current_index;
@@ -1798,6 +1809,9 @@ void Connector::computeNeighborhoodDifferences(
    const Connector& left,
    const Connector& right)
 {
+//TODO:  Commenting out until there's a way to do set_difference for
+// BoxContainer
+#if 0
    if (0) {
       tbox::plog << "Computing relationship differences, a:\n" << left.format(dbgbord, 3)
       << "Computing relationship differences, b:\n" << right.format(dbgbord, 3);
@@ -1830,11 +1844,12 @@ void Connector::computeNeighborhoodDifferences(
          if (diff.empty()) {
             drelationships.erase(mapped_box_id);
          }
-      } else if (!anabrs.empty()) {
+      } else if (!anabrs.isEmpty()) {
          drelationships[mapped_box_id] = anabrs;
       }
 
    }
+#endif
 }
 
 /*
@@ -1901,24 +1916,24 @@ size_t Connector::checkConsistencyWithHead(
       const BoxId& mapped_box_id = ei->first;
       const NeighborSet& nabrs = ei->second;
 
-      for (NeighborSet::const_iterator na = nabrs.begin();
-           na != nabrs.end(); ++na) {
+      for (NeighborSet::SetConstIterator na = nabrs.setBegin();
+           na != nabrs.setEnd(); ++na) {
 
          const Box& nabr = *na;
          const Box unshifted_nabr(
             nabr, PeriodicId::zero(), head_mapped_box_level.getRefinementRatio());
 
-         BoxSet::const_iterator na_in_head =
+         BoxSet::SetConstIterator na_in_head =
             head_mapped_boxes.find(unshifted_nabr);
 
-         if (na_in_head == head_mapped_boxes.end()) {
+         if (na_in_head == head_mapped_boxes.setEnd()) {
             tbox::perr << "\nConnector::checkConsistencyWithHead:\n"
             << "Neighbor list for mapped_box " << mapped_box_id << "\n"
             << "referenced nonexistent neighbor "
             << nabr << "\n";
             tbox::perr << "Neighbors of mapped_box " << mapped_box_id << ":\n";
-            for (BoxSet::const_iterator nb = nabrs.begin();
-                 nb != nabrs.end(); ++nb) {
+            for (BoxSet::SetConstIterator nb = nabrs.setBegin();
+                 nb != nabrs.setEnd(); ++nb) {
                tbox::perr << "    " << *nb << '\n';
             }
             ++number_of_inconsistencies;
@@ -1953,8 +1968,8 @@ void Connector::getNeighborBoxes(
    BoxList& nbr_boxes) const
 {
    const NeighborSet& nbr_mapped_boxes = getNeighborSet(mapped_box_id);
-   for (NeighborSet::const_iterator ni = nbr_mapped_boxes.begin();
-        ni != nbr_mapped_boxes.end(); ni++) {
+   for (NeighborSet::SetConstIterator ni = nbr_mapped_boxes.setBegin();
+        ni != nbr_mapped_boxes.setEnd(); ni++) {
       nbr_boxes.pushBack(*ni);
    }
 }

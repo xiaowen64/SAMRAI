@@ -51,7 +51,7 @@ public:
    typedef BoxSet NeighborSet;
 
    //! @brief Default constructor creates an empty container.
-   NeighborhoodSet();
+   NeighborhoodSet(const tbox::Dimension& dim);
 
    /*!
     * @brief Copy constructor.
@@ -146,10 +146,55 @@ public:
       d_map.clear();
    }
 
-   NeighborSet& operator [] (
-      const key_type& k) {
-      TBOX_ASSERT(k.getPeriodicId().getPeriodicValue() == 0);
-      return d_map[k];
+//   NeighborSet& operator [] (
+//      const key_type& k) {
+//      TBOX_ASSERT(k.getPeriodicId().getPeriodicValue() == 0);
+//      return d_map[k];
+//   }
+
+   bool insertNeighbor(const key_type& k,
+                       const Box& neighbor)
+   {
+      iterator iter = d_map.find(k);
+      bool neighbor_inserted;
+      if (iter != end()) {
+         neighbor_inserted = iter->second.insert(neighbor);
+      } else {
+         BoxContainer neighbor_set(neighbor);
+         neighbor_set.makeSet();
+         std::pair<iterator,bool> inserted_pair =
+            d_map.insert(std::pair<key_type, BoxContainer>(k, neighbor_set));
+         neighbor_inserted = inserted_pair.second;
+      }
+      return neighbor_inserted;
+   }
+
+   void insertNeighborSet(const key_type& k,
+                          const BoxContainer& neighbor_set)
+   {
+      d_map.insert(std::pair<key_type, BoxContainer>(k, neighbor_set));
+   } 
+
+   void clearNeighborSet(const key_type& k)
+   {
+      iterator iter = d_map.find(k);
+      if (iter != end()) {
+         iter->second.clear();
+      }
+   } 
+
+   NeighborSet& getNeighborSet(const key_type& k,
+                               const tbox::Dimension& dim)
+   {
+      iterator iter = d_map.find(k);
+      if (iter != end()) {
+         return iter->second;
+      } else {
+         BoxContainer neighbor_set(dim);
+         std::pair<iterator,bool> ret =
+            d_map.insert(std::pair<key_type, BoxContainer>(k, neighbor_set));
+         return ret.first->second;
+      }
    }
 
    iterator find(
@@ -290,8 +335,7 @@ public:
     * @param[out] output_neighborhood_set
     */
    void
-   removePeriodicNeighbors(
-      NeighborhoodSet& output_neighborhood_set) const;
+   removePeriodicNeighbors();
 
    /*!
     * @brief Insert all neighbors from a NeighborhoodSet into a
@@ -309,9 +353,9 @@ public:
     *
     * @param[out] all_neighbors
     */
-   void
-   getNeighbors(
-      BoxList& all_neighbors) const;
+//   void
+//   getNeighbors(
+//      BoxList& all_neighbors) const;
 
    /*!
     * @brief Insert all neighbors from a NeighborhoodSet with a
@@ -363,6 +407,11 @@ public:
    void
    getFromDatabase(
       tbox::Database& database);
+
+   const tbox::Dimension& getDim() const
+   {
+      return d_dim;
+   }
 
    //@}
 
@@ -440,6 +489,8 @@ private:
     * Static integer constant describing class's version number.
     */
    static const int HIER_EDGE_SET_VERSION;
+
+   tbox::Dimension d_dim;
 
    /*!
     * @brief NeighborhoodSet is just a wrapper around an STL map.

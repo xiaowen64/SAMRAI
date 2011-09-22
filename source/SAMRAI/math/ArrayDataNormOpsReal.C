@@ -30,11 +30,11 @@ ArrayDataNormOpsReal<TYPE>::~ArrayDataNormOpsReal()
 
 /*
  *************************************************************************
- *                                                                       *
- * The const constructor and assignment operator are not actually used   *
- * but are defined here for compilers that require an implementation for *
- * every declaration.                                                    *
- *                                                                       *
+ *
+ * The const constructor and assignment operator are not actually used
+ * but are defined here for compilers that require an implementation for
+ * every declaration.
+ *
  *************************************************************************
  */
 
@@ -54,9 +54,9 @@ void ArrayDataNormOpsReal<TYPE>::operator = (
 
 /*
  *************************************************************************
- *                                                                       *
- * Generic class template norm operations for real array data.           *
- *                                                                       *
+ *
+ * Generic class template norm operations for real array data.
+ *
  *************************************************************************
  */
 

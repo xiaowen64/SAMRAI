@@ -30,9 +30,9 @@ namespace solv {
 
 /*
  *************************************************************************
- *                                                                       *
- * Static public member functions.                                       *
- *                                                                       *
+ *
+ * Static public member functions.
+ *
  *************************************************************************
  */
 
@@ -92,9 +92,9 @@ PETSc_SAMRAIVectorReal<TYPE>::getSAMRAIVector(
 
 /*
  *************************************************************************
- *                                                                       *
- * Protected constructor and destructor for PETSc_SAMRAIVectorReal.      *
- *                                                                       *
+ *
+ * Protected constructor and destructor for PETSc_SAMRAIVectorReal.
+ *
  *************************************************************************
  */
 
@@ -118,9 +118,9 @@ PETSc_SAMRAIVectorReal<TYPE>::~PETSc_SAMRAIVectorReal()
 
 /*
  *************************************************************************
- *                                                                       *
- * Other member functions                                                *
- *                                                                       *
+ *
+ * Other member functions
+ *
  *************************************************************************
  */
 

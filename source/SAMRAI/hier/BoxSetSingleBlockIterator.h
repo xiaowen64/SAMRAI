@@ -12,6 +12,7 @@
 
 #include "SAMRAI/SAMRAI_config.h"
 
+#include "SAMRAI/hier/BoxContainerSetConstIterator.h"
 #include "SAMRAI/hier/BoxSet.h"
 #include "SAMRAI/hier/BlockId.h"
 
@@ -123,7 +124,7 @@ private:
    /*!
     * @brief The iterator.
     */
-   BoxSet::const_iterator d_iter;
+   BoxContainer::SetConstIterator d_iter;
 
 };
 

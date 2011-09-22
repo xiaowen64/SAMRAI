@@ -30,9 +30,9 @@ PatchNodeDataNormOpsComplex::~PatchNodeDataNormOpsComplex()
 
 /*
  *************************************************************************
- *                                                                       *
- * Compute the number of data entries on a patch in the given box.       *
- *                                                                       *
+ *
+ * Compute the number of data entries on a patch in the given box.
+ *
  *************************************************************************
  */
 
@@ -51,9 +51,9 @@ int PatchNodeDataNormOpsComplex::numberOfEntries(
 
 /*
  *************************************************************************
- *                                                                       *
- * Norm operations for complex node-centered data.                       *
- *                                                                       *
+ *
+ * Norm operations for complex node-centered data.
+ *
  *************************************************************************
  */
 

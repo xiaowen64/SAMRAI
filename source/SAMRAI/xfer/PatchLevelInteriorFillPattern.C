@@ -13,6 +13,8 @@
 
 #include "SAMRAI/xfer/PatchLevelInteriorFillPattern.h"
 #include "SAMRAI/hier/Box.h"
+#include "SAMRAI/hier/BoxContainerSetConstIterator.h"
+#include "SAMRAI/hier/BoxContainerSetIterator.h"
 #include "SAMRAI/tbox/MathUtilities.h"
 
 #ifndef SAMRAI_INLINE
@@ -32,9 +34,9 @@ namespace xfer {
 
 /*
  *************************************************************************
- *                                                                       *
- * Default constructor                                                   *
- *                                                                       *
+ *
+ * Default constructor
+ *
  *************************************************************************
  */
 
@@ -45,9 +47,9 @@ PatchLevelInteriorFillPattern::PatchLevelInteriorFillPattern():
 
 /*
  *************************************************************************
- *                                                                       *
- * Destructor                                                            *
- *                                                                       *
+ *
+ * Destructor
+ *
  *************************************************************************
  */
 
@@ -57,9 +59,9 @@ PatchLevelInteriorFillPattern::~PatchLevelInteriorFillPattern()
 
 /*
  *************************************************************************
- *                                                                       *
- * computeFillBoxesAndNeighborhoodSets                                   *
- *                                                                       *
+ *
+ * computeFillBoxesAndNeighborhoodSets
+ *
  *************************************************************************
  */
 
@@ -84,21 +86,21 @@ void PatchLevelInteriorFillPattern::computeFillBoxesAndNeighborhoodSets(
    /*
     * Fill just the interior.  Disregard gcw.
     */
-   for (hier::BoxSet::const_iterator ni = dst_mapped_boxes.begin();
-        ni != dst_mapped_boxes.end(); ++ni) {
+   for (hier::BoxSet::SetConstIterator ni = dst_mapped_boxes.setBegin();
+        ni != dst_mapped_boxes.setEnd(); ++ni) {
       const hier::BoxId& gid = ni->getId();
       const hier::Box& dst_mapped_box =
          *dst_mapped_box_level.getBox(gid);
-      fill_mapped_boxes.insert(fill_mapped_boxes.end(), dst_mapped_box);
-      dst_to_fill_edges[gid].insert(dst_mapped_box);
+      fill_mapped_boxes.insert(fill_mapped_boxes.setEnd(), dst_mapped_box);
+      dst_to_fill_edges.insertNeighbor(gid, dst_mapped_box);
    }
 }
 
 /*
  *************************************************************************
- *                                                                       *
- * computeDestinationFillBoxesOnSourceProc                               *
- *                                                                       *
+ *
+ * computeDestinationFillBoxesOnSourceProc
+ *
  *************************************************************************
  */
 
@@ -111,6 +113,7 @@ void PatchLevelInteriorFillPattern::computeDestinationFillBoxesOnSourceProc(
    NULL_USE(fill_ghost_width);
    TBOX_DIM_ASSERT_CHECK_ARGS2(dst_mapped_box_level, fill_ghost_width);
 
+   const tbox::Dimension& dim(fill_ghost_width.getDim());
    /*
     * src_to_dst initialized only when there is a src mapped_box_level.
     * Without the src mapped_box_level, we do not need to compute
@@ -120,15 +123,16 @@ void PatchLevelInteriorFillPattern::computeDestinationFillBoxesOnSourceProc(
     * boxes for all its dst neighbors using local data.  This info is
     * stored in dst_fill_boxes_on_src_proc.
     */
-   NeighborSet tmp_nabrs, all_dst_nabrs;
+   NeighborSet tmp_nabrs(dim), all_dst_nabrs(dim);
    src_to_dst.getNeighborhoodSets().getNeighbors(tmp_nabrs);
    tmp_nabrs.unshiftPeriodicImageBoxes(
       all_dst_nabrs,
       dst_mapped_box_level.getRefinementRatio());
    tmp_nabrs.clear();
-   for (NeighborSet::const_iterator na = all_dst_nabrs.begin();
-        na != all_dst_nabrs.end(); ++na) {
-      hier::BoxSet& fill_boxes = dst_fill_boxes_on_src_proc[na->getId()];
+   for (NeighborSet::SetConstIterator na = all_dst_nabrs.setBegin();
+        na != all_dst_nabrs.setEnd(); ++na) {
+      hier::BoxSet& fill_boxes =
+         dst_fill_boxes_on_src_proc.getNeighborSet(na->getId(), dim);
       fill_boxes.insert(*na);
       d_max_fill_boxes = tbox::MathUtilities<int>::Max(d_max_fill_boxes,
             static_cast<int>(fill_boxes.size()));

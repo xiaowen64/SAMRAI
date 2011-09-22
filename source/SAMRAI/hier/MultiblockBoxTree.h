@@ -122,7 +122,7 @@ public:
    void
    generateTree(
       const tbox::ConstPointer<GridGeometry>& grid_geometry,
-      const std::vector<Box>& mapped_boxes,
+      const BoxSet& mapped_boxes,
       size_t min_number = 10);
 
    /*!
@@ -242,13 +242,13 @@ public:
     * intersections with boxes in blocks that are neighbors of block
     * block_id across a multiblock singularity.
     */
-   void
-   findOverlapBoxes(
-      BoxSet& overlap_mapped_boxes,
-      const Box& box,
-      const BlockId& block_id,
-      const IntVector& refinement_ratio,
-      bool include_singularity_block_neighbors = false) const;
+//   void
+//   findOverlapBoxes(
+//      BoxSet& overlap_mapped_boxes,
+//      const Box& box,
+//      const BlockId& block_id,
+//      const IntVector& refinement_ratio,
+//      bool include_singularity_block_neighbors = false) const;
 
    /*!
     * @brief Find all boxes that overlap the given Box.

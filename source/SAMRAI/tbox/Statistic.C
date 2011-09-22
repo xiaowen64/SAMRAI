@@ -37,9 +37,9 @@ double Statistic::s_empty_seq_tag_entry = -99999999.;
 
 /*
  *************************************************************************
- *                                                                       *
- * Statistic constructor and destructor.                                 *
- *                                                                       *
+ *
+ * Statistic constructor and destructor.
+ *
  *************************************************************************
  */
 
@@ -84,9 +84,9 @@ Statistic::~Statistic()
 
 /*
  *************************************************************************
- *                                                                       *
- * Utility functions to record statistic record data.                    *
- *                                                                       *
+ *
+ * Utility functions to record statistic record data.
+ *
  *************************************************************************
  */
 
@@ -200,21 +200,21 @@ void Statistic::recordPatchStat(
 
 /*
  *************************************************************************
- *                                                                       *
- * Utility function for communicating statistic data in parallel.        *
- *                                                                       *
- * Stream data size includes 4 ints (instance id, proc rank,             *
- *                                   stat type, seq length).             *
- *                                                                       *
- * Additionally, data stream size includes space needed for statistic    *
- * data values:                                                          *
- *                                                                       *
- *    o for processor stat, this is 1 double (value) for each seq entry. *
- *                                                                       *
- *    o for patch stat, this is 1 int (#patches) for each sequence       *
- *      entry + 1 int (patch_id) + 1 double (value) for each patch       *
- *      entry.                                                           *
- *                                                                       *
+ *
+ * Utility function for communicating statistic data in parallel.
+ *
+ * Stream data size includes 4 ints (instance id, proc rank,
+ *                                   stat type, seq length).
+ *
+ * Additionally, data stream size includes space needed for statistic
+ * data values:
+ *
+ *    o for processor stat, this is 1 double (value) for each seq entry.
+ *
+ *    o for patch stat, this is 1 int (#patches) for each sequence
+ *      entry + 1 int (patch_id) + 1 double (value) for each patch
+ *      entry.
+ *
  *************************************************************************
  */
 

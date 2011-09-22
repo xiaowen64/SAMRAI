@@ -90,11 +90,11 @@ ArrayData<TYPE>::~ArrayData()
 
 /*
  *************************************************************************
- *                                                                       *
- * The const constructor and assignment operator are not actually used   *
- * but are defined here for compilers that require an implementation for *
- * every declaration.                                                    *
- *                                                                       *
+ *
+ * The const constructor and assignment operator are not actually used
+ * but are defined here for compilers that require an implementation for
+ * every declaration.
+ *
  *************************************************************************
  */
 
@@ -170,15 +170,15 @@ void ArrayData<TYPE>::initializeArray(
 
 /*
  *************************************************************************
- *                                                                       *
- * Copy data between two array data objects on a specified box domain.   *
- * Don't use C++ indexing member functions, since compilers are probably *
- * too stupid to do strength reduction on the loops to get performance.  *
- *                                                                       *
- * If the source box, destination box, and copy box are the same and the *
- * source and destination have the same depth, then perform a fast copy  *
- * of all data.                                                          *
- *                                                                       *
+ *
+ * Copy data between two array data objects on a specified box domain.
+ * Don't use C++ indexing member functions, since compilers are probably
+ * too stupid to do strength reduction on the loops to get performance.
+ *
+ * If the source box, destination box, and copy box are the same and the
+ * source and destination have the same depth, then perform a fast copy
+ * of all data.
+ *
  *************************************************************************
  */
 
@@ -235,10 +235,10 @@ void ArrayData<TYPE>::copy(
 
 /*
  *************************************************************************
- *                                                                       *
- * Copy data from source ArrayData object to this (destination)          *
- * ArrayData object on given box domain.                                 *
- *                                                                       *
+ *
+ * Copy data from source ArrayData object to this (destination)
+ * ArrayData object on given box domain.
+ *
  *************************************************************************
  */
 
@@ -284,10 +284,10 @@ void ArrayData<TYPE>::copy(
 
 /*
  *************************************************************************
- *                                                                       *
- * Copy over the boxlist by calling the single-box copy for each box in  *
- * the boxlist.                                                          *
- *                                                                       *
+ *
+ * Copy over the boxlist by calling the single-box copy for each box in
+ * the boxlist.
+ *
  *************************************************************************
  */
 
@@ -304,13 +304,13 @@ void ArrayData<TYPE>::copy(
 
 /*
  *************************************************************************
- *                                                                       *
- * Copy data between two array data objects on a specified box domain.   *
- *                                                                       *
- * If the source box, destination box, and copy box are the same and the *
- * source and destination have the same depth, then perform a fast copy  *
- * of all data.                                                          *
- *                                                                       *
+ *
+ * Copy data between two array data objects on a specified box domain.
+ *
+ * If the source box, destination box, and copy box are the same and the
+ * source and destination have the same depth, then perform a fast copy
+ * of all data.
+ *
  *************************************************************************
  */
 
@@ -370,14 +370,14 @@ void ArrayData<TYPE>::copyDepth(
 
 /*
  *************************************************************************
- *                                                                       *
- * Add data from source ArrayData object to this (destination)           *
- * ArrayData object on given box region.                                 *
- *                                                                       *
- * If the source box, destination box, and copy box are the same and the *
- * source and destination have the same depth, then perform a fast sum   *
- * on all data rather than performing explicit looping operations.       *
- *                                                                       *
+ *
+ * Add data from source ArrayData object to this (destination)
+ * ArrayData object on given box region.
+ *
+ * If the source box, destination box, and copy box are the same and the
+ * source and destination have the same depth, then perform a fast sum
+ * on all data rather than performing explicit looping operations.
+ *
  *************************************************************************
  */
 
@@ -433,10 +433,10 @@ void ArrayData<TYPE>::sum(
 
 /*
  *************************************************************************
- *                                                                       *
- * Add data from source ArrayData object to this (destination)           *
- * ArrayData object on region described by given box and offset.         *
- *                                                                       *
+ *
+ * Add data from source ArrayData object to this (destination)
+ * ArrayData object on region described by given box and offset.
+ *
  *************************************************************************
  */
 
@@ -482,10 +482,10 @@ void ArrayData<TYPE>::sum(
 
 /*
  *************************************************************************
- *                                                                       *
- * Add data from source ArrayData object to this (destination)           *
- * ArrayData object on regions described by given boxes and offset.      *
- *                                                                       *
+ *
+ * Add data from source ArrayData object to this (destination)
+ * ArrayData object on regions described by given boxes and offset.
+ *
  *************************************************************************
  */
 
@@ -502,13 +502,13 @@ void ArrayData<TYPE>::sum(
 
 /*
  *************************************************************************
- *                                                                       *
- * Pack data into the message stream.  Both packing routines add one     *
- * level of copy into a temporary buffer to reduce the number of calls   *
- * to the abstract stream packing routines.  These definitions will only *
- * work for the standard built-in types of bool, char, double, float,    *
- * and int.                                                              *
- *                                                                       *
+ *
+ * Pack data into the message stream.  Both packing routines add one
+ * level of copy into a temporary buffer to reduce the number of calls
+ * to the abstract stream packing routines.  These definitions will only
+ * work for the standard built-in types of bool, char, double, float,
+ * and int.
+ *
  *************************************************************************
  */
 
@@ -554,13 +554,13 @@ void ArrayData<TYPE>::packStream(
 
 /*
  *************************************************************************
- *                                                                       *
- * Unpack data from the message stream.  Both unpacking routines add one *
- * level of copy into a temporary buffer to reduce the number of calls   *
- * to the abstract stream packing routines.  These definitions will only *
- * work for the standard built-in types of bool, char, double, float,    *
- * and int.                                                              *
- *                                                                       *
+ *
+ * Unpack data from the message stream.  Both unpacking routines add one
+ * level of copy into a temporary buffer to reduce the number of calls
+ * to the abstract stream packing routines.  These definitions will only
+ * work for the standard built-in types of bool, char, double, float,
+ * and int.
+ *
  *************************************************************************
  */
 
@@ -606,13 +606,13 @@ void ArrayData<TYPE>::unpackStream(
 
 /*
  *************************************************************************
- *                                                                       *
- * Unpack data from the message stream and add to this array data object.*
- * Both unpacking routines add one level of copy into a temporary buffer *
- * to reduce the number of calls to the abstract stream packing routines.*
- * These definitions will only work for the standard built-in types of   *
- * bool, char, double, float, and int.                                   *
- *                                                                       *
+ *
+ * Unpack data from the message stream and add to this array data object.
+ * Both unpacking routines add one level of copy into a temporary buffer
+ * to reduce the number of calls to the abstract stream packing routines.
+ * These definitions will only work for the standard built-in types of
+ * bool, char, double, float, and int.
+ *
  *************************************************************************
  */
 
@@ -658,10 +658,10 @@ void ArrayData<TYPE>::unpackStreamAndSum(
 
 /*
  *************************************************************************
- *                                                                       *
- * Fill all or portions of the array with the specified data value.      *
- * The templated TYPE must define the assignment operator.               *
- *                                                                       *
+ *
+ * Fill all or portions of the array with the specified data value.
+ * The templated TYPE must define the assignment operator.
+ *
  *************************************************************************
  */
 
@@ -770,12 +770,12 @@ void ArrayData<TYPE>::fill(
 
 /*
  *************************************************************************
- *                                                                       *
- * Checks to make sure that class and restart file version numbers are   *
- * equal.  If so, reads in d_depth, d_offset, and d_box from the         *
- * database.  Then calls getSpecializedFromDatabase() to read in the     *
- * actual data.                                                          *
- *                                                                       *
+ *
+ * Checks to make sure that class and restart file version numbers are
+ * equal.  If so, reads in d_depth, d_offset, and d_box from the
+ * database.  Then calls getSpecializedFromDatabase() to read in the
+ * actual data.
+ *
  *************************************************************************
  */
 
@@ -800,11 +800,11 @@ void ArrayData<TYPE>::getFromDatabase(
 
 /*
  *************************************************************************
- *                                                                       *
- * Write out the class version number, d_depth, d_offset, and d_box      *
- * to the database.  Then calls putSpecializedToDatabase() to write      *
- * in the actual data.                                                   *
- *                                                                       *
+ *
+ * Write out the class version number, d_depth, d_offset, and d_box
+ * to the database.  Then calls putSpecializedToDatabase() to write
+ * in the actual data.
+ *
  *************************************************************************
  */
 
@@ -842,9 +842,9 @@ void ArrayData<TYPE>::getSpecializedFromDatabase(
 
 /*
  *************************************************************************
- *                                                                       *
- * Set all array data to undefined values.                               *
- *                                                                       *
+ *
+ * Set all array data to undefined values.
+ *
  *************************************************************************
  */
 
@@ -856,10 +856,10 @@ void ArrayData<TYPE>::undefineData()
 
 /*
  *************************************************************************
- *                                                                       *
- * Private member functions to pack and unpack data on the specified box *
- * (for all components) into/from the buffer.                            *
- *                                                                       *
+ *
+ * Private member functions to pack and unpack data on the specified box
+ * (for all components) into/from the buffer.
+ *
  *************************************************************************
  */
 
@@ -904,10 +904,10 @@ void ArrayData<TYPE>::unpackBuffer(
 
 /*
  *************************************************************************
- *                                                                       *
- * Private member function to unpack data on the specified box           *
- * (all components) from the buffer and add to this array data object.   *
- *                                                                       *
+ *
+ * Private member function to unpack data on the specified box
+ * (all components) from the buffer and add to this array data object.
+ *
  *************************************************************************
  */
 

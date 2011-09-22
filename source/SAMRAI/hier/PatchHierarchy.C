@@ -15,6 +15,8 @@
 
 #include <stdio.h>
 
+#include "SAMRAI/hier/BoxContainerIterator.h"
+#include "SAMRAI/hier/BoxContainerSetIterator.h"
 #include "SAMRAI/hier/OverlapConnectorAlgorithm.h"
 #include "SAMRAI/hier/PeriodicShiftCatalog.h"
 #include "SAMRAI/hier/VariableDatabase.h"
@@ -44,10 +46,10 @@ PatchHierarchy::s_initialize_finalize_handler(
 
 /*
  *************************************************************************
- *                                                                       *
- * Instantiate the patch hierarchy and set default values.               *
- * Initialize from restart if necessary.                                 *
- *                                                                       *
+ *
+ * Instantiate the patch hierarchy and set default values.
+ * Initialize from restart if necessary.
+ *
  *************************************************************************
  */
 
@@ -106,11 +108,11 @@ PatchHierarchy::PatchHierarchy(
 
 /*
  **************************************************************************
- *                                                                        *
- * The destructor tells the tbox::RestartManager to remove this hierarchy *
- * from the list of restart items and automatically deletes all           *
- * allocated resources through smart pointers and arrays.                 *
- *                                                                        *
+ *
+ * The destructor tells the tbox::RestartManager to remove this hierarchy
+ * from the list of restart items and automatically deletes all
+ * allocated resources through smart pointers and arrays.
+ *
  **************************************************************************
  */
 
@@ -429,10 +431,10 @@ const Connector& PatchHierarchy::getConnector(
 
 /*
  *************************************************************************
- *                                                                       *
- * Create a copy of this patch hierarchy with each level refined by      *
- * the given ratio and return a pointer to it.                           *
- *                                                                       *
+ *
+ * Create a copy of this patch hierarchy with each level refined by
+ * the given ratio and return a pointer to it.
+ *
  *************************************************************************
  */
 
@@ -659,7 +661,7 @@ void PatchHierarchy::setupDomainData()
     * Grab the physical domain (including periodic images) from the
     * GridGeometry and set up domain data dependent on it.
     */
-   tbox::Array<BoxSet> domain_mapped_boxes(d_number_blocks);
+   tbox::Array<BoxSet> domain_mapped_boxes(d_number_blocks, BoxSet(d_dim));
    for (int nb = 0; nb < d_number_blocks; nb++) {
       d_grid_geometry->computePhysicalDomain(domain_mapped_boxes[nb],
          IntVector::getOne(d_dim), BlockId(nb));
@@ -674,10 +676,10 @@ void PatchHierarchy::setupDomainData()
          tbox::SAMRAI_MPI::getSAMRAIWorld(),
          BoxLevel::GLOBALIZED);
    } else {
-      BoxSet all_domain_mapped_boxes;
+      BoxSet all_domain_mapped_boxes(d_dim);
       for (int nb = 0; nb < d_number_blocks; nb++) {
-         all_domain_mapped_boxes.insert(domain_mapped_boxes[nb].begin(),
-            domain_mapped_boxes[nb].end());
+         all_domain_mapped_boxes.insert(domain_mapped_boxes[nb].setBegin(),
+            domain_mapped_boxes[nb].setEnd());
       }
       d_domain_mapped_box_level.initialize(
          all_domain_mapped_boxes,
@@ -688,12 +690,11 @@ void PatchHierarchy::setupDomainData()
    }
 
    // Initialize the multiblock domain search tree.
-   std::vector<Box> multiblock_mapped_boxes;
+   BoxSet multiblock_mapped_boxes(d_dim);
    for (int nb = 0; nb < d_number_blocks; nb++) {
       multiblock_mapped_boxes.insert(
-         multiblock_mapped_boxes.end(),
-         domain_mapped_boxes[nb].begin(),
-         domain_mapped_boxes[nb].end());
+         domain_mapped_boxes[nb].setBegin(),
+         domain_mapped_boxes[nb].setEnd());
    }
    d_domain_search_tree_periodic.generateTree(
       d_grid_geometry,
@@ -701,11 +702,11 @@ void PatchHierarchy::setupDomainData()
 
    // Generate the non-periodic multiblock domain search tree.
    if (PeriodicShiftCatalog::getCatalog(d_dim)->isPeriodic()) {
-      std::vector<Box> multiblock_mapped_boxes_noperiodic;
-      for (std::vector<Box>::const_iterator ni = multiblock_mapped_boxes.begin();
-           ni != multiblock_mapped_boxes.end(); ++ni) {
-         if (!ni->isPeriodicImage()) {
-            multiblock_mapped_boxes_noperiodic.push_back(*ni);
+      BoxSet multiblock_mapped_boxes_noperiodic(d_dim);
+      for (BoxSet::SetConstIterator ni = multiblock_mapped_boxes.setBegin();
+           ni != multiblock_mapped_boxes.setEnd(); ++ni) {
+         if (!(*ni).isPeriodicImage()) {
+            multiblock_mapped_boxes_noperiodic.pushBack(*ni);
          }
       }
       d_domain_search_tree.generateTree(
@@ -743,16 +744,16 @@ void PatchHierarchy::setupDomainData()
 
 /*
  *************************************************************************
- *                                                                       *
- * Writes out the class version number and the number of levels in the   *
- * hierarchy and has each patch_level write itself out.                  *
- * The database keys for the patch levels are given by                   *
- * "level#" where # is the level number for the patch_level.             *
- * The patchdata that are written to the database are determined by      *
- * which those bits in the VariableDatabase restart table.               *
- *                                                                       *
- * Asserts that the database pointer passed in is not NULL.              *
- *                                                                       *
+ *
+ * Writes out the class version number and the number of levels in the
+ * hierarchy and has each patch_level write itself out.
+ * The database keys for the patch levels are given by
+ * "level#" where # is the level number for the patch_level.
+ * The patchdata that are written to the database are determined by
+ * which those bits in the VariableDatabase restart table.
+ *
+ * Asserts that the database pointer passed in is not NULL.
+ *
  *************************************************************************
  */
 
@@ -765,17 +766,17 @@ void PatchHierarchy::putToDatabase(
 
 /*
  *************************************************************************
- *                                                                       *
- * Writes out the class version number and the number of levels in the   *
- * hierarchy and has each patch_level write itself out.                  *
- * The database keys for the patch levels are given by                   *
- * "level#" where # is the level number for the patch_level.             *
- * The patchdata that are written to the database are determined by      *
- * which those bits in the specified ComponentSelector that are          *
- * set.                                                                  *
- *                                                                       *
- * Asserts that the database pointer passed in is not NULL.              *
- *                                                                       *
+ *
+ * Writes out the class version number and the number of levels in the
+ * hierarchy and has each patch_level write itself out.
+ * The database keys for the patch levels are given by
+ * "level#" where # is the level number for the patch_level.
+ * The patchdata that are written to the database are determined by
+ * which those bits in the specified ComponentSelector that are
+ * set.
+ *
+ * Asserts that the database pointer passed in is not NULL.
+ *
  *************************************************************************
  */
 
@@ -860,14 +861,14 @@ void PatchHierarchy::putToDatabase(
 
 /*
  *************************************************************************
- *                                                                       *
- * Gets the database in the root database that corresponds to the object *
- * name.  This method then checks the class version against restart      *
- * file version.  If they match, it creates each hierarchy level and     *
- * reads in the level data.   The number of levels read from restart is  *
- * the minimum of the argument max levels and the number of levels in    *
- * the restart file.                                                     *
- *                                                                       *
+ *
+ * Gets the database in the root database that corresponds to the object
+ * name.  This method then checks the class version against restart
+ * file version.  If they match, it creates each hierarchy level and
+ * reads in the level data.   The number of levels read from restart is
+ * the minimum of the argument max levels and the number of levels in
+ * the restart file.
+ *
  *************************************************************************
  */
 void PatchHierarchy::getFromRestart()

@@ -561,7 +561,7 @@ void BoxNeighborhoodCollection::getNeighbors(
    }
    return;
 }
-
+#if 0
 void BoxNeighborhoodCollection::getNeighbors(
    BoxList& neighbors) const
 {
@@ -571,7 +571,7 @@ void BoxNeighborhoodCollection::getNeighbors(
 
    // First call the version taking a BoxSet so that there are no duplicates.
    // Then dump the neighbors into the supplied BoxList.
-   BoxSet tmp_nbrs;
+   BoxSet tmp_nbrs(neighbors.getDim());
    getNeighbors(tmp_nbrs);
    for (BoxSet::const_iterator itr(tmp_nbrs.begin());
         itr != tmp_nbrs.end(); ++itr) {
@@ -579,7 +579,7 @@ void BoxNeighborhoodCollection::getNeighbors(
    }
    return;
 }
-
+#endif
 void BoxNeighborhoodCollection::getNeighbors(
    BoxList& neighbors,
    const BlockId& block_id) const
@@ -591,11 +591,11 @@ void BoxNeighborhoodCollection::getNeighbors(
    // First call the version taking a BoxSet so that there are no duplicates.
    // Then dump the neighbors with the desired BlockId into the supplied
    // BoxList.
-   BoxSet tmp_nbrs;
-   getNeighbors(tmp_nbrs);
-   for (BoxSetSingleBlockIterator itr(tmp_nbrs, block_id);
-        itr.isValid(); ++itr) {
-      neighbors.pushBack(*itr);
+   BoxSet tmp_nabrs(neighbors.getDim());
+   getNeighbors(tmp_nabrs);
+   for (BoxSetSingleBlockIterator ei(tmp_nabrs, block_id);
+        ei.isValid(); ++ei) {
+      neighbors.pushBack(*ei);
    }
    return;
 }
@@ -609,11 +609,22 @@ void BoxNeighborhoodCollection::getNeighbors(
 
    // First call the version taking a BoxSet so that there are no duplicates.
    // Then dump each neighbor into the BoxList associated with its BlockId.
-   BoxSet tmp_nbrs;
-   getNeighbors(tmp_nbrs);
-   for (BoxSet::const_iterator itr(tmp_nbrs.begin());
-        itr != tmp_nbrs.end(); ++itr) {
-      neighbors[itr->getBlockId()].pushBack(*itr);
+   for (AdjListConstItr root_itr(d_adj_list.begin());
+        root_itr != d_adj_list.end(); ++root_itr) {
+      for (NeighborsConstItr nbr_itr(root_itr->second.begin());
+           nbr_itr != root_itr->second.end(); ++nbr_itr) {
+
+         const BlockId& block_id = (**nbr_itr).getBlockId(); 
+         std::map<BlockId, BoxList>::iterator iter = neighbors.find(block_id);
+
+         if (iter != neighbors.end()) {
+            iter->second.pushBack(**nbr_itr);
+         } else {
+            BoxContainer nabr_container(**nbr_itr);
+            neighbors.insert(std::pair<BlockId, BoxContainer>(block_id,
+                                                              nabr_container));
+         }
+      }
    }
    return;
 }

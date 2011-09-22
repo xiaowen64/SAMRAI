@@ -12,6 +12,7 @@
 #define included_xfer_PatchLevelFullFillPattern_C
 
 #include "SAMRAI/xfer/PatchLevelFullFillPattern.h"
+#include "SAMRAI/hier/BoxContainerSetIterator.h"
 #include "SAMRAI/hier/RealBoxConstIterator.h"
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/tbox/MathUtilities.h"
@@ -33,9 +34,9 @@ namespace xfer {
 
 /*
  *************************************************************************
- *                                                                       *
- * Default constructor                                                   *
- *                                                                       *
+ *
+ * Default constructor
+ *
  *************************************************************************
  */
 
@@ -46,9 +47,9 @@ PatchLevelFullFillPattern::PatchLevelFullFillPattern():
 
 /*
  *************************************************************************
- *                                                                       *
- * Destructor                                                            *
- *                                                                       *
+ *
+ * Destructor
+ *
  *************************************************************************
  */
 
@@ -58,9 +59,9 @@ PatchLevelFullFillPattern::~PatchLevelFullFillPattern()
 
 /*
  *************************************************************************
- *                                                                       *
- * computeFillBoxesAndNeighborhoodSets                                   *
- *                                                                       *
+ *
+ * computeFillBoxesAndNeighborhoodSets
+ *
  *************************************************************************
  */
 
@@ -86,17 +87,17 @@ void PatchLevelFullFillPattern::computeFillBoxesAndNeighborhoodSets(
       const hier::Box& dst_mapped_box = *ni;
       hier::Box fill_mapped_box(dst_mapped_box);
       fill_mapped_box.grow(fill_ghost_width);
-      fill_mapped_boxes.insert(fill_mapped_boxes.end(), fill_mapped_box);
-      dst_to_fill_edges[dst_mapped_box.getId()].insert(fill_mapped_box);
-      TBOX_ASSERT(dst_to_fill_edges[dst_mapped_box.getId()].size() == 1);
+      fill_mapped_boxes.insert(fill_mapped_boxes.setEnd(), fill_mapped_box);
+      dst_to_fill_edges.insertNeighbor(dst_mapped_box.getId(), fill_mapped_box);
+      TBOX_ASSERT(dst_to_fill_edges.getNeighborSet(dst_mapped_box.getId(), dst_mapped_box.getDim()).size() == 1);
    }
 }
 
 /*
  *************************************************************************
- *                                                                       *
- * computeDestinationFillBoxesOnSourceProc                               *
- *                                                                       *
+ *
+ * computeDestinationFillBoxesOnSourceProc
+ *
  *************************************************************************
  */
 
@@ -108,6 +109,8 @@ void PatchLevelFullFillPattern::computeDestinationFillBoxesOnSourceProc(
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(dst_mapped_box_level, fill_ghost_width);
 
+   const tbox::Dimension& dim(fill_ghost_width.getDim());
+
    /*
     * src_to_dst initialized only when there is a src mapped_box_level.
     * Without the src mapped_box_level, we do not need to compute
@@ -117,15 +120,16 @@ void PatchLevelFullFillPattern::computeDestinationFillBoxesOnSourceProc(
     * for all its dst neighbors using local data.  This info is
     * stored in dst_fill_boxes_on_src_proc.
     */
-   NeighborSet tmp_nabrs, all_dst_nabrs;
+   NeighborSet tmp_nabrs(dim), all_dst_nabrs(dim);
    src_to_dst.getNeighborhoodSets().getNeighbors(tmp_nabrs);
    tmp_nabrs.unshiftPeriodicImageBoxes(
       all_dst_nabrs,
       dst_mapped_box_level.getRefinementRatio());
    tmp_nabrs.clear();
-   for (NeighborSet::const_iterator na = all_dst_nabrs.begin();
-        na != all_dst_nabrs.end(); ++na) {
-      hier::BoxSet& fill_boxes = dst_fill_boxes_on_src_proc[na->getId()];
+   for (NeighborSet::SetConstIterator na = all_dst_nabrs.setBegin();
+        na != all_dst_nabrs.setEnd(); ++na) {
+      hier::BoxSet& fill_boxes =
+         dst_fill_boxes_on_src_proc.getNeighborSet(na->getId(), dim);
       hier::Box fill_box(*na);
       fill_box.grow(fill_ghost_width);
       fill_boxes.insert(fill_box);

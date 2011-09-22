@@ -10,6 +10,9 @@
 
 #include "SAMRAI/hier/BoxContainerIterator.h"
 #include "SAMRAI/hier/BoxContainerConstIterator.h"
+#include "SAMRAI/hier/BoxContainerSetIterator.h"
+#include "SAMRAI/hier/BoxContainerSetConstReverseIterator.h"
+#include "SAMRAI/hier/PeriodicShiftCatalog.h"
 #include "SAMRAI/tbox/Utilities.h"
 
 namespace SAMRAI {
@@ -20,7 +23,8 @@ BoxContainer::BoxContainer(
    const tbox::Dimension& dim,
    const int n):
    d_dim(dim),
-   d_list(n, Box(dim))
+   d_list(n, Box(dim)),
+   d_set_created(false)
 {
 }
 
@@ -28,7 +32,8 @@ SAMRAI_INLINE_KEYWORD
 BoxContainer::BoxContainer(
    const Box& box):
    d_dim(box.getDim()),
-   d_list(1, box)
+   d_list(1, box),
+   d_set_created(false)
 {
 }
 
@@ -36,8 +41,12 @@ SAMRAI_INLINE_KEYWORD
 BoxContainer::BoxContainer(
    const BoxContainer& other):
    d_dim(other.d_dim),
-   d_list(other.d_list)
+   d_list(other.d_list),
+   d_set_created(false) 
 {
+   if (other.d_set_created) {
+      makeSet();
+   }
 }
 
 SAMRAI_INLINE_KEYWORD
@@ -48,7 +57,11 @@ BoxContainer::~BoxContainer()
 SAMRAI_INLINE_KEYWORD
 int BoxContainer::size() const
 {
-   return static_cast<int>(d_list.size());
+   if (!d_set_created) {
+      return static_cast<int>(d_list.size());
+   } else {
+      return static_cast<int>(d_set.size());
+   }
 }
 
 SAMRAI_INLINE_KEYWORD
@@ -169,6 +182,7 @@ SAMRAI_INLINE_KEYWORD
 void BoxContainer::clear()
 {
    d_list.clear();
+   d_set.clear();
 }
 
 SAMRAI_INLINE_KEYWORD
@@ -189,10 +203,82 @@ bool BoxContainer::operator != (const BoxContainer& rhs) const
 }
 
 SAMRAI_INLINE_KEYWORD
+BoxContainerSetConstIterator BoxContainer::setBegin() const
+{
+   TBOX_ASSERT(d_set_created || size() == 0);
+   return BoxContainerSetConstIterator(*this);
+}
+
+SAMRAI_INLINE_KEYWORD
+BoxContainerSetConstIterator BoxContainer::setEnd() const
+{
+   TBOX_ASSERT(d_set_created || size() == 0);
+   return BoxContainerSetConstIterator(*this, false);
+}
+
+SAMRAI_INLINE_KEYWORD
+BoxContainerSetConstReverseIterator BoxContainer::setRBegin() const
+{
+   TBOX_ASSERT(d_set_created || size() == 0);
+   return BoxContainerSetConstReverseIterator(*this);
+}
+
+SAMRAI_INLINE_KEYWORD
+BoxContainerSetConstReverseIterator BoxContainer::setREnd() const
+{
+   TBOX_ASSERT(d_set_created || size() == 0);
+   return BoxContainerSetConstReverseIterator(*this, false);
+}
+
+SAMRAI_INLINE_KEYWORD
+BoxContainerSetIterator BoxContainer::setBegin()
+{
+   if (!d_set_created) {
+      makeSet();
+   }
+   return BoxContainerSetIterator(*this);
+}
+
+SAMRAI_INLINE_KEYWORD
+BoxContainerSetIterator BoxContainer::setEnd()
+{
+   if (!d_set_created) {
+      makeSet();
+   }
+   return BoxContainerSetIterator(*this, false);
+}
+
+SAMRAI_INLINE_KEYWORD
 const tbox::Dimension& BoxContainer::getDim() const
 {
    return d_dim;
 }
+
+SAMRAI_INLINE_KEYWORD
+void BoxContainer::separatePeriodicImages(
+   std::vector<Box>& real_mapped_box_vector,
+   std::vector<Box>& periodic_image_mapped_box_vector) const
+{
+   if (!isEmpty()) {
+
+      const Box& first_element(*begin());
+
+      const PeriodicId zero_shift_number(PeriodicShiftCatalog::getCatalog(
+                                            first_element.getDim())->
+                                         getZeroShiftNumber());
+
+      real_mapped_box_vector.reserve(real_mapped_box_vector.size() + size());
+      for (BoxContainerSetConstIterator ni = setBegin(); ni != setEnd(); ++ni) {
+         const Box& mapped_box = *ni;
+         if (mapped_box.getPeriodicId() == zero_shift_number) {
+            real_mapped_box_vector.push_back(*ni);
+         } else {
+            periodic_image_mapped_box_vector.push_back(*ni);
+         }
+      }
+   }
+}
+
 
 }
 }

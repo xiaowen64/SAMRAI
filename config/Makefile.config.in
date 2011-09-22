@@ -55,17 +55,19 @@ BIN_SAM       = $(OBJECT)/bin
 
 LIB_SUFFIX=@LIB_SUFFIX@
 
-LIBSAMRAI = \
-	$(LIB_SAM)/libSAMRAI_appu$(LIB_SUFFIX) \
-	$(LIB_SAM)/libSAMRAI_algs$(LIB_SUFFIX) \
-	$(LIB_SAM)/libSAMRAI_solv$(LIB_SUFFIX) \
-	$(LIB_SAM)/libSAMRAI_geom$(LIB_SUFFIX) \
-	$(LIB_SAM)/libSAMRAI_mesh$(LIB_SUFFIX) \
-	$(LIB_SAM)/libSAMRAI_math$(LIB_SUFFIX) \
-	$(LIB_SAM)/libSAMRAI_pdat$(LIB_SUFFIX) \
-	$(LIB_SAM)/libSAMRAI_xfer$(LIB_SUFFIX) \
-	$(LIB_SAM)/libSAMRAI_hier$(LIB_SUFFIX) \
-	$(LIB_SAM)/libSAMRAI_tbox$(LIB_SUFFIX)
+#
+# GNUMake script to reverse strings.  This is recursive.
+#
+reverse = $(if $(1),$(call reverse,$(wordlist 2,$(words $(1)),$(1)))) $(firstword $(1))
+
+#
+# List of packages to process. 
+# 
+# Packages available : appu algs solv geom mesh math pdat xfer hier tbox
+SAMRAI_LIBRARIES:=@SAMRAI_LIBRARIES@
+SAMRAI_LIBRARIES_R:=$(call reverse,@SAMRAI_LIBRARIES@)
+
+LIBSAMRAI=$(addsuffix $(LIB_SUFFIX),$(addprefix $(LIB_SAM)/libSAMRAI_,$(SAMRAI_LIBRARIES)))
 
 LIBSAMRAIDEPEND   = $(LIBSAMRAI)
 

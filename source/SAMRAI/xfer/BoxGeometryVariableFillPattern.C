@@ -23,9 +23,9 @@ const std::string BoxGeometryVariableFillPattern::s_name_id =
 
 /*
  *************************************************************************
- *                                                                       *
- * Default contructor only sets the string name identifier               *
- *                                                                       *
+ *
+ * Default contructor only sets the string name identifier
+ *
  *************************************************************************
  */
 
@@ -35,9 +35,9 @@ BoxGeometryVariableFillPattern::BoxGeometryVariableFillPattern()
 
 /*
  *************************************************************************
- *                                                                       *
- * Destructor                                                            *
- *                                                                       *
+ *
+ * Destructor
+ *
  *************************************************************************
  */
 
@@ -47,10 +47,10 @@ BoxGeometryVariableFillPattern::~BoxGeometryVariableFillPattern()
 
 /*
  *************************************************************************
- *                                                                       *
- * Calculate the overlap using the implemented calculateOverlap() method *
- * for the destination geometry.                                         *
- *                                                                       *
+ *
+ * Calculate the overlap using the implemented calculateOverlap() method
+ * for the destination geometry.
+ *
  *************************************************************************
  */
 
@@ -72,9 +72,9 @@ BoxGeometryVariableFillPattern::calculateOverlap(
 
 /*
  *************************************************************************
- *                                                                       *
- * Return the string name identifier.                                    *
- *                                                                       *
+ *
+ * Return the string name identifier.
+ *
  *************************************************************************
  */
 const std::string& BoxGeometryVariableFillPattern::getPatternName() const
@@ -84,10 +84,10 @@ const std::string& BoxGeometryVariableFillPattern::getPatternName() const
 
 /*
  *************************************************************************
- *                                                                       *
- * getStencilWidth() throws an error if called.  Only overridding        *
- * versions of this method in concrete subclasses should be called.      *
- *                                                                       *
+ *
+ * getStencilWidth() throws an error if called.  Only overridding
+ * versions of this method in concrete subclasses should be called.
+ *
  *************************************************************************
  */
 const hier::IntVector& BoxGeometryVariableFillPattern::getStencilWidth()
@@ -106,10 +106,10 @@ const hier::IntVector& BoxGeometryVariableFillPattern::getStencilWidth()
 
 /*
  *************************************************************************
- *                                                                       *
- * Compute BoxOverlap that specifies data to be filled by refinement     *
- * operator.                                                             *
- *                                                                       *
+ *
+ * Compute BoxOverlap that specifies data to be filled by refinement
+ * operator.
+ *
  *************************************************************************
  */
 tbox::Pointer<hier::BoxOverlap>

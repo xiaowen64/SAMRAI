@@ -32,10 +32,10 @@ namespace mesh {
 
 /*
  *************************************************************************
- *                                                                       *
- * The default constructor and virtual destructor do nothing             *
- * particularly interesting.                                             *
- *                                                                       *
+ *
+ * The default constructor and virtual destructor do nothing
+ * particularly interesting.
+ *
  *************************************************************************
  */
 
@@ -134,9 +134,6 @@ void MultiblockGriddingTagger::fillSingularityBoundaryConditions(
 
    const hier::BlockId& patch_blk_id = dst_mb_id.getBlockId();
 
-   const tbox::List<hier::GridGeometry::Neighbor>& neighbors =
-      grid_geometry->getNeighbors(patch_blk_id);
-
    const tbox::Pointer<pdat::CellData<int> > tag_data =
       patch.getPatchData(d_buf_tag_indx);
 
@@ -158,8 +155,8 @@ void MultiblockGriddingTagger::fillSingularityBoundaryConditions(
 
          const hier::BoxSet& encon_nbrs = ni->second;
 
-         for (hier::BoxSet::const_iterator ei = encon_nbrs.begin();
-              ei != encon_nbrs.end(); ++ei) {
+         for (hier::BoxSet::SetConstIterator ei = encon_nbrs.setBegin();
+              ei != encon_nbrs.setEnd(); ++ei) {
 
             tbox::Pointer<hier::Patch> encon_patch(
                encon_level.getPatch(ei->getId()));

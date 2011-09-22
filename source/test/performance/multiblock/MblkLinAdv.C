@@ -408,16 +408,16 @@ void F77_FUNC(detectshock3d, DETECTSHOCK3D) (
 
 /*
  *************************************************************************
- *                                                                       *
- * The constructor for MblkLinAdv class sets data members to defualt values, *
- * creates variables that define the solution state for the linear       *
+ *
+ * The constructor for MblkLinAdv class sets data members to defualt values,
+ * creates variables that define the solution state for the linear
  * advection equation.
- *                                                                       *
- * After default values are set, this routine calls getFromRestart()     *
- * if execution from a restart file is specified.  Finally,              *
- * getFromInput() is called to read values from the given input          *
- * database (potentially overriding those found in the restart file).    *
- *                                                                       *
+ *
+ * After default values are set, this routine calls getFromRestart()
+ * if execution from a restart file is specified.  Finally,
+ * getFromInput() is called to read values from the given input
+ * database (potentially overriding those found in the restart file).
+ *
  *************************************************************************
  */
 
@@ -650,9 +650,9 @@ MblkLinAdv::MblkLinAdv(
 
 /*
  *************************************************************************
- *                                                                       *
- * Empty destructor for MblkLinAdv class.                                    *
- *                                                                       *
+ *
+ * Empty destructor for MblkLinAdv class.
+ *
  *************************************************************************
  */
 
@@ -662,11 +662,11 @@ MblkLinAdv::~MblkLinAdv() {
 
 /*
  *************************************************************************
- *                                                                       *
- * Register conserved variable (u) (i.e., solution state variable) and   *
- * flux variable with hyperbolic integrator that manages storage for     *
- * those quantities.  Also, register plot data with Vizamrai or VisIt.   *
- *                                                                       *
+ *
+ * Register conserved variable (u) (i.e., solution state variable) and
+ * flux variable with hyperbolic integrator that manages storage for
+ * those quantities.  Also, register plot data with Vizamrai or VisIt.
+ *
  *************************************************************************
  */
 
@@ -738,14 +738,14 @@ void MblkLinAdv::registerModelVariables(
 
 /*
  *************************************************************************
- *                                                                       *
- * Set initial data for solution variables on patch interior.            *
- * This routine is called whenever a new patch is introduced to the      *
- * AMR patch hierarchy.  Note that the routine does nothing unless       *
- * we are at the initial time.  In all other cases, conservative         *
- * interpolation from coarser levels and copies from patches at the      *
- * same mesh resolution are sufficient to set data.                      *
- *                                                                       *
+ *
+ * Set initial data for solution variables on patch interior.
+ * This routine is called whenever a new patch is introduced to the
+ * AMR patch hierarchy.  Note that the routine does nothing unless
+ * we are at the initial time.  In all other cases, conservative
+ * interpolation from coarser levels and copies from patches at the
+ * same mesh resolution are sufficient to set data.
+ *
  *************************************************************************
  */
 void MblkLinAdv::initializeDataOnPatch(
@@ -917,9 +917,9 @@ void MblkLinAdv::initializeDataOnPatch(
 
 /*
  *************************************************************************
- *                                                                       *
- * Compute stable time increment for patch.  Return this value.          *
- *                                                                       *
+ *
+ * Compute stable time increment for patch.  Return this value.
+ *
  *************************************************************************
  */
 
@@ -979,11 +979,11 @@ double MblkLinAdv::computeStableDtOnPatch(
 
 /*
  *************************************************************************
- *                                                                       *
- * Compute time integral of numerical fluxes for finite difference       *
- * at each cell face on patch.  When d_dim == tbox::Dimension(3)), there are two options    *
- * for the transverse flux correction.  Otherwise, there is only one.    *
- *                                                                       *
+ *
+ * Compute time integral of numerical fluxes for finite difference
+ * at each cell face on patch.  When d_dim == tbox::Dimension(3)), there are two options
+ * for the transverse flux correction.  Otherwise, there is only one.
+ *
  *************************************************************************
  */
 
@@ -1170,11 +1170,11 @@ void MblkLinAdv::computeFluxesOnPatch(
 
 /*
  *************************************************************************
- *                                                                       *
- * Compute numerical approximations to flux terms using an extension     *
- * to three dimensions of Collella's corner transport upwind approach.   *
- * I.E. input value corner_transport = CORNER_TRANSPORT_1                *
- *                                                                       *
+ *
+ * Compute numerical approximations to flux terms using an extension
+ * to three dimensions of Collella's corner transport upwind approach.
+ * I.E. input value corner_transport = CORNER_TRANSPORT_1
+ *
  *************************************************************************
  */
 void MblkLinAdv::compute3DFluxesWithCornerTransport1(
@@ -1473,12 +1473,12 @@ void MblkLinAdv::compute3DFluxesWithCornerTransport1(
 
 /*
  *************************************************************************
- *                                                                       *
- * Compute numerical approximations to flux terms using John             *
- * Trangenstein's interpretation of the three-dimensional version of     *
- * Collella's corner transport upwind approach.                          *
- * I.E. input value corner_transport = CORNER_TRANSPORT_2                *
- *                                                                       *
+ *
+ * Compute numerical approximations to flux terms using John
+ * Trangenstein's interpretation of the three-dimensional version of
+ * Collella's corner transport upwind approach.
+ * I.E. input value corner_transport = CORNER_TRANSPORT_2
+ *
  *************************************************************************
  */
 void MblkLinAdv::compute3DFluxesWithCornerTransport2(
@@ -1708,10 +1708,10 @@ void MblkLinAdv::compute3DFluxesWithCornerTransport2(
 
 /*
  *************************************************************************
- *                                                                       *
- * Update solution variables by performing a conservative                *
- * difference with the fluxes calculated in computeFluxesOnPatch().      *
- *                                                                       *
+ *
+ * Update solution variables by performing a conservative
+ * difference with the fluxes calculated in computeFluxesOnPatch().
+ *
  *************************************************************************
  */
 
@@ -1773,12 +1773,12 @@ void MblkLinAdv::conservativeDifferenceOnPatch(
 
 /*
  *************************************************************************
- *                                                                       *
- * Set the data in ghost cells corresponding to physical boundary        *
- * conditions.  Note that boundary geometry configuration information    *
- * (i.e., faces, edges, and nodes) is obtained from the patch geometry   *
- * object owned by the patch.                                            *
- *                                                                       *
+ *
+ * Set the data in ghost cells corresponding to physical boundary
+ * conditions.  Note that boundary geometry configuration information
+ * (i.e., faces, edges, and nodes) is obtained from the patch geometry
+ * object owned by the patch.
+ *
  *************************************************************************
  */
 
@@ -1865,9 +1865,9 @@ void MblkLinAdv::setPhysicalBoundaryConditions(
 
 /*
  *************************************************************************
- *                                                                       *
+ *
  * Refine operations
- *                                                                       *
+ *
  *************************************************************************
  */
 
@@ -1918,9 +1918,9 @@ void MblkLinAdv::postprocessRefine(
 
 /*
  *************************************************************************
- *                                                                       *
+ *
  * Coarsen operations
- *                                                                       *
+ *
  *************************************************************************
  */
 void MblkLinAdv::preprocessCoarsen(
@@ -1977,10 +1977,10 @@ void MblkLinAdv::postprocessCoarsen(
 
 /*
  *************************************************************************
- *                                                                       *
- * Tag cells for refinement using gradient detector.  Tagging criteria   *
- * defined in input.                                                     *
- *                                                                       *
+ *
+ * Tag cells for refinement using gradient detector.  Tagging criteria
+ * defined in input.
+ *
  *************************************************************************
  */
 
@@ -2214,9 +2214,9 @@ void MblkLinAdv::tagGradientDetectorCells(
 
 /*
  *************************************************************************
- *                                                                       *
+ *
  * Fill the singularity conditions for the multi-block case
- *                                                                       *
+ *
  *************************************************************************
  */
 
@@ -2241,9 +2241,9 @@ void MblkLinAdv::fillSingularityBoundaryConditions(
 
 /*
  *************************************************************************
- *                                                                       *
- * Private method to build XYZ coordinates on a patch                    *
- *                                                                       *
+ *
+ * Private method to build XYZ coordinates on a patch
+ *
  *************************************************************************
  */
 void MblkLinAdv::setMappedGridOnPatch(
@@ -2280,10 +2280,10 @@ void MblkLinAdv::setMappedGridOnPatch(
 
 /*
  *************************************************************************
- *                                                                       *
- * Register VisIt data writer to write data to plot files that may       *
- * be postprocessed by the VisIt tool.                                   *
- *                                                                       *
+ *
+ * Register VisIt data writer to write data to plot files that may
+ * be postprocessed by the VisIt tool.
+ *
  *************************************************************************
  */
 
@@ -2300,9 +2300,9 @@ void MblkLinAdv::registerVisItDataWriter(
 
 /*
  *************************************************************************
- *                                                                       *
- * Write MblkLinAdv object state to specified stream.                        *
- *                                                                       *
+ *
+ * Write MblkLinAdv object state to specified stream.
+ *
  *************************************************************************
  */
 
@@ -2474,10 +2474,10 @@ void MblkLinAdv::printClassData(
 
 /*
  *************************************************************************
- *                                                                       *
- * Read data members from input.  All values set from restart can be     *
- * overridden by values in the input database.                           *
- *                                                                       *
+ *
+ * Read data members from input.  All values set from restart can be
+ * overridden by values in the input database.
+ *
  *************************************************************************
  */
 void MblkLinAdv::getFromInput(
@@ -2939,9 +2939,9 @@ void MblkLinAdv::getFromInput(
 
 /*
  *************************************************************************
- *                                                                       *
- * Routines to put/get data members to/from restart database.            *
- *                                                                       *
+ *
+ * Routines to put/get data members to/from restart database.
+ *
  *************************************************************************
  */
 
@@ -3021,9 +3021,9 @@ void MblkLinAdv::putToDatabase(
 
 /*
  *************************************************************************
- *                                                                       *
- *    Access class information from restart database.                    *
- *                                                                       *
+ *
+ *    Access class information from restart database.
+ *
  *************************************************************************
  */
 void MblkLinAdv::getFromRestart()
@@ -3116,9 +3116,9 @@ void MblkLinAdv::getFromRestart()
 
 /*
  *************************************************************************
- *                                                                       *
- * Routines to read boundary data from input database.                   *
- *                                                                       *
+ *
+ * Routines to read boundary data from input database.
+ *
  *************************************************************************
  */
 
@@ -3170,9 +3170,9 @@ void MblkLinAdv::readStateDataEntry(
 
 /*
  *************************************************************************
- *                                                                       *
- * Routine to check boundary data when debugging.                        *
- *                                                                       *
+ *
+ * Routine to check boundary data when debugging.
+ *
  *************************************************************************
  */
 

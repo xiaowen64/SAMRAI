@@ -110,9 +110,9 @@ tbox::Pointer<tbox::Timer> VisItDataWriter::t_write_plot_data;
 
 /*
  *************************************************************************
- *                                                                       *
- * The constructor --- sets default object state.                        *
- *                                                                       *
+ *
+ * The constructor --- sets default object state.
+ *
  *************************************************************************
  */
 
@@ -166,9 +166,9 @@ VisItDataWriter::VisItDataWriter(
 
 /*
  *************************************************************************
- *                                                                       *
- * The destructor implicitly deallocates the list of plot data items.    *
- *                                                                       *
+ *
+ * The destructor implicitly deallocates the list of plot data items.
+ *
  *************************************************************************
  */
 
@@ -191,9 +191,9 @@ VisItDataWriter::~VisItDataWriter()
 
 /*
  *************************************************************************
- *                                                                       *
- * Set default derived data writer.                                      *
- *                                                                       *
+ *
+ * Set default derived data writer.
+ *
  *************************************************************************
  */
 
@@ -207,9 +207,9 @@ void VisItDataWriter::setDefaultDerivedDataWriter(
 
 /*
  *************************************************************************
- *                                                                       *
- * Set materials data writer object.                                     *
- *                                                                       *
+ *
+ * Set materials data writer object.
+ *
  *************************************************************************
  */
 
@@ -223,9 +223,9 @@ void VisItDataWriter::setMaterialsDataWriter(
 
 /*
  *************************************************************************
- *                                                                       *
- * Register (non-derived) plot quantities: scalar, vector or tensor.     *
- *                                                                       *
+ *
+ * Register (non-derived) plot quantities: scalar, vector or tensor.
+ *
  *************************************************************************
  */
 void VisItDataWriter::registerPlotQuantity(
@@ -274,11 +274,11 @@ void VisItDataWriter::registerPlotQuantity(
 
 /*
  *************************************************************************
- *                                                                       *
- * Register derived plot quantities: scalar, vector, or tensor.  If no   *
- * derived data strategy is specified and no default derived data        *
- * strategy is set, an error will result.                                *
- *                                                                       *
+ *
+ * Register derived plot quantities: scalar, vector, or tensor.  If no
+ * derived data strategy is specified and no default derived data
+ * strategy is set, an error will result.
+ *
  *************************************************************************
  */
 
@@ -381,13 +381,13 @@ void VisItDataWriter::registerDerivedPlotQuantity(
 
 /*
  *************************************************************************
- *                                                                       *
- * Reset previously-registered scalar/vector variable to new data id     *
- * and depth index on the given level.  This allows the use of different *
- * patch data ids for the same quantity on different hierarchy levels.   *
- * We check to make sure that the factory at the given index is          *
- * defined and consistent with the original registration.                *
- *                                                                       *
+ *
+ * Reset previously-registered scalar/vector variable to new data id
+ * and depth index on the given level.  This allows the use of different
+ * patch data ids for the same quantity on different hierarchy levels.
+ * We check to make sure that the factory at the given index is
+ * defined and consistent with the original registration.
+ *
  *************************************************************************
  */
 
@@ -514,9 +514,9 @@ void VisItDataWriter::resetLevelPlotQuantity(
 
 /*
  *************************************************************************
- *                                                                       *
- * Register node coordinates of deformed (moving) grids.                 *
- *                                                                       *
+ *
+ * Register node coordinates of deformed (moving) grids.
+ *
  *************************************************************************
  */
 
@@ -631,9 +631,9 @@ void VisItDataWriter::registerNodeCoordinates(
 
 /*
  *************************************************************************
- *                                                                       *
- * Register node coordinates of deformed (moving) grids.                 *
- *                                                                       *
+ *
+ * Register node coordinates of deformed (moving) grids.
+ *
  *************************************************************************
  */
 
@@ -760,10 +760,10 @@ void VisItDataWriter::registerSingleNodeCoordinate(
 
 /*
  *************************************************************************
- *                                                                       *
- * Register material names -- names of all the materials (not species)   *
- * being used in the application.                                        *
- *                                                                       *
+ *
+ * Register material names -- names of all the materials (not species)
+ * being used in the application.
+ *
  *************************************************************************
  */
 
@@ -828,11 +828,11 @@ void VisItDataWriter::registerMaterialNames(
 
 /*
  *************************************************************************
- *                                                                       *
- * Register material names -- names of all the materials (not species)   *
- * being used in the application. Volume fractions (and optionally state *
- * variables) will be written in sparse arrays                           *
- *                                                                       *
+ *
+ * Register material names -- names of all the materials (not species)
+ * being used in the application. Volume fractions (and optionally state
+ * variables) will be written in sparse arrays
+ *
  *************************************************************************
  */
 
@@ -902,9 +902,9 @@ void VisItDataWriter::registerSparseMaterialNames(
 
 /*
  *************************************************************************
- *                                                                       *
- * Register species names for a given material.                          *
- *                                                                       *
+ *
+ * Register species names for a given material.
+ *
  *************************************************************************
  */
 
@@ -1008,11 +1008,11 @@ void VisItDataWriter::registerSpeciesNames(
 
 /*
  *************************************************************************
- *                                                                       *
- * Register VisIt expressions to be embedded in datafile summary         *
- *   This method may be called multiple times to add more expressions    *
+ *
+ * Register VisIt expressions to be embedded in datafile summary
+ *   This method may be called multiple times to add more expressions
  *   as needed.
- *                                                                       *
+ *
  *************************************************************************
  */
 void VisItDataWriter::registerVisItExpressions(
@@ -1037,10 +1037,10 @@ void VisItDataWriter::registerVisItExpressions(
 
 /*
  *************************************************************************
- *                                                                       *
- * Private method which initializes a VisIt variable based on user       *
+ *
+ * Private method which initializes a VisIt variable based on user
  * input.
- *                                                                       *
+ *
  *************************************************************************
  */
 void VisItDataWriter::initializePlotItem(
@@ -1272,11 +1272,11 @@ void VisItDataWriter::initializePlotItem(
 
 /*
  *************************************************************************
- *                                                                       *
- * Private functions for parallel runs which serve as barriers to enable *
- * orderly writing of cluster files by passing a baton from the current  *
- * writer to the next proc in cluster, and so on.                        *
- *                                                                       *
+ *
+ * Private functions for parallel runs which serve as barriers to enable
+ * orderly writing of cluster files by passing a baton from the current
+ * writer to the next proc in cluster, and so on.
+ *
  *************************************************************************
  */
 
@@ -1324,9 +1324,9 @@ void VisItDataWriter::dumpWriteBarrierEnd()
 
 /*
  *************************************************************************
- *                                                                       *
- * Write plot data from given hierarchy to HDF file                      *
- *                                                                       *
+ *
+ * Write plot data from given hierarchy to HDF file
+ *
  *************************************************************************
  */
 
@@ -1427,9 +1427,9 @@ void VisItDataWriter::writePlotData(
 
 /*
  *************************************************************************
- *                                                                       *
- * Write plot data from given hierarchy to HDF file                      *
- *                                                                       *
+ *
+ * Write plot data from given hierarchy to HDF file
+ *
  *************************************************************************
  */
 
@@ -1443,15 +1443,15 @@ void VisItDataWriter::setSummaryFilename(
 
 /*
  *************************************************************************
- *                                                                       *
- * Private function to initialize min/max information for the plot       *
- * components.  This method will allocate space for the d_mm array on    *
- * the VISIT_MASTER processsor (which holds min/max info for all plot    *
- * variables on all patches) and will allocate the d_worker_min_max array   *
- * on all processors except the VISIT_MASTER.  This latter array is used *
- * to store data to be sent to the master when summary information is    *
- * written.                                                              *
- *                                                                       *
+ *
+ * Private function to initialize min/max information for the plot
+ * components.  This method will allocate space for the d_mm array on
+ * the VISIT_MASTER processsor (which holds min/max info for all plot
+ * variables on all patches) and will allocate the d_worker_min_max array
+ * on all processors except the VISIT_MASTER.  This latter array is used
+ * to store data to be sent to the master when summary information is
+ * written.
+ *
  *************************************************************************
  */
 
@@ -1566,9 +1566,9 @@ void VisItDataWriter::initializePlotVariableMinMaxInfo(
 
 /*
  *************************************************************************
- *                                                                       *
- * Private function to coordinate writing HDF plot files.                *
- *                                                                       *
+ *
+ * Private function to coordinate writing HDF plot files.
+ *
  *************************************************************************
  */
 
@@ -1706,12 +1706,12 @@ void VisItDataWriter::writeHDFFiles(
 
 /*
  *************************************************************************
- *                                                                       *
- * Private function to find global patch number, given level number and  *
- * local patch number. This is needed because SAMRAI maintains the patch *
- * number on each level, but VisIt needs a unique number for each patch  *
- * written.                                                              *
- *                                                                       *
+ *
+ * Private function to find global patch number, given level number and
+ * local patch number. This is needed because SAMRAI maintains the patch
+ * number on each level, but VisIt needs a unique number for each patch
+ * written.
+ *
  *************************************************************************
  */
 
@@ -1738,9 +1738,9 @@ int VisItDataWriter::getGlobalPatchNumber(
 
 /*
  *************************************************************************
- *                                                                       *
- * Private function to write variables & materials data to an HDF File.  *
- *                                                                       *
+ *
+ * Private function to write variables & materials data to an HDF File.
+ *
  *************************************************************************
  */
 
@@ -1823,10 +1823,10 @@ void VisItDataWriter::writeVisItVariablesToHDFFile(
 
 /*
  *************************************************************************
- *                                                                       *
- * Private function to pack regular and derived VisIt variables into     *
- * specified HDF database.                                               *
- *                                                                       *
+ *
+ * Private function to pack regular and derived VisIt variables into
+ * specified HDF database.
+ *
  *************************************************************************
  */
 
@@ -2181,10 +2181,10 @@ void VisItDataWriter::packRegularAndDerivedData(
 
 /*
  *************************************************************************
- *                                                                       *
- * Private function to pack Material variables into specified HDF        *
- * database.                                                             *
- *                                                                       *
+ *
+ * Private function to pack Material variables into specified HDF
+ * database.
+ *
  *************************************************************************
  */
 
@@ -2525,10 +2525,10 @@ void VisItDataWriter::packMaterialsData(
 
 /*
  *************************************************************************
- *                                                                       *
- * Private function to pack Species variables into specified HDF         *
- * database.                                                             *
- *                                                                       *
+ *
+ * Private function to pack Species variables into specified HDF
+ * database.
+ *
  *************************************************************************
  */
 
@@ -2698,9 +2698,9 @@ void VisItDataWriter::packSpeciesData(
 
 /*
  *************************************************************************
- *                                                                       *
- * Private function to check float min/max values.                       *
- *                                                                       *
+ *
+ * Private function to check float min/max values.
+ *
  *************************************************************************
  */
 
@@ -2749,10 +2749,10 @@ void VisItDataWriter::checkFloatMinMax(
 
 /*
  *************************************************************************
- *                                                                       *
- * Private function to write one summary HDF file covering data from all *
- * processors for use by VisIt.                                          *
- *                                                                       *
+ *
+ * Private function to write one summary HDF file covering data from all
+ * processors for use by VisIt.
+ *
  *************************************************************************
  */
 
@@ -3454,12 +3454,12 @@ void VisItDataWriter::writeSummaryToHDFFile(
 
 /*
  *************************************************************************
- *                                                                       *
- * Private function to store min/max information on each patch for each  *
- * variable.  The "master" processor allocates an array that will hold   *
- * the global data.  The "worker" processors send this information to    *
- * the master which in turn unpacks and stores the data.                 *
- *                                                                       *
+ *
+ * Private function to store min/max information on each patch for each
+ * variable.  The "master" processor allocates an array that will hold
+ * the global data.  The "worker" processors send this information to
+ * the master which in turn unpacks and stores the data.
+ *
  *************************************************************************
  */
 void VisItDataWriter::exchangeMinMaxPatchInformation(
@@ -3595,20 +3595,20 @@ void VisItDataWriter::exchangeMinMaxPatchInformation(
 
 /*
  *************************************************************************
- *                                                                       *
- * Private function to find and write to summary file parent & child     *
- * info.  For each global patch number, find its children using the      *
- * box_tree.  Record the children, as well as each child's parent, in a  *
- * child_parent array. A child_ptrs array records for each global patch  *
- * number, the number of children that patch has, as well as the offset  *
- * into the child_parent array where the patch numbers of those children *
- * are stored.  If a patch has no children, offset = -1. Next, the child *
- * info from the child_parent array is copied into the final child array.*
- * Then the child_parent array is sorted by child number.  Now all       *
- * parents of a given patch are grouped together in this sorted array.   *
- * The parents are then stored in a parent array, and a parent_ptrs      *
- * array is created similar to the child_ptrs array.                     *
- *                                                                       *
+ *
+ * Private function to find and write to summary file parent & child
+ * info.  For each global patch number, find its children using the
+ * box_tree.  Record the children, as well as each child's parent, in a
+ * child_parent array. A child_ptrs array records for each global patch
+ * number, the number of children that patch has, as well as the offset
+ * into the child_parent array where the patch numbers of those children
+ * are stored.  If a patch has no children, offset = -1. Next, the child
+ * info from the child_parent array is copied into the final child array.
+ * Then the child_parent array is sorted by child number.  Now all
+ * parents of a given patch are grouped together in this sorted array.
+ * The parents are then stored in a parent array, and a parent_ptrs
+ * array is created similar to the child_ptrs array.
+ *
  *************************************************************************
  */
 void VisItDataWriter::writeParentChildInfoToSummaryHDFFile(
@@ -3672,7 +3672,7 @@ void VisItDataWriter::writeParentChildInfoToSummaryHDFFile(
           */
          if (hierarchy->getGridGeometry()->getNumberBlocks() == 1) {
 
-            hier::BoxSet non_per_child_boxes;
+            hier::BoxSet non_per_child_boxes(d_dim);
             for (hier::RealBoxConstIterator gi(global_child_boxes);
                  gi.isValid(); ++gi) {
                non_per_child_boxes.insert(*gi);
@@ -3859,10 +3859,10 @@ void VisItDataWriter::writeParentChildInfoToSummaryHDFFile(
 
 /*
  *************************************************************************
- *                                                                       *
- *    childParentCompareFunc() used by qsort to sort child_parent array  *
- *        by child patch num to find all parents of a given child        *
- *                                                                       *
+ *
+ *    childParentCompareFunc() used by qsort to sort child_parent array
+ *        by child patch num to find all parents of a given child
+ *
  *************************************************************************
  */
 
@@ -3885,11 +3885,11 @@ int VisItDataWriter::childParentCompareFunc(
 
 /*
  *************************************************************************
- *                                                                       *
- * Private utility function to pack DIM patch data into 1D double       *
- * precision buffer, omitting ghost data if necessary. Data is packed in *
- * column major order, i.e. x0,y0,z0, x1,y0,z0, x2,y0,z0, ...            *
- *                                                                       *
+ *
+ * Private utility function to pack DIM patch data into 1D double
+ * precision buffer, omitting ghost data if necessary. Data is packed in
+ * column major order, i.e. x0,y0,z0, x1,y0,z0, x2,y0,z0, ...
+ *
  *************************************************************************
  */
 
@@ -4080,10 +4080,10 @@ void VisItDataWriter::packPatchDataIntoDoubleBuffer(
 
 /*
  *************************************************************************
- *                                                                       *
- * Create a 2D integer array entry in an HDF database with the specified *
- * key name.  The array type is based on the hdf type H5T_NATIVE_INT.    *
- *                                                                       *
+ *
+ * Create a 2D integer array entry in an HDF database with the specified
+ * key name.  The array type is based on the hdf type H5T_NATIVE_INT.
+ *
  *************************************************************************
  */
 
@@ -4149,10 +4149,10 @@ void VisItDataWriter::HDFputIntegerArray2D(
 
 /*
  *************************************************************************
- *                                                                       *
- * Create a 2D double array entry in an HDF database with the specified  *
- * key name.  The array type is based on the hdf type H5T_NATIVE_DOUBLE. *
- *                                                                       *
+ *
+ * Create a 2D double array entry in an HDF database with the specified
+ * key name.  The array type is based on the hdf type H5T_NATIVE_DOUBLE.
+ *
  *************************************************************************
  */
 
@@ -4219,10 +4219,10 @@ void VisItDataWriter::HDFputDoubleArray2D(
 
 /*
  *************************************************************************
- *                                                                       *
- * Create an array of patch extent (pe) structs in an HDF database       *
- * with the specified key name.                                          *
- *                                                                       *
+ *
+ * Create an array of patch extent (pe) structs in an HDF database
+ * with the specified key name.
+ *
  *************************************************************************
  */
 
@@ -4337,10 +4337,10 @@ void VisItDataWriter::HDFputPatchExtentsStructArray(
 
 /*
  *************************************************************************
- *                                                                       *
- * Create patch map for each of the patch extents HDF entries            *
- * with the specified key name.                                          *
- *                                                                       *
+ *
+ * Create patch map for each of the patch extents HDF entries
+ * with the specified key name.
+ *
  *************************************************************************
  */
 
@@ -4433,10 +4433,10 @@ void VisItDataWriter::HDFputPatchMapStructArray(
 
 /*
  *************************************************************************
- *                                                                       *
- * Create an array of max-min double (mm) structs an HDF database with   *
- * the specified key name.                                               *
- *                                                                       *
+ *
+ * Create an array of max-min double (mm) structs an HDF database with
+ * the specified key name.
+ *
  *************************************************************************
  */
 void VisItDataWriter::HDFputPatchMinMaxStructArray(
@@ -4536,10 +4536,10 @@ void VisItDataWriter::HDFputPatchMinMaxStructArray(
 
 /*
  *************************************************************************
- *                                                                       *
- * Create an array of child/parent pointer (cpp) structs an HDF          *
- * database with the specified key name.                                 *
- *                                                                       *
+ *
+ * Create an array of child/parent pointer (cpp) structs an HDF
+ * database with the specified key name.
+ *
  *************************************************************************
  */
 
@@ -4618,9 +4618,9 @@ void VisItDataWriter::HDFputChildParentStructArray(
 
 /*
  *************************************************************************
- *                                                                       *
- * Private function to calculate required size for a buffer              *
- *                                                                       *
+ *
+ * Private function to calculate required size for a buffer
+ *
  *************************************************************************
  */
 
@@ -4647,9 +4647,9 @@ int VisItDataWriter::getBufferSize(
 
 /*
  *************************************************************************
- *                                                                       *
- * Dump plotitem fields for debugging purposes                           *
- *                                                                       *
+ *
+ * Dump plotitem fields for debugging purposes
+ *
  *************************************************************************
  */
 void VisItDataWriter::dumpItem(

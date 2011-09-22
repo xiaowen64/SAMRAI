@@ -30,9 +30,9 @@ PatchSideDataOpsInteger::~PatchSideDataOpsInteger()
 
 /*
  *************************************************************************
- *                                                                       *
- * Compute the number of data entries on a patch in the given box.       *
- *                                                                       *
+ *
+ * Compute the number of data entries on a patch in the given box.
+ *
  *************************************************************************
  */
 
@@ -59,9 +59,9 @@ int PatchSideDataOpsInteger::numberOfEntries(
 
 /*
  *************************************************************************
- *                                                                       *
- * General operations for integer side-centered patch data.              *
- *                                                                       *
+ *
+ * General operations for integer side-centered patch data.
+ *
  *************************************************************************
  */
 

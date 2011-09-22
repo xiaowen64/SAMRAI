@@ -55,9 +55,9 @@ HierarchyCellDataOpsReal<TYPE>::~HierarchyCellDataOpsReal()
 
 /*
  *************************************************************************
- *                                                                       *
- * Routines to set the hierarchy and level informtation.                 *
- *                                                                       *
+ *
+ * Routines to set the hierarchy and level informtation.
+ *
  *************************************************************************
  */
 
@@ -95,11 +95,11 @@ HierarchyCellDataOpsReal<TYPE>::getPatchHierarchy() const
 
 /*
  *************************************************************************
- *                                                                       *
- * The following are private and cannot be used, but they are defined    *
- * here for compilers that require that every template declaration have  *
- * a definition (a stupid requirement, if you ask me).                   *
- *                                                                       *
+ *
+ * The following are private and cannot be used, but they are defined
+ * here for compilers that require that every template declaration have
+ * a definition (a stupid requirement, if you ask me).
+ *
  *************************************************************************
  */
 
@@ -120,9 +120,9 @@ void HierarchyCellDataOpsReal<TYPE>::operator = (
 
 /*
  *************************************************************************
- *                                                                       *
- * Basic generic operations.                                             *
- *                                                                       *
+ *
+ * Basic generic operations.
+ *
  *************************************************************************
  */
 
@@ -254,9 +254,9 @@ void HierarchyCellDataOpsReal<TYPE>::setToScalar(
 
 /*
  *************************************************************************
- *                                                                       *
- * Basic generic arithmetic operations.                                  *
- *                                                                       *
+ *
+ * Basic generic arithmetic operations.
+ *
  *************************************************************************
  */
 
@@ -642,9 +642,9 @@ void HierarchyCellDataOpsReal<TYPE>::setRandomValues(
 
 /*
  *************************************************************************
- *                                                                       *
- * Generic norm and order operations.                                    *
- *                                                                       *
+ *
+ * Generic norm and order operations.
+ *
  *************************************************************************
  */
 
@@ -1005,9 +1005,9 @@ TYPE HierarchyCellDataOpsReal<TYPE>::integral(
 
 /*
  *************************************************************************
- *                                                                       *
- * Generic miscellaneous operations for real data.                       *
- *                                                                       *
+ *
+ * Generic miscellaneous operations for real data.
+ *
  *************************************************************************
  */
 

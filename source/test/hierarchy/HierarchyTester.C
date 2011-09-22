@@ -28,10 +28,10 @@ namespace SAMRAI {
 
 /*
  *************************************************************************
- *                                                                       *
- * The constructor initializes object state.                             *
- * The destructor deallocates object storage.                            *
- *                                                                       *
+ *
+ * The constructor initializes object state.
+ * The destructor deallocates object storage.
+ *
  *************************************************************************
  */
 
@@ -104,10 +104,10 @@ HierarchyTester::~HierarchyTester()
 
 /*
  *************************************************************************
- *                                                                       *
- * Create and configure gridding objects used to build the hierarchy.    *
- * Then, create hierarchy and set up dummy data for patch descriptor.    *
- *                                                                       *
+ *
+ * Create and configure gridding objects used to build the hierarchy.
+ * Then, create hierarchy and set up dummy data for patch descriptor.
+ *
  *************************************************************************
  */
 
@@ -189,7 +189,7 @@ int HierarchyTester::runHierarchyTestAndVerify()
 
    /*
     **************************************************************
-    * Tests 0a-0c check global data in grid geometry.            *
+    * Tests 0a-0c check global data in grid geometry.
     **************************************************************
     */
 
@@ -252,7 +252,7 @@ int HierarchyTester::runHierarchyTestAndVerify()
 
    /*
     **************************************************************
-    * Tests 1-8 check global data for levels in hierarchy.       *
+    * Tests 1-8 check global data for levels in hierarchy.
     **************************************************************
     */
 
@@ -374,7 +374,7 @@ int HierarchyTester::runHierarchyTestAndVerify()
 
       /*
        **************************************************************
-       *  Tests 9-13 check global data for patches on each level.   *
+       *  Tests 9-13 check global data for patches on each level.
        **************************************************************
        */
 
@@ -464,7 +464,7 @@ int HierarchyTester::runHierarchyTestAndVerify()
 
       /*
        **************************************************************
-       *  Tests 14-20 check local data for patches on each level.   *
+       *  Tests 14-20 check local data for patches on each level.
        **************************************************************
        */
       for (PatchLevel::Iterator tip(test_level); tip; tip++) {
@@ -547,7 +547,7 @@ int HierarchyTester::runHierarchyTestAndVerify()
 
          /*
           **************************************************************
-          * Tests 20a-20c check patch geometry data.                   *
+          * Tests 20a-20c check patch geometry data.
           **************************************************************
           */
 

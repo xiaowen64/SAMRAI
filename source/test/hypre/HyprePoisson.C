@@ -47,8 +47,8 @@ namespace SAMRAI {
 
 /*
  *************************************************************************
- * Constructor creates a unique context for the object and register      *
- * all its internal variables with the variable database.                *
+ * Constructor creates a unique context for the object and register
+ * all its internal variables with the variable database.
  *************************************************************************
  */
 HyprePoisson::HyprePoisson(
@@ -114,7 +114,7 @@ HyprePoisson::HyprePoisson(
 
 /*
  *************************************************************************
- * Destructor does nothing interesting                                   *
+ * Destructor does nothing interesting
  *************************************************************************
  */
 HyprePoisson::~HyprePoisson()
@@ -123,10 +123,10 @@ HyprePoisson::~HyprePoisson()
 
 /*
  *************************************************************************
- * Initialize data on a level.                                           *
- *                                                                       *
- * Allocate the solution, exact solution and rhs memory.                 *
- * Fill the rhs and exact solution.                                      *
+ * Initialize data on a level.
+ *
+ * Allocate the solution, exact solution and rhs memory.
+ * Fill the rhs and exact solution.
  *************************************************************************
  */
 void HyprePoisson::initializeLevelData(
@@ -212,7 +212,7 @@ void HyprePoisson::initializeLevelData(
 
 /*
  *************************************************************************
- * Reset the hierarchy-dependent internal information.                   *
+ * Reset the hierarchy-dependent internal information.
  *************************************************************************
  */
 void HyprePoisson::resetHierarchyConfiguration(
@@ -228,7 +228,7 @@ void HyprePoisson::resetHierarchyConfiguration(
 
 /*
  *************************************************************************
- * Solve the Poisson problem.                                            *
+ * Solve the Poisson problem.
  *************************************************************************
  */
 bool HyprePoisson::solvePoisson()
@@ -302,9 +302,9 @@ bool HyprePoisson::solvePoisson()
 #ifdef HAVE_HDF5
 /*
  *************************************************************************
- * Set up VisIt to plot internal data from this class.                   *
- * Tell the plotter about the refinement ratios.  Register variables     *
- * appropriate for plotting.                                             *
+ * Set up VisIt to plot internal data from this class.
+ * Tell the plotter about the refinement ratios.  Register variables
+ * appropriate for plotting.
  *************************************************************************
  */
 int HyprePoisson::registerVariablesWithPlotter(
@@ -345,7 +345,7 @@ int HyprePoisson::registerVariablesWithPlotter(
 
 /*
  *************************************************************************
- * Write derived data to the given stream.                               *
+ * Write derived data to the given stream.
  *************************************************************************
  */
 bool HyprePoisson::packDerivedDataIntoDoubleBuffer(

@@ -22,9 +22,9 @@ namespace xfer {
 
 /*
  *************************************************************************
- *                                                                       *
- * Default constructor and destructor.                                   *
- *                                                                       *
+ *
+ * Default constructor and destructor.
+ *
  *************************************************************************
  */
 
@@ -38,9 +38,9 @@ StandardRefineTransactionFactory::~StandardRefineTransactionFactory()
 
 /*
  *************************************************************************
- *                                                                       *
- * Set/unset information for transactions managed by this factory class. *
- *                                                                       *
+ *
+ * Set/unset information for transactions managed by this factory class.
+ *
  *************************************************************************
  */
 
@@ -72,9 +72,9 @@ void StandardRefineTransactionFactory::setTransactionTime(
 
 /*
  *************************************************************************
- *                                                                       *
- * Allocate appropriate transaction object.                              *
- *                                                                       *
+ *
+ * Allocate appropriate transaction object.
+ *
  *************************************************************************
  */
 

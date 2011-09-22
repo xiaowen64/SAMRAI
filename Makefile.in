@@ -21,47 +21,17 @@ INCLUDE_SAM = @top_srcdir@/source/SAMRAI
 INSTALL	    = sh @srcdir@/config/install-sh
 INSTDIR	    = @INSTDIR@
 
-# SGS TODO These lists should be cleaned up
+#
+# GNUMake script to reverse strings.  This is recursive.
+#
+reverse = $(if $(1),$(call reverse,$(wordlist 2,$(words $(1)),$(1)))) $(firstword $(1))
+
 #
 # List of packages to process. 
-# tbox is not included since all of it's object files go into libSAMRAI.a (.so)
 # 
-PACKAGES=appu algs solv geom mesh math pdat xfer hier tbox
-PACKAGES_R=tbox hier xfer pdat math mesh geom solv algs appu  
-
-#
-# List of all packages, including tbox
-#
-ALL_PACKAGES=appu algs solv geom mesh math pdat xfer hier tbox
-
-#
-# List of libraries that will be created.
-#
-LIBRARIES=appu algs solv geom mesh math pdat xfer hier tbox
-LIBRARIES_R=tbox hier xfer pdat math mesh geom solv algs appu
-
-#
-# Package to directory name mapping
-dir_appu=apputils
-export dir_appu
-dir_algs=algorithm
-export dir_algs
-dir_solv=solvers
-export dir_solv
-dir_geom=geometry
-export dir_geom
-dir_mesh=mesh
-export dir_mesh
-dir_math=mathops
-export dir_math
-dir_pdat=patchdata
-export dir_pdat
-dir_xfer=transfer
-export dir_xfer
-dir_hier=hierarchy
-export dir_hier
-dir_tbox=toolbox
-export dir_tbox
+# Packages available : appu algs solv geom mesh math pdat xfer hier tbox
+SAMRAI_LIBRARIES:=@SAMRAI_LIBRARIES@
+SAMRAI_LIBRARIES_R:=$(call reverse,@SAMRAI_LIBRARIES@)
 
 # These targets are based on the current config chosen (standard, noxargs, 
 # or shared).
@@ -97,7 +67,7 @@ checkclean:
 archive_gather_obj_names: archive_remove_obj_names
 	@find source -name "*.o" -print | egrep -v "(test)" > obj.all
 	@cp obj.all obj.remain
-	@-for i in $(PACKAGES); \
+	@-for i in $(SAMRAI_LIBRARIES); \
 	do \
 	   grep $$i obj.remain >> obj.$$i; \
 	   grep -v $$i obj.remain > obj.tmp; \
@@ -107,7 +77,7 @@ archive_gather_obj_names: archive_remove_obj_names
 
 # Remove temporary lists of object files
 archive_remove_obj_names:
-	@for i in $(LIBRARIES); \
+	@for i in $(SAMRAI_LIBRARIES); \
 	do \
 	   $(RM) obj.$$i; \
 	done
@@ -123,7 +93,7 @@ archive_remove_obj_names:
 archive_lib_standard:
 	@if test ! -d lib; then mkdir lib; fi
 	$(MAKE) archive_gather_obj_names
-	@for i in $(LIBRARIES); \
+	@for i in $(SAMRAI_LIBRARIES); \
 	do \
 	   echo "Creating archive lib/libSAMRAI_$$i$(LIB_SUFFIX)"; \
 	   $(RM) lib/libSAMRAI_$$i$(LIB_SUFFIX); \
@@ -139,7 +109,7 @@ archive_lib_standard:
 archive_lib_noxargs:
 	@if test ! -d lib; then mkdir lib; fi
 	$(MAKE) archive_gather_obj_names
-	@for i in $(LIBRARIES); \
+	@for i in $(SAMRAI_LIBRARIES); \
 	do \
 	   echo "Creating archive lib/libSAMRAI_$$i$(LIB_SUFFIX)"; \
 	   $(RM) lib/libSAMRAI_$$i$(LIB_SUFFIX); \
@@ -156,7 +126,7 @@ archive_lib_shared:
 	@if test ! -d lib; then mkdir lib; fi
 	$(MAKE) archive_gather_obj_names
 	@LIBLIST=""; \
-	for i in $(LIBRARIES_R); \
+	for i in $(SAMRAI_LIBRARIES_R); \
 	do \
 	   echo "Creating archive lib/libSAMRAI_$$i$(LIB_SUFFIX)"; \
 	   $(RM) lib/libSAMRAI_$$i$(LIB_SUFFIX); \
@@ -176,7 +146,7 @@ install: library tools
 	$(INSTALL) -c -m 644 config/Makefile.config $(INSTDIR)/config
 	cat config/Makefile.config.install >> $(INSTDIR)/config/Makefile.config 
 	$(INSTALL) -c -m 644 include/SAMRAI/SAMRAI_config.h $(INSTDIR)/include/SAMRAI/
-	@for i in $(ALL_PACKAGES); \
+	@for i in $(SAMRAI_LIBRARIES); \
 	do \
            $(INSTALL) -d -m 755 $(INSTDIR)/include/SAMRAI/$$i;                    \
            for f in $(INCLUDE_SAM)/$$i/*.[hICi]; do                               \

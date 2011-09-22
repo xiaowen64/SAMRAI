@@ -34,9 +34,9 @@ namespace pdat {
 
 /*
  *************************************************************************
- *                                                                       *
- * The constructor simply caches the default ghost cell width and depth. *
- *                                                                       *
+ *
+ * The constructor simply caches the default ghost cell width and depth.
+ *
  *************************************************************************
  */
 
@@ -64,9 +64,9 @@ CellDataFactory<TYPE>::~CellDataFactory()
 
 /*
  *************************************************************************
- *                                                                       *
- * Clone the factory and copy the default parameters to the new factory. *
- *                                                                       *
+ *
+ * Clone the factory and copy the default parameters to the new factory.
+ *
  *************************************************************************
  */
 
@@ -103,9 +103,9 @@ CellDataFactory<TYPE>::allocate(
 
 /*
  *************************************************************************
- *                                                                       *
- * Return the box geometry type for cell data objects.                   *
- *                                                                       *
+ *
+ * Return the box geometry type for cell data objects.
+ *
  *************************************************************************
  */
 
@@ -122,9 +122,9 @@ CellDataFactory<TYPE>::getBoxGeometry(
 
 /*
  *************************************************************************
- *                                                                       *
- * Calculate the amount of memory needed to allocate the data object.    *
- *                                                                       *
+ *
+ * Calculate the amount of memory needed to allocate the data object.
+ *
  *************************************************************************
  */
 
@@ -143,10 +143,10 @@ size_t CellDataFactory<TYPE>::getSizeOfMemory(
 
 /*
  *************************************************************************
- *                                                                       *
- * Determine whether this is a valid copy operation to/from CellData     *
- * between the supplied datatype.                                        *
- *                                                                       *
+ *
+ * Determine whether this is a valid copy operation to/from CellData
+ * between the supplied datatype.
+ *
  *************************************************************************
  */
 

@@ -27,9 +27,9 @@ namespace solv {
 
 /*
  *************************************************************************
- *                                                                       *
- * Initialize the static data members.                                   *
- *                                                                       *
+ *
+ * Initialize the static data members.
+ *
  *************************************************************************
  */
 
@@ -41,16 +41,16 @@ int CellPoissonFACSolver::s_instance_counter[SAMRAI::tbox::Dimension::
 
 /*
  *************************************************************************
- *                                                                       *
- * Constructor sets uninitialized solver state.                          *
- * Set default iteration and convergence parameters.                     *
- *                                                                       *
- * By default settings:                                                  *
- *   - Poisson equation specified has D=1, C=0.                          *
- *   - State is uninitialized                                            *
- *   - Logging is disabled                                               *
- *   - Context for internal data is set based on object name.            *
- *                                                                       *
+ *
+ * Constructor sets uninitialized solver state.
+ * Set default iteration and convergence parameters.
+ *
+ * By default settings:
+ *   - Poisson equation specified has D=1, C=0.
+ *   - State is uninitialized
+ *   - Logging is disabled
+ *   - Context for internal data is set based on object name.
+ *
  *************************************************************************
  */
 
@@ -141,10 +141,10 @@ CellPoissonFACSolver::CellPoissonFACSolver(
 
 /*
  *************************************************************************
- *                                                                       *
- * Destructor for CellPoissonFACSolver.                            *
- * Deallocate internal data.                                             *
- *                                                                       *
+ *
+ * Destructor for CellPoissonFACSolver.
+ * Deallocate internal data.
+ *
  *************************************************************************
  */
 
@@ -163,15 +163,15 @@ CellPoissonFACSolver::~CellPoissonFACSolver()
 
 /*
  ********************************************************************
- * Set state from database                                          *
- *                                                                  *
- * Do not allow FAC preconditioner and Poisson FAC operators to be  *
- * set from database, as that may cause them to be inconsistent     *
- * with this object if user does not coordinate the inputs          *
- * correctly.  This is also why we don't allow direct access to     *
- * those objects.  The responsibility for maintaining consistency   *
- * lies in the public functions to set parameters, so use them      *
- * instead of setting the parameters directly in this function.     *
+ * Set state from database
+ *
+ * Do not allow FAC preconditioner and Poisson FAC operators to be
+ * set from database, as that may cause them to be inconsistent
+ * with this object if user does not coordinate the inputs
+ * correctly.  This is also why we don't allow direct access to
+ * those objects.  The responsibility for maintaining consistency
+ * lies in the public functions to set parameters, so use them
+ * instead of setting the parameters directly in this function.
  ********************************************************************
  */
 
@@ -230,14 +230,14 @@ void CellPoissonFACSolver::getFromInput(
 
 /*
  *************************************************************************
- *                                                                       *
- * Prepare internal data for solve.                                      *
- * Allocate scratch data.  Create vectors for u and f                    *
- * required by the FACPreconditioner interface.                    *
- * Set up internal boundary condition object.                            *
- * Share data to coordinate with FAC preconditioner and                  *
- * Poisson FAC operator.                                                 *
- *                                                                       *
+ *
+ * Prepare internal data for solve.
+ * Allocate scratch data.  Create vectors for u and f
+ * required by the FACPreconditioner interface.
+ * Set up internal boundary condition object.
+ * Share data to coordinate with FAC preconditioner and
+ * Poisson FAC operator.
+ *
  *************************************************************************
  */
 
@@ -345,7 +345,7 @@ void CellPoissonFACSolver::deallocateSolverState()
 
 /*
  *************************************************************************
- * Enable logging and propagate logging flag to major components.        *
+ * Enable logging and propagate logging flag to major components.
  *************************************************************************
  */
 
@@ -393,14 +393,14 @@ void CellPoissonFACSolver::setBcObject(
 
 /*
  *************************************************************************
- *                                                                       *
- * Solve the linear system and report whether iteration converged.       *
- *                                                                       *
- * This version is for an initialized solver state.                      *
- * Before solving, set the final piece of the boundary condition,        *
- * which is not known until now, and initialize some internal            *
- * solver quantities.                                                    *
- *                                                                       *
+ *
+ * Solve the linear system and report whether iteration converged.
+ *
+ * This version is for an initialized solver state.
+ * Before solving, set the final piece of the boundary condition,
+ * which is not known until now, and initialize some internal
+ * solver quantities.
+ *
  *************************************************************************
  */
 
@@ -450,14 +450,14 @@ bool CellPoissonFACSolver::solveSystem(
 
 /*
  *************************************************************************
- *                                                                       *
- * Solve the linear system and report whether iteration converged.       *
- *                                                                       *
- * This version is for an uninitialized solver state.                    *
- * 1. Initialize the (currently uninitialized) solver state.             *
- * 2. Solve.                                                             *
- * 3. Deallocate the solver state.                                       *
- *                                                                       *
+ *
+ * Solve the linear system and report whether iteration converged.
+ *
+ * This version is for an uninitialized solver state.
+ * 1. Initialize the (currently uninitialized) solver state.
+ * 2. Solve.
+ * 3. Deallocate the solver state.
+ *
  *************************************************************************
  */
 
@@ -551,8 +551,8 @@ void CellPoissonFACSolver::createVectorWrappers(
 
 /*
  ***********************************************************************
- * Delete the vector wrappers.  Do not freeVectorComponents because    *
- * we do not control their data allocation.  The user does that.       *
+ * Delete the vector wrappers.  Do not freeVectorComponents because
+ * we do not control their data allocation.  The user does that.
  ***********************************************************************
  */
 void CellPoissonFACSolver::destroyVectorWrappers() {

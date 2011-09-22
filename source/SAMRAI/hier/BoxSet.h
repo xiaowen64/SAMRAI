@@ -13,6 +13,7 @@
 #include "SAMRAI/SAMRAI_config.h"
 
 #include "SAMRAI/hier/Box.h"
+#include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/tbox/Database.h"
 #include "SAMRAI/tbox/Dimension.h"
 
@@ -23,7 +24,9 @@ namespace hier {
 
 class BoxContainer;
 typedef BoxContainer BoxList;
+typedef BoxContainer BoxSet;
 
+#if 0
 /*!
  * @brief A wrapper around std::set<Box>.
  *
@@ -294,16 +297,9 @@ public:
 
    /*!
     * @brief Remove periodic image Boxes from a BoxSet.
-    *
-    * Put the results in the output container.  For flexibility and
-    * efficiency, the output container is NOT cleared first, so you
-    * may want to clear it before calling this method.
-    *
-    * @param[out] output_mapped_boxes
     */
    void
-   removePeriodicImageBoxes(
-      BoxSet& output_mapped_boxes) const;
+   removePeriodicImageBoxes();
 
    /*!
     * @brief Remove from a BoxList its intersections with a BoxSet.
@@ -441,7 +437,7 @@ private:
    std::set<Box, Box::id_less> d_set;
 
 };
-
+#endif
 }
 }
 

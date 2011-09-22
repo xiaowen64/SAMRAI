@@ -30,9 +30,9 @@ PatchFaceDataOpsComplex::~PatchFaceDataOpsComplex()
 
 /*
  *************************************************************************
- *                                                                       *
- * General operations for complex face-centered patch data.              *
- *                                                                       *
+ *
+ * General operations for complex face-centered patch data.
+ *
  *************************************************************************
  */
 

@@ -43,12 +43,12 @@ PatchData::~PatchData()
 
 /*
  *************************************************************************
- *                                                                       *
- * Checks that clas and restart file version number are same.  If so,    *
- * reads in data members common to all patch data and then invoke        *
- * getSpecializedFromDatabase() to read in data particular to the        *
- * specific derived class.                                               *
- *                                                                       *
+ *
+ * Checks that clas and restart file version number are same.  If so,
+ * reads in data members common to all patch data and then invoke
+ * getSpecializedFromDatabase() to read in data particular to the
+ * specific derived class.
+ *
  *************************************************************************
  */
 
@@ -73,11 +73,11 @@ void PatchData::getFromDatabase(
 
 /*
  *************************************************************************
- *                                                                       *
- * Write out data members common to all patch data and then invoke       *
- * putSpecializedToDatabase() to write out data particular to the        *
- * specific derived class.                                               *
- *                                                                       *
+ *
+ * Write out data members common to all patch data and then invoke
+ * putSpecializedToDatabase() to write out data particular to the
+ * specific derived class.
+ *
  *************************************************************************
  */
 

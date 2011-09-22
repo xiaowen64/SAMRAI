@@ -31,10 +31,10 @@ const int EdgeData<TYPE>::PDAT_EDGEDATA_VERSION = 1;
 
 /*
  *************************************************************************
- *                                                                       *
- * Constructor and destructor for edge data objects.  The constructor    *
- * simply initializes data variables and sets up the array data.         *
- *                                                                       *
+ *
+ * Constructor and destructor for edge data objects.  The constructor
+ * simply initializes data variables and sets up the array data.
+ *
  *************************************************************************
  */
 
@@ -65,11 +65,11 @@ EdgeData<TYPE>::~EdgeData()
 
 /*
  *************************************************************************
- *                                                                       *
- * The following are private and cannot be used, but they are defined    *
- * here for compilers that require that every template declaration have  *
- * a definition (a stupid requirement, if you ask me).                   *
- *                                                                       *
+ *
+ * The following are private and cannot be used, but they are defined
+ * here for compilers that require that every template declaration have
+ * a definition (a stupid requirement, if you ask me).
+ *
  *************************************************************************
  */
 
@@ -90,10 +90,10 @@ void EdgeData<TYPE>::operator = (
 
 /*
  *************************************************************************
- *                                                                       *
- * Perform a fast copy between two edge centered arrays where their      *
- * index spaces overlap.                                                 *
- *                                                                       *
+ *
+ * Perform a fast copy between two edge centered arrays where their
+ * index spaces overlap.
+ *
  *************************************************************************
  */
 
@@ -138,10 +138,10 @@ void EdgeData<TYPE>::copy2(
 
 /*
  *************************************************************************
- *                                                                       *
- * Copy data from the source into the destination according to the       *
- * overlap descriptor.                                                   *
- *                                                                       *
+ *
+ * Copy data from the source into the destination according to the
+ * overlap descriptor.
+ *
  *************************************************************************
  */
 
@@ -262,10 +262,10 @@ void EdgeData<TYPE>::copyWithRotation(
 
 /*
  *************************************************************************
- *                                                                       *
- * Perform a fast copy from an edge data object to this edge data        *
- * object at the specified depths, where their index spaces overlap.     *
- *                                                                       *
+ *
+ * Perform a fast copy from an edge data object to this edge data
+ * object at the specified depths, where their index spaces overlap.
+ *
  *************************************************************************
  */
 
@@ -287,10 +287,10 @@ void EdgeData<TYPE>::copyDepth(
 
 /*
  *************************************************************************
- *                                                                       *
- * Calculate the buffer space needed to pack/unpack messages on the box  *
- * region using the overlap descriptor.                                  *
- *                                                                       *
+ *
+ * Calculate the buffer space needed to pack/unpack messages on the box
+ * region using the overlap descriptor.
+ *
  *************************************************************************
  */
 
@@ -321,10 +321,10 @@ int EdgeData<TYPE>::getDataStreamSize(
 
 /*
  *************************************************************************
- *                                                                       *
- * Pack/unpack data into/out of the message streams using the index      *
- * space in the overlap descriptor.                                      *
- *                                                                       *
+ *
+ * Pack/unpack data into/out of the message streams using the index
+ * space in the overlap descriptor.
+ *
  *************************************************************************
  */
 
@@ -437,10 +437,10 @@ void EdgeData<TYPE>::unpackStream(
 
 /*
  *************************************************************************
- *                                                                       *
- * Calculate the amount of memory space needed to represent the data     *
- * for a  edge centered grid.                                            *
- *                                                                       *
+ *
+ * Calculate the amount of memory space needed to represent the data
+ * for a  edge centered grid.
+ *
  *************************************************************************
  */
 
@@ -464,9 +464,9 @@ size_t EdgeData<TYPE>::getSizeOfData(
 
 /*
  *************************************************************************
- *                                                                       *
- * Fill the edge centered box with the given value.                      *
- *                                                                       *
+ *
+ * Fill the edge centered box with the given value.
+ *
  *************************************************************************
  */
 
@@ -520,10 +520,10 @@ void EdgeData<TYPE>::fillAll(
 
 /*
  *************************************************************************
- *                                                                       *
- * Print edge centered data.  Note:  makes call to specialized printAxis *
- * routine in EdgeDataSpecialized.C                                      *
- *                                                                       *
+ *
+ * Print edge centered data.  Note:  makes call to specialized printAxis
+ * routine in EdgeDataSpecialized.C
+ *
  *************************************************************************
  */
 
@@ -592,11 +592,11 @@ void EdgeData<TYPE>::printAxis(
 
 /*
  *************************************************************************
- *                                                                       *
- * Checks that class version and restart file version are equal.  If so, *
- * reads in the d_depth data member to the database.  Then tell          *
- * d_data to read itself in from the database.                           *
- *                                                                       *
+ *
+ * Checks that class version and restart file version are equal.  If so,
+ * reads in the d_depth data member to the database.  Then tell
+ * d_data to read itself in from the database.
+ *
  *************************************************************************
  */
 
@@ -624,10 +624,10 @@ void EdgeData<TYPE>::getSpecializedFromDatabase(
 
 /*
  *************************************************************************
- *                                                                       *
- * Write out the class version number, d_depth data member to the        *
- * database.  Then tells d_data to write itself to the database.         *
- *                                                                       *
+ *
+ * Write out the class version number, d_depth data member to the
+ * database.  Then tells d_data to write itself to the database.
+ *
  *************************************************************************
  */
 

@@ -19,6 +19,8 @@
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/hier/BoxContainerIterator.h"
 #include "SAMRAI/hier/BoxContainerConstIterator.h"
+#include "SAMRAI/hier/BoxContainerSetIterator.h"
+#include "SAMRAI/hier/BoxContainerSetConstIterator.h"
 #include "SAMRAI/hier/BoxList.h"
 #include "SAMRAI/hier/BoxLevel.h"
 #include "SAMRAI/hier/IntVector.h"
@@ -75,11 +77,11 @@ tbox::Pointer<tbox::Timer> GridGeometry::t_get_boundary_boxes;
 
 /*
  *************************************************************************
- *                                                                       *
- * Constructors for GridGeometry.  Both set up operator                  *
- * handlers.  However, one initializes data members based on arguments.  *
- * The other initializes the object based on input database information. *
- *                                                                       *
+ *
+ * Constructors for GridGeometry.  Both set up operator
+ * handlers.  However, one initializes data members based on arguments.
+ * The other initializes the object based on input database information.
+ *
  *************************************************************************
  */
 GridGeometry::GridGeometry(
@@ -92,7 +94,7 @@ GridGeometry::GridGeometry(
    d_object_name(object_name),
    d_physical_domain(1, BoxList(d_dim)),
    d_domain_tree(0),
-   d_domain_mapped_box_sets(1, BoxSet()),
+   d_domain_with_images(1, BoxSet(d_dim)),
    d_periodic_shift(IntVector::getZero(d_dim)),
    d_max_data_ghost_width(IntVector(d_dim, -1)),
    d_has_enhanced_connectivity(false),
@@ -118,11 +120,11 @@ GridGeometry::GridGeometry(
 
 /*
  *************************************************************************
- *                                                                       *
- * Constructors for GridGeometry.  Both set up operator                  *
- * handlers.  However, one initializes data members based on arguments.  *
- * The other initializes the object based on input database information. *
- *                                                                       *
+ *
+ * Constructors for GridGeometry.  Both set up operator
+ * handlers.  However, one initializes data members based on arguments.
+ * The other initializes the object based on input database information.
+ *
  *************************************************************************
  */
 GridGeometry::GridGeometry(
@@ -133,7 +135,7 @@ GridGeometry::GridGeometry(
    d_object_name(object_name),
    d_physical_domain(1, BoxList(d_dim)),
    d_domain_tree(0),
-   d_domain_mapped_box_sets(1, BoxSet()),
+   d_domain_with_images(1, BoxSet(d_dim)),
    d_periodic_shift(IntVector::getZero(d_dim)),
    d_max_data_ghost_width(IntVector(d_dim, -1)),
    d_number_blocks(1),
@@ -160,7 +162,7 @@ GridGeometry::GridGeometry(
    d_object_name(object_name),
    d_physical_domain(domain),
    d_domain_tree(0),
-   d_domain_mapped_box_sets(1, BoxSet()),
+   d_domain_with_images(1, BoxSet(d_dim)),
    d_periodic_shift(IntVector::getZero(d_dim)),
    d_max_data_ghost_width(IntVector(d_dim, -1)),
    d_number_of_block_singularities(0),
@@ -554,10 +556,10 @@ void GridGeometry::setBoundaryBoxes(
 
 /*
  *************************************************************************
- *                                                                       *
- * Create PatchGeometry geometry object, initializing its                *
- * boundary and assigning it to the given patch.                         *
- *                                                                       *
+ *
+ * Create PatchGeometry geometry object, initializing its
+ * boundary and assigning it to the given patch.
+ *
  *************************************************************************
  */
 
@@ -603,10 +605,10 @@ const
 
 /*
  *************************************************************************
- *                                                                       *
- * Create and return pointer to coarsened version of this                *
- * grid geometry object coarsened by the given ratio.                    *
- *                                                                       *
+ *
+ * Create and return pointer to coarsened version of this
+ * grid geometry object coarsened by the given ratio.
+ *
  *************************************************************************
  */
 
@@ -671,10 +673,10 @@ GridGeometry::makeCoarsenedGridGeometry(
 
 /*
  *************************************************************************
- *                                                                       *
- * Create and return pointer to refined version of this                  *
- * grid geometry object refined by the given ratio.                      *
- *                                                                       *
+ *
+ * Create and return pointer to refined version of this
+ * grid geometry object refined by the given ratio.
+ *
  *************************************************************************
  */
 
@@ -712,11 +714,11 @@ GridGeometry::makeRefinedGridGeometry(
 
 /*
  *************************************************************************
- * Checks to see if the version number for the class is the same as     *
- * as the version number of the restart file.                           *
- * If they are equal, then the data from the database are read to local *
- * variables and the setPhysicalDomain() method is called.              *
- *                                                                       *
+ * Checks to see if the version number for the class is the same as
+ * as the version number of the restart file.
+ * If they are equal, then the data from the database are read to local
+ * variables and the setPhysicalDomain() method is called.
+ *
  *************************************************************************
  */
 void GridGeometry::getFromRestart()
@@ -770,12 +772,12 @@ void GridGeometry::getFromRestart()
 
 /*
  *************************************************************************
- *                                                                       *
- * Data is read from input only if the simulation is not from restart.   *
- * Otherwise, all values specifed in the input database are ignored.    *
- * In this method data from the database are read to local              *
- * variables and the setPhysicalDomain() method is called.              *
- *                                                                       *
+ *
+ * Data is read from input only if the simulation is not from restart.
+ * Otherwise, all values specifed in the input database are ignored.
+ * In this method data from the database are read to local
+ * variables and the setPhysicalDomain() method is called.
+ *
  *************************************************************************
  */
 
@@ -833,9 +835,9 @@ void GridGeometry::getFromInput(
 
 /*
  *************************************************************************
- *                                                                       *
- * Writes out version number and data members for the class.            *
- *                                                                       *
+ *
+ * Writes out version number and data members for the class.
+ *
  *************************************************************************
  */
 
@@ -1226,7 +1228,7 @@ void GridGeometry::computePhysicalDomain(
  *
  *************************************************************************
  */
-
+#if 0
 void GridGeometry::computePhysicalDomain(
    BoxSet& domain_mapped_boxes,
    const IntVector& ratio_to_level_zero,
@@ -1253,7 +1255,7 @@ void GridGeometry::computePhysicalDomain(
    }
 #endif
 
-   domain_mapped_boxes = d_domain_mapped_box_sets[block_id.getBlockValue()];
+   domain_mapped_boxes = d_domain_with_images[block_id.getBlockValue()];
 
    if (ratio_to_level_zero != IntVector::getOne(d_dim)) {
       bool coarsen = false;
@@ -1271,6 +1273,7 @@ void GridGeometry::computePhysicalDomain(
       domain_mapped_boxes.swap(tmp_mapped_boxes);
    }
 }
+#endif
 
 void GridGeometry::computePhysicalDomain(
    BoxSet& domain_mapped_boxes,
@@ -1298,7 +1301,7 @@ void GridGeometry::computePhysicalDomain(
 #endif
 
    for (int nb = 0; nb < d_number_blocks; nb++) {
-      BoxSet block_domain_boxes = d_domain_mapped_box_sets[nb];
+      BoxSet block_domain_boxes = d_domain_with_images[nb];
 
       if (ratio_to_level_zero != IntVector::getOne(d_dim)) {
          bool coarsen = false;
@@ -1307,18 +1310,19 @@ void GridGeometry::computePhysicalDomain(
             if (ratio_to_level_zero(id) < 0) coarsen = true;
             tmp_rat(id) = abs(ratio_to_level_zero(id));
          }
-         BoxSet tmp_mapped_boxes;
+//         BoxSet tmp_mapped_boxes(d_dim);
          if (coarsen) {
-            block_domain_boxes.coarsen(tmp_mapped_boxes, tmp_rat);
+            block_domain_boxes.coarsen(tmp_rat);
+//            block_domain_boxes.coarsen(tmp_mapped_boxes, tmp_rat);
          } else {
-            block_domain_boxes.refine(tmp_mapped_boxes, tmp_rat);
+            block_domain_boxes.refine(tmp_rat);
+//            block_domain_boxes.refine(tmp_mapped_boxes, tmp_rat);
          }
-         block_domain_boxes.swap(tmp_mapped_boxes);
+//         block_domain_boxes.swap(tmp_mapped_boxes);
       }
 
-      BoxSet::const_iterator bi;
-      for (bi = block_domain_boxes.begin();
-           bi != block_domain_boxes.end(); ++bi) {
+      for (BoxSet::SetConstIterator bi = block_domain_boxes.setBegin();
+           bi != block_domain_boxes.setEnd(); ++bi) {
 
          domain_mapped_boxes.insert(*bi);
 
@@ -1345,7 +1349,7 @@ void GridGeometry::setPhysicalDomain(
    d_domain_is_single_box.resizeArray(number_blocks);
    d_physical_domain.resizeArray(number_blocks, BoxList(d_dim));
    d_domain_tree.resizeArray(number_blocks);
-   d_domain_mapped_box_sets.resizeArray(number_blocks, BoxSet());
+   d_domain_with_images.resizeArray(number_blocks, BoxSet(d_dim));
    d_number_blocks = number_blocks;
 
    for (int b = 0; b < number_blocks; b++) {
@@ -1385,11 +1389,15 @@ void GridGeometry::setPhysicalDomain(
 void GridGeometry::resetDomainBoxSet(const BlockId& block_id)
 {
    const int& block_number = block_id.getBlockValue();
+   BoxContainer domain_set(d_dim);
    BoxContainer::Iterator itr(d_physical_domain[block_number]);
    for (LocalId i(0); i < d_physical_domain[block_number].size(); ++i, itr++) {
       Box mapped_box(*itr, i, 0, BlockId(block_number));
-      d_domain_mapped_box_sets[block_number].insert(mapped_box);
+      d_domain_with_images[block_number].insert(mapped_box);
    }
+   d_physical_domain[block_number].clear();
+   d_physical_domain[block_number] = d_domain_with_images[block_number];
+
    const IntVector periodic_shift_distances = getPeriodicShift(
          IntVector::getOne(d_dim));
    bool is_periodic = false;
@@ -1405,10 +1413,10 @@ void GridGeometry::resetDomainBoxSet(const BlockId& block_id)
       const PeriodicShiftCatalog* periodic_shift_catalog =
          PeriodicShiftCatalog::getCatalog(d_dim);
 
-      // Add periodic images of the domain d_domain_mapped_box_sets.
+      // Add periodic images of the domain d_domain_with_images.
       std::vector<IntVector> shifts;
       const BoxSet& mapped_boxes =
-         d_domain_mapped_box_sets[block_number];
+         d_domain_with_images[block_number];
       for (RealBoxConstIterator ni(mapped_boxes); ni.isValid(); ++ni) {
          const Box& mapped_box = *ni;
          computeShiftsForBox(shifts,
@@ -1423,7 +1431,7 @@ void GridGeometry::resetDomainBoxSet(const BlockId& block_id)
                mapped_box,
                shift_number,
                IntVector::getOne(d_dim));
-            d_domain_mapped_box_sets[block_number].insert(image_mapped_box);
+            d_domain_with_images[block_number].insert(image_mapped_box);
          }
       }
    }
@@ -1836,9 +1844,9 @@ void GridGeometry::readBlockDataFromInput(
 
 /*
  * ************************************************************************
- *                                                                        *
- * Get a BoxList representing all of the domain outside the given block.  *
- *                                                                        *
+ *
+ * Get a BoxList representing all of the domain outside the given block.
+ *
  * ************************************************************************
  */
 
@@ -1951,11 +1959,11 @@ GridGeometry::transformBox(
 
 /*
  * ************************************************************************
- *                                                                        *
- * Rotate and shift the boxes in the given array according to the         *
- * rotation and shift that is used to transformed the index space of       *
- * input_block into the index space of output_block.                   *
- *                                                                        *
+ *
+ * Rotate and shift the boxes in the given array according to the
+ * rotation and shift that is used to transformed the index space of
+ * input_block into the index space of output_block.
+ *
  * ************************************************************************
  */
 
@@ -1982,10 +1990,10 @@ GridGeometry::transformBoxList(
 
 /*
  * ************************************************************************
- *                                                                        *
- * Set block to be the domain of transformed_block in the index space of   *
- * base_block.                                                            *
- *                                                                        *
+ *
+ * Set block to be the domain of transformed_block in the index space of
+ * base_block.
+ *
  * ************************************************************************
  */
 
@@ -2008,10 +2016,10 @@ GridGeometry::getTransformedBlock(
 
 /*
  * ************************************************************************
- *                                                                        *
- * Adjust all of the boundary boxes on the level so that they are         *
- * multiblock-aware.                                                      *
- *                                                                        *
+ *
+ * Adjust all of the boundary boxes on the level so that they are
+ * multiblock-aware.
+ *
  * ************************************************************************
  */
 
@@ -2068,10 +2076,10 @@ void GridGeometry::adjustMultiblockPatchLevelBoundaries(
 
 /*
  * ************************************************************************
- *                                                                        *
- * Adjust all of the boundary boxes on the patch so that they are         *
- * multiblock-aware.                                                      *
- *                                                                        *
+ *
+ * Adjust all of the boundary boxes on the patch so that they are
+ * multiblock-aware.
+ *
  * ************************************************************************
  */
 
@@ -2140,7 +2148,7 @@ void GridGeometry::adjustBoundaryBoxesOnPatch(
 
 /*
  *************************************************************************
- *                                                                       *
+ *
  *************************************************************************
  */
 Transformation::RotationIdentifier
@@ -2163,7 +2171,7 @@ GridGeometry::getRotationIdentifier(const BlockId& dst,
 
 /*
  *************************************************************************
- *                                                                       *
+ *
  *************************************************************************
  */
 const IntVector&
@@ -2184,7 +2192,7 @@ GridGeometry::getOffset(const BlockId& dst,
 
 /*
  *************************************************************************
- *                                                                       *
+ *
  *************************************************************************
  */
 bool GridGeometry::areNeighbors(const BlockId& block_a,
@@ -2205,7 +2213,7 @@ bool GridGeometry::areNeighbors(const BlockId& block_a,
 
 /*
  *************************************************************************
- *                                                                       *
+ *
  *************************************************************************
  */
 bool GridGeometry::areSingularityNeighbors(const BlockId& block_a,
@@ -2228,9 +2236,9 @@ bool GridGeometry::areSingularityNeighbors(const BlockId& block_a,
 
 /*
  *************************************************************************
- *                                                                       *
- * Add operator to appropriate lookup list.                              *
- *                                                                       *
+ *
+ * Add operator to appropriate lookup list.
+ *
  *************************************************************************
  */
 
@@ -2254,9 +2262,9 @@ void GridGeometry::addTimeInterpolateOperator(
 
 /*
  *************************************************************************
- *                                                                       *
- * Search operator lists for operator matching request.                  *
- *                                                                       *
+ *
+ * Search operator lists for operator matching request.
+ *
  *************************************************************************
  */
 

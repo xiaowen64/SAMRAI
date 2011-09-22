@@ -200,9 +200,9 @@ void Box::initialize(
 
 /*
  *************************************************************************
- *                                                                       *
- * Return the dimension of the box that is the longest.                  *
- *                                                                       *
+ *
+ * Return the dimension of the box that is the longest.
+ *
  *************************************************************************
  */
 
@@ -221,9 +221,9 @@ int Box::longestDimension() const
 
 /*
  *************************************************************************
- *                                                                       *
- * Type Conversions                                                      *
- *                                                                       *
+ *
+ * Type Conversions
+ *
  *************************************************************************
  */
 
@@ -256,9 +256,9 @@ void Box::set_Box_from_DatabaseBox(
 
 /*
  *************************************************************************
- *                                                                       *
- * Stream input/output operators: [(l0,...,ln),(u0,...,un)].8            *
- *                                                                       *
+ *
+ * Stream input/output operators: [(l0,...,ln),(u0,...,un)].8
+ *
  *************************************************************************
  */
 
@@ -309,13 +309,13 @@ Box& Box::operator += (
 
 /*
  *************************************************************************
- *                                                                       *
- * Static member function called from coalesceWith().  It attempts to    *
- * recursively coalesce intervals individual dimensions in index space.  *
- * If it is possible to coalesce two intervals (defined by a proper      *
- * overlap or adjacency relationship), the value true is returned.       *
- * If this is impossible, false is returned.                             *
- *                                                                       *
+ *
+ * Static member function called from coalesceWith().  It attempts to
+ * recursively coalesce intervals individual dimensions in index space.
+ * If it is possible to coalesce two intervals (defined by a proper
+ * overlap or adjacency relationship), the value true is returned.
+ * If this is impossible, false is returned.
+ *
  *************************************************************************
  */
 
@@ -372,13 +372,13 @@ bool Box::coalesceIntervals(
 
 /*
  *************************************************************************
- *                                                                       *
- * Return true if this box can be coalesced with the argument box,       *
- * and set this box to the union of the boxes.  Otherwise, return false  *
- * and leave this box as is.  Two boxes may be coalesced if their union  *
- * is a box.  This routine attempts to coalesce the boxes along          *
- * each coordinate direction using the coalesceIntervals() function.     *
- *                                                                       *
+ *
+ * Return true if this box can be coalesced with the argument box,
+ * and set this box to the union of the boxes.  Otherwise, return false
+ * and leave this box as is.  Two boxes may be coalesced if their union
+ * is a box.  This routine attempts to coalesce the boxes along
+ * each coordinate direction using the coalesceIntervals() function.
+ *
  *************************************************************************
  */
 

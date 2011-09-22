@@ -87,7 +87,7 @@ namespace solv {
 
 /*
  ************************************************************************
- * Constructor                                                          *
+ * Constructor
  ************************************************************************
  */
 
@@ -114,7 +114,7 @@ CartesianRobinBcHelper::CartesianRobinBcHelper(
 
 /*
  ************************************************************************
- * Destructor                                                           *
+ * Destructor
  ************************************************************************
  */
 
@@ -124,7 +124,7 @@ CartesianRobinBcHelper::~CartesianRobinBcHelper(
 
 /*
  ************************************************************************
- *     Set physical boundary conditions in cells.                       *
+ *     Set physical boundary conditions in cells.
  ************************************************************************
  */
 
@@ -601,8 +601,8 @@ void CartesianRobinBcHelper::setBoundaryValuesInCells(
 
 /*
  ************************************************************************
- * Set physical boundary conditions in cells, for all patches in a      *
- * given level.                                                         *
+ * Set physical boundary conditions in cells, for all patches in a
+ * given level.
  ************************************************************************
  */
 
@@ -627,7 +627,7 @@ void CartesianRobinBcHelper::setBoundaryValuesInCells(
 
 /*
  ************************************************************************
- * Set physical boundary conditions at nodes.                           *
+ * Set physical boundary conditions at nodes.
  ************************************************************************
  */
 
@@ -653,13 +653,13 @@ void CartesianRobinBcHelper::setBoundaryValuesAtNodes(
 
 /*
  ************************************************************************
- * Set the coefficient strategy pointer that will be used to get        *
- * Robin bc coefficients.  It should be some external implementation.   *
- * This function implies that the simple mappings for                   *
- * parallelpiped domains are not used and resets those arrays to null.  *
- * is a parallelpiped (not checked) and that the boundary condition     *
- * coefficients are functions only of the location index of the         *
- * boundary.                                                            *
+ * Set the coefficient strategy pointer that will be used to get
+ * Robin bc coefficients.  It should be some external implementation.
+ * This function implies that the simple mappings for
+ * parallelpiped domains are not used and resets those arrays to null.
+ * is a parallelpiped (not checked) and that the boundary condition
+ * coefficients are functions only of the location index of the
+ * boundary.
  ************************************************************************
  */
 
@@ -687,9 +687,9 @@ void CartesianRobinBcHelper::setHomogeneousBc(
 
 /*
  ***********************************************************************
- *                                                                     *
- *  Virtual functions or xfer::RefinePatchStrategy.                    *
- *                                                                     *
+ *
+ *  Virtual functions or xfer::RefinePatchStrategy.
+ *
  ***********************************************************************
  */
 
@@ -776,9 +776,9 @@ void CartesianRobinBcHelper::fillSingularityBoundaryConditions(
 
 /*
  ************************************************************************
- * Trim a boundary box so it does not stick out past the corners of a   *
- * given box.  This removes the extension parallel to the boundary,     *
- * past the corner of the limit box.                                    *
+ * Trim a boundary box so it does not stick out past the corners of a
+ * given box.  This removes the extension parallel to the boundary,
+ * past the corner of the limit box.
  ************************************************************************
  */
 
@@ -843,7 +843,7 @@ hier::BoundaryBox CartesianRobinBcHelper::trimBoundaryBox(
 
 /*
  ************************************************************************
- * Make surface box on boundary using standard boundary box             *
+ * Make surface box on boundary using standard boundary box
  ************************************************************************
  */
 
@@ -872,7 +872,7 @@ hier::Box CartesianRobinBcHelper::makeFaceBoundaryBox(
 
 /*
  ************************************************************************
- * Make node box on boundary using standard boundary box                *
+ * Make node box on boundary using standard boundary box
  ************************************************************************
  */
 

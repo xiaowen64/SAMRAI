@@ -29,9 +29,9 @@ namespace pdat {
 
 /*
  *************************************************************************
- *                                                                       *
- * The constructor simply caches the default ghost cell width and depth. *
- *                                                                       *
+ *
+ * The constructor simply caches the default ghost cell width and depth.
+ *
  *************************************************************************
  */
 
@@ -59,9 +59,9 @@ EdgeDataFactory<TYPE>::~EdgeDataFactory()
 
 /*
  *************************************************************************
- *                                                                       *
- * Clone the factory and copy the default parameters to the new factory. *
- *                                                                       *
+ *
+ * Clone the factory and copy the default parameters to the new factory.
+ *
  *************************************************************************
  */
 
@@ -100,9 +100,9 @@ EdgeDataFactory<TYPE>::allocate(
 
 /*
  *************************************************************************
- *                                                                       *
- * Return the box geometry type for edge data objects.                   *
- *                                                                       *
+ *
+ * Return the box geometry type for edge data objects.
+ *
  *************************************************************************
  */
 
@@ -119,9 +119,9 @@ EdgeDataFactory<TYPE>::getBoxGeometry(
 
 /*
  *************************************************************************
- *                                                                       *
- * Calculate the amount of memory needed to allocate the data object.    *
- *                                                                       *
+ *
+ * Calculate the amount of memory needed to allocate the data object.
+ *
  *************************************************************************
  */
 
@@ -140,10 +140,10 @@ size_t EdgeDataFactory<TYPE>::getSizeOfMemory(
 
 /*
  *************************************************************************
- *                                                                       *
- * Determine whether this is a valid copy operation to/from EdgeData     *
- * between the supplied datatype.                                        *
- *                                                                       *
+ *
+ * Determine whether this is a valid copy operation to/from EdgeData
+ * between the supplied datatype.
+ *
  *************************************************************************
  */
 
