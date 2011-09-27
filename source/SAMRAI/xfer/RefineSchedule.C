@@ -2990,6 +2990,7 @@ void RefineSchedule::reorderNeighborhoodSetsByDstNodes(
                iter->second.insert(shifted_mapped_box);
             } else {
                hier::BoxContainer box_container(shifted_mapped_box);
+               box_container.makeSet();
                full_inverted_edges.insert(
                   std::pair<hier::Box, NeighborSet>(unshifted_nabr,
                                                     box_container));
@@ -3000,6 +3001,7 @@ void RefineSchedule::reorderNeighborhoodSetsByDstNodes(
                iter->second.insert(mapped_box);
             } else {
                hier::BoxContainer box_container(mapped_box);
+               box_container.makeSet();
                full_inverted_edges.insert(
                   std::pair<hier::Box, NeighborSet>(nabr,
                                                     box_container));

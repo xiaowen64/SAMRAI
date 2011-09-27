@@ -404,9 +404,10 @@ void BoxContainer::erase(BoxContainerSetIterator iter)
 int BoxContainer::erase(const Box& box)
 {
    bool ret = d_set.erase(&box);
-   for (std::list<Box>::iterator bi = d_list.begin(); bi != d_list.end(); ) {
+   for (std::list<Box>::iterator bi = d_list.begin(); bi != d_list.end(); ++bi) {
       if (bi->getId() == box.getId() && bi->isSpatiallyEqual(box)) {
          d_list.erase(bi++);
+         break;
       }
    }
 

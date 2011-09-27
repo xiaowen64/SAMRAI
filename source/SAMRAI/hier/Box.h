@@ -281,6 +281,11 @@ public:
       {
          return b1.isIdEqual(b2);
       }
+
+      bool operator () (const Box* b1, const Box* b2) const
+      {
+         return b1->isIdEqual(*b2);
+      }
    };
 
    struct id_less {

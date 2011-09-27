@@ -1801,7 +1801,7 @@ void Connector::computeNeighborhoodDifferences(
 {
 //TODO:  Commenting out until there's a way to do set_difference for
 // BoxContainer
-#if 0
+#if 1
    if (0) {
       tbox::plog << "Computing relationship differences, a:\n" << left.format(dbgbord, 3)
       << "Computing relationship differences, b:\n" << right.format(dbgbord, 3);
@@ -1824,18 +1824,39 @@ void Connector::computeNeighborhoodDifferences(
       if (bi != brelationships.end()) {
          const NeighborSet& bnabrs = (*bi).second;
          // Remove bi from ai.  Put results in a_minus_b.
-         NeighborSet& diff = drelationships[mapped_box_id];
+         NeighborSet& diff = drelationships.getNeighborSet(mapped_box_id,
+                                                           left.d_base_width.getDim());
+
+         //equivalent of stl set_difference
+         BoxContainer::SetConstIterator na = anabrs.setBegin();
+         BoxContainer::SetConstIterator nb = bnabrs.setBegin();
+         while (na != anabrs.setEnd() && nb != bnabrs.setEnd()) {
+            if ((*na).getId() < (*nb).getId()) {
+               diff.insert(diff.setEnd(), (*na));
+               ++na;
+            } else if ((*nb).getId() < (*na).getId()) {
+               ++nb;
+            } else {
+               ++na;
+               ++nb;
+            } 
+         }
+             
+
+#if 0
          std::insert_iterator<NeighborSet> ii(diff, diff.begin());
          set_difference(anabrs.begin(),
             anabrs.end(),
             bnabrs.begin(),
             bnabrs.end(),
             ii, Box::id_less());
-         if (diff.empty()) {
+#endif
+         if (diff.isEmpty()) {
             drelationships.erase(mapped_box_id);
          }
       } else if (!anabrs.isEmpty()) {
-         drelationships[mapped_box_id] = anabrs;
+         drelationships.clear();
+         drelationships.insertNeighborSet(mapped_box_id, anabrs);
       }
 
    }

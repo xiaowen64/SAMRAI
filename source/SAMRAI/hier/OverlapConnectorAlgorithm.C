@@ -1673,7 +1673,7 @@ void OverlapConnectorAlgorithm::findOverlapErrors(
     * as a check for that method.
     */
 //TODO: computeNeighborhoodDifferences does not work with BoxContainer
-#if 0
+#if 1
    Connector::computeNeighborhoodDifferences(
       extra,
       connector,

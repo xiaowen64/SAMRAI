@@ -174,6 +174,7 @@ void MultiblockBoxTree::generateTree(
          iter->second.insert(iter->second.setEnd(), *bi);
       } else {
          hier::BoxContainer boxes(*bi);
+         boxes.makeSet();
          mapped_boxes_by_block.insert(
             std::pair<BlockId, BoxContainer>(block_id, boxes));
       }

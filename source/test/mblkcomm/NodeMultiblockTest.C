@@ -355,8 +355,8 @@ void NodeMultiblockTest::fillSingularityBoundaryConditions(
 
             const hier::BoxSet& encon_nbrs = ni->second;
 
-            for (hier::BoxSet::const_iterator ei = encon_nbrs.begin();
-                 ei != encon_nbrs.end(); ++ei) {
+            for (hier::BoxSet::SetConstIterator ei = encon_nbrs.setBegin();
+                 ei != encon_nbrs.setEnd(); ++ei) {
 
                const hier::BlockId& encon_blk_id = ei->getBlockId();
                tbox::Pointer<hier::Patch> encon_patch(

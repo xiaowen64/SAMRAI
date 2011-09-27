@@ -12,6 +12,8 @@
 #include "SAMRAI/hier/Connector.h"
 #include "SAMRAI/hier/GridGeometry.h"
 #include "SAMRAI/hier/Box.h"
+#include "SAMRAI/hier/BoxContainerSetConstIterator.h"
+#include "SAMRAI/hier/BoxContainerSetIterator.h"
 #include "SAMRAI/hier/BoxLevel.h"
 #include "SAMRAI/hier/MappingConnectorAlgorithm.h"
 #include "SAMRAI/hier/OverlapConnectorAlgorithm.h"
@@ -174,7 +176,7 @@ int main(
       const hier::IntVector& one_vector(hier::IntVector::getOne(dim));
       const hier::IntVector& zero_vector(hier::IntVector::getZero(dim));
 
-      hier::BoxSet multiblock_boxes;
+      hier::BoxSet multiblock_boxes(dim);
       grid_geometry->computePhysicalDomain(
          multiblock_boxes,
          hier::IntVector::getOne(dim));
@@ -353,12 +355,12 @@ void breakUpBoxes(
 
    if (refinement_ratio != hier::IntVector::getOne(dim)) {
       const hier::BoxSet& mapped_boxes(mapped_box_level.getBoxes());
-      hier::BoxSet refined_mapped_boxes;
-      for (hier::BoxSet::const_iterator bi = mapped_boxes.begin();
-           bi != mapped_boxes.end(); ++bi) {
+      hier::BoxSet refined_mapped_boxes(dim);
+      for (hier::BoxSet::SetConstIterator bi = mapped_boxes.setBegin();
+           bi != mapped_boxes.setEnd(); ++bi) {
          hier::Box refined_mapped_box(*bi);
          refined_mapped_box.refine(refinement_ratio);
-         refined_mapped_boxes.insert(refined_mapped_boxes.end(), refined_mapped_box);
+         refined_mapped_boxes.insert(refined_mapped_boxes.setEnd(), refined_mapped_box);
       }
       mapped_box_level.swapInitialize(
          refined_mapped_boxes,
@@ -423,11 +425,11 @@ void alterAndGenerateMapping(
       database->getIntegerWithDefault("local_id_increment", 0);
 
    const hier::BoxSet mapped_boxes_b(mapped_box_level_b.getBoxes());
-   hier::BoxSet mapped_boxes_c;
-   hier::NeighborhoodSet b_eto_c;
-   hier::NeighborhoodSet c_eto_b;
-   for (hier::BoxSet::const_iterator bi(mapped_boxes_b.begin());
-        bi != mapped_boxes_b.end(); ++bi) {
+   hier::BoxSet mapped_boxes_c(dim);
+   hier::NeighborhoodSet b_eto_c(dim);
+   hier::NeighborhoodSet c_eto_b(dim);
+   for (hier::BoxSet::SetConstIterator bi(mapped_boxes_b.setBegin());
+        bi != mapped_boxes_b.setEnd(); ++bi) {
       const hier::Box& mapped_box_b(*bi);
       hier::Box mapped_box_c(mapped_box_b,
                              mapped_box_b.getLocalId() + local_id_increment,
@@ -435,8 +437,8 @@ void alterAndGenerateMapping(
                              mapped_box_b.getBlockId(),
                              mapped_box_b.getPeriodicId());
       mapped_boxes_c.insert(mapped_box_c);
-      b_eto_c[mapped_box_b.getId()].insert(mapped_box_c);
-      c_eto_b[mapped_box_c.getId()].insert(mapped_box_b);
+      b_eto_c.insertNeighbor(mapped_box_b.getId(), mapped_box_c);
+      c_eto_b.insertNeighbor(mapped_box_c.getId(), mapped_box_b);
    }
 
    mapped_box_level_c.initialize(mapped_boxes_c,

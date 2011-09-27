@@ -403,8 +403,8 @@ OuternodeGeometry::doOverlap(
 
             hier::Box hi_lo_box(
                hi_src_node_box * msk_node_box * lo_dst_node_box);
-            if (!lo_lo_box.empty()) {
-               dst_boxes.pushBack(lo_lo_box);
+            if (!hi_lo_box.empty()) {
+               dst_boxes.pushBack(hi_lo_box);
             }
 
             hier::Box lo_hi_box(

@@ -95,8 +95,8 @@ NeighborhoodSet::coarsenNeighbors(
 {
    for (const_iterator ei = begin(); ei != end(); ++ei) {
       const BoxId& mapped_box_id = (*ei).first;
-      output_edges.d_map[mapped_box_id] = (*ei).second; 
-      output_edges.d_map[mapped_box_id].coarsen(ratio);
+      output_edges.getNeighborSet(mapped_box_id, ratio.getDim()) = (*ei).second;
+      output_edges.getNeighborSet(mapped_box_id, ratio.getDim()).coarsen(ratio);
    }
 }
 
@@ -112,8 +112,8 @@ NeighborhoodSet::refineNeighbors(
 {
    for (const_iterator ei = begin(); ei != end(); ++ei) {
       const BoxId& mapped_box_id = (*ei).first;
-      output_edges.d_map[mapped_box_id] = (*ei).second;
-      output_edges.d_map[mapped_box_id].refine(ratio);
+      output_edges.getNeighborSet(mapped_box_id, ratio.getDim()) = (*ei).second;
+      output_edges.getNeighborSet(mapped_box_id, ratio.getDim()).refine(ratio);
    }
 }
 

@@ -325,6 +325,12 @@ public:
       const IntVector& ratio_to_level_zero,
       const BlockId& block_id) const;
 
+   void
+   computePhysicalDomainWithPeriodicImages(
+      BoxContainer& domain,
+      const IntVector& ratio_to_level_zero,
+      const BlockId& block_id) const;
+
    /*!
     * @brief Compute the BoxSet describing the index space for a
     * given block of the physical domain.

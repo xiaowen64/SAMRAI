@@ -12,6 +12,7 @@
 #include "SAMRAI/hier/Connector.h"
 #include "SAMRAI/hier/GridGeometry.h"
 #include "SAMRAI/hier/Box.h"
+#include "SAMRAI/hier/BoxContainerSetIterator.h"
 #include "SAMRAI/hier/BoxLevel.h"
 #include "SAMRAI/hier/MultiblockBoxTree.h"
 #include "SAMRAI/hier/TransferOperatorRegistry.h"
@@ -200,7 +201,7 @@ int main(
 
       const hier::IntVector& one_vector(hier::IntVector::getOne(dim));
 
-      hier::BoxSet multiblock_boxes;
+      hier::BoxSet multiblock_boxes(dim);
       grid_geometry->computePhysicalDomain(
          multiblock_boxes,
          hier::IntVector::getOne(dim));
@@ -266,16 +267,17 @@ int main(
          main_db->getIntegerArray("connector_width", &connector_width[0], dim.getValue());
       }
 
-      hier::NeighborhoodSet neighborhood_set;
+      hier::NeighborhoodSet neighborhood_set(dim);
 
       const hier::IntVector& refinement_ratio(one_vector);
 
-      for (hier::BoxSet::iterator bi = mapped_box_level.getBoxes().begin();
-           bi != mapped_box_level.getBoxes().end(); ++bi) {
+      for (hier::BoxSet::SetConstIterator bi = mapped_box_level.getBoxes().setBegin();
+           bi != mapped_box_level.getBoxes().setEnd(); ++bi) {
 
          const hier::Box& mapped_box(*bi);
 
-         hier::BoxSet& neighbors(neighborhood_set[mapped_box.getId()]);
+         hier::BoxSet& neighbors(neighborhood_set.getNeighborSet(mapped_box.getId(),
+                                                                 dim));
 
          hier::Box grown_box(mapped_box);
          grown_box.grow(connector_width);
@@ -304,13 +306,14 @@ int main(
           * If writing baseline, verify the results against the
           * exhaustive search method first.
           */
-         hier::NeighborhoodSet neighborhood_set_from_exhaustive_search;
-         for (hier::BoxSet::iterator bi = mapped_box_level.getBoxes().begin();
-              bi != mapped_box_level.getBoxes().end(); ++bi) {
+         hier::NeighborhoodSet neighborhood_set_from_exhaustive_search(dim);
+         for (hier::BoxSet::SetConstIterator bi = mapped_box_level.getBoxes().setBegin();
+              bi != mapped_box_level.getBoxes().setEnd(); ++bi) {
 
             const hier::Box& mapped_box(*bi);
 
-            hier::BoxSet& neighbors(neighborhood_set_from_exhaustive_search[mapped_box.getId()]);
+            hier::BoxSet& neighbors(neighborhood_set_from_exhaustive_search.
+                                       getNeighborSet(mapped_box.getId(), dim));
 
             hier::Box grown_mapped_box(mapped_box);
             grown_mapped_box.grow(connector_width);
@@ -378,7 +381,7 @@ int main(
          /*
           * Get the baseline Connector NeighborhoodSet and compare.
           */
-         hier::NeighborhoodSet baseline_neighborhoods;
+         hier::NeighborhoodSet baseline_neighborhoods(dim);
          baseline_neighborhoods.getFromDatabase(*connector_db);
          if (baseline_neighborhoods != connector.getNeighborhoodSets()) {
             tbox::perr << "MultiblockBoxTree test problem:\n"
@@ -493,8 +496,8 @@ void exhaustiveFindOverlapBoxes(
    hier::Box transformed_box(mapped_box);
    hier::BlockId transformed_block_id(mapped_box.getBlockId());
 
-   for (hier::BoxSet::const_iterator bi = search_mapped_boxes.begin();
-        bi != search_mapped_boxes.end(); ++bi) {
+   for (hier::BoxSet::SetConstIterator bi = search_mapped_boxes.setBegin();
+        bi != search_mapped_boxes.setEnd(); ++bi) {
 
       const hier::Box& search_mapped_box(*bi);
 

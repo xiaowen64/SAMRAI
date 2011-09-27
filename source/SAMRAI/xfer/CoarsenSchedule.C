@@ -689,9 +689,29 @@ void CoarsenSchedule::restructureNeighborhoodSetsByDstNodes(
                nabr,
                shift_catalog->getZeroShiftNumber(),
                dst_ratio);
-            full_inverted_edges[unshifted_nabr].insert(shifted_mapped_box);
+
+            FullNeighborhoodSet::iterator iter =
+               full_inverted_edges.find(unshifted_nabr);
+
+            if (iter != full_inverted_edges.end()) {
+               iter->second.insert(shifted_mapped_box);
+            } else {
+               hier::BoxContainer new_container(shifted_mapped_box);
+               new_container.makeSet();
+               full_inverted_edges.insert(std::pair<hier::Box, hier::BoxContainer>(
+                                             unshifted_nabr, new_container));
+            }
          } else {
-            full_inverted_edges[nabr].insert(mapped_box);
+            FullNeighborhoodSet::iterator iter = full_inverted_edges.find(nabr);
+
+            if (iter != full_inverted_edges.end()) {
+               iter->second.insert(mapped_box);
+            } else {
+               hier::BoxContainer new_container(mapped_box);
+               new_container.makeSet();
+               full_inverted_edges.insert(std::pair<hier::Box, hier::BoxContainer>(
+                                             nabr, new_container));
+            }
          }
       }
    }

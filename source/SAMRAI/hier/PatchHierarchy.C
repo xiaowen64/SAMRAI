@@ -663,7 +663,8 @@ void PatchHierarchy::setupDomainData()
     */
    tbox::Array<BoxSet> domain_mapped_boxes(d_number_blocks, BoxSet(d_dim));
    for (int nb = 0; nb < d_number_blocks; nb++) {
-      d_grid_geometry->computePhysicalDomain(domain_mapped_boxes[nb],
+      d_grid_geometry->computePhysicalDomainWithPeriodicImages(
+         domain_mapped_boxes[nb],
          IntVector::getOne(d_dim), BlockId(nb));
    }
 
@@ -706,7 +707,9 @@ void PatchHierarchy::setupDomainData()
       for (BoxSet::SetConstIterator ni = multiblock_mapped_boxes.setBegin();
            ni != multiblock_mapped_boxes.setEnd(); ++ni) {
          if (!(*ni).isPeriodicImage()) {
-            multiblock_mapped_boxes_noperiodic.pushBack(*ni);
+            multiblock_mapped_boxes_noperiodic.insert(
+               multiblock_mapped_boxes_noperiodic.setEnd(),
+               *ni);
          }
       }
       d_domain_search_tree.generateTree(

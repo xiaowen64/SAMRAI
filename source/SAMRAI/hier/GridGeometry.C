@@ -1175,7 +1175,7 @@ void GridGeometry::getBoundaryBoxes(
  *
  *************************************************************************
  */
-
+#if 0
 void GridGeometry::computePhysicalDomain(
    BoxList& domain,
    const IntVector& ratio_to_level_zero,
@@ -1218,7 +1218,7 @@ void GridGeometry::computePhysicalDomain(
    }
 
 }
-
+#endif
 /*
  *************************************************************************
  *
@@ -1228,8 +1228,51 @@ void GridGeometry::computePhysicalDomain(
  *
  *************************************************************************
  */
-#if 0
+
 void GridGeometry::computePhysicalDomain(
+   BoxSet& domain_mapped_boxes,
+   const IntVector& ratio_to_level_zero,
+   const BlockId& block_id) const
+{
+   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, ratio_to_level_zero);
+
+#ifdef DEBUG_CHECK_ASSERTIONS
+   /*
+    * All components of ratio must be nonzero.  Additionally, all components
+    * of ratio not equal to 1 must have the same sign.
+    */
+   int i;
+   for (i = 0; i < d_dim.getValue(); i++) {
+      TBOX_ASSERT(ratio_to_level_zero(i) != 0);
+   }
+   if (d_dim.getValue() > 1) {
+      for (i = 0; i < d_dim.getValue(); i++) {
+         TBOX_ASSERT((ratio_to_level_zero(i)
+                      * ratio_to_level_zero((i + 1) % d_dim.getValue()) > 0)
+            || (ratio_to_level_zero(i) == 1)
+            || (ratio_to_level_zero((i + 1) % d_dim.getValue()) == 1));
+      }
+   }
+#endif
+
+   domain_mapped_boxes = d_physical_domain[block_id.getBlockValue()];
+
+   if (ratio_to_level_zero != IntVector::getOne(d_dim)) {
+      bool coarsen = false;
+      IntVector tmp_rat = ratio_to_level_zero;
+      for (int id = 0; id < d_dim.getValue(); id++) {
+         if (ratio_to_level_zero(id) < 0) coarsen = true;
+         tmp_rat(id) = abs(ratio_to_level_zero(id));
+      }
+      if (coarsen) {
+         domain_mapped_boxes.coarsen(tmp_rat);
+      } else {
+         domain_mapped_boxes.refine(tmp_rat);
+      }
+   }
+}
+
+void GridGeometry::computePhysicalDomainWithPeriodicImages(
    BoxSet& domain_mapped_boxes,
    const IntVector& ratio_to_level_zero,
    const BlockId& block_id) const
@@ -1264,16 +1307,14 @@ void GridGeometry::computePhysicalDomain(
          if (ratio_to_level_zero(id) < 0) coarsen = true;
          tmp_rat(id) = abs(ratio_to_level_zero(id));
       }
-      BoxSet tmp_mapped_boxes;
       if (coarsen) {
-         domain_mapped_boxes.coarsen(tmp_mapped_boxes, tmp_rat);
+         domain_mapped_boxes.coarsen(tmp_rat);
       } else {
-         domain_mapped_boxes.refine(tmp_mapped_boxes, tmp_rat);
+         domain_mapped_boxes.refine(tmp_rat);
       }
-      domain_mapped_boxes.swap(tmp_mapped_boxes);
    }
 }
-#endif
+
 
 void GridGeometry::computePhysicalDomain(
    BoxSet& domain_mapped_boxes,

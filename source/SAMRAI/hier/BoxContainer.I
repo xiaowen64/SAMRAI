@@ -123,6 +123,8 @@ void BoxContainer::pushFront(const Box& item)
 {
    TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(d_dim, item);
    d_list.push_front(item);
+   d_set.clear();
+   d_set_created = false;
 }
 
 SAMRAI_INLINE_KEYWORD
@@ -130,6 +132,8 @@ void BoxContainer::pushBack(const Box& item)
 {
    TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(d_dim, item);
    d_list.push_back(item);
+   d_set.clear();
+   d_set_created = false;
 }
 
 SAMRAI_INLINE_KEYWORD
@@ -137,6 +141,8 @@ void BoxContainer::insertBefore(Iterator iter, const Box& item)
 {
    TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(d_dim, item);
    d_list.insert(iter.d_list_iter, item);
+   d_set.clear();
+   d_set_created = false;
 }
 
 SAMRAI_INLINE_KEYWORD
@@ -144,6 +150,8 @@ void BoxContainer::spliceFront(BoxContainer& boxes)
 {
    TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(d_dim, boxes);
    d_list.splice(begin().d_list_iter, boxes.d_list);
+   d_set.clear();
+   d_set_created = false;
 }
 
 SAMRAI_INLINE_KEYWORD
@@ -152,30 +160,40 @@ void BoxContainer::spliceBack(BoxContainer& boxes)
    TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(d_dim, boxes);
    boxes.spliceFront(*this);
    d_list.swap(boxes.d_list);
+   d_set.clear();
+   d_set_created = false;
 }
 
 SAMRAI_INLINE_KEYWORD
 void BoxContainer::popFront()
 {
    d_list.pop_front();
+   d_set.clear();
+   d_set_created = false;
 }
 
 SAMRAI_INLINE_KEYWORD
 void BoxContainer::popBack()
 {
    d_list.pop_back();
+   d_set.clear();
+   d_set_created = false;
 }
 
 SAMRAI_INLINE_KEYWORD
 void BoxContainer::erase(Iterator iter)
 {
    d_list.erase(iter.d_list_iter);
+   d_set.clear();
+   d_set_created = false;
 }
 
 SAMRAI_INLINE_KEYWORD
 void BoxContainer::erase(Iterator first, Iterator last)
 {
    d_list.erase(first.d_list_iter, last.d_list_iter);
+   d_set.clear();
+   d_set_created = false;
 }
 
 SAMRAI_INLINE_KEYWORD
@@ -183,6 +201,7 @@ void BoxContainer::clear()
 {
    d_list.clear();
    d_set.clear();
+   d_set_created = false; 
 }
 
 SAMRAI_INLINE_KEYWORD
@@ -190,8 +209,13 @@ bool BoxContainer::operator == (const BoxContainer& rhs) const
 {
    bool isEqual = (d_dim == rhs.d_dim);
    if (isEqual) {
-      isEqual = std::equal(d_list.begin(), d_list.end(),
-            rhs.d_list.begin(), Box::box_equality());
+      if (!d_set_created || !rhs.d_set_created) { 
+         isEqual = std::equal(d_list.begin(), d_list.end(),
+                      rhs.d_list.begin(), Box::box_equality());
+      } else {
+         isEqual = std::equal(d_set.begin(), d_set.end(),
+                      rhs.d_set.begin(), Box::id_equal());
+      }
    }
    return isEqual;
 }

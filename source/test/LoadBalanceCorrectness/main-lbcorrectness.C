@@ -13,6 +13,7 @@
 
 #include "SAMRAI/mesh/BergerRigoutsos.h"
 #include "SAMRAI/hier/BoxContainerIterator.h"
+#include "SAMRAI/hier/BoxContainerSetIterator.h"
 #include "SAMRAI/hier/BoxList.h"
 #include "SAMRAI/hier/BoxLevel.h"
 #include "SAMRAI/hier/IntVector.h"
@@ -869,7 +870,7 @@ int checkBalanceCorrectness(
       globalized_postbalance_mapped_box_set);
 
    // Check for prebalance indices absent in postbalance.
-   for (hier::BoxSet::const_iterator bi = globalized_prebalance_mapped_box_set.begin();
+   for (hier::BoxSet::SetConstIterator bi = globalized_prebalance_mapped_box_set.setBegin();
         bi != globalized_prebalance_mapped_box_set.end(); ++bi) {
       hier::BoxList box_container(*bi);
       box_container.removeIntersections(bi->getBlockId(),
@@ -886,7 +887,7 @@ int checkBalanceCorrectness(
    }
 
    // Check for postbalance indices absent in prebalance.
-   for (hier::BoxSet::const_iterator bi = globalized_postbalance_mapped_box_set.begin();
+   for (hier::BoxSet::SetConstIterator bi = globalized_postbalance_mapped_box_set.setBegin();
         bi != globalized_postbalance_mapped_box_set.end(); ++bi) {
       hier::BoxList box_container(*bi);
       box_container.removeIntersections(bi->getBlockId(),

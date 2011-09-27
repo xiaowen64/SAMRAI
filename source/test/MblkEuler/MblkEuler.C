@@ -1626,7 +1626,7 @@ void MblkEuler::setPhysicalBoundaryConditions(
       patch.getPatchGeometry();
    const hier::IntVector ratio = patch_geom->getRatio();
    hier::BoxList domain_boxes(d_dim);
-   d_grid_geometry->computePhysicalDomain(domain_boxes, ratio,
+   d_grid_geometry->computeePhysicalDomain(domain_boxes, ratio,
       patch.getBox().getBlockId());
 
    const hier::IntVector& periodic =

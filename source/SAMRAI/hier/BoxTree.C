@@ -699,7 +699,7 @@ void BoxTree::findOverlapBoxes(
               ni != d_mapped_boxes.setEnd(); ++ni) {
             const Box& this_box = *ni;
             if (box.intersects(this_box)) {
-               overlap_boxes.pushBack(this_box);
+               overlap_boxes.insert(this_box);
             }
          }
       }
@@ -713,7 +713,6 @@ void BoxTree::findOverlapBoxes(
       }
    }
 
-   overlap_boxes.makeSet();
 
    if (!recursive_call) {
       t_search[d_dim.getValue() - 1]->stop();

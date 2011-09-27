@@ -43,7 +43,7 @@ int main(
 
       const tbox::Dimension dim(2);
 
-      hier::BoxSet mboxes;
+      hier::BoxSet mboxes(dim);
 
       const int num_boxes = 100;
       const int num_blocks = 5;
