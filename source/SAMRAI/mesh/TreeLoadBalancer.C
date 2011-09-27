@@ -4276,10 +4276,7 @@ bool TreeLoadBalancer::breakOffLoad_planar(
             * d_cut_factor(brk_dir);
 
          if (brk_len < d_min_size(brk_dir)) {
-            if (brk_len + 1 < d_min_size(brk_dir)) {
-               // No chance rounding up would satisfy minimum size.
-               return false;
-            }
+            // Breakoff box violates minimum size.
             continue;
          }
 
