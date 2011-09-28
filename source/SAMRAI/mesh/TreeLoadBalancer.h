@@ -515,7 +515,7 @@ private:
 
    void
    sortIntVector(
-      hier::IntVector& order,
+      hier::IntVector& ordered_dims,
       const hier::IntVector& vector) const;
 
    /*!

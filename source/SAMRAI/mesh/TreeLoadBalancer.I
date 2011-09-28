@@ -24,5 +24,45 @@ const std::string& TreeLoadBalancer::getObjectName() const
    return d_object_name;
 }
 
+
+
+/*
+ *************************************************************************
+ *************************************************************************
+ */
+SAMRAI_INLINE_KEYWORD
+double TreeLoadBalancer::computeLoad(
+   const hier::Box& mapped_box,
+   const hier::Box& box) const
+{
+   /*
+    * Currently only for uniform loads, where the load is equal
+    * to the number of cells.  For non-uniform loads, this method
+    * needs the patch data index for the load.  It would summ up
+    * the individual cell loads in the overlap region.
+    */
+   hier::Box overlap = mapped_box * box;
+   return double(overlap.size());
+}
+
+
+
+/*
+ *************************************************************************
+ *************************************************************************
+ */
+SAMRAI_INLINE_KEYWORD
+double TreeLoadBalancer::computeLoad(
+   const hier::Box& mapped_box) const
+{
+   /*
+    * Currently only for uniform loads, where the load is equal
+    * to the number of cells.  For non-uniform loads, this method
+    * needs the patch data index for the load.  It would summ up
+    * the individual cell loads in the cell.
+    */
+   return double(mapped_box.size());
+}
+
 }
 }
