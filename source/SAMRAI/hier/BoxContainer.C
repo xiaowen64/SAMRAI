@@ -57,10 +57,14 @@ BoxContainer& BoxContainer::operator = (
    const BoxContainer& rhs)
 {
    TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(d_dim, rhs);
+   clear();
+
    if (this != &rhs) {
       d_list = rhs.d_list;
       if (rhs.d_set_created) { 
          makeSet();
+      } else {
+         d_set_created = false;
       }
    }
    return *this;
