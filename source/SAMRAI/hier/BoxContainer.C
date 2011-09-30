@@ -323,8 +323,8 @@ void BoxContainer::makeSet()
    d_set_created = true;
 }
 
-BoxContainerSetIterator
-BoxContainer::insert(BoxContainerSetIterator position,
+BoxContainer::OrderedIterator
+BoxContainer::insert(OrderedIterator position,
        const Box& box)
 {
    if (!d_set_created) {
@@ -332,7 +332,7 @@ BoxContainer::insert(BoxContainerSetIterator position,
    }
    const std::list<Box>::iterator& iter = d_list.insert(d_list.end(), box);
 
-   BoxContainerSetIterator insert_iter(*this);
+   OrderedIterator insert_iter(*this);
    int old_size = d_set.size();
    insert_iter.d_set_iter = d_set.insert(position.d_set_iter, &(*iter));
    if (d_set.size() == old_size) {
@@ -341,8 +341,8 @@ BoxContainer::insert(BoxContainerSetIterator position,
    return insert_iter;
 }
 
-void BoxContainer::insert ( BoxContainerSetConstIterator first,
-                            BoxContainerSetConstIterator last )
+void BoxContainer::insert ( OrderedConstIterator first,
+                            OrderedConstIterator last )
 {
    if (!d_set_created) {
       makeSet();
@@ -358,9 +358,9 @@ void BoxContainer::insert ( BoxContainerSetConstIterator first,
 
 }
 
-BoxContainerSetIterator BoxContainer::find(const Box& box) const
+BoxContainer::OrderedIterator BoxContainer::find(const Box& box) const
 {
-   BoxContainerSetIterator iter(*this);
+   OrderedIterator iter(*this);
    iter.d_set_iter = d_set.find(&box);
 
    return iter;
@@ -380,7 +380,7 @@ BoxContainer::swap(BoxContainer& other)
 void
 BoxContainer::removePeriodicImageBoxes()
 {
-   for (SetIterator na = setBegin(); na != setEnd(); ) {
+   for (OrderedIterator na = setBegin(); na != setEnd(); ) {
       if (na->isPeriodicImage()) {
          erase(na++);
       }
@@ -391,7 +391,7 @@ BoxContainer::removePeriodicImageBoxes()
 }
 
 
-void BoxContainer::erase(BoxContainerSetIterator iter)
+void BoxContainer::erase(OrderedIterator iter)
 {
    const Box& box = **(iter.d_set_iter);
    d_set.erase(iter.d_set_iter);
@@ -419,25 +419,25 @@ int BoxContainer::erase(const Box& box)
 }
 
 #if 0
-void BoxContainer::erase(BoxContainerSetIterator first,
-                         BoxContainerSetIterator last)
+void BoxContainer::erase(OrderedIterator first,
+                         OrderedIterator last)
 {
    d_set.erase(first.d_set_iter, last.d_set_iter);
    //TODO:: Linear search to erase from d_list? 
 }
 #endif
-BoxContainerSetIterator BoxContainer::lower_bound(const Box& box) const
+BoxContainer::OrderedIterator BoxContainer::lower_bound(const Box& box) const
 {
-   BoxContainerSetIterator iter(*this);
+   OrderedIterator iter(*this);
 
    iter.d_set_iter = d_set.lower_bound(&box);
 
    return iter;
 }
 
-BoxContainerSetIterator BoxContainer::upper_bound(const Box& box) const
+BoxContainer::OrderedIterator BoxContainer::upper_bound(const Box& box) const
 {
-   BoxContainerSetIterator iter(*this);
+   OrderedIterator iter(*this);
 
    iter.d_set_iter = d_set.upper_bound(&box);
 
@@ -467,7 +467,7 @@ int BoxContainer::getTotalSizeOfBoxes() const
          size += i().size();
       }
    } else {
-      for (SetConstIterator i(*this); i; i++) {
+      for (OrderedConstIterator i(*this); i; i++) {
          size += i().size(); 
       }
    } 
@@ -1058,7 +1058,7 @@ BoxContainer::getSingleBlockBoxContainer(
 void BoxContainer::getOwners(
    std::set<int>& owners) const
 {
-   for (BoxContainerSetConstIterator i_nabr = setBegin();
+   for (OrderedConstIterator i_nabr = setBegin();
         i_nabr != setEnd(); ++i_nabr) {
       const int owner = (*i_nabr).getOwnerRank();
       owners.insert(owner);
@@ -1074,7 +1074,7 @@ void BoxContainer::unshiftPeriodicImageBoxes(
    BoxContainer& output_mapped_boxes,
    const IntVector& refinement_ratio) const
 {
-   BoxContainerSetIterator hint = output_mapped_boxes.setBegin();
+   OrderedIterator hint = output_mapped_boxes.setBegin();
 
    if (!isEmpty()) {
       const Box& first_element(*begin());
@@ -1083,7 +1083,7 @@ void BoxContainer::unshiftPeriodicImageBoxes(
                                             first_element.getDim())->
                                          getZeroShiftNumber());
 
-      for (BoxContainerSetConstIterator na = setBegin(); na != setEnd(); ++na) {
+      for (OrderedConstIterator na = setBegin(); na != setEnd(); ++na) {
          if (na->isPeriodicImage()) {
             const Box unshifted_mapped_box(
                *na, zero_shift_number, refinement_ratio);
@@ -1122,7 +1122,7 @@ void BoxContainer::putToDatabase(
       tbox::Array<tbox::DatabaseBox> db_box_array(mbs_size);
 
       int counter = -1;
-      for (BoxContainer::SetConstIterator ni = setBegin();
+      for (BoxContainer::OrderedConstIterator ni = setBegin();
            ni != setEnd(); ++ni) {
          local_ids.push_back(ni->getLocalId().getValue());
          ranks.push_back(ni->getOwnerRank());

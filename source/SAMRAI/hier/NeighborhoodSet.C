@@ -212,7 +212,7 @@ NeighborhoodSet::getNeighbors(
    for (const_iterator ei = begin(); ei != end(); ++ei) {
       const NeighborSet& nabrs = (*ei).second;
 
-      for (BoxSet::SetConstIterator ni = nabrs.setBegin();
+      for (BoxSet::OrderedConstIterator ni = nabrs.setBegin();
          ni != nabrs.setEnd(); ++ni) {
 
          std::map<BlockId, BoxList>::iterator iter =
@@ -266,7 +266,7 @@ NeighborhoodSet::getOwners(
    for (const_iterator ei = begin(); ei != end(); ++ei) {
       const NeighborSet& nabrs = (*ei).second;
 
-      for (BoxSet::SetConstIterator ni = nabrs.setBegin();
+      for (BoxSet::OrderedConstIterator ni = nabrs.setBegin();
          ni != nabrs.setEnd(); ++ni) {
 
          const int rank = ni->getOwnerRank();

@@ -9,15 +9,15 @@
  ************************************************************************/
 
 #include "SAMRAI/hier/BoxContainer.h"
+#include "SAMRAI/hier/BoxContainerOrderedIterator.h"
 
-#include "SAMRAI/hier/BoxContainerSetIterator.h"
 
 namespace SAMRAI {
 namespace hier {
 
 SAMRAI_INLINE_KEYWORD
-BoxContainerSetConstIterator::BoxContainerSetConstIterator(
-   const BoxContainerSetConstIterator& other):
+BoxContainerOrderedConstIterator::BoxContainerOrderedConstIterator(
+   const BoxContainerOrderedConstIterator& other):
    d_box_container(other.d_box_container),
    d_set_iter(other.d_set_iter)
 {
@@ -25,8 +25,8 @@ BoxContainerSetConstIterator::BoxContainerSetConstIterator(
 
 
 SAMRAI_INLINE_KEYWORD
-BoxContainerSetConstIterator::BoxContainerSetConstIterator(
-   const BoxContainerSetIterator& other):
+BoxContainerOrderedConstIterator::BoxContainerOrderedConstIterator(
+   const BoxContainerOrderedIterator& other):
    d_box_container(other.d_box_container),
    d_set_iter(other.d_set_iter)
 {
@@ -34,64 +34,64 @@ BoxContainerSetConstIterator::BoxContainerSetConstIterator(
 
 
 SAMRAI_INLINE_KEYWORD
-BoxContainerSetConstIterator::~BoxContainerSetConstIterator()
+BoxContainerOrderedConstIterator::~BoxContainerOrderedConstIterator()
 {
 }
 
 SAMRAI_INLINE_KEYWORD
-const Box& BoxContainerSetConstIterator::operator * () const
+const Box& BoxContainerOrderedConstIterator::operator * () const
 {
    return **d_set_iter;
 }
 
 SAMRAI_INLINE_KEYWORD
-const Box* BoxContainerSetConstIterator::operator -> () const
+const Box* BoxContainerOrderedConstIterator::operator -> () const
 {
    return *d_set_iter;
 }
 
 SAMRAI_INLINE_KEYWORD
-const Box& BoxContainerSetConstIterator::operator () () const
+const Box& BoxContainerOrderedConstIterator::operator () () const
 {
    return **d_set_iter;
 }
 
 SAMRAI_INLINE_KEYWORD
-BoxContainerSetConstIterator::operator bool () const
+BoxContainerOrderedConstIterator::operator bool () const
 {
    return d_set_iter != d_box_container->setEnd().d_set_iter;
 }
 
 SAMRAI_INLINE_KEYWORD
-bool BoxContainerSetConstIterator::operator ! () const
+bool BoxContainerOrderedConstIterator::operator ! () const
 {
    return d_set_iter == d_box_container->setEnd().d_set_iter;
 }
 
 SAMRAI_INLINE_KEYWORD
-void BoxContainerSetConstIterator::operator ++ (
+void BoxContainerOrderedConstIterator::operator ++ (
    int)
 {
    d_set_iter++;
 }
 
 SAMRAI_INLINE_KEYWORD
-const BoxContainerSetConstIterator& BoxContainerSetConstIterator::operator ++ ()
+const BoxContainerOrderedConstIterator& BoxContainerOrderedConstIterator::operator ++ ()
 {
    ++d_set_iter;
    return *this;
 }
 
 SAMRAI_INLINE_KEYWORD
-bool BoxContainerSetConstIterator::operator == (
-   const BoxContainerSetConstIterator& other) const
+bool BoxContainerOrderedConstIterator::operator == (
+   const BoxContainerOrderedConstIterator& other) const
 {
    return d_set_iter == other.d_set_iter;
 }
 
 SAMRAI_INLINE_KEYWORD
-bool BoxContainerSetConstIterator::operator != (
-   const BoxContainerSetConstIterator& other) const
+bool BoxContainerOrderedConstIterator::operator != (
+   const BoxContainerOrderedConstIterator& other) const
 {
    return d_set_iter != other.d_set_iter;
 }

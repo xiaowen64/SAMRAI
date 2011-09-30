@@ -14,72 +14,72 @@ namespace SAMRAI {
 namespace hier {
 
 SAMRAI_INLINE_KEYWORD
-BoxContainerSetConstReverseIterator::BoxContainerSetConstReverseIterator(
-   const BoxContainerSetConstReverseIterator& other):
+BoxContainerOrderedConstReverseIterator::BoxContainerOrderedConstReverseIterator(
+   const BoxContainerOrderedConstReverseIterator& other):
    d_box_container(other.d_box_container),
    d_set_iter(other.d_set_iter)
 {
 }
 
 SAMRAI_INLINE_KEYWORD
-BoxContainerSetConstReverseIterator::~BoxContainerSetConstReverseIterator()
+BoxContainerOrderedConstReverseIterator::~BoxContainerOrderedConstReverseIterator()
 {
 }
 
 SAMRAI_INLINE_KEYWORD
-const Box& BoxContainerSetConstReverseIterator::operator * () const
+const Box& BoxContainerOrderedConstReverseIterator::operator * () const
 {
    return **d_set_iter;
 }
 
 SAMRAI_INLINE_KEYWORD
-const Box* BoxContainerSetConstReverseIterator::operator -> () const
+const Box* BoxContainerOrderedConstReverseIterator::operator -> () const
 {
    return *d_set_iter;
 }
 
 SAMRAI_INLINE_KEYWORD
-const Box& BoxContainerSetConstReverseIterator::operator () () const
+const Box& BoxContainerOrderedConstReverseIterator::operator () () const
 {
    return **d_set_iter;
 }
 
 SAMRAI_INLINE_KEYWORD
-BoxContainerSetConstReverseIterator::operator bool () const
+BoxContainerOrderedConstReverseIterator::operator bool () const
 {
    return d_set_iter != d_box_container->setREnd().d_set_iter;
 }
 
 SAMRAI_INLINE_KEYWORD
-bool BoxContainerSetConstReverseIterator::operator ! () const
+bool BoxContainerOrderedConstReverseIterator::operator ! () const
 {
    return d_set_iter == d_box_container->setREnd().d_set_iter;
 }
 
 SAMRAI_INLINE_KEYWORD
-void BoxContainerSetConstReverseIterator::operator ++ (
+void BoxContainerOrderedConstReverseIterator::operator ++ (
    int)
 {
    d_set_iter++;
 }
 
 SAMRAI_INLINE_KEYWORD
-const BoxContainerSetConstReverseIterator& BoxContainerSetConstReverseIterator::operator ++ ()
+const BoxContainerOrderedConstReverseIterator& BoxContainerOrderedConstReverseIterator::operator ++ ()
 {
    ++d_set_iter;
    return *this;
 }
 
 SAMRAI_INLINE_KEYWORD
-bool BoxContainerSetConstReverseIterator::operator == (
-   const BoxContainerSetConstReverseIterator& other) const
+bool BoxContainerOrderedConstReverseIterator::operator == (
+   const BoxContainerOrderedConstReverseIterator& other) const
 {
    return d_set_iter == other.d_set_iter;
 }
 
 SAMRAI_INLINE_KEYWORD
-bool BoxContainerSetConstReverseIterator::operator != (
-   const BoxContainerSetConstReverseIterator& other) const
+bool BoxContainerOrderedConstReverseIterator::operator != (
+   const BoxContainerOrderedConstReverseIterator& other) const
 {
    return d_set_iter != other.d_set_iter;
 }

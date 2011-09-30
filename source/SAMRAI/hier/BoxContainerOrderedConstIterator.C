@@ -8,30 +8,30 @@
  *
  ************************************************************************/
 
-#ifndef included_hier_BoxContainerSetConstReverseIterator_C
-#define included_hier_BoxContainerSetConstReverseIterator_C
+#ifndef included_hier_BoxContainerOrderedConstIterator_C
+#define included_hier_BoxContainerOrderedConstIterator_C
 
-#include "SAMRAI/hier/BoxContainerSetConstReverseIterator.h"
+#include "SAMRAI/hier/BoxContainerOrderedConstIterator.h"
 #include "SAMRAI/hier/BoxContainer.h"
 
 #ifndef SAMRAI_INLINE
-#include "SAMRAI/hier/BoxContainerSetConstReverseIterator.I"
+#include "SAMRAI/hier/BoxContainerOrderedConstIterator.I"
 #endif
 
 namespace SAMRAI {
 namespace hier {
 
-BoxContainerSetConstReverseIterator::BoxContainerSetConstReverseIterator(
+BoxContainerOrderedConstIterator::BoxContainerOrderedConstIterator(
    const BoxContainer& container,
-   bool from_back):
+   bool from_start):
    d_box_container(&container),
-   d_set_iter(from_back ? container.d_set.rbegin() :
-              container.d_set.rend())
+   d_set_iter(from_start ? container.d_set.begin() :
+              container.d_set.end())
 {
 }
 
-BoxContainerSetConstReverseIterator& BoxContainerSetConstReverseIterator::operator = (
-   const BoxContainerSetConstReverseIterator& rhs)
+BoxContainerOrderedConstIterator& BoxContainerOrderedConstIterator::operator = (
+   const BoxContainerOrderedConstIterator& rhs)
 {
    if (this != &rhs) {
       d_box_container = rhs.d_box_container;

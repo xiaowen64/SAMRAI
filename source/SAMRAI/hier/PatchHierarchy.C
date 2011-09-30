@@ -16,7 +16,7 @@
 #include <stdio.h>
 
 #include "SAMRAI/hier/BoxContainerIterator.h"
-#include "SAMRAI/hier/BoxContainerSetIterator.h"
+#include "SAMRAI/hier/BoxContainerOrderedIterator.h"
 #include "SAMRAI/hier/OverlapConnectorAlgorithm.h"
 #include "SAMRAI/hier/PeriodicShiftCatalog.h"
 #include "SAMRAI/hier/VariableDatabase.h"
@@ -704,7 +704,7 @@ void PatchHierarchy::setupDomainData()
    // Generate the non-periodic multiblock domain search tree.
    if (PeriodicShiftCatalog::getCatalog(d_dim)->isPeriodic()) {
       BoxSet multiblock_mapped_boxes_noperiodic(d_dim);
-      for (BoxSet::SetConstIterator ni = multiblock_mapped_boxes.setBegin();
+      for (BoxSet::OrderedConstIterator ni = multiblock_mapped_boxes.setBegin();
            ni != multiblock_mapped_boxes.setEnd(); ++ni) {
          if (!(*ni).isPeriodicImage()) {
             multiblock_mapped_boxes_noperiodic.insert(

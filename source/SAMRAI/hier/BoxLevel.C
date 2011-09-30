@@ -12,6 +12,8 @@
 
 #include "SAMRAI/hier/BoxLevel.h"
 
+#include "SAMRAI/hier/BoxContainerOrderedConstIterator.h"
+#include "SAMRAI/hier/BoxContainerOrderedIterator.h"
 #include "SAMRAI/hier/PeriodicShiftCatalog.h"
 #include "SAMRAI/hier/RealBoxConstIterator.h"
 #include "SAMRAI/tbox/MathUtilities.h"
@@ -316,7 +318,7 @@ void BoxLevel::initializePrivate(
    }
 
    // Erase non-local Boxes, if any, from d_mapped_boxes.
-   for (BoxSet::SetIterator mbi(d_mapped_boxes.setBegin());
+   for (BoxSet::OrderedIterator mbi(d_mapped_boxes.setBegin());
         mbi != d_mapped_boxes.setEnd(); /* incremented in loop */) {
       if (mbi->getOwnerRank() != d_mpi.getRank()) {
          d_mapped_boxes.erase(mbi++);
@@ -875,7 +877,7 @@ void BoxLevel::acquireRemoteBoxes_pack(
    int* ptr = &send_mesg[0] + old_size;
    *(ptr++) = static_cast<int>(d_mapped_boxes.size());
 
-   for (BoxSet::SetConstIterator i_mapped_boxes = d_mapped_boxes.setBegin();
+   for (BoxSet::OrderedConstIterator i_mapped_boxes = d_mapped_boxes.setBegin();
         i_mapped_boxes != d_mapped_boxes.setEnd();
         ++i_mapped_boxes) {
       (*i_mapped_boxes).putToIntBuffer(ptr);
@@ -920,7 +922,7 @@ void BoxLevel::acquireRemoteBoxes_unpack(
          }
 
       } else {
-         for (BoxContainer::SetConstIterator ni = d_mapped_boxes.setBegin();
+         for (BoxContainer::OrderedConstIterator ni = d_mapped_boxes.setBegin();
               ni != d_mapped_boxes.setEnd(); ++ni) {
             d_global_mapped_boxes.insert(*ni);
          }
@@ -936,7 +938,7 @@ void BoxLevel::acquireRemoteBoxes_unpack(
  ***********************************************************************
  */
 
-BoxSet::SetIterator BoxLevel::addBox(
+BoxSet::OrderedIterator BoxLevel::addBox(
    const Box& box,
    const BlockId& block_id,
    const bool use_vacant_index)
@@ -964,7 +966,7 @@ BoxSet::SetIterator BoxLevel::addBox(
 
    clearForBoxChanges(false);
 
-   BoxSet::SetIterator new_iterator(d_mapped_boxes);
+   BoxSet::OrderedIterator new_iterator(d_mapped_boxes);
 
    if (d_mapped_boxes.size() == 0) {
       Box new_mapped_box =
@@ -976,7 +978,7 @@ BoxSet::SetIterator BoxLevel::addBox(
       new_iterator = d_mapped_boxes.insert(d_mapped_boxes.setEnd(), new_mapped_box);
    } else {
       // Set new_index to one more than the largest index used.
-      BoxSet::SetIterator ni = d_mapped_boxes.setEnd();
+      BoxSet::OrderedIterator ni = d_mapped_boxes.setEnd();
       do {
          TBOX_ASSERT(ni != d_mapped_boxes.setBegin());   // There should not be all periodic images.
          --ni;
@@ -1166,7 +1168,7 @@ BoxLevel::addBox(
 
 void
 BoxLevel::eraseBox(
-   BoxSet::SetIterator& ibox)
+   BoxSet::OrderedIterator& ibox)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    if (d_parallel_state != DISTRIBUTED) {
@@ -1239,7 +1241,7 @@ BoxLevel::eraseBox(
 
    d_local_bounding_box_up_to_date = d_global_data_up_to_date = false;
 
-   BoxSet::SetIterator ibox = d_mapped_boxes.find(mapped_box);
+   BoxSet::OrderedIterator ibox = d_mapped_boxes.find(mapped_box);
    if (ibox == d_mapped_boxes.setEnd()) {
       TBOX_ERROR("BoxLevel::eraseBox: Box to be erased ("
          << mapped_box << ") is NOT a part of the BoxLevel.\n");
@@ -1290,7 +1292,7 @@ const
  */
 void BoxLevel::getGlobalBoxes(BoxList& global_boxes) const
 {
-   for (BoxSet::SetConstIterator itr = d_global_mapped_boxes.setBegin();
+   for (BoxSet::OrderedConstIterator itr = d_global_mapped_boxes.setBegin();
         itr != d_global_mapped_boxes.setEnd(); itr++) {
       global_boxes.pushBack(*itr);
    }
@@ -1456,7 +1458,7 @@ void BoxLevel::recursivePrint(
          /*
           * Print mapped_boxes from all ranks.
           */
-         for (BoxSet::SetConstIterator bi = d_global_mapped_boxes.setBegin();
+         for (BoxSet::OrderedConstIterator bi = d_global_mapped_boxes.setBegin();
               bi != d_global_mapped_boxes.setEnd();
               ++bi) {
             Box mapped_box = *bi;
@@ -1468,7 +1470,7 @@ void BoxLevel::recursivePrint(
          /*
           * Print local mapped_boxes only.
           */
-         for (BoxSet::SetConstIterator bi = d_mapped_boxes.setBegin();
+         for (BoxSet::OrderedConstIterator bi = d_mapped_boxes.setBegin();
               bi != d_mapped_boxes.setEnd();
               ++bi) {
             Box mapped_box = *bi;

@@ -8,10 +8,9 @@
  *
  ************************************************************************/
 
-#ifndef included_hier_BoxContainerSetConstReverseIterator
-#define included_hier_BoxContainerSetConstReverseIterator
+#ifndef included_hier_BoxContainerOrderedConstReverseIterator
+#define included_hier_BoxContainerOrderedConstReverseIterator
 
-#include "BoxContainer.h"
 
 #include <set>
 
@@ -19,13 +18,16 @@ namespace SAMRAI {
 namespace hier {
 
 
+class Box;
+class BoxContainer;
+
 /**
  * A mutable iterator over the boxes in a BoxContainer or the underlying boxes
  * in a BoxContainer.
  *
  * @see hier::BoxContainer
  */
-class BoxContainerSetConstReverseIterator
+class BoxContainerOrderedConstReverseIterator
 {
    friend class BoxContainer;
 
@@ -33,14 +35,14 @@ public:
    // Constructors.
 
    /*!
-    * @brief Constructor for the BoxContainerSetConstReverseIterator.
+    * @brief Constructor for the BoxContainerOrderedConstReverseIterator.
     *
     * The iterator will enumerate the boxes in the argument container.
     *
     * @param[in] container The container whose members are iterated.
     * @param[in] from_back true if iteration starts at back of container.
     */
-   explicit BoxContainerSetConstReverseIterator(
+   explicit BoxContainerOrderedConstReverseIterator(
       const BoxContainer& container,
       bool from_back = true);
 
@@ -49,24 +51,24 @@ public:
     *
     * @param[in] other
     */
-   BoxContainerSetConstReverseIterator(
-      const BoxContainerSetConstReverseIterator& other);
+   BoxContainerOrderedConstReverseIterator(
+      const BoxContainerOrderedConstReverseIterator& other);
 
    /*!
     * @brief Assignment operator.
     *
     * @param[in] rhs
     */
-   BoxContainerSetConstReverseIterator&
+   BoxContainerOrderedConstReverseIterator&
    operator = (
-      const BoxContainerSetConstReverseIterator& rhs);
+      const BoxContainerOrderedConstReverseIterator& rhs);
 
    // Destructor.
 
    /*!
     * @brief The destructor releases all storage.
     */
-   ~BoxContainerSetConstReverseIterator();
+   ~BoxContainerOrderedConstReverseIterator();
 
    // Operators.
 
@@ -114,7 +116,7 @@ public:
    /*!
     * @brief Pre-increment iterator to point to next box in the container.
     */
-   const BoxContainerSetConstReverseIterator&
+   const BoxContainerOrderedConstReverseIterator&
    operator ++ ();
 
    /*!
@@ -126,7 +128,7 @@ public:
     */
    bool
    operator == (
-      const BoxContainerSetConstReverseIterator& other) const;
+      const BoxContainerOrderedConstReverseIterator& other) const;
 
    /*!
     * @brief Determine if two iterators are not equivalent.
@@ -137,13 +139,13 @@ public:
     */
    bool
    operator != (
-      const BoxContainerSetConstReverseIterator& other) const;
+      const BoxContainerOrderedConstReverseIterator& other) const;
 
 private:
    /*
     * Default constructor just to be clear that there is none.
     */
-   BoxContainerSetConstReverseIterator();
+   BoxContainerOrderedConstReverseIterator();
 
    /*
     * The BoxContainer being iterated over.
@@ -161,7 +163,7 @@ private:
 }
 
 #ifdef SAMRAI_INLINE
-#include "SAMRAI/hier/BoxContainerSetConstReverseIterator.I"
+#include "SAMRAI/hier/BoxContainerOrderedConstReverseIterator.I"
 #endif
 
 #endif

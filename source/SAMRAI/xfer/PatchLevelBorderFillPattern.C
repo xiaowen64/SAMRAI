@@ -14,7 +14,7 @@
 #include "SAMRAI/xfer/PatchLevelBorderFillPattern.h"
 
 #include "SAMRAI/hier/BoxContainerIterator.h"
-#include "SAMRAI/hier/BoxContainerSetIterator.h"
+#include "SAMRAI/hier/BoxContainerOrderedIterator.h"
 #include "SAMRAI/hier/BoxList.h"
 #include "SAMRAI/hier/RealBoxConstIterator.h"
 #include "SAMRAI/hier/Box.h"
@@ -87,7 +87,7 @@ void PatchLevelBorderFillPattern::computeFillBoxesAndNeighborhoodSets(
       fill_boxes.front().grow(fill_ghost_width);
       const NeighborSet& nabrs =
          dst_to_dst.getNeighborSet(dst_mapped_box.getId());
-      for (NeighborSet::SetConstIterator na = nabrs.setBegin();
+      for (NeighborSet::OrderedConstIterator na = nabrs.setBegin();
            na != nabrs.setEnd(); ++na) {
          if (dst_mapped_box.getBlockId() == na->getBlockId()) {
             fill_boxes.removeIntersections(*na);

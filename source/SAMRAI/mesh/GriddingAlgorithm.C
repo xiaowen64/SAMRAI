@@ -16,9 +16,9 @@
 #include "SAMRAI/tbox/IEEE.h"
 #include "SAMRAI/tbox/RestartManager.h"
 #include "SAMRAI/hier/BoxContainerIterator.h"
-#include "SAMRAI/hier/BoxContainerSetIterator.h"
-#include "SAMRAI/hier/BoxUtilities.h"
+#include "SAMRAI/hier/BoxContainerOrderedIterator.h"
 #include "SAMRAI/hier/BoxLevelConnectorUtils.h"
+#include "SAMRAI/hier/BoxUtilities.h"
 #include "SAMRAI/hier/MappingConnectorAlgorithm.h"
 #include "SAMRAI/hier/OverlapConnectorAlgorithm.h"
 #include "SAMRAI/hier/PeriodicShiftCatalog.h"
@@ -2265,7 +2265,7 @@ void GriddingAlgorithm::checkNonrefinedTags(
       tbox::Pointer<pdat::CellData<int> > tag_data =
          patch->getPatchData(d_tag_indx);
       const NeighborSet& nabrs = (*ei).second;
-      for (NeighborSet::SetConstIterator na = nabrs.setBegin();
+      for (NeighborSet::OrderedConstIterator na = nabrs.setBegin();
            na != nabrs.end(); ++na) {
          const hier::Box& vio_mapped_box = *na;
          maxval = dataop.max(tag_data, vio_mapped_box);
@@ -2315,7 +2315,7 @@ void GriddingAlgorithm::checkOverlappingPatches(
       const hier::Box& mapped_box = *mapped_box_level.getBoxStrict(ei->first);
       const NeighborSet& nabrs = ei->second;
 
-      for (NeighborSet::SetConstIterator na = nabrs.setBegin();
+      for (NeighborSet::OrderedConstIterator na = nabrs.setBegin();
            na != nabrs.end() && !has_overlap;
            ++na) {
          const hier::Box& nabr = *na;
@@ -2614,7 +2614,7 @@ void GriddingAlgorithm::fillTagsFromBoxLevel(
          mapped_box_id,
          growth_in_tag_resolution);
 
-      for (NeighborSet::SetConstIterator
+      for (NeighborSet::OrderedConstIterator
            ni = neighbors.setBegin(); ni != neighbors.end(); ++ni) {
          const hier::Box& neighbor(*ni);
          hier::Box box = neighbor;
@@ -3444,7 +3444,7 @@ void GriddingAlgorithm::extendBoxesToDomainBoundary(
    hier::NeighborhoodSet before_eto_after(d_dim);
    hier::NeighborhoodSet after_eto_before(d_dim);
 
-   for (hier::BoxSet::SetConstIterator
+   for (hier::BoxSet::OrderedConstIterator
         nn = before_nodes.setBegin(); nn != before_nodes.end(); ++nn) {
       const hier::Box& before_mapped_box = *nn;
       hier::Box after_mapped_box = before_mapped_box;
@@ -3662,7 +3662,7 @@ void GriddingAlgorithm::computeNestingViolator(
    tbox::Pointer<hier::MultiblockBoxTree> refined_domain_search_tree =
       d_hierarchy->getDomainSearchTree().createRefinedTree(candidate.getRefinementRatio());
 
-   for (hier::BoxSet::SetConstIterator ni = candidate_mapped_boxes.setBegin();
+   for (hier::BoxSet::OrderedConstIterator ni = candidate_mapped_boxes.setBegin();
         ni != candidate_mapped_boxes.end(); ++ni) {
       const hier::Box& cmb = *ni;
       hier::BoxList addl_violators(cmb);
@@ -3686,7 +3686,7 @@ void GriddingAlgorithm::computeNestingViolator(
              */
             NeighborSet& current_violators =
                candidate_eto_violator.getNeighborSet(cmb_non_per_id, d_dim);
-            for (NeighborSet::SetConstIterator na =
+            for (NeighborSet::OrderedConstIterator na =
                     current_violators.setBegin();
                  na != current_violators.end() && !addl_violators.isEmpty();
                  ++na) {
@@ -3694,7 +3694,7 @@ void GriddingAlgorithm::computeNestingViolator(
             }
             if (!addl_violators.isEmpty()) {
                for (hier::BoxList::Iterator bi(addl_violators); bi; bi++) {
-                  hier::BoxSet::SetIterator new_violator = violator.addBox(
+                  hier::BoxSet::OrderedIterator new_violator = violator.addBox(
                         *bi, cmb.getBlockId());
                   current_violators.insert(*new_violator);
                }
@@ -3815,7 +3815,7 @@ void GriddingAlgorithm::computeProperNestingData(
          d_to_nesting_complement[ln - 1].getMPI());
       const hier::BoxSet& lnm1_complement_mapped_boxes =
          d_proper_nesting_complement[ln - 1].getBoxes();
-      for (hier::BoxSet::SetConstIterator ni =
+      for (hier::BoxSet::OrderedConstIterator ni =
               lnm1_complement_mapped_boxes.setBegin();
            ni != lnm1_complement_mapped_boxes.end(); ++ni) {
          hier::Box tmp_mapped_box = *ni;
@@ -3837,7 +3837,7 @@ void GriddingAlgorithm::computeProperNestingData(
          const NeighborSet& lnm1_nabrs = ei->second;
          NeighborSet& ln_nabrs =
             lnm1_eto_ln_complement.getNeighborSet(ei->first, d_dim);
-         for (NeighborSet::SetConstIterator na =
+         for (NeighborSet::OrderedConstIterator na =
                  lnm1_nabrs.setBegin();
               na != lnm1_nabrs.setEnd(); ++na) {
             hier::Box tmp_mapped_box = *na;
@@ -3974,7 +3974,7 @@ void GriddingAlgorithm::growBoxesWithinNestingDomain(
     * Box minus parts removed to satisfy nesting requirements.
     */
 
-   for (hier::BoxSet::SetConstIterator ni = new_mapped_boxes.setBegin();
+   for (hier::BoxSet::OrderedConstIterator ni = new_mapped_boxes.setBegin();
         ni != new_mapped_boxes.setEnd(); ++ni) {
       const hier::Box& omb = *ni;
       TBOX_ASSERT(!omb.isPeriodicImage());
@@ -3996,7 +3996,7 @@ void GriddingAlgorithm::growBoxesWithinNestingDomain(
       if (new_to_nesting_complement.hasNeighborSet(omb.getId())) {
          const NeighborSet& neighbors(
             new_to_nesting_complement.getNeighborSet(omb.getId()));
-         for (NeighborSet::SetConstIterator na(neighbors.setBegin());
+         for (NeighborSet::OrderedConstIterator na(neighbors.setBegin());
               na != neighbors.setEnd(); ++na) {
             nesting_domain.removeIntersections(*na);
          }

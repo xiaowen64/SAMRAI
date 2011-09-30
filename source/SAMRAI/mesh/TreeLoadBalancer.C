@@ -13,7 +13,7 @@
 
 #include "SAMRAI/mesh/TreeLoadBalancer.h"
 #include "SAMRAI/hier/BoxContainerIterator.h"
-#include "SAMRAI/hier/BoxContainerSetIterator.h"
+#include "SAMRAI/hier/BoxContainerOrderedIterator.h"
 #include "SAMRAI/hier/BoxUtilities.h"
 #include "SAMRAI/tbox/StartupShutdownManager.h"
 
@@ -347,6 +347,10 @@ void TreeLoadBalancer::loadBalanceBoxLevel(
       /*
        * Global reduction for total load and number of procs that has
        * any initial load.
+       *
+       * TODO: If there's more than one rank group, shouldn't this a
+       * global reduction for each rank group instead of a single one
+       * for all?
        */
       t_compute_global_load->start();
       if (d_mpi.getSize() > 1) {
@@ -619,7 +623,7 @@ void TreeLoadBalancer::mapOversizedBoxes(
 
    hier::LocalId next_available_index = unconstrained.getLastLocalId() + 1;
 
-   for (hier::BoxSet::SetConstIterator ni = unconstrained_mapped_boxes.setBegin();
+   for (hier::BoxSet::OrderedConstIterator ni = unconstrained_mapped_boxes.setBegin();
         ni != unconstrained_mapped_boxes.setEnd(); ++ni) {
 
       const hier::Box& mapped_box = *ni;
@@ -708,9 +712,8 @@ void TreeLoadBalancer::mapOversizedBoxes(
 
 /*
  *************************************************************************
- * Balance a mapped_box_level by using a single cycle of the tree load
+ * Balance a BoxLevel by using a single cycle of the tree load
  * balancer algorithm.
- *
  *************************************************************************
  */
 void TreeLoadBalancer::loadBalanceBoxLevel_rootCycle(
@@ -754,11 +757,15 @@ void TreeLoadBalancer::loadBalanceBoxLevel_rootCycle(
 
    comm_stage.setCommunicationWaitTimer(t_MPI_wait);
 
+
+   /*
+    * Compute the load for the group.  If this is the last cycle,
+    * the group must include all processes, and the group's load
+    * is the global sum load.  Else, use all-reduce to get the
+    * group load.
+    */
    t_compute_tree_load->start();
    if (cycle_number == number_of_cycles - 1) {
-      /*
-       * The last cycle must have all processors in one group.
-       */
       group_sum_load = global_sum_load;
    } else {
       switch (cycle_number) {
@@ -803,6 +810,7 @@ void TreeLoadBalancer::loadBalanceBoxLevel_rootCycle(
                  << "  " << group_avg_load
                  << std::endl;
    }
+
 
    /*
     * Before the last cycle, it is possible for the group average load
@@ -953,7 +961,7 @@ void TreeLoadBalancer::loadBalanceBoxLevel_rootCycle(
        * Local process is underloaded, so put all of unbalanced_mapped_box_level into
        * the balanced_mapped_box_level (and add more later).
        */
-      for (hier::BoxSet::SetConstIterator ni = unbalanced_mapped_boxes.setBegin();
+      for (hier::BoxSet::OrderedConstIterator ni = unbalanced_mapped_boxes.setBegin();
            ni != unbalanced_mapped_boxes.setEnd(); ++ni) {
          balanced_mapped_box_level.addBox(*ni);
       }
@@ -2175,7 +2183,6 @@ void TreeLoadBalancer::createBalanceSubgroups(
     * tree, d_degree = 2.
     */
    TBOX_ASSERT(d_degree == 2);
-   //tbox::BalancedDepthFirstTree bdfs(0, g_nproc - 1, g_rank, true);
    tbox::BalancedDepthFirstTree bdfs(0, g_nproc - 1, g_rank, true);
    num_children = bdfs.getNumberOfChildren();
    child_comms = new tbox::AsyncCommPeer<int>[num_children];
@@ -3368,57 +3375,6 @@ double TreeLoadBalancer::combinedBreakingPenalty(
 
 /*
  *************************************************************************
- * Compute the limiter function applied to box shape penalty when
- * cutting.  We limit the quality checks to boxes with a volume in a
- * certain range.  Outside the range, we relax the shape penalty to have
- * more freedom improve the load balance.
- *
- * We care most about box quality near box sizes near the
- * d_global_avg_load.  A box with volume well above this value is going
- * to be broken again, so we don't care yet about its shape.  A box with
- * volume well below this value is small enough to allow to have poor
- * form (we prefer not to restrict small boxes to good shapes, so we can
- * have more flexibility to improve load balance).
- *
- * The limiter is a function of the ratio x = box_volume/d_global_avg_load.
- *
- *   y^
- *    |
- *   1|
- *    |  / \
- *    | /  \
- *    |/    \
- *   b/      \
- *    |       \
- *    +------------>
- *        a    c   x
- *
- * It is piece-wise linear, passing through (x,y) coordinates (0,b),
- * (a,1), (c,0).  Typically a<1 and c>1.
- *
- * The values a, b, c are set by experimentation.
- *************************************************************************
- */
-
-double TreeLoadBalancer::shapePenaltyLimiter(
-   double box_volume) const
-{
-   TBOX_ASSERT(box_volume >= 0.0);
-   const double a = 0.5;
-   const double b = 1.0;
-   const double c = 1.5;
-   const double x = box_volume / d_global_avg_load;
-   const double rval = x < a ? b + x * (1 - b) / a : x <
-      c ? (c - x) / (c - a) : 0.0;
-   return rval;
-}
-
-
-
-#define TreeLoadBalancer_BalancePenaltyType 1
-
-/*
- *************************************************************************
  * Return non-dimensional volume-weighted balance penalty for
  * two containers of boxes and how imbalanced they are.
  *************************************************************************
@@ -3429,41 +3385,9 @@ double TreeLoadBalancer::computeBalancePenalty(
    const std::vector<hier::Box>& b,
    double imbalance) const
 {
-#if TreeLoadBalancer_BalancePenaltyType == 1
    NULL_USE(a);
    NULL_USE(b);
    return tbox::MathUtilities<double>::Abs(imbalance);
-
-#elif TreeLoadBalancer_BalancePenaltyType == 2
-   int total_volume = 0;
-   for (std::vector<hier::Box>::const_iterator bi = a.begin();
-        bi != a.end();
-        ++bi) {
-      total_volume += bi->size();
-   }
-   for (std::vector<hier::Box>::const_iterator bi = b.begin();
-        bi != b.end();
-        ++bi) {
-      total_volume += bi->size();
-   }
-   const double balance_penalty =
-      tbox::MathUtilities<double>::Abs(imbalance) / total_volume;
-   return balance_penalty;
-
-#elif TreeLoadBalancer_BalancePenaltyType == 3
-   NULL_USE(a);
-   NULL_USE(b);
-   return tbox::MathUtilities<double>::Abs(imbalance) / d_global_avg_load;
-
-#elif TreeLoadBalancer_BalancePenaltyType == 4
-   NULL_USE(a);
-   NULL_USE(b);
-   double balance_penalty = tbox::MathUtilities<double>::Abs(imbalance)
-      / d_global_avg_load;
-   balance_penalty += balance_penalty * balance_penalty;  // Add non-linear growth.
-   return balance_penalty;
-
-#endif
 }
 
 
@@ -3480,37 +3404,9 @@ double TreeLoadBalancer::computeBalancePenalty(
    const TransitSet& b,
    double imbalance) const
 {
-#if TreeLoadBalancer_BalancePenaltyType == 1
    NULL_USE(a);
    NULL_USE(b);
    return tbox::MathUtilities<double>::Abs(imbalance);
-
-#elif TreeLoadBalancer_BalancePenaltyType == 2
-   int total_volume = 0;
-   for (TransitSet::const_iterator bi = a.begin(); bi != a.end(); ++bi) {
-      total_volume += bi->mapped_box.size();
-   }
-   for (TransitSet::const_iterator bi = b.begin(); bi != b.end(); ++bi) {
-      total_volume += bi->mapped_box.size();
-   }
-   const double balance_penalty =
-      tbox::MathUtilities<double>::Abs(imbalance) / total_volume;
-   return balance_penalty;
-
-#elif TreeLoadBalancer_BalancePenaltyType == 3
-   NULL_USE(a);
-   NULL_USE(b);
-   return tbox::MathUtilities<double>::Abs(imbalance) / d_global_avg_load;
-
-#elif TreeLoadBalancer_BalancePenaltyType == 4
-   NULL_USE(a);
-   NULL_USE(b);
-   double balance_penalty = tbox::MathUtilities<double>::Abs(imbalance)
-      / d_global_avg_load;
-   balance_penalty += balance_penalty * balance_penalty;  // Add non-linear growth.
-   return balance_penalty;
-
-#endif
 }
 
 
@@ -3526,32 +3422,11 @@ double TreeLoadBalancer::computeBalancePenalty(
    const hier::Box& a,
    double imbalance) const
 {
-#if TreeLoadBalancer_BalancePenaltyType == 1
    NULL_USE(a);
    return tbox::MathUtilities<double>::Abs(imbalance);
-
-#elif TreeLoadBalancer_BalancePenaltyType == 2
-   int total_volume = a.size();
-   const double balance_penalty =
-      tbox::MathUtilities<double>::Abs(imbalance) / total_volume;
-   return balance_penalty;
-
-#elif TreeLoadBalancer_BalancePenaltyType == 3
-   NULL_USE(a);
-   return tbox::MathUtilities<double>::Abs(imbalance) / d_global_avg_load;
-
-#elif TreeLoadBalancer_BalancePenaltyType == 4
-   double balance_penalty = tbox::MathUtilities<double>::Abs(imbalance)
-      / d_global_avg_load;
-   balance_penalty += balance_penalty * balance_penalty;  // Add non-linear growth.
-   return balance_penalty;
-
-#endif
 }
 
 
-
-#define TreeLoadBalancer_SurfacePenaltyType 4
 
 /*
  *************************************************************************
@@ -3565,71 +3440,6 @@ double TreeLoadBalancer::computeSurfacePenalty(
    const std::vector<hier::Box>& a,
    const std::vector<hier::Box>& b) const
 {
-#if TreeLoadBalancer_SurfacePenaltyType == 1
-   double surface_area = 0;
-   for (std::vector<hier::Box>::const_iterator bi = a.begin();
-        bi != a.end();
-        ++bi) {
-      surface_area += computeBoxSurfaceArea(*bi);
-   }
-   for (std::vector<hier::Box>::const_iterator bi = b.begin();
-        bi != b.end();
-        ++bi) {
-      surface_area += computeBoxSurfaceArea(*bi);
-   }
-   double surface_penalty = pow(surface_area, (double)(d_dim) / (d_dim.getValue() - 1));
-   return surface_penalty;
-
-#elif TreeLoadBalancer_SurfacePenaltyType == 2
-   double surface_area = 0;
-   int total_volume = 0;
-   for (std::vector<hier::Box>::const_iterator bi = a.begin();
-        bi != a.end();
-        ++bi) {
-      int boxvol = bi->size();
-      surface_area += computeBoxSurfaceArea(*bi);
-      total_volume += boxvol;
-   }
-   for (std::vector<hier::Box>::const_iterator bi = b.begin();
-        bi != b.end();
-        ++bi) {
-      int boxvol = bi->size();
-      surface_area += computeBoxSurfaceArea(*bi);
-      total_volume += boxvol;
-   }
-   double best_surface = 2 * d_dim * pow(total_volume,
-                                         (double)(d_dim.getValue() - 1) / d_dim);
-   double surface_penalty = surface_area / best_surface - 1.0;
-   return surface_penalty;
-
-#elif TreeLoadBalancer_SurfacePenaltyType == 3
-   double surface_penalty = 0;
-   double total_volume = 0;
-   for (std::vector<hier::Box>::const_iterator bi = a.begin();
-        bi != a.end();
-        ++bi) {
-      int boxvol = bi->size();
-      double surface_area = computeBoxSurfaceArea(*bi);
-      double best_surface = 2 * d_dim * pow((double)boxvol,
-                                            (double)(d_dim.getValue() - 1) / d_dim);
-      surface_penalty += surface_area / best_surface - 1.0;
-      total_volume += boxvol;
-   }
-   for (std::vector<hier::Box>::const_iterator bi = b.begin();
-        bi != b.end();
-        ++bi) {
-      int boxvol = bi->size();
-      double surface_area = computeBoxSurfaceArea(*bi);
-      double best_surface = 2 * d_dim * pow((double)boxvol,
-                                            (double)(d_dim.getValue() - 1) / d_dim);
-      surface_penalty += surface_area / best_surface - 1.0;
-      total_volume += boxvol;
-   }
-   double relative_importance = d_global_avg_load / total_volume;
-   surface_penalty *= relative_importance;
-   return surface_penalty;
-
-#elif TreeLoadBalancer_SurfacePenaltyType == 4
    double surface_penalty = 0;
    for (std::vector<hier::Box>::const_iterator bi = a.begin();
         bi != a.end();
@@ -3642,9 +3452,6 @@ double TreeLoadBalancer::computeSurfacePenalty(
       surface_penalty += computeSurfacePenalty(*bi);
    }
    return surface_penalty;
-
-#else
-#endif
 }
 
 
@@ -3661,59 +3468,6 @@ double TreeLoadBalancer::computeSurfacePenalty(
    const TransitSet& a,
    const TransitSet& b) const
 {
-#if TreeLoadBalancer_SurfacePenaltyType == 1
-   double surface_area = 0;
-   for (TransitSet::const_iterator bi = a.begin(); bi != a.end(); ++bi) {
-      surface_area += computeBoxSurfaceArea(bi->mapped_box);
-   }
-   for (TransitSet::const_iterator bi = b.begin(); bi != b.end(); ++bi) {
-      surface_area += computeBoxSurfaceArea(bi->mapped_box);
-   }
-   double surface_penalty = pow(surface_area, (double)(d_dim) / (d_dim.getValue() - 1));
-   return surface_penalty;
-
-#elif TreeLoadBalancer_SurfacePenaltyType == 2
-   double surface_area = 0;
-   int total_volume = 0;
-   for (TransitSet::const_iterator bi = a.begin(); bi != a.end(); ++bi) {
-      int boxvol = bi->mapped_box.size();
-      surface_area += computeBoxSurfaceArea(bi->mapped_box);
-      total_volume += boxvol;
-   }
-   for (TransitSet::const_iterator bi = b.begin(); bi != b.end(); ++bi) {
-      int boxvol = bi->mapped_box.size();
-      surface_area += computeBoxSurfaceArea(bi->mapped_box);
-      total_volume += boxvol;
-   }
-   double best_surface = 2 * d_dim * pow(total_volume,
-                                         (double)(d_dim.getValue() - 1) / d_dim);
-   double surface_penalty = surface_area / best_surface - 1.0;
-   return surface_penalty;
-
-#elif TreeLoadBalancer_SurfacePenaltyType == 3
-   double surface_penalty = 0;
-   double total_volume = 0;
-   for (TransitSet::const_iterator bi = a.begin(); bi != a.end(); ++bi) {
-      int boxvol = bi->mapped_box.size();
-      double surface_area = computeBoxSurfaceArea(bi->mapped_box);
-      double best_surface = 2 * d_dim * pow((double)boxvol,
-                                            (double)(d_dim.getValue() - 1) / d_dim);
-      surface_penalty += surface_area / best_surface - 1.0;
-      total_volume += boxvol;
-   }
-   for (TransitSet::const_iterator bi = b.begin(); bi != b.end(); ++bi) {
-      int boxvol = bi->mapped_box.size();
-      double surface_area = computeBoxSurfaceArea(bi->mapped_box);
-      double best_surface = 2 * d_dim * pow((double)boxvol,
-                                            (double)(d_dim.getValue() - 1) / d_dim);
-      surface_penalty += surface_area / best_surface - 1.0;
-      total_volume += boxvol;
-   }
-   double relative_importance = d_global_avg_load / total_volume;
-   surface_penalty *= relative_importance;
-   return surface_penalty;
-
-#elif TreeLoadBalancer_SurfacePenaltyType == 4
    double surface_penalty = 0;
    for (TransitSet::const_iterator bi = a.begin(); bi != a.end(); ++bi) {
       surface_penalty += computeSurfacePenalty(bi->mapped_box);
@@ -3722,9 +3476,6 @@ double TreeLoadBalancer::computeSurfacePenalty(
       surface_penalty += computeSurfacePenalty(bi->mapped_box);
    }
    return surface_penalty;
-
-#else
-#endif
 }
 
 
@@ -3740,50 +3491,16 @@ double TreeLoadBalancer::computeSurfacePenalty(
 double TreeLoadBalancer::computeSurfacePenalty(
    const hier::Box& a) const
 {
-#if TreeLoadBalancer_SurfacePenaltyType == 1
-   double surface_area = computeBoxSurfaceArea(a);
-   double surface_penalty = pow(surface_area, (double)(d_dim) / (d_dim.getValue() - 1));
-   return surface_penalty;
-
-#elif TreeLoadBalancer_SurfacePenaltyType == 2
-   if (d_dim == tbox::Dimension(1)) {
-      return 0.0;
-   }
-   double surface_area = computeBoxSurfaceArea(a);
-   int total_volume = a.size();
-   double best_surface = 2 * d_dim * pow(total_volume,
-                                         (double)(d_dim.getValue() - 1) / d_dim);
-   double surface_penalty = surface_area / best_surface - 1.0;
-   return surface_penalty;
-
-#elif TreeLoadBalancer_SurfacePenaltyType == 3
-   int boxvol = a.size();
-   double surface_area = computeBoxSurfaceArea(a);
-   double best_surface = 2 * d_dim * pow((double)boxvol,
-                                         (double)(d_dim.getValue() - 1) / d_dim);
-   double surface_penalty = surface_area / best_surface - 1.0;
-   double total_volume = boxvol;
-   double relative_importance = d_global_avg_load / total_volume;
-   surface_penalty *= relative_importance;
-   return surface_penalty;
-
-#elif TreeLoadBalancer_SurfacePenaltyType == 4
    int boxvol = a.size();
    double surface_area = computeBoxSurfaceArea(a);
    double best_surface = 2 * d_dim.getValue() * pow((double)boxvol,
          (double)(d_dim.getValue() - 1) / d_dim.getValue());
    double surface_penalty = surface_area / best_surface - 1.0;
    surface_penalty = surface_penalty * surface_penalty; // Make it blow up.
-   // double shape_penalty_limiter = shapePenaltyLimiter(boxvol);
-   // surface_penalty *= shape_penalty_limiter;
    return surface_penalty;
-
-#endif
 }
 
 
-
-#define TreeLoadBalancer_SlenderPenaltyType 4
 
 /*
  *************************************************************************
@@ -3797,58 +3514,6 @@ double TreeLoadBalancer::computeSlenderPenalty(
    const std::vector<hier::Box>& a,
    const std::vector<hier::Box>& b) const
 {
-#if TreeLoadBalancer_SlenderPenaltyType == 1
-   double slender_penalty = 0;
-   int total_volume = 0;
-   for (std::vector<hier::Box>::const_iterator bi = a.begin();
-        bi != a.end();
-        ++bi) {
-      const hier::IntVector boxdim = bi->numberCells();
-      double slender = (double)boxdim.max() / boxdim.min() - 1.0;
-      const int boxvol = boxdim.getProduct();
-      slender_penalty += boxvol * slender;
-      total_volume += boxvol;
-   }
-   for (std::vector<hier::Box>::const_iterator bi = b.begin();
-        bi != b.end();
-        ++bi) {
-      const hier::IntVector boxdim = bi->numberCells();
-      double slender = (double)boxdim.max() / boxdim.min() - 1.0;
-      const int boxvol = boxdim.getProduct();
-      slender_penalty += boxvol * slender;
-      total_volume += boxvol;
-   }
-   slender_penalty /= total_volume;
-   // tbox::plog << " volume-weighted boxes has slender = " << slender_penalty << std::endl;
-   return slender_penalty;
-
-#elif TreeLoadBalancer_SlenderPenaltyType == 3
-   double slender_penalty = 0;
-   double total_volume = 0;
-   for (std::vector<hier::Box>::const_iterator bi = a.begin();
-        bi != a.end();
-        ++bi) {
-      const hier::IntVector boxdim = bi->numberCells();
-      slender_penalty += tbox::MathUtilities<double>::Min(0.0,
-            (double)boxdim.max() / boxdim.min() - 1.0
-            - d_slender_penalty_threshold);
-      total_volume += boxdim.getProduct();
-   }
-   for (std::vector<hier::Box>::const_iterator bi = b.begin();
-        bi != b.end();
-        ++bi) {
-      const hier::IntVector boxdim = bi->numberCells();
-      slender_penalty += (double)boxdim.max() / boxdim.min() - 1.0;
-      slender_penalty += tbox::MathUtilities<double>::Min(0.0,
-            (double)boxdim.max() / boxdim.min() - 1.0
-            - d_slender_penalty_threshold);
-      total_volume += boxdim.getProduct();
-   }
-   double relative_importance = d_global_avg_load / total_volume;
-   slender_penalty *= relative_importance;
-   return slender_penalty;
-
-#elif TreeLoadBalancer_SlenderPenaltyType == 4
    double slender_penalty = 0;
    for (std::vector<hier::Box>::const_iterator bi = a.begin();
         bi != a.end();
@@ -3861,8 +3526,6 @@ double TreeLoadBalancer::computeSlenderPenalty(
       slender_penalty += computeSlenderPenalty(*bi);
    }
    return slender_penalty;
-
-#endif
 }
 
 
@@ -3879,49 +3542,6 @@ double TreeLoadBalancer::computeSlenderPenalty(
    const TransitSet& a,
    const TransitSet& b) const
 {
-#if TreeLoadBalancer_SlenderPenaltyType == 1
-   double slender_penalty = 0;
-   int total_volume = 0;
-   for (TransitSet::const_iterator bi = a.begin(); bi != a.end(); ++bi) {
-      const hier::IntVector boxdim = bi->mapped_box.numberCells();
-      double slender = (double)boxdim.max() / boxdim.min() - 1.0;
-      const int boxvol = boxdim.getProduct();
-      slender_penalty += boxvol * slender;
-      total_volume += boxvol;
-   }
-   for (TransitSet::const_iterator bi = b.begin(); bi != b.end(); ++bi) {
-      const hier::IntVector boxdim = bi->mapped_box.numberCells();
-      double slender = (double)boxdim.max() / boxdim.min() - 1.0;
-      const int boxvol = boxdim.getProduct();
-      slender_penalty += boxvol * slender;
-      total_volume += boxvol;
-   }
-   slender_penalty /= total_volume;
-   // tbox::plog << " volume-weighted boxes has slender = " << slender_penalty << std::endl;
-   return slender_penalty;
-
-#elif TreeLoadBalancer_SlenderPenaltyType == 3
-   double slender_penalty = 0;
-   double total_volume = 0;
-   for (TransitSet::const_iterator bi = a.begin(); bi != a.end(); ++bi) {
-      const hier::IntVector boxdim = bi->mapped_box.numberCells();
-      slender_penalty += tbox::MathUtilities<double>::Min(0.0,
-            (double)boxdim.max() / boxdim.min() - 1.0
-            - d_slender_penalty_threshold);
-      total_volume += boxdim.getProduct();
-   }
-   for (TransitSet::const_iterator bi = b.begin(); bi != b.end(); ++bi) {
-      const hier::IntVector boxdim = bi->mapped_box.numberCells();
-      slender_penalty += tbox::MathUtilities<double>::Min(0.0,
-            (double)boxdim.max() / boxdim.min() - 1.0
-            - d_slender_penalty_threshold);
-      total_volume += boxdim.getProduct();
-   }
-   double relative_importance = d_global_avg_load / total_volume;
-   slender_penalty *= relative_importance;
-   return slender_penalty;
-
-#elif TreeLoadBalancer_SlenderPenaltyType == 4
    double slender_penalty = 0;
    for (TransitSet::const_iterator bi = a.begin(); bi != a.end(); ++bi) {
       slender_penalty += computeSlenderPenalty(bi->mapped_box);
@@ -3930,9 +3550,6 @@ double TreeLoadBalancer::computeSlenderPenalty(
       slender_penalty += computeSlenderPenalty(bi->mapped_box);
    }
    return slender_penalty;
-
-#else
-#endif
 }
 
 
@@ -3948,34 +3565,10 @@ double TreeLoadBalancer::computeSlenderPenalty(
 double TreeLoadBalancer::computeSlenderPenalty(
    const hier::Box& a) const
 {
-#if TreeLoadBalancer_SlenderPenaltyType == 1
    const hier::IntVector boxdim = a.numberCells();
-   double slender = (double)boxdim.max() / boxdim.min() - 1.0;
-   // tbox::plog << "box " << a << " dims " << boxdim << " has slender = " << slender << std::endl;
-   return slender;
-
-#elif TreeLoadBalancer_SlenderPenaltyType == 3
-   const hier::IntVector boxdim = a.numberCells();
-   double total_volume = boxdim.getProduct();
-   double slender_penalty = (double)boxdim.max() / boxdim.min() - 1.0;
-   slender_penalty = tbox::MathUtilities<double>::Min(0.0,
-         slender_penalty - d_slender_penalty_threshold);
-   // tbox::plog << "box " << a << " dims " << boxdim << " has slender = " << slender << std::endl;
-   double relative_importance = d_global_avg_load / total_volume;
-   slender_penalty *= relative_importance;
-   return slender_penalty;
-
-#elif TreeLoadBalancer_SlenderPenaltyType == 4
-   const hier::IntVector boxdim = a.numberCells();
-   // double total_volume = boxdim.getProduct();
    double slender_penalty = (double)boxdim.max() / boxdim.min() - 1.0;
    slender_penalty = slender_penalty * slender_penalty; // Make it blow up.
-   // tbox::plog << "box " << a << " dims " << boxdim << " has slender_penalty = " << slender << std::endl;
-   // double shape_penalty_limiter = shapePenaltyLimiter(total_volume);
-   // slender_penalty *= shape_penalty_limiter;
    return slender_penalty;
-
-#endif
 }
 
 
@@ -4093,7 +3686,7 @@ double TreeLoadBalancer::computeLocalLoads(
    // Count up workload.
    double load = 0.0;
    const hier::BoxSet& mapped_boxes = mapped_box_level.getBoxes();
-   for (hier::BoxSet::SetConstIterator ni = mapped_boxes.setBegin();
+   for (hier::BoxSet::OrderedConstIterator ni = mapped_boxes.setBegin();
         ni != mapped_boxes.setEnd();
         ++ni) {
       double mapped_box_load = computeLoad(*ni);
@@ -4860,6 +4453,9 @@ void TreeLoadBalancer::unsetShadowData() const {
 
 /*
 **************************************************************************
+* Move Boxes in balance_mapped_box_level from ranks outside of
+* rank_group to ranks inside rank_group.  Modify the given connectors
+* to make them correct following this moving of boxes.
 **************************************************************************
 */
 
@@ -4990,7 +4586,7 @@ void TreeLoadBalancer::prebalanceBoxLevel(
       const hier::BoxSet& unchanged_mapped_boxes =
          balance_mapped_box_level.getBoxes();
 
-      for (hier::BoxSet::SetConstIterator ni =
+      for (hier::BoxSet::OrderedConstIterator ni =
               unchanged_mapped_boxes.setBegin();
            ni != unchanged_mapped_boxes.end(); ++ni) {
 
@@ -5012,7 +4608,7 @@ void TreeLoadBalancer::prebalanceBoxLevel(
 
       int* buffer = new int[buf_size * num_sending_boxes];
       int box_count = 0;
-      for (hier::BoxSet::SetConstIterator ni = sending_mapped_boxes.setBegin();
+      for (hier::BoxSet::OrderedConstIterator ni = sending_mapped_boxes.setBegin();
            ni != sending_mapped_boxes.setEnd(); ++ni) {
 
          const hier::Box& mapped_box = *ni;
@@ -5050,7 +4646,7 @@ void TreeLoadBalancer::prebalanceBoxLevel(
 
                   mapped_box.getFromIntBuffer(&buffer[b * buf_size]);
 
-                  hier::BoxSet::SetIterator tmp_iter =
+                  hier::BoxSet::OrderedIterator tmp_iter =
                      tmp_mapped_box_level.addBox(mapped_box,
                         mapped_box.getBlockId());
 
@@ -5095,7 +4691,7 @@ void TreeLoadBalancer::prebalanceBoxLevel(
       TBOX_ASSERT(static_cast<unsigned int>(id_recv->getRecvSize()) == sending_mapped_boxes.size());
 
       int box_count = 0;
-      for (hier::BoxSet::SetConstIterator ni =
+      for (hier::BoxSet::OrderedConstIterator ni =
               sending_mapped_boxes.setBegin();
            ni != sending_mapped_boxes.setEnd(); ++ni) {
 

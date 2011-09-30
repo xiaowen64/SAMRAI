@@ -28,9 +28,9 @@ namespace hier {
 
 class BoxContainerIterator;
 class BoxContainerConstIterator;
-class BoxContainerSetIterator;
-class BoxContainerSetConstIterator;
-class BoxContainerSetConstReverseIterator;
+class BoxContainerOrderedIterator;
+class BoxContainerOrderedConstIterator;
+class BoxContainerOrderedConstReverseIterator;
 class BoxTree;
 #ifdef MB_BOXTREE_EXISTS
 class MultiblockBoxTree;
@@ -50,9 +50,9 @@ class BoxContainer
 {
 friend class BoxContainerIterator;
 friend class BoxContainerConstIterator;
-friend class BoxContainerSetIterator;
-friend class BoxContainerSetConstIterator;
-friend class BoxContainerSetConstReverseIterator;
+friend class BoxContainerOrderedIterator;
+friend class BoxContainerOrderedConstIterator;
+friend class BoxContainerOrderedConstReverseIterator;
 
 public:
    // Typedefs.
@@ -66,9 +66,9 @@ public:
     * @brief The const iterator for class BoxContainer.
     */
    typedef BoxContainerConstIterator ConstIterator;
-   typedef BoxContainerSetIterator SetIterator;
-   typedef BoxContainerSetConstIterator SetConstIterator;
-   typedef BoxContainerSetConstReverseIterator SetConstReverseIterator;
+   typedef BoxContainerOrderedIterator OrderedIterator;
+   typedef BoxContainerOrderedConstIterator OrderedConstIterator;
+   typedef BoxContainerOrderedConstReverseIterator OrderedConstReverseIterator;
 
    // Constructors.
 
@@ -358,12 +358,12 @@ public:
       return d_set_created;
    }
 
-   SetConstIterator setBegin() const;
-   SetConstIterator setEnd() const;
-   SetConstReverseIterator setRBegin() const;
-   SetConstReverseIterator setREnd() const;
-   SetIterator setBegin();
-   SetIterator setEnd();
+   OrderedConstIterator setBegin() const;
+   OrderedConstIterator setEnd() const;
+   OrderedConstReverseIterator setRBegin() const;
+   OrderedConstReverseIterator setREnd() const;
+   OrderedIterator setBegin();
+   OrderedIterator setEnd();
 
    bool insert(const Box& box)
    {
@@ -381,19 +381,19 @@ public:
       }
    }
 
-   BoxContainerSetIterator insert ( BoxContainerSetIterator position,
+   BoxContainerOrderedIterator insert ( BoxContainerOrderedIterator position,
                                     const Box& box );
 
-   void insert ( BoxContainerSetConstIterator first,
-                 BoxContainerSetConstIterator last );
+   void insert ( BoxContainerOrderedConstIterator first,
+                 BoxContainerOrderedConstIterator last );
 
-   BoxContainerSetIterator find(const Box& box) const;
-   BoxContainerSetIterator lower_bound(const Box& box) const;
-   BoxContainerSetIterator upper_bound(const Box& box) const;
-   void erase(BoxContainerSetIterator iter);
+   BoxContainerOrderedIterator find(const Box& box) const;
+   BoxContainerOrderedIterator lower_bound(const Box& box) const;
+   BoxContainerOrderedIterator upper_bound(const Box& box) const;
+   void erase(BoxContainerOrderedIterator iter);
    int erase(const Box& box);
-   void erase(BoxContainerSetIterator first,
-              BoxContainerSetIterator last);
+   void erase(BoxContainerOrderedIterator first,
+              BoxContainerOrderedIterator last);
 
    void
    swap(BoxContainer& other);

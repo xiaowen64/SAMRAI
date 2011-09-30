@@ -10,8 +10,9 @@
 
 #include "SAMRAI/hier/BoxContainerIterator.h"
 #include "SAMRAI/hier/BoxContainerConstIterator.h"
-#include "SAMRAI/hier/BoxContainerSetIterator.h"
-#include "SAMRAI/hier/BoxContainerSetConstReverseIterator.h"
+#include "SAMRAI/hier/BoxContainerOrderedConstIterator.h"
+#include "SAMRAI/hier/BoxContainerOrderedConstReverseIterator.h"
+#include "SAMRAI/hier/BoxContainerOrderedIterator.h"
 #include "SAMRAI/hier/PeriodicShiftCatalog.h"
 #include "SAMRAI/tbox/Utilities.h"
 
@@ -227,49 +228,49 @@ bool BoxContainer::operator != (const BoxContainer& rhs) const
 }
 
 SAMRAI_INLINE_KEYWORD
-BoxContainerSetConstIterator BoxContainer::setBegin() const
+BoxContainer::OrderedConstIterator BoxContainer::setBegin() const
 {
    TBOX_ASSERT(d_set_created || size() == 0);
-   return BoxContainerSetConstIterator(*this);
+   return OrderedConstIterator(*this);
 }
 
 SAMRAI_INLINE_KEYWORD
-BoxContainerSetConstIterator BoxContainer::setEnd() const
+BoxContainer::OrderedConstIterator BoxContainer::setEnd() const
 {
    TBOX_ASSERT(d_set_created || size() == 0);
-   return BoxContainerSetConstIterator(*this, false);
+   return OrderedConstIterator(*this, false);
 }
 
 SAMRAI_INLINE_KEYWORD
-BoxContainerSetConstReverseIterator BoxContainer::setRBegin() const
+BoxContainer::OrderedConstReverseIterator BoxContainer::setRBegin() const
 {
    TBOX_ASSERT(d_set_created || size() == 0);
-   return BoxContainerSetConstReverseIterator(*this);
+   return OrderedConstReverseIterator(*this);
 }
 
 SAMRAI_INLINE_KEYWORD
-BoxContainerSetConstReverseIterator BoxContainer::setREnd() const
+BoxContainer::OrderedConstReverseIterator BoxContainer::setREnd() const
 {
    TBOX_ASSERT(d_set_created || size() == 0);
-   return BoxContainerSetConstReverseIterator(*this, false);
+   return OrderedConstReverseIterator(*this, false);
 }
 
 SAMRAI_INLINE_KEYWORD
-BoxContainerSetIterator BoxContainer::setBegin()
+BoxContainer::OrderedIterator BoxContainer::setBegin()
 {
    if (!d_set_created) {
       makeSet();
    }
-   return BoxContainerSetIterator(*this);
+   return OrderedIterator(*this);
 }
 
 SAMRAI_INLINE_KEYWORD
-BoxContainerSetIterator BoxContainer::setEnd()
+BoxContainer::OrderedIterator BoxContainer::setEnd()
 {
    if (!d_set_created) {
       makeSet();
    }
-   return BoxContainerSetIterator(*this, false);
+   return OrderedIterator(*this, false);
 }
 
 SAMRAI_INLINE_KEYWORD
@@ -292,7 +293,7 @@ void BoxContainer::separatePeriodicImages(
                                          getZeroShiftNumber());
 
       real_mapped_box_vector.reserve(real_mapped_box_vector.size() + size());
-      for (BoxContainerSetConstIterator ni = setBegin(); ni != setEnd(); ++ni) {
+      for (OrderedConstIterator ni = setBegin(); ni != setEnd(); ++ni) {
          const Box& mapped_box = *ni;
          if (mapped_box.getPeriodicId() == zero_shift_number) {
             real_mapped_box_vector.push_back(*ni);

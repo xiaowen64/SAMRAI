@@ -81,9 +81,9 @@ OBJS = 	\
 	Transformation.o \
 	BoxContainerIterator.o \
 	BoxContainerConstIterator.o \
-	BoxContainerSetConstIterator.o \
-	BoxContainerSetConstReverseIterator.o \
-	BoxContainerSetIterator.o
+	BoxContainerOrderedConstIterator.o \
+	BoxContainerOrderedConstReverseIterator.o \
+	BoxContainerOrderedIterator.o
 
 library: $(OBJS)
 	for DIR in $(SUBDIRS); do if test -d $$DIR; then (cd $$DIR && $(MAKE) $@) ; fi || exit 1; done

@@ -587,7 +587,7 @@ void CoarsenSchedule::generateScheduleDLBG()
        * Construct transactions for data going from local source mapped_boxes
        * to remote coarse mapped_boxes.
        */
-      for (hier::BoxSet::SetConstIterator ni =
+      for (hier::BoxSet::OrderedConstIterator ni =
               local_temp_mapped_boxes.setBegin();
            ni != local_temp_mapped_boxes.setEnd(); ++ni) {
          const hier::Box& temp_mapped_box = *ni;
@@ -620,7 +620,7 @@ void CoarsenSchedule::generateScheduleDLBG()
          *coarse_mapped_box_level.getBoxStrict(dst_gid);
 
       const hier::BoxSet& src_mapped_boxes = ei->second;
-      for (hier::BoxSet::SetConstIterator ni = src_mapped_boxes.setBegin();
+      for (hier::BoxSet::OrderedConstIterator ni = src_mapped_boxes.setBegin();
            ni != src_mapped_boxes.setEnd(); ++ni) {
          const hier::Box& src_mapped_box = *ni;
 
@@ -677,7 +677,7 @@ void CoarsenSchedule::restructureNeighborhoodSetsByDstNodes(
       const hier::Box& mapped_box =
          *src_mapped_box_level.getBoxStrict(ci->first);
       const NeighborSet& nabrs = ci->second;
-      for (NeighborSet::SetConstIterator na = nabrs.setBegin();
+      for (NeighborSet::OrderedConstIterator na = nabrs.setBegin();
            na != nabrs.setEnd(); ++na) {
          const hier::Box& nabr = *na;
          if (nabr.isPeriodicImage()) {

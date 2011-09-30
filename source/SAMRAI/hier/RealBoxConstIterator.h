@@ -12,11 +12,12 @@
 
 #include "SAMRAI/SAMRAI_config.h"
 
-#include "SAMRAI/hier/BoxContainerSetConstIterator.h"
 #include "SAMRAI/hier/BoxSet.h"
+#include "SAMRAI/hier/BoxContainerOrderedConstIterator.h"
 
 namespace SAMRAI {
 namespace hier {
+
 
 /*
  * TODO: Do we really need a separate class for this?  Couldn't we just
@@ -131,7 +132,7 @@ private:
    /*!
     * @brief The iterator.
     */
-   BoxSet::SetConstIterator d_ni;
+   BoxSet::OrderedConstIterator d_ni;
 
 };
 

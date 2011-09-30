@@ -13,8 +13,8 @@
 
 #include "SAMRAI/xfer/PatchLevelBorderAndInteriorFillPattern.h"
 #include "SAMRAI/hier/BoxContainerIterator.h"
-#include "SAMRAI/hier/BoxContainerSetIterator.h"
-#include "SAMRAI/hier/BoxContainerSetConstIterator.h"
+#include "SAMRAI/hier/BoxContainerOrderedConstIterator.h"
+#include "SAMRAI/hier/BoxContainerOrderedIterator.h"
 #include "SAMRAI/hier/BoxList.h"
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/tbox/MathUtilities.h"
@@ -84,7 +84,7 @@ PatchLevelBorderAndInteriorFillPattern::computeFillBoxesAndNeighborhoodSets(
     * normally filled by coarser mapped_box_level.)
     */
    hier::LocalId last_id = dst_mapped_box_level.getLastLocalId();
-   for (hier::BoxSet::SetConstIterator ni = dst_mapped_boxes.setBegin();
+   for (hier::BoxSet::OrderedConstIterator ni = dst_mapped_boxes.setBegin();
         ni != dst_mapped_boxes.setEnd(); ++ni) {
 
       const hier::BoxId& gid(ni->getId());
@@ -95,7 +95,7 @@ PatchLevelBorderAndInteriorFillPattern::computeFillBoxesAndNeighborhoodSets(
       const NeighborSet& nabrs =
          dst_to_dst.getNeighborSet(dst_mapped_box.getId());
 
-      for (NeighborSet::SetConstIterator na = nabrs.setBegin();
+      for (NeighborSet::OrderedConstIterator na = nabrs.setBegin();
            na != nabrs.setEnd(); ++na) {
          if (!ni->isSpatiallyEqual(*na)) {
             if (dst_mapped_box.getBlockId() == na->getBlockId()) {

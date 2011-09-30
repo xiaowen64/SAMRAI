@@ -13,9 +13,8 @@
 
 #include "SAMRAI/hier/MultiblockBoxTree.h"
 #include "SAMRAI/hier/GridGeometry.h"
-#include "SAMRAI/hier/BoxContainerSetConstIterator.h"
-#include "SAMRAI/hier/BoxContainerSetIterator.h"
-#include "SAMRAI/hier/BoxList.h"
+#include "SAMRAI/hier/BoxContainerOrderedConstIterator.h"
+#include "SAMRAI/hier/BoxContainerOrderedIterator.h"
 #include "SAMRAI/tbox/MathUtilities.h"
 #include "SAMRAI/tbox/SAMRAI_MPI.h"
 #include "SAMRAI/tbox/SAMRAIManager.h"
@@ -55,7 +54,7 @@ MultiblockBoxTree::MultiblockBoxTree(
     */
 
    std::map<BlockId, BoxSet> mapped_boxes_by_block;
-   for (BoxSet::SetConstIterator bi = mapped_boxes.setBegin();
+   for (BoxSet::OrderedConstIterator bi = mapped_boxes.setBegin();
         bi != mapped_boxes.setEnd(); ++bi) {
 
       const BlockId& block_id = bi->getBlockId();
@@ -162,7 +161,7 @@ void MultiblockBoxTree::generateTree(
     * BlockId.
     */
    std::map<BlockId, BoxSet> mapped_boxes_by_block;
-   for (BoxSet::SetConstIterator bi = mapped_boxes.setBegin();
+   for (BoxSet::OrderedConstIterator bi = mapped_boxes.setBegin();
         bi != mapped_boxes.setEnd(); ++bi) {
 
       const BlockId& block_id = bi->getBlockId();

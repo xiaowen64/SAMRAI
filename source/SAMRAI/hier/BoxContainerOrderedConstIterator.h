@@ -8,16 +8,17 @@
  *
  ************************************************************************/
 
-#ifndef included_hier_BoxContainerSetConstIterator
-#define included_hier_BoxContainerSetConstIterator
-
-#include "BoxContainer.h"
+#ifndef included_hier_BoxContainerOrderedConstIterator
+#define included_hier_BoxContainerOrderedConstIterator
 
 #include <set>
 
 namespace SAMRAI {
 namespace hier {
 
+class Box;
+class BoxContainer;
+class BoxContainerOrderedIterator;
 
 /**
  * A mutable iterator over the boxes in a BoxContainer or the underlying boxes
@@ -25,23 +26,23 @@ namespace hier {
  *
  * @see hier::BoxContainer
  */
-class BoxContainerSetConstIterator
+class BoxContainerOrderedConstIterator
 {
    friend class BoxContainer;
-   friend class BoxContainerSetIterator;
+   friend class BoxContainerOrderedIterator;
 
 public:
    // Constructors.
 
    /*!
-    * @brief Constructor for the BoxContainerSetConstIterator.
+    * @brief Constructor for the BoxContainerOrderedConstIterator.
     *
     * The iterator will enumerate the boxes in the argument container.
     *
     * @param[in] container The container whose members are iterated.
     * @param[in] from_start true if iteration starts at front of container.
     */
-   explicit BoxContainerSetConstIterator(
+   explicit BoxContainerOrderedConstIterator(
       const BoxContainer& container,
       bool from_start = true);
 
@@ -50,20 +51,20 @@ public:
     *
     * @param[in] other
     */
-   BoxContainerSetConstIterator(
-      const BoxContainerSetConstIterator& other);
+   BoxContainerOrderedConstIterator(
+      const BoxContainerOrderedConstIterator& other);
 
-   BoxContainerSetConstIterator(
-      const BoxContainerSetIterator& other);
+   BoxContainerOrderedConstIterator(
+      const BoxContainerOrderedIterator& other);
 
    /*!
     * @brief Assignment operator.
     *
     * @param[in] rhs
     */
-   BoxContainerSetConstIterator&
+   BoxContainerOrderedConstIterator&
    operator = (
-      const BoxContainerSetConstIterator& rhs);
+      const BoxContainerOrderedConstIterator& rhs);
 
 
    // Destructor.
@@ -71,7 +72,7 @@ public:
    /*!
     * @brief The destructor releases all storage.
     */
-   ~BoxContainerSetConstIterator();
+   ~BoxContainerOrderedConstIterator();
 
    // Operators.
 
@@ -119,7 +120,7 @@ public:
    /*!
     * @brief Pre-increment iterator to point to next box in the container.
     */
-   const BoxContainerSetConstIterator&
+   const BoxContainerOrderedConstIterator&
    operator ++ ();
 
    /*!
@@ -131,7 +132,7 @@ public:
     */
    bool
    operator == (
-      const BoxContainerSetConstIterator& other) const;
+      const BoxContainerOrderedConstIterator& other) const;
 
    /*!
     * @brief Determine if two iterators are not equivalent.
@@ -142,13 +143,13 @@ public:
     */
    bool
    operator != (
-      const BoxContainerSetConstIterator& other) const;
+      const BoxContainerOrderedConstIterator& other) const;
 
 private:
    /*
     * Default constructor just to be clear that there is none.
     */
-   BoxContainerSetConstIterator();
+   BoxContainerOrderedConstIterator();
 
    /*
     * The BoxContainer being iterated over.
@@ -166,7 +167,7 @@ private:
 }
 
 #ifdef SAMRAI_INLINE
-#include "SAMRAI/hier/BoxContainerSetConstIterator.I"
+#include "SAMRAI/hier/BoxContainerOrderedConstIterator.I"
 #endif
 
 #endif

@@ -13,8 +13,8 @@
 #include "SAMRAI/hier/BoxLevelConnectorUtils.h"
 
 #include "SAMRAI/hier/BoxContainerIterator.h"
-#include "SAMRAI/hier/BoxContainerSetIterator.h"
-#include "SAMRAI/hier/BoxContainerSetConstIterator.h"
+#include "SAMRAI/hier/BoxContainerOrderedIterator.h"
+#include "SAMRAI/hier/BoxContainerOrderedConstIterator.h"
 #include "SAMRAI/hier/BoxSetSingleBlockIterator.h"
 #include "SAMRAI/hier/MappingConnectorAlgorithm.h"
 #include "SAMRAI/hier/OverlapConnectorAlgorithm.h"
@@ -220,7 +220,7 @@ bool BoxLevelConnectorUtils::baseNestsInHead(
    } else {
       const BoxSet& base_mapped_boxes = base.getBoxes();
       BoxSet swelledbase_mapped_boxes(dim);
-      for (BoxSet::SetConstIterator ni = base_mapped_boxes.setBegin();
+      for (BoxSet::OrderedConstIterator ni = base_mapped_boxes.setBegin();
            ni != base_mapped_boxes.setEnd(); ++ni) {
          Box swelledbase_mapped_box(*ni);
          swelledbase_mapped_box.grow(base_swell);
@@ -243,7 +243,7 @@ bool BoxLevelConnectorUtils::baseNestsInHead(
 
       BoxSet swelledhead_mapped_boxes(dim);
 
-      for (BoxSet::SetConstIterator ni = head_mapped_boxes.setBegin();
+      for (BoxSet::OrderedConstIterator ni = head_mapped_boxes.setBegin();
            ni != head_mapped_boxes.setEnd(); ++ni) {
          Box swelledhead_mapped_box = *ni;
 
@@ -453,7 +453,7 @@ void BoxLevelConnectorUtils::makeSortingMap(
        * new LocalId.  In finding the image mapped_boxes, we use the fact
        * that a real mapped_box's image follows the real mapped_box in a BoxSet.
        */
-      BoxSet::SetConstIterator ini = cur_mapped_boxes.find(cur_mapped_box);
+      BoxSet::OrderedConstIterator ini = cur_mapped_boxes.find(cur_mapped_box);
       TBOX_ASSERT(ini != cur_mapped_boxes.setEnd());
       ++ini; // Skip the real mapped_box to look for its image mapped_boxes.
       while (ini != cur_mapped_boxes.setEnd() &&
@@ -1163,7 +1163,7 @@ void BoxLevelConnectorUtils::makeRemainderMap(
 
    const NeighborhoodSet& orig_eto_rejection = orig_to_rejection.getNeighborhoodSets();
 
-   for (BoxSet::SetConstIterator ni = orig_nodes.setBegin();
+   for (BoxSet::OrderedConstIterator ni = orig_nodes.setBegin();
         ni != orig_nodes.setEnd(); ++ni) {
 
       const Box& orig_node = *ni;
@@ -1209,7 +1209,7 @@ void BoxLevelConnectorUtils::makeRemainderMap(
 
          BoxList remaining_parts_list(orig_node);
 
-         for (Connector::NeighborSet::SetConstIterator
+         for (Connector::NeighborSet::OrderedConstIterator
               vi = rejections.setBegin(); vi != rejections.setEnd(); ++vi) {
             remaining_parts_list.removeIntersections((*vi));
          }
