@@ -343,8 +343,8 @@ void TreeLoadBalancer::loadBalanceBoxLevel(
 
    {
       /*
-       * Global reduction for total load and number of procs that has
-       * any initial load.
+       * Determine the total load and number of processes that has any
+       * initial load.
        *
        * TODO: If there's more than one rank group, shouldn't this a
        * global reduction for each rank group instead of a single one
@@ -378,17 +378,21 @@ void TreeLoadBalancer::loadBalanceBoxLevel(
    }
 
 
-
    d_global_avg_load = global_sum_load / rank_group.size();
 
+
+   /*
+    * User can set the number of cycles to use (see n_root_cycles
+    * input parameter), or leave it negative to let this class set it
+    * automatically using the following heuristic algorithm:
+    *
+    * Use 1 cycle unless too few (less than sqrt(nproc)) processors
+    * own the initial load.  Exception: use 1 cycle if nproc is small.
+    */
    int number_of_cycles = d_n_root_cycles;
    if (number_of_cycles < 0) {
       /*
        * User requested automatic number of cycles.
-       *
-       * Heuristic algorithm: Use 1 cycle unless too few (less than
-       * sqrt(nproc)) processors own the initial load.  Exception: use
-       * 1 cycle if nproc is small.
        */
       if (balance_mapped_box_level.getMPI().getSize() < 64 ||
           int(nproc_with_initial_load * nproc_with_initial_load) >
@@ -399,11 +403,26 @@ void TreeLoadBalancer::loadBalanceBoxLevel(
       }
    }
 
-   // Temporary object.
+
+
+   /*
+    * The loop through number_of_cycles spreads out the work each time
+    * through.  If using more than one cycle, only the last one tries
+    * to balance across all of d_mpi.
+    *
+    * 1.  Rebalance balance_mapped_box_level and store in temporary
+    *     tmp_mapped_box_level.
+    *
+    * 2.  Use the balancing map to modify connectors to anchor.
+    *
+    * 3.  Reset balance_mapped_box_level to tmp_mapped_box_level.
+    */
+
    hier::BoxLevel tmp_mapped_box_level(d_dim);
 
    for (int n = 0; n < number_of_cycles; ++n) {
 
+      // If not the first cycle, local_load needs to be updated.
       if (n > 0) {
          t_compute_local_load->start();
          local_load = computeLocalLoads(balance_mapped_box_level);
@@ -420,47 +439,34 @@ void TreeLoadBalancer::loadBalanceBoxLevel(
             balance_mapped_box_level.getMPI());
       }
 
-      bool using_this_rank = rank_group.isMember(d_mpi.getRank());
 
       /*
-       * 1.  Rebalance balance_mapped_box_level and store in temporary tmp_mapped_box_level.
-       * 2.  Use the balancing map to modify connectors to anchor.
-       * 3.  Reset balance_mapped_box_level to tmp_mapped_box_level.
+       * Compute the load-balancing map.
        */
+
       hier::Connector balance_to_tmp, tmp_to_balance;
       t_get_map->start();
-      if (using_this_rank) {
-         loadBalanceBoxLevel_rootCycle(n,
-            number_of_cycles,
-            local_load,
-            global_sum_load,
-            balance_mapped_box_level,
-            rank_group,
-            tmp_mapped_box_level,
-            balance_to_tmp,
-            tmp_to_balance);
-      } else {
-         //initialize empty last 3 args
-         //NOTE: Why can't this happen in loadBalanceBoxLevel_rootCycle by degeneration?
-         tmp_mapped_box_level.initialize(
-            balance_mapped_box_level.getRefinementRatio(),
-            balance_mapped_box_level.getGridGeometry(),
-            balance_mapped_box_level.getMPI());
-         balance_to_tmp.initialize(
-            balance_mapped_box_level,
-            tmp_mapped_box_level,
-            hier::IntVector::getZero(d_dim));
-         tmp_to_balance.initialize(
-            tmp_mapped_box_level,
-            balance_mapped_box_level,
-            hier::IntVector::getZero(d_dim));
-      }
+      loadBalanceBoxLevel_rootCycle(n,
+                                    number_of_cycles,
+                                    local_load,
+                                    global_sum_load,
+                                    balance_mapped_box_level,
+                                    rank_group,
+                                    tmp_mapped_box_level,
+                                    balance_to_tmp,
+                                    tmp_to_balance);
       if (d_barrier_after) {
          t_barrier_after->start();
          d_mpi.Barrier();
          t_barrier_after->stop();
       }
       t_get_map->stop();
+
+
+
+      /*
+       * Apply the load-balancing map.
+       */
 
       t_use_map->start();
       if (anchor_to_balance.isInitialized()) {
@@ -505,11 +511,13 @@ void TreeLoadBalancer::loadBalanceBoxLevel(
 
    }
 
+
    /*
     * If max_size is given (positive), constrain boxes to the given
     * max_size.  If not given, skip the enforcement step to save some
     * communications.
     */
+
    if (max_size > hier::IntVector::getZero(d_dim)) {
       t_constrain_size->start();
       hier::Connector unconstrained_to_constrained;
@@ -533,6 +541,11 @@ void TreeLoadBalancer::loadBalanceBoxLevel(
                     << "\n";
       }
    }
+
+
+   /*
+    * Finished load balancing.  Clean up and wrap up.
+    */
 
    unsetShadowData();
 
@@ -713,6 +726,10 @@ void TreeLoadBalancer::mapOversizedBoxes(
  *************************************************************************
  * Balance a BoxLevel by using a single cycle of the tree load
  * balancer algorithm.
+ *
+ * If the local process is not a member of the rank_group, it does not
+ * participate in the work and just sets the output objects to be
+ * locally empty.
  *************************************************************************
  */
 void TreeLoadBalancer::loadBalanceBoxLevel_rootCycle(
@@ -729,6 +746,23 @@ void TreeLoadBalancer::loadBalanceBoxLevel_rootCycle(
    TBOX_DIM_ASSERT_CHECK_DIM_ARGS2(d_dim,
       unbalanced_mapped_box_level,
       balanced_mapped_box_level);
+
+   if ( !rank_group.isMember(d_mpi.getRank()) ) {
+      // initialize empty last 3 args
+      balanced_mapped_box_level.initialize(
+         unbalanced_mapped_box_level.getRefinementRatio(),
+         unbalanced_mapped_box_level.getGridGeometry(),
+         unbalanced_mapped_box_level.getMPI());
+      balanced_to_unbalanced.initialize(
+         balanced_mapped_box_level,
+         unbalanced_mapped_box_level,
+         hier::IntVector::getZero(d_dim));
+      unbalanced_to_balanced.initialize(
+         unbalanced_mapped_box_level,
+         balanced_mapped_box_level,
+         hier::IntVector::getZero(d_dim));
+      return;
+   }
 
    const bool last_cycle = (cycle_number == number_of_cycles-1);
 
