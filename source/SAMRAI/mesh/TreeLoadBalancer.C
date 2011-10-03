@@ -377,8 +377,9 @@ void TreeLoadBalancer::loadBalanceBoxLevel(
       }
    }
 
-   int output_nproc = rank_group.size();
-   d_global_avg_load = global_sum_load / output_nproc;
+
+
+   d_global_avg_load = global_sum_load / rank_group.size();
 
    int number_of_cycles = d_n_root_cycles;
    if (number_of_cycles < 0) {
@@ -440,6 +441,7 @@ void TreeLoadBalancer::loadBalanceBoxLevel(
             tmp_to_balance);
       } else {
          //initialize empty last 3 args
+         //NOTE: Why can't this happen in loadBalanceBoxLevel_rootCycle by degeneration?
          tmp_mapped_box_level.initialize(
             balance_mapped_box_level.getRefinementRatio(),
             balance_mapped_box_level.getGridGeometry(),
@@ -728,7 +730,40 @@ void TreeLoadBalancer::loadBalanceBoxLevel_rootCycle(
       unbalanced_mapped_box_level,
       balanced_mapped_box_level);
 
-   const tbox::SAMRAI_MPI &mpi(unbalanced_mapped_box_level.getMPI());
+   const bool last_cycle = (cycle_number == number_of_cycles-1);
+
+
+   /*
+    * The RankGroup describes the subset of processes in d_mpi within
+    * which we are to load balance.
+    *
+    * This method balances within the given rank_group, or subgroup it
+    * into cycle_rank_group based on the cycle number.  If given a
+    * rank_group with less than all ranks, we treat it as a specific
+    * user request and just use it.  Otherwise, we will sub-group
+    * based on the cycle number.
+    *
+    * The objective of balancing over multiple cycles is to avoid
+    * unscalable performance in the cases where just a few processes
+    * own all the initial load.  By slowly spreading out the load, no
+    * process has to set up Connector unbalanced_to_balanced with
+    * number of relationships that scales with the machine size.
+    */
+
+   const tbox::RankGroup *use_rank_group = &rank_group;
+   int num_groups = 1;
+   int group_num = 0;
+
+   tbox::RankGroup cycle_rank_group(d_mpi);
+   if ( !last_cycle && rank_group.containsAllRanks() ) {
+      createBalanceRankGroupBasedOnCycles(
+         cycle_rank_group,
+         num_groups,
+         group_num,
+         cycle_number,
+         number_of_cycles);
+      use_rank_group = &cycle_rank_group;
+   }
 
    tbox::AsyncCommStage comm_stage;
    tbox::AsyncCommPeer<int>* child_comms = NULL;
@@ -736,23 +771,45 @@ void TreeLoadBalancer::loadBalanceBoxLevel_rootCycle(
    tbox::AsyncCommPeer<int>* parent_recv = NULL;
    int num_children = 0;
 
-   int g_count, g_id, g_rank, g_nproc;
-   createBalanceSubgroups(cycle_number,
-      number_of_cycles,
-      rank_group,
-      g_count,
-      g_id,
-      g_rank,
-      g_nproc,
+   setupAsyncCommObjects(
       num_children,
       child_comms,
       parent_send,
       parent_recv,
-      comm_stage);
+      comm_stage,
+      *use_rank_group);
 
-   double group_sum_load, group_avg_load;
+   if(1) {
+      // Temporary test code.  Delete soon.
+      int test_num_children, test_num_groups, test_group_num, test_g_rank, test_g_nproc;
+      tbox::AsyncCommStage test_comm_stage;
+      tbox::AsyncCommPeer<int>* test_child_comms = NULL;
+      tbox::AsyncCommPeer<int>* test_parent_send = NULL;
+      tbox::AsyncCommPeer<int>* test_parent_recv = NULL;
+      createBalanceSubgroups(cycle_number,
+                             number_of_cycles,
+                             rank_group,
+                             test_num_groups,
+                             test_group_num,
+                             test_g_rank,
+                             test_g_nproc,
+                             test_num_children,
+                             test_child_comms,
+                             test_parent_send,
+                             test_parent_recv,
+                             test_comm_stage);
+      assert( num_groups == test_num_groups );
+      assert( group_num == test_group_num );
+      assert( num_children == test_num_children );
+      assert( bool(parent_send) == bool(test_parent_send) );
+      assert( bool(parent_recv) == bool(test_parent_recv) );
+      assert( bool(child_comms) == bool(test_child_comms) );
+      for ( int i=0; i<num_children; ++i ) {
+         assert( bool(child_comms) == bool(test_child_comms) );
+         assert( child_comms[i].getPeerRank() == test_child_comms[i].getPeerRank() );
+      }
+   }
 
-   comm_stage.setCommunicationWaitTimer(t_MPI_wait);
 
 
    /*
@@ -761,10 +818,14 @@ void TreeLoadBalancer::loadBalanceBoxLevel_rootCycle(
     * is the global sum load.  Else, use all-reduce to get the
     * group load.
     */
+
+   double group_sum_load, group_avg_load;
+
    t_compute_tree_load->start();
    if (cycle_number == number_of_cycles - 1) {
       group_sum_load = global_sum_load;
    } else {
+
       switch (cycle_number) {
          case 0: t_compute_tree_load0->start();
             break;
@@ -773,20 +834,22 @@ void TreeLoadBalancer::loadBalanceBoxLevel_rootCycle(
          case 2: t_compute_tree_load2->start();
             break;
       }
+
       /*
        * Use MPI's vector all-reduce to get individual group loads.
        * This gives more info than the process needs, but because the
        * number of groups << number of procs, it is still faster
        * (probably) than hand coded conmunication.
        */
-      std::vector<double> group_loads(g_count, 0.0);
-      group_loads[g_id] = local_load;
-      if (mpi.getSize() > 1) {
-         mpi.AllReduce(&group_loads[0],
+      std::vector<double> group_loads(num_groups, 0.0);
+      group_loads[group_num] = local_load;
+      if (d_mpi.getSize() > 1) {
+         d_mpi.AllReduce(&group_loads[0],
             static_cast<int>(group_loads.size()),
             MPI_SUM);
       }
-      group_sum_load = group_loads[g_id];
+      group_sum_load = group_loads[group_num];
+
       switch (cycle_number) {
          case 0: t_compute_tree_load0->stop();
             break;
@@ -795,10 +858,11 @@ void TreeLoadBalancer::loadBalanceBoxLevel_rootCycle(
          case 2: t_compute_tree_load2->stop();
             break;
       }
+
    }
    t_compute_tree_load->stop();
 
-   group_avg_load = group_sum_load / g_nproc;
+   group_avg_load = group_sum_load / rank_group.size();
 
    if (d_print_steps) {
       tbox::plog << "Initial local,group_sum,group_avg loads:"
@@ -821,7 +885,7 @@ void TreeLoadBalancer::loadBalanceBoxLevel_rootCycle(
    group_avg_load =
       tbox::MathUtilities<double>::Max(group_avg_load, d_global_avg_load);
 
-   // List of all ranks we communicate with.
+   // peer_ranks list of all ranks we communicate with.
    std::vector<int> peer_ranks(num_children + 1);
    for (int i = 0; i < num_children; ++i) {
       peer_ranks[i] = child_comms[i].getPeerRank();
@@ -1026,7 +1090,7 @@ void TreeLoadBalancer::loadBalanceBoxLevel_rootCycle(
          tbox::plog << "    Unassigning " << unassigned.size()
                     << " boxes (" << actual_transfer << " / "
                     << ideal_transfer << " units) "
-                    << "for " << (g_nproc - 1) << " procs:";
+                    << "for " << (num_groups - 1) << " procs:";
          for (TransitSet::const_iterator
               ni = unassigned.begin(); ni != unassigned.end(); ++ni) {
             tbox::plog << "  " << *ni;
@@ -1158,7 +1222,7 @@ void TreeLoadBalancer::loadBalanceBoxLevel_rootCycle(
                        << " boxes (" << actual_transfer << " / "
                        << ideal_transfer << " units) to parent "
                        << parent_send->getPeerRank() << " for "
-                       << (g_nproc - my_load_data.num_procs) << " procs:";
+                       << (num_groups - my_load_data.num_procs) << " procs:";
             for (TransitSet::const_iterator
                  ni = my_load_data.for_export.begin();
                  ni != my_load_data.for_export.end(); ++ni) {
@@ -2026,6 +2090,156 @@ void TreeLoadBalancer::freeMPICommunicator()
 
 /*
  *************************************************************************
+ * RankGroups load-balances within their membership and ignore other
+ * groups.  When we balance over multiple cycles, the RankGroup for
+ * the local process depends on the cycle, as computed by this method.
+ *
+ * The RankGroup size increases exponentially with the cycle number
+ * such that for the last cycle the rank group includes all processes
+ * in d_mpi.  It's a heuristic formula, as follows:
+ *
+ * Partition all ranks into similar sized groups.  With each cycle,
+ * the group size grows exponentially while the number of groups
+ * shrinks.  The last cycle_number has a single group of
+ * d_mpi.getSize() processors.
+ *
+ * Let m = number of cycles
+ * i = cycle number, [0,m)
+ * p = communicator size
+ *
+ * The group size is p^((i+1)/m)
+ *************************************************************************
+ */
+void TreeLoadBalancer::createBalanceRankGroupBasedOnCycles(
+   tbox::RankGroup &rank_group,
+   int &num_groups,
+   int &group_num,
+   const int cycle_number,
+   const int number_of_cycles) const
+{
+
+   /*
+    * Compute the number of group and, implicitly, the group sizes.
+    * Tiny groups tend to leave the members with possibly large
+    * overloads.  In order to make all groups similar in size we round
+    * down the number of groups (and round up the group size).
+    */
+   num_groups =
+      (int)pow((double)d_mpi.getSize(),
+               1.0 - double(cycle_number + 1) / number_of_cycles);
+
+   /*
+    * All groups will have a nominal population count of
+    * d_mpi.getSize()/num_groups.  The remainder from the integer
+    * division is distributed to a subset of groups, starting from
+    * group 0, so these groups will have one more than nominal.
+    */
+   const int nominal_group_size = d_mpi.getSize() / num_groups;
+   const int first_nominal_sized_group = d_mpi.getSize() % num_groups;
+   const int first_rank_in_nominal_sized_group = first_nominal_sized_group * (1 + nominal_group_size);
+
+   if (d_mpi.getRank() < first_rank_in_nominal_sized_group) {
+      group_num = d_mpi.getRank() / (1 + nominal_group_size);
+      const int group_first_rank = group_num * (1 +nominal_group_size);
+      rank_group.setMinMax( group_first_rank,
+                            group_first_rank + nominal_group_size );
+   } else {
+      group_num = first_nominal_sized_group
+         + (d_mpi.getRank() - first_rank_in_nominal_sized_group) / nominal_group_size;
+      const int group_first_rank = first_rank_in_nominal_sized_group +
+         (group_num - first_nominal_sized_group)*(1+nominal_group_size);
+      rank_group.setMinMax( group_first_rank,
+                            group_first_rank + nominal_group_size - 1 );
+   }
+
+   return;
+}
+
+
+
+/*
+ *************************************************************************
+ * Set up the asynchronous communication objects for the process tree
+ * containing ranks defined by the RankGroup.
+ *
+ * The process tree lay-out is defined by the BalancedDepthFirstTree
+ * class, thus defining parent and children of the local process.
+ * This method sets the AsyncCommPeer objects for communication with
+ * children and parent.
+ *************************************************************************
+ */
+void TreeLoadBalancer::setupAsyncCommObjects(
+   int& num_children,
+   tbox::AsyncCommPeer<int> *& child_comms,
+   tbox::AsyncCommPeer<int> *& parent_send,
+   tbox::AsyncCommPeer<int> *& parent_recv,
+   tbox::AsyncCommStage& comm_stage,
+   const tbox::RankGroup &rank_group ) const
+{
+   comm_stage.setCommunicationWaitTimer(t_MPI_wait);
+
+   child_comms = parent_send = parent_recv = NULL;
+
+   /*
+    * Arrange the group ranks in a BalancedDepthFirstTree in order to get
+    * the parent/children in the group.
+    *
+    * By the way, the BalancedDepthFirstTree currently assumes a binary
+    * tree, d_degree = 2.
+    */
+   TBOX_ASSERT(d_degree == 2);
+   // FIXME: BalancedDepthFirstTree could use a constructor that takes a RankGroup.
+   tbox::BalancedDepthFirstTree bdfs(0,
+                                     rank_group.size()-1,
+                                     rank_group.getMapIndex(d_mpi.getRank()),
+                                     true);
+
+   num_children = bdfs.getNumberOfChildren();
+
+   if ( num_children > 0 ) {
+      child_comms = new tbox::AsyncCommPeer<int>[num_children];
+      for (int child_num = 0; child_num < num_children; ++child_num) {
+         const int child_rank_in_grp = bdfs.getChildRank(child_num);
+         const int child_true_rank = rank_group.getMappedRank(child_rank_in_grp);
+         child_comms[child_num].initialize(&comm_stage);
+         child_comms[child_num].setPeerRank(child_true_rank);
+         child_comms[child_num].setMPI(d_mpi);
+         child_comms[child_num].setMPITag(TreeLoadBalancer_LOADTAG0,
+                                          TreeLoadBalancer_LOADTAG1);
+         child_comms[child_num].limitFirstDataLength(TreeLoadBalancer_FIRSTDATALEN);
+      }
+   }
+
+   if (bdfs.getParentRank() != bdfs.getInvalidRank()) {
+
+      const int parent_rank_in_grp = bdfs.getParentRank();
+      int parent_true_rank = rank_group.getMappedRank(parent_rank_in_grp);
+
+      parent_send = new tbox::AsyncCommPeer<int>;
+      parent_send->initialize(&comm_stage);
+      parent_send->setPeerRank(parent_true_rank);
+      parent_send->setMPI(d_mpi);
+      parent_send->setMPITag(TreeLoadBalancer_LOADTAG0,
+         TreeLoadBalancer_LOADTAG1);
+      parent_send->limitFirstDataLength(TreeLoadBalancer_FIRSTDATALEN);
+
+      parent_recv = new tbox::AsyncCommPeer<int>;
+      parent_recv->initialize(&comm_stage);
+      parent_recv->setPeerRank(parent_true_rank);
+      parent_recv->setMPI(d_mpi);
+      parent_recv->setMPITag(TreeLoadBalancer_LOADTAG0,
+         TreeLoadBalancer_LOADTAG1);
+      parent_recv->limitFirstDataLength(TreeLoadBalancer_FIRSTDATALEN);
+
+   }
+
+   return;
+}
+
+
+
+/*
+ *************************************************************************
  * Divide all ranks into groups.  With each cycle,
  * the group size grows geometrically while the number of groups
  * shrink geometrically.
@@ -2094,6 +2308,7 @@ void TreeLoadBalancer::createBalanceSubgroups(
       g_nproc = d_mpi.getSize();
       g_id = 0;
       g_rank = 0;
+      num_children = 0;
       return;
    }
 
@@ -2176,7 +2391,9 @@ void TreeLoadBalancer::createBalanceSubgroups(
    TBOX_ASSERT(d_degree == 2);
    tbox::BalancedDepthFirstTree bdfs(0, g_nproc - 1, g_rank, true);
    num_children = bdfs.getNumberOfChildren();
-   child_comms = new tbox::AsyncCommPeer<int>[num_children];
+   if ( num_children > 0 ) {
+      child_comms = new tbox::AsyncCommPeer<int>[num_children];
+   }
    for (int i = 0; i < num_children; ++i) {
       const int child_g_rank = bdfs.getChildRank(i);
       int child_true_rank;

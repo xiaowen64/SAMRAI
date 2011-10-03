@@ -802,6 +802,50 @@ private:
       hier::Connector& unconstrained_to_constrained) const;
 
    /*!
+    * @brief Create the cycle-based RankGroups the local process
+    * belongs in.
+    *
+    * The RankGroup size increases exponentially with the cycle
+    * number such that for the last cycle the rank group includes
+    * all processes in d_mpi.
+    *
+    * @param [o] rank_group
+    * @param [o] num_groups
+    * @param [o] group_num
+    * @param [i] cycle_number
+    * @param [i] number_of_cycles
+    */
+   void createBalanceRankGroupBasedOnCycles(
+      tbox::RankGroup &rank_group,
+      int &num_groups,
+      int &group_num,
+      const int cycle_number,
+      const int number_of_cycles) const;
+
+   /*!
+    * @brief Set up the asynchronous communication objects for the
+    * given RankGroup.
+    *
+    * Based on a conceptual process tree with num_children children,
+    * set the AsyncCommPeer objects for communication with children
+    * and parent.
+    *
+    * @param [o] num_children
+    * @param [o] child_comms
+    * @param [o] parent_send
+    * @param [o] parent_recv
+    * @param [i/o] parent_recv
+    * @param [i] rank_group
+    */
+   void setupAsyncCommObjects(
+      int& num_children,
+      tbox::AsyncCommPeer<int> *& child_comms,
+      tbox::AsyncCommPeer<int> *& parent_send,
+      tbox::AsyncCommPeer<int> *& parent_recv,
+      tbox::AsyncCommStage& comm_stage,
+      const tbox::RankGroup &rank_group ) const;
+
+   /*!
     * @brief Create the rank groups that load-balances within their membership
     * and ignores other groups.
     */
