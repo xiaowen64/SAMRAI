@@ -779,37 +779,6 @@ void TreeLoadBalancer::loadBalanceBoxLevel_rootCycle(
       comm_stage,
       *use_rank_group);
 
-   if(1) {
-      // Temporary test code.  Delete soon.
-      int test_num_children, test_num_groups, test_group_num, test_g_rank, test_g_nproc;
-      tbox::AsyncCommStage test_comm_stage;
-      tbox::AsyncCommPeer<int>* test_child_comms = NULL;
-      tbox::AsyncCommPeer<int>* test_parent_send = NULL;
-      tbox::AsyncCommPeer<int>* test_parent_recv = NULL;
-      createBalanceSubgroups(cycle_number,
-                             number_of_cycles,
-                             rank_group,
-                             test_num_groups,
-                             test_group_num,
-                             test_g_rank,
-                             test_g_nproc,
-                             test_num_children,
-                             test_child_comms,
-                             test_parent_send,
-                             test_parent_recv,
-                             test_comm_stage);
-      assert( num_groups == test_num_groups );
-      assert( group_num == test_group_num );
-      assert( num_children == test_num_children );
-      assert( bool(parent_send) == bool(test_parent_send) );
-      assert( bool(parent_recv) == bool(test_parent_recv) );
-      assert( bool(child_comms) == bool(test_child_comms) );
-      for ( int i=0; i<num_children; ++i ) {
-         assert( bool(child_comms) == bool(test_child_comms) );
-         assert( child_comms[i].getPeerRank() == test_child_comms[i].getPeerRank() );
-      }
-   }
-
 
 
    /*
@@ -1650,7 +1619,7 @@ void TreeLoadBalancer::loadBalanceBoxLevel_rootCycle(
    comm_stage.advanceAll(completed);
    t_finish_comms->stop();
 
-   destroyBalanceSubgroups(child_comms, parent_send, parent_recv);
+   destroyAsyncCommObjects(child_comms, parent_send, parent_recv);
 }
 
 
@@ -2240,310 +2209,9 @@ void TreeLoadBalancer::setupAsyncCommObjects(
 
 /*
  *************************************************************************
- * Divide all ranks into groups.  With each cycle,
- * the group size grows geometrically while the number of groups
- * shrink geometrically.
- * The last cycle_number has a single group of d_mpi.getSize() processors.
- *
- * Let m = number of cycles
- * i = cycle number, [0,m)
- * p = communicator size
- * r = rank in communicator
- * q = group size
- * c = number of groups
- * g = group id
- * s = rank in group
- * d = tree degree (d==2 means binary tree)
- *
- * c = p^( 1-(i+1)/m )
- *
- * With interlacing
- * g = r%q
- * r = q*s + g
- * s = (r+g)/q
- *
- * Without interlacing
- * q = ceil(p/c)
- * g=r/q
- * s = r%c
- *
- * Note that for the last cycle, p == q and r == s.
- *
- * The tree is built from the processor ranks in its group, as shown:
- *         0
- *        / \
- *       /   \
- *      /     \
- *     1       2
- *    / \     / \
- *   3   4   5   6
- *  /|  /|   |
- * 7 8 9 10 11 ...
- *
- * Communication with children are separated by communication
- * with parents, so we can reuse child_comms.  Sends and
- * receives with parents can overlap, so we have two objects
- * (parent_send and parent_recv) whose activities may
- * overlap.
- *
  *************************************************************************
  */
-void TreeLoadBalancer::createBalanceSubgroups(
-   const int cycle_number,
-   const int number_of_cycles,
-   const tbox::RankGroup& rank_group,
-   int& g_count,
-   int& g_id,
-   int& g_rank,
-   int& g_nproc,
-   int& num_children,
-   tbox::AsyncCommPeer<int> *& child_comms,
-   tbox::AsyncCommPeer<int> *& parent_send,
-   tbox::AsyncCommPeer<int> *& parent_recv,
-   tbox::AsyncCommStage& comm_stage) const
-{
-   if (d_mpi.getSize() == 1) {
-      child_comms = parent_send = parent_recv = NULL;
-      g_count = 1;
-      g_nproc = d_mpi.getSize();
-      g_id = 0;
-      g_rank = 0;
-      num_children = 0;
-      return;
-   }
-
-   TBOX_ASSERT(d_mpi.getCommunicator() != tbox::SAMRAI_MPI::commNull);
-   TBOX_ASSERT(child_comms == NULL);
-   TBOX_ASSERT(parent_send == NULL);
-   TBOX_ASSERT(parent_recv == NULL);
-
-   /*
-    * Groups can be contiguous intervals in [0..nproc) or they can be
-    * interlaced.
-    *
-    * We assume that contiguous numbers of processors tend to be closer
-    * on the network.  We usually want contiguous cycles to help reduce
-    * the communication hops made by transfered loads.  However,
-    * multiple cycles, used for severe initial imbalances, are meant to
-    * spread the load across the machine as fast as possible so we want
-    * contiguous groups only in the final cycle.
-    */
-   const bool interlace_groups = cycle_number < number_of_cycles - 1;
-
-   TBOX_ASSERT(rank_group.isMember(d_mpi.getRank()));
-   int my_output_id = rank_group.getMapIndex(d_mpi.getRank());
-   int output_nproc = rank_group.size();
-
-   /*
-    * Compute group sizes, membership, etc.
-    *
-    * Tiny groups tend to leave the members with
-    * possibly large overloads.
-    * In order to make all groups similar in size
-    * we tend to round down the number of groups
-    * (and round up the group size).
-    */
-   // Number of groups:
-   g_count = (int)pow((double)output_nproc,
-         1.0 - double(cycle_number + 1) / number_of_cycles);
-   if (interlace_groups) {
-      // Group id (group number):
-      g_id = my_output_id % g_count;
-      // Rank in group g_id:
-      g_rank = my_output_id / g_count;
-      // Population of group g_id:
-      g_nproc = output_nproc / g_count + (g_id < (output_nproc % g_count));
-   } else {
-      /*
-       * All groups will have a nominal population count.
-       * Remainder is distributed to a subset of groups, starting from group 0,
-       * so these groups will have one more than nominal.
-       */
-      int nominal_g_nproc = output_nproc / g_count;
-      int first_nominal_group = output_nproc % g_count;
-      int first_nominal_rank_id = first_nominal_group * (1 + nominal_g_nproc);
-      if (my_output_id < first_nominal_rank_id) {
-         // Group id (group number):
-         g_id = my_output_id / (1 + nominal_g_nproc);
-         // Rank in group g_id:
-         g_rank = my_output_id % (1 + nominal_g_nproc);
-         // Population of group g_id:
-         g_nproc = nominal_g_nproc + 1;
-      } else {
-         // Group id (group number):
-         g_id = first_nominal_group
-            + (my_output_id - first_nominal_rank_id) / nominal_g_nproc;
-         // Rank in group g_id:
-         g_rank = (my_output_id - first_nominal_rank_id) % nominal_g_nproc;
-         // Population of group g_id:
-         g_nproc = nominal_g_nproc;
-      }
-   }
-
-#if 1
-   /*
-    * Arrange the group ranks in a BalancedDepthFirstTree in order to get
-    * the parent/children in the group.
-    *
-    * By the way, the BalancedDepthFirstTree currently assumes a binary
-    * tree, d_degree = 2.
-    */
-   TBOX_ASSERT(d_degree == 2);
-   tbox::BalancedDepthFirstTree bdfs(0, g_nproc - 1, g_rank, true);
-   num_children = bdfs.getNumberOfChildren();
-   if ( num_children > 0 ) {
-      child_comms = new tbox::AsyncCommPeer<int>[num_children];
-   }
-   for (int i = 0; i < num_children; ++i) {
-      const int child_g_rank = bdfs.getChildRank(i);
-      int child_true_rank;
-      if (interlace_groups) {
-         child_true_rank = rank_group.getMappedRank(child_g_rank * g_count + g_id);
-      } else {
-         int nominal_g_nproc = output_nproc / g_count;
-         int first_nominal_group = output_nproc % g_count;
-         int group_first_rank = g_id < first_nominal_group ?
-            g_id * (1 + nominal_g_nproc) :
-            first_nominal_group
-            * (1
-               + nominal_g_nproc)
-            + (g_id - first_nominal_group) * nominal_g_nproc;
-         child_true_rank = rank_group.getMappedRank(child_g_rank + group_first_rank);
-      }
-      child_comms[i].initialize(&comm_stage);
-      child_comms[i].setPeerRank(child_true_rank);
-      child_comms[i].setMPI(d_mpi);
-      child_comms[i].setMPITag(TreeLoadBalancer_LOADTAG0,
-         TreeLoadBalancer_LOADTAG1);
-      child_comms[i].limitFirstDataLength(TreeLoadBalancer_FIRSTDATALEN);
-   }
-   if (bdfs.getParentRank() != bdfs.getInvalidRank()) {
-      const int parent_g_rank = bdfs.getParentRank();
-      int parent_true_rank;
-      if (interlace_groups) {
-         parent_true_rank = rank_group.getMappedRank(parent_g_rank * g_count + g_id);
-      } else {
-         int nominal_g_nproc = output_nproc / g_count;
-         int first_nominal_group = output_nproc % g_count;
-         int group_first_rank = g_id < first_nominal_group ?
-            g_id * (1 + nominal_g_nproc) :
-            first_nominal_group
-            * (1
-               + nominal_g_nproc)
-            + (g_id - first_nominal_group) * nominal_g_nproc;
-         parent_true_rank = rank_group.getMappedRank(parent_g_rank + group_first_rank);
-      }
-
-      parent_send = new tbox::AsyncCommPeer<int>;
-      parent_send->initialize(&comm_stage);
-      parent_send->setPeerRank(parent_true_rank);
-      parent_send->setMPI(d_mpi);
-      parent_send->setMPITag(TreeLoadBalancer_LOADTAG0,
-         TreeLoadBalancer_LOADTAG1);
-      parent_send->limitFirstDataLength(TreeLoadBalancer_FIRSTDATALEN);
-
-      parent_recv = new tbox::AsyncCommPeer<int>;
-      parent_recv->initialize(&comm_stage);
-      parent_recv->setPeerRank(parent_true_rank);
-      parent_recv->setMPI(d_mpi);
-      parent_recv->setMPITag(TreeLoadBalancer_LOADTAG0,
-         TreeLoadBalancer_LOADTAG1);
-      parent_recv->limitFirstDataLength(TreeLoadBalancer_FIRSTDATALEN);
-   }
-#else
-   /*
-    * Arrange the group ranks in a breadth-first tree in order to get
-    * the parent/children in the group.
-    */
-   for (num_children = 0; num_children < d_degree; ++num_children) {
-      const int child_g_rank = d_degree * (g_rank + 1) + num_children - 1;
-      const int child_true_rank = child_g_rank * g_count + g_id;
-      if (child_true_rank >= d_mpi.getSize()) break;
-   }
-   child_comms = new tbox::AsyncCommPeer<int>[num_children];
-   for (int i = 0; i < num_children; ++i) {
-      const int child_g_rank = d_degree * (g_rank + 1) + i - 1;
-      int child_true_rank;
-      if (interlace_groups) {
-         child_true_rank = child_g_rank * g_count + g_id;
-      } else {
-         int nominal_g_nproc = d_mpi.getSize() / g_count;
-         int first_nominal_group = d_mpi.getSize() % g_count;
-         // int first_nominal_rank = first_nominal_group*(1+nominal_g_nproc);
-         int group_first_rank = g_id < first_nominal_group ?
-            g_id * (1 + nominal_g_nproc) :
-            first_nominal_group
-            * (1
-               + nominal_g_nproc)
-            + (g_id - first_nominal_group) * nominal_g_nproc;
-         child_true_rank = child_g_rank + group_first_rank;
-      }
-      child_comms[i].initialize(&comm_stage);
-      child_comms[i].setPeerRank(child_true_rank);
-      child_comms[i].setSAMRAI_MPI(d_mpi);
-      child_comms[i].setMPITag(TreeLoadBalancer_LOADTAG0,
-         TreeLoadBalancer_LOADTAG1);
-      child_comms[i].limitFirstDataLength(TreeLoadBalancer_FIRSTDATALEN);
-   }
-   if (g_rank > 0) {
-      const int parent_g_rank = (g_rank + 1) / d_degree - 1;
-      int parent_true_rank;
-      if (interlace_groups) {
-         parent_true_rank = parent_g_rank * g_count + g_id;
-      } else {
-         int nominal_g_nproc = d_mpi.getSize() / g_count;
-         int first_nominal_group = d_mpi.getSize() % g_count;
-         // int first_nominal_rank = first_nominal_group*(1+nominal_g_nproc);
-         int group_first_rank = g_id < first_nominal_group ?
-            g_id * (1 + nominal_g_nproc) :
-            first_nominal_group
-            * (1
-               + nominal_g_nproc)
-            + (g_id - first_nominal_group) * nominal_g_nproc;
-         parent_true_rank = parent_g_rank + group_first_rank;
-      }
-      parent_send = new tbox::AsyncCommPeer<int>;
-      parent_send->initialize(&comm_stage);
-      parent_send->setPeerRank(parent_true_rank);
-      parent_send->setSAMRAI_MPI(d_mpi);
-      parent_send->setMPITag(TreeLoadBalancer_LOADTAG0,
-         TreeLoadBalancer_LOADTAG1);
-      parent_send->limitFirstDataLength(TreeLoadBalancer_FIRSTDATALEN);
-
-      parent_recv = new tbox::AsyncCommPeer<int>;
-      parent_recv->initialize(&comm_stage);
-      parent_recv->setPeerRank(parent_true_rank);
-      parent_recv->setSAMRAI_MPI(d_mpi);
-      parent_recv->setMPITag(TreeLoadBalancer_LOADTAG0,
-         TreeLoadBalancer_LOADTAG1);
-      parent_recv->limitFirstDataLength(TreeLoadBalancer_FIRSTDATALEN);
-   }
-#endif
-   if (d_print_steps) {
-      tbox::plog << "Groups for cycle " << cycle_number
-                 << '/' << number_of_cycles
-                 << ": g_count=" << g_count
-                 << "  g_nproc=" << g_nproc
-                 << "  g_id=" << g_id
-                 << "  g_rank=" << g_rank
-                 << "  parent="
-                 << (parent_send ? parent_send->getPeerRank() : -1)
-                 << "  children (" << num_children << ") =";
-      for (int i = 0; i < num_children; ++i) {
-         tbox::plog << ' ' << child_comms[i].getPeerRank();
-      }
-      tbox::plog << "\n";
-   }
-
-}
-
-
-
-/*
- *************************************************************************
- *************************************************************************
- */
-void TreeLoadBalancer::destroyBalanceSubgroups(
+void TreeLoadBalancer::destroyAsyncCommObjects(
    tbox::AsyncCommPeer<int> *& child_comms,
    tbox::AsyncCommPeer<int> *& parent_send,
    tbox::AsyncCommPeer<int> *& parent_recv) const
@@ -2553,9 +2221,13 @@ void TreeLoadBalancer::destroyBalanceSubgroups(
       TBOX_ASSERT(parent_send == NULL);
       TBOX_ASSERT(parent_recv == NULL);
    } else {
-      delete[] child_comms;
-      delete parent_send;
-      delete parent_recv;
+      if ( child_comms != NULL ) {
+         delete[] child_comms;
+      }
+      if ( parent_send != NULL ) {
+         delete parent_send;
+         delete parent_recv;
+      }
       child_comms = parent_send = parent_recv = NULL;
    }
 }

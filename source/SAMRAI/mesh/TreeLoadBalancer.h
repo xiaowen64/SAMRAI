@@ -845,27 +845,11 @@ private:
       tbox::AsyncCommStage& comm_stage,
       const tbox::RankGroup &rank_group ) const;
 
-   /*!
-    * @brief Create the rank groups that load-balances within their membership
-    * and ignores other groups.
+   /*
+    * @brief Undo the set-up done by setupAsyncCommObjects.
     */
    void
-   createBalanceSubgroups(
-      const int cycle_number,
-      const int number_of_cycles,
-      const tbox::RankGroup& rank_group,
-      int& g_count,
-      int& g_id,
-      int& g_rank,
-      int& g_nproc,
-      int& num_children,
-      tbox::AsyncCommPeer<int> *& child_comms,
-      tbox::AsyncCommPeer<int> *& parent_send,
-      tbox::AsyncCommPeer<int> *& parent_recv,
-      tbox::AsyncCommStage& comm_stage) const;
-
-   void
-   destroyBalanceSubgroups(
+   destroyAsyncCommObjects(
       tbox::AsyncCommPeer<int> *& child_comms,
       tbox::AsyncCommPeer<int> *& parent_send,
       tbox::AsyncCommPeer<int> *& parent_recv) const;
