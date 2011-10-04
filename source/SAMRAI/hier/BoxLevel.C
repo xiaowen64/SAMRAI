@@ -13,7 +13,6 @@
 #include "SAMRAI/hier/BoxLevel.h"
 
 #include "SAMRAI/hier/BoxContainerOrderedConstIterator.h"
-#include "SAMRAI/hier/BoxContainerOrderedIterator.h"
 #include "SAMRAI/hier/PeriodicShiftCatalog.h"
 #include "SAMRAI/hier/RealBoxConstIterator.h"
 #include "SAMRAI/tbox/MathUtilities.h"
@@ -318,7 +317,7 @@ void BoxLevel::initializePrivate(
    }
 
    // Erase non-local Boxes, if any, from d_mapped_boxes.
-   for (BoxSet::OrderedIterator mbi(d_mapped_boxes.orderedBegin());
+   for (BoxSet::OrderedConstIterator mbi(d_mapped_boxes.orderedBegin());
         mbi != d_mapped_boxes.orderedEnd(); /* incremented in loop */) {
       if (mbi->getOwnerRank() != d_mpi.getRank()) {
          d_mapped_boxes.erase(mbi++);
@@ -938,7 +937,7 @@ void BoxLevel::acquireRemoteBoxes_unpack(
  ***********************************************************************
  */
 
-BoxSet::OrderedIterator BoxLevel::addBox(
+BoxSet::OrderedConstIterator BoxLevel::addBox(
    const Box& box,
    const BlockId& block_id,
    const bool use_vacant_index)
@@ -966,7 +965,7 @@ BoxSet::OrderedIterator BoxLevel::addBox(
 
    clearForBoxChanges(false);
 
-   BoxSet::OrderedIterator new_iterator(d_mapped_boxes);
+   BoxSet::OrderedConstIterator new_iterator(d_mapped_boxes);
 
    if (d_mapped_boxes.size() == 0) {
       Box new_mapped_box =
@@ -978,7 +977,7 @@ BoxSet::OrderedIterator BoxLevel::addBox(
       new_iterator = d_mapped_boxes.insert(d_mapped_boxes.orderedEnd(), new_mapped_box);
    } else {
       // Set new_index to one more than the largest index used.
-      BoxSet::OrderedIterator ni = d_mapped_boxes.orderedEnd();
+      BoxSet::OrderedConstIterator ni = d_mapped_boxes.orderedEnd();
       do {
          TBOX_ASSERT(ni != d_mapped_boxes.orderedBegin());   // There should not be all periodic images.
          --ni;
@@ -1168,7 +1167,7 @@ BoxLevel::addBox(
 
 void
 BoxLevel::eraseBox(
-   BoxSet::OrderedIterator& ibox)
+   BoxSet::OrderedConstIterator& ibox)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    if (d_parallel_state != DISTRIBUTED) {
@@ -1241,7 +1240,7 @@ BoxLevel::eraseBox(
 
    d_local_bounding_box_up_to_date = d_global_data_up_to_date = false;
 
-   BoxSet::OrderedIterator ibox = d_mapped_boxes.find(mapped_box);
+   BoxSet::OrderedConstIterator ibox = d_mapped_boxes.find(mapped_box);
    if (ibox == d_mapped_boxes.orderedEnd()) {
       TBOX_ERROR("BoxLevel::eraseBox: Box to be erased ("
          << mapped_box << ") is NOT a part of the BoxLevel.\n");

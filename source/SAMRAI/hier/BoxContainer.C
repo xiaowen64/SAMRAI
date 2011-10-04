@@ -319,8 +319,8 @@ void BoxContainer::makeOrdered()
    d_set_created = true;
 }
 
-BoxContainer::OrderedIterator
-BoxContainer::insert(OrderedIterator position,
+BoxContainer::OrderedConstIterator
+BoxContainer::insert(OrderedConstIterator position,
        const Box& box)
 {
    if (!d_set_created) {
@@ -328,7 +328,7 @@ BoxContainer::insert(OrderedIterator position,
    }
    const std::list<Box>::iterator& iter = d_list.insert(d_list.end(), box);
 
-   OrderedIterator insert_iter(*this);
+   OrderedConstIterator insert_iter(*this);
    int old_size = d_set.size();
    insert_iter.d_set_iter = d_set.insert(position.d_set_iter, &(*iter));
    if (d_set.size() == old_size) {
@@ -354,11 +354,11 @@ void BoxContainer::insert ( OrderedConstIterator first,
 
 }
 
-BoxContainer::OrderedIterator BoxContainer::find(const Box& box) const
+BoxContainer::OrderedConstIterator BoxContainer::find(const Box& box) const
 {
    TBOX_ASSERT(d_set_created);
 
-   OrderedIterator iter(*this);
+   OrderedConstIterator iter(*this);
    iter.d_set_iter = d_set.find(&box);
 
    return iter;
@@ -378,7 +378,7 @@ BoxContainer::swap(BoxContainer& other)
 void
 BoxContainer::removePeriodicImageBoxes()
 {
-   for (OrderedIterator na = orderedBegin(); na != orderedEnd(); ) {
+   for (OrderedConstIterator na = orderedBegin(); na != orderedEnd(); ) {
       if (na->isPeriodicImage()) {
          erase(na++);
       }
@@ -389,7 +389,7 @@ BoxContainer::removePeriodicImageBoxes()
 }
 
 
-void BoxContainer::erase(OrderedIterator iter)
+void BoxContainer::erase(OrderedConstIterator iter)
 {
    TBOX_ASSERT(d_set_created);
 
@@ -421,25 +421,25 @@ int BoxContainer::erase(const Box& box)
 }
 
 #if 0
-void BoxContainer::erase(OrderedIterator first,
-                         OrderedIterator last)
+void BoxContainer::erase(OrderedConstIterator first,
+                         OrderedConstIterator last)
 {
    d_set.erase(first.d_set_iter, last.d_set_iter);
    //TODO:: Linear search to erase from d_list? 
 }
 #endif
-BoxContainer::OrderedIterator BoxContainer::lower_bound(const Box& box) const
+BoxContainer::OrderedConstIterator BoxContainer::lower_bound(const Box& box) const
 {
-   OrderedIterator iter(*this);
+   OrderedConstIterator iter(*this);
 
    iter.d_set_iter = d_set.lower_bound(&box);
 
    return iter;
 }
 
-BoxContainer::OrderedIterator BoxContainer::upper_bound(const Box& box) const
+BoxContainer::OrderedConstIterator BoxContainer::upper_bound(const Box& box) const
 {
-   OrderedIterator iter(*this);
+   OrderedConstIterator iter(*this);
 
    iter.d_set_iter = d_set.upper_bound(&box);
 
@@ -1077,7 +1077,7 @@ void BoxContainer::unshiftPeriodicImageBoxes(
    BoxContainer& output_mapped_boxes,
    const IntVector& refinement_ratio) const
 {
-   OrderedIterator hint = output_mapped_boxes.orderedBegin();
+   OrderedConstIterator hint = output_mapped_boxes.orderedBegin();
 
    if (!isEmpty()) {
       const Box& first_element(*begin());

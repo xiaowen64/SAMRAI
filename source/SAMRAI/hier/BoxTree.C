@@ -15,7 +15,6 @@
 
 #include "SAMRAI/hier/BoxContainerConstIterator.h"
 #include "SAMRAI/hier/BoxContainerOrderedConstIterator.h"
-#include "SAMRAI/hier/BoxContainerOrderedIterator.h"
 #include "SAMRAI/hier/BoxList.h"
 #include "SAMRAI/tbox/MathUtilities.h"
 #include "SAMRAI/tbox/SAMRAI_MPI.h"
@@ -458,17 +457,17 @@ void BoxTree::privateGenerateTree(
           + d_bounding_box.upper(d_partition_dim)) / 2;
 
       BoxSet left_mapped_boxes(d_dim), right_mapped_boxes(d_dim);
-      for (BoxSet::OrderedIterator ni = d_mapped_boxes.orderedBegin();
+      for (BoxSet::OrderedConstIterator ni = d_mapped_boxes.orderedBegin();
            ni != d_mapped_boxes.orderedEnd(); ) {
          const Box& mapped_box = *ni;
          if (mapped_box.upper(d_partition_dim) <= midpoint) {
             left_mapped_boxes.insert(left_mapped_boxes.orderedEnd(), mapped_box);
-            BoxSet::OrderedIterator curr = ni;
+            BoxSet::OrderedConstIterator curr = ni;
             ++ni;
             d_mapped_boxes.erase(curr);
          } else if (mapped_box.lower(d_partition_dim) > midpoint) {
             right_mapped_boxes.insert(right_mapped_boxes.orderedEnd(), mapped_box);
-            BoxSet::OrderedIterator curr = ni;
+            BoxSet::OrderedConstIterator curr = ni;
             ++ni;
             d_mapped_boxes.erase(curr);
          } else {

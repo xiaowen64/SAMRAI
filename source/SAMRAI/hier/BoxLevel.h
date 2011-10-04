@@ -753,7 +753,7 @@ public:
     *
     * @return iterator to the new Box
     */
-   BoxSet::OrderedIterator
+   BoxSet::OrderedConstIterator
    addBox(
       const Box& box,
       const BlockId& block_id,
@@ -837,7 +837,7 @@ public:
     */
    void
    eraseBox(
-      BoxSet::OrderedIterator& ibox);
+      BoxSet::OrderedConstIterator& ibox);
 
    /*!
     * @brief Erase the Box matching the one given.

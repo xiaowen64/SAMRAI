@@ -15,7 +15,6 @@
 #include "SAMRAI/tbox/AsyncCommGroup.h"
 #include "SAMRAI/tbox/vector.h"
 #include "SAMRAI/hier/BlockId.h"
-#include "SAMRAI/hier/BoxContainerOrderedIterator.h"
 #include "SAMRAI/hier/BoxLevel.h"
 #include "SAMRAI/hier/Connector.h"
 #include "SAMRAI/hier/PatchLevel.h"
@@ -966,7 +965,7 @@ public:
     * in a container.  On contributors, the graph node is non-local
     * and stands alone.
     */
-   BoxSet::OrderedIterator d_mapped_box_iterator;
+   BoxSet::OrderedConstIterator d_mapped_box_iterator;
 
    /*!
     * @brief Name of wait phase when continueAlgorithm()

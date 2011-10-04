@@ -16,7 +16,6 @@
 #include "SAMRAI/tbox/IEEE.h"
 #include "SAMRAI/tbox/RestartManager.h"
 #include "SAMRAI/hier/BoxContainerIterator.h"
-#include "SAMRAI/hier/BoxContainerOrderedIterator.h"
 #include "SAMRAI/hier/BoxLevelConnectorUtils.h"
 #include "SAMRAI/hier/BoxUtilities.h"
 #include "SAMRAI/hier/MappingConnectorAlgorithm.h"
@@ -3698,7 +3697,7 @@ void GriddingAlgorithm::computeNestingViolator(
             if (!addl_violators.isEmpty()) {
                for (hier::BoxList::Iterator bi(addl_violators);
                     bi != addl_violators.end(); ++bi) {
-                  hier::BoxSet::OrderedIterator new_violator = violator.addBox(
+                  hier::BoxSet::OrderedConstIterator new_violator = violator.addBox(
                         *bi, cmb.getBlockId());
                   current_violators.insert(*new_violator);
                }

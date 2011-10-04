@@ -12,7 +12,6 @@
 #include "SAMRAI/hier/BoxContainerConstIterator.h"
 #include "SAMRAI/hier/BoxContainerOrderedConstIterator.h"
 #include "SAMRAI/hier/BoxContainerOrderedConstReverseIterator.h"
-#include "SAMRAI/hier/BoxContainerOrderedIterator.h"
 #include "SAMRAI/hier/PeriodicShiftCatalog.h"
 #include "SAMRAI/tbox/Utilities.h"
 
@@ -253,24 +252,6 @@ BoxContainer::OrderedConstReverseIterator BoxContainer::orderedREnd() const
 {
    TBOX_ASSERT(d_set_created || size() == 0);
    return OrderedConstReverseIterator(*this, false);
-}
-
-SAMRAI_INLINE_KEYWORD
-BoxContainer::OrderedIterator BoxContainer::orderedBegin()
-{
-   if (!d_set_created) {
-      makeOrdered();
-   }
-   return OrderedIterator(*this);
-}
-
-SAMRAI_INLINE_KEYWORD
-BoxContainer::OrderedIterator BoxContainer::orderedEnd()
-{
-   if (!d_set_created) {
-      makeOrdered();
-   }
-   return OrderedIterator(*this, false);
 }
 
 SAMRAI_INLINE_KEYWORD

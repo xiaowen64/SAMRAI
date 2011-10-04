@@ -13,7 +13,6 @@
 
 #include "SAMRAI/mesh/TreeLoadBalancer.h"
 #include "SAMRAI/hier/BoxContainerIterator.h"
-#include "SAMRAI/hier/BoxContainerOrderedIterator.h"
 #include "SAMRAI/hier/BoxUtilities.h"
 #include "SAMRAI/tbox/StartupShutdownManager.h"
 
@@ -4585,7 +4584,7 @@ void TreeLoadBalancer::prebalanceBoxLevel(
 
                   mapped_box.getFromIntBuffer(&buffer[b * buf_size]);
 
-                  hier::BoxSet::OrderedIterator tmp_iter =
+                  hier::BoxSet::OrderedConstIterator tmp_iter =
                      tmp_mapped_box_level.addBox(mapped_box,
                         mapped_box.getBlockId());
 

@@ -13,7 +13,6 @@
 
 #include "SAMRAI/xfer/PatchLevelFullFillPattern.h"
 #include "SAMRAI/hier/RealBoxConstIterator.h"
-#include "SAMRAI/hier/BoxContainerOrderedIterator.h"
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/tbox/MathUtilities.h"
 

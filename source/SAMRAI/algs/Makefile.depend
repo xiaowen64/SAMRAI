@@ -36,8 +36,6 @@ DEPENDS_0:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerOrderedConstIterator.h	\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerOrderedConstReverseIterator.I\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerOrderedConstReverseIterator.h\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerOrderedIterator.I	\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerOrderedIterator.h	\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
@@ -319,8 +317,6 @@ DEPENDS_1:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerOrderedConstIterator.h	\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerOrderedConstReverseIterator.I\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerOrderedConstReverseIterator.h\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerOrderedIterator.I	\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerOrderedIterator.h	\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
@@ -536,8 +532,6 @@ DEPENDS_2:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerOrderedConstIterator.h	\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerOrderedConstReverseIterator.I\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerOrderedConstReverseIterator.h\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerOrderedIterator.I	\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerOrderedIterator.h	\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
@@ -885,8 +879,6 @@ DEPENDS_3:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerOrderedConstIterator.h	\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerOrderedConstReverseIterator.I\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerOrderedConstReverseIterator.h\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerOrderedIterator.I	\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerOrderedIterator.h	\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
@@ -1240,8 +1232,6 @@ DEPENDS_4:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerOrderedConstIterator.h	\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerOrderedConstReverseIterator.I\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerOrderedConstReverseIterator.h\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerOrderedIterator.I	\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerOrderedIterator.h	\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
@@ -1461,8 +1451,6 @@ DEPENDS_5:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerOrderedConstIterator.h	\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerOrderedConstReverseIterator.I\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerOrderedConstReverseIterator.h\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerOrderedIterator.I	\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerOrderedIterator.h	\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
@@ -1687,8 +1675,6 @@ DEPENDS_6:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerOrderedConstIterator.h	\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerOrderedConstReverseIterator.I\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerOrderedConstReverseIterator.h\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerOrderedIterator.I	\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerOrderedIterator.h	\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
@@ -1833,8 +1819,6 @@ DEPENDS_7:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerOrderedConstIterator.h	\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerOrderedConstReverseIterator.I\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerOrderedConstReverseIterator.h\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerOrderedIterator.I	\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerOrderedIterator.h	\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
@@ -2014,8 +1998,6 @@ DEPENDS_8:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerOrderedConstIterator.h	\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerOrderedConstReverseIterator.I\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerOrderedConstReverseIterator.h\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerOrderedIterator.I	\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerOrderedIterator.h	\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
@@ -2193,8 +2175,6 @@ DEPENDS_9:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerOrderedConstIterator.h	\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerOrderedConstReverseIterator.I\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerOrderedConstReverseIterator.h\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerOrderedIterator.I	\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerOrderedIterator.h	\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
@@ -2372,8 +2352,6 @@ DEPENDS_10:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerOrderedConstIterator.h	\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerOrderedConstReverseIterator.I\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerOrderedConstReverseIterator.h\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerOrderedIterator.I	\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerOrderedIterator.h	\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
@@ -2551,8 +2529,6 @@ DEPENDS_11:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerOrderedConstIterator.h	\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerOrderedConstReverseIterator.I\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerOrderedConstReverseIterator.h\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerOrderedIterator.I	\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerOrderedIterator.h	\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
@@ -2764,8 +2740,6 @@ DEPENDS_12:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerOrderedConstIterator.h	\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerOrderedConstReverseIterator.I\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerOrderedConstReverseIterator.h\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerOrderedIterator.I	\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerOrderedIterator.h	\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
@@ -2986,8 +2960,6 @@ DEPENDS_13:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerOrderedConstIterator.h	\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerOrderedConstReverseIterator.I\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerOrderedConstReverseIterator.h\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerOrderedIterator.I	\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerOrderedIterator.h	\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
@@ -3141,8 +3113,6 @@ DEPENDS_14:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerOrderedConstIterator.h	\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerOrderedConstReverseIterator.I\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerOrderedConstReverseIterator.h\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerOrderedIterator.I	\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerOrderedIterator.h	\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\

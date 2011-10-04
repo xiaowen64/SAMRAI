@@ -17,7 +17,6 @@
 #include "SAMRAI/mesh/BergerRigoutsosNode.h"
 #include "SAMRAI/pdat/CellData.h"
 #include "SAMRAI/hier/BoxContainer.h"
-#include "SAMRAI/hier/BoxContainerOrderedIterator.h"
 #include "SAMRAI/hier/BoxContainerOrderedConstReverseIterator.h"
 #include "SAMRAI/hier/RealBoxConstIterator.h"
 #include "SAMRAI/tbox/MathUtilities.h"

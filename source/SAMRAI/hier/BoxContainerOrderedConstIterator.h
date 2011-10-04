@@ -18,7 +18,6 @@ namespace hier {
 
 class Box;
 class BoxContainer;
-class BoxContainerOrderedIterator;
 
 /**
  * A mutable iterator over the boxes in a BoxContainer or the underlying boxes
@@ -29,7 +28,6 @@ class BoxContainerOrderedIterator;
 class BoxContainerOrderedConstIterator
 {
    friend class BoxContainer;
-   friend class BoxContainerOrderedIterator;
 
 public:
    // Constructors.
@@ -53,9 +51,6 @@ public:
     */
    BoxContainerOrderedConstIterator(
       const BoxContainerOrderedConstIterator& other);
-
-   BoxContainerOrderedConstIterator(
-      const BoxContainerOrderedIterator& other);
 
    /*!
     * @brief Assignment operator.

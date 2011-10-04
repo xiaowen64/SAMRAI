@@ -27,7 +27,6 @@ namespace hier {
 
 class BoxContainerIterator;
 class BoxContainerConstIterator;
-class BoxContainerOrderedIterator;
 class BoxContainerOrderedConstIterator;
 class BoxContainerOrderedConstReverseIterator;
 class BoxTree;
@@ -47,7 +46,6 @@ class BoxContainer
 {
 friend class BoxContainerIterator;
 friend class BoxContainerConstIterator;
-friend class BoxContainerOrderedIterator;
 friend class BoxContainerOrderedConstIterator;
 friend class BoxContainerOrderedConstReverseIterator;
 
@@ -63,7 +61,6 @@ public:
     * @brief The const iterator for class BoxContainer.
     */
    typedef BoxContainerConstIterator ConstIterator;
-   typedef BoxContainerOrderedConstIterator OrderedIterator;
    typedef BoxContainerOrderedConstIterator OrderedConstIterator;
    typedef BoxContainerOrderedConstReverseIterator OrderedConstReverseIterator;
 
@@ -351,24 +348,22 @@ public:
    OrderedConstIterator orderedEnd() const;
    OrderedConstReverseIterator orderedRBegin() const;
    OrderedConstReverseIterator orderedREnd() const;
-   OrderedIterator orderedBegin();
-   OrderedIterator orderedEnd();
 
    bool insert(const Box& box);
 
-   OrderedIterator insert ( OrderedIterator position,
+   OrderedConstIterator insert ( OrderedConstIterator position,
                             const Box& box );
 
    void insert ( BoxContainerOrderedConstIterator first,
                  BoxContainerOrderedConstIterator last );
 
-   OrderedIterator find(const Box& box) const;
-   OrderedIterator lower_bound(const Box& box) const;
-   OrderedIterator upper_bound(const Box& box) const;
-   void erase(OrderedIterator iter);
+   OrderedConstIterator find(const Box& box) const;
+   OrderedConstIterator lower_bound(const Box& box) const;
+   OrderedConstIterator upper_bound(const Box& box) const;
+   void erase(OrderedConstIterator iter);
    int erase(const Box& box);
-   void erase(OrderedIterator first,
-              OrderedIterator last);
+   void erase(OrderedConstIterator first,
+              OrderedConstIterator last);
 
    void
    swap(BoxContainer& other);

@@ -11,7 +11,6 @@
 #define included_hier_OverlapConnectorAlgorithm_C
 
 #include "SAMRAI/hier/OverlapConnectorAlgorithm.h"
-#include "SAMRAI/hier/BoxContainerOrderedIterator.h"
 #include "SAMRAI/hier/BoxContainerUtils.h"
 #include "SAMRAI/hier/MultiblockBoxTree.h"
 #include "SAMRAI/hier/PeriodicShiftCatalog.h"
@@ -410,7 +409,7 @@ void OverlapConnectorAlgorithm::shrinkConnectorWidth(
       if (base_coarser) {
          mapped_box_box.refine(connector.getRatio());
       }
-      for (BoxSet::OrderedIterator na = nabrs.orderedBegin();
+      for (BoxSet::OrderedConstIterator na = nabrs.orderedBegin();
            na != nabrs.orderedEnd(); /* incremented in loop */) {
          const Box& nabr = *na;
          hier::Box nabr_box = nabr;
@@ -942,8 +941,8 @@ void OverlapConnectorAlgorithm::privateBridge(
        * interested in the east-->west connector, then east_ni will
        * be unused.
        */
-      NeighborSet::OrderedIterator west_ni(visible_west_nabrs);
-      NeighborSet::OrderedIterator east_ni(visible_east_nabrs);
+      NeighborSet::OrderedConstIterator west_ni(visible_west_nabrs);
+      NeighborSet::OrderedConstIterator east_ni(visible_east_nabrs);
       /*
        * Local process can find some neighbors for the (local and
        * remote) Boxes in visible_west_nabrs and
@@ -1428,7 +1427,7 @@ void OverlapConnectorAlgorithm::sendDiscoveryToOneProcess(
 void OverlapConnectorAlgorithm::findOverlapsForOneProcess(
    const int owner_rank,
    NeighborSet& visible_base_nabrs,
-   NeighborSet::OrderedIterator& base_ni,
+   NeighborSet::OrderedConstIterator& base_ni,
    std::vector<int>& send_mesg,
    const size_t remote_mapped_box_counter_index,
    Connector& bridging_connector,
@@ -1790,7 +1789,7 @@ size_t OverlapConnectorAlgorithm::checkOverlapCorrectness(
            ei != missing_overlaps.end(); ++ei) {
          // Erase periodic neighbors from missing.
          missing.swapNeighbors(nabrs, ei->first);
-         for (NeighborSet::OrderedIterator na = nabrs.orderedBegin();
+         for (NeighborSet::OrderedConstIterator na = nabrs.orderedBegin();
               na != nabrs.orderedEnd(); /* incremented in loop */) {
             if (na->isPeriodicImage()) {
                nabrs.erase(na++); // Delete periodic image neighbor.

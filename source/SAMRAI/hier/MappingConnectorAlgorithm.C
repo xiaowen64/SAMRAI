@@ -14,7 +14,6 @@
 #include "SAMRAI/hier/OverlapConnectorAlgorithm.h"
 #include "SAMRAI/tbox/InputManager.h"
 #include "SAMRAI/hier/BoxContainerOrderedConstIterator.h"
-#include "SAMRAI/hier/BoxContainerOrderedIterator.h"
 #include "SAMRAI/hier/RealBoxConstIterator.h"
 #include "SAMRAI/tbox/AsyncCommStage.h"
 #include "SAMRAI/tbox/AsyncCommPeer.h"
@@ -1031,7 +1030,7 @@ void MappingConnectorAlgorithm::privateModify_receiveAndUnpack(
                      << " Removing " << mapped_box_gone
                      << " from nabr list for " << id_affected
                      << std::endl;
-                  NeighborSet::OrderedIterator ni = nabrs.find(mapped_box_gone);
+                  NeighborSet::OrderedConstIterator ni = nabrs.find(mapped_box_gone);
                   TBOX_ASSERT(ni != nabrs.orderedEnd());
                   nabrs.erase(ni);
                }
@@ -1201,8 +1200,8 @@ void MappingConnectorAlgorithm::privateModify_discoverAndSend(
     * If we are not interested in that connector, then new_ni plays no
     * role.
     */
-   NeighborSet::OrderedIterator anchor_ni(visible_anchor_nabrs);
-   NeighborSet::OrderedIterator new_ni(visible_new_nabrs);
+   NeighborSet::OrderedConstIterator anchor_ni(visible_anchor_nabrs);
+   NeighborSet::OrderedConstIterator new_ni(visible_new_nabrs);
    /*
     * Local process can find neighbors for the owners of mapped_boxes
     * in visible_anchor_nabrs and visible_new_nabrs.  As an
@@ -1705,7 +1704,7 @@ void MappingConnectorAlgorithm::privateModify_removeAndCache(
                      tbox::plog << nabrs_nabrs.format("XX-> ") << std::endl;
                   }
 
-                  NeighborSet::OrderedIterator nb = nabrs_nabrs.find(old_mapped_box_gone);
+                  NeighborSet::OrderedConstIterator nb = nabrs_nabrs.find(old_mapped_box_gone);
                   if (nb != nabrs_nabrs.orderedEnd()) {
                      if (s_print_modify_steps == 'y') tbox::plog
                         << "    Removing neighbor " << *nb
