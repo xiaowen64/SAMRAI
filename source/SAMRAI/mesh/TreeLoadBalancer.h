@@ -546,9 +546,9 @@ private:
    reassignLoads(
       TransitSet& src,
       TransitSet& dst,
-      const int ideal_transfer,
       int& actual_transfer,
-      hier::LocalId& next_available_index) const;
+      hier::LocalId& next_available_index,
+      const int ideal_transfer ) const;
 
    /*
     * @brief Shift load from src to dst by swapping BoxInTransit
@@ -567,8 +567,8 @@ private:
    shiftLoadsBySwapping(
       TransitSet& src,
       TransitSet& dst,
-      const int ideal_transfer,
-      int& actual_transfer) const;
+      int& actual_transfer,
+      const int ideal_transfer ) const;
 
    /*
     * @brief Shift load from src to dst by various box breaking strategies.
@@ -587,18 +587,18 @@ private:
    shiftLoadsByBreaking(
       TransitSet& src,
       TransitSet& dst,
-      const int ideal_transfer,
       int& actual_transfer,
-      hier::LocalId& next_available_index) const;
+      hier::LocalId& next_available_index,
+      const int ideal_transfer ) const;
 
    bool
    findLoadSwapPair(
       TransitSet& src,
       TransitSet& dst,
-      const int ideal_transfer,
       int& actual_transfer,
       TransitSet::iterator& isrc,
-      TransitSet::iterator& idst) const;
+      TransitSet::iterator& idst,
+      const int ideal_transfer ) const;
 
    /*!
     * @brief Pack load/boxes for sending.
@@ -613,11 +613,11 @@ private:
     */
    void
    unpackSubtreeLoadData(
-      const int* received_data,
-      int received_data_length,
       SubtreeLoadData& proc_data,
       TransitSet& receiving_bin,
-      hier::LocalId& next_available_index) const;
+      hier::LocalId& next_available_index,
+      const int* received_data,
+      int received_data_length ) const;
 
    void
    packNeighborhoodSetMessages(
@@ -628,21 +628,14 @@ private:
 
    void
    unpackAndRouteNeighborhoodSets(
-      const int* received_data,
-      int received_data_length,
       std::vector<int> outgoing_messages[],
       hier::Connector& unbalanced_to_balanced,
-      const std::vector<int>& peer_ranks) const;
+      const std::vector<int>& peer_ranks,
+      const int* received_data,
+      int received_data_length ) const;
 
    /*!
     * @brief Break off a given load size from a given Box.
-    *
-    * Try various breaking schemes and choose the best one.  This
-    * method always return a breakage if at all possible, without
-    * considering whether the break should be used.  For example,
-    * requesting breakage of 1 cell in a 100x100 box will return a
-    * breakage of 100 cells!  The decision to use such a breakage
-    * requires context that breakOffLoad does not have.
     *
     * @param mapped_box Box to break.
     * @param @ideal_load_to_break Ideal load to break.
@@ -653,11 +646,11 @@ private:
     */
    bool
    breakOffLoad(
-      const hier::Box& mapped_box,
-      double ideal_load_to_break,
       std::vector<hier::Box>& breakoff,
       std::vector<hier::Box>& leftover,
-      double& brk_load) const;
+      double& brk_load,
+      const hier::Box& mapped_box,
+      double ideal_load_to_break ) const;
 
    /*!
     * @brief Computes surface area of a list of boxes.
@@ -678,10 +671,6 @@ private:
       double balance_penalty,
       double surface_penalty,
       double slender_penalty) const;
-
-   double
-   shapePenaltyLimiter(
-      double box_volume) const;
 
    double
    computeBalancePenalty(
@@ -724,27 +713,27 @@ private:
 
    bool
    breakOffLoad_planar(
-      const hier::Box& mapped_box,
-      double ideal_load_to_break,
-      const tbox::Array<tbox::Array<bool> >& bad_cuts,
       std::vector<hier::Box>& breakoff,
       std::vector<hier::Box>& leftover,
-      double& brk_load) const;
+      double& brk_load,
+      const hier::Box& mapped_box,
+      double ideal_load_to_break,
+      const tbox::Array<tbox::Array<bool> >& bad_cuts ) const;
 
    bool
    breakOffLoad_cubic1(
-      const hier::Box& mapped_box,
-      double ideal_load_to_give,
-      const tbox::Array<tbox::Array<bool> >& bad_cuts,
       std::vector<hier::Box>& breakoff,
       std::vector<hier::Box>& leftover,
-      double& brk_load) const;
+      double& brk_load,
+      const hier::Box& mapped_box,
+      double ideal_load_to_give,
+      const tbox::Array<tbox::Array<bool> >& bad_cuts ) const;
 
    void
    burstBox(
+      std::vector<hier::Box>& boxes,
       const hier::Box& bursty,
-      const hier::Box& solid,
-      std::vector<hier::Box>& boxes) const;
+      const hier::Box& solid ) const;
 
    /*
     * Utility functions to determine parameter values for level.
@@ -776,19 +765,21 @@ private:
       const hier::BoxLevel& mapped_box_level) const;
 
    /*!
-    * @brief Load balance within a subset of the communicator.
+    * @brief Given an "unbalanced" BoxLevel, compute the BoxLevel that
+    * is load-balanced within the given rank_group and compute the
+    * mapping between the unbalanced and balanced BoxLevels.
     */
    void
-   loadBalanceBoxLevel_rootCycle(
+   computeLoadBalancingMapWithinRankGroup(
+      hier::BoxLevel& balanced_mapped_box_level,
+      hier::Connector& unbalanced_to_balanced,
+      hier::Connector& balanced_to_unbalanced,
+      const hier::BoxLevel& unbalanced_mapped_box_level,
+      const tbox::RankGroup& rank_group,
       const int cycle_number,
       const int number_of_cycles,
       const double local_load,
-      const double global_sum_load,
-      const hier::BoxLevel& unbalanced_mapped_box_level,
-      const tbox::RankGroup& rank_group,
-      hier::BoxLevel& balanced_mapped_box_level,
-      hier::Connector& unbalanced_to_balanced,
-      hier::Connector& balanced_to_unbalanced) const;
+      const double global_sum_load ) const;
 
    /*!
     * @brief Create mapping to break up oversized boxes.
@@ -797,31 +788,59 @@ private:
     */
    void
    mapOversizedBoxes(
-      const hier::BoxLevel& unconstrained,
       hier::BoxLevel& constrained,
-      hier::Connector& unconstrained_to_constrained) const;
+      hier::Connector& unconstrained_to_constrained,
+      const hier::BoxLevel& unconstrained ) const;
 
    /*!
-    * @brief Create the rank groups that load-balances within their membership
-    * and ignores other groups.
+    * @brief Create the cycle-based RankGroups the local process
+    * belongs in.
+    *
+    * The RankGroup size increases exponentially with the cycle
+    * number such that for the last cycle the rank group includes
+    * all processes in d_mpi.
+    *
+    * @param [o] rank_group
+    * @param [o] num_groups
+    * @param [o] group_num
+    * @param [i] cycle_number
+    * @param [i] number_of_cycles
     */
-   void
-   createBalanceSubgroups(
+   void createBalanceRankGroupBasedOnCycles(
+      tbox::RankGroup &rank_group,
+      int &num_groups,
+      int &group_num,
       const int cycle_number,
-      const int number_of_cycles,
-      const tbox::RankGroup& rank_group,
-      int& g_count,
-      int& g_id,
-      int& g_rank,
-      int& g_nproc,
+      const int number_of_cycles) const;
+
+   /*!
+    * @brief Set up the asynchronous communication objects for the
+    * given RankGroup.
+    *
+    * Based on a conceptual process tree with num_children children,
+    * set the AsyncCommPeer objects for communication with children
+    * and parent.
+    *
+    * @param [o] num_children
+    * @param [o] child_comms
+    * @param [o] parent_send
+    * @param [o] parent_recv
+    * @param [i/o] parent_recv
+    * @param [i] rank_group
+    */
+   void setupAsyncCommObjects(
       int& num_children,
       tbox::AsyncCommPeer<int> *& child_comms,
       tbox::AsyncCommPeer<int> *& parent_send,
       tbox::AsyncCommPeer<int> *& parent_recv,
-      tbox::AsyncCommStage& comm_stage) const;
+      tbox::AsyncCommStage& comm_stage,
+      const tbox::RankGroup &rank_group ) const;
 
+   /*
+    * @brief Undo the set-up done by setupAsyncCommObjects.
+    */
    void
-   destroyBalanceSubgroups(
+   destroyAsyncCommObjects(
       tbox::AsyncCommPeer<int> *& child_comms,
       tbox::AsyncCommPeer<int> *& parent_send,
       tbox::AsyncCommPeer<int> *& parent_recv) const;
