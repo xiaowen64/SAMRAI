@@ -439,7 +439,7 @@ void GridGeometry::computeBoxTouchingBoundaries(
 
             bool lower_side = false;
             bool upper_side = false;
-            for (BoxContainer::Iterator bl(bdry_list); bl; bl++) {
+            for (BoxContainer::Iterator bl(bdry_list); bl != bdry_list.end(); ++bl) {
                if (bl().lower() (nd) < box.lower(nd)) {
                   lower_side = true;
                }
@@ -639,7 +639,7 @@ GridGeometry::makeCoarsenedGridGeometry(
       const int nboxes = fine_domain.size();
       BoxContainer::ConstIterator coarse_domain_itr(coarse_domain[b]);
       BoxContainer::ConstIterator fine_domain_itr(fine_domain);
-      for (int ib = 0; ib < nboxes; ib++, coarse_domain_itr++, fine_domain_itr++) {
+      for (int ib = 0; ib < nboxes; ib++, ++coarse_domain_itr, ++fine_domain_itr) {
          Box testbox = Box::refine(*coarse_domain_itr, coarsen_ratio);
          if (!testbox.isSpatiallyEqual(*fine_domain_itr)) {
 #ifdef DEBUG_CHECK_ASSERTIONS
@@ -861,6 +861,7 @@ void GridGeometry::putToDatabase(
 
       tbox::Array<tbox::DatabaseBox> temp_box_array =
          getPhysicalDomain(BlockId(b));
+
       db->putDatabaseBoxArray(domain_name, temp_box_array);
    }
 
@@ -1137,7 +1138,7 @@ void GridGeometry::getBoundaryBoxes(
                if (border_list.size() > 0) {
                   border_list.coalesce();
                   for (BoxContainer::Iterator bl(border_list);
-                       bl; bl++) {
+                       bl != border_list.end(); ++bl) {
                      if (num_bboxes == bdry_array_size) {
                         patch_boundaries[d].resizeArray(
                            bdry_array_size + location_index_max[d],
@@ -1362,8 +1363,8 @@ void GridGeometry::computePhysicalDomain(
 //         block_domain_boxes.swap(tmp_mapped_boxes);
       }
 
-      for (BoxSet::OrderedConstIterator bi = block_domain_boxes.setBegin();
-           bi != block_domain_boxes.setEnd(); ++bi) {
+      for (BoxSet::OrderedConstIterator bi = block_domain_boxes.orderedBegin();
+           bi != block_domain_boxes.orderedEnd(); ++bi) {
 
          domain_mapped_boxes.insert(*bi);
 
@@ -1432,7 +1433,7 @@ void GridGeometry::resetDomainBoxSet(const BlockId& block_id)
    const int& block_number = block_id.getBlockValue();
    BoxContainer domain_set(d_dim);
    BoxContainer::Iterator itr(d_physical_domain[block_number]);
-   for (LocalId i(0); i < d_physical_domain[block_number].size(); ++i, itr++) {
+   for (LocalId i(0); i < d_physical_domain[block_number].size(); ++i, ++itr) {
       Box mapped_box(*itr, i, 0, BlockId(block_number));
       d_domain_with_images[block_number].insert(mapped_box);
    }
@@ -1636,7 +1637,7 @@ bool GridGeometry::checkPeriodicValidity(
       dup_domain2.removeIntersections(BoxList(domain));
 
       BoxContainer::Iterator n(dup_domain2);
-      for ( ; n; n++) {
+      for ( ; n != dup_domain2.end(); ++n) {
          Box this_box = n();
          Index box_lower = this_box.lower();
          Index box_upper = this_box.upper();
@@ -1871,7 +1872,7 @@ void GridGeometry::readBlockDataFromInput(
          pseudo_domain.spliceFront(physical_domain);
 
          for (BoxContainer::Iterator
-              si(d_singularity[b]); si; si++) {
+              si(d_singularity[b]); si != d_singularity[b].end(); ++si) {
             BoxList test_domain(pseudo_domain);
             test_domain.intersectBoxes(si());
             if (test_domain.size() == 0) {
@@ -2409,7 +2410,8 @@ void GridGeometry::printClassData(
       }
 
       stream << "      singularity Boxes (" << singularity_boxlist.size() << ")\n";
-      for (BoxContainer::ConstIterator bi(singularity_boxlist); bi; bi++) {
+      for (BoxContainer::ConstIterator bi(singularity_boxlist);
+           bi != singularity_boxlist.end(); ++bi) {
          stream << "         " << *bi << '\n';
       }
 

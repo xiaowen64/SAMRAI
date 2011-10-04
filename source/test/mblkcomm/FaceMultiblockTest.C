@@ -369,8 +369,8 @@ void FaceMultiblockTest::fillSingularityBoundaryConditions(
 
             const hier::BoxSet& encon_nbrs = ni->second;
 
-            for (hier::BoxSet::SetConstIterator ei = encon_nbrs.setBegin();
-                 ei != encon_nbrs.setEnd(); ++ei) {
+            for (hier::BoxSet::OrderedConstIterator ei = encon_nbrs.orderedBegin();
+                 ei != encon_nbrs.orderedEnd(); ++ei) {
 
                tbox::Pointer<hier::Patch> encon_patch(
                   encon_level.getPatch(ei->getId()));
@@ -605,7 +605,8 @@ bool FaceMultiblockTest::verifyResults(
 
             hier::BoxList neighbor_ghost(ne().getTransformedDomain());
             hier::BoxList neighbor_face_ghost(d_dim);
-            for (hier::BoxList::Iterator nn(neighbor_ghost); nn; nn++) {
+            for (hier::BoxList::Iterator nn(neighbor_ghost);
+                 nn != neighbor_ghost.end(); ++nn) {
                hier::Box neighbor_ghost_interior(
                   pdat::FaceGeometry::toFaceBox(nn(), axis));
                neighbor_ghost_interior.grow(-hier::IntVector::getOne(d_dim));
@@ -618,7 +619,8 @@ bool FaceMultiblockTest::verifyResults(
 
             neighbor_face_ghost.removeIntersections(tested_neighbors);
 
-            for (hier::BoxList::Iterator ng(neighbor_face_ghost); ng; ng++) {
+            for (hier::BoxList::Iterator ng(neighbor_face_ghost);
+                 ng != neighbor_face_ghost.end(); ++ng) {
 
                for (hier::BoxIterator ci(ng()); ci; ci++) {
                   pdat::FaceIndex fi(ci(), 0, 0);

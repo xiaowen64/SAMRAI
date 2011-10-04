@@ -287,8 +287,8 @@ void CellMultiblockTest::fillSingularityBoundaryConditions(
 
             const hier::BoxSet& encon_nbrs = ni->second;
 
-            for (hier::BoxSet::SetConstIterator ei = encon_nbrs.setBegin();
-                 ei != encon_nbrs.setEnd(); ++ei) {
+            for (hier::BoxSet::OrderedConstIterator ei = encon_nbrs.orderedBegin();
+                 ei != encon_nbrs.orderedEnd(); ++ei) {
 
                tbox::Pointer<hier::Patch> encon_patch(
                   encon_level.getPatch(ei->getId()));
@@ -461,7 +461,8 @@ bool CellMultiblockTest::verifyResults(
          neighbor_ghost.refine(ratio);
          neighbor_ghost.intersectBoxes(gbox);
 
-         for (hier::BoxList::Iterator ng(neighbor_ghost); ng; ng++) {
+         for (hier::BoxList::Iterator ng(neighbor_ghost);
+              ng != neighbor_ghost.end(); ++ng) {
 
             for (pdat::CellIterator ci(ng()); ci; ci++) {
                for (int d = 0; d < depth; d++) {

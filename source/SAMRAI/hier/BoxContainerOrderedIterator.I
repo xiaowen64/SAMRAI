@@ -49,13 +49,13 @@ const Box& BoxContainerOrderedIterator::operator () () const
 SAMRAI_INLINE_KEYWORD
 BoxContainerOrderedIterator::operator bool () const
 {
-   return d_set_iter != d_box_container->setEnd().d_set_iter;
+   return d_set_iter != d_box_container->orderedEnd().d_set_iter;
 }
 
 SAMRAI_INLINE_KEYWORD
 bool BoxContainerOrderedIterator::operator ! () const
 {
-   return d_set_iter == d_box_container->setEnd().d_set_iter;
+   return d_set_iter == d_box_container->orderedEnd().d_set_iter;
 }
 
 SAMRAI_INLINE_KEYWORD

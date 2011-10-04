@@ -96,25 +96,25 @@ public:
     *
     * @return true if iterator points to a valid position in container.
     */
-   operator bool () const;
+//   operator bool () const;
 
    /*!
     * @brief Determine if iterator points to an invalid position in container.
     *
     * @return true if iterator points to an invalid position in container.
     */
-   bool
-   operator ! () const;
+//   bool
+//   operator ! () const;
 
    /*!
-    * @brief Post-increment iterator to point to next box in the container.
+    * @brief Post-increment iterator to point to previous box in the container.
     */
-   void
+   BoxContainerOrderedConstReverseIterator
    operator ++ (
       int);
 
    /*!
-    * @brief Pre-increment iterator to point to next box in the container.
+    * @brief Pre-increment iterator to point to previous box in the container.
     */
    const BoxContainerOrderedConstReverseIterator&
    operator ++ ();

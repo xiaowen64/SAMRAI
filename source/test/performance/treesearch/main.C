@@ -10,8 +10,8 @@
 #include "SAMRAI/SAMRAI_config.h"
 
 #include "SAMRAI/hier/Box.h"
-#include "SAMRAI/hier/BoxContainerSetIterator.h"
 #include "SAMRAI/hier/BoxTree.h"
+#include "SAMRAI/hier/BoxContainerOrderedConstIterator.h"
 #include "SAMRAI/tbox/InputDatabase.h"
 #include "SAMRAI/tbox/InputManager.h"
 #include "SAMRAI/tbox/SAMRAIManager.h"
@@ -215,7 +215,7 @@ int main(
           */
          hier::BoxSet nodes(dim);
          for (hier::LocalId i(0); i < static_cast<int>(boxes.size()); ++i) {
-            nodes.insert(nodes.setEnd(),
+            nodes.insert(nodes.orderedEnd(),
                hier::Box(boxes[i.getValue()], i, 0));
          }
          const size_t node_count = nodes.size();

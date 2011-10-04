@@ -105,7 +105,8 @@ void PatchLevelEnhancedFillPattern::computeFillBoxesAndNeighborhoodSets(
                   dst_to_fill_edges.getNeighborSet(dst_mapped_box.getId(),
                                                    dst_mapped_box.getDim());
 
-               for (hier::BoxList::Iterator ei(encon_boxes); ei; ei++) {
+               for (hier::BoxList::Iterator ei(encon_boxes);
+                    ei != encon_boxes.end(); ei++) {
 
                   hier::Box fill_mapped_box(
                      *ei,
@@ -113,7 +114,7 @@ void PatchLevelEnhancedFillPattern::computeFillBoxesAndNeighborhoodSets(
                      dst_mapped_box.getOwnerRank(),
                      dst_mapped_box.getBlockId());
 
-                  fill_mapped_boxes.insert(fill_mapped_boxes.setEnd(),
+                  fill_mapped_boxes.insert(fill_mapped_boxes.orderedEnd(),
                      fill_mapped_box);
 
                   fill_nabrs.insert(fill_mapped_box);

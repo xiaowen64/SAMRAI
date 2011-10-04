@@ -172,7 +172,7 @@ void OuterfaceIntegerConstantRefine::refine(
    for (int axis = 0; axis < dim.getValue(); axis++) {
       const hier::BoxList& boxes = t_overlap->getDestinationBoxList(axis);
 
-      for (hier::BoxList::ConstIterator b(boxes); b; b++) {
+      for (hier::BoxList::ConstIterator b(boxes); b != boxes.end(); ++b) {
 
          const hier::Box& face_box = b();
          TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(dim, face_box);

@@ -161,7 +161,7 @@ public:
          neighbor_inserted = iter->second.insert(neighbor);
       } else {
          BoxContainer neighbor_set(neighbor);
-         neighbor_set.makeSet();
+         neighbor_set.makeOrdered();
          std::pair<iterator,bool> inserted_pair =
             d_map.insert(std::pair<key_type, BoxContainer>(k, neighbor_set));
          neighbor_inserted = inserted_pair.second;

@@ -46,7 +46,7 @@ BoxContainer::BoxContainer(
    d_set_created(false) 
 {
    if (other.d_set_created) {
-      makeSet();
+      makeOrdered();
    }
 }
 
@@ -228,47 +228,47 @@ bool BoxContainer::operator != (const BoxContainer& rhs) const
 }
 
 SAMRAI_INLINE_KEYWORD
-BoxContainer::OrderedConstIterator BoxContainer::setBegin() const
+BoxContainer::OrderedConstIterator BoxContainer::orderedBegin() const
 {
    TBOX_ASSERT(d_set_created || size() == 0);
    return OrderedConstIterator(*this);
 }
 
 SAMRAI_INLINE_KEYWORD
-BoxContainer::OrderedConstIterator BoxContainer::setEnd() const
+BoxContainer::OrderedConstIterator BoxContainer::orderedEnd() const
 {
    TBOX_ASSERT(d_set_created || size() == 0);
    return OrderedConstIterator(*this, false);
 }
 
 SAMRAI_INLINE_KEYWORD
-BoxContainer::OrderedConstReverseIterator BoxContainer::setRBegin() const
+BoxContainer::OrderedConstReverseIterator BoxContainer::orderedRBegin() const
 {
    TBOX_ASSERT(d_set_created || size() == 0);
    return OrderedConstReverseIterator(*this);
 }
 
 SAMRAI_INLINE_KEYWORD
-BoxContainer::OrderedConstReverseIterator BoxContainer::setREnd() const
+BoxContainer::OrderedConstReverseIterator BoxContainer::orderedREnd() const
 {
    TBOX_ASSERT(d_set_created || size() == 0);
    return OrderedConstReverseIterator(*this, false);
 }
 
 SAMRAI_INLINE_KEYWORD
-BoxContainer::OrderedIterator BoxContainer::setBegin()
+BoxContainer::OrderedIterator BoxContainer::orderedBegin()
 {
    if (!d_set_created) {
-      makeSet();
+      makeOrdered();
    }
    return OrderedIterator(*this);
 }
 
 SAMRAI_INLINE_KEYWORD
-BoxContainer::OrderedIterator BoxContainer::setEnd()
+BoxContainer::OrderedIterator BoxContainer::orderedEnd()
 {
    if (!d_set_created) {
-      makeSet();
+      makeOrdered();
    }
    return OrderedIterator(*this, false);
 }
@@ -293,7 +293,7 @@ void BoxContainer::separatePeriodicImages(
                                          getZeroShiftNumber());
 
       real_mapped_box_vector.reserve(real_mapped_box_vector.size() + size());
-      for (OrderedConstIterator ni = setBegin(); ni != setEnd(); ++ni) {
+      for (OrderedConstIterator ni = orderedBegin(); ni != orderedEnd(); ++ni) {
          const Box& mapped_box = *ni;
          if (mapped_box.getPeriodicId() == zero_shift_number) {
             real_mapped_box_vector.push_back(*ni);
@@ -303,6 +303,31 @@ void BoxContainer::separatePeriodicImages(
       }
    }
 }
+
+SAMRAI_INLINE_KEYWORD
+bool BoxContainer::isOrdered() const
+{
+   return d_set_created;
+}
+
+SAMRAI_INLINE_KEYWORD
+bool BoxContainer::insert(const Box& box)
+{
+   if (!d_set_created) {
+      makeOrdered();
+   }
+
+   const std::list<Box>::iterator& iter = d_list.insert(d_list.end(), box);
+   Box* box_ptr(&(*iter));
+   if (d_set.insert(box_ptr).second) {
+      return true;
+   } else {
+      d_list.erase(iter);
+      return false;
+   }
+}
+
+
 
 
 }

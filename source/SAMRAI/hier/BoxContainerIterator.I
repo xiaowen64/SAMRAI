@@ -38,23 +38,25 @@ Box& BoxContainerIterator::operator () () const
    return *d_list_iter;
 }
 
-SAMRAI_INLINE_KEYWORD
-BoxContainerIterator::operator bool () const
-{
-   return d_list_iter != d_box_container->end().d_list_iter;
-}
+//SAMRAI_INLINE_KEYWORD
+//BoxContainerIterator::operator bool () const
+//{
+//   return d_list_iter != d_box_container->end().d_list_iter;
+//}
+
+//SAMRAI_INLINE_KEYWORD
+//bool BoxContainerIterator::operator ! () const
+//{
+//   return d_list_iter == d_box_container->end().d_list_iter;
+//}
 
 SAMRAI_INLINE_KEYWORD
-bool BoxContainerIterator::operator ! () const
-{
-   return d_list_iter == d_box_container->end().d_list_iter;
-}
-
-SAMRAI_INLINE_KEYWORD
-void BoxContainerIterator::operator ++ (
+BoxContainerIterator BoxContainerIterator::operator ++ (
    int)
 {
-   d_list_iter++;
+   BoxContainerIterator return_iter(*this);
+   ++d_list_iter;
+   return return_iter;
 }
 
 SAMRAI_INLINE_KEYWORD

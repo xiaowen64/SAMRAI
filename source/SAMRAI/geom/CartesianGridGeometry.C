@@ -360,8 +360,11 @@ void CartesianGridGeometry::setGeometryData(
    this->setPhysicalDomain(domain_array);
 
    hier::Box bigbox(dim);
-   for (hier::BoxList::ConstIterator k(getPhysicalDomain(hier::BlockId(0))); k; k++)
+   const hier::BoxContainer& block_domain = getPhysicalDomain(hier::BlockId(0));
+   for (hier::BoxList::ConstIterator k(block_domain); k != block_domain.end();
+        ++k) {
       bigbox += *k;
+   }
 
    d_domain_box = bigbox;
 

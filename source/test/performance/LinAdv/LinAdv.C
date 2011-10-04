@@ -1506,7 +1506,8 @@ void LinAdv::boundaryReset(
          bdry_case = d_scalar_bdry_edge_conds[bside];
          if (bdry_case == BdryCond::REFLECT) {
             for (pdat::CellIterator ic(*bdryboxitr); ic; ic++) {
-               for (hier::BoxList::Iterator i(domain_boxes); i; i++) {
+               for (hier::BoxList::Iterator i(domain_boxes);
+                    i != domain_boxes.end(); ++i) {
                   if (i().contains(ic()))
                      bdry_cell = false;
                }
@@ -1516,13 +1517,14 @@ void LinAdv::boundaryReset(
                }
             }
          }
-         bdryboxitr++;
+         ++bdryboxitr;
 
          int bnode = 2 * idir + 1;
          bdry_case = d_scalar_bdry_edge_conds[bnode];
          if (bdry_case == BdryCond::REFLECT) {
             for (pdat::CellIterator ic(*bdryboxitr); ic; ic++) {
-               for (hier::BoxList::Iterator i(domain_boxes); i; i++) {
+               for (hier::BoxList::Iterator i(domain_boxes);
+                    i != domain_boxes.end(); ++i) {
                   if (i().contains(ic()))
                      bdry_cell = false;
                }
@@ -1532,7 +1534,7 @@ void LinAdv::boundaryReset(
                }
             }
          }
-         bdryboxitr++;
+         ++bdryboxitr;
       }
    } else if (d_dim == tbox::Dimension(3)) {
       for (idir = 0; idir < d_dim.getValue(); idir++) {
@@ -1540,7 +1542,8 @@ void LinAdv::boundaryReset(
          bdry_case = d_scalar_bdry_face_conds[bside];
          if (bdry_case == BdryCond::REFLECT) {
             for (pdat::CellIterator ic(*bdryboxitr); ic; ic++) {
-               for (hier::BoxList::Iterator i(domain_boxes); i; i++) {
+               for (hier::BoxList::Iterator i(domain_boxes);
+                    i != domain_boxes.end(); ++i) {
                   if (i().contains(ic()))
                      bdry_cell = false;
                }
@@ -1550,13 +1553,14 @@ void LinAdv::boundaryReset(
                }
             }
          }
-         bdryboxitr++;
+         ++bdryboxitr;
 
          int bnode = 2 * idir + 1;
          bdry_case = d_scalar_bdry_face_conds[bnode];
          if (bdry_case == BdryCond::REFLECT) {
             for (pdat::CellIterator ic(*bdryboxitr); ic; ic++) {
-               for (hier::BoxList::Iterator i(domain_boxes); i; i++) {
+               for (hier::BoxList::Iterator i(domain_boxes);
+                    i != domain_boxes.end(); ++i) {
                   if (i().contains(ic()))
                      bdry_cell = false;
                }
@@ -1566,7 +1570,7 @@ void LinAdv::boundaryReset(
                }
             }
          }
-         bdryboxitr++;
+         ++bdryboxitr;
       }
    }
 }

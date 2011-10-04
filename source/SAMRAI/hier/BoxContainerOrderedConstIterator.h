@@ -94,7 +94,7 @@ public:
     */
    const Box&
    operator () () const;
-
+#if 0
    /*!
     * @brief Determine if iterator points to a valid position in container.
     *
@@ -109,11 +109,11 @@ public:
     */
    bool
    operator ! () const;
-
+#endif
    /*!
     * @brief Post-increment iterator to point to next box in the container.
     */
-   void
+   BoxContainerOrderedConstIterator 
    operator ++ (
       int);
 
@@ -122,6 +122,19 @@ public:
     */
    const BoxContainerOrderedConstIterator&
    operator ++ ();
+
+   /*!
+    * @brief Post-decrement iterator to point to previous box in the container.
+    */
+   BoxContainerOrderedConstIterator
+   operator -- (
+      int);
+
+   /*!
+    * @brief Pre-decrement iterator to point to previous box in the container.
+    */
+   const BoxContainerOrderedConstIterator&
+   operator -- ();
 
    /*!
     * @brief Determine if two iterators are equivalent.

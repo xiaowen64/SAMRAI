@@ -232,7 +232,7 @@ void EdgeDataTest::setConservativeData(
    const hier::BoxList& domain =
       level->getPhysicalDomain(hier::BlockId::zero());
    int ncells = 0;
-   for (hier::BoxList::ConstIterator i(domain); i; i++) {
+   for (hier::BoxList::ConstIterator i(domain); i != domain.end(); ++i) {
       ncells += i().size();
    }
 

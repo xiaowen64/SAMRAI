@@ -13,7 +13,7 @@
 
 #include "SAMRAI/mesh/BergerRigoutsos.h"
 #include "SAMRAI/hier/BoxContainerIterator.h"
-#include "SAMRAI/hier/BoxContainerSetIterator.h"
+#include "SAMRAI/hier/BoxContainerOrderedConstIterator.h"
 #include "SAMRAI/hier/BoxLevel.h"
 #include "SAMRAI/hier/IntVector.h"
 #include "SAMRAI/geom/CartesianGridGeometry.h"
@@ -243,7 +243,7 @@ int main(
          tbox::SAMRAI_MPI::getSAMRAIWorld(),
          hier::BoxLevel::GLOBALIZED);
       hier::BoxList::Iterator domain_boxes_itr(domain_boxes);
-      for (int i = 0; i < domain_boxes.size(); ++i, domain_boxes_itr++) {
+      for (int i = 0; i < domain_boxes.size(); ++i, ++domain_boxes_itr) {
          domain_mapped_box_level.addBox(hier::Box(*domain_boxes_itr,
                hier::LocalId(i), 0));
       }
@@ -305,7 +305,7 @@ int main(
                anchor_boxes.size());
          hier::BoxList::Iterator anchor_boxes_itr(anchor_boxes);
          for (int i = 0; i < my_boxes_start; ++i) {
-            anchor_boxes_itr++;
+            ++anchor_boxes_itr;
          }
          for (int i = my_boxes_start; i < my_boxes_stop; ++i, anchor_boxes_itr++) {
             anchor_mapped_box_level.addBox(*anchor_boxes_itr, hier::BlockId::zero());
@@ -718,7 +718,7 @@ void generatePrebalanceByUserBoxes(
       hierarchy->getGridGeometry(),
       anchor_mapped_box_level.getMPI());
    hier::BoxList::Iterator balance_boxes_itr(balance_boxes);
-   for (int i = 0; i < balance_boxes.size(); ++i, balance_boxes_itr++) {
+   for (int i = 0; i < balance_boxes.size(); ++i, ++balance_boxes_itr) {
       const int owner = i % initial_owners.size();
       if (owner == balance_mapped_box_level.getMPI().getRank()) {
          balance_mapped_box_level.addBox(hier::Box(*balance_boxes_itr,

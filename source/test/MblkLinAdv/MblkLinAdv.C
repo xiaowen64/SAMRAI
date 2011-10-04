@@ -2381,7 +2381,8 @@ void MblkLinAdv::tagGradientDetectorCells(
          if (d_mblk_geometry->getRefineBoxes(refine_boxes,
                 block_number,
                 level_number)) {
-            for (hier::BoxList::Iterator b(refine_boxes); b; b++) {
+            for (hier::BoxList::Iterator b(refine_boxes); b != refine_boxes.end();
+                 ++b) {
                hier::Box intersect = pbox * b();
                if (!intersect.empty()) {
                   temp_tags->fill(TRUE, intersect);

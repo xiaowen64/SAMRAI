@@ -225,7 +225,7 @@ SparseData<BOX_GEOMETRY>::copy(
    const hier::Box& src_ghost_box = tmp_src->getGhostBox();
 
    for (hier::BoxList::ConstIterator overlap_box(box_list);
-        overlap_box; overlap_box++) {
+        overlap_box != box_list.end(); ++overlap_box) {
 
       const hier::Box& dst_box = overlap_box();
       const hier::Box src_box(hier::Box::shift(overlap_box(), -src_offset));
@@ -304,8 +304,8 @@ SparseData<BOX_GEOMETRY>::getDataStreamSize(
 
    // first count up the number of items that we'll need to deal
    // with
-   for (hier::BoxList::ConstIterator overlap_box(boxes); overlap_box;
-        overlap_box++) {
+   for (hier::BoxList::ConstIterator overlap_box(boxes);
+        overlap_box != boxes.end(); ++overlap_box) {
 
       const hier::Box& box = hier::PatchData::getBox()
          * hier::Box::shift(overlap_box(), -(tmp_overlap->getSourceOffset()));
@@ -397,8 +397,8 @@ SparseData<BOX_GEOMETRY>::packStream(
    int num_items = 0;
    int num_attributes = 0;
 
-   for (hier::BoxList::ConstIterator overlap_box(boxes); overlap_box;
-        overlap_box++) {
+   for (hier::BoxList::ConstIterator overlap_box(boxes);
+        overlap_box != boxes.end(); ++overlap_box) {
       hier::Box box = hier::PatchData::getBox()
          * hier::Box::shift(overlap_box(), -(tmp_overlap->getSourceOffset()));
 
@@ -461,8 +461,8 @@ SparseData<BOX_GEOMETRY>::packStream(
    }
 
    // pack the individual items
-   for (hier::BoxList::ConstIterator overlap_box(boxes); overlap_box;
-        overlap_box++) {
+   for (hier::BoxList::ConstIterator overlap_box(boxes);
+        overlap_box != boxes.end(); overlap_box++) {
 
       hier::Box box = hier::PatchData::getBox()
          * hier::Box::shift(overlap_box(), -(tmp_overlap->getSourceOffset()));
@@ -579,8 +579,8 @@ SparseData<BOX_GEOMETRY>::unpackStream(
    }
 
    const hier::BoxList& boxes = tmp_overlap->getDestinationBoxList();
-   for (hier::BoxList::ConstIterator overlap_box(boxes); overlap_box;
-        overlap_box++) {
+   for (hier::BoxList::ConstIterator overlap_box(boxes);
+        overlap_box != boxes.end(); ++overlap_box) {
 
       _removeInsideBox(overlap_box());
    }

@@ -318,7 +318,8 @@ void StandardTagAndInitialize::tagCellsForRefinement(
          TBOX_ASSERT(!(tag_data.isNull()));
 #endif
 
-         for (hier::BoxList::Iterator ib(refine_boxes); ib; ib++) {
+         for (hier::BoxList::Iterator ib(refine_boxes); ib != refine_boxes.end();
+              ++ib) {
             hier::Box intersection = *ib * tag_data->getBox();
             if (!(intersection.empty())) {
                tag_data->fill(1, intersection);
@@ -920,7 +921,7 @@ bool StandardTagAndInitialize::coarsestLevelBoxesOK(
    bool boxes_ok = true;
    if (d_use_richardson_extrapolation) {
 
-      for (hier::BoxList::ConstIterator ib(boxes); ib; ib++) {
+      for (hier::BoxList::ConstIterator ib(boxes); ib != boxes.end(); ++ib) {
          hier::IntVector n_cells = ib().numberCells();
          for (int i = 0; i < getDim().getValue(); i++) {
             int error_coarsen_ratio = getErrorCoarsenRatio();

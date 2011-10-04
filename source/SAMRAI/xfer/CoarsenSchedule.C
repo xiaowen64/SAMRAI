@@ -588,8 +588,8 @@ void CoarsenSchedule::generateScheduleDLBG()
        * to remote coarse mapped_boxes.
        */
       for (hier::BoxSet::OrderedConstIterator ni =
-              local_temp_mapped_boxes.setBegin();
-           ni != local_temp_mapped_boxes.setEnd(); ++ni) {
+              local_temp_mapped_boxes.orderedBegin();
+           ni != local_temp_mapped_boxes.orderedEnd(); ++ni) {
          const hier::Box& temp_mapped_box = *ni;
          if (temp_mapped_box.getOwnerRank() ==
              coarse_mapped_box.getOwnerRank()) {
@@ -620,8 +620,8 @@ void CoarsenSchedule::generateScheduleDLBG()
          *coarse_mapped_box_level.getBoxStrict(dst_gid);
 
       const hier::BoxSet& src_mapped_boxes = ei->second;
-      for (hier::BoxSet::OrderedConstIterator ni = src_mapped_boxes.setBegin();
-           ni != src_mapped_boxes.setEnd(); ++ni) {
+      for (hier::BoxSet::OrderedConstIterator ni = src_mapped_boxes.orderedBegin();
+           ni != src_mapped_boxes.orderedEnd(); ++ni) {
          const hier::Box& src_mapped_box = *ni;
 
          constructScheduleTransactions(d_crse_level,
@@ -677,8 +677,8 @@ void CoarsenSchedule::restructureNeighborhoodSetsByDstNodes(
       const hier::Box& mapped_box =
          *src_mapped_box_level.getBoxStrict(ci->first);
       const NeighborSet& nabrs = ci->second;
-      for (NeighborSet::OrderedConstIterator na = nabrs.setBegin();
-           na != nabrs.setEnd(); ++na) {
+      for (NeighborSet::OrderedConstIterator na = nabrs.orderedBegin();
+           na != nabrs.orderedEnd(); ++na) {
          const hier::Box& nabr = *na;
          if (nabr.isPeriodicImage()) {
             shifted_mapped_box.initialize(
@@ -697,7 +697,7 @@ void CoarsenSchedule::restructureNeighborhoodSetsByDstNodes(
                iter->second.insert(shifted_mapped_box);
             } else {
                hier::BoxContainer new_container(shifted_mapped_box);
-               new_container.makeSet();
+               new_container.makeOrdered();
                full_inverted_edges.insert(std::pair<hier::Box, hier::BoxContainer>(
                                              unshifted_nabr, new_container));
             }
@@ -708,7 +708,7 @@ void CoarsenSchedule::restructureNeighborhoodSetsByDstNodes(
                iter->second.insert(mapped_box);
             } else {
                hier::BoxContainer new_container(mapped_box);
-               new_container.makeSet();
+               new_container.makeOrdered();
                full_inverted_edges.insert(std::pair<hier::Box, hier::BoxContainer>(
                                              nabr, new_container));
             }

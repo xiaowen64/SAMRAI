@@ -43,9 +43,9 @@ public:
     * @param[in] container The container whose members are iterated.
     * @param[in] from_start true if iteration starts at front of container.
     */
-   explicit BoxContainerOrderedIterator(
-      BoxContainer& container,
-      bool from_start = true);
+//   explicit BoxContainerOrderedIterator(
+//      BoxContainer& container,
+//     bool from_start = true);
 
    explicit BoxContainerOrderedIterator(
       const BoxContainer& container,

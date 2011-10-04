@@ -129,8 +129,8 @@ NeighborhoodSet::growNeighbors(
 {
    for (const_iterator ei = begin(); ei != end(); ++ei) {
       const BoxId& mapped_box_id = (*ei).first;
-      output_edges.d_map[mapped_box_id] = (*ei).second;
-      output_edges.d_map[mapped_box_id].grow(growth);
+      output_edges.getNeighborSet(mapped_box_id, growth.getDim()) = (*ei).second;
+      output_edges.getNeighborSet(mapped_box_id, growth.getDim()).grow(growth);
    }
 }
 
@@ -158,7 +158,7 @@ NeighborhoodSet::getNeighbors(
 {
    for (const_iterator ei = begin(); ei != end(); ++ei) {
       const NeighborSet& nabrs = (*ei).second;
-      all_nabrs.insert(nabrs.setBegin(), nabrs.setEnd());
+      all_nabrs.insert(nabrs.orderedBegin(), nabrs.orderedEnd());
    }
 }
 
@@ -212,8 +212,8 @@ NeighborhoodSet::getNeighbors(
    for (const_iterator ei = begin(); ei != end(); ++ei) {
       const NeighborSet& nabrs = (*ei).second;
 
-      for (BoxSet::OrderedConstIterator ni = nabrs.setBegin();
-         ni != nabrs.setEnd(); ++ni) {
+      for (BoxSet::OrderedConstIterator ni = nabrs.orderedBegin();
+         ni != nabrs.orderedEnd(); ++ni) {
 
          std::map<BlockId, BoxList>::iterator iter =
             all_nabrs.find(ni->getBlockId());
@@ -223,7 +223,7 @@ NeighborhoodSet::getNeighbors(
             iter->second.insert(*ni);
          } else {
             BoxContainer nabr_container(*ni);
-            nabr_container.makeSet();
+            nabr_container.makeOrdered();
             all_nabrs.insert(std::pair<BlockId, BoxContainer>(ni->getBlockId(),
                                                               nabr_container));
          }
@@ -266,8 +266,8 @@ NeighborhoodSet::getOwners(
    for (const_iterator ei = begin(); ei != end(); ++ei) {
       const NeighborSet& nabrs = (*ei).second;
 
-      for (BoxSet::OrderedConstIterator ni = nabrs.setBegin();
-         ni != nabrs.setEnd(); ++ni) {
+      for (BoxSet::OrderedConstIterator ni = nabrs.orderedBegin();
+         ni != nabrs.orderedEnd(); ++ni) {
 
          const int rank = ni->getOwnerRank();
          owners.insert(rank);
@@ -394,7 +394,7 @@ void NeighborhoodSet::recursivePrint(
       co << border << "  " << mbid << "\n";
       co << border << "    Neighbors (" << nabrs.size() << "):\n";
       if (detail_depth > 1) {
-         nabrs.recursivePrint(co, indented_border, detail_depth - 1);
+         nabrs.print(co);
       }
    }
 }

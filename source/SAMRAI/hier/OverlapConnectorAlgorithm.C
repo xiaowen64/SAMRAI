@@ -185,8 +185,8 @@ void OverlapConnectorAlgorithm::extractNeighbors(
          if (connector.getHeadCoarserFlag() == false) {
             grown_mapped_box.refine(connector.getRatio());
          }
-         for (NeighborSet::OrderedConstIterator ni = superset.setBegin();
-              ni != superset.setEnd(); ++ni) {
+         for (NeighborSet::OrderedConstIterator ni = superset.orderedBegin();
+              ni != superset.orderedEnd(); ++ni) {
             const Box& neighbor(*ni);
             Box nabr_box(neighbor);
             if (neighbor.getBlockId() != mapped_box.getBlockId()) {
@@ -199,7 +199,7 @@ void OverlapConnectorAlgorithm::extractNeighbors(
                nabr_box.refine(connector.getRatio());
             }
             if (grown_mapped_box.intersects(nabr_box)) {
-               neighbors.insert(neighbors.setEnd(), neighbor);
+               neighbors.insert(neighbors.orderedEnd(), neighbor);
             }
          }
       }
@@ -410,8 +410,8 @@ void OverlapConnectorAlgorithm::shrinkConnectorWidth(
       if (base_coarser) {
          mapped_box_box.refine(connector.getRatio());
       }
-      for (BoxSet::OrderedIterator na = nabrs.setBegin();
-           na != nabrs.setEnd(); /* incremented in loop */) {
+      for (BoxSet::OrderedIterator na = nabrs.orderedBegin();
+           na != nabrs.orderedEnd(); /* incremented in loop */) {
          const Box& nabr = *na;
          hier::Box nabr_box = nabr;
          if (nabr.getBlockId() != mapped_box.getBlockId()) {
@@ -968,15 +968,15 @@ void OverlapConnectorAlgorithm::privateBridge(
          east_ni = visible_east_nabrs.lower_bound(start_loop_here);
       }
 
-      if (west_ni == visible_west_nabrs.setEnd() &&
+      if (west_ni == visible_west_nabrs.orderedEnd() &&
           (!compute_reverse ||
-           east_ni == visible_east_nabrs.setEnd())) {
+           east_ni == visible_east_nabrs.orderedEnd())) {
          /*
           * There are no visible Boxes owned by rank higher than
           * local process.  So loop from the beginning.
           */
-         west_ni = visible_west_nabrs.setBegin();
-         east_ni = visible_east_nabrs.setBegin();
+         west_ni = visible_west_nabrs.orderedBegin();
+         east_ni = visible_east_nabrs.orderedBegin();
       }
 
       /*
@@ -995,8 +995,8 @@ void OverlapConnectorAlgorithm::privateBridge(
        * searched for.  But only do this for the east mapped_boxes if
        * we are actively seeking neighbor data for them.
        */
-      while ((west_ni != visible_west_nabrs.setEnd()) ||
-             (compute_reverse && east_ni != visible_east_nabrs.setEnd())) {
+      while ((west_ni != visible_west_nabrs.orderedEnd()) ||
+             (compute_reverse && east_ni != visible_east_nabrs.orderedEnd())) {
 
          /*
           * curr_owner is the owner whose neighbors is currently
@@ -1004,12 +1004,12 @@ void OverlapConnectorAlgorithm::privateBridge(
           * next west or east Box in our cyclic-type looping.
           */
          int curr_owner = nproc; // an invalid value.
-         if (west_ni != visible_west_nabrs.setEnd() &&
+         if (west_ni != visible_west_nabrs.orderedEnd() &&
              curr_owner > west_ni->getOwnerRank()) {
             curr_owner = west_ni->getOwnerRank();
          }
          if (compute_reverse) {
-            if (east_ni != visible_east_nabrs.setEnd() &&
+            if (east_ni != visible_east_nabrs.orderedEnd() &&
                 curr_owner > east_ni->getOwnerRank()) {
                curr_owner = east_ni->getOwnerRank();
             }
@@ -1129,16 +1129,16 @@ void OverlapConnectorAlgorithm::privateBridge(
           * than the local rank.  (This is part of the optimization
           * to reduce communication time.)
           */
-         if (west_ni == visible_west_nabrs.setEnd() &&
+         if (west_ni == visible_west_nabrs.orderedEnd() &&
              (!compute_reverse ||
-              east_ni == visible_east_nabrs.setEnd())) {
+              east_ni == visible_east_nabrs.orderedEnd())) {
             /*
              * There are no Boxes that owned by rank higher than
              * local process and that we still need to find neighbors
              * for.  So loop from the beginning.
              */
-            west_ni = visible_west_nabrs.setBegin();
-            east_ni = visible_east_nabrs.setBegin();
+            west_ni = visible_west_nabrs.orderedBegin();
+            east_ni = visible_east_nabrs.orderedBegin();
          }
 
       } // Loop through visible neighbors.
@@ -1272,12 +1272,12 @@ void OverlapConnectorAlgorithm::unpackDiscoveryMessage(
    ptr = incoming_comm->getRecvData() + offset + 2;
    for (int ii = 0; ii < n_reference_west_mapped_boxes; ++ii) {
       tmp_mapped_box.getFromIntBuffer(ptr);
-      referenced_west_nabrs.insert(referenced_west_nabrs.setEnd(), tmp_mapped_box);
+      referenced_west_nabrs.insert(referenced_west_nabrs.orderedEnd(), tmp_mapped_box);
       ptr += mapped_box_com_buffer_size;
    }
    for (int ii = 0; ii < n_reference_east_mapped_boxes; ++ii) {
       tmp_mapped_box.getFromIntBuffer(ptr);
-      referenced_east_nabrs.insert(referenced_east_nabrs.setEnd(), tmp_mapped_box);
+      referenced_east_nabrs.insert(referenced_east_nabrs.orderedEnd(), tmp_mapped_box);
       ptr += mapped_box_com_buffer_size;
    }
    if (s_print_bridge_steps == 'y') {
@@ -1310,7 +1310,7 @@ void OverlapConnectorAlgorithm::unpackDiscoveryMessage(
          ptr += BoxId::commBufferSize();
          NeighborSet::OrderedConstIterator na =
             referenced_east_nabrs.find(tmp_mapped_box);
-         TBOX_ASSERT(na != referenced_east_nabrs.setEnd());
+         TBOX_ASSERT(na != referenced_east_nabrs.orderedEnd());
          const Box& east_nabr = *na;
          east_nabrs.insert(east_nabr);
       }
@@ -1329,7 +1329,7 @@ void OverlapConnectorAlgorithm::unpackDiscoveryMessage(
          ptr += BoxId::commBufferSize();
          NeighborSet::OrderedConstIterator na =
             referenced_west_nabrs.find(tmp_mapped_box);
-         TBOX_ASSERT(na != referenced_west_nabrs.setEnd());
+         TBOX_ASSERT(na != referenced_west_nabrs.orderedEnd());
          const Box& west_nabr = *na;
          west_nabrs.insert(west_nabr);
       }
@@ -1356,9 +1356,9 @@ void OverlapConnectorAlgorithm::sendDiscoveryToOneProcess(
    tbox::AsyncCommPeer<int>& outgoing_comm) const
 {
    const tbox::Dimension dim =
-      !referenced_east_nabrs.isEmpty() ? referenced_east_nabrs.setBegin()->getDim()
+      !referenced_east_nabrs.isEmpty() ? referenced_east_nabrs.orderedBegin()->getDim()
       :
-      !referenced_west_nabrs.isEmpty() ? referenced_west_nabrs.setBegin()->getDim()
+      !referenced_west_nabrs.isEmpty() ? referenced_west_nabrs.orderedBegin()->getDim()
       :
       tbox::Dimension(1);
    /*
@@ -1377,14 +1377,14 @@ void OverlapConnectorAlgorithm::sendDiscoveryToOneProcess(
    int* ptr = &send_mesg[offset];
    *(ptr++) = static_cast<int>(referenced_west_nabrs.size());
    *(ptr++) = static_cast<int>(referenced_east_nabrs.size());
-   for (BoxSet::OrderedConstIterator ni = referenced_west_nabrs.setBegin();
-        ni != referenced_west_nabrs.setEnd(); ++ni) {
+   for (BoxSet::OrderedConstIterator ni = referenced_west_nabrs.orderedBegin();
+        ni != referenced_west_nabrs.orderedEnd(); ++ni) {
       const Box& mapped_box = *ni;
       mapped_box.putToIntBuffer(ptr);
       ptr += Box::commBufferSize(dim);
    }
-   for (BoxSet::OrderedConstIterator ni = referenced_east_nabrs.setBegin();
-        ni != referenced_east_nabrs.setEnd(); ++ni) {
+   for (BoxSet::OrderedConstIterator ni = referenced_east_nabrs.orderedBegin();
+        ni != referenced_east_nabrs.orderedEnd(); ++ni) {
       const Box& mapped_box = *ni;
       mapped_box.putToIntBuffer(ptr);
       ptr += Box::commBufferSize(dim);
@@ -1462,7 +1462,7 @@ void OverlapConnectorAlgorithm::findOverlapsForOneProcess(
 
    std::vector<Box> found_nabrs, scratch_found_nabrs; // Should be made a member to avoid repetitive alloc/dealloc.  Reserve in privateBridge and used here.
 
-   while (base_ni != visible_base_nabrs.setEnd() &&
+   while (base_ni != visible_base_nabrs.orderedEnd() &&
           base_ni->getOwnerRank() == owner_rank) {
       const Box& base_mapped_box = *base_ni;
       if (s_print_bridge_steps == 'y') {
@@ -1530,7 +1530,7 @@ void OverlapConnectorAlgorithm::findOverlapsForOneProcess(
                  fn != found_nabrs.end(); ++fn) {
                tmp_nabrs.insert(*fn);
             }
-            //tmp_nabrs.insert(found_nabrs.begin(), found_nabrs.setEnd());
+            //tmp_nabrs.insert(found_nabrs.begin(), found_nabrs.orderedEnd());
             bridging_connector.swapNeighbors(tmp_nabrs,
                unshifted_base_mapped_box_id);
          }
@@ -1540,7 +1540,7 @@ void OverlapConnectorAlgorithm::findOverlapsForOneProcess(
       }
       visible_base_nabrs.erase(base_ni++);
       if (s_print_bridge_steps == 'y') {
-         if (base_ni == visible_base_nabrs.setEnd()) {
+         if (base_ni == visible_base_nabrs.orderedEnd()) {
             tbox::plog << "Next base nabr: end" << std::endl;
          } else {
             tbox::plog << "Next base nabr: " << *base_ni << std::endl;
@@ -1790,8 +1790,8 @@ size_t OverlapConnectorAlgorithm::checkOverlapCorrectness(
            ei != missing_overlaps.end(); ++ei) {
          // Erase periodic neighbors from missing.
          missing.swapNeighbors(nabrs, ei->first);
-         for (NeighborSet::OrderedIterator na = nabrs.setBegin();
-              na != nabrs.setEnd(); /* incremented in loop */) {
+         for (NeighborSet::OrderedIterator na = nabrs.orderedBegin();
+              na != nabrs.orderedEnd(); /* incremented in loop */) {
             if (na->isPeriodicImage()) {
                nabrs.erase(na++); // Delete periodic image neighbor.
             } else {
@@ -1847,8 +1847,8 @@ size_t OverlapConnectorAlgorithm::checkOverlapCorrectness(
                        << std::endl;
             hier::Box ghost_box = mapped_box;
             ghost_box.grow(connector.getConnectorWidth());
-            for (NeighborSet::OrderedConstIterator na = nabrs.setBegin();
-                 na != nabrs.setEnd(); ++na) {
+            for (NeighborSet::OrderedConstIterator na = nabrs.orderedBegin();
+                 na != nabrs.orderedEnd(); ++na) {
                const Box& nabr = *na;
                hier::Box nabr_box = nabr;
                if (connector.getHeadCoarserFlag()) {
@@ -1868,8 +1868,8 @@ size_t OverlapConnectorAlgorithm::checkOverlapCorrectness(
                        << std::endl;
             hier::Box ghost_box = mapped_box;
             ghost_box.grow(connector.getConnectorWidth());
-            for (NeighborSet::OrderedConstIterator na = nabrs.setBegin();
-                 na != nabrs.setEnd(); ++na) {
+            for (NeighborSet::OrderedConstIterator na = nabrs.orderedBegin();
+                 na != nabrs.orderedEnd(); ++na) {
                const Box& nabr = *na;
                hier::Box nabr_box = nabr;
                if (connector.getHeadCoarserFlag()) {
@@ -1889,8 +1889,8 @@ size_t OverlapConnectorAlgorithm::checkOverlapCorrectness(
                        << std::endl;
             hier::Box ghost_box = mapped_box;
             ghost_box.grow(connector.getConnectorWidth());
-            for (NeighborSet::OrderedConstIterator na = nabrs.setBegin();
-                 na != nabrs.setEnd(); ++na) {
+            for (NeighborSet::OrderedConstIterator na = nabrs.orderedBegin();
+                 na != nabrs.orderedEnd(); ++na) {
                const Box& nabr = *na;
                hier::Box nabr_box = nabr;
                if (connector.getHeadCoarserFlag()) {
@@ -1929,8 +1929,8 @@ size_t OverlapConnectorAlgorithm::checkOverlapCorrectness(
                        << std::endl;
             hier::Box ghost_box = mapped_box;
             ghost_box.grow(connector.getConnectorWidth());
-            for (NeighborSet::OrderedConstIterator na = nabrs.setBegin();
-                 na != nabrs.setEnd(); ++na) {
+            for (NeighborSet::OrderedConstIterator na = nabrs.orderedBegin();
+                 na != nabrs.orderedEnd(); ++na) {
                const Box& nabr = *na;
                hier::Box nabr_box = nabr;
                if (connector.getHeadCoarserFlag()) {
@@ -1950,8 +1950,8 @@ size_t OverlapConnectorAlgorithm::checkOverlapCorrectness(
                        << std::endl;
             hier::Box ghost_box = mapped_box;
             ghost_box.grow(connector.getConnectorWidth());
-            for (NeighborSet::OrderedConstIterator na = nabrs.setBegin();
-                 na != nabrs.setEnd(); ++na) {
+            for (NeighborSet::OrderedConstIterator na = nabrs.orderedBegin();
+                 na != nabrs.orderedEnd(); ++na) {
                const Box& nabr = *na;
                hier::Box nabr_box = nabr;
                if (connector.getHeadCoarserFlag()) {
@@ -1987,8 +1987,8 @@ size_t OverlapConnectorAlgorithm::checkOverlapCorrectness(
                        << std::endl;
             hier::Box ghost_box = mapped_box;
             ghost_box.grow(connector.getConnectorWidth());
-            for (NeighborSet::OrderedConstIterator na = nabrs.setBegin();
-                 na != nabrs.setEnd(); ++na) {
+            for (NeighborSet::OrderedConstIterator na = nabrs.orderedBegin();
+                 na != nabrs.orderedEnd(); ++na) {
                const Box& nabr = *na;
                hier::Box nabr_box = nabr;
                if (connector.getHeadCoarserFlag()) {
@@ -2008,8 +2008,8 @@ size_t OverlapConnectorAlgorithm::checkOverlapCorrectness(
                        << std::endl;
             hier::Box ghost_box = mapped_box;
             ghost_box.grow(connector.getConnectorWidth());
-            for (NeighborSet::OrderedConstIterator na = nabrs.setBegin();
-                 na != nabrs.setEnd(); ++na) {
+            for (NeighborSet::OrderedConstIterator na = nabrs.orderedBegin();
+                 na != nabrs.orderedEnd(); ++na) {
                const Box& nabr = *na;
                hier::Box nabr_box = nabr;
                if (connector.getHeadCoarserFlag()) {

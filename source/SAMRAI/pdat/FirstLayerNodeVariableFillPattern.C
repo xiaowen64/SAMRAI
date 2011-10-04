@@ -169,7 +169,7 @@ FirstLayerNodeVariableFillPattern::computeFillBoxesOverlap(
     * to a node centering, which must be done before intersecting with
     * stencil_boxes, which is node-centered.
     */
-   for (hier::BoxList::Iterator b(overlap_boxes); b; b++) {
+   for (hier::BoxList::Iterator b(overlap_boxes); b != overlap_boxes.end(); ++b) {
       b().growUpper(hier::IntVector::getOne(dim));
    }
 

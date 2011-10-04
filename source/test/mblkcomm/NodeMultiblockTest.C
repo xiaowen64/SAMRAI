@@ -355,8 +355,8 @@ void NodeMultiblockTest::fillSingularityBoundaryConditions(
 
             const hier::BoxSet& encon_nbrs = ni->second;
 
-            for (hier::BoxSet::SetConstIterator ei = encon_nbrs.setBegin();
-                 ei != encon_nbrs.setEnd(); ++ei) {
+            for (hier::BoxSet::OrderedConstIterator ei = encon_nbrs.orderedBegin();
+                 ei != encon_nbrs.orderedEnd(); ++ei) {
 
                const hier::BlockId& encon_blk_id = ei->getBlockId();
                tbox::Pointer<hier::Patch> encon_patch(
@@ -551,7 +551,8 @@ bool NodeMultiblockTest::verifyResults(
          pdat::NodeGeometry::toNodeBox(pbox);
 
       hier::BoxList sing_node_boxlist(d_dim);
-      for (hier::BoxList::Iterator si(singularity); si; si++) {
+      for (hier::BoxList::Iterator si(singularity);
+           si != singularity.end(); ++si) {
          sing_node_boxlist.pushFront(pdat::NodeGeometry::toNodeBox(si()));
       }
 
@@ -565,7 +566,8 @@ bool NodeMultiblockTest::verifyResults(
          hier::BoxList neighbor_ghost(ne().getTransformedDomain());
 
          hier::BoxList neighbor_node_ghost(d_dim);
-         for (hier::BoxList::Iterator nn(neighbor_ghost); nn; nn++) {
+         for (hier::BoxList::Iterator nn(neighbor_ghost);
+              nn != neighbor_ghost.end(); ++nn) {
             hier::Box neighbor_ghost_interior(
                pdat::NodeGeometry::toNodeBox(nn()));
             neighbor_ghost_interior.grow(-hier::IntVector::getOne(d_dim));
@@ -580,7 +582,8 @@ bool NodeMultiblockTest::verifyResults(
          neighbor_node_ghost.removeIntersections(sing_node_boxlist);
          neighbor_node_ghost.removeIntersections(tested_neighbors);
 
-         for (hier::BoxList::Iterator ng(neighbor_node_ghost); ng; ng++) {
+         for (hier::BoxList::Iterator ng(neighbor_node_ghost);
+              ng != neighbor_node_ghost.end(); ++ng) {
 
             for (hier::BoxIterator ci(ng()); ci; ci++) {
                pdat::NodeIndex ni(ci(), hier::IntVector(d_dim, 0));

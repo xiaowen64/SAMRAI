@@ -37,7 +37,7 @@ const Box& BoxContainerConstIterator::operator () () const
 {
    return *d_list_iter;
 }
-
+#if 0
 SAMRAI_INLINE_KEYWORD
 BoxContainerConstIterator::operator bool () const
 {
@@ -49,7 +49,7 @@ bool BoxContainerConstIterator::operator ! () const
 {
    return d_list_iter == d_box_container->end().d_list_iter;
 }
-
+#endif
 SAMRAI_INLINE_KEYWORD
 void BoxContainerConstIterator::operator ++ (
    int)

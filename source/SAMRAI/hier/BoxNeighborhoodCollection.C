@@ -29,7 +29,7 @@ BoxNeighborhoodCollection::BoxNeighborhoodCollection(
    d_rank(rank)
 {
    // For each root in roots create an empty neighborhood.
-   for (BoxContainer::ConstIterator itr(roots.begin()); itr; ++itr) {
+   for (BoxContainer::ConstIterator itr(roots.begin()); itr != roots.end(); ++itr) {
       d_roots.insert(&(d_adj_list.insert(std::make_pair(*itr, Neighbors())).first->first));
    }
 }
@@ -274,7 +274,7 @@ void BoxNeighborhoodCollection::insert(
 
    // Add each neighbor in the container to the root.
    for (BoxContainer::ConstIterator nbr_itr(new_nbrs.begin());
-        nbr_itr; ++nbr_itr) {
+        nbr_itr != new_nbrs.end(); ++nbr_itr) {
 
       // First add this new neighbor to the collection if it is not there.
       AdjListItr itr(d_adj_list.find(*nbr_itr));
@@ -299,7 +299,7 @@ void BoxNeighborhoodCollection::erase(
 
    // Remove each neighbor in the container from the root.
    for (BoxContainer::ConstIterator nbr_itr(nbrs.begin());
-        nbr_itr; ++nbr_itr) {
+        nbr_itr != nbrs.end(); ++nbr_itr) {
 
       // Remove this neighbor from the root's neighborhood.
       root_itr.d_itr->second.erase(&(*nbr_itr));

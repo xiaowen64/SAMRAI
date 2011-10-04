@@ -220,12 +220,12 @@ bool BoxLevelConnectorUtils::baseNestsInHead(
    } else {
       const BoxSet& base_mapped_boxes = base.getBoxes();
       BoxSet swelledbase_mapped_boxes(dim);
-      for (BoxSet::OrderedConstIterator ni = base_mapped_boxes.setBegin();
-           ni != base_mapped_boxes.setEnd(); ++ni) {
+      for (BoxSet::OrderedConstIterator ni = base_mapped_boxes.orderedBegin();
+           ni != base_mapped_boxes.orderedEnd(); ++ni) {
          Box swelledbase_mapped_box(*ni);
          swelledbase_mapped_box.grow(base_swell);
          swelledbase_mapped_boxes.insert(
-            swelledbase_mapped_boxes.setEnd(), swelledbase_mapped_box);
+            swelledbase_mapped_boxes.orderedEnd(), swelledbase_mapped_box);
       }
       swelledbase.swapInitialize(swelledbase_mapped_boxes,
          base.getRefinementRatio(),
@@ -243,13 +243,13 @@ bool BoxLevelConnectorUtils::baseNestsInHead(
 
       BoxSet swelledhead_mapped_boxes(dim);
 
-      for (BoxSet::OrderedConstIterator ni = head_mapped_boxes.setBegin();
-           ni != head_mapped_boxes.setEnd(); ++ni) {
+      for (BoxSet::OrderedConstIterator ni = head_mapped_boxes.orderedBegin();
+           ni != head_mapped_boxes.orderedEnd(); ++ni) {
          Box swelledhead_mapped_box = *ni;
 
          swelledhead_mapped_box.grow(head_swell);
          swelledhead_mapped_boxes.insert(
-            swelledhead_mapped_boxes.setEnd(), swelledhead_mapped_box);
+            swelledhead_mapped_boxes.orderedEnd(), swelledhead_mapped_box);
       }
       swelledhead.swapInitialize(swelledhead_mapped_boxes,
          head.getRefinementRatio(),
@@ -446,7 +446,7 @@ void BoxLevelConnectorUtils::makeSortingMap(
                                cur_mapped_box.getOwnerRank(),
                                cur_mapped_box.getBlockId(),
                                cur_mapped_box.getPeriodicId());
-      new_mapped_boxes.insert(new_mapped_boxes.setEnd(), new_mapped_box);
+      new_mapped_boxes.insert(new_mapped_boxes.orderedEnd(), new_mapped_box);
 
       /*
        * Now, add cur_mapped_box's periodic images, but give them cur_mapped_box's
@@ -454,9 +454,9 @@ void BoxLevelConnectorUtils::makeSortingMap(
        * that a real mapped_box's image follows the real mapped_box in a BoxSet.
        */
       BoxSet::OrderedConstIterator ini = cur_mapped_boxes.find(cur_mapped_box);
-      TBOX_ASSERT(ini != cur_mapped_boxes.setEnd());
+      TBOX_ASSERT(ini != cur_mapped_boxes.orderedEnd());
       ++ini; // Skip the real mapped_box to look for its image mapped_boxes.
-      while (ini != cur_mapped_boxes.setEnd() &&
+      while (ini != cur_mapped_boxes.orderedEnd() &&
              ini->getGlobalId() == cur_mapped_box.getGlobalId()) {
          const Box& image_mapped_box = *ini;
          const Box new_image_mapped_box(image_mapped_box,
@@ -465,7 +465,7 @@ void BoxLevelConnectorUtils::makeSortingMap(
                                         new_mapped_box.getBlockId(),
                                         image_mapped_box.
                                         getPeriodicId());
-         new_mapped_boxes.insert(new_mapped_boxes.setEnd(), new_image_mapped_box);
+         new_mapped_boxes.insert(new_mapped_boxes.orderedEnd(), new_image_mapped_box);
          ++ini;
       }
 
@@ -891,7 +891,7 @@ void BoxLevelConnectorUtils::computeInternalOrExternalParts(
 
             Connector::NeighborSet& replacements = 
                input_eto_parts.getNeighborSet(input_mapped_box.getId(), dim);
-            for (BoxList::Iterator bi(parts_list); bi; bi++) {
+            for (BoxList::Iterator bi(parts_list); bi != parts_list.end(); ++bi) {
                const Box
                parts_mapped_box((*bi),
                                 ++last_used_index,
@@ -1163,8 +1163,8 @@ void BoxLevelConnectorUtils::makeRemainderMap(
 
    const NeighborhoodSet& orig_eto_rejection = orig_to_rejection.getNeighborhoodSets();
 
-   for (BoxSet::OrderedConstIterator ni = orig_nodes.setBegin();
-        ni != orig_nodes.setEnd(); ++ni) {
+   for (BoxSet::OrderedConstIterator ni = orig_nodes.orderedBegin();
+        ni != orig_nodes.orderedEnd(); ++ni) {
 
       const Box& orig_node = *ni;
       const BoxId mapped_box_id = orig_node.getId();
@@ -1210,7 +1210,7 @@ void BoxLevelConnectorUtils::makeRemainderMap(
          BoxList remaining_parts_list(orig_node);
 
          for (Connector::NeighborSet::OrderedConstIterator
-              vi = rejections.setBegin(); vi != rejections.setEnd(); ++vi) {
+              vi = rejections.orderedBegin(); vi != rejections.orderedEnd(); ++vi) {
             remaining_parts_list.removeIntersections((*vi));
          }
          /*
@@ -1230,14 +1230,14 @@ void BoxLevelConnectorUtils::makeRemainderMap(
          Connector::NeighborSet& remaining_parts_neighbors =
             orig_eto_remainder.getNeighborSet(mapped_box_id, dim);
          for (BoxList::Iterator bi(remaining_parts_list);
-              bi; bi++) {
+              bi != remaining_parts_list.end(); ++bi) {
             Box new_box = (*bi);
             Box new_node(new_box,
                          ++last_used_index,
                          rank,
                          orig_node.getBlockId());
-            remainder_nodes.insert(remainder_nodes.setEnd(), new_node);
-            remaining_parts_neighbors.insert(remaining_parts_neighbors.setEnd(),
+            remainder_nodes.insert(remainder_nodes.orderedEnd(), new_node);
+            remaining_parts_neighbors.insert(remaining_parts_neighbors.orderedEnd(),
                new_node);
          }
       }

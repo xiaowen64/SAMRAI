@@ -94,7 +94,7 @@ void HierarchyEdgeDataOpsComplex::resetLevels(
 
       for (int nd = 0; nd < dim.getValue(); nd++) {
          edge_boxes = level->getBoxes();
-         for (hier::BoxList::Iterator i(edge_boxes); i; i++) {
+         for (hier::BoxList::Iterator i(edge_boxes); i != edge_boxes.end(); ++i) {
             *i = pdat::EdgeGeometry::toEdgeBox(*i, nd);
          }
          hier::BoxUtilities::makeNonOverlappingBoxLists(
@@ -656,12 +656,12 @@ int HierarchyEdgeDataOpsComplex::numberOfEntries(
          }
 #endif
          for (int il = 0; il < npatches; il++) {
-            tbox::List<hier::Box>::Iterator lb;
 
             for (int eb = 0; eb < dim.getValue(); eb++) {
                hier::BoxList::ConstIterator lb =
                   ((d_nonoverlapping_edge_boxes[eb][ln])[il]).begin();
-               for ( ; lb; lb++) {
+               for ( ; lb != ((d_nonoverlapping_edge_boxes[eb][ln])[il]).end();
+                    ++lb) {
                   entries += lb().size();
                }
             }

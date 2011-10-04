@@ -20,9 +20,9 @@ BoxSetSingleBlockIterator::BoxSetSingleBlockIterator(
    const BlockId& block_id):
    d_mapped_boxes(&mapped_boxes),
    d_block_id(block_id),
-   d_iter(d_mapped_boxes->setBegin())
+   d_iter(d_mapped_boxes->orderedBegin())
 {
-   while (d_iter != d_mapped_boxes->setEnd() && d_iter->getBlockId() != d_block_id) {
+   while (d_iter != d_mapped_boxes->orderedEnd() && d_iter->getBlockId() != d_block_id) {
       ++d_iter;
    }
 }
@@ -35,7 +35,7 @@ BoxSetSingleBlockIterator::~BoxSetSingleBlockIterator()
 bool BoxSetSingleBlockIterator::isValid() const
 {
    return d_mapped_boxes != NULL &&
-          d_iter != d_mapped_boxes->setEnd() &&
+          d_iter != d_mapped_boxes->orderedEnd() &&
           d_iter->getBlockId() == d_block_id;
 }
 
@@ -84,7 +84,7 @@ BoxSetSingleBlockIterator& BoxSetSingleBlockIterator::operator ++ ()
 {
    do {
       ++d_iter;
-   } while (d_iter != d_mapped_boxes->setEnd() &&
+   } while (d_iter != d_mapped_boxes->orderedEnd() &&
             d_iter->getBlockId() != d_block_id);
    return *this;
 }
@@ -101,7 +101,7 @@ BoxSetSingleBlockIterator BoxSetSingleBlockIterator::operator ++ (
    BoxSetSingleBlockIterator saved = *this;
    do {
       ++d_iter;
-   } while (d_iter != d_mapped_boxes->setEnd() &&
+   } while (d_iter != d_mapped_boxes->orderedEnd() &&
             d_iter->getBlockId() != d_block_id);
    return saved;
 }

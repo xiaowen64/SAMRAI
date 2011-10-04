@@ -623,8 +623,8 @@ void TreeLoadBalancer::mapOversizedBoxes(
 
    hier::LocalId next_available_index = unconstrained.getLastLocalId() + 1;
 
-   for (hier::BoxSet::OrderedConstIterator ni = unconstrained_mapped_boxes.setBegin();
-        ni != unconstrained_mapped_boxes.setEnd(); ++ni) {
+   for (hier::BoxSet::OrderedConstIterator ni = unconstrained_mapped_boxes.orderedBegin();
+        ni != unconstrained_mapped_boxes.orderedEnd(); ++ni) {
 
       const hier::Box& mapped_box = *ni;
 
@@ -657,7 +657,7 @@ void TreeLoadBalancer::mapOversizedBoxes(
                                                             d_dim);
 
             for (hier::BoxList::Iterator li(chopped);
-                 li; li++) {
+                 li != chopped.end(); ++li) {
 
                const hier::Box new_box = *li;
 
@@ -673,7 +673,7 @@ void TreeLoadBalancer::mapOversizedBoxes(
 
                constrained.addBox(new_mapped_box);
 
-               constrained_nabrs.insert(constrained_nabrs.setEnd(),
+               constrained_nabrs.insert(constrained_nabrs.orderedEnd(),
                   new_mapped_box);
 
             }
@@ -961,8 +961,8 @@ void TreeLoadBalancer::loadBalanceBoxLevel_rootCycle(
        * Local process is underloaded, so put all of unbalanced_mapped_box_level into
        * the balanced_mapped_box_level (and add more later).
        */
-      for (hier::BoxSet::OrderedConstIterator ni = unbalanced_mapped_boxes.setBegin();
-           ni != unbalanced_mapped_boxes.setEnd(); ++ni) {
+      for (hier::BoxSet::OrderedConstIterator ni = unbalanced_mapped_boxes.orderedBegin();
+           ni != unbalanced_mapped_boxes.orderedEnd(); ++ni) {
          balanced_mapped_box_level.addBox(*ni);
       }
    } else {
@@ -995,7 +995,7 @@ void TreeLoadBalancer::loadBalanceBoxLevel_rootCycle(
        */
 
       TransitSet
-      sorted_loads(unbalanced_mapped_boxes.setBegin(), unbalanced_mapped_boxes.setEnd());
+      sorted_loads(unbalanced_mapped_boxes.orderedBegin(), unbalanced_mapped_boxes.orderedEnd());
       int ideal_transfer = int(0.5 + my_load_data.total_work - group_avg_load);
       if (d_print_steps) {
          tbox::plog << "  Reassigning initial overload of " << ideal_transfer
@@ -3686,8 +3686,8 @@ double TreeLoadBalancer::computeLocalLoads(
    // Count up workload.
    double load = 0.0;
    const hier::BoxSet& mapped_boxes = mapped_box_level.getBoxes();
-   for (hier::BoxSet::OrderedConstIterator ni = mapped_boxes.setBegin();
-        ni != mapped_boxes.setEnd();
+   for (hier::BoxSet::OrderedConstIterator ni = mapped_boxes.orderedBegin();
+        ni != mapped_boxes.orderedEnd();
         ++ni) {
       double mapped_box_load = computeLoad(*ni);
       load += mapped_box_load;
@@ -4587,8 +4587,8 @@ void TreeLoadBalancer::prebalanceBoxLevel(
          balance_mapped_box_level.getBoxes();
 
       for (hier::BoxSet::OrderedConstIterator ni =
-              unchanged_mapped_boxes.setBegin();
-           ni != unchanged_mapped_boxes.end(); ++ni) {
+              unchanged_mapped_boxes.orderedBegin();
+           ni != unchanged_mapped_boxes.orderedEnd(); ++ni) {
 
          const hier::Box& mapped_box = *ni;
          tmp_mapped_box_level.addBox(mapped_box);
@@ -4608,8 +4608,8 @@ void TreeLoadBalancer::prebalanceBoxLevel(
 
       int* buffer = new int[buf_size * num_sending_boxes];
       int box_count = 0;
-      for (hier::BoxSet::OrderedConstIterator ni = sending_mapped_boxes.setBegin();
-           ni != sending_mapped_boxes.setEnd(); ++ni) {
+      for (hier::BoxSet::OrderedConstIterator ni = sending_mapped_boxes.orderedBegin();
+           ni != sending_mapped_boxes.orderedEnd(); ++ni) {
 
          const hier::Box& mapped_box = *ni;
 
@@ -4692,8 +4692,8 @@ void TreeLoadBalancer::prebalanceBoxLevel(
 
       int box_count = 0;
       for (hier::BoxSet::OrderedConstIterator ni =
-              sending_mapped_boxes.setBegin();
-           ni != sending_mapped_boxes.setEnd(); ++ni) {
+              sending_mapped_boxes.orderedBegin();
+           ni != sending_mapped_boxes.orderedEnd(); ++ni) {
 
          hier::Box new_mapped_box(
             (*ni),

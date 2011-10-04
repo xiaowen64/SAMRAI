@@ -1626,7 +1626,7 @@ void MblkEuler::setPhysicalBoundaryConditions(
       patch.getPatchGeometry();
    const hier::IntVector ratio = patch_geom->getRatio();
    hier::BoxList domain_boxes(d_dim);
-   d_grid_geometry->computeePhysicalDomain(domain_boxes, ratio,
+   d_grid_geometry->computePhysicalDomain(domain_boxes, ratio,
       patch.getBox().getBlockId());
 
    const hier::IntVector& periodic =
@@ -2472,7 +2472,8 @@ void MblkEuler::tagGradientDetectorCells(
          if (d_mblk_geometry->getRefineBoxes(refine_boxes,
                 patch.getBox().getBlockId().getBlockValue(),
                 level_number)) {
-            for (hier::BoxList::Iterator b(refine_boxes); b; b++) {
+            for (hier::BoxList::Iterator b(refine_boxes); b != refine_boxes.end();
+                 ++b) {
                hier::Box intersect = pbox * b();
                if (!intersect.empty()) {
                   temp_tags->fill(TRUE, intersect);

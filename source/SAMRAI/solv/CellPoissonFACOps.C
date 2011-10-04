@@ -2008,7 +2008,8 @@ void CellPoissonFACOps::computeVectorWeights(
          for (hier::PatchLevel::Iterator p(level); p; p++) {
 
             tbox::Pointer<hier::Patch> patch = *p;
-            for (hier::BoxList::Iterator i(coarsened_boxes); i; i++) {
+            for (hier::BoxList::Iterator i(coarsened_boxes);
+                 i != coarsened_boxes.end(); ++i) {
 
                hier::Box intersection = *i * (patch->getBox());
                if (!intersection.empty()) {

@@ -197,7 +197,8 @@ OuternodeGeometry::doOverlap(
 
       if (dst_restrict_boxes.size() && dst_boxes.size()) {
          hier::BoxList node_restrict_boxes(dim);
-         for (hier::BoxList::ConstIterator b(dst_restrict_boxes); b; b++) {
+         for (hier::BoxList::ConstIterator b(dst_restrict_boxes);
+              b != dst_restrict_boxes.end(); ++b) {
             node_restrict_boxes.pushBack(NodeGeometry::toNodeBox(b()));
          }
          dst_boxes.intersectBoxes(node_restrict_boxes);
@@ -302,7 +303,8 @@ OuternodeGeometry::doOverlap(
 
       if (dst_restrict_boxes.size() && src_boxes.size()) {
          hier::BoxList node_restrict_boxes(dim);
-         for (hier::BoxList::ConstIterator b(dst_restrict_boxes); b; b++) {
+         for (hier::BoxList::ConstIterator b(dst_restrict_boxes);
+              b != dst_restrict_boxes.end(); ++b) {
             node_restrict_boxes.pushBack(NodeGeometry::toNodeBox(b()));
          }
          src_boxes.intersectBoxes(node_restrict_boxes);
@@ -432,7 +434,8 @@ OuternodeGeometry::doOverlap(
 
       if (dst_restrict_boxes.size() && dst_boxes.size()) {
          hier::BoxList node_restrict_boxes(dim);
-         for (hier::BoxList::ConstIterator b(dst_restrict_boxes); b; b++) {
+         for (hier::BoxList::ConstIterator b(dst_restrict_boxes);
+              b != dst_restrict_boxes.end(); ++b) {
             node_restrict_boxes.pushBack(NodeGeometry::toNodeBox(b()));
          }
          dst_boxes.intersectBoxes(node_restrict_boxes);
@@ -461,7 +464,7 @@ OuternodeGeometry::setUpOverlap(
 {
    hier::BoxList dst_boxes(boxes.getDim());
 
-   for (hier::BoxList::ConstIterator b(boxes); b; b++) {
+   for (hier::BoxList::ConstIterator b(boxes); b != boxes.end(); ++b) {
       hier::Box node_box(NodeGeometry::toNodeBox(b()));
       dst_boxes.pushBack(node_box);
    }

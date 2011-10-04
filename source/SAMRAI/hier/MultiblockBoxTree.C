@@ -54,8 +54,8 @@ MultiblockBoxTree::MultiblockBoxTree(
     */
 
    std::map<BlockId, BoxSet> mapped_boxes_by_block;
-   for (BoxSet::OrderedConstIterator bi = mapped_boxes.setBegin();
-        bi != mapped_boxes.setEnd(); ++bi) {
+   for (BoxSet::OrderedConstIterator bi = mapped_boxes.orderedBegin();
+        bi != mapped_boxes.orderedEnd(); ++bi) {
 
       const BlockId& block_id = bi->getBlockId();
 
@@ -63,10 +63,10 @@ MultiblockBoxTree::MultiblockBoxTree(
          mapped_boxes_by_block.find(block_id);
 
       if (iter != mapped_boxes_by_block.end()) {
-         iter->second.insert(iter->second.setEnd(), *bi);
+         iter->second.insert(iter->second.orderedEnd(), *bi);
       } else {
          hier::BoxContainer boxes(*bi);
-         boxes.makeSet();
+         boxes.makeOrdered();
          mapped_boxes_by_block.insert(
             std::pair<BlockId, BoxContainer>(block_id, boxes)); 
       }
@@ -161,8 +161,8 @@ void MultiblockBoxTree::generateTree(
     * BlockId.
     */
    std::map<BlockId, BoxSet> mapped_boxes_by_block;
-   for (BoxSet::OrderedConstIterator bi = mapped_boxes.setBegin();
-        bi != mapped_boxes.setEnd(); ++bi) {
+   for (BoxSet::OrderedConstIterator bi = mapped_boxes.orderedBegin();
+        bi != mapped_boxes.orderedEnd(); ++bi) {
 
       const BlockId& block_id = bi->getBlockId();
 
@@ -170,10 +170,10 @@ void MultiblockBoxTree::generateTree(
          mapped_boxes_by_block.find(block_id);
 
       if (iter != mapped_boxes_by_block.end()) {
-         iter->second.insert(iter->second.setEnd(), *bi);
+         iter->second.insert(iter->second.orderedEnd(), *bi);
       } else {
          hier::BoxContainer boxes(*bi);
-         boxes.makeSet();
+         boxes.makeOrdered();
          mapped_boxes_by_block.insert(
             std::pair<BlockId, BoxContainer>(block_id, boxes));
       }

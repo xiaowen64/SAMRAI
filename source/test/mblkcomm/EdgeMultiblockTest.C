@@ -367,8 +367,8 @@ void EdgeMultiblockTest::fillSingularityBoundaryConditions(
 
             const hier::BoxSet& encon_nbrs = ni->second;
 
-            for (hier::BoxSet::SetConstIterator ei = encon_nbrs.setBegin();
-                 ei != encon_nbrs.setEnd(); ++ei) {
+            for (hier::BoxSet::OrderedConstIterator ei = encon_nbrs.orderedBegin();
+                 ei != encon_nbrs.orderedEnd(); ++ei) {
 
                const hier::BlockId& encon_blk_id = ei->getBlockId();
                tbox::Pointer<hier::Patch> encon_patch(
@@ -596,7 +596,8 @@ bool EdgeMultiblockTest::verifyResults(
          hier::BoxList tested_neighbors(d_dim);
 
          hier::BoxList sing_edge_boxlist(d_dim);
-         for (hier::BoxList::Iterator si(singularity); si; si++) {
+         for (hier::BoxList::Iterator si(singularity); si != singularity.end();
+              ++si) {
             sing_edge_boxlist.pushFront(
                pdat::EdgeGeometry::toEdgeBox(si(), axis));
          }
@@ -611,7 +612,8 @@ bool EdgeMultiblockTest::verifyResults(
             hier::BoxList neighbor_ghost(ne().getTransformedDomain());
 
             hier::BoxList neighbor_edge_ghost(d_dim);
-            for (hier::BoxList::Iterator nn(neighbor_ghost); nn; nn++) {
+            for (hier::BoxList::Iterator nn(neighbor_ghost);
+                 nn != neighbor_ghost.end(); ++nn) {
                hier::Box neighbor_ghost_interior(
                   pdat::EdgeGeometry::toEdgeBox(nn(), axis));
                neighbor_ghost_interior.grow(-hier::IntVector::getOne(d_dim));
@@ -627,7 +629,7 @@ bool EdgeMultiblockTest::verifyResults(
             neighbor_edge_ghost.removeIntersections(tested_neighbors);
 
             for (hier::BoxList::Iterator ng(neighbor_edge_ghost);
-                 ng; ng++) {
+                 ng != neighbor_edge_ghost.end(); ++ng) {
 
                for (hier::BoxIterator ci(ng()); ci; ci++) {
                   pdat::EdgeIndex ei(ci(), 0, 0);

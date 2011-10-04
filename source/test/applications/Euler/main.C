@@ -825,7 +825,8 @@ static void dumpMatlabData1dPencil(
          tbox::Pointer<hier::Patch> patch = *i;
          hier::Box pbox = patch->getBox();
 
-         for (hier::BoxList::Iterator b(outboxes[l5]); b; b++) {
+         for (hier::BoxList::Iterator b(outboxes[l5]);
+              b != outboxes[l5].end(); ++b) {
             const hier::Box box = b() * pbox * level_pencil_box;
 
             euler_model->writeData1dPencil(patch,

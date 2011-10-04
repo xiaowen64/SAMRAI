@@ -21,7 +21,6 @@
 #include <list>
 #include <set>
 
-#define MB_BOXTREE_EXISTS
 
 namespace SAMRAI {
 namespace hier {
@@ -32,9 +31,7 @@ class BoxContainerOrderedIterator;
 class BoxContainerOrderedConstIterator;
 class BoxContainerOrderedConstReverseIterator;
 class BoxTree;
-#ifdef MB_BOXTREE_EXISTS
 class MultiblockBoxTree;
-#endif
 
 /*!
  * @brief A generic container for Boxes.
@@ -66,7 +63,7 @@ public:
     * @brief The const iterator for class BoxContainer.
     */
    typedef BoxContainerConstIterator ConstIterator;
-   typedef BoxContainerOrderedIterator OrderedIterator;
+   typedef BoxContainerOrderedConstIterator OrderedIterator;
    typedef BoxContainerOrderedConstIterator OrderedConstIterator;
    typedef BoxContainerOrderedConstReverseIterator OrderedConstReverseIterator;
 
@@ -82,11 +79,6 @@ public:
       const tbox::Dimension& dim,
       const int n = 0);
 
-   explicit BoxContainer() : d_dim(tbox::Dimension::getInvalidDimension())
-   {
-      TBOX_ASSERT(false);
-   }
-     
 
    /*!
     * @brief Create container containing members from another container.
@@ -352,48 +344,31 @@ public:
 /*******************************************************/
 // set methods
 
-   void makeSet();
-   bool hasSetSemantics() const
-   {
-      return d_set_created;
-   }
+   void makeOrdered();
+   bool isOrdered() const;
 
-   OrderedConstIterator setBegin() const;
-   OrderedConstIterator setEnd() const;
-   OrderedConstReverseIterator setRBegin() const;
-   OrderedConstReverseIterator setREnd() const;
-   OrderedIterator setBegin();
-   OrderedIterator setEnd();
+   OrderedConstIterator orderedBegin() const;
+   OrderedConstIterator orderedEnd() const;
+   OrderedConstReverseIterator orderedRBegin() const;
+   OrderedConstReverseIterator orderedREnd() const;
+   OrderedIterator orderedBegin();
+   OrderedIterator orderedEnd();
 
-   bool insert(const Box& box)
-   {
-      if (!d_set_created) {
-         makeSet();
-      }
+   bool insert(const Box& box);
 
-      const std::list<Box>::iterator& iter = d_list.insert(d_list.end(), box);
-      Box* box_ptr(&(*iter));
-      if (d_set.insert(box_ptr).second) {
-         return true;
-      } else {
-         d_list.erase(iter);
-         return false;
-      }
-   }
-
-   BoxContainerOrderedIterator insert ( BoxContainerOrderedIterator position,
-                                    const Box& box );
+   OrderedIterator insert ( OrderedIterator position,
+                            const Box& box );
 
    void insert ( BoxContainerOrderedConstIterator first,
                  BoxContainerOrderedConstIterator last );
 
-   BoxContainerOrderedIterator find(const Box& box) const;
-   BoxContainerOrderedIterator lower_bound(const Box& box) const;
-   BoxContainerOrderedIterator upper_bound(const Box& box) const;
-   void erase(BoxContainerOrderedIterator iter);
+   OrderedIterator find(const Box& box) const;
+   OrderedIterator lower_bound(const Box& box) const;
+   OrderedIterator upper_bound(const Box& box) const;
+   void erase(OrderedIterator iter);
    int erase(const Box& box);
-   void erase(BoxContainerOrderedIterator first,
-              BoxContainerOrderedIterator last);
+   void erase(OrderedIterator first,
+              OrderedIterator last);
 
    void
    swap(BoxContainer& other);
@@ -406,7 +381,6 @@ public:
    void
    getOwners(
       std::set<int>& owners) const;
-
 
    /*!
     * @brief Split a BoxContainer into two vector<Box>
@@ -529,12 +503,13 @@ private:
     *
     * @param[in] detail_depth How much detail to print.
     */
+/*
    void
    recursivePrint(
       std::ostream& output_stream,
       const std::string& left_border,
       int detail_depth) const;
-
+*/
  
 
 // end set methods
@@ -737,7 +712,6 @@ private:
    removeIntersections(
       const BoxTree& takeaway);
 
-#ifdef MB_BOXTREE_EXISTS
    /*!
     * @brief Remove from each box portions intersecting boxes in takeaway.
     *
@@ -749,7 +723,7 @@ private:
     * the index space specified this BlockId.
     *
     * @param[in] refinement_ratio Assume all boxes in this BoxContainer
-    * belong in this refefinement ratio.
+    * belong in this refinement ratio.
     *
     * @param[in] takeaway The boxes to take away from this BoxContainer.
     */
@@ -759,7 +733,6 @@ private:
       const IntVector& refinement_ratio,
       const MultiblockBoxTree& takeaway,
       bool include_singularity_block_neighbors = false);
-#endif
 
    /*!
     * @brief Remove from box the portions intersecting takeaway.
@@ -819,7 +792,6 @@ private:
    intersectBoxes(
       const BoxTree& keep);
 
-#ifdef MB_BOXTREE_EXISTS
    /*!
     * @brief Keep the intersection of the container's boxes and keep's boxes
     *
@@ -842,7 +814,6 @@ private:
       const IntVector& refinement_ratio,
       const MultiblockBoxTree& keep,
       bool include_singularity_block_neighbors = false);
-#endif
 
    /*!
     * @brief Returns a BoxContainer containing the Boxes from this container 

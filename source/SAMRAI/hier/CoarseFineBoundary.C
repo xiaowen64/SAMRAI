@@ -441,7 +441,7 @@ void CoarseFineBoundary::addPeriodicImageBoxes(
    const int old_size = current_size;
 
    BoxContainer::Iterator itr(boxes);
-   for (int ip = 0; ip < old_size; ++ip, itr++) {
+   for (int ip = 0; ip < old_size; ++ip, ++itr) {
       const Box& unshifted_box = *itr;
       const tbox::List<IntVector>& shifts_list = shifts[ip];
       if (!shifts_list.isEmpty()) {

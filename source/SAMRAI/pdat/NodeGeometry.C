@@ -173,7 +173,8 @@ void NodeGeometry::computeDestinationBoxes(
 
    if (dst_restrict_boxes.size() && dst_boxes.size()) {
       hier::BoxList node_restrict_boxes(src_mask.getDim());
-      for (hier::BoxList::ConstIterator b(dst_restrict_boxes); b; b++) {
+      for (hier::BoxList::ConstIterator b(dst_restrict_boxes);
+           b != dst_restrict_boxes.end(); ++b) {
          node_restrict_boxes.pushBack(toNodeBox(b()));
       }
       dst_boxes.intersectBoxes(node_restrict_boxes);
@@ -194,7 +195,7 @@ NodeGeometry::setUpOverlap(
 {
    hier::BoxList dst_boxes(boxes.getDim());
 
-   for (hier::BoxList::ConstIterator b(boxes); b; b++) {
+   for (hier::BoxList::ConstIterator b(boxes); b != boxes.end(); ++b) {
       hier::Box node_box(NodeGeometry::toNodeBox(b()));
       dst_boxes.pushBack(node_box);
    }

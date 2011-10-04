@@ -248,7 +248,8 @@ void FaceData<TYPE>::copyWithRotation(
 
       hier::Box face_rotatebox(FaceGeometry::toFaceBox(rotatebox, i));
 
-      for (hier::BoxList::ConstIterator bi(overlap_boxes); bi; bi++) {
+      for (hier::BoxList::ConstIterator bi(overlap_boxes);
+           bi != overlap_boxes.end(); ++bi) {
          const hier::Box& overlap_box = bi();
 
          const hier::Box copybox(face_rotatebox * overlap_box);
@@ -415,7 +416,8 @@ void FaceData<TYPE>::packWithRotation(
       hier::Box face_rotatebox(FaceGeometry::toFaceBox(rotatebox, i));
 
       int buf_count = 0;
-      for (hier::BoxList::ConstIterator bi(overlap_boxes); bi; bi++) {
+      for (hier::BoxList::ConstIterator bi(overlap_boxes);
+           bi != overlap_boxes.end(); ++bi) {
          const hier::Box& overlap_box = bi();
 
          const hier::Box copybox(face_rotatebox * overlap_box);

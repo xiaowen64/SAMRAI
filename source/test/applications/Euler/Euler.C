@@ -1754,8 +1754,8 @@ void Euler::boundaryReset(
       if (bdry_case == BdryCond::REFLECT) {
          for (pdat::CellIterator ic(ib()); ic; ic++) {
             for (hier::BoxList::Iterator domain_boxes_itr(domain_boxes);
-                 domain_boxes_itr;
-                 domain_boxes_itr++) {
+                 domain_boxes_itr != domain_boxes.end();
+                 ++domain_boxes_itr) {
                if (domain_boxes_itr().contains(ic()))
                   bdry_cell = false;
             }
@@ -1765,7 +1765,7 @@ void Euler::boundaryReset(
             }
          }
       }
-      ib++;
+      ++ib;
 
       int bnode = 2 * idir + 1;
       if (d_dim == tbox::Dimension(2)) {
@@ -1783,8 +1783,8 @@ void Euler::boundaryReset(
       if (bdry_case == BdryCond::REFLECT) {
          for (pdat::CellIterator ic(ib()); ic; ic++) {
             for (hier::BoxList::Iterator domain_boxes_itr(domain_boxes);
-                 domain_boxes_itr;
-                 domain_boxes_itr++) {
+                 domain_boxes_itr != domain_boxes.end();
+                 ++domain_boxes_itr) {
                if (domain_boxes_itr().contains(ic()))
                   bdry_cell = false;
             }
@@ -1794,7 +1794,7 @@ void Euler::boundaryReset(
             }
          }
       }
-      ib++;
+      ++ib;
    }
 }
 
@@ -2347,7 +2347,7 @@ void Euler::tagGradientDetectorCells(
     * Construct domain bounding box
     */
    hier::Box domain(d_dim);
-   for (hier::BoxList::Iterator i(domain_boxes); i; i++) {
+   for (hier::BoxList::Iterator i(domain_boxes); i != domain_boxes.end(); ++i) {
       domain += *i;
    }
 

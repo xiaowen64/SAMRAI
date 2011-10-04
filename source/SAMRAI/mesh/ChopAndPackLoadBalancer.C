@@ -355,7 +355,7 @@ void ChopAndPackLoadBalancer::loadBalanceBoxLevel(
       balance_mapped_box_level.getMPI(),
       hier::BoxLevel::GLOBALIZED);
    int i = 0;
-   for (hier::BoxList::Iterator itr(out_boxes); itr; itr++, ++i) {
+   for (hier::BoxList::Iterator itr(out_boxes); itr != out_boxes.end(); ++itr, ++i) {
       hier::Box node(*itr, hier::LocalId(i),
                      mapping.getProcessorAssignment(i));
       balance_mapped_box_level.addBox(node);
@@ -601,7 +601,7 @@ void ChopAndPackLoadBalancer::loadBalanceBoxes(
       procloads[i] = 0;
    }
    int itrCt = 0;
-   for (hier::BoxList::Iterator itr(out_boxes); itr; itr++, ++itrCt) {
+   for (hier::BoxList::Iterator itr(out_boxes); itr != out_boxes.end(); ++itr, ++itrCt) {
       int p = mapping.getProcessorAssignment(itrCt);
       procloads[p] += itr->size();
    }
@@ -616,7 +616,8 @@ void ChopAndPackLoadBalancer::loadBalanceBoxes(
    int local_indices_idx = 0;
    int idx = 0;
    for (hier::BoxList::Iterator itr(out_boxes);
-        itr && local_indices_idx < local_indices.size(); itr++, ++idx) {
+        itr != out_boxes.end() && local_indices_idx < local_indices.size();
+        ++itr, ++idx) {
       if (local_indices[local_indices_idx] == idx) {
          local_load += itr().size();
          ++local_indices_idx;
@@ -708,7 +709,8 @@ void ChopAndPackLoadBalancer::chopUniformSingleBox(
    const int nboxes = out_boxes.size();
    out_workloads.resizeArray(nboxes);
    int ibCt = 0;
-   for (hier::BoxList::Iterator ib(out_boxes); ib; ib++, ++ibCt) {
+   for (hier::BoxList::Iterator ib(out_boxes); ib != out_boxes.end();
+        ++ib, ++ibCt) {
       out_workloads[ibCt] = (double)(ib().size());
    }
 
@@ -765,7 +767,8 @@ void ChopAndPackLoadBalancer::chopBoxesWithUniformWorkload(
       physical_domain);
 
    double total_work = 0.0;
-   for (hier::BoxList::Iterator ib0(tmp_in_boxes_list); ib0; ib0++) {
+   for (hier::BoxList::Iterator ib0(tmp_in_boxes_list);
+        ib0 != tmp_in_boxes_list.end(); ++ib0) {
       total_work += ib0().size();
    }
 
@@ -864,8 +867,9 @@ void ChopAndPackLoadBalancer::chopBoxesWithNonuniformWorkload(
    const int num_tmp_patches = tmp_level_boxes.size();
    tbox::Array<double> tmp_level_workloads(num_tmp_patches);
    int idx = 0;
-   for (hier::BoxList::Iterator i(tmp_level_boxes); i; i++, ++idx) {
-      tmp_level_workloads[i] = i().size();
+   for (hier::BoxList::Iterator i(tmp_level_boxes); i != tmp_level_boxes.end();
+        ++i, ++idx) {
+      tmp_level_workloads[idx] = i().size();
    }
 
    hier::ProcessorMapping tmp_level_mapping;
@@ -881,7 +885,8 @@ void ChopAndPackLoadBalancer::chopBoxesWithNonuniformWorkload(
          mpi,
          hier::BoxLevel::GLOBALIZED));
    idx = 0;
-   for (hier::BoxList::Iterator i(tmp_level_boxes); i; i++, ++idx) {
+   for (hier::BoxList::Iterator i(tmp_level_boxes); i != tmp_level_boxes.end();
+        ++i, ++idx) {
       hier::Box node(*i, hier::LocalId(idx),
                      tmp_level_mapping.getProcessorAssignment(idx));
       tmp_mapped_box_level->addBox(node);
@@ -1077,7 +1082,7 @@ void ChopAndPackLoadBalancer::exchangeBoxListsAndWeightArrays(
     * populate the buffers with data for sending
     */
    int offset = 0;
-   for (hier::BoxList::ConstIterator x(box_list_in); x; x++) {
+   for (hier::BoxList::ConstIterator x(box_list_in); x != box_list_in.end(); ++x) {
       for (int i = 0; i < dim.getValue(); ++i) {
          buf_in_ptr[offset++] = x().lower(i);
          buf_in_ptr[offset++] = x().upper(i);
@@ -1117,7 +1122,7 @@ void ChopAndPackLoadBalancer::exchangeBoxListsAndWeightArrays(
     * assemble the output array of boxes
     */
    offset = 0;
-   for (hier::BoxList::Iterator b(box_list_out); b; b++) {
+   for (hier::BoxList::Iterator b(box_list_out); b != box_list_out.end(); ++b) {
       for (int j = 0; j < dim.getValue(); ++j) {
          b().lower(j) = buf_out_ptr[offset++];
          b().upper(j) = buf_out_ptr[offset++];

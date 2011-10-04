@@ -95,7 +95,7 @@ void HierarchyFaceDataOpsInteger::resetLevels(
 
       for (int nd = 0; nd < dim.getValue(); nd++) {
          face_boxes = level->getBoxes();
-         for (hier::BoxList::Iterator i(face_boxes); i; i++) {
+         for (hier::BoxList::Iterator i(face_boxes); i != face_boxes.end(); ++i) {
             *i = pdat::FaceGeometry::toFaceBox(*i, nd);
          }
          hier::BoxUtilities::makeNonOverlappingBoxLists(
@@ -154,7 +154,8 @@ int HierarchyFaceDataOpsInteger::numberOfEntries(
             for (int eb = 0; eb < dim.getValue(); eb++) {
                hier::BoxList::ConstIterator lb =
                   ((d_nonoverlapping_face_boxes[eb][ln])[il]).begin();
-               for ( ; lb; lb++) {
+               for ( ; lb != ((d_nonoverlapping_face_boxes[eb][ln])[il]).end();
+                    ++lb) {
                   entries += lb().size();
                }
             }

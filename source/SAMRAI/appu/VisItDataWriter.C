@@ -3294,7 +3294,8 @@ void VisItDataWriter::writeSummaryToHDFFile(
          }
 
          pn = 0;
-         for (hier::BoxList::ConstIterator itr(boxes); itr; itr++, pn++) {
+         for (hier::BoxList::ConstIterator itr(boxes); itr != boxes.end();
+              ++itr, ++pn) {
             int global_patch_id = getGlobalPatchNumber(hierarchy, ln, pn);
             const hier::Box& box = *itr;
             const int* lower = &box.lower()[0];

@@ -13,7 +13,7 @@
 
 #include "SAMRAI/mesh/BergerRigoutsos.h"
 #include "SAMRAI/hier/BoxContainerIterator.h"
-#include "SAMRAI/hier/BoxContainerSetIterator.h"
+#include "SAMRAI/hier/BoxContainerOrderedConstIterator.h"
 #include "SAMRAI/hier/BoxList.h"
 #include "SAMRAI/hier/BoxLevel.h"
 #include "SAMRAI/hier/IntVector.h"
@@ -336,7 +336,7 @@ int main(
                anchor_boxes.size());
          hier::BoxList::Iterator anchor_boxes_itr(anchor_boxes);
          for (int i = 0; i < my_boxes_start; ++i) {
-            anchor_boxes_itr++;
+            ++anchor_boxes_itr;
          }
          for (int i = my_boxes_start; i < my_boxes_stop; ++i, anchor_boxes_itr++) {
             anchor_mapped_box_level.addBox(*anchor_boxes_itr, hier::BlockId::zero());
@@ -780,7 +780,7 @@ void generatePrebalanceByUserBoxes(
       hierarchy->getGridGeometry(),
       anchor_mapped_box_level.getMPI());
    hier::BoxList::Iterator balance_boxes_itr(balance_boxes);
-   for (int i = 0; i < balance_boxes.size(); ++i, balance_boxes_itr++) {
+   for (int i = 0; i < balance_boxes.size(); ++i, ++balance_boxes_itr) {
       const int owner = i % initial_owners.size();
       if (owner == balance_mapped_box_level.getMPI().getRank()) {
          balance_mapped_box_level.addBox(hier::Box(*balance_boxes_itr,
@@ -870,8 +870,8 @@ int checkBalanceCorrectness(
       globalized_postbalance_mapped_box_set);
 
    // Check for prebalance indices absent in postbalance.
-   for (hier::BoxSet::SetConstIterator bi = globalized_prebalance_mapped_box_set.setBegin();
-        bi != globalized_prebalance_mapped_box_set.end(); ++bi) {
+   for (hier::BoxSet::OrderedConstIterator bi = globalized_prebalance_mapped_box_set.orderedBegin();
+        bi != globalized_prebalance_mapped_box_set.orderedEnd(); ++bi) {
       hier::BoxList box_container(*bi);
       box_container.removeIntersections(bi->getBlockId(),
          prebalance.getRefinementRatio(),
@@ -879,7 +879,8 @@ int checkBalanceCorrectness(
       if (!box_container.isEmpty()) {
          tbox::plog << "Prebalance Box " << *bi << " has " << box_container.size()
                     << " parts absent in postbalance:\n";
-         for (hier::BoxList::Iterator bj(box_container); bj; bj++) {
+         for (hier::BoxList::Iterator bj(box_container);
+              bj != box_container.end(); ++bj) {
             tbox::plog << "  " << *bj << std::endl;
          }
          ++error_count;
@@ -887,8 +888,8 @@ int checkBalanceCorrectness(
    }
 
    // Check for postbalance indices absent in prebalance.
-   for (hier::BoxSet::SetConstIterator bi = globalized_postbalance_mapped_box_set.setBegin();
-        bi != globalized_postbalance_mapped_box_set.end(); ++bi) {
+   for (hier::BoxSet::OrderedConstIterator bi = globalized_postbalance_mapped_box_set.orderedBegin();
+        bi != globalized_postbalance_mapped_box_set.orderedEnd(); ++bi) {
       hier::BoxList box_container(*bi);
       box_container.removeIntersections(bi->getBlockId(),
          postbalance.getRefinementRatio(),
@@ -896,7 +897,8 @@ int checkBalanceCorrectness(
       if (!box_container.isEmpty()) {
          tbox::plog << "Postbalance Box " << *bi << " has " << box_container.size()
                     << " parts absent in prebalance:\n";
-         for (hier::BoxList::Iterator bj(box_container); bj; bj++) {
+         for (hier::BoxList::Iterator bj(box_container);
+              bj != box_container.end(); ++bj) {
             tbox::plog << "  " << *bj << std::endl;
          }
          ++error_count;

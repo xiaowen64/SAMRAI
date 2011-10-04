@@ -155,8 +155,8 @@ void MultiblockGriddingTagger::fillSingularityBoundaryConditions(
 
          const hier::BoxSet& encon_nbrs = ni->second;
 
-         for (hier::BoxSet::OrderedConstIterator ei = encon_nbrs.setBegin();
-              ei != encon_nbrs.setEnd(); ++ei) {
+         for (hier::BoxSet::OrderedConstIterator ei = encon_nbrs.orderedBegin();
+              ei != encon_nbrs.orderedEnd(); ++ei) {
 
             tbox::Pointer<hier::Patch> encon_patch(
                encon_level.getPatch(ei->getId()));

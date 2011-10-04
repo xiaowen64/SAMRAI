@@ -19,7 +19,7 @@
 
 namespace SAMRAI {
 namespace hier {
-
+/*
 BoxContainerOrderedIterator::BoxContainerOrderedIterator(
    BoxContainer& container,
    bool from_start):
@@ -28,7 +28,7 @@ BoxContainerOrderedIterator::BoxContainerOrderedIterator(
               container.d_set.end())
 {
 }
-
+*/
 BoxContainerOrderedIterator::BoxContainerOrderedIterator(
    const BoxContainer& container,
    bool from_start):

@@ -12,7 +12,7 @@
 #include "SAMRAI/hier/Connector.h"
 #include "SAMRAI/hier/GridGeometry.h"
 #include "SAMRAI/hier/Box.h"
-#include "SAMRAI/hier/BoxContainerSetIterator.h"
+#include "SAMRAI/hier/BoxContainerOrderedConstIterator.h"
 #include "SAMRAI/hier/BoxLevel.h"
 #include "SAMRAI/hier/MultiblockBoxTree.h"
 #include "SAMRAI/hier/TransferOperatorRegistry.h"
@@ -271,8 +271,8 @@ int main(
 
       const hier::IntVector& refinement_ratio(one_vector);
 
-      for (hier::BoxSet::SetConstIterator bi = mapped_box_level.getBoxes().setBegin();
-           bi != mapped_box_level.getBoxes().setEnd(); ++bi) {
+      for (hier::BoxSet::OrderedConstIterator bi = mapped_box_level.getBoxes().orderedBegin();
+           bi != mapped_box_level.getBoxes().orderedEnd(); ++bi) {
 
          const hier::Box& mapped_box(*bi);
 
@@ -307,8 +307,8 @@ int main(
           * exhaustive search method first.
           */
          hier::NeighborhoodSet neighborhood_set_from_exhaustive_search(dim);
-         for (hier::BoxSet::SetConstIterator bi = mapped_box_level.getBoxes().setBegin();
-              bi != mapped_box_level.getBoxes().setEnd(); ++bi) {
+         for (hier::BoxSet::OrderedConstIterator bi = mapped_box_level.getBoxes().orderedBegin();
+              bi != mapped_box_level.getBoxes().orderedEnd(); ++bi) {
 
             const hier::Box& mapped_box(*bi);
 
@@ -496,8 +496,8 @@ void exhaustiveFindOverlapBoxes(
    hier::Box transformed_box(mapped_box);
    hier::BlockId transformed_block_id(mapped_box.getBlockId());
 
-   for (hier::BoxSet::SetConstIterator bi = search_mapped_boxes.setBegin();
-        bi != search_mapped_boxes.setEnd(); ++bi) {
+   for (hier::BoxSet::OrderedConstIterator bi = search_mapped_boxes.orderedBegin();
+        bi != search_mapped_boxes.orderedEnd(); ++bi) {
 
       const hier::Box& search_mapped_box(*bi);
 

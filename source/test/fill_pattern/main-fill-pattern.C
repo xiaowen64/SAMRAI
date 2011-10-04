@@ -167,7 +167,7 @@ void txt2boxes(
    }
 
    // Shift all boxes into SAMRAI coordinates
-   for (hier::BoxList::Iterator itr(boxes); itr; itr++) {
+   for (hier::BoxList::Iterator itr(boxes); itr != boxes.end(); ++itr) {
       itr().shift(-hier::IntVector(tbox::Dimension(2), 2));
    }
 }
@@ -334,7 +334,7 @@ bool SingleLevelTestCase(
    txt2boxes(levelboxes_txt, level_boxes);
 
    hier::Box domain_box(dim);
-   for (hier::BoxList::Iterator itr(level_boxes); itr; itr++) {
+   for (hier::BoxList::Iterator itr(level_boxes); itr != level_boxes.end(); ++itr) {
       domain_box += *itr;
    }
 

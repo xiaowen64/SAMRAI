@@ -476,7 +476,8 @@ void CellPoissonHypreSolver::allocateHypreData()
       const hier::BoxList& level_domain =
          level->getPhysicalDomain(hier::BlockId::zero());
       hier::Box domain_bound(level_domain.front());
-      for (hier::BoxList::ConstIterator i(level_domain); i; i++) {
+      for (hier::BoxList::ConstIterator i(level_domain); i != level_domain.end();
+           ++i) {
          domain_bound.lower().min(i().lower());
          domain_bound.upper().max(i().upper());
       }

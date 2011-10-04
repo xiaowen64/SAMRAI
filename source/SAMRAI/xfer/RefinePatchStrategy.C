@@ -55,7 +55,7 @@ void RefinePatchStrategy::preprocessRefineBoxes(
 {
    TBOX_DIM_ASSERT_CHECK_ARGS3(fine, coarse, ratio);
 
-   for (hier::BoxList::ConstIterator b(fine_boxes); b; b++) {
+   for (hier::BoxList::ConstIterator b(fine_boxes); b != fine_boxes.end(); ++b) {
       this->preprocessRefine(fine, coarse, b(), ratio);
    }
 }
@@ -76,7 +76,7 @@ void RefinePatchStrategy::postprocessRefineBoxes(
 {
    TBOX_DIM_ASSERT_CHECK_DIM_ARGS3(d_dim, fine, coarse, ratio);
 
-   for (hier::BoxList::ConstIterator b(fine_boxes); b; b++) {
+   for (hier::BoxList::ConstIterator b(fine_boxes); b != fine_boxes.end(); ++b) {
       this->postprocessRefine(fine, coarse, b(), ratio);
    }
 }

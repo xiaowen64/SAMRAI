@@ -86,7 +86,7 @@ BergerRigoutsosNode::BergerRigoutsosNode(
    d_overlap(-1),
    d_box_acceptance(undetermined),
    d_mapped_box(d_dim),
-   d_mapped_box_iterator(hier::BoxContainer(d_dim).setEnd()),
+   d_mapped_box_iterator(hier::BoxContainer(d_dim).orderedEnd()),
    d_wait_phase(to_be_launched),
    d_send_msg(),
    d_recv_msg(),
@@ -141,7 +141,7 @@ BergerRigoutsosNode::BergerRigoutsosNode(
    d_overlap(-1),
    d_box_acceptance(undetermined),
    d_mapped_box(d_dim),
-   d_mapped_box_iterator(hier::BoxContainer(d_dim).setEnd()),
+   d_mapped_box_iterator(hier::BoxContainer(d_dim).orderedEnd()),
    d_wait_phase(for_data_only),
    d_send_msg(),
    d_recv_msg(),
@@ -163,7 +163,7 @@ BergerRigoutsosNode::BergerRigoutsosNode(
 #endif
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-   d_mapped_box_iterator = BoxSet(d_dim).setEnd();
+   d_mapped_box_iterator = BoxSet(d_dim).orderedEnd();
 #endif
 
    ++(d_common->num_nodes_allocated);
@@ -2264,10 +2264,10 @@ void BergerRigoutsosNode::createBox()
 #endif
    hier::LocalId last_index =
       d_common->new_mapped_box_set.isEmpty() ? hier::LocalId::getZero() :
-      d_common->new_mapped_box_set.setRBegin()->getLocalId();
+      d_common->new_mapped_box_set.orderedRBegin()->getLocalId();
 
    d_mapped_box_iterator = d_common->new_mapped_box_set.insert(
-         d_common->new_mapped_box_set.setEnd(),
+         d_common->new_mapped_box_set.orderedEnd(),
          hier::Box(d_box, last_index + 1, d_common->rank, d_block_id));
 
    d_mapped_box = *d_mapped_box_iterator;
@@ -2287,7 +2287,7 @@ void BergerRigoutsosNode::eraseBox()
       d_common->new_mapped_box_set.erase(d_mapped_box_iterator);
    }
 #ifdef DEBUG_CHECK_ASSERTIONS
-   d_mapped_box_iterator = BoxSet(d_dim).setEnd();
+   d_mapped_box_iterator = BoxSet(d_dim).orderedEnd();
    d_mapped_box = hier::Box(d_dim);
 #endif
 }
