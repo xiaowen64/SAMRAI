@@ -198,6 +198,18 @@ void TreeLoadBalancer::setUniformWorkload(
 
 /*
  *************************************************************************
+ * This method implements the abstract LoadBalanceStrategy interface,
+ * but it is not where the tree load balancer algorithm is implemented.
+ *
+ * This method does some preliminary setup then calls
+ * computeLoadBalancingMapWithinRankGroup to compute the new balanced
+ * BoxLevel and the mapping Connectors between the old and the new.
+ * Then it applies the mapping to update the balance<==>anchor
+ * Connectors.  It may do this multiple times, as specified by the
+ * cycling parameter.
+ *
+ * After load balancing, it enforces the maximum size restriction
+ * by breaking up large boxes and update balance<==>anchor again.
  *************************************************************************
  */
 void TreeLoadBalancer::loadBalanceBoxLevel(
@@ -388,17 +400,22 @@ void TreeLoadBalancer::loadBalanceBoxLevel(
     * input parameter), or leave it negative to let this class set it
     * automatically using the following heuristic algorithm:
     *
-    * Use 1 cycle unless too few (less than sqrt(nproc)) processors
-    * own the initial load.  Exception: use 1 cycle if nproc is small.
+    * If machine size is small enough to have negligible scaling
+    * issues (<= 64), use 1 cycle.
+    *
+    * Else if the initial load is sufficiently spread out (across at
+    * least sqrt(nproc)) processes, use 1 cycle.
+    *
+    * Else use 2 cycles.
     */
    int number_of_cycles = d_n_root_cycles;
    if (number_of_cycles < 0) {
-      /*
-       * User requested automatic number of cycles.
-       */
-      if (balance_mapped_box_level.getMPI().getSize() < 64 ||
-          int(nproc_with_initial_load * nproc_with_initial_load) >
-          balance_mapped_box_level.getMPI().getSize()) {
+      // User requested automatic number of cycles.
+      if (balance_mapped_box_level.getMPI().getSize() <= 64 ) {
+         number_of_cycles = 1;
+      }
+      else if ( int(nproc_with_initial_load * nproc_with_initial_load) >=
+                balance_mapped_box_level.getMPI().getSize() ) {
          number_of_cycles = 1;
       } else {
          number_of_cycles = 2;
@@ -408,14 +425,14 @@ void TreeLoadBalancer::loadBalanceBoxLevel(
 
 
    /*
-    * The loop through number_of_cycles spreads out the work each time
-    * through.  If using more than one cycle, only the last one tries
-    * to balance across all of d_mpi.
+    * The icycle loop spreads out the work each time through.  If
+    * using more than one cycle, only the last one tries to balance
+    * across all of d_mpi.  Here's what the loop does:
     *
-    * 1.  Rebalance balance_mapped_box_level and store in temporary
-    *     tmp_mapped_box_level.
+    * 1.  Rebalance balance_mapped_box_level, storing the balanced
+    * version and the balance mapping Connectors in temporary objects.
     *
-    * 2.  Use the balancing map to modify connectors to anchor.
+    * 2.  Use the balanc mapping to modify connectors to anchor.
     *
     * 3.  Reset balance_mapped_box_level to tmp_mapped_box_level.
     */
@@ -454,7 +471,7 @@ void TreeLoadBalancer::loadBalanceBoxLevel(
          balance_to_tmp,
          tmp_to_balance,
          balance_mapped_box_level,
-         rank_group,
+        rank_group,
          icycle,
          number_of_cycles,
          local_load,
@@ -470,40 +487,23 @@ void TreeLoadBalancer::loadBalanceBoxLevel(
 
 
       /*
-       * Apply the load-balancing map.
+       * Apply the load-balancing map.  If anchor<==>balance
+       * Connectors are given, modify them while exchanging
+       * balance_mapped_box_level with tmp_mapped_box_level.
+       * If not, manually swap the two.
        */
 
       t_use_map->start();
+
       if (anchor_to_balance.isInitialized()) {
-         if (0) {
-            tbox::plog << "loadBalanceBoxLevel: unbalanced:\n"
-                       << balance_mapped_box_level.format("--> ", 3)
-                       << "loadBalanceBoxLevel: balanced:\n" << tmp_mapped_box_level.format(
-               "--> ",
-               3)
-            << "loadBalanceBoxLevel: unbalanced_to_balanced:\n"
-            << balance_to_tmp.format("--> ", 3)
-            << "loadBalanceBoxLevel: balanced_to_unbalanced:\n"
-            << tmp_to_balance.format("--> ", 3);
-         }
          const hier::MappingConnectorAlgorithm mca;
-         mca.modify(anchor_to_balance,
+         mca.modify(
+            anchor_to_balance,
             balance_to_anchor,
             balance_to_tmp,
             tmp_to_balance,
             &balance_mapped_box_level,
             &tmp_mapped_box_level);
-         if (0) {
-            tbox::plog << "loadBalanceBoxLevel: anchor:\n"
-                       << anchor_to_balance.getBase().format("--> ", 3)
-                       << "loadBalanceBoxLevel: balanced:\n" << tmp_mapped_box_level.format(
-               "--> ",
-               3)
-            << "loadBalanceBoxLevel: balance_to_anchor:\n"
-            << balance_to_anchor.format("--> ", 3)
-            << "loadBalanceBoxLevel: anchor_to_balance:\n"
-            << anchor_to_balance.format("--> ", 3);
-         }
       } else {
          BoxLevel::swap(balance_mapped_box_level, tmp_mapped_box_level);
       }
@@ -512,6 +512,7 @@ void TreeLoadBalancer::loadBalanceBoxLevel(
          d_mpi.Barrier();
          t_barrier_after->stop();
       }
+
       t_use_map->stop();
 
    }
@@ -524,12 +525,15 @@ void TreeLoadBalancer::loadBalanceBoxLevel(
     */
 
    if (max_size > hier::IntVector::getZero(d_dim)) {
+
       t_constrain_size->start();
+
       hier::Connector unconstrained_to_constrained;
       mapOversizedBoxes(
          tmp_mapped_box_level,
          unconstrained_to_constrained,
          balance_mapped_box_level );
+
       if (anchor_to_balance.isInitialized()) {
          const hier::MappingConnectorAlgorithm mca;
          mca.modify(anchor_to_balance,
@@ -540,11 +544,13 @@ void TreeLoadBalancer::loadBalanceBoxLevel(
       } else {
          BoxLevel::swap(balance_mapped_box_level, tmp_mapped_box_level);
       }
+
       t_constrain_size->stop();
       if (d_print_steps) {
          tbox::plog << " TreeLoadBalancer completed applying unconstrained_to_constrained map"
                     << "\n";
       }
+
    }
 
 
@@ -613,6 +619,8 @@ void TreeLoadBalancer::loadBalanceBoxLevel(
 
 /*
  *************************************************************************
+ * Compute BoxLevel conforming to max size constraint and the mapping
+ * to that BoxLevel.
  *************************************************************************
  */
 void TreeLoadBalancer::mapOversizedBoxes(
@@ -651,12 +659,19 @@ void TreeLoadBalancer::mapOversizedBoxes(
 
       const hier::IntVector mapped_box_size = mapped_box.numberCells();
 
+      /*
+       * If mapped_box already conform to max size constraint, keep it.
+       * Else chop it up and keep the parts.
+       */
+
       if (mapped_box_size <= d_max_size) {
+
          if (d_print_break_steps) {
             tbox::plog << "    Not oversized: " << mapped_box
                        << mapped_box.numberCells() << "\n";
          }
          constrained.addBox(mapped_box);
+
       } else {
 
          if (d_print_break_steps) {
@@ -670,8 +685,9 @@ void TreeLoadBalancer::mapOversizedBoxes(
             d_cut_factor,
             d_bad_interval,
             d_domain_boxes);
+         TBOX_ASSERT( chopped.size() != 0 );
 
-         if (true || chopped.size() != 1) {
+         if (chopped.size() != 1) {
 
             unconstrained_to_constrained.makeEmptyLocalNeighborhood(
                mapped_box.getId());
@@ -703,6 +719,7 @@ void TreeLoadBalancer::mapOversizedBoxes(
             }
 
          } else {
+            TBOX_ASSERT( mapped_box.isSpatiallyEqual( chopped.getFirstItem() ) );
             if (d_print_break_steps) {
                tbox::plog << " Unbreakable!" << "\n";
             }
@@ -738,7 +755,8 @@ void TreeLoadBalancer::mapOversizedBoxes(
  * This method balances within the given rank_group, or subgroup it
  * based on the cycle number.  If given a rank_group with less than
  * all ranks, we treat it as a specific user request and just use it
- * as is.  Otherwise, we will sub-group it based on the cycle number.
+ * as is.  Otherwise, we may generate sub-groups based on the cycle
+ * number and balance within the generated sub-group.
  *
  * The objective of balancing over multiple cycles is to avoid
  * unscalable performance in the cases where just a few processes own
@@ -788,20 +806,26 @@ void TreeLoadBalancer::computeLoadBalancingMapWithinRankGroup(
     */
 
    const tbox::RankGroup *use_rank_group = &rank_group;
-   int num_groups = 1;
+   int number_of_groups = 1;
    int group_num = 0;
 
    tbox::RankGroup cycle_rank_group(d_mpi);
    if ( !last_cycle && rank_group.containsAllRanks() ) {
       createBalanceRankGroupBasedOnCycles(
          cycle_rank_group,
-         num_groups,
+         number_of_groups,
          group_num,
          cycle_number,
          number_of_cycles);
       use_rank_group = &cycle_rank_group;
    }
 
+
+   /*
+    * Determine the parent and children processes (on the tree) of the
+    * local process and set up the objects for communicating with
+    * those processes.
+    */
    tbox::AsyncCommStage comm_stage;
    tbox::AsyncCommPeer<int>* child_comms = NULL;
    tbox::AsyncCommPeer<int>* parent_send = NULL;
@@ -824,12 +848,14 @@ void TreeLoadBalancer::computeLoadBalancingMapWithinRankGroup(
     * is the global sum load.  Else, use all-reduce to get the
     * group load.
     */
+   t_compute_tree_load->start();
 
    double group_sum_load, group_avg_load;
 
-   t_compute_tree_load->start();
    if (cycle_number == number_of_cycles - 1) {
+
       group_sum_load = global_sum_load;
+
    } else {
 
       switch (cycle_number) {
@@ -847,7 +873,7 @@ void TreeLoadBalancer::computeLoadBalancingMapWithinRankGroup(
        * number of groups << number of procs, it is still faster
        * (probably) than hand coded conmunication.
        */
-      std::vector<double> group_loads(num_groups, 0.0);
+      std::vector<double> group_loads(number_of_groups, 0.0);
       group_loads[group_num] = local_load;
       if (d_mpi.getSize() > 1) {
          d_mpi.AllReduce(&group_loads[0],
@@ -866,9 +892,10 @@ void TreeLoadBalancer::computeLoadBalancingMapWithinRankGroup(
       }
 
    }
-   t_compute_tree_load->stop();
 
    group_avg_load = group_sum_load / rank_group.size();
+
+   t_compute_tree_load->stop();
 
    if (d_print_steps) {
       tbox::plog << "Initial local,group_sum,group_avg loads:"
@@ -891,19 +918,9 @@ void TreeLoadBalancer::computeLoadBalancingMapWithinRankGroup(
    group_avg_load =
       tbox::MathUtilities<double>::Max(group_avg_load, d_global_avg_load);
 
-   // peer_ranks list of all ranks we communicate with.
-   std::vector<int> peer_ranks(num_children + 1);
-   for (int i = 0; i < num_children; ++i) {
-      peer_ranks[i] = child_comms[i].getPeerRank();
-   }
-   peer_ranks[num_children] = parent_send ==
-      NULL ? -1 : parent_send->getPeerRank();
-
-   const hier::BoxSet& unbalanced_mapped_boxes =
-      unbalanced_mapped_box_level.getBoxes();
 
    /*
-    * Outline for load balancing:
+    * Outline of the tree load balancing algorithm as implemented:
     *
     * 1. For each child:
     * Receive data from subtree rooted at child (number in
@@ -941,7 +958,6 @@ void TreeLoadBalancer::computeLoadBalancingMapWithinRankGroup(
    }
    t_get_load_from_children->stop();
 
-   t_misc1->start();
 
    /*
     * Data for storing and transfering subtree info.
@@ -949,29 +965,35 @@ void TreeLoadBalancer::computeLoadBalancingMapWithinRankGroup(
    SubtreeLoadData* child_load_data = new SubtreeLoadData[num_children];
    SubtreeLoadData my_load_data;
 
-   t_misc1->stop();
-   t_misc2->start();
 
    /*
-    * For tracking available indices that can be assigned to newly
-    * created Boxes: The indices for Boxes from this proc
-    * and those from children procs are interlaced to remove results'
-    * dependence on which message arrives first.
-    *
-    * Nodes from the first child start with the first unused index
-    * divisible by (2+d_degree).  Nodes from child c start with the
-    * same number plus c.  Locally created Boxes start with the
-    * same number plus d_degree.  Nodes from parent start with the
-    * same number plus d_degree+1.
-    *
-    * Each time an index is used, next_available_index is increased by 2+degree.
+    * The local process must generate indices for new and imported
+    * boxes.  To do it deterministically, no generated index should
+    * depend on message arrival order.  To achieve this, we maintain
+    * 2+d_degree values in next_available_index: one for the local
+    * process, one for the parent and one for each child.  The first
+    * index given to a locally generated Box is some index unused by
+    * unbalanced_mapped_box_level.  The first index given to a Box
+    * from the parent is the same value plus 1.  The first index given
+    * to a box from child 0 is the same value plus 2.  And so on.
+    * Each time a value from next_available_index is used, we
+    * increment it by 2+d_degree so that the 2+d_degree available
+    * values can never be the same.  Moreover, boxes from a certain
+    * source always take indices from its own set, independent of when
+    * boxes from other sources arrive.
     */
    std::vector<hier::LocalId> next_available_index(2 + d_degree);
    next_available_index[0] = unbalanced_mapped_box_level.getLastLocalId() + 1;
-   next_available_index[0] += (next_available_index[0] % (1 + d_degree));
+   /*
+    * The next line makes next_available_index[0] divisible by 2+d_degree.
+    * It is not strictly necessary but makes debugging much easier because
+    * we can quickly associate any value with the source of its Box.
+    */
+   next_available_index[0] += hier::LocalId(2+d_degree) - (next_available_index[0] % (2 + d_degree));
    for (int c = 1; c < d_degree + 2; ++c) {
       next_available_index[c] = next_available_index[0] + c;
    }
+
 
    /*
     * Initialize output objects.
@@ -989,16 +1011,6 @@ void TreeLoadBalancer::computeLoadBalancingMapWithinRankGroup(
       balanced_mapped_box_level,
       hier::IntVector::getZero(d_dim));
 
-   t_misc2->stop();
-   t_misc3->start();
-
-   /*
-    * Unassigned NodeInTransit.  First set to local excess Box
-    * (if any).  If children send up excess NodeInTransit, add them.  Result
-    * should be taken by local proc and sent down the tree to children
-    * (if needed).  The rest (if any) are sent up to parent.
-    */
-   TransitSet unassigned;
 
    /*
     * Compute local proc's Boxes and loads and store in
@@ -1009,7 +1021,6 @@ void TreeLoadBalancer::computeLoadBalancingMapWithinRankGroup(
    my_load_data.num_procs = 1;
    my_load_data.total_work = (int)computeLocalLoads(unbalanced_mapped_box_level);
 
-   t_misc3->stop();
 
    /*
     * Decide whether local parts of unbalanced_mapped_box_level should
@@ -1018,19 +1029,32 @@ void TreeLoadBalancer::computeLoadBalancingMapWithinRankGroup(
 
    t_local_balancing->start();
 
+
+   /*
+    * unassigned is a container NodeInTransit that has been released
+    * by a process and has not yet been assigned to another.  First,
+    * put excess local work (if any) in unassigned.  Imported
+    * NodeInTransits are placed here before deterining whether to keep
+    * them or send them to another part of the tree.
+    */
+   TransitSet unassigned;
+
+
    if (my_load_data.total_work /* currently excluding children */ <=
        group_avg_load) {
       /*
        * Local process is underloaded, so put all of unbalanced_mapped_box_level into
        * the balanced_mapped_box_level (and add more later).
        */
+      const hier::BoxSet& unbalanced_mapped_boxes =
+         unbalanced_mapped_box_level.getBoxes();
       for (hier::BoxSet::const_iterator ni = unbalanced_mapped_boxes.begin();
            ni != unbalanced_mapped_boxes.end(); ++ni) {
          balanced_mapped_box_level.addBox(*ni);
       }
    } else {
       /*
-       * Local process is overloaded, so reassign some loads:
+       * Local process is overloaded, so remove excess loads:
        * - sort NodeInTransit by load
        * - reassignLoads (put excess loads in unassigned container) and
        * - put remainder in balanced_mapped_box_level.
@@ -1057,13 +1081,19 @@ void TreeLoadBalancer::computeLoadBalancingMapWithinRankGroup(
        * be seen.
        */
 
+      const hier::BoxSet& unbalanced_mapped_boxes =
+         unbalanced_mapped_box_level.getBoxes();
+
       TransitSet
       sorted_loads(unbalanced_mapped_boxes.begin(), unbalanced_mapped_boxes.end());
+
       int ideal_transfer = int(0.5 + my_load_data.total_work - group_avg_load);
+
       if (d_print_steps) {
          tbox::plog << "  Reassigning initial overload of " << ideal_transfer
                     << " to unassigned.\n";
       }
+
       int actual_transfer;
       reassignLoads(sorted_loads,
          unassigned,
@@ -1076,9 +1106,9 @@ void TreeLoadBalancer::computeLoadBalancingMapWithinRankGroup(
          const BoxInTransit& mapped_box_in_transit = *ni;
          balanced_mapped_box_level.addBox(mapped_box_in_transit.mapped_box);
          /*
-          * Create local edges only for mapped_box_in_transit that changed.
-          * Semilocal edges are created by final owner
-          * and sent back.
+          * Create local edges only for mapped_box_in_transit that
+          * changed.  Semilocal edges are created by owner who decides
+          * to keep the box.
           */
          if (mapped_box_in_transit.mapped_box.getLocalId() !=
              mapped_box_in_transit.orig_mapped_box.getLocalId()) {
@@ -1095,7 +1125,7 @@ void TreeLoadBalancer::computeLoadBalancingMapWithinRankGroup(
          tbox::plog << "    Unassigning " << unassigned.size()
                     << " boxes (" << actual_transfer << " / "
                     << ideal_transfer << " units) "
-                    << "for " << (num_groups - 1) << " procs:";
+                    << "for " << (number_of_groups - 1) << " procs:";
          for (TransitSet::const_iterator
               ni = unassigned.begin(); ni != unassigned.end(); ++ni) {
             tbox::plog << "  " << *ni;
@@ -1109,12 +1139,14 @@ void TreeLoadBalancer::computeLoadBalancingMapWithinRankGroup(
 
 
    /*
-    * Complete load communications with children.
+    * Complete load-receive communications with children.
     * Add imported BoxInTransit to unassigned bin.
     */
    t_get_load_from_children->start();
    do {
+
       for (unsigned int i = 0; i < completed.size(); ++i) {
+
          tbox::AsyncCommPeer<int>* peer_comm =
             dynamic_cast<tbox::AsyncCommPeer<int> *>(completed[i]);
          TBOX_ASSERT(peer_comm >= child_comms);
@@ -1126,9 +1158,9 @@ void TreeLoadBalancer::computeLoadBalancingMapWithinRankGroup(
          TBOX_ASSERT(cindex >= 0 && cindex < num_children);
 
          /*
-          * Extract data from the children.  Initialize data for tree
-          * rooted at children.  If child sent up any excess
-          * Box, put them in unassigned.
+          * Extract data from the child cindex, storing it in
+          * child_load_data[cindex].  If child sent up any excess Box,
+          * put them in unassigned.
           */
          int old_size = static_cast<int>(unassigned.size());
          unpackSubtreeLoadData(
@@ -1137,14 +1169,14 @@ void TreeLoadBalancer::computeLoadBalancingMapWithinRankGroup(
             next_available_index[cindex],
             received_data,
             received_data_length );
+
          child_load_data[cindex].ideal_work =
             int(group_avg_load * child_load_data[cindex].num_procs + 0.5);
+
          if (d_print_steps) {
             TransitSet::const_iterator
                ni = unassigned.begin();
-            for (int ii = 0; ii < old_size; ++ii) {
-               ++ni;
-            }
+            for (int ii = 0; ii < old_size; ++ii) { ++ni; }
             if (d_print_steps) {
                tbox::plog << "    Got " << unassigned.size() - old_size
                           << " boxes (" << child_load_data[cindex].load_imported
@@ -1157,16 +1189,20 @@ void TreeLoadBalancer::computeLoadBalancingMapWithinRankGroup(
                tbox::plog << std::endl;
             }
          }
+
          // Sum children load into my_load_data.
          my_load_data.num_procs += child_load_data[cindex].num_procs;
          my_load_data.total_work +=
             child_load_data[cindex].total_work
             + child_load_data[cindex].load_imported;
+
       }
+
       completed.clear();
       t_children_load_comm->start();
       comm_stage.advanceSome(completed);
       t_children_load_comm->stop();
+
    } while (!completed.empty());
 
 
@@ -1204,16 +1240,21 @@ void TreeLoadBalancer::computeLoadBalancingMapWithinRankGroup(
     */
    t_send_load_to_parent->start();
    if (parent_send != NULL) {
+
       /*
        * Compute the excess work we want to send to parent.
+       * If it's positive, compute the boxes to send to parent.
        */
       int ideal_transfer = my_load_data.total_work > my_load_data.ideal_work ?
          my_load_data.total_work - my_load_data.ideal_work : 0;
+
       if (ideal_transfer > 0) {
+
          if (d_print_steps) {
             tbox::plog << "  Attempting to reassign " << ideal_transfer
                        << " of unassigned load to parent.\n";
          }
+
          int actual_transfer;
          reassignLoads(unassigned,
             my_load_data.for_export /* to parent */,
@@ -1228,7 +1269,7 @@ void TreeLoadBalancer::computeLoadBalancingMapWithinRankGroup(
                        << " boxes (" << actual_transfer << " / "
                        << ideal_transfer << " units) to parent "
                        << parent_send->getPeerRank() << " for "
-                       << (num_groups - my_load_data.num_procs) << " procs:";
+                       << (number_of_groups - my_load_data.num_procs) << " procs:";
             for (TransitSet::const_iterator
                  ni = my_load_data.for_export.begin();
                  ni != my_load_data.for_export.end(); ++ni) {
@@ -1236,13 +1277,17 @@ void TreeLoadBalancer::computeLoadBalancingMapWithinRankGroup(
             }
             tbox::plog << std::endl;
          }
+
       }
+
       /*
-       * Send local process's load info up to parent.
+       * Send local process's load info, along with any exported work,
+       * up to parent.
        */
       std::vector<int> msg;
       packSubtreeLoadData(msg, my_load_data);
       parent_send->beginSend(&msg[0], static_cast<int>(msg.size()));
+
    }
    t_send_load_to_parent->stop();
 
@@ -1265,11 +1310,21 @@ void TreeLoadBalancer::computeLoadBalancingMapWithinRankGroup(
 
 
    /*
-    * May do some things here that do not depend on message from parents.
+    * May do some things here that do not depend on message from
+    * parents.  Steve Smith suggested sending work down to underloaded
+    * children here, even if it makes the local process underloaded as
+    * a result.  The local process can recover the correct amount of
+    * work when it comes down from the parent.  This would allow some
+    * children subtrees to wait less, but it has other consequences.
     */
 
 
    if (parent_recv != NULL && my_load_data.load_exported == 0) {
+      /*
+       * Receive and unpack message from parent.  Since we did not
+       * export work to parent, parent may import some to us.  Put
+       * imported work in unassigned.
+       */
       t_get_load_from_parent->start();
 
       t_parent_load_comm->start();
@@ -1315,48 +1370,33 @@ void TreeLoadBalancer::computeLoadBalancingMapWithinRankGroup(
                  << my_load_data.ideal_work << std::endl;
    }
 
+
    /*
     * Divide unassigned between self and children subtrees.
-    *
-    * Give as much as possible of the excess work to children trees
-    * so they can start their partitioning process.  The remaining
-    * excess is to be kept locally.
     */
 
    t_send_load_to_children->start();
 
-   /*
-    * Compute number of processors that would have to share
-    * the unassigned loads.  (Processor subtrees that have
-    * detached themselves do not count because they will
-    * not receive any unassigned loads.)
-    */
-   int remaining_num_procs = 1;
-   for (int c = 0; c < num_children; ++c) {
-      if (child_load_data[c].load_imported == 0) {
-         remaining_num_procs += child_load_data[c].num_procs;
-      }
-   }
+   for (int ichild = 0; ichild < num_children; ++ichild) {
 
-   for (int c = 0; c < num_children; ++c) {
-
-      SubtreeLoadData& recip_data = child_load_data[c];
+      SubtreeLoadData& recip_data = child_load_data[ichild];
 
       /*
-       * To preclude unneeded messages,
-       * we do *not* send a work message down if the child
-       * sent work up to us.
+       * Note: To preclude unneeded messages, we do *not* send a work
+       * message down if the child sent work up to us.
        */
       if (recip_data.load_imported == 0) {
+
          int ideal_transfer = recip_data.ideal_work - recip_data.total_work;
          int actual_transfer = 0;
+
          if (d_print_steps) {
             tbox::plog << "  Attempting to reassign " << ideal_transfer
                        << " of unassigned load to child "
-                       << child_comms[c].getPeerRank() << "\n";
+                       << child_comms[ichild].getPeerRank() << "\n";
          }
+
          if (ideal_transfer > 0) {
-            remaining_num_procs -= recip_data.num_procs;
             reassignLoads(unassigned,
                recip_data.for_export,
                actual_transfer,
@@ -1369,8 +1409,8 @@ void TreeLoadBalancer::computeLoadBalancingMapWithinRankGroup(
          if (d_print_steps) {
             tbox::plog << "  Giving " << recip_data.for_export.size()
                        << " boxes (" << actual_transfer << " / " << ideal_transfer
-                       << " units) to child " << c << ':'
-                       << child_comms[c].getPeerRank() << " for "
+                       << " units) to child " << ichild << ':'
+                       << child_comms[ichild].getPeerRank() << " for "
                        << recip_data.num_procs
                        << " procs:";
             for (TransitSet::const_iterator
@@ -1380,9 +1420,10 @@ void TreeLoadBalancer::computeLoadBalancingMapWithinRankGroup(
             }
             tbox::plog << std::endl;
          }
+
          std::vector<int> msg;
          packSubtreeLoadData(msg, recip_data);
-         child_comms[c].beginSend(&msg[0], static_cast<int>(msg.size()));
+         child_comms[ichild].beginSend(&msg[0], static_cast<int>(msg.size()));
 
       }
 
@@ -1392,8 +1433,9 @@ void TreeLoadBalancer::computeLoadBalancingMapWithinRankGroup(
 
 
    /*
-    * Populate balanced_mapped_box_level with unassigned Boxes
-    * and generate relationships in balanced<==>unbalanced.
+    * Populate balanced_mapped_box_level with unassigned Boxes and
+    * generate relationships in balanced<==>unbalanced mapping
+    * Connectors.
     *
     * Unassigned BoxInTransit that differ from their orig_mapped_box
     * are imported or left-overs from breaking.  These Boxes
@@ -1402,15 +1444,18 @@ void TreeLoadBalancer::computeLoadBalancingMapWithinRankGroup(
     * Unassigned BoxInTransit that are identical to their
     * orig_mapped_box are Boxes that were intended for export but
     * never exported.  These Boxes should NOT have relationships in
-    * balanced<==>unbalanced.
+    * balanced<==>unbalanced.  Remove these boxes so unassigned
+    * can be interpreted as the container of changed boxes.
     */
    t_local_balancing->start();
 
    for (TransitSet::iterator
         ni = unassigned.begin();
         ni != unassigned.end(); /* incremented in loop */) {
+
       const BoxInTransit& mapped_box_in_transit = *ni;
       balanced_mapped_box_level.addBox(mapped_box_in_transit.mapped_box);
+
       if (!mapped_box_in_transit.mapped_box.isIdEqual(mapped_box_in_transit.orig_mapped_box)) {
          // Create relationship for changed Box.
          balanced_to_unbalanced.insertLocalNeighbor(
@@ -1424,19 +1469,14 @@ void TreeLoadBalancer::computeLoadBalancingMapWithinRankGroup(
          ++ni;
          unassigned.erase(sni);
       }
+
    }
+
 
    balanced_to_unbalanced.setConnectorType(hier::Connector::MAPPING);
    unbalanced_to_balanced.setConnectorType(hier::Connector::MAPPING);
 
    t_local_balancing->stop();
-
-   /*
-    * Now that unchanged BoxInTransit have been removed from
-    * unassigned, call it "changed", for clarity.  Changed
-    * BoxInTransit need to have edges built.
-    */
-   TransitSet& changed = unassigned;
 
    /*
     * Finish messages before starting edge info exchange.
@@ -1457,7 +1497,8 @@ void TreeLoadBalancer::computeLoadBalancingMapWithinRankGroup(
    }
 #endif
 
-#if 1
+
+#if 0
    /*
     * This is not needed if the communications are bug-free.
     * As a debugging measure, switch the MPI tags for edge communication.
@@ -1474,7 +1515,13 @@ void TreeLoadBalancer::computeLoadBalancingMapWithinRankGroup(
    }
 #endif
 
+
    /*
+    * TODO: Move code to compute neighborhoods to a separate method.
+    * It should make this method more manageable and allows us to
+    * experiment with various way to compute the edges (by direct
+    * communication without relying on the tree, for example).
+    *
     * Determine edges from unbalanced to balanced BoxLevels
     * by sending balanced Boxes back to the owners of
     * the unbalanced Boxes that originated them.  Use
@@ -1514,10 +1561,29 @@ void TreeLoadBalancer::computeLoadBalancingMapWithinRankGroup(
       }
    }
 
+
+   /*
+    * peer_ranks is a list of all ranks we communicate with.  Compute
+    * once here for use in the pack/unpack methods, to avoid repeated
+    * recomputing.
+    */
+   std::vector<int> peer_ranks(num_children + 1);
+   for (int i = 0; i < num_children; ++i) {
+      peer_ranks[i] = child_comms[i].getPeerRank();
+   }
+   peer_ranks[num_children] = parent_send ==
+      NULL ? -1 : parent_send->getPeerRank();
+
+
+   /*
+    * Note that unchanged BoxInTransit have been removed from
+    * unassigned, so it now only contains boxes that have changed
+    * and need to have edges built.
+    */
    t_local_edges->start();
    packNeighborhoodSetMessages(messages,
       unbalanced_to_balanced,
-      changed,
+      unassigned,
       peer_ranks);
    t_local_edges->stop();
 
@@ -1550,11 +1616,18 @@ void TreeLoadBalancer::computeLoadBalancingMapWithinRankGroup(
    }
    t_get_edge_from_children->stop();
 
+
+   /*
+    * Edge data to/from parents:
+    *
+    * If we received BoxInTransit from the parent, the parent is
+    * expecting us to send relationship data for those boxes.
+    *
+    * We sent BoxInTransit to the parent, the parent would send back
+    * relationship data for those boxes.
+    */
    if (my_load_data.load_imported > 0) {
-      /*
-       * We have received BoxInTransit from the parent, so the parent
-       * is expecting us to send relationship data.
-       */
+
       t_send_edge_to_parent->start();
       t_parent_edge_comm->start();
       parent_send->completeCurrentOperation();
@@ -1562,11 +1635,9 @@ void TreeLoadBalancer::computeLoadBalancingMapWithinRankGroup(
          static_cast<int>(messages[num_children].size()));
       t_parent_edge_comm->stop();
       t_send_edge_to_parent->stop();
+
    } else if (my_load_data.load_exported > 0) {
-      /*
-       * We have sent BoxInTransit to the parent, so the parent would
-       * send back relationship data.
-       */
+
       t_get_edge_from_parent->start();
       t_parent_edge_comm->start();
       parent_recv->beginRecv();
@@ -1579,6 +1650,7 @@ void TreeLoadBalancer::computeLoadBalancingMapWithinRankGroup(
          parent_recv->getRecvData(),
          parent_recv->getRecvSize() );
       t_get_edge_from_parent->stop();
+
    }
 
    t_send_edge_to_children->start();
@@ -2091,7 +2163,7 @@ void TreeLoadBalancer::freeMPICommunicator()
  */
 void TreeLoadBalancer::createBalanceRankGroupBasedOnCycles(
    tbox::RankGroup &rank_group,
-   int &num_groups,
+   int &number_of_groups,
    int &group_num,
    const int cycle_number,
    const int number_of_cycles) const
@@ -2103,18 +2175,18 @@ void TreeLoadBalancer::createBalanceRankGroupBasedOnCycles(
     * overloads.  In order to make all groups similar in size we round
     * down the number of groups (and round up the group size).
     */
-   num_groups =
+   number_of_groups =
       (int)pow((double)d_mpi.getSize(),
                1.0 - double(cycle_number + 1) / number_of_cycles);
 
    /*
     * All groups will have a nominal population count of
-    * d_mpi.getSize()/num_groups.  The remainder from the integer
+    * d_mpi.getSize()/number_of_groups.  The remainder from the integer
     * division is distributed to a subset of groups, starting from
     * group 0, so these groups will have one more than nominal.
     */
-   const int nominal_group_size = d_mpi.getSize() / num_groups;
-   const int first_nominal_sized_group = d_mpi.getSize() % num_groups;
+   const int nominal_group_size = d_mpi.getSize() / number_of_groups;
+   const int first_nominal_sized_group = d_mpi.getSize() % number_of_groups;
    const int first_rank_in_nominal_sized_group = first_nominal_sized_group * (1 + nominal_group_size);
 
    if (d_mpi.getRank() < first_rank_in_nominal_sized_group) {
@@ -2406,6 +2478,7 @@ bool TreeLoadBalancer::shiftLoadsByBreaking(
          TransitSet trial_dst = dst;
          TBOX_ASSERT(trial_src.size() + trial_dst.size() > 0);
          int trial_actual_transfer = actual_transfer;
+         trial_src.erase(candidate);
 
          /*
           * Put breakoff in trial_dst and put leftover back into trial_src.
