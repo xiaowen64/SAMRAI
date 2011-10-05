@@ -1041,22 +1041,6 @@ void PatchLevel::initializeGlobalizedBoxLevel() const
 }
 
 /*
- *************************************************************************
- * Return a const reference to the shift array for the patches on the level;
- * the shift array contains a list of shift vectors for each patch
- * when the domain has some periodic direction.
- *************************************************************************
- */
-
-const tbox::Array<tbox::List<IntVector> >& PatchLevel::getShiftsForLevel()
-const
-{
-   TBOX_ERROR("Incomplete code.");
-   static tbox::Array<tbox::List<IntVector> > dummy(0);
-   return dummy;
-}
-
-/*
  * ************************************************************************
  * ************************************************************************
  */

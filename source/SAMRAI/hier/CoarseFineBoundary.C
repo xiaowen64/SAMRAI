@@ -405,54 +405,6 @@ void CoarseFineBoundary::computeFromLevel(
 
 }
 
-void CoarseFineBoundary::addPeriodicImageBoxes(
-   BoxList& boxes,
-   const tbox::Array<tbox::List<IntVector> >& shifts)
-{
-   TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(d_dim, boxes);
-   TBOX_ASSERT(shifts.size() == boxes.getNumberOfBoxes());
-
-   int current_size = boxes.getNumberOfBoxes();
-
-   TBOX_ERROR("Code disabled because getShiftsForLevel is gone.");
-
-   // TODO Something needs to be done with this
-
-   /*
-    * Count number of boxes that must be added to boxes.
-    * And resize boxes accordingly before adding the
-    * periodic images to it.
-    */
-   int new_size = current_size;
-   for (int ip = 0; ip < current_size; ++ip) {
-      new_size += shifts[ip].getNumberOfItems();
-   }
-
-   /*
-    * For all the possible shifts of all patches,
-    * compute the shifted box and add it to boxes.
-    * This completes the addition of images boxes.
-    */
-   const int old_size = current_size;
-
-   BoxList::Iterator itr(boxes);
-   for (int ip = 0; ip < old_size; ++ip, itr++) {
-      const Box& unshifted_box = *itr;
-      const tbox::List<IntVector>& shifts_list = shifts[ip];
-      if (!shifts_list.isEmpty()) {
-         tbox::List<IntVector>::Iterator sh;
-         for (sh = shifts_list.listStart(); sh; sh++) {
-            Box shifted_box(unshifted_box);
-            shifted_box.shift((*sh));
-            boxes.appendItem(shifted_box);
-            ++current_size;
-         }
-      }
-   }
-
-   TBOX_ASSERT(current_size == new_size);
-}
-
 void CoarseFineBoundary::clear()
 {
    d_boundary_boxes.clear();

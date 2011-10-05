@@ -182,16 +182,6 @@ PatchLevel::getGlobalizedBoxLevel() const
    return d_mapped_box_level->getGlobalizedVersion();
 }
 
-#if 0
-// Removed due to incompatibility with DLBG.
-SAMRAI_INLINE_KEYWORD
-const tbox::Array<tbox::List<IntVector> >& PatchLevel::getShiftsForLevel()
-const
-{
-   return d_shifts;
-}
-#endif
-
 SAMRAI_INLINE_KEYWORD
 const ProcessorMapping& PatchLevel::getProcessorMapping() const
 {
