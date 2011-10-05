@@ -65,8 +65,8 @@ public:
     * describing the relationship between dst_mapped_box_level and
     * fill_mapped_boxes.
     *
-    * @param[out] fill_mapped_boxes    Boxes to be filled
-    * @param[out] dst_to_fill_edges    NeighborhoodSet between
+    * @param[out] fill_mapped_boxes    BoxLevel to be filled
+    * @param[out] dst_to_fill          Connector between
     *                                  dst_mapped_box_level and
     *                                  and fill_mapped_boxes
     * @param[in] dst_mapped_box_level  destination level
@@ -78,8 +78,8 @@ public:
     */
    virtual void
    computeFillBoxesAndNeighborhoodSets(
-      hier::BoxSet& fill_mapped_boxes,
-      hier::NeighborhoodSet& dst_to_fill_edges,
+      hier::BoxLevel& fill_mapped_boxes,
+      hier::Connector& dst_to_fill,
       const hier::BoxLevel& dst_mapped_box_level,
       const hier::Connector& dst_to_dst,
       const hier::Connector& dst_to_src,

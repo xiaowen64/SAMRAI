@@ -66,7 +66,7 @@ refineBoxLevel(
  *
  * This is an correctness test for the
  * computeExternalParts and
- * computeExternalParts method in
+ * computeInternalParts method in
  * BoxLevelConnectorUtils.
  *
  * 1. Set up GridGeometry.
@@ -376,8 +376,8 @@ int main(
 
       const hier::Connector& big_to_small(
          big_mapped_box_level.getPersistentOverlapConnectors().createConnector(
-            small_mapped_box_level,
-            shrinkage));
+         small_mapped_box_level,
+         shrinkage));
       big_to_small.cacheGlobalReducedData();
 
       tbox::plog << "\nsmall_to_big:\n"
@@ -440,12 +440,12 @@ int main(
             const hier::Box& small_mapped_box = *bi;
 
             if (small_to_everything.hasNeighborSet(small_mapped_box.getId())) {
-               const hier::BoxSet& neighbors = small_to_everything.getNeighborSet(
-                     small_mapped_box.getId());
+               hier::Connector::ConstNeighborhoodIterator neighbors =
+                  small_to_everything.find(small_mapped_box.getId());
 
                hier::BoxList neighbor_box_list;
-               for (hier::BoxSet::const_iterator na = neighbors.begin();
-                    na != neighbors.end(); ++na) {
+               for (hier::Connector::ConstNeighborIterator na = small_to_everything.begin(neighbors);
+                    na != small_to_everything.end(neighbors); ++na) {
                   neighbor_box_list.unionBoxes(*na);
                   if (!small_mapped_box.contains(*na)) {
                      tbox::perr << "Mapping small_to_everyting erroneously mapped "
@@ -459,19 +459,22 @@ int main(
                tmp_box_list.removeIntersections(neighbor_box_list);
                if (tmp_box_list.size() != 0) {
                   tbox::perr << "Mapping small_to_everything erroneously mapped "
-                             << small_mapped_box << " to something less than itself:\n"
-                             << neighbors.format();
+                             << small_mapped_box << " to something less than itself:\n";
+                  small_to_everything.writeNeighborhoodToErrorStream(
+                     small_mapped_box.getId(),
+                     "");
                }
 
             }
 
             if (small_to_nothing.hasNeighborSet(small_mapped_box.getId())) {
-               const hier::BoxSet& neighbors = small_to_nothing.getNeighborSet(
-                     small_mapped_box.getId());
-               if (!neighbors.empty()) {
+               if (!small_to_nothing.isEmptyNeighborhood(
+                       small_mapped_box.getId())) {
                   tbox::perr << "Mapping small_to_nothing erroneously mapped " << small_mapped_box
-                             << " to:\n" << neighbors.format()
-                             << "\nIt should be mapped to nothing\n";
+                             << " to:\n";
+                  small_to_nothing.writeNeighborhoodToErrorStream(
+                     small_mapped_box.getId(), "");
+                  tbox::perr << "\nIt should be mapped to nothing\n";
                   ++fail_count;
                }
             } else {
@@ -737,12 +740,13 @@ void shrinkBoxLevel(
          big_mapped_box_level,
          shrinkage));
 
-   const hier::NeighborhoodSet& big_eto_big = big_to_big.getNeighborhoodSets();
-
    hier::BoxSet visible_mapped_boxes(big_mapped_box_set);
-   for (hier::NeighborhoodSet::const_iterator mi = big_eto_big.begin();
-        mi != big_eto_big.end(); ++mi) {
-      visible_mapped_boxes.insert(mi->second.begin(), mi->second.end());
+   for (hier::Connector::ConstNeighborhoodIterator mi = big_to_big.begin();
+        mi != big_to_big.end(); ++mi) {
+      for (hier::Connector::ConstNeighborIterator ni = big_to_big.begin(mi);
+           ni != big_to_big.end(mi); ++ni) {
+         visible_mapped_boxes.insert(*ni);
+      }
    }
 
    std::map<hier::BlockId, hier::BoxList> boundary_boxes;
@@ -803,8 +807,11 @@ void shrinkBoxLevel(
     * Construct the small_mapped_box_level.
     */
 
+   small_mapped_box_level.initialize(
+      big_mapped_box_level.getRefinementRatio(),
+      grid_geometry,
+      big_mapped_box_level.getMPI());
    last_local_id = -1;
-   hier::BoxSet small_mapped_boxes;
    for (hier::BoxSet::const_iterator bi = big_mapped_box_set.begin();
         bi != big_mapped_box_set.end(); ++bi) {
 
@@ -821,7 +828,7 @@ void shrinkBoxLevel(
          /*
           * This block should be excluded from shrinking.
           */
-         small_mapped_boxes.insert(small_mapped_boxes.end(), mapped_box);
+         small_mapped_box_level.addBoxWithoutUpdate(mapped_box);
       } else {
 
          hier::BoxList shrunken_boxes(mapped_box);
@@ -838,17 +845,12 @@ void shrinkBoxLevel(
                mapped_box.getOwnerRank(),
                mapped_box.getBlockId());
 
-            small_mapped_boxes.insert(small_mapped_boxes.end(), shrunken_mapped_box);
+            small_mapped_box_level.addBoxWithoutUpdate(shrunken_mapped_box);
          }
       }
 
    }
-
-   small_mapped_box_level.swapInitialize(
-      small_mapped_boxes,
-      big_mapped_box_level.getRefinementRatio(),
-      grid_geometry,
-      big_mapped_box_level.getMPI());
+   small_mapped_box_level.finalize();
 }
 
 /*
@@ -858,11 +860,5 @@ void shrinkBoxLevel(
 void refineBoxLevel(hier::BoxLevel& mapped_box_level,
                     const hier::IntVector& ratio)
 {
-   hier::BoxSet refined_mapped_boxes;
-   mapped_box_level.getBoxes().refine(refined_mapped_boxes, ratio);
-   mapped_box_level.swapInitialize(
-      refined_mapped_boxes,
-      ratio * mapped_box_level.getRefinementRatio(),
-      mapped_box_level.getGridGeometry(),
-      mapped_box_level.getMPI());
+   mapped_box_level.refineBoxes(mapped_box_level, ratio);
 }

@@ -241,7 +241,7 @@ public:
     *
     * @param[out] output_neighborhood_set
     *
-    * @param[in] ratio Ratio in the coarsen operation.
+    * @param[in] ratio Ratio in the refine operation.
     */
    void
    refineNeighbors(

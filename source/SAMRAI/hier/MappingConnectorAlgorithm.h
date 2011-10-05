@@ -40,9 +40,6 @@ public:
     *
     * The default constructor creates an uninitialized object in
     * distributed state.
-    *
-    * @see initialize()
-    * @see swapInitialize()
     */
    explicit MappingConnectorAlgorithm();
 
@@ -358,9 +355,6 @@ public:
 private:
    static const int MAPPING_CONNECTOR_ALGORITHM_FIRST_DATA_LENGTH;
 
-   // Internal shorthand.
-   typedef Connector::NeighborSet NeighborSet;
-
    /*!
     * @brief BoxIdSet is a clarifying typedef.
     */
@@ -422,8 +416,8 @@ private:
    void
    privateModify_removeAndCache(
       std::map<int, std::vector<int> >& neighbor_removal_mesg,
-      NeighborhoodSet& anchor_eto_new,
-      NeighborhoodSet& new_eto_anchor,
+      Connector& anchor_to_new,
+      Connector& new_to_anchor,
       const Connector& old_to_new) const;
 
    /*!
@@ -435,8 +429,6 @@ private:
       std::map<int, std::vector<int> >& neighbor_removal_mesg,
       Connector& anchor_to_new,
       Connector& new_to_anchor,
-      NeighborhoodSet& anchor_eto_new,
-      NeighborhoodSet& new_eto_anchor,
       std::set<int>& incoming_ranks,
       std::set<int>& outoing_ranks,
       tbox::AsyncCommPeer<int> all_comms[],
@@ -450,8 +442,8 @@ private:
     */
    void
    privateModify_receiveAndUnpack(
-      NeighborhoodSet& anchor_eto_new,
-      NeighborhoodSet& new_eto_anchor,
+      Connector& anchor_to_new,
+      Connector& new_to_anchor,
       std::set<int>& outgoing_ranks,
       tbox::AsyncCommPeer<int> all_comms[],
       tbox::AsyncCommStage& comm_stage,

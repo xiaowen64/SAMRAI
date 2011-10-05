@@ -352,19 +352,7 @@ void breakUpBoxes(
    }
 
    if (refinement_ratio != hier::IntVector::getOne(dim)) {
-      const hier::BoxSet& mapped_boxes(mapped_box_level.getBoxes());
-      hier::BoxSet refined_mapped_boxes;
-      for (hier::BoxSet::const_iterator bi = mapped_boxes.begin();
-           bi != mapped_boxes.end(); ++bi) {
-         hier::Box refined_mapped_box(*bi);
-         refined_mapped_box.refine(refinement_ratio);
-         refined_mapped_boxes.insert(refined_mapped_boxes.end(), refined_mapped_box);
-      }
-      mapped_box_level.swapInitialize(
-         refined_mapped_boxes,
-         mapped_box_level.getRefinementRatio() * refinement_ratio,
-         mapped_box_level.getGridGeometry(),
-         mapped_box_level.getMPI());
+      mapped_box_level.refineBoxes(mapped_box_level, refinement_ratio);
    }
 
    hier::IntVector max_box_size(dim, tbox::MathUtilities<int>::getMax());
@@ -423,9 +411,17 @@ void alterAndGenerateMapping(
       database->getIntegerWithDefault("local_id_increment", 0);
 
    const hier::BoxSet mapped_boxes_b(mapped_box_level_b.getBoxes());
-   hier::BoxSet mapped_boxes_c;
-   hier::NeighborhoodSet b_eto_c;
-   hier::NeighborhoodSet c_eto_b;
+
+   mapped_box_level_c.initialize(mapped_box_level_b.getRefinementRatio(),
+      mapped_box_level_b.getGridGeometry(),
+      mapped_box_level_b.getMPI());
+
+   b_to_c.initialize(mapped_box_level_b,
+      mapped_box_level_c,
+      hier::IntVector::getZero(dim));
+   c_to_b.initialize(mapped_box_level_c,
+      mapped_box_level_b,
+      hier::IntVector::getZero(dim));
    for (hier::BoxSet::const_iterator bi(mapped_boxes_b.begin());
         bi != mapped_boxes_b.end(); ++bi) {
       const hier::Box& mapped_box_b(*bi);
@@ -434,24 +430,12 @@ void alterAndGenerateMapping(
                              mapped_box_b.getOwnerRank(),
                              mapped_box_b.getBlockId(),
                              mapped_box_b.getPeriodicId());
-      mapped_boxes_c.insert(mapped_box_c);
-      b_eto_c[mapped_box_b.getId()].insert(mapped_box_c);
-      c_eto_b[mapped_box_c.getId()].insert(mapped_box_b);
+      mapped_box_level_c.addBoxWithoutUpdate(mapped_box_c);
+      b_to_c.insertLocalNeighbor(mapped_box_c, mapped_box_b.getId());
+      c_to_b.insertLocalNeighbor(mapped_box_b, mapped_box_c.getId());
    }
 
-   mapped_box_level_c.initialize(mapped_boxes_c,
-      mapped_box_level_b.getRefinementRatio(),
-      mapped_box_level_b.getGridGeometry(),
-      mapped_box_level_b.getMPI());
-
-   b_to_c.initialize(mapped_box_level_b,
-      mapped_box_level_c,
-      hier::IntVector::getZero(dim),
-      b_eto_c);
-   c_to_b.initialize(mapped_box_level_c,
-      mapped_box_level_b,
-      hier::IntVector::getZero(dim),
-      c_eto_b);
+   mapped_box_level_c.finalize();
 
    b_to_c.checkConsistencyWithBase();
    b_to_c.checkConsistencyWithHead();

@@ -256,6 +256,15 @@ public:
       const ParallelState parallel_state = DISTRIBUTED);
 
    /*!
+    * @brief Removes non-local boxes; computes bounding box, local number of
+    * boxes, local number of cells, max/min box size.  To be called after all
+    * Boxes in a BoxLevel have been added to indicate that the BoxLevel is
+    * fully defined and ready to be used.
+    */
+   void
+   finalize();
+
+   /*!
     * @brief Returns True if the object has been initialized.
     */
    bool
@@ -720,6 +729,24 @@ public:
 
    //@{
 
+   //! @name Methods to modify all Boxes.
+
+   /*!
+    * @brief Refine all Boxes of this BoxLevel by ratio placing result into
+    * finer.
+    *
+    * @param[out] finer
+    * @param[in] ratio
+    */
+   void
+   refineBoxes(
+      BoxLevel& finer,
+      const IntVector& ratio) const;
+
+   //@}
+
+   //@{
+
    //! @name Individual Box methods.
 
    /*
@@ -785,6 +812,19 @@ public:
    void
    addBox(
       const Box& mapped_box);
+
+   /*!
+    * @brief Add a Box to this level without updating summary data such as
+    * local number of boxes/cells, bounding box, max/min box size.  Meant to
+    * be used during the construction of a BoxLevel as Boxes belonging to the
+    * level are found.  finalize() should be called at the end of construction
+    * making use of addBoxWithoutUpdate.
+    *
+    * @param[in] box
+    */
+   void
+   addBoxWithoutUpdate(
+      const Box& box);
 
    /*!
     * @brief Insert given periodic image of an existing Box.
@@ -856,6 +896,19 @@ public:
    void
    eraseBox(
       const Box& mapped_box);
+
+   /*!
+    * @brief Erases the Box matching the supplied Box from this level without
+    * updating summary data such as local number of boxes/cells, bounding box,
+    * max/min box size.  Meant to be used during the construction of a BoxLevel
+    * as Boxes not belonging to the level are found.  finalize() should be
+    * called at the end of construction making use of eraseBoxWithoutUpdate.
+    *
+    * @param[in] box
+    */
+   void
+   eraseBoxWithoutUpdate(
+      const Box& box);
 
    /*!
     * @brief Find the Box matching the one given.
@@ -938,6 +991,23 @@ public:
    BoxSet::const_iterator
    getBoxStrict(
       const BoxId& mapped_box_id) const;
+
+   /*!
+    * @brief Find the Box with the given BlockId which is spatially equal to
+    * the supplied Box.
+    *
+    * @param[in] box_to_match
+    * @param[in] block_id
+    * @param[out] matching_box If there is a box with the supplied BlockId
+    * spatially equal to box_to_match then this is set to that Box.
+    *
+    * @return true if a match is found.
+    */
+   bool
+   getSpatiallyEqualBox(
+      const Box& box_to_match,
+      const BlockId& block_id,
+      Box& matching_box) const;
 
    /*!
     * @brief Returns true when the object has a Box specified by the

@@ -283,7 +283,6 @@ void BergerRigoutsosNode::clusterAndComputeRelationships(
    setMPI(mpi_object);
 
    d_box = bound_box;
-   clusterAndComputeRelationships();
 
    /*
     * During the algorithm, we kept the results in primitive
@@ -293,36 +292,41 @@ void BergerRigoutsosNode::clusterAndComputeRelationships(
     */
 
    new_mapped_box_level.initialize(
-      d_common->new_mapped_box_set,
       d_common->tag_level->getRatioToLevelZero(),
       d_common->tag_level->getGridGeometry(),
       d_common->tag_mapped_box_level->getMPI(),
       hier::BoxLevel::DISTRIBUTED);
 
    if (d_common->compute_relationships >= 1) {
-      tag_to_new.swapInitialize(
+      tag_to_new.initialize(
          *tag_level->getBoxLevel(),
          new_mapped_box_level,
          d_common->max_gcw,
-         d_common->tag_eto_new,
          hier::BoxLevel::DISTRIBUTED);
    }
    if (d_common->compute_relationships >= 2) {
-      new_to_tag.swapInitialize(
+      new_to_tag.initialize(
          new_mapped_box_level,
          *tag_level->getBoxLevel(),
          d_common->max_gcw,
-         d_common->new_eto_tag,
          hier::BoxLevel::DISTRIBUTED);
    }
+
+   d_common->new_mapped_box_level = &new_mapped_box_level;
+   d_common->tag_to_new = &tag_to_new;
+   d_common->new_to_tag = &new_to_tag;
+
+   clusterAndComputeRelationships();
+
+   new_mapped_box_level.finalize();
 
    /*
     * Clear temporary parameters that are only used during active
     * clustering.
     */
-   d_common->new_eto_tag.clear();
-   d_common->tag_eto_new.clear();
-   d_common->new_mapped_box_set.clear();
+   d_common->new_mapped_box_level = NULL;
+   d_common->tag_to_new = NULL;
+   d_common->new_to_tag = NULL;
    d_common->tag_mapped_box_level = NULL;
    d_common->tag_level.setNull();
 }
@@ -367,12 +371,12 @@ void BergerRigoutsosNode::clusterAndComputeRelationships()
          d_common->tag_mapped_box_level->getBoxes();
       for (hier::RealBoxConstIterator ni(tag_mapped_boxes); ni.isValid();
            ++ni) {
-         d_common->tag_eto_new[ni->getId()];
+         d_common->tag_to_new->makeEmptyLocalNeighborhood(ni->getId());
       }
 #ifdef DEBUG_CHECK_ASSERTIONS
       TBOX_ASSERT(
          d_common->tag_mapped_box_level->getLocalNumberOfBoxes() ==
-         d_common->tag_eto_new.size());
+         d_common->tag_to_new->getLocalNumberOfNeighborSets());
 #endif
 
    }
@@ -455,8 +459,8 @@ void BergerRigoutsosNode::clusterAndComputeRelationships()
    }
    if (d_common->compute_relationships > 2) {
       // Each new node should have its own neighbor list.
-      TBOX_ASSERT(d_common->new_mapped_box_set.size() ==
-         d_common->new_eto_tag.size());
+      TBOX_ASSERT(d_common->new_mapped_box_level->getBoxes().size() ==
+         d_common->new_to_tag->getLocalNumberOfNeighborSets());
    }
 #endif
 
@@ -1247,8 +1251,9 @@ BergerRigoutsosNode::CommonParams::CommonParams(
    d_dim(dim),
    tag_level(NULL),
    tag_mapped_box_level(NULL),
-   new_mapped_box_set(),
-   tag_eto_new(),
+   new_mapped_box_level(NULL),
+   tag_to_new(NULL),
+   new_to_tag(NULL),
    relationship_senders(),
    relationship_messages(),
    // Parameters not from clustering algorithm interface ...
@@ -2250,7 +2255,7 @@ void BergerRigoutsosNode::cutAtLaplacian(
 
 /*
  ********************************************************************
- * Create a DLBG Box in d_common->new_mapped_box_set,
+ * Create a DLBG Box in d_common->new_mapped_box_level,
  * where the output boxes of the algorithm is saved.
  *
  * Only the owner should create the mapped_box_level node this way.
@@ -2263,12 +2268,12 @@ void BergerRigoutsosNode::createBox()
    TBOX_ASSERT(d_common->rank == d_owner);
 #endif
    hier::LocalId last_index =
-      d_common->new_mapped_box_set.empty() ? hier::LocalId::getZero() :
-      d_common->new_mapped_box_set.rbegin()->getLocalId();
+      d_common->new_mapped_box_level->getBoxes().empty() ? hier::LocalId::getZero() :
+      d_common->new_mapped_box_level->getBoxes().rbegin()->getLocalId();
 
-   d_mapped_box_iterator = d_common->new_mapped_box_set.insert(
-         d_common->new_mapped_box_set.end(),
-         hier::Box(d_box, last_index + 1, d_common->rank, d_block_id));
+   hier::Box new_box(d_box, last_index + 1, d_common->rank, d_block_id);
+   d_common->new_mapped_box_level->addBoxWithoutUpdate(new_box);
+   d_mapped_box_iterator = d_common->new_mapped_box_level->getBox(new_box);
 
    d_mapped_box = *d_mapped_box_iterator;
 }
@@ -2276,7 +2281,7 @@ void BergerRigoutsosNode::createBox()
 /*
  ********************************************************************
  * Discard the Box.  On the owner, this Box is a part of
- * d_common->new_mapped_box_set where it must be removed.  On
+ * d_common->new_mapped_box_level where it must be removed.  On
  * contributors the Box can just be ignored.  To prevent bugs,
  * the node and its iterator are set to unusable values.
  ********************************************************************
@@ -2284,7 +2289,8 @@ void BergerRigoutsosNode::createBox()
 void BergerRigoutsosNode::eraseBox()
 {
    if (d_common->rank == d_owner) {
-      d_common->new_mapped_box_set.erase(d_mapped_box_iterator);
+      d_common->new_mapped_box_level->eraseBoxWithoutUpdate(
+         *d_mapped_box_iterator);
    }
 #ifdef DEBUG_CHECK_ASSERTIONS
    d_mapped_box_iterator = BoxSet().end();
@@ -2472,17 +2478,17 @@ void BergerRigoutsosNode::formChildGroups()
  * the tagged level, saving that data in the form of relationships.
  *
  * Note that the relationship data may be duplicated in two objects.
- * - tag_eto_new stores the relationships organized around each node
+ * - tag_to_new stores the relationships organized around each node
  *   in the tagged level.  For each node on the tagged level,
  *   we store a container of neighbors on the new mapped_box_level.
- * - new_eto_tags stores the relationships organized around each NEW node.
+ * - new_to_tag stores the relationships organized around each NEW node.
  *   For each new node we store a container of neighbors on the
  *   tagged level.
  *
- * If compute_relationships > 0, we store tag_eto_new.
+ * If compute_relationships > 0, we store tag_to_new.
  *
- * If compute_relationships > 1, we also compute new_eto_tags.
- * The data in new_eto_tags are
+ * If compute_relationships > 1, we also compute new_to_tag.
+ * The data in new_to_tag are
  * computed by the particant processes but eventually stored on the
  * owners of the new nodes, so their computation requires caching
  * the relationship data in relationship_messages for sending to the appropriate
@@ -2522,9 +2528,9 @@ void BergerRigoutsosNode::computeNewNeighborhoodSets()
     * On the owner process, we store the neighbors of the new node.
     * This data is NOT required on other processes.
     */
-   GraphNeighborSet* nabrs_of_new_node = NULL;
-   if (d_common->rank == d_owner) {
-      nabrs_of_new_node = &(d_common->new_eto_tag[d_mapped_box.getId()]);
+   bool on_owner_process = d_common->rank == d_owner;
+   if (on_owner_process) {
+      d_common->new_to_tag->makeEmptyLocalNeighborhood(d_mapped_box.getId());
    }
 
    // Data to send to d_owner regarding new relationships found by local process.
@@ -2563,13 +2569,13 @@ void BergerRigoutsosNode::computeNewNeighborhoodSets()
       if (!intersection.empty()) {
 
          // Add d_mapped_box as a neighbor of tag_mapped_box.
-         GraphNeighborSet& new_nabrs_of_tag_mapped_box =
-            d_common->tag_eto_new[tag_mapped_box.getId()];
-         new_nabrs_of_tag_mapped_box.insert(d_mapped_box);
+         d_common->tag_to_new->insertLocalNeighbor(d_mapped_box,
+            tag_mapped_box.getId());
 
-         if (nabrs_of_new_node != NULL) {
+         if (on_owner_process) {
             // Owner adds tag_mapped_box as a neighbor of d_mapped_box.
-            (*nabrs_of_new_node).insert(tag_mapped_box);
+            d_common->new_to_tag->insertLocalNeighbor(tag_mapped_box,
+               d_mapped_box.getId());
          }
 
          if (relationship_message != NULL) {
@@ -2628,7 +2634,6 @@ void BergerRigoutsosNode::shareNewNeighborhoodSetsWithOwners()
 
    IntSet relationship_senders = d_common->relationship_senders;
    std::map<int, VectorOfInts>& relationship_messages = d_common->relationship_messages;
-   hier::NeighborhoodSet& new_eto_tag = d_common->new_eto_tag;
 
    const int ints_per_node = hier::Box::commBufferSize(d_dim);
 
@@ -2722,18 +2727,16 @@ void BergerRigoutsosNode::shareNewNeighborhoodSetsWithOwners()
       int consumed = 0;
       while (ptr < buf.getPointer() + buf.size()) {
          const hier::LocalId new_local_id(*(ptr++));
+         hier::BoxId box_id(new_local_id, d_common->rank, d_block_id);
          int n_new_relationships = *(ptr++);
-         hier::NeighborhoodSet::iterator nn =
-            new_eto_tag.find(hier::BoxId(new_local_id, d_common->rank, d_block_id));
 #ifdef DEBUG_CHECK_ASSERTIONS
-         TBOX_ASSERT(nn != new_eto_tag.end());
+         TBOX_ASSERT(d_common->new_to_tag->hasNeighborSet(box_id));
 #endif
-         GraphNeighborSet& nabrs = (*nn).second;
          for (int n = 0; n < n_new_relationships; ++n) {
             hier::Box node(d_dim);
             node.getFromIntBuffer(ptr);
             ptr += ints_per_node;
-            nabrs.insert(node);
+            d_common->new_to_tag->insertLocalNeighbor(node, box_id);
          }
          consumed += 2 + n_new_relationships * ints_per_node;
       }
@@ -3165,36 +3168,6 @@ int BergerRigoutsosNode::getMaxNumberOfCont() const
 int BergerRigoutsosNode::getNumBoxesGenerated() const
 {
    return d_common->num_boxes_generated;
-}
-
-/*
- **********************************************************************
- *
- * Methods for accessing output from BR algorithm.
- *
- **********************************************************************
- */
-
-const hier::NeighborhoodSet
-& BergerRigoutsosNode::getNeighborhoodSetsToNew() const
-{
-#ifdef DEBUG_CHECK_ASSERTION
-   if (d_wait_phase != completed) {
-      TBOX_ERROR("Cannot get results until algorithm completes running.");
-   }
-#endif
-   return d_common->tag_eto_new;
-}
-
-const hier::NeighborhoodSet
-& BergerRigoutsosNode::getNeighborhoodSetsFromNew() const
-{
-#ifdef DEBUG_CHECK_ASSERTION
-   if (d_wait_phase != completed) {
-      TBOX_ERROR("Cannot get results until algorithm completes running.");
-   }
-#endif
-   return d_common->new_eto_tag;
 }
 
 void BergerRigoutsosNode::printDendogramState(

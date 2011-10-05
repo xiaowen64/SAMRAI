@@ -251,6 +251,29 @@ public:
       bool include_singularity_block_neighbors = false) const;
 
    /*!
+    * @brief Find all boxes that overlap the given Box and insert as neighbors
+    * of that box in overlap_connector.
+    *
+    * @param[out] overlap_connector Overlap connector with box in its base
+    * BoxLevel.
+    *
+    * @param[in] box
+    *
+    * @param[in] refinement_ratio Refinement ratio of box's index
+    * space.
+    *
+    * @param[in] include_singularity_block_neighbors Whether to include
+    * intersections with boxes in blocks that are neighbors of block
+    * block_id across a multiblock singularity.
+    */
+   void
+   findOverlapBoxes(
+      Connector& overlap_connector,
+      const Box& box,
+      const IntVector& refinement_ratio,
+      bool include_singularity_block_neighbors = false) const;
+
+   /*!
     * @brief Find all boxes that overlap the given Box.
     *
     * To avoid unneeded work, the output @b overlap_mapped_boxes

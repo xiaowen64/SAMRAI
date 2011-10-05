@@ -12,6 +12,7 @@
 
 #include "SAMRAI/hier/BoxLevel.h"
 
+#include "SAMRAI/hier/BoxSetSingleBlockIterator.h"
 #include "SAMRAI/hier/PeriodicShiftCatalog.h"
 #include "SAMRAI/hier/RealBoxConstIterator.h"
 #include "SAMRAI/tbox/MathUtilities.h"
@@ -293,6 +294,23 @@ void BoxLevel::swapInitialize(
       grid_geom,
       mpi,
       parallel_state);
+}
+
+void BoxLevel::finalize()
+{
+
+   // Erase non-local Boxes, if any, from d_mapped_boxes.
+   for (BoxSet::const_iterator mbi(d_mapped_boxes.begin());
+        mbi != d_mapped_boxes.end(); /* incremented in loop */) {
+      if (mbi->getOwnerRank() != d_mpi.getRank()) {
+         d_mapped_boxes.erase(mbi++);
+      } else {
+         ++mbi;
+      }
+   }
+
+   computeLocalRedundantData();
+   return;
 }
 
 void BoxLevel::initializePrivate(
@@ -711,6 +729,23 @@ const IntVector& BoxLevel::getGlobalMinBoxSize(int block_num) const
 {
    cacheGlobalReducedData();
    return d_global_min_box_size[block_num];
+}
+
+bool BoxLevel::getSpatiallyEqualBox(
+   const Box& box_to_match,
+   const BlockId& block_id,
+   Box& matching_box) const
+{
+   bool box_exists = false;
+   for (BoxSetSingleBlockIterator itr(d_mapped_boxes, block_id);
+        itr.isValid(); ++itr) {
+      if (box_to_match.isSpatiallyEqual(*itr)) {
+         box_exists = true;
+         matching_box = *itr;
+         break;
+      }
+   }
+   return box_exists;
 }
 
 /*
@@ -1160,6 +1195,23 @@ BoxLevel::addBox(
  ***********************************************************************
  ***********************************************************************
  */
+void
+BoxLevel::addBoxWithoutUpdate(
+   const Box& box)
+{
+   if (d_parallel_state == GLOBALIZED) {
+      d_global_mapped_boxes.insert(box);
+   }
+   if (box.getOwnerRank() == d_mpi.getRank()) {
+      d_mapped_boxes.insert(box);
+   }
+   return;
+}
+
+/*
+ ***********************************************************************
+ ***********************************************************************
+ */
 
 void
 BoxLevel::eraseBox(
@@ -1242,6 +1294,31 @@ BoxLevel::eraseBox(
          << mapped_box << ") is NOT a part of the BoxLevel.\n");
    }
    d_mapped_boxes.erase(ibox);
+}
+
+/*
+ ****************************************************************************
+ ****************************************************************************
+ */
+void BoxLevel::eraseBoxWithoutUpdate(
+   const Box& box)
+{
+   d_mapped_boxes.erase(box);
+   return;
+}
+
+/*
+ ****************************************************************************
+ ****************************************************************************
+ */
+void BoxLevel::refineBoxes(
+   BoxLevel& finer,
+   const IntVector& ratio) const
+{
+   d_mapped_boxes.refine(finer.d_mapped_boxes, ratio);
+   finer.d_ratio *= ratio;
+   finer.finalize();
+   return;
 }
 
 /*

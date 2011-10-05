@@ -767,17 +767,19 @@ StandardTagAndInitialize::preprocessRichardsonExtrapolation(
          *patch_level->getBoxLevel(),
          level_to_level_gcw);
 
-   const hier::Connector coarsened_to_level(
+   hier::Connector coarsened_to_level = level_to_level;
+   coarsened_to_level.initialize(
       *coarsened_level->getBoxLevel(),
       *patch_level->getBoxLevel(),
       hier::IntVector::ceilingDivide(level_to_level_gcw, coarsen_ratio),
-      level_to_level.getNeighborhoodSets(),
-      hier::BoxLevel::DISTRIBUTED);
+      hier::BoxLevel::DISTRIBUTED,
+      false);
 
-   hier::NeighborhoodSet new_edges;
-   level_to_level.getNeighborhoodSets().coarsenNeighbors(
-      new_edges,
-      coarsen_ratio);
+   hier::Connector tmp_coarsened(
+      level_to_level.getBase(),
+      level_to_level.getHead(),
+      level_to_level.getConnectorWidth());
+   level_to_level.coarsenLocalNeighbors(tmp_coarsened, coarsen_ratio);
 
    const tbox::ConstPointer<hier::BoxLevel>& mapped_box_level_ptr =
       patch_level->getBoxLevel();
@@ -788,15 +790,13 @@ StandardTagAndInitialize::preprocessRichardsonExtrapolation(
       persistent_overlap_connectors.createConnector(
          *coarsened_level->getBoxLevel(),
          level_to_level_gcw,
-         new_edges);
+         tmp_coarsened);
 
    coarsened_level->getBoxLevel()->getPersistentOverlapConnectors().
    createConnector(
       *coarsened_level->getBoxLevel(),
       hier::IntVector::ceilingDivide(level_to_level_gcw, coarsen_ratio),
-      new_edges);
-
-   new_edges.clear();
+      tmp_coarsened);
 
    /*
     * Get Connectors coarsened<==>coarser, which are used for recursive
@@ -829,12 +829,12 @@ StandardTagAndInitialize::preprocessRichardsonExtrapolation(
       createConnector(
          *coarser_level->getBoxLevel(),
          coarsened_to_coarser.getConnectorWidth(),
-         coarsened_to_coarser.getNeighborhoodSets());
+         coarsened_to_coarser);
       coarser_level->getBoxLevel()->getPersistentOverlapConnectors().
       createConnector(
          *coarsened_level->getBoxLevel(),
          coarser_to_coarsened.getConnectorWidth(),
-         coarser_to_coarsened.getNeighborhoodSets());
+         coarser_to_coarsened);
    }
 
    bool before_advance = true;

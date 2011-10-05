@@ -13,6 +13,7 @@
 
 #include "SAMRAI/hier/BoxTree.h"
 #include "SAMRAI/hier/BoxList.h"
+#include "SAMRAI/hier/Connector.h"
 #include "SAMRAI/tbox/MathUtilities.h"
 #include "SAMRAI/tbox/SAMRAI_MPI.h"
 #include "SAMRAI/tbox/SAMRAIManager.h"
@@ -776,6 +777,63 @@ void BoxTree::findOverlapBoxes(
             num_found_box);
       s_num_found_box[d_dim.getValue() - 1] += num_found_box;
    }
+}
+
+void BoxTree::findOverlapBoxes(
+   Connector& overlap_connector,
+   const Box& box,
+   bool recursive_call) const
+{
+   const BoxId& box_id = box.getId();
+   int num_found_box = 0;
+   if (!recursive_call) {
+      ++s_num_search[d_dim.getValue() - 1];
+      if (overlap_connector.hasNeighborSet(box_id)) {
+         num_found_box = overlap_connector.numLocalNeighbors(box_id);
+      }
+      else {
+         num_found_box = 0;
+      }
+      t_search[d_dim.getValue() - 1]->start();
+   }
+
+   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, box);
+
+   if (box.intersects(d_bounding_box)) {
+
+      if (d_center_child) {
+         d_center_child->findOverlapBoxes(overlap_connector, box, true);
+      } else {
+         for (BoxSet::const_iterator ni = d_mapped_boxes.begin();
+              ni != d_mapped_boxes.end(); ++ni) {
+            const Box& mapped_box = *ni;
+            if (box.intersects(mapped_box)) {
+	      overlap_connector.insertLocalNeighbor(mapped_box, box_id);
+            }
+         }
+      }
+
+      if (d_left_child) {
+         d_left_child->findOverlapBoxes(overlap_connector, box, true);
+      }
+
+      if (d_right_child) {
+         d_right_child->findOverlapBoxes(overlap_connector, box, true);
+      }
+   }
+
+   if (!recursive_call) {
+      t_search[d_dim.getValue() - 1]->stop();
+      if (overlap_connector.hasNeighborSet(box_id)) {
+         num_found_box =
+            overlap_connector.numLocalNeighbors(box_id) - num_found_box;
+      }
+      s_max_found_box[d_dim.getValue() - 1] =
+         tbox::MathUtilities<int>::Max(s_max_found_box[d_dim.getValue() - 1],
+            num_found_box);
+      s_num_found_box[d_dim.getValue() - 1] += num_found_box;
+   }
+   return;
 }
 
 void BoxTree::getBoxes(

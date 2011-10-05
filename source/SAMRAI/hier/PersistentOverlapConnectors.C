@@ -13,7 +13,6 @@
 #include "SAMRAI/hier/PersistentOverlapConnectors.h"
 #include "SAMRAI/hier/Connector.h"
 #include "SAMRAI/hier/BoxLevel.h"
-#include "SAMRAI/hier/NeighborhoodSet.h"
 #include "SAMRAI/hier/OverlapConnectorAlgorithm.h"
 #include "SAMRAI/tbox/InputManager.h"
 
@@ -108,7 +107,7 @@ const Connector& PersistentOverlapConnectors::createConnector(
 const Connector& PersistentOverlapConnectors::createConnector(
    const BoxLevel& head,
    const IntVector& connector_width,
-   const NeighborhoodSet& relationships)
+   const Connector& relationships)
 {
    TBOX_ASSERT(d_my_mapped_box_level.isInitialized());
    TBOX_ASSERT(head.isInitialized());
@@ -135,12 +134,13 @@ const Connector& PersistentOverlapConnectors::createConnector(
       }
    }
 
-   Connector* new_connector = new Connector(
+   Connector* new_connector = new Connector(relationships);
+   new_connector->initialize(
          d_my_mapped_box_level,
          head,
          connector_width,
-         relationships,
-         BoxLevel::DISTRIBUTED);
+         BoxLevel::DISTRIBUTED,
+         false);
    if (s_check_created_connectors == 'y') {
       // Check correctness.
       OverlapConnectorAlgorithm oca;
@@ -236,24 +236,11 @@ const Connector& PersistentOverlapConnectors::findConnector(
        * width.  This is scalable!
        */
 
-      const hier::NeighborhoodSet& wider_neighborhoods
-         (found->getNeighborhoodSets());
-      hier::NeighborhoodSet exact_neighborhoods;
-
-      for (hier::NeighborhoodSet::const_iterator ni(wider_neighborhoods.begin());
-           ni != wider_neighborhoods.end(); ++ni) {
-         oca.extractNeighbors(exact_neighborhoods[ni->first],
-            *found,
-            ni->first,
-            min_connector_width);
-      }
-
-      Connector* new_connector = new Connector;
-      new_connector->swapInitialize(
+      Connector* new_connector = new Connector(
          d_my_mapped_box_level,
          head,
-         min_connector_width,
-         exact_neighborhoods);
+         min_connector_width);
+      oca.extractNeighbors(*new_connector, *found, min_connector_width);
       /*
        * Remove empty neighborhood sets.  They are not essential to an
        * overlap Connector.
@@ -357,24 +344,11 @@ const Connector& PersistentOverlapConnectors::findOrCreateConnector(
        * width.  This is scalable!
        */
 
-      const hier::NeighborhoodSet& wider_neighborhoods
-         (found->getNeighborhoodSets());
-      hier::NeighborhoodSet exact_neighborhoods;
-
-      for (hier::NeighborhoodSet::const_iterator ni(wider_neighborhoods.begin());
-           ni != wider_neighborhoods.end(); ++ni) {
-         oca.extractNeighbors(exact_neighborhoods[ni->first],
-            *found,
-            ni->first,
-            min_connector_width);
-      }
-
-      Connector* new_connector = new Connector;
-      new_connector->swapInitialize(
+      Connector* new_connector = new Connector(
          d_my_mapped_box_level,
          head,
-         min_connector_width,
-         exact_neighborhoods);
+         min_connector_width);
+      oca.extractNeighbors(*new_connector, *found, min_connector_width);
       /*
        * Remove empty neighborhood sets.  They are not essential to an
        * overlap Connector.

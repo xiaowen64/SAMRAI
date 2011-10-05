@@ -342,8 +342,6 @@ void CoarsenSchedule::generateTemporaryLevel()
          *d_crse_level->getBoxLevel(),
          min_gcw);
 
-   hier::OverlapConnectorAlgorithm oca;
-
    d_temp_crse_level = new hier::PatchLevel(dim);
    d_temp_crse_level->setCoarsenedPatchLevel(d_fine_level,
       d_ratio_between_levels);
@@ -362,28 +360,34 @@ void CoarsenSchedule::generateTemporaryLevel()
     * like the fine level patches.  The Connectors between coarse and
     * temp are very similar to those between coarse and fine.
     */
-   hier::NeighborhoodSet coarse_eto_temp;
-   coarse_to_fine.getNeighborhoodSets().coarsenNeighbors(
-      coarse_eto_temp,
-      d_ratio_between_levels);
-   d_coarse_to_temp.swapInitialize(
+   d_coarse_to_temp.initialize(
       coarse_to_fine.getBase(),
       *d_temp_crse_level->getBoxLevel(),
       coarse_to_fine.getConnectorWidth(),
-      coarse_eto_temp,
       hier::BoxLevel::DISTRIBUTED);
+   coarse_to_fine.coarsenLocalNeighbors(
+      d_coarse_to_temp,
+      d_ratio_between_levels);
    d_coarse_to_temp.setConnectorType(hier::Connector::BASE_GENERATED);
-   coarse_eto_temp.clear();
+   /*
+    * d_temp_to_coarse is a Connector from a coarsened version of fine to
+    * coarse.  Therefore it has the same neighborhoods as fine_to_coarse
+    * but it's base, head and width are different.  So first assign
+    * fine_to_coarse to d_temp_to_coarse which will properly set the
+    * neighborhoods.  Then initialize it with the proper base/head/width
+    * keeping the neighborhoods that we just set.
+    */
+   d_temp_to_coarse = fine_to_coarse;
    d_temp_to_coarse.initialize(
       *d_temp_crse_level->getBoxLevel(),
       coarse_to_fine.getBase(),
       coarse_to_fine.getConnectorWidth(),
-      fine_to_coarse.getNeighborhoodSets(),
-      hier::BoxLevel::DISTRIBUTED);
+      hier::BoxLevel::DISTRIBUTED,
+      false);
    d_temp_to_coarse.setConnectorType(hier::Connector::BASE_GENERATED);
    const hier::IntVector one_vector(dim, 1);
-   oca.shrinkConnectorWidth(d_coarse_to_temp, one_vector);
-   oca.shrinkConnectorWidth(d_temp_to_coarse, one_vector);
+   d_coarse_to_temp.shrinkWidth(one_vector);
+   d_temp_to_coarse.shrinkWidth(one_vector);
 
 #if 0
    /*
@@ -401,6 +405,7 @@ void CoarsenSchedule::generateTemporaryLevel()
    << "d_coarse_to_temp:\n" << d_coarse_to_temp.format("", 3);
 #endif
 #if 0
+   hier::OverlapConnectorAlgorithm oca;
    oca.assertOverlapCorrectness(d_coarse_to_temp, false, true, false);
    oca.assertOverlapCorrectness(d_temp_to_coarse, false, true, false);
 #endif
@@ -610,17 +615,15 @@ void CoarsenSchedule::generateScheduleDLBG()
     * Construct receiving transactions for local dst mapped_boxes.
     */
    const BoxLevel& coarse_mapped_box_level = *d_crse_level->getBoxLevel();
-   const hier::NeighborhoodSet& coarse_eto_temp = d_coarse_to_temp.getNeighborhoodSets();
-   for (hier::NeighborhoodSet::const_iterator ei = coarse_eto_temp.begin();
-        ei != coarse_eto_temp.end(); ++ei) {
+   for (hier::Connector::ConstNeighborhoodIterator ei = d_coarse_to_temp.begin();
+        ei != d_coarse_to_temp.end(); ++ei) {
 
       const hier::BoxId& dst_gid = ei->first;
       const hier::Box& dst_mapped_box =
          *coarse_mapped_box_level.getBoxStrict(dst_gid);
 
-      const hier::BoxSet& src_mapped_boxes = ei->second;
-      for (hier::BoxSet::const_iterator ni = src_mapped_boxes.begin();
-           ni != src_mapped_boxes.end(); ++ni) {
+      for (hier::Connector::ConstNeighborIterator ni = d_coarse_to_temp.begin(ei);
+           ni != d_coarse_to_temp.end(ei); ++ni) {
          const hier::Box& src_mapped_box = *ni;
 
          constructScheduleTransactions(d_crse_level,
@@ -659,7 +662,6 @@ void CoarsenSchedule::restructureNeighborhoodSetsByDstNodes(
 
    const hier::PeriodicShiftCatalog* shift_catalog =
       hier::PeriodicShiftCatalog::getCatalog(dim);
-   const hier::NeighborhoodSet& edges = src_to_dst.getNeighborhoodSets();
    const BoxLevel& src_mapped_box_level = src_to_dst.getBase();
    const hier::IntVector& src_ratio(src_to_dst.getBase().getRefinementRatio());
    const hier::IntVector& dst_ratio(src_to_dst.getHead().getRefinementRatio());
@@ -670,14 +672,13 @@ void CoarsenSchedule::restructureNeighborhoodSetsByDstNodes(
     */
    hier::Box shifted_mapped_box(dim), unshifted_nabr(dim);
    full_inverted_edges.clear();
-   for (hier::NeighborhoodSet::const_iterator ci = edges.begin();
-        ci != edges.end();
+   for (hier::Connector::ConstNeighborhoodIterator ci = src_to_dst.begin();
+        ci != src_to_dst.end();
         ++ci) {
       const hier::Box& mapped_box =
          *src_mapped_box_level.getBoxStrict(ci->first);
-      const NeighborSet& nabrs = ci->second;
-      for (NeighborSet::const_iterator na = nabrs.begin();
-           na != nabrs.end(); ++na) {
+      for (hier::Connector::ConstNeighborIterator na = src_to_dst.begin(ci);
+           na != src_to_dst.end(ci); ++na) {
          const hier::Box& nabr = *na;
          if (nabr.isPeriodicImage()) {
             shifted_mapped_box.initialize(

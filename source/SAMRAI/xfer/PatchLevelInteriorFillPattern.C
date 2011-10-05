@@ -64,8 +64,8 @@ PatchLevelInteriorFillPattern::~PatchLevelInteriorFillPattern()
  */
 
 void PatchLevelInteriorFillPattern::computeFillBoxesAndNeighborhoodSets(
-   hier::BoxSet& fill_mapped_boxes,
-   hier::NeighborhoodSet& dst_to_fill_edges,
+   hier::BoxLevel& fill_mapped_boxes,
+   hier::Connector& dst_to_fill,
    const hier::BoxLevel& dst_mapped_box_level,
    const hier::Connector& dst_to_dst,
    const hier::Connector& dst_to_src,
@@ -89,9 +89,10 @@ void PatchLevelInteriorFillPattern::computeFillBoxesAndNeighborhoodSets(
       const hier::BoxId& gid = ni->getId();
       const hier::Box& dst_mapped_box =
          *dst_mapped_box_level.getBox(gid);
-      fill_mapped_boxes.insert(fill_mapped_boxes.end(), dst_mapped_box);
-      dst_to_fill_edges[gid].insert(dst_mapped_box);
+      fill_mapped_boxes.addBoxWithoutUpdate(dst_mapped_box);
+      dst_to_fill.insertLocalNeighbor(dst_mapped_box, gid);
    }
+   fill_mapped_boxes.finalize();
 }
 
 /*
@@ -120,13 +121,13 @@ void PatchLevelInteriorFillPattern::computeDestinationFillBoxesOnSourceProc(
     * boxes for all its dst neighbors using local data.  This info is
     * stored in dst_fill_boxes_on_src_proc.
     */
-   NeighborSet tmp_nabrs, all_dst_nabrs;
-   src_to_dst.getNeighborhoodSets().getNeighbors(tmp_nabrs);
+   hier::BoxSet tmp_nabrs, all_dst_nabrs;
+   src_to_dst.getLocalNeighbors(tmp_nabrs);
    tmp_nabrs.unshiftPeriodicImageBoxes(
       all_dst_nabrs,
       dst_mapped_box_level.getRefinementRatio());
    tmp_nabrs.clear();
-   for (NeighborSet::const_iterator na = all_dst_nabrs.begin();
+   for (hier::BoxSet::const_iterator na = all_dst_nabrs.begin();
         na != all_dst_nabrs.end(); ++na) {
       hier::BoxSet& fill_boxes = dst_fill_boxes_on_src_proc[na->getId()];
       fill_boxes.insert(*na);
