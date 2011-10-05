@@ -80,7 +80,7 @@ namespace tbox {
  *
  * -# Methods closely matching the MPI interfaces associated with a
  * communicator.  The communicator is set during object construction
- * and is removed from the argument list.
+ * and is removed from the argument list of the MPI-like interfaces.
  *
  * -# Static methods exactly matching the MPI interfaces not associated
  * with any specific communicator.
