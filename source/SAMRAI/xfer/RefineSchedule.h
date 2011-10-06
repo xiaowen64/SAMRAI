@@ -348,13 +348,11 @@ private:
    //! @brief Shorthand typedef.
    typedef hier::Connector Connector;
    //! @brief Shorthand typedef.
-   typedef hier::Connector::NeighborSet NeighborSet;
-   //! @brief Shorthand typedef.
    typedef std::vector<hier::Box> BoxVector;
    //! @brief Similar to NeighborhoodSet but maps to BoxVector instead of BoxSet.
    typedef hier::NeighborhoodSet FillSet;
    //! @brief Mapping from a (potentially remote) Box to a set of neighbors.
-   typedef std::map<hier::Box, NeighborSet, hier::Box::id_less> FullNeighborhoodSet;
+   typedef std::map<hier::Box, hier::BoxSet, hier::Box::id_less> FullNeighborhoodSet;
 
    /*!
     * @brief This private constructor creates a communication schedule
@@ -641,11 +639,10 @@ private:
     *
     * The source level is the head level from the connector dst_to_src.
     *
-    * @param[out]  level_encon_unfilled_boxes  set of encon unfilled boxes
-    *                                          for the dst level
-    * @param[out]  encon_to_unfilled_encon_nbrhood_set  edges from
-    *                                                d_encon_level to
-    *                                                level_encon_unfilled_boxes
+    * @param[out]  unfilled_encon_box_level  encon unfilled boxes for the dst
+    *                                        level
+    * @param[out]  encon_to_unfilled_encon  connector from d_encon_level to
+    *                                       level_encon_unfilled_boxes
     * @param[in,out]  last_unfilled_local_id a unique LocalId not already
     *                                        used in level_encon_unfilled_boxes
     * @param[in]  dst_mapped_box  The destination box
@@ -654,8 +651,8 @@ private:
     */
    void
    findEnconUnfilledBoxes(
-      hier::BoxSet& level_encon_unfilled_boxes,
-      hier::NeighborhoodSet& encon_to_unfilled_encon_nbrhood_set,
+      tbox::Pointer<hier::BoxLevel>& unfilled_encon_box_level,
+      tbox::Pointer<hier::Connector>& encon_to_unfilled_encon,
       hier::LocalId& last_unfilled_local_id,
       const hier::Box& dst_mapped_box,
       const Connector& dst_to_src,

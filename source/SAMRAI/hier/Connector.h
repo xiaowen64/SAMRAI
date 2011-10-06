@@ -16,14 +16,14 @@
 #include "SAMRAI/hier/NeighborhoodSet.h"
 #include "SAMRAI/tbox/Timer.h"
 
-#include <vector>
+#include <set>
 #include <string>
+#include <vector>
 
 namespace SAMRAI {
 namespace hier {
 
 class BoxLevelHandle;
-class NeighborhoodSet;
 
 /*!
  * @brief A container which holds relationship connections between two
@@ -55,6 +55,16 @@ public:
     * @brief NeighborsSet is a clarifying typedef.
     */
    typedef BoxSet NeighborSet;
+
+   /*!
+    * @brief Type of the iterator over neighborhoods.
+    */
+   typedef NeighborhoodSet::const_iterator ConstNeighborhoodIterator;
+
+   /*!
+    * @brief Type of the iterator over neighbors in a neighborhood.
+    */
+   typedef NeighborSet::OrderedConstIterator ConstNeighborIterator;
 
    /// TODO:  Possible refactor?  Since Connectors do not imply relationship
    // meanings, why is this even defined?  The "getConnectorType function
@@ -107,7 +117,6 @@ public:
     * distributed state.
     *
     * @see initialize()
-    * @see swapInitialize()
     */
    Connector();
 
@@ -118,22 +127,6 @@ public:
     */
    Connector(
       const Connector& other);
-
-   /*!
-    * @brief Creates an initialized Connector with the given relationships.
-    *
-    * @param[in] base_mapped_box_level
-    * @param[in] head_mapped_box_level
-    * @param[in] base_width
-    * @param[in] relationships
-    * @param[in] parallel_state
-    */
-   explicit Connector(
-      const BoxLevel& base_mapped_box_level,
-      const BoxLevel& head_mapped_box_level,
-      const IntVector& base_width,
-      const NeighborhoodSet& relationships,
-      const BoxLevel::ParallelState parallel_state = BoxLevel::DISTRIBUTED);
 
    /*!
     * @brief Initialize a Connector with no defined relationships.
@@ -157,53 +150,17 @@ public:
    virtual ~Connector();
 
    /*!
-    * @brief Initializes the Connector.
-    *
-    * The Connector is initialized with the provided information.
-    *
-    * Consistency with the base and head requires that the relationships be
-    * from an existing Box in the base to an existing Box
-    * in the head.
-    *
-    * @par Assertions
-    * With assertion checking turned on, this function will check for
-    * base consistency only.  Consistency with the head is not checked
-    * explicitly.
-    *
-    * @param[in] base
-    * @param[in] head
-    * @param[in] base_width The Connector width associated with the meaning of the
-    *   relationships, specified in base refinement ratio.
-    * @param[in] parallel_state Either DISTRIBUTED or GLOBALIZED.
-    *   If state is GLOBALIZED, base must be in GLOBALIZED mode.
-    * @param[in] relationships The input relationship data.  For DISTRIBUTED state, we
-    *   disregard relationships from remote Boxes.
-    *
-    * @see initializePrivate()
-    * @see checkConsistencyWithBase()
-    * @see checkConsistencyWithHead()
-    *
-    */
-   void
-   initialize(
-      const BoxLevel& base,
-      const BoxLevel& head,
-      const IntVector& base_width,
-      const NeighborhoodSet& relationships,
-      const BoxLevel::ParallelState parallel_state = BoxLevel::DISTRIBUTED);
-
-   /*!
     * @brief Initializes the Connector without any relationships.
     *
     * @param[in] base
     * @param[in] head
     * @param[in] base_width The Connector width, specified in the base
-    *   refinement ratio, associated with the meaning of the relationships to be
-    *   added to the Connector.
+    *   refinement ratio, associated with the meaning of the relationships to
+    *   be added to the Connector.
     * @param[in] parallel_state Either DISTRIBUTED or GLOBALIZED.
     *   If state is GLOBALIZED, base must be in GLOBALIZED mode.
+    * @param[in] clear_relationships
     *
-    * @see swapInitialize()
     * @see initializePrivate()
     *
     */
@@ -212,29 +169,8 @@ public:
       const BoxLevel& base,
       const BoxLevel& head,
       const IntVector& base_width,
-      const BoxLevel::ParallelState parallel_state = BoxLevel::DISTRIBUTED);
-
-   /*!
-    * @brief Set data defining the relationship set.
-    *
-    * @param[in] base
-    * @param[in] head
-    * @param[in] base_width
-    * @param[out] relationships
-    * @param[in] parallel_state
-    *
-    * POST-CONDITION:  @c relationships contains the NeighborhoodSet.
-    *
-    * @see initializePrivate()
-    *
-    */
-   void
-   swapInitialize(
-      const BoxLevel& base,
-      const BoxLevel& head,
-      const IntVector& base_width,
-      NeighborhoodSet& relationships,
-      const BoxLevel::ParallelState parallel_state = BoxLevel::DISTRIBUTED);
+      const BoxLevel::ParallelState parallel_state = BoxLevel::DISTRIBUTED,
+      bool clear_relationships = true);
 
    /*!
     * @brief Clear the Connector, putting it into an uninitialized state.
@@ -243,25 +179,81 @@ public:
    clear();
 
    /*!
+    * @brief Clear the Connector's neighborhood relations.
+    */
+   void
+   clearLocalNeighborhoods();
+
+   /*!
     * @brief Returns true if the object has been initialized
     */
    bool
    isInitialized() const;
 
    /*!
-    * @brief Return relationships from local base Boxes.
+    * @brief Iterator pointing to the first neighborhood.
     */
-   const NeighborhoodSet&
-   getNeighborhoodSets() const;
+   ConstNeighborhoodIterator
+   begin() const;
 
    /*!
-    * @brief Return the globalized relationship data.
-    *
-    * @par Assertions
-    * Throws an unrecoverable assertion if not in GLOBALIZED mode.
+    * @brief Iterator pointing one past the last neighborhood.
     */
-   const NeighborhoodSet&
-   getGlobalNeighborhoodSets() const;
+   ConstNeighborhoodIterator
+   end() const;
+
+   /*!
+    * @brief Iterator pointing to the first neighbor in nbrhd.
+    *
+    * @param nbrhd The neighborhood whose neighbors are to be iterated.
+    */
+   ConstNeighborIterator
+   begin(ConstNeighborhoodIterator& nbrhd) const;
+
+   /*!
+    * @brief Iterator pointing one past the last neighbor in nbrhd.
+    *
+    * @param nbrhd The neighborhood whose neighbors are to be iterated.
+    */
+   ConstNeighborIterator
+   end(ConstNeighborhoodIterator& nbrhd) const;
+
+   /*!
+    * @brief Returns an Iterator pointing to the neighborhood of box_id--
+    * localized version.
+    *
+    * @param[in] box_id
+    */
+   ConstNeighborhoodIterator
+   findLocal(const BoxId& box_id) const;
+
+   /*!
+    * @brief Returns an Iterator pointing to the neighborhood of box_id--
+    * globalized version.
+    *
+    * @param[in] box_id
+    */
+   ConstNeighborhoodIterator
+   find(const BoxId& box_id) const;
+
+   /*!
+    * @brief Returns true if the local neighborhoods of this and other are the
+    * same.
+    *
+    * @param[in] other
+    */
+   bool
+   localNeighborhoodsEqual(const Connector& other) const;
+
+   /*!
+    * @brief Returns true if the neighborhood of the supplied BoxId of this
+    * and other are the same.
+    *
+    * @param[in] box_id
+    * @param[in] other
+    */
+   bool
+   neighborhoodEqual(const BoxId& box_id, const Connector& other) const;
 
    /*!
     * @brief Return true if a neighbor set exists for the specified
@@ -274,13 +266,16 @@ public:
       const BoxId& mapped_box_id) const;
 
    /*!
-    * @brief Return the neighbor set for the specified BoxId.
+    * @brief Return true if the supplied box is in the neighborhood of the
+    * supplied BoxId.
     *
-    * @param[in] mapped_box_id
+    * @param[in] box_id
+    * @param[in] neighbor
     */
-   const NeighborSet&
-   getNeighborSet(
-      const BoxId& mapped_box_id) const;
+   bool
+   hasLocalNeighbor(
+      const BoxId& box_id,
+      const Box& neighbor) const;
 
    /*!
     * @brief Return the neighbor set for the specified BoxId.
@@ -291,6 +286,58 @@ public:
    getNeighborBoxes(
       const BoxId& mapped_box_id,
       BoxList& nbr_boxes) const;
+
+   /*!
+    * @brief Return all neighbors for all neighborhoods.
+    *
+    * @param[out] neighbors
+    */
+   void
+   getLocalNeighbors(
+      NeighborSet& neighbors) const;
+
+   /*!
+    * @brief Return all neighbors for all neighborhoods.
+    *
+    * @param[out] neighbors
+    */
+//   void
+//   getLocalNeighbors(
+//      BoxList& neighbors) const;
+
+   /*!
+    * @brief Return all neighbors for all neighborhoods segragated by BlockId.
+    *
+    * @param[out] neighbors
+    */
+   void
+   getLocalNeighbors(
+      std::map<BlockId, BoxList>& neighbors) const;
+
+   /*!
+    * @brief Returns the number of neighbors in the neighborhood with the
+    * supplied BoxId.
+    *
+    * @param[in] box_id
+    */
+   int
+   numLocalNeighbors(const BoxId& box_id) const;
+
+   /*!
+    * @brief Returns the number of empty neighborhoods in the Connector.
+    *
+    * @return The number of empty neighborhoods in the Connector.
+    */
+   int
+   numLocalEmptyNeighborhoods() const;
+
+   /*!
+    * @brief Places the ranks of the processors owning neighbors into owners.
+    *
+    * @param[out] owners
+    */
+   void
+   getLocalOwners(std::set<int>& owners) const;
 
    //@{
    /*!
@@ -323,34 +370,105 @@ public:
       const BoxId& mapped_box_id);
 
    /*!
+    * @brief Adds a neighbor of the specified BoxId.
+    *
+    * @param[in] neighbor
+    * @param[in] box_id
+    */
+   void
+   insertLocalNeighbor(
+      const Box& neighbor,
+      const BoxId& box_id);
+
+   /*!
+    * @brief Erases the neighborhood of the specified BoxId.
+    *
+    * @param[in] box_id
+    */
+   void
+   eraseLocalNeighborhood(
+      const BoxId& box_id);
+
+   /*!
     * @brief Remove all the periodic relationships in the Connector.
     */
    void
    removePeriodicRelationships();
 
    /*!
-    * @brief Set the neighbors for the specified BoxId to the
-    * given set by swapping the sets.
-    *
-    * If no neighbor set exists for the specified BoxId, an empty
-    * set is first created for swapping.
-    *
-    * An assertion failure will occur if the BoxId has a non-zero
-    * PeriodicId.
-    *
-    * @param[out] neighbors
-    * @param[in] mapped_box_id
+    * @brief Remove all the periodic neighbors in all local neighborhoods.
     */
    void
-   swapNeighbors(
-      NeighborSet& neighbors,
-      const BoxId& mapped_box_id);
+   removePeriodicLocalNeighbors();
+
+   /*!
+    * @brief Check for any neighborhood roots which are periodic.
+    *
+    * @return true if any neighborhood root is periodic
+    */
+   bool
+   hasPeriodicLocalNeighborhoodRoots() const;
+
+   /*!
+    * @brief Make and empty set of neighbors of the box with the supplied
+    * box_id.
+    *
+    * @param[in] box_id
+    */
+   void
+   makeEmptyLocalNeighborhood(
+      const BoxId& box_id);
 
    /*!
     * @brief Remove empty sets of neighbors.
     */
    void
    eraseEmptyNeighborSets();
+
+   /*!
+    * @brief Returns true is the neighborhood of the supplied BoxId is empty.
+    *
+    * @param[in] box_id
+    */
+   bool
+   isEmptyNeighborhood(
+      const BoxId& box_id) const;
+
+   /*!
+    * @brief Coarsen all neighbors of this connector by ratio placing result
+    * into coarser.
+    *
+    * @param[out] coarser
+    * @param[in] ratio
+    */
+   void
+   coarsenLocalNeighbors(
+      Connector& coarser,
+      const IntVector& ratio) const;
+
+   /*!
+    * @brief Refine all neighbors of this connector by ratio placing result
+    * into finer.
+    *
+    * @param[out] finer
+    * @param[in] ratio
+    */
+   void
+   refineLocalNeighbors(
+      Connector& finer,
+      const IntVector& ratio) const;
+
+   /*!
+    * @brief Grow all neighbors of this connector by growth placing result
+    * into grown.
+    *
+    * @param[out] grown
+    * @param[in] growth
+    */
+   void
+   growLocalNeighbors(
+      Connector& grown,
+      const IntVector& growth) const;
 
    //@}
 
@@ -462,14 +580,6 @@ public:
       const Connector& rhs) const;
 
    /*!
-    * @brief Swap the contents of two Connector objects.
-    */
-   static void
-   swap(
-      Connector& a,
-      Connector& b);
-
-   /*!
     * @brief Set the parallel distribution state.
     *
     * Before a Connector can be in a GLOBALIZED state, The base
@@ -514,6 +624,16 @@ public:
     */
    const IntVector&
    getConnectorWidth() const;
+
+   /*!
+    * @brief Shrink the width of the connector modifying the proximity
+    * relationships as needed.
+    *
+    * @param[in] new_width
+    */
+   void
+   shrinkWidth(
+      const IntVector& new_width);
 
    //@{
    /*!
@@ -639,24 +759,6 @@ public:
    assertConsistencyWithHead() const;
 
    /*!
-    * @brief Check that Boxes referenced by the given NeighborhoodSet
-    * match those in the given BoxLevel.
-    *
-    * This method is static so users can check data without having to
-    * put it in a Connector object.  Connectors prohibit initializing
-    * with inconsistent data.
-    *
-    * @param[in] relationships
-    * @param[in] head_mapped_box_level
-    *
-    * @return number of inconsistencies found.
-    */
-   static size_t
-   checkConsistencyWithHead(
-      const NeighborhoodSet& relationships,
-      const BoxLevel& head_mapped_box_level);
-
-   /*!
     * @brief Compute the differences between two relationship sets.
     *
     * Given Connectors @c left_connector and @c right_connector,
@@ -775,6 +877,61 @@ public:
    cacheGlobalReducedData() const;
 
    /*!
+    * @brief Write the neighborhoods to a database.
+    *
+    * @param[in] database
+    */
+   void
+   putNeighborhoodsToDatabase(tbox::Database& database) const;
+
+   /*!
+    * @brief Read the neighborhoods from a database.
+    *
+    * @param[in] database
+    */
+   void
+   getNeighborhoodsFromDatabase(tbox::Database& database);
+
+   /*!
+    *
+    * @brief Computes refinement ratio between head and base, whether that
+    * ratio is exact and whether the head is coarser than the base.
+    *
+    * @param[in] baseRefinementRatio
+    * @param[in] headRefinementRatio
+    * @param[out] ratio
+    * @param[out[ head_coarser
+    * @param[out] ratio_exact
+    */
+   static void
+   computeRatioInfo(
+      const IntVector& baseRefinementRatio,
+      const IntVector& headRefinementRatio,
+      IntVector& ratio,
+      bool& head_coarser,
+      bool& ratio_is_exact);
+
+   /*!
+    * @brief Writes the neighborhoods to tbox::perr.
+    *
+    * @param[in] border Left border of the output.
+    */
+   void
+   writeNeighborhoodsToErrorStream(
+      const std::string& border) const;
+
+   /*!
+    * @brief Writes the requested neighborhood to tbox::perr.
+    *
+    * @param[in[ box_id
+    * @param[in] border Left border of the output.
+    */
+   void
+   writeNeighborhoodToErrorStream(
+      const BoxId& box_id,
+      const std::string& border) const;
+
+   /*!
     * @brief A class for outputting Connector.
     *
     * This class simplifies the insertion of a Connector into a stream
@@ -837,7 +994,25 @@ private:
 
    enum { BAD_INT = (1 << (8 * sizeof(int) - 2)) };
 
-   /*
+   /*!
+    * @brief Return the globalized relationship data.
+    *
+    * @par Assertions
+    * Throws an unrecoverable assertion if not in GLOBALIZED mode.
+    */
+   const NeighborhoodSet&
+   getGlobalNeighborhoodSets() const;
+
+   /*!
+    * @brief Return the neighbor set for the specified BoxId.
+    *
+    * @param[in] mapped_box_id
+    */
+   const NeighborSet&
+   getNeighborSet(
+      const BoxId& mapped_box_id) const;
+
+   /*!
     * @brief Create a copy of a DISTRIBUTED Connector and
     * change its state to GLOBALIZED.
     *

@@ -11,8 +11,9 @@
 #define included_hier_NeighborhoodSet_C
 
 #include "SAMRAI/hier/NeighborhoodSet.h"
-#include "SAMRAI/hier/Connector.h"
+#include "SAMRAI/hier/BoxContainerConstIterator.h"
 #include "SAMRAI/hier/BoxSetSingleBlockIterator.h"
+#include "SAMRAI/hier/Connector.h"
 
 #include "SAMRAI/tbox/Utilities.h"
 
@@ -158,7 +159,14 @@ NeighborhoodSet::getNeighbors(
 {
    for (const_iterator ei = begin(); ei != end(); ++ei) {
       const NeighborSet& nabrs = (*ei).second;
-      all_nabrs.insert(nabrs.orderedBegin(), nabrs.orderedEnd());
+      if (all_nabrs.isUnordered()) {
+         for (BoxContainer::ConstIterator ni = nabrs.begin(); ni != nabrs.end();
+              ++ni) {
+            all_nabrs.pushBack(*ni);
+         }
+      } else {
+         all_nabrs.insert(nabrs.orderedBegin(), nabrs.orderedEnd());
+      }
    }
 }
 
@@ -222,8 +230,7 @@ NeighborhoodSet::getNeighbors(
 //            iter->second.pushBack(*ni);
             iter->second.insert(*ni);
          } else {
-            BoxContainer nabr_container(*ni);
-            nabr_container.makeOrdered();
+            BoxContainer nabr_container(*ni, true);
             all_nabrs.insert(std::pair<BlockId, BoxContainer>(ni->getBlockId(),
                                                               nabr_container));
          }

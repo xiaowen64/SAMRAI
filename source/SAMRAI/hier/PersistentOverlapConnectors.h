@@ -20,7 +20,6 @@ namespace hier {
 
 class Connector;
 class BoxLevel;
-class NeighborhoodSet;
 
 /*!
  * @brief A managager of overlap Connectors incident from a
@@ -112,7 +111,7 @@ public:
    createConnector(
       const BoxLevel& head,
       const IntVector& connector_width,
-      const NeighborhoodSet& relationships);
+      const Connector& relationships);
 
    /*!
     * @brief Find an overlap Connector with the given head and minimum

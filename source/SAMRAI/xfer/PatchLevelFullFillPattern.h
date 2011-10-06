@@ -61,8 +61,8 @@ public:
     */
    void
    computeFillBoxesAndNeighborhoodSets(
-      hier::BoxSet& fill_mapped_boxes,
-      hier::NeighborhoodSet& dst_to_fill_edges,
+      hier::BoxLevel& fill_mapped_boxes,
+      hier::Connector& dst_to_fill,
       const hier::BoxLevel& dst_mapped_box_level,
       const hier::Connector& dst_to_dst,
       const hier::Connector& dst_to_src,
@@ -126,11 +126,6 @@ private:
    void
    operator = (
       const PatchLevelFullFillPattern&);             // not implemented
-
-   /*!
-    * @brief Shorthand typedef.
-    */
-   typedef hier::Connector::NeighborSet NeighborSet;
 
    /*!
     * @brief Maximum number of fill boxes across all destination patches.

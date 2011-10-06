@@ -683,11 +683,13 @@ void generatePrebalanceByUserShells(
    anchor_to_balance.initialize(anchor_mapped_box_level,
       balance_mapped_box_level,
       anchor_to_balance.getConnectorWidth(),
-      anchor_to_balance.getNeighborhoodSets());
+      hier::BoxLevel::DISTRIBUTED,
+      false);
    balance_to_anchor.initialize(balance_mapped_box_level,
       anchor_mapped_box_level,
       balance_to_anchor.getConnectorWidth(),
-      balance_to_anchor.getNeighborhoodSets());
+      hier::BoxLevel::DISTRIBUTED,
+      false);
 }
 
 /*

@@ -171,18 +171,15 @@ void CoarseFineBoundary::computeFromLevel(
     * everywhere there IS a physical boundary or a fine-boundary.
     */
    BoxList fake_domain_list(d_dim);
-   const NeighborhoodSet& mapped_box_level_eto_domain =
-      mapped_box_level_to_domain.getNeighborhoodSets();
 
    // Every mapped_box should connect to the domain mapped_box_level.
-   TBOX_ASSERT(
-      mapped_box_level_eto_domain.size() == mapped_box_level.getLocalNumberOfBoxes());
+   TBOX_ASSERT(mapped_box_level_to_domain.getLocalNumberOfNeighborSets() ==
+               mapped_box_level.getLocalNumberOfBoxes());
 
    // Add physical boundaries to the fake domain.
-   for (NeighborhoodSet::const_iterator ei = mapped_box_level_eto_domain.begin();
-        ei != mapped_box_level_eto_domain.end(); ++ei) {
-      const Box& mapped_box = *mapped_box_level.getBoxStrict(
-            ei->first);
+   for (Connector::ConstNeighborhoodIterator ei = mapped_box_level_to_domain.begin();
+        ei != mapped_box_level_to_domain.end(); ++ei) {
+      const Box& mapped_box = *mapped_box_level.getBoxStrict(ei->first);
       const NeighborhoodSet::NeighborSet& domain_nabrs = ei->second;
       NeighborhoodSet::NeighborSet refined_domain_nabrs(domain_nabrs);
       refined_domain_nabrs.refine(ratio);
@@ -198,7 +195,7 @@ void CoarseFineBoundary::computeFromLevel(
    // Add fine-fine boundaries to the fake domain.
    TBOX_ASSERT(mapped_box_level_to_self.getConnectorWidth() >=
       IntVector::getOne(d_dim));
-   mapped_box_level_to_self.getNeighborhoodSets().getNeighbors(fake_domain_list);
+   mapped_box_level_to_self.getLocalNeighbors(fake_domain_list);
 
    /*
     * Call GridGeometry::computeBoundaryGeometry with arguments contrived
@@ -259,7 +256,7 @@ void CoarseFineBoundary::computeFromLevel(
    /*
     * Get the dimension and number of blocks from the GridGeometry.
     */
-   tbox::Pointer<hier::GridGeometry> grid_geometry = level.getGridGeometry();
+   tbox::Pointer<GridGeometry> grid_geometry = level.getGridGeometry();
    int nblocks = grid_geometry->getNumberBlocks();
 
    tbox::Array<BoxList> adjusted_level_domain(nblocks, BoxList(d_dim));
@@ -290,7 +287,7 @@ void CoarseFineBoundary::computeFromLevel(
          tbox::Pointer<BoxList> phys_domain =
             all_boxes_on_level0.getSingleBlockBoxContainer(d_dim, block_id);
 
-         const hier::IntVector& ratio = level.getRatioToLevelZero();
+         const IntVector& ratio = level.getRatioToLevelZero();
          phys_domain->refine(ratio);
 
          /*
@@ -360,7 +357,7 @@ void CoarseFineBoundary::computeFromLevel(
                BoxList neighbor_boxes_to_add(*phys_domain);
                neighbor_boxes_to_add.grow(max_ghost_width);
 
-               neighbor_boxes_to_add.intersectBoxes(hier::BoxList(
+               neighbor_boxes_to_add.intersectBoxes(BoxList(
                      *neighbor_boxes));
 
                adjusted_level_domain_list.spliceFront(neighbor_boxes_to_add);

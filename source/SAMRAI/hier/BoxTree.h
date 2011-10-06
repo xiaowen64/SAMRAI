@@ -28,6 +28,7 @@ namespace hier {
 
 class BoxContainer;
 typedef BoxContainer BoxList;
+class Connector;
 
 /*!
  * @brief Utility sorting Boxes into tree-like form for finding
@@ -204,6 +205,22 @@ public:
 //      BoxSet& overlap_mapped_boxes,
 //      const Box& box,
 //      bool recursive_call = false) const;
+
+   /*!
+    * @brief Find all boxes that overlap the given \b box.
+    *
+    * @param[out] overlap_connector Overlap Connector with box in its base
+    * BoxLevel.
+    *
+    * @param[in] box the specified box whose overlaps are requested.
+    * The box is assumed to be in same index space as those in the
+    * tree.
+    */
+   void
+   findOverlapBoxes(
+      Connector& overlap_connector,
+      const Box& box,
+      bool recursive_call = false) const;
 
    /*!
     * @brief Find all boxes that overlap the given \b box.

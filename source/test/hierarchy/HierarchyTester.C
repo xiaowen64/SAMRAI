@@ -424,8 +424,7 @@ int HierarchyTester::runHierarchyTestAndVerify()
          }
 
          // Test #10:
-         if (init_connector.getNeighborSet(mapped_box_id) !=
-             test_connector.getNeighborSet(mapped_box_id)) {
+         if (!init_connector.neighborhoodEqual(mapped_box_id, test_connector)) {
             fail_count++;
             tbox::perr << "FAILED: - Test #10: for level number " << ln
                        << " initial and test level have different number of "

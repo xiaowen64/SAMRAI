@@ -270,14 +270,16 @@ void TreeLoadBalancer::loadBalanceBoxLevel(
             anchor_to_balance.getBase(),
             balance_mapped_box_level,
             anchor_to_balance.getConnectorWidth(),
-            anchor_to_balance.getNeighborhoodSets());
+            hier::BoxLevel::DISTRIBUTED,
+            false);
 
          balance_to_anchor.removePeriodicRelationships();
          balance_to_anchor.initialize(
             balance_mapped_box_level,
             balance_to_anchor.getHead(),
             balance_to_anchor.getConnectorWidth(),
-            balance_to_anchor.getNeighborhoodSets());
+            hier::BoxLevel::DISTRIBUTED,
+            false);
 
       }
    }
@@ -634,7 +636,10 @@ void TreeLoadBalancer::mapOversizedBoxes(
    constrained.initialize(unconstrained.getRefinementRatio(),
       unconstrained.getGridGeometry(),
       unconstrained.getMPI());
-   hier::NeighborhoodSet unconstrained_eto_constrained(d_dim);
+   unconstrained_to_constrained.initialize(
+      unconstrained,
+      constrained,
+      zero_vector);
 
    const hier::BoxSet& unconstrained_mapped_boxes = unconstrained.getBoxes();
 
@@ -669,9 +674,8 @@ void TreeLoadBalancer::mapOversizedBoxes(
 
          if (true || chopped.size() != 1) {
 
-            hier::BoxSet& constrained_nabrs =
-               unconstrained_eto_constrained.getNeighborSet(mapped_box.getId(),
-                                                            d_dim);
+            unconstrained_to_constrained.makeEmptyLocalNeighborhood(
+               mapped_box.getId());
 
             for (hier::BoxList::Iterator li(chopped);
                  li != chopped.end(); ++li) {
@@ -690,8 +694,8 @@ void TreeLoadBalancer::mapOversizedBoxes(
 
                constrained.addBox(new_mapped_box);
 
-               constrained_nabrs.insert(constrained_nabrs.orderedEnd(),
-                  new_mapped_box);
+               unconstrained_to_constrained.insertLocalNeighbor(new_mapped_box,
+                  mapped_box.getId());
 
             }
 
@@ -710,11 +714,6 @@ void TreeLoadBalancer::mapOversizedBoxes(
 
    }
 
-   unconstrained_to_constrained.swapInitialize(
-      unconstrained,
-      constrained,
-      zero_vector,
-      unconstrained_eto_constrained);
    unconstrained_to_constrained.setConnectorType(hier::Connector::MAPPING);
 
    if (d_print_steps) {
@@ -982,8 +981,6 @@ void TreeLoadBalancer::computeLoadBalancingMapWithinRankGroup(
       unbalanced_mapped_box_level.getRefinementRatio(),
       unbalanced_mapped_box_level.getGridGeometry(),
       unbalanced_mapped_box_level.getMPI());
-   hier::NeighborhoodSet balanced_eto_unbalanced(d_dim);
-   hier::NeighborhoodSet unbalanced_eto_balanced(d_dim);
    balanced_to_unbalanced.initialize(
       balanced_mapped_box_level,
       unbalanced_mapped_box_level,
@@ -1086,12 +1083,12 @@ void TreeLoadBalancer::computeLoadBalancingMapWithinRankGroup(
           */
          if (mapped_box_in_transit.mapped_box.getLocalId() !=
              mapped_box_in_transit.orig_mapped_box.getLocalId()) {
-            balanced_eto_unbalanced.insertNeighbor(
-               mapped_box_in_transit.mapped_box.getId(),
-               mapped_box_in_transit.orig_mapped_box);
-            unbalanced_eto_balanced.insertNeighbor(
-               mapped_box_in_transit.orig_mapped_box.getId(),
-               mapped_box_in_transit.mapped_box);
+            balanced_to_unbalanced.insertLocalNeighbor(
+               mapped_box_in_transit.orig_mapped_box,
+               mapped_box_in_transit.mapped_box.getId());
+            unbalanced_to_balanced.insertLocalNeighbor(
+               mapped_box_in_transit.mapped_box,
+               mapped_box_in_transit.orig_mapped_box.getId());
          }
       }
 
@@ -1417,9 +1414,9 @@ void TreeLoadBalancer::computeLoadBalancingMapWithinRankGroup(
       balanced_mapped_box_level.addBox(mapped_box_in_transit.mapped_box);
       if (!mapped_box_in_transit.mapped_box.isIdEqual(mapped_box_in_transit.orig_mapped_box)) {
          // Create relationship for changed Box.
-         balanced_eto_unbalanced.insertNeighbor(
-            mapped_box_in_transit.mapped_box.getId(),
-            mapped_box_in_transit.orig_mapped_box);
+         balanced_to_unbalanced.insertLocalNeighbor(
+            mapped_box_in_transit.orig_mapped_box,
+            mapped_box_in_transit.mapped_box.getId());
          ++ni;
       } else {
          // Remove unchanged mapped_box_in_transit so packedgeMessages
@@ -1430,17 +1427,7 @@ void TreeLoadBalancer::computeLoadBalancingMapWithinRankGroup(
       }
    }
 
-   balanced_to_unbalanced.swapInitialize(
-      balanced_mapped_box_level,
-      unbalanced_mapped_box_level,
-      hier::IntVector::getZero(d_dim),
-      balanced_eto_unbalanced);
    balanced_to_unbalanced.setConnectorType(hier::Connector::MAPPING);
-   unbalanced_to_balanced.swapInitialize(
-      unbalanced_mapped_box_level,
-      balanced_mapped_box_level,
-      hier::IntVector::getZero(d_dim),
-      unbalanced_eto_balanced);
    unbalanced_to_balanced.setConnectorType(hier::Connector::MAPPING);
 
    t_local_balancing->stop();
@@ -1886,15 +1873,8 @@ void TreeLoadBalancer::packNeighborhoodSetMessages(
    const int parent_rank = peer_ranks[num_children];
    const std::vector<int>& child_ranks = peer_ranks;
 
-   hier::NeighborhoodSet unbalanced_eto_balanced(d_dim);
-   unbalanced_to_balanced.swapInitialize(
-      unbalanced_to_balanced.getBase(),
-      unbalanced_to_balanced.getHead(),
-      unbalanced_to_balanced.getConnectorWidth(),
-      unbalanced_eto_balanced);
-
-   for (TransitSet::const_iterator
-        ni = mapped_boxes_in_transit.begin(); ni != mapped_boxes_in_transit.end(); ++ni) {
+   for (TransitSet::const_iterator ni = mapped_boxes_in_transit.begin();
+        ni != mapped_boxes_in_transit.end(); ++ni) {
 
       BoxInTransit mapped_box_in_transit = *ni;
 
@@ -1905,9 +1885,9 @@ void TreeLoadBalancer::packNeighborhoodSetMessages(
             tbox::plog << "Keeping edge " << mapped_box_in_transit << std::endl;
          }
          TBOX_ASSERT(mapped_box_in_transit.orig_mapped_box.getOwnerRank() == d_mpi.getRank());
-         unbalanced_eto_balanced.insertNeighbor(
-            mapped_box_in_transit.orig_mapped_box.getId(),
-            mapped_box_in_transit.mapped_box);
+         unbalanced_to_balanced.insertLocalNeighbor(
+            mapped_box_in_transit.mapped_box,
+            mapped_box_in_transit.orig_mapped_box.getId());
 
       } else {
 
@@ -1947,11 +1927,6 @@ void TreeLoadBalancer::packNeighborhoodSetMessages(
       }
 
    }
-   unbalanced_to_balanced.swapInitialize(
-      unbalanced_to_balanced.getBase(),
-      unbalanced_to_balanced.getHead(),
-      unbalanced_to_balanced.getConnectorWidth(),
-      unbalanced_eto_balanced);
    t_pack_edge->stop();
 }
 
@@ -1976,13 +1951,6 @@ void TreeLoadBalancer::unpackAndRouteNeighborhoodSets(
    const int num_children = static_cast<int>(peer_ranks.size()) - 1;
    const int parent_rank = peer_ranks[num_children];
    const std::vector<int>& child_ranks = peer_ranks;
-
-   hier::NeighborhoodSet unbalanced_eto_balanced(d_dim);
-   unbalanced_to_balanced.swapInitialize(
-      unbalanced_to_balanced.getBase(),
-      unbalanced_to_balanced.getHead(),
-      unbalanced_to_balanced.getConnectorWidth(),
-      unbalanced_eto_balanced);
 
    const int* beg = received_data;
    const int* end = received_data + received_data_length;
@@ -2014,9 +1982,9 @@ void TreeLoadBalancer::unpackAndRouteNeighborhoodSets(
 
          TBOX_ASSERT(mapped_box_in_transit.orig_mapped_box.getOwnerRank() == d_mpi.getRank());
 
-         unbalanced_eto_balanced.insertNeighbor(
-            mapped_box_in_transit.orig_mapped_box.getId(),
-            mapped_box_in_transit.mapped_box);
+         unbalanced_to_balanced.insertLocalNeighbor(
+            mapped_box_in_transit.mapped_box,
+            mapped_box_in_transit.orig_mapped_box.getId());
 
       } else {
 
@@ -2055,11 +2023,6 @@ void TreeLoadBalancer::unpackAndRouteNeighborhoodSets(
                                                    - mapped_box_in_transit.commBufferSize()]);
       }
    }
-   unbalanced_to_balanced.swapInitialize(
-      unbalanced_to_balanced.getBase(),
-      unbalanced_to_balanced.getHead(),
-      unbalanced_to_balanced.getConnectorWidth(),
-      unbalanced_eto_balanced);
    t_unpack_edge->stop();
 }
 
@@ -4505,16 +4468,20 @@ void TreeLoadBalancer::prebalanceBoxLevel(
    }
 
    /*
-    * These NeighborhoodSets are used to create mapping Connectors which
-    * describe the mapping from the box configuration of the given
-    * balance_mapped_box_level, to the new configuration stored in
-    * tmp_mapped_box_level.  These mapping Connectors are necessary to
-    * modify the two Connectors given in the argument list, so that on
-    * return from this method, they will be correct for the new
+    * Construct the mapping Connectors which describe the mapping from the box
+    * configuration of the given balance_mapped_box_level, to the new
+    * configuration stored in tmp_mapped_box_level.  These mapping Connectors
+    * are necessary to modify the two Connectors given in the argument list,
+    * so that on return from this method, they will be correct for the new
     * balance_mapped_box_level.
     */
-   hier::NeighborhoodSet balance_to_tmp_edges(d_dim);
-   hier::NeighborhoodSet tmp_to_balance_edges(d_dim);
+   hier::Connector balance_to_tmp(balance_mapped_box_level,
+                                  tmp_mapped_box_level,
+                                  hier::IntVector::getZero(d_dim));
+
+   hier::Connector tmp_to_balance(tmp_mapped_box_level,
+                                  balance_mapped_box_level,
+                                  hier::IntVector::getZero(d_dim));
 
    /*
     * Where Boxes already exist on ranks in rank_group,
@@ -4561,7 +4528,7 @@ void TreeLoadBalancer::prebalanceBoxLevel(
 
    /*
     * On receiving ranks, complete the receives, add the boxes to local
-    * tmp_mapped_box_level, insert boxes into tmp_to_balance_edges, and then
+    * tmp_mapped_box_level, insert boxes into tmp_to_balance, and then
     * send the new LocalIdes back to the sending processors.
     */
    if (!is_sending_rank && num_recvs > 0) {
@@ -4590,8 +4557,8 @@ void TreeLoadBalancer::prebalanceBoxLevel(
 
                   hier::BoxId tmp_mapped_box_id = (*tmp_iter).getId();
 
-                  tmp_to_balance_edges.insertNeighbor(tmp_mapped_box_id,
-                                                      mapped_box);
+                  tmp_to_balance.insertLocalNeighbor(mapped_box,
+                     tmp_mapped_box_id);
 
                   id_buffer[b] = tmp_mapped_box_id.getLocalId().getValue();
                }
@@ -4610,7 +4577,7 @@ void TreeLoadBalancer::prebalanceBoxLevel(
 
    /*
     * On sending ranks, receive the LocalIds, and add the edges
-    * to balance_to_tmp_edges.
+    * to balance_to_tmp.
     */
    if (is_sending_rank) {
       if (!box_send->checkSend()) {
@@ -4639,23 +4606,10 @@ void TreeLoadBalancer::prebalanceBoxLevel(
             rank_group.getMappedRank(d_mpi.getRank() % output_nproc),
             (*ni).getBlockId());
 
-         balance_to_tmp_edges.insertNeighbor((*ni).getId(), new_mapped_box);
+         balance_to_tmp.insertLocalNeighbor(new_mapped_box, (*ni).getId());
          box_count++;
       }
    }
-
-   /*
-    * Construct the mapping Connectors with the appropriate NeighborhoodSets.
-    */
-   hier::Connector balance_to_tmp(balance_mapped_box_level,
-                                  tmp_mapped_box_level,
-                                  hier::IntVector::getZero(d_dim),
-                                  balance_to_tmp_edges);
-
-   hier::Connector tmp_to_balance(tmp_mapped_box_level,
-                                  balance_mapped_box_level,
-                                  hier::IntVector::getZero(d_dim),
-                                  tmp_to_balance_edges);
 
    if (anchor_to_balance.isInitialized()) {
       /*

@@ -116,6 +116,20 @@ public:
       const IntVector& connector_width) const;
 
    /*!
+    * @brief Like extractNeighbors above except that it computes all
+    * neighborhoods of connector placing them into other.
+    *
+    * @param[out] other
+    * @param[in] connector
+    * @param[in] connector_width
+    */
+   void
+   extractNeighbors(
+      Connector& other,
+      const Connector& connector,
+      const IntVector& connector_width) const;
+
+   /*!
     * @brief Compute the overlap Connectors between BoxLevels
     * efficiently by using information from existing overlap
     * Connectors.
@@ -339,20 +353,33 @@ public:
       const Connector& center_to_west) const;
 
    /*!
-    * @brief Shrink the current Connector width and discard overlaps
-    * that do not represent an overlap.
+    * @brief A version of bridge without any guarantee of nesting in which
+    * one pair of input connectors is modified to form the resulting bridge
+    * connectors.
     *
-    * @par Assertions
-    * The new Connector width must be less than or equal to the
-    * current value, or an unrecoverable assertion is thrown.
+    * The east and west BoxLevels are assumed
+    * to nest in the center BoxLevel.  If they do not,
+    * the results are not guaranteed to be complete.
     *
-    * @param[out] connector
-    * @param[in] new_width
+    * The output Connector widths are the greater of the widths of @c
+    * center_to_east and @c center_to_west (converted into the proper
+    * index space, of course).
+    *
+    * @param[in,out] west_to_center
+    * @param[in] center_to_east
+    * @param[in] east_to_center
+    * @param[in,out] center_to_west
+    * @param[in] connector_width_limit
+    *
+    * @see bridgeWithNesting( Connector& west_to_east, Connector& east_to_west, const Connector& west_to_center, const Connector& center_to_east, const Connector& east_to_center, const Connector& center_to_west, const IntVector& center_growth_to_nest_west, const IntVector& center_growth_to_nest_east, const IntVector& connector_width_limit) const;
     */
    void
-   shrinkConnectorWidth(
-      Connector& connector,
-      const IntVector& new_width) const;
+   bridge(
+      Connector& west_to_center,
+      const Connector& center_to_east,
+      const Connector& east_to_center,
+      Connector& center_to_west,
+      const IntVector& connector_width_limit) const;
 
    /*!
     * @brief When @c do_check is true, turn on sanity checks for input
@@ -476,7 +503,8 @@ private:
 
    /*!
     * @brief This is where the bridge algorithm is implemented.
-    * All public bridge interfaces call this method underneath.
+    * All public bridge interfaces which do not perform an "in place" bridge
+    * call this method underneath.
     *
     * @param west_nesting_is_known Whether we know how west nests in
     * center.
@@ -484,14 +512,8 @@ private:
     * @param cent_growth_to_nest_west Amount center BoxLevel has
     * to grow to nest west BoxLevel (if known).
     *
-    * @param west_nesting_is_known Whether we known how much center
-    * level has to grow to nest west level.
-    *
     * @param east_nesting_is_known Whether we know how east nests in
     * center.
-    *
-    * @param east_nesting_is_known Whether we known how much center
-    * level has to grow to nest east level.
     *
     * @param cent_growth_to_nest_east Amount center BoxLevel has
     * to grow to nest east BoxLevel (if known).
@@ -510,6 +532,41 @@ private:
       const Connector& cent_to_east,
       const Connector& east_to_cent,
       const Connector& cent_to_west,
+      bool west_nesting_is_known,
+      const IntVector& cent_growth_to_nest_west,
+      bool east_nesting_is_known,
+      const IntVector& cent_growth_to_nest_east,
+      const IntVector& connector_width_limit) const;
+
+   /*!
+    * @brief This is where the bridge algorithm is implemented.
+    * All public bridge interfaces which perform an "in place" bridge call
+    * this method underneath.
+    *
+    * @param west_nesting_is_known Whether we know how west nests in
+    * center.
+    *
+    * @param cent_growth_to_nest_west Amount center BoxLevel has
+    * to grow to nest west BoxLevel (if known).
+    *
+    * @param east_nesting_is_known Whether we know how east nests in
+    * center.
+    *
+    * @param cent_growth_to_nest_east Amount center BoxLevel has
+    * to grow to nest east BoxLevel (if known).
+    *
+    * @param connector_width_limit specifies the maximum Connector
+    * width to compute overlaps for (negative if unlimited).  If
+    * connector_width_limit is negative, do not apply any limit.  The
+    * connector_width should be in the coarser of the east and west
+    * indices.
+    */
+   void
+   privateBridge(
+      Connector& west_to_cent,
+      const Connector& cent_to_east,
+      const Connector& east_to_cent,
+      Connector& cent_to_west,
       bool west_nesting_is_known,
       const IntVector& cent_growth_to_nest_west,
       bool east_nesting_is_known,

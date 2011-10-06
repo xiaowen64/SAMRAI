@@ -73,8 +73,7 @@ public:
     * @param[in] n
     */
    explicit BoxContainer(
-      const tbox::Dimension& dim,
-      const int n = 0);
+      const tbox::Dimension& dim);
 
 
    /*!
@@ -87,7 +86,8 @@ public:
     */
    explicit BoxContainer(
       Iterator first,
-      Iterator last);
+      Iterator last,
+      bool ordered = false);
 
    /*!
     * @brief Create a container with 1 box.
@@ -95,7 +95,16 @@ public:
     * @param[in] box Box to copy into new container.
     */
    explicit BoxContainer(
-      const Box& box);
+      const Box& box,
+      bool ordered = false);
+
+   /*!
+    * @brief Copy constructor from another BoxContainer.
+    *
+    * @param[in] other
+    */
+   BoxContainer(
+      const BoxContainer& other);
 
    /*!
     * @brief Assignment from other BoxContainer.
@@ -114,14 +123,6 @@ public:
    BoxContainer&
    operator = (
       const tbox::Array<tbox::DatabaseBox>& rhs);
-
-   /*!
-    * @brief Copy constructor from another BoxContainer.
-    *
-    * @param[in] other
-    */
-   BoxContainer(
-      const BoxContainer& other);
 
    /*!
     * @brief Copy constructor from an array of tbox::DatabaseBox objects.
@@ -342,7 +343,9 @@ public:
 // set methods
 
    void makeOrdered();
+
    bool isOrdered() const;
+   bool isUnordered() const;
 
    OrderedConstIterator orderedBegin() const;
    OrderedConstIterator orderedEnd() const;
@@ -362,8 +365,6 @@ public:
    OrderedConstIterator upper_bound(const Box& box) const;
    void erase(OrderedConstIterator iter);
    int erase(const Box& box);
-   void erase(OrderedConstIterator first,
-              OrderedConstIterator last);
 
    void
    swap(BoxContainer& other);
@@ -847,7 +848,7 @@ private:
    /*
     * Default constructor just to be clear that there is none.
     */
-//   BoxContainer();
+   BoxContainer();
 
    /*!
     * @brief Break up bursty against solid and adds the pieces to container.
@@ -885,6 +886,7 @@ private:
       const Box& solid,
       const int dimension,
       Iterator& itr);
+
    /*!
     * @brief Remove from each box in the sublist of this container defined
     * by sublist_start and sublist_end portions intersecting takeaway.

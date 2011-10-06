@@ -193,13 +193,14 @@ void BoxSet::refine(
          output_mapped_boxes.insert(output_mapped_boxes.end(), n);
       }
    } else {
-      BoxSet tmp_mapped_boxes;
-      for (const_iterator na = begin(); na != end(); ++na) {
+      for (const_iterator na = begin(); na != end();) {
          Box n = *na;
+         const_iterator this_box(na);
+         ++na;
          n.refine(ratio);
-         tmp_mapped_boxes.insert(tmp_mapped_boxes.end(), n);
+         output_mapped_boxes.erase(this_box);
+         output_mapped_boxes.insert(na, n);
       }
-      output_mapped_boxes.swap(tmp_mapped_boxes);
    }
 }
 
@@ -219,13 +220,14 @@ void BoxSet::coarsen(
          output_mapped_boxes.insert(output_mapped_boxes.end(), n);
       }
    } else {
-      BoxSet tmp_mapped_boxes;
-      for (const_iterator na = begin(); na != end(); ++na) {
+      for (const_iterator na = begin(); na != end();) {
          Box n = *na;
+         const_iterator this_box(na);
+         ++na;
          n.coarsen(ratio);
-         tmp_mapped_boxes.insert(tmp_mapped_boxes.end(), n);
+         output_mapped_boxes.erase(this_box);
+         output_mapped_boxes.insert(na, n);
       }
-      output_mapped_boxes.swap(tmp_mapped_boxes);
    }
 }
 
@@ -245,13 +247,14 @@ void BoxSet::grow(
          output_mapped_boxes.insert(output_mapped_boxes.end(), n);
       }
    } else {
-      BoxSet tmp_mapped_boxes;
-      for (const_iterator na = begin(); na != end(); ++na) {
+      for (const_iterator na = begin(); na != end();) {
          Box n = *na;
+         const_iterator this_box(na);
+         ++na;
          n.grow(growth);
-         tmp_mapped_boxes.insert(tmp_mapped_boxes.end(), n);
+         output_mapped_boxes.erase(this_box);
+         output_mapped_boxes.insert(na, n);
       }
-      output_mapped_boxes.swap(tmp_mapped_boxes);
    }
 }
 

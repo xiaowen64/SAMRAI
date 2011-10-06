@@ -218,55 +218,47 @@ bool BoxLevelConnectorUtils::baseNestsInHead(
       swelledbase = base;
    } else {
       const BoxSet& base_mapped_boxes = base.getBoxes();
-      BoxSet swelledbase_mapped_boxes(dim);
+      swelledbase.initialize(
+         base.getRefinementRatio(),
+         grid_geom,
+         base.getMPI());
       for (BoxSet::OrderedConstIterator ni = base_mapped_boxes.orderedBegin();
            ni != base_mapped_boxes.orderedEnd(); ++ni) {
          Box swelledbase_mapped_box(*ni);
          swelledbase_mapped_box.grow(base_swell);
-         swelledbase_mapped_boxes.insert(
-            swelledbase_mapped_boxes.orderedEnd(), swelledbase_mapped_box);
+         swelledbase.addBoxWithoutUpdate(swelledbase_mapped_box);
       }
-      swelledbase.swapInitialize(swelledbase_mapped_boxes,
-         base.getRefinementRatio(),
-         grid_geom,
-         base.getMPI());
+      swelledbase.finalize();
    }
 
    BoxLevel swelledhead(dim);
-   NeighborhoodSet swelledbase_eto_swelledhead(dim);
    if (head_swell == IntVector::getZero(dim)) {
       swelledhead = head;
-      swelledbase_eto_swelledhead = connector.getNeighborhoodSets();
    } else {
       const BoxSet& head_mapped_boxes = head.getBoxes();
 
-      BoxSet swelledhead_mapped_boxes(dim);
-
-      for (BoxSet::OrderedConstIterator ni = head_mapped_boxes.orderedBegin();
-           ni != head_mapped_boxes.orderedEnd(); ++ni) {
-         Box swelledhead_mapped_box = *ni;
-
-         swelledhead_mapped_box.grow(head_swell);
-         swelledhead_mapped_boxes.insert(
-            swelledhead_mapped_boxes.orderedEnd(), swelledhead_mapped_box);
-      }
-      swelledhead.swapInitialize(swelledhead_mapped_boxes,
+      swelledhead.initialize(
          head.getRefinementRatio(),
          grid_geom,
          head.getMPI());
 
-      connector.getNeighborhoodSets().growNeighbors(
-         swelledbase_eto_swelledhead,
-         head_swell);
+      for (BoxSet::OrderedConstIterator ni = head_mapped_boxes.orderedBegin();
+           ni != head_mapped_boxes.orderedEnd(); ++ni) {
+         Box swelledhead_mapped_box(*ni);
+
+         swelledhead_mapped_box.grow(head_swell);
+         swelledhead.addBoxWithoutUpdate(swelledhead_mapped_box);
+      }
+      swelledhead.finalize();
    }
 
-   Connector swelledbase_to_swelledhead;
-   swelledbase_to_swelledhead.swapInitialize(
+   Connector swelledbase_to_swelledhead(
       swelledbase,
       swelledhead,
-      connector.getConnectorWidth() - base_swell,
-      swelledbase_eto_swelledhead,
-      BoxLevel::DISTRIBUTED);
+      connector.getConnectorWidth() - base_swell);
+
+   connector.growLocalNeighbors(swelledbase_to_swelledhead, head_swell);
+
    if (d_sanity_check_precond &&
        head_swell == IntVector::getZero(dim)) {
       /*
@@ -434,7 +426,18 @@ void BoxLevelConnectorUtils::makeSortingMap(
    }
 
    BoxSet new_mapped_boxes(dim);
-   NeighborhoodSet edges(dim);
+
+   sorted_mapped_box_level.initialize(
+      unsorted_mapped_box_level.getRefinementRatio(),
+      unsorted_mapped_box_level.getGridGeometry(),
+      unsorted_mapped_box_level.getMPI(),
+      BoxLevel::DISTRIBUTED);
+   output_map.initialize(
+      unsorted_mapped_box_level,
+      sorted_mapped_box_level,
+      IntVector::getZero(dim),
+      BoxLevel::DISTRIBUTED);
+   output_map.setConnectorType(Connector::MAPPING);
 
    for (std::vector<Box>::const_iterator ni = real_mapped_box_vector.begin();
         ni != real_mapped_box_vector.end(); ++ni) {
@@ -445,7 +448,7 @@ void BoxLevelConnectorUtils::makeSortingMap(
                                cur_mapped_box.getOwnerRank(),
                                cur_mapped_box.getBlockId(),
                                cur_mapped_box.getPeriodicId());
-      new_mapped_boxes.insert(new_mapped_boxes.orderedEnd(), new_mapped_box);
+      sorted_mapped_box_level.addBoxWithoutUpdate(new_mapped_box);
 
       /*
        * Now, add cur_mapped_box's periodic images, but give them cur_mapped_box's
@@ -464,7 +467,7 @@ void BoxLevelConnectorUtils::makeSortingMap(
                                         new_mapped_box.getBlockId(),
                                         image_mapped_box.
                                         getPeriodicId());
-         new_mapped_boxes.insert(new_mapped_boxes.orderedEnd(), new_image_mapped_box);
+         sorted_mapped_box_level.addBoxWithoutUpdate(new_image_mapped_box);
          ++ini;
       }
 
@@ -474,23 +477,11 @@ void BoxLevelConnectorUtils::makeSortingMap(
        * edges unless there is a change.
        */
       if (cur_mapped_box.getLocalId() != new_mapped_box.getLocalId()) {
-         edges.insertNeighbor(cur_mapped_box.getId(), new_mapped_box);
+         output_map.insertLocalNeighbor(new_mapped_box,
+            cur_mapped_box.getId());
       }
+      sorted_mapped_box_level.finalize();
    }
-
-   sorted_mapped_box_level.swapInitialize(
-      new_mapped_boxes,
-      unsorted_mapped_box_level.getRefinementRatio(),
-      unsorted_mapped_box_level.getGridGeometry(),
-      unsorted_mapped_box_level.getMPI(),
-      BoxLevel::DISTRIBUTED);
-   output_map.swapInitialize(
-      unsorted_mapped_box_level,
-      sorted_mapped_box_level,
-      IntVector::getZero(dim),
-      edges,
-      BoxLevel::DISTRIBUTED);
-   output_map.setConnectorType(Connector::MAPPING);
 
    t_make_sorting_map->stop();
 }
@@ -694,9 +685,8 @@ void BoxLevelConnectorUtils::computeInternalOrExternalParts(
     * order to remove duplicate entries.  Then we move them into BoxList for
     * each block for box manipulation.
     */
-   const NeighborhoodSet& input_eto_reference = input_to_reference.getNeighborhoodSets();
    std::map<BlockId, BoxList> reference_box_list;
-   input_eto_reference.getNeighbors(reference_box_list);
+   input_to_reference.getLocalNeighbors(reference_box_list);
 
    /*
     * Bring reference_box_list into refinement ratio of input
@@ -796,7 +786,15 @@ void BoxLevelConnectorUtils::computeInternalOrExternalParts(
     */
    LocalId last_used_index = input.getLastLocalId();
 
-   NeighborhoodSet input_eto_parts(dim);
+   /*
+    * The output mapping has zero width.  For a mapping, zero width
+    * means that no Box is mapped to something outside its
+    * extent.
+    */
+   input_to_parts.initialize(
+      input,
+      parts,
+      zero_vec);
 
    const bool compute_overlaps =
       search_tree_represents_internal == (internal_or_external == 'i');
@@ -813,9 +811,7 @@ void BoxLevelConnectorUtils::computeInternalOrExternalParts(
 
       const Box& input_mapped_box = *ni;
 
-      NeighborhoodSet::const_iterator ei = input_eto_reference.find(ni->getId());
-
-      if (ei == input_eto_reference.end()) {
+      if (!input_to_reference.hasNeighborSet(ni->getId())) {
          /*
           * Absence of a neighbor set in the overlap Connector means
           * the input Box does not overlap the reference
@@ -824,9 +820,10 @@ void BoxLevelConnectorUtils::computeInternalOrExternalParts(
          if (compute_overlaps) {
             /*
              * Trying to get the overlapping parts.  Create empty
-             * neighbor list to indicate there is no such parts.
+             * neighbor list to indicate there are no such parts.
              */
-            input_eto_parts.getNeighborSet(input_mapped_box.getId(), dim);
+            input_to_parts.makeEmptyLocalNeighborhood(
+               input_mapped_box.getId());
          } else {
             /*
              * Trying to get the non-overlapping parts.
@@ -888,8 +885,8 @@ void BoxLevelConnectorUtils::computeInternalOrExternalParts(
 
          } else {
 
-            Connector::NeighborSet& replacements = 
-               input_eto_parts.getNeighborSet(input_mapped_box.getId(), dim);
+            input_to_parts.makeEmptyLocalNeighborhood(
+               input_mapped_box.getId());
             for (BoxList::Iterator bi(parts_list); bi != parts_list.end(); ++bi) {
                const Box
                parts_mapped_box((*bi),
@@ -899,12 +896,13 @@ void BoxLevelConnectorUtils::computeInternalOrExternalParts(
                parts.addBox(parts_mapped_box);
 
                // Set connectivities between input and internal.
-               replacements.insert(parts_mapped_box);
+               input_to_parts.insertLocalNeighbor(parts_mapped_box,
+                  input_mapped_box.getId());
             }
 
          } // parts_list
 
-      } // ei != input_eto_reference.end()
+      } // !input_to_reference.hasNeighborSet(ni->getId())
 
    } // Loop through input_mapped_boxes
 
@@ -915,34 +913,21 @@ void BoxLevelConnectorUtils::computeInternalOrExternalParts(
        * should be mapped to empty neighbor containers according
        * to the definition of a map in MappingConnectorAlgorithm::modify().
        */
-      if (input_eto_parts.size() != input.getLocalNumberOfBoxes()) {
+      int a = input_to_parts.getLocalNumberOfNeighborSets();
+      int b = input.getLocalNumberOfBoxes();
+      if (a != b) {
          tbox::perr << "BoxLevelConnectorUtils::" << caller << ": library error:\n"
                     <<
          "There are no parts, so input BoxLevel should be completely mapped away.\n"
                     << "However, not all input Boxes have been mapped.\n"
                     << "input BoxLevel:\n" << input.format("", 2)
-                    << "input_eto_parts:\n" << input_eto_parts.format("", 2)
-         ;
+                    << "input_to_parts:\n";
+         input_to_parts.writeNeighborhoodsToErrorStream("");
          TBOX_ERROR("Library error\n");
       }
-      for (NeighborhoodSet::const_iterator ci = input_eto_parts.begin();
-           ci != input_eto_parts.end(); ++ci) {
-         TBOX_ASSERT((*ci).second.isEmpty());
-      }
+      TBOX_ASSERT(a == input_to_parts.numLocalEmptyNeighborhoods());
    }
 #endif
-
-   /*
-    * The output mapping has zero width.  For a mapping, zero width
-    * means that no Box is mapped to something outside its
-    * extent.
-    */
-   input_to_parts.swapInitialize(
-      input,
-      parts,
-      zero_vec,
-      input_eto_parts,
-      BoxLevel::DISTRIBUTED);
 
    TBOX_ASSERT(input_to_parts.isLocal());
 }
@@ -1149,7 +1134,14 @@ void BoxLevelConnectorUtils::makeRemainderMap(
    const BoxLevel& orig = orig_to_rejection.getBase();
    const BoxSet& orig_nodes = orig.getBoxes();
    const int rank = orig.getMPI().getRank();
-   BoxSet remainder_nodes = orig_nodes;
+
+   remainder = orig;
+
+   orig_to_remainder.initialize(
+      orig,
+      remainder,
+      IntVector::getZero(dim),
+      BoxLevel::DISTRIBUTED);
 
    /*
     * Track last used index to ensure we use unique indices for new
@@ -1158,34 +1150,26 @@ void BoxLevelConnectorUtils::makeRemainderMap(
     */
    LocalId last_used_index = orig.getLastLocalId();
 
-   NeighborhoodSet orig_eto_remainder(dim);
-
-   const NeighborhoodSet& orig_eto_rejection = orig_to_rejection.getNeighborhoodSets();
-
    for (BoxSet::OrderedConstIterator ni = orig_nodes.orderedBegin();
         ni != orig_nodes.orderedEnd(); ++ni) {
 
       const Box& orig_node = *ni;
       const BoxId mapped_box_id = orig_node.getId();
 
-      NeighborhoodSet::const_iterator ci =
-         orig_eto_rejection.find(orig_node.getId());
-
-      if (ci == orig_eto_rejection.end()) {
+      if (!orig_to_rejection.hasNeighborSet(orig_node.getId())) {
          /*
           * By the definition of a mapping Connector, no mapping means
           * the entire orig_node is rejected.
           *
-          * - Erase rejected node from remainder_nodes
+          * - Erase rejected node from remainder
           * - Build connectivities in orig_to_remainder (empty neighbor list).
           */
-         remainder_nodes.erase(orig_node);
+         remainder.eraseBoxWithoutUpdate(orig_node);
 
-         TBOX_ASSERT(orig_eto_remainder.find(
-               mapped_box_id) == orig_eto_remainder.end());
+         TBOX_ASSERT(!orig_to_remainder.hasNeighborSet(mapped_box_id));
 
-         orig_eto_remainder.getNeighborSet(mapped_box_id, dim);
-      } else if (ci->second.isEmpty()) {
+         orig_to_remainder.makeEmptyLocalNeighborhood(mapped_box_id);
+      } else if (orig_to_rejection.numLocalNeighbors(orig_node.getId()) == 0) {
          /*
           * By the definition of a mapping Connector, empty mapping
           * means entire orig_node remains.
@@ -1196,20 +1180,21 @@ void BoxLevelConnectorUtils::makeRemainderMap(
          /*
           * The orig_node is partially rejected.
           *
-          * - Erase rejected node from remainder_nodes
+          * - Erase rejected node from remainder
           * - Remove rejected parts to obtain remainder parts
-          * - Add remaining parts to remainder_nodes
+          * - Add remaining parts to remainder
           * - Build connectivities in orig_to_remainder
           */
 
-         const Connector::NeighborSet& rejections = (*ci).second;
+         Connector::ConstNeighborhoodIterator ci =
+            orig_to_rejection.findLocal(orig_node.getId());
 
-         remainder_nodes.erase(orig_node);
+         remainder.eraseBoxWithoutUpdate(orig_node);
 
          BoxList remaining_parts_list(orig_node);
 
-         for (Connector::NeighborSet::OrderedConstIterator
-              vi = rejections.orderedBegin(); vi != rejections.orderedEnd(); ++vi) {
+         for (Connector::ConstNeighborIterator vi = orig_to_rejection.begin(ci);
+              vi != orig_to_rejection.end(ci); ++vi) {
             remaining_parts_list.removeIntersections((*vi));
          }
          /*
@@ -1222,12 +1207,12 @@ void BoxLevelConnectorUtils::makeRemainderMap(
          }
 
          /*
-          * Create orig_eto_remainder[mapped_box_id] even if remaining_parts_list
-          * is empty because its existence defines the required mapping from
-          * the orig node to a (possibly empty) container of nesting parts.
+          * Create neighborhood of mapped_box_id in orig_to_remainder even if
+          * remaining_parts_list is empty because its existence defines the
+          * required mapping from the orig node to a (possibly empty)
+          * container of nesting parts.
           */
-         Connector::NeighborSet& remaining_parts_neighbors =
-            orig_eto_remainder.getNeighborSet(mapped_box_id, dim);
+         orig_to_remainder.makeEmptyLocalNeighborhood(mapped_box_id);
          for (BoxList::Iterator bi(remaining_parts_list);
               bi != remaining_parts_list.end(); ++bi) {
             Box new_box = (*bi);
@@ -1235,27 +1220,13 @@ void BoxLevelConnectorUtils::makeRemainderMap(
                          ++last_used_index,
                          rank,
                          orig_node.getBlockId());
-            remainder_nodes.insert(remainder_nodes.orderedEnd(), new_node);
-            remaining_parts_neighbors.insert(remaining_parts_neighbors.orderedEnd(),
-               new_node);
+            remainder.addBoxWithoutUpdate(new_node);
+            orig_to_remainder.insertLocalNeighbor(new_node, mapped_box_id);
          }
       }
 
    }
-
-   remainder.initialize(
-      remainder_nodes,
-      orig.getRefinementRatio(),
-      orig.getGridGeometry(),
-      orig.getMPI(),
-      BoxLevel::DISTRIBUTED);
-
-   orig_to_remainder.initialize(
-      orig,
-      remainder,
-      IntVector::getZero(dim),
-      orig_eto_remainder,
-      BoxLevel::DISTRIBUTED);
+   remainder.finalize();
 }
 
 /*
@@ -1422,7 +1393,7 @@ void BoxLevelConnectorUtils::addPeriodicImagesAndRelationships(
          if (d_sanity_check_precond) {
             if (images_added &&
                 (!mapped_box_level_to_anchor.hasNeighborSet(mapped_box.getId()) ||
-                 mapped_box_level_to_anchor.getNeighborSet(mapped_box.getId()).isEmpty())) {
+                 mapped_box_level_to_anchor.isEmptyNeighborhood(mapped_box.getId()))) {
                TBOX_WARNING(
                   "BoxLevelConnectorUtils::addPeriodicImages: Box " << mapped_box
                                                                     <<
@@ -1454,46 +1425,41 @@ void BoxLevelConnectorUtils::addPeriodicImagesAndRelationships(
          3);
    }
 
-   Connector new_anchor_to_mapped_box_level;
-   Connector new_mapped_box_level_to_anchor;
-
    IntVector width_limit =
       anchor_to_mapped_box_level.getHeadCoarserFlag() ?
       mapped_box_level_to_anchor.getConnectorWidth() :
       anchor_to_mapped_box_level.getConnectorWidth();
 
    oca.setSanityCheckMethodPreconditions(d_sanity_check_precond);
-   oca.bridge(new_mapped_box_level_to_anchor,
-      new_anchor_to_mapped_box_level,
-      mapped_box_level_to_anchor,
+   oca.bridge(mapped_box_level_to_anchor,
       anchor_to_anchor,
       anchor_to_anchor,
       anchor_to_mapped_box_level,
       width_limit);
-   new_anchor_to_mapped_box_level.eraseEmptyNeighborSets();
-   new_mapped_box_level_to_anchor.eraseEmptyNeighborSets();
+   anchor_to_mapped_box_level.eraseEmptyNeighborSets();
+   mapped_box_level_to_anchor.eraseEmptyNeighborSets();
 
    if (d_sanity_check_postcond) {
       // Expensive sanity check for consistency.
-      size_t err1 = new_anchor_to_mapped_box_level.checkConsistencyWithBase();
+      size_t err1 = anchor_to_mapped_box_level.checkConsistencyWithBase();
       if (err1) {
          tbox::perr << "OverlapConnectorAlgorithm found " << err1
                     << " edge-base consistency errors in\n"
                     << "anchor_to_mapped_box_level after computing periodic images.\n";
       }
-      size_t err2 = new_mapped_box_level_to_anchor.checkConsistencyWithBase();
+      size_t err2 = mapped_box_level_to_anchor.checkConsistencyWithBase();
       if (err2) {
          tbox::perr << "OverlapConnectorAlgorithm found " << err2
                     << " edge-base consistency errors in\n"
                     << "mapped_box_level_to_anchor after computing periodic images.\n";
       }
-      size_t err3 = new_anchor_to_mapped_box_level.checkConsistencyWithHead();
+      size_t err3 = anchor_to_mapped_box_level.checkConsistencyWithHead();
       if (err3) {
          tbox::perr << "OverlapConnectorAlgorithm found " << err3
                     << " edge-mapped_box consistency errors in\n"
                     << "anchor_to_mapped_box_level after computing periodic images.\n";
       }
-      size_t err4 = new_mapped_box_level_to_anchor.checkConsistencyWithHead();
+      size_t err4 = mapped_box_level_to_anchor.checkConsistencyWithHead();
       if (err4) {
          tbox::perr << "OverlapConnectorAlgorithm found " << err4
                     << " edge-mapped_box consistency errors in\n"
@@ -1506,28 +1472,28 @@ void BoxLevelConnectorUtils::addPeriodicImagesAndRelationships(
             << "anchor:\n" << anchor.format("ERR-> ", 3)
             << "mapped_box_level:\n" << mapped_box_level.format("ERR-> ", 3)
             << "anchor_to_anchor:\n" << anchor_to_anchor.format("ERR-> ", 3)
-            << "new_anchor_to_mapped_box_level:\n"
-            << new_anchor_to_mapped_box_level.format("ERR-> ", 3)
-            << "new_mapped_box_level_to_anchor:\n"
-            << new_mapped_box_level_to_anchor.format("ERR-> ", 3));
+            << "anchor_to_mapped_box_level:\n"
+            << anchor_to_mapped_box_level.format("ERR-> ", 3)
+            << "mapped_box_level_to_anchor:\n"
+            << mapped_box_level_to_anchor.format("ERR-> ", 3));
       }
    }
    if (d_sanity_check_postcond) {
       // Expensive sanity check for correctness.
-      size_t err1 = oca.checkOverlapCorrectness(new_anchor_to_mapped_box_level);
+      size_t err1 = oca.checkOverlapCorrectness(anchor_to_mapped_box_level);
       if (err1) {
          tbox::perr << "BoxLevelConnectorUtils::addPeriodicImages found " << err1
                     << " errors\n"
-                    << "in new_anchor_to_mapped_box_level after\n"
+                    << "in anchor_to_mapped_box_level after\n"
                     << "computing periodic images.  If you enabled\n"
                     << "precondition checking, this is probably a\n"
                     << "library error.\n";
       }
-      size_t err2 = oca.checkOverlapCorrectness(new_mapped_box_level_to_anchor);
+      size_t err2 = oca.checkOverlapCorrectness(mapped_box_level_to_anchor);
       if (err2) {
          tbox::perr << "BoxLevelConnectorUtils::addPeriodicImages found " << err2
                     << " errors\n"
-                    << "in new_mapped_box_level_to_anchor after\n"
+                    << "in mapped_box_level_to_anchor after\n"
                     << "computing periodic images.  If you enabled\n"
                     << "precondition checking, this is probably a\n"
                     << "library error.\n";
@@ -1541,15 +1507,12 @@ void BoxLevelConnectorUtils::addPeriodicImagesAndRelationships(
             << "anchor_to_anchor:\n" << anchor_to_anchor.format("ERR-> ", 3)
             << "anchor_to_mapped_box_level:\n" << anchor_to_mapped_box_level.format("ERR-> ", 3)
             << "mapped_box_level_to_anchor:\n" << mapped_box_level_to_anchor.format("ERR-> ", 3)
-            << "new_anchor_to_mapped_box_level:\n"
-            << new_anchor_to_mapped_box_level.format("ERR-> ", 3)
-            << "new_mapped_box_level_to_anchor:\n"
-            << new_mapped_box_level_to_anchor.format("ERR-> ", 3));
+            << "anchor_to_mapped_box_level:\n"
+            << anchor_to_mapped_box_level.format("ERR-> ", 3)
+            << "mapped_box_level_to_anchor:\n"
+            << mapped_box_level_to_anchor.format("ERR-> ", 3));
       }
    }
-
-   Connector::swap(new_anchor_to_mapped_box_level, anchor_to_mapped_box_level);
-   Connector::swap(new_mapped_box_level_to_anchor, mapped_box_level_to_anchor);
 }
 
 /*

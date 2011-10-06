@@ -20,21 +20,25 @@ namespace hier {
 
 SAMRAI_INLINE_KEYWORD
 BoxContainer::BoxContainer(
-   const tbox::Dimension& dim,
-   const int n):
+   const tbox::Dimension& dim):
+//   const int n):
    d_dim(dim),
-   d_list(n, Box(dim)),
+//   d_list(n, Box(dim)),
    d_set_created(false)
 {
 }
 
 SAMRAI_INLINE_KEYWORD
 BoxContainer::BoxContainer(
-   const Box& box):
+   const Box& box,
+   bool ordered):
    d_dim(box.getDim()),
    d_list(1, box),
-   d_set_created(false)
+   d_set_created(ordered)
 {
+   if (d_set_created) {
+      makeOrdered();
+   }
 }
 
 SAMRAI_INLINE_KEYWORD
@@ -123,8 +127,10 @@ void BoxContainer::pushFront(const Box& item)
 {
    TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(d_dim, item);
    d_list.push_front(item);
-   d_set.clear();
-   d_set_created = false;
+   if (d_set_created) {
+      d_set.clear();
+      d_set_created = false;
+   }
 }
 
 SAMRAI_INLINE_KEYWORD
@@ -132,8 +138,10 @@ void BoxContainer::pushBack(const Box& item)
 {
    TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(d_dim, item);
    d_list.push_back(item);
-   d_set.clear();
-   d_set_created = false;
+   if (d_set_created) {
+      d_set.clear();
+      d_set_created = false;
+   }
 }
 
 SAMRAI_INLINE_KEYWORD
@@ -141,8 +149,10 @@ void BoxContainer::insertBefore(Iterator iter, const Box& item)
 {
    TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(d_dim, item);
    d_list.insert(iter.d_list_iter, item);
-   d_set.clear();
-   d_set_created = false;
+   if (d_set_created) {
+      d_set.clear();
+      d_set_created = false;
+   }
 }
 
 SAMRAI_INLINE_KEYWORD
@@ -150,8 +160,10 @@ void BoxContainer::spliceFront(BoxContainer& boxes)
 {
    TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(d_dim, boxes);
    d_list.splice(begin().d_list_iter, boxes.d_list);
-   d_set.clear();
-   d_set_created = false;
+   if (d_set_created) {
+      d_set.clear();
+      d_set_created = false;
+   }
 }
 
 SAMRAI_INLINE_KEYWORD
@@ -160,40 +172,50 @@ void BoxContainer::spliceBack(BoxContainer& boxes)
    TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(d_dim, boxes);
    boxes.spliceFront(*this);
    d_list.swap(boxes.d_list);
-   d_set.clear();
-   d_set_created = false;
+   if (d_set_created) {
+      d_set.clear();
+      d_set_created = false;
+   }
 }
 
 SAMRAI_INLINE_KEYWORD
 void BoxContainer::popFront()
 {
    d_list.pop_front();
-   d_set.clear();
-   d_set_created = false;
+   if (d_set_created) {
+      d_set.clear();
+      d_set_created = false;
+   }
 }
 
 SAMRAI_INLINE_KEYWORD
 void BoxContainer::popBack()
 {
    d_list.pop_back();
-   d_set.clear();
-   d_set_created = false;
+   if (d_set_created) {
+      d_set.clear();
+      d_set_created = false;
+   }
 }
 
 SAMRAI_INLINE_KEYWORD
 void BoxContainer::erase(Iterator iter)
 {
    d_list.erase(iter.d_list_iter);
-   d_set.clear();
-   d_set_created = false;
+   if (d_set_created) {
+      d_set.clear();
+      d_set_created = false;
+   }
 }
 
 SAMRAI_INLINE_KEYWORD
 void BoxContainer::erase(Iterator first, Iterator last)
 {
    d_list.erase(first.d_list_iter, last.d_list_iter);
-   d_set.clear();
-   d_set_created = false;
+   if (d_set_created) {
+      d_set.clear();
+      d_set_created = false;
+   }
 }
 
 SAMRAI_INLINE_KEYWORD
@@ -265,6 +287,8 @@ void BoxContainer::separatePeriodicImages(
    std::vector<Box>& real_mapped_box_vector,
    std::vector<Box>& periodic_image_mapped_box_vector) const
 {
+   TBOX_ASSERT(d_set_created || size() == 0);
+
    if (!isEmpty()) {
 
       const Box& first_element(*begin());
@@ -288,14 +312,26 @@ void BoxContainer::separatePeriodicImages(
 SAMRAI_INLINE_KEYWORD
 bool BoxContainer::isOrdered() const
 {
-   return d_set_created;
+   return (d_set_created && size() != 0);
 }
+
+SAMRAI_INLINE_KEYWORD
+bool BoxContainer::isUnordered() const
+{
+   return (!d_set_created && size() != 0);
+}
+
 
 SAMRAI_INLINE_KEYWORD
 bool BoxContainer::insert(const Box& box)
 {
+   TBOX_ASSERT(box.getLocalId() != LocalId::getInvalidId());
+   TBOX_ASSERT(box.getOwnerRank() != tbox::SAMRAI_MPI::getInvalidRank());
+   TBOX_ASSERT(box.getBlockId() != BlockId::invalidId());
+
    if (!d_set_created) {
-      makeOrdered();
+      TBOX_ASSERT(size() == 0);
+      d_set_created = true;
    }
 
    const std::list<Box>::iterator& iter = d_list.insert(d_list.end(), box);

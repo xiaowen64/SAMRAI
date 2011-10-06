@@ -49,7 +49,7 @@ breakUpBoxes(
  */
 void
 exhaustiveFindOverlapBoxes(
-   hier::BoxSet& overlap_mapped_boxes,
+   hier::Connector& overlap_connector,
    const hier::Box& mapped_box,
    const hier::IntVector& refinement_ratio,
    const tbox::ConstPointer<hier::GridGeometry>& grid_geometry,
@@ -267,7 +267,10 @@ int main(
          main_db->getIntegerArray("connector_width", &connector_width[0], dim.getValue());
       }
 
-      hier::NeighborhoodSet neighborhood_set(dim);
+      hier::Connector connector(
+         mapped_box_level,
+         mapped_box_level,
+         connector_width);
 
       const hier::IntVector& refinement_ratio(one_vector);
 
@@ -276,26 +279,16 @@ int main(
 
          const hier::Box& mapped_box(*bi);
 
-         hier::BoxSet& neighbors(neighborhood_set.getNeighborSet(mapped_box.getId(),
-                                                                 dim));
-
          hier::Box grown_box(mapped_box);
          grown_box.grow(connector_width);
 
          multiblock_mapped_box_tree.findOverlapBoxes(
-            neighbors,
+            connector,
             grown_box,
-            mapped_box.getBlockId(),
             refinement_ratio,
             true);
 
       }
-
-      const hier::Connector connector(
-         mapped_box_level,
-         mapped_box_level,
-         connector_width,
-         neighborhood_set);
 
       /*
        * Write the baseline NeighborhoodSet or check against it.
@@ -306,35 +299,30 @@ int main(
           * If writing baseline, verify the results against the
           * exhaustive search method first.
           */
-         hier::NeighborhoodSet neighborhood_set_from_exhaustive_search(dim);
-         for (hier::BoxSet::OrderedConstIterator bi = mapped_box_level.getBoxes().orderedBegin();
+         hier::Connector connector_from_exhaustive_search(
+            mapped_box_level,
+            mapped_box_level,
+            connector_width);
+         for (hier::BoxSet::OrderedConstIterator bi =
+              mapped_box_level.getBoxes().orderedBegin();
               bi != mapped_box_level.getBoxes().orderedEnd(); ++bi) {
 
             const hier::Box& mapped_box(*bi);
-
-            hier::BoxSet& neighbors(neighborhood_set_from_exhaustive_search.
-                                       getNeighborSet(mapped_box.getId(), dim));
 
             hier::Box grown_mapped_box(mapped_box);
             grown_mapped_box.grow(connector_width);
 
             exhaustiveFindOverlapBoxes(
-               neighbors,
+               connector_from_exhaustive_search,
                grown_mapped_box,
                refinement_ratio,
                grid_geometry,
                mapped_box_level.getBoxes());
-            // tbox::pout << "overlaps for " << mapped_box << ":\n" << neighbors.format() << std::endl;
 
          }
-         const hier::Connector connector_from_exhaustive_search(
-            mapped_box_level,
-            mapped_box_level,
-            connector_width,
-            neighborhood_set_from_exhaustive_search);
 
-         if (connector.getNeighborhoodSets() !=
-             connector_from_exhaustive_search.getNeighborhoodSets()) {
+         if (!connector.localNeighborhoodsEqual(
+                 connector_from_exhaustive_search)) {
 
             tbox::perr << "Failed verification in baseline generation:\n"
                        << "Neighborhoods from the tree search do not match\n"
@@ -367,7 +355,7 @@ int main(
             ++fail_count;
          } else {
 
-            connector.getNeighborhoodSets().putToDatabase(*connector_db);
+            connector.putNeighborhoodsToDatabase(*connector_db);
             tbox::pout << "Connector for review:\n"
                        << connector.format("REVIEW: ", 2)
                        << "This data has been verified by comparing against the results\n"
@@ -381,16 +369,16 @@ int main(
          /*
           * Get the baseline Connector NeighborhoodSet and compare.
           */
-         hier::NeighborhoodSet baseline_neighborhoods(dim);
-         baseline_neighborhoods.getFromDatabase(*connector_db);
-         if (baseline_neighborhoods != connector.getNeighborhoodSets()) {
+         hier::Connector baseline_connector;
+         baseline_connector.getNeighborhoodsFromDatabase(*connector_db);
+         if (!baseline_connector.localNeighborhoodsEqual(connector)) {
             tbox::perr << "MultiblockBoxTree test problem:\n"
                        << "the NeighborhoodSets generated is different\n"
                        << "from the one in the database.\n"
-                       << "computed neighborhood set:\n"
-                       << connector.getNeighborhoodSets().format("COMPUTED:  ", 2)
-                       << "baseline neighborhood set\n"
-                       << baseline_neighborhoods.format("BASELINE:  ", 2);
+                       << "computed neighborhood set:\n";
+            connector.writeNeighborhoodsToErrorStream("COMPUTED:  ");
+            tbox::perr << "baseline neighborhood set\n";
+            baseline_connector.writeNeighborhoodsToErrorStream("BASELINE:  ");
             ++fail_count;
          }
       }
@@ -486,7 +474,7 @@ void breakUpBoxes(
  * results from tree search.
  */
 void exhaustiveFindOverlapBoxes(
-   hier::BoxSet& overlap_mapped_boxes,
+   hier::Connector& overlap_connector,
    const hier::Box& mapped_box,
    const hier::IntVector& refinement_ratio,
    const tbox::ConstPointer<hier::GridGeometry>& grid_geometry,
@@ -520,7 +508,8 @@ void exhaustiveFindOverlapBoxes(
 
       if (transformed_block_id == search_mapped_box.getBlockId()) {
          if (transformed_box.intersects(search_mapped_box)) {
-            overlap_mapped_boxes.insert(search_mapped_box);
+	   overlap_connector.insertLocalNeighbor(search_mapped_box,
+              mapped_box.getId());
          }
       }
 

@@ -345,18 +345,14 @@ void NodeMultiblockTest::fillSingularityBoundaryConditions(
       int num_encon_used = 0;
 
       if (grid_geometry->hasEnhancedConnectivity()) {
-         const hier::NeighborhoodSet& dst_to_encon_nbrhood_set =
-            dst_to_encon.getNeighborhoodSets();
 
-         hier::NeighborhoodSet::const_iterator ni =
-            dst_to_encon_nbrhood_set.find(dst_mb_id);
+         hier::Connector::ConstNeighborhoodIterator ni =
+            dst_to_encon.findLocal(dst_mb_id);
 
-         if (ni != dst_to_encon_nbrhood_set.end()) {
+         if (ni != dst_to_encon.end()) {
 
-            const hier::BoxSet& encon_nbrs = ni->second;
-
-            for (hier::BoxSet::OrderedConstIterator ei = encon_nbrs.orderedBegin();
-                 ei != encon_nbrs.orderedEnd(); ++ei) {
+            for (hier::Connector::ConstNeighborIterator ei = dst_to_encon.begin(ni);
+                 ei != dst_to_encon.end(ni); ++ei) {
 
                const hier::BlockId& encon_blk_id = ei->getBlockId();
                tbox::Pointer<hier::Patch> encon_patch(
@@ -369,11 +365,11 @@ void NodeMultiblockTest::fillSingularityBoundaryConditions(
                hier::IntVector offset(dim);
 
                for (tbox::List<hier::GridGeometry::Neighbor>::Iterator
-                    ni(neighbors); ni; ni++) {
+                    nbri(neighbors); nbri; nbri++) {
 
-                  if (ni().getBlockId() == encon_blk_id) {
-                     rotation = ni().getRotationIdentifier();
-                     offset = ni().getShift();
+                  if (nbri().getBlockId() == encon_blk_id) {
+                     rotation = nbri().getRotationIdentifier();
+                     offset = nbri().getShift();
                      break;
                   }
                }

@@ -136,18 +136,18 @@ void OverlapConnectorAlgorithm::extractNeighbors(
 
 #ifdef DEBUG_CHECK_ASSERTIONS
    if (!(gcw <= connector.getConnectorWidth())) {
-      TBOX_ERROR("Connector::extractNeighbors cannot provide neighbors for\n"
+      TBOX_ERROR("OverlapConnectorAlgorithm::extractNeighbors cannot provide neighbors for\n"
          << "a wider ghost cell width that used to initialize it.\n");
    }
    if (connector.getParallelState() != BoxLevel::GLOBALIZED &&
        mapped_box_id.getOwnerRank() != connector.getMPI().getRank()) {
-      TBOX_ERROR("Connector::extractNeighbors cannot get neighbor data\n"
+      TBOX_ERROR("OverlapConnectorAlgorithm::extractNeighbors cannot get neighbor data\n"
          << "for a remote mapped_box unless in GLOBALIZED mode.\n");
    }
    if (!connector.getBase().hasBox(mapped_box_id)) {
       std::string dbgbord;
       TBOX_ERROR(
-         "\nConnector::extractNeighbors: mapped_box_id " << mapped_box_id
+         "\nOverlapConnectorAlgorithm::extractNeighbors: mapped_box_id " << mapped_box_id
                                                          <<
          " is not in the base of the mapped_box_level.\n"
                                                          << "base:\n"
@@ -166,17 +166,17 @@ void OverlapConnectorAlgorithm::extractNeighbors(
     */
    TBOX_ASSERT(mapped_box_id.getOwnerRank() == connector.getMPI().getRank());
 
-   const tbox::ConstPointer<hier::GridGeometry>& grid_geom(connector.getBase().getGridGeometry());
+   const tbox::ConstPointer<GridGeometry>& grid_geom(connector.getBase().getGridGeometry());
 
    const Box& mapped_box(*connector.getBase().getBox(Box(dim,
                                mapped_box_id)));
-   NeighborhoodSet::const_iterator ins = connector.getNeighborhoodSets().find(mapped_box_id);
-   if (ins == connector.getNeighborhoodSets().end()) {
+   Connector::ConstNeighborhoodIterator ins =
+      connector.findLocal(mapped_box_id);
+   if (ins == connector.end()) {
       neighbors.clear();
    } else {
-      const NeighborSet& superset = ins->second;
       if (gcw == connector.getConnectorWidth()) {
-         neighbors = superset;
+         neighbors = ins->second;
       } else {
          neighbors.clear();
          Box grown_mapped_box = mapped_box;
@@ -184,8 +184,8 @@ void OverlapConnectorAlgorithm::extractNeighbors(
          if (connector.getHeadCoarserFlag() == false) {
             grown_mapped_box.refine(connector.getRatio());
          }
-         for (NeighborSet::OrderedConstIterator ni = superset.orderedBegin();
-              ni != superset.orderedEnd(); ++ni) {
+         for (Connector::ConstNeighborIterator ni = connector.begin(ins);
+              ni != connector.end(ins); ++ni) {
             const Box& neighbor(*ni);
             Box nabr_box(neighbor);
             if (neighbor.getBlockId() != mapped_box.getBlockId()) {
@@ -203,6 +203,93 @@ void OverlapConnectorAlgorithm::extractNeighbors(
          }
       }
    }
+}
+
+/*
+ ***********************************************************************
+ ***********************************************************************
+ */
+
+void OverlapConnectorAlgorithm::extractNeighbors(
+   Connector& other,
+   const Connector& connector,
+   const IntVector& gcw) const
+{
+   other.clearLocalNeighborhoods();
+   for (Connector::ConstNeighborhoodIterator ni = connector.begin();
+        ni != connector.end(); ++ni) {
+
+      other.makeEmptyLocalNeighborhood(ni->first);
+
+      const BoxId& mapped_box_id = ni->first;
+      const tbox::Dimension& dim(gcw.getDim());
+
+#ifdef DEBUG_CHECK_ASSERTIONS
+      if (!(gcw <= connector.getConnectorWidth())) {
+         TBOX_ERROR("OverlapConnectorAlgorithm::extractNeighbors cannot provide neighbors for\n"
+            << "a wider ghost cell width that used to initialize it.\n");
+      }
+      if (connector.getParallelState() != BoxLevel::GLOBALIZED &&
+          mapped_box_id.getOwnerRank() != connector.getMPI().getRank()) {
+         TBOX_ERROR("OverlapConnectorAlgorithm::extractNeighbors cannot get neighbor data\n"
+            << "for a remote mapped_box unless in GLOBALIZED mode.\n");
+      }
+      if (!connector.getBase().hasBox(mapped_box_id)) {
+         std::string dbgbord;
+         TBOX_ERROR(
+            "\nOverlapConnectorAlgorithm::extractNeighbors: mapped_box_id " << mapped_box_id
+                                                            <<
+            " is not in the base of the mapped_box_level.\n"
+                                                            << "base:\n"
+                                                            << connector.getBase().format(dbgbord, 2)
+                                                            << "head:\n"
+                                                            << connector.getHead().format(dbgbord, 2)
+                                                            << "connector:\n"
+                                                            << connector.format(dbgbord, 2));
+      }
+#endif
+
+      /*
+       * Temporarily disable extracting neighbors for remote boxes.  This
+       * method functionality is not much used and prrobably should be
+       * removed.
+       */
+      TBOX_ASSERT(mapped_box_id.getOwnerRank() == connector.getMPI().getRank());
+
+      const tbox::ConstPointer<GridGeometry>& grid_geom = 
+         connector.getBase().getGridGeometry();
+
+      const Box& mapped_box =
+         *connector.getBase().getBox(Box(dim, mapped_box_id));
+
+      if (gcw == connector.getConnectorWidth()) {
+         other.insertNeighbors(ni->second, mapped_box_id);
+      } else {
+         Box grown_mapped_box = mapped_box;
+         grown_mapped_box.grow(gcw);
+         if (connector.getHeadCoarserFlag() == false) {
+            grown_mapped_box.refine(connector.getRatio());
+         }
+         for (Connector::ConstNeighborIterator si = connector.begin(ni);
+              si != connector.end(ni); ++si) {
+            const Box& neighbor = *si;
+            Box nabr_box(neighbor);
+            if (neighbor.getBlockId() != mapped_box.getBlockId()) {
+               grid_geom->transformBox(nabr_box,
+                  connector.getHead().getRefinementRatio(),
+                  mapped_box.getBlockId(),
+                  neighbor.getBlockId());
+            }
+            if (connector.getHeadCoarserFlag() == true) {
+               nabr_box.refine(connector.getRatio());
+            }
+            if (grown_mapped_box.intersects(nabr_box)) {
+	      other.insertLocalNeighbor(neighbor, mapped_box_id);
+            }
+         }
+      }
+   }
+   return;
 }
 
 /*
@@ -274,7 +361,7 @@ void OverlapConnectorAlgorithm::findOverlaps_rbbt(
     * The nomenclature "base" refers to the *this mapped_box_level
     * and "head" refer to the mapped_box_level in the argument.
     */
-   const hier::BoxLevel& base(connector.getBase());
+   const BoxLevel& base(connector.getBase());
 
    /*
     * Determine relationship between base and head index spaces.
@@ -290,8 +377,7 @@ void OverlapConnectorAlgorithm::findOverlaps_rbbt(
     * Create single container of visible head mapped_boxes
     * to generate the search tree.
     */
-   hier::MultiblockBoxTree rbbt(head.getGridGeometry(),
-                                head.getGlobalBoxes());
+   MultiblockBoxTree rbbt(head.getGridGeometry(), head.getGlobalBoxes());
 
    /*
     * A neighbor of a Box would be discarded if
@@ -323,7 +409,7 @@ void OverlapConnectorAlgorithm::findOverlaps_rbbt(
       const Box& base_mapped_box = *ni;
 
       // Grow the base_mapped_box and put it in the head refinement ratio.
-      hier::Box box = base_mapped_box;
+      Box box = base_mapped_box;
       box.grow(connector.getConnectorWidth());
       if (head_is_finer) {
          box.refine(connector.getRatio());
@@ -360,86 +446,6 @@ void OverlapConnectorAlgorithm::findOverlaps_rbbt(
  ***********************************************************************
  ***********************************************************************
  */
-
-void OverlapConnectorAlgorithm::shrinkConnectorWidth(
-   Connector& connector,
-   const IntVector& new_width) const
-{
-   if (!(new_width <= connector.getConnectorWidth())) {
-      TBOX_ERROR("Connector::shrinkConnectorWidth: new ghost cell\n"
-         << "width " << new_width << " involves an\n"
-         << "enlargement of the current cell width "
-         << connector.getConnectorWidth());
-   }
-   if (new_width == connector.getConnectorWidth()) {
-      // This is a no-op.
-      return;
-   }
-
-   // Have not yet written this for GLOBALIZED mode.
-   TBOX_ASSERT(connector.getParallelState() == BoxLevel::DISTRIBUTED);
-
-   /*
-    * Remove overlaps that disappeared given the new GCW.
-    * Swap out the overlaps, modify them then swap them back in.
-    */
-   NeighborhoodSet neighborhood_set(new_width.getDim());
-   connector.swapInitialize(connector.getBase(),
-      connector.getHead(),
-      connector.getConnectorWidth(),
-      neighborhood_set,
-      BoxLevel::DISTRIBUTED);
-
-   const bool head_coarser = connector.getHeadCoarserFlag();
-   const bool base_coarser =
-      !connector.getHeadCoarserFlag() &&
-      connector.getBase().getRefinementRatio() !=
-      connector.getHead().getRefinementRatio();
-
-   const tbox::ConstPointer<hier::GridGeometry>& grid_geom(connector.getBase().getGridGeometry());
-
-   for (NeighborhoodSet::iterator ei = neighborhood_set.begin();
-        ei != neighborhood_set.end(); ++ei) {
-      const BoxId& mapped_box_id = ei->first;
-      NeighborSet& nabrs = ei->second;
-      const Box& mapped_box = *connector.getBase().getBoxStrict(
-            mapped_box_id);
-      hier::Box mapped_box_box = mapped_box;
-      mapped_box_box.grow(new_width);
-      if (base_coarser) {
-         mapped_box_box.refine(connector.getRatio());
-      }
-      for (BoxSet::OrderedConstIterator na = nabrs.orderedBegin();
-           na != nabrs.orderedEnd(); /* incremented in loop */) {
-         const Box& nabr = *na;
-         hier::Box nabr_box = nabr;
-         if (nabr.getBlockId() != mapped_box.getBlockId()) {
-            grid_geom->transformBox(nabr_box,
-               connector.getHead().getRefinementRatio(),
-               mapped_box.getBlockId(),
-               nabr.getBlockId());
-         }
-         if (head_coarser) nabr_box.refine(connector.getRatio());
-         if (!mapped_box_box.intersects(nabr_box)) {
-            nabrs.erase(na++);
-         } else {
-            ++na;
-         }
-      }
-   }
-
-   connector.swapInitialize(
-      connector.getBase(),
-      connector.getHead(),
-      new_width,
-      neighborhood_set,
-      BoxLevel::DISTRIBUTED);
-}
-
-/*
- ***********************************************************************
- ***********************************************************************
- */
 void OverlapConnectorAlgorithm::bridge(
    Connector& west_to_east,
    Connector& east_to_west,
@@ -449,7 +455,7 @@ void OverlapConnectorAlgorithm::bridge(
    const Connector& cent_to_west) const
 {
    const IntVector& zero_vector(
-      hier::IntVector::getZero(cent_to_east.getConnectorWidth().getDim()));
+      IntVector::getZero(cent_to_east.getConnectorWidth().getDim()));
    const IntVector connector_width_limit(
       cent_to_east.getConnectorWidth().getDim(), -1); // No user-imposed limit.
    privateBridge(
@@ -509,10 +515,35 @@ void OverlapConnectorAlgorithm::bridge(
    const IntVector& connector_width_limit) const
 {
    const IntVector& zero_vector(
-      hier::IntVector::getZero(cent_to_east.getConnectorWidth().getDim()));
+      IntVector::getZero(cent_to_east.getConnectorWidth().getDim()));
    privateBridge(
       west_to_east,
       &east_to_west == &west_to_east ? NULL : &east_to_west,
+      west_to_cent,
+      cent_to_east,
+      east_to_cent,
+      cent_to_west,
+      false,
+      zero_vector,
+      false,
+      zero_vector,
+      connector_width_limit);
+}
+
+/*
+ ***********************************************************************
+ ***********************************************************************
+ */
+void OverlapConnectorAlgorithm::bridge(
+   Connector& west_to_cent,
+   const Connector& cent_to_east,
+   const Connector& east_to_cent,
+   Connector& cent_to_west,
+   const IntVector& connector_width_limit) const
+{
+   const IntVector& zero_vector(
+      IntVector::getZero(cent_to_east.getConnectorWidth().getDim()));
+   privateBridge(
       west_to_cent,
       cent_to_east,
       east_to_cent,
@@ -537,7 +568,7 @@ void OverlapConnectorAlgorithm::bridge(
    const IntVector& connector_width_limit) const
 {
    const IntVector& zero_vector(
-      hier::IntVector::getZero(cent_to_east.getConnectorWidth().getDim()));
+      IntVector::getZero(cent_to_east.getConnectorWidth().getDim()));
    privateBridge(
       west_to_east,
       NULL,
@@ -564,7 +595,7 @@ void OverlapConnectorAlgorithm::bridge(
    const Connector& cent_to_west) const
 {
    const IntVector& zero_vector(
-      hier::IntVector::getZero(cent_to_east.getConnectorWidth().getDim()));
+      IntVector::getZero(cent_to_east.getConnectorWidth().getDim()));
    const IntVector connector_width_limit(
       cent_to_east.getConnectorWidth().getDim(), -1); // No user-imposed limit.
    privateBridge(
@@ -621,7 +652,7 @@ void OverlapConnectorAlgorithm::privateBridge(
    const tbox::Dimension& dim(connector_width_limit.getDim());
 
    const IntVector& zero_vector(
-      hier::IntVector::getZero(cent_to_east.getConnectorWidth().getDim()));
+      IntVector::getZero(cent_to_east.getConnectorWidth().getDim()));
 
    const BoxLevel& cent = cent_to_west.getBase();
 
@@ -826,11 +857,11 @@ void OverlapConnectorAlgorithm::privateBridge(
     * owning east/west Boxes visible to the local process.
     */
    std::set<int> outgoing_ranks, incoming_ranks;
-   cent_to_east.getNeighborhoodSets().getOwners(outgoing_ranks);
-   east_to_cent.getNeighborhoodSets().getOwners(incoming_ranks);
+   cent_to_east.getLocalOwners(outgoing_ranks);
+   east_to_cent.getLocalOwners(incoming_ranks);
    if (&cent_to_west != &cent_to_east) {
-      cent_to_west.getNeighborhoodSets().getOwners(outgoing_ranks);
-      west_to_cent.getNeighborhoodSets().getOwners(incoming_ranks);
+      cent_to_west.getLocalOwners(outgoing_ranks);
+      west_to_cent.getLocalOwners(incoming_ranks);
    }
    outgoing_ranks.erase(rank);
    incoming_ranks.erase(rank);
@@ -908,8 +939,8 @@ void OverlapConnectorAlgorithm::privateBridge(
     */
    t_bridge_discover_get_neighbors->start();
    NeighborSet visible_west_nabrs(dim), visible_east_nabrs(dim);
-   cent_to_west.getNeighborhoodSets().getNeighbors(visible_west_nabrs);
-   cent_to_east.getNeighborhoodSets().getNeighbors(visible_east_nabrs);
+   cent_to_west.getLocalNeighbors(visible_west_nabrs);
+   cent_to_east.getLocalNeighbors(visible_east_nabrs);
    t_bridge_discover_get_neighbors->stop();
 
    if (!visible_west_nabrs.isEmpty() || !visible_east_nabrs.isEmpty()) {
@@ -928,7 +959,7 @@ void OverlapConnectorAlgorithm::privateBridge(
                     << std::endl;
       }
 
-      const tbox::ConstPointer<hier::GridGeometry> &grid_geometry(cent.getGridGeometry());
+      const tbox::ConstPointer<GridGeometry> &grid_geometry(cent.getGridGeometry());
 
       t_bridge_discover_form_rbbt->start();
       const MultiblockBoxTree west_rbbt(grid_geometry, visible_west_nabrs);
@@ -961,7 +992,7 @@ void OverlapConnectorAlgorithm::privateBridge(
        * highest of all owners of the visible Boxes, start at
        * the beginning.)
        */
-      const Box start_loop_here(dim, hier::LocalId::getZero(), rank + 1);
+      const Box start_loop_here(dim, LocalId::getZero(), rank + 1);
       west_ni = visible_west_nabrs.lower_bound(start_loop_here);
       if (compute_reverse) {
          east_ni = visible_east_nabrs.lower_bound(start_loop_here);
@@ -1209,6 +1240,631 @@ void OverlapConnectorAlgorithm::privateBridge(
 
 /*
  ***********************************************************************
+ *
+ *                           west to east
+ * (west mapped_box_level)  ------------------> (east mapped_box_level)
+ *                       ^  <------------------ ^
+ *                        \    east to west    /
+ *                         \                  /
+ *           center to west \                / center to east
+ *                           \              /
+ *                            \            /
+ *                      (center mapped_box_level)
+ *
+ * Bridge operation is in two phases, discovery and
+ * sharing.  The discovery phase loops through local
+ * Boxes in the center and comparing the west and east neighbors
+ * for overlaps.  Local overlaps are stored immediately.
+ * Remote overlaps are placed in messages to be sent to appropriate
+ * processors by the sharing phase.
+ ***********************************************************************
+ */
+
+void OverlapConnectorAlgorithm::privateBridge(
+   Connector& west_to_cent,
+   const Connector& cent_to_east,
+   const Connector& east_to_cent,
+   Connector& cent_to_west,
+   bool west_nesting_is_known,
+   const IntVector& cent_growth_to_nest_west,
+   bool east_nesting_is_known,
+   const IntVector& cent_growth_to_nest_east,
+   const IntVector& connector_width_limit) const
+{
+   t_bridge->barrierAndStart();
+
+   const tbox::Dimension& dim(connector_width_limit.getDim());
+
+   const IntVector& zero_vector(
+      IntVector::getZero(cent_to_east.getConnectorWidth().getDim()));
+
+   const BoxLevel& cent = cent_to_west.getBase();
+
+#if defined(DEBUG_CHECK_ASSERTIONS) || \
+   defined(CONNECTOR_CheckBridgeBoxLevelIdentities)
+   /*
+    * Ensure that Connectors incident to and from the center agree on
+    * what the center is.  This can be an expensive (though still
+    * scalable) check, so we only check in debug mode, unless debugging,
+    * in which it can be independently enabled in any mode.
+    */
+   if (cent != cent_to_east.getBase() ||
+       cent != east_to_cent.getHead() ||
+       cent != west_to_cent.getHead()) {
+      TBOX_ERROR("Bad input for OverlapConnectorAlgorithm::bridge:\n"
+         << "Given Connectors to base and head of bridge are not incident\n"
+         << "from the same center in OverlapConnectorAlgorithm::bridge:\n"
+         << "west_to_cent is  TO  " << &west_to_cent.getHead() << "\n"
+         << "cent_to_east is FROM " << &cent_to_east.getBase() << "\n"
+         << "east_to_cent is  TO  " << &east_to_cent.getHead() << "\n"
+         << "cent_to_west is FROM " << &cent_to_west.getBase() << "\n"
+         );
+   }
+#endif
+   /*
+    * Ensure that head and base mapped_box_levels in argument agree with
+    * head and base in the object.
+    */
+   if (cent_to_west.getHead() != west_to_cent.getBase()) {
+      TBOX_ERROR("Bad input for OverlapConnectorAlgorithm::bridge:\n"
+         << "Given Connectors to and from base of bridge do not refer\n"
+         << "to the base of the bridge in OverlapConnectorAlgorithm::bridge:\n"
+         << "west_to_cent is FROM " << &west_to_cent.getBase() << "\n"
+         << "cent_to_west is  TO  " << &cent_to_west.getHead() << "\n"
+         );
+   }
+   if (cent_to_east.getHead() != east_to_cent.getBase()) {
+      TBOX_ERROR("Bad input for OverlapConnectorAlgorithm::bridge:\n"
+         << "Given Connectors to and from head of bridge do not refer\n"
+         << "to the head of the bridge in OverlapConnectorAlgorithm::bridge:\n"
+         << "east_to_cent is FROM " << &east_to_cent.getBase() << "\n"
+         << "cent_to_east is  TO  " << &cent_to_east.getHead() << "\n"
+         );
+   }
+   if (!west_to_cent.isTransposeOf(cent_to_west)) {
+      TBOX_ERROR("Bad input for OverlapConnectorAlgorithm::bridge:\n"
+         << "Given Connectors between base and center of bridge\n"
+         << "are not transposes of each other.\n"
+         << "See OverlapConnectorAlgorithm::isTransposeOf().\n"
+         );
+   }
+   if (!east_to_cent.isTransposeOf(cent_to_east)) {
+      TBOX_ERROR("Bad input for OverlapConnectorAlgorithm::bridge:\n"
+         << "Given Connectors between head and center of bridge\n"
+         << "are not transposes of each other.\n"
+         << "See OverlapConnectorAlgorithm::isTransposeOf().\n"
+         );
+   }
+
+   // Expensive sanity checks:
+   if (d_sanity_check_method_preconditions) {
+      west_to_cent.assertTransposeCorrectness(cent_to_west);
+      cent_to_west.assertTransposeCorrectness(west_to_cent);
+      east_to_cent.assertTransposeCorrectness(cent_to_east);
+      cent_to_east.assertTransposeCorrectness(east_to_cent);
+   }
+
+   if (s_print_bridge_steps == 'y') {
+      std::string dbgbord("bridge->  ");
+      tbox::plog
+      << "bridge west:\n" << west_to_cent.getBase().format(dbgbord, 3)
+      << "bridge east:\n" << east_to_cent.getBase().format(dbgbord, 3)
+      << "bridge center:\n" << cent_to_west.getBase().format(dbgbord, 3)
+      << "bridge west_to_cent:\n" << west_to_cent.format(dbgbord, 3)
+      << "bridge cent_to_west:\n" << cent_to_west.format(dbgbord, 3)
+      << "bridge cent_to_east:\n" << cent_to_east.format(dbgbord, 3)
+      << "bridge east_to_cent:\n" << east_to_cent.format(dbgbord, 3);
+   }
+
+   /* End sanity checks.  Begin work. */
+
+   const BoxLevel& west = cent_to_west.getHead();
+   const BoxLevel& east = cent_to_east.getHead();
+   const IntVector& cent_refinement_ratio = cent.getRefinementRatio();
+   const IntVector& west_refinement_ratio = west.getRefinementRatio();
+   const IntVector& east_refinement_ratio = east.getRefinementRatio();
+
+   const IntVector finest_refinement_ratio =
+      IntVector::max(cent_refinement_ratio, IntVector::max(west_refinement_ratio, east_refinement_ratio));
+
+   /*
+    * Using the bridge theorem, compute the largest bridge width for
+    * which we can guarantee discovering all the overlaps (when
+    * nesting is satisfied).  If either the east or west
+    * BoxLevel's nesting in the center is known, compute the
+    * output width by the bridge theorem, and use the bigger one.  If
+    * neither is known, we assume that both east and west nest in
+    * center, and just to do something reasonable.
+    */
+   IntVector output_width1(dim, 0), output_width2(dim, 0);
+   if (west_nesting_is_known || east_nesting_is_known) {
+      if (west_nesting_is_known) {
+         output_width1 =
+            cent_to_east.getConnectorWidth() - cent_growth_to_nest_west;
+      }
+      if (east_nesting_is_known) {
+         output_width2 =
+            cent_to_west.getConnectorWidth() - cent_growth_to_nest_east;
+      }
+      if (!(output_width1 >= zero_vector ||
+            output_width2 >= zero_vector)) {
+         TBOX_ERROR("OverlapConnectorAlgorithm::privateBridge:\n"
+            << "Useless nesting specifications!\n"
+            << "Neither west nor east BoxLevel nest with enough\n"
+            << "margin to guarantee finding all overlaps.\n"
+            << "To ensure you understand completness is not guaranteed,\n"
+            << "this is considered an error.  To proceed anyway and live\n"
+            << "with potential incompleteness, use a bridge interface\n"
+            << "that does not claim any nesting.  Or, you can specify\n"
+            << "a different nesting claim (but don't enable sanity\n"
+            << "checking, which will catch your fib).\n");
+      }
+   } else {
+      output_width1 = cent_to_east.getConnectorWidth();
+      output_width2 = cent_to_west.getConnectorWidth();
+   }
+   IntVector output_width_in_finest_refinement_ratio =
+      IntVector::max(output_width1, output_width2) * finest_refinement_ratio / cent_refinement_ratio;
+
+   /*
+    * Reduce the output width to the user-specified width limit.  Note
+    * that the width limit is specified in the coarser of the east and
+    * west refinement ratios.
+    */
+   if (connector_width_limit >= IntVector::getZero(dim)) {
+      const IntVector coarser_refinement_ratio = IntVector::min(west_refinement_ratio, east_refinement_ratio);
+      const IntVector width_limit_in_finest_refinement_ratio(
+         connector_width_limit * finest_refinement_ratio / coarser_refinement_ratio);
+      if (width_limit_in_finest_refinement_ratio > output_width_in_finest_refinement_ratio) {
+         /*
+          * If user specifies a width limit, he is probably assuming
+          * that the bridge's allowable width is bigger.  If that is
+          * not the case, this method won't crash, but it will give
+          * bad results that result in elusive bugs.  Therefore, we
+          * catch it immediately.
+          */
+         TBOX_ERROR("OverlapConnectorAlgorithm::privateBridge found input error:\n"
+            << "The given connector width limit, " << connector_width_limit
+            << " (" << width_limit_in_finest_refinement_ratio << " in finest index space)\n"
+            << "is smaller than the width of the bridge, "
+            << output_width_in_finest_refinement_ratio << " (in finest index space).");
+      }
+      output_width_in_finest_refinement_ratio.min(width_limit_in_finest_refinement_ratio);
+   }
+
+   const IntVector west_to_east_width =
+      IntVector::ceilingDivide(output_width_in_finest_refinement_ratio, finest_refinement_ratio / west_refinement_ratio);
+   const IntVector east_to_west_width =
+      IntVector::ceilingDivide(output_width_in_finest_refinement_ratio, finest_refinement_ratio / east_refinement_ratio);
+
+
+   const int rank = cent_to_west.getMPI().getRank();
+   const int nproc = cent_to_west.getMPI().getSize();
+
+
+   /*
+    * Owners we have to exchange information with are the ones
+    * owning east/west Boxes visible to the local process.
+    */
+   std::set<int> outgoing_ranks, incoming_ranks;
+   cent_to_east.getLocalOwners(outgoing_ranks);
+   east_to_cent.getLocalOwners(incoming_ranks);
+   if (&cent_to_west != &cent_to_east) {
+      cent_to_west.getLocalOwners(outgoing_ranks);
+      west_to_cent.getLocalOwners(incoming_ranks);
+   }
+   outgoing_ranks.erase(rank);
+   incoming_ranks.erase(rank);
+
+   /*
+    * Create BoxSets which will later be used to initialize the search trees
+    * for visible east and west neighbors:
+    * visible_west_nabrs and visible_east_nabrs.
+    */
+   t_bridge_discover_get_neighbors->start();
+   NeighborSet visible_west_nabrs(dim), visible_east_nabrs(dim);
+   cent_to_west.getLocalNeighbors(visible_west_nabrs);
+   cent_to_east.getLocalNeighbors(visible_east_nabrs);
+   t_bridge_discover_get_neighbors->stop();
+
+   /*
+    * Compute the reverse bridge (east_to_west) if it is given and is
+    * distinct.
+    */
+   const bool compute_reverse = (&cent_to_west != &west_to_cent);
+
+   /*
+    * Initialize the output Connectors without overlaps.  Add overlaps
+    * below as they are discovered or received from other procs.
+    */
+   west_to_cent.initialize(
+      west,
+      east,
+      west_to_east_width);
+   if (compute_reverse) {
+      cent_to_west.initialize(
+         east,
+         west,
+         east_to_west_width);
+#ifdef DEBUG_CHECK_ASSERTIONS
+      if (west_refinement_ratio / east_refinement_ratio * east_refinement_ratio == west_refinement_ratio ||
+          east_refinement_ratio / west_refinement_ratio * west_refinement_ratio == east_refinement_ratio) {
+         /*
+          * If it's possible to make west<==>east transposes, it
+          * should happen.  The requirement is that one refinement ratio is
+          * an IntVector times the other.
+          */
+         west_to_cent.isTransposeOf(cent_to_west);
+         cent_to_west.isTransposeOf(west_to_cent);
+      }
+#endif
+   }
+
+
+   /*
+    * Set up communication mechanism and post receives.
+    * Note that in comm_peer, all the outgoing_comm come
+    * first, the incoming_comm later.
+    */
+
+   t_bridge_share->start();
+   t_bridge_comm_init->start();
+
+   tbox::AsyncCommStage comm_stage;
+   comm_stage.setCommunicationWaitTimer(t_bridge_MPI_wait);
+   const int n_comm = static_cast<int>(
+         outgoing_ranks.size() + incoming_ranks.size());
+   tbox::AsyncCommPeer<int>* comm_peer =
+      new tbox::AsyncCommPeer<int>[n_comm];
+
+   tbox::AsyncCommStage::MemberVec completed;
+   completed.reserve(incoming_ranks.size());
+
+   const int tag0 = ++s_operation_mpi_tag;
+   const int tag1 = ++s_operation_mpi_tag;
+
+   size_t comm_idx;
+
+   comm_idx = outgoing_ranks.size();
+   for (std::set<int>::const_iterator owneri = incoming_ranks.begin();
+        owneri != incoming_ranks.end(); ++owneri, ++comm_idx) {
+      const int peer_rank = *owneri;
+      tbox::AsyncCommPeer<int>& incoming_comm = comm_peer[comm_idx];
+      incoming_comm.initialize(&comm_stage);
+      incoming_comm.setPeerRank(peer_rank);
+      incoming_comm.setMPI(cent.getMPI());
+      incoming_comm.setMPITag(tag0, tag1);
+      incoming_comm.limitFirstDataLength(OVERLAP_CONNECTOR_ALGORITHM_FIRST_DATA_LENGTH);
+      if (s_print_bridge_steps == 'y') {
+         tbox::plog << "Receiving from " << incoming_comm.getPeerRank()
+                    << std::endl;
+      }
+      incoming_comm.beginRecv();
+      if (incoming_comm.isDone()) {
+         completed.insert(completed.end(), &incoming_comm);
+      }
+   }
+
+   comm_idx = 0;
+   for (std::set<int>::const_iterator owneri = outgoing_ranks.begin();
+        owneri != outgoing_ranks.end(); ++owneri, ++comm_idx) {
+      const int peer_rank = *owneri;
+      tbox::AsyncCommPeer<int>& outgoing_comm = comm_peer[comm_idx];
+      outgoing_comm.initialize(&comm_stage);
+      outgoing_comm.setPeerRank(peer_rank);
+      outgoing_comm.setMPI(cent.getMPI());
+      outgoing_comm.setMPITag(tag0, tag1);
+      outgoing_comm.limitFirstDataLength(OVERLAP_CONNECTOR_ALGORITHM_FIRST_DATA_LENGTH);
+      if (s_print_bridge_steps == 'y') {
+         tbox::plog << "Sending to " << outgoing_comm.getPeerRank()
+                    << std::endl;
+      }
+   }
+
+   t_bridge_comm_init->stop();
+   t_bridge_share->stop();
+
+
+
+   /*
+    * Create search trees for visible east and west neighbors.
+    */
+
+   if (!visible_west_nabrs.isEmpty() || !visible_east_nabrs.isEmpty()) {
+
+      /*
+       * Discover overlaps.  Overlaps are either locally stored or
+       * packed into a message for sending.
+       */
+
+      t_bridge_discover->start();
+
+      if (s_print_bridge_steps == 'y') {
+         tbox::plog << "Before building RBBTs:\n"
+                    << "visible_west_nabrs:" << visible_west_nabrs.format("\n  ")
+                    << "visible_east_nabrs:" << visible_east_nabrs.format("\n  ")
+                    << std::endl;
+      }
+
+      const tbox::ConstPointer<GridGeometry> &grid_geometry(cent.getGridGeometry());
+
+      t_bridge_discover_form_rbbt->start();
+      const MultiblockBoxTree west_rbbt(grid_geometry, visible_west_nabrs);
+      const MultiblockBoxTree east_rbbt(grid_geometry, visible_east_nabrs);
+      t_bridge_discover_form_rbbt->stop();
+
+      /*
+       * Iterators west_ni and east_ni point to the west/east
+       * Box whose neighbors are being sought.  If we are not
+       * interested in the east-->west connector, then east_ni will
+       * be unused.
+       */
+      NeighborSet::OrderedConstIterator west_ni(visible_west_nabrs);
+      NeighborSet::OrderedConstIterator east_ni(visible_east_nabrs);
+      /*
+       * Local process can find some neighbors for the (local and
+       * remote) Boxes in visible_west_nabrs and
+       * visible_east_nabrs.  We loop through the visible_west_nabrs
+       * and compare each to visible_ease_nabrs, looking for overlaps.
+       * Then vice versa.
+       *
+       * Looping through the NeighborSets is like looping through
+       * their owners, since they are ordered by owners first.  As an
+       * optimization measure, start loop on the first owner with
+       * higher rank than the local rank.  This avoid the higher-end
+       * ranks from having to wait for messages at the beginning and
+       * the lower-end ranks from having to wait for messages at the
+       * end.  After the highest rank owner has been handled, continue
+       * at the beginning and do the remaining.  (If local rank is
+       * highest of all owners of the visible Boxes, start at
+       * the beginning.)
+       */
+      const Box start_loop_here(dim, LocalId::getZero(), rank + 1);
+      west_ni = visible_west_nabrs.lower_bound(start_loop_here);
+      if (compute_reverse) {
+         east_ni = visible_east_nabrs.lower_bound(start_loop_here);
+      }
+
+      if (west_ni == visible_west_nabrs.orderedEnd() &&
+          (!compute_reverse ||
+           east_ni == visible_east_nabrs.orderedEnd())) {
+         /*
+          * There are no visible Boxes owned by rank higher than
+          * local process.  So loop from the beginning.
+          */
+         west_ni = visible_west_nabrs.orderedBegin();
+         east_ni = visible_east_nabrs.orderedBegin();
+      }
+
+      /*
+       * Set send_comm_idx to reference the first outgoing rank in comm_peer.
+       * It will be incremented to correpond to the rank whose overlaps
+       * are being searched for.
+       */
+      size_t send_comm_idx = 0;
+
+#ifdef DEBUG_CHECK_ASSERTIONS
+      std::set<int> owners_sent_to; // Used for debugging.
+#endif
+
+      /*
+       * Loop until all visible neighbors have their neighbors
+       * searched for.  But only do this for the east mapped_boxes if
+       * we are actively seeking neighbor data for them.
+       */
+      while ((west_ni != visible_west_nabrs.orderedEnd()) ||
+             (compute_reverse && east_ni != visible_east_nabrs.orderedEnd())) {
+
+         /*
+          * curr_owner is the owner whose neighbors is currently
+          * being searched for.  It should be the owner of the
+          * next west or east Box in our cyclic-type looping.
+          */
+         int curr_owner = nproc; // an invalid value.
+         if (west_ni != visible_west_nabrs.orderedEnd() &&
+             curr_owner > west_ni->getOwnerRank()) {
+            curr_owner = west_ni->getOwnerRank();
+         }
+         if (compute_reverse) {
+            if (east_ni != visible_east_nabrs.orderedEnd() &&
+                curr_owner > east_ni->getOwnerRank()) {
+               curr_owner = east_ni->getOwnerRank();
+            }
+         }
+         if (s_print_bridge_steps == 'y') {
+            tbox::plog << "cur_owner set to " << curr_owner << std::endl;
+         }
+
+         TBOX_ASSERT(curr_owner < nproc);
+         TBOX_ASSERT(curr_owner > -1);
+         TBOX_ASSERT(owners_sent_to.find(curr_owner) == owners_sent_to.end());
+
+         /*
+          * Set up send_message to contain info discovered
+          * locally but needed by curr_owner.
+          *
+          * Content of send_mesg:
+          * - offset to the reference section (see below)
+          * - number of west mapped_boxes for which neighbors are found
+          * - number of east mapped_boxes for which neighbors are found
+          *   - index of west/east mapped_box
+          *   - number of neighbors found for west/east mapped_box.
+          *     - BoxId of neighbors found.
+          *       Boxes of these found neighbors are given in the
+          *       reference section of the message.
+          * - reference section: all the Boxes referenced as
+          *   neighbors (accumulated in referenced_west_nabrs
+          *   and referenced_east_nabrs).
+          *   - number of referenced west neighbors
+          *   - number of referenced east neighbors
+          *   - referenced west neighbors
+          *   - referenced east neighbors
+          *
+          * The purpose of factoring out info on the neighbors referenced
+          * is to reduce redundant data that can eat up lots of memory
+          * when we find lots of Boxes with the same neighbors.
+          */
+         std::vector<int> send_mesg(3); // Message to send to curr_owner.
+         BoxSet referenced_west_nabrs(dim); // Referenced neighbors in west.
+         BoxSet referenced_east_nabrs(dim); // Referenced neighbors in east.
+
+         t_bridge_discover_find_overlaps->start();
+
+         // Find neighbors for all west mapped_boxes owned by curr_owner.
+         if (s_print_bridge_steps == 'y') {
+            tbox::plog << "Finding west --> east overlaps for owner "
+                       << curr_owner << std::endl;
+         }
+
+         findOverlapsForOneProcess(
+            curr_owner,
+            visible_west_nabrs,
+            west_ni,
+            send_mesg,
+            1, // remote_mapped_box_counter_index,
+            west_to_cent,
+            east_rbbt,
+            referenced_east_nabrs);
+
+         // Find neighbors for all east mapped_boxes owned by curr_owner.
+         if (compute_reverse) {
+            if (s_print_bridge_steps == 'y') {
+               tbox::plog << "Finding west <-- east overlaps for owner "
+                          << curr_owner << std::endl;
+            }
+            findOverlapsForOneProcess(
+               curr_owner,
+               visible_east_nabrs,
+               east_ni,
+               send_mesg,
+               2, // remote_mapped_box_counter_index,
+               cent_to_west,
+               west_rbbt,
+               referenced_west_nabrs);
+         }
+
+         t_bridge_discover_find_overlaps->stop();
+
+         if (curr_owner != rank) {
+            // Send discoveries to the curr_owner.
+
+            t_bridge_discover->stop();
+            t_bridge_share->start();
+
+            /*
+             * Find the communication object by increasing send_comm_idx
+             * (cyclically) until it corresponds to curr_owner.
+             */
+            while (comm_peer[send_comm_idx].getPeerRank() != curr_owner) {
+               send_comm_idx = (send_comm_idx + 1) % outgoing_ranks.size();
+            }
+            tbox::AsyncCommPeer<int>& outgoing_comm = comm_peer[send_comm_idx];
+            TBOX_ASSERT(outgoing_comm.getPeerRank() == curr_owner);
+
+            sendDiscoveryToOneProcess(
+               send_mesg,
+               referenced_east_nabrs,
+               referenced_west_nabrs,
+               outgoing_comm);
+
+            if (outgoing_comm.isDone()) {
+               completed.push_back(&outgoing_comm);
+            }
+#ifdef DEBUG_CHECK_ASSERTIONS
+            TBOX_ASSERT(owners_sent_to.find(curr_owner) == owners_sent_to.end());
+            owners_sent_to.insert(curr_owner);
+#endif
+
+            t_bridge_share->stop();
+            t_bridge_discover->start();
+
+         } // Block to send discoveries to curr_owner.
+
+         /*
+          * If we come to the end of visible Boxes, go back and
+          * work on the Boxes owned by processors with lower rank
+          * than the local rank.  (This is part of the optimization
+          * to reduce communication time.)
+          */
+         if (west_ni == visible_west_nabrs.orderedEnd() &&
+             (!compute_reverse ||
+              east_ni == visible_east_nabrs.orderedEnd())) {
+            /*
+             * There are no Boxes that owned by rank higher than
+             * local process and that we still need to find neighbors
+             * for.  So loop from the beginning.
+             */
+            west_ni = visible_west_nabrs.orderedBegin();
+            east_ni = visible_east_nabrs.orderedBegin();
+         }
+
+      } // Loop through visible neighbors.
+
+      t_bridge_discover->stop();
+
+   }
+
+   t_bridge_share->start();
+
+   /*
+    * Receive and unpack messages.
+    */
+   do {
+
+      t_bridge_unpack->start();
+      for (unsigned int i = 0; i < completed.size(); ++i) {
+
+         tbox::AsyncCommPeer<int>* peer =
+            dynamic_cast<tbox::AsyncCommPeer<int> *>(completed[i]);
+         TBOX_ASSERT(completed[i] != NULL);
+         TBOX_ASSERT(peer != NULL);
+
+         if ((size_t)(peer - comm_peer) < outgoing_ranks.size()) {
+            // Sent to this peer.  No follow-up needed.
+            if (s_print_bridge_steps == 'y') {
+               tbox::plog << "Sent to " << peer->getPeerRank() << std::endl;
+            }
+         } else {
+            // Receive from this peer.
+            if (s_print_bridge_steps == 'y') {
+               tbox::plog << "Received from " << peer->getPeerRank()
+                          << std::endl;
+            }
+            unpackDiscoveryMessage(
+               peer,
+               west_to_cent,
+               &cent_to_west);
+         }
+      }
+      t_bridge_unpack->stop();
+
+      completed.clear();
+      comm_stage.advanceSome(completed);
+
+   } while (completed.size() > 0);
+
+   t_bridge_share->stop();
+
+   delete[] comm_peer;
+
+   west_to_cent.setConnectorType(Connector::UNKNOWN);
+   cent_to_west.setConnectorType(Connector::UNKNOWN);
+
+   if (d_sanity_check_method_postconditions) {
+      west_to_cent.assertConsistencyWithBase();
+      west_to_cent.assertConsistencyWithHead();
+      if (compute_reverse) {
+         cent_to_west.assertConsistencyWithBase();
+         cent_to_west.assertConsistencyWithHead();
+         cent_to_west.assertTransposeCorrectness(west_to_cent, true);
+      }
+   }
+
+   t_bridge->barrierAndStop();
+}
+
+/*
+ ***********************************************************************
  ***********************************************************************
  */
 
@@ -1296,14 +1952,12 @@ void OverlapConnectorAlgorithm::unpackDiscoveryMessage(
     */
    const int rank = west_to_east.getMPI().getRank();
    ptr = incoming_comm->getRecvData() + 3;
-   NeighborSet east_nabrs(dim);
    for (int ii = 0; ii < n_west_mapped_boxes; ++ii) {
       const LocalId local_id(*(ptr++));
       const BlockId block_id(*(ptr++));
       const BoxId west_mapped_box_id(local_id, rank, block_id);
       const int n_east_nabrs_found = *(ptr++);
       // Add received neighbors to Box west_mapped_box_id.
-      west_to_east.swapNeighbors(east_nabrs, west_mapped_box_id);
       for (int j = 0; j < n_east_nabrs_found; ++j) {
          tmp_mapped_box.getId().getFromIntBuffer(ptr);
          ptr += BoxId::commBufferSize();
@@ -1311,18 +1965,15 @@ void OverlapConnectorAlgorithm::unpackDiscoveryMessage(
             referenced_east_nabrs.find(tmp_mapped_box);
          TBOX_ASSERT(na != referenced_east_nabrs.orderedEnd());
          const Box& east_nabr = *na;
-         east_nabrs.insert(east_nabr);
+         west_to_east.insertLocalNeighbor(east_nabr, west_mapped_box_id);
       }
-      west_to_east.swapNeighbors(east_nabrs, west_mapped_box_id);
    }
-   NeighborSet west_nabrs(dim);
    for (int ii = 0; ii < n_east_mapped_boxes; ++ii) {
       const LocalId local_id(*(ptr++));
       const BlockId block_id(*(ptr++));
       const BoxId east_mapped_box_id(local_id, rank, block_id);
       const int n_west_nabrs_found = *(ptr++);
       // Add received neighbors to Box east_mapped_box_id.
-      east_to_west->swapNeighbors(west_nabrs, east_mapped_box_id);
       for (int j = 0; j < n_west_nabrs_found; ++j) {
          tmp_mapped_box.getId().getFromIntBuffer(ptr);
          ptr += BoxId::commBufferSize();
@@ -1330,9 +1981,8 @@ void OverlapConnectorAlgorithm::unpackDiscoveryMessage(
             referenced_west_nabrs.find(tmp_mapped_box);
          TBOX_ASSERT(na != referenced_west_nabrs.orderedEnd());
          const Box& west_nabr = *na;
-         west_nabrs.insert(west_nabr);
+         east_to_west->insertLocalNeighbor(west_nabr, east_mapped_box_id);
       }
-      east_to_west->swapNeighbors(west_nabrs, east_mapped_box_id);
    }
 }
 
@@ -1481,7 +2131,7 @@ void OverlapConnectorAlgorithm::findOverlapsForOneProcess(
                                  true /* include singularity block neighbors */ );
       if (s_print_bridge_steps == 'y') {
          tbox::plog << "Found " << found_nabrs.size() << " neighbors:";
-         hier::BoxContainerUtils::recursivePrintBoxVector(found_nabrs, tbox::plog, "\n ");
+         BoxContainerUtils::recursivePrintBoxVector(found_nabrs, tbox::plog, "\n ");
          tbox::plog << std::endl;
       }
       if (!found_nabrs.empty()) {
@@ -1521,17 +2171,12 @@ void OverlapConnectorAlgorithm::findOverlapsForOneProcess(
                   base_mapped_box.getBlockId(),
                   PeriodicId::zero());
             }
-            NeighborSet tmp_nabrs(dim);
-            bridging_connector.swapNeighbors(tmp_nabrs,
-               unshifted_base_mapped_box_id);
             // Add found neighbors for base_mapped_box.
-            for (std::vector<Box>::const_iterator fn = found_nabrs.begin();
-                 fn != found_nabrs.end(); ++fn) {
-               tmp_nabrs.insert(*fn);
+            for (std::vector<Box>::const_iterator na = found_nabrs.begin();
+                 na != found_nabrs.end(); ++na) {
+	      bridging_connector.insertLocalNeighbor(*na,
+                 unshifted_base_mapped_box_id);
             }
-            //tmp_nabrs.insert(found_nabrs.begin(), found_nabrs.orderedEnd());
-            bridging_connector.swapNeighbors(tmp_nabrs,
-               unshifted_base_mapped_box_id);
          }
       }
       if (s_print_bridge_steps == 'y') {
@@ -1573,7 +2218,7 @@ void OverlapConnectorAlgorithm::unshiftOverlappingNeighbors(
    for (std::vector<Box>::iterator na = neighbors.begin();
         na != neighbors.end(); ++na) {
       Box& nabr = *na;
-      hier::IntVector sum_shift =
+      IntVector sum_shift =
          shift_catalog->shiftNumberToShiftDistance(nabr.getPeriodicId())
          - shift_catalog->shiftNumberToShiftDistance(mapped_box.getPeriodicId());
       const PeriodicId new_shift_number = shift_catalog->shiftDistanceToShiftNumber(sum_shift);
@@ -1632,8 +2277,7 @@ void OverlapConnectorAlgorithm::findOverlapErrors(
     * Each referenced neighbor should exist in the head.
     */
    size_t num_base_consistency_errors = connector.checkConsistencyWithBase();
-   size_t num_head_consistency_errors = Connector::checkConsistencyWithHead(
-         connector.getNeighborhoodSets(), head);
+   size_t num_head_consistency_errors = connector.checkConsistencyWithHead();
    if (num_base_consistency_errors > 0) {
       tbox::perr
       << "OverlapConnectorAlgorithm::findOverlapErrors: cannot check overlap errors\n"
@@ -1762,15 +2406,7 @@ size_t OverlapConnectorAlgorithm::checkOverlapCorrectness(
 #endif
    const tbox::Dimension& dim = connector.getConnectorWidth().getDim();
  
-   const NeighborhoodSet& relationships = connector.getNeighborhoodSets();
-   for (NeighborhoodSet::const_iterator ei = relationships.begin();
-        ei != relationships.end(); ++ei) {
-
-      BoxId mapped_box_id(ei->first);
-
-      TBOX_ASSERT(mapped_box_id.getPeriodicId().getPeriodicValue() == 0);
-
-   }
+   TBOX_ASSERT(!connector.hasPeriodicLocalNeighborhoodRoots());
 
    Connector missing, extra;
    findOverlapErrors(connector, missing, extra, ignore_self_overlap);
@@ -1782,49 +2418,30 @@ size_t OverlapConnectorAlgorithm::checkOverlapCorrectness(
          missing.getHead(),
          missing.getConnectorWidth());
    } else if (ignore_periodic_images) {
-      // Disregard missing overlaps if they are incident on a periodic mapped_box.
-      const NeighborhoodSet& missing_overlaps = missing.getNeighborhoodSets();
-      NeighborSet nabrs(dim);
-      for (NeighborhoodSet::const_iterator ei = missing_overlaps.begin();
-           ei != missing_overlaps.end(); ++ei) {
-         // Erase periodic neighbors from missing.
-         missing.swapNeighbors(nabrs, ei->first);
-         for (NeighborSet::OrderedConstIterator na = nabrs.orderedBegin();
-              na != nabrs.orderedEnd(); /* incremented in loop */) {
-            if (na->isPeriodicImage()) {
-               nabrs.erase(na++); // Delete periodic image neighbor.
-            } else {
-               ++na;
-            }
-         }
-         missing.swapNeighbors(nabrs, ei->first);
-      }
+      // Disregard missing overlaps if they are incident on a periodic box.
+      missing.removePeriodicLocalNeighbors();
       missing.eraseEmptyNeighborSets();
    }
-
-   const NeighborhoodSet& overlaps = connector.getNeighborhoodSets();
-   const NeighborhoodSet& missing_overlaps = missing.getNeighborhoodSets();
-   const NeighborhoodSet& extra_overlaps = extra.getNeighborhoodSets();
 
    const BoxId dummy_mapped_box_id;
 
    /*
     * Report the errors found, ordered by the Box where the
     * error appears.  In order to do this, we have to loop through
-    * missing_overlaps and extra_overlaps at the same time.
+    * the neighborhoods of missing and extra at the same time.
     */
 
-   NeighborhoodSet::const_iterator im, ie, it;
-   for (im = missing_overlaps.begin(), ie = extra_overlaps.begin();
-        im != missing_overlaps.end() || ie != extra_overlaps.end();
+   Connector::ConstNeighborhoodIterator im, ie, it;
+   for (im = missing.begin(), ie = extra.begin();
+        im != missing.end() || ie != extra.end();
         /* incremented in loop */) {
 
       const BoxId& global_id_missing =
-         im == missing_overlaps.end() ? dummy_mapped_box_id : im->first;
+         im == missing.end() ? dummy_mapped_box_id : im->first;
       const BoxId& global_id_extra =
-         ie == extra_overlaps.end() ? dummy_mapped_box_id : ie->first;
+         ie == extra.end() ? dummy_mapped_box_id : ie->first;
 
-      if (im != missing_overlaps.end() && ie != extra_overlaps.end() &&
+      if (im != missing.end() && ie != extra.end() &&
           im->first == ie->first) {
 
          /*
@@ -1834,70 +2451,72 @@ size_t OverlapConnectorAlgorithm::checkOverlapCorrectness(
 
          const Box& mapped_box = *connector.getBase().getBoxStrict(
                global_id_missing);
-         tbox::perr << "Found " << im->second.size() << " missing and "
-                    << ie->second.size() << " extra overlaps for "
+         tbox::perr << "Found " << missing.numLocalNeighbors(im->first)
+                    << " missing and "
+                    << extra.numLocalNeighbors(ie->first)
+                    << " extra overlaps for "
                     << mapped_box << std::endl;
-         it = overlaps.find(global_id_missing);
-         if (it == overlaps.end()) {
+         it = connector.findLocal(global_id_missing);
+         if (it == connector.end()) {
             tbox::perr << "  Current Neighbors (no neighbor set)." << std::endl;
          } else {
-            const NeighborSet& nabrs = it->second;
-            tbox::perr << "  Current Neighbors (" << nabrs.size() << "):"
+            tbox::perr << "  Current Neighbors ("
+                       << connector.numLocalNeighbors(it->first) << "):"
                        << std::endl;
-            hier::Box ghost_box = mapped_box;
+            Box ghost_box = mapped_box;
             ghost_box.grow(connector.getConnectorWidth());
-            for (NeighborSet::OrderedConstIterator na = nabrs.orderedBegin();
-                 na != nabrs.orderedEnd(); ++na) {
+            for (Connector::ConstNeighborIterator na = connector.begin(it);
+                 na != connector.end(it); ++na) {
                const Box& nabr = *na;
-               hier::Box nabr_box = nabr;
+               Box nabr_box = nabr;
                if (connector.getHeadCoarserFlag()) {
                   nabr_box.refine(connector.getRatio());
                } else if (connector.getRatio() != 1) {
                   nabr_box.coarsen(connector.getRatio());
                }
-               hier::Box ovlap = ghost_box * nabr_box;
+               Box ovlap = ghost_box * nabr_box;
                tbox::perr << "    " << nabr << '_' << nabr.numberCells()
                           << "\tov" << ovlap << '_' << ovlap.numberCells()
                           << std::endl;
             }
          }
          {
-            const NeighborSet& nabrs = im->second;
-            tbox::perr << "  Missing Neighbors (" << nabrs.size() << "):"
+            tbox::perr << "  Missing Neighbors ("
+                       << missing.numLocalNeighbors(im->first) << "):"
                        << std::endl;
-            hier::Box ghost_box = mapped_box;
+            Box ghost_box = mapped_box;
             ghost_box.grow(connector.getConnectorWidth());
-            for (NeighborSet::OrderedConstIterator na = nabrs.orderedBegin();
-                 na != nabrs.orderedEnd(); ++na) {
+            for (Connector::ConstNeighborIterator na = missing.begin(im);
+                 na != missing.end(im); ++na) {
                const Box& nabr = *na;
-               hier::Box nabr_box = nabr;
+               Box nabr_box = nabr;
                if (connector.getHeadCoarserFlag()) {
                   nabr_box.refine(connector.getRatio());
                } else if (connector.getRatio() != 1) {
                   nabr_box.coarsen(connector.getRatio());
                }
-               hier::Box ovlap = ghost_box * nabr_box;
+               Box ovlap = ghost_box * nabr_box;
                tbox::perr << "    " << nabr << '_' << nabr.numberCells()
                           << "\tov" << ovlap << '_' << ovlap.numberCells()
                           << std::endl;
             }
          }
          {
-            const NeighborSet& nabrs = ie->second;
-            tbox::perr << "  Extra Neighbors (" << nabrs.size() << "):"
+            tbox::perr << "  Extra Neighbors ("
+                       << extra.numLocalNeighbors(ie->first) << "):"
                        << std::endl;
-            hier::Box ghost_box = mapped_box;
+            Box ghost_box = mapped_box;
             ghost_box.grow(connector.getConnectorWidth());
-            for (NeighborSet::OrderedConstIterator na = nabrs.orderedBegin();
-                 na != nabrs.orderedEnd(); ++na) {
+            for (Connector::ConstNeighborIterator na = extra.begin(ie);
+                 na != extra.end(ie); ++na) {
                const Box& nabr = *na;
-               hier::Box nabr_box = nabr;
+               Box nabr_box = nabr;
                if (connector.getHeadCoarserFlag()) {
                   nabr_box.refine(connector.getRatio());
                } else if (connector.getRatio() != 1) {
                   nabr_box.coarsen(connector.getRatio());
                }
-               hier::Box ovlap = ghost_box * nabr_box;
+               Box ovlap = ghost_box * nabr_box;
                tbox::perr << "    " << nabr << '_' << nabr.numberCells()
                           << "\tov" << ovlap << '_' << ovlap.numberCells()
                           << std::endl;
@@ -1906,8 +2525,8 @@ size_t OverlapConnectorAlgorithm::checkOverlapCorrectness(
          ++im;
          ++ie;
 
-      } else if ((ie == extra_overlaps.end()) ||
-                 (im != missing_overlaps.end() && im->first < ie->first)) {
+      } else if ((ie == extra.end()) ||
+                 (im != missing.end() && im->first < ie->first)) {
 
          /*
           * im goes before ie (or ie has reached the end).  Report the
@@ -1916,57 +2535,57 @@ size_t OverlapConnectorAlgorithm::checkOverlapCorrectness(
 
          const Box& mapped_box = *connector.getBase().getBoxStrict(
                global_id_missing);
-         tbox::perr << "Found " << im->second.size()
+         tbox::perr << "Found " << missing.numLocalNeighbors(im->first)
                     << " missing overlaps for " << mapped_box << std::endl;
-         it = overlaps.find(global_id_missing);
-         if (it == overlaps.end()) {
+         it = connector.findLocal(global_id_missing);
+         if (it == connector.end()) {
             tbox::perr << "    Current Neighbors (no neighbor set)."
                        << std::endl;
          } else {
-            const NeighborSet& nabrs = it->second;
-            tbox::perr << "  Current Neighbors (" << nabrs.size() << "):"
+            tbox::perr << "  Current Neighbors ("
+                       << connector.numLocalNeighbors(it->first) << "):"
                        << std::endl;
-            hier::Box ghost_box = mapped_box;
+            Box ghost_box = mapped_box;
             ghost_box.grow(connector.getConnectorWidth());
-            for (NeighborSet::OrderedConstIterator na = nabrs.orderedBegin();
-                 na != nabrs.orderedEnd(); ++na) {
+            for (Connector::ConstNeighborIterator na = connector.begin(it);
+                 na != connector.end(it); ++na) {
                const Box& nabr = *na;
-               hier::Box nabr_box = nabr;
+               Box nabr_box = nabr;
                if (connector.getHeadCoarserFlag()) {
                   nabr_box.refine(connector.getRatio());
                } else if (connector.getRatio() != 1) {
                   nabr_box.coarsen(connector.getRatio());
                }
-               hier::Box ovlap = ghost_box * nabr_box;
+               Box ovlap = ghost_box * nabr_box;
                tbox::perr << "    " << nabr << '_' << nabr.numberCells()
                           << "\tov" << ovlap << '_' << ovlap.numberCells()
                           << std::endl;
             }
          }
          {
-            const NeighborSet& nabrs = im->second;
-            tbox::perr << "  Missing Neighbors (" << nabrs.size() << "):"
+            tbox::perr << "  Missing Neighbors ("
+                       << missing.numLocalNeighbors(im->first) << "):"
                        << std::endl;
-            hier::Box ghost_box = mapped_box;
+            Box ghost_box = mapped_box;
             ghost_box.grow(connector.getConnectorWidth());
-            for (NeighborSet::OrderedConstIterator na = nabrs.orderedBegin();
-                 na != nabrs.orderedEnd(); ++na) {
+            for (Connector::ConstNeighborIterator na = missing.begin(im);
+                 na != missing.end(im); ++na) {
                const Box& nabr = *na;
-               hier::Box nabr_box = nabr;
+               Box nabr_box = nabr;
                if (connector.getHeadCoarserFlag()) {
                   nabr_box.refine(connector.getRatio());
                } else if (connector.getRatio() != 1) {
                   nabr_box.coarsen(connector.getRatio());
                }
-               hier::Box ovlap = ghost_box * nabr_box;
+               Box ovlap = ghost_box * nabr_box;
                tbox::perr << "    " << nabr << '_' << nabr.numberCells()
                           << "\tov" << ovlap << '_' << ovlap.numberCells()
                           << std::endl;
             }
          }
          ++im;
-      } else if ((im == missing_overlaps.end()) ||
-                 (ie != extra_overlaps.end() && ie->first < im->first)) {
+      } else if ((im == missing.end()) ||
+                 (ie != extra.end() && ie->first < im->first)) {
 
          /*
           * ie goes before im (or im has reached the end).  Report the
@@ -1975,48 +2594,48 @@ size_t OverlapConnectorAlgorithm::checkOverlapCorrectness(
 
          const Box& mapped_box = *connector.getBase().getBoxStrict(
                global_id_extra);
-         tbox::perr << "Found " << ie->second.size()
+         tbox::perr << "Found " << extra.numLocalNeighbors(ie->first)
                     << " extra overlaps for " << mapped_box << std::endl;
-         it = overlaps.find(global_id_extra);
-         if (it == overlaps.end()) {
+         it = connector.findLocal(global_id_extra);
+         if (it == connector.end()) {
             tbox::perr << "  Current Neighbors (no neighbor set)." << std::endl;
          } else {
-            const NeighborSet& nabrs = it->second;
-            tbox::perr << "  Current Neighbors (" << nabrs.size() << "):"
+            tbox::perr << "  Current Neighbors ("
+                       << connector.numLocalNeighbors(it->first) << "):"
                        << std::endl;
-            hier::Box ghost_box = mapped_box;
+            Box ghost_box = mapped_box;
             ghost_box.grow(connector.getConnectorWidth());
-            for (NeighborSet::OrderedConstIterator na = nabrs.orderedBegin();
-                 na != nabrs.orderedEnd(); ++na) {
+            for (Connector::ConstNeighborIterator na = connector.begin(it);
+                 na != connector.end(it); ++na) {
                const Box& nabr = *na;
-               hier::Box nabr_box = nabr;
+               Box nabr_box = nabr;
                if (connector.getHeadCoarserFlag()) {
                   nabr_box.refine(connector.getRatio());
                } else if (connector.getRatio() != 1) {
                   nabr_box.coarsen(connector.getRatio());
                }
-               hier::Box ovlap = ghost_box * nabr_box;
+               Box ovlap = ghost_box * nabr_box;
                tbox::perr << "    " << nabr << '_' << nabr.numberCells()
                           << "\tov" << ovlap << '_' << ovlap.numberCells()
                           << std::endl;
             }
          }
          {
-            const NeighborSet& nabrs = ie->second;
-            tbox::perr << "  Extra Neighbors (" << nabrs.size() << "):"
+            tbox::perr << "  Extra Neighbors ("
+                       << extra.numLocalNeighbors(ie->first) << "):"
                        << std::endl;
-            hier::Box ghost_box = mapped_box;
+            Box ghost_box = mapped_box;
             ghost_box.grow(connector.getConnectorWidth());
-            for (NeighborSet::OrderedConstIterator na = nabrs.orderedBegin();
-                 na != nabrs.orderedEnd(); ++na) {
+            for (Connector::ConstNeighborIterator na = extra.begin(ie);
+                 na != extra.end(ie); ++na) {
                const Box& nabr = *na;
-               hier::Box nabr_box = nabr;
+               Box nabr_box = nabr;
                if (connector.getHeadCoarserFlag()) {
                   nabr_box.refine(connector.getRatio());
                } else if (connector.getRatio() != 1) {
                   nabr_box.coarsen(connector.getRatio());
                }
-               hier::Box ovlap = ghost_box * nabr_box;
+               Box ovlap = ghost_box * nabr_box;
                tbox::perr << "    " << nabr << '_' << nabr.numberCells()
                           << "\tov" << ovlap << '_' << ovlap.numberCells()
                           << std::endl;
@@ -2027,7 +2646,8 @@ size_t OverlapConnectorAlgorithm::checkOverlapCorrectness(
 
    }
 
-   return missing.getNeighborhoodSets().size() + extra.getNeighborhoodSets().size();
+   return missing.getLocalNumberOfNeighborSets() +
+          extra.getLocalNumberOfNeighborSets();
 }
 
 /*

@@ -310,8 +310,6 @@ private:
    typedef hier::BoxLevel BoxLevel;
    //! @brief Shorthand typedef.
    typedef hier::Connector Edges;
-   //! @brief Shorthand typedef.
-   typedef hier::Connector::NeighborSet NeighborSet;
 
    /*!
     * @brief Dimension of the object.

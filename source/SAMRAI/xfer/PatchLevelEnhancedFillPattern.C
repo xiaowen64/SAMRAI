@@ -57,8 +57,8 @@ PatchLevelEnhancedFillPattern::~PatchLevelEnhancedFillPattern()
  *************************************************************************
  */
 void PatchLevelEnhancedFillPattern::computeFillBoxesAndNeighborhoodSets(
-   hier::BoxSet& fill_mapped_boxes,
-   hier::NeighborhoodSet& dst_to_fill_edges,
+   hier::BoxLevel& fill_mapped_boxes,
+   hier::Connector& dst_to_fill,
    const hier::BoxLevel& dst_mapped_box_level,
    const hier::Connector& dst_to_dst,
    const hier::Connector& dst_to_src,
@@ -100,10 +100,7 @@ void PatchLevelEnhancedFillPattern::computeFillBoxesAndNeighborhoodSets(
 
             if (encon_boxes.size()) {
 
-               NeighborSet& fill_nabrs =
-                  dst_to_fill_edges.getNeighborSet(dst_mapped_box.getId(),
-                                                   dst_mapped_box.getDim());
-
+               dst_to_fill.makeEmptyLocalNeighborhood(dst_mapped_box.getId());
                for (hier::BoxList::Iterator ei(encon_boxes);
                     ei != encon_boxes.end(); ei++) {
 
@@ -113,10 +110,10 @@ void PatchLevelEnhancedFillPattern::computeFillBoxesAndNeighborhoodSets(
                      dst_mapped_box.getOwnerRank(),
                      dst_mapped_box.getBlockId());
 
-                  fill_mapped_boxes.insert(fill_mapped_boxes.orderedEnd(),
-                     fill_mapped_box);
+                  fill_mapped_boxes.addBoxWithoutUpdate(fill_mapped_box);
 
-                  fill_nabrs.insert(fill_mapped_box);
+                  dst_to_fill.insertLocalNeighbor(fill_mapped_box,
+                     dst_mapped_box.getId());
 
                   constructed_fill_boxes.pushBack(*ei);
                }
@@ -128,6 +125,7 @@ void PatchLevelEnhancedFillPattern::computeFillBoxesAndNeighborhoodSets(
             d_max_fill_boxes,
             constructed_fill_boxes.size());
    }
+   fill_mapped_boxes.finalize();
 }
 
 }

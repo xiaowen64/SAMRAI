@@ -13,6 +13,7 @@
 #include "SAMRAI/hier/BoxLevel.h"
 
 #include "SAMRAI/hier/BoxContainerOrderedConstIterator.h"
+#include "SAMRAI/hier/BoxSetSingleBlockIterator.h"
 #include "SAMRAI/hier/PeriodicShiftCatalog.h"
 #include "SAMRAI/hier/RealBoxConstIterator.h"
 #include "SAMRAI/tbox/MathUtilities.h"
@@ -294,6 +295,23 @@ void BoxLevel::swapInitialize(
       grid_geom,
       mpi,
       parallel_state);
+}
+
+void BoxLevel::finalize()
+{
+
+   // Erase non-local Boxes, if any, from d_mapped_boxes.
+   for (BoxSet::OrderedConstIterator mbi = d_mapped_boxes.orderedBegin();
+        mbi != d_mapped_boxes.orderedEnd(); /* incremented in loop */) {
+      if (mbi->getOwnerRank() != d_mpi.getRank()) {
+         d_mapped_boxes.erase(mbi++);
+      } else {
+         ++mbi;
+      }
+   }
+
+   computeLocalRedundantData();
+   return;
 }
 
 void BoxLevel::initializePrivate(
@@ -712,6 +730,23 @@ const IntVector& BoxLevel::getGlobalMinBoxSize(int block_num) const
 {
    cacheGlobalReducedData();
    return d_global_min_box_size[block_num];
+}
+
+bool BoxLevel::getSpatiallyEqualBox(
+   const Box& box_to_match,
+   const BlockId& block_id,
+   Box& matching_box) const
+{
+   bool box_exists = false;
+   for (BoxSetSingleBlockIterator itr(d_mapped_boxes, block_id);
+        itr.isValid(); ++itr) {
+      if (box_to_match.isSpatiallyEqual(*itr)) {
+         box_exists = true;
+         matching_box = *itr;
+         break;
+      }
+   }
+   return box_exists;
 }
 
 /*
@@ -1164,6 +1199,23 @@ BoxLevel::addBox(
  ***********************************************************************
  ***********************************************************************
  */
+void
+BoxLevel::addBoxWithoutUpdate(
+   const Box& box)
+{
+   if (d_parallel_state == GLOBALIZED) {
+      d_global_mapped_boxes.insert(box);
+   }
+   if (box.getOwnerRank() == d_mpi.getRank()) {
+      d_mapped_boxes.insert(box);
+   }
+   return;
+}
+
+/*
+ ***********************************************************************
+ ***********************************************************************
+ */
 
 void
 BoxLevel::eraseBox(
@@ -1252,6 +1304,32 @@ BoxLevel::eraseBox(
  ****************************************************************************
  ****************************************************************************
  */
+void BoxLevel::eraseBoxWithoutUpdate(
+   const Box& box)
+{
+   d_mapped_boxes.erase(box);
+   return;
+}
+
+/*
+ ****************************************************************************
+ ****************************************************************************
+ */
+void BoxLevel::refineBoxes(
+   BoxLevel& finer,
+   const IntVector& ratio) const
+{
+   finer.d_mapped_boxes = d_mapped_boxes;
+   finer.d_mapped_boxes.refine(ratio);
+   finer.d_ratio *= ratio;
+   finer.finalize();
+   return;
+}
+
+/*
+ ****************************************************************************
+ ****************************************************************************
+ */
 const BoxLevel& BoxLevel::getGlobalizedVersion() const
 {
    TBOX_ASSERT(isInitialized());
@@ -1292,7 +1370,7 @@ const
 void BoxLevel::getGlobalBoxes(BoxList& global_boxes) const
 {
    for (BoxSet::OrderedConstIterator itr = d_global_mapped_boxes.orderedBegin();
-        itr != d_global_mapped_boxes.orderedEnd(); itr++) {
+        itr != d_global_mapped_boxes.orderedEnd(); ++itr) {
       global_boxes.pushBack(*itr);
    }
 }

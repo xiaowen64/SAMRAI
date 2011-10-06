@@ -633,8 +633,6 @@ private:
    typedef hier::Box MBox;
    //! @brief Shorthand typedef.
    typedef hier::BoxLevel BoxLevel;
-   //! @brief Shorthand typedef.
-   typedef hier::Connector::NeighborSet NeighborSet;
 
    /*!
     * @brief Dimension of the object

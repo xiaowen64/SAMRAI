@@ -59,8 +59,8 @@ PatchLevelBorderAndInteriorFillPattern::~PatchLevelBorderAndInteriorFillPattern(
  */
 void
 PatchLevelBorderAndInteriorFillPattern::computeFillBoxesAndNeighborhoodSets(
-   hier::BoxSet& fill_mapped_boxes,
-   hier::NeighborhoodSet& dst_to_fill_edges,
+   hier::BoxLevel& fill_mapped_boxes,
+   hier::Connector& dst_to_fill,
    const hier::BoxLevel& dst_mapped_box_level,
    const hier::Connector& dst_to_dst,
    const hier::Connector& dst_to_src,
@@ -91,11 +91,11 @@ PatchLevelBorderAndInteriorFillPattern::computeFillBoxesAndNeighborhoodSets(
          *dst_mapped_box_level.getBox(gid);
       hier::BoxList fill_boxes(dst_mapped_box);
       fill_boxes.front().grow(fill_ghost_width);
-      const NeighborSet& nabrs =
-         dst_to_dst.getNeighborSet(dst_mapped_box.getId());
+      hier::Connector::ConstNeighborhoodIterator nabrs =
+         dst_to_dst.find(dst_mapped_box.getId());
 
-      for (NeighborSet::OrderedConstIterator na = nabrs.orderedBegin();
-           na != nabrs.orderedEnd(); ++na) {
+      for (hier::Connector::ConstNeighborIterator na = dst_to_dst.begin(nabrs);
+           na != dst_to_dst.end(nabrs); ++na) {
          if (!ni->isSpatiallyEqual(*na)) {
             if (dst_mapped_box.getBlockId() == na->getBlockId()) {
                fill_boxes.removeIntersections(*na);
@@ -133,17 +133,18 @@ PatchLevelBorderAndInteriorFillPattern::computeFillBoxesAndNeighborhoodSets(
          d_max_fill_boxes = tbox::MathUtilities<int>::Max(d_max_fill_boxes,
                fill_boxes.size());
 
-         NeighborSet& fill_nabrs = dst_to_fill_edges.getNeighborSet(gid, dim);
-         for (hier::BoxList::Iterator li(fill_boxes); li != fill_boxes.end(); li++) {
+         dst_to_fill.makeEmptyLocalNeighborhood(gid);
+         for (hier::BoxList::Iterator li(fill_boxes); li != fill_boxes.end(); ++li) {
             hier::Box fill_mapped_box(*li,
                                       ++last_id,
                                       dst_mapped_box.getOwnerRank(),
                                       dst_mapped_box.getBlockId());
-            fill_mapped_boxes.insert(fill_mapped_boxes.orderedEnd(), fill_mapped_box);
-            fill_nabrs.insert(fill_mapped_box);
+            fill_mapped_boxes.addBoxWithoutUpdate(fill_mapped_box);
+            dst_to_fill.insertLocalNeighbor(fill_mapped_box, gid);
          }
       }
    }
+   fill_mapped_boxes.finalize();
 }
 
 }

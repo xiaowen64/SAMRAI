@@ -45,19 +45,7 @@ const Box& BoxContainerOrderedConstIterator::operator () () const
 {
    return **d_set_iter;
 }
-#if 0
-SAMRAI_INLINE_KEYWORD
-BoxContainerOrderedConstIterator::operator bool () const
-{
-   return d_set_iter != d_box_container->orderedEnd().d_set_iter;
-}
 
-SAMRAI_INLINE_KEYWORD
-bool BoxContainerOrderedConstIterator::operator ! () const
-{
-   return d_set_iter == d_box_container->orderedEnd().d_set_iter;
-}
-#endif
 SAMRAI_INLINE_KEYWORD
 BoxContainerOrderedConstIterator BoxContainerOrderedConstIterator::operator ++ (
    int)

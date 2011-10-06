@@ -38,14 +38,19 @@ const int BoxContainer::HIER_BOX_CONTAINER_VERSION = 0;
 
 BoxContainer::BoxContainer(
    Iterator first,
-   Iterator last):
+   Iterator last,
+   bool ordered):
    d_dim(first().getDim()),
    d_list(),
-   d_set_created(false)
+   d_set_created(ordered)
 {
    while (first != last) {
+      TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(d_dim, first());
       d_list.push_back(first());
       ++first;
+   }
+   if (d_set_created) {
+      makeOrdered();
    }
 }
 
@@ -53,9 +58,9 @@ BoxContainer& BoxContainer::operator = (
    const BoxContainer& rhs)
 {
    TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(d_dim, rhs);
-   clear();
 
    if (this != &rhs) {
+      clear();
       d_list = rhs.d_list;
       if (rhs.d_set_created) { 
          makeOrdered();
@@ -314,6 +319,9 @@ void BoxContainer::makeOrdered()
 {
    d_set.clear();
    for (Iterator i(*this); i != end(); ++i) {
+      TBOX_ASSERT(i().getLocalId() != LocalId::getInvalidId());
+      TBOX_ASSERT(i().getOwnerRank() != tbox::SAMRAI_MPI::getInvalidRank());
+      TBOX_ASSERT(i().getBlockId() != BlockId::invalidId());
       d_set.insert(&(i()));
    }
    d_set_created = true;
@@ -323,9 +331,15 @@ BoxContainer::OrderedConstIterator
 BoxContainer::insert(OrderedConstIterator position,
        const Box& box)
 {
+   TBOX_ASSERT(box.getLocalId() != LocalId::getInvalidId());
+   TBOX_ASSERT(box.getOwnerRank() != tbox::SAMRAI_MPI::getInvalidRank());
+   TBOX_ASSERT(box.getBlockId() != BlockId::invalidId());
+
    if (!d_set_created) {
-      makeOrdered();
+      TBOX_ASSERT(size() == 0);
+      d_set_created = true;
    }
+
    const std::list<Box>::iterator& iter = d_list.insert(d_list.end(), box);
 
    OrderedConstIterator insert_iter(*this);
@@ -340,23 +354,29 @@ BoxContainer::insert(OrderedConstIterator position,
 void BoxContainer::insert ( OrderedConstIterator first,
                             OrderedConstIterator last )
 {
-   if (!d_set_created) {
-      makeOrdered();
-   }
+   TBOX_ASSERT(d_set_created || size() == 0);
 
    for (std::set<const Box*>::const_iterator set_iter = first.d_set_iter;
         set_iter != last.d_set_iter; ++set_iter) {
+
+      TBOX_ASSERT((**set_iter).getLocalId() != LocalId::getInvalidId());
+      TBOX_ASSERT((**set_iter).getOwnerRank() != tbox::SAMRAI_MPI::getInvalidRank());
+      TBOX_ASSERT((**set_iter).getBlockId() != BlockId::invalidId());
+
       const std::list<Box>::iterator& iter = d_list.insert(d_list.end(), **set_iter);
       if (!d_set.insert(&(*iter)).second) {
          d_list.erase(iter); 
       }
    }
 
+   if (d_set.size() > 0) {
+      d_set_created = true;
+   }
 }
 
 BoxContainer::OrderedConstIterator BoxContainer::find(const Box& box) const
 {
-   TBOX_ASSERT(d_set_created);
+   TBOX_ASSERT(d_set_created || size() == 0);
 
    OrderedConstIterator iter(*this);
    iter.d_set_iter = d_set.find(&box);
@@ -378,6 +398,9 @@ BoxContainer::swap(BoxContainer& other)
 void
 BoxContainer::removePeriodicImageBoxes()
 {
+
+   TBOX_ASSERT(d_set_created || size() == 0);
+
    for (OrderedConstIterator na = orderedBegin(); na != orderedEnd(); ) {
       if (na->isPeriodicImage()) {
          erase(na++);
@@ -391,13 +414,12 @@ BoxContainer::removePeriodicImageBoxes()
 
 void BoxContainer::erase(OrderedConstIterator iter)
 {
-   TBOX_ASSERT(d_set_created);
-
+   TBOX_ASSERT(d_set_created || size() == 0);
    const Box& box = **(iter.d_set_iter);
    d_set.erase(iter.d_set_iter);
 
    for (std::list<Box>::iterator bi = d_list.begin(); bi != d_list.end(); ++bi) {
-      if (bi->getId() == box.getId() && bi->isSpatiallyEqual(box)) {
+      if (bi->getId() == box.getId()) {
          d_list.erase(bi);
          break;
       }
@@ -407,11 +429,11 @@ void BoxContainer::erase(OrderedConstIterator iter)
 
 int BoxContainer::erase(const Box& box)
 {
-   TBOX_ASSERT(d_set_created);
+   TBOX_ASSERT(d_set_created || size() == 0);
  
    int ret = d_set.erase(&box);
    for (std::list<Box>::iterator bi = d_list.begin(); bi != d_list.end(); ++bi) {
-      if (bi->getId() == box.getId() && bi->isSpatiallyEqual(box)) {
+      if (bi->getId() == box.getId()) {
          d_list.erase(bi++);
          break;
       }
@@ -430,6 +452,8 @@ void BoxContainer::erase(OrderedConstIterator first,
 #endif
 BoxContainer::OrderedConstIterator BoxContainer::lower_bound(const Box& box) const
 {
+   TBOX_ASSERT(d_set_created || size() == 0);
+
    OrderedConstIterator iter(*this);
 
    iter.d_set_iter = d_set.lower_bound(&box);
@@ -439,6 +463,8 @@ BoxContainer::OrderedConstIterator BoxContainer::lower_bound(const Box& box) con
 
 BoxContainer::OrderedConstIterator BoxContainer::upper_bound(const Box& box) const
 {
+   TBOX_ASSERT(d_set_created || size() == 0);
+
    OrderedConstIterator iter(*this);
 
    iter.d_set_iter = d_set.upper_bound(&box);
@@ -460,8 +486,10 @@ void BoxContainer::rotate(
          << "\n   Rotation only implemented for 2D and 3D " << std::endl);
    }
 
-   d_set.clear();
-   d_set_created = false;
+   if (d_set_created) {
+      d_set.clear();
+      d_set_created = false;
+   }
 
 }
 
@@ -827,6 +855,11 @@ void BoxContainer::intersectBoxes(
       return;
    }
 
+   if (d_set_created) {
+      d_set.clear();
+      d_set_created = false;
+   }
+
    std::vector<const Box *> overlap_mapped_boxes;
    Box overlap(front().getDim());
    Iterator itr(*this);
@@ -857,6 +890,11 @@ void BoxContainer::intersectBoxes(
 {
    if (isEmpty()) {
       return;
+   }
+
+   if (d_set_created) {
+      d_set.clear();
+      d_set_created = false;
    }
 
    const tbox::ConstPointer<hier::GridGeometry>
@@ -1061,6 +1099,7 @@ BoxContainer::getSingleBlockBoxContainer(
 void BoxContainer::getOwners(
    std::set<int>& owners) const
 {
+   TBOX_ASSERT(d_set_created || size() == 0);
    for (OrderedConstIterator i_nabr = orderedBegin();
         i_nabr != orderedEnd(); ++i_nabr) {
       const int owner = (*i_nabr).getOwnerRank();
@@ -1077,6 +1116,8 @@ void BoxContainer::unshiftPeriodicImageBoxes(
    BoxContainer& output_mapped_boxes,
    const IntVector& refinement_ratio) const
 {
+   TBOX_ASSERT(d_set_created || size() == 0);
+
    OrderedConstIterator hint = output_mapped_boxes.orderedBegin();
 
    if (!isEmpty()) {
