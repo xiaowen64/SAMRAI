@@ -1270,6 +1270,65 @@ void GridGeometry::computePhysicalDomain(
    }
 }
 
+/*
+ *************************************************************************
+ *
+ * Compute physical domain for index space related to reference domain
+ * by specified ratio.  If any entry of ratio is negative, the reference
+ * domain will be coarsened.  Otherwise, it will be refined.
+ *
+ *************************************************************************
+ */
+
+void GridGeometry::computePhysicalDomain(
+   BoxLevel& box_level,
+   const IntVector& ratio_to_level_zero,
+   const BlockId& block_id) const
+{
+   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, ratio_to_level_zero);
+
+#ifdef DEBUG_CHECK_ASSERTIONS
+   /*
+    * All components of ratio must be nonzero.  Additionally, all components
+    * of ratio not equal to 1 must have the same sign.
+    */
+   int i;
+   for (i = 0; i < d_dim.getValue(); i++) {
+      TBOX_ASSERT(ratio_to_level_zero(i) != 0);
+   }
+   if (d_dim.getValue() > 1) {
+      for (i = 0; i < d_dim.getValue(); i++) {
+         TBOX_ASSERT((ratio_to_level_zero(i)
+                      * ratio_to_level_zero((i + 1) % d_dim.getValue()) > 0)
+            || (ratio_to_level_zero(i) == 1)
+            || (ratio_to_level_zero((i + 1) % d_dim.getValue()) == 1));
+      }
+   }
+#endif
+
+   for (BoxSet::const_iterator itr = d_domain_mapped_box_sets[block_id.getBlockValue()].begin();
+        itr != d_domain_mapped_box_sets[block_id.getBlockValue()].end();
+        ++itr) {
+      box_level.addBoxWithoutUpdate(*itr);
+   }
+
+   if (ratio_to_level_zero != IntVector::getOne(d_dim)) {
+      bool coarsen = false;
+      IntVector tmp_rat = ratio_to_level_zero;
+      for (int id = 0; id < d_dim.getValue(); id++) {
+         if (ratio_to_level_zero(id) < 0) {
+            coarsen = true;
+         }
+         tmp_rat(id) = abs(ratio_to_level_zero(id));
+      }
+      if (coarsen) {
+         box_level.coarsenBoxes(box_level, tmp_rat, IntVector::getOne(d_dim));
+      } else {
+         box_level.refineBoxes(box_level, tmp_rat, IntVector::getOne(d_dim));
+      }
+   }
+}
+
 void GridGeometry::computePhysicalDomain(
    BoxSet& domain_mapped_boxes,
    const IntVector& ratio_to_level_zero) const
@@ -1319,6 +1378,60 @@ void GridGeometry::computePhysicalDomain(
            bi != block_domain_boxes.end(); ++bi) {
 
          domain_mapped_boxes.insert(*bi);
+
+      }
+   }
+}
+
+void GridGeometry::computePhysicalDomain(
+   BoxLevel& box_level,
+   const IntVector& ratio_to_level_zero) const
+{
+   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, ratio_to_level_zero);
+
+#ifdef DEBUG_CHECK_ASSERTIONS
+   /*
+    * All components of ratio must be nonzero.  Additionally, all components
+    * of ratio not equal to 1 must have the same sign.
+    */
+   int i;
+   for (i = 0; i < d_dim.getValue(); i++) {
+      TBOX_ASSERT(ratio_to_level_zero(i) != 0);
+   }
+   if (d_dim.getValue() > 1) {
+      for (i = 0; i < d_dim.getValue(); i++) {
+         TBOX_ASSERT((ratio_to_level_zero(i)
+                      * ratio_to_level_zero((i + 1) % d_dim.getValue()) > 0)
+            || (ratio_to_level_zero(i) == 1)
+            || (ratio_to_level_zero((i + 1) % d_dim.getValue()) == 1));
+      }
+   }
+#endif
+
+   for (int nb = 0; nb < d_number_blocks; nb++) {
+      BoxSet block_domain_boxes = d_domain_mapped_box_sets[nb];
+
+      if (ratio_to_level_zero != IntVector::getOne(d_dim)) {
+         bool coarsen = false;
+         IntVector tmp_rat = ratio_to_level_zero;
+         for (int id = 0; id < d_dim.getValue(); id++) {
+            if (ratio_to_level_zero(id) < 0) coarsen = true;
+            tmp_rat(id) = abs(ratio_to_level_zero(id));
+         }
+         BoxSet tmp_mapped_boxes;
+         if (coarsen) {
+            block_domain_boxes.coarsen(tmp_mapped_boxes, tmp_rat);
+         } else {
+            block_domain_boxes.refine(tmp_mapped_boxes, tmp_rat);
+         }
+         block_domain_boxes.swap(tmp_mapped_boxes);
+      }
+
+      BoxSet::const_iterator bi;
+      for (bi = block_domain_boxes.begin();
+           bi != block_domain_boxes.end(); ++bi) {
+
+         box_level.addBoxWithoutUpdate(*bi);
 
       }
    }

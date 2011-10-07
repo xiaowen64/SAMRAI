@@ -13,7 +13,7 @@
 
 #include "SAMRAI/SAMRAI_config.h"
 
-#include "SAMRAI/tbox/ConstPointer.h"
+#include "SAMRAI/tbox/Pointer.h"
 #include "SAMRAI/hier/BoxList.h"
 #include "SAMRAI/hier/BoxLevel.h"
 #include "SAMRAI/hier/BoxSetSingleBlockIterator.h"
@@ -440,10 +440,10 @@ public:
    /*!
     * @brief Get the BoxLevel associated with the PatchLevel.
     *
-    * @return a reference to a ConstPointer to the BoxLevel
+    * @return a reference to a Pointer to the BoxLevel
     * associated with the PatchLevel.
     */
-   const tbox::ConstPointer<BoxLevel>&
+   const tbox::Pointer<BoxLevel>&
    getBoxLevel() const;
 
    /*!
@@ -903,7 +903,7 @@ private:
    /*!
     * Primary metadata describing the PatchLevel.
     */
-   tbox::ConstPointer<BoxLevel> d_mapped_box_level;
+   tbox::Pointer<BoxLevel> d_mapped_box_level;
 
    /*
     * Whether we have a globalized version of d_mapped_box_level.

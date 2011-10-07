@@ -122,24 +122,6 @@ public:
       const BoxLevel& rhs);
 
    /*!
-    * @brief Construct initialized and populated object.
-    *
-    * @see initialize()
-    *
-    * @param[in] mapped_boxes
-    * @param[in] ratio
-    * @param[in] grid_geom
-    * @param[in] mpi
-    * @param[in] parallel_state
-    */
-   explicit BoxLevel(
-      const BoxSet& mapped_boxes,
-      const IntVector& ratio,
-      const tbox::ConstPointer<GridGeometry>& grid_geom,
-      const tbox::SAMRAI_MPI& mpi = tbox::SAMRAI_MPI::getSAMRAIWorld(),
-      const ParallelState parallel_state = DISTRIBUTED);
-
-   /*!
     * @brief Constructs an empty, initialized object.
     *
     * @see addBox()
@@ -167,41 +149,6 @@ public:
 
    //@{
    //! @name Initialization and clearing methods
-
-   /*!
-    * @brief Initialize the BoxLevel
-    *
-    * If @c parallel_state is GLOBALIZED, mapped_boxes must be
-    * the global set of Boxes.
-    *
-    * If @c parallel_state is DISTRIBUTED, mapped_boxes should contain
-    * all local Boxes.  Non-local Boxes are ignored.
-    *
-    * Once the object is initialized, you can further modify it by
-    * adding and removing boxes.
-    *
-    * Initializing is a modifying operation, causing the
-    * PersistentOverlapConnectors to be cleared.
-    *
-    * The content and state of the object before calling this function
-    * is discarded.
-    *
-    * @see initializePrivate()
-    * @see getPersistentOverlapConnectors().
-    *
-    * @param[in] mapped_boxes
-    * @param[in] ratio
-    * @param[in] grid_geom
-    * @param[in] mpi
-    * @param[in] parallel_state
-    */
-   void
-   initialize(
-      const BoxSet& mapped_boxes,
-      const IntVector& ratio,
-      const tbox::ConstPointer<GridGeometry>& grid_geom,
-      const tbox::SAMRAI_MPI& mpi = tbox::SAMRAI_MPI::getSAMRAIWorld(),
-      const ParallelState parallel_state = DISTRIBUTED);
 
    /*!
     * @brief Initialize the BoxLevel without and Boxes
@@ -733,15 +680,31 @@ public:
 
    /*!
     * @brief Refine all Boxes of this BoxLevel by ratio placing result into
-    * finer.
+    * finer making finer's ratio final_ratio.
     *
     * @param[out] finer
     * @param[in] ratio
+    * @param[in] final_ratio
     */
    void
    refineBoxes(
       BoxLevel& finer,
-      const IntVector& ratio) const;
+      const IntVector& ratio,
+      const IntVector& final_ratio) const;
+
+   /*!
+    * @brief Coarsen all Boxes of this BoxLevel by ratio placing result into
+    * coarser making coarser's ratio final_ratio.
+    *
+    * @param[out] coarser
+    * @param[in] ratio
+    * @param[in] final_ratio
+    */
+   void
+   coarsenBoxes(
+      BoxLevel& coarser,
+      const IntVector& ratio,
+      const IntVector& final_ratio) const;
 
    //@}
 

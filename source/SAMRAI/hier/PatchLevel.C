@@ -502,15 +502,15 @@ void PatchLevel::setRefinedPatchLevel(
    d_boxes.refine(refine_ratio);
 
    {
-      BoxSet mapped_boxes;
-      coarse_level->d_mapped_box_level->getBoxes().refine(
-         mapped_boxes,
-         refine_ratio);
       d_mapped_box_level = new BoxLevel(
-            mapped_boxes,
             d_ratio_to_level_zero,
             d_geometry,
             coarse_level->d_mapped_box_level->getMPI());
+      coarse_level->d_mapped_box_level->refineBoxes(
+         *d_mapped_box_level,
+         refine_ratio,
+         d_ratio_to_level_zero);
+      d_mapped_box_level->finalize();
    }
    d_local_number_patches = coarse_level->getLocalNumberOfPatches();
    d_number_blocks = coarse_level->d_number_blocks;
@@ -690,15 +690,15 @@ void PatchLevel::setCoarsenedPatchLevel(
     */
    const BoxLevel& fine_mapped_box_level =
       *fine_level->d_mapped_box_level;
-   BoxSet coarsened_mapped_boxes;
-   fine_level->d_mapped_box_level->getBoxes().coarsen(
-      coarsened_mapped_boxes,
-      coarsen_ratio);
    d_mapped_box_level = new BoxLevel(
-         coarsened_mapped_boxes,
          d_ratio_to_level_zero,
          d_geometry,
          fine_mapped_box_level.getMPI());
+   fine_level->d_mapped_box_level->coarsenBoxes(
+      *d_mapped_box_level,
+      coarsen_ratio,
+      d_ratio_to_level_zero);
+   d_mapped_box_level->finalize();
    d_local_number_patches = fine_level->getNumberOfPatches();
    d_number_blocks = fine_level->d_number_blocks;
 

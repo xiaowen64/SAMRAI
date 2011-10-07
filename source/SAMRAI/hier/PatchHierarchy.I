@@ -22,7 +22,7 @@ PatchHierarchy::getPatchLevel(
 }
 
 SAMRAI_INLINE_KEYWORD
-const tbox::ConstPointer<BoxLevel>& PatchHierarchy::getBoxLevel(int level) const
+const tbox::Pointer<BoxLevel>& PatchHierarchy::getBoxLevel(int level) const
 {
    return d_patch_levels[level]->getBoxLevel();
 }

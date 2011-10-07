@@ -167,7 +167,7 @@ void PatchLevel::getBoxes(BoxList& boxes, const BlockId& block_id) const
 }
 
 SAMRAI_INLINE_KEYWORD
-const tbox::ConstPointer<BoxLevel>& PatchLevel::getBoxLevel() const
+const tbox::Pointer<BoxLevel>& PatchLevel::getBoxLevel() const
 {
    return d_mapped_box_level;
 }

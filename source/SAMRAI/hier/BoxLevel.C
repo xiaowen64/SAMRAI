@@ -163,7 +163,6 @@ BoxLevel::BoxLevel(
 }
 
 BoxLevel::BoxLevel(
-   const BoxSet& mapped_boxes,
    const IntVector& ratio,
    const tbox::ConstPointer<GridGeometry>& grid_geom,
    const tbox::SAMRAI_MPI& mpi,
@@ -199,47 +198,7 @@ BoxLevel::BoxLevel(
    d_handle(NULL),
    d_grid_geometry(tbox::ConstPointer<GridGeometry>(NULL))
 {
-   initialize(mapped_boxes, ratio, grid_geom, mpi, parallel_state);
-}
-
-BoxLevel::BoxLevel(
-   const IntVector& ratio,
-   const tbox::ConstPointer<GridGeometry>& grid_geom,
-   const tbox::SAMRAI_MPI& mpi,
-   const ParallelState parallel_state):
-   d_mpi(tbox::SAMRAI_MPI::commNull),
-   d_mapped_boxes(),
-   d_global_mapped_boxes(),
-   d_ratio(ratio),
-
-   d_local_number_of_cells(0),
-   d_global_number_of_cells(-1),
-   d_local_number_of_mapped_boxes(0),
-   d_global_number_of_mapped_boxes(-1),
-
-   d_max_number_of_mapped_boxes(-1),
-   d_min_number_of_mapped_boxes(-1),
-   d_max_number_of_cells(-1),
-   d_min_number_of_cells(-1),
-
-   d_local_max_box_size(0),
-   d_global_max_box_size(0),
-   d_local_min_box_size(0),
-   d_global_min_box_size(0),
-
-   d_local_bounding_box(0),
-   d_local_bounding_box_up_to_date(false),
-   d_global_bounding_box(0),
-   d_global_data_up_to_date(false),
-
-   d_parallel_state(DISTRIBUTED),
-   d_globalized_version(NULL),
-   d_persistent_overlap_connectors(NULL),
-   d_handle(NULL),
-   d_grid_geometry(tbox::ConstPointer<GridGeometry>(NULL))
-{
-   BoxSet dummy_mapped_boxes;
-   initialize(dummy_mapped_boxes, ratio, grid_geom, mpi, parallel_state);
+   initialize(ratio, grid_geom, mpi, parallel_state);
 }
 
 BoxLevel::~BoxLevel()
@@ -249,22 +208,6 @@ BoxLevel::~BoxLevel()
       delete d_persistent_overlap_connectors;
       d_persistent_overlap_connectors = NULL;
    }
-}
-
-void BoxLevel::initialize(
-   const BoxSet& mapped_boxes,
-   const IntVector& ratio,
-   const tbox::ConstPointer<GridGeometry>& grid_geom,
-   const tbox::SAMRAI_MPI& mpi,
-   const ParallelState parallel_state)
-{
-   if (&mapped_boxes != &d_mapped_boxes) {
-      d_mapped_boxes = mapped_boxes;
-   }
-   initializePrivate(ratio,
-      grid_geom,
-      mpi,
-      parallel_state);
 }
 
 void BoxLevel::initialize(
@@ -1202,9 +1145,7 @@ BoxLevel::addBoxWithoutUpdate(
    if (d_parallel_state == GLOBALIZED) {
       d_global_mapped_boxes.insert(box);
    }
-   if (box.getOwnerRank() == d_mpi.getRank()) {
-      d_mapped_boxes.insert(box);
-   }
+   d_mapped_boxes.insert(box);
    return;
 }
 
@@ -1313,11 +1254,25 @@ void BoxLevel::eraseBoxWithoutUpdate(
  */
 void BoxLevel::refineBoxes(
    BoxLevel& finer,
-   const IntVector& ratio) const
+   const IntVector& ratio,
+   const IntVector& final_ratio) const
 {
    d_mapped_boxes.refine(finer.d_mapped_boxes, ratio);
-   finer.d_ratio *= ratio;
-   finer.finalize();
+   finer.d_ratio = final_ratio;
+   return;
+}
+
+/*
+ ****************************************************************************
+ ****************************************************************************
+ */
+void BoxLevel::coarsenBoxes(
+   BoxLevel& coarser,
+   const IntVector& ratio,
+   const IntVector& final_ratio) const
+{
+   d_mapped_boxes.coarsen(coarser.d_mapped_boxes, ratio);
+   coarser.d_ratio = final_ratio;
    return;
 }
 

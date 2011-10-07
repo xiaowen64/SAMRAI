@@ -31,6 +31,7 @@
 namespace SAMRAI {
 namespace hier {
 
+class BoxLevel;
 class PatchLevel;
 class BoxTree;
 
@@ -348,6 +349,28 @@ public:
       const BlockId& block_id) const;
 
    /*!
+    * @brief Compute the BoxLevel describing the index space for a
+    * given block of the physical domain.
+    *
+    * The domain description includes periodic images, if any exist.
+    *
+    * Unlike the BoxList version of this function, the domain computed
+    * contains periodic image boxes.  If any entry of ratio vector is
+    * negative, the index space is coarsened with respect to the physical
+    * domain description.  Otherwise, the index space is refined.
+    *
+    * @param[out]    box_level The BoxLevel containing all
+    *                Boxes describing the index space
+    * @param[in]     ratio_to_level_zero ratio to the coarsest level
+    * @param[in]     block_id
+    */
+   void
+   computePhysicalDomain(
+      BoxLevel& box_level,
+      const IntVector& ratio_to_level_zero,
+      const BlockId& block_id) const;
+
+   /*!
     * @brief Compute the BoxSet describing the complete physical
     * domain for all blocks.
     *
@@ -364,6 +387,25 @@ public:
    void
    computePhysicalDomain(
       BoxSet& domain_mapped_boxes,
+      const IntVector& ratio_to_level_zero) const;
+
+   /*!
+    * @brief Compute the BoxLevel describing the complete physical
+    * domain for all blocks.
+    *
+    * The domain description includes periodic images, if any exist.
+    *
+    * If any entry of the ratio vector is negative, the index space is
+    * coarsened with respect to the physical domain description.
+    * Otherwise, the index space is refined.
+    *
+    * @param[out]    box_level The BoxLevel containing all
+    *                Boxes describing the physical domain
+    * @param[in]     ratio_to_level_zero ratio to the coarsest level
+    */
+   void
+   computePhysicalDomain(
+      BoxLevel& box_level,
       const IntVector& ratio_to_level_zero) const;
 
    /*!

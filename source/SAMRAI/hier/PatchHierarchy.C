@@ -659,61 +659,30 @@ void PatchHierarchy::setupDomainData()
     * Grab the physical domain (including periodic images) from the
     * GridGeometry and set up domain data dependent on it.
     */
-   tbox::Array<BoxSet> domain_mapped_boxes(d_number_blocks);
+   d_domain_mapped_box_level.initialize(
+      IntVector::getOne(d_dim),
+      getGridGeometry(),
+      tbox::SAMRAI_MPI::getSAMRAIWorld(),
+      BoxLevel::GLOBALIZED);
    for (int nb = 0; nb < d_number_blocks; nb++) {
-      d_grid_geometry->computePhysicalDomain(domain_mapped_boxes[nb],
+      d_grid_geometry->computePhysicalDomain(d_domain_mapped_box_level,
          IntVector::getOne(d_dim), BlockId(nb));
    }
 
-   // Initialize the multiblock domain.
-   if (d_number_blocks == 1) {
-      d_domain_mapped_box_level.initialize(
-         domain_mapped_boxes[0],
-         IntVector::getOne(d_dim),
-         getGridGeometry(),
-         tbox::SAMRAI_MPI::getSAMRAIWorld(),
-         BoxLevel::GLOBALIZED);
-   } else {
-      BoxSet all_domain_mapped_boxes;
-      for (int nb = 0; nb < d_number_blocks; nb++) {
-         all_domain_mapped_boxes.insert(domain_mapped_boxes[nb].begin(),
-            domain_mapped_boxes[nb].end());
-      }
-      d_domain_mapped_box_level.initialize(
-         all_domain_mapped_boxes,
-         IntVector::getOne(d_dim),
-         getGridGeometry(),
-         tbox::SAMRAI_MPI::getSAMRAIWorld(),
-         BoxLevel::GLOBALIZED);
-   }
-
    // Initialize the multiblock domain search tree.
-   std::vector<Box> multiblock_mapped_boxes;
-   for (int nb = 0; nb < d_number_blocks; nb++) {
-      multiblock_mapped_boxes.insert(
-         multiblock_mapped_boxes.end(),
-         domain_mapped_boxes[nb].begin(),
-         domain_mapped_boxes[nb].end());
-   }
    d_domain_search_tree_periodic.generateTree(
       d_grid_geometry,
-      multiblock_mapped_boxes);
+      d_domain_mapped_box_level.getBoxes());
 
    // Generate the non-periodic multiblock domain search tree.
    if (PeriodicShiftCatalog::getCatalog(d_dim)->isPeriodic()) {
-      std::vector<Box> multiblock_mapped_boxes_noperiodic;
-      for (std::vector<Box>::const_iterator ni = multiblock_mapped_boxes.begin();
-           ni != multiblock_mapped_boxes.end(); ++ni) {
-         if (!ni->isPeriodicImage()) {
-            multiblock_mapped_boxes_noperiodic.push_back(*ni);
-         }
-      }
-      d_domain_search_tree.generateTree(
+      d_domain_search_tree.generateNonPeriodicTree(
          d_grid_geometry,
-         multiblock_mapped_boxes_noperiodic);
+         d_domain_mapped_box_level.getBoxes());
    } else {
       d_domain_search_tree = d_domain_search_tree_periodic;
    }
+   d_domain_mapped_box_level.finalize();
 
    std::map<BlockId, BoxList> multiblock_complement_boxes;
 
