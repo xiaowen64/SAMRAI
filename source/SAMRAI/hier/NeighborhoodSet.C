@@ -96,8 +96,8 @@ NeighborhoodSet::coarsenNeighbors(
 {
    for (const_iterator ei = begin(); ei != end(); ++ei) {
       const BoxId& mapped_box_id = (*ei).first;
-      output_edges.getNeighborSet(mapped_box_id) = (*ei).second;
-      output_edges.getNeighborSet(mapped_box_id).coarsen(ratio);
+      output_edges[mapped_box_id] = (*ei).second;
+      output_edges[mapped_box_id].coarsen(ratio);
    }
 }
 
@@ -113,8 +113,8 @@ NeighborhoodSet::refineNeighbors(
 {
    for (const_iterator ei = begin(); ei != end(); ++ei) {
       const BoxId& mapped_box_id = (*ei).first;
-      output_edges.getNeighborSet(mapped_box_id) = (*ei).second;
-      output_edges.getNeighborSet(mapped_box_id).refine(ratio);
+      output_edges[mapped_box_id] = (*ei).second;
+      output_edges[mapped_box_id].refine(ratio);
    }
 }
 
@@ -130,8 +130,8 @@ NeighborhoodSet::growNeighbors(
 {
    for (const_iterator ei = begin(); ei != end(); ++ei) {
       const BoxId& mapped_box_id = (*ei).first;
-      output_edges.getNeighborSet(mapped_box_id) = (*ei).second;
-      output_edges.getNeighborSet(mapped_box_id).grow(growth);
+      output_edges[mapped_box_id] = (*ei).second;
+      output_edges[mapped_box_id].grow(growth);
    }
 }
 
@@ -159,7 +159,7 @@ NeighborhoodSet::getNeighbors(
 {
    for (const_iterator ei = begin(); ei != end(); ++ei) {
       const NeighborSet& nabrs = (*ei).second;
-      if (all_nabrs.isUnordered()) {
+      if (!all_nabrs.isOrdered()) {
          for (BoxContainer::ConstIterator ni = nabrs.begin(); ni != nabrs.end();
               ++ni) {
             all_nabrs.pushBack(*ni);
@@ -223,39 +223,11 @@ NeighborhoodSet::getNeighbors(
       for (BoxSet::OrderedConstIterator ni = nabrs.orderedBegin();
          ni != nabrs.orderedEnd(); ++ni) {
 
-         std::map<BlockId, BoxList>::iterator iter =
-            all_nabrs.find(ni->getBlockId());
+         all_nabrs[ni->getBlockId()].insert(*ni);
 
-         if (iter != all_nabrs.end()) { 
-//            iter->second.pushBack(*ni);
-            iter->second.insert(*ni);
-         } else {
-            BoxContainer nabr_container(*ni, true);
-            all_nabrs.insert(std::pair<BlockId, BoxContainer>(ni->getBlockId(),
-                                                              nabr_container));
-         }
       }
    }
 
-/*
-
-   NeighborSet tmp_nabrs;
-   getNeighbors(tmp_nabrs);
-   for (BoxSet::const_iterator ei = tmp_nabrs.begin();
-        ei != tmp_nabrs.end(); ++ei) {
-      std::map<BlockId, BoxList>::iterator iter =
-         all_nabrs.find(ei->getBlockId());
-
-      if (iter != all_nabrs.end()) {
-         iter->second.pushBack(*ei);
-      } else {
-         BoxList nabr_list(*ei);
-         all_nabrs.insert(std::pair<BlockId, BoxList>(ei->getBlockId(),
-                                                      nabr_list));
-      }
-//      all_nabrs[ei->getBlockId()].pushBack(*ei);
-   }
-*/
 
 }
 
@@ -360,7 +332,6 @@ void NeighborhoodSet::getFromDatabase(
 
       const std::string set_db_string("set_for_local_id_");
 
-//      std::pair<BoxId, NeighborSet> tmp_pair;
       for (size_t i = 0; i < number_of_sets; ++i) {
          BoxId box_id(LocalId(local_indices[i]),
             owners[i],

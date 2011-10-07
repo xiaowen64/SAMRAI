@@ -1624,7 +1624,8 @@ bool GridGeometry::checkPeriodicValidity(
       IntVector grow_one(d_dim, 0);
       grow_one(i) = 1;
       dup_domain2.grow(grow_one);
-      dup_domain2.removeIntersections(BoxList(domain));
+      dup_domain2.unorder();
+      dup_domain2.removeIntersections(domain);
 
       BoxContainer::Iterator n(dup_domain2);
       for ( ; n != dup_domain2.end(); ++n) {
@@ -1737,6 +1738,7 @@ bool GridGeometry::checkBoundaryBox(
     * check that the boundary box is outside the physical domain.
     */
    BoxList domain_list(domain);
+   domain_list.unorder(); 
    BoxList bbox_list(bbox);
 
    domain_list.intersectBoxes(bbox_list);
@@ -1914,6 +1916,8 @@ void GridGeometry::registerNeighbors(
    const int& b = block_b.getBlockValue();
    BoxList b_domain_in_a_space(d_physical_domain[b]);
    BoxList a_domain_in_b_space(d_physical_domain[a]);
+   b_domain_in_a_space.unorder();
+   a_domain_in_b_space.unorder();
 
    Transformation::RotationIdentifier back_rotation =
       Transformation::getReverseRotationIdentifier(rotation, d_dim);

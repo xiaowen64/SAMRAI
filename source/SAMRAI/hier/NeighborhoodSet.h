@@ -146,54 +146,10 @@ public:
       d_map.clear();
    }
 
-//   NeighborSet& operator [] (
-//      const key_type& k) {
-//      TBOX_ASSERT(k.getPeriodicId().getPeriodicValue() == 0);
-//      return d_map[k];
-//   }
-
-   bool insertNeighbor(const key_type& k,
-                       const Box& neighbor)
-   {
-      iterator iter = d_map.find(k);
-      bool neighbor_inserted;
-      if (iter != end()) {
-         neighbor_inserted = iter->second.insert(neighbor);
-      } else {
-         BoxContainer neighbor_set(neighbor, true);
-//         neighbor_set.makeOrdered();
-         std::pair<iterator,bool> inserted_pair =
-            d_map.insert(std::pair<key_type, BoxContainer>(k, neighbor_set));
-         neighbor_inserted = inserted_pair.second;
-      }
-      return neighbor_inserted;
-   }
-
-   void insertNeighborSet(const key_type& k,
-                          const BoxContainer& neighbor_set)
-   {
-      d_map.insert(std::pair<key_type, BoxContainer>(k, neighbor_set));
-   } 
-
-   void clearNeighborSet(const key_type& k)
-   {
-      iterator iter = d_map.find(k);
-      if (iter != end()) {
-         iter->second.clear();
-      }
-   } 
-
-   NeighborSet& getNeighborSet(const key_type& k)
-   {
-      iterator iter = d_map.find(k);
-      if (iter != end()) {
-         return iter->second;
-      } else {
-         BoxContainer neighbor_set;
-         std::pair<iterator,bool> ret =
-            d_map.insert(std::pair<key_type, BoxContainer>(k, neighbor_set));
-         return ret.first->second;
-      }
+   NeighborSet& operator [] (
+      const key_type& k) {
+      TBOX_ASSERT(k.getPeriodicId().getPeriodicValue() == 0);
+      return d_map[k];
    }
 
    iterator find(

@@ -198,22 +198,6 @@ public:
    /*!
     * @brief Returns the first element in the container.
     *
-    * @return A mutable reference to the first Box in the container.
-    */
-   Box&
-   front();
-
-   /*!
-    * @brief Returns the last element in the container.
-    *
-    * @return A mutable reference to the last Box in the container.
-    */
-   Box&
-   back();
-
-   /*!
-    * @brief Returns the first element in the container.
-    *
     * @return An immutable reference to the first Box in the container.
     */
    const Box&
@@ -344,10 +328,10 @@ public:
 /*******************************************************/
 // set methods
 
-   void makeOrdered();
+   void order();
+   void unorder();
 
    bool isOrdered() const;
-   bool isUnordered() const;
 
    OrderedConstIterator orderedBegin() const;
    OrderedConstIterator orderedEnd() const;
@@ -898,7 +882,7 @@ private:
 
    std::set<const Box*, Box::id_less> d_set;
 
-   bool d_set_created;
+   bool d_ordered;
 };
 
 }

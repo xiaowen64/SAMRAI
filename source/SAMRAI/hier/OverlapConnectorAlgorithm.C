@@ -938,7 +938,8 @@ void OverlapConnectorAlgorithm::privateBridge(
     * visible_west_nabrs and visible_east_nabrs.
     */
    t_bridge_discover_get_neighbors->start();
-   NeighborSet visible_west_nabrs, visible_east_nabrs;
+   bool ordered = true;
+   NeighborSet visible_west_nabrs(ordered), visible_east_nabrs(ordered);
    cent_to_west.getLocalNeighbors(visible_west_nabrs);
    cent_to_east.getLocalNeighbors(visible_east_nabrs);
    t_bridge_discover_get_neighbors->stop();
@@ -1462,7 +1463,8 @@ void OverlapConnectorAlgorithm::privateBridge(
     * visible_west_nabrs and visible_east_nabrs.
     */
    t_bridge_discover_get_neighbors->start();
-   NeighborSet visible_west_nabrs, visible_east_nabrs;
+   bool ordered = true;
+   NeighborSet visible_west_nabrs(ordered), visible_east_nabrs(ordered);
    cent_to_west.getLocalNeighbors(visible_west_nabrs);
    cent_to_east.getLocalNeighbors(visible_east_nabrs);
    t_bridge_discover_get_neighbors->stop();

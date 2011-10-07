@@ -1140,7 +1140,8 @@ void MappingConnectorAlgorithm::privateModify_discoverAndSend(
     * owners first.  Note the comparator BoxOwnerFirst used to
     * achieve this ordering.
     */
-   BoxSet visible_anchor_nabrs, visible_new_nabrs;
+   bool ordered = true;
+   BoxSet visible_anchor_nabrs(ordered), visible_new_nabrs(ordered);
    InvertedNeighborhoodSet anchor_eto_old, new_eto_old;
    for (Connector::ConstNeighborhoodIterator ei = old_to_anchor.begin();
         ei != old_to_anchor.end(); ++ei) {

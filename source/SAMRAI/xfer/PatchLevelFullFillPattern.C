@@ -120,7 +120,8 @@ void PatchLevelFullFillPattern::computeDestinationFillBoxesOnSourceProc(
     * for all its dst neighbors using local data.  This info is
     * stored in dst_fill_boxes_on_src_proc.
     */
-   hier::BoxSet tmp_nabrs, all_dst_nabrs;
+   bool ordered = true;
+   hier::BoxSet tmp_nabrs(ordered), all_dst_nabrs(ordered);
    src_to_dst.getLocalNeighbors(tmp_nabrs);
    tmp_nabrs.unshiftPeriodicImageBoxes(
       all_dst_nabrs,
@@ -128,7 +129,7 @@ void PatchLevelFullFillPattern::computeDestinationFillBoxesOnSourceProc(
    tmp_nabrs.clear();
    for (hier::BoxSet::OrderedConstIterator na = all_dst_nabrs.orderedBegin();
         na != all_dst_nabrs.orderedEnd(); ++na) {
-      hier::BoxSet& fill_boxes = dst_fill_boxes_on_src_proc.getNeighborSet(na->getId());
+      hier::BoxSet& fill_boxes = dst_fill_boxes_on_src_proc[na->getId()];
       hier::Box fill_box(*na);
       fill_box.grow(fill_ghost_width);
       fill_boxes.insert(fill_box);

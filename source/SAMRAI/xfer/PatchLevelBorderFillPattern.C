@@ -82,8 +82,8 @@ void PatchLevelBorderFillPattern::computeFillBoxesAndNeighborhoodSets(
    for (hier::RealBoxConstIterator ni(dst_mapped_boxes);
         ni.isValid(); ++ni) {
       const hier::Box& dst_mapped_box = *ni;
-      hier::BoxList fill_boxes(dst_mapped_box);
-      fill_boxes.front().grow(fill_ghost_width);
+      hier::BoxList fill_boxes(
+         hier::Box::grow(dst_mapped_box, fill_ghost_width));
       hier::Connector::ConstNeighborhoodIterator nabrs =
          dst_to_dst.find(dst_mapped_box.getId());
       for (hier::Connector::ConstNeighborIterator na = dst_to_dst.begin(nabrs);

@@ -272,7 +272,7 @@ void Connector::insertLocalNeighbor(
    const Box& neighbor,
    const BoxId& box_id)
 {
-   d_relationships.insertNeighbor(box_id, neighbor);
+   d_relationships[box_id].insert(neighbor);
 }
 
 /*
@@ -283,7 +283,7 @@ SAMRAI_INLINE_KEYWORD
 void Connector::makeEmptyLocalNeighborhood(
       const BoxId& box_id)
 {
-   d_relationships.getNeighborSet(box_id);
+   d_relationships[box_id];
 }
 
 /*

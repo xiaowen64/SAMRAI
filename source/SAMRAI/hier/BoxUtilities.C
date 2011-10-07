@@ -337,6 +337,7 @@ void BoxUtilities::chopBoxes(
    TBOX_ASSERT(cut_factor > IntVector::getZero(min_size.getDim()));
    TBOX_ASSERT(bad_interval >= IntVector::getZero(min_size.getDim()));
    TBOX_ASSERT(physical_boxes.size() > 0);
+   TBOX_ASSERT(!boxes.isOrdered());
 
    const tbox::Dimension& dim(max_size.getDim());
 

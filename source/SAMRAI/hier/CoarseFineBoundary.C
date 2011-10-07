@@ -299,7 +299,7 @@ void CoarseFineBoundary::computeFromLevel(
           */
 
          BoxList pseudo_domain(*phys_domain);
-
+         pseudo_domain.unorder();
          for (tbox::List<GridGeometry::Neighbor>::Iterator
               ni(grid_geometry->getNeighbors(block_id)); ni; ni++) {
 

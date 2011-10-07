@@ -269,6 +269,7 @@ int main(
 
             hier::BoxList exclude_boxes;
             exclude_boxes = main_db->getDatabaseBoxArray(exclude_boxes_name);
+            block_domain.unorder();
             block_domain.removeIntersections(exclude_boxes);
 
             hier::LocalId last_local_id(-1);

@@ -151,6 +151,9 @@ public:
    bool
    isPeriodicImage() const;
 
+   bool
+   isValid() const;
+
    //@{
 
    //! @name Comparison operators

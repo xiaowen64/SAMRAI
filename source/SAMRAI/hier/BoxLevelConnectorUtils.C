@@ -971,6 +971,7 @@ void BoxLevelConnectorUtils::computeBoxesAroundBoundary(
        * These are specially handled in the following if-block.
        */
       const bool include_singularity_neighbors(false);
+      box_list.unorder();
       box_list.removeIntersections(
          block_id,
          refinement_ratio,

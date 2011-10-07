@@ -249,6 +249,7 @@ BoxTree::BoxTree(
       if (boxes.isOrdered()) {
          d_mapped_boxes = boxes;
       } else {
+         d_mapped_boxes.order();
          LocalId count(-1);
          for (BoxList::ConstIterator li(boxes); li != boxes.end(); ++li) {
             const Box n(*li, ++count, 0, d_block_id);

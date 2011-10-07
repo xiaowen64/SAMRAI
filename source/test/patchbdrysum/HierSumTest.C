@@ -278,7 +278,8 @@ HierSumTest::setInitialNodeValues(
             Pointer<NodeData<double> > unode =
                patch->getPatchData(d_unode_id);
 
-            for (BoxList::Iterator b(fine_overlap_shrunk); b; b++) {
+            for (BoxList::Iterator b = fine_overlap_shrunk.begin();
+                 b != fine_overlap_shrunk.end(); ++b) {
                Box fine_overlap = b();
                Box patch_interior = patch->getBox();
                Box data_box = fine_overlap * patch_interior;
@@ -569,7 +570,8 @@ int HierSumTest::checkNodeResult(
             patch->getPatchData(d_unode_id);
 
          // loop over Level complement boxlist
-         for (BoxList::Iterator b(level_boxes_complement); b; b++) {
+         for (BoxList::Iterator b = level_boxes_complement.begin();
+              b != level_boxes_complement.end(); ++b) {
             Box complement = b();
 
             // intersect patch box with level box complement
@@ -872,8 +874,8 @@ void HierSumTest::initializeLevelData(
             cpatch->getPatchData(d_ucell_node_id);
 
          Box cpbox = cpatch->getBox();
-         for (BoxList::Iterator fine_level_itr(fine_level_boxes); fine_level_itr;
-              fine_level_itr++) {
+         for (BoxList::Iterator fine_level_itr = fine_level_boxes.begin();
+              fine_level_itr != fine_level_boxes.end(); ++fine_level_itr) {
             Box setbox = cpbox * *fine_level_itr;
             if (!setbox.empty()) {
                ucell_node->fillAll(0.0, setbox);

@@ -1240,6 +1240,7 @@ void RefineSchedule::setupCoarseInterpBoxLevel(
             coarser_shear_domain[b].grow(big_grow_vector);
          }
 
+         coarser_shear_domain[b].unorder();
          coarser_shear_domain[b].simplify();
 
          t_coarse_shear->stop();
@@ -3461,9 +3462,7 @@ void RefineSchedule::communicateFillBoxes(
               so != tmp_owners.end(); ++so) {
             const int& src_owner = *so;
             if (src_owner == dst_mapped_box_id.getOwnerRank()) {
-               dst_to_fill_on_src_proc.clearNeighborSet(dst_mapped_box_id);
-               dst_to_fill_on_src_proc.insertNeighborSet(dst_mapped_box_id,
-                                                         tmp_fill_boxes);
+               dst_to_fill_on_src_proc[dst_mapped_box_id] = tmp_fill_boxes;
             } else {
                std::vector<int>& send_mesg = send_mesgs[src_owner];
                send_mesg.insert(send_mesg.end(),
@@ -3510,8 +3509,7 @@ void RefineSchedule::communicateFillBoxes(
                d_max_fill_boxes = tbox::MathUtilities<int>::Max(
                      d_max_fill_boxes,
                      num_fill_mapped_boxes);
-               hier::BoxSet& fill_boxes = dst_to_fill_on_src_proc.getNeighborSet(
-                  distributed_id);
+               hier::BoxSet& fill_boxes = dst_to_fill_on_src_proc[distributed_id];
                for (size_t ii = 0; ii < num_fill_mapped_boxes; ++ii) {
                   hier::Box tmp_dst_mapped_box(dim);
                   tmp_dst_mapped_box.getFromIntBuffer(ptr);

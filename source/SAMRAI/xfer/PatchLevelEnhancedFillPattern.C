@@ -80,8 +80,8 @@ void PatchLevelEnhancedFillPattern::computeFillBoxesAndNeighborhoodSets(
    for (hier::RealBoxConstIterator ni(dst_mapped_boxes);
         ni.isValid(); ++ni) {
       const hier::Box& dst_mapped_box = *ni;
-      hier::BoxList fill_boxes(dst_mapped_box);
-      fill_boxes.front().grow(fill_ghost_width);
+      hier::BoxList fill_boxes(
+         hier::Box::grow(dst_mapped_box, fill_ghost_width));
 
       const tbox::List<hier::GridGeometry::Neighbor>& neighbors =
          grid_geometry->getNeighbors(dst_mapped_box.getBlockId());

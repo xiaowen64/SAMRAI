@@ -180,15 +180,12 @@ void Connector::insertNeighbors(
 #endif
    const tbox::Dimension& dim = d_ratio.getDim();
    if (d_parallel_state == BoxLevel::GLOBALIZED) {
-      NeighborSet& global_nabrs =
-         d_global_relationships.getNeighborSet(mapped_box_id);
-      global_nabrs.insert(neighbors.orderedBegin(),
-                          neighbors.orderedEnd());
+      d_global_relationships[mapped_box_id].insert(neighbors.orderedBegin(),
+         neighbors.orderedEnd());
    }
    if (mapped_box_id.getOwnerRank() == getBase().getMPI().getRank()) {
-      NeighborSet& nabrs = d_relationships.getNeighborSet(mapped_box_id);
-      nabrs.insert(neighbors.orderedBegin(),
-                   neighbors.orderedEnd());
+      d_relationships[mapped_box_id].insert(neighbors.orderedBegin(),
+         neighbors.orderedEnd());
    }
 }
 
@@ -317,7 +314,7 @@ void Connector::removePeriodicLocalNeighbors()
    TBOX_ASSERT(isInitialized());
    for (NeighborhoodSet::iterator ei = d_relationships.begin();
         ei != d_relationships.end(); ++ei) {
-      d_relationships.getNeighborSet(ei->first).removePeriodicImageBoxes();
+      d_relationships[ei->first].removePeriodicImageBoxes();
    }
    return;
 }
@@ -500,8 +497,7 @@ void Connector::acquireRemoteNeighborhoods_unpack(
             const int num_nabrs = (*ptr++);
             const BoxId mapped_box_id(local_id, n, block_id);
 
-            NeighborSet& nabrs =
-               d_global_relationships.getNeighborSet(mapped_box_id);
+            NeighborSet& nabrs = d_global_relationships[mapped_box_id];
             Box nabr(dim);
             for (int nn = 0; nn < num_nabrs; ++nn) {
                nabr.getFromIntBuffer(ptr);
@@ -795,12 +791,11 @@ void Connector::initializeToLocalTranspose(
                   my_base_mapped_box.getGlobalId(),
                   my_base_mapped_box.getBlockId(),
                   PeriodicId::zero());
-               d_relationships.insertNeighbor(base_non_per_id,
-                                              my_shifted_head_mapped_box);
+               d_relationships[base_non_per_id].insert(
+                  my_shifted_head_mapped_box);
             }
          } else {
-            d_relationships.insertNeighbor(my_base_mapped_box.getId(),
-                                           my_head_mapped_box);
+            d_relationships[my_base_mapped_box.getId()].insert(my_head_mapped_box);
          }
       }
 
@@ -1753,7 +1748,7 @@ void Connector::computeNeighborhoodDifferences(
       if (bi != right.end()) {
          const NeighborSet& bnabrs = bi->second;
          // Remove bi from ai.  Put results in a_minus_b.
-         NeighborSet& diff = drelationships.getNeighborSet(mapped_box_id);
+         NeighborSet& diff = drelationships[mapped_box_id];
 
          //equivalent of stl set_difference
          BoxContainer::OrderedConstIterator na = anabrs.orderedBegin();
@@ -1783,8 +1778,7 @@ void Connector::computeNeighborhoodDifferences(
             drelationships.erase(mapped_box_id);
          }
       } else if (!anabrs.isEmpty()) {
-         drelationships.clear();
-         drelationships.insertNeighborSet(mapped_box_id, anabrs);
+         drelationships[mapped_box_id] = anabrs;
       }
 
    }

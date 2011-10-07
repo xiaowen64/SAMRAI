@@ -164,6 +164,7 @@ int main(
       const hier::BoxList& domain =
          grid_geometry->getPhysicalDomain(hier::BlockId(0));
       hier::BoxList boxes(domain);
+      boxes.unorder();
       if ((domain.size() == 1) &&
           (num_boxes != hier::IntVector(dim, 1))) {
          const hier::Box& dbox = domain.front();

@@ -267,6 +267,7 @@ void BoxLevel::initialize(
    const ParallelState parallel_state)
 {
    d_mapped_boxes.clear();
+   d_mapped_boxes.order();
    initializePrivate(
       ratio,
       grid_geom,

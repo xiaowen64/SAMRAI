@@ -279,5 +279,19 @@ bool BoxId::operator >= (
    return *this > r || *this == r;
 }
 
+/*
+ ************************************************************************
+ ************************************************************************
+ */
+SAMRAI_INLINE_KEYWORD
+bool BoxId::isValid() const
+{
+   return (d_block_id.isValid() &&
+           d_periodic_id.isValid() &&
+           d_global_id.getLocalId() != LocalId::getInvalidId() && 
+           d_global_id.getOwnerRank() != tbox::SAMRAI_MPI::getInvalidRank());
+            
+}
+
 }
 }
