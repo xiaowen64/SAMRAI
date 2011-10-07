@@ -72,7 +72,7 @@ SecondLayerNodeNoCornersVariableFillPattern::calculateOverlap(
    TBOX_DIM_ASSERT_CHECK_ARGS2(dst_patch_box, src_mask);
    NULL_USE(overwrite_interior);
 
-   hier::BoxList dst_boxes(dst_patch_box.getDim());
+   hier::BoxList dst_boxes;
 
    hier::Box dst_node_box(pdat::NodeGeometry::toNodeBox(dst_patch_box));
    hier::Box src_node_mask(pdat::NodeGeometry::toNodeBox(src_mask));
@@ -81,7 +81,7 @@ SecondLayerNodeNoCornersVariableFillPattern::calculateOverlap(
       ? true : false;
 
    if (!corner_overlap) {
-      hier::BoxList stencil_boxes(dst_patch_box.getDim());
+      hier::BoxList stencil_boxes;
       computeStencilBoxes(stencil_boxes, dst_patch_box);
 
       const NodeGeometry* t_dst =
@@ -181,7 +181,7 @@ SecondLayerNodeNoCornersVariableFillPattern::computeFillBoxesOverlap(
    NULL_USE(pdf);
    const tbox::Dimension& dim = patch_box.getDim();
 
-   hier::BoxList stencil_boxes(dim);
+   hier::BoxList stencil_boxes;
    computeStencilBoxes(stencil_boxes, patch_box);
 
    hier::BoxList overlap_boxes(fill_boxes);

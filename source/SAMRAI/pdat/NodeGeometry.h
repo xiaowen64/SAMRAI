@@ -110,7 +110,7 @@ public:
       const bool overwrite_interior,
       const hier::Transformation& transformation,
       const bool retry,
-      const hier::BoxList& dst_restrict_boxes = hier::BoxList(tbox::Dimension(1))) const;
+      const hier::BoxList& dst_restrict_boxes = hier::BoxList()) const;
 
    /*!
     * @brief Compute the node-centered destination boxes that represent
@@ -125,7 +125,7 @@ public:
       const hier::Box& fill_box,
       const bool overwrite_interior,
       const hier::Transformation& transformation,
-      const hier::BoxList& dst_restrict_boxes = hier::BoxList(tbox::Dimension(1))) const;
+      const hier::BoxList& dst_restrict_boxes = hier::BoxList()) const;
 
    /*!
     * @brief Set up a EdgeOverlap object based on the given boxes and the

@@ -66,9 +66,8 @@ PatchLevel::PatchLevel(
    d_dim(dim),
    d_mapped_box_level(NULL),
    d_has_globalized_data(false),
-   d_boxes(dim),
    d_ratio_to_level_zero(hier::IntVector::getZero(dim)),
-   d_physical_domain(0, BoxList(dim)),
+   d_physical_domain(0),
    d_ratio_to_coarser_level(hier::IntVector::getZero(dim))
 {
    t_level_constructor->start();
@@ -106,10 +105,8 @@ PatchLevel::PatchLevel(
    d_dim(grid_geometry->getDim()),
    d_mapped_box_level(new BoxLevel(mapped_box_level)),
    d_has_globalized_data(false),
-   d_boxes(grid_geometry->getDim()),
    d_ratio_to_level_zero(d_mapped_box_level->getRefinementRatio()),
-   d_physical_domain(grid_geometry->getNumberBlocks(),
-                     BoxList(grid_geometry->getDim())),
+   d_physical_domain(grid_geometry->getNumberBlocks()),
    d_ratio_to_coarser_level(grid_geometry->getDim(), 0)
 
 {
@@ -224,11 +221,9 @@ PatchLevel::PatchLevel(
    bool defer_boundary_box_creation):
    d_dim(grid_geometry->getDim()),
    d_has_globalized_data(false),
-   d_boxes(grid_geometry->getDim()),
    d_ratio_to_level_zero(hier::IntVector(grid_geometry->getDim(),
                                          tbox::MathUtilities<int>::getMax())),
-   d_physical_domain(grid_geometry->getNumberBlocks(),
-                     BoxList(grid_geometry->getDim())),
+   d_physical_domain(grid_geometry->getNumberBlocks()),
    d_ratio_to_coarser_level(hier::IntVector(grid_geometry->getDim(),
                                             tbox::MathUtilities<int>::getMax()))
 {
@@ -513,7 +508,7 @@ void PatchLevel::setRefinedPatchLevel(
    d_local_number_patches = coarse_level->getLocalNumberOfPatches();
    d_number_blocks = coarse_level->d_number_blocks;
 
-   d_physical_domain.resizeArray(d_number_blocks, BoxList(d_dim));
+   d_physical_domain.resizeArray(d_number_blocks);
    for (int nb = 0; nb < d_number_blocks; nb++) {
       d_physical_domain[nb] = coarse_level->d_physical_domain[nb];
       d_physical_domain[nb].refine(refine_ratio);
@@ -698,7 +693,7 @@ void PatchLevel::setCoarsenedPatchLevel(
    d_local_number_patches = fine_level->getNumberOfPatches();
    d_number_blocks = fine_level->d_number_blocks;
 
-   d_physical_domain.resizeArray(d_number_blocks, BoxList(d_dim));
+   d_physical_domain.resizeArray(d_number_blocks);
    for (int nb = 0; nb < d_number_blocks; nb++) {
       d_physical_domain[nb] = fine_level->d_physical_domain[nb];
       d_physical_domain[nb].coarsen(coarsen_ratio);
@@ -828,7 +823,7 @@ void PatchLevel::getFromDatabase(
 
    d_number_blocks = database->getInteger("d_number_blocks");
 
-   d_physical_domain.resizeArray(d_number_blocks, BoxList(d_dim));
+   d_physical_domain.resizeArray(d_number_blocks);
    for (int nb = 0; nb < d_number_blocks; nb++) {
       std::string domain_name = "d_physical_domain_"
          + tbox::Utilities::blockToString(nb);

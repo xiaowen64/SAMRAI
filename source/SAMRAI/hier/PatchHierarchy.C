@@ -660,7 +660,7 @@ void PatchHierarchy::setupDomainData()
     * Grab the physical domain (including periodic images) from the
     * GridGeometry and set up domain data dependent on it.
     */
-   tbox::Array<BoxSet> domain_mapped_boxes(d_number_blocks, BoxSet(d_dim));
+   tbox::Array<BoxSet> domain_mapped_boxes(d_number_blocks);
    for (int nb = 0; nb < d_number_blocks; nb++) {
       d_grid_geometry->computePhysicalDomainWithPeriodicImages(
          domain_mapped_boxes[nb],
@@ -676,7 +676,7 @@ void PatchHierarchy::setupDomainData()
          tbox::SAMRAI_MPI::getSAMRAIWorld(),
          BoxLevel::GLOBALIZED);
    } else {
-      BoxSet all_domain_mapped_boxes(d_dim);
+      BoxSet all_domain_mapped_boxes;
       for (int nb = 0; nb < d_number_blocks; nb++) {
          all_domain_mapped_boxes.insert(domain_mapped_boxes[nb].orderedBegin(),
             domain_mapped_boxes[nb].orderedEnd());
@@ -690,7 +690,7 @@ void PatchHierarchy::setupDomainData()
    }
 
    // Initialize the multiblock domain search tree.
-   BoxSet multiblock_mapped_boxes(d_dim);
+   BoxSet multiblock_mapped_boxes;
    for (int nb = 0; nb < d_number_blocks; nb++) {
       multiblock_mapped_boxes.insert(
          domain_mapped_boxes[nb].orderedBegin(),
@@ -702,7 +702,7 @@ void PatchHierarchy::setupDomainData()
 
    // Generate the non-periodic multiblock domain search tree.
    if (PeriodicShiftCatalog::getCatalog(d_dim)->isPeriodic()) {
-      BoxSet multiblock_mapped_boxes_noperiodic(d_dim);
+      BoxSet multiblock_mapped_boxes_noperiodic;
       for (BoxSet::OrderedConstIterator ni = multiblock_mapped_boxes.orderedBegin();
            ni != multiblock_mapped_boxes.orderedEnd(); ++ni) {
          if (!(*ni).isPeriodicImage()) {

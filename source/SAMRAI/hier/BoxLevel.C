@@ -56,8 +56,6 @@ BoxLevel::s_initialize_finalize_handler(
 
 BoxLevel::BoxLevel():
    d_mpi(tbox::SAMRAI_MPI::commNull),
-   d_mapped_boxes(tbox::Dimension::getInvalidDimension()),
-   d_global_mapped_boxes(tbox::Dimension::getInvalidDimension()),
    d_ratio(tbox::Dimension::getInvalidDimension(), 0),
 
    d_local_number_of_cells(0),
@@ -94,8 +92,6 @@ BoxLevel::BoxLevel(
    const tbox::Dimension& dim):
 
    d_mpi(tbox::SAMRAI_MPI::commNull),
-   d_mapped_boxes(dim),
-   d_global_mapped_boxes(dim),
    d_ratio(dim, 0),
 
    d_local_number_of_cells(0),
@@ -170,8 +166,6 @@ BoxLevel::BoxLevel(
    const tbox::SAMRAI_MPI& mpi,
    const ParallelState parallel_state):
    d_mpi(tbox::SAMRAI_MPI::commNull),
-   d_mapped_boxes(ratio.getDim()),
-   d_global_mapped_boxes(ratio.getDim()),
    d_ratio(ratio),
 
    d_local_number_of_cells(0),
@@ -209,8 +203,6 @@ BoxLevel::BoxLevel(
    const tbox::SAMRAI_MPI& mpi,
    const ParallelState parallel_state):
    d_mpi(tbox::SAMRAI_MPI::commNull),
-   d_mapped_boxes(ratio.getDim()),
-   d_global_mapped_boxes(ratio.getDim()),
    d_ratio(ratio),
 
    d_local_number_of_cells(0),
@@ -239,7 +231,7 @@ BoxLevel::BoxLevel(
    d_handle(NULL),
    d_grid_geometry(tbox::ConstPointer<GridGeometry>(NULL))
 {
-   BoxSet dummy_mapped_boxes(ratio.getDim());
+   BoxSet dummy_mapped_boxes;
    initialize(dummy_mapped_boxes, ratio, grid_geom, mpi, parallel_state);
 }
 

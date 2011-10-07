@@ -69,10 +69,10 @@ FirstLayerNodeVariableFillPattern::calculateOverlap(
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(dst_patch_box, src_mask);
 
-   hier::BoxList stencil_boxes(dst_patch_box.getDim());
+   hier::BoxList stencil_boxes;
    computeStencilBoxes(stencil_boxes, dst_patch_box);
 
-   hier::BoxList dst_boxes(dst_patch_box.getDim());
+   hier::BoxList dst_boxes;
 
    const NodeGeometry* t_dst =
       dynamic_cast<const NodeGeometry *>(&dst_geometry);
@@ -159,7 +159,7 @@ FirstLayerNodeVariableFillPattern::computeFillBoxesOverlap(
 
    const tbox::Dimension& dim = patch_box.getDim();
 
-   hier::BoxList stencil_boxes(dim);
+   hier::BoxList stencil_boxes;
    computeStencilBoxes(stencil_boxes, patch_box);
 
    hier::BoxList overlap_boxes(fill_boxes);

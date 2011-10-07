@@ -123,7 +123,7 @@ void PatchLevelInteriorFillPattern::computeDestinationFillBoxesOnSourceProc(
     * boxes for all its dst neighbors using local data.  This info is
     * stored in dst_fill_boxes_on_src_proc.
     */
-   hier::BoxSet tmp_nabrs(dim), all_dst_nabrs(dim);
+   hier::BoxSet tmp_nabrs, all_dst_nabrs;
    src_to_dst.getLocalNeighbors(tmp_nabrs);
    tmp_nabrs.unshiftPeriodicImageBoxes(
       all_dst_nabrs,
@@ -132,7 +132,7 @@ void PatchLevelInteriorFillPattern::computeDestinationFillBoxesOnSourceProc(
    for (hier::BoxSet::OrderedConstIterator na = all_dst_nabrs.orderedBegin();
         na != all_dst_nabrs.orderedEnd(); ++na) {
       hier::BoxSet& fill_boxes =
-         dst_fill_boxes_on_src_proc.getNeighborSet(na->getId(), dim);
+         dst_fill_boxes_on_src_proc.getNeighborSet(na->getId());
       fill_boxes.insert(*na);
       d_max_fill_boxes = tbox::MathUtilities<int>::Max(d_max_fill_boxes,
             static_cast<int>(fill_boxes.size()));

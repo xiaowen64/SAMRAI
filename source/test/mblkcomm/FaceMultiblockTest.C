@@ -589,7 +589,7 @@ bool FaceMultiblockTest::verifyResults(
          hier::Box patch_face_box =
             pdat::FaceGeometry::toFaceBox(pbox, axis);
 
-         hier::BoxList tested_neighbors(d_dim);
+         hier::BoxList tested_neighbors;
 
          for (tbox::List<hier::GridGeometry::Neighbor>::
               Iterator ne(neighbors); ne; ne++) {
@@ -599,7 +599,7 @@ bool FaceMultiblockTest::verifyResults(
             correct = ne().getBlockId().getBlockValue();
 
             hier::BoxList neighbor_ghost(ne().getTransformedDomain());
-            hier::BoxList neighbor_face_ghost(d_dim);
+            hier::BoxList neighbor_face_ghost;
             for (hier::BoxList::Iterator nn(neighbor_ghost);
                  nn != neighbor_ghost.end(); ++nn) {
                hier::Box neighbor_ghost_interior(

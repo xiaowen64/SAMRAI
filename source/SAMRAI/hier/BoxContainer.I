@@ -19,12 +19,14 @@ namespace SAMRAI {
 namespace hier {
 
 SAMRAI_INLINE_KEYWORD
-BoxContainer::BoxContainer(
-   const tbox::Dimension& dim):
-//   const int n):
-   d_dim(dim),
-//   d_list(n, Box(dim)),
+BoxContainer::BoxContainer() :
    d_set_created(false)
+{
+}
+
+SAMRAI_INLINE_KEYWORD
+BoxContainer::BoxContainer(bool ordered) :
+   d_set_created(ordered)
 {
 }
 
@@ -32,7 +34,6 @@ SAMRAI_INLINE_KEYWORD
 BoxContainer::BoxContainer(
    const Box& box,
    bool ordered):
-   d_dim(box.getDim()),
    d_list(1, box),
    d_set_created(ordered)
 {
@@ -44,7 +45,6 @@ BoxContainer::BoxContainer(
 SAMRAI_INLINE_KEYWORD
 BoxContainer::BoxContainer(
    const BoxContainer& other):
-   d_dim(other.d_dim),
    d_list(other.d_list),
    d_set_created(false) 
 {
@@ -125,7 +125,11 @@ const Box& BoxContainer::back() const
 SAMRAI_INLINE_KEYWORD
 void BoxContainer::pushFront(const Box& item)
 {
-   TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(d_dim, item);
+#ifdef DEBUG_CHECK_ASSERTIONS
+   if (size() > 0) {
+      TBOX_DIM_ASSERT_CHECK_ARGS2(front(), item);
+   }
+#endif
    d_list.push_front(item);
    if (d_set_created) {
       d_set.clear();
@@ -136,7 +140,11 @@ void BoxContainer::pushFront(const Box& item)
 SAMRAI_INLINE_KEYWORD
 void BoxContainer::pushBack(const Box& item)
 {
-   TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(d_dim, item);
+#ifdef DEBUG_CHECK_ASSERTIONS
+   if (size() > 0) {
+      TBOX_DIM_ASSERT_CHECK_ARGS2(front(), item);
+   }
+#endif
    d_list.push_back(item);
    if (d_set_created) {
       d_set.clear();
@@ -147,7 +155,11 @@ void BoxContainer::pushBack(const Box& item)
 SAMRAI_INLINE_KEYWORD
 void BoxContainer::insertBefore(Iterator iter, const Box& item)
 {
-   TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(d_dim, item);
+#ifdef DEBUG_CHECK_ASSERTIONS
+   if (size() > 0) {
+      TBOX_DIM_ASSERT_CHECK_ARGS2(front(), item);
+   }
+#endif
    d_list.insert(iter.d_list_iter, item);
    if (d_set_created) {
       d_set.clear();
@@ -158,7 +170,11 @@ void BoxContainer::insertBefore(Iterator iter, const Box& item)
 SAMRAI_INLINE_KEYWORD
 void BoxContainer::spliceFront(BoxContainer& boxes)
 {
-   TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(d_dim, boxes);
+#ifdef DEBUG_CHECK_ASSERTIONS
+   if (size() > 0 && boxes.size() > 0) {
+      TBOX_DIM_ASSERT_CHECK_ARGS2(front(), boxes.front());
+   }
+#endif
    d_list.splice(begin().d_list_iter, boxes.d_list);
    if (d_set_created) {
       d_set.clear();
@@ -169,7 +185,11 @@ void BoxContainer::spliceFront(BoxContainer& boxes)
 SAMRAI_INLINE_KEYWORD
 void BoxContainer::spliceBack(BoxContainer& boxes)
 {
-   TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(d_dim, boxes);
+#ifdef DEBUG_CHECK_ASSERTIONS
+   if (size() > 0 && boxes.size() > 0) {
+      TBOX_DIM_ASSERT_CHECK_ARGS2(front(), boxes.front());
+   }
+#endif
    boxes.spliceFront(*this);
    d_list.swap(boxes.d_list);
    if (d_set_created) {
@@ -229,16 +249,15 @@ void BoxContainer::clear()
 SAMRAI_INLINE_KEYWORD
 bool BoxContainer::operator == (const BoxContainer& rhs) const
 {
-   bool isEqual = (d_dim == rhs.d_dim);
-   if (isEqual) {
-      if (!d_set_created || !rhs.d_set_created) { 
-         isEqual = std::equal(d_list.begin(), d_list.end(),
-                      rhs.d_list.begin(), Box::box_equality());
-      } else {
-         isEqual = std::equal(d_set.begin(), d_set.end(),
-                      rhs.d_set.begin(), Box::id_equal());
-      }
+   bool isEqual;
+   if (!d_set_created || !rhs.d_set_created) { 
+      isEqual = std::equal(d_list.begin(), d_list.end(),
+                   rhs.d_list.begin(), Box::box_equality());
+   } else {
+      isEqual = std::equal(d_set.begin(), d_set.end(),
+                   rhs.d_set.begin(), Box::id_equal());
    }
+
    return isEqual;
 }
 
@@ -274,12 +293,6 @@ BoxContainer::OrderedConstReverseIterator BoxContainer::orderedREnd() const
 {
    TBOX_ASSERT(d_set_created || size() == 0);
    return OrderedConstReverseIterator(*this, false);
-}
-
-SAMRAI_INLINE_KEYWORD
-const tbox::Dimension& BoxContainer::getDim() const
-{
-   return d_dim;
 }
 
 SAMRAI_INLINE_KEYWORD

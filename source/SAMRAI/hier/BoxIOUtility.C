@@ -120,14 +120,9 @@ void BoxIOUtility::putLevelBoxes(
    const int level_number,
    const int entry_number)
 {
-   const tbox::Dimension dim(level_boxes.getDim());
-
    tbox::plog << "Writing boxes for level: " << level_number
               << " entry number: " << entry_number << std::endl;
 
-   /*
-    * Reset dimension of arrays, if necessary.
-    */
    if (d_level_boxes.getSize() < level_number + 1) {
       d_level_boxes.resizeArray(level_number + 1);
    }
@@ -137,8 +132,7 @@ void BoxIOUtility::putLevelBoxes(
     */
    int level_entry_size = d_level_boxes[level_number].getSize();
    if (level_entry_size < entry_number + 1) {
-      d_level_boxes[level_number].resizeArray(level_entry_size + 10,
-         hier::BoxList(dim));
+      d_level_boxes[level_number].resizeArray(level_entry_size + 10);
    }
 
    /*
@@ -243,8 +237,7 @@ void BoxIOUtility::readLevelBoxesDatabase()
              * a box.
              */
             if (d_level_boxes[ln].size() < nentries) {
-               d_level_boxes[ln].resizeArray(nentries,
-                  hier::BoxList(db_array[0].getDim()));
+               d_level_boxes[ln].resizeArray(nentries);
             }
 
             d_level_boxes[ln][i] = db_array;

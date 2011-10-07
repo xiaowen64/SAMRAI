@@ -80,7 +80,6 @@ BoxTree::BoxTree(
    d_dim(dim),
    d_bounding_box(dim),
    d_block_id(BlockId::invalidId()),
-   d_mapped_boxes(dim),
    d_partition_dim(0)
 {
 }
@@ -91,8 +90,7 @@ BoxTree::BoxTree(
    size_t min_number):
    d_dim(dim),
    d_bounding_box(dim),
-   d_block_id(BlockId::invalidId()),
-   d_mapped_boxes(dim)
+   d_block_id(BlockId::invalidId())
 {
    ++s_num_build[d_dim.getValue() - 1];
    s_num_sorted_box[d_dim.getValue() - 1] +=
@@ -176,7 +174,7 @@ BoxTree::BoxTree(
          (d_bounding_box.lower(d_partition_dim)
           + d_bounding_box.upper(d_partition_dim)) / 2;
 
-      BoxSet left_mapped_boxes(d_dim), right_mapped_boxes(d_dim);
+      BoxSet left_mapped_boxes, right_mapped_boxes;
       for (BoxSet::OrderedConstIterator ni = mapped_boxes.orderedBegin();
            ni != mapped_boxes.orderedEnd(); ++ni) {
          const Box& mapped_box = *ni;
@@ -215,8 +213,7 @@ BoxTree::BoxTree(
    size_t min_number):
    d_dim(dim),
    d_bounding_box(d_dim),
-   d_block_id(block_id),
-   d_mapped_boxes(d_dim)
+   d_block_id(block_id)
 {
    t_build_tree[d_dim.getValue() - 1]->start();
    ++s_num_build[d_dim.getValue() - 1];
@@ -286,7 +283,7 @@ BoxTree::BoxTree(
          (d_bounding_box.lower(d_partition_dim)
           + d_bounding_box.upper(d_partition_dim)) / 2;
 
-      BoxSet left_mapped_boxes(d_dim), right_mapped_boxes(d_dim);
+      BoxSet left_mapped_boxes, right_mapped_boxes;
       LocalId count(-1);
       Box mapped_box(d_dim);
       for (BoxList::ConstIterator li(boxes); li != boxes.end(); ++li) {
@@ -457,7 +454,7 @@ void BoxTree::privateGenerateTree(
          (d_bounding_box.lower(d_partition_dim)
           + d_bounding_box.upper(d_partition_dim)) / 2;
 
-      BoxSet left_mapped_boxes(d_dim), right_mapped_boxes(d_dim);
+      BoxSet left_mapped_boxes, right_mapped_boxes;
       for (BoxSet::OrderedConstIterator ni = d_mapped_boxes.orderedBegin();
            ni != d_mapped_boxes.orderedEnd(); ) {
          const Box& mapped_box = *ni;

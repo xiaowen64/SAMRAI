@@ -120,7 +120,7 @@ tbox::Pointer<hier::BoxOverlap> OutersideGeometry::doOverlap(
 
    TBOX_ASSERT(dst_geometry.getDirectionVector() == hier::IntVector::getOne(dim));
 
-   tbox::Array<hier::BoxList> dst_boxes(dim.getValue(), hier::BoxList(dim));
+   tbox::Array<hier::BoxList> dst_boxes(dim.getValue());
 
    // Perform a quick-and-dirty intersection to see if the boxes might overlap
 
@@ -185,7 +185,7 @@ tbox::Pointer<hier::BoxOverlap> OutersideGeometry::doOverlap(
          }  // if (!together.empty())
 
          if (dst_restrict_boxes.size() && dst_boxes[d].size()) {
-            hier::BoxList side_restrict_boxes(dim);
+            hier::BoxList side_restrict_boxes;
             for (hier::BoxList::ConstIterator b(dst_restrict_boxes);
                  b != dst_restrict_boxes.end(); ++b) {
                side_restrict_boxes.pushBack(SideGeometry::toSideBox(b(), d));
@@ -216,7 +216,7 @@ OutersideGeometry::setUpOverlap(
    const hier::Transformation& transformation) const
 {
    const tbox::Dimension& dim(transformation.getOffset().getDim());
-   tbox::Array<hier::BoxList> dst_boxes(dim.getValue(), hier::BoxList(dim));
+   tbox::Array<hier::BoxList> dst_boxes(dim.getValue());
 
    for (hier::BoxList::ConstIterator b(boxes); b != boxes.end(); ++b) {
       for (int d = 0; d < dim.getValue(); d++) {

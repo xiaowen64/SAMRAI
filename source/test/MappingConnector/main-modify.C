@@ -175,7 +175,7 @@ int main(
       const hier::IntVector& one_vector(hier::IntVector::getOne(dim));
       const hier::IntVector& zero_vector(hier::IntVector::getZero(dim));
 
-      hier::BoxSet multiblock_boxes(dim);
+      hier::BoxSet multiblock_boxes;
       grid_geometry->computePhysicalDomain(
          multiblock_boxes,
          hier::IntVector::getOne(dim));

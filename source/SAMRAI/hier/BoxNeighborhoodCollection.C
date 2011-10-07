@@ -591,7 +591,7 @@ void BoxNeighborhoodCollection::getNeighbors(
    // First call the version taking a BoxSet so that there are no duplicates.
    // Then dump the neighbors with the desired BlockId into the supplied
    // BoxList.
-   BoxSet tmp_nabrs(neighbors.getDim());
+   BoxSet tmp_nabrs;
    getNeighbors(tmp_nabrs);
    for (BoxSetSingleBlockIterator ei(tmp_nabrs, block_id);
         ei.isValid(); ++ei) {

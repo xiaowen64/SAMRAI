@@ -86,7 +86,7 @@ void PatchLevelEnhancedFillPattern::computeFillBoxesAndNeighborhoodSets(
       const tbox::List<hier::GridGeometry::Neighbor>& neighbors =
          grid_geometry->getNeighbors(dst_mapped_box.getBlockId());
 
-      hier::BoxList constructed_fill_boxes(dst_mapped_box.getDim());
+      hier::BoxList constructed_fill_boxes;
 
       for (tbox::List<hier::GridGeometry::Neighbor>::Iterator ni(neighbors);
            ni; ni++) {

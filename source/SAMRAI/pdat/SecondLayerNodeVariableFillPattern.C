@@ -77,12 +77,12 @@ SecondLayerNodeVariableFillPattern::calculateOverlap(
    bool corner_overlap = ((dst_node_box * src_node_mask).size() == 1)
       ? true : false;
 
-   hier::BoxList stencil_boxes(dim);
+   hier::BoxList stencil_boxes;
    computeStencilBoxes(stencil_boxes, dst_patch_box);
    if (corner_overlap) {
       hier::IntVector grow_vec(dim, 0);
       hier::Box grow_box(dim);
-      hier::BoxList remove_list(dim);
+      hier::BoxList remove_list;
       for (unsigned int i = 0; i < dim.getValue(); i++) {
          grow_box = dst_node_box;
          grow_vec(i) = 1;
@@ -93,7 +93,7 @@ SecondLayerNodeVariableFillPattern::calculateOverlap(
       stencil_boxes.removeIntersections(remove_list);
    }
 
-   hier::BoxList dst_boxes(dim);
+   hier::BoxList dst_boxes;
 
    const NodeGeometry* t_dst =
       dynamic_cast<const NodeGeometry *>(&dst_geometry);
@@ -180,7 +180,7 @@ SecondLayerNodeVariableFillPattern::computeFillBoxesOverlap(
 
    const tbox::Dimension& dim = patch_box.getDim();
 
-   hier::BoxList stencil_boxes(dim);
+   hier::BoxList stencil_boxes;
    computeStencilBoxes(stencil_boxes, patch_box);
 
    hier::BoxList overlap_boxes(fill_boxes);

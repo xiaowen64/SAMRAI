@@ -170,7 +170,7 @@ void CoarseFineBoundary::computeFromLevel(
     * the fake domain be everywhere there is NOT a coarse-fine boundary--or
     * everywhere there IS a physical boundary or a fine-boundary.
     */
-   BoxList fake_domain_list(d_dim);
+   BoxList fake_domain_list;
 
    // Every mapped_box should connect to the domain mapped_box_level.
    TBOX_ASSERT(mapped_box_level_to_domain.getLocalNumberOfNeighborSets() ==
@@ -259,7 +259,7 @@ void CoarseFineBoundary::computeFromLevel(
    tbox::Pointer<GridGeometry> grid_geometry = level.getGridGeometry();
    int nblocks = grid_geometry->getNumberBlocks();
 
-   tbox::Array<BoxList> adjusted_level_domain(nblocks, BoxList(d_dim));
+   tbox::Array<BoxList> adjusted_level_domain(nblocks);
 
    /*
     * Loop over each block.
@@ -411,7 +411,6 @@ void CoarseFineBoundary::addPeriodicImageBoxes(
    BoxList& boxes,
    const tbox::Array<tbox::List<IntVector> >& shifts)
 {
-   TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(d_dim, boxes);
    TBOX_ASSERT(shifts.size() == boxes.size());
 
    int current_size = boxes.size();

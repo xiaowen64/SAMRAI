@@ -130,7 +130,7 @@ bool TagAndInitializeStrategy::getUserSuppliedRefineBoxes(
     * Print some warnings if the user-supplied entries will not
     * generate any refined boxes for the level.
     */
-   hier::BoxList empty_boxes(d_dim);
+   hier::BoxList empty_boxes;
    if ((d_refine_boxes.getSize() <= level_num) ||
        (d_refine_boxes[level_num][seq_num].size() == 0)) {
 
@@ -219,7 +219,7 @@ void TagAndInitializeStrategy::resetRefineBoxes(
 
    int i = d_reset_refine_boxes.getSize();
    if (i <= level_num) {
-      d_reset_refine_boxes.resizeArray(level_num + 1, hier::BoxList(d_dim));
+      d_reset_refine_boxes.resizeArray(level_num + 1);
       d_refine_boxes_reset.resizeArray(level_num + 1);
       for ( ; i < d_reset_refine_boxes.getSize(); ++i) {
          d_refine_boxes_reset[i] = false;
@@ -365,7 +365,7 @@ void TagAndInitializeStrategy::getFromInput(
          } else {
             max_seq = d_refine_boxes_cycles[ln].getSize();
          }
-         d_refine_boxes[ln].resizeArray(max_seq, hier::BoxList(d_dim));
+         d_refine_boxes[ln].resizeArray(max_seq);
 
          /*
           * Read boxes.
@@ -384,7 +384,7 @@ void TagAndInitializeStrategy::getFromInput(
       for (int ln = 0; ln < nkeys; ln++) {
          std::string level_boxes_name = "level_" + tbox::Utilities::intToString(
                ln);
-         d_refine_boxes[ln].resizeArray(1, hier::BoxList(d_dim));
+         d_refine_boxes[ln].resizeArray(1);
          d_refine_boxes_cycles[ln].resizeArray(1);
          d_refine_boxes_times[ln].resizeArray(1);
 

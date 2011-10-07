@@ -91,7 +91,7 @@ void HierarchySideDataOpsInteger::resetLevels(
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
       tbox::Pointer<hier::PatchLevel> level = d_hierarchy->getPatchLevel(ln);
-      hier::BoxList side_boxes(dim);
+      hier::BoxList side_boxes;
 
       for (int nd = 0; nd < dim.getValue(); nd++) {
          side_boxes = level->getBoxes();

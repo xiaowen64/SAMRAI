@@ -138,7 +138,7 @@ void PatchDataTestStrategy::readRefinementInput(
    tbox::Array<string> box_keys = db->getAllKeys();
    int nkeys = box_keys.getSize();
 
-   d_refine_level_boxes.resizeArray(nkeys, hier::BoxList(d_dim));
+   d_refine_level_boxes.resizeArray(nkeys);
    for (int i = 0; i < nkeys; i++) {
       d_refine_level_boxes[i] = db->getDatabaseBoxArray(box_keys[i]);
    }

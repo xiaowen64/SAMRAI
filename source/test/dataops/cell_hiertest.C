@@ -131,8 +131,8 @@ int main(
       hier::Box fine1(flo1, fhi1);
       hier::IntVector ratio(dim, 2);
 
-      hier::BoxList coarse_domain(dim);
-      hier::BoxList fine_boxes(dim);
+      hier::BoxList coarse_domain;
+      hier::BoxList fine_boxes;
       coarse_domain.pushBack(coarse0);
       coarse_domain.pushBack(coarse1);
       fine_boxes.pushBack(fine0);

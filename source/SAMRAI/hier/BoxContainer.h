@@ -67,14 +67,16 @@ public:
    // Constructors.
 
    /*!
-    * @brief Create a container with n empty boxes each with dimension dim.
-    *
-    * @param[in] dim
-    * @param[in] n
+    * @brief Default constructor creates empty container in unordered state.
     */
-   explicit BoxContainer(
-      const tbox::Dimension& dim);
+   explicit BoxContainer();
 
+   /*!
+    * @brief Creates empty container in state determined by boolean
+    *
+    * param[in] ordered   Container will be ordered if true, unordered if false.
+    */
+   explicit BoxContainer(const bool ordered);
 
    /*!
     * @brief Create container containing members from another container.
@@ -535,16 +537,6 @@ private:
    operator != (
       const BoxContainer& rhs) const;
 
-   // Box properties.
-
-   /*!
-    * @brief Dimension of Box contents.
-    *
-    * @return The dimension of each Box in the container.
-    */
-   const tbox::Dimension&
-   getDim() const;
-
    // Container manipulation.
 
    /*!
@@ -845,11 +837,6 @@ private:
     */
    static const int HIER_BOX_CONTAINER_VERSION;
 
-   /*
-    * Default constructor just to be clear that there is none.
-    */
-   BoxContainer();
-
    /*!
     * @brief Break up bursty against solid and adds the pieces to container.
     *
@@ -903,11 +890,6 @@ private:
       Iterator& sublist_start,
       Iterator& sublist_end,
       Iterator& insertion_pt);
-
-   /*
-    * The dimemsion of each box in the container.
-    */
-   tbox::Dimension d_dim;
 
    /*
     * The underlying container representation.  This class is a wrapper.

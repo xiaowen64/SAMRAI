@@ -197,11 +197,12 @@ CartesianGridGeometry::CartesianGridGeometry(
    const double* x_up,
    const hier::BoxList& domain,
    bool register_for_restart):
-   hier::GridGeometry(domain.getDim(), object_name,
+   hier::GridGeometry(domain.front().getDim(), object_name,
                       tbox::Pointer<hier::TransferOperatorRegistry>(
-                         new SAMRAITransferOperatorRegistry(domain.getDim()))),
-   d_domain_box(domain.getDim())
+                         new SAMRAITransferOperatorRegistry(domain.front().getDim()))),
+   d_domain_box(domain.front().getDim())
 {
+   TBOX_ASSERT(domain.size() > 0);
    TBOX_ASSERT(!object_name.empty());
    TBOX_ASSERT(!(x_lo == (double *)NULL));
    TBOX_ASSERT(!(x_up == (double *)NULL));
@@ -349,7 +350,6 @@ void CartesianGridGeometry::setGeometryData(
 
    TBOX_ASSERT(!(x_lo == (double *)NULL));
    TBOX_ASSERT(!(x_up == (double *)NULL));
-   TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(dim, domain);
 
    for (int id = 0; id < dim.getValue(); id++) {
       d_x_lo[id] = x_lo[id];
@@ -545,7 +545,7 @@ void CartesianGridGeometry::getFromInput(
 
    if (!is_from_restart) {
 
-      hier::BoxList domain(dim);
+      hier::BoxList domain;
       if (db->keyExists("domain_boxes")) {
          domain = db->getDatabaseBoxArray("domain_boxes");
          if (domain.size() == 0) {

@@ -105,7 +105,7 @@ int main(
       hier::Index indxhi(dim, 9);
       indxhi(1) = 4;
       hier::Box patch_box(indxlo, indxhi);
-      hier::BoxList grid_domain(dim);
+      hier::BoxList grid_domain;
       grid_domain.pushBack(patch_box);
       hier::IntVector ratio(dim, 1);
 

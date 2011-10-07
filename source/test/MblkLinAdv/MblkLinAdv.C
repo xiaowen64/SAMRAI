@@ -2377,7 +2377,7 @@ void MblkLinAdv::tagGradientDetectorCells(
           */
          int block_number = patch.getBox().getBlockId().getBlockValue();
          int level_number = patch.getPatchLevelNumber();
-         hier::BoxList refine_boxes(d_dim);
+         hier::BoxList refine_boxes;
          if (d_mblk_geometry->getRefineBoxes(refine_boxes,
                 block_number,
                 level_number)) {
@@ -2452,7 +2452,7 @@ void MblkLinAdv::setMappedGridOnPatch(
    const tbox::Pointer<hier::PatchGeometry>
    patch_geom = patch.getPatchGeometry();
    hier::IntVector ratio = patch_geom->getRatio();
-   hier::BoxList domain_boxes(d_dim);
+   hier::BoxList domain_boxes;
    d_grid_geometry->computePhysicalDomain(domain_boxes, ratio,
       hier::BlockId(block_number));
    int num_domain_boxes = domain_boxes.size();

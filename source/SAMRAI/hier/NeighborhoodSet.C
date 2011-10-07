@@ -96,8 +96,8 @@ NeighborhoodSet::coarsenNeighbors(
 {
    for (const_iterator ei = begin(); ei != end(); ++ei) {
       const BoxId& mapped_box_id = (*ei).first;
-      output_edges.getNeighborSet(mapped_box_id, ratio.getDim()) = (*ei).second;
-      output_edges.getNeighborSet(mapped_box_id, ratio.getDim()).coarsen(ratio);
+      output_edges.getNeighborSet(mapped_box_id) = (*ei).second;
+      output_edges.getNeighborSet(mapped_box_id).coarsen(ratio);
    }
 }
 
@@ -113,8 +113,8 @@ NeighborhoodSet::refineNeighbors(
 {
    for (const_iterator ei = begin(); ei != end(); ++ei) {
       const BoxId& mapped_box_id = (*ei).first;
-      output_edges.getNeighborSet(mapped_box_id, ratio.getDim()) = (*ei).second;
-      output_edges.getNeighborSet(mapped_box_id, ratio.getDim()).refine(ratio);
+      output_edges.getNeighborSet(mapped_box_id) = (*ei).second;
+      output_edges.getNeighborSet(mapped_box_id).refine(ratio);
    }
 }
 
@@ -130,8 +130,8 @@ NeighborhoodSet::growNeighbors(
 {
    for (const_iterator ei = begin(); ei != end(); ++ei) {
       const BoxId& mapped_box_id = (*ei).first;
-      output_edges.getNeighborSet(mapped_box_id, growth.getDim()) = (*ei).second;
-      output_edges.getNeighborSet(mapped_box_id, growth.getDim()).grow(growth);
+      output_edges.getNeighborSet(mapped_box_id) = (*ei).second;
+      output_edges.getNeighborSet(mapped_box_id).grow(growth);
    }
 }
 
@@ -198,7 +198,7 @@ NeighborhoodSet::getNeighbors(
    BoxList& all_nabrs,
    const BlockId& block_id) const
 {
-   NeighborSet tmp_nabrs(all_nabrs.getDim());
+   NeighborSet tmp_nabrs;
    getNeighbors(tmp_nabrs);
    for (BoxSetSingleBlockIterator ei(tmp_nabrs, block_id);
         ei.isValid(); ++ei) {
@@ -374,7 +374,7 @@ void NeighborhoodSet::getFromDatabase(
             + tbox::Utilities::intToString(box_id.getPeriodicId().getPeriodicValue());
          iterator mi =
             insert(end(),
-                   std::pair<BoxId, BoxContainer>(box_id, BoxContainer(d_dim)));
+                   std::pair<BoxId, BoxContainer>(box_id, BoxContainer()));
          mi->second.getFromDatabase(*database.getDatabase(set_name));
       }
 

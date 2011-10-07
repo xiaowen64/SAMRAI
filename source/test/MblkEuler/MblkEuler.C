@@ -1625,7 +1625,7 @@ void MblkEuler::setPhysicalBoundaryConditions(
    const tbox::Pointer<hier::PatchGeometry> patch_geom =
       patch.getPatchGeometry();
    const hier::IntVector ratio = patch_geom->getRatio();
-   hier::BoxList domain_boxes(d_dim);
+   hier::BoxList domain_boxes;
    d_grid_geometry->computePhysicalDomain(domain_boxes, ratio,
       patch.getBox().getBlockId());
 
@@ -2468,7 +2468,7 @@ void MblkEuler::tagGradientDetectorCells(
       //
       if (ref == "USER_DEFINED") {
 
-         hier::BoxList refine_boxes(d_dim);
+         hier::BoxList refine_boxes;
          if (d_mblk_geometry->getRefineBoxes(refine_boxes,
                 patch.getBox().getBlockId().getBlockValue(),
                 level_number)) {
@@ -2540,7 +2540,7 @@ void MblkEuler::setMappedGridOnPatch(
    const tbox::Pointer<hier::PatchGeometry>
    patch_geom = patch.getPatchGeometry();
    hier::IntVector ratio = patch_geom->getRatio();
-   hier::BoxList domain_boxes(d_dim);
+   hier::BoxList domain_boxes;
    d_grid_geometry->computePhysicalDomain(domain_boxes, ratio,
       patch.getBox().getBlockId());
 

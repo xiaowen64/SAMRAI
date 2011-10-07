@@ -330,7 +330,7 @@ bool SingleLevelTestCase(
    const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
    const std::string& pattern_name = fill_pattern->getPatternName();
 
-   hier::BoxList level_boxes(dim);
+   hier::BoxList level_boxes;
    txt2boxes(levelboxes_txt, level_boxes);
 
    hier::Box domain_box(dim);

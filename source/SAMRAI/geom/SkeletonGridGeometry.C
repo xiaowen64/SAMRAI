@@ -102,10 +102,11 @@ SkeletonGridGeometry::SkeletonGridGeometry(
    const std::string& object_name,
    const hier::BoxList& domain,
    bool register_for_restart):
-   hier::GridGeometry(domain.getDim(), object_name,
+   hier::GridGeometry(domain.front().getDim(), object_name,
                       tbox::Pointer<hier::TransferOperatorRegistry>(
-                         new SAMRAITransferOperatorRegistry(domain.getDim())))
+                         new SAMRAITransferOperatorRegistry(domain.front().getDim())))
 {
+   TBOX_ASSERT(domain.size() > 0);
    TBOX_ASSERT(!object_name.empty());
 
    d_registered_for_restart = register_for_restart;
@@ -329,7 +330,7 @@ void SkeletonGridGeometry::getFromInput(
 
    if (!is_from_restart) {
 
-      hier::BoxList domain(dim);
+      hier::BoxList domain;
       if (db->keyExists("domain_boxes")) {
          domain = db->getDatabaseBoxArray("domain_boxes");
          if (domain.size() == 0) {

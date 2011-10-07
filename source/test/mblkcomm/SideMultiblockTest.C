@@ -586,7 +586,7 @@ bool SideMultiblockTest::verifyResults(
          hier::Box patch_side_box =
             pdat::SideGeometry::toSideBox(pbox, axis);
 
-         hier::BoxList tested_neighbors(d_dim);
+         hier::BoxList tested_neighbors;
 
          for (tbox::List<hier::GridGeometry::Neighbor>::
               Iterator ne(neighbors); ne; ne++) {
@@ -596,7 +596,7 @@ bool SideMultiblockTest::verifyResults(
             correct = ne().getBlockId().getBlockValue();
 
             hier::BoxList neighbor_ghost(ne().getTransformedDomain());
-            hier::BoxList neighbor_side_ghost(d_dim);
+            hier::BoxList neighbor_side_ghost;
             for (hier::BoxList::Iterator nn(neighbor_ghost);
                  nn != neighbor_ghost.end(); ++nn) {
                hier::Box neighbor_ghost_interior(

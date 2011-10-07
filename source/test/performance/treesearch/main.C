@@ -213,7 +213,7 @@ int main(
          /*
           * Generate the nodes from the boxes.
           */
-         hier::BoxSet nodes(dim);
+         hier::BoxSet nodes;
          for (hier::LocalId i(0); i < static_cast<int>(boxes.size()); ++i) {
             nodes.insert(nodes.orderedEnd(),
                hier::Box(boxes[i.getValue()], i, 0));
@@ -257,7 +257,7 @@ int main(
           * in a vector is almost twice as fast, probably due to the set having to
           * sort the output.
           */
-         hier::BoxSet overlap_set(dim);
+         hier::BoxSet overlap_set;
          t_search_tree_for_set->start();
          for (BoxVec::iterator bi = grown_boxes.begin();
               bi != grown_boxes.end();

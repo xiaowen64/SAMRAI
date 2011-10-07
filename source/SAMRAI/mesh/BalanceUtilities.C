@@ -325,7 +325,7 @@ void BalanceUtilities::privateInitializeBadCutPointsForBox(
    const hier::IntVector& bad_interval,
    const hier::BoxList& physical_domain)
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS3(box, bad_interval, physical_domain);
+   TBOX_DIM_ASSERT_CHECK_ARGS2(box, bad_interval);
 
    const tbox::Dimension dim(box.getDim());
 
@@ -731,7 +731,7 @@ void BalanceUtilities::privateRecursiveBisectionUniformSingleBox(
             cut_factor,
             bad_cut_points_for_boxlo);
 
-         hier::BoxList boxes_hi(dim);
+         hier::BoxList boxes_hi;
          tbox::List<double> work_hi;
 
          double box_hi_workload = (double)box_hi.size();
@@ -877,7 +877,7 @@ void BalanceUtilities::privateRecursiveBisectionNonuniformSingleBox(
             cut_factor,
             bad_cut_points_for_boxlo);
 
-         hier::BoxList boxes_hi(dim);
+         hier::BoxList boxes_hi;
          tbox::List<double> work_hi;
 
          double box_hi_workload = in_box_workload - box_lo_workload;
@@ -1037,8 +1037,6 @@ double BalanceUtilities::spatialBinPack(
 
    const int nboxes = boxes.size();
 
-   const tbox::Dimension dim(boxes.getDim());
-
    /*
     * compute offset which guarantees that the index space for all boxes
     * is positive.
@@ -1051,24 +1049,28 @@ double BalanceUtilities::spatialBinPack(
    /* construct array of spatialKeys */
    tbox::Array<SpatialKey> spatial_keys(nboxes);
    int i = 0;
-   for (hier::BoxList::Iterator itr(boxes); itr != boxes.end(); ++itr) {
 
-      /* compute center of box */
-      hier::IntVector center = (itr().upper() + itr().lower()) / 2;
+   if (nboxes > 0) {
+      const tbox::Dimension& dim = boxes.front().getDim();
 
-      if (dim == tbox::Dimension(1)) {
-         spatial_keys[i].setKey(center(0) - offset(0));
-      } else if (dim == tbox::Dimension(2)) {
-         spatial_keys[i].setKey(center(0) - offset(0), center(1) - offset(1));
-      } else if (dim == tbox::Dimension(3)) {
-         spatial_keys[i].setKey(center(0) - offset(0), center(1) - offset(1),
-            center(2) - offset(2));
-      } else {
-         TBOX_ERROR("BalanceUtilities::spatialBinPack error ..."
-            << "\n not implemented for DIM>3" << std::endl);
+      for (hier::BoxList::Iterator itr(boxes); itr != boxes.end(); ++itr) {
+
+         /* compute center of box */
+         hier::IntVector center = (itr().upper() + itr().lower()) / 2;
+
+         if (dim == tbox::Dimension(1)) {
+            spatial_keys[i].setKey(center(0) - offset(0));
+         } else if (dim == tbox::Dimension(2)) {
+            spatial_keys[i].setKey(center(0) - offset(0), center(1) - offset(1));
+         } else if (dim == tbox::Dimension(3)) {
+            spatial_keys[i].setKey(center(0) - offset(0), center(1) - offset(1),
+               center(2) - offset(2));
+         } else {
+            TBOX_ERROR("BalanceUtilities::spatialBinPack error ..."
+               << "\n not implemented for DIM>3" << std::endl);
+         }
+         ++i;
       }
-      ++i;
-
    }
 
    /*
@@ -1094,43 +1096,48 @@ double BalanceUtilities::spatialBinPack(
    /*
     * Copy unsorted data into temporaries and permute into sorted order
     */
+   if (nboxes > 0) {
+      const tbox::Dimension& dim = boxes.front().getDim();
 
-   tbox::Array<hier::Box> unsorted_boxes(nboxes, hier::Box(boxes.getDim()));
-   tbox::Array<double> unsorted_weights(nboxes);
+      tbox::Array<hier::Box> unsorted_boxes(nboxes, hier::Box(dim));
+      tbox::Array<double> unsorted_weights(nboxes);
 
-   i = 0;
-   for (hier::BoxList::Iterator itr(boxes); itr != boxes.end(); ++itr) {
-      unsorted_boxes[i] = *itr;
-      unsorted_weights[i] = weights[i];
-      ++i;
-   }
+      i = 0;
+      for (hier::BoxList::Iterator itr(boxes); itr != boxes.end(); ++itr) {
+         unsorted_boxes[i] = *itr;
+         unsorted_weights[i] = weights[i];
+         ++i;
+      }
 
-   i = 0;
-   for (hier::BoxList::Iterator itr(boxes); itr != boxes.end(); ++itr) {
-      *itr = unsorted_boxes[permutation[i]];
-      weights[i] = unsorted_weights[permutation[i]];
-      ++i;
-   }
+      i = 0;
+      for (hier::BoxList::Iterator itr(boxes); itr != boxes.end(); ++itr) {
+         *itr = unsorted_boxes[permutation[i]];
+         weights[i] = unsorted_weights[permutation[i]];
+         ++i;
+      }
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-   /*
-    * Verify that the spatial keys are sorted in non-decreasing order
-    */
+      /*
+       * Verify that the spatial keys are sorted in non-decreasing order
+       */
 
-   tbox::Array<SpatialKey> unsorted_keys(nboxes);
-   for (i = 0; i < nboxes; i++) {
-      unsorted_keys[i] = spatial_keys[i];
-   }
+      tbox::Array<SpatialKey> unsorted_keys(nboxes);
+      for (i = 0; i < nboxes; i++) {
+         unsorted_keys[i] = spatial_keys[i];
+      }
 
-   for (i = 0; i < nboxes; i++) {
-      spatial_keys[i] = unsorted_keys[permutation[i]];
-   }
+      for (i = 0; i < nboxes; i++) {
+         spatial_keys[i] = unsorted_keys[permutation[i]];
+      }
 
-   for (i = 0; i < nboxes - 1; i++) {
-      TBOX_ASSERT(spatial_keys[i] <= spatial_keys[i + 1]);
-   }
+      for (i = 0; i < nboxes - 1; i++) {
+         TBOX_ASSERT(spatial_keys[i] <= spatial_keys[i + 1]);
+      }
 #endif
 
+   }
+
+ 
    /* Find average workload */
 
    double avg_work = 0.0;
@@ -1244,7 +1251,7 @@ void BalanceUtilities::recursiveBisectionUniform(
             bad_interval,
             physical_domain);
 
-         hier::BoxList tempboxes(dim);
+         hier::BoxList tempboxes;
          tbox::List<double> temploads;
          privateRecursiveBisectionUniformSingleBox(
             tempboxes,
@@ -1330,7 +1337,7 @@ void BalanceUtilities::recursiveBisectionNonuniform(
             bad_interval,
             physical_domain);
 
-         hier::BoxList tempboxes(dim);
+         hier::BoxList tempboxes;
          tbox::List<double> temploads;
          privateRecursiveBisectionNonuniformSingleBox(
             tempboxes,
@@ -1582,8 +1589,6 @@ void BalanceUtilities::sortDescendingBoxWorkloads(
    TBOX_ASSERT(boxes.size() == workload.getSize());
 #endif
 
-   const tbox::Dimension dim(boxes.getDim());
-
    /*
     * Create the permutation array that represents indices in sorted order
     */
@@ -1612,33 +1617,36 @@ void BalanceUtilities::sortDescendingBoxWorkloads(
    /*
     * Copy unsorted data into temporaries and permute into sorted order
     */
+   if (nboxes > 0) {
+      const tbox::Dimension& dim(boxes.front().getDim());
 
-   tbox::Array<hier::Box> unsorted_boxes(nboxes, hier::Box(dim));
-   tbox::Array<double> unsorted_workload(nboxes);
+      tbox::Array<hier::Box> unsorted_boxes(nboxes, hier::Box(dim));
+      tbox::Array<double> unsorted_workload(nboxes);
 
-   int l = 0;
-   for (hier::BoxList::Iterator itr(boxes); itr != boxes.end(); ++itr) {
-      unsorted_boxes[l] = *itr;
-      unsorted_workload[l] = workload[l];
-      ++l;
-   }
+      int l = 0;
+      for (hier::BoxList::Iterator itr(boxes); itr != boxes.end(); ++itr) {
+         unsorted_boxes[l] = *itr;
+         unsorted_workload[l] = workload[l];
+         ++l;
+      }
 
-   int m = 0;
-   for (hier::BoxList::Iterator itr(boxes); itr != boxes.end(); ++itr) {
-      *itr = unsorted_boxes[permutation[m]];
-      workload[m] = unsorted_workload[permutation[m]];
-      ++m;
-   }
+      int m = 0;
+      for (hier::BoxList::Iterator itr(boxes); itr != boxes.end(); ++itr) {
+         *itr = unsorted_boxes[permutation[m]];
+         workload[m] = unsorted_workload[permutation[m]];
+         ++m;
+      }
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-   /*
-    * Verify that the workload is sorted in nonincreasing order
-    */
+      /*
+       * Verify that the workload is sorted in nonincreasing order
+       */
 
-   for (int n = 0; n < nboxes - 1; n++) {
-      TBOX_ASSERT(workload[n] >= workload[n + 1]);
-   }
+      for (int n = 0; n < nboxes - 1; n++) {
+         TBOX_ASSERT(workload[n] >= workload[n + 1]);
+      }
 #endif
+   }
 }
 
 /*

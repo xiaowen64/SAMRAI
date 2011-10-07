@@ -546,13 +546,13 @@ bool NodeMultiblockTest::verifyResults(
       hier::Box patch_node_box =
          pdat::NodeGeometry::toNodeBox(pbox);
 
-      hier::BoxList sing_node_boxlist(d_dim);
+      hier::BoxList sing_node_boxlist;
       for (hier::BoxList::Iterator si(singularity);
            si != singularity.end(); ++si) {
          sing_node_boxlist.pushFront(pdat::NodeGeometry::toNodeBox(si()));
       }
 
-      hier::BoxList tested_neighbors(d_dim);
+      hier::BoxList tested_neighbors;
 
       for (tbox::List<hier::GridGeometry::Neighbor>::
            Iterator ne(neighbors); ne; ne++) {
@@ -561,7 +561,7 @@ bool NodeMultiblockTest::verifyResults(
 
          hier::BoxList neighbor_ghost(ne().getTransformedDomain());
 
-         hier::BoxList neighbor_node_ghost(d_dim);
+         hier::BoxList neighbor_node_ghost;
          for (hier::BoxList::Iterator nn(neighbor_ghost);
               nn != neighbor_ghost.end(); ++nn) {
             hier::Box neighbor_ghost_interior(

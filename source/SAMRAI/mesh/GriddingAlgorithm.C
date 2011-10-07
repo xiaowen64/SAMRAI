@@ -2382,7 +2382,7 @@ void GriddingAlgorithm::readLevelBoxes(
          tag_ln);
 
    int fine_level_number = tag_ln + 1;
-   hier::BoxList boxes_to_refine(d_dim);
+   hier::BoxList boxes_to_refine;
 
    /*
     * Access the user supplied refine boxes.  The
@@ -2608,7 +2608,7 @@ void GriddingAlgorithm::fillTagsFromBoxLevel(
 
       const hier::BoxId& mapped_box_id(patch->getBox().getId());
 
-      NeighborSet neighbors(d_dim);
+      NeighborSet neighbors;
 
       oca.extractNeighbors(
          neighbors,
@@ -2870,7 +2870,7 @@ void GriddingAlgorithm::findRefinementBoxes(
        * findBoxesContainingTags interface.  The interfaces should be
        * changed to support multiblock.
        */
-      hier::BoxSet accumulated_mapped_boxes(d_dim);
+      hier::BoxSet accumulated_mapped_boxes;
       for (int bn = 0; bn < nblocks; ++bn) {
          /*
           * Determine single smallest bounding box for all nesting boxes.
@@ -3945,7 +3945,7 @@ void GriddingAlgorithm::growBoxesWithinNestingDomain(
          continue;
       }
 
-      hier::BoxList nesting_domain(d_dim);
+      hier::BoxList nesting_domain;
 
       refined_domain_search_tree->findOverlapBoxes(
          nesting_domain,

@@ -91,7 +91,6 @@ TreeLoadBalancer::TreeLoadBalancer(
    d_mpi(tbox::SAMRAI_MPI::commNull),
    d_min_size(d_dim),
    d_max_size(d_dim),
-   d_domain_boxes(d_dim),
    d_bad_interval(d_dim),
    d_cut_factor(d_dim),
    // Output control.

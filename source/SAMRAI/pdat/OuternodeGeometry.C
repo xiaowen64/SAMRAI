@@ -131,7 +131,7 @@ OuternodeGeometry::doOverlap(
 
    const tbox::Dimension& dim(src_mask.getDim());
 
-   hier::BoxList dst_boxes(dim);
+   hier::BoxList dst_boxes;
 
    // Perform a quick-and-dirty intersection to see if the boxes might overlap
 
@@ -196,7 +196,7 @@ OuternodeGeometry::doOverlap(
       }  // loop over dim
 
       if (dst_restrict_boxes.size() && dst_boxes.size()) {
-         hier::BoxList node_restrict_boxes(dim);
+         hier::BoxList node_restrict_boxes;
          for (hier::BoxList::ConstIterator b(dst_restrict_boxes);
               b != dst_restrict_boxes.end(); ++b) {
             node_restrict_boxes.pushBack(NodeGeometry::toNodeBox(b()));
@@ -238,7 +238,7 @@ OuternodeGeometry::doOverlap(
 
    const tbox::Dimension& dim(src_mask.getDim());
 
-   hier::BoxList src_boxes(dim);
+   hier::BoxList src_boxes;
 
    // Perform a quick-and-dirty intersection to see if the boxes might overlap
 
@@ -302,7 +302,7 @@ OuternodeGeometry::doOverlap(
       }  // loop over dim
 
       if (dst_restrict_boxes.size() && src_boxes.size()) {
-         hier::BoxList node_restrict_boxes(dim);
+         hier::BoxList node_restrict_boxes;
          for (hier::BoxList::ConstIterator b(dst_restrict_boxes);
               b != dst_restrict_boxes.end(); ++b) {
             node_restrict_boxes.pushBack(NodeGeometry::toNodeBox(b()));
@@ -344,7 +344,7 @@ OuternodeGeometry::doOverlap(
 
    const tbox::Dimension& dim(src_mask.getDim());
 
-   hier::BoxList dst_boxes(dim);
+   hier::BoxList dst_boxes;
 
    // Perform a quick-and-dirty intersection to see if the boxes might overlap
 
@@ -433,7 +433,7 @@ OuternodeGeometry::doOverlap(
       }  // loop over dst dim
 
       if (dst_restrict_boxes.size() && dst_boxes.size()) {
-         hier::BoxList node_restrict_boxes(dim);
+         hier::BoxList node_restrict_boxes;
          for (hier::BoxList::ConstIterator b(dst_restrict_boxes);
               b != dst_restrict_boxes.end(); ++b) {
             node_restrict_boxes.pushBack(NodeGeometry::toNodeBox(b()));
@@ -462,7 +462,7 @@ OuternodeGeometry::setUpOverlap(
    const hier::BoxList& boxes,
    const hier::Transformation& transformation) const
 {
-   hier::BoxList dst_boxes(boxes.getDim());
+   hier::BoxList dst_boxes;
 
    for (hier::BoxList::ConstIterator b(boxes); b != boxes.end(); ++b) {
       hier::Box node_box(NodeGeometry::toNodeBox(b()));

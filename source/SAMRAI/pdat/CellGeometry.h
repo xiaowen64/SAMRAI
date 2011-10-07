@@ -93,7 +93,7 @@ public:
       const bool overwrite_interior,
       const hier::Transformation& transformation,
       const bool retry,
-      const hier::BoxList& dst_restrict_boxes = hier::BoxList(tbox::Dimension(0))) const;
+      const hier::BoxList& dst_restrict_boxes = hier::BoxList()) const;
 
    /*!
     * @brief Compute the cell-centered destination boxes that represent

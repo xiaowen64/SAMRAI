@@ -588,9 +588,9 @@ bool EdgeMultiblockTest::verifyResults(
          hier::Box patch_edge_box =
             pdat::EdgeGeometry::toEdgeBox(pbox, axis);
 
-         hier::BoxList tested_neighbors(d_dim);
+         hier::BoxList tested_neighbors;
 
-         hier::BoxList sing_edge_boxlist(d_dim);
+         hier::BoxList sing_edge_boxlist;
          for (hier::BoxList::Iterator si(singularity); si != singularity.end();
               ++si) {
             sing_edge_boxlist.pushFront(
@@ -606,7 +606,7 @@ bool EdgeMultiblockTest::verifyResults(
 
             hier::BoxList neighbor_ghost(ne().getTransformedDomain());
 
-            hier::BoxList neighbor_edge_ghost(d_dim);
+            hier::BoxList neighbor_edge_ghost;
             for (hier::BoxList::Iterator nn(neighbor_ghost);
                  nn != neighbor_ghost.end(); ++nn) {
                hier::Box neighbor_ghost_interior(

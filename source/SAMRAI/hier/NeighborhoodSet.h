@@ -51,7 +51,7 @@ public:
    typedef BoxSet NeighborSet;
 
    //! @brief Default constructor creates an empty container.
-   NeighborhoodSet(const tbox::Dimension& dim);
+   NeighborhoodSet();
 
    /*!
     * @brief Copy constructor.
@@ -183,14 +183,13 @@ public:
       }
    } 
 
-   NeighborSet& getNeighborSet(const key_type& k,
-                               const tbox::Dimension& dim)
+   NeighborSet& getNeighborSet(const key_type& k)
    {
       iterator iter = d_map.find(k);
       if (iter != end()) {
          return iter->second;
       } else {
-         BoxContainer neighbor_set(dim);
+         BoxContainer neighbor_set;
          std::pair<iterator,bool> ret =
             d_map.insert(std::pair<key_type, BoxContainer>(k, neighbor_set));
          return ret.first->second;
@@ -408,11 +407,6 @@ public:
    getFromDatabase(
       tbox::Database& database);
 
-   const tbox::Dimension& getDim() const
-   {
-      return d_dim;
-   }
-
    //@}
 
    /*!
@@ -489,8 +483,6 @@ private:
     * Static integer constant describing class's version number.
     */
    static const int HIER_EDGE_SET_VERSION;
-
-   tbox::Dimension d_dim;
 
    /*!
     * @brief NeighborhoodSet is just a wrapper around an STL map.

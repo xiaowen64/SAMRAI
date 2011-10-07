@@ -1478,13 +1478,13 @@ void LinAdv::boundaryReset(
 
    const tbox::Pointer<geom::CartesianPatchGeometry> patch_geom =
       patch.getPatchGeometry();
-   hier::BoxList domain_boxes(d_dim);
+   hier::BoxList domain_boxes;
    d_grid_geometry->computePhysicalDomain(domain_boxes,
       patch_geom->getRatio(),
       patch.getBox().getBlockId());
 
    pdat::CellIndex icell(ifirst);
-   hier::BoxList bdrybox(d_dim);
+   hier::BoxList bdrybox;
    hier::Index ibfirst = ifirst;
    hier::Index iblast = ilast;
    int bdry_case, bside;

@@ -376,7 +376,7 @@ void MblkGeometry::getFromInput(
             max_ln++;
          }
       }
-      d_refine_boxes[nb].resizeArray(max_ln, hier::BoxList(d_dim));
+      d_refine_boxes[nb].resizeArray(max_ln);
 
       for (ln = 0; ln < max_ln; ln++) {
          sprintf(block_name, "refine_boxes_%d_%d", nb, ln);

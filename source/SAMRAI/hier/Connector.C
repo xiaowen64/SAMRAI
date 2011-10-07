@@ -66,8 +66,6 @@ Connector::Connector():
    d_ratio(tbox::Dimension::getInvalidDimension()),
    d_ratio_is_exact(false),
    d_head_coarser(false),
-   d_relationships(tbox::Dimension::getInvalidDimension()),
-   d_global_relationships(tbox::Dimension::getInvalidDimension()),
    d_mpi(tbox::SAMRAI_MPI::commNull),
    d_parallel_state(BoxLevel::DISTRIBUTED),
    d_global_number_of_neighbor_sets(0),
@@ -115,8 +113,6 @@ Connector::Connector(
    d_base_width(base_width.getDim(), 0),
    d_ratio(base_width.getDim(), 0),
    d_head_coarser(false),
-   d_relationships(base_width.getDim()),
-   d_global_relationships(base_width.getDim()),
    d_mpi(base_mapped_box_level.getMPI()),
    d_parallel_state(BoxLevel::DISTRIBUTED),
    d_global_number_of_neighbor_sets(0),
@@ -185,13 +181,12 @@ void Connector::insertNeighbors(
    const tbox::Dimension& dim = d_ratio.getDim();
    if (d_parallel_state == BoxLevel::GLOBALIZED) {
       NeighborSet& global_nabrs =
-         d_global_relationships.getNeighborSet(
-            mapped_box_id, dim);
+         d_global_relationships.getNeighborSet(mapped_box_id);
       global_nabrs.insert(neighbors.orderedBegin(),
                           neighbors.orderedEnd());
    }
    if (mapped_box_id.getOwnerRank() == getBase().getMPI().getRank()) {
-      NeighborSet& nabrs = d_relationships.getNeighborSet(mapped_box_id, dim);
+      NeighborSet& nabrs = d_relationships.getNeighborSet(mapped_box_id);
       nabrs.insert(neighbors.orderedBegin(),
                    neighbors.orderedEnd());
    }
@@ -322,7 +317,7 @@ void Connector::removePeriodicLocalNeighbors()
    TBOX_ASSERT(isInitialized());
    for (NeighborhoodSet::iterator ei = d_relationships.begin();
         ei != d_relationships.end(); ++ei) {
-      d_relationships.getNeighborSet(ei->first, d_ratio.getDim()).removePeriodicImageBoxes();
+      d_relationships.getNeighborSet(ei->first).removePeriodicImageBoxes();
    }
    return;
 }
@@ -506,7 +501,7 @@ void Connector::acquireRemoteNeighborhoods_unpack(
             const BoxId mapped_box_id(local_id, n, block_id);
 
             NeighborSet& nabrs =
-               d_global_relationships.getNeighborSet(mapped_box_id, dim);
+               d_global_relationships.getNeighborSet(mapped_box_id);
             Box nabr(dim);
             for (int nn = 0; nn < num_nabrs; ++nn) {
                nabr.getFromIntBuffer(ptr);
@@ -1758,8 +1753,7 @@ void Connector::computeNeighborhoodDifferences(
       if (bi != right.end()) {
          const NeighborSet& bnabrs = bi->second;
          // Remove bi from ai.  Put results in a_minus_b.
-         NeighborSet& diff = drelationships.getNeighborSet(mapped_box_id,
-                                                           left.d_base_width.getDim());
+         NeighborSet& diff = drelationships.getNeighborSet(mapped_box_id);
 
          //equivalent of stl set_difference
          BoxContainer::OrderedConstIterator na = anabrs.orderedBegin();

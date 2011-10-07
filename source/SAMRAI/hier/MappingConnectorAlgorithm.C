@@ -1008,8 +1008,8 @@ void MappingConnectorAlgorithm::privateModify_receiveAndUnpack(
             }
 
             // Get the referenced neighbor Boxes.
-            BoxSet referenced_base_nabrs(dim);
-            BoxSet referenced_head_nabrs(dim);
+            BoxSet referenced_base_nabrs;
+            BoxSet referenced_head_nabrs;
             const int offset = *(ptr++);
             const int* ref_mapped_box_ptr = peer->getRecvData() + offset;
             const int n_reference_base_mapped_boxes = *(ref_mapped_box_ptr++);
@@ -1140,7 +1140,7 @@ void MappingConnectorAlgorithm::privateModify_discoverAndSend(
     * owners first.  Note the comparator BoxOwnerFirst used to
     * achieve this ordering.
     */
-   BoxSet visible_anchor_nabrs(dim), visible_new_nabrs(dim);
+   BoxSet visible_anchor_nabrs, visible_new_nabrs;
    InvertedNeighborhoodSet anchor_eto_old, new_eto_old;
    for (Connector::ConstNeighborhoodIterator ei = old_to_anchor.begin();
         ei != old_to_anchor.end(); ++ei) {
@@ -1304,8 +1304,8 @@ void MappingConnectorAlgorithm::privateModify_discoverAndSend(
       send_mesg.insert(send_mesg.end(), 3, 0);
 
       // Mapped_boxes referenced in the message, used when adding ref section.
-      BoxSet referenced_anchor_nabrs(dim); // Referenced neighbors in anchor.
-      BoxSet referenced_new_nabrs(dim); // Referenced neighbors in new.
+      BoxSet referenced_anchor_nabrs; // Referenced neighbors in anchor.
+      BoxSet referenced_new_nabrs; // Referenced neighbors in new.
 
       /*
        * Find locally visible new neighbors for all anchor

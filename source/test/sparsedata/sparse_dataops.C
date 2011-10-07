@@ -109,8 +109,8 @@ int main(
       *   (NOTE: it is setup to work on at most 2 processors)
       *
       ********************************************************************/
-      hier::BoxList coarse_domain(dim);
-      hier::BoxList fine_domain(dim);
+      hier::BoxList coarse_domain;
+      hier::BoxList fine_domain;
       hier::IntVector ratio(dim, 2);
 
       tbox::Pointer<geom::CartesianGridGeometry> geometry =

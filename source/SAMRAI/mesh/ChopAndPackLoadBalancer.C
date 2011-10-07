@@ -321,7 +321,7 @@ void ChopAndPackLoadBalancer::loadBalanceBoxLevel(
    globalized_input_mapped_box_level.setParallelState(
       hier::BoxLevel::GLOBALIZED);
 
-   hier::BoxList in_boxes(d_dim);
+   hier::BoxList in_boxes;
    const hier::BoxSet globalized_input_mapped_boxes(
       globalized_input_mapped_box_level.getGlobalBoxes());
    for (hier::RealBoxConstIterator bi(globalized_input_mapped_boxes);
@@ -329,10 +329,10 @@ void ChopAndPackLoadBalancer::loadBalanceBoxLevel(
       in_boxes.pushBack(*bi);
    }
 
-   hier::BoxList physical_domain(d_dim);
+   hier::BoxList physical_domain;
    domain_mapped_box_level.getGlobalBoxes(physical_domain);
 
-   hier::BoxList out_boxes(d_dim);
+   hier::BoxList out_boxes;
    hier::ProcessorMapping mapping;
 
    loadBalanceBoxes(
@@ -464,7 +464,7 @@ void ChopAndPackLoadBalancer::loadBalanceBoxes(
     * if it is.  So shortcut it for empty in_boxes.
     */
    if (in_boxes.isEmpty()) {
-      out_boxes = hier::BoxList(d_dim);
+      out_boxes = hier::BoxList();
       return;
    }
 
@@ -775,7 +775,7 @@ void ChopAndPackLoadBalancer::chopBoxesWithUniformWorkload(
    double work_factor = getMaxWorkloadFactor(level_number);
    double average_work = work_factor * total_work / mpi.getSize();
 
-   hier::BoxList tmp_box_list(d_dim);
+   hier::BoxList tmp_box_list;
    tbox::List<double> tmp_work_list;
    BalanceUtilities::recursiveBisectionUniform(tmp_box_list,
       tmp_work_list,
@@ -962,7 +962,7 @@ void ChopAndPackLoadBalancer::chopBoxesWithNonuniformWorkload(
    double work_factor = getMaxWorkloadFactor(level_number);
    double average_work = work_factor * total_work / mpi.getSize();
 
-   hier::BoxList tmp_box_list(d_dim);
+   hier::BoxList tmp_box_list;
    tbox::List<double> tmp_work_list;
    BalanceUtilities::recursiveBisectionNonuniform(tmp_box_list,
       tmp_work_list,
@@ -1024,10 +1024,8 @@ void ChopAndPackLoadBalancer::exchangeBoxListsAndWeightArrays(
    tbox::Array<double>& weights_out,
    const tbox::SAMRAI_MPI& mpi) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(box_list_in, box_list_out);
    TBOX_ASSERT(box_list_in.size() == weights_in.getSize());
 
-   const tbox::Dimension& dim(box_list_in.getDim());
 
    /*
     * allocate send and receive buffers, and set array sizes
@@ -1046,13 +1044,13 @@ void ChopAndPackLoadBalancer::exchangeBoxListsAndWeightArrays(
    }
 #endif
 
-   int buf_size_in = size_in * dim.getValue() * 2;
-   int buf_size_out = size_out * dim.getValue() * 2;
+   int buf_size_in = size_in * d_dim.getValue() * 2;
+   int buf_size_out = size_out * d_dim.getValue() * 2;
 
    int curr_box_list_out_size = box_list_out.size();
    if (size_out > curr_box_list_out_size) {
       for (int i = curr_box_list_out_size; i < size_out; ++i) {
-         box_list_out.pushBack(hier::Box(dim));
+         box_list_out.pushBack(hier::Box(d_dim));
       }
    } else if (size_out < curr_box_list_out_size) {
       for (int i = size_out; i < curr_box_list_out_size; ++i) {
@@ -1083,7 +1081,7 @@ void ChopAndPackLoadBalancer::exchangeBoxListsAndWeightArrays(
     */
    int offset = 0;
    for (hier::BoxList::ConstIterator x(box_list_in); x != box_list_in.end(); ++x) {
-      for (int i = 0; i < dim.getValue(); ++i) {
+      for (int i = 0; i < d_dim.getValue(); ++i) {
          buf_in_ptr[offset++] = x().lower(i);
          buf_in_ptr[offset++] = x().upper(i);
       }
@@ -1111,7 +1109,7 @@ void ChopAndPackLoadBalancer::exchangeBoxListsAndWeightArrays(
       &displs[0],
       MPI_INT);
 
-   const int ints_per_box = dim.getValue() * 2;
+   const int ints_per_box = d_dim.getValue() * 2;
    for (size_t i = 0; i < displs.size(); ++i) {
       counts[i] *= ints_per_box;
       displs[i] *= ints_per_box;
@@ -1123,7 +1121,7 @@ void ChopAndPackLoadBalancer::exchangeBoxListsAndWeightArrays(
     */
    offset = 0;
    for (hier::BoxList::Iterator b(box_list_out); b != box_list_out.end(); ++b) {
-      for (int j = 0; j < dim.getValue(); ++j) {
+      for (int j = 0; j < d_dim.getValue(); ++j) {
          b().lower(j) = buf_out_ptr[offset++];
          b().upper(j) = buf_out_ptr[offset++];
       }

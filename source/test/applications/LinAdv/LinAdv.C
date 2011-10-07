@@ -1453,11 +1453,11 @@ void LinAdv::boundaryReset(
 
    const tbox::Pointer<geom::CartesianPatchGeometry> patch_geom =
       patch.getPatchGeometry();
-   hier::BoxList domain_boxes(d_dim);
+   hier::BoxList domain_boxes;
    d_grid_geometry->computePhysicalDomain(domain_boxes, patch_geom->getRatio(), hier::BlockId::zero());
 
    pdat::CellIndex icell(ifirst);
-   hier::BoxList bdrybox(d_dim);
+   hier::BoxList bdrybox;
    hier::Index ibfirst = ifirst;
    hier::Index iblast = ilast;
    int bdry_case = 0;
@@ -1845,7 +1845,7 @@ void LinAdv::tagGradientDetectorCells(
    tbox::Pointer<pdat::CellData<int> > tags = patch.getPatchData(tag_indx);
 
    hier::Box pbox(patch.getBox());
-   hier::BoxList domain_boxes(d_dim);
+   hier::BoxList domain_boxes;
    d_grid_geometry->computePhysicalDomain(domain_boxes, patch_geom->getRatio(), hier::BlockId::zero());
    /*
     * Construct domain bounding box

@@ -3673,7 +3673,7 @@ void VisItDataWriter::writeParentChildInfoToSummaryHDFFile(
           */
          if (hierarchy->getGridGeometry()->getNumberBlocks() == 1) {
 
-            hier::BoxSet non_per_child_boxes(d_dim);
+            hier::BoxSet non_per_child_boxes;
             for (hier::RealBoxConstIterator gi(global_child_boxes);
                  gi.isValid(); ++gi) {
                non_per_child_boxes.insert(*gi);

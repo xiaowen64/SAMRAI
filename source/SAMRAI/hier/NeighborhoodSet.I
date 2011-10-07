@@ -13,8 +13,7 @@ namespace SAMRAI {
 namespace hier {
 
 SAMRAI_INLINE_KEYWORD
-NeighborhoodSet::NeighborhoodSet(const tbox::Dimension& dim):
-   d_dim(dim),
+NeighborhoodSet::NeighborhoodSet() :
    d_map()
 {
 }
@@ -22,7 +21,6 @@ NeighborhoodSet::NeighborhoodSet(const tbox::Dimension& dim):
 SAMRAI_INLINE_KEYWORD
 NeighborhoodSet::NeighborhoodSet(
    const NeighborhoodSet& r):
-   d_dim(r.d_dim),
    d_map(r.d_map)
 {
 }

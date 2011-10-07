@@ -40,13 +40,11 @@ BoxContainer::BoxContainer(
    Iterator first,
    Iterator last,
    bool ordered):
-   d_dim(first().getDim()),
    d_list(),
    d_set_created(ordered)
 {
    while (first != last) {
-      TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(d_dim, first());
-      d_list.push_back(first());
+      pushBack(first());
       ++first;
    }
    if (d_set_created) {
@@ -57,8 +55,6 @@ BoxContainer::BoxContainer(
 BoxContainer& BoxContainer::operator = (
    const BoxContainer& rhs)
 {
-   TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(d_dim, rhs);
-
    if (this != &rhs) {
       clear();
       d_list = rhs.d_list;
@@ -78,7 +74,6 @@ BoxContainer& BoxContainer::operator = (
 
    const int n = rhs.size();
    for (int j = 0; j < n; j++) {
-      TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(d_dim, rhs[j]);
       pushBack(Box(rhs[j]));
    }
    d_set_created = false;
@@ -88,20 +83,16 @@ BoxContainer& BoxContainer::operator = (
 
 BoxContainer::BoxContainer(
    const tbox::Array<tbox::DatabaseBox>& other):
-   d_dim(other.size() == 0 ? tbox::Dimension::getInvalidDimension() :
-         other[0].getDim()),
    d_set_created(false)
 {
    const int n = other.size();
    for (int j = 0; j < n; j++) {
-      TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(d_dim, other[j]);
       pushBack(Box(other[j]));
    }
 }
 
 void BoxContainer::insertAfter(Iterator iter, const Box& item)
 {
-   TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(d_dim, item);
    Iterator tmp = iter;
    ++tmp;
    if (tmp == end()) {
@@ -148,9 +139,10 @@ void BoxContainer::simplify()
    }
 
    if (!isEmpty()) {
+      const tbox::Dimension dim(d_list.front().getDim());
 
-      BoxContainer notCanonical(d_dim);
-      for (int d = d_dim.getValue() - 1; d >= 0; d--) {
+      BoxContainer notCanonical;
+      for (int d = dim.getValue() - 1; d >= 0; d--) {
          notCanonical.spliceBack(*this);
          while (!notCanonical.isEmpty()) {
             Box tryMe = notCanonical.front();
@@ -171,7 +163,7 @@ void BoxContainer::simplify()
                   const Index& bh = tryMe.upper();
 
                   combineDaPuppies = true;
-                  for (int du = d + 1; du < d_dim.getValue(); du++) {
+                  for (int du = d + 1; du < dim.getValue(); du++) {
                      if ((al(du) != bl(du)) || (ah(du) != bh(du))) {
                         combineDaPuppies = false;
                         break;
@@ -475,15 +467,18 @@ BoxContainer::OrderedConstIterator BoxContainer::upper_bound(const Box& box) con
 void BoxContainer::rotate(
    const Transformation::RotationIdentifier rotation_ident)
 {
-   if (getDim().getValue() == 2 || getDim().getValue() == 3) {
-      for (Iterator i(*this); i != end(); ++i) {
-         i().rotate(rotation_ident);
-      }
-   } else {
-      NULL_USE(rotation_ident);
+   if (!isEmpty()) {
+      const tbox::Dimension& dim = d_list.front().getDim();
+      if (dim.getValue() == 2 || dim.getValue() == 3) {
+         for (Iterator i(*this); i != end(); ++i) {
+            i().rotate(rotation_ident);
+         }
+      } else {
+         NULL_USE(rotation_ident);
 
-      TBOX_ERROR("BoxContainer::rotate() error ..."
-         << "\n   Rotation only implemented for 2D and 3D " << std::endl);
+         TBOX_ERROR("BoxContainer::rotate() error ..."
+            << "\n   Rotation only implemented for 2D and 3D " << std::endl);
+      }
    }
 
    if (d_set_created) {
@@ -534,8 +529,10 @@ Box BoxContainer::getBoundingBox() const
       Box empty(dim);
       return empty;
    } else {
-      Box bbox(d_dim);
-      for (ConstIterator i(*this); i != end(); ++i) {
+      ConstIterator i = begin();
+      Box bbox(*i);
+      ++i;
+      for ( ; i != end(); ++i) {
          bbox += i();
       }
 
@@ -1081,7 +1078,7 @@ BoxContainer::getSingleBlockBoxContainer(
    const BlockId& which_block) const
 {
    BoxSetSingleBlockIterator itr(*this, which_block);
-   BoxContainer* boxes_in_block = new BoxContainer(dim);
+   BoxContainer* boxes_in_block = new BoxContainer();
    while (itr.isValid()) {
       const Box& mapped_box = *itr;
       TBOX_ASSERT(dim == mapped_box.getDim());

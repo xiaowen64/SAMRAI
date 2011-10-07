@@ -283,7 +283,7 @@ SAMRAI_INLINE_KEYWORD
 void Connector::makeEmptyLocalNeighborhood(
       const BoxId& box_id)
 {
-   d_relationships.getNeighborSet(box_id, d_ratio.getDim());
+   d_relationships.getNeighborSet(box_id);
 }
 
 /*

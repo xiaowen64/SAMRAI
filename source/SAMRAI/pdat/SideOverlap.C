@@ -27,7 +27,7 @@ SideOverlap::SideOverlap(
    d_transformation(transformation)
 {
    const tbox::Dimension& dim = d_transformation.getOffset().getDim();
-   d_dst_boxes.resizeArray(boxes.getSize(), hier::BoxList(dim));
+   d_dst_boxes.resizeArray(boxes.getSize());
 
    for (int d = 0; d < dim.getValue(); d++) {
       d_dst_boxes[d] = boxes[d];

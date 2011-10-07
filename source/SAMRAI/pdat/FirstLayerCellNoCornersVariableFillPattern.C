@@ -70,7 +70,7 @@ FirstLayerCellNoCornersVariableFillPattern::calculateOverlap(
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(dst_patch_box, src_mask);
 
-   hier::BoxList stencil_boxes(dst_patch_box.getDim());
+   hier::BoxList stencil_boxes;
    computeStencilBoxes(stencil_boxes, dst_patch_box);
 
    return dst_geometry.calculateOverlap(src_geometry,
@@ -154,7 +154,7 @@ FirstLayerCellNoCornersVariableFillPattern::computeFillBoxesOverlap(
 {
    NULL_USE(pdf);
 
-   hier::BoxList stencil_boxes(patch_box.getDim());
+   hier::BoxList stencil_boxes;
    computeStencilBoxes(stencil_boxes, patch_box);
 
    hier::BoxList overlap_boxes(fill_boxes);

@@ -303,7 +303,7 @@ void StandardTagAndInitialize::tagCellsForRefinement(
     */
    if (d_use_refine_boxes) {
 
-      hier::BoxList refine_boxes(dim);
+      hier::BoxList refine_boxes;
       getUserSuppliedRefineBoxes(refine_boxes, level_number, regrid_time);
 
       tbox::Pointer<hier::PatchLevel> level =
@@ -915,7 +915,6 @@ StandardTagAndInitialize::preprocessRichardsonExtrapolation(
 bool StandardTagAndInitialize::coarsestLevelBoxesOK(
    const hier::BoxList& boxes) const
 {
-   TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(getDim(), boxes);
    TBOX_ASSERT(boxes.size() > 0);
 
    bool boxes_ok = true;

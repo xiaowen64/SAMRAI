@@ -123,8 +123,8 @@ int main(
 
       hier::IntVector ratio(dim2d, 2);
 
-      hier::BoxList coarse_domain(dim2d);
-      hier::BoxList fine_boxes(dim2d);
+      hier::BoxList coarse_domain;
+      hier::BoxList fine_boxes;
       coarse_domain.pushBack(coarse0);
       coarse_domain.pushBack(coarse1);
       fine_boxes.pushBack(fine0);

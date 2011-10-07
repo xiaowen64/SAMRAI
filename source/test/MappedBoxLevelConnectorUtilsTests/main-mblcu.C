@@ -233,7 +233,7 @@ int main(
        * Set up the domain.
        */
 
-      hier::BoxSet domain_mapped_boxes(dim);
+      hier::BoxSet domain_mapped_boxes;
       grid_geometry->computePhysicalDomain(
          domain_mapped_boxes, one_vector);
       tbox::plog << "domain_mapped_boxes:\n"
@@ -248,7 +248,7 @@ int main(
        * the domain but without exclude* boxes.
        */
 
-      hier::BoxSet big_mapped_boxes(dim);
+      hier::BoxSet big_mapped_boxes;
       const std::string exclude("exclude");
       for (int bn = 0; bn < grid_geometry->getNumberBlocks(); ++bn) {
 
@@ -262,12 +262,12 @@ int main(
              * block_domain \ exclude_boxes.
              */
 
-            hier::BoxList block_domain(dim);
+            hier::BoxList block_domain;
             grid_geometry->computePhysicalDomain(block_domain,
                one_vector,
                block_id);
 
-            hier::BoxList exclude_boxes(dim);
+            hier::BoxList exclude_boxes;
             exclude_boxes = main_db->getDatabaseBoxArray(exclude_boxes_name);
             block_domain.removeIntersections(exclude_boxes);
 
@@ -446,7 +446,7 @@ int main(
                hier::Connector::ConstNeighborhoodIterator neighbors =
                   small_to_everything.find(small_mapped_box.getId());
 
-               hier::BoxList neighbor_box_list(dim);
+               hier::BoxList neighbor_box_list;
                for (hier::Connector::ConstNeighborIterator na = small_to_everything.begin(neighbors);
                     na != small_to_everything.end(neighbors); ++na) {
                   if (!(*na).empty()) {
@@ -800,7 +800,7 @@ void shrinkBoxLevel(
     * growing the boundary boxes.
     */
 
-   hier::BoxContainer complement_mapped_boxes(dim);
+   hier::BoxContainer complement_mapped_boxes;
 
    hier::LocalId last_local_id(-1);
    for (std::map<hier::BlockId, hier::BoxList>::iterator mi = boundary_boxes.begin();

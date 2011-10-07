@@ -751,7 +751,7 @@ static void dumpMatlabData1dPencil(
       }
    }
 
-   tbox::Array<hier::BoxList> outboxes(nlevels, hier::BoxList(dim));
+   tbox::Array<hier::BoxList> outboxes(nlevels);
 
    for (int l1 = 0; l1 < nlevels; l1++) {
       tbox::Pointer<hier::PatchLevel> level = hierarchy->getPatchLevel(l1);

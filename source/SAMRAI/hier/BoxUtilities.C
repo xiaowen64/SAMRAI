@@ -348,7 +348,7 @@ void BoxUtilities::chopBoxes(
       Box box = in_boxes.front();
       in_boxes.popFront();
 
-      BoxList tmp_boxes(dim);
+      BoxList tmp_boxes;
 
       tbox::Array<tbox::List<int> > cut_points(dim.getValue());
       bool chop_box = findBestCutPointsGivenMax(cut_points,
@@ -421,7 +421,7 @@ void BoxUtilities::chopBox(
       boxes.clear();
       boxes.pushBack(box);
 
-      BoxList tmp_boxes(dim);
+      BoxList tmp_boxes;
       for (int id = 0; id < dim.getValue(); id++) {
 
          tmp_boxes.clear();
@@ -504,7 +504,7 @@ bool BoxUtilities::extendBoxesToDomainBoundary(
 
    bool out_val = false;
 
-   BoxList out_boxes(boxes.getDim());
+   BoxList out_boxes;
 
    while (!boxes.isEmpty()) {
 
@@ -548,7 +548,7 @@ bool BoxUtilities::extendBoxToDomainBoundary(
       if (!outside_domain.isEmpty()) {
 
          for (id = 0; id < dim.getValue(); id++) {
-            BoxList outside_boxes(dim);
+            BoxList outside_boxes;
 
             // Test whether lower end of ghost box extends outside domain
             Box test_region = test_ghost_box;
@@ -621,9 +621,9 @@ void BoxUtilities::growBoxesWithinDomain(
 
    if (!boxes.isEmpty()) {
 
-      BoxList out_boxes(dim);
+      BoxList out_boxes;
 
-      BoxList outside_domain(dim);
+      BoxList outside_domain;
       if (domain.isEmpty()) {
          Box big_box(boxes.getBoundingBox());
          big_box.grow(min_size);
@@ -647,7 +647,7 @@ void BoxUtilities::growBoxesWithinDomain(
 
             if (grow > 0) {
 
-               BoxList outside_boxes(dim);
+               BoxList outside_boxes;
                Box test_region(dim);
 
                // How far may box be grown within domain in lower direction?
@@ -741,7 +741,7 @@ void BoxUtilities::growBoxWithinDomain(
 
       if (grow > 0) {
 
-         BoxList outside_boxes(dim);
+         BoxList outside_boxes;
          Box test_region(dim);
 
          // How far may box be grown within domain in lower direction?
@@ -1133,7 +1133,7 @@ bool BoxUtilities::checkBoxForBadCutPoints(
    const BoxList& physical_boxes,
    const IntVector& bad_interval)
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS4(bad_cut_information, box, physical_boxes,
+   TBOX_DIM_ASSERT_CHECK_ARGS3(bad_cut_information, box,
       bad_interval);
 
    const tbox::Dimension& dim(box.getDim());
@@ -1171,7 +1171,7 @@ bool BoxUtilities::checkBoxForBadCutPointsInDirection(
    const BoxList& physical_boxes,
    const IntVector& bad_interval)
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS3(box, physical_boxes, bad_interval);
+   TBOX_DIM_ASSERT_CHECK_ARGS2(box, bad_interval);
 
    const tbox::Dimension& dim(box.getDim());
 
@@ -1305,7 +1305,7 @@ void BoxUtilities::findBadCutPointsForDirection(
    const BoxList& physical_boxes,
    const IntVector& bad_interval)
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS3(box, physical_boxes, bad_interval);
+   TBOX_DIM_ASSERT_CHECK_ARGS2(box, bad_interval);
 
    const tbox::Dimension& dim(box.getDim());
 
@@ -1723,7 +1723,7 @@ void BoxUtilities::makeNonOverlappingBoxLists(
       box_list_array[i].clear();
    }
 
-   box_list_array.resizeArray(nb, hier::BoxList(boxes.getDim()));
+   box_list_array.resizeArray(nb);
 
    // Copy boxes into a list to preserve the original box array.
    BoxList box_list(boxes);

@@ -425,7 +425,7 @@ void BoxLevelConnectorUtils::makeSortingMap(
       }
    }
 
-   BoxSet new_mapped_boxes(dim);
+   BoxSet new_mapped_boxes;
 
    sorted_mapped_box_level.initialize(
       unsorted_mapped_box_level.getRefinementRatio(),
