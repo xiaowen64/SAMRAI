@@ -17,7 +17,9 @@ SAMRAI_INLINE_KEYWORD
 BoxContainerConstIterator::BoxContainerConstIterator(
    const BoxContainerConstIterator& other):
    d_box_container(other.d_box_container),
-   d_list_iter(other.d_list_iter)
+   d_list_iter(other.d_list_iter),
+   d_set_iter(other.d_set_iter),
+   d_ordered(other.d_ordered)
 {
 }
 
@@ -29,38 +31,68 @@ BoxContainerConstIterator::~BoxContainerConstIterator()
 SAMRAI_INLINE_KEYWORD
 const Box& BoxContainerConstIterator::operator * () const
 {
-   return *d_list_iter;
+   return d_ordered ? **d_set_iter : *d_list_iter;
 }
 
 SAMRAI_INLINE_KEYWORD
 const Box& BoxContainerConstIterator::operator () () const
 {
-   return *d_list_iter;
-}
-#if 0
-SAMRAI_INLINE_KEYWORD
-BoxContainerConstIterator::operator bool () const
-{
-   return d_list_iter != d_box_container->end().d_list_iter;
+   return d_ordered ? **d_set_iter : *d_list_iter;
 }
 
 SAMRAI_INLINE_KEYWORD
-bool BoxContainerConstIterator::operator ! () const
+const Box* BoxContainerConstIterator::operator -> () const
 {
-   return d_list_iter == d_box_container->end().d_list_iter;
+   return d_ordered ? *d_set_iter : &(*d_list_iter);
 }
-#endif
+
 SAMRAI_INLINE_KEYWORD
-void BoxContainerConstIterator::operator ++ (
+BoxContainerConstIterator
+BoxContainerConstIterator::operator ++ (
    int)
 {
-   d_list_iter++;
+   BoxContainerConstIterator return_iter(*this);
+   if (d_ordered) {
+      ++d_set_iter;
+   } else {
+      ++d_list_iter;
+   }
+   return return_iter;
 }
 
 SAMRAI_INLINE_KEYWORD
 const BoxContainerConstIterator& BoxContainerConstIterator::operator ++ ()
 {
-   ++d_list_iter;
+   if (d_ordered) {
+      ++d_set_iter;
+   } else {
+      ++d_list_iter;
+   }
+   return *this;
+}
+
+SAMRAI_INLINE_KEYWORD
+BoxContainerConstIterator
+BoxContainerConstIterator::operator -- (
+   int)
+{
+   BoxContainerConstIterator return_iter(*this);
+   if (d_ordered) {
+      --d_set_iter;
+   } else {
+      --d_list_iter;
+   }
+   return return_iter;
+}
+
+SAMRAI_INLINE_KEYWORD
+const BoxContainerConstIterator& BoxContainerConstIterator::operator -- ()
+{
+   if (d_ordered) {
+      --d_set_iter;
+   } else {
+      --d_list_iter;
+   }
    return *this;
 }
 
@@ -68,14 +100,16 @@ SAMRAI_INLINE_KEYWORD
 bool BoxContainerConstIterator::operator == (
    const BoxContainerConstIterator& other) const
 {
-   return d_list_iter == other.d_list_iter;
+   return d_ordered ? d_set_iter == other.d_set_iter :
+                      d_list_iter == other.d_list_iter;
 }
 
 SAMRAI_INLINE_KEYWORD
 bool BoxContainerConstIterator::operator != (
    const BoxContainerConstIterator& other) const
 {
-   return d_list_iter != other.d_list_iter;
+   return d_ordered ? d_set_iter != other.d_set_iter :
+                      d_list_iter != other.d_list_iter;
 }
 
 }

@@ -12,6 +12,7 @@
 #define included_xfer_PatchLevelBorderAndInteriorFillPattern_C
 
 #include "SAMRAI/xfer/PatchLevelBorderAndInteriorFillPattern.h"
+#include "SAMRAI/hier/BoxContainerConstIterator.h"
 #include "SAMRAI/hier/BoxContainerIterator.h"
 #include "SAMRAI/hier/BoxContainerOrderedConstIterator.h"
 #include "SAMRAI/hier/BoxList.h"

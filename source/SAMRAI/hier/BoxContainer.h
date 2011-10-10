@@ -61,7 +61,7 @@ public:
     * @brief The const iterator for class BoxContainer.
     */
    typedef BoxContainerConstIterator ConstIterator;
-   typedef BoxContainerOrderedConstIterator OrderedConstIterator;
+   typedef BoxContainerConstIterator OrderedConstIterator;
    typedef BoxContainerOrderedConstReverseIterator OrderedConstReverseIterator;
 
    // Constructors.
@@ -343,8 +343,8 @@ public:
    OrderedConstIterator insert ( OrderedConstIterator position,
                             const Box& box );
 
-   void insert ( BoxContainerOrderedConstIterator first,
-                 BoxContainerOrderedConstIterator last );
+   void insert ( OrderedConstIterator first,
+                 OrderedConstIterator last );
 
    OrderedConstIterator find(const Box& box) const;
    OrderedConstIterator lower_bound(const Box& box) const;

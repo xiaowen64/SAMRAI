@@ -77,25 +77,25 @@ bool BoxContainer::isEmpty() const
 SAMRAI_INLINE_KEYWORD
 BoxContainer::ConstIterator BoxContainer::begin() const
 {
-   return BoxContainerConstIterator(*this);
+   return ConstIterator(*this);
 }
 
 SAMRAI_INLINE_KEYWORD
 BoxContainer::ConstIterator BoxContainer::end() const
 {
-   return BoxContainerConstIterator(*this, false);
+   return ConstIterator(*this, false);
 }
 
 SAMRAI_INLINE_KEYWORD
 BoxContainer::Iterator BoxContainer::begin()
 {
-   return BoxContainerIterator(*this);
+   return Iterator(*this);
 }
 
 SAMRAI_INLINE_KEYWORD
 BoxContainer::Iterator BoxContainer::end()
 {
-   return BoxContainerIterator(*this, false);
+   return Iterator(*this, false);
 }
 
 SAMRAI_INLINE_KEYWORD

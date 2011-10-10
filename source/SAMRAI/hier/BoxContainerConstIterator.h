@@ -12,6 +12,7 @@
 #define included_hier_BoxContainerConstIterator
 
 #include <list>
+#include <set>
 
 namespace SAMRAI {
 namespace hier {
@@ -86,6 +87,8 @@ public:
    const Box&
    operator () () const;
 
+   const Box*
+   operator -> () const;
    /*!
     * @brief Determine if iterator points to a valid position in container.
     *
@@ -104,7 +107,7 @@ public:
    /*!
     * @brief Post-increment iterator to point to next box in the container.
     */
-   void
+   BoxContainerConstIterator
    operator ++ (
       int);
 
@@ -114,6 +117,13 @@ public:
    const BoxContainerConstIterator&
    operator ++ ();
 
+
+   BoxContainerConstIterator
+   operator -- (
+      int);
+
+   const BoxContainerConstIterator&
+   operator -- ();
    /*!
     * @brief Determine if two iterators are equivalent.
     *
@@ -121,6 +131,7 @@ public:
     *
     * @param[in] other
     */
+
    bool
    operator == (
       const BoxContainerConstIterator& other) const;
@@ -151,6 +162,9 @@ private:
     * Underlying iterator for a BoxContainer.  This is a wrapper.
     */
    std::list<Box>::const_iterator d_list_iter;
+   std::set<const Box*>::const_iterator d_set_iter;
+
+   bool d_ordered;
 
    // Add pointer to BoxContainer and underlying iterator for
    // BoxContainer here.

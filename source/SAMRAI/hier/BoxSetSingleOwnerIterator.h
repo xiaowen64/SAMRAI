@@ -13,6 +13,7 @@
 #include "SAMRAI/SAMRAI_config.h"
 
 #include "SAMRAI/hier/BoxSet.h"
+#include "SAMRAI/hier/BoxContainerConstIterator.h"
 #include "SAMRAI/hier/BoxContainerOrderedConstIterator.h"
 
 namespace SAMRAI {
