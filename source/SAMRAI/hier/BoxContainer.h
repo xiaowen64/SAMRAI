@@ -27,8 +27,6 @@ namespace hier {
 
 class BoxContainerIterator;
 class BoxContainerConstIterator;
-class BoxContainerOrderedConstIterator;
-class BoxContainerOrderedConstReverseIterator;
 class BoxTree;
 class MultiblockBoxTree;
 
@@ -46,8 +44,6 @@ class BoxContainer
 {
 friend class BoxContainerIterator;
 friend class BoxContainerConstIterator;
-friend class BoxContainerOrderedConstIterator;
-friend class BoxContainerOrderedConstReverseIterator;
 
 public:
    // Typedefs.
@@ -61,8 +57,6 @@ public:
     * @brief The const iterator for class BoxContainer.
     */
    typedef BoxContainerConstIterator ConstIterator;
-   typedef BoxContainerConstIterator OrderedConstIterator;
-   typedef BoxContainerOrderedConstReverseIterator OrderedConstReverseIterator;
 
    // Constructors.
 
@@ -333,23 +327,21 @@ public:
 
    bool isOrdered() const;
 
-   OrderedConstIterator orderedBegin() const;
-   OrderedConstIterator orderedEnd() const;
-   OrderedConstReverseIterator orderedRBegin() const;
-   OrderedConstReverseIterator orderedREnd() const;
-
    bool insert(const Box& box);
 
-   OrderedConstIterator insert ( OrderedConstIterator position,
-                            const Box& box );
+   Iterator insert ( Iterator position,
+                     const Box& box );
 
-   void insert ( OrderedConstIterator first,
-                 OrderedConstIterator last );
+   void insert ( ConstIterator first,
+                 ConstIterator last );
 
-   OrderedConstIterator find(const Box& box) const;
-   OrderedConstIterator lower_bound(const Box& box) const;
-   OrderedConstIterator upper_bound(const Box& box) const;
-   void erase(OrderedConstIterator iter);
+   void insert ( Iterator first,
+                 Iterator last );
+
+   Iterator find(const Box& box) const;
+   Iterator lower_bound(const Box& box) const;
+   Iterator upper_bound(const Box& box) const;
+
    int erase(const Box& box);
 
    void
@@ -880,7 +872,7 @@ private:
     */
    std::list<Box> d_list;
 
-   std::set<const Box*, Box::id_less> d_set;
+   std::set<Box*, Box::id_less> d_set;
 
    bool d_ordered;
 };

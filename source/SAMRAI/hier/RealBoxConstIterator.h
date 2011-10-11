@@ -14,7 +14,6 @@
 
 #include "SAMRAI/hier/BoxSet.h"
 #include "SAMRAI/hier/BoxContainerConstIterator.h"
-#include "SAMRAI/hier/BoxContainerOrderedConstIterator.h"
 
 namespace SAMRAI {
 namespace hier {
@@ -133,7 +132,7 @@ private:
    /*!
     * @brief The iterator.
     */
-   BoxSet::OrderedConstIterator d_ni;
+   BoxSet::ConstIterator d_ni;
 
 };
 

@@ -678,8 +678,8 @@ void PatchHierarchy::setupDomainData()
    } else {
       BoxSet all_domain_mapped_boxes;
       for (int nb = 0; nb < d_number_blocks; nb++) {
-         all_domain_mapped_boxes.insert(domain_mapped_boxes[nb].orderedBegin(),
-            domain_mapped_boxes[nb].orderedEnd());
+         all_domain_mapped_boxes.insert(domain_mapped_boxes[nb].begin(),
+            domain_mapped_boxes[nb].end());
       }
       d_domain_mapped_box_level.initialize(
          all_domain_mapped_boxes,
@@ -693,8 +693,8 @@ void PatchHierarchy::setupDomainData()
    BoxSet multiblock_mapped_boxes;
    for (int nb = 0; nb < d_number_blocks; nb++) {
       multiblock_mapped_boxes.insert(
-         domain_mapped_boxes[nb].orderedBegin(),
-         domain_mapped_boxes[nb].orderedEnd());
+         domain_mapped_boxes[nb].begin(),
+         domain_mapped_boxes[nb].end());
    }
    d_domain_search_tree_periodic.generateTree(
       d_grid_geometry,
@@ -703,11 +703,11 @@ void PatchHierarchy::setupDomainData()
    // Generate the non-periodic multiblock domain search tree.
    if (PeriodicShiftCatalog::getCatalog(d_dim)->isPeriodic()) {
       BoxSet multiblock_mapped_boxes_noperiodic;
-      for (BoxSet::OrderedConstIterator ni = multiblock_mapped_boxes.orderedBegin();
-           ni != multiblock_mapped_boxes.orderedEnd(); ++ni) {
+      for (BoxSet::Iterator ni = multiblock_mapped_boxes.begin();
+           ni != multiblock_mapped_boxes.end(); ++ni) {
          if (!(*ni).isPeriodicImage()) {
             multiblock_mapped_boxes_noperiodic.insert(
-               multiblock_mapped_boxes_noperiodic.orderedEnd(),
+               multiblock_mapped_boxes_noperiodic.end(),
                *ni);
          }
       }

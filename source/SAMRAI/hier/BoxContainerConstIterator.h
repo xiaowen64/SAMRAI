@@ -19,6 +19,7 @@ namespace hier {
 
 class Box;
 class BoxContainer;
+class BoxContainerIterator;
 
 /**
  * An immutable iterator over the boxes in a BoxContainer or the underlying
@@ -29,6 +30,7 @@ class BoxContainer;
 class BoxContainerConstIterator
 {
    friend class BoxContainer;
+   friend class BoxContainerIterator;
 
 public:
    // Constructors.
@@ -52,6 +54,9 @@ public:
     */
    BoxContainerConstIterator(
       const BoxContainerConstIterator& other);
+
+   BoxContainerConstIterator(
+      const BoxContainerIterator& other);
 
    /*!
     * @brief Assignment operator.
@@ -154,20 +159,12 @@ private:
    BoxContainerConstIterator();
 
    /*
-    * The BoxContainer being iterated over.
-    */
-   const BoxContainer* d_box_container;
-
-   /*
     * Underlying iterator for a BoxContainer.  This is a wrapper.
     */
    std::list<Box>::const_iterator d_list_iter;
-   std::set<const Box*>::const_iterator d_set_iter;
+   std::set<Box*>::const_iterator d_set_iter;
 
    bool d_ordered;
-
-   // Add pointer to BoxContainer and underlying iterator for
-   // BoxContainer here.
 };
 
 }

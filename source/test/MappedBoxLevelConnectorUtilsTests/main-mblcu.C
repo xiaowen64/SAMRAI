@@ -13,7 +13,6 @@
 #include "SAMRAI/hier/GridGeometry.h"
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/hier/BoxContainerIterator.h"
-#include "SAMRAI/hier/BoxContainerOrderedConstIterator.h"
 #include "SAMRAI/hier/BoxLevel.h"
 #include "SAMRAI/hier/BoxLevelConnectorUtils.h"
 #include "SAMRAI/hier/BoxSetSingleBlockIterator.h"
@@ -275,7 +274,7 @@ int main(
             hier::LocalId last_local_id(-1);
             for (hier::BoxList::Iterator bi(block_domain);
                  bi != block_domain.end(); ++bi) {
-               big_mapped_boxes.insert(big_mapped_boxes.orderedEnd(),
+               big_mapped_boxes.insert(big_mapped_boxes.end(),
                   hier::Box(*bi,
                      ++last_local_id,
                      0,
@@ -290,7 +289,7 @@ int main(
              */
             for (hier::BoxSetSingleBlockIterator bi(domain_mapped_boxes, block_id);
                  bi.isValid(); ++bi) {
-               big_mapped_boxes.insert(big_mapped_boxes.orderedEnd(), *bi);
+               big_mapped_boxes.insert(big_mapped_boxes.end(), *bi);
             }
 
          }
@@ -439,8 +438,8 @@ int main(
                     << everything.format("", 2) << '\n'
          ;
 
-         for (hier::BoxSet::OrderedConstIterator bi = small_mapped_box_set.orderedBegin();
-              bi != small_mapped_box_set.orderedEnd(); ++bi) {
+         for (hier::BoxSet::ConstIterator bi = small_mapped_box_set.begin();
+              bi != small_mapped_box_set.end(); ++bi) {
             const hier::Box& small_mapped_box = *bi;
 
             if (small_to_everything.hasNeighborSet(small_mapped_box.getId())) {
@@ -523,8 +522,8 @@ int main(
             grid_geometry,
             internal_mapped_box_level.getGlobalizedVersion().getGlobalBoxes());
 
-         for (hier::BoxSet::OrderedConstIterator ni = small_mapped_box_set.orderedBegin();
-              ni != small_mapped_box_set.orderedEnd(); ++ni) {
+         for (hier::BoxSet::ConstIterator ni = small_mapped_box_set.begin();
+              ni != small_mapped_box_set.end(); ++ni) {
             hier::BoxList tmp_box_list(*ni);
             small_to_big.getHeadCoarserFlag() ?
             tmp_box_list.coarsen(small_to_big.getRatio()) :
@@ -539,8 +538,8 @@ int main(
             }
          }
 
-         for (hier::BoxSet::OrderedConstIterator ni = internal_mapped_box_set.orderedBegin();
-              ni != internal_mapped_box_set.orderedEnd(); ++ni) {
+         for (hier::BoxSet::ConstIterator ni = internal_mapped_box_set.begin();
+              ni != internal_mapped_box_set.end(); ++ni) {
             hier::BoxList tmp_box_list(*ni);
             big_to_small.getHeadCoarserFlag() ?
             tmp_box_list.coarsen(big_to_small.getRatio()) :
@@ -591,8 +590,8 @@ int main(
             grid_geometry,
             external_mapped_box_level.getGlobalizedVersion().getGlobalBoxes());
 
-         for (hier::BoxSet::OrderedConstIterator ni = external_mapped_box_set.orderedBegin();
-              ni != external_mapped_box_set.orderedEnd(); ++ni) {
+         for (hier::BoxSet::ConstIterator ni = external_mapped_box_set.begin();
+              ni != external_mapped_box_set.end(); ++ni) {
             hier::BoxList tmp_box_list(*ni);
             big_to_small.getHeadCoarserFlag() ?
             tmp_box_list.coarsen(big_to_small.getRatio()) :
@@ -610,8 +609,8 @@ int main(
             }
          }
 
-         for (hier::BoxSet::OrderedConstIterator ni = small_mapped_box_set.orderedBegin();
-              ni != small_mapped_box_set.orderedEnd(); ++ni) {
+         for (hier::BoxSet::ConstIterator ni = small_mapped_box_set.begin();
+              ni != small_mapped_box_set.end(); ++ni) {
             hier::BoxList tmp_box_list(*ni);
             small_to_big.getHeadCoarserFlag() ?
             tmp_box_list.coarsen(small_to_big.getRatio()) :
@@ -629,8 +628,8 @@ int main(
             }
          }
 
-         for (hier::BoxSet::OrderedConstIterator ni = big_mapped_box_set.orderedBegin();
-              ni != big_mapped_box_set.orderedEnd(); ++ni) {
+         for (hier::BoxSet::ConstIterator ni = big_mapped_box_set.begin();
+              ni != big_mapped_box_set.end(); ++ni) {
             hier::BoxList tmp_box_list(*ni);
             big_to_small.getHeadCoarserFlag() ?
             tmp_box_list.coarsen(big_to_small.getRatio()) :
@@ -758,8 +757,8 @@ void shrinkBoxLevel(
    }
 
    std::map<hier::BlockId, hier::BoxList> boundary_boxes;
-   for (hier::BoxSet::OrderedConstIterator si = visible_mapped_boxes.orderedBegin();
-        si != visible_mapped_boxes.orderedEnd(); ++si) {
+   for (hier::BoxSet::ConstIterator si = visible_mapped_boxes.begin();
+        si != visible_mapped_boxes.end(); ++si) {
 
       std::map<hier::BlockId, hier::BoxList>::iterator bdry_iter =
          boundary_boxes.find(si->getBlockId());
@@ -834,8 +833,8 @@ void shrinkBoxLevel(
       grid_geometry,
       big_mapped_box_level.getMPI());
    last_local_id = -1;
-   for (hier::BoxSet::OrderedConstIterator bi = big_mapped_box_set.orderedBegin();
-        bi != big_mapped_box_set.orderedEnd(); ++bi) {
+   for (hier::BoxSet::ConstIterator bi = big_mapped_box_set.begin();
+        bi != big_mapped_box_set.end(); ++bi) {
 
       const hier::Box& mapped_box = *bi;
 

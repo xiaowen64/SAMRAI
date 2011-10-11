@@ -12,7 +12,7 @@
 #include "SAMRAI/hier/Connector.h"
 #include "SAMRAI/hier/GridGeometry.h"
 #include "SAMRAI/hier/Box.h"
-#include "SAMRAI/hier/BoxContainerOrderedConstIterator.h"
+#include "SAMRAI/hier/BoxContainerConstIterator.h"
 #include "SAMRAI/hier/BoxLevel.h"
 #include "SAMRAI/hier/MappingConnectorAlgorithm.h"
 #include "SAMRAI/hier/OverlapConnectorAlgorithm.h"
@@ -423,8 +423,8 @@ void alterAndGenerateMapping(
    c_to_b.initialize(mapped_box_level_c,
       mapped_box_level_b,
       hier::IntVector::getZero(dim));
-   for (hier::BoxSet::OrderedConstIterator bi = mapped_boxes_b.orderedBegin();
-        bi != mapped_boxes_b.orderedEnd(); ++bi) {
+   for (hier::BoxSet::ConstIterator bi = mapped_boxes_b.begin();
+        bi != mapped_boxes_b.end(); ++bi) {
       const hier::Box& mapped_box_b(*bi);
       hier::Box mapped_box_c(mapped_box_b,
                              mapped_box_b.getLocalId() + local_id_increment,

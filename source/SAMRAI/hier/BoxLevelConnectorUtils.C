@@ -13,7 +13,6 @@
 #include "SAMRAI/hier/BoxLevelConnectorUtils.h"
 
 #include "SAMRAI/hier/BoxContainerIterator.h"
-#include "SAMRAI/hier/BoxContainerOrderedConstIterator.h"
 #include "SAMRAI/hier/BoxSetSingleBlockIterator.h"
 #include "SAMRAI/hier/MappingConnectorAlgorithm.h"
 #include "SAMRAI/hier/OverlapConnectorAlgorithm.h"
@@ -222,8 +221,8 @@ bool BoxLevelConnectorUtils::baseNestsInHead(
          base.getRefinementRatio(),
          grid_geom,
          base.getMPI());
-      for (BoxSet::OrderedConstIterator ni = base_mapped_boxes.orderedBegin();
-           ni != base_mapped_boxes.orderedEnd(); ++ni) {
+      for (BoxSet::ConstIterator ni = base_mapped_boxes.begin();
+           ni != base_mapped_boxes.end(); ++ni) {
          Box swelledbase_mapped_box(*ni);
          swelledbase_mapped_box.grow(base_swell);
          swelledbase.addBoxWithoutUpdate(swelledbase_mapped_box);
@@ -242,8 +241,8 @@ bool BoxLevelConnectorUtils::baseNestsInHead(
          grid_geom,
          head.getMPI());
 
-      for (BoxSet::OrderedConstIterator ni = head_mapped_boxes.orderedBegin();
-           ni != head_mapped_boxes.orderedEnd(); ++ni) {
+      for (BoxSet::ConstIterator ni = head_mapped_boxes.begin();
+           ni != head_mapped_boxes.end(); ++ni) {
          Box swelledhead_mapped_box(*ni);
 
          swelledhead_mapped_box.grow(head_swell);
@@ -455,10 +454,10 @@ void BoxLevelConnectorUtils::makeSortingMap(
        * new LocalId.  In finding the image mapped_boxes, we use the fact
        * that a real mapped_box's image follows the real mapped_box in a BoxSet.
        */
-      BoxSet::OrderedConstIterator ini = cur_mapped_boxes.find(cur_mapped_box);
-      TBOX_ASSERT(ini != cur_mapped_boxes.orderedEnd());
+      BoxSet::ConstIterator ini = cur_mapped_boxes.find(cur_mapped_box);
+      TBOX_ASSERT(ini != cur_mapped_boxes.end());
       ++ini; // Skip the real mapped_box to look for its image mapped_boxes.
-      while (ini != cur_mapped_boxes.orderedEnd() &&
+      while (ini != cur_mapped_boxes.end() &&
              ini->getGlobalId() == cur_mapped_box.getGlobalId()) {
          const Box& image_mapped_box = *ini;
          const Box new_image_mapped_box(image_mapped_box,
@@ -1151,8 +1150,8 @@ void BoxLevelConnectorUtils::makeRemainderMap(
     */
    LocalId last_used_index = orig.getLastLocalId();
 
-   for (BoxSet::OrderedConstIterator ni = orig_nodes.orderedBegin();
-        ni != orig_nodes.orderedEnd(); ++ni) {
+   for (BoxSet::ConstIterator ni = orig_nodes.begin();
+        ni != orig_nodes.end(); ++ni) {
 
       const Box& orig_node = *ni;
       const BoxId mapped_box_id = orig_node.getId();

@@ -592,9 +592,9 @@ void CoarsenSchedule::generateScheduleDLBG()
        * Construct transactions for data going from local source mapped_boxes
        * to remote coarse mapped_boxes.
        */
-      for (hier::BoxSet::OrderedConstIterator ni =
-              local_temp_mapped_boxes.orderedBegin();
-           ni != local_temp_mapped_boxes.orderedEnd(); ++ni) {
+      for (hier::BoxSet::ConstIterator ni =
+              local_temp_mapped_boxes.begin();
+           ni != local_temp_mapped_boxes.end(); ++ni) {
          const hier::Box& temp_mapped_box = *ni;
          if (temp_mapped_box.getOwnerRank() ==
              coarse_mapped_box.getOwnerRank()) {

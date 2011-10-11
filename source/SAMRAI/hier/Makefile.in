@@ -80,9 +80,7 @@ OBJS = 	\
 	TimeInterpolateOperator.o \
 	Transformation.o \
 	BoxContainerIterator.o \
-	BoxContainerConstIterator.o \
-	BoxContainerOrderedConstIterator.o \
-	BoxContainerOrderedConstReverseIterator.o
+	BoxContainerConstIterator.o
 
 library: $(OBJS)
 	for DIR in $(SUBDIRS); do if test -d $$DIR; then (cd $$DIR && $(MAKE) $@) ; fi || exit 1; done

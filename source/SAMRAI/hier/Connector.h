@@ -12,6 +12,7 @@
 
 #include "SAMRAI/SAMRAI_config.h"
 
+#include "SAMRAI/hier/BoxContainerIterator.h"
 #include "SAMRAI/hier/BoxLevel.h"
 #include "SAMRAI/hier/NeighborhoodSet.h"
 #include "SAMRAI/tbox/Timer.h"
@@ -64,7 +65,7 @@ public:
    /*!
     * @brief Type of the iterator over neighbors in a neighborhood.
     */
-   typedef NeighborSet::OrderedConstIterator ConstNeighborIterator;
+   typedef NeighborSet::ConstIterator ConstNeighborIterator;
 
    /// TODO:  Possible refactor?  Since Connectors do not imply relationship
    // meanings, why is this even defined?  The "getConnectorType function

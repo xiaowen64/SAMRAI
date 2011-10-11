@@ -946,7 +946,7 @@ public:
     * in a container.  On contributors, the graph node is non-local
     * and stands alone.
     */
-   BoxSet::OrderedConstIterator d_mapped_box_iterator;
+   BoxSet::ConstIterator d_mapped_box_iterator;
 
    /*!
     * @brief Name of wait phase when continueAlgorithm()

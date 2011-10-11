@@ -127,8 +127,8 @@ void PatchLevelFullFillPattern::computeDestinationFillBoxesOnSourceProc(
       all_dst_nabrs,
       dst_mapped_box_level.getRefinementRatio());
    tmp_nabrs.clear();
-   for (hier::BoxSet::OrderedConstIterator na = all_dst_nabrs.orderedBegin();
-        na != all_dst_nabrs.orderedEnd(); ++na) {
+   for (hier::BoxSet::ConstIterator na = all_dst_nabrs.begin();
+        na != all_dst_nabrs.end(); ++na) {
       hier::BoxSet& fill_boxes = dst_fill_boxes_on_src_proc[na->getId()];
       hier::Box fill_box(*na);
       fill_box.grow(fill_ghost_width);

@@ -165,7 +165,7 @@ NeighborhoodSet::getNeighbors(
             all_nabrs.pushBack(*ni);
          }
       } else {
-         all_nabrs.insert(nabrs.orderedBegin(), nabrs.orderedEnd());
+         all_nabrs.insert(nabrs.begin(), nabrs.end());
       }
    }
 }
@@ -220,8 +220,8 @@ NeighborhoodSet::getNeighbors(
    for (const_iterator ei = begin(); ei != end(); ++ei) {
       const NeighborSet& nabrs = (*ei).second;
 
-      for (BoxSet::OrderedConstIterator ni = nabrs.orderedBegin();
-         ni != nabrs.orderedEnd(); ++ni) {
+      for (BoxSet::ConstIterator ni = nabrs.begin();
+         ni != nabrs.end(); ++ni) {
 
          all_nabrs[ni->getBlockId()].insert(*ni);
 
@@ -245,8 +245,8 @@ NeighborhoodSet::getOwners(
    for (const_iterator ei = begin(); ei != end(); ++ei) {
       const NeighborSet& nabrs = (*ei).second;
 
-      for (BoxSet::OrderedConstIterator ni = nabrs.orderedBegin();
-         ni != nabrs.orderedEnd(); ++ni) {
+      for (BoxSet::ConstIterator ni = nabrs.begin();
+         ni != nabrs.end(); ++ni) {
 
          const int rank = ni->getOwnerRank();
          owners.insert(rank);

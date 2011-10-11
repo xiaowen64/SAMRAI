@@ -310,7 +310,7 @@ bool Connector::hasLocalNeighbor(
    if (itr == d_relationships.end()) {
       return false;
    }
-   else if ((*itr).second.find(neighbor) == (*itr).second.orderedEnd()) {
+   else if ((*itr).second.find(neighbor) == (*itr).second.end()) {
       return false;
    }
    else {
@@ -426,7 +426,7 @@ Connector::ConstNeighborIterator Connector::begin(
    ConstNeighborhoodIterator& nbrhd) const
 {
    TBOX_ASSERT(nbrhd != end());
-   return nbrhd->second.orderedBegin();
+   return nbrhd->second.begin();
 }
 
 /*
@@ -438,7 +438,7 @@ Connector::ConstNeighborIterator Connector::end(
    ConstNeighborhoodIterator& nbrhd) const
 {
    TBOX_ASSERT(nbrhd != end());
-   return nbrhd->second.orderedEnd();
+   return nbrhd->second.end();
 }
 
 /*

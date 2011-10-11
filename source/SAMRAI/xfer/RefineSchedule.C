@@ -2235,8 +2235,8 @@ void RefineSchedule::refineScratchData(
 
    const hier::BoxSet& crse_mapped_boxes =
       coarse_level->getBoxLevel()->getBoxes();
-   for (hier::BoxSet::OrderedConstIterator ni = crse_mapped_boxes.orderedBegin();
-        ni != crse_mapped_boxes.orderedEnd(); ++ni) {
+   for (hier::BoxSet::ConstIterator ni = crse_mapped_boxes.begin();
+        ni != crse_mapped_boxes.end(); ++ni) {
 
       const hier::Box& crse_mapped_box = *ni;
       hier::Connector::ConstNeighborhoodIterator dst_nabrs =
@@ -2337,8 +2337,8 @@ void RefineSchedule::computeRefineOverlaps(
 
    const hier::BoxSet& coarse_mapped_boxes =
       coarse_level->getBoxLevel()->getBoxes();
-   for (hier::BoxSet::OrderedConstIterator ni = coarse_mapped_boxes.orderedBegin();
-        ni != coarse_mapped_boxes.orderedEnd(); ++ni) {
+   for (hier::BoxSet::ConstIterator ni = coarse_mapped_boxes.begin();
+        ni != coarse_mapped_boxes.end(); ++ni) {
 
       const hier::Box& coarse_mapped_box = *ni;
       hier::Connector::ConstNeighborhoodIterator fine_nabrs =
@@ -2519,9 +2519,9 @@ void RefineSchedule::generateCommunicationSchedule(
 
          const hier::BoxSet& dst_fill_boxes = dst_fill_iter->second;
 
-         for (hier::BoxSet::OrderedConstIterator
-              ni = local_src_mapped_boxes.orderedBegin();
-              ni != local_src_mapped_boxes.orderedEnd(); ++ni) {
+         for (hier::BoxSet::ConstIterator
+              ni = local_src_mapped_boxes.begin();
+              ni != local_src_mapped_boxes.end(); ++ni) {
             const hier::Box& src_mapped_box = *ni;
 
             if (src_mapped_box.getOwnerRank() !=
@@ -3514,7 +3514,7 @@ void RefineSchedule::communicateFillBoxes(
                   hier::Box tmp_dst_mapped_box(dim);
                   tmp_dst_mapped_box.getFromIntBuffer(ptr);
                   ptr += hier::Box::commBufferSize(dim);
-                  fill_boxes.insert(fill_boxes.orderedEnd(), tmp_dst_mapped_box);
+                  fill_boxes.insert(fill_boxes.end(), tmp_dst_mapped_box);
                }
             }
             TBOX_ASSERT(ptr == peer->getRecvData() + peer->getRecvSize());
@@ -3650,8 +3650,8 @@ void RefineSchedule::constructScheduleTransactions(
                  << "R" << d_dst_level->getRatioToLevelZero()
                  << " / " << dst_mapped_box << std::endl;
       tbox::plog << "  fill_boxes (" << fill_boxes.size() << ")";
-      for (hier::BoxSet::OrderedConstIterator bi = fill_boxes.orderedBegin();
-           bi != fill_boxes.orderedEnd(); ++bi) {
+      for (hier::BoxSet::ConstIterator bi = fill_boxes.begin();
+           bi != fill_boxes.end(); ++bi) {
          tbox::plog << " " << *bi;
       }
       tbox::plog << std::endl;
@@ -3887,8 +3887,8 @@ void RefineSchedule::constructScheduleTransactions(
 
       hier::BoxList::Iterator box_itr(d_src_masks);
       int box_num = 0;
-      for (hier::BoxSet::OrderedConstIterator bi = fill_boxes.orderedBegin();
-           bi != fill_boxes.orderedEnd(); ++bi) {
+      for (hier::BoxSet::ConstIterator bi = fill_boxes.begin();
+           bi != fill_boxes.end(); ++bi) {
 
          const hier::Box& fill_box = *bi;
 

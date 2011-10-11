@@ -12,7 +12,7 @@
 
 #include "SAMRAI/hier/BoxLevel.h"
 
-#include "SAMRAI/hier/BoxContainerOrderedConstIterator.h"
+#include "SAMRAI/hier/BoxContainerConstIterator.h"
 #include "SAMRAI/hier/BoxSetSingleBlockIterator.h"
 #include "SAMRAI/hier/PeriodicShiftCatalog.h"
 #include "SAMRAI/hier/RealBoxConstIterator.h"
@@ -294,8 +294,8 @@ void BoxLevel::finalize()
 {
 
    // Erase non-local Boxes, if any, from d_mapped_boxes.
-   for (BoxSet::OrderedConstIterator mbi = d_mapped_boxes.orderedBegin();
-        mbi != d_mapped_boxes.orderedEnd(); /* incremented in loop */) {
+   for (BoxSet::Iterator mbi = d_mapped_boxes.begin();
+        mbi != d_mapped_boxes.end(); /* incremented in loop */) {
       if (mbi->getOwnerRank() != d_mpi.getRank()) {
          d_mapped_boxes.erase(mbi++);
       } else {
@@ -328,8 +328,8 @@ void BoxLevel::initializePrivate(
    }
 
    // Erase non-local Boxes, if any, from d_mapped_boxes.
-   for (BoxSet::OrderedConstIterator mbi(d_mapped_boxes.orderedBegin());
-        mbi != d_mapped_boxes.orderedEnd(); /* incremented in loop */) {
+   for (BoxSet::Iterator mbi(d_mapped_boxes.begin());
+        mbi != d_mapped_boxes.end(); /* incremented in loop */) {
       if (mbi->getOwnerRank() != d_mpi.getRank()) {
          d_mapped_boxes.erase(mbi++);
       } else {
@@ -904,8 +904,8 @@ void BoxLevel::acquireRemoteBoxes_pack(
    int* ptr = &send_mesg[0] + old_size;
    *(ptr++) = static_cast<int>(d_mapped_boxes.size());
 
-   for (BoxSet::OrderedConstIterator i_mapped_boxes = d_mapped_boxes.orderedBegin();
-        i_mapped_boxes != d_mapped_boxes.orderedEnd();
+   for (BoxSet::ConstIterator i_mapped_boxes = d_mapped_boxes.begin();
+        i_mapped_boxes != d_mapped_boxes.end();
         ++i_mapped_boxes) {
       (*i_mapped_boxes).putToIntBuffer(ptr);
       ptr += mapped_box_com_buf_size;
@@ -944,17 +944,17 @@ void BoxLevel::acquireRemoteBoxes_unpack(
          for (i = 0; i < n_self_mapped_boxes; ++i) {
             mapped_box.getFromIntBuffer(ptr);
             d_global_mapped_boxes.insert(
-               d_global_mapped_boxes.orderedEnd(), mapped_box);
+               d_global_mapped_boxes.end(), mapped_box);
             ptr += mapped_box_com_buf_size;
          }
 
       } else {
-         for (BoxContainer::OrderedConstIterator ni = d_mapped_boxes.orderedBegin();
-              ni != d_mapped_boxes.orderedEnd(); ++ni) {
+         for (BoxContainer::ConstIterator ni = d_mapped_boxes.begin();
+              ni != d_mapped_boxes.end(); ++ni) {
             d_global_mapped_boxes.insert(*ni);
          }
 //         d_global_mapped_boxes.insert(
-//            d_mapped_boxes.orderedBegin(), d_mapped_boxes.orderedEnd());
+//            d_mapped_boxes.begin(), d_mapped_boxes.end());
       }
    }
 
@@ -965,7 +965,7 @@ void BoxLevel::acquireRemoteBoxes_unpack(
  ***********************************************************************
  */
 
-BoxSet::OrderedConstIterator BoxLevel::addBox(
+BoxSet::ConstIterator BoxLevel::addBox(
    const Box& box,
    const BlockId& block_id,
    const bool use_vacant_index)
@@ -993,7 +993,7 @@ BoxSet::OrderedConstIterator BoxLevel::addBox(
 
    clearForBoxChanges(false);
 
-   BoxSet::OrderedConstIterator new_iterator(d_mapped_boxes);
+   BoxSet::ConstIterator new_iterator(d_mapped_boxes);
 
    if (d_mapped_boxes.size() == 0) {
       Box new_mapped_box =
@@ -1002,12 +1002,12 @@ BoxSet::OrderedConstIterator BoxLevel::addBox(
             d_mpi.getRank(),
             block_id,
             PeriodicShiftCatalog::getCatalog(dim)->getZeroShiftNumber());
-      new_iterator = d_mapped_boxes.insert(d_mapped_boxes.orderedEnd(), new_mapped_box);
+      new_iterator = d_mapped_boxes.insert(d_mapped_boxes.end(), new_mapped_box);
    } else {
       // Set new_index to one more than the largest index used.
-      BoxSet::OrderedConstIterator ni = d_mapped_boxes.orderedEnd();
+      BoxSet::Iterator ni = d_mapped_boxes.end();
       do {
-         TBOX_ASSERT(ni != d_mapped_boxes.orderedBegin());   // There should not be all periodic images.
+         TBOX_ASSERT(ni != d_mapped_boxes.begin());   // There should not be all periodic images.
          --ni;
       } while (ni->isPeriodicImage());
       LocalId new_index = ni->getLocalId() + 1;
@@ -1019,8 +1019,8 @@ BoxSet::OrderedConstIterator BoxLevel::addBox(
             /*
              * There is a smaller unused index we can use for the new index.
              */
-            for (new_index = 0, ni = d_mapped_boxes.orderedBegin();
-                 ni != d_mapped_boxes.orderedEnd();
+            for (new_index = 0, ni = d_mapped_boxes.begin();
+                 ni != d_mapped_boxes.end();
                  ++ni) {
                if (new_index != (*ni).getLocalId()) {
                   break;
@@ -1030,7 +1030,7 @@ BoxSet::OrderedConstIterator BoxLevel::addBox(
                }
             }
             // We should have found an unused index.
-            TBOX_ASSERT(ni != d_mapped_boxes.orderedEnd());
+            TBOX_ASSERT(ni != d_mapped_boxes.end());
          }
       }
 
@@ -1094,7 +1094,7 @@ BoxLevel::addPeriodicBox(
                        ref_mapped_box.getBlockId(),
                        PeriodicShiftCatalog::getCatalog(
                           getDim())->getZeroShiftNumber());
-   if (mapped_boxes.find(real_mapped_box) == mapped_boxes.orderedEnd()) {
+   if (mapped_boxes.find(real_mapped_box) == mapped_boxes.end()) {
       TBOX_ERROR(
          "BoxLevel::addPeriodicBox: cannot add periodic image Box "
          << image_mapped_box
@@ -1143,7 +1143,7 @@ BoxLevel::addBox(
                              getDim())->getZeroShiftNumber());
       BoxSet& mapped_boxes = mapped_box.getOwnerRank() ==
          d_mpi.getRank() ? d_mapped_boxes : d_global_mapped_boxes;
-      if (mapped_boxes.find(real_mapped_box) == mapped_boxes.orderedEnd()) {
+      if (mapped_boxes.find(real_mapped_box) == mapped_boxes.end()) {
          TBOX_ERROR(
             "BoxLevel::addBox: cannot add periodic image Box "
             << mapped_box
@@ -1151,7 +1151,7 @@ BoxLevel::addBox(
             << ") already in the BoxLevel.\n");
       }
       if (d_global_mapped_boxes.find(mapped_box) !=
-          d_global_mapped_boxes.orderedEnd()) {
+          d_global_mapped_boxes.end()) {
          TBOX_ERROR(
             "BoxLevel::addBox: cannot add Box "
             << mapped_box
@@ -1212,7 +1212,7 @@ BoxLevel::addBoxWithoutUpdate(
 
 void
 BoxLevel::eraseBox(
-   BoxSet::OrderedConstIterator& ibox)
+   BoxSet::Iterator& ibox)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    if (d_parallel_state != DISTRIBUTED) {
@@ -1248,7 +1248,7 @@ BoxLevel::eraseBox(
       const LocalId& local_id = ibox->getLocalId();
       do {
          d_mapped_boxes.erase(ibox++);
-      } while (ibox != d_mapped_boxes.orderedEnd() && ibox->getLocalId() ==
+      } while (ibox != d_mapped_boxes.end() && ibox->getLocalId() ==
                local_id);
    }
 }
@@ -1285,8 +1285,8 @@ BoxLevel::eraseBox(
 
    d_local_bounding_box_up_to_date = d_global_data_up_to_date = false;
 
-   BoxSet::OrderedConstIterator ibox = d_mapped_boxes.find(mapped_box);
-   if (ibox == d_mapped_boxes.orderedEnd()) {
+   BoxSet::Iterator ibox = d_mapped_boxes.find(mapped_box);
+   if (ibox == d_mapped_boxes.end()) {
       TBOX_ERROR("BoxLevel::eraseBox: Box to be erased ("
          << mapped_box << ") is NOT a part of the BoxLevel.\n");
    }
@@ -1362,8 +1362,8 @@ const
  */
 void BoxLevel::getGlobalBoxes(BoxList& global_boxes) const
 {
-   for (BoxSet::OrderedConstIterator itr = d_global_mapped_boxes.orderedBegin();
-        itr != d_global_mapped_boxes.orderedEnd(); ++itr) {
+   for (BoxSet::ConstIterator itr = d_global_mapped_boxes.begin();
+        itr != d_global_mapped_boxes.end(); ++itr) {
       global_boxes.pushBack(*itr);
    }
 }
@@ -1528,8 +1528,8 @@ void BoxLevel::recursivePrint(
          /*
           * Print mapped_boxes from all ranks.
           */
-         for (BoxSet::OrderedConstIterator bi = d_global_mapped_boxes.orderedBegin();
-              bi != d_global_mapped_boxes.orderedEnd();
+         for (BoxSet::ConstIterator bi = d_global_mapped_boxes.begin();
+              bi != d_global_mapped_boxes.end();
               ++bi) {
             Box mapped_box = *bi;
             co << border << "    "
@@ -1540,8 +1540,8 @@ void BoxLevel::recursivePrint(
          /*
           * Print local mapped_boxes only.
           */
-         for (BoxSet::OrderedConstIterator bi = d_mapped_boxes.orderedBegin();
-              bi != d_mapped_boxes.orderedEnd();
+         for (BoxSet::ConstIterator bi = d_mapped_boxes.begin();
+              bi != d_mapped_boxes.end();
               ++bi) {
             Box mapped_box = *bi;
             co << border << "    "

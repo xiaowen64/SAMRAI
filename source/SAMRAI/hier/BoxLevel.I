@@ -9,7 +9,7 @@
  ************************************************************************/
 #include "SAMRAI/hier/RealBoxConstIterator.h"
 #include "SAMRAI/hier/BoxLevelHandle.h"
-#include "SAMRAI/hier/BoxContainerOrderedConstReverseIterator.h"
+#include "SAMRAI/hier/BoxContainerIterator.h"
 #include "SAMRAI/hier/BoxSetSingleOwnerIterator.h"
 
 #if !defined(__BGL_FAMILY__) && defined(__xlC__)
@@ -203,9 +203,9 @@ LocalId BoxLevel::getFirstLocalId() const
    if (mapped_boxes.isEmpty()) {
       return s_negative_one_local_id;
    }
-   BoxSet::OrderedConstIterator ni = mapped_boxes.orderedBegin();
+   BoxSet::ConstIterator ni = mapped_boxes.begin();
    while (ni->isPeriodicImage()) {
-      TBOX_ASSERT(ni != mapped_boxes.orderedEnd());   // There should be a real mapped_box!
+      TBOX_ASSERT(ni != mapped_boxes.end());   // There should be a real mapped_box!
       ++ni;
    }
    return ni->getLocalId();
@@ -221,8 +221,8 @@ LocalId BoxLevel::getLastLocalId() const
       return s_negative_one_local_id;
    }
    LocalId last_local_id(0);
-   for (BoxSet::OrderedConstReverseIterator ni = mapped_boxes.orderedRBegin();
-        ni != mapped_boxes.orderedREnd(); ++ni) {
+   for (BoxSet::ConstIterator ni = mapped_boxes.begin();
+        ni != mapped_boxes.end(); ++ni) {
       if (last_local_id < ni->getLocalId()) {
          last_local_id = ni->getLocalId();
       }
@@ -318,8 +318,8 @@ bool BoxLevel::hasBox(
 {
    if (mapped_box.getOwnerRank() == d_mpi.getRank()) {
 
-      BoxSet::OrderedConstIterator ni = d_mapped_boxes.find(mapped_box);
-      return ni != d_mapped_boxes.orderedEnd();
+      BoxSet::ConstIterator ni = d_mapped_boxes.find(mapped_box);
+      return ni != d_mapped_boxes.end();
 
    } else {
 #ifdef DEBUG_CHECK_ASSERTIONS
@@ -329,8 +329,8 @@ bool BoxLevel::hasBox(
             << "See BoxLevel::setParallelState().");
       }
 #endif
-      BoxSet::OrderedConstIterator ni = d_global_mapped_boxes.find(mapped_box);
-      return ni != d_global_mapped_boxes.orderedEnd();
+      BoxSet::ConstIterator ni = d_global_mapped_boxes.find(mapped_box);
+      return ni != d_global_mapped_boxes.end();
    }
 }
 
@@ -375,7 +375,7 @@ const tbox::SAMRAI_MPI& BoxLevel::getMPI() const
  ***********************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-BoxSet::OrderedConstIterator
+BoxSet::ConstIterator
 BoxLevel::getBox(
    const Box& mapped_box) const
 {
@@ -398,7 +398,7 @@ BoxLevel::getBox(
  ***********************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-BoxSet::OrderedConstIterator
+BoxSet::ConstIterator
 BoxLevel::getBox(
    const BoxId& mapped_box_id) const
 {
@@ -424,13 +424,13 @@ BoxLevel::getBox(
  ***********************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-BoxSet::OrderedConstIterator
+BoxSet::ConstIterator
 BoxLevel::getBoxStrict(
    const Box& mapped_box) const
 {
    if (mapped_box.getOwnerRank() == d_mpi.getRank()) {
-      BoxSet::OrderedConstIterator ni = d_mapped_boxes.find(mapped_box);
-      if (ni == d_mapped_boxes.orderedEnd()) {
+      BoxSet::ConstIterator ni = d_mapped_boxes.find(mapped_box);
+      if (ni == d_mapped_boxes.end()) {
          TBOX_ERROR(
             "BoxSet::getBoxStrict: requested mapped_box "
             << mapped_box
@@ -446,8 +446,8 @@ BoxLevel::getBoxStrict(
             << mapped_box << " without being in globalized state.");
       }
 #endif
-      BoxSet::OrderedConstIterator ni = d_global_mapped_boxes.find(mapped_box);
-      if (ni == d_global_mapped_boxes.orderedEnd()) {
+      BoxSet::ConstIterator ni = d_global_mapped_boxes.find(mapped_box);
+      if (ni == d_global_mapped_boxes.end()) {
          TBOX_ERROR(
             "BoxSet::getBoxStrict: requested mapped_box "
             << mapped_box
@@ -463,7 +463,7 @@ BoxLevel::getBoxStrict(
  ***********************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-BoxSet::OrderedConstIterator
+BoxSet::ConstIterator
 BoxLevel::getBoxStrict(
    const BoxId& mapped_box_id) const
 {
@@ -479,8 +479,8 @@ BoxLevel::getBoxStrict(
    Box mapped_box(getDim(),
                   mapped_box_id);
    if (mapped_box.getOwnerRank() == d_mpi.getRank()) {
-      BoxSet::OrderedConstIterator ni = d_mapped_boxes.find(mapped_box);
-      if (ni == d_mapped_boxes.orderedEnd()) {
+      BoxSet::ConstIterator ni = d_mapped_boxes.find(mapped_box);
+      if (ni == d_mapped_boxes.end()) {
          TBOX_ERROR(
             "BoxSet::getBoxStrict: requested mapped_box "
             << mapped_box
@@ -488,8 +488,8 @@ BoxLevel::getBoxStrict(
       }
       return ni;
    } else {
-      BoxSet::OrderedConstIterator ni = d_global_mapped_boxes.find(mapped_box);
-      if (ni == d_global_mapped_boxes.orderedEnd()) {
+      BoxSet::ConstIterator ni = d_global_mapped_boxes.find(mapped_box);
+      if (ni == d_global_mapped_boxes.end()) {
          TBOX_ERROR(
             "BoxSet::getBoxStrict: requested mapped_box "
             << mapped_box

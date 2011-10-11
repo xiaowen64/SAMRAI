@@ -333,9 +333,10 @@ void BoxContainer::unorder()
    }
 }
 
-BoxContainer::OrderedConstIterator
-BoxContainer::insert(OrderedConstIterator position,
-       const Box& box)
+BoxContainer::Iterator
+BoxContainer::insert(
+   Iterator position,
+   const Box& box)
 {
    TBOX_ASSERT(box.getId().isValid());
 
@@ -349,7 +350,7 @@ BoxContainer::insert(OrderedConstIterator position,
 
    const std::list<Box>::iterator& iter = d_list.insert(d_list.end(), box);
 
-   OrderedConstIterator insert_iter(*this);
+   Iterator insert_iter(d_ordered);
    int old_size = d_set.size();
    insert_iter.d_set_iter = d_set.insert(position.d_set_iter, &(*iter));
    if (d_set.size() == old_size) {
@@ -358,8 +359,8 @@ BoxContainer::insert(OrderedConstIterator position,
    return insert_iter;
 }
 
-void BoxContainer::insert ( OrderedConstIterator first,
-                            OrderedConstIterator last )
+void BoxContainer::insert ( ConstIterator first,
+                            ConstIterator last )
 {
    if (!d_ordered && size() == 0) {
       order();
@@ -369,7 +370,7 @@ void BoxContainer::insert ( OrderedConstIterator first,
       TBOX_ERROR("insert attempted on unordered container.");
    }
 
-   for (std::set<const Box*>::const_iterator set_iter = first.d_set_iter;
+   for (std::set<Box*>::const_iterator set_iter = first.d_set_iter;
         set_iter != last.d_set_iter; ++set_iter) {
 
       TBOX_ASSERT((**set_iter).getId().isValid());
@@ -380,19 +381,41 @@ void BoxContainer::insert ( OrderedConstIterator first,
       }
    }
 
-   if (d_set.size() > 0) {
-      d_ordered = true;
-   }
 }
 
-BoxContainer::OrderedConstIterator BoxContainer::find(const Box& box) const
+void BoxContainer::insert ( Iterator first,
+                            Iterator last )
+{
+   if (!d_ordered && size() == 0) {
+      order();
+   }
+
+   if (!d_ordered) {
+      TBOX_ERROR("insert attempted on unordered container.");
+   }
+
+   for (std::set<Box*>::iterator set_iter = first.d_set_iter;
+        set_iter != last.d_set_iter; ++set_iter) {
+
+      TBOX_ASSERT((**set_iter).getId().isValid());
+
+      const std::list<Box>::iterator& iter = d_list.insert(d_list.end(), **set_iter);
+      if (!d_set.insert(&(*iter)).second) {
+         d_list.erase(iter);
+      }
+   }
+
+}
+
+
+BoxContainer::Iterator BoxContainer::find(const Box& box) const
 {
    if (!d_ordered) {
       TBOX_ERROR("find attempted on unordered container.");
    }
 
-   OrderedConstIterator iter(*this);
-   iter.d_set_iter = d_set.find(&box);
+   Iterator iter(true);
+   iter.d_set_iter = d_set.find((Box*)&box);
 
    return iter;
 }
@@ -415,7 +438,7 @@ BoxContainer::removePeriodicImageBoxes()
       TBOX_ERROR("removePeriodicImages attempted on unordered container.");
    }
 
-   for (OrderedConstIterator na = orderedBegin(); na != orderedEnd(); ) {
+   for (Iterator na = begin(); na != end(); ) {
       if (na->isPeriodicImage()) {
          erase(na++);
       }
@@ -426,27 +449,31 @@ BoxContainer::removePeriodicImageBoxes()
 }
 
 
-void BoxContainer::erase(OrderedConstIterator iter)
+void BoxContainer::erase(Iterator iter)
 {
-//TODO:  merge erase options
-   TBOX_ASSERT(d_ordered || size() == 0);
-   const Box& box = **(iter.d_set_iter);
-   d_set.erase(iter.d_set_iter);
+   if (!d_ordered) {
+      d_list.erase(iter.d_list_iter);
+   } else {
+      const Box& box = **(iter.d_set_iter);
+      d_set.erase(iter.d_set_iter);
 
-   for (std::list<Box>::iterator bi = d_list.begin(); bi != d_list.end(); ++bi) {
-      if (bi->getId() == box.getId()) {
-         d_list.erase(bi);
-         break;
+      for (std::list<Box>::iterator bi = d_list.begin(); bi != d_list.end();
+           ++bi) {
+         if (bi->getId() == box.getId()) {
+            d_list.erase(bi);
+            break;
+         }
       }
    }
-
 }
 
 int BoxContainer::erase(const Box& box)
 {
-   TBOX_ASSERT(d_ordered || size() == 0);
+   if (!d_ordered) {
+      TBOX_ERROR("erase with Box argument attempted on unordered container.");
+   }
  
-   int ret = d_set.erase(&box);
+   int ret = d_set.erase((Box*)&box);
    for (std::list<Box>::iterator bi = d_list.begin(); bi != d_list.end(); ++bi) {
       if (bi->getId() == box.getId()) {
          d_list.erase(bi++);
@@ -457,37 +484,41 @@ int BoxContainer::erase(const Box& box)
    return ret;
 }
 
-#if 0
-void BoxContainer::erase(OrderedConstIterator first,
-                         OrderedConstIterator last)
+SAMRAI_INLINE_KEYWORD
+void BoxContainer::erase(Iterator first, Iterator last)
 {
-   d_set.erase(first.d_set_iter, last.d_set_iter);
-   //TODO:: Linear search to erase from d_list? 
+   if (!d_ordered) {
+      d_list.erase(first.d_list_iter, last.d_list_iter);
+   } else {
+      for (Iterator iter = first; iter != last; ++iter) {
+         erase(iter);
+      }
+   } 
 }
-#endif
 
-BoxContainer::OrderedConstIterator BoxContainer::lower_bound(const Box& box) const
+
+BoxContainer::Iterator BoxContainer::lower_bound(const Box& box) const
 {
    if (!d_ordered) {
       TBOX_ERROR("lower_bound attempted on unordered container.");
    }
 
-   OrderedConstIterator iter(*this);
+   Iterator iter(true);
 
-   iter.d_set_iter = d_set.lower_bound(&box);
+   iter.d_set_iter = d_set.lower_bound((Box*)&box);
 
    return iter;
 }
 
-BoxContainer::OrderedConstIterator BoxContainer::upper_bound(const Box& box) const
+BoxContainer::Iterator BoxContainer::upper_bound(const Box& box) const
 {
    if (!d_ordered) {
       TBOX_ERROR("upper_bound attempted on unordered container.");
    }
 
-   OrderedConstIterator iter(*this);
+   Iterator iter(true);
 
-   iter.d_set_iter = d_set.upper_bound(&box);
+   iter.d_set_iter = d_set.upper_bound((Box*)&box);
 
    return iter;
 }
@@ -522,7 +553,7 @@ int BoxContainer::getTotalSizeOfBoxes() const
          size += i().size();
       }
    } else {
-      for (OrderedConstIterator i(*this); i != orderedEnd(); ++i) {
+      for (ConstIterator i(*this); i != end(); ++i) {
          size += i().size(); 
       }
    } 
@@ -1119,8 +1150,8 @@ void BoxContainer::getOwners(
    std::set<int>& owners) const
 {
    if (d_ordered) {
-      for (OrderedConstIterator i_nabr = orderedBegin();
-           i_nabr != orderedEnd(); ++i_nabr) {
+      for (ConstIterator i_nabr = begin();
+           i_nabr != end(); ++i_nabr) {
          const int owner = (*i_nabr).getOwnerRank();
          owners.insert(owner);
       }
@@ -1150,7 +1181,7 @@ void BoxContainer::unshiftPeriodicImageBoxes(
       TBOX_ERROR("unshiftPeriodicImageBoxes called on unordered container.");
    }
 
-   OrderedConstIterator hint = output_mapped_boxes.orderedBegin();
+   Iterator hint = output_mapped_boxes.begin();
 
    if (!isEmpty()) {
       const Box& first_element(*begin());
@@ -1159,7 +1190,7 @@ void BoxContainer::unshiftPeriodicImageBoxes(
                                             first_element.getDim())->
                                          getZeroShiftNumber());
 
-      for (OrderedConstIterator na = orderedBegin(); na != orderedEnd(); ++na) {
+      for (ConstIterator na = begin(); na != end(); ++na) {
          if (na->isPeriodicImage()) {
             const Box unshifted_mapped_box(
                *na, zero_shift_number, refinement_ratio);
@@ -1198,8 +1229,8 @@ void BoxContainer::putToDatabase(
       tbox::Array<tbox::DatabaseBox> db_box_array(mbs_size);
 
       int counter = -1;
-      for (BoxContainer::OrderedConstIterator ni = orderedBegin();
-           ni != orderedEnd(); ++ni) {
+      for (BoxContainer::ConstIterator ni = begin();
+           ni != end(); ++ni) {
          local_ids.push_back(ni->getLocalId().getValue());
          ranks.push_back(ni->getOwnerRank());
          block_ids.push_back(ni->getBlockId().getBlockValue());
@@ -1256,7 +1287,7 @@ void BoxContainer::getFromDatabase(
             ranks[i],
             BlockId(block_ids[i]),
             PeriodicId(periodic_ids[i]));
-         insert(orderedEnd(), mapped_box);
+         insert(end(), mapped_box);
       }
    }
 }

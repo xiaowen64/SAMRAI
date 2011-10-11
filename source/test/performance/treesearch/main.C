@@ -12,6 +12,7 @@
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/hier/BoxTree.h"
 #include "SAMRAI/hier/BoxContainerConstIterator.h"
+#include "SAMRAI/hier/BoxContainerIterator.h"
 #include "SAMRAI/tbox/InputDatabase.h"
 #include "SAMRAI/tbox/InputManager.h"
 #include "SAMRAI/tbox/SAMRAIManager.h"
@@ -215,7 +216,7 @@ int main(
           */
          hier::BoxSet nodes;
          for (hier::LocalId i(0); i < static_cast<int>(boxes.size()); ++i) {
-            nodes.insert(nodes.orderedEnd(),
+            nodes.insert(nodes.end(),
                hier::Box(boxes[i.getValue()], i, 0));
          }
          const size_t node_count = nodes.size();

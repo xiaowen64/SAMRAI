@@ -581,7 +581,7 @@ private:
    findOverlapsForOneProcess(
       const int curr_owner,
       NeighborSet& visible_base_nabrs,
-      NeighborSet::OrderedConstIterator& base_ni,
+      NeighborSet::Iterator& base_ni,
       std::vector<int>& send_mesg,
       const size_t remote_mapped_box_counter_index,
       Connector& bridging_connector,

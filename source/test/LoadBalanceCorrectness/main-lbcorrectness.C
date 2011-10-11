@@ -12,8 +12,8 @@
 #include <iomanip>
 
 #include "SAMRAI/mesh/BergerRigoutsos.h"
+#include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/hier/BoxContainerIterator.h"
-#include "SAMRAI/hier/BoxContainerOrderedConstIterator.h"
 #include "SAMRAI/hier/BoxList.h"
 #include "SAMRAI/hier/BoxLevel.h"
 #include "SAMRAI/hier/IntVector.h"
@@ -872,8 +872,8 @@ int checkBalanceCorrectness(
       globalized_postbalance_mapped_box_set);
 
    // Check for prebalance indices absent in postbalance.
-   for (hier::BoxSet::OrderedConstIterator bi = globalized_prebalance_mapped_box_set.orderedBegin();
-        bi != globalized_prebalance_mapped_box_set.orderedEnd(); ++bi) {
+   for (hier::BoxSet::ConstIterator bi = globalized_prebalance_mapped_box_set.begin();
+        bi != globalized_prebalance_mapped_box_set.end(); ++bi) {
       hier::BoxList box_container(*bi);
       box_container.removeIntersections(bi->getBlockId(),
          prebalance.getRefinementRatio(),
@@ -890,8 +890,8 @@ int checkBalanceCorrectness(
    }
 
    // Check for postbalance indices absent in prebalance.
-   for (hier::BoxSet::OrderedConstIterator bi = globalized_postbalance_mapped_box_set.orderedBegin();
-        bi != globalized_postbalance_mapped_box_set.orderedEnd(); ++bi) {
+   for (hier::BoxSet::ConstIterator bi = globalized_postbalance_mapped_box_set.begin();
+        bi != globalized_postbalance_mapped_box_set.end(); ++bi) {
       hier::BoxList box_container(*bi);
       box_container.removeIntersections(bi->getBlockId(),
          postbalance.getRefinementRatio(),

@@ -9,6 +9,7 @@
  ************************************************************************/
 
 #include "SAMRAI/hier/BoxContainer.h"
+#include "SAMRAI/hier/BoxContainerIterator.h"
 
 namespace SAMRAI {
 namespace hier {
@@ -16,7 +17,15 @@ namespace hier {
 SAMRAI_INLINE_KEYWORD
 BoxContainerConstIterator::BoxContainerConstIterator(
    const BoxContainerConstIterator& other):
-   d_box_container(other.d_box_container),
+   d_list_iter(other.d_list_iter),
+   d_set_iter(other.d_set_iter),
+   d_ordered(other.d_ordered)
+{
+}
+
+SAMRAI_INLINE_KEYWORD
+BoxContainerConstIterator::BoxContainerConstIterator(
+   const BoxContainerIterator& other):
    d_list_iter(other.d_list_iter),
    d_set_iter(other.d_set_iter),
    d_ordered(other.d_ordered)

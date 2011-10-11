@@ -14,7 +14,6 @@
 #include "SAMRAI/xfer/PatchLevelInteriorFillPattern.h"
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/hier/BoxContainerConstIterator.h"
-#include "SAMRAI/hier/BoxContainerOrderedConstIterator.h"
 #include "SAMRAI/tbox/MathUtilities.h"
 
 #ifndef SAMRAI_INLINE
@@ -86,8 +85,8 @@ void PatchLevelInteriorFillPattern::computeFillBoxesAndNeighborhoodSets(
    /*
     * Fill just the interior.  Disregard gcw.
     */
-   for (hier::BoxSet::OrderedConstIterator ni = dst_mapped_boxes.orderedBegin();
-        ni != dst_mapped_boxes.orderedEnd(); ++ni) {
+   for (hier::BoxSet::ConstIterator ni = dst_mapped_boxes.begin();
+        ni != dst_mapped_boxes.end(); ++ni) {
       const hier::BoxId& gid = ni->getId();
       const hier::Box& dst_mapped_box =
          *dst_mapped_box_level.getBox(gid);
@@ -131,8 +130,8 @@ void PatchLevelInteriorFillPattern::computeDestinationFillBoxesOnSourceProc(
       all_dst_nabrs,
       dst_mapped_box_level.getRefinementRatio());
    tmp_nabrs.clear();
-   for (hier::BoxSet::OrderedConstIterator na = all_dst_nabrs.orderedBegin();
-        na != all_dst_nabrs.orderedEnd(); ++na) {
+   for (hier::BoxSet::ConstIterator na = all_dst_nabrs.begin();
+        na != all_dst_nabrs.end(); ++na) {
       hier::BoxSet& fill_boxes =
          dst_fill_boxes_on_src_proc[na->getId()];
       fill_boxes.insert(*na);

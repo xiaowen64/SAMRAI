@@ -24,7 +24,6 @@ namespace hier {
 BoxContainerConstIterator::BoxContainerConstIterator(
    const BoxContainer& container,
    bool from_start):
-   d_box_container(&container),
    d_list_iter(from_start ? container.d_list.begin() :
                container.d_list.end()),
    d_set_iter(from_start ? container.d_set.begin() :
@@ -38,7 +37,6 @@ BoxContainerConstIterator::operator = (
    const BoxContainerConstIterator& rhs)
 {
    if (this != &rhs) {
-      d_box_container = rhs.d_box_container;
       d_list_iter = rhs.d_list_iter;
       d_set_iter = rhs.d_set_iter;
       d_ordered = rhs.d_ordered;

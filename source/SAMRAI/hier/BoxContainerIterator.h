@@ -12,12 +12,14 @@
 #define included_hier_BoxContainerIterator
 
 #include <list>
+#include <set>
 
 namespace SAMRAI {
 namespace hier {
 
 class Box;
 class BoxContainer;
+class BoxContainerConstIterator;
 
 /**
  * A mutable iterator over the boxes in a BoxContainer or the underlying boxes
@@ -28,6 +30,7 @@ class BoxContainer;
 class BoxContainerIterator
 {
    friend class BoxContainer;
+   friend class BoxContainerConstIterator;
 
 public:
    // Constructors.
@@ -43,6 +46,8 @@ public:
    explicit BoxContainerIterator(
       BoxContainer& container,
       bool from_start = true);
+
+   explicit BoxContainerIterator(bool ordered);
 
    /*!
     * @brief Copy constructor.
@@ -86,6 +91,9 @@ public:
    Box&
    operator () () const;
 
+   Box*
+   operator -> () const;
+
    /*!
     * @brief Determine if iterator points to a valid position in container.
     *
@@ -114,6 +122,14 @@ public:
    const BoxContainerIterator&
    operator ++ ();
 
+   BoxContainerIterator
+   operator -- (
+      int);
+
+   const BoxContainerIterator&
+   operator -- ();
+
+
    /*!
     * @brief Determine if two iterators are equivalent.
     *
@@ -124,6 +140,10 @@ public:
    bool
    operator == (
       const BoxContainerIterator& other) const;
+
+   bool
+   operator == (
+      const BoxContainerConstIterator& other) const;
 
    /*!
     * @brief Determine if two iterators are not equivalent.
@@ -136,6 +156,10 @@ public:
    operator != (
       const BoxContainerIterator& other) const;
 
+   bool
+   operator != (
+      const BoxContainerConstIterator& other) const;
+
 private:
    /*
     * Default constructor just to be clear that there is none.
@@ -143,17 +167,13 @@ private:
    BoxContainerIterator();
 
    /*
-    * The BoxContainer being iterated over.
-    */
-   BoxContainer* d_box_container;
-
-   /*
     * Underlying iterator for a BoxContainer.  This is a wrapper.
     */
    std::list<Box>::iterator d_list_iter;
+   std::set<Box*>::iterator d_set_iter;
 
-   // Add pointer to BoxContainer and underlying iterator for
-   // BoxContainer here.
+   bool d_ordered;
+
 };
 
 }

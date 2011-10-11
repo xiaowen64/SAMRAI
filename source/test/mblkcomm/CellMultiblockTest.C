@@ -282,7 +282,7 @@ void CellMultiblockTest::fillSingularityBoundaryConditions(
 
          if (ni != dst_to_encon.end()) {
 
-            for (hier::BoxSet::OrderedConstIterator ei = dst_to_encon.begin(ni);
+            for (hier::BoxSet::ConstIterator ei = dst_to_encon.begin(ni);
                  ei != dst_to_encon.end(ni); ++ei) {
 
                tbox::Pointer<hier::Patch> encon_patch(

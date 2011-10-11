@@ -19,7 +19,6 @@
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/hier/BoxContainerIterator.h"
 #include "SAMRAI/hier/BoxContainerConstIterator.h"
-#include "SAMRAI/hier/BoxContainerOrderedConstIterator.h"
 #include "SAMRAI/hier/BoxList.h"
 #include "SAMRAI/hier/BoxLevel.h"
 #include "SAMRAI/hier/IntVector.h"
@@ -1357,8 +1356,8 @@ void GridGeometry::computePhysicalDomain(
 //         block_domain_boxes.swap(tmp_mapped_boxes);
       }
 
-      for (BoxSet::OrderedConstIterator bi = block_domain_boxes.orderedBegin();
-           bi != block_domain_boxes.orderedEnd(); ++bi) {
+      for (BoxSet::ConstIterator bi = block_domain_boxes.begin();
+           bi != block_domain_boxes.end(); ++bi) {
 
          domain_mapped_boxes.insert(*bi);
 

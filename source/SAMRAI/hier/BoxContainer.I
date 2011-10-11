@@ -10,8 +10,6 @@
 
 #include "SAMRAI/hier/BoxContainerIterator.h"
 #include "SAMRAI/hier/BoxContainerConstIterator.h"
-#include "SAMRAI/hier/BoxContainerOrderedConstIterator.h"
-#include "SAMRAI/hier/BoxContainerOrderedConstReverseIterator.h"
 #include "SAMRAI/hier/PeriodicShiftCatalog.h"
 #include "SAMRAI/tbox/Utilities.h"
 
@@ -207,27 +205,6 @@ void BoxContainer::popBack()
 }
 
 SAMRAI_INLINE_KEYWORD
-void BoxContainer::erase(Iterator iter)
-{
-// TODO: merge erase options
-   d_list.erase(iter.d_list_iter);
-   if (d_ordered) {
-      d_set.clear();
-      d_ordered = false;
-   }
-}
-
-SAMRAI_INLINE_KEYWORD
-void BoxContainer::erase(Iterator first, Iterator last)
-{
-   d_list.erase(first.d_list_iter, last.d_list_iter);
-   if (d_ordered) {
-      d_set.clear();
-      d_ordered = false;
-   }
-}
-
-SAMRAI_INLINE_KEYWORD
 void BoxContainer::clear()
 {
    d_list.clear();
@@ -259,34 +236,6 @@ bool BoxContainer::operator != (const BoxContainer& rhs) const
 }
 
 SAMRAI_INLINE_KEYWORD
-BoxContainer::OrderedConstIterator BoxContainer::orderedBegin() const
-{
-   TBOX_ASSERT(d_ordered || size() == 0);
-   return OrderedConstIterator(*this);
-}
-
-SAMRAI_INLINE_KEYWORD
-BoxContainer::OrderedConstIterator BoxContainer::orderedEnd() const
-{
-   TBOX_ASSERT(d_ordered || size() == 0);
-   return OrderedConstIterator(*this, false);
-}
-
-SAMRAI_INLINE_KEYWORD
-BoxContainer::OrderedConstReverseIterator BoxContainer::orderedRBegin() const
-{
-   TBOX_ASSERT(d_ordered || size() == 0);
-   return OrderedConstReverseIterator(*this);
-}
-
-SAMRAI_INLINE_KEYWORD
-BoxContainer::OrderedConstReverseIterator BoxContainer::orderedREnd() const
-{
-   TBOX_ASSERT(d_ordered || size() == 0);
-   return OrderedConstReverseIterator(*this, false);
-}
-
-SAMRAI_INLINE_KEYWORD
 void BoxContainer::separatePeriodicImages(
    std::vector<Box>& real_mapped_box_vector,
    std::vector<Box>& periodic_image_mapped_box_vector) const
@@ -304,7 +253,7 @@ void BoxContainer::separatePeriodicImages(
                                          getZeroShiftNumber());
 
       real_mapped_box_vector.reserve(real_mapped_box_vector.size() + size());
-      for (OrderedConstIterator ni = orderedBegin(); ni != orderedEnd(); ++ni) {
+      for (ConstIterator ni = begin(); ni != end(); ++ni) {
          const Box& mapped_box = *ni;
          if (mapped_box.getPeriodicId() == zero_shift_number) {
             real_mapped_box_vector.push_back(*ni);
