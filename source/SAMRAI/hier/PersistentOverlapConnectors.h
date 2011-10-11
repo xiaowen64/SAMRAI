@@ -114,6 +114,20 @@ public:
       const Connector& relationships);
 
    /*!
+    * @brief Cache the supplied overlap Connector.
+    *
+    * The head will be the supplied head and the base will be the
+    * BoxLevel that owns this object.
+    *
+    * @param[in] head
+    * @param[in] connector
+    */
+   void
+   cacheConnector(
+      const BoxLevel& head,
+      Connector* connector);
+
+   /*!
     * @brief Find an overlap Connector with the given head and minimum
     * Connector width.
     *

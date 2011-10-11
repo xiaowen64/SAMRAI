@@ -154,6 +154,60 @@ const Connector& PersistentOverlapConnectors::createConnector(
 
    return *d_cons_from_me.back();
 }
+
+/*
+ ************************************************************************
+ * Cache the user-provided Connector.
+ ************************************************************************
+ */
+void PersistentOverlapConnectors::cacheConnector(
+   const BoxLevel& head,
+   Connector* connector)
+{
+   TBOX_ASSERT(d_my_mapped_box_level.isInitialized());
+
+   for (int i = 0; i < d_cons_from_me.size(); ++i) {
+      TBOX_ASSERT(d_cons_from_me[i]->isInitialized());
+      TBOX_ASSERT(d_cons_from_me[i]->getBase().isInitialized());
+      TBOX_ASSERT(d_cons_from_me[i]->getHead().isInitialized());
+      TBOX_ASSERT(
+         !d_cons_from_me[i]->getBase().getBoxLevelHandle().isNull());
+      TBOX_ASSERT(
+         !d_cons_from_me[i]->getHead().getBoxLevelHandle().isNull());
+      TBOX_ASSERT(&d_cons_from_me[i]->getBase() ==
+         &d_cons_from_me[i]->getBase().getBoxLevelHandle()->
+         getBoxLevel());
+      TBOX_ASSERT(&d_cons_from_me[i]->getHead() ==
+         &d_cons_from_me[i]->getHead().getBoxLevelHandle()->
+         getBoxLevel());
+      if (&(d_cons_from_me[i]->getHead()) == &head &&
+          d_cons_from_me[i]->getConnectorWidth() == connector->getConnectorWidth()) {
+         TBOX_ERROR(
+            "PersistentOverlapConnectors::createConnector:\n"
+            << "Cannot create duplicate Connectors.");
+      }
+   }
+
+   connector->initialize(
+      d_my_mapped_box_level,
+      head,
+      connector->getConnectorWidth(),
+      BoxLevel::DISTRIBUTED,
+      false);
+      
+   if (s_check_created_connectors == 'y') {
+      // Check correctness.
+      OverlapConnectorAlgorithm oca;
+      TBOX_ASSERT(oca.checkOverlapCorrectness(*connector) == 0);
+   }
+
+   d_cons_from_me.push_back(connector);
+   head.getPersistentOverlapConnectors().d_cons_to_me.
+   push_back(connector);
+
+   return;
+}
+
 /*
  ************************************************************************
  *
