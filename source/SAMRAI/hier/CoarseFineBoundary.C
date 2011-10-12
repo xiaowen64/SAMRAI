@@ -407,6 +407,7 @@ void CoarseFineBoundary::computeFromLevel(
 
 }
 
+#if 0
 void CoarseFineBoundary::addPeriodicImageBoxes(
    BoxList& boxes,
    const tbox::Array<tbox::List<IntVector> >& shifts)
@@ -453,7 +454,7 @@ void CoarseFineBoundary::addPeriodicImageBoxes(
 
    TBOX_ASSERT(current_size == new_size);
 }
-
+#endif
 void CoarseFineBoundary::clear()
 {
    d_boundary_boxes.clear();

@@ -461,18 +461,6 @@ public:
    getGlobalizedBoxLevel() const;
 
    /*!
-    * @brief Get the shifts for the patches on the level.
-    *
-    * The shift array contains a list of shift vectors for each patch
-    * when the domain has some periodic direction.
-    *
-    * @return a const reference to the shift array for the patches on the
-    * level.
-    */
-   const tbox::Array<tbox::List<IntVector> >&
-   getShiftsForLevel() const;
-
-   /*!
     * @brief Get the mapping of patches to processors.
     *
     * @return A const reference to the mapping of patches to processors.

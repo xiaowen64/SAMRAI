@@ -272,27 +272,6 @@ private:
       const IntVector& max_ghost_width);
 
    /*!
-    * @brief Take a set of boxes representing a domain and
-    * append to it the immediate periodic images of the boxes.
-    *
-    * If there are no periodic directions in the grid, there will be no
-    * change.
-    *
-    * The image boxes form a virtual domain which can be used by
-    * GridGeometry to compute the coarse-fine boundary instead of the
-    * physical boundary.
-    *
-    * @param[in,out] boxes Box array on which to append periodic images boxes
-    * @param[in] shifts Periodic shifts.
-    *
-    * TODO: refactor remove this method.
-    */
-   void
-   addPeriodicImageBoxes(
-      BoxList& boxes,
-      const tbox::Array<tbox::List<IntVector> >& shifts);
-
-   /*!
     * @brief Dimension of the object.
     */
    const tbox::Dimension d_dim;
