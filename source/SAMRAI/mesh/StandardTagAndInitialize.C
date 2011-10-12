@@ -800,7 +800,8 @@ StandardTagAndInitialize::preprocessRichardsonExtrapolation(
     * Get Connectors coarsened<==>coarser, which are used for recursive
     * refinement filling of the coarsened level's ghosts.
     */
-   hier::Connector coarsened_to_coarser, coarser_to_coarsened;
+   hier::Connector* coarsened_to_coarser = new hier::Connector;
+   hier::Connector* coarser_to_coarsened = new hier::Connector;
    if (level_number > 0) {
       tbox::Pointer<hier::PatchLevel> coarser_level = hierarchy->getPatchLevel(
             level_number - 1);
@@ -817,21 +818,19 @@ StandardTagAndInitialize::preprocessRichardsonExtrapolation(
             hierarchy->getRequiredConnectorWidth(
                level_number - 1, level_number));
       hier::OverlapConnectorAlgorithm oca;
-      oca.bridge(coarsened_to_coarser,
-         coarser_to_coarsened,
+      oca.bridge(*coarsened_to_coarser,
+         *coarser_to_coarsened,
          coarsened_to_level,
          level_to_coarser,
          coarser_to_level,
          level_to_coarsened);
       coarsened_level->getBoxLevel()->getPersistentOverlapConnectors().
-      createConnector(
+      cacheConnector(
          *coarser_level->getBoxLevel(),
-         coarsened_to_coarser.getConnectorWidth(),
          coarsened_to_coarser);
       coarser_level->getBoxLevel()->getPersistentOverlapConnectors().
-      createConnector(
+      cacheConnector(
          *coarsened_level->getBoxLevel(),
-         coarser_to_coarsened.getConnectorWidth(),
          coarser_to_coarsened);
    }
 

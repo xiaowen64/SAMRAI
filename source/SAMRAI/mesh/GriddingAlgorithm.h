@@ -565,8 +565,8 @@ private:
    regridFinerLevel_createAndInstallNewLevel(
       const int tag_ln,
       const double regrid_time,
-      const hier::Connector& tag_to_new,
-      const hier::Connector& new_to_tag,
+      hier::Connector* tag_to_new,
+      hier::Connector* new_to_tag,
       const hier::Connector& tag_to_finer,
       const hier::Connector& finer_to_tag);
 

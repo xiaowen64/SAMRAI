@@ -1511,8 +1511,8 @@ void RefineSchedule::createCoarseInterpPatchLevel(
    if (s_barrier_and_time) {
       t_bridge_coarse_interp_hiercoarse->barrierAndStart();
    }
-   const tbox::Pointer<hier::Connector> coarse_interp_to_hiercoarse(new hier::Connector);
-   const tbox::Pointer<hier::Connector> hiercoarse_to_coarse_interp(new hier::Connector);
+   hier::Connector* coarse_interp_to_hiercoarse = new hier::Connector;
+   hier::Connector* hiercoarse_to_coarse_interp = new hier::Connector;
 
    const hier::IntVector neg1(-hier::IntVector::getOne(hierarchy->getDim()));
    const hier::IntVector dst_growth_to_nest_coarse_interp =
@@ -1590,13 +1590,11 @@ void RefineSchedule::createCoarseInterpPatchLevel(
    }
 
    coarse_interp_level->getBoxLevel()->getPersistentOverlapConnectors().
-      createConnector( *hiercoarse_level->getBoxLevel(),
-                       coarse_interp_to_hiercoarse->getConnectorWidth(),
-                       *coarse_interp_to_hiercoarse );
+      cacheConnector( *hiercoarse_level->getBoxLevel(),
+                      coarse_interp_to_hiercoarse );
    hiercoarse_level->getBoxLevel()->getPersistentOverlapConnectors().
-      createConnector( *coarse_interp_level->getBoxLevel(),
-                       hiercoarse_to_coarse_interp->getConnectorWidth(),
-                       *hiercoarse_to_coarse_interp );
+      cacheConnector( *coarse_interp_level->getBoxLevel(),
+                      hiercoarse_to_coarse_interp );
 }
 
 /*
@@ -2456,7 +2454,7 @@ void RefineSchedule::generateCommunicationSchedule(
          dst_mapped_box_level.getGridGeometry(),
          dst_mapped_box_level.getMPI());
 
-   dst_to_unfilled = new Connector(
+   dst_to_unfilled = new hier::Connector(
          dst_mapped_box_level,
          *unfilled_mapped_box_level,
          dst_to_fill.getConnectorWidth(),
@@ -2468,7 +2466,7 @@ void RefineSchedule::generateCommunicationSchedule(
             dst_mapped_box_level.getGridGeometry(),
             dst_mapped_box_level.getMPI());
 
-      encon_to_unfilled_encon = new Connector(
+      encon_to_unfilled_encon = new hier::Connector(
             *(d_encon_level->getBoxLevel()),
             *unfilled_encon_box_level,
             dst_to_fill.getConnectorWidth(),
