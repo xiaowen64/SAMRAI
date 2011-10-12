@@ -910,8 +910,8 @@ void BoxLevelConnectorUtils::computeInternalOrExternalParts(
        * should be mapped to empty neighbor containers according
        * to the definition of a map in MappingConnectorAlgorithm::modify().
        */
-      int a = input_to_parts.getLocalNumberOfNeighborSets();
-      int b = input.getLocalNumberOfBoxes();
+      int a = static_cast<int>(input_to_parts.getLocalNumberOfNeighborSets());
+      int b = static_cast<int>(input.getLocalNumberOfBoxes());
       if (a != b) {
          tbox::perr << "BoxLevelConnectorUtils::" << caller << ": library error:\n"
                     <<

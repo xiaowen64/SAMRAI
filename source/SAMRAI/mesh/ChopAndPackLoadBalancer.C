@@ -908,29 +908,6 @@ void ChopAndPackLoadBalancer::chopBoxesWithNonuniformWorkload(
       current_level = hierarchy->getPatchLevel(level_number);
    }
 
-   tbox::Pointer<hier::PatchLevel>
-   coarse_level = hierarchy->getPatchLevel(level_number - 1);
-   hier::Connector tmp_to_current(
-      *tmp_mapped_box_level,
-      *current_level->getBoxLevel(),
-      hier::IntVector::getZero(d_dim));
-   hier::Connector current_to_tmp(
-      *current_level->getBoxLevel(),
-      *tmp_mapped_box_level,
-      hier::IntVector::getZero(d_dim));
-   hier::Connector tmp_to_coarse(
-      *tmp_mapped_box_level,
-      *coarse_level->getBoxLevel(),
-      hier::IntVector::getZero(d_dim));
-   hier::Connector coarse_to_tmp(
-      *coarse_level->getBoxLevel(),
-      *tmp_mapped_box_level,
-      hier::IntVector::getZero(d_dim));
-   hier::OverlapConnectorAlgorithm oca;
-   oca.findOverlaps(tmp_to_current);
-   oca.findOverlaps(current_to_tmp);
-   oca.findOverlaps(tmp_to_coarse);
-   oca.findOverlaps(coarse_to_tmp);
    fill_work_algorithm.createSchedule(tmp_level,
       current_level,
       level_number - 1,

@@ -150,6 +150,7 @@ MblkHyperbolicLevelIntegrator::MblkHyperbolicLevelIntegrator(
    bool use_time_refinement):
    d_dim(dim)
 {
+   NULL_USE(mblk_hierarchy);
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(!object_name.empty());
    TBOX_ASSERT(!input_db.isNull());

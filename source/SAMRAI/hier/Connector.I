@@ -348,7 +348,7 @@ int Connector::numLocalNeighbors(
    BoxId non_per_id(box_id.getGlobalId(),
                     box_id.getBlockId(),
                     PeriodicId::zero());
-   return d_relationships.find(non_per_id)->second.size();
+   return static_cast<int>(d_relationships.find(non_per_id)->second.size());
 }
 
 /*

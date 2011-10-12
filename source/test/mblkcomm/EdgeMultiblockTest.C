@@ -369,8 +369,6 @@ void EdgeMultiblockTest::fillSingularityBoundaryConditions(
                tbox::Pointer<hier::Patch> encon_patch(
                   encon_level.getPatch(ei->getId()));
 
-               int encon_blk_num = ei->getBlockId().getBlockValue();
-
                hier::Transformation::RotationIdentifier rotation =
                   hier::Transformation::NO_ROTATE;
                hier::IntVector offset(dim);

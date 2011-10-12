@@ -290,8 +290,6 @@ void CellMultiblockTest::fillSingularityBoundaryConditions(
 
                const hier::BlockId& encon_blk_id = ei->getBlockId();
 
-               int encon_blk_num = ei->getBlockId().getBlockValue();
-
                hier::Transformation::RotationIdentifier rotation =
                   hier::Transformation::NO_ROTATE;
                hier::IntVector offset(dim);
