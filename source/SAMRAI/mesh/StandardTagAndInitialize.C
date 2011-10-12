@@ -783,13 +783,9 @@ StandardTagAndInitialize::preprocessRichardsonExtrapolation(
       level_to_level.getConnectorWidth());
    level_to_level.coarsenLocalNeighbors(tmp_coarsened, coarsen_ratio);
 
-   const tbox::ConstPointer<hier::BoxLevel>& mapped_box_level_ptr =
-      patch_level->getBoxLevel();
-   const hier::BoxLevel& mapped_box_level = *mapped_box_level_ptr;
-   hier::PersistentOverlapConnectors& persistent_overlap_connectors =
-      mapped_box_level.getPersistentOverlapConnectors();
    const hier::Connector& level_to_coarsened =
-      persistent_overlap_connectors.createConnector(
+      patch_level->getBoxLevel()->getPersistentOverlapConnectors().
+      createConnector(
          *coarsened_level->getBoxLevel(),
          level_to_level_gcw,
          tmp_coarsened);

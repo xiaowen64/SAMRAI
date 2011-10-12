@@ -404,11 +404,7 @@ void GriddingAlgorithm::makeCoarsestLevel(
     * regularly.
     */
 
-   hier::BoxLevel new_mapped_box_level(
-      domain_mapped_box_level.getBoxes(),
-      domain_mapped_box_level.getRefinementRatio(),
-      domain_mapped_box_level.getGridGeometry(),
-      domain_mapped_box_level.getMPI());
+   hier::BoxLevel new_mapped_box_level(domain_mapped_box_level);
    hier::Connector domain_to_new(domain_to_domain);
    domain_to_new.initialize(
       domain_mapped_box_level,
@@ -1624,7 +1620,7 @@ void GriddingAlgorithm::regridFinerLevel_createAndInstallNewLevel(
     */
    if (d_print_steps) {
       tbox::plog
-      << "GriddingAlgorithm::findRefinementBoxes: bridge links\n";
+      << "GriddingAlgorithm::regridFinerLevel_createAndInstallNewLevel: bridge links\n";
    }
 
    const int new_ln = tag_ln + 1;
@@ -2526,6 +2522,7 @@ void GriddingAlgorithm::readLevelBoxes(
          d_hierarchy->getDomainSearchTree(hier::BlockId::zero()),
          coarser_to_coarser);
    }
+   new_mapped_box_level.finalize();
 }
 
 /*
@@ -3370,7 +3367,10 @@ void GriddingAlgorithm::refineNewBoxLevel(
 {
    TBOX_DIM_ASSERT_CHECK_DIM_ARGS2(d_dim, new_mapped_box_level, ratio);
 
-   new_mapped_box_level.refineBoxes(new_mapped_box_level, ratio);
+   new_mapped_box_level.refineBoxes(new_mapped_box_level,
+      ratio,
+      new_mapped_box_level.getRefinementRatio()*ratio);
+   new_mapped_box_level.finalize();
 
    new_to_tag.initialize(
       new_mapped_box_level,

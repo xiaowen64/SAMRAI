@@ -248,7 +248,10 @@ int main(
        * the domain but without exclude* boxes.
        */
 
-      hier::BoxSet big_mapped_boxes;
+      hier::BoxLevel big_mapped_box_level(
+         one_vector,
+         grid_geometry,
+         tbox::SAMRAI_MPI::getSAMRAIWorld());
       const std::string exclude("exclude");
       for (int bn = 0; bn < grid_geometry->getNumberBlocks(); ++bn) {
 
@@ -275,7 +278,7 @@ int main(
             hier::LocalId last_local_id(-1);
             for (hier::BoxList::Iterator bi(block_domain);
                  bi != block_domain.end(); ++bi) {
-               big_mapped_boxes.insert(big_mapped_boxes.end(),
+               big_mapped_box_level.addBoxWithoutUpdate(
                   hier::Box(*bi,
                      ++last_local_id,
                      0,
@@ -290,17 +293,13 @@ int main(
              */
             for (hier::BoxSetSingleBlockIterator bi(domain_mapped_boxes, block_id);
                  bi.isValid(); ++bi) {
-               big_mapped_boxes.insert(big_mapped_boxes.end(), *bi);
+               big_mapped_box_level.addBoxWithoutUpdate(*bi);
             }
 
          }
 
       }
-      hier::BoxLevel big_mapped_box_level(
-         big_mapped_boxes,
-         one_vector,
-         grid_geometry,
-         tbox::SAMRAI_MPI::getSAMRAIWorld());
+      big_mapped_box_level.finalize();
 
       const hier::BoxSet& big_mapped_box_set(
          big_mapped_box_level.getBoxes());
@@ -889,5 +888,10 @@ void shrinkBoxLevel(
 void refineBoxLevel(hier::BoxLevel& mapped_box_level,
                     const hier::IntVector& ratio)
 {
-   mapped_box_level.refineBoxes(mapped_box_level, ratio);
+   mapped_box_level.refineBoxes(
+     mapped_box_level,
+     ratio,
+     mapped_box_level.getRefinementRatio()*ratio);
+   mapped_box_level.finalize();
+   return;
 }

@@ -445,7 +445,7 @@ public:
     *
     * @param[in]  level
     */
-   const tbox::ConstPointer<BoxLevel>&
+   const tbox::Pointer<BoxLevel>&
    getBoxLevel(
       const int level) const;
 

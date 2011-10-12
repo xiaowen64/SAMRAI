@@ -660,63 +660,28 @@ void PatchHierarchy::setupDomainData()
     * Grab the physical domain (including periodic images) from the
     * GridGeometry and set up domain data dependent on it.
     */
-   tbox::Array<BoxSet> domain_mapped_boxes(d_number_blocks);
-   for (int nb = 0; nb < d_number_blocks; nb++) {
-      d_grid_geometry->computePhysicalDomainWithPeriodicImages(
-         domain_mapped_boxes[nb],
-         IntVector::getOne(d_dim), BlockId(nb));
-   }
-
-   // Initialize the multiblock domain.
-   if (d_number_blocks == 1) {
-      d_domain_mapped_box_level.initialize(
-         domain_mapped_boxes[0],
-         IntVector::getOne(d_dim),
-         getGridGeometry(),
-         tbox::SAMRAI_MPI::getSAMRAIWorld(),
-         BoxLevel::GLOBALIZED);
-   } else {
-      BoxSet all_domain_mapped_boxes;
-      for (int nb = 0; nb < d_number_blocks; nb++) {
-         all_domain_mapped_boxes.insert(domain_mapped_boxes[nb].begin(),
-            domain_mapped_boxes[nb].end());
-      }
-      d_domain_mapped_box_level.initialize(
-         all_domain_mapped_boxes,
-         IntVector::getOne(d_dim),
-         getGridGeometry(),
-         tbox::SAMRAI_MPI::getSAMRAIWorld(),
-         BoxLevel::GLOBALIZED);
-   }
+   d_domain_mapped_box_level.initialize(
+      IntVector::getOne(d_dim),
+      getGridGeometry(),
+      tbox::SAMRAI_MPI::getSAMRAIWorld(),
+      BoxLevel::GLOBALIZED);
+   d_grid_geometry->computePhysicalDomain(d_domain_mapped_box_level,
+      IntVector::getOne(d_dim));
 
    // Initialize the multiblock domain search tree.
-   BoxSet multiblock_mapped_boxes;
-   for (int nb = 0; nb < d_number_blocks; nb++) {
-      multiblock_mapped_boxes.insert(
-         domain_mapped_boxes[nb].begin(),
-         domain_mapped_boxes[nb].end());
-   }
    d_domain_search_tree_periodic.generateTree(
       d_grid_geometry,
-      multiblock_mapped_boxes);
+      d_domain_mapped_box_level.getBoxes());
 
    // Generate the non-periodic multiblock domain search tree.
    if (PeriodicShiftCatalog::getCatalog(d_dim)->isPeriodic()) {
-      BoxSet multiblock_mapped_boxes_noperiodic;
-      for (BoxSet::Iterator ni = multiblock_mapped_boxes.begin();
-           ni != multiblock_mapped_boxes.end(); ++ni) {
-         if (!(*ni).isPeriodicImage()) {
-            multiblock_mapped_boxes_noperiodic.insert(
-               multiblock_mapped_boxes_noperiodic.end(),
-               *ni);
-         }
-      }
-      d_domain_search_tree.generateTree(
+      d_domain_search_tree.generateNonPeriodicTree(
          d_grid_geometry,
-         multiblock_mapped_boxes_noperiodic);
+         d_domain_mapped_box_level.getBoxes());
    } else {
       d_domain_search_tree = d_domain_search_tree_periodic;
    }
+   d_domain_mapped_box_level.finalize();
 
    std::map<BlockId, BoxList> multiblock_complement_boxes;
 
@@ -733,10 +698,6 @@ void PatchHierarchy::setupDomainData()
       multiblock_complement_boxes.insert(
          std::pair<BlockId, BoxList>(block_id, complement_boxes));
 
-//      multiblock_complement_boxes[block_id].pushBack(
-//         hier::Box::getUniverse(d_dim));
-//      multiblock_complement_boxes[block_id].removeIntersections(
-//         d_domain_search_tree_periodic.getSingleBlockBoxTree(block_id));
    }
 
    d_complement_searchtree.generateTree(

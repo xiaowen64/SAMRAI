@@ -200,16 +200,14 @@ int main(
 
       const hier::IntVector& one_vector(hier::IntVector::getOne(dim));
 
-      hier::BoxSet multiblock_boxes;
-      grid_geometry->computePhysicalDomain(
-         multiblock_boxes,
-         hier::IntVector::getOne(dim));
-
       hier::BoxLevel mapped_box_level(
-         multiblock_boxes,
          one_vector,
          grid_geometry,
          tbox::SAMRAI_MPI::getSAMRAIWorld());
+      grid_geometry->computePhysicalDomain(
+         mapped_box_level,
+         hier::IntVector::getOne(dim));
+      mapped_box_level.finalize();
 
       /*
        * Generate boxes from the multiblock domain description.

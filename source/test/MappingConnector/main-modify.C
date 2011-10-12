@@ -175,17 +175,15 @@ int main(
       const hier::IntVector& one_vector(hier::IntVector::getOne(dim));
       const hier::IntVector& zero_vector(hier::IntVector::getZero(dim));
 
-      hier::BoxSet multiblock_boxes;
-      grid_geometry->computePhysicalDomain(
-         multiblock_boxes,
-         hier::IntVector::getOne(dim));
-
       hier::BoxLevel domain_mapped_box_level(
-         multiblock_boxes,
          one_vector,
          grid_geometry,
          tbox::SAMRAI_MPI::getSAMRAIWorld(),
          hier::BoxLevel::GLOBALIZED);
+      grid_geometry->computePhysicalDomain(
+         domain_mapped_box_level,
+         hier::IntVector::getOne(dim));
+      domain_mapped_box_level.finalize();
 
       /*
        * Generate BoxLevel A from the multiblock domain description
@@ -353,7 +351,10 @@ void breakUpBoxes(
    }
 
    if (refinement_ratio != hier::IntVector::getOne(dim)) {
-      mapped_box_level.refineBoxes(mapped_box_level, refinement_ratio);
+      mapped_box_level.refineBoxes(mapped_box_level,
+         refinement_ratio,
+         mapped_box_level.getRefinementRatio()*refinement_ratio);
+      mapped_box_level.finalize();
    }
 
    hier::IntVector max_box_size(dim, tbox::MathUtilities<int>::getMax());

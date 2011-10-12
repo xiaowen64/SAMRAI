@@ -106,32 +106,22 @@ public:
    ~MultiblockBoxTree();
 
    /*!
-    * @brief Generates the tree from a MUTABLE vector of Boxes.
-    *
-    * For efficiency reasons, mapped_boxes is changed in the process.
-    * Its output state is undefined.  However, you can change
-    * mapped_boxes after tree generation without invalidating the
-    * tree.
+    * @brief Generates the tree from a BoxSet.
     *
     * @param[in] grid_geometry
     *
-    * @param[in] mapped_boxes.  No empty boxes are allowed.
+    * @param[in] boxes.  No empty boxes are allowed.
     *
     * @param[in] min_number
     */
    void
    generateTree(
       const tbox::ConstPointer<GridGeometry>& grid_geometry,
-      const BoxSet& mapped_boxes,
+      const BoxSet& boxes,
       size_t min_number = 10);
 
    /*!
-    * @brief Generates the tree from MUTABLE lists of Boxes.
-    *
-    * For efficiency reasons, boxes is changed in the process.
-    * Its output state is undefined.  However, you can change
-    * boxes after tree generation without invalidating the
-    * tree.
+    * @brief Generates the tree from lists of Boxes.
     *
     * @param[in] grid_geometry
     *
@@ -143,6 +133,21 @@ public:
    generateTree(
       const tbox::ConstPointer<GridGeometry>& grid_geometry,
       const std::map<BlockId, BoxList>& boxes,
+      size_t min_number = 10);
+
+   /*!
+    * @brief Generates the tree of non-periodic Boxes from a BoxSet.
+    *
+    * @param[in] grid_geometry
+    *
+    * @param[in] boxes.  No empty boxes are allowed.
+    *
+    * @param[in] min_number
+    */
+   void
+   generateNonPeriodicTree(
+      const tbox::ConstPointer<GridGeometry>& grid_geometry,
+      const BoxSet& boxes,
       size_t min_number = 10);
 
    /*!
