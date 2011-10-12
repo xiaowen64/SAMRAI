@@ -239,7 +239,7 @@ struct BoxInTransitMoreLoad {
  * n_root_cycles = -1         // Number of root cycles to use for
  *                            // reaching final partitioning. Nominally 1.
  *                            // Can be set higher to reduce negative
- *                            // performance effects of very poor initial
+ *                            // performance effects of extremely poor initial
  *                            // load balance.  Set to -1 for "automatic".
  *                            // Set to zero to effectively bypass load balancing.
  * balance_penalty_wt = 1.0   // Relative weight for computing combined box breaking
@@ -458,7 +458,7 @@ private:
    typedef std::set<BoxInTransit, BoxInTransitMoreLoad> TransitSet;
 
    /*!
-    * @brief Data to save for each processor.
+    * @brief Data to save for each subtree.
     */
    struct SubtreeLoadData {
       SubtreeLoadData():num_procs(0),
@@ -782,7 +782,8 @@ private:
       const double global_sum_load ) const;
 
    /*!
-    * @brief Create mapping to break up oversized boxes.
+    * @brief Compute BoxLevel conforming to max size constraint and
+    * the mapping to that BoxLevel.
     *
     * The mapping is entirely local (no transfering of work).
     */
