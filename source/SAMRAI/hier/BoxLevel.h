@@ -486,18 +486,12 @@ public:
 
    /*!
     * @brief Returns the container of global Boxes.
-    *
-    * @par Assertions
-    * Throws an unrecoverable assertion if not in GLOBALIZED mode.
     */
    const BoxSet&
    getGlobalBoxes() const;
 
    /*!
-    * @brief Returns the container of global Boxes.
-    *
-    * @par Assertions
-    * Throws an unrecoverable assertion if not in GLOBALIZED mode.
+    * @brief Fill the container with the global Boxes.
     */
    void
    getGlobalBoxes(

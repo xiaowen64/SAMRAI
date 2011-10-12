@@ -669,7 +669,7 @@ void TreeLoadBalancer::mapOversizedBoxes(
             d_min_size,
             d_cut_factor,
             d_bad_interval,
-            d_domain_boxes);
+            d_block_domain_boxes[mapped_box.getBlockId().getBlockValue()]);
 
          if (true || chopped.size() != 1) {
 
@@ -2991,7 +2991,7 @@ bool TreeLoadBalancer::breakOffLoad(
    t_find_bad_cuts->start();
    hier::BoxUtilities::findBadCutPoints(bad_cuts,
       mapped_box,
-      d_domain_boxes,
+      d_block_domain_boxes[mapped_box.getBlockId().getBlockValue()],
       d_bad_interval);
    t_find_bad_cuts->stop();
 
@@ -4329,9 +4329,23 @@ void TreeLoadBalancer::setShadowData(
       domain_mapped_box_level.getParallelState() ==
       hier::BoxLevel::GLOBALIZED);
 
-   d_domain_boxes.clear();
-   domain_mapped_box_level.getGlobalBoxes(d_domain_boxes);
-   d_domain_boxes.refine(refinement_ratio);
+   d_block_domain_boxes.clear();
+   int nblocks =
+      domain_mapped_box_level.getGridGeometry()->getNumberBlocks();
+   d_block_domain_boxes.resize(nblocks);
+
+   if (nblocks == 1) {
+      domain_mapped_box_level.getGlobalBoxes(d_block_domain_boxes[0]);
+      d_block_domain_boxes[0].refine(refinement_ratio);
+   } else {
+      for (int b = 0; b < nblocks; ++b) {
+         domain_mapped_box_level.getGlobalBoxes().
+            getSingleBlockBoxContainer(d_block_domain_boxes[b],
+                                       hier::BlockId(b));
+
+         d_block_domain_boxes[b].refine(refinement_ratio);
+      }
+   }
 }
 
 
@@ -4344,7 +4358,7 @@ void TreeLoadBalancer::setShadowData(
 void TreeLoadBalancer::unsetShadowData() const {
    d_min_size = hier::IntVector(d_dim, -1);
    d_max_size = hier::IntVector(d_dim, -1);
-   d_domain_boxes.clear();
+   d_block_domain_boxes.clear();
    d_bad_interval = hier::IntVector(d_dim, -1);
    d_cut_factor = hier::IntVector(d_dim, -1);
 }

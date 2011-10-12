@@ -359,6 +359,10 @@ void BoxUtilities::chopBoxes(
             cut_factor);
 
       if (chop_box) {
+         TBOX_ASSERT(box.getBlockId().isValid());
+         BoxContainer phys_block_boxes;
+         physical_boxes.getSingleBlockBoxContainer(phys_block_boxes,
+                                                   box.getBlockId());
 
          for (int id = 0; id < dim.getValue(); id++) {
 
@@ -369,7 +373,7 @@ void BoxUtilities::chopBoxes(
                findBadCutPointsForDirection(id,
                   bad_cut_points,
                   box,
-                  physical_boxes,
+                  phys_block_boxes,
                   bad_interval);
                fixBadCutPointsForDirection(id,
                   cut_points[id],

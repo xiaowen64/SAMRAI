@@ -282,13 +282,13 @@ void CoarseFineBoundary::computeFromLevel(
          /*
           * Construct the array of boxes on level and level0 in this block.
           */
-         tbox::Pointer<BoxList> level_domain =
-            all_boxes_on_level.getSingleBlockBoxContainer(d_dim, block_id);
-         tbox::Pointer<BoxList> phys_domain =
-            all_boxes_on_level0.getSingleBlockBoxContainer(d_dim, block_id);
+         BoxList level_domain;
+         BoxList phys_domain;
+         all_boxes_on_level.getSingleBlockBoxContainer(level_domain, block_id);
+         all_boxes_on_level0.getSingleBlockBoxContainer(phys_domain, block_id);
 
          const IntVector& ratio = level.getRatioToLevelZero();
-         phys_domain->refine(ratio);
+         phys_domain.refine(ratio);
 
          /*
           * Create a pseudo-domain -- the union of the physical domain boxes
@@ -298,7 +298,7 @@ void CoarseFineBoundary::computeFromLevel(
           * ratio.
           */
 
-         BoxList pseudo_domain(*phys_domain);
+         BoxList pseudo_domain(phys_domain);
          pseudo_domain.unorder();
          for (tbox::List<GridGeometry::Neighbor>::Iterator
               ni(grid_geometry->getNeighbors(block_id)); ni; ni++) {
@@ -317,7 +317,7 @@ void CoarseFineBoundary::computeFromLevel(
           * coarse-fine boundaries.
           */
 
-         BoxList adjusted_level_domain_list(*level_domain);
+         BoxList adjusted_level_domain_list(level_domain);
 
          for (PatchLevel::Iterator p(level); p; ++p) {
             if ((*p)->getBox().getBlockId() == i &&
@@ -345,20 +345,20 @@ void CoarseFineBoundary::computeFromLevel(
              * Construct the array of boxes on level in this neighbor's block.
              */
             BlockId nbr_block_id(ni().getBlockId());
-            tbox::Pointer<BoxList> neighbor_boxes =
-               all_boxes_on_level.getSingleBlockBoxContainer(d_dim, nbr_block_id);
+            BoxList neighbor_boxes;
+            all_boxes_on_level.getSingleBlockBoxContainer(neighbor_boxes,
+                                                          nbr_block_id);
 
-            if (neighbor_boxes->size()) {
-               grid_geometry->transformBoxList(*neighbor_boxes,
+            if (neighbor_boxes.size()) {
+               grid_geometry->transformBoxList(neighbor_boxes,
                   ratio,
                   block_id,
                   nbr_block_id);
 
-               BoxList neighbor_boxes_to_add(*phys_domain);
+               BoxList neighbor_boxes_to_add(phys_domain);
                neighbor_boxes_to_add.grow(max_ghost_width);
 
-               neighbor_boxes_to_add.intersectBoxes(BoxList(
-                     *neighbor_boxes));
+               neighbor_boxes_to_add.intersectBoxes(neighbor_boxes);
 
                adjusted_level_domain_list.spliceFront(neighbor_boxes_to_add);
             }

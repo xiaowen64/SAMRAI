@@ -41,6 +41,7 @@ using namespace tbox;
 void
 partitionBoxes(
    hier::BoxLevel& mapped_box_level,
+   hier::BoxLevel& domain_mapped_box_level,
    const hier::IntVector& max_box_size,
    const hier::IntVector& min_box_size);
 
@@ -304,6 +305,8 @@ int main(
       const hier::BoxSet& big_mapped_box_set(
          big_mapped_box_level.getBoxes());
 
+      hier::BoxLevel big_domain_level = big_mapped_box_level;
+
       /*
        * Generate the "small" BoxLevel by shrinking the big one
        * back at its boundary.
@@ -313,6 +316,8 @@ int main(
          big_mapped_box_level,
          shrinkage,
          unshrunken_blocks);
+
+      hier::BoxLevel small_domain_level = small_mapped_box_level;
 
       /*
        * Refine Boxlevels as user specified.
@@ -347,8 +352,10 @@ int main(
       if (main_db->isInteger("min_box_size")) {
          main_db->getIntegerArray("min_box_size", &min_box_size[0], dim.getValue());
       }
-      partitionBoxes(small_mapped_box_level, max_box_size, min_box_size);
-      partitionBoxes(big_mapped_box_level, max_box_size, min_box_size);
+      partitionBoxes(small_mapped_box_level, small_domain_level,
+                     max_box_size, min_box_size);
+      partitionBoxes(big_mapped_box_level, big_domain_level,
+                     max_box_size, min_box_size);
 
       big_mapped_box_level.cacheGlobalReducedData();
       small_mapped_box_level.cacheGlobalReducedData();
@@ -696,12 +703,12 @@ int main(
  */
 void partitionBoxes(
    hier::BoxLevel& mapped_box_level,
+   hier::BoxLevel& domain_mapped_box_level,
    const hier::IntVector& max_box_size,
    const hier::IntVector& min_box_size) {
 
    const tbox::Dimension& dim(mapped_box_level.getDim());
 
-   hier::BoxLevel domain_mapped_box_level(mapped_box_level);
    domain_mapped_box_level.setParallelState(hier::BoxLevel::GLOBALIZED);
 
    mesh::TreeLoadBalancer load_balancer(mapped_box_level.getDim());

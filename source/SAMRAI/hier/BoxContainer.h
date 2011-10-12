@@ -783,9 +783,9 @@ private:
     * @brief Returns a BoxContainer containing the Boxes from this container 
     * in the requested block.
     */
-   tbox::Pointer<BoxContainer>
+   void
    getSingleBlockBoxContainer(
-      const tbox::Dimension& dim,
+      BoxContainer& container,
       const BlockId& which_block) const;
 
    // Database I/O.

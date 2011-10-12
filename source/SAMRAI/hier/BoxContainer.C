@@ -580,18 +580,26 @@ bool BoxContainer::contains(
  */
 Box BoxContainer::getBoundingBox() const
 {
-//TODO: multiblock 
    if (isEmpty()) {
       TBOX_WARNING("Bounding box container is empty");
       const tbox::Dimension dim(tbox::Dimension::getInvalidDimension());
       Box empty(dim);
       return empty;
    } else {
+      const tbox::Dimension& dim = d_list.front().getDim();
+      Box bbox(dim);
       ConstIterator i = begin();
-      Box bbox(*i);
+      for ( ; i != end(); ++i) {
+//         if (i->getBlockId() == block_id) {
+            bbox = *i;
+            break;
+//         }
+      }
       ++i;
       for ( ; i != end(); ++i) {
-         bbox += i();
+//         if (i->getBlockId() == block_id) {
+            bbox += i();
+//         }
       }
 
       return bbox;
@@ -1122,23 +1130,21 @@ void BoxContainer::burstBoxes(
  * in the requested block.
  ***********************************************************************
  */
-tbox::Pointer<BoxContainer>
+void
 BoxContainer::getSingleBlockBoxContainer(
-   const tbox::Dimension& dim,
+   BoxContainer& container,
    const BlockId& which_block) const
 {
+   container.clear();
    BoxSetSingleBlockIterator itr(*this, which_block);
-   BoxContainer* boxes_in_block = new BoxContainer();
    while (itr.isValid()) {
       const Box& mapped_box = *itr;
-      TBOX_ASSERT(dim == mapped_box.getDim());
-      boxes_in_block->pushBack(mapped_box);
+      container.pushBack(mapped_box);
       ++itr;
    }
    if (d_ordered) {
-      boxes_in_block->order();
+      container.order();
    }
-   return tbox::Pointer<BoxContainer>(boxes_in_block);
 }
 
 /*
