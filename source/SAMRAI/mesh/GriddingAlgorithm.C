@@ -2507,8 +2507,8 @@ void GriddingAlgorithm::readLevelBoxes(
          coarser_to_new,
          d_hierarchy->getDomainSearchTree(hier::BlockId::zero()),
          coarser_to_coarser);
+      new_mapped_box_level.finalize();
    }
-   new_mapped_box_level.finalize();
 }
 
 /*
