@@ -471,7 +471,7 @@ void TreeLoadBalancer::loadBalanceBoxLevel(
          balance_to_tmp,
          tmp_to_balance,
          balance_mapped_box_level,
-        rank_group,
+         rank_group,
          icycle,
          number_of_cycles,
          local_load,

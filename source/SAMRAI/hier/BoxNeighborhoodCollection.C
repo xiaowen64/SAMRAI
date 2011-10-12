@@ -747,12 +747,14 @@ void BoxNeighborhoodCollection::getFromIntBuffer(
 void BoxNeighborhoodCollection::putToDatabase(
    tbox::Database& database) const
 {
+   NULL_USE(database);
    return;
 }
 
 void BoxNeighborhoodCollection::getFromDatabase(
    const tbox::Database& database)
 {
+   NULL_USE(database);
    return;
 }
 
@@ -831,7 +833,7 @@ BoxNeighborhoodCollection::ConstIterator::operator ++ ()
    else {
       const Box* next_root = *roots;
       ++d_itr;
-      for (; d_itr != d_collection->d_adj_list.end() && d_itr->second.size() == 0;
+      for (; d_itr != d_collection->d_adj_list.end() && !d_itr->first.isIdEqual(*next_root);
            ++d_itr) {
       }
    }

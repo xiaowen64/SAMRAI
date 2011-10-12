@@ -227,7 +227,7 @@ int BoxNeighborhoodCollection::numNeighbors(
       TBOX_ERROR("hier::BoxNeighborhoodCollection::numNeighbors root_itr points to end");
    }
 
-   return root_itr.d_itr->second.size();
+   return static_cast<int>(root_itr.d_itr->second.size());
 }
 
 SAMRAI_INLINE_KEYWORD
