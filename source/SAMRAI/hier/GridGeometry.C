@@ -1458,7 +1458,7 @@ void GridGeometry::setPhysicalDomain(
       bounding_box.removeIntersections(domain_boxes);
       if (bounding_box.size() == 0) {
          d_domain_is_single_box[b] = true;
-         d_physical_domain[b] = BoxList(domain_boxes.getBoundingBox());
+         d_physical_domain[b] = BoxContainer(domain_boxes.getBoundingBox());
       } else {
          d_domain_is_single_box[b] = false;
          d_physical_domain[b] = domain[b];
@@ -1484,7 +1484,6 @@ void GridGeometry::setPhysicalDomain(
 void GridGeometry::resetDomainBoxSet(const BlockId& block_id)
 {
    const int& block_number = block_id.getBlockValue();
-   BoxContainer domain_set;
    BoxContainer::Iterator itr(d_physical_domain[block_number]);
    for (LocalId i(0); i < d_physical_domain[block_number].size(); ++i, ++itr) {
       Box mapped_box(*itr, i, 0, BlockId(block_number));
@@ -1561,25 +1560,27 @@ void GridGeometry::initializePeriodicShift(
          d_periodic_shift(id) = ((d_periodic_shift(id) == 0) ? 0 : 1);
       }
 
-      /*
-       * Check if the physical domain is valid for the specified
-       * periodic conditions.  If so, compute the shift in each
-       * dimension based on the the number of cells.
-       */
-      if (checkPeriodicValidity(d_physical_domain[0])) {
+      if (d_periodic_shift != hier::IntVector::getZero(d_dim)) {
+         /*
+          * Check if the physical domain is valid for the specified
+          * periodic conditions.  If so, compute the shift in each
+          * dimension based on the the number of cells.
+          */
+         if (checkPeriodicValidity(d_physical_domain[0])) {
 
-         BoxList domain_box_list(d_physical_domain[0]);
-         Box bounding_box = domain_box_list.getBoundingBox();
+            BoxList domain_box_list(d_physical_domain[0]);
+            Box bounding_box = domain_box_list.getBoundingBox();
 
-         for (id = 0; id < d_dim.getValue(); id++) {
-            d_periodic_shift(id) *= bounding_box.numberCells(id);
+            for (id = 0; id < d_dim.getValue(); id++) {
+               d_periodic_shift(id) *= bounding_box.numberCells(id);
+            }
+
+         } else {
+            TBOX_ERROR("Error in GridGeometry object with name = "
+               << d_object_name << ": in intializePeriodicShift():  "
+               << "Domain is not periodic for one (or more) of the dimensions "
+               << "specified in the geometry input file!");
          }
-
-      } else {
-         TBOX_ERROR("Error in GridGeometry object with name = "
-            << d_object_name << ": in intializePeriodicShift():  "
-            << "Domain is not periodic for one (or more) of the dimensions "
-            << "specified in the geometry input file!");
       }
    } else {
       TBOX_ASSERT(directions == IntVector::getZero(d_dim));

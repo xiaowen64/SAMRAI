@@ -632,7 +632,7 @@ void BoxUtilities::growBoxesWithinDomain(
       if (domain.isEmpty()) {
          Box big_box(boxes.getBoundingBox());
          big_box.grow(min_size);
-         outside_domain = BoxList(big_box);
+         outside_domain.pushBack(big_box);
          outside_domain.grow(IntVector::getOne(dim));
          outside_domain.removeIntersections(big_box);
       } else {
@@ -1344,7 +1344,7 @@ void BoxUtilities::findBadCutPointsForDirection(
     */
 
    BoxList level_interior(physical_boxes);
-   Box level_bounding_box = level_interior.getBoundingBox();
+   Box level_bounding_box = level_interior.getBoundingBox(box.getBlockId());
 
    for (int id2 = 0; id2 < dim.getValue(); id2++) {
 

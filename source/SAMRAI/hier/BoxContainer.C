@@ -586,20 +586,49 @@ Box BoxContainer::getBoundingBox() const
       Box empty(dim);
       return empty;
    } else {
+      ConstIterator i = begin();
+      Box bbox(*i);
+      const hier::BlockId& block_id = bbox.getBlockId();
+      ++i;
+      for ( ; i != end(); ++i) {
+         if (i->getBlockId() == block_id) {
+            bbox += *i;
+         } else {
+            TBOX_ERROR("Attempted to find bounding box for BoxContainer with boxes from different blocks");
+         }
+      }
+      return bbox;
+   }
+}
+
+Box BoxContainer::getBoundingBox(const hier::BlockId& block_id) const
+{
+   if (isEmpty()) {
+      TBOX_WARNING("Bounding box container is empty");
+      const tbox::Dimension dim(tbox::Dimension::getInvalidDimension());
+      Box empty(dim);
+      return empty;
+   } else {
       const tbox::Dimension& dim = d_list.front().getDim();
       Box bbox(dim);
       ConstIterator i = begin();
       for ( ; i != end(); ++i) {
-//         if (i->getBlockId() == block_id) {
+         if (i->getBlockId() == block_id) {
             bbox = *i;
             break;
-//         }
+         }
       }
+
+      if (i == end()) {
+         TBOX_WARNING("Container has no boxes with the given BlockId");
+      }
+
       ++i;
+
       for ( ; i != end(); ++i) {
-//         if (i->getBlockId() == block_id) {
+         if (i->getBlockId() == block_id) {
             bbox += i();
-//         }
+         }
       }
 
       return bbox;

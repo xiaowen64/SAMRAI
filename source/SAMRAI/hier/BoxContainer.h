@@ -625,6 +625,8 @@ private:
     */
    Box
    getBoundingBox() const;
+   Box
+   getBoundingBox(const hier::BlockId& block_id) const;
 
    /*!
     * @brief Check for non-empty intersection among boxes in container.
