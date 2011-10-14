@@ -318,6 +318,7 @@ void CoarseFineBoundary::computeFromLevel(
           */
 
          BoxList adjusted_level_domain_list(level_domain);
+         adjusted_level_domain_list.unorder();
 
          for (PatchLevel::Iterator p(level); p; ++p) {
             if ((*p)->getBox().getBlockId() == i &&
@@ -350,12 +351,14 @@ void CoarseFineBoundary::computeFromLevel(
                                                           nbr_block_id);
 
             if (neighbor_boxes.size()) {
+               neighbor_boxes.unorder();
                grid_geometry->transformBoxList(neighbor_boxes,
                   ratio,
                   block_id,
                   nbr_block_id);
 
                BoxList neighbor_boxes_to_add(phys_domain);
+               neighbor_boxes_to_add.unorder();
                neighbor_boxes_to_add.grow(max_ghost_width);
 
                neighbor_boxes_to_add.intersectBoxes(neighbor_boxes);
