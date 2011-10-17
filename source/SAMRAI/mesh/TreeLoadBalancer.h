@@ -676,6 +676,32 @@ private:
       int received_data_length ) const;
 
    /*!
+    * @brief Construct semilocal relationships in
+    * unbalanced--->balanced Connector.
+    *
+    * Constructing semilocal unbalanced--->balanced relationships
+    * require communication to determine where exported work ended up.
+    * This methods does the necessary communication and constructs
+    * these relationship in the given Connector.
+    *
+    * @param [o] unbalanced_to_balanced Connector to store
+    * relationships in.
+    *
+    * @param [i] exported_to Ranks of processes that the local process
+    * exported work to.
+    *
+    * @param [i] imported_from Ranks of processes that the local
+    * process imported work from.
+    *
+    * @param [i] kept_imports Work that was imported and locally kept.
+    */
+   void constructSemilocalUnbalancedToBalanced(
+      hier::Connector &unbalanced_to_balanced,
+      const std::vector<int> &exported_to,
+      const std::vector<int> &imported_from,
+      const TreeLoadBalancer::TransitSet &kept_imports ) const;
+
+   /*!
     * @brief Break off a given load size from a given Box.
     *
     * @param mapped_box Box to break.
@@ -867,7 +893,7 @@ private:
     * @param [o] child_comms
     * @param [o] parent_send
     * @param [o] parent_recv
-    * @param [i/o] parent_recv
+    * @param [o] parent_recv
     * @param [i] rank_group
     */
    void setupAsyncCommObjects(

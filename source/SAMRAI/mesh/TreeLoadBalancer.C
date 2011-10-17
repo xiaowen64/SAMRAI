@@ -1511,158 +1511,33 @@ void TreeLoadBalancer::computeLoadBalancingMapWithinRankGroup(
 #endif
 
 
-
-
    /*
-    * TODO: Move code to compute neighborhoods to a separate method.
-    * It should make this method more manageable and allows us to
-    * experiment with various way to compute the edges (by direct
-    * communication without relying on the tree, for example).
     *
-    * Determine edges from unbalanced to balanced BoxLevels
-    * by sending balanced Boxes back to the owners of
-    * the unbalanced Boxes that originated them.  Use
-    * the proc_hist data from the balanced BoxInTransit
-    * to send along the tree.
-    *
-    * Post receives for edge data sent from children.
-    * Pack relationship data for locally owned Boxes.
-    * Then complete receives  from children and send
-    * data up to parents.
-    *
-    * Four steps for passing relationship data to the owners of
-    * originating Boxes:
-    * 1. Receive relationships from all children to whom we exported work.
-    * 1a. Note relationships to local Boxes on balanced_mapped_box_level.
-    * 2. Send relationship data to parent if we imported work from parent.
-    * 3. Receive relationship data from parent if we exported work to parent.
-    * 4. Send relationships to children from whom we imported work.
-    *
-    * TODO: Implement alternate edge generation method where terminal
-    * owners send edge info directly back to initial owners.  No need
-    * for trails.  Initial owners receive from MPI_ANY and stops
-    * receiving when it can account for the number of cells it started
-    * with.  We should retain both methods for edge generation because
-    * we don't know which is faster on any given machine.  BTNG.
     */
+   std::vector<int> exported_to;
+   std::vector<int> imported_from;
 
-   t_get_edge_from_children->start();
-   for (int c = 0; c < num_children; ++c) {
-      if (child_load_data[c].load_exported > 0) {
-         child_comms[c].beginRecv();
-         if (child_comms[c].isDone()) {
-            completed.insert(completed.end(), &child_comms[c]);
-         }
+   for ( int ichild=0; ichild<num_children; ++ichild ) {
+      if ( child_load_data[ichild].load_imported > 0 ) {
+         imported_from.push_back(child_comms[ichild].getPeerRank());
+      }
+      if ( child_load_data[ichild].load_exported > 0 ) {
+         exported_to.push_back(child_comms[ichild].getPeerRank());
       }
    }
 
-
-   std::map<int,std::vector<int> > outgoing_messages;
-
-   /*
-    * Pack up balance boxes from remote origins for sending to the
-    * previous owner (and eventually to the box's originator.
-    * Note that unassigned now contains only these boxes.
-    */
-   t_local_edges->start();
-   for (TransitSet::const_iterator ni = unassigned.begin();
-        ni != unassigned.end(); ++ni) {
-      const BoxInTransit &box_in_transit = *ni;
-      TBOX_ASSERT(!box_in_transit.proc_hist.empty());
-      TBOX_ASSERT(box_in_transit.orig_box.getOwnerRank() != d_mpi.getRank());
-      box_in_transit.packForPreviousOwner(outgoing_messages);
+   if ( my_load_data.load_imported > 0 ) {
+      imported_from.push_back(parent_send->getPeerRank());
    }
-   t_local_edges->stop();
-
-
-   /*
-    * Advance edge messages from children.
-    */
-
-   if (completed.empty()) {
-      t_children_edge_comm->start();
-      comm_stage.advanceSome(completed);
-      t_children_edge_comm->stop();
-   }
-   while (!completed.empty()) {
-      for (unsigned int i = 0; i < completed.size(); ++i) {
-         tbox::AsyncCommPeer<int>* peer_comm =
-            dynamic_cast<tbox::AsyncCommPeer<int> *>(completed[i]);
-         const int* received_data = peer_comm->getRecvData();
-         int received_data_length = peer_comm->getRecvSize();
-         unpackAndRouteNeighborhoodSets(
-            outgoing_messages,
-            unbalanced_to_balanced,
-            received_data,
-            received_data_length );
-      }
-      completed.clear();
-      t_children_edge_comm->start();
-      comm_stage.advanceSome(completed);
-      t_children_edge_comm->stop();
-   }
-   t_get_edge_from_children->stop();
-
-
-   /*
-    * Edge data to/from parents:
-    *
-    * If we received BoxInTransit from the parent, the parent is
-    * expecting us to send relationship data for those boxes.
-    *
-    * We sent BoxInTransit to the parent, the parent would send back
-    * relationship data for those boxes.
-    */
-   if (my_load_data.load_imported > 0) {
-
-      t_send_edge_to_parent->start();
-      t_parent_edge_comm->start();
-      parent_send->completeCurrentOperation();
-      const std::vector<int> &msg(outgoing_messages[parent_send->getPeerRank()]);
-      parent_send->beginSend(&msg[0], static_cast<int>(msg.size()));
-      t_parent_edge_comm->stop();
-      t_send_edge_to_parent->stop();
-
-   } else if (my_load_data.load_exported > 0) {
-
-      t_get_edge_from_parent->start();
-      t_parent_edge_comm->start();
-      parent_recv->beginRecv();
-      parent_recv->completeCurrentOperation();
-      t_parent_edge_comm->stop();
-      unpackAndRouteNeighborhoodSets(
-         outgoing_messages,
-         unbalanced_to_balanced,
-         parent_recv->getRecvData(),
-         parent_recv->getRecvSize() );
-      t_get_edge_from_parent->stop();
-
+   if ( my_load_data.load_exported > 0 ) {
+      exported_to.push_back(parent_send->getPeerRank());
    }
 
-   t_send_edge_to_children->start();
-   for (int c = 0; c < num_children; ++c) {
-      if (child_load_data[c].load_imported > 0) {
-         const std::vector<int> &msg(outgoing_messages[child_comms[c].getPeerRank()]);
-         child_comms[c].beginSend(&msg[0], static_cast<int>(msg.size()));
-      }
-   }
-   t_send_edge_to_children->stop();
-
-
-   /*
-    * Wrap up communications.
-    * No follow-up needed because all the receives have been
-    * processed--only the sends may still be out.
-    *
-    * TODO: This step should take no significant time, because the sends
-    * should all be well on their way.  However, I'm seeing some
-    * aparent scaling issues.  I may want to use MPI_Request_free
-    * to just let the sends finish quietly without furthe actions.
-    * Not sure if that would help.
-    */
-   t_finish_comms->start();
-   comm_stage.advanceAll(completed);
-   t_finish_comms->stop();
+   constructSemilocalUnbalancedToBalanced(
+      unbalanced_to_balanced,
+      exported_to,
+      imported_from,
+      unassigned );
 
 
    if (d_check_connectivity) {
@@ -1901,6 +1776,158 @@ void TreeLoadBalancer::unpackSubtreeLoadData(
       received_data += received_box.commBufferSize();
    }
    t_unpack_load->stop();
+}
+
+
+
+
+
+/*
+ *************************************************************************
+ * Construct semilocal relationships in unbalanced--->balanced
+ * Connector.  Constructing these relationships require communication
+ * to determine where exported work ended up.
+ *************************************************************************
+ */
+void TreeLoadBalancer::constructSemilocalUnbalancedToBalanced(
+   hier::Connector &unbalanced_to_balanced,
+   const std::vector<int> &export_dsts,
+   const std::vector<int> &import_srcs,
+   const TreeLoadBalancer::TransitSet &kept_imports ) const
+{
+   /*
+    * Determine edges from unbalanced to balanced BoxLevels by sending
+    * balanced Boxes back to the owners of the unbalanced Boxes that
+    * originated them.  Use the proc_hist data from each balanced
+    * BoxInTransit to send it back along the path it took to get to
+    * the process that eventually kept it.
+    *
+    * Any process we exported work to should send back a message about
+    * where that work went.  Any process we imported work from expects
+    * us to send a message about what happened to that work.  So we
+    * receive messages from procs in export_dsts and send messages to
+    * procs in import_srcs.
+    *
+    * For work that originated locally, construct relationships when
+    * an incoming message tells us where that work ended up.  For work
+    * that originated elsewhere, forward the information to the
+    * process that sent it to us.
+    *
+    * TODO: Implement alternate edge generation method where terminal
+    * owners send edge info directly back to initial owners.  No need
+    * for trails.  Initial owners receive from MPI_ANY and stops
+    * receiving when it can account for the number of cells it started
+    * with.  We should retain both methods for edge generation because
+    * we don't know which is faster on any given machine.  BTNG.
+    */
+
+
+   /*
+    * Set up objects for asynchronous communication.
+    */
+   tbox::AsyncCommStage comm_stage;
+   tbox::AsyncCommPeer<int> *importer_comms = import_srcs.empty() ? NULL : new tbox::AsyncCommPeer<int>[import_srcs.size()];
+   tbox::AsyncCommPeer<int> *exporter_comms = export_dsts.empty() ? NULL : new tbox::AsyncCommPeer<int>[export_dsts.size()];
+   tbox::AsyncCommStage::MemberVec completed;
+
+   for ( size_t i=0; i<export_dsts.size(); ++i ) {
+      exporter_comms[i].initialize(&comm_stage);
+      exporter_comms[i].setPeerRank(export_dsts[i]);
+      exporter_comms[i].setMPI(d_mpi);
+      exporter_comms[i].setMPITag(TreeLoadBalancer_EDGETAG0,
+                                  TreeLoadBalancer_EDGETAG1);
+      exporter_comms[i].limitFirstDataLength(TreeLoadBalancer_FIRSTDATALEN);
+      exporter_comms[i].beginRecv();
+      if ( exporter_comms[i].isDone() ) {
+         completed.push_back(&exporter_comms[i]);
+      }
+   }
+
+   for ( size_t i=0; i<import_srcs.size(); ++i ) {
+      importer_comms[i].initialize(&comm_stage);
+      importer_comms[i].setPeerRank(import_srcs[i]);
+      importer_comms[i].setMPI(d_mpi);
+      importer_comms[i].setMPITag(TreeLoadBalancer_EDGETAG0,
+                                  TreeLoadBalancer_EDGETAG1);
+      importer_comms[i].limitFirstDataLength(TreeLoadBalancer_FIRSTDATALEN);
+   }
+
+
+   // Buffers for staging data to send.  Indexed by recipient rank.
+   std::map<int,std::vector<int> > outgoing_messages;
+
+
+   /*
+    * Prepare messages to tell processes that sent work to us about
+    * the work that we kept.
+    */
+   t_local_edges->start();
+   for (TransitSet::const_iterator ni = kept_imports.begin();
+        ni != kept_imports.end(); ++ni) {
+      const BoxInTransit &box_in_transit = *ni;
+      TBOX_ASSERT(!box_in_transit.proc_hist.empty());
+      TBOX_ASSERT(box_in_transit.orig_box.getOwnerRank() != d_mpi.getRank());
+      box_in_transit.packForPreviousOwner(outgoing_messages);
+   }
+   t_local_edges->stop();
+
+   /*
+    * Receive and unpack incoming messages.
+    */
+   do {
+      for (unsigned int i = 0; i < completed.size(); ++i) {
+
+         tbox::AsyncCommPeer<int>* peer_comm =
+            dynamic_cast<tbox::AsyncCommPeer<int> *>(completed[i]);
+         const int peer_rank = peer_comm->getPeerRank();
+
+#ifdef DEBUG_CHECK_ASSERTIONS
+         int j;
+         for ( j=0; j<export_dsts.size(); ++j ) {
+            if ( export_dsts[j] == peer_rank ) break;
+         }
+         TBOX_ASSERT( j < export_dsts.size() );
+#endif
+
+         const int* received_data = peer_comm->getRecvData();
+         int received_data_length = peer_comm->getRecvSize();
+         unpackAndRouteNeighborhoodSets(
+            outgoing_messages,
+            unbalanced_to_balanced,
+            received_data,
+            received_data_length );
+      }
+
+      completed.clear();
+      t_children_edge_comm->start();
+      comm_stage.advanceSome(completed);
+      t_children_edge_comm->stop();
+
+   } while (!completed.empty());
+
+
+   /*
+    * Send outgoing messages.
+    */
+   TBOX_ASSERT( outgoing_messages.size() == import_srcs.size() );
+   for ( int i=0; i<import_srcs.size(); ++i ) {
+      tbox::AsyncCommPeer<int> &peer_comm = importer_comms[i];
+      const int peer_rank = peer_comm.getPeerRank();
+      std::map<int,std::vector<int> >::const_iterator recip =
+         outgoing_messages.find(peer_rank);
+      TBOX_ASSERT( recip != outgoing_messages.end() );
+      const std::vector<int> &message = recip->second;
+      peer_comm.beginSend( &message[0], message.size() );
+   }
+
+   t_finish_comms->start();
+   comm_stage.advanceAll(completed);
+   t_finish_comms->stop();
+
+   delete [] importer_comms;
+   delete [] exporter_comms;
+
+   return;
 }
 
 
