@@ -21,7 +21,7 @@ namespace SAMRAI {
 namespace pdat {
 
 NodeOverlap::NodeOverlap(
-   const hier::BoxList& boxes,
+   const hier::BoxContainer& boxes,
    const hier::Transformation& transformation):
    d_is_overlap_empty(boxes.isEmpty()),
    d_transformation(transformation),

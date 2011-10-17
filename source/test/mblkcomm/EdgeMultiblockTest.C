@@ -541,8 +541,8 @@ bool EdgeMultiblockTest::verifyResults(
 
    const tbox::List<hier::GridGeometry::Neighbor>& neighbors =
       hierarchy->getGridGeometry()->getNeighbors(block_id);
-   hier::BoxList singularity(
-      hierarchy->getGridGeometry()->getSingularityBoxList(block_id));
+   hier::BoxContainer singularity(
+      hierarchy->getGridGeometry()->getSingularityBoxContainer(block_id));
 
    hier::IntVector ratio =
       hierarchy->getPatchLevel(level_number)->getRatioToLevelZero();
@@ -586,10 +586,10 @@ bool EdgeMultiblockTest::verifyResults(
          hier::Box patch_edge_box =
             pdat::EdgeGeometry::toEdgeBox(pbox, axis);
 
-         hier::BoxList tested_neighbors;
+         hier::BoxContainer tested_neighbors;
 
-         hier::BoxList sing_edge_boxlist;
-         for (hier::BoxList::Iterator si(singularity); si != singularity.end();
+         hier::BoxContainer sing_edge_boxlist;
+         for (hier::BoxContainer::Iterator si(singularity); si != singularity.end();
               ++si) {
             sing_edge_boxlist.pushFront(
                pdat::EdgeGeometry::toEdgeBox(si(), axis));
@@ -602,10 +602,10 @@ bool EdgeMultiblockTest::verifyResults(
 
             correct = ne().getBlockId().getBlockValue();
 
-            hier::BoxList neighbor_ghost(ne().getTransformedDomain());
+            hier::BoxContainer neighbor_ghost(ne().getTransformedDomain());
 
-            hier::BoxList neighbor_edge_ghost;
-            for (hier::BoxList::Iterator nn(neighbor_ghost);
+            hier::BoxContainer neighbor_edge_ghost;
+            for (hier::BoxContainer::Iterator nn(neighbor_ghost);
                  nn != neighbor_ghost.end(); ++nn) {
                hier::Box neighbor_ghost_interior(
                   pdat::EdgeGeometry::toEdgeBox(nn(), axis));
@@ -621,7 +621,7 @@ bool EdgeMultiblockTest::verifyResults(
             neighbor_edge_ghost.removeIntersections(sing_edge_boxlist);
             neighbor_edge_ghost.removeIntersections(tested_neighbors);
 
-            for (hier::BoxList::Iterator ng(neighbor_edge_ghost);
+            for (hier::BoxContainer::Iterator ng(neighbor_edge_ghost);
                  ng != neighbor_edge_ghost.end(); ++ng) {
 
                for (hier::BoxIterator ci(ng()); ci; ci++) {
@@ -673,7 +673,7 @@ bool EdgeMultiblockTest::verifyResults(
                     <hier::GridGeometry::Neighbor>::
                     Iterator ns(neighbors); ns; ns++) {
                   if (ns().isSingularity()) {
-                     hier::BoxList neighbor_ghost(
+                     hier::BoxContainer neighbor_ghost(
                         ns().getTransformedDomain());
                      neighbor_ghost.refine(ratio);
                      neighbor_ghost.intersectBoxes(fill_box);
@@ -768,7 +768,7 @@ void EdgeMultiblockTest::postprocessRefine(
 
    pdat::EdgeDoubleConstantRefine ref_op(dim);
 
-   hier::BoxList fine_box_list(fine_box);
+   hier::BoxContainer fine_box_list(fine_box);
 
    xfer::BoxGeometryVariableFillPattern fill_pattern;
 

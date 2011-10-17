@@ -56,7 +56,6 @@ OBJS = 	\
 	MultiblockBoxTree.o \
 	BoxLevel.o \
 	PersistentOverlapConnectors.o \
-	BoxSet.o \
 	NeighborhoodSet.o \
 	BoxNeighborhoodCollection.o \
 	BoxOverlap.o \
@@ -65,7 +64,6 @@ OBJS = 	\
 	BoxUtilities.o \
 	BoundaryBox.o \
 	BoundaryLookupTable.o \
-	BoxList.o \
 	Box.o \
 	Index.o \
 	IntVector.o \

@@ -157,7 +157,7 @@ PatchLevel::PatchLevel(
       d_factory = new hier::PatchFactory();
    }
 
-   const BoxSet& mapped_boxes = d_mapped_box_level->getBoxes();
+   const BoxContainer& mapped_boxes = d_mapped_box_level->getBoxes();
    for (RealBoxConstIterator ni(mapped_boxes); ni.isValid(); ++ni) {
       const Box& mapped_box = *ni;
       const BoxId& ip = mapped_box.getId();
@@ -498,7 +498,7 @@ void PatchLevel::setRefinedPatchLevel(
 
    {
 #if 0
-      BoxSet mapped_boxes(coarse_level->d_mapped_box_level->getBoxes());
+      BoxContainer mapped_boxes(coarse_level->d_mapped_box_level->getBoxes());
       mapped_boxes.refine(refine_ratio); 
 #endif
       d_mapped_box_level = new BoxLevel(
@@ -530,7 +530,7 @@ void PatchLevel::setRefinedPatchLevel(
    // d_patch_touches_periodic_boundary.resizeArray(d_global_number_patches);
    // d_shifts.resizeArray(d_global_number_patches);
 
-   const BoxSet& mapped_boxes = d_mapped_box_level->getBoxes();
+   const BoxContainer& mapped_boxes = d_mapped_box_level->getBoxes();
    for (RealBoxConstIterator ni(mapped_boxes); ni.isValid(); ++ni) {
       const Box& mapped_box = *ni;
       const BoxId& mapped_box_id = mapped_box.getId();
@@ -690,7 +690,7 @@ void PatchLevel::setCoarsenedPatchLevel(
    const BoxLevel& fine_mapped_box_level =
       *fine_level->d_mapped_box_level;
 #if 0
-   BoxSet coarsened_mapped_boxes(fine_level->d_mapped_box_level->getBoxes());
+   BoxContainer coarsened_mapped_boxes(fine_level->d_mapped_box_level->getBoxes());
    coarsened_mapped_boxes.coarsen(coarsen_ratio);
 #endif
    d_mapped_box_level = new BoxLevel(
@@ -721,7 +721,7 @@ void PatchLevel::setCoarsenedPatchLevel(
    // d_patch_touches_periodic_boundary.resizeArray(d_global_number_patches);
    // d_shifts.resizeArray(d_global_number_patches);
 
-   const BoxSet& mapped_boxes = d_mapped_box_level->getBoxes();
+   const BoxContainer& mapped_boxes = d_mapped_box_level->getBoxes();
    for (RealBoxConstIterator ni(mapped_boxes); ni.isValid(); ++ni) {
       const Box& mapped_box = *ni;
       const BoxId& mapped_box_id = mapped_box.getId();
@@ -863,7 +863,7 @@ void PatchLevel::getFromDatabase(
 
    d_patches.clear();
 
-   const BoxSet& mapped_boxes = d_mapped_box_level->getBoxes();
+   const BoxContainer& mapped_boxes = d_mapped_box_level->getBoxes();
    tbox::Pointer<tbox::Database> patch_database;
    for (RealBoxConstIterator ni(mapped_boxes); ni.isValid(); ++ni) {
       const Box& mapped_box = *ni;
@@ -1029,7 +1029,7 @@ void PatchLevel::initializeGlobalizedBoxLevel() const
        * global sequential index.
        */
       int count = 0;
-      const BoxSet& mapped_boxes =
+      const BoxContainer& mapped_boxes =
          globalized_mapped_box_level.getGlobalBoxes();
       for (hier::RealBoxConstIterator ni(mapped_boxes);
            ni.isValid();

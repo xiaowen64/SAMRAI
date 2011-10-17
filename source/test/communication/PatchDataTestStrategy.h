@@ -15,7 +15,6 @@
 
 #include "SAMRAI/geom/CartesianGridGeometry.h"
 #include "SAMRAI/hier/Box.h"
-#include "SAMRAI/hier/BoxList.h"
 #include "SAMRAI/hier/IntVector.h"
 #include "SAMRAI/hier/Patch.h"
 #include "SAMRAI/hier/PatchHierarchy.h"
@@ -250,7 +249,7 @@ protected:
    /*
     * Arrays of information read from input file describing test variables
     */
-   tbox::Array<hier::BoxList> d_refine_level_boxes;
+   tbox::Array<hier::BoxContainer> d_refine_level_boxes;
 
 private:
    tbox::Pointer<geom::CartesianGridGeometry> d_grid_geometry;

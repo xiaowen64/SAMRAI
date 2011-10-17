@@ -30,7 +30,6 @@ using namespace std;
 
 #include "SAMRAI/tbox/Array.h"
 #include "SAMRAI/mesh/BergerRigoutsos.h"
-#include "SAMRAI/hier/BoxList.h"
 #include "SAMRAI/geom/CartesianGridGeometry.h"
 #include "SAMRAI/pdat/CellVariable.h"
 #include "SAMRAI/pdat/CellData.h"
@@ -276,8 +275,8 @@ int main(
       int neq = 0;
       tbox::Pointer<hier::PatchLevel> level_zero =
          hierarchy->getPatchLevel(0);
-      const hier::BoxList& level_0_boxes = level_zero->getBoxes();
-      for (hier::BoxList::Iterator i(level_0_boxes); i; i++) {
+      const hier::BoxContainer& level_0_boxes = level_zero->getBoxes();
+      for (hier::BoxContainer::Iterator i(level_0_boxes); i; i++) {
          neq += i().size();
       }
       cvode_solver->setIterationType(uses_newton ? CV_NEWTON : CV_FUNCTIONAL);

@@ -213,10 +213,10 @@ void CellDataTest::setConservativeData(
    tbox::Pointer<hier::PatchLevel> level = hierarchy->getPatchLevel(
          level_number);
 
-   const hier::BoxList& domain =
+   const hier::BoxContainer& domain =
       level->getPhysicalDomain(hier::BlockId::zero());
    int ncells = 0;
-   for (hier::BoxList::ConstIterator i(domain); i != domain.end(); ++i) {
+   for (hier::BoxContainer::ConstIterator i(domain); i != domain.end(); ++i) {
       ncells += i().size();
    }
 

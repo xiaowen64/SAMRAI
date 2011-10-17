@@ -369,7 +369,7 @@ void Connector::getLocalNeighbors(
  */
 SAMRAI_INLINE_KEYWORD
 void Connector::getLocalNeighbors(
-   std::map<BlockId, BoxList>& neighbors) const
+   std::map<BlockId, BoxContainer>& neighbors) const
 {
    d_relationships.getNeighbors(neighbors);
    return;

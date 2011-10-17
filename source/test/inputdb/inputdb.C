@@ -14,7 +14,6 @@
 
 #include "SAMRAI/tbox/Array.h"
 #include "SAMRAI/tbox/DatabaseBox.h"
-#include "SAMRAI/hier/BoxList.h"
 #include "SAMRAI/tbox/Database.h"
 #include "SAMRAI/tbox/Complex.h"
 #include "SAMRAI/tbox/InputDatabase.h"

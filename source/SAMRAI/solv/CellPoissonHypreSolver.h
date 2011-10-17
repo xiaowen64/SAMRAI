@@ -35,7 +35,6 @@
 #include "SAMRAI/pdat/CellData.h"
 #include "SAMRAI/pdat/SideData.h"
 #include "SAMRAI/pdat/OutersideVariable.h"
-#include "SAMRAI/hier/BoxList.h"
 #include "SAMRAI/hier/CoarseFineBoundary.h"
 #include "SAMRAI/hier/PatchHierarchy.h"
 #include "SAMRAI/hier/PatchLevel.h"

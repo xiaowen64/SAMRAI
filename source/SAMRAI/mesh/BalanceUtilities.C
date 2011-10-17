@@ -299,10 +299,10 @@ void BalanceUtilities::privateResetPrimesArray(
  */
 
 bool BalanceUtilities::privateBadCutPointsExist(
-   const hier::BoxList& physical_domain)
+   const hier::BoxContainer& physical_domain)
 {
-   hier::BoxList tmp_domain(physical_domain);
-   hier::BoxList bounding_box(tmp_domain.getBoundingBox());
+   hier::BoxContainer tmp_domain(physical_domain);
+   hier::BoxContainer bounding_box(tmp_domain.getBoundingBox());
    bounding_box.removeIntersections(tmp_domain);
 
    return bounding_box.size() > 0;
@@ -323,7 +323,7 @@ void BalanceUtilities::privateInitializeBadCutPointsForBox(
    hier::Box& box,
    bool bad_domain_boundaries_exist,
    const hier::IntVector& bad_interval,
-   const hier::BoxList& physical_domain)
+   const hier::BoxContainer& physical_domain)
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(box, bad_interval);
 
@@ -339,8 +339,8 @@ void BalanceUtilities::privateInitializeBadCutPointsForBox(
          hier::VariableDatabase::getDatabase()->
          getPatchDescriptor()->getMaxGhostWidth(dim);
 
-      hier::BoxList tmp_domain(physical_domain);
-      hier::BoxList bdry_list(hier::Box::grow(box, tmp_max_gcw));
+      hier::BoxContainer tmp_domain(physical_domain);
+      hier::BoxContainer bdry_list(hier::Box::grow(box, tmp_max_gcw));
       bdry_list.removeIntersections(tmp_domain);
       if (bdry_list.size() > 0) {
          set_dummy_cut_points = false;
@@ -636,7 +636,7 @@ void BalanceUtilities::privateCutBoxesAndSetBadCutPoints(
  */
 
 void BalanceUtilities::privateRecursiveBisectionUniformSingleBox(
-   hier::BoxList& out_boxes,
+   hier::BoxContainer& out_boxes,
    tbox::List<double>& out_workloads,
    const hier::Box& in_box,
    double in_box_workload,
@@ -731,7 +731,7 @@ void BalanceUtilities::privateRecursiveBisectionUniformSingleBox(
             cut_factor,
             bad_cut_points_for_boxlo);
 
-         hier::BoxList boxes_hi;
+         hier::BoxContainer boxes_hi;
          tbox::List<double> work_hi;
 
          double box_hi_workload = (double)box_hi.size();
@@ -771,7 +771,7 @@ void BalanceUtilities::privateRecursiveBisectionUniformSingleBox(
  */
 
 void BalanceUtilities::privateRecursiveBisectionNonuniformSingleBox(
-   hier::BoxList& out_boxes,
+   hier::BoxContainer& out_boxes,
    tbox::List<double>& out_workloads,
    const tbox::Pointer<hier::Patch>& patch,
    const hier::Box& in_box,
@@ -877,7 +877,7 @@ void BalanceUtilities::privateRecursiveBisectionNonuniformSingleBox(
             cut_factor,
             bad_cut_points_for_boxlo);
 
-         hier::BoxList boxes_hi;
+         hier::BoxContainer boxes_hi;
          tbox::List<double> work_hi;
 
          double box_hi_workload = in_box_workload - box_lo_workload;
@@ -1027,7 +1027,7 @@ double BalanceUtilities::binPack(
 double BalanceUtilities::spatialBinPack(
    hier::ProcessorMapping& mapping,
    tbox::Array<double>& weights,
-   hier::BoxList& boxes,
+   hier::BoxContainer& boxes,
    const int nproc)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
@@ -1042,7 +1042,7 @@ double BalanceUtilities::spatialBinPack(
     * is positive.
     */
    hier::IntVector offset(boxes.front().lower());
-   for (hier::BoxList::Iterator itr(boxes); itr != boxes.end(); ++itr) {
+   for (hier::BoxContainer::Iterator itr(boxes); itr != boxes.end(); ++itr) {
       offset.min(itr().lower());
    }
 
@@ -1053,7 +1053,7 @@ double BalanceUtilities::spatialBinPack(
    if (nboxes > 0) {
       const tbox::Dimension& dim = boxes.front().getDim();
 
-      for (hier::BoxList::Iterator itr(boxes); itr != boxes.end(); ++itr) {
+      for (hier::BoxContainer::Iterator itr(boxes); itr != boxes.end(); ++itr) {
 
          /* compute center of box */
          hier::IntVector center = (itr().upper() + itr().lower()) / 2;
@@ -1103,14 +1103,14 @@ double BalanceUtilities::spatialBinPack(
       tbox::Array<double> unsorted_weights(nboxes);
 
       i = 0;
-      for (hier::BoxList::Iterator itr(boxes); itr != boxes.end(); ++itr) {
+      for (hier::BoxContainer::Iterator itr(boxes); itr != boxes.end(); ++itr) {
          unsorted_boxes[i] = *itr;
          unsorted_weights[i] = weights[i];
          ++i;
       }
 
       i = 0;
-      for (hier::BoxList::Iterator itr(boxes); itr != boxes.end(); ++itr) {
+      for (hier::BoxContainer::Iterator itr(boxes); itr != boxes.end(); ++itr) {
          *itr = unsorted_boxes[permutation[i]];
          weights[i] = unsorted_weights[permutation[i]];
          ++i;
@@ -1201,15 +1201,15 @@ double BalanceUtilities::spatialBinPack(
  */
 
 void BalanceUtilities::recursiveBisectionUniform(
-   hier::BoxList& out_boxes,
+   hier::BoxContainer& out_boxes,
    tbox::List<double>& out_workloads,
-   const hier::BoxList& in_boxes,
+   const hier::BoxContainer& in_boxes,
    const double ideal_workload,
    const double workload_tolerance,
    const hier::IntVector& min_size,
    const hier::IntVector& cut_factor,
    const hier::IntVector& bad_interval,
-   const hier::BoxList& physical_domain)
+   const hier::BoxContainer& physical_domain)
 {
    TBOX_DIM_ASSERT_CHECK_ARGS3(min_size, cut_factor, bad_interval);
 
@@ -1228,7 +1228,7 @@ void BalanceUtilities::recursiveBisectionUniform(
    bool bad_domain_boundaries_exist =
       privateBadCutPointsExist(physical_domain);
 
-   for (hier::BoxList::ConstIterator ib(in_boxes); ib != in_boxes.end(); ++ib) {
+   for (hier::BoxContainer::ConstIterator ib(in_boxes); ib != in_boxes.end(); ++ib) {
 
       hier::Box box2chop = ib();
 
@@ -1251,7 +1251,7 @@ void BalanceUtilities::recursiveBisectionUniform(
             bad_interval,
             physical_domain);
 
-         hier::BoxList tempboxes;
+         hier::BoxContainer tempboxes;
          tbox::List<double> temploads;
          privateRecursiveBisectionUniformSingleBox(
             tempboxes,
@@ -1285,7 +1285,7 @@ void BalanceUtilities::recursiveBisectionUniform(
  */
 
 void BalanceUtilities::recursiveBisectionNonuniform(
-   hier::BoxList& out_boxes,
+   hier::BoxContainer& out_boxes,
    tbox::List<double>& out_workloads,
    const tbox::Pointer<hier::PatchLevel>& in_level,
    int work_id,
@@ -1294,7 +1294,7 @@ void BalanceUtilities::recursiveBisectionNonuniform(
    const hier::IntVector& min_size,
    const hier::IntVector& cut_factor,
    const hier::IntVector& bad_interval,
-   const hier::BoxList& physical_domain)
+   const hier::BoxContainer& physical_domain)
 {
    TBOX_DIM_ASSERT_CHECK_ARGS3(min_size, cut_factor, bad_interval);
 
@@ -1337,7 +1337,7 @@ void BalanceUtilities::recursiveBisectionNonuniform(
             bad_interval,
             physical_domain);
 
-         hier::BoxList tempboxes;
+         hier::BoxContainer tempboxes;
          tbox::List<double> temploads;
          privateRecursiveBisectionNonuniformSingleBox(
             tempboxes,
@@ -1582,7 +1582,7 @@ void BalanceUtilities::computeDomainIndependentProcessorLayout(
  */
 
 void BalanceUtilities::sortDescendingBoxWorkloads(
-   hier::BoxList& boxes,
+   hier::BoxContainer& boxes,
    tbox::Array<double>& workload)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
@@ -1624,14 +1624,14 @@ void BalanceUtilities::sortDescendingBoxWorkloads(
       tbox::Array<double> unsorted_workload(nboxes);
 
       int l = 0;
-      for (hier::BoxList::Iterator itr(boxes); itr != boxes.end(); ++itr) {
+      for (hier::BoxContainer::Iterator itr(boxes); itr != boxes.end(); ++itr) {
          unsorted_boxes[l] = *itr;
          unsorted_workload[l] = workload[l];
          ++l;
       }
 
       int m = 0;
-      for (hier::BoxList::Iterator itr(boxes); itr != boxes.end(); ++itr) {
+      for (hier::BoxContainer::Iterator itr(boxes); itr != boxes.end(); ++itr) {
          *itr = unsorted_boxes[permutation[m]];
          workload[m] = unsorted_workload[permutation[m]];
          ++m;

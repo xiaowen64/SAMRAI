@@ -13,7 +13,6 @@
 
 #include "SAMRAI/SAMRAI_config.h"
 #include "SAMRAI/hier/Box.h"
-#include "SAMRAI/hier/BoxList.h"
 #include "SAMRAI/hier/IntVector.h"
 #include "SAMRAI/hier/Patch.h"
 #include "SAMRAI/hier/PatchLevel.h"
@@ -232,7 +231,7 @@ public:
    preprocessRefineBoxes(
       hier::Patch& fine,
       const hier::Patch& coarse,
-      const hier::BoxList& fine_boxes,
+      const hier::BoxContainer& fine_boxes,
       const hier::IntVector& ratio);
 
    /*!
@@ -254,7 +253,7 @@ public:
    postprocessRefineBoxes(
       hier::Patch& fine,
       const hier::Patch& coarse,
-      const hier::BoxList& fine_boxes,
+      const hier::BoxContainer& fine_boxes,
       const hier::IntVector& ratio);
 
    /*!

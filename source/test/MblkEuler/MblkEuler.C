@@ -38,7 +38,6 @@ using namespace std;
 #include "SAMRAI/tbox/RestartManager.h"
 #include "SAMRAI/tbox/Utilities.h"
 #include "SAMRAI/hier/BoxContainerIterator.h"
-#include "SAMRAI/hier/BoxList.h"
 #include "SAMRAI/hier/VariableDatabase.h"
 #include "SAMRAI/pdat/CellDoubleLinearTimeInterpolateOp.h"
 #include "SAMRAI/pdat/NodeData.h"
@@ -1625,7 +1624,7 @@ void MblkEuler::setPhysicalBoundaryConditions(
    const tbox::Pointer<hier::PatchGeometry> patch_geom =
       patch.getPatchGeometry();
    const hier::IntVector ratio = patch_geom->getRatio();
-   hier::BoxList domain_boxes;
+   hier::BoxContainer domain_boxes;
    d_grid_geometry->computePhysicalDomain(domain_boxes, ratio,
       patch.getBox().getBlockId());
 
@@ -2468,11 +2467,11 @@ void MblkEuler::tagGradientDetectorCells(
       //
       if (ref == "USER_DEFINED") {
 
-         hier::BoxList refine_boxes;
+         hier::BoxContainer refine_boxes;
          if (d_mblk_geometry->getRefineBoxes(refine_boxes,
                 patch.getBox().getBlockId().getBlockValue(),
                 level_number)) {
-            for (hier::BoxList::Iterator b(refine_boxes); b != refine_boxes.end();
+            for (hier::BoxContainer::Iterator b(refine_boxes); b != refine_boxes.end();
                  ++b) {
                hier::Box intersect = pbox * b();
                if (!intersect.empty()) {
@@ -2540,7 +2539,7 @@ void MblkEuler::setMappedGridOnPatch(
    const tbox::Pointer<hier::PatchGeometry>
    patch_geom = patch.getPatchGeometry();
    hier::IntVector ratio = patch_geom->getRatio();
-   hier::BoxList domain_boxes;
+   hier::BoxContainer domain_boxes;
    d_grid_geometry->computePhysicalDomain(domain_boxes, ratio,
       patch.getBox().getBlockId());
 
@@ -2549,7 +2548,7 @@ void MblkEuler::setMappedGridOnPatch(
    //
    d_dom_current_nboxes = domain_boxes.size();
 
-   hier::BoxList::Iterator itr(domain_boxes);
+   hier::BoxContainer::Iterator itr(domain_boxes);
    d_dom_current_bounds[0] = itr().lower(0);
    d_dom_current_bounds[1] = itr().lower(1);
    d_dom_current_bounds[2] = itr().lower(2);

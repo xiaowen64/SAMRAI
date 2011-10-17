@@ -15,7 +15,6 @@
 
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/hier/BoxContainerConstIterator.h"
-#include "SAMRAI/hier/BoxList.h"
 #include "SAMRAI/pdat/CellGeometry.h"
 #include "SAMRAI/pdat/CellOverlap.h"
 #include "SAMRAI/tbox/Utilities.h"
@@ -185,7 +184,7 @@ void CellData<TYPE>::copy(
       if (t_overlap->getTransformation().getRotation() ==
           hier::Transformation::NO_ROTATE) {
          d_data.copy(t_src->d_data,
-            t_overlap->getDestinationBoxList(),
+            t_overlap->getDestinationBoxContainer(),
             t_overlap->getSourceOffset());
       } else {
          copyWithRotation(*t_src, *t_overlap);
@@ -209,7 +208,7 @@ void CellData<TYPE>::copy2(
        hier::Transformation::NO_ROTATE) {
 
       t_dst->d_data.copy(d_data,
-         t_overlap->getDestinationBoxList(),
+         t_overlap->getDestinationBoxContainer(),
          t_overlap->getSourceOffset());
    } else {
       t_dst->copyWithRotation(*this, *t_overlap);
@@ -225,7 +224,7 @@ void CellData<TYPE>::copyWithRotation(
       hier::Transformation::NO_ROTATE);
 
    const tbox::Dimension& dim(src.getDim());
-   const hier::BoxList& overlap_boxes = overlap.getDestinationBoxList();
+   const hier::BoxContainer& overlap_boxes = overlap.getDestinationBoxContainer();
    const hier::Transformation::RotationIdentifier rotate =
       overlap.getTransformation().getRotation();
    const hier::IntVector& shift = overlap.getSourceOffset();
@@ -242,7 +241,7 @@ void CellData<TYPE>::copyWithRotation(
    hier::Transformation::calculateReverseShift(
       back_shift, shift, rotate);
 
-   for (hier::BoxList::ConstIterator bi(overlap_boxes);
+   for (hier::BoxContainer::ConstIterator bi(overlap_boxes);
         bi != overlap_boxes.end(); ++bi) {
       const hier::Box& overlap_box = bi();
 
@@ -315,7 +314,7 @@ int CellData<TYPE>::getDataStreamSize(
 
    TBOX_ASSERT(t_overlap != NULL);
 
-   return d_data.getDataStreamSize(t_overlap->getDestinationBoxList(),
+   return d_data.getDataStreamSize(t_overlap->getDestinationBoxContainer(),
       t_overlap->getSourceOffset());
 }
 
@@ -340,7 +339,7 @@ void CellData<TYPE>::packStream(
 
    if (t_overlap->getTransformation().getRotation() ==
        hier::Transformation::NO_ROTATE) {
-      d_data.packStream(stream, t_overlap->getDestinationBoxList(),
+      d_data.packStream(stream, t_overlap->getDestinationBoxContainer(),
          t_overlap->getSourceOffset());
    } else {
       packWithRotation(stream, *t_overlap);
@@ -357,7 +356,7 @@ void CellData<TYPE>::unpackStream(
 
    TBOX_ASSERT(t_overlap != NULL);
 
-   d_data.unpackStream(stream, t_overlap->getDestinationBoxList(),
+   d_data.unpackStream(stream, t_overlap->getDestinationBoxContainer(),
       t_overlap->getSourceOffset());
 }
 
@@ -370,7 +369,7 @@ void CellData<TYPE>::packWithRotation(
       hier::Transformation::NO_ROTATE);
 
    const tbox::Dimension& dim(getDim());
-   const hier::BoxList& overlap_boxes = overlap.getDestinationBoxList();
+   const hier::BoxContainer& overlap_boxes = overlap.getDestinationBoxContainer();
    const hier::Transformation::RotationIdentifier rotate =
       overlap.getTransformation().getRotation();
    const hier::IntVector& shift = overlap.getSourceOffset();
@@ -393,7 +392,7 @@ void CellData<TYPE>::packWithRotation(
    tbox::Array<TYPE> buffer(size);
 
    int i = 0;
-   for (hier::BoxList::ConstIterator bi(overlap_boxes);
+   for (hier::BoxContainer::ConstIterator bi(overlap_boxes);
         bi != overlap_boxes.end(); ++bi) {
       const hier::Box& overlap_box = bi();
 

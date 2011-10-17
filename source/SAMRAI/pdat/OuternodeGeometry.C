@@ -13,7 +13,6 @@
 
 #include "SAMRAI/pdat/OuternodeGeometry.h"
 #include "SAMRAI/hier/BoxContainerConstIterator.h"
-#include "SAMRAI/hier/BoxList.h"
 #include "SAMRAI/pdat/NodeGeometry.h"
 #include "SAMRAI/pdat/NodeOverlap.h"
 #include "SAMRAI/tbox/Utilities.h"
@@ -71,7 +70,7 @@ OuternodeGeometry::calculateOverlap(
    const bool overwrite_interior,
    const hier::Transformation& transformation,
    const bool retry,
-   const hier::BoxList& dst_restrict_boxes) const
+   const hier::BoxContainer& dst_restrict_boxes) const
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(d_box, src_mask);
 
@@ -124,14 +123,14 @@ OuternodeGeometry::doOverlap(
    const hier::Box& fill_box,
    const bool overwrite_interior,
    const hier::Transformation& transformation,
-   const hier::BoxList& dst_restrict_boxes)
+   const hier::BoxContainer& dst_restrict_boxes)
 {
    const hier::IntVector& src_offset = transformation.getOffset();
    TBOX_DIM_ASSERT_CHECK_ARGS2(src_mask, src_offset);
 
    const tbox::Dimension& dim(src_mask.getDim());
 
-   hier::BoxList dst_boxes;
+   hier::BoxContainer dst_boxes;
 
    // Perform a quick-and-dirty intersection to see if the boxes might overlap
 
@@ -196,8 +195,8 @@ OuternodeGeometry::doOverlap(
       }  // loop over dim
 
       if (dst_restrict_boxes.size() && dst_boxes.size()) {
-         hier::BoxList node_restrict_boxes;
-         for (hier::BoxList::ConstIterator b(dst_restrict_boxes);
+         hier::BoxContainer node_restrict_boxes;
+         for (hier::BoxContainer::ConstIterator b(dst_restrict_boxes);
               b != dst_restrict_boxes.end(); ++b) {
             node_restrict_boxes.pushBack(NodeGeometry::toNodeBox(b()));
          }
@@ -231,14 +230,14 @@ OuternodeGeometry::doOverlap(
    const hier::Box& fill_box,
    const bool overwrite_interior,
    const hier::Transformation& transformation,
-   const hier::BoxList& dst_restrict_boxes)
+   const hier::BoxContainer& dst_restrict_boxes)
 {
    const hier::IntVector& src_offset = transformation.getOffset();
    TBOX_DIM_ASSERT_CHECK_ARGS2(src_mask, src_offset);
 
    const tbox::Dimension& dim(src_mask.getDim());
 
-   hier::BoxList src_boxes;
+   hier::BoxContainer src_boxes;
 
    // Perform a quick-and-dirty intersection to see if the boxes might overlap
 
@@ -302,8 +301,8 @@ OuternodeGeometry::doOverlap(
       }  // loop over dim
 
       if (dst_restrict_boxes.size() && src_boxes.size()) {
-         hier::BoxList node_restrict_boxes;
-         for (hier::BoxList::ConstIterator b(dst_restrict_boxes);
+         hier::BoxContainer node_restrict_boxes;
+         for (hier::BoxContainer::ConstIterator b(dst_restrict_boxes);
               b != dst_restrict_boxes.end(); ++b) {
             node_restrict_boxes.pushBack(NodeGeometry::toNodeBox(b()));
          }
@@ -337,14 +336,14 @@ OuternodeGeometry::doOverlap(
    const hier::Box& fill_box,
    const bool overwrite_interior,
    const hier::Transformation& transformation,
-   const hier::BoxList& dst_restrict_boxes)
+   const hier::BoxContainer& dst_restrict_boxes)
 {
    const hier::IntVector& src_offset = transformation.getOffset();
    TBOX_DIM_ASSERT_CHECK_ARGS2(src_mask, src_offset);
 
    const tbox::Dimension& dim(src_mask.getDim());
 
-   hier::BoxList dst_boxes;
+   hier::BoxContainer dst_boxes;
 
    // Perform a quick-and-dirty intersection to see if the boxes might overlap
 
@@ -433,8 +432,8 @@ OuternodeGeometry::doOverlap(
       }  // loop over dst dim
 
       if (dst_restrict_boxes.size() && dst_boxes.size()) {
-         hier::BoxList node_restrict_boxes;
-         for (hier::BoxList::ConstIterator b(dst_restrict_boxes);
+         hier::BoxContainer node_restrict_boxes;
+         for (hier::BoxContainer::ConstIterator b(dst_restrict_boxes);
               b != dst_restrict_boxes.end(); ++b) {
             node_restrict_boxes.pushBack(NodeGeometry::toNodeBox(b()));
          }
@@ -459,12 +458,12 @@ OuternodeGeometry::doOverlap(
  */
 tbox::Pointer<hier::BoxOverlap>
 OuternodeGeometry::setUpOverlap(
-   const hier::BoxList& boxes,
+   const hier::BoxContainer& boxes,
    const hier::Transformation& transformation) const
 {
-   hier::BoxList dst_boxes;
+   hier::BoxContainer dst_boxes;
 
-   for (hier::BoxList::ConstIterator b(boxes); b != boxes.end(); ++b) {
+   for (hier::BoxContainer::ConstIterator b(boxes); b != boxes.end(); ++b) {
       hier::Box node_box(NodeGeometry::toNodeBox(b()));
       dst_boxes.pushBack(node_box);
    }

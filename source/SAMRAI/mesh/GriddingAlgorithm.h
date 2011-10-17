@@ -15,17 +15,12 @@
 
 #include "SAMRAI/mesh/GriddingAlgorithmStrategy.h"
 #include "SAMRAI/mesh/BoxGeneratorStrategy.h"
-#include "SAMRAI/pdat/CellVariable.h"
-#include "SAMRAI/mesh/GriddingAlgorithmConnectorWidthRequestor.h"
-#include "SAMRAI/mesh/TagAndInitializeStrategy.h"
-#include "SAMRAI/mesh/MultiblockGriddingTagger.h"
-#include "SAMRAI/hier/BoxList.h"
-#include "SAMRAI/hier/IntVector.h"
 #include "SAMRAI/mesh/LoadBalanceStrategy.h"
-#include "SAMRAI/hier/PatchHierarchy.h"
-#include "SAMRAI/hier/PatchLevel.h"
+#include "SAMRAI/mesh/GriddingAlgorithmConnectorWidthRequestor.h"
+#include "SAMRAI/mesh/MultiblockGriddingTagger.h"
+#include "SAMRAI/pdat/CellVariable.h"
+#include "SAMRAI/hier/Connector.h"
 #include "SAMRAI/xfer/RefineAlgorithm.h"
-#include "SAMRAI/xfer/RefineSchedule.h"
 #include "SAMRAI/tbox/Array.h"
 #include "SAMRAI/tbox/Database.h"
 #include "SAMRAI/tbox/Pointer.h"
@@ -715,7 +710,7 @@ private:
       hier::BoxLevel& new_mapped_box_level,
       hier::Connector& tag_to_new,
       hier::Connector& new_to_tag,
-      const hier::BoxList& physical_domain_list,
+      const hier::BoxContainer& physical_domain_list,
       const hier::IntVector& extend_ghosts) const;
 
    /*!
@@ -888,7 +883,7 @@ private:
     */
    void
    checkDomainBoxes(
-      const hier::BoxList& domain_boxes) const;
+      const hier::BoxContainer& domain_boxes) const;
 
    /*!
     * @brief Check for non-nesting user-specified boxes.

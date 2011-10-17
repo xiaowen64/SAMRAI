@@ -267,7 +267,7 @@ void Connector::shrinkWidth(const IntVector& new_width)
       if (base_coarser) {
          mapped_box_box.refine(getRatio());
       }
-      for (BoxSet::Iterator na = nabrs.begin();
+      for (BoxContainer::Iterator na = nabrs.begin();
            na != nabrs.end(); /* incremented in loop */) {
          const Box& nabr = *na;
          Box nabr_box = nabr;
@@ -758,7 +758,7 @@ void Connector::initializeToLocalTranspose(
         ci != connector.end(); ++ci) {
 
       const BoxId& mapped_box_id = ci->first;
-      const BoxSet::ConstIterator ni = getHead().getBox(mapped_box_id);
+      const BoxContainer::ConstIterator ni = getHead().getBox(mapped_box_id);
       if (ni == getHead().getBoxes().end()) {
          TBOX_ERROR(
             "Connector::initializeToLocalTranspose: mapped_box index\n"
@@ -887,8 +887,8 @@ bool Connector::isLocal() const
 {
    for (NeighborhoodSet::const_iterator ei = d_relationships.begin(); ei != d_relationships.end();
         ++ei) {
-      const BoxSet& nabrs = ei->second;
-      for (BoxSet::ConstIterator na = nabrs.begin();
+      const BoxContainer& nabrs = ei->second;
+      for (BoxContainer::ConstIterator na = nabrs.begin();
            na != nabrs.end();
            ++na) {
          if ((*na).getOwnerRank() != getBase().getMPI().getRank()) {
@@ -1091,7 +1091,7 @@ void Connector::recursivePrint(
    if (detail_depth > 0) {
       os << border << "Mapped_boxes with neighbors:\n";
       for (ConstNeighborhoodIterator ei = begin(); ei != end(); ++ei) {
-         BoxSet::ConstIterator ni = getBase().getBox(ei->first);
+         BoxContainer::ConstIterator ni = getBase().getBox(ei->first);
          if (ni != getBase().getBoxes().end()) {
             os << border << "  "
                << (*ni) << "_"
@@ -1815,7 +1815,7 @@ size_t Connector::checkConsistencyWithHead() const
    TBOX_ASSERT(head_mapped_box_level.getParallelState() ==
       BoxLevel::GLOBALIZED);
 
-   const BoxSet& head_mapped_boxes =
+   const BoxContainer& head_mapped_boxes =
       head_mapped_box_level.getGlobalBoxes();
 
    size_t number_of_inconsistencies = 0;
@@ -1835,7 +1835,7 @@ size_t Connector::checkConsistencyWithHead() const
          const Box unshifted_nabr(
             nabr, PeriodicId::zero(), head_mapped_box_level.getRefinementRatio());
 
-         BoxSet::ConstIterator na_in_head =
+         BoxContainer::ConstIterator na_in_head =
             head_mapped_boxes.find(unshifted_nabr);
 
          if (na_in_head == head_mapped_boxes.end()) {
@@ -1876,7 +1876,7 @@ size_t Connector::checkConsistencyWithHead() const
  */
 void Connector::getNeighborBoxes(
    const BoxId& mapped_box_id,
-   BoxList& nbr_boxes) const
+   BoxContainer& nbr_boxes) const
 {
    const NeighborSet& nbr_mapped_boxes = getNeighborSet(mapped_box_id);
    for (NeighborSet::ConstIterator ni = nbr_mapped_boxes.begin();

@@ -17,7 +17,6 @@ using namespace std;
 #include "SAMRAI/tbox/SAMRAIManager.h"
 
 #include "SAMRAI/hier/BoxContainerConstIterator.h"
-#include "SAMRAI/hier/BoxList.h"
 #include "SAMRAI/hier/BoxUtilities.h"
 #include "SAMRAI/geom/CartesianGridGeometry.h"
 #include "SAMRAI/tbox/Database.h"
@@ -161,9 +160,9 @@ int main(
 
       tbox::plog << "\nBuilding patch hierarchy..." << endl;
 
-      const hier::BoxList& domain =
+      const hier::BoxContainer& domain =
          grid_geometry->getPhysicalDomain(hier::BlockId(0));
-      hier::BoxList boxes(domain);
+      hier::BoxContainer boxes(domain);
       boxes.unorder();
       if ((domain.size() == 1) &&
           (num_boxes != hier::IntVector(dim, 1))) {
@@ -179,7 +178,7 @@ int main(
             bad_interval,
             domain);
       }
-      hier::BoxList patch_boxes(boxes);
+      hier::BoxContainer patch_boxes(boxes);
 
 #if 0
       hier::ProcessorMapping mapping(patch_boxes.size());
@@ -197,7 +196,7 @@ int main(
 
       hier::BoxLevelConnectorUtils edge_utils;
       hier::BoxLevel layer0(hier::IntVector(dim, 1), grid_geometry);
-      hier::BoxList::ConstIterator domain_boxes(domain);
+      hier::BoxContainer::ConstIterator domain_boxes(domain);
       for (hier::LocalId ib(0); ib < patch_boxes.size(); ib++, domain_boxes++) {
          layer0.addBox(hier::Box(domain_boxes(), ib, 0));
       }

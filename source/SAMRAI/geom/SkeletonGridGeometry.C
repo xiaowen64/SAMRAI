@@ -100,7 +100,7 @@ SkeletonGridGeometry::SkeletonGridGeometry(
 
 SkeletonGridGeometry::SkeletonGridGeometry(
    const std::string& object_name,
-   const hier::BoxList& domain,
+   const hier::BoxContainer& domain,
    bool register_for_restart):
    hier::GridGeometry(domain.front().getDim(), object_name,
                       tbox::Pointer<hier::TransferOperatorRegistry>(
@@ -116,7 +116,7 @@ SkeletonGridGeometry::SkeletonGridGeometry(
       registerRestartItem(getObjectName(), this);
    }
 
-   tbox::Array<hier::BoxList> domain_array(1, domain);
+   tbox::Array<hier::BoxContainer> domain_array(1, domain);
    this->setPhysicalDomain(domain_array);
 
 }
@@ -158,7 +158,7 @@ SkeletonGridGeometry::makeRefinedGridGeometry(
    TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(dim, refine_ratio);
    TBOX_ASSERT(refine_ratio > hier::IntVector::getZero(dim));
 
-   hier::BoxList fine_domain(this->getPhysicalDomain(hier::BlockId(0)));
+   hier::BoxContainer fine_domain(this->getPhysicalDomain(hier::BlockId(0)));
    fine_domain.refine(refine_ratio);
 
    geom::SkeletonGridGeometry* fine_geometry =
@@ -194,16 +194,16 @@ SkeletonGridGeometry::makeCoarsenedGridGeometry(
    TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(dim, coarsen_ratio);
    TBOX_ASSERT(coarsen_ratio > hier::IntVector::getZero(dim));
 
-   hier::BoxList coarse_domain(this->getPhysicalDomain(hier::BlockId(0)));
+   hier::BoxContainer coarse_domain(this->getPhysicalDomain(hier::BlockId(0)));
    coarse_domain.coarsen(coarsen_ratio);
 
    /*
     * Need to check that domain can be coarsened by given ratio.
     */
-   const hier::BoxList& fine_domain = this->getPhysicalDomain(hier::BlockId(0));
+   const hier::BoxContainer& fine_domain = this->getPhysicalDomain(hier::BlockId(0));
    const int nboxes = fine_domain.size();
-   hier::BoxList::ConstIterator fine_domain_itr(fine_domain);
-   hier::BoxList::Iterator coarse_domain_itr(coarse_domain);
+   hier::BoxContainer::ConstIterator fine_domain_itr(fine_domain);
+   hier::BoxContainer::Iterator coarse_domain_itr(coarse_domain);
    for (int ib = 0; ib < nboxes; ib++, fine_domain_itr++, coarse_domain_itr++) {
       hier::Box testbox = hier::Box::refine(*coarse_domain_itr, coarsen_ratio);
       if (!testbox.isSpatiallyEqual(*fine_domain_itr)) {
@@ -330,7 +330,7 @@ void SkeletonGridGeometry::getFromInput(
 
    if (!is_from_restart) {
 
-      hier::BoxList domain;
+      hier::BoxContainer domain;
       if (db->keyExists("domain_boxes")) {
          domain = db->getDatabaseBoxArray("domain_boxes");
          if (domain.size() == 0) {
@@ -353,7 +353,7 @@ void SkeletonGridGeometry::getFromInput(
          }
       }
 
-      tbox::Array<hier::BoxList> domain_array(1, domain);
+      tbox::Array<hier::BoxContainer> domain_array(1, domain);
 
       this->setPhysicalDomain(domain_array);
 
@@ -393,9 +393,9 @@ void SkeletonGridGeometry::getFromRestart()
          getObjectName() << ":  "
                          << "Restart file version is different than class version.");
    }
-   hier::BoxList domain(db->getDatabaseBoxArray("d_physical_domain"));
+   hier::BoxContainer domain(db->getDatabaseBoxArray("d_physical_domain"));
 
-   tbox::Array<hier::BoxList> domain_array(1, domain);
+   tbox::Array<hier::BoxContainer> domain_array(1, domain);
 
    this->setPhysicalDomain(domain_array);
 

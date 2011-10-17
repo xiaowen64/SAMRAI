@@ -1994,7 +1994,7 @@ void CellPoissonFACOps::computeVectorWeights(
 
          tbox::Pointer<hier::PatchLevel> next_finer_level =
             hierarchy->getPatchLevel(ln + 1);
-         hier::BoxList coarsened_boxes = next_finer_level->getBoxes();
+         hier::BoxContainer coarsened_boxes = next_finer_level->getBoxes();
          hier::IntVector coarsen_ratio(next_finer_level->getRatioToLevelZero());
          coarsen_ratio /= level->getRatioToLevelZero();
          coarsened_boxes.coarsen(coarsen_ratio);
@@ -2008,7 +2008,7 @@ void CellPoissonFACOps::computeVectorWeights(
          for (hier::PatchLevel::Iterator p(level); p; p++) {
 
             tbox::Pointer<hier::Patch> patch = *p;
-            for (hier::BoxList::Iterator i(coarsened_boxes);
+            for (hier::BoxContainer::Iterator i(coarsened_boxes);
                  i != coarsened_boxes.end(); ++i) {
 
                hier::Box intersection = *i * (patch->getBox());

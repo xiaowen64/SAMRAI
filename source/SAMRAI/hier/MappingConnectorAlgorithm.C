@@ -1009,8 +1009,8 @@ void MappingConnectorAlgorithm::privateModify_receiveAndUnpack(
             }
 
             // Get the referenced neighbor Boxes.
-            BoxSet referenced_base_nabrs;
-            BoxSet referenced_head_nabrs;
+            BoxContainer referenced_base_nabrs;
+            BoxContainer referenced_head_nabrs;
             const int offset = *(ptr++);
             const int* ref_mapped_box_ptr = peer->getRecvData() + offset;
             const int n_reference_base_mapped_boxes = *(ref_mapped_box_ptr++);
@@ -1048,7 +1048,7 @@ void MappingConnectorAlgorithm::privateModify_receiveAndUnpack(
                for (int j = 0; j < n_nabrs_found; ++j) {
                   Box tmp_nabr(dim, LocalId(ptr[1]), ptr[0], BlockId(ptr[2]));
                   ptr += 3;
-                  BoxSet::ConstIterator na =
+                  BoxContainer::ConstIterator na =
                      referenced_head_nabrs.find(tmp_nabr);
                   TBOX_ASSERT(na != referenced_head_nabrs.end());
                   const Box& nabr = *na;
@@ -1063,7 +1063,7 @@ void MappingConnectorAlgorithm::privateModify_receiveAndUnpack(
                for (int j = 0; j < n_nabrs_found; ++j) {
                   Box tmp_nabr(dim, LocalId(ptr[1]), ptr[0], BlockId(ptr[2]));
                   ptr += 3;
-                  BoxSet::ConstIterator na =
+                  BoxContainer::ConstIterator na =
                      referenced_base_nabrs.find(tmp_nabr);
                   TBOX_ASSERT(na != referenced_base_nabrs.end());
                   const Box& nabr = *na;
@@ -1142,7 +1142,7 @@ void MappingConnectorAlgorithm::privateModify_discoverAndSend(
     * achieve this ordering.
     */
    bool ordered = true;
-   BoxSet visible_anchor_nabrs(ordered), visible_new_nabrs(ordered);
+   BoxContainer visible_anchor_nabrs(ordered), visible_new_nabrs(ordered);
    InvertedNeighborhoodSet anchor_eto_old, new_eto_old;
    for (Connector::ConstNeighborhoodIterator ei = old_to_anchor.begin();
         ei != old_to_anchor.end(); ++ei) {
@@ -1306,8 +1306,8 @@ void MappingConnectorAlgorithm::privateModify_discoverAndSend(
       send_mesg.insert(send_mesg.end(), 3, 0);
 
       // Mapped_boxes referenced in the message, used when adding ref section.
-      BoxSet referenced_anchor_nabrs; // Referenced neighbors in anchor.
-      BoxSet referenced_new_nabrs; // Referenced neighbors in new.
+      BoxContainer referenced_anchor_nabrs; // Referenced neighbors in anchor.
+      BoxContainer referenced_new_nabrs; // Referenced neighbors in new.
 
       /*
        * Find locally visible new neighbors for all anchor
@@ -1541,13 +1541,13 @@ void MappingConnectorAlgorithm::privateModify_discoverAndSend(
          int* ptr = &send_mesg[offset];
          *(ptr++) = static_cast<int>(referenced_anchor_nabrs.size());
          *(ptr++) = static_cast<int>(referenced_new_nabrs.size());
-         for (BoxSet::ConstIterator ni = referenced_anchor_nabrs.begin();
+         for (BoxContainer::ConstIterator ni = referenced_anchor_nabrs.begin();
               ni != referenced_anchor_nabrs.end(); ++ni) {
             const Box& mapped_box = *ni;
             mapped_box.putToIntBuffer(ptr);
             ptr += Box::commBufferSize(dim);
          }
-         for (BoxSet::ConstIterator ni = referenced_new_nabrs.begin();
+         for (BoxContainer::ConstIterator ni = referenced_new_nabrs.begin();
               ni != referenced_new_nabrs.end(); ++ni) {
             const Box& mapped_box = *ni;
             mapped_box.putToIntBuffer(ptr);
@@ -1917,7 +1917,7 @@ size_t MappingConnectorAlgorithm::findMappingErrors(
     * the new BoxLevel.  There should be a mapping for each
     * Box that changed or disappeared.
     */
-   const BoxSet& old_mapped_boxes = connector.getBase().getBoxes();
+   const BoxContainer& old_mapped_boxes = connector.getBase().getBoxes();
    for (RealBoxConstIterator ni(old_mapped_boxes); ni.isValid();
         ++ni) {
       const Box& old_mapped_box = *ni;

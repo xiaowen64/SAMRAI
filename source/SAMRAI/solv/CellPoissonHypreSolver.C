@@ -473,10 +473,10 @@ void CellPoissonHypreSolver::allocateHypreData()
 
 #ifdef DEBUG_CHECK_ASSERTIONS
    if (is_periodic) {
-      const hier::BoxList& level_domain =
+      const hier::BoxContainer& level_domain =
          level->getPhysicalDomain(hier::BlockId::zero());
       hier::Box domain_bound(level_domain.front());
-      for (hier::BoxList::ConstIterator i(level_domain); i != level_domain.end();
+      for (hier::BoxContainer::ConstIterator i(level_domain); i != level_domain.end();
            ++i) {
          domain_bound.lower().min(i().lower());
          domain_bound.upper().max(i().upper());

@@ -43,12 +43,8 @@ DEPENDS_0:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxLevelConnectorUtils.I		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxLevelConnectorUtils.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxLevelHandle.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxSet.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxSet.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxSetSingleBlockIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxSetSingleOwnerIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\

@@ -204,7 +204,7 @@ private:
    //! @brief Shorthand typedef.
    typedef hier::Connector Connector;
    //! @brief Mapping from a (potentially remote) Box to a set of neighbors.
-   typedef std::map<hier::Box, hier::BoxSet, hier::Box::id_less> FullNeighborhoodSet;
+   typedef std::map<hier::Box, hier::BoxContainer, hier::Box::id_less> FullNeighborhoodSet;
 
    /*!
     * @brief Main schedule generation routine for moving data from temporary

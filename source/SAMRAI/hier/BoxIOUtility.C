@@ -72,7 +72,7 @@ BoxIOUtility::~BoxIOUtility()
  *************************************************************************
  */
 void BoxIOUtility::getLevelBoxes(
-   BoxList& level_boxes,
+   BoxContainer& level_boxes,
    const int level_number,
    const int entry_number)
 {
@@ -98,12 +98,12 @@ void BoxIOUtility::getLevelBoxes(
          << std::endl);
    }
 
-   tbox::plog << "Returning BoxList containing "
+   tbox::plog << "Returning BoxContainer containing "
               << d_level_boxes[level_number][entry_number].size()
               << " boxes. " << std::endl;
 
    /*
-    * Return BoxList entry for this step.
+    * Return BoxContainer entry for this step.
     */
    level_boxes = d_level_boxes[level_number][entry_number];
 }
@@ -116,7 +116,7 @@ void BoxIOUtility::getLevelBoxes(
  *************************************************************************
  */
 void BoxIOUtility::putLevelBoxes(
-   const BoxList& level_boxes,
+   const BoxContainer& level_boxes,
    const int level_number,
    const int entry_number)
 {
@@ -210,7 +210,7 @@ void BoxIOUtility::readLevelBoxesDatabase()
     * for each level, followed by the box arrays.
     *
     * Format:  nboxes[i]      - number of boxes for each entry
-    *          BoxList[i]     - box arrays for each of the entries
+    *          BoxContainer[i]     - box arrays for each of the entries
     */
 
    for (int ln = 0; ln < num_levels; ln++) {
@@ -227,7 +227,7 @@ void BoxIOUtility::readLevelBoxesDatabase()
       int nentries = number_of_boxes.getSize();
 
       for (i = 0; i < nentries; i++) {
-         std::string s2 = "BoxList[" + tbox::Utilities::intToString(ln) + "]["
+         std::string s2 = "BoxContainer[" + tbox::Utilities::intToString(ln) + "]["
             + tbox::Utilities::intToString(i) + "]";
          if (number_of_boxes[i] > 0) {
             tbox::Array<tbox::DatabaseBox> db_array = db->getDatabaseBoxArray(
@@ -275,7 +275,7 @@ void BoxIOUtility::writeLevelBoxesDatabase()
     *
     * Format:  num_levels     - number of levels in problem
     *          nboxes[i]      - number of boxes for each entry of the level
-    *          BoxList[i]     - box arrays for each of the entries
+    *          BoxContainer[i]     - box arrays for each of the entries
     */
 
    /*
@@ -303,7 +303,7 @@ void BoxIOUtility::writeLevelBoxesDatabase()
        * Write box array[i]
        */
       for (i = 0; i < nentries; i++) {
-         std::string s2 = "BoxList[" + tbox::Utilities::intToString(ln)
+         std::string s2 = "BoxContainer[" + tbox::Utilities::intToString(ln)
             + "][" + tbox::Utilities::intToString(i) + "]";
          if (number_of_boxes[i] > 0) {
             db->putDatabaseBoxArray(s2, d_level_boxes[ln][i]);

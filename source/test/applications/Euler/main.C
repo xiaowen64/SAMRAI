@@ -30,7 +30,6 @@
 // Headers for basic SAMRAI objects
 
 #include "SAMRAI/hier/BoxContainerIterator.h"
-#include "SAMRAI/hier/BoxList.h"
 #include "SAMRAI/hier/Index.h"
 #include "SAMRAI/hier/PatchLevel.h"
 #include "SAMRAI/hier/VariableDatabase.h"
@@ -721,7 +720,7 @@ static void dumpMatlabData1dPencil(
       nlevels = hierarchy->getNumberOfLevels();
    }
 
-   hier::BoxList domain(hierarchy->getGridGeometry()->getPhysicalDomain(hier::BlockId(0)));
+   hier::BoxContainer domain(hierarchy->getGridGeometry()->getPhysicalDomain(hier::BlockId(0)));
    hier::Box pencil_box(domain.getBoundingBox());
 
    if (dim > tbox::Dimension(1)) {
@@ -751,11 +750,11 @@ static void dumpMatlabData1dPencil(
       }
    }
 
-   tbox::Array<hier::BoxList> outboxes(nlevels);
+   tbox::Array<hier::BoxContainer> outboxes(nlevels);
 
    for (int l1 = 0; l1 < nlevels; l1++) {
       tbox::Pointer<hier::PatchLevel> level = hierarchy->getPatchLevel(l1);
-      outboxes[l1] = hier::BoxList(level->getBoxes());
+      outboxes[l1] = hier::BoxContainer(level->getBoxes());
 
       if (l1 < nlevels - 1) {
 
@@ -763,7 +762,7 @@ static void dumpMatlabData1dPencil(
             hierarchy->getPatchLevel(l1 + 1);
          hier::IntVector coarsen_ratio =
             finer_level->getRatioToCoarserLevel();
-         hier::BoxList takeaway = hier::BoxList(finer_level->getBoxes());
+         hier::BoxContainer takeaway = hier::BoxContainer(finer_level->getBoxes());
          takeaway.coarsen(coarsen_ratio);
          outboxes[l1].removeIntersections(takeaway);
       }
@@ -825,7 +824,7 @@ static void dumpMatlabData1dPencil(
          tbox::Pointer<hier::Patch> patch = *i;
          hier::Box pbox = patch->getBox();
 
-         for (hier::BoxList::Iterator b(outboxes[l5]);
+         for (hier::BoxContainer::Iterator b(outboxes[l5]);
               b != outboxes[l5].end(); ++b) {
             const hier::Box box = b() * pbox * level_pencil_box;
 

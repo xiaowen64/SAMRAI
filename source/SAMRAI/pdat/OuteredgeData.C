@@ -14,7 +14,6 @@
 #include "SAMRAI/pdat/OuteredgeData.h"
 
 #include "SAMRAI/hier/Box.h"
-#include "SAMRAI/hier/BoxList.h"
 #include "SAMRAI/pdat/EdgeData.h"
 #include "SAMRAI/pdat/EdgeGeometry.h"
 #include "SAMRAI/pdat/EdgeOverlap.h"
@@ -374,8 +373,8 @@ void OuteredgeData<TYPE>::sum(
 
       for (int axis = 0; axis < getDim().getValue(); ++axis) {
 
-         const hier::BoxList& box_list =
-            t_overlap->getDestinationBoxList(axis);
+         const hier::BoxContainer& box_list =
+            t_overlap->getDestinationBoxContainer(axis);
 
          for (int src_face_normal = 0;
               src_face_normal < getDim().getValue();
@@ -458,8 +457,8 @@ int OuteredgeData<TYPE>::getDataStreamSize(
 
    for (int axis = 0; axis < getDim().getValue(); ++axis) {
 
-      const hier::BoxList& boxlist =
-         t_overlap->getDestinationBoxList(axis);
+      const hier::BoxContainer& boxlist =
+         t_overlap->getDestinationBoxContainer(axis);
 
       for (int face_normal = 0; face_normal < getDim().getValue(); ++face_normal) {
 
@@ -508,10 +507,10 @@ void OuteredgeData<TYPE>::packStream(
 
    for (int axis = 0; axis < getDim().getValue(); ++axis) {
 
-      const hier::BoxList& dst_boxes =
-         t_overlap->getDestinationBoxList(axis);
+      const hier::BoxContainer& dst_boxes =
+         t_overlap->getDestinationBoxContainer(axis);
 
-      for (hier::BoxList::ConstIterator dst_box(dst_boxes);
+      for (hier::BoxContainer::ConstIterator dst_box(dst_boxes);
            dst_box != dst_boxes.end(); ++dst_box) {
 
          const hier::Box src_box = hier::Box::shift(dst_box(),
@@ -562,10 +561,10 @@ void OuteredgeData<TYPE>::unpackStream(
 
    for (int axis = 0; axis < getDim().getValue(); ++axis) {
 
-      const hier::BoxList& dst_boxes =
-         t_overlap->getDestinationBoxList(axis);
+      const hier::BoxContainer& dst_boxes =
+         t_overlap->getDestinationBoxContainer(axis);
 
-      for (hier::BoxList::ConstIterator dst_box(dst_boxes);
+      for (hier::BoxContainer::ConstIterator dst_box(dst_boxes);
            dst_box != dst_boxes.end(); ++dst_box) {
 
          for (int face_normal = 0; face_normal < getDim().getValue(); ++face_normal) {
@@ -620,10 +619,10 @@ void OuteredgeData<TYPE>::unpackStreamAndSum(
 
    for (int axis = 0; axis < getDim().getValue(); ++axis) {
 
-      const hier::BoxList& dst_boxes =
-         t_overlap->getDestinationBoxList(axis);
+      const hier::BoxContainer& dst_boxes =
+         t_overlap->getDestinationBoxContainer(axis);
 
-      for (hier::BoxList::ConstIterator dst_box(dst_boxes);
+      for (hier::BoxContainer::ConstIterator dst_box(dst_boxes);
            dst_box != dst_boxes.end(); ++dst_box) {
 
          for (int face_normal = 0; face_normal < getDim().getValue(); ++face_normal) {
@@ -946,7 +945,7 @@ void OuteredgeData<TYPE>::copyFromEdge(
 
    for (int axis = 0; axis < getDim().getValue(); ++axis) {
 
-      const hier::BoxList& box_list = overlap.getDestinationBoxList(axis);
+      const hier::BoxContainer& box_list = overlap.getDestinationBoxContainer(axis);
       const ArrayData<TYPE>& src_edge_array = src.getArrayData(axis);
 
       for (int face_normal = 0; face_normal < getDim().getValue(); ++face_normal) {
@@ -983,7 +982,7 @@ void OuteredgeData<TYPE>::copyToEdge(
 
    for (int axis = 0; axis < getDim().getValue(); ++axis) {
 
-      const hier::BoxList& box_list = overlap.getDestinationBoxList(axis);
+      const hier::BoxContainer& box_list = overlap.getDestinationBoxContainer(axis);
       ArrayData<TYPE>& dst_edge_array = dst.getArrayData(axis);
 
       for (int face_normal = 0; face_normal < getDim().getValue(); ++face_normal) {
@@ -1069,8 +1068,8 @@ void OuteredgeData<TYPE>::copyFromOuteredge(
 
    for (int axis = 0; axis < getDim().getValue(); ++axis) {
 
-      const hier::BoxList& box_list =
-         overlap.getDestinationBoxList(axis);
+      const hier::BoxContainer& box_list =
+         overlap.getDestinationBoxContainer(axis);
 
       for (int src_face_normal = 0;
            src_face_normal < getDim().getValue();

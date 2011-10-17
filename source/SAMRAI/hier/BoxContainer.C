@@ -415,7 +415,7 @@ BoxContainer::Iterator BoxContainer::find(const Box& box) const
    }
 
    Iterator iter(true);
-   iter.d_set_iter = d_set.find((Box*)&box);
+   iter.d_set_iter = d_set.find(const_cast<Box*>(&box));
 
    return iter;
 }
@@ -473,7 +473,7 @@ int BoxContainer::erase(const Box& box)
       TBOX_ERROR("erase with Box argument attempted on unordered container.");
    }
  
-   int ret = d_set.erase((Box*)&box);
+   int ret = d_set.erase(const_cast<Box*>(&box));
    for (std::list<Box>::iterator bi = d_list.begin(); bi != d_list.end(); ++bi) {
       if (bi->getId() == box.getId()) {
          d_list.erase(bi++);
@@ -505,7 +505,7 @@ BoxContainer::Iterator BoxContainer::lower_bound(const Box& box) const
 
    Iterator iter(true);
 
-   iter.d_set_iter = d_set.lower_bound((Box*)&box);
+   iter.d_set_iter = d_set.lower_bound(const_cast<Box*>(&box));
 
    return iter;
 }
@@ -518,7 +518,7 @@ BoxContainer::Iterator BoxContainer::upper_bound(const Box& box) const
 
    Iterator iter(true);
 
-   iter.d_set_iter = d_set.upper_bound((Box*)&box);
+   iter.d_set_iter = d_set.upper_bound(const_cast<Box*>(&box));
 
    return iter;
 }

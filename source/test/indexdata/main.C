@@ -481,12 +481,12 @@ int main(
          assert(dst.getNumberOfItems() == 1);
 
          IntVector src_offset(dim, 0);
-         BoxList boxes(box_src);
+         BoxContainer boxes(box_src);
          boxes.pushFront(box_dst);
-         BoxList intersection(box_src * box_dst);
+         BoxContainer intersection(box_src * box_dst);
          CellOverlap overlap(intersection, hier::Transformation(src_offset));
 
-         BoxList dst_boxlist(overlap.getDestinationBoxList());
+         BoxContainer dst_boxlist(overlap.getDestinationBoxContainer());
 
          dst.copy(src, overlap);
 

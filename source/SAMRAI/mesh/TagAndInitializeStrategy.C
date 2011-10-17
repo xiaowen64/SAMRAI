@@ -51,7 +51,7 @@ TagAndInitializeStrategy::~TagAndInitializeStrategy()
  *************************************************************************
  */
 bool TagAndInitializeStrategy::getUserSuppliedRefineBoxes(
-   hier::BoxList& refine_boxes,
+   hier::BoxContainer& refine_boxes,
    const int level_num,
    const double time)
 {
@@ -130,7 +130,7 @@ bool TagAndInitializeStrategy::getUserSuppliedRefineBoxes(
     * Print some warnings if the user-supplied entries will not
     * generate any refined boxes for the level.
     */
-   hier::BoxList empty_boxes;
+   hier::BoxContainer empty_boxes;
    if ((d_refine_boxes.getSize() <= level_num) ||
        (d_refine_boxes[level_num][seq_num].size() == 0)) {
 
@@ -210,7 +210,7 @@ bool TagAndInitializeStrategy::getUserSuppliedRefineBoxes(
  */
 
 void TagAndInitializeStrategy::resetRefineBoxes(
-   const hier::BoxList& refine_boxes,
+   const hier::BoxContainer& refine_boxes,
    const int level_num)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS

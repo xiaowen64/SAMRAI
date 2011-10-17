@@ -14,7 +14,6 @@
 #include "SAMRAI/SAMRAI_config.h"
 
 #include "SAMRAI/tbox/Pointer.h"
-#include "SAMRAI/hier/BoxList.h"
 #include "SAMRAI/hier/BoxLevel.h"
 #include "SAMRAI/hier/BoxSetSingleBlockIterator.h"
 #include "SAMRAI/hier/PatchFactory.h"
@@ -402,10 +401,10 @@ public:
     * @return A const reference to the box array that defines
     * the extent of the index space on the level.
     */
-   const tbox::Array<BoxList>&
+   const tbox::Array<BoxContainer>&
    getPhysicalDomainArray() const;
 
-   const BoxList&
+   const BoxContainer&
    getPhysicalDomain(
       const hier::BlockId& block_id) const;
 
@@ -420,21 +419,21 @@ public:
     * @return a const reference to the box array that defines
     * the patches on the level.
     */
-   const BoxList&
+   const BoxContainer&
    getBoxes() const;
 
    /*!
     * @brief Get boxes for a particular block.
     *
     * The boxes from only the specified block will be stored in the
-    * output BoxList.
+    * output BoxContainer.
     *
     * @param[out] boxes
     * @param[in] block_id
     */
    void
    getBoxes(
-      BoxList& boxes,
+      BoxContainer& boxes,
       const BlockId& block_id) const;
 
    /*!
@@ -916,7 +915,7 @@ private:
     * This means that the first getBoxes() has to be called by all processors,
     * because it requires communication.
     */
-   mutable BoxList d_boxes;
+   mutable BoxContainer d_boxes;
 
    /*
     * Patch mapping to processors.
@@ -949,7 +948,7 @@ private:
    /*
     * Extent of the index space.
     */
-   tbox::Array<BoxList> d_physical_domain;
+   tbox::Array<BoxContainer> d_physical_domain;
 
    /*
     * The ratio to coarser level applies only when the level resides

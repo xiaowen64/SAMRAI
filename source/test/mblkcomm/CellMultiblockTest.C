@@ -282,7 +282,7 @@ void CellMultiblockTest::fillSingularityBoundaryConditions(
 
          if (ni != dst_to_encon.end()) {
 
-            for (hier::BoxSet::ConstIterator ei = dst_to_encon.begin(ni);
+            for (hier::BoxContainer::ConstIterator ei = dst_to_encon.begin(ni);
                  ei != dst_to_encon.end(ni); ++ei) {
 
                tbox::Pointer<hier::Patch> encon_patch(
@@ -407,8 +407,8 @@ bool CellMultiblockTest::verifyResults(
 
    const tbox::List<hier::GridGeometry::Neighbor>& neighbors =
       hierarchy->getGridGeometry()->getNeighbors(block_id);
-   hier::BoxList singularity(
-      hierarchy->getGridGeometry()->getSingularityBoxList(block_id));
+   hier::BoxContainer singularity(
+      hierarchy->getGridGeometry()->getSingularityBoxContainer(block_id));
 
    hier::IntVector ratio =
       hierarchy->getPatchLevel(level_number)->getRatioToLevelZero();
@@ -450,11 +450,11 @@ bool CellMultiblockTest::verifyResults(
 
          if (ne().isSingularity()) continue;
 
-         hier::BoxList neighbor_ghost(ne().getTransformedDomain());
+         hier::BoxContainer neighbor_ghost(ne().getTransformedDomain());
          neighbor_ghost.refine(ratio);
          neighbor_ghost.intersectBoxes(gbox);
 
-         for (hier::BoxList::Iterator ng(neighbor_ghost);
+         for (hier::BoxContainer::Iterator ng(neighbor_ghost);
               ng != neighbor_ghost.end(); ++ng) {
 
             for (pdat::CellIterator ci(ng()); ci; ci++) {
@@ -497,7 +497,7 @@ bool CellMultiblockTest::verifyResults(
                     <hier::GridGeometry::Neighbor>::
                     Iterator ns(neighbors); ns; ns++) {
                   if (ns().isSingularity()) {
-                     hier::BoxList neighbor_ghost(
+                     hier::BoxContainer neighbor_ghost(
                         ns().getTransformedDomain());
                      neighbor_ghost.refine(ratio);
                      neighbor_ghost.intersectBoxes(fill_box);

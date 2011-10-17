@@ -15,7 +15,6 @@
 
 #include "SAMRAI/tbox/Array.h"
 #include "SAMRAI/hier/Box.h"
-#include "SAMRAI/hier/BoxList.h"
 #include "SAMRAI/hier/Patch.h"
 #include "SAMRAI/pdat/CellData.h"
 
@@ -54,7 +53,7 @@ public:
     */
    bool
    getRefineBoxes(
-      hier::BoxList& refine_boxes,
+      hier::BoxContainer& refine_boxes,
       const int block_number,
       const int level_number);
 
@@ -240,7 +239,7 @@ private:
    /*
     * Refine boxes for different blocks/levels
     */
-   tbox::Array<tbox::Array<hier::BoxList> > d_refine_boxes;
+   tbox::Array<tbox::Array<hier::BoxContainer> > d_refine_boxes;
 
 };
 

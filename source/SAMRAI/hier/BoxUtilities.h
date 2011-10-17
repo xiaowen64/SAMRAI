@@ -13,7 +13,8 @@
 
 #include "SAMRAI/SAMRAI_config.h"
 
-#include "SAMRAI/hier/BoxList.h"
+#include "SAMRAI/hier/Box.h"
+#include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/hier/IntVector.h"
 #include "SAMRAI/tbox/Array.h"
 #include "SAMRAI/tbox/List.h"
@@ -122,7 +123,7 @@ namespace hier {
  * among these classes.
  *
  * @see hier::Box
- * @see hier::BoxList
+ * @see hier::BoxContainer
  */
 
 struct BoxUtilities {
@@ -170,7 +171,7 @@ struct BoxUtilities {
       const IntVector& min_size,
       const IntVector& cut_factor,
       const IntVector& bad_interval,
-      const BoxList& physical_boxes);
+      const BoxContainer& physical_boxes);
 
    /**
     * Replace each box in the list that is too large with a list of non-
@@ -219,12 +220,12 @@ struct BoxUtilities {
     */
    static void
    chopBoxes(
-      BoxList& boxes,
+      BoxContainer& boxes,
       const IntVector& max_size,
       const IntVector& min_size,
       const IntVector& cut_factor,
       const IntVector& bad_interval,
-      const BoxList& physical_boxes);
+      const BoxContainer& physical_boxes);
 
    /**
     * Chop the box into a collection of boxes according to the collection
@@ -256,14 +257,14 @@ struct BoxUtilities {
     *
     * Notes:
     *
-    *    - The "boxes" BoxList is cleared before any box
+    *    - The "boxes" BoxContainer is cleared before any box
     *      operations are performed.  Thus, any boxes on the list when
     *      the function is called will be lost.
     *
     */
    static void
    chopBox(
-      BoxList& boxes,
+      BoxContainer& boxes,
       const Box& box,
       const tbox::Array<tbox::List<int> > cut_points);
 
@@ -320,7 +321,7 @@ struct BoxUtilities {
    static bool
    extendBoxToDomainBoundary(
       Box& box,
-      const BoxList& domain,
+      const BoxContainer& domain,
       const IntVector& ext_ghosts);
 
    /**
@@ -333,8 +334,8 @@ struct BoxUtilities {
     */
    static bool
    extendBoxesToDomainBoundary(
-      BoxList& boxes,
-      const BoxList& domain,
+      BoxContainer& boxes,
+      const BoxContainer& domain,
       const IntVector& ext_ghosts);
 
    /**
@@ -384,8 +385,8 @@ struct BoxUtilities {
     */
    static void
    growBoxesWithinDomain(
-      BoxList& boxes,
-      const BoxList& domain,
+      BoxContainer& boxes,
+      const BoxContainer& domain,
       const IntVector& min_size);
 
    /*
@@ -396,7 +397,7 @@ struct BoxUtilities {
    static void
    growBoxWithinDomain(
       Box& box,
-      const BoxList& local_domain_complement,
+      const BoxContainer& local_domain_complement,
       const IntVector& min_size);
 
    /**
@@ -643,7 +644,7 @@ struct BoxUtilities {
    checkBoxForBadCutPoints(
       IntVector& bad_cut_information,
       const Box& box,
-      const BoxList& physical_boxes,
+      const BoxContainer& physical_boxes,
       const IntVector& bad_interval);
 
    /**
@@ -679,7 +680,7 @@ struct BoxUtilities {
    checkBoxForBadCutPointsInDirection(
       const int dir,
       const Box& box,
-      const BoxList& physical_boxes,
+      const BoxContainer& physical_boxes,
       const IntVector& bad_interval);
 
    /**
@@ -719,7 +720,7 @@ struct BoxUtilities {
    findBadCutPoints(
       tbox::Array<tbox::Array<bool> >& bad_cuts,
       const Box& box,
-      const BoxList& physical_boxes,
+      const BoxContainer& physical_boxes,
       const IntVector& bad_interval);
 
    /**
@@ -758,7 +759,7 @@ struct BoxUtilities {
       const int dir,
       tbox::Array<bool>& bad_cuts,
       const Box& box,
-      const BoxList& physical_boxes,
+      const BoxContainer& physical_boxes,
       const IntVector& bad_interval);
 
    /**
@@ -909,9 +910,9 @@ struct BoxUtilities {
     *       an arbitrary box array
     */
    static void
-   makeNonOverlappingBoxLists(
-      tbox::Array<BoxList>& box_list_array,
-      const BoxList& boxes);
+   makeNonOverlappingBoxContainers(
+      tbox::Array<BoxContainer>& box_list_array,
+      const BoxContainer& boxes);
 
 };
 

@@ -34,7 +34,6 @@ using namespace std;
 
 #include "SAMRAI/tbox/Array.h"
 #include "SAMRAI/hier/BoundaryBox.h"
-#include "SAMRAI/hier/BoxList.h"
 #include "SAMRAI/pdat/CellData.h"
 #include "SAMRAI/pdat/CellIndex.h"
 #include "SAMRAI/pdat/CellIterator.h"
@@ -2259,7 +2258,7 @@ void MblkLinAdv::setMappedGridOnPatch(
    const tbox::Pointer<hier::PatchGeometry>
    patch_geom = patch.getPatchGeometry();
    hier::IntVector ratio = patch_geom->getRatio();
-   hier::BoxList domain_boxes;
+   hier::BoxContainer domain_boxes;
    d_grid_geometry->computePhysicalDomain(domain_boxes, ratio,
       hier::BlockId(block_number));
    int num_domain_boxes = domain_boxes.size();

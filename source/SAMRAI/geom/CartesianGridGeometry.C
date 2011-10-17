@@ -127,7 +127,6 @@
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/hier/BoxContainerConstIterator.h"
 #include "SAMRAI/hier/BoxContainerIterator.h"
-#include "SAMRAI/hier/BoxList.h"
 #include "SAMRAI/hier/Index.h"
 #include "SAMRAI/hier/IntVector.h"
 #include "SAMRAI/hier/Patch.h"
@@ -195,7 +194,7 @@ CartesianGridGeometry::CartesianGridGeometry(
    const std::string& object_name,
    const double* x_lo,
    const double* x_up,
-   const hier::BoxList& domain,
+   const hier::BoxContainer& domain,
    bool register_for_restart):
    hier::GridGeometry(domain.front().getDim(), object_name,
                       tbox::Pointer<hier::TransferOperatorRegistry>(
@@ -239,7 +238,7 @@ CartesianGridGeometry::makeRefinedGridGeometry(
    TBOX_ASSERT(fine_geom_name != getObjectName());
    TBOX_ASSERT(refine_ratio > hier::IntVector::getZero(dim));
 
-   hier::BoxList fine_domain(this->getPhysicalDomain(hier::BlockId(0)));
+   hier::BoxContainer fine_domain(this->getPhysicalDomain(hier::BlockId(0)));
    fine_domain.refine(refine_ratio);
 
    CartesianGridGeometry* fine_geometry =
@@ -276,16 +275,16 @@ makeCoarsenedGridGeometry(
    TBOX_ASSERT(coarse_geom_name != getObjectName());
    TBOX_ASSERT(coarsen_ratio > hier::IntVector::getZero(dim));
 
-   hier::BoxList coarse_domain(this->getPhysicalDomain(hier::BlockId(0)));
+   hier::BoxContainer coarse_domain(this->getPhysicalDomain(hier::BlockId(0)));
    coarse_domain.coarsen(coarsen_ratio);
 
    /*
     * Need to check that domain can be coarsened by given ratio.
     */
-   const hier::BoxList& fine_domain = this->getPhysicalDomain(hier::BlockId(0));
+   const hier::BoxContainer& fine_domain = this->getPhysicalDomain(hier::BlockId(0));
    const int nboxes = fine_domain.size();
-   hier::BoxList::ConstIterator fine_domain_itr(fine_domain);
-   hier::BoxList::Iterator coarse_domain_itr(coarse_domain);
+   hier::BoxContainer::ConstIterator fine_domain_itr(fine_domain);
+   hier::BoxContainer::Iterator coarse_domain_itr(coarse_domain);
    for (int ib = 0; ib < nboxes; ib++, fine_domain_itr++, coarse_domain_itr++) {
       hier::Box testbox = hier::Box::refine(*coarse_domain_itr, coarsen_ratio);
       if (!testbox.isSpatiallyEqual(*fine_domain_itr)) {
@@ -344,7 +343,7 @@ CartesianGridGeometry::~CartesianGridGeometry()
 void CartesianGridGeometry::setGeometryData(
    const double* x_lo,
    const double* x_up,
-   const hier::BoxList& domain)
+   const hier::BoxContainer& domain)
 {
    const tbox::Dimension& dim(getDim());
 
@@ -356,12 +355,12 @@ void CartesianGridGeometry::setGeometryData(
       d_x_up[id] = x_up[id];
    }
 
-   tbox::Array<hier::BoxList> domain_array(1, domain);
+   tbox::Array<hier::BoxContainer> domain_array(1, domain);
    this->setPhysicalDomain(domain_array);
 
    hier::Box bigbox(dim);
    const hier::BoxContainer& block_domain = getPhysicalDomain(hier::BlockId(0));
-   for (hier::BoxList::ConstIterator k(block_domain); k != block_domain.end();
+   for (hier::BoxContainer::ConstIterator k(block_domain); k != block_domain.end();
         ++k) {
       bigbox += *k;
    }
@@ -545,7 +544,7 @@ void CartesianGridGeometry::getFromInput(
 
    if (!is_from_restart) {
 
-      hier::BoxList domain;
+      hier::BoxContainer domain;
       if (db->keyExists("domain_boxes")) {
          domain = db->getDatabaseBoxArray("domain_boxes");
          if (domain.size() == 0) {
@@ -629,7 +628,7 @@ void CartesianGridGeometry::getFromRestart()
          << "    geometry object with name = " << getObjectName()
          << "Restart file version is different than class version" << std::endl);
    }
-   hier::BoxList domain(db->getDatabaseBoxArray("d_physical_domain"));
+   hier::BoxContainer domain(db->getDatabaseBoxArray("d_physical_domain"));
    double x_lo[tbox::Dimension::MAXIMUM_DIMENSION_VALUE],
           x_up[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
    db->getDoubleArray("d_x_lo", x_lo, dim.getValue());

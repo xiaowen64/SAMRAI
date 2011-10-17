@@ -13,6 +13,7 @@
 
 #include "SAMRAI/hier/BoxUtilities.h"
 
+#include "SAMRAI/hier/BoxContainer.h" 
 #include "SAMRAI/hier/BoxContainerConstIterator.h" 
 #include "SAMRAI/hier/BoxContainerIterator.h" 
 #include "SAMRAI/tbox/SAMRAI_MPI.h"
@@ -120,7 +121,7 @@ void BoxUtilities::checkBoxConstraints(
    const IntVector& min_size,
    const IntVector& cut_factor,
    const IntVector& bad_interval,
-   const BoxList& physical_boxes)
+   const BoxContainer& physical_boxes)
 {
 
    TBOX_DIM_ASSERT_CHECK_ARGS3(min_size, cut_factor, bad_interval);
@@ -201,7 +202,7 @@ void BoxUtilities::checkBoxConstraints(
       Box test_border = box;
       test_border.grow(bad_interval);
 
-      BoxList border_boxes(test_border);
+      BoxContainer border_boxes(test_border);
       border_boxes.removeIntersections(physical_boxes);
 
       if (!border_boxes.isEmpty()) {
@@ -226,11 +227,11 @@ void BoxUtilities::checkBoxConstraints(
 
             test_box.upper(id) = box.lower(id) - 1;
 
-            BoxList test_boxes(test_box);
+            BoxContainer test_boxes(test_box);
             test_boxes.intersectBoxes(border_boxes);
             test_boxes.simplify();
 
-            BoxList::Iterator tb = test_boxes.begin();
+            BoxContainer::Iterator tb = test_boxes.begin();
             while (!bad_cut_violation && tb != test_boxes.end()) {
                if ((tb().lower(id) > (blo - bad))
                    || (tb().upper(id) < (blo - 1))) {
@@ -251,7 +252,7 @@ void BoxUtilities::checkBoxConstraints(
 
                test_box.lower(id) = box.upper(id) + 1;
 
-               test_boxes = BoxList(test_box);
+               test_boxes = BoxContainer(test_box);
                test_boxes.intersectBoxes(border_boxes);
                test_boxes.simplify();
 
@@ -282,7 +283,7 @@ void BoxUtilities::checkBoxConstraints(
                     << bad_interval << std::endl;
          tbox::perr << "Physical domain boxes ... " << std::endl;
          int ib = 0;
-         for (BoxList::ConstIterator itr(physical_boxes);
+         for (BoxContainer::ConstIterator itr(physical_boxes);
               itr != physical_boxes.end(); ++itr, ++ib) {
             tbox::perr << "Box # " << ib << " -- " << *itr << std::endl;
          }
@@ -323,12 +324,12 @@ void BoxUtilities::checkBoxConstraints(
  */
 
 void BoxUtilities::chopBoxes(
-   BoxList& boxes,
+   BoxContainer& boxes,
    const IntVector& max_size,
    const IntVector& min_size,
    const IntVector& cut_factor,
    const IntVector& bad_interval,
-   const BoxList& physical_boxes)
+   const BoxContainer& physical_boxes)
 {
    TBOX_DIM_ASSERT_CHECK_ARGS4(max_size, min_size, cut_factor, bad_interval);
 
@@ -341,7 +342,7 @@ void BoxUtilities::chopBoxes(
 
    const tbox::Dimension& dim(max_size.getDim());
 
-   BoxList in_boxes(boxes);
+   BoxContainer in_boxes(boxes);
    boxes.clear();
 
    while (!in_boxes.isEmpty()) {
@@ -349,7 +350,7 @@ void BoxUtilities::chopBoxes(
       Box box = in_boxes.front();
       in_boxes.popFront();
 
-      BoxList tmp_boxes;
+      BoxContainer tmp_boxes;
 
       tbox::Array<tbox::List<int> > cut_points(dim.getValue());
       bool chop_box = findBestCutPointsGivenMax(cut_points,
@@ -413,7 +414,7 @@ void BoxUtilities::chopBoxes(
  */
 
 void BoxUtilities::chopBox(
-   BoxList& boxes,
+   BoxContainer& boxes,
    const Box& box,
    const tbox::Array<tbox::List<int> > cut_points)
 {
@@ -426,7 +427,7 @@ void BoxUtilities::chopBox(
       boxes.clear();
       boxes.pushBack(box);
 
-      BoxList tmp_boxes;
+      BoxContainer tmp_boxes;
       for (int id = 0; id < dim.getValue(); id++) {
 
          tmp_boxes.clear();
@@ -500,8 +501,8 @@ void BoxUtilities::chopBox(
  */
 
 bool BoxUtilities::extendBoxesToDomainBoundary(
-   BoxList& boxes,
-   const BoxList& domain,
+   BoxContainer& boxes,
+   const BoxContainer& domain,
    const IntVector& ext_ghosts)
 {
    TBOX_ASSERT(!domain.isEmpty());
@@ -509,7 +510,7 @@ bool BoxUtilities::extendBoxesToDomainBoundary(
 
    bool out_val = false;
 
-   BoxList out_boxes;
+   BoxContainer out_boxes;
 
    while (!boxes.isEmpty()) {
 
@@ -530,7 +531,7 @@ bool BoxUtilities::extendBoxesToDomainBoundary(
 
 bool BoxUtilities::extendBoxToDomainBoundary(
    Box& box,
-   const BoxList& domain,
+   const BoxContainer& domain,
    const IntVector& ext_ghosts)
 {
 
@@ -547,13 +548,13 @@ bool BoxUtilities::extendBoxToDomainBoundary(
       Box test_ghost_box = box;
       test_ghost_box.grow(ext_ghosts);
 
-      BoxList outside_domain(test_ghost_box);
+      BoxContainer outside_domain(test_ghost_box);
       outside_domain.removeIntersections(domain);
 
       if (!outside_domain.isEmpty()) {
 
          for (id = 0; id < dim.getValue(); id++) {
-            BoxList outside_boxes;
+            BoxContainer outside_boxes;
 
             // Test whether lower end of ghost box extends outside domain
             Box test_region = test_ghost_box;
@@ -563,7 +564,7 @@ bool BoxUtilities::extendBoxToDomainBoundary(
             outside_boxes.intersectBoxes(test_region);
 
             int box_lo = box.lower(id);
-            BoxList::Iterator lb = outside_boxes.begin();
+            BoxContainer::Iterator lb = outside_boxes.begin();
             for ( ; lb != outside_boxes.end(); ++lb) {
                box_lo = tbox::MathUtilities<int>::Min(box_lo, lb().upper(
                         id) + 1);
@@ -614,8 +615,8 @@ bool BoxUtilities::extendBoxToDomainBoundary(
  */
 
 void BoxUtilities::growBoxesWithinDomain(
-   BoxList& boxes,
-   const BoxList& domain,
+   BoxContainer& boxes,
+   const BoxContainer& domain,
    const IntVector& min_size)
 {
    const tbox::Dimension& dim(min_size.getDim());
@@ -626,9 +627,9 @@ void BoxUtilities::growBoxesWithinDomain(
 
    if (!boxes.isEmpty()) {
 
-      BoxList out_boxes;
+      BoxContainer out_boxes;
 
-      BoxList outside_domain;
+      BoxContainer outside_domain;
       if (domain.isEmpty()) {
          Box big_box(boxes.getBoundingBox());
          big_box.grow(min_size);
@@ -652,7 +653,7 @@ void BoxUtilities::growBoxesWithinDomain(
 
             if (grow > 0) {
 
-               BoxList outside_boxes;
+               BoxContainer outside_boxes;
                Box test_region(dim);
 
                // How far may box be grown within domain in lower direction?
@@ -664,7 +665,7 @@ void BoxUtilities::growBoxesWithinDomain(
                outside_boxes.intersectBoxes(test_region);
 
                int grow_lo = try_box.lower(id) - grow;
-               BoxList::Iterator lb = outside_boxes.begin();
+               BoxContainer::Iterator lb = outside_boxes.begin();
                for ( ; lb != outside_boxes.end(); ++lb) {
                   grow_lo =
                      tbox::MathUtilities<int>::Max(grow_lo, lb().upper(id) + 1);
@@ -730,7 +731,7 @@ void BoxUtilities::growBoxesWithinDomain(
 
 void BoxUtilities::growBoxWithinDomain(
    Box& box,
-   const BoxList& local_domain_complement,
+   const BoxContainer& local_domain_complement,
    const IntVector& min_size)
 {
    const tbox::Dimension& dim(min_size.getDim());
@@ -746,7 +747,7 @@ void BoxUtilities::growBoxWithinDomain(
 
       if (grow > 0) {
 
-         BoxList outside_boxes;
+         BoxContainer outside_boxes;
          Box test_region(dim);
 
          // How far may box be grown within domain in lower direction?
@@ -757,7 +758,7 @@ void BoxUtilities::growBoxWithinDomain(
          outside_boxes = local_domain_complement;
          outside_boxes.intersectBoxes(test_region);
 
-         BoxList::Iterator lb = outside_boxes.begin(); 
+         BoxContainer::Iterator lb = outside_boxes.begin(); 
          int grow_lo = try_box.lower(id) - grow;
          for ( ; lb != outside_boxes.end(); ++lb) {
             grow_lo =
@@ -1135,7 +1136,7 @@ bool BoxUtilities::findBestCutPointsForDirectionGivenNumber(
 bool BoxUtilities::checkBoxForBadCutPoints(
    IntVector& bad_cut_information,
    const Box& box,
-   const BoxList& physical_boxes,
+   const BoxContainer& physical_boxes,
    const IntVector& bad_interval)
 {
    TBOX_DIM_ASSERT_CHECK_ARGS3(bad_cut_information, box,
@@ -1173,7 +1174,7 @@ bool BoxUtilities::checkBoxForBadCutPoints(
 bool BoxUtilities::checkBoxForBadCutPointsInDirection(
    const int id,
    const Box& box,
-   const BoxList& physical_boxes,
+   const BoxContainer& physical_boxes,
    const IntVector& bad_interval)
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(box, bad_interval);
@@ -1187,7 +1188,7 @@ bool BoxUtilities::checkBoxForBadCutPointsInDirection(
 
    if (physical_boxes.size() > 0) {
 
-      BoxList level_interior(physical_boxes);
+      BoxContainer level_interior(physical_boxes);
 
       int bad = bad_interval(id);
 
@@ -1206,11 +1207,11 @@ bool BoxUtilities::checkBoxForBadCutPointsInDirection(
             border.grow(bad_interval);
             border.upper(id2) = box.lower(id2) - 1;
 
-            BoxList border_boxes(border);
+            BoxContainer border_boxes(border);
             border_boxes.removeIntersections(level_interior);
             border_boxes.simplify();
 
-            BoxList::Iterator bb = border_boxes.begin();
+            BoxContainer::Iterator bb = border_boxes.begin();
             while (!found_bad && bb != border_boxes.end()) {
                found_bad = ((bb().lower(id) > (blo - bad))
                             || (bb().upper(id) < (bhi + bad)));
@@ -1267,7 +1268,7 @@ bool BoxUtilities::checkBoxForBadCutPointsInDirection(
 void BoxUtilities::findBadCutPoints(
    tbox::Array<tbox::Array<bool> >& bad_cuts,
    const Box& box,
-   const BoxList& physical_boxes,
+   const BoxContainer& physical_boxes,
    const IntVector& bad_interval)
 {
    const tbox::Dimension& dim(box.getDim());
@@ -1307,7 +1308,7 @@ void BoxUtilities::findBadCutPointsForDirection(
    const int id,
    tbox::Array<bool>& bad_cuts,
    const Box& box,
-   const BoxList& physical_boxes,
+   const BoxContainer& physical_boxes,
    const IntVector& bad_interval)
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(box, bad_interval);
@@ -1343,7 +1344,7 @@ void BoxUtilities::findBadCutPointsForDirection(
     * intersects the domain exterior.
     */
 
-   BoxList level_interior(physical_boxes);
+   BoxContainer level_interior(physical_boxes);
    Box level_bounding_box = level_interior.getBoundingBox(box.getBlockId());
 
    for (int id2 = 0; id2 < dim.getValue(); id2++) {
@@ -1365,7 +1366,7 @@ void BoxUtilities::findBadCutPointsForDirection(
          border.upper(id) = level_bounding_box.upper(id);
          border.lower(id) = level_bounding_box.lower(id);
 
-         BoxList border_boxes(border);
+         BoxContainer border_boxes(border);
 
          if (dim.getValue() > 1) {
             /*
@@ -1378,7 +1379,7 @@ void BoxUtilities::findBadCutPointsForDirection(
          if (!border_boxes.isEmpty()) {
             border_boxes.simplify();
 
-            for (BoxList::Iterator bbox(border_boxes);
+            for (BoxContainer::Iterator bbox(border_boxes);
                  bbox != border_boxes.end(); ++bbox) {
                findBadCutPointsForBorderAndDirection(id,
                   bad_cuts,
@@ -1417,7 +1418,7 @@ void BoxUtilities::findBadCutPointsForDirection(
 
          if (!border_boxes.isEmpty()) {
             border_boxes.simplify();
-            for (BoxList::Iterator bbox(border_boxes);
+            for (BoxContainer::Iterator bbox(border_boxes);
                  bbox != border_boxes.end(); ++bbox) {
                findBadCutPointsForBorderAndDirection(id,
                   bad_cuts,
@@ -1718,9 +1719,9 @@ void BoxUtilities::fixBadCutPointsForDirection(
  *************************************************************************
  */
 
-void BoxUtilities::makeNonOverlappingBoxLists(
-   tbox::Array<BoxList>& box_list_array,
-   const BoxList& boxes)
+void BoxUtilities::makeNonOverlappingBoxContainers(
+   tbox::Array<BoxContainer>& box_list_array,
+   const BoxContainer& boxes)
 {
    const int nb = boxes.size();
 
@@ -1731,15 +1732,15 @@ void BoxUtilities::makeNonOverlappingBoxLists(
    box_list_array.resizeArray(nb);
 
    // Copy boxes into a list to preserve the original box array.
-   BoxList box_list(boxes);
+   BoxContainer box_list(boxes);
 
    // Remove portion of index space represented by array box from list.
    // Keep unique pieces on box list.
-   BoxList::ConstIterator itr(boxes);
+   BoxContainer::ConstIterator itr(boxes);
    for (int ib = 0; ib < nb; ++ib, ++itr) {
       Box remove = *itr;
 
-      for (BoxList::Iterator l(box_list); l != box_list.end(); ++l) {
+      for (BoxContainer::Iterator l(box_list); l != box_list.end(); ++l) {
          Box intersection = remove * l();
          if (intersection.isSpatiallyEqual(l())) {
             box_list_array[ib].pushBack(l());

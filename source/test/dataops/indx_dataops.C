@@ -15,7 +15,7 @@
 
 #include "SAMRAI/tbox/SAMRAIManager.h"
 #include "SAMRAI/hier/Box.h"
-#include "SAMRAI/hier/BoxList.h"
+#include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/geom/CartesianGridGeometry.h"
 #include "SAMRAI/geom/CartesianPatchGeometry.h"
 #include "SAMRAI/pdat/CellIterator.h"
@@ -69,8 +69,8 @@ int main(
       hier::Box fine1(hier::Index(8, 4), hier::Index(13, 7));
       hier::IntVector<NDIM> ratio(2);
 
-      hier::BoxList coarse_domain;
-      hier::BoxList fine_domain;
+      hier::BoxContainer coarse_domain;
+      hier::BoxContainer fine_domain;
       coarse_domain.appendItem(coarse0);
       coarse_domain.appendItem(coarse1);
       fine_domain.appendItem(fine0);

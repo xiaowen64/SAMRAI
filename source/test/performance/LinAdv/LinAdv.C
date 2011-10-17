@@ -35,7 +35,6 @@ using namespace std;
 #include "SAMRAI/tbox/Array.h"
 #include "SAMRAI/hier/BoundaryBox.h"
 #include "SAMRAI/hier/BoxContainerIterator.h"
-#include "SAMRAI/hier/BoxList.h"
 #include "SAMRAI/geom/CartesianPatchGeometry.h"
 #include "SAMRAI/pdat/CellData.h"
 #include "SAMRAI/pdat/CellIndex.h"
@@ -1478,13 +1477,13 @@ void LinAdv::boundaryReset(
 
    const tbox::Pointer<geom::CartesianPatchGeometry> patch_geom =
       patch.getPatchGeometry();
-   hier::BoxList domain_boxes;
+   hier::BoxContainer domain_boxes;
    d_grid_geometry->computePhysicalDomain(domain_boxes,
       patch_geom->getRatio(),
       patch.getBox().getBlockId());
 
    pdat::CellIndex icell(ifirst);
-   hier::BoxList bdrybox;
+   hier::BoxContainer bdrybox;
    hier::Index ibfirst = ifirst;
    hier::Index iblast = ilast;
    int bdry_case, bside;
@@ -1499,14 +1498,14 @@ void LinAdv::boundaryReset(
       bdrybox.pushBack(hier::Box(ibfirst, iblast));
    }
 
-   hier::BoxList::Iterator bdryboxitr(bdrybox);
+   hier::BoxContainer::Iterator bdryboxitr(bdrybox);
    if (d_dim == tbox::Dimension(2)) {
       for (idir = 0; idir < d_dim.getValue(); idir++) {
          bside = 2 * idir;
          bdry_case = d_scalar_bdry_edge_conds[bside];
          if (bdry_case == BdryCond::REFLECT) {
             for (pdat::CellIterator ic(*bdryboxitr); ic; ic++) {
-               for (hier::BoxList::Iterator i(domain_boxes);
+               for (hier::BoxContainer::Iterator i(domain_boxes);
                     i != domain_boxes.end(); ++i) {
                   if (i().contains(ic()))
                      bdry_cell = false;
@@ -1523,7 +1522,7 @@ void LinAdv::boundaryReset(
          bdry_case = d_scalar_bdry_edge_conds[bnode];
          if (bdry_case == BdryCond::REFLECT) {
             for (pdat::CellIterator ic(*bdryboxitr); ic; ic++) {
-               for (hier::BoxList::Iterator i(domain_boxes);
+               for (hier::BoxContainer::Iterator i(domain_boxes);
                     i != domain_boxes.end(); ++i) {
                   if (i().contains(ic()))
                      bdry_cell = false;
@@ -1542,7 +1541,7 @@ void LinAdv::boundaryReset(
          bdry_case = d_scalar_bdry_face_conds[bside];
          if (bdry_case == BdryCond::REFLECT) {
             for (pdat::CellIterator ic(*bdryboxitr); ic; ic++) {
-               for (hier::BoxList::Iterator i(domain_boxes);
+               for (hier::BoxContainer::Iterator i(domain_boxes);
                     i != domain_boxes.end(); ++i) {
                   if (i().contains(ic()))
                      bdry_cell = false;
@@ -1559,7 +1558,7 @@ void LinAdv::boundaryReset(
          bdry_case = d_scalar_bdry_face_conds[bnode];
          if (bdry_case == BdryCond::REFLECT) {
             for (pdat::CellIterator ic(*bdryboxitr); ic; ic++) {
-               for (hier::BoxList::Iterator i(domain_boxes);
+               for (hier::BoxContainer::Iterator i(domain_boxes);
                     i != domain_boxes.end(); ++i) {
                   if (i().contains(ic()))
                      bdry_cell = false;

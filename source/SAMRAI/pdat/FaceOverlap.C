@@ -21,7 +21,7 @@ namespace SAMRAI {
 namespace pdat {
 
 FaceOverlap::FaceOverlap(
-   const tbox::Array<hier::BoxList>& boxes,
+   const tbox::Array<hier::BoxContainer>& boxes,
    const hier::Transformation& transformation):
    d_is_overlap_empty(true),
    d_transformation(transformation)

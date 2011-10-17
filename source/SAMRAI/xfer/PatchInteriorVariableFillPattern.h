@@ -114,7 +114,7 @@ public:
     */
    tbox::Pointer<hier::BoxOverlap>
    computeFillBoxesOverlap(
-      const hier::BoxList& fill_boxes,
+      const hier::BoxContainer& fill_boxes,
       const hier::Box& patch_box,
       const hier::Box& data_box,
       const hier::PatchDataFactory& pdf) const;

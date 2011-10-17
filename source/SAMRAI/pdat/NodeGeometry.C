@@ -14,7 +14,6 @@
 #include "SAMRAI/pdat/NodeGeometry.h"
 #include "SAMRAI/pdat/NodeOverlap.h"
 #include "SAMRAI/hier/BoxContainerConstIterator.h"
-#include "SAMRAI/hier/BoxList.h"
 #include "SAMRAI/tbox/Utilities.h"
 
 #ifndef SAMRAI_INLINE
@@ -69,7 +68,7 @@ tbox::Pointer<hier::BoxOverlap> NodeGeometry::calculateOverlap(
    const bool overwrite_interior,
    const hier::Transformation& transformation,
    const bool retry,
-   const hier::BoxList& dst_restrict_boxes) const
+   const hier::BoxContainer& dst_restrict_boxes) const
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(d_box, src_mask);
 
@@ -109,9 +108,9 @@ tbox::Pointer<hier::BoxOverlap> NodeGeometry::doOverlap(
    const hier::Box& fill_box,
    const bool overwrite_interior,
    const hier::Transformation& transformation,
-   const hier::BoxList& dst_restrict_boxes)
+   const hier::BoxContainer& dst_restrict_boxes)
 {
-   hier::BoxList dst_boxes;
+   hier::BoxContainer dst_boxes;
    dst_geometry.computeDestinationBoxes(dst_boxes,
       src_geometry,
       src_mask,
@@ -135,13 +134,13 @@ tbox::Pointer<hier::BoxOverlap> NodeGeometry::doOverlap(
  */
 
 void NodeGeometry::computeDestinationBoxes(
-   hier::BoxList& dst_boxes,
+   hier::BoxContainer& dst_boxes,
    const NodeGeometry& src_geometry,
    const hier::Box& src_mask,
    const hier::Box& fill_box,
    const bool overwrite_interior,
    const hier::Transformation& transformation,
-   const hier::BoxList& dst_restrict_boxes) const
+   const hier::BoxContainer& dst_restrict_boxes) const
 {
    const hier::IntVector& src_offset(transformation.getOffset());
    TBOX_DIM_ASSERT_CHECK_ARGS2(src_mask, src_offset);
@@ -172,8 +171,8 @@ void NodeGeometry::computeDestinationBoxes(
    }
 
    if (dst_restrict_boxes.size() && dst_boxes.size()) {
-      hier::BoxList node_restrict_boxes;
-      for (hier::BoxList::ConstIterator b(dst_restrict_boxes);
+      hier::BoxContainer node_restrict_boxes;
+      for (hier::BoxContainer::ConstIterator b(dst_restrict_boxes);
            b != dst_restrict_boxes.end(); ++b) {
          node_restrict_boxes.pushBack(toNodeBox(b()));
       }
@@ -190,12 +189,12 @@ void NodeGeometry::computeDestinationBoxes(
  */
 tbox::Pointer<hier::BoxOverlap>
 NodeGeometry::setUpOverlap(
-   const hier::BoxList& boxes,
+   const hier::BoxContainer& boxes,
    const hier::Transformation& transformation) const
 {
-   hier::BoxList dst_boxes;
+   hier::BoxContainer dst_boxes;
 
-   for (hier::BoxList::ConstIterator b(boxes); b != boxes.end(); ++b) {
+   for (hier::BoxContainer::ConstIterator b(boxes); b != boxes.end(); ++b) {
       hier::Box node_box(NodeGeometry::toNodeBox(b()));
       dst_boxes.pushBack(node_box);
    }

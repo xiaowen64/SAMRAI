@@ -119,7 +119,7 @@ size_t ArrayData<TYPE>::getSizeOfData(
 template<class TYPE>
 SAMRAI_INLINE_KEYWORD
 int ArrayData<TYPE>::getDataStreamSize(
-   const hier::BoxList& boxes,
+   const hier::BoxContainer& boxes,
    const hier::IntVector& source_shift) const
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, source_shift);

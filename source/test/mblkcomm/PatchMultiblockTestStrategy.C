@@ -168,7 +168,7 @@ void PatchMultiblockTestStrategy::tagCellsInInputBoxes(
 
       const hier::Box pbox = patch.getBox();
 
-      for (hier::BoxList::Iterator k(d_refine_level_boxes[level_number]);
+      for (hier::BoxContainer::Iterator k(d_refine_level_boxes[level_number]);
            k != d_refine_level_boxes[level_number].end(); ++k) {
          tags->fill(1, *k * pbox, 0);
       }

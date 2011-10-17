@@ -26,11 +26,6 @@ DEPENDS_0:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxSet.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxSet.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Index.I				\
@@ -39,7 +34,6 @@ DEPENDS_0:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicShiftCatalog.I		\
@@ -59,10 +53,7 @@ DEPENDS_0:=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Clock.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Complex.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.I			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointerBase.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointerBase.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database.I				\
@@ -73,8 +64,6 @@ DEPENDS_0:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/IOStream.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.I				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.h			\
@@ -91,8 +80,6 @@ DEPENDS_0:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.I				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h ArrayDataBasicOps.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
@@ -102,9 +89,7 @@ DEPENDS_0 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CopyOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database_template_methods.C		\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MessageStream_template_methods.C	\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.C
@@ -127,11 +112,6 @@ DEPENDS_1:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxSet.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxSet.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Index.I				\
@@ -140,7 +120,6 @@ DEPENDS_1:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicShiftCatalog.I		\
@@ -160,10 +139,7 @@ DEPENDS_1:=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Clock.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Complex.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.I			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointerBase.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointerBase.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database.I				\
@@ -174,8 +150,6 @@ DEPENDS_1:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/IOStream.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.I				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.h			\
@@ -192,8 +166,6 @@ DEPENDS_1:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.I				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h				\
 	ArrayDataMiscellaneousOpsReal.C
 
@@ -204,9 +176,7 @@ DEPENDS_1 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CopyOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database_template_methods.C		\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MessageStream_template_methods.C	\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.C
@@ -229,11 +199,6 @@ DEPENDS_2:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxSet.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxSet.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Index.I				\
@@ -242,7 +207,6 @@ DEPENDS_2:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicShiftCatalog.I		\
@@ -261,10 +225,7 @@ DEPENDS_2:=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Clock.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Complex.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.I			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointerBase.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointerBase.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database.I				\
@@ -275,8 +236,6 @@ DEPENDS_2:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/IOStream.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.I				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.h			\
@@ -293,8 +252,6 @@ DEPENDS_2:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.I				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h ArrayDataNormOpsComplex.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
@@ -304,9 +261,7 @@ DEPENDS_2 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CopyOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database_template_methods.C		\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MessageStream_template_methods.C	\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.C
@@ -329,11 +284,6 @@ DEPENDS_3:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxSet.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxSet.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Index.I				\
@@ -342,7 +292,6 @@ DEPENDS_3:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicShiftCatalog.I		\
@@ -361,10 +310,7 @@ DEPENDS_3:=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Clock.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Complex.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.I			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointerBase.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointerBase.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database.I				\
@@ -375,8 +321,6 @@ DEPENDS_3:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/IOStream.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.I				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.h			\
@@ -393,8 +337,6 @@ DEPENDS_3:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.I				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h ArrayDataNormOpsInteger.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
@@ -404,9 +346,7 @@ DEPENDS_3 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CopyOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database_template_methods.C		\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MessageStream_template_methods.C	\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.C
@@ -429,11 +369,6 @@ DEPENDS_4:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxSet.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxSet.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Index.I				\
@@ -442,7 +377,6 @@ DEPENDS_4:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicShiftCatalog.I		\
@@ -462,10 +396,7 @@ DEPENDS_4:=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Clock.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Complex.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.I			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointerBase.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointerBase.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database.I				\
@@ -476,8 +407,6 @@ DEPENDS_4:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/IOStream.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.I				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.h			\
@@ -494,8 +423,6 @@ DEPENDS_4:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.I				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h ArrayDataNormOpsReal.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
@@ -505,9 +432,7 @@ DEPENDS_4 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CopyOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database_template_methods.C		\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MessageStream_template_methods.C	\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.C
@@ -539,12 +464,8 @@ DEPENDS_5:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxLevel.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxLevel.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxLevelHandle.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxSet.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxSet.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxSetSingleBlockIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxSetSingleOwnerIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
@@ -720,12 +641,8 @@ DEPENDS_6:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxLevel.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxLevel.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxLevelHandle.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxSet.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxSet.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxSetSingleBlockIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxSetSingleOwnerIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
@@ -900,12 +817,8 @@ DEPENDS_7:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxLevel.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxLevel.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxLevelHandle.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxSet.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxSet.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxSetSingleBlockIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxSetSingleOwnerIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
@@ -1090,12 +1003,8 @@ DEPENDS_8:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxLevel.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxLevel.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxLevelHandle.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxSet.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxSet.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxSetSingleBlockIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxSetSingleOwnerIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
@@ -1231,12 +1140,8 @@ DEPENDS_9:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxLevel.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxLevel.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxLevelHandle.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxSet.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxSet.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxSetSingleBlockIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxSetSingleOwnerIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
@@ -1372,12 +1277,8 @@ DEPENDS_10:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxLevel.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxLevel.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxLevelHandle.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxSet.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxSet.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxSetSingleBlockIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxSetSingleOwnerIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
@@ -1738,12 +1639,8 @@ DEPENDS_11:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxLevel.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxLevel.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxLevelHandle.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxSet.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxSet.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxSetSingleBlockIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxSetSingleOwnerIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
@@ -1880,12 +1777,8 @@ DEPENDS_12:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxLevel.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxLevel.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxLevelHandle.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxSet.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxSet.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxSetSingleBlockIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxSetSingleOwnerIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
@@ -2070,12 +1963,8 @@ DEPENDS_13:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxLevel.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxLevel.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxLevelHandle.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxSet.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxSet.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxSetSingleBlockIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxSetSingleOwnerIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
@@ -2259,12 +2148,8 @@ DEPENDS_14:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxLevel.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxLevel.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxLevelHandle.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxSet.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxSet.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxSetSingleBlockIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxSetSingleOwnerIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
@@ -2458,12 +2343,8 @@ DEPENDS_15:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxLevel.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxLevel.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxLevelHandle.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxSet.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxSet.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxSetSingleBlockIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxSetSingleOwnerIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
@@ -2648,12 +2529,8 @@ DEPENDS_16:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxLevel.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxLevel.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxLevelHandle.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxSet.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxSet.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxSetSingleBlockIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxSetSingleOwnerIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
@@ -2837,12 +2714,8 @@ DEPENDS_17:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxLevel.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxLevel.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxLevelHandle.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxSet.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxSet.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxSetSingleBlockIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxSetSingleOwnerIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
@@ -3036,12 +2909,8 @@ DEPENDS_18:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxLevel.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxLevel.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxLevelHandle.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxSet.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxSet.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxSetSingleBlockIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxSetSingleOwnerIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
@@ -3226,12 +3095,8 @@ DEPENDS_19:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxLevel.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxLevel.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxLevelHandle.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxSet.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxSet.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxSetSingleBlockIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxSetSingleOwnerIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
@@ -3415,12 +3280,8 @@ DEPENDS_20:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxLevel.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxLevel.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxLevelHandle.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxSet.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxSet.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxSetSingleBlockIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxSetSingleOwnerIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
@@ -3614,12 +3475,8 @@ DEPENDS_21:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxLevel.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxLevel.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxLevelHandle.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxSet.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxSet.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxSetSingleBlockIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxSetSingleOwnerIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
@@ -3804,12 +3661,8 @@ DEPENDS_22:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxLevel.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxLevel.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxLevelHandle.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxSet.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxSet.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxSetSingleBlockIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxSetSingleOwnerIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
@@ -3993,12 +3846,8 @@ DEPENDS_23:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxLevel.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxLevel.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxLevelHandle.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxSet.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxSet.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxSetSingleBlockIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxSetSingleOwnerIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
@@ -4185,13 +4034,8 @@ DEPENDS_24:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxSet.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxSet.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Index.I				\
@@ -4200,7 +4044,6 @@ DEPENDS_24:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchData.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchData.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicId.I				\
@@ -4233,10 +4076,7 @@ DEPENDS_24:=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Clock.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Complex.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.I			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointerBase.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointerBase.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database.I				\
@@ -4247,8 +4087,6 @@ DEPENDS_24:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/IOStream.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.I				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.h			\
@@ -4265,8 +4103,6 @@ DEPENDS_24:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.I				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h PatchCellDataBasicOps.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
@@ -4278,9 +4114,7 @@ DEPENDS_24 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CopyOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database_template_methods.C		\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MessageStream_template_methods.C	\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.C
@@ -4305,13 +4139,8 @@ DEPENDS_25:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxSet.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxSet.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Index.I				\
@@ -4320,7 +4149,6 @@ DEPENDS_25:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchData.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchData.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicId.I				\
@@ -4353,10 +4181,7 @@ DEPENDS_25:=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Clock.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Complex.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.I			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointerBase.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointerBase.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database.I				\
@@ -4367,8 +4192,6 @@ DEPENDS_25:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/IOStream.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.I				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.h			\
@@ -4385,8 +4208,6 @@ DEPENDS_25:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.I				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h				\
 	PatchCellDataMiscellaneousOpsReal.C
 
@@ -4399,9 +4220,7 @@ DEPENDS_25 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CopyOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database_template_methods.C		\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MessageStream_template_methods.C	\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.C
@@ -4426,13 +4245,8 @@ DEPENDS_26:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxSet.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxSet.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Index.I				\
@@ -4441,7 +4255,6 @@ DEPENDS_26:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchData.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchData.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicId.I				\
@@ -4473,10 +4286,7 @@ DEPENDS_26:=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Clock.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Complex.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.I			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointerBase.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointerBase.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database.I				\
@@ -4487,8 +4297,6 @@ DEPENDS_26:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/IOStream.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.I				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.h			\
@@ -4505,8 +4313,6 @@ DEPENDS_26:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.I				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h				\
 	PatchCellDataNormOpsComplex.C
 
@@ -4518,9 +4324,7 @@ DEPENDS_26 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CopyOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database_template_methods.C		\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MessageStream_template_methods.C	\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.C
@@ -4545,13 +4349,8 @@ DEPENDS_27:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxSet.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxSet.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Index.I				\
@@ -4560,7 +4359,6 @@ DEPENDS_27:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchData.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchData.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicId.I				\
@@ -4593,10 +4391,7 @@ DEPENDS_27:=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Clock.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Complex.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.I			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointerBase.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointerBase.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database.I				\
@@ -4607,8 +4402,6 @@ DEPENDS_27:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/IOStream.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.I				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.h			\
@@ -4625,8 +4418,6 @@ DEPENDS_27:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.I				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h				\
 	PatchCellDataNormOpsReal.C
 
@@ -4639,9 +4430,7 @@ DEPENDS_27 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CopyOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database_template_methods.C		\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MessageStream_template_methods.C	\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.C
@@ -4670,13 +4459,8 @@ DEPENDS_28:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxSet.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxSet.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/ComponentSelector.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/ComponentSelector.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.I				\
@@ -4687,7 +4471,6 @@ DEPENDS_28:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchBoundaries.I			\
@@ -4738,10 +4521,7 @@ DEPENDS_28:=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Clock.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Complex.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.I			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointerBase.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointerBase.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database.I				\
@@ -4771,8 +4551,6 @@ DEPENDS_28:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.I				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h PatchCellDataOpsComplex.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
@@ -4785,7 +4563,6 @@ DEPENDS_28 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CopyOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database_template_methods.C		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/List.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C			\
@@ -4816,13 +4593,8 @@ DEPENDS_29:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxSet.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxSet.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/ComponentSelector.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/ComponentSelector.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.I				\
@@ -4833,7 +4605,6 @@ DEPENDS_29:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchBoundaries.I			\
@@ -4883,10 +4654,7 @@ DEPENDS_29:=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Clock.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Complex.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.I			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointerBase.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointerBase.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database.I				\
@@ -4916,8 +4684,6 @@ DEPENDS_29:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.I				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h PatchCellDataOpsInteger.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
@@ -4930,7 +4696,6 @@ DEPENDS_29 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CopyOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database_template_methods.C		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/List.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C			\
@@ -4961,13 +4726,8 @@ DEPENDS_30:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxSet.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxSet.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/ComponentSelector.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/ComponentSelector.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.I				\
@@ -4978,7 +4738,6 @@ DEPENDS_30:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchBoundaries.I			\
@@ -5032,10 +4791,7 @@ DEPENDS_30:=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Clock.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Complex.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.I			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointerBase.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointerBase.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database.I				\
@@ -5065,8 +4821,6 @@ DEPENDS_30:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.I				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h PatchCellDataOpsReal.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
@@ -5083,7 +4837,6 @@ DEPENDS_30 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CopyOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database_template_methods.C		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/List.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C			\
@@ -5110,13 +4863,8 @@ DEPENDS_31:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxSet.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxSet.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Index.I				\
@@ -5125,7 +4873,6 @@ DEPENDS_31:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchData.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchData.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicId.I				\
@@ -5158,10 +4905,7 @@ DEPENDS_31:=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Clock.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Complex.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.I			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointerBase.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointerBase.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database.I				\
@@ -5172,8 +4916,6 @@ DEPENDS_31:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/IOStream.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.I				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.h			\
@@ -5190,8 +4932,6 @@ DEPENDS_31:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.I				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h PatchEdgeDataBasicOps.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
@@ -5203,9 +4943,7 @@ DEPENDS_31 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/EdgeData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database_template_methods.C		\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MessageStream_template_methods.C	\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.C
@@ -5230,13 +4968,8 @@ DEPENDS_32:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxSet.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxSet.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Index.I				\
@@ -5245,7 +4978,6 @@ DEPENDS_32:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchData.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchData.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicId.I				\
@@ -5278,10 +5010,7 @@ DEPENDS_32:=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Clock.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Complex.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.I			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointerBase.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointerBase.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database.I				\
@@ -5292,8 +5021,6 @@ DEPENDS_32:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/IOStream.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.I				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.h			\
@@ -5310,8 +5037,6 @@ DEPENDS_32:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.I				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h				\
 	PatchEdgeDataMiscellaneousOpsReal.C
 
@@ -5324,9 +5049,7 @@ DEPENDS_32 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/EdgeData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database_template_methods.C		\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MessageStream_template_methods.C	\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.C
@@ -5351,13 +5074,8 @@ DEPENDS_33:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxSet.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxSet.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Index.I				\
@@ -5366,7 +5084,6 @@ DEPENDS_33:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchData.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchData.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicId.I				\
@@ -5398,10 +5115,7 @@ DEPENDS_33:=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Clock.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Complex.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.I			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointerBase.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointerBase.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database.I				\
@@ -5412,8 +5126,6 @@ DEPENDS_33:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/IOStream.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.I				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.h			\
@@ -5430,8 +5142,6 @@ DEPENDS_33:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.I				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h				\
 	PatchEdgeDataNormOpsComplex.C
 
@@ -5443,9 +5153,7 @@ DEPENDS_33 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/EdgeData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database_template_methods.C		\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MessageStream_template_methods.C	\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.C
@@ -5470,13 +5178,8 @@ DEPENDS_34:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxSet.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxSet.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Index.I				\
@@ -5485,7 +5188,6 @@ DEPENDS_34:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchData.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchData.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicId.I				\
@@ -5518,10 +5220,7 @@ DEPENDS_34:=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Clock.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Complex.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.I			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointerBase.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointerBase.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database.I				\
@@ -5532,8 +5231,6 @@ DEPENDS_34:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/IOStream.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.I				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.h			\
@@ -5550,8 +5247,6 @@ DEPENDS_34:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.I				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h				\
 	PatchEdgeDataNormOpsReal.C
 
@@ -5564,9 +5259,7 @@ DEPENDS_34 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/EdgeData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database_template_methods.C		\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MessageStream_template_methods.C	\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.C
@@ -5595,13 +5288,8 @@ DEPENDS_35:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxSet.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxSet.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/ComponentSelector.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/ComponentSelector.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.I				\
@@ -5612,7 +5300,6 @@ DEPENDS_35:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchBoundaries.I			\
@@ -5663,10 +5350,7 @@ DEPENDS_35:=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Clock.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Complex.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.I			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointerBase.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointerBase.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database.I				\
@@ -5696,8 +5380,6 @@ DEPENDS_35:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.I				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h PatchEdgeDataOpsComplex.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
@@ -5710,7 +5392,6 @@ DEPENDS_35 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/EdgeData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database_template_methods.C		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/List.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C			\
@@ -5741,13 +5422,8 @@ DEPENDS_36:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxSet.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxSet.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/ComponentSelector.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/ComponentSelector.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.I				\
@@ -5758,7 +5434,6 @@ DEPENDS_36:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchBoundaries.I			\
@@ -5808,10 +5483,7 @@ DEPENDS_36:=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Clock.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Complex.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.I			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointerBase.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointerBase.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database.I				\
@@ -5841,8 +5513,6 @@ DEPENDS_36:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.I				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h PatchEdgeDataOpsInteger.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
@@ -5855,7 +5525,6 @@ DEPENDS_36 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/EdgeData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database_template_methods.C		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/List.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C			\
@@ -5886,13 +5555,8 @@ DEPENDS_37:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxSet.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxSet.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/ComponentSelector.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/ComponentSelector.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.I				\
@@ -5903,7 +5567,6 @@ DEPENDS_37:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchBoundaries.I			\
@@ -5957,10 +5620,7 @@ DEPENDS_37:=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Clock.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Complex.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.I			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointerBase.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointerBase.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database.I				\
@@ -5990,8 +5650,6 @@ DEPENDS_37:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.I				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h PatchEdgeDataOpsReal.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
@@ -6008,7 +5666,6 @@ DEPENDS_37 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/EdgeData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database_template_methods.C		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/List.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C			\
@@ -6035,13 +5692,8 @@ DEPENDS_38:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxSet.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxSet.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Index.I				\
@@ -6050,7 +5702,6 @@ DEPENDS_38:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchData.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchData.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicId.I				\
@@ -6083,10 +5734,7 @@ DEPENDS_38:=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Clock.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Complex.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.I			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointerBase.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointerBase.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database.I				\
@@ -6097,8 +5745,6 @@ DEPENDS_38:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/IOStream.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.I				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.h			\
@@ -6115,8 +5761,6 @@ DEPENDS_38:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.I				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h PatchFaceDataBasicOps.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
@@ -6128,9 +5772,7 @@ DEPENDS_38 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/FaceData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database_template_methods.C		\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MessageStream_template_methods.C	\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.C
@@ -6155,13 +5797,8 @@ DEPENDS_39:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxSet.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxSet.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Index.I				\
@@ -6170,7 +5807,6 @@ DEPENDS_39:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchData.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchData.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicId.I				\
@@ -6203,10 +5839,7 @@ DEPENDS_39:=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Clock.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Complex.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.I			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointerBase.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointerBase.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database.I				\
@@ -6217,8 +5850,6 @@ DEPENDS_39:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/IOStream.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.I				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.h			\
@@ -6235,8 +5866,6 @@ DEPENDS_39:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.I				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h				\
 	PatchFaceDataMiscellaneousOpsReal.C
 
@@ -6249,9 +5878,7 @@ DEPENDS_39 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/FaceData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database_template_methods.C		\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MessageStream_template_methods.C	\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.C
@@ -6276,13 +5903,8 @@ DEPENDS_40:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxSet.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxSet.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Index.I				\
@@ -6291,7 +5913,6 @@ DEPENDS_40:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchData.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchData.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicId.I				\
@@ -6323,10 +5944,7 @@ DEPENDS_40:=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Clock.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Complex.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.I			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointerBase.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointerBase.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database.I				\
@@ -6337,8 +5955,6 @@ DEPENDS_40:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/IOStream.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.I				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.h			\
@@ -6355,8 +5971,6 @@ DEPENDS_40:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.I				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h				\
 	PatchFaceDataNormOpsComplex.C
 
@@ -6368,9 +5982,7 @@ DEPENDS_40 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/FaceData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database_template_methods.C		\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MessageStream_template_methods.C	\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.C
@@ -6395,13 +6007,8 @@ DEPENDS_41:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxSet.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxSet.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Index.I				\
@@ -6410,7 +6017,6 @@ DEPENDS_41:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchData.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchData.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicId.I				\
@@ -6443,10 +6049,7 @@ DEPENDS_41:=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Clock.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Complex.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.I			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointerBase.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointerBase.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database.I				\
@@ -6457,8 +6060,6 @@ DEPENDS_41:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/IOStream.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.I				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.h			\
@@ -6475,8 +6076,6 @@ DEPENDS_41:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.I				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h				\
 	PatchFaceDataNormOpsReal.C
 
@@ -6489,9 +6088,7 @@ DEPENDS_41 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/FaceData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database_template_methods.C		\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MessageStream_template_methods.C	\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.C
@@ -6520,13 +6117,8 @@ DEPENDS_42:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxSet.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxSet.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/ComponentSelector.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/ComponentSelector.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.I				\
@@ -6537,7 +6129,6 @@ DEPENDS_42:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchBoundaries.I			\
@@ -6588,10 +6179,7 @@ DEPENDS_42:=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Clock.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Complex.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.I			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointerBase.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointerBase.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database.I				\
@@ -6621,8 +6209,6 @@ DEPENDS_42:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.I				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h PatchFaceDataOpsComplex.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
@@ -6635,7 +6221,6 @@ DEPENDS_42 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/FaceData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database_template_methods.C		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/List.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C			\
@@ -6666,13 +6251,8 @@ DEPENDS_43:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxSet.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxSet.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/ComponentSelector.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/ComponentSelector.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.I				\
@@ -6683,7 +6263,6 @@ DEPENDS_43:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchBoundaries.I			\
@@ -6733,10 +6312,7 @@ DEPENDS_43:=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Clock.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Complex.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.I			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointerBase.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointerBase.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database.I				\
@@ -6766,8 +6342,6 @@ DEPENDS_43:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.I				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h PatchFaceDataOpsInteger.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
@@ -6780,7 +6354,6 @@ DEPENDS_43 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/FaceData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database_template_methods.C		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/List.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C			\
@@ -6811,13 +6384,8 @@ DEPENDS_44:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxSet.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxSet.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/ComponentSelector.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/ComponentSelector.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.I				\
@@ -6828,7 +6396,6 @@ DEPENDS_44:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchBoundaries.I			\
@@ -6882,10 +6449,7 @@ DEPENDS_44:=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Clock.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Complex.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.I			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointerBase.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointerBase.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database.I				\
@@ -6915,8 +6479,6 @@ DEPENDS_44:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.I				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h PatchFaceDataOpsReal.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
@@ -6933,7 +6495,6 @@ DEPENDS_44 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/FaceData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database_template_methods.C		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/List.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C			\
@@ -6960,13 +6521,8 @@ DEPENDS_45:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxSet.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxSet.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Index.I				\
@@ -6975,7 +6531,6 @@ DEPENDS_45:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchData.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchData.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicId.I				\
@@ -7008,10 +6563,7 @@ DEPENDS_45:=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Clock.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Complex.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.I			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointerBase.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointerBase.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database.I				\
@@ -7022,8 +6574,6 @@ DEPENDS_45:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/IOStream.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.I				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.h			\
@@ -7040,8 +6590,6 @@ DEPENDS_45:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.I				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h PatchNodeDataBasicOps.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
@@ -7053,9 +6601,7 @@ DEPENDS_45 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/NodeData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database_template_methods.C		\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MessageStream_template_methods.C	\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.C
@@ -7080,13 +6626,8 @@ DEPENDS_46:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxSet.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxSet.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Index.I				\
@@ -7095,7 +6636,6 @@ DEPENDS_46:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchData.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchData.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicId.I				\
@@ -7128,10 +6668,7 @@ DEPENDS_46:=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Clock.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Complex.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.I			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointerBase.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointerBase.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database.I				\
@@ -7142,8 +6679,6 @@ DEPENDS_46:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/IOStream.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.I				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.h			\
@@ -7160,8 +6695,6 @@ DEPENDS_46:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.I				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h				\
 	PatchNodeDataMiscellaneousOpsReal.C
 
@@ -7174,9 +6707,7 @@ DEPENDS_46 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/NodeData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database_template_methods.C		\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MessageStream_template_methods.C	\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.C
@@ -7201,13 +6732,8 @@ DEPENDS_47:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxSet.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxSet.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Index.I				\
@@ -7216,7 +6742,6 @@ DEPENDS_47:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchData.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchData.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicId.I				\
@@ -7248,10 +6773,7 @@ DEPENDS_47:=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Clock.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Complex.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.I			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointerBase.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointerBase.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database.I				\
@@ -7262,8 +6784,6 @@ DEPENDS_47:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/IOStream.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.I				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.h			\
@@ -7280,8 +6800,6 @@ DEPENDS_47:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.I				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h				\
 	PatchNodeDataNormOpsComplex.C
 
@@ -7293,9 +6811,7 @@ DEPENDS_47 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/NodeData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database_template_methods.C		\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MessageStream_template_methods.C	\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.C
@@ -7320,13 +6836,8 @@ DEPENDS_48:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxSet.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxSet.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Index.I				\
@@ -7335,7 +6846,6 @@ DEPENDS_48:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchData.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchData.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicId.I				\
@@ -7368,10 +6878,7 @@ DEPENDS_48:=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Clock.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Complex.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.I			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointerBase.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointerBase.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database.I				\
@@ -7382,8 +6889,6 @@ DEPENDS_48:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/IOStream.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.I				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.h			\
@@ -7400,8 +6905,6 @@ DEPENDS_48:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.I				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h				\
 	PatchNodeDataNormOpsReal.C
 
@@ -7414,9 +6917,7 @@ DEPENDS_48 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/NodeData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database_template_methods.C		\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MessageStream_template_methods.C	\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.C
@@ -7445,13 +6946,8 @@ DEPENDS_49:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxSet.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxSet.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/ComponentSelector.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/ComponentSelector.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.I				\
@@ -7462,7 +6958,6 @@ DEPENDS_49:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchBoundaries.I			\
@@ -7513,10 +7008,7 @@ DEPENDS_49:=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Clock.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Complex.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.I			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointerBase.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointerBase.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database.I				\
@@ -7546,8 +7038,6 @@ DEPENDS_49:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.I				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h PatchNodeDataOpsComplex.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
@@ -7560,7 +7050,6 @@ DEPENDS_49 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/NodeData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database_template_methods.C		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/List.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C			\
@@ -7591,13 +7080,8 @@ DEPENDS_50:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxSet.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxSet.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/ComponentSelector.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/ComponentSelector.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.I				\
@@ -7608,7 +7092,6 @@ DEPENDS_50:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchBoundaries.I			\
@@ -7658,10 +7141,7 @@ DEPENDS_50:=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Clock.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Complex.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.I			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointerBase.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointerBase.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database.I				\
@@ -7691,8 +7171,6 @@ DEPENDS_50:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.I				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h PatchNodeDataOpsInteger.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
@@ -7705,7 +7183,6 @@ DEPENDS_50 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/NodeData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database_template_methods.C		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/List.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C			\
@@ -7736,13 +7213,8 @@ DEPENDS_51:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxSet.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxSet.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/ComponentSelector.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/ComponentSelector.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.I				\
@@ -7753,7 +7225,6 @@ DEPENDS_51:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchBoundaries.I			\
@@ -7807,10 +7278,7 @@ DEPENDS_51:=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Clock.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Complex.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.I			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointerBase.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointerBase.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database.I				\
@@ -7840,8 +7308,6 @@ DEPENDS_51:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.I				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h PatchNodeDataOpsReal.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
@@ -7858,7 +7324,6 @@ DEPENDS_51 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/NodeData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database_template_methods.C		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/List.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C			\
@@ -7885,13 +7350,8 @@ DEPENDS_52:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxSet.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxSet.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Index.I				\
@@ -7900,7 +7360,6 @@ DEPENDS_52:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchData.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchData.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicId.I				\
@@ -7933,10 +7392,7 @@ DEPENDS_52:=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Clock.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Complex.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.I			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointerBase.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointerBase.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database.I				\
@@ -7947,8 +7403,6 @@ DEPENDS_52:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/IOStream.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.I				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.h			\
@@ -7965,8 +7419,6 @@ DEPENDS_52:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.I				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h PatchSideDataBasicOps.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
@@ -7978,9 +7430,7 @@ DEPENDS_52 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SideData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database_template_methods.C		\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MessageStream_template_methods.C	\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.C
@@ -8005,13 +7455,8 @@ DEPENDS_53:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxSet.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxSet.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Index.I				\
@@ -8020,7 +7465,6 @@ DEPENDS_53:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchData.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchData.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicId.I				\
@@ -8053,10 +7497,7 @@ DEPENDS_53:=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Clock.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Complex.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.I			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointerBase.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointerBase.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database.I				\
@@ -8067,8 +7508,6 @@ DEPENDS_53:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/IOStream.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.I				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.h			\
@@ -8085,8 +7524,6 @@ DEPENDS_53:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.I				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h				\
 	PatchSideDataMiscellaneousOpsReal.C
 
@@ -8099,9 +7536,7 @@ DEPENDS_53 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SideData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database_template_methods.C		\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MessageStream_template_methods.C	\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.C
@@ -8126,13 +7561,8 @@ DEPENDS_54:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxSet.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxSet.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Index.I				\
@@ -8141,7 +7571,6 @@ DEPENDS_54:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchData.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchData.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicId.I				\
@@ -8173,10 +7602,7 @@ DEPENDS_54:=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Clock.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Complex.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.I			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointerBase.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointerBase.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database.I				\
@@ -8187,8 +7613,6 @@ DEPENDS_54:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/IOStream.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.I				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.h			\
@@ -8205,8 +7629,6 @@ DEPENDS_54:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.I				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h				\
 	PatchSideDataNormOpsComplex.C
 
@@ -8218,9 +7640,7 @@ DEPENDS_54 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SideData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database_template_methods.C		\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MessageStream_template_methods.C	\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.C
@@ -8245,13 +7665,8 @@ DEPENDS_55:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxSet.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxSet.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Index.I				\
@@ -8260,7 +7675,6 @@ DEPENDS_55:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchData.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchData.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicId.I				\
@@ -8293,10 +7707,7 @@ DEPENDS_55:=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Clock.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Complex.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.I			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointerBase.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointerBase.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database.I				\
@@ -8307,8 +7718,6 @@ DEPENDS_55:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/IOStream.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.I				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.h			\
@@ -8325,8 +7734,6 @@ DEPENDS_55:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.I				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h				\
 	PatchSideDataNormOpsReal.C
 
@@ -8339,9 +7746,7 @@ DEPENDS_55 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SideData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database_template_methods.C		\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MessageStream_template_methods.C	\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.C
@@ -8370,13 +7775,8 @@ DEPENDS_56:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxSet.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxSet.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/ComponentSelector.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/ComponentSelector.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.I				\
@@ -8387,7 +7787,6 @@ DEPENDS_56:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchBoundaries.I			\
@@ -8438,10 +7837,7 @@ DEPENDS_56:=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Clock.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Complex.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.I			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointerBase.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointerBase.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database.I				\
@@ -8471,8 +7867,6 @@ DEPENDS_56:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.I				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h PatchSideDataOpsComplex.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
@@ -8485,7 +7879,6 @@ DEPENDS_56 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SideData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database_template_methods.C		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/List.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C			\
@@ -8516,13 +7909,8 @@ DEPENDS_57:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxSet.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxSet.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/ComponentSelector.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/ComponentSelector.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.I				\
@@ -8533,7 +7921,6 @@ DEPENDS_57:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchBoundaries.I			\
@@ -8583,10 +7970,7 @@ DEPENDS_57:=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Clock.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Complex.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.I			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointerBase.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointerBase.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database.I				\
@@ -8616,8 +8000,6 @@ DEPENDS_57:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.I				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h PatchSideDataOpsInteger.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
@@ -8630,7 +8012,6 @@ DEPENDS_57 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SideData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database_template_methods.C		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/List.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C			\
@@ -8661,13 +8042,8 @@ DEPENDS_58:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxSet.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxSet.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/ComponentSelector.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/ComponentSelector.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.I				\
@@ -8678,7 +8054,6 @@ DEPENDS_58:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchBoundaries.I			\
@@ -8732,10 +8107,7 @@ DEPENDS_58:=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Clock.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Complex.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.I			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointerBase.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointerBase.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database.I				\
@@ -8765,8 +8137,6 @@ DEPENDS_58:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.I				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h PatchSideDataOpsReal.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
@@ -8783,7 +8153,6 @@ DEPENDS_58 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SideData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database_template_methods.C		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/List.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C			\

@@ -312,7 +312,7 @@ private:
    typedef hier::Box Box;
 
    //! @brief Shorthand for a container of graph-nodes.
-   typedef hier::BoxSet BoxSet;
+   typedef hier::BoxContainer BoxContainer;
 
    //! @brief Shorthand for a sorted, possibly incontiguous, set of integers.
    typedef std::set<int> IntSet;
@@ -946,7 +946,7 @@ public:
     * in a container.  On contributors, the graph node is non-local
     * and stands alone.
     */
-   BoxSet::ConstIterator d_mapped_box_iterator;
+   BoxContainer::ConstIterator d_mapped_box_iterator;
 
    /*!
     * @brief Name of wait phase when continueAlgorithm()

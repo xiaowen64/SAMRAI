@@ -15,7 +15,6 @@
 
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/hier/BoxContainerConstIterator.h"
-#include "SAMRAI/hier/BoxList.h"
 #include "SAMRAI/pdat/FaceGeometry.h"
 #include "SAMRAI/pdat/FaceOverlap.h"
 #include "SAMRAI/tbox/Utilities.h"
@@ -172,7 +171,7 @@ void FaceData<TYPE>::copy(
                   face_offset(i) = src_offset((d + i) % getDim().getValue());
                }
             }
-            const hier::BoxList& box_list = t_overlap->getDestinationBoxList(d);
+            const hier::BoxContainer& box_list = t_overlap->getDestinationBoxContainer(d);
             d_data[d].copy(t_src->d_data[d], box_list, face_offset);
          }
       } else {
@@ -208,7 +207,7 @@ void FaceData<TYPE>::copy2(
                face_offset(i) = src_offset((d + i) % getDim().getValue());
             }
          }
-         const hier::BoxList& box_list = t_overlap->getDestinationBoxList(d);
+         const hier::BoxContainer& box_list = t_overlap->getDestinationBoxContainer(d);
          t_dst->d_data[d].copy(d_data[d], box_list, face_offset);
       }
    } else {
@@ -244,11 +243,11 @@ void FaceData<TYPE>::copyWithRotation(
    overlap.getTransformation().transform(rotatebox);
 
    for (int i = 0; i < dim.getValue(); i++) {
-      const hier::BoxList& overlap_boxes = overlap.getDestinationBoxList(i);
+      const hier::BoxContainer& overlap_boxes = overlap.getDestinationBoxContainer(i);
 
       hier::Box face_rotatebox(FaceGeometry::toFaceBox(rotatebox, i));
 
-      for (hier::BoxList::ConstIterator bi(overlap_boxes);
+      for (hier::BoxContainer::ConstIterator bi(overlap_boxes);
            bi != overlap_boxes.end(); ++bi) {
          const hier::Box& overlap_box = bi();
 
@@ -333,7 +332,7 @@ int FaceData<TYPE>::getDataStreamSize(
             face_offset(i) = offset((d + i) % getDim().getValue());
          }
       }
-      size += d_data[d].getDataStreamSize(t_overlap->getDestinationBoxList(d),
+      size += d_data[d].getDataStreamSize(t_overlap->getDestinationBoxContainer(d),
             face_offset);
    }
    return size;
@@ -368,7 +367,7 @@ void FaceData<TYPE>::packStream(
                face_offset(i) = offset((d + i) % getDim().getValue());
             }
          }
-         const hier::BoxList& boxes = t_overlap->getDestinationBoxList(d);
+         const hier::BoxContainer& boxes = t_overlap->getDestinationBoxContainer(d);
          if (boxes.size() > 0) {
             d_data[d].packStream(stream, boxes, face_offset);
          }
@@ -408,7 +407,7 @@ void FaceData<TYPE>::packWithRotation(
    const int depth = getDepth();
 
    for (int i = 0; i < dim.getValue(); i++) {
-      const hier::BoxList& overlap_boxes = overlap.getDestinationBoxList(i);
+      const hier::BoxContainer& overlap_boxes = overlap.getDestinationBoxContainer(i);
 
       const int size = depth * overlap_boxes.getTotalSizeOfBoxes();
       tbox::Array<TYPE> buffer(size);
@@ -416,7 +415,7 @@ void FaceData<TYPE>::packWithRotation(
       hier::Box face_rotatebox(FaceGeometry::toFaceBox(rotatebox, i));
 
       int buf_count = 0;
-      for (hier::BoxList::ConstIterator bi(overlap_boxes);
+      for (hier::BoxContainer::ConstIterator bi(overlap_boxes);
            bi != overlap_boxes.end(); ++bi) {
          const hier::Box& overlap_box = bi();
 
@@ -460,7 +459,7 @@ void FaceData<TYPE>::unpackStream(
             face_offset(i) = offset((d + i) % getDim().getValue());
          }
       }
-      const hier::BoxList& boxes = t_overlap->getDestinationBoxList(d);
+      const hier::BoxContainer& boxes = t_overlap->getDestinationBoxContainer(d);
       if (boxes.size() > 0) {
          d_data[d].unpackStream(stream, boxes, face_offset);
       }

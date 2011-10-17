@@ -359,7 +359,7 @@ void GriddingAlgorithm::makeCoarsestLevel(
    if (!level_zero_exists) {
       for (int b = 0; b < d_hierarchy->getGridGeometry()->getNumberBlocks();
            b++) {
-         hier::BoxList domain_boxes =
+         hier::BoxContainer domain_boxes =
             d_hierarchy->getGridGeometry()->getPhysicalDomain(hier::BlockId(b));
          checkDomainBoxes(domain_boxes);
       }
@@ -1909,12 +1909,12 @@ size_t GriddingAlgorithm::checkBoundaryProximityViolation(
    for (hier::RealBoxConstIterator bi(mapped_box_level.getBoxes());
         bi.isValid(); ++bi) {
 
-      hier::BoxList external_parts(hier::Box::grow(*bi, extend_ghosts));
+      hier::BoxContainer external_parts(hier::Box::grow(*bi, extend_ghosts));
       external_parts.removeIntersections(bi->getBlockId(),
          mapped_box_level.getRefinementRatio(),
          *refined_periodic_domain_search_tree);
 
-      for (hier::BoxList::Iterator bli(external_parts); bli != external_parts.end();
+      for (hier::BoxContainer::Iterator bli(external_parts); bli != external_parts.end();
            bli++) {
          hier::IntVector leftover_size((*bli).numberCells());
          for (int d = 0; d < d_dim.getValue(); ++d) {
@@ -1942,7 +1942,7 @@ size_t GriddingAlgorithm::checkBoundaryProximityViolation(
  * Check domain boxes for violations of user constraints.
  *******************************************************************
  */
-void GriddingAlgorithm::checkDomainBoxes(const hier::BoxList& domain_boxes) const {
+void GriddingAlgorithm::checkDomainBoxes(const hier::BoxContainer& domain_boxes) const {
 
    hier::IntVector smallest_patch(d_dim);
    hier::IntVector largest_patch(d_dim);
@@ -1963,7 +1963,7 @@ void GriddingAlgorithm::checkDomainBoxes(const hier::BoxList& domain_boxes) cons
     * Check minimum size violations.
     */
    int i = 0;
-   for (hier::BoxList::ConstIterator itr(domain_boxes); itr != domain_boxes.end();
+   for (hier::BoxContainer::ConstIterator itr(domain_boxes); itr != domain_boxes.end();
         ++itr, ++i) {
 
       hier::Box test_box = *itr;
@@ -2368,7 +2368,7 @@ void GriddingAlgorithm::readLevelBoxes(
          tag_ln);
 
    int fine_level_number = tag_ln + 1;
-   hier::BoxList boxes_to_refine;
+   hier::BoxContainer boxes_to_refine;
 
    /*
     * Access the user supplied refine boxes.  The
@@ -2432,7 +2432,7 @@ void GriddingAlgorithm::readLevelBoxes(
          d_hierarchy->getMPI(),
          hier::BoxLevel::GLOBALIZED);
       hier::LocalId i(0);
-      for (hier::BoxList::Iterator itr(boxes_to_refine);
+      for (hier::BoxContainer::Iterator itr(boxes_to_refine);
            itr != boxes_to_refine.end(); ++itr, ++i) {
          hier::Box unbalanced_mapped_box(*itr, i, 0);
          unbalanced_mapped_box_level.addBox(unbalanced_mapped_box);
@@ -2857,7 +2857,7 @@ void GriddingAlgorithm::findRefinementBoxes(
        * findBoxesContainingTags interface.  The interfaces should be
        * changed to support multiblock.
        */
-      hier::BoxSet accumulated_mapped_boxes;
+      hier::BoxContainer accumulated_mapped_boxes;
       for (int bn = 0; bn < nblocks; ++bn) {
          /*
           * Determine single smallest bounding box for all nesting boxes.
@@ -3393,7 +3393,7 @@ void GriddingAlgorithm::extendBoxesToDomainBoundary(
    hier::BoxLevel& new_mapped_box_level,
    hier::Connector& tag_to_new,
    hier::Connector& new_to_tag,
-   const hier::BoxList& physical_domain_list,
+   const hier::BoxContainer& physical_domain_list,
    const hier::IntVector& extend_ghosts) const
 {
    TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(d_dim, new_mapped_box_level);
@@ -3410,7 +3410,7 @@ void GriddingAlgorithm::extendBoxesToDomainBoundary(
     * because there would not be enough room for an unseen coarse Box
     * to live in the small gap across which the Box is being extended.
     */
-   const hier::BoxSet& before_nodes =
+   const hier::BoxContainer& before_nodes =
       new_mapped_box_level.getBoxes();
 
    hier::BoxLevel after_mapped_box_level(d_dim);
@@ -3428,7 +3428,7 @@ void GriddingAlgorithm::extendBoxesToDomainBoundary(
       new_mapped_box_level,
       extend_ghosts);
 
-   for (hier::BoxSet::ConstIterator
+   for (hier::BoxContainer::ConstIterator
         nn = before_nodes.begin(); nn != before_nodes.end(); ++nn) {
       const hier::Box& before_mapped_box = *nn;
       hier::Box after_mapped_box = before_mapped_box;
@@ -3597,7 +3597,7 @@ void GriddingAlgorithm::computeNestingViolator(
    const hier::BoxLevelConnectorUtils edge_utils;
    const hier::OverlapConnectorAlgorithm oca;
 
-   const hier::BoxSet& candidate_mapped_boxes = candidate.getBoxes();
+   const hier::BoxContainer& candidate_mapped_boxes = candidate.getBoxes();
 
    /*
     * Bridge candidate to d_nesting_complement.  Any part of the
@@ -3627,10 +3627,10 @@ void GriddingAlgorithm::computeNestingViolator(
    tbox::Pointer<hier::MultiblockBoxTree> refined_domain_search_tree =
       d_hierarchy->getDomainSearchTree().createRefinedTree(candidate.getRefinementRatio());
 
-   for (hier::BoxSet::ConstIterator ni = candidate_mapped_boxes.begin();
+   for (hier::BoxContainer::ConstIterator ni = candidate_mapped_boxes.begin();
         ni != candidate_mapped_boxes.end(); ++ni) {
       const hier::Box& cmb = *ni;
-      hier::BoxList addl_violators(cmb);
+      hier::BoxContainer addl_violators(cmb);
       addl_violators.removeIntersections(cmb.getBlockId(),
          candidate.getRefinementRatio(),
          *refined_domain_search_tree);
@@ -3657,9 +3657,9 @@ void GriddingAlgorithm::computeNestingViolator(
                addl_violators.removeIntersections(*na);
             }
             if (!addl_violators.isEmpty()) {
-               for (hier::BoxList::Iterator bi(addl_violators);
+               for (hier::BoxContainer::Iterator bi(addl_violators);
                     bi != addl_violators.end(); ++bi) {
-                  hier::BoxSet::ConstIterator new_violator = violator.addBox(
+                  hier::BoxContainer::ConstIterator new_violator = violator.addBox(
                         *bi, cmb.getBlockId());
                   candidate_to_violator.insertLocalNeighbor(*new_violator,
                      cmb_non_per_id);
@@ -3770,9 +3770,9 @@ void GriddingAlgorithm::computeProperNestingData(
          d_hierarchy->getBoxLevel(ln)->getRefinementRatio(),
          d_hierarchy->getGridGeometry(),
          d_to_nesting_complement[ln - 1].getMPI());
-      const hier::BoxSet& lnm1_complement_mapped_boxes =
+      const hier::BoxContainer& lnm1_complement_mapped_boxes =
          d_proper_nesting_complement[ln - 1].getBoxes();
-      for (hier::BoxSet::ConstIterator ni =
+      for (hier::BoxContainer::ConstIterator ni =
               lnm1_complement_mapped_boxes.begin();
            ni != lnm1_complement_mapped_boxes.end(); ++ni) {
          hier::Box tmp_mapped_box = *ni;
@@ -3868,7 +3868,7 @@ void GriddingAlgorithm::growBoxesWithinNestingDomain(
       return;
    }
 
-   const hier::BoxSet& new_mapped_boxes =
+   const hier::BoxContainer& new_mapped_boxes =
       new_mapped_box_level.getBoxes();
 
    const hier::Connector& tag_to_nesting_complement =
@@ -3924,7 +3924,7 @@ void GriddingAlgorithm::growBoxesWithinNestingDomain(
     * Box minus parts removed to satisfy nesting requirements.
     */
 
-   for (hier::BoxSet::ConstIterator ni = new_mapped_boxes.begin();
+   for (hier::BoxContainer::ConstIterator ni = new_mapped_boxes.begin();
         ni != new_mapped_boxes.end(); ++ni) {
       const hier::Box& omb = *ni;
       TBOX_ASSERT(!omb.isPeriodicImage());
@@ -3935,7 +3935,7 @@ void GriddingAlgorithm::growBoxesWithinNestingDomain(
          continue;
       }
 
-      hier::BoxList nesting_domain;
+      hier::BoxContainer nesting_domain;
 
       refined_domain_search_tree->findOverlapBoxes(
          nesting_domain,

@@ -37,7 +37,6 @@ using namespace std;
 #include "SAMRAI/hier/PatchGeometry.h"
 #include "SAMRAI/hier/BoundaryBox.h"
 #include "SAMRAI/hier/BoxContainerIterator.h"
-#include "SAMRAI/hier/BoxList.h"
 #include "SAMRAI/hier/VariableDatabase.h"
 #include "SAMRAI/pdat/CellIndex.h"
 #include "SAMRAI/pdat/CellIterator.h"
@@ -2377,11 +2376,11 @@ void MblkLinAdv::tagGradientDetectorCells(
           */
          int block_number = patch.getBox().getBlockId().getBlockValue();
          int level_number = patch.getPatchLevelNumber();
-         hier::BoxList refine_boxes;
+         hier::BoxContainer refine_boxes;
          if (d_mblk_geometry->getRefineBoxes(refine_boxes,
                 block_number,
                 level_number)) {
-            for (hier::BoxList::Iterator b(refine_boxes); b != refine_boxes.end();
+            for (hier::BoxContainer::Iterator b(refine_boxes); b != refine_boxes.end();
                  ++b) {
                hier::Box intersect = pbox * b();
                if (!intersect.empty()) {
@@ -2452,7 +2451,7 @@ void MblkLinAdv::setMappedGridOnPatch(
    const tbox::Pointer<hier::PatchGeometry>
    patch_geom = patch.getPatchGeometry();
    hier::IntVector ratio = patch_geom->getRatio();
-   hier::BoxList domain_boxes;
+   hier::BoxContainer domain_boxes;
    d_grid_geometry->computePhysicalDomain(domain_boxes, ratio,
       hier::BlockId(block_number));
    int num_domain_boxes = domain_boxes.size();

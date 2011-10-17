@@ -12,16 +12,14 @@
 
 #include "SAMRAI/SAMRAI_config.h"
 
-#include "SAMRAI/hier/GridGeometry.h"
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/hier/BoxLevelHandle.h"
-#include "SAMRAI/hier/BoxSet.h"
+#include "SAMRAI/hier/GridGeometry.h"
 #include "SAMRAI/hier/PersistentOverlapConnectors.h"
 #include "SAMRAI/tbox/SAMRAI_MPI.h"
 #include "SAMRAI/tbox/SAMRAIManager.h"
 #include "SAMRAI/tbox/ConstPointer.h"
 #include "SAMRAI/tbox/Pointer.h"
-#include "SAMRAI/tbox/DescribedClass.h"
 #include "SAMRAI/tbox/Timer.h"
 
 #include <vector>
@@ -54,7 +52,7 @@ namespace hier {
  * which owns only the Patches that reside on a process.
  *
  * - @b GLOBALIZED: All processes know all Boxes in the set.
- * This is analogous to PatchLevel BoxList state when it is globalized
+ * This is analogous to PatchLevel BoxContainer state when it is globalized
  * (@see PatchLevel::getBoxes()).
  *
  * @par Performance notes
@@ -158,7 +156,7 @@ public:
     *
     * @see addBox()
     * @see addBox()
-    * @see initialize(const BoxSet&, const IntVector&, const tbox::SAMRAI_MPI&, const ParallelState)
+    * @see initialize(const BoxContainer&, const IntVector&, const tbox::SAMRAI_MPI&, const ParallelState)
     *
     * @param[in] ratio
     * @param[in] grid_geom
@@ -175,7 +173,7 @@ public:
    /*!
     * @brief Initialize the BoxLevel.
     *
-    * Similar to initialize(const BoxSet&, const IntVector&, const tbox::SAMRAI_MPI&, const ParallelState), except that the @c mapped_boxes are mutable.
+    * Similar to initialize(const BoxContainer&, const IntVector&, const tbox::SAMRAI_MPI&, const ParallelState), except that the @c mapped_boxes are mutable.
     *
     * The state of the object before calling this function is
     * discarded.  The Box content before calling this function
@@ -196,7 +194,7 @@ public:
     */
    void
    swapInitialize(
-      BoxSet& mapped_boxes,
+      BoxContainer& mapped_boxes,
       const IntVector& ratio,
       const tbox::ConstPointer<GridGeometry>& grid_geom,
       const tbox::SAMRAI_MPI& mpi = tbox::SAMRAI_MPI::getSAMRAIWorld(),
@@ -416,25 +414,25 @@ public:
     * @brief Returns the container of local Boxes.
     *
     * @par Important
-    * The BoxSet returned contains periodic image
+    * The BoxContainer returned contains periodic image
     * Boxes (if any).  To iterate through real Boxes only, see
     * RealBoxConstIterator.
     *
-    * You cannot directly modify the BoxSet because it may
+    * You cannot directly modify the BoxContainer because it may
     * invalidate other internal data.  Use other methods for modifying
-    * the BoxSet.
+    * the BoxContainer.
     *
     * @see getGlobalNumberOfBoxes()
     * @see getLocalNumberOfBoxes()
     *
     */
-   const BoxSet&
+   const BoxContainer&
    getBoxes() const;
 
    /*!
     * @brief Returns the container of global Boxes.
     */
-   const BoxSet&
+   const BoxContainer&
    getGlobalBoxes() const;
 
    /*!
@@ -442,7 +440,7 @@ public:
     */
    void
    getGlobalBoxes(
-      BoxList& global_boxes) const;
+      BoxContainer& global_boxes) const;
 
    /*
     * TODO: Why are the following two methods here?  Returning local id
@@ -737,7 +735,7 @@ public:
     *
     * @return iterator to the new Box
     */
-   BoxSet::ConstIterator
+   BoxContainer::ConstIterator
    addBox(
       const Box& box,
       const BlockId& block_id,
@@ -823,7 +821,7 @@ public:
     * The given iterator @em MUST be a valid iterator pointing to a
     * Box currently in this object.  After erasing, the iterator
     * is advanced to the next valid Box (or the end of its
-    * BoxSet).
+    * BoxContainer).
     *
     * Erasing a Box also erases all of its periodic images.
     *
@@ -834,7 +832,7 @@ public:
     */
    void
    eraseBox(
-      BoxSet::Iterator& ibox);
+      BoxContainer::Iterator& ibox);
 
    /*!
     * @brief Erase the Box matching the one given.
@@ -881,7 +879,7 @@ public:
     * @return Iterator to the mapped_box, or @c
     * getBoxes(owner).end() if mapped_box does not exist in set.
     */
-   BoxSet::ConstIterator
+   BoxContainer::ConstIterator
    getBox(
       const Box& mapped_box) const;
 
@@ -896,7 +894,7 @@ public:
     * @return Iterator to the mapped_box, or @c
     * getBoxes(owner).end() if mapped_box does not exist in set.
     */
-   BoxSet::ConstIterator
+   BoxContainer::ConstIterator
    getBox(
       const BoxId& mapped_box_id) const;
 
@@ -914,9 +912,9 @@ public:
     * If @c mapped_box is not owned by the local process, the state
     * must be GLOBALIZED.
     *
-    * You cannot directly modify the BoxSet because it may
+    * You cannot directly modify the BoxContainer because it may
     * invalidate other internal data.  Use other methods for modifying
-    * the BoxSet.
+    * the BoxContainer.
     *
     * @par Assertions
     * Throws an unrecoverable assertion if the Box does not
@@ -926,7 +924,7 @@ public:
     *
     * @return Iterator to the mapped_box.
     */
-   BoxSet::ConstIterator
+   BoxContainer::ConstIterator
    getBoxStrict(
       const Box& mapped_box) const;
 
@@ -934,9 +932,9 @@ public:
     * @brief Find the Box specified by the given BoxId and
     * periodic shift.
     *
-    * You cannot directly modify the BoxSet because it may
+    * You cannot directly modify the BoxContainer because it may
     * invalidate other internal data.  Use other methods for modifying
-    * the BoxSet.
+    * the BoxContainer.
     *
     * @par Assertions
     * Throw an unrecoverable assertion if the Box does not exist.
@@ -945,7 +943,7 @@ public:
     *
     * @return Iterator to the mapped_box.
     */
-   BoxSet::ConstIterator
+   BoxContainer::ConstIterator
    getBoxStrict(
       const BoxId& mapped_box_id) const;
 
@@ -1351,14 +1349,14 @@ private:
     * This is always the container of local Boxes, regardless of
     * parallel mode.
     */
-   BoxSet d_mapped_boxes;
+   BoxContainer d_mapped_boxes;
 
    /*!
     * @brief Locally-stored global Boxes (for GLOBALIZED mode).
     *
     * In DISTRIBUTED mode, this is empty.
     */
-   BoxSet d_global_mapped_boxes;
+   BoxContainer d_global_mapped_boxes;
 
    /*
     * TODO: I certainly hope we are not using tests on whether the

@@ -13,7 +13,6 @@
 #include "SAMRAI/tbox/SAMRAIManager.h"
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/hier/BoxContainerIterator.h"
-#include "SAMRAI/hier/BoxList.h"
 #include "SAMRAI/hier/Index.h"
 
 #include "SAMRAI/pdat/CellGeometry.h"
@@ -54,8 +53,8 @@ checkRemoveOps(
 
 tbox::Pointer<geom::CartesianGridGeometry>
 getGeometry(
-   hier::BoxList& coarse_domain,
-   hier::BoxList& fine_domain,
+   hier::BoxContainer& coarse_domain,
+   hier::BoxContainer& fine_domain,
    const tbox::Dimension& dim);
 
 void
@@ -109,8 +108,8 @@ int main(
       *   (NOTE: it is setup to work on at most 2 processors)
       *
       ********************************************************************/
-      hier::BoxList coarse_domain;
-      hier::BoxList fine_domain;
+      hier::BoxContainer coarse_domain;
+      hier::BoxContainer fine_domain;
       hier::IntVector ratio(dim, 2);
 
       tbox::Pointer<geom::CartesianGridGeometry> geometry =
@@ -128,7 +127,7 @@ int main(
       hier::BoxLevel layer0(hier::IntVector(dim, 1), geometry);
       hier::BoxLevel layer1(ratio, geometry);
 
-      hier::BoxList::Iterator coarse_domain_itr(coarse_domain);
+      hier::BoxContainer::Iterator coarse_domain_itr(coarse_domain);
       for (int ib = 0; ib < n_coarse_boxes; ib++, coarse_domain_itr++) {
          if (nproc > 1) {
             if (ib == layer0.getMPI().getRank()) {
@@ -141,7 +140,7 @@ int main(
          }
       }
 
-      hier::BoxList::Iterator fine_domain_itr(fine_domain);
+      hier::BoxContainer::Iterator fine_domain_itr(fine_domain);
       for (int ib = 0; ib < n_fine_boxes; ib++, fine_domain_itr++) {
          if (nproc > 1) {
             if (ib == layer1.getMPI().getRank()) {
@@ -498,8 +497,8 @@ bool checkRemoveOps(
 
 tbox::Pointer<geom::CartesianGridGeometry>
 getGeometry(
-   hier::BoxList& coarse_domain,
-   hier::BoxList& fine_domain,
+   hier::BoxContainer& coarse_domain,
+   hier::BoxContainer& fine_domain,
    const tbox::Dimension& dim)
 {
    double lo[dim.getValue()];

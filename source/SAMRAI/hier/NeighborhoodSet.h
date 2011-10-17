@@ -12,8 +12,8 @@
 
 #include "SAMRAI/SAMRAI_config.h"
 
+#include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/hier/BoxId.h"
-#include "SAMRAI/hier/BoxSet.h"
 #include "SAMRAI/tbox/Database.h"
 
 #include <iostream>
@@ -26,7 +26,7 @@ namespace hier {
 class Connector;
 
 /*!
- * @brief A wrapper around std::map<BoxId,BoxSet>.
+ * @brief A wrapper around std::map<BoxId,BoxContainer>.
  *
  * A neighborhood is defined as a Box and its "neighbors" which
  * are related to it via Connector relationships.  For example,
@@ -40,7 +40,7 @@ class Connector;
  *
  * The NeighborhoodSet @c m maps a BoxId @c i to a set of Boxes @c
  * m[i], usually its "neighbors".  (The neighbor are stored in a
- * BoxSet.)
+ * BoxContainer.)
  */
 
 class NeighborhoodSet
@@ -48,7 +48,7 @@ class NeighborhoodSet
 
 public:
    //! @brief NeighborSet is a clarifying typedef.
-   typedef BoxSet NeighborSet;
+   typedef BoxContainer NeighborSet;
 
    //! @brief Default constructor creates an empty container.
    NeighborhoodSet();
@@ -303,36 +303,26 @@ public:
       NeighborSet& all_neighbors) const;
 
    /*!
-    * @brief Insert all neighbors from a NeighborhoodSet into a
-    * single BoxList.
-    *
-    * @param[out] all_neighbors
-    */
-//   void
-//   getNeighbors(
-//      BoxList& all_neighbors) const;
-
-   /*!
     * @brief Insert all neighbors from a NeighborhoodSet with a
-    * given BlockId into a single BoxList.
+    * given BlockId into a single BoxContainer.
     *
     * @param[out] all_neighbors
     */
    void
    getNeighbors(
-      BoxList& all_neighbors,
+      BoxContainer& all_neighbors,
       const BlockId& block_id) const;
 
    /*!
     * @brief Insert all neighbors from a NeighborhoodSet into
-    * multiple BoxLists differentiated by the BlockId of the
+    * multiple BoxContainers differentiated by the BlockId of the
     * neighbors.
     *
     * @param[out] all_neighbors
     */
    void
    getNeighbors(
-      std::map<BlockId, BoxList>& all_neighbors) const;
+      std::map<BlockId, BoxContainer>& all_neighbors) const;
 
    /*!
     * @brief Insert all owners of neighbors from a NeighborhoodSet

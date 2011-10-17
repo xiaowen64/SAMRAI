@@ -104,7 +104,7 @@ public:
     */
    tbox::Pointer<hier::BoxOverlap>
    computeFillBoxesOverlap(
-      const hier::BoxList& fill_boxes,
+      const hier::BoxContainer& fill_boxes,
       const hier::Box& patch_box,
       const hier::Box& data_box,
       const hier::PatchDataFactory& pdf) const;
@@ -129,17 +129,17 @@ private:
       const FirstLayerCellVariableFillPattern&);    // not implemented
 
    /*!
-    * @brief Computes a BoxList defining the stencil around a given box
+    * @brief Computes a BoxContainer defining the stencil around a given box
     * for this fill pattern
     *
-    * The computed BoxList will cover a ghost region of width 1 around dst_box.
+    * The computed BoxContainer will cover a ghost region of width 1 around dst_box.
     *
-    * @param[out] stencil_boxes   The computed stencil BoxList.
+    * @param[out] stencil_boxes   The computed stencil BoxContainer.
     * @param[in]  dst_box         Input box around which stencil is computed.
     */
    void
    computeStencilBoxes(
-      hier::BoxList& stencil_boxes,
+      hier::BoxContainer& stencil_boxes,
       const hier::Box& dst_box) const;
 
    /*!

@@ -13,7 +13,6 @@
 #include "SAMRAI/tbox/Utilities.h"
 #include "SAMRAI/mesh/BergerRigoutsos.h"
 #include "SAMRAI/hier/Box.h"
-#include "SAMRAI/hier/BoxList.h"
 #include "SAMRAI/geom/CartesianGridGeometry.h"
 #include "SAMRAI/mesh/GriddingAlgorithm.h"
 #include "SAMRAI/hier/GridGeometry.h"
@@ -210,14 +209,14 @@ int HierarchyTester::runHierarchyTestAndVerify()
                  << test_geometry->getPeriodicShift(one_vector) << std::endl;
    }
 
-   const BoxList& init_phys_domain = init_geometry->getPhysicalDomain(BlockId(0));
-   const BoxList& test_phys_domain = test_geometry->getPhysicalDomain(BlockId(0));
+   const BoxContainer& init_phys_domain = init_geometry->getPhysicalDomain(BlockId(0));
+   const BoxContainer& test_phys_domain = test_geometry->getPhysicalDomain(BlockId(0));
 
    const int npdboxes = init_phys_domain.size();
 
    // Test #0b:
-   hier::BoxList::ConstIterator ipditr(init_phys_domain);
-   hier::BoxList::ConstIterator tpditr(test_phys_domain);
+   hier::BoxContainer::ConstIterator ipditr(init_phys_domain);
+   hier::BoxContainer::ConstIterator tpditr(test_phys_domain);
    if (d_do_refine_test) {
       for (int ib = 0; ib < npdboxes; ib++, ipditr++, tpditr++) {
          if (!Box::refine(*ipditr, d_ratio).isSpatiallyEqual(*tpditr)) {
@@ -341,14 +340,14 @@ int HierarchyTester::runHierarchyTestAndVerify()
                     << test_level->getRatioToCoarserLevel() << std::endl;
       }
 
-      const BoxList& init_domain = init_level->getPhysicalDomain(BlockId(0));
-      const BoxList& test_domain = test_level->getPhysicalDomain(BlockId(0));
+      const BoxContainer& init_domain = init_level->getPhysicalDomain(BlockId(0));
+      const BoxContainer& test_domain = test_level->getPhysicalDomain(BlockId(0));
 
       const int nboxes = init_domain.size();
 
       // Test #8:
-      hier::BoxList::ConstIterator iditr(init_domain);
-      hier::BoxList::ConstIterator tditr(test_domain);
+      hier::BoxContainer::ConstIterator iditr(init_domain);
+      hier::BoxContainer::ConstIterator tditr(test_domain);
       if (d_do_refine_test) {
          for (int ib = 0; ib < nboxes; ib++, iditr++, tditr++) {
             if (!Box::refine(*iditr, d_ratio).isSpatiallyEqual(*tditr)) {

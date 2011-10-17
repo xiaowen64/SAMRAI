@@ -50,12 +50,12 @@ RefinePatchStrategy::~RefinePatchStrategy()
 void RefinePatchStrategy::preprocessRefineBoxes(
    hier::Patch& fine,
    const hier::Patch& coarse,
-   const hier::BoxList& fine_boxes,
+   const hier::BoxContainer& fine_boxes,
    const hier::IntVector& ratio)
 {
    TBOX_DIM_ASSERT_CHECK_ARGS3(fine, coarse, ratio);
 
-   for (hier::BoxList::ConstIterator b(fine_boxes); b != fine_boxes.end(); ++b) {
+   for (hier::BoxContainer::ConstIterator b(fine_boxes); b != fine_boxes.end(); ++b) {
       this->preprocessRefine(fine, coarse, b(), ratio);
    }
 }
@@ -71,12 +71,12 @@ void RefinePatchStrategy::preprocessRefineBoxes(
 void RefinePatchStrategy::postprocessRefineBoxes(
    hier::Patch& fine,
    const hier::Patch& coarse,
-   const hier::BoxList& fine_boxes,
+   const hier::BoxContainer& fine_boxes,
    const hier::IntVector& ratio)
 {
    TBOX_DIM_ASSERT_CHECK_DIM_ARGS3(d_dim, fine, coarse, ratio);
 
-   for (hier::BoxList::ConstIterator b(fine_boxes); b != fine_boxes.end(); ++b) {
+   for (hier::BoxContainer::ConstIterator b(fine_boxes); b != fine_boxes.end(); ++b) {
       this->postprocessRefine(fine, coarse, b(), ratio);
    }
 }

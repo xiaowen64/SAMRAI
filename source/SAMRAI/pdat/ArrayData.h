@@ -15,15 +15,14 @@
 
 #include "SAMRAI/pdat/ArrayDataIterator.h"
 #include "SAMRAI/hier/Box.h"
-#include "SAMRAI/hier/BoxList.h"
+#include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/hier/Index.h"
 #include "SAMRAI/hier/IntVector.h"
-#include "SAMRAI/tbox/MessageStream.h"
 #include "SAMRAI/tbox/Array.h"
 #include "SAMRAI/tbox/Complex.h"
 #include "SAMRAI/tbox/Database.h"
-#include "SAMRAI/tbox/Pointer.h"
 #include "SAMRAI/tbox/MemoryUtilities.h"
+#include "SAMRAI/tbox/MessageStream.h"
 
 #include <typeinfo>
 
@@ -258,7 +257,7 @@ public:
    void
    copy(
       const ArrayData<TYPE>& src,
-      const hier::BoxList& boxes,
+      const hier::BoxContainer& boxes,
       const hier::IntVector& src_shift);
 
    /*!
@@ -346,7 +345,7 @@ public:
    void
    sum(
       const ArrayData<TYPE>& src,
-      const hier::BoxList& boxes,
+      const hier::BoxContainer& boxes,
       const hier::IntVector& src_shift);
 
    /*!
@@ -365,7 +364,7 @@ public:
     */
    int
    getDataStreamSize(
-      const hier::BoxList& boxes,
+      const hier::BoxContainer& boxes,
       const hier::IntVector& src_shift) const;
 
    /*!
@@ -411,7 +410,7 @@ public:
    void
    packStream(
       tbox::MessageStream& stream,
-      const hier::BoxList& dest_boxes,
+      const hier::BoxContainer& dest_boxes,
       const hier::IntVector& src_shift) const;
 
    /*!
@@ -451,7 +450,7 @@ public:
    void
    unpackStream(
       tbox::MessageStream& stream,
-      const hier::BoxList& dest_boxes,
+      const hier::BoxContainer& dest_boxes,
       const hier::IntVector& src_offset);
 
    /*!
@@ -491,7 +490,7 @@ public:
    void
    unpackStreamAndSum(
       tbox::MessageStream& stream,
-      const hier::BoxList& dest_boxes,
+      const hier::BoxContainer& dest_boxes,
       const hier::IntVector& src_offset);
 
    /*!

@@ -21,7 +21,6 @@ using namespace std;
 #include "SAMRAI/tbox/SAMRAIManager.h"
 
 #include "SAMRAI/hier/Box.h"
-#include "SAMRAI/hier/BoxList.h"
 #include "SAMRAI/geom/CartesianGridGeometry.h"
 #include "SAMRAI/geom/CartesianPatchGeometry.h"
 #include "SAMRAI/pdat/CellIndex.h"
@@ -112,8 +111,8 @@ int main(
       hier::Box fine7(hier::Index(8, 6, 6), hier::Index(13, 7, 7));
       hier::IntVector ratio(dim3d, 2);
 
-      hier::BoxList coarse_domain(dim3d);
-      hier::BoxList fine_boxes(dim3d);
+      hier::BoxContainer coarse_domain(dim3d);
+      hier::BoxContainer fine_boxes(dim3d);
       coarse_domain.appendItem(coarse0);
       coarse_domain.appendItem(coarse1);
       coarse_domain.appendItem(coarse2);
@@ -131,8 +130,8 @@ int main(
       fine_boxes.appendItem(fine6);
       fine_boxes.appendItem(fine7);
 
-      hier::BoxList coarse_domain_list(coarse_domain);
-      hier::BoxList fine_level_list(fine_boxes);
+      hier::BoxContainer coarse_domain_list(coarse_domain);
+      hier::BoxContainer fine_level_list(fine_boxes);
       coarse_domain_list.coalesceBoxes();
       fine_level_list.coalesceBoxes();
 
@@ -200,7 +199,7 @@ int main(
       hier::BoxLevel layer0(hier::IntVector(dim3d, 1), geometry);
       hier::BoxLevel layer1(ratio, geometry);
 
-      hier::BoxList::Iterator coarse_domain_itr(coarse_domain);
+      hier::BoxContainer::Iterator coarse_domain_itr(coarse_domain);
       if (nproc > 1) {
          if (layer0.getMPI().getRank() == 0) {
             for (int ib = 0; ib < n_coarse_boxes / 2; ib++, coarse_domain_itr++) {
@@ -229,7 +228,7 @@ int main(
 
       }
 
-      hier::BoxList::Iterator fine_boxes_itr(fine_boxes);
+      hier::BoxContainer::Iterator fine_boxes_itr(fine_boxes);
       if (nproc > 1) {
 
          if (layer1.getMPI().getRank() == 0) {

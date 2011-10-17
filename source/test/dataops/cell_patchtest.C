@@ -25,7 +25,7 @@
 #include "SAMRAI/tbox/SAMRAIManager.h"
 
 #include "SAMRAI/hier/Box.h"
-#include "SAMRAI/hier/BoxList.h"
+#include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/geom/CartesianGridGeometry.h"
 #include "SAMRAI/geom/CartesianPatchGeometry.h"
 #include "SAMRAI/pdat/CellData.h"
@@ -105,7 +105,7 @@ int main(
       hier::Index indxhi(dim, 9);
       indxhi(1) = 4;
       hier::Box patch_box(indxlo, indxhi);
-      hier::BoxList grid_domain;
+      hier::BoxContainer grid_domain;
       grid_domain.pushBack(patch_box);
       hier::IntVector ratio(dim, 1);
 

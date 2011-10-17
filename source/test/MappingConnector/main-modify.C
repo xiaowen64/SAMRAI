@@ -412,7 +412,7 @@ void alterAndGenerateMapping(
    const int local_id_increment =
       database->getIntegerWithDefault("local_id_increment", 0);
 
-   const hier::BoxSet mapped_boxes_b(mapped_box_level_b.getBoxes());
+   const hier::BoxContainer mapped_boxes_b(mapped_box_level_b.getBoxes());
 
    mapped_box_level_c.initialize(mapped_box_level_b.getRefinementRatio(),
       mapped_box_level_b.getGridGeometry(),
@@ -424,7 +424,7 @@ void alterAndGenerateMapping(
    c_to_b.initialize(mapped_box_level_c,
       mapped_box_level_b,
       hier::IntVector::getZero(dim));
-   for (hier::BoxSet::ConstIterator bi = mapped_boxes_b.begin();
+   for (hier::BoxContainer::ConstIterator bi = mapped_boxes_b.begin();
         bi != mapped_boxes_b.end(); ++bi) {
       const hier::Box& mapped_box_b(*bi);
       hier::Box mapped_box_c(mapped_box_b,

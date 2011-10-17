@@ -16,7 +16,7 @@ namespace SAMRAI {
 namespace hier {
 
 BoxSetSingleBlockIterator::BoxSetSingleBlockIterator(
-   const BoxSet& mapped_boxes,
+   const BoxContainer& mapped_boxes,
    const BlockId& block_id):
    d_mapped_boxes(&mapped_boxes),
    d_block_id(block_id),

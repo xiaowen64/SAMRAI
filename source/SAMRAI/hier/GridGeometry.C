@@ -19,10 +19,9 @@
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/hier/BoxContainerIterator.h"
 #include "SAMRAI/hier/BoxContainerConstIterator.h"
-#include "SAMRAI/hier/BoxList.h"
 #include "SAMRAI/hier/BoxLevel.h"
+#include "SAMRAI/hier/BoxTree.h"
 #include "SAMRAI/hier/IntVector.h"
-#include "SAMRAI/hier/BoxSetSingleBlockIterator.h"
 #include "SAMRAI/hier/Patch.h"
 #include "SAMRAI/hier/PatchDescriptor.h"
 #include "SAMRAI/hier/PatchLevel.h"
@@ -153,7 +152,7 @@ GridGeometry::GridGeometry(
 
 GridGeometry::GridGeometry(
    const std::string& object_name,
-   const tbox::Array<BoxList>& domain,
+   const tbox::Array<BoxContainer>& domain,
    tbox::Pointer<TransferOperatorRegistry> op_reg,
    bool register_for_restart):
    d_dim((*(domain[0].begin())).getDim()),
@@ -215,7 +214,7 @@ void GridGeometry::computeBoundaryBoxesOnLevel(
    const PatchLevel& level,
    const IntVector& periodic_shift,
    const IntVector& ghost_width,
-   const tbox::Array<BoxList>& domain,
+   const tbox::Array<BoxContainer>& domain,
    bool do_all_patches) const
 {
    TBOX_DIM_ASSERT_CHECK_DIM_ARGS3(d_dim,
@@ -249,7 +248,7 @@ void GridGeometry::computeBoundaryBoxesOnLevel(
          const Box& box(patch->getBox());
 
          /*
-          * patch_boundaries is an array of DIM BoxLists for each patch.
+          * patch_boundaries is an array of DIM BoxContainers for each patch.
           * patch_boundaries[DIM-1] will store boundary boxes of the
           * mapped_box type. If DIM > 1, patch_boundaries[DIM-2] will store
           * boundary boxes of the edge type, and if DIM > 2,
@@ -303,7 +302,7 @@ void GridGeometry::findPatchesTouchingBoundaries(
    std::map<BoxId, TwoDimBool>& touches_periodic_bdry,
    const PatchLevel& level,
    const IntVector& periodic_shift,
-   const tbox::Array<BoxList>& domain) const
+   const tbox::Array<BoxContainer>& domain) const
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(level, periodic_shift);
 
@@ -380,7 +379,7 @@ void GridGeometry::computeBoxTouchingBoundaries(
     * patch.  Remove the intersections with the domain's interior, so that only
     * boxes outside the physical domain (if any) remain in the list.
     */
-   BoxList bdry_list(Box::grow(box, IntVector::getOne(d_dim)));
+   BoxContainer bdry_list(Box::grow(box, IntVector::getOne(d_dim)));
    bdry_list.removeIntersections(domain_tree);
    const bool touches_any_boundary = (bdry_list.size() > 0);
 
@@ -392,8 +391,8 @@ void GridGeometry::computeBoxTouchingBoundaries(
    } else {
       bool bdry_located = false;
       for (int nd = 0; nd < d_dim.getValue(); nd++) {
-         BoxList lower_list(bdry_list);
-         BoxList upper_list(bdry_list);
+         BoxContainer lower_list(bdry_list);
+         BoxContainer upper_list(bdry_list);
 
          Box test_box(box);
 
@@ -515,7 +514,7 @@ void GridGeometry::setBoundaryBoxes(
    t_set_boundary_boxes->start();
    std::map<BoxId, PatchBoundaries> boundaries;
 
-   tbox::Array<BoxList> domain(level.getPhysicalDomainArray());
+   tbox::Array<BoxContainer> domain(level.getPhysicalDomainArray());
 
    IntVector ghost_width(
       level.getPatchDescriptor()->getMaxGhostWidth(d_dim));
@@ -618,7 +617,7 @@ GridGeometry::makeCoarsenedGridGeometry(
    TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(dim, coarsen_ratio);
    TBOX_ASSERT(coarsen_ratio > IntVector::getZero(dim));
 
-   tbox::Array<BoxList> coarse_domain(d_number_blocks);
+   tbox::Array<BoxContainer> coarse_domain(d_number_blocks);
 
    for (int b = 0; b < d_number_blocks; b++) {
       BlockId block_id(b);
@@ -628,7 +627,7 @@ GridGeometry::makeCoarsenedGridGeometry(
       /*
        * Need to check that domain can be coarsened by given ratio.
        */
-      const BoxList& fine_domain = getPhysicalDomain(block_id);
+      const BoxContainer& fine_domain = getPhysicalDomain(block_id);
       const int nboxes = fine_domain.size();
       BoxContainer::ConstIterator coarse_domain_itr(coarse_domain[b]);
       BoxContainer::ConstIterator fine_domain_itr(fine_domain);
@@ -686,7 +685,7 @@ GridGeometry::makeRefinedGridGeometry(
    TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(dim, refine_ratio);
    TBOX_ASSERT(refine_ratio > IntVector::getZero(dim));
 
-   tbox::Array<BoxList> fine_domain(d_number_blocks);
+   tbox::Array<BoxContainer> fine_domain(d_number_blocks);
 
    for (int b = 0; b < d_number_blocks; b++) {
       fine_domain[b] = getPhysicalDomain(BlockId(b));
@@ -740,7 +739,7 @@ void GridGeometry::getFromRestart()
    d_number_blocks = db->getInteger("d_number_blocks");
 
    std::string domain_name;
-   tbox::Array<hier::BoxList> domain(d_number_blocks);
+   tbox::Array<hier::BoxContainer> domain(d_number_blocks);
 
    for (int b = 0; b < d_number_blocks; b++) {
       domain_name = "d_physical_domain_" + tbox::Utilities::intToString(b);
@@ -788,7 +787,7 @@ void GridGeometry::getFromInput(
       d_number_blocks = db->getIntegerWithDefault("num_blocks", 1);
 
       std::string domain_name;
-      tbox::Array<hier::BoxList> domain(d_number_blocks);
+      tbox::Array<hier::BoxContainer> domain(d_number_blocks);
 
       for (int b = 0; b < d_number_blocks; b++) {
 
@@ -941,7 +940,7 @@ void GridGeometry::computeShiftsForBox(
                }
 
                border.shift(border_shift);
-               BoxList border_list(border);
+               BoxContainer border_list(border);
 
                border_list.removeIntersections(domain_search_tree);
 
@@ -1017,7 +1016,7 @@ void GridGeometry::computeShiftsForBox(
 void GridGeometry::getBoundaryBoxes(
    PatchBoundaries& patch_boundaries,
    const Box& box,
-   const BoxList& domain_boxes,
+   const BoxContainer& domain_boxes,
    const IntVector& ghosts,
    const IntVector& periodic_shift) const
 {
@@ -1044,7 +1043,7 @@ void GridGeometry::getBoundaryBoxes(
 
       const tbox::Array<int>& location_index_max =
          blut->getMaxLocationIndices();
-      tbox::Array<BoxList> codim_boxlist(d_dim.getValue());
+      tbox::Array<BoxContainer> codim_boxlist(d_dim.getValue());
 
       for (int d = 0; d < d_dim.getValue() - num_per_dirs; d++) {
 
@@ -1100,7 +1099,7 @@ void GridGeometry::getBoundaryBoxes(
                   }
                }
 
-               BoxList domain_list(domain_boxes);
+               BoxContainer domain_list(domain_boxes);
                if (num_per_dirs != 0) {
                   domain_list.grow(periodic_shift);
                }
@@ -1111,7 +1110,7 @@ void GridGeometry::getBoundaryBoxes(
                 * intersections with the domain.
                 */
 
-               BoxList border_list(border);
+               BoxContainer border_list(border);
                border_list.intersectBoxes(domain_list); // Should use BoxTree here if possible.
 
                border_list.shift(border_shift);
@@ -1171,7 +1170,7 @@ void GridGeometry::getBoundaryBoxes(
  */
 #if 0
 void GridGeometry::computePhysicalDomain(
-   BoxList& domain,
+   BoxContainer& domain,
    const IntVector& ratio_to_level_zero,
    const BlockId& block_id) const
 {
@@ -1224,7 +1223,7 @@ void GridGeometry::computePhysicalDomain(
  */
 
 void GridGeometry::computePhysicalDomain(
-   BoxSet& domain_mapped_boxes,
+   BoxContainer& domain_mapped_boxes,
    const IntVector& ratio_to_level_zero,
    const BlockId& block_id) const
 {
@@ -1302,7 +1301,7 @@ void GridGeometry::computePhysicalDomain(
    }
 #endif
 
-   for (BoxSet::ConstIterator itr = d_domain_with_images[block_id.getBlockValue()].begin();
+   for (BoxContainer::ConstIterator itr = d_domain_with_images[block_id.getBlockValue()].begin();
         itr != d_domain_with_images[block_id.getBlockValue()].end();
         ++itr) {
       box_level.addBoxWithoutUpdate(*itr);
@@ -1326,7 +1325,7 @@ void GridGeometry::computePhysicalDomain(
 }
 
 void GridGeometry::computePhysicalDomain(
-   BoxSet& domain_mapped_boxes,
+   BoxContainer& domain_mapped_boxes,
    const IntVector& ratio_to_level_zero) const
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, ratio_to_level_zero);
@@ -1351,7 +1350,7 @@ void GridGeometry::computePhysicalDomain(
 #endif
 
    for (int nb = 0; nb < d_number_blocks; nb++) {
-      BoxSet block_domain_boxes = d_domain_with_images[nb];
+      BoxContainer block_domain_boxes = d_domain_with_images[nb];
 
       if (ratio_to_level_zero != IntVector::getOne(d_dim)) {
          bool coarsen = false;
@@ -1367,7 +1366,7 @@ void GridGeometry::computePhysicalDomain(
          }
       }
 
-      for (BoxSet::ConstIterator bi = block_domain_boxes.begin();
+      for (BoxContainer::ConstIterator bi = block_domain_boxes.begin();
            bi != block_domain_boxes.end(); ++bi) {
 
          domain_mapped_boxes.insert(*bi);
@@ -1402,7 +1401,7 @@ void GridGeometry::computePhysicalDomain(
 #endif
 
    for (int nb = 0; nb < d_number_blocks; nb++) {
-      BoxSet block_domain_boxes = d_domain_with_images[nb];
+      BoxContainer block_domain_boxes = d_domain_with_images[nb];
 
       if (ratio_to_level_zero != IntVector::getOne(d_dim)) {
          bool coarsen = false;
@@ -1418,7 +1417,7 @@ void GridGeometry::computePhysicalDomain(
          }
       }
 
-      for (BoxSet::ConstIterator bi = block_domain_boxes.begin();
+      for (BoxContainer::ConstIterator bi = block_domain_boxes.begin();
            bi != block_domain_boxes.end(); ++bi) {
 
          box_level.addBoxWithoutUpdate(*bi);
@@ -1437,7 +1436,7 @@ void GridGeometry::computePhysicalDomain(
  */
 
 void GridGeometry::setPhysicalDomain(
-   const tbox::Array<BoxList>& domain)
+   const tbox::Array<BoxContainer>& domain)
 {
    TBOX_ASSERT(domain.size() > 0);
 
@@ -1452,8 +1451,8 @@ void GridGeometry::setPhysicalDomain(
    for (int b = 0; b < number_blocks; b++) {
 
       BlockId block_id(b);
-      BoxList domain_boxes(domain[b]);
-      BoxList bounding_box(domain_boxes.getBoundingBox());
+      BoxContainer domain_boxes(domain[b]);
+      BoxContainer bounding_box(domain_boxes.getBoundingBox());
 
       bounding_box.removeIntersections(domain_boxes);
       if (bounding_box.size() == 0) {
@@ -1464,7 +1463,7 @@ void GridGeometry::setPhysicalDomain(
          d_physical_domain[b] = domain[b];
       }
 
-      resetDomainBoxSet(block_id);
+      resetDomainBoxContainer(block_id);
 
       d_domain_tree[b] = new BoxTree(d_dim,
             d_physical_domain[b],
@@ -1475,13 +1474,13 @@ void GridGeometry::setPhysicalDomain(
 /*
  *************************************************************************
  *
- * Reset the domain BoxSet based on current definition of
+ * Reset the domain BoxContainer based on current definition of
  * physical domain and periodic shift.
  *
  *************************************************************************
  */
 
-void GridGeometry::resetDomainBoxSet(const BlockId& block_id)
+void GridGeometry::resetDomainBoxContainer(const BlockId& block_id)
 {
    const int& block_number = block_id.getBlockValue();
    BoxContainer::Iterator itr(d_physical_domain[block_number]);
@@ -1509,7 +1508,7 @@ void GridGeometry::resetDomainBoxSet(const BlockId& block_id)
 
       // Add periodic images of the domain d_domain_with_images.
       std::vector<IntVector> shifts;
-      const BoxSet& mapped_boxes =
+      const BoxContainer& mapped_boxes =
          d_domain_with_images[block_number];
       for (RealBoxConstIterator ni(mapped_boxes); ni.isValid(); ++ni) {
          const Box& mapped_box = *ni;
@@ -1568,7 +1567,7 @@ void GridGeometry::initializePeriodicShift(
           */
          if (checkPeriodicValidity(d_physical_domain[0])) {
 
-            BoxList domain_box_list(d_physical_domain[0]);
+            BoxContainer domain_box_list(d_physical_domain[0]);
             Box bounding_box = domain_box_list.getBoundingBox();
 
             for (id = 0; id < d_dim.getValue(); id++) {
@@ -1587,7 +1586,7 @@ void GridGeometry::initializePeriodicShift(
    }
 
    for (int b = 0; b < d_physical_domain.size(); b++) {
-      resetDomainBoxSet(BlockId(b));
+      resetDomainBoxContainer(BlockId(b));
    }
 }
 
@@ -1650,7 +1649,7 @@ IntVector GridGeometry::getPeriodicShift(
  */
 
 bool GridGeometry::checkPeriodicValidity(
-   const BoxList& domain)
+   const BoxContainer& domain)
 {
    bool is_valid = true;
 
@@ -1661,7 +1660,7 @@ bool GridGeometry::checkPeriodicValidity(
     * Compute the bounding box of a "duplicate" domain + 1
     * cell and set the min and max indices of this grown box.
     */
-   BoxList dup_domain(domain);
+   BoxContainer dup_domain(domain);
 
    Box domain_box = dup_domain.getBoundingBox();
    domain_box.grow(grow_direction);
@@ -1682,7 +1681,7 @@ bool GridGeometry::checkPeriodicValidity(
     * not, this dimension is not a valid periodic dimension.
     */
    for (i = 0; i < d_dim.getValue(); i++) {
-      BoxList dup_domain2(domain);
+      BoxContainer dup_domain2(domain);
       IntVector grow_one(d_dim, 0);
       grow_one(i) = 1;
       dup_domain2.grow(grow_one);
@@ -1726,7 +1725,7 @@ bool GridGeometry::checkPeriodicValidity(
 bool GridGeometry::checkBoundaryBox(
    const BoundaryBox& boundary_box,
    const Patch& patch,
-   const BoxList& domain,
+   const BoxContainer& domain,
    const int num_per_dirs,
    const IntVector& max_data_ghost_width) const
 {
@@ -1799,9 +1798,9 @@ bool GridGeometry::checkBoundaryBox(
    /*
     * check that the boundary box is outside the physical domain.
     */
-   BoxList domain_list(domain);
+   BoxContainer domain_list(domain);
    domain_list.unorder(); 
-   BoxList bbox_list(bbox);
+   BoxContainer bbox_list(bbox);
 
    domain_list.intersectBoxes(bbox_list);
 
@@ -1918,15 +1917,15 @@ void GridGeometry::readBlockDataFromInput(
 
    if (d_number_blocks > 1) {
       for (int b = 0; b < d_number_blocks; b++) {
-         BoxList pseudo_domain;
+         BoxContainer pseudo_domain;
          getDomainOutsideBlock(pseudo_domain, BlockId(b));
 
-         hier::BoxList physical_domain(d_physical_domain[b]);
+         hier::BoxContainer physical_domain(d_physical_domain[b]);
          pseudo_domain.spliceFront(physical_domain);
 
          for (BoxContainer::Iterator
               si(d_singularity[b]); si != d_singularity[b].end(); ++si) {
-            BoxList test_domain(pseudo_domain);
+            BoxContainer test_domain(pseudo_domain);
             test_domain.intersectBoxes(si());
             if (test_domain.size() == 0) {
                d_reduced_connect[b] = true;
@@ -1940,19 +1939,19 @@ void GridGeometry::readBlockDataFromInput(
 /*
  * ************************************************************************
  *
- * Get a BoxList representing all of the domain outside the given block.
+ * Get a BoxContainer representing all of the domain outside the given block.
  *
  * ************************************************************************
  */
 
 void
 GridGeometry::getDomainOutsideBlock(
-   BoxList& domain_outside_block,
+   BoxContainer& domain_outside_block,
    const BlockId& block_id) const
 {
    for (tbox::List<Neighbor>::Iterator
         nei(d_block_neighbors[block_id.getBlockValue()]); nei; nei++) {
-      hier::BoxList transformed_domain(nei().getTransformedDomain()); 
+      hier::BoxContainer transformed_domain(nei().getTransformedDomain()); 
       domain_outside_block.spliceFront(transformed_domain);
    }
 }
@@ -1976,8 +1975,8 @@ void GridGeometry::registerNeighbors(
 
    const int& a = block_a.getBlockValue();
    const int& b = block_b.getBlockValue();
-   BoxList b_domain_in_a_space(d_physical_domain[b]);
-   BoxList a_domain_in_b_space(d_physical_domain[a]);
+   BoxContainer b_domain_in_a_space(d_physical_domain[b]);
+   BoxContainer a_domain_in_b_space(d_physical_domain[a]);
    b_domain_in_a_space.unorder();
    a_domain_in_b_space.unorder();
 
@@ -2065,8 +2064,8 @@ GridGeometry::transformBox(
  */
 
 bool
-GridGeometry::transformBoxList(
-   BoxList& boxes,
+GridGeometry::transformBoxContainer(
+   BoxContainer& boxes,
    const IntVector& ratio,
    const BlockId& output_block,
    const BlockId& input_block) const
@@ -2094,7 +2093,7 @@ GridGeometry::transformBoxList(
 
 void
 GridGeometry::getTransformedBlock(
-   BoxList& block,
+   BoxContainer& block,
    const BlockId& base_block,
    const BlockId& transformed_block)
 {
@@ -2124,7 +2123,7 @@ void GridGeometry::adjustMultiblockPatchLevelBoundaries(
 
    if (d_number_blocks > 1) {
 
-      const BoxSet& d_mapped_boxes =
+      const BoxContainer& d_mapped_boxes =
          patch_level.getBoxLevel()->getBoxes();
 
       IntVector gcw(patch_level.getPatchDescriptor()->getMaxGhostWidth(d_dim));
@@ -2133,21 +2132,21 @@ void GridGeometry::adjustMultiblockPatchLevelBoundaries(
 
          const BlockId block_id(nb);
 
-         BoxList singularity(d_singularity[nb]);
+         BoxContainer singularity(d_singularity[nb]);
          singularity.refine(patch_level.getRatioToLevelZero());
 
-         BoxList pseudo_domain;
+         BoxContainer pseudo_domain;
 
          for (tbox::List<GridGeometry::Neighbor>::Iterator
               nei(d_block_neighbors[nb]); nei; nei++) {
-            hier::BoxList transformed_domain(nei().getTransformedDomain());
+            hier::BoxContainer transformed_domain(nei().getTransformedDomain());
             pseudo_domain.spliceFront(transformed_domain);
          }
 
          pseudo_domain.refine(patch_level.getRatioToLevelZero());
 
-         hier::BoxList physical_domain(patch_level.getPhysicalDomain(block_id));
-         hier::BoxList sing_boxes(singularity); 
+         hier::BoxContainer physical_domain(patch_level.getPhysicalDomain(block_id));
+         hier::BoxContainer sing_boxes(singularity); 
          pseudo_domain.spliceFront(physical_domain);
          pseudo_domain.spliceFront(sing_boxes);
          pseudo_domain.coalesce();
@@ -2178,9 +2177,9 @@ void GridGeometry::adjustMultiblockPatchLevelBoundaries(
 
 void GridGeometry::adjustBoundaryBoxesOnPatch(
    const Patch& patch,
-   const BoxList& pseudo_domain,
+   const BoxContainer& pseudo_domain,
    const IntVector& gcw,
-   const BoxList& singularity)
+   const BoxContainer& singularity)
 {
    TBOX_DIM_ASSERT_CHECK_ARGS3(*this, patch, gcw);
 
@@ -2194,7 +2193,7 @@ void GridGeometry::adjustBoundaryBoxesOnPatch(
 
       getBoundaryBoxes(boundaries,
          patch.getBox(),
-         BoxList(pseudo_domain),
+         BoxContainer(pseudo_domain),
          gcw,
          IntVector::getZero(d_dim));
 
@@ -2211,7 +2210,7 @@ void GridGeometry::adjustBoundaryBoxesOnPatch(
 
          for (int n = 0; n < num_boxes; n++) {
             Box border_box(codim_boundaries[codim - 1][n].getBox());
-            BoxList sing_test_list(singularity);
+            BoxContainer sing_test_list(singularity);
             sing_test_list.intersectBoxes(border_box);
             if (sing_test_list.size() != 0) {
                boundaries_in_sing[codim - 1].addItem(n);
@@ -2452,7 +2451,7 @@ void GridGeometry::printClassData(
       const BlockId block_id(bn);
       const tbox::List<Neighbor>& block_neighbors(getNeighbors(block_id));
 
-      const BoxList& singularity_boxlist(getSingularityBoxList(block_id));
+      const BoxContainer& singularity_boxlist(getSingularityBoxContainer(block_id));
 
       for (tbox::List<Neighbor>::Iterator li(block_neighbors); li; li++) {
          const Neighbor& neighbor(*li);

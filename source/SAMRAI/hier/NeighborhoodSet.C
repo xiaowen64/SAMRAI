@@ -175,27 +175,9 @@ NeighborhoodSet::getNeighbors(
  * Insert all neighbors from a NeighborhoodSet into a single NeighborSet.
  ***********************************************************************
  */
-#if 0
 void
 NeighborhoodSet::getNeighbors(
-   BoxList& all_nabrs) const
-{
-   NeighborSet tmp_nabrs;
-   getNeighbors(tmp_nabrs);
-   for (BoxSet::const_iterator ei = tmp_nabrs.begin();
-        ei != tmp_nabrs.end(); ++ei) {
-      all_nabrs.pushBack(*ei);
-   }
-}
-#endif
-/*!
- ***********************************************************************
- * Insert all neighbors from a NeighborhoodSet into a single NeighborSet.
- ***********************************************************************
- */
-void
-NeighborhoodSet::getNeighbors(
-   BoxList& all_nabrs,
+   BoxContainer& all_nabrs,
    const BlockId& block_id) const
 {
    NeighborSet tmp_nabrs;
@@ -214,13 +196,13 @@ NeighborhoodSet::getNeighbors(
  */
 void
 NeighborhoodSet::getNeighbors(
-   std::map<BlockId, BoxList>& all_nabrs) const
+   std::map<BlockId, BoxContainer>& all_nabrs) const
 {
 
    for (const_iterator ei = begin(); ei != end(); ++ei) {
       const NeighborSet& nabrs = (*ei).second;
 
-      for (BoxSet::ConstIterator ni = nabrs.begin();
+      for (BoxContainer::ConstIterator ni = nabrs.begin();
          ni != nabrs.end(); ++ni) {
 
          all_nabrs[ni->getBlockId()].insert(*ni);
@@ -245,7 +227,7 @@ NeighborhoodSet::getOwners(
    for (const_iterator ei = begin(); ei != end(); ++ei) {
       const NeighborSet& nabrs = (*ei).second;
 
-      for (BoxSet::ConstIterator ni = nabrs.begin();
+      for (BoxContainer::ConstIterator ni = nabrs.begin();
          ni != nabrs.end(); ++ni) {
 
          const int rank = ni->getOwnerRank();

@@ -15,7 +15,6 @@
 
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/hier/BoxContainerConstIterator.h"
-#include "SAMRAI/hier/BoxList.h"
 #include "SAMRAI/pdat/SideData.h"
 #include "SAMRAI/pdat/SideGeometry.h"
 #include "SAMRAI/pdat/SideOverlap.h"
@@ -176,7 +175,7 @@ void OutersideData<TYPE>::copy2(
 
    const hier::IntVector& src_offset = t_overlap->getSourceOffset();
    for (int d = 0; d < getDim().getValue(); d++) {
-      const hier::BoxList& box_list = t_overlap->getDestinationBoxList(d);
+      const hier::BoxContainer& box_list = t_overlap->getDestinationBoxContainer(d);
       t_dst->getArrayData(d).copy(d_data[d][0], box_list, src_offset);
       t_dst->getArrayData(d).copy(d_data[d][1], box_list, src_offset);
    }
@@ -268,7 +267,7 @@ int OutersideData<TYPE>::getDataStreamSize(
 
    int size = 0;
    for (int d = 0; d < getDim().getValue(); d++) {
-      const hier::BoxList& boxlist = t_overlap->getDestinationBoxList(d);
+      const hier::BoxContainer& boxlist = t_overlap->getDestinationBoxContainer(d);
       size += d_data[d][0].getDataStreamSize(boxlist, src_offset);
       size += d_data[d][1].getDataStreamSize(boxlist, src_offset);
    }
@@ -296,8 +295,8 @@ void OutersideData<TYPE>::packStream(
 
    const hier::IntVector& src_offset = t_overlap->getSourceOffset();
    for (int d = 0; d < getDim().getValue(); d++) {
-      const hier::BoxList& boxes = t_overlap->getDestinationBoxList(d);
-      for (hier::BoxList::ConstIterator b(boxes); b != boxes.end(); ++b) {
+      const hier::BoxContainer& boxes = t_overlap->getDestinationBoxContainer(d);
+      for (hier::BoxContainer::ConstIterator b(boxes); b != boxes.end(); ++b) {
          const hier::Box src_box = hier::Box::shift(b(), -src_offset);
          for (int f = 0; f < 2; f++) {
             const hier::Box intersect = src_box * d_data[d][f].getBox();
@@ -323,8 +322,8 @@ void OutersideData<TYPE>::unpackStream(
 
    const hier::IntVector& src_offset = t_overlap->getSourceOffset();
    for (int d = 0; d < getDim().getValue(); d++) {
-      const hier::BoxList& boxes = t_overlap->getDestinationBoxList(d);
-      for (hier::BoxList::ConstIterator b(boxes); b != boxes.end(); ++b) {
+      const hier::BoxContainer& boxes = t_overlap->getDestinationBoxContainer(d);
+      for (hier::BoxContainer::ConstIterator b(boxes); b != boxes.end(); ++b) {
          for (int f = 0; f < 2; f++) {
             const hier::Box intersect = b() * d_data[d][f].getBox();
             if (!intersect.empty()) {

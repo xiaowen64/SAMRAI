@@ -14,7 +14,7 @@
 #include "SAMRAI/pdat/OuternodeData.h"
 
 #include "SAMRAI/hier/Box.h"
-#include "SAMRAI/hier/BoxList.h"
+#include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/pdat/NodeData.h"
 #include "SAMRAI/pdat/NodeGeometry.h"
 #include "SAMRAI/pdat/NodeOverlap.h"
@@ -345,8 +345,8 @@ void OuternodeData<TYPE>::sum(
 
             const ArrayData<TYPE>& src_array =
                t_onode_src->d_data[src_d][src_p];
-            const hier::BoxList& box_list =
-               t_overlap->getDestinationBoxList();
+            const hier::BoxContainer& box_list =
+               t_overlap->getDestinationBoxContainer();
 
             for (int dst_d = 0; dst_d < getDim().getValue(); dst_d++) {
                for (int dst_p = 0; dst_p < 2; dst_p++) {
@@ -389,7 +389,7 @@ int OuternodeData<TYPE>::getDataStreamSize(
    TBOX_ASSERT(t_overlap != NULL);
 
    int size = 0;
-   const hier::BoxList& boxlist = t_overlap->getDestinationBoxList();
+   const hier::BoxContainer& boxlist = t_overlap->getDestinationBoxContainer();
    const hier::IntVector& src_offset = t_overlap->getSourceOffset();
    for (int d = 0; d < getDim().getValue(); d++) {
       size += d_data[d][0].getDataStreamSize(boxlist, src_offset);
@@ -417,9 +417,9 @@ void OuternodeData<TYPE>::packStream(
 
    TBOX_ASSERT(t_overlap != NULL);
 
-   const hier::BoxList& dst_boxes = t_overlap->getDestinationBoxList();
+   const hier::BoxContainer& dst_boxes = t_overlap->getDestinationBoxContainer();
    const hier::IntVector& src_offset = t_overlap->getSourceOffset();
-   for (hier::BoxList::ConstIterator dst_box(dst_boxes);
+   for (hier::BoxContainer::ConstIterator dst_box(dst_boxes);
         dst_box != dst_boxes.end(); ++dst_box) {
       const hier::Box src_box =
          hier::Box::shift(dst_box(), -src_offset);
@@ -446,9 +446,9 @@ void OuternodeData<TYPE>::unpackStream(
 
    TBOX_ASSERT(t_overlap != NULL);
 
-   const hier::BoxList& dst_boxes = t_overlap->getDestinationBoxList();
+   const hier::BoxContainer& dst_boxes = t_overlap->getDestinationBoxContainer();
    const hier::IntVector& src_offset = t_overlap->getSourceOffset();
-   for (hier::BoxList::ConstIterator dst_box(dst_boxes);
+   for (hier::BoxContainer::ConstIterator dst_box(dst_boxes);
         dst_box != dst_boxes.end(); ++dst_box) {
       for (int d = 0; d < getDim().getValue(); d++) {
          for (int f = 0; f < 2; f++) {
@@ -481,10 +481,10 @@ void OuternodeData<TYPE>::unpackStreamAndSum(
 
    TBOX_ASSERT(t_overlap != NULL);
 
-   const hier::BoxList& dst_boxes = t_overlap->getDestinationBoxList();
+   const hier::BoxContainer& dst_boxes = t_overlap->getDestinationBoxContainer();
    const hier::IntVector& src_offset = t_overlap->getSourceOffset();
    for (int d = 0; d < getDim().getValue(); d++) {
-      for (hier::BoxList::ConstIterator dst_box(dst_boxes);
+      for (hier::BoxContainer::ConstIterator dst_box(dst_boxes);
            dst_box != dst_boxes.end(); ++dst_box) {
          for (int f = 0; f < 2; f++) {
             const hier::Box intersect =
@@ -723,7 +723,7 @@ void OuternodeData<TYPE>::copyFromNode(
 
    const hier::IntVector& src_offset = overlap.getSourceOffset();
    for (int d = 0; d < getDim().getValue(); d++) {
-      const hier::BoxList& box_list = overlap.getDestinationBoxList();
+      const hier::BoxContainer& box_list = overlap.getDestinationBoxContainer();
       if (d_data[d][0].isInitialized()) {
          d_data[d][0].copy(src.getArrayData(), box_list, src_offset);
       }
@@ -741,7 +741,7 @@ void OuternodeData<TYPE>::copyToNode(
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, dst);
 
    const hier::IntVector& src_offset = overlap.getSourceOffset();
-   const hier::BoxList& box_list = overlap.getDestinationBoxList();
+   const hier::BoxContainer& box_list = overlap.getDestinationBoxContainer();
    for (int d = 0; d < getDim().getValue(); d++) {
       if (d_data[d][0].isInitialized()) {
          dst.getArrayData().copy(d_data[d][0], box_list, src_offset);
@@ -787,7 +787,7 @@ void OuternodeData<TYPE>::copyFromOuternode(
       for (int src_p = 0; src_p < 2; src_p++) {
 
          const ArrayData<TYPE>& src_array = src.d_data[src_d][src_p];
-         const hier::BoxList& box_list = overlap.getDestinationBoxList();
+         const hier::BoxContainer& box_list = overlap.getDestinationBoxContainer();
 
          for (int dst_d = 0; dst_d < getDim().getValue(); dst_d++) {
             for (int dst_p = 0; dst_p < 2; dst_p++) {
@@ -831,7 +831,7 @@ void OuternodeData<TYPE>::copyToOuternode(
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, dst);
 
    const hier::IntVector& src_offset = overlap.getSourceOffset();
-   const hier::BoxList& box_list = overlap.getDestinationBoxList();
+   const hier::BoxContainer& box_list = overlap.getDestinationBoxContainer();
 
    for (int dst_d = 0; dst_d < getDim().getValue(); dst_d++) {
       for (int dst_p = 0; dst_p < 2; dst_p++) {

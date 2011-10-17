@@ -13,7 +13,6 @@
 
 #include "SAMRAI/pdat/CellGeometry.h"
 #include "SAMRAI/pdat/CellOverlap.h"
-#include "SAMRAI/hier/BoxList.h"
 #include "SAMRAI/tbox/Utilities.h"
 
 #ifndef SAMRAI_INLINE
@@ -67,7 +66,7 @@ tbox::Pointer<hier::BoxOverlap> CellGeometry::calculateOverlap(
    const bool overwrite_interior,
    const hier::Transformation& transformation,
    const bool retry,
-   const hier::BoxList& dst_restrict_boxes) const
+   const hier::BoxContainer& dst_restrict_boxes) const
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(d_box, src_mask);
 
@@ -106,9 +105,9 @@ tbox::Pointer<hier::BoxOverlap> CellGeometry::doOverlap(
    const hier::Box& fill_box,
    const bool overwrite_interior,
    const hier::Transformation& transformation,
-   const hier::BoxList& dst_restrict_boxes)
+   const hier::BoxContainer& dst_restrict_boxes)
 {
-   hier::BoxList dst_boxes;
+   hier::BoxContainer dst_boxes;
    dst_geometry.computeDestinationBoxes(dst_boxes,
       src_geometry,
       src_mask,
@@ -132,13 +131,13 @@ tbox::Pointer<hier::BoxOverlap> CellGeometry::doOverlap(
  */
 
 void CellGeometry::computeDestinationBoxes(
-   hier::BoxList& dst_boxes,
+   hier::BoxContainer& dst_boxes,
    const CellGeometry& src_geometry,
    const hier::Box& src_mask,
    const hier::Box& fill_box,
    const bool overwrite_interior,
    const hier::Transformation& transformation,
-   const hier::BoxList& dst_restrict_boxes) const
+   const hier::BoxContainer& dst_restrict_boxes) const
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(d_box, src_mask);
 
@@ -181,7 +180,7 @@ void CellGeometry::computeDestinationBoxes(
 
 tbox::Pointer<hier::BoxOverlap>
 CellGeometry::setUpOverlap(
-   const hier::BoxList& boxes,
+   const hier::BoxContainer& boxes,
    const hier::Transformation& transformation) const
 {
    // Create the cell overlap data object using the boxes and source shift

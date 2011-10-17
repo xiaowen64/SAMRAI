@@ -160,9 +160,9 @@ void EdgeDoubleConstantRefine::refine(
    const hier::Index fihi = fdata->getGhostBox().upper();
 
    for (int axis = 0; axis < dim.getValue(); axis++) {
-      const hier::BoxList& boxes = t_overlap->getDestinationBoxList(axis);
+      const hier::BoxContainer& boxes = t_overlap->getDestinationBoxContainer(axis);
 
-      for (hier::BoxList::ConstIterator b(boxes); b != boxes.end(); ++b) {
+      for (hier::BoxContainer::ConstIterator b(boxes); b != boxes.end(); ++b) {
 
          hier::Box fine_box(b());
          TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(dim, fine_box);

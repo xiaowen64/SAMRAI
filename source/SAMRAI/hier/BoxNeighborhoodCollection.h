@@ -15,8 +15,6 @@
 
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/hier/BoxContainer.h"
-#include "SAMRAI/hier/BoxList.h"
-#include "SAMRAI/hier/BoxSet.h"
 #include "SAMRAI/hier/BoxId.h"
 #include "SAMRAI/hier/IntVector.h"
 #include "SAMRAI/tbox/Database.h"
@@ -1226,7 +1224,7 @@ class BoxNeighborhoodCollection
       // but we may find that it is not necessary.
 
       /*!
-       * @brief Fill the supplied BoxSet with the neighbors from all the
+       * @brief Fill the supplied BoxContainer with the neighbors from all the
        * neighborhoods in this object.  The container has no notion of the
        * neighborhoods to which its contents belong.
        *
@@ -1234,10 +1232,10 @@ class BoxNeighborhoodCollection
        */
       void
       getNeighbors(
-         BoxSet& neighbors) const;
+         BoxContainer& neighbors) const;
 
       /*!
-       * @brief Fill the supplied BoxList with the neighbors from all the
+       * @brief Fill the supplied BoxContainer with the neighbors from all the
        * neighborhoods in this object.  The container has no notion of the
        * neighborhoods to which its contents belong.
        *
@@ -1245,10 +1243,10 @@ class BoxNeighborhoodCollection
        */
 //      void
 //      getNeighbors(
-//         BoxList& neighbors) const;
+//         BoxContainer& neighbors) const;
 
       /*!
-       * @brief Fill the supplied BoxList with the neighbors having the
+       * @brief Fill the supplied BoxContainer with the neighbors having the
        * specified block id from all the neighborhoods in this object.  The
        * container has no notion of the neighborhoods to which its contents
        * belong.
@@ -1259,7 +1257,7 @@ class BoxNeighborhoodCollection
        */
       void
       getNeighbors(
-         BoxList& neighbors,
+         BoxContainer& neighbors,
          const BlockId& block_id) const;
 
       /*!
@@ -1271,17 +1269,17 @@ class BoxNeighborhoodCollection
        */
       void
       getNeighbors(
-         std::map<BlockId, BoxList>& neighbors) const;
+         std::map<BlockId, BoxContainer>& neighbors) const;
 
       /*!
        * @brief Place any periodic neighbors from each neighborhood into the
-       * supplied BoxSet.
+       * supplied BoxContainer.
        *
        * @param result
        */
       void
       getPeriodicNeighbors(
-         BoxSet& result) const;
+         BoxContainer& result) const;
 
 
       // Communication packing/unpacking

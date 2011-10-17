@@ -12,7 +12,7 @@
 
 #include "SAMRAI/SAMRAI_config.h"
 
-#include "SAMRAI/hier/BoxSet.h"
+#include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/hier/BoxContainerConstIterator.h"
 
 namespace SAMRAI {
@@ -38,7 +38,7 @@ public:
     * @param [i] owner_rank
     */
    BoxSetSingleOwnerIterator(
-      const BoxSet& container,
+      const BoxContainer& container,
       const int& owner_rank);
 
    //! @brief Destructor
@@ -107,7 +107,7 @@ private:
    /*!
     * @brief BoxSet being iterated through.
     */
-   const BoxSet* d_mapped_boxes;
+   const BoxContainer* d_mapped_boxes;
 
    /*!
     * @brief The owner_rank.
@@ -117,7 +117,7 @@ private:
    /*!
     * @brief The iterator.
     */
-   BoxSet::ConstIterator d_iter;
+   BoxContainer::ConstIterator d_iter;
 
 };
 

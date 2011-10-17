@@ -4,14 +4,14 @@
  * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Main program for testing BoxSet iterators
+ * Description:   Main program for testing BoxContainer iterators
  *
  ************************************************************************/
 
 #include "SAMRAI/SAMRAI_config.h"
 
 #include "SAMRAI/hier/Box.h"
-#include "SAMRAI/hier/BoxSet.h"
+#include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/hier/BoxSetSingleBlockIterator.h"
 #include "SAMRAI/hier/BoxSetSingleOwnerIterator.h"
 #include "SAMRAI/tbox/SAMRAIManager.h"
@@ -43,13 +43,13 @@ int main(
 
       const tbox::Dimension dim(2);
 
-      hier::BoxSet mboxes;
+      hier::BoxContainer mboxes;
 
       const int num_boxes = 100;
       const int num_blocks = 5;
       const int num_owners = 10;
 
-      // Build the BoxSet.
+      // Build the BoxContainer.
       for (int i = 0; i < num_boxes; ++i) {
 
          int owner(i % num_owners);

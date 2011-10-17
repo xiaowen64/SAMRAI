@@ -14,8 +14,7 @@
 #include "SAMRAI/SAMRAI_config.h"
 
 #include "SAMRAI/hier/Box.h"
-#include "SAMRAI/hier/Box.h"
-#include "SAMRAI/hier/BoxSet.h"
+#include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/tbox/DescribedClass.h"
 #include "SAMRAI/tbox/Pointer.h"
 #include "SAMRAI/tbox/Timer.h"
@@ -26,8 +25,6 @@
 namespace SAMRAI {
 namespace hier {
 
-class BoxContainer;
-typedef BoxContainer BoxList;
 class Connector;
 
 /*!
@@ -80,13 +77,13 @@ public:
     */
    explicit BoxTree(
       const tbox::Dimension& dim,
-      const BoxSet& mapped_boxes,
+      const BoxContainer& mapped_boxes,
       size_t min_number = 10);
 
    /*!
     * @brief Constructs a BoxTree from a list of Boxes.
     *
-    * See BoxTree( const tbox::Dimension& , const BoxSet& , size_t min_number );
+    * See BoxTree( const tbox::Dimension& , const BoxContainer& , size_t min_number );
     *
     * @param[in] dim
     *
@@ -99,7 +96,7 @@ public:
     */
    explicit BoxTree(
       const tbox::Dimension& dim,
-      const BoxList& boxes,
+      const BoxContainer& boxes,
       const BlockId& block_id,
       size_t min_number = 10);
 
@@ -122,7 +119,7 @@ public:
     */
    void
    generateTree(
-      BoxSet& mapped_boxes,
+      BoxContainer& mapped_boxes,
       size_t min_number = 10);
 
    /*!
@@ -202,7 +199,7 @@ public:
     */
 //   void
 //   findOverlapBoxes(
-//      BoxSet& overlap_mapped_boxes,
+//      BoxContainer& overlap_mapped_boxes,
 //      const Box& box,
 //      bool recursive_call = false) const;
 
@@ -280,7 +277,7 @@ public:
     */
    void
    findOverlapBoxes(
-      BoxList& overlap_boxes,
+      BoxContainer& overlap_boxes,
       const Box& box,
       bool recursive_call = false) const;
 
@@ -379,8 +376,8 @@ private:
    void
    setupChildren(
       const size_t min_number,
-      BoxSet& left_mapped_boxes,
-      BoxSet& right_mapped_boxes);
+      BoxContainer& left_mapped_boxes,
+      BoxContainer& right_mapped_boxes);
 
    /*!
     * @brief Set up static class members.
@@ -431,7 +428,7 @@ private:
     * that this tree represents.  When we have a small number of boxes
     * that do not warant the overhead of a child tree, the boxes go here.
     */
-   BoxSet d_mapped_boxes;
+   BoxContainer d_mapped_boxes;
 
    /*!
     * @brief Dimension along which the input box triples are

@@ -55,7 +55,7 @@ public:
    /*!
     * @brief NeighborsSet is a clarifying typedef.
     */
-   typedef BoxSet NeighborSet;
+   typedef BoxContainer NeighborSet;
 
    /*!
     * @brief Type of the iterator over neighborhoods.
@@ -286,7 +286,7 @@ public:
    void
    getNeighborBoxes(
       const BoxId& mapped_box_id,
-      BoxList& nbr_boxes) const;
+      BoxContainer& nbr_boxes) const;
 
    /*!
     * @brief Return all neighbors for all neighborhoods.
@@ -298,22 +298,13 @@ public:
       NeighborSet& neighbors) const;
 
    /*!
-    * @brief Return all neighbors for all neighborhoods.
-    *
-    * @param[out] neighbors
-    */
-//   void
-//   getLocalNeighbors(
-//      BoxList& neighbors) const;
-
-   /*!
     * @brief Return all neighbors for all neighborhoods segragated by BlockId.
     *
     * @param[out] neighbors
     */
    void
    getLocalNeighbors(
-      std::map<BlockId, BoxList>& neighbors) const;
+      std::map<BlockId, BoxContainer>& neighbors) const;
 
    /*!
     * @brief Returns the number of neighbors in the neighborhood with the

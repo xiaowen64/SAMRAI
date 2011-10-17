@@ -79,13 +79,13 @@ void PatchLevelInteriorFillPattern::computeFillBoxesAndNeighborhoodSets(
    NULL_USE(fill_ghost_width);
    TBOX_DIM_ASSERT_CHECK_ARGS2(dst_mapped_box_level, fill_ghost_width);
 
-   const hier::BoxSet& dst_mapped_boxes =
+   const hier::BoxContainer& dst_mapped_boxes =
       dst_mapped_box_level.getBoxes();
 
    /*
     * Fill just the interior.  Disregard gcw.
     */
-   for (hier::BoxSet::ConstIterator ni = dst_mapped_boxes.begin();
+   for (hier::BoxContainer::ConstIterator ni = dst_mapped_boxes.begin();
         ni != dst_mapped_boxes.end(); ++ni) {
       const hier::BoxId& gid = ni->getId();
       const hier::Box& dst_mapped_box =
@@ -124,15 +124,15 @@ void PatchLevelInteriorFillPattern::computeDestinationFillBoxesOnSourceProc(
     * stored in dst_fill_boxes_on_src_proc.
     */
    bool ordered = true;
-   hier::BoxSet tmp_nabrs(ordered), all_dst_nabrs(ordered);
+   hier::BoxContainer tmp_nabrs(ordered), all_dst_nabrs(ordered);
    src_to_dst.getLocalNeighbors(tmp_nabrs);
    tmp_nabrs.unshiftPeriodicImageBoxes(
       all_dst_nabrs,
       dst_mapped_box_level.getRefinementRatio());
    tmp_nabrs.clear();
-   for (hier::BoxSet::ConstIterator na = all_dst_nabrs.begin();
+   for (hier::BoxContainer::ConstIterator na = all_dst_nabrs.begin();
         na != all_dst_nabrs.end(); ++na) {
-      hier::BoxSet& fill_boxes =
+      hier::BoxContainer& fill_boxes =
          dst_fill_boxes_on_src_proc[na->getId()];
       fill_boxes.insert(*na);
       d_max_fill_boxes = tbox::MathUtilities<int>::Max(d_max_fill_boxes,

@@ -69,10 +69,10 @@ FirstLayerNodeVariableFillPattern::calculateOverlap(
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(dst_patch_box, src_mask);
 
-   hier::BoxList stencil_boxes;
+   hier::BoxContainer stencil_boxes;
    computeStencilBoxes(stencil_boxes, dst_patch_box);
 
-   hier::BoxList dst_boxes;
+   hier::BoxContainer dst_boxes;
 
    const NodeGeometry* t_dst =
       dynamic_cast<const NodeGeometry *>(&dst_geometry);
@@ -127,7 +127,7 @@ const std::string& FirstLayerNodeVariableFillPattern::getPatternName() const
  */
 
 void FirstLayerNodeVariableFillPattern::computeStencilBoxes(
-   hier::BoxList& stencil_boxes,
+   hier::BoxContainer& stencil_boxes,
    const hier::Box& dst_box) const
 {
    TBOX_ASSERT(stencil_boxes.size() == 0);
@@ -150,7 +150,7 @@ void FirstLayerNodeVariableFillPattern::computeStencilBoxes(
 
 tbox::Pointer<hier::BoxOverlap>
 FirstLayerNodeVariableFillPattern::computeFillBoxesOverlap(
-   const hier::BoxList& fill_boxes,
+   const hier::BoxContainer& fill_boxes,
    const hier::Box& patch_box,
    const hier::Box& data_box,
    const hier::PatchDataFactory& pdf) const
@@ -159,17 +159,17 @@ FirstLayerNodeVariableFillPattern::computeFillBoxesOverlap(
 
    const tbox::Dimension& dim = patch_box.getDim();
 
-   hier::BoxList stencil_boxes;
+   hier::BoxContainer stencil_boxes;
    computeStencilBoxes(stencil_boxes, patch_box);
 
-   hier::BoxList overlap_boxes(fill_boxes);
+   hier::BoxContainer overlap_boxes(fill_boxes);
 
    /*
     * This is the equivalent of converting every box in overlap_boxes
     * to a node centering, which must be done before intersecting with
     * stencil_boxes, which is node-centered.
     */
-   for (hier::BoxList::Iterator b(overlap_boxes); b != overlap_boxes.end(); ++b) {
+   for (hier::BoxContainer::Iterator b(overlap_boxes); b != overlap_boxes.end(); ++b) {
       b().growUpper(hier::IntVector::getOne(dim));
    }
 

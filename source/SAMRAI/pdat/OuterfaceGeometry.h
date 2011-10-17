@@ -74,7 +74,7 @@ public:
       const bool overwrite_interior,
       const hier::Transformation& transformation,
       const bool retry,
-      const hier::BoxList& dst_restrict_boxes = hier::BoxList()) const;
+      const hier::BoxContainer& dst_restrict_boxes = hier::BoxContainer()) const;
 
    /*!
     * @brief Set up a FaceOverlap object based on the given boxes and the
@@ -82,7 +82,7 @@ public:
     */
    virtual tbox::Pointer<hier::BoxOverlap>
    setUpOverlap(
-      const hier::BoxList& boxes,
+      const hier::BoxContainer& boxes,
       const hier::Transformation& transformation) const;
 
    /*!
@@ -111,7 +111,7 @@ private:
       const hier::Box& fill_box,
       const bool overwrite_interior,
       const hier::Transformation& transformation,
-      const hier::BoxList& dst_restrict_boxes);
+      const hier::BoxContainer& dst_restrict_boxes);
 
    OuterfaceGeometry(
       const OuterfaceGeometry&);                // not implemented

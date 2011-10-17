@@ -39,12 +39,8 @@ DEPENDS_0:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxLevel.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxLevel.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxLevelHandle.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxSet.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxSet.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxSetSingleBlockIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxSetSingleOwnerIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
@@ -247,12 +243,8 @@ DEPENDS_1:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxLevel.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxLevel.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxLevelHandle.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxSet.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxSet.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxSetSingleBlockIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxSetSingleOwnerIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
@@ -474,12 +466,8 @@ DEPENDS_2:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxLevel.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxLevel.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxLevelHandle.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxSet.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxSet.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxSetSingleBlockIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxSetSingleOwnerIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
@@ -700,12 +688,8 @@ DEPENDS_3:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxLevel.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxLevel.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxLevelHandle.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxSet.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxSet.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxSetSingleBlockIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxSetSingleOwnerIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
@@ -926,12 +910,8 @@ DEPENDS_4:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxLevel.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxLevel.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxLevelHandle.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxSet.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxSet.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxSetSingleBlockIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxSetSingleOwnerIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
@@ -1144,12 +1124,8 @@ DEPENDS_5:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxLevel.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxLevel.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxLevelHandle.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxSet.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxSet.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxSetSingleBlockIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxSetSingleOwnerIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
@@ -1372,12 +1348,8 @@ DEPENDS_6:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxLevel.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxLevel.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxLevelHandle.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxSet.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxSet.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxSetSingleBlockIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxSetSingleOwnerIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
@@ -1592,12 +1564,8 @@ DEPENDS_7:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxLevel.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxLevel.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxLevelHandle.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxSet.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxSet.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxSetSingleBlockIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxSetSingleOwnerIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
@@ -1818,12 +1786,8 @@ DEPENDS_8:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxLevel.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxLevel.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxLevelHandle.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxSet.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxSet.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxSetSingleBlockIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxSetSingleOwnerIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
@@ -1986,12 +1950,8 @@ DEPENDS_9:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxLevel.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxLevel.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxLevelHandle.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxSet.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxSet.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxSetSingleBlockIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxSetSingleOwnerIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
@@ -2163,12 +2123,8 @@ DEPENDS_10:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxLevel.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxLevel.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxLevelHandle.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxSet.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxSet.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxSetSingleBlockIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxSetSingleOwnerIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
@@ -2383,13 +2339,8 @@ DEPENDS_11:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxSet.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxSet.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/ComponentSelector.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/ComponentSelector.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.I				\
@@ -2400,7 +2351,6 @@ DEPENDS_11:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchBoundaries.I			\
@@ -2427,10 +2377,7 @@ DEPENDS_11:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/VariableDatabase.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Clock.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Complex.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.I			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointerBase.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointerBase.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database.I				\
@@ -2459,15 +2406,12 @@ DEPENDS_11:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.I				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h VisItDerivedData.C	\
 	VisItDerivedData.h
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_11 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database_template_methods.C		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/List.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C			\
@@ -2509,12 +2453,8 @@ DEPENDS_12:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxLevel.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxLevel.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxLevelHandle.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxList.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxSet.I				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxSet.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxSetSingleBlockIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxSetSingleOwnerIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\

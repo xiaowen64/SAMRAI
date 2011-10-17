@@ -303,7 +303,7 @@ void StandardTagAndInitialize::tagCellsForRefinement(
     */
    if (d_use_refine_boxes) {
 
-      hier::BoxList refine_boxes;
+      hier::BoxContainer refine_boxes;
       getUserSuppliedRefineBoxes(refine_boxes, level_number, regrid_time);
 
       tbox::Pointer<hier::PatchLevel> level =
@@ -318,7 +318,7 @@ void StandardTagAndInitialize::tagCellsForRefinement(
          TBOX_ASSERT(!(tag_data.isNull()));
 #endif
 
-         for (hier::BoxList::Iterator ib(refine_boxes); ib != refine_boxes.end();
+         for (hier::BoxContainer::Iterator ib(refine_boxes); ib != refine_boxes.end();
               ++ib) {
             hier::Box intersection = *ib * tag_data->getBox();
             if (!(intersection.empty())) {
@@ -908,14 +908,14 @@ StandardTagAndInitialize::preprocessRichardsonExtrapolation(
  */
 
 bool StandardTagAndInitialize::coarsestLevelBoxesOK(
-   const hier::BoxList& boxes) const
+   const hier::BoxContainer& boxes) const
 {
    TBOX_ASSERT(boxes.size() > 0);
 
    bool boxes_ok = true;
    if (d_use_richardson_extrapolation) {
 
-      for (hier::BoxList::ConstIterator ib(boxes); ib != boxes.end(); ++ib) {
+      for (hier::BoxContainer::ConstIterator ib(boxes); ib != boxes.end(); ++ib) {
          hier::IntVector n_cells = ib().numberCells();
          for (int i = 0; i < getDim().getValue(); i++) {
             int error_coarsen_ratio = getErrorCoarsenRatio();
