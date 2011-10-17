@@ -1648,6 +1648,23 @@ void TreeLoadBalancer::computeLoadBalancingMapWithinRankGroup(
    }
    t_send_edge_to_children->stop();
 
+
+   /*
+    * Wrap up communications.
+    * No follow-up needed because all the receives have been
+    * processed--only the sends may still be out.
+    *
+    * TODO: This step should take no significant time, because the sends
+    * should all be well on their way.  However, I'm seeing some
+    * aparent scaling issues.  I may want to use MPI_Request_free
+    * to just let the sends finish quietly without furthe actions.
+    * Not sure if that would help.
+    */
+   t_finish_comms->start();
+   comm_stage.advanceAll(completed);
+   t_finish_comms->stop();
+
+
    if (d_check_connectivity) {
       const hier::OverlapConnectorAlgorithm oca;
       tbox::plog
@@ -1690,21 +1707,6 @@ void TreeLoadBalancer::computeLoadBalancingMapWithinRankGroup(
       }
    }
 
-
-   /*
-    * Wrap up communications.
-    * No follow-up needed because all the receives have been
-    * processed--only the sends may still be out.
-    *
-    * TODO: This step should take no significant time, because the sends
-    * should all be well on their way.  However, I'm seeing some
-    * aparent scaling issues.  I may want to use MPI_Request_free
-    * to just let the sends finish quietly without furthe actions.
-    * Not sure if that would help.
-    */
-   t_finish_comms->start();
-   comm_stage.advanceAll(completed);
-   t_finish_comms->stop();
 
    delete[] child_load_data;
    destroyAsyncCommObjects(child_comms, parent_send, parent_recv);
