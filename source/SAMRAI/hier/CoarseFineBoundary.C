@@ -282,10 +282,8 @@ void CoarseFineBoundary::computeFromLevel(
          /*
           * Construct the array of boxes on level and level0 in this block.
           */
-         BoxContainer level_domain;
-         BoxContainer phys_domain;
-         all_boxes_on_level.getSingleBlockBoxContainer(level_domain, block_id);
-         all_boxes_on_level0.getSingleBlockBoxContainer(phys_domain, block_id);
+         BoxContainer level_domain(all_boxes_on_level, block_id);
+         BoxContainer phys_domain(phys_domain, block_id);
 
          const IntVector& ratio = level.getRatioToLevelZero();
          phys_domain.refine(ratio);
@@ -346,9 +344,7 @@ void CoarseFineBoundary::computeFromLevel(
              * Construct the array of boxes on level in this neighbor's block.
              */
             BlockId nbr_block_id(ni().getBlockId());
-            BoxContainer neighbor_boxes;
-            all_boxes_on_level.getSingleBlockBoxContainer(neighbor_boxes,
-                                                          nbr_block_id);
+            BoxContainer neighbor_boxes(all_boxes_on_level, nbr_block_id);
 
             if (neighbor_boxes.size()) {
                neighbor_boxes.unorder();

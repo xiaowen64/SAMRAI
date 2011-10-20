@@ -301,9 +301,8 @@ void BalanceUtilities::privateResetPrimesArray(
 bool BalanceUtilities::privateBadCutPointsExist(
    const hier::BoxContainer& physical_domain)
 {
-   hier::BoxContainer tmp_domain(physical_domain);
-   hier::BoxContainer bounding_box(tmp_domain.getBoundingBox());
-   bounding_box.removeIntersections(tmp_domain);
+   hier::BoxContainer bounding_box(physical_domain.getBoundingBox());
+   bounding_box.removeIntersections(physical_domain);
 
    return bounding_box.size() > 0;
 }
@@ -339,9 +338,9 @@ void BalanceUtilities::privateInitializeBadCutPointsForBox(
          hier::VariableDatabase::getDatabase()->
          getPatchDescriptor()->getMaxGhostWidth(dim);
 
-      hier::BoxContainer tmp_domain(physical_domain);
-      hier::BoxContainer bdry_list(hier::Box::grow(box, tmp_max_gcw));
-      bdry_list.removeIntersections(tmp_domain);
+      hier::BoxContainer bdry_list(box);
+      bdry_list.grow(tmp_max_gcw);
+      bdry_list.removeIntersections(physical_domain);
       if (bdry_list.size() > 0) {
          set_dummy_cut_points = false;
       }

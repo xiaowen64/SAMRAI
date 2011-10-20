@@ -359,7 +359,7 @@ void GriddingAlgorithm::makeCoarsestLevel(
    if (!level_zero_exists) {
       for (int b = 0; b < d_hierarchy->getGridGeometry()->getNumberBlocks();
            b++) {
-         hier::BoxContainer domain_boxes =
+         const hier::BoxContainer& domain_boxes =
             d_hierarchy->getGridGeometry()->getPhysicalDomain(hier::BlockId(b));
          checkDomainBoxes(domain_boxes);
       }
@@ -1909,7 +1909,8 @@ size_t GriddingAlgorithm::checkBoundaryProximityViolation(
    for (hier::RealBoxConstIterator bi(mapped_box_level.getBoxes());
         bi.isValid(); ++bi) {
 
-      hier::BoxContainer external_parts(hier::Box::grow(*bi, extend_ghosts));
+      hier::BoxContainer external_parts(*bi);
+      external_parts.grow(extend_ghosts);
       external_parts.removeIntersections(bi->getBlockId(),
          mapped_box_level.getRefinementRatio(),
          *refined_periodic_domain_search_tree);

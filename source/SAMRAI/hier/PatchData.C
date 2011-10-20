@@ -28,13 +28,13 @@ PatchData::PatchData(
    const Box& domain,
    const IntVector& ghosts):
    d_box(domain),
-   d_ghost_box(domain.getDim()),
+   d_ghost_box(domain),
    d_ghosts(ghosts),
    d_timestamp(0.0)
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(domain, ghosts);
 
-   d_ghost_box = Box::grow(domain, ghosts);
+   d_ghost_box.grow(ghosts);
 }
 
 PatchData::~PatchData()

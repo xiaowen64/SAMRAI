@@ -115,19 +115,19 @@ tbox::Pointer<hier::BoxOverlap> OuterfaceGeometry::doOverlap(
 
    // Perform a quick-and-dirty intersection to see if the boxes might overlap
 
-   const hier::Box src_box(
-      hier::Box::grow(src_geometry.d_box, src_geometry.d_ghosts) * src_mask);
-   hier::Box src_shift(src_box);
-   transformation.transform(src_shift);
-   const hier::Box dst_ghost(
-      hier::Box::grow(dst_geometry.getBox(), dst_geometry.getGhosts()));
+   hier::Box src_box(src_geometry.d_box);
+   src_box.grow(src_geometry.d_ghosts);
+   src_box = src_box * src_mask;
+   transformation.transform(src_box);
+   hier::Box dst_ghost(dst_geometry.getBox());
+   dst_ghost.grow(dst_geometry.getGhosts());
 
    // Compute the intersection (if any) for each of the face directions
 
    const hier::IntVector one_vector(dim, 1);
 
    const hier::Box quick_check(
-      hier::Box::grow(src_shift, one_vector) * hier::Box::grow(dst_ghost,
+      hier::Box::grow(src_box, one_vector) * hier::Box::grow(dst_ghost,
          one_vector));
 
    if (!quick_check.empty()) {
@@ -141,7 +141,7 @@ tbox::Pointer<hier::BoxOverlap> OuterfaceGeometry::doOverlap(
          const hier::Box dst_face(
             FaceGeometry::toFaceBox(dst_ghost, d));
          const hier::Box src_face(
-            FaceGeometry::toFaceBox(src_shift, d));
+            FaceGeometry::toFaceBox(src_box, d));
          const hier::Box fill_face(
             FaceGeometry::toFaceBox(fill_box, d));
 

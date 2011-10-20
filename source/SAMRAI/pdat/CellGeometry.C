@@ -143,16 +143,17 @@ void CellGeometry::computeDestinationBoxes(
 
    // Translate the source box and grow the destination box by the ghost cells
 
-   const hier::Box src_box(
-      hier::Box::grow(src_geometry.d_box, src_geometry.d_ghosts) * src_mask);
-   hier::Box src_shift(src_box);
-   transformation.transform(src_shift);
-   const hier::Box dst_ghost(hier::Box::grow(d_box, d_ghosts));
+   hier::Box src_box(src_geometry.d_box);
+   src_box.grow(src_geometry.d_ghosts);
+   src_box = src_box * src_mask;
+   transformation.transform(src_box);
+   hier::Box dst_ghost(d_box);
+   dst_ghost.grow(d_ghosts);
 
    // Convert the boxes into cell space and compute the intersection
 
    const hier::Box dst_cell(toCellBox(dst_ghost));
-   const hier::Box src_cell(toCellBox(src_shift));
+   const hier::Box src_cell(toCellBox(src_box));
    const hier::Box fill_cell(toCellBox(fill_box));
    const hier::Box together(dst_cell * src_cell * fill_cell);
 

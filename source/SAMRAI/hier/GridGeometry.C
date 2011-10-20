@@ -379,7 +379,8 @@ void GridGeometry::computeBoxTouchingBoundaries(
     * patch.  Remove the intersections with the domain's interior, so that only
     * boxes outside the physical domain (if any) remain in the list.
     */
-   BoxContainer bdry_list(Box::grow(box, IntVector::getOne(d_dim)));
+   BoxContainer bdry_list(box);
+   bdry_list.grow(IntVector::getOne(d_dim));
    bdry_list.removeIntersections(domain_tree);
    const bool touches_any_boundary = (bdry_list.size() > 0);
 
@@ -1451,13 +1452,11 @@ void GridGeometry::setPhysicalDomain(
    for (int b = 0; b < number_blocks; b++) {
 
       BlockId block_id(b);
-      BoxContainer domain_boxes(domain[b]);
-      BoxContainer bounding_box(domain_boxes.getBoundingBox());
-
-      bounding_box.removeIntersections(domain_boxes);
+      BoxContainer bounding_box(domain[b].getBoundingBox());
+      bounding_box.removeIntersections(domain[b]);
       if (bounding_box.size() == 0) {
          d_domain_is_single_box[b] = true;
-         d_physical_domain[b] = BoxContainer(domain_boxes.getBoundingBox());
+         d_physical_domain[b] = BoxContainer(domain[b].getBoundingBox());
       } else {
          d_domain_is_single_box[b] = false;
          d_physical_domain[b] = domain[b];

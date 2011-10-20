@@ -1718,6 +1718,17 @@ void RefineSchedule::fillData(
 {
    t_fill_data->start();
 
+#ifdef BOX_TELEMETRY
+//   printf("Constructed:  %i\n", hier::Box::s_cumulative_constructed_ct);
+
+//   printf("Assigned:  %i\n", hier::Box::s_cumulative_assigned_ct);
+
+//   printf("Active:  %i\n", hier::Box::s_active_ct);
+
+//   printf("High water:  %i\n", hier::Box::s_high_water);
+#endif
+
+
    /*
     * Set the refine items and time for all transactions.  These items will
     * be shared by all transaction objects in the communication schedule.
@@ -2764,8 +2775,7 @@ void RefineSchedule::findEnconUnfilledBoxes(
          hier::BoxContainer neighbor_boxes(ni().getTransformedDomain());
          neighbor_boxes.refine(d_dst_level->getRatioToLevelZero());
          neighbor_boxes.intersectBoxes(encon_fill_boxes);
-         unfilled_encon_nbr_boxes.insert(
-            std::pair<hier::BlockId, hier::BoxContainer>(nbr_block_id, neighbor_boxes));
+         unfilled_encon_nbr_boxes[nbr_block_id].spliceFront(neighbor_boxes);
 /*
 
          hier::BoxContainer transformed_domain(ni().getTransformedDomain());
@@ -2942,26 +2952,9 @@ void RefineSchedule::reorderNeighborhoodSetsByDstNodes(
                nabr,
                shift_catalog->getZeroShiftNumber(),
                dst_ratio);
-            FullNeighborhoodSet::iterator iter =
-               full_inverted_edges.find(unshifted_nabr);
-            if (iter != full_inverted_edges.end()) {
-               iter->second.insert(shifted_mapped_box);
-            } else {
-               hier::BoxContainer box_container(shifted_mapped_box, true);
-               full_inverted_edges.insert(
-                  std::pair<hier::Box, hier::BoxContainer>(unshifted_nabr,
-                                                           box_container));
-            }
+            full_inverted_edges[unshifted_nabr].insert(shifted_mapped_box);
          } else {
-            FullNeighborhoodSet::iterator iter = full_inverted_edges.find(nabr);
-            if (iter != full_inverted_edges.end()) {
-               iter->second.insert(mapped_box);
-            } else {
-               hier::BoxContainer box_container(mapped_box, true);
-               full_inverted_edges.insert(
-                  std::pair<hier::Box, hier::BoxContainer>(nabr,
-                                                           box_container));
-            }
+            full_inverted_edges[nabr].insert(mapped_box);
          }
       }
    }

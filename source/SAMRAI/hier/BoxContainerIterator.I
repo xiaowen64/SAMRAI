@@ -16,6 +16,18 @@ namespace hier {
 
 SAMRAI_INLINE_KEYWORD
 BoxContainerIterator::BoxContainerIterator(
+   BoxContainer& container,
+   bool from_start):
+   d_list_iter(from_start ? container.d_list.begin() :
+               container.d_list.end()),
+   d_set_iter(from_start ? container.d_set.begin() :
+               container.d_set.end()),
+   d_ordered(container.d_ordered)
+{
+}
+
+SAMRAI_INLINE_KEYWORD
+BoxContainerIterator::BoxContainerIterator(
    const BoxContainerIterator& other):
    d_list_iter(other.d_list_iter),
    d_set_iter(other.d_set_iter),
@@ -24,15 +36,26 @@ BoxContainerIterator::BoxContainerIterator(
 }
 
 SAMRAI_INLINE_KEYWORD
-BoxContainerIterator::BoxContainerIterator(
-   const bool ordered):
-   d_ordered(ordered)
+BoxContainerIterator::BoxContainerIterator():
+   d_ordered(false)
 {
 }
 
 SAMRAI_INLINE_KEYWORD
 BoxContainerIterator::~BoxContainerIterator()
 {
+}
+
+SAMRAI_INLINE_KEYWORD
+BoxContainerIterator& BoxContainerIterator::operator = (
+   const BoxContainerIterator& rhs)
+{
+   if (this != &rhs) {
+      d_list_iter = rhs.d_list_iter;
+      d_set_iter = rhs.d_set_iter;
+      d_ordered = rhs.d_ordered;
+   }
+   return *this;
 }
 
 SAMRAI_INLINE_KEYWORD

@@ -16,6 +16,12 @@
 namespace SAMRAI {
 namespace hier {
 
+/*
+ *************************************************************************
+ * Constructors and destructor
+ *************************************************************************
+ */
+
 SAMRAI_INLINE_KEYWORD
 BoxContainer::BoxContainer() :
    d_ordered(false)
@@ -23,7 +29,7 @@ BoxContainer::BoxContainer() :
 }
 
 SAMRAI_INLINE_KEYWORD
-BoxContainer::BoxContainer(bool ordered) :
+BoxContainer::BoxContainer(const bool ordered) :
    d_ordered(ordered)
 {
 }
@@ -31,7 +37,7 @@ BoxContainer::BoxContainer(bool ordered) :
 SAMRAI_INLINE_KEYWORD
 BoxContainer::BoxContainer(
    const Box& box,
-   bool ordered):
+   const bool ordered):
    d_list(1, box),
    d_ordered(false)
 {
@@ -56,6 +62,12 @@ BoxContainer::~BoxContainer()
 {
 }
 
+/*
+ *************************************************************************
+ * Size queries
+ *************************************************************************
+ */
+
 SAMRAI_INLINE_KEYWORD
 int BoxContainer::size() const
 {
@@ -71,6 +83,12 @@ bool BoxContainer::isEmpty() const
 {
    return size() == 0;
 }
+
+/*
+ *************************************************************************
+ * Access methods
+ *************************************************************************
+ */
 
 SAMRAI_INLINE_KEYWORD
 BoxContainer::ConstIterator BoxContainer::begin() const
@@ -108,6 +126,12 @@ const Box& BoxContainer::back() const
    return d_ordered ? **(d_set.rbegin()) : d_list.back();
 }
 
+/*
+ *************************************************************************
+ * List-like semantics to manipulate unordered containers
+ *************************************************************************
+ */
+
 SAMRAI_INLINE_KEYWORD
 void BoxContainer::pushFront(const Box& item)
 {
@@ -119,7 +143,7 @@ void BoxContainer::pushFront(const Box& item)
    if (!d_ordered) {
       d_list.push_front(item);
    } else {
-      TBOX_ERROR("pushFront on an ordered BoxContainer");
+      TBOX_ERROR("Attempted pushFront on an ordered BoxContainer");
    }
 }
 
@@ -134,7 +158,7 @@ void BoxContainer::pushBack(const Box& item)
    if (!d_ordered) {
       d_list.push_back(item);
    } else {
-      TBOX_ERROR("pushBack on an ordered BoxContainer");
+      TBOX_ERROR("Attempted pushBack on an ordered BoxContainer");
    }
 }
 
@@ -149,9 +173,26 @@ void BoxContainer::insertBefore(Iterator iter, const Box& item)
    if (!d_ordered) {
       d_list.insert(iter.d_list_iter, item);
    } else {
-      TBOX_ERROR("insertBefore on an ordered BoxContainer");
+      TBOX_ERROR("Attempted insertBefore on an ordered BoxContainer");
    }
 }
+
+SAMRAI_INLINE_KEYWORD
+void BoxContainer::insertAfter(Iterator iter, const Box& item)
+{
+   if (!d_ordered) {
+      Iterator tmp = iter;
+      ++tmp;
+      if (tmp == end()) {
+         pushBack(item);
+      } else {
+         insertBefore(tmp, item);
+      }
+   } else {
+      TBOX_ERROR("Attempted insertAfter called on ordered BoxContainer.");
+   }
+}
+
 
 SAMRAI_INLINE_KEYWORD
 void BoxContainer::spliceFront(BoxContainer& boxes)
@@ -164,7 +205,7 @@ void BoxContainer::spliceFront(BoxContainer& boxes)
    if (!d_ordered) {
       d_list.splice(begin().d_list_iter, boxes.d_list);
    } else {
-      TBOX_ERROR("spliceFront on an ordered BoxContainer");
+      TBOX_ERROR("Attempted spliceFront on an ordered BoxContainer");
    }
 }
 
@@ -180,7 +221,7 @@ void BoxContainer::spliceBack(BoxContainer& boxes)
       boxes.spliceFront(*this);
       d_list.swap(boxes.d_list);
    } else {
-      TBOX_ERROR("spliceBack on an ordered BoxContainer");
+      TBOX_ERROR("Attempted spliceBack on an ordered BoxContainer");
    }
 }
 
@@ -190,7 +231,7 @@ void BoxContainer::popFront()
    if (!d_ordered) {
       d_list.pop_front();
    } else {
-      TBOX_ERROR("popFront on an ordered BoxContainer");
+      TBOX_ERROR("Attempted popFront on an ordered BoxContainer");
    }
 }
 
@@ -200,9 +241,15 @@ void BoxContainer::popBack()
    if (!d_ordered) {
       d_list.pop_back();
    } else {
-      TBOX_ERROR("popBack on an ordered BoxContainer");
+      TBOX_ERROR("Attempted popBack on an ordered BoxContainer");
    }
 }
+
+/*
+ *************************************************************************
+ * Clear the container
+ *************************************************************************
+ */
 
 SAMRAI_INLINE_KEYWORD
 void BoxContainer::clear()
@@ -211,6 +258,240 @@ void BoxContainer::clear()
    d_set.clear();
    d_ordered = false; 
 }
+
+/*
+ *************************************************************************
+ * Switch or query the ordered/unordered state
+ *************************************************************************
+ */
+
+SAMRAI_INLINE_KEYWORD
+void BoxContainer::order()
+{
+   if (!d_ordered) {
+      d_set.clear();
+      for (Iterator i(*this); i != end(); ++i) {
+         if (!(*i).getId().isValid()) {
+            TBOX_ERROR("Attempted to order a BoxContainer that has a member with an invalid BoxId.");
+         }
+         if (d_set.insert(&(*i)).second == false) {
+            TBOX_ERROR("Attempted to order a BoxContainer with duplicate BoxIds.");
+         }
+         i->lockId();
+      }
+      d_ordered = true;
+   }
+}
+
+SAMRAI_INLINE_KEYWORD
+void BoxContainer::unorder()
+{
+   if (d_ordered) {
+      d_set.clear();
+      d_ordered = false;
+   }
+}
+
+SAMRAI_INLINE_KEYWORD
+bool BoxContainer::isOrdered() const
+{
+   return (d_ordered);
+}
+
+
+/*
+ *************************************************************************
+ * Swap all data
+ *************************************************************************
+ */
+
+SAMRAI_INLINE_KEYWORD
+void BoxContainer::swap(BoxContainer& other)
+{
+   d_list.swap(other.d_list);
+   d_set.swap(other.d_set);
+
+   bool other_set_created = other.d_ordered;
+   other.d_ordered = d_ordered;
+   d_ordered = other_set_created;
+}
+
+
+/*
+ *************************************************************************
+ * Erase methods
+ *************************************************************************
+ */
+
+SAMRAI_INLINE_KEYWORD
+void BoxContainer::erase(Iterator iter)
+{
+   if (!d_ordered) {
+      d_list.erase(iter.d_list_iter);
+   } else {
+      const Box& box = **(iter.d_set_iter);
+      d_set.erase(iter.d_set_iter);
+
+      for (std::list<Box>::iterator bi = d_list.begin(); bi != d_list.end();
+           ++bi) {
+         if (bi->getId() == box.getId()) {
+            d_list.erase(bi);
+            break;
+         }
+      }
+   }
+}
+
+SAMRAI_INLINE_KEYWORD
+void BoxContainer::erase(Iterator first, Iterator last)
+{
+   if (!d_ordered) {
+      d_list.erase(first.d_list_iter, last.d_list_iter);
+   } else {
+      for (Iterator iter = first; iter != last; ++iter) {
+         erase(iter);
+      }
+   }
+}
+
+
+SAMRAI_INLINE_KEYWORD
+int BoxContainer::erase(const Box& box)
+{
+   if (!d_ordered) {
+      TBOX_ERROR("erase with Box argument attempted on unordered BoxContainer.");
+   }
+
+   int ret = d_set.erase(const_cast<Box*>(&box));
+   for (std::list<Box>::iterator bi = d_list.begin(); bi != d_list.end();
+        ++bi) {
+      if (bi->getId() == box.getId()) {
+         d_list.erase(bi++);
+         break;
+      }
+   }
+
+   return ret;
+}
+
+
+/*
+ *************************************************************************
+ * Set-like semantics for ordered containers
+ *************************************************************************
+ */
+
+SAMRAI_INLINE_KEYWORD
+BoxContainer::Iterator BoxContainer::find(const Box& box) const
+{
+   if (!d_ordered) {
+      TBOX_ERROR("find attempted on unordered BoxContainer.");
+   }
+
+   Iterator iter;
+   iter.d_set_iter = d_set.find(const_cast<Box*>(&box));
+   iter.d_ordered = true;
+
+   return iter;
+}
+
+SAMRAI_INLINE_KEYWORD
+BoxContainer::Iterator BoxContainer::lowerBound(const Box& box) const
+{
+   if (!d_ordered) {
+      TBOX_ERROR("lowerBound attempted on unordered BoxContainer.");
+   }
+
+   Iterator iter;
+   iter.d_set_iter = d_set.lower_bound(const_cast<Box*>(&box));
+   iter.d_ordered = true;
+
+   return iter;
+}
+
+SAMRAI_INLINE_KEYWORD
+BoxContainer::Iterator BoxContainer::upperBound(const Box& box) const
+{
+   if (!d_ordered) {
+      TBOX_ERROR("upperBound attempted on unordered BoxContainer.");
+   }
+
+   Iterator iter;
+   iter.d_set_iter = d_set.upper_bound(const_cast<Box*>(&box));
+   iter.d_ordered = true;
+
+   return iter;
+}
+
+SAMRAI_INLINE_KEYWORD
+bool BoxContainer::insert(const Box& box)
+{
+#ifdef DEBUG_CHECK_ASSERTIONS
+   TBOX_ASSERT(box.getId().isValid());
+   if (size() > 0) {
+      TBOX_DIM_ASSERT_CHECK_ARGS2(front(), box);
+   }
+#endif
+
+   if (!d_ordered && size() == 0) {
+      order();
+   }
+
+   if (!d_ordered) {
+      TBOX_ERROR("BoxContainer::insert called on unordered BoxContainer.");
+   }
+
+   const std::list<Box>::iterator& iter = d_list.insert(d_list.end(), box);
+   Box* box_ptr(&(*iter));
+   if (d_set.insert(box_ptr).second) {
+      box_ptr->lockId();
+      return true;
+   } else {
+      d_list.erase(iter);
+      return false;
+   }
+
+}
+
+/*
+ *************************************************************************
+ * Box-based queries
+ *************************************************************************
+ */
+
+SAMRAI_INLINE_KEYWORD
+int BoxContainer::getTotalSizeOfBoxes() const
+{
+   int size = 0;
+   if (!d_ordered) {
+      for (ConstIterator i(*this); i != end(); ++i) {
+         size += i().size();
+      }
+   } else {
+      for (ConstIterator i(*this); i != end(); ++i) {
+         size += i().size();
+      }
+   }
+   return size;
+}
+
+SAMRAI_INLINE_KEYWORD
+bool BoxContainer::contains(
+   const Index& idx) const
+{
+   for (ConstIterator i(*this); i != end(); ++i) {
+      if (i().contains(idx)) {
+         return true;
+      }
+   }
+   return false;
+}
+
+/*
+ *************************************************************************
+ * Equality/inequality
+ *************************************************************************
+ */
 
 SAMRAI_INLINE_KEYWORD
 bool BoxContainer::operator == (const BoxContainer& rhs) const
@@ -235,64 +516,48 @@ bool BoxContainer::operator != (const BoxContainer& rhs) const
    return !(*this == rhs);
 }
 
+/*
+ *************************************************************************
+ * Spatial manipulation of Boxes
+ ************************************************************************
+ */
+
 SAMRAI_INLINE_KEYWORD
-void BoxContainer::separatePeriodicImages(
-   std::vector<Box>& real_mapped_box_vector,
-   std::vector<Box>& periodic_image_mapped_box_vector) const
+void BoxContainer::grow(
+   const IntVector& ghosts)
 {
-   if (!d_ordered) {
-      TBOX_ERROR("separatePeriodicImages called on unordered container.");
+   for (Iterator i(*this); i != end(); ++i) {
+      i().grow(ghosts);
    }
+}
 
-   if (!isEmpty()) {
 
-      const Box& first_element(*begin());
-
-      const PeriodicId zero_shift_number(PeriodicShiftCatalog::getCatalog(
-                                            first_element.getDim())->
-                                         getZeroShiftNumber());
-
-      real_mapped_box_vector.reserve(real_mapped_box_vector.size() + size());
-      for (ConstIterator ni = begin(); ni != end(); ++ni) {
-         const Box& mapped_box = *ni;
-         if (mapped_box.getPeriodicId() == zero_shift_number) {
-            real_mapped_box_vector.push_back(*ni);
-         } else {
-            periodic_image_mapped_box_vector.push_back(*ni);
-         }
-      }
+SAMRAI_INLINE_KEYWORD
+void BoxContainer::shift(
+   const IntVector& offset)
+{
+   for (Iterator i(*this); i != end(); ++i) {
+      i().shift(offset);
    }
 }
 
 SAMRAI_INLINE_KEYWORD
-bool BoxContainer::isOrdered() const
+void BoxContainer::refine(
+   const IntVector& ratio)
 {
-   return (d_ordered);
+   for (Iterator i(*this); i != end(); ++i) {
+      i().refine(ratio);
+   }
 }
 
 SAMRAI_INLINE_KEYWORD
-bool BoxContainer::insert(const Box& box)
+void BoxContainer::coarsen(
+   const IntVector& ratio)
 {
-   TBOX_ASSERT(box.getId().isValid());
-
-   if (!d_ordered && size() == 0) {
-      order();
-   }
-
-   if (!d_ordered) {
-      TBOX_ERROR("BoxContainer::insert called on unordered container.");
-   }
-
-   const std::list<Box>::iterator& iter = d_list.insert(d_list.end(), box);
-   Box* box_ptr(&(*iter));
-   if (d_set.insert(box_ptr).second) {
-      return true;
-   } else {
-      d_list.erase(iter);
-      return false;
+   for (Iterator i(*this); i != end(); ++i) {
+      i().coarsen(ratio);
    }
 }
-
 
 
 

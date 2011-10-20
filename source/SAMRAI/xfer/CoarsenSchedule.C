@@ -892,7 +892,8 @@ void CoarsenSchedule::constructScheduleTransactions(
 
       const hier::IntVector& dst_gcw(dst_pdf->getGhostCellWidth());
 
-      const hier::Box dst_fill_box(hier::Box::grow(unshifted_dst_box, dst_gcw));
+      hier::Box dst_fill_box(unshifted_dst_box);
+      dst_fill_box.grow(dst_gcw);
 
       hier::Box test_mask(dst_fill_box * transformed_src_box);
       if ((dst_gcw == constant_zero_intvector) &&

@@ -1198,8 +1198,8 @@ void MappingConnectorAlgorithm::privateModify_discoverAndSend(
     */
 
    const Box start_loop_here(dim, LocalId::getZero(), rank + 1);
-   anchor_ni = visible_anchor_nabrs.lower_bound(start_loop_here);
-   new_ni = visible_new_nabrs.lower_bound(start_loop_here);
+   anchor_ni = visible_anchor_nabrs.lowerBound(start_loop_here);
+   new_ni = visible_new_nabrs.lowerBound(start_loop_here);
 
    if (anchor_ni == visible_anchor_nabrs.end() &&
        new_ni == visible_new_nabrs.end()) {

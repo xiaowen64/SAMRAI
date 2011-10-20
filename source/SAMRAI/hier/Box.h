@@ -754,6 +754,10 @@ public:
    const tbox::Dimension&
    getDim() const;
 
+   void lockId() {
+      d_id_locked = true;
+   }
+
    /**
     * Read the box description in the form [L,U], where L and U are the
     * lower and upper bounds of the box.
@@ -842,6 +846,7 @@ private:
    Index d_lo;
    Index d_hi;
    BoxId d_id;
+   bool d_id_locked;
 
    /*!
     * @brief Initialize static objects and register shutdown routine.

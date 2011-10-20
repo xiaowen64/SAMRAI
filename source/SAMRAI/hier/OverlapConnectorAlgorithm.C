@@ -995,9 +995,9 @@ void OverlapConnectorAlgorithm::privateBridge(
        * the beginning.)
        */
       const Box start_loop_here(dim, LocalId::getZero(), rank + 1);
-      west_ni = visible_west_nabrs.lower_bound(start_loop_here);
+      west_ni = visible_west_nabrs.lowerBound(start_loop_here);
       if (compute_reverse) {
-         east_ni = visible_east_nabrs.lower_bound(start_loop_here);
+         east_ni = visible_east_nabrs.lowerBound(start_loop_here);
       }
 
       if (west_ni == visible_west_nabrs.end() &&
@@ -1623,9 +1623,9 @@ void OverlapConnectorAlgorithm::privateBridge(
        * the beginning.)
        */
       const Box start_loop_here(dim, LocalId::getZero(), rank + 1);
-      west_ni = visible_west_nabrs.lower_bound(start_loop_here);
+      west_ni = visible_west_nabrs.lowerBound(start_loop_here);
       if (compute_reverse) {
-         east_ni = visible_east_nabrs.lower_bound(start_loop_here);
+         east_ni = visible_east_nabrs.lowerBound(start_loop_here);
       }
 
       if (west_ni == visible_west_nabrs.end() &&

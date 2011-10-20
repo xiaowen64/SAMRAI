@@ -1034,8 +1034,8 @@ void BoxLevelConnectorUtils::computeBoxesAroundBoundary(
           * description, because they do not live in a valid index
           * space.
           */
-         BoxContainer reduced_connectivity_singularity_boxes =
-            grid_geometry->getSingularityBoxContainer(block_id);
+         BoxContainer reduced_connectivity_singularity_boxes(
+            grid_geometry->getSingularityBoxContainer(block_id));
          const tbox::List<GridGeometry::Neighbor>& neighbors(
             grid_geometry->getNeighbors(block_id));
 
@@ -1064,8 +1064,8 @@ void BoxLevelConnectorUtils::computeBoxesAroundBoundary(
           * not touch the singularity, overriding what the (R^1)\R
           * formula says.
           */
-         BoxContainer singularity_boxes =
-            grid_geometry->getSingularityBoxContainer(block_id);
+         BoxContainer singularity_boxes(
+            grid_geometry->getSingularityBoxContainer(block_id));
          if (refinement_ratio != one_vec) {
             singularity_boxes.refine(refinement_ratio);
          }

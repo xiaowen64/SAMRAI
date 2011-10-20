@@ -676,10 +676,8 @@ tbox::Pointer<MultiblockBoxTree> MultiblockBoxTree::createRefinedTree(
          rval->d_single_block_trees.insert(
             std::pair<BlockId, BoxTree>(
                block_id,
-               BoxTree(dim)));
+               BoxTree(*mapped_box_tree.createRefinedTree(ratio))));
       TBOX_ASSERT(insert_return_value.second);
-      insert_return_value.first->second = *mapped_box_tree.createRefinedTree(ratio);
-
    }
 
    return tbox::Pointer<MultiblockBoxTree>(rval);

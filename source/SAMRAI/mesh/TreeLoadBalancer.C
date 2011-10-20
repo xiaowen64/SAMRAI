@@ -647,7 +647,7 @@ void TreeLoadBalancer::mapOversizedBoxes(
       constrained,
       zero_vector);
 
-   const hier::BoxContainer unconstrained_mapped_boxes = unconstrained.getBoxes();
+   const hier::BoxContainer& unconstrained_mapped_boxes = unconstrained.getBoxes();
 
    hier::LocalId next_available_index = unconstrained.getLastLocalId() + 1;
 
@@ -1045,7 +1045,7 @@ void TreeLoadBalancer::computeLoadBalancingMapWithinRankGroup(
        * Local process is underloaded, so put all of unbalanced_mapped_box_level into
        * the balanced_mapped_box_level (and add more later).
        */
-      const hier::BoxContainer unbalanced_mapped_boxes =
+      const hier::BoxContainer& unbalanced_mapped_boxes =
          unbalanced_mapped_box_level.getBoxes();
       for (hier::BoxContainer::ConstIterator ni = unbalanced_mapped_boxes.begin();
            ni != unbalanced_mapped_boxes.end(); ++ni) {
@@ -1080,7 +1080,7 @@ void TreeLoadBalancer::computeLoadBalancingMapWithinRankGroup(
        * be seen.
        */
 
-      const hier::BoxContainer unbalanced_mapped_boxes =
+      const hier::BoxContainer& unbalanced_mapped_boxes =
          unbalanced_mapped_box_level.getBoxes();
 
       TransitSet
@@ -3655,7 +3655,7 @@ double TreeLoadBalancer::computeLocalLoads(
 {
    // Count up workload.
    double load = 0.0;
-   const hier::BoxContainer mapped_boxes = mapped_box_level.getBoxes();
+   const hier::BoxContainer& mapped_boxes = mapped_box_level.getBoxes();
    for (hier::BoxContainer::ConstIterator ni = mapped_boxes.begin();
         ni != mapped_boxes.end();
         ++ni) {
@@ -4411,9 +4411,8 @@ void TreeLoadBalancer::setShadowData(
       d_block_domain_boxes[0].refine(refinement_ratio);
    } else {
       for (int b = 0; b < nblocks; ++b) {
-         domain_mapped_box_level.getGlobalBoxes().
-            getSingleBlockBoxContainer(d_block_domain_boxes[b],
-                                       hier::BlockId(b));
+         d_block_domain_boxes[b] = hier::BoxContainer(
+            domain_mapped_box_level.getGlobalBoxes(), hier::BlockId(b));
 
          d_block_domain_boxes[b].refine(refinement_ratio);
       }
@@ -4573,7 +4572,7 @@ void TreeLoadBalancer::prebalanceBoxLevel(
     * move them directly to tmp_mapped_box_level.
     */
    if (!is_sending_rank) {
-      const hier::BoxContainer unchanged_mapped_boxes =
+      const hier::BoxContainer& unchanged_mapped_boxes =
          balance_mapped_box_level.getBoxes();
 
       for (hier::BoxContainer::ConstIterator ni =
@@ -4591,7 +4590,7 @@ void TreeLoadBalancer::prebalanceBoxLevel(
     * On sending ranks, pack the Boxes into buffers and send.
     */
    if (is_sending_rank) {
-      const hier::BoxContainer sending_mapped_boxes =
+      const hier::BoxContainer& sending_mapped_boxes =
          balance_mapped_box_level.getBoxes();
       const int num_sending_boxes =
          static_cast<int>(sending_mapped_boxes.size());
@@ -4676,7 +4675,7 @@ void TreeLoadBalancer::prebalanceBoxLevel(
       }
       const int* buffer = id_recv->getRecvData();
 
-      const hier::BoxContainer sending_mapped_boxes =
+      const hier::BoxContainer& sending_mapped_boxes =
          balance_mapped_box_level.getBoxes();
       TBOX_ASSERT(static_cast<unsigned int>(id_recv->getRecvSize()) == sending_mapped_boxes.size());
 

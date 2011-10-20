@@ -64,7 +64,8 @@ Box::Box(
    d_lo(other.d_lo),
    d_hi(other.d_hi),
    d_id(other.getLocalId(), other.getOwnerRank(), other.getBlockId(),
-        periodic_id)
+        periodic_id),
+   d_id_locked(false)
 {
    TBOX_DIM_ASSERT_CHECK_ARGS3(*this, other, refinement_ratio);
 #ifdef BOX_TELEMETRY
@@ -193,9 +194,13 @@ void Box::initialize(
 
    }
 
-   d_id.initialize(
-      other.getLocalId(), other.getOwnerRank(),
-      other.getBlockId(), periodic_id);
+   if (!d_id_locked) {
+      d_id.initialize(
+         other.getLocalId(), other.getOwnerRank(),
+         other.getBlockId(), periodic_id);
+   } else {
+      TBOX_ERROR("Attempted to change BoxId that is locked in an ordered BoxContainer.");
+   }
 }
 
 /*

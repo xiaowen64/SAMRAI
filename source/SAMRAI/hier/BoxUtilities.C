@@ -22,7 +22,6 @@
 #include "SAMRAI/tbox/Utilities.h"
 #include "SAMRAI/tbox/MathUtilities.h"
 
-#include <stdlib.h>
 
 namespace SAMRAI {
 namespace hier {
@@ -252,7 +251,7 @@ void BoxUtilities::checkBoxConstraints(
 
                test_box.lower(id) = box.upper(id) + 1;
 
-               test_boxes = BoxContainer(test_box);
+               test_boxes = BoxContainer(test_box); 
                test_boxes.intersectBoxes(border_boxes);
                test_boxes.simplify();
 
@@ -361,9 +360,7 @@ void BoxUtilities::chopBoxes(
 
       if (chop_box) {
          TBOX_ASSERT(box.getBlockId().isValid());
-         BoxContainer phys_block_boxes;
-         physical_boxes.getSingleBlockBoxContainer(phys_block_boxes,
-                                                   box.getBlockId());
+         BoxContainer phys_block_boxes(physical_boxes, box.getBlockId());
 
          for (int id = 0; id < dim.getValue(); id++) {
 
@@ -638,6 +635,7 @@ void BoxUtilities::growBoxesWithinDomain(
          outside_domain.removeIntersections(big_box);
       } else {
          outside_domain = domain;
+         outside_domain.unorder();
          outside_domain.grow(IntVector::getOne(dim));
          outside_domain.removeIntersections(domain);
       }
@@ -1188,8 +1186,6 @@ bool BoxUtilities::checkBoxForBadCutPointsInDirection(
 
    if (physical_boxes.size() > 0) {
 
-      BoxContainer level_interior(physical_boxes);
-
       int bad = bad_interval(id);
 
       int id2 = 0;
@@ -1208,7 +1204,7 @@ bool BoxUtilities::checkBoxForBadCutPointsInDirection(
             border.upper(id2) = box.lower(id2) - 1;
 
             BoxContainer border_boxes(border);
-            border_boxes.removeIntersections(level_interior);
+            border_boxes.removeIntersections(physical_boxes);
             border_boxes.simplify();
 
             BoxContainer::Iterator bb = border_boxes.begin();
@@ -1230,7 +1226,7 @@ bool BoxUtilities::checkBoxForBadCutPointsInDirection(
 
                border_boxes.clear();
                border_boxes.pushBack(border);
-               border_boxes.removeIntersections(level_interior);
+               border_boxes.removeIntersections(physical_boxes);
                border_boxes.simplify();
 
                bb = border_boxes.begin();
@@ -1344,8 +1340,7 @@ void BoxUtilities::findBadCutPointsForDirection(
     * intersects the domain exterior.
     */
 
-   BoxContainer level_interior(physical_boxes);
-   Box level_bounding_box = level_interior.getBoundingBox(box.getBlockId());
+   Box level_bounding_box = physical_boxes.getBoundingBox(box.getBlockId());
 
    for (int id2 = 0; id2 < dim.getValue(); id2++) {
 
@@ -1373,7 +1368,7 @@ void BoxUtilities::findBadCutPointsForDirection(
              * only remove the level interior if the dimensionality of
              * the problem is greater than 1.
              */
-            border_boxes.removeIntersections(level_interior);
+            border_boxes.removeIntersections(physical_boxes);
          }
 
          if (!border_boxes.isEmpty()) {
@@ -1413,7 +1408,7 @@ void BoxUtilities::findBadCutPointsForDirection(
              * only remove the level interior if the dimensionality of
              * the problem is greater than 1.
              */
-            border_boxes.removeIntersections(level_interior);
+            border_boxes.removeIntersections(physical_boxes);
          }
 
          if (!border_boxes.isEmpty()) {
