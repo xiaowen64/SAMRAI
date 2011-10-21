@@ -45,6 +45,7 @@ OBJS = 	\
 	OverlapConnectorAlgorithm.o \
 	MappingConnectorAlgorithm.o \
 	Connector.o \
+	ConnectorStatistics.o \
 	BoxLevelHandle.o \
 	BoxIOUtility.o \
 	PeriodicShiftCatalog.o \
@@ -54,6 +55,7 @@ OBJS = 	\
 	BoxTree.o \
 	MultiblockBoxTree.o \
 	BoxLevel.o \
+	BoxLevelStatistics.o \
 	PersistentOverlapConnectors.o \
 	BoxSet.o \
 	NeighborhoodSet.o \

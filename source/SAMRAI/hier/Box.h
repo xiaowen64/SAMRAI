@@ -497,6 +497,15 @@ public:
       const Box& box) const;
 
    /**
+    * Calculate the intersection of the index spaces of this and the
+    * given box.  The intersection with an empty box always yields an
+    * empty box.
+    */
+   Box
+   &operator *= (
+      const Box& box);
+
+   /**
     * Preallocated box intersection.
     * Calculate the intersection of the index spaces of two boxes.  The
     * intersection with an empty box always yields an empty box.

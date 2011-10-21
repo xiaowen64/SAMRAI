@@ -586,6 +586,17 @@ Box Box::operator * (
 }
 
 SAMRAI_INLINE_KEYWORD
+Box &Box::operator *= (
+   const Box& box)
+{
+   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, box);
+
+   d_lo.max(box.d_lo);
+   d_hi.min(box.d_hi);
+   return *this;
+}
+
+SAMRAI_INLINE_KEYWORD
 void Box::intersect(
    const Box& other,
    Box& result) const
