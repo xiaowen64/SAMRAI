@@ -13,12 +13,14 @@
 
 #include "SAMRAI/mesh/BergerRigoutsos.h"
 #include "SAMRAI/hier/BoxLevel.h"
+#include "SAMRAI/hier/BoxLevelStatistics.h"
 #include "SAMRAI/hier/IntVector.h"
 #include "SAMRAI/geom/CartesianGridGeometry.h"
 #include "SAMRAI/pdat/CellData.h"
 #include "SAMRAI/pdat/CellVariable.h"
 #include "SAMRAI/hier/Connector.h"
 #include "SAMRAI/hier/BoxContainerIterator.h"
+#include "SAMRAI/hier/ConnectorStatistics.h"
 #include "SAMRAI/hier/BoxLevelConnectorUtils.h"
 #include "SAMRAI/hier/OverlapConnectorAlgorithm.h"
 #include "SAMRAI/hier/MappingConnectorAlgorithm.h"
@@ -427,23 +429,27 @@ int main(
             (double)balance_mapped_box_level.getLocalNumberOfCells(),
             balance_mapped_box_level.getMPI());
 
+         hier::BoxLevelStatistics anchor_stats(anchor_mapped_box_level);
          tbox::plog << "Anchor mapped_box_level node stats:\n";
-         anchor_mapped_box_level.printBoxStats(tbox::plog, "AL-> ");
+         anchor_stats.printBoxStats(tbox::plog, "AL-> ");
          tbox::plog << "Anchor mapped_box_level:\n";
          anchor_mapped_box_level.recursivePrint(tbox::plog, "AL-> ", 2);
 
+         hier::BoxLevelStatistics balance_stats(anchor_mapped_box_level);
          tbox::plog << "Balance mapped_box_level node stats:\n";
-         balance_mapped_box_level.printBoxStats(tbox::plog, "BL-> ");
+         balance_stats.printBoxStats(tbox::plog, "BL-> ");
          tbox::plog << "Balance mapped_box_level:\n";
          balance_mapped_box_level.recursivePrint(tbox::plog, "BL-> ", 2);
 
+         hier::ConnectorStatistics balance_anchor_stats(balance_to_anchor);
          tbox::plog << "balance_to_anchor edge stats:\n";
-         balance_to_anchor.printNeighborStats(tbox::plog, "BA-> ");
+         balance_anchor_stats.printNeighborStats(tbox::plog, "BA-> ");
          tbox::plog << "balance_to_anchor:\n";
          balance_to_anchor.recursivePrint(tbox::plog, "BA-> ");
 
+         hier::ConnectorStatistics anchor_balance_stats(anchor_to_balance);
          tbox::plog << "anchor_to_balance edge stats:\n";
-         anchor_to_balance.printNeighborStats(tbox::plog, "AB-> ");
+         anchor_balance_stats.printNeighborStats(tbox::plog, "AB-> ");
          tbox::plog << "anchor_to_balance:\n";
          anchor_to_balance.recursivePrint(tbox::plog, "AB-> ");
       }
@@ -506,23 +512,27 @@ int main(
             (double)balance_mapped_box_level.getLocalNumberOfCells(),
             balance_mapped_box_level.getMPI());
 
+         hier::BoxLevelStatistics balance_stats(balance_mapped_box_level);
          tbox::plog << "Balance mapped_box_level node stats:\n";
-         balance_mapped_box_level.printBoxStats(tbox::plog, "BL-> ");
+         balance_stats.printBoxStats(tbox::plog, "BL-> ");
          tbox::plog << "Balance mapped_box_level:\n";
          balance_mapped_box_level.recursivePrint(tbox::plog, "BL-> ", 2);
 
+         hier::ConnectorStatistics balance_balance_stats(balance_to_balance);
          tbox::plog << "balance_to_balance edge stats:\n";
-         balance_to_balance.printNeighborStats(tbox::plog, "BB-> ");
+         balance_balance_stats.printNeighborStats(tbox::plog, "BB-> ");
          tbox::plog << "balance_to_balance:\n";
          balance_to_balance.recursivePrint(tbox::plog, "BB-> ");
 
+         hier::ConnectorStatistics balance_anchor_stats(balance_to_anchor);
          tbox::plog << "balance_to_anchor edge stats:\n";
-         balance_to_anchor.printNeighborStats(tbox::plog, "BA-> ");
+         balance_anchor_stats.printNeighborStats(tbox::plog, "BA-> ");
          tbox::plog << "balance_to_anchor:\n";
          balance_to_anchor.recursivePrint(tbox::plog, "BA-> ");
 
+         hier::ConnectorStatistics anchor_balance_stats(anchor_to_balance);
          tbox::plog << "anchor_to_balance edge stats:\n";
-         anchor_to_balance.printNeighborStats(tbox::plog, "AB-> ");
+         anchor_balance_stats.printNeighborStats(tbox::plog, "AB-> ");
          tbox::plog << "anchor_to_balance:\n";
          anchor_to_balance.recursivePrint(tbox::plog, "AB-> ");
 
@@ -531,10 +541,6 @@ int main(
             (double)balance_mapped_box_level.getLocalNumberOfCells(),
             balance_mapped_box_level.getMPI(),
             tbox::plog);
-         tbox::plog << "Balance mapped_box_level node stats:\n";
-         balance_mapped_box_level.printBoxStats(tbox::plog, "BL-> ");
-         tbox::plog << "balance_to_balance edge stats:\n";
-         balance_to_balance.printNeighborStats(tbox::plog, "BB-> ");
       }
 
       const hier::BoxLevel& layer0 = anchor_mapped_box_level;

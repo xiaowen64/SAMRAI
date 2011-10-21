@@ -646,19 +646,6 @@ public:
       int detail_depth = 0) const;
 
    /*!
-    * @brief Print out statistics on the relationships.
-    *
-    * Requires communication, so all processors must call this.
-    *
-    * @param[in,out] os The output stream
-    * @param[in] border
-    */
-   void
-   printNeighborStats(
-      std::ostream& co,
-      const std::string& border) const;
-
-   /*!
     * @brief Return true if two Connector objects are
     * transposes of each other.
     *

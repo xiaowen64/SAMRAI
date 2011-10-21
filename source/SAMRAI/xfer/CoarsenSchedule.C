@@ -361,7 +361,7 @@ void CoarsenSchedule::generateTemporaryLevel()
     * temp are very similar to those between coarse and fine.
     */
    d_coarse_to_temp.initialize(
-      coarse_to_fine.getBase(),
+      *d_crse_level->getBoxLevel(),
       *d_temp_crse_level->getBoxLevel(),
       coarse_to_fine.getConnectorWidth(),
       hier::BoxLevel::DISTRIBUTED);
@@ -388,27 +388,6 @@ void CoarsenSchedule::generateTemporaryLevel()
    const hier::IntVector one_vector(dim, 1);
    d_coarse_to_temp.shrinkWidth(one_vector);
    d_temp_to_coarse.shrinkWidth(one_vector);
-
-#if 0
-   /*
-    * We expect these to be complete because d_temp_crse_level
-    * is singly nested in fine_mapped_box_level^gcw(fine_to_coarse).
-    * I think.
-    */
-   tbox::plog
-   << "fine_mapped_box_level:\n" << d_fine_level->getBoxLevel()->format("", 2)
-   << "d_temp_crse_level:\n" << d_temp_crse_level->getBoxLevel()->format("", 2)
-   << "coarse mapped_box_level:\n" << coarse_to_fine.getBase().format("", 2)
-   << "d_temp_to_coarse:\n" << d_temp_to_coarse.format("", 3)
-   << "fine_to_coarse:\n" << fine_to_coarse.format("", 3)
-   << "coarse_to_fine:\n" << coarse_to_fine.format("", 3)
-   << "d_coarse_to_temp:\n" << d_coarse_to_temp.format("", 3);
-#endif
-#if 0
-   hier::OverlapConnectorAlgorithm oca;
-   oca.assertOverlapCorrectness(d_coarse_to_temp, false, true, false);
-   oca.assertOverlapCorrectness(d_temp_to_coarse, false, true, false);
-#endif
 }
 
 /*

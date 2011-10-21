@@ -230,6 +230,7 @@ void TreeLoadBalancer::loadBalanceBoxLevel(
    NULL_USE(attractor_to_balance);
    NULL_USE(hierarchy);
    NULL_USE(level_number);
+
    TBOX_ASSERT(anchor_to_balance.isInitialized() ==
       balance_to_anchor.isInitialized());
    if (anchor_to_balance.isInitialized()) {
@@ -246,6 +247,7 @@ void TreeLoadBalancer::loadBalanceBoxLevel(
       TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(d_dim, *hierarchy);
    }
 
+
    d_mpi =
       d_mpi_dup.getCommunicator() == tbox::SAMRAI_MPI::commNull ?
       balance_mapped_box_level.getMPI() : d_mpi_dup;
@@ -260,39 +262,39 @@ void TreeLoadBalancer::loadBalanceBoxLevel(
                  << std::endl << balance_mapped_box_level.format("", 2);
    }
 
-   {
-      /*
-       * Periodic image Box should be ignored during load
-       * balancing.  The load-balanced results should contain no
-       * periodic images.
-       *
-       * To avoid need for special logic to skip periodic
-       * images while load balancing, we just remove
-       * periodic images in the balance_mapped_box_level and
-       * all periodic edges in anchor<==>balance.
-       */
 
-      balance_mapped_box_level.removePeriodicImageBoxes();
-      if (balance_to_anchor.isInitialized()) {
+   /*
+    * Periodic image Box should be ignored during load balancing
+    * because they have no real work.  The load-balanced results
+    * should contain no periodic images.
+    *
+    * To avoid need for special logic to skip periodic images while
+    * load balancing, we just remove periodic images in the
+    * balance_mapped_box_level and all periodic edges in
+    * anchor<==>balance.
+    */
 
-         anchor_to_balance.removePeriodicRelationships();
-         anchor_to_balance.initialize(
-            anchor_to_balance.getBase(),
-            balance_mapped_box_level,
-            anchor_to_balance.getConnectorWidth(),
-            hier::BoxLevel::DISTRIBUTED,
-            false);
+   balance_mapped_box_level.removePeriodicImageBoxes();
+   if (balance_to_anchor.isInitialized()) {
 
-         balance_to_anchor.removePeriodicRelationships();
-         balance_to_anchor.initialize(
-            balance_mapped_box_level,
-            balance_to_anchor.getHead(),
-            balance_to_anchor.getConnectorWidth(),
-            hier::BoxLevel::DISTRIBUTED,
-            false);
+      anchor_to_balance.removePeriodicRelationships();
+      anchor_to_balance.initialize(
+         anchor_to_balance.getBase(),
+         balance_mapped_box_level,
+         anchor_to_balance.getConnectorWidth(),
+         hier::BoxLevel::DISTRIBUTED,
+         false);
 
-      }
+      balance_to_anchor.removePeriodicRelationships();
+      balance_to_anchor.initialize(
+         balance_mapped_box_level,
+         balance_to_anchor.getHead(),
+         balance_to_anchor.getConnectorWidth(),
+         hier::BoxLevel::DISTRIBUTED,
+         false);
+
    }
+
 
    const hier::OverlapConnectorAlgorithm oca;
 
@@ -345,14 +347,15 @@ void TreeLoadBalancer::loadBalanceBoxLevel(
    }
 #endif
 
-   double local_load, global_sum_load;
 
    t_compute_local_load->start();
-   local_load = computeLocalLoads(balance_mapped_box_level);
+   double local_load = computeLocalLoads(balance_mapped_box_level);
    t_compute_local_load->stop();
 
    size_t nproc_with_initial_load =
-      balance_mapped_box_level.getLocalNumberOfBoxes() == 0 ? 0 : 1;
+      balance_mapped_box_level.getLocalNumberOfBoxes() > 0;
+
+   double global_sum_load;
 
    {
       /*
@@ -440,7 +443,7 @@ void TreeLoadBalancer::loadBalanceBoxLevel(
 
    for (int icycle = 0; icycle < number_of_cycles; ++icycle) {
 
-      // If not the first cycle, local_load needs to be updated.
+      // If not the first cycle, local_load needs updating.
       if (icycle > 0) {
          t_compute_local_load->start();
          local_load = computeLocalLoads(balance_mapped_box_level);
@@ -639,7 +642,8 @@ void TreeLoadBalancer::mapOversizedBoxes(
 
    const hier::IntVector& zero_vector(hier::IntVector::getZero(d_dim));
 
-   constrained.initialize(unconstrained.getRefinementRatio(),
+   constrained.initialize(
+      unconstrained.getRefinementRatio(),
       unconstrained.getGridGeometry(),
       unconstrained.getMPI());
    unconstrained_to_constrained.initialize(
@@ -678,7 +682,8 @@ void TreeLoadBalancer::mapOversizedBoxes(
                        << mapped_box.numberCells() << " ->";
          }
          hier::BoxContainer chopped(mapped_box);
-         hier::BoxUtilities::chopBoxes(chopped,
+         hier::BoxUtilities::chopBoxes(
+            chopped,
             d_max_size,
             d_min_size,
             d_cut_factor,
@@ -804,7 +809,7 @@ void TreeLoadBalancer::computeLoadBalancingMapWithinRankGroup(
     * which we are to load balance.
     */
 
-   const tbox::RankGroup *use_rank_group = &rank_group;
+   const tbox::RankGroup *rank_group_in_use = &rank_group;
    int number_of_groups = 1;
    int group_num = 0;
 
@@ -816,7 +821,7 @@ void TreeLoadBalancer::computeLoadBalancingMapWithinRankGroup(
          group_num,
          cycle_number,
          number_of_cycles);
-      use_rank_group = &cycle_rank_group;
+      rank_group_in_use = &cycle_rank_group;
    }
 
 
@@ -837,7 +842,7 @@ void TreeLoadBalancer::computeLoadBalancingMapWithinRankGroup(
       parent_send,
       parent_recv,
       comm_stage,
-      *use_rank_group);
+      *rank_group_in_use);
 
 
 
@@ -1083,9 +1088,6 @@ void TreeLoadBalancer::computeLoadBalancingMapWithinRankGroup(
       const hier::BoxContainer& unbalanced_mapped_boxes =
          unbalanced_mapped_box_level.getBoxes();
 
-      TransitSet
-      sorted_loads(unbalanced_mapped_boxes.begin(), unbalanced_mapped_boxes.end());
-
       int ideal_transfer = int(0.5 + my_load_data.total_work - group_avg_load);
 
       if (d_print_steps) {
@@ -1093,30 +1095,33 @@ void TreeLoadBalancer::computeLoadBalancingMapWithinRankGroup(
                     << " to unassigned.\n";
       }
 
+      TransitSet
+      local_loads(unbalanced_mapped_boxes.begin(), unbalanced_mapped_boxes.end());
       int actual_transfer;
-      reassignLoads(sorted_loads,
+      reassignLoads(
+         local_loads,
          unassigned,
          actual_transfer,
          next_available_index[d_degree],
          ideal_transfer );
 
       for (TransitSet::const_iterator
-           ni = sorted_loads.begin(); ni != sorted_loads.end(); ++ni) {
+           ni = local_loads.begin(); ni != local_loads.end(); ++ni) {
          const BoxInTransit& mapped_box_in_transit = *ni;
-         balanced_mapped_box_level.addBox(mapped_box_in_transit.mapped_box);
+         balanced_mapped_box_level.addBox(mapped_box_in_transit.box);
          /*
           * Create local edges only for mapped_box_in_transit that
           * changed.  Semilocal edges are created by owner who decides
           * to keep the box.
           */
-         if (mapped_box_in_transit.mapped_box.getLocalId() !=
-             mapped_box_in_transit.orig_mapped_box.getLocalId()) {
+         if (mapped_box_in_transit.box.getLocalId() !=
+             mapped_box_in_transit.orig_box.getLocalId()) {
             balanced_to_unbalanced.insertLocalNeighbor(
-               mapped_box_in_transit.orig_mapped_box,
-               mapped_box_in_transit.mapped_box.getId());
+               mapped_box_in_transit.orig_box,
+               mapped_box_in_transit.box.getId());
             unbalanced_to_balanced.insertLocalNeighbor(
-               mapped_box_in_transit.mapped_box,
-               mapped_box_in_transit.orig_mapped_box.getId());
+               mapped_box_in_transit.box,
+               mapped_box_in_transit.orig_box.getId());
          }
       }
 
@@ -1311,10 +1316,11 @@ void TreeLoadBalancer::computeLoadBalancingMapWithinRankGroup(
    /*
     * May do some things here that do not depend on message from
     * parents.  Steve Smith suggested sending work down to underloaded
-    * children here, even if it makes the local process underloaded as
-    * a result.  The local process can recover the correct amount of
-    * work when it comes down from the parent.  This would allow some
-    * children subtrees to wait less, but it has other consequences.
+    * children at this point, even if it makes the local process
+    * underloaded as a result.  The local process can recover the
+    * correct amount of work when it comes down from the parent.  This
+    * would allow some children subtrees to wait less, but it has
+    * other consequences.
     */
 
 
@@ -1371,7 +1377,9 @@ void TreeLoadBalancer::computeLoadBalancingMapWithinRankGroup(
 
 
    /*
-    * Divide unassigned between self and children subtrees.
+    * Reassign unassigned load to children subtrees as needed.
+    * If local process is underloaded, it will take what is left
+    * in unassigned after reassigning to children.
     */
 
    t_send_load_to_children->start();
@@ -1432,19 +1440,16 @@ void TreeLoadBalancer::computeLoadBalancingMapWithinRankGroup(
 
 
    /*
-    * Populate balanced_mapped_box_level with unassigned Boxes and
-    * generate relationships in balanced<==>unbalanced mapping
-    * Connectors.
+    * All unassigned boxes should go into balanced_mapped_box_level.
     *
-    * Unassigned BoxInTransit that differ from their orig_mapped_box
-    * are imported or left-overs from breaking.  These Boxes
-    * should have relationships in balanced<==>unbalanced.
+    * Put unassigned boxes into balanced_mapped_box_level and generate
+    * relationships in balanced<==>unbalanced mapping Connectors where
+    * required.
     *
-    * Unassigned BoxInTransit that are identical to their
-    * orig_mapped_box are Boxes that were intended for export but
-    * never exported.  These Boxes should NOT have relationships in
-    * balanced<==>unbalanced.  Remove these boxes so unassigned
-    * can be interpreted as the container of changed boxes.
+    * We remove boxes from unassigned when we no longer need to keep
+    * track of them.  We do leave behind boxes originating remotely so
+    * we can later notify the originating processes about where the
+    * box finally ended up.
     */
    t_local_balancing->start();
 
@@ -1453,20 +1458,28 @@ void TreeLoadBalancer::computeLoadBalancingMapWithinRankGroup(
         ni != unassigned.end(); /* incremented in loop */) {
 
       const BoxInTransit& mapped_box_in_transit = *ni;
-      balanced_mapped_box_level.addBox(mapped_box_in_transit.mapped_box);
+      balanced_mapped_box_level.addBox(mapped_box_in_transit.box);
 
-      if (!mapped_box_in_transit.mapped_box.isIdEqual(mapped_box_in_transit.orig_mapped_box)) {
-         // Create relationship for changed Box.
-         balanced_to_unbalanced.insertLocalNeighbor(
-            mapped_box_in_transit.orig_mapped_box,
-            mapped_box_in_transit.mapped_box.getId());
-         ++ni;
+      if (mapped_box_in_transit.box.isIdEqual(mapped_box_in_transit.orig_box)) {
+         // Unchanged box requires no edge.  Nothing else need to be done.
+         unassigned.erase(ni++);
       } else {
-         // Remove unchanged mapped_box_in_transit so packedgeMessages
-         // will not create edge.
-         TransitSet::iterator sni = ni;
-         ++ni;
-         unassigned.erase(sni);
+
+         balanced_to_unbalanced.insertLocalNeighbor(
+            mapped_box_in_transit.orig_box,
+            mapped_box_in_transit.box.getId());
+
+         if (mapped_box_in_transit.orig_box.getOwnerRank() == d_mpi.getRank()) {
+            unbalanced_to_balanced.insertLocalNeighbor(
+               mapped_box_in_transit.box,
+               mapped_box_in_transit.orig_box.getId());
+            unassigned.erase(ni++);
+         }
+         else {
+            // Leave this box in unassigned for notifying originating
+            // process of where it landed.
+            ++ni;
+         }
       }
 
    }
@@ -1497,169 +1510,34 @@ void TreeLoadBalancer::computeLoadBalancingMapWithinRankGroup(
 #endif
 
 
-#if 0
    /*
-    * This is not needed if the communications are bug-free.
-    * As a debugging measure, switch the MPI tags for edge communication.
+    *
     */
-   for (int i = 0; i < num_children; ++i) {
-      child_comms[i].setMPITag(TreeLoadBalancer_EDGETAG0,
-         TreeLoadBalancer_EDGETAG1);
-   }
-   if (parent_send != NULL) {
-      parent_send->setMPITag(TreeLoadBalancer_EDGETAG0,
-         TreeLoadBalancer_EDGETAG1);
-      parent_recv->setMPITag(TreeLoadBalancer_EDGETAG0,
-         TreeLoadBalancer_EDGETAG1);
-   }
-#endif
+   std::vector<int> exported_to;
+   std::vector<int> imported_from;
 
-
-   /*
-    * TODO: Move code to compute neighborhoods to a separate method.
-    * It should make this method more manageable and allows us to
-    * experiment with various way to compute the edges (by direct
-    * communication without relying on the tree, for example).
-    *
-    * Determine edges from unbalanced to balanced BoxLevels
-    * by sending balanced Boxes back to the owners of
-    * the unbalanced Boxes that originated them.  Use
-    * the proc_hist data from the balanced BoxInTransit
-    * to send along the tree.
-    *
-    * Post receives for edge data sent from children.
-    * Pack relationship data for locally owned Boxes.
-    * Then complete receives  from children and send
-    * data up to parents.
-    *
-    * Four steps for passing relationship data to the owners of
-    * originating Boxes:
-    * 1. Receive relationships from all children to whom we exported work.
-    * 1a. Note relationships to local Boxes on balanced_mapped_box_level.
-    * 2. Send relationship data to parent if we imported work from parent.
-    * 3. Receive relationship data from parent if we exported work to parent.
-    * 4. Send relationships to children from whom we imported work.
-    *
-    * TODO: Implement alternate edge generation method where terminal
-    * owners send edge info directly back to initial owners.  No need
-    * for trails.  Initial owners receive from MPI_ANY and stops
-    * receiving when it can account for the number of cells it started
-    * with.  We should retain both methods for edge generation because
-    * we don't know which is faster on any given machine.  BTNG.
-    */
-
-   std::vector<int>* messages = new std::vector<int>[num_children + 1];
-
-   t_get_edge_from_children->start();
-   for (int c = 0; c < num_children; ++c) {
-      if (child_load_data[c].load_exported > 0) {
-         child_comms[c].beginRecv();
-         if (child_comms[c].isDone()) {
-            completed.insert(completed.end(), &child_comms[c]);
-         }
+   for ( int ichild=0; ichild<num_children; ++ichild ) {
+      if ( child_load_data[ichild].load_imported > 0 ) {
+         imported_from.push_back(child_comms[ichild].getPeerRank());
+      }
+      if ( child_load_data[ichild].load_exported > 0 ) {
+         exported_to.push_back(child_comms[ichild].getPeerRank());
       }
    }
 
-
-   /*
-    * peer_ranks is a list of all ranks we communicate with.  Compute
-    * once here for use in the pack/unpack methods, to avoid repeated
-    * recomputing.
-    */
-   std::vector<int> peer_ranks(num_children + 1);
-   for (int i = 0; i < num_children; ++i) {
-      peer_ranks[i] = child_comms[i].getPeerRank();
+   if ( my_load_data.load_imported > 0 ) {
+      imported_from.push_back(parent_send->getPeerRank());
    }
-   peer_ranks[num_children] = parent_send ==
-      NULL ? -1 : parent_send->getPeerRank();
+   if ( my_load_data.load_exported > 0 ) {
+      exported_to.push_back(parent_send->getPeerRank());
+   }
 
-
-   /*
-    * Note that unchanged BoxInTransit have been removed from
-    * unassigned, so it now only contains boxes that have changed
-    * and need to have edges built.
-    */
-   t_local_edges->start();
-   packNeighborhoodSetMessages(messages,
+   constructSemilocalUnbalancedToBalanced(
       unbalanced_to_balanced,
-      unassigned,
-      peer_ranks);
-   t_local_edges->stop();
+      exported_to,
+      imported_from,
+      unassigned );
 
-   /*
-    * Advance edge messages from children.
-    */
-
-   if (completed.empty()) {
-      t_children_edge_comm->start();
-      comm_stage.advanceSome(completed);
-      t_children_edge_comm->stop();
-   }
-   while (!completed.empty()) {
-      for (unsigned int i = 0; i < completed.size(); ++i) {
-         tbox::AsyncCommPeer<int>* peer_comm =
-            dynamic_cast<tbox::AsyncCommPeer<int> *>(completed[i]);
-         const int* received_data = peer_comm->getRecvData();
-         int received_data_length = peer_comm->getRecvSize();
-         unpackAndRouteNeighborhoodSets(
-            messages,
-            unbalanced_to_balanced,
-            peer_ranks,
-            received_data,
-            received_data_length );
-      }
-      completed.clear();
-      t_children_edge_comm->start();
-      comm_stage.advanceSome(completed);
-      t_children_edge_comm->stop();
-   }
-   t_get_edge_from_children->stop();
-
-
-   /*
-    * Edge data to/from parents:
-    *
-    * If we received BoxInTransit from the parent, the parent is
-    * expecting us to send relationship data for those boxes.
-    *
-    * We sent BoxInTransit to the parent, the parent would send back
-    * relationship data for those boxes.
-    */
-   if (my_load_data.load_imported > 0) {
-
-      t_send_edge_to_parent->start();
-      t_parent_edge_comm->start();
-      parent_send->completeCurrentOperation();
-      parent_send->beginSend(&messages[num_children][0],
-         static_cast<int>(messages[num_children].size()));
-      t_parent_edge_comm->stop();
-      t_send_edge_to_parent->stop();
-
-   } else if (my_load_data.load_exported > 0) {
-
-      t_get_edge_from_parent->start();
-      t_parent_edge_comm->start();
-      parent_recv->beginRecv();
-      parent_recv->completeCurrentOperation();
-      t_parent_edge_comm->stop();
-      unpackAndRouteNeighborhoodSets(
-         messages,
-         unbalanced_to_balanced,
-         peer_ranks,
-         parent_recv->getRecvData(),
-         parent_recv->getRecvSize() );
-      t_get_edge_from_parent->stop();
-
-   }
-
-   t_send_edge_to_children->start();
-   for (int c = 0; c < num_children; ++c) {
-      if (child_load_data[c].load_imported > 0) {
-         child_comms[c].beginSend(&messages[c][0],
-            static_cast<int>(messages[c].size()));
-      }
-   }
-   t_send_edge_to_children->stop();
 
    if (d_check_connectivity) {
       const hier::OverlapConnectorAlgorithm oca;
@@ -1703,25 +1581,11 @@ void TreeLoadBalancer::computeLoadBalancingMapWithinRankGroup(
       }
    }
 
+
    delete[] child_load_data;
-   delete[] messages;
-
-   /*
-    * Wrap up communications.
-    * No follow-up needed because all the receives have been
-    * processed--only the sends may still be out.
-    *
-    * TODO: This step should take no significant time, because the sends
-    * should all be well on their way.  However, I'm seeing some
-    * aparent scaling issues.  I may want to use MPI_Request_free
-    * to just let the sends finish quietly without furthe actions.
-    * Not sure if that would help.
-    */
-   t_finish_comms->start();
-   comm_stage.advanceAll(completed);
-   t_finish_comms->stop();
-
    destroyAsyncCommObjects(child_comms, parent_send, parent_recv);
+
+   return;
 }
 
 
@@ -1872,10 +1736,10 @@ void TreeLoadBalancer::packSubtreeLoadData(
    msg.insert(msg.end(), static_cast<int>(for_export.size()));
    for (TransitSet::const_iterator
         ni = for_export.begin(); ni != for_export.end(); ++ni) {
-      const BoxInTransit& mapped_box_in_transit = *ni;
+      const BoxInTransit& box_in_transit = *ni;
       int i0 = static_cast<int>(msg.size());
-      msg.insert(msg.end(), mapped_box_in_transit.commBufferSize(), 0);
-      mapped_box_in_transit.putToIntBuffer(&msg[i0]);
+      msg.insert(msg.end(), box_in_transit.commBufferSize(), 0);
+      box_in_transit.putToIntBuffer(&msg[i0]);
    }
    t_pack_load->stop();
 }
@@ -1898,107 +1762,173 @@ void TreeLoadBalancer::unpackSubtreeLoadData(
    load_data.num_procs = *(received_data++);
    load_data.total_work = *(received_data++);
    load_data.load_imported = *(received_data++);
-   const int num_transits = *(received_data++);
-   for (int i = 0; i < num_transits; ++i) {
-      BoxInTransit received_mapped_box_in_transit(d_dim);
-      received_mapped_box_in_transit.getFromIntBuffer(received_data);
-      BoxInTransit renamed_mapped_box_in_transit(received_mapped_box_in_transit,
-                                                 received_mapped_box_in_transit.getBox(),
-                                                 d_mpi.getRank(),
-                                                 next_available_index);
+   const int num_boxes = *(received_data++);
+   BoxInTransit received_box(d_dim);
+   for (int i = 0; i < num_boxes; ++i) {
+      received_box.getFromIntBuffer(received_data);
+      BoxInTransit renamed_box(received_box,
+                               received_box.getBox(),
+                               d_mpi.getRank(),
+                               next_available_index);
       next_available_index += 2 + d_degree;
-      receiving_bin.insert(renamed_mapped_box_in_transit);
-      received_data += received_mapped_box_in_transit.commBufferSize();
+      receiving_bin.insert(renamed_box);
+      received_data += received_box.commBufferSize();
    }
    t_unpack_load->stop();
 }
 
 
 
+
+
 /*
  *************************************************************************
- * This method sets up local relationships in unbalanced_to_balanced.
- * For remote relationships, it packs information into messages to be
- * sent out.
- *
- * The input mapped_boxes_in_transit contains local BoxInTransit that
- * will remain on the local process.  This method builds the
- * relationships from the BoxInTransit to its origin (in
- * unbalanced_to_balanced) if the origin is local.
- * If the origin is remote, pack the BoxInTransit in a message to send
- * in the direction of the originating rank.  The process history
- * tells us whether to send the BoxInTransit to the parent or one of
- * the children.
+ * Construct semilocal relationships in unbalanced--->balanced
+ * Connector.  Constructing these relationships require communication
+ * to determine where exported work ended up.
  *************************************************************************
  */
-void TreeLoadBalancer::packNeighborhoodSetMessages(
-   std::vector<int> messages[],
-   hier::Connector& unbalanced_to_balanced,
-   const TransitSet& mapped_boxes_in_transit,
-   const std::vector<int>& peer_ranks) const
+void TreeLoadBalancer::constructSemilocalUnbalancedToBalanced(
+   hier::Connector &unbalanced_to_balanced,
+   const std::vector<int> &export_dsts,
+   const std::vector<int> &import_srcs,
+   const TreeLoadBalancer::TransitSet &kept_imports ) const
 {
-   t_pack_edge->start();
+   /*
+    * Determine edges from unbalanced to balanced BoxLevels by sending
+    * balanced Boxes back to the owners of the unbalanced Boxes that
+    * originated them.  Use the proc_hist data from each balanced
+    * BoxInTransit to send it back along the path it took to get to
+    * the process that eventually kept it.
+    *
+    * Any process we exported work to should send back a message about
+    * where that work went.  Any process we imported work from expects
+    * us to send a message about what happened to that work.  So we
+    * receive messages from procs in export_dsts and send messages to
+    * procs in import_srcs.
+    *
+    * For work that originated locally, construct relationships when
+    * an incoming message tells us where that work ended up.  For work
+    * that originated elsewhere, forward the information to the
+    * process that sent it to us.
+    *
+    * TODO: Implement alternate edge generation method where terminal
+    * owners send edge info directly back to initial owners.  No need
+    * for trails.  Initial owners receive from MPI_ANY and stops
+    * receiving when it can account for the number of cells it started
+    * with.  We should retain both methods for edge generation because
+    * we don't know which is faster on any given machine.  BTNG.
+    */
 
-   const int num_children = static_cast<int>(peer_ranks.size()) - 1;
-   const int parent_rank = peer_ranks[num_children];
-   const std::vector<int>& child_ranks = peer_ranks;
 
-   for (TransitSet::const_iterator ni = mapped_boxes_in_transit.begin();
-        ni != mapped_boxes_in_transit.end(); ++ni) {
+   /*
+    * Set up objects for asynchronous communication.
+    */
+   tbox::AsyncCommStage comm_stage;
+   tbox::AsyncCommPeer<int> *importer_comms = import_srcs.empty() ? NULL : new tbox::AsyncCommPeer<int>[import_srcs.size()];
+   tbox::AsyncCommPeer<int> *exporter_comms = export_dsts.empty() ? NULL : new tbox::AsyncCommPeer<int>[export_dsts.size()];
+   tbox::AsyncCommStage::MemberVec completed;
 
-      BoxInTransit mapped_box_in_transit = *ni;
+   for ( size_t i=0; i<export_dsts.size(); ++i ) {
+      exporter_comms[i].initialize(&comm_stage);
+      exporter_comms[i].setPeerRank(export_dsts[i]);
+      exporter_comms[i].setMPI(d_mpi);
+      exporter_comms[i].setMPITag(TreeLoadBalancer_EDGETAG0,
+                                  TreeLoadBalancer_EDGETAG1);
+      exporter_comms[i].limitFirstDataLength(TreeLoadBalancer_FIRSTDATALEN);
+      exporter_comms[i].beginRecv();
+      if ( exporter_comms[i].isDone() ) {
+         completed.push_back(&exporter_comms[i]);
+      }
+   }
 
-      // If there is no process history, then local process must be originator.
-      if (mapped_box_in_transit.proc_hist.empty()) {
+   for ( size_t i=0; i<import_srcs.size(); ++i ) {
+      importer_comms[i].initialize(&comm_stage);
+      importer_comms[i].setPeerRank(import_srcs[i]);
+      importer_comms[i].setMPI(d_mpi);
+      importer_comms[i].setMPITag(TreeLoadBalancer_EDGETAG0,
+                                  TreeLoadBalancer_EDGETAG1);
+      importer_comms[i].limitFirstDataLength(TreeLoadBalancer_FIRSTDATALEN);
+   }
 
-         if (d_print_edge_steps) {
-            tbox::plog << "Keeping edge " << mapped_box_in_transit << std::endl;
+
+   // Buffers for staging data to send.  Indexed by recipient rank.
+   std::map<int,std::vector<int> > outgoing_messages;
+
+
+   /*
+    * Prepare messages to tell processes that sent work to us about
+    * the work that we kept.
+    */
+   t_local_edges->start();
+   for (TransitSet::const_iterator ni = kept_imports.begin();
+        ni != kept_imports.end(); ++ni) {
+      const BoxInTransit &box_in_transit = *ni;
+      TBOX_ASSERT(!box_in_transit.proc_hist.empty());
+      TBOX_ASSERT(box_in_transit.orig_box.getOwnerRank() != d_mpi.getRank());
+      box_in_transit.packForPreviousOwner(outgoing_messages);
+   }
+   t_local_edges->stop();
+
+   /*
+    * Receive and unpack incoming messages.
+    */
+   do {
+      for (unsigned int i = 0; i < completed.size(); ++i) {
+
+         tbox::AsyncCommPeer<int>* peer_comm =
+            dynamic_cast<tbox::AsyncCommPeer<int> *>(completed[i]);
+         const int peer_rank = peer_comm->getPeerRank();
+
+#ifdef DEBUG_CHECK_ASSERTIONS
+         int j;
+         for ( j=0; j<export_dsts.size(); ++j ) {
+            if ( export_dsts[j] == peer_rank ) break;
          }
-         TBOX_ASSERT(mapped_box_in_transit.orig_mapped_box.getOwnerRank() == d_mpi.getRank());
-         unbalanced_to_balanced.insertLocalNeighbor(
-            mapped_box_in_transit.mapped_box,
-            mapped_box_in_transit.orig_mapped_box.getId());
+         TBOX_ASSERT( j < export_dsts.size() );
+#endif
 
-      } else {
-
-         TBOX_ASSERT(mapped_box_in_transit.orig_mapped_box.getOwnerRank() != d_mpi.getRank());
-
-         // Remember the previous owner and remove it from the proc_hist.
-         const int prev_owner = mapped_box_in_transit.proc_hist.back();
-         mapped_box_in_transit.proc_hist.pop_back();
-
-         // Find message corresponding to prev_owner.
-         int source_i = -1;
-         if (parent_rank != -1 && prev_owner == parent_rank) {
-            source_i = num_children; // Means source is parent.
-         } else {
-            for (source_i = 0; source_i != num_children; ++source_i) {
-               if (prev_owner == child_ranks[source_i]) {
-                  break;
-               }
-            }
-         }
-
-         TBOX_ASSERT(source_i < num_children + 1);
-
-         std::vector<int>& msg = messages[source_i];
-
-         // Pack mapped_box_in_transit into msg.
-         if (d_print_edge_steps) {
-            tbox::plog << "Pack edge to "
-                       << (source_i < num_children ? "child " : "parent ")
-                       << (source_i < num_children ? child_ranks[source_i] : parent_rank)
-                       << ": " << mapped_box_in_transit
-                       << std::endl;
-         }
-         msg.insert(msg.end(), mapped_box_in_transit.commBufferSize(), 0);
-         mapped_box_in_transit.putToIntBuffer(&msg[msg.size()
-                                                   - mapped_box_in_transit.commBufferSize()]);
+         const int* received_data = peer_comm->getRecvData();
+         int received_data_length = peer_comm->getRecvSize();
+         unpackAndRouteNeighborhoodSets(
+            outgoing_messages,
+            unbalanced_to_balanced,
+            received_data,
+            received_data_length );
       }
 
+      completed.clear();
+      t_children_edge_comm->start();
+      comm_stage.advanceSome(completed);
+      t_children_edge_comm->stop();
+
+   } while (!completed.empty());
+
+
+   /*
+    * Send outgoing messages.
+    */
+   TBOX_ASSERT( outgoing_messages.size() == import_srcs.size() );
+   for ( int i=0; i<import_srcs.size(); ++i ) {
+      tbox::AsyncCommPeer<int> &peer_comm = importer_comms[i];
+      const int peer_rank = peer_comm.getPeerRank();
+      std::map<int,std::vector<int> >::const_iterator recip =
+         outgoing_messages.find(peer_rank);
+      TBOX_ASSERT( recip != outgoing_messages.end() );
+      const std::vector<int> &message = recip->second;
+      peer_comm.beginSend( &message[0], message.size() );
    }
-   t_pack_edge->stop();
+
+   t_finish_comms->start();
+   comm_stage.advanceAll(completed);
+   t_finish_comms->stop();
+
+   delete [] importer_comms;
+   delete [] exporter_comms;
+
+   return;
 }
+
 
 
 
@@ -2010,87 +1940,48 @@ void TreeLoadBalancer::packNeighborhoodSetMessages(
  *************************************************************************
  */
 void TreeLoadBalancer::unpackAndRouteNeighborhoodSets(
-   std::vector<int> outgoing_messages[],
+   std::map<int,std::vector<int> > &outgoing_messages,
    hier::Connector& unbalanced_to_balanced,
-   const std::vector<int>& peer_ranks,
    const int* received_data,
    int received_data_length ) const
 {
    t_unpack_edge->start();
-
-   const int num_children = static_cast<int>(peer_ranks.size()) - 1;
-   const int parent_rank = peer_ranks[num_children];
-   const std::vector<int>& child_ranks = peer_ranks;
 
    const int* beg = received_data;
    const int* end = received_data + received_data_length;
 
    while (beg < end) {
 
-      BoxInTransit mapped_box_in_transit(d_dim);
-      mapped_box_in_transit.getFromIntBuffer(beg);
-      beg += mapped_box_in_transit.commBufferSize();
+      const BoxInTransit box_in_transit(beg, d_dim);
       if (d_print_edge_steps) {
-         tbox::plog << "Unpacked edge " << mapped_box_in_transit << std::endl;
+         tbox::plog << "Unpacked edge " << box_in_transit << std::endl;
       }
 
       TBOX_ASSERT(beg <= end);
 
+      // Empty proc_hist must mean that local process is the originator.
+      TBOX_ASSERT(box_in_transit.proc_hist.empty() ==
+                  ( box_in_transit.orig_box.getOwnerRank() ==
+                    d_mpi.getRank() ) );
 
       /*
-       * If mapped_box_in_transit originated on this process (its
-       * proc_hist is empty), the relationship should live here.
-       * Else, send mapped_box_in_transit toward its originating
-       * process by packing it into the message to route it to its
-       * previous owner.
+       * If the local process originated this box, generate the
+       * relationship here.  Else, pack the box to forward to its
+       * previous owner (and eventually to its originator).
        */
-      if (mapped_box_in_transit.proc_hist.empty()) {
+
+      if (box_in_transit.orig_box.getOwnerRank() == d_mpi.getRank()) {
 
          if (d_print_edge_steps) {
-            tbox::plog << "Keeping edge " << mapped_box_in_transit << std::endl;
+            tbox::plog << "Keeping edge " << box_in_transit << std::endl;
          }
-
-         TBOX_ASSERT(mapped_box_in_transit.orig_mapped_box.getOwnerRank() == d_mpi.getRank());
 
          unbalanced_to_balanced.insertLocalNeighbor(
-            mapped_box_in_transit.mapped_box,
-            mapped_box_in_transit.orig_mapped_box.getId());
+            box_in_transit.box,
+            box_in_transit.orig_box.getId());
 
       } else {
-
-         TBOX_ASSERT(mapped_box_in_transit.orig_mapped_box.getOwnerRank() != d_mpi.getRank());
-
-         // Remember the previous owner and remove it from the proc_hist.
-         const int prev_owner = mapped_box_in_transit.proc_hist.back();
-         mapped_box_in_transit.proc_hist.pop_back();
-
-         // Find outgoing message corresponding to prev_owner.
-         int source_i = -1;
-         if (parent_rank != -1 && prev_owner == parent_rank) {
-            source_i = num_children; // Means source is parent.
-         } else {
-            for (source_i = 0; source_i != num_children; ++source_i) {
-               if (prev_owner == child_ranks[source_i]) {
-                  break;
-               }
-            }
-         }
-
-         TBOX_ASSERT(source_i < num_children + 1);
-
-         std::vector<int>& msg = outgoing_messages[source_i];
-
-         // Pack mapped_box_in_transit into msg.
-         if (d_print_edge_steps) {
-            tbox::plog << "Pack edge to "
-                       << (source_i < num_children ? "child " : "parent ")
-                       << (source_i < num_children ? child_ranks[source_i] : parent_rank)
-                       << ": " << mapped_box_in_transit
-                       << std::endl;
-         }
-         msg.insert(msg.end(), mapped_box_in_transit.commBufferSize(), 0);
-         mapped_box_in_transit.putToIntBuffer(&msg[msg.size()
-                                                   - mapped_box_in_transit.commBufferSize()]);
+         box_in_transit.packForPreviousOwner(outgoing_messages);
       }
    }
    t_unpack_edge->stop();
@@ -2440,7 +2331,7 @@ bool TreeLoadBalancer::shiftLoadsByBreaking(
          breakoff,
          leftover,
          breakoff_amt,
-         candidate.mapped_box,
+         candidate.box,
          ideal_transfer );
 
       if (!breakoff.empty()) {
@@ -2461,17 +2352,13 @@ bool TreeLoadBalancer::shiftLoadsByBreaking(
          }
 
          if (!improves_balance) {
-            /*
-             * Consider only options that changes the balance for the
-             * better.  Options that degrades or leave alone the
-             * balance put us in an infinite loop bouncing between
-             * better balance and better combined penalty.
-             */
+            // Reject.
             continue;
          }
 
          /*
-          * Trial modifications of src and dst, for evaluating penalties.
+          * Trial modifications of src and dst, for evaluating
+          * combined penalties.
           */
          TransitSet trial_src = src;
          TransitSet trial_dst = dst;
@@ -2480,7 +2367,7 @@ bool TreeLoadBalancer::shiftLoadsByBreaking(
          trial_src.erase(candidate);
 
          /*
-          * Put breakoff in trial_dst and put leftover back into trial_src.
+          * Put breakoff in trial_dst and leftover back into trial_src.
           */
          for (std::vector<hier::Box>::const_iterator bi = breakoff.begin();
               bi != breakoff.end();
@@ -2491,8 +2378,8 @@ bool TreeLoadBalancer::shiftLoadsByBreaking(
                d_mpi.getRank(),
                next_available_index);
             give_mapped_box_in_transit.load = (int)computeLoad(
-                  give_mapped_box_in_transit.orig_mapped_box,
-                  give_mapped_box_in_transit.getBox());
+               give_mapped_box_in_transit.orig_box,
+               give_mapped_box_in_transit.getBox());
             next_available_index += 2 + d_degree;
             trial_dst.insert(give_mapped_box_in_transit);
             trial_actual_transfer += give_mapped_box_in_transit.load;
@@ -2511,7 +2398,7 @@ bool TreeLoadBalancer::shiftLoadsByBreaking(
                d_mpi.getRank(),
                next_available_index);
             keep_mapped_box_in_transit.load = (int)computeLoad(
-                  keep_mapped_box_in_transit.orig_mapped_box,
+                  keep_mapped_box_in_transit.orig_box,
                   keep_mapped_box_in_transit.getBox());
             next_available_index += 2 + d_degree;
             trial_src.insert(keep_mapped_box_in_transit);
@@ -3440,10 +3327,10 @@ double TreeLoadBalancer::computeSurfacePenalty(
 {
    double surface_penalty = 0;
    for (TransitSet::const_iterator bi = a.begin(); bi != a.end(); ++bi) {
-      surface_penalty += computeSurfacePenalty(bi->mapped_box);
+      surface_penalty += computeSurfacePenalty(bi->box);
    }
    for (TransitSet::const_iterator bi = b.begin(); bi != b.end(); ++bi) {
-      surface_penalty += computeSurfacePenalty(bi->mapped_box);
+      surface_penalty += computeSurfacePenalty(bi->box);
    }
    return surface_penalty;
 }
@@ -3514,10 +3401,10 @@ double TreeLoadBalancer::computeSlenderPenalty(
 {
    double slender_penalty = 0;
    for (TransitSet::const_iterator bi = a.begin(); bi != a.end(); ++bi) {
-      slender_penalty += computeSlenderPenalty(bi->mapped_box);
+      slender_penalty += computeSlenderPenalty(bi->box);
    }
    for (TransitSet::const_iterator bi = b.begin(); bi != b.end(); ++bi) {
-      slender_penalty += computeSlenderPenalty(bi->mapped_box);
+      slender_penalty += computeSlenderPenalty(bi->box);
    }
    return slender_penalty;
 }
@@ -4740,15 +4627,15 @@ std::ostream& operator << (
    std::ostream& co,
    const BoxInTransit& r)
 {
-   co << r.mapped_box
-   << r.mapped_box.numberCells() << '|'
-   << r.mapped_box.numberCells().getProduct();
+   co << r.box
+   << r.box.numberCells() << '|'
+   << r.box.numberCells().getProduct();
    for (int i = static_cast<int>(r.proc_hist.size()) - 1; i >= 0; --i) {
       co << '-' << r.proc_hist[i];
    }
-   co << '-' << r.orig_mapped_box
-   << r.mapped_box.numberCells() << '|'
-   << r.mapped_box.numberCells().getProduct();
+   co << '-' << r.orig_box
+   << r.box.numberCells() << '|'
+   << r.box.numberCells().getProduct();
    return co;
 }
 
@@ -4833,8 +4720,6 @@ void TreeLoadBalancer::setTimers()
          getTimer(d_object_name + "::pack_load");
       t_unpack_load = tbox::TimerManager::getManager()->
          getTimer(d_object_name + "::unpack_load");
-      t_pack_edge = tbox::TimerManager::getManager()->
-         getTimer(d_object_name + "::pack_edge");
       t_unpack_edge = tbox::TimerManager::getManager()->
          getTimer(d_object_name + "::unpack_edge");
       t_parent_load_comm = tbox::TimerManager::getManager()->

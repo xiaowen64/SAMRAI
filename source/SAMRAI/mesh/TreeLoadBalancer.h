@@ -54,8 +54,8 @@ struct BoxInTransit {
     */
    BoxInTransit(
       const tbox::Dimension& dim):
-      mapped_box(dim),
-      orig_mapped_box(dim)
+      box(dim),
+      orig_box(dim)
    {
    }
 
@@ -66,16 +66,38 @@ struct BoxInTransit {
     */
    BoxInTransit(
       const hier::Box& other):
-      mapped_box(other),
-      orig_mapped_box(other),
+      box(other),
+      orig_box(other),
       load(other.size()),
       proc_hist()
    {
    }
 
    /*!
-    * @brief Construct new object with a new process added to the
-    * process history.  Copy the history from an existing object.
+    * @brief Construct new object using integer data packed by
+    * putToIntBuffer().
+    *
+    * @param[i/o] ptr Pointer to integer data in buffer.  On return,
+    * @c ptr will be advanced past the data used by this object.
+    *
+    * @param[i] dim
+    */
+   BoxInTransit(
+      const int *&ptr,
+      const tbox::Dimension &dim ):
+      box(dim),
+      orig_box(dim),
+      load(0),
+      proc_hist(0)
+   {
+      getFromIntBuffer(ptr);
+      ptr += commBufferSize();
+   }
+
+   /*!
+    * @brief Construct new object based on an existing object, taking
+    * the exiting object's origin data and process history, but
+    * appending a new process in the history and using a new box.
     *
     * @param[in] other
     *
@@ -90,8 +112,8 @@ struct BoxInTransit {
       const hier::Box& box,
       int rank,
       LocalId local_id):
-      mapped_box(box, local_id, rank, other.orig_mapped_box.getBlockId()),
-      orig_mapped_box(other.orig_mapped_box),
+      box(box, local_id, rank, other.orig_box.getBlockId()),
+      orig_box(other.orig_box),
       load(box.size()),
       proc_hist(other.proc_hist)
    {
@@ -107,18 +129,18 @@ struct BoxInTransit {
     */
    const BoxInTransit& operator = (
       const BoxInTransit& other) {
-      mapped_box = other.mapped_box;
-      orig_mapped_box = other.orig_mapped_box;
+      box = other.box;
+      orig_box = other.orig_box;
       load = other.load;
       proc_hist = other.proc_hist;
       return *this;
    }
 
    //! @brief The Box.
-   hier::Box mapped_box;
+   hier::Box box;
 
    //! @brief Originating Box.
-   hier::Box orig_mapped_box;
+   hier::Box orig_box;
 
    //! @brief Normalized work load.
    int load;
@@ -132,22 +154,22 @@ struct BoxInTransit {
 
    //! @brief Return the owner rank.
    int getOwnerRank() const {
-      return mapped_box.getOwnerRank();
+      return box.getOwnerRank();
    }
 
    //! @brief Return the LocalId.
    LocalId getLocalId() const {
-      return mapped_box.getLocalId();
+      return box.getLocalId();
    }
 
    //! @brief Return the Box.
    hier::Box& getBox() {
-      return mapped_box;
+      return box;
    }
 
    //! @brief Return the Box.
    const hier::Box& getBox() const {
-      return mapped_box;
+      return box;
    }
 
    /*!
@@ -155,7 +177,7 @@ struct BoxInTransit {
     * object in message passing buffer.
     */
    int commBufferSize() const {
-      const tbox::Dimension& dim(mapped_box.getDim());
+      const tbox::Dimension& dim(box.getDim());
       return 2 * hier::Box::commBufferSize(dim) + 2 + static_cast<int>(proc_hist.size());
    }
 
@@ -164,17 +186,23 @@ struct BoxInTransit {
     *
     * This is the opposite of getFromIntBuffer().  Number of ints
     * written is given by commBufferSize().
+    *
+    * If skip_last_owner is true, and the last owner in proc_hist will
+    * be skipped (proc_hist must be non-empty) and the number of integers
+    * put in the buffer would be one less than commBufferSize().
     */
    void putToIntBuffer(
-      int* buffer) const {
-      const tbox::Dimension& dim(mapped_box.getDim());
-      mapped_box.putToIntBuffer(buffer);
+      int* buffer,
+      bool skip_last_owner=false) const {
+      const tbox::Dimension& dim(box.getDim());
+      box.putToIntBuffer(buffer);
       buffer += hier::Box::commBufferSize(dim);
-      orig_mapped_box.putToIntBuffer(buffer);
+      orig_box.putToIntBuffer(buffer);
       buffer += hier::Box::commBufferSize(dim);
       *(buffer++) = load;
-      *(buffer++) = static_cast<int>(proc_hist.size());
-      for (unsigned int i = 0; i < proc_hist.size(); ++i) {
+      if (skip_last_owner) { TBOX_ASSERT( !proc_hist.empty() ); }
+      *(buffer++) = static_cast<int>(proc_hist.size()-skip_last_owner);
+      for (unsigned int i = 0; i < proc_hist.size()-skip_last_owner; ++i) {
          buffer[i] = proc_hist[i];
       }
    }
@@ -187,10 +215,10 @@ struct BoxInTransit {
     */
    void getFromIntBuffer(
       const int* buffer) {
-      const tbox::Dimension& dim(mapped_box.getDim());
-      mapped_box.getFromIntBuffer(buffer);
+      const tbox::Dimension& dim(box.getDim());
+      box.getFromIntBuffer(buffer);
       buffer += hier::Box::commBufferSize(dim);
-      orig_mapped_box.getFromIntBuffer(buffer);
+      orig_box.getFromIntBuffer(buffer);
       buffer += hier::Box::commBufferSize(dim);
       load = *(buffer++);
       proc_hist.clear();
@@ -198,6 +226,27 @@ struct BoxInTransit {
       for (unsigned int i = 0; i < proc_hist.size(); ++i) {
          proc_hist[i] = buffer[i];
       }
+   }
+
+   /*!
+    * @brief Stuff into an outgoing message destined for the previous
+    * owner.
+    *
+    * prev_owner must not be empty.  This method pops the next value
+    * from prev_owner (changing the object's state!) and packs the
+    * object into the message for that owner.
+    *
+    * @param outgoing_messages Map of outgoing messages, indexed by
+    * recipient rank.  On return, the message corresponding to the
+    * previous owner will be grown by commBufferSize()-1.
+    */
+   void packForPreviousOwner(
+      std::map<int,std::vector<int> > &outgoing_messages ) const {
+      const int prev_owner = proc_hist.back();
+      std::vector<int> &msg(outgoing_messages[prev_owner]);
+      const int cbs = commBufferSize();
+      msg.insert(msg.end(), cbs-1, 0);
+      putToIntBuffer(&msg[msg.size() - (cbs-1)], true);
    }
 
    //! @brief Stream-insert operator.
@@ -218,7 +267,7 @@ struct BoxInTransitMoreLoad {
       if (a.getBox().size() != b.getBox().size()) {
          return a.load > b.load;
       }
-      return a.mapped_box.getId() < b.mapped_box.getId();
+      return a.box.getId() < b.box.getId();
    }
 };
 
@@ -620,19 +669,37 @@ private:
       int received_data_length ) const;
 
    void
-   packNeighborhoodSetMessages(
-      std::vector<int> messages[],
-      hier::Connector& unbalanced_to_balanced,
-      const TransitSet& mapped_boxes_in_transit,
-      const std::vector<int>& peer_ranks) const;
-
-   void
    unpackAndRouteNeighborhoodSets(
-      std::vector<int> outgoing_messages[],
+      std::map<int,std::vector<int> > &outgoing_messages,
       hier::Connector& unbalanced_to_balanced,
-      const std::vector<int>& peer_ranks,
       const int* received_data,
       int received_data_length ) const;
+
+   /*!
+    * @brief Construct semilocal relationships in
+    * unbalanced--->balanced Connector.
+    *
+    * Constructing semilocal unbalanced--->balanced relationships
+    * require communication to determine where exported work ended up.
+    * This methods does the necessary communication and constructs
+    * these relationship in the given Connector.
+    *
+    * @param [o] unbalanced_to_balanced Connector to store
+    * relationships in.
+    *
+    * @param [i] exported_to Ranks of processes that the local process
+    * exported work to.
+    *
+    * @param [i] imported_from Ranks of processes that the local
+    * process imported work from.
+    *
+    * @param [i] kept_imports Work that was imported and locally kept.
+    */
+   void constructSemilocalUnbalancedToBalanced(
+      hier::Connector &unbalanced_to_balanced,
+      const std::vector<int> &exported_to,
+      const std::vector<int> &imported_from,
+      const TreeLoadBalancer::TransitSet &kept_imports ) const;
 
    /*!
     * @brief Break off a given load size from a given Box.
@@ -826,7 +893,7 @@ private:
     * @param [o] child_comms
     * @param [o] parent_send
     * @param [o] parent_recv
-    * @param [i/o] parent_recv
+    * @param [o] parent_recv
     * @param [i] rank_group
     */
    void setupAsyncCommObjects(
@@ -987,7 +1054,6 @@ private:
    tbox::Pointer<tbox::Timer> t_misc3;
    tbox::Pointer<tbox::Timer> t_pack_load;
    tbox::Pointer<tbox::Timer> t_unpack_load;
-   tbox::Pointer<tbox::Timer> t_pack_edge;
    tbox::Pointer<tbox::Timer> t_unpack_edge;
    tbox::Pointer<tbox::Timer> t_children_load_comm;
    tbox::Pointer<tbox::Timer> t_parent_load_comm;

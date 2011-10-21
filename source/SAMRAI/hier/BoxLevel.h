@@ -1130,17 +1130,6 @@ public:
       int detail_depth = 0) const;
 
    /*!
-    * @brief Print out statistics on the Boxes.
-    *
-    * @param[in,out] os The output stream
-    * @param[in] border
-    */
-   void
-   printBoxStats(
-      std::ostream& os,
-      const std::string& border) const;
-
-   /*!
     * @brief A class for outputting BoxLevel.
     *
     * To use, see BoxLevel::format().

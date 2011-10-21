@@ -778,8 +778,8 @@ StandardTagAndInitialize::preprocessRichardsonExtrapolation(
       false);
 
    hier::Connector tmp_coarsened(
-      level_to_level.getBase(),
-      level_to_level.getHead(),
+      *patch_level->getBoxLevel(),
+      *coarsened_level->getBoxLevel(),
       level_to_level.getConnectorWidth());
    level_to_level.coarsenLocalNeighbors(tmp_coarsened, coarsen_ratio);
 

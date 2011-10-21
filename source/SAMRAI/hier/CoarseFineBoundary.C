@@ -283,7 +283,7 @@ void CoarseFineBoundary::computeFromLevel(
           * Construct the array of boxes on level and level0 in this block.
           */
          BoxContainer level_domain(all_boxes_on_level, block_id);
-         BoxContainer phys_domain(phys_domain, block_id);
+         BoxContainer phys_domain(all_boxes_on_level0, block_id);
 
          const IntVector& ratio = level.getRatioToLevelZero();
          phys_domain.refine(ratio);
