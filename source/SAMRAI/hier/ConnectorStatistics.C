@@ -75,9 +75,9 @@ ConnectorStatistics::StatisticalQuantities::StatisticalQuantities()
 void ConnectorStatistics::computeLocalConnectorStatistics(
    StatisticalQuantities &sq) const
 {
-   if (!d_connector.isInitialized()) {
+   if (!d_connector.isFinalized()) {
       TBOX_ERROR("ConnectorStatistics::computeLocalStatistics cannot compute\n"
-                 <<"statistics for uninitialized Connector.");
+                 <<"statistics for unfinalized Connector.");
       return;
    }
 
@@ -199,8 +199,8 @@ void ConnectorStatistics::printNeighborStats(
    std::ostream& co,
    const std::string& border) const
 {
-   if (!d_connector.isInitialized()) {
-      co << "Connector is unininitialized.\n";
+   if (!d_connector.isFinalized()) {
+      co << "Connector is unfinalized.\n";
       return;
    }
 

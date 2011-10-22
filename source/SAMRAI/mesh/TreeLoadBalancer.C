@@ -231,10 +231,9 @@ void TreeLoadBalancer::loadBalanceBoxLevel(
    NULL_USE(attractor_to_balance);
    NULL_USE(hierarchy);
    NULL_USE(level_number);
-
-   TBOX_ASSERT(anchor_to_balance.isInitialized() ==
-      balance_to_anchor.isInitialized());
-   if (anchor_to_balance.isInitialized()) {
+   TBOX_ASSERT(anchor_to_balance.isFinalized() ==
+      balance_to_anchor.isFinalized());
+   if (anchor_to_balance.isFinalized()) {
       TBOX_ASSERT(anchor_to_balance.isTransposeOf(balance_to_anchor));
    }
    TBOX_DIM_ASSERT_CHECK_DIM_ARGS6(d_dim,
@@ -276,23 +275,13 @@ void TreeLoadBalancer::loadBalanceBoxLevel(
     */
 
    balance_mapped_box_level.removePeriodicImageBoxes();
-   if (balance_to_anchor.isInitialized()) {
+   if (balance_to_anchor.isFinalized()) {
 
       anchor_to_balance.removePeriodicRelationships();
-      anchor_to_balance.initialize(
-         anchor_to_balance.getBase(),
-         balance_mapped_box_level,
-         anchor_to_balance.getConnectorWidth(),
-         hier::BoxLevel::DISTRIBUTED,
-         false);
+      anchor_to_balance.setHead(balance_mapped_box_level, true);
 
       balance_to_anchor.removePeriodicRelationships();
-      balance_to_anchor.initialize(
-         balance_mapped_box_level,
-         balance_to_anchor.getHead(),
-         balance_to_anchor.getConnectorWidth(),
-         hier::BoxLevel::DISTRIBUTED,
-         false);
+      balance_to_anchor.setBase(balance_mapped_box_level, true);
 
    }
 
@@ -330,7 +319,7 @@ void TreeLoadBalancer::loadBalanceBoxLevel(
    }
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-   if (balance_to_attractor.isInitialized()) {
+   if (balance_to_attractor.isFinalized()) {
       /*
        * If balance_to_attractor is given, sanity-check it.
        */
@@ -498,7 +487,7 @@ void TreeLoadBalancer::loadBalanceBoxLevel(
 
       t_use_map->start();
 
-      if (anchor_to_balance.isInitialized()) {
+      if (anchor_to_balance.isFinalized()) {
          const hier::MappingConnectorAlgorithm mca;
          mca.modify(
             anchor_to_balance,
@@ -537,7 +526,7 @@ void TreeLoadBalancer::loadBalanceBoxLevel(
          unconstrained_to_constrained,
          balance_mapped_box_level );
 
-      if (anchor_to_balance.isInitialized()) {
+      if (anchor_to_balance.isFinalized()) {
          const hier::MappingConnectorAlgorithm mca;
          mca.modify(anchor_to_balance,
             balance_to_anchor,
@@ -580,7 +569,7 @@ void TreeLoadBalancer::loadBalanceBoxLevel(
       t_report_loads->stop();
    }
 
-   if (d_check_connectivity && anchor_to_balance.isInitialized()) {
+   if (d_check_connectivity && anchor_to_balance.isFinalized()) {
       tbox::plog << "TreeLoadBalancer checking balance-anchor connectivity."
                  << std::endl;
       int errs = 0;
@@ -647,10 +636,10 @@ void TreeLoadBalancer::mapOversizedBoxes(
       unconstrained.getRefinementRatio(),
       unconstrained.getGridGeometry(),
       unconstrained.getMPI());
-   unconstrained_to_constrained.initialize(
-      unconstrained,
-      constrained,
-      zero_vector);
+   unconstrained_to_constrained.clearNeighborhoods();
+   unconstrained_to_constrained.setBase(unconstrained);
+   unconstrained_to_constrained.setHead(constrained);
+   unconstrained_to_constrained.setWidth(zero_vector, true);
 
    const hier::BoxSet& unconstrained_mapped_boxes = unconstrained.getBoxes();
 
@@ -791,14 +780,16 @@ void TreeLoadBalancer::computeLoadBalancingMapWithinRankGroup(
          unbalanced_mapped_box_level.getRefinementRatio(),
          unbalanced_mapped_box_level.getGridGeometry(),
          unbalanced_mapped_box_level.getMPI());
-      balanced_to_unbalanced.initialize(
-         balanced_mapped_box_level,
-         unbalanced_mapped_box_level,
-         hier::IntVector::getZero(d_dim));
-      unbalanced_to_balanced.initialize(
-         unbalanced_mapped_box_level,
-         balanced_mapped_box_level,
-         hier::IntVector::getZero(d_dim));
+      balanced_to_unbalanced.setConnectorType(hier::Connector::MAPPING);
+      balanced_to_unbalanced.clearNeighborhoods();
+      balanced_to_unbalanced.setBase(balanced_mapped_box_level);
+      balanced_to_unbalanced.setHead(unbalanced_mapped_box_level);
+      balanced_to_unbalanced.setWidth(hier::IntVector::getZero(d_dim), true);
+      unbalanced_to_balanced.setConnectorType(hier::Connector::MAPPING);
+      unbalanced_to_balanced.clearNeighborhoods();
+      unbalanced_to_balanced.setBase(unbalanced_mapped_box_level);
+      unbalanced_to_balanced.setHead(balanced_mapped_box_level);
+      unbalanced_to_balanced.setWidth(hier::IntVector::getZero(d_dim), true);
       return;
    }
 
@@ -1007,14 +998,14 @@ void TreeLoadBalancer::computeLoadBalancingMapWithinRankGroup(
       unbalanced_mapped_box_level.getRefinementRatio(),
       unbalanced_mapped_box_level.getGridGeometry(),
       unbalanced_mapped_box_level.getMPI());
-   balanced_to_unbalanced.initialize(
-      balanced_mapped_box_level,
-      unbalanced_mapped_box_level,
-      hier::IntVector::getZero(d_dim));
-   unbalanced_to_balanced.initialize(
-      unbalanced_mapped_box_level,
-      balanced_mapped_box_level,
-      hier::IntVector::getZero(d_dim));
+   balanced_to_unbalanced.clearNeighborhoods();
+   balanced_to_unbalanced.setBase(balanced_mapped_box_level);
+   balanced_to_unbalanced.setHead(unbalanced_mapped_box_level);
+   balanced_to_unbalanced.setWidth(hier::IntVector::getZero(d_dim), true);
+   unbalanced_to_balanced.clearNeighborhoods();
+   unbalanced_to_balanced.setBase(unbalanced_mapped_box_level);
+   unbalanced_to_balanced.setHead(balanced_mapped_box_level);
+   unbalanced_to_balanced.setWidth(hier::IntVector::getZero(d_dim), true);
 
 
    /*
@@ -4327,7 +4318,7 @@ void TreeLoadBalancer::prebalanceBoxLevel(
 {
    hier::OverlapConnectorAlgorithm oca;
 
-   if (balance_to_anchor.isInitialized()) {
+   if (balance_to_anchor.isFinalized()) {
       TBOX_ASSERT(anchor_to_balance.checkTransposeCorrectness(balance_to_anchor) == 0);
       TBOX_ASSERT(balance_to_anchor.checkTransposeCorrectness(anchor_to_balance) == 0);
    }
@@ -4569,8 +4560,10 @@ void TreeLoadBalancer::prebalanceBoxLevel(
          box_count++;
       }
    }
+   balance_to_tmp.setConnectorType(hier::Connector::MAPPING);
+   tmp_to_balance.setConnectorType(hier::Connector::MAPPING);
 
-   if (anchor_to_balance.isInitialized()) {
+   if (anchor_to_balance.isFinalized()) {
       /*
        * This modify operation copies tmp_mapped_box_level to
        * balance_mapped_box_level, and changes anchor_to_balance and

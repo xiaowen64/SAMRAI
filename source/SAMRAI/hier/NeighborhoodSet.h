@@ -23,8 +23,6 @@
 namespace SAMRAI {
 namespace hier {
 
-class Connector;
-
 /*!
  * @brief A wrapper around std::map<BoxId,BoxSet>.
  *

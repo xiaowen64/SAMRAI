@@ -360,15 +360,13 @@ void CoarsenSchedule::generateTemporaryLevel()
     * like the fine level patches.  The Connectors between coarse and
     * temp are very similar to those between coarse and fine.
     */
-   d_coarse_to_temp.initialize(
-      *d_crse_level->getBoxLevel(),
-      *d_temp_crse_level->getBoxLevel(),
-      coarse_to_fine.getConnectorWidth(),
-      hier::BoxLevel::DISTRIBUTED);
+   d_coarse_to_temp.setConnectorType(hier::Connector::BASE_GENERATED);
+   d_coarse_to_temp.setBase(*d_crse_level->getBoxLevel());
+   d_coarse_to_temp.setHead(*d_temp_crse_level->getBoxLevel());
+   d_coarse_to_temp.setWidth(coarse_to_fine.getConnectorWidth(), true);
    coarse_to_fine.coarsenLocalNeighbors(
       d_coarse_to_temp,
       d_ratio_between_levels);
-   d_coarse_to_temp.setConnectorType(hier::Connector::BASE_GENERATED);
    /*
     * d_temp_to_coarse is a Connector from a coarsened version of fine to
     * coarse.  Therefore it has the same neighborhoods as fine_to_coarse
@@ -378,13 +376,10 @@ void CoarsenSchedule::generateTemporaryLevel()
     * keeping the neighborhoods that we just set.
     */
    d_temp_to_coarse = fine_to_coarse;
-   d_temp_to_coarse.initialize(
-      *d_temp_crse_level->getBoxLevel(),
-      coarse_to_fine.getBase(),
-      coarse_to_fine.getConnectorWidth(),
-      hier::BoxLevel::DISTRIBUTED,
-      false);
    d_temp_to_coarse.setConnectorType(hier::Connector::BASE_GENERATED);
+   d_temp_to_coarse.setBase(*d_temp_crse_level->getBoxLevel());
+   d_temp_to_coarse.setHead(coarse_to_fine.getBase());
+   d_temp_to_coarse.setWidth(coarse_to_fine.getConnectorWidth(), true);
    const hier::IntVector one_vector(dim, 1);
    d_coarse_to_temp.shrinkWidth(one_vector);
    d_temp_to_coarse.shrinkWidth(one_vector);

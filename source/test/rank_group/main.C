@@ -726,16 +726,10 @@ void generatePrebalanceByUserShells(
     * anchor BoxLevel.  We need to reset the Connectors to use
     * the anchor_mapped_box_level instead.
     */
-   anchor_to_balance.initialize(anchor_mapped_box_level,
-      balance_mapped_box_level,
-      anchor_to_balance.getConnectorWidth(),
-      hier::BoxLevel::DISTRIBUTED,
-      false);
-   balance_to_anchor.initialize(balance_mapped_box_level,
-      anchor_mapped_box_level,
-      balance_to_anchor.getConnectorWidth(),
-      hier::BoxLevel::DISTRIBUTED,
-      false);
+   anchor_to_balance.setBase(anchor_mapped_box_level);
+   anchor_to_balance.setHead(balance_mapped_box_level, true);
+   balance_to_anchor.setBase(balance_mapped_box_level);
+   balance_to_anchor.setHead(anchor_mapped_box_level, true);
 }
 
 /*
@@ -773,14 +767,12 @@ void generatePrebalanceByUserBoxes(
                hier::LocalId(i), owner));
       }
    }
-   balance_to_anchor.initialize(
-      balance_mapped_box_level,
-      anchor_mapped_box_level,
-      max_gcw);
-   anchor_to_balance.initialize(
-      anchor_mapped_box_level,
-      balance_mapped_box_level,
-      max_gcw);
+   balance_to_anchor.setBase(balance_mapped_box_level);
+   balance_to_anchor.setHead(anchor_mapped_box_level);
+   balance_to_anchor.setWidth(max_gcw, true);
+   anchor_to_balance.setBase(anchor_mapped_box_level);
+   anchor_to_balance.setHead(balance_mapped_box_level);
+   anchor_to_balance.setWidth(max_gcw, true);
    hier::OverlapConnectorAlgorithm oca;
    oca.findOverlaps(balance_to_anchor);
    oca.findOverlaps(anchor_to_balance);

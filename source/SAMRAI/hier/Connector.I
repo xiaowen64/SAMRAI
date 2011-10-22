@@ -15,9 +15,9 @@ namespace SAMRAI {
 namespace hier {
 
 SAMRAI_INLINE_KEYWORD
-bool Connector::isInitialized() const
+bool Connector::isFinalized() const
 {
-   return !d_base_handle.isNull();
+   return d_finalized;
 }
 
 SAMRAI_INLINE_KEYWORD
@@ -29,50 +29,49 @@ BoxLevel::ParallelState Connector::getParallelState() const
 SAMRAI_INLINE_KEYWORD
 const tbox::SAMRAI_MPI& Connector::getMPI() const
 {
-   TBOX_ASSERT(isInitialized());
-
+   TBOX_ASSERT(isFinalized());
    return d_base_handle->getBoxLevel().getMPI();
 }
 
 SAMRAI_INLINE_KEYWORD
 const hier::IntVector& Connector::getConnectorWidth() const
 {
-   TBOX_ASSERT(isInitialized());
+   TBOX_ASSERT(isFinalized());
    return d_base_width;
 }
 
 SAMRAI_INLINE_KEYWORD
 const hier::BoxLevel& Connector::getBase() const
 {
-   TBOX_ASSERT(isInitialized());
+   TBOX_ASSERT(isFinalized());
    return d_base_handle->getBoxLevel();
 }
 
 SAMRAI_INLINE_KEYWORD
 const hier::BoxLevel& Connector::getHead() const
 {
-   TBOX_ASSERT(isInitialized());
+   TBOX_ASSERT(isFinalized());
    return d_head_handle->getBoxLevel();
 }
 
 SAMRAI_INLINE_KEYWORD
 const hier::IntVector& Connector::getRatio() const
 {
-   TBOX_ASSERT(isInitialized());
+   TBOX_ASSERT(isFinalized());
    return d_ratio;
 }
 
 SAMRAI_INLINE_KEYWORD
 bool Connector::ratioIsExact() const
 {
-   TBOX_ASSERT(isInitialized());
+   TBOX_ASSERT(isFinalized());
    return d_ratio_is_exact;
 }
 
 SAMRAI_INLINE_KEYWORD
 bool Connector::getHeadCoarserFlag() const
 {
-   TBOX_ASSERT(isInitialized());
+   TBOX_ASSERT(isFinalized());
    return d_head_coarser;
 }
 
@@ -128,6 +127,7 @@ const Connector& Connector::operator = (
       d_ratio = rhs.d_ratio;
       d_head_coarser = rhs.d_head_coarser;
       d_parallel_state = rhs.d_parallel_state;
+      d_finalized = rhs.d_finalized;
       d_connector_type = rhs.d_connector_type;
    }
    return *this;
@@ -144,14 +144,14 @@ bool Connector::operator == (
    if (this == &rhs) {
       return true;
    }
-   // Note: two uninitialized Connectors always compare equal.
-   if (!isInitialized() && !rhs.isInitialized()) {
+   // Note: two unfinalized Connectors always compare equal.
+   if (!isFinalized() && !rhs.isFinalized()) {
       return true;
    }
-   if (!isInitialized() && rhs.isInitialized()) {
+   if (!isFinalized() && rhs.isFinalized()) {
       return false;
    }
-   if (isInitialized() && !rhs.isInitialized()) {
+   if (isFinalized() && !rhs.isFinalized()) {
       return false;
    }
 
@@ -185,14 +185,14 @@ bool Connector::operator != (
    if (this == &rhs) {
       return false;
    }
-   // Note: two uninitialized Connectors always compare equal.
-   if (!isInitialized() && !rhs.isInitialized()) {
+   // Note: two unfinalized Connectors always compare equal.
+   if (!isFinalized() && !rhs.isFinalized()) {
       return false;
    }
-   if (!isInitialized() && rhs.isInitialized()) {
+   if (!isFinalized() && rhs.isFinalized()) {
       return true;
    }
-   if (isInitialized() && !rhs.isInitialized()) {
+   if (isFinalized() && !rhs.isFinalized()) {
       return true;
    }
 
@@ -403,9 +403,10 @@ void Connector::getLocalOwners(std::set<int>& owners) const
  ***********************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-void Connector::clearLocalNeighborhoods()
+void Connector::clearNeighborhoods()
 {
    d_relationships.clear();
+   d_global_relationships.clear();
    return;
 }
 

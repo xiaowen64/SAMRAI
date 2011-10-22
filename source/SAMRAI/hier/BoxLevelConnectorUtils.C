@@ -164,7 +164,7 @@ bool BoxLevelConnectorUtils::baseNestsInHead(
 {
    TBOX_DIM_ASSERT_CHECK_ARGS3(
       connector.getBase(), base_swell, head_nesting_margin);
-   TBOX_ASSERT(connector.isInitialized());
+   TBOX_ASSERT(connector.isFinalized());
    const tbox::Dimension& dim(connector.getBase().getDim());
    TBOX_ASSERT(base_swell >= IntVector::getZero(dim));
    TBOX_ASSERT(head_nesting_margin >= IntVector::getZero(dim));
@@ -361,12 +361,11 @@ void BoxLevelConnectorUtils::makeSortingMap(
    if (!sort_mapped_boxes_by_corner && !sequentialize_global_indices) {
       // Make a blank map.
       sorted_mapped_box_level = unsorted_mapped_box_level;
-      output_map.initialize(
-         unsorted_mapped_box_level,
-         sorted_mapped_box_level,
-         IntVector::getZero(dim),
-         BoxLevel::DISTRIBUTED);
+      output_map.clearNeighborhoods();
       output_map.setConnectorType(Connector::MAPPING);
+      output_map.setBase(unsorted_mapped_box_level);
+      output_map.setHead(sorted_mapped_box_level);
+      output_map.setWidth(IntVector::getZero(dim), true);
       return;
    }
 
@@ -429,12 +428,11 @@ void BoxLevelConnectorUtils::makeSortingMap(
       unsorted_mapped_box_level.getGridGeometry(),
       unsorted_mapped_box_level.getMPI(),
       BoxLevel::DISTRIBUTED);
-   output_map.initialize(
-      unsorted_mapped_box_level,
-      sorted_mapped_box_level,
-      IntVector::getZero(dim),
-      BoxLevel::DISTRIBUTED);
+   output_map.clearNeighborhoods();
    output_map.setConnectorType(Connector::MAPPING);
+   output_map.setBase(unsorted_mapped_box_level);
+   output_map.setHead(sorted_mapped_box_level);
+   output_map.setWidth(IntVector::getZero(dim), true);
 
    for (std::vector<Box>::const_iterator ni = real_mapped_box_vector.begin();
         ni != real_mapped_box_vector.end(); ++ni) {
@@ -788,10 +786,11 @@ void BoxLevelConnectorUtils::computeInternalOrExternalParts(
     * means that no Box is mapped to something outside its
     * extent.
     */
-   input_to_parts.initialize(
-      input,
-      parts,
-      zero_vec);
+   input_to_parts.clearNeighborhoods();
+   input_to_parts.setConnectorType(Connector::UNKNOWN);
+   input_to_parts.setBase(input);
+   input_to_parts.setHead(parts);
+   input_to_parts.setWidth(zero_vec, true);
 
    const bool compute_overlaps =
       search_tree_represents_internal == (internal_or_external == 'i');
@@ -1134,11 +1133,11 @@ void BoxLevelConnectorUtils::makeRemainderMap(
 
    remainder = orig;
 
-   orig_to_remainder.initialize(
-      orig,
-      remainder,
-      IntVector::getZero(dim),
-      BoxLevel::DISTRIBUTED);
+   orig_to_remainder.clearNeighborhoods();
+   orig_to_remainder.setConnectorType(Connector::MAPPING);
+   orig_to_remainder.setBase(orig);
+   orig_to_remainder.setHead(remainder);
+   orig_to_remainder.setWidth(IntVector::getZero(dim), true);
 
    /*
     * Track last used index to ensure we use unique indices for new

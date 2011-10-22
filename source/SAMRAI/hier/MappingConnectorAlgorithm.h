@@ -444,12 +444,18 @@ private:
    privateModify_receiveAndUnpack(
       Connector& anchor_to_new,
       Connector& new_to_anchor,
-      std::set<int>& outgoing_ranks,
+      std::set<int>& incoming_ranks,
       tbox::AsyncCommPeer<int> all_comms[],
       tbox::AsyncCommStage& comm_stage,
       tbox::AsyncCommStage::MemberVec& completed,
-      const tbox::Dimension& dim,
       const tbox::SAMRAI_MPI& mpi) const;
+
+   //! @brief Unpack message sent by sendDiscoverytoOneProcess().
+   void
+   unpackDiscoveryMessage(
+      const tbox::AsyncCommPeer<int>* incoming_comm,
+      Connector& anchor_to_new,
+      Connector& new_to_anchor) const;
 
    /*
     * @brief Performn checks on the arguments of modify.

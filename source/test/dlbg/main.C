@@ -516,17 +516,15 @@ static int createAndTestDLBG(
          Pointer<PatchLevel> level_ptr = patch_hierarchy.getPatchLevel(ln);
          PatchLevel& level = *level_ptr;
          if (ln < patch_hierarchy.getNumberOfLevels() - 1) {
-            fine_connectors[ln].initialize(
-               mapped_box_levels[ln],
-               mapped_box_levels[ln + 1],
-               IntVector(dim, 1));
+            fine_connectors[ln].setBase(mapped_box_levels[ln]);
+            fine_connectors[ln].setHead(mapped_box_levels[ln + 1]);
+            fine_connectors[ln].setWidth(IntVector(dim, 1), true);
             oca.findOverlaps(fine_connectors[ln]);
          }
          if (ln > 0) {
-            crse_connectors[ln].initialize(
-               mapped_box_levels[ln],
-               mapped_box_levels[ln - 1],
-               level.getRatioToCoarserLevel());
+            crse_connectors[ln].setBase(mapped_box_levels[ln]);
+            crse_connectors[ln].setHead(mapped_box_levels[ln - 1]);
+            crse_connectors[ln].setWidth(level.getRatioToCoarserLevel(), true);
             oca.findOverlaps(crse_connectors[ln]);
             if (edge_log_detail >= 0) {
                plog << "****************************************\n";
@@ -548,10 +546,9 @@ static int createAndTestDLBG(
     */
    if (build_peer_edge) {
       for (ln = 0; ln < patch_hierarchy.getNumberOfLevels(); ++ln) {
-         peer_connectors[ln].initialize(
-            mapped_box_levels[ln],
-            mapped_box_levels[ln],
-            IntVector(dim, 1));
+         peer_connectors[ln].setBase(mapped_box_levels[ln]);
+         peer_connectors[ln].setHead(mapped_box_levels[ln]);
+         peer_connectors[ln].setWidth(IntVector(dim, 1), true);
          if (build_cross_edge && ln > 0) {
             // plog << " Bridging for level " << ln << std::endl;
             oca.bridge(

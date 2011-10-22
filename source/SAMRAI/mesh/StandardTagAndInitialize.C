@@ -768,18 +768,18 @@ StandardTagAndInitialize::preprocessRichardsonExtrapolation(
          level_to_level_gcw);
 
    hier::Connector coarsened_to_level = level_to_level;
-   coarsened_to_level.initialize(
-      *coarsened_level->getBoxLevel(),
-      *patch_level->getBoxLevel(),
+   coarsened_to_level.setBase(*coarsened_level->getBoxLevel());
+   coarsened_to_level.setHead(*patch_level->getBoxLevel());
+   coarsened_to_level.setWidth(
       hier::IntVector::ceilingDivide(level_to_level_gcw, coarsen_ratio),
-      hier::BoxLevel::DISTRIBUTED,
-      false);
+      true);
 
    hier::Connector tmp_coarsened(
       *patch_level->getBoxLevel(),
       *coarsened_level->getBoxLevel(),
       level_to_level.getConnectorWidth());
    level_to_level.coarsenLocalNeighbors(tmp_coarsened, coarsen_ratio);
+   tmp_coarsened.setConnectorType(hier::Connector::COMPLETE_OVERLAP);
 
    const hier::Connector& level_to_coarsened =
       patch_level->getBoxLevel()->getPersistentOverlapConnectors().
@@ -794,13 +794,13 @@ StandardTagAndInitialize::preprocessRichardsonExtrapolation(
       hier::IntVector::ceilingDivide(level_to_level_gcw, coarsen_ratio),
       tmp_coarsened);
 
-   /*
-    * Get Connectors coarsened<==>coarser, which are used for recursive
-    * refinement filling of the coarsened level's ghosts.
-    */
-   hier::Connector* coarsened_to_coarser = new hier::Connector;
-   hier::Connector* coarser_to_coarsened = new hier::Connector;
    if (level_number > 0) {
+      /*
+       * Get Connectors coarsened<==>coarser, which are used for recursive
+       * refinement filling of the coarsened level's ghosts.
+       */
+      hier::Connector* coarsened_to_coarser = new hier::Connector;
+      hier::Connector* coarser_to_coarsened = new hier::Connector;
       tbox::Pointer<hier::PatchLevel> coarser_level = hierarchy->getPatchLevel(
             level_number - 1);
       const hier::Connector& level_to_coarser =
@@ -822,6 +822,8 @@ StandardTagAndInitialize::preprocessRichardsonExtrapolation(
          level_to_coarser,
          coarser_to_level,
          level_to_coarsened);
+      coarsened_to_coarser->setConnectorType(hier::Connector::COMPLETE_OVERLAP);
+      coarser_to_coarsened->setConnectorType(hier::Connector::COMPLETE_OVERLAP);
       coarsened_level->getBoxLevel()->getPersistentOverlapConnectors().
       cacheConnector(
          *coarser_level->getBoxLevel(),
