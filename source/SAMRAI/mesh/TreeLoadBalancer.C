@@ -1876,11 +1876,11 @@ void TreeLoadBalancer::constructSemilocalUnbalancedToBalanced(
             dynamic_cast<tbox::AsyncCommPeer<int> *>(completed[i]);
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-         int j;
-         for ( j=0; j<static_cast<int>(export_dsts.size()); ++j ) {
+         size_t j;
+         for ( j=0; j<export_dsts.size(); ++j ) {
             if ( export_dsts[j] == peer_comm->getPeerRank() ) break;
          }
-         TBOX_ASSERT( j < static_cast<int>(export_dsts.size()) );
+         TBOX_ASSERT( j < export_dsts.size() );
 #endif
 
          const int* received_data = peer_comm->getRecvData();
@@ -1904,7 +1904,7 @@ void TreeLoadBalancer::constructSemilocalUnbalancedToBalanced(
     * Send outgoing messages.
     */
    TBOX_ASSERT( outgoing_messages.size() == import_srcs.size() );
-   for ( int i=0; i<static_cast<int>(import_srcs.size()); ++i ) {
+   for ( size_t i=0; i<import_srcs.size(); ++i ) {
       tbox::AsyncCommPeer<int> &peer_comm = importer_comms[i];
       std::map<int,std::vector<int> >::const_iterator recip =
          outgoing_messages.find(peer_comm.getPeerRank());

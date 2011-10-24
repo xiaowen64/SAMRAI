@@ -35,12 +35,10 @@ namespace mesh {
  * edges.  This class is used only by TreeLoadBalancer.
  *
  * The purpose of the BoxInTransit is to associate extra data with a
- * Box as the it is broken up and passed from processor to processor.
- * A BoxInTransit is a Box going through these changes.  It has a
- * current work load and an orginating Box.  It is passed from process
- * to process and keeps a history of the processes it passed through.
- * It is assigned a LocalId on every process it passes through, but
- * the LocalId history is not kept.
+ * Box as it is broken up and passed from processor to processor.  A
+ * BoxInTransit is a Box going through these changes.  It has a
+ * current work load, an orginating Box and a history of the processes
+ * it passed through.
  */
 struct BoxInTransit {
    typedef hier::Box Box;
@@ -59,19 +57,11 @@ struct BoxInTransit {
    }
 
    /*!
-    * @brief Construct a newly birthed BoxInTransit from an
-    * originating box.
+    * @brief Construct a new BoxInTransit from an originating box.
     *
     * @param[in] other
     */
-   BoxInTransit(
-      const hier::Box& origin):
-      box(origin),
-      orig_box(origin),
-      load(origin.size()),
-      proc_hist()
-   {
-   }
+   BoxInTransit(const hier::Box& origin);
 
    /*!
     * @brief Construct new object using integer data packed by
@@ -84,15 +74,7 @@ struct BoxInTransit {
     */
    BoxInTransit(
       const int *&ptr,
-      const tbox::Dimension &dim ):
-      box(dim),
-      orig_box(dim),
-      load(0),
-      proc_hist(0)
-   {
-      getFromIntBuffer(ptr);
-      ptr += commBufferSize();
-   }
+      const tbox::Dimension &dim );
 
    /*!
     * @brief Construct new object having the history an existing object.
@@ -111,30 +93,74 @@ struct BoxInTransit {
       const BoxInTransit& other,
       const hier::Box& box,
       int rank,
-      LocalId local_id):
-      box(box, local_id, rank, other.orig_box.getBlockId()),
-      orig_box(other.orig_box),
-      load(box.size()),
-      proc_hist(other.proc_hist)
-   {
-      if (rank != other.getOwnerRank()) {
-         proc_hist.push_back(other.getOwnerRank());
-      }
-   }
+      LocalId local_id);
 
    /*!
     * @brief Assignment operator
     *
     * @param[in] other
     */
-   const BoxInTransit& operator = (
-      const BoxInTransit& other) {
-      box = other.box;
-      orig_box = other.orig_box;
-      load = other.load;
-      proc_hist = other.proc_hist;
-      return *this;
-   }
+   const BoxInTransit& operator = (const BoxInTransit& other);
+
+   //! @brief Return the owner rank.
+   int getOwnerRank() const;
+
+   //! @brief Return the LocalId.
+   LocalId getLocalId() const;
+
+   //! @brief Return the Box.
+   hier::Box& getBox();
+
+   //! @brief Return the Box.
+   const hier::Box& getBox() const;
+
+   /*!
+    * @brief Return number of ints required for putting a putting the
+    * object in message passing buffer.
+    */
+   int commBufferSize() const;
+
+   /*!
+    * @brief Put self into a int buffer.
+    *
+    * This is the opposite of getFromIntBuffer().  Number of ints
+    * written is given by commBufferSize(), except when
+    * skip_last_owner is true.  If skip_last_owner is true, and the
+    * last owner in proc_hist will be skipped (proc_hist must be
+    * non-empty) and the number of integers put in the buffer would be
+    * commBufferSize()-1.
+    */
+   void putToIntBuffer(
+      int* buffer,
+      bool skip_last_owner=false) const;
+
+   /*!
+    * @brief Set attributes according to data in int buffer.
+    *
+    * This is the opposite of putToIntBuffer().  Number of ints read
+    * is given by what commBufferSize() AFTER this method is called.
+    */
+   void getFromIntBuffer(
+      const int* buffer);
+
+   /*!
+    * @brief Stuff into an outgoing message destined for the previous
+    * owner.
+    *
+    * prev_owner must not be empty.
+    *
+    * @param outgoing_messages Map of outgoing messages, indexed by
+    * recipient rank.  On return, the message corresponding to the
+    * previous owner will be grown by commBufferSize()-1.
+    */
+   void packForPreviousOwner(
+      std::map<int,std::vector<int> > &outgoing_messages ) const;
+
+   //! @brief Stream-insert operator.
+   friend std::ostream&
+   operator << (
+      std::ostream& co,
+      const BoxInTransit& r);
 
    //! @brief The Box.
    hier::Box box;
@@ -151,109 +177,6 @@ struct BoxInTransit {
     * proc_hist.
     */
    std::vector<int> proc_hist;
-
-   //! @brief Return the owner rank.
-   int getOwnerRank() const {
-      return box.getOwnerRank();
-   }
-
-   //! @brief Return the LocalId.
-   LocalId getLocalId() const {
-      return box.getLocalId();
-   }
-
-   //! @brief Return the Box.
-   hier::Box& getBox() {
-      return box;
-   }
-
-   //! @brief Return the Box.
-   const hier::Box& getBox() const {
-      return box;
-   }
-
-   /*!
-    * @brief Return number of ints required for putting a putting the
-    * object in message passing buffer.
-    */
-   int commBufferSize() const {
-      const tbox::Dimension& dim(box.getDim());
-      return 2 * hier::Box::commBufferSize(dim) + 2 + static_cast<int>(proc_hist.size());
-   }
-
-   /*!
-    * @brief Put self into a int buffer.
-    *
-    * This is the opposite of getFromIntBuffer().  Number of ints
-    * written is given by commBufferSize().
-    *
-    * If skip_last_owner is true, and the last owner in proc_hist will
-    * be skipped (proc_hist must be non-empty) and the number of integers
-    * put in the buffer would be one less than commBufferSize().
-    */
-   void putToIntBuffer(
-      int* buffer,
-      bool skip_last_owner=false) const {
-      const tbox::Dimension& dim(box.getDim());
-      box.putToIntBuffer(buffer);
-      buffer += hier::Box::commBufferSize(dim);
-      orig_box.putToIntBuffer(buffer);
-      buffer += hier::Box::commBufferSize(dim);
-      *(buffer++) = load;
-      if (skip_last_owner) { TBOX_ASSERT( !proc_hist.empty() ); }
-      *(buffer++) = static_cast<int>(proc_hist.size()-skip_last_owner);
-      for (unsigned int i = 0; i < proc_hist.size()-skip_last_owner; ++i) {
-         buffer[i] = proc_hist[i];
-      }
-   }
-
-   /*!
-    * @brief Set attributes according to data in int buffer.
-    *
-    * This is the opposite of putToIntBuffer().  Number of ints read
-    * is given by what commBufferSize() AFTER this method is called.
-    */
-   void getFromIntBuffer(
-      const int* buffer) {
-      const tbox::Dimension& dim(box.getDim());
-      box.getFromIntBuffer(buffer);
-      buffer += hier::Box::commBufferSize(dim);
-      orig_box.getFromIntBuffer(buffer);
-      buffer += hier::Box::commBufferSize(dim);
-      load = *(buffer++);
-      proc_hist.clear();
-      proc_hist.insert(proc_hist.end(), *(buffer++), 0);
-      for (unsigned int i = 0; i < proc_hist.size(); ++i) {
-         proc_hist[i] = buffer[i];
-      }
-   }
-
-   /*!
-    * @brief Stuff into an outgoing message destined for the previous
-    * owner.
-    *
-    * prev_owner must not be empty.  This method pops the next value
-    * from prev_owner (changing the object's state!) and packs the
-    * object into the message for that owner.
-    *
-    * @param outgoing_messages Map of outgoing messages, indexed by
-    * recipient rank.  On return, the message corresponding to the
-    * previous owner will be grown by commBufferSize()-1.
-    */
-   void packForPreviousOwner(
-      std::map<int,std::vector<int> > &outgoing_messages ) const {
-      const int prev_owner = proc_hist.back();
-      std::vector<int> &msg(outgoing_messages[prev_owner]);
-      const int cbs = commBufferSize();
-      msg.insert(msg.end(), cbs-1, 0);
-      putToIntBuffer(&msg[msg.size() - (cbs-1)], true);
-   }
-
-   //! @brief Stream-insert operator.
-   friend std::ostream&
-   operator << (
-      std::ostream& co,
-      const BoxInTransit& r);
 };
 
 
@@ -261,18 +184,17 @@ struct BoxInTransit {
 
 
 /*!
- * @brief Comparison functor for sorting BoxInTransit
- * from bigger to smaller loads.
+ * @brief Comparison functor for sorting BoxInTransit from more to
+ * less loads.
  */
 struct BoxInTransitMoreLoad {
+   /*
+    * @brief Compares two BoxInTransit for sorting them from more load
+    * to less load.
+    */
    bool operator () (
       const BoxInTransit& a,
-      const BoxInTransit& b) const {
-      if (a.getBox().size() != b.getBox().size()) {
-         return a.load > b.load;
-      }
-      return a.box.getId() < b.box.getId();
-   }
+      const BoxInTransit& b) const;
 };
 
 
