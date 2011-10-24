@@ -31,17 +31,16 @@ namespace SAMRAI {
 namespace mesh {
 
 /*!
- * @brief Data to save for each Box that gets passed along the
- * tree edges.
+ * @brief Data to save for each Box that gets passed along the tree
+ * edges.  This class is used only by TreeLoadBalancer.
  *
- * The purpose of the BoxInTransit is to associate extra data
- * with a Box as the it is broken up and passed from processor
- * to processor.  A BoxInTransit is a Box going through
- * these changes.  It has a current work load and an orginating
- * Box.  It is passed from process to process and keeps a
- * history of the processes it passed through.  It is assigned a
- * LocalId on every process it passes through, but the LocalId history
- * is not kept.
+ * The purpose of the BoxInTransit is to associate extra data with a
+ * Box as the it is broken up and passed from processor to processor.
+ * A BoxInTransit is a Box going through these changes.  It has a
+ * current work load and an orginating Box.  It is passed from process
+ * to process and keeps a history of the processes it passed through.
+ * It is assigned a LocalId on every process it passes through, but
+ * the LocalId history is not kept.
  */
 struct BoxInTransit {
    typedef hier::Box Box;
@@ -60,15 +59,16 @@ struct BoxInTransit {
    }
 
    /*!
-    * @brief Construct a newly birthed BoxInTransit.
+    * @brief Construct a newly birthed BoxInTransit from an
+    * originating box.
     *
     * @param[in] other
     */
    BoxInTransit(
-      const hier::Box& other):
-      box(other),
-      orig_box(other),
-      load(other.size()),
+      const hier::Box& origin):
+      box(origin),
+      orig_box(origin),
+      load(origin.size()),
       proc_hist()
    {
    }
@@ -95,9 +95,9 @@ struct BoxInTransit {
    }
 
    /*!
-    * @brief Construct new object based on an existing object, taking
-    * the exiting object's origin data and process history, but
-    * appending a new process in the history and using a new box.
+    * @brief Construct new object having the history an existing object.
+    * The new object has the same origin and proc_history of the existing,
+    * but it is otherwise different.
     *
     * @param[in] other
     *
@@ -142,13 +142,13 @@ struct BoxInTransit {
    //! @brief Originating Box.
    hier::Box orig_box;
 
-   //! @brief Normalized work load.
+   //! @brief Work load.
    int load;
 
    /*!
     * @brief History of processors passed in transit.  Each time a
-    * processor passes on a Box, it should append its rank to
-    * the proc_hist.
+    * process receives a Box, it should append its rank to the
+    * proc_hist.
     */
    std::vector<int> proc_hist;
 
@@ -256,9 +256,13 @@ struct BoxInTransit {
       const BoxInTransit& r);
 };
 
+
+
+
+
 /*!
  * @brief Comparison functor for sorting BoxInTransit
- * from bigger to smaller boxes.
+ * from bigger to smaller loads.
  */
 struct BoxInTransitMoreLoad {
    bool operator () (
@@ -270,6 +274,10 @@ struct BoxInTransitMoreLoad {
       return a.box.getId() < b.box.getId();
    }
 };
+
+
+
+
 
 /*!
  * @brief Provides load balancing routines for AMR hierarchy by
@@ -287,16 +295,10 @@ struct BoxInTransitMoreLoad {
  * report_load_balance = TRUE // Write out load balance report in log
  * n_root_cycles = -1         // Number of root cycles to use for
  *                            // reaching final partitioning. Nominally 1.
- *                            // Can be set higher to reduce negative
+ *                            // Can be set higher (2 or 3) to reduce negative
  *                            // performance effects of extremely poor initial
  *                            // load balance.  Set to -1 for "automatic".
  *                            // Set to zero to effectively bypass load balancing.
- * balance_penalty_wt = 1.0   // Relative weight for computing combined box breaking
- *                            // penalty:  How much to penalize imbalance.
- * surface_penalty_wt = 1.0   // Relative weight for computing combined box breaking
- *                            // penalty:  How much to penalize new surfaces.
- * slender_penalty_wt = 1.0   // Relative weight for computing combined box breaking
- *                            // penalty:  How much to penalize slender boxes.
  * @endverbatim
  *
  * @see mesh::LoadBalanceStrategy
@@ -308,7 +310,7 @@ class TreeLoadBalancer:
 public:
    /*!
     * @brief Initializing constructor sets object state to default or,
-    * if provided, to parameters in database.
+    * if database provided, to parameters in database.
     *
     * @param[in] dim
     *
@@ -332,28 +334,23 @@ public:
    virtual ~TreeLoadBalancer();
 
    /*!
-    * @brief Set the internal communicator to a duplicate of the given
-    * communicator.
+    * @brief Set the internal SAMRAI_MPI to a duplicate of the given
+    * SAMRAI_MPI.
     *
-    * The given communicator must be a valid communicator.
+    * The given SAMRAI_MPI must have a valid communicator.
     *
-    * The given communicator is duplicated for private use.  This
+    * The given SAMRAI_MPI is duplicated for private use.  This
     * requires a global communication, so all processes in the
     * communicator must call it.  The advantage of a duplicate
     * communicator is that it ensures the communications for the
     * object won't accidentally interact with other communications.
     *
-    * If the duplicate MPI communicator it is set, the
-    * TreeLoadBalancer will only balance BoxLevels with
-    * congruent SAMRAI_MPI objects and will use the duplicate
-    * communicator for communications.  Otherwise, the communicator of
-    * the BoxLevel will be used.  The duplicate MPI communicator
-    * is freed when the object is destructed, or freeMPICommunicator()
-    * is called.
-    *
-    * TODO: For uniformity, we should pass in a SAMRAI_MPI instead of
-    * a communicator.  This class is the only one that still uses the
-    * communicator instead of the SAMRAI_MPI.
+    * If the duplicate SAMRAI_MPI it is set, the TreeLoadBalancer will
+    * only balance BoxLevels with congruent SAMRAI_MPI objects and
+    * will use the duplicate SAMRAI_MPI for communications.
+    * Otherwise, the SAMRAI_MPI of the BoxLevel will be used.  The
+    * duplicate MPI communicator is freed when the object is
+    * destructed, or freeMPICommunicator() is called.
     */
    void
    setSAMRAI_MPI(
@@ -429,7 +426,7 @@ public:
     */
    void
    loadBalanceBoxLevel(
-      hier::BoxLevel& balance_mapped_box_level,
+      hier::BoxLevel& balance_box_level,
       hier::Connector& balance_to_anchor,
       hier::Connector& anchor_to_balance,
       const tbox::Pointer<hier::PatchHierarchy> hierarchy,
@@ -438,7 +435,7 @@ public:
       const hier::Connector& attractor_to_unbalanced,
       const hier::IntVector& min_size,
       const hier::IntVector& max_size,
-      const hier::BoxLevel& domain_mapped_box_level,
+      const hier::BoxLevel& domain_box_level,
       const hier::IntVector& bad_interval,
       const hier::IntVector& cut_factor,
       const tbox::RankGroup& = tbox::RankGroup()) const;
@@ -507,51 +504,55 @@ private:
    typedef std::set<BoxInTransit, BoxInTransitMoreLoad> TransitSet;
 
    /*!
-    * @brief Data to save for each subtree.
+    * @brief Data to save for each sending/receiving process and the
+    * subtree for that process.
     */
    struct SubtreeLoadData {
+      // @brief Constructor.
       SubtreeLoadData():num_procs(0),
          total_work(0),
          load_exported(0),
          load_imported(0) {
       }
       /*!
-       * @brief Number of nodes in child's subtree
-       * (unused for parent's data).
+       * @brief Number of processes in subtree
        */
       int num_procs;
       /*!
-       * @brief Current total work amount in child's subtree
+       * @brief Current total work amount in the subtree
        */
       int total_work;
       /*!
-       * @brief Work exported (or scheduled for export) to nonlocal process.
+       * @brief Load exported (or to be exported) to nonlocal process.
        *
-       * Value is often used to determine if more communication is needed.
-       *
-       * For local data, this refers to the work exported to parent.
+       * If the object is for the local process, load_exported means
+       * the load exported to the process's parent.
        */
       int load_exported;
       /*!
-       * @brief Work imported from nonlocal process.
+       * @brief Load imported from nonlocal process.
        *
-       * Value is often used to determine if more communication is needed.
-       *
-       * For local data, this refers to the work imported from parent.
+       * If the object is for the local process, load_imported means
+       * the load imported from the process's parent.
        */
       int load_imported;
       /*!
-       * @brief Ideal work amount in subtree
+       * @brief Ideal work amount for the subtree
        */
       int ideal_work;
       /*!
-       * @brief Nodes to export.
+       * @brief Work to export.
        *
-       * For local data, this refers to exporting to parent.
+       * If the object is for the local process, for_export means for
+       * exporting to the process's parent.
        */
       TransitSet for_export;
    };
 
+   /*
+    * @brief Check if there is any pending messages for the private
+    * communication and throw an error if there is.
+    */
    void
    assertNoMessageForPrivateCommunicator() const;
 
@@ -562,19 +563,22 @@ private:
    getFromInput(
       tbox::Pointer<tbox::Database> db);
 
+   /*
+    * @brief Sort an IntVector from the smallest to the largest value.
+    */
    void
    sortIntVector(
-      hier::IntVector& ordered_dims,
+      hier::IntVector& sorted_dirs,
       const hier::IntVector& vector) const;
 
    /*!
-    * Move Boxes in balance_mapped_box_level from ranks outside of
+    * Move Boxes in balance_box_level from ranks outside of
     * rank_group to ranks inside rank_group.  Modify the given connectors
     * to make them correct following this moving of boxes.
     */
    void
    prebalanceBoxLevel(
-      hier::BoxLevel& balance_mapped_box_level,
+      hier::BoxLevel& balance_box_level,
       hier::Connector& balance_to_anchor,
       hier::Connector& anchor_to_balance,
       const tbox::RankGroup& rank_group) const;
@@ -704,7 +708,7 @@ private:
    /*!
     * @brief Break off a given load size from a given Box.
     *
-    * @param mapped_box Box to break.
+    * @param box Box to break.
     * @param @ideal_load_to_break Ideal load to break.
     * This is not guaranteed to be met.  The actual
     * amount broken off may be slightly over or under.
@@ -716,7 +720,7 @@ private:
       std::vector<hier::Box>& breakoff,
       std::vector<hier::Box>& leftover,
       double& brk_load,
-      const hier::Box& mapped_box,
+      const hier::Box& box,
       double ideal_load_to_break ) const;
 
    /*!
@@ -783,7 +787,7 @@ private:
       std::vector<hier::Box>& breakoff,
       std::vector<hier::Box>& leftover,
       double& brk_load,
-      const hier::Box& mapped_box,
+      const hier::Box& box,
       double ideal_load_to_break,
       const tbox::Array<tbox::Array<bool> >& bad_cuts ) const;
 
@@ -792,7 +796,7 @@ private:
       std::vector<hier::Box>& breakoff,
       std::vector<hier::Box>& leftover,
       double& brk_load,
-      const hier::Box& mapped_box,
+      const hier::Box& box,
       double ideal_load_to_give,
       const tbox::Array<tbox::Array<bool> >& bad_cuts ) const;
 
@@ -814,22 +818,23 @@ private:
     */
    double
    computeLoad(
-      const hier::Box& mapped_box) const;
+      const hier::Box& box) const;
 
    /*!
-    * @brief Compute the load for the Box where it intersects the given box.
+    * @brief Compute the load for the Box, restricted to where it
+    * intersects a given box.
     */
    double
    computeLoad(
-      const hier::Box& mapped_box,
-      const hier::Box& box) const;
+      const hier::Box& box,
+      const hier::Box& restriction) const;
 
    /*
     * Count the local workload.
     */
    double
    computeLocalLoads(
-      const hier::BoxLevel& mapped_box_level) const;
+      const hier::BoxLevel& box_level) const;
 
    /*!
     * @brief Given an "unbalanced" BoxLevel, compute the BoxLevel that
@@ -838,10 +843,10 @@ private:
     */
    void
    computeLoadBalancingMapWithinRankGroup(
-      hier::BoxLevel& balanced_mapped_box_level,
+      hier::BoxLevel& balanced_box_level,
       hier::Connector& unbalanced_to_balanced,
       hier::Connector& balanced_to_unbalanced,
-      const hier::BoxLevel& unbalanced_mapped_box_level,
+      const hier::BoxLevel& unbalanced_box_level,
       const tbox::RankGroup& rank_group,
       const int cycle_number,
       const int number_of_cycles,
@@ -917,7 +922,7 @@ private:
    setShadowData(
       const hier::IntVector& min_size,
       const hier::IntVector& max_size,
-      const hier::BoxLevel& domain_mapped_box_level,
+      const hier::BoxLevel& domain_box_level,
       const hier::IntVector& bad_interval,
       const hier::IntVector& cut_factor,
       const hier::IntVector& refinement_ratio) const;
@@ -1020,7 +1025,7 @@ private:
    /*
     * Performance timers.
     */
-   tbox::Pointer<tbox::Timer> t_load_balance_mapped_box_level;
+   tbox::Pointer<tbox::Timer> t_load_balance_box_level;
    tbox::Pointer<tbox::Timer> t_get_map;
    tbox::Pointer<tbox::Timer> t_use_map;
    tbox::Pointer<tbox::Timer> t_constrain_size;

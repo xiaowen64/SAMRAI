@@ -32,8 +32,8 @@ const std::string& TreeLoadBalancer::getObjectName() const
  */
 SAMRAI_INLINE_KEYWORD
 double TreeLoadBalancer::computeLoad(
-   const hier::Box& mapped_box,
-   const hier::Box& box) const
+   const hier::Box& box,
+   const hier::Box& restriction) const
 {
    /*
     * Currently only for uniform loads, where the load is equal
@@ -41,7 +41,7 @@ double TreeLoadBalancer::computeLoad(
     * needs the patch data index for the load.  It would summ up
     * the individual cell loads in the overlap region.
     */
-   hier::Box overlap = mapped_box * box;
+   hier::Box overlap = box * restriction;
    return double(overlap.size());
 }
 
