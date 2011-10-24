@@ -212,7 +212,7 @@ void TreeLoadBalancer::setUniformWorkload(
  *************************************************************************
  */
 void TreeLoadBalancer::loadBalanceBoxLevel(
-   hier::BoxLevel& balance_mapped_box_level,
+   hier::BoxLevel& balance_box_level,
    hier::Connector& balance_to_anchor,
    hier::Connector& anchor_to_balance,
    const tbox::Pointer<hier::PatchHierarchy> hierarchy,
@@ -221,7 +221,7 @@ void TreeLoadBalancer::loadBalanceBoxLevel(
    const hier::Connector& attractor_to_balance,
    const hier::IntVector& min_size,
    const hier::IntVector& max_size,
-   const hier::BoxLevel& domain_mapped_box_level,
+   const hier::BoxLevel& domain_box_level,
    const hier::IntVector& bad_interval,
    const hier::IntVector& cut_factor,
    const tbox::RankGroup& rank_group) const
@@ -236,10 +236,10 @@ void TreeLoadBalancer::loadBalanceBoxLevel(
       TBOX_ASSERT(anchor_to_balance.isTransposeOf(balance_to_anchor));
    }
    TBOX_DIM_ASSERT_CHECK_DIM_ARGS6(d_dim,
-      balance_mapped_box_level,
+      balance_box_level,
       min_size,
       max_size,
-      domain_mapped_box_level,
+      domain_box_level,
       bad_interval,
       cut_factor);
    if (!hierarchy.isNull()) {
@@ -249,7 +249,7 @@ void TreeLoadBalancer::loadBalanceBoxLevel(
 
    d_mpi =
       d_mpi_dup.getCommunicator() == tbox::SAMRAI_MPI::commNull ?
-      balance_mapped_box_level.getMPI() : d_mpi_dup;
+      balance_box_level.getMPI() : d_mpi_dup;
 
    if (d_print_steps ||
        d_print_break_steps) {
@@ -258,7 +258,7 @@ void TreeLoadBalancer::loadBalanceBoxLevel(
                  << "\n  max_size = " << max_size
                  << "\n  bad_interval = " << bad_interval
                  << "\n  cut_factor = " << cut_factor
-                 << std::endl << balance_mapped_box_level.format("", 2);
+                 << std::endl << balance_box_level.format("", 2);
    }
 
 
@@ -269,18 +269,18 @@ void TreeLoadBalancer::loadBalanceBoxLevel(
     *
     * To avoid need for special logic to skip periodic images while
     * load balancing, we just remove periodic images in the
-    * balance_mapped_box_level and all periodic edges in
+    * balance_box_level and all periodic edges in
     * anchor<==>balance.
     */
 
-   balance_mapped_box_level.removePeriodicImageBoxes();
+   balance_box_level.removePeriodicImageBoxes();
    if (balance_to_anchor.isFinalized()) {
 
       anchor_to_balance.removePeriodicRelationships();
-      anchor_to_balance.setHead(balance_mapped_box_level, true);
+      anchor_to_balance.setHead(balance_box_level, true);
 
       balance_to_anchor.removePeriodicRelationships();
-      balance_to_anchor.setBase(balance_mapped_box_level, true);
+      balance_to_anchor.setBase(balance_box_level, true);
 
    }
 
@@ -294,13 +294,13 @@ void TreeLoadBalancer::loadBalanceBoxLevel(
    }
 
    if (!rank_group.containsAllRanks()) {
-      prebalanceBoxLevel(balance_mapped_box_level,
+      prebalanceBoxLevel(balance_box_level,
          balance_to_anchor,
          anchor_to_balance,
          rank_group);
    }
 
-   t_load_balance_mapped_box_level->start();
+   t_load_balance_box_level->start();
 
    /*
     * Shadow data is internal duplicates of some parameters
@@ -308,13 +308,13 @@ void TreeLoadBalancer::loadBalanceBoxLevel(
     */
    setShadowData(min_size,
       max_size,
-      domain_mapped_box_level,
+      domain_box_level,
       bad_interval,
       cut_factor,
-      balance_mapped_box_level.getRefinementRatio());
+      balance_box_level.getRefinementRatio());
 
    if (d_print_steps) {
-      tbox::plog << "Pre balanced:\n" << balance_mapped_box_level.format("", 2);
+      tbox::plog << "Pre balanced:\n" << balance_box_level.format("", 2);
    }
 
 #ifdef DEBUG_CHECK_ASSERTIONS
@@ -322,10 +322,10 @@ void TreeLoadBalancer::loadBalanceBoxLevel(
       /*
        * If balance_to_attractor is given, sanity-check it.
        */
-      if (&balance_mapped_box_level != &balance_to_attractor.getBase() &&
-          !(balance_mapped_box_level == balance_to_attractor.getBase())) {
+      if (&balance_box_level != &balance_to_attractor.getBase() &&
+          !(balance_box_level == balance_to_attractor.getBase())) {
          TBOX_ERROR(
-            "TreeLoadBalancer::loadBalanceBoxLevel: balance_mapped_box_level\n"
+            "TreeLoadBalancer::loadBalanceBoxLevel: balance_box_level\n"
             << "does not match the base of balance_to_attractor.");
       }
       if (!balance_to_attractor.isTransposeOf(attractor_to_balance)) {
@@ -338,11 +338,11 @@ void TreeLoadBalancer::loadBalanceBoxLevel(
 
 
    t_compute_local_load->start();
-   double local_load = computeLocalLoads(balance_mapped_box_level);
+   double local_load = computeLocalLoads(balance_box_level);
    t_compute_local_load->stop();
 
    size_t nproc_with_initial_load =
-      balance_mapped_box_level.getLocalNumberOfBoxes() > 0;
+      balance_box_level.getLocalNumberOfBoxes() > 0;
 
    double global_sum_load;
 
@@ -402,11 +402,11 @@ void TreeLoadBalancer::loadBalanceBoxLevel(
    int number_of_cycles = d_n_root_cycles;
    if (number_of_cycles < 0) {
       // User requested automatic number of cycles.
-      if (balance_mapped_box_level.getMPI().getSize() <= 64 ) {
+      if (balance_box_level.getMPI().getSize() <= 64 ) {
          number_of_cycles = 1;
       }
       else if ( int(nproc_with_initial_load * nproc_with_initial_load) >=
-                balance_mapped_box_level.getMPI().getSize() ) {
+                balance_box_level.getMPI().getSize() ) {
          number_of_cycles = 1;
       } else {
          number_of_cycles = 2;
@@ -420,22 +420,22 @@ void TreeLoadBalancer::loadBalanceBoxLevel(
     * using more than one cycle, only the last one tries to balance
     * across all of d_mpi.  Here's what the loop does:
     *
-    * 1.  Rebalance balance_mapped_box_level, storing the balanced
+    * 1.  Rebalance balance_box_level, storing the balanced
     * version and the balance mapping Connectors in temporary objects.
     *
     * 2.  Use the balanc mapping to modify connectors to anchor.
     *
-    * 3.  Reset balance_mapped_box_level to tmp_mapped_box_level.
+    * 3.  Reset balance_box_level to tmp_box_level.
     */
 
-   hier::BoxLevel tmp_mapped_box_level(d_dim);
+   hier::BoxLevel tmp_box_level(d_dim);
 
    for (int icycle = 0; icycle < number_of_cycles; ++icycle) {
 
       // If not the first cycle, local_load needs updating.
       if (icycle > 0) {
          t_compute_local_load->start();
-         local_load = computeLocalLoads(balance_mapped_box_level);
+         local_load = computeLocalLoads(balance_box_level);
          t_compute_local_load->stop();
       }
 
@@ -446,7 +446,7 @@ void TreeLoadBalancer::loadBalanceBoxLevel(
          << icycle << ":" << std::endl;
          TreeLoadBalancer::gatherAndReportLoadBalance(
             local_load,
-            balance_mapped_box_level.getMPI());
+            balance_box_level.getMPI());
       }
 
 
@@ -458,10 +458,10 @@ void TreeLoadBalancer::loadBalanceBoxLevel(
       t_get_map->start();
 
       computeLoadBalancingMapWithinRankGroup(
-         tmp_mapped_box_level,
+         tmp_box_level,
          balance_to_tmp,
          tmp_to_balance,
-         balance_mapped_box_level,
+         balance_box_level,
          rank_group,
          icycle,
          number_of_cycles,
@@ -480,7 +480,7 @@ void TreeLoadBalancer::loadBalanceBoxLevel(
       /*
        * Apply the load-balancing map.  If anchor<==>balance
        * Connectors are given, modify them while exchanging
-       * balance_mapped_box_level with tmp_mapped_box_level.
+       * balance_box_level with tmp_box_level.
        * If not, manually swap the two.
        */
 
@@ -493,10 +493,10 @@ void TreeLoadBalancer::loadBalanceBoxLevel(
             balance_to_anchor,
             balance_to_tmp,
             tmp_to_balance,
-            &balance_mapped_box_level,
-            &tmp_mapped_box_level);
+            &balance_box_level,
+            &tmp_box_level);
       } else {
-         BoxLevel::swap(balance_mapped_box_level, tmp_mapped_box_level);
+         BoxLevel::swap(balance_box_level, tmp_box_level);
       }
       if (d_barrier_after) {
          t_barrier_after->start();
@@ -521,19 +521,19 @@ void TreeLoadBalancer::loadBalanceBoxLevel(
 
       hier::Connector unconstrained_to_constrained;
       mapOversizedBoxes(
-         tmp_mapped_box_level,
+         tmp_box_level,
          unconstrained_to_constrained,
-         balance_mapped_box_level );
+         balance_box_level );
 
       if (anchor_to_balance.isFinalized()) {
          const hier::MappingConnectorAlgorithm mca;
          mca.modify(anchor_to_balance,
             balance_to_anchor,
             unconstrained_to_constrained,
-            &balance_mapped_box_level,
-            &tmp_mapped_box_level);
+            &balance_box_level,
+            &tmp_box_level);
       } else {
-         BoxLevel::swap(balance_mapped_box_level, tmp_mapped_box_level);
+         BoxLevel::swap(balance_box_level, tmp_box_level);
       }
 
       t_constrain_size->stop();
@@ -551,12 +551,12 @@ void TreeLoadBalancer::loadBalanceBoxLevel(
 
    unsetShadowData();
 
-   t_load_balance_mapped_box_level->stop();
+   t_load_balance_box_level->stop();
 
-   local_load = computeLocalLoads(balance_mapped_box_level);
+   local_load = computeLocalLoads(balance_box_level);
    d_load_stat.push_back(local_load);
    d_box_count_stat.push_back(
-      static_cast<int>(balance_mapped_box_level.getBoxes().size()));
+      static_cast<int>(balance_box_level.getBoxes().size()));
 
    if (d_report_load_balance) {
       t_report_loads->start();
@@ -564,7 +564,7 @@ void TreeLoadBalancer::loadBalanceBoxLevel(
       << "TreeLoadBalancer::loadBalanceBoxLevel results after "
       << number_of_cycles << " cycles:" << std::endl;
       TreeLoadBalancer::gatherAndReportLoadBalance(local_load,
-         balance_mapped_box_level.getMPI());
+         balance_box_level.getMPI());
       t_report_loads->stop();
    }
 
@@ -588,8 +588,8 @@ void TreeLoadBalancer::loadBalanceBoxLevel(
       if (errs != 0) {
          TBOX_ERROR(
             "Errors in load balance mapping found."
-            << "anchor_mapped_box_level:\n" << anchor_to_balance.getBase().format("", 2)
-            << "balance_mapped_box_level:\n" << balance_mapped_box_level.format("", 2)
+            << "anchor_box_level:\n" << anchor_to_balance.getBase().format("", 2)
+            << "balance_box_level:\n" << balance_box_level.format("", 2)
             << "anchor_to_balance:\n" << anchor_to_balance.format("", 2)
             << "balance_to_anchor:\n" << balance_to_anchor.format("", 2));
       }
@@ -640,70 +640,70 @@ void TreeLoadBalancer::mapOversizedBoxes(
    unconstrained_to_constrained.setHead(constrained);
    unconstrained_to_constrained.setWidth(zero_vector, true);
 
-   const hier::BoxContainer& unconstrained_mapped_boxes = unconstrained.getBoxes();
+   const hier::BoxContainer& unconstrained_boxes = unconstrained.getBoxes();
 
    hier::LocalId next_available_index = unconstrained.getLastLocalId() + 1;
 
-   for (hier::BoxContainer::ConstIterator ni = unconstrained_mapped_boxes.begin();
-        ni != unconstrained_mapped_boxes.end(); ++ni) {
+   for (hier::BoxContainer::ConstIterator ni = unconstrained_boxes.begin();
+        ni != unconstrained_boxes.end(); ++ni) {
 
-      const hier::Box& mapped_box = *ni;
+      const hier::Box& box = *ni;
 
-      const hier::IntVector mapped_box_size = mapped_box.numberCells();
+      const hier::IntVector box_size = box.numberCells();
 
       /*
-       * If mapped_box already conform to max size constraint, keep it.
+       * If box already conform to max size constraint, keep it.
        * Else chop it up and keep the parts.
        */
 
-      if (mapped_box_size <= d_max_size) {
+      if (box_size <= d_max_size) {
 
          if (d_print_break_steps) {
-            tbox::plog << "    Not oversized: " << mapped_box
-                       << mapped_box.numberCells() << "\n";
+            tbox::plog << "    Not oversized: " << box
+                       << box.numberCells() << "\n";
          }
-         constrained.addBox(mapped_box);
+         constrained.addBox(box);
 
       } else {
 
          if (d_print_break_steps) {
-            tbox::plog << "    Breaking oversized " << mapped_box
-                       << mapped_box.numberCells() << " ->";
+            tbox::plog << "    Breaking oversized " << box
+                       << box.numberCells() << " ->";
          }
-         hier::BoxContainer chopped(mapped_box);
+         hier::BoxContainer chopped(box);
          hier::BoxUtilities::chopBoxes(
             chopped,
             d_max_size,
             d_min_size,
             d_cut_factor,
             d_bad_interval,
-            d_block_domain_boxes[mapped_box.getBlockId().getBlockValue()]);
+            d_block_domain_boxes[box.getBlockId().getBlockValue()]);
          TBOX_ASSERT( chopped.size() != 0 );
 
          if (chopped.size() != 1) {
 
             unconstrained_to_constrained.makeEmptyLocalNeighborhood(
-               mapped_box.getId());
+               box.getId());
 
             for (hier::BoxContainer::Iterator li(chopped);
                  li != chopped.end(); ++li) {
 
-               const hier::Box new_box = *li;
+               const hier::Box fragment = *li;
 
-               const hier::Box new_mapped_box(new_box,
-                                              next_available_index++,
-                                              d_mpi.getRank(),
-                                              (*ni).getBlockId());
+               const hier::Box new_box(fragment,
+                                       next_available_index++,
+                                       d_mpi.getRank(),
+                                       (*ni).getBlockId());
 
                if (d_print_break_steps) {
-                  tbox::plog << "  " << new_mapped_box
-                             << new_mapped_box.numberCells();
+                  tbox::plog << "  " << new_box
+                             << new_box.numberCells();
                }
 
-               constrained.addBox(new_mapped_box);
+               constrained.addBox(new_box);
 
-               unconstrained_to_constrained.insertLocalNeighbor(new_mapped_box,
-                  mapped_box.getId());
+               unconstrained_to_constrained.insertLocalNeighbor(new_box,
+                  box.getId());
 
             }
 
@@ -712,11 +712,11 @@ void TreeLoadBalancer::mapOversizedBoxes(
             }
 
          } else {
-            TBOX_ASSERT( mapped_box.isSpatiallyEqual( chopped.front() ) );
+            TBOX_ASSERT( box.isSpatiallyEqual( chopped.front() ) );
             if (d_print_break_steps) {
                tbox::plog << " Unbreakable!" << "\n";
             }
-            constrained.addBox(mapped_box);
+            constrained.addBox(box);
          }
 
       }
@@ -759,10 +759,10 @@ void TreeLoadBalancer::mapOversizedBoxes(
  *************************************************************************
  */
 void TreeLoadBalancer::computeLoadBalancingMapWithinRankGroup(
-   hier::BoxLevel& balanced_mapped_box_level,
+   hier::BoxLevel& balanced_box_level,
    hier::Connector& unbalanced_to_balanced,
    hier::Connector& balanced_to_unbalanced,
-   const hier::BoxLevel& unbalanced_mapped_box_level,
+   const hier::BoxLevel& unbalanced_box_level,
    const tbox::RankGroup& rank_group,
    const int cycle_number,
    const int number_of_cycles,
@@ -770,24 +770,24 @@ void TreeLoadBalancer::computeLoadBalancingMapWithinRankGroup(
    const double global_sum_load ) const
 {
    TBOX_DIM_ASSERT_CHECK_DIM_ARGS2(d_dim,
-      unbalanced_mapped_box_level,
-      balanced_mapped_box_level);
+      unbalanced_box_level,
+      balanced_box_level);
 
    if ( !rank_group.isMember(d_mpi.getRank()) ) {
       // initialize empty last 3 args
-      balanced_mapped_box_level.initialize(
-         unbalanced_mapped_box_level.getRefinementRatio(),
-         unbalanced_mapped_box_level.getGridGeometry(),
-         unbalanced_mapped_box_level.getMPI());
+      balanced_box_level.initialize(
+         unbalanced_box_level.getRefinementRatio(),
+         unbalanced_box_level.getGridGeometry(),
+         unbalanced_box_level.getMPI());
       balanced_to_unbalanced.setConnectorType(hier::Connector::MAPPING);
       balanced_to_unbalanced.clearNeighborhoods();
-      balanced_to_unbalanced.setBase(balanced_mapped_box_level);
-      balanced_to_unbalanced.setHead(unbalanced_mapped_box_level);
+      balanced_to_unbalanced.setBase(balanced_box_level);
+      balanced_to_unbalanced.setHead(unbalanced_box_level);
       balanced_to_unbalanced.setWidth(hier::IntVector::getZero(d_dim), true);
       unbalanced_to_balanced.setConnectorType(hier::Connector::MAPPING);
       unbalanced_to_balanced.clearNeighborhoods();
-      unbalanced_to_balanced.setBase(unbalanced_mapped_box_level);
-      unbalanced_to_balanced.setHead(balanced_mapped_box_level);
+      unbalanced_to_balanced.setBase(unbalanced_box_level);
+      unbalanced_to_balanced.setHead(balanced_box_level);
       unbalanced_to_balanced.setWidth(hier::IntVector::getZero(d_dim), true);
       return;
    }
@@ -968,7 +968,7 @@ void TreeLoadBalancer::computeLoadBalancingMapWithinRankGroup(
     * 2+d_degree values in next_available_index: one for the local
     * process, one for the parent and one for each child.  The first
     * index given to a locally generated Box is some index unused by
-    * unbalanced_mapped_box_level.  The first index given to a Box
+    * unbalanced_box_level.  The first index given to a Box
     * from the parent is the same value plus 1.  The first index given
     * to a box from child 0 is the same value plus 2.  And so on.
     * Each time a value from next_available_index is used, we
@@ -978,7 +978,7 @@ void TreeLoadBalancer::computeLoadBalancingMapWithinRankGroup(
     * boxes from other sources arrive.
     */
    std::vector<hier::LocalId> next_available_index(2 + d_degree);
-   next_available_index[0] = unbalanced_mapped_box_level.getLastLocalId() + 1;
+   next_available_index[0] = unbalanced_box_level.getLastLocalId() + 1;
    /*
     * The next line makes next_available_index[0] divisible by 2+d_degree.
     * It is not strictly necessary but makes debugging much easier because
@@ -993,17 +993,17 @@ void TreeLoadBalancer::computeLoadBalancingMapWithinRankGroup(
    /*
     * Initialize output objects.
     */
-   balanced_mapped_box_level.initialize(
-      unbalanced_mapped_box_level.getRefinementRatio(),
-      unbalanced_mapped_box_level.getGridGeometry(),
-      unbalanced_mapped_box_level.getMPI());
+   balanced_box_level.initialize(
+      unbalanced_box_level.getRefinementRatio(),
+      unbalanced_box_level.getGridGeometry(),
+      unbalanced_box_level.getMPI());
    balanced_to_unbalanced.clearNeighborhoods();
-   balanced_to_unbalanced.setBase(balanced_mapped_box_level);
-   balanced_to_unbalanced.setHead(unbalanced_mapped_box_level);
+   balanced_to_unbalanced.setBase(balanced_box_level);
+   balanced_to_unbalanced.setHead(unbalanced_box_level);
    balanced_to_unbalanced.setWidth(hier::IntVector::getZero(d_dim), true);
    unbalanced_to_balanced.clearNeighborhoods();
-   unbalanced_to_balanced.setBase(unbalanced_mapped_box_level);
-   unbalanced_to_balanced.setHead(balanced_mapped_box_level);
+   unbalanced_to_balanced.setBase(unbalanced_box_level);
+   unbalanced_to_balanced.setHead(balanced_box_level);
    unbalanced_to_balanced.setWidth(hier::IntVector::getZero(d_dim), true);
 
 
@@ -1014,12 +1014,12 @@ void TreeLoadBalancer::computeLoadBalancingMapWithinRankGroup(
     * data from the children.
     */
    my_load_data.num_procs = 1;
-   my_load_data.total_work = (int)computeLocalLoads(unbalanced_mapped_box_level);
+   my_load_data.total_work = (int)computeLocalLoads(unbalanced_box_level);
 
 
    /*
-    * Decide whether local parts of unbalanced_mapped_box_level should
-    * be reassigned.  Populate balanced_mapped_box_level from local loads.
+    * Decide whether local parts of unbalanced_box_level should
+    * be reassigned.  Populate balanced_box_level from local loads.
     */
 
    t_local_balancing->start();
@@ -1038,21 +1038,21 @@ void TreeLoadBalancer::computeLoadBalancingMapWithinRankGroup(
    if (my_load_data.total_work /* currently excluding children */ <=
        group_avg_load) {
       /*
-       * Local process is underloaded, so put all of unbalanced_mapped_box_level into
-       * the balanced_mapped_box_level (and add more later).
+       * Local process is underloaded, so put all of unbalanced_box_level into
+       * the balanced_box_level (and add more later).
        */
-      const hier::BoxContainer& unbalanced_mapped_boxes =
-         unbalanced_mapped_box_level.getBoxes();
-      for (hier::BoxContainer::ConstIterator ni = unbalanced_mapped_boxes.begin();
-           ni != unbalanced_mapped_boxes.end(); ++ni) {
-         balanced_mapped_box_level.addBox(*ni);
+      const hier::BoxContainer& unbalanced_boxes =
+         unbalanced_box_level.getBoxes();
+      for (hier::BoxContainer::ConstIterator ni = unbalanced_boxes.begin();
+           ni != unbalanced_boxes.end(); ++ni) {
+         balanced_box_level.addBox(*ni);
       }
    } else {
       /*
        * Local process is overloaded, so remove excess loads:
        * - sort NodeInTransit by load
        * - reassignLoads (put excess loads in unassigned container) and
-       * - put remainder in balanced_mapped_box_level.
+       * - put remainder in balanced_box_level.
        *
        * Note: This algorithm would also work if we put all local
        * Boxes into unassigned (instead of just the excess load).
@@ -1076,8 +1076,8 @@ void TreeLoadBalancer::computeLoadBalancingMapWithinRankGroup(
        * be seen.
        */
 
-      const hier::BoxContainer& unbalanced_mapped_boxes =
-         unbalanced_mapped_box_level.getBoxes();
+      const hier::BoxContainer& unbalanced_boxes =
+         unbalanced_box_level.getBoxes();
 
       int ideal_transfer = int(0.5 + my_load_data.total_work - group_avg_load);
 
@@ -1087,7 +1087,7 @@ void TreeLoadBalancer::computeLoadBalancingMapWithinRankGroup(
       }
 
       TransitSet
-      local_loads(unbalanced_mapped_boxes.begin(), unbalanced_mapped_boxes.end());
+      local_loads(unbalanced_boxes.begin(), unbalanced_boxes.end());
       int actual_transfer;
       reassignLoads(
          local_loads,
@@ -1098,21 +1098,21 @@ void TreeLoadBalancer::computeLoadBalancingMapWithinRankGroup(
 
       for (TransitSet::const_iterator
            ni = local_loads.begin(); ni != local_loads.end(); ++ni) {
-         const BoxInTransit& mapped_box_in_transit = *ni;
-         balanced_mapped_box_level.addBox(mapped_box_in_transit.box);
+         const BoxInTransit& box_in_transit = *ni;
+         balanced_box_level.addBox(box_in_transit.box);
          /*
-          * Create local edges only for mapped_box_in_transit that
+          * Create local edges only for box_in_transit that
           * changed.  Semilocal edges are created by owner who decides
           * to keep the box.
           */
-         if (mapped_box_in_transit.box.getLocalId() !=
-             mapped_box_in_transit.orig_box.getLocalId()) {
+         if (box_in_transit.box.getLocalId() !=
+             box_in_transit.orig_box.getLocalId()) {
             balanced_to_unbalanced.insertLocalNeighbor(
-               mapped_box_in_transit.orig_box,
-               mapped_box_in_transit.box.getId());
+               box_in_transit.orig_box,
+               box_in_transit.box.getId());
             unbalanced_to_balanced.insertLocalNeighbor(
-               mapped_box_in_transit.box,
-               mapped_box_in_transit.orig_box.getId());
+               box_in_transit.box,
+               box_in_transit.orig_box.getId());
          }
       }
 
@@ -1178,8 +1178,8 @@ void TreeLoadBalancer::computeLoadBalancingMapWithinRankGroup(
                           << " units) from child "
                           << peer_comm->getPeerRank() << ":";
                for ( ; ni != unassigned.end(); ++ni) {
-                  const BoxInTransit& mapped_box_in_transit = *ni;
-                  tbox::plog << "  " << mapped_box_in_transit;
+                  const BoxInTransit& box_in_transit = *ni;
+                  tbox::plog << "  " << box_in_transit;
                }
                tbox::plog << std::endl;
             }
@@ -1350,8 +1350,8 @@ void TreeLoadBalancer::computeLoadBalancingMapWithinRankGroup(
                        << " units) from parent "
                        << parent_recv->getPeerRank() << ":";
             for ( ; ni != unassigned.end(); ++ni) {
-               const BoxInTransit& mapped_box_in_transit = *ni;
-               tbox::plog << "  " << mapped_box_in_transit;
+               const BoxInTransit& box_in_transit = *ni;
+               tbox::plog << "  " << box_in_transit;
             }
             tbox::plog << std::endl;
          }
@@ -1431,9 +1431,9 @@ void TreeLoadBalancer::computeLoadBalancingMapWithinRankGroup(
 
 
    /*
-    * All unassigned boxes should go into balanced_mapped_box_level.
+    * All unassigned boxes should go into balanced_box_level.
     *
-    * Put unassigned boxes into balanced_mapped_box_level and generate
+    * Put unassigned boxes into balanced_box_level and generate
     * relationships in balanced<==>unbalanced mapping Connectors where
     * required.
     *
@@ -1448,22 +1448,22 @@ void TreeLoadBalancer::computeLoadBalancingMapWithinRankGroup(
         ni = unassigned.begin();
         ni != unassigned.end(); /* incremented in loop */) {
 
-      const BoxInTransit& mapped_box_in_transit = *ni;
-      balanced_mapped_box_level.addBox(mapped_box_in_transit.box);
+      const BoxInTransit& box_in_transit = *ni;
+      balanced_box_level.addBox(box_in_transit.box);
 
-      if (mapped_box_in_transit.box.isIdEqual(mapped_box_in_transit.orig_box)) {
+      if (box_in_transit.box.isIdEqual(box_in_transit.orig_box)) {
          // Unchanged box requires no edge.  Nothing else need to be done.
          unassigned.erase(ni++);
       } else {
 
          balanced_to_unbalanced.insertLocalNeighbor(
-            mapped_box_in_transit.orig_box,
-            mapped_box_in_transit.box.getId());
+            box_in_transit.orig_box,
+            box_in_transit.box.getId());
 
-         if (mapped_box_in_transit.orig_box.getOwnerRank() == d_mpi.getRank()) {
+         if (box_in_transit.orig_box.getOwnerRank() == d_mpi.getRank()) {
             unbalanced_to_balanced.insertLocalNeighbor(
-               mapped_box_in_transit.box,
-               mapped_box_in_transit.orig_box.getId());
+               box_in_transit.box,
+               box_in_transit.orig_box.getId());
             unassigned.erase(ni++);
          }
          else {
@@ -1552,8 +1552,8 @@ void TreeLoadBalancer::computeLoadBalancingMapWithinRankGroup(
       if (errs != 0) {
          TBOX_ERROR(
             "Errors in load balance mapping found."
-            << "unbalanced_mapped_box_level:\n" << unbalanced_mapped_box_level.format("", 2)
-            << "balanced_mapped_box_level:\n" << balanced_mapped_box_level.format("", 2)
+            << "unbalanced_box_level:\n" << unbalanced_box_level.format("", 2)
+            << "balanced_box_level:\n" << balanced_box_level.format("", 2)
             << "unbalanced_to_balanced:\n" << unbalanced_to_balanced.format("", 2)
             << "balanced_to_unbalanced:\n" << balanced_to_unbalanced.format("", 2));
       }
@@ -1754,6 +1754,10 @@ void TreeLoadBalancer::unpackSubtreeLoadData(
    load_data.total_work = *(received_data++);
    load_data.load_imported = *(received_data++);
    const int num_boxes = *(received_data++);
+   /*
+    * As we pull each BoxInTransit out, give it a new id that reflects
+    * its new owner.  Place all BoxInTransits in the receiving_bin.
+    */
    BoxInTransit received_box(d_dim);
    for (int i = 0; i < num_boxes; ++i) {
       received_box.getFromIntBuffer(received_data);
@@ -1869,14 +1873,13 @@ void TreeLoadBalancer::constructSemilocalUnbalancedToBalanced(
 
          tbox::AsyncCommPeer<int>* peer_comm =
             dynamic_cast<tbox::AsyncCommPeer<int> *>(completed[i]);
-         const int peer_rank = peer_comm->getPeerRank();
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-         int j;
-         for ( j=0; j<static_cast<int>(export_dsts.size()); ++j ) {
-            if ( export_dsts[j] == peer_rank ) break;
+         size_t j;
+         for ( j=0; j<export_dsts.size(); ++j ) {
+            if ( export_dsts[j] == peer_comm->getPeerRank() ) break;
          }
-         TBOX_ASSERT( j < static_cast<int>(export_dsts.size()) );
+         TBOX_ASSERT( j < export_dsts.size() );
 #endif
 
          const int* received_data = peer_comm->getRecvData();
@@ -1900,11 +1903,10 @@ void TreeLoadBalancer::constructSemilocalUnbalancedToBalanced(
     * Send outgoing messages.
     */
    TBOX_ASSERT( outgoing_messages.size() == import_srcs.size() );
-   for ( int i=0; i<static_cast<int>(import_srcs.size()); ++i ) {
+   for ( size_t i=0; i<import_srcs.size(); ++i ) {
       tbox::AsyncCommPeer<int> &peer_comm = importer_comms[i];
-      const int peer_rank = peer_comm.getPeerRank();
       std::map<int,std::vector<int> >::const_iterator recip =
-         outgoing_messages.find(peer_rank);
+         outgoing_messages.find(peer_comm.getPeerRank());
       TBOX_ASSERT( recip != outgoing_messages.end() );
       const std::vector<int> &message = recip->second;
       peer_comm.beginSend( &message[0], static_cast<int>(message.size()) );
@@ -2203,26 +2205,26 @@ void TreeLoadBalancer::destroyAsyncCommObjects(
  *************************************************************************
  */
 void TreeLoadBalancer::sortIntVector(
-   hier::IntVector& ordered_dims,
+   hier::IntVector& sorted_dirs,
    const hier::IntVector& vector) const
 {
    const hier::IntVector num_cells = vector;
 
    for (int d = 0; d < d_dim.getValue(); d++) {
-      ordered_dims(d) = d;
+      sorted_dirs(d) = d;
    }
    for (int d0 = 0; d0 < d_dim.getValue() - 1; d0++) {
       for (int d1 = d0 + 1; d1 < d_dim.getValue(); d1++) {
-         if (vector(ordered_dims(d0)) > vector(ordered_dims(d1))) {
-            int tmp_d = ordered_dims(d0);
-            ordered_dims(d0) = ordered_dims(d1);
-            ordered_dims(d1) = tmp_d;
+         if (vector(sorted_dirs(d0)) > vector(sorted_dirs(d1))) {
+            int tmp_d = sorted_dirs(d0);
+            sorted_dirs(d0) = sorted_dirs(d1);
+            sorted_dirs(d1) = tmp_d;
          }
       }
    }
 #ifdef DEBUG_CHECK_ASSERTIONS
    for (int d = 0; d < d_dim.getValue() - 1; d++) {
-      TBOX_ASSERT(vector(ordered_dims(d)) <= vector(ordered_dims(d + 1)));
+      TBOX_ASSERT(vector(sorted_dirs(d)) <= vector(sorted_dirs(d + 1)));
    }
 #endif
 }
@@ -2327,7 +2329,7 @@ bool TreeLoadBalancer::shiftLoadsByBreaking(
 
       if (!breakoff.empty()) {
 
-         const BoxInTransit& brk_mapped_box_in_transit = *si;
+         const BoxInTransit& brk_box_in_transit = *si;
 
          const bool improves_balance =
             tbox::MathUtilities<double>::Abs(
@@ -2335,7 +2337,7 @@ bool TreeLoadBalancer::shiftLoadsByBreaking(
             (ideal_transfer - tbox::MathUtilities<double>::getEpsilon());
 
          if (d_print_steps) {
-            tbox::plog << "    Potential to replace " << brk_mapped_box_in_transit << " with "
+            tbox::plog << "    Potential to replace " << brk_box_in_transit << " with "
                        << breakoff.size() << " breakoff Boxes and "
                        << leftover.size() << " leftover Boxes."
                        << "  improves_balance=" << improves_balance
@@ -2363,19 +2365,19 @@ bool TreeLoadBalancer::shiftLoadsByBreaking(
          for (std::vector<hier::Box>::const_iterator bi = breakoff.begin();
               bi != breakoff.end();
               ++bi) {
-            BoxInTransit give_mapped_box_in_transit(
-               brk_mapped_box_in_transit,
+            BoxInTransit give_box_in_transit(
+               brk_box_in_transit,
                *bi,
                d_mpi.getRank(),
                next_available_index);
-            give_mapped_box_in_transit.load = (int)computeLoad(
-               give_mapped_box_in_transit.orig_box,
-               give_mapped_box_in_transit.getBox());
+            give_box_in_transit.load = (int)computeLoad(
+               give_box_in_transit.orig_box,
+               give_box_in_transit.getBox());
             next_available_index += 2 + d_degree;
-            trial_dst.insert(give_mapped_box_in_transit);
-            trial_actual_transfer += give_mapped_box_in_transit.load;
+            trial_dst.insert(give_box_in_transit);
+            trial_actual_transfer += give_box_in_transit.load;
             if (d_print_steps) {
-               tbox::plog << "    Breakoff box " << *bi << " -> " << give_mapped_box_in_transit
+               tbox::plog << "    Breakoff box " << *bi << " -> " << give_box_in_transit
                           << std::endl;
             }
          }
@@ -2383,23 +2385,23 @@ bool TreeLoadBalancer::shiftLoadsByBreaking(
          for (std::vector<hier::Box>::const_iterator bi = leftover.begin();
               bi != leftover.end();
               ++bi) {
-            BoxInTransit keep_mapped_box_in_transit(
-               brk_mapped_box_in_transit,
+            BoxInTransit keep_box_in_transit(
+               brk_box_in_transit,
                *bi,
                d_mpi.getRank(),
                next_available_index);
-            keep_mapped_box_in_transit.load = (int)computeLoad(
-                  keep_mapped_box_in_transit.orig_box,
-                  keep_mapped_box_in_transit.getBox());
+            keep_box_in_transit.load = (int)computeLoad(
+                  keep_box_in_transit.orig_box,
+                  keep_box_in_transit.getBox());
             next_available_index += 2 + d_degree;
-            trial_src.insert(keep_mapped_box_in_transit);
+            trial_src.insert(keep_box_in_transit);
             if (d_print_steps) {
-               tbox::plog << "    Leftover box " << *bi << " -> " << keep_mapped_box_in_transit
+               tbox::plog << "    Leftover box " << *bi << " -> " << keep_box_in_transit
                           << std::endl;
             }
          }
          TBOX_ASSERT(trial_src.size() + trial_dst.size() > 0);
-         trial_src.erase(brk_mapped_box_in_transit);
+         trial_src.erase(brk_box_in_transit);
 
          /*
           * Compute the new penalty to see if it improves our best result so far.
@@ -2892,7 +2894,7 @@ bool TreeLoadBalancer::breakOffLoad(
    std::vector<hier::Box>& breakoff,
    std::vector<hier::Box>& leftover,
    double& brk_load,
-   const hier::Box& mapped_box,
+   const hier::Box& box,
    double ideal_load_to_break ) const
 {
    TBOX_ASSERT(ideal_load_to_break > 0);
@@ -2926,7 +2928,7 @@ bool TreeLoadBalancer::breakOffLoad(
       if (d_print_break_steps) {
          tbox::plog << "      ideal_load_to_break " << ideal_load_to_break
                     << " < " << d_min_size.getProduct() << d_min_size
-                    << ":  Cannot break Box " << mapped_box << std::endl;
+                    << ":  Cannot break Box " << box << std::endl;
       }
       t_break_off_load->stop();
       return false;
@@ -2940,18 +2942,18 @@ bool TreeLoadBalancer::breakOffLoad(
    tbox::Array<tbox::Array<bool> > bad_cuts(d_dim.getValue());
    t_find_bad_cuts->start();
    hier::BoxUtilities::findBadCutPoints(bad_cuts,
-      mapped_box,
-      d_block_domain_boxes[mapped_box.getBlockId().getBlockValue()],
+      box,
+      d_block_domain_boxes[box.getBlockId().getBlockValue()],
       d_bad_interval);
    t_find_bad_cuts->stop();
 
    // Penalty for not transfering ideal load.
-   double best_balance_penalty = computeBalancePenalty(mapped_box,
+   double best_balance_penalty = computeBalancePenalty(box,
          ideal_load_to_break);
    // Penalty for new surfaces generated (none generated yet).
-   double best_surface_penalty = computeSurfacePenalty(mapped_box);
+   double best_surface_penalty = computeSurfacePenalty(box);
    // Penalty for slender boxes.
-   double best_slender_penalty = computeSlenderPenalty(mapped_box);
+   double best_slender_penalty = computeSlenderPenalty(box);
 
    double best_combined_penalty = tbox::MathUtilities<double>::getMax();
 
@@ -2978,7 +2980,7 @@ bool TreeLoadBalancer::breakOffLoad(
             planar_breakoff,
             planar_leftover,
             planar_brk_load,
-            mapped_box,
+            box,
             ideal_load_to_break,
             bad_cuts );
 
@@ -3000,9 +3002,9 @@ bool TreeLoadBalancer::breakOffLoad(
             tbox::plog.precision(6);
             tbox::plog << "      Planar-break broke off "
                        << planar_brk_load << " / " << ideal_load_to_break
-                       << " from " << mapped_box << '|'
-                       << mapped_box.numberCells() << '|'
-                       << mapped_box.size() << " into "
+                       << " from " << box << '|'
+                       << box.numberCells() << '|'
+                       << box.size() << " into "
                        << planar_breakoff.size()
                        << " breakoff: ";
             for (std::vector<hier::Box>::const_iterator bi =
@@ -3062,7 +3064,7 @@ bool TreeLoadBalancer::breakOffLoad(
             cubic1_breakoff,
             cubic1_leftover,
             cubic1_brk_load,
-            mapped_box,
+            box,
             ideal_load_to_break,
             bad_cuts );
 
@@ -3085,9 +3087,9 @@ bool TreeLoadBalancer::breakOffLoad(
             tbox::plog.precision(6);
             tbox::plog << "      Cubic-break broke off "
                        << cubic1_brk_load << " / " << ideal_load_to_break
-                       << " from " << mapped_box << '|'
-                       << mapped_box.numberCells() << '|'
-                       << mapped_box.size() << " into "
+                       << " from " << box << '|'
+                       << box.numberCells() << '|'
+                       << box.size() << " into "
                        << cubic1_breakoff.size()
                        << " breakoff: ";
             for (std::vector<hier::Box>::const_iterator bi =
@@ -3134,9 +3136,9 @@ bool TreeLoadBalancer::breakOffLoad(
       } else {
          if (d_print_break_steps) {
             tbox::plog << "      breakOffLoad_cubic1 could not break "
-                       << ideal_load_to_break << " from " << mapped_box
-                       << '/' << mapped_box.numberCells()
-                       << '/' << mapped_box.numberCells().getProduct()
+                       << ideal_load_to_break << " from " << box
+                       << '/' << box.numberCells()
+                       << '/' << box.numberCells().getProduct()
                        << std::endl;
          }
       }
@@ -3529,16 +3531,16 @@ void TreeLoadBalancer::burstBox(
  *************************************************************************
  */
 double TreeLoadBalancer::computeLocalLoads(
-   const hier::BoxLevel& mapped_box_level) const
+   const hier::BoxLevel& box_level) const
 {
    // Count up workload.
    double load = 0.0;
-   const hier::BoxContainer& mapped_boxes = mapped_box_level.getBoxes();
-   for (hier::BoxContainer::ConstIterator ni = mapped_boxes.begin();
-        ni != mapped_boxes.end();
+   const hier::BoxContainer& boxes = box_level.getBoxes();
+   for (hier::BoxContainer::ConstIterator ni = boxes.begin();
+        ni != boxes.end();
         ++ni) {
-      double mapped_box_load = computeLoad(*ni);
-      load += mapped_box_load;
+      double box_load = computeLoad(*ni);
+      load += box_load;
    }
    return (double)load;
 }
@@ -3713,7 +3715,7 @@ bool TreeLoadBalancer::breakOffLoad_planar(
    std::vector<hier::Box>& breakoff,
    std::vector<hier::Box>& leftover,
    double& brk_load,
-   const hier::Box& mapped_box,
+   const hier::Box& box,
    double ideal_load_to_break,
    const tbox::Array<tbox::Array<bool> >& bad_cuts ) const
 {
@@ -3722,7 +3724,7 @@ bool TreeLoadBalancer::breakOffLoad_planar(
 
    if (d_print_break_steps) {
       tbox::plog << "      breakOffLoad_planar attempting to break "
-                 << ideal_load_to_break << " from Box " << mapped_box
+                 << ideal_load_to_break << " from Box " << box
                  << " min_size=" << d_min_size << std::endl;
    }
 
@@ -3730,17 +3732,17 @@ bool TreeLoadBalancer::breakOffLoad_planar(
    breakoff.clear();
    leftover.clear();
 
-   const hier::IntVector& box_dims = mapped_box.numberCells();
+   const hier::IntVector& box_dims = box.numberCells();
 
    const int box_vol = box_dims.getProduct();
 
    if (box_vol <= ideal_load_to_break) {
       // Easy: break off everything.
-      breakoff.push_back(mapped_box);
+      breakoff.push_back(box);
       brk_load = box_vol;
       if (d_print_break_steps) {
          tbox::plog << "      breakOffload_planar broke off entire Box "
-                    << mapped_box
+                    << box
                     << std::endl;
       }
       return true;
@@ -3749,8 +3751,8 @@ bool TreeLoadBalancer::breakOffLoad_planar(
    /*
     * Determine ordering of box_dims from shortest to longest.
     */
-   hier::IntVector ordered_dims(dim);
-   sortIntVector(ordered_dims, box_dims);
+   hier::IntVector sorted_dirs(dim);
+   sortIntVector(sorted_dirs, box_dims);
 
    /*
     * best_difference is the difference between the best cut found and
@@ -3766,7 +3768,7 @@ bool TreeLoadBalancer::breakOffLoad_planar(
        * Search directions from longest to shortest
        * because we prefer to break across longest dir.
        */
-      const int brk_dir = ordered_dims(d_dim.getValue() - 1);
+      const int brk_dir = sorted_dirs(d_dim.getValue() - 1);
 
       const int brk_area = box_vol / box_dims(brk_dir);
 
@@ -3818,20 +3820,20 @@ bool TreeLoadBalancer::breakOffLoad_planar(
                 bad[brk_len] == false) {
                // Cutting brk_len from low side is ok.
                best_difference = difference;
-               best_breakoff_box = mapped_box;
+               best_breakoff_box = box;
                best_breakoff_box.upper() (brk_dir) =
                   best_breakoff_box.lower() (brk_dir) + brk_len - 1;
-               best_leftover_box = mapped_box;
+               best_leftover_box = box;
                best_leftover_box.lower() (brk_dir) =
                   best_breakoff_box.upper() (brk_dir) + 1;
                break;
             } else if (bad[box_dims(brk_dir) - brk_len] == false) {
                // Cutting brk_len from high side is ok.
                best_difference = difference;
-               best_breakoff_box = mapped_box;
+               best_breakoff_box = box;
                best_breakoff_box.lower() (brk_dir) =
                   best_breakoff_box.upper() (brk_dir) - brk_len + 1;
-               best_leftover_box = mapped_box;
+               best_leftover_box = box;
                best_leftover_box.upper() (brk_dir) =
                   best_breakoff_box.lower() (brk_dir) - 1;
                break;
@@ -3848,14 +3850,14 @@ bool TreeLoadBalancer::breakOffLoad_planar(
       brk_load = best_breakoff_box.size();
       successful_break = true;
       if (d_print_break_steps) {
-         tbox::plog << "      breakOffload_planar broke off box " << mapped_box
+         tbox::plog << "      breakOffload_planar broke off box " << box
                     << " for breakoff box " << best_breakoff_box
                     << " and leftover " << best_leftover_box << std::endl;
       }
    } else {
       if (d_print_break_steps) {
          tbox::plog << "      breakOffload_planar could not break "
-                    << ideal_load_to_break << " from Box " << mapped_box
+                    << ideal_load_to_break << " from Box " << box
                     << std::endl;
       }
    }
@@ -3924,30 +3926,30 @@ bool TreeLoadBalancer::breakOffLoad_cubic1(
    std::vector<hier::Box>& breakoff,
    std::vector<hier::Box>& leftover,
    double& brk_load,
-   const hier::Box& mapped_box,
+   const hier::Box& box,
    double ideal_load_to_break,
    const tbox::Array<tbox::Array<bool> >& bad_cuts ) const
 {
 
-   const hier::IntVector box_dims(mapped_box.numberCells());
+   const hier::IntVector box_dims(box.numberCells());
 
-   const double mapped_box_load(box_dims.getProduct());
+   const double box_load(box_dims.getProduct());
 
-   if (ideal_load_to_break >= mapped_box_load) {
+   if (ideal_load_to_break >= box_load) {
       // Easy: break off everything.
       leftover.clear();
       breakoff.clear();
-      breakoff.push_back(mapped_box);
-      brk_load = mapped_box_load;
+      breakoff.push_back(box);
+      brk_load = box_load;
       if (d_print_break_steps) {
          tbox::plog << "      breakOffload_cubic1 broke off entire Box "
-                    << mapped_box
+                    << box
                     << std::endl;
       }
       return true;
    }
 
-   if (ideal_load_to_break > 0.5 * mapped_box_load) {
+   if (ideal_load_to_break > 0.5 * box_load) {
       /*
        * This algorithm is better when breaking off a small portion.
        * Since the ideal is a bigger portion, switch breakoff with leftover.
@@ -3964,7 +3966,7 @@ bool TreeLoadBalancer::breakOffLoad_cubic1(
             leftover,
             breakoff,
             brk_load,
-            mapped_box,
+            box,
             box_dims.getProduct() - ideal_load_to_break,
             bad_cuts );
       if (success) {
@@ -3975,7 +3977,7 @@ bool TreeLoadBalancer::breakOffLoad_cubic1(
 
    if (d_print_break_steps) {
       tbox::plog << "      breakOffload_cubic1 attempting to break "
-                 << ideal_load_to_break << " from Box " << mapped_box
+                 << ideal_load_to_break << " from Box " << box
                  << " min_size=" << d_min_size << std::endl;
    }
 
@@ -3984,7 +3986,7 @@ bool TreeLoadBalancer::breakOffLoad_cubic1(
 
    /*
     * brk_size is the size of the box we want to break off of
-    * mapped_box.  We start with the smallest allowed brk_size that
+    * box.  We start with the smallest allowed brk_size that
     * will not create remainders that violate size constraints.
     *
     * In the do loop below, we increase brk_size to bring brk_load
@@ -4116,8 +4118,8 @@ bool TreeLoadBalancer::breakOffLoad_cubic1(
     * placement_impossible to true.
     */
    hier::Box breakoff_box(d_dim);
-   const hier::IntVector& lower(mapped_box.lower());
-   const hier::IntVector& upper(mapped_box.upper());
+   const hier::IntVector& lower(box.lower());
+   const hier::IntVector& upper(box.upper());
    bool placement_impossible = false;
    if (d_print_break_steps) {
       tbox::plog << "      Placing " << brk_size
@@ -4200,7 +4202,7 @@ bool TreeLoadBalancer::breakOffLoad_cubic1(
 
    burstBox(
       leftover,
-      mapped_box,
+      box,
       breakoff_box );
 
 #ifdef DEBUG_CHECK_ASSERTIONS
@@ -4216,7 +4218,7 @@ bool TreeLoadBalancer::breakOffLoad_cubic1(
                << "breakoff box " << b << ", with size " << s
                << "\nis not between the min size " << d_min_size
                << "\nand the original box size " << box_dims << "\n"
-               << "orig box " << mapped_box << "\n"
+               << "orig box " << box << "\n"
                << "break box " << breakoff_box << "\n"
                << "break box size " << brk_size << "\n"
                << "ideal brk load " << ideal_load_to_break);
@@ -4235,7 +4237,7 @@ bool TreeLoadBalancer::breakOffLoad_cubic1(
                << "leftover box " << b << ", with size " << s
                << "\nis not between the min size " << d_min_size
                << "\nand the original box size " << box_dims << "\n"
-               << "orig box " << mapped_box << "\n"
+               << "orig box " << box << "\n"
                << "break box " << breakoff_box << "\n"
                << "break box size " << brk_size << "\n"
                << "ideal brk load " << ideal_load_to_break);
@@ -4257,7 +4259,7 @@ bool TreeLoadBalancer::breakOffLoad_cubic1(
 void TreeLoadBalancer::setShadowData(
    const hier::IntVector& min_size,
    const hier::IntVector& max_size,
-   const hier::BoxLevel& domain_mapped_box_level,
+   const hier::BoxLevel& domain_box_level,
    const hier::IntVector& bad_interval,
    const hier::IntVector& cut_factor,
    const hier::IntVector& refinement_ratio) const
@@ -4268,29 +4270,29 @@ void TreeLoadBalancer::setShadowData(
    d_cut_factor = cut_factor;
    /*
     * Domain boxes are used by breakOffLoad to determine where
-    * the bad cuts are.  Computing domain_boxes from domain_mapped_box_level
+    * the bad cuts are.  Computing domain_boxes from domain_box_level
     * should be moved above the this method.
     */
 
    /*
-    * We expect the domain mapped_box_level to be in globalized state.
+    * We expect the domain box_level to be in globalized state.
     */
    TBOX_ASSERT(
-      domain_mapped_box_level.getParallelState() ==
+      domain_box_level.getParallelState() ==
       hier::BoxLevel::GLOBALIZED);
 
    d_block_domain_boxes.clear();
    int nblocks =
-      domain_mapped_box_level.getGridGeometry()->getNumberBlocks();
+      domain_box_level.getGridGeometry()->getNumberBlocks();
    d_block_domain_boxes.resize(nblocks);
 
    if (nblocks == 1) {
-      domain_mapped_box_level.getGlobalBoxes(d_block_domain_boxes[0]);
+      domain_box_level.getGlobalBoxes(d_block_domain_boxes[0]);
       d_block_domain_boxes[0].refine(refinement_ratio);
    } else {
       for (int b = 0; b < nblocks; ++b) {
          d_block_domain_boxes[b] = hier::BoxContainer(
-            domain_mapped_box_level.getGlobalBoxes(), hier::BlockId(b));
+            domain_box_level.getGlobalBoxes(), hier::BlockId(b));
 
          d_block_domain_boxes[b].refine(refinement_ratio);
       }
@@ -4316,14 +4318,14 @@ void TreeLoadBalancer::unsetShadowData() const {
 
 /*
 **************************************************************************
-* Move Boxes in balance_mapped_box_level from ranks outside of
+* Move Boxes in balance_box_level from ranks outside of
 * rank_group to ranks inside rank_group.  Modify the given connectors
 * to make them correct following this moving of boxes.
 **************************************************************************
 */
 
 void TreeLoadBalancer::prebalanceBoxLevel(
-   hier::BoxLevel& balance_mapped_box_level,
+   hier::BoxLevel& balance_box_level,
    hier::Connector& balance_to_anchor,
    hier::Connector& anchor_to_balance,
    const tbox::RankGroup& rank_group) const
@@ -4336,15 +4338,15 @@ void TreeLoadBalancer::prebalanceBoxLevel(
    }
 
    /*
-    * tmp_mapped_box_level will contain the same boxes as
-    * balance_mapped_box_level, but all will live on the processors
+    * tmp_box_level will contain the same boxes as
+    * balance_box_level, but all will live on the processors
     * specified in rank_group.
     */
-   hier::BoxLevel tmp_mapped_box_level(d_dim);
-   tmp_mapped_box_level.initialize(
-      balance_mapped_box_level.getRefinementRatio(),
-      balance_mapped_box_level.getGridGeometry(),
-      balance_mapped_box_level.getMPI());
+   hier::BoxLevel tmp_box_level(d_dim);
+   tmp_box_level.initialize(
+      balance_box_level.getRefinementRatio(),
+      balance_box_level.getGridGeometry(),
+      balance_box_level.getMPI());
 
    /*
     * If a rank is not in rank_group it is called a "sending" rank, as
@@ -4431,34 +4433,34 @@ void TreeLoadBalancer::prebalanceBoxLevel(
 
    /*
     * Construct the mapping Connectors which describe the mapping from the box
-    * configuration of the given balance_mapped_box_level, to the new
-    * configuration stored in tmp_mapped_box_level.  These mapping Connectors
+    * configuration of the given balance_box_level, to the new
+    * configuration stored in tmp_box_level.  These mapping Connectors
     * are necessary to modify the two Connectors given in the argument list,
     * so that on return from this method, they will be correct for the new
-    * balance_mapped_box_level.
+    * balance_box_level.
     */
-   hier::Connector balance_to_tmp(balance_mapped_box_level,
-                                  tmp_mapped_box_level,
+   hier::Connector balance_to_tmp(balance_box_level,
+                                  tmp_box_level,
                                   hier::IntVector::getZero(d_dim));
 
-   hier::Connector tmp_to_balance(tmp_mapped_box_level,
-                                  balance_mapped_box_level,
+   hier::Connector tmp_to_balance(tmp_box_level,
+                                  balance_box_level,
                                   hier::IntVector::getZero(d_dim));
 
    /*
     * Where Boxes already exist on ranks in rank_group,
-    * move them directly to tmp_mapped_box_level.
+    * move them directly to tmp_box_level.
     */
    if (!is_sending_rank) {
-      const hier::BoxContainer& unchanged_mapped_boxes =
-         balance_mapped_box_level.getBoxes();
+      const hier::BoxContainer& unchanged_boxes =
+         balance_box_level.getBoxes();
 
       for (hier::BoxContainer::ConstIterator ni =
-              unchanged_mapped_boxes.begin();
-           ni != unchanged_mapped_boxes.end(); ++ni) {
+              unchanged_boxes.begin();
+           ni != unchanged_boxes.end(); ++ni) {
 
-         const hier::Box& mapped_box = *ni;
-         tmp_mapped_box_level.addBox(mapped_box);
+         const hier::Box& box = *ni;
+         tmp_box_level.addBox(box);
       }
    }
 
@@ -4468,19 +4470,19 @@ void TreeLoadBalancer::prebalanceBoxLevel(
     * On sending ranks, pack the Boxes into buffers and send.
     */
    if (is_sending_rank) {
-      const hier::BoxContainer& sending_mapped_boxes =
-         balance_mapped_box_level.getBoxes();
+      const hier::BoxContainer& sending_boxes =
+         balance_box_level.getBoxes();
       const int num_sending_boxes =
-         static_cast<int>(sending_mapped_boxes.size());
+         static_cast<int>(sending_boxes.size());
 
       int* buffer = new int[buf_size * num_sending_boxes];
       int box_count = 0;
-      for (hier::BoxContainer::ConstIterator ni = sending_mapped_boxes.begin();
-           ni != sending_mapped_boxes.end(); ++ni) {
+      for (hier::BoxContainer::ConstIterator ni = sending_boxes.begin();
+           ni != sending_boxes.end(); ++ni) {
 
-         const hier::Box& mapped_box = *ni;
+         const hier::Box& box = *ni;
 
-         mapped_box.putToIntBuffer(&buffer[box_count * buf_size]);
+         box.putToIntBuffer(&buffer[box_count * buf_size]);
          box_count++;
       }
       box_send->beginSend(buffer, buf_size * num_sending_boxes);
@@ -4490,7 +4492,7 @@ void TreeLoadBalancer::prebalanceBoxLevel(
 
    /*
     * On receiving ranks, complete the receives, add the boxes to local
-    * tmp_mapped_box_level, insert boxes into tmp_to_balance, and then
+    * tmp_box_level, insert boxes into tmp_to_balance, and then
     * send the new LocalIdes back to the sending processors.
     */
    if (!is_sending_rank && num_recvs > 0) {
@@ -4509,20 +4511,20 @@ void TreeLoadBalancer::prebalanceBoxLevel(
                int* id_buffer = new int[num_boxes];
 
                for (int b = 0; b < num_boxes; b++) {
-                  hier::Box mapped_box(d_dim);
+                  hier::Box box(d_dim);
 
-                  mapped_box.getFromIntBuffer(&buffer[b * buf_size]);
+                  box.getFromIntBuffer(&buffer[b * buf_size]);
 
                   hier::BoxContainer::ConstIterator tmp_iter =
-                     tmp_mapped_box_level.addBox(mapped_box,
-                        mapped_box.getBlockId());
+                     tmp_box_level.addBox(box,
+                        box.getBlockId());
 
-                  hier::BoxId tmp_mapped_box_id = (*tmp_iter).getId();
+                  hier::BoxId tmp_box_id = (*tmp_iter).getId();
 
-                  tmp_to_balance.insertLocalNeighbor(mapped_box,
-                     tmp_mapped_box_id);
+                  tmp_to_balance.insertLocalNeighbor(box,
+                     tmp_box_id);
 
-                  id_buffer[b] = tmp_mapped_box_id.getLocalId().getValue();
+                  id_buffer[b] = tmp_box_id.getLocalId().getValue();
                }
                id_send[i].beginSend(id_buffer, num_boxes);
 
@@ -4553,22 +4555,22 @@ void TreeLoadBalancer::prebalanceBoxLevel(
       }
       const int* buffer = id_recv->getRecvData();
 
-      const hier::BoxContainer& sending_mapped_boxes =
-         balance_mapped_box_level.getBoxes();
-      TBOX_ASSERT(static_cast<unsigned int>(id_recv->getRecvSize()) == sending_mapped_boxes.size());
+      const hier::BoxContainer& sending_boxes =
+         balance_box_level.getBoxes();
+      TBOX_ASSERT(static_cast<unsigned int>(id_recv->getRecvSize()) == sending_boxes.size());
 
       int box_count = 0;
       for (hier::BoxContainer::ConstIterator ni =
-              sending_mapped_boxes.begin();
-           ni != sending_mapped_boxes.end(); ++ni) {
+              sending_boxes.begin();
+           ni != sending_boxes.end(); ++ni) {
 
-         hier::Box new_mapped_box(
+         hier::Box new_box(
             (*ni),
             (hier::LocalId)buffer[box_count],
             rank_group.getMappedRank(d_mpi.getRank() % output_nproc),
             (*ni).getBlockId());
 
-         balance_to_tmp.insertLocalNeighbor(new_mapped_box, (*ni).getId());
+         balance_to_tmp.insertLocalNeighbor(new_box, (*ni).getId());
          box_count++;
       }
    }
@@ -4577,23 +4579,23 @@ void TreeLoadBalancer::prebalanceBoxLevel(
 
    if (anchor_to_balance.isFinalized()) {
       /*
-       * This modify operation copies tmp_mapped_box_level to
-       * balance_mapped_box_level, and changes anchor_to_balance and
+       * This modify operation copies tmp_box_level to
+       * balance_box_level, and changes anchor_to_balance and
        * balance_to_anchor such that they are correct for the new state
-       * of balance_mapped_box_level.
+       * of balance_box_level.
        */
       const hier::MappingConnectorAlgorithm mca;
       mca.modify(anchor_to_balance,
          balance_to_anchor,
          balance_to_tmp,
          tmp_to_balance,
-         &balance_mapped_box_level,
-         &tmp_mapped_box_level);
+         &balance_box_level,
+         &tmp_box_level);
 
       TBOX_ASSERT(anchor_to_balance.checkTransposeCorrectness(balance_to_anchor) == 0);
       TBOX_ASSERT(balance_to_anchor.checkTransposeCorrectness(anchor_to_balance) == 0);
    } else {
-      hier::BoxLevel::swap(balance_mapped_box_level, tmp_mapped_box_level);
+      hier::BoxLevel::swap(balance_box_level, tmp_box_level);
    }
 
    /*
@@ -4644,8 +4646,8 @@ void TreeLoadBalancer::setTimers()
     * The first constructor gets timers from the TimerManager.
     * and sets up their deallocation.
     */
-   if (t_load_balance_mapped_box_level.isNull()) {
-      t_load_balance_mapped_box_level = tbox::TimerManager::getManager()->
+   if (t_load_balance_box_level.isNull()) {
+      t_load_balance_box_level = tbox::TimerManager::getManager()->
          getTimer(d_object_name + "::loadBalanceBoxLevel()");
       t_get_map = tbox::TimerManager::getManager()->
          getTimer(d_object_name + "::get_map");
