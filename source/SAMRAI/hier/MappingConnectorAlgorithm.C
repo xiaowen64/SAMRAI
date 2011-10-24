@@ -756,8 +756,7 @@ void MappingConnectorAlgorithm::privateModify(
          incoming_ranks,
          all_comms,
          comm_stage,
-         completed,
-         mpi);
+         completed);
 
       t_modify_misc->start();
 
@@ -900,12 +899,9 @@ void MappingConnectorAlgorithm::privateModify_receiveAndUnpack(
    std::set<int>& incoming_ranks,
    tbox::AsyncCommPeer<int> all_comms[],
    tbox::AsyncCommStage& comm_stage,
-   tbox::AsyncCommStage::MemberVec& completed,
-   const tbox::SAMRAI_MPI& mpi) const
+   tbox::AsyncCommStage::MemberVec& completed) const
 {
    t_modify_receive_and_unpack->start();
-
-   const int rank(mpi.getRank());
 
    do {
       for (unsigned int i = 0; i < completed.size(); ++i) {

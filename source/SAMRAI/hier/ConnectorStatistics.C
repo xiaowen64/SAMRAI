@@ -104,15 +104,22 @@ void ConnectorStatistics::computeLocalConnectorStatistics(
     * available while others are computed in the loops following.
     */
 
-   sq.d_values[NUMBER_OF_BASE_BOXES] = base.getLocalNumberOfBoxes();
-   sq.d_values[NUMBER_OF_BASE_CELLS] = base.getLocalNumberOfCells();
+   sq.d_values[NUMBER_OF_BASE_BOXES] =
+      static_cast<double>(base.getLocalNumberOfBoxes());
+   sq.d_values[NUMBER_OF_BASE_CELLS] =
+      static_cast<double>(base.getLocalNumberOfCells());
 
-   sq.d_values[HAS_ANY_NEIGHBOR_SETS] = d_connector.getLocalNumberOfNeighborSets() > 0;
-   sq.d_values[NUMBER_OF_NEIGHBOR_SETS] = d_connector.getLocalNumberOfNeighborSets();
+   sq.d_values[HAS_ANY_NEIGHBOR_SETS] =
+      d_connector.getLocalNumberOfNeighborSets() > 0;
+   sq.d_values[NUMBER_OF_NEIGHBOR_SETS] =
+      static_cast<double>(d_connector.getLocalNumberOfNeighborSets());
 
-   sq.d_values[HAS_ANY_RELATIONSHIPS] = d_connector.getLocalNumberOfRelationships() > 0;
-   sq.d_values[NUMBER_OF_RELATIONSHIPS] =  d_connector.getLocalNumberOfRelationships();
-   sq.d_values[MIN_NUMBER_OF_RELATIONSHIPS] = tbox::MathUtilities<double>::getMax();
+   sq.d_values[HAS_ANY_RELATIONSHIPS] =
+      d_connector.getLocalNumberOfRelationships() > 0;
+   sq.d_values[NUMBER_OF_RELATIONSHIPS] =
+      static_cast<double>(d_connector.getLocalNumberOfRelationships());
+   sq.d_values[MIN_NUMBER_OF_RELATIONSHIPS] =
+      tbox::MathUtilities<double>::getMax();
    sq.d_values[MAX_NUMBER_OF_RELATIONSHIPS] = 0;
 
    sq.d_values[NUMBER_OF_NEIGHBORS] = 0;
@@ -130,12 +137,14 @@ void ConnectorStatistics::computeLocalConnectorStatistics(
       visible_neighbors.insert( neighbors.begin(), neighbors.end() );
 
       sq.d_values[MIN_NUMBER_OF_RELATIONSHIPS] =
-         tbox::MathUtilities<double>::Min(sq.d_values[MIN_NUMBER_OF_RELATIONSHIPS],
-                                          neighbors.size());
+         tbox::MathUtilities<double>::Min(
+            sq.d_values[MIN_NUMBER_OF_RELATIONSHIPS],
+            static_cast<double>(neighbors.size()));
 
       sq.d_values[MAX_NUMBER_OF_RELATIONSHIPS] =
-         tbox::MathUtilities<double>::Max(sq.d_values[MAX_NUMBER_OF_RELATIONSHIPS],
-                                          neighbors.size());
+         tbox::MathUtilities<double>::Max(
+            sq.d_values[MAX_NUMBER_OF_RELATIONSHIPS],
+            static_cast<double>(neighbors.size()));
 
       Box base_box = *base.getBoxStrict(nbi->first);
       base_box.grow(d_connector.getConnectorWidth());
@@ -166,7 +175,8 @@ void ConnectorStatistics::computeLocalConnectorStatistics(
    }
 
 
-   sq.d_values[NUMBER_OF_NEIGHBORS] = visible_neighbors.size();
+   sq.d_values[NUMBER_OF_NEIGHBORS] =
+      static_cast<double>(visible_neighbors.size());
 
    std::set<int> remote_neighbor_owners;
    for ( hier::BoxSet::const_iterator bi=visible_neighbors.begin();
@@ -183,7 +193,8 @@ void ConnectorStatistics::computeLocalConnectorStatistics(
 
    }
    remote_neighbor_owners.erase(mpi.getRank());
-   sq.d_values[NUMBER_OF_REMOTE_NEIGHBOR_OWNERS] = remote_neighbor_owners.size();
+   sq.d_values[NUMBER_OF_REMOTE_NEIGHBOR_OWNERS] =
+      static_cast<double>(remote_neighbor_owners.size());
 
    return;
 }
@@ -206,7 +217,6 @@ void ConnectorStatistics::printNeighborStats(
 
    const BoxLevel &base(d_connector.getBase());
    const tbox::SAMRAI_MPI &mpi(base.getMPI());
-   const tbox::Dimension& dim(base.getDim());
 
    StatisticalQuantities sq;
    computeLocalConnectorStatistics(sq);
@@ -222,9 +232,20 @@ void ConnectorStatistics::printNeighborStats(
    int rank_of_min[NUMBER_OF_QUANTITIES];
    int rank_of_max[NUMBER_OF_QUANTITIES];
    if (mpi.getSize() > 1) {
-      mpi.AllReduce(sq_min.d_values, NUMBER_OF_QUANTITIES, MPI_MINLOC, rank_of_min);
-      mpi.AllReduce(sq_max.d_values, NUMBER_OF_QUANTITIES, MPI_MAXLOC, rank_of_max);
-      mpi.AllReduce(sq_sum.d_values, NUMBER_OF_QUANTITIES, MPI_SUM);
+      mpi.AllReduce(
+         sq_min.d_values,
+         NUMBER_OF_QUANTITIES,
+         MPI_MINLOC,
+         rank_of_min);
+      mpi.AllReduce(
+         sq_max.d_values,
+         NUMBER_OF_QUANTITIES,
+         MPI_MAXLOC,
+         rank_of_max);
+      mpi.AllReduce(
+         sq_sum.d_values,
+         NUMBER_OF_QUANTITIES,
+         MPI_SUM);
    } else {
       for (int i = 0; i < NUMBER_OF_QUANTITIES; ++i) {
          rank_of_min[i] = rank_of_max[i] = 0;
@@ -234,21 +255,25 @@ void ConnectorStatistics::printNeighborStats(
    co.unsetf(std::ios::fixed | std::ios::scientific);
    co.precision(3);
 
-   co << border << "N = " << base.getGlobalNumberOfBoxes() << " (global number of boxes)\n"
+   co << border << "N = " << base.getGlobalNumberOfBoxes()
+      << " (global number of boxes)\n"
       << border << "P = " << mpi.getSize() << " (number of processes)\n"
-      << border << std::setw(s_longest_length) << std::string() << "    local        min               max             sum    sum/N    sum/P\n";
+      << border << std::setw(s_longest_length) << std::string()
+      << "    local        min               max             sum    sum/N    sum/P\n";
 
    for (int i = 0; i < NUMBER_OF_QUANTITIES; ++i) {
-      co << border << std::setw(s_longest_length) << std::left << s_quantity_names[i]
+      co << border << std::setw(s_longest_length) << std::left
+         << s_quantity_names[i]
          << ' ' << std::setw(8) << std::right << sq.d_values[i]
          << ' ' << std::setw(8) << std::right << sq_min.d_values[i] << " @ "
          << std::setw(6) << std::left << rank_of_min[i]
          << ' ' << std::setw(8) << std::right << sq_max.d_values[i] << " @ "
          << std::setw(6) << std::left << rank_of_max[i]
          << ' ' << std::setw(8) << std::right << sq_sum.d_values[i]
-         << ' ' << std::setw(8) << std::right << sq_sum.d_values[i] / base.getGlobalNumberOfBoxes()
-         << ' ' << std::setw(8) << std::right << sq_sum.d_values[i] / mpi.getSize()
-         << '\n';
+         << ' ' << std::setw(8) << std::right
+         << sq_sum.d_values[i] / base.getGlobalNumberOfBoxes()
+         << ' ' << std::setw(8) << std::right
+         << sq_sum.d_values[i] / mpi.getSize() << '\n';
    }
 
    return;
@@ -277,7 +302,8 @@ void ConnectorStatistics::initializeCallback()
    s_quantity_names[NUMBER_OF_NEIGHBORS] = "num neighbors";
    s_quantity_names[NUMBER_OF_LOCAL_NEIGHBORS] = "num local neighbors";
    s_quantity_names[NUMBER_OF_REMOTE_NEIGHBORS] = "num remote neighbors";
-   s_quantity_names[NUMBER_OF_REMOTE_NEIGHBOR_OWNERS] = "num remote neighbor owners";
+   s_quantity_names[NUMBER_OF_REMOTE_NEIGHBOR_OWNERS] =
+      "num remote neighbor owners";
 
    s_quantity_names[OVERLAP_SIZE] = "overlap size";
    s_quantity_names[LOCAL_OVERLAP_SIZE] = "local overlap size";
@@ -286,7 +312,7 @@ void ConnectorStatistics::initializeCallback()
    s_longest_length = 0;
    for ( int i=0; i<NUMBER_OF_QUANTITIES; ++i ) {
       s_longest_length = tbox::MathUtilities<int>::Max(
-         s_longest_length, s_quantity_names[i].length());
+         s_longest_length, static_cast<int>(s_quantity_names[i].length()));
    }
 }
 

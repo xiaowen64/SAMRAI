@@ -447,8 +447,7 @@ private:
       std::set<int>& incoming_ranks,
       tbox::AsyncCommPeer<int> all_comms[],
       tbox::AsyncCommStage& comm_stage,
-      tbox::AsyncCommStage::MemberVec& completed,
-      const tbox::SAMRAI_MPI& mpi) const;
+      tbox::AsyncCommStage::MemberVec& completed) const;
 
    //! @brief Unpack message sent by sendDiscoverytoOneProcess().
    void
