@@ -93,9 +93,12 @@ void BoxLevelStatistics::computeLocalBoxLevelStatistics(
     */
 
    sq.d_values[HAS_ANY_BOX] = (d_box_level.getLocalNumberOfBoxes() > 0);
-   sq.d_values[NUMBER_OF_BOXES] = d_box_level.getLocalNumberOfBoxes();
+   sq.d_values[NUMBER_OF_BOXES] =
+      static_cast<double>(d_box_level.getLocalNumberOfBoxes());
    sq.d_values[LARGEST_DIMENSION] = 0;
-   sq.d_values[SMALLEST_DIMENSION] = (d_box_level.getLocalNumberOfBoxes() == 0 ? 0 : tbox::MathUtilities<double>::getMax());
+   sq.d_values[SMALLEST_DIMENSION] =
+      (d_box_level.getLocalNumberOfBoxes() == 0 ?
+       0 : tbox::MathUtilities<double>::getMax());
    sq.d_values[LARGEST_ASPECT_RATIO] = 0;
    sq.d_values[SMALLEST_ASPECT_RATIO] = tbox::MathUtilities<double>::getMax();
    sq.d_values[SUM_SURFACE_AREA] = 0.;
@@ -142,7 +145,8 @@ void BoxLevelStatistics::computeLocalBoxLevelStatistics(
       pow(double(d_box_level.getGlobalNumberOfCells()) / mpi.getSize(),
           double(dim.getValue() - 1) / dim.getValue());
 
-   sq.d_values[SUM_NORMALIZED_SURFACE_AREA] = sq.d_values[SUM_SURFACE_AREA] / ideal_surfarea;
+   sq.d_values[SUM_NORMALIZED_SURFACE_AREA] =
+      sq.d_values[SUM_SURFACE_AREA] / ideal_surfarea;
 
 }
 
@@ -179,8 +183,16 @@ void BoxLevelStatistics::printBoxStats(
    int rank_of_min[NUMBER_OF_QUANTITIES];
    int rank_of_max[NUMBER_OF_QUANTITIES];
    if (mpi.getSize() > 1) {
-      mpi.AllReduce(sq_min.d_values, NUMBER_OF_QUANTITIES, MPI_MINLOC, rank_of_min);
-      mpi.AllReduce(sq_max.d_values, NUMBER_OF_QUANTITIES, MPI_MAXLOC, rank_of_max);
+      mpi.AllReduce(
+         sq_min.d_values,
+         NUMBER_OF_QUANTITIES,
+         MPI_MINLOC,
+         rank_of_min);
+      mpi.AllReduce(
+         sq_max.d_values,
+         NUMBER_OF_QUANTITIES,
+         MPI_MAXLOC,
+         rank_of_max);
       mpi.AllReduce(sq_sum.d_values, NUMBER_OF_QUANTITIES, MPI_SUM);
    } else {
       for (int i = 0; i < NUMBER_OF_QUANTITIES; ++i) {
@@ -199,22 +211,27 @@ void BoxLevelStatistics::printBoxStats(
       pow(double(d_box_level.getGlobalNumberOfCells()) / mpi.getSize(),
           double(dim.getValue() - 1) / dim.getValue());
 
-   co << border << "N = " << d_box_level.getGlobalNumberOfBoxes() << " (global number of boxes)\n"
+   co << border << "N = " << d_box_level.getGlobalNumberOfBoxes()
+      << " (global number of boxes)\n"
       << border << "P = " << mpi.getSize() << " (number of processes)\n"
-      << border << "Ideal surface area is " << ideal_surfarea << " for " << (d_box_level.getGlobalNumberOfCells()/mpi.getSize()) << " cells\n"
-      << border << std::setw(s_longest_length) << std::string() << "    local        min               max             sum    sum/N    sum/P\n";
+      << border << "Ideal surface area is " << ideal_surfarea << " for "
+      << (d_box_level.getGlobalNumberOfCells()/mpi.getSize()) << " cells\n"
+      << border << std::setw(s_longest_length) << std::string()
+      << "    local        min               max             sum    sum/N    sum/P\n";
 
    for (int i = 0; i < NUMBER_OF_QUANTITIES; ++i) {
-      co << border << std::setw(s_longest_length) << std::left << s_quantity_names[i]
+      co << border << std::setw(s_longest_length) << std::left
+         << s_quantity_names[i]
          << ' ' << std::setw(8) << std::right << sq.d_values[i]
          << ' ' << std::setw(8) << std::right << sq_min.d_values[i] << " @ "
          << std::setw(6) << std::left << rank_of_min[i]
          << ' ' << std::setw(8) << std::right << sq_max.d_values[i] << " @ "
          << std::setw(6) << std::left << rank_of_max[i]
          << ' ' << std::setw(8) << std::right << sq_sum.d_values[i]
-         << ' ' << std::setw(8) << std::right << sq_sum.d_values[i] / d_box_level.getGlobalNumberOfBoxes()
-         << ' ' << std::setw(8) << std::right << sq_sum.d_values[i] / mpi.getSize()
-         << '\n';
+         << ' ' << std::setw(8)
+         << std::right << sq_sum.d_values[i] / d_box_level.getGlobalNumberOfBoxes()
+         << ' ' << std::setw(8)
+         << std::right << sq_sum.d_values[i] / mpi.getSize() << '\n';
    }
 
    return;
@@ -239,7 +256,7 @@ void BoxLevelStatistics::initializeCallback()
    s_longest_length = 0;
    for ( int i=0; i<NUMBER_OF_QUANTITIES; ++i ) {
       s_longest_length = tbox::MathUtilities<int>::Max(
-         s_longest_length, s_quantity_names[i].length());
+         s_longest_length, static_cast<int>(s_quantity_names[i].length()));
    }
 }
 

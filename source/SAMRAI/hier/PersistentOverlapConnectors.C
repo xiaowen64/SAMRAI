@@ -113,7 +113,7 @@ const Connector& PersistentOverlapConnectors::createConnector(
    TBOX_ASSERT(head.isInitialized());
 
    for (int i = 0; i < d_cons_from_me.size(); ++i) {
-      TBOX_ASSERT(d_cons_from_me[i]->isInitialized());
+      TBOX_ASSERT(d_cons_from_me[i]->isFinalized());
       TBOX_ASSERT(d_cons_from_me[i]->getBase().isInitialized());
       TBOX_ASSERT(d_cons_from_me[i]->getHead().isInitialized());
       TBOX_ASSERT(
@@ -135,12 +135,9 @@ const Connector& PersistentOverlapConnectors::createConnector(
    }
 
    Connector* new_connector = new Connector(relationships);
-   new_connector->initialize(
-         d_my_mapped_box_level,
-         head,
-         connector_width,
-         BoxLevel::DISTRIBUTED,
-         false);
+   new_connector->setBase(d_my_mapped_box_level);
+   new_connector->setHead(head);
+   new_connector->setWidth(connector_width, true);
    if (s_check_created_connectors == 'y') {
       // Check correctness.
       OverlapConnectorAlgorithm oca;
@@ -167,7 +164,7 @@ void PersistentOverlapConnectors::cacheConnector(
    TBOX_ASSERT(d_my_mapped_box_level.isInitialized());
 
    for (int i = 0; i < d_cons_from_me.size(); ++i) {
-      TBOX_ASSERT(d_cons_from_me[i]->isInitialized());
+      TBOX_ASSERT(d_cons_from_me[i]->isFinalized());
       TBOX_ASSERT(d_cons_from_me[i]->getBase().isInitialized());
       TBOX_ASSERT(d_cons_from_me[i]->getHead().isInitialized());
       TBOX_ASSERT(
@@ -188,12 +185,8 @@ void PersistentOverlapConnectors::cacheConnector(
       }
    }
 
-   connector->initialize(
-      d_my_mapped_box_level,
-      head,
-      connector->getConnectorWidth(),
-      BoxLevel::DISTRIBUTED,
-      false);
+   connector->setBase(d_my_mapped_box_level);
+   connector->setHead(head, true);
       
    if (s_check_created_connectors == 'y') {
       // Check correctness.
@@ -229,7 +222,7 @@ const Connector& PersistentOverlapConnectors::findConnector(
 
    const Connector* found = NULL;
    for (int i = 0; i < d_cons_from_me.size(); ++i) {
-      TBOX_ASSERT(d_cons_from_me[i]->isInitialized());
+      TBOX_ASSERT(d_cons_from_me[i]->isFinalized());
       TBOX_ASSERT(d_cons_from_me[i]->getBase().isInitialized());
       TBOX_ASSERT(d_cons_from_me[i]->getHead().isInitialized());
       TBOX_ASSERT(
@@ -337,7 +330,7 @@ const Connector& PersistentOverlapConnectors::findOrCreateConnector(
 
    const Connector* found = NULL;
    for (int i = 0; i < d_cons_from_me.size(); ++i) {
-      TBOX_ASSERT(d_cons_from_me[i]->isInitialized());
+      TBOX_ASSERT(d_cons_from_me[i]->isFinalized());
       TBOX_ASSERT(d_cons_from_me[i]->getBase().isInitialized());
       TBOX_ASSERT(d_cons_from_me[i]->getHead().isInitialized());
       TBOX_ASSERT(

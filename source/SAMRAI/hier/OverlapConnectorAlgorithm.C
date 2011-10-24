@@ -216,7 +216,7 @@ void OverlapConnectorAlgorithm::extractNeighbors(
    const Connector& connector,
    const IntVector& gcw) const
 {
-   other.clearLocalNeighborhoods();
+   other.clearNeighborhoods();
    for (Connector::ConstNeighborhoodIterator ni = connector.begin();
         ni != connector.end(); ++ni) {
 
@@ -395,10 +395,7 @@ void OverlapConnectorAlgorithm::findOverlaps_rbbt(
    /*
     * Discard current overlaps in connector (if any).
     */
-   connector.initialize(
-      connector.getBase(),
-      connector.getHead(),
-      connector.getConnectorWidth());
+   connector.clearNeighborhoods();
 
    /*
     * Use BoxTree to find local base Boxes intersecting head Boxes.
@@ -825,15 +822,15 @@ void OverlapConnectorAlgorithm::privateBridge(
     * Initialize the output Connectors without overlaps.  Add overlaps
     * below as they are discovered or received from other procs.
     */
-   west_to_east.initialize(
-      west,
-      east,
-      west_to_east_width);
+   west_to_east.clearNeighborhoods();
+   west_to_east.setBase(west);
+   west_to_east.setHead(east);
+   west_to_east.setWidth(west_to_east_width, true);
    if (compute_reverse) {
-      east_to_west->initialize(
-         east,
-         west,
-         east_to_west_width);
+      east_to_west->clearNeighborhoods();
+      east_to_west->setBase(east);
+      east_to_west->setHead(west);
+      east_to_west->setWidth(east_to_west_width, true);
 #ifdef DEBUG_CHECK_ASSERTIONS
       if (west_refinement_ratio / east_refinement_ratio * east_refinement_ratio == west_refinement_ratio ||
           east_refinement_ratio / west_refinement_ratio * west_refinement_ratio == east_refinement_ratio) {
@@ -858,11 +855,11 @@ void OverlapConnectorAlgorithm::privateBridge(
     * owning east/west Boxes visible to the local process.
     */
    std::set<int> outgoing_ranks, incoming_ranks;
-   cent_to_east.getLocalOwners(outgoing_ranks);
-   east_to_cent.getLocalOwners(incoming_ranks);
-   if (&cent_to_west != &cent_to_east) {
-      cent_to_west.getLocalOwners(outgoing_ranks);
-      west_to_cent.getLocalOwners(incoming_ranks);
+   cent_to_west.getLocalOwners(outgoing_ranks);
+   west_to_cent.getLocalOwners(incoming_ranks);
+   if (compute_reverse && &cent_to_west != &cent_to_east) {
+      cent_to_east.getLocalOwners(outgoing_ranks);
+      east_to_cent.getLocalOwners(incoming_ranks);
    }
    outgoing_ranks.erase(rank);
    incoming_ranks.erase(rank);
@@ -870,68 +867,21 @@ void OverlapConnectorAlgorithm::privateBridge(
 
    /*
     * Set up communication mechanism and post receives.
-    * Note that in comm_peer, all the outgoing_comm come
-    * first, the incoming_comm later.
+    * Note that in all_comms, all the incoming_comm come
+    * first, the outgoing_comm later.
     */
 
-   t_bridge_share->start();
-   t_bridge_comm_init->start();
-
    tbox::AsyncCommStage comm_stage;
-   comm_stage.setCommunicationWaitTimer(t_bridge_MPI_wait);
-   const int n_comm = static_cast<int>(
-         outgoing_ranks.size() + incoming_ranks.size());
-   tbox::AsyncCommPeer<int>* comm_peer =
-      new tbox::AsyncCommPeer<int>[n_comm];
-
+   tbox::AsyncCommPeer<int>* all_comms(NULL);
    tbox::AsyncCommStage::MemberVec completed;
-   completed.reserve(incoming_ranks.size());
 
-   const int tag0 = ++s_operation_mpi_tag;
-   const int tag1 = ++s_operation_mpi_tag;
-
-   size_t comm_idx;
-
-   comm_idx = outgoing_ranks.size();
-   for (std::set<int>::const_iterator owneri = incoming_ranks.begin();
-        owneri != incoming_ranks.end(); ++owneri, ++comm_idx) {
-      const int peer_rank = *owneri;
-      tbox::AsyncCommPeer<int>& incoming_comm = comm_peer[comm_idx];
-      incoming_comm.initialize(&comm_stage);
-      incoming_comm.setPeerRank(peer_rank);
-      incoming_comm.setMPI(cent.getMPI());
-      incoming_comm.setMPITag(tag0, tag1);
-      incoming_comm.limitFirstDataLength(OVERLAP_CONNECTOR_ALGORITHM_FIRST_DATA_LENGTH);
-      if (s_print_bridge_steps == 'y') {
-         tbox::plog << "Receiving from " << incoming_comm.getPeerRank()
-                    << std::endl;
-      }
-      incoming_comm.beginRecv();
-      if (incoming_comm.isDone()) {
-         completed.insert(completed.end(), &incoming_comm);
-      }
-   }
-
-   comm_idx = 0;
-   for (std::set<int>::const_iterator owneri = outgoing_ranks.begin();
-        owneri != outgoing_ranks.end(); ++owneri, ++comm_idx) {
-      const int peer_rank = *owneri;
-      tbox::AsyncCommPeer<int>& outgoing_comm = comm_peer[comm_idx];
-      outgoing_comm.initialize(&comm_stage);
-      outgoing_comm.setPeerRank(peer_rank);
-      outgoing_comm.setMPI(cent.getMPI());
-      outgoing_comm.setMPITag(tag0, tag1);
-      outgoing_comm.limitFirstDataLength(OVERLAP_CONNECTOR_ALGORITHM_FIRST_DATA_LENGTH);
-      if (s_print_bridge_steps == 'y') {
-         tbox::plog << "Sending to " << outgoing_comm.getPeerRank()
-                    << std::endl;
-      }
-   }
-
-   t_bridge_comm_init->stop();
-   t_bridge_share->stop();
-
-
+   privateBridge_setupCommunication(
+      all_comms,
+      comm_stage,
+      completed,
+      cent.getMPI(),
+      incoming_ranks,
+      outgoing_ranks);
 
    /*
     * Create search trees for visible east and west neighbors.  First,
@@ -1012,11 +962,11 @@ void OverlapConnectorAlgorithm::privateBridge(
       }
 
       /*
-       * Set send_comm_idx to reference the first outgoing rank in comm_peer.
+       * Set send_comm_idx to reference the first outgoing rank in all_comms.
        * It will be incremented to correpond to the rank whose overlaps
        * are being searched for.
        */
-      size_t send_comm_idx = 0;
+      size_t send_comm_idx = static_cast<int>(incoming_ranks.size());
 
 #ifdef DEBUG_CHECK_ASSERTIONS
       std::set<int> owners_sent_to; // Used for debugging.
@@ -1130,10 +1080,14 @@ void OverlapConnectorAlgorithm::privateBridge(
              * Find the communication object by increasing send_comm_idx
              * (cyclically) until it corresponds to curr_owner.
              */
-            while (comm_peer[send_comm_idx].getPeerRank() != curr_owner) {
-               send_comm_idx = (send_comm_idx + 1) % outgoing_ranks.size();
+            while (all_comms[send_comm_idx].getPeerRank() != curr_owner) {
+               ++send_comm_idx;
+               if (send_comm_idx == static_cast<int>(incoming_ranks.size() +
+                                                     outgoing_ranks.size())) {
+                  send_comm_idx -= static_cast<int>(outgoing_ranks.size());
+               }
             }
-            tbox::AsyncCommPeer<int>& outgoing_comm = comm_peer[send_comm_idx];
+            tbox::AsyncCommPeer<int>& outgoing_comm = all_comms[send_comm_idx];
             TBOX_ASSERT(outgoing_comm.getPeerRank() == curr_owner);
 
             sendDiscoveryToOneProcess(
@@ -1194,12 +1148,7 @@ void OverlapConnectorAlgorithm::privateBridge(
          TBOX_ASSERT(completed[i] != NULL);
          TBOX_ASSERT(peer != NULL);
 
-         if ((size_t)(peer - comm_peer) < outgoing_ranks.size()) {
-            // Sent to this peer.  No follow-up needed.
-            if (s_print_bridge_steps == 'y') {
-               tbox::plog << "Sent to " << peer->getPeerRank() << std::endl;
-            }
-         } else {
+         if ((size_t)(peer - all_comms) < incoming_ranks.size()) {
             // Receive from this peer.
             if (s_print_bridge_steps == 'y') {
                tbox::plog << "Received from " << peer->getPeerRank()
@@ -1208,7 +1157,13 @@ void OverlapConnectorAlgorithm::privateBridge(
             unpackDiscoveryMessage(
                peer,
                west_to_east,
-               east_to_west);
+               *east_to_west);
+         }
+         else {
+            // Sent to this peer.  No follow-up needed.
+            if (s_print_bridge_steps == 'y') {
+               tbox::plog << "Sent to " << peer->getPeerRank() << std::endl;
+            }
          }
       }
       t_bridge_unpack->stop();
@@ -1220,7 +1175,7 @@ void OverlapConnectorAlgorithm::privateBridge(
 
    t_bridge_share->stop();
 
-   delete[] comm_peer;
+   delete[] all_comms;
 
    west_to_east.setConnectorType(Connector::UNKNOWN);
    if (east_to_west != NULL) {
@@ -1445,15 +1400,21 @@ void OverlapConnectorAlgorithm::privateBridge(
 
 
    /*
+    * Compute the reverse bridge (east_to_west) if it is given and is
+    * distinct.
+    */
+   const bool compute_reverse = (&cent_to_west != &west_to_cent);
+
+   /*
     * Owners we have to exchange information with are the ones
     * owning east/west Boxes visible to the local process.
     */
    std::set<int> outgoing_ranks, incoming_ranks;
-   cent_to_east.getLocalOwners(outgoing_ranks);
-   east_to_cent.getLocalOwners(incoming_ranks);
-   if (&cent_to_west != &cent_to_east) {
-      cent_to_west.getLocalOwners(outgoing_ranks);
-      west_to_cent.getLocalOwners(incoming_ranks);
+   cent_to_west.getLocalOwners(outgoing_ranks);
+   west_to_cent.getLocalOwners(incoming_ranks);
+   if (compute_reverse && &cent_to_west != &cent_to_east) {
+      cent_to_east.getLocalOwners(outgoing_ranks);
+      east_to_cent.getLocalOwners(incoming_ranks);
    }
    outgoing_ranks.erase(rank);
    incoming_ranks.erase(rank);
@@ -1471,24 +1432,18 @@ void OverlapConnectorAlgorithm::privateBridge(
    t_bridge_discover_get_neighbors->stop();
 
    /*
-    * Compute the reverse bridge (east_to_west) if it is given and is
-    * distinct.
-    */
-   const bool compute_reverse = (&cent_to_west != &west_to_cent);
-
-   /*
     * Initialize the output Connectors without overlaps.  Add overlaps
     * below as they are discovered or received from other procs.
     */
-   west_to_cent.initialize(
-      west,
-      east,
-      west_to_east_width);
+   west_to_cent.clearNeighborhoods();
+   west_to_cent.setBase(west);
+   west_to_cent.setHead(east);
+   west_to_cent.setWidth(west_to_east_width, true);
    if (compute_reverse) {
-      cent_to_west.initialize(
-         east,
-         west,
-         east_to_west_width);
+      cent_to_west.clearNeighborhoods();
+      cent_to_west.setBase(east);
+      cent_to_west.setHead(west);
+      cent_to_west.setWidth(east_to_west_width, true);
 #ifdef DEBUG_CHECK_ASSERTIONS
       if (west_refinement_ratio / east_refinement_ratio * east_refinement_ratio == west_refinement_ratio ||
           east_refinement_ratio / west_refinement_ratio * west_refinement_ratio == east_refinement_ratio) {
@@ -1506,67 +1461,21 @@ void OverlapConnectorAlgorithm::privateBridge(
 
    /*
     * Set up communication mechanism and post receives.
-    * Note that in comm_peer, all the outgoing_comm come
-    * first, the incoming_comm later.
+    * Note that in all_comms, all the incoming_comm come
+    * first, the outgoing_comm later.
     */
 
-   t_bridge_share->start();
-   t_bridge_comm_init->start();
-
    tbox::AsyncCommStage comm_stage;
-   comm_stage.setCommunicationWaitTimer(t_bridge_MPI_wait);
-   const int n_comm = static_cast<int>(
-         outgoing_ranks.size() + incoming_ranks.size());
-   tbox::AsyncCommPeer<int>* comm_peer =
-      new tbox::AsyncCommPeer<int>[n_comm];
-
+   tbox::AsyncCommPeer<int>* all_comms(NULL);
    tbox::AsyncCommStage::MemberVec completed;
-   completed.reserve(incoming_ranks.size());
 
-   const int tag0 = ++s_operation_mpi_tag;
-   const int tag1 = ++s_operation_mpi_tag;
-
-   size_t comm_idx;
-
-   comm_idx = outgoing_ranks.size();
-   for (std::set<int>::const_iterator owneri = incoming_ranks.begin();
-        owneri != incoming_ranks.end(); ++owneri, ++comm_idx) {
-      const int peer_rank = *owneri;
-      tbox::AsyncCommPeer<int>& incoming_comm = comm_peer[comm_idx];
-      incoming_comm.initialize(&comm_stage);
-      incoming_comm.setPeerRank(peer_rank);
-      incoming_comm.setMPI(cent.getMPI());
-      incoming_comm.setMPITag(tag0, tag1);
-      incoming_comm.limitFirstDataLength(OVERLAP_CONNECTOR_ALGORITHM_FIRST_DATA_LENGTH);
-      if (s_print_bridge_steps == 'y') {
-         tbox::plog << "Receiving from " << incoming_comm.getPeerRank()
-                    << std::endl;
-      }
-      incoming_comm.beginRecv();
-      if (incoming_comm.isDone()) {
-         completed.insert(completed.end(), &incoming_comm);
-      }
-   }
-
-   comm_idx = 0;
-   for (std::set<int>::const_iterator owneri = outgoing_ranks.begin();
-        owneri != outgoing_ranks.end(); ++owneri, ++comm_idx) {
-      const int peer_rank = *owneri;
-      tbox::AsyncCommPeer<int>& outgoing_comm = comm_peer[comm_idx];
-      outgoing_comm.initialize(&comm_stage);
-      outgoing_comm.setPeerRank(peer_rank);
-      outgoing_comm.setMPI(cent.getMPI());
-      outgoing_comm.setMPITag(tag0, tag1);
-      outgoing_comm.limitFirstDataLength(OVERLAP_CONNECTOR_ALGORITHM_FIRST_DATA_LENGTH);
-      if (s_print_bridge_steps == 'y') {
-         tbox::plog << "Sending to " << outgoing_comm.getPeerRank()
-                    << std::endl;
-      }
-   }
-
-   t_bridge_comm_init->stop();
-   t_bridge_share->stop();
-
+   privateBridge_setupCommunication(
+      all_comms,
+      comm_stage,
+      completed,
+      cent.getMPI(),
+      incoming_ranks,
+      outgoing_ranks);
 
 
    /*
@@ -1640,11 +1549,11 @@ void OverlapConnectorAlgorithm::privateBridge(
       }
 
       /*
-       * Set send_comm_idx to reference the first outgoing rank in comm_peer.
+       * Set send_comm_idx to reference the first outgoing rank in all_comms.
        * It will be incremented to correpond to the rank whose overlaps
        * are being searched for.
        */
-      size_t send_comm_idx = 0;
+      size_t send_comm_idx = static_cast<int>(incoming_ranks.size());
 
 #ifdef DEBUG_CHECK_ASSERTIONS
       std::set<int> owners_sent_to; // Used for debugging.
@@ -1758,10 +1667,14 @@ void OverlapConnectorAlgorithm::privateBridge(
              * Find the communication object by increasing send_comm_idx
              * (cyclically) until it corresponds to curr_owner.
              */
-            while (comm_peer[send_comm_idx].getPeerRank() != curr_owner) {
-               send_comm_idx = (send_comm_idx + 1) % outgoing_ranks.size();
+            while (all_comms[send_comm_idx].getPeerRank() != curr_owner) {
+               ++send_comm_idx;
+               if (send_comm_idx == static_cast<int>(incoming_ranks.size() +
+                                                     outgoing_ranks.size())) {
+                  send_comm_idx -= static_cast<int>(outgoing_ranks.size());
+               }
             }
-            tbox::AsyncCommPeer<int>& outgoing_comm = comm_peer[send_comm_idx];
+            tbox::AsyncCommPeer<int>& outgoing_comm = all_comms[send_comm_idx];
             TBOX_ASSERT(outgoing_comm.getPeerRank() == curr_owner);
 
             sendDiscoveryToOneProcess(
@@ -1822,12 +1735,7 @@ void OverlapConnectorAlgorithm::privateBridge(
          TBOX_ASSERT(completed[i] != NULL);
          TBOX_ASSERT(peer != NULL);
 
-         if ((size_t)(peer - comm_peer) < outgoing_ranks.size()) {
-            // Sent to this peer.  No follow-up needed.
-            if (s_print_bridge_steps == 'y') {
-               tbox::plog << "Sent to " << peer->getPeerRank() << std::endl;
-            }
-         } else {
+         if ((size_t)(peer - all_comms) < incoming_ranks.size()) {
             // Receive from this peer.
             if (s_print_bridge_steps == 'y') {
                tbox::plog << "Received from " << peer->getPeerRank()
@@ -1836,7 +1744,13 @@ void OverlapConnectorAlgorithm::privateBridge(
             unpackDiscoveryMessage(
                peer,
                west_to_cent,
-               &cent_to_west);
+               cent_to_west);
+         }
+         else {
+            // Sent to this peer.  No follow-up needed.
+            if (s_print_bridge_steps == 'y') {
+               tbox::plog << "Sent to " << peer->getPeerRank() << std::endl;
+            }
          }
       }
       t_bridge_unpack->stop();
@@ -1848,7 +1762,7 @@ void OverlapConnectorAlgorithm::privateBridge(
 
    t_bridge_share->stop();
 
-   delete[] comm_peer;
+   delete[] all_comms;
 
    west_to_cent.setConnectorType(Connector::UNKNOWN);
    cent_to_west.setConnectorType(Connector::UNKNOWN);
@@ -1870,11 +1784,81 @@ void OverlapConnectorAlgorithm::privateBridge(
  ***********************************************************************
  ***********************************************************************
  */
+void OverlapConnectorAlgorithm::privateBridge_setupCommunication(
+   tbox::AsyncCommPeer<int> *& all_comms,
+   tbox::AsyncCommStage& comm_stage,
+   tbox::AsyncCommStage::MemberVec& completed,
+   const tbox::SAMRAI_MPI& mpi,
+   const std::set<int>& incoming_ranks,
+   const std::set<int>& outgoing_ranks) const
+{
+   t_bridge_share->start();
+   t_bridge_comm_init->start();
+
+   /*
+    * Set up communication mechanism (and post receives).  We lump all
+    * communication objects into one array, all_comms.  all_comms is
+    * ordered with the incoming first and the outgoing afterward.
+    */
+   comm_stage.setCommunicationWaitTimer(t_bridge_MPI_wait);
+   const int n_comm = static_cast<int>(
+         incoming_ranks.size() + outgoing_ranks.size());
+   all_comms = new tbox::AsyncCommPeer<int>[n_comm];
+
+   completed.reserve(incoming_ranks.size());
+
+   const int tag0 = ++s_operation_mpi_tag;
+   const int tag1 = ++s_operation_mpi_tag;
+
+   std::set<int>::const_iterator owneri;
+   size_t comm_idx = 0;
+   for (owneri = incoming_ranks.begin(); owneri != incoming_ranks.end(); ++owneri,
+        ++comm_idx) {
+      const int peer_rank = *owneri;
+      tbox::AsyncCommPeer<int>& incoming_comm = all_comms[comm_idx];
+      incoming_comm.initialize(&comm_stage);
+      incoming_comm.setPeerRank(peer_rank);
+      incoming_comm.setMPI(mpi);
+      incoming_comm.setMPITag(tag0, tag1);
+      incoming_comm.limitFirstDataLength(OVERLAP_CONNECTOR_ALGORITHM_FIRST_DATA_LENGTH);
+      incoming_comm.beginRecv();
+      if (s_print_bridge_steps == 'y') {
+         tbox::plog << "Receiving from " << incoming_comm.getPeerRank()
+                    << std::endl;
+      }
+      if (incoming_comm.isDone()) {
+         completed.insert(completed.end(), &incoming_comm);
+      }
+   }
+
+   for (owneri = outgoing_ranks.begin(); owneri != outgoing_ranks.end(); ++owneri,
+        ++comm_idx) {
+      const int peer_rank = *owneri;
+      tbox::AsyncCommPeer<int>& outgoing_comm = all_comms[comm_idx];
+      outgoing_comm.initialize(&comm_stage);
+      outgoing_comm.setPeerRank(peer_rank);
+      outgoing_comm.setMPI(mpi);
+      outgoing_comm.setMPITag(tag0, tag1);
+      outgoing_comm.limitFirstDataLength(OVERLAP_CONNECTOR_ALGORITHM_FIRST_DATA_LENGTH);
+      if (s_print_bridge_steps == 'y') {
+         tbox::plog << "Sending to " << outgoing_comm.getPeerRank()
+                    << std::endl;
+      }
+   }
+
+   t_bridge_comm_init->stop();
+   t_bridge_share->stop();
+}
+
+/*
+ ***********************************************************************
+ ***********************************************************************
+ */
 
 void OverlapConnectorAlgorithm::unpackDiscoveryMessage(
    const tbox::AsyncCommPeer<int>* incoming_comm,
    Connector& west_to_east,
-   Connector* east_to_west) const
+   Connector& east_to_west) const
 {
    const int* ptr = incoming_comm->getRecvData();
 
@@ -1984,7 +1968,7 @@ void OverlapConnectorAlgorithm::unpackDiscoveryMessage(
             referenced_west_nabrs.find(tmp_mapped_box);
          TBOX_ASSERT(na != referenced_west_nabrs.end());
          const Box& west_nabr = *na;
-         east_to_west->insertLocalNeighbor(west_nabr, east_mapped_box_id);
+         east_to_west.insertLocalNeighbor(west_nabr, east_mapped_box_id);
       }
    }
 }
@@ -2416,10 +2400,7 @@ size_t OverlapConnectorAlgorithm::checkOverlapCorrectness(
 
    if (!assert_completeness) {
       // Disregard missing overlaps by resetting missing to empty.
-      missing.initialize(
-         missing.getBase(),
-         missing.getHead(),
-         missing.getConnectorWidth());
+      missing.clearNeighborhoods();
    } else if (ignore_periodic_images) {
       // Disregard missing overlaps if they are incident on a periodic box.
       missing.removePeriodicLocalNeighbors();

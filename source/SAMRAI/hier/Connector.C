@@ -42,7 +42,6 @@ namespace hier {
 
 const int Connector::HIER_CONNECTOR_VERSION = 0;
 
-tbox::Pointer<tbox::Timer> Connector::t_initialize_private;
 tbox::Pointer<tbox::Timer> Connector::t_acquire_remote_relationships;
 tbox::Pointer<tbox::Timer> Connector::t_cache_global_reduced_data;
 
@@ -68,6 +67,7 @@ Connector::Connector():
    d_head_coarser(false),
    d_mpi(tbox::SAMRAI_MPI::commNull),
    d_parallel_state(BoxLevel::DISTRIBUTED),
+   d_finalized(false),
    d_global_number_of_neighbor_sets(0),
    d_global_number_of_relationships(0),
    d_global_data_up_to_date(false),
@@ -93,6 +93,7 @@ Connector::Connector(
    d_global_relationships(other.d_global_relationships),
    d_mpi(other.d_mpi),
    d_parallel_state(other.d_parallel_state),
+   d_finalized(other.d_finalized),
    d_global_number_of_neighbor_sets(other.d_global_number_of_neighbor_sets),
    d_global_number_of_relationships(other.d_global_number_of_relationships),
    d_global_data_up_to_date(other.d_global_data_up_to_date),
@@ -114,7 +115,8 @@ Connector::Connector(
    d_ratio(base_width.getDim(), 0),
    d_head_coarser(false),
    d_mpi(base_mapped_box_level.getMPI()),
-   d_parallel_state(BoxLevel::DISTRIBUTED),
+   d_parallel_state(parallel_state),
+   d_finalized(false),
    d_global_number_of_neighbor_sets(0),
    d_global_number_of_relationships(0),
    d_global_data_up_to_date(true),
@@ -124,10 +126,9 @@ Connector::Connector(
       head_mapped_box_level,
       base_width);
 
-   initialize(base_mapped_box_level,
-      head_mapped_box_level,
-      base_width,
-      parallel_state);
+   setBase(base_mapped_box_level);
+   setHead(head_mapped_box_level);
+   setWidth(base_width, true);
 }
 
 /*
@@ -148,7 +149,6 @@ Connector::~Connector()
 const NeighborhoodSet
 & Connector::getGlobalNeighborhoodSets() const
 {
-   TBOX_ASSERT(isInitialized());
    if (d_parallel_state == BoxLevel::DISTRIBUTED) {
       TBOX_ERROR("Global connectivity unavailable in DISTRIBUTED state.");
    }
@@ -298,7 +298,6 @@ void Connector::shrinkWidth(const IntVector& new_width)
  */
 void Connector::removePeriodicRelationships()
 {
-   TBOX_ASSERT(isInitialized());
    d_relationships.removePeriodicNeighbors();
    if (d_parallel_state == BoxLevel::GLOBALIZED) {
       d_global_relationships.removePeriodicNeighbors();
@@ -311,7 +310,6 @@ void Connector::removePeriodicRelationships()
  */
 void Connector::removePeriodicLocalNeighbors()
 {
-   TBOX_ASSERT(isInitialized());
    for (NeighborhoodSet::iterator ei = d_relationships.begin();
         ei != d_relationships.end(); ++ei) {
       d_relationships[ei->first].removePeriodicImageBoxes();
@@ -367,7 +365,7 @@ void Connector::acquireRemoteNeighborhoods()
     * Send and receive the data.
     */
 
-   std::vector<int> recv_mesg_size(getBase().getMPI().getSize());
+   std::vector<int> recv_mesg_size(getMPI().getSize());
    mpi.Allgather(&send_mesg_size,
       1,
       MPI_INT,
@@ -375,9 +373,9 @@ void Connector::acquireRemoteNeighborhoods()
       1,
       MPI_INT);
 
-   std::vector<int> proc_offset(getBase().getMPI().getSize());
+   std::vector<int> proc_offset(getMPI().getSize());
    int totl_size = 0;
-   for (int n = 0; n < getBase().getMPI().getSize(); ++n) {
+   for (int n = 0; n < getMPI().getSize(); ++n) {
       proc_offset[n] = totl_size;
       totl_size += recv_mesg_size[n];
    }
@@ -483,9 +481,9 @@ void Connector::acquireRemoteNeighborhoods_unpack(
 
    d_global_relationships = d_relationships;
 
-   for (int n = 0; n < getBase().getMPI().getSize(); ++n) {
+   for (int n = 0; n < getMPI().getSize(); ++n) {
 
-      if (n != getBase().getMPI().getRank()) {
+      if (n != getMPI().getRank()) {
 
          const int* ptr = &recv_mesg[0] + proc_offset[n];
          const int num_nabr_lists = *(ptr++);
@@ -520,10 +518,10 @@ void Connector::setParallelState(
    const BoxLevel::ParallelState parallel_state)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   if (!isInitialized()) {
+   if (!isFinalized()) {
       TBOX_ERROR(
          "Connector::setParallelState: Cannot change the parallel state of\n"
-         << "an uninitialized Connector.  See Connector::initialize()");
+         << "an unfinalized Connector.  See Connector::finalizeContext()");
    }
 #endif
    if (parallel_state != BoxLevel::DISTRIBUTED && parallel_state !=
@@ -546,72 +544,38 @@ void Connector::setParallelState(
  ***********************************************************************
  ***********************************************************************
  */
-
-void Connector::initialize(
-   const BoxLevel& base,
-   const BoxLevel& head,
-   const IntVector& base_width,
-   const BoxLevel::ParallelState parallel_state,
-   bool clear_relationships)
+void Connector::finalizeContext()
 {
-   if (clear_relationships) {
-      d_relationships.clear();
-   }
-   initializePrivate(base, head, base_width, base.getRefinementRatio(),
-      head.getRefinementRatio(), parallel_state);
-}
+   TBOX_ASSERT(!d_base_handle.isNull());
+   TBOX_ASSERT(!d_head_handle.isNull());
+   TBOX_ASSERT(d_base_width.getDim().isValid());
 
-/*
- ***********************************************************************
- ***********************************************************************
- */
+   const BoxLevel& base = d_base_handle->getBoxLevel();
+   const BoxLevel& head = d_head_handle->getBoxLevel();
+   const IntVector& baseRefinementRatio = base.getRefinementRatio();
+   const IntVector& headRefinementRatio = head.getRefinementRatio();
 
-void Connector::initializePrivate(
-   const BoxLevel& base,
-   const BoxLevel& head,
-   const IntVector& base_width,
-   const IntVector& baseRefinementRatio,
-   const IntVector& headRefinementRatio,
-   const BoxLevel::ParallelState parallel_state)
-{
-   t_initialize_private->start();
-   /*
-    * Check inputs.
-    */
-   if (!base.isInitialized() ||
-       !head.isInitialized()) {
-      TBOX_ERROR("Connector::initializePrivate():\n"
-         << "Connector may not be initialized with\n"
-         << "an uninitialized BoxLevel.");
-   }
    if (base.getGridGeometry() != head.getGridGeometry()) {
-      TBOX_ERROR("Connector::initializePrivate():\n"
-         << "Connector must be initialized with\n"
+      TBOX_ERROR("Connector::finalizeContext():\n"
+         << "Connector must be finalized with\n"
          << "BoxLevels using the same GridGeometry.");
    }
-   if (!(base.getRefinementRatio() >=
-         head.getRefinementRatio() ||
-         base.getRefinementRatio() <=
-         head.getRefinementRatio())) {
-      TBOX_ERROR("Connector::initializePrivate():\n"
-         << "Refinement ratio between base and head mapped_box_levels\n"
+   if (!(baseRefinementRatio >= headRefinementRatio ||
+         baseRefinementRatio <= headRefinementRatio)) {
+      TBOX_ERROR("Connector::finalizeContext():\n"
+         << "Refinement ratio between base and head box_levels\n"
          << "cannot be mixed (bigger in some dimension and\n"
          << "smaller in others).\n"
-         << "Input base ratio = " << base.getRefinementRatio()
+         << "Input base ratio = " << baseRefinementRatio
          << "\n"
-         << "Input head ratio = " << head.getRefinementRatio()
+         << "Input head ratio = " << headRefinementRatio
          << "\n");
    }
-   if (!(base_width >= IntVector::getZero(base_width.getDim()))) {
-      TBOX_ERROR("Connector::initializePrivate():\n"
-         << "Invalid ghost cell width: "
-         << base_width << "\n");
-   }
-   if (parallel_state == BoxLevel::GLOBALIZED &&
+   if (d_parallel_state == BoxLevel::GLOBALIZED &&
        base.getParallelState() != BoxLevel::GLOBALIZED) {
       TBOX_ERROR(
-         "Connector::initializePrivate: base BoxLevel must be in\n"
-         << "GLOBALIZED state before initializing the Connector to\n"
+         "Connector::finalizeContext: base BoxLevel must be in\n"
+         << "GLOBALIZED state for the Connector to be in\n"
          << "GLOBALIZED state.");
    }
 
@@ -622,8 +586,8 @@ void Connector::initializePrivate(
         ++ci) {
       if (!base.hasBox((*ci).first)) {
          const NeighborSet& nabrs = (*ci).second;
-         tbox::perr << "\nConnector::initializePrivate: NeighborhoodSet "
-                    << "provided for non-existent mapped_box " << ci->first
+         tbox::perr << "\nConnector::finalizeContext: NeighborhoodSet "
+                    << "provided for non-existent box " << ci->first
                     << "\n" << "Neighbors (" << nabrs.size() << "):\n";
          for (NeighborSet::ConstIterator na = nabrs.begin();
               na != nabrs.end(); ++na) {
@@ -635,25 +599,21 @@ void Connector::initializePrivate(
    if (errf) {
       TBOX_ERROR(
          "Exiting due to errors."
-         << "\nConnector::initializePrivate base mapped_box_level:\n"
-         << base.format(dbgbord, 2)
-         << "\nConnector::initializePrivate head mapped_box_level:\n"
-         << head.format(dbgbord, 2));
+         << "\nConnector::finalizeContext base box_level:\n"
+         << base.format(dbgbord, 2));
    }
 #endif
+   computeRatioInfo(
+      baseRefinementRatio,
+      headRefinementRatio,
+      d_ratio,
+      d_head_coarser,
+      d_ratio_is_exact);
 
-   d_base_handle = base.getBoxLevelHandle();
-   d_head_handle = head.getBoxLevelHandle();
-   d_mpi = base.getMPI();
-
-   d_base_width = base_width;
-
-   computeRatioInfo(baseRefinementRatio, headRefinementRatio,
-      d_ratio, d_head_coarser, d_ratio_is_exact);
-
-   if (parallel_state == BoxLevel::DISTRIBUTED) {
+   if (d_parallel_state == BoxLevel::DISTRIBUTED) {
       d_global_relationships.clear();
-   } else {
+   }
+   else {
       if (&d_relationships != &d_global_relationships) {
          d_global_relationships = d_relationships;
       }
@@ -661,24 +621,90 @@ void Connector::initializePrivate(
 
    // Erase remote relationships, if any, from d_relationships.
    if (!d_relationships.empty()) {
-      if (d_relationships.begin()->first.getOwnerRank() != getBase().getMPI().getRank() ||
-          d_relationships.rbegin()->first.getOwnerRank() != getBase().getMPI().getRank()) {
-         NeighborhoodSet::Range range = d_relationships.findRanksRange(getBase().getMPI().getRank());
+      if (d_relationships.begin()->first.getOwnerRank() != base.getMPI().getRank() ||
+          d_relationships.rbegin()->first.getOwnerRank() != base.getMPI().getRank()) {
+         NeighborhoodSet::Range range = d_relationships.findRanksRange(base.getMPI().getRank());
          if (range.first == range.second) {
             // No relationship belongs to local process.
             d_relationships.clear();
-         } else {
-            // Erase relationships belonging to remote process < getBase().getMPI().getRank().
+         }
+         else {
+            // Erase relationships belonging to remote process <
+            // base.getMPI().getRank().
             d_relationships.erase(d_relationships.begin(), range.first);
-            // Erase relationships belonging to remote process > getBase().getMPI().getRank().
+
+            // Erase relationships belonging to remote process >
+            // base.getMPI().getRank().
             d_relationships.erase(range.second, d_relationships.end());
          }
       }
    }
+   d_finalized = true;
+   return;
+}
 
-   d_parallel_state = parallel_state;
+/*
+ ***********************************************************************
+ ***********************************************************************
+ */
+void Connector::setBase(
+   const BoxLevel& new_base,
+   bool finalize_context)
+{
+   if (!new_base.isInitialized()) {
+      TBOX_ERROR("Connector::setBase():\n"
+         << "Connector may not be finalized with\n"
+         << "an uninitialized BoxLevel.");
+   }
+   d_finalized = false;
+   d_base_handle = new_base.getBoxLevelHandle();
+   d_mpi = new_base.getMPI();
+   if (finalize_context) {
+      finalizeContext();
+   }
+   return;
+}
 
-   t_initialize_private->stop();
+/*
+ ***********************************************************************
+ ***********************************************************************
+ */
+void Connector::setHead(
+   const BoxLevel& new_head,
+   bool finalize_context)
+{
+   if (!new_head.isInitialized()) {
+      TBOX_ERROR("Connector::setHead():\n"
+         << "Connector may not be finalized with\n"
+         << "an uninitialized BoxLevel.");
+   }
+   d_finalized = false;
+   d_head_handle = new_head.getBoxLevelHandle();
+   if (finalize_context) {
+      finalizeContext();
+   }
+   return;
+}
+
+/*
+ ***********************************************************************
+ ***********************************************************************
+ */
+void Connector::setWidth(
+   const IntVector& new_width,
+   bool finalize_context)
+{
+   if (!(new_width >= IntVector::getZero(new_width.getDim()))) {
+      TBOX_ERROR("Connector::setWidth():\n"
+         << "Invalid ghost cell width: "
+         << new_width << "\n");
+   }
+   d_finalized = false;
+   d_base_width = new_width;
+   if (finalize_context) {
+      finalizeContext();
+   }
+   return;
 }
 
 /*
@@ -743,11 +769,10 @@ void Connector::initializeToLocalTranspose(
          connector.getBase().getRefinementRatio(),
          connector.getConnectorWidth());
 
-   initialize(
-      connector.d_head_handle->getBoxLevel(),
-      connector.d_base_handle->getBoxLevel(),
-      my_gcw,
-      BoxLevel::DISTRIBUTED);
+   clearNeighborhoods();
+   setBase(connector.d_head_handle->getBoxLevel());
+   setHead(connector.d_base_handle->getBoxLevel());
+   setWidth(my_gcw, true);
    TBOX_ASSERT(isTransposeOf(connector));
 
    const tbox::Dimension dim(my_gcw.getDim());
@@ -772,7 +797,7 @@ void Connector::initializeToLocalTranspose(
       for (ConstNeighborIterator na = connector.begin(ci);
            na != connector.end(ci); ++na) {
          const Box& my_base_mapped_box = *na;
-         if (my_base_mapped_box.getOwnerRank() != getBase().getMPI().getRank()) {
+         if (my_base_mapped_box.getOwnerRank() != getMPI().getRank()) {
             TBOX_ERROR(
                "Connector::initializeToLocalTranspose: base mapped_box "
                << my_head_mapped_box << "\n"
@@ -891,7 +916,7 @@ bool Connector::isLocal() const
       for (BoxContainer::ConstIterator na = nabrs.begin();
            na != nabrs.end();
            ++na) {
-         if ((*na).getOwnerRank() != getBase().getMPI().getRank()) {
+         if (na->getOwnerRank() != getMPI().getRank()) {
             return false;
          }
       }
@@ -905,7 +930,6 @@ bool Connector::isLocal() const
  */
 size_t Connector::getLocalNumberOfNeighborSets() const
 {
-   TBOX_ASSERT(isInitialized());
    return d_relationships.size();
 }
 
@@ -915,7 +939,6 @@ size_t Connector::getLocalNumberOfNeighborSets() const
  */
 size_t Connector::getLocalNumberOfRelationships() const
 {
-   TBOX_ASSERT(isInitialized());
    size_t local_number_of_relationships = 0;
    for (NeighborhoodSet::const_iterator ei(d_relationships.begin());
         ei != d_relationships.end();
@@ -931,7 +954,7 @@ size_t Connector::getLocalNumberOfRelationships() const
  */
 int Connector::getGlobalNumberOfNeighborSets() const
 {
-   TBOX_ASSERT(isInitialized());
+   TBOX_ASSERT(isFinalized());
 
    cacheGlobalReducedData();
    return d_global_number_of_neighbor_sets;
@@ -943,7 +966,7 @@ int Connector::getGlobalNumberOfNeighborSets() const
  */
 int Connector::getGlobalNumberOfRelationships() const
 {
-   TBOX_ASSERT(isInitialized());
+   TBOX_ASSERT(isFinalized());
 
    cacheGlobalReducedData();
    return d_global_number_of_relationships;
@@ -955,7 +978,7 @@ int Connector::getGlobalNumberOfRelationships() const
  */
 void Connector::cacheGlobalReducedData() const
 {
-   TBOX_ASSERT(isInitialized());
+   TBOX_ASSERT(isFinalized());
 
    if (d_global_data_up_to_date) {
       return;
@@ -1058,10 +1081,12 @@ void Connector::recursivePrint(
    const std::string& border,
    int detail_depth) const
 {
-   if (detail_depth < 0) return;
+   if (detail_depth < 0) {
+      return;
+   }
 
-   if (!isInitialized()) {
-      os << border << "Uninitialized.\n";
+   if (!isFinalized()) {
+      os << border << "Unfinalized.\n";
       return;
    }
    bool head_coarser = d_head_coarser;
@@ -1073,7 +1098,7 @@ void Connector::recursivePrint(
    os << border << "Parallel state     : "
       << (getParallelState() == BoxLevel::DISTRIBUTED ? "DIST" : "GLOB")
       << '\n'
-      << border << "Rank,nproc         : " << getBase().getMPI().getRank() << ", " << getBase().getMPI().getSize() << '\n'
+      << border << "Rank,nproc         : " << getMPI().getRank() << ", " << getMPI().getSize() << '\n'
       << border << "Base,head objects  :"
       << " ("
       << (d_base_handle == d_head_handle ? "same" : "different") << ") "
@@ -1251,6 +1276,9 @@ size_t Connector::checkTransposeCorrectness(
 
    size_t err_count = 0;
 
+
+   const NeighborhoodSet& tran_relationships =
+      transpose->getGlobalNeighborhoodSets();
    for (ConstNeighborhoodIterator ci = begin(); ci != end(); ++ci) {
 
       const BoxId& mapped_box_id = ci->first;
@@ -1265,8 +1293,6 @@ size_t Connector::checkTransposeCorrectness(
          }
 
          const Box& nabr = *ni;
-
-         const NeighborhoodSet& tran_relationships = transpose->getGlobalNeighborhoodSets();
 
          /*
           * Key for find in NeighborhoodSet must be non-periodic.
@@ -1340,8 +1366,6 @@ size_t Connector::checkTransposeCorrectness(
     * one in this.
     */
 
-   const NeighborhoodSet& tran_relationships = transpose->getGlobalNeighborhoodSets();
-
    for (NeighborhoodSet::const_iterator ci = tran_relationships.begin();
         ci != tran_relationships.end(); ++ci) {
 
@@ -1360,7 +1384,7 @@ size_t Connector::checkTransposeCorrectness(
 
          const Box nabr = *na;
 
-         if (nabr.getOwnerRank() == getBase().getMPI().getRank()) {
+         if (nabr.getOwnerRank() == getMPI().getRank()) {
 
             if (ignore_periodic_relationships && nabr.isPeriodicImage()) {
                continue;
@@ -1524,10 +1548,11 @@ void Connector::computeNeighborhoodDifferences(
       tbox::plog << "Computing relationship differences, a:\n" << left.format(dbgbord, 3)
       << "Computing relationship differences, b:\n" << right.format(dbgbord, 3);
    }
-   left_minus_right.initialize(left.d_base_handle->getBoxLevel(),
-      left.d_head_handle->getBoxLevel(),
-      left.d_base_width,
-      left.getParallelState());
+   left_minus_right.clearNeighborhoods();
+   left_minus_right.d_parallel_state = left.getParallelState();
+   left_minus_right.setBase(left.d_base_handle->getBoxLevel());
+   left_minus_right.setHead(left.d_head_handle->getBoxLevel());
+   left_minus_right.setWidth(left.d_base_width, true);
    NeighborhoodSet& drelationships = left_minus_right.d_relationships;
 
    for (ConstNeighborhoodIterator ai = left.begin(); ai != left.end(); ++ai) {
@@ -1583,8 +1608,7 @@ void Connector::computeNeighborhoodDifferences(
 
 void Connector::assertConsistencyWithHead() const
 {
-   const int number_of_inconsistencies =
-      checkConsistencyWithHead();
+   const int number_of_inconsistencies = checkConsistencyWithHead();
    if (number_of_inconsistencies > 0) {
       TBOX_ERROR(
          "Connector::assertConsistencyWithHead() found inconsistencies.\n"
@@ -1702,8 +1726,6 @@ Connector::ConnectorType Connector::getConnectorType() const
 
 void Connector::initializeCallback()
 {
-   t_initialize_private = tbox::TimerManager::getManager()->
-      getTimer("hier::Connector::initializePrivate()");
    t_acquire_remote_relationships = tbox::TimerManager::getManager()->
       getTimer("hier::Connector::acquireRemoteNeighborhoods()");
    t_cache_global_reduced_data = tbox::TimerManager::getManager()->
@@ -1721,7 +1743,6 @@ void Connector::initializeCallback()
 
 void Connector::finalizeCallback()
 {
-   t_initialize_private.setNull();
    t_acquire_remote_relationships.setNull();
    t_cache_global_reduced_data.setNull();
 }

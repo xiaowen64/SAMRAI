@@ -47,38 +47,6 @@ LoadBalanceStrategy::~LoadBalanceStrategy()
 {
 }
 
-void LoadBalanceStrategy::loadBalanceBoxLevel(
-   hier::BoxLevel& balance_mapped_box_level,
-   hier::Connector& balance_to_anchor,
-   hier::Connector& anchor_to_balance,
-   const tbox::Pointer<hier::PatchHierarchy> hierarchy,
-   const int level_number,
-   const hier::Connector& unbalanced_to_attractor,
-   const hier::Connector& attractor_to_unbalanced,
-   const hier::IntVector& min_size,
-   const hier::IntVector& max_size,
-   const hier::BoxLevel& domain_mapped_box_level,
-   const hier::IntVector& bad_interval,
-   const hier::IntVector& cut_factor,
-   const tbox::RankGroup& rank_group) const
-{
-   NULL_USE(balance_mapped_box_level);
-   NULL_USE(balance_to_anchor);
-   NULL_USE(anchor_to_balance);
-   NULL_USE(hierarchy);
-   NULL_USE(level_number);
-   NULL_USE(unbalanced_to_attractor);
-   NULL_USE(attractor_to_unbalanced);
-   NULL_USE(min_size);
-   NULL_USE(max_size);
-   NULL_USE(domain_mapped_box_level);
-   NULL_USE(bad_interval);
-   NULL_USE(cut_factor);
-   NULL_USE(rank_group);
-   TBOX_ERROR(
-      "Unusable base method LoadBalanceStrategy::loadBalanceBoxLevel used.");
-}
-
 /*
  *************************************************************************
  * Report the load balance on processor, primarily
@@ -263,9 +231,13 @@ int LoadBalanceStrategy::qsortRankAndLoadCompareDescending(
 {
    const RankAndLoad* lv = (const RankAndLoad *)v;
    const RankAndLoad* lw = (const RankAndLoad *)w;
-   if (lv->load > lw->load) return -1;
+   if (lv->load > lw->load) {
+      return -1;
+   }
 
-   if (lv->load < lw->load) return 1;
+   if (lv->load < lw->load) {
+      return 1;
+   }
 
    return 0;
 }
@@ -281,9 +253,13 @@ int LoadBalanceStrategy::qsortRankAndLoadCompareAscending(
 {
    const RankAndLoad* lv = (const RankAndLoad *)v;
    const RankAndLoad* lw = (const RankAndLoad *)w;
-   if (lv->load < lw->load) return -1;
+   if (lv->load < lw->load) {
+      return -1;
+   }
 
-   if (lv->load > lw->load) return 1;
+   if (lv->load > lw->load) {
+      return 1;
+   }
 
    return 0;
 }

@@ -151,29 +151,6 @@ public:
    virtual ~Connector();
 
    /*!
-    * @brief Initializes the Connector without any relationships.
-    *
-    * @param[in] base
-    * @param[in] head
-    * @param[in] base_width The Connector width, specified in the base
-    *   refinement ratio, associated with the meaning of the relationships to
-    *   be added to the Connector.
-    * @param[in] parallel_state Either DISTRIBUTED or GLOBALIZED.
-    *   If state is GLOBALIZED, base must be in GLOBALIZED mode.
-    * @param[in] clear_relationships
-    *
-    * @see initializePrivate()
-    *
-    */
-   void
-   initialize(
-      const BoxLevel& base,
-      const BoxLevel& head,
-      const IntVector& base_width,
-      const BoxLevel::ParallelState parallel_state = BoxLevel::DISTRIBUTED,
-      bool clear_relationships = true);
-
-   /*!
     * @brief Clear the Connector, putting it into an uninitialized state.
     */
    void
@@ -183,13 +160,13 @@ public:
     * @brief Clear the Connector's neighborhood relations.
     */
    void
-   clearLocalNeighborhoods();
+   clearNeighborhoods();
 
    /*!
-    * @brief Returns true if the object has been initialized
+    * @brief Returns true if the object has been finalized
     */
    bool
-   isInitialized() const;
+   isFinalized() const;
 
    /*!
     * @brief Iterator pointing to the first neighborhood.
@@ -465,10 +442,46 @@ public:
    //@}
 
    /*!
+    * @brief Enforces implicit class invariants and removes non-local neighbors
+    * from relationships.
+    *
+    * To be called after modifying a Connector's context through setBase,
+    * setHead, or setWidth methods.
+    */
+   void
+   finalizeContext();
+
+   /*!
+    * @brief Change the Connector base to new_base.  If finalize_context is
+    * true then this is the last atomic change being made and finalizeContext
+    * should be called.
+    *
+    * @param new_level
+    * @param finalize_context
+    */
+   void
+   setBase(
+      const BoxLevel& new_base,
+      bool finalize_context = false);
+
+   /*!
     * @brief Return a reference to the base BoxLevel.
     */
    const BoxLevel&
    getBase() const;
+
+   /*!
+    * @brief Change the Connector head to new_head.  If finalize_context is
+    * true then this is the last atomic change being made and finalizeContext
+    * should be called.
+    *
+    * @param new_head
+    * @param finalize_context
+    */
+   void
+   setHead(
+      const BoxLevel& new_head,
+      bool finalize_context = false);
 
    /*!
     * @brief Return a reference to the head BoxLevel.
@@ -604,6 +617,19 @@ public:
     */
    const tbox::SAMRAI_MPI&
    getMPI() const;
+
+   /*!
+    * @brief Change the Connector width to new_width.  If finalize_context is
+    * true then this is the last atomic change being made and finalizeContext
+    * should be called.
+    *
+    * @param new_width
+    * @param finalize_context
+    */
+   void
+   setWidth(
+      const IntVector& new_width,
+      bool finalize_context = false);
 
    /*!
     * @brief Return the Connector width associated with the relationships.
@@ -1024,18 +1050,6 @@ private:
       const std::vector<int>& recv_mesg,
       const std::vector<int>& proc_offset);
 
-   /*! @brief Encapsulates functionality common to all initialization
-    *  functions.
-    */
-   void
-   initializePrivate(
-      const BoxLevel& base,
-      const BoxLevel& head,
-      const IntVector& base_width,
-      const IntVector& baseRefinementRatio,
-      const IntVector& headRefinementRatio,
-      const BoxLevel::ParallelState parallel_state = BoxLevel::DISTRIBUTED);
-
    /*!
     * @brief Set up things for the entire class.
     *
@@ -1139,6 +1153,12 @@ private:
    BoxLevel::ParallelState d_parallel_state;
 
    /*!
+    * @brief true when Container's context has been finalized--base, head and
+    * width are all defined and consistent/valid.
+    */
+   bool d_finalized;
+
+   /*!
     * @brief Number of NeighborSets in d_relationships globally.
     */
    mutable int d_global_number_of_neighbor_sets;
@@ -1156,7 +1176,6 @@ private:
 
    ConnectorType d_connector_type;
 
-   static tbox::Pointer<tbox::Timer> t_initialize_private;
    static tbox::Pointer<tbox::Timer> t_acquire_remote_relationships;
    static tbox::Pointer<tbox::Timer> t_cache_global_reduced_data;
 

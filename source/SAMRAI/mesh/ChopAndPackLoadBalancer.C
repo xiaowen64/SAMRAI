@@ -361,14 +361,10 @@ void ChopAndPackLoadBalancer::loadBalanceBoxLevel(
       balance_mapped_box_level.addBox(node);
    }
    // Reinitialize Connectors due to changed balance_mapped_box_level.
-   balance_to_anchor.initialize(
-      balance_mapped_box_level,
-      balance_to_anchor.getHead(),
-      balance_to_anchor.getConnectorWidth());
-   anchor_to_balance.initialize(
-      anchor_to_balance.getBase(),
-      balance_mapped_box_level,
-      anchor_to_balance.getConnectorWidth());
+   balance_to_anchor.clearNeighborhoods();
+   balance_to_anchor.setBase(balance_mapped_box_level, true);
+   anchor_to_balance.clearNeighborhoods();
+   anchor_to_balance.setHead(balance_mapped_box_level, true);
    hier::OverlapConnectorAlgorithm oca;
    oca.findOverlaps(balance_to_anchor);
    oca.findOverlaps(anchor_to_balance, balance_mapped_box_level);

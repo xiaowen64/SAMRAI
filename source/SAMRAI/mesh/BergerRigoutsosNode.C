@@ -295,18 +295,16 @@ void BergerRigoutsosNode::clusterAndComputeRelationships(
       hier::BoxLevel::DISTRIBUTED);
 
    if (d_common->compute_relationships >= 1) {
-      tag_to_new.initialize(
-         *tag_level->getBoxLevel(),
-         new_mapped_box_level,
-         d_common->max_gcw,
-         hier::BoxLevel::DISTRIBUTED);
+      tag_to_new.clearNeighborhoods();
+      tag_to_new.setBase(*tag_level->getBoxLevel());
+      tag_to_new.setHead(new_mapped_box_level);
+      tag_to_new.setWidth(d_common->max_gcw, true);
    }
    if (d_common->compute_relationships >= 2) {
-      new_to_tag.initialize(
-         new_mapped_box_level,
-         *tag_level->getBoxLevel(),
-         d_common->max_gcw,
-         hier::BoxLevel::DISTRIBUTED);
+      new_to_tag.clearNeighborhoods();
+      new_to_tag.setBase(new_mapped_box_level);
+      new_to_tag.setHead(*tag_level->getBoxLevel());
+      new_to_tag.setWidth(d_common->max_gcw, true);
    }
 
    d_common->new_mapped_box_level = &new_mapped_box_level;

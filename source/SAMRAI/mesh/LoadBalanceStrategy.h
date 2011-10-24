@@ -41,11 +41,6 @@ class LoadBalanceStrategy:public tbox::DescribedClass
 {
 public:
    /*!
-    * Construct load balance strategy object.
-    */
-   LoadBalanceStrategy();
-
-   /*!
     * This virtual destructor does nothing interesting.
     */
    virtual ~LoadBalanceStrategy();
@@ -145,7 +140,7 @@ public:
       const hier::BoxLevel& domain_mapped_box_level,
       const hier::IntVector& bad_interval,
       const hier::IntVector& cut_factor, // Default v 2.x.x = hier::IntVector::getOne(tbox::Dimension(DIM))
-      const tbox::RankGroup& rank_group = tbox::RankGroup()) const;
+      const tbox::RankGroup& rank_group = tbox::RankGroup()) const = 0;
 
    /*!
     * @brief Gather workloads in an MPI group and write out a summary
@@ -197,6 +192,11 @@ public:
 
 protected:
    /*!
+    * Construct load balance strategy object.
+    */
+   LoadBalanceStrategy();
+
+   /*!
     * @brief Write load data to log for postprocessing later.
     *
     * For development only.  Not for general use.
@@ -240,19 +240,23 @@ private:
    // The following are not implemented:
    LoadBalanceStrategy(
       const LoadBalanceStrategy&);
+
    void
    operator = (
       const LoadBalanceStrategy&);
 
-   struct RankAndLoad { int rank;
-                        double load;
+   struct RankAndLoad {
+      int rank;
+      double load;
    };
 
    static int s_sequence_number;
+
    static int
    qsortRankAndLoadCompareAscending(
       const void* v,
       const void* w);
+
    static int
    qsortRankAndLoadCompareDescending(
       const void* v,

@@ -574,6 +574,18 @@ private:
       const IntVector& connector_width_limit) const;
 
    /*!
+    * @brief Set up communication objects for use in privateBridge.
+    */
+   void
+   privateBridge_setupCommunication(
+      tbox::AsyncCommPeer<int> *& comm_peer,
+      tbox::AsyncCommStage& comm_stage,
+      tbox::AsyncCommStage::MemberVec& completed,
+      const tbox::SAMRAI_MPI& mpi,
+      const std::set<int>& incoming_ranks,
+      const std::set<int>& outgoing_ranks) const;
+
+   /*!
     * @brief Find overlap and save in bridging connector or pack
     * into send message, used in privateBridge().
     */
@@ -607,9 +619,9 @@ private:
    //! @brief Unpack message sent by sendDiscoverytoOneProcess().
    void
    unpackDiscoveryMessage(
-      const tbox::AsyncCommPeer<int>* peer,
+      const tbox::AsyncCommPeer<int>* incoming_comm,
       Connector& west_to_east,
-      Connector* east_to_west) const;
+      Connector& east_to_west) const;
 
    /*!
     * @brief Discover and add overlaps from base and externally

@@ -308,8 +308,6 @@ private:
    typedef hier::Box MBox;
    //! @brief Shorthand typedef.
    typedef hier::BoxLevel BoxLevel;
-   //! @brief Shorthand typedef.
-   typedef hier::Connector Edges;
 
    /*!
     * @brief Dimension of the object.

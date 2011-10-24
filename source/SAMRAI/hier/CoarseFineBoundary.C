@@ -186,8 +186,6 @@ void CoarseFineBoundary::computeFromLevel(
       Box box = mapped_box;
       box.grow(max_ghost_width);
       BoxContainer physical_boundary_portion(box);
-      //refined_domain_nabrs.removeIntersections(
-      //   physical_boundary_portion);
       physical_boundary_portion.removeIntersections(refined_domain_nabrs);
       fake_domain_list.spliceBack(physical_boundary_portion);
    }
@@ -406,54 +404,6 @@ void CoarseFineBoundary::computeFromLevel(
 
 }
 
-#if 0
-void CoarseFineBoundary::addPeriodicImageBoxes(
-   BoxContainer& boxes,
-   const tbox::Array<tbox::List<IntVector> >& shifts)
-{
-   TBOX_ASSERT(shifts.size() == boxes.size());
-
-   int current_size = boxes.size();
-
-   TBOX_ERROR("Code disabled because getShiftsForLevel is gone.");
-
-   // TODO Something needs to be done with this
-
-   /*
-    * Count number of boxes that must be added to boxes.
-    * And resize boxes accordingly before adding the
-    * periodic images to it.
-    */
-   int new_size = current_size;
-   for (int ip = 0; ip < current_size; ++ip) {
-      new_size += shifts[ip].getNumberOfItems();
-   }
-
-   /*
-    * For all the possible shifts of all patches,
-    * compute the shifted box and add it to boxes.
-    * This completes the addition of images boxes.
-    */
-   const int old_size = current_size;
-
-   BoxContainer::Iterator itr(boxes);
-   for (int ip = 0; ip < old_size; ++ip, ++itr) {
-      const Box& unshifted_box = *itr;
-      const tbox::List<IntVector>& shifts_list = shifts[ip];
-      if (!shifts_list.isEmpty()) {
-         tbox::List<IntVector>::Iterator sh;
-         for (sh = shifts_list.listStart(); sh; sh++) {
-            Box shifted_box(unshifted_box);
-            shifted_box.shift((*sh));
-            boxes.pushBack(shifted_box);
-            ++current_size;
-         }
-      }
-   }
-
-   TBOX_ASSERT(current_size == new_size);
-}
-#endif
 void CoarseFineBoundary::clear()
 {
    d_boundary_boxes.clear();
@@ -474,7 +424,7 @@ CoarseFineBoundary::getEdgeBoundaries(
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    if (d_dim.getValue() < 2) {
-      TBOX_ERROR("CoarseFineBoundary::getEdgeBoundaries():  There is\n"
+      TBOX_ERROR("CoarseFineBoundary::getEdgeBoundaries():  There are\n"
          << "no edge boundaries in " << d_dim << "d.\n");
    }
 #endif
@@ -488,7 +438,7 @@ CoarseFineBoundary::getFaceBoundaries(
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    if (d_dim.getValue() < 3) {
-      TBOX_ERROR("CoarseFineBoundary::getFaceBoundaries():  There is\n"
+      TBOX_ERROR("CoarseFineBoundary::getFaceBoundaries():  There are\n"
          << "no face boundaries in " << d_dim << "d.\n");
    }
 #endif
