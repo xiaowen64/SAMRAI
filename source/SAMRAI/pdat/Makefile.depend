@@ -5890,6 +5890,12 @@ DEPENDS_51:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.I			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerConstIterator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.I		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\

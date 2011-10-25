@@ -266,8 +266,6 @@ void StandardTagAndInitialize::tagCellsForRefinement(
    TBOX_ASSERT(tag_index >= 0);
    TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(getDim(), *hierarchy);
 
-   const tbox::Dimension& dim(getDim());
-
    if (d_use_richardson_extrapolation) {
       tagCellsUsingRichardsonExtrapolation(hierarchy,
          level_number,

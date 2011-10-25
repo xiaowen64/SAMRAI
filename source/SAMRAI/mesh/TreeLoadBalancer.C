@@ -4557,7 +4557,7 @@ void TreeLoadBalancer::prebalanceBoxLevel(
 
       const hier::BoxContainer& sending_boxes =
          balance_box_level.getBoxes();
-      TBOX_ASSERT(static_cast<unsigned int>(id_recv->getRecvSize()) == sending_boxes.size());
+      TBOX_ASSERT(static_cast<int>(id_recv->getRecvSize()) == sending_boxes.size());
 
       int box_count = 0;
       for (hier::BoxContainer::ConstIterator ni =

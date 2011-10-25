@@ -455,7 +455,7 @@ void BergerRigoutsosNode::clusterAndComputeRelationships()
    if (d_common->compute_relationships > 2) {
       // Each new node should have its own neighbor list.
       TBOX_ASSERT(d_common->new_mapped_box_level->getBoxes().size() ==
-         d_common->new_to_tag->getLocalNumberOfNeighborSets());
+         static_cast<int>(d_common->new_to_tag->getLocalNumberOfNeighborSets()));
    }
 #endif
 

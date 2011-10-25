@@ -12,6 +12,7 @@
 
 #include "SAMRAI/pdat/SparseData.h"
 #include "SAMRAI/hier/Box.h"
+#include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/hier/BoxContainerConstIterator.h"
 #include "SAMRAI/tbox/PIO.h"
 

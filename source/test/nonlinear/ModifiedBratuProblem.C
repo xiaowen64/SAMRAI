@@ -471,9 +471,10 @@ void ModifiedBratuProblem::setVectorWeights(
          for (hier::PatchLevel::Iterator p(level); p; p++) {
 
             tbox::Pointer<hier::Patch> patch = *p;
-            for (hier::BoxContainer::Iterator i(coarsened_boxes); i; i++) {
+            for (hier::BoxContainer::ConstIterator i(coarsened_boxes);
+                 i != coarsened_boxes.end(); ++i) {
 
-               hier::Box& coarse_box = *i;
+               const hier::Box& coarse_box = *i;
                hier::Box intersection = coarse_box * patch->getBox();
                if (!intersection.empty()) {
                   tbox::Pointer<pdat::CellData<double> > w =
@@ -2783,7 +2784,7 @@ void ModifiedBratuProblem::getLevelEdges(
     * (dim,face).
     */
 
-   boxes.clearItems();
+   boxes.clear();
    hier::Box box = patch->getBox();
    hier::Box boundary = box;
    if (face == 0) {
@@ -2800,8 +2801,8 @@ void ModifiedBratuProblem::getLevelEdges(
     * the level.
     */
 
-   boxes.unionBoxes(boundary);
-   boxes.removeIntersections(hier::BoxContainer(level->getBoxes()));
+   boxes.pushBack(boundary);
+   boxes.removeIntersections(level->getBoxes());
 
    /*
     * Finally delete the part of the level edge that meets the
@@ -2820,7 +2821,7 @@ void ModifiedBratuProblem::getLevelEdges(
     * Put the result into canonical order.
     */
 
-   boxes.simplifyBoxes();
+   boxes.simplify();
 }
 
 void ModifiedBratuProblem::correctLevelFlux(
@@ -2848,7 +2849,8 @@ void ModifiedBratuProblem::correctLevelFlux(
             twodelta(d) = ((s == 0) ? 2 : -2);
             hier::BoxContainer level_edges;
             getLevelEdges(level_edges, patch, level, d, s);
-            for (hier::BoxContainer::Iterator l(level_edges); l; l++) {
+            for (hier::BoxContainer::Iterator l(level_edges);
+                 l != level_edges.end(); ++l) {
                for (pdat::CellIterator ic(l()); ic; ic++) {
                   pdat::SideIndex iside(ic() + delta, d, s);
                   (*flux_data)(iside) = 2.0 * (*flux_data)(iside) / 3.0;
@@ -2880,7 +2882,8 @@ void ModifiedBratuProblem::correctPatchFlux(
          double factor = ((s == 0) ? 1.0 / dx[d] : -1.0 / dx[d]);
          hier::BoxContainer level_edges;
          getLevelEdges(level_edges, patch, level, d, s);
-         for (hier::BoxContainer::Iterator l(level_edges); l; l++) {
+         for (hier::BoxContainer::Iterator l(level_edges);
+              l != level_edges.end(); ++l) {
             for (pdat::CellIterator ic(l()); ic; ic++) {
                pdat::SideIndex iside(ic() + delta1, d, s);
                (*flux_data)(iside) = factor * (-8.0 * (*u)(ic()) / 15.0

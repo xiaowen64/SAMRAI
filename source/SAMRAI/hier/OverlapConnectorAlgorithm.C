@@ -1082,9 +1082,9 @@ void OverlapConnectorAlgorithm::privateBridge(
              */
             while (all_comms[send_comm_idx].getPeerRank() != curr_owner) {
                ++send_comm_idx;
-               if (send_comm_idx == static_cast<int>(incoming_ranks.size() +
+               if (send_comm_idx == static_cast<size_t>(incoming_ranks.size() +
                                                      outgoing_ranks.size())) {
-                  send_comm_idx -= static_cast<int>(outgoing_ranks.size());
+                  send_comm_idx -= static_cast<size_t>(outgoing_ranks.size());
                }
             }
             tbox::AsyncCommPeer<int>& outgoing_comm = all_comms[send_comm_idx];
@@ -1669,9 +1669,9 @@ void OverlapConnectorAlgorithm::privateBridge(
              */
             while (all_comms[send_comm_idx].getPeerRank() != curr_owner) {
                ++send_comm_idx;
-               if (send_comm_idx == static_cast<int>(incoming_ranks.size() +
+               if (send_comm_idx == static_cast<size_t>(incoming_ranks.size() +
                                                      outgoing_ranks.size())) {
-                  send_comm_idx -= static_cast<int>(outgoing_ranks.size());
+                  send_comm_idx -= static_cast<size_t>(outgoing_ranks.size());
                }
             }
             tbox::AsyncCommPeer<int>& outgoing_comm = all_comms[send_comm_idx];
@@ -2073,8 +2073,6 @@ void OverlapConnectorAlgorithm::findOverlapsForOneProcess(
 {
    const IntVector &head_refinement_ratio(bridging_connector.getHead().getRefinementRatio());
 
-   const tbox::Dimension& dim = head_refinement_ratio.getDim();
-
    bool refine_base = false;
    bool coarsen_base = false;
    if (bridging_connector.getHead().getRefinementRatio() ==
@@ -2391,8 +2389,6 @@ size_t OverlapConnectorAlgorithm::checkOverlapCorrectness(
 
    }
 #endif
-   const tbox::Dimension& dim = connector.getConnectorWidth().getDim();
- 
    TBOX_ASSERT(!connector.hasPeriodicLocalNeighborhoodRoots());
 
    Connector missing, extra;

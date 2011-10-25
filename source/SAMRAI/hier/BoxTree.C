@@ -85,7 +85,7 @@ BoxTree::BoxTree(
 BoxTree::BoxTree(
    const tbox::Dimension& dim,
    const BoxContainer& mapped_boxes,
-   size_t min_number):
+   int min_number):
    d_dim(dim),
    d_bounding_box(dim),
    d_block_id(BlockId::invalidId())
@@ -189,9 +189,10 @@ BoxTree::BoxTree(
 
    }
 
-   if (s_max_lin_search[d_dim.getValue() - 1] < d_mapped_boxes.size()) {
+   if (s_max_lin_search[d_dim.getValue() - 1] <
+       static_cast<unsigned int>(d_mapped_boxes.size())) {
       s_max_lin_search[d_dim.getValue() - 1] =
-         static_cast<int>(d_mapped_boxes.size());
+         static_cast<unsigned int>(d_mapped_boxes.size());
    }
 
    t_build_tree[d_dim.getValue() - 1]->stop();
@@ -208,7 +209,7 @@ BoxTree::BoxTree(
    const tbox::Dimension& dim,
    const hier::BoxContainer& boxes,
    const BlockId& block_id,
-   size_t min_number):
+   int min_number):
    d_dim(dim),
    d_bounding_box(d_dim),
    d_block_id(block_id)
@@ -243,7 +244,7 @@ BoxTree::BoxTree(
     * live here.  In this case, there is no left child,
     * no right child, and no recursive d_center_child.
     */
-   if ((size_t)boxes.size() <= min_number) {
+   if (boxes.size() <= min_number) {
       if (boxes.isOrdered()) {
          d_mapped_boxes = boxes;
       } else {
@@ -304,9 +305,10 @@ BoxTree::BoxTree(
 
    }
 
-   if (s_max_lin_search[d_dim.getValue() - 1] < d_mapped_boxes.size()) {
+   if (s_max_lin_search[d_dim.getValue() - 1] <
+       static_cast<unsigned int>(d_mapped_boxes.size())) {
       s_max_lin_search[d_dim.getValue() - 1] =
-         static_cast<int>(d_mapped_boxes.size());
+         static_cast<unsigned int>(d_mapped_boxes.size());
    }
 
    t_build_tree[d_dim.getValue() - 1]->stop();
@@ -356,7 +358,7 @@ BoxTree& BoxTree::operator = (
  */
 void BoxTree::generateTree(
    BoxContainer& mapped_boxes,
-   size_t min_number)
+   int min_number)
 {
    t_build_tree[d_dim.getValue() - 1]->start();
    ++s_num_build[d_dim.getValue() - 1];
@@ -403,7 +405,7 @@ void BoxTree::generateTree(
  *************************************************************************
  */
 void BoxTree::privateGenerateTree(
-   size_t min_number)
+   int min_number)
 {
    ++s_num_generate[d_dim.getValue() - 1];
 
@@ -475,9 +477,10 @@ void BoxTree::privateGenerateTree(
       setupChildren(min_number, left_mapped_boxes, right_mapped_boxes);
    }
 
-   if (s_max_lin_search[d_dim.getValue() - 1] < d_mapped_boxes.size()) {
+   if (s_max_lin_search[d_dim.getValue() - 1] <
+       static_cast<unsigned int>(d_mapped_boxes.size())) {
       s_max_lin_search[d_dim.getValue() - 1] =
-         static_cast<int>(d_mapped_boxes.size());
+         static_cast<unsigned int>(d_mapped_boxes.size());
    }
 }
 
@@ -492,12 +495,14 @@ void BoxTree::privateGenerateTree(
  **************************************************************************
  */
 void BoxTree::setupChildren(
-   const size_t min_number,
+   const int min_number,
    BoxContainer& left_mapped_boxes,
    BoxContainer& right_mapped_boxes)
 {
-   const size_t total_size =
-      left_mapped_boxes.size() + right_mapped_boxes.size() + d_mapped_boxes.size();
+   const int total_size = static_cast<int>(
+      left_mapped_boxes.size() +
+      right_mapped_boxes.size() +
+      d_mapped_boxes.size());
 
    /*
     * If all Boxes are in a single child, the child is just as

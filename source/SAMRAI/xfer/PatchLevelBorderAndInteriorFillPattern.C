@@ -70,8 +70,6 @@ PatchLevelBorderAndInteriorFillPattern::computeFillBoxesAndNeighborhoodSets(
    NULL_USE(src_to_dst);
    TBOX_DIM_ASSERT_CHECK_ARGS2(dst_mapped_box_level, fill_ghost_width);
 
-   const tbox::Dimension& dim = fill_ghost_width.getDim();
-
    const hier::BoxContainer& dst_mapped_boxes =
       dst_mapped_box_level.getBoxes();
 

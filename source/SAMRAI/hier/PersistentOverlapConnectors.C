@@ -218,8 +218,6 @@ const Connector& PersistentOverlapConnectors::findConnector(
    TBOX_ASSERT(d_my_mapped_box_level.isInitialized());
    TBOX_ASSERT(head.isInitialized());
 
-   const tbox::Dimension& dim = min_connector_width.getDim();
-
    const Connector* found = NULL;
    for (int i = 0; i < d_cons_from_me.size(); ++i) {
       TBOX_ASSERT(d_cons_from_me[i]->isFinalized());
@@ -325,8 +323,6 @@ const Connector& PersistentOverlapConnectors::findOrCreateConnector(
 {
    TBOX_ASSERT(d_my_mapped_box_level.isInitialized());
    TBOX_ASSERT(head.isInitialized());
-
-   const tbox::Dimension& dim = min_connector_width.getDim();
 
    const Connector* found = NULL;
    for (int i = 0; i < d_cons_from_me.size(); ++i) {

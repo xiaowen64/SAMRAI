@@ -178,7 +178,6 @@ void Connector::insertNeighbors(
          << "base:\n" << getBase().format("", 2));
    }
 #endif
-   const tbox::Dimension& dim = d_ratio.getDim();
    if (d_parallel_state == BoxLevel::GLOBALIZED) {
       d_global_relationships[mapped_box_id].insert(neighbors.begin(),
          neighbors.end());

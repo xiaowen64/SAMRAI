@@ -276,7 +276,7 @@ int main(
       tbox::Pointer<hier::PatchLevel> level_zero =
          hierarchy->getPatchLevel(0);
       const hier::BoxContainer& level_0_boxes = level_zero->getBoxes();
-      for (hier::BoxContainer::Iterator i(level_0_boxes); i; i++) {
+      for (hier::BoxContainer::ConstIterator i(level_0_boxes); i != level_0_boxes.end(); ++i) {
          neq += i().size();
       }
       cvode_solver->setIterationType(uses_newton ? CV_NEWTON : CV_FUNCTIONAL);

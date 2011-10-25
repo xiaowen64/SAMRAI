@@ -12,6 +12,7 @@
 #define included_math_HierarchyEdgeDataOpsReal_C
 
 #include "SAMRAI/math/HierarchyEdgeDataOpsReal.h"
+#include "SAMRAI/hier/BoxContainerIterator.h"
 #include "SAMRAI/hier/BoxUtilities.h"
 #include "SAMRAI/hier/PatchDescriptor.h"
 #include "SAMRAI/pdat/EdgeDataFactory.h"
@@ -97,7 +98,8 @@ void HierarchyEdgeDataOpsReal<TYPE>::resetLevels(
 
       for (int nd = 0; nd < dim.getValue(); nd++) {
          edge_boxes = level->getBoxes();
-         for (hier::BoxContainer::Iterator i(edge_boxes); i != edge_boxes.end(); ++i) {
+         for (hier::BoxContainer::Iterator i = edge_boxes.begin();
+              i != edge_boxes.end(); ++i) {
             *i = pdat::EdgeGeometry::toEdgeBox(*i, nd);
          }
          hier::BoxUtilities::makeNonOverlappingBoxContainers(

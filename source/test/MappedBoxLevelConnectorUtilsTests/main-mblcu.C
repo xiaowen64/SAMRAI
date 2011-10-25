@@ -740,8 +740,6 @@ void shrinkBoxLevel(
    const hier::IntVector& shrinkage,
    const tbox::Array<int>& unshrunken_blocks)
 {
-   const tbox::Dimension& dim(shrinkage.getDim());
-
    const tbox::ConstPointer<hier::GridGeometry>& grid_geometry(big_mapped_box_level.getGridGeometry());
 
    const int local_rank = big_mapped_box_level.getMPI().getRank();

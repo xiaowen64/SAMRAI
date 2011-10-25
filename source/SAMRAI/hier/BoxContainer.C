@@ -170,7 +170,7 @@ BoxContainer::insert(
    Iterator insert_iter;
    insert_iter.d_ordered = true;
 
-   int old_size = d_set.size();
+   unsigned int old_size = d_set.size();
    insert_iter.d_set_iter = d_set.insert(position.d_set_iter, &(*list_iter));
    if (d_set.size() == old_size) {
       d_list.erase(list_iter);

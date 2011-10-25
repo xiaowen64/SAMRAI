@@ -2455,8 +2455,6 @@ void RefineSchedule::generateCommunicationSchedule(
       }
    }
 
-   const tbox::Dimension& dim = dst_to_fill.getConnectorWidth().getDim();
-
    const BoxLevel& dst_mapped_box_level = dst_to_fill.getBase();
 
    unfilled_mapped_box_level = new BoxLevel(
@@ -2560,8 +2558,6 @@ void RefineSchedule::generateCommunicationSchedule(
       const hier::Box& dst_mapped_box = *dst_mapped_box_level.getBox(
             dst_mapped_box_id);
       const hier::BlockId& dst_block_id = dst_mapped_box_id.getBlockId();
-
-      const tbox::Dimension& dim = dst_mapped_box.getDim();
 
       hier::BoxContainer fill_boxes_list;
       for (hier::Connector::ConstNeighborIterator bi = dst_to_fill.begin(cf);

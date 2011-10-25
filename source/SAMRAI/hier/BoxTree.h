@@ -78,12 +78,12 @@ public:
    explicit BoxTree(
       const tbox::Dimension& dim,
       const BoxContainer& mapped_boxes,
-      size_t min_number = 10);
+      int min_number = 10);
 
    /*!
     * @brief Constructs a BoxTree from a list of Boxes.
     *
-    * See BoxTree( const tbox::Dimension& , const BoxContainer& , size_t min_number );
+    * See BoxTree( const tbox::Dimension& , const BoxContainer& , int min_number );
     *
     * @param[in] dim
     *
@@ -98,7 +98,7 @@ public:
       const tbox::Dimension& dim,
       const BoxContainer& boxes,
       const BlockId& block_id,
-      size_t min_number = 10);
+      int min_number = 10);
 
    /*!
     * @brief Destructor.
@@ -120,7 +120,7 @@ public:
    void
    generateTree(
       BoxContainer& mapped_boxes,
-      size_t min_number = 10);
+      int min_number = 10);
 
    /*!
     * @brief Reset to uninitialized state.
@@ -357,7 +357,7 @@ private:
     */
    void
    privateGenerateTree(
-      size_t min_number = 10);
+      int min_number = 10);
 
    /*!
     * @brief Set up the child branches.
@@ -375,7 +375,7 @@ private:
     */
    void
    setupChildren(
-      const size_t min_number,
+      const int min_number,
       BoxContainer& left_mapped_boxes,
       BoxContainer& right_mapped_boxes);
 
