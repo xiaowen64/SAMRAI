@@ -313,8 +313,8 @@ void CoarseFineBoundary::computeFromLevel(
           * coarse-fine boundaries.
           */
 
-         BoxContainer adjusted_level_domain_list(level_domain);
-         adjusted_level_domain_list.unorder();
+         adjusted_level_domain[i] = level_domain;
+         adjusted_level_domain[i].unorder();
 
          for (PatchLevel::Iterator p(level); p; ++p) {
             if ((*p)->getBox().getBlockId() == i &&
@@ -325,7 +325,7 @@ void CoarseFineBoundary::computeFromLevel(
                BoxContainer no_shift_boxes(patch_box);
                no_shift_boxes.grow(max_ghost_width);
                no_shift_boxes.removeIntersections(pseudo_domain);
-               adjusted_level_domain_list.spliceFront(no_shift_boxes);
+               adjusted_level_domain[i].spliceFront(no_shift_boxes);
             }
          }
 
@@ -357,11 +357,10 @@ void CoarseFineBoundary::computeFromLevel(
 
                neighbor_boxes_to_add.intersectBoxes(neighbor_boxes);
 
-               adjusted_level_domain_list.spliceFront(neighbor_boxes_to_add);
+               adjusted_level_domain[i].spliceFront(neighbor_boxes_to_add);
             }
          }
 
-         adjusted_level_domain[i] = BoxContainer(adjusted_level_domain_list);
       }
       d_boundary_boxes.clear();
 

@@ -1100,11 +1100,12 @@ void GridGeometry::getBoundaryBoxes(
                   }
                }
 
-               BoxContainer domain_list(domain_boxes);
+               BoxContainer per_domain_boxes;
                if (num_per_dirs != 0) {
-                  domain_list.grow(periodic_shift);
+                  per_domain_boxes = domain_boxes;
+                  per_domain_boxes.grow(periodic_shift);
                }
-
+ 
                /*
                 * Intersect border_list with domain, then shift so that
                 * true boundary boxes are outside domain.  Then remove
@@ -1112,12 +1113,19 @@ void GridGeometry::getBoundaryBoxes(
                 */
 
                BoxContainer border_list(border);
-               border_list.intersectBoxes(domain_list); // Should use BoxTree here if possible.
-
+               if (num_per_dirs != 0) {
+                  border_list.intersectBoxes(per_domain_boxes); // Should use BoxTree here if possible.
+               } else {
+                  border_list.intersectBoxes(domain_boxes);
+               }
                border_list.shift(border_shift);
 
-               border_list.removeIntersections(domain_list);
-
+               if (num_per_dirs != 0) {
+                  border_list.removeIntersections(per_domain_boxes);
+               } else {
+                  border_list.removeIntersections(domain_boxes);
+               }
+ 
                if (border_list.size() > 0) {
                   for (int bd = 0; bd < d; bd++) {
                      border_list.removeIntersections(codim_boxlist[bd]);
@@ -1444,7 +1452,7 @@ void GridGeometry::setPhysicalDomain(
    int number_blocks = domain.size();
 
    d_domain_is_single_box.resizeArray(number_blocks);
-   d_physical_domain.resizeArray(number_blocks);
+   d_physical_domain.resizeArray(number_blocks, BoxContainer());
    d_domain_tree.resizeArray(number_blocks);
    d_domain_with_images.resizeArray(number_blocks);
    d_number_blocks = number_blocks;
@@ -1456,7 +1464,7 @@ void GridGeometry::setPhysicalDomain(
       bounding_box.removeIntersections(domain[b]);
       if (bounding_box.size() == 0) {
          d_domain_is_single_box[b] = true;
-         d_physical_domain[b] = BoxContainer(domain[b].getBoundingBox());
+         d_physical_domain[b].pushBack((domain[b].getBoundingBox()));
       } else {
          d_domain_is_single_box[b] = false;
          d_physical_domain[b] = domain[b];
@@ -1797,13 +1805,10 @@ bool GridGeometry::checkBoundaryBox(
    /*
     * check that the boundary box is outside the physical domain.
     */
-   BoxContainer domain_list(domain);
-   domain_list.unorder(); 
    BoxContainer bbox_list(bbox);
+   bbox_list.intersectBoxes(domain);
 
-   domain_list.intersectBoxes(bbox_list);
-
-   if (domain_list.size()) {
+   if (bbox_list.size()) {
       return_val = false;
    }
 
@@ -2192,7 +2197,7 @@ void GridGeometry::adjustBoundaryBoxesOnPatch(
 
       getBoundaryBoxes(boundaries,
          patch.getBox(),
-         BoxContainer(pseudo_domain),
+         pseudo_domain,
          gcw,
          IntVector::getZero(d_dim));
 
