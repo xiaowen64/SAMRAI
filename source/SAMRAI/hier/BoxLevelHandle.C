@@ -21,8 +21,8 @@ namespace hier {
  ************************************************************************
  */
 BoxLevelHandle::BoxLevelHandle(
-   const BoxLevel* mapped_box_level):
-   d_mapped_box_level(mapped_box_level)
+   const BoxLevel* box_level):
+   d_box_level(box_level)
 {
 }
 
@@ -41,7 +41,7 @@ BoxLevelHandle::~BoxLevelHandle()
  */
 bool BoxLevelHandle::isAttached() const
 {
-   return d_mapped_box_level != NULL;
+   return d_box_level != NULL;
 }
 
 /*
@@ -50,7 +50,7 @@ bool BoxLevelHandle::isAttached() const
  */
 const BoxLevel& BoxLevelHandle::getBoxLevel() const
 {
-   if (d_mapped_box_level == NULL) {
+   if (d_box_level == NULL) {
       TBOX_ERROR(
          "BoxLevelHandle::getBoxLevel Attempted to access a BoxLevel\n"
          << "that has been detached from its handle.  Detachment happens\n"
@@ -60,11 +60,11 @@ const BoxLevel& BoxLevelHandle::getBoxLevel() const
    }
 #ifdef DEBUG_CHECK_ASSERTIONS
    // Sanity check: the BoxLevel's handle should be this handle.
-   if (d_mapped_box_level->getBoxLevelHandle().getPointer() != this) {
+   if (d_box_level->getBoxLevelHandle().getPointer() != this) {
       TBOX_ERROR("Library error in BoxLevelHandle::getBoxLevel");
    }
 #endif
-   return *d_mapped_box_level;
+   return *d_box_level;
 }
 
 /*
@@ -76,7 +76,7 @@ const BoxLevel& BoxLevelHandle::getBoxLevel() const
  */
 void BoxLevelHandle::detachMyBoxLevel()
 {
-   d_mapped_box_level = NULL;
+   d_box_level = NULL;
 }
 
 }
