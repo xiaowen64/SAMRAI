@@ -996,5 +996,11 @@ const Box& Box::getUniverse(
    return *(s_universes[dim.getValue() - 1]);
 }
 
+SAMRAI_INLINE_KEYWORD
+void Box::lockId() {
+   d_id_locked = true;
+}
+
+
 }
 }

@@ -894,12 +894,8 @@ void BoxLevel::acquireRemoteBoxes_unpack(
          }
 
       } else {
-         for (BoxContainer::ConstIterator ni = d_mapped_boxes.begin();
-              ni != d_mapped_boxes.end(); ++ni) {
-            d_global_mapped_boxes.insert(*ni);
-         }
-//         d_global_mapped_boxes.insert(
-//            d_mapped_boxes.begin(), d_mapped_boxes.end());
+         d_global_mapped_boxes.insert(
+            d_mapped_boxes.begin(), d_mapped_boxes.end());
       }
    }
 
@@ -938,15 +934,15 @@ BoxContainer::ConstIterator BoxLevel::addBox(
 
    clearForBoxChanges(false);
 
-   BoxContainer::ConstIterator new_iterator(d_mapped_boxes);
+   BoxContainer::Iterator new_iterator(d_mapped_boxes);
 
    if (d_mapped_boxes.size() == 0) {
-      Box new_mapped_box =
-         Box(box,
-            LocalId::getZero(),
-            d_mpi.getRank(),
-            block_id,
-            PeriodicShiftCatalog::getCatalog(dim)->getZeroShiftNumber());
+      Box new_mapped_box(
+         box,
+         LocalId::getZero(),
+         d_mpi.getRank(),
+         block_id,
+         PeriodicShiftCatalog::getCatalog(dim)->getZeroShiftNumber());
       new_iterator = d_mapped_boxes.insert(d_mapped_boxes.end(), new_mapped_box);
    } else {
       // Set new_index to one more than the largest index used.
@@ -979,8 +975,8 @@ BoxContainer::ConstIterator BoxLevel::addBox(
          }
       }
 
-      const Box new_mapped_box =
-         Box(box, new_index, d_mpi.getRank(), block_id);
+      const Box new_mapped_box(
+         box, new_index, d_mpi.getRank(), block_id);
       new_iterator = d_mapped_boxes.insert(ni, new_mapped_box);
    }
 

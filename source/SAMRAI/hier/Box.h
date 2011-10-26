@@ -763,9 +763,11 @@ public:
    const tbox::Dimension&
    getDim() const;
 
-   void lockId() {
-      d_id_locked = true;
-   }
+   /*!
+    * @brief Lock the BoxId of this Box so that it may not be changed in any
+    * way until this Box is destroyed.
+    */
+   void lockId();
 
    /**
     * Read the box description in the form [L,U], where L and U are the

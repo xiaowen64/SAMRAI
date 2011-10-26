@@ -772,15 +772,6 @@ public:
    void insert ( ConstIterator first,
                  ConstIterator last );
 
-#if 0
-   /*!
-    * @brief  Insert all Boxes within a range.
-    *
-    * Same as the insert method above but taking mutable Iterators.
-    */
-   void insert ( Iterator first,
-                 Iterator last );
-#endif
    //@} 
 
    //@{ @name Methods that may only be called on an ordered container
