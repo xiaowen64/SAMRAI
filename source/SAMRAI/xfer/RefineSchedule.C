@@ -1718,17 +1718,6 @@ void RefineSchedule::fillData(
 {
    t_fill_data->start();
 
-#ifdef BOX_TELEMETRY
-//   printf("Constructed:  %i\n", hier::Box::s_cumulative_constructed_ct);
-
-//   printf("Assigned:  %i\n", hier::Box::s_cumulative_assigned_ct);
-
-//   printf("Active:  %i\n", hier::Box::s_active_ct);
-
-//   printf("High water:  %i\n", hier::Box::s_high_water);
-#endif
-
-
    /*
     * Set the refine items and time for all transactions.  These items will
     * be shared by all transaction objects in the communication schedule.
@@ -2772,17 +2761,6 @@ void RefineSchedule::findEnconUnfilledBoxes(
          neighbor_boxes.refine(d_dst_level->getRatioToLevelZero());
          neighbor_boxes.intersectBoxes(encon_fill_boxes);
          unfilled_encon_nbr_boxes[nbr_block_id].spliceFront(neighbor_boxes);
-/*
-
-         hier::BoxContainer transformed_domain(ni().getTransformedDomain());
-         
-         unfilled_encon_nbr_boxes[nbr_block_id].spliceFront(
-            transformed_domain);
-         unfilled_encon_nbr_boxes[nbr_block_id].refine(
-            d_dst_level->getRatioToLevelZero());
-         unfilled_encon_nbr_boxes[nbr_block_id].intersectBoxes(
-            encon_fill_boxes);
-*/ 
      }
    }
 
@@ -2818,14 +2796,8 @@ void RefineSchedule::findEnconUnfilledBoxes(
                   dst_block_id,
                   src_block_id);
 
-               std::map<hier::BlockId, hier::BoxContainer>::iterator encon_iter =
-                  unfilled_encon_nbr_boxes.find(src_block_id);
-               if (encon_iter != unfilled_encon_nbr_boxes.end()) {
-                  encon_iter->second.removeIntersections(transformed_src_box);
-               }
-
-//               unfilled_encon_nbr_boxes[src_block_id].removeIntersections(
-//                  transformed_src_box);
+               unfilled_encon_nbr_boxes[src_block_id].removeIntersections(
+                  transformed_src_box);
 
             }
          }
@@ -2851,15 +2823,8 @@ void RefineSchedule::findEnconUnfilledBoxes(
             const hier::BlockId& nbr_block_id =
                encon_mapped_box_id.getBlockId();
 
-            std::map<hier::BlockId, hier::BoxContainer>::iterator encon_iter =
-               unfilled_encon_nbr_boxes.find(nbr_block_id);
-
             const hier::BoxContainer& unfilled_boxes =
-               encon_iter != unfilled_encon_nbr_boxes.end() ?
-               encon_iter->second :
-               hier::BoxContainer();
-//            const hier::BoxContainer& unfilled_boxes =
-//               unfilled_encon_nbr_boxes[nbr_block_id];
+               unfilled_encon_nbr_boxes[nbr_block_id];
 
             if (unfilled_boxes.size() > 0) {
 
