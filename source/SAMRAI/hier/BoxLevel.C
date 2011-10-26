@@ -963,11 +963,13 @@ BoxContainer::ConstIterator BoxLevel::addBox(
             for (new_index = 0, ni = d_mapped_boxes.begin();
                  ni != d_mapped_boxes.end();
                  ++ni) {
-               if (new_index != (*ni).getLocalId()) {
-                  break;
-               }
-               if (!ni->isPeriodicImage()) {
-                  ++new_index;
+               if ((*ni).getBlockId() == block_id) {
+                  if (new_index != (*ni).getLocalId()) {
+                     break;
+                  }
+                  if (!ni->isPeriodicImage()) {
+                     ++new_index;
+                  }
                }
             }
             // We should have found an unused index.
