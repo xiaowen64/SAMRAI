@@ -90,20 +90,6 @@ MultiblockBoxTree::MultiblockBoxTree(
  *************************************************************************
  *************************************************************************
  */
-#if 0
-MultiblockBoxTree::MultiblockBoxTree(
-   const tbox::ConstPointer<GridGeometry>& grid_geometry,
-   const BoxContainer& mapped_boxes,
-   size_t min_number):
-   d_grid_geometry(grid_geometry)
-{
-   generateTree(grid_geometry, mapped_boxes, min_number);
-}
-#endif
-/*
- *************************************************************************
- *************************************************************************
- */
 
 MultiblockBoxTree::MultiblockBoxTree(
    const tbox::ConstPointer<GridGeometry>& grid_geometry,
@@ -332,69 +318,6 @@ const BoxTree& MultiblockBoxTree::getSingleBlockBoxTree(
    return mi->second;
 }
 
-/*
- *************************************************************************
- *************************************************************************
- */
-#if 0
-void MultiblockBoxTree::findOverlapBoxes(
-   BoxContainer& overlap_mapped_boxes,
-   const Box& box,
-   const BlockId& block_id,
-   const IntVector& refinement_ratio,
-   bool include_singularity_block_neighbors) const
-{
-   TBOX_DIM_ASSERT_CHECK_ARGS3(*d_grid_geometry, box, refinement_ratio);
-
-   TBOX_ASSERT(block_id.getBlockValue() >= 0 &&
-      block_id.getBlockValue() < d_grid_geometry->getNumberBlocks());
-
-   /*
-    * Search in the index space of block_id for overlaps.
-    */
-
-   std::map<BlockId, BoxTree>::const_iterator
-   blocki(d_single_block_trees.find(block_id));
-
-   if (blocki != d_single_block_trees.end()) {
-      blocki->second.findOverlapBoxes(overlap_mapped_boxes, box);
-   }
-
-   /*
-    * Search in the index spaces neighboring block_id for overlaps.
-    */
-
-   const tbox::List<GridGeometry::Neighbor>& block_neighbors(
-      d_grid_geometry->getNeighbors(block_id));
-
-   for (tbox::ListIterator<GridGeometry::Neighbor> ni(block_neighbors); ni; ni++) {
-
-      const GridGeometry::Neighbor& neighbor(*ni);
-
-      if (!include_singularity_block_neighbors && neighbor.isSingularity()) {
-         continue;
-      }
-
-      const BlockId neighbor_block_id(neighbor.getBlockId());
-
-      blocki = d_single_block_trees.find(neighbor_block_id);
-
-      if (blocki == d_single_block_trees.end()) {
-         continue;
-      }
-
-      Box transformed_box(box);
-
-      d_grid_geometry->transformBox(transformed_box,
-         refinement_ratio,
-         neighbor_block_id,
-         block_id);
-
-      blocki->second.findOverlapBoxes(overlap_mapped_boxes, transformed_box);
-
-   }
-}
-#endif
 /*
  *************************************************************************
  *************************************************************************

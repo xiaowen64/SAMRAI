@@ -748,55 +748,7 @@ const tbox::Dimension& BoxTree::getDim() const
 {
    return d_dim;
 }
-#if 0
-void BoxTree::findOverlapBoxes(
-   BoxContainer& overlap_mapped_boxes,
-   const Box& box,
-   bool recursive_call) const
-{
-   int num_found_box = 0;
-   if (!recursive_call) {
-      ++s_num_search[d_dim.getValue() - 1];
-      num_found_box = static_cast<int>(overlap_mapped_boxes.size());
-      t_search[d_dim.getValue() - 1]->start();
-   }
 
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, box);
-
-   if (box.intersects(d_bounding_box)) {
-
-      if (d_center_child) {
-         d_center_child->findOverlapBoxes(overlap_mapped_boxes, box, true);
-      } else {
-         for (BoxContainer::ConstIterator ni = d_mapped_boxes.begin();
-              ni != d_mapped_boxes.end(); ++ni) {
-            const Box& mapped_box = *ni;
-            if (box.intersects(mapped_box)) {
-               overlap_mapped_boxes.insert(mapped_box);
-            }
-         }
-      }
-
-      if (d_left_child) {
-         d_left_child->findOverlapBoxes(overlap_mapped_boxes, box, true);
-      }
-
-      if (d_right_child) {
-         d_right_child->findOverlapBoxes(overlap_mapped_boxes, box, true);
-      }
-   }
-
-   if (!recursive_call) {
-      t_search[d_dim.getValue() - 1]->stop();
-      num_found_box = static_cast<int>(overlap_mapped_boxes.size())
-         - num_found_box;
-      s_max_found_box[d_dim.getValue() - 1] =
-         tbox::MathUtilities<int>::Max(s_max_found_box[d_dim.getValue() - 1],
-            num_found_box);
-      s_num_found_box[d_dim.getValue() - 1] += num_found_box;
-   }
-}
-#endif
 void BoxTree::findOverlapBoxes(
    Connector& overlap_connector,
    const Box& box,

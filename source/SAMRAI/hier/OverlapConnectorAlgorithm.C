@@ -2299,8 +2299,6 @@ void OverlapConnectorAlgorithm::findOverlapErrors(
     * Thus, it may be pointless to use this method
     * as a check for that method.
     */
-//TODO: computeNeighborhoodDifferences does not work with BoxContainer
-#if 1
    Connector::computeNeighborhoodDifferences(
       extra,
       connector,
@@ -2313,7 +2311,6 @@ void OverlapConnectorAlgorithm::findOverlapErrors(
       connector);
    TBOX_ASSERT(&missing.getBase() == &connector.getBase());
    TBOX_ASSERT(&missing.getHead() == &connector.getHead());
-#endif
 }
 
 /*

@@ -561,25 +561,7 @@ void BoxNeighborhoodCollection::getNeighbors(
    }
    return;
 }
-#if 0
-void BoxNeighborhoodCollection::getNeighbors(
-   BoxContainer& neighbors) const
-{
-   // This is a 2 step process so it's more expensive than the version using a
-   // BoxContainer for the result.  This should go away when the unfied BoxContainer
-   // is in place.
 
-   // First call the version taking a BoxContainer so that there are no duplicates.
-   // Then dump the neighbors into the supplied BoxContainer.
-   BoxContainer tmp_nbrs(neighbors.getDim());
-   getNeighbors(tmp_nbrs);
-   for (BoxContainer::const_iterator itr(tmp_nbrs.begin());
-        itr != tmp_nbrs.end(); ++itr) {
-      neighbors.pushBack(*itr);
-   }
-   return;
-}
-#endif
 void BoxNeighborhoodCollection::getNeighbors(
    BoxContainer& neighbors,
    const BlockId& block_id) const

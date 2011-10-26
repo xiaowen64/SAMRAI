@@ -689,12 +689,10 @@ void PatchHierarchy::setupDomainData()
        * Set up the search tree for the domain's complement.
        */
       BlockId block_id(nb);
-      hier::BoxContainer complement_boxes(hier::Box::getUniverse(d_dim));
-      complement_boxes.removeIntersections(
+      multiblock_complement_boxes[block_id].pushBack(
+         hier::Box::getUniverse(d_dim));
+      multiblock_complement_boxes[block_id].removeIntersections(
          d_domain_search_tree_periodic.getSingleBlockBoxTree(block_id));
-
-      multiblock_complement_boxes.insert(
-         std::pair<BlockId, BoxContainer>(block_id, complement_boxes));
 
    }
 

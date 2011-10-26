@@ -186,26 +186,6 @@ public:
    /*!
     * @brief Find all boxes that overlap the given \b box.
     *
-    * To avoid unneeded work, the output @b overlap_mapped_boxes container
-    * is not emptied.  Overlapping Boxes are simply added.
-    *
-    * Output is sorted.
-    *
-    * @param[out] overlap_mapped_boxes Boxes that overlap with box.
-    *
-    * @param[in] box the specified box whose overlaps are requested.
-    * The box is assumed to be in same index space as those in the
-    * tree.
-    */
-//   void
-//   findOverlapBoxes(
-//      BoxContainer& overlap_mapped_boxes,
-//      const Box& box,
-//      bool recursive_call = false) const;
-
-   /*!
-    * @brief Find all boxes that overlap the given \b box.
-    *
     * @param[out] overlap_connector Overlap Connector with box in its base
     * BoxLevel.
     *

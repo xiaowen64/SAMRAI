@@ -497,10 +497,6 @@ void PatchLevel::setRefinedPatchLevel(
    d_boxes.refine(refine_ratio);
 
    {
-#if 0
-      BoxContainer mapped_boxes(coarse_level->d_mapped_box_level->getBoxes());
-      mapped_boxes.refine(refine_ratio); 
-#endif
       d_mapped_box_level = new BoxLevel(
             d_ratio_to_level_zero,
             d_geometry,
@@ -525,10 +521,6 @@ void PatchLevel::setRefinedPatchLevel(
     * initialize patch objects.  Finally, set patch geometry and remaining
     * domain information.
     */
-
-   // d_patch_touches_regular_boundary.resizeArray(d_global_number_patches);
-   // d_patch_touches_periodic_boundary.resizeArray(d_global_number_patches);
-   // d_shifts.resizeArray(d_global_number_patches);
 
    const BoxContainer& mapped_boxes = d_mapped_box_level->getBoxes();
    for (RealBoxConstIterator ni(mapped_boxes); ni.isValid(); ++ni) {
@@ -689,10 +681,6 @@ void PatchLevel::setCoarsenedPatchLevel(
     */
    const BoxLevel& fine_mapped_box_level =
       *fine_level->d_mapped_box_level;
-#if 0
-   BoxContainer coarsened_mapped_boxes(fine_level->d_mapped_box_level->getBoxes());
-   coarsened_mapped_boxes.coarsen(coarsen_ratio);
-#endif
    d_mapped_box_level = new BoxLevel(
          d_ratio_to_level_zero,
          d_geometry,
@@ -716,10 +704,6 @@ void PatchLevel::setCoarsenedPatchLevel(
     * initialize patch objects.  Finally, set patch geometry and remaining
     * domain information.
     */
-
-   // d_patch_touches_regular_boundary.resizeArray(d_global_number_patches);
-   // d_patch_touches_periodic_boundary.resizeArray(d_global_number_patches);
-   // d_shifts.resizeArray(d_global_number_patches);
 
    const BoxContainer& mapped_boxes = d_mapped_box_level->getBoxes();
    for (RealBoxConstIterator ni(mapped_boxes); ni.isValid(); ++ni) {

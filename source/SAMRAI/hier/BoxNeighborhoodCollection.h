@@ -1235,17 +1235,6 @@ class BoxNeighborhoodCollection
          BoxContainer& neighbors) const;
 
       /*!
-       * @brief Fill the supplied BoxContainer with the neighbors from all the
-       * neighborhoods in this object.  The container has no notion of the
-       * neighborhoods to which its contents belong.
-       *
-       * @param neighbors
-       */
-//      void
-//      getNeighbors(
-//         BoxContainer& neighbors) const;
-
-      /*!
        * @brief Fill the supplied BoxContainer with the neighbors having the
        * specified block id from all the neighborhoods in this object.  The
        * container has no notion of the neighborhoods to which its contents

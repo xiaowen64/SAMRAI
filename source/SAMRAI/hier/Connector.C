@@ -1540,9 +1540,6 @@ void Connector::computeNeighborhoodDifferences(
    const Connector& left,
    const Connector& right)
 {
-//TODO:  Commenting out until there's a way to do set_difference for
-// BoxContainer
-#if 1
    if (0) {
       tbox::plog << "Computing relationship differences, a:\n" << left.format(dbgbord, 3)
       << "Computing relationship differences, b:\n" << right.format(dbgbord, 3);
@@ -1580,15 +1577,6 @@ void Connector::computeNeighborhoodDifferences(
             } 
          }
              
-
-#if 0
-         std::insert_iterator<NeighborSet> ii(diff, diff.begin());
-         set_difference(anabrs.begin(),
-            anabrs.end(),
-            bnabrs.begin(),
-            bnabrs.end(),
-            ii, Box::id_less());
-#endif
          if (diff.isEmpty()) {
             drelationships.erase(mapped_box_id);
          }
@@ -1597,7 +1585,6 @@ void Connector::computeNeighborhoodDifferences(
       }
 
    }
-#endif
 }
 
 /*
