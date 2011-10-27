@@ -171,7 +171,7 @@ const TreeLoadBalancer::BoxInTransit& TreeLoadBalancer::BoxInTransit::operator =
  *************************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-void TreeLoadBalancer::BoxInTransit::putToIntBuffer(
+int * TreeLoadBalancer::BoxInTransit::putToIntBuffer(
    int* buffer,
    bool skip_last_owner) const
 {
@@ -184,8 +184,9 @@ void TreeLoadBalancer::BoxInTransit::putToIntBuffer(
    if (skip_last_owner) { TBOX_ASSERT( !proc_hist.empty() ); }
    *(buffer++) = static_cast<int>(proc_hist.size()-skip_last_owner);
    for (unsigned int i = 0; i < proc_hist.size()-skip_last_owner; ++i) {
-      buffer[i] = proc_hist[i];
+      *(buffer++) = proc_hist[i];
    }
+   return buffer;
 }
 
 
@@ -195,7 +196,7 @@ void TreeLoadBalancer::BoxInTransit::putToIntBuffer(
  *************************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-void TreeLoadBalancer::BoxInTransit::getFromIntBuffer(
+const int * TreeLoadBalancer::BoxInTransit::getFromIntBuffer(
    const int* buffer)
 {
    const tbox::Dimension& dim(box.getDim());
@@ -207,8 +208,9 @@ void TreeLoadBalancer::BoxInTransit::getFromIntBuffer(
    proc_hist.clear();
    proc_hist.insert(proc_hist.end(), *(buffer++), 0);
    for (unsigned int i = 0; i < proc_hist.size(); ++i) {
-      proc_hist[i] = buffer[i];
+      proc_hist[i] = *(buffer++);
    }
+   return buffer;
 }
 
 

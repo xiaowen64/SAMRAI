@@ -265,9 +265,8 @@ private:
          const tbox::Dimension &dim );
 
       /*!
-       * @brief Construct new object having the history an existing object.
-       * The new object has the same origin and proc_history of the existing,
-       * but it is otherwise different.
+       * @brief Construct new object having the history an existing
+       * object but is otherwise different.
        *
        * @param[in] other
        *
@@ -317,8 +316,10 @@ private:
        * last owner in proc_hist will be skipped (proc_hist must be
        * non-empty) and the number of integers put in the buffer would be
        * commBufferSize()-1.
+       *
+       * @return The next unwritten position in the buffer.
        */
-      void putToIntBuffer(
+      int *putToIntBuffer(
          int* buffer,
          bool skip_last_owner=false) const;
 
@@ -327,8 +328,10 @@ private:
        *
        * This is the opposite of putToIntBuffer().  Number of ints read
        * is given by what commBufferSize() AFTER this method is called.
+       *
+       * @return The next unread position in the buffer.
        */
-      void getFromIntBuffer(
+      const int *getFromIntBuffer(
          const int* buffer);
 
       /*!

@@ -1741,14 +1741,13 @@ void TreeLoadBalancer::unpackSubtreeLoadData(
     */
    BoxInTransit received_box(d_dim);
    for (int i = 0; i < num_boxes; ++i) {
-      received_box.getFromIntBuffer(received_data);
+      received_data = received_box.getFromIntBuffer(received_data);
       BoxInTransit renamed_box(received_box,
                                received_box.getBox(),
                                d_mpi.getRank(),
                                next_available_index);
       next_available_index += 2 + d_degree;
       receiving_bin.insert(renamed_box);
-      received_data += received_box.commBufferSize();
    }
    t_unpack_load->stop();
 }
