@@ -30,173 +30,6 @@
 namespace SAMRAI {
 namespace mesh {
 
-/*!
- * @brief Data to save for each Box that gets passed along the tree
- * edges.  This class is used only by TreeLoadBalancer.
- *
- * The purpose of the BoxInTransit is to associate extra data with a
- * Box as it is broken up and passed from processor to processor.  A
- * BoxInTransit is a Box going through these changes.  It has a
- * current work load, an orginating Box and a history of the processes
- * it passed through.
- */
-struct BoxInTransit {
-   typedef hier::Box Box;
-   typedef hier::LocalId LocalId;
-
-   /*!
-    * @brief Constructor
-    *
-    * @param[in] dim
-    */
-   BoxInTransit(
-      const tbox::Dimension& dim):
-      box(dim),
-      orig_box(dim)
-   {
-   }
-
-   /*!
-    * @brief Construct a new BoxInTransit from an originating box.
-    *
-    * @param[in] other
-    */
-   BoxInTransit(const hier::Box& origin);
-
-   /*!
-    * @brief Construct new object using integer data packed by
-    * putToIntBuffer().
-    *
-    * @param[i/o] ptr Pointer to integer data in buffer.  On return,
-    * @c ptr will be advanced past the data used by this object.
-    *
-    * @param[i] dim
-    */
-   BoxInTransit(
-      const int *&ptr,
-      const tbox::Dimension &dim );
-
-   /*!
-    * @brief Construct new object having the history an existing object.
-    * The new object has the same origin and proc_history of the existing,
-    * but it is otherwise different.
-    *
-    * @param[in] other
-    *
-    * @param[in] box
-    *
-    * @param[in] rank
-    *
-    * @param[in] local_id
-    */
-   BoxInTransit(
-      const BoxInTransit& other,
-      const hier::Box& box,
-      int rank,
-      LocalId local_id);
-
-   /*!
-    * @brief Assignment operator
-    *
-    * @param[in] other
-    */
-   const BoxInTransit& operator = (const BoxInTransit& other);
-
-   //! @brief Return the owner rank.
-   int getOwnerRank() const;
-
-   //! @brief Return the LocalId.
-   LocalId getLocalId() const;
-
-   //! @brief Return the Box.
-   hier::Box& getBox();
-
-   //! @brief Return the Box.
-   const hier::Box& getBox() const;
-
-   /*!
-    * @brief Return number of ints required for putting a putting the
-    * object in message passing buffer.
-    */
-   int commBufferSize() const;
-
-   /*!
-    * @brief Put self into a int buffer.
-    *
-    * This is the opposite of getFromIntBuffer().  Number of ints
-    * written is given by commBufferSize(), except when
-    * skip_last_owner is true.  If skip_last_owner is true, and the
-    * last owner in proc_hist will be skipped (proc_hist must be
-    * non-empty) and the number of integers put in the buffer would be
-    * commBufferSize()-1.
-    */
-   void putToIntBuffer(
-      int* buffer,
-      bool skip_last_owner=false) const;
-
-   /*!
-    * @brief Set attributes according to data in int buffer.
-    *
-    * This is the opposite of putToIntBuffer().  Number of ints read
-    * is given by what commBufferSize() AFTER this method is called.
-    */
-   void getFromIntBuffer(
-      const int* buffer);
-
-   /*!
-    * @brief Stuff into an outgoing message destined for the previous
-    * owner.
-    *
-    * prev_owner must not be empty.
-    *
-    * @param outgoing_messages Map of outgoing messages, indexed by
-    * recipient rank.  On return, the message corresponding to the
-    * previous owner will be grown by commBufferSize()-1.
-    */
-   void packForPreviousOwner(
-      std::map<int,std::vector<int> > &outgoing_messages ) const;
-
-   //! @brief Stream-insert operator.
-   friend std::ostream&
-   operator << (
-      std::ostream& co,
-      const BoxInTransit& r);
-
-   //! @brief The Box.
-   hier::Box box;
-
-   //! @brief Originating Box.
-   hier::Box orig_box;
-
-   //! @brief Work load.
-   int load;
-
-   /*!
-    * @brief History of processors passed in transit.  Each time a
-    * process receives a Box, it should append its rank to the
-    * proc_hist.
-    */
-   std::vector<int> proc_hist;
-};
-
-
-
-
-
-/*!
- * @brief Comparison functor for sorting BoxInTransit from more to
- * less loads.
- */
-struct BoxInTransitMoreLoad {
-   /*
-    * @brief Compares two BoxInTransit for sorting them from more load
-    * to less load.
-    */
-   bool operator () (
-      const BoxInTransit& a,
-      const BoxInTransit& b) const;
-};
-
 
 
 
@@ -204,6 +37,10 @@ struct BoxInTransitMoreLoad {
 /*!
  * @brief Provides load balancing routines for AMR hierarchy by
  * implemementing the LoadBalancerStrategy.
+ *
+ * This class implements a tree-based load balancer.  The MPI
+ * processes are aranged in a tree.  Work load is transmitted from
+ * process to process along the edges of the tree.
  *
  * Currently, only uniform load balancing is supported.  Eventually,
  * non-uniform load balancing should be supported.  (Non-uniform load
@@ -382,17 +219,177 @@ public:
    printStatistics(
       std::ostream& output_stream = tbox::plog) const;
 
-   /*!
-    * @brief Get the name of this object.
-    *
-    * @return The name of this object.
-    */
-   const std::string&
-   getObjectName() const;
+
 
 private:
+
+   /*!
+    * @brief Data to save for each Box that gets passed along the tree
+    * edges.
+    *
+    * The purpose of the BoxInTransit is to associate extra data with
+    * a Box as it is broken up and passed from process to process.  A
+    * BoxInTransit is a Box going through these changes.  It has a
+    * current work load, an orginating Box and a history of the
+    * processes it passed through.
+    */
+   struct BoxInTransit {
+      typedef hier::Box Box;
+      typedef hier::LocalId LocalId;
+
+      /*!
+       * @brief Constructor
+       *
+       * @param[in] dim
+       */
+      BoxInTransit(const tbox::Dimension& dim);
+
+      /*!
+       * @brief Construct a new BoxInTransit from an originating box.
+       *
+       * @param[in] other
+       */
+      BoxInTransit(const hier::Box& origin);
+
+      /*!
+       * @brief Construct new object using integer data packed by
+       * putToIntBuffer().
+       *
+       * @param[i/o] ptr Pointer to integer data in buffer.  On return,
+       * @c ptr will be advanced past the data used by this object.
+       *
+       * @param[i] dim
+       */
+      BoxInTransit(
+         const int *&ptr,
+         const tbox::Dimension &dim );
+
+      /*!
+       * @brief Construct new object having the history an existing object.
+       * The new object has the same origin and proc_history of the existing,
+       * but it is otherwise different.
+       *
+       * @param[in] other
+       *
+       * @param[in] box
+       *
+       * @param[in] rank
+       *
+       * @param[in] local_id
+       */
+      BoxInTransit(
+         const BoxInTransit& other,
+         const hier::Box& box,
+         int rank,
+         LocalId local_id);
+
+      /*!
+       * @brief Assignment operator
+       *
+       * @param[in] other
+       */
+      const BoxInTransit& operator = (const BoxInTransit& other);
+
+      //! @brief Return the owner rank.
+      int getOwnerRank() const;
+
+      //! @brief Return the LocalId.
+      LocalId getLocalId() const;
+
+      //! @brief Return the Box.
+      hier::Box& getBox();
+
+      //! @brief Return the Box.
+      const hier::Box& getBox() const;
+
+      /*!
+       * @brief Return number of ints required for putting a putting the
+       * object in message passing buffer.
+       */
+      int commBufferSize() const;
+
+      /*!
+       * @brief Put self into a int buffer.
+       *
+       * This is the opposite of getFromIntBuffer().  Number of ints
+       * written is given by commBufferSize(), except when
+       * skip_last_owner is true.  If skip_last_owner is true, and the
+       * last owner in proc_hist will be skipped (proc_hist must be
+       * non-empty) and the number of integers put in the buffer would be
+       * commBufferSize()-1.
+       */
+      void putToIntBuffer(
+         int* buffer,
+         bool skip_last_owner=false) const;
+
+      /*!
+       * @brief Set attributes according to data in int buffer.
+       *
+       * This is the opposite of putToIntBuffer().  Number of ints read
+       * is given by what commBufferSize() AFTER this method is called.
+       */
+      void getFromIntBuffer(
+         const int* buffer);
+
+      /*!
+       * @brief Stuff into an outgoing message destined for the previous
+       * owner.
+       *
+       * prev_owner must not be empty.
+       *
+       * @param outgoing_messages Map of outgoing messages, indexed by
+       * recipient rank.  On return, the message corresponding to the
+       * previous owner will be grown by commBufferSize()-1.
+       */
+      void packForPreviousOwner(
+         std::map<int,std::vector<int> > &outgoing_messages ) const;
+
+      //! @brief The Box.
+      hier::Box box;
+
+      //! @brief Originating Box.
+      hier::Box orig_box;
+
+      //! @brief Work load.
+      int load;
+
+      /*!
+       * @brief History of processors passed in transit.  Each time a
+       * process receives a Box, it should append its rank to the
+       * proc_hist.
+       */
+      std::vector<int> proc_hist;
+   };
+
+
+   /*!
+    * @brief Insert BoxInTransit into an otput stream.
+    */
+   friend std::ostream&
+   operator << (
+      std::ostream& co,
+      const BoxInTransit& r);
+
+
+   /*!
+    * @brief Comparison functor for sorting BoxInTransit from more to
+    * less loads.
+    */
+   struct BoxInTransitMoreLoad {
+      /*
+       * @brief Compares two BoxInTransit for sorting them from more load
+       * to less load.
+       */
+      bool operator () (
+         const BoxInTransit& a,
+         const BoxInTransit& b) const;
+   };
+
+
+
    /*
-    * Static integer constants.
+    * Static integer constants.  Tags are for isolating messages
+    * from different phases of the algorithm.
     */
    static const int TreeLoadBalancer_LOADTAG0;
    static const int TreeLoadBalancer_LOADTAG1;
@@ -401,14 +398,6 @@ private:
    static const int TreeLoadBalancer_PREBALANCE0;
    static const int TreeLoadBalancer_PREBALANCE1;
    static const int TreeLoadBalancer_FIRSTDATALEN;
-
-   typedef hier::Box Box;
-
-   typedef hier::LocalId LocalId;
-
-   typedef hier::BoxLevel BoxLevel;
-
-   typedef mesh::BoxInTransitMoreLoad BoxInTransitMoreLoad;
 
    // The following are not implemented, but are provided here for
    // dumb compilers.
@@ -427,11 +416,12 @@ private:
 
    /*!
     * @brief Data to save for each sending/receiving process and the
-    * subtree for that process.
+    * subtree at that process.
     */
    struct SubtreeLoadData {
       // @brief Constructor.
-      SubtreeLoadData():num_procs(0),
+      SubtreeLoadData():
+         num_procs(0),
          total_work(0),
          load_exported(0),
          load_imported(0) {
@@ -448,14 +438,14 @@ private:
        * @brief Load exported (or to be exported) to nonlocal process.
        *
        * If the object is for the local process, load_exported means
-       * the load exported to the process's parent.
+       * the load exported to the process's *parent*.
        */
       int load_exported;
       /*!
        * @brief Load imported from nonlocal process.
        *
        * If the object is for the local process, load_imported means
-       * the load imported from the process's parent.
+       * the load imported from the process's *parent*.
        */
       int load_imported;
       /*!
@@ -466,7 +456,7 @@ private:
        * @brief Work to export.
        *
        * If the object is for the local process, for_export means for
-       * exporting to the process's parent.
+       * exporting to the process's *parent*.
        */
       TransitSet for_export;
    };
@@ -508,55 +498,59 @@ private:
    /*!
     * @brief Reassign loads from one TransitSet to another.
     *
-    * @param ideal_transfer Amount of load to reassign from src to
+    * @param[i] ideal_transfer Amount of load to reassign from src to
     * dst.  If negative, reassign the load from dst to src.
     *
-    * @param actual_transfer Amount of load transfered.  If positive,
-    * transfer load from src to dst (if negative, from dst to src).
-    *
-    * @param next_available_index Index for guaranteeing new
+    * @param[io] next_available_index Index for guaranteeing new
     * Boxes are uniquely numbered.
+    *
+    * @return Amount of load transfered.  If positive, work went from
+    * src to dst (if negative, from dst to src).
+    *
     */
-   void
+   int
    reassignLoads(
       TransitSet& src,
       TransitSet& dst,
-      int& actual_transfer,
       hier::LocalId& next_available_index,
       const int ideal_transfer ) const;
 
-   /*
+   /*!
     * @brief Shift load from src to dst by swapping BoxInTransit
     * between them.
     *
-    * @param ideal_transfer Amount of load to reassign from src to
+    * @param[io] src Source of work, for a positive ideal_transfer.
+    *
+    * @param[io] dst Destination of work, for a positive ideal_transfer.
+    *
+    * @param[i] ideal_transfer Amount of load to reassign from src to
     * dst.  If negative, reassign the load from dst to src.
     *
-    * @param actual_transfer Amount of load transfered.  If positive,
-    * transfer load from src to dst (if negative, from dst to src).
-    *
-    * @param actual_transfer Amount of load transfered.  If positive,
-    * transfer load from src to dst (if negative, from dst to src).
+    * @return Amount of load transfered.  If positive, transfer load
+    * from src to dst (if negative, from dst to src).
     */
-   bool
+   int
    shiftLoadsBySwapping(
       TransitSet& src,
       TransitSet& dst,
-      int& actual_transfer,
       const int ideal_transfer ) const;
 
-   /*
+   /*!
     * @brief Shift load from src to dst by various box breaking strategies.
     * choosing the break that gives the best overall penalty.
     *
-    * @param ideal_transfer Amount of load to reassign from src to
-    * dst.  If negative, reassign the load from dst to src.
+    * @param[io] src Source of work, for a positive ideal_transfer.
+    *
+    * @param[io] dst Destination of work, for a positive ideal_transfer.
     *
     * @param actual_transfer Amount of load transfered.  If positive,
     * transfer load from src to dst (if negative, from dst to src).
     *
     * @param next_available_index Index for guaranteeing new
     * Boxes are uniquely numbered.
+    *
+    * @param ideal_transfer Amount of load to reassign from src to
+    * dst.  If negative, reassign the load from dst to src.
     */
    bool
    shiftLoadsByBreaking(
@@ -566,6 +560,11 @@ private:
       hier::LocalId& next_available_index,
       const int ideal_transfer ) const;
 
+   /*!
+    * @brief Find a BoxInTransit in each of the source and destination
+    * containers that, when swapped, effects a transfer of the given
+    * amount of work from the source to the destination.
+    */
    bool
    findLoadSwapPair(
       TransitSet& src,
@@ -872,6 +871,7 @@ private:
 
    int d_n_root_cycles;
 
+   //! @brief Degree of the tree.  Two means binary tree.
    const int d_degree;
 
    /*

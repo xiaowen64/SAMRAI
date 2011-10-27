@@ -18,10 +18,18 @@
 namespace SAMRAI {
 namespace mesh {
 
+
+
+/*
+ *************************************************************************
+ *************************************************************************
+ */
 SAMRAI_INLINE_KEYWORD
-const std::string& TreeLoadBalancer::getObjectName() const
+TreeLoadBalancer::BoxInTransit::BoxInTransit(
+   const tbox::Dimension &dim) :
+   box(dim),
+   orig_box(dim)
 {
-   return d_object_name;
 }
 
 
@@ -31,7 +39,7 @@ const std::string& TreeLoadBalancer::getObjectName() const
  *************************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-BoxInTransit::BoxInTransit(
+TreeLoadBalancer::BoxInTransit::BoxInTransit(
    const hier::Box& origin):
    box(origin),
    orig_box(origin),
@@ -47,7 +55,7 @@ BoxInTransit::BoxInTransit(
  *************************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-BoxInTransit::BoxInTransit(
+TreeLoadBalancer::BoxInTransit::BoxInTransit(
    const int *&ptr,
    const tbox::Dimension &dim ):
    box(dim),
@@ -67,7 +75,7 @@ BoxInTransit::BoxInTransit(
  *************************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-BoxInTransit::BoxInTransit(
+TreeLoadBalancer::BoxInTransit::BoxInTransit(
    const BoxInTransit& other,
    const hier::Box& box,
    int rank,
@@ -89,7 +97,7 @@ BoxInTransit::BoxInTransit(
  *************************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-int BoxInTransit::getOwnerRank() const {
+int TreeLoadBalancer::BoxInTransit::getOwnerRank() const {
    return box.getOwnerRank();
 }
 
@@ -100,7 +108,7 @@ int BoxInTransit::getOwnerRank() const {
  *************************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-hier::LocalId BoxInTransit::getLocalId() const {
+hier::LocalId TreeLoadBalancer::BoxInTransit::getLocalId() const {
    return box.getLocalId();
 }
 
@@ -111,7 +119,7 @@ hier::LocalId BoxInTransit::getLocalId() const {
  *************************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-hier::Box& BoxInTransit::getBox() {
+hier::Box& TreeLoadBalancer::BoxInTransit::getBox() {
    return box;
 }
 
@@ -122,7 +130,7 @@ hier::Box& BoxInTransit::getBox() {
  *************************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-const hier::Box& BoxInTransit::getBox() const {
+const hier::Box& TreeLoadBalancer::BoxInTransit::getBox() const {
    return box;
 }
 
@@ -133,7 +141,7 @@ const hier::Box& BoxInTransit::getBox() const {
  *************************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-int BoxInTransit::commBufferSize() const
+int TreeLoadBalancer::BoxInTransit::commBufferSize() const
 {
    const tbox::Dimension& dim(box.getDim());
    return 2 * hier::Box::commBufferSize(dim) + 2 + static_cast<int>(proc_hist.size());
@@ -146,7 +154,7 @@ int BoxInTransit::commBufferSize() const
  *************************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-const BoxInTransit& BoxInTransit::operator = (
+const TreeLoadBalancer::BoxInTransit& TreeLoadBalancer::BoxInTransit::operator = (
    const BoxInTransit& other)
 {
    box = other.box;
@@ -163,7 +171,7 @@ const BoxInTransit& BoxInTransit::operator = (
  *************************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-void BoxInTransit::putToIntBuffer(
+void TreeLoadBalancer::BoxInTransit::putToIntBuffer(
    int* buffer,
    bool skip_last_owner) const
 {
@@ -187,7 +195,7 @@ void BoxInTransit::putToIntBuffer(
  *************************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-void BoxInTransit::getFromIntBuffer(
+void TreeLoadBalancer::BoxInTransit::getFromIntBuffer(
    const int* buffer)
 {
    const tbox::Dimension& dim(box.getDim());
@@ -210,7 +218,7 @@ void BoxInTransit::getFromIntBuffer(
  *************************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-void BoxInTransit::packForPreviousOwner(
+void TreeLoadBalancer::BoxInTransit::packForPreviousOwner(
    std::map<int,std::vector<int> > &outgoing_messages ) const
 {
    const int prev_owner = proc_hist.back();
@@ -227,9 +235,9 @@ void BoxInTransit::packForPreviousOwner(
  *************************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-bool BoxInTransitMoreLoad::operator () (
-   const BoxInTransit& a,
-   const BoxInTransit& b) const
+bool TreeLoadBalancer::BoxInTransitMoreLoad::operator () (
+   const TreeLoadBalancer::BoxInTransit& a,
+   const TreeLoadBalancer::BoxInTransit& b) const
 {
    if (a.getBox().size() != b.getBox().size()) {
       return a.load > b.load;
