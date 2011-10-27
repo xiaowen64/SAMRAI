@@ -573,6 +573,16 @@ private:
       const IntVector& cent_growth_to_nest_east,
       const IntVector& connector_width_limit) const;
 
+   /*
+    * @brief Perform checks on the arguments of bridge.
+    */
+   void
+   checkBridgeParameters(
+      const Connector& west_to_cent,
+      const Connector& cent_to_east,
+      const Connector& east_to_cent,
+      const Connector& cent_to_west) const;
+
    /*!
     * @brief Set up communication objects for use in privateBridge.
     */
@@ -586,6 +596,33 @@ private:
       const std::set<int>& outgoing_ranks) const;
 
    /*!
+    * @brief Relationship removal part of overlap algorithm, caching
+    * outgoing information in message buffers.
+    */
+   void
+   privateModify_removeAndCache(
+      std::map<int, std::vector<int> >& neighbor_removal_mesg,
+      Connector& overlap_connector,
+      Connector* overlap_connector_transpose,
+      const Connector& misc_connector) const;
+
+   /*!
+    *@brief Find all relationships in the Connector(s) to be computed and send
+    * outgoing information.
+    */
+   void
+   privateBridge_discoverAndSend(
+      std::map<int, std::vector<int> > neighbor_removal_mesg,
+      Connector& west_to_east,
+      Connector* east_to_west,
+      std::set<int>& incoming_ranks,
+      std::set<int>& outgoing_ranks,
+      tbox::AsyncCommPeer<int> all_comms[],
+      tbox::AsyncCommStage::MemberVec& completed,
+      NeighborSet& visible_west_nabrs,
+      NeighborSet& visible_east_nabrs) const;
+
+   /*!
     * @brief Find overlap and save in bridging connector or pack
     * into send message, used in privateBridge().
     */
@@ -597,8 +634,8 @@ private:
       std::vector<int>& send_mesg,
       const size_t remote_mapped_box_counter_index,
       Connector& bridging_connector,
-      const MultiblockBoxTree& head_rbbt,
-      NeighborSet& referenced_head_nabrs) const;
+      NeighborSet& referenced_head_nabrs,
+      const MultiblockBoxTree& head_rbbt) const;
 
    //! @brief Utility used in privateBridge()
    void
@@ -612,16 +649,30 @@ private:
    void
    sendDiscoveryToOneProcess(
       std::vector<int>& send_mesg,
+      const int idx_offset_to_ref,
       NeighborSet& referenced_east_nabrs,
       NeighborSet& referenced_west_nabrs,
-      tbox::AsyncCommPeer<int>& sendto_peer) const;
+      tbox::AsyncCommPeer<int>& outgoing_comm,
+      const tbox::Dimension& dim) const;
+
+   /*!
+    * @brief Receive messages and unpack info sent from other processes.
+    */
+   void
+   privateBridge_receiveAndUnpack(
+      Connector& west_to_east,
+      Connector* east_to_west,
+      std::set<int>& incoming_ranks,
+      tbox::AsyncCommPeer<int> all_comms[],
+      tbox::AsyncCommStage& comm_stage,
+      tbox::AsyncCommStage::MemberVec& completed) const;
 
    //! @brief Unpack message sent by sendDiscoverytoOneProcess().
    void
    unpackDiscoveryMessage(
       const tbox::AsyncCommPeer<int>* incoming_comm,
       Connector& west_to_east,
-      Connector& east_to_west) const;
+      Connector* east_to_west) const;
 
    /*!
     * @brief Discover and add overlaps from base and externally
@@ -704,8 +755,7 @@ private:
    bool d_sanity_check_method_preconditions;
    bool d_sanity_check_method_postconditions;
 
-   static tbox::StartupShutdownManager::Handler
-      s_initialize_finalize_handler;
+   static tbox::StartupShutdownManager::Handler s_initialize_finalize_handler;
 
 };
 

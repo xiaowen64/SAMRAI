@@ -397,6 +397,16 @@ private:
       BoxLevel* mutable_new,
       BoxLevel* mutable_old) const;
 
+   /*
+    * @brief Perform checks on the arguments of modify.
+    */
+   void
+   checkModifyParameters(
+      const Connector& anchor_to_mapped,
+      const Connector& mapped_to_anchor,
+      const Connector& old_to_new,
+      const Connector& new_to_old) const;
+
    /*!
     * @brief Set up communication objects for use in privateModify.
     */
@@ -417,7 +427,7 @@ private:
    privateModify_removeAndCache(
       std::map<int, std::vector<int> >& neighbor_removal_mesg,
       Connector& anchor_to_new,
-      Connector& new_to_anchor,
+      Connector* new_to_anchor,
       const Connector& old_to_new) const;
 
    /*!
@@ -428,14 +438,47 @@ private:
    privateModify_discoverAndSend(
       std::map<int, std::vector<int> >& neighbor_removal_mesg,
       Connector& anchor_to_new,
-      Connector& new_to_anchor,
+      Connector* new_to_anchor,
       std::set<int>& incoming_ranks,
       std::set<int>& outoing_ranks,
       tbox::AsyncCommPeer<int> all_comms[],
       tbox::AsyncCommStage::MemberVec& completed,
+      BoxSet& visible_new_nabrs,
+      BoxSet& visible_anchor_nabrs,
+      InvertedNeighborhoodSet& anchor_eto_old,
+      InvertedNeighborhoodSet& new_eto_old,
       const Connector& old_to_anchor,
       const Connector& anchor_to_old,
       const Connector& old_to_new) const;
+
+   /*!
+    * @brief Find overlap and save in mapping connector or pack
+    * into send message, used in privateModify().
+    */
+   void
+   findOverlapsForOneProcess(
+      const int owner_rank,
+      BoxSet& visible_base_nabrs,
+      BoxSet::iterator& base_ni,
+      std::vector<int>& send_mesg,
+      const size_t remote_box_counter_index,
+      Connector& mapped_connector,
+      BoxSet& referenced_head_nabrs,
+      const Connector& unmapped_connector,
+      const Connector& unmapped_connector_transpose,
+      const Connector& mapping_connector,
+      InvertedNeighborhoodSet& inverted_nbrhd,
+      const IntVector& refinement_ratio) const;
+
+   //! @brief Send discovery to one processor during privateModify().
+   void
+   sendDiscoveryToOneProcess(
+      std::vector<int>& send_mesg,
+      const int idx_offset_to_ref,
+      BoxSet& referenced_new_nabrs,
+      BoxSet& referenced_anchor_nabrs,
+      tbox::AsyncCommPeer<int>& outgoing_comm,
+      const tbox::Dimension& dim) const;
 
    /*!
     * @brief Receive messages and unpack info sent from other processes.
@@ -443,7 +486,7 @@ private:
    void
    privateModify_receiveAndUnpack(
       Connector& anchor_to_new,
-      Connector& new_to_anchor,
+      Connector* new_to_anchor,
       std::set<int>& incoming_ranks,
       tbox::AsyncCommPeer<int> all_comms[],
       tbox::AsyncCommStage& comm_stage,
@@ -454,17 +497,7 @@ private:
    unpackDiscoveryMessage(
       const tbox::AsyncCommPeer<int>* incoming_comm,
       Connector& anchor_to_new,
-      Connector& new_to_anchor) const;
-
-   /*
-    * @brief Performn checks on the arguments of modify.
-    */
-   void
-   checkModifyParameters(
-      const Connector& anchor_to_mapped,
-      const Connector& mapped_to_anchor,
-      const Connector& old_to_new,
-      const Connector& new_to_old) const;
+      Connector* new_to_anchor) const;
 
    /*!
     * @brief Set up things for the entire class.
