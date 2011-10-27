@@ -596,6 +596,15 @@ private:
       const int* received_data,
       int received_data_length ) const;
 
+   /*!
+    * @brief Unpack and route neighborhood sets in
+    * unbalanced--->balanced Connector.
+    *
+    * Neighborhood sets for local boxes are directly stored in the
+    * Connector.  Other neighborhood sets are packed into an outgoing
+    * message depending according to where they should be rerouted
+    * to get to their eventual owners.
+    */
    void
    unpackAndRouteNeighborhoodSets(
       std::map<int,std::vector<int> > &outgoing_messages,
@@ -632,12 +641,15 @@ private:
    /*!
     * @brief Break off a given load size from a given Box.
     *
-    * @param box Box to break.
-    * @param @ideal_load_to_break Ideal load to break.
-    * This is not guaranteed to be met.  The actual
-    * amount broken off may be slightly over or under.
-    * @param breakoff Boxes broken off (usually just one).
-    * @parem leftover Remainder of Box after breakoff is gone.
+    * @param[i] box Box to break.
+    *
+    * @param[i] ideal_load_to_break Ideal load to break.
+    *
+    * @param[o] breakoff Boxes broken off (usually just one).
+    *
+    * @param[o] leftover Remainder of Box after breakoff is gone.
+    *
+    * @param[o] brk_load The load broken off.
     */
    bool
    breakOffLoad(
@@ -766,28 +778,21 @@ private:
     * mapping between the unbalanced and balanced BoxLevels.
     */
    void
-   computeLoadBalancingMapWithinRankGroup(
-      hier::BoxLevel& balanced_box_level,
-      hier::Connector& unbalanced_to_balanced,
-      hier::Connector& balanced_to_unbalanced,
-      const hier::BoxLevel& unbalanced_box_level,
+   loadBalanceWithinRankGroup(
+      hier::BoxLevel& balance_box_level,
+      hier::Connector &balance_to_anchor,
+      hier::Connector &anchor_to_balance,
       const tbox::RankGroup& rank_group,
-      const int cycle_number,
-      const int number_of_cycles,
-      const double local_load,
-      const double global_sum_load ) const;
+      const double group_sum_load ) const;
 
    /*!
-    * @brief Compute BoxLevel conforming to max size constraint and
-    * the mapping to that BoxLevel.
-    *
-    * The mapping is entirely local (no transfering of work).
+    * @brief Constrain maximum box sizes in the given BoxLevel and
+    * update given Connectors to the changed BoxLevel.
     */
-   void
-   mapOversizedBoxes(
-      hier::BoxLevel& constrained,
-      hier::Connector& unconstrained_to_constrained,
-      const hier::BoxLevel& unconstrained ) const;
+   void constrainMaxBoxSizes(
+      hier::BoxLevel& box_level,
+      hier::Connector &anchor_to_level,
+      hier::Connector &level_to_anchor ) const;
 
    /*!
     * @brief Create the cycle-based RankGroups the local process
