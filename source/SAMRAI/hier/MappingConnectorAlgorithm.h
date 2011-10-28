@@ -443,8 +443,8 @@ private:
       std::set<int>& outoing_ranks,
       tbox::AsyncCommPeer<int> all_comms[],
       tbox::AsyncCommStage::MemberVec& completed,
-      BoxSet& visible_new_nabrs,
-      BoxSet& visible_anchor_nabrs,
+      BoxContainer& visible_new_nabrs,
+      BoxContainer& visible_anchor_nabrs,
       InvertedNeighborhoodSet& anchor_eto_old,
       InvertedNeighborhoodSet& new_eto_old,
       const Connector& old_to_anchor,
@@ -458,12 +458,12 @@ private:
    void
    findOverlapsForOneProcess(
       const int owner_rank,
-      BoxSet& visible_base_nabrs,
-      BoxSet::iterator& base_ni,
+      BoxContainer& visible_base_nabrs,
+      BoxContainer::Iterator& base_ni,
       std::vector<int>& send_mesg,
       const size_t remote_box_counter_index,
       Connector& mapped_connector,
-      BoxSet& referenced_head_nabrs,
+      BoxContainer& referenced_head_nabrs,
       const Connector& unmapped_connector,
       const Connector& unmapped_connector_transpose,
       const Connector& mapping_connector,
@@ -475,8 +475,8 @@ private:
    sendDiscoveryToOneProcess(
       std::vector<int>& send_mesg,
       const int idx_offset_to_ref,
-      BoxSet& referenced_new_nabrs,
-      BoxSet& referenced_anchor_nabrs,
+      BoxContainer& referenced_new_nabrs,
+      BoxContainer& referenced_anchor_nabrs,
       tbox::AsyncCommPeer<int>& outgoing_comm,
       const tbox::Dimension& dim) const;
 

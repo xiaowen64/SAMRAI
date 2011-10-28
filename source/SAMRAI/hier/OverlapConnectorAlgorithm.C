@@ -11,6 +11,7 @@
 #define included_hier_OverlapConnectorAlgorithm_C
 
 #include "SAMRAI/hier/OverlapConnectorAlgorithm.h"
+#include "SAMRAI/hier/BoxContainerIterator.h"
 #include "SAMRAI/hier/BoxContainerUtils.h"
 #include "SAMRAI/hier/MultiblockBoxTree.h"
 #include "SAMRAI/hier/PeriodicShiftCatalog.h"
@@ -400,7 +401,7 @@ void OverlapConnectorAlgorithm::findOverlaps_rbbt(
     * Use BoxTree to find local base Boxes intersecting head Boxes.
     */
    NeighborSet nabrs_for_box;
-   const BoxSet& base_mapped_boxes = base.getBoxes();
+   const BoxContainer& base_mapped_boxes = base.getBoxes();
    for (RealBoxConstIterator ni(base_mapped_boxes); ni.isValid(); ++ni) {
 
       const Box& base_mapped_box = *ni;
@@ -423,7 +424,7 @@ void OverlapConnectorAlgorithm::findOverlaps_rbbt(
       if (discard_self_overlap) {
          nabrs_for_box.erase(base_mapped_box);
       }
-      if (!nabrs_for_box.empty()) {
+      if (!nabrs_for_box.isEmpty()) {
          connector.insertNeighbors(nabrs_for_box, base_mapped_box.getId());
          nabrs_for_box.clear();
       }
@@ -781,12 +782,13 @@ void OverlapConnectorAlgorithm::privateBridge(
    incoming_ranks.erase(rank);
 
    /*
-    * Create BoxSets which will later be used to initialize the search trees
+    * Create BoxContainers which will later be used to initialize the search trees
     * for visible east and west neighbors:
     * visible_west_nabrs and visible_east_nabrs.
     */
    t_bridge_discover_get_neighbors->start();
-   NeighborSet visible_west_nabrs, visible_east_nabrs;
+   bool ordered = true;
+   NeighborSet visible_west_nabrs(ordered), visible_east_nabrs(ordered);
    cent_to_west.getLocalNeighbors(visible_west_nabrs);
    cent_to_east.getLocalNeighbors(visible_east_nabrs);
    t_bridge_discover_get_neighbors->stop();
@@ -1068,12 +1070,13 @@ void OverlapConnectorAlgorithm::privateBridge(
    incoming_ranks.erase(rank);
 
    /*
-    * Create BoxSets which will later be used to initialize the search trees
+    * Create BoxContainers which will later be used to initialize the search trees
     * for visible east and west neighbors:
     * visible_west_nabrs and visible_east_nabrs.
     */
    t_bridge_discover_get_neighbors->start();
-   NeighborSet visible_west_nabrs, visible_east_nabrs;
+   bool ordered = true;
+   NeighborSet visible_west_nabrs(ordered), visible_east_nabrs(ordered);
    cent_to_west.getLocalNeighbors(visible_west_nabrs);
    cent_to_east.getLocalNeighbors(visible_east_nabrs);
    t_bridge_discover_get_neighbors->stop();
@@ -1362,7 +1365,7 @@ void OverlapConnectorAlgorithm::privateBridge_discoverAndSend(
    NeighborSet& visible_west_nabrs,
    NeighborSet& visible_east_nabrs) const
 {
-   if (!visible_west_nabrs.empty() || !visible_east_nabrs.empty()) {
+   if (!visible_west_nabrs.isEmpty() || !visible_east_nabrs.isEmpty()) {
 
       /*
        * Discover overlaps.  Overlaps are either locally stored or
@@ -1400,8 +1403,8 @@ void OverlapConnectorAlgorithm::privateBridge_discoverAndSend(
        * interested in the east-->west connector, then east_ni will
        * be unused.
        */
-      NeighborSet::iterator west_ni;
-      NeighborSet::iterator east_ni;
+      NeighborSet::Iterator west_ni(visible_west_nabrs);
+      NeighborSet::Iterator east_ni(visible_east_nabrs);
       /*
        * Local process can find some neighbors for the (local and
        * remote) Boxes in visible_west_nabrs and
@@ -1421,9 +1424,9 @@ void OverlapConnectorAlgorithm::privateBridge_discoverAndSend(
        * the beginning.)
        */
       const Box start_loop_here(dim, LocalId::getZero(), rank + 1);
-      west_ni = visible_west_nabrs.lower_bound(start_loop_here);
+      west_ni = visible_west_nabrs.lowerBound(start_loop_here);
       if (compute_reverse) {
-         east_ni = visible_east_nabrs.lower_bound(start_loop_here);
+         east_ni = visible_east_nabrs.lowerBound(start_loop_here);
       }
 
       if (west_ni == visible_west_nabrs.end() &&
@@ -1528,8 +1531,8 @@ void OverlapConnectorAlgorithm::privateBridge_discoverAndSend(
          send_mesg.insert(send_mesg.end(), 3, 0);
 
          // Mapped_boxes referenced in the message, used when adding ref section.
-         BoxSet referenced_west_nabrs;
-         BoxSet referenced_east_nabrs;
+         BoxContainer referenced_west_nabrs;
+         BoxContainer referenced_east_nabrs;
 
          t_bridge_discover_find_overlaps->start();
 
@@ -1582,9 +1585,9 @@ void OverlapConnectorAlgorithm::privateBridge_discoverAndSend(
              */
             while (all_comms[send_comm_idx].getPeerRank() != curr_owner) {
                ++send_comm_idx;
-               if (send_comm_idx == static_cast<int>(incoming_ranks.size() +
+               if (send_comm_idx == static_cast<size_t>(incoming_ranks.size() +
                                                      outgoing_ranks.size())) {
-                  send_comm_idx -= static_cast<int>(outgoing_ranks.size());
+                  send_comm_idx -= static_cast<size_t>(outgoing_ranks.size());
                }
             }
             tbox::AsyncCommPeer<int>& outgoing_comm = all_comms[send_comm_idx];
@@ -1656,7 +1659,7 @@ void OverlapConnectorAlgorithm::privateBridge_discoverAndSend(
 void OverlapConnectorAlgorithm::findOverlapsForOneProcess(
    const int owner_rank,
    NeighborSet& visible_base_nabrs,
-   NeighborSet::iterator& base_ni,
+   NeighborSet::Iterator& base_ni,
    std::vector<int>& send_mesg,
    const size_t remote_mapped_box_counter_index,
    Connector& bridging_connector,
@@ -1810,13 +1813,13 @@ void OverlapConnectorAlgorithm::sendDiscoveryToOneProcess(
    int* ptr = &send_mesg[offset];
    *(ptr++) = static_cast<int>(referenced_west_nabrs.size());
    *(ptr++) = static_cast<int>(referenced_east_nabrs.size());
-   for (BoxSet::const_iterator ni = referenced_west_nabrs.begin();
+   for (BoxContainer::ConstIterator ni = referenced_west_nabrs.begin();
         ni != referenced_west_nabrs.end(); ++ni) {
       const Box& mapped_box = *ni;
       mapped_box.putToIntBuffer(ptr);
       ptr += Box::commBufferSize(dim);
    }
-   for (BoxSet::const_iterator ni = referenced_east_nabrs.begin();
+   for (BoxContainer::ConstIterator ni = referenced_east_nabrs.begin();
         ni != referenced_east_nabrs.end(); ++ni) {
       const Box& mapped_box = *ni;
       mapped_box.putToIntBuffer(ptr);
@@ -1968,8 +1971,9 @@ void OverlapConnectorAlgorithm::unpackDiscoveryMessage(
    }
 
    // Get the referenced neighbor Boxes.
-   NeighborSet referenced_west_nabrs;
-   NeighborSet referenced_east_nabrs;
+   bool ordered = true;
+   NeighborSet referenced_west_nabrs(ordered);
+   NeighborSet referenced_east_nabrs(ordered);
    const int offset = *(ptr++);
    const int n_west_boxes = *(ptr++);
    const int n_east_boxes = *(ptr++);
@@ -2023,7 +2027,7 @@ void OverlapConnectorAlgorithm::unpackDiscoveryMessage(
       for (int j = 0; j < n_east_nabrs_found; ++j) {
          tmp_box.getId().getFromIntBuffer(ptr);
          ptr += BoxId::commBufferSize();
-         NeighborSet::const_iterator na = referenced_east_nabrs.find(tmp_box);
+         NeighborSet::ConstIterator na = referenced_east_nabrs.find(tmp_box);
          TBOX_ASSERT(na != referenced_east_nabrs.end());
          const Box& east_nabr = *na;
          west_to_east.insertLocalNeighbor(east_nabr, west_box_id);
@@ -2038,7 +2042,7 @@ void OverlapConnectorAlgorithm::unpackDiscoveryMessage(
       for (int j = 0; j < n_west_nabrs_found; ++j) {
          tmp_box.getId().getFromIntBuffer(ptr);
          ptr += BoxId::commBufferSize();
-         NeighborSet::const_iterator na = referenced_west_nabrs.find(tmp_box);
+         NeighborSet::ConstIterator na = referenced_west_nabrs.find(tmp_box);
          TBOX_ASSERT(na != referenced_west_nabrs.end());
          const Box& west_nabr = *na;
          east_to_west->insertLocalNeighbor(west_nabr, east_box_id);
@@ -2253,7 +2257,6 @@ size_t OverlapConnectorAlgorithm::checkOverlapCorrectness(
 
    }
 #endif
-
    TBOX_ASSERT(!connector.hasPeriodicLocalNeighborhoodRoots());
 
    Connector missing, extra;

@@ -15,7 +15,6 @@
 
 #include "SAMRAI/hier/BoundaryBox.h"
 #include "SAMRAI/hier/GridGeometry.h"
-#include "SAMRAI/hier/BoxList.h"
 #include "SAMRAI/hier/IntVector.h"
 #include "SAMRAI/hier/Patch.h"
 #include "SAMRAI/hier/PatchLevel.h"
@@ -140,7 +139,7 @@ public:
       const std::string& object_name,
       const double* x_lo,
       const double* x_up,
-      const hier::BoxList& domain,
+      const hier::BoxContainer& domain,
       bool register_for_restart = true);
 
    /**
@@ -191,7 +190,7 @@ public:
    setGeometryData(
       const double* x_lo,
       const double* x_up,
-      const hier::BoxList& domain);
+      const hier::BoxContainer& domain);
 
    /**
     * Return const pointer to dx array for reference level in hierarchy.

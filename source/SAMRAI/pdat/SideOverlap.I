@@ -14,8 +14,8 @@ namespace SAMRAI {
 namespace pdat {
 
 SAMRAI_INLINE_KEYWORD
-const hier::BoxList&
-SideOverlap::getDestinationBoxList(
+const hier::BoxContainer&
+SideOverlap::getDestinationBoxContainer(
    const int axis) const
 {
    TBOX_ASSERT((axis >= 0) && (axis < d_dst_boxes.getSize()));

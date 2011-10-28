@@ -14,7 +14,7 @@
 #include "SAMRAI/SAMRAI_config.h"
 
 #include "SAMRAI/hier/Box.h"
-#include "SAMRAI/hier/BoxList.h"
+#include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/hier/BoxOverlap.h"
 #include "SAMRAI/hier/IntVector.h"
 #include "SAMRAI/tbox/Pointer.h"
@@ -44,7 +44,7 @@ public:
     * in the generation of communication schedules.
     */
    explicit CellOverlap(
-      const hier::BoxList& boxes,
+      const hier::BoxContainer& boxes,
       const hier::Transformation& transformation);
 
    /**
@@ -67,8 +67,8 @@ public:
     * space and must be shifted by -(getSourceOffset()) to lie in the source
     * index space.
     */
-   virtual const hier::BoxList&
-   getDestinationBoxList() const;
+   virtual const hier::BoxContainer&
+   getDestinationBoxContainer() const;
 
    /**
     * Return the offset between the destination and source index spaces.
@@ -94,7 +94,7 @@ public:
 private:
    bool d_is_overlap_empty;
    hier::Transformation d_transformation;
-   hier::BoxList d_dst_boxes;
+   hier::BoxContainer d_dst_boxes;
    int d_count;
 
 };

@@ -93,7 +93,7 @@ public:
       const bool overwrite_interior,
       const hier::Transformation& transformation,
       const bool retry,
-      const hier::BoxList& dst_restrict_boxes = hier::BoxList()) const;
+      const hier::BoxContainer& dst_restrict_boxes = hier::BoxContainer()) const;
 
    /*!
     * @brief Compute the cell-centered destination boxes that represent
@@ -102,13 +102,13 @@ public:
     */
    void
    computeDestinationBoxes(
-      hier::BoxList& dst_boxes,
+      hier::BoxContainer& dst_boxes,
       const CellGeometry& src_geometry,
       const hier::Box& src_mask,
       const hier::Box& fill_box,
       const bool overwrite_interior,
       const hier::Transformation& transformation,
-      const hier::BoxList& dst_restrict_boxes) const;
+      const hier::BoxContainer& dst_restrict_boxes) const;
 
    /*!
     * @brief Set up a CellOverlap object that consists simply of the given
@@ -116,7 +116,7 @@ public:
     */
    virtual tbox::Pointer<hier::BoxOverlap>
    setUpOverlap(
-      const hier::BoxList& boxes,
+      const hier::BoxContainer& boxes,
       const hier::Transformation& transformation) const;
 
    /*!
@@ -147,7 +147,7 @@ private:
       const hier::Box& fill_box,
       const bool overwrite_interior,
       const hier::Transformation& transformation,
-      const hier::BoxList& dst_restrict_boxes);
+      const hier::BoxContainer& dst_restrict_boxes);
 
    static void
    rotateAboutAxis(

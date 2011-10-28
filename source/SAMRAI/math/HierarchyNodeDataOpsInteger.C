@@ -12,6 +12,7 @@
 #define included_math_HierarchyNodeDataOpsInteger_C
 
 #include "SAMRAI/math/HierarchyNodeDataOpsInteger.h"
+#include "SAMRAI/hier/BoxContainerIterator.h"
 #include "SAMRAI/hier/BoxUtilities.h"
 #include "SAMRAI/hier/PatchDescriptor.h"
 #include "SAMRAI/pdat/NodeDataFactory.h"
@@ -87,11 +88,11 @@ void HierarchyNodeDataOpsInteger::resetLevels(
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
       tbox::Pointer<hier::PatchLevel> level =
          d_hierarchy->getPatchLevel(ln);
-      hier::BoxList node_boxes = level->getBoxes();
-      for (hier::BoxList::Iterator i(node_boxes); i; i++) {
+      hier::BoxContainer node_boxes = level->getBoxes();
+      for (hier::BoxContainer::Iterator i(node_boxes); i != node_boxes.end(); ++i) {
          *i = pdat::NodeGeometry::toNodeBox(*i);
       }
-      hier::BoxUtilities::makeNonOverlappingBoxLists(
+      hier::BoxUtilities::makeNonOverlappingBoxContainers(
          d_nonoverlapping_node_boxes[ln],
          node_boxes);
    }
@@ -141,9 +142,9 @@ int HierarchyNodeDataOpsInteger::numberOfEntries(
          TBOX_ASSERT(npatches == d_nonoverlapping_node_boxes[ln].getSize());
 #endif
          for (int il = 0; il < npatches; il++) {
-            tbox::List<hier::Box>::Iterator lb =
-               ((d_nonoverlapping_node_boxes[ln])[il]).listStart();
-            for ( ; lb; lb++) {
+            hier::BoxContainer::ConstIterator lb =
+               ((d_nonoverlapping_node_boxes[ln])[il]).begin();
+            for ( ; lb != ((d_nonoverlapping_node_boxes[ln])[il]).end(); ++lb) {
                entries += lb().size();
             }
          }

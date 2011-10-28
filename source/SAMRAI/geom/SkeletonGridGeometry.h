@@ -29,7 +29,7 @@ namespace geom {
  * from the hier::GridGeometry base class.
  *
  * An object of this class requires parameters to be read from input to create
- * the hier::BoxList that stores the index space in the hier::GridGeometry
+ * the hier::BoxContainer that stores the index space in the hier::GridGeometry
  * superclass.  Also, data must be written to and read from files for restart.
  * The input and restart data are summarized as follows:
  *
@@ -107,7 +107,7 @@ public:
     */
    explicit SkeletonGridGeometry(
       const std::string& object_name,
-      const hier::BoxList& level_domain,
+      const hier::BoxContainer& level_domain,
       bool register_for_restart = true);
 
    /**

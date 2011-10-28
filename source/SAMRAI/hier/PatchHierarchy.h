@@ -14,6 +14,7 @@
 #include "SAMRAI/SAMRAI_config.h"
 
 #include "SAMRAI/tbox/Array.h"
+#include "SAMRAI/hier/BoxContainerConstIterator.h"
 #include "SAMRAI/hier/ComponentSelector.h"
 #include "SAMRAI/hier/GridGeometry.h"
 #include "SAMRAI/hier/BoxLevel.h"

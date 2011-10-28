@@ -14,6 +14,7 @@
 #include "SAMRAI/pdat/IndexData.h"
 
 #include "SAMRAI/hier/Box.h"
+#include "SAMRAI/hier/BoxContainerConstIterator.h"
 #include "SAMRAI/hier/BoxOverlap.h"
 #include "SAMRAI/tbox/Utilities.h"
 #include "SAMRAI/tbox/IOStream.h"
@@ -157,10 +158,10 @@ void IndexData<TYPE, BOX_GEOMETRY>::copy(
    TBOX_ASSERT(t_overlap != NULL);
 
    const hier::IntVector& src_offset(t_overlap->getSourceOffset());
-   const hier::BoxList& box_list = t_overlap->getDestinationBoxList();
+   const hier::BoxContainer& box_list = t_overlap->getDestinationBoxContainer();
    const hier::Box& src_ghost_box = t_src->getGhostBox();
 
-   for (hier::BoxList::Iterator b(box_list); b; b++) {
+   for (hier::BoxContainer::ConstIterator b(box_list); b != box_list.end(); b++) {
       const hier::Box& dst_box = b();
       const hier::Box src_box(hier::Box::shift(b(), -src_offset));
       removeInsideBox(dst_box);
@@ -215,8 +216,8 @@ int IndexData<TYPE, BOX_GEOMETRY>::getDataStreamSize(
 
    size_t bytes = 0;
    int num_items = 0;
-   const hier::BoxList& boxes = t_overlap->getDestinationBoxList();
-   for (hier::BoxList::Iterator b(boxes); b; b++) {
+   const hier::BoxContainer& boxes = t_overlap->getDestinationBoxContainer();
+   for (hier::BoxContainer::ConstIterator b(boxes); b != boxes.end(); ++b) {
       hier::Box box = hier::PatchData::getBox()
          * hier::Box::shift(b(), -(t_overlap->getSourceOffset()));
       for (hier::Box::Iterator index(box); index; index++) {
@@ -250,9 +251,9 @@ void IndexData<TYPE, BOX_GEOMETRY>::packStream(
       dynamic_cast<const typename BOX_GEOMETRY::Overlap *>(&overlap);
    TBOX_ASSERT(t_overlap != NULL);
 
-   const hier::BoxList& boxes = t_overlap->getDestinationBoxList();
+   const hier::BoxContainer& boxes = t_overlap->getDestinationBoxContainer();
    int num_items = 0;
-   for (hier::BoxList::Iterator b(boxes); b; b++) {
+   for (hier::BoxContainer::ConstIterator b(boxes); b != boxes.end(); ++b) {
       hier::Box box = hier::PatchData::getBox()
          * hier::Box::shift(b(), -(t_overlap->getSourceOffset()));
       for (typename IndexData<TYPE, BOX_GEOMETRY>::Iterator s(*this); s; s++) {
@@ -264,7 +265,7 @@ void IndexData<TYPE, BOX_GEOMETRY>::packStream(
 
    stream << num_items;
 
-   for (hier::BoxList::Iterator c(boxes); c; c++) {
+   for (hier::BoxContainer::ConstIterator c(boxes); c != boxes.end(); ++c) {
       hier::Box box = hier::PatchData::getBox()
          * hier::Box::shift(c(), -(t_overlap->getSourceOffset()));
       for (typename IndexData<TYPE, BOX_GEOMETRY>::Iterator t(*this); t; t++) {
@@ -296,8 +297,8 @@ void IndexData<TYPE, BOX_GEOMETRY>::unpackStream(
    int num_items;
    stream >> num_items;
 
-   const hier::BoxList& boxes = t_overlap->getDestinationBoxList();
-   for (hier::BoxList::Iterator b(boxes); b; b++) {
+   const hier::BoxContainer& boxes = t_overlap->getDestinationBoxContainer();
+   for (hier::BoxContainer::ConstIterator b(boxes); b != boxes.end(); ++b) {
       removeInsideBox(b());
    }
 

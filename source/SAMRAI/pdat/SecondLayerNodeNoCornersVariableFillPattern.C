@@ -13,6 +13,7 @@
 
 #include "SAMRAI/pdat/SecondLayerNodeNoCornersVariableFillPattern.h"
 
+#include "SAMRAI/hier/BoxContainerIterator.h"
 #include "SAMRAI/pdat/NodeGeometry.h"
 #include "SAMRAI/tbox/Utilities.h"
 
@@ -71,7 +72,7 @@ SecondLayerNodeNoCornersVariableFillPattern::calculateOverlap(
    TBOX_DIM_ASSERT_CHECK_ARGS2(dst_patch_box, src_mask);
    NULL_USE(overwrite_interior);
 
-   hier::BoxList dst_boxes;
+   hier::BoxContainer dst_boxes;
 
    hier::Box dst_node_box(pdat::NodeGeometry::toNodeBox(dst_patch_box));
    hier::Box src_node_mask(pdat::NodeGeometry::toNodeBox(src_mask));
@@ -80,7 +81,7 @@ SecondLayerNodeNoCornersVariableFillPattern::calculateOverlap(
       ? true : false;
 
    if (!corner_overlap) {
-      hier::BoxList stencil_boxes;
+      hier::BoxContainer stencil_boxes;
       computeStencilBoxes(stencil_boxes, dst_patch_box);
 
       const NodeGeometry* t_dst =
@@ -140,7 +141,7 @@ const
  */
 
 void SecondLayerNodeNoCornersVariableFillPattern::computeStencilBoxes(
-   hier::BoxList& stencil_boxes,
+   hier::BoxContainer& stencil_boxes,
    const hier::Box& dst_box) const
 {
    TBOX_ASSERT(stencil_boxes.size() == 0);
@@ -152,12 +153,12 @@ void SecondLayerNodeNoCornersVariableFillPattern::computeStencilBoxes(
       hier::Box low_box(dst_node_box);
       low_box.lower(i) = dst_node_box.lower(i) - 1;
       low_box.upper(i) = low_box.lower(i);
-      stencil_boxes.addItem(low_box);
+      stencil_boxes.pushFront(low_box);
 
       hier::Box high_box(dst_node_box);
       high_box.lower(i) = dst_node_box.upper(i) + 1;
       high_box.upper(i) = high_box.lower(i);
-      stencil_boxes.addItem(high_box);
+      stencil_boxes.pushFront(high_box);
    }
 }
 
@@ -172,7 +173,7 @@ void SecondLayerNodeNoCornersVariableFillPattern::computeStencilBoxes(
 
 tbox::Pointer<hier::BoxOverlap>
 SecondLayerNodeNoCornersVariableFillPattern::computeFillBoxesOverlap(
-   const hier::BoxList& fill_boxes,
+   const hier::BoxContainer& fill_boxes,
    const hier::Box& patch_box,
    const hier::Box& data_box,
    const hier::PatchDataFactory& pdf) const
@@ -180,17 +181,17 @@ SecondLayerNodeNoCornersVariableFillPattern::computeFillBoxesOverlap(
    NULL_USE(pdf);
    const tbox::Dimension& dim = patch_box.getDim();
 
-   hier::BoxList stencil_boxes;
+   hier::BoxContainer stencil_boxes;
    computeStencilBoxes(stencil_boxes, patch_box);
 
-   hier::BoxList overlap_boxes(fill_boxes);
+   hier::BoxContainer overlap_boxes(fill_boxes);
 
    /*
     * This is the equivalent of converting every box in overlap_boxes
     * to a node centering, which must be done before intersecting with
     * stencil_boxes, which is node-centered.
     */
-   for (hier::BoxList::Iterator b(overlap_boxes); b; b++) {
+   for (hier::BoxContainer::Iterator b(overlap_boxes); b != overlap_boxes.end(); ++b) {
       b().growUpper(hier::IntVector::getOne(dim));
    }
 
@@ -198,7 +199,7 @@ SecondLayerNodeNoCornersVariableFillPattern::computeFillBoxesOverlap(
 
    overlap_boxes.intersectBoxes(stencil_boxes);
 
-   overlap_boxes.coalesceBoxes();
+   overlap_boxes.coalesce();
 
    hier::BoxOverlap* overlap =
       new pdat::NodeOverlap(

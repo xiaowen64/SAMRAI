@@ -66,9 +66,8 @@ PatchLevel::PatchLevel(
    d_dim(dim),
    d_mapped_box_level(NULL),
    d_has_globalized_data(false),
-   d_boxes(dim),
    d_ratio_to_level_zero(hier::IntVector::getZero(dim)),
-   d_physical_domain(0, BoxList(dim)),
+   d_physical_domain(0),
    d_ratio_to_coarser_level(hier::IntVector::getZero(dim))
 {
    t_level_constructor->start();
@@ -106,10 +105,8 @@ PatchLevel::PatchLevel(
    d_dim(grid_geometry->getDim()),
    d_mapped_box_level(new BoxLevel(mapped_box_level)),
    d_has_globalized_data(false),
-   d_boxes(grid_geometry->getDim()),
    d_ratio_to_level_zero(d_mapped_box_level->getRefinementRatio()),
-   d_physical_domain(grid_geometry->getNumberBlocks(),
-                     BoxList(grid_geometry->getDim())),
+   d_physical_domain(grid_geometry->getNumberBlocks()),
    d_ratio_to_coarser_level(grid_geometry->getDim(), 0)
 
 {
@@ -160,7 +157,7 @@ PatchLevel::PatchLevel(
       d_factory = new hier::PatchFactory();
    }
 
-   const BoxSet& mapped_boxes = d_mapped_box_level->getBoxes();
+   const BoxContainer& mapped_boxes = d_mapped_box_level->getBoxes();
    for (RealBoxConstIterator ni(mapped_boxes); ni.isValid(); ++ni) {
       const Box& mapped_box = *ni;
       const BoxId& ip = mapped_box.getId();
@@ -224,11 +221,9 @@ PatchLevel::PatchLevel(
    bool defer_boundary_box_creation):
    d_dim(grid_geometry->getDim()),
    d_has_globalized_data(false),
-   d_boxes(grid_geometry->getDim()),
    d_ratio_to_level_zero(hier::IntVector(grid_geometry->getDim(),
                                          tbox::MathUtilities<int>::getMax())),
-   d_physical_domain(grid_geometry->getNumberBlocks(),
-                     BoxList(grid_geometry->getDim())),
+   d_physical_domain(grid_geometry->getNumberBlocks()),
    d_ratio_to_coarser_level(hier::IntVector(grid_geometry->getDim(),
                                             tbox::MathUtilities<int>::getMax()))
 {
@@ -515,7 +510,7 @@ void PatchLevel::setRefinedPatchLevel(
    d_local_number_patches = coarse_level->getLocalNumberOfPatches();
    d_number_blocks = coarse_level->d_number_blocks;
 
-   d_physical_domain.resizeArray(d_number_blocks, BoxList(d_dim));
+   d_physical_domain.resizeArray(d_number_blocks);
    for (int nb = 0; nb < d_number_blocks; nb++) {
       d_physical_domain[nb] = coarse_level->d_physical_domain[nb];
       d_physical_domain[nb].refine(refine_ratio);
@@ -527,11 +522,7 @@ void PatchLevel::setRefinedPatchLevel(
     * domain information.
     */
 
-   // d_patch_touches_regular_boundary.resizeArray(d_global_number_patches);
-   // d_patch_touches_periodic_boundary.resizeArray(d_global_number_patches);
-   // d_shifts.resizeArray(d_global_number_patches);
-
-   const BoxSet& mapped_boxes = d_mapped_box_level->getBoxes();
+   const BoxContainer& mapped_boxes = d_mapped_box_level->getBoxes();
    for (RealBoxConstIterator ni(mapped_boxes); ni.isValid(); ++ni) {
       const Box& mapped_box = *ni;
       const BoxId& mapped_box_id = mapped_box.getId();
@@ -702,7 +693,7 @@ void PatchLevel::setCoarsenedPatchLevel(
    d_local_number_patches = fine_level->getNumberOfPatches();
    d_number_blocks = fine_level->d_number_blocks;
 
-   d_physical_domain.resizeArray(d_number_blocks, BoxList(d_dim));
+   d_physical_domain.resizeArray(d_number_blocks);
    for (int nb = 0; nb < d_number_blocks; nb++) {
       d_physical_domain[nb] = fine_level->d_physical_domain[nb];
       d_physical_domain[nb].coarsen(coarsen_ratio);
@@ -714,11 +705,7 @@ void PatchLevel::setCoarsenedPatchLevel(
     * domain information.
     */
 
-   // d_patch_touches_regular_boundary.resizeArray(d_global_number_patches);
-   // d_patch_touches_periodic_boundary.resizeArray(d_global_number_patches);
-   // d_shifts.resizeArray(d_global_number_patches);
-
-   const BoxSet& mapped_boxes = d_mapped_box_level->getBoxes();
+   const BoxContainer& mapped_boxes = d_mapped_box_level->getBoxes();
    for (RealBoxConstIterator ni(mapped_boxes); ni.isValid(); ++ni) {
       const Box& mapped_box = *ni;
       const BoxId& mapped_box_id = mapped_box.getId();
@@ -832,7 +819,7 @@ void PatchLevel::getFromDatabase(
 
    d_number_blocks = database->getInteger("d_number_blocks");
 
-   d_physical_domain.resizeArray(d_number_blocks, BoxList(d_dim));
+   d_physical_domain.resizeArray(d_number_blocks);
    for (int nb = 0; nb < d_number_blocks; nb++) {
       std::string domain_name = "d_physical_domain_"
          + tbox::Utilities::blockToString(nb);
@@ -860,7 +847,7 @@ void PatchLevel::getFromDatabase(
 
    d_patches.clear();
 
-   const BoxSet& mapped_boxes = d_mapped_box_level->getBoxes();
+   const BoxContainer& mapped_boxes = d_mapped_box_level->getBoxes();
    tbox::Pointer<tbox::Database> patch_database;
    for (RealBoxConstIterator ni(mapped_boxes); ni.isValid(); ++ni) {
       const Box& mapped_box = *ni;
@@ -1013,7 +1000,7 @@ void PatchLevel::initializeGlobalizedBoxLevel() const
          d_mapped_box_level->getGlobalizedVersion());
 
       const int nboxes = globalized_mapped_box_level.getGlobalNumberOfBoxes();
-      d_boxes.clearItems();
+      d_boxes.clear();
       d_mapping.setMappingSize(nboxes);
 
       /*
@@ -1026,13 +1013,13 @@ void PatchLevel::initializeGlobalizedBoxLevel() const
        * global sequential index.
        */
       int count = 0;
-      const BoxSet& mapped_boxes =
+      const BoxContainer& mapped_boxes =
          globalized_mapped_box_level.getGlobalBoxes();
       for (hier::RealBoxConstIterator ni(mapped_boxes);
            ni.isValid();
            ++ni) {
          d_mapping.setProcessorAssignment(count, ni->getOwnerRank());
-         d_boxes.appendItem(*ni);
+         d_boxes.pushBack(*ni);
          ++count;
       }
 

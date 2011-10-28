@@ -36,7 +36,7 @@ using namespace std;
 #include "SAMRAI/tbox/RestartManager.h"
 #include "SAMRAI/hier/PatchGeometry.h"
 #include "SAMRAI/hier/BoundaryBox.h"
-#include "SAMRAI/hier/BoxList.h"
+#include "SAMRAI/hier/BoxContainerIterator.h"
 #include "SAMRAI/hier/VariableDatabase.h"
 #include "SAMRAI/pdat/CellIndex.h"
 #include "SAMRAI/pdat/CellIterator.h"
@@ -2376,11 +2376,12 @@ void MblkLinAdv::tagGradientDetectorCells(
           */
          int block_number = patch.getBox().getBlockId().getBlockValue();
          int level_number = patch.getPatchLevelNumber();
-         hier::BoxList refine_boxes(d_dim);
+         hier::BoxContainer refine_boxes;
          if (d_mblk_geometry->getRefineBoxes(refine_boxes,
                 block_number,
                 level_number)) {
-            for (hier::BoxList::Iterator b(refine_boxes); b; b++) {
+            for (hier::BoxContainer::Iterator b(refine_boxes); b != refine_boxes.end();
+                 ++b) {
                hier::Box intersect = pbox * b();
                if (!intersect.empty()) {
                   temp_tags->fill(TRUE, intersect);
@@ -2450,10 +2451,10 @@ void MblkLinAdv::setMappedGridOnPatch(
    const tbox::Pointer<hier::PatchGeometry>
    patch_geom = patch.getPatchGeometry();
    hier::IntVector ratio = patch_geom->getRatio();
-   hier::BoxList domain_boxes(d_dim);
+   hier::BoxContainer domain_boxes;
    d_grid_geometry->computePhysicalDomain(domain_boxes, ratio,
       hier::BlockId(block_number));
-   int num_domain_boxes = domain_boxes.getNumberOfBoxes();
+   int num_domain_boxes = domain_boxes.size();
 
    if (num_domain_boxes > 1) {
       TBOX_ERROR("Sorry, cannot handle non-rectangular domains..." << endl);
@@ -2463,7 +2464,7 @@ void MblkLinAdv::setMappedGridOnPatch(
       mapVariableAndContextToIndex(d_xyz, getDataContext());
 
    d_mblk_geometry->buildGridOnPatch(patch,
-      domain_boxes.getFirstItem(),
+      domain_boxes.front(),
       xyz_id,
       level_number,
       block_number);

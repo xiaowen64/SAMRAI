@@ -37,7 +37,7 @@ using namespace std;
 #include "SAMRAI/tbox/PIO.h"
 #include "SAMRAI/tbox/RestartManager.h"
 #include "SAMRAI/tbox/Utilities.h"
-#include "SAMRAI/hier/BoxList.h"
+#include "SAMRAI/hier/BoxContainerIterator.h"
 #include "SAMRAI/hier/VariableDatabase.h"
 #include "SAMRAI/pdat/CellDoubleLinearTimeInterpolateOp.h"
 #include "SAMRAI/pdat/NodeData.h"
@@ -1624,7 +1624,7 @@ void MblkEuler::setPhysicalBoundaryConditions(
    const tbox::Pointer<hier::PatchGeometry> patch_geom =
       patch.getPatchGeometry();
    const hier::IntVector ratio = patch_geom->getRatio();
-   hier::BoxList domain_boxes(d_dim);
+   hier::BoxContainer domain_boxes;
    d_grid_geometry->computePhysicalDomain(domain_boxes, ratio,
       patch.getBox().getBlockId());
 
@@ -1632,7 +1632,7 @@ void MblkEuler::setPhysicalBoundaryConditions(
       d_grid_geometry->getPeriodicShift(
          hier::IntVector(d_dim, 1));
 
-   const hier::Box& domain_box = domain_boxes.getFirstItem();
+   const hier::Box& domain_box = domain_boxes.front();
    // domain_box.refine(patch_geom->getRatio());
 
    d_mblk_geometry->buildLocalBlocks(patch_box,
@@ -2467,11 +2467,12 @@ void MblkEuler::tagGradientDetectorCells(
       //
       if (ref == "USER_DEFINED") {
 
-         hier::BoxList refine_boxes(d_dim);
+         hier::BoxContainer refine_boxes;
          if (d_mblk_geometry->getRefineBoxes(refine_boxes,
                 patch.getBox().getBlockId().getBlockValue(),
                 level_number)) {
-            for (hier::BoxList::Iterator b(refine_boxes); b; b++) {
+            for (hier::BoxContainer::Iterator b(refine_boxes); b != refine_boxes.end();
+                 ++b) {
                hier::Box intersect = pbox * b();
                if (!intersect.empty()) {
                   temp_tags->fill(TRUE, intersect);
@@ -2538,16 +2539,16 @@ void MblkEuler::setMappedGridOnPatch(
    const tbox::Pointer<hier::PatchGeometry>
    patch_geom = patch.getPatchGeometry();
    hier::IntVector ratio = patch_geom->getRatio();
-   hier::BoxList domain_boxes(d_dim);
+   hier::BoxContainer domain_boxes;
    d_grid_geometry->computePhysicalDomain(domain_boxes, ratio,
       patch.getBox().getBlockId());
 
    //
    // statistics on the level domain
    //
-   d_dom_current_nboxes = domain_boxes.getNumberOfBoxes();
+   d_dom_current_nboxes = domain_boxes.size();
 
-   hier::BoxList::Iterator itr(domain_boxes);
+   hier::BoxContainer::Iterator itr(domain_boxes);
    d_dom_current_bounds[0] = itr().lower(0);
    d_dom_current_bounds[1] = itr().lower(1);
    d_dom_current_bounds[2] = itr().lower(2);
@@ -2573,7 +2574,7 @@ void MblkEuler::setMappedGridOnPatch(
       mapVariableAndContextToIndex(d_xyz, getDataContext());
 
    d_mblk_geometry->buildGridOnPatch(patch,
-      domain_boxes.getFirstItem(),
+      domain_boxes.front(),
       xyz_id,
       patch.getBox().getBlockId().getBlockValue(),
       d_dom_local_blocks);

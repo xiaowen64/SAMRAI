@@ -12,8 +12,8 @@ namespace SAMRAI {
 namespace pdat {
 
 SAMRAI_INLINE_KEYWORD
-const hier::BoxList&
-NodeOverlap::getDestinationBoxList() const
+const hier::BoxContainer&
+NodeOverlap::getDestinationBoxContainer() const
 {
    return d_dst_boxes;
 }

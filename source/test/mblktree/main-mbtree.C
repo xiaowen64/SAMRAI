@@ -52,7 +52,7 @@ exhaustiveFindOverlapBoxes(
    const hier::Box& mapped_box,
    const hier::IntVector& refinement_ratio,
    const tbox::ConstPointer<hier::GridGeometry>& grid_geometry,
-   const hier::BoxSet& search_mapped_boxes);
+   const hier::BoxContainer& search_mapped_boxes);
 
 /*
  ************************************************************************
@@ -271,7 +271,7 @@ int main(
 
       const hier::IntVector& refinement_ratio(one_vector);
 
-      for (hier::BoxSet::iterator bi = mapped_box_level.getBoxes().begin();
+      for (hier::BoxContainer::ConstIterator bi = mapped_box_level.getBoxes().begin();
            bi != mapped_box_level.getBoxes().end(); ++bi) {
 
          const hier::Box& mapped_box(*bi);
@@ -300,7 +300,8 @@ int main(
             mapped_box_level,
             mapped_box_level,
             connector_width);
-         for (hier::BoxSet::iterator bi = mapped_box_level.getBoxes().begin();
+         for (hier::BoxContainer::ConstIterator bi =
+              mapped_box_level.getBoxes().begin();
               bi != mapped_box_level.getBoxes().end(); ++bi) {
 
             const hier::Box& mapped_box(*bi);
@@ -474,13 +475,13 @@ void exhaustiveFindOverlapBoxes(
    const hier::Box& mapped_box,
    const hier::IntVector& refinement_ratio,
    const tbox::ConstPointer<hier::GridGeometry>& grid_geometry,
-   const hier::BoxSet& search_mapped_boxes)
+   const hier::BoxContainer& search_mapped_boxes)
 {
 
    hier::Box transformed_box(mapped_box);
    hier::BlockId transformed_block_id(mapped_box.getBlockId());
 
-   for (hier::BoxSet::const_iterator bi = search_mapped_boxes.begin();
+   for (hier::BoxContainer::ConstIterator bi = search_mapped_boxes.begin();
         bi != search_mapped_boxes.end(); ++bi) {
 
       const hier::Box& search_mapped_box(*bi);

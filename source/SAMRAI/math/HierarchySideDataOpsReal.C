@@ -93,14 +93,14 @@ void HierarchySideDataOpsReal<TYPE>::resetLevels(
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
       tbox::Pointer<hier::PatchLevel> level = d_hierarchy->getPatchLevel(ln);
-      hier::BoxList side_boxes(dim);
+      hier::BoxContainer side_boxes;
 
       for (int nd = 0; nd < dim.getValue(); nd++) {
          side_boxes = level->getBoxes();
-         for (hier::BoxList::Iterator i(side_boxes); i; i++) {
+         for (hier::BoxContainer::Iterator i(side_boxes); i != side_boxes.end(); ++i) {
             *i = pdat::SideGeometry::toSideBox(*i, nd);
          }
-         hier::BoxUtilities::makeNonOverlappingBoxLists(
+         hier::BoxUtilities::makeNonOverlappingBoxContainers(
             d_nonoverlapping_side_boxes[nd][ln],
             side_boxes);
       }
@@ -705,11 +705,12 @@ int HierarchySideDataOpsReal<TYPE>::numberOfEntries(
          }
 #endif
          for (int il = 0; il < npatches; il++) {
-            tbox::List<hier::Box>::Iterator lb;
             for (int eb = 0; eb < dim.getValue(); eb++) {
                if (directions(eb)) {
-                  lb = ((d_nonoverlapping_side_boxes[eb][ln])[il]).listStart();
-                  for ( ; lb; lb++) {
+                  hier::BoxContainer::ConstIterator lb =
+                     ((d_nonoverlapping_side_boxes[eb][ln])[il]).begin();
+                  for ( ; lb != ((d_nonoverlapping_side_boxes[eb][ln])[il]).end();
+                       ++lb) {
                      entries += lb().size();
                   }
                }

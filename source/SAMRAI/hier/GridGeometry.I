@@ -12,7 +12,7 @@ namespace SAMRAI {
 namespace hier {
 
 SAMRAI_INLINE_KEYWORD
-const BoxList& GridGeometry::getPhysicalDomain(const BlockId& block_id) const
+const BoxContainer& GridGeometry::getPhysicalDomain(const BlockId& block_id) const
 {
    return d_physical_domain[block_id.getBlockValue()];
 }
@@ -34,7 +34,7 @@ const std::string& GridGeometry::getObjectName() const {
 }
 
 SAMRAI_INLINE_KEYWORD
-const BoxList&
+const BoxContainer&
 GridGeometry::Neighbor::getTransformedDomain() const
 {
    return d_transformed_domain;
@@ -48,8 +48,8 @@ GridGeometry::getNumberOfBlockSingularities() const
 }
 
 SAMRAI_INLINE_KEYWORD
-const BoxList&
-GridGeometry::getSingularityBoxList(
+const BoxContainer&
+GridGeometry::getSingularityBoxContainer(
    const BlockId& block_id) const
 {
    return d_singularity[block_id.getBlockValue()];

@@ -13,7 +13,7 @@
 
 #include "SAMRAI/SAMRAI_config.h"
 #include "SAMRAI/hier/Box.h"
-#include "SAMRAI/hier/BoxList.h"
+#include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/hier/BoxOverlap.h"
 #include "SAMRAI/hier/IntVector.h"
 #include "SAMRAI/tbox/Pointer.h"
@@ -40,7 +40,7 @@ public:
     * in the generation of communication schedules.
     */
    explicit FaceOverlap(
-      const tbox::Array<hier::BoxList>& boxes,
+      const tbox::Array<hier::BoxContainer>& boxes,
       const hier::Transformation& transformation);
    /**
     * The virtual destructor does nothing interesting except deallocate
@@ -65,8 +65,8 @@ public:
     * Z=2. This method over-rides the virtual function in the
     * hier::BoxOverlap base class.
     */
-   virtual const hier::BoxList&
-   getDestinationBoxList(
+   virtual const hier::BoxContainer&
+   getDestinationBoxContainer(
       const int axis) const;
 
    /**
@@ -83,7 +83,7 @@ public:
 private:
    bool d_is_overlap_empty;
    hier::Transformation d_transformation;
-   tbox::Array<hier::BoxList> d_dst_boxes;
+   tbox::Array<hier::BoxContainer> d_dst_boxes;
 
 };
 

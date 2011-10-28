@@ -12,11 +12,11 @@
 #define included_mesh_TreeLoadBalancer_C
 
 #include "SAMRAI/mesh/TreeLoadBalancer.h"
+#include "SAMRAI/hier/BoxContainerIterator.h"
 #include "SAMRAI/hier/BoxUtilities.h"
 #include "SAMRAI/tbox/StartupShutdownManager.h"
 
 #include "SAMRAI/hier/MappingConnectorAlgorithm.h"
-#include "SAMRAI/hier/BoxSet.h"
 #include "SAMRAI/hier/OverlapConnectorAlgorithm.h"
 #include "SAMRAI/hier/BoxUtilities.h"
 #include "SAMRAI/hier/PatchDescriptor.h"
@@ -91,7 +91,6 @@ TreeLoadBalancer::TreeLoadBalancer(
    d_mpi(tbox::SAMRAI_MPI::commNull),
    d_min_size(d_dim),
    d_max_size(d_dim),
-   d_domain_boxes(d_dim),
    d_bad_interval(d_dim),
    d_cut_factor(d_dim),
    // Output control.
@@ -655,11 +654,11 @@ void TreeLoadBalancer::constrainMaxBoxSizes(
    unconstrained_to_constrained.setHead(constrained);
    unconstrained_to_constrained.setWidth(zero_vector, true);
 
-   const hier::BoxSet& unconstrained_boxes = box_level.getBoxes();
+   const hier::BoxContainer& unconstrained_boxes = box_level.getBoxes();
 
    hier::LocalId next_available_index = box_level.getLastLocalId() + 1;
 
-   for (hier::BoxSet::const_iterator ni = unconstrained_boxes.begin();
+   for (hier::BoxContainer::ConstIterator ni = unconstrained_boxes.begin();
         ni != unconstrained_boxes.end(); ++ni) {
 
       const hier::Box& box = *ni;
@@ -685,14 +684,14 @@ void TreeLoadBalancer::constrainMaxBoxSizes(
             tbox::plog << "    Breaking oversized " << box
                        << box.numberCells() << " ->";
          }
-         hier::BoxList chopped(box);
+         hier::BoxContainer chopped(box);
          hier::BoxUtilities::chopBoxes(
             chopped,
             d_max_size,
             d_min_size,
             d_cut_factor,
             d_bad_interval,
-            d_domain_boxes);
+            d_block_domain_boxes[box.getBlockId().getBlockValue()]);
          TBOX_ASSERT( chopped.size() != 0 );
 
          if (chopped.size() != 1) {
@@ -700,8 +699,8 @@ void TreeLoadBalancer::constrainMaxBoxSizes(
             unconstrained_to_constrained.makeEmptyLocalNeighborhood(
                box.getId());
 
-            for (hier::BoxList::Iterator li(chopped);
-                 li; li++) {
+            for (hier::BoxContainer::Iterator li(chopped);
+                 li != chopped.end(); ++li) {
 
                const hier::Box fragment = *li;
 
@@ -727,7 +726,7 @@ void TreeLoadBalancer::constrainMaxBoxSizes(
             }
 
          } else {
-            TBOX_ASSERT( box.isSpatiallyEqual( chopped.getFirstItem() ) );
+            TBOX_ASSERT( box.isSpatiallyEqual( chopped.front() ) );
             if (d_print_break_steps) {
                tbox::plog << " Unbreakable!" << "\n";
             }
@@ -1005,9 +1004,9 @@ void TreeLoadBalancer::loadBalanceWithinRankGroup(
        * Local process is underloaded, so put all of balance_box_level into
        * the balanced_box_level (and add more later).
        */
-      const hier::BoxSet& unbalanced_boxes =
+      const hier::BoxContainer& unbalanced_boxes =
          balance_box_level.getBoxes();
-      for (hier::BoxSet::const_iterator ni = unbalanced_boxes.begin();
+      for (hier::BoxContainer::ConstIterator ni = unbalanced_boxes.begin();
            ni != unbalanced_boxes.end(); ++ni) {
          balanced_box_level.addBox(*ni);
       }
@@ -1038,7 +1037,7 @@ void TreeLoadBalancer::loadBalanceWithinRankGroup(
        * any significant effects at all remains to be seen.
        */
 
-      const hier::BoxSet& unbalanced_boxes =
+      const hier::BoxContainer& unbalanced_boxes =
          balance_box_level.getBoxes();
 
       int ideal_transfer = int(0.5 + my_load_data.total_work - group_avg_load);
@@ -2908,7 +2907,7 @@ bool TreeLoadBalancer::breakOffLoad(
    t_find_bad_cuts->start();
    hier::BoxUtilities::findBadCutPoints(bad_cuts,
       box,
-      d_domain_boxes,
+      d_block_domain_boxes[box.getBlockId().getBlockValue()],
       d_bad_interval);
    t_find_bad_cuts->stop();
 
@@ -3391,7 +3390,7 @@ double TreeLoadBalancer::computeSlenderPenalty(
 /*
  *************************************************************************
  * Break up box bursty against box solid and adds the pieces to list.
- * This version differs from that in BoxList in that it tries to minimize
+ * This version differs from that in BoxContainer in that it tries to minimize
  * slivers.
  *************************************************************************
  */
@@ -3475,12 +3474,12 @@ void TreeLoadBalancer::burstBox(
          }
       }
    }
-   hier::BoxList l1(bursty);
-   hier::BoxList l2(solid);
+   hier::BoxContainer l1(bursty);
+   hier::BoxContainer l2(solid);
    for (std::vector<hier::Box>::const_iterator bi = boxes.begin();
         bi != boxes.end();
         bi++) {
-      l2.addItem(*bi);
+      l2.pushFront(*bi);
    }
    l1.removeIntersections(l2);
    TBOX_ASSERT(l1.size() == 0);
@@ -3500,8 +3499,8 @@ double TreeLoadBalancer::computeLocalLoads(
 {
    // Count up workload.
    double load = 0.0;
-   const hier::BoxSet& boxes = box_level.getBoxes();
-   for (hier::BoxSet::const_iterator ni = boxes.begin();
+   const hier::BoxContainer& boxes = box_level.getBoxes();
+   for (hier::BoxContainer::ConstIterator ni = boxes.begin();
         ni != boxes.end();
         ++ni) {
       double box_load = computeLoad(*ni);
@@ -4246,9 +4245,22 @@ void TreeLoadBalancer::setShadowData(
       domain_box_level.getParallelState() ==
       hier::BoxLevel::GLOBALIZED);
 
-   d_domain_boxes.clearItems();
-   domain_box_level.getGlobalBoxes(d_domain_boxes);
-   d_domain_boxes.refine(refinement_ratio);
+   d_block_domain_boxes.clear();
+   int nblocks =
+      domain_box_level.getGridGeometry()->getNumberBlocks();
+   d_block_domain_boxes.resize(nblocks);
+
+   if (nblocks == 1) {
+      domain_box_level.getGlobalBoxes(d_block_domain_boxes[0]);
+      d_block_domain_boxes[0].refine(refinement_ratio);
+   } else {
+      for (int b = 0; b < nblocks; ++b) {
+         d_block_domain_boxes[b] = hier::BoxContainer(
+            domain_box_level.getGlobalBoxes(), hier::BlockId(b));
+
+         d_block_domain_boxes[b].refine(refinement_ratio);
+      }
+   }
 }
 
 
@@ -4261,7 +4273,7 @@ void TreeLoadBalancer::setShadowData(
 void TreeLoadBalancer::unsetShadowData() const {
    d_min_size = hier::IntVector(d_dim, -1);
    d_max_size = hier::IntVector(d_dim, -1);
-   d_domain_boxes.clearItems();
+   d_block_domain_boxes.clear();
    d_bad_interval = hier::IntVector(d_dim, -1);
    d_cut_factor = hier::IntVector(d_dim, -1);
 }
@@ -4403,10 +4415,10 @@ void TreeLoadBalancer::prebalanceBoxLevel(
     * move them directly to tmp_box_level.
     */
    if (!is_sending_rank) {
-      const hier::BoxSet& unchanged_boxes =
+      const hier::BoxContainer& unchanged_boxes =
          balance_box_level.getBoxes();
 
-      for (hier::BoxSet::const_iterator ni =
+      for (hier::BoxContainer::ConstIterator ni =
               unchanged_boxes.begin();
            ni != unchanged_boxes.end(); ++ni) {
 
@@ -4421,14 +4433,14 @@ void TreeLoadBalancer::prebalanceBoxLevel(
     * On sending ranks, pack the Boxes into buffers and send.
     */
    if (is_sending_rank) {
-      const hier::BoxSet& sending_boxes =
+      const hier::BoxContainer& sending_boxes =
          balance_box_level.getBoxes();
       const int num_sending_boxes =
          static_cast<int>(sending_boxes.size());
 
       int* buffer = new int[buf_size * num_sending_boxes];
       int box_count = 0;
-      for (hier::BoxSet::const_iterator ni = sending_boxes.begin();
+      for (hier::BoxContainer::ConstIterator ni = sending_boxes.begin();
            ni != sending_boxes.end(); ++ni) {
 
          const hier::Box& box = *ni;
@@ -4466,7 +4478,7 @@ void TreeLoadBalancer::prebalanceBoxLevel(
 
                   box.getFromIntBuffer(&buffer[b * buf_size]);
 
-                  hier::BoxSet::iterator tmp_iter =
+                  hier::BoxContainer::ConstIterator tmp_iter =
                      tmp_box_level.addBox(box,
                         box.getBlockId());
 
@@ -4506,12 +4518,12 @@ void TreeLoadBalancer::prebalanceBoxLevel(
       }
       const int* buffer = id_recv->getRecvData();
 
-      const hier::BoxSet& sending_boxes =
+      const hier::BoxContainer& sending_boxes =
          balance_box_level.getBoxes();
-      TBOX_ASSERT(static_cast<unsigned int>(id_recv->getRecvSize()) == sending_boxes.size());
+      TBOX_ASSERT(static_cast<int>(id_recv->getRecvSize()) == sending_boxes.size());
 
       int box_count = 0;
-      for (hier::BoxSet::const_iterator ni =
+      for (hier::BoxContainer::ConstIterator ni =
               sending_boxes.begin();
            ni != sending_boxes.end(); ++ni) {
 

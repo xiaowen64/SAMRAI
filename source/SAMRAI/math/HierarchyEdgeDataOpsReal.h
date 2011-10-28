@@ -506,7 +506,7 @@ private:
    tbox::Pointer<hier::PatchHierarchy> d_hierarchy;
    int d_coarsest_level;
    int d_finest_level;
-   tbox::Array<tbox::Array<hier::BoxList> > d_nonoverlapping_edge_boxes[tbox::
+   tbox::Array<tbox::Array<hier::BoxContainer> > d_nonoverlapping_edge_boxes[tbox::
                                                                         Dimension
                                                                         ::
                                                                         MAXIMUM_DIMENSION_VALUE];

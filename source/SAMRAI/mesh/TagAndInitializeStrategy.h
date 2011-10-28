@@ -12,7 +12,6 @@
 #define included_mesh_TagAndInitializeStrategy
 
 #include "SAMRAI/SAMRAI_config.h"
-#include "SAMRAI/hier/BoxList.h"
 #include "SAMRAI/hier/IntVector.h"
 #include "SAMRAI/hier/PatchHierarchy.h"
 #include "SAMRAI/hier/PatchLevel.h"
@@ -86,7 +85,7 @@ namespace mesh {
  *       followed for regridding cycles.  To avoid errant behavior, the times
  *       and cycles entries should always be supplied in increasing order.
  *
- *       The hier::BoxList entries withing each level's input section
+ *       The hier::BoxContainer entries withing each level's input section
  *       must be of the form ``boxes_n'' (where n is the corresponds to the
  *       elements of the times or cycles array), or the input parser will
  *       ignore the entry.  If there is no ``boxes_n'' entry corresponding
@@ -149,7 +148,7 @@ public:
     */
    bool
    getUserSuppliedRefineBoxes(
-      hier::BoxList& refine_boxes,
+      hier::BoxContainer& refine_boxes,
       const int level_number,
       const double time);
 
@@ -159,7 +158,7 @@ public:
     */
    void
    resetRefineBoxes(
-      const hier::BoxList& refine_boxes,
+      const hier::BoxContainer& refine_boxes,
       const int level_number);
 
    /*!
@@ -297,7 +296,7 @@ public:
     */
    virtual bool
    coarsestLevelBoxesOK(
-      const hier::BoxList& boxes) const = 0;
+      const hier::BoxContainer& boxes) const = 0;
 
    /*!
     * Return ratio by which level may be coarsened during the error
@@ -359,7 +358,7 @@ private:
     * internally the number of times the getRefineBoxes() method has
     * been accessed for each level.
     */
-   tbox::Array<tbox::Array<hier::BoxList> > d_refine_boxes;
+   tbox::Array<tbox::Array<hier::BoxContainer> > d_refine_boxes;
    tbox::Array<tbox::Array<int> > d_refine_boxes_cycles;
    tbox::Array<tbox::Array<double> > d_refine_boxes_times;
    tbox::Array<bool> d_refine_boxes_use_times;
@@ -374,7 +373,7 @@ private:
     * determine when refine boxes change between steps.
     */
    tbox::Array<bool> d_refine_boxes_reset;
-   tbox::Array<hier::BoxList> d_reset_refine_boxes;
+   tbox::Array<hier::BoxContainer> d_reset_refine_boxes;
    tbox::Array<int> d_refine_boxes_old_seq_num;
 
    // The following are not implemented:

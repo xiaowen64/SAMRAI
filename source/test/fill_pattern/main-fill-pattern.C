@@ -20,7 +20,7 @@
 #include "SAMRAI/pdat/SecondLayerNodeVariableFillPattern.h"
 #include "SAMRAI/pdat/SecondLayerNodeNoCornersVariableFillPattern.h"
 #include "SAMRAI/xfer/RefineAlgorithm.h"
-#include "SAMRAI/hier/BoxList.h"
+#include "SAMRAI/hier/BoxContainerIterator.h"
 #include "SAMRAI/hier/OverlapConnectorAlgorithm.h"
 #include "SAMRAI/hier/PatchHierarchy.h"
 #include "SAMRAI/hier/VariableDatabase.h"
@@ -40,7 +40,7 @@ using namespace SAMRAI;
 
 void txt2boxes(
    const char* txt,
-   hier::BoxList& boxes)
+   hier::BoxContainer& boxes)
 {
    // algorithm:
    // find width
@@ -160,13 +160,13 @@ void txt2boxes(
             }
          }
 
-         boxes.appendItem(smallest_box);
+         boxes.pushBack(smallest_box);
       }
 
    }
 
    // Shift all boxes into SAMRAI coordinates
-   for (hier::BoxList::Iterator itr(boxes); itr; itr++) {
+   for (hier::BoxContainer::Iterator itr(boxes); itr != boxes.end(); ++itr) {
       itr().shift(-hier::IntVector(tbox::Dimension(2), 2));
    }
 }
@@ -329,11 +329,11 @@ bool SingleLevelTestCase(
    const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
    const std::string& pattern_name = fill_pattern->getPatternName();
 
-   hier::BoxList level_boxes(dim);
+   hier::BoxContainer level_boxes;
    txt2boxes(levelboxes_txt, level_boxes);
 
    hier::Box domain_box(dim);
-   for (hier::BoxList::Iterator itr(level_boxes); itr; itr++) {
+   for (hier::BoxContainer::Iterator itr(level_boxes); itr != level_boxes.end(); ++itr) {
       domain_box += *itr;
    }
 
@@ -350,7 +350,7 @@ bool SingleLevelTestCase(
    const int num_boxes = level_boxes.size();
    hier::LocalId local_id(0);
    tbox::Array<int> local_indices(mpi.getSize(), 0);
-   hier::BoxList::Iterator level_boxes_itr(level_boxes);
+   hier::BoxContainer::Iterator level_boxes_itr(level_boxes);
    for (int i = 0; i < num_boxes; ++i, level_boxes_itr++) {
 
       int proc;

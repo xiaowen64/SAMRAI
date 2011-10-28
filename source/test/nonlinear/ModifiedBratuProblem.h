@@ -59,7 +59,6 @@
 #include "SAMRAI/hier/ComponentSelector.h"
 #include "SAMRAI/hier/VariableContext.h"
 #include "SAMRAI/hier/Box.h"
-#include "SAMRAI/hier/BoxList.h"
 #include "SAMRAI/tbox/Serializable.h"
 #include "SAMRAI/tbox/Pointer.h"
 #include "SAMRAI/tbox/MessageStream.h"
@@ -425,7 +424,7 @@ private:
 
    void
    getLevelEdges(
-      hier::BoxList& boxes,
+      hier::BoxContainer& boxes,
       tbox::Pointer<hier::Patch> patch,
       tbox::Pointer<hier::PatchLevel> level,
       const int dim,

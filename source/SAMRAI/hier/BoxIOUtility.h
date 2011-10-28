@@ -13,7 +13,7 @@
 
 #include "SAMRAI/SAMRAI_config.h"
 
-#include "SAMRAI/hier/BoxList.h"
+#include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/tbox/Array.h"
 #include "SAMRAI/tbox/Database.h"
 #include "SAMRAI/tbox/Pointer.h"
@@ -65,7 +65,7 @@ public:
     */
    void
    getLevelBoxes(
-      BoxList& level_boxes,
+      BoxContainer& level_boxes,
       const int level_number,
       const int entry_number);
 
@@ -75,7 +75,7 @@ public:
     */
    void
    putLevelBoxes(
-      const BoxList& level_boxes,
+      const BoxContainer& level_boxes,
       const int level_number,
       const int entry_number);
 
@@ -128,7 +128,7 @@ private:
    /*
     * tbox::Array to store the level boxes.
     */
-   tbox::Array<tbox::Array<BoxList> > d_level_boxes;
+   tbox::Array<tbox::Array<BoxContainer> > d_level_boxes;
 
 };
 

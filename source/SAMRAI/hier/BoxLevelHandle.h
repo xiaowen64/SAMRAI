@@ -72,11 +72,11 @@ private:
     * This is the only constructor and it is private.  Only the
     * BoxLevel should allocate BoxLevelHandles.
     *
-    * @param[in] mapped_box_level The BoxLevel to be attached to
+    * @param[in] box_level The BoxLevel to be attached to
     * this handle.
     */
    BoxLevelHandle(
-      const BoxLevel * mapped_box_level);
+      const BoxLevel * box_level);
 
    /*!
     * @brief Forbidden copy constructor.
@@ -120,7 +120,7 @@ private:
    /*!
     * @brief Pointer to the BoxLevel attached to this handle.
     */
-   const BoxLevel* d_mapped_box_level;
+   const BoxLevel* d_box_level;
 
 };
 

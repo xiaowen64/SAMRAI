@@ -12,19 +12,21 @@
 
 #include "SAMRAI/SAMRAI_config.h"
 
-#include "SAMRAI/hier/BoxSet.h"
 #include "SAMRAI/hier/BlockId.h"
+#include "SAMRAI/hier/BoxContainer.h"
+#include "SAMRAI/hier/BoxContainerConstIterator.h"
 
 namespace SAMRAI {
 namespace hier {
 
+
 /*!
- * @brief BoxSet iterator picking items with a specified
+ * @brief BoxContainer iterator picking items with a specified
  * BlockId.
  *
- * This iterator runs through all Boxes in a BoxSet that
+ * This iterator runs through all Boxes in a BoxContainer that
  * has the given BlockId.  The iterator runs through the Boxes
- * in the order they appear in the BoxSet, skipping over
+ * in the order they appear in the BoxContainer, skipping over
  * Boxes that do not have the specified owner rank.
  */
 class BoxSetSingleBlockIterator
@@ -38,7 +40,7 @@ public:
     * @param [i] block_id
     */
    BoxSetSingleBlockIterator(
-      const BoxSet& container,
+      const BoxContainer& container,
       const BlockId& block_id);
 
    //! @brief Destructor
@@ -104,16 +106,16 @@ public:
       int);
 
    /*!
-    * @brief Returns the number of BoxSets being iterated through.
+    * @brief Returns the number of BoxContainers being iterated through.
     */
    int
    count() const;
 
 private:
    /*!
-    * @brief BoxSet being iterated through.
+    * @brief BoxContainer being iterated through.
     */
-   const BoxSet* d_mapped_boxes;
+   const BoxContainer* d_mapped_boxes;
 
    /*!
     * @brief The BlockId.
@@ -123,7 +125,7 @@ private:
    /*!
     * @brief The iterator.
     */
-   BoxSet::const_iterator d_iter;
+   BoxContainer::ConstIterator d_iter;
 
 };
 

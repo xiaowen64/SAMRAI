@@ -13,7 +13,7 @@ namespace SAMRAI {
 namespace hier {
 
 SAMRAI_INLINE_KEYWORD
-NeighborhoodSet::NeighborhoodSet():
+NeighborhoodSet::NeighborhoodSet() :
    d_map()
 {
 }
@@ -42,14 +42,14 @@ SAMRAI_INLINE_KEYWORD
 bool NeighborhoodSet::operator == (
    const NeighborhoodSet& r) const
 {
-   return d_map == r.d_map;
+   return (d_map == r.d_map);
 }
 
 SAMRAI_INLINE_KEYWORD
 bool NeighborhoodSet::operator != (
    const NeighborhoodSet& r) const
 {
-   return d_map != r.d_map;
+   return (d_map != r.d_map);
 }
 
 SAMRAI_INLINE_KEYWORD

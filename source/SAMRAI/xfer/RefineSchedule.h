@@ -17,7 +17,6 @@
 #include "SAMRAI/xfer/RefineClasses.h"
 #include "SAMRAI/xfer/RefinePatchStrategy.h"
 #include "SAMRAI/xfer/RefineTransactionFactory.h"
-#include "SAMRAI/hier/BoxList.h"
 #include "SAMRAI/hier/ComponentSelector.h"
 #include "SAMRAI/hier/IntVector.h"
 #include "SAMRAI/hier/PatchHierarchy.h"
@@ -348,11 +347,9 @@ private:
    //! @brief Shorthand typedef.
    typedef hier::Connector Connector;
    //! @brief Shorthand typedef.
-   typedef std::vector<hier::Box> BoxVector;
-   //! @brief Similar to NeighborhoodSet but maps to BoxVector instead of BoxSet.
-   typedef std::map<hier::BoxId, hier::BoxSet> FillSet;
+   typedef hier::NeighborhoodSet NeighborhoodSet;
    //! @brief Mapping from a (potentially remote) Box to a set of neighbors.
-   typedef std::map<hier::Box, hier::BoxSet, hier::Box::id_less> FullNeighborhoodSet;
+   typedef std::map<hier::Box, hier::BoxContainer, hier::Box::id_less> FullNeighborhoodSet;
 
    /*!
     * @brief This private constructor creates a communication schedule
@@ -418,9 +415,9 @@ private:
     *                                    destination level.
     * @param[in] dst_to_fill  Connector describing the boxes to fill for each
     *                         destination patch.
-    * @param[in] src_owner_dst_to_fill  A FillSet that maps each local
+    * @param[in] src_owner_dst_to_fill  A NeighborhoodSet that maps each local
     *                                   mapped box on the source level to
-    *                                   a BoxVector that indicates what parts
+    *                                   a BoxContainer that indicates what parts
     *                                   of the destination fill boxes can be filled
     *                                   by that source box.
     * @param[in] use_time_interpolation  Boolean flag indicating whether to
@@ -440,7 +437,7 @@ private:
       const bool dst_is_coarse_interp_level,
       const hier::IntVector& src_growth_to_nest_dst,
       const Connector& dst_to_fill,
-      const FillSet& src_owner_dst_to_fill,
+      const NeighborhoodSet& src_owner_dst_to_fill,
       bool use_time_interpolation,
       bool skip_generate_schedule = false);
 
@@ -542,9 +539,9 @@ private:
     *                        passed into the constructor
     * @param[in] dst_to_fill  Connector between dst_level and a level
     *                         representing the boxes that need to be filled.
-    * @param[in] src_owner_dst_to_fill  A FillSet that maps each local
+    * @param[in] src_owner_dst_to_fill  A NeighborhoodSet that maps each local
     *                                   mapped box on the source level to
-    *                                   a BoxVector that indicates what parts
+    *                                   a BoxContainer that indicates what parts
     *                                   of the fill can be filled by that
     *                                   source box.
     * @param[in] use_time_interpolation  Boolean flag indicating whether to
@@ -560,7 +557,7 @@ private:
       const Connector& dst_to_src,
       const Connector& src_to_dst,
       const Connector& dst_to_fill,
-      const FillSet& src_owner_dst_to_fill,
+      const NeighborhoodSet& src_owner_dst_to_fill,
       const bool use_time_interpolation,
       const bool create_transactions);
 
@@ -581,9 +578,9 @@ private:
     *                                    be filled.
     * @param[out] dst_to_fill  Connector from dst_level to
     *                          fill_mapped_box_level.
-    * @param[out] src_owner_dst_to_fill  A FillSet that maps each local
+    * @param[out] src_owner_dst_to_fill  A NeighborhoodSet that maps each local
     *                                    mapped box on the source level to
-    *                                    a BoxVector that indicates what parts
+    *                                    a BoxContainer that indicates what parts
     *                                    of fill_mapped_box_level can be filled
     *                                    by that source box.
     * @param[in] dst_mapped_box_level  Mapped box representation of the
@@ -596,7 +593,7 @@ private:
    setDefaultFillBoxLevel(
       BoxLevel& fill_mapped_box_level,
       Connector& dst_to_fill,
-      FillSet& src_owner_dst_to_fill,
+      NeighborhoodSet& src_owner_dst_to_fill,
       const hier::BoxLevel& dst_mapped_box_level,
       const hier::Connector* dst_to_src,
       const hier::Connector* src_to_dst,
@@ -625,8 +622,8 @@ private:
     */
    void
    findEnconFillBoxes(
-      hier::BoxList& encon_fill_boxes,
-      const hier::BoxList& fill_boxes_list,
+      hier::BoxContainer& encon_fill_boxes,
+      const hier::BoxContainer& fill_boxes_list,
       const hier::BlockId& dst_block_id);
 
    /*
@@ -656,7 +653,7 @@ private:
       hier::LocalId& last_unfilled_local_id,
       const hier::Box& dst_mapped_box,
       const Connector& dst_to_src,
-      const hier::BoxList& encon_fill_boxes);
+      const hier::BoxContainer& encon_fill_boxes);
 
    /*
     * @brief Create schedule for filling unfilled boxes at enhanced
@@ -681,9 +678,9 @@ private:
     * @brief Communicate dst_to_fill info to the src owners when the owners
     * would otherwise be unable to compute the info.
     *
-    * @param[out] src_owner_dst_to_fill  A FillSet that maps each local
+    * @param[out] src_owner_dst_to_fill  A NeighborhoodSet that maps each local
     *                                    mapped box on the source level to
-    *                                    a BoxVector that indicates what parts
+    *                                    a BoxContainer that indicates what parts
     *                                    of fill_mapped_box_level can be filled
     *                                    by that source box.
     * @param[in] dst_to_fill  Mapping from the dst_level to boxes it needs
@@ -693,7 +690,7 @@ private:
     */
    void
    communicateFillBoxes(
-      FillSet& src_owner_dst_to_fill,
+      NeighborhoodSet& src_owner_dst_to_fill,
       const Connector& dst_to_fill,
       const Connector& dst_to_src,
       const Connector& src_to_dst);
@@ -827,7 +824,7 @@ private:
     */
    void
    constructScheduleTransactions(
-      const hier::BoxSet& fill_boxes,
+      const hier::BoxContainer& fill_boxes,
       const hier::Box& dst_mapped_box,
       const hier::Box& src_mapped_box,
       const bool use_time_interpolation);
@@ -1140,7 +1137,7 @@ private:
     * Like d_overlaps, this is declared in the class to make memory
     * management more efficient.
     */
-   hier::BoxList d_src_masks;
+   hier::BoxContainer d_src_masks;
 
    /*!
     * @brief The maximum number of fill boxes across all patches in the

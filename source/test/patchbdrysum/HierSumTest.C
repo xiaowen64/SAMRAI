@@ -12,7 +12,7 @@
 
 #include "SAMRAI/tbox/Array.h"
 #include "SAMRAI/hier/BoundaryBox.h"
-#include "SAMRAI/hier/BoxList.h"
+#include "SAMRAI/hier/BoxContainerIterator.h"
 #include "SAMRAI/geom/CartesianPatchGeometry.h"
 #include "SAMRAI/pdat/CellData.h"
 #include "SAMRAI/pdat/CellIndex.h"
@@ -261,11 +261,11 @@ HierSumTest::setInitialNodeValues(
        * overlap region, on which the nodes shouldn't participate in any
        * communication.
        */
-      BoxList fine_overlap_shrunk = level->getBoxes();
-      BoxList complement(fine_overlap_shrunk);
+      BoxContainer fine_overlap_shrunk = level->getBoxes();
+      BoxContainer complement(fine_overlap_shrunk);
       if (level->getLevelNumber() != hierarchy->getFinestLevelNumber()) {
          Pointer<PatchLevel> fine_level = hierarchy->getPatchLevel(ln + 1);
-         BoxList fine_level_boxes = fine_level->getBoxes();
+         BoxContainer fine_level_boxes = fine_level->getBoxes();
          fine_level_boxes.coarsen(fine_level->getRatioToCoarserLevel());
          complement.removeIntersections(fine_level_boxes);
          complement.grow(IntVector(d_dim, 1));
@@ -277,7 +277,8 @@ HierSumTest::setInitialNodeValues(
             Pointer<NodeData<double> > unode =
                patch->getPatchData(d_unode_id);
 
-            for (BoxList::Iterator b(fine_overlap_shrunk); b; b++) {
+            for (BoxContainer::Iterator b = fine_overlap_shrunk.begin();
+                 b != fine_overlap_shrunk.end(); ++b) {
                Box fine_overlap = b();
                Box patch_interior = patch->getBox();
                Box data_box = fine_overlap * patch_interior;
@@ -549,12 +550,12 @@ int HierSumTest::checkNodeResult(
    for (int ln = 0; ln <= hierarchy->getFinestLevelNumber(); ln++) {
       Pointer<PatchLevel> level = hierarchy->getPatchLevel(ln);
 
-      BoxList level_boxes_complement = level->getBoxes();
+      BoxContainer level_boxes_complement = level->getBoxes();
 
       // If a finer level exists, remove overlap boxes by computing complement
       if (level->getLevelNumber() != hierarchy->getFinestLevelNumber()) {
          Pointer<PatchLevel> fine_level = hierarchy->getPatchLevel(ln + 1);
-         BoxList fine_level_boxes = fine_level->getBoxes();
+         BoxContainer fine_level_boxes = fine_level->getBoxes();
          fine_level_boxes.coarsen(fine_level->getRatioToCoarserLevel());
          level_boxes_complement.removeIntersections(fine_level_boxes);
       }
@@ -568,7 +569,8 @@ int HierSumTest::checkNodeResult(
             patch->getPatchData(d_unode_id);
 
          // loop over Level complement boxlist
-         for (BoxList::Iterator b(level_boxes_complement); b; b++) {
+         for (BoxContainer::Iterator b = level_boxes_complement.begin();
+              b != level_boxes_complement.end(); ++b) {
             Box complement = b();
 
             // intersect patch box with level box complement
@@ -859,7 +861,7 @@ void HierSumTest::initializeLevelData(
        */
       Pointer<PatchLevel> coarser_level =
          hierarchy->getPatchLevel(level_number - 1);
-      BoxList fine_level_boxes = level->getBoxes();
+      BoxContainer fine_level_boxes = level->getBoxes();
 
       IntVector ratio(level->getRatioToCoarserLevel());
       fine_level_boxes.coarsen(ratio);
@@ -871,8 +873,8 @@ void HierSumTest::initializeLevelData(
             cpatch->getPatchData(d_ucell_node_id);
 
          Box cpbox = cpatch->getBox();
-         for (BoxList::Iterator fine_level_itr(fine_level_boxes); fine_level_itr;
-              fine_level_itr++) {
+         for (BoxContainer::Iterator fine_level_itr = fine_level_boxes.begin();
+              fine_level_itr != fine_level_boxes.end(); ++fine_level_itr) {
             Box setbox = cpbox * *fine_level_itr;
             if (!setbox.empty()) {
                ucell_node->fillAll(0.0, setbox);

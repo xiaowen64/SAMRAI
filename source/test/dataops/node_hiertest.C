@@ -23,7 +23,8 @@ using namespace std;
 #include "SAMRAI/tbox/Pointer.h"
 
 #include "SAMRAI/hier/Box.h"
-#include "SAMRAI/hier/BoxList.h"
+#include "SAMRAI/hier/BoxContainerIterator.h"
+#include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/geom/CartesianGridGeometry.h"
 #include "SAMRAI/geom/CartesianPatchGeometry.h"
 #include "SAMRAI/pdat/NodeData.h"
@@ -123,12 +124,12 @@ int main(
 
       hier::IntVector ratio(dim2d, 2);
 
-      hier::BoxList coarse_domain(dim2d);
-      hier::BoxList fine_boxes(dim2d);
-      coarse_domain.appendItem(coarse0);
-      coarse_domain.appendItem(coarse1);
-      fine_boxes.appendItem(fine0);
-      fine_boxes.appendItem(fine1);
+      hier::BoxContainer coarse_domain;
+      hier::BoxContainer fine_boxes;
+      coarse_domain.pushBack(coarse0);
+      coarse_domain.pushBack(coarse1);
+      fine_boxes.pushBack(fine0);
+      fine_boxes.pushBack(fine1);
 
       tbox::Pointer<geom::CartesianGridGeometry> geometry(
          new geom::CartesianGridGeometry("CartesianGeometry",
@@ -146,13 +147,13 @@ int main(
       const int nproc = mpi.getSize();
       TBOX_ASSERT(nproc < 3);
 
-      const int n_coarse_boxes = coarse_domain.getNumberOfBoxes();
-      const int n_fine_boxes = fine_boxes.getNumberOfBoxes();
+      const int n_coarse_boxes = coarse_domain.size();
+      const int n_fine_boxes = fine_boxes.size();
 
       hier::BoxLevel layer0(hier::IntVector(dim, 1), geometry);
       hier::BoxLevel layer1(ratio, geometry);
 
-      hier::BoxList::Iterator coarse_itr(coarse_domain);
+      hier::BoxContainer::Iterator coarse_itr(coarse_domain);
       for (int ib = 0; ib < n_coarse_boxes; ib++, coarse_itr++) {
          if (nproc > 1) {
             if (ib == layer0.getMPI().getRank()) {
@@ -164,7 +165,7 @@ int main(
          }
       }
 
-      hier::BoxList::Iterator fine_itr(fine_boxes);
+      hier::BoxContainer::Iterator fine_itr(fine_boxes);
       for (int ib = 0; ib < n_fine_boxes; ib++, fine_itr++) {
          if (nproc > 1) {
             if (ib == layer1.getMPI().getRank()) {

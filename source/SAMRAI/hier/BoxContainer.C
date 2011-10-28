@@ -13,13 +13,10 @@
 
 #include "SAMRAI/hier/BoxContainer.h"
 
+#include "SAMRAI/hier/BoxSetSingleBlockIterator.h"
 #include "SAMRAI/hier/Index.h"
-#ifdef MB_BOXTREE_EXISTS
 #include "SAMRAI/hier/GridGeometry.h"
 #include "SAMRAI/hier/MultiblockBoxTree.h"
-#else
-#include "SAMRAI/hier/BoxTree.h"
-#endif
 
 #ifndef SAMRAI_INLINE
 #include "SAMRAI/hier/BoxContainer.I"
@@ -36,24 +33,91 @@
 namespace SAMRAI {
 namespace hier {
 
+const int BoxContainer::HIER_BOX_CONTAINER_VERSION = 0;
+
+
+/*
+ ***********************************************************************
+ * Construct a BoxContainer consisting of the Boxes in other BoxContainer
+ * with the given BlockId.
+ ***********************************************************************
+ */
 BoxContainer::BoxContainer(
-   Iterator first,
-   Iterator last):
-   d_dim(first().getDim()),
-   d_list()
+   const BoxContainer& other,
+   const BlockId& block_id):
+   d_ordered(false)
 {
-   while (first != last) {
-      d_list.push_back(first());
-      ++first;
+   BoxSetSingleBlockIterator itr(other, block_id);
+   while (itr.isValid()) {
+      const Box& mapped_box = *itr;
+      pushBack(mapped_box);
+      ++itr;
+   }
+   if (other.d_ordered) {
+      order();
    }
 }
+
+/*
+ *************************************************************************
+ *
+ * Construct BoxContainer from a range.
+ *
+ *************************************************************************
+ */
+
+BoxContainer::BoxContainer(
+   ConstIterator first,
+   ConstIterator last,
+   const bool ordered):
+   d_ordered(false)
+{
+   while (first != last) {
+      pushBack(first());
+      ++first;
+   }
+   if (ordered) {
+      order();
+   }
+}
+
+/*
+ *************************************************************************
+ *
+ * Construct from DatabaseBox array.
+ * 
+ *************************************************************************
+ */
+
+BoxContainer::BoxContainer(
+   const tbox::Array<tbox::DatabaseBox>& other):
+   d_ordered(false)
+{
+   const int n = other.size();
+   for (int j = 0; j < n; j++) {
+      pushBack(Box(other[j]));
+   }
+}
+
+/*
+ *************************************************************************
+ *
+ * Assignment.
+ * 
+ *************************************************************************
+ */
 
 BoxContainer& BoxContainer::operator = (
    const BoxContainer& rhs)
 {
-   TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(d_dim, rhs);
    if (this != &rhs) {
+      clear();
       d_list = rhs.d_list;
+      if (rhs.d_ordered) { 
+         order();
+      } else {
+         d_ordered = false;
+      }
    }
    return *this;
 }
@@ -65,37 +129,101 @@ BoxContainer& BoxContainer::operator = (
 
    const int n = rhs.size();
    for (int j = 0; j < n; j++) {
-      TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(d_dim, rhs[j]);
       pushBack(Box(rhs[j]));
    }
+   d_ordered = false;
+
    return *this;
 }
 
-BoxContainer::BoxContainer(
-   const tbox::Array<tbox::DatabaseBox>& other):
-   d_dim(other.size() == 0 ? tbox::Dimension::getInvalidDimension() :
-         other[0].getDim())
-{
-   const int n = other.size();
-   for (int j = 0; j < n; j++) {
-      TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(d_dim, other[j]);
-      pushBack(Box(other[j]));
-   }
-}
+/*
+ *************************************************************************
+ *
+ * Insert Box.
+ *
+ *************************************************************************
+ */
 
-void BoxContainer::insertAfter(Iterator iter, const Box& item)
+BoxContainer::Iterator
+BoxContainer::insert(
+   Iterator position,
+   const Box& box)
 {
-   TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(d_dim, item);
-   Iterator tmp = iter;
-   ++tmp;
-   if (tmp == end()) {
-      pushBack(item);
+#ifdef DEBUG_CHECK_ASSERTIONS
+   TBOX_ASSERT(box.getId().isValid());
+   if (size() > 0) {
+      TBOX_DIM_ASSERT_CHECK_ARGS2(front(), box);
+   }
+#endif
+
+   if (!d_ordered && size() == 0) {
+      order();
+   }
+
+   if (!d_ordered) {
+      TBOX_ERROR("insert attempted on unordered container.");
+   }
+
+   const std::list<Box>::iterator& list_iter =
+      d_list.insert(d_list.end(), box);
+
+   Iterator insert_iter;
+   insert_iter.d_ordered = true;
+
+   unsigned int old_size = d_set.size();
+   insert_iter.d_set_iter = d_set.insert(position.d_set_iter, &(*list_iter));
+   if (d_set.size() == old_size) {
+      d_list.erase(list_iter);
    } else {
-      insertBefore(tmp, item);
+      list_iter->lockId();
    }
+   return insert_iter;
 }
 
-/*************************************************************************
+/*
+ *************************************************************************
+ *
+ * Insert a range.
+ *
+ *************************************************************************
+ */
+
+void BoxContainer::insert ( ConstIterator first,
+                            ConstIterator last )
+{
+
+   if (!d_ordered && size() == 0) {
+      order();
+   }
+
+   if (!d_ordered) {
+      TBOX_ERROR("insert attempted on unordered container.");
+   }
+
+   for (std::set<Box*>::const_iterator set_iter = first.d_set_iter;
+        set_iter != last.d_set_iter; ++set_iter) {
+
+#ifdef DEBUG_CHECK_ASSERTIONS
+      TBOX_ASSERT((**set_iter).getId().isValid());
+      if (size() > 0) {
+         TBOX_DIM_ASSERT_CHECK_ARGS2(front(), **set_iter);
+      }
+#endif
+
+      const std::list<Box>::iterator& list_iter =
+         d_list.insert(d_list.end(), **set_iter);
+
+      if (!d_set.insert(&(*list_iter)).second) {
+         d_list.erase(list_iter);
+      } else {
+         list_iter->lockId();
+      }
+   }
+
+}
+
+/*
+ ************************************************************************
  *
  * Function simplify() takes the complicated container of boxes and
  * coalesces regions together where possible.
@@ -126,10 +254,15 @@ void BoxContainer::simplify()
    // Start coalescing on the highest dimension of the containers and work down
    // While there are non-canonical boxes, pick somebody out of the container.
 
-   if (!isEmpty()) {
+   if (d_ordered) {
+      TBOX_ERROR("simplify called on ordered BoxContainer."); 
+   }
 
-      BoxContainer notCanonical(d_dim);
-      for (int d = d_dim.getValue() - 1; d >= 0; d--) {
+   if (!isEmpty()) {
+      const tbox::Dimension dim(d_list.front().getDim());
+
+      BoxContainer notCanonical;
+      for (int d = dim.getValue() - 1; d >= 0; d--) {
          notCanonical.spliceBack(*this);
          while (!notCanonical.isEmpty()) {
             Box tryMe = notCanonical.front();
@@ -141,7 +274,7 @@ void BoxContainer::simplify()
             if (!tryMe.empty()) {
                bool combineDaPuppies = false;
                Iterator l(*this);
-               for ( ; l; l++) {
+               for ( ; l != end(); ++l) {
                   const Box andMe = l();
 
                   const Index& al = andMe.lower();
@@ -150,7 +283,7 @@ void BoxContainer::simplify()
                   const Index& bh = tryMe.upper();
 
                   combineDaPuppies = true;
-                  for (int du = d + 1; du < d_dim.getValue(); du++) {
+                  for (int du = d + 1; du < dim.getValue(); du++) {
                      if ((al(du) != bl(du)) || (ah(du) != bh(du))) {
                         combineDaPuppies = false;
                         break;
@@ -231,98 +364,127 @@ void BoxContainer::simplify()
  */
 void BoxContainer::coalesce()
 {
+   if (d_ordered) {
+      TBOX_ERROR("coalesce called on ordered BoxContainer.");
+   }
+
    Iterator tb(*this);
-   while (tb) {
+   while (tb != end()) {
 
       bool found_match = false;
 
       Iterator tb2 = tb;
-      tb2++;
+      ++tb2;
 
-      while (!found_match && tb2) {
+      while (!found_match && tb2 != end()) {
 
          if (tb2().coalesceWith(tb())) {
             found_match = true;
             erase(tb);
          }
 
-         tb2++;
+         ++tb2;
       }
 
       if (found_match) {
          tb = begin();
       } else {
-         tb++;
+         ++tb;
       }
    }
 }
 
-void BoxContainer::grow(
-   const IntVector& ghosts)
+/*
+ *************************************************************************
+ * Remove periodic images from container.
+ *************************************************************************
+ */
+
+void
+BoxContainer::removePeriodicImageBoxes()
 {
-   for (Iterator i(*this); i; i++) {
-      i().grow(ghosts);
+   if (!d_ordered && size() > 0) {
+      TBOX_ERROR("removePeriodicImages attempted on unordered container.");
+   }
+
+   for (Iterator na = begin(); na != end(); ) {
+      if (na->isPeriodicImage()) {
+         erase(na++);
+      }
+      else {
+         ++na;
+      }
    }
 }
 
-void BoxContainer::shift(
-   const IntVector& offset)
+/*
+ *************************************************************************
+ * Separate periodic images from real boxes
+ *************************************************************************
+ */
+void BoxContainer::separatePeriodicImages(
+   std::vector<Box>& real_mapped_box_vector,
+   std::vector<Box>& periodic_image_mapped_box_vector) const
 {
-   for (Iterator i(*this); i; i++) {
-      i().shift(offset);
+   if (!d_ordered) {
+      TBOX_ERROR("separatePeriodicImages called on unordered BoxContainer.");
+   }
+
+   if (!isEmpty()) {
+
+      const Box& first_element(*begin());
+
+      const PeriodicId zero_shift_number(PeriodicShiftCatalog::getCatalog(
+                                            first_element.getDim())->
+                                         getZeroShiftNumber());
+
+      real_mapped_box_vector.reserve(real_mapped_box_vector.size() + size());
+      for (ConstIterator ni = begin(); ni != end(); ++ni) {
+         const Box& mapped_box = *ni;
+         if (mapped_box.getPeriodicId() == zero_shift_number) {
+            real_mapped_box_vector.push_back(*ni);
+         } else {
+            periodic_image_mapped_box_vector.push_back(*ni);
+         }
+      }
    }
 }
 
-void BoxContainer::refine(
-   const IntVector& ratio)
-{
-   for (Iterator i(*this); i; i++) {
-      i().refine(ratio);
-   }
-}
-
-void BoxContainer::coarsen(
-   const IntVector& ratio)
-{
-   for (Iterator i(*this); i; i++) {
-      i().coarsen(ratio);
-   }
-}
+/*
+ *************************************************************************
+ * Rotate all boxes
+ *************************************************************************
+ */
 
 void BoxContainer::rotate(
    const Transformation::RotationIdentifier rotation_ident)
 {
-   if (getDim().getValue() == 2 || getDim().getValue() == 3) {
-      for (Iterator i(*this); i; i++) {
-         i().rotate(rotation_ident);
-      }
-   } else {
-      NULL_USE(rotation_ident);
-
-      TBOX_ERROR("BoxContainer::rotate() error ..."
-         << "\n   Rotation only implemented for 2D and 3D " << std::endl);
+   if (d_ordered) {
+      TBOX_ERROR("Rotate attempted on ordered container.");
    }
-}
+ 
+   if (!isEmpty()) {
+      const tbox::Dimension& dim = d_list.front().getDim();
+      const hier::BlockId& block_id = d_list.front().getBlockId();
+      if (dim.getValue() == 2 || dim.getValue() == 3) {
+         for (Iterator i(*this); i != end(); ++i) {
+            if (i->getBlockId() != block_id) {
+               TBOX_ERROR("BoxContainer::rotate() error ..."
+                 << "\n  Attempted to rotate BoxContainer having Boxes with"
+                 << "\n  differing BlockIds " << std::endl);
+            } else {
+               i().rotate(rotation_ident);
+            }
+         }
+      } else {
+         NULL_USE(rotation_ident);
 
-int BoxContainer::getTotalSizeOfBoxes() const
-{
-   int size = 0;
-   for (ConstIterator i(*this); i; i++) {
-      size += i().size();
-   }
-   return size;
-}
-
-bool BoxContainer::contains(
-   const Index& idx) const
-{
-   for (ConstIterator i(*this); i; i++) {
-      if (i().contains(idx)) {
-         return true;
+         TBOX_ERROR("BoxContainer::rotate() error ..."
+            << "\n   Rotation only implemented for 2D and 3D " << std::endl);
       }
    }
-   return false;
 }
+
 
 /*
  *************************************************************************
@@ -339,9 +501,59 @@ Box BoxContainer::getBoundingBox() const
       Box empty(dim);
       return empty;
    } else {
-      Box bbox(d_dim);
-      for (ConstIterator i(*this); i; i++) {
-         bbox += i();
+      ConstIterator i = begin();
+      Box bbox(*i);
+      const BlockId& block_id = bbox.getBlockId();
+      ++i;
+      for ( ; i != end(); ++i) {
+         if (i->getBlockId() == block_id) {
+            bbox += *i;
+         } else {
+            TBOX_ERROR("Attempted to find bounding box for BoxContainer with boxes from different blocks");
+         }
+      }
+      return bbox;
+   }
+}
+
+
+Box BoxContainer::getBoundingBox(const BlockId& block_id) const
+{
+   if (isEmpty()) {
+      TBOX_WARNING("Bounding box container is empty");
+      const tbox::Dimension dim(tbox::Dimension::getInvalidDimension());
+      Box empty(dim);
+      return empty;
+   } else {
+      const tbox::Dimension& dim = d_list.front().getDim();
+      Box bbox(dim);
+
+      /*
+       * First find the first box with the given BlockId
+       */ 
+      ConstIterator i = begin();
+      for ( ; i != end(); ++i) {
+         if (i->getBlockId() == block_id) {
+            bbox = *i;
+            break;
+         }
+      }
+
+      /*
+       * If no boxes were found with the desired BlockId, then the returned
+       * box will be empty.
+       */
+      if (i == end()) {
+         TBOX_WARNING("Container has no boxes with the given BlockId");
+      } else {
+
+         ++i;
+
+         for ( ; i != end(); ++i) {
+            if (i->getBlockId() == block_id) {
+               bbox += i();
+            }
+         }
       }
 
       return bbox;
@@ -361,17 +573,19 @@ bool BoxContainer::boxesIntersect() const
 
    ConstIterator tryMe(*this);
    ConstIterator whatAboutMe(*this);
-   whatAboutMe++;
-   while (!intersections && tryMe) {
-      while (!intersections && whatAboutMe) {
-         if (!((tryMe() * whatAboutMe()).size() == 0)) {
-            intersections = true;
+   ++whatAboutMe;
+   while (!intersections && tryMe != end()) {
+      while (!intersections && whatAboutMe != end()) {
+         if (tryMe().getBlockId() == whatAboutMe().getBlockId()) {
+            if (!((tryMe() * whatAboutMe()).size() == 0)) {
+               intersections = true;
+            }
          }
-         whatAboutMe++;
+         ++whatAboutMe;
       }
-      tryMe++;
+      ++tryMe;
       whatAboutMe = tryMe;
-      whatAboutMe++;
+      ++whatAboutMe;
    }
    return intersections;
 }
@@ -391,16 +605,20 @@ void BoxContainer::removeIntersections(
       return;
    }
 
+   if (d_ordered) {
+      TBOX_ERROR("removeIntersections attempted on ordered container.");
+   }
+
    const unsigned short dim = takeaway.getDim().getValue();
    Iterator insertion_pt(*this);
-   while (insertion_pt) {
+   while (insertion_pt != end()) {
       Box& tryme = *insertion_pt;
       if (!tryme.intersects(takeaway)) {
-         insertion_pt++;
+         ++insertion_pt;
       } else {
          Iterator tmp = insertion_pt;
          burstBoxes(tryme, takeaway, dim, insertion_pt);
-         insertion_pt++;
+         ++insertion_pt;
          erase(tmp);
       }
    }
@@ -413,7 +631,11 @@ void BoxContainer::removeIntersections(
       return;
    }
 
-   for (ConstIterator remove(takeaway); remove; remove++) {
+   if (d_ordered) {
+      TBOX_ERROR("removeIntersections attempted on ordered container.");
+   }
+
+   for (ConstIterator remove(takeaway); remove != takeaway.end(); ++remove) {
       const Box& byebye = remove();
       removeIntersections(byebye);
    }
@@ -426,17 +648,21 @@ void BoxContainer::removeIntersections(
       return;
    }
 
+   if (d_ordered) {
+      TBOX_ERROR("removeIntersections attempted on ordered container.");
+   }
+
    std::vector<const Box *> overlap_mapped_boxes;
    Iterator itr(*this);
-   while (itr) {
+   while (itr != end()) {
       const Box& tryme = *itr;
       takeaway.findOverlapBoxes(overlap_mapped_boxes, tryme);
       if (overlap_mapped_boxes.empty()) {
-         itr++;
+         ++itr;
       } else {
          Iterator sublist_start = itr;
          Iterator sublist_end = sublist_start;
-         sublist_end++;
+         ++sublist_end;
          for (size_t i = 0;
               i < overlap_mapped_boxes.size() && sublist_start != sublist_end;
               ++i) {
@@ -453,23 +679,26 @@ void BoxContainer::removeIntersections(
    }
 }
 
-#ifdef MB_BOXTREE_EXISTS
 void BoxContainer::removeIntersections(
    const BlockId& block_id,
    const IntVector& refinement_ratio,
    const MultiblockBoxTree& takeaway,
-   bool include_singularity_block_neighbors)
+   const bool include_singularity_block_neighbors)
 {
    if (isEmpty()) {
       return;
    }
 
-   const tbox::ConstPointer<hier::GridGeometry>
+   if (d_ordered) {
+      TBOX_ERROR("removeIntersections attempted on ordered container.");
+   }
+
+   const tbox::ConstPointer<GridGeometry>
    & grid_geometry(takeaway.getGridGeometry());
 
    std::vector<const Box *> overlap_mapped_boxes;
    Iterator itr(*this);
-   while (itr) {
+   while (itr != end()) {
       const Box& tryme = *itr;
       takeaway.findOverlapBoxes(overlap_mapped_boxes,
          tryme,
@@ -477,11 +706,11 @@ void BoxContainer::removeIntersections(
          refinement_ratio,
          include_singularity_block_neighbors);
       if (overlap_mapped_boxes.empty()) {
-         itr++;
+         ++itr;
       } else {
          Iterator sublist_start = itr;
          Iterator sublist_end = sublist_start;
-         sublist_end++;
+         ++sublist_end;
          for (size_t i = 0;
               i < overlap_mapped_boxes.size() && sublist_start != sublist_end;
               ++i) {
@@ -512,12 +741,15 @@ void BoxContainer::removeIntersections(
       }
    }
 }
-#endif
 
 void BoxContainer::removeIntersections(
    const Box& box,
    const Box& takeaway)
 {
+   if (d_ordered) {
+      TBOX_ERROR("removeIntersections attempted on ordered container.");
+   }
+
    /*
     * The box container MUST be empty to use this function (see comments
     * in header file for discussion of why). If the two boxes intersect,
@@ -541,18 +773,22 @@ void BoxContainer::removeIntersectionsFromSublist(
    Iterator& sublist_end,
    Iterator& insertion_pt)
 {
+   if (d_ordered) {
+      TBOX_ERROR("removeIntersections attempted on ordered container.");
+   }
+
    const unsigned short dim = takeaway.getDim().getValue();
    Iterator itr = sublist_start;
    while (itr != sublist_end) {
       Box& tryme = *itr;
       if (!tryme.intersects(takeaway)) {
-         itr++;
+         ++itr;
       } else {
          burstBoxes(tryme, takeaway, dim, insertion_pt);
          Iterator tmp = itr;
-         itr++;
+         ++itr;
          if (tmp == sublist_start) {
-            sublist_start++;
+            ++sublist_start;
          }
          erase(tmp);
       }
@@ -575,17 +811,21 @@ void BoxContainer::intersectBoxes(
       return;
    }
 
+   if (d_ordered) {
+      TBOX_ERROR("intersectBoxes attempted on ordered container.");
+   }
+
    Iterator i(*this);
    Box overlap(i().getDim());
-   while (i) {
+   while (i != end()) {
       Box& tryMe = *i;
       tryMe.intersect(keep, overlap);
       if (!overlap.empty()) {
          tryMe = overlap;
-         i++;
+         ++i;
       } else {
          Iterator tmp = i;
-         i++;
+         ++i;
          erase(tmp);
       }
    }
@@ -598,19 +838,23 @@ void BoxContainer::intersectBoxes(
       return;
    }
 
+   if (d_ordered) {
+      TBOX_ERROR("intersectBoxes attempted on ordered container.");
+   }
+
    Iterator insertion_pt(*this);
    Box overlap(insertion_pt().getDim());
-   while (insertion_pt) {
+   while (insertion_pt != end()) {
       Iterator tmp = insertion_pt;
       const Box& tryme = *insertion_pt;
-      for (ConstIterator i(keep); i; i++) {
+      for (ConstIterator i(keep); i != keep.end(); ++i) {
          tryme.intersect(i(), overlap);
          if (!overlap.empty()) {
             insertAfter(insertion_pt, overlap);
-            insertion_pt++;
+            ++insertion_pt;
          }
       }
-      insertion_pt++;
+      ++insertion_pt;
       erase(tmp);
    }
 }
@@ -622,47 +866,54 @@ void BoxContainer::intersectBoxes(
       return;
    }
 
+   if (d_ordered) {
+      TBOX_ERROR("intersectBoxes attempted on ordered container.");
+   }
+
    std::vector<const Box *> overlap_mapped_boxes;
    Box overlap(front().getDim());
    Iterator itr(*this);
    Iterator insertion_pt = itr;
-   while (itr) {
+   while (itr != end()) {
       const Box& tryme = *itr;
       keep.findOverlapBoxes(overlap_mapped_boxes, tryme);
       for (size_t i = 0; i < overlap_mapped_boxes.size(); ++i) {
          tryme.intersect(*overlap_mapped_boxes[i], overlap);
          if (!overlap.empty()) {
             insertAfter(insertion_pt, overlap);
-            insertion_pt++;
+            ++insertion_pt;
          }
       }
       overlap_mapped_boxes.clear();
       Iterator tmp = itr;
-      insertion_pt++;
+      ++insertion_pt;
       itr = insertion_pt;
       erase(tmp);
    }
 }
 
-#ifdef MB_BOXTREE_EXISTS
 void BoxContainer::intersectBoxes(
    const BlockId& block_id,
    const IntVector& refinement_ratio,
    const MultiblockBoxTree& keep,
-   bool include_singularity_block_neighbors)
+   const bool include_singularity_block_neighbors)
 {
    if (isEmpty()) {
       return;
    }
 
-   const tbox::ConstPointer<hier::GridGeometry>
+   if (d_ordered) {
+      TBOX_ERROR("intersectBoxes attempted on ordered container.");
+   }
+
+   const tbox::ConstPointer<GridGeometry>
    & grid_geometry(keep.getGridGeometry());
 
    std::vector<const Box *> overlap_mapped_boxes;
    Box overlap(front().getDim());
    Iterator itr(*this);
    Iterator insertion_pt = itr;
-   while (itr) {
+   while (itr != end()) {
       const Box& tryme = *itr;
       keep.findOverlapBoxes(overlap_mapped_boxes,
          tryme,
@@ -681,24 +932,23 @@ void BoxContainer::intersectBoxes(
             tryme.intersect(overlap_box, overlap);
             if (!overlap.empty()) {
                insertAfter(insertion_pt, overlap);
-               insertion_pt++;
+               ++insertion_pt;
             }
          } else {
             tryme.intersect(*overlap_mapped_boxes[i], overlap);
             if (!overlap.empty()) {
                insertAfter(insertion_pt, overlap);
-               insertion_pt++;
+               ++insertion_pt;
             }
          }
       }
       overlap_mapped_boxes.clear();
       Iterator tmp = itr;
-      insertion_pt++;
+      ++insertion_pt;
       itr = insertion_pt;
       erase(tmp);
    }
 }
-#endif
 
 /*
  *************************************************************************
@@ -713,28 +963,11 @@ BoxContainer::operator tbox::Array<tbox::DatabaseBox>() const
    tbox::Array<tbox::DatabaseBox> new_Array(size());
 
    int j = 0;
-   for (ConstIterator i(*this); i; i++) {
+   for (ConstIterator i = begin(); i != end(); ++i) {
       new_Array[j++] = (tbox::DatabaseBox)(*i);
    }
 
    return new_Array;
-}
-
-/*
- *************************************************************************
- *
- * Print boxes in container.
- *
- *************************************************************************
- */
-void BoxContainer::print(
-   std::ostream& os) const
-{
-   int i = 0;
-   for (ConstIterator b(*this); b; b++) {
-      os << "Box # " << i << ":  " << b() << std::endl;
-      i++;
-   }
 }
 
 /*
@@ -815,17 +1048,379 @@ void BoxContainer::burstBoxes(
          newl(d) = solidh(d) + 1;
          insertAfter(insertion_pt, Box(newl, bursth));
          bursth(d) = solidh(d);
-         insertion_pt++;
+         ++insertion_pt;
       }
       if (burstl(d) < solidl(d)) {
          Index newh = bursth;
          newh(d) = solidl(d) - 1;
          insertAfter(insertion_pt, Box(burstl, newh));
          burstl(d) = solidl(d);
-         insertion_pt++;
+         ++insertion_pt;
       }
    }
 }
+
+/*
+ ***********************************************************************
+ * Insert Box owners into a single set container.
+ ***********************************************************************
+ */
+void BoxContainer::getOwners(
+   std::set<int>& owners) const
+{
+   if (d_ordered) {
+      for (ConstIterator i_nabr = begin();
+           i_nabr != end(); ++i_nabr) {
+         const int owner = (*i_nabr).getOwnerRank();
+         owners.insert(owner);
+      }
+   } else {
+      for (ConstIterator i_nabr = begin();
+           i_nabr != end(); ++i_nabr) {
+         if ((*i_nabr).getId().isValid()) {
+            const int owner = (*i_nabr).getOwnerRank();
+            owners.insert(owner);
+         } else {
+            TBOX_ERROR("Attempted to get owner of Box with invalid BoxId.");
+         }
+      }
+   }
+}
+
+/*
+ ***********************************************************************
+ * Unshift periodic image Boxes from a BoxContainer.
+ ***********************************************************************
+ */
+void BoxContainer::unshiftPeriodicImageBoxes(
+   BoxContainer& output_mapped_boxes,
+   const IntVector& refinement_ratio) const
+{
+   if (!d_ordered) {
+      TBOX_ERROR("unshiftPeriodicImageBoxes called on unordered container.");
+   }
+
+   Iterator hint = output_mapped_boxes.begin();
+
+   if (!isEmpty()) {
+      const Box& first_element(*begin());
+
+      const PeriodicId zero_shift_number(PeriodicShiftCatalog::getCatalog(
+                                            first_element.getDim())->
+                                         getZeroShiftNumber());
+
+      for (ConstIterator na = begin(); na != end(); ++na) {
+         if (na->isPeriodicImage()) {
+            const Box unshifted_mapped_box(
+               *na, zero_shift_number, refinement_ratio);
+            hint = output_mapped_boxes.insert(hint, unshifted_mapped_box);
+         } else {
+            hint = output_mapped_boxes.insert(hint, *na);
+         }
+      }
+   }
+}
+
+/*
+ ***********************************************************************
+ * Switch to ordered state.
+ ***********************************************************************
+ */
+void BoxContainer::order()
+{
+   if (!d_ordered) {
+      d_set.clear();
+      for (Iterator i(*this); i != end(); ++i) {
+         if (!(*i).getId().isValid()) {
+            TBOX_ERROR("Attempted to order a BoxContainer that has a member with an invalid BoxId.");
+         }
+         if (d_set.insert(&(*i)).second == false) {
+            TBOX_ERROR("Attempted to order a BoxContainer with duplicate BoxIds.");
+         }
+         i->lockId();
+      }
+      d_ordered = true;
+   }
+}
+
+/*
+ *************************************************************************
+ * Erase methods
+ *************************************************************************
+ */
+
+void BoxContainer::erase(Iterator iter)
+{
+   if (!d_ordered) {
+      d_list.erase(iter.d_list_iter);
+   } else {
+      const Box& box = **(iter.d_set_iter);
+      d_set.erase(iter.d_set_iter);
+
+      for (std::list<Box>::iterator bi = d_list.begin(); bi != d_list.end();
+           ++bi) {
+         if (bi->getId() == box.getId()) {
+            d_list.erase(bi);
+            break;
+         }
+      }
+   }
+}
+
+void BoxContainer::erase(Iterator first, Iterator last)
+{
+   if (!d_ordered) {
+      d_list.erase(first.d_list_iter, last.d_list_iter);
+   } else {
+      for (Iterator iter = first; iter != last; ++iter) {
+         erase(iter);
+      }
+   }
+}
+
+
+int BoxContainer::erase(const Box& box)
+{
+   if (!d_ordered) {
+      TBOX_ERROR("erase with Box argument attempted on unordered BoxContainer.");
+   }
+
+   int ret = d_set.erase(const_cast<Box*>(&box));
+   for (std::list<Box>::iterator bi = d_list.begin(); bi != d_list.end();
+        ++bi) {
+      if (bi->getId() == box.getId()) {
+         d_list.erase(bi++);
+         break;
+      }
+   }
+
+   return ret;
+}
+
+/*
+ *************************************************************************
+ * Box-based queries
+ *************************************************************************
+ */
+
+int BoxContainer::getTotalSizeOfBoxes() const
+{
+   int size = 0;
+   if (!d_ordered) {
+      for (ConstIterator i(*this); i != end(); ++i) {
+         size += i().size();
+      }
+   } else {
+      for (ConstIterator i(*this); i != end(); ++i) {
+         size += i().size();
+      }
+   }
+   return size;
+}
+
+bool BoxContainer::contains(
+   const Index& idx) const
+{
+   for (ConstIterator i(*this); i != end(); ++i) {
+      if (i().contains(idx)) {
+         return true;
+      }
+   }
+   return false;
+}
+
+/*
+ *************************************************************************
+ * Spatial manipulation of Boxes
+ ************************************************************************
+ */
+
+void BoxContainer::grow(
+   const IntVector& ghosts)
+{
+   for (Iterator i(*this); i != end(); ++i) {
+      i().grow(ghosts);
+   }
+}
+
+
+void BoxContainer::shift(
+   const IntVector& offset)
+{
+   for (Iterator i(*this); i != end(); ++i) {
+      i().shift(offset);
+   }
+}
+
+void BoxContainer::refine(
+   const IntVector& ratio)
+{
+   for (Iterator i(*this); i != end(); ++i) {
+      i().refine(ratio);
+   }
+}
+
+void BoxContainer::coarsen(
+   const IntVector& ratio)
+{
+   for (Iterator i(*this); i != end(); ++i) {
+      i().coarsen(ratio);
+   }
+}
+
+/*
+ ***********************************************************************
+ * Write the BoxContainer to a database.
+ ***********************************************************************
+ */
+void BoxContainer::putToDatabase(
+   tbox::Database& database) const
+{
+   database.putInteger(
+      "HIER_BOX_CONTAINER_VERSION", HIER_BOX_CONTAINER_VERSION);
+
+   const int mbs_size = size();
+   database.putInteger("mapped_box_set_size", mbs_size);
+   if (mbs_size > 0) {
+
+      std::vector<int> local_ids;
+      std::vector<int> ranks;
+      std::vector<int> block_ids;
+      std::vector<int> periodic_ids;
+      local_ids.reserve(mbs_size);
+      ranks.reserve(mbs_size);
+      block_ids.reserve(mbs_size);
+      periodic_ids.reserve(mbs_size);
+
+      tbox::Array<tbox::DatabaseBox> db_box_array(mbs_size);
+
+      int counter = -1;
+      for (BoxContainer::ConstIterator ni = begin();
+           ni != end(); ++ni) {
+         local_ids.push_back(ni->getLocalId().getValue());
+         ranks.push_back(ni->getOwnerRank());
+         block_ids.push_back(ni->getBlockId().getBlockValue());
+         periodic_ids.push_back(ni->getPeriodicId().getPeriodicValue());
+         db_box_array[++counter] = *ni;
+      }
+
+      database.putIntegerArray(
+         "local_indices", &local_ids[0], mbs_size);
+      database.putIntegerArray(
+         "ranks", &ranks[0], mbs_size);
+      database.putIntegerArray(
+         "block_ids", &block_ids[0], mbs_size);
+      database.putIntegerArray(
+         "periodic_ids", &periodic_ids[0], mbs_size);
+      database.putDatabaseBoxArray(
+         "boxes", &db_box_array[0], mbs_size);
+   }
+}
+
+
+/*
+ ***********************************************************************
+ * Read the BoxContainer from a database.
+ ***********************************************************************
+ */
+void BoxContainer::getFromDatabase(
+   tbox::Database& database)
+{
+   const unsigned int mbs_size = database.getInteger("mapped_box_set_size");
+   if (mbs_size > 0) {
+      std::vector<int> local_ids(mbs_size);
+      std::vector<int> ranks(mbs_size);
+      std::vector<int> block_ids(mbs_size);
+      std::vector<int> periodic_ids(mbs_size);
+      tbox::Array<tbox::DatabaseBox> db_box_array(mbs_size);
+
+      database.getIntegerArray(
+         "local_indices", &local_ids[0], mbs_size);
+      database.getIntegerArray(
+         "ranks", &ranks[0], mbs_size);
+      database.getIntegerArray(
+         "block_ids", &block_ids[0], mbs_size);
+      database.getIntegerArray(
+         "periodic_ids", &periodic_ids[0], mbs_size);
+      database.getDatabaseBoxArray(
+         "boxes", &db_box_array[0], mbs_size);
+
+      for (unsigned int i = 0; i < mbs_size; ++i) {
+         Box box(db_box_array[i]);
+         Box mapped_box(
+            box,
+            LocalId(local_ids[i]),
+            ranks[i],
+            BlockId(block_ids[i]),
+            PeriodicId(periodic_ids[i]));
+         insert(end(), mapped_box);
+      }
+   }
+}
+
+
+/*
+ ***********************************************************************
+ * Prind contents of the BoxContainer
+ ***********************************************************************
+ */
+void BoxContainer::print(
+   std::ostream& co) const
+{
+   for (ConstIterator bi = begin(); bi != end(); ++bi) {
+      Box box(*bi);
+      co << "    "
+         << box << "   "
+         << box.numberCells() << '\n';
+   }
+}
+
+/*
+ ***********************************************************************
+ * Construct a BoxContainer Outputter with formatting parameters.
+ ***********************************************************************
+ */
+
+BoxContainer::Outputter::Outputter(
+   const BoxContainer& mapped_box_set,
+   const std::string& border,
+   int detail_depth):
+   d_set(mapped_box_set),
+   d_border(border),
+   d_detail_depth(detail_depth)
+{
+}
+
+/*
+ ***********************************************************************
+ * Print out a BoxContainer according to settings in the Outputter.
+ ***********************************************************************
+ */
+
+std::ostream& operator << (
+   std::ostream& s,
+   const BoxContainer::Outputter& format)
+{
+   format.d_set.print(s);
+   return s;
+}
+
+
+/*
+ ***********************************************************************
+ * Return a Outputter that can dump the BoxContainer to a stream.
+ ***********************************************************************
+ */
+
+BoxContainer::Outputter BoxContainer::format(
+   const std::string& border,
+   int detail_depth) const
+{
+   return Outputter(*this, border, detail_depth);
+}
+
+
+
 
 }
 }

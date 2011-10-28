@@ -12,6 +12,8 @@
 
 #include "SAMRAI/pdat/SparseData.h"
 #include "SAMRAI/hier/Box.h"
+#include "SAMRAI/hier/BoxContainer.h"
+#include "SAMRAI/hier/BoxContainerConstIterator.h"
 #include "SAMRAI/tbox/PIO.h"
 
 // used for boost::to_lower
@@ -220,11 +222,11 @@ SparseData<BOX_GEOMETRY>::copy(
    TBOX_ASSERT(tmp_overlap != NULL);
 
    const hier::IntVector& src_offset(tmp_overlap->getSourceOffset());
-   const hier::BoxList& box_list = tmp_overlap->getDestinationBoxList();
+   const hier::BoxContainer& box_list = tmp_overlap->getDestinationBoxContainer();
    const hier::Box& src_ghost_box = tmp_src->getGhostBox();
 
-   for (hier::BoxList::Iterator overlap_box(box_list);
-        overlap_box; overlap_box++) {
+   for (hier::BoxContainer::ConstIterator overlap_box(box_list);
+        overlap_box != box_list.end(); ++overlap_box) {
 
       const hier::Box& dst_box = overlap_box();
       const hier::Box src_box(hier::Box::shift(overlap_box(), -src_offset));
@@ -244,7 +246,7 @@ SparseData<BOX_GEOMETRY>::copy(
 
          } // if (src_ghost_box.contains(...
       } // for (; src_index_map_iter != ...
-   } // for (hier::BoxList::Iterator overlap_box(...
+   } // for (hier::BoxContainer::Iterator overlap_box(...
 }
 
 /**********************************************************************
@@ -299,12 +301,12 @@ SparseData<BOX_GEOMETRY>::getDataStreamSize(
    int num_items = 0;
    int num_attributes = 0;
    //int exc_count = 0;
-   const hier::BoxList& boxes = tmp_overlap->getDestinationBoxList();
+   const hier::BoxContainer& boxes = tmp_overlap->getDestinationBoxContainer();
 
    // first count up the number of items that we'll need to deal
    // with
-   for (hier::BoxList::Iterator overlap_box(boxes); overlap_box;
-        overlap_box++) {
+   for (hier::BoxContainer::ConstIterator overlap_box(boxes);
+        overlap_box != boxes.end(); ++overlap_box) {
 
       const hier::Box& box = hier::PatchData::getBox()
          * hier::Box::shift(overlap_box(), -(tmp_overlap->getSourceOffset()));
@@ -391,13 +393,13 @@ SparseData<BOX_GEOMETRY>::packStream(
    TBOX_ASSERT(tmp_overlap != NULL);
 
    // Calculate the number of matching items
-   const hier::BoxList& boxes = tmp_overlap->getDestinationBoxList();
+   const hier::BoxContainer& boxes = tmp_overlap->getDestinationBoxContainer();
 
    int num_items = 0;
    int num_attributes = 0;
 
-   for (hier::BoxList::Iterator overlap_box(boxes); overlap_box;
-        overlap_box++) {
+   for (hier::BoxContainer::ConstIterator overlap_box(boxes);
+        overlap_box != boxes.end(); ++overlap_box) {
       hier::Box box = hier::PatchData::getBox()
          * hier::Box::shift(overlap_box(), -(tmp_overlap->getSourceOffset()));
 
@@ -460,8 +462,8 @@ SparseData<BOX_GEOMETRY>::packStream(
    }
 
    // pack the individual items
-   for (hier::BoxList::Iterator overlap_box(boxes); overlap_box;
-        overlap_box++) {
+   for (hier::BoxContainer::ConstIterator overlap_box(boxes);
+        overlap_box != boxes.end(); overlap_box++) {
 
       hier::Box box = hier::PatchData::getBox()
          * hier::Box::shift(overlap_box(), -(tmp_overlap->getSourceOffset()));
@@ -509,7 +511,7 @@ SparseData<BOX_GEOMETRY>::packStream(
             }
          } //  if (box.contains(...
       } // for (; index_map_iter
-   } // for (hier::BoxList::Iterator overlap_box(...
+   } // for (hier::BoxContainer::Iterator overlap_box(...
 }
 
 /**********************************************************************
@@ -577,9 +579,9 @@ SparseData<BOX_GEOMETRY>::unpackStream(
 
    }
 
-   const hier::BoxList& boxes = tmp_overlap->getDestinationBoxList();
-   for (hier::BoxList::Iterator overlap_box(boxes); overlap_box;
-        overlap_box++) {
+   const hier::BoxContainer& boxes = tmp_overlap->getDestinationBoxContainer();
+   for (hier::BoxContainer::ConstIterator overlap_box(boxes);
+        overlap_box != boxes.end(); ++overlap_box) {
 
       _removeInsideBox(overlap_box());
    }

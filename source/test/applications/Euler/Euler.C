@@ -33,7 +33,7 @@ using namespace std;
 #include <cmath>
 #include <cfloat>
 
-#include "SAMRAI/hier/BoxList.h"
+#include "SAMRAI/hier/BoxContainerIterator.h"
 #include "SAMRAI/geom/CartesianPatchGeometry.h"
 #include "SAMRAI/pdat/CellData.h"
 #include "SAMRAI/pdat/CellIndex.h"
@@ -1719,14 +1719,14 @@ void Euler::boundaryReset(
 
    const tbox::Pointer<geom::CartesianPatchGeometry> patch_geom =
       patch.getPatchGeometry();
-   hier::BoxList domain_boxes(d_dim);
+   hier::BoxContainer domain_boxes;
    d_grid_geometry->computePhysicalDomain(domain_boxes, patch_geom->getRatio(), hier::BlockId::zero());
    const double* dx = patch_geom->getDx();
    const double* xpatchhi = patch_geom->getXUpper();
    const double* xdomainhi = d_grid_geometry->getXUpper();
 
    pdat::CellIndex icell(ifirst);
-   hier::BoxList bdrybox(d_dim);
+   hier::BoxContainer bdrybox;
    hier::Index ibfirst = ifirst;
    hier::Index iblast = ilast;
    int bdry_case = 0;
@@ -1734,14 +1734,14 @@ void Euler::boundaryReset(
    for (idir = 0; idir < d_dim.getValue(); idir++) {
       ibfirst(idir) = ifirst(idir) - 1;
       iblast(idir) = ifirst(idir) - 1;
-      bdrybox.appendItem(hier::Box(ibfirst, iblast));
+      bdrybox.pushBack(hier::Box(ibfirst, iblast));
 
       ibfirst(idir) = ilast(idir) + 1;
       iblast(idir) = ilast(idir) + 1;
-      bdrybox.appendItem(hier::Box(ibfirst, iblast));
+      bdrybox.pushBack(hier::Box(ibfirst, iblast));
    }
 
-   hier::BoxList::Iterator ib(bdrybox);
+   hier::BoxContainer::Iterator ib(bdrybox);
    for (idir = 0; idir < d_dim.getValue(); idir++) {
       int bside = 2 * idir;
       if (d_dim == tbox::Dimension(2)) {
@@ -1752,9 +1752,9 @@ void Euler::boundaryReset(
       }
       if (bdry_case == BdryCond::REFLECT) {
          for (pdat::CellIterator ic(ib()); ic; ic++) {
-            for (hier::BoxList::Iterator domain_boxes_itr(domain_boxes);
-                 domain_boxes_itr;
-                 domain_boxes_itr++) {
+            for (hier::BoxContainer::Iterator domain_boxes_itr(domain_boxes);
+                 domain_boxes_itr != domain_boxes.end();
+                 ++domain_boxes_itr) {
                if (domain_boxes_itr().contains(ic()))
                   bdry_cell = false;
             }
@@ -1764,7 +1764,7 @@ void Euler::boundaryReset(
             }
          }
       }
-      ib++;
+      ++ib;
 
       int bnode = 2 * idir + 1;
       if (d_dim == tbox::Dimension(2)) {
@@ -1781,9 +1781,9 @@ void Euler::boundaryReset(
 // END SIMPLE-MINDED FIX FOR STEP PROBLEM
       if (bdry_case == BdryCond::REFLECT) {
          for (pdat::CellIterator ic(ib()); ic; ic++) {
-            for (hier::BoxList::Iterator domain_boxes_itr(domain_boxes);
-                 domain_boxes_itr;
-                 domain_boxes_itr++) {
+            for (hier::BoxContainer::Iterator domain_boxes_itr(domain_boxes);
+                 domain_boxes_itr != domain_boxes.end();
+                 ++domain_boxes_itr) {
                if (domain_boxes_itr().contains(ic()))
                   bdry_cell = false;
             }
@@ -1793,7 +1793,7 @@ void Euler::boundaryReset(
             }
          }
       }
-      ib++;
+      ++ib;
    }
 }
 
@@ -2340,13 +2340,13 @@ void Euler::tagGradientDetectorCells(
    tbox::Pointer<pdat::CellData<int> > tags = patch.getPatchData(tag_indx);
 
    hier::Box pbox = patch.getBox();
-   hier::BoxList domain_boxes(d_dim);
+   hier::BoxContainer domain_boxes;
    d_grid_geometry->computePhysicalDomain(domain_boxes, patch_geom->getRatio(), hier::BlockId::zero());
    /*
     * Construct domain bounding box
     */
    hier::Box domain(d_dim);
-   for (hier::BoxList::Iterator i(domain_boxes); i; i++) {
+   for (hier::BoxContainer::Iterator i(domain_boxes); i != domain_boxes.end(); ++i) {
       domain += *i;
    }
 

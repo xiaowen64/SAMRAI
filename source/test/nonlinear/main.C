@@ -18,7 +18,6 @@ using namespace std;
 /*
  * Headers for basic SAMRAI objects used in this sample code.
  */
-#include "SAMRAI/hier/BoxList.h"
 #include "SAMRAI/tbox/Database.h"
 #include "SAMRAI/hier/GridGeometry.h"
 #include "SAMRAI/tbox/InputManager.h"

@@ -12,6 +12,7 @@
 #define included_xfer_PatchLevelEnhancedFillPattern_C
 
 #include "SAMRAI/xfer/PatchLevelEnhancedFillPattern.h"
+#include "SAMRAI/hier/BoxContainerIterator.h"
 #include "SAMRAI/hier/RealBoxConstIterator.h"
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/tbox/MathUtilities.h"
@@ -72,27 +73,27 @@ void PatchLevelEnhancedFillPattern::computeFillBoxesAndNeighborhoodSets(
    tbox::ConstPointer<hier::GridGeometry> grid_geometry(
       dst_mapped_box_level.getGridGeometry());
 
-   const hier::BoxSet& dst_mapped_boxes =
+   const hier::BoxContainer& dst_mapped_boxes =
       dst_mapped_box_level.getBoxes();
 
    hier::LocalId last_id = dst_mapped_box_level.getLastLocalId();
    for (hier::RealBoxConstIterator ni(dst_mapped_boxes);
         ni.isValid(); ++ni) {
       const hier::Box& dst_mapped_box = *ni;
-      hier::BoxList fill_boxes(dst_mapped_box);
-      fill_boxes.getFirstItem().grow(fill_ghost_width);
+      hier::BoxContainer fill_boxes(
+         hier::Box::grow(dst_mapped_box, fill_ghost_width));
 
       const tbox::List<hier::GridGeometry::Neighbor>& neighbors =
          grid_geometry->getNeighbors(dst_mapped_box.getBlockId());
 
-      hier::BoxList constructed_fill_boxes(dst_mapped_box.getDim());
+      hier::BoxContainer constructed_fill_boxes;
 
       for (tbox::List<hier::GridGeometry::Neighbor>::Iterator ni(neighbors);
            ni; ni++) {
 
          if (ni().isSingularity()) {
 
-            hier::BoxList encon_boxes(ni().getTransformedDomain());
+            hier::BoxContainer encon_boxes(ni().getTransformedDomain());
             encon_boxes.refine(dst_mapped_box_level.getRefinementRatio());
             encon_boxes.intersectBoxes(fill_boxes);
             encon_boxes.removeIntersections(constructed_fill_boxes);
@@ -100,7 +101,8 @@ void PatchLevelEnhancedFillPattern::computeFillBoxesAndNeighborhoodSets(
             if (encon_boxes.size()) {
 
                dst_to_fill.makeEmptyLocalNeighborhood(dst_mapped_box.getId());
-               for (hier::BoxList::Iterator ei(encon_boxes); ei; ei++) {
+               for (hier::BoxContainer::Iterator ei(encon_boxes);
+                    ei != encon_boxes.end(); ei++) {
 
                   hier::Box fill_mapped_box(
                      *ei,
@@ -113,7 +115,7 @@ void PatchLevelEnhancedFillPattern::computeFillBoxesAndNeighborhoodSets(
                   dst_to_fill.insertLocalNeighbor(fill_mapped_box,
                      dst_mapped_box.getId());
 
-                  constructed_fill_boxes.appendItem(*ei);
+                  constructed_fill_boxes.pushBack(*ei);
                }
             }
          }

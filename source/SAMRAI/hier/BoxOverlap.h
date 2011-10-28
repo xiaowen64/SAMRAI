@@ -12,8 +12,8 @@
 #define included_hier_BoxOverlap
 
 #include "SAMRAI/SAMRAI_config.h"
-#include "SAMRAI/hier/BoxList.h"
 #include "SAMRAI/hier/IntVector.h"
+#include "SAMRAI/hier/Transformation.h"
 #include "SAMRAI/tbox/DescribedClass.h"
 
 namespace SAMRAI {

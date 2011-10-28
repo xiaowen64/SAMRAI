@@ -16,12 +16,12 @@ namespace SAMRAI {
 namespace hier {
 
 BoxSetSingleOwnerIterator::BoxSetSingleOwnerIterator(
-   const BoxSet& mapped_boxes,
+   const BoxContainer& mapped_boxes,
    const int& owner_rank):
    d_mapped_boxes(&mapped_boxes),
-   d_owner_rank(owner_rank)
+   d_owner_rank(owner_rank),
+   d_iter(d_mapped_boxes->begin())
 {
-   d_iter = d_mapped_boxes->begin();
    while (d_iter != d_mapped_boxes->end() && d_iter->getOwnerRank() != d_owner_rank) {
       ++d_iter;
    }

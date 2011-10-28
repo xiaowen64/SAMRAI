@@ -45,6 +45,8 @@
 #include "SAMRAI/pdat/SideDoubleLinearTimeInterpolateOp.h"
 #include "SAMRAI/hier/PatchLevel.h"
 #include "SAMRAI/hier/BoundaryLookupTable.h"
+#include "SAMRAI/hier/BoxContainerConstIterator.h"
+#include "SAMRAI/hier/BoxContainerIterator.h"
 #include "SAMRAI/hier/VariableDatabase.h"
 #include "SAMRAI/tbox/RestartManager.h"
 #include "SAMRAI/tbox/Utilities.h"
@@ -98,12 +100,13 @@ SkeletonGridGeometry::SkeletonGridGeometry(
 
 SkeletonGridGeometry::SkeletonGridGeometry(
    const std::string& object_name,
-   const hier::BoxList& domain,
+   const hier::BoxContainer& domain,
    bool register_for_restart):
-   hier::GridGeometry(domain.getDim(), object_name,
+   hier::GridGeometry(domain.front().getDim(), object_name,
                       tbox::Pointer<hier::TransferOperatorRegistry>(
-                         new SAMRAITransferOperatorRegistry(domain.getDim())))
+                         new SAMRAITransferOperatorRegistry(domain.front().getDim())))
 {
+   TBOX_ASSERT(domain.size() > 0);
    TBOX_ASSERT(!object_name.empty());
 
    d_registered_for_restart = register_for_restart;
@@ -113,7 +116,7 @@ SkeletonGridGeometry::SkeletonGridGeometry(
       registerRestartItem(getObjectName(), this);
    }
 
-   tbox::Array<hier::BoxList> domain_array(1, domain);
+   tbox::Array<hier::BoxContainer> domain_array(1, domain);
    this->setPhysicalDomain(domain_array);
 
 }
@@ -155,7 +158,7 @@ SkeletonGridGeometry::makeRefinedGridGeometry(
    TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(dim, refine_ratio);
    TBOX_ASSERT(refine_ratio > hier::IntVector::getZero(dim));
 
-   hier::BoxList fine_domain(this->getPhysicalDomain(hier::BlockId(0)));
+   hier::BoxContainer fine_domain(this->getPhysicalDomain(hier::BlockId(0)));
    fine_domain.refine(refine_ratio);
 
    geom::SkeletonGridGeometry* fine_geometry =
@@ -191,16 +194,16 @@ SkeletonGridGeometry::makeCoarsenedGridGeometry(
    TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(dim, coarsen_ratio);
    TBOX_ASSERT(coarsen_ratio > hier::IntVector::getZero(dim));
 
-   hier::BoxList coarse_domain(this->getPhysicalDomain(hier::BlockId(0)));
+   hier::BoxContainer coarse_domain(this->getPhysicalDomain(hier::BlockId(0)));
    coarse_domain.coarsen(coarsen_ratio);
 
    /*
     * Need to check that domain can be coarsened by given ratio.
     */
-   const hier::BoxList& fine_domain = this->getPhysicalDomain(hier::BlockId(0));
-   const int nboxes = fine_domain.getNumberOfBoxes();
-   hier::BoxList::Iterator fine_domain_itr(fine_domain);
-   hier::BoxList::Iterator coarse_domain_itr(coarse_domain);
+   const hier::BoxContainer& fine_domain = this->getPhysicalDomain(hier::BlockId(0));
+   const int nboxes = fine_domain.size();
+   hier::BoxContainer::ConstIterator fine_domain_itr(fine_domain);
+   hier::BoxContainer::Iterator coarse_domain_itr(coarse_domain);
    for (int ib = 0; ib < nboxes; ib++, fine_domain_itr++, coarse_domain_itr++) {
       hier::Box testbox = hier::Box::refine(*coarse_domain_itr, coarsen_ratio);
       if (!testbox.isSpatiallyEqual(*fine_domain_itr)) {
@@ -327,10 +330,10 @@ void SkeletonGridGeometry::getFromInput(
 
    if (!is_from_restart) {
 
-      hier::BoxList domain(dim);
+      hier::BoxContainer domain;
       if (db->keyExists("domain_boxes")) {
          domain = db->getDatabaseBoxArray("domain_boxes");
-         if (domain.getNumberOfBoxes() == 0) {
+         if (domain.size() == 0) {
             TBOX_ERROR(
                getObjectName() << ":  "
                                << "Skeleton `domain_boxes' array found in input.");
@@ -350,7 +353,7 @@ void SkeletonGridGeometry::getFromInput(
          }
       }
 
-      tbox::Array<hier::BoxList> domain_array(1, domain);
+      tbox::Array<hier::BoxContainer> domain_array(1, domain);
 
       this->setPhysicalDomain(domain_array);
 
@@ -390,9 +393,9 @@ void SkeletonGridGeometry::getFromRestart()
          getObjectName() << ":  "
                          << "Restart file version is different than class version.");
    }
-   hier::BoxList domain(db->getDatabaseBoxArray("d_physical_domain"));
+   hier::BoxContainer domain(db->getDatabaseBoxArray("d_physical_domain"));
 
-   tbox::Array<hier::BoxList> domain_array(1, domain);
+   tbox::Array<hier::BoxContainer> domain_array(1, domain);
 
    this->setPhysicalDomain(domain_array);
 

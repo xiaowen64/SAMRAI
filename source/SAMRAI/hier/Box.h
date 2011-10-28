@@ -281,12 +281,22 @@ public:
       {
          return b1.isIdEqual(b2);
       }
+
+      bool operator () (const Box* b1, const Box* b2) const
+      {
+         return b1->isIdEqual(*b2);
+      }
    };
 
    struct id_less {
       bool operator () (const Box& b1, const Box& b2) const
       {
          return b1.getId() < b2.getId();
+      }
+
+      bool operator () (const Box* b1, const Box* b2) const
+      {
+         return b1->getId() < b2->getId();
       }
    };
 
@@ -753,6 +763,12 @@ public:
    const tbox::Dimension&
    getDim() const;
 
+   /*!
+    * @brief Lock the BoxId of this Box so that it may not be changed in any
+    * way until this Box is destroyed.
+    */
+   void lockId();
+
    /**
     * Read the box description in the form [L,U], where L and U are the
     * lower and upper bounds of the box.
@@ -841,6 +857,7 @@ private:
    Index d_lo;
    Index d_hi;
    BoxId d_id;
+   bool d_id_locked;
 
    /*!
     * @brief Initialize static objects and register shutdown routine.

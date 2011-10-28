@@ -14,7 +14,7 @@
 #include "SAMRAI/pdat/OuterfaceData.h"
 
 #include "SAMRAI/hier/Box.h"
-#include "SAMRAI/hier/BoxList.h"
+#include "SAMRAI/hier/BoxContainerConstIterator.h"
 #include "SAMRAI/pdat/FaceData.h"
 #include "SAMRAI/pdat/FaceGeometry.h"
 #include "SAMRAI/pdat/FaceOverlap.h"
@@ -181,7 +181,7 @@ void OuterfaceData<TYPE>::copy2(
             face_offset(i) = src_offset((d + i) % getDim().getValue());
          }
       }
-      const hier::BoxList& box_list = t_overlap->getDestinationBoxList(d);
+      const hier::BoxContainer& box_list = t_overlap->getDestinationBoxContainer(d);
       t_dst->getArrayData(d).copy(d_data[d][0], box_list, face_offset);
       t_dst->getArrayData(d).copy(d_data[d][1], box_list, face_offset);
    }
@@ -273,7 +273,7 @@ int OuterfaceData<TYPE>::getDataStreamSize(
 
    int size = 0;
    for (int d = 0; d < getDim().getValue(); d++) {
-      const hier::BoxList& boxlist = t_overlap->getDestinationBoxList(d);
+      const hier::BoxContainer& boxlist = t_overlap->getDestinationBoxContainer(d);
       hier::IntVector face_offset(offset);
       if (d > 0) {
          for (int i = 0; i < getDim().getValue(); i++) {
@@ -307,7 +307,7 @@ void OuterfaceData<TYPE>::packStream(
 
    const hier::IntVector& offset = t_overlap->getSourceOffset();
    for (int d = 0; d < getDim().getValue(); d++) {
-      const hier::BoxList& boxes = t_overlap->getDestinationBoxList(d);
+      const hier::BoxContainer& boxes = t_overlap->getDestinationBoxContainer(d);
       hier::IntVector face_offset(offset);
       if (d > 0) {
          for (int i = 0; i < getDim().getValue(); i++) {
@@ -315,7 +315,7 @@ void OuterfaceData<TYPE>::packStream(
          }
       }
 
-      for (hier::BoxList::Iterator b(boxes); b; b++) {
+      for (hier::BoxContainer::ConstIterator b(boxes); b != boxes.end(); ++b) {
          const hier::Box src_box = hier::Box::shift(b(), -face_offset);
          for (int f = 0; f < 2; f++) {
             const hier::Box intersect = src_box * d_data[d][f].getBox();
@@ -342,7 +342,7 @@ void OuterfaceData<TYPE>::unpackStream(
 
    const hier::IntVector& offset = t_overlap->getSourceOffset();
    for (int d = 0; d < getDim().getValue(); d++) {
-      const hier::BoxList& boxes = t_overlap->getDestinationBoxList(d);
+      const hier::BoxContainer& boxes = t_overlap->getDestinationBoxContainer(d);
       hier::IntVector face_offset(offset);
       if (d > 0) {
          for (int i = 0; i < getDim().getValue(); i++) {
@@ -350,7 +350,7 @@ void OuterfaceData<TYPE>::unpackStream(
          }
       }
 
-      for (hier::BoxList::Iterator b(boxes); b; b++) {
+      for (hier::BoxContainer::ConstIterator b(boxes); b != boxes.end(); ++b) {
          for (int f = 0; f < 2; f++) {
             const hier::Box intersect = b() * d_data[d][f].getBox();
             if (!intersect.empty()) {

@@ -17,6 +17,7 @@
 #include "SAMRAI/pdat/CellIntegerConstantRefine.h"
 #include "SAMRAI/pdat/CellData.h"
 #include "SAMRAI/hier/Box.h"
+#include "SAMRAI/hier/BoxContainerIterator.h"
 #include "SAMRAI/hier/NeighborhoodSet.h"
 #include "SAMRAI/hier/OverlapConnectorAlgorithm.h"
 #include "SAMRAI/hier/Patch.h"
@@ -265,8 +266,6 @@ void StandardTagAndInitialize::tagCellsForRefinement(
    TBOX_ASSERT(tag_index >= 0);
    TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(getDim(), *hierarchy);
 
-   const tbox::Dimension& dim(getDim());
-
    if (d_use_richardson_extrapolation) {
       tagCellsUsingRichardsonExtrapolation(hierarchy,
          level_number,
@@ -302,7 +301,7 @@ void StandardTagAndInitialize::tagCellsForRefinement(
     */
    if (d_use_refine_boxes) {
 
-      hier::BoxList refine_boxes(dim);
+      hier::BoxContainer refine_boxes;
       getUserSuppliedRefineBoxes(refine_boxes, level_number, regrid_time);
 
       tbox::Pointer<hier::PatchLevel> level =
@@ -317,7 +316,8 @@ void StandardTagAndInitialize::tagCellsForRefinement(
          TBOX_ASSERT(!(tag_data.isNull()));
 #endif
 
-         for (hier::BoxList::Iterator ib(refine_boxes); ib; ib++) {
+         for (hier::BoxContainer::Iterator ib(refine_boxes); ib != refine_boxes.end();
+              ++ib) {
             hier::Box intersection = *ib * tag_data->getBox();
             if (!(intersection.empty())) {
                tag_data->fill(1, intersection);
@@ -908,15 +908,14 @@ StandardTagAndInitialize::preprocessRichardsonExtrapolation(
  */
 
 bool StandardTagAndInitialize::coarsestLevelBoxesOK(
-   const hier::BoxList& boxes) const
+   const hier::BoxContainer& boxes) const
 {
-   TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(getDim(), boxes);
-   TBOX_ASSERT(boxes.getNumberOfBoxes() > 0);
+   TBOX_ASSERT(boxes.size() > 0);
 
    bool boxes_ok = true;
    if (d_use_richardson_extrapolation) {
 
-      for (hier::BoxList::Iterator ib(boxes); ib; ib++) {
+      for (hier::BoxContainer::ConstIterator ib(boxes); ib != boxes.end(); ++ib) {
          hier::IntVector n_cells = ib().numberCells();
          for (int i = 0; i < getDim().getValue(); i++) {
             int error_coarsen_ratio = getErrorCoarsenRatio();

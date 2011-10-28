@@ -110,13 +110,13 @@ tbox::Pointer<GridGeometry> PatchLevel::getGridGeometry() const
 }
 
 SAMRAI_INLINE_KEYWORD
-const tbox::Array<BoxList>& PatchLevel::getPhysicalDomainArray() const
+const tbox::Array<BoxContainer>& PatchLevel::getPhysicalDomainArray() const
 {
    return d_physical_domain;
 }
 
 SAMRAI_INLINE_KEYWORD
-const BoxList& PatchLevel::getPhysicalDomain(const BlockId& block_id) const
+const BoxContainer& PatchLevel::getPhysicalDomain(const BlockId& block_id) const
 {
    return d_physical_domain[block_id.getBlockValue()];
 }
@@ -141,7 +141,7 @@ void PatchLevel::setRatioToCoarserLevel(
 }
 
 SAMRAI_INLINE_KEYWORD
-const BoxList& PatchLevel::getBoxes() const
+const BoxContainer& PatchLevel::getBoxes() const
 {
    if (!d_has_globalized_data) {
       initializeGlobalizedBoxLevel();
@@ -150,19 +150,19 @@ const BoxList& PatchLevel::getBoxes() const
 }
 
 SAMRAI_INLINE_KEYWORD
-void PatchLevel::getBoxes(BoxList& boxes, const BlockId& block_id) const
+void PatchLevel::getBoxes(BoxContainer& boxes, const BlockId& block_id) const
 {
    if (!d_has_globalized_data) {
       initializeGlobalizedBoxLevel();
    }
 
-   boxes.clearItems();
-   const BoxSet& global_mapped_boxes =
+   boxes.clear();
+   const BoxContainer& global_mapped_boxes =
       d_mapped_box_level->getGlobalizedVersion().getGlobalBoxes();
 
    for (BoxSetSingleBlockIterator gi(global_mapped_boxes, block_id);
         gi.isValid(); gi++) {
-      boxes.appendItem(*gi);
+      boxes.pushBack(*gi);
    }
 }
 

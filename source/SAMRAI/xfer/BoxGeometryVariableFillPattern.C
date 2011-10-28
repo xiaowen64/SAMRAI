@@ -114,7 +114,7 @@ const hier::IntVector& BoxGeometryVariableFillPattern::getStencilWidth()
  */
 tbox::Pointer<hier::BoxOverlap>
 BoxGeometryVariableFillPattern::computeFillBoxesOverlap(
-   const hier::BoxList& fill_boxes,
+   const hier::BoxContainer& fill_boxes,
    const hier::Box& patch_box,
    const hier::Box& data_box,
    const hier::PatchDataFactory& pdf) const
@@ -126,7 +126,7 @@ BoxGeometryVariableFillPattern::computeFillBoxesOverlap(
    hier::Transformation transformation(
       hier::IntVector::getZero(patch_box.getDim()));
 
-   hier::BoxList overlap_boxes(fill_boxes);
+   hier::BoxContainer overlap_boxes(fill_boxes);
    overlap_boxes.intersectBoxes(data_box);
 
    return pdf.getBoxGeometry(patch_box)->setUpOverlap(overlap_boxes,

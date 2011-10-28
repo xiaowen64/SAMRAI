@@ -12,6 +12,7 @@
 
 #include "SAMRAI/SAMRAI_config.h"
 
+#include "SAMRAI/hier/BoxContainerIterator.h"
 #include "SAMRAI/hier/BoxLevel.h"
 #include "SAMRAI/hier/NeighborhoodSet.h"
 #include "SAMRAI/tbox/Timer.h"
@@ -54,7 +55,7 @@ public:
    /*!
     * @brief NeighborsSet is a clarifying typedef.
     */
-   typedef BoxSet NeighborSet;
+   typedef BoxContainer NeighborSet;
 
    /*!
     * @brief Type of the iterator over neighborhoods.
@@ -64,7 +65,7 @@ public:
    /*!
     * @brief Type of the iterator over neighbors in a neighborhood.
     */
-   typedef NeighborSet::const_iterator ConstNeighborIterator;
+   typedef NeighborSet::ConstIterator ConstNeighborIterator;
 
    /// TODO:  Possible refactor?  Since Connectors do not imply relationship
    // meanings, why is this even defined?  The "getConnectorType function
@@ -262,7 +263,7 @@ public:
    void
    getNeighborBoxes(
       const BoxId& mapped_box_id,
-      BoxList& nbr_boxes) const;
+      BoxContainer& nbr_boxes) const;
 
    /*!
     * @brief Return all neighbors for all neighborhoods.
@@ -274,22 +275,13 @@ public:
       NeighborSet& neighbors) const;
 
    /*!
-    * @brief Return all neighbors for all neighborhoods.
-    *
-    * @param[out] neighbors
-    */
-   void
-   getLocalNeighbors(
-      BoxList& neighbors) const;
-
-   /*!
     * @brief Return all neighbors for all neighborhoods segragated by BlockId.
     *
     * @param[out] neighbors
     */
    void
    getLocalNeighbors(
-      std::map<BlockId, BoxList>& neighbors) const;
+      std::map<BlockId, BoxContainer>& neighbors) const;
 
    /*!
     * @brief Returns the number of neighbors in the neighborhood with the

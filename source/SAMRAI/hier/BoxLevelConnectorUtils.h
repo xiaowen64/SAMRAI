@@ -260,7 +260,7 @@ public:
     * @brief Given a set of Boxes, compute its boundary as a set
     * of boxes located just outside it.
     *
-    * @param boundary_boxes[o] Boundary boxes, sorted into BoxLists
+    * @param boundary_boxes[o] Boundary boxes, sorted into BoxContainers
     * according to the BlockId.
     *
     * @param mapped_boxes[i] Boxes to find the boundary for.
@@ -274,7 +274,7 @@ public:
     */
    void
    computeBoxesAroundBoundary(
-      std::map<BlockId, BoxList>& boundary,
+      std::map<BlockId, BoxContainer>& boundary,
       const IntVector& refinement_ratio,
       const tbox::ConstPointer<GridGeometry>& grid_geometry,
       const bool simplify_boundary_boxes = true) const;

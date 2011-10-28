@@ -70,7 +70,7 @@ FirstLayerCellNoCornersVariableFillPattern::calculateOverlap(
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(dst_patch_box, src_mask);
 
-   hier::BoxList stencil_boxes;
+   hier::BoxContainer stencil_boxes;
    computeStencilBoxes(stencil_boxes, dst_patch_box);
 
    return dst_geometry.calculateOverlap(src_geometry,
@@ -117,7 +117,7 @@ const
  *************************************************************************
  */
 void FirstLayerCellNoCornersVariableFillPattern::computeStencilBoxes(
-   hier::BoxList& stencil_boxes,
+   hier::BoxContainer& stencil_boxes,
    const hier::Box& dst_box) const
 {
    TBOX_ASSERT(stencil_boxes.size() == 0);
@@ -128,12 +128,12 @@ void FirstLayerCellNoCornersVariableFillPattern::computeStencilBoxes(
       hier::Box low_box(dst_box);
       low_box.lower(i) = dst_box.lower(i) - 1;
       low_box.upper(i) = low_box.lower(i);
-      stencil_boxes.addItem(low_box);
+      stencil_boxes.pushFront(low_box);
 
       hier::Box high_box(dst_box);
       high_box.lower(i) = dst_box.upper(i) + 1;
       high_box.upper(i) = high_box.lower(i);
-      stencil_boxes.addItem(high_box);
+      stencil_boxes.pushFront(high_box);
    }
 }
 
@@ -147,17 +147,17 @@ void FirstLayerCellNoCornersVariableFillPattern::computeStencilBoxes(
  */
 tbox::Pointer<hier::BoxOverlap>
 FirstLayerCellNoCornersVariableFillPattern::computeFillBoxesOverlap(
-   const hier::BoxList& fill_boxes,
+   const hier::BoxContainer& fill_boxes,
    const hier::Box& patch_box,
    const hier::Box& data_box,
    const hier::PatchDataFactory& pdf) const
 {
    NULL_USE(pdf);
 
-   hier::BoxList stencil_boxes;
+   hier::BoxContainer stencil_boxes;
    computeStencilBoxes(stencil_boxes, patch_box);
 
-   hier::BoxList overlap_boxes(fill_boxes);
+   hier::BoxContainer overlap_boxes(fill_boxes);
    overlap_boxes.intersectBoxes(data_box);
    overlap_boxes.intersectBoxes(stencil_boxes);
 

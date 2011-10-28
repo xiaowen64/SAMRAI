@@ -4,7 +4,7 @@
  * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Iterator over real Boxes in a BoxSet.
+ * Description:   Iterator over real Boxes in a BoxContainer.
  *
  ************************************************************************/
 #ifndef included_hier_RealBoxConstIterator_C
@@ -16,10 +16,10 @@ namespace SAMRAI {
 namespace hier {
 
 RealBoxConstIterator::RealBoxConstIterator(
-   const BoxSet& mapped_boxes):
-   d_mapped_boxes(&mapped_boxes)
+   const BoxContainer& mapped_boxes):
+   d_mapped_boxes(&mapped_boxes),
+   d_ni(d_mapped_boxes->begin())
 {
-   d_ni = d_mapped_boxes->begin();
    while (d_ni != d_mapped_boxes->end() && d_ni->isPeriodicImage()) {
       ++d_ni;
    }

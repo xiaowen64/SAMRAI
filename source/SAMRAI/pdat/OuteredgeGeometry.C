@@ -15,7 +15,7 @@
 
 #include "SAMRAI/pdat/EdgeGeometry.h"
 #include "SAMRAI/pdat/EdgeOverlap.h"
-#include "SAMRAI/hier/BoxList.h"
+#include "SAMRAI/hier/BoxContainerConstIterator.h"
 #include "SAMRAI/tbox/Utilities.h"
 
 #ifndef SAMRAI_INLINE
@@ -71,7 +71,7 @@ OuteredgeGeometry::calculateOverlap(
    const bool overwrite_interior,
    const hier::Transformation& transformation,
    const bool retry,
-   const hier::BoxList& dst_restrict_boxes) const
+   const hier::BoxContainer& dst_restrict_boxes) const
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(d_box, src_mask);
 
@@ -118,11 +118,11 @@ OuteredgeGeometry::doOverlap(
    const hier::Box& fill_box,
    const bool overwrite_interior,
    const hier::Transformation& transformation,
-   const hier::BoxList& dst_restrict_boxes)
+   const hier::BoxContainer& dst_restrict_boxes)
 {
    const tbox::Dimension& dim(src_mask.getDim());
 
-   tbox::Array<hier::BoxList> dst_boxes(dim.getValue());
+   tbox::Array<hier::BoxContainer> dst_boxes(dim.getValue());
 
    // Perform a quick-and-dirty intersection to see if the boxes might overlap
 
@@ -166,8 +166,12 @@ OuteredgeGeometry::doOverlap(
                            axis,
                            face_normal,
                            side));
-                     dst_boxes[axis].unionBoxes(
+                     hier::Box overlap_box(
                         outeredge_src_box * dst_edge_box * fill_edge_box);
+                     if (!overlap_box.empty()) {
+                        dst_boxes[axis].pushBack(
+                           outeredge_src_box * dst_edge_box * fill_edge_box);
+                     }
                   }
 
                }  // data is not defined when face_normal == axis
@@ -184,9 +188,10 @@ OuteredgeGeometry::doOverlap(
          }  // if source and destination edge boxes overlap in axis direction
 
          if (dst_restrict_boxes.size() && dst_boxes[axis].size()) {
-            hier::BoxList edge_restrict_boxes;
-            for (hier::BoxList::Iterator b(dst_restrict_boxes); b; b++) {
-               edge_restrict_boxes.appendItem(EdgeGeometry::toEdgeBox(b(), axis));
+            hier::BoxContainer edge_restrict_boxes;
+            for (hier::BoxContainer::ConstIterator b(dst_restrict_boxes);
+                 b != dst_restrict_boxes.end(); ++b) {
+               edge_restrict_boxes.pushBack(EdgeGeometry::toEdgeBox(b(), axis));
             }
             dst_boxes[axis].intersectBoxes(edge_restrict_boxes);
          }
@@ -219,12 +224,12 @@ OuteredgeGeometry::doOverlap(
    const hier::Box& fill_box,
    const bool overwrite_interior,
    const hier::Transformation& transformation,
-   const hier::BoxList& dst_restrict_boxes)
+   const hier::BoxContainer& dst_restrict_boxes)
 {
 
    const tbox::Dimension& dim(src_mask.getDim());
 
-   tbox::Array<hier::BoxList> dst_boxes(dim.getValue());
+   tbox::Array<hier::BoxContainer> dst_boxes(dim.getValue());
 
    // Perform a quick-and-dirty intersection to see if the boxes might overlap
 
@@ -295,14 +300,29 @@ OuteredgeGeometry::doOverlap(
                         outeredge_dst_box_up =
                            outeredge_dst_box_up * fill_edge_box;
 
-                        dst_boxes[axis].unionBoxes(
+                        hier::Box lo_lo_box(
                            outeredge_src_box_lo * outeredge_dst_box_lo);
-                        dst_boxes[axis].unionBoxes(
+                        if (!lo_lo_box.empty()) {
+                           dst_boxes[axis].pushBack(lo_lo_box);
+                        }
+
+                        hier::Box lo_up_box(
                            outeredge_src_box_lo * outeredge_dst_box_up);
-                        dst_boxes[axis].unionBoxes(
+                        if (!lo_up_box.empty()) {
+                           dst_boxes[axis].pushBack(lo_up_box);
+                        }
+
+                        hier::Box up_lo_box(
                            outeredge_src_box_up * outeredge_dst_box_lo);
-                        dst_boxes[axis].unionBoxes(
+                        if (!up_lo_box.empty()) {
+                           dst_boxes[axis].pushBack(up_lo_box);
+                        }
+
+                        hier::Box up_up_box(
                            outeredge_src_box_up * outeredge_dst_box_up);
+                        if (!up_up_box.empty()) {
+                           dst_boxes[axis].pushBack(up_up_box);
+                        }
 
                      }  // dst data undefined when dst_face_normal == axis
 
@@ -322,9 +342,10 @@ OuteredgeGeometry::doOverlap(
          }
 
          if (dst_restrict_boxes.size() && dst_boxes[axis].size()) {
-            hier::BoxList edge_restrict_boxes;
-            for (hier::BoxList::Iterator b(dst_restrict_boxes); b; b++) {
-               edge_restrict_boxes.appendItem(EdgeGeometry::toEdgeBox(b(), axis));
+            hier::BoxContainer edge_restrict_boxes;
+            for (hier::BoxContainer::ConstIterator b(dst_restrict_boxes);
+                 b != dst_restrict_boxes.end(); ++b) {
+               edge_restrict_boxes.pushBack(EdgeGeometry::toEdgeBox(b(), axis));
             }
             dst_boxes[axis].intersectBoxes(edge_restrict_boxes);
          }
@@ -416,16 +437,16 @@ hier::Box OuteredgeGeometry::toOuteredgeBox(
  */
 tbox::Pointer<hier::BoxOverlap>
 OuteredgeGeometry::setUpOverlap(
-   const hier::BoxList& boxes,
+   const hier::BoxContainer& boxes,
    const hier::Transformation& transformation) const
 {
    const tbox::Dimension& dim(transformation.getOffset().getDim());
-   tbox::Array<hier::BoxList> dst_boxes(dim.getValue());
+   tbox::Array<hier::BoxContainer> dst_boxes(dim.getValue());
 
-   for (hier::BoxList::Iterator b(boxes); b; b++) {
+   for (hier::BoxContainer::ConstIterator b(boxes); b != boxes.end(); ++b) {
       for (int d = 0; d < dim.getValue(); d++) {
          hier::Box edge_box(EdgeGeometry::toEdgeBox(b(), d));
-         dst_boxes[d].appendItem(edge_box);
+         dst_boxes[d].pushBack(edge_box);
       }
    }
 

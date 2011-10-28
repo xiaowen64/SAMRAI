@@ -84,7 +84,7 @@ public:
    preprocessRefineBoxes(
       hier::Patch& fine,
       const hier::Patch& coarse,
-      const hier::BoxList& fine_boxes,
+      const hier::BoxContainer& fine_boxes,
       const hier::IntVector& ratio);
    virtual void
    preprocessRefine(
@@ -96,7 +96,7 @@ public:
    postprocessRefineBoxes(
       hier::Patch& fine,
       const hier::Patch& coarse,
-      const hier::BoxList& fine_boxes,
+      const hier::BoxContainer& fine_boxes,
       const hier::IntVector& ratio);
    virtual void
    postprocessRefine(

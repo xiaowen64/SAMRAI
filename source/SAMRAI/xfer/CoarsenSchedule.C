@@ -13,10 +13,10 @@
 
 #include "SAMRAI/xfer/CoarsenSchedule.h"
 #include "SAMRAI/hier/Box.h"
+#include "SAMRAI/hier/BoxContainerConstIterator.h"
 #include "SAMRAI/hier/BoxGeometry.h"
 #include "SAMRAI/hier/BoxOverlap.h"
 #include "SAMRAI/hier/IntVector.h"
-#include "SAMRAI/hier/BoxSet.h"
 #include "SAMRAI/hier/OverlapConnectorAlgorithm.h"
 #include "SAMRAI/hier/Patch.h"
 #include "SAMRAI/hier/PatchDataFactory.h"
@@ -495,7 +495,7 @@ void CoarsenSchedule::generateScheduleNSquared()
    const hier::ProcessorMapping& src_mapping =
       d_temp_crse_level->getProcessorMapping();
 
-   hier::BoxList::Iterator crse_itr_dp(d_crse_level->getBoxes());
+   hier::BoxContainer::ConstIterator crse_itr_dp(d_crse_level->getBoxes());
    for (int dp = 0; dp < dst_npatches; dp++, crse_itr_dp++) {
 
       const hier::Box dst_mapped_box(*crse_itr_dp,
@@ -503,7 +503,7 @@ void CoarsenSchedule::generateScheduleNSquared()
                                      d_crse_level->getProcessorMapping().
                                      getProcessorAssignment(dp));
 
-      hier::BoxList::Iterator crse_itr_sp(d_temp_crse_level->getBoxes());
+      hier::BoxContainer::ConstIterator crse_itr_sp(d_temp_crse_level->getBoxes());
       for (int sp = 0; sp < src_npatches; sp++, crse_itr_sp++) {
 
          const hier::Box src_mapped_box(*crse_itr_sp,
@@ -558,14 +558,14 @@ void CoarsenSchedule::generateScheduleDLBG()
        * contribute data to coarse_mapped_box.
        */
       const hier::Box& coarse_mapped_box = ei->first;
-      const hier::BoxSet& local_temp_mapped_boxes = ei->second;
+      const hier::BoxContainer& local_temp_mapped_boxes = ei->second;
       TBOX_ASSERT(!coarse_mapped_box.isPeriodicImage());
 
       /*
        * Construct transactions for data going from local source mapped_boxes
        * to remote coarse mapped_boxes.
        */
-      for (hier::BoxSet::const_iterator ni =
+      for (hier::BoxContainer::ConstIterator ni =
               local_temp_mapped_boxes.begin();
            ni != local_temp_mapped_boxes.end(); ++ni) {
          const hier::Box& temp_mapped_box = *ni;
@@ -663,6 +663,7 @@ void CoarsenSchedule::restructureNeighborhoodSetsByDstNodes(
                nabr,
                shift_catalog->getZeroShiftNumber(),
                dst_ratio);
+
             full_inverted_edges[unshifted_nabr].insert(shifted_mapped_box);
          } else {
             full_inverted_edges[nabr].insert(mapped_box);
@@ -848,7 +849,8 @@ void CoarsenSchedule::constructScheduleTransactions(
 
       const hier::IntVector& dst_gcw(dst_pdf->getGhostCellWidth());
 
-      const hier::Box dst_fill_box(hier::Box::grow(unshifted_dst_box, dst_gcw));
+      hier::Box dst_fill_box(unshifted_dst_box);
+      dst_fill_box.grow(dst_gcw);
 
       hier::Box test_mask(dst_fill_box * transformed_src_box);
       if ((dst_gcw == constant_zero_intvector) &&

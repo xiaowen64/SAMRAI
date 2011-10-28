@@ -12,6 +12,7 @@
 #define included_math_HierarchyEdgeDataOpsComplex_C
 
 #include "SAMRAI/math/HierarchyEdgeDataOpsComplex.h"
+#include "SAMRAI/hier/BoxContainerIterator.h"
 #include "SAMRAI/hier/BoxUtilities.h"
 #include "SAMRAI/hier/PatchDescriptor.h"
 #include "SAMRAI/pdat/EdgeDataFactory.h"
@@ -89,14 +90,14 @@ void HierarchyEdgeDataOpsComplex::resetLevels(
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
       tbox::Pointer<hier::PatchLevel> level = d_hierarchy->getPatchLevel(ln);
-      hier::BoxList edge_boxes(dim);
+      hier::BoxContainer edge_boxes;
 
       for (int nd = 0; nd < dim.getValue(); nd++) {
          edge_boxes = level->getBoxes();
-         for (hier::BoxList::Iterator i(edge_boxes); i; i++) {
+         for (hier::BoxContainer::Iterator i(edge_boxes); i != edge_boxes.end(); ++i) {
             *i = pdat::EdgeGeometry::toEdgeBox(*i, nd);
          }
-         hier::BoxUtilities::makeNonOverlappingBoxLists(
+         hier::BoxUtilities::makeNonOverlappingBoxContainers(
             d_nonoverlapping_edge_boxes[nd][ln],
             edge_boxes);
       }
@@ -655,11 +656,12 @@ int HierarchyEdgeDataOpsComplex::numberOfEntries(
          }
 #endif
          for (int il = 0; il < npatches; il++) {
-            tbox::List<hier::Box>::Iterator lb;
 
             for (int eb = 0; eb < dim.getValue(); eb++) {
-               lb = ((d_nonoverlapping_edge_boxes[eb][ln])[il]).listStart();
-               for ( ; lb; lb++) {
+               hier::BoxContainer::ConstIterator lb =
+                  ((d_nonoverlapping_edge_boxes[eb][ln])[il]).begin();
+               for ( ; lb != ((d_nonoverlapping_edge_boxes[eb][ln])[il]).end();
+                    ++lb) {
                   entries += lb().size();
                }
             }

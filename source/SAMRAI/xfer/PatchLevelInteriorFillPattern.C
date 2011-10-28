@@ -13,6 +13,7 @@
 
 #include "SAMRAI/xfer/PatchLevelInteriorFillPattern.h"
 #include "SAMRAI/hier/Box.h"
+#include "SAMRAI/hier/BoxContainerConstIterator.h"
 #include "SAMRAI/tbox/MathUtilities.h"
 
 #ifndef SAMRAI_INLINE
@@ -78,13 +79,13 @@ void PatchLevelInteriorFillPattern::computeFillBoxesAndNeighborhoodSets(
    NULL_USE(fill_ghost_width);
    TBOX_DIM_ASSERT_CHECK_ARGS2(dst_mapped_box_level, fill_ghost_width);
 
-   const hier::BoxSet& dst_mapped_boxes =
+   const hier::BoxContainer& dst_mapped_boxes =
       dst_mapped_box_level.getBoxes();
 
    /*
     * Fill just the interior.  Disregard gcw.
     */
-   for (hier::BoxSet::const_iterator ni = dst_mapped_boxes.begin();
+   for (hier::BoxContainer::ConstIterator ni = dst_mapped_boxes.begin();
         ni != dst_mapped_boxes.end(); ++ni) {
       const hier::BoxId& gid = ni->getId();
       const hier::Box& dst_mapped_box =
@@ -112,6 +113,15 @@ void PatchLevelInteriorFillPattern::computeDestinationFillBoxesOnSourceProc(
    NULL_USE(fill_ghost_width);
    TBOX_DIM_ASSERT_CHECK_ARGS2(dst_mapped_box_level, fill_ghost_width);
 
+   const tbox::Dimension& dim(fill_ghost_width.getDim());
+   const hier::IntVector& ratio(dst_mapped_box_level.getRefinementRatio());
+
+   bool is_periodic = false;
+   if (dst_mapped_box_level.getGridGeometry()->getPeriodicShift(ratio) != 
+       hier::IntVector::getZero(dim)) {
+      is_periodic = true;
+   }
+
    /*
     * src_to_dst initialized only when there is a src mapped_box_level.
     * Without the src mapped_box_level, we do not need to compute
@@ -121,15 +131,21 @@ void PatchLevelInteriorFillPattern::computeDestinationFillBoxesOnSourceProc(
     * boxes for all its dst neighbors using local data.  This info is
     * stored in dst_fill_boxes_on_src_proc.
     */
-   hier::BoxSet tmp_nabrs, all_dst_nabrs;
-   src_to_dst.getLocalNeighbors(tmp_nabrs);
-   tmp_nabrs.unshiftPeriodicImageBoxes(
-      all_dst_nabrs,
-      dst_mapped_box_level.getRefinementRatio());
-   tmp_nabrs.clear();
-   for (hier::BoxSet::const_iterator na = all_dst_nabrs.begin();
+   bool ordered = true;
+   hier::BoxContainer all_dst_nabrs(ordered);
+   if (is_periodic) {
+      hier::BoxContainer tmp_nabrs(ordered);
+      src_to_dst.getLocalNeighbors(tmp_nabrs);
+      tmp_nabrs.unshiftPeriodicImageBoxes(
+         all_dst_nabrs,
+         dst_mapped_box_level.getRefinementRatio());
+   } else {
+      src_to_dst.getLocalNeighbors(all_dst_nabrs);
+   }
+   for (hier::BoxContainer::ConstIterator na = all_dst_nabrs.begin();
         na != all_dst_nabrs.end(); ++na) {
-      hier::BoxSet& fill_boxes = dst_fill_boxes_on_src_proc[na->getId()];
+      hier::BoxContainer& fill_boxes =
+         dst_fill_boxes_on_src_proc[na->getId()];
       fill_boxes.insert(*na);
       d_max_fill_boxes = tbox::MathUtilities<int>::Max(d_max_fill_boxes,
             static_cast<int>(fill_boxes.size()));

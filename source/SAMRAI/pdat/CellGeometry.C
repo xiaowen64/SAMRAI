@@ -13,7 +13,6 @@
 
 #include "SAMRAI/pdat/CellGeometry.h"
 #include "SAMRAI/pdat/CellOverlap.h"
-#include "SAMRAI/hier/BoxList.h"
 #include "SAMRAI/tbox/Utilities.h"
 
 #ifndef SAMRAI_INLINE
@@ -67,7 +66,7 @@ tbox::Pointer<hier::BoxOverlap> CellGeometry::calculateOverlap(
    const bool overwrite_interior,
    const hier::Transformation& transformation,
    const bool retry,
-   const hier::BoxList& dst_restrict_boxes) const
+   const hier::BoxContainer& dst_restrict_boxes) const
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(d_box, src_mask);
 
@@ -106,9 +105,9 @@ tbox::Pointer<hier::BoxOverlap> CellGeometry::doOverlap(
    const hier::Box& fill_box,
    const bool overwrite_interior,
    const hier::Transformation& transformation,
-   const hier::BoxList& dst_restrict_boxes)
+   const hier::BoxContainer& dst_restrict_boxes)
 {
-   hier::BoxList dst_boxes;
+   hier::BoxContainer dst_boxes;
    dst_geometry.computeDestinationBoxes(dst_boxes,
       src_geometry,
       src_mask,
@@ -132,28 +131,29 @@ tbox::Pointer<hier::BoxOverlap> CellGeometry::doOverlap(
  */
 
 void CellGeometry::computeDestinationBoxes(
-   hier::BoxList& dst_boxes,
+   hier::BoxContainer& dst_boxes,
    const CellGeometry& src_geometry,
    const hier::Box& src_mask,
    const hier::Box& fill_box,
    const bool overwrite_interior,
    const hier::Transformation& transformation,
-   const hier::BoxList& dst_restrict_boxes) const
+   const hier::BoxContainer& dst_restrict_boxes) const
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(d_box, src_mask);
 
    // Translate the source box and grow the destination box by the ghost cells
 
-   const hier::Box src_box(
-      hier::Box::grow(src_geometry.d_box, src_geometry.d_ghosts) * src_mask);
-   hier::Box src_shift(src_box);
-   transformation.transform(src_shift);
-   const hier::Box dst_ghost(hier::Box::grow(d_box, d_ghosts));
+   hier::Box src_box(src_geometry.d_box);
+   src_box.grow(src_geometry.d_ghosts);
+   src_box = src_box * src_mask;
+   transformation.transform(src_box);
+   hier::Box dst_ghost(d_box);
+   dst_ghost.grow(d_ghosts);
 
    // Convert the boxes into cell space and compute the intersection
 
    const hier::Box dst_cell(toCellBox(dst_ghost));
-   const hier::Box src_cell(toCellBox(src_shift));
+   const hier::Box src_cell(toCellBox(src_box));
    const hier::Box fill_cell(toCellBox(fill_box));
    const hier::Box together(dst_cell * src_cell * fill_cell);
 
@@ -162,7 +162,7 @@ void CellGeometry::computeDestinationBoxes(
          const hier::Box int_cell(toCellBox(d_box));
          dst_boxes.removeIntersections(together, int_cell);
       } else {
-         dst_boxes.appendItem(together);
+         dst_boxes.pushBack(together);
       }
    }
 
@@ -181,7 +181,7 @@ void CellGeometry::computeDestinationBoxes(
 
 tbox::Pointer<hier::BoxOverlap>
 CellGeometry::setUpOverlap(
-   const hier::BoxList& boxes,
+   const hier::BoxContainer& boxes,
    const hier::Transformation& transformation) const
 {
    // Create the cell overlap data object using the boxes and source shift

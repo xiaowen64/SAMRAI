@@ -78,7 +78,7 @@ void PatchLevelFullFillPattern::computeFillBoxesAndNeighborhoodSets(
    NULL_USE(src_to_dst);
    TBOX_DIM_ASSERT_CHECK_ARGS2(dst_mapped_box_level, fill_ghost_width);
 
-   const hier::BoxSet& dst_mapped_boxes =
+   const hier::BoxContainer& dst_mapped_boxes =
       dst_mapped_box_level.getBoxes();
 
    for (hier::RealBoxConstIterator ni(dst_mapped_boxes);
@@ -109,6 +109,15 @@ void PatchLevelFullFillPattern::computeDestinationFillBoxesOnSourceProc(
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(dst_mapped_box_level, fill_ghost_width);
 
+   const tbox::Dimension& dim(fill_ghost_width.getDim());
+   const hier::IntVector& ratio(dst_mapped_box_level.getRefinementRatio());
+
+   bool is_periodic = false;
+   if (dst_mapped_box_level.getGridGeometry()->getPeriodicShift(ratio) != 
+       hier::IntVector::getZero(dim)) {
+      is_periodic = true; 
+   }
+
    /*
     * src_to_dst initialized only when there is a src mapped_box_level.
     * Without the src mapped_box_level, we do not need to compute
@@ -118,15 +127,20 @@ void PatchLevelFullFillPattern::computeDestinationFillBoxesOnSourceProc(
     * for all its dst neighbors using local data.  This info is
     * stored in dst_fill_boxes_on_src_proc.
     */
-   hier::BoxSet tmp_nabrs, all_dst_nabrs;
-   src_to_dst.getLocalNeighbors(tmp_nabrs);
-   tmp_nabrs.unshiftPeriodicImageBoxes(
-      all_dst_nabrs,
-      dst_mapped_box_level.getRefinementRatio());
-   tmp_nabrs.clear();
-   for (hier::BoxSet::const_iterator na = all_dst_nabrs.begin();
+   bool ordered = true;
+   hier::BoxContainer all_dst_nabrs(ordered);
+   if (is_periodic) {
+      hier::BoxContainer tmp_nabrs(ordered);
+      src_to_dst.getLocalNeighbors(tmp_nabrs);
+      tmp_nabrs.unshiftPeriodicImageBoxes(
+         all_dst_nabrs,
+         dst_mapped_box_level.getRefinementRatio());
+   } else {
+      src_to_dst.getLocalNeighbors(all_dst_nabrs);
+   }
+   for (hier::BoxContainer::ConstIterator na = all_dst_nabrs.begin();
         na != all_dst_nabrs.end(); ++na) {
-      hier::BoxSet& fill_boxes = dst_fill_boxes_on_src_proc[na->getId()];
+      hier::BoxContainer& fill_boxes = dst_fill_boxes_on_src_proc[na->getId()];
       hier::Box fill_box(*na);
       fill_box.grow(fill_ghost_width);
       fill_boxes.insert(fill_box);

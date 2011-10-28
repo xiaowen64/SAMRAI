@@ -14,7 +14,7 @@
 #include "SAMRAI/pdat/SideData.h"
 
 #include "SAMRAI/hier/Box.h"
-#include "SAMRAI/hier/BoxList.h"
+#include "SAMRAI/hier/BoxContainerConstIterator.h"
 #include "SAMRAI/pdat/SideGeometry.h"
 #include "SAMRAI/pdat/SideOverlap.h"
 #include "SAMRAI/tbox/Utilities.h"
@@ -216,8 +216,8 @@ void SideData<TYPE>::copy(
          const hier::IntVector& src_offset = t_overlap->getSourceOffset();
          for (int d = 0; d < getDim().getValue(); d++) {
             if (d_directions(d)) {
-               const hier::BoxList& box_list =
-                  t_overlap->getDestinationBoxList(d);
+               const hier::BoxContainer& box_list =
+                  t_overlap->getDestinationBoxContainer(d);
                d_data[d].copy(t_src->d_data[d], box_list, src_offset);
             }
          }
@@ -249,7 +249,7 @@ void SideData<TYPE>::copy2(
       const hier::IntVector& src_offset = t_overlap->getSourceOffset();
       for (int d = 0; d < getDim().getValue(); d++) {
          if (d_directions(d)) {
-            const hier::BoxList& box_list = t_overlap->getDestinationBoxList(d);
+            const hier::BoxContainer& box_list = t_overlap->getDestinationBoxContainer(d);
             t_dst->d_data[d].copy(d_data[d], box_list, src_offset);
          }
       }
@@ -287,11 +287,12 @@ void SideData<TYPE>::copyWithRotation(
 
    for (int i = 0; i < dim.getValue(); i++) {
       if (d_directions(i)) {
-         const hier::BoxList& overlap_boxes = overlap.getDestinationBoxList(i);
+         const hier::BoxContainer& overlap_boxes = overlap.getDestinationBoxContainer(i);
 
          hier::Box side_rotatebox(SideGeometry::toSideBox(rotatebox, i));
 
-         for (hier::BoxList::Iterator bi(overlap_boxes); bi; bi++) {
+         for (hier::BoxContainer::ConstIterator bi(overlap_boxes);
+              bi != overlap_boxes.end(); ++bi) {
             const hier::Box& overlap_box = bi();
 
             const hier::Box copybox(side_rotatebox * overlap_box);
@@ -375,7 +376,7 @@ int SideData<TYPE>::getDataStreamSize(
    for (int d = 0; d < getDim().getValue(); d++) {
       if (d_directions(d)) {
          size +=
-            d_data[d].getDataStreamSize(t_overlap->getDestinationBoxList(d),
+            d_data[d].getDataStreamSize(t_overlap->getDestinationBoxContainer(d),
                offset);
       }
    }
@@ -407,8 +408,8 @@ void SideData<TYPE>::packStream(
       const hier::IntVector& offset = t_overlap->getSourceOffset();
       for (int d = 0; d < getDim().getValue(); d++) {
          if (d_directions(d)) {
-            const hier::BoxList& boxes = t_overlap->getDestinationBoxList(d);
-            if (boxes.getNumberOfItems() > 0) {
+            const hier::BoxContainer& boxes = t_overlap->getDestinationBoxContainer(d);
+            if (boxes.size() > 0) {
                d_data[d].packStream(stream, boxes, offset);
             }
          }
@@ -449,7 +450,7 @@ void SideData<TYPE>::packWithRotation(
 
    for (int i = 0; i < dim.getValue(); i++) {
       if (d_directions(i)) {
-         const hier::BoxList& overlap_boxes = overlap.getDestinationBoxList(i);
+         const hier::BoxContainer& overlap_boxes = overlap.getDestinationBoxContainer(i);
 
          const int size = depth * overlap_boxes.getTotalSizeOfBoxes();
          tbox::Array<TYPE> buffer(size);
@@ -457,7 +458,8 @@ void SideData<TYPE>::packWithRotation(
          hier::Box side_rotatebox(SideGeometry::toSideBox(rotatebox, i));
 
          int buf_count = 0;
-         for (hier::BoxList::Iterator bi(overlap_boxes); bi; bi++) {
+         for (hier::BoxContainer::ConstIterator bi(overlap_boxes);
+              bi != overlap_boxes.end(); ++bi) {
             const hier::Box& overlap_box = bi();
 
             const hier::Box copybox(side_rotatebox * overlap_box);
@@ -496,8 +498,8 @@ void SideData<TYPE>::unpackStream(
    const hier::IntVector& offset = t_overlap->getSourceOffset();
    for (int d = 0; d < getDim().getValue(); d++) {
       if (d_directions(d)) {
-         const hier::BoxList& boxes = t_overlap->getDestinationBoxList(d);
-         if (boxes.getNumberOfItems() > 0) {
+         const hier::BoxContainer& boxes = t_overlap->getDestinationBoxContainer(d);
+         if (boxes.size() > 0) {
             d_data[d].unpackStream(stream, boxes, offset);
          }
       }

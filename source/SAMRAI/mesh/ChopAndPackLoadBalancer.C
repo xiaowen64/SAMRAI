@@ -15,6 +15,7 @@
 
 #include "SAMRAI/mesh/ChopAndPackLoadBalancer.h"
 
+#include "SAMRAI/hier/BoxContainerIterator.h"
 #include "SAMRAI/hier/BoxUtilities.h"
 #include "SAMRAI/hier/RealBoxConstIterator.h"
 #include "SAMRAI/hier/PatchDescriptor.h"
@@ -320,18 +321,18 @@ void ChopAndPackLoadBalancer::loadBalanceBoxLevel(
    globalized_input_mapped_box_level.setParallelState(
       hier::BoxLevel::GLOBALIZED);
 
-   hier::BoxList in_boxes;
-   const hier::BoxSet globalized_input_mapped_boxes(
+   hier::BoxContainer in_boxes;
+   const hier::BoxContainer globalized_input_mapped_boxes(
       globalized_input_mapped_box_level.getGlobalBoxes());
    for (hier::RealBoxConstIterator bi(globalized_input_mapped_boxes);
         bi.isValid(); ++bi) {
-      in_boxes.appendItem(*bi);
+      in_boxes.pushBack(*bi);
    }
 
-   hier::BoxList physical_domain(d_dim);
+   hier::BoxContainer physical_domain;
    domain_mapped_box_level.getGlobalBoxes(physical_domain);
 
-   hier::BoxList out_boxes(d_dim);
+   hier::BoxContainer out_boxes;
    hier::ProcessorMapping mapping;
 
    loadBalanceBoxes(
@@ -354,7 +355,7 @@ void ChopAndPackLoadBalancer::loadBalanceBoxLevel(
       balance_mapped_box_level.getMPI(),
       hier::BoxLevel::GLOBALIZED);
    int i = 0;
-   for (hier::BoxList::Iterator itr(out_boxes); itr; itr++, ++i) {
+   for (hier::BoxContainer::Iterator itr(out_boxes); itr != out_boxes.end(); ++itr, ++i) {
       hier::Box node(*itr, hier::LocalId(i),
                      mapping.getProcessorAssignment(i));
       balance_mapped_box_level.addBox(node);
@@ -424,12 +425,12 @@ void ChopAndPackLoadBalancer::loadBalanceBoxLevel(
  */
 
 void ChopAndPackLoadBalancer::loadBalanceBoxes(
-   hier::BoxList& out_boxes,
+   hier::BoxContainer& out_boxes,
    hier::ProcessorMapping& mapping,
-   const hier::BoxList& in_boxes,
+   const hier::BoxContainer& in_boxes,
    const tbox::Pointer<hier::PatchHierarchy> hierarchy,
    int level_number,
-   const hier::BoxList& physical_domain,
+   const hier::BoxContainer& physical_domain,
    const hier::IntVector& ratio_to_hierarchy_level_zero,
    const hier::IntVector& min_size,
    const hier::IntVector& max_size,
@@ -447,7 +448,7 @@ void ChopAndPackLoadBalancer::loadBalanceBoxes(
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(!hierarchy.isNull());
    TBOX_ASSERT(level_number >= 0);
-   TBOX_ASSERT(physical_domain.getNumberOfBoxes() > 0);
+   TBOX_ASSERT(physical_domain.size() > 0);
    TBOX_ASSERT(min_size > hier::IntVector::getZero(d_dim));
    TBOX_ASSERT(max_size >= min_size);
    TBOX_ASSERT(cut_factor > hier::IntVector::getZero(d_dim));
@@ -459,7 +460,7 @@ void ChopAndPackLoadBalancer::loadBalanceBoxes(
     * if it is.  So shortcut it for empty in_boxes.
     */
    if (in_boxes.isEmpty()) {
-      out_boxes = hier::BoxList(d_dim);
+      out_boxes = hier::BoxContainer();
       return;
    }
 
@@ -483,7 +484,7 @@ void ChopAndPackLoadBalancer::loadBalanceBoxes(
 
       if (!d_ignore_level_box_union_is_single_box) {
          hier::Box bbox = in_boxes.getBoundingBox();
-         hier::BoxList difference(bbox);
+         hier::BoxContainer difference(bbox);
          t_load_balance_boxes_remove_intersection->start();
          difference.removeIntersections(in_boxes);
          t_load_balance_boxes_remove_intersection->stop();
@@ -562,8 +563,8 @@ void ChopAndPackLoadBalancer::loadBalanceBoxes(
     * constraints.
     */
 #ifdef DEBUG_CHECK_ASSERTIONS
-   const int nboxes = out_boxes.getNumberOfBoxes();
-   for (hier::BoxList::Iterator ib(out_boxes); ib; ib++) {
+   const int nboxes = out_boxes.size();
+   for (hier::BoxContainer::Iterator ib(out_boxes); ib; ib++) {
       hier::BoxUtilities::checkBoxConstraints(*ib,
          min_size,
          cut_factor,
@@ -596,7 +597,7 @@ void ChopAndPackLoadBalancer::loadBalanceBoxes(
       procloads[i] = 0;
    }
    int itrCt = 0;
-   for (hier::BoxList::Iterator itr(out_boxes); itr; itr++, ++itrCt) {
+   for (hier::BoxContainer::Iterator itr(out_boxes); itr != out_boxes.end(); ++itr, ++itrCt) {
       int p = mapping.getProcessorAssignment(itrCt);
       procloads[p] += itr->size();
    }
@@ -610,8 +611,9 @@ void ChopAndPackLoadBalancer::loadBalanceBoxes(
    double local_load = 0;
    int local_indices_idx = 0;
    int idx = 0;
-   for (hier::BoxList::Iterator itr(out_boxes);
-        itr && local_indices_idx < local_indices.size(); itr++, ++idx) {
+   for (hier::BoxContainer::Iterator itr(out_boxes);
+        itr != out_boxes.end() && local_indices_idx < local_indices.size();
+        ++itr, ++idx) {
       if (local_indices[local_indices_idx] == idx) {
          local_load += itr().size();
          ++local_indices_idx;
@@ -635,14 +637,14 @@ void ChopAndPackLoadBalancer::loadBalanceBoxes(
  */
 
 void ChopAndPackLoadBalancer::chopUniformSingleBox(
-   hier::BoxList& out_boxes,
+   hier::BoxContainer& out_boxes,
    tbox::Array<double>& out_workloads,
    const hier::Box& in_box,
    const hier::IntVector& min_size,
    const hier::IntVector& max_size,
    const hier::IntVector& cut_factor,
    const hier::IntVector& bad_interval,
-   const hier::BoxList& physical_domain,
+   const hier::BoxContainer& physical_domain,
    const tbox::SAMRAI_MPI& mpi) const
 {
 
@@ -685,7 +687,7 @@ void ChopAndPackLoadBalancer::chopUniformSingleBox(
     * ideal_box_size as the maximum size of each of the smaller boxes.
     */
 
-   hier::BoxList tmp_box_list(in_box);
+   hier::BoxContainer tmp_box_list(in_box);
 
    hier::BoxUtilities::chopBoxes(tmp_box_list,
       ideal_box_size,
@@ -700,10 +702,11 @@ void ChopAndPackLoadBalancer::chopUniformSingleBox(
 
    out_boxes = tmp_box_list;
 
-   const int nboxes = out_boxes.getNumberOfBoxes();
+   const int nboxes = out_boxes.size();
    out_workloads.resizeArray(nboxes);
    int ibCt = 0;
-   for (hier::BoxList::Iterator ib(out_boxes); ib; ib++, ++ibCt) {
+   for (hier::BoxContainer::Iterator ib(out_boxes); ib != out_boxes.end();
+        ++ib, ++ibCt) {
       out_workloads[ibCt] = (double)(ib().size());
    }
 
@@ -721,16 +724,16 @@ void ChopAndPackLoadBalancer::chopUniformSingleBox(
  */
 
 void ChopAndPackLoadBalancer::chopBoxesWithUniformWorkload(
-   hier::BoxList& out_boxes,
+   hier::BoxContainer& out_boxes,
    tbox::Array<double>& out_workloads,
-   const hier::BoxList& in_boxes,
+   const hier::BoxContainer& in_boxes,
    const tbox::Pointer<hier::PatchHierarchy> hierarchy,
    int level_number,
    const hier::IntVector& min_size,
    const hier::IntVector& max_size,
    const hier::IntVector& cut_factor,
    const hier::IntVector& bad_interval,
-   const hier::BoxList& physical_domain,
+   const hier::BoxContainer& physical_domain,
    const tbox::SAMRAI_MPI& mpi) const
 {
    NULL_USE(hierarchy);
@@ -745,7 +748,7 @@ void ChopAndPackLoadBalancer::chopBoxesWithUniformWorkload(
     * Create copy of input box list to prevent changing it.
     */
 
-   hier::BoxList tmp_in_boxes_list(in_boxes);
+   hier::BoxContainer tmp_in_boxes_list(in_boxes);
 
    /*
     * Chop any boxes in input box list that are larger than max box size
@@ -760,14 +763,15 @@ void ChopAndPackLoadBalancer::chopBoxesWithUniformWorkload(
       physical_domain);
 
    double total_work = 0.0;
-   for (hier::BoxList::Iterator ib0(tmp_in_boxes_list); ib0; ib0++) {
+   for (hier::BoxContainer::Iterator ib0(tmp_in_boxes_list);
+        ib0 != tmp_in_boxes_list.end(); ++ib0) {
       total_work += ib0().size();
    }
 
    double work_factor = getMaxWorkloadFactor(level_number);
    double average_work = work_factor * total_work / mpi.getSize();
 
-   hier::BoxList tmp_box_list;
+   hier::BoxContainer tmp_box_list;
    tbox::List<double> tmp_work_list;
    BalanceUtilities::recursiveBisectionUniform(tmp_box_list,
       tmp_work_list,
@@ -779,7 +783,7 @@ void ChopAndPackLoadBalancer::chopBoxesWithUniformWorkload(
       bad_interval,
       physical_domain);
 
-   if (tmp_box_list.getNumberOfItems() != tmp_work_list.getNumberOfItems()) {
+   if (tmp_box_list.size() != tmp_work_list.size()) {
       TBOX_ERROR(
          d_object_name << ": "
                        << "Number of boxes generated != number of workload values generated."
@@ -792,7 +796,7 @@ void ChopAndPackLoadBalancer::chopBoxesWithUniformWorkload(
 
    out_boxes = tmp_box_list;
 
-   out_workloads.resizeArray(out_boxes.getNumberOfBoxes());
+   out_workloads.resizeArray(out_boxes.size());
    int i = 0;
    for (tbox::List<double>::Iterator il(tmp_work_list); il; il++) {
       out_workloads[i] = il();
@@ -813,9 +817,9 @@ void ChopAndPackLoadBalancer::chopBoxesWithUniformWorkload(
  */
 
 void ChopAndPackLoadBalancer::chopBoxesWithNonuniformWorkload(
-   hier::BoxList& out_boxes,
+   hier::BoxContainer& out_boxes,
    tbox::Array<double>& out_workloads,
-   const hier::BoxList& in_boxes,
+   const hier::BoxContainer& in_boxes,
    const tbox::Pointer<hier::PatchHierarchy> hierarchy,
    int level_number,
    const hier::IntVector& ratio_to_hierarchy_level_zero,
@@ -824,7 +828,7 @@ void ChopAndPackLoadBalancer::chopBoxesWithNonuniformWorkload(
    const hier::IntVector& max_size,
    const hier::IntVector& cut_factor,
    const hier::IntVector& bad_interval,
-   const hier::BoxList& physical_domain,
+   const hier::BoxContainer& physical_domain,
    const tbox::SAMRAI_MPI& mpi) const
 {
 
@@ -838,7 +842,7 @@ void ChopAndPackLoadBalancer::chopBoxesWithNonuniformWorkload(
     * Create copy of input box list to prevent changing it.
     */
 
-   hier::BoxList tmp_in_boxes_list(in_boxes);
+   hier::BoxContainer tmp_in_boxes_list(in_boxes);
 
    hier::BoxUtilities::chopBoxes(tmp_in_boxes_list,
       max_size,
@@ -854,13 +858,14 @@ void ChopAndPackLoadBalancer::chopBoxesWithNonuniformWorkload(
     * the total work for the set of boxes.
     */
 
-   hier::BoxList tmp_level_boxes(tmp_in_boxes_list);
+   hier::BoxContainer tmp_level_boxes(tmp_in_boxes_list);
 
-   const int num_tmp_patches = tmp_level_boxes.getNumberOfBoxes();
+   const int num_tmp_patches = tmp_level_boxes.size();
    tbox::Array<double> tmp_level_workloads(num_tmp_patches);
    int idx = 0;
-   for (hier::BoxList::Iterator i(tmp_level_boxes); i; i++, ++idx) {
-      tmp_level_workloads[i] = i().size();
+   for (hier::BoxContainer::Iterator i(tmp_level_boxes); i != tmp_level_boxes.end();
+        ++i, ++idx) {
+      tmp_level_workloads[idx] = i().size();
    }
 
    hier::ProcessorMapping tmp_level_mapping;
@@ -876,7 +881,8 @@ void ChopAndPackLoadBalancer::chopBoxesWithNonuniformWorkload(
          mpi,
          hier::BoxLevel::GLOBALIZED));
    idx = 0;
-   for (hier::BoxList::Iterator i(tmp_level_boxes); i; i++, ++idx) {
+   for (hier::BoxContainer::Iterator i(tmp_level_boxes); i != tmp_level_boxes.end();
+        ++i, ++idx) {
       hier::Box node(*i, hier::LocalId(idx),
                      tmp_level_mapping.getProcessorAssignment(idx));
       tmp_mapped_box_level->addBox(node);
@@ -929,7 +935,7 @@ void ChopAndPackLoadBalancer::chopBoxesWithNonuniformWorkload(
    double work_factor = getMaxWorkloadFactor(level_number);
    double average_work = work_factor * total_work / mpi.getSize();
 
-   hier::BoxList tmp_box_list;
+   hier::BoxContainer tmp_box_list;
    tbox::List<double> tmp_work_list;
    BalanceUtilities::recursiveBisectionNonuniform(tmp_box_list,
       tmp_work_list,
@@ -945,7 +951,7 @@ void ChopAndPackLoadBalancer::chopBoxesWithNonuniformWorkload(
    tmp_level->deallocatePatchData(wrk_indx);
    tmp_level.setNull();
 
-   if (tmp_box_list.getNumberOfItems() != tmp_work_list.getNumberOfItems()) {
+   if (tmp_box_list.size() != tmp_work_list.size()) {
       TBOX_ERROR(
          d_object_name << ": "
                        << "Number of boxes generated != number of workload values generated."
@@ -956,9 +962,9 @@ void ChopAndPackLoadBalancer::chopBoxesWithNonuniformWorkload(
     * Set local box array to list of chopped boxes and set local workload array.
     */
 
-   hier::BoxList local_out_boxes(tmp_box_list);
+   hier::BoxContainer local_out_boxes(tmp_box_list);
 
-   tbox::Array<double> local_out_workloads(local_out_boxes.getNumberOfBoxes());
+   tbox::Array<double> local_out_workloads(local_out_boxes.size());
 
    int i = 0;
    for (tbox::List<double>::Iterator il(tmp_work_list); il; il++) {
@@ -969,7 +975,7 @@ void ChopAndPackLoadBalancer::chopBoxesWithNonuniformWorkload(
    /*
     * Gather local box and work arrays so that each processor has a copy.
     */
-   exchangeBoxListsAndWeightArrays(local_out_boxes,
+   exchangeBoxContainersAndWeightArrays(local_out_boxes,
       local_out_workloads,
       out_boxes,
       out_workloads,
@@ -984,23 +990,21 @@ void ChopAndPackLoadBalancer::chopBoxesWithNonuniformWorkload(
  *
  *************************************************************************
  */
-void ChopAndPackLoadBalancer::exchangeBoxListsAndWeightArrays(
-   const hier::BoxList& box_list_in,
+void ChopAndPackLoadBalancer::exchangeBoxContainersAndWeightArrays(
+   const hier::BoxContainer& box_list_in,
    const tbox::Array<double>& weights_in,
-   hier::BoxList& box_list_out,
+   hier::BoxContainer& box_list_out,
    tbox::Array<double>& weights_out,
    const tbox::SAMRAI_MPI& mpi) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(box_list_in, box_list_out);
-   TBOX_ASSERT(box_list_in.getNumberOfBoxes() == weights_in.getSize());
+   TBOX_ASSERT(box_list_in.size() == weights_in.getSize());
 
-   const tbox::Dimension& dim(box_list_in.getDim());
 
    /*
     * allocate send and receive buffers, and set array sizes
     * for the output arrays.
     */
-   int size_in = box_list_in.getNumberOfBoxes();
+   int size_in = box_list_in.size();
    int size_out = size_in;
    if (mpi.getSize() > 1) {
       mpi.Allreduce(&size_in, &size_out, 1, MPI_INT, MPI_SUM);
@@ -1008,22 +1012,22 @@ void ChopAndPackLoadBalancer::exchangeBoxListsAndWeightArrays(
 
 #ifdef DEBUG_CHECK_ASSERTIONS
    if (size_out <= 0) {
-      TBOX_ERROR("ChopAndPackLoadBalancer::exchangeBoxListsAndWeightArrays() error"
+      TBOX_ERROR("ChopAndPackLoadBalancer::exchangeBoxContainersAndWeightArrays() error"
          << "\n All box arrays have zero length!" << std::endl);
    }
 #endif
 
-   int buf_size_in = size_in * dim.getValue() * 2;
-   int buf_size_out = size_out * dim.getValue() * 2;
+   int buf_size_in = size_in * d_dim.getValue() * 2;
+   int buf_size_out = size_out * d_dim.getValue() * 2;
 
    int curr_box_list_out_size = box_list_out.size();
    if (size_out > curr_box_list_out_size) {
       for (int i = curr_box_list_out_size; i < size_out; ++i) {
-         box_list_out.appendItem(hier::Box(dim));
+         box_list_out.pushBack(hier::Box(d_dim));
       }
    } else if (size_out < curr_box_list_out_size) {
       for (int i = size_out; i < curr_box_list_out_size; ++i) {
-         box_list_out.removeLastItem();
+         box_list_out.popBack();
       }
    }
    weights_out.resizeArray(size_out);
@@ -1049,8 +1053,8 @@ void ChopAndPackLoadBalancer::exchangeBoxListsAndWeightArrays(
     * populate the buffers with data for sending
     */
    int offset = 0;
-   for (hier::BoxList::Iterator x(box_list_in); x; x++) {
-      for (int i = 0; i < dim.getValue(); ++i) {
+   for (hier::BoxContainer::ConstIterator x(box_list_in); x != box_list_in.end(); ++x) {
+      for (int i = 0; i < d_dim.getValue(); ++i) {
          buf_in_ptr[offset++] = x().lower(i);
          buf_in_ptr[offset++] = x().upper(i);
       }
@@ -1078,7 +1082,7 @@ void ChopAndPackLoadBalancer::exchangeBoxListsAndWeightArrays(
       &displs[0],
       MPI_INT);
 
-   const int ints_per_box = dim.getValue() * 2;
+   const int ints_per_box = d_dim.getValue() * 2;
    for (size_t i = 0; i < displs.size(); ++i) {
       counts[i] *= ints_per_box;
       displs[i] *= ints_per_box;
@@ -1089,8 +1093,8 @@ void ChopAndPackLoadBalancer::exchangeBoxListsAndWeightArrays(
     * assemble the output array of boxes
     */
    offset = 0;
-   for (hier::BoxList::Iterator b(box_list_out); b; b++) {
-      for (int j = 0; j < dim.getValue(); ++j) {
+   for (hier::BoxContainer::Iterator b(box_list_out); b != box_list_out.end(); ++b) {
+      for (int j = 0; j < d_dim.getValue(); ++j) {
          b().lower(j) = buf_out_ptr[offset++];
          b().upper(j) = buf_out_ptr[offset++];
       }
@@ -1261,7 +1265,7 @@ void ChopAndPackLoadBalancer::getFromInput(
  */
 
 void ChopAndPackLoadBalancer::binPackBoxes(
-   hier::BoxList& boxes,
+   hier::BoxContainer& boxes,
    hier::ProcessorMapping& mapping,
    tbox::Array<double>& workloads,
    const std::string& bin_pack_method) const

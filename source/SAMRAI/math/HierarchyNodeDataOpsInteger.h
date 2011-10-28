@@ -308,7 +308,7 @@ private:
    tbox::Pointer<hier::PatchHierarchy> d_hierarchy;
    int d_coarsest_level;
    int d_finest_level;
-   tbox::Array<tbox::Array<hier::BoxList> > d_nonoverlapping_node_boxes;
+   tbox::Array<tbox::Array<hier::BoxContainer> > d_nonoverlapping_node_boxes;
 
    PatchNodeDataOpsInteger d_patch_ops;
 

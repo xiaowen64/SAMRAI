@@ -17,7 +17,6 @@
 #include "SAMRAI/tbox/Database.h"
 #include "SAMRAI/tbox/Pointer.h"
 #include "SAMRAI/hier/Box.h"
-#include "SAMRAI/hier/BoxList.h"
 #include "MultiblockTester.h"
 #include "SAMRAI/hier/IntVector.h"
 #include "SAMRAI/hier/Patch.h"
@@ -330,7 +329,7 @@ protected:
    /*
     * Arrays of information read from input file describing test variables
     */
-   tbox::Array<hier::BoxList> d_refine_level_boxes;
+   tbox::Array<hier::BoxContainer> d_refine_level_boxes;
 
 private:
    tbox::Pointer<hier::GridGeometry> d_grid_geometry;

@@ -185,7 +185,7 @@ SparseDataTester::testPackStream()
    hier::Index lo = hier::Index(d_dim, 0);
    hier::Index hi = hier::Index(d_dim, 100);
    hier::Box box(lo, hi);
-   hier::BoxList blist(box);
+   hier::BoxContainer blist(box);
    hier::Transformation trans(hier::IntVector::getZero(d_dim));
 
    pdat::CellOverlap overlap(blist, trans);

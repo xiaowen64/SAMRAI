@@ -929,7 +929,7 @@ private:
    mutable tbox::SAMRAI_MPI d_mpi;
    mutable hier::IntVector d_min_size;
    mutable hier::IntVector d_max_size;
-   mutable hier::BoxList d_domain_boxes;
+   mutable std::vector<hier::BoxContainer> d_block_domain_boxes;
    mutable hier::IntVector d_bad_interval;
    mutable hier::IntVector d_cut_factor;
    mutable double d_global_avg_load;

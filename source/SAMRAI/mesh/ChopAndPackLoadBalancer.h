@@ -445,12 +445,12 @@ private:
     */
    void
    loadBalanceBoxes(
-      hier::BoxList& out_boxes,
+      hier::BoxContainer& out_boxes,
       hier::ProcessorMapping& mapping,
-      const hier::BoxList& in_boxes,
+      const hier::BoxContainer& in_boxes,
       const tbox::Pointer<hier::PatchHierarchy> hierarchy,
       int level_number,
-      const hier::BoxList& physical_domain,
+      const hier::BoxContainer& physical_domain,
       const hier::IntVector& ratio_to_hierarchy_level_zero,
       const hier::IntVector& min_size,
       const hier::IntVector& max_size,
@@ -462,14 +462,14 @@ private:
     */
    void
    chopUniformSingleBox(
-      hier::BoxList& out_boxes,
+      hier::BoxContainer& out_boxes,
       tbox::Array<double>& out_workloads,
       const hier::Box& in_box,
       const hier::IntVector& min_size,
       const hier::IntVector& max_size,
       const hier::IntVector& cut_factor,
       const hier::IntVector& bad_interval,
-      const hier::BoxList& physical_domain,
+      const hier::BoxContainer& physical_domain,
       const tbox::SAMRAI_MPI& mpi) const;
 
    /*
@@ -477,16 +477,16 @@ private:
     */
    void
    chopBoxesWithUniformWorkload(
-      hier::BoxList& out_boxes,
+      hier::BoxContainer& out_boxes,
       tbox::Array<double>& out_workloads,
-      const hier::BoxList& in_boxes,
+      const hier::BoxContainer& in_boxes,
       const tbox::Pointer<hier::PatchHierarchy> hierarchy,
       int level_number,
       const hier::IntVector& min_size,
       const hier::IntVector& max_size,
       const hier::IntVector& cut_factor,
       const hier::IntVector& bad_interval,
-      const hier::BoxList& physical_domain,
+      const hier::BoxContainer& physical_domain,
       const tbox::SAMRAI_MPI& mpi) const;
 
    /*
@@ -494,9 +494,9 @@ private:
     */
    void
    chopBoxesWithNonuniformWorkload(
-      hier::BoxList& out_boxes,
+      hier::BoxContainer& out_boxes,
       tbox::Array<double>& out_workloads,
-      const hier::BoxList& in_boxes,
+      const hier::BoxContainer& in_boxes,
       const tbox::Pointer<hier::PatchHierarchy> hierarchy,
       int level_number,
       const hier::IntVector& ratio_to_coarsest_hierarchy_level,
@@ -505,7 +505,7 @@ private:
       const hier::IntVector& max_size,
       const hier::IntVector& cut_factor,
       const hier::IntVector& bad_interval,
-      const hier::BoxList& physical_domain,
+      const hier::BoxContainer& physical_domain,
       const tbox::SAMRAI_MPI& mpi) const;
 
    /*
@@ -513,7 +513,7 @@ private:
     */
    void
    binPackBoxes(
-      hier::BoxList& boxes,
+      hier::BoxContainer& boxes,
       hier::ProcessorMapping& mapping,
       tbox::Array<double>& workloads,
       const std::string& bin_pack_method) const;
@@ -529,10 +529,10 @@ private:
     * is thrown.
     */
    void
-   exchangeBoxListsAndWeightArrays(
-      const hier::BoxList& box_list_in,
+   exchangeBoxContainersAndWeightArrays(
+      const hier::BoxContainer& box_list_in,
       const tbox::Array<double>& weights_in,
-      hier::BoxList& box_list_out,
+      hier::BoxContainer& box_list_out,
       tbox::Array<double>& weights_out,
       const tbox::SAMRAI_MPI& mpi) const;
 

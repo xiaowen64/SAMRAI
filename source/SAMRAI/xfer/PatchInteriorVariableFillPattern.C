@@ -69,7 +69,7 @@ PatchInteriorVariableFillPattern::calculateOverlap(
    NULL_USE(dst_patch_box);
    NULL_USE(overwrite_interior);
    TBOX_DIM_ASSERT_CHECK_ARGS2(dst_patch_box, src_mask);
-   hier::BoxList dst_restrict_boxes(dst_patch_box);
+   hier::BoxContainer dst_restrict_boxes(dst_patch_box);
    return dst_geometry.calculateOverlap(src_geometry, src_mask, fill_box,
       true, transformation,
       dst_restrict_boxes);
@@ -110,7 +110,7 @@ const hier::IntVector& PatchInteriorVariableFillPattern::getStencilWidth()
  */
 tbox::Pointer<hier::BoxOverlap>
 PatchInteriorVariableFillPattern::computeFillBoxesOverlap(
-   const hier::BoxList& fill_boxes,
+   const hier::BoxContainer& fill_boxes,
    const hier::Box& patch_box,
    const hier::Box& data_box,
    const hier::PatchDataFactory& pdf) const
@@ -122,7 +122,7 @@ PatchInteriorVariableFillPattern::computeFillBoxesOverlap(
    hier::Transformation transformation(
       hier::IntVector::getZero(patch_box.getDim()));
 
-   hier::BoxList overlap_boxes(fill_boxes);
+   hier::BoxContainer overlap_boxes(fill_boxes);
    overlap_boxes.intersectBoxes(data_box * patch_box);
 
    return pdf.getBoxGeometry(patch_box)->setUpOverlap(overlap_boxes,

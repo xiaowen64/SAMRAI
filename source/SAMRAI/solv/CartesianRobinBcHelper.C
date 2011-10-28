@@ -715,7 +715,7 @@ hier::IntVector CartesianRobinBcHelper::getRefineOpStencilWidth() const
 void CartesianRobinBcHelper::preprocessRefineBoxes(
    hier::Patch& fine,
    const hier::Patch& coarse,
-   const hier::BoxList& fine_boxes,
+   const hier::BoxContainer& fine_boxes,
    const hier::IntVector& ratio)
 {
    NULL_USE(fine);
@@ -737,7 +737,7 @@ void CartesianRobinBcHelper::preprocessRefine(
 void CartesianRobinBcHelper::postprocessRefineBoxes(
    hier::Patch& fine,
    const hier::Patch& coarse,
-   const hier::BoxList& fine_box,
+   const hier::BoxContainer& fine_box,
    const hier::IntVector& ratio)
 {
    NULL_USE(fine);

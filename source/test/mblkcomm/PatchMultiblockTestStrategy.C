@@ -136,7 +136,7 @@ void PatchMultiblockTestStrategy::readRefinementInput(
    tbox::Array<string> box_keys = db->getAllKeys();
    int nkeys = box_keys.getSize();
 
-   d_refine_level_boxes.resizeArray(nkeys, hier::BoxList(d_dim));
+   d_refine_level_boxes.resizeArray(nkeys);
    for (int i = 0; i < nkeys; i++) {
       d_refine_level_boxes[i] = db->getDatabaseBoxArray(box_keys[i]);
    }
@@ -168,7 +168,8 @@ void PatchMultiblockTestStrategy::tagCellsInInputBoxes(
 
       const hier::Box pbox = patch.getBox();
 
-      for (hier::BoxList::Iterator k(d_refine_level_boxes[level_number]); k; k++) {
+      for (hier::BoxContainer::Iterator k(d_refine_level_boxes[level_number]);
+           k != d_refine_level_boxes[level_number].end(); ++k) {
          tags->fill(1, *k * pbox, 0);
       }
 

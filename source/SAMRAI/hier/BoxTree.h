@@ -14,8 +14,7 @@
 #include "SAMRAI/SAMRAI_config.h"
 
 #include "SAMRAI/hier/Box.h"
-#include "SAMRAI/hier/Box.h"
-#include "SAMRAI/hier/BoxSet.h"
+#include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/tbox/DescribedClass.h"
 #include "SAMRAI/tbox/Pointer.h"
 #include "SAMRAI/tbox/Timer.h"
@@ -26,7 +25,7 @@
 namespace SAMRAI {
 namespace hier {
 
-class BoxList;
+class Connector;
 class Connector;
 
 /*!
@@ -79,13 +78,13 @@ public:
     */
    explicit BoxTree(
       const tbox::Dimension& dim,
-      const BoxSet& mapped_boxes,
-      size_t min_number = 10);
+      const BoxContainer& mapped_boxes,
+      int min_number = 10);
 
    /*!
     * @brief Constructs a BoxTree from a list of Boxes.
     *
-    * See BoxTree( const tbox::Dimension& , const BoxSet& , size_t min_number );
+    * See BoxTree( const tbox::Dimension& , const BoxContainer& , int min_number );
     *
     * @param[in] dim
     *
@@ -98,9 +97,9 @@ public:
     */
    explicit BoxTree(
       const tbox::Dimension& dim,
-      const BoxList& boxes,
+      const BoxContainer& boxes,
       const BlockId& block_id,
-      size_t min_number = 10);
+      int min_number = 10);
 
    /*!
     * @brief Destructor.
@@ -121,8 +120,8 @@ public:
     */
    void
    generateTree(
-      BoxSet& mapped_boxes,
-      size_t min_number = 10);
+      BoxContainer& mapped_boxes,
+      int min_number = 10);
 
    /*!
     * @brief Reset to uninitialized state.
@@ -184,26 +183,6 @@ public:
    bool
    hasOverlap(
       const Box& box) const;
-
-   /*!
-    * @brief Find all boxes that overlap the given \b box.
-    *
-    * To avoid unneeded work, the output @b overlap_mapped_boxes container
-    * is not emptied.  Overlapping Boxes are simply added.
-    *
-    * Output is sorted.
-    *
-    * @param[out] overlap_mapped_boxes Boxes that overlap with box.
-    *
-    * @param[in] box the specified box whose overlaps are requested.
-    * The box is assumed to be in same index space as those in the
-    * tree.
-    */
-   void
-   findOverlapBoxes(
-      BoxSet& overlap_mapped_boxes,
-      const Box& box,
-      bool recursive_call = false) const;
 
    /*!
     * @brief Find all boxes that overlap the given \b box.
@@ -279,7 +258,7 @@ public:
     */
    void
    findOverlapBoxes(
-      BoxList& overlap_boxes,
+      BoxContainer& overlap_boxes,
       const Box& box,
       bool recursive_call = false) const;
 
@@ -359,7 +338,7 @@ private:
     */
    void
    privateGenerateTree(
-      size_t min_number = 10);
+      int min_number = 10);
 
    /*!
     * @brief Set up the child branches.
@@ -377,9 +356,9 @@ private:
     */
    void
    setupChildren(
-      const size_t min_number,
-      BoxSet& left_mapped_boxes,
-      BoxSet& right_mapped_boxes);
+      const int min_number,
+      BoxContainer& left_mapped_boxes,
+      BoxContainer& right_mapped_boxes);
 
    /*!
     * @brief Set up static class members.
@@ -430,7 +409,7 @@ private:
     * that this tree represents.  When we have a small number of boxes
     * that do not warant the overhead of a child tree, the boxes go here.
     */
-   BoxSet d_mapped_boxes;
+   BoxContainer d_mapped_boxes;
 
    /*!
     * @brief Dimension along which the input box triples are

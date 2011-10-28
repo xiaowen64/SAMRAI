@@ -276,9 +276,10 @@ void MappingConnectorAlgorithm::modify(
       for (Connector::ConstNeighborIterator na = old_to_new.begin(ci);
            na != old_to_new.end(ci); ++na) {
          if (na->getOwnerRank() != old_to_new.getMPI().getRank()) {
+            const hier::Box find_box(na->getDim(), (*ci).first);
             const Box& mapped_box(
                *old_to_new.getBase().getBoxes().
-               find(Box(na->getDim(), ci->first)));
+               find(find_box));
             TBOX_ERROR("MappingConnectorAlgorithm::modify: this version of modify\n"
                "only allows local mappings.  The local mapped_box\n"
                << mapped_box << " has a non-local map to\n"
@@ -682,7 +683,8 @@ void MappingConnectorAlgorithm::privateModify(
        * owners first.  Note the comparator BoxOwnerFirst used to
        * achieve this ordering.
        */
-      BoxSet visible_anchor_nabrs, visible_new_nabrs;
+      bool ordered = true;
+      BoxContainer visible_anchor_nabrs(ordered), visible_new_nabrs(ordered);
       InvertedNeighborhoodSet anchor_eto_old, new_eto_old;
       for (Connector::ConstNeighborhoodIterator ei = old_to_anchor.begin();
            ei != old_to_anchor.end(); ++ei) {
@@ -1133,7 +1135,8 @@ void MappingConnectorAlgorithm::privateModify_removeAndCache(
                // mesg[0] is the counter for how many mapped_boxes are removed.
                if (mesg.empty()) {
                   mesg.insert(mesg.end(), 1);
-               } else { ++mesg[0];
+               } else {
+                  ++mesg[0];
                }
                mesg.insert(mesg.end(), old_gid_gone.getLocalId().getValue());
                mesg.insert(mesg.end(), old_gid_gone.getBlockId().getBlockValue());
@@ -1181,15 +1184,15 @@ void MappingConnectorAlgorithm::privateModify_discoverAndSend(
    std::set<int>& outgoing_ranks,
    tbox::AsyncCommPeer<int> all_comms[],
    tbox::AsyncCommStage::MemberVec& completed,
-   BoxSet& visible_new_nabrs,
-   BoxSet& visible_anchor_nabrs,
+   BoxContainer& visible_new_nabrs,
+   BoxContainer& visible_anchor_nabrs,
    InvertedNeighborhoodSet& anchor_eto_old,
    InvertedNeighborhoodSet& new_eto_old,
    const Connector& old_to_anchor,
    const Connector& anchor_to_old,
    const Connector& old_to_new) const
 {
-   if (!visible_anchor_nabrs.empty() || !visible_new_nabrs.empty()) {
+   if (!visible_anchor_nabrs.isEmpty() || !visible_new_nabrs.isEmpty()) {
 
       /*
        * Discover overlaps.  Overlaps are either locally stored or
@@ -1209,10 +1212,7 @@ void MappingConnectorAlgorithm::privateModify_discoverAndSend(
        * Box whose neighbors are being sought.  If we are not
        * interested in the new-->anchor connector, then new_ni will
        * be unused.
-       */
-      BoxSet::iterator anchor_ni;
-      BoxSet::iterator new_ni;
-      /*
+       *
        * Local process can find some neighbors for the (local and
        * remote) Boxes in visible_anchor_nabrs and
        * visible_new_nabrs.  We loop through the visible_anchor_nabrs
@@ -1231,8 +1231,10 @@ void MappingConnectorAlgorithm::privateModify_discoverAndSend(
        * the begining.)
        */
       const Box start_loop_here(dim, LocalId::getZero(), rank + 1);
-      anchor_ni = visible_anchor_nabrs.lower_bound(start_loop_here);
-      new_ni = visible_new_nabrs.lower_bound(start_loop_here);
+      BoxContainer::Iterator anchor_ni =
+         visible_anchor_nabrs.lowerBound(start_loop_here);
+      BoxContainer::Iterator new_ni =
+         visible_new_nabrs.lowerBound(start_loop_here);
 
       if (anchor_ni == visible_anchor_nabrs.end() &&
           new_ni == visible_new_nabrs.end()) {
@@ -1253,12 +1255,12 @@ void MappingConnectorAlgorithm::privateModify_discoverAndSend(
 
       if (s_print_modify_steps == 'y') {
          tbox::plog << "visible_anchor_nabrs:" << std::endl;
-         for (BoxSet::const_iterator na = visible_anchor_nabrs.begin();
+         for (BoxContainer::ConstIterator na = visible_anchor_nabrs.begin();
               na != visible_anchor_nabrs.end(); ++na) {
             tbox::plog << "  " << *na << std::endl;
          }
          tbox::plog << "visible_new_nabrs:" << std::endl;
-         for (BoxSet::const_iterator na = visible_new_nabrs.begin();
+         for (BoxContainer::ConstIterator na = visible_new_nabrs.begin();
               na != visible_new_nabrs.end(); ++na) {
             tbox::plog << "  " << *na << std::endl;
          }
@@ -1346,8 +1348,8 @@ void MappingConnectorAlgorithm::privateModify_discoverAndSend(
          send_mesg.insert(send_mesg.end(), 3, 0);
 
          // Mapped_boxes referenced in the message, used when adding ref section.
-         BoxSet referenced_anchor_nabrs; // Referenced neighbors in anchor.
-         BoxSet referenced_new_nabrs; // Referenced neighbors in new.
+         BoxContainer referenced_anchor_nabrs; // Referenced neighbors in anchor.
+         BoxContainer referenced_new_nabrs; // Referenced neighbors in new.
 
          /*
           * Find locally visible new neighbors for all base
@@ -1463,12 +1465,12 @@ void MappingConnectorAlgorithm::privateModify_discoverAndSend(
  */
 void MappingConnectorAlgorithm::findOverlapsForOneProcess(
    const int owner_rank,
-   BoxSet& visible_base_nabrs,
-   BoxSet::iterator& base_ni,
+   BoxContainer& visible_base_nabrs,
+   BoxContainer::Iterator& base_ni,
    std::vector<int>& send_mesg,
    const size_t remote_box_counter_index,
    Connector& mapped_connector,
-   BoxSet& referenced_head_nabrs,
+   BoxContainer& referenced_head_nabrs,
    const Connector& unmapped_connector,
    const Connector& unmapped_connector_transpose,
    const Connector& mapping_connector,
@@ -1601,8 +1603,8 @@ void MappingConnectorAlgorithm::findOverlapsForOneProcess(
 void MappingConnectorAlgorithm::sendDiscoveryToOneProcess(
    std::vector<int>& send_mesg,
    const int idx_offset_to_ref,
-   BoxSet& referenced_new_nabrs,
-   BoxSet& referenced_anchor_nabrs,
+   BoxContainer& referenced_new_nabrs,
+   BoxContainer& referenced_anchor_nabrs,
    tbox::AsyncCommPeer<int>& outgoing_comm,
    const tbox::Dimension& dim) const
 {
@@ -1623,13 +1625,13 @@ void MappingConnectorAlgorithm::sendDiscoveryToOneProcess(
    int* ptr = &send_mesg[offset];
    *(ptr++) = static_cast<int>(referenced_anchor_nabrs.size());
    *(ptr++) = static_cast<int>(referenced_new_nabrs.size());
-   for (BoxSet::const_iterator ni = referenced_anchor_nabrs.begin();
+   for (BoxContainer::ConstIterator ni = referenced_anchor_nabrs.begin();
         ni != referenced_anchor_nabrs.end(); ++ni) {
       const Box& mapped_box = *ni;
       mapped_box.putToIntBuffer(ptr);
       ptr += Box::commBufferSize(dim);
    }
-   for (BoxSet::const_iterator ni = referenced_new_nabrs.begin();
+   for (BoxContainer::ConstIterator ni = referenced_new_nabrs.begin();
         ni != referenced_new_nabrs.end(); ++ni) {
       const Box& mapped_box = *ni;
       mapped_box.putToIntBuffer(ptr);
@@ -1763,8 +1765,8 @@ void MappingConnectorAlgorithm::unpackDiscoveryMessage(
    }
 
    // Get the referenced neighbor Boxes.
-   BoxSet referenced_anchor_nabrs;
-   BoxSet referenced_new_nabrs;
+   BoxContainer referenced_anchor_nabrs;
+   BoxContainer referenced_new_nabrs;
    const int offset = *(ptr++);
    const int n_anchor_boxes = *(ptr++);
    const int n_new_boxes = *(ptr++);
@@ -1809,7 +1811,7 @@ void MappingConnectorAlgorithm::unpackDiscoveryMessage(
       for (int j = 0; j < n_new_nabrs_found; ++j) {
          tmp_box.getId().getFromIntBuffer(ptr);
          ptr += BoxId::commBufferSize();
-         BoxSet::const_iterator na = referenced_new_nabrs.find(tmp_box);
+         BoxContainer::ConstIterator na = referenced_new_nabrs.find(tmp_box);
          TBOX_ASSERT(na != referenced_new_nabrs.end());
          const Box& new_nabr = *na;
          anchor_to_new.insertLocalNeighbor(new_nabr, anchor_box_id);
@@ -1824,7 +1826,7 @@ void MappingConnectorAlgorithm::unpackDiscoveryMessage(
       for (int j = 0; j < n_anchor_nabrs_found; ++j) {
          tmp_box.getId().getFromIntBuffer(ptr);
          ptr += BoxId::commBufferSize();
-         BoxSet::const_iterator na = referenced_anchor_nabrs.find(tmp_box);
+         BoxContainer::ConstIterator na = referenced_anchor_nabrs.find(tmp_box);
          TBOX_ASSERT(na != referenced_anchor_nabrs.end());
          const Box& anchor_nabr = *na;
          new_to_anchor->insertLocalNeighbor(anchor_nabr, new_box_id);
@@ -1908,7 +1910,7 @@ size_t MappingConnectorAlgorithm::findMappingErrors(
     * the new BoxLevel.  There should be a mapping for each
     * Box that changed or disappeared.
     */
-   const BoxSet& old_mapped_boxes = connector.getBase().getBoxes();
+   const BoxContainer& old_mapped_boxes = connector.getBase().getBoxes();
    for (RealBoxConstIterator ni(old_mapped_boxes); ni.isValid();
         ++ni) {
       const Box& old_mapped_box = *ni;

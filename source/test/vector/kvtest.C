@@ -22,7 +22,7 @@
 #include "SAMRAI/tbox/Pointer.h"
 
 #include "SAMRAI/hier/Box.h"
-#include "SAMRAI/hier/BoxList.h"
+#include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/geom/CartesianGridGeometry.h"
 #include "SAMRAI/geom/CartesianPatchGeometry.h"
 #include "SAMRAI/pdat/CellIndex.h"
@@ -117,35 +117,35 @@ int main(
       hier::Box fine7(hier::Index(8, 6, 6), hier::Index(13, 7, 7));
       hier::IntVector ratio(dim3d, 2);
 
-      hier::BoxList coarse_domain(dim3d);
-      hier::BoxList fine_boxes(dim3d);
-      coarse_domain.appendItem(coarse0);
-      coarse_domain.appendItem(coarse1);
-      coarse_domain.appendItem(coarse2);
-      coarse_domain.appendItem(coarse3);
-      coarse_domain.appendItem(coarse4);
-      coarse_domain.appendItem(coarse5);
-      coarse_domain.appendItem(coarse6);
-      coarse_domain.appendItem(coarse7);
-      fine_boxes.appendItem(fine0);
-      fine_boxes.appendItem(fine1);
-      fine_boxes.appendItem(fine2);
-      fine_boxes.appendItem(fine3);
-      fine_boxes.appendItem(fine4);
-      fine_boxes.appendItem(fine5);
-      fine_boxes.appendItem(fine6);
-      fine_boxes.appendItem(fine7);
+      hier::BoxContainer coarse_domain;
+      hier::BoxContainer fine_boxes;
+      coarse_domain.pushBack(coarse0);
+      coarse_domain.pushBack(coarse1);
+      coarse_domain.pushBack(coarse2);
+      coarse_domain.pushBack(coarse3);
+      coarse_domain.pushBack(coarse4);
+      coarse_domain.pushBack(coarse5);
+      coarse_domain.pushBack(coarse6);
+      coarse_domain.pushBack(coarse7);
+      fine_boxes.pushBack(fine0);
+      fine_boxes.pushBack(fine1);
+      fine_boxes.pushBack(fine2);
+      fine_boxes.pushBack(fine3);
+      fine_boxes.pushBack(fine4);
+      fine_boxes.pushBack(fine5);
+      fine_boxes.pushBack(fine6);
+      fine_boxes.pushBack(fine7);
 
-      hier::BoxList coarse_domain_list(coarse_domain);
-      hier::BoxList fine_level_list(fine_boxes);
-      coarse_domain_list.coalesceBoxes();
-      fine_level_list.coalesceBoxes();
+      hier::BoxContainer coarse_domain_list(coarse_domain);
+      hier::BoxContainer fine_level_list(fine_boxes);
+      coarse_domain_list.coalesce();
+      fine_level_list.coalesce();
 
-      TBOX_ASSERT(coarse_domain_list.getNumberOfItems() == 1);
-      TBOX_ASSERT(fine_level_list.getNumberOfItems() == 1);
+      TBOX_ASSERT(coarse_domain_list.size() == 1);
+      TBOX_ASSERT(fine_level_list.size() == 1);
 
-      hier::Box coarse_domain_box(coarse_domain_list.getFirstItem());
-      hier::Box fine_level_box(fine_level_list.getFirstItem());
+      hier::Box coarse_domain_box(coarse_domain_list.front());
+      hier::Box fine_level_box(fine_level_list.front());
 
       tbox::Pointer<geom::CartesianGridGeometry> geometry(
          new geom::CartesianGridGeometry("CartesianGeometry",
@@ -165,13 +165,13 @@ int main(
       const int nproc = mpi.getSize();
       TBOX_ASSERT(nproc < 3);
 
-      const int n_coarse_boxes = coarse_domain.getNumberOfBoxes();
-      const int n_fine_boxes = fine_boxes.getNumberOfBoxes();
+      const int n_coarse_boxes = coarse_domain.size();
+      const int n_fine_boxes = fine_boxes.size();
 
       hier::BoxLevel layer0(hier::IntVector(dim3d, 1), geometry);
       hier::BoxLevel layer1(ratio, geometry);
 
-      hier::BoxList::Iterator coarse_domain_itr(coarse_domain);
+      hier::BoxContainer::Iterator coarse_domain_itr(coarse_domain);
       for (int ib = 0; ib < n_coarse_boxes; ib++, coarse_domain_itr++) {
          if (ib % nproc == layer0.getMPI().getRank()) {
             layer0.addBox(hier::Box(*coarse_domain_itr,
@@ -180,7 +180,7 @@ int main(
          }
       }
 
-      hier::BoxList::Iterator fine_boxes_itr(fine_boxes);
+      hier::BoxContainer::Iterator fine_boxes_itr(fine_boxes);
       for (int ib = 0; ib < n_fine_boxes; ib++, fine_boxes_itr++) {
          if (ib % nproc == layer1.getMPI().getRank()) {
             layer1.addBox(hier::Box(*fine_boxes_itr,

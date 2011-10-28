@@ -11,6 +11,8 @@
 
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/hier/BoxTree.h"
+#include "SAMRAI/hier/BoxContainerConstIterator.h"
+#include "SAMRAI/hier/BoxContainerIterator.h"
 #include "SAMRAI/tbox/InputDatabase.h"
 #include "SAMRAI/tbox/InputManager.h"
 #include "SAMRAI/tbox/SAMRAIManager.h"
@@ -212,7 +214,7 @@ int main(
          /*
           * Generate the nodes from the boxes.
           */
-         hier::BoxSet nodes;
+         hier::BoxContainer nodes;
          for (hier::LocalId i(0); i < static_cast<int>(boxes.size()); ++i) {
             nodes.insert(nodes.end(),
                hier::Box(boxes[i.getValue()], i, 0));
@@ -256,7 +258,7 @@ int main(
           * in a vector is almost twice as fast, probably due to the set having to
           * sort the output.
           */
-         hier::BoxSet overlap_set;
+         hier::BoxContainer overlap_set;
          t_search_tree_for_set->start();
          for (BoxVec::iterator bi = grown_boxes.begin();
               bi != grown_boxes.end();

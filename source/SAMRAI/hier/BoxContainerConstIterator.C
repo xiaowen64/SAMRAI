@@ -21,25 +21,6 @@
 namespace SAMRAI {
 namespace hier {
 
-BoxContainerConstIterator::BoxContainerConstIterator(
-   const BoxContainer& container,
-   bool from_start):
-   d_box_container(&container),
-   d_list_iter(from_start ? container.d_list.begin() :
-               container.d_list.end())
-{
-}
-
-BoxContainerConstIterator&
-BoxContainerConstIterator::operator = (
-   const BoxContainerConstIterator& rhs)
-{
-   if (this != &rhs) {
-      d_box_container = rhs.d_box_container;
-      d_list_iter = rhs.d_list_iter;
-   }
-   return *this;
-}
 
 }
 }

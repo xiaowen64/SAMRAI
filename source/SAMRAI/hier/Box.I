@@ -24,7 +24,8 @@ const tbox::Dimension& Box::getDim() const
 SAMRAI_INLINE_KEYWORD
 Box::Box():
    d_lo(tbox::Dimension::getInvalidDimension(), tbox::MathUtilities<int>::getMax()),
-   d_hi(tbox::Dimension::getInvalidDimension(), tbox::MathUtilities<int>::getMin())
+   d_hi(tbox::Dimension::getInvalidDimension(), tbox::MathUtilities<int>::getMin()),
+   d_id_locked(false)
 {
 #ifdef BOX_TELEMETRY
    // Increment the cumulative constructed count, active box count and reset
@@ -42,7 +43,8 @@ Box::Box(
    const tbox::Dimension& dim):
    d_lo(dim, tbox::MathUtilities<int>::getMax()),
    d_hi(dim, tbox::MathUtilities<int>::getMin()),
-   d_id(GlobalId(), BlockId(), PeriodicId::zero())
+   d_id(GlobalId(), BlockId(), PeriodicId::zero()),
+   d_id_locked(false)
 {
    TBOX_DIM_ASSERT_CHECK_DIM(dim);
 #ifdef BOX_TELEMETRY
@@ -62,7 +64,8 @@ Box::Box(
    const Index& upper):
    d_lo(lower),
    d_hi(upper),
-   d_id(GlobalId(), BlockId(), PeriodicId::zero())
+   d_id(GlobalId(), BlockId(), PeriodicId::zero()),
+   d_id_locked(false)
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(lower, upper);
 #ifdef BOX_TELEMETRY
@@ -81,7 +84,8 @@ Box::Box(
    const Box& box):
    d_lo(box.d_lo),
    d_hi(box.d_hi),
-   d_id(box.d_id)
+   d_id(box.d_id),
+   d_id_locked(false)
 {
 #ifdef BOX_TELEMETRY
    // Increment the cumulative constructed count, active box count and reset
@@ -99,7 +103,8 @@ Box::Box(
    const tbox::DatabaseBox& box):
    d_lo(box.getDim(), tbox::MathUtilities<int>::getMax()),
    d_hi(box.getDim(), tbox::MathUtilities<int>::getMin()),
-   d_id(GlobalId(), BlockId(), PeriodicId::zero())
+   d_id(GlobalId(), BlockId(), PeriodicId::zero()),
+   d_id_locked(false)
 {
    set_Box_from_DatabaseBox(box);
 #ifdef BOX_TELEMETRY
@@ -122,7 +127,8 @@ Box::Box(
    const PeriodicId& periodic_id):
    d_lo(box.d_lo),
    d_hi(box.d_hi),
-   d_id(local_id, owner, block_id, periodic_id)
+   d_id(local_id, owner, block_id, periodic_id),
+   d_id_locked(false)
 {
    TBOX_ASSERT(periodic_id.isValid());
    TBOX_ASSERT(periodic_id.getPeriodicValue() <
@@ -147,7 +153,8 @@ Box::Box(
    const PeriodicId& periodic_id):
    d_lo(dim),
    d_hi(dim),
-   d_id(local_id, owner, block_id, periodic_id)
+   d_id(local_id, owner, block_id, periodic_id),
+   d_id_locked(false)
 {
    TBOX_ASSERT(periodic_id.isValid());
    TBOX_ASSERT(periodic_id.getPeriodicValue() < PeriodicShiftCatalog::getCatalog(
@@ -171,7 +178,8 @@ Box::Box(
    const PeriodicId& periodic_id):
    d_lo(dim),
    d_hi(dim),
-   d_id(global_id, block_id, periodic_id)
+   d_id(global_id, block_id, periodic_id),
+   d_id_locked(false)
 {
    TBOX_ASSERT(periodic_id.isValid());
    TBOX_ASSERT(periodic_id.getPeriodicValue() < PeriodicShiftCatalog::getCatalog(
@@ -193,7 +201,8 @@ Box::Box(
    const BoxId& mapped_box_id):
    d_lo(dim),
    d_hi(dim),
-   d_id(mapped_box_id)
+   d_id(mapped_box_id),
+   d_id_locked(false)
 {
    TBOX_ASSERT(mapped_box_id.getPeriodicId().isValid());
    TBOX_ASSERT(
@@ -220,7 +229,11 @@ void Box::initialize(
 {
    d_lo = box.d_lo;
    d_hi = box.d_hi;
-   d_id.initialize(local_id, owner, block_id, periodic_id);
+   if (!d_id_locked) {
+      d_id.initialize(local_id, owner, block_id, periodic_id);
+   } else {
+      TBOX_ERROR("Attempted to change BoxId that is locked in an ordered BoxContainer.");
+   }
 }
 
 SAMRAI_INLINE_KEYWORD
@@ -344,7 +357,11 @@ Box& Box::operator = (
 
       d_lo = rhs.d_lo;
       d_hi = rhs.d_hi;
-      d_id = rhs.d_id;
+      if (!d_id_locked) {
+         d_id = rhs.d_id;
+      } else {
+         TBOX_ERROR("Attempted to change BoxId that is locked in an ordered BoxContainer.");
+      }
 #ifdef BOX_TELEMETRY
       // Increment the cumulative assigned count only.
       ++s_cumulative_assigned_ct;
@@ -978,6 +995,12 @@ const Box& Box::getUniverse(
    TBOX_DIM_ASSERT_CHECK_DIM(dim);
    return *(s_universes[dim.getValue() - 1]);
 }
+
+SAMRAI_INLINE_KEYWORD
+void Box::lockId() {
+   d_id_locked = true;
+}
+
 
 }
 }

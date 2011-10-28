@@ -13,6 +13,7 @@
 
 #include "SAMRAI/SAMRAI_config.h"
 #include "SAMRAI/hier/Box.h"
+#include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/hier/BoxOverlap.h"
 #include "SAMRAI/hier/IntVector.h"
 #include "SAMRAI/tbox/Pointer.h"
@@ -99,7 +100,7 @@ public:
     * dst_restrict_boxes can be used to add a further restriction on the
     * calculated overlap, so that none of the calculated overlap will lie
     * outside of the space covered by dst_restrict_boxes. If dst_restrict_boxes
-    * is an empty BoxList, then it will have no effect on the overlap
+    * is an empty BoxContainer, then it will have no effect on the overlap
     * calculation.
     */
    tbox::Pointer<BoxOverlap>
@@ -109,7 +110,7 @@ public:
       const Box& fill_box,
       const bool overwrite_interior,
       const Transformation& transformation,
-      const BoxList& dst_restrict_boxes = BoxList()) const;
+      const BoxContainer& dst_restrict_boxes = BoxContainer()) const;
 
    /**
     * Calculate the overlap between two box geometry objects given the
@@ -124,7 +125,7 @@ public:
     * dst_restrict_boxes can be used to add a further restriction on the
     * calculated overlap, so that none of the calculated overlap will lie
     * outside of the space covered by dst_restrict_boxes. If dst_restrict_boxes
-    * is an empty BoxList, then it will have no effect on the overlap
+    * is an empty BoxContainer, then it will have no effect on the overlap
     * calculation.
     */
    virtual tbox::Pointer<BoxOverlap>
@@ -136,7 +137,7 @@ public:
       const bool overwrite_interior,
       const Transformation& src_offset,
       const bool retry,
-      const BoxList& dst_restrict_boxes = BoxList()) const = 0;
+      const BoxContainer& dst_restrict_boxes = BoxContainer()) const = 0;
 
    /**
     * Set up a BoxOverlap object that consists simply of the given boxes
@@ -144,7 +145,7 @@ public:
     */
    virtual tbox::Pointer<BoxOverlap>
    setUpOverlap(
-      const hier::BoxList& boxes,
+      const hier::BoxContainer& boxes,
       const hier::Transformation& offset) const = 0;
 
 private:

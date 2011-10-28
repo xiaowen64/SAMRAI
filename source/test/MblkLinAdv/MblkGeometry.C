@@ -11,7 +11,6 @@
 #include "MblkGeometry.h"
 
 #include "SAMRAI/hier/Box.h"
-#include "SAMRAI/hier/BoxList.h"
 #include "SAMRAI/hier/Index.h"
 #include "SAMRAI/hier/IntVector.h"
 #include "SAMRAI/pdat/NodeData.h"
@@ -96,7 +95,7 @@ std::string MblkGeometry::getGeometryType()
  *************************************************************************
  */
 bool MblkGeometry::getRefineBoxes(
-   hier::BoxList& refine_boxes,
+   hier::BoxContainer& refine_boxes,
    const int block_number,
    const int level_number)
 {
@@ -371,7 +370,7 @@ void MblkGeometry::getFromInput(
             max_ln++;
          }
       }
-      d_refine_boxes[nb].resizeArray(max_ln, hier::BoxList(d_dim));
+      d_refine_boxes[nb].resizeArray(max_ln);
 
       for (ln = 0; ln < max_ln; ln++) {
          sprintf(block_name, "refine_boxes_%d_%d", nb, ln);

@@ -13,7 +13,6 @@
 
 #include "SAMRAI/SAMRAI_config.h"
 
-#include "SAMRAI/hier/BoxSet.h"
 #include "SAMRAI/hier/BoxTree.h"
 #include "SAMRAI/tbox/ConstPointer.h"
 #include "SAMRAI/tbox/DescribedClass.h"
@@ -60,13 +59,13 @@ public:
     */
    explicit MultiblockBoxTree(
       const tbox::ConstPointer<GridGeometry>& grid_geometry,
-      const BoxSet& mapped_boxes,
+      const BoxContainer& mapped_boxes,
       size_t min_number = 10);
 
    /*!
     * @brief Constructs a MultiblockBoxTree from vector of Boxes.
     *
-    * See MultiblockBoxTree( const tbox::Dimension& , const BoxSet& , size_t min_number );
+    * See MultiblockBoxTree( const tbox::Dimension& , const BoxContainer& , size_t min_number );
     *
     * @param[in] grid_geometry
     *
@@ -80,7 +79,7 @@ public:
       size_t min_number = 10);
 
    /*!
-    * @brief Constructs a MultiblockBoxTree from a collection of BoxLists each
+    * @brief Constructs a MultiblockBoxTree from a collection of BoxContainers each
     * of which is associated with a specific BlockId.
     *
     * @param[in] grid_geometry
@@ -91,7 +90,7 @@ public:
     */
    explicit MultiblockBoxTree(
       const tbox::ConstPointer<GridGeometry>& grid_geometry,
-      const std::map<BlockId, BoxList>& boxes,
+      const std::map<BlockId, BoxContainer>& boxes,
       size_t min_number = 10);
 
    /*!
@@ -106,22 +105,7 @@ public:
    ~MultiblockBoxTree();
 
    /*!
-    * @brief Generates the tree from a vector of Boxes.
-    *
-    * @param[in] grid_geometry
-    *
-    * @param[in] mapped_boxes.  No empty boxes are allowed.
-    *
-    * @param[in] min_number
-    */
-   void
-   generateTree(
-      const tbox::ConstPointer<GridGeometry>& grid_geometry,
-      const std::vector<Box>& mapped_boxes,
-      size_t min_number = 10);
-
-   /*!
-    * @brief Generates the tree from a BoxSet.
+    * @brief Generates the tree from a BoxContainer.
     *
     * @param[in] grid_geometry
     *
@@ -132,7 +116,7 @@ public:
    void
    generateTree(
       const tbox::ConstPointer<GridGeometry>& grid_geometry,
-      const BoxSet& boxes,
+      const BoxContainer& boxes,
       size_t min_number = 10);
 
    /*!
@@ -147,11 +131,11 @@ public:
    void
    generateTree(
       const tbox::ConstPointer<GridGeometry>& grid_geometry,
-      const std::map<BlockId, BoxList>& boxes,
+      const std::map<BlockId, BoxContainer>& boxes,
       size_t min_number = 10);
 
    /*!
-    * @brief Generates the tree of non-periodic Boxes from a BoxSet.
+    * @brief Generates the tree of non-periodic Boxes from a BoxContainer.
     *
     * @param[in] grid_geometry
     *
@@ -162,7 +146,7 @@ public:
    void
    generateNonPeriodicTree(
       const tbox::ConstPointer<GridGeometry>& grid_geometry,
-      const BoxSet& boxes,
+      const BoxContainer& boxes,
       size_t min_number = 10);
 
    /*!
@@ -237,37 +221,6 @@ public:
    hasOverlap(
       const Box& box,
       const BlockId& block_id,
-      bool include_singularity_block_neighbors = false) const;
-
-   /*!
-    * @brief Find all boxes that overlap the given Box.
-    *
-    * To avoid unneeded work, the output @b overlap_mapped_boxes
-    * container is not emptied.  Overlapping Boxes are simply
-    * added.
-    *
-    * Output is sorted.
-    *
-    * @param[out] overlap_mapped_boxes Boxes that overlap with box.
-    *
-    * @param[in] box
-    *
-    * @param[in] block_id Specifies the block in which box is
-    * specified.
-    *
-    * @param[in] refinement_ratio Refinement ratio of box's index
-    * space.
-    *
-    * @param[in] include_singularity_block_neighbors Whether to include
-    * intersections with boxes in blocks that are neighbors of block
-    * block_id across a multiblock singularity.
-    */
-   void
-   findOverlapBoxes(
-      BoxSet& overlap_mapped_boxes,
-      const Box& box,
-      const BlockId& block_id,
-      const IntVector& refinement_ratio,
       bool include_singularity_block_neighbors = false) const;
 
    /*!
@@ -384,7 +337,7 @@ public:
     */
    void
    findOverlapBoxes(
-      BoxList& overlap_boxes,
+      BoxContainer& overlap_boxes,
       const Box& box,
       const BlockId& block_id,
       const IntVector& refinement_ratio,

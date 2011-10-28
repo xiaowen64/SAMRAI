@@ -16,6 +16,7 @@
 
 #include "SAMRAI/mesh/BergerRigoutsosNode.h"
 #include "SAMRAI/pdat/CellData.h"
+#include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/hier/RealBoxConstIterator.h"
 #include "SAMRAI/tbox/MathUtilities.h"
 #include "SAMRAI/tbox/SAMRAI_MPI.h"
@@ -83,7 +84,7 @@ BergerRigoutsosNode::BergerRigoutsosNode(
    d_overlap(-1),
    d_box_acceptance(undetermined),
    d_mapped_box(d_dim),
-   d_mapped_box_iterator(),
+   d_mapped_box_iterator(hier::BoxContainer().end()),
    d_wait_phase(to_be_launched),
    d_send_msg(),
    d_recv_msg(),
@@ -92,10 +93,6 @@ BergerRigoutsosNode::BergerRigoutsosNode(
    d_generation(1),
    d_n_cont(0)
 {
-
-#ifdef DEBUG_CHECK_ASSERTIONS
-   d_mapped_box_iterator = BoxSet().end();
-#endif
 
    ++(d_common->num_nodes_owned);
    ++(d_common->max_nodes_owned);
@@ -142,7 +139,7 @@ BergerRigoutsosNode::BergerRigoutsosNode(
    d_overlap(-1),
    d_box_acceptance(undetermined),
    d_mapped_box(d_dim),
-   d_mapped_box_iterator(),
+   d_mapped_box_iterator(hier::BoxContainer().end()),
    d_wait_phase(for_data_only),
    d_send_msg(),
    d_recv_msg(),
@@ -164,7 +161,7 @@ BergerRigoutsosNode::BergerRigoutsosNode(
 #endif
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-   d_mapped_box_iterator = BoxSet().end();
+   d_mapped_box_iterator = BoxContainer().end();
 #endif
 
    ++(d_common->num_nodes_allocated);
@@ -365,7 +362,7 @@ void BergerRigoutsosNode::clusterAndComputeRelationships()
        * As new nodes are finalized, they will be added to
        * these lists.
        */
-      const BoxSet& tag_mapped_boxes =
+      const BoxContainer& tag_mapped_boxes =
          d_common->tag_mapped_box_level->getBoxes();
       for (hier::RealBoxConstIterator ni(tag_mapped_boxes); ni.isValid();
            ++ni) {
@@ -458,7 +455,7 @@ void BergerRigoutsosNode::clusterAndComputeRelationships()
    if (d_common->compute_relationships > 2) {
       // Each new node should have its own neighbor list.
       TBOX_ASSERT(d_common->new_mapped_box_level->getBoxes().size() ==
-         d_common->new_to_tag->getLocalNumberOfNeighborSets());
+         static_cast<int>(d_common->new_to_tag->getLocalNumberOfNeighborSets()));
    }
 #endif
 
@@ -2266,8 +2263,8 @@ void BergerRigoutsosNode::createBox()
    TBOX_ASSERT(d_common->rank == d_owner);
 #endif
    hier::LocalId last_index =
-      d_common->new_mapped_box_level->getBoxes().empty() ? hier::LocalId::getZero() :
-      d_common->new_mapped_box_level->getBoxes().rbegin()->getLocalId();
+      d_common->new_mapped_box_level->getBoxes().isEmpty() ? hier::LocalId::getZero() :
+      d_common->new_mapped_box_level->getBoxes().back().getLocalId();
 
    hier::Box new_box(d_box, last_index + 1, d_common->rank, d_block_id);
    d_common->new_mapped_box_level->addBoxWithoutUpdate(new_box);
@@ -2291,7 +2288,7 @@ void BergerRigoutsosNode::eraseBox()
          *d_mapped_box_iterator);
    }
 #ifdef DEBUG_CHECK_ASSERTIONS
-   d_mapped_box_iterator = BoxSet().end();
+   d_mapped_box_iterator = BoxContainer().end();
    d_mapped_box = hier::Box(d_dim);
 #endif
 }
@@ -2555,7 +2552,7 @@ void BergerRigoutsosNode::computeNewNeighborhoodSets()
       (relationship_message != NULL ? static_cast<int>(relationship_message->size()) : 0) - 1;
    const int ints_per_node = hier::Box::commBufferSize(d_dim);
 
-   const BoxSet& tag_mapped_boxes =
+   const BoxContainer& tag_mapped_boxes =
       d_common->tag_mapped_box_level->getBoxes();
 
    for (hier::RealBoxConstIterator ni(tag_mapped_boxes); ni.isValid(); ++ni) {

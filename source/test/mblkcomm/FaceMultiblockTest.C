@@ -544,8 +544,8 @@ bool FaceMultiblockTest::verifyResults(
 
    const tbox::List<hier::GridGeometry::Neighbor>& neighbors =
       hierarchy->getGridGeometry()->getNeighbors(block_id);
-   hier::BoxList singularity(
-      hierarchy->getGridGeometry()->getSingularityBoxList(block_id));
+   hier::BoxContainer singularity(
+      hierarchy->getGridGeometry()->getSingularityBoxContainer(block_id));
 
    hier::IntVector ratio =
       hierarchy->getPatchLevel(level_number)->getRatioToLevelZero();
@@ -589,7 +589,7 @@ bool FaceMultiblockTest::verifyResults(
          hier::Box patch_face_box =
             pdat::FaceGeometry::toFaceBox(pbox, axis);
 
-         hier::BoxList tested_neighbors(d_dim);
+         hier::BoxContainer tested_neighbors;
 
          for (tbox::List<hier::GridGeometry::Neighbor>::
               Iterator ne(neighbors); ne; ne++) {
@@ -598,13 +598,14 @@ bool FaceMultiblockTest::verifyResults(
 
             correct = ne().getBlockId().getBlockValue();
 
-            hier::BoxList neighbor_ghost(ne().getTransformedDomain());
-            hier::BoxList neighbor_face_ghost;
-            for (hier::BoxList::Iterator nn(neighbor_ghost); nn; nn++) {
+            hier::BoxContainer neighbor_ghost(ne().getTransformedDomain());
+            hier::BoxContainer neighbor_face_ghost;
+            for (hier::BoxContainer::Iterator nn(neighbor_ghost);
+                 nn != neighbor_ghost.end(); ++nn) {
                hier::Box neighbor_ghost_interior(
                   pdat::FaceGeometry::toFaceBox(nn(), axis));
                neighbor_ghost_interior.grow(-hier::IntVector::getOne(d_dim));
-               neighbor_face_ghost.addItem(neighbor_ghost_interior);
+               neighbor_face_ghost.pushFront(neighbor_ghost_interior);
             }
 
             neighbor_face_ghost.refine(ratio);
@@ -613,7 +614,8 @@ bool FaceMultiblockTest::verifyResults(
 
             neighbor_face_ghost.removeIntersections(tested_neighbors);
 
-            for (hier::BoxList::Iterator ng(neighbor_face_ghost); ng; ng++) {
+            for (hier::BoxContainer::Iterator ng(neighbor_face_ghost);
+                 ng != neighbor_face_ghost.end(); ++ng) {
 
                for (hier::BoxIterator ci(ng()); ci; ci++) {
                   pdat::FaceIndex fi(ci(), 0, 0);
@@ -637,7 +639,7 @@ bool FaceMultiblockTest::verifyResults(
                   }
                }
             }
-            tested_neighbors.unionBoxes(neighbor_face_ghost);
+            tested_neighbors.spliceBack(neighbor_face_ghost);
          }
       }
 
@@ -662,7 +664,7 @@ bool FaceMultiblockTest::verifyResults(
                     <hier::GridGeometry::Neighbor>::
                     Iterator ns(neighbors); ns; ns++) {
                   if (ns().isSingularity()) {
-                     hier::BoxList neighbor_ghost(
+                     hier::BoxContainer neighbor_ghost(
                         ns().getTransformedDomain());
                      neighbor_ghost.refine(ratio);
                      neighbor_ghost.intersectBoxes(fill_box);
@@ -757,7 +759,7 @@ void FaceMultiblockTest::postprocessRefine(
 
    pdat::FaceDoubleConstantRefine ref_op(dim);
 
-   hier::BoxList fine_box_list(fine_box);
+   hier::BoxContainer fine_box_list(fine_box);
 
    xfer::BoxGeometryVariableFillPattern fill_pattern;
 

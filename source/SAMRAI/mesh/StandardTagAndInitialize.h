@@ -12,7 +12,6 @@
 #define included_mesh_StandardTagAndInitialize
 
 #include "SAMRAI/SAMRAI_config.h"
-#include "SAMRAI/hier/BoxList.h"
 #include "SAMRAI/mesh/StandardTagAndInitStrategy.h"
 #include "SAMRAI/mesh/StandardTagAndInitializeConnectorWidthRequestor.h"
 #include "SAMRAI/mesh/TagAndInitializeStrategy.h"
@@ -205,7 +204,7 @@ public:
     */
    bool
    coarsestLevelBoxesOK(
-      const hier::BoxList& boxes) const;
+      const hier::BoxContainer& boxes) const;
 
    /*!
     * Return whether refinement is being performed using ONLY

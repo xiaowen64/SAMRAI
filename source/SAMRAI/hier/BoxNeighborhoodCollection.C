@@ -29,7 +29,7 @@ BoxNeighborhoodCollection::BoxNeighborhoodCollection(
    d_rank(rank)
 {
    // For each root in roots create an empty neighborhood.
-   for (BoxContainer::ConstIterator itr(roots.begin()); itr; ++itr) {
+   for (BoxContainer::ConstIterator itr(roots.begin()); itr != roots.end(); ++itr) {
       d_roots.insert(&(d_adj_list.insert(std::make_pair(*itr, Neighbors())).first->first));
    }
 }
@@ -274,7 +274,7 @@ void BoxNeighborhoodCollection::insert(
 
    // Add each neighbor in the container to the root.
    for (BoxContainer::ConstIterator nbr_itr(new_nbrs.begin());
-        nbr_itr; ++nbr_itr) {
+        nbr_itr != new_nbrs.end(); ++nbr_itr) {
 
       // First add this new neighbor to the collection if it is not there.
       AdjListItr itr(d_adj_list.find(*nbr_itr));
@@ -299,7 +299,7 @@ void BoxNeighborhoodCollection::erase(
 
    // Remove each neighbor in the container from the root.
    for (BoxContainer::ConstIterator nbr_itr(nbrs.begin());
-        nbr_itr; ++nbr_itr) {
+        nbr_itr != nbrs.end(); ++nbr_itr) {
 
       // Remove this neighbor from the root's neighborhood.
       root_itr.d_itr->second.erase(&(*nbr_itr));
@@ -548,10 +548,10 @@ void BoxNeighborhoodCollection::growNeighbors(
 }
 
 void BoxNeighborhoodCollection::getNeighbors(
-   BoxSet& neighbors) const
+   BoxContainer& neighbors) const
 {
    // Iterate through the neighbors of each neighborhood and dump them into the
-   // BoxSet.
+   // BoxContainer.
    for (AdjListConstItr root_itr(d_adj_list.begin());
         root_itr != d_adj_list.end(); ++root_itr) {
       for (NeighborsConstItr nbr_itr(root_itr->second.begin());
@@ -563,66 +563,59 @@ void BoxNeighborhoodCollection::getNeighbors(
 }
 
 void BoxNeighborhoodCollection::getNeighbors(
-   BoxList& neighbors) const
-{
-   // This is a 2 step process so it's more expensive than the version using a
-   // BoxSet for the result.  This should go away when the unfied BoxContainer
-   // is in place.
-
-   // First call the version taking a BoxSet so that there are no duplicates.
-   // Then dump the neighbors into the supplied BoxList.
-   BoxSet tmp_nbrs;
-   getNeighbors(tmp_nbrs);
-   for (BoxSet::const_iterator itr(tmp_nbrs.begin());
-        itr != tmp_nbrs.end(); ++itr) {
-      neighbors.appendItem(*itr);
-   }
-   return;
-}
-
-void BoxNeighborhoodCollection::getNeighbors(
-   BoxList& neighbors,
+   BoxContainer& neighbors,
    const BlockId& block_id) const
 {
    // This is a 2 step process so it's more expensive than the version using a
-   // BoxSet for the result.  This should be changed to take a BoxSet when the
+   // BoxContainer for the result.  This should be changed to take a BoxContainer when the
    // unfied BoxContainer is in place.
 
-   // First call the version taking a BoxSet so that there are no duplicates.
+   // First call the version taking a BoxContainer so that there are no duplicates.
    // Then dump the neighbors with the desired BlockId into the supplied
-   // BoxList.
-   BoxSet tmp_nbrs;
-   getNeighbors(tmp_nbrs);
-   for (BoxSetSingleBlockIterator itr(tmp_nbrs, block_id);
-        itr.isValid(); ++itr) {
-      neighbors.appendItem(*itr);
+   // BoxContainer.
+   BoxContainer tmp_nabrs;
+   getNeighbors(tmp_nabrs);
+   for (BoxSetSingleBlockIterator ei(tmp_nabrs, block_id);
+        ei.isValid(); ++ei) {
+      neighbors.pushBack(*ei);
    }
    return;
 }
 
 void BoxNeighborhoodCollection::getNeighbors(
-   std::map<BlockId, BoxList>& neighbors) const
+   std::map<BlockId, BoxContainer>& neighbors) const
 {
    // This is a 2 step process so it's more expensive than the version using a
-   // BoxSet for the result.  This should be changed to take a BoxSet when the
+   // BoxContainer for the result.  This should be changed to take a BoxContainer when the
    // unfied BoxContainer is in place.
 
-   // First call the version taking a BoxSet so that there are no duplicates.
-   // Then dump each neighbor into the BoxList associated with its BlockId.
-   BoxSet tmp_nbrs;
-   getNeighbors(tmp_nbrs);
-   for (BoxSet::const_iterator itr(tmp_nbrs.begin());
-        itr != tmp_nbrs.end(); ++itr) {
-      neighbors[itr->getBlockId()].appendItem(*itr);
+   // First call the version taking a BoxContainer so that there are no duplicates.
+   // Then dump each neighbor into the BoxContainer associated with its BlockId.
+   for (AdjListConstItr root_itr(d_adj_list.begin());
+        root_itr != d_adj_list.end(); ++root_itr) {
+      for (NeighborsConstItr nbr_itr(root_itr->second.begin());
+           nbr_itr != root_itr->second.end(); ++nbr_itr) {
+
+         const BlockId& block_id = (**nbr_itr).getBlockId(); 
+         std::map<BlockId, BoxContainer>::iterator iter = neighbors.find(block_id);
+
+         if (iter != neighbors.end()) {
+            iter->second.pushBack(**nbr_itr);
+         } else {
+            BoxContainer nabr_container(**nbr_itr);
+            neighbors.insert(std::pair<BlockId, BoxContainer>(block_id,
+                                                              nabr_container));
+         }
+      }
    }
    return;
 }
 
 void BoxNeighborhoodCollection::getPeriodicNeighbors(
-   BoxSet& result) const
+   BoxContainer& result) const
 {
    // Iterate through each neighbor of each root and place each neighbor which
-   // is a periodic image into the supplied BoxSet.
+   // is a periodic image into the supplied BoxContainer.
    for (ConstIterator root_itr(begin()); root_itr != end(); ++root_itr) {
       for (ConstNeighborIterator nbr_itr(begin(root_itr));
            nbr_itr != end(root_itr); ++nbr_itr) {

@@ -151,6 +151,13 @@ public:
    bool
    isPeriodicImage() const;
 
+   /*!
+    * @brief Whether the BoxId is valid--meaning it has a valid BlockId,
+    * GlobalId, and PeriodicId.
+    */ 
+   bool
+   isValid() const;
+
    //@{
 
    //! @name Comparison operators

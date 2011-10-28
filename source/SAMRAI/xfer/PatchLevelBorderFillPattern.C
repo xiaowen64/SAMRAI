@@ -12,7 +12,8 @@
 #define included_xfer_PatchLevelBorderFillPattern_C
 
 #include "SAMRAI/xfer/PatchLevelBorderFillPattern.h"
-#include "SAMRAI/hier/BoxList.h"
+
+#include "SAMRAI/hier/BoxContainerIterator.h"
 #include "SAMRAI/hier/RealBoxConstIterator.h"
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/tbox/MathUtilities.h"
@@ -69,7 +70,7 @@ void PatchLevelBorderFillPattern::computeFillBoxesAndNeighborhoodSets(
    NULL_USE(src_to_dst);
    TBOX_DIM_ASSERT_CHECK_ARGS2(dst_mapped_box_level, fill_ghost_width);
 
-   const hier::BoxSet& dst_mapped_boxes =
+   const hier::BoxContainer& dst_mapped_boxes =
       dst_mapped_box_level.getBoxes();
 
    /*
@@ -80,8 +81,8 @@ void PatchLevelBorderFillPattern::computeFillBoxesAndNeighborhoodSets(
    for (hier::RealBoxConstIterator ni(dst_mapped_boxes);
         ni.isValid(); ++ni) {
       const hier::Box& dst_mapped_box = *ni;
-      hier::BoxList fill_boxes(dst_mapped_box);
-      fill_boxes.getFirstItem().grow(fill_ghost_width);
+      hier::BoxContainer fill_boxes(
+         hier::Box::grow(dst_mapped_box, fill_ghost_width));
       hier::Connector::ConstNeighborhoodIterator nabrs =
          dst_to_dst.find(dst_mapped_box.getId());
       for (hier::Connector::ConstNeighborIterator na = dst_to_dst.begin(nabrs);
@@ -119,7 +120,7 @@ void PatchLevelBorderFillPattern::computeFillBoxesAndNeighborhoodSets(
          d_max_fill_boxes = tbox::MathUtilities<int>::Max(d_max_fill_boxes,
                fill_boxes.size());
          dst_to_fill.makeEmptyLocalNeighborhood(dst_mapped_box.getId());
-         for (hier::BoxList::Iterator li(fill_boxes); li; li++) {
+         for (hier::BoxContainer::Iterator li(fill_boxes); li != fill_boxes.end(); ++li) {
             hier::Box fill_mapped_box(*li,
                                       ++last_id,
                                       dst_mapped_box.getOwnerRank(),

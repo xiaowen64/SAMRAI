@@ -21,12 +21,12 @@ namespace SAMRAI {
 namespace pdat {
 
 EdgeOverlap::EdgeOverlap(
-   const tbox::Array<hier::BoxList>& boxes,
+   const tbox::Array<hier::BoxContainer>& boxes,
    const hier::Transformation& transformation):
    d_is_overlap_empty(true),
    d_transformation(transformation)
 {
-
+   const tbox::Dimension dim(transformation.getOffset().getDim());
    d_dst_boxes.resizeArray(boxes.getSize());
 
    for (int d = 0; d < boxes.getSize(); d++) {

@@ -499,8 +499,8 @@ bool NodeMultiblockTest::verifyResults(
 
    const tbox::List<hier::GridGeometry::Neighbor>& neighbors =
       hierarchy->getGridGeometry()->getNeighbors(block_id);
-   hier::BoxList singularity(
-      hierarchy->getGridGeometry()->getSingularityBoxList(block_id));
+   hier::BoxContainer singularity(
+      hierarchy->getGridGeometry()->getSingularityBoxContainer(block_id));
 
    hier::IntVector ratio =
       hierarchy->getPatchLevel(level_number)->getRatioToLevelZero();
@@ -544,26 +544,28 @@ bool NodeMultiblockTest::verifyResults(
       hier::Box patch_node_box =
          pdat::NodeGeometry::toNodeBox(pbox);
 
-      hier::BoxList sing_node_boxlist;
-      for (hier::BoxList::Iterator si(singularity); si; si++) {
-         sing_node_boxlist.addItem(pdat::NodeGeometry::toNodeBox(si()));
+      hier::BoxContainer sing_node_boxlist;
+      for (hier::BoxContainer::Iterator si(singularity);
+           si != singularity.end(); ++si) {
+         sing_node_boxlist.pushFront(pdat::NodeGeometry::toNodeBox(si()));
       }
 
-      hier::BoxList tested_neighbors(d_dim);
+      hier::BoxContainer tested_neighbors;
 
       for (tbox::List<hier::GridGeometry::Neighbor>::
            Iterator ne(neighbors); ne; ne++) {
 
          correct = ne().getBlockId().getBlockValue();
 
-         hier::BoxList neighbor_ghost(ne().getTransformedDomain());
+         hier::BoxContainer neighbor_ghost(ne().getTransformedDomain());
 
-         hier::BoxList neighbor_node_ghost;
-         for (hier::BoxList::Iterator nn(neighbor_ghost); nn; nn++) {
+         hier::BoxContainer neighbor_node_ghost;
+         for (hier::BoxContainer::Iterator nn(neighbor_ghost);
+              nn != neighbor_ghost.end(); ++nn) {
             hier::Box neighbor_ghost_interior(
                pdat::NodeGeometry::toNodeBox(nn()));
             neighbor_ghost_interior.grow(-hier::IntVector::getOne(d_dim));
-            neighbor_node_ghost.addItem(neighbor_ghost_interior);
+            neighbor_node_ghost.pushFront(neighbor_ghost_interior);
          }
 
          neighbor_node_ghost.refine(ratio);
@@ -574,7 +576,8 @@ bool NodeMultiblockTest::verifyResults(
          neighbor_node_ghost.removeIntersections(sing_node_boxlist);
          neighbor_node_ghost.removeIntersections(tested_neighbors);
 
-         for (hier::BoxList::Iterator ng(neighbor_node_ghost); ng; ng++) {
+         for (hier::BoxContainer::Iterator ng(neighbor_node_ghost);
+              ng != neighbor_node_ghost.end(); ++ng) {
 
             for (hier::BoxIterator ci(ng()); ci; ci++) {
                pdat::NodeIndex ni(ci(), hier::IntVector(d_dim, 0));
@@ -596,7 +599,7 @@ bool NodeMultiblockTest::verifyResults(
                }
             }
          }
-         tested_neighbors.unionBoxes(neighbor_node_ghost);
+         tested_neighbors.spliceBack(neighbor_node_ghost);
       }
 
       for (int b = 0; b < d_dim.getValue(); b++) {
@@ -617,7 +620,7 @@ bool NodeMultiblockTest::verifyResults(
                     <hier::GridGeometry::Neighbor>::
                     Iterator ns(neighbors); ns; ns++) {
                   if (ns().isSingularity()) {
-                     hier::BoxList neighbor_ghost(
+                     hier::BoxContainer neighbor_ghost(
                         ns().getTransformedDomain());
                      neighbor_ghost.refine(ratio);
                      neighbor_ghost.intersectBoxes(fill_box);

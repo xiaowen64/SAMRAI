@@ -332,7 +332,7 @@ bool Connector::isEmptyNeighborhood(
       d_parallel_state == BoxLevel::DISTRIBUTED ?
       d_relationships : d_global_relationships;
 
-   return relationships.find(box_id)->second.empty();
+   return relationships.find(box_id)->second.isEmpty();
 }
 
 /*
@@ -369,19 +369,7 @@ void Connector::getLocalNeighbors(
  */
 SAMRAI_INLINE_KEYWORD
 void Connector::getLocalNeighbors(
-   BoxList& neighbors) const
-{
-   d_relationships.getNeighbors(neighbors);
-   return;
-}
-
-/*
- ***********************************************************************
- ***********************************************************************
- */
-SAMRAI_INLINE_KEYWORD
-void Connector::getLocalNeighbors(
-   std::map<BlockId, BoxList>& neighbors) const
+   std::map<BlockId, BoxContainer>& neighbors) const
 {
    d_relationships.getNeighbors(neighbors);
    return;

@@ -12,6 +12,7 @@
 #include <iomanip>
 
 #include "SAMRAI/mesh/BergerRigoutsos.h"
+#include "SAMRAI/hier/BoxContainerIterator.h"
 #include "SAMRAI/hier/BoxLevel.h"
 #include "SAMRAI/hier/BoxLevelStatistics.h"
 #include "SAMRAI/hier/IntVector.h"
@@ -208,7 +209,7 @@ int main(
       /*
        * Set up the domain from input.
        */
-      hier::BoxList domain_boxes(main_db->getDatabaseBoxArray("domain_boxes"));
+      hier::BoxContainer domain_boxes(main_db->getDatabaseBoxArray("domain_boxes"));
 
       /*
        * Create hierarchy we can satisfy the load balancing
@@ -242,8 +243,8 @@ int main(
          grid_geometry,
          tbox::SAMRAI_MPI::getSAMRAIWorld(),
          hier::BoxLevel::GLOBALIZED);
-      hier::BoxList::Iterator domain_boxes_itr(domain_boxes);
-      for (int i = 0; i < domain_boxes.size(); ++i, domain_boxes_itr++) {
+      hier::BoxContainer::Iterator domain_boxes_itr(domain_boxes);
+      for (int i = 0; i < domain_boxes.size(); ++i, ++domain_boxes_itr) {
          domain_mapped_box_level.addBox(hier::Box(*domain_boxes_itr,
                hier::LocalId(i), 0));
       }
@@ -294,7 +295,7 @@ int main(
       hier::Connector balance_to_balance;
 
       {
-         hier::BoxList anchor_boxes(main_db->getDatabaseBoxArray("anchor_boxes"));
+         hier::BoxContainer anchor_boxes(main_db->getDatabaseBoxArray("anchor_boxes"));
          const int boxes_per_proc =
             (anchor_boxes.size() + anchor_mapped_box_level.getMPI().getSize()
              - 1) / anchor_mapped_box_level.getMPI().getSize();
@@ -303,9 +304,9 @@ int main(
          const int my_boxes_stop =
             tbox::MathUtilities<int>::Min(my_boxes_start + boxes_per_proc,
                anchor_boxes.size());
-         hier::BoxList::Iterator anchor_boxes_itr(anchor_boxes);
+         hier::BoxContainer::Iterator anchor_boxes_itr(anchor_boxes);
          for (int i = 0; i < my_boxes_start; ++i) {
-            anchor_boxes_itr++;
+            ++anchor_boxes_itr;
          }
          for (int i = my_boxes_start; i < my_boxes_stop; ++i, anchor_boxes_itr++) {
             anchor_mapped_box_level.addBox(*anchor_boxes_itr, hier::BlockId::zero());
@@ -709,7 +710,7 @@ void generatePrebalanceByUserBoxes(
 
    const tbox::Dimension& dim(hierarchy->getDim());
 
-   hier::BoxList balance_boxes(database->getDatabaseBoxArray("balance_boxes"));
+   hier::BoxContainer balance_boxes(database->getDatabaseBoxArray("balance_boxes"));
    tbox::Array<int> initial_owners(1);
    initial_owners[0] = 0;
    initial_owners = database->getIntegerArray("initial_owners");
@@ -717,8 +718,8 @@ void generatePrebalanceByUserBoxes(
    balance_mapped_box_level.initialize(hier::IntVector(dim, 1),
       hierarchy->getGridGeometry(),
       anchor_mapped_box_level.getMPI());
-   hier::BoxList::Iterator balance_boxes_itr(balance_boxes);
-   for (int i = 0; i < balance_boxes.size(); ++i, balance_boxes_itr++) {
+   hier::BoxContainer::Iterator balance_boxes_itr(balance_boxes);
+   for (int i = 0; i < balance_boxes.size(); ++i, ++balance_boxes_itr) {
       const int owner = i % initial_owners.size();
       if (owner == balance_mapped_box_level.getMPI().getRank()) {
          balance_mapped_box_level.addBox(hier::Box(*balance_boxes_itr,

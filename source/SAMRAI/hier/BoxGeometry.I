@@ -26,7 +26,7 @@ BoxGeometry::calculateOverlap(
    const Box& fill_box,
    const bool overwrite_interior,
    const Transformation& transformation,
-   const BoxList& dst_restrict_boxes) const
+   const BoxContainer& dst_restrict_boxes) const
 {
    return this->calculateOverlap(
       *this, src_geometry, src_mask, fill_box,

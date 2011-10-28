@@ -16,7 +16,7 @@ using namespace std;
 // Headers for basic SAMRAI objects used in this code.
 #include "SAMRAI/tbox/SAMRAIManager.h"
 
-#include "SAMRAI/hier/BoxList.h"
+#include "SAMRAI/hier/BoxContainerConstIterator.h"
 #include "SAMRAI/hier/BoxUtilities.h"
 #include "SAMRAI/geom/CartesianGridGeometry.h"
 #include "SAMRAI/tbox/Database.h"
@@ -160,12 +160,13 @@ int main(
 
       tbox::plog << "\nBuilding patch hierarchy..." << endl;
 
-      const hier::BoxList& domain =
+      const hier::BoxContainer& domain =
          grid_geometry->getPhysicalDomain(hier::BlockId(0));
-      hier::BoxList boxes(domain);
-      if ((domain.getNumberOfBoxes() == 1) &&
+      hier::BoxContainer boxes(domain);
+      boxes.unorder();
+      if ((domain.size() == 1) &&
           (num_boxes != hier::IntVector(dim, 1))) {
-         const hier::Box& dbox = domain.getFirstItem();
+         const hier::Box& dbox = domain.front();
          hier::IntVector max_size(dbox.numberCells());
          hier::IntVector min_size(dbox.numberCells() / num_boxes);
          hier::IntVector cut_factor(dim, 1);
@@ -177,12 +178,12 @@ int main(
             bad_interval,
             domain);
       }
-      hier::BoxList patch_boxes(boxes);
+      hier::BoxContainer patch_boxes(boxes);
 
 #if 0
-      hier::ProcessorMapping mapping(patch_boxes.getNumberOfBoxes());
+      hier::ProcessorMapping mapping(patch_boxes.size());
 
-      for (int ib = 0; ib < patch_boxes.getNumberOfBoxes(); ib++) {
+      for (int ib = 0; ib < patch_boxes.size(); ib++) {
          mapping.setProcessorAssignment(ib, 0);
       }
 
@@ -195,8 +196,8 @@ int main(
 
       hier::BoxLevelConnectorUtils edge_utils;
       hier::BoxLevel layer0(hier::IntVector(dim, 1), grid_geometry);
-      hier::BoxList::Iterator domain_boxes(domain);
-      for (hier::LocalId ib(0); ib < patch_boxes.getNumberOfBoxes(); ib++, domain_boxes++) {
+      hier::BoxContainer::ConstIterator domain_boxes(domain);
+      for (hier::LocalId ib(0); ib < patch_boxes.size(); ib++, domain_boxes++) {
          layer0.addBox(hier::Box(domain_boxes(), ib, 0));
       }
       edge_utils.addPeriodicImages(

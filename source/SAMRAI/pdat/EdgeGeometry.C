@@ -13,7 +13,7 @@
 
 #include "SAMRAI/pdat/EdgeGeometry.h"
 #include "SAMRAI/pdat/EdgeOverlap.h"
-#include "SAMRAI/hier/BoxList.h"
+#include "SAMRAI/hier/BoxContainerConstIterator.h"
 #include "SAMRAI/tbox/Utilities.h"
 
 #ifndef SAMRAI_INLINE
@@ -67,7 +67,7 @@ tbox::Pointer<hier::BoxOverlap> EdgeGeometry::calculateOverlap(
    const bool overwrite_interior,
    const hier::Transformation& transformation,
    const bool retry,
-   const hier::BoxList& dst_restrict_boxes) const
+   const hier::BoxContainer& dst_restrict_boxes) const
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(d_box, src_mask);
 
@@ -142,11 +142,11 @@ tbox::Pointer<hier::BoxOverlap> EdgeGeometry::doOverlap(
    const hier::Box& fill_box,
    const bool overwrite_interior,
    const hier::Transformation& transformation,
-   const hier::BoxList& dst_restrict_boxes)
+   const hier::BoxContainer& dst_restrict_boxes)
 {
    const tbox::Dimension& dim(src_mask.getDim());
 
-   tbox::Array<hier::BoxList> dst_boxes(dim.getValue());
+   tbox::Array<hier::BoxContainer> dst_boxes(dim.getValue());
 
    // Perform a quick-and-dirty intersection to see if the boxes might overlap
 
@@ -176,20 +176,21 @@ tbox::Pointer<hier::BoxOverlap> EdgeGeometry::doOverlap(
 
          if (!together.empty()) {
 
-            dst_boxes[d].unionBoxes(together);
+            dst_boxes[d].pushBack(together);
             if (!overwrite_interior) {
                const hier::Box int_edge(toEdgeBox(dst_geometry.d_box, d));
                dst_boxes[d].removeIntersections(together, int_edge);
             } else {
-               dst_boxes[d].appendItem(together);
+               dst_boxes[d].pushBack(together);
             }
 
          }  // if (!together.empty())
 
          if (dst_restrict_boxes.size() && dst_boxes[d].size()) {
-            hier::BoxList edge_restrict_boxes;
-            for (hier::BoxList::Iterator b(dst_restrict_boxes); b; b++) {
-               edge_restrict_boxes.appendItem(toEdgeBox(b(), d));
+            hier::BoxContainer edge_restrict_boxes;
+            for (hier::BoxContainer::ConstIterator b(dst_restrict_boxes);
+                 b != dst_restrict_boxes.end(); ++b) {
+               edge_restrict_boxes.pushBack(toEdgeBox(b(), d));
             }
             dst_boxes[d].intersectBoxes(edge_restrict_boxes);
          }
@@ -212,16 +213,16 @@ tbox::Pointer<hier::BoxOverlap> EdgeGeometry::doOverlap(
  */
 tbox::Pointer<hier::BoxOverlap>
 EdgeGeometry::setUpOverlap(
-   const hier::BoxList& boxes,
+   const hier::BoxContainer& boxes,
    const hier::Transformation& transformation) const
 {
    const tbox::Dimension& dim(transformation.getOffset().getDim());
-   tbox::Array<hier::BoxList> dst_boxes(dim.getValue());
+   tbox::Array<hier::BoxContainer> dst_boxes(dim.getValue());
 
-   for (hier::BoxList::Iterator b(boxes); b; b++) {
+   for (hier::BoxContainer::ConstIterator b(boxes); b != boxes.end(); ++b) {
       for (int d = 0; d < dim.getValue(); d++) {
          hier::Box edge_box(EdgeGeometry::toEdgeBox(b(), d));
-         dst_boxes[d].appendItem(edge_box);
+         dst_boxes[d].pushBack(edge_box);
       }
    }
 

@@ -4,7 +4,7 @@
  * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Iterator over real Boxes in a BoxSet.
+ * Description:   Iterator over real Boxes in a BoxContainer.
  *
  ************************************************************************/
 #ifndef included_hier_RealBoxConstIterator
@@ -12,14 +12,16 @@
 
 #include "SAMRAI/SAMRAI_config.h"
 
-#include "SAMRAI/hier/BoxSet.h"
+#include "SAMRAI/hier/BoxContainer.h"
+#include "SAMRAI/hier/BoxContainerConstIterator.h"
 
 namespace SAMRAI {
 namespace hier {
 
+
 /*
  * TODO: Do we really need a separate class for this?  Couldn't we just
- *       add an argument to the BoxSet iterator construction that
+ *       add an argument to the BoxContainer iterator construction that
  *       (e.g., an enum with values: All (default value), RealOnly,
  *       PeriodicImagesOnly, etc.  and extend for Multiblock stuff)?
  *       Then, which boxes in the set are selected for iteration would be
@@ -27,14 +29,14 @@ namespace hier {
  */
 /*!
  * @brief Iterator through real Boxes (not periodic images) in a
- * const BoxSet.
+ * const BoxContainer.
  *
  * RealBoxConstIterator is an iterator that provides methods for
- * stepping through a BoxSet, skipping periodic images.
+ * stepping through a BoxContainer, skipping periodic images.
  *
  * Example usage:
  * @verbatim
- *  BoxSet mapped_boxes;
+ *  BoxContainer mapped_boxes;
  *  // fill in mapped_boxes
  *  for ( RealBoxConstIterator ni(mapped_boxes); ni.isValid(); ++ni ) {
  *    TBOX_ASSERT( ! ni->isPeriodicImage() );
@@ -46,14 +48,14 @@ class RealBoxConstIterator
 
 public:
    /*!
-    * @brief Construct the iterator for the given BoxSet.
+    * @brief Construct the iterator for the given BoxContainer.
     *
     * The iterator will iterate through the items in mapped_boxes.
     *
     * @param[in] mapped_boxes
     */
    explicit RealBoxConstIterator(
-      const BoxSet& mapped_boxes);
+      const BoxContainer& mapped_boxes);
 
    /*!
     * @brief Destructor.
@@ -123,14 +125,14 @@ public:
 
 private:
    /*!
-    * @brief BoxSet being iterated through.
+    * @brief BoxContainer being iterated through.
     */
-   const BoxSet* d_mapped_boxes;
+   const BoxContainer* d_mapped_boxes;
 
    /*!
     * @brief The iterator.
     */
-   BoxSet::const_iterator d_ni;
+   BoxContainer::ConstIterator d_ni;
 
 };
 

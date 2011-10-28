@@ -13,8 +13,7 @@
 
 #include "SAMRAI/hier/PatchHierarchy.h"
 
-#include <stdio.h>
-
+#include "SAMRAI/hier/BoxContainerIterator.h"
 #include "SAMRAI/hier/OverlapConnectorAlgorithm.h"
 #include "SAMRAI/hier/PeriodicShiftCatalog.h"
 #include "SAMRAI/hier/VariableDatabase.h"
@@ -664,10 +663,8 @@ void PatchHierarchy::setupDomainData()
       getGridGeometry(),
       tbox::SAMRAI_MPI::getSAMRAIWorld(),
       BoxLevel::GLOBALIZED);
-   for (int nb = 0; nb < d_number_blocks; nb++) {
-      d_grid_geometry->computePhysicalDomain(d_domain_mapped_box_level,
-         IntVector::getOne(d_dim), BlockId(nb));
-   }
+   d_grid_geometry->computePhysicalDomain(d_domain_mapped_box_level,
+      IntVector::getOne(d_dim));
 
    // Initialize the multiblock domain search tree.
    d_domain_search_tree_periodic.generateTree(
@@ -684,7 +681,7 @@ void PatchHierarchy::setupDomainData()
    }
    d_domain_mapped_box_level.finalize();
 
-   std::map<BlockId, BoxList> multiblock_complement_boxes;
+   std::map<BlockId, BoxContainer> multiblock_complement_boxes;
 
    for (int nb = 0; nb < d_number_blocks; nb++) {
 
@@ -692,10 +689,11 @@ void PatchHierarchy::setupDomainData()
        * Set up the search tree for the domain's complement.
        */
       BlockId block_id(nb);
-      multiblock_complement_boxes[block_id].appendItem(
+      multiblock_complement_boxes[block_id].pushBack(
          hier::Box::getUniverse(d_dim));
       multiblock_complement_boxes[block_id].removeIntersections(
          d_domain_search_tree_periodic.getSingleBlockBoxTree(block_id));
+
    }
 
    d_complement_searchtree.generateTree(

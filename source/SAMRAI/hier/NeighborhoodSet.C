@@ -11,8 +11,9 @@
 #define included_hier_NeighborhoodSet_C
 
 #include "SAMRAI/hier/NeighborhoodSet.h"
-#include "SAMRAI/hier/Connector.h"
+#include "SAMRAI/hier/BoxContainerConstIterator.h"
 #include "SAMRAI/hier/BoxSetSingleBlockIterator.h"
+#include "SAMRAI/hier/Connector.h"
 
 #include "SAMRAI/tbox/Utilities.h"
 
@@ -95,8 +96,8 @@ NeighborhoodSet::coarsenNeighbors(
 {
    for (const_iterator ei = begin(); ei != end(); ++ei) {
       const BoxId& mapped_box_id = (*ei).first;
-      const NeighborSet& orig_nabrs = (*ei).second;
-      orig_nabrs.coarsen(output_edges[mapped_box_id], ratio);
+      output_edges[mapped_box_id] = (*ei).second;
+      output_edges[mapped_box_id].coarsen(ratio);
    }
 }
 
@@ -112,8 +113,8 @@ NeighborhoodSet::refineNeighbors(
 {
    for (const_iterator ei = begin(); ei != end(); ++ei) {
       const BoxId& mapped_box_id = (*ei).first;
-      const NeighborSet& orig_nabrs = (*ei).second;
-      orig_nabrs.refine(output_edges[mapped_box_id], ratio);
+      output_edges[mapped_box_id] = (*ei).second;
+      output_edges[mapped_box_id].refine(ratio);
    }
 }
 
@@ -129,8 +130,8 @@ NeighborhoodSet::growNeighbors(
 {
    for (const_iterator ei = begin(); ei != end(); ++ei) {
       const BoxId& mapped_box_id = (*ei).first;
-      const NeighborSet& orig_nabrs = (*ei).second;
-      orig_nabrs.grow(output_edges[mapped_box_id], growth);
+      output_edges[mapped_box_id] = (*ei).second;
+      output_edges[mapped_box_id].grow(growth);
    }
 }
 
@@ -158,7 +159,14 @@ NeighborhoodSet::getNeighbors(
 {
    for (const_iterator ei = begin(); ei != end(); ++ei) {
       const NeighborSet& nabrs = (*ei).second;
-      all_nabrs.insert(nabrs.begin(), nabrs.end());
+      if (!all_nabrs.isOrdered()) {
+         for (BoxContainer::ConstIterator ni = nabrs.begin(); ni != nabrs.end();
+              ++ni) {
+            all_nabrs.pushBack(*ni);
+         }
+      } else {
+         all_nabrs.insert(nabrs.begin(), nabrs.end());
+      }
    }
 }
 
@@ -169,49 +177,40 @@ NeighborhoodSet::getNeighbors(
  */
 void
 NeighborhoodSet::getNeighbors(
-   BoxList& all_nabrs) const
-{
-   NeighborSet tmp_nabrs;
-   getNeighbors(tmp_nabrs);
-   for (BoxSet::const_iterator ei = tmp_nabrs.begin();
-        ei != tmp_nabrs.end(); ++ei) {
-      all_nabrs.appendItem(*ei);
-   }
-}
-
-/*!
- ***********************************************************************
- * Insert all neighbors from a NeighborhoodSet into a single NeighborSet.
- ***********************************************************************
- */
-void
-NeighborhoodSet::getNeighbors(
-   BoxList& all_nabrs,
+   BoxContainer& all_nabrs,
    const BlockId& block_id) const
 {
    NeighborSet tmp_nabrs;
    getNeighbors(tmp_nabrs);
    for (BoxSetSingleBlockIterator ei(tmp_nabrs, block_id);
         ei.isValid(); ++ei) {
-      all_nabrs.appendItem(*ei);
+      all_nabrs.pushBack(*ei);
    }
 }
 
 /*!
  ***********************************************************************
- * Insert all neighbors from a NeighborhoodSet into a single NeighborSet.
+ * Insert all neighbors from a NeighborhoodSet into a map of containers
+ * keyed by BlockId.
  ***********************************************************************
  */
 void
 NeighborhoodSet::getNeighbors(
-   std::map<BlockId, BoxList>& all_nabrs) const
+   std::map<BlockId, BoxContainer>& all_nabrs) const
 {
-   NeighborSet tmp_nabrs;
-   getNeighbors(tmp_nabrs);
-   for (BoxSet::const_iterator ei = tmp_nabrs.begin();
-        ei != tmp_nabrs.end(); ++ei) {
-      all_nabrs[ei->getBlockId()].appendItem(*ei);
+
+   for (const_iterator ei = begin(); ei != end(); ++ei) {
+      const NeighborSet& nabrs = (*ei).second;
+
+      for (BoxContainer::ConstIterator ni = nabrs.begin();
+         ni != nabrs.end(); ++ni) {
+
+         all_nabrs[ni->getBlockId()].insert(*ni);
+
+      }
    }
+
+
 }
 
 /*!
@@ -224,10 +223,16 @@ void
 NeighborhoodSet::getOwners(
    std::set<int>& owners) const
 {
-   for (const_iterator i_nabrhood = begin(); i_nabrhood != end(); ++i_nabrhood) {
-      const value_type& nabrhood = *i_nabrhood;
-      const NeighborSet& nabr = nabrhood.second;
-      nabr.getOwners(owners);
+
+   for (const_iterator ei = begin(); ei != end(); ++ei) {
+      const NeighborSet& nabrs = (*ei).second;
+
+      for (BoxContainer::ConstIterator ni = nabrs.begin();
+         ni != nabrs.end(); ++ni) {
+
+         const int rank = ni->getOwnerRank();
+         owners.insert(rank);
+      }
    }
 }
 
@@ -309,19 +314,20 @@ void NeighborhoodSet::getFromDatabase(
 
       const std::string set_db_string("set_for_local_id_");
 
-      std::pair<BoxId, NeighborSet> tmp_pair;
       for (size_t i = 0; i < number_of_sets; ++i) {
-         tmp_pair.first.initialize(LocalId(local_indices[i]),
+         BoxId box_id(LocalId(local_indices[i]),
             owners[i],
             BlockId(block_ids[i]),
             PeriodicId(periodic_ids[i]));
          const std::string set_name =
             set_db_string
-            + tbox::Utilities::blockToString(tmp_pair.first.getBlockId().getBlockValue())
-            + tbox::Utilities::processorToString(tmp_pair.first.getOwnerRank())
-            + tbox::Utilities::patchToString(tmp_pair.first.getLocalId().getValue())
-            + tbox::Utilities::intToString(tmp_pair.first.getPeriodicId().getPeriodicValue());
-         iterator mi = insert(end(), tmp_pair);
+            + tbox::Utilities::blockToString(box_id.getBlockId().getBlockValue())
+            + tbox::Utilities::processorToString(box_id.getOwnerRank())
+            + tbox::Utilities::patchToString(box_id.getLocalId().getValue())
+            + tbox::Utilities::intToString(box_id.getPeriodicId().getPeriodicValue());
+         iterator mi =
+            insert(end(),
+                   std::pair<BoxId, BoxContainer>(box_id, BoxContainer()));
          mi->second.getFromDatabase(*database.getDatabase(set_name));
       }
 
@@ -348,7 +354,7 @@ void NeighborhoodSet::recursivePrint(
       co << border << "  " << mbid << "\n";
       co << border << "    Neighbors (" << nabrs.size() << "):\n";
       if (detail_depth > 1) {
-         nabrs.recursivePrint(co, indented_border, detail_depth - 1);
+         nabrs.print(co);
       }
    }
 }

@@ -39,7 +39,6 @@ using namespace SAMRAI;
 
 #include "SAMRAI/tbox/Array.h"
 #include "SAMRAI/hier/BoundaryBox.h"
-#include "SAMRAI/hier/BoxList.h"
 #include "SAMRAI/geom/CartesianPatchGeometry.h"
 #include "SAMRAI/pdat/CellData.h"
 #include "SAMRAI/pdat/CellIterator.h"
@@ -458,7 +457,7 @@ void ModifiedBratuProblem::setVectorWeights(
 
          tbox::Pointer<hier::PatchLevel> next_finer_level =
             hierarchy->getPatchLevel(amr_level + 1);
-         hier::BoxList coarsened_boxes = next_finer_level->getBoxes();
+         hier::BoxContainer coarsened_boxes = next_finer_level->getBoxes();
          hier::IntVector coarsen_ratio = next_finer_level->getRatioToLevelZero();
          coarsen_ratio /= level->getRatioToLevelZero();
          coarsened_boxes.coarsen(coarsen_ratio);
@@ -472,9 +471,10 @@ void ModifiedBratuProblem::setVectorWeights(
          for (hier::PatchLevel::Iterator p(level); p; p++) {
 
             tbox::Pointer<hier::Patch> patch = *p;
-            for (hier::BoxList::Iterator i(coarsened_boxes); i; i++) {
+            for (hier::BoxContainer::ConstIterator i(coarsened_boxes);
+                 i != coarsened_boxes.end(); ++i) {
 
-               hier::Box& coarse_box = *i;
+               const hier::Box& coarse_box = *i;
                hier::Box intersection = coarse_box * patch->getBox();
                if (!intersection.empty()) {
                   tbox::Pointer<pdat::CellData<double> > w =
@@ -2772,7 +2772,7 @@ void ModifiedBratuProblem::printClassData(
 }
 
 void ModifiedBratuProblem::getLevelEdges(
-   hier::BoxList& boxes,
+   hier::BoxContainer& boxes,
    tbox::Pointer<hier::Patch> patch,
    tbox::Pointer<hier::PatchLevel> level,
    const int dim,
@@ -2784,7 +2784,7 @@ void ModifiedBratuProblem::getLevelEdges(
     * (dim,face).
     */
 
-   boxes.clearItems();
+   boxes.clear();
    hier::Box box = patch->getBox();
    hier::Box boundary = box;
    if (face == 0) {
@@ -2801,8 +2801,8 @@ void ModifiedBratuProblem::getLevelEdges(
     * the level.
     */
 
-   boxes.unionBoxes(boundary);
-   boxes.removeIntersections(hier::BoxList(level->getBoxes()));
+   boxes.pushBack(boundary);
+   boxes.removeIntersections(level->getBoxes());
 
    /*
     * Finally delete the part of the level edge that meets the
@@ -2821,7 +2821,7 @@ void ModifiedBratuProblem::getLevelEdges(
     * Put the result into canonical order.
     */
 
-   boxes.simplifyBoxes();
+   boxes.simplify();
 }
 
 void ModifiedBratuProblem::correctLevelFlux(
@@ -2847,9 +2847,10 @@ void ModifiedBratuProblem::correctLevelFlux(
             delta(d) = ((s == 0) ? 1 : -1);
             hier::Index twodelta(d_dim, 0);
             twodelta(d) = ((s == 0) ? 2 : -2);
-            hier::BoxList level_edges;
+            hier::BoxContainer level_edges;
             getLevelEdges(level_edges, patch, level, d, s);
-            for (hier::BoxList::Iterator l(level_edges); l; l++) {
+            for (hier::BoxContainer::Iterator l(level_edges);
+                 l != level_edges.end(); ++l) {
                for (pdat::CellIterator ic(l()); ic; ic++) {
                   pdat::SideIndex iside(ic() + delta, d, s);
                   (*flux_data)(iside) = 2.0 * (*flux_data)(iside) / 3.0;
@@ -2879,9 +2880,10 @@ void ModifiedBratuProblem::correctPatchFlux(
          hier::Index delta2(d_dim, 0);
          delta2(d) = ((s == 0) ? 2 : -2);
          double factor = ((s == 0) ? 1.0 / dx[d] : -1.0 / dx[d]);
-         hier::BoxList level_edges;
+         hier::BoxContainer level_edges;
          getLevelEdges(level_edges, patch, level, d, s);
-         for (hier::BoxList::Iterator l(level_edges); l; l++) {
+         for (hier::BoxContainer::Iterator l(level_edges);
+              l != level_edges.end(); ++l) {
             for (pdat::CellIterator ic(l()); ic; ic++) {
                pdat::SideIndex iside(ic() + delta1, d, s);
                (*flux_data)(iside) = factor * (-8.0 * (*u)(ic()) / 15.0

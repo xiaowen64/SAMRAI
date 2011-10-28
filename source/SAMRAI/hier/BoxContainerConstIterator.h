@@ -12,33 +12,41 @@
 #define included_hier_BoxContainerConstIterator
 
 #include <list>
+#include <set>
 
 namespace SAMRAI {
 namespace hier {
 
 class Box;
 class BoxContainer;
+class BoxContainerIterator;
 
-/**
- * An immutable iterator over the boxes in a BoxContainer or the underlying
- * boxes in a BoxContainer.
+/*!
+ * @brief A immutable iterator over the boxes in a BoxContainer.
  *
- * @see hier::BoxContainer
+ * If iterating over an ordered BoxContainer, then iteration will follow
+ * the sequence of the BoxId-based ordering of the container.  If iterating
+ * over an unordered BoxContainer, the sequence of the iteration will be
+ * based on how the members of the container were added.
+ *
+ * @see BoxContainer
+ * @see BoxContainerIterator
  */
 class BoxContainerConstIterator
 {
    friend class BoxContainer;
+   friend class BoxContainerIterator;
 
 public:
-   // Constructors.
 
    /*!
     * @brief Constructor for the BoxContainerConstIterator.
     *
-    * The iterator will enumerate the boxes in the argument container.
+    * The iterator will point to the beginning or the end of the argument
+    * container, depending on the from_start argument
     *
     * @param[in] container The container whose members are iterated.
-    * @param[in] from_start true if iteration starts at front of container.
+    * @param[in] from_start true if iteration starts at beginning of container.
     */
    explicit BoxContainerConstIterator(
       const BoxContainer& container,
@@ -53,6 +61,13 @@ public:
       const BoxContainerConstIterator& other);
 
    /*!
+    * @brief Copy constructor to copy mutable iterator to an immutable
+    * iterator.
+    */
+   BoxContainerConstIterator(
+      const BoxContainerIterator& other);
+
+   /*!
     * @brief Assignment operator.
     *
     * @param[in] rhs
@@ -61,17 +76,13 @@ public:
    operator = (
       const BoxContainerConstIterator& rhs);
 
-   // Destructor.
-
    /*!
     * @brief The destructor releases all storage.
     */
    ~BoxContainerConstIterator();
 
-   // Operators.
-
    /*!
-    * @brief Extract box corresponding to iterator's position in container.
+    * @brief Get box corresponding to iterator's position in container.
     *
     * @return An immutable reference to the current Box in the iteration.
     */
@@ -79,7 +90,7 @@ public:
    operator * () const;
 
    /*!
-    * @brief Extract box corresponding to iterator's position in container.
+    * @brief Get box corresponding to iterator's position in container.
     *
     * @return An immutable reference to the current Box in the iteration.
     */
@@ -87,35 +98,51 @@ public:
    operator () () const;
 
    /*!
-    * @brief Determine if iterator points to a valid position in container.
+    * @brief Get pointer to box at iterator's position in container.
     *
-    * @return true if iterator points to a valid position in container.
+    * @return Const pointer to the current box.
     */
-   operator bool () const;
-
-   /*!
-    * @brief Determine if iterator points to an invalid position in container.
-    *
-    * @return true if iterator points to an invalid position in container.
-    */
-   bool
-   operator ! () const;
+   const Box*
+   operator -> () const;
 
    /*!
     * @brief Post-increment iterator to point to next box in the container.
+    *
+    * @return Iterator at the position in the container before the increment.
     */
-   void
+   BoxContainerConstIterator
    operator ++ (
       int);
 
    /*!
     * @brief Pre-increment iterator to point to next box in the container.
+    *
+    * @return Reference to iterator at the position in the container after
+    * the increment.
     */
    const BoxContainerConstIterator&
    operator ++ ();
 
    /*!
-    * @brief Determine if two iterators are equivalent.
+    * @brief Post-decrement iterator to point to next box in the container.
+    *
+    * @return Iterator at the position in the container before the decrement.
+    */
+   BoxContainerConstIterator
+   operator -- (
+      int);
+
+   /*!
+    * @brief Pre-decrement iterator to point to next box in the container.
+    *
+    * @return Reference to iterator at the position in the container after
+    * the decrement.
+    */
+   const BoxContainerConstIterator&
+   operator -- ();
+
+   /*!
+    * @brief Equality operator.
     *
     * @return true if both iterators point to the same box.
     *
@@ -126,7 +153,7 @@ public:
       const BoxContainerConstIterator& other) const;
 
    /*!
-    * @brief Determine if two iterators are not equivalent.
+    * @brief Inequality operator.
     *
     * @return true if both iterators point to different boxes.
     *
@@ -143,17 +170,16 @@ private:
    BoxContainerConstIterator();
 
    /*
-    * The BoxContainer being iterated over.
-    */
-   const BoxContainer* d_box_container;
-
-   /*
-    * Underlying iterator for a BoxContainer.  This is a wrapper.
+    * Underlying iterator to be used when unordered.
     */
    std::list<Box>::const_iterator d_list_iter;
 
-   // Add pointer to BoxContainer and underlying iterator for
-   // BoxContainer here.
+   /*
+    * Underlying iterator to be used when ordered.
+    */
+   std::set<Box*>::const_iterator d_set_iter;
+
+   bool d_ordered;
 };
 
 }

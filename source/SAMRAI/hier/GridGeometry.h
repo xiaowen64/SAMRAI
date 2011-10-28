@@ -14,7 +14,7 @@
 #include "SAMRAI/SAMRAI_config.h"
 
 #include "SAMRAI/tbox/Serializable.h"
-#include "SAMRAI/hier/BoxList.h"
+#include "SAMRAI/tbox/Timer.h"
 #include "SAMRAI/hier/CoarsenOperator.h"
 #include "SAMRAI/hier/Patch.h"
 #include "SAMRAI/hier/PatchGeometry.h"
@@ -172,7 +172,7 @@ public:
     */
    explicit GridGeometry(
       const std::string& object_name,
-      const tbox::Array<BoxList>& domain,
+      const tbox::Array<BoxContainer>& domain,
       tbox::Pointer<TransferOperatorRegistry> op_reg,
       bool register_for_restart = true);
 
@@ -210,7 +210,7 @@ public:
       std::map<BoxId, TwoDimBool>& touches_periodic_boundary,
       const PatchLevel& level,
       const IntVector& periodic_shift,
-      const tbox::Array<BoxList>& domain) const;
+      const tbox::Array<BoxContainer>& domain) const;
 
    /*!
     * @brief Version of findPatchTouchingBoundaries using pre-constructed
@@ -316,35 +316,19 @@ public:
     * coarsened with respect to the physical domain description.
     * Otherwise, the index space is refined.
     *
-    * @param[out]    domain The BoxList to be computed
+    * @param[out]    domain The BoxContainer to be computed
     * @param[in]     ratio_to_level_zero ratio to the coarsest level
     * @param[in]     block_id
     */
    void
    computePhysicalDomain(
-      BoxList& domain,
+      BoxContainer& domain,
       const IntVector& ratio_to_level_zero,
       const BlockId& block_id) const;
 
-   /*!
-    * @brief Compute the BoxSet describing the index space for a
-    * given block of the physical domain.
-    *
-    * The domain description includes periodic images, if any exist.
-    *
-    * Unlike the BoxList version of this function, the domain computed
-    * contains periodic image boxes.  If any entry of ratio vector is
-    * negative, the index space is coarsened with respect to the physical
-    * domain description.  Otherwise, the index space is refined.
-    *
-    * @param[out]    domain_mapped_boxes The BoxSet containing all
-    *                Boxes describing the index space
-    * @param[in]     ratio_to_level_zero ratio to the coarsest level
-    * @param[in]     block_id
-    */
    void
-   computePhysicalDomain(
-      BoxSet& domain_mapped_boxes,
+   computePhysicalDomainWithPeriodicImages(
+      BoxContainer& domain,
       const IntVector& ratio_to_level_zero,
       const BlockId& block_id) const;
 
@@ -354,7 +338,7 @@ public:
     *
     * The domain description includes periodic images, if any exist.
     *
-    * Unlike the BoxList version of this function, the domain computed
+    * Unlike the BoxContainer version of this function, the domain computed
     * contains periodic image boxes.  If any entry of ratio vector is
     * negative, the index space is coarsened with respect to the physical
     * domain description.  Otherwise, the index space is refined.
@@ -371,7 +355,7 @@ public:
       const BlockId& block_id) const;
 
    /*!
-    * @brief Compute the BoxSet describing the complete physical
+    * @brief Compute the BoxContainer describing the complete physical
     * domain for all blocks.
     *
     * The domain description includes periodic images, if any exist.
@@ -380,13 +364,13 @@ public:
     * coarsened with respect to the physical domain description.
     * Otherwise, the index space is refined.
     *
-    * @param[out]    domain_mapped_boxes The BoxSet containing all
+    * @param[out]    domain_mapped_boxes The BoxContainer containing all
     *                Boxes describing the physical domain
     * @param[in]     ratio_to_level_zero ratio to the coarsest level
     */
    void
    computePhysicalDomain(
-      BoxSet& domain_mapped_boxes,
+      BoxContainer& domain_mapped_boxes,
       const IntVector& ratio_to_level_zero) const;
 
    /*!
@@ -414,11 +398,11 @@ public:
     * Each entry in the array of box arrays represents the physical domain
     * for a single block
     *
-    * @param[in]     domain The input array of BoxList
+    * @param[in]     domain The input array of BoxContainer
     */
    void
    setPhysicalDomain(
-      const tbox::Array<BoxList>& domain);
+      const tbox::Array<BoxContainer>& domain);
 
    /*!
     * @brief Get the physical domain description for a given block on level
@@ -428,7 +412,7 @@ public:
     *
     * @param[in]   block_id
     */
-   const BoxList&
+   const BoxContainer&
    getPhysicalDomain(
       const hier::BlockId& block_id) const;
 
@@ -609,7 +593,7 @@ public:
       const PatchLevel& level,
       const IntVector& periodic_shift,
       const IntVector& ghost_width,
-      const tbox::Array<BoxList>& domain,
+      const tbox::Array<BoxContainer>& domain,
       bool do_all_patches = false) const;
 
    /*!
@@ -629,7 +613,7 @@ public:
    getBoundaryBoxes(
       PatchBoundaries& patch_boundaries,
       const Box& box,
-      const BoxList& domain_boxes,
+      const BoxContainer& domain_boxes,
       const IntVector& ghosts,
       const IntVector& periodic_shift) const;
 
@@ -792,7 +776,7 @@ public:
        */
       Neighbor(
          const BlockId& block_id,
-         const BoxList& domain,
+         const BoxContainer& domain,
          const Transformation& transformation,
          const bool is_singularity):
          d_block_id(block_id),
@@ -811,7 +795,7 @@ public:
        * @brief Get the neighboring block's domain in the current block's
        * index space.
        */
-      const BoxList&
+      const BoxContainer&
       getTransformedDomain() const;
 
       /*!
@@ -849,7 +833,7 @@ private:
        * @brief The neighboring block's domain in the current block's
        * index space.
        */
-      BoxList d_transformed_domain;
+      BoxContainer d_transformed_domain;
 
       /*!
        * @brief The transformation to transform the neighboring block's
@@ -887,10 +871,10 @@ private:
       const int neighbor_type);
 
    /*!
-    * @brief Get a BoxList that contains all of the index space of all other
+    * @brief Get a BoxContainer that contains all of the index space of all other
     * blocks in the multiblock domain.
     *
-    * A BoxList will be constructed that contains the full set of the
+    * A BoxContainer will be constructed that contains the full set of the
     * coarse level domains of all blocks except the one identified by
     * block_id.  The domains will all be transformed into the index space
     * represented by block_id.
@@ -901,8 +885,8 @@ private:
     */
    void
    getDomainOutsideBlock(
-      BoxList& domain_outside_block,
-      const BlockId& block_id);
+      BoxContainer& domain_outside_block,
+      const BlockId& block_id) const;
 
    /*!
     * @brief Return the number of block singularities in the block
@@ -912,20 +896,20 @@ private:
    getNumberOfBlockSingularities() const;
 
    /*!
-    * @brief Return a BoxList that describes all of the singularities
+    * @brief Return a BoxContainer that describes all of the singularities
     * touched by the block indicated by block_id.
     *
-    * @return For every singularity point the block touches, the BoxList will
+    * @return For every singularity point the block touches, the BoxContainer will
     * contain a single-cell box that lies just outside the block domain,
     * touching the block only at the singularity point.  For line singularities,
-    * the BoxList will contain boxes of width 1 in all dimensions except one,
+    * the BoxContainer will contain boxes of width 1 in all dimensions except one,
     * lying outside the block's coarse-level domain and touching the domain
     * only along the line of singularity.
     *
     * @param[io] block_id
     */
-   const BoxList&
-   getSingularityBoxList(
+   const BoxContainer&
+   getSingularityBoxContainer(
       const BlockId& block_id) const;
 
    /*!
@@ -998,8 +982,8 @@ private:
     * if there is no such relationship.
     */
    bool
-   transformBoxList(
-      BoxList& boxes,
+   transformBoxContainer(
+      BoxContainer& boxes,
       const IntVector& ratio,
       const BlockId& output_block,
       const BlockId& input_block) const;
@@ -1020,7 +1004,7 @@ private:
     */
    void
    getTransformedBlock(
-      BoxList& block_boxes,
+      BoxContainer& block_boxes,
       const BlockId& base_block,
       const BlockId& transformed_block);
 
@@ -1138,11 +1122,11 @@ protected:
 
 private:
    /*!
-    * @brief Reset domain BoxSet after data it depends on has changed.
+    * @brief Reset domain BoxContainer after data it depends on has changed.
     * TODO:  Remove block_id
     */
    void
-   resetDomainBoxSet(
+   resetDomainBoxContainer(
       const hier::BlockId& block_id);
 
    /*!
@@ -1150,7 +1134,7 @@ private:
     */
    bool
    checkPeriodicValidity(
-      const BoxList& domain);
+      const BoxContainer& domain);
 
    /*!
     * @brief Check on each BoundaryBox when it is created.
@@ -1164,7 +1148,7 @@ private:
    checkBoundaryBox(
       const BoundaryBox& boundary_box,
       const Patch& patch,
-      const BoxList& domain,
+      const BoxContainer& domain,
       const int num_per_dirs,
       const IntVector& max_data_ghost_width) const;
 
@@ -1196,15 +1180,15 @@ private:
     * @param[in] pseudo_domain The full multiblock domain represented as if
     *            every block were in the index space where the patch exists
     * @param[in] gcw         The maximum patch data ghost width
-    * @param[in] singularity BoxList obtained by getSingularityBoxList()
+    * @param[in] singularity BoxContainer obtained by getSingularityBoxContainer()
     */
 
    void
    adjustBoundaryBoxesOnPatch(
       const Patch& patch,
-      const BoxList& pseudo_domain,
+      const BoxContainer& pseudo_domain,
       const IntVector& gcw,
-      const BoxList& singularity);
+      const BoxContainer& singularity);
 
    /*!
     * @brief Reads in data from the specified input database.
@@ -1262,10 +1246,10 @@ private:
    std::string d_object_name;
 
    /*!
-    * Array of BoxList defining computational domain on coarsest level.
+    * Array of BoxContainer defining computational domain on coarsest level.
     * Each entry of array describes one block.
     */
-   tbox::Array<BoxList> d_physical_domain;
+   tbox::Array<BoxContainer> d_physical_domain;
 
    /*!
     * Tree representation of domain, used for searches.
@@ -1284,10 +1268,10 @@ private:
    tbox::Array<bool> d_domain_is_single_box;
 
    /*!
-    * @brief BoxSet representation of the physical domain, including
+    * @brief BoxContainer representation of the physical domain, including
     * its periodic image Boxes.
     */
-   tbox::Array<BoxSet> d_domain_mapped_box_sets;
+   tbox::Array<BoxContainer> d_domain_with_images;
 
    /*!
     * Integer array vector describing periodic shift coarsest level.
@@ -1319,11 +1303,11 @@ private:
    tbox::Array<tbox::List<Neighbor> > d_block_neighbors;
 
    /*!
-    * @brief An array of BoxLists defining the singularities of a multiblock
-    * domain.  Each BoxList element defines the singularities that a single
+    * @brief An array of BoxContainers defining the singularities of a multiblock
+    * domain.  Each BoxContainer element defines the singularities that a single
     * block touches.
     */
-   tbox::Array<BoxList> d_singularity;
+   tbox::Array<BoxContainer> d_singularity;
 
    /*!
     * @brief An array of singularity indices of a multiblock

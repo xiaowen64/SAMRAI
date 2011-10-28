@@ -13,6 +13,7 @@
 
 #include "SAMRAI/hier/CoarseFineBoundary.h"
 
+#include "SAMRAI/hier/BoxContainerIterator.h"
 #include "SAMRAI/hier/Connector.h"
 #include "SAMRAI/hier/BoxSetSingleBlockIterator.h"
 #include "SAMRAI/hier/PatchLevel.h"
@@ -169,7 +170,7 @@ void CoarseFineBoundary::computeFromLevel(
     * the fake domain be everywhere there is NOT a coarse-fine boundary--or
     * everywhere there IS a physical boundary or a fine-boundary.
     */
-   BoxList fake_domain_list(d_dim);
+   BoxContainer fake_domain_list;
 
    // Every mapped_box should connect to the domain mapped_box_level.
    TBOX_ASSERT(mapped_box_level_to_domain.getLocalNumberOfNeighborSets() ==
@@ -180,14 +181,13 @@ void CoarseFineBoundary::computeFromLevel(
         ei != mapped_box_level_to_domain.end(); ++ei) {
       const Box& mapped_box = *mapped_box_level.getBoxStrict(ei->first);
       const NeighborhoodSet::NeighborSet& domain_nabrs = ei->second;
-      NeighborhoodSet::NeighborSet refined_domain_nabrs;
-      domain_nabrs.refine(refined_domain_nabrs, ratio);
+      NeighborhoodSet::NeighborSet refined_domain_nabrs(domain_nabrs);
+      refined_domain_nabrs.refine(ratio);
       Box box = mapped_box;
       box.grow(max_ghost_width);
-      BoxList physical_boundary_portion(box);
-      refined_domain_nabrs.removeBoxListIntersections(
-         physical_boundary_portion);
-      fake_domain_list.copyItems(physical_boundary_portion);
+      BoxContainer physical_boundary_portion(box);
+      physical_boundary_portion.removeIntersections(refined_domain_nabrs);
+      fake_domain_list.spliceBack(physical_boundary_portion);
    }
 
    // Add fine-fine boundaries to the fake domain.
@@ -224,7 +224,7 @@ void CoarseFineBoundary::computeFromLevel(
     */
    bool do_all_patches = true;
    const IntVector use_periodic_shift(d_dim, 0);
-   const tbox::Array<BoxList> fake_domain(1, BoxList(fake_domain_list));
+   const tbox::Array<BoxContainer> fake_domain(1, fake_domain_list);
    grid_geometry->computeBoundaryBoxesOnLevel(
       d_boundary_boxes,
       level,
@@ -246,9 +246,9 @@ void CoarseFineBoundary::computeFromLevel(
    /*
     * Get all the boxes on level and level0.  These will be used later.
     */
-   const BoxSet& all_boxes_on_level =
+   const BoxContainer& all_boxes_on_level =
       level.getBoxLevel()->getGlobalizedVersion().getGlobalBoxes();
-   const BoxSet& all_boxes_on_level0 =
+   const BoxContainer& all_boxes_on_level0 =
       level0.getBoxLevel()->getGlobalizedVersion().getGlobalBoxes();
 
    /*
@@ -257,7 +257,7 @@ void CoarseFineBoundary::computeFromLevel(
    tbox::Pointer<GridGeometry> grid_geometry = level.getGridGeometry();
    int nblocks = grid_geometry->getNumberBlocks();
 
-   tbox::Array<BoxList> adjusted_level_domain(nblocks, BoxList(d_dim));
+   tbox::Array<BoxContainer> adjusted_level_domain(nblocks);
 
    /*
     * Loop over each block.
@@ -280,13 +280,11 @@ void CoarseFineBoundary::computeFromLevel(
          /*
           * Construct the array of boxes on level and level0 in this block.
           */
-         tbox::Pointer<BoxList> level_domain =
-            all_boxes_on_level.getSingleBlockBoxList(d_dim, block_id);
-         tbox::Pointer<BoxList> phys_domain =
-            all_boxes_on_level0.getSingleBlockBoxList(d_dim, block_id);
+         BoxContainer level_domain(all_boxes_on_level, block_id);
+         BoxContainer phys_domain(all_boxes_on_level0, block_id);
 
          const IntVector& ratio = level.getRatioToLevelZero();
-         phys_domain->refine(ratio);
+         phys_domain.refine(ratio);
 
          /*
           * Create a pseudo-domain -- the union of the physical domain boxes
@@ -296,15 +294,15 @@ void CoarseFineBoundary::computeFromLevel(
           * ratio.
           */
 
-         BoxList pseudo_domain(*phys_domain);
-
+         BoxContainer pseudo_domain(phys_domain);
+         pseudo_domain.unorder();
          for (tbox::List<GridGeometry::Neighbor>::Iterator
               ni(grid_geometry->getNeighbors(block_id)); ni; ni++) {
 
-            BoxList neighbor_domain(ni().getTransformedDomain());
+            BoxContainer neighbor_domain(ni().getTransformedDomain());
             neighbor_domain.refine(ratio);
 
-            pseudo_domain.unionBoxes(neighbor_domain);
+            pseudo_domain.spliceFront(neighbor_domain);
 
          }
 
@@ -315,7 +313,8 @@ void CoarseFineBoundary::computeFromLevel(
           * coarse-fine boundaries.
           */
 
-         BoxList adjusted_level_domain_list(*level_domain);
+         adjusted_level_domain[i] = level_domain;
+         adjusted_level_domain[i].unorder();
 
          for (PatchLevel::Iterator p(level); p; ++p) {
             if ((*p)->getBox().getBlockId() == i &&
@@ -323,10 +322,10 @@ void CoarseFineBoundary::computeFromLevel(
 
                const Box& patch_box = (*p)->getBox();
 
-               BoxList no_shift_boxes(patch_box);
+               BoxContainer no_shift_boxes(patch_box);
                no_shift_boxes.grow(max_ghost_width);
                no_shift_boxes.removeIntersections(pseudo_domain);
-               adjusted_level_domain_list.unionBoxes(no_shift_boxes);
+               adjusted_level_domain[i].spliceFront(no_shift_boxes);
             }
          }
 
@@ -343,26 +342,25 @@ void CoarseFineBoundary::computeFromLevel(
              * Construct the array of boxes on level in this neighbor's block.
              */
             BlockId nbr_block_id(ni().getBlockId());
-            tbox::Pointer<BoxList> neighbor_boxes =
-               all_boxes_on_level.getSingleBlockBoxList(d_dim, nbr_block_id);
+            BoxContainer neighbor_boxes(all_boxes_on_level, nbr_block_id);
 
-            if (neighbor_boxes->size()) {
-               grid_geometry->transformBoxList(*neighbor_boxes,
+            if (neighbor_boxes.size()) {
+               neighbor_boxes.unorder();
+               grid_geometry->transformBoxContainer(neighbor_boxes,
                   ratio,
                   block_id,
                   nbr_block_id);
 
-               BoxList neighbor_boxes_to_add(*phys_domain);
+               BoxContainer neighbor_boxes_to_add(phys_domain);
+               neighbor_boxes_to_add.unorder();
                neighbor_boxes_to_add.grow(max_ghost_width);
 
-               neighbor_boxes_to_add.intersectBoxes(BoxList(
-                     *neighbor_boxes));
+               neighbor_boxes_to_add.intersectBoxes(neighbor_boxes);
 
-               adjusted_level_domain_list.unionBoxes(neighbor_boxes_to_add);
+               adjusted_level_domain[i].spliceFront(neighbor_boxes_to_add);
             }
          }
 
-         adjusted_level_domain[i] = BoxList(adjusted_level_domain_list);
       }
       d_boundary_boxes.clear();
 
@@ -425,7 +423,7 @@ CoarseFineBoundary::getEdgeBoundaries(
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    if (d_dim.getValue() < 2) {
-      TBOX_ERROR("CoarseFineBoundary::getEdgeBoundaries():  There is\n"
+      TBOX_ERROR("CoarseFineBoundary::getEdgeBoundaries():  There are\n"
          << "no edge boundaries in " << d_dim << "d.\n");
    }
 #endif
@@ -439,7 +437,7 @@ CoarseFineBoundary::getFaceBoundaries(
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    if (d_dim.getValue() < 3) {
-      TBOX_ERROR("CoarseFineBoundary::getFaceBoundaries():  There is\n"
+      TBOX_ERROR("CoarseFineBoundary::getFaceBoundaries():  There are\n"
          << "no face boundaries in " << d_dim << "d.\n");
    }
 #endif

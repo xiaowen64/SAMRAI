@@ -104,7 +104,7 @@ void BoxLevelStatistics::computeLocalBoxLevelStatistics(
    sq.d_values[SUM_SURFACE_AREA] = 0.;
    sq.d_values[SUM_NORMALIZED_SURFACE_AREA] = 0.;
 
-   const BoxSet& boxes = d_box_level.getBoxes();
+   const BoxContainer& boxes = d_box_level.getBoxes();
 
    for (RealBoxConstIterator ni(boxes); ni.isValid(); ++ni) {
 

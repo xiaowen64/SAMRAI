@@ -10,34 +10,51 @@
 
 #include "SAMRAI/hier/BoxContainerIterator.h"
 #include "SAMRAI/hier/BoxContainerConstIterator.h"
+#include "SAMRAI/hier/PeriodicShiftCatalog.h"
 #include "SAMRAI/tbox/Utilities.h"
 
 namespace SAMRAI {
 namespace hier {
 
+/*
+ *************************************************************************
+ * Constructors and destructor
+ *************************************************************************
+ */
+
 SAMRAI_INLINE_KEYWORD
-BoxContainer::BoxContainer(
-   const tbox::Dimension& dim,
-   const int n):
-   d_dim(dim),
-   d_list(n, Box(dim))
+BoxContainer::BoxContainer() :
+   d_ordered(false)
+{
+}
+
+SAMRAI_INLINE_KEYWORD
+BoxContainer::BoxContainer(const bool ordered) :
+   d_ordered(ordered)
 {
 }
 
 SAMRAI_INLINE_KEYWORD
 BoxContainer::BoxContainer(
-   const Box& box):
-   d_dim(box.getDim()),
-   d_list(1, box)
+   const Box& box,
+   const bool ordered):
+   d_list(1, box),
+   d_ordered(false)
 {
+   if (ordered) {
+      order();
+   }
 }
 
 SAMRAI_INLINE_KEYWORD
 BoxContainer::BoxContainer(
    const BoxContainer& other):
-   d_dim(other.d_dim),
-   d_list(other.d_list)
+   d_list(other.d_list),
+   d_ordered(false) 
 {
+   if (other.d_ordered) {
+      order();
+   }
 }
 
 SAMRAI_INLINE_KEYWORD
@@ -45,10 +62,20 @@ BoxContainer::~BoxContainer()
 {
 }
 
+/*
+ *************************************************************************
+ * Size queries
+ *************************************************************************
+ */
+
 SAMRAI_INLINE_KEYWORD
 int BoxContainer::size() const
 {
-   return static_cast<int>(d_list.size());
+   if (!d_ordered) {
+      return static_cast<int>(d_list.size());
+   } else {
+      return static_cast<int>(d_set.size());
+   }
 }
 
 SAMRAI_INLINE_KEYWORD
@@ -57,128 +84,319 @@ bool BoxContainer::isEmpty() const
    return size() == 0;
 }
 
+/*
+ *************************************************************************
+ * Access methods
+ *************************************************************************
+ */
+
 SAMRAI_INLINE_KEYWORD
 BoxContainer::ConstIterator BoxContainer::begin() const
 {
-   return BoxContainerConstIterator(*this);
+   return ConstIterator(*this);
 }
 
 SAMRAI_INLINE_KEYWORD
 BoxContainer::ConstIterator BoxContainer::end() const
 {
-   return BoxContainerConstIterator(*this, false);
+   return ConstIterator(*this, false);
 }
 
 SAMRAI_INLINE_KEYWORD
 BoxContainer::Iterator BoxContainer::begin()
 {
-   return BoxContainerIterator(*this);
+   return Iterator(*this);
 }
 
 SAMRAI_INLINE_KEYWORD
 BoxContainer::Iterator BoxContainer::end()
 {
-   return BoxContainerIterator(*this, false);
-}
-
-SAMRAI_INLINE_KEYWORD
-Box& BoxContainer::front()
-{
-   return d_list.front();
-}
-
-SAMRAI_INLINE_KEYWORD
-Box& BoxContainer::back()
-{
-   return d_list.back();
+   return Iterator(*this, false);
 }
 
 SAMRAI_INLINE_KEYWORD
 const Box& BoxContainer::front() const
 {
-   return d_list.front();
+   return d_ordered ? **(d_set.begin()) : d_list.front();
 }
 
 SAMRAI_INLINE_KEYWORD
 const Box& BoxContainer::back() const
 {
-   return d_list.back();
+   return d_ordered ? **(d_set.rbegin()) : d_list.back();
 }
+
+/*
+ *************************************************************************
+ * List-like semantics to manipulate unordered containers
+ *************************************************************************
+ */
 
 SAMRAI_INLINE_KEYWORD
 void BoxContainer::pushFront(const Box& item)
 {
-   TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(d_dim, item);
-   d_list.push_front(item);
+#ifdef DEBUG_CHECK_ASSERTIONS
+   if (size() > 0) {
+      TBOX_DIM_ASSERT_CHECK_ARGS2(front(), item);
+   }
+#endif
+   if (!d_ordered) {
+      d_list.push_front(item);
+   } else {
+      TBOX_ERROR("Attempted pushFront on an ordered BoxContainer");
+   }
 }
 
 SAMRAI_INLINE_KEYWORD
 void BoxContainer::pushBack(const Box& item)
 {
-   TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(d_dim, item);
-   d_list.push_back(item);
+#ifdef DEBUG_CHECK_ASSERTIONS
+   if (size() > 0) {
+      TBOX_DIM_ASSERT_CHECK_ARGS2(front(), item);
+   }
+#endif
+   if (!d_ordered) {
+      d_list.push_back(item);
+   } else {
+      TBOX_ERROR("Attempted pushBack on an ordered BoxContainer");
+   }
 }
 
 SAMRAI_INLINE_KEYWORD
 void BoxContainer::insertBefore(Iterator iter, const Box& item)
 {
-   TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(d_dim, item);
-   d_list.insert(iter.d_list_iter, item);
+#ifdef DEBUG_CHECK_ASSERTIONS
+   if (size() > 0) {
+      TBOX_DIM_ASSERT_CHECK_ARGS2(front(), item);
+   }
+#endif
+   if (!d_ordered) {
+      d_list.insert(iter.d_list_iter, item);
+   } else {
+      TBOX_ERROR("Attempted insertBefore on an ordered BoxContainer");
+   }
 }
+
+SAMRAI_INLINE_KEYWORD
+void BoxContainer::insertAfter(Iterator iter, const Box& item)
+{
+   if (!d_ordered) {
+      Iterator tmp = iter;
+      ++tmp;
+      if (tmp == end()) {
+         pushBack(item);
+      } else {
+         insertBefore(tmp, item);
+      }
+   } else {
+      TBOX_ERROR("Attempted insertAfter called on ordered BoxContainer.");
+   }
+}
+
 
 SAMRAI_INLINE_KEYWORD
 void BoxContainer::spliceFront(BoxContainer& boxes)
 {
-   TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(d_dim, boxes);
-   d_list.splice(begin().d_list_iter, boxes.d_list);
+#ifdef DEBUG_CHECK_ASSERTIONS
+   if (size() > 0 && boxes.size() > 0) {
+      TBOX_DIM_ASSERT_CHECK_ARGS2(front(), boxes.front());
+   }
+#endif
+   if (!d_ordered) {
+      d_list.splice(begin().d_list_iter, boxes.d_list);
+   } else {
+      TBOX_ERROR("Attempted spliceFront on an ordered BoxContainer");
+   }
 }
 
 SAMRAI_INLINE_KEYWORD
 void BoxContainer::spliceBack(BoxContainer& boxes)
 {
-   TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(d_dim, boxes);
-   boxes.spliceFront(*this);
-   d_list.swap(boxes.d_list);
+#ifdef DEBUG_CHECK_ASSERTIONS
+   if (size() > 0 && boxes.size() > 0) {
+      TBOX_DIM_ASSERT_CHECK_ARGS2(front(), boxes.front());
+   }
+#endif
+   if (!d_ordered) {
+      boxes.spliceFront(*this);
+      d_list.swap(boxes.d_list);
+   } else {
+      TBOX_ERROR("Attempted spliceBack on an ordered BoxContainer");
+   }
 }
 
 SAMRAI_INLINE_KEYWORD
 void BoxContainer::popFront()
 {
-   d_list.pop_front();
+   if (!d_ordered) {
+      d_list.pop_front();
+   } else {
+      TBOX_ERROR("Attempted popFront on an ordered BoxContainer");
+   }
 }
 
 SAMRAI_INLINE_KEYWORD
 void BoxContainer::popBack()
 {
-   d_list.pop_back();
+   if (!d_ordered) {
+      d_list.pop_back();
+   } else {
+      TBOX_ERROR("Attempted popBack on an ordered BoxContainer");
+   }
 }
 
-SAMRAI_INLINE_KEYWORD
-void BoxContainer::erase(Iterator iter)
-{
-   d_list.erase(iter.d_list_iter);
-}
-
-SAMRAI_INLINE_KEYWORD
-void BoxContainer::erase(Iterator first, Iterator last)
-{
-   d_list.erase(first.d_list_iter, last.d_list_iter);
-}
+/*
+ *************************************************************************
+ * Clear the container
+ *************************************************************************
+ */
 
 SAMRAI_INLINE_KEYWORD
 void BoxContainer::clear()
 {
    d_list.clear();
+   d_set.clear();
+   d_ordered = false; 
 }
+
+/*
+ *************************************************************************
+ * Switch or query the ordered/unordered state
+ *************************************************************************
+ */
+
+SAMRAI_INLINE_KEYWORD
+void BoxContainer::unorder()
+{
+   if (d_ordered) {
+      d_set.clear();
+      d_ordered = false;
+   }
+}
+
+SAMRAI_INLINE_KEYWORD
+bool BoxContainer::isOrdered() const
+{
+   return (d_ordered);
+}
+
+
+/*
+ *************************************************************************
+ * Swap all data
+ *************************************************************************
+ */
+
+SAMRAI_INLINE_KEYWORD
+void BoxContainer::swap(BoxContainer& other)
+{
+   d_list.swap(other.d_list);
+   d_set.swap(other.d_set);
+
+   bool other_set_created = other.d_ordered;
+   other.d_ordered = d_ordered;
+   d_ordered = other_set_created;
+}
+
+
+/*
+ *************************************************************************
+ * Set-like semantics for ordered containers
+ *************************************************************************
+ */
+
+SAMRAI_INLINE_KEYWORD
+BoxContainer::Iterator BoxContainer::find(const Box& box) const
+{
+   if (!d_ordered) {
+      TBOX_ERROR("find attempted on unordered BoxContainer.");
+   }
+
+   Iterator iter;
+   iter.d_set_iter = d_set.find(const_cast<Box*>(&box));
+   iter.d_ordered = true;
+
+   return iter;
+}
+
+SAMRAI_INLINE_KEYWORD
+BoxContainer::Iterator BoxContainer::lowerBound(const Box& box) const
+{
+   if (!d_ordered) {
+      TBOX_ERROR("lowerBound attempted on unordered BoxContainer.");
+   }
+
+   Iterator iter;
+   iter.d_set_iter = d_set.lower_bound(const_cast<Box*>(&box));
+   iter.d_ordered = true;
+
+   return iter;
+}
+
+SAMRAI_INLINE_KEYWORD
+BoxContainer::Iterator BoxContainer::upperBound(const Box& box) const
+{
+   if (!d_ordered) {
+      TBOX_ERROR("upperBound attempted on unordered BoxContainer.");
+   }
+
+   Iterator iter;
+   iter.d_set_iter = d_set.upper_bound(const_cast<Box*>(&box));
+   iter.d_ordered = true;
+
+   return iter;
+}
+
+SAMRAI_INLINE_KEYWORD
+bool BoxContainer::insert(const Box& box)
+{
+#ifdef DEBUG_CHECK_ASSERTIONS
+   TBOX_ASSERT(box.getId().isValid());
+   if (size() > 0) {
+      TBOX_DIM_ASSERT_CHECK_ARGS2(front(), box);
+   }
+#endif
+
+   if (!d_ordered && size() == 0) {
+      order();
+   }
+
+   if (!d_ordered) {
+      TBOX_ERROR("BoxContainer::insert called on unordered BoxContainer.");
+   }
+
+   const std::list<Box>::iterator& iter = d_list.insert(d_list.end(), box);
+   Box* box_ptr(&(*iter));
+   if (d_set.insert(box_ptr).second) {
+      box_ptr->lockId();
+      return true;
+   } else {
+      d_list.erase(iter);
+      return false;
+   }
+
+}
+
+/*
+ *************************************************************************
+ * Equality/inequality
+ *************************************************************************
+ */
 
 SAMRAI_INLINE_KEYWORD
 bool BoxContainer::operator == (const BoxContainer& rhs) const
 {
-   bool isEqual = (d_dim == rhs.d_dim);
+   bool isEqual = (d_ordered && rhs.d_ordered); 
    if (isEqual) {
-      isEqual = std::equal(d_list.begin(), d_list.end(),
-            rhs.d_list.begin(), Box::box_equality());
+      if (!d_ordered) { 
+         isEqual = std::equal(d_list.begin(), d_list.end(),
+                      rhs.d_list.begin(), Box::box_equality());
+      } else {
+         isEqual = std::equal(d_set.begin(), d_set.end(),
+                      rhs.d_set.begin(), Box::id_equal());
+      }
    }
+
    return isEqual;
 }
 
@@ -188,11 +406,8 @@ bool BoxContainer::operator != (const BoxContainer& rhs) const
    return !(*this == rhs);
 }
 
-SAMRAI_INLINE_KEYWORD
-const tbox::Dimension& BoxContainer::getDim() const
-{
-   return d_dim;
-}
+
+
 
 }
 }

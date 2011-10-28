@@ -14,7 +14,6 @@
 #include "SAMRAI/SAMRAI_config.h"
 
 #include "SAMRAI/tbox/List.h"
-#include "SAMRAI/hier/BoxList.h"
 #include "SAMRAI/hier/GridGeometry.h"
 #include "SAMRAI/hier/PatchLevel.h"
 #include "SAMRAI/hier/ProcessorMapping.h"
@@ -77,7 +76,7 @@ struct BalanceUtilities {
    spatialBinPack(
       hier::ProcessorMapping& mapping,
       tbox::Array<double>& weights,
-      hier::BoxList& boxes,
+      hier::BoxContainer& boxes,
       const int nproc);
 
    /*!
@@ -122,15 +121,15 @@ struct BalanceUtilities {
     */
    static void
    recursiveBisectionUniform(
-      hier::BoxList& out_boxes,
+      hier::BoxContainer& out_boxes,
       tbox::List<double>& out_workloads,
-      const hier::BoxList& in_boxes,
+      const hier::BoxContainer& in_boxes,
       double ideal_workload,
       const double workload_tolerance,
       const hier::IntVector& min_size,
       const hier::IntVector& cut_factor,
       const hier::IntVector& bad_interval,
-      const hier::BoxList& physical_domain);
+      const hier::BoxContainer& physical_domain);
 
    /*!
     * Recursively chops boxes given by patches on input patch level until each
@@ -179,7 +178,7 @@ struct BalanceUtilities {
     */
    static void
    recursiveBisectionNonuniform(
-      hier::BoxList& out_boxes,
+      hier::BoxContainer& out_boxes,
       tbox::List<double>& out_workloads,
       const tbox::Pointer<hier::PatchLevel>& in_level,
       int work_id,
@@ -188,7 +187,7 @@ struct BalanceUtilities {
       const hier::IntVector& min_size,
       const hier::IntVector& cut_factor,
       const hier::IntVector& bad_interval,
-      const hier::BoxList& physical_domain);
+      const hier::BoxContainer& physical_domain);
 
    /*!
     * Compute factorization of processors corresponding to
@@ -239,7 +238,7 @@ struct BalanceUtilities {
     */
    static void
    sortDescendingBoxWorkloads(
-      hier::BoxList& boxes,
+      hier::BoxContainer& boxes,
       tbox::Array<double>& workload);
 
    /*!
@@ -319,7 +318,7 @@ private:
 
    static bool
    privateBadCutPointsExist(
-      const hier::BoxList& physical_domain);
+      const hier::BoxContainer& physical_domain);
 
    static void
    privateInitializeBadCutPointsForBox(
@@ -327,7 +326,7 @@ private:
       hier::Box& box,
       bool bad_domain_boundaries_exist,
       const hier::IntVector& bad_interval,
-      const hier::BoxList& physical_domain);
+      const hier::BoxContainer& physical_domain);
 
    static bool
    privateFindBestCutDimension(
@@ -359,7 +358,7 @@ private:
 
    static void
    privateRecursiveBisectionUniformSingleBox(
-      hier::BoxList& out_boxes,
+      hier::BoxContainer& out_boxes,
       tbox::List<double>& out_workloads,
       const hier::Box& in_box,
       double in_box_workload,
@@ -371,7 +370,7 @@ private:
 
    static void
    privateRecursiveBisectionNonuniformSingleBox(
-      hier::BoxList& out_boxes,
+      hier::BoxContainer& out_boxes,
       tbox::List<double>& out_workloads,
       const tbox::Pointer<hier::Patch>& patch,
       const hier::Box& in_box,

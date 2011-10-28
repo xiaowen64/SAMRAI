@@ -3283,7 +3283,7 @@ void VisItDataWriter::writeSummaryToHDFFile(
       for (ln = coarsest_plot_level; ln <= finest_plot_level; ln++) {
          tbox::Pointer<hier::PatchLevel> patch_level =
             hierarchy->getPatchLevel(ln);
-         const hier::BoxList& boxes = patch_level->getBoxes();
+         const hier::BoxContainer& boxes = patch_level->getBoxes();
 
          /*
           * Set the dx for the next level
@@ -3294,7 +3294,8 @@ void VisItDataWriter::writeSummaryToHDFFile(
          }
 
          pn = 0;
-         for (hier::BoxList::Iterator itr(boxes); itr; itr++, pn++) {
+         for (hier::BoxContainer::ConstIterator itr(boxes); itr != boxes.end();
+              ++itr, ++pn) {
             int global_patch_id = getGlobalPatchNumber(hierarchy, ln, pn);
             const hier::Box& box = *itr;
             const int* lower = &box.lower()[0];
@@ -3650,7 +3651,7 @@ void VisItDataWriter::writeParentChildInfoToSummaryHDFFile(
       tbox::Pointer<hier::PatchLevel> patch_level =
          hierarchy->getPatchLevel(ln);
 
-      const hier::BoxSet& coarser_mapped_boxes =
+      const hier::BoxContainer& coarser_mapped_boxes =
          patch_level->getBoxLevel()->getGlobalizedVersion().getGlobalBoxes();
 
       tbox::Pointer<hier::MultiblockBoxTree> child_box_tree;
@@ -3661,7 +3662,7 @@ void VisItDataWriter::writeParentChildInfoToSummaryHDFFile(
             hierarchy->getPatchLevel(ln + 1);
          ratio = child_patch_level->getRatioToCoarserLevel();
 
-         const hier::BoxSet& global_child_boxes =
+         const hier::BoxContainer& global_child_boxes =
             child_patch_level->getBoxLevel()->
             getGlobalizedVersion().getGlobalBoxes();
 
@@ -3672,7 +3673,7 @@ void VisItDataWriter::writeParentChildInfoToSummaryHDFFile(
           */
          if (hierarchy->getGridGeometry()->getNumberBlocks() == 1) {
 
-            hier::BoxSet non_per_child_boxes;
+            hier::BoxContainer non_per_child_boxes;
             for (hier::RealBoxConstIterator gi(global_child_boxes);
                  gi.isValid(); ++gi) {
                non_per_child_boxes.insert(*gi);
