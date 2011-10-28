@@ -221,38 +221,6 @@ void BoxContainer::insert ( ConstIterator first,
    }
 
 }
-#if 0
-void BoxContainer::insert ( Iterator first,
-                            Iterator last )
-{
-   if (!d_ordered && size() == 0) {
-      order();
-   }
-
-   if (!d_ordered) {
-      TBOX_ERROR("insert attempted on unordered container.");
-   }
-
-   for (std::set<Box*>::iterator set_iter = first.d_set_iter;
-        set_iter != last.d_set_iter; ++set_iter) {
-
-#ifdef DEBUG_CHECK_ASSERTIONS
-      TBOX_ASSERT((**set_iter).getId().isValid());
-      if (size() > 0) {
-         TBOX_DIM_ASSERT_CHECK_ARGS2(front(), **set_iter);
-      }
-#endif
-
-      const std::list<Box>::iterator& list_iter =
-         d_list.insert(d_list.end(), **set_iter);
-
-      if (!d_set.insert(&(*list_iter)).second) {
-         d_list.erase(list_iter);
-      }
-   }
-
-}
-#endif
 
 /*
  ************************************************************************
@@ -1150,6 +1118,153 @@ void BoxContainer::unshiftPeriodicImageBoxes(
             hint = output_mapped_boxes.insert(hint, *na);
          }
       }
+   }
+}
+
+/*
+ ***********************************************************************
+ * Switch to ordered state.
+ ***********************************************************************
+ */
+void BoxContainer::order()
+{
+   if (!d_ordered) {
+      d_set.clear();
+      for (Iterator i(*this); i != end(); ++i) {
+         if (!(*i).getId().isValid()) {
+            TBOX_ERROR("Attempted to order a BoxContainer that has a member with an invalid BoxId.");
+         }
+         if (d_set.insert(&(*i)).second == false) {
+            TBOX_ERROR("Attempted to order a BoxContainer with duplicate BoxIds.");
+         }
+         i->lockId();
+      }
+      d_ordered = true;
+   }
+}
+
+/*
+ *************************************************************************
+ * Erase methods
+ *************************************************************************
+ */
+
+void BoxContainer::erase(Iterator iter)
+{
+   if (!d_ordered) {
+      d_list.erase(iter.d_list_iter);
+   } else {
+      const Box& box = **(iter.d_set_iter);
+      d_set.erase(iter.d_set_iter);
+
+      for (std::list<Box>::iterator bi = d_list.begin(); bi != d_list.end();
+           ++bi) {
+         if (bi->getId() == box.getId()) {
+            d_list.erase(bi);
+            break;
+         }
+      }
+   }
+}
+
+void BoxContainer::erase(Iterator first, Iterator last)
+{
+   if (!d_ordered) {
+      d_list.erase(first.d_list_iter, last.d_list_iter);
+   } else {
+      for (Iterator iter = first; iter != last; ++iter) {
+         erase(iter);
+      }
+   }
+}
+
+
+int BoxContainer::erase(const Box& box)
+{
+   if (!d_ordered) {
+      TBOX_ERROR("erase with Box argument attempted on unordered BoxContainer.");
+   }
+
+   int ret = d_set.erase(const_cast<Box*>(&box));
+   for (std::list<Box>::iterator bi = d_list.begin(); bi != d_list.end();
+        ++bi) {
+      if (bi->getId() == box.getId()) {
+         d_list.erase(bi++);
+         break;
+      }
+   }
+
+   return ret;
+}
+
+/*
+ *************************************************************************
+ * Box-based queries
+ *************************************************************************
+ */
+
+int BoxContainer::getTotalSizeOfBoxes() const
+{
+   int size = 0;
+   if (!d_ordered) {
+      for (ConstIterator i(*this); i != end(); ++i) {
+         size += i().size();
+      }
+   } else {
+      for (ConstIterator i(*this); i != end(); ++i) {
+         size += i().size();
+      }
+   }
+   return size;
+}
+
+bool BoxContainer::contains(
+   const Index& idx) const
+{
+   for (ConstIterator i(*this); i != end(); ++i) {
+      if (i().contains(idx)) {
+         return true;
+      }
+   }
+   return false;
+}
+
+/*
+ *************************************************************************
+ * Spatial manipulation of Boxes
+ ************************************************************************
+ */
+
+void BoxContainer::grow(
+   const IntVector& ghosts)
+{
+   for (Iterator i(*this); i != end(); ++i) {
+      i().grow(ghosts);
+   }
+}
+
+
+void BoxContainer::shift(
+   const IntVector& offset)
+{
+   for (Iterator i(*this); i != end(); ++i) {
+      i().shift(offset);
+   }
+}
+
+void BoxContainer::refine(
+   const IntVector& ratio)
+{
+   for (Iterator i(*this); i != end(); ++i) {
+      i().refine(ratio);
+   }
+}
+
+void BoxContainer::coarsen(
+   const IntVector& ratio)
+{
+   for (Iterator i(*this); i != end(); ++i) {
+      i().coarsen(ratio);
    }
 }
 

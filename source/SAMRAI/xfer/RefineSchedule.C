@@ -1598,10 +1598,9 @@ void RefineSchedule::createCoarseInterpPatchLevel(
 
 /*
  **************************************************************************
- * @brief Check that the Connectors between the coarse
- * interpolation and hiercoarse levels are transposes and that that
- * the coarse interpolation BoxLevel sufficiently nests
- * inside the hiercoarse.
+ * Check that the Connectors between the coarse interpolation and
+ * hiercoarse levels are transposes and that the coarse interpolation
+ * BoxLevel sufficiently nests inside the hiercoarse.
  **************************************************************************
  */
 void RefineSchedule::sanityCheckCoarseInterpAndHiercoarseLevels(

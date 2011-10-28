@@ -2500,6 +2500,15 @@ void GriddingAlgorithm::readLevelBoxes(
 
       oca.findOverlaps(coarser_to_new);
       oca.findOverlaps(new_to_coarser);
+      new_to_coarser.removePeriodicRelationships();
+
+      /*
+       * Periodic relationships exist in new_to_coarser, but are not
+       * complete because new doesn't have any periodic images yet.
+       * Remove these relationships to make new<==>coarser proper
+       * transposes.
+       */
+      new_to_coarser.removePeriodicRelationships();
 
       const hier::Connector& coarser_to_coarser =
          d_hierarchy->getConnector(tag_ln, tag_ln);

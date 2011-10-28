@@ -266,24 +266,6 @@ void BoxContainer::clear()
  */
 
 SAMRAI_INLINE_KEYWORD
-void BoxContainer::order()
-{
-   if (!d_ordered) {
-      d_set.clear();
-      for (Iterator i(*this); i != end(); ++i) {
-         if (!(*i).getId().isValid()) {
-            TBOX_ERROR("Attempted to order a BoxContainer that has a member with an invalid BoxId.");
-         }
-         if (d_set.insert(&(*i)).second == false) {
-            TBOX_ERROR("Attempted to order a BoxContainer with duplicate BoxIds.");
-         }
-         i->lockId();
-      }
-      d_ordered = true;
-   }
-}
-
-SAMRAI_INLINE_KEYWORD
 void BoxContainer::unorder()
 {
    if (d_ordered) {
@@ -314,64 +296,6 @@ void BoxContainer::swap(BoxContainer& other)
    bool other_set_created = other.d_ordered;
    other.d_ordered = d_ordered;
    d_ordered = other_set_created;
-}
-
-
-/*
- *************************************************************************
- * Erase methods
- *************************************************************************
- */
-
-SAMRAI_INLINE_KEYWORD
-void BoxContainer::erase(Iterator iter)
-{
-   if (!d_ordered) {
-      d_list.erase(iter.d_list_iter);
-   } else {
-      const Box& box = **(iter.d_set_iter);
-      d_set.erase(iter.d_set_iter);
-
-      for (std::list<Box>::iterator bi = d_list.begin(); bi != d_list.end();
-           ++bi) {
-         if (bi->getId() == box.getId()) {
-            d_list.erase(bi);
-            break;
-         }
-      }
-   }
-}
-
-SAMRAI_INLINE_KEYWORD
-void BoxContainer::erase(Iterator first, Iterator last)
-{
-   if (!d_ordered) {
-      d_list.erase(first.d_list_iter, last.d_list_iter);
-   } else {
-      for (Iterator iter = first; iter != last; ++iter) {
-         erase(iter);
-      }
-   }
-}
-
-
-SAMRAI_INLINE_KEYWORD
-int BoxContainer::erase(const Box& box)
-{
-   if (!d_ordered) {
-      TBOX_ERROR("erase with Box argument attempted on unordered BoxContainer.");
-   }
-
-   int ret = d_set.erase(const_cast<Box*>(&box));
-   for (std::list<Box>::iterator bi = d_list.begin(); bi != d_list.end();
-        ++bi) {
-      if (bi->getId() == box.getId()) {
-         d_list.erase(bi++);
-         break;
-      }
-   }
-
-   return ret;
 }
 
 
@@ -455,40 +379,6 @@ bool BoxContainer::insert(const Box& box)
 
 /*
  *************************************************************************
- * Box-based queries
- *************************************************************************
- */
-
-SAMRAI_INLINE_KEYWORD
-int BoxContainer::getTotalSizeOfBoxes() const
-{
-   int size = 0;
-   if (!d_ordered) {
-      for (ConstIterator i(*this); i != end(); ++i) {
-         size += i().size();
-      }
-   } else {
-      for (ConstIterator i(*this); i != end(); ++i) {
-         size += i().size();
-      }
-   }
-   return size;
-}
-
-SAMRAI_INLINE_KEYWORD
-bool BoxContainer::contains(
-   const Index& idx) const
-{
-   for (ConstIterator i(*this); i != end(); ++i) {
-      if (i().contains(idx)) {
-         return true;
-      }
-   }
-   return false;
-}
-
-/*
- *************************************************************************
  * Equality/inequality
  *************************************************************************
  */
@@ -516,48 +406,6 @@ bool BoxContainer::operator != (const BoxContainer& rhs) const
    return !(*this == rhs);
 }
 
-/*
- *************************************************************************
- * Spatial manipulation of Boxes
- ************************************************************************
- */
-
-SAMRAI_INLINE_KEYWORD
-void BoxContainer::grow(
-   const IntVector& ghosts)
-{
-   for (Iterator i(*this); i != end(); ++i) {
-      i().grow(ghosts);
-   }
-}
-
-
-SAMRAI_INLINE_KEYWORD
-void BoxContainer::shift(
-   const IntVector& offset)
-{
-   for (Iterator i(*this); i != end(); ++i) {
-      i().shift(offset);
-   }
-}
-
-SAMRAI_INLINE_KEYWORD
-void BoxContainer::refine(
-   const IntVector& ratio)
-{
-   for (Iterator i(*this); i != end(); ++i) {
-      i().refine(ratio);
-   }
-}
-
-SAMRAI_INLINE_KEYWORD
-void BoxContainer::coarsen(
-   const IntVector& ratio)
-{
-   for (Iterator i(*this); i != end(); ++i) {
-      i().coarsen(ratio);
-   }
-}
 
 
 

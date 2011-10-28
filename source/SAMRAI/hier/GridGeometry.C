@@ -1280,6 +1280,16 @@ void GridGeometry::computePhysicalDomain(
    }
 }
 
+/*
+ *************************************************************************
+ *
+ * Compute physical domain for index space related to reference domain
+ * by specified ratio.  If any entry of ratio is negative, the reference
+ * domain will be coarsened.  Otherwise, it will be refined.
+ *
+ *************************************************************************
+ */
+
 void GridGeometry::computePhysicalDomain(
    BoxContainer& domain_mapped_boxes,
    const IntVector& ratio_to_level_zero) const

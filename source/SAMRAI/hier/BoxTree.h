@@ -26,6 +26,7 @@ namespace SAMRAI {
 namespace hier {
 
 class Connector;
+class Connector;
 
 /*!
  * @brief Utility sorting Boxes into tree-like form for finding

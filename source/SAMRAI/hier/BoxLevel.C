@@ -1398,7 +1398,7 @@ void BoxLevel::getFromDatabase(
    TBOX_ASSERT(nproc == d_mpi.getSize());
    TBOX_ASSERT(rank == d_mpi.getRank());
 
-   d_boxes.getFromDatabase(*database.getDatabase("boxes"));
+   d_boxes.getFromDatabase(*database.getDatabase("mapped_boxes"));
    computeLocalRedundantData();
 
 }

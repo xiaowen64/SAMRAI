@@ -779,7 +779,7 @@ private:
 
    /*!
     * @brief Check that the Connectors between the coarse
-    * interpolation and hiercoarse levels are transposes and that that
+    * interpolation and hiercoarse levels are transposes and that
     * the coarse interpolation BoxLevel sufficiently nests
     * inside the hiercoarse.
     */
