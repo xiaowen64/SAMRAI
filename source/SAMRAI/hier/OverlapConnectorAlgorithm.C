@@ -757,8 +757,6 @@ void OverlapConnectorAlgorithm::privateBridge(
 
 
    const int rank = mpi.getRank();
-   const int nproc = mpi.getSize();
-
 
    /*
     * Compute the reverse bridge (east_to_west) if it is given and is
@@ -1046,7 +1044,6 @@ void OverlapConnectorAlgorithm::privateBridge(
 
 
    const int rank = mpi.getRank();
-   const int nproc = mpi.getSize();
 
 
    /*
@@ -1343,6 +1340,10 @@ void OverlapConnectorAlgorithm::privateModify_removeAndCache(
    Connector* overlap_connector_transpose,
    const Connector& misc_connector) const
 {
+   NULL_USE(neighbor_removal_mesg); 
+   NULL_USE(overlap_connector); 
+   NULL_USE(overlap_connector_transpose); 
+   NULL_USE(misc_connector); 
   /*
    * As the overlap relationships are empty to start there are never any
    * that need to be deleted.
@@ -1585,9 +1586,9 @@ void OverlapConnectorAlgorithm::privateBridge_discoverAndSend(
              */
             while (all_comms[send_comm_idx].getPeerRank() != curr_owner) {
                ++send_comm_idx;
-               if (send_comm_idx == static_cast<size_t>(incoming_ranks.size() +
+               if (send_comm_idx == static_cast<int>(incoming_ranks.size() +
                                                      outgoing_ranks.size())) {
-                  send_comm_idx -= static_cast<size_t>(outgoing_ranks.size());
+                  send_comm_idx -= static_cast<int>(outgoing_ranks.size());
                }
             }
             tbox::AsyncCommPeer<int>& outgoing_comm = all_comms[send_comm_idx];
