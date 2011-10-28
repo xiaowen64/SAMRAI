@@ -405,6 +405,10 @@ public:
     * Connector updated, use addPeriodicImages() instead of this
     * method.
     *
+    * Preconditions: mapped_box_level<==>anchor must be transpose
+    * overlap Connectors (or communications may hang).
+    * anchor--->anchor must be a complete overlap Connector.
+    *
     * @param[in,out] mapped_box_level BoxLevel subject to the
     * addition of periodic Boxes.
     *

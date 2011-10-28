@@ -2500,6 +2500,7 @@ void GriddingAlgorithm::readLevelBoxes(
 
       oca.findOverlaps(coarser_to_new);
       oca.findOverlaps(new_to_coarser);
+      new_to_coarser.removePeriodicRelationships();
 
       const hier::Connector& coarser_to_coarser =
          d_hierarchy->getConnector(tag_ln, tag_ln);
