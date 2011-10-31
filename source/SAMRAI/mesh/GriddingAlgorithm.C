@@ -2500,7 +2500,6 @@ void GriddingAlgorithm::readLevelBoxes(
 
       oca.findOverlaps(coarser_to_new);
       oca.findOverlaps(new_to_coarser);
-      new_to_coarser.removePeriodicRelationships();
 
       /*
        * Periodic relationships exist in new_to_coarser, but are not
