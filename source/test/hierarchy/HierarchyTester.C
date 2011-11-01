@@ -209,8 +209,8 @@ int HierarchyTester::runHierarchyTestAndVerify()
                  << test_geometry->getPeriodicShift(one_vector) << std::endl;
    }
 
-   const BoxContainer& init_phys_domain = init_geometry->getPhysicalDomain(BlockId(0));
-   const BoxContainer& test_phys_domain = test_geometry->getPhysicalDomain(BlockId(0));
+   const BoxContainer& init_phys_domain = init_geometry->getPhysicalDomain();
+   const BoxContainer& test_phys_domain = test_geometry->getPhysicalDomain();
 
    const int npdboxes = init_phys_domain.size();
 

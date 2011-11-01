@@ -89,9 +89,7 @@ GridGeometry::GridGeometry(
    bool register_for_restart):
    d_dim(dim),
    d_object_name(object_name),
-   d_physical_domain(1),
    d_domain_tree(0),
-   d_domain_with_images(1),
    d_periodic_shift(IntVector::getZero(d_dim)),
    d_max_data_ghost_width(IntVector(d_dim, -1)),
    d_has_enhanced_connectivity(false),
@@ -130,9 +128,7 @@ GridGeometry::GridGeometry(
    tbox::Pointer<TransferOperatorRegistry> op_reg):
    d_dim(dim),
    d_object_name(object_name),
-   d_physical_domain(1),
    d_domain_tree(0),
-   d_domain_with_images(1),
    d_periodic_shift(IntVector::getZero(d_dim)),
    d_max_data_ghost_width(IntVector(d_dim, -1)),
    d_number_blocks(1),
@@ -152,14 +148,13 @@ GridGeometry::GridGeometry(
 
 GridGeometry::GridGeometry(
    const std::string& object_name,
-   const tbox::Array<BoxContainer>& domain,
+   const BoxContainer& domain,
    tbox::Pointer<TransferOperatorRegistry> op_reg,
    bool register_for_restart):
-   d_dim((*(domain[0].begin())).getDim()),
+   d_dim((*(domain.begin())).getDim()),
    d_object_name(object_name),
    d_physical_domain(domain),
    d_domain_tree(0),
-   d_domain_with_images(1),
    d_periodic_shift(IntVector::getZero(d_dim)),
    d_max_data_ghost_width(IntVector(d_dim, -1)),
    d_number_of_block_singularities(0),
@@ -175,11 +170,16 @@ GridGeometry::GridGeometry(
       registerRestartItem(getObjectName(), this);
    }
 
-   d_number_blocks = domain.size();
+   std::set<int> block_numbers;
+   for (BoxContainer::ConstIterator itr = domain.begin(); itr != domain.end();
+        ++itr) {
+      block_numbers.insert(itr->getBlockId().getBlockValue());
+   }
+   d_number_blocks = block_numbers.size();
    d_reduced_connect.resizeArray(d_number_blocks, false);
    d_block_neighbors.resizeArray(d_number_blocks);
 
-   setPhysicalDomain(domain);
+   setPhysicalDomain(domain, d_number_blocks);
 
 }
 
@@ -618,37 +618,34 @@ GridGeometry::makeCoarsenedGridGeometry(
    TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(dim, coarsen_ratio);
    TBOX_ASSERT(coarsen_ratio > IntVector::getZero(dim));
 
-   tbox::Array<BoxContainer> coarse_domain(d_number_blocks);
+   BoxContainer coarse_domain;
 
-   for (int b = 0; b < d_number_blocks; b++) {
-      BlockId block_id(b);
-      coarse_domain[b] = getPhysicalDomain(block_id);
-      coarse_domain[b].coarsen(coarsen_ratio);
+   coarse_domain = getPhysicalDomain();
+   coarse_domain.coarsen(coarsen_ratio);
 
-      /*
-       * Need to check that domain can be coarsened by given ratio.
-       */
-      const BoxContainer& fine_domain = getPhysicalDomain(block_id);
-      const int nboxes = fine_domain.size();
-      BoxContainer::ConstIterator coarse_domain_itr(coarse_domain[b]);
-      BoxContainer::ConstIterator fine_domain_itr(fine_domain);
-      for (int ib = 0; ib < nboxes; ib++, ++coarse_domain_itr, ++fine_domain_itr) {
-         Box testbox = Box::refine(*coarse_domain_itr, coarsen_ratio);
-         if (!testbox.isSpatiallyEqual(*fine_domain_itr)) {
+   /*
+    * Need to check that domain can be coarsened by given ratio.
+    */
+   const BoxContainer& fine_domain = getPhysicalDomain();
+   const int nboxes = fine_domain.size();
+   BoxContainer::ConstIterator coarse_domain_itr(coarse_domain);
+   BoxContainer::ConstIterator fine_domain_itr(fine_domain);
+   for (int ib = 0; ib < nboxes; ib++, ++coarse_domain_itr, ++fine_domain_itr) {
+      Box testbox = Box::refine(*coarse_domain_itr, coarsen_ratio);
+      if (!testbox.isSpatiallyEqual(*fine_domain_itr)) {
 #ifdef DEBUG_CHECK_ASSERTIONS
-            tbox::plog
-            << "GridGeometry::makeCoarsenedGridGeometry : Box # "
-            << ib << std::endl;
-            tbox::plog << "   fine box = " << *fine_domain_itr << std::endl;
-            tbox::plog << "f   coarse box = " << *coarse_domain_itr << std::endl;
-            tbox::plog << "   refined coarse box = " << testbox << std::endl;
+         tbox::plog
+         << "GridGeometry::makeCoarsenedGridGeometry : Box # "
+         << ib << std::endl;
+         tbox::plog << "   fine box = " << *fine_domain_itr << std::endl;
+         tbox::plog << "f   coarse box = " << *coarse_domain_itr << std::endl;
+         tbox::plog << "   refined coarse box = " << testbox << std::endl;
 #endif
-            TBOX_ERROR(
-               "GridGeometry::makeCoarsenedGridGeometry() error...\n"
-               << "    geometry object with name = " << getObjectName()
-               << "\n    Cannot be coarsened by ratio " << coarsen_ratio
-               << std::endl);
-         }
+         TBOX_ERROR(
+            "GridGeometry::makeCoarsenedGridGeometry() error...\n"
+            << "    geometry object with name = " << getObjectName()
+            << "\n    Cannot be coarsened by ratio " << coarsen_ratio
+            << std::endl);
       }
    }
 
@@ -686,12 +683,8 @@ GridGeometry::makeRefinedGridGeometry(
    TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(dim, refine_ratio);
    TBOX_ASSERT(refine_ratio > IntVector::getZero(dim));
 
-   tbox::Array<BoxContainer> fine_domain(d_number_blocks);
-
-   for (int b = 0; b < d_number_blocks; b++) {
-      fine_domain[b] = getPhysicalDomain(BlockId(b));
-      fine_domain[b].refine(refine_ratio);
-   }
+   BoxContainer fine_domain(getPhysicalDomain());
+   fine_domain.refine(refine_ratio);
 
    GridGeometry* fine_geometry =
       new GridGeometry(fine_geom_name,
@@ -740,22 +733,30 @@ void GridGeometry::getFromRestart()
    d_number_blocks = db->getInteger("d_number_blocks");
 
    std::string domain_name;
-   tbox::Array<hier::BoxContainer> domain(d_number_blocks);
+   BoxContainer domain;
+   LocalId local_id(0);
 
    for (int b = 0; b < d_number_blocks; b++) {
       domain_name = "d_physical_domain_" + tbox::Utilities::intToString(b);
+      BoxContainer block_domain_boxes;
       if (db->keyExists(domain_name)) {
-         domain[b] = db->getDatabaseBoxArray(domain_name);
+         block_domain_boxes = db->getDatabaseBoxArray(domain_name);
       } else {
          TBOX_ERROR(
             getObjectName() << ":  "
                             << "No '" << domain_name << "' restart data found for "
                             << "Block " << b << " physical domain. ");
       }
-   }
-   setPhysicalDomain(domain);
 
-   hier::IntVector periodic_shift(dim);
+      for (BoxContainer::Iterator itr = block_domain_boxes.begin();
+           itr != block_domain_boxes.end(); ++itr) {
+         Box box(*itr, local_id++, 0, BlockId(b));
+         domain.pushBack(box);
+      }
+   }
+   setPhysicalDomain(domain, d_number_blocks);
+
+   IntVector periodic_shift(dim);
    int* temp_shift = &periodic_shift[0];
    db->getIntegerArray("d_periodic_shift", temp_shift, dim.getValue());
    initializePeriodicShift(periodic_shift);
@@ -788,15 +789,17 @@ void GridGeometry::getFromInput(
       d_number_blocks = db->getIntegerWithDefault("num_blocks", 1);
 
       std::string domain_name;
-      tbox::Array<hier::BoxContainer> domain(d_number_blocks);
+      BoxContainer domain;
+      LocalId local_id(0);
 
       for (int b = 0; b < d_number_blocks; b++) {
 
          domain_name = "domain_boxes_" + tbox::Utilities::intToString(b);
 
+         BoxContainer block_domain_boxes; 
          if (db->keyExists(domain_name)) {
-            domain[b] = db->getDatabaseBoxArray(domain_name);
-            if (domain[b].size() == 0) {
+            block_domain_boxes = db->getDatabaseBoxArray(domain_name);
+            if (block_domain_boxes.size() == 0) {
                TBOX_ERROR(
                   getObjectName() << ":  "
                                   << "No boxes for " << domain_name
@@ -807,6 +810,13 @@ void GridGeometry::getFromInput(
                getObjectName() << ":  "
                                << "Key data '" << domain_name << "' not found in input.");
          }
+
+         for (BoxContainer::Iterator itr = block_domain_boxes.begin();
+              itr != block_domain_boxes.end(); ++itr) {
+            Box box(*itr, local_id++, 0, BlockId(b));
+            domain.pushBack(box);
+         }
+
       }
 
       int pbc[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
@@ -818,7 +828,7 @@ void GridGeometry::getFromInput(
          }
       }
 
-      setPhysicalDomain(domain);
+      setPhysicalDomain(domain, d_number_blocks);
 
       initializePeriodicShift(per_bc);
    }
@@ -852,13 +862,13 @@ void GridGeometry::putToDatabase(
 
       domain_name = "d_physical_domain_" + tbox::Utilities::intToString(b);
 
-      tbox::Array<tbox::DatabaseBox> temp_box_array =
-         getPhysicalDomain(BlockId(b));
+      BoxContainer block_phys_domain(getPhysicalDomain(), BlockId(b));
+      tbox::Array<tbox::DatabaseBox> temp_box_array = block_phys_domain;
 
       db->putDatabaseBoxArray(domain_name, temp_box_array);
    }
 
-   hier::IntVector level0_shift(getPeriodicShift(hier::IntVector::getOne(dim)));
+   IntVector level0_shift(getPeriodicShift(IntVector::getOne(dim)));
    int* temp_shift = &level0_shift[0];
    db->putIntegerArray("d_periodic_shift", temp_shift, dim.getValue());
 
@@ -1204,7 +1214,13 @@ void GridGeometry::computePhysicalDomain(
    }
 #endif
 
-   domain_mapped_boxes = d_physical_domain[block_id.getBlockValue()];
+   domain_mapped_boxes.clear();
+   for (BoxContainer::ConstIterator itr = d_physical_domain.begin();
+        itr != d_physical_domain.end(); ++itr) {
+      if (itr->getBlockId() == block_id) {
+         domain_mapped_boxes.insert(*itr);
+      }
+   }
 
    if (ratio_to_level_zero != IntVector::getOne(d_dim)) {
       bool coarsen = false;
@@ -1257,10 +1273,12 @@ void GridGeometry::computePhysicalDomain(
    }
 #endif
 
-   for (BoxContainer::ConstIterator itr = d_domain_with_images[block_id.getBlockValue()].begin();
-        itr != d_domain_with_images[block_id.getBlockValue()].end();
+   for (BoxContainer::ConstIterator itr = d_domain_with_images.begin();
+        itr != d_domain_with_images.end();
         ++itr) {
-      box_level.addBoxWithoutUpdate(*itr);
+      if (itr->getBlockId() == block_id) {
+         box_level.addBoxWithoutUpdate(*itr);
+      }
    }
 
    if (ratio_to_level_zero != IntVector::getOne(d_dim)) {
@@ -1315,30 +1333,22 @@ void GridGeometry::computePhysicalDomain(
    }
 #endif
 
-   for (int nb = 0; nb < d_number_blocks; nb++) {
-      BoxContainer block_domain_boxes = d_domain_with_images[nb];
+   domain_mapped_boxes = d_domain_with_images;
 
-      if (ratio_to_level_zero != IntVector::getOne(d_dim)) {
-         bool coarsen = false;
-         IntVector tmp_rat = ratio_to_level_zero;
-         for (int id = 0; id < d_dim.getValue(); id++) {
-            if (ratio_to_level_zero(id) < 0) coarsen = true;
-            tmp_rat(id) = abs(ratio_to_level_zero(id));
-         }
-         if (coarsen) {
-            block_domain_boxes.coarsen(tmp_rat);
-         } else {
-            block_domain_boxes.refine(tmp_rat);
-         }
+   if (ratio_to_level_zero != IntVector::getOne(d_dim)) {
+      bool coarsen = false;
+      IntVector tmp_rat = ratio_to_level_zero;
+      for (int id = 0; id < d_dim.getValue(); id++) {
+         if (ratio_to_level_zero(id) < 0) coarsen = true;
+         tmp_rat(id) = abs(ratio_to_level_zero(id));
       }
-
-      for (BoxContainer::ConstIterator bi = block_domain_boxes.begin();
-           bi != block_domain_boxes.end(); ++bi) {
-
-         domain_mapped_boxes.insert(*bi);
-
+      if (coarsen) {
+         domain_mapped_boxes.coarsen(tmp_rat);
+      } else {
+         domain_mapped_boxes.refine(tmp_rat);
       }
    }
+
 }
 
 void GridGeometry::computePhysicalDomain(
@@ -1366,29 +1376,27 @@ void GridGeometry::computePhysicalDomain(
    }
 #endif
 
-   for (int nb = 0; nb < d_number_blocks; nb++) {
-      BoxContainer block_domain_boxes = d_domain_with_images[nb];
+   BoxContainer domain_boxes = d_domain_with_images;
 
-      if (ratio_to_level_zero != IntVector::getOne(d_dim)) {
-         bool coarsen = false;
-         IntVector tmp_rat = ratio_to_level_zero;
-         for (int id = 0; id < d_dim.getValue(); id++) {
-            if (ratio_to_level_zero(id) < 0) coarsen = true;
-            tmp_rat(id) = abs(ratio_to_level_zero(id));
-         }
-         if (coarsen) {
-            block_domain_boxes.coarsen(tmp_rat);
-         } else {
-            block_domain_boxes.refine(tmp_rat);
-         }
+   if (ratio_to_level_zero != IntVector::getOne(d_dim)) {
+      bool coarsen = false;
+      IntVector tmp_rat = ratio_to_level_zero;
+      for (int id = 0; id < d_dim.getValue(); id++) {
+         if (ratio_to_level_zero(id) < 0) coarsen = true;
+         tmp_rat(id) = abs(ratio_to_level_zero(id));
       }
-
-      for (BoxContainer::ConstIterator bi = block_domain_boxes.begin();
-           bi != block_domain_boxes.end(); ++bi) {
-
-         box_level.addBoxWithoutUpdate(*bi);
-
+      if (coarsen) {
+         domain_boxes.coarsen(tmp_rat);
+      } else {
+         domain_boxes.refine(tmp_rat);
       }
+   }
+
+   for (BoxContainer::ConstIterator bi = domain_boxes.begin();
+        bi != domain_boxes.end(); ++bi) {
+
+      box_level.addBoxWithoutUpdate(*bi);
+
    }
 }
 
@@ -1402,37 +1410,44 @@ void GridGeometry::computePhysicalDomain(
  */
 
 void GridGeometry::setPhysicalDomain(
-   const tbox::Array<BoxContainer>& domain)
+   const BoxContainer& domain,
+   const int number_blocks)
 {
    TBOX_ASSERT(domain.size() > 0);
 
-   int number_blocks = domain.size();
-
    d_domain_is_single_box.resizeArray(number_blocks);
-   d_physical_domain.resizeArray(number_blocks, BoxContainer());
    d_domain_tree.resizeArray(number_blocks);
-   d_domain_with_images.resizeArray(number_blocks);
    d_number_blocks = number_blocks;
+   LocalId local_id(0);
 
    for (int b = 0; b < number_blocks; b++) {
-
       BlockId block_id(b);
-      BoxContainer bounding_box(domain[b].getBoundingBox());
-      bounding_box.removeIntersections(domain[b]);
-      if (bounding_box.size() == 0) {
+
+      BoxContainer block_domain(domain, block_id);
+      Box bounding_box(block_domain.getBoundingBox());
+      BoxContainer bounding_cntnr(bounding_box);
+      bounding_cntnr.removeIntersections(block_domain);
+      if (bounding_cntnr.size() == 0) {
          d_domain_is_single_box[b] = true;
-         d_physical_domain[b].pushBack((domain[b].getBoundingBox()));
+         Box box(bounding_box, local_id++, 0, block_id);
+         d_physical_domain.pushBack(box);
+
+         d_domain_tree[b] = new BoxTree(d_dim,
+            BoxContainer(box),
+            BlockId(b));
       } else {
          d_domain_is_single_box[b] = false;
-         d_physical_domain[b] = domain[b];
-      }
-
-      resetDomainBoxContainer(block_id);
-
-      d_domain_tree[b] = new BoxTree(d_dim,
-            d_physical_domain[b],
+         for (BoxContainer::Iterator itr = block_domain.begin();
+              itr != block_domain.end(); ++itr) {
+            d_physical_domain.pushBack(*itr);
+         }
+         d_domain_tree[b] = new BoxTree(d_dim,
+            block_domain,
             BlockId(b));
+      }
    }
+
+   resetDomainBoxContainer();
 }
 
 /*
@@ -1444,16 +1459,10 @@ void GridGeometry::setPhysicalDomain(
  *************************************************************************
  */
 
-void GridGeometry::resetDomainBoxContainer(const BlockId& block_id)
+void GridGeometry::resetDomainBoxContainer()
 {
-   const int& block_number = block_id.getBlockValue();
-   BoxContainer::Iterator itr(d_physical_domain[block_number]);
-   for (LocalId i(0); i < d_physical_domain[block_number].size(); ++i, ++itr) {
-      Box mapped_box(*itr, i, 0, BlockId(block_number));
-      d_domain_with_images[block_number].insert(mapped_box);
-   }
-   d_physical_domain[block_number].clear();
-   d_physical_domain[block_number] = d_domain_with_images[block_number];
+   d_domain_with_images = d_physical_domain;
+   d_domain_with_images.order();
 
    const IntVector periodic_shift_distances = getPeriodicShift(
          IntVector::getOne(d_dim));
@@ -1472,13 +1481,12 @@ void GridGeometry::resetDomainBoxContainer(const BlockId& block_id)
 
       // Add periodic images of the domain d_domain_with_images.
       std::vector<IntVector> shifts;
-      const BoxContainer& mapped_boxes =
-         d_domain_with_images[block_number];
+      const BoxContainer& mapped_boxes = d_domain_with_images;
       for (RealBoxConstIterator ni(mapped_boxes); ni.isValid(); ++ni) {
          const Box& mapped_box = *ni;
          computeShiftsForBox(shifts,
             mapped_box,
-            *d_domain_tree[block_number],
+            *d_domain_tree[0],
             periodic_shift_distances);
          for (std::vector<IntVector>::const_iterator si = shifts.begin();
               si != shifts.end(); ++si) {
@@ -1488,7 +1496,7 @@ void GridGeometry::resetDomainBoxContainer(const BlockId& block_id)
                mapped_box,
                shift_number,
                IntVector::getOne(d_dim));
-            d_domain_with_images[block_number].insert(image_mapped_box);
+            d_domain_with_images.insert(image_mapped_box);
          }
       }
    }
@@ -1529,10 +1537,9 @@ void GridGeometry::initializePeriodicShift(
           * periodic conditions.  If so, compute the shift in each
           * dimension based on the the number of cells.
           */
-         if (checkPeriodicValidity(d_physical_domain[0])) {
+         if (checkPeriodicValidity(d_physical_domain)) {
 
-            BoxContainer domain_box_list(d_physical_domain[0]);
-            Box bounding_box = domain_box_list.getBoundingBox();
+            Box bounding_box(d_physical_domain.getBoundingBox());
 
             for (id = 0; id < d_dim.getValue(); id++) {
                d_periodic_shift(id) *= bounding_box.numberCells(id);
@@ -1549,9 +1556,7 @@ void GridGeometry::initializePeriodicShift(
       TBOX_ASSERT(directions == IntVector::getZero(d_dim));
    }
 
-   for (int b = 0; b < d_physical_domain.size(); b++) {
-      resetDomainBoxContainer(BlockId(b));
-   }
+   resetDomainBoxContainer();
 }
 
 /*
@@ -1878,11 +1883,12 @@ void GridGeometry::readBlockDataFromInput(
 
    if (d_number_blocks > 1) {
       for (int b = 0; b < d_number_blocks; b++) {
+         hier::BlockId block_id(b);
          BoxContainer pseudo_domain;
-         getDomainOutsideBlock(pseudo_domain, BlockId(b));
+         getDomainOutsideBlock(pseudo_domain, block_id);
 
-         hier::BoxContainer physical_domain(d_physical_domain[b]);
-         pseudo_domain.spliceFront(physical_domain);
+         hier::BoxContainer block_domain(d_physical_domain, block_id);
+         pseudo_domain.spliceFront(block_domain);
 
          for (BoxContainer::Iterator
               si(d_singularity[b]); si != d_singularity[b].end(); ++si) {
@@ -1936,8 +1942,8 @@ void GridGeometry::registerNeighbors(
 
    const int& a = block_a.getBlockValue();
    const int& b = block_b.getBlockValue();
-   BoxContainer b_domain_in_a_space(d_physical_domain[b]);
-   BoxContainer a_domain_in_b_space(d_physical_domain[a]);
+   BoxContainer b_domain_in_a_space(d_physical_domain, block_b);
+   BoxContainer a_domain_in_b_space(d_physical_domain, block_a);
    b_domain_in_a_space.unorder();
    a_domain_in_b_space.unorder();
 
@@ -2391,13 +2397,10 @@ void GridGeometry::printClassData(
           << (GridGeometry *)this << std::endl;
    stream << "d_object_name = " << d_object_name << std::endl;
 
-   for (int b = 0; b < d_physical_domain.size(); b++) {
-      const int n = d_physical_domain[b].size();
-      stream << "Block number " << b << std::endl;
-      stream << "Number of boxes describing physical domain = " << n << std::endl;
-      stream << "Boxes describing physical domain..." << std::endl;
-      d_physical_domain[b].print(stream);
-   }
+   const int n = d_physical_domain.size();
+   stream << "Number of boxes describing physical domain = " << n << std::endl;
+   stream << "Boxes describing physical domain..." << std::endl;
+   d_physical_domain.print(stream);
 
    stream << "\nd_periodic_shift = " << d_periodic_shift << std::endl;
 

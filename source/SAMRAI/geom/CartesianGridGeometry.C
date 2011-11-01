@@ -238,7 +238,7 @@ CartesianGridGeometry::makeRefinedGridGeometry(
    TBOX_ASSERT(fine_geom_name != getObjectName());
    TBOX_ASSERT(refine_ratio > hier::IntVector::getZero(dim));
 
-   hier::BoxContainer fine_domain(this->getPhysicalDomain(hier::BlockId(0)));
+   hier::BoxContainer fine_domain(this->getPhysicalDomain());
    fine_domain.refine(refine_ratio);
 
    CartesianGridGeometry* fine_geometry =
@@ -275,13 +275,13 @@ makeCoarsenedGridGeometry(
    TBOX_ASSERT(coarse_geom_name != getObjectName());
    TBOX_ASSERT(coarsen_ratio > hier::IntVector::getZero(dim));
 
-   hier::BoxContainer coarse_domain(this->getPhysicalDomain(hier::BlockId(0)));
+   hier::BoxContainer coarse_domain(this->getPhysicalDomain());
    coarse_domain.coarsen(coarsen_ratio);
 
    /*
     * Need to check that domain can be coarsened by given ratio.
     */
-   const hier::BoxContainer& fine_domain = this->getPhysicalDomain(hier::BlockId(0));
+   const hier::BoxContainer& fine_domain = this->getPhysicalDomain();
    const int nboxes = fine_domain.size();
    hier::BoxContainer::ConstIterator fine_domain_itr(fine_domain);
    hier::BoxContainer::Iterator coarse_domain_itr(coarse_domain);
@@ -355,11 +355,10 @@ void CartesianGridGeometry::setGeometryData(
       d_x_up[id] = x_up[id];
    }
 
-   tbox::Array<hier::BoxContainer> domain_array(1, domain);
-   this->setPhysicalDomain(domain_array);
+   this->setPhysicalDomain(domain, 1);
 
    hier::Box bigbox(dim);
-   const hier::BoxContainer& block_domain = getPhysicalDomain(hier::BlockId(0));
+   const hier::BoxContainer& block_domain = getPhysicalDomain();
    for (hier::BoxContainer::ConstIterator k(block_domain); k != block_domain.end();
         ++k) {
       bigbox += *k;
@@ -508,7 +507,7 @@ void CartesianGridGeometry::putToDatabase(
 
    db->putInteger("GEOM_CARTESIAN_GRID_GEOMETRY_VERSION",
       GEOM_CARTESIAN_GRID_GEOMETRY_VERSION);
-   tbox::Array<tbox::DatabaseBox> temp_box_array = this->getPhysicalDomain(hier::BlockId(0));
+   tbox::Array<tbox::DatabaseBox> temp_box_array = this->getPhysicalDomain();
    db->putDatabaseBoxArray("d_physical_domain", temp_box_array);
 
    db->putDoubleArray("d_dx", d_dx, dim.getValue());
@@ -546,13 +545,19 @@ void CartesianGridGeometry::getFromInput(
 
       hier::BoxContainer domain;
       if (db->keyExists("domain_boxes")) {
-         domain = db->getDatabaseBoxArray("domain_boxes");
-         if (domain.size() == 0) {
+         hier::BoxContainer input_domain(
+            db->getDatabaseBoxArray("domain_boxes"));
+         if (input_domain.size() == 0) {
             TBOX_ERROR(
                "CartesianGridGeometry::getFromInput() error...\n"
                << "    geometry object with name = " << getObjectName()
                << "\n    Empty `domain_boxes' array found in input."
                << std::endl);
+         }
+         hier::LocalId local_id(0);
+         for (hier::BoxContainer::Iterator itr = input_domain.begin();
+              itr != input_domain.end(); ++itr) {
+            domain.pushBack(hier::Box(*itr, local_id++, 0));
          }
       } else {
          TBOX_ERROR("CartesianGridGeometry::getFromInput() error...\n"
@@ -586,6 +591,7 @@ void CartesianGridGeometry::getFromInput(
             per_bc(i) = ((pbc[i] == 0) ? 0 : 1);
          }
       }
+
 
       setGeometryData(x_lo, x_up, domain);
 
@@ -628,11 +634,19 @@ void CartesianGridGeometry::getFromRestart()
          << "    geometry object with name = " << getObjectName()
          << "Restart file version is different than class version" << std::endl);
    }
-   hier::BoxContainer domain(db->getDatabaseBoxArray("d_physical_domain"));
+   hier::BoxContainer restart_domain(
+      db->getDatabaseBoxArray("d_physical_domain"));
    double x_lo[tbox::Dimension::MAXIMUM_DIMENSION_VALUE],
           x_up[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
    db->getDoubleArray("d_x_lo", x_lo, dim.getValue());
    db->getDoubleArray("d_x_up", x_up, dim.getValue());
+
+   hier::BoxContainer domain;
+   hier::LocalId local_id(0);
+   for (hier::BoxContainer::Iterator itr = restart_domain.begin();
+        itr != restart_domain.end(); ++itr) {
+      domain.pushBack(hier::Box(*itr, local_id++, 0));
+   }
 
    setGeometryData(x_lo, x_up, domain);
 

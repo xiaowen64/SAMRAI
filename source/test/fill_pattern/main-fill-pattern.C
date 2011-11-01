@@ -332,13 +332,14 @@ bool SingleLevelTestCase(
    hier::BoxContainer level_boxes;
    txt2boxes(levelboxes_txt, level_boxes);
 
-   hier::Box domain_box(dim);
+   hier::BoxContainer domain_boxes;
+   hier::LocalId domain_id(0);
    for (hier::BoxContainer::Iterator itr(level_boxes); itr != level_boxes.end(); ++itr) {
-      domain_box += *itr;
+      domain_boxes.pushBack(hier::Box(*itr, domain_id++, 0));
    }
 
    tbox::Pointer<geom::SkeletonGridGeometry> geom(
-      new geom::SkeletonGridGeometry("GridGeometry", level_boxes));
+      new geom::SkeletonGridGeometry("GridGeometry", domain_boxes));
 
    tbox::Pointer<hier::PatchHierarchy> hierarchy(new
                                                  hier::PatchHierarchy("hier",

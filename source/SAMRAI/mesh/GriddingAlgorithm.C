@@ -359,8 +359,9 @@ void GriddingAlgorithm::makeCoarsestLevel(
    if (!level_zero_exists) {
       for (int b = 0; b < d_hierarchy->getGridGeometry()->getNumberBlocks();
            b++) {
-         const hier::BoxContainer& domain_boxes =
-            d_hierarchy->getGridGeometry()->getPhysicalDomain(hier::BlockId(b));
+         hier::BoxContainer domain_boxes(
+            d_hierarchy->getGridGeometry()->getPhysicalDomain(),
+            hier::BlockId(b));
          checkDomainBoxes(domain_boxes);
       }
    }

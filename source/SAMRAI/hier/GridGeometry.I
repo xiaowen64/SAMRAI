@@ -12,9 +12,9 @@ namespace SAMRAI {
 namespace hier {
 
 SAMRAI_INLINE_KEYWORD
-const BoxContainer& GridGeometry::getPhysicalDomain(const BlockId& block_id) const
+const BoxContainer& GridGeometry::getPhysicalDomain() const
 {
-   return d_physical_domain[block_id.getBlockValue()];
+   return d_physical_domain;
 }
 
 SAMRAI_INLINE_KEYWORD

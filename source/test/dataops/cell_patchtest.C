@@ -105,8 +105,8 @@ int main(
       hier::Index indxhi(dim, 9);
       indxhi(1) = 4;
       hier::Box patch_box(indxlo, indxhi);
-      hier::BoxContainer grid_domain;
-      grid_domain.pushBack(patch_box);
+      patch_box.initialize(patch_box, hier::LocalId(0), 0);
+      hier::BoxContainer grid_domain(patch_box);
       hier::IntVector ratio(dim, 1);
 
       geom::CartesianGridGeometry geometry("CartesianGeometry",
