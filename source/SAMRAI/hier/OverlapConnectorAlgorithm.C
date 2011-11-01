@@ -1394,8 +1394,11 @@ void OverlapConnectorAlgorithm::privateBridge_discoverAndSend(
       const int nproc = east.getMPI().getSize();
 
       t_bridge_discover_form_rbbt->start();
-      const MultiblockBoxTree west_rbbt(grid_geometry, visible_west_nabrs);
-      const MultiblockBoxTree east_rbbt(grid_geometry, visible_east_nabrs);
+      const MultiblockBoxTree east_rbbt(grid_geometry,
+                                        visible_east_nabrs);
+      // Note: west_rbbt only needed when compute_reverse is true.
+      const MultiblockBoxTree west_rbbt(grid_geometry,
+                                        compute_reverse ? visible_west_nabrs : NeighborSet() );
       t_bridge_discover_form_rbbt->stop();
 
       /*
