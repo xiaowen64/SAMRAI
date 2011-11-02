@@ -10,14 +10,7 @@
 #ifndef included_hier_MappingConnectorAlgorithm
 #define included_hier_MappingConnectorAlgorithm
 
-#include "SAMRAI/SAMRAI_config.h"
-
-#include "SAMRAI/hier/Connector.h"
-#include "SAMRAI/hier/Box.h"
-#include "SAMRAI/hier/BoxLevel.h"
-#include "SAMRAI/tbox/AsyncCommPeer.h"
-#include "SAMRAI/tbox/SAMRAI_MPI.h"
-#include "SAMRAI/tbox/Timer.h"
+#include "SAMRAI/hier/BaseConnectorAlgorithm.h"
 
 #include <map>
 #include <string>
@@ -31,7 +24,7 @@ namespace hier {
  *
  * MappingConnectorAlgorithm objects check and apply mappings.
  */
-class MappingConnectorAlgorithm
+class MappingConnectorAlgorithm : public BaseConnectorAlgorithm
 {
 
 public:
@@ -46,8 +39,7 @@ public:
    /*!
     * @brief Deallocate internal data.
     */
-   virtual ~MappingConnectorAlgorithm(
-      void);
+   virtual ~MappingConnectorAlgorithm();
 
    /*!
     * @brief Set whether to run expensive sanity checks on input
@@ -297,22 +289,6 @@ public:
       BoxLevel* mutable_new = NULL,
       BoxLevel* mutable_old = NULL) const;
 
-   /*
-    * @brief Set whether to check for trivial mappings in modify
-    * operations.
-    *
-    * Many common maps describe small (possibly zero) changes to a
-    * bigger BoxLevel.  If @c do_shortcut is set, we check whether
-    * the mapping is globally empty.  (This costs a global reduction
-    * unless it is already cached in the mapping Connector.)  If
-    * empty, the shortcut improves performance.
-    *
-    * @param[in] do_shortcut
-    */
-   void
-   shortcutTrivialMapsInModify(
-      bool do_shortcut);
-
    // TODO:  Create an enum to replace the char for clarity.
    /*!
     * @brief Check if the Connector has a valid mapping.
@@ -353,8 +329,6 @@ public:
    //@}
 
 private:
-   static const int MAPPING_CONNECTOR_ALGORITHM_FIRST_DATA_LENGTH;
-
    /*!
     * @brief BoxIdSet is a clarifying typedef.
     */
@@ -401,23 +375,11 @@ private:
     * @brief Perform checks on the arguments of modify.
     */
    void
-   checkModifyParameters(
+   privateModify_checkParameters(
       const Connector& anchor_to_mapped,
       const Connector& mapped_to_anchor,
       const Connector& old_to_new,
       const Connector& new_to_old) const;
-
-   /*!
-    * @brief Set up communication objects for use in privateModify.
-    */
-   void
-   privateModify_setupCommunication(
-      tbox::AsyncCommPeer<int> *& all_comms,
-      tbox::AsyncCommStage& comm_stage,
-      tbox::AsyncCommStage::MemberVec& completed,
-      const tbox::SAMRAI_MPI& mpi,
-      const std::set<int>& incoming_ranks,
-      const std::set<int>& outgoing_ranks) const;
 
    /*!
     * @brief Relationship removal part of modify algorithm, caching
@@ -456,12 +418,12 @@ private:
     * into send message, used in privateModify().
     */
    void
-   findOverlapsForOneProcess(
+   privateModify_findOverlapsForOneProcess(
       const int owner_rank,
       BoxContainer& visible_base_nabrs,
       BoxContainer::Iterator& base_ni,
       std::vector<int>& send_mesg,
-      const size_t remote_box_counter_index,
+      const int remote_box_counter_index,
       Connector& mapped_connector,
       BoxContainer& referenced_head_nabrs,
       const Connector& unmapped_connector,
@@ -469,35 +431,6 @@ private:
       const Connector& mapping_connector,
       InvertedNeighborhoodSet& inverted_nbrhd,
       const IntVector& refinement_ratio) const;
-
-   //! @brief Send discovery to one processor during privateModify().
-   void
-   sendDiscoveryToOneProcess(
-      std::vector<int>& send_mesg,
-      const int idx_offset_to_ref,
-      BoxContainer& referenced_new_nabrs,
-      BoxContainer& referenced_anchor_nabrs,
-      tbox::AsyncCommPeer<int>& outgoing_comm,
-      const tbox::Dimension& dim) const;
-
-   /*!
-    * @brief Receive messages and unpack info sent from other processes.
-    */
-   void
-   privateModify_receiveAndUnpack(
-      Connector& anchor_to_new,
-      Connector* new_to_anchor,
-      std::set<int>& incoming_ranks,
-      tbox::AsyncCommPeer<int> all_comms[],
-      tbox::AsyncCommStage& comm_stage,
-      tbox::AsyncCommStage::MemberVec& completed) const;
-
-   //! @brief Unpack message sent by sendDiscoverytoOneProcess().
-   void
-   unpackDiscoveryMessage(
-      const tbox::AsyncCommPeer<int>* incoming_comm,
-      Connector& anchor_to_new,
-      Connector* new_to_anchor) const;
 
    /*!
     * @brief Set up things for the entire class.
@@ -531,18 +464,18 @@ private:
     * possibility.
     */
    static tbox::SAMRAI_MPI s_class_mpi;
+
    /*!
     * @brief Tag to use (and increment) at begining of operations that
     * require nearest-neighbor communication, to aid in eliminating
     * mixing of messages from different internal operations.
+    *
+    * Using unique tags was important to the early development of this
+    * class but may not be necessary anymore.
     */
    static int s_operation_mpi_tag;
 
-   // Extra checks independent of optimization/debug.
-   static char s_print_modify_steps;
-
    static tbox::Pointer<tbox::Timer> t_modify;
-   static tbox::Pointer<tbox::Timer> t_modify_shortcut;
    static tbox::Pointer<tbox::Timer> t_modify_setup_comm;
    static tbox::Pointer<tbox::Timer> t_modify_remove_and_cache;
    static tbox::Pointer<tbox::Timer> t_modify_discover_and_send;
@@ -552,7 +485,6 @@ private:
 
    bool d_sanity_check_inputs;
    bool d_sanity_check_outputs;
-   bool d_shortcut_trivial_maps;
 
    static tbox::StartupShutdownManager::Handler
       s_initialize_finalize_handler;

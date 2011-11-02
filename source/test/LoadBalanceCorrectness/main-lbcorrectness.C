@@ -232,8 +232,6 @@ int main(
             "GridGeometry",
             input_db->getDatabase("CartesianGridGeometry")));
 
-      const hier::BoxContainer domain_boxes(grid_geometry->getPhysicalDomain(hier::BlockId(0)));
-
       tbox::Pointer<hier::PatchHierarchy> hierarchy(
          new hier::PatchHierarchy(
             "Hierarchy",

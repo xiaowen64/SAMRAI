@@ -28,12 +28,7 @@
 namespace SAMRAI {
 namespace hier {
 
-const int MappingConnectorAlgorithm::MAPPING_CONNECTOR_ALGORITHM_FIRST_DATA_LENGTH = 1000;
-
-char MappingConnectorAlgorithm::s_print_modify_steps = '\0';
-
 tbox::Pointer<tbox::Timer> MappingConnectorAlgorithm::t_modify;
-tbox::Pointer<tbox::Timer> MappingConnectorAlgorithm::t_modify_shortcut;
 tbox::Pointer<tbox::Timer> MappingConnectorAlgorithm::t_modify_setup_comm;
 tbox::Pointer<tbox::Timer> MappingConnectorAlgorithm::t_modify_remove_and_cache;
 tbox::Pointer<tbox::Timer> MappingConnectorAlgorithm::t_modify_discover_and_send;
@@ -67,8 +62,7 @@ MappingConnectorAlgorithm::s_initialize_finalize_handler(
 
 MappingConnectorAlgorithm::MappingConnectorAlgorithm():
    d_sanity_check_inputs(false),
-   d_sanity_check_outputs(false),
-   d_shortcut_trivial_maps(false)
+   d_sanity_check_outputs(false)
 {
    /*
     * While we figure out how to use multiple communicators in SAMRAI,
@@ -113,16 +107,6 @@ void MappingConnectorAlgorithm::setSanityCheckMethodPostconditions(
    bool do_check)
 {
    d_sanity_check_outputs = do_check;
-}
-
-/*
- ***********************************************************************
- ***********************************************************************
- */
-void MappingConnectorAlgorithm::shortcutTrivialMapsInModify(
-   bool do_shortcut)
-{
-   d_shortcut_trivial_maps = do_shortcut;
 }
 
 /*
@@ -204,7 +188,7 @@ void MappingConnectorAlgorithm::modify(
          << "mode only.\n");
    }
 
-   if (s_print_modify_steps == 'y') {
+   if (s_print_steps == 'y') {
       tbox::plog
       << "MappingConnectorAlgorithm::modify: old mapped_box_level:\n"
       << old_to_new.getBase().format(s_dbgbord, 2)
@@ -280,8 +264,7 @@ void MappingConnectorAlgorithm::modify(
          if (na->getOwnerRank() != old_to_new.getMPI().getRank()) {
             const hier::Box find_box(na->getDim(), (*ci).first);
             const Box& mapped_box(
-               *old_to_new.getBase().getBoxes().
-               find(find_box));
+               *old_to_new.getBase().getBoxes().find(find_box));
             TBOX_ERROR("MappingConnectorAlgorithm::modify: this version of modify\n"
                "only allows local mappings.  The local mapped_box\n"
                << mapped_box << " has a non-local map to\n"
@@ -341,7 +324,7 @@ void MappingConnectorAlgorithm::modify(
          << "mode only.\n");
    }
 
-   if (s_print_modify_steps == 'y') {
+   if (s_print_steps == 'y') {
       const BoxLevel& anchor_mapped_box_level = anchor_to_mapped.getBase();
       const BoxLevel& old_mapped_box_level = old_to_new.getBase();
 
@@ -438,7 +421,7 @@ void MappingConnectorAlgorithm::modify(
    Connector mapped_to_anchor;
    mapped_to_anchor.initializeToLocalTranspose(anchor_to_mapped);
 
-   if (s_print_modify_steps == 'y') {
+   if (s_print_steps == 'y') {
       const BoxLevel& anchor_mapped_box_level = anchor_to_mapped.getBase();
       const BoxLevel& old_mapped_box_level = old_to_new.getBase();
       const BoxLevel& new_mapped_box_level =
@@ -515,7 +498,7 @@ void MappingConnectorAlgorithm::privateModify(
    t_modify->barrierAndStart();
    t_modify_misc->start();
 
-   if (s_print_modify_steps == 'y') {
+   if (s_print_steps == 'y') {
       tbox::plog
       << "MappingConnectorAlgorithm::privateModify: anchor_to_old:\n"
       << anchor_to_mapped.format(s_dbgbord, 3)
@@ -527,7 +510,7 @@ void MappingConnectorAlgorithm::privateModify(
       << old_to_new.format(s_dbgbord, 3);
    }
 
-   checkModifyParameters(
+   privateModify_checkParameters(
       anchor_to_mapped,
       mapped_to_anchor,
       old_to_new,
@@ -556,8 +539,8 @@ void MappingConnectorAlgorithm::privateModify(
     * ratios.
     */
    const BoxLevel& old = old_to_anchor.getBase();
-   const BoxLevel& new_level = old_to_new.getHead();
    const BoxLevel& anchor = anchor_to_new.getBase();
+   const BoxLevel& new_level = old_to_new.getHead();
    const IntVector& old_ratio = old.getRefinementRatio();
    const IntVector& anchor_ratio = anchor.getRefinementRatio();
    const IntVector& new_ratio = new_level.getRefinementRatio();
@@ -612,221 +595,185 @@ void MappingConnectorAlgorithm::privateModify(
 
    t_modify_misc->stop();
 
-   bool do_shortcut(false);
-   if (d_shortcut_trivial_maps) {
-      t_modify_shortcut->start();
-      do_shortcut = (old_to_new.getGlobalNumberOfNeighborSets() == 0);
-      t_modify_shortcut->stop();
-   }
+   /*
+    * The essential modify algorithm is in this block.
+    */
 
-   if (do_shortcut) {
+   t_modify_misc->start();
 
-      t_modify_shortcut->start();
-      /*
-       * Shortcut for trivial mapping.
-       *
-       * Initialize the output Connectors to connect to the new
-       * BoxLevel.  Shrink the ghost widths to those computed
-       * above (if needed).
-       */
+   /*
+    * Initialize the output connectors with the correct new
+    * BoxLevel.  (As inputs, they were referencing the old
+    * BoxLevel.)
+    */
 
-      if (d_sanity_check_inputs) {
-         TBOX_ASSERT(old_to_new.getBase() == old_to_new.getHead());
-      }
+   /*
+    * Determine which ranks we have to communicate with.  They are
+    * the ones who owns Boxes that the local Boxes will
+    * be mapped to.
+    */
+   std::set<int> incoming_ranks, outgoing_ranks;
+   old_to_anchor.getLocalOwners(outgoing_ranks);
+   anchor_to_old.getLocalOwners(incoming_ranks);
+   old_to_new.getLocalOwners(outgoing_ranks);
+   new_to_old.getLocalOwners(incoming_ranks);
 
-      anchor_to_new.setHead(new_level, true);
-      new_to_anchor.setBase(new_level);
-      new_to_anchor.setHead(anchor, true);
+   // We don't need to communicate locally.
+   incoming_ranks.erase(mpi.getRank());
+   outgoing_ranks.erase(mpi.getRank());
 
-      if (anchor_to_new_width != anchor_to_new.getConnectorWidth()) {
-         anchor_to_new.shrinkWidth(anchor_to_new_width);
-      }
-      if (new_to_anchor_width != new_to_anchor.getConnectorWidth()) {
-         new_to_anchor.shrinkWidth(new_to_anchor_width);
-      }
-
-      t_modify_shortcut->stop();
-
-   } else {
-
-      /*
-       * The essential modify algorithm is in this block.
-       */
-
-      t_modify_misc->start();
-
-      /*
-       * Initialize the output connectors with the correct new
-       * BoxLevel.  (As inputs, they were referencing the old
-       * BoxLevel.)
-       */
-
-      /*
-       * Determine which ranks we have to communicate with.  They are
-       * the ones who owns Boxes that the local Boxes will
-       * be mapped to.
-       */
-      std::set<int> incoming_ranks, outgoing_ranks;
-      old_to_new.getLocalOwners(outgoing_ranks);
-      old_to_anchor.getLocalOwners(outgoing_ranks);
-
-      anchor_to_old.getLocalOwners(incoming_ranks);
-      if (new_to_old.isFinalized()) {
-         new_to_old.getLocalOwners(incoming_ranks);
-      }
-
-      // We don't need to communicate locally.
-      incoming_ranks.erase(mpi.getRank());
-      outgoing_ranks.erase(mpi.getRank());
-
-      /*
-       * visible_anchor_nabrs, visible_new_nabrs are the neighbors that
-       * are seen by the local process.  For communication efficiency, we
-       * use a looping construct that assumes that they are sorted by
-       * owners first.  Note the comparator BoxOwnerFirst used to
-       * achieve this ordering.
-       */
-      bool ordered = true;
-      BoxContainer visible_anchor_nabrs(ordered), visible_new_nabrs(ordered);
-      InvertedNeighborhoodSet anchor_eto_old, new_eto_old;
-      for (Connector::ConstNeighborhoodIterator ei = old_to_anchor.begin();
-           ei != old_to_anchor.end(); ++ei) {
-         const BoxId& old_gid = (*ei).first;
-         for (Connector::ConstNeighborIterator na = old_to_anchor.begin(ei);
-              na != old_to_anchor.end(ei); ++na) {
-            visible_anchor_nabrs.insert(*na);
-           if (old_to_new.hasNeighborSet(old_gid)) {
-               /*
-                * anchor_eto_old is an InvertedNeighborhoodSet mapping visible anchor
-                * Boxes to local old Boxes that are changing (excludes
-                * old Boxes that do not change).
-                */
-               anchor_eto_old[*na].insert(old_gid);
-            }
+   /*
+    * visible_anchor_nabrs, visible_new_nabrs are the neighbors that
+    * are seen by the local process.  For communication efficiency, we
+    * use a looping construct that assumes that they are sorted by
+    * owners first.  Note the comparator BoxOwnerFirst used to
+    * achieve this ordering.
+    */
+   bool ordered = true;
+   BoxContainer visible_anchor_nabrs(ordered), visible_new_nabrs(ordered);
+   InvertedNeighborhoodSet anchor_eto_old, new_eto_old;
+   for (Connector::ConstNeighborhoodIterator ei = old_to_anchor.begin();
+        ei != old_to_anchor.end(); ++ei) {
+      const BoxId& old_gid = (*ei).first;
+      for (Connector::ConstNeighborIterator na = old_to_anchor.begin(ei);
+           na != old_to_anchor.end(ei); ++na) {
+         visible_anchor_nabrs.insert(*na);
+         if (old_to_new.hasNeighborSet(old_gid)) {
+            /*
+             * anchor_eto_old is an InvertedNeighborhoodSet mapping visible anchor
+             * Boxes to local old Boxes that are changing (excludes
+             * old Boxes that do not change).
+             */
+            anchor_eto_old[*na].insert(old_gid);
          }
       }
-      for (Connector::ConstNeighborhoodIterator ei = old_to_new.begin();
-           ei != old_to_new.end(); ++ei) {
-         const BoxId& old_gid = (*ei).first;
-         for (Connector::ConstNeighborIterator na = old_to_new.begin(ei);
-              na != old_to_new.end(ei); ++na) {
-            visible_new_nabrs.insert(visible_new_nabrs.end(), *na);
-            new_eto_old[*na].insert(old_gid);
-         }
-      }
-
-      /*
-       * Object for communicating relationship changes.
-       */
-      tbox::AsyncCommStage comm_stage;
-      tbox::AsyncCommPeer<int> * all_comms(NULL);
-      tbox::AsyncCommStage::MemberVec completed;
-
-      t_modify_misc->stop();
-
-      /*
-       * Set up communication mechanism (and post receives).
-       */
-      privateModify_setupCommunication(
-         all_comms,
-         comm_stage,
-         completed,
-         anchor.getMPI(),
-         incoming_ranks,
-         outgoing_ranks);
-
-      /*
-       * There are three major parts to computing the new neighbors:
-       * (1) remove relationships for Boxes being mapped into
-       * something else, (2) discover new relationships for the new
-       * Boxes and (3) share information with other processes.
-       *
-       * In steps 1 and 2, the owners of the Boxes being
-       * modified determine which relationships to remove and which to
-       * add.  Some of this information is kept locally while the rest
-       * are to be sent to the owners of the affected anchor and new
-       * Boxes.
-       *
-       * The three parts are done in the 3 steps following.  Note that
-       * these steps do not correspond to the parts.
-       */
-
-      /*
-       * Data for caching relationship removal messages.  This
-       * temporary object holds data computed when removing neighbors,
-       * to be used when sending out the relationship removal
-       * information.
-       */
-      std::map<int, std::vector<int> > neighbor_removal_mesg;
-
-      /*
-       * First step: Remove neighbor data for Boxes that are
-       * going away and cache information to be sent out.
-       */
-      privateModify_removeAndCache(
-         neighbor_removal_mesg,
-         anchor_to_new,
-         &new_to_anchor,
-         old_to_new);
-
-      /*
-       * Second step: Discover overlaps for new Boxes.  Send
-       * messages with information about what relationships to remove
-       * or create.
-       */
-      privateModify_discoverAndSend(
-         neighbor_removal_mesg,
-         anchor_to_new,
-         &new_to_anchor,
-         incoming_ranks,
-         outgoing_ranks,
-         all_comms,
-         completed,
-         visible_new_nabrs,
-         visible_anchor_nabrs,
-         anchor_eto_old,
-         new_eto_old,
-         old_to_anchor,
-         anchor_to_old,
-         old_to_new);
-
-      /*
-       * Third step: Receive and unpack messages from incoming_ranks.
-       * These message contain information about what relationships to
-       * remove or add.
-       */
-      privateModify_receiveAndUnpack(
-         anchor_to_new,
-         &new_to_anchor,
-         incoming_ranks,
-         all_comms,
-         comm_stage,
-         completed);
-
-      t_modify_misc->start();
-
-      delete[] all_comms;
-
-      /*
-       * Now we have set up the NeighborhoodSets for anchor_to_new and
-       * new_to_anchor so we can initialize these Connectors.
-       */
-      anchor_to_new.setBase(anchor);
-      anchor_to_new.setHead(new_level);
-      anchor_to_new.setWidth(anchor_to_new_width, true);
-      new_to_anchor.setBase(new_level);
-      new_to_anchor.setHead(anchor);
-      new_to_anchor.setWidth(new_to_anchor_width, true);
-
-      if (!anchor_to_new.ratioIsExact()) {
-         TBOX_WARNING("MappingConnectorAlgorithm::privateModify: generated\n"
-            << "overlap Connectors with non-integer ratio between\n"
-            << "the base and head.  The results are not guaranteed\n"
-            << "to be complete overlap Connectors.");
-      }
-      t_modify_misc->stop();
-
    }
+   for (Connector::ConstNeighborhoodIterator ei = old_to_new.begin();
+        ei != old_to_new.end(); ++ei) {
+      const BoxId& old_gid = (*ei).first;
+      for (Connector::ConstNeighborIterator na = old_to_new.begin(ei);
+           na != old_to_new.end(ei); ++na) {
+         visible_new_nabrs.insert(visible_new_nabrs.end(), *na);
+         new_eto_old[*na].insert(old_gid);
+      }
+   }
+
+   /*
+    * Object for communicating relationship changes.
+    */
+   tbox::AsyncCommStage comm_stage;
+   tbox::AsyncCommPeer<int> * all_comms(NULL);
+   tbox::AsyncCommStage::MemberVec completed;
+
+   t_modify_misc->stop();
+
+   /*
+    * Set up communication mechanism (and post receives).
+    */
+   t_modify_setup_comm->start();
+
+   setupCommunication(
+      all_comms,
+      comm_stage,
+      completed,
+      anchor.getMPI(),
+      incoming_ranks,
+      outgoing_ranks,
+      t_modify_MPI_wait,
+      s_operation_mpi_tag);
+
+   t_modify_setup_comm->stop();
+
+   /*
+    * There are three major parts to computing the new neighbors:
+    * (1) remove relationships for Boxes being mapped into
+    * something else, (2) discover new relationships for the new
+    * Boxes and (3) share information with other processes.
+    *
+    * In steps 1 and 2, the owners of the Boxes being
+    * modified determine which relationships to remove and which to
+    * add.  Some of this information is kept locally while the rest
+    * are to be sent to the owners of the affected anchor and new
+    * Boxes.
+    *
+    * The three parts are done in the 3 steps following.  Note that
+    * these steps do not correspond to the parts.
+    */
+
+   /*
+    * Data for caching relationship removal messages.  This
+    * temporary object holds data computed when removing neighbors,
+    * to be used when sending out the relationship removal
+    * information.
+    */
+   std::map<int, std::vector<int> > neighbor_removal_mesg;
+
+   /*
+    * First step: Remove neighbor data for Boxes that are
+    * going away and cache information to be sent out.
+    */
+   privateModify_removeAndCache(
+      neighbor_removal_mesg,
+      anchor_to_new,
+      &new_to_anchor,
+      old_to_new);
+
+   /*
+    * Second step: Discover overlaps for new Boxes.  Send
+    * messages with information about what relationships to remove
+    * or create.
+    */
+   privateModify_discoverAndSend(
+      neighbor_removal_mesg,
+      anchor_to_new,
+      &new_to_anchor,
+      incoming_ranks,
+      outgoing_ranks,
+      all_comms,
+      completed,
+      visible_new_nabrs,
+      visible_anchor_nabrs,
+      anchor_eto_old,
+      new_eto_old,
+      old_to_anchor,
+      anchor_to_old,
+      old_to_new);
+
+   /*
+    * Third step: Receive and unpack messages from incoming_ranks.
+    * These message contain information about what relationships to
+    * remove or add.
+    */
+   receiveAndUnpack(
+      anchor_to_new,
+      &new_to_anchor,
+      incoming_ranks,
+      all_comms,
+      comm_stage,
+      completed,
+      t_modify_receive_and_unpack);
+
+   t_modify_misc->start();
+
+   delete[] all_comms;
+
+   /*
+    * Now we have set up the NeighborhoodSets for anchor_to_new and
+    * new_to_anchor so we can initialize these Connectors.
+    */
+   anchor_to_new.setHead(new_level);
+   anchor_to_new.setWidth(anchor_to_new_width, true);
+   new_to_anchor.setBase(new_level);
+   new_to_anchor.setHead(anchor);
+   new_to_anchor.setWidth(new_to_anchor_width, true);
+
+   if (!anchor_to_new.ratioIsExact()) {
+      TBOX_WARNING("MappingConnectorAlgorithm::privateModify: generated\n"
+         << "overlap Connectors with non-integer ratio between\n"
+         << "the base and head.  The results are not guaranteed\n"
+         << "to be complete overlap Connectors.");
+   }
+   t_modify_misc->stop();
 
    /*
     * Optional in-place changes:
@@ -870,7 +817,7 @@ void MappingConnectorAlgorithm::privateModify(
  ***********************************************************************
  */
 
-void MappingConnectorAlgorithm::checkModifyParameters(
+void MappingConnectorAlgorithm::privateModify_checkParameters(
    const Connector& anchor_to_mapped,
    const Connector& mapped_to_anchor,
    const Connector& old_to_new,
@@ -970,75 +917,6 @@ void MappingConnectorAlgorithm::checkModifyParameters(
 
 /*
  ***********************************************************************
- * Receive messages and unpack info sent from other processes.
- ***********************************************************************
- */
-void MappingConnectorAlgorithm::privateModify_setupCommunication(
-   tbox::AsyncCommPeer<int> *& all_comms,
-   tbox::AsyncCommStage& comm_stage,
-   tbox::AsyncCommStage::MemberVec& completed,
-   const tbox::SAMRAI_MPI& mpi,
-   const std::set<int>& incoming_ranks,
-   const std::set<int>& outgoing_ranks) const
-{
-   t_modify_setup_comm->start();
-
-   /*
-    * Set up communication mechanism (and post receives).  We lump all
-    * communication objects into one array, all_comms.  all_comms is
-    * ordered with the incoming first and the outgoing afterward.
-    */
-   comm_stage.setCommunicationWaitTimer(t_modify_MPI_wait);
-   const int n_comm = static_cast<int>(
-         incoming_ranks.size() + outgoing_ranks.size());
-   all_comms = new tbox::AsyncCommPeer<int>[n_comm];
-
-   completed.reserve(incoming_ranks.size());
-
-   const int tag0 = ++s_operation_mpi_tag;
-   const int tag1 = ++s_operation_mpi_tag;
-
-   std::set<int>::const_iterator owneri;
-   size_t comm_idx = 0;
-   for (owneri = incoming_ranks.begin(); owneri != incoming_ranks.end(); ++owneri,
-        ++comm_idx) {
-      const int peer_rank = *owneri;
-      tbox::AsyncCommPeer<int>& incoming_comm = all_comms[comm_idx];
-      incoming_comm.initialize(&comm_stage);
-      incoming_comm.setPeerRank(peer_rank);
-      incoming_comm.setMPI(mpi);
-      incoming_comm.setMPITag(tag0, tag1);
-      incoming_comm.limitFirstDataLength(MAPPING_CONNECTOR_ALGORITHM_FIRST_DATA_LENGTH);
-      incoming_comm.beginRecv();
-      if (s_print_modify_steps == 'y') {
-         tbox::plog << "Receiving from " << incoming_comm.getPeerRank()
-                    << std::endl;
-      }
-      if (incoming_comm.isDone()) {
-         completed.insert(completed.end(), &incoming_comm);
-      }
-   }
-
-   for (owneri = outgoing_ranks.begin(); owneri != outgoing_ranks.end(); ++owneri,
-        ++comm_idx) {
-      const int peer_rank = *owneri;
-      tbox::AsyncCommPeer<int>& outgoing_comm = all_comms[comm_idx];
-      outgoing_comm.initialize(&comm_stage);
-      outgoing_comm.setPeerRank(peer_rank);
-      outgoing_comm.setMPI(mpi);
-      outgoing_comm.setMPITag(tag0, tag1);
-      outgoing_comm.limitFirstDataLength(MAPPING_CONNECTOR_ALGORITHM_FIRST_DATA_LENGTH);
-      if (s_print_modify_steps == 'y') {
-         tbox::plog << "Sending to " << outgoing_comm.getPeerRank()
-                    << std::endl;
-      }
-   }
-
-   t_modify_setup_comm->stop();
-}
-
-/*
- ***********************************************************************
  * Remove relationships made obsolete by mapping.  Cache outgoing
  * information in message buffers.
  ***********************************************************************
@@ -1081,7 +959,7 @@ void MappingConnectorAlgorithm::privateModify_removeAndCache(
          Connector::ConstNeighborhoodIterator affected_anchor_nbrhd =
             new_to_anchor->find(old_gid_gone);
 
-         if (s_print_modify_steps == 'y') {
+         if (s_print_steps == 'y') {
             tbox::plog << "Box " << old_mapped_box_gone
                        << " is gone." << std::endl;
          }
@@ -1090,7 +968,7 @@ void MappingConnectorAlgorithm::privateModify_removeAndCache(
               new_to_anchor->begin(affected_anchor_nbrhd);
               ianchor != new_to_anchor->end(affected_anchor_nbrhd); /* incremented in loop */) {
 
-            if (s_print_modify_steps == 'y') {
+            if (s_print_steps == 'y') {
                tbox::plog << "  Box " << *ianchor
                           << " is affected." << std::endl;
             }
@@ -1100,21 +978,21 @@ void MappingConnectorAlgorithm::privateModify_removeAndCache(
                // Erase local relationship from anchor to old_gid_gone.
                do {
 
-                  if (s_print_modify_steps == 'y') {
+                  if (s_print_steps == 'y') {
                      tbox::plog << "  Fixing affected mapped_box " << *ianchor
                                 << std::endl;
                   }
 
                   TBOX_ASSERT(anchor_to_new.hasNeighborSet(ianchor->getId()));
 
-                  if (s_print_modify_steps == 'y') {
+                  if (s_print_steps == 'y') {
                      anchor_to_new.writeNeighborhoodToErrorStream(
                         ianchor->getId(), "XX-> ");
                      tbox::plog << std::endl;
                   }
                   if (anchor_to_new.hasLocalNeighbor(ianchor->getId(),
                                                      old_mapped_box_gone)) {
-                     if (s_print_modify_steps == 'y') {
+                     if (s_print_steps == 'y') {
                         tbox::plog << "    Removing neighbor " << old_mapped_box_gone
                                    << " from list for " << *ianchor << std::endl;
                      }
@@ -1149,7 +1027,7 @@ void MappingConnectorAlgorithm::privateModify_removeAndCache(
                   mesg.insert(mesg.end(), ianchor->getLocalId().getValue());
                   mesg.insert(mesg.end(), ianchor->getBlockId().getBlockValue());
                   ++mesg[i_count];
-                  if (s_print_modify_steps == 'y') tbox::plog
+                  if (s_print_steps == 'y') tbox::plog
                      << "    Request change " << mesg[i_count]
                      << " to neighbors fo " << *ianchor << std::endl;
                   ++ianchor;
@@ -1256,7 +1134,7 @@ void MappingConnectorAlgorithm::privateModify_discoverAndSend(
        */
       int send_comm_idx = static_cast<int>(incoming_ranks.size());
 
-      if (s_print_modify_steps == 'y') {
+      if (s_print_steps == 'y') {
          tbox::plog << "visible_anchor_nabrs:" << std::endl;
          for (BoxContainer::ConstIterator na = visible_anchor_nabrs.begin();
               na != visible_anchor_nabrs.end(); ++na) {
@@ -1310,9 +1188,9 @@ void MappingConnectorAlgorithm::privateModify_discoverAndSend(
           * - offset to the reference section (see below)
           * - number of anchor mapped_boxes for which neighbors are found
           * - number of new mapped_boxes for which neighbors are found
-          *   - index of base/head mapped_box
+          *   - id of base/head mapped_box
           *   - number of neighbors found for base/head mapped_box.
-          *     - owner and local indices of neighbors found.
+          *     - BoxId of neighbors found.
           *       Boxes of found neighbors are given in the
           *       reference section of the message.
           * - reference section: all the mapped_boxes referenced as
@@ -1325,7 +1203,7 @@ void MappingConnectorAlgorithm::privateModify_discoverAndSend(
           *
           * The purpose of factoring out info on the neighbors referenced
           * is to reduce redundant data that can eat up lots of memory
-          * and message passing bandwidth when there are lots of mapped_boxes
+          * and message passing bandwidth when there are lots of Boxes
           * with the same neighbors.
           */
          std::vector<int> send_mesg;
@@ -1345,9 +1223,9 @@ void MappingConnectorAlgorithm::privateModify_discoverAndSend(
          }
 
          // Indices of certain positions in send_mesg.
-         const size_t idx_offset_to_ref = send_mesg.size();
-         const size_t idx_num_anchor_mapped_boxes = idx_offset_to_ref + 1;
-         const size_t idx_num_new_mapped_boxes = idx_offset_to_ref + 2;
+         const int idx_offset_to_ref = static_cast<int>(send_mesg.size());
+         const int idx_num_anchor_mapped_boxes = idx_offset_to_ref + 1;
+         const int idx_num_new_mapped_boxes = idx_offset_to_ref + 2;
          send_mesg.insert(send_mesg.end(), 3, 0);
 
          // Mapped_boxes referenced in the message, used when adding ref section.
@@ -1358,7 +1236,7 @@ void MappingConnectorAlgorithm::privateModify_discoverAndSend(
           * Find locally visible new neighbors for all base
           * Boxes owned by owner_rank.
           */
-         findOverlapsForOneProcess(
+         privateModify_findOverlapsForOneProcess(
             curr_owner,
             visible_anchor_nabrs,
             anchor_ni,
@@ -1376,7 +1254,7 @@ void MappingConnectorAlgorithm::privateModify_discoverAndSend(
           * Find locally visible anchor neighbors for all new
           * Boxes owned by curr_owner.
           */
-         findOverlapsForOneProcess(
+         privateModify_findOverlapsForOneProcess(
             curr_owner,
             visible_new_nabrs,
             new_ni,
@@ -1466,12 +1344,12 @@ void MappingConnectorAlgorithm::privateModify_discoverAndSend(
  *
  ***********************************************************************
  */
-void MappingConnectorAlgorithm::findOverlapsForOneProcess(
+void MappingConnectorAlgorithm::privateModify_findOverlapsForOneProcess(
    const int owner_rank,
    BoxContainer& visible_base_nabrs,
    BoxContainer::Iterator& base_ni,
    std::vector<int>& send_mesg,
-   const size_t remote_box_counter_index,
+   const int remote_box_counter_index,
    Connector& mapped_connector,
    BoxContainer& referenced_head_nabrs,
    const Connector& unmapped_connector,
@@ -1487,7 +1365,7 @@ void MappingConnectorAlgorithm::findOverlapsForOneProcess(
    while (base_ni != visible_base_nabrs.end() &&
           base_ni->getOwnerRank() == owner_rank) {
       const Box& base_box = *base_ni;
-      if (s_print_modify_steps == 'y') {
+      if (s_print_steps == 'y') {
          tbox::plog << "Finding neighbors for base_box "
                     << base_box << std::endl;
       }
@@ -1537,7 +1415,7 @@ void MappingConnectorAlgorithm::findOverlapsForOneProcess(
             }
          }
       }
-      if (s_print_modify_steps == 'y') {
+      if (s_print_steps == 'y') {
          tbox::plog << "Found " << found_nabrs.size() << " neighbors :";
          BoxContainerUtils::recursivePrintBoxVector(
             found_nabrs,
@@ -1577,262 +1455,17 @@ void MappingConnectorAlgorithm::findOverlapsForOneProcess(
             }
          }
       }
-      if (s_print_modify_steps == 'y') {
+      if (s_print_steps == 'y') {
          tbox::plog << "Erasing visible base nabr " << (*base_ni) << std::endl;
       }
       visible_base_nabrs.erase(base_ni++);
-      if (s_print_modify_steps == 'y') {
+      if (s_print_steps == 'y') {
          if (base_ni == visible_base_nabrs.end()) {
             tbox::plog << "Next base nabr: end" << std::endl;
          }
          else {
             tbox::plog << "Next base nabr: " << *base_ni << std::endl;
          }
-      }
-   }
-}
-
-/*
- ***********************************************************************
- * findOverlapsForOneProcess() cached some discovered remote neighbors
- * into send_mesg.  sendDiscoveryToOneProcess() sends the message.
- *
- * findOverlapsForOneProcess() placed neighbor data in
- * referenced_new_nabrs and referenced_anchor_nabrs rather than directly
- * into send_mesg.  This method packs the referenced neighbors and send
- * them.
- ***********************************************************************
- */
-void MappingConnectorAlgorithm::sendDiscoveryToOneProcess(
-   std::vector<int>& send_mesg,
-   const int idx_offset_to_ref,
-   BoxContainer& referenced_new_nabrs,
-   BoxContainer& referenced_anchor_nabrs,
-   tbox::AsyncCommPeer<int>& outgoing_comm,
-   const tbox::Dimension& dim) const
-{
-   /*
-    * Fill the messages's reference section with neighbors
-    * that have been referenced.
-    */
-   const int offset = send_mesg[idx_offset_to_ref] =
-      static_cast<int>(send_mesg.size());
-   const int n_referenced_nabrs = static_cast<int>(
-         referenced_new_nabrs.size() + referenced_anchor_nabrs.size());
-   const int reference_section_size =
-      2 + n_referenced_nabrs * Box::commBufferSize(dim);
-   send_mesg.insert(
-      send_mesg.end(),
-      reference_section_size,
-      -1);
-   int* ptr = &send_mesg[offset];
-   *(ptr++) = static_cast<int>(referenced_anchor_nabrs.size());
-   *(ptr++) = static_cast<int>(referenced_new_nabrs.size());
-   for (BoxContainer::ConstIterator ni = referenced_anchor_nabrs.begin();
-        ni != referenced_anchor_nabrs.end(); ++ni) {
-      const Box& mapped_box = *ni;
-      mapped_box.putToIntBuffer(ptr);
-      ptr += Box::commBufferSize(dim);
-   }
-   for (BoxContainer::ConstIterator ni = referenced_new_nabrs.begin();
-        ni != referenced_new_nabrs.end(); ++ni) {
-      const Box& mapped_box = *ni;
-      mapped_box.putToIntBuffer(ptr);
-      ptr += Box::commBufferSize(dim);
-   }
-
-   TBOX_ASSERT(ptr == &send_mesg[send_mesg.size() - 1] + 1);
-
-   /*
-    * Send message.
-    */
-   outgoing_comm.beginSend(&send_mesg[0], static_cast<int>(send_mesg.size()));
-}
-
-/*
- ***********************************************************************
- * Receive messages and unpack info sent from other processes.
- ***********************************************************************
- */
-void MappingConnectorAlgorithm::privateModify_receiveAndUnpack(
-   Connector& anchor_to_new,
-   Connector* new_to_anchor,
-   std::set<int>& incoming_ranks,
-   tbox::AsyncCommPeer<int> all_comms[],
-   tbox::AsyncCommStage& comm_stage,
-   tbox::AsyncCommStage::MemberVec& completed) const
-{
-   t_modify_receive_and_unpack->start();
-
-   /*
-    * Receive and unpack messages.
-    */
-   do {
-      for (unsigned int i = 0; i < completed.size(); ++i) {
-
-         tbox::AsyncCommPeer<int>* peer =
-            dynamic_cast<tbox::AsyncCommPeer<int> *>(completed[i]);
-         TBOX_ASSERT(completed[i] != NULL);
-         TBOX_ASSERT(peer != NULL);
-
-         if ((unsigned int)(peer - all_comms) < incoming_ranks.size()) {
-            // Received from this peer
-            unpackDiscoveryMessage(
-               peer,
-               anchor_to_new,
-               new_to_anchor);
-         } else {
-            // Sent to this peer.  No need to do anything.
-         }
-      }
-
-      completed.clear();
-      comm_stage.advanceSome(completed);
-
-   } while (completed.size() > 0);
-
-   t_modify_receive_and_unpack->stop();
-}
-
-/*
- ***********************************************************************
- ***********************************************************************
- */
-void MappingConnectorAlgorithm::unpackDiscoveryMessage(
-   const tbox::AsyncCommPeer<int>* incoming_comm,
-   Connector& anchor_to_new,
-   Connector* new_to_anchor) const
-{
-   const int sender = incoming_comm->getPeerRank();
-   const int* ptr = incoming_comm->getRecvData();
-
-#ifdef DEBUG_CHECK_ASSERTIONS
-   const int msg_size = incoming_comm->getRecvSize();
-   const int* ptr_end = ptr + msg_size;
-#endif
-   const int rank = anchor_to_new.getMPI().getRank();
-
-   const tbox::Dimension& dim(anchor_to_new.getRatio().getDim());
-
-   Box tmp_box(dim);
-
-   const int box_com_buffer_size = Box::commBufferSize(dim);
-   /*
-    * Content of send_mesg:
-    * - neighbor-removal section cached in neighbor_removal_mesg.
-    * - offset to the reference section (see below)
-    * - number of anchor boxes for which neighbors are found
-    * - number of new boxes for which neighbors are found
-    * - index of anchor/new box
-    * - number of neighbors found for anchor/new box.
-    *   - owner and local indices of neighbors found.
-    *     Boxes of found neighbors are given in the
-    *     reference section of the message.
-    * - reference section: all the boxes referenced as
-    *   neighbors (accumulated in referenced_anchor_nabrs
-    *   and referenced_new_nabrs).
-    *   - number of referenced anchor neighbors
-    *   - number of referenced new neighbors
-    *   - referenced anchor neighbors
-    *   - referenced new neighbors
-    */
-
-   // Unpack neighbor-removal section.
-   const int num_removed_boxes = *(ptr++);
-   for (int ii = 0; ii < num_removed_boxes; ++ii) {
-      const LocalId id_gone(*(ptr++));
-      const BlockId block_id_gone(*(ptr++));
-      const int number_affected = *(ptr++);
-      const Box box_gone(dim, id_gone, sender, block_id_gone);
-      if (s_print_modify_steps == 'y') {
-         tbox::plog << "Box " << box_gone
-                    << " removed, affecting " << number_affected
-                    << " boxes." << std::endl;
-      }
-//TODO: Is BoxId usage in this method correct regarding block id?
-      for (int iii = 0; iii < number_affected; ++iii) {
-         const LocalId id_affected(*(ptr++));
-         const BlockId block_id_affected(*(ptr++));
-         BoxId affected_nbrhd(id_affected, rank, block_id_affected);
-         if (s_print_modify_steps == 'y') {
-            tbox::plog << " Removing " << box_gone
-                       << " from nabr list for " << id_affected
-                       << std::endl;
-         }
-         TBOX_ASSERT(anchor_to_new.hasLocalNeighbor(
-            affected_nbrhd,
-            box_gone));
-         anchor_to_new.eraseNeighbor(box_gone, affected_nbrhd);
-      }
-      TBOX_ASSERT(ptr != ptr_end);
-   }
-
-   // Get the referenced neighbor Boxes.
-   BoxContainer referenced_anchor_nabrs;
-   BoxContainer referenced_new_nabrs;
-   const int offset = *(ptr++);
-   const int n_anchor_boxes = *(ptr++);
-   const int n_new_boxes = *(ptr++);
-   const int* ref_box_ptr = incoming_comm->getRecvData() + offset;
-   const int n_reference_anchor_boxes = *(ref_box_ptr++);
-   const int n_reference_new_boxes = *(ref_box_ptr++);
-
-#ifdef DEBUG_CHECK_ASSERTIONS
-   const int correct_msg_size = offset
-      + 2 /* counters of anchor and new reference boxes */
-      + Box::commBufferSize(dim) * n_reference_anchor_boxes
-      + Box::commBufferSize(dim) * n_reference_new_boxes
-   ;
-   TBOX_ASSERT(msg_size == correct_msg_size);
-#endif
-
-   // Extract referenced boxes from message.
-   for (int ii = 0; ii < n_reference_anchor_boxes; ++ii) {
-      tmp_box.getFromIntBuffer(ref_box_ptr);
-      referenced_anchor_nabrs.insert(referenced_anchor_nabrs.end(), tmp_box);
-      ref_box_ptr += box_com_buffer_size;
-   }
-   for (int ii = 0; ii < n_reference_new_boxes; ++ii) {
-      tmp_box.getFromIntBuffer(ref_box_ptr);
-      referenced_new_nabrs.insert(referenced_new_nabrs.end(), tmp_box);
-      ref_box_ptr += box_com_buffer_size;
-   }
-   TBOX_ASSERT(ref_box_ptr == ptr_end);
-
-   /*
-    * Unpack neighbor data for new neighbors of anchor boxes
-    * and anchor neighbors of new boxes.  The neighbor info
-    * given includes only block and local index.  Refer to
-    * reference data to get the box info.
-    */
-   for (int ii = 0; ii < n_anchor_boxes; ++ii) {
-      const LocalId local_id(*(ptr++));
-      const BlockId block_id(*(ptr++));
-      const BoxId anchor_box_id(local_id, rank, block_id);
-      const int n_new_nabrs_found = *(ptr++);
-      // Add received neighbors to Box anchor_box_id.
-      for (int j = 0; j < n_new_nabrs_found; ++j) {
-         tmp_box.getId().getFromIntBuffer(ptr);
-         ptr += BoxId::commBufferSize();
-         BoxContainer::ConstIterator na = referenced_new_nabrs.find(tmp_box);
-         TBOX_ASSERT(na != referenced_new_nabrs.end());
-         const Box& new_nabr = *na;
-         anchor_to_new.insertLocalNeighbor(new_nabr, anchor_box_id);
-      }
-   }
-   for (int ii = 0; ii < n_new_boxes; ++ii) {
-      const LocalId local_id(*(ptr++));
-      const BlockId block_id(*(ptr++));
-      const BoxId new_box_id(local_id, rank, block_id);
-      const int n_anchor_nabrs_found = *(ptr++);
-      // Add received neighbors to Box new_box_id.
-      for (int j = 0; j < n_anchor_nabrs_found; ++j) {
-         tmp_box.getId().getFromIntBuffer(ptr);
-         ptr += BoxId::commBufferSize();
-         BoxContainer::ConstIterator na = referenced_anchor_nabrs.find(tmp_box);
-         TBOX_ASSERT(na != referenced_anchor_nabrs.end());
-         const Box& anchor_nabr = *na;
-         new_to_anchor->insertLocalNeighbor(anchor_nabr, new_box_id);
       }
    }
 }
@@ -2022,33 +1655,30 @@ void MappingConnectorAlgorithm::initializeCallback()
     * - sets up debugging flags.
     */
 
-   if (s_print_modify_steps == 0) {
+   if (s_print_steps == '\0') {
       if (tbox::InputManager::inputDatabaseExists()) {
-         s_print_modify_steps = 'n';
+         s_print_steps = 'n';
          tbox::Pointer<tbox::Database> idb =
             tbox::InputManager::getInputDatabase();
          if (idb->isDatabase("MappingConnectorAlgorithm")) {
             tbox::Pointer<tbox::Database> ocu_db =
                idb->getDatabase("MappingConnectorAlgorithm");
-            s_print_modify_steps =
-               ocu_db->getCharWithDefault("print_modify_steps",
-                  s_print_modify_steps);
+            s_print_steps = ocu_db->getCharWithDefault("print_modify_steps",
+                  s_print_steps);
          }
       }
    }
 
    t_modify = tbox::TimerManager::getManager()->
       getTimer("hier::MappingConnectorAlgorithm::privateModify()");
-   t_modify_shortcut = tbox::TimerManager::getManager()->
-      getTimer("hier::MappingConnectorAlgorithm::privateModify()_shortcut");
    t_modify_setup_comm = tbox::TimerManager::getManager()->
-      getTimer("hier::MappingConnectorAlgorithm::privateModify_setupCommunication()");
+      getTimer("hier::MappingConnectorAlgorithm::setupCommunication()");
    t_modify_remove_and_cache = tbox::TimerManager::getManager()->
       getTimer("hier::MappingConnectorAlgorithm::privateModify_removeAndCache()");
    t_modify_discover_and_send = tbox::TimerManager::getManager()->
       getTimer("hier::MappingConnectorAlgorithm::privateModify_discoverAndSend()");
    t_modify_receive_and_unpack = tbox::TimerManager::getManager()->
-      getTimer("hier::MappingConnectorAlgorithm::privateModify_receiveAndUnpack()");
+      getTimer("hier::MappingConnectorAlgorithm::receiveAndUnpack()");
    t_modify_MPI_wait = tbox::TimerManager::getManager()->
       getTimer("hier::MappingConnectorAlgorithm::privateModify()_MPI_wait");
    t_modify_misc = tbox::TimerManager::getManager()->

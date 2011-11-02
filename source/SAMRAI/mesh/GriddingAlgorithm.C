@@ -359,8 +359,9 @@ void GriddingAlgorithm::makeCoarsestLevel(
    if (!level_zero_exists) {
       for (int b = 0; b < d_hierarchy->getGridGeometry()->getNumberBlocks();
            b++) {
-         const hier::BoxContainer& domain_boxes =
-            d_hierarchy->getGridGeometry()->getPhysicalDomain(hier::BlockId(b));
+         hier::BoxContainer domain_boxes(
+            d_hierarchy->getGridGeometry()->getPhysicalDomain(),
+            hier::BlockId(b));
          checkDomainBoxes(domain_boxes);
       }
    }
@@ -2500,7 +2501,6 @@ void GriddingAlgorithm::readLevelBoxes(
 
       oca.findOverlaps(coarser_to_new);
       oca.findOverlaps(new_to_coarser);
-      new_to_coarser.removePeriodicRelationships();
 
       /*
        * Periodic relationships exist in new_to_coarser, but are not

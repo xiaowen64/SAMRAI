@@ -172,7 +172,7 @@ public:
     */
    explicit GridGeometry(
       const std::string& object_name,
-      const tbox::Array<BoxContainer>& domain,
+      const BoxContainer& domain,
       tbox::Pointer<TransferOperatorRegistry> op_reg,
       bool register_for_restart = true);
 
@@ -402,7 +402,8 @@ public:
     */
    void
    setPhysicalDomain(
-      const tbox::Array<BoxContainer>& domain);
+      const BoxContainer& domain,
+      const int number_blocks);
 
    /*!
     * @brief Get the physical domain description for a given block on level
@@ -413,8 +414,7 @@ public:
     * @param[in]   block_id
     */
    const BoxContainer&
-   getPhysicalDomain(
-      const hier::BlockId& block_id) const;
+   getPhysicalDomain() const;
 
    /*!
     * @brief returns whether the physical domain for a block managed by this
@@ -1123,11 +1123,9 @@ protected:
 private:
    /*!
     * @brief Reset domain BoxContainer after data it depends on has changed.
-    * TODO:  Remove block_id
     */
    void
-   resetDomainBoxContainer(
-      const hier::BlockId& block_id);
+   resetDomainBoxContainer();
 
    /*!
     * @brief Check that the domain is valid for periodic boundary conditions
@@ -1246,10 +1244,9 @@ private:
    std::string d_object_name;
 
    /*!
-    * Array of BoxContainer defining computational domain on coarsest level.
-    * Each entry of array describes one block.
+    * BoxContainer defining computational domain on coarsest level.
     */
-   tbox::Array<BoxContainer> d_physical_domain;
+   BoxContainer d_physical_domain;
 
    /*!
     * Tree representation of domain, used for searches.
@@ -1271,7 +1268,7 @@ private:
     * @brief BoxContainer representation of the physical domain, including
     * its periodic image Boxes.
     */
-   tbox::Array<BoxContainer> d_domain_with_images;
+   BoxContainer d_domain_with_images;
 
    /*!
     * Integer array vector describing periodic shift coarsest level.

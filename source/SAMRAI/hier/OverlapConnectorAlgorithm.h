@@ -10,22 +10,13 @@
 #ifndef included_hier_OverlapConnectorAlgorithm
 #define included_hier_OverlapConnectorAlgorithm
 
-#include "SAMRAI/SAMRAI_config.h"
-
-#include "SAMRAI/hier/Box.h"
-#include "SAMRAI/hier/Connector.h"
+#include "SAMRAI/hier/BaseConnectorAlgorithm.h"
 #include "SAMRAI/hier/MultiblockBoxTree.h"
-#include "SAMRAI/hier/BoxLevel.h"
-#include "SAMRAI/tbox/AsyncCommPeer.h"
-#include "SAMRAI/tbox/AsyncCommStage.h"
-#include "SAMRAI/tbox/SAMRAI_MPI.h"
 
 #include <map>
 
 namespace SAMRAI {
 namespace hier {
-
-class Connector;
 
 /*!
  * @brief Algorithms for working Connectors whose neighbor data
@@ -40,7 +31,7 @@ class Connector;
  * OverlapConnectorAlgorithm objects create, check and operate on overlap
  * Connectors.
  */
-class OverlapConnectorAlgorithm
+class OverlapConnectorAlgorithm : public BaseConnectorAlgorithm
 {
 
 public:
@@ -488,11 +479,6 @@ public:
       bool ignore_self_overlap = false) const;
 
 private:
-   /*
-    * Static integer constant describing class's version number.
-    */
-   static const int OVERLAP_CONNECTOR_ALGORITHM_FIRST_DATA_LENGTH;
-
    // Internal shorthand.
    typedef Connector::NeighborSet NeighborSet;
 
@@ -577,23 +563,11 @@ private:
     * @brief Perform checks on the arguments of bridge.
     */
    void
-   checkBridgeParameters(
+   privateBridge_checkParameters(
       const Connector& west_to_cent,
       const Connector& cent_to_east,
       const Connector& east_to_cent,
       const Connector& cent_to_west) const;
-
-   /*!
-    * @brief Set up communication objects for use in privateBridge.
-    */
-   void
-   privateBridge_setupCommunication(
-      tbox::AsyncCommPeer<int> *& comm_peer,
-      tbox::AsyncCommStage& comm_stage,
-      tbox::AsyncCommStage::MemberVec& completed,
-      const tbox::SAMRAI_MPI& mpi,
-      const std::set<int>& incoming_ranks,
-      const std::set<int>& outgoing_ranks) const;
 
    /*!
     * @brief Relationship removal part of overlap algorithm, caching
@@ -627,52 +601,23 @@ private:
     * into send message, used in privateBridge().
     */
    void
-   findOverlapsForOneProcess(
+   privateBridge_findOverlapsForOneProcess(
       const int curr_owner,
       NeighborSet& visible_base_nabrs,
       NeighborSet::Iterator& base_ni,
       std::vector<int>& send_mesg,
-      const size_t remote_mapped_box_counter_index,
+      const int remote_mapped_box_counter_index,
       Connector& bridging_connector,
       NeighborSet& referenced_head_nabrs,
       const MultiblockBoxTree& head_rbbt) const;
 
    //! @brief Utility used in privateBridge()
    void
-   unshiftOverlappingNeighbors(
+   privateBridge_unshiftOverlappingNeighbors(
       const Box& mapped_box,
       std::vector<Box>& neighbors,
       std::vector<Box>& scratch_space,
       const IntVector& neighbor_refinement_ratio) const;
-
-   //! @brief Send discovery to one processor during privateBridge().
-   void
-   sendDiscoveryToOneProcess(
-      std::vector<int>& send_mesg,
-      const int idx_offset_to_ref,
-      NeighborSet& referenced_east_nabrs,
-      NeighborSet& referenced_west_nabrs,
-      tbox::AsyncCommPeer<int>& outgoing_comm,
-      const tbox::Dimension& dim) const;
-
-   /*!
-    * @brief Receive messages and unpack info sent from other processes.
-    */
-   void
-   privateBridge_receiveAndUnpack(
-      Connector& west_to_east,
-      Connector* east_to_west,
-      std::set<int>& incoming_ranks,
-      tbox::AsyncCommPeer<int> all_comms[],
-      tbox::AsyncCommStage& comm_stage,
-      tbox::AsyncCommStage::MemberVec& completed) const;
-
-   //! @brief Unpack message sent by sendDiscoverytoOneProcess().
-   void
-   unpackDiscoveryMessage(
-      const tbox::AsyncCommPeer<int>* incoming_comm,
-      Connector& west_to_east,
-      Connector* east_to_west) const;
 
    /*!
     * @brief Discover and add overlaps from base and externally
@@ -728,8 +673,9 @@ private:
     * possibility.
     */
    static tbox::SAMRAI_MPI s_class_mpi;
+
    /*!
-    * @brief Tag to use (and increment) at beginning of operations that
+    * @brief Tag to use (and increment) at begining of operations that
     * require nearest-neighbor communication, to aid in eliminating
     * mixing of messages from different internal operations.
     *
@@ -738,18 +684,17 @@ private:
     */
    static int s_operation_mpi_tag;
 
-   // Extra checks independent of optimization/debug.
-   static char s_print_bridge_steps;
-
    static tbox::Pointer<tbox::Timer> t_find_overlaps_rbbt;
+
    static tbox::Pointer<tbox::Timer> t_bridge;
+   static tbox::Pointer<tbox::Timer> t_bridge_setup_comm;
+   static tbox::Pointer<tbox::Timer> t_bridge_remove_and_cache;
    static tbox::Pointer<tbox::Timer> t_bridge_discover;
    static tbox::Pointer<tbox::Timer> t_bridge_discover_get_neighbors;
    static tbox::Pointer<tbox::Timer> t_bridge_discover_form_rbbt;
    static tbox::Pointer<tbox::Timer> t_bridge_discover_find_overlaps;
    static tbox::Pointer<tbox::Timer> t_bridge_share;
-   static tbox::Pointer<tbox::Timer> t_bridge_comm_init;
-   static tbox::Pointer<tbox::Timer> t_bridge_unpack;
+   static tbox::Pointer<tbox::Timer> t_bridge_receive_and_unpack;
    static tbox::Pointer<tbox::Timer> t_bridge_MPI_wait;
 
    bool d_sanity_check_method_preconditions;

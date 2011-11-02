@@ -514,6 +514,11 @@ getGeometry(
    hier::Box fine0(hier::Index(4, 4), hier::Index(7, 7));
    hier::Box fine1(hier::Index(8, 4), hier::Index(13, 7));
 
+   coarse0.initialize(coarse0, hier::LocalId(0), 0);
+   coarse1.initialize(coarse1, hier::LocalId(1), 0);
+   fine0.initialize(fine0, hier::LocalId(0), 0);
+   fine1.initialize(fine1, hier::LocalId(1), 0);
+
    coarse_domain.pushBack(coarse0);
    coarse_domain.pushBack(coarse1);
    fine_domain.pushBack(fine0);

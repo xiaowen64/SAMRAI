@@ -161,7 +161,7 @@ int main(
       tbox::plog << "\nBuilding patch hierarchy..." << endl;
 
       const hier::BoxContainer& domain =
-         grid_geometry->getPhysicalDomain(hier::BlockId(0));
+         grid_geometry->getPhysicalDomain();
       hier::BoxContainer boxes(domain);
       boxes.unorder();
       if ((domain.size() == 1) &&

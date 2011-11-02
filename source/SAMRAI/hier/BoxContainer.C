@@ -170,7 +170,7 @@ BoxContainer::insert(
    Iterator insert_iter;
    insert_iter.d_ordered = true;
 
-   unsigned int old_size = d_set.size();
+   std::set<int>::size_type old_size = d_set.size();
    insert_iter.d_set_iter = d_set.insert(position.d_set_iter, &(*list_iter));
    if (d_set.size() == old_size) {
       d_list.erase(list_iter);
@@ -1185,7 +1185,7 @@ int BoxContainer::erase(const Box& box)
       TBOX_ERROR("erase with Box argument attempted on unordered BoxContainer.");
    }
 
-   int ret = d_set.erase(const_cast<Box*>(&box));
+   int ret = static_cast<int>(d_set.erase(const_cast<Box*>(&box)));
    for (std::list<Box>::iterator bi = d_list.begin(); bi != d_list.end();
         ++bi) {
       if (bi->getId() == box.getId()) {

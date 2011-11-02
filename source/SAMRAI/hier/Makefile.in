@@ -43,6 +43,7 @@ OBJS = 	\
 	PatchData.o \
 	BoxLevelConnectorUtils.o \
 	BoxContainerUtils.o \
+	BaseConnectorAlgorithm.o \
 	OverlapConnectorAlgorithm.o \
 	MappingConnectorAlgorithm.o \
 	Connector.o \

@@ -215,7 +215,13 @@ int main(
       /*
        * Set up the domain from input.
        */
-      hier::BoxContainer domain_boxes(main_db->getDatabaseBoxArray("domain_boxes"));
+      hier::BoxContainer input_boxes(main_db->getDatabaseBoxArray("domain_boxes"));
+      hier::BoxContainer domain_boxes;
+      hier::LocalId local_id(0);
+      for (hier::BoxContainer::Iterator itr = input_boxes.begin();
+           itr != input_boxes.end(); ++itr) {
+         domain_boxes.pushBack(hier::Box(*itr, local_id++, 0));
+      }
 
       /*
        * Create hierarchy we can satisfy the load balancing
