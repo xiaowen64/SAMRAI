@@ -1335,14 +1335,14 @@ void BoxLevel::getGlobalBoxes(BoxContainer& global_boxes) const
 void BoxLevel::putToDatabase(
    tbox::Database& database) const
 {
-   database.putBool("d_is_box_level", true);
+   database.putBool("d_is_mapped_box_level", true);
    database.putInteger(
       "HIER_MAPPED_BOX_LEVEL_VERSION", HIER_MAPPED_BOX_LEVEL_VERSION);
    database.putInteger("d_nproc", d_mpi.getSize());
    database.putInteger("d_rank", d_mpi.getRank());
    database.putInteger("dim", d_ratio.getDim().getValue());
    database.putIntegerArray("d_ratio", &d_ratio[0], d_ratio.getDim().getValue());
-   getBoxes().putToDatabase(*database.putDatabase("boxes"));
+   getBoxes().putToDatabase(*database.putDatabase("mapped_boxes"));
 }
 
 /*
