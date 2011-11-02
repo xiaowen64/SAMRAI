@@ -124,6 +124,7 @@ DEPENDS_1:=\
 	$(INCLUDE_SAM)/SAMRAI/appu/VisMaterialsDataStrategy.h		\
 	$(INCLUDE_SAM)/SAMRAI/geom/CartesianGridGeometry.I		\
 	$(INCLUDE_SAM)/SAMRAI/geom/CartesianGridGeometry.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BaseConnectorAlgorithm.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoundaryBox.I			\

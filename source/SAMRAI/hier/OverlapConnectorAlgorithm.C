@@ -34,12 +34,10 @@
 namespace SAMRAI {
 namespace hier {
 
-const int OverlapConnectorAlgorithm::OVERLAP_CONNECTOR_ALGORITHM_FIRST_DATA_LENGTH = 1000;
-
-char OverlapConnectorAlgorithm::s_print_bridge_steps = '\0';
-
 tbox::Pointer<tbox::Timer> OverlapConnectorAlgorithm::t_find_overlaps_rbbt;
 tbox::Pointer<tbox::Timer> OverlapConnectorAlgorithm::t_bridge;
+tbox::Pointer<tbox::Timer> OverlapConnectorAlgorithm::t_bridge_setup_comm;
+tbox::Pointer<tbox::Timer> OverlapConnectorAlgorithm::t_bridge_remove_and_cache;
 tbox::Pointer<tbox::Timer> OverlapConnectorAlgorithm::t_bridge_discover;
 tbox::Pointer<tbox::Timer> OverlapConnectorAlgorithm::
 t_bridge_discover_get_neighbors;
@@ -47,8 +45,7 @@ tbox::Pointer<tbox::Timer> OverlapConnectorAlgorithm::t_bridge_discover_form_rbb
 tbox::Pointer<tbox::Timer> OverlapConnectorAlgorithm::
 t_bridge_discover_find_overlaps;
 tbox::Pointer<tbox::Timer> OverlapConnectorAlgorithm::t_bridge_share;
-tbox::Pointer<tbox::Timer> OverlapConnectorAlgorithm::t_bridge_comm_init;
-tbox::Pointer<tbox::Timer> OverlapConnectorAlgorithm::t_bridge_unpack;
+tbox::Pointer<tbox::Timer> OverlapConnectorAlgorithm::t_bridge_receive_and_unpack;
 tbox::Pointer<tbox::Timer> OverlapConnectorAlgorithm::t_bridge_MPI_wait;
 
 int OverlapConnectorAlgorithm::s_operation_mpi_tag = 0;
@@ -647,7 +644,7 @@ void OverlapConnectorAlgorithm::privateBridge(
 {
    t_bridge->barrierAndStart();
 
-   if (s_print_bridge_steps == 'y') {
+   if (s_print_steps == 'y') {
       std::string dbgbord("bridge->  ");
       tbox::plog
       << "bridge west:\n" << west_to_cent.getBase().format(dbgbord, 3)
@@ -659,7 +656,7 @@ void OverlapConnectorAlgorithm::privateBridge(
       << "bridge east_to_cent:\n" << cent_to_east.format(dbgbord, 3);
    }
 
-   checkBridgeParameters(
+   privateBridge_checkParameters(
       west_to_cent,
       cent_to_east,
       east_to_cent,
@@ -832,15 +829,19 @@ void OverlapConnectorAlgorithm::privateBridge(
    tbox::AsyncCommStage::MemberVec completed;
 
    t_bridge_share->start();
+   t_bridge_setup_comm->start();
 
-   privateBridge_setupCommunication(
+   setupCommunication(
       all_comms,
       comm_stage,
       completed,
       mpi,
       incoming_ranks,
-      outgoing_ranks);
+      outgoing_ranks,
+      t_bridge_MPI_wait,
+      s_operation_mpi_tag);
 
+   t_bridge_setup_comm->stop();
    t_bridge_share->stop();
 
    /*
@@ -874,13 +875,14 @@ void OverlapConnectorAlgorithm::privateBridge(
 
    t_bridge_share->start();
 
-   privateBridge_receiveAndUnpack(
+   receiveAndUnpack(
       west_to_east,
       east_to_west,
       incoming_ranks,
       all_comms,
       comm_stage,
-      completed);
+      completed,
+      t_bridge_receive_and_unpack);
 
    t_bridge_share->stop();
 
@@ -934,7 +936,7 @@ void OverlapConnectorAlgorithm::privateBridge(
 {
    t_bridge->barrierAndStart();
 
-   if (s_print_bridge_steps == 'y') {
+   if (s_print_steps == 'y') {
       std::string dbgbord("bridge->  ");
       tbox::plog
       << "bridge west:\n" << west_to_cent.getBase().format(dbgbord, 3)
@@ -946,7 +948,7 @@ void OverlapConnectorAlgorithm::privateBridge(
       << "bridge east_to_cent:\n" << east_to_cent.format(dbgbord, 3);
    }
 
-   checkBridgeParameters(
+   privateBridge_checkParameters(
       west_to_cent,
       cent_to_east,
       east_to_cent,
@@ -1119,15 +1121,19 @@ void OverlapConnectorAlgorithm::privateBridge(
    tbox::AsyncCommStage::MemberVec completed;
 
    t_bridge_share->start();
+   t_bridge_setup_comm->start();
 
-   privateBridge_setupCommunication(
+   setupCommunication(
       all_comms,
       comm_stage,
       completed,
       mpi,
       incoming_ranks,
-      outgoing_ranks);
+      outgoing_ranks,
+      t_bridge_MPI_wait,
+      s_operation_mpi_tag);
 
+   t_bridge_setup_comm->stop();
    t_bridge_share->stop();
 
    /*
@@ -1161,13 +1167,14 @@ void OverlapConnectorAlgorithm::privateBridge(
 
    t_bridge_share->start();
 
-   privateBridge_receiveAndUnpack(
+   receiveAndUnpack(
       west_to_cent,
       &cent_to_west,
       incoming_ranks,
       all_comms,
       comm_stage,
-      completed);
+      completed,
+      t_bridge_receive_and_unpack);
 
    t_bridge_share->stop();
 
@@ -1190,7 +1197,7 @@ void OverlapConnectorAlgorithm::privateBridge(
  ***********************************************************************
  ***********************************************************************
  */
-void OverlapConnectorAlgorithm::checkBridgeParameters(
+void OverlapConnectorAlgorithm::privateBridge_checkParameters(
    const Connector& west_to_cent,
    const Connector& cent_to_east,
    const Connector& east_to_cent,
@@ -1262,74 +1269,6 @@ void OverlapConnectorAlgorithm::checkBridgeParameters(
 
 /*
  ***********************************************************************
- ***********************************************************************
- */
-void OverlapConnectorAlgorithm::privateBridge_setupCommunication(
-   tbox::AsyncCommPeer<int> *& all_comms,
-   tbox::AsyncCommStage& comm_stage,
-   tbox::AsyncCommStage::MemberVec& completed,
-   const tbox::SAMRAI_MPI& mpi,
-   const std::set<int>& incoming_ranks,
-   const std::set<int>& outgoing_ranks) const
-{
-   t_bridge_comm_init->start();
-
-   /*
-    * Set up communication mechanism (and post receives).  We lump all
-    * communication objects into one array, all_comms.  all_comms is
-    * ordered with the incoming first and the outgoing afterward.
-    */
-   comm_stage.setCommunicationWaitTimer(t_bridge_MPI_wait);
-   const int n_comm = static_cast<int>(
-         incoming_ranks.size() + outgoing_ranks.size());
-   all_comms = new tbox::AsyncCommPeer<int>[n_comm];
-
-   completed.reserve(incoming_ranks.size());
-
-   const int tag0 = ++s_operation_mpi_tag;
-   const int tag1 = ++s_operation_mpi_tag;
-
-   std::set<int>::const_iterator owneri;
-   size_t comm_idx = 0;
-   for (owneri = incoming_ranks.begin(); owneri != incoming_ranks.end(); ++owneri,
-        ++comm_idx) {
-      const int peer_rank = *owneri;
-      tbox::AsyncCommPeer<int>& incoming_comm = all_comms[comm_idx];
-      incoming_comm.initialize(&comm_stage);
-      incoming_comm.setPeerRank(peer_rank);
-      incoming_comm.setMPI(mpi);
-      incoming_comm.setMPITag(tag0, tag1);
-      incoming_comm.limitFirstDataLength(OVERLAP_CONNECTOR_ALGORITHM_FIRST_DATA_LENGTH);
-      incoming_comm.beginRecv();
-      if (s_print_bridge_steps == 'y') {
-         tbox::plog << "Receiving from " << incoming_comm.getPeerRank()
-                    << std::endl;
-      }
-      if (incoming_comm.isDone()) {
-         completed.insert(completed.end(), &incoming_comm);
-      }
-   }
-
-   for (owneri = outgoing_ranks.begin(); owneri != outgoing_ranks.end(); ++owneri,
-        ++comm_idx) {
-      const int peer_rank = *owneri;
-      tbox::AsyncCommPeer<int>& outgoing_comm = all_comms[comm_idx];
-      outgoing_comm.initialize(&comm_stage);
-      outgoing_comm.setPeerRank(peer_rank);
-      outgoing_comm.setMPI(mpi);
-      outgoing_comm.setMPITag(tag0, tag1);
-      outgoing_comm.limitFirstDataLength(OVERLAP_CONNECTOR_ALGORITHM_FIRST_DATA_LENGTH);
-      if (s_print_bridge_steps == 'y') {
-         tbox::plog << "Sending to " << outgoing_comm.getPeerRank()
-                    << std::endl;
-      }
-   }
-
-   t_bridge_comm_init->stop();
-}
-
-/*
- ***********************************************************************
  * Remove relationships from resulting overlap.  Cache outgoing
  * information in message buffers.
  ***********************************************************************
@@ -1340,6 +1279,8 @@ void OverlapConnectorAlgorithm::privateModify_removeAndCache(
    Connector* overlap_connector_transpose,
    const Connector& misc_connector) const
 {
+   t_bridge_remove_and_cache->start();
+
    NULL_USE(neighbor_removal_mesg); 
    NULL_USE(overlap_connector); 
    NULL_USE(overlap_connector_transpose); 
@@ -1348,6 +1289,7 @@ void OverlapConnectorAlgorithm::privateModify_removeAndCache(
    * As the overlap relationships are empty to start there are never any
    * that need to be deleted.
    */
+   t_bridge_remove_and_cache->stop();
    return;
 }
 
@@ -1375,7 +1317,7 @@ void OverlapConnectorAlgorithm::privateBridge_discoverAndSend(
 
       t_bridge_discover->start();
 
-      if (s_print_bridge_steps == 'y') {
+      if (s_print_steps == 'y') {
          tbox::plog << "Before building RBBTs:\n"
                     << "visible_west_nabrs:" << visible_west_nabrs.format("\n  ")
                     << "visible_east_nabrs:" << visible_east_nabrs.format("\n  ")
@@ -1479,7 +1421,7 @@ void OverlapConnectorAlgorithm::privateBridge_discoverAndSend(
                curr_owner = east_ni->getOwnerRank();
             }
          }
-         if (s_print_bridge_steps == 'y') {
+         if (s_print_steps == 'y') {
             tbox::plog << "cur_owner set to " << curr_owner << std::endl;
          }
 
@@ -1492,10 +1434,11 @@ void OverlapConnectorAlgorithm::privateBridge_discoverAndSend(
           * locally but needed by curr_owner.
           *
           * Content of send_mesg:
+          * - neighbor-removal section cached in neighbor_removal_mesg.
           * - offset to the reference section (see below)
           * - number of west mapped_boxes for which neighbors are found
           * - number of east mapped_boxes for which neighbors are found
-          *   - index of west/east mapped_box
+          *   - id of west/east mapped_box
           *   - number of neighbors found for west/east mapped_box.
           *     - BoxId of neighbors found.
           *       Boxes of these found neighbors are given in the
@@ -1510,7 +1453,8 @@ void OverlapConnectorAlgorithm::privateBridge_discoverAndSend(
           *
           * The purpose of factoring out info on the neighbors referenced
           * is to reduce redundant data that can eat up lots of memory
-          * when we find lots of Boxes with the same neighbors.
+          * and message passing bandwidth when there are lots of Boxes
+          * with the same neighbors.
           */
          std::vector<int> send_mesg;
 
@@ -1529,9 +1473,9 @@ void OverlapConnectorAlgorithm::privateBridge_discoverAndSend(
          }
 
          // Indices of certain positions in send_mesg.
-         const size_t idx_offset_to_ref = send_mesg.size();
-         const size_t idx_num_west_mapped_boxes = idx_offset_to_ref + 1;
-         const size_t idx_num_east_mapped_boxes = idx_offset_to_ref + 2;
+         const int idx_offset_to_ref = static_cast<int>(send_mesg.size());
+         const int idx_num_west_mapped_boxes = idx_offset_to_ref + 1;
+         const int idx_num_east_mapped_boxes = idx_offset_to_ref + 2;
          send_mesg.insert(send_mesg.end(), 3, 0);
 
          // Mapped_boxes referenced in the message, used when adding ref section.
@@ -1540,13 +1484,13 @@ void OverlapConnectorAlgorithm::privateBridge_discoverAndSend(
 
          t_bridge_discover_find_overlaps->start();
 
-         if (s_print_bridge_steps == 'y') {
+         if (s_print_steps == 'y') {
             tbox::plog << "Finding west --> east overlaps for owner "
                        << curr_owner << std::endl;
          }
 
          // Find neighbors for all west mapped_boxes owned by curr_owner.
-         findOverlapsForOneProcess(
+         privateBridge_findOverlapsForOneProcess(
             curr_owner,
             visible_west_nabrs,
             west_ni,
@@ -1558,11 +1502,11 @@ void OverlapConnectorAlgorithm::privateBridge_discoverAndSend(
 
          // Find neighbors for all east mapped_boxes owned by curr_owner.
          if (compute_reverse) {
-            if (s_print_bridge_steps == 'y') {
+            if (s_print_steps == 'y') {
                tbox::plog << "Finding west <-- east overlaps for owner "
                           << curr_owner << std::endl;
             }
-            findOverlapsForOneProcess(
+            privateBridge_findOverlapsForOneProcess(
                curr_owner,
                visible_east_nabrs,
                east_ni,
@@ -1660,12 +1604,12 @@ void OverlapConnectorAlgorithm::privateBridge_discoverAndSend(
  ***********************************************************************
  */
 
-void OverlapConnectorAlgorithm::findOverlapsForOneProcess(
+void OverlapConnectorAlgorithm::privateBridge_findOverlapsForOneProcess(
    const int owner_rank,
    NeighborSet& visible_base_nabrs,
    NeighborSet::Iterator& base_ni,
    std::vector<int>& send_mesg,
-   const size_t remote_mapped_box_counter_index,
+   const int remote_mapped_box_counter_index,
    Connector& bridging_connector,
    NeighborSet& referenced_head_nabrs,
    const MultiblockBoxTree& head_rbbt) const
@@ -1698,7 +1642,7 @@ void OverlapConnectorAlgorithm::findOverlapsForOneProcess(
    while (base_ni != visible_base_nabrs.end() &&
           base_ni->getOwnerRank() == owner_rank) {
       const Box& base_mapped_box = *base_ni;
-      if (s_print_bridge_steps == 'y') {
+      if (s_print_steps == 'y') {
          tbox::plog << "Finding neighbors for non-periodic base_mapped_box "
                     << base_mapped_box << std::endl;
       }
@@ -1714,14 +1658,14 @@ void OverlapConnectorAlgorithm::findOverlapsForOneProcess(
       head_rbbt.findOverlapBoxes(found_nabrs, base_box, base_box.getBlockId(),
                                  head_refinement_ratio,
                                  true /* include singularity block neighbors */ );
-      if (s_print_bridge_steps == 'y') {
+      if (s_print_steps == 'y') {
          tbox::plog << "Found " << found_nabrs.size() << " neighbors:";
          BoxContainerUtils::recursivePrintBoxVector(found_nabrs, tbox::plog, "\n ");
          tbox::plog << std::endl;
       }
       if (!found_nabrs.empty()) {
          if (base_mapped_box.isPeriodicImage()) {
-            unshiftOverlappingNeighbors(
+            privateBridge_unshiftOverlappingNeighbors(
                base_mapped_box,
                found_nabrs,
                scratch_found_nabrs,
@@ -1744,12 +1688,14 @@ void OverlapConnectorAlgorithm::findOverlapsForOneProcess(
                head_nabr.getId().putToIntBuffer(submesg);
                submesg += BoxId::commBufferSize();
             }
-         } else {
+         }
+         else {
             // Save neighbor info locally.
             BoxId unshifted_base_mapped_box_id;
             if (!base_mapped_box.isPeriodicImage()) {
                unshifted_base_mapped_box_id = base_mapped_box.getId();
-            } else {
+            }
+            else {
                unshifted_base_mapped_box_id.initialize(
                   base_mapped_box.getLocalId(),
                   base_mapped_box.getOwnerRank(),
@@ -1764,11 +1710,11 @@ void OverlapConnectorAlgorithm::findOverlapsForOneProcess(
             }
          }
       }
-      if (s_print_bridge_steps == 'y') {
+      if (s_print_steps == 'y') {
          tbox::plog << "Erasing visible base nabr " << (*base_ni) << std::endl;
       }
       visible_base_nabrs.erase(base_ni++);
-      if (s_print_bridge_steps == 'y') {
+      if (s_print_steps == 'y') {
          if (base_ni == visible_base_nabrs.end()) {
             tbox::plog << "Next base nabr: end" << std::endl;
          }
@@ -1782,287 +1728,13 @@ void OverlapConnectorAlgorithm::findOverlapsForOneProcess(
 
 /*
  ***********************************************************************
- * findOverlapsForOneProcess() cached some discovered remote neighbors
- * into send_mesg.  sendDiscoveryToOneProcess() sends the message.
- *
- * findOverlapsForOneProcess() placed neighbor data in
- * referenced_east_nabrs and referenced_west_nabrs rather than directly
- * into send_mesg.  This method packs the referenced neighbors and send
- * them.
- ***********************************************************************
- */
-
-void OverlapConnectorAlgorithm::sendDiscoveryToOneProcess(
-   std::vector<int>& send_mesg,
-   const int idx_offset_to_ref,
-   NeighborSet& referenced_east_nabrs,
-   NeighborSet& referenced_west_nabrs,
-   tbox::AsyncCommPeer<int>& outgoing_comm,
-   const tbox::Dimension& dim) const
-{
-   /*
-    * Fill the messages's reference section with all the neighbors
-    * that have been referenced.
-    */
-   const int offset = send_mesg[idx_offset_to_ref] =
-      static_cast<int>(send_mesg.size());
-   const int n_referenced_nabrs = static_cast<int>(
-         referenced_east_nabrs.size() + referenced_west_nabrs.size());
-   const int reference_section_size =
-      2 + n_referenced_nabrs * Box::commBufferSize(dim);
-   send_mesg.insert(
-      send_mesg.end(),
-      reference_section_size,
-      -1);
-   int* ptr = &send_mesg[offset];
-   *(ptr++) = static_cast<int>(referenced_west_nabrs.size());
-   *(ptr++) = static_cast<int>(referenced_east_nabrs.size());
-   for (BoxContainer::ConstIterator ni = referenced_west_nabrs.begin();
-        ni != referenced_west_nabrs.end(); ++ni) {
-      const Box& mapped_box = *ni;
-      mapped_box.putToIntBuffer(ptr);
-      ptr += Box::commBufferSize(dim);
-   }
-   for (BoxContainer::ConstIterator ni = referenced_east_nabrs.begin();
-        ni != referenced_east_nabrs.end(); ++ni) {
-      const Box& mapped_box = *ni;
-      mapped_box.putToIntBuffer(ptr);
-      ptr += Box::commBufferSize(dim);
-   }
-   if (s_print_bridge_steps == 'y') {
-      tbox::plog << "sending " << referenced_west_nabrs.size()
-                 << " referenced_west_nabrs:" << referenced_west_nabrs.format("\n  ") << std::endl
-                 << "sending " << referenced_east_nabrs.size()
-                 << " referenced_east_nabrs:" << referenced_east_nabrs.format("\n  ") << std::endl;
-   }
-
-   TBOX_ASSERT(ptr == &send_mesg[send_mesg.size() - 1] + 1);
-
-   /*
-    * Send message.
-    */
-   outgoing_comm.beginSend(&send_mesg[0], static_cast<int>(send_mesg.size()));
-   if (s_print_bridge_steps == 'y') {
-      tbox::plog << "Sent to " << outgoing_comm.getPeerRank() << std::endl;
-   }
-}
-
-/*
- ***********************************************************************
- ***********************************************************************
- */
-void OverlapConnectorAlgorithm::privateBridge_receiveAndUnpack(
-   Connector& west_to_east,
-   Connector* east_to_west,
-   std::set<int>& incoming_ranks,
-   tbox::AsyncCommPeer<int> all_comms[],
-   tbox::AsyncCommStage& comm_stage,
-   tbox::AsyncCommStage::MemberVec& completed) const
-{
-   t_bridge_unpack->start();
-
-   /*
-    * Receive and unpack messages.
-    */
-   do {
-      for (unsigned int i = 0; i < completed.size(); ++i) {
-
-         tbox::AsyncCommPeer<int>* peer =
-            dynamic_cast<tbox::AsyncCommPeer<int> *>(completed[i]);
-         TBOX_ASSERT(completed[i] != NULL);
-         TBOX_ASSERT(peer != NULL);
-
-         if ((size_t)(peer - all_comms) < incoming_ranks.size()) {
-            // Receive from this peer.
-            if (s_print_bridge_steps == 'y') {
-               tbox::plog << "Received from " << peer->getPeerRank()
-                          << std::endl;
-            }
-            unpackDiscoveryMessage(
-               peer,
-               west_to_east,
-               east_to_west);
-         }
-         else {
-            // Sent to this peer.  No follow-up needed.
-            if (s_print_bridge_steps == 'y') {
-               tbox::plog << "Sent to " << peer->getPeerRank() << std::endl;
-            }
-         }
-      }
-
-      completed.clear();
-      comm_stage.advanceSome(completed);
-
-   } while (completed.size() > 0);
-
-   t_bridge_unpack->stop();
-}
-
-/*
- ***********************************************************************
- ***********************************************************************
- */
-
-void OverlapConnectorAlgorithm::unpackDiscoveryMessage(
-   const tbox::AsyncCommPeer<int>* incoming_comm,
-   Connector& west_to_east,
-   Connector* east_to_west) const
-{
-   const int sender = incoming_comm->getPeerRank();
-   const int* ptr = incoming_comm->getRecvData();
-
-#ifdef DEBUG_CHECK_ASSERTIONS
-   const int msg_size = incoming_comm->getRecvSize();
-   const int* ptr_end = ptr + msg_size;
-#endif
-   const int rank = west_to_east.getMPI().getRank();
-
-   const tbox::Dimension& dim(west_to_east.getRatio().getDim());
-
-   Box tmp_box(dim);
-
-   const int box_com_buffer_size = Box::commBufferSize(dim);
-   /*
-    * Content of send_mesg, constructed largely in
-    * findOverlapsForOneProcess() and sendDiscoveryToOneProcess():
-    *
-    * - offset to the reference section (see below)
-    * - number of west boxes for which overlaps are found
-    * - number of east boxes for which overlaps are found
-    *   - index of west/east box
-    *   - number of neighbors found for west/east box.
-    *     - owner and local indices of neighbors found (unsorted).
-    *       Boxes of found neighbors are given in the
-    *       reference section of the message.
-    * - reference section: all the boxes referenced as
-    *   neighbors (accumulated in referenced_west_nabrs
-    *   and referenced_east_nabrs).
-    *   - number of referenced west neighbors
-    *   - number of referenced east neighbors
-    *   - referenced west neighbors
-    *   - referenced east neighbors
-    */
-
-   // Unpack neighbor-removal section.
-   const int num_removed_boxes = *(ptr++);
-   for (int ii = 0; ii < num_removed_boxes; ++ii) {
-      const LocalId id_gone(*(ptr++));
-      const BlockId block_id_gone(*(ptr++));
-      const int number_affected = *(ptr++);
-      const Box box_gone(dim, id_gone, sender, block_id_gone);
-      if (s_print_bridge_steps == 'y') {
-         tbox::plog << "Box " << box_gone
-                    << " removed, affecting " << number_affected
-                    << " boxes." << std::endl;
-      }
-//TODO: Is BoxId usage in this method correct regarding block id?
-      for (int iii = 0; iii < number_affected; ++iii) {
-         const LocalId id_affected(*(ptr++));
-         const BlockId block_id_affected(*(ptr++));
-         BoxId affected_nbrhd(id_affected, rank, block_id_affected);
-         if (s_print_bridge_steps == 'y') {
-            tbox::plog << " Removing " << box_gone
-                       << " from nabr list for " << id_affected
-                       << std::endl;
-         }
-         TBOX_ASSERT(west_to_east.hasLocalNeighbor(
-            affected_nbrhd,
-            box_gone));
-         west_to_east.eraseNeighbor(box_gone, affected_nbrhd);
-      }
-      TBOX_ASSERT(ptr != ptr_end);
-   }
-
-   // Get the referenced neighbor Boxes.
-   bool ordered = true;
-   NeighborSet referenced_west_nabrs(ordered);
-   NeighborSet referenced_east_nabrs(ordered);
-   const int offset = *(ptr++);
-   const int n_west_boxes = *(ptr++);
-   const int n_east_boxes = *(ptr++);
-   const int* ref_box_ptr = incoming_comm->getRecvData() + offset;
-   const int n_reference_west_boxes = *(ref_box_ptr++);
-   const int n_reference_east_boxes = *(ref_box_ptr++);
-
-   TBOX_ASSERT(east_to_west != NULL || n_east_boxes == 0);
-
-#ifdef DEBUG_CHECK_ASSERTIONS
-   const int correct_msg_size = offset
-      + 2 /* counters of east and west reference boxes */
-      + Box::commBufferSize(dim) * n_reference_west_boxes
-      + Box::commBufferSize(dim) * n_reference_east_boxes
-   ;
-   TBOX_ASSERT(msg_size == correct_msg_size);
-#endif
-
-   // Extract referenced boxes from message.
-   for (int ii = 0; ii < n_reference_west_boxes; ++ii) {
-      tmp_box.getFromIntBuffer(ref_box_ptr);
-      referenced_west_nabrs.insert(referenced_west_nabrs.end(), tmp_box);
-      ref_box_ptr += box_com_buffer_size;
-   }
-   for (int ii = 0; ii < n_reference_east_boxes; ++ii) {
-      tmp_box.getFromIntBuffer(ref_box_ptr);
-      referenced_east_nabrs.insert(referenced_east_nabrs.end(), tmp_box);
-      ref_box_ptr += box_com_buffer_size;
-   }
-   TBOX_ASSERT(ref_box_ptr == ptr_end);
-
-   if (s_print_bridge_steps == 'y') {
-      tbox::plog << "received " << n_reference_west_boxes
-                 << " referenced_west_nabrs:" << referenced_west_nabrs.format("\n  ") << std::endl
-                 << "received " << n_reference_east_boxes
-                 << " referenced_east_nabrs:" << referenced_east_nabrs.format("\n  ") << std::endl;
-   }
-
-   /*
-    * Unpack neighbor data for east neighbors of west boxes
-    * and west neighbors of east boxes.  The neighbor info
-    * given includes only block and local index.  Refer to
-    * reference data to get the box info.
-    */
-   for (int ii = 0; ii < n_west_boxes; ++ii) {
-      const LocalId local_id(*(ptr++));
-      const BlockId block_id(*(ptr++));
-      const BoxId west_box_id(local_id, rank, block_id);
-      const int n_east_nabrs_found = *(ptr++);
-      // Add received neighbors to Box west_box_id.
-      for (int j = 0; j < n_east_nabrs_found; ++j) {
-         tmp_box.getId().getFromIntBuffer(ptr);
-         ptr += BoxId::commBufferSize();
-         NeighborSet::ConstIterator na = referenced_east_nabrs.find(tmp_box);
-         TBOX_ASSERT(na != referenced_east_nabrs.end());
-         const Box& east_nabr = *na;
-         west_to_east.insertLocalNeighbor(east_nabr, west_box_id);
-      }
-   }
-   for (int ii = 0; ii < n_east_boxes; ++ii) {
-      const LocalId local_id(*(ptr++));
-      const BlockId block_id(*(ptr++));
-      const BoxId east_box_id(local_id, rank, block_id);
-      const int n_west_nabrs_found = *(ptr++);
-      // Add received neighbors to Box east_box_id.
-      for (int j = 0; j < n_west_nabrs_found; ++j) {
-         tmp_box.getId().getFromIntBuffer(ptr);
-         ptr += BoxId::commBufferSize();
-         NeighborSet::ConstIterator na = referenced_west_nabrs.find(tmp_box);
-         TBOX_ASSERT(na != referenced_west_nabrs.end());
-         const Box& west_nabr = *na;
-         east_to_west->insertLocalNeighbor(west_nabr, east_box_id);
-      }
-   }
-}
-
-/*
- ***********************************************************************
  * Shift neighbors by amount equal and opposite of a Box's shift so that
  * they become neighbors of the unshifed mapped_box.  If this results in a
  * neighbor shift that is not in the shift catalog, discard the neighbor.
  ***********************************************************************
  */
 
-void OverlapConnectorAlgorithm::unshiftOverlappingNeighbors(
+void OverlapConnectorAlgorithm::privateBridge_unshiftOverlappingNeighbors(
    const Box& mapped_box,
    std::vector<Box>& neighbors,
    std::vector<Box>& scratch_space,
@@ -2509,17 +2181,16 @@ size_t OverlapConnectorAlgorithm::checkOverlapCorrectness(
 void OverlapConnectorAlgorithm::initializeCallback()
 {
 
-   if (s_print_bridge_steps == 0) {
+   if (s_print_steps == '\0') {
       if (tbox::InputManager::inputDatabaseExists()) {
-         s_print_bridge_steps = 'n';
+         s_print_steps = 'n';
          tbox::Pointer<tbox::Database> idb =
             tbox::InputManager::getInputDatabase();
          if (idb->isDatabase("OverlapConnectorAlgorithm")) {
             tbox::Pointer<tbox::Database> ocu_db =
                idb->getDatabase("OverlapConnectorAlgorithm");
-            s_print_bridge_steps =
-               ocu_db->getCharWithDefault("print_bridge_steps",
-                  s_print_bridge_steps);
+            s_print_steps = ocu_db->getCharWithDefault("print_bridge_steps",
+                  s_print_steps);
          }
       }
    }
@@ -2528,6 +2199,10 @@ void OverlapConnectorAlgorithm::initializeCallback()
       getTimer("hier::OverlapConnectorAlgorithm::findOverlaps_rbbt()");
    t_bridge = tbox::TimerManager::getManager()->
       getTimer("hier::OverlapConnectorAlgorithm::privateBridge()");
+   t_bridge_setup_comm = tbox::TimerManager::getManager()->
+      getTimer("hier::OverlapConnectorAlgorithm::setupCommunication()");
+   t_bridge_remove_and_cache = tbox::TimerManager::getManager()->
+      getTimer("hier::OverlapConnectorAlgorithm::privateBridge_removeAndCache()");
    t_bridge_discover = tbox::TimerManager::getManager()->
       getTimer("hier::OverlapConnectorAlgorithm::privateBridge()_discover");
    t_bridge_discover_get_neighbors = tbox::TimerManager::getManager()->
@@ -2541,10 +2216,8 @@ void OverlapConnectorAlgorithm::initializeCallback()
          "hier::OverlapConnectorAlgorithm::privateBridge()_discover_find_overlaps");
    t_bridge_share = tbox::TimerManager::getManager()->
       getTimer("hier::OverlapConnectorAlgorithm::privateBridge()_share");
-   t_bridge_comm_init = tbox::TimerManager::getManager()->
-      getTimer("hier::OverlapConnectorAlgorithm::privateBridge()_comm_init");
-   t_bridge_unpack = tbox::TimerManager::getManager()->
-      getTimer("hier::OverlapConnectorAlgorithm::privateBridge()_unpack");
+   t_bridge_receive_and_unpack = tbox::TimerManager::getManager()->
+      getTimer("hier::OverlapConnectorAlgorithm::receiveAndUnpack");
    t_bridge_MPI_wait = tbox::TimerManager::getManager()->
       getTimer("hier::OverlapConnectorAlgorithm::privateBridge()_MPI_wait");
 }
@@ -2560,13 +2233,14 @@ void OverlapConnectorAlgorithm::finalizeCallback()
 {
    t_find_overlaps_rbbt.setNull();
    t_bridge.setNull();
+   t_bridge_setup_comm.setNull();
+   t_bridge_remove_and_cache.setNull();
    t_bridge_discover.setNull();
    t_bridge_discover_get_neighbors.setNull();
    t_bridge_discover_form_rbbt.setNull();
    t_bridge_discover_find_overlaps.setNull();
    t_bridge_share.setNull();
-   t_bridge_comm_init.setNull();
-   t_bridge_unpack.setNull();
+   t_bridge_receive_and_unpack.setNull();
    t_bridge_MPI_wait.setNull();
 
    if (s_class_mpi.getCommunicator() != tbox::SAMRAI_MPI::commNull) {

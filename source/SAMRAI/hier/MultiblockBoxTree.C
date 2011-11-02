@@ -197,7 +197,7 @@ void MultiblockBoxTree::generateTree(
             std::pair<BlockId, BoxTree>(
                blocki->first,
                BoxTree(grid_geometry->getDim(), blocki->second,
-                  blocki->first, min_number))));
+                  blocki->first, static_cast<int>(min_number)))));
       TBOX_ASSERT(insert_return_value.second);
    }
 }

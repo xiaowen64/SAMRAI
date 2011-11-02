@@ -18,6 +18,7 @@ DEPENDS_0:=\
 	$(INCLUDE_SAM)/SAMRAI/algs/HyperbolicLevelIntegrator.h		\
 	$(INCLUDE_SAM)/SAMRAI/algs/HyperbolicPatchStrategy.h		\
 	$(INCLUDE_SAM)/SAMRAI/algs/TimeRefinementLevelStrategy.h	\
+	$(INCLUDE_SAM)/SAMRAI/hier/BaseConnectorAlgorithm.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoundaryBox.I			\
@@ -2616,6 +2617,7 @@ DEPENDS_12:=\
 	$(INCLUDE_SAM)/SAMRAI/algs/OuternodeSumTransactionFactory.h	\
 	$(INCLUDE_SAM)/SAMRAI/algs/PatchBoundaryNodeSum.I		\
 	$(INCLUDE_SAM)/SAMRAI/algs/PatchBoundaryNodeSum.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BaseConnectorAlgorithm.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoundaryBox.I			\
