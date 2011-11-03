@@ -175,7 +175,7 @@ GridGeometry::GridGeometry(
         ++itr) {
       block_numbers.insert(itr->getBlockId().getBlockValue());
    }
-   d_number_blocks = block_numbers.size();
+   d_number_blocks = static_cast<int>(block_numbers.size());
    d_reduced_connect.resizeArray(d_number_blocks, false);
    d_block_neighbors.resizeArray(d_number_blocks);
 

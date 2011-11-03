@@ -170,7 +170,8 @@ void CoarseFineBoundary::computeFromLevel(
     * the fake domain be everywhere there is NOT a coarse-fine boundary--or
     * everywhere there IS a physical boundary or a fine-boundary.
     */
-   BoxContainer fake_domain_list;
+   tbox::Array<BoxContainer> fake_domain(1);
+   BoxContainer& fake_domain_list = fake_domain[0];
 
    // Every mapped_box should connect to the domain mapped_box_level.
    TBOX_ASSERT(mapped_box_level_to_domain.getLocalNumberOfNeighborSets() ==
@@ -224,7 +225,6 @@ void CoarseFineBoundary::computeFromLevel(
     */
    bool do_all_patches = true;
    const IntVector use_periodic_shift(d_dim, 0);
-   const tbox::Array<BoxContainer> fake_domain(1, fake_domain_list);
    grid_geometry->computeBoundaryBoxesOnLevel(
       d_boundary_boxes,
       level,
