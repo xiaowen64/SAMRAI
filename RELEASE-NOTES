@@ -56,6 +56,9 @@ descriptions of items in the following list are provided below.
 
 (2) Operations to remove periodic image boxes now work on this.
 
+(3) Constructing SAMRAI_MPI with MPI_COMM_NULL sets rank and size
+    to invalid values.
+
 
 *****************************************************************************
 
@@ -98,6 +101,12 @@ Old behavior: Take an output box container copy the non-periodic image
 there.  The method is const.
 
 New behavior: Remove periodic images from this.  The method is non-const.
+
+(3) Constructing SAMRAI_MPI with MPI_COMM_NULL sets rank and size
+    to invalid values.
+
+This change prevents unexpectedly valid rank and group sizes when
+SAMRAI_MPI is built with MPI_COMM_NULL.
 
 =============================================================================
 =============================================================================
