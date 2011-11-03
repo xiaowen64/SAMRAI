@@ -111,6 +111,15 @@ int main(
       hier::Box fine7(hier::Index(8, 6, 6), hier::Index(13, 7, 7));
       hier::IntVector ratio(dim3d, 2);
 
+      coarse0.initialize(coarse0, hier::LocalId(0), 0);
+      coarse1.initialize(coarse1, hier::LocalId(1), 0);
+      coarse2.initialize(coarse2, hier::LocalId(2), 0);
+      coarse3.initialize(coarse3, hier::LocalId(3), 0);
+      coarse4.initialize(coarse4, hier::LocalId(4), 0);
+      coarse5.initialize(coarse5, hier::LocalId(5), 0);
+      coarse6.initialize(coarse6, hier::LocalId(6), 0);
+      coarse7.initialize(coarse7, hier::LocalId(7), 0);
+
       hier::BoxContainer coarse_domain;
       hier::BoxContainer fine_boxes;
       coarse_domain.pushBack(coarse0);
