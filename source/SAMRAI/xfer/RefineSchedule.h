@@ -387,6 +387,8 @@ private:
       tbox::Pointer<hier::PatchLevel> src_level,
       int next_coarser_level,
       tbox::Pointer<hier::PatchHierarchy> hierarchy,
+      const hier::Connector& dst_to_src,
+      const hier::Connector& src_to_dst,
       const hier::IntVector& src_growth_to_nest_dst,
       const tbox::Pointer<xfer::RefineClasses> refine_classes,
       tbox::Pointer<xfer::RefineTransactionFactory> transaction_factory,
@@ -749,6 +751,10 @@ private:
     *
     * @param[in] hierarchy
     *
+    * @param[in] coarse_interp_to_hiercoarse
+    *
+    * @param[in] hiercoarse_to_coarse_interp
+    *
     * @param[in] next_coarser_ln Level number of hiercoarse (the
     * coarser level on the hierarchy
     *
@@ -768,6 +774,8 @@ private:
    createCoarseInterpPatchLevel(
       tbox::Pointer<hier::PatchLevel>& coarse_interp_level,
       hier::BoxLevel& coarse_interp_mapped_box_level,
+      hier::Connector &coarse_interp_to_hiercoarse,
+      hier::Connector &hiercoarse_to_coarse_interp,
       const tbox::Pointer<hier::PatchHierarchy>& hierarchy,
       const int next_coarser_ln,
       const hier::Connector &dst_to_src,

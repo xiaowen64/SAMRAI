@@ -197,6 +197,6 @@ TreeLoadBalancer{
 }
 
 PersistentOverlapConnectors {
-   check_created_connectors = FALSE
-   check_accessed_connectors = FALSE
+   check_created_connectors = TRUE
+   check_accessed_connectors = TRUE
 }
