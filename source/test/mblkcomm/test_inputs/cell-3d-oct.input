@@ -206,9 +206,9 @@ BlockGridGeometry {
       block_a = 2
       block_b = 3
 
-      rotation_b_to_a = "J_UP", "K_DOWN", "I_DOWN"
+      rotation_b_to_a = "K_UP", "J_UP", "I_DOWN"
       point_in_a_space = 0,0,14
-      point_in_b_space = 15,0,14
+      point_in_b_space = 15,0,0
    }
 
 }
