@@ -1103,8 +1103,8 @@ void OverlapConnectorAlgorithm::privateBridge(
           * should happen.  The requirement is that one refinement ratio is
           * an IntVector times the other.
           */
-         west_to_cent.isTransposeOf(cent_to_west);
-         cent_to_west.isTransposeOf(west_to_cent);
+         TBOX_ASSERT(west_to_cent.isTransposeOf(cent_to_west));
+         TBOX_ASSERT(cent_to_west.isTransposeOf(west_to_cent));
       }
 #endif
    }
