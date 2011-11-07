@@ -1413,7 +1413,14 @@ void GridGeometry::setPhysicalDomain(
    const BoxContainer& domain,
    const int number_blocks)
 {
+#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(domain.size() > 0);
+   for (BoxContainer::ConstIterator itr = domain.begin(); itr != domain.end();
+        ++itr) {
+      TBOX_ASSERT(itr->getBlockId().isValid());       
+      TBOX_ASSERT(itr->getBlockId().getBlockValue() < number_blocks);       
+   } 
+#endif
 
    d_domain_is_single_box.resizeArray(number_blocks);
    d_domain_tree.resizeArray(number_blocks);
