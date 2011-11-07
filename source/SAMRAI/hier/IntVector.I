@@ -648,6 +648,7 @@ const IntVector& IntVector::getOne(
  * Sort the sizes of the given IntVector from smallest to largest value.
  *************************************************************************
  */
+SAMRAI_INLINE_KEYWORD
 void IntVector::sortIntVector(
    const hier::IntVector& values)
 {

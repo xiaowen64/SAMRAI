@@ -352,7 +352,7 @@ void TreeLoadBalancer::loadBalanceBoxLevel(
       if (d_mpi.getSize() > 1) {
          double dtmp[2], dtmp_sum[2];
          dtmp[0] = local_load;
-         dtmp[1] = (double)nproc_with_initial_load;
+         dtmp[1] = static_cast<double>(nproc_with_initial_load);
          d_mpi.Allreduce(dtmp,
             dtmp_sum,
             2,
@@ -983,7 +983,7 @@ void TreeLoadBalancer::loadBalanceWithinRankGroup(
     * data from the children.
     */
    my_load_data.d_num_procs = 1;
-   my_load_data.d_total_work = (int)computeLocalLoads(balance_box_level);
+   my_load_data.d_total_work = static_cast<int>(computeLocalLoads(balance_box_level));
 
 
    /*
@@ -2025,8 +2025,8 @@ void TreeLoadBalancer::createBalanceRankGroupBasedOnCycles(
     * down the number of groups (and round up the group size).
     */
    number_of_groups =
-      (int)pow((double)d_mpi.getSize(),
-               1.0 - double(cycle_number + 1) / number_of_cycles);
+      static_cast<int>(pow(static_cast<double>(d_mpi.getSize()),
+                           1.0 - double(cycle_number + 1) / number_of_cycles));
 
    /*
     * All groups will have a base population count of
@@ -2220,10 +2220,10 @@ bool TreeLoadBalancer::shiftLoadsByBreaking(
    int best_actual_transfer = 0;
 
    double best_combined_penalty = combinedBreakingPenalty(
-         computeBalancePenalty(best_src, best_dst, (double)ideal_transfer
-            - best_actual_transfer),
-         computeSurfacePenalty(best_src, best_dst),
-         computeSlenderPenalty(best_src, best_dst));
+      computeBalancePenalty(best_src, best_dst, static_cast<double>(ideal_transfer)
+                            - best_actual_transfer),
+      computeSurfacePenalty(best_src, best_dst),
+      computeSlenderPenalty(best_src, best_dst));
 
    /*
     * Scale the pre-cut penalty.  Scaling makes this method more
@@ -2268,7 +2268,7 @@ bool TreeLoadBalancer::shiftLoadsByBreaking(
 
          const bool improves_balance =
             tbox::MathUtilities<double>::Abs(
-               (double)ideal_transfer - breakoff_amt) <
+               static_cast<double>(ideal_transfer) - breakoff_amt) <
             (ideal_transfer - tbox::MathUtilities<double>::getEpsilon());
 
          if (d_print_steps) {
@@ -2305,9 +2305,9 @@ bool TreeLoadBalancer::shiftLoadsByBreaking(
                *bi,
                d_mpi.getRank(),
                next_available_index);
-            give_box_in_transit.d_load = (int)computeLoad(
+            give_box_in_transit.d_load = static_cast<int>(computeLoad(
                give_box_in_transit.d_orig_box,
-               give_box_in_transit.getBox());
+               give_box_in_transit.getBox()));
             next_available_index += 2 + d_degree;
             trial_dst.insert(give_box_in_transit);
             trial_actual_transfer += give_box_in_transit.d_load;
@@ -2325,9 +2325,9 @@ bool TreeLoadBalancer::shiftLoadsByBreaking(
                *bi,
                d_mpi.getRank(),
                next_available_index);
-            keep_box_in_transit.d_load = (int)computeLoad(
+            keep_box_in_transit.d_load = static_cast<int>(computeLoad(
                   keep_box_in_transit.d_orig_box,
-                  keep_box_in_transit.getBox());
+                  keep_box_in_transit.getBox()));
             next_available_index += 2 + d_degree;
             trial_src.insert(keep_box_in_transit);
             if (d_print_steps) {
@@ -2343,8 +2343,8 @@ bool TreeLoadBalancer::shiftLoadsByBreaking(
           */
          TBOX_ASSERT(trial_src.size() + trial_dst.size() > 0);
          double trial_balance_penalty = computeBalancePenalty(trial_src,
-               trial_dst,
-               (double)ideal_transfer - trial_actual_transfer);
+                                                              trial_dst,
+                                                              static_cast<int>(ideal_transfer) - trial_actual_transfer);
          double trial_surface_penalty = computeSurfacePenalty(trial_src,
                trial_dst);
          double trial_slender_penalty = computeSlenderPenalty(trial_src,
@@ -2371,7 +2371,7 @@ bool TreeLoadBalancer::shiftLoadsByBreaking(
                tbox::plog << "    Keeping this trial." << std::endl;
             }
             found_breakage = true;
-            best_actual_transfer = (int)breakoff_amt;
+            best_actual_transfer = static_cast<int>(breakoff_amt);
             best_src = trial_src;
             best_dst = trial_dst;
             best_combined_penalty = trial_combined_penalty;
@@ -2760,9 +2760,9 @@ bool TreeLoadBalancer::findLoadSwapPair(
     * Swapping does not produce new cuts, so it is ok to omit the penalties
     * arising from cutting.
     */
-   double current_balance_penalty = (double)ideal_transfer;
-   double balance_penalty_loside = (double)imbalance_loside;
-   double balance_penalty_hiside = (double)imbalance_hiside;
+   double current_balance_penalty = static_cast<double>(ideal_transfer);
+   double balance_penalty_loside = static_cast<double>(imbalance_loside);
+   double balance_penalty_hiside = static_cast<double>(imbalance_hiside);
 
    if (d_print_swap_steps) {
       tbox::plog << "    Swap candidates give penalties (unswap,lo,hi): "
@@ -2920,7 +2920,7 @@ bool TreeLoadBalancer::breakOffLoad(
          found_any_break = true;
          double planar_balance_penalty = computeBalancePenalty(planar_breakoff,
                planar_leftover,
-               (double)(planar_brk_load - ideal_load_to_break));
+               static_cast<double>(planar_brk_load - ideal_load_to_break));
          double planar_surface_penalty = computeSurfacePenalty(planar_breakoff,
                planar_leftover);
          double planar_slender_penalty = computeSlenderPenalty(planar_breakoff,
@@ -3005,7 +3005,7 @@ bool TreeLoadBalancer::breakOffLoad(
          double cubic_balance_penalty = computeBalancePenalty(
                cubic_breakoff,
                cubic_leftover,
-               (double)(cubic_brk_load - ideal_load_to_break));
+               static_cast<double>(cubic_brk_load - ideal_load_to_break));
          double cubic_surface_penalty = computeSurfacePenalty(cubic_breakoff,
                cubic_leftover);
          double cubic_slender_penalty = computeSlenderPenalty(cubic_breakoff,
@@ -3275,8 +3275,8 @@ double TreeLoadBalancer::computeSurfacePenalty(
 {
    int boxvol = a.size();
    double surface_area = computeBoxSurfaceArea(a);
-   double best_surface = 2 * d_dim.getValue() * pow((double)boxvol,
-         (double)(d_dim.getValue() - 1) / d_dim.getValue());
+   double best_surface = 2 * d_dim.getValue() * pow(static_cast<double>(boxvol),
+         static_cast<double>(d_dim.getValue() - 1) / d_dim.getValue());
    double surface_penalty = surface_area / best_surface - 1.0;
    surface_penalty = surface_penalty * surface_penalty; // Make it blow up.
    return surface_penalty;
@@ -3348,7 +3348,7 @@ double TreeLoadBalancer::computeSlenderPenalty(
    const hier::Box& a) const
 {
    const hier::IntVector boxdim = a.numberCells();
-   double slender_penalty = (double)boxdim.max() / boxdim.min() - 1.0;
+   double slender_penalty = static_cast<double>(boxdim.max()) / boxdim.min() - 1.0;
    slender_penalty = slender_penalty * slender_penalty; // Make it blow up.
    return slender_penalty;
 }
@@ -3474,7 +3474,7 @@ double TreeLoadBalancer::computeLocalLoads(
       double box_load = computeLoad(*ni);
       load += box_load;
    }
-   return (double)load;
+   return static_cast<double>(load);
 }
 
 
@@ -3690,7 +3690,7 @@ bool TreeLoadBalancer::breakOffLoad_planar(
     * best_difference is the difference between the best cut found and
     * ideal_load_to_break.  Initialize it for zero breakoff.
     */
-   double best_difference = (double)ideal_load_to_break;
+   double best_difference = static_cast<double>(ideal_load_to_break);
    hier::Box best_breakoff_box(dim);
    hier::Box best_leftover_box(dim);
 
@@ -3717,7 +3717,7 @@ bool TreeLoadBalancer::breakOffLoad_planar(
           * so brk_len must be an integer multiple of d_cut_factor.
           */
          const int brk_len =
-            (((int)(ideal_load_to_break / brk_area))
+            (static_cast<int>(ideal_load_to_break / brk_area)
              / d_cut_factor(brk_dir) + round)
             * d_cut_factor(brk_dir);
 
@@ -3739,8 +3739,8 @@ bool TreeLoadBalancer::breakOffLoad_planar(
           * and the ideal.
           */
          const double difference = brk_volume <= ideal_load_to_break ?
-            ((double)ideal_load_to_break - brk_volume) :
-            ((double)brk_volume - ideal_load_to_break);
+            static_cast<double>(ideal_load_to_break - brk_volume) :
+            static_cast<double>(brk_volume - ideal_load_to_break);
 
          if (difference < best_difference) {
             // This cut gives better difference, if it can be done.
@@ -4014,7 +4014,7 @@ bool TreeLoadBalancer::breakOffLoad_cubic(
                           << std::flush;
             }
          } else if ((new_brk_load - ideal_load_to_break) <
-                    ((double)ideal_load_to_break - brk_load)) {
+                    static_cast<double>(ideal_load_to_break - brk_load)) {
             /*
              * new_brk_load is bigger than ideal but is still an
              * improvement over brk_load.  Accept it, but break out of
