@@ -2168,38 +2168,6 @@ void TreeLoadBalancer::destroyAsyncCommObjects(
 
 /*
  *************************************************************************
- * Sort the sizes of an IntVector from smallest to largest value.
- *************************************************************************
- */
-void TreeLoadBalancer::sortIntVector(
-   hier::IntVector& sorted_dirs,
-   const hier::IntVector& vector) const
-{
-   const hier::IntVector num_cells = vector;
-
-   for (int d = 0; d < d_dim.getValue(); d++) {
-      sorted_dirs(d) = d;
-   }
-   for (int d0 = 0; d0 < d_dim.getValue() - 1; d0++) {
-      for (int d1 = d0 + 1; d1 < d_dim.getValue(); d1++) {
-         if (vector(sorted_dirs(d0)) > vector(sorted_dirs(d1))) {
-            int tmp_d = sorted_dirs(d0);
-            sorted_dirs(d0) = sorted_dirs(d1);
-            sorted_dirs(d1) = tmp_d;
-         }
-      }
-   }
-#ifdef DEBUG_CHECK_ASSERTIONS
-   for (int d = 0; d < d_dim.getValue() - 1; d++) {
-      TBOX_ASSERT(vector(sorted_dirs(d)) <= vector(sorted_dirs(d + 1)));
-   }
-#endif
-}
-
-
-
-/*
- *************************************************************************
  * Attempt to shift a specified ammount of load from one TransitSet to
  * another by breaking a single box from the overloaded set.  Examine
  * multiple NodeInTransit and breakages to
@@ -3716,7 +3684,7 @@ bool TreeLoadBalancer::breakOffLoad_planar(
     * Determine ordering of box_dims from shortest to longest.
     */
    hier::IntVector sorted_dirs(dim);
-   sortIntVector(sorted_dirs, box_dims);
+   sorted_dirs.sortIntVector(box_dims);
 
    /*
     * best_difference is the difference between the best cut found and

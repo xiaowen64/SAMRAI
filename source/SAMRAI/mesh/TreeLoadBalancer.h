@@ -482,14 +482,6 @@ private:
    getFromInput(
       tbox::Pointer<tbox::Database> db);
 
-   /*
-    * @brief Sort an IntVector from the smallest to the largest value.
-    */
-   void
-   sortIntVector(
-      hier::IntVector& sorted_dirs,
-      const hier::IntVector& vector) const;
-
    /*!
     * Move Boxes in balance_box_level from ranks outside of
     * rank_group to ranks inside rank_group.  Modify the given connectors
