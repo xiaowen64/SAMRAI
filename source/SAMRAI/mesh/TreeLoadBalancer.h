@@ -39,7 +39,7 @@ namespace mesh {
  * implemementing the LoadBalancerStrategy.
  *
  * This class implements a tree-based load balancer.  The MPI
- * processes are aranged in a tree.  Work load is transmitted from
+ * processes are arranged in a tree.  Work load is transmitted from
  * process to process along the edges of the tree.
  *
  * Currently, only uniform load balancing is supported.  Eventually,
@@ -52,11 +52,14 @@ namespace mesh {
  *
  * @verbatim
  * report_load_balance = TRUE // Write out load balance report in log
- * n_root_cycles = -1         // Number of root cycles to use for
- *                            // reaching final partitioning. Nominally 1.
+ * n_root_cycles = -1         // Number of steps over which to smoothly spread
+ *                            // out work load.  This helps scalability when
+ *                            // initial work load is grossly unbalanced.
+ *                            // Usually 1 step is sufficient.
  *                            // Can be set higher (2 or 3) to reduce negative
  *                            // performance effects of extremely poor initial
- *                            // load balance.  Set to -1 for "automatic".
+ *                            // load balance.  Set to -1 (default) to compute
+ *                            // the number of cycles by a simple heuristic.
  *                            // Set to zero to effectively bypass load balancing.
  * @endverbatim
  *
@@ -167,10 +170,6 @@ public:
     * @brief Return true if load balancing procedure for given level
     * depends on patch data on mesh; otherwise return false.
     *
-    * This can be used to determine whether a level needs to be
-    * rebalanced although its box configuration is unchanged.  This
-    * function is pure virtual in the LoadBalanceStrategy base class.
-    *
     * @param[in] level_number  Integer patch level number.
     */
    bool
@@ -234,8 +233,6 @@ private:
     * processes it passed through.
     */
    struct BoxInTransit {
-      typedef hier::Box Box;
-      typedef hier::LocalId LocalId;
 
       /*!
        * @brief Constructor
@@ -280,7 +277,7 @@ private:
          const BoxInTransit& other,
          const hier::Box& box,
          int rank,
-         LocalId local_id);
+         hier::LocalId local_id);
 
       /*!
        * @brief Assignment operator
@@ -293,7 +290,7 @@ private:
       int getOwnerRank() const;
 
       //! @brief Return the LocalId.
-      LocalId getLocalId() const;
+      hier::LocalId getLocalId() const;
 
       //! @brief Return the Box.
       hier::Box& getBox();
@@ -348,25 +345,25 @@ private:
          std::map<int,std::vector<int> > &outgoing_messages ) const;
 
       //! @brief The Box.
-      hier::Box box;
+      hier::Box d_box;
 
       //! @brief Originating Box.
-      hier::Box orig_box;
+      hier::Box d_orig_box;
 
       //! @brief Work load.
-      int load;
+      int d_load;
 
       /*!
        * @brief History of processors passed in transit.  Each time a
        * process receives a Box, it should append its rank to the
        * proc_hist.
        */
-      std::vector<int> proc_hist;
+      std::vector<int> d_proc_hist;
    };
 
 
    /*!
-    * @brief Insert BoxInTransit into an otput stream.
+    * @brief Insert BoxInTransit into an output stream.
     */
    friend std::ostream&
    operator << (
@@ -394,13 +391,13 @@ private:
     * Static integer constants.  Tags are for isolating messages
     * from different phases of the algorithm.
     */
-   static const int TreeLoadBalancer_LOADTAG0;
-   static const int TreeLoadBalancer_LOADTAG1;
-   static const int TreeLoadBalancer_EDGETAG0;
-   static const int TreeLoadBalancer_EDGETAG1;
-   static const int TreeLoadBalancer_PREBALANCE0;
-   static const int TreeLoadBalancer_PREBALANCE1;
-   static const int TreeLoadBalancer_FIRSTDATALEN;
+   static const int TreeLoadBalancer_LOADTAG0 = 1212001;
+   static const int TreeLoadBalancer_LOADTAG1 = 1212002;
+   static const int TreeLoadBalancer_EDGETAG0 = 1212003;
+   static const int TreeLoadBalancer_EDGETAG1 = 1212004;
+   static const int TreeLoadBalancer_PREBALANCE0 = 1212005;
+   static const int TreeLoadBalancer_PREBALANCE1 = 1212006;
+   static const int TreeLoadBalancer_FIRSTDATALEN = 1000;
 
    // The following are not implemented, but are provided here for
    // dumb compilers.
@@ -417,6 +414,7 @@ private:
     */
    typedef std::set<BoxInTransit, BoxInTransitMoreLoad> TransitSet;
 
+
    /*!
     * @brief Data to save for each sending/receiving process and the
     * subtree at that process.
@@ -424,44 +422,50 @@ private:
    struct SubtreeLoadData {
       // @brief Constructor.
       SubtreeLoadData():
-         num_procs(0),
-         total_work(0),
-         load_exported(0),
-         load_imported(0) {
+         d_num_procs(0),
+         d_total_work(0),
+         d_load_exported(0),
+         d_load_imported(0) {
       }
+
       /*!
        * @brief Number of processes in subtree
        */
-      int num_procs;
+      int d_num_procs;
+
       /*!
        * @brief Current total work amount in the subtree
        */
-      int total_work;
+      int d_total_work;
+
       /*!
        * @brief Load exported (or to be exported) to nonlocal process.
        *
        * If the object is for the local process, load_exported means
        * the load exported to the process's *parent*.
        */
-      int load_exported;
+      int d_load_exported;
+
       /*!
        * @brief Load imported from nonlocal process.
        *
        * If the object is for the local process, load_imported means
        * the load imported from the process's *parent*.
        */
-      int load_imported;
+      int d_load_imported;
+
       /*!
        * @brief Ideal work amount for the subtree
        */
-      int ideal_work;
+      int d_ideal_work;
+
       /*!
        * @brief Work to export.
        *
        * If the object is for the local process, for_export means for
        * exporting to the process's *parent*.
        */
-      TransitSet for_export;
+      TransitSet d_for_export;
    };
 
    /*
@@ -516,7 +520,7 @@ private:
       TransitSet& src,
       TransitSet& dst,
       hier::LocalId& next_available_index,
-      const int ideal_transfer ) const;
+      int ideal_transfer ) const;
 
    /*!
     * @brief Shift load from src to dst by swapping BoxInTransit
@@ -536,7 +540,7 @@ private:
    shiftLoadsBySwapping(
       TransitSet& src,
       TransitSet& dst,
-      const int ideal_transfer ) const;
+      int ideal_transfer ) const;
 
    /*!
     * @brief Shift load from src to dst by various box breaking strategies.
@@ -561,7 +565,7 @@ private:
       TransitSet& dst,
       int& actual_transfer,
       hier::LocalId& next_available_index,
-      const int ideal_transfer ) const;
+      int ideal_transfer ) const;
 
    /*!
     * @brief Find a BoxInTransit in each of the source and destination
@@ -575,7 +579,7 @@ private:
       int& actual_transfer,
       TransitSet::iterator& isrc,
       TransitSet::iterator& idst,
-      const int ideal_transfer ) const;
+      int ideal_transfer ) const;
 
    /*!
     * @brief Pack load/boxes for sending.
@@ -728,7 +732,7 @@ private:
       const tbox::Array<tbox::Array<bool> >& bad_cuts ) const;
 
    bool
-   breakOffLoad_cubic1(
+   breakOffLoad_cubic(
       std::vector<hier::Box>& breakoff,
       std::vector<hier::Box>& leftover,
       double& brk_load,
