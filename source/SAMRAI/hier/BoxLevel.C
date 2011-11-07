@@ -13,7 +13,7 @@
 #include "SAMRAI/hier/BoxLevel.h"
 
 #include "SAMRAI/hier/BoxContainerConstIterator.h"
-#include "SAMRAI/hier/BoxSetSingleBlockIterator.h"
+#include "SAMRAI/hier/BoxContainerSingleBlockIterator.h"
 #include "SAMRAI/hier/PeriodicShiftCatalog.h"
 #include "SAMRAI/hier/RealBoxConstIterator.h"
 #include "SAMRAI/tbox/MathUtilities.h"
@@ -676,7 +676,7 @@ bool BoxLevel::getSpatiallyEqualBox(
    Box& matching_box) const
 {
    bool box_exists = false;
-   for (BoxSetSingleBlockIterator itr(d_boxes, block_id);
+   for (BoxContainerSingleBlockIterator itr(d_boxes, block_id);
         itr.isValid(); ++itr) {
       if (box_to_match.isSpatiallyEqual(*itr)) {
          box_exists = true;

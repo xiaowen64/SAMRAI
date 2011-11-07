@@ -14,8 +14,8 @@
 #include "SAMRAI/SAMRAI_config.h"
 
 #include "SAMRAI/tbox/Pointer.h"
+#include "SAMRAI/hier/BoxContainerSingleBlockIterator.h"
 #include "SAMRAI/hier/BoxLevel.h"
-#include "SAMRAI/hier/BoxSetSingleBlockIterator.h"
 #include "SAMRAI/hier/PatchFactory.h"
 #include "SAMRAI/hier/ProcessorMapping.h"
 

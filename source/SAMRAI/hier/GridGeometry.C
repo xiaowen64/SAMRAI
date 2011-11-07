@@ -19,6 +19,7 @@
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/hier/BoxContainerIterator.h"
 #include "SAMRAI/hier/BoxContainerConstIterator.h"
+#include "SAMRAI/hier/BoxContainerSingleBlockIterator.h"
 #include "SAMRAI/hier/BoxLevel.h"
 #include "SAMRAI/hier/BoxTree.h"
 #include "SAMRAI/hier/IntVector.h"
@@ -2125,7 +2126,7 @@ void GridGeometry::adjustMultiblockPatchLevelBoundaries(
          pseudo_domain.spliceFront(sing_boxes);
          pseudo_domain.coalesce();
 
-         BoxSetSingleBlockIterator mbi(d_mapped_boxes, block_id);
+         BoxContainerSingleBlockIterator mbi(d_mapped_boxes, block_id);
 
          for ( ; mbi.isValid(); mbi++) {
             const BoxId& mapped_box_id = (*mbi).getId();

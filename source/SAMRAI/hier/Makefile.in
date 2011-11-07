@@ -52,8 +52,8 @@ OBJS = 	\
 	BoxIOUtility.o \
 	PeriodicShiftCatalog.o \
 	RealBoxConstIterator.o \
-	BoxSetSingleBlockIterator.o \
-	BoxSetSingleOwnerIterator.o \
+	BoxContainerSingleBlockIterator.o \
+	BoxContainerSingleOwnerIterator.o \
 	BoxTree.o \
 	MultiblockBoxTree.o \
 	BoxLevel.o \

@@ -4,18 +4,18 @@
  * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Special iterator for BoxSet.
+ * Description:   Special iterator for BoxContainer.
  *
  ************************************************************************/
-#ifndef included_hier_BoxSetSingleBlockIterator_C
-#define included_hier_BoxSetSingleBlockIterator_C
+#ifndef included_hier_BoxContainerSingleBlockIterator_C
+#define included_hier_BoxContainerSingleBlockIterator_C
 
-#include "SAMRAI/hier/BoxSetSingleBlockIterator.h"
+#include "SAMRAI/hier/BoxContainerSingleBlockIterator.h"
 
 namespace SAMRAI {
 namespace hier {
 
-BoxSetSingleBlockIterator::BoxSetSingleBlockIterator(
+BoxContainerSingleBlockIterator::BoxContainerSingleBlockIterator(
    const BoxContainer& mapped_boxes,
    const BlockId& block_id):
    d_mapped_boxes(&mapped_boxes),
@@ -27,20 +27,20 @@ BoxSetSingleBlockIterator::BoxSetSingleBlockIterator(
    }
 }
 
-BoxSetSingleBlockIterator::~BoxSetSingleBlockIterator()
+BoxContainerSingleBlockIterator::~BoxContainerSingleBlockIterator()
 {
    d_mapped_boxes = NULL;
 }
 
-bool BoxSetSingleBlockIterator::isValid() const
+bool BoxContainerSingleBlockIterator::isValid() const
 {
    return d_mapped_boxes != NULL &&
           d_iter != d_mapped_boxes->end() &&
           d_iter->getBlockId() == d_block_id;
 }
 
-BoxSetSingleBlockIterator& BoxSetSingleBlockIterator::operator = (
-   const BoxSetSingleBlockIterator& r)
+BoxContainerSingleBlockIterator& BoxContainerSingleBlockIterator::operator = (
+   const BoxContainerSingleBlockIterator& r)
 {
    d_mapped_boxes = r.d_mapped_boxes;
    d_iter = r.d_iter;
@@ -48,26 +48,26 @@ BoxSetSingleBlockIterator& BoxSetSingleBlockIterator::operator = (
    return *this;
 }
 
-const Box& BoxSetSingleBlockIterator::operator * () const
+const Box& BoxContainerSingleBlockIterator::operator * () const
 {
    return *d_iter;
 }
 
-const Box *BoxSetSingleBlockIterator::operator -> () const
+const Box *BoxContainerSingleBlockIterator::operator -> () const
 {
    return &(*d_iter);
 }
 
-bool BoxSetSingleBlockIterator::operator == (
-   const BoxSetSingleBlockIterator& r) const
+bool BoxContainerSingleBlockIterator::operator == (
+   const BoxContainerSingleBlockIterator& r) const
 {
    return d_mapped_boxes == r.d_mapped_boxes &&
           d_block_id == r.d_block_id &&
           d_iter == r.d_iter;
 }
 
-bool BoxSetSingleBlockIterator::operator != (
-   const BoxSetSingleBlockIterator& r) const
+bool BoxContainerSingleBlockIterator::operator != (
+   const BoxContainerSingleBlockIterator& r) const
 {
    return d_mapped_boxes != r.d_mapped_boxes ||
           d_block_id != r.d_block_id ||
@@ -80,7 +80,7 @@ bool BoxSetSingleBlockIterator::operator != (
  ****************************************************************************
  */
 
-BoxSetSingleBlockIterator& BoxSetSingleBlockIterator::operator ++ ()
+BoxContainerSingleBlockIterator& BoxContainerSingleBlockIterator::operator ++ ()
 {
    do {
       ++d_iter;
@@ -95,10 +95,10 @@ BoxSetSingleBlockIterator& BoxSetSingleBlockIterator::operator ++ ()
  ****************************************************************************
  */
 
-BoxSetSingleBlockIterator BoxSetSingleBlockIterator::operator ++ (
+BoxContainerSingleBlockIterator BoxContainerSingleBlockIterator::operator ++ (
    int)
 {
-   BoxSetSingleBlockIterator saved = *this;
+   BoxContainerSingleBlockIterator saved = *this;
    do {
       ++d_iter;
    } while (d_iter != d_mapped_boxes->end() &&
@@ -106,10 +106,10 @@ BoxSetSingleBlockIterator BoxSetSingleBlockIterator::operator ++ (
    return saved;
 }
 
-int BoxSetSingleBlockIterator::count() const
+int BoxContainerSingleBlockIterator::count() const
 {
    int ct = 0;
-   BoxSetSingleBlockIterator iter(*d_mapped_boxes, d_block_id);
+   BoxContainerSingleBlockIterator iter(*d_mapped_boxes, d_block_id);
    while (iter.isValid()) {
       ++ct;
       ++iter;

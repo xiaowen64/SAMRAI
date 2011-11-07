@@ -160,7 +160,7 @@ void PatchLevel::getBoxes(BoxContainer& boxes, const BlockId& block_id) const
    const BoxContainer& global_mapped_boxes =
       d_mapped_box_level->getGlobalizedVersion().getGlobalBoxes();
 
-   for (BoxSetSingleBlockIterator gi(global_mapped_boxes, block_id);
+   for (BoxContainerSingleBlockIterator gi(global_mapped_boxes, block_id);
         gi.isValid(); gi++) {
       boxes.pushBack(*gi);
    }

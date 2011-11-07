@@ -12,8 +12,8 @@
 
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/hier/BoxContainer.h"
-#include "SAMRAI/hier/BoxSetSingleBlockIterator.h"
-#include "SAMRAI/hier/BoxSetSingleOwnerIterator.h"
+#include "SAMRAI/hier/BoxContainerSingleBlockIterator.h"
+#include "SAMRAI/hier/BoxContainerSingleOwnerIterator.h"
 #include "SAMRAI/tbox/SAMRAIManager.h"
 #include "SAMRAI/tbox/SAMRAI_MPI.h"
 #include "SAMRAI/tbox/PIO.h"
@@ -68,7 +68,7 @@ int main(
 
          const hier::BlockId bid(b);
 
-         for (hier::BoxSetSingleBlockIterator bi(mboxes, hier::BlockId(b));
+         for (hier::BoxContainerSingleBlockIterator bi(mboxes, hier::BlockId(b));
               bi.isValid(); ++bi) {
 
             if (bi->getBlockId() != bid) {
@@ -84,7 +84,7 @@ int main(
 
       for (int owner_rank = 0; owner_rank < num_owners; ++owner_rank) {
 
-         for (hier::BoxSetSingleOwnerIterator bi(mboxes, owner_rank);
+         for (hier::BoxContainerSingleOwnerIterator bi(mboxes, owner_rank);
               bi.isValid(); ++bi) {
 
             if (bi->getOwnerRank() != owner_rank) {

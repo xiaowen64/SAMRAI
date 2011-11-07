@@ -1987,7 +1987,7 @@ void RefineSchedule::fillSingularityBoundaries(
                hier::Box singularity(sb());
                singularity.refine(ratio);
 
-               hier::BoxSetSingleBlockIterator dst_local_iter(
+               hier::BoxContainerSingleBlockIterator dst_local_iter(
                   d_dst_level->getBoxLevel()->getBoxes(), block_id);
 
                for ( ; dst_local_iter.isValid(); dst_local_iter++) {
@@ -3127,7 +3127,7 @@ void RefineSchedule::createEnconLevel(const hier::IntVector& fill_gcw)
           * Test to see if there are any local destination boxes on this
           * block.  Move on to next block if not.
           */
-         hier::BoxSetSingleBlockIterator dst_test_iter(
+         hier::BoxContainerSingleBlockIterator dst_test_iter(
             d_dst_level->getBoxLevel()->getBoxes(),
             block_id);
 
@@ -3182,7 +3182,7 @@ void RefineSchedule::createEnconLevel(const hier::IntVector& fill_gcw)
                    * determine if they touch the current neighbor block
                    * at enhanced connectivity.
                    */
-                  hier::BoxSetSingleBlockIterator dst_local_iter(
+                  hier::BoxContainerSingleBlockIterator dst_local_iter(
                      d_dst_level->getBoxLevel()->getBoxes(),
                      block_id);
 

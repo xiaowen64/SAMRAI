@@ -500,10 +500,10 @@ static int createAndTestDLBG(
       plog << "****************************************\n";
       mapped_box_levels[ln].recursivePrint(plog, "", node_log_detail);
       if (globalize_mapped_box_levels) {
-         pout << "Globalizing BoxSet " << ln << ".\n";
+         pout << "Globalizing BoxLevel " << ln << ".\n";
          mapped_box_levels[ln].setParallelState(BoxLevel::GLOBALIZED);
       }
-      pout << "BoxSet " << ln << " done.\n";
+      pout << "BoxLevel " << ln << " done.\n";
    }
 
    /*

@@ -15,7 +15,7 @@
 
 #include "SAMRAI/hier/BoxContainerIterator.h"
 #include "SAMRAI/hier/Connector.h"
-#include "SAMRAI/hier/BoxSetSingleBlockIterator.h"
+#include "SAMRAI/hier/BoxContainerSingleBlockIterator.h"
 #include "SAMRAI/hier/PatchLevel.h"
 
 #if !defined(__BGL_FAMILY__) && defined(__xlC__)
@@ -270,7 +270,7 @@ void CoarseFineBoundary::computeFromLevel(
       /*
        * Construct an iterator which filters only level's boxes in this block.
        */
-      BoxSetSingleBlockIterator itr(all_boxes_on_level, block_id);
+      BoxContainerSingleBlockIterator itr(all_boxes_on_level, block_id);
 
       /*
        * Only do work if there any boxes in this block.

@@ -12,7 +12,7 @@
 
 #include "SAMRAI/hier/NeighborhoodSet.h"
 #include "SAMRAI/hier/BoxContainerConstIterator.h"
-#include "SAMRAI/hier/BoxSetSingleBlockIterator.h"
+#include "SAMRAI/hier/BoxContainerSingleBlockIterator.h"
 #include "SAMRAI/hier/Connector.h"
 
 #include "SAMRAI/tbox/Utilities.h"
@@ -182,7 +182,7 @@ NeighborhoodSet::getNeighbors(
 {
    NeighborSet tmp_nabrs;
    getNeighbors(tmp_nabrs);
-   for (BoxSetSingleBlockIterator ei(tmp_nabrs, block_id);
+   for (BoxContainerSingleBlockIterator ei(tmp_nabrs, block_id);
         ei.isValid(); ++ei) {
       all_nabrs.pushBack(*ei);
    }

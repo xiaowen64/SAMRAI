@@ -15,7 +15,7 @@
 #include "SAMRAI/hier/BoxContainerIterator.h"
 #include "SAMRAI/hier/BoxLevel.h"
 #include "SAMRAI/hier/BoxLevelConnectorUtils.h"
-#include "SAMRAI/hier/BoxSetSingleBlockIterator.h"
+#include "SAMRAI/hier/BoxContainerSingleBlockIterator.h"
 #include "SAMRAI/hier/MultiblockBoxTree.h"
 #include "SAMRAI/hier/TransferOperatorRegistry.h"
 #include "SAMRAI/mesh/TreeLoadBalancer.h"
@@ -291,7 +291,7 @@ int main(
              * Block bn boxes in big_mapped_box_level are the same as
              * block bn domain.
              */
-            for (hier::BoxSetSingleBlockIterator bi(domain_mapped_boxes, block_id);
+            for (hier::BoxContainerSingleBlockIterator bi(domain_mapped_boxes, block_id);
                  bi.isValid(); ++bi) {
                big_mapped_box_level.addBoxWithoutUpdate(*bi);
             }
