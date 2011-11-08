@@ -1105,6 +1105,18 @@ void BoxLevelConnectorUtils::computeBoxesAroundBoundary(
          mi->second.simplify();
       }
    }
+
+   // Set correct block ids.
+   for (std::map<BlockId, BoxContainer>::iterator bi = boundary.begin();
+        bi != boundary.end(); ++bi) {
+      const BlockId& block_id(bi->first);
+      BoxContainer &boxes(bi->second);
+      for ( BoxContainer::Iterator bj=boxes.begin(); bj!=boxes.end(); ++bj ) {
+         bj->getId() = BoxId( bj->getLocalId(), bj->getOwnerRank(),
+                              block_id, bj->getPeriodicId() );
+      }
+   }
+
 }
 
 /*
