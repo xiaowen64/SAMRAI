@@ -13,7 +13,7 @@
 
 #include "SAMRAI/hier/BoxContainer.h"
 
-#include "SAMRAI/hier/BoxSetSingleBlockIterator.h"
+#include "SAMRAI/hier/BoxContainerSingleBlockIterator.h"
 #include "SAMRAI/hier/Index.h"
 #include "SAMRAI/hier/GridGeometry.h"
 #include "SAMRAI/hier/MultiblockBoxTree.h"
@@ -47,7 +47,7 @@ BoxContainer::BoxContainer(
    const BlockId& block_id):
    d_ordered(false)
 {
-   BoxSetSingleBlockIterator itr(other, block_id);
+   BoxContainerSingleBlockIterator itr(other, block_id);
    while (itr.isValid()) {
       const Box& mapped_box = *itr;
       pushBack(mapped_box);

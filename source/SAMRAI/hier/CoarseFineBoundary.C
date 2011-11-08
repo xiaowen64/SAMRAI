@@ -15,7 +15,7 @@
 
 #include "SAMRAI/hier/BoxContainerIterator.h"
 #include "SAMRAI/hier/Connector.h"
-#include "SAMRAI/hier/BoxSetSingleBlockIterator.h"
+#include "SAMRAI/hier/BoxContainerSingleBlockIterator.h"
 #include "SAMRAI/hier/PatchLevel.h"
 
 #if !defined(__BGL_FAMILY__) && defined(__xlC__)
@@ -170,7 +170,8 @@ void CoarseFineBoundary::computeFromLevel(
     * the fake domain be everywhere there is NOT a coarse-fine boundary--or
     * everywhere there IS a physical boundary or a fine-boundary.
     */
-   BoxContainer fake_domain_list;
+   tbox::Array<BoxContainer> fake_domain(1);
+   BoxContainer& fake_domain_list = fake_domain[0];
 
    // Every mapped_box should connect to the domain mapped_box_level.
    TBOX_ASSERT(mapped_box_level_to_domain.getLocalNumberOfNeighborSets() ==
@@ -224,7 +225,6 @@ void CoarseFineBoundary::computeFromLevel(
     */
    bool do_all_patches = true;
    const IntVector use_periodic_shift(d_dim, 0);
-   const tbox::Array<BoxContainer> fake_domain(1, fake_domain_list);
    grid_geometry->computeBoundaryBoxesOnLevel(
       d_boundary_boxes,
       level,
@@ -270,7 +270,7 @@ void CoarseFineBoundary::computeFromLevel(
       /*
        * Construct an iterator which filters only level's boxes in this block.
        */
-      BoxSetSingleBlockIterator itr(all_boxes_on_level, block_id);
+      BoxContainerSingleBlockIterator itr(all_boxes_on_level, block_id);
 
       /*
        * Only do work if there any boxes in this block.

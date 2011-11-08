@@ -19,6 +19,7 @@
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/hier/BoxContainerIterator.h"
 #include "SAMRAI/hier/BoxContainerConstIterator.h"
+#include "SAMRAI/hier/BoxContainerSingleBlockIterator.h"
 #include "SAMRAI/hier/BoxLevel.h"
 #include "SAMRAI/hier/BoxTree.h"
 #include "SAMRAI/hier/IntVector.h"
@@ -175,7 +176,7 @@ GridGeometry::GridGeometry(
         ++itr) {
       block_numbers.insert(itr->getBlockId().getBlockValue());
    }
-   d_number_blocks = block_numbers.size();
+   d_number_blocks = static_cast<int>(block_numbers.size());
    d_reduced_connect.resizeArray(d_number_blocks, false);
    d_block_neighbors.resizeArray(d_number_blocks);
 
@@ -1413,7 +1414,14 @@ void GridGeometry::setPhysicalDomain(
    const BoxContainer& domain,
    const int number_blocks)
 {
+#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(domain.size() > 0);
+   for (BoxContainer::ConstIterator itr = domain.begin(); itr != domain.end();
+        ++itr) {
+      TBOX_ASSERT(itr->getBlockId().isValid());       
+      TBOX_ASSERT(itr->getBlockId().getBlockValue() < number_blocks);       
+   } 
+#endif
 
    d_domain_is_single_box.resizeArray(number_blocks);
    d_domain_tree.resizeArray(number_blocks);
@@ -2118,7 +2126,7 @@ void GridGeometry::adjustMultiblockPatchLevelBoundaries(
          pseudo_domain.spliceFront(sing_boxes);
          pseudo_domain.coalesce();
 
-         BoxSetSingleBlockIterator mbi(d_mapped_boxes, block_id);
+         BoxContainerSingleBlockIterator mbi(d_mapped_boxes, block_id);
 
          for ( ; mbi.isValid(); mbi++) {
             const BoxId& mapped_box_id = (*mbi).getId();

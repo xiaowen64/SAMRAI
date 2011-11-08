@@ -403,6 +403,16 @@ public:
    getOne(
       const tbox::Dimension& dim);
 
+   /*
+    * @brief Sort the given IntVector the smallest to the largest value.
+    *
+    * Set the ith entry of this to the position of the ith largest
+    * value in the given IntVector.
+    */
+   void
+   sortIntVector(
+      const hier::IntVector& values);
+
    /**
     * Read an integer vector from an input stream.  The format for
     * the input is (i0,...,in) for an n-dimensional vector.

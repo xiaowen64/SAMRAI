@@ -641,5 +641,37 @@ const IntVector& IntVector::getOne(
    return *(s_ones[dim.getValue() - 1]);
 }
 
+
+
+/*
+ *************************************************************************
+ * Sort the sizes of the given IntVector from smallest to largest value.
+ *************************************************************************
+ */
+SAMRAI_INLINE_KEYWORD
+void IntVector::sortIntVector(
+   const hier::IntVector& values)
+{
+   const hier::IntVector num_cells = values;
+
+   for (int d = 0; d < d_dim.getValue(); d++) {
+      d_vector[d] = d;
+   }
+   for (int d0 = 0; d0 < d_dim.getValue() - 1; d0++) {
+      for (int d1 = d0 + 1; d1 < d_dim.getValue(); d1++) {
+         if (values(d_vector[d0]) > values(d_vector[d1])) {
+            int tmp_d = d_vector[d0];
+            d_vector[d0] = d_vector[d1];
+            d_vector[d1] = tmp_d;
+         }
+      }
+   }
+#ifdef DEBUG_CHECK_ASSERTIONS
+   for (int d = 0; d < d_dim.getValue() - 1; d++) {
+      TBOX_ASSERT(values(d_vector[d]) <= values(d_vector[d + 1]));
+   }
+#endif
+}
+
 }
 }

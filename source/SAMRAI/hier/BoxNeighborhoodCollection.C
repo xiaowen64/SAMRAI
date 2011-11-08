@@ -14,7 +14,7 @@
 #include "SAMRAI/hier/BoxNeighborhoodCollection.h"
 #include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/hier/BoxContainerConstIterator.h"
-#include "SAMRAI/hier/BoxSetSingleBlockIterator.h"
+#include "SAMRAI/hier/BoxContainerSingleBlockIterator.h"
 
 #ifndef SAMRAI_INLINE
 #include "SAMRAI/hier/BoxNeighborhoodCollection.I"
@@ -575,7 +575,7 @@ void BoxNeighborhoodCollection::getNeighbors(
    // BoxContainer.
    BoxContainer tmp_nabrs;
    getNeighbors(tmp_nabrs);
-   for (BoxSetSingleBlockIterator ei(tmp_nabrs, block_id);
+   for (BoxContainerSingleBlockIterator ei(tmp_nabrs, block_id);
         ei.isValid(); ++ei) {
       neighbors.pushBack(*ei);
    }

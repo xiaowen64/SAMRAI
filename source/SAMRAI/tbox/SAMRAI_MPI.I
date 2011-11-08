@@ -28,17 +28,20 @@ SAMRAI_INLINE_KEYWORD
 SAMRAI_MPI::SAMRAI_MPI(
    const Comm& comm):
    d_comm(comm),
-   d_rank(0),
-   d_size(1)
+   d_rank(-1),
+   d_size(-1)
 {
-#ifdef HAVE_MPI
    if (comm != MPI_COMM_NULL) {
+#ifdef HAVE_MPI
       if (s_mpi_is_initialized) {
          MPI_Comm_rank(d_comm, &d_rank);
          MPI_Comm_size(d_comm, &d_size);
       }
-   }
+#else
+      d_rank = 0;
+      d_size = 1;
 #endif
+   }
 }
 
 /*

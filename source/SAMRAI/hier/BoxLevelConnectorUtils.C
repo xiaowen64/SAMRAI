@@ -13,7 +13,6 @@
 #include "SAMRAI/hier/BoxLevelConnectorUtils.h"
 
 #include "SAMRAI/hier/BoxContainerIterator.h"
-#include "SAMRAI/hier/BoxSetSingleBlockIterator.h"
 #include "SAMRAI/hier/MappingConnectorAlgorithm.h"
 #include "SAMRAI/hier/OverlapConnectorAlgorithm.h"
 #include "SAMRAI/hier/PeriodicShiftCatalog.h"
@@ -113,7 +112,9 @@ bool BoxLevelConnectorUtils::baseNestsInHead(
    } else if (head.getRefinementRatio() >= base.getRefinementRatio()) {
       const IntVector ratio = head.getRefinementRatio()
          / base.getRefinementRatio();
-      required_gcw += IntVector::ceilingDivide((head_swell + head_nesting_margin), ratio);
+      required_gcw += IntVector::ceilingDivide(
+         (head_swell + head_nesting_margin),
+         ratio);
    } else {
       TBOX_ERROR("BoxLevelConnectorUtils::baseNestsInHead: head index space\n"
          << "must be either a refinement or a coarsening of\n"
@@ -186,9 +187,9 @@ bool BoxLevelConnectorUtils::baseNestsInHead(
          IntVector::ceilingDivide(head_nesting_margin, connector.getRatio()))
    ;
    if (!(connector.getConnectorWidth() >= required_gcw)) {
-      TBOX_ERROR("BoxLevelConnectorUtils::baseNestsInHead: connector lacks sufficient\n"
-         << "ghost cell width for determining whether its base nests\n"
-         << "inside its head.");
+      TBOX_ERROR("BoxLevelConnectorUtils::baseNestsInHead: connector lacks\n"
+         << "sufficient ghost cell width for determining whether its base\n"
+         << "nests inside its head.");
    }
 
    OverlapConnectorAlgorithm oca;
@@ -410,7 +411,8 @@ void BoxLevelConnectorUtils::makeSortingMap(
    std::vector<Box> periodic_image_mapped_box_vector;
    if (!cur_mapped_boxes.isEmpty()) {
       /*
-       * Bypass qsort if we have no mapped_boxes (else there is a memory warning).
+       * Bypass qsort if we have no mapped_boxes (else there is a memory
+       * warning).
        */
       cur_mapped_boxes.separatePeriodicImages(
          real_mapped_box_vector,
@@ -422,8 +424,6 @@ void BoxLevelConnectorUtils::makeSortingMap(
             qsortBoxCompare);
       }
    }
-
-   BoxContainer new_mapped_boxes;
 
    sorted_mapped_box_level.initialize(
       unsorted_mapped_box_level.getRefinementRatio(),
@@ -448,9 +448,10 @@ void BoxLevelConnectorUtils::makeSortingMap(
       sorted_mapped_box_level.addBoxWithoutUpdate(new_mapped_box);
 
       /*
-       * Now, add cur_mapped_box's periodic images, but give them cur_mapped_box's
-       * new LocalId.  In finding the image mapped_boxes, we use the fact
-       * that a real mapped_box's image follows the real mapped_box in a BoxContainer.
+       * Now, add cur_mapped_box's periodic images, but give them
+       * cur_mapped_box's new LocalId.  In finding the image mapped_boxes, we
+       * use the fact that a real mapped_box's image follows the real
+       * mapped_box in a BoxContainer.
        */
       BoxContainer::ConstIterator ini = cur_mapped_boxes.find(cur_mapped_box);
       TBOX_ASSERT(ini != cur_mapped_boxes.end());
@@ -677,10 +678,9 @@ void BoxLevelConnectorUtils::computeInternalOrExternalParts(
       input.getGridGeometry(), input.getMPI());
 
    /*
-    * Get the set of neighboring boxes on the reference
-    * BoxLevel.  We first store these boxes in a NeighborSet in
-    * order to remove duplicate entries.  Then we move them into BoxContainer for
-    * each block for box manipulation.
+    * Get the set of neighboring boxes on the reference BoxLevel.  We first
+    * store these boxes in a NeighborSet in order to remove duplicate entries.
+    * Then we move them into BoxContainer for each block for box manipulation.
     */
    std::map<BlockId, BoxContainer> reference_box_list;
    input_to_reference.getLocalNeighbors(reference_box_list);
@@ -885,7 +885,8 @@ void BoxLevelConnectorUtils::computeInternalOrExternalParts(
 
             input_to_parts.makeEmptyLocalNeighborhood(
                input_mapped_box.getId());
-            for (BoxContainer::Iterator bi(parts_list); bi != parts_list.end(); ++bi) {
+            for (BoxContainer::Iterator bi(parts_list);
+                 bi != parts_list.end(); ++bi) {
                const Box
                parts_mapped_box((*bi),
                                 ++last_used_index,
@@ -914,7 +915,8 @@ void BoxLevelConnectorUtils::computeInternalOrExternalParts(
       int a = static_cast<int>(input_to_parts.getLocalNumberOfNeighborSets());
       int b = static_cast<int>(input.getLocalNumberOfBoxes());
       if (a != b) {
-         tbox::perr << "BoxLevelConnectorUtils::" << caller << ": library error:\n"
+         tbox::perr << "BoxLevelConnectorUtils::" << caller
+                    << ": library error:\n"
                     <<
          "There are no parts, so input BoxLevel should be completely mapped away.\n"
                     << "However, not all input Boxes have been mapped.\n"
@@ -948,7 +950,9 @@ void BoxLevelConnectorUtils::computeBoxesAroundBoundary(
    const tbox::Dimension& dim(grid_geometry->getDim());
    const IntVector& one_vec(IntVector::getOne(dim));
 
-   const std::map<BlockId, BoxContainer> box_list_map(boundary);
+   MultiblockBoxTree reference_mapped_boxes_tree(
+      grid_geometry,
+      boundary);
    // ... boundary is now R
 
    for (std::map<BlockId, BoxContainer>::iterator mi = boundary.begin();
@@ -956,10 +960,6 @@ void BoxLevelConnectorUtils::computeBoxesAroundBoundary(
       mi->second.grow(one_vec);
    }
    // ... boundary is now (R^1)
-
-   MultiblockBoxTree reference_mapped_boxes_tree(
-      grid_geometry,
-      box_list_map);
    for (std::map<BlockId, BoxContainer>::iterator mi = boundary.begin();
         mi != boundary.end(); ++mi) {
       const BlockId& block_id(mi->first);
@@ -1052,7 +1052,8 @@ void BoxLevelConnectorUtils::computeBoxesAroundBoundary(
                reduced_connectivity_singularity_boxes.refine(refinement_ratio);
             }
             //boundary[block_id].removeIntersections(reduced_connectivity_singularity_boxes);
-            bi->second.removeIntersections(reduced_connectivity_singularity_boxes);
+            bi->second.removeIntersections(
+               reduced_connectivity_singularity_boxes);
          }
 
          /*
@@ -1082,7 +1083,8 @@ void BoxLevelConnectorUtils::computeBoxesAroundBoundary(
                   block_id);
 
                singularity_boxes.intersectBoxes(
-                  reference_mapped_boxes_tree.getSingleBlockBoxTree(neighbor_block_id));
+                  reference_mapped_boxes_tree.getSingleBlockBoxTree(
+                     neighbor_block_id));
 
                grid_geometry->transformBoxContainer(singularity_boxes,
                   refinement_ratio,
@@ -1197,9 +1199,9 @@ void BoxLevelConnectorUtils::makeRemainderMap(
             remaining_parts_list.removeIntersections((*vi));
          }
          /*
-          * Coalesce the remaining_parts_list, because it may have unneeded cuts.
-          * The coalesce algorithm is O(N^2) or O(N^3), but we expect the
-          * length of remaining_parts_list to be very small.
+          * Coalesce the remaining_parts_list, because it may have unneeded
+          * cuts.  The coalesce algorithm is O(N^2) or O(N^3), but we expect
+          * the length of remaining_parts_list to be very small.
           */
          if (remaining_parts_list.size() > 1) {
             remaining_parts_list.coalesce();
@@ -1252,7 +1254,8 @@ void BoxLevelConnectorUtils::addPeriodicImages(
    }
 
    tbox::Pointer<BoxTree> domain_tree_for_mapped_box_level =
-      domain_search_tree.createRefinedTree(mapped_box_level.getRefinementRatio());
+      domain_search_tree.createRefinedTree(
+         mapped_box_level.getRefinementRatio());
 
    const BoxTree& domain_tree =
       *domain_tree_for_mapped_box_level;
@@ -1350,7 +1353,8 @@ void BoxLevelConnectorUtils::addPeriodicImagesAndRelationships(
    const BoxLevel& anchor = anchor_to_mapped_box_level.getBase();
 
    tbox::Pointer<BoxTree> domain_tree_for_mapped_box_level =
-      domain_search_tree.createRefinedTree(mapped_box_level.getRefinementRatio());
+      domain_search_tree.createRefinedTree(
+         mapped_box_level.getRefinementRatio());
 
    {
       /*

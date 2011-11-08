@@ -10,7 +10,7 @@
 #include "SAMRAI/hier/RealBoxConstIterator.h"
 #include "SAMRAI/hier/BoxLevelHandle.h"
 #include "SAMRAI/hier/BoxContainerIterator.h"
-#include "SAMRAI/hier/BoxSetSingleOwnerIterator.h"
+#include "SAMRAI/hier/BoxContainerSingleOwnerIterator.h"
 
 #if !defined(__BGL_FAMILY__) && defined(__xlC__)
 /*
@@ -261,7 +261,7 @@ size_t BoxLevel::getLocalNumberOfBoxes(
       return d_local_number_of_boxes;
    } else {
       size_t count = 0;
-      BoxSetSingleOwnerIterator mbi(d_global_boxes, rank);
+      BoxContainerSingleOwnerIterator mbi(d_global_boxes, rank);
       for ( ; mbi.isValid(); mbi++) {
          if (!(*mbi).isPeriodicImage()) {
             ++count;
@@ -297,7 +297,7 @@ size_t BoxLevel::getLocalNumberOfCells(
       return d_local_number_of_cells;
    } else {
       size_t count = 0;
-      BoxSetSingleOwnerIterator mbi(d_global_boxes, rank);
+      BoxContainerSingleOwnerIterator mbi(d_global_boxes, rank);
       for ( ; mbi.isValid(); mbi++) {
          if (!(*mbi).isPeriodicImage()) {
             count += (*mbi).size();

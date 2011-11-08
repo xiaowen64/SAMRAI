@@ -4,30 +4,32 @@
  * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Special iterator for BoxSet.
+ * Description:   Special iterator for BoxContainer.
  *
  ************************************************************************/
-#ifndef included_hier_BoxSetSingleOwnerIterator
-#define included_hier_BoxSetSingleOwnerIterator
+#ifndef included_hier_BoxContainerSingleBlockIterator
+#define included_hier_BoxContainerSingleBlockIterator
 
 #include "SAMRAI/SAMRAI_config.h"
 
+#include "SAMRAI/hier/BlockId.h"
 #include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/hier/BoxContainerConstIterator.h"
 
 namespace SAMRAI {
 namespace hier {
 
+
 /*!
- * @brief BoxSet iterator picking items with a specified
- * owner rank.
+ * @brief BoxContainer iterator picking items with a specified
+ * BlockId.
  *
- * This iterator runs through all Boxes in a BoxSet that
- * has the given owner rank.  The iterator runs through the
- * Boxes in the order they appear in the BoxSet, skipping
- * over Boxes that do not have the specified owner rank.
+ * This iterator runs through all Boxes in a BoxContainer that
+ * has the given BlockId.  The iterator runs through the Boxes
+ * in the order they appear in the BoxContainer, skipping over
+ * Boxes that do not have the specified owner rank.
  */
-class BoxSetSingleOwnerIterator
+class BoxContainerSingleBlockIterator
 {
 
 public:
@@ -35,21 +37,21 @@ public:
     * @brief Constructor
     *
     * @param [i] container
-    * @param [i] owner_rank
+    * @param [i] block_id
     */
-   BoxSetSingleOwnerIterator(
+   BoxContainerSingleBlockIterator(
       const BoxContainer& container,
-      const int& owner_rank);
+      const BlockId& block_id);
 
    //! @brief Destructor
-   ~BoxSetSingleOwnerIterator();
+   ~BoxContainerSingleBlockIterator();
 
    /*!
     * @brief Assignment operator.
     */
-   BoxSetSingleOwnerIterator&
+   BoxContainerSingleBlockIterator&
    operator = (
-      const BoxSetSingleOwnerIterator& r);
+      const BoxContainerSingleBlockIterator& r);
 
    /*!
     * @brief Dereference operator mimicking a pointer dereference.
@@ -68,14 +70,14 @@ public:
     */
    bool
    operator == (
-      const BoxSetSingleOwnerIterator& r) const;
+      const BoxContainerSingleBlockIterator& r) const;
 
    /*!
     * @brief Inequality comparison.
     */
    bool
    operator != (
-      const BoxSetSingleOwnerIterator& r) const;
+      const BoxContainerSingleBlockIterator& r) const;
 
    /*!
     * @brief Whether the iterator can be dereferenced.  When the
@@ -90,7 +92,7 @@ public:
     * Pre-increment increment the iterator and returns the incremented
     * state.
     */
-   BoxSetSingleOwnerIterator&
+   BoxContainerSingleBlockIterator&
    operator ++ ();
 
    /*!
@@ -99,20 +101,26 @@ public:
     * Post-increment saves the iterator, increment it and returns the
     * saved iterator.
     */
-   BoxSetSingleOwnerIterator
+   BoxContainerSingleBlockIterator
    operator ++ (
       int);
 
+   /*!
+    * @brief Returns the number of BoxContainers being iterated through.
+    */
+   int
+   count() const;
+
 private:
    /*!
-    * @brief BoxSet being iterated through.
+    * @brief BoxContainer being iterated through.
     */
    const BoxContainer* d_mapped_boxes;
 
    /*!
-    * @brief The owner_rank.
+    * @brief The BlockId.
     */
-   int d_owner_rank;
+   BlockId d_block_id;
 
    /*!
     * @brief The iterator.
@@ -125,7 +133,7 @@ private:
 }
 
 #ifdef SAMRAI_INLINE
-// #include "SAMRAI/hier/BoxSetSingleOwnerIterator.I"
+// #include "SAMRAI/hier/BoxContainerSingleBlockIterator.I"
 #endif
 
-#endif  // included_hier_BoxSetSingleOwnerIterator
+#endif  // included_hier_BoxContainerSingleBlockIterator

@@ -195,8 +195,7 @@ void PersistentOverlapConnectors::cacheConnector(
    }
 
    d_cons_from_me.push_back(connector);
-   head.getPersistentOverlapConnectors().d_cons_to_me.
-   push_back(connector);
+   head.getPersistentOverlapConnectors().d_cons_to_me.push_back(connector);
 
    return;
 }

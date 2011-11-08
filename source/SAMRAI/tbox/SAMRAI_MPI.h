@@ -177,6 +177,12 @@ public:
     * Note that the object will NOT automatically free the communicator.
     * To manually free the communicator, use freeCommunicator().
     *
+    * If the specified communicator is MPI_COMM_NULL, the rank (see getRank())
+    * and size (see getSize()) are set to invalid values.  Otherwise, the
+    * rank and size are set using the given communicator.  If MPI is enabled
+    * but MPI has not been initialized, the rank and size are set to invalid
+    * values.  If MPI is not enabled, the rank is set to 0 and size to 1.
+    *
     * @param[in] comm
     */
    explicit SAMRAI_MPI(
