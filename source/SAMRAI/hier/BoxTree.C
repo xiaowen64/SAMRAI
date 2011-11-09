@@ -143,7 +143,10 @@ BoxTree::BoxTree(
     * no right child, and no recursive d_center_child.
     */
    if (mapped_boxes.size() <= min_number) {
-      d_mapped_boxes = mapped_boxes; 
+      for (BoxContainer::ConstIterator ni = mapped_boxes.begin();
+        ni != mapped_boxes.end(); ++ni) {
+         d_mapped_boxes.push_back(&(*ni));
+      }
    } else {
 
       /*
@@ -172,16 +175,16 @@ BoxTree::BoxTree(
          (d_bounding_box.lower(d_partition_dim)
           + d_bounding_box.upper(d_partition_dim)) / 2;
 
-      BoxContainer left_mapped_boxes, right_mapped_boxes;
+      std::list<const Box*> left_mapped_boxes, right_mapped_boxes;
       for (BoxContainer::ConstIterator ni = mapped_boxes.begin();
            ni != mapped_boxes.end(); ++ni) {
          const Box& mapped_box = *ni;
          if (mapped_box.upper(d_partition_dim) <= midpoint) {
-            left_mapped_boxes.insert(left_mapped_boxes.end(), mapped_box);
+            left_mapped_boxes.push_back(&mapped_box);
          } else if (mapped_box.lower(d_partition_dim) > midpoint) {
-            right_mapped_boxes.insert(right_mapped_boxes.end(), mapped_box);
+            right_mapped_boxes.push_back(&mapped_box);
          } else {
-            d_mapped_boxes.insert(d_mapped_boxes.end(), mapped_box);
+            d_mapped_boxes.push_back(&mapped_box);
          }
       }
 
@@ -246,14 +249,19 @@ BoxTree::BoxTree(
     */
    if (boxes.size() <= min_number) {
       if (boxes.isOrdered()) {
-         d_mapped_boxes = boxes;
+         for (BoxContainer::ConstIterator ni(boxes); ni != boxes.end(); ++ni) {
+            d_mapped_boxes.push_back(&(*ni));
+         }
       } else {
+TBOX_ASSERT(0);
+/*
          d_mapped_boxes.order();
          LocalId count(-1);
          for (BoxContainer::ConstIterator li(boxes); li != boxes.end(); ++li) {
             const Box n(*li, ++count, 0, d_block_id);
             d_mapped_boxes.insert(d_mapped_boxes.end(), n);
          }
+*/
       }
    } else {
 
@@ -283,21 +291,22 @@ BoxTree::BoxTree(
          (d_bounding_box.lower(d_partition_dim)
           + d_bounding_box.upper(d_partition_dim)) / 2;
 
-      BoxContainer left_mapped_boxes, right_mapped_boxes;
+      std::list<const Box*> left_mapped_boxes, right_mapped_boxes;
       LocalId count(-1);
       Box mapped_box(d_dim);
       for (BoxContainer::ConstIterator li(boxes); li != boxes.end(); ++li) {
+         const Box* mapped_box = &(*li);
          if (boxes.isOrdered()) {
-            mapped_box = *li;
          } else {
-            mapped_box.initialize(*li, ++count, 0, d_block_id);
+            TBOX_ASSERT(0);
+            //mapped_box.initialize(*li, ++count, 0, d_block_id);
          }
-         if (mapped_box.upper(d_partition_dim) <= midpoint) {
-            left_mapped_boxes.insert(left_mapped_boxes.end(), mapped_box);
-         } else if (mapped_box.lower(d_partition_dim) > midpoint) {
-            right_mapped_boxes.insert(right_mapped_boxes.end(), mapped_box);
+         if (mapped_box->upper(d_partition_dim) <= midpoint) {
+            left_mapped_boxes.push_back(mapped_box);
+         } else if (mapped_box->lower(d_partition_dim) > midpoint) {
+            right_mapped_boxes.push_back(mapped_box);
          } else {
-            d_mapped_boxes.insert(d_mapped_boxes.end(), mapped_box);
+            d_mapped_boxes.push_back(mapped_box);
          }
       }
 
@@ -380,7 +389,11 @@ void BoxTree::generateTree(
 #endif
 
    clear();
-   mapped_boxes.swap(d_mapped_boxes);
+   for (BoxContainer::ConstIterator ni = mapped_boxes.begin();
+        ni != mapped_boxes.end();
+        ++ni) {
+      d_mapped_boxes.push_back(&(*ni));
+   }
    privateGenerateTree(min_number);
    t_build_tree[d_dim.getValue() - 1]->stop();
 }
@@ -410,16 +423,16 @@ void BoxTree::privateGenerateTree(
    ++s_num_generate[d_dim.getValue() - 1];
 
    if (d_mapped_boxes.size()) {
-      d_block_id = d_mapped_boxes.begin()->getBlockId();
+      d_block_id = (**(d_mapped_boxes.begin())).getBlockId();
    }
 
    /*
     * Compute this tree's domain, which is the bounding box for the
     * constituent boxes.
     */
-   for (BoxContainer::ConstIterator ni = d_mapped_boxes.begin();
+   for (std::list<const Box*>::const_iterator ni = d_mapped_boxes.begin();
         ni != d_mapped_boxes.end(); ++ni) {
-      d_bounding_box += *ni;
+      d_bounding_box += **ni;
    }
 
    /*
@@ -455,18 +468,18 @@ void BoxTree::privateGenerateTree(
          (d_bounding_box.lower(d_partition_dim)
           + d_bounding_box.upper(d_partition_dim)) / 2;
 
-      BoxContainer left_mapped_boxes, right_mapped_boxes;
-      for (BoxContainer::Iterator ni = d_mapped_boxes.begin();
+      std::list<const Box*> left_mapped_boxes, right_mapped_boxes;
+      for (std::list<const Box*>::iterator ni = d_mapped_boxes.begin();
            ni != d_mapped_boxes.end(); ) {
-         const Box& mapped_box = *ni;
-         if (mapped_box.upper(d_partition_dim) <= midpoint) {
-            left_mapped_boxes.insert(left_mapped_boxes.end(), mapped_box);
-            BoxContainer::Iterator curr = ni;
+         const Box* mapped_box = *ni;
+         if (mapped_box->upper(d_partition_dim) <= midpoint) {
+            left_mapped_boxes.push_back(mapped_box);
+            std::list<const Box*>::iterator curr = ni;
             ++ni;
             d_mapped_boxes.erase(curr);
-         } else if (mapped_box.lower(d_partition_dim) > midpoint) {
-            right_mapped_boxes.insert(right_mapped_boxes.end(), mapped_box);
-            BoxContainer::Iterator curr = ni;
+         } else if (mapped_box->lower(d_partition_dim) > midpoint) {
+            right_mapped_boxes.push_back(mapped_box);
+            std::list<const Box*>::iterator curr = ni;
             ++ni;
             d_mapped_boxes.erase(curr);
          } else {
@@ -496,8 +509,8 @@ void BoxTree::privateGenerateTree(
  */
 void BoxTree::setupChildren(
    const int min_number,
-   BoxContainer& left_mapped_boxes,
-   BoxContainer& right_mapped_boxes)
+   std::list<const Box*>& left_mapped_boxes,
+   std::list<const Box*>& right_mapped_boxes)
 {
    const int total_size = static_cast<int>(
       left_mapped_boxes.size() +
@@ -538,12 +551,12 @@ void BoxTree::setupChildren(
    /*
     * Recurse to build this node's left and right children.
     */
-   if (!left_mapped_boxes.isEmpty()) {
+   if (!left_mapped_boxes.empty()) {
       d_left_child = new BoxTree(d_dim);
       left_mapped_boxes.swap(d_left_child->d_mapped_boxes);
       d_left_child->privateGenerateTree(min_number);
    }
-   if (!right_mapped_boxes.isEmpty()) {
+   if (!right_mapped_boxes.empty()) {
       d_right_child = new BoxTree(d_dim);
       right_mapped_boxes.swap(d_right_child->d_mapped_boxes);
       d_right_child->privateGenerateTree(min_number);
@@ -560,10 +573,10 @@ bool BoxTree::hasOverlap(
       if (d_center_child) {
          has_overlap = d_center_child->hasOverlap(box);
       } else {
-         for (BoxContainer::ConstIterator ni = d_mapped_boxes.begin();
+         for (std::list<const Box*>::const_iterator ni = d_mapped_boxes.begin();
               ni != d_mapped_boxes.end(); ++ni) {
-            const Box& mapped_box = *ni;
-            if (box.intersects(mapped_box)) {
+            const Box* mapped_box = *ni;
+            if (box.intersects(*mapped_box)) {
                has_overlap = true;
                break;
             }
@@ -600,11 +613,11 @@ void BoxTree::findOverlapBoxes(
       if (d_center_child) {
          d_center_child->findOverlapBoxes(overlap_mapped_boxes, box, true);
       } else {
-         for (BoxContainer::ConstIterator ni = d_mapped_boxes.begin();
+         for (std::list<const Box*>::const_iterator ni = d_mapped_boxes.begin();
               ni != d_mapped_boxes.end(); ++ni) {
-            const Box& mapped_box = *ni;
-            if (box.intersects(mapped_box)) {
-               overlap_mapped_boxes.push_back(mapped_box);
+            const Box* mapped_box = *ni;
+            if (box.intersects(*mapped_box)) {
+               overlap_mapped_boxes.push_back(*mapped_box);
             }
          }
       }
@@ -648,11 +661,11 @@ void BoxTree::findOverlapBoxes(
       if (d_center_child) {
          d_center_child->findOverlapBoxes(overlap_mapped_boxes, box, true);
       } else {
-         for (BoxContainer::ConstIterator ni = d_mapped_boxes.begin();
+         for (std::list<const Box*>::const_iterator ni = d_mapped_boxes.begin();
               ni != d_mapped_boxes.end(); ++ni) {
-            const Box& mapped_box = *ni;
-            if (box.intersects(mapped_box)) {
-               overlap_mapped_boxes.push_back(&mapped_box);
+            const Box* mapped_box = *ni;
+            if (box.intersects(*mapped_box)) {
+               overlap_mapped_boxes.push_back(mapped_box);
             }
          }
       }
@@ -696,11 +709,11 @@ void BoxTree::findOverlapBoxes(
       if (d_center_child) {
          d_center_child->findOverlapBoxes(overlap_boxes, box, true);
       } else {
-         for (BoxContainer::ConstIterator ni = d_mapped_boxes.begin();
+         for (std::list<const Box*>::const_iterator ni = d_mapped_boxes.begin();
               ni != d_mapped_boxes.end(); ++ni) {
-            const Box& this_box = *ni;
-            if (box.intersects(this_box)) {
-               overlap_boxes.insert(this_box);
+            const Box* this_box = *ni;
+            if (box.intersects(*this_box)) {
+               overlap_boxes.insert(*this_box);
             }
          }
       }
@@ -774,11 +787,11 @@ void BoxTree::findOverlapBoxes(
       if (d_center_child) {
          d_center_child->findOverlapBoxes(overlap_connector, box, true);
       } else {
-         for (BoxContainer::ConstIterator ni = d_mapped_boxes.begin();
+         for (std::list<const Box*>::const_iterator ni = d_mapped_boxes.begin();
               ni != d_mapped_boxes.end(); ++ni) {
-            const Box& mapped_box = *ni;
-            if (box.intersects(mapped_box)) {
-	      overlap_connector.insertLocalNeighbor(mapped_box, box_id);
+            const Box* mapped_box = *ni;
+            if (box.intersects(*mapped_box)) {
+	      overlap_connector.insertLocalNeighbor(*mapped_box, box_id);
             }
          }
       }
@@ -812,9 +825,9 @@ void BoxTree::getBoxes(
    if (d_center_child) {
       d_center_child->getBoxes(mapped_boxes);
    } else {
-      for (BoxContainer::ConstIterator ni = d_mapped_boxes.begin();
+      for (std::list<const Box*>::const_iterator ni = d_mapped_boxes.begin();
            ni != d_mapped_boxes.end(); ++ni) {
-         mapped_boxes.push_back(*ni);
+         mapped_boxes.push_back(**ni);
       }
    }
 
@@ -840,11 +853,11 @@ tbox::Pointer<BoxTree> BoxTree::createRefinedTree(
    rval->d_bounding_box = d_bounding_box;
    rval->d_bounding_box.refine(ratio);
 
-   for (BoxContainer::ConstIterator ni = d_mapped_boxes.begin();
+   for (std::list<const Box*>::const_iterator ni = d_mapped_boxes.begin();
         ni != d_mapped_boxes.end(); ++ni) {
-      Box refined_box = *ni;
+      Box refined_box = **ni;
       refined_box.refine(ratio);
-      rval->d_mapped_boxes.insert(refined_box);
+      rval->d_mapped_boxes.push_back(&refined_box);
    }
 
    if (!d_center_child.isNull()) {

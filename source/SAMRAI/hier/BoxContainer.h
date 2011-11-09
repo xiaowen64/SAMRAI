@@ -28,6 +28,7 @@ namespace hier {
 class BoxContainerIterator;
 class BoxContainerConstIterator;
 class BoxTree;
+class Connector;
 class MultiblockBoxTree;
 
 /*!
@@ -990,6 +991,33 @@ private:
 
    //@}
 
+   void makeTree() const;
+
+   void
+   findOverlapBoxes(
+      BoxContainer& overlap_connector,
+      const Box& box) const;
+
+   void
+   findOverlapBoxes(
+      Connector& overlap_connector,
+      const Box& box) const;
+
+   void
+   findOverlapBoxes(
+      std::vector<Box>& overlap_connector,
+      const Box& box) const;
+
+   void
+   findOverlapBoxes(
+      std::vector<const Box*>& overlap_connector,
+      const Box& box) const;
+//      bool recursive_call = false) const;
+
+   bool
+   hasOverlap(
+      const Box& box) const;
+
 private:
 
    /*
@@ -1063,6 +1091,8 @@ private:
    std::set<Box*, Box::id_less> d_set;
 
    bool d_ordered;
+
+   mutable tbox::Pointer<MultiblockBoxTree> d_tree;
 };
 
 }

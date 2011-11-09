@@ -230,7 +230,7 @@ public:
       std::map<BoxId, TwoDimBool>& touches_periodic_boundary,
       const PatchLevel& level,
       const IntVector& periodic_shift,
-      const tbox::Array<tbox::Pointer<BoxTree> >& domain_tree) const;
+      const tbox::Array<tbox::Pointer<BoxContainer> >& domain_tree) const;
 
    /*!
     * @brief Version of findPatchTouchingBoundaries for a single box.
@@ -249,7 +249,7 @@ public:
       TwoDimBool& touches_periodic_bdry,
       const Box& box,
       const IntVector& periodic_shift,
-      const BoxTree& domain_tree) const;
+      const BoxContainer& domain_tree) const;
 
    /*!
     * @brief Sets geometry data for patches on a level.
@@ -1166,7 +1166,7 @@ private:
    computeShiftsForBox(
       std::vector<IntVector>& shifts,
       const Box& box,
-      const BoxTree& domain_search_tree,
+      const BoxContainer& domain_search_tree,
       const IntVector& periodic_shift) const;
 
    /*!
@@ -1256,7 +1256,7 @@ private:
     *
     * Each entry of the array provides a tree representation for one block.
     */
-   tbox::Array<tbox::Pointer<BoxTree> > d_domain_tree;
+   tbox::Array<tbox::Pointer<BoxContainer> > d_domain_tree;
 
    /*!
     * Boolean array telling for each block whether the domain of that block

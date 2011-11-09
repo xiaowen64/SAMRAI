@@ -431,7 +431,7 @@ public:
       BoxLevel& mapped_box_level,
       Connector& mapped_box_level_to_anchor,
       Connector& anchor_to_mapped_box_level,
-      const BoxTree& domain_search_tree,
+      const BoxContainer& domain_search_tree,
       const Connector& anchor_to_anchor) const;
 
    //@}

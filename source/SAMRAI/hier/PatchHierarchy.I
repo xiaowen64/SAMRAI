@@ -52,7 +52,7 @@ const tbox::SAMRAI_MPI& PatchHierarchy::getMPI() const
  */
 
 SAMRAI_INLINE_KEYWORD
-const hier::BoxTree& PatchHierarchy::
+const hier::BoxContainer& PatchHierarchy::
 getDomainSearchTree(const BlockId& block_id) const
 {
    return d_domain_search_tree.getSingleBlockBoxTree(block_id);
@@ -70,7 +70,7 @@ getDomainSearchTree() const
  ***********************************************************************
  */
 
-SAMRAI_INLINE_KEYWORD const hier::BoxTree& PatchHierarchy::
+SAMRAI_INLINE_KEYWORD const hier::BoxContainer& PatchHierarchy::
 getPeriodicDomainSearchTree(const BlockId& block_id) const
 {
    return d_domain_search_tree_periodic.getSingleBlockBoxTree(block_id);

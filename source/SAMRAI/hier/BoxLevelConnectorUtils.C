@@ -1314,7 +1314,7 @@ void BoxLevelConnectorUtils::addPeriodicImagesAndRelationships(
    BoxLevel& mapped_box_level,
    Connector& mapped_box_level_to_anchor,
    Connector& anchor_to_mapped_box_level,
-   const BoxTree& domain_search_tree,
+   const BoxContainer& domain_search_tree,
    const Connector& anchor_to_anchor) const
 {
    OverlapConnectorAlgorithm oca;
@@ -1364,9 +1364,9 @@ void BoxLevelConnectorUtils::addPeriodicImagesAndRelationships(
 
    const BoxLevel& anchor = anchor_to_mapped_box_level.getBase();
 
-   tbox::Pointer<BoxTree> domain_tree_for_mapped_box_level =
-      domain_search_tree.createRefinedTree(
-         mapped_box_level.getRefinementRatio());
+   BoxContainer domain_tree_for_mapped_box_level(domain_search_tree);
+   domain_tree_for_mapped_box_level.refine(mapped_box_level.getRefinementRatio());
+   domain_tree_for_mapped_box_level.makeTree();
 
    {
       /*
@@ -1381,8 +1381,8 @@ void BoxLevelConnectorUtils::addPeriodicImagesAndRelationships(
          tbox::perr << "mapped_box_level:\n"
                     << mapped_box_level.format("BEFORE-> ", 3);
       }
-      const BoxTree& domain_tree =
-         *domain_tree_for_mapped_box_level;
+      const BoxContainer& domain_tree =
+         domain_tree_for_mapped_box_level;
 
       const IntVector& mapped_box_level_growth =
          mapped_box_level_to_anchor.getConnectorWidth();

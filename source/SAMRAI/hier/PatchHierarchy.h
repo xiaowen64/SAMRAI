@@ -565,7 +565,7 @@ public:
     *
     * @return The domain description as a search tree.
     */
-   const hier::BoxTree&
+   const hier::BoxContainer&
    getDomainSearchTree(
       const BlockId& block_id) const;
 
@@ -587,7 +587,7 @@ public:
     * @return The domain description as a search tree with periodic
     * images (if any).
     */
-   const hier::BoxTree&
+   const hier::BoxContainer&
    getPeriodicDomainSearchTree(
       const BlockId& block_id) const;
 

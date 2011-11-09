@@ -26,7 +26,6 @@ namespace SAMRAI {
 namespace hier {
 
 class Connector;
-class Connector;
 
 /*!
  * @brief Utility sorting Boxes into tree-like form for finding
@@ -357,8 +356,8 @@ private:
    void
    setupChildren(
       const int min_number,
-      BoxContainer& left_mapped_boxes,
-      BoxContainer& right_mapped_boxes);
+      std::list<const Box*>& left_mapped_boxes,
+      std::list<const Box*>& right_mapped_boxes);
 
    /*!
     * @brief Set up static class members.
@@ -409,7 +408,7 @@ private:
     * that this tree represents.  When we have a small number of boxes
     * that do not warant the overhead of a child tree, the boxes go here.
     */
-   BoxContainer d_mapped_boxes;
+   std::list<const Box*> d_mapped_boxes;
 
    /*!
     * @brief Dimension along which the input box triples are

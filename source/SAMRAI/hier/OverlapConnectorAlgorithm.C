@@ -1339,8 +1339,9 @@ void OverlapConnectorAlgorithm::privateBridge_discoverAndSend(
       const MultiblockBoxTree east_rbbt(grid_geometry,
                                         visible_east_nabrs);
       // Note: west_rbbt only needed when compute_reverse is true.
+      BoxContainer empty_nabrs(true);
       const MultiblockBoxTree west_rbbt(grid_geometry,
-                                        compute_reverse ? visible_west_nabrs : NeighborSet() );
+                                        compute_reverse ? visible_west_nabrs : empty_nabrs );
       t_bridge_discover_form_rbbt->stop();
 
       /*

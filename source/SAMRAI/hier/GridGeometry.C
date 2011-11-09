@@ -307,9 +307,10 @@ void GridGeometry::findPatchesTouchingBoundaries(
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(level, periodic_shift);
 
-   tbox::Array<tbox::Pointer<BoxTree> > domain_tree(d_number_blocks);
+   tbox::Array<tbox::Pointer<BoxContainer> > domain_tree(d_number_blocks);
    for (int nb = 0; nb < d_number_blocks; nb++) {
-      domain_tree[nb] = new BoxTree(d_dim, domain[nb], BlockId(nb));
+      domain_tree[nb] = new BoxContainer(domain[nb]);
+      domain_tree[nb]->makeTree();
    }
    findPatchesTouchingBoundaries(touches_regular_bdry,
       touches_periodic_bdry,
@@ -323,7 +324,7 @@ void GridGeometry::findPatchesTouchingBoundaries(
    std::map<BoxId, TwoDimBool>& touches_periodic_bdry,
    const PatchLevel& level,
    const IntVector& periodic_shift,
-   const tbox::Array<tbox::Pointer<BoxTree> >& domain_tree) const
+   const tbox::Array<tbox::Pointer<BoxContainer> >& domain_tree) const
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(level, periodic_shift);
 
@@ -371,7 +372,7 @@ void GridGeometry::computeBoxTouchingBoundaries(
    TwoDimBool& touches_periodic_bdry,
    const Box& box,
    const IntVector& periodic_shift,
-   const BoxTree& domain_tree) const
+   const BoxContainer& domain_tree) const
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(box, periodic_shift);
 
@@ -887,7 +888,7 @@ void GridGeometry::putToDatabase(
 void GridGeometry::computeShiftsForBox(
    std::vector<IntVector>& shifts,
    const Box& box,
-   const BoxTree& domain_search_tree,
+   const BoxContainer& domain_search_tree,
    const IntVector& periodic_shift) const
 {
    TBOX_DIM_ASSERT_CHECK_ARGS3(*this, box, periodic_shift);
@@ -1440,18 +1441,19 @@ void GridGeometry::setPhysicalDomain(
          Box box(bounding_box, local_id++, 0, block_id);
          d_physical_domain.pushBack(box);
 
-         d_domain_tree[b] = new BoxTree(d_dim,
-            BoxContainer(box),
-            BlockId(b));
+         d_domain_tree[b] = new BoxContainer(box);
+         d_domain_tree[b]->order();
+         d_domain_tree[b]->makeTree();
       } else {
          d_domain_is_single_box[b] = false;
+         d_domain_tree[b] = new BoxContainer(true);
          for (BoxContainer::Iterator itr = block_domain.begin();
               itr != block_domain.end(); ++itr) {
-            d_physical_domain.pushBack(*itr);
+            Box box(*itr, local_id++, 0, block_id);
+            d_domain_tree[b]->insert(d_domain_tree[b]->end(), box);
+            d_physical_domain.pushBack(box);
          }
-         d_domain_tree[b] = new BoxTree(d_dim,
-            block_domain,
-            BlockId(b));
+         d_domain_tree[b]->makeTree();
       }
    }
 

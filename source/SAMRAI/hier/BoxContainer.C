@@ -14,6 +14,7 @@
 #include "SAMRAI/hier/BoxContainer.h"
 
 #include "SAMRAI/hier/BoxContainerSingleBlockIterator.h"
+#include "SAMRAI/hier/Connector.h"
 #include "SAMRAI/hier/Index.h"
 #include "SAMRAI/hier/GridGeometry.h"
 #include "SAMRAI/hier/MultiblockBoxTree.h"
@@ -117,6 +118,9 @@ BoxContainer& BoxContainer::operator = (
          order();
       } else {
          d_ordered = false;
+      }
+      if (!rhs.d_tree.isNull()) {
+         makeTree();
       }
    }
    return *this;
@@ -635,9 +639,13 @@ void BoxContainer::removeIntersections(
       TBOX_ERROR("removeIntersections attempted on ordered container.");
    }
 
-   for (ConstIterator remove(takeaway); remove != takeaway.end(); ++remove) {
-      const Box& byebye = remove();
-      removeIntersections(byebye);
+   if (!takeaway.d_tree.isNull()) {
+      removeIntersections(*(takeaway.d_tree));
+   } else {
+      for (ConstIterator remove(takeaway); remove != takeaway.end(); ++remove) {
+         const Box& byebye = remove();
+         removeIntersections(byebye);
+      }
    }
 }
 
@@ -842,20 +850,24 @@ void BoxContainer::intersectBoxes(
       TBOX_ERROR("intersectBoxes attempted on ordered container.");
    }
 
-   Iterator insertion_pt(*this);
-   Box overlap(insertion_pt().getDim());
-   while (insertion_pt != end()) {
-      Iterator tmp = insertion_pt;
-      const Box& tryme = *insertion_pt;
-      for (ConstIterator i(keep); i != keep.end(); ++i) {
-         tryme.intersect(i(), overlap);
-         if (!overlap.empty()) {
-            insertAfter(insertion_pt, overlap);
-            ++insertion_pt;
+   if (!keep.d_tree.isNull()) {
+      intersectBoxes(*(keep.d_tree));
+   } else {
+      Iterator insertion_pt(*this);
+      Box overlap(insertion_pt().getDim());
+      while (insertion_pt != end()) {
+         Iterator tmp = insertion_pt;
+         const Box& tryme = *insertion_pt;
+         for (ConstIterator i(keep); i != keep.end(); ++i) {
+            tryme.intersect(i(), overlap);
+            if (!overlap.empty()) {
+               insertAfter(insertion_pt, overlap);
+               ++insertion_pt;
+            }
          }
+         ++insertion_pt;
+         erase(tmp);
       }
-      ++insertion_pt;
-      erase(tmp);
    }
 }
 
@@ -1268,6 +1280,15 @@ void BoxContainer::coarsen(
    }
 }
 
+void BoxContainer::makeTree() const
+{
+   if (size() > 10 && d_tree.isNull()) {
+      const tbox::Dimension& dim = front().getDim();
+
+      d_tree = new BoxTree(dim, *this); 
+   }
+}
+
 /*
  ***********************************************************************
  * Write the BoxContainer to a database.
@@ -1418,6 +1439,96 @@ BoxContainer::Outputter BoxContainer::format(
 {
    return Outputter(*this, border, detail_depth);
 }
+
+void BoxContainer::findOverlapBoxes(
+   Connector& overlap_connector,
+   const Box& box) const
+{
+   if (!d_tree.isNull()) {
+      d_tree->findOverlapBoxes(overlap_connector, box);
+   } else {
+      const BoxId& box_id = box.getId();
+
+      for (ConstIterator ni = begin(); ni != end(); ++ni) {
+         const Box& my_box = *ni;
+         if (box.intersects(my_box)) {
+            overlap_connector.insertLocalNeighbor(my_box, box_id);
+         }
+      }
+   }
+}
+
+void BoxContainer::findOverlapBoxes(
+   BoxContainer& container,
+   const Box& box) const
+{
+   if (!d_tree.isNull()) {
+      d_tree->findOverlapBoxes(container, box);
+   } else {
+
+      for (ConstIterator ni = begin(); ni != end(); ++ni) {
+         const Box& my_box = *ni;
+         if (box.intersects(my_box)) {
+            container.insert(container.end(), my_box);
+         }
+      }
+   }
+}
+
+void BoxContainer::findOverlapBoxes(
+   std::vector<Box>& box_vector,
+   const Box& box) const
+{
+   if (!d_tree.isNull()) {
+      d_tree->findOverlapBoxes(box_vector, box);
+   } else {
+
+      for (ConstIterator ni = begin(); ni != end(); ++ni) {
+         const Box& my_box = *ni;
+         if (box.intersects(my_box)) {
+            box_vector.push_back(my_box);
+         }
+      }
+   }
+}
+
+
+void BoxContainer::findOverlapBoxes(
+   std::vector<const Box*>& box_vector,
+   const Box& box) const
+{
+   if (!d_tree.isNull()) {
+      d_tree->findOverlapBoxes(box_vector, box);
+   } else {
+
+      for (ConstIterator ni = begin(); ni != end(); ++ni) {
+         const Box& my_box = *ni;
+         if (box.intersects(my_box)) {
+            box_vector.push_back(&my_box);
+         }
+      }
+   }
+}
+
+bool BoxContainer::hasOverlap(
+   const Box& box) const
+{
+   if (!d_tree.isNull()) {
+      return (d_tree->hasOverlap(box));
+   } else {
+      bool ret_val = false;      
+      for (ConstIterator ni = begin(); ni != end(); ++ni) {
+         const Box& my_box = *ni;
+         if (box.intersects(my_box)) {
+            ret_val = true;
+            break;
+         } 
+      }
+      return ret_val;
+   } 
+}
+
+
 
 
 

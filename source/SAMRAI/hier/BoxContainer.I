@@ -55,6 +55,9 @@ BoxContainer::BoxContainer(
    if (other.d_ordered) {
       order();
    }
+   if (!other.d_tree.isNull()) {
+      makeTree();
+   }
 }
 
 SAMRAI_INLINE_KEYWORD
@@ -256,7 +259,8 @@ void BoxContainer::clear()
 {
    d_list.clear();
    d_set.clear();
-   d_ordered = false; 
+   d_ordered = false;
+   d_tree.setNull();
 }
 
 /*

@@ -170,7 +170,7 @@ public:
     * unrecoverable error.  To check for the existance of the tree,
     * use hasBoxInBlock().
     */
-   const BoxTree&
+   const BoxContainer&
    getSingleBlockBoxTree(
       const BlockId& block_id) const;
 
@@ -377,7 +377,7 @@ private:
     * For each BlockId represented in the set of Boxes, there is
     * an entry in this container.
     */
-   std::map<BlockId, BoxTree> d_single_block_trees;
+   std::map<BlockId, BoxContainer> d_single_block_trees;
 
    tbox::ConstPointer<GridGeometry> d_grid_geometry;
 
