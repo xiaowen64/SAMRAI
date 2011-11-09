@@ -362,44 +362,44 @@ void CoarseFineBoundary::computeFromLevel(
          }
 
       }
-      d_boundary_boxes.clear();
-
-      /*
-       * Call GridGeometry::computeBoundaryGeometry with arguments contrived
-       * such that they give the coarse-fine boundaries instead of the
-       * domain boundaries.  The basic algorithm used by
-       * GridGeometry::computeBoundaryGeometry is
-       * 1. grow boxes by ghost width
-       * 2. remove intersection with domain
-       * 3. reorganize and classify resulting boxes
-       *
-       * This is how we get GridGeometry::computeBoundaryGeometry to
-       * compute the coarse-fine boundary instead of the physical boundary.
-       *
-       * Send the adjusted level boxes as the domain for the
-       * remove-intersection-with-domain operation.  This causes that
-       * operation to remove non-coarse-fine (that is, fine-fine) boxes
-       * along the periodic boundaries, leaving the coarse-fine boundary
-       * boxes.
-       *
-       * Send the adjusted domain for the limit-domain intersect
-       * operation.  This removes the boundaries that are on the physical
-       * boundaries, which is what we want because there is no possibility
-       * of a coarse-fine boundary there.
-       */
-      bool do_all_patches = true;
-      IntVector use_periodic_shift(d_dim, 0);
-      grid_geometry->computeBoundaryBoxesOnLevel(
-         d_boundary_boxes,
-         level,
-         use_periodic_shift,
-         max_ghost_width,
-         adjusted_level_domain,
-         do_all_patches);
 
       d_initialized[i] = true;
-
    }
+
+   d_boundary_boxes.clear();
+
+   /*
+    * Call GridGeometry::computeBoundaryGeometry with arguments contrived
+    * such that they give the coarse-fine boundaries instead of the
+    * domain boundaries.  The basic algorithm used by
+    * GridGeometry::computeBoundaryGeometry is
+    * 1. grow boxes by ghost width
+    * 2. remove intersection with domain
+    * 3. reorganize and classify resulting boxes
+    *
+    * This is how we get GridGeometry::computeBoundaryGeometry to
+    * compute the coarse-fine boundary instead of the physical boundary.
+    *
+    * Send the adjusted level boxes as the domain for the
+    * remove-intersection-with-domain operation.  This causes that
+    * operation to remove non-coarse-fine (that is, fine-fine) boxes
+    * along the periodic boundaries, leaving the coarse-fine boundary
+    * boxes.
+    *
+    * Send the adjusted domain for the limit-domain intersect
+    * operation.  This removes the boundaries that are on the physical
+    * boundaries, which is what we want because there is no possibility
+    * of a coarse-fine boundary there.
+    */
+   bool do_all_patches = true;
+   IntVector use_periodic_shift(d_dim, 0);
+   grid_geometry->computeBoundaryBoxesOnLevel(
+      d_boundary_boxes,
+      level,
+      use_periodic_shift,
+      max_ghost_width,
+      adjusted_level_domain,
+      do_all_patches);
 
 }
 
