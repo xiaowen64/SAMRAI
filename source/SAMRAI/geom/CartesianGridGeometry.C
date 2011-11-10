@@ -593,9 +593,9 @@ void CartesianGridGeometry::getFromInput(
       }
 
 
-      setGeometryData(x_lo, x_up, domain);
-
       this->initializePeriodicShift(per_bc);
+
+      setGeometryData(x_lo, x_up, domain);
 
    }
 }
