@@ -4,7 +4,7 @@
   All rights reserved.
 *****************************************************************************
 
-                     Release Notes for SAMRAI v3.2.2 
+                     Release Notes for SAMRAI v3.3.0
 
      (notes for previous releases may be found in /SAMRAI/docs/release)
 
@@ -39,10 +39,15 @@ Bugs found by other users should send email to samrai-bugs@llnl.gov.
 This section contains a summary of additions to SAMRAI.  More detailed
 descriptions of items in the following list are provided below.
 
-(1) Boost is now required for building SAMRAI.
+(1) Reduced memory usage.
 
-(2) Configure option allows building selected parts of SAMRAI.
+(2) Better execution times.
 
+(3) The bridge algorithm is now multi-block aware.
+
+(4) CoarsenSchedule is multi-block aware.
+
+(5) RefineSchedule construction performance has been improved.
 
 
 -----------------------------------------------------------------------------
@@ -52,12 +57,12 @@ descriptions of items in the following list are provided below.
 This section contains a summary of changes to SAMRAI.  More detailed
 descriptions of items in the following list are provided below.
 
-(1) The ceiling methods in IntVector have been renamed ceilingDivide.
+(1) MappedBox has been merged into Box.
 
-(2) Operations to remove periodic image boxes now work on this.
+(2) BoxSet and BoxList have been merged into BoxContainer.
 
-(3) Constructing SAMRAI_MPI with MPI_COMM_NULL sets rank and size
-    to invalid values.
+(3) Internal representation of Connector is now encapsulated behind an abstract
+    API.
 
 
 *****************************************************************************
@@ -66,47 +71,77 @@ descriptions of items in the following list are provided below.
                 Details about what's new
 -----------------------------------------------------------------------------
 
-(1) Boost is now required for building SAMRAI.
+(1) Reduced memory usage.
 
-Boost is required to build SAMRAI.   We have tested against boost/1.45.0.
+Algorithmic improvements and the use of BoxContainer in lieu of BoxSet and/or
+BoxList have drastically reduced the number of Box creations and assignments
+especially for multi-block.  In addition the number of Boxes in existence at
+any time has also been drastically reduced especially for multi-block.
 
-Boost is available at www.boost.org.
+QUOTE SOME NUMBERS HERE
 
-Use the --with-boost=<directory> configure option to specify the path to 
-the boost install.
+(2) Better execution times.
 
-(2) Configure option allows building selected parts of SAMRAI.
+Larely due to the reduction in object creation/copying execution time has
+improved.
 
-A new option to configure is provide to enable selectively picking the 
-libraries that will be built.   This enables a smaller SAMRAI build if one does 
-not need a particular library.   For example to build just the tbox and hier 
-libraries configure with:
+QUOTE SOME NUMBERS HERE
 
-./configure --with-libraries="hier tbox"
+(3) The bridge algorithm is now multi-block aware.
 
-Leaving off a needed library dependency will result in link failures so use 
-this with caution.  For example, SAMRAI will not work without tbox.
+NEED SOME DETAILS
+
+(4) CoarsenSchedule is multi-block aware.
+
+There is no longer a MultiblockCoarsenSchedule.
+
+(5) RefineSchedule construction performance has been improved.
+
+NEED SOME DETAILS
 
 -----------------------------------------------------------------------------
                 Details about what's changed
 -----------------------------------------------------------------------------
 
-(1) The ceiling methods in IntVector have been renamed ceilingDivide.
+(1) MappedBox has been merged into Box.
 
-Renaming was meant to show the divide part of the operation.
+There is no longer a class called MappedBox.
 
-(2) Operations to remove periodic image boxes now work on this.
+All Boxes now have a BoxId.
 
-Old behavior: Take an output box container copy the non-periodic image
-there.  The method is const.
+"Unmapped" Boxes have an invalid BoxId.
 
-New behavior: Remove periodic images from this.  The method is non-const.
+Names of classes have changed to reflect the fact that MappedBox is no longer
+a class.  For example MappedBoxTree is now just BoxTree.  "Mapped box"
+terminology still exists in variable and function argument names as no complete
+attempt was made to eliminate this.
 
-(3) Constructing SAMRAI_MPI with MPI_COMM_NULL sets rank and size
-    to invalid values.
+(2)  BoxSet and BoxList have been merged into BoxContainer.
 
-This change prevents unexpectedly valid rank and group sizes when
-SAMRAI_MPI is built with MPI_COMM_NULL.
+The single container, BoxContainer, can act as a set or as a list depending on
+the algorithmic needs.
+
+Internally only one instance of each Box exists.
+
+Merging these containers eliminates much of the need to copy from one
+container representation to another in order to access different container
+operators.
+
+BoxTree and MultiblockBoxTree will be merged into BoxContainer in a future
+release.
+
+NEED INFO ABOUT USAGE HERE.
+
+(3) Internal representation of Connector is now encapsulated behind an abstract
+    API.
+
+Previously, the fact that Connector used a NeighborhoodSet as its internal
+representation was implicitly exported.  Client code would request the
+NeighborhoodSet and explicitly manipulate it.  It is no longer possible to
+obtain the NeighborhoodSet.  Instead, there is an API which allows clients to
+abstractly request information from or to perform modifications on a Connector.
+There are also typedefs for the different Connector iterators which should
+now be used.
 
 =============================================================================
 =============================================================================
