@@ -54,8 +54,8 @@ generatePrebalanceByUserBoxes(
    const tbox::Pointer<hier::PatchHierarchy>& hierarchy,
    const hier::IntVector& min_size,
    const hier::IntVector& connector_width,
-   hier::BoxLevel& balance_mapped_box_level,
-   const hier::BoxLevel& anchor_mapped_box_level,
+   hier::BoxLevel& balance_box_level,
+   const hier::BoxLevel& anchor_box_level,
    hier::Connector& anchor_to_balance,
    hier::Connector& balacne_to_anchor);
 
@@ -65,14 +65,14 @@ generatePrebalanceByUserShells(
    const tbox::Pointer<hier::PatchHierarchy>& hierarchy,
    const hier::IntVector& min_size,
    const hier::IntVector& connector_width,
-   hier::BoxLevel& balance_mapped_box_level,
-   const hier::BoxLevel& anchor_mapped_box_level,
+   hier::BoxLevel& balance_box_level,
+   const hier::BoxLevel& anchor_box_level,
    hier::Connector& anchor_to_balance,
    hier::Connector& balance_to_anchor);
 
 void
 sortNodes(
-   hier::BoxLevel& new_mapped_box_level,
+   hier::BoxLevel& new_box_level,
    hier::Connector& tag_to_new,
    hier::Connector& new_to_tag,
    bool sort_by_corners,
@@ -144,7 +144,8 @@ int main(
 
       Pointer<Database> main_db = input_db->getDatabase("Main");
 
-      const tbox::Dimension dim(static_cast<unsigned short>(main_db->getInteger("dim")));
+      const tbox::Dimension
+         dim(static_cast<unsigned short>(main_db->getInteger("dim")));
 
       std::string base_name = "unnamed";
       base_name = main_db->getStringWithDefault("base_name", base_name);
@@ -219,11 +220,11 @@ int main(
       }
 
       /*
-       * Create hierarchy we can satisfy the load balancing
-       * interface and dump visit output.
+       * Create hierarchy required by the load balancing
+       * interface and visit writer.
        *
-       * anchor_mapped_box_level is used for level 0.
-       * balance_mapped_box_level is used for level 1.
+       * anchor_box_level is used for level 0.
+       * balance_box_level is used for level 1.
        */
       std::vector<double> xlo(dim.getValue());
       std::vector<double> xhi(dim.getValue());
@@ -245,14 +246,14 @@ int main(
 
       hierarchy->setMaxNumberOfLevels(2);
 
-      hier::BoxLevel domain_mapped_box_level(
+      hier::BoxLevel domain_box_level(
          hier::IntVector(dim, 1),
          grid_geometry,
          tbox::SAMRAI_MPI::getSAMRAIWorld(),
          hier::BoxLevel::GLOBALIZED);
       hier::BoxContainer::Iterator domain_boxes_itr(domain_boxes);
       for (int i = 0; i < domain_boxes.size(); ++i, ++domain_boxes_itr) {
-         domain_mapped_box_level.addBox(hier::Box(*domain_boxes_itr,
+         domain_box_level.addBox(hier::Box(*domain_boxes_itr,
                hier::LocalId(i), 0));
       }
 
@@ -295,8 +296,8 @@ int main(
        * Set up data used by TreeLoadBalancer.
        */
       hier::BoxLevel
-      anchor_mapped_box_level(hier::IntVector(dim, 1), grid_geometry);
-      hier::BoxLevel balance_mapped_box_level(dim);
+      anchor_box_level(hier::IntVector(dim, 1), grid_geometry);
+      hier::BoxLevel balance_box_level(dim);
       hier::Connector balance_to_anchor;
       hier::Connector anchor_to_balance;
       hier::Connector balance_to_balance;
@@ -304,9 +305,9 @@ int main(
       {
          hier::BoxContainer anchor_boxes(main_db->getDatabaseBoxArray("anchor_boxes"));
          const int boxes_per_proc =
-            (anchor_boxes.size() + anchor_mapped_box_level.getMPI().getSize()
-             - 1) / anchor_mapped_box_level.getMPI().getSize();
-         const int my_boxes_start = anchor_mapped_box_level.getMPI().getRank()
+            (anchor_boxes.size() + anchor_box_level.getMPI().getSize()
+             - 1) / anchor_box_level.getMPI().getSize();
+         const int my_boxes_start = anchor_box_level.getMPI().getRank()
             * boxes_per_proc;
          const int my_boxes_stop =
             tbox::MathUtilities<int>::Min(my_boxes_start + boxes_per_proc,
@@ -316,7 +317,7 @@ int main(
             ++anchor_boxes_itr;
          }
          for (int i = my_boxes_start; i < my_boxes_stop; ++i, anchor_boxes_itr++) {
-            anchor_mapped_box_level.addBox(*anchor_boxes_itr, hier::BlockId::zero());
+            anchor_box_level.addBox(*anchor_boxes_itr, hier::BlockId::zero());
          }
       }
 
@@ -329,23 +330,23 @@ int main(
           * distributed anchor for the real load balancing performance test.
           */
          hier::Connector anchor_to_domain(
-            anchor_mapped_box_level,
-            domain_mapped_box_level,
+            anchor_box_level,
+            domain_box_level,
             hier::IntVector(dim, 2));
          hier::Connector domain_to_anchor(
-            domain_mapped_box_level,
-            anchor_mapped_box_level,
+            domain_box_level,
+            anchor_box_level,
             hier::IntVector(dim, 2));
          oca.findOverlaps(anchor_to_domain);
          oca.findOverlaps(domain_to_anchor);
 
          tbox::plog << "\n\n\ninitial anchor loads:\n";
          lb->gatherAndReportLoadBalance(
-            (double)anchor_mapped_box_level.getLocalNumberOfCells(),
-            anchor_mapped_box_level.getMPI());
+            (double)anchor_box_level.getLocalNumberOfCells(),
+            anchor_box_level.getMPI());
 
          lb->loadBalanceBoxLevel(
-            anchor_mapped_box_level,
+            anchor_box_level,
             anchor_to_domain,
             domain_to_anchor,
             hierarchy,
@@ -354,11 +355,11 @@ int main(
             hier::Connector(),
             min_size,
             max_size,
-            domain_mapped_box_level,
+            domain_box_level,
             bad_interval,
             cut_factor);
 
-         sortNodes(anchor_mapped_box_level,
+         sortNodes(anchor_box_level,
             domain_to_anchor,
             anchor_to_domain,
             false,
@@ -367,12 +368,12 @@ int main(
          oca.assertOverlapCorrectness(anchor_to_domain);
          oca.assertOverlapCorrectness(domain_to_anchor);
 
-         anchor_mapped_box_level.cacheGlobalReducedData();
+         anchor_box_level.cacheGlobalReducedData();
 
          tbox::plog << "\n\n\nfinal anchor loads:\n";
          lb->gatherAndReportLoadBalance(
-            (double)anchor_mapped_box_level.getLocalNumberOfCells(),
-            anchor_mapped_box_level.getMPI());
+            (double)anchor_box_level.getLocalNumberOfCells(),
+            anchor_box_level.getMPI());
       }
 
       {
@@ -385,8 +386,8 @@ int main(
                hierarchy,
                min_size,
                ghost_cell_width,
-               balance_mapped_box_level,
-               anchor_mapped_box_level,
+               balance_box_level,
+               anchor_box_level,
                anchor_to_balance,
                balance_to_anchor);
          } else if (box_gen_method == "PrebalanceByUserShells") {
@@ -395,8 +396,8 @@ int main(
                hierarchy,
                min_size,
                ghost_cell_width,
-               balance_mapped_box_level,
-               anchor_mapped_box_level,
+               balance_box_level,
+               anchor_box_level,
                anchor_to_balance,
                balance_to_anchor);
          } else {
@@ -408,23 +409,23 @@ int main(
          /*
           * Output "before" data.
           */
-         balance_mapped_box_level.cacheGlobalReducedData();
+         balance_box_level.cacheGlobalReducedData();
          tbox::plog << "\n\n\nBefore:\n";
          lb->gatherAndReportLoadBalance(
-            (double)balance_mapped_box_level.getLocalNumberOfCells(),
-            balance_mapped_box_level.getMPI());
+            (double)balance_box_level.getLocalNumberOfCells(),
+            balance_box_level.getMPI());
 
-         hier::BoxLevelStatistics anchor_stats(anchor_mapped_box_level);
-         tbox::plog << "Anchor mapped_box_level node stats:\n";
+         hier::BoxLevelStatistics anchor_stats(anchor_box_level);
+         tbox::plog << "Anchor box_level node stats:\n";
          anchor_stats.printBoxStats(tbox::plog, "AL-> ");
-         tbox::plog << "Anchor mapped_box_level:\n";
-         anchor_mapped_box_level.recursivePrint(tbox::plog, "AL-> ", 2);
+         tbox::plog << "Anchor box_level:\n";
+         anchor_box_level.recursivePrint(tbox::plog, "AL-> ", 2);
 
-         hier::BoxLevelStatistics balance_stats(balance_mapped_box_level);
-         tbox::plog << "Balance mapped_box_level node stats:\n";
+         hier::BoxLevelStatistics balance_stats(balance_box_level);
+         tbox::plog << "Balance box_level node stats:\n";
          balance_stats.printBoxStats(tbox::plog, "BL-> ");
-         tbox::plog << "Balance mapped_box_level:\n";
-         balance_mapped_box_level.recursivePrint(tbox::plog, "BL-> ", 2);
+         tbox::plog << "Balance box_level:\n";
+         balance_box_level.recursivePrint(tbox::plog, "BL-> ", 2);
 
          hier::ConnectorStatistics balance_anchor_stats(balance_to_anchor);
          tbox::plog << "balance_to_anchor edge stats:\n";
@@ -441,10 +442,10 @@ int main(
 
       {
          /*
-          * Load balance the unbalanced mapped_box_level.
+          * Load balance the unbalanced box_level.
           */
          lb->loadBalanceBoxLevel(
-            balance_mapped_box_level,
+            balance_box_level,
             balance_to_anchor,
             anchor_to_balance,
             hierarchy,
@@ -453,14 +454,14 @@ int main(
             hier::Connector(),
             min_size,
             max_size,
-            domain_mapped_box_level,
+            domain_box_level,
             bad_interval,
             cut_factor);
 
          oca.assertOverlapCorrectness(balance_to_anchor);
          oca.assertOverlapCorrectness(anchor_to_balance);
 
-         sortNodes(balance_mapped_box_level,
+         sortNodes(balance_box_level,
             anchor_to_balance,
             balance_to_anchor,
             false,
@@ -481,17 +482,17 @@ int main(
          /*
           * Output "after" data.
           */
-         balance_mapped_box_level.cacheGlobalReducedData();
+         balance_box_level.cacheGlobalReducedData();
          tbox::plog << "\n\n\nAfter:\n";
          lb->gatherAndReportLoadBalance(
-            (double)balance_mapped_box_level.getLocalNumberOfCells(),
-            balance_mapped_box_level.getMPI());
+            (double)balance_box_level.getLocalNumberOfCells(),
+            balance_box_level.getMPI());
 
-         hier::BoxLevelStatistics balance_stats(balance_mapped_box_level);
-         tbox::plog << "Balance mapped_box_level node stats:\n";
+         hier::BoxLevelStatistics balance_stats(balance_box_level);
+         tbox::plog << "Balance box_level node stats:\n";
          balance_stats.printBoxStats(tbox::plog, "BL-> ");
-         tbox::plog << "Balance mapped_box_level:\n";
-         balance_mapped_box_level.recursivePrint(tbox::plog, "BL-> ", 2);
+         tbox::plog << "Balance box_level:\n";
+         balance_box_level.recursivePrint(tbox::plog, "BL-> ", 2);
 
          hier::ConnectorStatistics balance_balance_stats(balance_to_balance);
          tbox::plog << "balance_to_balance edge stats:\n";
@@ -513,14 +514,14 @@ int main(
 
          // Dump summary statistics to output.
          lb->gatherAndReportLoadBalance(
-            (double)balance_mapped_box_level.getLocalNumberOfCells(),
-            balance_mapped_box_level.getMPI(),
+            (double)balance_box_level.getLocalNumberOfCells(),
+            balance_box_level.getMPI(),
             tbox::plog);
       }
 
 #ifdef HAVE_HDF5
-      hierarchy->makeNewPatchLevel(0, anchor_mapped_box_level);
-      hierarchy->makeNewPatchLevel(1, balance_mapped_box_level);
+      hierarchy->makeNewPatchLevel(0, anchor_box_level);
+      hierarchy->makeNewPatchLevel(1, balance_box_level);
 
       if ((dim == tbox::Dimension(2)) || (dim == tbox::Dimension(3))) {
          /*
@@ -581,8 +582,8 @@ void generatePrebalanceByUserShells(
    const tbox::Pointer<hier::PatchHierarchy>& hierarchy,
    const hier::IntVector& min_size,
    const hier::IntVector& connector_width,
-   hier::BoxLevel& balance_mapped_box_level,
-   const hier::BoxLevel& anchor_mapped_box_level,
+   hier::BoxLevel& balance_box_level,
+   const hier::BoxLevel& anchor_box_level,
    hier::Connector& anchor_to_balance,
    hier::Connector& balance_to_anchor)
 {
@@ -623,10 +624,10 @@ void generatePrebalanceByUserShells(
       hierarchy->getGridGeometry();
 
    const tbox::ConstPointer<hier::BoxLevel>
-   anchor_mapped_box_level_ptr(&anchor_mapped_box_level, false);
+   anchor_box_level_ptr(&anchor_box_level, false);
 
    tbox::Pointer<hier::PatchLevel> tag_level(
-      new hier::PatchLevel(anchor_mapped_box_level,
+      new hier::PatchLevel(anchor_box_level,
          grid_geometry,
          vdb->getPatchDescriptor()));
 
@@ -671,15 +672,15 @@ void generatePrebalanceByUserShells(
    }
 
    mesh::BergerRigoutsos abr(dim, abr_db);
-   abr.setMPI(anchor_mapped_box_level.getMPI());
+   abr.setMPI(anchor_box_level.getMPI());
    abr.findBoxesContainingTags(
-      balance_mapped_box_level,
+      balance_box_level,
       anchor_to_balance,
       balance_to_anchor,
       tag_level,
       tag_id,
       tag_val,
-      anchor_mapped_box_level.getGlobalBoundingBox(0),
+      anchor_box_level.getGlobalBoundingBox(0),
       min_size,
       efficiency_tol,
       combine_tol,
@@ -690,12 +691,12 @@ void generatePrebalanceByUserShells(
     * The clustering step generated Connectors to/from the temporary
     * tag_level->getBoxLevel(), which is not the same as the
     * anchor BoxLevel.  We need to reset the Connectors to use
-    * the anchor_mapped_box_level instead.
+    * the anchor_box_level instead.
     */
-   anchor_to_balance.setBase(anchor_mapped_box_level);
-   anchor_to_balance.setHead(balance_mapped_box_level, true);
-   balance_to_anchor.setBase(balance_mapped_box_level);
-   balance_to_anchor.setHead(anchor_mapped_box_level, true);
+   anchor_to_balance.setBase(anchor_box_level);
+   anchor_to_balance.setHead(balance_box_level, true);
+   balance_to_anchor.setBase(balance_box_level);
+   balance_to_anchor.setHead(anchor_box_level, true);
 }
 
 /*
@@ -707,8 +708,8 @@ void generatePrebalanceByUserBoxes(
    const tbox::Pointer<hier::PatchHierarchy>& hierarchy,
    const hier::IntVector& min_size,
    const hier::IntVector& connector_width,
-   hier::BoxLevel& balance_mapped_box_level,
-   const hier::BoxLevel& anchor_mapped_box_level,
+   hier::BoxLevel& balance_box_level,
+   const hier::BoxLevel& anchor_box_level,
    hier::Connector& anchor_to_balance,
    hier::Connector& balance_to_anchor)
 {
@@ -722,24 +723,24 @@ void generatePrebalanceByUserBoxes(
    initial_owners[0] = 0;
    initial_owners = database->getIntegerArray("initial_owners");
 
-   balance_mapped_box_level.initialize(hier::IntVector(dim, 1),
+   balance_box_level.initialize(hier::IntVector(dim, 1),
       hierarchy->getGridGeometry(),
-      anchor_mapped_box_level.getMPI());
+      anchor_box_level.getMPI());
    hier::BoxContainer::Iterator balance_boxes_itr(balance_boxes);
    for (int i = 0; i < balance_boxes.size(); ++i, ++balance_boxes_itr) {
       const int owner = i % initial_owners.size();
-      if (owner == balance_mapped_box_level.getMPI().getRank()) {
-         balance_mapped_box_level.addBox(hier::Box(*balance_boxes_itr,
+      if (owner == balance_box_level.getMPI().getRank()) {
+         balance_box_level.addBox(hier::Box(*balance_boxes_itr,
                hier::LocalId(i), owner));
       }
    }
 
    // Generate the balance<===>anchor Connectors.
-   balance_to_anchor.setBase(balance_mapped_box_level);
-   balance_to_anchor.setHead(anchor_mapped_box_level);
+   balance_to_anchor.setBase(balance_box_level);
+   balance_to_anchor.setHead(anchor_box_level);
    balance_to_anchor.setWidth(connector_width, true);
-   anchor_to_balance.setBase(anchor_mapped_box_level);
-   anchor_to_balance.setHead(balance_mapped_box_level);
+   anchor_to_balance.setBase(anchor_box_level);
+   anchor_to_balance.setHead(balance_box_level);
    anchor_to_balance.setWidth(connector_width, true);
    hier::OverlapConnectorAlgorithm oca;
    oca.findOverlaps(balance_to_anchor);
@@ -751,7 +752,7 @@ void generatePrebalanceByUserBoxes(
  ***********************************************************************
  */
 void sortNodes(
-   hier::BoxLevel& new_mapped_box_level,
+   hier::BoxLevel& new_box_level,
    hier::Connector& tag_to_new,
    hier::Connector& new_to_tag,
    bool sort_by_corners,
@@ -760,17 +761,17 @@ void sortNodes(
    const hier::MappingConnectorAlgorithm mca;
 
    hier::Connector sorting_map;
-   hier::BoxLevel seq_mapped_box_level(new_mapped_box_level.getDim());
+   hier::BoxLevel seq_box_level(new_box_level.getDim());
    hier::BoxLevelConnectorUtils dlbg_edge_utils;
    dlbg_edge_utils.makeSortingMap(
-      seq_mapped_box_level,
+      seq_box_level,
       sorting_map,
-      new_mapped_box_level,
+      new_box_level,
       sort_by_corners,
       sequentialize_global_indices);
 
    mca.modify(tag_to_new,
       new_to_tag,
       sorting_map,
-      &new_mapped_box_level);
+      &new_box_level);
 }
