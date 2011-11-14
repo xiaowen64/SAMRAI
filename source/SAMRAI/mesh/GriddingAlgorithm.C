@@ -3877,11 +3877,11 @@ void GriddingAlgorithm::growBoxesWithinNestingDomain(
 
    /*
     * Connect new_mapped_box_level to the nesting complement so we
-    * know it cannot exist.  Use a Connector width of zero because we
-    * don't need it any bigger and we don't want inter-block
-    * neighbors.  (The new Boxes are already confined to their
-    * own blocks before entering this method, so a zero Connector
-    * width eliminates inter-block neighbors.)
+    * know where it cannot exist.  Use a Connector width of zero
+    * because we don't need it any bigger and we don't want
+    * inter-block neighbors.  (The new Boxes are already confined to
+    * their own blocks before entering this method, so a zero
+    * Connector width eliminates inter-block neighbors.)
     */
 
    hier::Connector new_to_nesting_complement;
