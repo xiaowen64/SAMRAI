@@ -725,7 +725,8 @@ void generatePrebalanceByUserShells(
       efficiency_tol,
       combine_tol,
       max_gcw,
-      hier::BlockId::zero());
+      hier::BlockId::zero(),
+      hier::LocalId(0));
 
    /*
     * The clustering step generated Connectors to/from the temporary

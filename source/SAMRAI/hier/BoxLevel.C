@@ -572,6 +572,7 @@ void BoxLevel::cacheGlobalReducedData() const
                d_global_min_box_size[bn][i] = -recv_mesg[++tmpi];
                d_global_max_box_size[bn][i] = recv_mesg[++tmpi];
             }
+            d_global_bounding_box[bn].setBlockId(BlockId(bn));
          }
          d_max_number_of_boxes = recv_mesg[++tmpi];
          d_min_number_of_boxes = -recv_mesg[++tmpi];

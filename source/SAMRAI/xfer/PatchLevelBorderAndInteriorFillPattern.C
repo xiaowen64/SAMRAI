@@ -115,7 +115,8 @@ PatchLevelBorderAndInteriorFillPattern::computeFillBoxesAndNeighborhoodSets(
 
                offset *= (dst_mapped_box_level.getRefinementRatio());
 
-               hier::Transformation transformation(rotation, offset);
+               hier::Transformation transformation(rotation, offset,
+                                                   nbr_block_id, dst_block_id);
 
                hier::Box nbr_box(*na);
                transformation.transform(nbr_box);

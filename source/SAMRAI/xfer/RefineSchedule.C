@@ -3168,7 +3168,8 @@ void RefineSchedule::createEnconLevel(const hier::IntVector& fill_gcw)
                   hier::IntVector offset(ni().getShift());
                   offset *= (d_dst_level->getRatioToLevelZero());
 
-                  hier::Transformation transformation(rotation, offset);
+                  hier::Transformation transformation(rotation, offset,
+                                                      nbr_id, block_id);
 
                   hier::BoxContainer trans_neighbor_list;
                   grid_geometry->getTransformedBlock(trans_neighbor_list,
@@ -3724,7 +3725,8 @@ void RefineSchedule::constructScheduleTransactions(
       is_singularity = grid_geometry->areSingularityNeighbors(dst_block_id,
             src_block_id);
 
-      transformation = hier::Transformation(rotation, offset);
+      transformation = hier::Transformation(rotation, offset,
+                                            src_block_id, dst_block_id);
       transformation.transform(transformed_src_box);
    }
 

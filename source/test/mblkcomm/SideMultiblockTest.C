@@ -385,7 +385,9 @@ void SideMultiblockTest::fillSingularityBoundaryConditions(
 
                offset *= patch.getPatchGeometry()->getRatio();
 
-               hier::Transformation transformation(rotation, offset);
+               hier::Transformation transformation(rotation, offset,
+                                                   encon_blk_id,
+                                                   patch_blk_id);
                hier::Box encon_patch_box(encon_patch->getBox());
                transformation.transform(encon_patch_box);
 
@@ -401,7 +403,9 @@ void SideMultiblockTest::fillSingularityBoundaryConditions(
                   hier::Transformation::calculateReverseShift(
                      back_shift, offset, rotation);
 
-                  hier::Transformation back_trans(back_rotate, back_shift);
+                  hier::Transformation back_trans(back_rotate, back_shift,
+                                                  patch_blk_id,
+                                                  encon_blk_id);
 
                   tbox::Pointer<pdat::SideData<double> > sing_data(
                      encon_patch->getPatchData(d_variables[i], getDataContext()));

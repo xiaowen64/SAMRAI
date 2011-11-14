@@ -152,13 +152,14 @@ void MultiblockNodeDataTranslator<TYPE>::translateAndCopyData(
          }
       }
    } else if (dim == tbox::Dimension(3)) {
+      const hier::BlockId& block_id = dst->getBox().getBlockId();
       for (pdat::NodeIterator ni(dst->getBox()); ni; ni++) {
          pdat::NodeIndex dst_index(ni());
 
          hier::Transformation::RotationIdentifier back_rotate =
             hier::Transformation::getReverseRotationIdentifier(rotate, dim);
 
-         hier::Box src_box(dst_index, dst_index);
+         hier::Box src_box(dst_index, dst_index, block_id);
 
          src_box.rotate(back_rotate);
 

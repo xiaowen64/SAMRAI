@@ -813,7 +813,8 @@ void CoarsenSchedule::constructScheduleTransactions(
 
       offset *= d_crse_level->getRatioToLevelZero();
 
-      transformation = hier::Transformation(rotation, offset);
+      transformation = hier::Transformation(rotation, offset,
+                                            src_block_id, dst_block_id);
       transformation.transform(transformed_src_box);
 
 #ifdef DEBUG_CHECK_ASSERTIONS

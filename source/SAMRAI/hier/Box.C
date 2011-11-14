@@ -63,6 +63,7 @@ Box::Box(
    const IntVector& refinement_ratio):
    d_lo(other.d_lo),
    d_hi(other.d_hi),
+   d_block_id(other.getBlockId()),
    d_id(other.getLocalId(), other.getOwnerRank(), other.getBlockId(),
         periodic_id),
    d_id_locked(false)
@@ -193,6 +194,8 @@ void Box::initialize(
          << "\nRefinement ratio must be completely positive or negative.");
 
    }
+
+   d_block_id = other.getBlockId();
 
    if (!d_id_locked) {
       d_id.initialize(
@@ -589,7 +592,8 @@ void Box::initializeCallback()
        */
       s_universes[d] = new hier::Box(
             hier::Index(dim, tbox::MathUtilities<int>::getMin()),
-            hier::Index(dim, tbox::MathUtilities<int>::getMax()));
+            hier::Index(dim, tbox::MathUtilities<int>::getMax()),
+            hier::BlockId(0));
    }
 
 }

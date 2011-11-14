@@ -14,6 +14,7 @@
 
 #include "SAMRAI/SAMRAI_config.h"
 
+#include "SAMRAI/hier/BlockId.h"
 #include "SAMRAI/hier/IntVector.h"
 #include "SAMRAI/hier/Index.h"
 #include "SAMRAI/tbox/Array.h"
@@ -100,7 +101,9 @@ public:
     */
    explicit Transformation(
       const RotationIdentifier rotation,
-      const IntVector& offset);
+      const IntVector& offset,
+      const BlockId& begin_block,
+      const BlockId& end_block);
 
    /*!
     * @brief Constructor that sets only offset
@@ -345,6 +348,9 @@ private:
 
    RotationIdentifier d_rotation;
    IntVector d_offset;
+
+   BlockId d_begin_block;
+   BlockId d_end_block;
 
 };
 

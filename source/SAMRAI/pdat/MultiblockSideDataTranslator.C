@@ -234,6 +234,7 @@ void MultiblockSideDataTranslator<TYPE>::translateAndCopyData(
                }
             }
 
+            const hier::BlockId& block_id = dst->getBox().getBlockId();
             for (pdat::SideIterator si(dst->getBox(), axis); si; si++) {
                pdat::SideIndex dst_index(si());
                hier::Index dst_xyz_index(dst_index);
@@ -242,7 +243,7 @@ void MultiblockSideDataTranslator<TYPE>::translateAndCopyData(
                   hier::Transformation::
                   getReverseRotationIdentifier(rotate, dim);
 
-               hier::Box src_box(dst_xyz_index, dst_xyz_index);
+               hier::Box src_box(dst_xyz_index, dst_xyz_index, block_id);
 
                src_box.rotate(back_rotate);
 

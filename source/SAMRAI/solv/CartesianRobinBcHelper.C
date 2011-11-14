@@ -834,7 +834,7 @@ hier::BoundaryBox CartesianRobinBcHelper::trimBoundaryBox(
          }
          break;
    }
-   const hier::Box newbox(newlo, newup);
+   const hier::Box newbox(newlo, newup, boundary_box.getBox().getBlockId());
    const hier::BoundaryBox newbbox(newbox,
                                    boundary_box.getBoundaryType(),
                                    boundary_box.getLocationIndex());

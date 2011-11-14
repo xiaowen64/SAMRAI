@@ -259,7 +259,7 @@ hier::BoundaryBox BoundaryBoxUtils::trimBoundaryBox(
       }
    }
 
-   const hier::Box newbox(newlo, newup);
+   const hier::Box newbox(newlo, newup, d_bbox.getBox().getBlockId());
    const hier::BoundaryBox newbbox(newbox,
                                    d_bbox.getBoundaryType(),
                                    d_bbox.getLocationIndex());

@@ -155,7 +155,8 @@ public:
       const double efficiency_tol,
       const double combine_tol,
       const hier::IntVector& max_gcw,
-      const hier::BlockId& block_id) const;
+      const hier::BlockId& block_id,
+      const hier::LocalId& first_local_id) const;
 
 private:
    const tbox::Dimension d_dim;

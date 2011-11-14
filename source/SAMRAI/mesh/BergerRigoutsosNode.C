@@ -70,7 +70,8 @@ tbox::Pointer<tbox::Timer> BergerRigoutsosNode::CommonParams::t_bcast_to_dropout
  */
 BergerRigoutsosNode::BergerRigoutsosNode(
    const tbox::Dimension& dim,
-   const hier::BlockId& block_id):
+   const hier::BlockId& block_id,
+   const hier::LocalId& first_local_id):
    d_dim(dim),
    d_pos(1),
    d_common(new CommonParams(d_dim)),
@@ -90,6 +91,7 @@ BergerRigoutsosNode::BergerRigoutsosNode(
    d_recv_msg(),
    d_comm_group(NULL),
    d_block_id(block_id),
+   d_first_local_id(first_local_id),
    d_generation(1),
    d_n_cont(0)
 {
@@ -122,7 +124,8 @@ BergerRigoutsosNode::BergerRigoutsosNode(
    CommonParams* common_params,
    BergerRigoutsosNode* parent,
    const int child_number,
-   const hier::BlockId& block_id):
+   const hier::BlockId& block_id,
+   const hier::LocalId& first_local_id):
    d_dim(parent->d_dim),
    d_pos((parent->d_pos > 0 && parent->d_pos <
           tbox::MathUtilities<int>::getMax() / 2) ?
@@ -145,6 +148,7 @@ BergerRigoutsosNode::BergerRigoutsosNode(
    d_recv_msg(),
    d_comm_group(NULL),
    d_block_id(block_id),
+   d_first_local_id(first_local_id),
    d_generation(d_parent->d_generation + 1),
    d_n_cont(0)
 {
@@ -1431,20 +1435,24 @@ bool BergerRigoutsosNode::broadcastAcceptability_check()
           * The owner formed its children earlier so it can
           * use their parameters while determining which to run.
           * Contributors create the children when the receive
-          * the d_box_acceptance flag indicates tha further
+          * the d_box_acceptance flag indicates that further
           * branching is required.
           */
          d_lft_child = new BergerRigoutsosNode(d_common,
                this,
                0,
-               d_block_id);
+               d_block_id,
+               d_first_local_id);
          d_rht_child = new BergerRigoutsosNode(d_common,
                this,
                1,
-               d_block_id);
+               d_block_id,
+               d_first_local_id);
 
          ptr = getBoxFromBuffer(d_lft_child->d_box, ptr);
          ptr = getBoxFromBuffer(d_rht_child->d_box, ptr);
+         d_lft_child->d_box.setBlockId(d_block_id);
+         d_rht_child->d_box.setBlockId(d_block_id);
 
          d_lft_child->d_mpi_tag = *(ptr++);
          d_rht_child->d_mpi_tag = *(ptr++);
@@ -1769,7 +1777,7 @@ void BergerRigoutsosNode::computeMinimalBoundingBoxForTags()
       }
    }
 
-   const hier::Box new_box(new_lower, new_upper);
+   const hier::Box new_box(new_lower, new_upper, d_block_id);
    const hier::IntVector new_size = new_box.numberCells();
 
    if (!new_box.isSpatiallyEqual(d_box)) {
@@ -2027,11 +2035,11 @@ void BergerRigoutsosNode::acceptOrSplitBox()
        * Contributors create the children when they receive
        * the d_box_acceptance flag from the owner.
        */
-      d_lft_child = new BergerRigoutsosNode(d_common, this, 0, d_block_id);
-      d_rht_child = new BergerRigoutsosNode(d_common, this, 1, d_block_id);
+      d_lft_child = new BergerRigoutsosNode(d_common, this, 0, d_block_id, d_first_local_id);
+      d_rht_child = new BergerRigoutsosNode(d_common, this, 1, d_block_id, d_first_local_id);
 
-      d_lft_child->d_box = hier::Box(box_lo, lft_hi);
-      d_rht_child->d_box = hier::Box(rht_lo, box_hi);
+      d_lft_child->d_box = hier::Box(box_lo, lft_hi, d_block_id);
+      d_rht_child->d_box = hier::Box(rht_lo, box_hi, d_block_id);
 #ifdef DEBUG_CHECK_ASSERTIONS
       TBOX_ASSERT(d_lft_child->d_box.numberCells() >= d_common->min_box);
       TBOX_ASSERT(d_rht_child->d_box.numberCells() >= d_common->min_box);
@@ -2263,7 +2271,7 @@ void BergerRigoutsosNode::createBox()
    TBOX_ASSERT(d_common->rank == d_owner);
 #endif
    hier::LocalId last_index =
-      d_common->new_mapped_box_level->getBoxes().isEmpty() ? hier::LocalId::getZero() :
+      d_common->new_mapped_box_level->getBoxes().isEmpty() ? d_first_local_id :
       d_common->new_mapped_box_level->getBoxes().back().getLocalId();
 
    hier::Box new_box(d_box, last_index + 1, d_common->rank, d_block_id);
@@ -2559,30 +2567,31 @@ void BergerRigoutsosNode::computeNewNeighborhoodSets()
 
       const hier::Box& tag_mapped_box = *ni;
 
-      hier::Box intersection = tag_mapped_box * grown_box;
+      if (tag_mapped_box.getBlockId() == d_block_id) {
+         hier::Box intersection = tag_mapped_box * grown_box;
 
-      if (!intersection.empty()) {
+         if (!intersection.empty()) {
 
-         // Add d_mapped_box as a neighbor of tag_mapped_box.
-         d_common->tag_to_new->insertLocalNeighbor(d_mapped_box,
-            tag_mapped_box.getId());
+            // Add d_mapped_box as a neighbor of tag_mapped_box.
+            d_common->tag_to_new->insertLocalNeighbor(d_mapped_box,
+               tag_mapped_box.getId());
 
-         if (on_owner_process) {
-            // Owner adds tag_mapped_box as a neighbor of d_mapped_box.
-            d_common->new_to_tag->insertLocalNeighbor(tag_mapped_box,
-               d_mapped_box.getId());
+            if (on_owner_process) {
+               // Owner adds tag_mapped_box as a neighbor of d_mapped_box.
+               d_common->new_to_tag->insertLocalNeighbor(tag_mapped_box,
+                  d_mapped_box.getId());
+            }
+
+            if (relationship_message != NULL) {
+               /* Non-owners put found relationship in the message
+                * to (eventually) send to d_owner.
+                */
+               relationship_message->insert(relationship_message->end(), ints_per_node, 0);
+               int* ptr = &(*relationship_message)[relationship_message->size() - ints_per_node];
+               tag_mapped_box.putToIntBuffer(ptr);
+               ++(*relationship_message)[index_of_counter];
+            }
          }
-
-         if (relationship_message != NULL) {
-            /* Non-owners put found relationship in the message
-             * to (eventually) send to d_owner.
-             */
-            relationship_message->insert(relationship_message->end(), ints_per_node, 0);
-            int* ptr = &(*relationship_message)[relationship_message->size() - ints_per_node];
-            tag_mapped_box.putToIntBuffer(ptr);
-            ++(*relationship_message)[index_of_counter];
-         }
-
       }
    }
 

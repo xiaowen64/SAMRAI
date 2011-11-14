@@ -151,6 +151,7 @@ BoxContainer::insert(
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(box.getId().isValid());
+   TBOX_ASSERT(box.getBlockId() != BlockId::invalidId());
    if (size() > 0) {
       TBOX_DIM_ASSERT_CHECK_ARGS2(front(), box);
    }
@@ -333,7 +334,7 @@ void BoxContainer::simplify()
                   if (bh(d) > ih(d)) {
                      ih(d) = bh(d);
                   }
-                  Box intersection(il, ih);
+                  Box intersection(il, ih, tryMe.getBlockId());
                   notCanonical.pushFront(intersection);
                   if (d > 0) {
                      notCanonical.burstBoxes(tryMe, intersection, d);
@@ -994,6 +995,7 @@ void BoxContainer::burstBoxes(
    Index bursth = bursty.upper();
    const Index& solidl = solid.lower();
    const Index& solidh = solid.upper();
+   const BlockId& block_id = bursty.getBlockId();
 
    // Break bursty region against solid region along low dimensions first
 
@@ -1001,13 +1003,13 @@ void BoxContainer::burstBoxes(
       if (bursth(d) > solidh(d)) {
          Index newl = burstl;
          newl(d) = solidh(d) + 1;
-         pushBack(Box(newl, bursth));
+         pushBack(Box(newl, bursth, block_id));
          bursth(d) = solidh(d);
       }
       if (burstl(d) < solidl(d)) {
          Index newh = bursth;
          newh(d) = solidl(d) - 1;
-         pushBack(Box(burstl, newh));
+         pushBack(Box(burstl, newh, block_id));
          burstl(d) = solidl(d);
       }
    }
@@ -1039,6 +1041,7 @@ void BoxContainer::burstBoxes(
    Index bursth = bursty.upper();
    const Index& solidl = solid.lower();
    const Index& solidh = solid.upper();
+   const BlockId& block_id = bursty.getBlockId();
 
    // Break bursty region against solid region along low dimensions first
 
@@ -1046,14 +1049,14 @@ void BoxContainer::burstBoxes(
       if (bursth(d) > solidh(d)) {
          Index newl = burstl;
          newl(d) = solidh(d) + 1;
-         insertAfter(insertion_pt, Box(newl, bursth));
+         insertAfter(insertion_pt, Box(newl, bursth, block_id));
          bursth(d) = solidh(d);
          ++insertion_pt;
       }
       if (burstl(d) < solidl(d)) {
          Index newh = bursth;
          newh(d) = solidl(d) - 1;
-         insertAfter(insertion_pt, Box(burstl, newh));
+         insertAfter(insertion_pt, Box(burstl, newh, block_id));
          burstl(d) = solidl(d);
          ++insertion_pt;
       }

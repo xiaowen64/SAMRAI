@@ -132,7 +132,8 @@ tbox::Pointer<hier::BoxOverlap> OuterfaceGeometry::doOverlap(
 
    if (!quick_check.empty()) {
 
-      const hier::Box mask_shift(hier::Box::shift(src_mask, src_offset));
+      hier::Box mask_shift(src_mask);
+      transformation.transform(mask_shift);
 
       for (int d = 0; d < dim.getValue(); d++) {
 

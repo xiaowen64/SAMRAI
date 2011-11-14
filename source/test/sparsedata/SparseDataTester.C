@@ -37,7 +37,7 @@ SparseDataTester::testConstruction()
 {
    hier::Index lo = hier::Index(d_dim, 0);
    hier::Index hi = hier::Index(d_dim, 100);
-   hier::Box box(lo, hi);
+   hier::Box box(lo, hi, hier::BlockId(0));
 
    hier::IntVector vec(d_dim, 0);
    hier::IntVector ghosts(d_dim, 0);
@@ -184,7 +184,7 @@ SparseDataTester::testPackStream()
 
    hier::Index lo = hier::Index(d_dim, 0);
    hier::Index hi = hier::Index(d_dim, 100);
-   hier::Box box(lo, hi);
+   hier::Box box(lo, hi, hier::BlockId(0));
    hier::BoxContainer blist(box);
    hier::Transformation trans(hier::IntVector::getZero(d_dim));
 
@@ -341,7 +341,7 @@ SparseDataTester::_createEmptySparseData()
 {
    hier::Index lo = hier::Index(d_dim, 0);
    hier::Index hi = hier::Index(d_dim, 100);
-   hier::Box box(lo, hi);
+   hier::Box box(lo, hi, hier::BlockId(0));
    hier::IntVector ghosts(d_dim, 0);
 
    std::vector<std::string> dkeys;

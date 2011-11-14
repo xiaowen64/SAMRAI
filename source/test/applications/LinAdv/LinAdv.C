@@ -1465,11 +1465,11 @@ void LinAdv::boundaryReset(
    for (idir = 0; idir < d_dim.getValue(); idir++) {
       ibfirst(idir) = ifirst(idir) - 1;
       iblast(idir) = ifirst(idir) - 1;
-      bdrybox.pushBack(hier::Box(ibfirst, iblast));
+      bdrybox.pushBack(hier::Box(ibfirst, iblast, hier::BlockId(0)));
 
       ibfirst(idir) = ilast(idir) + 1;
       iblast(idir) = ilast(idir) + 1;
-      bdrybox.pushBack(hier::Box(ibfirst, iblast));
+      bdrybox.pushBack(hier::Box(ibfirst, iblast, hier::BlockId(0)));
    }
 
    hier::BoxContainer::Iterator ib(bdrybox);

@@ -2675,7 +2675,8 @@ void GriddingAlgorithm::bufferTagsOnLevel(
 
       buf_tag_data->fillAll(not_tag);
 
-      hier::Box interior = patch->getBox();
+      const hier::Box& interior = patch->getBox();
+      const hier::BlockId& block_id = interior.getBlockId();
 
       for (int bc = buffer_size; bc >= 0; bc--) {
 
@@ -2683,7 +2684,7 @@ void GriddingAlgorithm::bufferTagsOnLevel(
 
          for (pdat::CellIterator ic(interior); ic; ic++) {
             if ((*tag_data)(ic()) == tag_value) {
-               hier::Box buf_box(ic() - bc, ic() + bc);
+               hier::Box buf_box(ic() - bc, ic() + bc, block_id);
                buf_tag_data->fill(fill_val, buf_box * interior);
             }
          }
@@ -2713,8 +2714,9 @@ void GriddingAlgorithm::bufferTagsOnLevel(
       tbox::Pointer<pdat::CellData<int> > tag_data =
          patch->getPatchData(d_tag_indx);
 
-      hier::Box buf_tag_box = buf_tag_data->getGhostBox();
-      hier::Box tag_box = tag_data->getBox();
+      const hier::Box& buf_tag_box = buf_tag_data->getGhostBox();
+      const hier::Box& tag_box = tag_data->getBox();
+      const hier::BlockId& block_id = tag_box.getBlockId();
 
       /*
        * Set all interior tags to tag value where buffer tags non-zero.
@@ -2730,7 +2732,7 @@ void GriddingAlgorithm::bufferTagsOnLevel(
          int tval = (*buf_tag_data)(ic2());
          if (tval > 1) {
             int buf_size = tval - 1;
-            hier::Box buf_box(ic2() - buf_size, ic2() + buf_size);
+            hier::Box buf_box(ic2() - buf_size, ic2() + buf_size, block_id);
             tag_data->fill(tag_value, buf_box);
          }
       }
@@ -2857,7 +2859,8 @@ void GriddingAlgorithm::findRefinementBoxes(
          getEfficiencyTolerance(tag_ln),
          getCombineEfficiency(tag_ln),
          tag_to_cluster_width,
-         hier::BlockId(0));
+         hier::BlockId(0),
+         hier::LocalId(0));
    } else {
       /*
        * TODO: The following loop is an inefficient work-around to
@@ -2866,6 +2869,7 @@ void GriddingAlgorithm::findRefinementBoxes(
        * changed to support multiblock.
        */
       hier::BoxContainer accumulated_mapped_boxes;
+      hier::LocalId first_local_id(0);
       for (int bn = 0; bn < nblocks; ++bn) {
          /*
           * Determine single smallest bounding box for all nesting boxes.
@@ -2884,13 +2888,27 @@ void GriddingAlgorithm::findRefinementBoxes(
                getEfficiencyTolerance(tag_ln),
                getCombineEfficiency(tag_ln),
                tag_to_cluster_width,
-               hier::BlockId(bn));
+               hier::BlockId(bn),
+               first_local_id);
             accumulated_mapped_boxes.insert(
                new_mapped_box_level.getBoxes().begin(),
                new_mapped_box_level.getBoxes().end());
+            if (accumulated_mapped_boxes.size() > 0) {
+               first_local_id =
+                  accumulated_mapped_boxes.back().getId().getLocalId() + 1;
+            }
          }
 
       }
+#ifdef DEBUG_CHECK_ASSERTIONS
+      std::set<int> local_ids;
+      for (hier::BoxContainer::Iterator
+           ac_itr = accumulated_mapped_boxes.begin();
+           ac_itr != accumulated_mapped_boxes.end(); ++ac_itr) {
+         local_ids.insert(ac_itr->getId().getLocalId().getValue());
+      }
+      TBOX_ASSERT(local_ids.size() == accumulated_mapped_boxes.size());
+#endif
       const hier::BoxLevel& tag_mapped_box_level(tag_to_new.getBase());
       new_mapped_box_level.swapInitialize(
          accumulated_mapped_boxes,
@@ -3192,6 +3210,16 @@ void GriddingAlgorithm::findRefinementBoxes(
                new_to_tag.getConnectorWidth() - smallest_box_to_refine);
          }
       }
+#ifdef DEBUG_CHECK_ASSERTIONS
+      std::set<int> new_local_ids;
+      const hier::BoxContainer& new_boxes = new_mapped_box_level.getBoxes();
+      for (hier::BoxContainer::ConstIterator
+           new_itr = new_boxes.begin();
+           new_itr != new_boxes.end(); ++new_itr) {
+         new_local_ids.insert(new_itr->getId().getLocalId().getValue());
+      }
+      TBOX_ASSERT(new_local_ids.size() == new_boxes.size());
+#endif
 
       t_box_massage->stop();
 

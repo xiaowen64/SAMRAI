@@ -53,7 +53,8 @@ public:
     */
    explicit Box(
       const Index& lower,
-      const Index& upper);
+      const Index& upper,
+      const BlockId& block_id);
 
    /**
     * The copy constructor copies the index space of the argument box.
@@ -244,7 +245,13 @@ public:
    const BoxId&
    getId() const;
 
-   //! @brief Get the Block.
+   //! @brief Set the BlockId.
+   void setBlockId(const BlockId& block_id)
+   {
+      d_block_id = block_id;
+   }
+
+   //! @brief Get the BlockId.
    const BlockId&
    getBlockId() const;
 
@@ -856,8 +863,10 @@ private:
 
    Index d_lo;
    Index d_hi;
+   BlockId d_block_id;
    BoxId d_id;
    bool d_id_locked;
+
 
    /*!
     * @brief Initialize static objects and register shutdown routine.

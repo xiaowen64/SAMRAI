@@ -227,6 +227,7 @@ void MultiblockEdgeDataTranslator<TYPE>::translateAndCopyData(
             }
          }
 
+         const hier::BlockId& block_id = dst->getBox().getBlockId();
          for (pdat::EdgeIterator fi(dst->getBox(), axis); fi; fi++) {
             pdat::EdgeIndex dst_index(fi());
 
@@ -234,7 +235,7 @@ void MultiblockEdgeDataTranslator<TYPE>::translateAndCopyData(
                hier::Transformation::
                getReverseRotationIdentifier(rotate, dim);
 
-            hier::Box src_box(dst_index, dst_index);
+            hier::Box src_box(dst_index, dst_index, block_id);
 
             src_box.rotate(back_rotate);
 

@@ -233,6 +233,7 @@ void MultiblockFaceDataTranslator<TYPE>::translateAndCopyData(
 
             }
          }
+         const hier::BlockId& block_id = dst->getBox().getBlockId();
          for (pdat::FaceIterator fi(dst->getBox(), axis); fi; fi++) {
             pdat::FaceIndex dst_index(fi());
             hier::Index dst_xyz_index(dst_index);
@@ -250,7 +251,7 @@ void MultiblockFaceDataTranslator<TYPE>::translateAndCopyData(
                hier::Transformation::
                getReverseRotationIdentifier(rotate, dim);
 
-            hier::Box src_box(dst_xyz_index, dst_xyz_index);
+            hier::Box src_box(dst_xyz_index, dst_xyz_index, block_id);
 
             src_box.rotate(back_rotate);
 

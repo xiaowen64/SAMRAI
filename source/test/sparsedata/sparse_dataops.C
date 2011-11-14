@@ -509,10 +509,10 @@ getGeometry(
    hi[1] = 0.5;
 
    // Sparse data sample 1 info
-   hier::Box coarse0(hier::Index(0, 0), hier::Index(9, 2));
-   hier::Box coarse1(hier::Index(0, 3), hier::Index(9, 4));
-   hier::Box fine0(hier::Index(4, 4), hier::Index(7, 7));
-   hier::Box fine1(hier::Index(8, 4), hier::Index(13, 7));
+   hier::Box coarse0(hier::Index(0, 0), hier::Index(9, 2), hier::BlockId(0));
+   hier::Box coarse1(hier::Index(0, 3), hier::Index(9, 4), hier::BlockId(0));
+   hier::Box fine0(hier::Index(4, 4), hier::Index(7, 7), hier::BlockId(0));
+   hier::Box fine1(hier::Index(8, 4), hier::Index(13, 7), hier::BlockId(0));
 
    coarse0.initialize(coarse0, hier::LocalId(0), 0);
    coarse1.initialize(coarse1, hier::LocalId(1), 0);
