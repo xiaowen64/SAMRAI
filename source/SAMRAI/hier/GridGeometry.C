@@ -90,7 +90,6 @@ GridGeometry::GridGeometry(
    bool register_for_restart):
    d_dim(dim),
    d_object_name(object_name),
-   d_domain_tree(0),
    d_periodic_shift(IntVector::getZero(d_dim)),
    d_max_data_ghost_width(IntVector(d_dim, -1)),
    d_has_enhanced_connectivity(false),
@@ -129,7 +128,6 @@ GridGeometry::GridGeometry(
    tbox::Pointer<TransferOperatorRegistry> op_reg):
    d_dim(dim),
    d_object_name(object_name),
-   d_domain_tree(0),
    d_periodic_shift(IntVector::getZero(d_dim)),
    d_max_data_ghost_width(IntVector(d_dim, -1)),
    d_number_blocks(1),
@@ -155,7 +153,6 @@ GridGeometry::GridGeometry(
    d_dim((*(domain.begin())).getDim()),
    d_object_name(object_name),
    d_physical_domain(domain),
-   d_domain_tree(0),
    d_periodic_shift(IntVector::getZero(d_dim)),
    d_max_data_ghost_width(IntVector(d_dim, -1)),
    d_number_of_block_singularities(0),
@@ -1424,7 +1421,6 @@ void GridGeometry::setPhysicalDomain(
 #endif
 
    d_domain_is_single_box.resizeArray(number_blocks);
-   d_domain_tree.resizeArray(number_blocks);
    d_number_blocks = number_blocks;
    LocalId local_id(0);
 
@@ -1439,19 +1435,12 @@ void GridGeometry::setPhysicalDomain(
          d_domain_is_single_box[b] = true;
          Box box(bounding_box, local_id++, 0, block_id);
          d_physical_domain.pushBack(box);
-
-         d_domain_tree[b] = new BoxTree(d_dim,
-            BoxContainer(box),
-            BlockId(b));
       } else {
          d_domain_is_single_box[b] = false;
          for (BoxContainer::Iterator itr = block_domain.begin();
               itr != block_domain.end(); ++itr) {
             d_physical_domain.pushBack(*itr);
          }
-         d_domain_tree[b] = new BoxTree(d_dim,
-            block_domain,
-            BlockId(b));
       }
    }
 
@@ -1503,46 +1492,45 @@ void GridGeometry::setPhysicalDomain(
 
 void GridGeometry::resetDomainBoxContainer()
 {
-   d_domain_with_images = d_physical_domain;
-   d_domain_with_images.order();
 
-   const IntVector periodic_shift_distances = getPeriodicShift(
-         IntVector::getOne(d_dim));
-   bool is_periodic = false;
-   for (int i = 0; i < d_dim.getValue(); i++) {
-      if (periodic_shift_distances(i) != 0) {
-         is_periodic = true;
-         break;
-      }
-   }
+   d_domain_search_tree.generateTree(*this, d_physical_domain);
+
+   const bool is_periodic =
+      d_periodic_shift != IntVector::getZero(d_periodic_shift.getDim());
+
+   d_domain_with_images = d_physical_domain; // Images added next if is_periodic.
+
    if (is_periodic) {
 
       PeriodicShiftCatalog::initializeShiftsByIndexDirections(d_periodic_shift);
       const PeriodicShiftCatalog* periodic_shift_catalog =
          PeriodicShiftCatalog::getCatalog(d_dim);
 
-      // Add periodic images of the domain d_domain_with_images.
-      std::vector<IntVector> shifts;
-      const BoxContainer& mapped_boxes = d_domain_with_images;
-      for (RealBoxConstIterator ni(mapped_boxes); ni.isValid(); ++ni) {
-         const Box& mapped_box = *ni;
-         computeShiftsForBox(shifts,
-            mapped_box,
-            *d_domain_tree[0],
-            periodic_shift_distances);
-         for (std::vector<IntVector>::const_iterator si = shifts.begin();
-              si != shifts.end(); ++si) {
-            PeriodicId shift_number =
-               periodic_shift_catalog->shiftDistanceToShiftNumber(*si);
-            Box image_mapped_box(
-               mapped_box,
-               shift_number,
-               IntVector::getOne(d_dim));
-            d_domain_with_images.insert(image_mapped_box);
+      const IntVector &one_vector(IntVector::getOne(d_dim));
+
+      for ( BoxContainer::ConstIterator ni(d_physical_domain.begin());
+            ni!=d_physical_domain.end(); ++ni ) {
+
+         const Box &real_box = *ni;
+         TBOX_ASSERT(real_box.getPeriodicId() == periodic_shift_catalog->getZeroShiftNumber());
+
+         for ( int ishift=1; ishift<periodic_shift_catalog->getNumberOfShifts();
+               ++ishift ) {
+            const Box image_box( real_box, PeriodicId(ishift), one_vector );
+            d_domain_with_images.pushBack(image_box);
          }
+
       }
+
+      d_domain_search_tree_periodic.generateTree(*this, d_domain_with_images);
+
+   }
+   else {
+      d_domain_search_tree_periodic = d_domain_search_tree;
    }
 }
+
+
 
 /*
  *************************************************************************

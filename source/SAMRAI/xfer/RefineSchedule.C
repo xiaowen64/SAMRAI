@@ -1558,7 +1558,7 @@ void RefineSchedule::createCoarseInterpPatchLevel(
          coarse_interp_mapped_box_level,
          coarse_interp_to_hiercoarse,
          hiercoarse_to_coarse_interp,
-         hierarchy->getDomainSearchTree(hier::BlockId(0)),
+         hierarchy->getGridGeometry()->getDomainSearchTree().getSingleBlockBoxTree(hier::BlockId(0)),
          hiercoarse_to_hiercoarse);
 
    }
@@ -1668,7 +1668,7 @@ void RefineSchedule::sanityCheckCoarseInterpAndHiercoarseLevels(
       coarse_interp_to_external,
       wider_coarse_interp_to_hiercoarse,
       fine_connector_widths[next_coarser_ln] - d_max_stencil_width,
-      hierarchy->getPeriodicDomainSearchTree());
+      hierarchy->getGridGeometry()->getPeriodicDomainSearchTree());
    coarse_interp_to_external.eraseEmptyNeighborSets();
 
    int err3 = coarse_interp_to_external.getGlobalNumberOfRelationships();
