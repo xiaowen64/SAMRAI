@@ -668,13 +668,13 @@ void PatchHierarchy::setupDomainData()
 
    // Initialize the multiblock domain search tree.
    d_domain_search_tree_periodic.generateTree(
-      d_grid_geometry,
+      *d_grid_geometry,
       d_domain_mapped_box_level.getBoxes());
 
    // Generate the non-periodic multiblock domain search tree.
    if (PeriodicShiftCatalog::getCatalog(d_dim)->isPeriodic()) {
       d_domain_search_tree.generateNonPeriodicTree(
-         d_grid_geometry,
+         *d_grid_geometry,
          d_domain_mapped_box_level.getBoxes());
    } else {
       d_domain_search_tree = d_domain_search_tree_periodic;
@@ -697,7 +697,7 @@ void PatchHierarchy::setupDomainData()
    }
 
    d_complement_searchtree.generateTree(
-      d_grid_geometry,
+      *d_grid_geometry,
       multiblock_complement_boxes);
 }
 

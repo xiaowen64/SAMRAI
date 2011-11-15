@@ -693,8 +693,7 @@ void BoxContainer::removeIntersections(
       TBOX_ERROR("removeIntersections attempted on ordered container.");
    }
 
-   const tbox::ConstPointer<GridGeometry>
-   & grid_geometry(takeaway.getGridGeometry());
+   const GridGeometry & grid_geometry(takeaway.getGridGeometry());
 
    std::vector<const Box *> overlap_mapped_boxes;
    Iterator itr(*this);
@@ -719,7 +718,7 @@ void BoxContainer::removeIntersections(
                overlap_mapped_boxes[i]->getBlockId();
             if (overlap_box_block_id != block_id) {
                Box overlap_box = *overlap_mapped_boxes[i];
-               grid_geometry->transformBox(overlap_box,
+               grid_geometry.transformBox(overlap_box,
                   refinement_ratio,
                   block_id,
                   overlap_box_block_id);
@@ -906,8 +905,7 @@ void BoxContainer::intersectBoxes(
       TBOX_ERROR("intersectBoxes attempted on ordered container.");
    }
 
-   const tbox::ConstPointer<GridGeometry>
-   & grid_geometry(keep.getGridGeometry());
+   const GridGeometry & grid_geometry(keep.getGridGeometry());
 
    std::vector<const Box *> overlap_mapped_boxes;
    Box overlap(front().getDim());
@@ -925,7 +923,7 @@ void BoxContainer::intersectBoxes(
             overlap_mapped_boxes[i]->getBlockId();
          if (overlap_box_block_id != block_id) {
             Box overlap_box = *overlap_mapped_boxes[i];
-            grid_geometry->transformBox(overlap_box,
+            grid_geometry.transformBox(overlap_box,
                refinement_ratio,
                block_id,
                overlap_box_block_id);

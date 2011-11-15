@@ -253,7 +253,7 @@ int main(
        */
 
       hier::MultiblockBoxTree multiblock_mapped_box_tree(
-         grid_geometry,
+         *grid_geometry,
          mapped_box_level.getBoxes());
 
       /*

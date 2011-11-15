@@ -58,7 +58,7 @@ public:
     * searching slower, and vice versa.  @b Default: 10
     */
    explicit MultiblockBoxTree(
-      const tbox::ConstPointer<GridGeometry>& grid_geometry,
+      const GridGeometry& grid_geometry,
       const BoxContainer& mapped_boxes,
       size_t min_number = 10);
 
@@ -74,7 +74,7 @@ public:
     * @param[in] min_number.  @b Default: 10
     */
    explicit MultiblockBoxTree(
-      const tbox::ConstPointer<GridGeometry>& grid_geometry,
+      const GridGeometry& grid_geometry,
       const std::vector<Box>& mapped_boxes,
       size_t min_number = 10);
 
@@ -89,7 +89,7 @@ public:
     * @param[in] min_number.  @b Default: 10
     */
    explicit MultiblockBoxTree(
-      const tbox::ConstPointer<GridGeometry>& grid_geometry,
+      const GridGeometry& grid_geometry,
       const std::map<BlockId, BoxContainer>& boxes,
       size_t min_number = 10);
 
@@ -115,7 +115,7 @@ public:
     */
    void
    generateTree(
-      const tbox::ConstPointer<GridGeometry>& grid_geometry,
+      const GridGeometry& grid_geometry,
       const BoxContainer& boxes,
       size_t min_number = 10);
 
@@ -130,7 +130,7 @@ public:
     */
    void
    generateTree(
-      const tbox::ConstPointer<GridGeometry>& grid_geometry,
+      const GridGeometry& grid_geometry,
       const std::map<BlockId, BoxContainer>& boxes,
       size_t min_number = 10);
 
@@ -145,7 +145,7 @@ public:
     */
    void
    generateNonPeriodicTree(
-      const tbox::ConstPointer<GridGeometry>& grid_geometry,
+      const GridGeometry& grid_geometry,
       const BoxContainer& boxes,
       size_t min_number = 10);
 
@@ -194,7 +194,7 @@ public:
     * @brief Return the GridGeometry object for the multiblock
     * environment.
     */
-   const tbox::ConstPointer<GridGeometry>&
+   const GridGeometry&
    getGridGeometry() const;
 
    //@{
@@ -379,7 +379,7 @@ private:
     */
    std::map<BlockId, BoxTree> d_single_block_trees;
 
-   tbox::ConstPointer<GridGeometry> d_grid_geometry;
+   const GridGeometry *d_grid_geometry;
 
 };
 

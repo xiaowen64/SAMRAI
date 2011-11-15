@@ -241,7 +241,7 @@ int main(
                  << std::endl;
 
       const hier::MultiblockBoxTree domain_mapped_box_tree(
-         grid_geometry, domain_mapped_boxes);
+         *grid_geometry, domain_mapped_boxes);
 
       /*
        * Construct the big_mapped_box_level.  It is a refinement of
@@ -369,7 +369,7 @@ int main(
 
       const hier::BoxContainer& small_mapped_box_set(small_mapped_box_level.getBoxes());
 
-      const hier::MultiblockBoxTree small_box_tree(grid_geometry,
+      const hier::MultiblockBoxTree small_box_tree(*grid_geometry,
                                                    small_mapped_box_level.getGlobalizedVersion().
                                                    getGlobalBoxes());
 
@@ -525,7 +525,7 @@ int main(
                     << big_to_internal.format("", 2);
 
          hier::MultiblockBoxTree internal_box_tree(
-            grid_geometry,
+            *grid_geometry,
             internal_mapped_box_level.getGlobalizedVersion().getGlobalBoxes());
 
          for (hier::BoxContainer::ConstIterator ni = small_mapped_box_set.begin();
@@ -593,7 +593,7 @@ int main(
                     << big_to_external.format("", 2);
 
          hier::MultiblockBoxTree external_box_tree(
-            grid_geometry,
+            *grid_geometry,
             external_mapped_box_level.getGlobalizedVersion().getGlobalBoxes());
 
          for (hier::BoxContainer::ConstIterator ni = external_mapped_box_set.begin();
@@ -779,7 +779,7 @@ void shrinkBoxLevel(
    }
 
    hier::MultiblockBoxTree visible_box_tree(
-      grid_geometry,
+      *grid_geometry,
       visible_mapped_boxes);
 
    hier::BoxLevelConnectorUtils mblcu;
@@ -825,7 +825,7 @@ void shrinkBoxLevel(
    }
 
    const hier::MultiblockBoxTree complement_mapped_box_tree(
-      grid_geometry,
+      *grid_geometry,
       complement_mapped_boxes);
 
    /*

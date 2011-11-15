@@ -3681,14 +3681,14 @@ void VisItDataWriter::writeParentChildInfoToSummaryHDFFile(
 
             child_box_tree =
                new hier::MultiblockBoxTree(
-                  hierarchy->getGridGeometry(),
+                  *hierarchy->getGridGeometry(),
                   non_per_child_boxes);
 
          } else {
 
             child_box_tree =
                new hier::MultiblockBoxTree(
-                  hierarchy->getGridGeometry(),
+                  *hierarchy->getGridGeometry(),
                   global_child_boxes);
 
          }

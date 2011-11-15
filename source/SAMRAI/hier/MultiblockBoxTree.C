@@ -39,10 +39,10 @@ namespace hier {
  */
 
 MultiblockBoxTree::MultiblockBoxTree(
-   const tbox::ConstPointer<GridGeometry>& grid_geometry,
+   const GridGeometry& grid_geometry,
    const BoxContainer& mapped_boxes,
    size_t min_number):
-   d_grid_geometry(grid_geometry)
+   d_grid_geometry(&grid_geometry)
 {
    NULL_USE(min_number);
 
@@ -68,7 +68,7 @@ MultiblockBoxTree::MultiblockBoxTree(
         blocki != mapped_boxes_by_block.end(); ++blocki) {
 
       TBOX_ASSERT(blocki->first.getBlockValue() >= 0 &&
-         blocki->first.getBlockValue() < grid_geometry->getNumberBlocks());
+         blocki->first.getBlockValue() < d_grid_geometry->getNumberBlocks());
 
       /*
        * The following lines do this:
@@ -92,10 +92,10 @@ MultiblockBoxTree::MultiblockBoxTree(
  */
 
 MultiblockBoxTree::MultiblockBoxTree(
-   const tbox::ConstPointer<GridGeometry>& grid_geometry,
+   const GridGeometry& grid_geometry,
    const std::map<BlockId, BoxContainer>& boxes,
    size_t min_number):
-   d_grid_geometry(grid_geometry)
+   d_grid_geometry(&grid_geometry)
 {
    generateTree(grid_geometry, boxes, min_number);
 }
@@ -125,7 +125,7 @@ MultiblockBoxTree::~MultiblockBoxTree()
  *************************************************************************
  */
 void MultiblockBoxTree::generateTree(
-   const tbox::ConstPointer<GridGeometry>& grid_geometry,
+   const GridGeometry& grid_geometry,
    const BoxContainer& boxes,
    size_t min_number)
 {
@@ -133,7 +133,7 @@ void MultiblockBoxTree::generateTree(
 
    clear();
 
-   d_grid_geometry = grid_geometry;
+   d_grid_geometry = &grid_geometry;
 
    /*
     * Group Boxes by their BlockId and create a tree for each
@@ -151,7 +151,7 @@ void MultiblockBoxTree::generateTree(
         blocki != mapped_boxes_by_block.end(); ++blocki) {
 
       TBOX_ASSERT(blocki->first.getBlockValue() >= 0 &&
-         blocki->first.getBlockValue() < grid_geometry->getNumberBlocks());
+         blocki->first.getBlockValue() < d_grid_geometry->getNumberBlocks());
 
       /*
        * The following lines do this:
@@ -164,7 +164,7 @@ void MultiblockBoxTree::generateTree(
          d_single_block_trees.insert(
             std::pair<BlockId, BoxTree>(
                blocki->first,
-               BoxTree(grid_geometry->getDim(), blocki->second))));
+               BoxTree(d_grid_geometry->getDim(), blocki->second))));
       TBOX_ASSERT(insert_return_value.second);
    }
 }
@@ -175,19 +175,19 @@ void MultiblockBoxTree::generateTree(
  *************************************************************************
  */
 void MultiblockBoxTree::generateTree(
-   const tbox::ConstPointer<GridGeometry>& grid_geometry,
+   const GridGeometry& grid_geometry,
    const std::map<BlockId, BoxContainer>& boxes,
    size_t min_number)
 {
    clear();
 
-   d_grid_geometry = grid_geometry;
+   d_grid_geometry = &grid_geometry;
 
    for (std::map<BlockId, BoxContainer>::const_iterator blocki = boxes.begin();
         blocki != boxes.end(); ++blocki) {
 
       TBOX_ASSERT(blocki->first.getBlockValue() >= 0 &&
-         blocki->first.getBlockValue() < grid_geometry->getNumberBlocks());
+         blocki->first.getBlockValue() < d_grid_geometry->getNumberBlocks());
 
       /*
        * The following lines do this:
@@ -200,7 +200,7 @@ void MultiblockBoxTree::generateTree(
          d_single_block_trees.insert(
             std::pair<BlockId, BoxTree>(
                blocki->first,
-               BoxTree(grid_geometry->getDim(), blocki->second,
+               BoxTree(d_grid_geometry->getDim(), blocki->second,
                   blocki->first, static_cast<int>(min_number)))));
       TBOX_ASSERT(insert_return_value.second);
    }
@@ -212,7 +212,7 @@ void MultiblockBoxTree::generateTree(
  *************************************************************************
  */
 void MultiblockBoxTree::generateNonPeriodicTree(
-   const tbox::ConstPointer<GridGeometry>& grid_geometry,
+   const GridGeometry& grid_geometry,
    const BoxContainer& boxes,
    size_t min_number)
 {
@@ -220,7 +220,7 @@ void MultiblockBoxTree::generateNonPeriodicTree(
 
    clear();
 
-   d_grid_geometry = grid_geometry;
+   d_grid_geometry = &grid_geometry;
 
    /*
     * Group Boxes by their BlockId and create a tree for each
@@ -240,7 +240,7 @@ void MultiblockBoxTree::generateNonPeriodicTree(
         blocki != mapped_boxes_by_block.end(); ++blocki) {
 
       TBOX_ASSERT(blocki->first.getBlockValue() >= 0 &&
-         blocki->first.getBlockValue() < grid_geometry->getNumberBlocks());
+         blocki->first.getBlockValue() < d_grid_geometry->getNumberBlocks());
 
       /*
        * The following lines do this:
@@ -253,7 +253,7 @@ void MultiblockBoxTree::generateNonPeriodicTree(
          d_single_block_trees.insert(
             std::pair<BlockId, BoxTree>(
                blocki->first,
-               BoxTree(grid_geometry->getDim(), blocki->second))));
+               BoxTree(d_grid_geometry->getDim(), blocki->second))));
       TBOX_ASSERT(insert_return_value.second);
    }
 }
@@ -266,7 +266,7 @@ void MultiblockBoxTree::generateNonPeriodicTree(
 void MultiblockBoxTree::clear()
 {
    d_single_block_trees.clear();
-   d_grid_geometry.setNull();
+   d_grid_geometry = NULL;
 }
 
 /*
@@ -276,7 +276,7 @@ void MultiblockBoxTree::clear()
 
 bool MultiblockBoxTree::isInitialized() const
 {
-   return !d_grid_geometry.isNull();
+   return d_grid_geometry != NULL;
 }
 
 /*
@@ -284,9 +284,9 @@ bool MultiblockBoxTree::isInitialized() const
  *************************************************************************
  */
 
-const tbox::ConstPointer<GridGeometry>& MultiblockBoxTree::getGridGeometry() const
+const GridGeometry& MultiblockBoxTree::getGridGeometry() const
 {
-   return d_grid_geometry;
+   return *d_grid_geometry;
 }
 
 /*
