@@ -131,6 +131,8 @@ void MultiblockBoxTree::generateTree(
 {
    NULL_USE(min_number);
 
+   clear();
+
    d_grid_geometry = grid_geometry;
 
    /*
@@ -177,6 +179,8 @@ void MultiblockBoxTree::generateTree(
    const std::map<BlockId, BoxContainer>& boxes,
    size_t min_number)
 {
+   clear();
+
    d_grid_geometry = grid_geometry;
 
    for (std::map<BlockId, BoxContainer>::const_iterator blocki = boxes.begin();
@@ -213,6 +217,8 @@ void MultiblockBoxTree::generateNonPeriodicTree(
    size_t min_number)
 {
    NULL_USE(min_number);
+
+   clear();
 
    d_grid_geometry = grid_geometry;
 
