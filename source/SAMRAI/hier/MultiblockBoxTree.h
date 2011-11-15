@@ -191,6 +191,8 @@ public:
    /*!
     * @brief Return the GridGeometry object for the multiblock
     * environment.
+    *
+    * Do not deallocate the returned GridGeometry.
     */
    const GridGeometry&
    getGridGeometry() const;
@@ -377,6 +379,11 @@ private:
     */
    std::map<BlockId, BoxTree> d_single_block_trees;
 
+   /*
+    * @brief GridGeometry object.
+    *
+    * Do not delete this object.
+    */
    const GridGeometry *d_grid_geometry;
 
 };
