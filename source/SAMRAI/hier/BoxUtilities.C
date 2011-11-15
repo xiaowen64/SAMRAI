@@ -721,7 +721,7 @@ void BoxUtilities::growBoxesWithinDomain(
  *
  * Grow each box in the list that is smaller than the specified minimum
  * size.  Each box that is grown must remain within the union of the
- * boxes of the given domain.  The domain is defined by the complement
+ * boxes of the given domain.  The domain is specified by the complement
  * of the local portion of the domain.
  *
  *************************************************************************
