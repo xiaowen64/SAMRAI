@@ -399,6 +399,8 @@ private:
    static const int TreeLoadBalancer_PREBALANCE1 = 1212006;
    static const int TreeLoadBalancer_FIRSTDATALEN = 1000;
 
+   static const int TreeLoadBalancer_MIN_NPROC_FOR_AUTOMATIC_MULTICYCLE = 65;
+
    // The following are not implemented, but are provided here for
    // dumb compilers.
 

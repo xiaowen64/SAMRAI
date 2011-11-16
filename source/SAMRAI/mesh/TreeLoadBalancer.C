@@ -63,6 +63,7 @@ const int TreeLoadBalancer::TreeLoadBalancer_EDGETAG1;
 const int TreeLoadBalancer::TreeLoadBalancer_PREBALANCE0;
 const int TreeLoadBalancer::TreeLoadBalancer_PREBALANCE1;
 const int TreeLoadBalancer::TreeLoadBalancer_FIRSTDATALEN;
+const int TreeLoadBalancer::TreeLoadBalancer_MIN_NPROC_FOR_AUTOMATIC_MULTICYCLE;
 
 const int TreeLoadBalancer::d_default_data_id = -1;
 
@@ -408,7 +409,7 @@ void TreeLoadBalancer::loadBalanceBoxLevel(
     * automatically using the following heuristic algorithm:
     *
     * If machine size is small enough to have negligible scaling
-    * issues (<= 64), use 1 cycle.
+    * issues (< TreeLoadBalancer_MIN_NPROC_FOR_AUTOMATIC_MULTICYCLE), use 1 cycle.
     *
     * Else if the initial load is sufficiently spread out (across at
     * least sqrt(nproc)) processes, use 1 cycle.
@@ -418,7 +419,7 @@ void TreeLoadBalancer::loadBalanceBoxLevel(
    int number_of_cycles = d_n_root_cycles;
    if (number_of_cycles < 0) {
       // User requested automatic number of cycles.
-      if (balance_box_level.getMPI().getSize() <= 64 ) {
+      if (balance_box_level.getMPI().getSize() < TreeLoadBalancer_MIN_NPROC_FOR_AUTOMATIC_MULTICYCLE ) {
          number_of_cycles = 1;
       }
       else if ( int(nproc_with_initial_load * nproc_with_initial_load) >=
