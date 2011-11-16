@@ -497,14 +497,7 @@ void TreeLoadBalancer::loadBalanceBoxLevel(
 
       } else {
 
-         switch (icycle) {
-         case 0: t_compute_tree_load0->start();
-            break;
-         case 1: t_compute_tree_load1->start();
-            break;
-         case 2: t_compute_tree_load2->start();
-            break;
-         }
+         t_compute_tree_load_for_cycle[icycle]->start();
 
          /*
           * Use MPI's vector all-reduce to get individual group loads.
@@ -521,16 +514,11 @@ void TreeLoadBalancer::loadBalanceBoxLevel(
          }
          group_sum_load = group_loads[group_num];
 
-         switch (icycle) {
-         case 0: t_compute_tree_load0->stop();
-            break;
-         case 1: t_compute_tree_load1->stop();
-            break;
-         case 2: t_compute_tree_load2->stop();
-            break;
-         }
+         t_compute_tree_load_for_cycle[icycle]->stop();
 
       }
+
+      t_compute_tree_load->stop();
 
 
       /*
@@ -825,8 +813,6 @@ void TreeLoadBalancer::loadBalanceWithinRankGroup(
       balance_box_level);
 
    double group_avg_load = group_sum_load / rank_group.size();
-
-   t_compute_tree_load->stop();
 
 
    hier::BoxLevel balanced_box_level(balance_box_level.getDim());
@@ -4557,12 +4543,16 @@ void TreeLoadBalancer::setTimers()
          getTimer(d_object_name + "::compute_global_load");
       t_compute_tree_load = tbox::TimerManager::getManager()->
          getTimer(d_object_name + "::compute_tree_load");
-      t_compute_tree_load0 = tbox::TimerManager::getManager()->
-         getTimer(d_object_name + "::compute_tree_load0");
-      t_compute_tree_load1 = tbox::TimerManager::getManager()->
-         getTimer(d_object_name + "::compute_tree_load1");
-      t_compute_tree_load2 = tbox::TimerManager::getManager()->
-         getTimer(d_object_name + "::compute_tree_load2");
+
+      const int max_cycles_to_time = 4;
+      t_compute_tree_load_for_cycle.resize( max_cycles_to_time,
+                                            tbox::Pointer<tbox::Timer>(NULL) );
+      for ( int i=0; i<max_cycles_to_time; ++i ) {
+         t_compute_tree_load_for_cycle[i] = tbox::TimerManager::getManager()->
+            getTimer(d_object_name + "::compute_tree_load_for_cycle["
+                     + tbox::Utilities::intToString(i) + "]");
+      }
+
       t_break_off_load = tbox::TimerManager::getManager()->
          getTimer(d_object_name + "::breakOffLoad()");
       t_find_bad_cuts = tbox::TimerManager::getManager()->

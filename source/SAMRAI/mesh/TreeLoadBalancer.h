@@ -950,9 +950,7 @@ private:
    tbox::Pointer<tbox::Timer> t_compute_local_load;
    tbox::Pointer<tbox::Timer> t_compute_global_load;
    tbox::Pointer<tbox::Timer> t_compute_tree_load;
-   tbox::Pointer<tbox::Timer> t_compute_tree_load0;
-   tbox::Pointer<tbox::Timer> t_compute_tree_load1;
-   tbox::Pointer<tbox::Timer> t_compute_tree_load2;
+   std::vector<tbox::Pointer<tbox::Timer> > t_compute_tree_load_for_cycle;
    tbox::Pointer<tbox::Timer> t_reassign_loads;
    tbox::Pointer<tbox::Timer> t_shift_loads_by_swapping;
    tbox::Pointer<tbox::Timer> t_shift_loads_by_breaking;
