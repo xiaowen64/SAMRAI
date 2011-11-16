@@ -295,16 +295,39 @@ void TreeLoadBalancer::loadBalanceBoxLevel(
 
    t_load_balance_box_level->start();
 
+   d_min_size = min_size;
+   d_max_size = max_size;
+   d_bad_interval = bad_interval;
+   d_cut_factor = cut_factor;
    /*
-    * Shadow data is internal duplicates of some parameters
-    * so they do not have to appear in all the interfaces.
+    * Domain boxes are used by breakOffLoad to determine where
+    * the bad cuts are.  Computing domain_boxes from domain_box_level
+    * should be moved above the this method.
     */
-   setShadowData(min_size,
-      max_size,
-      domain_box_level,
-      bad_interval,
-      cut_factor,
-      balance_box_level.getRefinementRatio());
+
+   /*
+    * We expect the domain box_level to be in globalized state.
+    */
+   TBOX_ASSERT(
+      domain_box_level.getParallelState() ==
+      hier::BoxLevel::GLOBALIZED);
+
+   d_block_domain_boxes.clear();
+   int nblocks =
+      domain_box_level.getGridGeometry()->getNumberBlocks();
+   d_block_domain_boxes.resize(nblocks);
+
+   if (nblocks == 1) {
+      domain_box_level.getGlobalBoxes(d_block_domain_boxes[0]);
+      d_block_domain_boxes[0].refine(balance_box_level.getRefinementRatio());
+   } else {
+      for (int b = 0; b < nblocks; ++b) {
+         d_block_domain_boxes[b] = hier::BoxContainer(
+            domain_box_level.getGlobalBoxes(), hier::BlockId(b));
+
+         d_block_domain_boxes[b].refine(balance_box_level.getRefinementRatio());
+      }
+   }
 
    if (d_print_steps) {
       tbox::plog << "Pre balanced:\n" << balance_box_level.format("", 2);
@@ -559,7 +582,11 @@ void TreeLoadBalancer::loadBalanceBoxLevel(
     * Finished load balancing.  Clean up and wrap up.
     */
 
-   unsetShadowData();
+   d_min_size = hier::IntVector(d_dim, -1);
+   d_max_size = hier::IntVector(d_dim, -1);
+   d_block_domain_boxes.clear();
+   d_bad_interval = hier::IntVector(d_dim, -1);
+   d_cut_factor = hier::IntVector(d_dim, -1);
 
    t_load_balance_box_level->stop();
 
@@ -4179,71 +4206,6 @@ bool TreeLoadBalancer::breakOffLoad_cubic(
 #endif
 
    return true;
-}
-
-
-
-/*
-**************************************************************************
-**************************************************************************
-*/
-
-void TreeLoadBalancer::setShadowData(
-   const hier::IntVector& min_size,
-   const hier::IntVector& max_size,
-   const hier::BoxLevel& domain_box_level,
-   const hier::IntVector& bad_interval,
-   const hier::IntVector& cut_factor,
-   const hier::IntVector& refinement_ratio) const
-{
-   d_min_size = min_size;
-   d_max_size = max_size;
-   d_bad_interval = bad_interval;
-   d_cut_factor = cut_factor;
-   /*
-    * Domain boxes are used by breakOffLoad to determine where
-    * the bad cuts are.  Computing domain_boxes from domain_box_level
-    * should be moved above the this method.
-    */
-
-   /*
-    * We expect the domain box_level to be in globalized state.
-    */
-   TBOX_ASSERT(
-      domain_box_level.getParallelState() ==
-      hier::BoxLevel::GLOBALIZED);
-
-   d_block_domain_boxes.clear();
-   int nblocks =
-      domain_box_level.getGridGeometry()->getNumberBlocks();
-   d_block_domain_boxes.resize(nblocks);
-
-   if (nblocks == 1) {
-      domain_box_level.getGlobalBoxes(d_block_domain_boxes[0]);
-      d_block_domain_boxes[0].refine(refinement_ratio);
-   } else {
-      for (int b = 0; b < nblocks; ++b) {
-         d_block_domain_boxes[b] = hier::BoxContainer(
-            domain_box_level.getGlobalBoxes(), hier::BlockId(b));
-
-         d_block_domain_boxes[b].refine(refinement_ratio);
-      }
-   }
-}
-
-
-
-/*
-**************************************************************************
-**************************************************************************
-*/
-
-void TreeLoadBalancer::unsetShadowData() const {
-   d_min_size = hier::IntVector(d_dim, -1);
-   d_max_size = hier::IntVector(d_dim, -1);
-   d_block_domain_boxes.clear();
-   d_bad_interval = hier::IntVector(d_dim, -1);
-   d_cut_factor = hier::IntVector(d_dim, -1);
 }
 
 

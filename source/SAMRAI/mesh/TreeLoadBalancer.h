@@ -843,17 +843,6 @@ private:
       tbox::AsyncCommPeer<int> *& parent_send,
       tbox::AsyncCommPeer<int> *& parent_recv) const;
 
-   void
-   setShadowData(
-      const hier::IntVector& min_size,
-      const hier::IntVector& max_size,
-      const hier::BoxLevel& domain_box_level,
-      const hier::IntVector& bad_interval,
-      const hier::IntVector& cut_factor,
-      const hier::IntVector& refinement_ratio) const;
-   void
-   unsetShadowData() const;
-
    /*!
     * @brief Set up timers for the object.
     */
