@@ -121,6 +121,8 @@ public:
    /*!
     * @brief Free the internal MPI communicator, if any has been set.
     *
+    * This is automatically done by the destructor, if needed.
+    *
     * @see setSAMRAI_MPI().
     */
    void
@@ -862,7 +864,10 @@ private:
    std::string d_object_name;
 
    //! @brief Duplicated communicator object.  See setSAMRAI_MPI().
-   tbox::SAMRAI_MPI d_mpi_dup;
+   mutable tbox::SAMRAI_MPI d_mpi;
+
+   //! @brief Whether d_mpi is an internal duplicate.  See setSAMRAI_MPI().
+   bool d_mpi_is_dupe;
 
    int d_n_root_cycles;
 
@@ -913,7 +918,6 @@ private:
 
    //@{
    //! @name Data shared with private methods during balancing.
-   mutable tbox::SAMRAI_MPI d_mpi;
    mutable hier::IntVector d_min_size;
    mutable hier::IntVector d_max_size;
    mutable std::vector<hier::BoxContainer> d_block_domain_boxes;

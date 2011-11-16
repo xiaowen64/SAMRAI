@@ -79,7 +79,8 @@ TreeLoadBalancer::TreeLoadBalancer(
    tbox::Pointer<tbox::Database> input_db):
    d_dim(dim),
    d_object_name(name),
-   d_mpi_dup(tbox::SAMRAI_MPI::commNull),
+   d_mpi(tbox::SAMRAI_MPI::commNull),
+   d_mpi_is_dupe(false),
    d_n_root_cycles(-1),
    d_degree(2),
    d_master_workload_data_id(d_default_data_id),
@@ -89,7 +90,6 @@ TreeLoadBalancer::TreeLoadBalancer(
    d_slender_penalty_threshold(3.0),
    d_precut_penalty_wt(1.0),
    // Data shared during balancing.
-   d_mpi(tbox::SAMRAI_MPI::commNull),
    d_min_size(d_dim),
    d_max_size(d_dim),
    d_bad_interval(d_dim),
@@ -243,9 +243,31 @@ void TreeLoadBalancer::loadBalanceBoxLevel(
    }
 
 
-   d_mpi =
-      d_mpi_dup.getCommunicator() == tbox::SAMRAI_MPI::commNull ?
-      balance_box_level.getMPI() : d_mpi_dup;
+   if ( d_mpi_is_dupe ) {
+      /*
+       * If user has set the duplicate communicator, make sure it is
+       * compatible with the BoxLevel involved.
+       */
+      TBOX_ASSERT(d_mpi.getSize() == balance_box_level.getMPI().getSize());
+      TBOX_ASSERT(d_mpi.getRank() == balance_box_level.getMPI().getRank());
+      if (d_mpi.getSize() > 1) {
+         int compare_result;
+         tbox::SAMRAI_MPI::Comm_compare(
+            d_mpi.getCommunicator(),
+            balance_box_level.getMPI().getCommunicator(),
+            &compare_result);
+         if (compare_result != MPI_CONGRUENT) {
+            TBOX_ERROR("TreeLoadBalancer::loadBalanceBoxLevel:\n"
+               << "The input balance_box_level has a SAMRAI_MPI that is\n"
+               << "not congruent with the one set with setSAMRAI_MPI().\n"
+               << "You must use freeMPICommunicator() before balancing\n"
+               << "a BoxLevel with an incongruent SAMRAI_MPI.");
+         }
+      }
+   }
+   else {
+      d_mpi = balance_box_level.getMPI();
+   }
 
    if (d_print_steps ||
        d_print_break_steps) {
@@ -630,7 +652,6 @@ void TreeLoadBalancer::loadBalanceBoxLevel(
       t_barrier_after->stop();
    }
 
-   d_mpi.setCommunicator(tbox::SAMRAI_MPI::commNull);
 }
 
 
@@ -1977,10 +1998,13 @@ void TreeLoadBalancer::setSAMRAI_MPI(
          << "communicator is invalid.");
    }
 
-   d_mpi_dup.freeCommunicator();
+   if ( d_mpi_is_dupe ) {
+      d_mpi.freeCommunicator();
+   }
 
    // Enable private communicator.
-   d_mpi_dup.dupCommunicator(samrai_mpi);
+   d_mpi.dupCommunicator(samrai_mpi);
+   d_mpi_is_dupe = true;
 }
 
 
@@ -1992,12 +2016,16 @@ void TreeLoadBalancer::setSAMRAI_MPI(
  */
 void TreeLoadBalancer::freeMPICommunicator()
 {
-   // Free the private communicator (if MPI has not been finalized).
-   int flag;
-   tbox::SAMRAI_MPI::Finalized(&flag);
-   if (!flag) {
-      d_mpi_dup.freeCommunicator();
+   if ( d_mpi_is_dupe ) {
+      // Free the private communicator (if MPI has not been finalized).
+      int flag;
+      tbox::SAMRAI_MPI::Finalized(&flag);
+      if (!flag) {
+         d_mpi.freeCommunicator();
+      }
    }
+   d_mpi.setCommunicator(tbox::SAMRAI_MPI::commNull);
+   d_mpi_is_dupe = false;
 }
 
 
@@ -3613,10 +3641,10 @@ void TreeLoadBalancer::assertNoMessageForPrivateCommunicator() const
     * that there is no messages in transit, but it can find
     * messages that have arrived but not received.
     */
-   if (d_mpi_dup.getCommunicator() != tbox::SAMRAI_MPI::commNull) {
+   if (d_mpi.getCommunicator() != tbox::SAMRAI_MPI::commNull) {
       int flag;
       tbox::SAMRAI_MPI::Status mpi_status;
-      int mpi_err = d_mpi_dup.Iprobe(MPI_ANY_SOURCE,
+      int mpi_err = d_mpi.Iprobe(MPI_ANY_SOURCE,
             MPI_ANY_TAG,
             &flag,
             &mpi_status);
