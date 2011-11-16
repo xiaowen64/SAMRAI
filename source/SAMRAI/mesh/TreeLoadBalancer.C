@@ -197,7 +197,7 @@ void TreeLoadBalancer::setUniformWorkload(
  * but it is not where the tree load balancer algorithm is implemented.
  *
  * This method does some preliminary setup then calls
- * computeLoadBalancingMapWithinRankGroup to compute the new balanced
+ * loadBalanceWithinRankGroup to compute the new balanced
  * BoxLevel and the mapping Connectors between the old and the new.
  * Then it applies the mapping to update the balance<==>anchor
  * Connectors.  It may do this multiple times, as specified by the
@@ -840,6 +840,25 @@ void TreeLoadBalancer::loadBalanceWithinRankGroup(
    hier::Connector unbalanced_to_balanced;
    hier::Connector balanced_to_unbalanced;
 
+   /*
+    * Initialize empty balanced_box_level and mappings.
+    */
+   balanced_box_level.initialize(
+      balance_box_level.getRefinementRatio(),
+      balance_box_level.getGridGeometry(),
+      balance_box_level.getMPI());
+   balanced_to_unbalanced.setConnectorType(hier::Connector::MAPPING);
+   balanced_to_unbalanced.clearNeighborhoods();
+   balanced_to_unbalanced.setBase(balanced_box_level);
+   balanced_to_unbalanced.setHead(balance_box_level);
+   balanced_to_unbalanced.setWidth(hier::IntVector::getZero(d_dim), true);
+   unbalanced_to_balanced.setConnectorType(hier::Connector::MAPPING);
+   unbalanced_to_balanced.clearNeighborhoods();
+   unbalanced_to_balanced.setBase(balance_box_level);
+   unbalanced_to_balanced.setHead(balanced_box_level);
+   unbalanced_to_balanced.setWidth(hier::IntVector::getZero(d_dim), true);
+
+
    if ( !rank_group.isMember(d_mpi.getRank()) ) {
       /*
        * The following assert should be guaranteed by an earlier call
@@ -847,21 +866,6 @@ void TreeLoadBalancer::loadBalanceWithinRankGroup(
        * given rank group leads to undefined results.
        */
       TBOX_ASSERT( balance_box_level.getLocalNumberOfBoxes() == 0 );
-      // Initialize empty outputs.
-      balanced_box_level.initialize(
-         balance_box_level.getRefinementRatio(),
-         balance_box_level.getGridGeometry(),
-         balance_box_level.getMPI());
-      balanced_to_unbalanced.setConnectorType(hier::Connector::MAPPING);
-      balanced_to_unbalanced.clearNeighborhoods();
-      balanced_to_unbalanced.setBase(balanced_box_level);
-      balanced_to_unbalanced.setHead(balance_box_level);
-      balanced_to_unbalanced.setWidth(hier::IntVector::getZero(d_dim), true);
-      unbalanced_to_balanced.setConnectorType(hier::Connector::MAPPING);
-      unbalanced_to_balanced.clearNeighborhoods();
-      unbalanced_to_balanced.setBase(balance_box_level);
-      unbalanced_to_balanced.setHead(balanced_box_level);
-      unbalanced_to_balanced.setWidth(hier::IntVector::getZero(d_dim), true);
 
       if (anchor_to_balance.isFinalized()) {
          const hier::MappingConnectorAlgorithm mca;
@@ -941,6 +945,8 @@ void TreeLoadBalancer::loadBalanceWithinRankGroup(
    tbox::AsyncCommStage::MemberVec completed;
 
    /*
+    * Step 1:
+    *
     * Post receive for data from subtree rooted at children.
     * We have to do a few local setups, but post the receive
     * now to overlap communication.
@@ -956,13 +962,8 @@ void TreeLoadBalancer::loadBalanceWithinRankGroup(
 
 
    /*
-    * Data for storing and transfering subtree info.
-    */
-   SubtreeLoadData* child_load_data = new SubtreeLoadData[num_children];
-   SubtreeLoadData my_load_data;
-
-
-   /*
+    * Step 2, local part:
+    *
     * The local process must generate indices for new and imported
     * boxes.  To do it deterministically, no generated index should
     * depend on message arrival order.  To achieve this, we maintain
@@ -995,20 +996,10 @@ void TreeLoadBalancer::loadBalanceWithinRankGroup(
 
 
    /*
-    * Initialize output objects.
+    * Data for storing and transfering subtree info.
     */
-   balanced_box_level.initialize(
-      balance_box_level.getRefinementRatio(),
-      balance_box_level.getGridGeometry(),
-      balance_box_level.getMPI());
-   balanced_to_unbalanced.clearNeighborhoods();
-   balanced_to_unbalanced.setBase(balanced_box_level);
-   balanced_to_unbalanced.setHead(balance_box_level);
-   balanced_to_unbalanced.setWidth(hier::IntVector::getZero(d_dim), true);
-   unbalanced_to_balanced.clearNeighborhoods();
-   unbalanced_to_balanced.setBase(balance_box_level);
-   unbalanced_to_balanced.setHead(balanced_box_level);
-   unbalanced_to_balanced.setWidth(hier::IntVector::getZero(d_dim), true);
+   SubtreeLoadData* child_load_data = new SubtreeLoadData[num_children];
+   SubtreeLoadData my_load_data;
 
 
    /*
@@ -1126,6 +1117,8 @@ void TreeLoadBalancer::loadBalanceWithinRankGroup(
 
 
    /*
+    * Step 2, remote part:
+    *
     * Complete load-receive communications with children.
     * Add imported BoxInTransit to unassigned bin.
     */
@@ -1137,6 +1130,7 @@ void TreeLoadBalancer::loadBalanceWithinRankGroup(
          tbox::AsyncCommPeer<int>* peer_comm =
             dynamic_cast<tbox::AsyncCommPeer<int> *>(completed[i]);
 
+         TBOX_ASSERT(peer_comm != NULL);
          TBOX_ASSERT(peer_comm >= child_comms);
          TBOX_ASSERT(peer_comm <= child_comms + num_children);
 
@@ -1223,6 +1217,8 @@ void TreeLoadBalancer::loadBalanceWithinRankGroup(
 
 
    /*
+    * Step 3:
+    *
     * Send subtree info and excess work (if any) up to parent.
     */
    t_send_load_to_parent->start();
@@ -1279,6 +1275,8 @@ void TreeLoadBalancer::loadBalanceWithinRankGroup(
 
 
    /*
+    * Step 4:
+    *
     * Finish the send-up.
     * To preclude sending work in both directions, the parent
     * will *not* send a work message down if we sent work up.
@@ -1359,6 +1357,8 @@ void TreeLoadBalancer::loadBalanceWithinRankGroup(
 
 
    /*
+    * Step 5 and 6:
+    *
     * Reassign unassigned load to children subtrees as needed.
     */
 
@@ -1464,8 +1464,6 @@ void TreeLoadBalancer::loadBalanceWithinRankGroup(
    }
 
 
-   balanced_to_unbalanced.setConnectorType(hier::Connector::MAPPING);
-   unbalanced_to_balanced.setConnectorType(hier::Connector::MAPPING);
 
    t_local_balancing->stop();
 
@@ -1874,6 +1872,7 @@ void TreeLoadBalancer::constructSemilocalUnbalancedToBalanced(
 
          tbox::AsyncCommPeer<int>* peer_comm =
             dynamic_cast<tbox::AsyncCommPeer<int> *>(completed[i]);
+         TBOX_ASSERT(peer_comm != NULL);
 
 #ifdef DEBUG_CHECK_ASSERTIONS
          size_t j;
@@ -2408,19 +2407,20 @@ bool TreeLoadBalancer::shiftLoadsByBreaking(
                        << std::endl;
          }
 
-         if (trial_combined_penalty < best_combined_penalty) {
-            if (d_print_steps) {
+         if (d_print_steps) {
+            if (trial_combined_penalty < best_combined_penalty) {
                tbox::plog << "    Keeping this trial." << std::endl;
+            } else {
+               tbox::plog << "    Rejecting this trial." << std::endl;
             }
+         }
+
+         if (trial_combined_penalty < best_combined_penalty) {
             found_breakage = true;
             best_actual_transfer = static_cast<int>(breakoff_amt);
             best_src = trial_src;
             best_dst = trial_dst;
             best_combined_penalty = trial_combined_penalty;
-         } else {
-            if (d_print_steps) {
-               tbox::plog << "    Rejecting this trial." << std::endl;
-            }
          }
 
       } else {
