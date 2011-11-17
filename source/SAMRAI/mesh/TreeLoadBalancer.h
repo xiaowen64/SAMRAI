@@ -529,7 +529,7 @@ private:
     * @param[i] ideal_transfer Amount of load to reassign from src to
     * dst.  If negative, reassign the load from dst to src.
     *
-    * @return Amount of load transfered.  If positive, transfer load
+    * @return Amount of load transfered.  If positive, load went
     * from src to dst (if negative, from dst to src).
     */
    int
@@ -546,20 +546,19 @@ private:
     *
     * @param[io] dst Destination of work, for a positive ideal_transfer.
     *
-    * @param actual_transfer Amount of load transfered.  If positive,
-    * transfer load from src to dst (if negative, from dst to src).
-    *
     * @param next_available_index Index for guaranteeing new
     * Boxes are uniquely numbered.
     *
     * @param ideal_transfer Amount of load to reassign from src to
     * dst.  If negative, reassign the load from dst to src.
+    *
+    * @return Amount of load transfered.  If positive, load went
+    * from src to dst (if negative, from dst to src).
     */
-   bool
+   int
    shiftLoadsByBreaking(
       TransitSet& src,
       TransitSet& dst,
-      int& actual_transfer,
       hier::LocalId& next_available_index,
       int ideal_transfer ) const;
 

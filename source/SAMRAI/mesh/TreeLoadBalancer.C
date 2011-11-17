@@ -1592,7 +1592,7 @@ void TreeLoadBalancer::loadBalanceWithinRankGroup(
  * two-bin load balancer.  Given two sets of BoxInTransit (the bins)
  * and an amount of work to move from one set to the other, this
  * method makes a best effort to effect the work transfer between the
- * two bins.  This can move BoxInTransit between given sets and, if
+ * two bins.  It can move BoxInTransit between given sets and, if
  * needed, break some BoxInTransit up to move part of the work.
  *
  * This method is purely local--it reassigns the load but does not
@@ -1666,11 +1666,9 @@ int TreeLoadBalancer::reassignLoads(
        * in the overloaded side for partial transfer to the
        * underloaded side.
        */
-      int brk_transfer;
-      shiftLoadsByBreaking(
+      int brk_transfer = shiftLoadsByBreaking(
          src,
          dst,
-         brk_transfer,
          next_available_index,
          ideal_transfer - actual_transfer );
       actual_transfer += brk_transfer;
@@ -2221,21 +2219,21 @@ void TreeLoadBalancer::destroyAsyncCommObjects(
  * Return whether any changes were made.
  *************************************************************************
  */
-bool TreeLoadBalancer::shiftLoadsByBreaking(
+int TreeLoadBalancer::shiftLoadsByBreaking(
    TransitSet& src,
    TransitSet& dst,
-   int& actual_transfer,
    hier::LocalId& next_available_index,
    const int ideal_transfer ) const
 {
+   int actual_transfer = 0;
+
    if (ideal_transfer < 0) {
-      bool rval = shiftLoadsByBreaking(dst,
-            src,
-            actual_transfer,
-            next_available_index,
-            -ideal_transfer );
-      actual_transfer = -actual_transfer;
-      return rval;
+      actual_transfer = -shiftLoadsByBreaking(
+         dst,
+         src,
+         next_available_index,
+         -ideal_transfer );
+      return actual_transfer;
    }
 
    TBOX_ASSERT(src.size() + dst.size() > 0);
@@ -2250,8 +2248,6 @@ bool TreeLoadBalancer::shiftLoadsByBreaking(
                  << " Boxes."
                  << std::endl;
    }
-
-   actual_transfer = 0;
 
    /*
     * The best results so far (from not transfering anything).
@@ -2439,7 +2435,7 @@ bool TreeLoadBalancer::shiftLoadsByBreaking(
    }
 
    t_shift_loads_by_breaking->stop();
-   return found_breakage;
+   return actual_transfer;
 }
 
 
