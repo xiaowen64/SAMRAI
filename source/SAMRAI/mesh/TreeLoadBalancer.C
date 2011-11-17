@@ -2603,79 +2603,79 @@ bool TreeLoadBalancer::findLoadSwapPair(
    }
 
    /*
-    * Look for a high and a low NodeInTransit to swap, subject to condition
+    * Look for two swap options.  The "high side" option would
+    * transfer at least ideal_transfer.  The "low side" option would
+    * transfer up to ideal_transfer.
     *
-    * 0 < load(high) - load(low) < lim_transfer.
+    * Each option is defined by a box from src and a box from dst,
+    * designated by the iterators src_hiside, dst_hiside, src_loside
+    * and dst_loside.  src_hiside points to the box in the src for the
+    * high-side transfer, and similarly for dst_hiside.  src_loside
+    * points to the box in the src for the low-side transfer, and
+    * similarly for dst_loside.
     *
-    * Compute the
-    * balance_penalty if high and low were swapped.  Keep looking
-    * until we find the pair giving the lowest balance_penalty on swapping.
+    * Note that in the degenerate case, the dst box does not exist,
+    * and the swap degenerates to moving a box from the src to the
+    * dst.
+    *
+    * Compute the balance_penalty if high and low were swapped.  Keep
+    * looking until we find the pair giving the lowest balance_penalty
+    * on swapping.
     *
     * isrc and idst point to the current best pair to swap.  new_balance_penalty
     * is the balance_penalty if we swap them.
     *
-    * jsrc and jdst are trial pairs to check to see if we can improve on
+    * src_test and dst_test are trial pairs to check to see if we can improve on
     * new_balance_penalty.
     *
     * We will look for two "best" pairs:
-    *
-    * On the high side, swapping more than ideal_transfer:
-    * (jsrc_hiside , jdst_hiside) are the best swap pair such that
-    * jsrc_hiside->load - jdst_hiside->load >= ideal_transfer
-    *
-    * On the low side, swapping less than ideal_transfer:
-    * (jsrc_loside, jdst_loside are the best swap pair such that
-    * jsrc_loside->load - jdst_loside->load < ideal_transfer
-    *
-    * Then we decide on whether to choose the hig-hside swap or the
-    * low-side swap based on balance_penalty of each candidate swap.
     */
 
-   // Initialization indicating no swap pair found.
-   TransitSet::iterator jsrc_hiside = src.end();
-   TransitSet::iterator jdst_hiside = dst.end();
-   TransitSet::iterator jsrc_loside = src.end();
-   TransitSet::iterator jdst_loside = dst.end();
+   // Initialization indicating no swap pair found yet.
+   TransitSet::iterator src_hiside = src.end();
+   TransitSet::iterator dst_hiside = dst.end();
+   TransitSet::iterator src_loside = src.end();
+   TransitSet::iterator dst_loside = dst.end();
 
    // A dummy BoxInTransit for set searches.
    hier::Box dummy_box(d_dim);
    BoxInTransit dummy_search_target(d_dim);
 
-   // Distance between ideal and candidate, >= 0
+   // Difference between swap results and ideal, >= 0
    int imbalance_loside = tbox::MathUtilities<int>::getMax();
    int imbalance_hiside = tbox::MathUtilities<int>::getMax();
 
    if (dst.empty()) {
       /*
        * There is no dst BoxInTransit, so the swap would
-       * degnerate to moving a src BoxInTransit to dst.  Find
+       * degnerate to moving a box from src to dst.  Find
        * the best src BoxInTransit to move.
        */
       dummy_search_target = BoxInTransit(hier::Box(dummy_box, hier::LocalId::getZero(), 0));
       dummy_search_target.d_load = ideal_transfer;
-      TransitSet::iterator jsrc = src.lower_bound(dummy_search_target);
+      TransitSet::iterator src_test = src.lower_bound(dummy_search_target);
 
       if (d_print_swap_steps) {
          tbox::plog << "  findLoadSwapPair with empty dst: ";
       }
-      if (jsrc != src.begin()) {
-         jsrc_hiside = jsrc;
-         --jsrc_hiside;
-         imbalance_hiside = jsrc_hiside->d_load - ideal_transfer;
+
+      if (src_test != src.begin()) {
+         src_hiside = src_test;
+         --src_hiside;
+         imbalance_hiside = src_hiside->d_load - ideal_transfer;
          if (d_print_swap_steps) {
-            tbox::plog << "  hi src: " << (*jsrc_hiside)
-                       << " with transfer " << (*jsrc_hiside).d_load
-                       << " missing by " << imbalance_hiside;
+            tbox::plog << "  hi src: " << (*src_hiside)
+                       << " with transfer " << src_hiside->d_load
+                       << ", off by " << imbalance_hiside;
          }
       }
-
-      if (jsrc != src.end()) {
-         jsrc_loside = jsrc;
-         imbalance_loside = ideal_transfer - jsrc_loside->d_load;
+      if (src_test != src.end()) {
+         src_loside = src_test;
+         imbalance_loside = ideal_transfer - src_loside->d_load;
          if (d_print_swap_steps) {
-            tbox::plog << "  lo src: " << (*jsrc_loside)
-                       << " with transfer " << (*jsrc_loside).d_load
-                       << " missing by " << imbalance_loside;
+            tbox::plog << "  lo src: " << (*src_loside)
+                       << " with transfer " << src_loside->d_load
+                       << ", off by " << imbalance_loside;
          }
       }
       if (d_print_swap_steps) {
@@ -2685,62 +2685,65 @@ bool TreeLoadBalancer::findLoadSwapPair(
    } else {
 
       /*
-       * Start search through src beginning with the NodeInTransit
-       * whose load exceed the biggest dst BoxInTransit by at
-       * least ideal_transfer.
+       * Start search through src beginning with the box whose load
+       * exceed the biggest dst box by at least ideal_transfer.
        */
       dummy_search_target = *dst.begin();
       dummy_search_target.d_load += ideal_transfer;
-      TransitSet::iterator jsrc_beg = src.lower_bound(dummy_search_target);
+      TransitSet::iterator src_beg = src.lower_bound(dummy_search_target);
 
-      for (TransitSet::iterator jsrc = jsrc_beg; jsrc != src.end(); ++jsrc) {
+      for (TransitSet::iterator src_test = src_beg; src_test != src.end(); ++src_test) {
 
          /*
-          * Set jdst pointing to where we should start looking in dst.
-          * Look for a load less than the load of jsrc by
+          * Set dst_test pointing to where we should start looking in dst.
+          * Look for a load less than the load of src_test by
           * ideal_transfer.
           */
          dummy_search_target = BoxInTransit(hier::Box(dummy_box, hier::LocalId::getZero(), 0));
          dummy_search_target.d_load = tbox::MathUtilities<int>::Max(
-               jsrc->d_load - ideal_transfer,
+               src_test->d_load - ideal_transfer,
                0);
-         TransitSet::iterator jdst = dst.lower_bound(dummy_search_target);
+         TransitSet::iterator dst_test = dst.lower_bound(dummy_search_target);
 
-         if (jdst != dst.end()) {
+         if (dst_test != dst.end()) {
 
             /*
-             * lower_bound returns jdst that gives >= ideal_transfer
-             * when swapped with jsrc.  Check transfererence between
-             * jsrc and two dst NodeInTransit on either side of the
-             * ideal dst BoxInTransit to swap.
+             * lower_bound returned dst_test that would transfer >=
+             * ideal_transfer when swapped with src_test.  Check
+             * transfererence between src_test and dst_test for the
+             * high-side transfer.  Also check the next smaller box in
+             * dst for the low-side transfer.
              */
-            int tmp_miss = (jsrc->d_load - jdst->d_load) - ideal_transfer;
+
+            // tmp_miss is the difference between the test swap amount and ideal_transfer.
+            int tmp_miss = (src_test->d_load - dst_test->d_load) - ideal_transfer;
             TBOX_ASSERT(tmp_miss >= 0);
+
             if ((tmp_miss < imbalance_hiside)) {
-               jsrc_hiside = jsrc;
-               jdst_hiside = jdst;
+               src_hiside = src_test;
+               dst_hiside = dst_test;
                imbalance_hiside = tmp_miss;
                if (d_print_swap_steps) {
-                  tbox::plog << "    new hi-swap pair: " << (*jsrc_hiside)
-                             << " & " << (*jdst_hiside) << " with transfer "
-                             << (jsrc_hiside->d_load - jdst_hiside->d_load)
+                  tbox::plog << "    new hi-swap pair: " << (*src_hiside)
+                             << " & " << (*dst_hiside) << " with transfer "
+                             << (src_hiside->d_load - dst_hiside->d_load)
                              << " missing by " << imbalance_hiside
                              << std::endl;
                }
             }
 
-            if (jdst != dst.begin()) {
-               --jdst; // Now, jsrc and jdst transferer by *less* than ideal_transfer.
-               tmp_miss = ideal_transfer - (jsrc->d_load - jdst->d_load);
+            if (dst_test != dst.begin()) {
+               --dst_test; // Now, src_test and dst_test transferer by *less* than ideal_transfer.
+               tmp_miss = ideal_transfer - (src_test->d_load - dst_test->d_load);
                TBOX_ASSERT(tmp_miss >= 0);
                if (tmp_miss < imbalance_loside) {
-                  jsrc_loside = jsrc;
-                  jdst_loside = jdst;
+                  src_loside = src_test;
+                  dst_loside = dst_test;
                   imbalance_loside = tmp_miss;
                   if (d_print_swap_steps) {
-                     tbox::plog << "    new lo-swap pair: " << (*jsrc_loside)
-                                << " & " << (*jdst_loside) << " with transfer "
-                                << (jsrc_loside->d_load - jdst_loside->d_load)
+                     tbox::plog << "    new lo-swap pair: " << (*src_loside)
+                                << " & " << (*dst_loside) << " with transfer "
+                                << (src_loside->d_load - dst_loside->d_load)
                                 << " missing by " << imbalance_loside
                                 << std::endl;
                   }
@@ -2751,45 +2754,44 @@ bool TreeLoadBalancer::findLoadSwapPair(
 
             /*
              * The ideal dst to swap is smaller than the smallest dst
-             * BoxInTransit.  Check the transfererence between
-             * jsrc and smallest BoxInTransit, the case of
-             * moving jsrc in whole.
+             * box.  So the only choice is swapping src_test for nothing.
+             * Chech this against the current high- and low-side choices.
              */
-            if (jsrc->d_load > ideal_transfer) {
-               // Moving jsrc to src is moving too much--hiside.
-               int tmp_miss = jsrc->d_load - ideal_transfer;
+            if (src_test->d_load > ideal_transfer) {
+               // Moving src_test to src is moving too much--hiside.
+               int tmp_miss = src_test->d_load - ideal_transfer;
                TBOX_ASSERT(tmp_miss >= 0);
                if (tmp_miss < imbalance_hiside) {
-                  jsrc_hiside = jsrc;
-                  jdst_hiside = dst.end();
+                  src_hiside = src_test;
+                  dst_hiside = dst.end();
                   imbalance_hiside = tmp_miss;
                   if (d_print_swap_steps) {
-                     tbox::plog << "    new hi-swap source: " << (*jsrc_hiside)
+                     tbox::plog << "    new hi-swap source: " << (*src_hiside)
                                 << " & " << "no dst" << " with transfer "
-                                << (jsrc_hiside->d_load)
+                                << (src_hiside->d_load)
                                 << " missing by " << imbalance_hiside
                                 << std::endl;
                   }
                }
             } else {
-               // Moving jsrc to src is moving (just right or) too little--loside.
-               int tmp_miss = ideal_transfer - jsrc->d_load;
+               // Moving src_test to src is moving (just right or) too little--loside.
+               int tmp_miss = ideal_transfer - src_test->d_load;
                TBOX_ASSERT(tmp_miss >= 0);
                if (tmp_miss < imbalance_loside) {
-                  jsrc_loside = jsrc;
-                  jdst_loside = dst.end();
+                  src_loside = src_test;
+                  dst_loside = dst.end();
                   imbalance_loside = tmp_miss;
                   if (d_print_swap_steps) {
-                     tbox::plog << "    new lo-swap source: " << (*jsrc_loside)
+                     tbox::plog << "    new lo-swap source: " << (*src_loside)
                                 << " & " << "no dst" << " with transfer "
-                                << (jsrc_loside->d_load)
+                                << (src_loside->d_load)
                                 << " missing by " << imbalance_loside
                                 << std::endl;
                   }
                }
                /*
                 * Break out of the loop early because there is no
-                * point checking smaller src NodeInTransit.
+                * point checking smaller src boxes.
                 */
                break;
             }
@@ -2815,16 +2817,16 @@ bool TreeLoadBalancer::findLoadSwapPair(
    bool return_value = false;
    if (balance_penalty_loside < current_balance_penalty &&
        balance_penalty_loside <= balance_penalty_hiside) {
-      isrc = jsrc_loside;
-      idst = jdst_loside;
+      isrc = src_loside;
+      idst = dst_loside;
       return_value = true;
       if (d_print_swap_steps) {
          tbox::plog << "    Taking loside." << std::endl;
       }
    } else if (balance_penalty_hiside < current_balance_penalty &&
               balance_penalty_hiside <= balance_penalty_loside) {
-      isrc = jsrc_hiside;
-      idst = jdst_hiside;
+      isrc = src_hiside;
+      idst = dst_hiside;
       return_value = true;
       if (d_print_swap_steps) {
          tbox::plog << "    Taking hiside." << std::endl;
