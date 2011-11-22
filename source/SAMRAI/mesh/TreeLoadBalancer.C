@@ -2497,46 +2497,15 @@ int TreeLoadBalancer::shiftLoadsBySwapping(
 
       found_swap = false;
 
-      TransitSet::iterator isrc;
-      TransitSet::iterator idst;
       int swap_transfer;
-      found_swap = findLoadSwapPair(
+      found_swap = swapLoadPair(
          src,
          dst,
          swap_transfer,
-         isrc,
-         idst,
          rem_transfer );
 
       if (found_swap) {
-
-         // We can improve balance_penalty by swapping isrc with idst.
-         if (d_print_steps) {
-            tbox::plog << "    Swapping " << swap_transfer << " units using ";
-            if (isrc != src.end()) tbox::plog << *isrc;
-            else tbox::plog << "X";
-            tbox::plog << " <--> ";
-            if (idst != dst.end()) tbox::plog << *idst;
-            else tbox::plog << "X";
-            tbox::plog << std::endl;
-         }
-
-         if (isrc != src.end()) {
-            dst.insert(*isrc);
-            src.erase(isrc);
-         }
-         if (idst != dst.end()) {
-            src.insert(*idst);
-            dst.erase(idst);
-         }
-
          actual_transfer += swap_transfer;
-
-      } else {
-         if (d_print_steps) {
-            tbox::plog << "    Cannot find swap pair for " << rem_transfer
-                       << " units." << std::endl;
-         }
       }
 
    } while (found_swap && (actual_transfer != ideal_transfer));
@@ -2565,22 +2534,18 @@ int TreeLoadBalancer::shiftLoadsBySwapping(
  * load.
  *************************************************************************
  */
-bool TreeLoadBalancer::findLoadSwapPair(
+bool TreeLoadBalancer::swapLoadPair(
    TransitSet& src,
    TransitSet& dst,
    int& actual_transfer,
-   TransitSet::iterator& isrc,
-   TransitSet::iterator& idst,
    int ideal_transfer ) const
 {
    if (ideal_transfer < 0) {
       // The logic below does not handle bi-directional transfers, so handle it here.
-      bool rval = findLoadSwapPair(
+      bool rval = swapLoadPair(
          dst,
          src,
          actual_transfer,
-         idst,
-         isrc,
          -ideal_transfer );
       actual_transfer = -actual_transfer;
       return rval;
@@ -2589,7 +2554,7 @@ bool TreeLoadBalancer::findLoadSwapPair(
    t_find_swap_pair->start();
 
    if (d_print_steps) {
-      tbox::plog << "  findLoadSwapPair looking for transfer of "
+      tbox::plog << "  swapLoadPair looking for transfer of "
                  << ideal_transfer
                  << " between " << src.size() << "-BoxInTransit src and "
                  << dst.size() << "-BoxInTransit dst." << std::endl;
@@ -2659,7 +2624,7 @@ bool TreeLoadBalancer::findLoadSwapPair(
       TransitSet::iterator src_test = src.lower_bound(dummy_search_target);
 
       if (d_print_swap_steps) {
-         tbox::plog << "  findLoadSwapPair with empty dst: ";
+         tbox::plog << "  swapLoadPair with empty dst: ";
       }
 
       if (src_test != src.begin()) {
@@ -2817,12 +2782,15 @@ bool TreeLoadBalancer::findLoadSwapPair(
                  << " , " << balance_penalty_hiside << std::endl;
    }
 
-   bool return_value = false;
+   bool found_swap = false;
+   TransitSet::iterator isrc;
+   TransitSet::iterator idst;
+
    if (balance_penalty_loside < current_balance_penalty &&
        balance_penalty_loside <= balance_penalty_hiside) {
       isrc = src_loside;
       idst = dst_loside;
-      return_value = true;
+      found_swap = true;
       if (d_print_swap_steps) {
          tbox::plog << "    Taking loside." << std::endl;
       }
@@ -2830,7 +2798,7 @@ bool TreeLoadBalancer::findLoadSwapPair(
               balance_penalty_hiside <= balance_penalty_loside) {
       isrc = src_hiside;
       idst = dst_hiside;
-      return_value = true;
+      found_swap = true;
       if (d_print_swap_steps) {
          tbox::plog << "    Taking hiside." << std::endl;
       }
@@ -2840,15 +2808,45 @@ bool TreeLoadBalancer::findLoadSwapPair(
       }
    }
 
-   if (return_value) {
+   if (found_swap) {
       actual_transfer = isrc->d_load;
       if (idst != dst.end()) {
          actual_transfer -= idst->d_load;
       }
    }
 
+   if (found_swap) {
+
+      // We can improve balance_penalty by swapping isrc with idst.
+      if (d_print_steps) {
+         tbox::plog << "    Swapping " << actual_transfer << " units using ";
+         if (isrc != src.end()) tbox::plog << *isrc;
+         else tbox::plog << "X";
+         tbox::plog << " <--> ";
+         if (idst != dst.end()) tbox::plog << *idst;
+         else tbox::plog << "X";
+         tbox::plog << std::endl;
+      }
+
+      if (isrc != src.end()) {
+         dst.insert(*isrc);
+         src.erase(isrc);
+      }
+      if (idst != dst.end()) {
+         src.insert(*idst);
+         dst.erase(idst);
+      }
+
+
+   } else {
+      if (d_print_steps) {
+         tbox::plog << "    Cannot find swap pair for " << ideal_transfer
+                    << " units." << std::endl;
+      }
+   }
+
    t_find_swap_pair->stop();
-   return return_value;
+   return found_swap;
 }
 
 
@@ -4597,7 +4595,7 @@ void TreeLoadBalancer::setTimers()
       t_shift_loads_by_breaking = tbox::TimerManager::getManager()->
          getTimer(d_object_name + "::shiftLoadsByBreaking()");
       t_find_swap_pair = tbox::TimerManager::getManager()->
-         getTimer(d_object_name + "::findLoadSwapPair()");
+         getTimer(d_object_name + "::swapLoadPair()");
       t_send_load_to_children = tbox::TimerManager::getManager()->
          getTimer(d_object_name + "::send_load_to_children");
       t_send_load_to_parent = tbox::TimerManager::getManager()->

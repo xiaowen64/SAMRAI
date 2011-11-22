@@ -565,15 +565,13 @@ private:
    /*!
     * @brief Find a BoxInTransit in each of the source and destination
     * containers that, when swapped, effects a transfer of the given
-    * amount of work from the source to the destination.
+    * amount of work from the source to the destination.  Swap the boxes.
     */
    bool
-   findLoadSwapPair(
+   swapLoadPair(
       TransitSet& src,
       TransitSet& dst,
       int& actual_transfer,
-      TransitSet::iterator& isrc,
-      TransitSet::iterator& idst,
       int ideal_transfer ) const;
 
    /*!
