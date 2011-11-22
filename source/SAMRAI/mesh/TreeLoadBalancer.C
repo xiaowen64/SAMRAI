@@ -1687,9 +1687,11 @@ int TreeLoadBalancer::reassignLoads(
       }
       if (brk_transfer == 0) {
          /*
-          * If no Box can be broken to improve the actual_transfer,
-          * there is nothing further we can do.  (The swap phase, tried
-          * before the break phase, also generated no transfer.)
+          * If no box can be broken to improve the actual_transfer,
+          * there is nothing further we can do.  The swap phase, tried
+          * before the break phase, also generated no transfer, so
+          * there's no point trying again.  Break out now to save
+          * retrying the swap phase.
           */
          break;
       }
@@ -1815,6 +1817,10 @@ void TreeLoadBalancer::constructSemilocalUnbalancedToBalanced(
 
    /*
     * Set up objects for asynchronous communication.
+    *
+    * NOTE: In the code review, it was suggested that the setting up
+    * of asynchronous communication objects can be factored out for
+    * reuse.
     */
    tbox::AsyncCommStage comm_stage;
    tbox::AsyncCommPeer<int> *importer_comms = import_srcs.empty() ? NULL : new tbox::AsyncCommPeer<int>[import_srcs.size()];
@@ -2228,6 +2234,7 @@ int TreeLoadBalancer::shiftLoadsByBreaking(
    int actual_transfer = 0;
 
    if (ideal_transfer < 0) {
+      // The logic below does not handle bi-directional transfers, so handle it here.
       actual_transfer = -shiftLoadsByBreaking(
          dst,
          src,
@@ -2567,7 +2574,7 @@ bool TreeLoadBalancer::findLoadSwapPair(
    int ideal_transfer ) const
 {
    if (ideal_transfer < 0) {
-      // The logic below does not handle bi-directional so handle it here.
+      // The logic below does not handle bi-directional transfers, so handle it here.
       bool rval = findLoadSwapPair(
          dst,
          src,
