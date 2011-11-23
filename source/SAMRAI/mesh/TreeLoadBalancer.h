@@ -15,6 +15,7 @@
 #include "SAMRAI/mesh/LoadBalanceStrategy.h"
 #include "SAMRAI/tbox/AsyncCommPeer.h"
 #include "SAMRAI/tbox/AsyncCommStage.h"
+#include "SAMRAI/tbox/BalancedDepthFirstTree.h"
 #include "SAMRAI/tbox/Database.h"
 #include "SAMRAI/tbox/SAMRAI_MPI.h"
 #include "SAMRAI/tbox/Pointer.h"
@@ -820,20 +821,20 @@ private:
     * set the AsyncCommPeer objects for communication with children
     * and parent.
     *
-    * @param [o] num_children
+    * @param [o] child_stage
     * @param [o] child_comms
-    * @param [o] parent_send
-    * @param [o] parent_recv
-    * @param [o] parent_recv
+    * @param [o] parent_stage
+    * @param [o] parent_comm
     * @param [i] rank_group
+    * @param [i] bdfs
     */
    void setupAsyncCommObjects(
-      int& num_children,
+      tbox::AsyncCommStage& child_stage,
       tbox::AsyncCommPeer<int> *& child_comms,
-      tbox::AsyncCommPeer<int> *& parent_send,
-      tbox::AsyncCommPeer<int> *& parent_recv,
-      tbox::AsyncCommStage& comm_stage,
-      const tbox::RankGroup &rank_group ) const;
+      tbox::AsyncCommStage& parent_stage,
+      tbox::AsyncCommPeer<int> *& parent_comm,
+      const tbox::RankGroup &rank_group,
+      const tbox::BalancedDepthFirstTree &bdfs ) const;
 
    /*
     * @brief Undo the set-up done by setupAsyncCommObjects.
@@ -841,8 +842,7 @@ private:
    void
    destroyAsyncCommObjects(
       tbox::AsyncCommPeer<int> *& child_comms,
-      tbox::AsyncCommPeer<int> *& parent_send,
-      tbox::AsyncCommPeer<int> *& parent_recv) const;
+      tbox::AsyncCommPeer<int> *& parent_comm) const;
 
    /*!
     * @brief Set up timers for the object.
@@ -982,7 +982,10 @@ private:
    tbox::Pointer<tbox::Timer> t_parent_edge_comm;
    tbox::Pointer<tbox::Timer> t_barrier_before;
    tbox::Pointer<tbox::Timer> t_barrier_after;
-   tbox::Pointer<tbox::Timer> t_MPI_wait;
+   tbox::Pointer<tbox::Timer> t_child_send_wait;
+   tbox::Pointer<tbox::Timer> t_child_recv_wait;
+   tbox::Pointer<tbox::Timer> t_parent_send_wait;
+   tbox::Pointer<tbox::Timer> t_parent_recv_wait;
 
    /*
     * Statistics on number of cells and patches generated.

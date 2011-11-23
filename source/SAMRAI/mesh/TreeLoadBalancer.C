@@ -25,7 +25,6 @@
 #include "SAMRAI/pdat/CellData.h"
 #include "SAMRAI/pdat/CellDataFactory.h"
 #include "SAMRAI/tbox/Array.h"
-#include "SAMRAI/tbox/BalancedDepthFirstTree.h"
 #include "SAMRAI/tbox/InputManager.h"
 #include "SAMRAI/tbox/MathUtilities.h"
 #include "SAMRAI/tbox/SAMRAI_MPI.h"
@@ -899,23 +898,58 @@ void TreeLoadBalancer::loadBalanceWithinRankGroup(
 
 
    /*
-    * Determine the parent and children (on the tree) of the local
-    * process and set up the objects for communicating with those
-    * processes.
+    * Arrange the group ranks in a BalancedDepthFirstTree in order to get
+    * the parent/children in the group.
+    *
+    * By the way, the BalancedDepthFirstTree currently assumes a binary
+    * tree, d_degree = 2.
     */
-   tbox::AsyncCommStage comm_stage;
-   tbox::AsyncCommPeer<int>* child_comms = NULL;
+   TBOX_ASSERT(d_degree == 2);
+   // FIXME: BalancedDepthFirstTree could use a constructor that takes a RankGroup.
+   tbox::BalancedDepthFirstTree bdfs(0,
+                                     rank_group.size()-1,
+                                     rank_group.getMapIndex(d_mpi.getRank()),
+                                     true);
+   const int num_children = bdfs.getNumberOfChildren();
+
+
+   /*
+    * Communication objects for sending to/receiving from
+    * parent/children: We could combine all of these AsyncCommStages
+    * and most of the AsyncCommPeers, but we intentionally keep them
+    * separate to aid performance analysis.
+    */
+
+   tbox::AsyncCommStage child_send_stage;
+   tbox::AsyncCommPeer<int>* child_sends = NULL;
+   tbox::AsyncCommStage parent_send_stage;
    tbox::AsyncCommPeer<int>* parent_send = NULL;
-   tbox::AsyncCommPeer<int>* parent_recv = NULL;
-   int num_children = 0;
 
    setupAsyncCommObjects(
-      num_children,
-      child_comms,
+      child_send_stage,
+      child_sends,
+      parent_send_stage,
       parent_send,
+      rank_group,
+      bdfs );
+   child_send_stage.setCommunicationWaitTimer(t_child_send_wait);
+   parent_send_stage.setCommunicationWaitTimer(t_parent_send_wait);
+
+   tbox::AsyncCommStage child_recv_stage;
+   tbox::AsyncCommPeer<int>* child_recvs = NULL;
+   tbox::AsyncCommStage parent_recv_stage;
+   tbox::AsyncCommPeer<int>* parent_recv = NULL;
+
+   setupAsyncCommObjects(
+      child_recv_stage,
+      child_recvs,
+      parent_recv_stage,
       parent_recv,
-      comm_stage,
-      rank_group);
+      rank_group,
+      bdfs );
+   child_recv_stage.setCommunicationWaitTimer(t_child_recv_wait);
+   parent_recv_stage.setCommunicationWaitTimer(t_parent_send_wait);
+
 
 
    /*
@@ -953,9 +987,9 @@ void TreeLoadBalancer::loadBalanceWithinRankGroup(
     */
    t_get_load_from_children->start();
    for (int c = 0; c < num_children; ++c) {
-      child_comms[c].beginRecv();
-      if (child_comms[c].isDone()) {
-         completed.insert(completed.end(), &child_comms[c]);
+      child_recvs[c].beginRecv();
+      if (child_recvs[c].isDone()) {
+         completed.insert(completed.end(), &child_recvs[c]);
       }
    }
    t_get_load_from_children->stop();
@@ -1127,14 +1161,14 @@ void TreeLoadBalancer::loadBalanceWithinRankGroup(
 
       for (unsigned int i = 0; i < completed.size(); ++i) {
 
-         tbox::AsyncCommPeer<int>* peer_comm =
+         tbox::AsyncCommPeer<int>* child_recv =
             dynamic_cast<tbox::AsyncCommPeer<int> *>(completed[i]);
 
-         TBOX_ASSERT(peer_comm != NULL);
-         TBOX_ASSERT(peer_comm >= child_comms);
-         TBOX_ASSERT(peer_comm <= child_comms + num_children);
+         TBOX_ASSERT(child_recv != NULL);
+         TBOX_ASSERT(child_recv >= child_recvs);
+         TBOX_ASSERT(child_recv < child_recvs + num_children);
 
-         const int cindex = static_cast<int>(peer_comm - child_comms);
+         const int cindex = static_cast<int>(child_recv - child_recvs);
 
          TBOX_ASSERT(cindex >= 0 && cindex < num_children);
 
@@ -1148,8 +1182,8 @@ void TreeLoadBalancer::loadBalanceWithinRankGroup(
             child_load_data[cindex],
             unassigned,
             next_available_index[cindex],
-            peer_comm->getRecvData(),
-            peer_comm->getRecvSize() );
+            child_recv->getRecvData(),
+            child_recv->getRecvSize() );
 
          child_load_data[cindex].d_ideal_work =
             int(group_avg_load * child_load_data[cindex].d_num_procs + 0.5);
@@ -1162,7 +1196,7 @@ void TreeLoadBalancer::loadBalanceWithinRankGroup(
                tbox::plog << "    Got " << unassigned.size() - old_size
                           << " boxes (" << child_load_data[cindex].d_load_imported
                           << " units) from child "
-                          << peer_comm->getPeerRank() << ":";
+                          << child_recv->getPeerRank() << ":";
                for ( ; ni != unassigned.end(); ++ni) {
                   const BoxInTransit& box_in_transit = *ni;
                   tbox::plog << "  " << box_in_transit;
@@ -1181,7 +1215,7 @@ void TreeLoadBalancer::loadBalanceWithinRankGroup(
 
       completed.clear();
       t_children_load_comm->start();
-      comm_stage.advanceSome(completed);
+      child_recv_stage.advanceSome(completed);
       t_children_load_comm->stop();
 
    } while (!completed.empty());
@@ -1189,14 +1223,14 @@ void TreeLoadBalancer::loadBalanceWithinRankGroup(
 
 
    // We should have received everything at this point.
-   TBOX_ASSERT(!comm_stage.hasPendingRequests());
+   TBOX_ASSERT(!child_recv_stage.hasPendingRequests());
 
    my_load_data.d_ideal_work = int(group_avg_load * my_load_data.d_num_procs + 0.5);
 
    if (d_print_steps) {
       tbox::plog << "Received children subtree data." << std::endl;
       for (int c = 0; c < num_children; ++c) {
-         tbox::plog << "Child " << child_comms[c].getPeerRank()
+         tbox::plog << "Child " << child_recvs[c].getPeerRank()
                     << " subtree data: " << child_load_data[c].d_total_work
                     << "/" << child_load_data[c].d_ideal_work
                     << " for " << child_load_data[c].d_num_procs << " procs averaging "
@@ -1380,7 +1414,7 @@ void TreeLoadBalancer::loadBalanceWithinRankGroup(
          if (d_print_steps) {
             tbox::plog << "  Attempting to reassign " << ideal_transfer
                        << " of unassigned load to child "
-                       << child_comms[ichild].getPeerRank() << "\n";
+                       << child_sends[ichild].getPeerRank() << "\n";
          }
 
          if (ideal_transfer > 0) {
@@ -1397,7 +1431,7 @@ void TreeLoadBalancer::loadBalanceWithinRankGroup(
             tbox::plog << "  Giving " << recip_data.d_for_export.size()
                        << " boxes (" << actual_transfer << " / " << ideal_transfer
                        << " units) to child " << ichild << ':'
-                       << child_comms[ichild].getPeerRank() << " for "
+                       << child_sends[ichild].getPeerRank() << " for "
                        << recip_data.d_num_procs
                        << " procs:";
             for (TransitSet::const_iterator ni = recip_data.d_for_export.begin();
@@ -1409,7 +1443,7 @@ void TreeLoadBalancer::loadBalanceWithinRankGroup(
 
          std::vector<int> msg;
          packSubtreeLoadData(msg, recip_data);
-         child_comms[ichild].beginSend(&msg[0], static_cast<int>(msg.size()));
+         child_sends[ichild].beginSend(&msg[0], static_cast<int>(msg.size()));
 
       }
 
@@ -1473,12 +1507,14 @@ void TreeLoadBalancer::loadBalanceWithinRankGroup(
     * long to advance them all to completion.
     */
    t_finish_comms->start();
-   comm_stage.advanceAll(completed);
+   child_send_stage.advanceAll(completed);
+   parent_send_stage.advanceAll(completed);
    t_finish_comms->stop();
    completed.clear();
 #ifdef DEBUG_CHECK_ASSERTIONS
    for (int i = 0; i < num_children; ++i) {
-      TBOX_ASSERT(child_comms[i].isDone());
+      TBOX_ASSERT(child_sends[i].isDone());
+      TBOX_ASSERT(child_recvs[i].isDone());
    }
    if (parent_send != NULL) {
       TBOX_ASSERT(parent_send->isDone());
@@ -1497,10 +1533,10 @@ void TreeLoadBalancer::loadBalanceWithinRankGroup(
 
    for ( int ichild=0; ichild<num_children; ++ichild ) {
       if ( child_load_data[ichild].d_load_imported > 0 ) {
-         imported_from.push_back(child_comms[ichild].getPeerRank());
+         imported_from.push_back(child_recvs[ichild].getPeerRank());
       }
       if ( child_load_data[ichild].d_load_exported > 0 ) {
-         exported_to.push_back(child_comms[ichild].getPeerRank());
+         exported_to.push_back(child_sends[ichild].getPeerRank());
       }
    }
 
@@ -1562,7 +1598,8 @@ void TreeLoadBalancer::loadBalanceWithinRankGroup(
 
 
    delete[] child_load_data;
-   destroyAsyncCommObjects(child_comms, parent_send, parent_recv);
+   destroyAsyncCommObjects(child_sends, parent_send);
+   destroyAsyncCommObjects(child_recvs, parent_recv);
 
 
    if (anchor_to_balance.isFinalized()) {
@@ -2115,39 +2152,28 @@ void TreeLoadBalancer::createBalanceRankGroupBasedOnCycles(
  *************************************************************************
  */
 void TreeLoadBalancer::setupAsyncCommObjects(
-   int& num_children,
+   tbox::AsyncCommStage& child_stage,
    tbox::AsyncCommPeer<int> *& child_comms,
-   tbox::AsyncCommPeer<int> *& parent_send,
-   tbox::AsyncCommPeer<int> *& parent_recv,
-   tbox::AsyncCommStage& comm_stage,
-   const tbox::RankGroup &rank_group ) const
+   tbox::AsyncCommStage& parent_stage,
+   tbox::AsyncCommPeer<int> *& parent_comm,
+   const tbox::RankGroup &rank_group,
+   const tbox::BalancedDepthFirstTree &bdfs ) const
 {
-   comm_stage.setCommunicationWaitTimer(t_MPI_wait);
 
-   child_comms = parent_send = parent_recv = NULL;
+   child_comms = parent_comm = NULL;
 
-   /*
-    * Arrange the group ranks in a BalancedDepthFirstTree in order to get
-    * the parent/children in the group.
-    *
-    * By the way, the BalancedDepthFirstTree currently assumes a binary
-    * tree, d_degree = 2.
-    */
-   TBOX_ASSERT(d_degree == 2);
-   // FIXME: BalancedDepthFirstTree could use a constructor that takes a RankGroup.
-   tbox::BalancedDepthFirstTree bdfs(0,
-                                     rank_group.size()-1,
-                                     rank_group.getMapIndex(d_mpi.getRank()),
-                                     true);
-
-   num_children = bdfs.getNumberOfChildren();
+   const int num_children = bdfs.getNumberOfChildren();
 
    if ( num_children > 0 ) {
+
       child_comms = new tbox::AsyncCommPeer<int>[num_children];
+
       for (int child_num = 0; child_num < num_children; ++child_num) {
+
          const int child_rank_in_grp = bdfs.getChildRank(child_num);
          const int child_true_rank = rank_group.getMappedRank(child_rank_in_grp);
-         child_comms[child_num].initialize(&comm_stage);
+
+         child_comms[child_num].initialize(&child_stage);
          child_comms[child_num].setPeerRank(child_true_rank);
          child_comms[child_num].setMPI(d_mpi);
          child_comms[child_num].setMPITag(TreeLoadBalancer_LOADTAG0,
@@ -2161,21 +2187,13 @@ void TreeLoadBalancer::setupAsyncCommObjects(
       const int parent_rank_in_grp = bdfs.getParentRank();
       int parent_true_rank = rank_group.getMappedRank(parent_rank_in_grp);
 
-      parent_send = new tbox::AsyncCommPeer<int>;
-      parent_send->initialize(&comm_stage);
-      parent_send->setPeerRank(parent_true_rank);
-      parent_send->setMPI(d_mpi);
-      parent_send->setMPITag(TreeLoadBalancer_LOADTAG0,
+      parent_comm = new tbox::AsyncCommPeer<int>;
+      parent_comm->initialize(&parent_stage);
+      parent_comm->setPeerRank(parent_true_rank);
+      parent_comm->setMPI(d_mpi);
+      parent_comm->setMPITag(TreeLoadBalancer_LOADTAG0,
          TreeLoadBalancer_LOADTAG1);
-      parent_send->limitFirstDataLength(TreeLoadBalancer_FIRSTDATALEN);
-
-      parent_recv = new tbox::AsyncCommPeer<int>;
-      parent_recv->initialize(&comm_stage);
-      parent_recv->setPeerRank(parent_true_rank);
-      parent_recv->setMPI(d_mpi);
-      parent_recv->setMPITag(TreeLoadBalancer_LOADTAG0,
-         TreeLoadBalancer_LOADTAG1);
-      parent_recv->limitFirstDataLength(TreeLoadBalancer_FIRSTDATALEN);
+      parent_comm->limitFirstDataLength(TreeLoadBalancer_FIRSTDATALEN);
 
    }
 
@@ -2190,22 +2208,19 @@ void TreeLoadBalancer::setupAsyncCommObjects(
  */
 void TreeLoadBalancer::destroyAsyncCommObjects(
    tbox::AsyncCommPeer<int> *& child_comms,
-   tbox::AsyncCommPeer<int> *& parent_send,
-   tbox::AsyncCommPeer<int> *& parent_recv) const
+   tbox::AsyncCommPeer<int> *& parent_comm) const
 {
    if (d_mpi.getSize() == 1) {
       TBOX_ASSERT(child_comms == NULL);
-      TBOX_ASSERT(parent_send == NULL);
-      TBOX_ASSERT(parent_recv == NULL);
+      TBOX_ASSERT(parent_comm == NULL);
    } else {
       if ( child_comms != NULL ) {
          delete[] child_comms;
       }
-      if ( parent_send != NULL ) {
-         delete parent_send;
-         delete parent_recv;
+      if ( parent_comm != NULL ) {
+         delete parent_comm;
       }
-      child_comms = parent_send = parent_recv = NULL;
+      child_comms = parent_comm = NULL;
    }
 }
 
@@ -4644,8 +4659,14 @@ void TreeLoadBalancer::setTimers()
          getTimer(d_object_name + "::barrier_before");
       t_barrier_after = tbox::TimerManager::getManager()->
          getTimer(d_object_name + "::barrier_after");
-      t_MPI_wait = tbox::TimerManager::getManager()->
-         getTimer(d_object_name + "::MPI_wait");
+      t_child_send_wait = tbox::TimerManager::getManager()->
+         getTimer(d_object_name + "::child_send_wait");
+      t_child_recv_wait = tbox::TimerManager::getManager()->
+         getTimer(d_object_name + "::child_recv_wait");
+      t_parent_send_wait = tbox::TimerManager::getManager()->
+         getTimer(d_object_name + "::parent_send_wait");
+      t_parent_recv_wait = tbox::TimerManager::getManager()->
+         getTimer(d_object_name + "::parent_recv_wait");
    }
 }
 
