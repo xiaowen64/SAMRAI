@@ -64,6 +64,14 @@ descriptions of items in the following list are provided below.
 (3) Internal representation of Connector is now encapsulated behind an abstract
     API.
 
+(4) The ceiling methods in IntVector have been renamed ceilingDivide.
+
+(5) Operations to remove periodic image boxes now work on this.
+
+(6) Constructing SAMRAI_MPI with MPI_COMM_NULL sets rank and size
+    to invalid values.
+
+
 
 *****************************************************************************
 
@@ -176,6 +184,24 @@ now be used.
 MultiblockCoarsenAlgorithm and MultiblockCoarsenSchedule have been removed from
 the library, and CoarsenAlgorithm and CoarsenSchedule are now capable of
 handling coarsening operations for multi-block configurations.
+
+(1) The ceiling methods in IntVector have been renamed ceilingDivide.
+
+Renaming was meant to show the divide part of the operation.
+
+(2) Operations to remove periodic image boxes now work on this.
+
+Old behavior: Take an output box container copy the non-periodic image
+there.  The method is const.
+
+New behavior: Remove periodic images from this.  The method is non-const.
+
+(3) Constructing SAMRAI_MPI with MPI_COMM_NULL sets rank and size
+    to invalid values.
+
+This change prevents unexpectedly valid rank and group sizes when
+SAMRAI_MPI is built with MPI_COMM_NULL.
+
 
 =============================================================================
 =============================================================================
