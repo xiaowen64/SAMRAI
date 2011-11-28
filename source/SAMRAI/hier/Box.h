@@ -765,9 +765,14 @@ public:
 
    /*!
     * @brief Lock the BoxId of this Box so that it may not be changed in any
-    * way until this Box is destroyed.
+    * way.
     */
    void lockId();
+
+   /*!
+    * @brief Unlock the BoxId of this Box so that it may be changed.
+    */
+   void unlockId();
 
    /**
     * Read the box description in the form [L,U], where L and U are the

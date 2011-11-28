@@ -1001,6 +1001,12 @@ void Box::lockId() {
    d_id_locked = true;
 }
 
+SAMRAI_INLINE_KEYWORD
+void Box::unlockId() {
+   d_id_locked = false;
+}
+
+
 
 }
 }
