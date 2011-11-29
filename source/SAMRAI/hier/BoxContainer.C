@@ -1233,11 +1233,16 @@ int BoxContainer::getTotalSizeOfBoxes() const
 }
 
 bool BoxContainer::contains(
-   const Index& idx) const
+   const Index& idx,
+   const BlockId& block_id) const
 {
    for (ConstIterator i(*this); i != end(); ++i) {
-      if (i().contains(idx)) {
-         return true;
+      //TODO: Change this when BoxContainer can no longer accept invalid BlockId
+      if (i->getBlockId() == block_id ||
+          i->getBlockId() == BlockId::invalidId()) {
+         if (i().contains(idx)) {
+            return true;
+         }
       }
    }
    return false;
