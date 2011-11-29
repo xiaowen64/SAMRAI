@@ -1146,7 +1146,6 @@ void BoxContainer::order()
  * Switch to unordered state.
  ***********************************************************************
  */
-SAMRAI_INLINE_KEYWORD
 void BoxContainer::unorder()
 {
    if (d_ordered) {
