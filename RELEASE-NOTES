@@ -71,6 +71,8 @@ descriptions of items in the following list are provided below.
 (6) Constructing SAMRAI_MPI with MPI_COMM_NULL sets rank and size
     to invalid values.
 
+(7) Boost is no longer required.
+
 
 
 *****************************************************************************
@@ -197,6 +199,14 @@ New behavior: Remove periodic images from this.  The method is non-const.
 
 This change prevents unexpectedly valid rank and group sizes when
 SAMRAI_MPI is built with MPI_COMM_NULL.
+
+(7) Boost is no longer required.
+
+The compiled Boost libraries are no longer required.  Boost headers
+are needed for some classes but are not required.  Use configure
+switch "--without-boost" to remove Boost dependency.  Note that, as
+warned by the configure script, the SparseData class is not supported
+without Boost.
 
 
 =============================================================================

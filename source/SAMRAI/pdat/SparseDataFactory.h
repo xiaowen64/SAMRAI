@@ -8,8 +8,17 @@
  *
  ************************************************************************/
 
-#ifndef included_pdat_IndexDataFactory
-#define included_pdat_IndexDataFactory
+#ifndef included_pdat_SparseDataFactory
+#define included_pdat_SparseDataFactory
+
+#include "SAMRAI/SAMRAI_config.h"
+
+/*
+ ************************************************************************
+ *  THIS CLASS WILL BE UNDEFINED IF THE LIBRARY IS BUILT WITHOUT BOOST
+ ************************************************************************
+ */
+#ifdef HAVE_BOOST_HEADERS
 
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/hier/IntVector.h"
@@ -155,4 +164,5 @@ private:
 #include "SAMRAI/pdat/SparseDataFactory.C"
 #endif
 
+#endif
 #endif

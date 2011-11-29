@@ -1,7 +1,7 @@
-# generated automatically by aclocal 1.10 -*- Autoconf -*-
+# generated automatically by aclocal 1.9.6 -*- Autoconf -*-
 
 # Copyright (C) 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004,
-# 2005, 2006  Free Software Foundation, Inc.
+# 2005  Free Software Foundation, Inc.
 # This file is free software; the Free Software Foundation
 # gives unlimited permission to copy and/or distribute it,
 # with or without modifications, as long as this notice is preserved.
@@ -4085,7 +4085,7 @@ case "$with_boost" in
     if test -f ${with_boost}/include/boost/tr1/unordered_map.hpp; then
         boost_PREFIX=$with_boost
         boost_INCLUDES="-I${boost_PREFIX}/include"
-        boost_LIBS="-L${boost_PREFIX}/lib -lboost_regex"
+        dnl boost_LIBS="-L${boost_PREFIX}/lib -lboost_regex"
         AC_MSG_RESULT([$boost_PREFIX])
     else
         AC_MSG_RESULT([$boost_PREFIX])
@@ -4094,47 +4094,6 @@ case "$with_boost" in
   ;;
 esac
 
-
-
-# Test compiling an BOOST application
-
-# NOTE that AC_SEARCH_LIBS didn't work completely so
-# use a more complicated example program to see
-# if that will catch when BOOST is not working.
-if test "${boost_PREFIX+set}" = set; then
-
-   AC_REQUIRE([AC_PROG_CXX])
-   AC_MSG_CHECKING(whether BOOST link works)
-   AC_LANG_PUSH(C++)
-   CASC_PUSH_COMPILER_STATE
-   # NOTE lib z and m were from BTNG macro.
-   LIBS="${LIBS} ${boost_LIBS}"
-   CXXFLAGS="${CXXFLAGS} ${boost_INCLUDES}"
-   AC_LINK_IFELSE([
-      #include <boost/tr1/unordered_map.hpp>
-      #include <boost/tr1/regex.hpp>
-      #include <string>
-
-      int main() {
-         boost::unordered_map<std::string, int> my_map;
-
-         my_map[["one"]] = 1;
-         my_map[["two"]] = 2;
-         std::string expr1 = ["samrai"];
-         const boost::regex e(expr1);
-         return 0;
-      }
-      ], 
-      casc_boost_compile=yes,
-      casc_boost_compile=no)
-   CASC_POP_COMPILER_STATE
-   AC_LANG_POP
-   AC_MSG_RESULT($casc_boost_compile)
-
-   if test "$casc_boost_compile" = no; then
-      AC_MSG_ERROR([BOOST compile/link test failed])
-   fi
-fi
 
 # END CASC_SUPPORT_BOOST
 

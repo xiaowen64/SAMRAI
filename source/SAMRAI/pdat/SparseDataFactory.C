@@ -12,6 +12,8 @@
 
 #include "SAMRAI/pdat/SparseDataFactory.h"
 
+#ifdef HAVE_BOOST_HEADERS
+
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/pdat/SparseData.h"
 #include "SAMRAI/tbox/Pointer.h"
@@ -110,4 +112,5 @@ SparseDataFactory<BOX_GEOMETRY>::validCopyTo(
 } // end namespace pdat
 } // end namespace SAMRAI
 
+#endif
 #endif

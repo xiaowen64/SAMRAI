@@ -7,8 +7,18 @@
  * Description:   pdat
  *
  ************************************************************************/
+
 #ifndef included_pdat_SparseData_h
 #define included_pdat_SparseData_h
+
+#include "SAMRAI/SAMRAI_config.h"
+
+/*
+ ************************************************************************
+ *  THIS CLASS WILL BE UNDEFINED IF THE LIBRARY IS BUILT WITHOUT BOOST
+ ************************************************************************
+ */
+#ifdef HAVE_BOOST_HEADERS
 
 #include "SAMRAI/hier/Index.h"
 #include "SAMRAI/hier/PatchData.h"
@@ -975,4 +985,5 @@ private:
 #include "SAMRAI/pdat/SparseData.C"
 #endif
 
+#endif
 #endif // included_pdat_SparseData
