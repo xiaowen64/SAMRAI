@@ -48,9 +48,7 @@ public:
     * @param[in] grid_geometry GridGeometry desribing the multiblock
     * environment.
     *
-    * @param[in] mapped_boxes.  No empty boxes are allowed.  An assertion
-    *                           failure will occur if the mapped boxes in this
-    *                           input set do not all have the same BlockId.
+    * @param[in] boxes.  No empty boxes are allowed.
     *
     * @param[in] min_number Split up sets of boxes while the number of
     * boxes in a subset is greater than this value.  Setting to a
@@ -58,8 +56,8 @@ public:
     * searching slower, and vice versa.  @b Default: 10
     */
    explicit MultiblockBoxTree(
-      const tbox::ConstPointer<GridGeometry>& grid_geometry,
-      const BoxContainer& mapped_boxes,
+      const GridGeometry& grid_geometry,
+      const BoxContainer& boxes,
       size_t min_number = 10);
 
    /*!
@@ -69,13 +67,13 @@ public:
     *
     * @param[in] grid_geometry
     *
-    * @param[in] mapped_boxes.  No empty boxes are allowed.
+    * @param[in] boxes.  No empty boxes are allowed.
     *
     * @param[in] min_number.  @b Default: 10
     */
    explicit MultiblockBoxTree(
-      const tbox::ConstPointer<GridGeometry>& grid_geometry,
-      const std::vector<Box>& mapped_boxes,
+      const GridGeometry& grid_geometry,
+      const std::vector<Box>& boxes,
       size_t min_number = 10);
 
    /*!
@@ -89,7 +87,7 @@ public:
     * @param[in] min_number.  @b Default: 10
     */
    explicit MultiblockBoxTree(
-      const tbox::ConstPointer<GridGeometry>& grid_geometry,
+      const GridGeometry& grid_geometry,
       const std::map<BlockId, BoxContainer>& boxes,
       size_t min_number = 10);
 
@@ -115,7 +113,7 @@ public:
     */
    void
    generateTree(
-      const tbox::ConstPointer<GridGeometry>& grid_geometry,
+      const GridGeometry& grid_geometry,
       const BoxContainer& boxes,
       size_t min_number = 10);
 
@@ -124,13 +122,13 @@ public:
     *
     * @param[in] grid_geometry
     *
-    * @param[in] mapped_boxes.  No empty boxes are allowed.
+    * @param[in] boxes.  No empty boxes are allowed.
     *
     * @param[in] min_number
     */
    void
    generateTree(
-      const tbox::ConstPointer<GridGeometry>& grid_geometry,
+      const GridGeometry& grid_geometry,
       const std::map<BlockId, BoxContainer>& boxes,
       size_t min_number = 10);
 
@@ -145,7 +143,7 @@ public:
     */
    void
    generateNonPeriodicTree(
-      const tbox::ConstPointer<GridGeometry>& grid_geometry,
+      const GridGeometry& grid_geometry,
       const BoxContainer& boxes,
       size_t min_number = 10);
 
@@ -193,8 +191,10 @@ public:
    /*!
     * @brief Return the GridGeometry object for the multiblock
     * environment.
+    *
+    * Do not deallocate the returned GridGeometry.
     */
-   const tbox::ConstPointer<GridGeometry>&
+   const GridGeometry&
    getGridGeometry() const;
 
    //@{
@@ -206,7 +206,7 @@ public:
     * Boxes in the tree.
     *
     * We also check for overlap with Boxes in blocks adjacent
-    * to mapped_box's block.
+    * to box's block.
     *
     * @param[in] box
     *
@@ -249,7 +249,7 @@ public:
    /*!
     * @brief Find all boxes that overlap the given Box.
     *
-    * To avoid unneeded work, the output @b overlap_mapped_boxes
+    * To avoid unneeded work, the output @b overlap_boxes
     * container is not emptied.  Overlapping Boxes are simply
     * added.
     *
@@ -258,7 +258,7 @@ public:
     * REMARK: Now that Box has a BlockId, the block_id argument is
     * obsolete.
     *
-    * @param[out] overlap_mapped_boxes
+    * @param[out] overlap_boxes
     *
     * @param[in] box
     *
@@ -274,7 +274,7 @@ public:
     */
    void
    findOverlapBoxes(
-      std::vector<Box>& overlap_mapped_boxes,
+      std::vector<Box>& overlap_boxes,
       const Box& box,
       const BlockId& block_id,
       const IntVector& refinement_ratio,
@@ -284,14 +284,14 @@ public:
     * @brief Find all boxes that overlap the given Box.
     *
     * Analogous to findOverlapBoxes returning a vector of Boxes
-    * but avoids the copies.  If the returned overlapped mapped boxes are used
+    * but avoids the copies.  If the returned overlapped boxes are used
     * in a context in which the MultiblockBoxTree is constant there is
     * no point in incurring the cost of copying the tree's Boxes.  Just
     * return a vector of their addresses.
     *
     * Output is unsorted.
     *
-    * @param[out] overlap_mapped_boxes Pointers to Boxes that overlap
+    * @param[out] overlap_boxes Pointers to Boxes that overlap
     * with box.
     *
     * @param[in] box
@@ -308,7 +308,7 @@ public:
     */
    void
    findOverlapBoxes(
-      std::vector<const Box *>& overlap_mapped_boxes,
+      std::vector<const Box *>& overlap_boxes,
       const Box& box,
       const BlockId& block_id,
       const IntVector& refinement_ratio,
@@ -346,11 +346,11 @@ public:
    /*!
     * @brief Get the Boxes in the tree.
     *
-    * @param[out] mapped_boxes
+    * @param[out] boxes
     */
    void
    getBoxes(
-      std::vector<Box>& mapped_boxes) const;
+      std::vector<Box>& boxes) const;
 
    /*!
     * @brief Create a similar tree with the boxes refined by a given
@@ -379,7 +379,12 @@ private:
     */
    std::map<BlockId, BoxTree> d_single_block_trees;
 
-   tbox::ConstPointer<GridGeometry> d_grid_geometry;
+   /*
+    * @brief GridGeometry object.
+    *
+    * Do not delete this object.
+    */
+   const GridGeometry *d_grid_geometry;
 
 };
 

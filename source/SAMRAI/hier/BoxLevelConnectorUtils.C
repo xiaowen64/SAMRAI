@@ -770,7 +770,7 @@ void BoxLevelConnectorUtils::computeInternalOrExternalParts(
       // ... reference_boundary is now ( ( (R^1) \ R ) <intersection> O )^(-g)
    } // search_tree_represents_internal == false
 
-   MultiblockBoxTree search_tree(grid_geometry, reference_box_list);
+   MultiblockBoxTree search_tree(*grid_geometry, reference_box_list);
 
    reference_box_list.clear();
 
@@ -951,7 +951,7 @@ void BoxLevelConnectorUtils::computeBoxesAroundBoundary(
    const IntVector& one_vec(IntVector::getOne(dim));
 
    MultiblockBoxTree reference_mapped_boxes_tree(
-      grid_geometry,
+      *grid_geometry,
       boundary);
    // ... boundary is now R
 

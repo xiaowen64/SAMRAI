@@ -848,7 +848,7 @@ int checkBalanceCorrectness(
       globalized_prebalance.getGlobalBoxes();
 
    const hier::MultiblockBoxTree globalized_prebalance_mapped_box_tree(
-      prebalance.getGridGeometry(),
+      *prebalance.getGridGeometry(),
       globalized_prebalance_mapped_box_set);
 
    const hier::BoxLevel& globalized_postbalance =
@@ -858,7 +858,7 @@ int checkBalanceCorrectness(
       globalized_postbalance.getGlobalBoxes();
 
    const hier::MultiblockBoxTree globalized_postbalance_mapped_box_tree(
-      postbalance.getGridGeometry(),
+      *postbalance.getGridGeometry(),
       globalized_postbalance_mapped_box_set);
 
    // Check for prebalance indices absent in postbalance.

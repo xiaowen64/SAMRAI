@@ -443,7 +443,7 @@ void GriddingAlgorithm::makeCoarsestLevel(
       new_mapped_box_level,
       new_to_domain,
       domain_to_new,
-      d_hierarchy->getDomainSearchTree(hier::BlockId::zero()),
+      d_hierarchy->getGridGeometry()->getDomainSearchTree().getSingleBlockBoxTree(hier::BlockId::zero()),
       domain_to_domain);
 
    if (d_check_connectors) {
@@ -807,7 +807,7 @@ void GriddingAlgorithm::makeFinerLevel(
                      required_nesting,
                      zero_vector,
                      zero_vector,
-                     &d_hierarchy->getPeriodicDomainSearchTree());
+                     &d_hierarchy->getGridGeometry()->getPeriodicDomainSearchTree());
 
                if (!new_nests_in_tag) {
                   hier::BoxLevel violator(d_dim);
@@ -819,7 +819,7 @@ void GriddingAlgorithm::makeFinerLevel(
                      new_to_violator,
                      *new_to_tag,
                      hier::IntVector(d_dim, -d_hierarchy->getProperNestingBuffer(tag_ln)),
-                     d_hierarchy->getDomainSearchTree());
+                     d_hierarchy->getGridGeometry()->getDomainSearchTree());
                   t_compute_external_parts->stop();
 
                   TBOX_ERROR(
@@ -1559,7 +1559,7 @@ void GriddingAlgorithm::regridFinerLevel_doTaggingAfterRecursiveRegrid(
          dummy_finer_mapped_box_level,
          finer_to_tag,
          tag_to_finer,
-         d_hierarchy->getDomainSearchTree(hier::BlockId::zero()),
+         d_hierarchy->getGridGeometry()->getDomainSearchTree().getSingleBlockBoxTree(hier::BlockId::zero()),
          d_hierarchy->getConnector(tag_ln, tag_ln));
 
 #ifdef DEBUG_CHECK_ASSERTIONS
@@ -1701,7 +1701,7 @@ void GriddingAlgorithm::regridFinerLevel_createAndInstallNewLevel(
                required_nesting,
                zero_vector,
                zero_vector,
-               &d_hierarchy->getPeriodicDomainSearchTree());
+               &d_hierarchy->getGridGeometry()->getPeriodicDomainSearchTree());
 
          if (!finer_nests_in_new) {
 
@@ -1735,7 +1735,7 @@ void GriddingAlgorithm::regridFinerLevel_createAndInstallNewLevel(
                finer_to_external,
                finer_to_new,
                -required_nesting,
-               d_hierarchy->getDomainSearchTree());
+               d_hierarchy->getGridGeometry()->getDomainSearchTree());
             tbox::plog << "External parts:\n" << finer_to_external.format("FE->", 3);
 
             TBOX_ERROR(
@@ -1895,7 +1895,7 @@ size_t GriddingAlgorithm::checkBoundaryProximityViolation(
     */
 
    const hier::MultiblockBoxTree& periodic_domain_search_tree =
-      d_hierarchy->getPeriodicDomainSearchTree();
+      d_hierarchy->getGridGeometry()->getPeriodicDomainSearchTree();
 
    tbox::Pointer<hier::MultiblockBoxTree> refined_periodic_domain_search_tree(
       periodic_domain_search_tree.createRefinedTree(mapped_box_level.getRefinementRatio()));
@@ -2041,7 +2041,7 @@ void GriddingAlgorithm::checkNonnestingUserBoxes(
       new_to_violating_parts,
       new_to_tag,
       -nesting_buffer,
-      d_hierarchy->getDomainSearchTree());
+      d_hierarchy->getGridGeometry()->getDomainSearchTree());
 
    if (violating_parts.getGlobalNumberOfBoxes() > 0) {
 
@@ -2517,7 +2517,7 @@ void GriddingAlgorithm::readLevelBoxes(
          new_mapped_box_level,
          new_to_coarser,
          coarser_to_new,
-         d_hierarchy->getDomainSearchTree(hier::BlockId::zero()),
+         d_hierarchy->getGridGeometry()->getDomainSearchTree().getSingleBlockBoxTree(hier::BlockId::zero()),
          coarser_to_coarser);
       new_mapped_box_level.finalize();
    }
@@ -3027,7 +3027,7 @@ void GriddingAlgorithm::findRefinementBoxes(
                   hier::IntVector::getZero(d_dim),
                   hier::IntVector::getZero(d_dim),
                   hier::IntVector::getZero(d_dim),
-                  &d_hierarchy->getDomainSearchTree());
+                  &d_hierarchy->getGridGeometry()->getDomainSearchTree());
             if (!nested) {
                TBOX_ERROR(
                   "Failed overflow nesting: new mapped_box_level does not nest in tagged mapped_box_level.\n"
@@ -3104,7 +3104,7 @@ void GriddingAlgorithm::findRefinementBoxes(
                   required_nesting,
                   hier::IntVector::getZero(d_dim),
                   hier::IntVector::getZero(d_dim),
-                  &d_hierarchy->getPeriodicDomainSearchTree());
+                  &d_hierarchy->getGridGeometry()->getPeriodicDomainSearchTree());
             if (!new_nests_in_tag) {
                tbox::perr << "GriddingAlgorithm: new BoxLevel\n"
                           << "at ln=" << new_ln
@@ -3133,7 +3133,7 @@ void GriddingAlgorithm::findRefinementBoxes(
                   new_to_external,
                   tmp_new_to_tag,
                   -required_nesting,
-                  d_hierarchy->getDomainSearchTree());
+                  d_hierarchy->getGridGeometry()->getDomainSearchTree());
                tbox::plog << "External parts:\n" << new_to_external.format("NE->", 3);
                TBOX_ERROR(
                   "Internal library error: Failed to produce proper nesting.");
@@ -3306,7 +3306,7 @@ void GriddingAlgorithm::findRefinementBoxes(
          new_mapped_box_level,
          new_to_tag,
          tag_to_new,
-         d_hierarchy->getDomainSearchTree(hier::BlockId::zero()),
+         d_hierarchy->getGridGeometry()->getDomainSearchTree().getSingleBlockBoxTree(hier::BlockId::zero()),
          tag_to_tag);
       if (d_print_steps) {
          tbox::plog << "GriddingAlgorithm begin adding periodic images."
@@ -3521,7 +3521,7 @@ void GriddingAlgorithm::makeOverflowNestingMap(
       unnested_to_violator,
       unnested_to_reference,
       hier::IntVector::getZero(d_dim),
-      d_hierarchy->getDomainSearchTree());
+      d_hierarchy->getGridGeometry()->getDomainSearchTree());
    t_compute_external_parts->stop();
    t_make_overflow_map_compute->stop();
 
@@ -3645,7 +3645,7 @@ void GriddingAlgorithm::computeNestingViolator(
       candidate_to_violator,
       candidate_to_complement,
       zero_vector,
-      d_hierarchy->getDomainSearchTree());
+      d_hierarchy->getGridGeometry()->getDomainSearchTree());
    /*
     * Above step ignored the domain complement components of nesting
     * definition (by necessity).  Where the candidate falls outside
@@ -3653,7 +3653,7 @@ void GriddingAlgorithm::computeNestingViolator(
     */
 
    tbox::Pointer<hier::MultiblockBoxTree> refined_domain_search_tree =
-      d_hierarchy->getDomainSearchTree().createRefinedTree(candidate.getRefinementRatio());
+      d_hierarchy->getGridGeometry()->getDomainSearchTree().createRefinedTree(candidate.getRefinementRatio());
 
    for (hier::BoxContainer::ConstIterator ni = candidate_mapped_boxes.begin();
         ni != candidate_mapped_boxes.end(); ++ni) {
@@ -3735,7 +3735,7 @@ void GriddingAlgorithm::computeProperNestingData(
          d_to_nesting_complement[ln],
          self_connector,
          hier::IntVector(d_dim, -d_hierarchy->getProperNestingBuffer(ln)),
-         d_hierarchy->getDomainSearchTree());
+         d_hierarchy->getGridGeometry()->getDomainSearchTree());
 
       d_from_nesting_complement[ln].initializeToLocalTranspose(
          d_to_nesting_complement[ln]);
@@ -3905,11 +3905,11 @@ void GriddingAlgorithm::growBoxesWithinNestingDomain(
 
    /*
     * Connect new_mapped_box_level to the nesting complement so we
-    * know it cannot exist.  Use a Connector width of zero because we
-    * don't need it any bigger and we don't want inter-block
-    * neighbors.  (The new Boxes are already confined to their
-    * own blocks before entering this method, so a zero Connector
-    * width eliminates inter-block neighbors.)
+    * know where it cannot exist.  Use a Connector width of zero
+    * because we don't need it any bigger and we don't want
+    * inter-block neighbors.  (The new Boxes are already confined to
+    * their own blocks before entering this method, so a zero
+    * Connector width eliminates inter-block neighbors.)
     */
 
    hier::Connector new_to_nesting_complement;
@@ -3938,7 +3938,7 @@ void GriddingAlgorithm::growBoxesWithinNestingDomain(
    new_to_grown.setConnectorType(hier::Connector::MAPPING);
 
    tbox::Pointer<hier::MultiblockBoxTree> refined_domain_search_tree =
-      d_hierarchy->getDomainSearchTree().createRefinedTree(
+      d_hierarchy->getGridGeometry()->getDomainSearchTree().createRefinedTree(
          new_mapped_box_level.getRefinementRatio());
 
    std::vector<hier::Box> tmp_mapped_box_vector;

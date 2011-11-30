@@ -29,6 +29,24 @@ const tbox::Dimension& GridGeometry::getDim() const {
 }
 
 SAMRAI_INLINE_KEYWORD
+const hier::MultiblockBoxTree& GridGeometry::
+getDomainSearchTree() const
+{
+   return d_domain_search_tree;
+}
+
+/*
+ ***********************************************************************
+ ***********************************************************************
+ */
+
+SAMRAI_INLINE_KEYWORD const hier::MultiblockBoxTree& GridGeometry::
+getPeriodicDomainSearchTree() const
+{
+   return d_domain_search_tree_periodic;
+}
+
+SAMRAI_INLINE_KEYWORD
 const std::string& GridGeometry::getObjectName() const {
    return d_object_name;
 }

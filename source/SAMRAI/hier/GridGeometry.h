@@ -16,6 +16,7 @@
 #include "SAMRAI/tbox/Serializable.h"
 #include "SAMRAI/tbox/Timer.h"
 #include "SAMRAI/hier/CoarsenOperator.h"
+#include "SAMRAI/hier/MultiblockBoxTree.h"
 #include "SAMRAI/hier/Patch.h"
 #include "SAMRAI/hier/PatchGeometry.h"
 #include "SAMRAI/hier/RefineOperator.h"
@@ -415,6 +416,28 @@ public:
     */
    const BoxContainer&
    getPhysicalDomain() const;
+
+   /*!
+    * @brief Access the multiblock domain description as a tree
+    * without periodic images.
+    *
+    * This tree does not contain periodic images, even if there is
+    * only one block and the domain is periodic.
+    *
+    * @return The multiblock domain description as a search tree.
+    */
+   const hier::MultiblockBoxTree&
+   getDomainSearchTree() const;
+
+   /*!
+    * @brief Access the multiblock domain description with periodic
+    * images (if any)
+    *
+    * @return The domain description as a search tree with periodic
+    * images (if any).
+    */
+   const hier::MultiblockBoxTree&
+   getPeriodicDomainSearchTree() const;
 
    /*!
     * @brief returns whether the physical domain for a block managed by this
@@ -1249,14 +1272,25 @@ private:
    BoxContainer d_physical_domain;
 
    /*!
-    * Tree representation of domain, used for searches.
-    *
-    * This representation does NOT contain any periodic image boxes of
-    * the domain.
-    *
-    * Each entry of the array provides a tree representation for one block.
+    * @brief The domain, excluding periodic images, in
+    * MultiblockBoxTree form, used for overlap searches.
     */
-   tbox::Array<tbox::Pointer<BoxTree> > d_domain_tree;
+   MultiblockBoxTree d_domain_search_tree;
+
+   /*!
+    * @brief The same as d_domain_search_tree, but with periodic
+    * Boxes.
+    *
+    * For non-periodic domains, this tree is identical to
+    * d_domain_search_tree.
+    */
+   MultiblockBoxTree d_domain_search_tree_periodic;
+
+   /*!
+    * @brief The multiblock domain complement description stored in a
+    * search tree.
+    */
+   MultiblockBoxTree d_complement_searchtree;
 
    /*!
     * Boolean array telling for each block whether the domain of that block

@@ -11,6 +11,9 @@
 #define included_pdat_SparseData_C
 
 #include "SAMRAI/pdat/SparseData.h"
+
+#ifdef HAVE_BOOST_HEADERS
+
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/hier/BoxContainerConstIterator.h"
@@ -1267,4 +1270,5 @@ std::ostream& operator << (std::ostream& out,
 
 } // namespace pdat
 } // namespace SAMRAI
+#endif
 #endif

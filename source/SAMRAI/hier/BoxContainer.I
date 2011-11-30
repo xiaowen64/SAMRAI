@@ -261,18 +261,9 @@ void BoxContainer::clear()
 
 /*
  *************************************************************************
- * Switch or query the ordered/unordered state
+ * Query the ordered/unordered state
  *************************************************************************
  */
-
-SAMRAI_INLINE_KEYWORD
-void BoxContainer::unorder()
-{
-   if (d_ordered) {
-      d_set.clear();
-      d_ordered = false;
-   }
-}
 
 SAMRAI_INLINE_KEYWORD
 bool BoxContainer::isOrdered() const

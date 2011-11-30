@@ -46,47 +46,6 @@ const tbox::SAMRAI_MPI& PatchHierarchy::getMPI() const
    return d_domain_mapped_box_level.getMPI();
 }
 
-/*
- ***********************************************************************
- ***********************************************************************
- */
-
-SAMRAI_INLINE_KEYWORD
-const hier::BoxTree& PatchHierarchy::
-getDomainSearchTree(const BlockId& block_id) const
-{
-   return d_domain_search_tree.getSingleBlockBoxTree(block_id);
-}
-
-SAMRAI_INLINE_KEYWORD
-const hier::MultiblockBoxTree& PatchHierarchy::
-getDomainSearchTree() const
-{
-   return d_domain_search_tree;
-}
-
-/*
- ***********************************************************************
- ***********************************************************************
- */
-
-SAMRAI_INLINE_KEYWORD const hier::BoxTree& PatchHierarchy::
-getPeriodicDomainSearchTree(const BlockId& block_id) const
-{
-   return d_domain_search_tree_periodic.getSingleBlockBoxTree(block_id);
-}
-
-/*
- ***********************************************************************
- ***********************************************************************
- */
-
-SAMRAI_INLINE_KEYWORD const hier::MultiblockBoxTree& PatchHierarchy::
-getPeriodicDomainSearchTree() const
-{
-   return d_domain_search_tree_periodic;
-}
-
 SAMRAI_INLINE_KEYWORD
 bool PatchHierarchy::levelExists(
    const int l) const

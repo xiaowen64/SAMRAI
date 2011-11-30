@@ -351,13 +351,17 @@ public:
    /*!
     * @brief Determine if "idx" lies within bounds of boxes in container.
     *
+    * Only boxes of the given BlockId will be checked.
+    *
     * @return true if idx lies within bounds of boxes in container.
     *
     * @param[in] idx
+    * @param[in] block_id
     */
    bool
    contains(
-      const Index& idx) const;
+      const Index& idx,
+      const BlockId& block_id) const;
 
    /*!
     * @brief  Returns the bounding box for all the boxes in the container.

@@ -426,15 +426,24 @@ BlockGridGeometry {
    }
 
    BlockNeighbors8 {
-      block_a = 2
-      block_b = 3
+      block_a = 1
+      block_b = 6
 
-      rotation_b_to_a = "J_UP", "K_DOWN", "I_DOWN"
-      point_in_a_space = 0,0,14
-      point_in_b_space = 15,0,14
+      rotation_b_to_a = "I_UP", "J_UP", "K_UP"
+      point_in_a_space = 0,0,0
+      point_in_b_space = 15,0,0
    }
 
    BlockNeighbors9 {
+      block_a = 2
+      block_b = 3
+
+      rotation_b_to_a = "K_UP", "J_UP", "I_DOWN"
+      point_in_a_space = 0,0,14
+      point_in_b_space = 15,0,0
+   }
+
+   BlockNeighbors10 {
       block_a = 2
       block_b = 4
 
@@ -443,7 +452,7 @@ BlockGridGeometry {
       point_in_b_space = 15,0,14
    }
 
-   BlockNeighbors10 {
+   BlockNeighbors11 {
       block_a = 2
       block_b = 5
 
@@ -452,13 +461,49 @@ BlockGridGeometry {
       point_in_b_space = 15,0,0
    }
 
-   BlockNeighbors11 {
+   BlockNeighbors12 {
       block_a = 3
       block_b = 5
 
       rotation_b_to_a = "I_UP", "J_UP", "K_UP"
       point_in_a_space = 14,0,14
       point_in_b_space = 14,0,-1
+   }
+
+   BlockNeighbors13 {
+      block_a = 3
+      block_b = 6
+
+      rotation_b_to_a = "K_UP", "J_UP", "I_DOWN"
+      point_in_a_space = 0,0,14
+      point_in_b_space = 0,0,15
+   }
+
+   BlockNeighbors14 {
+      block_a = 4
+      block_b = 5
+
+      rotation_b_to_a = "I_UP", "J_UP", "K_UP"
+      point_in_a_space = 0,0,0
+      point_in_b_space = 0,0,15
+   }
+
+   BlockNeighbors15 {
+      block_a = 4
+      block_b = 6
+
+      rotation_b_to_a = "K_DOWN", "J_UP", "I_UP"
+      point_in_a_space = 0,0,0
+      point_in_b_space = 0,0,-1
+   }
+
+   BlockNeighbors16 {
+      block_a = 5
+      block_b = 6
+
+      rotation_b_to_a = "I_DOWN", "J_UP", "K_DOWN"
+      point_in_a_space = 0,0,0
+      point_in_b_space = -1,0,14
    }
 
 }

@@ -95,6 +95,11 @@ int main(
       + tbox::Utilities::intToString(dim.getValue(), 1) + "d.log";
    tbox::PIO::logAllNodes(log_fn);
 
+   bool check_it = true;
+   bool copy_ops = true;
+   bool remove_ops = true;
+
+#ifdef HAVE_BOOST_HEADERS
    /*
     * Create block to force pointer deallocation.  If this is not done
     * then there will be memory leaks reported.
@@ -245,20 +250,20 @@ int main(
       *   Run the tests
       *
       ********************************************************************/
-      bool check_it = checkIterators(hierarchy, data_id1);
+      check_it = checkIterators(hierarchy, data_id1);
       // Test 1 check iterators
       os << (check_it ? "PASSED: " : "FAILED: ")
          << "Test 1: Iterator test"
          << std::endl;
 
       // Test 2: copying items
-      bool copy_ops = checkCopyOps(hierarchy, data_id1, data_id2);
+      copy_ops = checkCopyOps(hierarchy, data_id1, data_id2);
       os << (copy_ops ? "PASSED: " : "FAILED: ")
          << "Test 2: Copy test"
          << std::endl;
 
       // Test 3:  removing and erasing items.
-      bool remove_ops = checkRemoveOps(hierarchy, data_id1);
+      remove_ops = checkRemoveOps(hierarchy, data_id1);
       os << (remove_ops ? "PASSED: " : "FAILED: ")
          << "Test 3: Remove test"
          << std::endl;
@@ -268,10 +273,11 @@ int main(
        */
       geometry.setNull();
       hierarchy.setNull();
+   }
+#endif
 
-      if (check_it && copy_ops && remove_ops) {
-         tbox::pout << "\nPASSED: sparse data ops" << std::endl;
-      }
+   if (check_it && copy_ops && remove_ops) {
+      tbox::pout << "\nPASSED: sparse data ops" << std::endl;
    }
 
    tbox::SAMRAIManager::shutdown();
@@ -320,11 +326,12 @@ checkIterators(
    const tbox::Pointer<hier::PatchHierarchy> hierarchy,
    const int data_id1)
 {
-   typedef pdat::SparseData<pdat::CellGeometry> LSparseData;
 
    // Test 1 - check the functionality of the SparseData API
    //
    int num_failures(0);
+#ifdef HAVE_BOOST_HEADERS
+   typedef pdat::SparseData<pdat::CellGeometry> LSparseData;
    for (int ln = hierarchy->getFinestLevelNumber(); ln >= 0; ln--) {
       tbox::Pointer<hier::PatchLevel> level = hierarchy->getPatchLevel(ln);
 
@@ -363,6 +370,7 @@ checkIterators(
          } // for (; ic; ic++) ... (cell iterator)
       } // for (hier::PatchLevel::Iterator...
    } // hierarchy iteration
+#endif
 
    bool it_passed = true;
    if (num_failures > 0) {
@@ -379,10 +387,11 @@ bool checkCopyOps(
    const tbox::Pointer<hier::PatchHierarchy> hierarchy,
    const int data_id1, const int data_id2)
 {
-   typedef pdat::SparseData<pdat::CellGeometry> LSparseData;
 
    bool copy_passed = true;
 
+#ifdef HAVE_BOOST_HEADERS
+   typedef pdat::SparseData<pdat::CellGeometry> LSparseData;
    for (int ln = hierarchy->getFinestLevelNumber(); ln >= 0; ln--) {
       tbox::Pointer<hier::PatchLevel> level = hierarchy->getPatchLevel(ln);
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
@@ -437,6 +446,7 @@ bool checkCopyOps(
          }
       }
    }
+#endif
    return copy_passed;
 }
 
@@ -444,9 +454,10 @@ bool checkRemoveOps(
    const tbox::Pointer<hier::PatchHierarchy> hierarchy,
    const int data_id1)
 {
-   typedef pdat::SparseData<pdat::CellGeometry> LSparseData;
    bool remove_passed = true;
 
+#ifdef HAVE_BOOST_HEADERS
+   typedef pdat::SparseData<pdat::CellGeometry> LSparseData;
    int num_failures(0);
    for (int ln = hierarchy->getFinestLevelNumber(); ln >= 0; ln--) {
       tbox::Pointer<hier::PatchLevel> level = hierarchy->getPatchLevel(ln);
@@ -492,6 +503,7 @@ bool checkRemoveOps(
       << "FAILED: the container is not empty and it should be."
       << std::endl;
    }
+#endif
    return remove_passed;
 }
 

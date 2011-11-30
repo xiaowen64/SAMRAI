@@ -12,6 +12,13 @@
 
 #include "SAMRAI/SAMRAI_config.h"
 
+/*
+ ************************************************************************
+ *  THIS CLASS WILL BE UNDEFINED IF THE LIBRARY IS BUILT WITHOUT BOOST
+ ************************************************************************
+ */
+#ifdef HAVE_BOOST_HEADERS
+
 #include "SAMRAI/hier/IntVector.h"
 #include "SAMRAI/hier/Variable.h"
 
@@ -93,4 +100,5 @@ private:
 #include "SAMRAI/pdat/SparseDataVariable.C"
 #endif
 
+#endif
 #endif

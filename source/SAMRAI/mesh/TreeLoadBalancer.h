@@ -15,6 +15,7 @@
 #include "SAMRAI/mesh/LoadBalanceStrategy.h"
 #include "SAMRAI/tbox/AsyncCommPeer.h"
 #include "SAMRAI/tbox/AsyncCommStage.h"
+#include "SAMRAI/tbox/BalancedDepthFirstTree.h"
 #include "SAMRAI/tbox/Database.h"
 #include "SAMRAI/tbox/SAMRAI_MPI.h"
 #include "SAMRAI/tbox/Pointer.h"
@@ -120,6 +121,8 @@ public:
 
    /*!
     * @brief Free the internal MPI communicator, if any has been set.
+    *
+    * This is automatically done by the destructor, if needed.
     *
     * @see setSAMRAI_MPI().
     */
@@ -399,6 +402,8 @@ private:
    static const int TreeLoadBalancer_PREBALANCE1 = 1212006;
    static const int TreeLoadBalancer_FIRSTDATALEN = 1000;
 
+   static const int TreeLoadBalancer_MIN_NPROC_FOR_AUTOMATIC_MULTICYCLE = 65;
+
    // The following are not implemented, but are provided here for
    // dumb compilers.
 
@@ -525,7 +530,7 @@ private:
     * @param[i] ideal_transfer Amount of load to reassign from src to
     * dst.  If negative, reassign the load from dst to src.
     *
-    * @return Amount of load transfered.  If positive, transfer load
+    * @return Amount of load transfered.  If positive, load went
     * from src to dst (if negative, from dst to src).
     */
    int
@@ -542,35 +547,32 @@ private:
     *
     * @param[io] dst Destination of work, for a positive ideal_transfer.
     *
-    * @param actual_transfer Amount of load transfered.  If positive,
-    * transfer load from src to dst (if negative, from dst to src).
-    *
     * @param next_available_index Index for guaranteeing new
     * Boxes are uniquely numbered.
     *
     * @param ideal_transfer Amount of load to reassign from src to
     * dst.  If negative, reassign the load from dst to src.
+    *
+    * @return Amount of load transfered.  If positive, load went
+    * from src to dst (if negative, from dst to src).
     */
-   bool
+   int
    shiftLoadsByBreaking(
       TransitSet& src,
       TransitSet& dst,
-      int& actual_transfer,
       hier::LocalId& next_available_index,
       int ideal_transfer ) const;
 
    /*!
     * @brief Find a BoxInTransit in each of the source and destination
     * containers that, when swapped, effects a transfer of the given
-    * amount of work from the source to the destination.
+    * amount of work from the source to the destination.  Swap the boxes.
     */
    bool
-   findLoadSwapPair(
+   swapLoadPair(
       TransitSet& src,
       TransitSet& dst,
       int& actual_transfer,
-      TransitSet::iterator& isrc,
-      TransitSet::iterator& idst,
       int ideal_transfer ) const;
 
    /*!
@@ -819,20 +821,20 @@ private:
     * set the AsyncCommPeer objects for communication with children
     * and parent.
     *
-    * @param [o] num_children
+    * @param [o] child_stage
     * @param [o] child_comms
-    * @param [o] parent_send
-    * @param [o] parent_recv
-    * @param [o] parent_recv
+    * @param [o] parent_stage
+    * @param [o] parent_comm
     * @param [i] rank_group
+    * @param [i] bdfs
     */
    void setupAsyncCommObjects(
-      int& num_children,
+      tbox::AsyncCommStage& child_stage,
       tbox::AsyncCommPeer<int> *& child_comms,
-      tbox::AsyncCommPeer<int> *& parent_send,
-      tbox::AsyncCommPeer<int> *& parent_recv,
-      tbox::AsyncCommStage& comm_stage,
-      const tbox::RankGroup &rank_group ) const;
+      tbox::AsyncCommStage& parent_stage,
+      tbox::AsyncCommPeer<int> *& parent_comm,
+      const tbox::RankGroup &rank_group,
+      const tbox::BalancedDepthFirstTree &bdfs ) const;
 
    /*
     * @brief Undo the set-up done by setupAsyncCommObjects.
@@ -840,19 +842,7 @@ private:
    void
    destroyAsyncCommObjects(
       tbox::AsyncCommPeer<int> *& child_comms,
-      tbox::AsyncCommPeer<int> *& parent_send,
-      tbox::AsyncCommPeer<int> *& parent_recv) const;
-
-   void
-   setShadowData(
-      const hier::IntVector& min_size,
-      const hier::IntVector& max_size,
-      const hier::BoxLevel& domain_box_level,
-      const hier::IntVector& bad_interval,
-      const hier::IntVector& cut_factor,
-      const hier::IntVector& refinement_ratio) const;
-   void
-   unsetShadowData() const;
+      tbox::AsyncCommPeer<int> *& parent_comm) const;
 
    /*!
     * @brief Set up timers for the object.
@@ -871,7 +861,10 @@ private:
    std::string d_object_name;
 
    //! @brief Duplicated communicator object.  See setSAMRAI_MPI().
-   tbox::SAMRAI_MPI d_mpi_dup;
+   mutable tbox::SAMRAI_MPI d_mpi;
+
+   //! @brief Whether d_mpi is an internal duplicate.  See setSAMRAI_MPI().
+   bool d_mpi_is_dupe;
 
    int d_n_root_cycles;
 
@@ -922,7 +915,6 @@ private:
 
    //@{
    //! @name Data shared with private methods during balancing.
-   mutable tbox::SAMRAI_MPI d_mpi;
    mutable hier::IntVector d_min_size;
    mutable hier::IntVector d_max_size;
    mutable std::vector<hier::BoxContainer> d_block_domain_boxes;
@@ -959,9 +951,7 @@ private:
    tbox::Pointer<tbox::Timer> t_compute_local_load;
    tbox::Pointer<tbox::Timer> t_compute_global_load;
    tbox::Pointer<tbox::Timer> t_compute_tree_load;
-   tbox::Pointer<tbox::Timer> t_compute_tree_load0;
-   tbox::Pointer<tbox::Timer> t_compute_tree_load1;
-   tbox::Pointer<tbox::Timer> t_compute_tree_load2;
+   std::vector<tbox::Pointer<tbox::Timer> > t_compute_tree_load_for_cycle;
    tbox::Pointer<tbox::Timer> t_reassign_loads;
    tbox::Pointer<tbox::Timer> t_shift_loads_by_swapping;
    tbox::Pointer<tbox::Timer> t_shift_loads_by_breaking;
@@ -992,7 +982,10 @@ private:
    tbox::Pointer<tbox::Timer> t_parent_edge_comm;
    tbox::Pointer<tbox::Timer> t_barrier_before;
    tbox::Pointer<tbox::Timer> t_barrier_after;
-   tbox::Pointer<tbox::Timer> t_MPI_wait;
+   tbox::Pointer<tbox::Timer> t_child_send_wait;
+   tbox::Pointer<tbox::Timer> t_child_recv_wait;
+   tbox::Pointer<tbox::Timer> t_parent_send_wait;
+   tbox::Pointer<tbox::Timer> t_parent_recv_wait;
 
    /*
     * Statistics on number of cells and patches generated.

@@ -694,8 +694,7 @@ void BoxContainer::removeIntersections(
       TBOX_ERROR("removeIntersections attempted on ordered container.");
    }
 
-   const tbox::ConstPointer<GridGeometry>
-   & grid_geometry(takeaway.getGridGeometry());
+   const GridGeometry & grid_geometry(takeaway.getGridGeometry());
 
    std::vector<const Box *> overlap_mapped_boxes;
    Iterator itr(*this);
@@ -720,7 +719,7 @@ void BoxContainer::removeIntersections(
                overlap_mapped_boxes[i]->getBlockId();
             if (overlap_box_block_id != block_id) {
                Box overlap_box = *overlap_mapped_boxes[i];
-               grid_geometry->transformBox(overlap_box,
+               grid_geometry.transformBox(overlap_box,
                   refinement_ratio,
                   block_id,
                   overlap_box_block_id);
@@ -907,8 +906,7 @@ void BoxContainer::intersectBoxes(
       TBOX_ERROR("intersectBoxes attempted on ordered container.");
    }
 
-   const tbox::ConstPointer<GridGeometry>
-   & grid_geometry(keep.getGridGeometry());
+   const GridGeometry & grid_geometry(keep.getGridGeometry());
 
    std::vector<const Box *> overlap_mapped_boxes;
    Box overlap(front().getDim());
@@ -926,7 +924,7 @@ void BoxContainer::intersectBoxes(
             overlap_mapped_boxes[i]->getBlockId();
          if (overlap_box_block_id != block_id) {
             Box overlap_box = *overlap_mapped_boxes[i];
-            grid_geometry->transformBox(overlap_box,
+            grid_geometry.transformBox(overlap_box,
                refinement_ratio,
                block_id,
                overlap_box_block_id);
@@ -1147,6 +1145,22 @@ void BoxContainer::order()
 }
 
 /*
+ ***********************************************************************
+ * Switch to unordered state.
+ ***********************************************************************
+ */
+void BoxContainer::unorder()
+{
+   if (d_ordered) {
+      d_set.clear();
+      d_ordered = false;
+      for (Iterator i(*this); i != end(); ++i) {
+         i->unlockId();
+      }
+   }
+}
+
+/*
  *************************************************************************
  * Erase methods
  *************************************************************************
@@ -1222,11 +1236,16 @@ int BoxContainer::getTotalSizeOfBoxes() const
 }
 
 bool BoxContainer::contains(
-   const Index& idx) const
+   const Index& idx,
+   const BlockId& block_id) const
 {
    for (ConstIterator i(*this); i != end(); ++i) {
-      if (i().contains(idx)) {
-         return true;
+      //TODO: Change this when BoxContainer can no longer accept invalid BlockId
+      if (i->getBlockId() == block_id ||
+          i->getBlockId() == BlockId::invalidId()) {
+         if (i().contains(idx)) {
+            return true;
+         }
       }
    }
    return false;
