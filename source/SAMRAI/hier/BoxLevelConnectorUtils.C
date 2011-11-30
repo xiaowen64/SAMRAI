@@ -672,6 +672,18 @@ void BoxLevelConnectorUtils::computeInternalOrExternalParts(
             << "which can lead to erroneous results.");
       }
    }
+
+   if ( !(nesting_width >= zero_vec) &&
+        (input_to_reference.getConnectorWidth() < IntVector::getOne(dim)) ) {
+      TBOX_ERROR(
+         "BoxLevelConnectorUtils::computeInternalOrExternalParts:" << caller
+                                                                   <<
+         ": error:\n"
+                                                                   <<
+         "nesting_width, " << nesting_width << ", has negative values,\n"
+         << "thus the width of input_to_reference, " << input_to_reference.getConnectorWidth() << ",\n"
+         << "must be at least 1.  Otherwise, correct results cannot be guaranteed.");
+   }
 #endif
 
    parts.initialize(input.getRefinementRatio(),

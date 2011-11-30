@@ -189,10 +189,11 @@ public:
     * @param[in] input_to_reference Overlap Connector from input to
     * reference BoxLevel.
     *
-    * @param[in] nesting_width Growth of the reference BoxLevel
-    * for the purpose of comparing to input.  Must be in resolution of
-    * input BoxLevel.  Must be either non-negative or
-    * non-positive but not mixed.
+    * @param[in] nesting_width Growth of the reference BoxLevel for
+    * the purpose of comparing to input.  Must be in resolution of
+    * input BoxLevel.  Must be either non-negative or non-positive but
+    * not mixed.  If any width is negative, then input_to_reference
+    * must have a Connector width of at least 1.
     *
     * @param[in] domain The domain representation, without periodic
     * images, in search tree form.  These boxes should be in the
@@ -236,10 +237,11 @@ public:
     * @param[in] input_to_reference Overlap Connector from input to
     * reference BoxLevel.
     *
-    * @param[in] nesting_width Growth of the reference BoxLevel
-    * for the purpose of comparing to input.  Must be in resolution of
-    * input BoxLevel.  Must be either non-negative or
-    * non-positive but not mixed.
+    * @param[in] nesting_width Growth of the reference BoxLevel for
+    * the purpose of comparing to input.  Must be in resolution of
+    * input BoxLevel.  Must be either non-negative or non-positive but
+    * not mixed.  If any width is negative, then input_to_reference
+    * must have a Connector width of at least 1.
     *
     * @param[in] domain The domain representation, without periodic
     * images, in search tree form.  These boxes should be in the
