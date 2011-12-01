@@ -692,9 +692,6 @@ public:
     * version of intersectBoxes is relatively fast.  The complement of
     * removeIntersection.
     *
-    * @param[in]  block_id  Assume all boxes in this BoxContainer belong in
-    * the index space specified this BlockId.
-    *
     * @param[in]  refinement_ratio  Assume all boxes in this BoxContainer
     * belong in this refefinement ratio.
     *
@@ -704,7 +701,6 @@ public:
     */
    void
    intersectBoxes(
-      const BlockId& block_id,
       const IntVector& refinement_ratio,
       const MultiblockBoxTree& keep,
       bool include_singularity_block_neighbors = false);

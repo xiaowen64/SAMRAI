@@ -892,7 +892,6 @@ void BoxContainer::intersectBoxes(
 }
 
 void BoxContainer::intersectBoxes(
-   const BlockId& block_id,
    const IntVector& refinement_ratio,
    const MultiblockBoxTree& keep,
    const bool include_singularity_block_neighbors)
@@ -915,17 +914,17 @@ void BoxContainer::intersectBoxes(
       const Box& tryme = *itr;
       keep.findOverlapBoxes(overlap_mapped_boxes,
          tryme,
-         block_id,
+         tryme.getBlockId(),
          refinement_ratio,
          include_singularity_block_neighbors);
       for (size_t i = 0; i < overlap_mapped_boxes.size(); ++i) {
          const BlockId& overlap_box_block_id =
             overlap_mapped_boxes[i]->getBlockId();
-         if (overlap_box_block_id != block_id) {
+         if (overlap_box_block_id != tryme.getBlockId()) {
             Box overlap_box = *overlap_mapped_boxes[i];
             grid_geometry.transformBox(overlap_box,
                refinement_ratio,
-               block_id,
+               tryme.getBlockId(),
                overlap_box_block_id);
             tryme.intersect(overlap_box, overlap);
             if (!overlap.empty()) {

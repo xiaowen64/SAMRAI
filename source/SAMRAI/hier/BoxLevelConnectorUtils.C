@@ -755,20 +755,14 @@ void BoxLevelConnectorUtils::computeInternalOrExternalParts(
          if (input.getRefinementRatio() == one_vec) {
             for (std::map<BlockId, BoxContainer>::iterator mi = reference_box_list.begin();
                  mi != reference_box_list.end(); ++mi) {
-               mi->second.intersectBoxes(
-                  mi->first,
-                  input.getRefinementRatio(),
-                  domain);
+               mi->second.intersectBoxes(input.getRefinementRatio(), domain);
             }
          } else {
             tbox::Pointer<MultiblockBoxTree> refined_domain =
                domain.createRefinedTree(input.getRefinementRatio());
             for (std::map<BlockId, BoxContainer>::iterator mi = reference_box_list.begin();
                  mi != reference_box_list.end(); ++mi) {
-               mi->second.intersectBoxes(
-                  mi->first,
-                  input.getRefinementRatio(),
-                  *refined_domain);
+               mi->second.intersectBoxes(input.getRefinementRatio(), *refined_domain);
             }
          }
 
@@ -865,7 +859,6 @@ void BoxLevelConnectorUtils::computeInternalOrExternalParts(
          t_compute_internal_parts_intersection->start();
          if (compute_overlaps) {
             parts_list.intersectBoxes(
-               input_mapped_box.getBlockId(),
                input.getRefinementRatio(),
                search_tree,
                true /* Count singularity neighbors */);
