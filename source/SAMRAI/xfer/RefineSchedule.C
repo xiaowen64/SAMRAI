@@ -3797,6 +3797,7 @@ void RefineSchedule::constructScheduleTransactions(
          }
          if (encon_nbr_choices.size() == 0) {
             transaction_dst_mapped_box.setEmpty();
+            transaction_dst_mapped_box.setBlockId(src_mapped_box.getBlockId());
          } else {
             int max_nbr_size = 0;
             for (hier::BoxContainer::Iterator en(encon_nbr_choices);
