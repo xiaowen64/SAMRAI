@@ -193,7 +193,8 @@ public:
     * the purpose of comparing to input.  Must be in resolution of
     * input BoxLevel.  Must be either non-negative or non-positive but
     * not mixed.  If any width is negative, then input_to_reference
-    * must have a Connector width of at least 1.
+    * must have a Connector width of at least 1.  Otherwise, an error
+    * is thrown (because correct results cannot be guaranteed).
     *
     * @param[in] domain The domain representation, without periodic
     * images, in search tree form.  These boxes should be in the
@@ -241,7 +242,8 @@ public:
     * the purpose of comparing to input.  Must be in resolution of
     * input BoxLevel.  Must be either non-negative or non-positive but
     * not mixed.  If any width is negative, then input_to_reference
-    * must have a Connector width of at least 1.
+    * must have a Connector width of at least 1.  Otherwise, an error
+    * is thrown (because correct results cannot be guaranteed).
     *
     * @param[in] domain The domain representation, without periodic
     * images, in search tree form.  These boxes should be in the
