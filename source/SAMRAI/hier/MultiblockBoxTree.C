@@ -56,12 +56,8 @@ MultiblockBoxTree::MultiblockBoxTree(
    std::map<BlockId, BoxContainer> boxes_by_block;
    for (BoxContainer::ConstIterator bi = boxes.begin();
         bi != boxes.end(); ++bi) {
-
-      TBOX_ASSERT((*bi).getId().isValid());
-      const BlockId& block_id = (*bi).getBlockId();
-      boxes_by_block[block_id].order();
-      boxes_by_block[block_id].insert(
-         boxes_by_block[block_id].end(), *bi);
+      TBOX_ASSERT(bi->getBlockId().isValid());
+      boxes_by_block[bi->getBlockId()].pushBack(*bi);
    }
 
    for (std::map<BlockId, BoxContainer>::iterator blocki = boxes_by_block.begin();
