@@ -998,13 +998,13 @@ void BoxContainer::burstBoxes(
       if (bursth(d) > solidh(d)) {
          Index newl = burstl;
          newl(d) = solidh(d) + 1;
-         pushBack(Box(newl, bursth));
+         pushBack(Box(Box(newl, bursth), LocalId::getInvalidId(), bursty.getOwnerRank(), bursty.getBlockId()));
          bursth(d) = solidh(d);
       }
       if (burstl(d) < solidl(d)) {
          Index newh = bursth;
          newh(d) = solidl(d) - 1;
-         pushBack(Box(burstl, newh));
+         pushBack(Box(Box(burstl, newh), LocalId::getInvalidId(), bursty.getOwnerRank(), bursty.getBlockId()));
          burstl(d) = solidl(d);
       }
    }
@@ -1043,14 +1043,14 @@ void BoxContainer::burstBoxes(
       if (bursth(d) > solidh(d)) {
          Index newl = burstl;
          newl(d) = solidh(d) + 1;
-         insertAfter(insertion_pt, Box(newl, bursth));
+         insertAfter(insertion_pt, Box(Box(newl, bursth), LocalId::getInvalidId(), bursty.getOwnerRank(), bursty.getBlockId()));
          bursth(d) = solidh(d);
          ++insertion_pt;
       }
       if (burstl(d) < solidl(d)) {
          Index newh = bursth;
          newh(d) = solidl(d) - 1;
-         insertAfter(insertion_pt, Box(burstl, newh));
+         insertAfter(insertion_pt, Box(Box(burstl, newh), LocalId::getInvalidId(), bursty.getOwnerRank(), bursty.getBlockId()));
          burstl(d) = solidl(d);
          ++insertion_pt;
       }
