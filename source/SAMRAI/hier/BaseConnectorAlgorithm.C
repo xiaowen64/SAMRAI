@@ -291,7 +291,7 @@ void BaseConnectorAlgorithm::unpackDiscoveryMessage(
       for (int iii = 0; iii < number_affected; ++iii) {
          const LocalId id_affected(*(ptr++));
          const BlockId block_id_affected(*(ptr++));
-         BoxId affected_nbrhd(id_affected, rank, block_id_affected);
+         BoxId affected_nbrhd(id_affected, rank);
          if (s_print_steps == 'y') {
             tbox::plog << " Removing " << box_gone
                        << " from nabr list for " << id_affected
@@ -362,7 +362,7 @@ void BaseConnectorAlgorithm::unpackDiscoveryMessage(
    for (int ii = 0; ii < n_new_base_boxes; ++ii) {
       const LocalId local_id(*(ptr++));
       const BlockId block_id(*(ptr++));
-      const BoxId new_base_box_id(local_id, rank, block_id);
+      const BoxId new_base_box_id(local_id, rank);
       const int n_new_head_nabrs_found = *(ptr++);
       // Add received neighbors to Box new_base_box_id.
       for (int j = 0; j < n_new_head_nabrs_found; ++j) {
@@ -380,7 +380,7 @@ void BaseConnectorAlgorithm::unpackDiscoveryMessage(
    for (int ii = 0; ii < n_new_head_boxes; ++ii) {
       const LocalId local_id(*(ptr++));
       const BlockId block_id(*(ptr++));
-      const BoxId new_head_box_id(local_id, rank, block_id);
+      const BoxId new_head_box_id(local_id, rank);
       const int n_new_base_nabrs_found = *(ptr++);
       // Add received neighbors to Box new_head_box_id.
       for (int j = 0; j < n_new_base_nabrs_found; ++j) {

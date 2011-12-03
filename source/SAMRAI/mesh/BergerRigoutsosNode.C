@@ -2731,7 +2731,7 @@ void BergerRigoutsosNode::shareNewNeighborhoodSetsWithOwners()
       int consumed = 0;
       while (ptr < buf.getPointer() + buf.size()) {
          const hier::LocalId new_local_id(*(ptr++));
-         hier::BoxId box_id(new_local_id, d_common->rank, d_block_id);
+         hier::BoxId box_id(new_local_id, d_common->rank);
          int n_new_relationships = *(ptr++);
 #ifdef DEBUG_CHECK_ASSERTIONS
          TBOX_ASSERT(d_common->new_to_tag->hasNeighborSet(box_id));

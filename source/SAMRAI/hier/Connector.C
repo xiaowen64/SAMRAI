@@ -448,7 +448,7 @@ void Connector::acquireRemoteNeighborhoods_pack(
       const NeighborSet& nabrs = (*ci).second;
 
       send_mesg[imesg++] = mapped_box_id.getLocalId().getValue();
-      send_mesg[imesg++] = mapped_box_id.getBlockId().getBlockValue();
+      send_mesg[imesg++] = -1;
       send_mesg[imesg++] = static_cast<int>(nabrs.size());
 
       for (NeighborSet::ConstIterator ni = nabrs.begin();
@@ -492,7 +492,7 @@ void Connector::acquireRemoteNeighborhoods_unpack(
             const LocalId local_id(*ptr++);
             const BlockId block_id(*ptr++);
             const int num_nabrs = (*ptr++);
-            const BoxId mapped_box_id(local_id, n, block_id);
+            const BoxId mapped_box_id(local_id, n);
 
             NeighborSet& nabrs = d_global_relationships[mapped_box_id];
             Box nabr(dim);
@@ -813,7 +813,6 @@ void Connector::initializeToLocalTranspose(
             if (getHead().hasBox(my_shifted_head_mapped_box)) {
                BoxId base_non_per_id(
                   my_base_mapped_box.getGlobalId(),
-                  my_base_mapped_box.getBlockId(),
                   PeriodicId::zero());
                d_relationships[base_non_per_id].insert(
                   my_shifted_head_mapped_box);
@@ -1297,7 +1296,6 @@ size_t Connector::checkTransposeCorrectness(
           * Key for find in NeighborhoodSet must be non-periodic.
           */
          BoxId non_per_nabr_id(nabr.getGlobalId(),
-                               nabr.getBlockId(),
                                PeriodicId::zero());
 
          const NeighborhoodSet::const_iterator cn =
@@ -1412,7 +1410,6 @@ size_t Connector::checkTransposeCorrectness(
              * Non-periodic BoxId needed for NeighborhoodSet::find()
              */
             BoxId base_non_per_id(base_mapped_box.getGlobalId(),
-                                  base_mapped_box.getBlockId(),
                                   PeriodicId::zero());
             NeighborhoodSet::const_iterator nabr_nabrs_ =
                d_relationships.find(base_non_per_id);

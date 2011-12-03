@@ -316,8 +316,7 @@ void FaceMultiblockTest::fillSingularityBoundaryConditions(
    const tbox::Dimension& dim = fill_box.getDim();
 
    const hier::BoxId& dst_mb_id = patch.getBox().getId();
-
-   const hier::BlockId& patch_blk_id = dst_mb_id.getBlockId();
+   const hier::BlockId& patch_blk_id = patch.getBox().getBlockId();
 
    const tbox::List<hier::GridGeometry::Neighbor>& neighbors =
       grid_geometry->getNeighbors(patch_blk_id);

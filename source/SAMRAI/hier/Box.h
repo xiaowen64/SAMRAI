@@ -155,8 +155,6 @@ public:
     * @param[in] dim
     *
     * @param[in] mapped_box_id
-    *
-    * @param[in] periodic_id
     */
    /*
     * TODO: Constructors initializing boxes are only used to construct

@@ -238,7 +238,7 @@ void GridGeometry::computeBoundaryBoxesOnLevel(
    for (PatchLevel::Iterator ip(&level); ip; ip++) {
       tbox::Pointer<Patch> patch = *ip;
       const BoxId& patch_id = patch->getBox().getId();
-      const int block_num = patch_id.getBlockId().getBlockValue();
+      const int block_num = patch->getBox().getBlockId().getBlockValue();
 
       if (patch->getPatchGeometry()->getTouchesRegularBoundary() ||
           do_all_patches) {

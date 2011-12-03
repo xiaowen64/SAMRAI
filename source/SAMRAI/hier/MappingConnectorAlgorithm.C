@@ -1017,7 +1017,7 @@ void MappingConnectorAlgorithm::privateModify_removeAndCache(
                   ++mesg[0];
                }
                mesg.insert(mesg.end(), old_gid_gone.getLocalId().getValue());
-               mesg.insert(mesg.end(), old_gid_gone.getBlockId().getBlockValue());
+               mesg.insert(mesg.end(), -1);
                int i_count = static_cast<int>(mesg.size());
                mesg.insert(mesg.end(), 0);
                do {

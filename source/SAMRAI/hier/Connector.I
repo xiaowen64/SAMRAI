@@ -89,7 +89,6 @@ bool Connector::hasNeighborSet(
    const NeighborhoodSet& relationships = d_parallel_state == BoxLevel::DISTRIBUTED ?
       d_relationships : d_global_relationships;
    BoxId non_per_id(mapped_box_id.getGlobalId(),
-                    mapped_box_id.getBlockId(),
                     PeriodicId::zero());
    NeighborhoodSet::const_iterator ei = relationships.find(non_per_id);
    return ei != relationships.end();
@@ -346,7 +345,6 @@ int Connector::numLocalNeighbors(
    TBOX_ASSERT(hasNeighborSet(box_id));
 
    BoxId non_per_id(box_id.getGlobalId(),
-                    box_id.getBlockId(),
                     PeriodicId::zero());
    return static_cast<int>(d_relationships.find(non_per_id)->second.size());
 }
@@ -451,7 +449,6 @@ Connector::ConstNeighborhoodIterator Connector::findLocal(
    const BoxId& box_id) const
 {
    BoxId non_per_id(box_id.getGlobalId(),
-                    box_id.getBlockId(),
                     PeriodicId::zero());
    return d_relationships.find(non_per_id);
 }
@@ -470,7 +467,6 @@ Connector::ConstNeighborhoodIterator Connector::find(
    const NeighborhoodSet& relationships = d_parallel_state == BoxLevel::DISTRIBUTED ?
       d_relationships : d_global_relationships;
    BoxId non_per_id(box_id.getGlobalId(),
-                    box_id.getBlockId(),
                     PeriodicId::zero());
    NeighborhoodSet::const_iterator ei = relationships.find(non_per_id);
    if (ei == relationships.end()) {

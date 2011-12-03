@@ -64,7 +64,7 @@ Box::Box(
    d_lo(other.d_lo),
    d_hi(other.d_hi),
    d_block_id(other.getBlockId()),
-   d_id(other.getLocalId(), other.getOwnerRank(), other.getBlockId(),
+   d_id(other.getLocalId(), other.getOwnerRank(),
         periodic_id),
    d_id_locked(false)
 {
@@ -200,7 +200,7 @@ void Box::initialize(
    if (!d_id_locked) {
       d_id.initialize(
          other.getLocalId(), other.getOwnerRank(),
-         other.getBlockId(), periodic_id);
+         periodic_id);
    } else {
       TBOX_ERROR("Attempted to change BoxId that is locked in an ordered BoxContainer.");
    }

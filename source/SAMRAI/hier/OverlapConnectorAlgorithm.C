@@ -1699,7 +1699,6 @@ void OverlapConnectorAlgorithm::privateBridge_findOverlapsForOneProcess(
                unshifted_base_mapped_box_id.initialize(
                   base_mapped_box.getLocalId(),
                   base_mapped_box.getOwnerRank(),
-                  base_mapped_box.getBlockId(),
                   PeriodicId::zero());
             }
             // Add found neighbors for base_mapped_box.

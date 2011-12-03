@@ -864,7 +864,7 @@ void PatchLevel::getFromDatabase(
          + "-patch_" + tbox::Utilities::patchToString(local_id.getValue())
          + "-block_"
          + tbox::Utilities::blockToString(
-            mapped_box_id.getBlockId().getBlockValue());
+            mapped_box.getBlockId().getBlockValue());
       if (!(database->isDatabase(patch_name))) {
          TBOX_ERROR("PatchLevel::getFromDatabase() error...\n"
             << "   patch name " << patch_name

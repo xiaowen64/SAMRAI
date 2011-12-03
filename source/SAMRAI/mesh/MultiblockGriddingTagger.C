@@ -132,7 +132,7 @@ void MultiblockGriddingTagger::fillSingularityBoundaryConditions(
 
    const hier::BoxId& dst_mb_id = patch.getBox().getId();
 
-   const hier::BlockId& patch_blk_id = dst_mb_id.getBlockId();
+   const hier::BlockId& patch_blk_id = patch.getBox().getBlockId();
 
    const tbox::Pointer<pdat::CellData<int> > tag_data =
       patch.getPatchData(d_buf_tag_indx);

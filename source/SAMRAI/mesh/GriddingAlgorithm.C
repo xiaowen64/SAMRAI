@@ -3667,7 +3667,6 @@ void GriddingAlgorithm::computeNestingViolator(
           * Non-periodic BoxId needed for NeighborhoodSet::find()
           */
          hier::BoxId cmb_non_per_id(cmb.getGlobalId(),
-                                    cmb.getBlockId(),
                                     hier::PeriodicId::zero());
          if (candidate_to_violator.hasNeighborSet(cmb_non_per_id)) {
             /*

@@ -16,7 +16,7 @@
 #include "SAMRAI/SAMRAI_config.h"
 
 #include "SAMRAI/hier/GlobalId.h"
-#include "SAMRAI/hier/BlockId.h"
+//#include "SAMRAI/hier/BlockId.h"
 #include "SAMRAI/hier/PeriodicId.h"
 
 namespace SAMRAI {
@@ -65,7 +65,7 @@ public:
    explicit BoxId(
       const LocalId& local_id,
       const int owner_rank,
-      const BlockId& block_id = BlockId::zero(),
+//      const BlockId& block_id = BlockId::zero(),
       const PeriodicId& periodic_id = PeriodicId::zero());
 
    /*!
@@ -79,7 +79,7 @@ public:
     */
    explicit BoxId(
       const GlobalId& id,
-      const BlockId& block_id = BlockId::zero(),
+//      const BlockId& block_id = BlockId::zero(),
       const PeriodicId& periodic_id = PeriodicId::zero());
 
    /*!
@@ -110,7 +110,7 @@ public:
    initialize(
       const LocalId& local_id,
       const int owner_rank,
-      const BlockId& block_id = BlockId::zero(),
+//      const BlockId& block_id = BlockId::zero(),
       const PeriodicId& periodic_id = PeriodicId::zero());
 
    /*!
@@ -135,8 +135,8 @@ public:
    /*!
     * @brief Access the BlockId.
     */
-   const BlockId&
-   getBlockId() const;
+//   const BlockId&
+//   getBlockId() const;
 
    /*!
     * @brief Access the PeriodicId.
@@ -265,7 +265,7 @@ public:
 private:
    GlobalId d_global_id;
 
-   BlockId d_block_id;
+//   BlockId d_block_id;
 
    PeriodicId d_periodic_id;
 };

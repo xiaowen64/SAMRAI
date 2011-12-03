@@ -455,7 +455,7 @@ CoarseFineBoundary::getBoundaries(
       TBOX_ERROR("The boundary boxes have not been computed.");
    }
 
-   BoxId mapped_box_id(global_id, block_id);
+   BoxId mapped_box_id(global_id);
    std::map<BoxId, PatchBoundaries>::const_iterator
       mi = d_boundary_boxes.find(mapped_box_id);
    TBOX_ASSERT(mi != d_boundary_boxes.end());
