@@ -864,7 +864,6 @@ void BoxLevelConnectorUtils::computeInternalOrExternalParts(
                true /* Count singularity neighbors */);
          } else {
             parts_list.removeIntersections(
-               input_mapped_box.getBlockId(),
                input.getRefinementRatio(),
                search_tree,
                true /* Count singularity neighbors */);
@@ -976,7 +975,6 @@ void BoxLevelConnectorUtils::computeBoxesAroundBoundary(
       const bool include_singularity_neighbors(false);
       box_list.unorder();
       box_list.removeIntersections(
-         block_id,
          refinement_ratio,
          reference_mapped_boxes_tree,
          include_singularity_neighbors);

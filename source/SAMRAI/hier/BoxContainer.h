@@ -608,10 +608,6 @@ public:
     * MultiblockBoxTree has an efficient overlap search method so this
     * version of removeIntersection is relatively fast.
     *
-    * @param[in] block_id  Assume all Boxes in this BoxContainer belong in
-    * the index space specified this BlockId.  A run-time error will occur
-    * if this is not so.
-    *
     * @param[in] refinement_ratio  Assume all boxes in this BoxContainer
     * belong in this refinement ratio.
     *
@@ -621,7 +617,6 @@ public:
     */
    void
    removeIntersections(
-      const BlockId& block_id,
       const IntVector& refinement_ratio,
       const MultiblockBoxTree& takeaway,
       const bool include_singularity_block_neighbors = false);

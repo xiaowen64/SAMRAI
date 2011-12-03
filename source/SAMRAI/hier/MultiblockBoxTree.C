@@ -392,12 +392,12 @@ void MultiblockBoxTree::findOverlapBoxes(
 void MultiblockBoxTree::findOverlapBoxes(
    std::vector<Box>& overlap_boxes,
    const Box& box,
-   const BlockId& block_id,
    const IntVector& refinement_ratio,
    bool include_singularity_block_neighbors) const
 {
    TBOX_DIM_ASSERT_CHECK_ARGS3(*d_grid_geometry, box, refinement_ratio);
 
+   const BlockId &block_id = box.getBlockId();
    TBOX_ASSERT(block_id.getBlockValue() >= 0 &&
       block_id.getBlockValue() < d_grid_geometry->getNumberBlocks());
 
@@ -454,12 +454,12 @@ void MultiblockBoxTree::findOverlapBoxes(
 void MultiblockBoxTree::findOverlapBoxes(
    std::vector<const Box *>& overlap_boxes,
    const Box& box,
-   const BlockId& block_id,
    const IntVector& refinement_ratio,
    bool include_singularity_block_neighbors) const
 {
    TBOX_DIM_ASSERT_CHECK_ARGS3(*d_grid_geometry, box, refinement_ratio);
 
+   const BlockId &block_id = box.getBlockId();
    TBOX_ASSERT(block_id.getBlockValue() >= 0 &&
       block_id.getBlockValue() < d_grid_geometry->getNumberBlocks());
 
@@ -516,12 +516,12 @@ void MultiblockBoxTree::findOverlapBoxes(
 void MultiblockBoxTree::findOverlapBoxes(
    BoxContainer& overlap_boxes,
    const Box& box,
-   const BlockId& block_id,
    const IntVector& refinement_ratio,
    bool include_singularity_block_neighbors) const
 {
    TBOX_DIM_ASSERT_CHECK_ARGS3(*d_grid_geometry, box, refinement_ratio);
 
+   const BlockId &block_id = box.getBlockId();
    TBOX_ASSERT(block_id.getBlockValue() >= 0 &&
       block_id.getBlockValue() < d_grid_geometry->getNumberBlocks());
 

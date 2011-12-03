@@ -864,7 +864,7 @@ int checkBalanceCorrectness(
    for (hier::BoxContainer::ConstIterator bi = globalized_prebalance_mapped_box_set.begin();
         bi != globalized_prebalance_mapped_box_set.end(); ++bi) {
       hier::BoxContainer box_container(*bi);
-      box_container.removeIntersections(bi->getBlockId(),
+      box_container.removeIntersections(
          prebalance.getRefinementRatio(),
          globalized_postbalance_mapped_box_tree);
       if (!box_container.isEmpty()) {
@@ -882,7 +882,7 @@ int checkBalanceCorrectness(
    for (hier::BoxContainer::ConstIterator bi = globalized_postbalance_mapped_box_set.begin();
         bi != globalized_postbalance_mapped_box_set.end(); ++bi) {
       hier::BoxContainer box_container(*bi);
-      box_container.removeIntersections(bi->getBlockId(),
+      box_container.removeIntersections(
          postbalance.getRefinementRatio(),
          globalized_prebalance_mapped_box_tree);
       if (!box_container.isEmpty()) {
