@@ -951,6 +951,11 @@ void GriddingAlgorithm::makeFinerLevel(
          t_reset_hier->stop();
          t_make_finer_create->stop();
       }
+      else {
+         delete tag_to_new;
+         delete new_to_tag;
+         delete new_to_new;
+      }
 
       d_base_ln = -1;
 
@@ -1367,6 +1372,9 @@ void GriddingAlgorithm::regridFinerLevel(
              && remove_old_fine_level) {
             d_hierarchy->removePatchLevel(new_ln);
          }
+
+         delete tag_to_new;
+         delete new_to_tag;
 
       } // if we are not re-regenerating level new_ln.
 
