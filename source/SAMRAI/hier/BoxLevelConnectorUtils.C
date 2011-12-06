@@ -642,6 +642,8 @@ void BoxLevelConnectorUtils::computeInternalOrExternalParts(
    const IntVector& zero_vec(IntVector::getZero(input.getDim()));
    const IntVector& one_vec(IntVector::getOne(dim));
 
+   const bool nonnegative_nesting_width = nesting_width >= zero_vec;
+
 #ifdef DEBUG_CHECK_ASSERTIONS
    const char* caller = internal_or_external == 'i' ?
       "computInternalParts" : "computeExternalparts";
@@ -659,30 +661,26 @@ void BoxLevelConnectorUtils::computeInternalOrExternalParts(
          "and negative values.");
    }
 
-   if (nesting_width >= zero_vec) {
-      if (!(input_to_reference.getConnectorWidth() >=
-            nesting_width)) {
-         TBOX_ERROR(
-            "BoxLevelConnectorUtils::computeInternalOrExternalParts:"
-            << caller << ": error:\n"
-            << "nesting_width "
-            << nesting_width << " exceeds\n"
-            << "ghost cell width " << input_to_reference.getConnectorWidth()
-            << ",\n"
-            << "which can lead to erroneous results.");
-      }
-   }
-
-   if ( !(nesting_width >= zero_vec) &&
-        (input_to_reference.getConnectorWidth() < IntVector::getOne(dim)) ) {
+   if ( nesting_width != zero_vec &&
+           input_to_reference.getConnectorWidth() < one_vec ) {
       TBOX_ERROR(
          "BoxLevelConnectorUtils::computeInternalOrExternalParts:" << caller
                                                                    <<
          ": error:\n"
-                                                                   <<
-         "nesting_width, " << nesting_width << ", has negative values,\n"
-         << "thus the width of input_to_reference, " << input_to_reference.getConnectorWidth() << ",\n"
-         << "must be at least 1.  Otherwise, correct results cannot be guaranteed.");
+         << "If nesting width (" << nesting_width << " is non-zero,\n"
+         << "width of input_to_reference, " << input_to_reference.getConnectorWidth() << ",\n"
+         << "must be at least 1.  Otherwise, correct results cannot be guaranteed."
+         );
+   }
+
+   if ( !( input_to_reference.getConnectorWidth() >=
+          (nonnegative_nesting_width ? nesting_width : -nesting_width)) ) {
+      TBOX_ERROR(
+         "BoxLevelConnectorUtils::computeInternalOrExternalParts:"
+         << caller << ": error:\n"
+         << "input_to_reference width, " << input_to_reference.getConnectorWidth()
+         << ",\nmust be greater than the absolute value of nesting_width, "
+         << nesting_width << ",\nto avoid erroneous results.");
    }
 #endif
 
@@ -980,6 +978,7 @@ void BoxLevelConnectorUtils::computeBoxesAroundBoundary(
          include_singularity_neighbors);
    }
    // ... boundary is now ( (R^1) \ R )
+
 
    if (grid_geometry->getNumberOfBlockSingularities() > 0) {
       /*

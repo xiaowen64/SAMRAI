@@ -80,6 +80,11 @@ void GriddingAlgorithmConnectorWidthRequestor::computeRequiredConnectorWidths(
          hier::IntVector(dim, patch_hierarchy.getProperNestingBuffer(ln + 1)),
          max_stencil_width,
          max_ghost_width);
+
+      /*
+       * Must be big enough for GriddingAlgorithm::computeProperNestingData().
+       */
+      self_connector_widths[ln].max(hier::IntVector(dim,patch_hierarchy.getProperNestingBuffer(ln)));
    }
 }
 

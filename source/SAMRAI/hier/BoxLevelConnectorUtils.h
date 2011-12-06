@@ -187,7 +187,8 @@ public:
     * discarded.
     *
     * @param[in] input_to_reference Overlap Connector from input to
-    * reference BoxLevel.
+    * reference BoxLevel.  The width of input_to_reference must be
+    * at least one and at least the absolute value of nesting_width.
     *
     * @param[in] nesting_width Growth of the reference BoxLevel for
     * the purpose of comparing to input.  Must be in resolution of
@@ -236,7 +237,8 @@ public:
     * discarded.
     *
     * @param[in] input_to_reference Overlap Connector from input to
-    * reference BoxLevel.
+    * reference BoxLevel.  The width of input_to_reference must be
+    * at least one and at least the absolute value of nesting_width.
     *
     * @param[in] nesting_width Growth of the reference BoxLevel for
     * the purpose of comparing to input.  Must be in resolution of

@@ -3710,6 +3710,10 @@ void GriddingAlgorithm::computeProperNestingData(
       const hier::Connector& self_connector =
          d_hierarchy->getConnector(ln, ln);
 
+      // This assert shoud pass due to GriddingAlgorithmConnectorWidthRequestor.
+      TBOX_ASSERT( self_connector.getConnectorWidth() >=
+                   hier::IntVector(d_dim, -d_hierarchy->getProperNestingBuffer(ln)) );
+
       edge_utils.computeExternalParts(
          proper_nesting_complement,
          d_to_nesting_complement[ln],
