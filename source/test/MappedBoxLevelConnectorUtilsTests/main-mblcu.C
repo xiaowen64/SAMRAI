@@ -760,6 +760,9 @@ void shrinkBoxLevel(
       }
    }
 
+#if 1
+   hier::BoxContainer boundary_boxes = visible_mapped_boxes;
+#else
    std::map<hier::BlockId, hier::BoxContainer> boundary_boxes;
    for (hier::BoxContainer::ConstIterator si = visible_mapped_boxes.begin();
         si != visible_mapped_boxes.end(); ++si) {
@@ -777,6 +780,7 @@ void shrinkBoxLevel(
       }
 
    }
+#endif
 
    hier::MultiblockBoxTree visible_box_tree(
       *grid_geometry,
@@ -789,6 +793,10 @@ void shrinkBoxLevel(
       big_mapped_box_level.getRefinementRatio(),
       big_mapped_box_level.getGridGeometry());
 
+#if 1
+   tbox::plog << "shrinkBoxLevel: Boundary plain boxes:\n"
+              << boundary_boxes.format("\n", 2);
+#else
    tbox::plog << "shrinkBoxLevel: Boundary plain boxes:\n";
    for (std::map<hier::BlockId, hier::BoxContainer>::iterator mi = boundary_boxes.begin();
         mi != boundary_boxes.end(); ++mi) {
@@ -798,6 +806,7 @@ void shrinkBoxLevel(
          tbox::plog << "  " << *bi << '\t' << (*bi).numberCells() << '\n';
       }
    }
+#endif
 
    /*
     * Construct the complement of the small_mapped_box_level by
@@ -807,6 +816,16 @@ void shrinkBoxLevel(
    hier::BoxContainer complement_mapped_boxes;
 
    hier::LocalId last_local_id(-1);
+#if 1
+   for (hier::BoxContainer::ConstIterator bi = boundary_boxes.begin();
+        bi != boundary_boxes.end(); ++bi) {
+      hier::Box box(*bi);
+      box.grow(shrinkage);
+      hier::Box complement_mapped_box(
+         box, ++last_local_id, local_rank, box.getBlockId());
+      complement_mapped_boxes.insert(complement_mapped_box);
+   }
+#else
    for (std::map<hier::BlockId, hier::BoxContainer>::iterator mi = boundary_boxes.begin();
         mi != boundary_boxes.end(); ++mi) {
 
@@ -816,6 +835,7 @@ void shrinkBoxLevel(
       for (hier::BoxContainer::Iterator bi(boundary_for_block);
            bi != boundary_for_block.end(); bi++) {
          hier::Box box(*bi);
+         assert( box.getBlockId() == block_id );
          box.grow(shrinkage);
          hier::Box complement_mapped_box(
             box, ++last_local_id, local_rank, block_id);
@@ -823,6 +843,7 @@ void shrinkBoxLevel(
       }
 
    }
+#endif
 
    const hier::MultiblockBoxTree complement_mapped_box_tree(
       *grid_geometry,

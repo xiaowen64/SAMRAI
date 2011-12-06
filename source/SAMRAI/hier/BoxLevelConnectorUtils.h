@@ -280,7 +280,7 @@ public:
     */
    void
    computeBoxesAroundBoundary(
-      std::map<BlockId, BoxContainer>& boundary,
+      BoxContainer& boundary,
       const IntVector& refinement_ratio,
       const tbox::ConstPointer<GridGeometry>& grid_geometry,
       const bool simplify_boundary_boxes = true) const;

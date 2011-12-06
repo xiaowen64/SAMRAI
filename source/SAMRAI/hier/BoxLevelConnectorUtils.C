@@ -690,7 +690,8 @@ void BoxLevelConnectorUtils::computeInternalOrExternalParts(
     * store these boxes in a NeighborSet in order to remove duplicate entries.
     * Then we move them into BoxContainer for each block for box manipulation.
     */
-   std::map<BlockId, BoxContainer> reference_box_list;
+   BoxContainer reference_box_list;
+   reference_box_list.order();
    input_to_reference.getLocalNeighbors(reference_box_list);
 
    /*
@@ -698,17 +699,10 @@ void BoxLevelConnectorUtils::computeInternalOrExternalParts(
     * (for intersection checks).
     */
    if (input_to_reference.getRatio() != IntVector::getOne(dim)) {
-
       if (input_to_reference.getHeadCoarserFlag()) {
-         for (std::map<BlockId, BoxContainer>::iterator mi = reference_box_list.begin();
-              mi != reference_box_list.end(); ++mi) {
-            mi->second.refine(input_to_reference.getRatio());
-         }
+         reference_box_list.refine(input_to_reference.getRatio());
       } else {
-         for (std::map<BlockId, BoxContainer>::iterator mi = reference_box_list.begin();
-              mi != reference_box_list.end(); ++mi) {
-            mi->second.coarsen(input_to_reference.getRatio());
-         }
+         reference_box_list.coarsen(input_to_reference.getRatio());
       }
    }
 
@@ -728,11 +722,9 @@ void BoxLevelConnectorUtils::computeInternalOrExternalParts(
    if (search_tree_represents_internal) {
 
       if (!(nesting_width == zero_vec)) {
-         for (std::map<BlockId, BoxContainer>::iterator mi = reference_box_list.begin();
-              mi != reference_box_list.end(); ++mi) {
-            mi->second.grow(nesting_width);
-         }
+         reference_box_list.grow(nesting_width);
       }
+
    } else {
 
       /*
@@ -749,26 +741,17 @@ void BoxLevelConnectorUtils::computeInternalOrExternalParts(
       if (domain.isInitialized()) {
 
          if (input.getRefinementRatio() == one_vec) {
-            for (std::map<BlockId, BoxContainer>::iterator mi = reference_box_list.begin();
-                 mi != reference_box_list.end(); ++mi) {
-               mi->second.intersectBoxes(input.getRefinementRatio(), domain);
-            }
+            reference_box_list.intersectBoxes(input.getRefinementRatio(), domain);
          } else {
             tbox::Pointer<MultiblockBoxTree> refined_domain =
                domain.createRefinedTree(input.getRefinementRatio());
-            for (std::map<BlockId, BoxContainer>::iterator mi = reference_box_list.begin();
-                 mi != reference_box_list.end(); ++mi) {
-               mi->second.intersectBoxes(input.getRefinementRatio(), *refined_domain);
-            }
+            reference_box_list.intersectBoxes(input.getRefinementRatio(), *refined_domain);
          }
 
       }
       // ... reference_boundary is now ( ( (R^1) \ R ) <intersection> O )
 
-      for (std::map<BlockId, BoxContainer>::iterator mi = reference_box_list.begin();
-           mi != reference_box_list.end(); ++mi) {
-         mi->second.grow(-nesting_width);
-      }
+      reference_box_list.grow(-nesting_width);
       // ... reference_boundary is now ( ( (R^1) \ R ) <intersection> O )^(-g)
    } // search_tree_represents_internal == false
 
@@ -943,40 +926,48 @@ void BoxLevelConnectorUtils::computeInternalOrExternalParts(
  *************************************************************************
  */
 void BoxLevelConnectorUtils::computeBoxesAroundBoundary(
-   std::map<BlockId, BoxContainer>& boundary,
+   BoxContainer& boundary,
    const IntVector& refinement_ratio,
    const tbox::ConstPointer<GridGeometry>& grid_geometry,
    const bool simplify_boundary_boxes) const
 {
+
    const tbox::Dimension& dim(grid_geometry->getDim());
    const IntVector& one_vec(IntVector::getOne(dim));
 
    MultiblockBoxTree reference_mapped_boxes_tree(
       *grid_geometry,
       boundary);
-   // ... boundary is now R
 
-   for (std::map<BlockId, BoxContainer>::iterator mi = boundary.begin();
-        mi != boundary.end(); ++mi) {
-      mi->second.grow(one_vec);
-   }
+   // Boundary starts as R
+
+   boundary.grow(one_vec);
    // ... boundary is now (R^1)
-   for (std::map<BlockId, BoxContainer>::iterator mi = boundary.begin();
-        mi != boundary.end(); ++mi) {
-      const BlockId& block_id(mi->first);
-      BoxContainer& box_list(mi->second);
-      /*
-       * Leave boundary boxes in singularity neighbor blocks.
-       * These are specially handled in the following if-block.
-       */
-      const bool include_singularity_neighbors(false);
-      box_list.unorder();
-      box_list.removeIntersections(
-         refinement_ratio,
-         reference_mapped_boxes_tree,
-         include_singularity_neighbors);
-   }
+
+   /*
+    * Remove R from R^1, leaving alone boundary boxes in singularity
+    * neighbor blocks.  These are specially handled in the following
+    * if-block.
+    */
+   boundary.unorder();
+   boundary.removeIntersections(
+      refinement_ratio,
+      reference_mapped_boxes_tree,
+      false /* excludes singularity neighbors */);
    // ... boundary is now ( (R^1) \ R )
+
+
+   /*
+    * Separate boundary into containers for individual blocks required
+    * by the block_id loop.  At the end of each block_id loop, stuff
+    * the results for block_id back into boundary.
+    */
+   std::map<BlockId, BoxContainer> boundary_by_blocks;
+   for (BoxContainer::ConstIterator bi = boundary.begin();
+        bi != boundary.end(); ++bi) {
+      boundary_by_blocks[bi->getBlockId()].pushBack(*bi);
+   }
+   boundary.clear();
 
 
    if (grid_geometry->getNumberOfBlockSingularities() > 0) {
@@ -1012,17 +1003,8 @@ void BoxLevelConnectorUtils::computeBoxesAroundBoundary(
        * so we remove these parts of the boundary.
        */
 
-      //std::set<BlockId> blocks_with_mapped_boxes;
-      //for ( std::vector<Box>::const_iterator bi=mapped_boxes.begin();
-      //      bi!=mapped_boxes.end(); ++bi ) {
-      //   blocks_with_mapped_boxes.insert(bi->getBlockId());
-      //}
-      //   const std::vector<int> &singularity_indices = grid_geometry->getSingularityIndices(block_num);
-
-      //for ( std::set<BlockId>::const_iterator bi=blocks_with_mapped_boxes.begin();
-      //      bi!=blocks_with_mapped_boxes.end(); ++bi ) {
-      for (std::map<BlockId, BoxContainer>::iterator bi = boundary.begin();
-           bi != boundary.end(); ++bi) {
+      for (std::map<BlockId, BoxContainer>::iterator bi = boundary_by_blocks.begin();
+           bi != boundary_by_blocks.end(); ++bi) {
 
          const BlockId& block_id(bi->first);
 
@@ -1052,7 +1034,6 @@ void BoxLevelConnectorUtils::computeBoxesAroundBoundary(
             if (refinement_ratio != one_vec) {
                reduced_connectivity_singularity_boxes.refine(refinement_ratio);
             }
-            //boundary[block_id].removeIntersections(reduced_connectivity_singularity_boxes);
             bi->second.removeIntersections(
                reduced_connectivity_singularity_boxes);
          }
@@ -1094,28 +1075,33 @@ void BoxLevelConnectorUtils::computeBoxesAroundBoundary(
             }
          }
 
-         //boundary[block_id].removeIntersections(singularity_boxes);
          bi->second.removeIntersections(singularity_boxes);
 
       } // for std::map<BlockId, ...
+
    } // grid_geometry->getNumberOfBlockSingularities() > 0
 
    if (simplify_boundary_boxes) {
-      for (std::map<BlockId, BoxContainer>::iterator mi = boundary.begin();
-           mi != boundary.end(); ++mi) {
+      for (std::map<BlockId, BoxContainer>::iterator mi = boundary_by_blocks.begin();
+           mi != boundary_by_blocks.end(); ++mi) {
          mi->second.simplify();
       }
    }
 
    // Set correct block ids.
-   for (std::map<BlockId, BoxContainer>::iterator bi = boundary.begin();
-        bi != boundary.end(); ++bi) {
+   for (std::map<BlockId, BoxContainer>::iterator bi = boundary_by_blocks.begin();
+        bi != boundary_by_blocks.end(); ++bi) {
       const BlockId& block_id(bi->first);
       BoxContainer &boxes(bi->second);
       for ( BoxContainer::Iterator bj=boxes.begin(); bj!=boxes.end(); ++bj ) {
          bj->getId() = BoxId( bj->getLocalId(), bj->getOwnerRank(),
                               block_id, bj->getPeriodicId() );
       }
+   }
+
+   for (std::map<BlockId, BoxContainer>::iterator bi = boundary_by_blocks.begin();
+        bi != boundary_by_blocks.end(); ++bi) {
+      boundary.spliceBack(bi->second);
    }
 
 }
