@@ -644,7 +644,6 @@ void BoxLevelConnectorUtils::computeInternalOrExternalParts(
 
    const bool nonnegative_nesting_width = nesting_width >= zero_vec;
 
-#ifdef DEBUG_CHECK_ASSERTIONS
    const char* caller = internal_or_external == 'i' ?
       "computInternalParts" : "computeExternalparts";
 
@@ -682,7 +681,6 @@ void BoxLevelConnectorUtils::computeInternalOrExternalParts(
          << ",\nmust be greater than the absolute value of nesting_width, "
          << nesting_width << ",\nto avoid erroneous results.");
    }
-#endif
 
    parts.initialize(input.getRefinementRatio(),
       input.getGridGeometry(), input.getMPI());
