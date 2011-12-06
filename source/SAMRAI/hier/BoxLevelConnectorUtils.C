@@ -885,6 +885,7 @@ void BoxLevelConnectorUtils::computeInternalOrExternalParts(
 
             input_to_parts.makeEmptyLocalNeighborhood(
                input_mapped_box.getId());
+            parts_list.simplify();
             for (BoxContainer::Iterator bi(parts_list);
                  bi != parts_list.end(); ++bi) {
                const Box
