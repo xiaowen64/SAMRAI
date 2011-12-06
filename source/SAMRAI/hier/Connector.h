@@ -13,6 +13,7 @@
 #include "SAMRAI/SAMRAI_config.h"
 
 #include "SAMRAI/hier/BoxLevel.h"
+#include "SAMRAI/hier/BoxContainerIterator.h"
 #include "SAMRAI/hier/NeighborhoodSet.h"
 #include "SAMRAI/tbox/Timer.h"
 
