@@ -13,7 +13,7 @@
 Main {
    dim = 2
 
-   base_name = "small_front.treelb.2d"
+   base_name = "huge_front.treelb.2d"
    log_all_nodes = TRUE
 
    // Balancer types: TreeLoadBalancer, ChopAndPackLoadBalancer
@@ -22,13 +22,13 @@ Main {
    /*
      Specify domain as a box array in the reference index space.
    */
-   domain_boxes = [(0,0),(99,49)]
+   domain_boxes = [(0,0),(199,199)]
 
    /*
      Specify physical domain box.
    */
    xlo = 0.0, 0.0
-   xhi = 2.0, 1.0
+   xhi = 4.0, 4.0
 
    /*
      Specify number of levels (1, 2 or 3).
@@ -42,7 +42,7 @@ Main {
 
      If omitted, the L0 layer is the same as the domain.
    */
-   L0_boxes = [(0,0),(99,49)]
+   // L0_boxes = [(0,0),(199,199)]
 
    /*
      If L0 is not contained in domain, you can use this flag
@@ -85,7 +85,7 @@ Main {
       tag_buffer = 8, 8
       SinusoidalFrontTagger {
          init_disp = 1.0, 1.0, 1.0
-         period = 8.0, 4.0, 4.0
+         period = 2.0, 4.0, 4.0
          amplitude = 0.5
       }
       BergerRigoutsos {
