@@ -17,6 +17,7 @@
 #include "SAMRAI/hier/BoxLevelStatistics.h"
 #include "SAMRAI/hier/IntVector.h"
 #include "SAMRAI/geom/CartesianGridGeometry.h"
+#include "SAMRAI/geom/CartesianPatchGeometry.h"
 #include "SAMRAI/pdat/CellData.h"
 #include "SAMRAI/pdat/CellVariable.h"
 #include "SAMRAI/pdat/NodeData.h"
@@ -38,6 +39,7 @@
 #include <vector>
 
 #include "DerivedVisOwnerData.h"
+#include "SinusoidalFrontTagger.h"
 
 using namespace SAMRAI;
 using namespace tbox;
@@ -62,6 +64,17 @@ generatePrebalanceByUserBoxes(
 
 void
 generatePrebalanceByUserShells(
+   const tbox::Pointer<tbox::Database>& database,
+   const tbox::Pointer<hier::PatchHierarchy>& hierarchy,
+   const hier::IntVector& min_size,
+   const hier::IntVector& connector_width,
+   hier::BoxLevel& L1,
+   const hier::BoxLevel& L0,
+   hier::Connector& L0_to_L1,
+   hier::Connector& L1_to_L0);
+
+void
+generatePrebalanceBySinusoidalFront(
    const tbox::Pointer<tbox::Database>& database,
    const tbox::Pointer<hier::PatchHierarchy>& hierarchy,
    const hier::IntVector& min_size,
@@ -265,6 +278,7 @@ int main(
       /*
        * Set up the domain from input.
        */
+
       hier::BoxContainer input_boxes(main_db->getDatabaseBoxArray("domain_boxes"));
 
       hier::BoxContainer domain_boxes;
@@ -274,6 +288,19 @@ int main(
          domain_boxes.pushBack(hier::Box(*itr, local_id++, 0));
       }
 
+      std::vector<double> xlo(dim.getValue());
+      std::vector<double> xhi(dim.getValue());
+      for (int i = 0; i < dim.getValue(); ++i) {
+         xlo[i] = 0.0;
+         xhi[i] = 1.0;
+      }
+      if (main_db->isDouble("xlo")) {
+         main_db->getDoubleArray("xlo", &xlo[0], dim.getValue());
+      }
+      if (main_db->isDouble("xhi")) {
+         main_db->getDoubleArray("xhi", &xhi[0], dim.getValue());
+      }
+
 
 
       /*
@@ -281,12 +308,6 @@ int main(
        * interface and visit writer.
        */
 
-      std::vector<double> xlo(dim.getValue());
-      std::vector<double> xhi(dim.getValue());
-      for (int i = 0; i < dim.getValue(); ++i) {
-         xlo[i] = 0.0;
-         xhi[i] = 1.0;
-      }
       tbox::Pointer<geom::CartesianGridGeometry> grid_geometry(
          new geom::CartesianGridGeometry(
             "GridGeometry",
@@ -467,6 +488,16 @@ int main(
          } else if (L1_box_gen_method == "PrebalanceByUserShells") {
             generatePrebalanceByUserShells(
                main_db->getDatabaseWithDefault("PrebalanceByUserShells", tbox::Pointer<Database>(NULL)),
+               hierarchy,
+               min_size,
+               ghost_cell_width,
+               L1,
+               L0,
+               L0_to_L1,
+               L1_to_L0);
+         } else if (L1_box_gen_method == "PrebalanceBySinusoidalFront") {
+            generatePrebalanceBySinusoidalFront(
+               main_db->getDatabaseWithDefault("PrebalanceBySinusoidalFront", tbox::Pointer<Database>(NULL)),
                hierarchy,
                min_size,
                ghost_cell_width,
@@ -978,59 +1009,54 @@ void generatePrebalanceByShrinkingLevel(
    const tbox::Pointer<hier::PatchHierarchy>& hierarchy,
    const hier::IntVector& min_size,
    const hier::IntVector& connector_width,
-   hier::BoxLevel& L2,
-   const hier::BoxLevel& L1,
-   hier::Connector& L1_to_L2,
-   hier::Connector& L2_to_L1)
+   hier::BoxLevel& L1,
+   const hier::BoxLevel& L0,
+   hier::Connector& L0_to_L1,
+   hier::Connector& L1_to_L0)
 {
 
    const tbox::Dimension dim(hierarchy->getDim());
+   const hier::IntVector &zero_vec(hier::IntVector::getZero(dim));
+   const hier::IntVector &one_vec(hier::IntVector::getOne(dim));
 
-   tbox::Pointer<geom::CartesianGridGeometry> grid_geometry =
-      hierarchy->getGridGeometry();
+   /*
+    * Starting at shell origin, tag cells with centroids
+    * at radii[0]<r<radii[1], radii[2]<r<radii[3], and so on.
+    */
+   tbox::Array<double> radii;
+   double efficiency_tol = 0.75;
+   double combine_tol = 0.75;
 
-   // Parameters set by database, with defaults.
-   double efficiency_tol = 1.00;
-   double combine_tol = 1.00;
-   hier::IntVector shrink_width(dim, 2);
+   std::vector<double> r0(dim.getValue());
+   for (int d = 0; d < dim.getValue(); ++d) r0[d] = 0;
+
    tbox::Pointer<tbox::Database> abr_db;
-
    if (database) {
-
       efficiency_tol = database->getDoubleWithDefault("efficiency_tol",
             efficiency_tol);
-
       combine_tol = database->getDoubleWithDefault("combine_tol", combine_tol);
-
+      if (database->isDouble("r0")) {
+         database->getDoubleArray("r0", &r0[0], dim.getValue());
+      }
+      if (database->isDouble("radii")) {
+         radii = database->getDoubleArray("radii");
+      }
       abr_db = database->getDatabaseWithDefault("BergerRigoutsos", abr_db);
-
-      database->getIntegerArray("shrink_width", &shrink_width[0], dim.getValue());
+      TBOX_ASSERT(radii.size() % 2 == 0);
    }
-
-
-   hier::BoxLevel L1tags(dim);
-   hier::Connector L1_to_L1tags;
-   const hier::Connector &L1_to_L1 =
-      L1.getPersistentOverlapConnectors().findOrCreateConnector(
-         L1,
-         shrink_width );
-
-   hier::BoxLevelConnectorUtils blcu;
-   blcu.computeInternalParts( L1tags,
-                              L1_to_L1tags,
-                              L1_to_L1,
-                              -shrink_width,
-                              grid_geometry->getDomainSearchTree() );
-   tbox::plog << "L1_to_L1tags:\n" << L1_to_L1tags.format("L1->L1tags: ", 2);
-
 
    const int tag_val = 1;
 
    hier::VariableDatabase* vdb =
       hier::VariableDatabase::getDatabase();
+   tbox::Pointer<geom::CartesianGridGeometry> grid_geometry =
+      hierarchy->getGridGeometry();
+
+   const tbox::ConstPointer<hier::BoxLevel>
+   L0_ptr(&L0, false);
 
    tbox::Pointer<hier::PatchLevel> tag_level(
-      new hier::PatchLevel(L1,
+      new hier::PatchLevel(L0,
          grid_geometry,
          vdb->getPatchDescriptor()));
 
@@ -1047,28 +1073,189 @@ void generatePrebalanceByShrinkingLevel(
 
    tag_level->allocatePatchData(tag_id);
 
+   const double* xlo = grid_geometry->getXLower();
+   const double* h = grid_geometry->getDx();
+   std::vector<double> r(dim.getValue());
    for (hier::PatchLevel::Iterator pi(tag_level); pi; pi++) {
-
       tbox::Pointer<hier::Patch> patch = *pi;
+
+      pdat::NodeData<double> node_tag_data(patch->getBox(), 1, zero_vec);
+      for (pdat::NodeData<int>::Iterator ni(node_tag_data.getGhostBox());
+           ni; ni++) {
+         const pdat::NodeIndex& idx = *ni;
+         double rr = 0;
+         for (int d = 0; d < dim.getValue(); ++d) {
+            r[d] = xlo[d] + h[d] * idx(d) - r0[d];
+            rr += r[d] * r[d];
+         }
+         rr = sqrt(rr);
+         for (int i = 0; i < radii.size(); i += 2) {
+            if (radii[i] < rr && rr < radii[i + 1]) {
+               (node_tag_data)(idx) = tag_val;
+               break;
+            }
+         }
+      }
+
       tbox::Pointer<pdat::CellData<int> > tag_data = patch->getPatchData(tag_id);
 
       tag_data->getArrayData().fillAll(0);
 
-      if ( !L1_to_L1tags.hasNeighborSet(patch->getBox().getId()) ) {
-         tag_data->getArrayData().fillAll(1);
-      }
-      else {
-         hier::Connector::ConstNeighborhoodIterator ni =
-            L1_to_L1tags.find(patch->getBox().getId());
+      for (pdat::CellData<int>::Iterator ci(tag_data->getGhostBox());
+           ci; ci++) {
+         const pdat::CellIndex& cid = *ci;
 
-         for ( hier::Connector::ConstNeighborIterator na = L1_to_L1tags.begin(ni);
-               na != L1_to_L1tags.end(ni); ++na ) {
-
-            const hier::Box &tag_box = *na;
-            tag_data->getArrayData().fillAll(1, tag_box);
-
+         // Loop through nodes of cell cid.  Tag cell if node is tagged.
+         const hier::Box cell_box(cid,cid);
+         for ( pdat::NodeIterator node_itr(cell_box); node_itr; node_itr++ ) {
+            if ( node_tag_data(*node_itr) == tag_val ) {
+               (*tag_data)(cid) = tag_val;
+               break;
+            }
          }
       }
+
+   }
+
+   mesh::BergerRigoutsos abr(dim, abr_db);
+   abr.setMPI(L0.getMPI());
+   abr.findBoxesContainingTags(
+      L1,
+      L0_to_L1,
+      L1_to_L0,
+      tag_level,
+      tag_id,
+      tag_val,
+      L0.getGlobalBoundingBox(0),
+      min_size,
+      efficiency_tol,
+      combine_tol,
+      connector_width,
+      hier::BlockId::zero());
+
+   /*
+    * The clustering step generated Connectors to/from the temporary
+    * tag_level->getBoxLevel(), which is not the same as the
+    * L0 BoxLevel.  We need to reset the Connectors to use
+    * the L0 instead.
+    */
+   L0_to_L1.setBase(L0);
+   L0_to_L1.setHead(L1, true);
+   L1_to_L0.setBase(L1);
+   L1_to_L0.setHead(L0, true);
+
+
+   /*
+    * Make L1 nest inside L0 by one cell.
+    */
+   hier::BoxLevel L1nested(dim);
+   hier::Connector L1_to_L1nested;
+   hier::BoxLevelConnectorUtils blcu;
+   blcu.computeInternalParts( L1nested,
+                              L1_to_L1nested,
+                              L1_to_L0,
+                              -one_vec,
+                              grid_geometry->getDomainSearchTree() );
+   hier::MappingConnectorAlgorithm mca;
+   mca.modify( L0_to_L1,
+               L1_to_L0,
+               L1_to_L1nested,
+               &L1,
+               &L1nested );
+}
+
+/*
+ ***********************************************************************
+ ***********************************************************************
+ */
+void generatePrebalanceBySinusoidalFront(
+   const tbox::Pointer<tbox::Database>& database,
+   const tbox::Pointer<hier::PatchHierarchy>& hierarchy,
+   const hier::IntVector& min_size,
+   const hier::IntVector& connector_width,
+   hier::BoxLevel& L2,
+   const hier::BoxLevel& L1,
+   hier::Connector& L1_to_L2,
+   hier::Connector& L2_to_L1)
+{
+
+   const tbox::Dimension dim(hierarchy->getDim());
+   const hier::IntVector &zero_vec = hier::IntVector::getZero(dim);
+
+   tbox::Pointer<geom::CartesianGridGeometry> grid_geometry =
+      hierarchy->getGridGeometry();
+
+   // Parameters set by database, with defaults.
+   double efficiency_tol = 0.70;
+   double combine_tol = 0.70;
+   hier::IntVector nesting_width(dim, 2);
+   tbox::Pointer<tbox::Database> abr_db; // BergerRigoutsos database.
+   tbox::Pointer<tbox::Database> sft_db; // SinusoidalFrontTagger database.
+
+   if (database) {
+
+      efficiency_tol = database->getDoubleWithDefault("efficiency_tol",
+            efficiency_tol);
+
+      combine_tol = database->getDoubleWithDefault("combine_tol", combine_tol);
+
+      abr_db = database->getDatabaseWithDefault("BergerRigoutsos", abr_db);
+
+      sft_db = database->getDatabaseWithDefault("SinusoidalFrontTagger", sft_db);
+
+      database->getIntegerArray("nesting_width", &nesting_width[0], dim.getValue());
+   }
+
+
+
+
+   const int tag_val = 1;
+
+   hier::VariableDatabase* vdb =
+      hier::VariableDatabase::getDatabase();
+
+   tbox::Pointer<hier::PatchLevel> tag_level(
+      new hier::PatchLevel(L1,
+         grid_geometry,
+         vdb->getPatchDescriptor()));
+
+   tbox::Pointer<pdat::CellVariable<int> > tag_variable(
+      new pdat::CellVariable<int>(dim, "SinusoidalFrontTagVariable"));
+
+   tbox::Pointer<hier::VariableContext> default_context =
+      vdb->getContext("TagVariable");
+
+   const int tag_id = vdb->registerVariableAndContext(
+         tag_variable,
+         default_context,
+         hier::IntVector::getZero(dim));
+
+   tag_level->allocatePatchData(tag_id);
+
+   SinusoidalFrontTagger sinusoidal_front_tagger(
+      "SinusoidalFrontTagger",
+      dim,
+      sft_db.getPointer() );
+   sinusoidal_front_tagger.resetHierarchyConfiguration(hierarchy, 0, 1);
+
+   for (hier::PatchLevel::Iterator pi(tag_level); pi; pi++) {
+
+      tbox::Pointer<hier::Patch> patch = *pi;
+
+      tbox::Pointer<geom::CartesianPatchGeometry> patch_geom =
+         patch->getPatchGeometry();
+
+      tbox::Pointer<pdat::CellData<int> > tag_data = patch->getPatchData(tag_id);
+
+      sinusoidal_front_tagger.computeFrontsData(
+         NULL /* distance data */,
+         tag_data.getPointer(),
+         zero_vec,
+         patch_geom->getXLower(),
+         patch_geom->getDx(),
+         0.0 );
+      tbox::plog << "Tags for patch " << tag_data->getBox() << std::endl;
+      tag_data->print( tag_data->getGhostBox() );
 
    }
 
@@ -1102,14 +1289,15 @@ void generatePrebalanceByShrinkingLevel(
 
 
    /*
-    * Make L2 nest inside L1 by shrink_width.
+    * Make L2 nest inside L1 by nesting_width.
     */
    hier::BoxLevel L2nested(dim);
    hier::Connector L2_to_L2nested;
+   hier::BoxLevelConnectorUtils blcu;
    blcu.computeInternalParts( L2nested,
                               L2_to_L2nested,
                               L2_to_L1,
-                              -shrink_width,
+                              -nesting_width,
                               grid_geometry->getDomainSearchTree() );
    hier::MappingConnectorAlgorithm mca;
    mca.modify( L1_to_L2,

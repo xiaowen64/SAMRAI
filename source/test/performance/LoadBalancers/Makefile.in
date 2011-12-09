@@ -24,7 +24,7 @@ NUM_TESTS = 8
 
 TEST_NPROCS = @TEST_NPROCS@
 
-CXX_OBJS      = lb.o DerivedVisOwnerData.o
+CXX_OBJS      = lb.o DerivedVisOwnerData.o SinusoidalFrontTagger.o
 
 INPUTS1D = rod.1d.input
 INPUTS2D = rect.2d.treelb.input rod.2d.treelb.input small_cube.2d.caplb.input small_cube.2d.treelb.input small_sphere.2d.caplb.input small_sphere.2d.treelb.input
