@@ -378,7 +378,9 @@ int main(
       hier::BoxLevel L0(hier::IntVector(dim, 1), grid_geometry);
 
       {
-         hier::BoxContainer L0_boxes(main_db->getDatabaseBoxArray("L0_boxes"));
+         hier::BoxContainer L0_boxes(
+            main_db->isDatabase("L0_boxes") ?
+            main_db->getDatabaseBoxArray("L0_boxes") : domain_boxes );
          const int boxes_per_proc =
             (L0_boxes.size() + L0.getMPI().getSize()
              - 1) / L0.getMPI().getSize();
