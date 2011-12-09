@@ -33,7 +33,7 @@ Main {
    /*
      Specify number of levels (1, 2 or 3).
    */
-   max_levels = 2
+   max_levels = 3
 
    /*
      Specify L0 layer as a box array in the reference index space.
@@ -58,7 +58,7 @@ Main {
    /*
      Specify the min patch size.
    */
-   min_size = 1, 1
+   min_size = 3, 3
 
    L1_box_gen_method = "PrebalanceBySinusoidalFront"
 
@@ -79,9 +79,10 @@ Main {
         Specify unbalanced layer by tagging a set of sinusoidal fronts
         oriented in perpendicular to the x-axis.
       */
-      nesting_width = 2, 2
-      efficiency_tol = 0.70
-      combine_tol = 0.70
+      nesting_width = 4, 4
+      efficiency_tol = 0.80
+      combine_tol = 0.80
+      tag_buffer = 4, 4
       SinusoidalFrontTagger {
          init_disp = 1.0, 1.0, 1.0
          period = 8.0, 4.0, 4.0
@@ -99,7 +100,8 @@ Main {
    }
 
    PrebalanceByShrinkingLevel {
-      shrink_width = 3, 3
+      shrink_width = 4, 4
+      nesting_width = 3, 3
       BergerRigoutsos {
          log_node_history = TRUE
          log_cluster_summary = TRUE

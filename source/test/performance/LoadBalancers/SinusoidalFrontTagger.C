@@ -546,24 +546,26 @@ void SinusoidalFrontTagger::computeFrontsData(
       t_tag_cells->start();
 
       tag_data->fill(0);
-      const hier::IntVector& glower = tag_data->getGhostBox().lower();
-      const hier::IntVector& gupper = tag_data->getGhostBox().upper();
+      const hier::Box &gbox = tag_data->getGhostBox();
+      const hier::IntVector& glower = gbox.lower();
+      const hier::IntVector& gupper = gbox.upper();
 
       if (d_dim == tbox::Dimension(2)) {
-         MDA_Access<int, 2, MDA_OrderColMajor<2> > tag_aa(
-            tag_data->getPointer(0),
-            &tag_data->getGhostBox().lower()[0],
-            &tag_data->getGhostBox().upper()[0]);
-         for (int j = pbox.lower(1); j <= pbox.upper(1); ++j) {
-            int if2 = front_i2(ifront, j);
-            while (if2 >= glower(0)) {
-               if2 -= iperiod;
+         hier::IntVector front_loc(d_dim); // Index location of front.
+         for (front_loc(1) = glower(1); front_loc(1) <= gupper(1); ++front_loc(1)) {
+            front_loc(0) = front_i2(ifront, front_loc(1)); // i-location is a function of j.
+            while (front_loc(0) >= glower(0)) {
+               front_loc(0) -= iperiod;
             }
-            while (if2 + iperiod < glower(0)) {
-               if2 += iperiod;
+            while (front_loc(0) + iperiod < glower(0)) {
+               front_loc(0) += iperiod;
             }
-            for (if2 += iperiod; if2 <= gupper(0); if2 += iperiod) {
-               tag_aa(if2, j) = 1;
+            for (front_loc(0) += iperiod; front_loc(0) <= gupper(0); front_loc(0) += iperiod) {
+               hier::Box tag_here(front_loc, front_loc);
+               tag_here.grow(buffer);
+               tag_data->fillAll(1, tag_here);
+               tbox::plog << "Tagging " << front_loc << " box " << tag_here << std::endl;
+               // tag_aa(if2, j) = 1;
             }
          }
       } else if (d_dim == tbox::Dimension(3)) {
