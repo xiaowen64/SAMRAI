@@ -1470,7 +1470,7 @@ void GridGeometry::setPhysicalDomain(
 
          } else {
             TBOX_ERROR("Error in GridGeometry object with name = "
-               << d_object_name << ": in intializePeriodicShift():  "
+               << d_object_name << ": in initializePeriodicShift():  "
                << "Domain is not periodic for one (or more) of the dimensions "
                << "specified in the geometry input file!");
          }
@@ -1969,6 +1969,18 @@ void GridGeometry::registerNeighbors(
    }
    b_domain_in_a_space.shift(shift);
    a_domain_in_b_space.shift(back_shift);
+
+   //TODO:  This needs to be simplfied when there is a setBlockId() method
+   for (hier::BoxContainer::Iterator itr = b_domain_in_a_space.begin();
+        itr !=  b_domain_in_a_space.end(); ++itr) {
+      itr->initialize(*itr, itr->getLocalId(), itr->getOwnerRank(), block_a);
+   } 
+
+   for (hier::BoxContainer::Iterator itr = a_domain_in_b_space.begin();
+        itr !=  a_domain_in_b_space.end(); ++itr) {
+      itr->initialize(*itr, itr->getLocalId(), itr->getOwnerRank(), block_b);
+   } 
+
 
    Transformation transformation(rotation, shift);
    Transformation back_transformation(back_rotation, back_shift);
