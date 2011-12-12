@@ -56,12 +56,8 @@ MultiblockBoxTree::MultiblockBoxTree(
    std::map<BlockId, BoxContainer> boxes_by_block;
    for (BoxContainer::ConstIterator bi = boxes.begin();
         bi != boxes.end(); ++bi) {
-
-      TBOX_ASSERT((*bi).getId().isValid());
-      const BlockId& block_id = (*bi).getBlockId();
-      boxes_by_block[block_id].order();
-      boxes_by_block[block_id].insert(
-         boxes_by_block[block_id].end(), *bi);
+      TBOX_ASSERT(bi->getBlockId().isValid());
+      boxes_by_block[bi->getBlockId()].pushBack(*bi);
    }
 
    for (std::map<BlockId, BoxContainer>::iterator blocki = boxes_by_block.begin();
@@ -396,12 +392,12 @@ void MultiblockBoxTree::findOverlapBoxes(
 void MultiblockBoxTree::findOverlapBoxes(
    std::vector<Box>& overlap_boxes,
    const Box& box,
-   const BlockId& block_id,
    const IntVector& refinement_ratio,
    bool include_singularity_block_neighbors) const
 {
    TBOX_DIM_ASSERT_CHECK_ARGS3(*d_grid_geometry, box, refinement_ratio);
 
+   const BlockId &block_id = box.getBlockId();
    TBOX_ASSERT(block_id.getBlockValue() >= 0 &&
       block_id.getBlockValue() < d_grid_geometry->getNumberBlocks());
 
@@ -458,12 +454,12 @@ void MultiblockBoxTree::findOverlapBoxes(
 void MultiblockBoxTree::findOverlapBoxes(
    std::vector<const Box *>& overlap_boxes,
    const Box& box,
-   const BlockId& block_id,
    const IntVector& refinement_ratio,
    bool include_singularity_block_neighbors) const
 {
    TBOX_DIM_ASSERT_CHECK_ARGS3(*d_grid_geometry, box, refinement_ratio);
 
+   const BlockId &block_id = box.getBlockId();
    TBOX_ASSERT(block_id.getBlockValue() >= 0 &&
       block_id.getBlockValue() < d_grid_geometry->getNumberBlocks());
 
@@ -520,12 +516,12 @@ void MultiblockBoxTree::findOverlapBoxes(
 void MultiblockBoxTree::findOverlapBoxes(
    BoxContainer& overlap_boxes,
    const Box& box,
-   const BlockId& block_id,
    const IntVector& refinement_ratio,
    bool include_singularity_block_neighbors) const
 {
    TBOX_DIM_ASSERT_CHECK_ARGS3(*d_grid_geometry, box, refinement_ratio);
 
+   const BlockId &block_id = box.getBlockId();
    TBOX_ASSERT(block_id.getBlockValue() >= 0 &&
       block_id.getBlockValue() < d_grid_geometry->getNumberBlocks());
 

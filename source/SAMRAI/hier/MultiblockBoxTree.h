@@ -210,17 +210,13 @@ public:
     *
     * @param[in] box
     *
-    * @param[in] block_id Specifies the block in which box is
-    * specified.
-    *
     * @param[in] include_singularity_block_neighbors Whether to include
-    * intersections with boxes in blocks that are neighbors of block
-    * block_id across a multiblock singularity.
+    * intersections with boxes in blocks that are neighbors of box's
+    * block across a multiblock singularity.
     */
    bool
    hasOverlap(
       const Box& box,
-      const BlockId& block_id,
       bool include_singularity_block_neighbors = false) const;
 
    /*!
@@ -236,8 +232,8 @@ public:
     * space.
     *
     * @param[in] include_singularity_block_neighbors Whether to include
-    * intersections with boxes in blocks that are neighbors of block
-    * block_id across a multiblock singularity.
+    * intersections with boxes in blocks that are neighbors of box's
+    * block across a multiblock singularity.
     */
    void
    findOverlapBoxes(
@@ -255,28 +251,21 @@ public:
     *
     * Output is unsorted.
     *
-    * REMARK: Now that Box has a BlockId, the block_id argument is
-    * obsolete.
-    *
     * @param[out] overlap_boxes
     *
     * @param[in] box
-    *
-    * @param[in] block_id Specifies the block in which box is
-    * specified.
     *
     * @param[in] refinement_ratio Refinement ratio of box's index
     * space.
     *
     * @param[in] include_singularity_block_neighbors Whether to include
-    * intersections with boxes in blocks that are neighbors of block
-    * block_id across a multiblock singularity.
+    * intersections with boxes in blocks that are neighbors of box's
+    * block across a multiblock singularity.
     */
    void
    findOverlapBoxes(
       std::vector<Box>& overlap_boxes,
       const Box& box,
-      const BlockId& block_id,
       const IntVector& refinement_ratio,
       bool include_singularity_block_neighbors = false) const;
 
@@ -296,21 +285,17 @@ public:
     *
     * @param[in] box
     *
-    * @param[in] block_id Specifies the block in which box is
-    * specified.
-    *
     * @param[in] refinement_ratio Refinement ratio of box's index
     * space.
     *
     * @param[in] include_singularity_block_neighbors Whether to include
-    * intersections with boxes in blocks that are neighbors of block
-    * block_id across a multiblock singularity.
+    * intersections with boxes in blocks that are neighbors of box's
+    * block across a multiblock singularity.
     */
    void
    findOverlapBoxes(
       std::vector<const Box *>& overlap_boxes,
       const Box& box,
-      const BlockId& block_id,
       const IntVector& refinement_ratio,
       bool include_singularity_block_neighbors = false) const;
 
@@ -325,21 +310,17 @@ public:
     *
     * @param[in] box
     *
-    * @param[in] block_id Specifies the block in which box is
-    * specified.
-    *
     * @param[in] refinement_ratio Refinement ratio of box's index
     * space.
     *
     * @param[in] include_singularity_block_neighbors Whether to include
-    * intersections with boxes in blocks that are neighbors of block
-    * block_id across a multiblock singularity.
+    * intersections with boxes in blocks that are neighbors of box's
+    * block across a multiblock singularity.
     */
    void
    findOverlapBoxes(
       BoxContainer& overlap_boxes,
       const Box& box,
-      const BlockId& block_id,
       const IntVector& refinement_ratio,
       bool include_singularity_block_neighbors = false) const;
 

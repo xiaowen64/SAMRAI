@@ -77,8 +77,6 @@ public:
     *
     * @param[in] owner_rank
     *
-    * @param[in] block_id
-    *
     * @param[in] periodic_id The periodic shift number.  If
     * periodic_id is non-zero, specify the Box in the position shifted
     * according to the @c periodic_id.  The default argument for @c
@@ -88,7 +86,6 @@ public:
       const hier::Box& box,
       const LocalId& local_id,
       const int owner_rank,
-      const BlockId& block_id = BlockId::zero(),
       const PeriodicId& periodic_id = PeriodicId::zero());
 
    /*!

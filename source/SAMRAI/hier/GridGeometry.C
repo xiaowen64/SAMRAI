@@ -748,7 +748,8 @@ void GridGeometry::getFromRestart()
 
       for (BoxContainer::Iterator itr = block_domain_boxes.begin();
            itr != block_domain_boxes.end(); ++itr) {
-         Box box(*itr, local_id++, 0, BlockId(b));
+         Box box(*itr, local_id++, 0);
+         box.setBlockId(BlockId(b));
          domain.pushBack(box);
       }
    }
@@ -811,7 +812,8 @@ void GridGeometry::getFromInput(
 
          for (BoxContainer::Iterator itr = block_domain_boxes.begin();
               itr != block_domain_boxes.end(); ++itr) {
-            Box box(*itr, local_id++, 0, BlockId(b));
+            Box box(*itr, local_id++, 0);
+            box.setBlockId(BlockId(b));
             domain.pushBack(box);
          }
 
@@ -1433,7 +1435,8 @@ void GridGeometry::setPhysicalDomain(
       bounding_cntnr.removeIntersections(block_domain);
       if (bounding_cntnr.size() == 0) {
          d_domain_is_single_box[b] = true;
-         Box box(bounding_box, local_id++, 0, block_id);
+         Box box(bounding_box, local_id++, 0);
+         box.setBlockId(block_id);
          d_physical_domain.pushBack(box);
       } else {
          d_domain_is_single_box[b] = false;

@@ -129,11 +129,10 @@ Box::Box(
    const hier::Box& box,
    const LocalId& local_id,
    const int owner,
-   const BlockId& block_id,
    const PeriodicId& periodic_id):
    d_lo(box.d_lo),
    d_hi(box.d_hi),
-   d_block_id(block_id),
+   d_block_id(box.d_block_id),
    d_id(local_id, owner, periodic_id),
    d_id_locked(false)
 {

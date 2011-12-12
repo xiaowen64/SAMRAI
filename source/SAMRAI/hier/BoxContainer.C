@@ -460,10 +460,6 @@ void BoxContainer::separatePeriodicImages(
 void BoxContainer::rotate(
    const Transformation::RotationIdentifier rotation_ident)
 {
-   if (d_ordered) {
-      TBOX_ERROR("Rotate attempted on ordered container.");
-   }
- 
    if (!isEmpty()) {
       const tbox::Dimension& dim = d_list.front().getDim();
       const hier::BlockId& block_id = d_list.front().getBlockId();
@@ -681,7 +677,6 @@ void BoxContainer::removeIntersections(
 }
 
 void BoxContainer::removeIntersections(
-   const BlockId& block_id,
    const IntVector& refinement_ratio,
    const MultiblockBoxTree& takeaway,
    const bool include_singularity_block_neighbors)
@@ -702,7 +697,6 @@ void BoxContainer::removeIntersections(
       const Box& tryme = *itr;
       takeaway.findOverlapBoxes(overlap_mapped_boxes,
          tryme,
-         block_id,
          refinement_ratio,
          include_singularity_block_neighbors);
       if (overlap_mapped_boxes.empty()) {
@@ -717,11 +711,11 @@ void BoxContainer::removeIntersections(
             Iterator insertion_pt = sublist_start;
             const BlockId& overlap_box_block_id =
                overlap_mapped_boxes[i]->getBlockId();
-            if (overlap_box_block_id != block_id) {
+            if (overlap_box_block_id != sublist_start->getBlockId()) {
                Box overlap_box = *overlap_mapped_boxes[i];
                grid_geometry.transformBox(overlap_box,
                   refinement_ratio,
-                  block_id,
+                  sublist_start->getBlockId(),
                   overlap_box_block_id);
                removeIntersectionsFromSublist(
                   overlap_box,
@@ -893,7 +887,6 @@ void BoxContainer::intersectBoxes(
 }
 
 void BoxContainer::intersectBoxes(
-   const BlockId& block_id,
    const IntVector& refinement_ratio,
    const MultiblockBoxTree& keep,
    const bool include_singularity_block_neighbors)
@@ -916,17 +909,16 @@ void BoxContainer::intersectBoxes(
       const Box& tryme = *itr;
       keep.findOverlapBoxes(overlap_mapped_boxes,
          tryme,
-         block_id,
          refinement_ratio,
          include_singularity_block_neighbors);
       for (size_t i = 0; i < overlap_mapped_boxes.size(); ++i) {
          const BlockId& overlap_box_block_id =
             overlap_mapped_boxes[i]->getBlockId();
-         if (overlap_box_block_id != block_id) {
+         if (overlap_box_block_id != tryme.getBlockId()) {
             Box overlap_box = *overlap_mapped_boxes[i];
             grid_geometry.transformBox(overlap_box,
                refinement_ratio,
-               block_id,
+               tryme.getBlockId(),
                overlap_box_block_id);
             tryme.intersect(overlap_box, overlap);
             if (!overlap.empty()) {
@@ -1369,11 +1361,11 @@ void BoxContainer::getFromDatabase(
 
       for (unsigned int i = 0; i < mbs_size; ++i) {
          Box box(db_box_array[i]);
+         box.setBlockId(BlockId(block_ids[i]));
          Box mapped_box(
             box,
             LocalId(local_ids[i]),
             ranks[i],
-            BlockId(block_ids[i]),
             PeriodicId(periodic_ids[i]));
          insert(end(), mapped_box);
       }

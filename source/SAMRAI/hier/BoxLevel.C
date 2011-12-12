@@ -942,8 +942,8 @@ BoxContainer::ConstIterator BoxLevel::addBox(
          box,
          LocalId::getZero(),
          d_mpi.getRank(),
-         block_id,
          PeriodicShiftCatalog::getCatalog(dim)->getZeroShiftNumber());
+      TBOX_ASSERT(new_box.getBlockId() == block_id);
       new_iterator = d_boxes.insert(d_boxes.end(), new_box);
    } else {
       // Set new_index to one more than the largest index used.
@@ -979,7 +979,8 @@ BoxContainer::ConstIterator BoxLevel::addBox(
       }
 
       const Box new_box(
-         box, new_index, d_mpi.getRank(), block_id);
+         box, new_index, d_mpi.getRank());
+      TBOX_ASSERT(new_box.getBlockId() == block_id);
       new_iterator = d_boxes.insert(ni, new_box);
    }
 

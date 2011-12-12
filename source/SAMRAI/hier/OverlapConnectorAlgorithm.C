@@ -415,7 +415,7 @@ void OverlapConnectorAlgorithm::findOverlaps_rbbt(
       // Add found overlaps to neighbor set for mapped_box.
       rbbt.findOverlapBoxes(nabrs_for_box,
          box,
-         base_mapped_box.getBlockId(),
+                            // base_mapped_box.getBlockId(),
          head.getRefinementRatio(),
          true);
       if (discard_self_overlap) {
@@ -1655,7 +1655,7 @@ void OverlapConnectorAlgorithm::privateBridge_findOverlapsForOneProcess(
          base_box.coarsen(bridging_connector.getRatio());
       }
       found_nabrs.clear();
-      head_rbbt.findOverlapBoxes(found_nabrs, base_box, base_box.getBlockId(),
+      head_rbbt.findOverlapBoxes(found_nabrs, base_box, // base_box.getBlockId(),
                                  head_refinement_ratio,
                                  true /* include singularity block neighbors */ );
       if (s_print_steps == 'y') {

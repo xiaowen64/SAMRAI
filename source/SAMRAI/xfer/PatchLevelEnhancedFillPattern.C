@@ -107,8 +107,10 @@ void PatchLevelEnhancedFillPattern::computeFillBoxesAndNeighborhoodSets(
                   hier::Box fill_mapped_box(
                      *ei,
                      ++last_id,
-                     dst_mapped_box.getOwnerRank(),
-                     dst_mapped_box.getBlockId());
+                     dst_mapped_box.getOwnerRank());
+
+                  TBOX_ASSERT(fill_mapped_box.getBlockId() ==
+                              dst_mapped_box.getBlockId());
 
                   fill_mapped_boxes.addBoxWithoutUpdate(fill_mapped_box);
 

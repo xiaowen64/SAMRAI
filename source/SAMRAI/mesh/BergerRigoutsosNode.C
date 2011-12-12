@@ -1415,8 +1415,9 @@ bool BergerRigoutsosNode::broadcastAcceptability_check()
       if (!boxHasNoTag()) {
          const hier::LocalId node_local_id(*(ptr++));
          ptr = getBoxFromBuffer(d_box, ptr);
-         d_mapped_box = hier::Box(d_box, node_local_id, d_owner, d_block_id);
+         d_mapped_box = hier::Box(d_box, node_local_id, d_owner);
 #ifdef DEBUG_CHECK_ASSERTIONS
+         TBOX_ASSERT(d_mapped_box.getBlockId() == d_block_id);
          TBOX_ASSERT(d_mapped_box.getLocalId() >= 0);
          if (d_parent != NULL) {
             /*
@@ -1671,7 +1672,8 @@ bool BergerRigoutsosNode::broadcastToDropouts_check()
             TBOX_ASSERT(d_box.numberCells() >= d_common->min_box);
          }
 #endif
-         d_mapped_box = hier::Box(d_box, local_id, d_owner, d_block_id);
+         d_mapped_box = hier::Box(d_box, local_id, d_owner);
+         TBOX_ASSERT(d_mapped_box.getBlockId() == d_block_id);
       }
    }
    return d_comm_group->isDone();
@@ -2274,7 +2276,8 @@ void BergerRigoutsosNode::createBox()
       d_common->new_mapped_box_level->getBoxes().isEmpty() ? d_first_local_id :
       d_common->new_mapped_box_level->getBoxes().back().getLocalId();
 
-   hier::Box new_box(d_box, last_index + 1, d_common->rank, d_block_id);
+   hier::Box new_box(d_box, last_index + 1, d_common->rank);
+   TBOX_ASSERT(new_box.getBlockId() == d_block_id);
    d_common->new_mapped_box_level->addBoxWithoutUpdate(new_box);
    d_mapped_box_iterator = d_common->new_mapped_box_level->getBox(new_box);
 

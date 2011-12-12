@@ -742,8 +742,8 @@ void TreeLoadBalancer::constrainMaxBoxSizes(
 
                const hier::Box new_box(fragment,
                                        next_available_index++,
-                                       d_mpi.getRank(),
-                                       (*ni).getBlockId());
+                                       d_mpi.getRank());
+               TBOX_ASSERT(new_box.getBlockId() == ni->getBlockId());
 
                if (d_print_break_steps) {
                   tbox::plog << "  " << new_box
@@ -4496,8 +4496,7 @@ void TreeLoadBalancer::prebalanceBoxLevel(
          hier::Box new_box(
             (*ni),
             (hier::LocalId)buffer[box_count],
-            rank_group.getMappedRank(d_mpi.getRank() % output_nproc),
-            (*ni).getBlockId());
+            rank_group.getMappedRank(d_mpi.getRank() % output_nproc));
 
          balance_to_tmp.insertLocalNeighbor(new_box, (*ni).getId());
          box_count++;

@@ -177,11 +177,11 @@ BoxTree::BoxTree(
            ni != mapped_boxes.end(); ++ni) {
          const Box& mapped_box = *ni;
          if (mapped_box.upper(d_partition_dim) <= midpoint) {
-            left_mapped_boxes.insert(left_mapped_boxes.end(), mapped_box);
+            left_mapped_boxes.pushBack(mapped_box);
          } else if (mapped_box.lower(d_partition_dim) > midpoint) {
-            right_mapped_boxes.insert(right_mapped_boxes.end(), mapped_box);
+            right_mapped_boxes.pushBack(mapped_box);
          } else {
-            d_mapped_boxes.insert(d_mapped_boxes.end(), mapped_box);
+            d_mapped_boxes.pushBack(mapped_box);
          }
       }
 
@@ -251,7 +251,8 @@ BoxTree::BoxTree(
          d_mapped_boxes.order();
          LocalId count(-1);
          for (BoxContainer::ConstIterator li(boxes); li != boxes.end(); ++li) {
-            const Box n(*li, ++count, 0, d_block_id);
+            Box n(*li, ++count, 0);
+            n.setBlockId(block_id); 
             d_mapped_boxes.insert(d_mapped_boxes.end(), n);
          }
       }
@@ -293,11 +294,11 @@ BoxTree::BoxTree(
             mapped_box.initialize(*li, ++count, 0, d_block_id);
          }
          if (mapped_box.upper(d_partition_dim) <= midpoint) {
-            left_mapped_boxes.insert(left_mapped_boxes.end(), mapped_box);
+            left_mapped_boxes.pushBack(mapped_box);
          } else if (mapped_box.lower(d_partition_dim) > midpoint) {
-            right_mapped_boxes.insert(right_mapped_boxes.end(), mapped_box);
+            right_mapped_boxes.pushBack(mapped_box);
          } else {
-            d_mapped_boxes.insert(d_mapped_boxes.end(), mapped_box);
+            d_mapped_boxes.pushBack(mapped_box);
          }
       }
 
@@ -460,12 +461,12 @@ void BoxTree::privateGenerateTree(
            ni != d_mapped_boxes.end(); ) {
          const Box& mapped_box = *ni;
          if (mapped_box.upper(d_partition_dim) <= midpoint) {
-            left_mapped_boxes.insert(left_mapped_boxes.end(), mapped_box);
+            left_mapped_boxes.pushBack(mapped_box);
             BoxContainer::Iterator curr = ni;
             ++ni;
             d_mapped_boxes.erase(curr);
          } else if (mapped_box.lower(d_partition_dim) > midpoint) {
-            right_mapped_boxes.insert(right_mapped_boxes.end(), mapped_box);
+            right_mapped_boxes.pushBack(mapped_box);
             BoxContainer::Iterator curr = ni;
             ++ni;
             d_mapped_boxes.erase(curr);

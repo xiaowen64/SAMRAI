@@ -951,6 +951,11 @@ void GriddingAlgorithm::makeFinerLevel(
          t_reset_hier->stop();
          t_make_finer_create->stop();
       }
+      else {
+         delete tag_to_new;
+         delete new_to_tag;
+         delete new_to_new;
+      }
 
       d_base_ln = -1;
 
@@ -1367,6 +1372,9 @@ void GriddingAlgorithm::regridFinerLevel(
              && remove_old_fine_level) {
             d_hierarchy->removePatchLevel(new_ln);
          }
+
+         delete tag_to_new;
+         delete new_to_tag;
 
       } // if we are not re-regenerating level new_ln.
 
@@ -1907,7 +1915,7 @@ size_t GriddingAlgorithm::checkBoundaryProximityViolation(
 
       hier::BoxContainer external_parts(*bi);
       external_parts.grow(extend_ghosts);
-      external_parts.removeIntersections(bi->getBlockId(),
+      external_parts.removeIntersections(
          mapped_box_level.getRefinementRatio(),
          *refined_periodic_domain_search_tree);
 
@@ -3659,7 +3667,7 @@ void GriddingAlgorithm::computeNestingViolator(
         ni != candidate_mapped_boxes.end(); ++ni) {
       const hier::Box& cmb = *ni;
       hier::BoxContainer addl_violators(cmb);
-      addl_violators.removeIntersections(cmb.getBlockId(),
+      addl_violators.removeIntersections(
          candidate.getRefinementRatio(),
          *refined_domain_search_tree);
       if (!addl_violators.isEmpty()) {
@@ -3966,7 +3974,7 @@ void GriddingAlgorithm::growBoxesWithinNestingDomain(
       refined_domain_search_tree->findOverlapBoxes(
          nesting_domain,
          omb,
-         omb.getBlockId(),
+         // omb.getBlockId(),
          new_mapped_box_level.getRefinementRatio());
 
       if (new_to_nesting_complement.hasNeighborSet(omb.getId())) {

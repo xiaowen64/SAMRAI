@@ -2639,8 +2639,8 @@ void RefineSchedule::generateCommunicationSchedule(
 
             hier::Box unfilled_mapped_box(bi(),
                                           ++last_unfilled_local_id,
-                                          dst_mapped_box.getOwnerRank(),
-                                          dst_block_id);
+                                          dst_mapped_box.getOwnerRank());
+            TBOX_ASSERT(unfilled_mapped_box.getBlockId() == dst_block_id);
 
             unfilled_mapped_box_level->addBoxWithoutUpdate(unfilled_mapped_box);
             dst_to_unfilled->insertLocalNeighbor(unfilled_mapped_box,
@@ -2839,9 +2839,9 @@ void RefineSchedule::findEnconUnfilledBoxes(
 
                   hier::Box unfilled_encon_box(unfilled_box,
                                                ++last_unfilled_local_id,
-                                               dst_mapped_box.getOwnerRank(),
-                                               nbr_block_id);
+                                               dst_mapped_box.getOwnerRank());
 
+                  TBOX_ASSERT(unfilled_encon_box.getBlockId() == nbr_block_id); 
                   unfilled_encon_box_level->addBox(unfilled_encon_box);
 
                   encon_to_unfilled_encon->insertLocalNeighbor(
@@ -3235,8 +3235,9 @@ void RefineSchedule::createEnconLevel(const hier::IntVector& fill_gcw)
                                   encon_box, nbr_id, encon_mapped_box)) {
                                  encon_mapped_box = hier::Box(encon_box,
                                           ++encon_local_id,
-                                          mapped_box_id.getOwnerRank(),
-                                          nbr_id);
+                                          mapped_box_id.getOwnerRank());
+                                 TBOX_ASSERT(encon_mapped_box.getBlockId() ==
+                                             nbr_id);
                                  encon_box_level.addBoxWithoutUpdate(
                                     encon_mapped_box);
                               }

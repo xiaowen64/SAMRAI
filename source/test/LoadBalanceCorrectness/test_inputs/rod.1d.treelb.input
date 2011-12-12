@@ -49,7 +49,7 @@ Main {
       /*
         Specify unbalanced layer as a box array in the reference index space.
 
-        initial_owners are the ranks of the owner sof all the initial balance boxes.
+        initial_owners are the ranks of the owners of all the initial balance boxes.
         By default, processor 0 owns all the initial balance boxes.
       */
       balance_boxes = [(1),(298)]

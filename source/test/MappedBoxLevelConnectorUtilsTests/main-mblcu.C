@@ -534,7 +534,7 @@ int main(
             small_to_big.getHeadCoarserFlag() ?
             tmp_box_list.coarsen(small_to_big.getRatio()) :
             tmp_box_list.refine(small_to_big.getRatio());
-            tmp_box_list.removeIntersections(ni->getBlockId(),
+            tmp_box_list.removeIntersections(
                big_mapped_box_level.getRefinementRatio(),
                internal_box_tree);
             if (tmp_box_list.size() > 0) {
@@ -550,7 +550,7 @@ int main(
             big_to_small.getHeadCoarserFlag() ?
             tmp_box_list.coarsen(big_to_small.getRatio()) :
             tmp_box_list.refine(big_to_small.getRatio());
-            tmp_box_list.removeIntersections(ni->getBlockId(),
+            tmp_box_list.removeIntersections(
                small_mapped_box_level.getRefinementRatio(),
                small_box_tree);
             if (tmp_box_list.size() > 0) {
@@ -602,7 +602,7 @@ int main(
             big_to_small.getHeadCoarserFlag() ?
             tmp_box_list.coarsen(big_to_small.getRatio()) :
             tmp_box_list.refine(big_to_small.getRatio());
-            tmp_box_list.intersectBoxes(ni->getBlockId(),
+            tmp_box_list.intersectBoxes(
                small_mapped_box_level.getRefinementRatio(),
                small_box_tree);
             if (tmp_box_list.size() != 0) {
@@ -621,7 +621,7 @@ int main(
             small_to_big.getHeadCoarserFlag() ?
             tmp_box_list.coarsen(small_to_big.getRatio()) :
             tmp_box_list.refine(small_to_big.getRatio());
-            tmp_box_list.intersectBoxes(ni->getBlockId(),
+            tmp_box_list.intersectBoxes(
                big_mapped_box_level.getRefinementRatio(),
                external_box_tree);
             if (tmp_box_list.size() != 0) {
@@ -640,13 +640,13 @@ int main(
             big_to_small.getHeadCoarserFlag() ?
             tmp_box_list.coarsen(big_to_small.getRatio()) :
             tmp_box_list.refine(big_to_small.getRatio());
-            tmp_box_list.removeIntersections(ni->getBlockId(),
+            tmp_box_list.removeIntersections(
                small_mapped_box_level.getRefinementRatio(),
                small_box_tree);
             small_to_big.getHeadCoarserFlag() ?
             tmp_box_list.coarsen(small_to_big.getRatio()) :
             tmp_box_list.refine(small_to_big.getRatio());
-            tmp_box_list.removeIntersections(ni->getBlockId(),
+            tmp_box_list.removeIntersections(
                big_mapped_box_level.getRefinementRatio(),
                external_box_tree);
             if (tmp_box_list.size() > 0) {
@@ -858,7 +858,7 @@ void shrinkBoxLevel(
 
          hier::BoxContainer shrunken_boxes(mapped_box);
 
-         shrunken_boxes.removeIntersections(mapped_box.getBlockId(),
+         shrunken_boxes.removeIntersections(
             big_mapped_box_level.getRefinementRatio(),
             complement_mapped_box_tree);
          shrunken_boxes.simplify();

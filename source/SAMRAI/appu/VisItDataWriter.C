@@ -3710,7 +3710,7 @@ void VisItDataWriter::writeParentChildInfoToSummaryHDFFile(
             child_box_tree->findOverlapBoxes(
                overlap_mapped_boxes,
                compare_box,
-               block_id,
+               // block_id,
                ratio);
 
             int num_kids = static_cast<int>(overlap_mapped_boxes.size());
