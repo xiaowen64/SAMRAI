@@ -322,7 +322,7 @@ int main(
       tbox::Pointer<hier::VariableContext> dummy_context =
          vdb->getContext("DUMMY");
 
-      const int tag_id = vdb->registerVariableAndContext(
+      vdb->registerVariableAndContext(
          dummy_variable,
          dummy_context,
          hier::IntVector(dim,10));
@@ -1198,7 +1198,6 @@ void generatePrebalanceBySinusoidalFront(
 {
 
    const tbox::Dimension dim(hierarchy->getDim());
-   const hier::IntVector &zero_vec = hier::IntVector::getZero(dim);
 
    tbox::Pointer<geom::CartesianGridGeometry> grid_geometry =
       hierarchy->getGridGeometry();
