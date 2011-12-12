@@ -388,7 +388,6 @@ void SinusoidalFrontTagger::computePatchData(
       d_hierarchy->getPatchLevel(ln);
    const hier::IntVector& ratio(level->getRatioToLevelZero());
 
-   const hier::Box& pbox = patch.getBox();
    tbox::Pointer<geom::CartesianPatchGeometry> patch_geom =
       patch.getPatchGeometry();
 
@@ -564,26 +563,23 @@ void SinusoidalFrontTagger::computeFrontsData(
                hier::Box tag_here(front_loc, front_loc);
                tag_here.grow(buffer);
                tag_data->fillAll(1, tag_here);
-               tbox::plog << "Tagging " << front_loc << " box " << tag_here << std::endl;
-               // tag_aa(if2, j) = 1;
             }
          }
       } else if (d_dim == tbox::Dimension(3)) {
-         MDA_Access<int, 3, MDA_OrderColMajor<3> > tag_aa(
-            tag_data->getPointer(0),
-            &tag_data->getGhostBox().lower()[0],
-            &tag_data->getGhostBox().upper()[0]);
-         for (int k = pbox.lower(2); k <= pbox.upper(2); ++k) {
-            for (int j = pbox.lower(1); j <= pbox.upper(1); ++j) {
-               int if3 = front_i3(ifront, j, k);
-               while (if3 >= glower(0)) {
-                  if3 -= iperiod;
+         hier::IntVector front_loc(d_dim); // Index location of front.
+         for (front_loc(2) = glower(2); front_loc(2) <= gupper(2); ++front_loc(2)) {
+            for (front_loc(1) = glower(1); front_loc(1) <= gupper(1); ++front_loc(1)) {
+               front_loc(0) = front_i3(ifront, front_loc(1), front_loc(2)); // i-location is a function of j and k.
+               while (front_loc(0) >= glower(0)) {
+                  front_loc(0) -= iperiod;
                }
-               while (if3 + iperiod < glower(0)) {
-                  if3 += iperiod;
+               while (front_loc(0) + iperiod < glower(0)) {
+                  front_loc(0) += iperiod;
                }
-               for (if3 += iperiod; if3 <= gupper(0); if3 += iperiod) {
-                  tag_aa(if3, j, k) = 1;
+               for (front_loc(0) += iperiod; front_loc(0) <= gupper(0); front_loc(0) += iperiod) {
+                  hier::Box tag_here(front_loc, front_loc);
+                  tag_here.grow(buffer);
+                  tag_data->fillAll(1, tag_here);
                }
             }
          }
