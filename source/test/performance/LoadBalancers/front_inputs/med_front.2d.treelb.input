@@ -22,13 +22,13 @@ Main {
    /*
      Specify domain as a box array in the reference index space.
    */
-   domain_boxes = [(0,0),(99,99)]
+   domain_boxes = [(0,0),(199,399)]
 
    /*
      Specify physical domain box.
    */
    xlo = 0.0, 0.0
-   xhi = 2.0, 2.0
+   xhi = 1.0, 2.0
 
    /*
      Specify number of levels (1, 2 or 3).
@@ -42,7 +42,7 @@ Main {
 
      If omitted, the L0 layer is the same as the domain.
    */
-   L0_boxes = [(0,0),(99,99)]
+   // L0_boxes = [(0,0),(199,99)]
 
    /*
      If L0 is not contained in domain, you can use this flag
@@ -80,12 +80,12 @@ Main {
         oriented in perpendicular to the x-axis.
       */
       nesting_width = 4, 4
-      efficiency_tol = 0.80
-      combine_tol = 0.80
+      efficiency_tol = 0.75
+      combine_tol = 0.75
       tag_buffer = 8, 8
       SinusoidalFrontTagger {
-         init_disp = 1.0, 1.0, 1.0
-         period = 8.0, 4.0, 4.0
+         init_disp = 0.5, 1.0, 1.0
+         period = 1.0, 4.0, 4.0
          amplitude = 0.5
       }
       BergerRigoutsos {
