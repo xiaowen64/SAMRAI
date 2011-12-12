@@ -33,7 +33,7 @@ Main {
    /*
      Specify number of levels (1, 2 or 3).
    */
-   max_levels = 3
+   max_levels = 2
 
    /*
      Specify L0 layer as a box array in the reference index space.

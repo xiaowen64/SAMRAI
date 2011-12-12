@@ -302,6 +302,33 @@ int main(
       }
 
 
+      {
+         /*
+          * Add a dummy PatchData with a big ghost width.
+          * GridGeometry forbids increasing the max data ghost width
+          * after it starts computing boundary boxes for a patch.  We
+          * force it to accept a big ghost width here so that the
+          * methods below (particularly, those using registering tag
+          * data) won't crash by asking for more ghost width than what
+          * was registered when the first boundary boxes were
+          * computed.
+          */
+      hier::VariableDatabase* vdb =
+         hier::VariableDatabase::getDatabase();
+
+      tbox::Pointer<pdat::CellVariable<int> > dummy_variable(
+         new pdat::CellVariable<int>(dim, "DummyVariable"));
+
+      tbox::Pointer<hier::VariableContext> dummy_context =
+         vdb->getContext("DUMMY");
+
+      const int tag_id = vdb->registerVariableAndContext(
+         dummy_variable,
+         dummy_context,
+         hier::IntVector(dim,10));
+      }
+
+
 
       /*
        * Create hierarchy required by the load balancing
@@ -1226,7 +1253,7 @@ void generatePrebalanceBySinusoidalFront(
    const int tag_id = vdb->registerVariableAndContext(
          tag_variable,
          default_context,
-         hier::IntVector::getZero(dim));
+         tag_buffer );
 
    tag_level->allocatePatchData(tag_id);
 
