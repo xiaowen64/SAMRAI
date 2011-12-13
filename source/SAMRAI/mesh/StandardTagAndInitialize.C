@@ -18,7 +18,6 @@
 #include "SAMRAI/pdat/CellData.h"
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/hier/BoxContainerIterator.h"
-#include "SAMRAI/hier/NeighborhoodSet.h"
 #include "SAMRAI/hier/OverlapConnectorAlgorithm.h"
 #include "SAMRAI/hier/Patch.h"
 #include "SAMRAI/tbox/MathUtilities.h"
@@ -774,11 +773,10 @@ StandardTagAndInitialize::preprocessRichardsonExtrapolation(
       hier::IntVector::ceilingDivide(level_to_level_gcw, coarsen_ratio),
       true);
 
-   hier::Connector tmp_coarsened(
-      *patch_level->getBoxLevel(),
-      *coarsened_level->getBoxLevel(),
-      level_to_level.getConnectorWidth());
-   level_to_level.coarsenLocalNeighbors(tmp_coarsened, coarsen_ratio);
+   hier::Connector tmp_coarsened(level_to_level);
+   tmp_coarsened.setBase( *patch_level->getBoxLevel());
+   tmp_coarsened.setHead(*coarsened_level->getBoxLevel(), true);
+   tmp_coarsened.coarsenLocalNeighbors(coarsen_ratio);
    tmp_coarsened.setConnectorType(hier::Connector::COMPLETE_OVERLAP);
 
    const hier::Connector& level_to_coarsened =

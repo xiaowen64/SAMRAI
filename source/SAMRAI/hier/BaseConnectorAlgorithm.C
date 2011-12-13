@@ -365,16 +365,20 @@ void BaseConnectorAlgorithm::unpackDiscoveryMessage(
       const BoxId new_base_box_id(local_id, rank, block_id);
       const int n_new_head_nabrs_found = *(ptr++);
       // Add received neighbors to Box new_base_box_id.
-      for (int j = 0; j < n_new_head_nabrs_found; ++j) {
-         tmp_box.getId().getFromIntBuffer(ptr);
-         ptr += BoxId::commBufferSize();
-         BoxContainer::ConstIterator na =
-            referenced_new_head_nabrs.find(tmp_box);
-         TBOX_ASSERT(na != referenced_new_head_nabrs.end());
-         const Box& new_head_nabr = *na;
-         new_base_to_new_head.insertLocalNeighbor(
-            new_head_nabr,
-            new_base_box_id);
+      if (n_new_head_nabrs_found > 0) {
+         Connector::NeighborhoodIterator base_box_itr =
+            new_base_to_new_head.makeEmptyLocalNeighborhood(new_base_box_id);
+         for (int j = 0; j < n_new_head_nabrs_found; ++j) {
+            tmp_box.getId().getFromIntBuffer(ptr);
+            ptr += BoxId::commBufferSize();
+            BoxContainer::ConstIterator na =
+               referenced_new_head_nabrs.find(tmp_box);
+            TBOX_ASSERT(na != referenced_new_head_nabrs.end());
+            const Box& new_head_nabr = *na;
+            new_base_to_new_head.insertLocalNeighbor(
+               new_head_nabr,
+               base_box_itr);
+         }
       }
    }
    for (int ii = 0; ii < n_new_head_boxes; ++ii) {
@@ -383,16 +387,20 @@ void BaseConnectorAlgorithm::unpackDiscoveryMessage(
       const BoxId new_head_box_id(local_id, rank, block_id);
       const int n_new_base_nabrs_found = *(ptr++);
       // Add received neighbors to Box new_head_box_id.
-      for (int j = 0; j < n_new_base_nabrs_found; ++j) {
-         tmp_box.getId().getFromIntBuffer(ptr);
-         ptr += BoxId::commBufferSize();
-         BoxContainer::ConstIterator na =
-            referenced_new_base_nabrs.find(tmp_box);
-         TBOX_ASSERT(na != referenced_new_base_nabrs.end());
-         const Box& new_base_nabr = *na;
-         new_head_to_new_base->insertLocalNeighbor(
-            new_base_nabr,
-            new_head_box_id);
+      if (n_new_base_nabrs_found > 0) {
+         Connector::NeighborhoodIterator base_box_itr =
+            new_head_to_new_base->makeEmptyLocalNeighborhood(new_head_box_id);
+         for (int j = 0; j < n_new_base_nabrs_found; ++j) {
+            tmp_box.getId().getFromIntBuffer(ptr);
+            ptr += BoxId::commBufferSize();
+            BoxContainer::ConstIterator na =
+               referenced_new_base_nabrs.find(tmp_box);
+            TBOX_ASSERT(na != referenced_new_base_nabrs.end());
+            const Box& new_base_nabr = *na;
+            new_head_to_new_base->insertLocalNeighbor(
+               new_base_nabr,
+               base_box_itr);
+         }
       }
    }
 }

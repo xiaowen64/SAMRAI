@@ -175,14 +175,17 @@ void CoarseFineBoundary::computeFromLevel(
 
    // Every mapped_box should connect to the domain mapped_box_level.
    TBOX_ASSERT(mapped_box_level_to_domain.getLocalNumberOfNeighborSets() ==
-               mapped_box_level.getLocalNumberOfBoxes());
+               static_cast<int>(mapped_box_level.getLocalNumberOfBoxes()));
 
    // Add physical boundaries to the fake domain.
    for (Connector::ConstNeighborhoodIterator ei = mapped_box_level_to_domain.begin();
         ei != mapped_box_level_to_domain.end(); ++ei) {
-      const Box& mapped_box = *mapped_box_level.getBoxStrict(ei->first);
-      const NeighborhoodSet::NeighborSet& domain_nabrs = ei->second;
-      NeighborhoodSet::NeighborSet refined_domain_nabrs(domain_nabrs);
+      const Box& mapped_box = *mapped_box_level.getBoxStrict(*ei);
+      BoxContainer refined_domain_nabrs;
+      for (Connector::ConstNeighborIterator ni = mapped_box_level_to_domain.begin(ei);
+           ni != mapped_box_level_to_domain.end(ei); ++ni) {
+         refined_domain_nabrs.insert(refined_domain_nabrs.end(), *ni);
+      }
       refined_domain_nabrs.refine(ratio);
       Box box = mapped_box;
       box.grow(max_ghost_width);

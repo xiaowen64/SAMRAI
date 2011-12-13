@@ -473,8 +473,7 @@ int main(
                   tbox::perr << "Mapping small_to_everything erroneously mapped "
                              << small_mapped_box << " to something less than itself:\n";
                   small_to_everything.writeNeighborhoodToErrorStream(
-                     small_mapped_box.getId(),
-                     "");
+                     small_mapped_box.getId());
                }
 
             }
@@ -485,7 +484,7 @@ int main(
                   tbox::perr << "Mapping small_to_nothing erroneously mapped " << small_mapped_box
                              << " to:\n";
                   small_to_nothing.writeNeighborhoodToErrorStream(
-                     small_mapped_box.getId(), "");
+                     small_mapped_box.getId());
                   tbox::perr << "\nIt should be mapped to nothing\n";
                   ++fail_count;
                }

@@ -164,19 +164,21 @@ void OverlapConnectorAlgorithm::extractNeighbors(
     */
    TBOX_ASSERT(mapped_box_id.getOwnerRank() == connector.getMPI().getRank());
 
-   const tbox::ConstPointer<GridGeometry>& grid_geom(connector.getBase().getGridGeometry());
+   const tbox::ConstPointer<GridGeometry>& grid_geom(
+      connector.getBase().getGridGeometry());
 
-   const Box& mapped_box(*connector.getBase().getBox(Box(dim,
-                               mapped_box_id)));
+   const Box& mapped_box(*connector.getBase().getBox(Box(dim, mapped_box_id)));
    Connector::ConstNeighborhoodIterator ins =
       connector.findLocal(mapped_box_id);
-   if (ins == connector.end()) {
-      neighbors.clear();
-   } else {
+   neighbors.clear();
+   if (ins != connector.end()) {
       if (gcw == connector.getConnectorWidth()) {
-         neighbors = ins->second;
-      } else {
-         neighbors.clear();
+         for (Connector::ConstNeighborIterator ni = connector.begin(ins);
+              ni != connector.end(ins); ++ni) {
+            neighbors.insert(neighbors.end(), *ni);
+         }
+      }
+      else {
          Box grown_mapped_box = mapped_box;
          grown_mapped_box.grow(gcw);
          if (connector.getHeadCoarserFlag() == false) {
@@ -217,9 +219,10 @@ void OverlapConnectorAlgorithm::extractNeighbors(
    for (Connector::ConstNeighborhoodIterator ni = connector.begin();
         ni != connector.end(); ++ni) {
 
-      other.makeEmptyLocalNeighborhood(ni->first);
+      const BoxId& mapped_box_id = *ni;
+      Connector::NeighborhoodIterator base_box_itr =
+         other.makeEmptyLocalNeighborhood(mapped_box_id);
 
-      const BoxId& mapped_box_id = ni->first;
       const tbox::Dimension& dim(gcw.getDim());
 
 #ifdef DEBUG_CHECK_ASSERTIONS
@@ -261,7 +264,10 @@ void OverlapConnectorAlgorithm::extractNeighbors(
          *connector.getBase().getBox(Box(dim, mapped_box_id));
 
       if (gcw == connector.getConnectorWidth()) {
-         other.insertNeighbors(ni->second, mapped_box_id);
+         for (Connector::ConstNeighborIterator si = connector.begin(ni);
+              si != connector.end(ni); ++si) {
+            other.insertLocalNeighbor(*si, base_box_itr);
+         }
       } else {
          Box grown_mapped_box = mapped_box;
          grown_mapped_box.grow(gcw);
@@ -282,7 +288,7 @@ void OverlapConnectorAlgorithm::extractNeighbors(
                nabr_box.refine(connector.getRatio());
             }
             if (grown_mapped_box.intersects(nabr_box)) {
-	      other.insertLocalNeighbor(neighbor, mapped_box_id);
+               other.insertLocalNeighbor(neighbor, base_box_itr);
             }
          }
       }
@@ -1703,10 +1709,14 @@ void OverlapConnectorAlgorithm::privateBridge_findOverlapsForOneProcess(
                   PeriodicId::zero());
             }
             // Add found neighbors for base_mapped_box.
-            for (std::vector<Box>::const_iterator na = found_nabrs.begin();
-                 na != found_nabrs.end(); ++na) {
-	      bridging_connector.insertLocalNeighbor(*na,
-                 unshifted_base_mapped_box_id);
+            if (!found_nabrs.empty()) {
+               Connector::NeighborhoodIterator base_box_itr =
+                  bridging_connector.makeEmptyLocalNeighborhood(
+                     unshifted_base_mapped_box_id);
+               for (std::vector<Box>::const_iterator na = found_nabrs.begin();
+                    na != found_nabrs.end(); ++na) {
+                  bridging_connector.insertLocalNeighbor(*na, base_box_itr);
+               }
             }
          }
       }
@@ -1918,7 +1928,7 @@ void OverlapConnectorAlgorithm::assertOverlapCorrectness(
  ***********************************************************************
  */
 
-size_t OverlapConnectorAlgorithm::checkOverlapCorrectness(
+int OverlapConnectorAlgorithm::checkOverlapCorrectness(
    const Connector& connector,
    bool ignore_self_overlap,
    bool assert_completeness,
@@ -1933,7 +1943,7 @@ size_t OverlapConnectorAlgorithm::checkOverlapCorrectness(
 
    }
 #endif
-   TBOX_ASSERT(!connector.hasPeriodicLocalNeighborhoodRoots());
+   TBOX_ASSERT(!connector.hasPeriodicLocalNeighborhoodBaseBoxes());
 
    Connector missing, extra;
    findOverlapErrors(connector, missing, extra, ignore_self_overlap);
@@ -1955,18 +1965,18 @@ size_t OverlapConnectorAlgorithm::checkOverlapCorrectness(
     * the neighborhoods of missing and extra at the same time.
     */
 
-   Connector::ConstNeighborhoodIterator im, ie, it;
-   for (im = missing.begin(), ie = extra.begin();
-        im != missing.end() || ie != extra.end();
+   Connector::ConstNeighborhoodIterator im = missing.begin();
+   Connector::ConstNeighborhoodIterator ie = extra.begin();
+   for (; im != missing.end() || ie != extra.end();
         /* incremented in loop */) {
 
       const BoxId& global_id_missing =
-         im == missing.end() ? dummy_mapped_box_id : im->first;
+         im == missing.end() ? dummy_mapped_box_id : *im;
       const BoxId& global_id_extra =
-         ie == extra.end() ? dummy_mapped_box_id : ie->first;
+         ie == extra.end() ? dummy_mapped_box_id : *ie;
 
       if (im != missing.end() && ie != extra.end() &&
-          im->first == ie->first) {
+          *im == *ie) {
 
          /*
           * im and ie are pointing at the same Box.  Report the
@@ -1975,17 +1985,18 @@ size_t OverlapConnectorAlgorithm::checkOverlapCorrectness(
 
          const Box& mapped_box = *connector.getBase().getBoxStrict(
                global_id_missing);
-         tbox::perr << "Found " << missing.numLocalNeighbors(im->first)
+         tbox::perr << "Found " << missing.numLocalNeighbors(*im)
                     << " missing and "
-                    << extra.numLocalNeighbors(ie->first)
+                    << extra.numLocalNeighbors(*ie)
                     << " extra overlaps for "
                     << mapped_box << std::endl;
-         it = connector.findLocal(global_id_missing);
+         Connector::ConstNeighborhoodIterator it =
+            connector.findLocal(global_id_missing);
          if (it == connector.end()) {
             tbox::perr << "  Current Neighbors (no neighbor set)." << std::endl;
          } else {
             tbox::perr << "  Current Neighbors ("
-                       << connector.numLocalNeighbors(it->first) << "):"
+                       << connector.numLocalNeighbors(*it) << "):"
                        << std::endl;
             Box ghost_box = mapped_box;
             ghost_box.grow(connector.getConnectorWidth());
@@ -2006,7 +2017,7 @@ size_t OverlapConnectorAlgorithm::checkOverlapCorrectness(
          }
          {
             tbox::perr << "  Missing Neighbors ("
-                       << missing.numLocalNeighbors(im->first) << "):"
+                       << missing.numLocalNeighbors(*im) << "):"
                        << std::endl;
             Box ghost_box = mapped_box;
             ghost_box.grow(connector.getConnectorWidth());
@@ -2027,7 +2038,7 @@ size_t OverlapConnectorAlgorithm::checkOverlapCorrectness(
          }
          {
             tbox::perr << "  Extra Neighbors ("
-                       << extra.numLocalNeighbors(ie->first) << "):"
+                       << extra.numLocalNeighbors(*ie) << "):"
                        << std::endl;
             Box ghost_box = mapped_box;
             ghost_box.grow(connector.getConnectorWidth());
@@ -2050,7 +2061,7 @@ size_t OverlapConnectorAlgorithm::checkOverlapCorrectness(
          ++ie;
 
       } else if ((ie == extra.end()) ||
-                 (im != missing.end() && im->first < ie->first)) {
+                 (im != missing.end() && *im < *ie)) {
 
          /*
           * im goes before ie (or ie has reached the end).  Report the
@@ -2059,15 +2070,16 @@ size_t OverlapConnectorAlgorithm::checkOverlapCorrectness(
 
          const Box& mapped_box = *connector.getBase().getBoxStrict(
                global_id_missing);
-         tbox::perr << "Found " << missing.numLocalNeighbors(im->first)
+         tbox::perr << "Found " << missing.numLocalNeighbors(*im)
                     << " missing overlaps for " << mapped_box << std::endl;
-         it = connector.findLocal(global_id_missing);
+         Connector::ConstNeighborhoodIterator it =
+            connector.findLocal(global_id_missing);
          if (it == connector.end()) {
             tbox::perr << "    Current Neighbors (no neighbor set)."
                        << std::endl;
          } else {
             tbox::perr << "  Current Neighbors ("
-                       << connector.numLocalNeighbors(it->first) << "):"
+                       << connector.numLocalNeighbors(*it) << "):"
                        << std::endl;
             Box ghost_box = mapped_box;
             ghost_box.grow(connector.getConnectorWidth());
@@ -2088,7 +2100,7 @@ size_t OverlapConnectorAlgorithm::checkOverlapCorrectness(
          }
          {
             tbox::perr << "  Missing Neighbors ("
-                       << missing.numLocalNeighbors(im->first) << "):"
+                       << missing.numLocalNeighbors(*im) << "):"
                        << std::endl;
             Box ghost_box = mapped_box;
             ghost_box.grow(connector.getConnectorWidth());
@@ -2109,7 +2121,7 @@ size_t OverlapConnectorAlgorithm::checkOverlapCorrectness(
          }
          ++im;
       } else if ((im == missing.end()) ||
-                 (ie != extra.end() && ie->first < im->first)) {
+                 (ie != extra.end() && *ie < *im)) {
 
          /*
           * ie goes before im (or im has reached the end).  Report the
@@ -2118,14 +2130,15 @@ size_t OverlapConnectorAlgorithm::checkOverlapCorrectness(
 
          const Box& mapped_box = *connector.getBase().getBoxStrict(
                global_id_extra);
-         tbox::perr << "Found " << extra.numLocalNeighbors(ie->first)
+         tbox::perr << "Found " << extra.numLocalNeighbors(*ie)
                     << " extra overlaps for " << mapped_box << std::endl;
-         it = connector.findLocal(global_id_extra);
+         Connector::ConstNeighborhoodIterator it =
+            connector.findLocal(global_id_extra);
          if (it == connector.end()) {
             tbox::perr << "  Current Neighbors (no neighbor set)." << std::endl;
          } else {
             tbox::perr << "  Current Neighbors ("
-                       << connector.numLocalNeighbors(it->first) << "):"
+                       << connector.numLocalNeighbors(*it) << "):"
                        << std::endl;
             Box ghost_box = mapped_box;
             ghost_box.grow(connector.getConnectorWidth());
@@ -2146,7 +2159,7 @@ size_t OverlapConnectorAlgorithm::checkOverlapCorrectness(
          }
          {
             tbox::perr << "  Extra Neighbors ("
-                       << extra.numLocalNeighbors(ie->first) << "):"
+                       << extra.numLocalNeighbors(*ie) << "):"
                        << std::endl;
             Box ghost_box = mapped_box;
             ghost_box.grow(connector.getConnectorWidth());

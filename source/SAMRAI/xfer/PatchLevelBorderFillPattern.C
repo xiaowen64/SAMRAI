@@ -119,15 +119,15 @@ void PatchLevelBorderFillPattern::computeFillBoxesAndNeighborhoodSets(
       if (!fill_boxes.isEmpty()) {
          d_max_fill_boxes = tbox::MathUtilities<int>::Max(d_max_fill_boxes,
                fill_boxes.size());
-         dst_to_fill.makeEmptyLocalNeighborhood(dst_mapped_box.getId());
+         hier::Connector::NeighborhoodIterator base_box_itr =
+            dst_to_fill.makeEmptyLocalNeighborhood(dst_mapped_box.getId());
          for (hier::BoxContainer::Iterator li(fill_boxes); li != fill_boxes.end(); ++li) {
             hier::Box fill_mapped_box(*li,
                                       ++last_id,
                                       dst_mapped_box.getOwnerRank(),
                                       dst_mapped_box.getBlockId());
             fill_mapped_boxes.addBoxWithoutUpdate(fill_mapped_box);
-            dst_to_fill.insertLocalNeighbor(fill_mapped_box,
-               dst_mapped_box.getId());
+            dst_to_fill.insertLocalNeighbor(fill_mapped_box, base_box_itr);
          }
       }
    }

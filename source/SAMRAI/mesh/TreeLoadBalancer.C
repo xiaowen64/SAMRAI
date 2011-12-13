@@ -732,8 +732,9 @@ void TreeLoadBalancer::constrainMaxBoxSizes(
 
          if (chopped.size() != 1) {
 
-            unconstrained_to_constrained.makeEmptyLocalNeighborhood(
-               box.getId());
+            hier::Connector::NeighborhoodIterator base_box_itr =
+               unconstrained_to_constrained.makeEmptyLocalNeighborhood(
+                  box.getId());
 
             for (hier::BoxContainer::Iterator li(chopped);
                  li != chopped.end(); ++li) {
@@ -752,8 +753,9 @@ void TreeLoadBalancer::constrainMaxBoxSizes(
 
                constrained.addBox(new_box);
 
-               unconstrained_to_constrained.insertLocalNeighbor(new_box,
-                  box.getId());
+               unconstrained_to_constrained.insertLocalNeighbor(
+                  new_box,
+                  base_box_itr);
 
             }
 
@@ -4447,8 +4449,7 @@ void TreeLoadBalancer::prebalanceBoxLevel(
 
                   hier::BoxId tmp_box_id = (*tmp_iter).getId();
 
-                  tmp_to_balance.insertLocalNeighbor(box,
-                     tmp_box_id);
+                  tmp_to_balance.insertLocalNeighbor(box, tmp_box_id);
 
                   id_buffer[b] = tmp_box_id.getLocalId().getValue();
                }

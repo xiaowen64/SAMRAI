@@ -62,7 +62,7 @@ ConnectorStatistics::ConnectorStatistics(
 ConnectorStatistics::StatisticalQuantities::StatisticalQuantities()
 {
    for ( int i=0; i<NUMBER_OF_QUANTITIES; ++i ) {
-      d_values[i] = 0;
+      d_values[i] = 0.;
    }
 }
 
@@ -111,19 +111,19 @@ void ConnectorStatistics::computeLocalConnectorStatistics(
       static_cast<double>(base.getLocalNumberOfCells());
 
    sq.d_values[HAS_ANY_NEIGHBOR_SETS] =
-      d_connector.getLocalNumberOfNeighborSets() > 0;
+      static_cast<double>(d_connector.getLocalNumberOfNeighborSets() > 0);
    sq.d_values[NUMBER_OF_NEIGHBOR_SETS] =
       static_cast<double>(d_connector.getLocalNumberOfNeighborSets());
 
    sq.d_values[HAS_ANY_RELATIONSHIPS] =
-      d_connector.getLocalNumberOfRelationships() > 0;
+      static_cast<double>(d_connector.getLocalNumberOfRelationships() > 0);
    sq.d_values[NUMBER_OF_RELATIONSHIPS] =
       static_cast<double>(d_connector.getLocalNumberOfRelationships());
    sq.d_values[MIN_NUMBER_OF_RELATIONSHIPS] =
       tbox::MathUtilities<double>::getMax();
-   sq.d_values[MAX_NUMBER_OF_RELATIONSHIPS] = 0;
+   sq.d_values[MAX_NUMBER_OF_RELATIONSHIPS] = 0.;
 
-   sq.d_values[NUMBER_OF_NEIGHBORS] = 0;
+   sq.d_values[NUMBER_OF_NEIGHBORS] = 0.;
    sq.d_values[NUMBER_OF_LOCAL_NEIGHBORS] = 0.;
    sq.d_values[NUMBER_OF_REMOTE_NEIGHBORS] = 0.;
    sq.d_values[NUMBER_OF_REMOTE_NEIGHBOR_OWNERS] = 0.;
@@ -133,26 +133,25 @@ void ConnectorStatistics::computeLocalConnectorStatistics(
    for ( Connector::ConstNeighborhoodIterator nbi=d_connector.begin();
          nbi!=d_connector.end(); ++nbi ) {
 
-      const BoxContainer &neighbors = nbi->second;
-
-      visible_neighbors.insert( neighbors.begin(), neighbors.end() );
+      const int num_relations = d_connector.numLocalNeighbors(*nbi);
 
       sq.d_values[MIN_NUMBER_OF_RELATIONSHIPS] =
          tbox::MathUtilities<double>::Min(
             sq.d_values[MIN_NUMBER_OF_RELATIONSHIPS],
-            static_cast<double>(neighbors.size()));
+            static_cast<double>(num_relations));
 
       sq.d_values[MAX_NUMBER_OF_RELATIONSHIPS] =
          tbox::MathUtilities<double>::Max(
             sq.d_values[MAX_NUMBER_OF_RELATIONSHIPS],
-            static_cast<double>(neighbors.size()));
+            static_cast<double>(num_relations));
 
-      Box base_box = *base.getBoxStrict(nbi->first);
+      Box base_box = *base.getBoxStrict(*nbi);
       base_box.grow(d_connector.getConnectorWidth());
 
-      for ( Connector::ConstNeighborIterator ni=neighbors.begin();
-            ni!=neighbors.end(); ++ni ) {
+      for ( Connector::ConstNeighborIterator ni = d_connector.begin(nbi);
+            ni != d_connector.end(nbi); ++ni ) {
 
+         visible_neighbors.insert(*ni);
          Box neighbor = *ni;
          if ( refine_head ) {
             neighbor.refine(d_connector.getRatio());
