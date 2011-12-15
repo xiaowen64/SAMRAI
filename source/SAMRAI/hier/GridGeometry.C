@@ -1473,7 +1473,7 @@ void GridGeometry::setPhysicalDomain(
 
          } else {
             TBOX_ERROR("Error in GridGeometry object with name = "
-               << d_object_name << ": in intializePeriodicShift():  "
+               << d_object_name << ": in initializePeriodicShift():  "
                << "Domain is not periodic for one (or more) of the dimensions "
                << "specified in the geometry input file!");
          }
@@ -1986,6 +1986,7 @@ void GridGeometry::registerNeighbors(
    Transformation transformation(rotation, shift, block_b, block_a);
    Transformation back_transformation(back_rotation, back_shift,
                                       block_a, block_b);
+
    Neighbor neighbor_of_b(block_a, a_domain_in_b_space,
                           back_transformation,
                           is_singularity);

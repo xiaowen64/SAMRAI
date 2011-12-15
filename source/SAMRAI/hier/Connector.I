@@ -75,6 +75,12 @@ bool Connector::getHeadCoarserFlag() const
    return d_head_coarser;
 }
 
+SAMRAI_INLINE_KEYWORD
+bool Connector::isLocal() const
+{
+   return d_relationships.isLocal(getMPI().getRank());
+}
+
 /*
  ***********************************************************************
  ***********************************************************************
@@ -83,14 +89,11 @@ SAMRAI_INLINE_KEYWORD
 bool Connector::hasNeighborSet(
    const BoxId& mapped_box_id) const
 {
-   if (d_parallel_state == BoxLevel::DISTRIBUTED) {
-      TBOX_ASSERT(mapped_box_id.getOwnerRank() == d_mpi.getRank());
-   }
-   const NeighborhoodSet& relationships = d_parallel_state == BoxLevel::DISTRIBUTED ?
-      d_relationships : d_global_relationships;
+   const BoxNeighborhoodCollection& relationships =
+      getRelations(mapped_box_id);
    BoxId non_per_id(mapped_box_id.getGlobalId(),
                     PeriodicId::zero());
-   NeighborhoodSet::const_iterator ei = relationships.find(non_per_id);
+   ConstNeighborhoodIterator ei = relationships.find(non_per_id);
    return ei != relationships.end();
 }
 
@@ -99,10 +102,16 @@ bool Connector::hasNeighborSet(
  ***********************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-const Connector::NeighborSet& Connector::getNeighborSet(
+const BoxNeighborhoodCollection& Connector::getRelations(
    const BoxId& mapped_box_id) const
 {
-   return find(mapped_box_id)->second;
+   if (d_parallel_state == BoxLevel::DISTRIBUTED) {
+      TBOX_ASSERT(mapped_box_id.getOwnerRank() == d_mpi.getRank());
+   }
+   const BoxNeighborhoodCollection& relationships =
+      d_parallel_state == BoxLevel::DISTRIBUTED ?
+      d_relationships : d_global_relationships;
+   return relationships;
 }
 
 /*
@@ -220,13 +229,9 @@ bool Connector::operator != (
  */
 SAMRAI_INLINE_KEYWORD
 void Connector::coarsenLocalNeighbors(
-   Connector& coarser,
-   const IntVector& ratio) const
+   const IntVector& ratio)
 {
-   if (coarser != *this) {
-      coarser.d_relationships.clear();
-   }
-   d_relationships.coarsenNeighbors(coarser.d_relationships, ratio);
+   d_relationships.coarsenNeighbors(ratio);
    return;
 }
 
@@ -236,13 +241,9 @@ void Connector::coarsenLocalNeighbors(
  */
 SAMRAI_INLINE_KEYWORD
 void Connector::refineLocalNeighbors(
-   Connector& finer,
-   const IntVector& ratio) const
+   const IntVector& ratio)
 {
-   if (finer != *this) {
-      finer.d_relationships.clear();
-   }
-   d_relationships.refineNeighbors(finer.d_relationships, ratio);
+   d_relationships.refineNeighbors(ratio);
    return;
 }
 
@@ -252,13 +253,9 @@ void Connector::refineLocalNeighbors(
  */
 SAMRAI_INLINE_KEYWORD
 void Connector::growLocalNeighbors(
-   Connector& grown,
-   const IntVector& growth) const
+   const IntVector& growth)
 {
-   if (grown != *this) {
-      grown.d_relationships.clear();
-   }
-   d_relationships.growNeighbors(grown.d_relationships, growth);
+   d_relationships.growNeighbors(growth);
    return;
 }
 
@@ -271,7 +268,7 @@ void Connector::insertLocalNeighbor(
    const Box& neighbor,
    const BoxId& box_id)
 {
-   d_relationships[box_id].insert(neighbor);
+   d_relationships.insert(box_id, neighbor);
 }
 
 /*
@@ -279,10 +276,22 @@ void Connector::insertLocalNeighbor(
  ***********************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-void Connector::makeEmptyLocalNeighborhood(
-      const BoxId& box_id)
+void Connector::insertLocalNeighbor(
+   const Box& neighbor,
+   NeighborhoodIterator& base_box_itr)
 {
-   d_relationships[box_id];
+   d_relationships.insert(base_box_itr, neighbor);
+}
+
+/*
+ ***********************************************************************
+ ***********************************************************************
+ */
+SAMRAI_INLINE_KEYWORD
+Connector::NeighborhoodIterator Connector::makeEmptyLocalNeighborhood(
+   const BoxId& box_id)
+{
+   return d_relationships.insert(box_id).first;
 }
 
 /*
@@ -291,7 +300,7 @@ void Connector::makeEmptyLocalNeighborhood(
  */
 SAMRAI_INLINE_KEYWORD
 void Connector::eraseLocalNeighborhood(
-      const BoxId& box_id)
+   const BoxId& box_id)
 {
    d_relationships.erase(box_id);
 }
@@ -305,16 +314,7 @@ bool Connector::hasLocalNeighbor(
    const BoxId& box_id,
    const Box& neighbor) const
 {
-   NeighborhoodSet::const_iterator itr = d_relationships.find(box_id);
-   if (itr == d_relationships.end()) {
-      return false;
-   }
-   else if ((*itr).second.find(neighbor) == (*itr).second.end()) {
-      return false;
-   }
-   else {
-      return true;
-   }
+   return d_relationships.hasNeighbor(box_id, neighbor);
 }
 
 /*
@@ -325,13 +325,7 @@ SAMRAI_INLINE_KEYWORD
 bool Connector::isEmptyNeighborhood(
    const BoxId& box_id) const
 {
-   TBOX_ASSERT(hasNeighborSet(box_id));
-
-   const NeighborhoodSet& relationships =
-      d_parallel_state == BoxLevel::DISTRIBUTED ?
-      d_relationships : d_global_relationships;
-
-   return relationships.find(box_id)->second.isEmpty();
+   return getRelations(box_id).emptyBoxNeighborhood(box_id);
 }
 
 /*
@@ -346,7 +340,7 @@ int Connector::numLocalNeighbors(
 
    BoxId non_per_id(box_id.getGlobalId(),
                     PeriodicId::zero());
-   return static_cast<int>(d_relationships.find(non_per_id)->second.size());
+   return d_relationships.numNeighbors(non_per_id);
 }
 
 /*
@@ -355,7 +349,7 @@ int Connector::numLocalNeighbors(
  */
 SAMRAI_INLINE_KEYWORD
 void Connector::getLocalNeighbors(
-   NeighborSet& neighbors) const
+   BoxContainer& neighbors) const
 {
    d_relationships.getNeighbors(neighbors);
    return;
@@ -378,9 +372,23 @@ void Connector::getLocalNeighbors(
  ***********************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-void Connector::getLocalOwners(std::set<int>& owners) const
+void Connector::getLocalOwners(
+   std::set<int>& owners) const
 {
    d_relationships.getOwners(owners);
+   return;
+}
+
+/*
+ ***********************************************************************
+ ***********************************************************************
+ */
+SAMRAI_INLINE_KEYWORD
+void Connector::getLocalOwners(
+   ConstNeighborhoodIterator& base_boxes_itr,
+   std::set<int>& owners) const
+{
+   d_relationships.getOwners(base_boxes_itr, owners);
    return;
 }
 
@@ -411,7 +419,27 @@ Connector::ConstNeighborhoodIterator Connector::begin() const
  ***********************************************************************
  */
 SAMRAI_INLINE_KEYWORD
+Connector::NeighborhoodIterator Connector::begin()
+{
+   return d_relationships.begin();
+}
+
+/*
+ ***********************************************************************
+ ***********************************************************************
+ */
+SAMRAI_INLINE_KEYWORD
 Connector::ConstNeighborhoodIterator Connector::end() const
+{
+   return d_relationships.end();
+}
+
+/*
+ ***********************************************************************
+ ***********************************************************************
+ */
+SAMRAI_INLINE_KEYWORD
+Connector::NeighborhoodIterator Connector::end()
 {
    return d_relationships.end();
 }
@@ -424,8 +452,20 @@ SAMRAI_INLINE_KEYWORD
 Connector::ConstNeighborIterator Connector::begin(
    ConstNeighborhoodIterator& nbrhd) const
 {
-   TBOX_ASSERT(nbrhd != end());
-   return nbrhd->second.begin();
+   return nbrhd.d_collection->begin(nbrhd);
+}
+
+/*
+ ***********************************************************************
+ ***********************************************************************
+ */
+SAMRAI_INLINE_KEYWORD
+Connector::NeighborIterator Connector::begin(
+   NeighborhoodIterator& nbrhd)
+{
+   BoxNeighborhoodCollection* tmp =
+      const_cast<BoxNeighborhoodCollection*>(nbrhd.d_collection);
+   return tmp->begin(nbrhd);
 }
 
 /*
@@ -436,8 +476,20 @@ SAMRAI_INLINE_KEYWORD
 Connector::ConstNeighborIterator Connector::end(
    ConstNeighborhoodIterator& nbrhd) const
 {
-   TBOX_ASSERT(nbrhd != end());
-   return nbrhd->second.end();
+   return nbrhd.d_collection->end(nbrhd);
+}
+
+/*
+ ***********************************************************************
+ ***********************************************************************
+ */
+SAMRAI_INLINE_KEYWORD
+Connector::NeighborIterator Connector::end(
+   NeighborhoodIterator& nbrhd)
+{
+   BoxNeighborhoodCollection* tmp =
+      const_cast<BoxNeighborhoodCollection*>(nbrhd.d_collection);
+   return tmp->end(nbrhd);
 }
 
 /*
@@ -458,17 +510,26 @@ Connector::ConstNeighborhoodIterator Connector::findLocal(
  ***********************************************************************
  */
 SAMRAI_INLINE_KEYWORD
+Connector::NeighborhoodIterator Connector::findLocal(
+   const BoxId& box_id)
+{
+   BoxId non_per_id(box_id.getGlobalId(),
+                    PeriodicId::zero());
+   return d_relationships.find(non_per_id);
+}
+
+/*
+ ***********************************************************************
+ ***********************************************************************
+ */
+SAMRAI_INLINE_KEYWORD
 Connector::ConstNeighborhoodIterator Connector::find(
    const BoxId& box_id) const
 {
-   if (d_parallel_state == BoxLevel::DISTRIBUTED) {
-      TBOX_ASSERT(box_id.getOwnerRank() == d_mpi.getRank());
-   }
-   const NeighborhoodSet& relationships = d_parallel_state == BoxLevel::DISTRIBUTED ?
-      d_relationships : d_global_relationships;
+   const BoxNeighborhoodCollection& relationships = getRelations(box_id);
    BoxId non_per_id(box_id.getGlobalId(),
                     PeriodicId::zero());
-   NeighborhoodSet::const_iterator ei = relationships.find(non_per_id);
+   ConstNeighborhoodIterator ei = relationships.find(non_per_id);
    if (ei == relationships.end()) {
       TBOX_ERROR("Connector::find: No neighbor set exists for\n"
          << "box " << box_id << ".\n");
@@ -481,7 +542,8 @@ Connector::ConstNeighborhoodIterator Connector::find(
  ***********************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-bool Connector::localNeighborhoodsEqual(const Connector& other) const
+bool Connector::localNeighborhoodsEqual(
+   const Connector& other) const
 {
    return d_relationships == other.d_relationships;
 }
@@ -495,7 +557,12 @@ bool Connector::neighborhoodEqual(
    const BoxId& box_id,
    const Connector& other) const
 {
-   return getNeighborSet(box_id) == other.getNeighborSet(box_id);
+   const BoxNeighborhoodCollection& relationships = getRelations(box_id);
+   const BoxNeighborhoodCollection& other_relationships =
+      other.getRelations(box_id);
+   BoxId non_per_id(box_id.getGlobalId(),
+                    PeriodicId::zero());
+   return relationships.neighborhoodEqual(box_id, other_relationships);
 }
 
 /*
@@ -503,7 +570,8 @@ bool Connector::neighborhoodEqual(
  ***********************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-void Connector::putNeighborhoodsToDatabase(tbox::Database& database) const
+void Connector::putNeighborhoodsToDatabase(
+   tbox::Database& database) const
 {
    d_relationships.putToDatabase(database);
    return;
@@ -514,34 +582,10 @@ void Connector::putNeighborhoodsToDatabase(tbox::Database& database) const
  ***********************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-void Connector::getNeighborhoodsFromDatabase(tbox::Database& database)
+void Connector::getNeighborhoodsFromDatabase(
+   tbox::Database& database)
 {
    d_relationships.getFromDatabase(database);
-   return;
-}
-
-/*
- ***********************************************************************
- ***********************************************************************
- */
-SAMRAI_INLINE_KEYWORD
-void Connector::writeNeighborhoodsToErrorStream(
-   const std::string& border) const
-{
-   tbox::perr << d_relationships.format(border, 2);
-   return;
-}
-
-/*
- ***********************************************************************
- ***********************************************************************
- */
-SAMRAI_INLINE_KEYWORD
-void Connector::writeNeighborhoodToErrorStream(
-   const BoxId& box_id,
-   const std::string& border) const
-{
-   tbox::perr << getNeighborSet(box_id).format(border);
    return;
 }
 

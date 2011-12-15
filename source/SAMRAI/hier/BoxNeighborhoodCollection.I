@@ -14,9 +14,7 @@ namespace SAMRAI {
 namespace hier {
 
 SAMRAI_INLINE_KEYWORD
-BoxNeighborhoodCollection::BoxNeighborhoodCollection(
-   int rank) :
-   d_rank(rank)
+BoxNeighborhoodCollection::BoxNeighborhoodCollection()
 {
 }
 
@@ -52,303 +50,224 @@ BoxNeighborhoodCollection::ConstIterator BoxNeighborhoodCollection::end() const
 
 SAMRAI_INLINE_KEYWORD
 BoxNeighborhoodCollection::NeighborIterator BoxNeighborhoodCollection::begin(
-   const Box& root)
+   const BoxId& base_box_id)
 {
-   Iterator itr(find(root));
+   Iterator itr(find(base_box_id));
    return begin(itr);
 }
 
 SAMRAI_INLINE_KEYWORD
 BoxNeighborhoodCollection::ConstNeighborIterator
 BoxNeighborhoodCollection::begin(
-   const Box& root) const
+   const BoxId& base_box_id) const
 {
-   return begin(find(root));
+   return begin(find(base_box_id));
 }
 
 SAMRAI_INLINE_KEYWORD
 BoxNeighborhoodCollection::NeighborIterator BoxNeighborhoodCollection::begin(
-   const BoxId& root_id)
+   BoxNeighborhoodCollection::Iterator& base_box_itr)
 {
-   Iterator itr(find(root_id));
-   return begin(itr);
+   TBOX_ASSERT(base_box_itr.d_collection == this);
+   TBOX_ASSERT(base_box_itr != end());
+
+   return NeighborIterator(base_box_itr);
 }
 
 SAMRAI_INLINE_KEYWORD
 BoxNeighborhoodCollection::ConstNeighborIterator
 BoxNeighborhoodCollection::begin(
-   const BoxId& root_id) const
+   const BoxNeighborhoodCollection::ConstIterator& base_box_itr) const
 {
-   return begin(find(root_id));
-}
+   TBOX_ASSERT(base_box_itr.d_collection == this);
+   TBOX_ASSERT(base_box_itr != end());
 
-SAMRAI_INLINE_KEYWORD
-BoxNeighborhoodCollection::NeighborIterator BoxNeighborhoodCollection::begin(
-   BoxNeighborhoodCollection::Iterator& root_itr)
-{
-   if (root_itr == end()) {
-      TBOX_ERROR("hier::BoxNeighborhoolCollection::begin root_itr points to end");
-   }
-
-   return NeighborIterator(*this, root_itr);
-}
-
-SAMRAI_INLINE_KEYWORD
-BoxNeighborhoodCollection::ConstNeighborIterator
-BoxNeighborhoodCollection::begin(
-   const BoxNeighborhoodCollection::ConstIterator& root_itr) const
-{
-   if (root_itr == end()) {
-      TBOX_ERROR("hier::BoxNeighborhoolCollection::begin root_itr points to end");
-   }
-
-   return ConstNeighborIterator(*this, root_itr);
+   return ConstNeighborIterator(base_box_itr);
 }
 
 SAMRAI_INLINE_KEYWORD
 BoxNeighborhoodCollection::NeighborIterator BoxNeighborhoodCollection::end(
-   const Box& root)
+   const BoxId& base_box_id)
 {
-   Iterator itr(find(root));
+   Iterator itr(find(base_box_id));
    return end(itr);
 }
 
 SAMRAI_INLINE_KEYWORD
 BoxNeighborhoodCollection::ConstNeighborIterator
 BoxNeighborhoodCollection::end(
-   const Box& root) const
+   const BoxId& base_box_id) const
 {
-   return end(find(root));
+   return end(find(base_box_id));
 }
 
 SAMRAI_INLINE_KEYWORD
 BoxNeighborhoodCollection::NeighborIterator BoxNeighborhoodCollection::end(
-   const BoxId& root_id)
+   BoxNeighborhoodCollection::Iterator& base_box_itr)
 {
-   Iterator itr(find(root_id));
-   return end(itr);
+   TBOX_ASSERT(base_box_itr.d_collection == this);
+   TBOX_ASSERT(base_box_itr != end());
+
+   return NeighborIterator(base_box_itr, false);
 }
 
 SAMRAI_INLINE_KEYWORD
 BoxNeighborhoodCollection::ConstNeighborIterator
 BoxNeighborhoodCollection::end(
-   const BoxId& root_id) const
+   const BoxNeighborhoodCollection::ConstIterator& base_box_itr) const
 {
-   return end(find(root_id));
-}
+   TBOX_ASSERT(base_box_itr.d_collection == this);
+   TBOX_ASSERT(base_box_itr != end());
 
-SAMRAI_INLINE_KEYWORD
-BoxNeighborhoodCollection::NeighborIterator BoxNeighborhoodCollection::end(
-   BoxNeighborhoodCollection::Iterator& root_itr)
-{
-   if (root_itr == end()) {
-      TBOX_ERROR("hier::BoxNeighborhoodCollection::end root_itr points to end");
-   }
-
-   return NeighborIterator(*this, root_itr, false);
-}
-
-SAMRAI_INLINE_KEYWORD
-BoxNeighborhoodCollection::ConstNeighborIterator
-BoxNeighborhoodCollection::end(
-   const BoxNeighborhoodCollection::ConstIterator& root_itr) const
-{
-   if (root_itr == end()) {
-      TBOX_ERROR("hier::BoxNeighborhoodCollection::end root_itr points to end");
-   }
-
-   return ConstNeighborIterator(*this, root_itr, false);
+   return ConstNeighborIterator(base_box_itr, false);
 }
 
 SAMRAI_INLINE_KEYWORD
 BoxNeighborhoodCollection::ConstIterator BoxNeighborhoodCollection::find(
-   const BoxId& root_id) const
+   const BoxId& base_box_id) const
 {
-   return find(Box(tbox::Dimension::getMaxDimension(), root_id));
+   BaseBoxPoolItr base_boxes_itr = d_base_boxes.find(base_box_id);
+   if (base_boxes_itr == d_base_boxes.end()) {
+      return end();
+   }
+   else {
+      return ConstIterator(*this, d_adj_list.find(&(*base_boxes_itr)));
+   }
 }
 
 SAMRAI_INLINE_KEYWORD
 BoxNeighborhoodCollection::Iterator BoxNeighborhoodCollection::find(
-   const BoxId& root_id)
+   const BoxId& base_box_id)
 {
-   return find(Box(tbox::Dimension::getMaxDimension(), root_id));
+   BaseBoxPoolItr base_boxes_itr = d_base_boxes.find(base_box_id);
+   if (base_boxes_itr == d_base_boxes.end()) {
+      return end();
+   }
+   else {
+      return Iterator(*this, d_adj_list.find(&(*base_boxes_itr)));
+   }
 }
 
 SAMRAI_INLINE_KEYWORD
 bool BoxNeighborhoodCollection::empty() const
 {
-   return begin() == end();
+   return d_base_boxes.empty();
+}
+
+SAMRAI_INLINE_KEYWORD
+int BoxNeighborhoodCollection::numBoxNeighborhoods() const
+{
+   return static_cast<int>(d_base_boxes.size());
 }
 
 SAMRAI_INLINE_KEYWORD
 bool BoxNeighborhoodCollection::emptyBoxNeighborhood(
-   const Box& root) const
+   const BoxId& base_box_id) const
 {
-   return emptyBoxNeighborhood(find(root));
+   return emptyBoxNeighborhood(find(base_box_id));
 }
 
 SAMRAI_INLINE_KEYWORD
 bool BoxNeighborhoodCollection::emptyBoxNeighborhood(
-   const BoxId& root_id) const
+   const ConstIterator& base_box_itr) const
 {
-   return emptyBoxNeighborhood(find(root_id));
-}
+   TBOX_ASSERT(base_box_itr.d_collection == this);
+   TBOX_ASSERT(base_box_itr != end());
 
-SAMRAI_INLINE_KEYWORD
-bool BoxNeighborhoodCollection::emptyBoxNeighborhood(
-   const ConstIterator& root_itr) const
-{
-   if (root_itr == end()) {
-      TBOX_ERROR("hier::BoxNeighborhoodCollection::emptyBoxNeighborhood root_itr points to end");
-   }
-
-   return root_itr.d_itr->second.size() == 0;
+   return base_box_itr.d_itr->second.empty();
 }
 
 SAMRAI_INLINE_KEYWORD
 int BoxNeighborhoodCollection::numNeighbors(
-   const Box& root) const
+   const BoxId& base_box_id) const
 {
-   return numNeighbors(find(root));
+   return numNeighbors(find(base_box_id));
 }
 
 SAMRAI_INLINE_KEYWORD
 int BoxNeighborhoodCollection::numNeighbors(
-   const BoxId& root_id) const
+   const ConstIterator& base_box_itr) const
 {
-   return numNeighbors(find(root_id));
+   TBOX_ASSERT(base_box_itr.d_collection == this);
+   TBOX_ASSERT(base_box_itr != end());
+
+   return static_cast<int>(base_box_itr.d_itr->second.size());
 }
 
 SAMRAI_INLINE_KEYWORD
-int BoxNeighborhoodCollection::numNeighbors(
-   const ConstIterator& root_itr) const
+bool BoxNeighborhoodCollection::hasNeighbor(
+   const BoxId& base_box_id,
+   const Box& nbr) const
 {
-   if (root_itr == end()) {
-      TBOX_ERROR("hier::BoxNeighborhoodCollection::numNeighbors root_itr points to end");
-   }
-
-   return static_cast<int>(root_itr.d_itr->second.size());
+   return hasNeighbor(find(base_box_id), nbr);
 }
 
 SAMRAI_INLINE_KEYWORD
-bool BoxNeighborhoodCollection::hasPeriodicNeighborhood(
-   const Box& root) const
+bool BoxNeighborhoodCollection::isBaseBox(
+   const BoxId& base_box_id) const
 {
-   return hasPeriodicNeighborhood(find(root));
-}
-
-SAMRAI_INLINE_KEYWORD
-bool BoxNeighborhoodCollection::hasPeriodicNeighborhood(
-   const BoxId& root_id) const
-{
-   return hasPeriodicNeighborhood(find(root_id));
-}
-
-SAMRAI_INLINE_KEYWORD
-bool BoxNeighborhoodCollection::isRoot(
-   const Box& root) const
-{
-   return find(root) != end();
-}
-
-SAMRAI_INLINE_KEYWORD
-bool BoxNeighborhoodCollection::isRoot(
-   const BoxId& root_id) const
-{
-   return find(root_id) != end();
+   return find(base_box_id) != end();
 }
 
 SAMRAI_INLINE_KEYWORD
 BoxNeighborhoodCollection::Iterator BoxNeighborhoodCollection::insert(
-   const BoxId& root_id,
+   const BoxId& base_box_id,
    const Box& new_nbr)
 {
-   Iterator itr(find(root_id));
-   insert(itr, new_nbr);
-   return itr;
+   Iterator base_boxes_itr = insert(base_box_id).first;
+   insert(base_boxes_itr, new_nbr);
+   return base_boxes_itr;
 }
 
 SAMRAI_INLINE_KEYWORD
 BoxNeighborhoodCollection::Iterator BoxNeighborhoodCollection::insert(
-   const BoxId& root_id,
+   const BoxId& base_box_id,
    const BoxContainer& new_nbrs)
 {
-   Iterator itr(find(root_id));
-   insert(itr, new_nbrs);
-   return itr;
+   Iterator base_boxes_itr = insert(base_box_id).first;
+   insert(base_boxes_itr, new_nbrs);
+   return base_boxes_itr;
 }
 
 SAMRAI_INLINE_KEYWORD
 void BoxNeighborhoodCollection::erase(
-   const Box& root,
+   const BoxId& base_box_id,
    const Box& nbr)
 {
-   Iterator itr(find(root));
+   Iterator itr(find(base_box_id));
    erase(itr, nbr);
    return;
 }
 
 SAMRAI_INLINE_KEYWORD
 void BoxNeighborhoodCollection::erase(
-   const BoxId& root_id,
-   const Box& nbr)
-{
-   Iterator itr(find(root_id));
-   erase(itr, nbr);
-   return;
-}
-
-SAMRAI_INLINE_KEYWORD
-void BoxNeighborhoodCollection::erase(
-   Iterator& root_itr,
-   const Box& nbr)
-{
-   if (root_itr == end()) {
-      TBOX_ERROR("hier::BoxNeighborhoodCollection::erase root_itr points to end");
-   }
-
-   root_itr.d_itr->second.erase(&nbr);
-   return;
-}
-
-SAMRAI_INLINE_KEYWORD
-void BoxNeighborhoodCollection::erase(
-   const Box& root,
+   const BoxId& base_box_id,
    const BoxContainer& nbrs)
 {
-   Iterator itr(find(root));
+   Iterator itr(find(base_box_id));
    erase(itr, nbrs);
    return;
 }
 
 SAMRAI_INLINE_KEYWORD
 void BoxNeighborhoodCollection::erase(
-   const BoxId& root_id,
-   const BoxContainer& nbrs)
+   const BoxId& base_box_id)
 {
-   Iterator itr(find(root_id));
-   erase(itr, nbrs);
+   Iterator itr(find(base_box_id));
+   erase(itr);
    return;
 }
 
 SAMRAI_INLINE_KEYWORD
-void BoxNeighborhoodCollection::erase(
-   const Box& root,
-   bool erase_root)
+BoxNeighborhoodCollection::Iterator::Iterator(
+   BoxNeighborhoodCollection& nbrhds,
+   bool from_start) :
+   d_collection(&nbrhds),
+   d_itr(from_start ? nbrhds.d_adj_list.begin() :
+                      nbrhds.d_adj_list.end()),
+   d_base_boxes_itr(from_start ? nbrhds.d_base_boxes.begin() :
+                                 nbrhds.d_base_boxes.end())
 {
-   Iterator itr(find(root));
-   erase(itr, erase_root);
-   return;
-}
-
-SAMRAI_INLINE_KEYWORD
-void BoxNeighborhoodCollection::erase(
-   const BoxId& root_id,
-   bool erase_root)
-{
-   Iterator itr(find(root_id));
-   erase(itr, erase_root);
-   return;
 }
 
 SAMRAI_INLINE_KEYWORD
@@ -356,7 +275,8 @@ BoxNeighborhoodCollection::Iterator::Iterator(
    BoxNeighborhoodCollection& nbrhds,
    AdjListItr itr) :
    d_collection(&nbrhds),
-   d_itr(itr)
+   d_itr(itr),
+   d_base_boxes_itr(nbrhds.d_base_boxes.find(*(itr->first)))
 {
 }
 
@@ -364,7 +284,8 @@ SAMRAI_INLINE_KEYWORD
 BoxNeighborhoodCollection::Iterator::Iterator(
    const Iterator& other) :
    d_collection(other.d_collection),
-   d_itr(other.d_itr)
+   d_itr(other.d_itr),
+   d_base_boxes_itr(other.d_base_boxes_itr)
 {
 }
 
@@ -375,6 +296,7 @@ BoxNeighborhoodCollection::Iterator::operator = (
 {
    d_collection = rhs.d_collection;
    d_itr = rhs.d_itr;
+   d_base_boxes_itr = rhs.d_base_boxes_itr;
    return *this;
 }
 
@@ -384,23 +306,55 @@ BoxNeighborhoodCollection::Iterator::~Iterator()
 }
 
 SAMRAI_INLINE_KEYWORD
-const Box& BoxNeighborhoodCollection::Iterator::operator * ()
+const BoxId& BoxNeighborhoodCollection::Iterator::operator * () const
+{
+   return *(d_itr->first);
+}
+
+SAMRAI_INLINE_KEYWORD
+const BoxId* BoxNeighborhoodCollection::Iterator::operator -> () const
 {
    return d_itr->first;
+}
+
+SAMRAI_INLINE_KEYWORD
+BoxNeighborhoodCollection::Iterator&
+BoxNeighborhoodCollection::Iterator::operator ++ ()
+{
+   // Go to the next base Box.
+   if (d_base_boxes_itr != d_collection->d_base_boxes.end()) {
+      ++d_base_boxes_itr;
+      ++d_itr;
+   }
+   return *this;
 }
 
 SAMRAI_INLINE_KEYWORD
 bool BoxNeighborhoodCollection::Iterator::operator == (
    const Iterator& rhs) const
 {
-   return d_collection == rhs.d_collection && d_itr == rhs.d_itr;
+   return d_collection == rhs.d_collection &&
+          d_itr == rhs.d_itr &&
+          d_base_boxes_itr == rhs.d_base_boxes_itr;
 }
 
 SAMRAI_INLINE_KEYWORD
 bool BoxNeighborhoodCollection::Iterator::operator != (
    const Iterator& rhs) const
 {
-   return d_collection != rhs.d_collection || d_itr != rhs.d_itr;
+   return !(*this == rhs);
+}
+
+SAMRAI_INLINE_KEYWORD
+BoxNeighborhoodCollection::ConstIterator::ConstIterator(
+   const BoxNeighborhoodCollection& nbrhds,
+   bool from_start) :
+   d_collection(&nbrhds),
+   d_itr(from_start ? nbrhds.d_adj_list.begin() :
+                      nbrhds.d_adj_list.end()),
+   d_base_boxes_itr(from_start ? nbrhds.d_base_boxes.begin() :
+                                 nbrhds.d_base_boxes.end())
+{
 }
 
 SAMRAI_INLINE_KEYWORD
@@ -408,7 +362,8 @@ BoxNeighborhoodCollection::ConstIterator::ConstIterator(
    const BoxNeighborhoodCollection& nbrhds,
    AdjListConstItr itr) :
    d_collection(&nbrhds),
-   d_itr(itr)
+   d_itr(itr),
+   d_base_boxes_itr(nbrhds.d_base_boxes.find(*(itr->first)))
 {
 }
 
@@ -416,7 +371,17 @@ SAMRAI_INLINE_KEYWORD
 BoxNeighborhoodCollection::ConstIterator::ConstIterator(
    const ConstIterator& other) :
    d_collection(other.d_collection),
-   d_itr(other.d_itr)
+   d_itr(other.d_itr),
+   d_base_boxes_itr(other.d_base_boxes_itr)
+{
+}
+
+SAMRAI_INLINE_KEYWORD
+BoxNeighborhoodCollection::ConstIterator::ConstIterator(
+   const Iterator& other) :
+   d_collection(other.d_collection),
+   d_itr(other.d_itr),
+   d_base_boxes_itr(other.d_base_boxes_itr)
 {
 }
 
@@ -427,6 +392,18 @@ BoxNeighborhoodCollection::ConstIterator::operator = (
 {
    d_collection = rhs.d_collection;
    d_itr = rhs.d_itr;
+   d_base_boxes_itr = rhs.d_base_boxes_itr;
+   return *this;
+}
+
+SAMRAI_INLINE_KEYWORD
+BoxNeighborhoodCollection::ConstIterator&
+BoxNeighborhoodCollection::ConstIterator::operator = (
+   const Iterator& rhs)
+{
+   d_collection = rhs.d_collection;
+   d_itr = rhs.d_itr;
+   d_base_boxes_itr = rhs.d_base_boxes_itr;
    return *this;
 }
 
@@ -436,34 +413,53 @@ BoxNeighborhoodCollection::ConstIterator::~ConstIterator()
 }
 
 SAMRAI_INLINE_KEYWORD
-const Box& BoxNeighborhoodCollection::ConstIterator::operator * () const
+const BoxId& BoxNeighborhoodCollection::ConstIterator::operator * () const
+{
+   return *(d_itr->first);
+}
+
+SAMRAI_INLINE_KEYWORD
+const BoxId* BoxNeighborhoodCollection::ConstIterator::operator -> () const
 {
    return d_itr->first;
+}
+
+SAMRAI_INLINE_KEYWORD
+BoxNeighborhoodCollection::ConstIterator&
+BoxNeighborhoodCollection::ConstIterator::operator ++ ()
+{
+   // Go to the next base Box.
+   if (d_base_boxes_itr != d_collection->d_base_boxes.end()) {
+      ++d_base_boxes_itr;
+      ++d_itr;
+   }
+   return *this;
 }
 
 SAMRAI_INLINE_KEYWORD
 bool BoxNeighborhoodCollection::ConstIterator::operator == (
    const ConstIterator& rhs) const
 {
-   return d_collection == rhs.d_collection && d_itr == rhs.d_itr;
+   return d_collection == rhs.d_collection &&
+          d_itr == rhs.d_itr &&
+          d_base_boxes_itr == rhs.d_base_boxes_itr;
 }
 
 SAMRAI_INLINE_KEYWORD
 bool BoxNeighborhoodCollection::ConstIterator::operator != (
    const ConstIterator& rhs) const
 {
-   return d_collection != rhs.d_collection || d_itr != rhs.d_itr;
+   return !(*this == rhs);
 }
 
 SAMRAI_INLINE_KEYWORD
 BoxNeighborhoodCollection::NeighborIterator::NeighborIterator(
-   BoxNeighborhoodCollection& nbrhds,
-   Iterator& root,
+   Iterator& base_box_itr,
    bool from_start) :
-   d_collection(&nbrhds),
-   d_root(&(root.d_itr->first)),
-   d_itr(from_start ? root.d_itr->second.begin() :
-                      root.d_itr->second.end())
+   d_collection(base_box_itr.d_collection),
+   d_base_box(base_box_itr.d_itr->first),
+   d_itr(from_start ? base_box_itr.d_itr->second.begin() :
+                      base_box_itr.d_itr->second.end())
 {
 }
 
@@ -471,7 +467,7 @@ SAMRAI_INLINE_KEYWORD
 BoxNeighborhoodCollection::NeighborIterator::NeighborIterator(
    const NeighborIterator& other) :
    d_collection(other.d_collection),
-   d_root(other.d_root),
+   d_base_box(other.d_base_box),
    d_itr(other.d_itr)
 {
 }
@@ -482,7 +478,7 @@ BoxNeighborhoodCollection::NeighborIterator::operator = (
    const NeighborIterator& rhs)
 {
    d_collection = rhs.d_collection;
-   d_root = rhs.d_root;
+   d_base_box = rhs.d_base_box;
    d_itr = rhs.d_itr;
    return *this;
 }
@@ -499,10 +495,18 @@ const Box& BoxNeighborhoodCollection::NeighborIterator::operator * () const
 }
 
 SAMRAI_INLINE_KEYWORD
+const Box* BoxNeighborhoodCollection::NeighborIterator::operator -> () const
+{
+   return *d_itr;
+}
+
+SAMRAI_INLINE_KEYWORD
 BoxNeighborhoodCollection::NeighborIterator&
 BoxNeighborhoodCollection::NeighborIterator::operator ++ ()
 {
-   ++d_itr;
+   if (d_itr != d_collection->d_adj_list.find(d_base_box)->second.end()) {
+      ++d_itr;
+   }
    return *this;
 }
 
@@ -511,7 +515,7 @@ bool BoxNeighborhoodCollection::NeighborIterator::operator == (
    const NeighborIterator& rhs) const
 {
    return d_collection == rhs.d_collection &&
-          d_root == rhs.d_root &&
+          d_base_box == rhs.d_base_box &&
           d_itr == rhs.d_itr;
 }
 
@@ -519,20 +523,17 @@ SAMRAI_INLINE_KEYWORD
 bool BoxNeighborhoodCollection::NeighborIterator::operator != (
    const NeighborIterator& rhs) const
 {
-   return d_collection != rhs.d_collection ||
-          d_root != rhs.d_root ||
-          d_itr != rhs.d_itr;
+   return !(*this == rhs);
 }
 
 SAMRAI_INLINE_KEYWORD
 BoxNeighborhoodCollection::ConstNeighborIterator::ConstNeighborIterator(
-   const BoxNeighborhoodCollection& nbrhds,
-   const ConstIterator& root,
+   const ConstIterator& base_box_itr,
    bool from_start) :
-   d_collection(&nbrhds),
-   d_root(&(root.d_itr->first)),
-   d_itr(from_start ? root.d_itr->second.begin() :
-                      root.d_itr->second.end())
+   d_collection(base_box_itr.d_collection),
+   d_base_box(base_box_itr.d_itr->first),
+   d_itr(from_start ? base_box_itr.d_itr->second.begin() :
+                      base_box_itr.d_itr->second.end())
 {
 }
 
@@ -540,7 +541,16 @@ SAMRAI_INLINE_KEYWORD
 BoxNeighborhoodCollection::ConstNeighborIterator::ConstNeighborIterator(
    const ConstNeighborIterator& other) :
    d_collection(other.d_collection),
-   d_root(other.d_root),
+   d_base_box(other.d_base_box),
+   d_itr(other.d_itr)
+{
+}
+
+SAMRAI_INLINE_KEYWORD
+BoxNeighborhoodCollection::ConstNeighborIterator::ConstNeighborIterator(
+   const NeighborIterator& other) :
+   d_collection(other.d_collection),
+   d_base_box(other.d_base_box),
    d_itr(other.d_itr)
 {
 }
@@ -551,7 +561,18 @@ BoxNeighborhoodCollection::ConstNeighborIterator::operator = (
    const ConstNeighborIterator& rhs)
 {
    d_collection = rhs.d_collection;
-   d_root = rhs.d_root;
+   d_base_box = rhs.d_base_box;
+   d_itr = rhs.d_itr;
+   return *this;
+}
+
+SAMRAI_INLINE_KEYWORD
+BoxNeighborhoodCollection::ConstNeighborIterator&
+BoxNeighborhoodCollection::ConstNeighborIterator::operator = (
+   const NeighborIterator& rhs)
+{
+   d_collection = rhs.d_collection;
+   d_base_box = rhs.d_base_box;
    d_itr = rhs.d_itr;
    return *this;
 }
@@ -569,10 +590,19 @@ BoxNeighborhoodCollection::ConstNeighborIterator::operator * () const
 }
 
 SAMRAI_INLINE_KEYWORD
+const Box*
+BoxNeighborhoodCollection::ConstNeighborIterator::operator -> () const
+{
+   return *d_itr;
+}
+
+SAMRAI_INLINE_KEYWORD
 BoxNeighborhoodCollection::ConstNeighborIterator&
 BoxNeighborhoodCollection::ConstNeighborIterator::operator ++ ()
 {
-   ++d_itr;
+   if (d_itr != d_collection->d_adj_list.find(d_base_box)->second.end()) {
+      ++d_itr;
+   }
    return *this;
 }
 
@@ -581,7 +611,7 @@ bool BoxNeighborhoodCollection::ConstNeighborIterator::operator == (
    const ConstNeighborIterator& rhs) const
 {
    return d_collection == rhs.d_collection &&
-          d_root == rhs.d_root &&
+          d_base_box == rhs.d_base_box &&
           d_itr == rhs.d_itr;
 }
 
@@ -589,9 +619,7 @@ SAMRAI_INLINE_KEYWORD
 bool BoxNeighborhoodCollection::ConstNeighborIterator::operator != (
    const ConstNeighborIterator& rhs) const
 {
-   return d_collection != rhs.d_collection ||
-          d_root != rhs.d_root ||
-          d_itr != rhs.d_itr;
+   return !(*this == rhs);
 }
 
 }

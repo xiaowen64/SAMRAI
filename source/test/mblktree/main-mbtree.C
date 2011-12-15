@@ -477,9 +477,12 @@ void exhaustiveFindOverlapBoxes(
    const tbox::ConstPointer<hier::GridGeometry>& grid_geometry,
    const hier::BoxContainer& search_mapped_boxes)
 {
-
+   const hier::BoxId& box_id = mapped_box.getId();
    hier::Box transformed_box(mapped_box);
    hier::BlockId transformed_block_id(mapped_box.getBlockId());
+   hier::Connector::NeighborhoodIterator base_box_itr =
+      overlap_connector.findLocal(box_id);
+   bool has_base_box = base_box_itr != overlap_connector.end();
 
    for (hier::BoxContainer::ConstIterator bi = search_mapped_boxes.begin();
         bi != search_mapped_boxes.end(); ++bi) {
@@ -505,10 +508,15 @@ void exhaustiveFindOverlapBoxes(
 
       if (transformed_block_id == search_mapped_box.getBlockId()) {
          if (transformed_box.intersects(search_mapped_box)) {
-	   overlap_connector.insertLocalNeighbor(search_mapped_box,
-              mapped_box.getId());
+            if (!has_base_box) {
+               base_box_itr = overlap_connector.makeEmptyLocalNeighborhood(
+                  box_id);
+               has_base_box = true;
+            }
+            overlap_connector.insertLocalNeighbor(
+               search_mapped_box,
+               base_box_itr);
          }
       }
-
    }
 }

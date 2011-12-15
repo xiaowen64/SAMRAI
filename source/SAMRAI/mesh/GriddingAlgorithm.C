@@ -2255,7 +2255,7 @@ void GriddingAlgorithm::checkNonrefinedTags(
    int maxval = 0;
    for (hier::Connector::ConstNeighborhoodIterator ei = tag_to_violator.begin();
         ei != tag_to_violator.end(); ++ei) {
-      const hier::BoxId& mapped_box_id = (*ei).first;
+      const hier::BoxId& mapped_box_id = *ei;
       tbox::Pointer<hier::Patch> patch = level.getPatch(mapped_box_id);
       tbox::Pointer<pdat::CellData<int> > tag_data =
          patch->getPatchData(d_tag_indx);
@@ -2305,7 +2305,7 @@ void GriddingAlgorithm::checkOverlappingPatches(
    for (hier::Connector::ConstNeighborhoodIterator ei = mapped_box_level_to_self.begin();
         ei != mapped_box_level_to_self.end() && !has_overlap; ++ei) {
 
-      const hier::Box& mapped_box = *mapped_box_level.getBoxStrict(ei->first);
+      const hier::Box& mapped_box = *mapped_box_level.getBoxStrict(*ei);
 
       for (hier::Connector::ConstNeighborIterator na = mapped_box_level_to_self.begin(ei);
            na != mapped_box_level_to_self.end(ei) && !has_overlap;
@@ -3418,7 +3418,7 @@ void GriddingAlgorithm::refineNewBoxLevel(
    new_to_tag.setWidth(new_to_tag_width, true);
 
    tag_to_new.setHead(new_mapped_box_level, true);
-   tag_to_new.refineLocalNeighbors(tag_to_new, ratio);
+   tag_to_new.refineLocalNeighbors(ratio);
 #if 0
    const hier::OverlapConnectorAlgorithm oca;
    TBOX_ASSERT(oca.checkOverlapCorrectness(tag_to_new) == 0);
@@ -3683,7 +3683,8 @@ void GriddingAlgorithm::computeNestingViolator(
              * non-nesting parts not found using
              * candidate_to_complement.
              */
-            candidate_to_violator.makeEmptyLocalNeighborhood(cmb_non_per_id);
+            hier::Connector::NeighborhoodIterator base_box_itr =
+               candidate_to_violator.makeEmptyLocalNeighborhood(cmb_non_per_id);
             hier::Connector::ConstNeighborhoodIterator current_violators =
                candidate_to_violator.find(cmb_non_per_id);
             for (hier::Connector::ConstNeighborIterator na = candidate_to_violator.begin(current_violators);
@@ -3697,7 +3698,7 @@ void GriddingAlgorithm::computeNestingViolator(
                   hier::BoxContainer::ConstIterator new_violator = violator.addBox(
                         *bi, cmb.getBlockId());
                   candidate_to_violator.insertLocalNeighbor(*new_violator,
-                     cmb_non_per_id);
+                     base_box_itr);
                }
             }
          }
@@ -3736,6 +3737,10 @@ void GriddingAlgorithm::computeProperNestingData(
          d_proper_nesting_complement[ln];
       const hier::Connector& self_connector =
          d_hierarchy->getConnector(ln, ln);
+
+      // This assert shoud pass due to GriddingAlgorithmConnectorWidthRequestor.
+      TBOX_ASSERT( self_connector.getConnectorWidth() >=
+                   hier::IntVector(d_dim, -d_hierarchy->getProperNestingBuffer(ln)) );
 
       edge_utils.computeExternalParts(
          proper_nesting_complement,
@@ -3825,7 +3830,8 @@ void GriddingAlgorithm::computeProperNestingData(
          *d_hierarchy->getBoxLevel(ln - 1),
          d_proper_nesting_complement[ln],
          d_to_nesting_complement[ln - 1].getConnectorWidth());
-      for (hier::Connector::ConstNeighborhoodIterator ei = d_to_nesting_complement[ln - 1].begin();
+      for (hier::Connector::ConstNeighborhoodIterator ei =
+              d_to_nesting_complement[ln - 1].begin();
            ei != d_to_nesting_complement[ln - 1].end(); ++ei) {
          for (hier::Connector::ConstNeighborIterator na =
                  d_to_nesting_complement[ln - 1].begin(ei);
@@ -3834,8 +3840,7 @@ void GriddingAlgorithm::computeProperNestingData(
             tmp_mapped_box.refine(d_hierarchy->getRatioToCoarserLevel(ln));
             tmp_mapped_box.grow(
                hier::IntVector(d_dim, d_hierarchy->getProperNestingBuffer(ln)));
-            lnm1_to_ln_complement.insertLocalNeighbor(tmp_mapped_box,
-               ei->first);
+            lnm1_to_ln_complement.insertLocalNeighbor(tmp_mapped_box, *ei);
          }
       }
       hier::Connector ln_complement_to_lnm1(d_from_nesting_complement[ln - 1]);

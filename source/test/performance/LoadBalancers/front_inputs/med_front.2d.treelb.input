@@ -1,0 +1,141 @@
+/*************************************************************************
+ *
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
+ *
+ * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Description:   Performance input file for TreeLoadBalancer
+ *
+ ************************************************************************/
+
+
+
+Main {
+   dim = 2
+
+   base_name = "med_front.treelb.2d"
+   log_all_nodes = TRUE
+
+   // Balancer types: TreeLoadBalancer, ChopAndPackLoadBalancer
+   load_balancer_type = "TreeLoadBalancer"
+
+   /*
+     Specify domain as a box array in the reference index space.
+   */
+   domain_boxes = [(0,0),(199,399)]
+
+   /*
+     Specify physical domain box.
+   */
+   xlo = 0.0, 0.0
+   xhi = 1.0, 2.0
+
+   /*
+     Specify number of levels (1, 2 or 3).
+   */
+   max_levels = 3
+
+   /*
+     Specify L0 layer as a box array in the reference index space.
+     The L0 layer will be partitioned but its partitioning is not
+     used in the performance test.
+
+     If omitted, the L0 layer is the same as the domain.
+   */
+   // L0_boxes = [(0,0),(199,99)]
+
+   /*
+     If L0 is not contained in domain, you can use this flag
+     to remove the parts that are outside the domain.
+   */
+   autonest_L0 = TRUE
+
+   /*
+     Specify ghost-cell-width between L0 and unbalanced.
+   */
+   ghost_cell_width = 4, 4
+
+   /*
+     Specify the min patch size.
+   */
+   min_size = 3, 3
+
+   L1_box_gen_method = "PrebalanceBySinusoidalFront"
+
+   PrebalanceByUserBoxes {
+      /*
+        Specify unbalanced layer as a box array in the reference index space.
+
+        initial_owners are the ranks of the owners of all the initial balance boxes.
+        By default, processor 0 owns all the initial balance boxes.
+      */
+      prebalance_boxes = [(0,0),(36,36)]
+      // prebalance_boxes = [(0,0),(19,39)], [(20,0),(39,39)]
+      initial_owners = 0
+   }
+
+   PrebalanceBySinusoidalFront {
+      /*
+        Specify unbalanced layer by tagging a set of sinusoidal fronts
+        oriented in perpendicular to the x-axis.
+      */
+      nesting_width = 4, 4
+      efficiency_tol = 0.75
+      combine_tol = 0.75
+      tag_buffer = 8, 8
+      SinusoidalFrontTagger {
+         init_disp = 0.5, 1.0, 1.0
+         period = 1.0, 4.0, 4.0
+         amplitude = 0.5
+      }
+      BergerRigoutsos {
+         log_node_history = FALSE
+         log_cluster_summary = TRUE
+         log_cluster = FALSE
+         sequentialize_output_indices = FALSE
+         barrier_before_cluster = FALSE
+         // owner_mode = "SINGLE_OWNER"
+         // algo_advance_mode = "SYNCHRONOUS"
+      }
+   }
+
+   PrebalanceByShrinkingLevel {
+      shrink_width = 6, 6
+      nesting_width = 3, 3
+      BergerRigoutsos {
+         log_node_history = TRUE
+         log_cluster_summary = TRUE
+         log_cluster = TRUE
+         sequentialize_output_indices = FALSE
+         barrier_before_cluster = FALSE
+         // owner_mode = "SINGLE_OWNER"
+         // algo_advance_mode = "SYNCHRONOUS"
+      }
+   }
+
+}
+
+TreeLoadBalancer {
+  report_load_balance = TRUE // Reported in main
+  n_root_cycles = -1
+  balance_penalty_wt = 1.0
+  surface_penalty_wt = 1.0
+  slender_penalty_wt = 1.0
+  precut_penalty_wt = 1.0
+
+  // Debugging options
+  check_map = FALSE
+  check_connectivity = FALSE
+  print_steps = TRUE
+  print_swap_steps = FALSE
+  print_break_steps = FALSE
+  print_edge_steps = FALSE
+}
+
+TimerManager {
+//   print_exclusive      = TRUE
+   print_summed           = TRUE
+   print_max              = TRUE
+   print_threshold        = 0.
+   timer_list             = "hier::*::*", "mesh::*::*", "apps::*::*"
+}

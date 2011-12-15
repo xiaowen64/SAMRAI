@@ -28,11 +28,11 @@ namespace SAMRAI {
 namespace hier {
 
 /*!
- * @brief Given a box called the root, the boxes which are adjacent to the root
- * are its neighbors and are said to form the neighborhood of the root.  The
- * neighborhood of a root Box does not include the root Box itself.  This class
- * describes the neighborhoods of a collection of root Boxes.  Each root in the
- * collection has a neighborhood of adjacent Boxes.
+ * @brief Given a Box in a base BoxLevel, the Boxes in a head BoxLevel which
+ * are adjacent to the base Box are its neighbors and are said to form the
+ * neighborhood of the base Box.  This class describes the neighborhoods of a
+ * collection of base Boxes.  Each base Box in the collection has a
+ * neighborhood of adjacent head Boxes.
  */
 class BoxNeighborhoodCollection
 {
@@ -40,15 +40,7 @@ class BoxNeighborhoodCollection
    friend class ConstIterator;
 
    private:
-      // Default constructor does not exist.
-      BoxNeighborhoodCollection();
-
-      /*!
-       * @brief Rank of process on which this object lives.
-       */
-      int d_rank;
-
-      // Hmmmm.
+      // Strict weak ordering for pointers to Boxes.
       struct box_ptr_less {
          bool operator () (const Box* box0, const Box* box1) const
          {
@@ -56,6 +48,7 @@ class BoxNeighborhoodCollection
          }
       };
 
+      // Strict weak ordering for Boxes.
       struct box_less {
          bool operator () (const Box& box0, const Box& box1) const
          {
@@ -63,52 +56,91 @@ class BoxNeighborhoodCollection
          }
       };
 
+      // Strict weak ordering for pointers to BoxIds.
+      struct box_id_ptr_less {
+         bool operator () (const BoxId* id0, const BoxId* id1) const
+         {
+            return *id0 < *id1;
+         }
+      };
+
+      // Strict weak ordering for BoxIds.
+      struct box_id_less {
+         bool operator () (const BoxId& id0, const BoxId& id1) const
+         {
+            return id0 < id1;
+         }
+      };
+
       // Typedefs.
 
-      typedef std::set<const Box*, box_ptr_less> Roots;
+      typedef std::set<BoxId, box_id_less> BaseBoxPool;
 
-      typedef Roots::iterator RootsItr;
+      typedef BaseBoxPool::iterator BaseBoxPoolItr;
 
-      typedef std::set<const Box*, box_ptr_less> Neighbors;
+      typedef std::set<Box, box_less> HeadBoxPool;
 
-      typedef Neighbors::iterator NeighborsItr;
+      typedef std::map<const Box*, int, box_ptr_less> HeadBoxLinkCt;
 
-      typedef Neighbors::const_iterator NeighborsConstItr;
+      typedef std::set<const Box*, box_ptr_less> Neighborhood;
 
-      typedef std::map<Box, Neighbors, box_less> AdjList;
+      typedef Neighborhood::iterator NeighborhoodItr;
+
+      typedef Neighborhood::const_iterator NeighborhoodConstItr;
+
+      typedef std::map<const BoxId*, Neighborhood, box_id_ptr_less> AdjList;
 
       typedef AdjList::iterator AdjListItr;
 
       typedef AdjList::const_iterator AdjListConstItr;
 
+      /*
+       * Static integer constant describing class's version number.
+       */
+      static const int HIER_BOX_NBRHD_COLLECTION_VERSION;
+
+      /*!
+       * @brief The pool of BoxIds of base Boxes.
+       */
+      BaseBoxPool d_base_boxes;
+
+      /*!
+       * @brief The pool of head Boxes.
+       */
+      HeadBoxPool d_nbrs;
+
+      /*!
+       * @brief The links between members of the pool of base Box BoxIds and
+       * members of the pool of head Boxes.  The links are directed from base
+       * to head hence a given base BoxId is linked to arbitrarily many head
+       * Boxes.
+       */
       AdjList d_adj_list;
 
-      Roots d_roots;
+      /*!
+       * @brief The number of incident links for each member of the pool of
+       * head Boxes.
+       */
+      HeadBoxLinkCt d_nbr_link_ct;
 
    public:
       // Constructors.
 
       /*!
-       * @brief Constructs an empty object. There are not yet any root Boxes
+       * @brief Constructs an empty object. There are not yet any base Boxes
        * whose neighborhoods are represented by this object.
-       *
-       * @param rank The rank of the processor on which this object lives.
        */
-      BoxNeighborhoodCollection(
-         int rank);
+      BoxNeighborhoodCollection();
 
       /*!
-       * @brief Constructs a collection of empty neighborhoods for each root
-       * box in roots.
+       * @brief Constructs a collection of empty neighborhoods for each base
+       * box in base_boxes.
        *
-       * @param rank The rank of the processor on which this object lives.
-       *
-       * @param roots Root boxes whose neighborhoods will be represented by
-       * this object.
+       * @param base_boxes Base boxes whose neighborhoods will be represented
+       * by this object.
        */
       BoxNeighborhoodCollection(
-         int rank,
-         const BoxContainer& roots);
+         const BoxContainer& base_boxes);
 
       /*!
        * @brief Copy constructor.
@@ -145,24 +177,35 @@ class BoxNeighborhoodCollection
       bool operator == (
          const BoxNeighborhoodCollection& rhs) const;
 
+      /*!
+       * @brief Determine if two collections are not equivalent.
+       *
+       * @param rhs
+       */
+      bool operator != (
+         const BoxNeighborhoodCollection& rhs) const;
 
-      // Iteration
+      //@{
+      /*!
+       * @name Iteration
+       */
 
       /*!
-       * @brief An iterator over the roots of the neighborhoods in a
+       * @brief An iterator over the base Boxes of the neighborhoods in a
        * BoxNeighborhoodCollection.  The interface does not allow modification
-       * of the neighborhood roots.
+       * of the base Boxes.
        */
       class Iterator
       {
          friend class BoxNeighborhoodCollection;
+         friend class Connector;
 
          public:
             // Constructors.
 
             /*!
-             * @brief Constructs an iterator over the neighborhood roots in
-             * the supplied collection.
+             * @brief Constructs an iterator over the base Boxes in the
+             * supplied collection.
              *
              * @param nbrhds
              */
@@ -199,15 +242,22 @@ class BoxNeighborhoodCollection
             // Operators
 
             /*!
-             * @brief Extracts the Box which is the root of the current
+             * @brief Extracts the BoxId of the base Box of the current
              * neighborhood in the iteration.
              */
-            const Box&
-            operator * ();
+            const BoxId&
+            operator * () const;
 
             /*!
-             * @brief Pre-increment iterator to point to Box which is root of
-             * next neighborhood in the collection.
+             * @brief Extracts a pointer to the BoxId of the base Box of the
+             * current neighborhood in the iteration.
+             */
+            const BoxId*
+            operator -> () const;
+
+            /*!
+             * @brief Pre-increment iterator to point to BoxId of the base Box
+             * of next neighborhood in the collection.
              */
             Iterator&
             operator ++ ();
@@ -235,7 +285,7 @@ class BoxNeighborhoodCollection
             Iterator();
 
             /*!
-             * @brief Constructs an iterator pointing to a specific root in
+             * @brief Constructs an iterator pointing to a specific base Box in
              * nbrhds.  Should only be called by BoxNeighborhoodCollection.
              *
              * @param nbrhds
@@ -249,23 +299,26 @@ class BoxNeighborhoodCollection
             const BoxNeighborhoodCollection* d_collection;
 
             AdjListItr d_itr;
+
+            BaseBoxPoolItr d_base_boxes_itr;
       };
 
       /*!
-       * @brief An iterator over the roots of the neighborhoods in a const
+       * @brief An iterator over the base Boxes of the neighborhoods in a const
        * BoxNeighborhoodCollection.  The interface does not allow modification
-       * of the neighborhood roots.
+       * of the base Boxes.
        */
       class ConstIterator
       {
          friend class BoxNeighborhoodCollection;
+         friend class Connector;
 
          public:
             // Constructors.
 
             /*!
-             * @brief Constructs an iterator over the neighborhood roots in
-             * the supplied collection.
+             * @brief Constructs an iterator over the base Boxes in the
+             * supplied collection.
              *
              * @param nbrhds
              */
@@ -282,6 +335,14 @@ class BoxNeighborhoodCollection
                const ConstIterator& other);
 
             /*!
+             * @brief Copy constructor.
+             *
+             * @param other
+             */
+            ConstIterator(
+               const Iterator& other);
+
+            /*!
              * @brief Assignment operator.
              *
              * @param rhs
@@ -289,6 +350,15 @@ class BoxNeighborhoodCollection
             ConstIterator&
             operator = (
                const ConstIterator& rhs);
+
+            /*!
+             * @brief Assignment operator.
+             *
+             * @param rhs
+             */
+            ConstIterator&
+            operator = (
+               const Iterator& rhs);
 
 
             // Destructor
@@ -302,15 +372,22 @@ class BoxNeighborhoodCollection
             // Operators
 
             /*!
-             * @brief Extracts the Box which is the root of the current
+             * @brief Extracts the BoxId of the base Box of the current
              * neighborhood in the iteration.
              */
-            const Box&
+            const BoxId&
             operator * () const;
 
             /*!
-             * @brief Pre-increment iterator to point to Box which is root of
-             * next neighborhood in the collection.
+             * @brief Extracts a pointer to the BoxId of the base Box of the
+             * current neighborhood in the iteration.
+             */
+            const BoxId*
+            operator -> () const;
+
+            /*!
+             * @brief Pre-increment iterator to point to BoxId of the base Box
+             * of next neighborhood in the collection.
              */
             ConstIterator&
             operator ++ ();
@@ -338,7 +415,7 @@ class BoxNeighborhoodCollection
             ConstIterator();
 
             /*!
-             * @brief Constructs an iterator pointing to a specific root in
+             * @brief Constructs an iterator pointing to a specific base Box in
              * nbrhds.  Should only be called by BoxNeighborhoodCollection.
              *
              * @param nbrhds
@@ -352,11 +429,13 @@ class BoxNeighborhoodCollection
             const BoxNeighborhoodCollection* d_collection;
 
             AdjListConstItr d_itr;
+
+            BaseBoxPoolItr d_base_boxes_itr;
       };
 
       /*!
-       * @brief An iterator over the neighbors in the neighborhood of a root in
-       * a BoxNeighborhoodCollection.  The interface does not allow
+       * @brief An iterator over the neighbors in the neighborhood of a base
+       * Box in a BoxNeighborhoodCollection.  The interface does not allow
        * modification of the neighbors.
        */
       class NeighborIterator
@@ -367,16 +446,17 @@ class BoxNeighborhoodCollection
             // Constructors
 
             /*!
-             * @brief Constructs an iterator over the neighbors of the supplied
-             * root in the supplied collection of neighborhoods.
+             * @brief Constructs an iterator over the neighbors of the base Box
+             * pointed to by the supplied Iterator in the supplied collection
+             * of neighborhoods.
              *
-             * @param nbrhds
-             *
-             * @param root
+             * @param base_box_itr
+             * @param from_start If true constructs an iterator pointing to the
+             * first neighbor.  Otherwise constructs an iterator pointing one
+             * past the last neighbor.
              */
             NeighborIterator(
-               BoxNeighborhoodCollection& nbrhds,
-               Iterator& root,
+               Iterator& base_box_itr,
                bool from_start = true);
 
             /*!
@@ -409,14 +489,21 @@ class BoxNeighborhoodCollection
 
             /*!
              * @brief Extract the Box which is the current neighbor in the
-             * iteration of the neighborhood of the root.
+             * iteration of the neighborhood of the base Box.
              */
             const Box&
             operator * () const;
 
             /*!
+             * @brief Extracts a pointer to the Box which is current neighbor
+             * in the iteration of the neighborhood of the base Box.
+             */
+            const Box*
+            operator -> () const;
+
+            /*!
              * @brief Pre-increment iterator to point to the Box which is the
-             * next neighbor of the root.
+             * next neighbor of the base Box.
              */
             NeighborIterator&
             operator ++ ();
@@ -445,15 +532,15 @@ class BoxNeighborhoodCollection
 
             const BoxNeighborhoodCollection* d_collection;
 
-            const Box* d_root;
+            const BoxId* d_base_box;
 
-            NeighborsItr d_itr;
+            NeighborhoodItr d_itr;
       };
 
       /*!
-       * @brief An iterator over the neighbors in the neighborhood of a root in
-       * a const BoxNeighborhoodCollection.  The interface does not allow
-       * modification of the neighbors.
+       * @brief An iterator over the neighbors in the neighborhood of a base
+       * Box in a const BoxNeighborhoodCollection.  The interface does not
+       * allow modification of the neighbors.
        */
       class ConstNeighborIterator
       {
@@ -463,16 +550,17 @@ class BoxNeighborhoodCollection
             // Constructors
 
             /*!
-             * @brief Constructs an iterator over the neighbors of the supplied
-             * root in the supplied collection of neighborhoods.
+             * @brief Constructs an iterator over the neighbors of the base Box
+             * pointed to by the supplied Iterator in the supplied collection
+             * of neighborhoods.
              *
-             * @param nbrhds
-             *
-             * @param root
+             * @param base_box_itr
+             * @param from_start If true constructs an iterator pointing to the
+             * first neighbor.  Otherwise constructs an iterator pointing one
+             * past the last neighbor.
              */
             ConstNeighborIterator(
-               const BoxNeighborhoodCollection& nbrhds,
-               const ConstIterator& root,
+               const ConstIterator& base_box_itr,
                bool from_start = true);
 
             /*!
@@ -484,6 +572,14 @@ class BoxNeighborhoodCollection
                const ConstNeighborIterator& other);
 
             /*!
+             * @brief Copy constructor.
+             *
+             * @param other
+             */
+            ConstNeighborIterator(
+               const NeighborIterator& other);
+
+            /*!
              * @brief Assignment operator.
              *
              * @param rhs
@@ -491,6 +587,15 @@ class BoxNeighborhoodCollection
             ConstNeighborIterator&
             operator = (
                const ConstNeighborIterator& rhs);
+
+            /*!
+             * @brief Assignment operator.
+             *
+             * @param rhs
+             */
+            ConstNeighborIterator&
+            operator = (
+               const NeighborIterator& rhs);
 
 
             // Destructor
@@ -505,14 +610,21 @@ class BoxNeighborhoodCollection
 
             /*!
              * @brief Extract the Box which is the current neighbor in the
-             * iteration of the neighborhood of the root.
+             * iteration of the neighborhood of the base Box.
              */
             const Box&
             operator * () const;
 
             /*!
+             * @brief Extracts a pointer to the Box which is current neighbor
+             * in the iteration of the neighborhood of the base Box.
+             */
+            const Box*
+            operator -> () const;
+
+            /*!
              * @brief Pre-increment iterator to point to the Box which is the
-             * next neighbor of the root.
+             * next neighbor of the base Box.
              */
             ConstNeighborIterator&
             operator ++ ();
@@ -541,9 +653,9 @@ class BoxNeighborhoodCollection
 
             const BoxNeighborhoodCollection* d_collection;
 
-            const Box* d_root;
+            const BoxId* d_base_box;
 
-            NeighborsConstItr d_itr;
+            NeighborhoodConstItr d_itr;
       };
 
       /*!
@@ -576,175 +688,124 @@ class BoxNeighborhoodCollection
 
       /*!
        * @brief Returns an iterator pointing to the first neighbor in the
-       * neighborhood of root.
+       * neighborhood of the base Box with the supplied BoxId.
        *
-       * @param root
+       * @param base_box_id
        */
       NeighborIterator
       begin(
-         const Box& root);
+         const BoxId& base_box_id);
 
       /*!
        * @brief Returns an iterator pointing to the first neighbor in the
-       * neighborhood of root.
+       * neighborhood of the base Box with the supplied BoxId.
        *
-       * @param root
+       * @param base_box_id
        */
       ConstNeighborIterator
       begin(
-         const Box& root) const;
+         const BoxId& base_box_id) const;
 
       /*!
        * @brief Returns an iterator pointing to the first neighbor in the
-       * neighborhood of the root Box with the supplied BoxId.
+       * neighborhood of the base Box pointed to by base_box_itr.
        *
-       * @param root_id
+       * @param base_box_itr
        */
       NeighborIterator
       begin(
-         const BoxId& root_id);
+         Iterator& base_box_itr);
 
       /*!
        * @brief Returns an iterator pointing to the first neighbor in the
-       * neighborhood of the root Box with the supplied BoxId.
+       * neighborhood of the base Box pointed to by base_box_itr.
        *
-       * @param root_id
+       * @param base_box_itr
        */
       ConstNeighborIterator
       begin(
-         const BoxId& root_id) const;
-
-      /*!
-       * @brief Returns an iterator pointing to the first neighbor in the
-       * neighborhood of the root Box pointed to by root_itr.
-       *
-       * @param root_itr
-       */
-      NeighborIterator
-      begin(
-         Iterator& root_itr);
-
-      /*!
-       * @brief Returns an iterator pointing to the first neighbor in the
-       * neighborhood of the root Box pointed to by root_itr.
-       *
-       * @param root_itr
-       */
-      ConstNeighborIterator
-      begin(
-         const ConstIterator& root_itr) const;
+         const ConstIterator& base_box_itr) const;
 
       /*!
        * @brief Returns an iterator pointing just past the last neighbor in the
-       * neighborhood of root.
+       * neighborhood of the base Box with the supplied BoxId.
        *
-       * @param root
+       * @param base_box_id
        */
       NeighborIterator
       end(
-         const Box& root);
+         const BoxId& base_box_id);
 
       /*!
        * @brief Returns an iterator pointing just past the last neighbor in the
-       * neighborhood of root.
+       * neighborhood of the base Box with the supplied BoxId.
        *
-       * @param root
+       * @param base_box_id
        */
       ConstNeighborIterator
       end(
-         const Box& root) const;
+         const BoxId& base_box_id) const;
 
       /*!
        * @brief Returns an iterator pointing just past the last neighbor in the
-       * neighborhood of the root Box with the supplied BoxId.
+       * neighborhood of the base Box pointed to by base_box_itr.
        *
-       * @param root_id
+       * @param base_box_itr
        */
       NeighborIterator
       end(
-         const BoxId& root_id);
+         Iterator& base_box_itr);
 
       /*!
        * @brief Returns an iterator pointing just past the last neighbor in the
-       * neighborhood of the root Box with the supplied BoxId.
+       * neighborhood of the base Box pointed to by base_box_itr.
        *
-       * @param root_id
+       * @param base_box_itr
        */
       ConstNeighborIterator
       end(
-         const BoxId& root_id) const;
+         const ConstIterator& base_box_itr) const;
 
+      //@}
+
+      //@{
       /*!
-       * @brief Returns an iterator pointing just past the last neighbor in the
-       * neighborhood of the root Box pointed to by root_itr.
-       *
-       * @param root_itr
+       * @name Lookup
        */
-      NeighborIterator
-      end(
-         Iterator& root_itr);
 
       /*!
-       * @brief Returns an iterator pointing just past the last neighbor in the
-       * neighborhood of the root Box pointed to by root_itr.
+       * @brief Returns an iterator pointing to the base Box with the supplied
+       * BoxId.  If no base Box's BoxId is base_box_id this method returns
+       * end().
        *
-       * @param root_itr
-       */
-      ConstNeighborIterator
-      end(
-         const ConstIterator& root_itr) const;
-
-
-      // Lookup
-
-      /*!
-       * @brief Returns an iterator pointing to the supplied neighborhood root.
-       * If root is not in the collection this method returns end().
-       *
-       * @param root
+       * @param base_box_id
        */
       ConstIterator
       find(
-         const Box& root) const;
+         const BoxId& base_box_id) const;
 
       /*!
-       * @brief Returns an iterator pointing to the neighborhood root with the
-       * supplied BoxId.  If no root's BoxId is root_id this method returns
+       * @brief Returns an iterator pointing to the base Box with the supplied
+       * BoxId.  If no base Box's BoxId is base_box_id this method returns
        * end().
        *
-       * @param root_id
-       */
-      ConstIterator
-      find(
-         const BoxId& root_id) const;
-
-      /*!
-       * @brief Returns an iterator pointing to the supplied neighborhood root.
-       * If root is not in the collection this method returns end().
-       *
-       * @param root
+       * @param base_box_id
        */
       Iterator
       find(
-         const Box& root);
+         const BoxId& base_box_id);
 
-      /*!
-       * @brief Returns an iterator pointing to the neighborhood root with the
-       * supplied BoxId.  If no root's BoxId is root_id this method returns
-       * end().
-       *
-       * @param root_id
-       */
-      Iterator
-      find(
-         const BoxId& root_id);
+      //@}
 
 
       // Typedefs
       typedef std::pair<Iterator, bool> InsertRetType;
 
 
-      // State queries
+      //@{
+      /*!
+       * @name State queries
+       */
 
       /*!
        * @brief Returns true if the number of box neighborhoods == 0.
@@ -759,124 +820,115 @@ class BoxNeighborhoodCollection
       numBoxNeighborhoods() const;
 
       /*!
-       * @brief Returns true if the neighborhood of root is empty.
-       *
-       * @param root
-       */
-      bool
-      emptyBoxNeighborhood(
-         const Box& root) const;
-
-      /*!
-       * @brief Returns true if the neighborhood of the root Box with the
+       * @brief Returns true if the neighborhood of the base Box with the
        * supplied BoxId is empty.
        *
-       * @param root_id
+       * @param base_box_id
        */
       bool
       emptyBoxNeighborhood(
-         const BoxId& root_id) const;
+         const BoxId& base_box_id) const;
 
       /*!
-       * @brief Returns true if the neighborhood of the root Box pointed to by
-       * root_itr is empty.
+       * @brief Returns true if the neighborhood of the base Box pointed to by
+       * base_box_itr is empty.
        *
-       * @param root_itr
+       * @param base_box_itr
        */
       bool
       emptyBoxNeighborhood(
-         const ConstIterator& root_itr) const;
+         const ConstIterator& base_box_itr) const;
 
       /*!
-       * @brief Returns the number of neighbors in the neighborhood of root.
-       *
-       * @param root
-       */
-      int
-      numNeighbors(
-         const Box& root) const;
-
-      /*!
-       * @brief Returns the number of neighbors in the neighborhood of the root
+       * @brief Returns the number of neighbors in the neighborhood of the base
        * Box with the supplied BoxId.
        *
-       * @param root_id
+       * @param base_box_id
        */
       int
       numNeighbors(
-         const BoxId& root_id) const;
+         const BoxId& base_box_id) const;
 
       /*!
-       * @brief Returns the number of neighbors in the neighborhood of the root
-       * Box pointed to by root_itr.
+       * @brief Returns the number of neighbors in the neighborhood of the base
+       * Box pointed to by base_box_itr.
        *
-       * @param root_itr
+       * @param base_box_itr
        */
       int
       numNeighbors(
-         const ConstIterator& root_itr) const;
+         const ConstIterator& base_box_itr) const;
 
       /*!
        * @brief Returns the number of neighbors in all neighborhoods.
        */
       int
-      totalNumNeighbors() const;
+      sumNumNeighbors() const;
 
       /*!
-       * @brief Returns true if any neighbor of root is a periodic Box.
+       * @brief Returns true if nbr is a neighbor of the base Box with the
+       * supplied BoxId.
        *
-       * @param root
+       * @param base_box_id
+       * @param nbr
        */
       bool
-      hasPeriodicNeighborhood(
-         const Box& root) const;
+      hasNeighbor(
+         const BoxId& base_box_id,
+         const Box& nbr) const;
 
       /*!
-       * @brief Returns true if any neighbor of the root Box with the supplied
-       * BoxId is a periodic Box.
+       * @brief Returns true if nbr is a neighbor of the base Box pointed to by
+       * base_box_itr.
        *
-       * @param root_id
+       * @param base_box_itr
+       * @param nbr
        */
       bool
-      hasPeriodicNeighborhood(
-         const BoxId& root_id) const;
+      hasNeighbor(
+         const ConstIterator& base_box_itr,
+         const Box& nbr) const;
 
       /*!
-       * @brief Returns true if any neighbor of root Box pointed to by root_itr
-       * is a periodic Box.
+       * @brief Returns true if the neighborhood of the base Box with the
+       * supplied BoxId is the same in this and other.
        *
-       * @param root_itr
+       * @param base_box_id
+       * @param other
        */
       bool
-      hasPeriodicNeighborhood(
-         const ConstIterator& root_itr) const;
+      neighborhoodEqual(
+         const BoxId& base_box_id,
+         const BoxNeighborhoodCollection& other) const;
 
       /*!
-       * @brief Returns true if root is the root of a neighborhood held by this
-       * object.
+       * @brief Returns true if base_box_id is the BoxId of the base Box of a
+       * neighborhood held by this object.
        *
-       * @param root
+       * @param base_box_id
        */
       bool
-      isRoot(
-         const Box& root) const;
+      isBaseBox(
+         const BoxId& base_box_id) const;
 
       /*!
-       * @brief Returns true if root is the BoxId of the root of a neighborhood
-       * held by this object.
+       * @brief Returns true if all neighbors of all base Boxes are owned by
+       * the processor owning this object.
        *
-       * @param root_id
+       * @note Currently, this is only called (via Connector::isLocal) from
+       * within a small number of TBOX_ASSERTs so it is only a sanity check and
+       * is not called in optimized code.  If the method becomes
+       * algorithmically important an optimization would be to store a boolean
+       * to indicate if there are any non-local neighbors which would avoid the
+       * search that this method currently does.
+       *
+       * @param rank The rank of the process owning this object. 
        */
       bool
-      isRoot(
-         const BoxId& root_id) const;
+      isLocal(
+         int rank) const;
 
-      /*!
-       * @brief Returns true if all neighbors of all roots are owned by the
-       * processor owning this object.
-       */
-      bool
-      isLocal() const;
+      //@}
 
       /*!
        * @brief Insert the rank of the processor owning each neighbor in each
@@ -888,287 +940,218 @@ class BoxNeighborhoodCollection
       getOwners(
          std::set<int>& owners) const;
 
-
-      // Neighborhood editing
-
       /*!
-       * @brief Inserts a new neighbor into the neighborhood of root.  If the
-       * neighborhood of root is not yet represented by this object, then the
-       * object will be modified to include this new box neighborhood and the
-       * method will return true.  Otherwise it will return false.
+       * @brief Insert the rank of the processor owning each neighbor in each
+       * neighborhood into the supplied set.
        *
-       * @param root The neighborhood root.
-       *
-       * @param new_nbr The new neighbor of root.
-       *
-       * @return A pair the first member of which is an Iterator pointing to
-       * root and the second of which is true if root is a new neighborhood
-       * root, and false otherwise.
+       * @param owners
        */
-      InsertRetType
-      insert(
-         const Box& root,
-         const Box& new_nbr);
+      void
+      getOwners(
+         ConstIterator& itr,
+         std::set<int>& owners) const;
+
+
+      //@{
+      /*!
+       * @name Neighborhood editing
+       */
 
       /*!
-       * @brief Inserts a new neighbor into the neighborhood of the root with
-       * the supplied BoxId.
+       * @brief Inserts a new neighbor into the neighborhood of the base Box
+       * with the supplied BoxId.
        *
-       * @note root_id must be the BoxId of a valid root or this function can
-       * not work.  We can't create a new root Box only knowing a BoxId.
-       * Therefore this version of insert only returns an Iterator pointing to
-       * the root.
+       * @param base_box_id The BoxId of the neighborhood base Box.
        *
-       * @param root_id The BoxId of the neighborhood root.
+       * @param new_nbr The new neighbor of base_box_id.
        *
-       * @param new_nbr The new neighbor of root.
-       *
-       * @return An Iterator pointing to the root with the supplied BoxId.
+       * @return An Iterator pointing to the base Box with the supplied BoxId.
        */
       Iterator
       insert(
-         const BoxId& root_id,
+         const BoxId& base_box_id,
          const Box& new_nbr);
 
       /*!
-       * @brief Inserts a new neighbor into the neighborhood of the root
-       * pointed to by root_itr.
+       * @brief Inserts a new neighbor into the neighborhood of the base Box
+       * pointed to by base_box_itr.
        *
-       * @note root_itr must point to a valid root or this function can not
-       * work.  Unlike the other versions of insert, this version has no return
-       * value.  The root must exist and the Iterator already points to it so
-       * returning an Iterator or bool has no value.
+       * @note base_box_itr must point to a valid base Box or this function
+       * can not work.  Unlike the other versions of insert, this version has
+       * no return value.  The base Box must already exist and the Iterator
+       * already points to it so returning an Iterator or bool has no value.
        *
-       * @param root_itr Iterator pointing to the neighborhood root.
+       * @param base_box_itr Iterator pointing to the base Box.
        *
-       * @param new_nbr The new neighbor of root.
+       * @param new_nbr The new neighbor of the base Box.
        */
       void
       insert(
-         Iterator& root_itr,
+         Iterator& base_box_itr,
          const Box& new_nbr);
 
       /*!
-       * @brief Inserts new neighbors into the neighborhood of root.  If the
-       * neighborhood of root is not yet represented by this object, then the
-       * object will be modified to include this new box neighborhood and the
-       * method will return true.  Otherwise it will return false.
+       * @brief Inserts new neighbors into the neighborhood of the base Box
+       * with the supplied BoxId.
        *
-       * @param root The neighborhood root.
+       * @param base_box_id The BoxId of the base Box.
        *
-       * @param new_nbrs The new neighbors of root.
+       * @param new_nbrs The new neighbors of the base Box.
        *
-       * @return A pair the first member of which is an Iterator pointing to
-       * root and the second of which is true if root is a new neighborhood
-       * root, and false otherwise.
-       */
-      InsertRetType
-      insert(
-         const Box& root,
-         const BoxContainer& new_nbrs);
-
-      /*!
-       * @brief Inserts new neighbors into the neighborhood of the root with
-       * the supplied BoxId.
-       *
-       * @note root_id must be the BoxId of a valid root or this function can
-       * not work.  We can't create a new root Box only knowing a BoxId.
-       * Therefore this version of insert only returns an Iterator pointing to
-       * the root.
-       *
-       * @param root_id The BoxId of the neighborhood root.
-       *
-       * @param new_nbrs The new neighbors of root.
-       *
-       * @return An Iterator pointing to the root with the supplied BoxId.
+       * @return An Iterator pointing to the base Box with the supplied BoxId.
        */
       Iterator
       insert(
-         const BoxId& root_id,
+         const BoxId& base_box_id,
          const BoxContainer& new_nbrs);
 
       /*!
-       * @brief Inserts new neighbors into the neighborhood of the root pointed
-       * to by root_itr.
+       * @brief Inserts new neighbors into the neighborhood of the base Box
+       * pointed to by base_box_itr.
        *
-       * @note root_itr must point to a valid root or this function can not
-       * work.  Unlike the other versions of insert, this version has no return
-       * value.  The root must exist and the Iterator already points to it so
-       * returning an Iterator or bool has no value.
+       * @note base_box_itr must point to a valid base Box or this function
+       * can not work.  Unlike the other versions of insert, this version has
+       * no return value.  The base Box must already exist and the Iterator
+       * already points to it so returning an Iterator or bool has no value.
        *
-       * @param root_itr Iterator pointing to the neighborhood root.
+       * @param base_box_itr Iterator pointing to the base Box.
        *
-       * @param new_nbrs The new neighbors of root.
+       * @param new_nbrs The new neighbors of the base Box.
        */
       void
       insert(
-         Iterator& root_itr,
+         Iterator& base_box_itr,
          const BoxContainer& new_nbrs);
 
       /*!
-       * @brief Erases a neighbor from the neighborhood of root.
+       * @brief Erases a neighbor from the neighborhood of the base Box with
+       * the supplied BoxId.
        *
-       * @param root The neighborhood root.
+       * @param base_box_id The BoxId of the base Box.
        *
-       * @param nbr The neighbor of root to be erased.
+       * @param nbr The neighbor of the base Box to be erased.
        */
       void
       erase(
-         const Box& root,
+         const BoxId& base_box_id,
          const Box& nbr);
 
       /*!
-       * @brief Erases a neighbor from the neighborhood of the root with the
+       * @brief Erases a neighbor from the neighborhood of the base Box pointed
+       * to by base_box_itr.
+       *
+       * @param base_box_itr An iterator pointing to the base Box.
+       *
+       * @param nbr The neighbor of the base Box to be erased.
+       */
+      void
+      erase(
+         Iterator& base_box_itr,
+         const Box& nbr);
+
+      /*!
+       * @brief Erases neighbors from the neighborhood of the base Box with the
        * supplied BoxId.
        *
-       * @param root_id The BoxId of the neighborhood root.
+       * @param base_box_id The BoxId of the base Box.
        *
-       * @param nbr The neighbor of the root to be erased.
+       * @param nbrs The neighbors of base Box to be erased.
        */
       void
       erase(
-         const BoxId& root_id,
-         const Box& nbr);
-
-      /*!
-       * @brief Erases a neighbor from the neighborhood of the root pointed
-       * to by root_itr.
-       *
-       * @param root_itr An iterator pointing to the neighborhood root.
-       *
-       * @param nbr The neighbor of root to be erased.
-       */
-      void
-      erase(
-         Iterator& root_itr,
-         const Box& nbr);
-
-      /*!
-       * @brief Erases neighbors from the neighborhood of root.
-       *
-       * @param root The neighborhood root.
-       *
-       * @param nbrs The neighbors of root to be erased.
-       */
-      void
-      erase(
-         const Box& root,
+         const BoxId& base_box_id,
          const BoxContainer& nbrs);
 
       /*!
-       * @brief Erases neighbors from the neighborhood of the root with the
-       * supplied BoxId.
+       * @brief Erases neighbors from the neighborhood of the base Box pointed
+       * to by base_box_itr.
        *
-       * @param root_id The BoxId of the neighborhood root.
+       * @param base_box_itr An iterator pointing to the base Box.
        *
-       * @param nbrs The neighbors of root to be erased.
+       * @param nbrs The neighbors of base Box to be erased.
        */
       void
       erase(
-         const BoxId& root_id,
+         Iterator& base_box_itr,
          const BoxContainer& nbrs);
 
       /*!
-       * @brief Erases neighbors from the neighborhood of the root pointed to
-       * by root_itr.
+       * @brief Inserts a base Box with an empty neighborhood.  If the base Box
+       * does not exist in this object then this function returns true.
+       * Otherwise it returns false and takes no action.
        *
-       * @param root_itr An iterator pointing to the neighborhood root.
+       * @param new_base_box The new base_box of an empty neighborhood.
        *
-       * @param nbrs The neighbors of root to be erased.
-       */
-      void
-      erase(
-         Iterator& root_itr,
-         const BoxContainer& nbrs);
-
-      /*!
-       * @brief Inserts a root with an empty neighborhood.  If the root does
-       * not exist in this object then this function returns true.  Otherwise
-       * it returns false and takes no action.
-       *
-       * @param new_root The new root of an empty neighborhood.
-       *
-       * @return A pair the first member of which is an Iterator pointing to
-       * root and the second of which is true if root is a new neighborhood
-       * root, and false otherwise.
+       * @return A pair whose first member is an Iterator and second member is
+       * a bool.  If new_base_box was already a base Box then the Iterator
+       * points to the already existing base Box's neighborhood and the bool is
+       * false.  If new_base_box did not already exist then the Iterator points
+       * to the newly inserted base Box's neighborhood and the bool is true.
        */
       InsertRetType
       insert(
-         const Box& new_root);
+         const BoxId& new_base_box);
 
       /*!
-       * @brief Erases the neighbors of root.  If erase_root is true then the
-       * root will be erased as well.
+       * @brief Erases the neighbors of the base Box with the supplied BoxId
+       * including the base Box itself.
        *
-       * @param root The neighborhood root whose neighbors are to be erased.
-       *
-       * @param erase_root
+       * @param base_box_id The BoxId of the base Box whose neighbors are to be
+       * erased.
        */
       void
       erase(
-         const Box& root,
-         bool erase_root);
+         const BoxId& base_box_id);
 
       /*!
-       * @brief Erases the neighbors of the root with the supplied BoxId.  If
-       * erase_root is true then the root will be erased as well.
+       * @brief Erases the neighbors of the base Box pointed to by base_box_itr
+       * including base Box iself.
        *
-       * @param root_id The BoxId of the neighborhood root whose neighbors are
-       * to be erased.
-       *
-       * @param erase_root
+       * @param base_box_itr Iterator pointing to the base box whose neighbors
+       * are to be erased.
        */
       void
       erase(
-         const BoxId& root_id,
-         bool erase_root);
+         Iterator& base_box_itr);
 
       /*!
-       * @brief Erases the neighbors of the root pointed to by root_itr.  If
-       * erase_root is true then the root will be erased as well and root will
-       * point to end().
+       * @brief Erases the neighbors of the base Boxes pointed to in the range
+       * [first_base_box_itr, last_base_box_itr) including the base Boxes
+       * themselves.
        *
-       * @param root_itr Iterator pointing to the neighborhood root whose
-       * neighbors are to be erased.
+       * @param first_base_box_itr Iterator pointing to the first base Box
+       * whose neighbors are to be erased.
        *
-       * @param erase_root
+       * @param last_base_box_itr Iterator pointing one past the last base Box
+       * whose neighbors are to be erased.
        */
       void
       erase(
-         Iterator& root_itr,
-         bool erase_root);
+         Iterator& first_base_box_itr,
+         Iterator& last_base_box_itr);
 
       /*!
-       * @brief Erases the neighbors of the roots pointed to in the range
-       * [first_root_itr, last_root_itr).  If erase_roots is true then the
-       * roots will be erased as well and first_root_itr will point to end().
+       * @brief For all base Boxes not owned by the process owning this object
+       * this method erases the base Box and its neighbors.
        *
-       * @param first_root_itr Iterator pointing to the first root whose
-       * neighbors are to be erased.
-       *
-       * @param last_root_itr Iterator pointing one past the last root whose
-       * neighbors are to be erased.
-       *
-       * @param erase_roots
+       * @param rank the rank of the process owning this object.
        */
       void
-      erase(
-         Iterator& first_root_itr,
-         Iterator& last_root_itr,
-         bool erase_roots);
+      eraseNonLocalNeighborhoods(
+         int rank);
 
       /*!
-       * @brief For all roots not owned by the process owning this object this
-       * method erases the root and its neighbors.
-       */
-      void
-      localize();
-
-      /*!
-       * @brief Erases all roots having no neighbors.
+       * @brief Erases all base Boxes having no neighbors.
        */
       void
       eraseEmptyNeighborhoods();
+
+      /*!
+       * @brief Erases all neighbors in all neighborhoods which are periodic
+       * image boxes.
+       */
+      void
+      erasePeriodicNeighbors();
 
       /*!
        * @brief Erases all contents so empty() == true.
@@ -1176,52 +1159,48 @@ class BoxNeighborhoodCollection
       void
       clear();
 
+      //@}
 
-      // Coarsen, refine, grow.
+      //@{
+      /*!
+       * @name Coarsen, refine, grow.
+       */
 
       /*!
-       * @brief Produces another BoxNeighborhoodCollection by coarsening the
-       * neighbors of each root by the given ratio.
-       *
-       * @param result
+       * @brief Coarsens the neighbors of each base Box by the given ratio.
        *
        * @param ratio
        */
       void
       coarsenNeighbors(
-         BoxNeighborhoodCollection& result,
-         const IntVector& ratio) const;
+         const IntVector& ratio);
 
       /*!
-       * @brief Produces another BoxNeighborhoodCollection by coarsening the
-       * neighbors of each root by the given ratio.
-       *
-       * @param result
+       * @brief Refines the neighbors of each base Box by the given ratio.
        *
        * @param ratio
        */
       void
       refineNeighbors(
-         BoxNeighborhoodCollection& result,
-         const IntVector& ratio) const;
+         const IntVector& ratio);
 
       /*!
-       * @brief Produces another BoxNeighborhoodCollection by growing the
-       * neighbors of each root by the given amount.
-       *
-       * @param result
+       * @brief Grows the neighbors of each base Box by the given amount.
        *
        * @param growth
        */
       void
       growNeighbors(
-         BoxNeighborhoodCollection& result,
-         const IntVector& growth) const;
+         const IntVector& growth);
 
+      //@}
 
-      // Neighborhood member extraction
-      // Currently, the way some algorithms are implemented these are needed
-      // but we may find that it is not necessary.
+      //@{
+      /*!
+       * @name Neighborhood member extraction
+       * Currently, the way some algorithms are implemented these are needed
+       * but we may find that it is not necessary.
+       */
 
       /*!
        * @brief Fill the supplied BoxContainer with the neighbors from all the
@@ -1261,6 +1240,18 @@ class BoxNeighborhoodCollection
          std::map<BlockId, BoxContainer>& neighbors) const;
 
       /*!
+       * @brief Fill the supplied BoxContainer with the neighbors of the base
+       * Box with the supplied BoxId.
+       *
+       * @param base_box_id
+       * @param neighbors
+       */
+      void
+      getNeighbors(
+         const BoxId& base_box_id,
+         BoxContainer& neighbors) const;
+
+      /*!
        * @brief Place any periodic neighbors from each neighborhood into the
        * supplied BoxContainer.
        *
@@ -1270,8 +1261,12 @@ class BoxNeighborhoodCollection
       getPeriodicNeighbors(
          BoxContainer& result) const;
 
+      //@}
 
-      // Communication packing/unpacking
+      //@{
+      /*!
+       * @name Communication packing/unpacking
+       */
 
       /*!
        * @brief Load an integer communication buffer with the data from this
@@ -1281,15 +1276,12 @@ class BoxNeighborhoodCollection
        *
        * @param dim
        *
-       * @param offset Starting location in send_mesg
-       *
        * @param buff_init Initializer for newly allocated buffer data.
        */
       void
       putToIntBuffer(
          std::vector<int>& send_mesg,
          const tbox::Dimension& dim,
-         int offset,
          int buff_init) const;
 
       /*!
@@ -1298,19 +1290,29 @@ class BoxNeighborhoodCollection
        *
        * @param recv_mesg The integer communication buffer
        *
+       * @param proc_offset Offset of beginning of message stream in recv_mesg
+       * for each process.
+       *
        * @param dim
+       *
+       * @param num_proc
+       *
+       * @param rank
        */
       void
       getFromIntBuffer(
          const std::vector<int>& recv_mesg,
          const std::vector<int>& proc_offset,
          const tbox::Dimension& dim,
-         int num_proc);
+         int num_proc,
+         int rank);
 
+      //@}
 
-      // IO
-      // These are defined in NeighborhoodSet but are only called from the
-      // mblktree test.
+      //@{
+      /*!
+       * @name IO--these are only called from the mblktree test.
+       */
 
       /*!
        * @brief Writes the neighborhood information to the supplied database.
@@ -1328,7 +1330,9 @@ class BoxNeighborhoodCollection
        */
       void
       getFromDatabase(
-         const tbox::Database& database);
+         tbox::Database& database);
+
+      //@}
 };
 
 }

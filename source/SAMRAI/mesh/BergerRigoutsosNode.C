@@ -374,7 +374,7 @@ void BergerRigoutsosNode::clusterAndComputeRelationships()
       }
 #ifdef DEBUG_CHECK_ASSERTIONS
       TBOX_ASSERT(
-         d_common->tag_mapped_box_level->getLocalNumberOfBoxes() ==
+         static_cast<int>(d_common->tag_mapped_box_level->getLocalNumberOfBoxes()) ==
          d_common->tag_to_new->getLocalNumberOfNeighborSets());
 #endif
 
@@ -459,7 +459,7 @@ void BergerRigoutsosNode::clusterAndComputeRelationships()
    if (d_common->compute_relationships > 2) {
       // Each new node should have its own neighbor list.
       TBOX_ASSERT(d_common->new_mapped_box_level->getBoxes().size() ==
-         static_cast<int>(d_common->new_to_tag->getLocalNumberOfNeighborSets()));
+         d_common->new_to_tag->getLocalNumberOfNeighborSets());
    }
 #endif
 
@@ -2739,11 +2739,15 @@ void BergerRigoutsosNode::shareNewNeighborhoodSetsWithOwners()
 #ifdef DEBUG_CHECK_ASSERTIONS
          TBOX_ASSERT(d_common->new_to_tag->hasNeighborSet(box_id));
 #endif
-         for (int n = 0; n < n_new_relationships; ++n) {
-            hier::Box node(d_dim);
-            node.getFromIntBuffer(ptr);
-            ptr += ints_per_node;
-            d_common->new_to_tag->insertLocalNeighbor(node, box_id);
+         if (n_new_relationships > 0) {
+            hier::Connector::NeighborhoodIterator base_box_itr =
+               d_common->new_to_tag->makeEmptyLocalNeighborhood(box_id);
+            for (int n = 0; n < n_new_relationships; ++n) {
+               hier::Box node(d_dim);
+               node.getFromIntBuffer(ptr);
+               ptr += ints_per_node;
+               d_common->new_to_tag->insertLocalNeighbor(node, base_box_itr);
+            }
          }
          consumed += 2 + n_new_relationships * ints_per_node;
       }

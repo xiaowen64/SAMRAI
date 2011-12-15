@@ -775,11 +775,17 @@ void BoxTree::findOverlapBoxes(
       if (d_center_child) {
          d_center_child->findOverlapBoxes(overlap_connector, box, true);
       } else {
-         for (BoxContainer::ConstIterator ni = d_mapped_boxes.begin();
-              ni != d_mapped_boxes.end(); ++ni) {
-            const Box& mapped_box = *ni;
-            if (box.intersects(mapped_box)) {
-	      overlap_connector.insertLocalNeighbor(mapped_box, box_id);
+         if (!d_mapped_boxes.isEmpty()) {
+            Connector::NeighborhoodIterator base_box_itr =
+               overlap_connector.makeEmptyLocalNeighborhood(box_id);
+            for (BoxContainer::ConstIterator ni = d_mapped_boxes.begin();
+                 ni != d_mapped_boxes.end(); ++ni) {
+               const Box& mapped_box = *ni;
+               if (box.intersects(mapped_box)) {
+                  overlap_connector.insertLocalNeighbor(
+                     mapped_box,
+                     base_box_itr);
+               }
             }
          }
       }

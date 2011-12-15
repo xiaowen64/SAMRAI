@@ -360,13 +360,12 @@ void CoarsenSchedule::generateTemporaryLevel()
     * like the fine level patches.  The Connectors between coarse and
     * temp are very similar to those between coarse and fine.
     */
+   d_coarse_to_temp = coarse_to_fine;
    d_coarse_to_temp.setConnectorType(hier::Connector::BASE_GENERATED);
    d_coarse_to_temp.setBase(*d_crse_level->getBoxLevel());
    d_coarse_to_temp.setHead(*d_temp_crse_level->getBoxLevel());
    d_coarse_to_temp.setWidth(coarse_to_fine.getConnectorWidth(), true);
-   coarse_to_fine.coarsenLocalNeighbors(
-      d_coarse_to_temp,
-      d_ratio_between_levels);
+   d_coarse_to_temp.coarsenLocalNeighbors(d_ratio_between_levels);
    /*
     * d_temp_to_coarse is a Connector from a coarsened version of fine to
     * coarse.  Therefore it has the same neighborhoods as fine_to_coarse
@@ -592,7 +591,7 @@ void CoarsenSchedule::generateScheduleDLBG()
    for (hier::Connector::ConstNeighborhoodIterator ei = d_coarse_to_temp.begin();
         ei != d_coarse_to_temp.end(); ++ei) {
 
-      const hier::BoxId& dst_gid = ei->first;
+      const hier::BoxId& dst_gid = *ei;
       const hier::Box& dst_mapped_box =
          *coarse_mapped_box_level.getBoxStrict(dst_gid);
 
@@ -650,7 +649,7 @@ void CoarsenSchedule::restructureNeighborhoodSetsByDstNodes(
         ci != src_to_dst.end();
         ++ci) {
       const hier::Box& mapped_box =
-         *src_mapped_box_level.getBoxStrict(ci->first);
+         *src_mapped_box_level.getBoxStrict(*ci);
       for (hier::Connector::ConstNeighborIterator na = src_to_dst.begin(ci);
            na != src_to_dst.end(ci); ++na) {
          const hier::Box& nabr = *na;

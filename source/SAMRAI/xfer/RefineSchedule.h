@@ -838,6 +838,30 @@ private:
       const bool use_time_interpolation);
 
    /*!
+    * @brief Function that constructs schedule transactions between
+    * one source mapped box and one destination mapped box.
+    *
+    * Transactions will move data on the intersection of the source and
+    * destination mapped boxes with the fill boxes.
+    *
+    * @param[in] dst_to_fill  A connector from the destination to the fill
+    * levels.
+    * filled.
+    * @param[in] dst_itr  An iterator to the neighborhood of a Box in
+    * dst_to_fill.
+    * @param[in] dst_mapped_box  Box from a destination patch.
+    * @param[in] src_mapped_box  Box from a source patch.
+    * @param[in] use_time_interpolation
+    */
+   void
+   constructScheduleTransactions(
+      const hier::Connector& dst_to_fill,
+      hier::Connector::ConstNeighborhoodIterator& dst_itr,
+      const hier::Box& dst_mapped_box,
+      const hier::Box& src_mapped_box,
+      const bool use_time_interpolation);
+
+   /*!
     * @brief Reorder the neighborhood sets from a src_to_dst Connector
     * so they can be used in schedule generation.
     *

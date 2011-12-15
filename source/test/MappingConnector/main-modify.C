@@ -280,7 +280,7 @@ int main(
       b_to_a.checkConsistencyWithHead();
 
       tbox::pout << "Checking for a--->b errors:" << std::endl;
-      const size_t a_to_b_errors = oca.checkOverlapCorrectness(a_to_b);
+      const int a_to_b_errors = oca.checkOverlapCorrectness(a_to_b);
       if (a_to_b_errors) {
          tbox::pout << "... " << a_to_b_errors << " errors." << std::endl;
       } else {
@@ -288,7 +288,7 @@ int main(
       }
 
       tbox::pout << "Checking for b--->a errors:" << std::endl;
-      const size_t b_to_a_errors = oca.checkOverlapCorrectness(b_to_a);
+      const int b_to_a_errors = oca.checkOverlapCorrectness(b_to_a);
       if (b_to_a_errors) {
          tbox::pout << "... " << b_to_a_errors << " errors." << std::endl;
       } else {

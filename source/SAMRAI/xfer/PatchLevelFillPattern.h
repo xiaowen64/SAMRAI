@@ -14,6 +14,7 @@
 #include "SAMRAI/SAMRAI_config.h"
 
 #include "SAMRAI/hier/Connector.h"
+#include "SAMRAI/hier/NeighborhoodSet.h"
 #include "SAMRAI/tbox/DescribedClass.h"
 
 namespace SAMRAI {

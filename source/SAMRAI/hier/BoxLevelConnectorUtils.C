@@ -252,12 +252,14 @@ bool BoxLevelConnectorUtils::baseNestsInHead(
       swelledhead.finalize();
    }
 
-   Connector swelledbase_to_swelledhead(
-      swelledbase,
-      swelledhead,
-      connector.getConnectorWidth() - base_swell);
+   Connector swelledbase_to_swelledhead(connector);
+   swelledbase_to_swelledhead.setBase(swelledbase);
+   swelledbase_to_swelledhead.setHead(swelledhead);
+   swelledbase_to_swelledhead.setWidth(
+      connector.getConnectorWidth() - base_swell,
+      true);
 
-   connector.growLocalNeighbors(swelledbase_to_swelledhead, head_swell);
+   swelledbase_to_swelledhead.growLocalNeighbors(head_swell);
 
    if (d_sanity_check_precond &&
        head_swell == IntVector::getZero(dim)) {
@@ -642,7 +644,8 @@ void BoxLevelConnectorUtils::computeInternalOrExternalParts(
    const IntVector& zero_vec(IntVector::getZero(input.getDim()));
    const IntVector& one_vec(IntVector::getOne(dim));
 
-#ifdef DEBUG_CHECK_ASSERTIONS
+   const bool nonnegative_nesting_width = nesting_width >= zero_vec;
+
    const char* caller = internal_or_external == 'i' ?
       "computInternalParts" : "computeExternalparts";
 
@@ -659,32 +662,27 @@ void BoxLevelConnectorUtils::computeInternalOrExternalParts(
          "and negative values.");
    }
 
-   if (nesting_width >= zero_vec) {
-      if (!(input_to_reference.getConnectorWidth() >=
-            nesting_width)) {
-         TBOX_ERROR(
-            "BoxLevelConnectorUtils::computeInternalOrExternalParts:"
-            << caller << ": error:\n"
-            << "nesting_width "
-            << nesting_width << " exceeds\n"
-            << "ghost cell width " << input_to_reference.getConnectorWidth()
-            << ",\n"
-            << "which can lead to erroneous results.");
-      }
-   }
-
-   if ( !(nesting_width >= zero_vec) &&
-        (input_to_reference.getConnectorWidth() < IntVector::getOne(dim)) ) {
+   if ( nesting_width != zero_vec &&
+           input_to_reference.getConnectorWidth() < one_vec ) {
       TBOX_ERROR(
          "BoxLevelConnectorUtils::computeInternalOrExternalParts:" << caller
                                                                    <<
          ": error:\n"
-                                                                   <<
-         "nesting_width, " << nesting_width << ", has negative values,\n"
-         << "thus the width of input_to_reference, " << input_to_reference.getConnectorWidth() << ",\n"
-         << "must be at least 1.  Otherwise, correct results cannot be guaranteed.");
+         << "If nesting width (" << nesting_width << " is non-zero,\n"
+         << "width of input_to_reference, " << input_to_reference.getConnectorWidth() << ",\n"
+         << "must be at least 1.  Otherwise, correct results cannot be guaranteed."
+         );
    }
-#endif
+
+   if ( !( input_to_reference.getConnectorWidth() >=
+          (nonnegative_nesting_width ? nesting_width : -nesting_width)) ) {
+      TBOX_ERROR(
+         "BoxLevelConnectorUtils::computeInternalOrExternalParts:"
+         << caller << ": error:\n"
+         << "input_to_reference width, " << input_to_reference.getConnectorWidth()
+         << ",\nmust be greater than the absolute value of nesting_width, "
+         << nesting_width << ",\nto avoid erroneous results.");
+   }
 
    parts.initialize(input.getRefinementRatio(),
       input.getGridGeometry(), input.getMPI());
@@ -694,7 +692,8 @@ void BoxLevelConnectorUtils::computeInternalOrExternalParts(
     * store these boxes in a NeighborSet in order to remove duplicate entries.
     * Then we move them into BoxContainer for each block for box manipulation.
     */
-   std::map<BlockId, BoxContainer> reference_box_list;
+   BoxContainer reference_box_list;
+   reference_box_list.order();
    input_to_reference.getLocalNeighbors(reference_box_list);
 
    /*
@@ -702,17 +701,10 @@ void BoxLevelConnectorUtils::computeInternalOrExternalParts(
     * (for intersection checks).
     */
    if (input_to_reference.getRatio() != IntVector::getOne(dim)) {
-
       if (input_to_reference.getHeadCoarserFlag()) {
-         for (std::map<BlockId, BoxContainer>::iterator mi = reference_box_list.begin();
-              mi != reference_box_list.end(); ++mi) {
-            mi->second.refine(input_to_reference.getRatio());
-         }
+         reference_box_list.refine(input_to_reference.getRatio());
       } else {
-         for (std::map<BlockId, BoxContainer>::iterator mi = reference_box_list.begin();
-              mi != reference_box_list.end(); ++mi) {
-            mi->second.coarsen(input_to_reference.getRatio());
-         }
+         reference_box_list.coarsen(input_to_reference.getRatio());
       }
    }
 
@@ -732,11 +724,9 @@ void BoxLevelConnectorUtils::computeInternalOrExternalParts(
    if (search_tree_represents_internal) {
 
       if (!(nesting_width == zero_vec)) {
-         for (std::map<BlockId, BoxContainer>::iterator mi = reference_box_list.begin();
-              mi != reference_box_list.end(); ++mi) {
-            mi->second.grow(nesting_width);
-         }
+         reference_box_list.grow(nesting_width);
       }
+
    } else {
 
       /*
@@ -753,26 +743,17 @@ void BoxLevelConnectorUtils::computeInternalOrExternalParts(
       if (domain.isInitialized()) {
 
          if (input.getRefinementRatio() == one_vec) {
-            for (std::map<BlockId, BoxContainer>::iterator mi = reference_box_list.begin();
-                 mi != reference_box_list.end(); ++mi) {
-               mi->second.intersectBoxes(input.getRefinementRatio(), domain);
-            }
+            reference_box_list.intersectBoxes(input.getRefinementRatio(), domain);
          } else {
             tbox::Pointer<MultiblockBoxTree> refined_domain =
                domain.createRefinedTree(input.getRefinementRatio());
-            for (std::map<BlockId, BoxContainer>::iterator mi = reference_box_list.begin();
-                 mi != reference_box_list.end(); ++mi) {
-               mi->second.intersectBoxes(input.getRefinementRatio(), *refined_domain);
-            }
+            reference_box_list.intersectBoxes(input.getRefinementRatio(), *refined_domain);
          }
 
       }
       // ... reference_boundary is now ( ( (R^1) \ R ) <intersection> O )
 
-      for (std::map<BlockId, BoxContainer>::iterator mi = reference_box_list.begin();
-           mi != reference_box_list.end(); ++mi) {
-         mi->second.grow(-nesting_width);
-      }
+      reference_box_list.grow(-nesting_width);
       // ... reference_boundary is now ( ( (R^1) \ R ) <intersection> O )^(-g)
    } // search_tree_represents_internal == false
 
@@ -814,8 +795,9 @@ void BoxLevelConnectorUtils::computeInternalOrExternalParts(
         ++ni) {
 
       const Box& input_mapped_box = *ni;
+      const BoxId& input_mapped_box_id = input_mapped_box.getId();
 
-      if (!input_to_reference.hasNeighborSet(ni->getId())) {
+      if (!input_to_reference.hasNeighborSet(input_mapped_box_id)) {
          /*
           * Absence of a neighbor set in the overlap Connector means
           * the input Box does not overlap the reference
@@ -826,8 +808,7 @@ void BoxLevelConnectorUtils::computeInternalOrExternalParts(
              * Trying to get the overlapping parts.  Create empty
              * neighbor list to indicate there are no such parts.
              */
-            input_to_parts.makeEmptyLocalNeighborhood(
-               input_mapped_box.getId());
+            input_to_parts.makeEmptyLocalNeighborhood(input_mapped_box_id);
          } else {
             /*
              * Trying to get the non-overlapping parts.
@@ -887,8 +868,9 @@ void BoxLevelConnectorUtils::computeInternalOrExternalParts(
 
          } else {
 
-            input_to_parts.makeEmptyLocalNeighborhood(
-               input_mapped_box.getId());
+            Connector::NeighborhoodIterator base_box_itr =
+               input_to_parts.makeEmptyLocalNeighborhood(input_mapped_box_id);
+            parts_list.simplify();
             for (BoxContainer::Iterator bi(parts_list);
                  bi != parts_list.end(); ++bi) {
                const Box
@@ -900,8 +882,9 @@ void BoxLevelConnectorUtils::computeInternalOrExternalParts(
                parts.addBox(parts_mapped_box);
 
                // Set connectivities between input and internal.
-               input_to_parts.insertLocalNeighbor(parts_mapped_box,
-                  input_mapped_box.getId());
+               input_to_parts.insertLocalNeighbor(
+                  parts_mapped_box,
+                  base_box_itr);
             }
 
          } // parts_list
@@ -917,7 +900,7 @@ void BoxLevelConnectorUtils::computeInternalOrExternalParts(
        * should be mapped to empty neighbor containers according
        * to the definition of a map in MappingConnectorAlgorithm::modify().
        */
-      int a = static_cast<int>(input_to_parts.getLocalNumberOfNeighborSets());
+      int a = input_to_parts.getLocalNumberOfNeighborSets();
       int b = static_cast<int>(input.getLocalNumberOfBoxes());
       if (a != b) {
          tbox::perr << "BoxLevelConnectorUtils::" << caller
@@ -947,40 +930,49 @@ void BoxLevelConnectorUtils::computeInternalOrExternalParts(
  *************************************************************************
  */
 void BoxLevelConnectorUtils::computeBoxesAroundBoundary(
-   std::map<BlockId, BoxContainer>& boundary,
+   BoxContainer& boundary,
    const IntVector& refinement_ratio,
    const tbox::ConstPointer<GridGeometry>& grid_geometry,
    const bool simplify_boundary_boxes) const
 {
+
    const tbox::Dimension& dim(grid_geometry->getDim());
    const IntVector& one_vec(IntVector::getOne(dim));
 
    MultiblockBoxTree reference_mapped_boxes_tree(
       *grid_geometry,
       boundary);
-   // ... boundary is now R
 
-   for (std::map<BlockId, BoxContainer>::iterator mi = boundary.begin();
-        mi != boundary.end(); ++mi) {
-      mi->second.grow(one_vec);
-   }
+   // Boundary starts as R
+
+   boundary.grow(one_vec);
    // ... boundary is now (R^1)
-   for (std::map<BlockId, BoxContainer>::iterator mi = boundary.begin();
-        mi != boundary.end(); ++mi) {
-      const BlockId& block_id(mi->first);
-      BoxContainer& box_list(mi->second);
-      /*
-       * Leave boundary boxes in singularity neighbor blocks.
-       * These are specially handled in the following if-block.
-       */
-      const bool include_singularity_neighbors(false);
-      box_list.unorder();
-      box_list.removeIntersections(
-         refinement_ratio,
-         reference_mapped_boxes_tree,
-         include_singularity_neighbors);
-   }
+
+   /*
+    * Remove R from R^1, leaving alone boundary boxes in singularity
+    * neighbor blocks.  These are specially handled in the following
+    * if-block.
+    */
+   boundary.unorder();
+   boundary.removeIntersections(
+      refinement_ratio,
+      reference_mapped_boxes_tree,
+      false /* excludes singularity neighbors */);
    // ... boundary is now ( (R^1) \ R )
+
+
+   /*
+    * Separate boundary into containers for individual blocks required
+    * by the block_id loop.  At the end of each block_id loop, stuff
+    * the results for block_id back into boundary.
+    */
+   std::map<BlockId, BoxContainer> boundary_by_blocks;
+   for (BoxContainer::ConstIterator bi = boundary.begin();
+        bi != boundary.end(); ++bi) {
+      boundary_by_blocks[bi->getBlockId()].pushBack(*bi);
+   }
+   boundary.clear();
+
 
    if (grid_geometry->getNumberOfBlockSingularities() > 0) {
       /*
@@ -1015,17 +1007,8 @@ void BoxLevelConnectorUtils::computeBoxesAroundBoundary(
        * so we remove these parts of the boundary.
        */
 
-      //std::set<BlockId> blocks_with_mapped_boxes;
-      //for ( std::vector<Box>::const_iterator bi=mapped_boxes.begin();
-      //      bi!=mapped_boxes.end(); ++bi ) {
-      //   blocks_with_mapped_boxes.insert(bi->getBlockId());
-      //}
-      //   const std::vector<int> &singularity_indices = grid_geometry->getSingularityIndices(block_num);
-
-      //for ( std::set<BlockId>::const_iterator bi=blocks_with_mapped_boxes.begin();
-      //      bi!=blocks_with_mapped_boxes.end(); ++bi ) {
-      for (std::map<BlockId, BoxContainer>::iterator bi = boundary.begin();
-           bi != boundary.end(); ++bi) {
+      for (std::map<BlockId, BoxContainer>::iterator bi = boundary_by_blocks.begin();
+           bi != boundary_by_blocks.end(); ++bi) {
 
          const BlockId& block_id(bi->first);
 
@@ -1055,7 +1038,6 @@ void BoxLevelConnectorUtils::computeBoxesAroundBoundary(
             if (refinement_ratio != one_vec) {
                reduced_connectivity_singularity_boxes.refine(refinement_ratio);
             }
-            //boundary[block_id].removeIntersections(reduced_connectivity_singularity_boxes);
             bi->second.removeIntersections(
                reduced_connectivity_singularity_boxes);
          }
@@ -1097,28 +1079,33 @@ void BoxLevelConnectorUtils::computeBoxesAroundBoundary(
             }
          }
 
-         //boundary[block_id].removeIntersections(singularity_boxes);
          bi->second.removeIntersections(singularity_boxes);
 
       } // for std::map<BlockId, ...
+
    } // grid_geometry->getNumberOfBlockSingularities() > 0
 
    if (simplify_boundary_boxes) {
-      for (std::map<BlockId, BoxContainer>::iterator mi = boundary.begin();
-           mi != boundary.end(); ++mi) {
+      for (std::map<BlockId, BoxContainer>::iterator mi = boundary_by_blocks.begin();
+           mi != boundary_by_blocks.end(); ++mi) {
          mi->second.simplify();
       }
    }
 
    // Set correct block ids.
-   for (std::map<BlockId, BoxContainer>::iterator bi = boundary.begin();
-        bi != boundary.end(); ++bi) {
+   for (std::map<BlockId, BoxContainer>::iterator bi = boundary_by_blocks.begin();
+        bi != boundary_by_blocks.end(); ++bi) {
       const BlockId& block_id(bi->first);
       BoxContainer &boxes(bi->second);
       for ( BoxContainer::Iterator bj=boxes.begin(); bj!=boxes.end(); ++bj ) {
          bj->getId() = BoxId( bj->getLocalId(), bj->getOwnerRank(),
                               bj->getPeriodicId() );
       }
+   }
+
+   for (std::map<BlockId, BoxContainer>::iterator bi = boundary_by_blocks.begin();
+        bi != boundary_by_blocks.end(); ++bi) {
+      boundary.spliceBack(bi->second);
    }
 
 }
@@ -1173,7 +1160,7 @@ void BoxLevelConnectorUtils::makeRemainderMap(
       const Box& orig_node = *ni;
       const BoxId mapped_box_id = orig_node.getId();
 
-      if (!orig_to_rejection.hasNeighborSet(orig_node.getId())) {
+      if (!orig_to_rejection.hasNeighborSet(mapped_box_id)) {
          /*
           * By the definition of a mapping Connector, no mapping means
           * the entire orig_node is rejected.
@@ -1186,7 +1173,7 @@ void BoxLevelConnectorUtils::makeRemainderMap(
          TBOX_ASSERT(!orig_to_remainder.hasNeighborSet(mapped_box_id));
 
          orig_to_remainder.makeEmptyLocalNeighborhood(mapped_box_id);
-      } else if (orig_to_rejection.numLocalNeighbors(orig_node.getId()) == 0) {
+      } else if (orig_to_rejection.numLocalNeighbors(mapped_box_id) == 0) {
          /*
           * By the definition of a mapping Connector, empty mapping
           * means entire orig_node remains.
@@ -1204,7 +1191,7 @@ void BoxLevelConnectorUtils::makeRemainderMap(
           */
 
          Connector::ConstNeighborhoodIterator ci =
-            orig_to_rejection.findLocal(orig_node.getId());
+            orig_to_rejection.findLocal(mapped_box_id);
 
          remainder.eraseBoxWithoutUpdate(orig_node);
 
@@ -1229,7 +1216,8 @@ void BoxLevelConnectorUtils::makeRemainderMap(
           * required mapping from the orig node to a (possibly empty)
           * container of nesting parts.
           */
-         orig_to_remainder.makeEmptyLocalNeighborhood(mapped_box_id);
+         Connector::NeighborhoodIterator base_box_itr =
+            orig_to_remainder.makeEmptyLocalNeighborhood(mapped_box_id);
          for (BoxContainer::Iterator bi(remaining_parts_list);
               bi != remaining_parts_list.end(); ++bi) {
             Box new_box = (*bi);
@@ -1238,7 +1226,7 @@ void BoxLevelConnectorUtils::makeRemainderMap(
                          rank);
             TBOX_ASSERT(new_node.getBlockId() == orig_node.getBlockId());
             remainder.addBoxWithoutUpdate(new_node);
-            orig_to_remainder.insertLocalNeighbor(new_node, mapped_box_id);
+            orig_to_remainder.insertLocalNeighbor(new_node, base_box_itr);
          }
       }
 
@@ -1499,7 +1487,7 @@ void BoxLevelConnectorUtils::addPeriodicImagesAndRelationships(
    }
    if (d_sanity_check_postcond) {
       // Expensive sanity check for correctness.
-      size_t err1 = oca.checkOverlapCorrectness(anchor_to_mapped_box_level);
+      int err1 = oca.checkOverlapCorrectness(anchor_to_mapped_box_level);
       if (err1) {
          tbox::perr << "BoxLevelConnectorUtils::addPeriodicImages found " << err1
                     << " errors\n"
@@ -1508,7 +1496,7 @@ void BoxLevelConnectorUtils::addPeriodicImagesAndRelationships(
                     << "precondition checking, this is probably a\n"
                     << "library error.\n";
       }
-      size_t err2 = oca.checkOverlapCorrectness(mapped_box_level_to_anchor);
+      int err2 = oca.checkOverlapCorrectness(mapped_box_level_to_anchor);
       if (err2) {
          tbox::perr << "BoxLevelConnectorUtils::addPeriodicImages found " << err2
                     << " errors\n"

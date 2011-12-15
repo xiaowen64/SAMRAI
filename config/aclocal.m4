@@ -4085,6 +4085,7 @@ case "$with_boost" in
     if test -f ${with_boost}/include/boost/tr1/unordered_map.hpp; then
         boost_PREFIX=$with_boost
         boost_INCLUDES="-I${boost_PREFIX}/include"
+        dnl Do not have to set boost_LIBS because SAMRAI does not need it (yet).
         dnl boost_LIBS="-L${boost_PREFIX}/lib -lboost_regex"
         AC_MSG_RESULT([$boost_PREFIX])
     else

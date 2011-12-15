@@ -423,7 +423,7 @@ public:
     *
     * @return Number of overlap errors found locally.
     */
-   size_t
+   int
    checkOverlapCorrectness(
       const Connector& connector,
       bool ignore_self_overlap = false,
