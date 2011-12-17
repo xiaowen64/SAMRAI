@@ -546,6 +546,7 @@ void SinusoidalFrontTagger::computeFrontsData(
 
       tag_data->fill(0);
       const hier::Box &gbox = tag_data->getGhostBox();
+      const hier::BlockId& block_id = gbox.getBlockId();
       const hier::IntVector& glower = gbox.lower();
       const hier::IntVector& gupper = gbox.upper();
 
@@ -560,7 +561,7 @@ void SinusoidalFrontTagger::computeFrontsData(
                front_loc(0) += iperiod;
             }
             for (front_loc(0) += iperiod; front_loc(0) <= gupper(0); front_loc(0) += iperiod) {
-               hier::Box tag_here(front_loc, front_loc);
+               hier::Box tag_here(front_loc, front_loc, block_id);
                tag_here.grow(buffer);
                tag_data->fillAll(1, tag_here);
             }
@@ -577,7 +578,7 @@ void SinusoidalFrontTagger::computeFrontsData(
                   front_loc(0) += iperiod;
                }
                for (front_loc(0) += iperiod; front_loc(0) <= gupper(0); front_loc(0) += iperiod) {
-                  hier::Box tag_here(front_loc, front_loc);
+                  hier::Box tag_here(front_loc, front_loc, block_id);
                   tag_here.grow(buffer);
                   tag_data->fillAll(1, tag_here);
                }

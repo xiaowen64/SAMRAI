@@ -336,6 +336,7 @@ int main(
             ++anchor_boxes_itr;
          }
          for (int i = my_boxes_start; i < my_boxes_stop; ++i, anchor_boxes_itr++) {
+            anchor_boxes_itr->setBlockId(hier::BlockId(0));
             anchor_mapped_box_level.addBox(*anchor_boxes_itr, hier::BlockId::zero());
          }
       }
@@ -777,6 +778,7 @@ void generatePrebalanceByUserBoxes(
    for (int i = 0; i < balance_boxes.size(); ++i, ++balance_boxes_itr) {
       const int owner = i % initial_owners.size();
       if (owner == balance_mapped_box_level.getMPI().getRank()) {
+         balance_boxes_itr->setBlockId(hier::BlockId(0));
          balance_mapped_box_level.addBox(hier::Box(*balance_boxes_itr,
                hier::LocalId(i), owner));
       }

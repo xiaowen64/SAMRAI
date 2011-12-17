@@ -281,8 +281,7 @@ int main(
                big_mapped_box_level.addBoxWithoutUpdate(
                   hier::Box(*bi,
                      ++last_local_id,
-                     0,
-                     block_id));
+                     0));
             }
 
          } else {
@@ -821,7 +820,7 @@ void shrinkBoxLevel(
       hier::Box box(*bi);
       box.grow(shrinkage);
       hier::Box complement_mapped_box(
-         box, ++last_local_id, local_rank, box.getBlockId());
+         box, ++last_local_id, local_rank);
       complement_mapped_boxes.insert(complement_mapped_box);
    }
 #else
@@ -837,7 +836,7 @@ void shrinkBoxLevel(
          assert( box.getBlockId() == block_id );
          box.grow(shrinkage);
          hier::Box complement_mapped_box(
-            box, ++last_local_id, local_rank, block_id);
+            box, ++last_local_id, local_rank);
          complement_mapped_boxes.insert(complement_mapped_box);
       }
 
@@ -888,8 +887,9 @@ void shrinkBoxLevel(
             const hier::Box shrunken_mapped_box(
                *li,
                ++last_local_id,
-               mapped_box.getOwnerRank(),
-               mapped_box.getBlockId());
+               mapped_box.getOwnerRank());
+            TBOX_ASSERT(shrunken_mapped_box.getBlockId() ==
+                        mapped_box.getBlockId()); 
 
             small_mapped_box_level.addBoxWithoutUpdate(shrunken_mapped_box);
          }

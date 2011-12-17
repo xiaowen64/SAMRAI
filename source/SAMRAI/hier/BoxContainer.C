@@ -252,12 +252,21 @@ void BoxContainer::insert ( ConstIterator first,
  */
 void BoxContainer::simplify()
 {
+   if (d_ordered) {
+      TBOX_ERROR("simplify called on ordered BoxContainer.");
+   }
+
+#ifdef DEBUG_CHECK_ASSERTIONS
+   if (size() > 0) {
+      const hier::BlockId& front_block_id = front().getBlockId();
+      for (ConstIterator itr = begin(); itr != end(); ++itr) {
+         TBOX_ASSERT(itr->getBlockId() == front_block_id);
+      }
+   }
+#endif
+
    // Start coalescing on the highest dimension of the containers and work down
    // While there are non-canonical boxes, pick somebody out of the container.
-
-   if (d_ordered) {
-      TBOX_ERROR("simplify called on ordered BoxContainer."); 
-   }
 
    if (!isEmpty()) {
       const tbox::Dimension dim(d_list.front().getDim());
@@ -365,6 +374,15 @@ void BoxContainer::simplify()
  */
 void BoxContainer::coalesce()
 {
+#ifdef DEBUG_CHECK_ASSERTIONS
+   if (size() > 0) {
+      const hier::BlockId& front_block_id = front().getBlockId();
+      for (ConstIterator itr = begin(); itr != end(); ++itr) {
+         TBOX_ASSERT(itr->getBlockId() == front_block_id);
+      }
+   }
+#endif
+
    if (d_ordered) {
       TBOX_ERROR("coalesce called on ordered BoxContainer.");
    }

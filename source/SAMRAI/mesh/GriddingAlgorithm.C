@@ -2440,6 +2440,7 @@ void GriddingAlgorithm::readLevelBoxes(
       for (hier::BoxContainer::Iterator itr(boxes_to_refine);
            itr != boxes_to_refine.end(); ++itr, ++i) {
          hier::Box unbalanced_mapped_box(*itr, i, 0);
+         unbalanced_mapped_box.setBlockId(hier::BlockId(0));
          unbalanced_mapped_box_level.addBox(unbalanced_mapped_box);
       }
 

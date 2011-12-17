@@ -680,6 +680,10 @@ bool Box::intersects(
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, box);
 
+   if (d_block_id != box.d_block_id) {
+      return false;
+   }
+
    for (int i = 0; i < getDim().getValue(); i++) {
       if (tbox::MathUtilities<int>::Max(d_lo(i), box.d_lo(i)) >
           tbox::MathUtilities<int>::Min(d_hi(i), box.d_hi(i))) {
@@ -687,11 +691,7 @@ bool Box::intersects(
       }
    }
 
-   if (d_block_id == box.d_block_id) {
-      return true;
-   } else {
-      return false;
-   }
+   return true;
 }
 
 SAMRAI_INLINE_KEYWORD
@@ -699,6 +699,7 @@ Box Box::operator + (
    const Box& box) const
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, box);
+   TBOX_ASSERT(d_block_id == box.d_block_id || empty() || box.empty());
 
    Box bbox(*this);
    bbox += box;

@@ -557,6 +557,7 @@ void CartesianGridGeometry::getFromInput(
          hier::LocalId local_id(0);
          for (hier::BoxContainer::Iterator itr = input_domain.begin();
               itr != input_domain.end(); ++itr) {
+            itr->setBlockId(hier::BlockId(0));
             domain.pushBack(hier::Box(*itr, local_id++, 0));
          }
       } else {
@@ -645,6 +646,7 @@ void CartesianGridGeometry::getFromRestart()
    hier::LocalId local_id(0);
    for (hier::BoxContainer::Iterator itr = restart_domain.begin();
         itr != restart_domain.end(); ++itr) {
+      itr->setBlockId(hier::BlockId(0));
       domain.pushBack(hier::Box(*itr, local_id++, 0));
    }
 

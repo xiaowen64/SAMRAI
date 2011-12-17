@@ -285,6 +285,7 @@ int main(
       hier::LocalId local_id(0);
       for (hier::BoxContainer::Iterator itr = input_boxes.begin();
            itr != input_boxes.end(); ++itr) {
+         itr->setBlockId(hier::BlockId(0));
          domain_boxes.pushBack(hier::Box(*itr, local_id++, 0));
       }
 
@@ -966,12 +967,14 @@ void generatePrebalanceByUserShells(
 
       tag_data->getArrayData().fillAll(0);
 
+      const hier::BlockId& block_id = patch->getBox().getBlockId();
+
       for (pdat::CellData<int>::Iterator ci(tag_data->getGhostBox());
            ci; ci++) {
          const pdat::CellIndex& cid = *ci;
 
          // Loop through nodes of cell cid.  Tag cell if node is tagged.
-         const hier::Box cell_box(cid,cid);
+         const hier::Box cell_box(cid,cid, block_id);
          for ( pdat::NodeIterator node_itr(cell_box); node_itr; node_itr++ ) {
             if ( node_tag_data(*node_itr) == tag_val ) {
                (*tag_data)(cid) = tag_val;
@@ -1150,7 +1153,8 @@ void generatePrebalanceByShrinkingLevel(
       efficiency_tol,
       combine_tol,
       connector_width,
-      hier::BlockId::zero());
+      hier::BlockId::zero(),
+      hier::LocalId(0));
 
 
    /*
@@ -1296,7 +1300,8 @@ void generatePrebalanceBySinusoidalFront(
       efficiency_tol,
       combine_tol,
       connector_width,
-      hier::BlockId::zero());
+      hier::BlockId::zero(),
+      hier::LocalId(0));
 
 
    /*
@@ -1361,6 +1366,7 @@ void generatePrebalanceByUserBoxes(
    for (int i = 0; i < prebalance_boxes.size(); ++i, ++prebalance_boxes_itr) {
       const int owner = i % initial_owners.size();
       if (owner == L1.getMPI().getRank()) {
+         prebalance_boxes_itr->setBlockId(hier::BlockId(0));
          L1.addBox(hier::Box(*prebalance_boxes_itr,
                hier::LocalId(i), owner));
       }

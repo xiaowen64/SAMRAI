@@ -301,8 +301,8 @@ std::ostream& operator << (
 Box& Box::operator += (
    const Box& box)
 {
-
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, box);
+   TBOX_ASSERT(d_block_id == box.d_block_id || empty() || box.empty());
 
    if (!box.empty()) {
       if (empty()) {
@@ -400,7 +400,7 @@ bool Box::coalesceWith(
    if (empty() || box.empty()) {
       retval = true;
       *this += box;
-   } else {
+   } else if (d_block_id == box.d_block_id) {
       int id;
       const int* box_lo = &box.lower()[0];
       const int* box_hi = &box.upper()[0];
@@ -430,6 +430,8 @@ bool Box::coalesceWith(
             }
          }
       }
+   } else { // BlockIds don't match, so don't coalesce.
+      retval = false;
    }
 
    if (retval) *this += box;
@@ -595,7 +597,6 @@ void Box::initializeCallback()
             hier::Index(dim, tbox::MathUtilities<int>::getMax()),
             hier::BlockId(0));
    }
-
 }
 
 /*

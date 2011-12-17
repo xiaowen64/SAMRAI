@@ -931,6 +931,9 @@ BoxContainer::ConstIterator BoxLevel::addBox(
          << "so it can only be performed in\n"
          << "distributed state.");
    }
+   if (box.getBlockId() != BlockId::invalidId()) {
+      TBOX_ASSERT(box.getBlockId() == block_id);
+   }
 #endif
 
    clearForBoxChanges(false);
@@ -943,7 +946,7 @@ BoxContainer::ConstIterator BoxLevel::addBox(
          LocalId::getZero(),
          d_mpi.getRank(),
          PeriodicShiftCatalog::getCatalog(dim)->getZeroShiftNumber());
-      TBOX_ASSERT(new_box.getBlockId() == block_id);
+      new_box.setBlockId(block_id);
       new_iterator = d_boxes.insert(d_boxes.end(), new_box);
    } else {
       // Set new_index to one more than the largest index used.
@@ -964,13 +967,11 @@ BoxContainer::ConstIterator BoxLevel::addBox(
             for (new_index = 0, ni = d_boxes.begin();
                  ni != d_boxes.end();
                  ++ni) {
-               if ((*ni).getBlockId() == block_id) {
-                  if (new_index != (*ni).getLocalId()) {
-                     break;
-                  }
-                  if (!ni->isPeriodicImage()) {
-                     ++new_index;
-                  }
+               if (new_index != (*ni).getLocalId()) {
+                  break;
+               }
+               if (!ni->isPeriodicImage()) {
+                  ++new_index;
                }
             }
             // We should have found an unused index.
@@ -978,16 +979,16 @@ BoxContainer::ConstIterator BoxLevel::addBox(
          }
       }
 
-      const Box new_box(
+      Box new_box(
          box, new_index, d_mpi.getRank());
-      TBOX_ASSERT(new_box.getBlockId() == block_id);
+      new_box.setBlockId(block_id);
       new_iterator = d_boxes.insert(ni, new_box);
    }
 
-   const IntVector box_size(box.numberCells());
+   const IntVector box_size(new_iterator->numberCells());
    ++d_local_number_of_boxes;
    d_local_number_of_cells += box.size();
-   d_local_bounding_box[block_id.getBlockValue()] += box;
+   d_local_bounding_box[block_id.getBlockValue()] += *new_iterator;
    d_local_max_box_size[block_id.getBlockValue()].max(box_size);
    d_local_min_box_size[block_id.getBlockValue()].min(box_size);
    d_global_data_up_to_date = false;
