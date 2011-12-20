@@ -13,7 +13,7 @@
 Main {
    dim = 2
 
-   base_name = "small_front.treelb.2d"
+   base_name = "small_front.2d.treelb"
    log_all_nodes = TRUE
 
    // Balancer types: TreeLoadBalancer, ChopAndPackLoadBalancer
