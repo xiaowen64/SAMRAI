@@ -77,6 +77,7 @@ Main {
          amplitude = 0.5
       }
       BergerRigoutsos {
+         sort_output_nodes = TRUE
          log_node_history = FALSE
          log_cluster_summary = TRUE
          log_cluster = FALSE
@@ -90,6 +91,7 @@ Main {
    PrebalanceByShrinkingLevel {
       shrink_width = 10, 10, 10
       BergerRigoutsos {
+         sort_output_nodes = TRUE
          log_node_history = FALSE
          log_cluster_summary = TRUE
          log_cluster = FALSE

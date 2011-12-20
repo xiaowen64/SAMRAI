@@ -69,6 +69,7 @@ Main {
       efficiency_tol = 0.80
       combine_tol = 0.90
       BergerRigoutsos {
+         sort_output_nodes = TRUE
          log_node_history = FALSE
          log_cluster_summary = TRUE
          log_cluster = FALSE
