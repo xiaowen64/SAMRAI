@@ -205,6 +205,10 @@ void SAMRAI_MPI::initMPIDisabled()
    commWorld = MPI_COMM_WORLD;
    commNull = MPI_COMM_NULL;
 
+   s_samrai_world.d_comm = MPI_COMM_WORLD;
+   s_samrai_world.d_size = 1;
+   s_samrai_world.d_rank = 0;
+
    if (getenv("SAMRAI_ABORT_ON_ERROR")) {
       SAMRAI_MPI::setCallAbortInSerialInsteadOfExit(true);
       SAMRAI_MPI::setCallAbortInParallelInsteadOfMPIAbort(true);
