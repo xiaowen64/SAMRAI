@@ -14,7 +14,7 @@ Main {
    dim = 2
 
    base_name = "rod.2d.treelb"
-   log_all_nodes = FALSE
+   log_all_nodes = TRUE
 
    // Balancer types: TreeLoadBalancer, ChopAndPackLoadBalancer
    load_balancer_type = "TreeLoadBalancer"

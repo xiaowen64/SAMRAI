@@ -14,7 +14,7 @@ Main {
    dim = 2
 
    base_name = "small_cube.2d.caplb"
-   log_all_nodes = FALSE
+   log_all_nodes = TRUE
 
    // Balancer types: TreeLoadBalancer, ChopAndPackLoadBalancer
    load_balancer_type = "ChopAndPackLoadBalancer"
