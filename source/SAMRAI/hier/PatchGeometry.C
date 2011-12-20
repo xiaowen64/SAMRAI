@@ -36,8 +36,7 @@ PatchGeometry::PatchGeometry(
    d_dim(ratio_to_level_zero.getDim()),
    d_ratio_to_level_zero(ratio_to_level_zero),
    d_patch_boundaries(ratio_to_level_zero.getDim()),
-   d_touches_regular_bdry(ratio_to_level_zero.getDim()),
-   d_touches_periodic_bdry(ratio_to_level_zero.getDim())
+   d_touches_regular_bdry(ratio_to_level_zero.getDim())
 
 {
    TBOX_DIM_ASSERT_CHECK_ARGS3(ratio_to_level_zero,
@@ -70,13 +69,9 @@ PatchGeometry::PatchGeometry(
    for (int axis = 0; axis < d_dim.getValue(); axis++) {
       for (int dir = 0; dir < 2; dir++) {
          d_touches_regular_bdry(axis, dir) = touches_regular_bdry(axis, dir);
-         d_touches_periodic_bdry(axis, dir) = touches_periodic_bdry(axis, dir);
 
          if (d_touches_regular_bdry(axis, dir)) {
             d_has_regular_boundary = true;
-         }
-         if (d_touches_periodic_bdry(axis, dir)) {
-            d_has_periodic_boundary = true;
          }
       }
    }
