@@ -87,7 +87,7 @@ PatchHierarchy {
    /*
      Specify number of levels (1, 2 or 3 for this test).
    */
-   max_levels = 3
+   max_levels = 2
 
    enforce_proper_nesting = FALSE
    extend_to_domain_boundary = FALSE
