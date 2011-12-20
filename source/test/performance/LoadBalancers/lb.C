@@ -1459,38 +1459,17 @@ void refineHead(
    hier::Connector& head_to_ref,
    const hier::IntVector &refinement_ratio )
 {
+   head.refineBoxes(
+      head,
+      refinement_ratio,
+      head.getRefinementRatio()*refinement_ratio);
+   head.finalize();
 
-   const tbox::Dimension &dim(head.getDim());
-   const hier::IntVector &zero_vec(hier::IntVector::getZero(head.getDim()));
-   const hier::MappingConnectorAlgorithm mca;
+   const hier::IntVector& head_to_ref_width =
+      refinement_ratio * head_to_ref.getConnectorWidth();
+   head_to_ref.setBase(head);
+   head_to_ref.setWidth(head_to_ref_width, true);
 
-   hier::BoxContainer tmp_boxes(head.getBoxes());
-   tmp_boxes.refine(refinement_ratio);
-   hier::BoxLevel tmp_head(head.getRefinementRatio()*refinement_ratio,
-                           head.getGridGeometry(),
-                           head.getMPI() );
-   for ( hier::BoxContainer::ConstIterator bi=tmp_boxes.begin();
-         bi!=tmp_boxes.end(); ++bi ) {
-      tmp_head.addBox(*bi);
-   }
-
-   hier::Connector mapping( head, tmp_head, zero_vec );;
-
-   const hier::BoxContainer &head_boxes = head.getBoxes();
-   for ( hier::BoxContainer::ConstIterator bi=head_boxes.begin();
-         bi!=head_boxes.end(); ++bi ) {
-
-      const hier::Box &head_box(*bi);
-      hier::Box refined_head_box(head_box);
-      refined_head_box.refine(refinement_ratio);
-      mapping.insertLocalNeighbor( refined_head_box, head_box.getId() );
-
-   }
-
-   mca.modify(
-      ref_to_head,
-      head_to_ref,
-      mapping,
-      &head);
-
+   ref_to_head.setHead(head, true);
+   ref_to_head.refineLocalNeighbors(refinement_ratio);
 }
