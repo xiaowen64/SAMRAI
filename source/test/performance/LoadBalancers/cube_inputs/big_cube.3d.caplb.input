@@ -55,6 +55,20 @@ Main {
       initial_owners = 0
    }
 
+   PrebalanceByShrinkingLevel {
+      shrink_width = 10, 10
+      BergerRigoutsos {
+         sort_output_nodes = TRUE
+         log_node_history = FALSE
+         log_cluster_summary = TRUE
+         log_cluster = FALSE
+         sequentialize_output_indices = FALSE
+         barrier_before_cluster = FALSE
+         // owner_mode = "SINGLE_OWNER"
+         // algo_advance_mode = "SYNCHRONOUS"
+      }
+   }
+
 }
 
 TreeLoadBalancer {
