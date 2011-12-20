@@ -2234,12 +2234,10 @@ void RefineSchedule::refineScratchData(
     * destination patch and destination fill boxes.
     */
 
-   const hier::BoxContainer& crse_mapped_boxes =
-      coarse_level->getBoxLevel()->getBoxes();
-   for (hier::BoxContainer::ConstIterator ni = crse_mapped_boxes.begin();
-        ni != crse_mapped_boxes.end(); ++ni) {
-
-      const hier::Box& crse_mapped_box = *ni;
+   for ( hier::PatchLevel::Iterator crse_itr(*coarse_level);
+         crse_itr; ++crse_itr, overlap_iter++ )
+   {
+      const hier::Box& crse_mapped_box = crse_itr->getBox();
       hier::Connector::ConstNeighborhoodIterator dst_nabrs =
          coarse_to_fine.find(crse_mapped_box.getId());
       hier::Connector::ConstNeighborIterator na =
@@ -2295,8 +2293,6 @@ void RefineSchedule::refineScratchData(
          }
       }
 
-      overlap_iter++;
-
       if (d_refine_patch_strategy) {
          d_refine_patch_strategy->postprocessRefineBoxes(*fine_patch,
             *crse_patch,
@@ -2336,12 +2332,10 @@ void RefineSchedule::computeRefineOverlaps(
     * destination patch and destination fill boxes.
     */
 
-   const hier::BoxContainer& coarse_mapped_boxes =
-      coarse_level->getBoxLevel()->getBoxes();
-   for (hier::BoxContainer::ConstIterator ni = coarse_mapped_boxes.begin();
-        ni != coarse_mapped_boxes.end(); ++ni) {
-
-      const hier::Box& coarse_mapped_box = *ni;
+   for ( hier::PatchLevel::Iterator crse_itr(*coarse_level);
+         crse_itr; ++crse_itr )
+   {
+      const hier::Box& coarse_mapped_box = crse_itr->getBox();
       hier::Connector::ConstNeighborhoodIterator fine_nabrs =
          coarse_to_fine.find(coarse_mapped_box.getId());
       hier::Connector::ConstNeighborIterator na =
