@@ -695,33 +695,47 @@ int main(
 
 
 
+      bool write_visit =
+         main_db->getBoolWithDefault("write_visit", false);
+      if ( write_visit ) {
 #ifdef HAVE_HDF5
-      hierarchy->makeNewPatchLevel(0, L0);
-      if ( hierarchy->getMaxNumberOfLevels() > 1 ) {
-         hierarchy->makeNewPatchLevel(1, L1);
-      }
-      if ( hierarchy->getMaxNumberOfLevels() > 2 ) {
-         hierarchy->makeNewPatchLevel(2, L2);
-      }
+         hierarchy->makeNewPatchLevel(0, L0);
+         if ( hierarchy->getMaxNumberOfLevels() > 1 ) {
+            hierarchy->makeNewPatchLevel(1, L1);
+         }
+         if ( hierarchy->getMaxNumberOfLevels() > 2 ) {
+            hierarchy->makeNewPatchLevel(2, L2);
+         }
 
-      if ((dim == tbox::Dimension(2)) || (dim == tbox::Dimension(3))) {
-         /*
-          * Create the VisIt data writer.
-          * Write the plot file.
-          */
-         DerivedVisOwnerData owner_writer;
-         const std::string visit_filename = base_name + ".visit";
-         appu::VisItDataWriter visit_data_writer(dim,
-                                                 "VisIt Writer",
-                                                 visit_filename);
-         visit_data_writer.registerDerivedPlotQuantity("Owner",
-            "SCALAR",
-            &owner_writer);
-         visit_data_writer.writePlotData(hierarchy, 0);
-      }
+         if ((dim == tbox::Dimension(2)) || (dim == tbox::Dimension(3))) {
+            /*
+             * Create the VisIt data writer.
+             * Write the plot file.
+             */
+            DerivedVisOwnerData owner_writer;
+            const std::string visit_filename = base_name + ".visit";
+            appu::VisItDataWriter visit_data_writer(dim,
+                                                    "VisIt Writer",
+                                                    visit_filename);
+            visit_data_writer.registerDerivedPlotQuantity("Owner",
+                                                          "SCALAR",
+                                                          &owner_writer);
+            visit_data_writer.writePlotData(hierarchy, 0);
+         }
+#else
+         TBOX_WARNING("main: You set write_visit to TRUE,\n"
+                      << "but VisIt dumps are not supported due to\n"
+                      << "not having configured with HDF5.\n");
 #endif
+      }
 
    }
+
+   /*
+    * Output timer results.
+    */
+   tbox::TimerManager::getManager()->print(tbox::plog);
+
 
    /*
     * Print input database again to fully show usage.

@@ -15,6 +15,7 @@ Main {
 
    base_name = "rod.2d.treelb"
    log_all_nodes = TRUE
+   write_visit = TRUE
 
    // Balancer types: TreeLoadBalancer, ChopAndPackLoadBalancer
    load_balancer_type = "TreeLoadBalancer"
