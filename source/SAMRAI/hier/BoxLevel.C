@@ -1247,6 +1247,10 @@ void BoxLevel::eraseBoxWithoutUpdate(
 
 /*
  ****************************************************************************
+ * TODO: This method puts finer in an inconsistent state by not
+ * updating the attributes depenent on what has been changed.  This
+ * method seems to be an initializer, but it is not clear from the
+ * name or documentation if that is so.  The same goes for coarsenBoxes.
  ****************************************************************************
  */
 void BoxLevel::refineBoxes(
