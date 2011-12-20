@@ -25,11 +25,6 @@ Main {
    domain_boxes = [(0,0,0),(99,99,99)]
 
    /*
-     Specify number of levels (1, 2 or 3).
-   */
-   max_levels = 3
-
-   /*
      Specify L0 layer as a box array in the reference index space.
      The L0 layer will be partitioned but its partitioning is not
      used in the performance test.
@@ -48,11 +43,6 @@ Main {
    */
    ghost_cell_width = 4, 4, 4
 
-   /*
-     Specify the min patch size.
-   */
-   min_size = 4, 4, 4
-   max_size = 10, 10, 10
 
    PrebalanceByUserBoxes {
       /*
@@ -90,4 +80,37 @@ TimerManager {
    print_max              = TRUE
    print_threshold        = 0.
    timer_list             = "hier::*::*", "mesh::*::*", "apps::*::*"
+}
+
+
+PatchHierarchy {
+
+   /*
+     Specify number of levels (1, 2 or 3 for this test).
+   */
+   max_levels = 2
+
+   enforce_proper_nesting = FALSE
+   extend_to_domain_boundary = FALSE
+   check_nonrefined_tags = "IGNORE"
+   // load_balance = FALSE
+   largest_patch_size {
+      level_0 = -1,-1,-1
+      // level_0 = 20,20,20
+      // all finer levels will use same values as level_0...
+   }
+   smallest_patch_size {
+      level_0 = 5,5,5
+      // all finer levels will use same values as level_0...
+   }
+   ratio_to_coarser {
+      level_1            = 3, 3, 3
+      level_2            = 3, 3, 3
+      level_3            = 2, 2, 2
+      //  etc.
+   }
+
+   allow_patches_smaller_than_ghostwidth = TRUE
+   allow_patches_smaller_than_minimum_size_to_prevent_overlaps = TRUE
+   proper_nesting_buffer = 1, 1, 1
 }

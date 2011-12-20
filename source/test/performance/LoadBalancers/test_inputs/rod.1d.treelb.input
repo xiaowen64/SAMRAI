@@ -11,7 +11,7 @@
 
 
 Main {
-   base_name = "rod.treelb.1d"
+   base_name = "rod.1d.treelb"
    log_all_nodes = FALSE
 
    // Balancer types: TreeLoadBalancer, ChopAndPackLoadBalancer
@@ -46,11 +46,6 @@ Main {
    */
    ghost_cell_width = 4
 
-   /*
-     Specify the min patch size.
-   */
-   min_size = 1
-
    PrebalanceByUserBoxes {
       /*
         Specify unbalanced layer as a box array in the reference index space.
@@ -75,7 +70,7 @@ TreeLoadBalancer {
   // Debugging options
   check_map = FALSE
   check_connectivity = FALSE
-  print_steps = TRUE
+  print_steps = FALSE
   print_swap_steps = FALSE
   print_break_steps = FALSE
   print_edge_steps = FALSE
