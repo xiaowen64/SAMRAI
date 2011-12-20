@@ -25,11 +25,6 @@ Main {
    domain_boxes = [(0,0),(49,49)]
 
    /*
-     Specify number of levels (1, 2 or 3).
-   */
-   max_levels = 3
-
-   /*
      Specify L0 layer as a box array in the reference index space.
      The L0 layer will be partitioned but its partitioning is not
      used in the performance test.
