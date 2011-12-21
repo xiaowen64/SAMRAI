@@ -292,7 +292,6 @@ const Connector& PersistentOverlapConnectors::findConnector(
        * overlap Connector.
        */
       new_connector->eraseEmptyNeighborSets();
-      TBOX_ASSERT(oca.checkOverlapCorrectness(*found) == 0);
 
       d_cons_from_me.push_back(new_connector);
       head.getPersistentOverlapConnectors().d_cons_to_me.push_back(
@@ -400,7 +399,6 @@ const Connector& PersistentOverlapConnectors::findOrCreateConnector(
        * overlap Connector.
        */
       new_connector->eraseEmptyNeighborSets();
-      TBOX_ASSERT(oca.checkOverlapCorrectness(*found) == 0);
 
       d_cons_from_me.push_back(new_connector);
       head.getPersistentOverlapConnectors().d_cons_to_me.push_back(
