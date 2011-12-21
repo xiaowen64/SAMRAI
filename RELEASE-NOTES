@@ -73,6 +73,8 @@ descriptions of items in the following list are provided below.
 
 (7) Boost is no longer required.
 
+(8) Fixed bug causing excessive call-backs in RefineSchedule::fillData.
+
 
 
 *****************************************************************************
@@ -99,7 +101,7 @@ QUOTE SOME NUMBERS HERE
 
 (3) The bridge algorithm is now multi-block aware.
 
-NEED SOME DETAILS
+No interface change, but multi-block now runs faster.
 
 (4) CoarsenAlgorithm and CoarsenSchedule are multi-block aware.
 
@@ -207,6 +209,11 @@ are needed for some classes but are not required.  Use configure
 switch "--without-boost" to remove Boost dependency.  Note that, as
 warned by the configure script, the SparseData class is not supported
 without Boost.
+
+(8) Fixed bug causing excessive call-backs in RefineSchedule::fillData.
+
+As a side effect, the method PatchLevel::patchTouchesPeriodicBoundary,
+has been removed because it is obsolete.
 
 
 =============================================================================
