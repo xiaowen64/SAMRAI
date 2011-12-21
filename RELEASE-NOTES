@@ -47,8 +47,6 @@ descriptions of items in the following list are provided below.
 
 (4) CoarsenSchedule is multi-block aware.
 
-(5) RefineSchedule construction performance has been improved.
-
 
 -----------------------------------------------------------------------------
                 Summary of what's changed
@@ -75,6 +73,7 @@ descriptions of items in the following list are provided below.
 
 (8) Fixed bug causing excessive call-backs in RefineSchedule::fillData.
 
+(9) RefineSchedule construction performance has been improved.
 
 
 *****************************************************************************
@@ -109,10 +108,6 @@ No interface change, but multi-block now runs faster.
 MultiblockCoarsenAlgorithm and MultiblockCoarsenSchedule have been removed from
 the library, and CoarsenAlgorithm and CoarsenSchedule are now capable of
 handling coarsening operations for multi-block configurations.
-
-(5) RefineSchedule construction performance has been improved.
-
-NEED SOME DETAILS
 
 -----------------------------------------------------------------------------
                 Details about what's changed
@@ -171,7 +166,7 @@ SAMRAI iterators have been.
 
 Iteration should look like:
 
-   for (BoxContainer::Iterator itr = boxes.begin; itr != boxes.end();  ++itr) {
+   for (BoxContainer::Iterator itr = boxes.begin(); itr != boxes.end(); ++itr) {
       // Useful code goes here.
    } 
 
@@ -215,6 +210,12 @@ without Boost.
 
 As a side effect, the method PatchLevel::patchTouchesPeriodicBoundary,
 has been removed because it is obsolete.
+
+(9) RefineSchedule construction performance has been improved.
+
+Some non-scalable multiblock-related operations were replaced with scalable
+operations.
+
 
 
 =============================================================================
