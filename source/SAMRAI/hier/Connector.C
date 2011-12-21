@@ -1033,38 +1033,38 @@ void Connector::recursivePrint(
          } else {
             os << border << "  #"
                << box_id
-               << ": INVALID DATA WARNING: nonexistent mapped_box index\n";
-            TBOX_WARNING("Inconsistent data!!!\n"
-               << "Neighbor data found for mapped_box "
-               << box_id << " but there is no such mapped_box!\n");
+               << ": INVALID DATA WARNING: No base box with this index!\n";
          }
-         Box ghost_box = (*ni);
-         ghost_box.grow(d_base_width);
          os << border << "    Neighbors (" << numLocalNeighbors(box_id) << "):"
             << ((detail_depth > 1) ? "\n" : " ...\n");
          if (detail_depth > 1) {
             for (ConstNeighborIterator i_nabr = begin(ei);
                  i_nabr != end(ei); ++i_nabr) {
-               Box ovlap = *i_nabr;
-               if (ni->getBlockId() != i_nabr->getBlockId()) {
-                  d_base_handle->getBoxLevel().getGridGeometry()->
-                  transformBox(
-                     ovlap,
-                     d_head_handle->getBoxLevel().getRefinementRatio(),
-                     ni->getBlockId(),
-                     i_nabr->getBlockId());
-               }
-               if (head_coarser) {
-                  ovlap.refine(d_ratio);
-               }
-               else if (d_ratio != 1) {
-                  ovlap.coarsen(d_ratio);
-               }
-               ovlap = ovlap * ghost_box;
                os << border << "      "
                   << (*i_nabr) << "_"
-                  << i_nabr->numberCells()
-                  << "\tov" << ovlap << "_" << ovlap.numberCells() << '\n';
+                  << i_nabr->numberCells();
+               if (ni != getBase().getBoxes().end()) {
+                  Box ovlap = *i_nabr;
+                  if (ni->getBlockId() != i_nabr->getBlockId()) {
+                     d_base_handle->getBoxLevel().getGridGeometry()->
+                        transformBox(
+                           ovlap,
+                           d_head_handle->getBoxLevel().getRefinementRatio(),
+                           ni->getBlockId(),
+                           i_nabr->getBlockId());
+                  }
+                  if (head_coarser) {
+                     ovlap.refine(d_ratio);
+                  }
+                  else if (d_ratio != 1) {
+                     ovlap.coarsen(d_ratio);
+                  }
+                  Box ghost_box = (*ni);
+                  ghost_box.grow(d_base_width);
+                  ovlap = ovlap * ghost_box;
+                  os << "\tov" << ovlap << "_" << ovlap.numberCells();
+               }
+               os << '\n';
             }
          }
       }
