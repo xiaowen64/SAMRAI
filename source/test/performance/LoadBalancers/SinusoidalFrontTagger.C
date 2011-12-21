@@ -430,7 +430,6 @@ void SinusoidalFrontTagger::computeFrontsData(
    const double time ) const
 {
    const tbox::Dimension &dim(tag_buffer.getDim());
-   const hier::IntVector &zero_vec = hier::IntVector::getZero(dim);
 
    t_setup->start();
 
@@ -458,7 +457,6 @@ void SinusoidalFrontTagger::computeFrontsData(
    for (int idim = 0; idim < d_dim.getValue(); ++idim) {
       wave_number[idim] = 2 * 3.141592654 / d_period[idim];
    }
-   const int iperiod = int(d_period[0] / dx[0] + 0.5);
 
    t_setup->stop();
 
@@ -501,7 +499,9 @@ void SinusoidalFrontTagger::computeFrontsData(
       const pdat::CellIndex &cell_index = *ci;
       const hier::Box cell_box(cell_index, cell_index);
 
+#if 0
       int node_orientation = 0;
+#endif
       double min_distance_to_front =  tbox::MathUtilities<double>::getMax();
       double max_distance_to_front = -tbox::MathUtilities<double>::getMax();
       // tbox::plog << "initial distances to front: " << min_distance_to_front << " .. " << max_distance_to_front << std::endl;

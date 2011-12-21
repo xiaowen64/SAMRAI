@@ -557,8 +557,6 @@ void PatchLevel::setRefinedPatchLevel(
 
       PatchGeometry::TwoDimBool&
       touches_regular_bdry_ip((*iter_touches_regular_bdry).second);
-      PatchGeometry::TwoDimBool&
-      touches_periodic_bdry_ip((*iter_touches_periodic_bdry).second);
 
       for (int axis = 0; axis < getDim().getValue(); axis++) {
          for (int side = 0; side < 2; side++) {
@@ -738,8 +736,6 @@ void PatchLevel::setCoarsenedPatchLevel(
 
       PatchGeometry::TwoDimBool&
       touches_regular_bdry_ip((*iter_touches_regular_bdry).second);
-      PatchGeometry::TwoDimBool&
-      touches_periodic_bdry_ip((*iter_touches_periodic_bdry).second);
 
       for (int axis = 0; axis < getDim().getValue(); axis++) {
          for (int side = 0; side < 2; side++) {

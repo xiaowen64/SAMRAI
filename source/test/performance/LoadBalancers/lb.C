@@ -72,7 +72,6 @@ generatePrebalanceByUserBoxes(
    const hier::BoxLevel& L0,
    tbox::Pointer<tbox::Database> database,
    const tbox::Pointer<hier::PatchHierarchy>& hierarchy,
-   int coarser_ln,
    const hier::IntVector& min_size,
    const hier::IntVector& connector_width );
 
@@ -84,7 +83,6 @@ generatePrebalanceByUserShells(
    const hier::BoxLevel& L0,
    const tbox::Pointer<tbox::Database>& database,
    const tbox::Pointer<hier::PatchHierarchy>& hierarchy,
-   int coarser_ln,
    const hier::IntVector& min_size,
    const hier::IntVector& connector_width );
 
@@ -875,7 +873,6 @@ void generatePrebalanceByUserShells(
    const hier::BoxLevel& L0,
    const tbox::Pointer<tbox::Database>& database,
    const tbox::Pointer<hier::PatchHierarchy>& hierarchy,
-   int coarser_ln,
    const hier::IntVector& min_size,
    const hier::IntVector& connector_width )
 {
@@ -1345,7 +1342,6 @@ void generatePrebalanceByUserBoxes(
    const hier::BoxLevel& L0,
    tbox::Pointer<tbox::Database> database,
    const tbox::Pointer<hier::PatchHierarchy>& hierarchy,
-   int coarser_ln,
    const hier::IntVector& min_size,
    const hier::IntVector& connector_width )
 {
@@ -1476,7 +1472,6 @@ void generatePrebalance(
          La,
          box_gen_db,
          hierarchy,
-         coarser_ln,
          min_size,
          required_connector_width );
    } else if (box_gen_method == "PrebalanceByUserShells") {
@@ -1487,7 +1482,6 @@ void generatePrebalance(
          La,
          box_gen_db,
          hierarchy,
-         coarser_ln,
          min_size,
          required_connector_width );
    } else if (box_gen_method == "PrebalanceBySinusoidalFront") {
