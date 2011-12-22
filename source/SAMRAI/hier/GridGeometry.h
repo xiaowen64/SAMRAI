@@ -193,45 +193,17 @@ public:
     * For every patch on the given PatchLevel, this routine determines which
     * kinds of boundaries are touched (regular, periodic, both, or neither).
     *
-    * @note
-    * The array arguments should be uninitialized when they are passed into
-    * this function.
-    *
     * @param[out]   touches_regular_bdry map to store which patches touch
     *               non-periodic boundaries.
     * @param[out]   touches_periodic_bdry map to store which patches touch
     *               periodic boundaries.
     * @param[in]    level containing the patches to be checked
-    * @param[in]    periodic_shift periodic shift for the level (see getPeriodicShift())
-    * @param[in]    domain Physical domain (at the same level of refinement as level)
     */
    void
    findPatchesTouchingBoundaries(
       std::map<BoxId, TwoDimBool>& touches_regular_boundary,
       std::map<BoxId, TwoDimBool>& touches_periodic_boundary,
-      const PatchLevel& level,
-      const IntVector& periodic_shift,
-      const tbox::Array<BoxContainer>& domain) const;
-
-   /*!
-    * @brief Version of findPatchTouchingBoundaries using pre-constructed
-    * search tree for domain.
-    *
-    * @param[out]   touches_regular_bdry map to store which patches touch
-    *               non-periodic boundaries.
-    * @param[out]   touches_periodic_bdry map to store which patches touch
-    *               periodic boundaries.
-    * @param[in]    level containing the patches to be checked
-    * @param[in]    periodic_shift periodic shift for the level (see getPeriodicShift())
-    * @param[in]    domain_tree search tree for the domain
-    */
-   void
-   findPatchesTouchingBoundaries(
-      std::map<BoxId, TwoDimBool>& touches_regular_boundary,
-      std::map<BoxId, TwoDimBool>& touches_periodic_boundary,
-      const PatchLevel& level,
-      const IntVector& periodic_shift,
-      const tbox::Array<tbox::Pointer<BoxTree> >& domain_tree) const;
+      const PatchLevel& level) const;
 
    /*!
     * @brief Version of findPatchTouchingBoundaries for a single box.
@@ -241,16 +213,18 @@ public:
     * @param[out]   touches_periodic_bdry TwoDimBool to store which patches touch
     *               periodic boundaries.
     * @param[in]    box to be checked
-    * @param[in]    periodic_shift periodic shift for the level (see getPeriodicShift())
-    * @param[in]    domain_tree search tree for the domain
+    *
+    * @param[in] refinement_ratio Refinement ratio of given box
+    *
+    * @param[in refined_periodic_domain_tree
     */
    void
    computeBoxTouchingBoundaries(
       TwoDimBool& touches_regular_bdry,
       TwoDimBool& touches_periodic_bdry,
       const Box& box,
-      const IntVector& periodic_shift,
-      const BoxTree& domain_tree) const;
+      const hier::IntVector &refinement_ratio,
+      const MultiblockBoxTree& refined_periodic_domain_tree) const;
 
    /*!
     * @brief Sets geometry data for patches on a level.

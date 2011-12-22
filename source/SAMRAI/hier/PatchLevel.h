@@ -539,19 +539,6 @@ public:
       const BoxId& mapped_box_id) const;
 
    /*!
-    * @brief Determine if the patch is adjacent to a periodic physical
-    * domain boundary.
-    *
-    * @return True if patch with given number is adjacent to a periodic
-    * physical domain boundary.  Otherwise, false.
-    *
-    * @param[in] mapped_box_id Patch's BoxId
-    */
-   bool
-   patchTouchesPeriodicBoundary(
-      const BoxId& mapped_box_id) const;
-
-   /*!
     * @brief Allocate the specified component on all patches.
     *
     * @param[in]  id

@@ -89,18 +89,6 @@ PatchGeometry::getTouchesRegularBoundary(
 }
 
 SAMRAI_INLINE_KEYWORD
-bool
-PatchGeometry::getTouchesPeriodicBoundary(
-   int axis,
-   int upperlower) const
-{
-   TBOX_ASSERT(axis >= 0 && axis < d_dim.getValue());
-   TBOX_ASSERT(upperlower == 0 || upperlower == 1);
-
-   return d_touches_periodic_bdry(axis, upperlower);
-}
-
-SAMRAI_INLINE_KEYWORD
 const tbox::Array<BoundaryBox>&
 PatchGeometry::getNodeBoundaries() const
 {

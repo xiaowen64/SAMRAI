@@ -184,9 +184,7 @@ PatchLevel::PatchLevel(
    grid_geometry->findPatchesTouchingBoundaries(
       touches_regular_bdry,
       touches_periodic_bdry,
-      *this,
-      grid_geometry->getPeriodicShift(d_ratio_to_level_zero),
-      d_physical_domain);
+      *this);
    t_constructor_touch_boundaries->stop();
 
    t_constructor_set_geometry->start();
@@ -255,9 +253,7 @@ PatchLevel::PatchLevel(
    grid_geometry->findPatchesTouchingBoundaries(
       touches_regular_bdry,
       touches_periodic_bdry,
-      *this,
-      grid_geometry->getPeriodicShift(d_ratio_to_level_zero),
-      d_physical_domain);
+      *this);
    t_constructor_touch_boundaries->stop();
 
    t_constructor_set_geometry->start();
@@ -562,17 +558,11 @@ void PatchLevel::setRefinedPatchLevel(
 
       PatchGeometry::TwoDimBool&
       touches_regular_bdry_ip((*iter_touches_regular_bdry).second);
-      PatchGeometry::TwoDimBool&
-      touches_periodic_bdry_ip((*iter_touches_periodic_bdry).second);
 
       for (int axis = 0; axis < getDim().getValue(); axis++) {
          for (int side = 0; side < 2; side++) {
-
             touches_regular_bdry_ip(axis, side) =
                coarse_pgeom->getTouchesRegularBoundary(axis, side);
-
-            touches_periodic_bdry_ip(axis, side) =
-               coarse_pgeom->getTouchesPeriodicBoundary(axis, side);
          }
       }
    }
@@ -747,15 +737,11 @@ void PatchLevel::setCoarsenedPatchLevel(
 
       PatchGeometry::TwoDimBool&
       touches_regular_bdry_ip((*iter_touches_regular_bdry).second);
-      PatchGeometry::TwoDimBool&
-      touches_periodic_bdry_ip((*iter_touches_periodic_bdry).second);
 
       for (int axis = 0; axis < getDim().getValue(); axis++) {
          for (int side = 0; side < 2; side++) {
             touches_regular_bdry_ip(axis, side) =
                fine_pgeom->getTouchesRegularBoundary(axis, side);
-            touches_periodic_bdry_ip(axis, side) =
-               fine_pgeom->getTouchesPeriodicBoundary(axis, side);
          }
       }
    }

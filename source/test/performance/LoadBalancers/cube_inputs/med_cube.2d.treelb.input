@@ -13,7 +13,7 @@
 Main {
    dim = 2
 
-   base_name = "med_cube.treelb.2d"
+   base_name = "med_cube.2d.treelb"
    log_all_nodes = FALSE
 
    // Balancer types: TreeLoadBalancer, ChopAndPackLoadBalancer
@@ -23,11 +23,6 @@ Main {
      Specify domain as a box array in the reference index space.
    */
    domain_boxes = [(0,0),(299,299)]
-
-   /*
-     Specify number of levels (1, 2 or 3).
-   */
-   max_levels = 3
 
    /*
      Specify L0 layer as a box array in the reference index space.
@@ -48,11 +43,6 @@ Main {
    */
    ghost_cell_width = 4, 4
 
-   /*
-     Specify the min patch size.
-   */
-   min_size = 4, 4
-
    PrebalanceByUserBoxes {
       /*
         Specify unbalanced layer as a box array in the reference index space.
@@ -62,6 +52,20 @@ Main {
       */
       prebalance_boxes = [(10,10),(289,289)]
       initial_owners = 0
+   }
+
+   PrebalanceByShrinkingLevel {
+      shrink_width = 10, 10
+      BergerRigoutsos {
+         sort_output_nodes = TRUE
+         log_node_history = FALSE
+         log_cluster_summary = TRUE
+         log_cluster = FALSE
+         sequentialize_output_indices = FALSE
+         barrier_before_cluster = FALSE
+         // owner_mode = "SINGLE_OWNER"
+         // algo_advance_mode = "SYNCHRONOUS"
+      }
    }
 
 }
@@ -77,7 +81,7 @@ TreeLoadBalancer {
   // Debugging options
   check_map = FALSE
   check_connectivity = FALSE
-  print_steps = TRUE
+  print_steps = FALSE
   print_swap_steps = FALSE
   print_break_steps = FALSE
   print_edge_steps = FALSE
@@ -89,4 +93,37 @@ TimerManager {
    print_max              = TRUE
    print_threshold        = 0.
    timer_list             = "hier::*::*", "mesh::*::*", "apps::*::*"
+}
+
+
+PatchHierarchy {
+
+   /*
+     Specify number of levels (1, 2 or 3 for this test).
+   */
+   max_levels = 2
+
+   enforce_proper_nesting = FALSE
+   extend_to_domain_boundary = FALSE
+   check_nonrefined_tags = "IGNORE"
+   // load_balance = FALSE
+   largest_patch_size {
+      level_0 = -1,-1
+      // level_0 = 20,20
+      // all finer levels will use same values as level_0...
+   }
+   smallest_patch_size {
+      level_0 = 5,5
+      // all finer levels will use same values as level_0...
+   }
+   ratio_to_coarser {
+      level_1            = 3, 3
+      level_2            = 3, 3
+      level_3            = 2, 2
+      //  etc.
+   }
+
+   allow_patches_smaller_than_ghostwidth = TRUE
+   allow_patches_smaller_than_minimum_size_to_prevent_overlaps = TRUE
+   proper_nesting_buffer = 1, 1
 }

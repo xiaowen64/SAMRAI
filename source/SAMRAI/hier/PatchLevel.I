@@ -230,15 +230,6 @@ bool PatchLevel::patchTouchesRegularBoundary(
    return rval;
 }
 
-SAMRAI_INLINE_KEYWORD
-bool PatchLevel::patchTouchesPeriodicBoundary(
-   const BoxId& mapped_box_id) const
-{
-   TBOX_ASSERT(mapped_box_id.getOwnerRank() == d_mapped_box_level->getMPI().getRank());
-   bool rval = getPatch(mapped_box_id)->getPatchGeometry()->getTouchesPeriodicBoundary();
-   return rval;
-}
-
 // Iterator implementation
 
 /*

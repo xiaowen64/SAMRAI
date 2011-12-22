@@ -52,48 +52,63 @@ using namespace tbox;
  */
 
 void
+generatePrebalance(
+   hier::BoxLevel &Lb,
+   hier::BoxLevel &La,
+   hier::Connector &La_to_Lb,
+   hier::Connector &Lb_to_La,
+   const std::string &Lb_box_gen_method,
+   tbox::Database &main_db,
+   const tbox::Pointer<hier::PatchHierarchy> &hierarchy,
+   int coarser_ln,
+   const hier::IntVector &min_size,
+   const hier::IntVector &required_connector_width );
+
+void
 generatePrebalanceByUserBoxes(
+   hier::BoxLevel& L1,
+   hier::Connector& L0_to_L1,
+   hier::Connector& balacne_to_L0,
+   const hier::BoxLevel& L0,
    tbox::Pointer<tbox::Database> database,
    const tbox::Pointer<hier::PatchHierarchy>& hierarchy,
    const hier::IntVector& min_size,
-   const hier::IntVector& connector_width,
-   hier::BoxLevel& L1,
-   const hier::BoxLevel& L0,
-   hier::Connector& L0_to_L1,
-   hier::Connector& balacne_to_L0);
+   const hier::IntVector& connector_width );
 
 void
 generatePrebalanceByUserShells(
+   hier::BoxLevel& L1,
+   hier::Connector& L0_to_L1,
+   hier::Connector& L1_to_L0,
+   const hier::BoxLevel& L0,
    const tbox::Pointer<tbox::Database>& database,
    const tbox::Pointer<hier::PatchHierarchy>& hierarchy,
    const hier::IntVector& min_size,
-   const hier::IntVector& connector_width,
-   hier::BoxLevel& L1,
-   const hier::BoxLevel& L0,
-   hier::Connector& L0_to_L1,
-   hier::Connector& L1_to_L0);
+   const hier::IntVector& connector_width );
 
 void
 generatePrebalanceBySinusoidalFront(
+   hier::BoxLevel& L1,
+   hier::Connector& L0_to_L1,
+   hier::Connector& L1_to_L0,
+   const hier::BoxLevel& L0,
    const tbox::Pointer<tbox::Database>& database,
    const tbox::Pointer<hier::PatchHierarchy>& hierarchy,
+   int coarser_ln,
    const hier::IntVector& min_size,
-   const hier::IntVector& connector_width,
-   hier::BoxLevel& L1,
-   const hier::BoxLevel& L0,
-   hier::Connector& L0_to_L1,
-   hier::Connector& L1_to_L0);
+   const hier::IntVector& connector_width );
 
 void
 generatePrebalanceByShrinkingLevel(
+   hier::BoxLevel& L2,
+   hier::Connector& L1_to_L2,
+   hier::Connector& L2_to_L1,
+   const hier::BoxLevel& L1,
    const tbox::Pointer<tbox::Database>& database,
    const tbox::Pointer<hier::PatchHierarchy>& hierarchy,
+   int coarser_ln,
    const hier::IntVector& min_size,
-   const hier::IntVector& connector_width,
-   hier::BoxLevel& L2,
-   const hier::BoxLevel& L1,
-   hier::Connector& L1_to_L2,
-   hier::Connector& L2_to_L1);
+   const hier::IntVector& connector_width );
 
 void
 sortNodes(
@@ -102,6 +117,13 @@ sortNodes(
    hier::Connector& new_to_tag,
    bool sort_by_corners,
    bool sequentialize_global_indices);
+
+void
+refineHead(
+   hier::BoxLevel& head,
+   hier::Connector& ref_to_head,
+   hier::Connector& head_to_ref,
+   const hier::IntVector &refinement_ratio );
 
 void outputMetadataBefore(
    const hier::Connector &La_to_Lb,
@@ -211,6 +233,8 @@ int main(
       const tbox::Dimension
          dim(static_cast<unsigned short>(main_db->getInteger("dim")));
 
+      const hier::IntVector &zero_vec = hier::IntVector::getZero(dim);
+
       std::string base_name = "unnamed";
       base_name = main_db->getStringWithDefault("base_name", base_name);
 
@@ -260,14 +284,6 @@ int main(
          main_db->getIntegerArray("ghost_cell_width", &ghost_cell_width[0], dim.getValue());
       }
 
-      hier::IntVector min_size(dim, 8);
-      if (main_db->isInteger("min_size")) {
-         main_db->getIntegerArray("min_size", &min_size[0], dim.getValue());
-      }
-      hier::IntVector max_size(dim, -1);
-      if (main_db->isInteger("max_size")) {
-         main_db->getIntegerArray("max_size", &max_size[0], dim.getValue());
-      }
       hier::IntVector bad_interval(dim, 2);
       hier::IntVector cut_factor(dim, 1);
 
@@ -332,8 +348,7 @@ int main(
 
 
       /*
-       * Create hierarchy required by the load balancing
-       * interface and visit writer.
+       * Create hierarchy.
        */
 
       tbox::Pointer<geom::CartesianGridGeometry> grid_geometry(
@@ -346,10 +361,10 @@ int main(
       tbox::Pointer<hier::PatchHierarchy> hierarchy(
          new hier::PatchHierarchy(
             "Hierarchy",
-            grid_geometry));
+            grid_geometry,
+            input_db->getDatabase("PatchHierarchy") ));
 
-      const int max_levels = main_db->getIntegerWithDefault("max_levels", 2);
-      hierarchy->setMaxNumberOfLevels(max_levels);
+      const int max_levels = hierarchy->getMaxNumberOfLevels();
 
       hier::BoxLevel domain_box_level(
          hier::IntVector(dim, 1),
@@ -458,8 +473,8 @@ int main(
             0,
             hier::Connector(),
             hier::Connector(),
-            min_size,
-            max_size,
+            hierarchy->getSmallestPatchSize(0),
+            hierarchy->getLargestPatchSize(0),
             domain_box_level,
             bad_interval,
             cut_factor);
@@ -496,248 +511,230 @@ int main(
 
 
       if ( max_levels > 1 ) {
-      /*
-       * Step 2: Build L1.
-       */
+         /*
+          * Step 2: Build L1.
+          */
 
-      {
+         const int coarser_ln = 0;
+         const int finer_ln = coarser_ln + 1;
+
          // Get the prebalanced L1:
-         std::string L1_box_gen_method("PrebalanceByUserBoxes");
-         L1_box_gen_method = main_db->getStringWithDefault("L1_box_gen_method",
-               L1_box_gen_method);
-         if (L1_box_gen_method == "PrebalanceByUserBoxes") {
-            generatePrebalanceByUserBoxes(
-               main_db->getDatabaseWithDefault("PrebalanceByUserBoxes", tbox::Pointer<Database>(NULL)),
-               hierarchy,
-               min_size,
-               ghost_cell_width,
-               L1,
-               L0,
-               L0_to_L1,
-               L1_to_L0);
-         } else if (L1_box_gen_method == "PrebalanceByUserShells") {
-            generatePrebalanceByUserShells(
-               main_db->getDatabaseWithDefault("PrebalanceByUserShells", tbox::Pointer<Database>(NULL)),
-               hierarchy,
-               min_size,
-               ghost_cell_width,
-               L1,
-               L0,
-               L0_to_L1,
-               L1_to_L0);
-         } else if (L1_box_gen_method == "PrebalanceBySinusoidalFront") {
-            generatePrebalanceBySinusoidalFront(
-               main_db->getDatabaseWithDefault("PrebalanceBySinusoidalFront", tbox::Pointer<Database>(NULL)),
-               hierarchy,
-               min_size,
-               ghost_cell_width,
-               L1,
-               L0,
-               L0_to_L1,
-               L1_to_L0);
-         } else if (L1_box_gen_method == "PrebalanceByShrinkingLevel") {
-            generatePrebalanceByShrinkingLevel(
-               main_db->getDatabaseWithDefault("PrebalanceByShrinkingLevel", tbox::Pointer<Database>(NULL)),
-               hierarchy,
-               min_size,
-               ghost_cell_width,
-               L1,
-               L0,
-               L0_to_L1,
-               L1_to_L0);
-         } else {
-            TBOX_ERROR("Bad L1_box_gen_method: '" << L1_box_gen_method << "'");
+         const hier::IntVector required_connector_width =
+            hierarchy->getRequiredConnectorWidth(coarser_ln, finer_ln);
+         const hier::IntVector min_size = hier::IntVector::ceilingDivide(
+            hierarchy->getSmallestPatchSize(finer_ln), hierarchy->getRatioToCoarserLevel(finer_ln) );
+
+         std::string L1_box_gen_method =
+            main_db->getStringWithDefault("L1_box_gen_method", "PrebalanceByUserBoxes");
+         generatePrebalance(
+            L1,
+            L0,
+            L0_to_L1,
+            L1_to_L0,
+            L1_box_gen_method,
+            *main_db,
+            hierarchy,
+            coarser_ln,
+            min_size,
+            required_connector_width );
+
+
+         // Output metadata before balancing L1.
+         outputMetadataBefore( L0_to_L1, L1_to_L0, "L0", "L1" );
+
+         if ( L1.getGlobalNumberOfBoxes() == 0 ) {
+            TBOX_ERROR("Level " << finer_ln << " box generator resulted in no boxes.");
          }
-      }
 
-      /*
-       * Output metadata before balancing L1.
-       */
-      outputMetadataBefore( L0_to_L1, L1_to_L0, "L0", "L1" );
+         lb->gatherAndReportLoadBalance(
+            (double)L1.getLocalNumberOfCells(),
+            L1.getMPI());
 
-      lb->gatherAndReportLoadBalance(
-         (double)L1.getLocalNumberOfCells(),
-         L1.getMPI());
+         // Load balance L1.
+         lb->loadBalanceBoxLevel(
+            L1,
+            L1_to_L0,
+            L0_to_L1,
+            hierarchy,
+            1,
+            hier::Connector(),
+            hier::Connector(),
+            hier::IntVector::ceilingDivide(hierarchy->getSmallestPatchSize(1), hierarchy->getRatioToCoarserLevel(1)),
+            hier::IntVector::ceilingDivide(hierarchy->getLargestPatchSize(1), hierarchy->getRatioToCoarserLevel(1)),
+            domain_box_level,
+            bad_interval,
+            cut_factor);
 
-      /*
-       * Load balance L1.
-       */
-      lb->loadBalanceBoxLevel(
-         L1,
-         L1_to_L0,
-         L0_to_L1,
-         hierarchy,
-         1,
-         hier::Connector(),
-         hier::Connector(),
-         min_size,
-         max_size,
-         domain_box_level,
-         bad_interval,
-         cut_factor);
+         oca.assertOverlapCorrectness(L1_to_L0);
+         oca.assertOverlapCorrectness(L0_to_L1);
 
-      oca.assertOverlapCorrectness(L1_to_L0);
-      oca.assertOverlapCorrectness(L0_to_L1);
+         sortNodes(L1,
+                   L0_to_L1,
+                   L1_to_L0,
+                   false,
+                   true);
 
-      sortNodes(L1,
-                L0_to_L1,
-                L1_to_L0,
-                false,
-                true);
+         // Refine L1.
+         if ( hierarchy->getRatioToCoarserLevel(1) != zero_vec ) {
+            refineHead(
+               L1,
+               L0_to_L1,
+               L1_to_L0,
+               hierarchy->getRatioToCoarserLevel(1) );
+         }
 
-      /*
-       * Get the L1_to_L1 for edge statistics.
-       */
-      oca.bridge(
-         L1_to_L1,
-         L1_to_L0,
-         L0_to_L1,
-         L1_to_L0,
-         L0_to_L1);
+         // Get the L1_to_L1 for edge statistics.
+         oca.bridge(
+            L1_to_L1,
+            L1_to_L0,
+            L0_to_L1,
+            L1_to_L0,
+            L0_to_L1);
 
-      /*
-       * Output metadata after balancing L1.
-       */
-      outputMetadataAfter( L0_to_L1, L1_to_L0, L1_to_L1, "L0", "L1" );
+         // Output metadata after balancing L1.
+         outputMetadataAfter( L0_to_L1, L1_to_L0, L1_to_L1, "L0", "L1" );
 
-      lb->gatherAndReportLoadBalance(
-         (double)L1.getLocalNumberOfCells(),
-         L1.getMPI());
+         lb->gatherAndReportLoadBalance(
+            (double)L1.getLocalNumberOfCells(),
+            L1.getMPI());
       }
 
 
 
       if ( max_levels > 2 ) {
-      /*
-       * Step 3: Build L2.
-       */
-
-      {
-         // Get the prebalanced L2:
-         std::string L2_box_gen_method("PrebalanceByShrinkingLevel");
-         L2_box_gen_method = main_db->getStringWithDefault("L2_box_gen_method",
-               L2_box_gen_method);
-         if (L2_box_gen_method == "PrebalanceByUserBoxes") {
-            generatePrebalanceByUserBoxes(
-               main_db->getDatabaseWithDefault("PrebalanceByUserBoxes", tbox::Pointer<Database>(NULL)),
-               hierarchy,
-               min_size,
-               ghost_cell_width,
-               L2,
-               L1,
-               L1_to_L2,
-               L2_to_L1);
-         } else if (L2_box_gen_method == "PrebalanceByUserShells") {
-            generatePrebalanceByUserShells(
-               main_db->getDatabaseWithDefault("PrebalanceByUserShells", tbox::Pointer<Database>(NULL)),
-               hierarchy,
-               min_size,
-               ghost_cell_width,
-               L2,
-               L1,
-               L1_to_L2,
-               L2_to_L1);
-         } else if (L2_box_gen_method == "PrebalanceByShrinkingLevel") {
-            generatePrebalanceByShrinkingLevel(
-               main_db->getDatabaseWithDefault("PrebalanceByShrinkingLevel", tbox::Pointer<Database>(NULL)),
-               hierarchy,
-               min_size,
-               ghost_cell_width,
-               L2,
-               L1,
-               L1_to_L2,
-               L2_to_L1);
-         } else {
-            TBOX_ERROR("Bad L2_box_gen_method: '" << L2_box_gen_method << "'");
-         }
-      }
-
-      /*
-       * Output metadata before balancing L2.
-       */
-      outputMetadataBefore( L1_to_L2, L2_to_L1, "L1", "L2" );
-
-      lb->gatherAndReportLoadBalance(
-         (double)L2.getLocalNumberOfCells(),
-         L2.getMPI());
-
-      /*
-       * Load balance L2.
-       */
-      lb->loadBalanceBoxLevel(
-         L2,
-         L2_to_L1,
-         L1_to_L2,
-         hierarchy,
-         1,
-         hier::Connector(),
-         hier::Connector(),
-         min_size,
-         max_size,
-         domain_box_level,
-         bad_interval,
-         cut_factor);
-
-      oca.assertOverlapCorrectness(L2_to_L1);
-      oca.assertOverlapCorrectness(L1_to_L2);
-
-      sortNodes(L2,
-                L1_to_L2,
-                L2_to_L1,
-                false,
-                true);
-
-      /*
-       * Get the L2_to_L2 for edge statistics.
-       */
-      oca.bridge(
-         L2_to_L2,
-         L2_to_L1,
-         L1_to_L2,
-         L2_to_L1,
-         L1_to_L2);
-
-      /*
-       * Output metadata after balancing L2.
-       */
-      outputMetadataAfter( L1_to_L2, L2_to_L1, L2_to_L2, "L1", "L2" );
-
-      lb->gatherAndReportLoadBalance(
-         (double)L2.getLocalNumberOfCells(),
-         L2.getMPI());
-
-      }
-
-
-
-
-#ifdef HAVE_HDF5
-      hierarchy->makeNewPatchLevel(0, L0);
-      if ( hierarchy->getMaxNumberOfLevels() > 1 ) {
-         hierarchy->makeNewPatchLevel(1, L1);
-      }
-      if ( hierarchy->getMaxNumberOfLevels() > 2 ) {
-         hierarchy->makeNewPatchLevel(2, L2);
-      }
-
-      if ((dim == tbox::Dimension(2)) || (dim == tbox::Dimension(3))) {
          /*
-          * Create the VisIt data writer.
-          * Write the plot file.
+          * Step 3: Build L2.
           */
-         DerivedVisOwnerData owner_writer;
-         const std::string visit_filename = base_name + ".visit";
-         appu::VisItDataWriter visit_data_writer(dim,
-                                                 "VisIt Writer",
-                                                 visit_filename);
-         visit_data_writer.registerDerivedPlotQuantity("Owner",
-            "SCALAR",
-            &owner_writer);
-         visit_data_writer.writePlotData(hierarchy, 0);
+
+         const int coarser_ln = 1;
+         const int finer_ln = coarser_ln + 1;
+
+         // Get the prebalanced L2:
+         const hier::IntVector required_connector_width =
+            hierarchy->getRequiredConnectorWidth(coarser_ln, finer_ln);
+         const hier::IntVector min_size = hier::IntVector::ceilingDivide(
+            hierarchy->getSmallestPatchSize(finer_ln), hierarchy->getRatioToCoarserLevel(finer_ln) );
+
+         std::string L2_box_gen_method =
+            main_db->getStringWithDefault("L2_box_gen_method", "PrebalanceByShrinkingLevel");
+         generatePrebalance(
+            L2,
+            L1,
+            L1_to_L2,
+            L2_to_L1,
+            L2_box_gen_method,
+            *main_db,
+            hierarchy,
+            coarser_ln,
+            min_size,
+            required_connector_width );
+
+
+         // Output metadata before balancing L2.
+         outputMetadataBefore( L1_to_L2, L2_to_L1, "L1", "L2" );
+
+         if ( L2.getGlobalNumberOfBoxes() == 0 ) {
+            TBOX_ERROR("Level " << finer_ln << " box generator resulted in no boxes.");
+         }
+
+         lb->gatherAndReportLoadBalance(
+            (double)L2.getLocalNumberOfCells(),
+            L2.getMPI());
+
+         // Load balance L2.
+         lb->loadBalanceBoxLevel(
+            L2,
+            L2_to_L1,
+            L1_to_L2,
+            hierarchy,
+            1,
+            hier::Connector(),
+            hier::Connector(),
+            hier::IntVector::ceilingDivide(hierarchy->getSmallestPatchSize(2), hierarchy->getRatioToCoarserLevel(2)),
+            hier::IntVector::ceilingDivide(hierarchy->getLargestPatchSize(2), hierarchy->getRatioToCoarserLevel(2)),
+            domain_box_level,
+            bad_interval,
+            cut_factor);
+
+         oca.assertOverlapCorrectness(L2_to_L1);
+         oca.assertOverlapCorrectness(L1_to_L2);
+
+         sortNodes(L2,
+                   L1_to_L2,
+                   L2_to_L1,
+                   false,
+                   true);
+
+         // Refine L2.
+         if ( hierarchy->getRatioToCoarserLevel(2) != zero_vec ) {
+            refineHead(
+               L2,
+               L1_to_L2,
+               L2_to_L1,
+               hierarchy->getRatioToCoarserLevel(2) );
+         }
+
+         // Get the L2_to_L2 for edge statistics.
+         oca.bridge(
+            L2_to_L2,
+            L2_to_L1,
+            L1_to_L2,
+            L2_to_L1,
+            L1_to_L2);
+
+         // Output metadata after balancing L2.
+         outputMetadataAfter( L1_to_L2, L2_to_L1, L2_to_L2, "L1", "L2" );
+
+         lb->gatherAndReportLoadBalance(
+            (double)L2.getLocalNumberOfCells(),
+            L2.getMPI());
+
       }
+
+
+
+
+      bool write_visit =
+         main_db->getBoolWithDefault("write_visit", false);
+      if ( write_visit ) {
+#ifdef HAVE_HDF5
+         hierarchy->makeNewPatchLevel(0, L0);
+         if ( hierarchy->getMaxNumberOfLevels() > 1 ) {
+            hierarchy->makeNewPatchLevel(1, L1);
+         }
+         if ( hierarchy->getMaxNumberOfLevels() > 2 ) {
+            hierarchy->makeNewPatchLevel(2, L2);
+         }
+
+         if ((dim == tbox::Dimension(2)) || (dim == tbox::Dimension(3))) {
+            /*
+             * Create the VisIt data writer.
+             * Write the plot file.
+             */
+            DerivedVisOwnerData owner_writer;
+            const std::string visit_filename = base_name + ".visit";
+            appu::VisItDataWriter visit_data_writer(dim,
+                                                    "VisIt Writer",
+                                                    visit_filename);
+            visit_data_writer.registerDerivedPlotQuantity("Owner",
+                                                          "SCALAR",
+                                                          &owner_writer);
+            visit_data_writer.writePlotData(hierarchy, 0);
+         }
+#else
+         TBOX_WARNING("main: You set write_visit to TRUE,\n"
+                      << "but VisIt dumps are not supported due to\n"
+                      << "not having configured with HDF5.\n");
 #endif
+      }
 
    }
+
+   /*
+    * Output timer results.
+    */
+   tbox::TimerManager::getManager()->print(tbox::plog);
+
 
    /*
     * Print input database again to fully show usage.
@@ -871,14 +868,14 @@ void outputMetadataAfter(
  ***********************************************************************
  */
 void generatePrebalanceByUserShells(
+   hier::BoxLevel& L1,
+   hier::Connector& L0_to_L1,
+   hier::Connector& L1_to_L0,
+   const hier::BoxLevel& L0,
    const tbox::Pointer<tbox::Database>& database,
    const tbox::Pointer<hier::PatchHierarchy>& hierarchy,
    const hier::IntVector& min_size,
-   const hier::IntVector& connector_width,
-   hier::BoxLevel& L1,
-   const hier::BoxLevel& L0,
-   hier::Connector& L0_to_L1,
-   hier::Connector& L1_to_L0)
+   const hier::IntVector& connector_width )
 {
 
    const tbox::Dimension dim(hierarchy->getDim());
@@ -1031,6 +1028,8 @@ void generatePrebalanceByUserShells(
                L1_to_L1nested,
                &L1,
                &L1nested );
+
+   return;
 }
 
 /*
@@ -1038,14 +1037,15 @@ void generatePrebalanceByUserShells(
  ***********************************************************************
  */
 void generatePrebalanceByShrinkingLevel(
+   hier::BoxLevel& L2,
+   hier::Connector& L1_to_L2,
+   hier::Connector& L2_to_L1,
+   const hier::BoxLevel& L1,
    const tbox::Pointer<tbox::Database>& database,
    const tbox::Pointer<hier::PatchHierarchy>& hierarchy,
+   int coarser_ln,
    const hier::IntVector& min_size,
-   const hier::IntVector& connector_width,
-   hier::BoxLevel& L2,
-   const hier::BoxLevel& L1,
-   hier::Connector& L1_to_L2,
-   hier::Connector& L2_to_L1)
+   const hier::IntVector& connector_width )
 {
 
    const tbox::Dimension dim(hierarchy->getDim());
@@ -1057,7 +1057,6 @@ void generatePrebalanceByShrinkingLevel(
    double efficiency_tol = 1.00;
    double combine_tol = 1.00;
    hier::IntVector shrink_width(dim, 2);
-   hier::IntVector nesting_width(dim, 2);
    tbox::Pointer<tbox::Database> abr_db;
 
    if (database) {
@@ -1070,8 +1069,6 @@ void generatePrebalanceByShrinkingLevel(
       abr_db = database->getDatabaseWithDefault("BergerRigoutsos", abr_db);
 
       database->getIntegerArray("shrink_width", &shrink_width[0], dim.getValue());
-
-      database->getIntegerArray("nesting_width", &nesting_width[0], dim.getValue());
    }
 
 
@@ -1172,6 +1169,7 @@ void generatePrebalanceByShrinkingLevel(
    /*
     * Make L2 nest inside L1 by shrink_width.
     */
+   const hier::IntVector nesting_width(dim, hierarchy->getProperNestingBuffer(coarser_ln));
    hier::BoxLevel L2nested(dim);
    hier::Connector L2_to_L2nested;
    blcu.computeInternalParts( L2nested,
@@ -1185,6 +1183,8 @@ void generatePrebalanceByShrinkingLevel(
                L2_to_L2nested,
                &L2,
                &L2nested );
+
+   return;
 }
 
 /*
@@ -1192,14 +1192,15 @@ void generatePrebalanceByShrinkingLevel(
  ***********************************************************************
  */
 void generatePrebalanceBySinusoidalFront(
+   hier::BoxLevel& L2,
+   hier::Connector& L1_to_L2,
+   hier::Connector& L2_to_L1,
+   const hier::BoxLevel& L1,
    const tbox::Pointer<tbox::Database>& database,
    const tbox::Pointer<hier::PatchHierarchy>& hierarchy,
+   int coarser_ln,
    const hier::IntVector& min_size,
-   const hier::IntVector& connector_width,
-   hier::BoxLevel& L2,
-   const hier::BoxLevel& L1,
-   hier::Connector& L1_to_L2,
-   hier::Connector& L2_to_L1)
+   const hier::IntVector& connector_width )
 {
 
    const tbox::Dimension dim(hierarchy->getDim());
@@ -1210,7 +1211,6 @@ void generatePrebalanceBySinusoidalFront(
    // Parameters set by database, with defaults.
    double efficiency_tol = 0.70;
    double combine_tol = 0.70;
-   hier::IntVector nesting_width(dim, 2);
    hier::IntVector tag_buffer(dim, 2);
    tbox::Pointer<tbox::Database> abr_db; // BergerRigoutsos database.
    tbox::Pointer<tbox::Database> sft_db; // SinusoidalFrontTagger database.
@@ -1225,10 +1225,6 @@ void generatePrebalanceBySinusoidalFront(
       abr_db = database->getDatabaseWithDefault("BergerRigoutsos", abr_db);
 
       sft_db = database->getDatabaseWithDefault("SinusoidalFrontTagger", sft_db);
-
-      if ( database->isInteger("nesting_width") ) {
-         database->getIntegerArray("nesting_width", &nesting_width[0], dim.getValue());
-      }
 
       if ( database->isInteger("tag_buffer") ) {
          database->getIntegerArray("tag_buffer", &tag_buffer[0], dim.getValue());
@@ -1284,6 +1280,9 @@ void generatePrebalanceBySinusoidalFront(
          patch_geom->getDx(),
          0.0 );
 
+      // tbox::plog << "Tag data for patch " << patch->getBox() << ":\n";
+      // tag_data->print(tag_data->getGhostBox(),0,tbox::plog);
+
    }
 
    mesh::BergerRigoutsos abr(dim, abr_db);
@@ -1319,6 +1318,7 @@ void generatePrebalanceBySinusoidalFront(
    /*
     * Make L2 nest inside L1 by nesting_width.
     */
+   const hier::IntVector nesting_width(dim, hierarchy->getProperNestingBuffer(coarser_ln));
    hier::BoxLevel L2nested(dim);
    hier::Connector L2_to_L2nested;
    hier::BoxLevelConnectorUtils blcu;
@@ -1333,6 +1333,8 @@ void generatePrebalanceBySinusoidalFront(
                L2_to_L2nested,
                &L2,
                &L2nested );
+
+   return;
 }
 
 /*
@@ -1340,14 +1342,14 @@ void generatePrebalanceBySinusoidalFront(
  ***********************************************************************
  */
 void generatePrebalanceByUserBoxes(
+   hier::BoxLevel& L1,
+   hier::Connector& L0_to_L1,
+   hier::Connector& L1_to_L0,
+   const hier::BoxLevel& L0,
    tbox::Pointer<tbox::Database> database,
    const tbox::Pointer<hier::PatchHierarchy>& hierarchy,
    const hier::IntVector& min_size,
-   const hier::IntVector& connector_width,
-   hier::BoxLevel& L1,
-   const hier::BoxLevel& L0,
-   hier::Connector& L0_to_L1,
-   hier::Connector& L1_to_L0)
+   const hier::IntVector& connector_width )
 {
    NULL_USE(hierarchy);
    NULL_USE(min_size);
@@ -1382,6 +1384,8 @@ void generatePrebalanceByUserBoxes(
    hier::OverlapConnectorAlgorithm oca;
    oca.findOverlaps(L1_to_L0);
    oca.findOverlaps(L0_to_L1);
+
+   return;
 }
 
 /*
@@ -1411,4 +1415,107 @@ void sortNodes(
       new_to_tag,
       sorting_map,
       &new_box_level);
+
+   return;
+}
+
+
+
+
+/*
+ ***********************************************************************
+ ***********************************************************************
+ */
+void refineHead(
+   hier::BoxLevel& head,
+   hier::Connector& ref_to_head,
+   hier::Connector& head_to_ref,
+   const hier::IntVector &refinement_ratio )
+{
+   head.refineBoxes(
+      head,
+      refinement_ratio,
+      head.getRefinementRatio()*refinement_ratio);
+   head.finalize();
+
+   const hier::IntVector& head_to_ref_width =
+      refinement_ratio * head_to_ref.getConnectorWidth();
+   head_to_ref.setBase(head);
+   head_to_ref.setWidth(head_to_ref_width, true);
+
+   ref_to_head.setHead(head, true);
+   ref_to_head.refineLocalNeighbors(refinement_ratio);
+
+   return;
+}
+
+
+
+
+/*
+ ***********************************************************************
+ ***********************************************************************
+ */
+void generatePrebalance(
+   hier::BoxLevel &Lb,
+   hier::BoxLevel &La,
+   hier::Connector &La_to_Lb,
+   hier::Connector &Lb_to_La,
+   const std::string &box_gen_method,
+   tbox::Database &main_db,
+   const tbox::Pointer<hier::PatchHierarchy> &hierarchy,
+   int coarser_ln,
+   const hier::IntVector &min_size,
+   const hier::IntVector &required_connector_width )
+{
+   tbox::Pointer<tbox::Database> box_gen_db =
+      main_db.getDatabaseWithDefault(box_gen_method, tbox::Pointer<Database>(NULL));
+
+   if (box_gen_method == "PrebalanceByUserBoxes") {
+      generatePrebalanceByUserBoxes(
+         Lb,
+         La_to_Lb,
+         Lb_to_La,
+         La,
+         box_gen_db,
+         hierarchy,
+         min_size,
+         required_connector_width );
+   } else if (box_gen_method == "PrebalanceByUserShells") {
+      generatePrebalanceByUserShells(
+         Lb,
+         La_to_Lb,
+         Lb_to_La,
+         La,
+         box_gen_db,
+         hierarchy,
+         min_size,
+         required_connector_width );
+   } else if (box_gen_method == "PrebalanceBySinusoidalFront") {
+      generatePrebalanceBySinusoidalFront(
+         Lb,
+         La_to_Lb,
+         Lb_to_La,
+         La,
+         box_gen_db,
+         hierarchy,
+         coarser_ln,
+         min_size,
+         required_connector_width );
+   } else if (box_gen_method == "PrebalanceByShrinkingLevel") {
+      generatePrebalanceByShrinkingLevel(
+         Lb,
+         La_to_Lb,
+         Lb_to_La,
+         La,
+         box_gen_db,
+         hierarchy,
+         coarser_ln,
+         min_size,
+         required_connector_width );
+   } else {
+      TBOX_ERROR("Bad box_gen_method: '" << box_gen_method << "'");
+   }
+
+   return;
 }

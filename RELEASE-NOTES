@@ -47,8 +47,6 @@ descriptions of items in the following list are provided below.
 
 (4) CoarsenSchedule is multi-block aware.
 
-(5) RefineSchedule construction performance has been improved.
-
 
 -----------------------------------------------------------------------------
                 Summary of what's changed
@@ -73,6 +71,9 @@ descriptions of items in the following list are provided below.
 
 (7) Boost is no longer required.
 
+(8) Fixed bug causing excessive call-backs in RefineSchedule::fillData.
+
+(9) RefineSchedule construction performance has been improved.
 
 
 *****************************************************************************
@@ -88,28 +89,25 @@ BoxList have drastically reduced the number of Box creations and assignments
 especially for multi-block.  In addition the number of Boxes in existence at
 any time has also been drastically reduced especially for multi-block.
 
-QUOTE SOME NUMBERS HERE
+Several test problems run on an in-house application using SAMRAI show that the
+maximum number of Boxes in existence at any given time is as much as 16x lower
+than in version 3.2.  Additionally, the number of constructed Boxes is as
+much as 28x lower than in version 3.2.
 
 (2) Better execution times.
 
 Larely due to the reduction in object creation/copying execution time has
-improved.
-
-QUOTE SOME NUMBERS HERE
+improved slightly.
 
 (3) The bridge algorithm is now multi-block aware.
 
-NEED SOME DETAILS
+No interface change, but multi-block now runs faster.
 
 (4) CoarsenAlgorithm and CoarsenSchedule are multi-block aware.
 
 MultiblockCoarsenAlgorithm and MultiblockCoarsenSchedule have been removed from
 the library, and CoarsenAlgorithm and CoarsenSchedule are now capable of
 handling coarsening operations for multi-block configurations.
-
-(5) RefineSchedule construction performance has been improved.
-
-NEED SOME DETAILS
 
 -----------------------------------------------------------------------------
                 Details about what's changed
@@ -168,7 +166,7 @@ SAMRAI iterators have been.
 
 Iteration should look like:
 
-   for (BoxContainer::Iterator itr = boxes.begin; itr != boxes.end();  ++itr) {
+   for (BoxContainer::Iterator itr = boxes.begin(); itr != boxes.end(); ++itr) {
       // Useful code goes here.
    } 
 
@@ -207,6 +205,17 @@ are needed for some classes but are not required.  Use configure
 switch "--without-boost" to remove Boost dependency.  Note that, as
 warned by the configure script, the SparseData class is not supported
 without Boost.
+
+(8) Fixed bug causing excessive call-backs in RefineSchedule::fillData.
+
+As a side effect, the method PatchLevel::patchTouchesPeriodicBoundary,
+has been removed because it is obsolete.
+
+(9) RefineSchedule construction performance has been improved.
+
+Some non-scalable multiblock-related operations were replaced with scalable
+operations.
+
 
 
 =============================================================================

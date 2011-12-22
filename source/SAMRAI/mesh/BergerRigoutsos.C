@@ -311,7 +311,7 @@ void BergerRigoutsos::findBoxesContainingTags(
                  << ") in " << root_node.getMaxGeneration() << " generations,"
                  << "   " << root_node.getNumBoxesGenerated()
                  << " boxes generated.\n"
-                 << root_node.getMaxTagsOwned() << " locally owned tags.\n"
+                 << root_node.getMaxTagsOwned() << " locally owned tags on new BoxLevel.\n"
                  << "Initial bounding box = " << bound_box << ", "
                  << bound_box.size() << " cells, "
                  << "final global bounding box = "

@@ -298,32 +298,8 @@ void GridGeometry::computeBoundaryBoxesOnLevel(
 void GridGeometry::findPatchesTouchingBoundaries(
    std::map<BoxId, TwoDimBool>& touches_regular_bdry,
    std::map<BoxId, TwoDimBool>& touches_periodic_bdry,
-   const PatchLevel& level,
-   const IntVector& periodic_shift,
-   const tbox::Array<BoxContainer>& domain) const
+   const PatchLevel& level) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(level, periodic_shift);
-
-   tbox::Array<tbox::Pointer<BoxTree> > domain_tree(d_number_blocks);
-   for (int nb = 0; nb < d_number_blocks; nb++) {
-      domain_tree[nb] = new BoxTree(d_dim, domain[nb], BlockId(nb));
-   }
-   findPatchesTouchingBoundaries(touches_regular_bdry,
-      touches_periodic_bdry,
-      level,
-      periodic_shift,
-      domain_tree);
-}
-
-void GridGeometry::findPatchesTouchingBoundaries(
-   std::map<BoxId, TwoDimBool>& touches_regular_bdry,
-   std::map<BoxId, TwoDimBool>& touches_periodic_bdry,
-   const PatchLevel& level,
-   const IntVector& periodic_shift,
-   const tbox::Array<tbox::Pointer<BoxTree> >& domain_tree) const
-{
-   TBOX_DIM_ASSERT_CHECK_ARGS2(level, periodic_shift);
-
    t_find_patches_touching_boundaries->start();
 
    t_touching_boundaries_init->start();
@@ -331,11 +307,16 @@ void GridGeometry::findPatchesTouchingBoundaries(
    touches_periodic_bdry.clear();
    t_touching_boundaries_init->stop();
 
+   tbox::Pointer<MultiblockBoxTree> tmp_refined_periodic_domain_tree;
+   if ( level.getRatioToLevelZero() != hier::IntVector::getZero(level.getDim()) ) {
+      tmp_refined_periodic_domain_tree = d_domain_search_tree_periodic.createRefinedTree(
+         level.getRatioToLevelZero());
+   }
+
    t_touching_boundaries_loop->start();
    for (PatchLevel::Iterator ip(&level); ip; ip++) {
       tbox::Pointer<Patch> patch = *ip;
       const Box& box(patch->getBox());
-      const int block_number = patch->getBox().getBlockId().getBlockValue();
 
       std::map<BoxId, TwoDimBool>::iterator iter_touches_regular_bdry(
          touches_regular_bdry.find(ip->getBox().getId()));
@@ -353,11 +334,14 @@ void GridGeometry::findPatchesTouchingBoundaries(
                std::pair<BoxId, TwoDimBool>(ip->getBox().getId(), TwoDimBool(d_dim)));
       }
 
-      computeBoxTouchingBoundaries((*iter_touches_regular_bdry).second,
+      computeBoxTouchingBoundaries(
+         (*iter_touches_regular_bdry).second,
          (*iter_touches_periodic_bdry).second,
          box,
-         periodic_shift,
-         *(domain_tree[block_number]));
+         level.getRatioToLevelZero(),
+         tmp_refined_periodic_domain_tree.isNull() ?
+         d_domain_search_tree :
+         *tmp_refined_periodic_domain_tree );
    }
    t_touching_boundaries_loop->stop();
    t_find_patches_touching_boundaries->stop();
@@ -367,10 +351,9 @@ void GridGeometry::computeBoxTouchingBoundaries(
    TwoDimBool& touches_regular_bdry,
    TwoDimBool& touches_periodic_bdry,
    const Box& box,
-   const IntVector& periodic_shift,
-   const BoxTree& domain_tree) const
+   const hier::IntVector &refinement_ratio,
+   const MultiblockBoxTree& refined_periodic_domain_tree) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(box, periodic_shift);
 
    /*
     * Create a list of boxes inside a mapped_box_level of one cell outside the
@@ -379,7 +362,7 @@ void GridGeometry::computeBoxTouchingBoundaries(
     */
    BoxContainer bdry_list(box);
    bdry_list.grow(IntVector::getOne(d_dim));
-   bdry_list.removeIntersections(domain_tree);
+   bdry_list.removeIntersections(refinement_ratio, refined_periodic_domain_tree);
    const bool touches_any_boundary = (bdry_list.size() > 0);
 
    if (!touches_any_boundary) {
@@ -404,15 +387,15 @@ void GridGeometry::computeBoxTouchingBoundaries(
 
          if (lower_list.size()) {
             // Touches regular or periodic bdry on lower side.
-            touches_periodic_bdry(nd, 0) = (periodic_shift(nd) != 0);
-            touches_regular_bdry(nd, 0) = (periodic_shift(nd) == 0);
+            touches_periodic_bdry(nd, 0) = (d_periodic_shift(nd) != 0);
+            touches_regular_bdry(nd, 0) = (d_periodic_shift(nd) == 0);
             bdry_located = true;
          }
 
          if (upper_list.size()) {
             // Touches regular or periodic bdry on upper side.
-            touches_periodic_bdry(nd, 1) = (periodic_shift(nd) != 0);
-            touches_regular_bdry(nd, 1) = (periodic_shift(nd) == 0);
+            touches_periodic_bdry(nd, 1) = (d_periodic_shift(nd) != 0);
+            touches_regular_bdry(nd, 1) = (d_periodic_shift(nd) == 0);
             bdry_located = true;
          }
       }

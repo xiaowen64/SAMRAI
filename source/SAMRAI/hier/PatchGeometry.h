@@ -250,23 +250,6 @@ private:
       int axis,
       int upperlower) const;
 
-   /*!
-    * @brief Query whether patch touches a specific regular boundary
-    *
-    * Returns true if the Patch touches a periodic boundary
-    * on the side of the Patch specified in the argument list.  The side
-    * is specified by an axis direction and a flag specified the upper or
-    * lower side.
-    *
-    * @param axis       Axis direction normal to the side being checked
-    * @param upperlower Flag should be 0 if checking the lower side in the
-    *                   axis direction, or 1 if checking the upper side.
-    */
-   bool
-   getTouchesPeriodicBoundary(
-      int axis,
-      int upperlower) const;
-
    /**
     * Print object data to the specified output stream.
     */
@@ -283,7 +266,6 @@ private:
    PatchBoundaries d_patch_boundaries;
 
    TwoDimBool d_touches_regular_bdry;
-   TwoDimBool d_touches_periodic_bdry;
 
    tbox::List<IntVector> d_periodic_shifts;
 };

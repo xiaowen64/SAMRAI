@@ -11,8 +11,9 @@
 
 
 Main {
-   base_name = "rod.treelb.1d"
-   log_all_nodes = FALSE
+   base_name = "rod.1d.treelb"
+   log_all_nodes = TRUE
+   write_visit = TRUE
 
    // Balancer types: TreeLoadBalancer, ChopAndPackLoadBalancer
    load_balancer_type = "TreeLoadBalancer"
@@ -21,11 +22,6 @@ Main {
      Specify domain as a box array in the reference index space.
    */
    domain_boxes = [(0),(299)]
-
-   /*
-     Specify number of levels (1, 2 or 3).
-   */
-   max_levels = 3
 
    /*
      Specify L0 layer as a box array in the reference index space.
@@ -46,11 +42,6 @@ Main {
    */
    ghost_cell_width = 4
 
-   /*
-     Specify the min patch size.
-   */
-   min_size = 1
-
    PrebalanceByUserBoxes {
       /*
         Specify unbalanced layer as a box array in the reference index space.
@@ -60,6 +51,20 @@ Main {
       */
       prebalance_boxes = [(1),(298)]
       initial_owners = 0
+   }
+
+   PrebalanceByShrinkingLevel {
+      shrink_width = 10, 10
+      BergerRigoutsos {
+         sort_output_nodes = TRUE
+         log_node_history = FALSE
+         log_cluster_summary = TRUE
+         log_cluster = FALSE
+         sequentialize_output_indices = FALSE
+         barrier_before_cluster = FALSE
+         // owner_mode = "SINGLE_OWNER"
+         // algo_advance_mode = "SYNCHRONOUS"
+      }
    }
 
 }
@@ -75,7 +80,7 @@ TreeLoadBalancer {
   // Debugging options
   check_map = FALSE
   check_connectivity = FALSE
-  print_steps = TRUE
+  print_steps = FALSE
   print_swap_steps = FALSE
   print_break_steps = FALSE
   print_edge_steps = FALSE
