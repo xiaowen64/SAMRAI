@@ -19,7 +19,6 @@ namespace SAMRAI {
   - SAMRAI::hier::Box
   - SAMRAI::hier::BoxContainer
   - SAMRAI::hier::BoxIOUtility
-  - SAMRAI::hier::BoxList
   - SAMRAI::hier::BoxUtilities
   - SAMRAI::hier::Index
   - SAMRAI::hier::IntVector

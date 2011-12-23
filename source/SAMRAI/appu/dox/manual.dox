@@ -17,7 +17,6 @@ namespace SAMRAI {
   for application developmentwith SAMRAI.
   Currently, the package has two subdirectories containing:
   -# @ref package_apputils_boundary "Support for physical boundary conditions"
-  -# @ref package_apputils_embedded_boundary "Support for Embedded or Immersed boundary representations on Cartesian grids"
   -# @ref package_apputils_plotting "Utilities for plotting AMR data"
  
   All class names in the Application Utilities package are in the 
