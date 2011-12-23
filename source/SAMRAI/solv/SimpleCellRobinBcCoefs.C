@@ -196,7 +196,6 @@ void SimpleCellRobinBcCoefs::setBcCoefs(
 
    const int ln = patch.getPatchLevelNumber();
    const hier::GlobalId& global_id = patch.getGlobalId();
-   const hier::BlockId& block_id = patch.getBox().getBlockId();
    const int location_index = bdry_box.getLocationIndex();
 
    tbox::Pointer<hier::PatchData> patch_data;
@@ -522,7 +521,6 @@ void SimpleCellRobinBcCoefs::cacheDirichletData(
       for ( ; pi; pi++) {
          hier::Patch& patch = **pi;
          const hier::GlobalId& global_id = patch.getGlobalId();
-         const hier::BlockId& block_id = patch.getBox().getBlockId();
          hier::BoxId mapped_box_id(global_id);
          tbox::Pointer<geom::CartesianPatchGeometry> pg =
             patch.getPatchGeometry();
@@ -540,7 +538,6 @@ void SimpleCellRobinBcCoefs::cacheDirichletData(
       for ( ; pi; pi++) {
          hier::Patch& patch = **pi;
          const hier::GlobalId& global_id = patch.getGlobalId();
-         const hier::BlockId& block_id = patch.getBox().getBlockId();
          hier::BoxId mapped_box_id(global_id);
          tbox::Pointer<pdat::CellData<double> > cell_data =
             patch.getPatchData(dirichlet_data_id);
@@ -592,7 +589,6 @@ void SimpleCellRobinBcCoefs::restoreDirichletData(
       for ( ; pi; pi++) {
          hier::Patch& patch = **pi;
          const hier::GlobalId& global_id = patch.getGlobalId();
-         const hier::BlockId& block_id = patch.getBox().getBlockId();
          hier::BoxId mapped_box_id(global_id);
          tbox::Pointer<pdat::CellData<double> > cell_data =
             patch.getPatchData(dirichlet_data_id);

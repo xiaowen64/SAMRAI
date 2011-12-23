@@ -1095,7 +1095,6 @@ void BoxLevelConnectorUtils::computeBoxesAroundBoundary(
    // Set correct block ids.
    for (std::map<BlockId, BoxContainer>::iterator bi = boundary_by_blocks.begin();
         bi != boundary_by_blocks.end(); ++bi) {
-      const BlockId& block_id(bi->first);
       BoxContainer &boxes(bi->second);
       for ( BoxContainer::Iterator bj=boxes.begin(); bj!=boxes.end(); ++bj ) {
          bj->getId() = BoxId( bj->getLocalId(), bj->getOwnerRank(),

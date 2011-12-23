@@ -111,7 +111,6 @@ tbox::Pointer<hier::BoxOverlap> OuterfaceGeometry::doOverlap(
    const tbox::Dimension& dim(src_mask.getDim());
 
    tbox::Array<hier::BoxContainer> dst_boxes(dim.getValue());
-   const hier::IntVector& src_offset = transformation.getOffset();
 
    // Perform a quick-and-dirty intersection to see if the boxes might overlap
 

@@ -2916,7 +2916,7 @@ void GriddingAlgorithm::findRefinementBoxes(
            ac_itr != accumulated_mapped_boxes.end(); ++ac_itr) {
          local_ids.insert(ac_itr->getId().getLocalId().getValue());
       }
-      TBOX_ASSERT(local_ids.size() == accumulated_mapped_boxes.size());
+      TBOX_ASSERT(static_cast<int>(local_ids.size()) == accumulated_mapped_boxes.size());
 #endif
       const hier::BoxLevel& tag_mapped_box_level(tag_to_new.getBase());
       new_mapped_box_level.swapInitialize(
@@ -3227,7 +3227,7 @@ void GriddingAlgorithm::findRefinementBoxes(
            new_itr != new_boxes.end(); ++new_itr) {
          new_local_ids.insert(new_itr->getId().getLocalId().getValue());
       }
-      TBOX_ASSERT(new_local_ids.size() == new_boxes.size());
+      TBOX_ASSERT(static_cast<int>(new_local_ids.size()) == new_boxes.size());
 #endif
 
       t_box_massage->stop();
