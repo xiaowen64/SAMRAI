@@ -97,24 +97,25 @@ int main(
       double lo[3] = { 0.0, 0.0, 0.0 };
       double hi[3] = { 1.0, 0.5, 0.5 };
 
-      hier::Box coarseSGS(hier::Index(0, 0, 0), hier::Index(4, 2, 2));
+      const hier::BlockId blk0(0);
+      hier::Box coarseSGS(hier::Index(0, 0, 0), hier::Index(4, 2, 2), blk0);
 
-      hier::Box coarse0(hier::Index(0, 0, 0), hier::Index(4, 2, 2));
-      hier::Box coarse1(hier::Index(5, 0, 0), hier::Index(9, 2, 2));
-      hier::Box coarse2(hier::Index(0, 0, 3), hier::Index(4, 2, 4));
-      hier::Box coarse3(hier::Index(5, 0, 3), hier::Index(9, 2, 4));
-      hier::Box coarse4(hier::Index(0, 3, 0), hier::Index(4, 4, 2));
-      hier::Box coarse5(hier::Index(5, 3, 0), hier::Index(9, 4, 2));
-      hier::Box coarse6(hier::Index(0, 3, 3), hier::Index(4, 4, 4));
-      hier::Box coarse7(hier::Index(5, 3, 3), hier::Index(9, 4, 4));
-      hier::Box fine0(hier::Index(4, 4, 4), hier::Index(7, 5, 5));
-      hier::Box fine1(hier::Index(4, 4, 6), hier::Index(7, 5, 7));
-      hier::Box fine2(hier::Index(4, 6, 4), hier::Index(7, 7, 5));
-      hier::Box fine3(hier::Index(4, 6, 6), hier::Index(7, 7, 7));
-      hier::Box fine4(hier::Index(8, 4, 4), hier::Index(13, 5, 5));
-      hier::Box fine5(hier::Index(8, 4, 6), hier::Index(13, 5, 7));
-      hier::Box fine6(hier::Index(8, 6, 4), hier::Index(13, 7, 5));
-      hier::Box fine7(hier::Index(8, 6, 6), hier::Index(13, 7, 7));
+      hier::Box coarse0(hier::Index(0, 0, 0), hier::Index(4, 2, 2), blk0);
+      hier::Box coarse1(hier::Index(5, 0, 0), hier::Index(9, 2, 2), blk0);
+      hier::Box coarse2(hier::Index(0, 0, 3), hier::Index(4, 2, 4), blk0);
+      hier::Box coarse3(hier::Index(5, 0, 3), hier::Index(9, 2, 4), blk0);
+      hier::Box coarse4(hier::Index(0, 3, 0), hier::Index(4, 4, 2), blk0);
+      hier::Box coarse5(hier::Index(5, 3, 0), hier::Index(9, 4, 2), blk0);
+      hier::Box coarse6(hier::Index(0, 3, 3), hier::Index(4, 4, 4), blk0);
+      hier::Box coarse7(hier::Index(5, 3, 3), hier::Index(9, 4, 4), blk0);
+      hier::Box fine0(hier::Index(4, 4, 4), hier::Index(7, 5, 5), blk0);
+      hier::Box fine1(hier::Index(4, 4, 6), hier::Index(7, 5, 7), blk0);
+      hier::Box fine2(hier::Index(4, 6, 4), hier::Index(7, 7, 5), blk0);
+      hier::Box fine3(hier::Index(4, 6, 6), hier::Index(7, 7, 7), blk0);
+      hier::Box fine4(hier::Index(8, 4, 4), hier::Index(13, 5, 5), blk0);
+      hier::Box fine5(hier::Index(8, 4, 6), hier::Index(13, 5, 7), blk0);
+      hier::Box fine6(hier::Index(8, 6, 4), hier::Index(13, 7, 5), blk0);
+      hier::Box fine7(hier::Index(8, 6, 6), hier::Index(13, 7, 7), blk0);
       hier::IntVector ratio(dim3d, 2);
 
       coarse0.initialize(coarse0, hier::LocalId(0), 0);

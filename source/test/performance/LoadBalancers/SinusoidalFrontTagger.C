@@ -494,10 +494,11 @@ void SinusoidalFrontTagger::computeFrontsData(
     * Initialize tmp_tag to zero then tag specific cells.
     */
    tmp_tag.fill(0);
+   hier::BlockId blk0(0);
    for ( pdat::CellData<int>::Iterator ci(tmp_tag.getGhostBox()); ci; ci++ ) {
 
       const pdat::CellIndex &cell_index = *ci;
-      const hier::Box cell_box(cell_index, cell_index);
+      const hier::Box cell_box(cell_index, cell_index, blk0);
 
 #if 0
       int node_orientation = 0;
@@ -548,7 +549,7 @@ void SinusoidalFrontTagger::computeFrontsData(
       // tbox::plog << "shifted ..........: " << min_distance_to_front << " .. " << max_distance_to_front << std::endl;
       if ( min_distance_to_front < 0 && max_distance_to_front > 0 ) {
          // This cell has nodes on both sides of the front.  Tag it and the tag_buffer around it.
-         hier::Box cell_and_buffer(cell_index, cell_index);
+         hier::Box cell_and_buffer(cell_index, cell_index, blk0);
          cell_and_buffer.grow(tag_buffer);
          tmp_tag.fill(1,cell_and_buffer);
       }
