@@ -971,11 +971,7 @@ private:
    tbox::Pointer<tbox::Timer> t_get_edge_from_parent;
    tbox::Pointer<tbox::Timer> t_report_loads;
    tbox::Pointer<tbox::Timer> t_local_balancing;
-   tbox::Pointer<tbox::Timer> t_local_edges;
    tbox::Pointer<tbox::Timer> t_finish_comms;
-   tbox::Pointer<tbox::Timer> t_misc1;
-   tbox::Pointer<tbox::Timer> t_misc2;
-   tbox::Pointer<tbox::Timer> t_misc3;
    tbox::Pointer<tbox::Timer> t_pack_load;
    tbox::Pointer<tbox::Timer> t_unpack_load;
    tbox::Pointer<tbox::Timer> t_unpack_edge;

@@ -1902,7 +1902,6 @@ void TreeLoadBalancer::constructSemilocalUnbalancedToBalanced(
     * Prepare messages to tell processes that sent work to us about
     * the work that we kept.
     */
-   t_local_edges->start();
    for (TransitSet::const_iterator ni = kept_imports.begin();
         ni != kept_imports.end(); ++ni) {
       const BoxInTransit &box_in_transit = *ni;
@@ -1910,7 +1909,6 @@ void TreeLoadBalancer::constructSemilocalUnbalancedToBalanced(
       TBOX_ASSERT(box_in_transit.d_orig_box.getOwnerRank() != d_mpi.getRank());
       box_in_transit.packForPreviousOwner(outgoing_messages);
    }
-   t_local_edges->stop();
 
    /*
     * Receive and unpack incoming messages.
@@ -4646,18 +4644,10 @@ void TreeLoadBalancer::setTimers()
          getTimer(d_object_name + "::get_edge_from_parent");
       t_report_loads = tbox::TimerManager::getManager()->
          getTimer(d_object_name + "::report_loads");
-      t_misc1 = tbox::TimerManager::getManager()->
-         getTimer(d_object_name + "::misc1");
-      t_misc2 = tbox::TimerManager::getManager()->
-         getTimer(d_object_name + "::misc2");
-      t_misc3 = tbox::TimerManager::getManager()->
-         getTimer(d_object_name + "::misc3");
       t_finish_comms = tbox::TimerManager::getManager()->
          getTimer(d_object_name + "::finish_comms");
       t_local_balancing = tbox::TimerManager::getManager()->
          getTimer(d_object_name + "::local_balancing");
-      t_local_edges = tbox::TimerManager::getManager()->
-         getTimer(d_object_name + "::local_edges");
       t_pack_load = tbox::TimerManager::getManager()->
          getTimer(d_object_name + "::pack_load");
       t_unpack_load = tbox::TimerManager::getManager()->
