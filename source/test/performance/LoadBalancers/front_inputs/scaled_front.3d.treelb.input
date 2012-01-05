@@ -15,7 +15,7 @@ Main {
 
    base_name = "scaled_front.3d.treelb"
    log_all_nodes = FALSE
-   write_visit = TRUE
+   write_visit = FALSE
 
    // Balancer types: TreeLoadBalancer, ChopAndPackLoadBalancer
    load_balancer_type = "TreeLoadBalancer"
@@ -78,7 +78,7 @@ Main {
    }
 
    PrebalanceByShrinkingLevel {
-      shrink_width = 4, 4, 4
+      shrink_width = 5, 5, 5
       BergerRigoutsos {
          sort_output_nodes = TRUE
          log_node_history = FALSE
@@ -136,7 +136,7 @@ PatchHierarchy {
       // all finer levels will use same values as level_0...
    }
    smallest_patch_size {
-      level_0 = 3,3,3
+      level_0 = 6,6,6
       // all finer levels will use same values as level_0...
    }
    ratio_to_coarser {
