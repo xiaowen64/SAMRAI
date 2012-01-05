@@ -1165,7 +1165,7 @@ void BoxContainer::unorder()
       d_set.clear();
       d_ordered = false;
       for (Iterator i(*this); i != end(); ++i) {
-         i->unlockId();
+//         i->unlockId();
       }
    }
 }

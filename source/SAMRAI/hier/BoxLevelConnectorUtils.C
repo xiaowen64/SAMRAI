@@ -1097,8 +1097,8 @@ void BoxLevelConnectorUtils::computeBoxesAroundBoundary(
         bi != boundary_by_blocks.end(); ++bi) {
       BoxContainer &boxes(bi->second);
       for ( BoxContainer::Iterator bj=boxes.begin(); bj!=boxes.end(); ++bj ) {
-         bj->getId() = BoxId( bj->getLocalId(), bj->getOwnerRank(),
-                              bj->getPeriodicId() );
+         bj->setId(BoxId( bj->getLocalId(), bj->getOwnerRank(),
+                          bj->getPeriodicId() ));
       }
    }
 

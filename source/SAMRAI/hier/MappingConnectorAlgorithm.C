@@ -1108,7 +1108,7 @@ void MappingConnectorAlgorithm::privateModify_discoverAndSend(
        * highest of all owners of the visible Boxes, start at
        * the begining.)
        */
-      const Box start_loop_here(dim, LocalId::getZero(), rank + 1);
+      const Box start_loop_here(dim, GlobalId(LocalId::getZero(), rank + 1));
       BoxContainer::Iterator anchor_ni =
          visible_anchor_nabrs.lowerBound(start_loop_here);
       BoxContainer::Iterator new_ni =

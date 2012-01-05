@@ -1035,11 +1035,9 @@ BoxLevel::addPeriodicBox(
     *   before adding the periodic image Box.
     */
    Box real_box(getDim(),
-                       ref_box.getLocalId(),
-                       ref_box.getOwnerRank(),
-                       ref_box.getBlockId(),
-                       PeriodicShiftCatalog::getCatalog(
-                          getDim())->getZeroShiftNumber());
+                ref_box.getGlobalId(),
+                PeriodicShiftCatalog::getCatalog(
+                   getDim())->getZeroShiftNumber());
    if (boxes.find(real_box) == boxes.end()) {
       TBOX_ERROR(
          "BoxLevel::addPeriodicBox: cannot add periodic image Box "
@@ -1082,11 +1080,9 @@ BoxLevel::addBox(
     */
    if (box.isPeriodicImage()) {
       Box real_box(getDim(),
-                          box.getLocalId(),
-                          box.getOwnerRank(),
-                          box.getBlockId(),
-                          PeriodicShiftCatalog::getCatalog(
-                             getDim())->getZeroShiftNumber());
+                   box.getGlobalId(),
+                   PeriodicShiftCatalog::getCatalog(
+                      getDim())->getZeroShiftNumber());
       BoxContainer& boxes = box.getOwnerRank() ==
          d_mpi.getRank() ? d_boxes : d_global_boxes;
       if (boxes.find(real_box) == boxes.end()) {

@@ -153,39 +153,11 @@ Box::Box(
 SAMRAI_INLINE_KEYWORD
 Box::Box(
    const tbox::Dimension& dim,
-   const LocalId& local_id,
-   const int owner,
-   const BlockId& block_id,
-   const PeriodicId& periodic_id):
-   d_lo(dim),
-   d_hi(dim),
-   d_block_id(block_id),
-   d_id(local_id, owner, periodic_id),
-   d_id_locked(false)
-{
-   TBOX_ASSERT(periodic_id.isValid());
-   TBOX_ASSERT(periodic_id.getPeriodicValue() < PeriodicShiftCatalog::getCatalog(
-         dim)->getNumberOfShifts());
-#ifdef BOX_TELEMETRY
-   // Increment the cumulative constructed count, active mapped box count and
-   // reset the high water mark of active mapped boxes if necessary.
-   ++s_cumulative_constructed_ct;
-   ++s_active_ct;
-   if (s_active_ct > s_high_water) {
-      s_high_water = s_active_ct;
-   }
-#endif
-}
-
-SAMRAI_INLINE_KEYWORD
-Box::Box(
-   const tbox::Dimension& dim,
    const GlobalId& global_id,
-   const BlockId& block_id,
    const PeriodicId& periodic_id):
    d_lo(dim),
    d_hi(dim),
-   d_block_id(block_id),
+   d_block_id(BlockId::invalidId()),
    d_id(global_id, periodic_id),
    d_id_locked(false)
 {
@@ -232,12 +204,11 @@ void Box::initialize(
    const hier::Box& box,
    const LocalId& local_id,
    const int owner,
-   const BlockId& block_id,
    const PeriodicId& periodic_id)
 {
    d_lo = box.d_lo;
    d_hi = box.d_hi;
-   d_block_id = block_id;
+   d_block_id = box.d_block_id;
    if (!d_id_locked) {
       d_id.initialize(local_id, owner, periodic_id);
    } else {
@@ -253,13 +224,14 @@ Box::~Box()
    --s_active_ct;
 #endif
 }
+
 SAMRAI_INLINE_KEYWORD
-hier::BoxId& Box::getId() {
-   return d_id;
+void Box::setId(const BoxId& box_id) {
+   d_id = box_id;
 }
 
 SAMRAI_INLINE_KEYWORD
-const hier::BoxId& Box::getId() const {
+const BoxId& Box::getId() const {
    return d_id;
 }
 
@@ -278,6 +250,12 @@ SAMRAI_INLINE_KEYWORD
 const GlobalId& Box::getGlobalId() const
 {
    return d_id.getGlobalId();
+}
+
+SAMRAI_INLINE_KEYWORD
+void Box::setBlockId(const BlockId& block_id)
+{
+   d_block_id = block_id;
 }
 
 SAMRAI_INLINE_KEYWORD
@@ -637,7 +615,6 @@ Box &Box::operator *= (
    const Box& box)
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, box);
-   TBOX_ASSERT(d_block_id == box.d_block_id);
 
    if (d_block_id != box.d_block_id) {
       if (empty() || box.empty()) {
@@ -659,7 +636,6 @@ void Box::intersect(
    Box& result) const
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, other);
-   TBOX_ASSERT(d_block_id == other.d_block_id);
 
    result = *this;
    if (result.d_block_id != other.d_block_id) {
@@ -681,7 +657,11 @@ bool Box::intersects(
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, box);
 
    if (d_block_id != box.d_block_id) {
-      return false;
+      if (empty() || box.empty()) {
+         return false;
+      } else {
+         TBOX_ERROR("Attempted intersection of Boxes from different blocks."); 
+      }
    }
 
    for (int i = 0; i < getDim().getValue(); i++) {
@@ -699,9 +679,15 @@ Box Box::operator + (
    const Box& box) const
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, box);
-   TBOX_ASSERT(d_block_id == box.d_block_id || empty() || box.empty());
 
    Box bbox(*this);
+
+   if (d_block_id != box.d_block_id) {
+      if (!(empty()) || !(box.empty())) {
+         TBOX_ERROR("Attempted bounding box of Boxes from different blocks.");
+      }
+   }
+
    bbox += box;
    return bbox;
 }
@@ -1055,12 +1041,12 @@ SAMRAI_INLINE_KEYWORD
 void Box::lockId() {
    d_id_locked = true;
 }
-
+/*
 SAMRAI_INLINE_KEYWORD
 void Box::unlockId() {
-   d_id_locked = false;
+//   d_id_locked = false;
 }
-
+*/
 
 
 }

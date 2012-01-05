@@ -825,10 +825,10 @@ void BoxNeighborhoodCollection::getFromDatabase(
             for (unsigned int i = 0; i < mbs_size; ++i) {
                Box nbr(db_box_array[i]);
                nbr.setBlockId(BlockId(block_ids[i]));
-               nbr.getId().initialize(
-                  LocalId(local_ids[i]),
-                  ranks[i],
-                  PeriodicId(periodic_ids[i]));
+               hier::BoxId box_id(LocalId(local_ids[i]),
+                                  ranks[i],
+                                  PeriodicId(periodic_ids[i]));
+               nbr.setId(box_id);
                insert(base_box_loc, nbr);
             }
          }

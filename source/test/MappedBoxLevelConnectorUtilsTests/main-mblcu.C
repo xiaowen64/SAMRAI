@@ -272,6 +272,10 @@ int main(
 
             hier::BoxContainer exclude_boxes;
             exclude_boxes = main_db->getDatabaseBoxArray(exclude_boxes_name);
+            for (hier::BoxContainer::Iterator itr = exclude_boxes.begin();
+                 itr != exclude_boxes.end(); ++itr) {
+               itr->setBlockId(block_id);
+            }
             block_domain.unorder();
             block_domain.removeIntersections(exclude_boxes);
 

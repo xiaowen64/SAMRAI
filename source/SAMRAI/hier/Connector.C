@@ -1341,7 +1341,6 @@ size_t Connector::checkTransposeCorrectness(
             }
 
             const Box nabr_nabr(dim, mapped_box_id.getGlobalId(),
-                                head_mapped_box.getBlockId(),
                                 shift_catalog->getOppositeShiftNumber(
                                    base_mapped_box.getPeriodicId()));
 

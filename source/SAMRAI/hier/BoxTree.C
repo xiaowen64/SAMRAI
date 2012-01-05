@@ -291,7 +291,8 @@ BoxTree::BoxTree(
          if (boxes.isOrdered()) {
             mapped_box = *li;
          } else {
-            mapped_box.initialize(*li, ++count, 0, d_block_id);
+            mapped_box.initialize(*li, ++count, 0);
+            TBOX_ASSERT(mapped_box.getBlockId() == d_block_id);
          }
          if (mapped_box.upper(d_partition_dim) <= midpoint) {
             left_mapped_boxes.pushBack(mapped_box);

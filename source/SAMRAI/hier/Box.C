@@ -302,15 +302,16 @@ Box& Box::operator += (
    const Box& box)
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, box);
-   TBOX_ASSERT(d_block_id == box.d_block_id || empty() || box.empty());
 
    if (!box.empty()) {
       if (empty()) {
          *this = box;
-      } else {
+      } else if (d_block_id == box.d_block_id) {
          d_lo.min(box.d_lo);
          d_hi.max(box.d_hi);
-      }
+      } else {
+         TBOX_ERROR("Attempted bounding box of Boxes from different blocks.");
+      } 
    }
    return *this;
 }

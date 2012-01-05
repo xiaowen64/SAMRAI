@@ -700,7 +700,7 @@ private:
     *
     * @param[in,out] new_to_tag
     *
-    * @param[in] physical_domain_list
+    * @param[in] physical_domain_array  Array holding domain for each block
     *
     * @param[in] extend_ghosts Extend the boxes to the boundary if
     * they less than extend_ghosts cells from the boundary.
@@ -710,7 +710,7 @@ private:
       hier::BoxLevel& new_mapped_box_level,
       hier::Connector& tag_to_new,
       hier::Connector& new_to_tag,
-      const hier::BoxContainer& physical_domain_list,
+      const tbox::Array<hier::BoxContainer>& physical_domain_array,
       const hier::IntVector& extend_ghosts) const;
 
    /*!
