@@ -68,14 +68,15 @@ private:
    /*!
     * @brief Indices for statistical quantites.
     */
-   enum { HAS_ANY_BOX = 0,
-          NUMBER_OF_BOXES = 1,
-          LARGEST_DIMENSION = 2,
-          SMALLEST_DIMENSION = 3,
-          LARGEST_ASPECT_RATIO = 4,
-          SMALLEST_ASPECT_RATIO = 5,
-          SUM_SURFACE_AREA = 6,
-          SUM_NORMALIZED_SURFACE_AREA = 7,
+   enum { HAS_ANY_BOX,
+          NUMBER_OF_CELLS,
+          NUMBER_OF_BOXES,
+          LARGEST_DIMENSION,
+          SMALLEST_DIMENSION,
+          LARGEST_ASPECT_RATIO,
+          SMALLEST_ASPECT_RATIO,
+          SUM_SURFACE_AREA,
+          SUM_NORMALIZED_SURFACE_AREA,
           NUMBER_OF_QUANTITIES };
 
    /*
