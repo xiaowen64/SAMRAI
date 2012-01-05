@@ -546,8 +546,6 @@ void TreeLoadBalancer::loadBalanceBoxLevel(
        * Compute the load-balancing map.
        */
 
-      t_get_map->start();
-
       loadBalanceWithinRankGroup(
          balance_box_level,
          balance_to_anchor,
@@ -560,7 +558,6 @@ void TreeLoadBalancer::loadBalanceBoxLevel(
          d_mpi.Barrier();
          t_barrier_after->stop();
       }
-      t_get_map->stop();
 
    }
 
@@ -885,6 +882,8 @@ void TreeLoadBalancer::loadBalanceWithinRankGroup(
       return;
    }
 
+
+   t_get_map->start();
 
    t_load_distribution->start();
 
@@ -1606,6 +1605,7 @@ void TreeLoadBalancer::loadBalanceWithinRankGroup(
    destroyAsyncCommObjects(child_sends, parent_send);
    destroyAsyncCommObjects(child_recvs, parent_recv);
 
+   t_get_map->stop();
 
    if (anchor_to_balance.isFinalized()) {
       t_use_map->start();
