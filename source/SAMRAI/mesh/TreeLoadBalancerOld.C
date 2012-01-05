@@ -1512,10 +1512,10 @@ void TreeLoadBalancerOld::loadBalanceWithinRankGroup(
     * We have only sends to complete, so it should not take
     * long to advance them all to completion.
     */
-   t_finish_comms->start();
+   t_finish_sends->start();
    child_send_stage.advanceAll(completed);
    parent_send_stage.advanceAll(completed);
-   t_finish_comms->stop();
+   t_finish_sends->stop();
    completed.clear();
 #ifdef DEBUG_CHECK_ASSERTIONS
    for (int i = 0; i < num_children; ++i) {
@@ -1963,9 +1963,9 @@ void TreeLoadBalancerOld::constructSemilocalUnbalancedToBalanced(
    }
 
    t_construct_semilocal_comm_wait->start();
-   t_finish_comms->start();
+   t_finish_sends->start();
    comm_stage.advanceAll(completed);
-   t_finish_comms->stop();
+   t_finish_sends->stop();
    t_construct_semilocal_comm_wait->stop();
 
    delete [] importer_comms;
@@ -4646,8 +4646,8 @@ void TreeLoadBalancerOld::setTimers()
          getTimer(d_object_name + "::get_edge_from_parent");
       t_report_loads = tbox::TimerManager::getManager()->
          getTimer(d_object_name + "::report_loads");
-      t_finish_comms = tbox::TimerManager::getManager()->
-         getTimer(d_object_name + "::finish_comms");
+      t_finish_sends = tbox::TimerManager::getManager()->
+         getTimer(d_object_name + "::finish_sends");
       t_local_balancing = tbox::TimerManager::getManager()->
          getTimer(d_object_name + "::local_balancing");
       t_pack_load = tbox::TimerManager::getManager()->
