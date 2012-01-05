@@ -249,6 +249,7 @@ void TreeLoadBalancer::loadBalanceBoxLevel(
        */
       TBOX_ASSERT(d_mpi.getSize() == balance_box_level.getMPI().getSize());
       TBOX_ASSERT(d_mpi.getRank() == balance_box_level.getMPI().getRank());
+#ifdef DEBUG_CHECK_ASSERTIONS
       if (d_mpi.getSize() > 1) {
          int compare_result;
          tbox::SAMRAI_MPI::Comm_compare(
@@ -263,6 +264,7 @@ void TreeLoadBalancer::loadBalanceBoxLevel(
                << "a BoxLevel with an incongruent SAMRAI_MPI.");
          }
       }
+#endif
    }
    else {
       d_mpi = balance_box_level.getMPI();
