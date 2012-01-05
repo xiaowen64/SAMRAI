@@ -43,6 +43,7 @@ using namespace std;
 #include "SAMRAI/geom/CartesianGridGeometry.h"
 #include "SAMRAI/mesh/GriddingAlgorithm.h"
 #include "SAMRAI/algs/HyperbolicLevelIntegrator.h"
+#include "SAMRAI/mesh/ChopAndPackLoadBalancer.h"
 #include "SAMRAI/mesh/TreeLoadBalancer.h"
 #include "SAMRAI/hier/PatchHierarchy.h"
 #include "SAMRAI/mesh/StandardTagAndInitialize.h"
@@ -409,16 +410,43 @@ int main(
       Pointer<mesh::BoxGeneratorStrategy> box_generator =
          Pointer<mesh::BoxGeneratorStrategy>(new_box_generator);
 
-      Pointer<mesh::TreeLoadBalancer> load_balancer(
-         new mesh::TreeLoadBalancer(dim,
-            "mesh::TreeLoadBalancer",
-            input_db->getDatabase("TreeLoadBalancer")));
-      load_balancer->setSAMRAI_MPI(tbox::SAMRAI_MPI::getSAMRAIWorld());
-      Pointer<mesh::TreeLoadBalancer> load_balancer0(
-         new mesh::TreeLoadBalancer(dim,
-            "mesh::TreeLoadBalancer0",
-            input_db->getDatabase("TreeLoadBalancer")));
-      load_balancer0->setSAMRAI_MPI(tbox::SAMRAI_MPI::getSAMRAIWorld());
+
+      // Set up the load balancer.
+
+      Pointer<mesh::LoadBalanceStrategy> load_balancer;
+      Pointer<mesh::LoadBalanceStrategy> load_balancer0;
+
+      const std::string load_balancer_type =
+         main_db->getStringWithDefault("load_balancer_type", "TreeLoadBalancer");
+
+      if ( load_balancer_type == "TreeLoadBalancer" ) {
+
+         Pointer<mesh::TreeLoadBalancer> tree_load_balancer(
+            new mesh::TreeLoadBalancer(dim,
+                                       "mesh::TreeLoadBalancer",
+                                       input_db->getDatabase("TreeLoadBalancer")));
+         tree_load_balancer->setSAMRAI_MPI(tbox::SAMRAI_MPI::getSAMRAIWorld());
+
+         Pointer<mesh::TreeLoadBalancer> tree_load_balancer0(
+            new mesh::TreeLoadBalancer(dim,
+                                       "mesh::TreeLoadBalancer0",
+                                       input_db->getDatabase("TreeLoadBalancer")));
+         tree_load_balancer0->setSAMRAI_MPI(tbox::SAMRAI_MPI::getSAMRAIWorld());
+
+         load_balancer = tree_load_balancer;
+         load_balancer0 = tree_load_balancer0;
+      }
+      else if ( load_balancer_type == "ChopAndPackLoadBalancer" ) {
+
+         Pointer<mesh::ChopAndPackLoadBalancer> cap_load_balancer(
+            new mesh::ChopAndPackLoadBalancer(dim,
+                                       "mesh::ChopAndPackLoadBalancer",
+                                       input_db->getDatabase("ChopAndPackLoadBalancer")));
+
+         load_balancer = cap_load_balancer;
+         load_balancer0 = cap_load_balancer;
+      }
+
 
       Pointer<mesh::GriddingAlgorithm> gridding_algorithm(
          new mesh::GriddingAlgorithm(
@@ -602,11 +630,14 @@ int main(
       gridding_algorithm->printStatistics(tbox::plog);
 #endif
 
-      /*
-       * Output load balancing results.
-       */
-      tbox::plog << "\n\nLoad balancing results:\n";
-      load_balancer->printStatistics(tbox::plog);
+      if ( load_balancer_type == "TreeLoadBalancer" ) {
+         /*
+          * Output load balancing results for TreeLoadBalancer.
+          */
+         Pointer<mesh::TreeLoadBalancer> tree_load_balancer = load_balancer;
+         tbox::plog << "\n\nLoad balancing results:\n";
+         tree_load_balancer->printStatistics(tbox::plog);
+      }
 
       /*
        * Output box search results.
