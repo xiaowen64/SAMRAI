@@ -127,7 +127,7 @@ TreeLoadBalancer {
   precut_penalty_wt = 1.0
 
   // Debugging options
-  check_map = TRUE
+  check_map = FALSE
   check_connectivity = FALSE
   print_steps = FALSE
   print_swap_steps = FALSE
