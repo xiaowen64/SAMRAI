@@ -138,6 +138,13 @@ void outputMetadataAfter(
    const std::string &La_name,
    const std::string &Lb_name );
 
+SAMRAI::tbox::Pointer<SAMRAI::mesh::LoadBalanceStrategy>
+createLoadBalancer(
+   SAMRAI::tbox::Pointer<SAMRAI::tbox::Database> &input_db,
+   const std::string &lb_type,
+   int ln,
+   const tbox::Dimension &dim );
+
 
 /*
 ********************************************************************************
@@ -415,42 +422,21 @@ int main(
        * Set up the load balancers.
        */
 
-      mesh::ChopAndPackLoadBalancer cut_and_pack_lb(
-         dim,
-         "ChopAndPackLoadBalancer",
-         input_db->getDatabaseWithDefault("ChopAndPackLoadBalancer",
-            tbox::Pointer<SAMRAI::tbox::Database>(NULL)));
 
-      mesh::TreeLoadBalancer tree_lb(
-         dim,
-         "mesh::TreeLoadBalancer",
-         input_db->getDatabaseWithDefault("TreeLoadBalancer",
-            tbox::Pointer<SAMRAI::tbox::Database>(NULL)));
-      tree_lb.setSAMRAI_MPI(tbox::SAMRAI_MPI::getSAMRAIWorld());
 
       mesh::LoadBalanceStrategy* lb = NULL;
 
-      std::string load_balancer_type;
-      if (main_db->isString("load_balancer_type")) {
-         load_balancer_type = main_db->getString("load_balancer_type");
-         if (load_balancer_type == "TreeLoadBalancer") {
-            lb = &tree_lb;
-         } else if (load_balancer_type == "ChopAndPackLoadBalancer") {
-            lb = &cut_and_pack_lb;
-         }
-      }
-      if (lb == NULL) {
-         TBOX_ERROR(
-            "Missing or bad load_balancer specification in Main database.\n"
-            << "Specify load_balancer_type = STRING, where STRING can be\n"
-            << "\"ChopAndPackLoadBalancer\" or \"TreeLoadBalancer\".");
-      }
+      std::string load_balancer_type =
+         main_db->getStringWithDefault("load_balancer_type", "TreeLoadBalancer");
+
 
 
 
       /*
        * Step 1: Build L0.
        */
+      tbox::pout << "Generating L0" << std::endl;
+
       hier::BoxLevel L0(hier::IntVector(dim, 1), grid_geometry);
 
       {
@@ -493,12 +479,16 @@ int main(
          oca.findOverlaps(L0_to_domain);
          oca.findOverlaps(domain_to_L0);
 
+         tbox::Pointer<mesh::LoadBalanceStrategy> lb0
+            = createLoadBalancer( input_db, load_balancer_type, 0, dim );
+
          tbox::plog << "\n\n\ninitial L0 loads:\n";
-         lb->gatherAndReportLoadBalance(
+         lb0->gatherAndReportLoadBalance(
             (double)L0.getLocalNumberOfCells(),
             L0.getMPI());
 
-         lb->loadBalanceBoxLevel(
+         tbox::SAMRAI_MPI::getSAMRAIWorld().Barrier();
+         lb0->loadBalanceBoxLevel(
             L0,
             L0_to_domain,
             domain_to_L0,
@@ -547,6 +537,8 @@ int main(
          /*
           * Step 2: Build L1.
           */
+         tbox::pout << "Generating L1" << std::endl;
+
 
          const int coarser_ln = 0;
          const int finer_ln = coarser_ln + 1;
@@ -579,12 +571,16 @@ int main(
             TBOX_ERROR("Level " << finer_ln << " box generator resulted in no boxes.");
          }
 
-         lb->gatherAndReportLoadBalance(
+         tbox::Pointer<mesh::LoadBalanceStrategy> lb1
+            = createLoadBalancer( input_db, load_balancer_type, 1 , dim);
+
+         lb1->gatherAndReportLoadBalance(
             (double)L1.getLocalNumberOfCells(),
             L1.getMPI());
 
+         tbox::SAMRAI_MPI::getSAMRAIWorld().Barrier();
          // Load balance L1.
-         lb->loadBalanceBoxLevel(
+         lb1->loadBalanceBoxLevel(
             L1,
             L1_to_L0,
             L0_to_L1,
@@ -638,6 +634,7 @@ int main(
          /*
           * Step 3: Build L2.
           */
+         tbox::pout << "Generating L2" << std::endl;
 
          const int coarser_ln = 1;
          const int finer_ln = coarser_ln + 1;
@@ -670,12 +667,16 @@ int main(
             TBOX_ERROR("Level " << finer_ln << " box generator resulted in no boxes.");
          }
 
-         lb->gatherAndReportLoadBalance(
+         tbox::Pointer<mesh::LoadBalanceStrategy> lb2
+            = createLoadBalancer( input_db, load_balancer_type, 2 , dim);
+
+         lb2->gatherAndReportLoadBalance(
             (double)L2.getLocalNumberOfCells(),
             L2.getMPI());
 
+         tbox::SAMRAI_MPI::getSAMRAIWorld().Barrier();
          // Load balance L2.
-         lb->loadBalanceBoxLevel(
+         lb2->loadBalanceBoxLevel(
             L2,
             L2_to_L1,
             L1_to_L2,
@@ -1545,4 +1546,44 @@ void generatePrebalance(
    }
 
    return;
+}
+
+SAMRAI::tbox::Pointer<SAMRAI::mesh::LoadBalanceStrategy>
+createLoadBalancer(
+   SAMRAI::tbox::Pointer<SAMRAI::tbox::Database> &input_db,
+   const std::string &lb_type,
+   int ln,
+   const tbox::Dimension &dim )
+{
+
+   if (lb_type == "TreeLoadBalancer") {
+
+      SAMRAI::tbox::Pointer<SAMRAI::mesh::TreeLoadBalancer>
+         tree_lb(new mesh::TreeLoadBalancer(
+            dim,
+            std::string("mesh::TreeLoadBalancer") + tbox::Utilities::intToString(ln),
+            input_db->getDatabaseWithDefault("TreeLoadBalancer",
+                                             tbox::Pointer<SAMRAI::tbox::Database>(NULL))));
+      tree_lb->setSAMRAI_MPI(tbox::SAMRAI_MPI::getSAMRAIWorld());
+      return tree_lb;
+
+   } else if (lb_type == "ChopAndPackLoadBalancer") {
+
+      SAMRAI::tbox::Pointer<SAMRAI::mesh::ChopAndPackLoadBalancer>
+         cap_lb(new mesh::ChopAndPackLoadBalancer(
+            dim,
+            std::string("mesh::ChopAndPackLoadBalancer") + tbox::Utilities::intToString(ln),
+            input_db->getDatabaseWithDefault("ChopAndPackLoadBalancer",
+                                             tbox::Pointer<SAMRAI::tbox::Database>(NULL))));
+      return cap_lb;
+
+   }
+   else {
+      TBOX_ERROR(
+         "Missing or bad load_balancer specification in Main database.\n"
+         << "Specify load_balancer_type = STRING, where STRING can be\n"
+         << "\"ChopAndPackLoadBalancer\" or \"TreeLoadBalancer\".");
+   }
+
+   return tbox::Pointer<mesh::LoadBalanceStrategy>(NULL);
 }
