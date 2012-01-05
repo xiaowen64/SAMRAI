@@ -1968,6 +1968,7 @@ void TreeLoadBalancer::constructSemilocalUnbalancedToBalanced(
    delete [] importer_comms;
    delete [] exporter_comms;
 
+   t_construct_semilocal->stop();
    return;
 }
 
