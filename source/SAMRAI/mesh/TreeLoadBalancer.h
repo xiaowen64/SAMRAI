@@ -948,6 +948,7 @@ private:
    tbox::Pointer<tbox::Timer> t_use_map;
    tbox::Pointer<tbox::Timer> t_constrain_size;
    tbox::Pointer<tbox::Timer> t_map_big_boxes;
+   tbox::Pointer<tbox::Timer> t_load_distribution;
    tbox::Pointer<tbox::Timer> t_compute_local_load;
    tbox::Pointer<tbox::Timer> t_compute_global_load;
    tbox::Pointer<tbox::Timer> t_compute_tree_load;

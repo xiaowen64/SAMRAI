@@ -886,6 +886,8 @@ void TreeLoadBalancer::loadBalanceWithinRankGroup(
    }
 
 
+   t_load_distribution->start();
+
    /*
     * Before the last cycle, it is possible for the group average load
     * to be below the global average, if the group just happens to have
@@ -1499,9 +1501,10 @@ void TreeLoadBalancer::loadBalanceWithinRankGroup(
 
    }
 
-
-
    t_local_balancing->stop();
+
+   t_load_distribution->stop();
+
 
    /*
     * Finish messages before starting edge info exchange.
@@ -4591,6 +4594,8 @@ void TreeLoadBalancer::setTimers()
          getTimer(d_object_name + "::constrain_size");
       t_map_big_boxes = tbox::TimerManager::getManager()->
          getTimer(d_object_name + "::mapOversizedBoxes()");
+      t_load_distribution = tbox::TimerManager::getManager()->
+         getTimer(d_object_name + "::load_distribution");
       t_compute_local_load = tbox::TimerManager::getManager()->
          getTimer(d_object_name + "::compute_local_load");
       t_compute_global_load = tbox::TimerManager::getManager()->
