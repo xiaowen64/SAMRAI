@@ -25,7 +25,7 @@ namespace mesh {
  *************************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-TreeLoadBalancer::BoxInTransit::BoxInTransit(
+TreeLoadBalancerOld::BoxInTransit::BoxInTransit(
    const tbox::Dimension &dim) :
    d_box(dim),
    d_orig_box(dim)
@@ -39,11 +39,12 @@ TreeLoadBalancer::BoxInTransit::BoxInTransit(
  *************************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-TreeLoadBalancer::BoxInTransit::BoxInTransit(
+TreeLoadBalancerOld::BoxInTransit::BoxInTransit(
    const hier::Box& origin):
    d_box(origin),
    d_orig_box(origin),
-   d_load(origin.size())
+   d_load(origin.size()),
+   d_proc_hist()
 {
 }
 
@@ -54,12 +55,13 @@ TreeLoadBalancer::BoxInTransit::BoxInTransit(
  *************************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-TreeLoadBalancer::BoxInTransit::BoxInTransit(
+TreeLoadBalancerOld::BoxInTransit::BoxInTransit(
    const int *&ptr,
    const tbox::Dimension &dim ):
    d_box(dim),
    d_orig_box(dim),
-   d_load(0)
+   d_load(0),
+   d_proc_hist(0)
 {
    getFromIntBuffer(ptr);
    ptr += commBufferSize();
@@ -73,15 +75,19 @@ TreeLoadBalancer::BoxInTransit::BoxInTransit(
  *************************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-TreeLoadBalancer::BoxInTransit::BoxInTransit(
+TreeLoadBalancerOld::BoxInTransit::BoxInTransit(
    const BoxInTransit& other,
    const hier::Box& box,
    int rank,
    hier::LocalId local_id):
    d_box(box, local_id, rank, other.d_orig_box.getBlockId()),
    d_orig_box(other.d_orig_box),
-   d_load(d_box.size())
+   d_load(d_box.size()),
+   d_proc_hist(other.d_proc_hist)
 {
+   if (rank != other.getOwnerRank()) {
+      d_proc_hist.push_back(other.getOwnerRank());
+   }
 }
 
 
@@ -91,7 +97,7 @@ TreeLoadBalancer::BoxInTransit::BoxInTransit(
  *************************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-int TreeLoadBalancer::BoxInTransit::getOwnerRank() const {
+int TreeLoadBalancerOld::BoxInTransit::getOwnerRank() const {
    return d_box.getOwnerRank();
 }
 
@@ -102,7 +108,7 @@ int TreeLoadBalancer::BoxInTransit::getOwnerRank() const {
  *************************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-hier::LocalId TreeLoadBalancer::BoxInTransit::getLocalId() const {
+hier::LocalId TreeLoadBalancerOld::BoxInTransit::getLocalId() const {
    return d_box.getLocalId();
 }
 
@@ -113,7 +119,7 @@ hier::LocalId TreeLoadBalancer::BoxInTransit::getLocalId() const {
  *************************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-hier::Box& TreeLoadBalancer::BoxInTransit::getBox() {
+hier::Box& TreeLoadBalancerOld::BoxInTransit::getBox() {
    return d_box;
 }
 
@@ -124,7 +130,7 @@ hier::Box& TreeLoadBalancer::BoxInTransit::getBox() {
  *************************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-const hier::Box& TreeLoadBalancer::BoxInTransit::getBox() const {
+const hier::Box& TreeLoadBalancerOld::BoxInTransit::getBox() const {
    return d_box;
 }
 
@@ -135,10 +141,10 @@ const hier::Box& TreeLoadBalancer::BoxInTransit::getBox() const {
  *************************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-int TreeLoadBalancer::BoxInTransit::commBufferSize() const
+int TreeLoadBalancerOld::BoxInTransit::commBufferSize() const
 {
    const tbox::Dimension& dim(d_box.getDim());
-   return 2 * hier::Box::commBufferSize(dim) + 1;
+   return 2 * hier::Box::commBufferSize(dim) + 2 + static_cast<int>(d_proc_hist.size());
 }
 
 
@@ -148,12 +154,13 @@ int TreeLoadBalancer::BoxInTransit::commBufferSize() const
  *************************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-const TreeLoadBalancer::BoxInTransit& TreeLoadBalancer::BoxInTransit::operator = (
+const TreeLoadBalancerOld::BoxInTransit& TreeLoadBalancerOld::BoxInTransit::operator = (
    const BoxInTransit& other)
 {
    d_box = other.d_box;
    d_orig_box = other.d_orig_box;
    d_load = other.d_load;
+   d_proc_hist = other.d_proc_hist;
    return *this;
 }
 
@@ -164,8 +171,9 @@ const TreeLoadBalancer::BoxInTransit& TreeLoadBalancer::BoxInTransit::operator =
  *************************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-int * TreeLoadBalancer::BoxInTransit::putToIntBuffer(
-   int* buffer) const
+int * TreeLoadBalancerOld::BoxInTransit::putToIntBuffer(
+   int* buffer,
+   bool skip_last_owner) const
 {
    const tbox::Dimension& dim(d_box.getDim());
    d_box.putToIntBuffer(buffer);
@@ -173,6 +181,11 @@ int * TreeLoadBalancer::BoxInTransit::putToIntBuffer(
    d_orig_box.putToIntBuffer(buffer);
    buffer += hier::Box::commBufferSize(dim);
    *(buffer++) = d_load;
+   if (skip_last_owner) { TBOX_ASSERT( !d_proc_hist.empty() ); }
+   *(buffer++) = static_cast<int>(d_proc_hist.size()-skip_last_owner);
+   for (unsigned int i = 0; i < d_proc_hist.size()-skip_last_owner; ++i) {
+      *(buffer++) = d_proc_hist[i];
+   }
    return buffer;
 }
 
@@ -183,7 +196,7 @@ int * TreeLoadBalancer::BoxInTransit::putToIntBuffer(
  *************************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-const int * TreeLoadBalancer::BoxInTransit::getFromIntBuffer(
+const int * TreeLoadBalancerOld::BoxInTransit::getFromIntBuffer(
    const int* buffer)
 {
    const tbox::Dimension& dim(d_box.getDim());
@@ -192,6 +205,11 @@ const int * TreeLoadBalancer::BoxInTransit::getFromIntBuffer(
    d_orig_box.getFromIntBuffer(buffer);
    buffer += hier::Box::commBufferSize(dim);
    d_load = *(buffer++);
+   d_proc_hist.clear();
+   d_proc_hist.insert(d_proc_hist.end(), *(buffer++), 0);
+   for (unsigned int i = 0; i < d_proc_hist.size(); ++i) {
+      d_proc_hist[i] = *(buffer++);
+   }
    return buffer;
 }
 
@@ -202,9 +220,26 @@ const int * TreeLoadBalancer::BoxInTransit::getFromIntBuffer(
  *************************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-bool TreeLoadBalancer::BoxInTransitMoreLoad::operator () (
-   const TreeLoadBalancer::BoxInTransit& a,
-   const TreeLoadBalancer::BoxInTransit& b) const
+void TreeLoadBalancerOld::BoxInTransit::packForPreviousOwner(
+   std::map<int,std::vector<int> > &outgoing_messages ) const
+{
+   const int prev_owner = d_proc_hist.back();
+   std::vector<int> &msg(outgoing_messages[prev_owner]);
+   const int cbs1 = commBufferSize()-1;
+   msg.insert(msg.end(), cbs1, 0);
+   putToIntBuffer(&msg[msg.size() - cbs1], true);
+}
+
+
+
+/*
+ *************************************************************************
+ *************************************************************************
+ */
+SAMRAI_INLINE_KEYWORD
+bool TreeLoadBalancerOld::BoxInTransitMoreLoad::operator () (
+   const TreeLoadBalancerOld::BoxInTransit& a,
+   const TreeLoadBalancerOld::BoxInTransit& b) const
 {
    if (a.getBox().size() != b.getBox().size()) {
       return a.d_load > b.d_load;
@@ -219,7 +254,7 @@ bool TreeLoadBalancer::BoxInTransitMoreLoad::operator () (
  *************************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-double TreeLoadBalancer::computeLoad(
+double TreeLoadBalancerOld::computeLoad(
    const hier::Box& box,
    const hier::Box& restriction) const
 {
@@ -240,7 +275,7 @@ double TreeLoadBalancer::computeLoad(
  *************************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-double TreeLoadBalancer::computeLoad(
+double TreeLoadBalancerOld::computeLoad(
    const hier::Box& mapped_box) const
 {
    /*
