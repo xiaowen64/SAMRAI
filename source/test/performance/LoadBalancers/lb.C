@@ -573,7 +573,7 @@ int main(
 
 
          // Output metadata before balancing L1.
-         outputMetadataBefore( L0_to_L1, L1_to_L0, "L0", "L1" );
+         outputMetadataBefore( L0_to_L1, L1_to_L0, "L0", "L1pre" );
 
          if ( L1.getGlobalNumberOfBoxes() == 0 ) {
             TBOX_ERROR("Level " << finer_ln << " box generator resulted in no boxes.");
@@ -625,7 +625,7 @@ int main(
             L0_to_L1);
 
          // Output metadata after balancing L1.
-         outputMetadataAfter( L0_to_L1, L1_to_L0, L1_to_L1, "L0", "L1" );
+         outputMetadataAfter( L0_to_L1, L1_to_L0, L1_to_L1, "L0", "L1post" );
 
          lb->gatherAndReportLoadBalance(
             (double)L1.getLocalNumberOfCells(),
@@ -664,7 +664,7 @@ int main(
 
 
          // Output metadata before balancing L2.
-         outputMetadataBefore( L1_to_L2, L2_to_L1, "L1", "L2" );
+         outputMetadataBefore( L1_to_L2, L2_to_L1, "L1", "L2pre" );
 
          if ( L2.getGlobalNumberOfBoxes() == 0 ) {
             TBOX_ERROR("Level " << finer_ln << " box generator resulted in no boxes.");
@@ -716,7 +716,7 @@ int main(
             L1_to_L2);
 
          // Output metadata after balancing L2.
-         outputMetadataAfter( L1_to_L2, L2_to_L1, L2_to_L2, "L1", "L2" );
+         outputMetadataAfter( L1_to_L2, L2_to_L1, L2_to_L2, "L1", "L2post" );
 
          lb->gatherAndReportLoadBalance(
             (double)L2.getLocalNumberOfCells(),
