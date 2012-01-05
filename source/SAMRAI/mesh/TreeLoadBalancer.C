@@ -1827,6 +1827,8 @@ void TreeLoadBalancer::constructSemilocalUnbalancedToBalanced(
    const std::vector<int> &import_srcs,
    const TreeLoadBalancer::TransitSet &kept_imports ) const
 {
+   t_construct_semilocal->start();
+
    /*
     * Determine edges from unbalanced to balanced BoxLevels by sending
     * balanced Boxes back to the owners of the unbalanced Boxes that
@@ -1935,9 +1937,11 @@ void TreeLoadBalancer::constructSemilocalUnbalancedToBalanced(
       }
 
       completed.clear();
+      t_construct_semilocal_comm_wait->start();
       t_children_edge_comm->start();
       comm_stage.advanceSome(completed);
       t_children_edge_comm->stop();
+      t_construct_semilocal_comm_wait->stop();
 
    } while (!completed.empty());
 
@@ -1955,9 +1959,11 @@ void TreeLoadBalancer::constructSemilocalUnbalancedToBalanced(
       peer_comm.beginSend( &message[0], static_cast<int>(message.size()) );
    }
 
+   t_construct_semilocal_comm_wait->start();
    t_finish_comms->start();
    comm_stage.advanceAll(completed);
    t_finish_comms->stop();
+   t_construct_semilocal_comm_wait->stop();
 
    delete [] importer_comms;
    delete [] exporter_comms;
@@ -4620,6 +4626,10 @@ void TreeLoadBalancer::setTimers()
          getTimer(d_object_name + "::get_load_from_children");
       t_get_load_from_parent = tbox::TimerManager::getManager()->
          getTimer(d_object_name + "::get_load_from_parent");
+      t_construct_semilocal = tbox::TimerManager::getManager()->
+         getTimer(d_object_name + "::constructSemilocalUnbalancedToBalanced()");
+      t_construct_semilocal_comm_wait = tbox::TimerManager::getManager()->
+         getTimer(d_object_name + "::constructSemilocalUnbalancedToBalanced()_comm_wait");
       t_send_edge_to_children = tbox::TimerManager::getManager()->
          getTimer(d_object_name + "::send_edge_to_children");
       t_send_edge_to_parent = tbox::TimerManager::getManager()->

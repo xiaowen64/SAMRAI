@@ -962,6 +962,8 @@ private:
    tbox::Pointer<tbox::Timer> t_send_load_to_parent;
    tbox::Pointer<tbox::Timer> t_get_load_from_children;
    tbox::Pointer<tbox::Timer> t_get_load_from_parent;
+   tbox::Pointer<tbox::Timer> t_construct_semilocal;
+   tbox::Pointer<tbox::Timer> t_construct_semilocal_comm_wait;
    tbox::Pointer<tbox::Timer> t_send_edge_to_children;
    tbox::Pointer<tbox::Timer> t_send_edge_to_parent;
    tbox::Pointer<tbox::Timer> t_get_edge_from_children;
