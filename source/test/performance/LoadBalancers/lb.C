@@ -423,7 +423,7 @@ int main(
 
       mesh::TreeLoadBalancer tree_lb(
          dim,
-         "TreeLoadBalancer",
+         "mesh::TreeLoadBalancer",
          input_db->getDatabaseWithDefault("TreeLoadBalancer",
             tbox::Pointer<SAMRAI::tbox::Database>(NULL)));
       tree_lb.setSAMRAI_MPI(tbox::SAMRAI_MPI::getSAMRAIWorld());
