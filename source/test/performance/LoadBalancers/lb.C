@@ -27,6 +27,7 @@
 #include "SAMRAI/hier/OverlapConnectorAlgorithm.h"
 #include "SAMRAI/hier/MappingConnectorAlgorithm.h"
 #include "SAMRAI/mesh/TreeLoadBalancer.h"
+#include "SAMRAI/mesh/TreeLoadBalancerOld.h"
 #include "SAMRAI/mesh/ChopAndPackLoadBalancer.h"
 #include "SAMRAI/hier/VariableDatabase.h"
 #include "SAMRAI/appu/VisItDataWriter.h"
@@ -1563,6 +1564,17 @@ createLoadBalancer(
             dim,
             std::string("mesh::TreeLoadBalancer") + tbox::Utilities::intToString(ln),
             input_db->getDatabaseWithDefault("TreeLoadBalancer",
+                                             tbox::Pointer<SAMRAI::tbox::Database>(NULL))));
+      tree_lb->setSAMRAI_MPI(tbox::SAMRAI_MPI::getSAMRAIWorld());
+      return tree_lb;
+
+   }else if (lb_type == "TreeLoadBalancerOld") {
+
+      SAMRAI::tbox::Pointer<SAMRAI::mesh::TreeLoadBalancerOld>
+         tree_lb(new mesh::TreeLoadBalancerOld(
+            dim,
+            std::string("mesh::TreeLoadBalancerOld") + tbox::Utilities::intToString(ln),
+            input_db->getDatabaseWithDefault("TreeLoadBalancerOld",
                                              tbox::Pointer<SAMRAI::tbox::Database>(NULL))));
       tree_lb->setSAMRAI_MPI(tbox::SAMRAI_MPI::getSAMRAIWorld());
       return tree_lb;

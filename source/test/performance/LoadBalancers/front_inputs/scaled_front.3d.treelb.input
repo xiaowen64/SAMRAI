@@ -110,6 +110,23 @@ TreeLoadBalancer {
   print_edge_steps = FALSE
 }
 
+TreeLoadBalancerOld {
+  report_load_balance = TRUE // Reported in main
+  n_root_cycles = -1
+  balance_penalty_wt = 1.0
+  surface_penalty_wt = 1.0
+  slender_penalty_wt = 1.0
+  precut_penalty_wt = 1.0
+
+  // Debugging options
+  check_map = FALSE
+  check_connectivity = FALSE
+  print_steps = FALSE
+  print_swap_steps = FALSE
+  print_break_steps = FALSE
+  print_edge_steps = FALSE
+}
+
 TimerManager {
 //   print_exclusive      = TRUE
    print_summed           = TRUE
