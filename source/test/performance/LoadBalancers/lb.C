@@ -317,6 +317,40 @@ int main(
          main_db->getDoubleArray("xhi", &xhi[0], dim.getValue());
       }
 
+      /*
+       * If num_procs_in_tile is given, take the domain_boxes, xlo and xhi
+       * to be the size for the (integer) value of num_procs_in_tile.  Scale
+       * the problem from there to the number of process running by
+       * doubling the dimension starting with the j direction.
+       *
+       * The number of processes must be a power of 2 times the value
+       * of num_procs_in_tile.
+       */
+      if ( main_db->isInteger("num_procs_in_tile") ) {
+         int num_procs_in_tile = main_db->getInteger("num_procs_in_tile");
+         int doubling_dir = 1;
+
+         while (num_procs_in_tile < mpi.getSize()) {
+            for ( hier::BoxContainer::Iterator bi=domain_boxes.begin();
+                  bi!=domain_boxes.end(); ++bi ) {
+               hier::Box &input_box = *bi;
+               input_box.upper()(doubling_dir) += input_box.numberCells(doubling_dir);
+            }
+            xhi[doubling_dir] += xhi[doubling_dir] - xlo[doubling_dir];
+            doubling_dir = (doubling_dir + 1)%dim.getValue();
+            num_procs_in_tile *= 2;
+            tbox::plog << "num_procs_in_tile = " << num_procs_in_tile << std::endl
+                       << domain_boxes.format("IB: ", 2) << std::endl;
+         }
+
+         if ( num_procs_in_tile != mpi.getSize() ) {
+            TBOX_ERROR("If num_procs_in_tile (" << num_procs_in_tile << ") is given,\n"
+                       <<"number of processes (" << mpi.getSize() << ") must be\n"
+                       <<"a power-of-2 times the value of num_procs_in_tile.");
+         }
+
+      }
+
 
       {
          /*
