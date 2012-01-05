@@ -20,16 +20,16 @@ namespace SAMRAI {
   - SAMRAI::hier::Connector
   - SAMRAI::hier::GlobalId
   - SAMRAI::hier::LocalId
-  - SAMRAI::hier::MappedBox
-  - SAMRAI::hier::MappedBoxContainerUtils
-  - SAMRAI::hier::MappedBoxId
-  - SAMRAI::hier::MappedBoxLevel
-  - SAMRAI::hier::MappedBoxLevelHandle
-  - SAMRAI::hier::MappedBoxLevelConnectorUtils
-  - SAMRAI::hier::MappedBoxSet
-  - SAMRAI::hier::MappedBoxTree
+  - SAMRAI::hier::Box
+  - SAMRAI::hier::BoxContainerUtils
+  - SAMRAI::hier::BoxId
+  - SAMRAI::hier::BoxLevel
+  - SAMRAI::hier::BoxLevelHandle
+  - SAMRAI::hier::BoxLevelConnectorUtils
+  - SAMRAI::hier::BoxTree
   - SAMRAI::hier::MappingConnectorAlgorithm
-  - SAMRAI::hier::MultiblockMappedBoxTree
+  - SAMRAI::hier::MultiblockBoxTree
+  - SAMRAI::hier::BoxNeighborhoodCollection
   - SAMRAI::hier::NeighborhoodSet
   - SAMRAI::hier::OverlapConnectorAlgorithm
   - SAMRAI::hier::PersistentOverlapConnectors
