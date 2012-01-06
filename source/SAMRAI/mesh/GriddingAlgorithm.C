@@ -3143,7 +3143,7 @@ void GriddingAlgorithm::findRefinementBoxes(
             new_mapped_box_level,
             tag_to_new,
             new_to_tag,
-            level->getPhysicalDomain(hier::BlockId::zero()),
+            level->getPhysicalDomainArray(),
             extend_ghosts_in_tag_space);
          t_extend_to_domain_boundary->stop();
       }
@@ -3408,7 +3408,7 @@ void GriddingAlgorithm::extendBoxesToDomainBoundary(
    hier::BoxLevel& new_mapped_box_level,
    hier::Connector& tag_to_new,
    hier::Connector& new_to_tag,
-   const hier::BoxContainer& physical_domain_list,
+   const tbox::Array<hier::BoxContainer>& physical_domain_array,
    const hier::IntVector& extend_ghosts) const
 {
    TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(d_dim, new_mapped_box_level);
@@ -3446,7 +3446,7 @@ void GriddingAlgorithm::extendBoxesToDomainBoundary(
       hier::Box after_mapped_box = before_mapped_box;
       hier::BoxUtilities::extendBoxToDomainBoundary(
          after_mapped_box,
-         physical_domain_list,
+         physical_domain_array[before_mapped_box.getBlockId().getBlockValue()],
          extend_ghosts);
       after_mapped_box_level.addBox(after_mapped_box);
       before_to_after.insertLocalNeighbor(
