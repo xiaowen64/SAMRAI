@@ -394,12 +394,12 @@ private:
     * Static integer constants.  Tags are for isolating messages
     * from different phases of the algorithm.
     */
-   static const int TreeLoadBalancerOld_LOADTAG0 = 1212001;
-   static const int TreeLoadBalancerOld_LOADTAG1 = 1212002;
-   static const int TreeLoadBalancerOld_EDGETAG0 = 1212003;
-   static const int TreeLoadBalancerOld_EDGETAG1 = 1212004;
-   static const int TreeLoadBalancerOld_PREBALANCE0 = 1212005;
-   static const int TreeLoadBalancerOld_PREBALANCE1 = 1212006;
+   static const int TreeLoadBalancerOld_LOADTAG0 = 1;
+   static const int TreeLoadBalancerOld_LOADTAG1 = 2;
+   static const int TreeLoadBalancerOld_EDGETAG0 = 3;
+   static const int TreeLoadBalancerOld_EDGETAG1 = 4;
+   static const int TreeLoadBalancerOld_PREBALANCE0 = 5;
+   static const int TreeLoadBalancerOld_PREBALANCE1 = 6;
    static const int TreeLoadBalancerOld_FIRSTDATALEN = 1000;
 
    static const int TreeLoadBalancerOld_MIN_NPROC_FOR_AUTOMATIC_MULTICYCLE = 65;
