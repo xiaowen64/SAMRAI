@@ -93,6 +93,8 @@ void BoxLevelStatistics::computeLocalBoxLevelStatistics(
     */
 
    sq.d_values[HAS_ANY_BOX] = (d_box_level.getLocalNumberOfBoxes() > 0);
+   sq.d_values[NUMBER_OF_CELLS] =
+      static_cast<double>(d_box_level.getLocalNumberOfCells());
    sq.d_values[NUMBER_OF_BOXES] =
       static_cast<double>(d_box_level.getLocalNumberOfBoxes());
    sq.d_values[LARGEST_DIMENSION] = 0;
@@ -246,6 +248,7 @@ void BoxLevelStatistics::printBoxStats(
 void BoxLevelStatistics::initializeCallback()
 {
    s_quantity_names[HAS_ANY_BOX] = "has any box";
+   s_quantity_names[NUMBER_OF_CELLS] = "num cells";
    s_quantity_names[NUMBER_OF_BOXES] = "num boxes";
    s_quantity_names[LARGEST_DIMENSION] = "largest dim";
    s_quantity_names[SMALLEST_DIMENSION] = "smallest dim";

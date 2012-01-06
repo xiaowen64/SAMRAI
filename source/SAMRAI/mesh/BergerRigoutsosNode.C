@@ -572,18 +572,6 @@ void BergerRigoutsosNode::setMPI(
    d_common->available_mpi_tag =
       d_common->tag_upper_bound / d_common->nproc * d_common->rank;
 
-#if 0
-   if (tbox::SAMRAI_MPI::usingMPI()) {
-      int* tag_upper_bound_ptr, flag;
-      mpi.Attr_get(MPI_TAG_UB,
-         &tag_upper_bound_ptr,
-         &flag);
-      d_common->tag_upper_bound = *tag_upper_bound_ptr;
-   } else {
-      d_common->tag_upper_bound = 1000000; // Parameter only used with MPI.
-   }
-#endif
-
    // Divide the rest into tag pools divided among all processes.
    d_common->available_mpi_tag = d_common->tag_upper_bound / d_common->nproc
       * d_common->rank;
@@ -735,15 +723,6 @@ REDUCE_HISTOGRAM:
          sub_completed = reduceHistogram_check();
          d_common->t_reduce_histogram->stop();
          if (!sub_completed) {
-#if 0
-            tbox::plog << d_comm_group->numberOfPendingRequests()
-                       << '/' << d_common->comm_stage.numberOfPendingRequests()
-                       << " requests." << std::endl;
-            if (d_comm_group->numberOfPendingRequests() == 0) {
-               tbox::perr << "Unfinished reduction without pending request: \n";
-               printDendogramState(tbox::perr, "ERR->");
-            }
-#endif
             d_wait_phase = reduce_histogram;
             goto RETURN;
          }

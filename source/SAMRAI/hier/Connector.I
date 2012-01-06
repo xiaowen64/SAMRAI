@@ -268,6 +268,7 @@ void Connector::insertLocalNeighbor(
    const Box& neighbor,
    const BoxId& box_id)
 {
+   TBOX_ASSERT( box_id.getOwnerRank() == d_mpi.getRank() );
    d_relationships.insert(box_id, neighbor);
 }
 
@@ -280,6 +281,7 @@ void Connector::insertLocalNeighbor(
    const Box& neighbor,
    NeighborhoodIterator& base_box_itr)
 {
+   TBOX_ASSERT( base_box_itr->getOwnerRank() == d_mpi.getRank() );
    d_relationships.insert(base_box_itr, neighbor);
 }
 
@@ -291,6 +293,7 @@ SAMRAI_INLINE_KEYWORD
 Connector::NeighborhoodIterator Connector::makeEmptyLocalNeighborhood(
    const BoxId& box_id)
 {
+   TBOX_ASSERT( box_id.getOwnerRank() == d_mpi.getRank() );
    return d_relationships.insert(box_id).first;
 }
 
@@ -302,6 +305,7 @@ SAMRAI_INLINE_KEYWORD
 void Connector::eraseLocalNeighborhood(
    const BoxId& box_id)
 {
+   TBOX_ASSERT( box_id.getOwnerRank() == d_mpi.getRank() );
    d_relationships.erase(box_id);
 }
 
@@ -314,6 +318,7 @@ bool Connector::hasLocalNeighbor(
    const BoxId& box_id,
    const Box& neighbor) const
 {
+   TBOX_ASSERT( box_id.getOwnerRank() == d_mpi.getRank() );
    return d_relationships.hasNeighbor(box_id, neighbor);
 }
 

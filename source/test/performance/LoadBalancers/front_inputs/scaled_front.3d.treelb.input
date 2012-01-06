@@ -13,8 +13,9 @@
 Main {
    dim = 3
 
-   base_name = "med_front.3d.treelb"
-   log_all_nodes = TRUE
+   base_name = "scaled_front.3d.treelb"
+   log_all_nodes = FALSE
+   write_visit = FALSE
 
    // Balancer types: TreeLoadBalancer, ChopAndPackLoadBalancer
    load_balancer_type = "TreeLoadBalancer"
@@ -22,28 +23,27 @@ Main {
    /*
      Specify domain as a box array in the reference index space.
    */
-   domain_boxes = [(0,0,0),(99,99,49)]
+   domain_boxes = [(0,0,0),(15,7,7)]
 
    /*
      Specify physical domain box.
    */
    xlo = 0.0, 0.0, 0.0
-   xhi = 2.0, 2.0, 1.0
+   xhi = 2.0, 1.0, 1.0
 
    /*
-     Specify L0 layer as a box array in the reference index space.
-     The L0 layer will be partitioned but its partitioning is not
-     used in the performance test.
+     Use num_procs_in_tile if you want to scale up the problem
+     size by tiling the domain.  Tiling doubles the domain
+     size one direction at a time, starting with the j-direction
+     and cycles through all directions repeatedly.
 
-     If omitted, the L0 layer is the same as the domain.
+     When tiling, we keep constant the ratio of the domain size to
+     num_procs_in_tile and double the domain as many times as needed
+     for the number of MPI processes running.  We require that the
+     number of MPI processes be a power-of-two times
+     num_procs_in_tile.
    */
-   // L0_boxes = [(0,0,0),(199,99,99)]
-
-   /*
-     If L0 is not contained in domain, you can use this flag
-     to remove the parts that are outside the domain.
-   */
-   autonest_L0 = TRUE
+   num_procs_in_tile = 8
 
    /*
      Specify ghost-cell-width between L0 and unbalanced.
@@ -52,28 +52,17 @@ Main {
 
    L1_box_gen_method = "PrebalanceBySinusoidalFront"
 
-   PrebalanceByUserBoxes {
-      /*
-        Specify unbalanced layer as a box array in the reference index space.
-
-        initial_owners are the ranks of the owners of all the initial balance boxes.
-        By default, processor 0 owns all the initial balance boxes.
-      */
-      prebalance_boxes = [(0,0,36),(36,36,36)]
-      initial_owners = 0
-   }
-
    PrebalanceBySinusoidalFront {
       /*
         Specify unbalanced layer by tagging a set of sinusoidal fronts
         oriented in perpendicular to the x-axis.
       */
-      efficiency_tol = 0.80
-      combine_tol = 0.80
-      tag_buffer = 4, 4, 4
+      efficiency_tol = 0.85
+      combine_tol = 0.85
+      tag_buffer = 2, 2, 2
       SinusoidalFrontTagger {
          init_disp = 1.0, 1.0, 1.0
-         period = 2.0, 4.0, 4.0
+         period = 8.0, 4.0, 4.0
          amplitude = 0.5
       }
       BergerRigoutsos {
@@ -89,7 +78,7 @@ Main {
    }
 
    PrebalanceByShrinkingLevel {
-      shrink_width = 10, 10, 10
+      shrink_width = 5, 5, 5
       BergerRigoutsos {
          sort_output_nodes = TRUE
          log_node_history = FALSE
@@ -105,6 +94,23 @@ Main {
 }
 
 TreeLoadBalancer {
+  report_load_balance = TRUE // Reported in main
+  n_root_cycles = -1
+  balance_penalty_wt = 1.0
+  surface_penalty_wt = 1.0
+  slender_penalty_wt = 1.0
+  precut_penalty_wt = 1.0
+
+  // Debugging options
+  check_map = FALSE
+  check_connectivity = FALSE
+  print_steps = FALSE
+  print_swap_steps = FALSE
+  print_break_steps = FALSE
+  print_edge_steps = FALSE
+}
+
+TreeLoadBalancerOld {
   report_load_balance = TRUE // Reported in main
   n_root_cycles = -1
   balance_penalty_wt = 1.0
@@ -147,7 +153,7 @@ PatchHierarchy {
       // all finer levels will use same values as level_0...
    }
    smallest_patch_size {
-      level_0 = 5,5,5
+      level_0 = 6,6,6
       // all finer levels will use same values as level_0...
    }
    ratio_to_coarser {

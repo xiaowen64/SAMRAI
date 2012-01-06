@@ -8,8 +8,8 @@
  *
  ************************************************************************/
 
-#ifndef included_mesh_TreeLoadBalancer
-#define included_mesh_TreeLoadBalancer
+#ifndef included_mesh_TreeLoadBalancerOld
+#define included_mesh_TreeLoadBalancerOld
 
 #include "SAMRAI/SAMRAI_config.h"
 #include "SAMRAI/mesh/LoadBalanceStrategy.h"
@@ -67,7 +67,7 @@ namespace mesh {
  * @see mesh::LoadBalanceStrategy
  */
 
-class TreeLoadBalancer:
+class TreeLoadBalancerOld:
    public LoadBalanceStrategy
 {
 public:
@@ -78,23 +78,23 @@ public:
     * @param[in] dim
     *
     * @param[in] name User-defined std::string identifier used for error
-    * reporting and timer names.  If omitted, "TreeLoadBalancer"
+    * reporting and timer names.  If omitted, "TreeLoadBalancerOld"
     * is used.
     *
     * @param[in] input_db (optional) database pointer providing
     * parameters from input file.  This pointer may be null indicating
     * no input is used.
     */
-   TreeLoadBalancer(
+   TreeLoadBalancerOld(
       const tbox::Dimension& dim,
-      const std::string& name = std::string("TreeLoadBalancer"),
+      const std::string& name = std::string("TreeLoadBalancerOld"),
       tbox::Pointer<tbox::Database> input_db =
          tbox::Pointer<tbox::Database>(NULL));
 
    /*!
     * @brief Virtual destructor releases all internal storage.
     */
-   virtual ~TreeLoadBalancer();
+   virtual ~TreeLoadBalancerOld();
 
    /*!
     * @brief Set the internal SAMRAI_MPI to a duplicate of the given
@@ -108,7 +108,7 @@ public:
     * communicator is that it ensures the communications for the
     * object won't accidentally interact with other communications.
     *
-    * If the duplicate SAMRAI_MPI it is set, the TreeLoadBalancer will
+    * If the duplicate SAMRAI_MPI it is set, the TreeLoadBalancerOld will
     * only balance BoxLevels with congruent SAMRAI_MPI objects and
     * will use the duplicate SAMRAI_MPI for communications.
     * Otherwise, the SAMRAI_MPI of the BoxLevel will be used.  The
@@ -232,7 +232,8 @@ private:
     * The purpose of the BoxInTransit is to associate extra data with
     * a Box as it is broken up and passed from process to process.  A
     * BoxInTransit is a Box going through these changes.  It has a
-    * current work load and an orginating Box.
+    * current work load, an orginating Box and a history of the
+    * processes it passed through.
     */
    struct BoxInTransit {
 
@@ -310,12 +311,17 @@ private:
        * @brief Put self into a int buffer.
        *
        * This is the opposite of getFromIntBuffer().  Number of ints
-       * written is given by commBufferSize().
+       * written is given by commBufferSize(), except when
+       * skip_last_owner is true.  If skip_last_owner is true, and the
+       * last owner in proc_hist will be skipped (proc_hist must be
+       * non-empty) and the number of integers put in the buffer would be
+       * commBufferSize()-1.
        *
        * @return The next unwritten position in the buffer.
        */
       int *putToIntBuffer(
-         int* buffer) const;
+         int* buffer,
+         bool skip_last_owner=false) const;
 
       /*!
        * @brief Set attributes according to data in int buffer.
@@ -328,6 +334,19 @@ private:
       const int *getFromIntBuffer(
          const int* buffer);
 
+      /*!
+       * @brief Stuff into an outgoing message destined for the previous
+       * owner.
+       *
+       * prev_owner must not be empty.
+       *
+       * @param outgoing_messages Map of outgoing messages, indexed by
+       * recipient rank.  On return, the message corresponding to the
+       * previous owner will be grown by commBufferSize()-1.
+       */
+      void packForPreviousOwner(
+         std::map<int,std::vector<int> > &outgoing_messages ) const;
+
       //! @brief The Box.
       hier::Box d_box;
 
@@ -336,6 +355,13 @@ private:
 
       //! @brief Work load.
       int d_load;
+
+      /*!
+       * @brief History of processors passed in transit.  Each time a
+       * process receives a Box, it should append its rank to the
+       * proc_hist.
+       */
+      std::vector<int> d_proc_hist;
    };
 
 
@@ -368,25 +394,25 @@ private:
     * Static integer constants.  Tags are for isolating messages
     * from different phases of the algorithm.
     */
-   static const int TreeLoadBalancer_LOADTAG0 = 1212001;
-   static const int TreeLoadBalancer_LOADTAG1 = 1212002;
-   static const int TreeLoadBalancer_EDGETAG0 = 1212003;
-   static const int TreeLoadBalancer_EDGETAG1 = 1212004;
-   static const int TreeLoadBalancer_PREBALANCE0 = 1212005;
-   static const int TreeLoadBalancer_PREBALANCE1 = 1212006;
-   static const int TreeLoadBalancer_FIRSTDATALEN = 1000;
+   static const int TreeLoadBalancerOld_LOADTAG0 = 1212001;
+   static const int TreeLoadBalancerOld_LOADTAG1 = 1212002;
+   static const int TreeLoadBalancerOld_EDGETAG0 = 1212003;
+   static const int TreeLoadBalancerOld_EDGETAG1 = 1212004;
+   static const int TreeLoadBalancerOld_PREBALANCE0 = 1212005;
+   static const int TreeLoadBalancerOld_PREBALANCE1 = 1212006;
+   static const int TreeLoadBalancerOld_FIRSTDATALEN = 1000;
 
-   static const int TreeLoadBalancer_MIN_NPROC_FOR_AUTOMATIC_MULTICYCLE = 65;
+   static const int TreeLoadBalancerOld_MIN_NPROC_FOR_AUTOMATIC_MULTICYCLE = 65;
 
    // The following are not implemented, but are provided here for
    // dumb compilers.
 
-   TreeLoadBalancer(
-      const TreeLoadBalancer&);
+   TreeLoadBalancerOld(
+      const TreeLoadBalancerOld&);
 
    void
    operator = (
-      const TreeLoadBalancer&);
+      const TreeLoadBalancerOld&);
 
    /*!
     * @brief A set of BoxInTransit, sorted from highest load to lowest load.
@@ -569,6 +595,22 @@ private:
       int received_data_length ) const;
 
    /*!
+    * @brief Unpack and route neighborhood sets in
+    * unbalanced--->balanced Connector.
+    *
+    * Neighborhood sets for local boxes are directly stored in the
+    * Connector.  Other neighborhood sets are packed into an outgoing
+    * message depending according to where they should be rerouted
+    * to get to their eventual owners.
+    */
+   void
+   unpackAndRouteNeighborhoodSets(
+      std::map<int,std::vector<int> > &outgoing_messages,
+      hier::Connector& unbalanced_to_balanced,
+      const int* received_data,
+      int received_data_length ) const;
+
+   /*!
     * @brief Construct semilocal relationships in
     * unbalanced--->balanced Connector.
     *
@@ -580,11 +622,19 @@ private:
     * @param [o] unbalanced_to_balanced Connector to store
     * relationships in.
     *
+    * @param [i] exported_to Ranks of processes that the local process
+    * exported work to.
+    *
+    * @param [i] imported_from Ranks of processes that the local
+    * process imported work from.
+    *
     * @param [i] kept_imports Work that was imported and locally kept.
     */
    void constructSemilocalUnbalancedToBalanced(
       hier::Connector &unbalanced_to_balanced,
-      const TreeLoadBalancer::TransitSet &kept_imports ) const;
+      const std::vector<int> &exported_to,
+      const std::vector<int> &imported_from,
+      const TreeLoadBalancerOld::TransitSet &kept_imports ) const;
 
    /*!
     * @brief Break off a given load size from a given Box.
@@ -924,7 +974,6 @@ private:
    tbox::Pointer<tbox::Timer> t_finish_sends;
    tbox::Pointer<tbox::Timer> t_pack_load;
    tbox::Pointer<tbox::Timer> t_unpack_load;
-   tbox::Pointer<tbox::Timer> t_pack_edge;
    tbox::Pointer<tbox::Timer> t_unpack_edge;
    tbox::Pointer<tbox::Timer> t_children_load_comm;
    tbox::Pointer<tbox::Timer> t_parent_load_comm;
@@ -956,6 +1005,6 @@ private:
 }
 }
 #ifdef SAMRAI_INLINE
-#include "SAMRAI/mesh/TreeLoadBalancer.I"
+#include "SAMRAI/mesh/TreeLoadBalancerOld.I"
 #endif
 #endif
