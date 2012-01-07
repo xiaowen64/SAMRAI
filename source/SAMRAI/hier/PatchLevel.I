@@ -39,10 +39,10 @@ bool PatchLevel::inHierarchy() const
 
 SAMRAI_INLINE_KEYWORD
 const tbox::Pointer<Patch>& PatchLevel::getPatch(
-   const GlobalId& gid,
-   const BlockId& bid) const
+   const GlobalId& gid) const
+//   const BlockId& bid) const
 {
-   BoxId mbid(gid, bid);
+   BoxId mbid(gid);
    PatchContainer::const_iterator it = d_patches.find(mbid);
    TBOX_ASSERT(it != d_patches.end());
    return it->second;

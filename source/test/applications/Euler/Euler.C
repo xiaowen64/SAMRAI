@@ -1734,11 +1734,11 @@ void Euler::boundaryReset(
    for (idir = 0; idir < d_dim.getValue(); idir++) {
       ibfirst(idir) = ifirst(idir) - 1;
       iblast(idir) = ifirst(idir) - 1;
-      bdrybox.pushBack(hier::Box(ibfirst, iblast));
+      bdrybox.pushBack(hier::Box(ibfirst, iblast, hier::BlockId(0)));
 
       ibfirst(idir) = ilast(idir) + 1;
       iblast(idir) = ilast(idir) + 1;
-      bdrybox.pushBack(hier::Box(ibfirst, iblast));
+      bdrybox.pushBack(hier::Box(ibfirst, iblast, hier::BlockId(0)));
    }
 
    hier::BoxContainer::Iterator ib(bdrybox);
@@ -2371,7 +2371,7 @@ void Euler::tagGradientDetectorCells(
        */
       if (initial_error && d_data_problem == "STEP") {
          if (error_level_number < 2) {
-            hier::Box tagbox(hier::Index(9, 0), hier::Index(9, 3));
+            hier::Box tagbox(hier::Index(9, 0), hier::Index(9, 3), hier::BlockId(0));
             if (error_level_number == 1) {
                tagbox.refine(hier::IntVector(d_dim, 2));
             }

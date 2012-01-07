@@ -227,10 +227,10 @@ void Patch::getFromDatabase(
    const LocalId patch_local_id(database->getInteger("d_patch_local_id"));
    int patch_owner = database->getInteger("d_patch_owner");
    int block_id = database->getInteger("d_block_id");
+   box.setBlockId(BlockId(block_id));
    d_mapped_box.initialize(box,
       patch_local_id,
-      patch_owner,
-      BlockId(block_id));
+      patch_owner);
 
    d_patch_level_number = database->getInteger("d_patch_level_number");
    d_patch_in_hierarchy = database->getBool("d_patch_in_hierarchy");

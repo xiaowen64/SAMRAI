@@ -196,7 +196,6 @@ void SimpleCellRobinBcCoefs::setBcCoefs(
 
    const int ln = patch.getPatchLevelNumber();
    const hier::GlobalId& global_id = patch.getGlobalId();
-   const hier::BlockId& block_id = patch.getBox().getBlockId();
    const int location_index = bdry_box.getLocationIndex();
 
    tbox::Pointer<hier::PatchData> patch_data;
@@ -226,7 +225,7 @@ void SimpleCellRobinBcCoefs::setBcCoefs(
                              << "Dirichlet coefficients.");
          }
          tbox::Pointer<hier::PatchLevel> level = d_hierarchy->getPatchLevel(ln);
-         if (!level->getPatch(global_id, block_id)->getBox().isSpatiallyEqual(patch.getBox())) {
+         if (!level->getPatch(global_id)->getBox().isSpatiallyEqual(patch.getBox())) {
             TBOX_ERROR(
                d_object_name << ": patch is not in the hierarchy\n"
                              << "of cached boundary data.\n"
@@ -329,7 +328,7 @@ void SimpleCellRobinBcCoefs::setBcCoefs(
                              << "after the hierarchy changed.\n");
          }
 #endif
-         hier::BoxId mapped_box_id(global_id, block_id);
+         hier::BoxId mapped_box_id(global_id);
 
          std::map<hier::BoxId, int> foo = d_dirichlet_data_pos[ln];
          int position = foo[mapped_box_id] + bn;
@@ -433,7 +432,7 @@ void SimpleCellRobinBcCoefs::setBcCoefs(
                              << "hierarchy changed.\n");
          }
 #endif
-         hier::BoxId mapped_box_id(global_id, block_id);
+         hier::BoxId mapped_box_id(global_id);
 
          std::map<hier::BoxId, int> foo = d_dirichlet_data_pos[ln];
          int position = foo[mapped_box_id] + bn;
@@ -522,8 +521,7 @@ void SimpleCellRobinBcCoefs::cacheDirichletData(
       for ( ; pi; pi++) {
          hier::Patch& patch = **pi;
          const hier::GlobalId& global_id = patch.getGlobalId();
-         const hier::BlockId& block_id = patch.getBox().getBlockId();
-         hier::BoxId mapped_box_id(global_id, block_id);
+         hier::BoxId mapped_box_id(global_id);
          tbox::Pointer<geom::CartesianPatchGeometry> pg =
             patch.getPatchGeometry();
          const tbox::Array<hier::BoundaryBox>& codim1_boxes =
@@ -540,8 +538,7 @@ void SimpleCellRobinBcCoefs::cacheDirichletData(
       for ( ; pi; pi++) {
          hier::Patch& patch = **pi;
          const hier::GlobalId& global_id = patch.getGlobalId();
-         const hier::BlockId& block_id = patch.getBox().getBlockId();
-         hier::BoxId mapped_box_id(global_id, block_id);
+         hier::BoxId mapped_box_id(global_id);
          tbox::Pointer<pdat::CellData<double> > cell_data =
             patch.getPatchData(dirichlet_data_id);
          tbox::Pointer<geom::CartesianPatchGeometry> pg =
@@ -592,8 +589,7 @@ void SimpleCellRobinBcCoefs::restoreDirichletData(
       for ( ; pi; pi++) {
          hier::Patch& patch = **pi;
          const hier::GlobalId& global_id = patch.getGlobalId();
-         const hier::BlockId& block_id = patch.getBox().getBlockId();
-         hier::BoxId mapped_box_id(global_id, block_id);
+         hier::BoxId mapped_box_id(global_id);
          tbox::Pointer<pdat::CellData<double> > cell_data =
             patch.getPatchData(dirichlet_data_id);
          tbox::Pointer<geom::CartesianPatchGeometry> pg =

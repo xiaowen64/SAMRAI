@@ -742,8 +742,8 @@ void TreeLoadBalancer::constrainMaxBoxSizes(
 
                const hier::Box new_box(fragment,
                                        next_available_index++,
-                                       d_mpi.getRank(),
-                                       (*ni).getBlockId());
+                                       d_mpi.getRank());
+               TBOX_ASSERT(new_box.getBlockId() == ni->getBlockId());
 
                if (d_print_break_steps) {
                   tbox::plog << "  " << new_box
@@ -3694,6 +3694,8 @@ bool TreeLoadBalancer::breakOffLoad_planar(
    double best_difference = static_cast<double>(ideal_load_to_break);
    hier::Box best_breakoff_box(dim);
    hier::Box best_leftover_box(dim);
+   best_breakoff_box.setBlockId(box.getBlockId());
+   best_leftover_box.setBlockId(box.getBlockId());
 
    for (int d = d_dim.getValue() - 1; d >= 0; --d) {
 
@@ -4051,6 +4053,7 @@ bool TreeLoadBalancer::breakOffLoad_cubic(
     * placement_impossible to true.
     */
    hier::Box breakoff_box(d_dim);
+   breakoff_box.setBlockId(box.getBlockId());
    const hier::IntVector& lower(box.lower());
    const hier::IntVector& upper(box.upper());
    bool placement_impossible = false;
@@ -4433,8 +4436,7 @@ void TreeLoadBalancer::prebalanceBoxLevel(
          hier::Box new_box(
             (*ni),
             (hier::LocalId)buffer[box_count],
-            rank_group.getMappedRank(d_mpi.getRank() % output_nproc),
-            (*ni).getBlockId());
+            rank_group.getMappedRank(d_mpi.getRank() % output_nproc));
 
          balance_to_tmp.insertLocalNeighbor(new_box, (*ni).getId());
          box_count++;

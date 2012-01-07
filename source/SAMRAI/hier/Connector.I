@@ -92,7 +92,6 @@ bool Connector::hasNeighborSet(
    const BoxNeighborhoodCollection& relationships =
       getRelations(mapped_box_id);
    BoxId non_per_id(mapped_box_id.getGlobalId(),
-                    mapped_box_id.getBlockId(),
                     PeriodicId::zero());
    ConstNeighborhoodIterator ei = relationships.find(non_per_id);
    return ei != relationships.end();
@@ -345,7 +344,6 @@ int Connector::numLocalNeighbors(
    TBOX_ASSERT(hasNeighborSet(box_id));
 
    BoxId non_per_id(box_id.getGlobalId(),
-                    box_id.getBlockId(),
                     PeriodicId::zero());
    return d_relationships.numNeighbors(non_per_id);
 }
@@ -508,7 +506,6 @@ Connector::ConstNeighborhoodIterator Connector::findLocal(
    const BoxId& box_id) const
 {
    BoxId non_per_id(box_id.getGlobalId(),
-                    box_id.getBlockId(),
                     PeriodicId::zero());
    return d_relationships.find(non_per_id);
 }
@@ -522,7 +519,6 @@ Connector::NeighborhoodIterator Connector::findLocal(
    const BoxId& box_id)
 {
    BoxId non_per_id(box_id.getGlobalId(),
-                    box_id.getBlockId(),
                     PeriodicId::zero());
    return d_relationships.find(non_per_id);
 }
@@ -537,7 +533,6 @@ Connector::ConstNeighborhoodIterator Connector::find(
 {
    const BoxNeighborhoodCollection& relationships = getRelations(box_id);
    BoxId non_per_id(box_id.getGlobalId(),
-                    box_id.getBlockId(),
                     PeriodicId::zero());
    ConstNeighborhoodIterator ei = relationships.find(non_per_id);
    if (ei == relationships.end()) {
@@ -571,7 +566,6 @@ bool Connector::neighborhoodEqual(
    const BoxNeighborhoodCollection& other_relationships =
       other.getRelations(box_id);
    BoxId non_per_id(box_id.getGlobalId(),
-                    box_id.getBlockId(),
                     PeriodicId::zero());
    return relationships.neighborhoodEqual(box_id, other_relationships);
 }

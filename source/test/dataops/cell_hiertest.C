@@ -125,10 +125,10 @@ int main(
          }
       }
 
-      hier::Box coarse0(clo0, chi0);
-      hier::Box coarse1(clo1, chi1);
-      hier::Box fine0(flo0, fhi0);
-      hier::Box fine1(flo1, fhi1);
+      hier::Box coarse0(clo0, chi0, hier::BlockId(0));
+      hier::Box coarse1(clo1, chi1, hier::BlockId(0));
+      hier::Box fine0(flo0, fhi0, hier::BlockId(0));
+      hier::Box fine1(flo1, fhi1, hier::BlockId(0));
       hier::IntVector ratio(dim, 2);
 
       coarse0.initialize(coarse0, hier::LocalId(0), 0);

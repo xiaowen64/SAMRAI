@@ -505,8 +505,7 @@ StandardTagAndInitialize::tagCellsUsingRichardsonExtrapolation(
    for (hier::PatchLevel::Iterator ip(coarser_level); ip; ip++) {
       tbox::Pointer<hier::Patch> coarse_patch = *ip;
       tbox::Pointer<hier::Patch> fine_patch =
-         patch_level->getPatch(coarse_patch->getGlobalId(),
-            coarse_patch->getBox().getBlockId());
+         patch_level->getPatch(coarse_patch->getGlobalId());
       tbox::Pointer<pdat::CellData<int> >
       ftags = fine_patch->getPatchData(tag_index);
       tbox::Pointer<pdat::CellData<int> >
@@ -580,8 +579,7 @@ StandardTagAndInitialize::tagCellsUsingRichardsonExtrapolation(
 
       tbox::Pointer<hier::Patch> coarse_patch = *ip;
       tbox::Pointer<hier::Patch> fine_patch =
-         patch_level->getPatch(coarse_patch->getGlobalId(),
-            coarse_patch->getBox().getBlockId());
+         patch_level->getPatch(coarse_patch->getGlobalId());
       copytags.refine(*fine_patch, *coarse_patch,
          tag_index, tag_index,
          fine_patch->getBox(), coarsen_ratio);

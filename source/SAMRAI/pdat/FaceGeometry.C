@@ -117,6 +117,7 @@ FaceGeometry::toFaceBox(
          face_box.lower(i) = box.lower(y);
          face_box.upper(i) = box.upper(y);
       }
+      face_box.setBlockId(box.getBlockId());
    }
 
    return face_box;
@@ -259,6 +260,7 @@ FaceGeometry::transform(
          cell_box.upper() (cell_dim) = box.upper() (d);
       }
       cell_box.upper() (normal_direction) -= 1;
+      cell_box.setBlockId(box.getBlockId());
       transformation.transform(cell_box);
       if (dim.getValue() == 2) {
          const int rotation_num = static_cast<int>(rotation);
@@ -378,6 +380,7 @@ FaceGeometry::transform(
       }
 
       box.upper() (0) += 1;
+      box.setBlockId(cell_box.getBlockId());
    }
 }
 

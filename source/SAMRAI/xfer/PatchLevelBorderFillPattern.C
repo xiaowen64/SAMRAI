@@ -107,7 +107,8 @@ void PatchLevelBorderFillPattern::computeFillBoxesAndNeighborhoodSets(
 
             offset *= (dst_mapped_box_level.getRefinementRatio());
 
-            hier::Transformation transformation(rotation, offset);
+            hier::Transformation transformation(rotation, offset,
+                                                nbr_block_id, dst_block_id);
 
             hier::Box nbr_box(*na);
             transformation.transform(nbr_box);
@@ -124,8 +125,9 @@ void PatchLevelBorderFillPattern::computeFillBoxesAndNeighborhoodSets(
          for (hier::BoxContainer::Iterator li(fill_boxes); li != fill_boxes.end(); ++li) {
             hier::Box fill_mapped_box(*li,
                                       ++last_id,
-                                      dst_mapped_box.getOwnerRank(),
-                                      dst_mapped_box.getBlockId());
+                                      dst_mapped_box.getOwnerRank());
+            TBOX_ASSERT(fill_mapped_box.getBlockId() ==
+                        dst_mapped_box.getBlockId());
             fill_mapped_boxes.addBoxWithoutUpdate(fill_mapped_box);
             dst_to_fill.insertLocalNeighbor(fill_mapped_box, base_box_itr);
          }

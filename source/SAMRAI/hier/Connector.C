@@ -665,7 +665,6 @@ void Connector::writeNeighborhoodToErrorStream(
 {
    const BoxNeighborhoodCollection& relationships = getRelations(box_id);
    BoxId non_per_id(box_id.getGlobalId(),
-                    box_id.getBlockId(),
                     PeriodicId::zero());
    ConstNeighborhoodIterator ei = relationships.find(non_per_id);
    if (ei == relationships.end()) {
@@ -758,7 +757,6 @@ void Connector::initializeToLocalTranspose(
             if (getHead().hasBox(my_shifted_head_mapped_box)) {
                BoxId base_non_per_id(
                   my_base_mapped_box.getGlobalId(),
-                  my_base_mapped_box.getBlockId(),
                   PeriodicId::zero());
                d_relationships.insert(
                   base_non_per_id,
@@ -1211,7 +1209,6 @@ size_t Connector::checkTransposeCorrectness(
           * Key for find in NeighborhoodSet must be non-periodic.
           */
          BoxId non_per_nabr_id(nabr.getGlobalId(),
-                               nabr.getBlockId(),
                                PeriodicId::zero());
 
          ConstNeighborhoodIterator cn =
@@ -1323,7 +1320,6 @@ size_t Connector::checkTransposeCorrectness(
              * Non-periodic BoxId needed for NeighborhoodSet::find()
              */
             BoxId base_non_per_id(base_mapped_box.getGlobalId(),
-                                  base_mapped_box.getBlockId(),
                                   PeriodicId::zero());
 
             if (!d_relationships.isBaseBox(base_non_per_id)) {
@@ -1345,7 +1341,6 @@ size_t Connector::checkTransposeCorrectness(
             }
 
             const Box nabr_nabr(dim, mapped_box_id.getGlobalId(),
-                                head_mapped_box.getBlockId(),
                                 shift_catalog->getOppositeShiftNumber(
                                    base_mapped_box.getPeriodicId()));
 
@@ -1590,7 +1585,6 @@ void Connector::getNeighborBoxes(
 {
    const BoxNeighborhoodCollection& relationships = getRelations(box_id);
    BoxId non_per_id(box_id.getGlobalId(),
-                    box_id.getBlockId(),
                     PeriodicId::zero());
    relationships.getNeighbors(non_per_id, nbr_boxes);
 }

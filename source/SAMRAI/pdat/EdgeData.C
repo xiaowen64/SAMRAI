@@ -163,10 +163,11 @@ void EdgeData<TYPE>::copy(
       if (t_overlap->getTransformation().getRotation() ==
           hier::Transformation::NO_ROTATE) {
 
-         const hier::IntVector& src_offset = t_overlap->getSourceOffset();
+         const hier::Transformation& transformation =
+            t_overlap->getTransformation();
          for (int d = 0; d < getDim().getValue(); d++) {
             const hier::BoxContainer& box_list = t_overlap->getDestinationBoxContainer(d);
-            d_data[d].copy(t_src->d_data[d], box_list, src_offset);
+            d_data[d].copy(t_src->d_data[d], box_list, transformation);
          }
       } else {
          copyWithRotation(*t_src, *t_overlap);
@@ -224,10 +225,13 @@ void EdgeData<TYPE>::copyWithRotation(
    hier::Transformation::calculateReverseShift(
       back_shift, shift, rotate);
 
-   hier::Transformation back_trans(back_rotate, back_shift);
-
    hier::Box rotatebox(src.getGhostBox());
    overlap.getTransformation().transform(rotatebox);
+
+   hier::Transformation back_trans(back_rotate, back_shift,
+                                   rotatebox.getBlockId(),
+                                   getBox().getBlockId());
+
 
    for (int i = 0; i < dim.getValue(); i++) {
       const hier::BoxContainer& overlap_boxes = overlap.getDestinationBoxContainer(i);
@@ -341,11 +345,11 @@ void EdgeData<TYPE>::packStream(
    if (t_overlap->getTransformation().getRotation() ==
        hier::Transformation::NO_ROTATE) {
 
-      const hier::IntVector& offset = t_overlap->getSourceOffset();
+      const hier::Transformation& transformation = t_overlap->getTransformation();
       for (int d = 0; d < getDim().getValue(); d++) {
          const hier::BoxContainer& boxes = t_overlap->getDestinationBoxContainer(d);
          if (boxes.size() > 0) {
-            d_data[d].packStream(stream, boxes, offset);
+            d_data[d].packStream(stream, boxes, transformation);
          }
       }
    } else {
@@ -375,10 +379,12 @@ void EdgeData<TYPE>::packWithRotation(
    hier::Transformation::calculateReverseShift(
       back_shift, shift, rotate);
 
-   hier::Transformation back_trans(back_rotate, back_shift);
-
    hier::Box rotatebox(getGhostBox());
    overlap.getTransformation().transform(rotatebox);
+
+   hier::Transformation back_trans(back_rotate, back_shift,
+                                   rotatebox.getBlockId(),
+                                   getBox().getBlockId());
 
    const int depth = getDepth();
 

@@ -132,7 +132,7 @@ void MultiblockGriddingTagger::fillSingularityBoundaryConditions(
 
    const hier::BoxId& dst_mb_id = patch.getBox().getId();
 
-   const hier::BlockId& patch_blk_id = dst_mb_id.getBlockId();
+   const hier::BlockId& patch_blk_id = patch.getBox().getBlockId();
 
    const tbox::Pointer<pdat::CellData<int> > tag_data =
       patch.getPatchData(d_buf_tag_indx);
@@ -174,7 +174,8 @@ void MultiblockGriddingTagger::fillSingularityBoundaryConditions(
 
             offset *= patch.getPatchGeometry()->getRatio();
 
-            hier::Transformation transformation(rotation, offset);
+            hier::Transformation transformation(
+               rotation, offset, encon_blk_id, patch_blk_id);
             hier::Box encon_patch_box(encon_patch->getBox());
             transformation.transform(encon_patch_box);
 
@@ -190,7 +191,10 @@ void MultiblockGriddingTagger::fillSingularityBoundaryConditions(
                hier::Transformation::calculateReverseShift(
                   back_shift, offset, rotation);
 
-               hier::Transformation back_trans(back_rotate, back_shift);
+               hier::Transformation back_trans(back_rotate, back_shift,
+                                               encon_fill_box.getBlockId(),
+                                               encon_patch->getBox().getBlockId()); 
+                                               
 
                tbox::Pointer<pdat::CellData<int> > sing_data(
                   encon_patch->getPatchData(d_buf_tag_indx));

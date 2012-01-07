@@ -86,7 +86,7 @@ int main(
          box_upper(d) = (d + 4) * 3;
       }
 
-      hier::Box box(box_lower, box_upper);
+      hier::Box box(box_lower, box_upper, hier::BlockId(0));
 
       pdat::CellData<double> cell_data(box, 1, hier::IntVector(dim, 0));
       pdat::FaceData<double> face_data(box, 1, hier::IntVector(dim, 0));

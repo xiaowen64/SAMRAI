@@ -103,7 +103,8 @@ public:
     */
    explicit BergerRigoutsosNode(
       const tbox::Dimension& dim,
-      const hier::BlockId& block_id);
+      const hier::BlockId& block_id,
+      const hier::LocalId& first_local_id);
 
    /*!
     * @brief Destructor.
@@ -548,7 +549,8 @@ public:
       CommonParams* common_params,
       mesh::BergerRigoutsosNode* parent,
       const int child_number,
-      const hier::BlockId& block_id);
+      const hier::BlockId& block_id, 
+      const hier::LocalId& first_local_id);
 
    /*
     * @brief Duplicate given MPI communicator for private use
@@ -970,6 +972,7 @@ public:
    //@}
 
    hier::BlockId d_block_id;
+   hier::LocalId d_first_local_id;
 
    //@{
    //! @name Deubgging aid

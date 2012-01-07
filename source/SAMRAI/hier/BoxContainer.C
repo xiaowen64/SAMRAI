@@ -151,6 +151,7 @@ BoxContainer::insert(
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(box.getId().isValid());
+   TBOX_ASSERT(box.getBlockId() != BlockId::invalidId());
    if (size() > 0) {
       TBOX_DIM_ASSERT_CHECK_ARGS2(front(), box);
    }
@@ -251,12 +252,21 @@ void BoxContainer::insert ( ConstIterator first,
  */
 void BoxContainer::simplify()
 {
+   if (d_ordered) {
+      TBOX_ERROR("simplify called on ordered BoxContainer.");
+   }
+
+#ifdef DEBUG_CHECK_ASSERTIONS
+   if (size() > 0) {
+      const hier::BlockId& front_block_id = front().getBlockId();
+      for (ConstIterator itr = begin(); itr != end(); ++itr) {
+         TBOX_ASSERT(itr->getBlockId() == front_block_id);
+      }
+   }
+#endif
+
    // Start coalescing on the highest dimension of the containers and work down
    // While there are non-canonical boxes, pick somebody out of the container.
-
-   if (d_ordered) {
-      TBOX_ERROR("simplify called on ordered BoxContainer."); 
-   }
 
    if (!isEmpty()) {
       const tbox::Dimension dim(d_list.front().getDim());
@@ -333,7 +343,7 @@ void BoxContainer::simplify()
                   if (bh(d) > ih(d)) {
                      ih(d) = bh(d);
                   }
-                  Box intersection(il, ih);
+                  Box intersection(il, ih, tryMe.getBlockId());
                   notCanonical.pushFront(intersection);
                   if (d > 0) {
                      notCanonical.burstBoxes(tryMe, intersection, d);
@@ -364,6 +374,15 @@ void BoxContainer::simplify()
  */
 void BoxContainer::coalesce()
 {
+#ifdef DEBUG_CHECK_ASSERTIONS
+   if (size() > 0) {
+      const hier::BlockId& front_block_id = front().getBlockId();
+      for (ConstIterator itr = begin(); itr != end(); ++itr) {
+         TBOX_ASSERT(itr->getBlockId() == front_block_id);
+      }
+   }
+#endif
+
    if (d_ordered) {
       TBOX_ERROR("coalesce called on ordered BoxContainer.");
    }
@@ -459,10 +478,6 @@ void BoxContainer::separatePeriodicImages(
 void BoxContainer::rotate(
    const Transformation::RotationIdentifier rotation_ident)
 {
-   if (d_ordered) {
-      TBOX_ERROR("Rotate attempted on ordered container.");
-   }
- 
    if (!isEmpty()) {
       const tbox::Dimension& dim = d_list.front().getDim();
       const hier::BlockId& block_id = d_list.front().getBlockId();
@@ -988,6 +1003,7 @@ void BoxContainer::burstBoxes(
    Index bursth = bursty.upper();
    const Index& solidl = solid.lower();
    const Index& solidh = solid.upper();
+   const BlockId& block_id = bursty.getBlockId();
 
    // Break bursty region against solid region along low dimensions first
 
@@ -995,13 +1011,13 @@ void BoxContainer::burstBoxes(
       if (bursth(d) > solidh(d)) {
          Index newl = burstl;
          newl(d) = solidh(d) + 1;
-         pushBack(Box(Box(newl, bursth), LocalId::getInvalidId(), bursty.getOwnerRank(), bursty.getBlockId()));
+         pushBack(Box(newl, bursth, block_id));
          bursth(d) = solidh(d);
       }
       if (burstl(d) < solidl(d)) {
          Index newh = bursth;
          newh(d) = solidl(d) - 1;
-         pushBack(Box(Box(burstl, newh), LocalId::getInvalidId(), bursty.getOwnerRank(), bursty.getBlockId()));
+         pushBack(Box(burstl, newh, block_id));
          burstl(d) = solidl(d);
       }
    }
@@ -1033,6 +1049,7 @@ void BoxContainer::burstBoxes(
    Index bursth = bursty.upper();
    const Index& solidl = solid.lower();
    const Index& solidh = solid.upper();
+   const BlockId& block_id = bursty.getBlockId();
 
    // Break bursty region against solid region along low dimensions first
 
@@ -1040,14 +1057,14 @@ void BoxContainer::burstBoxes(
       if (bursth(d) > solidh(d)) {
          Index newl = burstl;
          newl(d) = solidh(d) + 1;
-         insertAfter(insertion_pt, Box(Box(newl, bursth), LocalId::getInvalidId(), bursty.getOwnerRank(), bursty.getBlockId()));
+         insertAfter(insertion_pt, Box(newl, bursth, block_id));
          bursth(d) = solidh(d);
          ++insertion_pt;
       }
       if (burstl(d) < solidl(d)) {
          Index newh = bursth;
          newh(d) = solidl(d) - 1;
-         insertAfter(insertion_pt, Box(Box(burstl, newh), LocalId::getInvalidId(), bursty.getOwnerRank(), bursty.getBlockId()));
+         insertAfter(insertion_pt, Box(burstl, newh, block_id));
          burstl(d) = solidl(d);
          ++insertion_pt;
       }
@@ -1147,9 +1164,6 @@ void BoxContainer::unorder()
    if (d_ordered) {
       d_set.clear();
       d_ordered = false;
-      for (Iterator i(*this); i != end(); ++i) {
-         i->unlockId();
-      }
    }
 }
 
@@ -1362,11 +1376,11 @@ void BoxContainer::getFromDatabase(
 
       for (unsigned int i = 0; i < mbs_size; ++i) {
          Box box(db_box_array[i]);
+         box.setBlockId(BlockId(block_ids[i]));
          Box mapped_box(
             box,
             LocalId(local_ids[i]),
             ranks[i],
-            BlockId(block_ids[i]),
             PeriodicId(periodic_ids[i]));
          insert(end(), mapped_box);
       }

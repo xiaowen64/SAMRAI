@@ -812,7 +812,8 @@ void CoarsenSchedule::constructScheduleTransactions(
 
       offset *= d_crse_level->getRatioToLevelZero();
 
-      transformation = hier::Transformation(rotation, offset);
+      transformation = hier::Transformation(rotation, offset,
+                                            src_block_id, dst_block_id);
       transformation.transform(transformed_src_box);
 
 #ifdef DEBUG_CHECK_ASSERTIONS
@@ -933,8 +934,7 @@ void CoarsenSchedule::coarsenSourceData(
    for (hier::PatchLevel::Iterator p(d_fine_level); p; p++) {
       tbox::Pointer<hier::Patch> fine_patch = *p;
       tbox::Pointer<hier::Patch> temp_patch =
-         d_temp_crse_level->getPatch(fine_patch->getGlobalId(),
-            fine_patch->getBox().getBlockId());
+         d_temp_crse_level->getPatch(fine_patch->getGlobalId());
 
       const hier::Box& box = temp_patch->getBox();
 

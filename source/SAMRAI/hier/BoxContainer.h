@@ -545,12 +545,6 @@ public:
    /*!
     * @brief Rotate boxes in container according to a RotationIdentifier
     *
-    * Can only be called on an unordered container.  The reason it may
-    * not be called on an ordered container is that it rotates the  
-    * Boxes' spatial indices to a different coordinate system but does not
-    * update their BlockId.  A run-time error will occur if called on a
-    * container with member Boxes having different BlockId values.
-    *
     * @note Works only in 2D or 3D.
     *
     * @param[in] rotation_ident

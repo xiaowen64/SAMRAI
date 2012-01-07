@@ -32,7 +32,6 @@ std::ostream& operator << (
    const BoxId& r)
 {
    co << r.d_global_id.getOwnerRank()
-   << ':' << r.d_block_id
    << '#' << r.d_global_id.getLocalId()
    << '/' << r.d_periodic_id;
    return co;

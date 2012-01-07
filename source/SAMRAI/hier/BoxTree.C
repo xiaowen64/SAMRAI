@@ -251,7 +251,8 @@ BoxTree::BoxTree(
          d_mapped_boxes.order();
          LocalId count(-1);
          for (BoxContainer::ConstIterator li(boxes); li != boxes.end(); ++li) {
-            const Box n(*li, ++count, 0, d_block_id);
+            Box n(*li, ++count, 0);
+            n.setBlockId(block_id); 
             d_mapped_boxes.insert(d_mapped_boxes.end(), n);
          }
       }
@@ -290,7 +291,8 @@ BoxTree::BoxTree(
          if (boxes.isOrdered()) {
             mapped_box = *li;
          } else {
-            mapped_box.initialize(*li, ++count, 0, d_block_id);
+            mapped_box.initialize(*li, ++count, 0);
+            TBOX_ASSERT(mapped_box.getBlockId() == d_block_id);
          }
          if (mapped_box.upper(d_partition_dim) <= midpoint) {
             left_mapped_boxes.pushBack(mapped_box);

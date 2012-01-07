@@ -246,8 +246,7 @@ public:
     */
    const tbox::Pointer<Patch>&
    getPatch(
-      const GlobalId& gid,
-      const BlockId& bid) const;
+      const GlobalId& gid) const;
 
    /*!
     * @brief Get a Patch based on its BoxId.

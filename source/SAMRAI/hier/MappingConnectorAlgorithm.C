@@ -1017,7 +1017,7 @@ void MappingConnectorAlgorithm::privateModify_removeAndCache(
                   ++mesg[0];
                }
                mesg.insert(mesg.end(), old_gid_gone.getLocalId().getValue());
-               mesg.insert(mesg.end(), old_gid_gone.getBlockId().getBlockValue());
+               mesg.insert(mesg.end(), -1);
                int i_count = static_cast<int>(mesg.size());
                mesg.insert(mesg.end(), 0);
                do {
@@ -1108,7 +1108,7 @@ void MappingConnectorAlgorithm::privateModify_discoverAndSend(
        * highest of all owners of the visible Boxes, start at
        * the begining.)
        */
-      const Box start_loop_here(dim, LocalId::getZero(), rank + 1);
+      const Box start_loop_here(dim, GlobalId(LocalId::getZero(), rank + 1));
       BoxContainer::Iterator anchor_ni =
          visible_anchor_nabrs.lowerBound(start_loop_here);
       BoxContainer::Iterator new_ni =

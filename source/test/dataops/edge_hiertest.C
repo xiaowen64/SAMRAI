@@ -102,10 +102,10 @@ int main(
       double lo[2] = { 0.0, 0.0 };
       double hi[2] = { 1.0, 0.5 };
 
-      hier::Box coarse0(hier::Index(0, 0), hier::Index(9, 2));
-      hier::Box coarse1(hier::Index(0, 3), hier::Index(9, 4));
-      hier::Box fine0(hier::Index(4, 4), hier::Index(7, 7));
-      hier::Box fine1(hier::Index(8, 4), hier::Index(13, 7));
+      hier::Box coarse0(hier::Index(0, 0), hier::Index(9, 2), hier::BlockId(0));
+      hier::Box coarse1(hier::Index(0, 3), hier::Index(9, 4), hier::BlockId(0));
+      hier::Box fine0(hier::Index(4, 4), hier::Index(7, 7), hier::BlockId(0));
+      hier::Box fine1(hier::Index(8, 4), hier::Index(13, 7), hier::BlockId(0));
       hier::IntVector ratio(dim2d, 2);
 
       coarse0.initialize(coarse0, hier::LocalId(0), 0);

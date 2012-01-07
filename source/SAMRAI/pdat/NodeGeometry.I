@@ -27,7 +27,9 @@ SAMRAI_INLINE_KEYWORD
 hier::Box NodeGeometry::toNodeBox(
    const hier::Box& box)
 {
-   return box.empty() ? box : hier::Box(box.lower(), box.upper() + 1);
+   return box.empty() ?
+          box :
+          hier::Box(box.lower(), box.upper() + 1, box.getBlockId());
 }
 
 }

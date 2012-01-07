@@ -377,7 +377,7 @@ void generateBoxesUniform(
       for (e = 0; e < boxrepeat(0); ++e) {
          lower(0) = e * boxsize(0);
          upper(0) = lower(0) + boxsize(0) - 1;
-         output.insert(output.end(), hier::Box(lower, upper));
+         output.insert(output.end(), hier::Box(lower, upper, hier::BlockId(0)));
       }
       for (int d = 0; d < dim.getValue(); ++d) {
          if (index(d) == boxrepeat(d) && d < dim.getValue() - 1) {

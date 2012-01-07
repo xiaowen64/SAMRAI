@@ -281,7 +281,7 @@ void BaseConnectorAlgorithm::unpackDiscoveryMessage(
       const LocalId id_gone(*(ptr++));
       const BlockId block_id_gone(*(ptr++));
       const int number_affected = *(ptr++);
-      const Box box_gone(dim, id_gone, sender, block_id_gone);
+      const Box box_gone(dim, GlobalId(id_gone, sender));
       if (s_print_steps == 'y') {
          tbox::plog << "Box " << box_gone
                     << " removed, affecting " << number_affected
@@ -291,7 +291,7 @@ void BaseConnectorAlgorithm::unpackDiscoveryMessage(
       for (int iii = 0; iii < number_affected; ++iii) {
          const LocalId id_affected(*(ptr++));
          const BlockId block_id_affected(*(ptr++));
-         BoxId affected_nbrhd(id_affected, rank, block_id_affected);
+         BoxId affected_nbrhd(id_affected, rank);
          if (s_print_steps == 'y') {
             tbox::plog << " Removing " << box_gone
                        << " from nabr list for " << id_affected
@@ -362,14 +362,16 @@ void BaseConnectorAlgorithm::unpackDiscoveryMessage(
    for (int ii = 0; ii < n_new_base_boxes; ++ii) {
       const LocalId local_id(*(ptr++));
       const BlockId block_id(*(ptr++));
-      const BoxId new_base_box_id(local_id, rank, block_id);
+      const BoxId new_base_box_id(local_id, rank);
       const int n_new_head_nabrs_found = *(ptr++);
       // Add received neighbors to Box new_base_box_id.
       if (n_new_head_nabrs_found > 0) {
          Connector::NeighborhoodIterator base_box_itr =
             new_base_to_new_head.makeEmptyLocalNeighborhood(new_base_box_id);
+         hier::BoxId box_id;
          for (int j = 0; j < n_new_head_nabrs_found; ++j) {
-            tmp_box.getId().getFromIntBuffer(ptr);
+            box_id.getFromIntBuffer(ptr);
+            tmp_box.setId(box_id);
             ptr += BoxId::commBufferSize();
             BoxContainer::ConstIterator na =
                referenced_new_head_nabrs.find(tmp_box);
@@ -384,14 +386,16 @@ void BaseConnectorAlgorithm::unpackDiscoveryMessage(
    for (int ii = 0; ii < n_new_head_boxes; ++ii) {
       const LocalId local_id(*(ptr++));
       const BlockId block_id(*(ptr++));
-      const BoxId new_head_box_id(local_id, rank, block_id);
+      const BoxId new_head_box_id(local_id, rank);
       const int n_new_base_nabrs_found = *(ptr++);
       // Add received neighbors to Box new_head_box_id.
       if (n_new_base_nabrs_found > 0) {
          Connector::NeighborhoodIterator base_box_itr =
             new_head_to_new_base->makeEmptyLocalNeighborhood(new_head_box_id);
+         hier::BoxId box_id;
          for (int j = 0; j < n_new_base_nabrs_found; ++j) {
-            tmp_box.getId().getFromIntBuffer(ptr);
+            box_id.getFromIntBuffer(ptr);
+            tmp_box.setId(box_id);
             ptr += BoxId::commBufferSize();
             BoxContainer::ConstIterator na =
                referenced_new_base_nabrs.find(tmp_box);

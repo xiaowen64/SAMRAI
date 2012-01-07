@@ -454,7 +454,7 @@ void BoxUtilities::chopBox(
 #endif
                   ihi(id) = cut_val - 1;
                   if ((ilo(id) < cut_val) && (ihi(id) <= boxhi(id))) {
-                     Box new_box(ilo, ihi);
+                     Box new_box(ilo, ihi, box.getBlockId());
                      tmp_boxes.pushBack(new_box);
                      ilo(id) = cut_val;
                   }
@@ -462,7 +462,7 @@ void BoxUtilities::chopBox(
                }
 
                ihi(id) = chop_box.upper(id);
-               Box last_box(ilo, ihi);
+               Box last_box(ilo, ihi, box.getBlockId());
                tmp_boxes.pushBack(last_box);
 
             } else {

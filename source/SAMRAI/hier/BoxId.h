@@ -16,28 +16,22 @@
 #include "SAMRAI/SAMRAI_config.h"
 
 #include "SAMRAI/hier/GlobalId.h"
-#include "SAMRAI/hier/BlockId.h"
 #include "SAMRAI/hier/PeriodicId.h"
 
 namespace SAMRAI {
 namespace hier {
 
 /*!
- * @brief Identifier for a Box, consisting of a GlobalId,
- * a BlockId and a PeriodicId.
+ * @brief Identifier for a Box, consisting of a GlobalId and a PeriodicId
  *
- * Boxes are identified by their BlockId, GlobalId and
- * PeriodicId.  SAMRAI does not support multiblock periodic domains so
- * either the BlockId must be zero or the PeriodicId must be zero, or
- * both.
- *
+ * Boxes are identified by their GlobalId and PeriodicId.
  * A Box and all its periodic images have the same GlobalId but
  * different PeriodicId.
  *
  * Comparison operators are provided to define sorted ordering of
- * objects.  The BlockId, GlobalId and PeriodicId are used for all
- * comparisons.  The BlockIds are compared first, then GlobalIds,
- * followed by the PeriodicId.
+ * objects.  The GlobalId and PeriodicId are used for all
+ * comparisons.  The GlobalIds are compared first, followed by
+ * the PeriodicIds.
  */
 class BoxId
 {
@@ -45,7 +39,7 @@ class BoxId
 public:
    /*!
     * @brief Default constructor uses the default constructors for the
-    * BlockId, GlobalId and PeriodicId.
+    * GlobalId and PeriodicId.
     *
     * The object can be changed using initialize() or by assignment.
     */
@@ -58,14 +52,11 @@ public:
     *
     * @param[in] owner_rank
     *
-    * @param[in] block_id
-    *
     * @param[in] periodic_id
     */
    explicit BoxId(
       const LocalId& local_id,
       const int owner_rank,
-      const BlockId& block_id = BlockId::zero(),
       const PeriodicId& periodic_id = PeriodicId::zero());
 
    /*!
@@ -73,13 +64,10 @@ public:
     *
     * @param[in] global_id
     *
-    * @param[in] block_id
-    *
     * @param[in] periodic_id
     */
    explicit BoxId(
       const GlobalId& id,
-      const BlockId& block_id = BlockId::zero(),
       const PeriodicId& periodic_id = PeriodicId::zero());
 
    /*!
@@ -102,15 +90,12 @@ public:
     *
     * @param[in] owner_rank
     *
-    * @param[in] block_id
-    *
     * @param[in] periodic_id
     */
    void
    initialize(
       const LocalId& local_id,
       const int owner_rank,
-      const BlockId& block_id = BlockId::zero(),
       const PeriodicId& periodic_id = PeriodicId::zero());
 
    /*!
@@ -133,12 +118,6 @@ public:
    getLocalId() const;
 
    /*!
-    * @brief Access the BlockId.
-    */
-   const BlockId&
-   getBlockId() const;
-
-   /*!
     * @brief Access the PeriodicId.
     */
    const PeriodicId&
@@ -152,8 +131,8 @@ public:
    isPeriodicImage() const;
 
    /*!
-    * @brief Whether the BoxId is valid--meaning it has a valid BlockId,
-    * GlobalId, and PeriodicId.
+    * @brief Whether the BoxId is valid--meaning it has a valid
+    * GlobalId and PeriodicId.
     */ 
    bool
    isValid() const;
@@ -165,8 +144,7 @@ public:
    /*!
     * @brief Equality operator.
     *
-    * All comparison operators use the BlockId, GlobalId and
-    * PeriodicId.
+    * All comparison operators use the GlobalId and PeriodicId.
     */
    bool
    operator == (
@@ -184,9 +162,8 @@ public:
    /*!
     * @brief Less-than operator.
     *
-    * Compare the owner ranks first; if they compare equal, compare
-    * the BlockIds next; if they compare equal, compare the LocalId
-    * next; if they compare equal, compare the PeriodicIds.
+    * Compare the owner ranks first; if they compare equal, compare the
+    * LocalIds next; if they compare equal, compare the PeriodicIds.
     */
    bool
    operator < (
@@ -195,9 +172,8 @@ public:
    /*!
     * @brief Greater-than operator.
     *
-    * Compare the owner ranks first; if they compare equal, compare
-    * the BlockIds next; if they compare equal, compare the LocalId
-    * next; if they compare equal, compare the PeriodicIds.
+    * Compare the owner ranks first; if they compare equal, compare the
+    * LocalIds next; if they compare equal, compare the PeriodicIds.
     */
    bool
    operator > (
@@ -264,8 +240,6 @@ public:
 
 private:
    GlobalId d_global_id;
-
-   BlockId d_block_id;
 
    PeriodicId d_periodic_id;
 };

@@ -238,7 +238,7 @@ void GridGeometry::computeBoundaryBoxesOnLevel(
    for (PatchLevel::Iterator ip(&level); ip; ip++) {
       tbox::Pointer<Patch> patch = *ip;
       const BoxId& patch_id = patch->getBox().getId();
-      const int block_num = patch_id.getBlockId().getBlockValue();
+      const int block_num = patch->getBox().getBlockId().getBlockValue();
 
       if (patch->getPatchGeometry()->getTouchesRegularBoundary() ||
           do_all_patches) {
@@ -731,7 +731,8 @@ void GridGeometry::getFromRestart()
 
       for (BoxContainer::Iterator itr = block_domain_boxes.begin();
            itr != block_domain_boxes.end(); ++itr) {
-         Box box(*itr, local_id++, 0, BlockId(b));
+         Box box(*itr, local_id++, 0);
+         box.setBlockId(BlockId(b));
          domain.pushBack(box);
       }
    }
@@ -794,7 +795,8 @@ void GridGeometry::getFromInput(
 
          for (BoxContainer::Iterator itr = block_domain_boxes.begin();
               itr != block_domain_boxes.end(); ++itr) {
-            Box box(*itr, local_id++, 0, BlockId(b));
+            Box box(*itr, local_id++, 0);
+            box.setBlockId(BlockId(b));
             domain.pushBack(box);
          }
 
@@ -1416,7 +1418,8 @@ void GridGeometry::setPhysicalDomain(
       bounding_cntnr.removeIntersections(block_domain);
       if (bounding_cntnr.size() == 0) {
          d_domain_is_single_box[b] = true;
-         Box box(bounding_box, local_id++, 0, block_id);
+         Box box(bounding_box, local_id++, 0);
+         box.setBlockId(block_id);
          d_physical_domain.pushBack(box);
       } else {
          d_domain_is_single_box[b] = false;
@@ -1802,6 +1805,7 @@ void GridGeometry::readBlockDataFromInput(
             + tbox::Utilities::intToString(block_number);
 
          Box sing_box(sing_db->getDatabaseBox(block_box_name));
+         sing_box.setBlockId(BlockId(block_number));
 
          d_singularity[block_number].pushFront(sing_box);
 
@@ -1843,8 +1847,8 @@ void GridGeometry::readBlockDataFromInput(
             a_index(p) = a_array[p];
          }
 
-         Box b_box(b_index, b_index);
-         Box a_box(a_index, a_index);
+         Box b_box(b_index, b_index, block_b);
+         Box a_box(a_index, a_index, block_a);
 
          b_box.rotate(rotation_b_to_a);
          Index b_rotated_point(b_box.lower());
@@ -1953,20 +1957,19 @@ void GridGeometry::registerNeighbors(
    b_domain_in_a_space.shift(shift);
    a_domain_in_b_space.shift(back_shift);
 
-   //TODO:  This needs to be simplfied when there is a setBlockId() method
-   for (hier::BoxContainer::Iterator itr = b_domain_in_a_space.begin();
-        itr !=  b_domain_in_a_space.end(); ++itr) {
-      itr->initialize(*itr, itr->getLocalId(), itr->getOwnerRank(), block_a);
-   } 
+   for (BoxContainer::Iterator itr = b_domain_in_a_space.begin();
+        itr != b_domain_in_a_space.end(); ++itr) {
+      itr->setBlockId(block_a);
+   }
+   for (BoxContainer::Iterator itr = a_domain_in_b_space.begin();
+        itr != a_domain_in_b_space.end(); ++itr) {
+      itr->setBlockId(block_b);
+   }
 
-   for (hier::BoxContainer::Iterator itr = a_domain_in_b_space.begin();
-        itr !=  a_domain_in_b_space.end(); ++itr) {
-      itr->initialize(*itr, itr->getLocalId(), itr->getOwnerRank(), block_b);
-   } 
+   Transformation transformation(rotation, shift, block_b, block_a);
+   Transformation back_transformation(back_rotation, back_shift,
+                                      block_a, block_b);
 
-
-   Transformation transformation(rotation, shift);
-   Transformation back_transformation(back_rotation, back_shift);
    Neighbor neighbor_of_b(block_a, a_domain_in_b_space,
                           back_transformation,
                           is_singularity);
@@ -2006,6 +2009,7 @@ GridGeometry::transformBox(
          IntVector refined_shift = (ni().getShift()) * (ratio);
          box.rotate(ni().getRotationIdentifier());
          box.shift(refined_shift);
+         box.setBlockId(output_block);
          return true;
       }
    }
@@ -2035,6 +2039,10 @@ GridGeometry::transformBoxContainer(
          IntVector refined_shift = (ni().getShift()) * (ratio);
          boxes.rotate(ni().getRotationIdentifier());
          boxes.shift(refined_shift);
+         for (BoxContainer::Iterator itr = boxes.begin(); itr != boxes.end();
+              ++itr) {
+            itr->setBlockId(output_block);
+         }
          return true;
       }
    }

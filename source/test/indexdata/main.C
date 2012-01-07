@@ -137,7 +137,7 @@ int main(
 
       Index box_lo = Index(dim, 0);
       Index box_hi = Index(dim, 100);
-      Box box(box_lo, box_hi);
+      Box box(box_lo, box_hi, BlockId(0));
 
       srand(1);
 
@@ -285,7 +285,7 @@ int main(
          v[1] = 5;
          Index hi(v);
 
-         Box box1(lo, hi);
+         Box box1(lo, hi, BlockId(0));
          for (Box::Iterator bi(box1); bi; bi++) {
 
             Index idx = bi();
@@ -312,7 +312,7 @@ int main(
          v[1] = 1;
          Index hi(v);
 
-         Box box1(lo, hi);
+         Box box1(lo, hi, BlockId(0));
          for (Box::Iterator bi(box1); bi; bi++) {
 
             Index idx = bi();
@@ -342,7 +342,7 @@ int main(
          v[1] = 1;
          Index hi(v);
 
-         Box box1(lo, hi);
+         Box box1(lo, hi, BlockId(0));
          for (Box::Iterator bi(box1); bi; bi++) {
             src.addItemPointer(bi(), new Item);
          }
@@ -368,7 +368,7 @@ int main(
          v[1] = 2;
          Index hi_src(v);
 
-         Box box_src(lo_src, hi_src);
+         Box box_src(lo_src, hi_src, BlockId(0));
          IndexData<Item, pdat::CellGeometry> src(box_src, ghosts);
 
          // Two of these three items should end up in dst
@@ -393,7 +393,7 @@ int main(
          v[0] = 3;
          v[1] = 3;
          Index hi_dst(v);
-         Box box_dst(lo_dst, hi_dst);
+         Box box_dst(lo_dst, hi_dst, BlockId(0));
 
          IndexData<Item, pdat::CellGeometry> dst(box_dst, ghosts);
 
@@ -441,7 +441,7 @@ int main(
          v[0] = 2;
          v[1] = 2;
          Index hi_src(v);
-         Box box_src(lo_src, hi_src);
+         Box box_src(lo_src, hi_src, BlockId(0));
          IndexData<Item, pdat::CellGeometry> src(box_src, ghosts);
 
          // Two of these three items should end up in dst
@@ -467,7 +467,7 @@ int main(
          v[0] = 2;
          v[1] = 2;
          Index hi_dst(v);
-         Box box_dst(lo_dst, hi_dst);
+         Box box_dst(lo_dst, hi_dst, BlockId(0));
 
          IndexData<Item, pdat::CellGeometry> dst(box_dst, ghosts);
 
@@ -503,7 +503,7 @@ int main(
          v[0] = 2;
          v[1] = 2;
          Index hi_src(v);
-         Box box_src(lo_src, hi_src);
+         Box box_src(lo_src, hi_src, BlockId(0));
          IndexData<Item, pdat::CellGeometry> src(box_src, ghosts);
 
          // Two of these three items should end up in dst
@@ -529,7 +529,7 @@ int main(
          v[0] = 3;
          v[1] = 3;
          Index hi_dst(v);
-         Box box_dst(lo_dst, hi_dst);
+         Box box_dst(lo_dst, hi_dst, BlockId(0));
 
          IndexData<Item, pdat::CellGeometry> dst(box_dst, ghosts);
 
@@ -549,7 +549,7 @@ int main(
          v[0] = 2;
          v[1] = 2;
          Index hi(v);
-         Box data_box(lo, hi);
+         Box data_box(lo, hi, BlockId(0));
          IndexData<Item, pdat::CellGeometry> data(data_box, ghosts);
 
          // Add three items
@@ -586,7 +586,7 @@ int main(
 
          Index lo = Index(dim, 0);
          Index hi = Index(dim, size);
-         Box data_box(lo, hi);
+         Box data_box(lo, hi, BlockId(0));
 
          IndexData<Item, pdat::CellGeometry> idx_data(data_box, ghosts);
 
@@ -626,7 +626,7 @@ int main(
 
          Index lo = Index(dim, 0);
          Index hi = Index(dim, size);
-         Box data_box(lo, hi);
+         Box data_box(lo, hi, BlockId(0));
 
          IndexData<Item, pdat::CellGeometry> idx_data(data_box, ghosts);
 
@@ -666,7 +666,7 @@ int main(
 
          Index lo = Index(dim, 0);
          Index hi = Index(dim, size);
-         Box data_box(lo, hi);
+         Box data_box(lo, hi, BlockId(0));
 
          IndexData<Item, pdat::CellGeometry> idx_data(data_box, ghosts);
 
@@ -707,7 +707,7 @@ int main(
 
          Index lo = Index(dim, 0);
          Index hi = Index(dim, size);
-         Box data_box(lo, hi);
+         Box data_box(lo, hi, BlockId(0));
 
          IndexData<Item, pdat::CellGeometry> idx_data(data_box, ghosts);
 
@@ -747,7 +747,7 @@ int main(
 
          Index lo = Index(dim, 0);
          Index hi = Index(dim, size);
-         Box data_box(lo, hi);
+         Box data_box(lo, hi, BlockId(0));
 
          IndexData<Item, pdat::CellGeometry> idx_data(data_box, ghosts);
 

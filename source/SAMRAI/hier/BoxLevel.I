@@ -341,13 +341,11 @@ bool BoxLevel::hasBox(
 SAMRAI_INLINE_KEYWORD
 bool BoxLevel::hasBox(
    const GlobalId& global_id,
-   const BlockId& block_id,
    const PeriodicId& periodic_id) const
 {
    const Box box(
       getDim(),
       global_id,
-      block_id,
       periodic_id);
    return hasBox(box);
 }

@@ -78,7 +78,7 @@ TreeLoadBalancer::BoxInTransit::BoxInTransit(
    const hier::Box& box,
    int rank,
    hier::LocalId local_id):
-   d_box(box, local_id, rank, other.d_orig_box.getBlockId()),
+   d_box(box, local_id, rank),
    d_orig_box(other.d_orig_box),
    d_load(d_box.size())
 {

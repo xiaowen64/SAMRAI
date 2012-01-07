@@ -102,24 +102,24 @@ int main(
       double hi[2] = { 1.0, 0.5 };
 
       int coarse0_array[2][2] = { { 0, 0 }, { 9, 2 } };
-      hier::Box coarse0((hier::Index(dim2d, coarse0_array[0])), (hier::Index(
-                                                                    dim2d,
-                                                                    coarse0_array
-                                                                    [1])));
+      hier::Box coarse0((hier::Index(dim2d, coarse0_array[0])),
+                        (hier::Index(dim2d, coarse0_array[1])),
+                        hier::BlockId(0));
 
       int coarse1_array[2][2] = { { 0, 3 }, { 9, 4 } };
-      hier::Box coarse1((hier::Index(dim2d, coarse1_array[0])), (hier::Index(
-                                                                    dim2d,
-                                                                    coarse1_array
-                                                                    [1])));
+      hier::Box coarse1((hier::Index(dim2d, coarse1_array[0])), 
+                        (hier::Index(dim2d, coarse1_array[1])),
+                        hier::BlockId(0));
 
       int fine0_array[2][2] = { { 4, 4 }, { 7, 7 } };
-      hier::Box fine0((hier::Index(dim2d, fine0_array[0])), (hier::Index(dim2d,
-                                                                fine0_array[1])));
+      hier::Box fine0((hier::Index(dim2d, fine0_array[0])), 
+                      (hier::Index(dim2d, fine0_array[1])),
+                      hier::BlockId(0));
 
       int fine1_array[2][2] = { { 8, 4 }, { 13, 7 } };
-      hier::Box fine1((hier::Index(dim2d, fine1_array[0])), (hier::Index(dim2d,
-                                                                fine1_array[1])));
+      hier::Box fine1((hier::Index(dim2d, fine1_array[0])), 
+                      (hier::Index(dim2d, fine1_array[1])),
+                      hier::BlockId(0));
 
       hier::IntVector ratio(dim2d, 2);
 

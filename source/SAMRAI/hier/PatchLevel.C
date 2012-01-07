@@ -16,6 +16,7 @@
 #include "SAMRAI/tbox/MathUtilities.h"
 #include "SAMRAI/tbox/TimerManager.h"
 #include "SAMRAI/hier/GridGeometry.h"
+#include "SAMRAI/hier/BoxContainerIterator.h"
 #include "SAMRAI/hier/RealBoxConstIterator.h"
 
 #include <cstdio>
@@ -810,6 +811,10 @@ void PatchLevel::getFromDatabase(
       std::string domain_name = "d_physical_domain_"
          + tbox::Utilities::blockToString(nb);
       d_physical_domain[nb] = database->getDatabaseBoxArray(domain_name);
+      for (BoxContainer::Iterator bi = d_physical_domain[nb].begin();
+           bi != d_physical_domain[nb].end(); ++bi) {
+         bi->setBlockId(BlockId(nb));
+      }
    }
 
    d_level_number = database->getInteger("d_level_number");
@@ -845,7 +850,7 @@ void PatchLevel::getFromDatabase(
          + "-patch_" + tbox::Utilities::patchToString(local_id.getValue())
          + "-block_"
          + tbox::Utilities::blockToString(
-            mapped_box_id.getBlockId().getBlockValue());
+            mapped_box.getBlockId().getBlockValue());
       if (!(database->isDatabase(patch_name))) {
          TBOX_ERROR("PatchLevel::getFromDatabase() error...\n"
             << "   patch name " << patch_name

@@ -445,7 +445,6 @@ void BoxLevelConnectorUtils::makeSortingMap(
       const Box new_mapped_box(cur_mapped_box,
                                ++last_index,
                                cur_mapped_box.getOwnerRank(),
-                               cur_mapped_box.getBlockId(),
                                cur_mapped_box.getPeriodicId());
       sorted_mapped_box_level.addBoxWithoutUpdate(new_mapped_box);
 
@@ -464,9 +463,10 @@ void BoxLevelConnectorUtils::makeSortingMap(
          const Box new_image_mapped_box(image_mapped_box,
                                         new_mapped_box.getLocalId(),
                                         new_mapped_box.getOwnerRank(),
-                                        new_mapped_box.getBlockId(),
                                         image_mapped_box.
                                         getPeriodicId());
+         TBOX_ASSERT(new_image_mapped_box.getBlockId() ==
+                     cur_mapped_box.getBlockId());
          sorted_mapped_box_level.addBoxWithoutUpdate(new_image_mapped_box);
          ++ini;
       }
@@ -873,10 +873,12 @@ void BoxLevelConnectorUtils::computeInternalOrExternalParts(
             parts_list.simplify();
             for (BoxContainer::Iterator bi(parts_list);
                  bi != parts_list.end(); ++bi) {
-               const Box parts_mapped_box((*bi),
-                                          ++last_used_index,
-                                          input_mapped_box.getOwnerRank(),
-                                          input_mapped_box.getBlockId());
+               const Box
+               parts_mapped_box((*bi),
+                                ++last_used_index,
+                                input_mapped_box.getOwnerRank());
+               TBOX_ASSERT(parts_mapped_box.getBlockId() ==
+                           input_mapped_box.getBlockId());
                parts.addBox(parts_mapped_box);
 
                // Set connectivities between input and internal.
@@ -1090,14 +1092,13 @@ void BoxLevelConnectorUtils::computeBoxesAroundBoundary(
       }
    }
 
-   // Set correct block ids.
+   // Set correct box ids.
    for (std::map<BlockId, BoxContainer>::iterator bi = boundary_by_blocks.begin();
         bi != boundary_by_blocks.end(); ++bi) {
-      const BlockId& block_id(bi->first);
       BoxContainer &boxes(bi->second);
       for ( BoxContainer::Iterator bj=boxes.begin(); bj!=boxes.end(); ++bj ) {
-         bj->getId() = BoxId( bj->getLocalId(), bj->getOwnerRank(),
-                              block_id, bj->getPeriodicId() );
+         bj->setId(BoxId( bj->getLocalId(), bj->getOwnerRank(),
+                          bj->getPeriodicId() ));
       }
    }
 
@@ -1221,8 +1222,8 @@ void BoxLevelConnectorUtils::makeRemainderMap(
             Box new_box = (*bi);
             Box new_node(new_box,
                          ++last_used_index,
-                         rank,
-                         orig_node.getBlockId());
+                         rank);
+            TBOX_ASSERT(new_node.getBlockId() == orig_node.getBlockId());
             remainder.addBoxWithoutUpdate(new_node);
             orig_to_remainder.insertLocalNeighbor(new_node, base_box_itr);
          }

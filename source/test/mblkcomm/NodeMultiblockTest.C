@@ -305,8 +305,7 @@ void NodeMultiblockTest::fillSingularityBoundaryConditions(
    const tbox::Dimension& dim = fill_box.getDim();
 
    const hier::BoxId& dst_mb_id = patch.getBox().getId();
-
-   const hier::BlockId& patch_blk_id = dst_mb_id.getBlockId();
+   const hier::BlockId& patch_blk_id = patch.getBox().getBlockId();
 
    const tbox::List<hier::GridGeometry::Neighbor>& neighbors =
       grid_geometry->getNeighbors(patch_blk_id);
@@ -374,7 +373,9 @@ void NodeMultiblockTest::fillSingularityBoundaryConditions(
 
                offset *= patch.getPatchGeometry()->getRatio();
 
-               hier::Transformation transformation(rotation, offset);
+               hier::Transformation transformation(rotation, offset,
+                                                   encon_blk_id,
+                                                   patch_blk_id);
                hier::Box encon_patch_box(encon_patch->getBox());
                transformation.transform(encon_patch_box);
 
@@ -390,7 +391,9 @@ void NodeMultiblockTest::fillSingularityBoundaryConditions(
                   hier::Transformation::calculateReverseShift(
                      back_shift, offset, rotation);
 
-                  hier::Transformation back_trans(back_rotate, back_shift);
+                  hier::Transformation back_trans(back_rotate, back_shift,
+                                                  patch_blk_id,
+                                                  encon_blk_id);
 
                   tbox::Pointer<pdat::NodeData<double> > sing_data(
                      encon_patch->getPatchData(d_variables[i], getDataContext()));

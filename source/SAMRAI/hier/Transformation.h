@@ -14,6 +14,7 @@
 
 #include "SAMRAI/SAMRAI_config.h"
 
+#include "SAMRAI/hier/BlockId.h"
 #include "SAMRAI/hier/IntVector.h"
 #include "SAMRAI/hier/Index.h"
 #include "SAMRAI/tbox/Array.h"
@@ -95,12 +96,20 @@ public:
    /*!
     * @brief Constructor to set rotation and offset
     *
+    * If begin_block and end_block have different values, all Boxes
+    * transformed by an object constructed with this constructor will have
+    * their BlockIds changed from begin_block to end_block.
+    *
     * @param[in] rotation  specifies rotation, if any, between blocks
     * @param[in] offset    offset to be applied after rotation
+    * @param[in] begin_block  Block before the transformation
+    * @param[in] end_block    Block after the transformation
     */
    explicit Transformation(
       const RotationIdentifier rotation,
-      const IntVector& offset);
+      const IntVector& offset,
+      const BlockId& begin_block,
+      const BlockId& end_block);
 
    /*!
     * @brief Constructor that sets only offset
@@ -109,6 +118,9 @@ public:
     * be used in cases where the calling code knows that the Transformation
     * is trivial or periodic.  Pass in a zero IntVector to construct a trivial
     * Transformation.
+    *
+    * Any Boxes transformed by an object constructed with this constructor
+    * will not have their BlockIds changed.
     *
     * @param[in]  offset
     */
@@ -345,6 +357,9 @@ private:
 
    RotationIdentifier d_rotation;
    IntVector d_offset;
+
+   BlockId d_begin_block;
+   BlockId d_end_block;
 
 };
 

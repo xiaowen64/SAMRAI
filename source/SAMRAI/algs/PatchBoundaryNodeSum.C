@@ -778,8 +778,7 @@ void PatchBoundaryNodeSum::doLocalCoarseFineBoundarySum(
 
          tbox::Pointer<hier::Patch> fpatch = *ip;
          tbox::Pointer<hier::Patch> cfpatch =
-            coarsened_fine_level->getPatch(fpatch->getGlobalId(),
-               fpatch->getBox().getBlockId());
+            coarsened_fine_level->getPatch(fpatch->getGlobalId());
 
          const hier::Index& filo = fpatch->getBox().lower();
          const hier::Index& fihi = fpatch->getBox().upper();

@@ -978,13 +978,11 @@ public:
     * of the arguments
     *
     * @param[in] global_id
-    * @param[in] block_id
     * @param[in] periodic_id
     */
    bool
    hasBox(
       const GlobalId& global_id,
-      const BlockId& block_id,
       const PeriodicId& periodic_id) const;
 
    /*!

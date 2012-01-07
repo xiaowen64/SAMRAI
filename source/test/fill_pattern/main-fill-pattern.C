@@ -142,7 +142,8 @@ void txt2boxes(
                j0 = tmp;
 
                hier::Box abox(hier::Index(i0, j0),
-                              hier::Index(i1, j1));
+                              hier::Index(i1, j1), 
+                              hier::BlockId(0));
                boxes_here.push_back(abox);
             }
          }

@@ -114,13 +114,13 @@ OuteredgeSumTransaction::canEstimateIncomingMessageSize()
    bool can_estimate = false;
    if (d_src_node.getOwnerRank() == d_src_level->getBoxLevel()->getMPI().getRank()) {
       can_estimate =
-         d_src_level->getPatch(d_src_node.getGlobalId(), d_src_node.getBlockId())
+         d_src_level->getPatch(d_src_node.getGlobalId())
          ->getPatchData(s_refine_items[d_refine_item_id]->
             d_src)
          ->canEstimateStreamSizeFromBox();
    } else {
       can_estimate =
-         d_dst_level->getPatch(d_dst_node.getGlobalId(), d_dst_node.getBlockId())
+         d_dst_level->getPatch(d_dst_node.getGlobalId())
          ->getPatchData(s_refine_items[d_refine_item_id]->
             d_scratch)
          ->canEstimateStreamSizeFromBox();
@@ -132,7 +132,7 @@ size_t
 OuteredgeSumTransaction::computeIncomingMessageSize()
 {
    d_incoming_bytes =
-      d_dst_level->getPatch(d_dst_node.getGlobalId(), d_src_node.getBlockId())
+      d_dst_level->getPatch(d_dst_node.getGlobalId())
       ->getPatchData(s_refine_items[d_refine_item_id]->
          d_scratch)
       ->getDataStreamSize(*d_overlap);
@@ -143,7 +143,7 @@ size_t
 OuteredgeSumTransaction::computeOutgoingMessageSize()
 {
    d_outgoing_bytes =
-      d_src_level->getPatch(d_src_node.getGlobalId(), d_src_node.getBlockId())
+      d_src_level->getPatch(d_src_node.getGlobalId())
       ->getPatchData(s_refine_items[d_refine_item_id]->
          d_src)
       ->getDataStreamSize(*d_overlap);
@@ -166,7 +166,7 @@ void
 OuteredgeSumTransaction::packStream(
    tbox::MessageStream& stream)
 {
-   d_src_level->getPatch(d_src_node.getGlobalId(), d_src_node.getBlockId())
+   d_src_level->getPatch(d_src_node.getGlobalId())
    ->getPatchData(s_refine_items[d_refine_item_id]->
       d_src)
    ->packStream(stream, *d_overlap);
@@ -177,7 +177,7 @@ OuteredgeSumTransaction::unpackStream(
    tbox::MessageStream& stream)
 {
    tbox::Pointer<pdat::OuteredgeData<double> > oedge_dst_data =
-      d_dst_level->getPatch(d_dst_node.getGlobalId(), d_dst_node.getBlockId())->
+      d_dst_level->getPatch(d_dst_node.getGlobalId())->
       getPatchData(s_refine_items[d_refine_item_id]->d_scratch);
    TBOX_ASSERT(!oedge_dst_data.isNull());
 
@@ -188,12 +188,12 @@ void
 OuteredgeSumTransaction::copyLocalData()
 {
    tbox::Pointer<pdat::OuteredgeData<double> > oedge_dst_data =
-      d_dst_level->getPatch(d_dst_node.getGlobalId(), d_dst_node.getBlockId())->
+      d_dst_level->getPatch(d_dst_node.getGlobalId())->
       getPatchData(s_refine_items[d_refine_item_id]->d_scratch);
    TBOX_ASSERT(!oedge_dst_data.isNull());
 
    tbox::Pointer<pdat::OuteredgeData<double> > oedge_src_data =
-      d_src_level->getPatch(d_src_node.getGlobalId(), d_src_node.getBlockId())->
+      d_src_level->getPatch(d_src_node.getGlobalId())->
       getPatchData(s_refine_items[d_refine_item_id]->d_src);
    TBOX_ASSERT(!oedge_src_data.isNull());
 

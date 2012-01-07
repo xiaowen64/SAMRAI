@@ -1375,7 +1375,7 @@ void OverlapConnectorAlgorithm::privateBridge_discoverAndSend(
        * highest of all owners of the visible Boxes, start at
        * the beginning.)
        */
-      const Box start_loop_here(dim, LocalId::getZero(), rank + 1);
+      const Box start_loop_here(dim, GlobalId(LocalId::getZero(), rank + 1));
       west_ni = visible_west_nabrs.lowerBound(start_loop_here);
       if (compute_reverse) {
          east_ni = visible_east_nabrs.lowerBound(start_loop_here);
@@ -1705,7 +1705,6 @@ void OverlapConnectorAlgorithm::privateBridge_findOverlapsForOneProcess(
                unshifted_base_mapped_box_id.initialize(
                   base_mapped_box.getLocalId(),
                   base_mapped_box.getOwnerRank(),
-                  base_mapped_box.getBlockId(),
                   PeriodicId::zero());
             }
             // Add found neighbors for base_mapped_box.

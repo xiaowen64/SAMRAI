@@ -281,6 +281,50 @@ void ArrayData<TYPE>::copy(
 
 }
 
+template<class TYPE>
+void ArrayData<TYPE>::copy(
+   const ArrayData<TYPE>& src,
+   const hier::Box& box,
+   const hier::Transformation& transformation)
+{
+   if (transformation.getRotation() == hier::Transformation::NO_ROTATE
+       && transformation.getOffset() == hier::IntVector::getZero(d_dim)) {
+
+      copy(src, box);
+
+   } else {
+
+      hier::Box transformed_src(src.d_box);
+      transformation.transform(transformed_src);
+      const hier::Box copybox(
+         box * d_box * transformed_src);
+
+      if (!copybox.empty()) {
+
+         const int dst_start_depth = 0;
+         const int src_start_depth = 0;
+         const int num_depth = (d_depth < src.d_depth ? d_depth : src.d_depth);
+
+         CopyOperation<TYPE> copyop;
+
+         ArrayDataOperationUtilities<TYPE, CopyOperation<TYPE> >::
+         doArrayDataOperationOnBox(*this,
+            src,
+            copybox,
+            transformation.getOffset(),
+            dst_start_depth,
+            src_start_depth,
+            num_depth,
+            copyop);
+
+      }
+
+   }
+
+}
+
+
+
 /*
  *************************************************************************
  *
@@ -298,6 +342,17 @@ void ArrayData<TYPE>::copy(
 {
    for (hier::BoxContainer::ConstIterator b(boxes); b != boxes.end(); ++b) {
       this->copy(src, b(), src_shift);
+   }
+}
+
+template<class TYPE>
+void ArrayData<TYPE>::copy(
+   const ArrayData<TYPE>& src,
+   const hier::BoxContainer& boxes,
+   const hier::Transformation& transformation)
+{
+   for (hier::BoxContainer::ConstIterator b(boxes); b != boxes.end(); ++b) {
+      this->copy(src, b(), transformation);
    }
 }
 
@@ -550,6 +605,52 @@ void ArrayData<TYPE>::packStream(
    stream.pack(buffer.getPointer(), size);
 
 }
+
+template<class TYPE>
+void ArrayData<TYPE>::packStream(
+   tbox::MessageStream& stream,
+   const hier::Box& dest_box,
+   const hier::Transformation& transformation) const
+{
+
+   const int size = d_depth * dest_box.size();
+   tbox::Array<TYPE> buffer(size);
+
+   hier::Box pack_box(dest_box);
+   transformation.inverseTransform(pack_box);
+   packBuffer(buffer.getPointer(), pack_box);
+//      hier::Box::shift(dest_box, -src_shift));
+
+   stream.pack(buffer.getPointer(), size);
+
+}
+
+
+template<class TYPE>
+void ArrayData<TYPE>::packStream(
+   tbox::MessageStream& stream,
+   const hier::BoxContainer& dest_boxes,
+   const hier::Transformation& transformation) const
+{
+
+   const int size = d_depth * dest_boxes.getTotalSizeOfBoxes();
+   tbox::Array<TYPE> buffer(size);
+
+   int ptr = 0;
+   for (hier::BoxContainer::ConstIterator b(dest_boxes); b != dest_boxes.end(); ++b) {
+      hier::Box pack_box(b());
+      transformation.inverseTransform(pack_box);
+      packBuffer(buffer.getPointer(ptr), pack_box);
+//         hier::Box::shift(b(), -src_shift));
+      ptr += d_depth * b().size();
+   }
+
+   TBOX_ASSERT(ptr == size);
+
+   stream.pack(buffer.getPointer(), size);
+
+}
+
 
 /*
  *************************************************************************

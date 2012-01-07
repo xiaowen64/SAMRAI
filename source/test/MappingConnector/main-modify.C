@@ -432,7 +432,6 @@ void alterAndGenerateMapping(
       hier::Box mapped_box_c(mapped_box_b,
                              mapped_box_b.getLocalId() + local_id_increment,
                              mapped_box_b.getOwnerRank(),
-                             mapped_box_b.getBlockId(),
                              mapped_box_b.getPeriodicId());
       mapped_box_level_c.addBoxWithoutUpdate(mapped_box_c);
       b_to_c.insertLocalNeighbor(mapped_box_c, mapped_box_b.getId());
