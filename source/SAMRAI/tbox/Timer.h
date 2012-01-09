@@ -210,7 +210,7 @@ protected:
     * The constructor for the Timer class sets timer name string
     * and integer identifiers, and initializes the timer state.
     */
-   Timer(
+   explicit Timer(
       const std::string& name);
 
    /*

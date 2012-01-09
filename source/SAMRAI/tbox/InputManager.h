@@ -120,7 +120,7 @@ public:
    virtual void
    parseInputFile(
       const std::string& filename,
-      Pointer<InputDatabase> db);
+      Pointer<InputDatabase> input_db);
 
 protected:
    /**

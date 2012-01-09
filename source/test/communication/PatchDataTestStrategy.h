@@ -109,7 +109,7 @@ public:
       tbox::Pointer<geom::CartesianGridGeometry> grid_geom)
    {
 #ifdef DEBUG_CHECK_ASSERTIONS
-      TBOX_ASSERT(!grid_geom.isNull());
+      TBOX_ASSERT(grid_geom);
 #endif
       d_grid_geometry = grid_geom;
    }
@@ -127,7 +127,7 @@ public:
       tbox::Pointer<hier::VariableContext> context)
    {
 #ifdef DEBUG_CHECK_ASSERTIONS
-      TBOX_ASSERT(!context.isNull());
+      TBOX_ASSERT(context);
 #endif
       d_data_context = context;
    }
@@ -140,7 +140,7 @@ public:
 
    void clearDataContext()
    {
-      d_data_context.setNull();
+      d_data_context.reset();
    }
 
    /**

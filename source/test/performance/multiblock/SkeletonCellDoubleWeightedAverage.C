@@ -70,7 +70,7 @@ bool SkeletonCellDoubleWeightedAverage::findCoarsenOperator(
    const string& op_name) const
 {
    const tbox::Pointer<pdat::CellVariable<double> > cast_var(var);
-   if (!cast_var.isNull() && (op_name == getOperatorName())) {
+   if (cast_var && (op_name == getOperatorName())) {
       return true;
    } else {
       return false;
@@ -100,8 +100,8 @@ void SkeletonCellDoubleWeightedAverage::coarsen(
    tbox::Pointer<pdat::CellData<double> >
    cdata = coarse.getPatchData(dst_component);
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!fdata.isNull());
-   TBOX_ASSERT(!cdata.isNull());
+   TBOX_ASSERT(fdata);
+   TBOX_ASSERT(cdata);
    TBOX_ASSERT(cdata->getDepth() == fdata->getDepth());
 #endif
 

@@ -32,7 +32,7 @@ void setupTestData(
 void writeTestData(
    tbox::Pointer<tbox::Database> db)
 {
-   if (db.isNull()) {
+   if (!db) {
       tbox::perr << "FAILED: - Test #0-write: database to write to is null"
                  << endl;
       tbox::SAMRAI_MPI::abort();
@@ -54,25 +54,25 @@ void writeTestData(
 
    NULL_USE(defaultdb);
 
-   if (arraydb.isNull()) {
+   if (!arraydb) {
       tbox::perr << "FAILED: - Test #1a-write: `arraydb' is null" << endl;
       tbox::SAMRAI_MPI::abort();
    }
-   if (scalardb.isNull()) {
+   if (!scalardb) {
       tbox::perr << "FAILED: - Test #1b-write: `scalardb' is null" << endl;
       tbox::SAMRAI_MPI::abort();
    }
-   if (scalardb_empty.isNull()) {
+   if (!scalardb_empty) {
       tbox::perr << "FAILED: - Test #1c-write: `scalardb_empty' is null"
                  << endl;
       tbox::SAMRAI_MPI::abort();
    }
-   if (scalardb_full.isNull()) {
+   if (!scalardb_full) {
       tbox::perr << "FAILED: - Test #1d-write: `scalardb_full' is null"
                  << endl;
       tbox::SAMRAI_MPI::abort();
    }
-   if (vectordb.isNull()) {
+   if (!vectordb) {
       tbox::perr << "FAILED: - Test #1e-write: `vectordb' is null"
                  << endl;
       tbox::SAMRAI_MPI::abort();
@@ -183,7 +183,7 @@ void testDatabaseContents(
    const string& tag)
 {
 
-   if (db.isNull()) {
+   if (!db) {
       tbox::perr << "FAILED: - Test #0-" << tag
                  << ": database to read from is null" << endl;
       ++number_of_failures;
@@ -201,28 +201,28 @@ void testDatabaseContents(
 
    tbox::Pointer<tbox::Database> vectordb = db->getDatabase("stl_vector");
 
-   if (arraydb.isNull()) {
+   if (!arraydb) {
       tbox::perr << "FAILED: - Test #1a-" << tag
                  << ": `arraydb' is null" << endl;
       ++number_of_failures;
    }
-   if (scalardb.isNull()) {
+   if (!scalardb) {
       tbox::perr << "FAILED: - Test #1b-" << tag
                  << ": `scalardb' is null" << endl;
       ++number_of_failures;
    }
-   if (scalardb_empty.isNull()) {
+   if (!scalardb_empty) {
       tbox::perr << "FAILED: - Test #1c-" << tag
                  << ": `scalardb_empty' is null" << endl;
       ++number_of_failures;
    }
-   if (scalardb_full.isNull()) {
+   if (!scalardb_full) {
       tbox::perr << "FAILED: - Test #1d-" << tag
                  << ": `scalardb_full' is null" << endl;
       ++number_of_failures;
    }
 
-   if (vectordb.isNull()) {
+   if (!vectordb) {
       tbox::perr << "FAILED: - Test #1e-" << tag
                  << ": `vectordb' is null" << endl;
       ++number_of_failures;

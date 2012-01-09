@@ -132,7 +132,7 @@ public:
     *                   coordinate directions will have data associated
     *                   with them.
     */
-   explicit SideData(
+   SideData(
       const hier::Box& box,
       int depth,
       const hier::IntVector& ghosts,
@@ -143,7 +143,7 @@ public:
     * vector of 1's.
     *
     */
-   explicit SideData(
+   SideData(
       const hier::Box& box,
       int depth,
       const hier::IntVector& ghosts);

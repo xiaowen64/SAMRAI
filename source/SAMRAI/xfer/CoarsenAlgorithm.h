@@ -187,7 +187,7 @@ public:
       const tbox::Pointer<hier::CoarsenOperator> opcoarsen,
       const hier::IntVector& gcw_to_coarsen,
       tbox::Pointer<VariableFillPattern> var_fill_pattern =
-         (tbox::Pointer<BoxGeometryVariableFillPattern>) NULL);
+         (tbox::Pointer<VariableFillPattern>) NULL);
 
    /*!
     * @brief Register a coarsening operation with the coarsening algorithm.
@@ -201,7 +201,7 @@ public:
       const int src,
       const tbox::Pointer<hier::CoarsenOperator> opcoarsen,
       tbox::Pointer<VariableFillPattern> var_fill_pattern =
-         (tbox::Pointer<BoxGeometryVariableFillPattern>) NULL);
+         (tbox::Pointer<VariableFillPattern>) NULL);
 
    /*!
     * @brief Create a communication schedule to coarsen data from the given

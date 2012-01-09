@@ -70,7 +70,7 @@ void CoarsenAlgorithm::registerCoarsen(
    tbox::Pointer<VariableFillPattern> var_fill_pattern)
 {
 #ifdef DEBUG_CHECK_DIM_ASSERTIONS
-   if (!opcoarsen.isNull()) {
+   if (opcoarsen) {
       TBOX_DIM_ASSERT_CHECK_ARGS2(*this, *opcoarsen);
    }
 #endif
@@ -93,7 +93,7 @@ void CoarsenAlgorithm::registerCoarsen(
    data.d_gcw_to_coarsen = gcw_to_coarsen;
    data.d_opcoarsen = opcoarsen;
    data.d_tag = -1;
-   if (!(var_fill_pattern.isNull())) {
+   if (var_fill_pattern) {
       data.d_var_fill_pattern = var_fill_pattern;
    } else {
       data.d_var_fill_pattern = new BoxGeometryVariableFillPattern();
@@ -135,7 +135,7 @@ CoarsenAlgorithm::createSchedule(
    tbox::Pointer<xfer::CoarsenTransactionFactory> trans_factory =
       transaction_factory;
 
-   if (trans_factory.isNull()) {
+   if (!trans_factory) {
       trans_factory = new xfer::StandardCoarsenTransactionFactory();
    }
 
@@ -159,7 +159,7 @@ CoarsenAlgorithm::createSchedule(
 bool CoarsenAlgorithm::checkConsistency(
    tbox::Pointer<xfer::CoarsenSchedule> schedule) const
 {
-   TBOX_ASSERT(!schedule.isNull());
+   TBOX_ASSERT(schedule);
 
    return d_coarsen_classes->
           classesMatch(schedule->getEquivalenceClasses());
@@ -169,7 +169,7 @@ void CoarsenAlgorithm::resetSchedule(
    tbox::Pointer<xfer::CoarsenSchedule> schedule) const
 {
 
-   TBOX_ASSERT(!schedule.isNull());
+   TBOX_ASSERT(schedule);
 
    if (d_coarsen_classes->classesMatch(schedule->getEquivalenceClasses())) {
       schedule->reset(d_coarsen_classes);

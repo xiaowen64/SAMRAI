@@ -147,7 +147,7 @@ int main(
        * Create an input database "input_db" and parse input file (specified
        * on the command line.
        */
-      tbox::Pointer<tbox::Database> input_db(new tbox::InputDatabase("input_db"));
+      tbox::Pointer<tbox::InputDatabase> input_db(new tbox::InputDatabase("input_db"));
       tbox::InputManager::getManager()->parseInputFile(input_filename, input_db);
 
       /*
@@ -303,13 +303,13 @@ int main(
          timers[timer_number] = tbox::TimerManager::getManager()->
             getTimer(timer_name);
 
-         if (timers[timer_number].isNull()) {
+         if (!timers[timer_number]) {
             TBOX_ERROR("Failed to allocate timer, max was " + timer_number);
          }
       }
 
       for (int timer_number = 0; timer_number < max_timers; timer_number++) {
-         timers[timer_number].setNull();
+         timers[timer_number].reset();
       }
 
 #ifdef CHECK_PTIMER

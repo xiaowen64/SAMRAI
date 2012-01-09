@@ -57,7 +57,7 @@ public:
    /*!
     * @brief Initializing constructor.
     */
-   explicit GlobalId(
+   GlobalId(
       const LocalId& local_id,
       const int owner_rank);
 

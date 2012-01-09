@@ -48,7 +48,7 @@ public:
     * Constructor for the face iterator.  The iterator will enumerate
     * the indices in the argument box.
     */
-   explicit FaceIterator(
+   FaceIterator(
       const hier::Box& box,
       const int axis);
 

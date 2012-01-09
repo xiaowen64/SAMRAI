@@ -105,7 +105,7 @@ public:
     * @param[in] begin_block  Block before the transformation
     * @param[in] end_block    Block after the transformation
     */
-   explicit Transformation(
+   Transformation(
       const RotationIdentifier rotation,
       const IntVector& offset,
       const BlockId& begin_block,

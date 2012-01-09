@@ -564,7 +564,7 @@ template<class TYPE>
 void OuterfaceData<TYPE>::getSpecializedFromDatabase(
    tbox::Pointer<tbox::Database> database)
 {
-   TBOX_ASSERT(!database.isNull());
+   TBOX_ASSERT(database);
 
    int ver = database->getInteger("PDAT_OUTERFACEDATA_VERSION");
    if (ver != PDAT_OUTERFACEDATA_VERSION) {
@@ -602,7 +602,7 @@ void OuterfaceData<TYPE>::putSpecializedToDatabase(
    tbox::Pointer<tbox::Database> database)
 {
 
-   TBOX_ASSERT(!database.isNull());
+   TBOX_ASSERT(database);
 
    database->putInteger("PDAT_OUTERFACEDATA_VERSION",
       PDAT_OUTERFACEDATA_VERSION);

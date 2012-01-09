@@ -187,7 +187,7 @@ int main(
        * Create input database and parse all data in input file.
        */
 
-      tbox::Pointer<tbox::Database> input_db(new tbox::InputDatabase("input_db"));
+      tbox::Pointer<tbox::InputDatabase> input_db(new tbox::InputDatabase("input_db"));
       tbox::InputManager::getManager()->parseInputFile(input_filename, input_db);
 
       /*
@@ -326,7 +326,7 @@ int main(
          new mesh::StandardTagAndInitialize(
             dim,
             "StandardTagAndInitialize",
-            mol_integrator,
+            mol_integrator.get(),
             input_db->getDatabase("StandardTagAndInitialize")));
 
       tbox::Pointer<mesh::BergerRigoutsos> box_generator(
@@ -582,30 +582,30 @@ int main(
        * At conclusion of simulation, deallocate objects.
        */
 
-      box_generator.setNull();
+      box_generator.reset();
 
-      load_balancer.setNull();
-      gridding_algorithm.setNull();
+      load_balancer.reset();
+      gridding_algorithm.reset();
 
 #ifdef HAVE_HDF5
-      visit_data_writer.setNull();
+      visit_data_writer.reset();
 #endif
 
       //delete tag_buffer_array;
 
-      error_detector.setNull();
-      mol_integrator.setNull();
+      error_detector.reset();
+      mol_integrator.reset();
 
       if (convdiff_model) delete convdiff_model;
 
-      patch_hierarchy.setNull();
+      patch_hierarchy.reset();
 
-      grid_geometry.setNull();
+      grid_geometry.reset();
 
       if (main_restart_data) delete main_restart_data;
 
-      main_db.setNull();
-      input_db.setNull();
+      main_db.reset();
+      input_db.reset();
 
 #if (TESTING == 1)
       delete autotester;

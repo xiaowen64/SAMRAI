@@ -121,19 +121,19 @@ GriddingAlgorithm::GriddingAlgorithm(
    d_print_hierarchy(false),
    d_print_steps(false)
 {
-   TBOX_ASSERT(!hierarchy.isNull());
+   TBOX_ASSERT(hierarchy);
    TBOX_ASSERT(!object_name.empty());
-   TBOX_ASSERT(!input_db.isNull());
-   TBOX_ASSERT(!tag_init_strategy.isNull());
-   TBOX_ASSERT(!generator.isNull());
-   TBOX_ASSERT(!balancer.isNull());
+   TBOX_ASSERT(input_db);
+   TBOX_ASSERT(tag_init_strategy);
+   TBOX_ASSERT(generator);
+   TBOX_ASSERT(balancer);
 
    if (d_registered_for_restart) {
       tbox::RestartManager::getManager()->
       registerRestartItem(d_object_name, this);
    }
 
-   if (d_load_balancer0.isNull()) {
+   if (!d_load_balancer0) {
       d_load_balancer0 = d_load_balancer;
    }
 
@@ -161,13 +161,15 @@ GriddingAlgorithm::GriddingAlgorithm(
    tag_interior_variable_name += dim_extension.str();
    tag_buffer_variable_name += dim_extension.str();
 
-   d_tag = var_db->getVariable(tag_interior_variable_name);
-   if (d_tag.isNull()) {
+   d_tag = tbox::dynamic_pointer_cast<pdat::CellVariable<int>, hier::Variable>(
+       var_db->getVariable(tag_interior_variable_name));
+   if (!d_tag) {
       d_tag = new pdat::CellVariable<int>(d_dim, tag_interior_variable_name, 1);
    }
 
-   d_buf_tag = var_db->getVariable(tag_buffer_variable_name);
-   if (d_buf_tag.isNull()) {
+   d_buf_tag = tbox::dynamic_pointer_cast<pdat::CellVariable<int>, hier::Variable>(
+      var_db->getVariable(tag_buffer_variable_name));
+   if (!d_buf_tag) {
       d_buf_tag = new pdat::CellVariable<int>(d_dim,
                                               tag_buffer_variable_name,
                                               1);
@@ -236,8 +238,10 @@ GriddingAlgorithm::GriddingAlgorithm(
       // Note: checkCoarsenRatios() must precede getErrorCoarsenRatio().
    }
    if (d_tag_init_strategy->getErrorCoarsenRatio() > 1) {
-      tbox::Pointer<StandardTagAndInitialize> std_tag_init(d_tag_init_strategy);
-      if (!std_tag_init.isNull()) {
+      tbox::Pointer<StandardTagAndInitialize> std_tag_init(
+         d_tag_init_strategy,
+         tbox::__dynamic_cast_tag());
+      if (std_tag_init) {
          d_hierarchy->registerConnectorWidthRequestor(
             std_tag_init->getConnectorWidthRequestor());
       }
@@ -332,7 +336,7 @@ void GriddingAlgorithm::makeCoarsestLevel(
 
    bool level_zero_exists = false;
    if ((d_hierarchy->getNumberOfLevels() > 0)) {
-      if (!(d_hierarchy->getPatchLevel(ln).isNull())) {
+      if (d_hierarchy->getPatchLevel(ln)) {
          level_zero_exists = true;
       }
    }
@@ -584,7 +588,7 @@ void GriddingAlgorithm::makeCoarsestLevel(
          false,
          old_level);
 
-      old_level.setNull();
+      old_level.reset();
 
    }
    t_make_new->stop();
@@ -645,9 +649,9 @@ void GriddingAlgorithm::makeFinerLevel(
       << d_hierarchy->getFinestLevelNumber() << "\n";
    }
 
-   TBOX_ASSERT(!(d_hierarchy.isNull()));
-   TBOX_ASSERT(!(d_hierarchy->getPatchLevel(
-                    d_hierarchy->getFinestLevelNumber()).isNull()));
+   TBOX_ASSERT(d_hierarchy);
+   TBOX_ASSERT(d_hierarchy->getPatchLevel(
+                    d_hierarchy->getFinestLevelNumber()));
    TBOX_ASSERT(tag_buffer >= 0);
 
    if (d_barrier_and_time) {
@@ -847,7 +851,7 @@ void GriddingAlgorithm::makeFinerLevel(
           * Deallocate tag arrays and schedule -- no longer needed.
           */
          tag_level->deallocatePatchData(d_tag_indx);
-         d_bdry_sched_tags[tag_ln].setNull();
+         d_bdry_sched_tags[tag_ln].reset();
 
       } else { /* do_tagging == false */
 
@@ -991,7 +995,7 @@ void GriddingAlgorithm::regridAllFinerLevels(
 {
    TBOX_ASSERT((level_number >= 0)
       && (level_number <= d_hierarchy->getFinestLevelNumber()));
-   TBOX_ASSERT(!(d_hierarchy->getPatchLevel(level_number).isNull()));
+   TBOX_ASSERT(d_hierarchy->getPatchLevel(level_number));
    TBOX_ASSERT(tag_buffer.getSize() >= level_number + 1);
 #ifdef DEBUG_CHECK_ASSERTIONS
    for (int i = 0; i < tag_buffer.getSize(); i++) {
@@ -1152,7 +1156,7 @@ void GriddingAlgorithm::regridFinerLevel(
 {
    TBOX_ASSERT((tag_ln >= 0)
       && (tag_ln <= d_hierarchy->getFinestLevelNumber()));
-   TBOX_ASSERT(!(d_hierarchy->getPatchLevel(tag_ln).isNull()));
+   TBOX_ASSERT(d_hierarchy->getPatchLevel(tag_ln));
    TBOX_ASSERT(finest_level_not_regridded >= 0
       && finest_level_not_regridded <= tag_ln);
    TBOX_ASSERT(tag_buffer.getSize() >= tag_ln + 1);
@@ -1310,7 +1314,7 @@ void GriddingAlgorithm::regridFinerLevel(
           */
 
          tag_level->deallocatePatchData(d_tag_indx);
-         d_bdry_sched_tags[tag_ln].setNull();
+         d_bdry_sched_tags[tag_ln].reset();
 
          if (d_barrier_and_time) {
             t_misc3->stop();
@@ -1668,7 +1672,7 @@ void GriddingAlgorithm::regridFinerLevel_createAndInstallNewLevel(
     */
 
    tbox::Pointer<hier::PatchLevel> old_fine_level;
-   tbox::ConstPointer<hier::BoxLevel> old_mapped_box_level;
+   tbox::Pointer<const hier::BoxLevel> old_mapped_box_level;
    const hier::Connector* old_to_tag = NULL;
    const hier::Connector* tag_to_old = NULL;
 
@@ -1824,7 +1828,7 @@ void GriddingAlgorithm::regridFinerLevel_createAndInstallNewLevel(
          finer_to_new);
    }
 
-   if (!old_mapped_box_level.isNull()) {
+   if (old_mapped_box_level) {
 
       /*
        * Connect old to new by bridging.
@@ -1875,7 +1879,7 @@ void GriddingAlgorithm::regridFinerLevel_createAndInstallNewLevel(
    /*
     * Destroy old patch level, if such a level existed prior to regrid.
     */
-   old_fine_level.setNull();
+   old_fine_level.reset();
    if (d_barrier_and_time) {
       t_regrid_finer_create->stop();
    }
@@ -2257,8 +2261,9 @@ void GriddingAlgorithm::checkNonrefinedTags(
         ei != tag_to_violator.end(); ++ei) {
       const hier::BoxId& mapped_box_id = *ei;
       tbox::Pointer<hier::Patch> patch = level.getPatch(mapped_box_id);
-      tbox::Pointer<pdat::CellData<int> > tag_data =
-         patch->getPatchData(d_tag_indx);
+      tbox::Pointer<pdat::CellData<int> > tag_data(
+         patch->getPatchData(d_tag_indx),
+         tbox::__dynamic_cast_tag());
       for (hier::Connector::ConstNeighborIterator na = tag_to_violator.begin(ei);
            na != tag_to_violator.end(ei); ++na) {
          const hier::Box& vio_mapped_box = *na;
@@ -2544,7 +2549,7 @@ void GriddingAlgorithm::fillTags(
    const int tag_index) const
 {
    TBOX_ASSERT((tag_value == d_true_tag) || (tag_value == d_false_tag));
-   TBOX_ASSERT(!(tag_level.isNull()));
+   TBOX_ASSERT(tag_level);
    TBOX_ASSERT(tag_index == d_tag_indx || tag_index == d_buf_tag_indx);
    TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(d_dim, *tag_level);
 
@@ -2553,8 +2558,10 @@ void GriddingAlgorithm::fillTags(
    for (hier::PatchLevel::Iterator ip(tag_level); ip; ip++) {
 
       tbox::Pointer<hier::Patch> patch = *ip;
-      tbox::Pointer<pdat::CellData<int> > tag_data = patch->getPatchData(tag_index);
-      TBOX_ASSERT(!(tag_data.isNull()));
+      tbox::Pointer<pdat::CellData<int> > tag_data(
+         patch->getPatchData(tag_index),
+         tbox::__dynamic_cast_tag());
+      TBOX_ASSERT(tag_data);
 
       tag_data->fill(tag_value);
 
@@ -2580,7 +2587,7 @@ void GriddingAlgorithm::fillTagsFromBoxLevel(
    const hier::IntVector& fill_box_growth) const
 {
    TBOX_ASSERT((tag_value == d_true_tag) || (tag_value == d_false_tag));
-   TBOX_ASSERT(!(tag_level.isNull()));
+   TBOX_ASSERT(tag_level);
    TBOX_ASSERT(tag_index == d_tag_indx || tag_index == d_buf_tag_indx);
    TBOX_DIM_ASSERT_CHECK_DIM_ARGS2(d_dim, *tag_level, fill_box_growth);
 
@@ -2594,7 +2601,7 @@ void GriddingAlgorithm::fillTagsFromBoxLevel(
 
    const hier::OverlapConnectorAlgorithm oca;
 
-   const tbox::ConstPointer<hier::GridGeometry>& grid_geom(d_hierarchy->getGridGeometry());
+   const tbox::Pointer<const hier::GridGeometry>& grid_geom(d_hierarchy->getGridGeometry());
 
    const hier::IntVector& ratio = tag_level_to_fill_mapped_box_level.getRatio();
 
@@ -2605,10 +2612,11 @@ void GriddingAlgorithm::fillTagsFromBoxLevel(
    for (hier::PatchLevel::Iterator ip(tag_level); ip; ip++) {
       tbox::Pointer<hier::Patch> patch = *ip;
 
-      tbox::Pointer<pdat::CellData<int> >
-      tag_data = patch->getPatchData(tag_index);
+      tbox::Pointer<pdat::CellData<int> > tag_data(
+         patch->getPatchData(tag_index),
+         tbox::__dynamic_cast_tag());
 
-      TBOX_ASSERT(!(tag_data.isNull()));
+      TBOX_ASSERT(tag_data);
 
       const hier::BoxId& mapped_box_id(patch->getBox().getId());
 
@@ -2661,7 +2669,7 @@ void GriddingAlgorithm::bufferTagsOnLevel(
    const int buffer_size) const
 {
    TBOX_ASSERT((tag_value == d_true_tag) || (tag_value == d_false_tag));
-   TBOX_ASSERT(!(level.isNull()));
+   TBOX_ASSERT(level);
    TBOX_ASSERT(buffer_size >= 0);
    TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(d_dim, *level);
    /*
@@ -2677,10 +2685,12 @@ void GriddingAlgorithm::bufferTagsOnLevel(
    for (hier::PatchLevel::Iterator ip1(level); ip1; ip1++) {
       tbox::Pointer<hier::Patch> patch = *ip1;
 
-      tbox::Pointer<pdat::CellData<int> >
-      buf_tag_data = patch->getPatchData(d_buf_tag_indx);
-      tbox::Pointer<pdat::CellData<int> >
-      tag_data = patch->getPatchData(d_tag_indx);
+      tbox::Pointer<pdat::CellData<int> > buf_tag_data(
+         patch->getPatchData(d_buf_tag_indx),
+         tbox::__dynamic_cast_tag());
+      tbox::Pointer<pdat::CellData<int> > tag_data(
+         patch->getPatchData(d_tag_indx),
+         tbox::__dynamic_cast_tag());
 
       buf_tag_data->fillAll(not_tag);
 
@@ -2718,10 +2728,12 @@ void GriddingAlgorithm::bufferTagsOnLevel(
    for (hier::PatchLevel::Iterator ip2(level); ip2; ip2++) {
       tbox::Pointer<hier::Patch> patch = *ip2;
 
-      tbox::Pointer<pdat::CellData<int> > buf_tag_data =
-         patch->getPatchData(d_buf_tag_indx);
-      tbox::Pointer<pdat::CellData<int> > tag_data =
-         patch->getPatchData(d_tag_indx);
+      tbox::Pointer<pdat::CellData<int> > buf_tag_data(
+         patch->getPatchData(d_buf_tag_indx),
+         tbox::__dynamic_cast_tag());
+      tbox::Pointer<pdat::CellData<int> > tag_data(
+         patch->getPatchData(d_tag_indx),
+         tbox::__dynamic_cast_tag());
 
       const hier::Box& buf_tag_box = buf_tag_data->getGhostBox();
       const hier::Box& tag_box = tag_data->getBox();
@@ -2775,7 +2787,7 @@ void GriddingAlgorithm::findRefinementBoxes(
 {
    TBOX_ASSERT((tag_ln >= 0)
       && (tag_ln <= d_hierarchy->getFinestLevelNumber()));
-   TBOX_ASSERT(!(d_hierarchy->getPatchLevel(tag_ln).isNull()));
+   TBOX_ASSERT(d_hierarchy->getPatchLevel(tag_ln));
    TBOX_DIM_ASSERT_CHECK_DIM_ARGS2(d_dim, new_mapped_box_level, *d_hierarchy);
 
    if (d_print_steps) {
@@ -4214,14 +4226,14 @@ void GriddingAlgorithm::printClassData(
       << (GriddingAlgorithm *)this << std::endl;
    os << "d_object_name = " << d_object_name << std::endl;
    os << "d_tag_init_strategy = "
-      << (TagAndInitializeStrategy *)d_tag_init_strategy << std::endl;
+      << d_tag_init_strategy.get() << std::endl;
    os << "d_box_generator = "
-      << (BoxGeneratorStrategy *)d_box_generator << std::endl;
+      << d_box_generator.get() << std::endl;
    os << "d_load_balancer = "
-      << (LoadBalanceStrategy *)d_load_balancer << std::endl;
+      << d_load_balancer.get() << std::endl;
    os << "d_load_balancer0 = "
-      << (LoadBalanceStrategy *)d_load_balancer0 << std::endl;
-   os << "d_tag = " << d_tag.getPointer() << std::endl;
+      << d_load_balancer0.get() << std::endl;
+   os << "d_tag = " << d_tag.get() << std::endl;
    os << "d_tag_indx = " << d_tag_indx << std::endl;
    os << "d_buf_tag_indx = " << d_buf_tag_indx << std::endl;
    os << "d_true_tag = " << d_true_tag << std::endl;
@@ -4252,7 +4264,7 @@ void GriddingAlgorithm::printClassData(
 void GriddingAlgorithm::putToDatabase(
    tbox::Pointer<tbox::Database> db)
 {
-   TBOX_ASSERT(!db.isNull());
+   TBOX_ASSERT(db);
 
    db->putInteger("ALGS_GRIDDING_ALGORITHM_VERSION",
       ALGS_GRIDDING_ALGORITHM_VERSION);
@@ -4282,7 +4294,7 @@ void GriddingAlgorithm::getFromInput(
 {
    NULL_USE(is_from_restart);
 
-   TBOX_ASSERT(!db.isNull());
+   TBOX_ASSERT(db);
 
    d_check_overflow_nesting =
       db->getBoolWithDefault("check_overflow_nesting", d_check_overflow_nesting);

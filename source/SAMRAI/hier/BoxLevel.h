@@ -18,7 +18,6 @@
 #include "SAMRAI/hier/PersistentOverlapConnectors.h"
 #include "SAMRAI/tbox/SAMRAI_MPI.h"
 #include "SAMRAI/tbox/SAMRAIManager.h"
-#include "SAMRAI/tbox/ConstPointer.h"
 #include "SAMRAI/tbox/Pointer.h"
 #include "SAMRAI/tbox/Timer.h"
 
@@ -131,9 +130,9 @@ public:
     * @param[in] mpi
     * @param[in] parallel_state
     */
-   explicit BoxLevel(
+   BoxLevel(
       const IntVector& ratio,
-      const tbox::ConstPointer<GridGeometry>& grid_geom,
+      const tbox::Pointer<const GridGeometry>& grid_geom,
       const tbox::SAMRAI_MPI& mpi = tbox::SAMRAI_MPI::getSAMRAIWorld(),
       const ParallelState parallel_state = DISTRIBUTED);
 
@@ -166,7 +165,7 @@ public:
    void
    initialize(
       const IntVector& ratio,
-      const tbox::ConstPointer<GridGeometry>& grid_geom,
+      const tbox::Pointer<const GridGeometry>& grid_geom,
       const tbox::SAMRAI_MPI& mpi = tbox::SAMRAI_MPI::getSAMRAIWorld(),
       const ParallelState parallel_state = DISTRIBUTED);
 
@@ -196,7 +195,7 @@ public:
    swapInitialize(
       BoxContainer& boxes,
       const IntVector& ratio,
-      const tbox::ConstPointer<GridGeometry>& grid_geom,
+      const tbox::Pointer<const GridGeometry>& grid_geom,
       const tbox::SAMRAI_MPI& mpi = tbox::SAMRAI_MPI::getSAMRAIWorld(),
       const ParallelState parallel_state = DISTRIBUTED);
 
@@ -661,7 +660,7 @@ public:
     *
     * If object has never been initialized, return NULL pointer.
     */
-   const tbox::ConstPointer<GridGeometry>&
+   const tbox::Pointer<const GridGeometry>&
    getGridGeometry() const;
 
    //@}
@@ -1038,7 +1037,7 @@ public:
    void
    getFromDatabase(
       tbox::Database& database,
-      const tbox::ConstPointer<GridGeometry>& grid_geom);
+      const tbox::Pointer<const GridGeometry>& grid_geom);
 
    //@}
 
@@ -1319,7 +1318,7 @@ private:
    void
    initializePrivate(
       const IntVector& ratio,
-      const tbox::ConstPointer<GridGeometry>& grid_geom,
+      const tbox::Pointer<const GridGeometry>& grid_geom,
       const tbox::SAMRAI_MPI& mpi = tbox::SAMRAI_MPI::getSAMRAIWorld(),
       const ParallelState parallel_state = DISTRIBUTED);
 
@@ -1496,7 +1495,7 @@ private:
    /*!
     * @brief Pointer to the GridGeometry associated with this object.
     */
-   tbox::ConstPointer<GridGeometry> d_grid_geometry;
+   tbox::Pointer<const GridGeometry> d_grid_geometry;
 
    /*!
     * @brief A LocalId object with value of -1.

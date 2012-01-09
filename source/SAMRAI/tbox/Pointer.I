@@ -23,14 +23,13 @@ template<class TYPE>
 SAMRAI_INLINE_KEYWORD
 Pointer<TYPE>::Pointer(
    const Pointer<TYPE>& ptr):
-   PointerBase(),
    d_object(ptr.d_object),
    d_counter(ptr.d_counter)
 {
    if (d_counter) d_counter->addReference();
 }
 
-template<class TYPE>
+template<typename TYPE>
 SAMRAI_INLINE_KEYWORD
 void Pointer<TYPE>::deleteObject()
 {
@@ -45,109 +44,58 @@ void Pointer<TYPE>::deleteObject()
 #endif
 }
 
-template<class TYPE>
+template<typename TYPE>
 SAMRAI_INLINE_KEYWORD
 Pointer<TYPE>::~Pointer()
 {
    if (d_counter && d_counter->deleteReference()) deleteObject();
 }
 
-template<class TYPE>
+template<typename TYPE>
 SAMRAI_INLINE_KEYWORD
-Pointer<TYPE>& Pointer<TYPE>::operator = (
-   const Pointer<TYPE>& ptr)
-{
-   if (this != &ptr) {
-      if (d_counter && d_counter->deleteReference()) deleteObject();
-      d_object = ptr.d_object;
-      d_counter = ptr.d_counter;
-      if (d_counter) d_counter->addReference();
-   }
-   return *this;
-}
-
-template<class TYPE>
-SAMRAI_INLINE_KEYWORD
-bool Pointer<TYPE>::operator == (
-   const Pointer<TYPE>& rhs) const
-{
-   return d_object == rhs.d_object;
-}
-
-template<class TYPE>
-SAMRAI_INLINE_KEYWORD
-bool Pointer<TYPE>::operator != (
-   const Pointer<TYPE>& rhs) const
-{
-   return d_object != rhs.d_object;
-}
-
-template<class TYPE>
-SAMRAI_INLINE_KEYWORD
-void Pointer<TYPE>::setNull()
+void Pointer<TYPE>::reset()
 {
    if (d_counter && d_counter->deleteReference()) deleteObject();
    d_object = 0;
    d_counter = 0;
 }
 
-template<class TYPE>
+template<typename TYPE>
 SAMRAI_INLINE_KEYWORD
 TYPE * Pointer<TYPE>::operator -> () const
 {
    return d_object;
 }
 
-template<class TYPE>
+template<typename TYPE>
 SAMRAI_INLINE_KEYWORD
 TYPE& Pointer<TYPE>::operator * () const
 {
    return *d_object;
 }
 
-template<class TYPE>
-SAMRAI_INLINE_KEYWORD
-Pointer<TYPE>::operator TYPE * () const
-{
-   return d_object;
-}
-
-template<class TYPE>
-SAMRAI_INLINE_KEYWORD
-bool Pointer<TYPE>::isNull() const
-{
-   return !d_object;
-}
-
-template<class TYPE>
+template<typename TYPE>
 SAMRAI_INLINE_KEYWORD
 Pointer<TYPE>::operator bool () const
 {
    return d_object ? true : false;
 }
 
-template<class TYPE>
+template<typename TYPE>
 SAMRAI_INLINE_KEYWORD
-bool Pointer<TYPE>::operator ! () const
-{
-   return !d_object;
-}
-
-template<class TYPE>
-SAMRAI_INLINE_KEYWORD
-TYPE * Pointer<TYPE>::getPointer() const
+TYPE * Pointer<TYPE>::get() const
 {
    return d_object;
 }
 
-template<class TYPE>
+template<typename TYPE>
 SAMRAI_INLINE_KEYWORD
 ReferenceCounter * Pointer<TYPE>::getReferenceCounter() const
 {
    return d_counter;
 }
 
-template<class TYPE>
+template<typename TYPE>
 SAMRAI_INLINE_KEYWORD
 const DescribedClass * Pointer<TYPE>::getSubclassPointer() const
 {
@@ -155,7 +103,7 @@ const DescribedClass * Pointer<TYPE>::getSubclassPointer() const
    return (DescribedClass *)d_object;
 }
 
-template<class TYPE>
+template<typename TYPE>
 SAMRAI_INLINE_KEYWORD
 ReferenceCounter * Pointer<TYPE>::getSubclassReferenceCounter() const
 {

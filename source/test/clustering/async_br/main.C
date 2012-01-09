@@ -94,7 +94,7 @@ int main(
        * Create input database and parse all data in input file into it.
        */
 
-      tbox::Pointer<tbox::Database> input_db(new tbox::InputDatabase("input_db"));
+      tbox::Pointer<tbox::InputDatabase> input_db(new tbox::InputDatabase("input_db"));
       tbox::InputManager::getManager()->parseInputFile(input_filename, input_db);
 
       /*
@@ -225,7 +225,7 @@ int main(
 
       tbox::Pointer<mesh::BoxGeneratorStrategy> box_generator =
          tbox::Pointer<mesh::BoxGeneratorStrategy>(new_br);
-      TBOX_ASSERT(!box_generator.isNull());
+      TBOX_ASSERT(box_generator);
 
       tbox::plog << "Creating grid algorithm.\n";
       tbox::Pointer<mesh::GriddingAlgorithm> gridding_algorithm;
@@ -240,7 +240,7 @@ int main(
                "CellTaggingMethod",
                tbox::Pointer<mesh::StandardTagAndInitStrategy>(
                   abrtest.getStandardTagAndInitObject(),
-                  false),
+                  false).get(),
                input_db->getDatabase("StandardTagAndInitialize")
                ));
          tbox::Pointer<mesh::TreeLoadBalancer> load_balancer(

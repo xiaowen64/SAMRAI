@@ -53,7 +53,7 @@ public:
       explicit TwoDimBool(
          const tbox::Dimension& dim);
 
-      explicit TwoDimBool(
+      TwoDimBool(
          const tbox::Dimension& dim,
          bool v);
 
@@ -92,7 +92,7 @@ private:
    /**
     * The default constructor for the patch geometry base class.
     */
-   explicit PatchGeometry(
+   PatchGeometry(
       const IntVector& ratio_to_level_zero,
       const TwoDimBool& touches_regular_bdry,
       const TwoDimBool& touches_periodic_bdry);

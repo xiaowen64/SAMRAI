@@ -221,13 +221,12 @@ int main(
 
       tbox::Pointer<math::HierarchyDataOpsReal<double> > face_ops(
          new math::HierarchyFaceDataOpsReal<double>(hierarchy, 0, 1));
-      TBOX_ASSERT(!face_ops.isNull());
+      TBOX_ASSERT(face_ops);
 
       tbox::Pointer<math::HierarchyDataOpsReal<double> > fwgt_ops(
          new math::HierarchyFaceDataOpsReal<double>(hierarchy, 0, 1));
 
       tbox::Pointer<hier::Patch> patch;
-      tbox::Pointer<geom::CartesianPatchGeometry> pgeom;
 
       // Initialize control volume data for face-centered components
       hier::Box coarse_fine = fine0 + fine1;
@@ -235,12 +234,15 @@ int main(
       for (ln = 0; ln < 2; ln++) {
          tbox::Pointer<hier::PatchLevel> level = hierarchy->getPatchLevel(ln);
          for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-            tbox::Pointer<pdat::FaceData<double> > data;
             patch = *ip;
-            pgeom = patch->getPatchGeometry();
+            tbox::Pointer<geom::CartesianPatchGeometry>pgeom(
+               patch->getPatchGeometry(),
+               tbox::__dynamic_cast_tag());
             const double* dx = pgeom->getDx();
             const double face_vol = dx[0] * dx[1];
-            data = patch->getPatchData(fwgt_id);
+            tbox::Pointer<pdat::FaceData<double> >data(
+                  patch->getPatchData(fwgt_id),
+                  tbox::__dynamic_cast_tag());
             data->fillAll(face_vol);
             pdat::FaceIndex fi(dim);
             int plo0 = patch->getBox().lower(0);
@@ -366,7 +368,9 @@ int main(
  *   for (ln = 0; ln < 2; ln++) {
  *   for (hier::PatchLevel::Iterator ip(hierarchy->getPatchLevel(ln)); ip; ip++) {
  *   patch = hierarchy->getPatchLevel(ln)->getPatch(ip());
- *   tbox::Pointer< pdat::FaceData<double> > cvdata = patch->getPatchData(cwgt_id);
+ *   tbox::Pointer< pdat::FaceData<double> > cvdata(
+ *      patch->getPatchData(cwgt_id),
+ *      tbox::__dynamic_cast_tag();
  *
  *   for (pdat::FaceIterator c(cvdata->getBox(),1);c && vol_test_passed;c++) {
  *   pdat::FaceIndex face_index = c();
@@ -611,7 +615,8 @@ int main(
          hierarchy->getPatchLevel(0);
       for (hier::PatchLevel::Iterator ip(level_zero); ip; ip++) {
          patch = *ip;
-         fdata = patch->getPatchData(fvindx[2]);
+         fdata = tbox::dynamic_pointer_cast<pdat::FaceData<double>,
+                                            hier::PatchData>(patch->getPatchData(fvindx[2]));
          int array0[2] = { 2, 2 };
          hier::Index index0(dim2d, array0);
          int array1[2] = { 5, 3 };
@@ -631,7 +636,8 @@ int main(
 
       for (hier::PatchLevel::Iterator ipp(level_zero); ipp; ipp++) {
          patch = *ipp;
-         fdata = patch->getPatchData(fvindx[2]);
+         fdata = tbox::dynamic_pointer_cast<pdat::FaceData<double>,
+                                            hier::PatchData>(patch->getPatchData(fvindx[2]));
          int array0[2] = { 2, 2 };
          pdat::FaceIndex index0(hier::Index(dim2d,
                                    array0), pdat::FaceIndex::Y,
@@ -806,14 +812,14 @@ int main(
       }
 
       for (iv = 0; iv < NVARS; iv++) {
-         fvar[iv].setNull();
+         fvar[iv].reset();
       }
-      fwgt.setNull();
+      fwgt.reset();
 
-      geometry.setNull();
-      hierarchy.setNull();
-      face_ops.setNull();
-      fwgt_ops.setNull();
+      geometry.reset();
+      hierarchy.reset();
+      face_ops.reset();
+      fwgt_ops.reset();
 
       if (num_failures == 0) {
          tbox::pout << "\nPASSED:  face hiertest" << std::endl;
@@ -845,8 +851,9 @@ doubleDataSameAsValue(
       tbox::Pointer<hier::PatchLevel> level = hierarchy->getPatchLevel(ln);
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
          patch = *ip;
-         tbox::Pointer<pdat::FaceData<double> > fvdata = patch->getPatchData(
-               desc_id);
+         tbox::Pointer<pdat::FaceData<double> > fvdata(
+            patch->getPatchData(desc_id),
+            tbox::__dynamic_cast_tag());
 
          for (pdat::FaceIterator c(fvdata->getBox(), 1); c && test_passed;
               c++) {

@@ -30,7 +30,8 @@ public:
     *
     * @param[i] connector
     */
-   explicit ConnectorStatistics(const Connector &connector);
+   explicit ConnectorStatistics(
+      const Connector &connector);
 
    /*!
     * @brief Print out local and globally reduced statistics on the
@@ -114,7 +115,9 @@ private:
       double d_values[NUMBER_OF_QUANTITIES];
    };
 
-   void computeLocalConnectorStatistics(StatisticalQuantities &sq) const;
+   void
+   computeLocalConnectorStatistics(
+      StatisticalQuantities &sq) const;
 
    //! @brief Connector to compute statistics for.
    const Connector &d_connector;

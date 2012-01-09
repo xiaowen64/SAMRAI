@@ -45,7 +45,7 @@ public:
     * cell width and depth (number of components) arguments give the defaults
     * for all cell data objects created with this factory.
     */
-   explicit CellDataFactory(
+   CellDataFactory(
       int depth,
       const hier::IntVector& ghosts);
 

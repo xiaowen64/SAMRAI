@@ -39,7 +39,7 @@ public:
     * source to destination index spaces.  This information is used later
     * in the generation of communication schedules.
     */
-   explicit FaceOverlap(
+   FaceOverlap(
       const tbox::Array<hier::BoxContainer>& boxes,
       const hier::Transformation& transformation);
    /**

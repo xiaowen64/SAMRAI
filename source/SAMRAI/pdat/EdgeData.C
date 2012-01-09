@@ -611,7 +611,7 @@ template<class TYPE>
 void EdgeData<TYPE>::getSpecializedFromDatabase(
    tbox::Pointer<tbox::Database> database)
 {
-   TBOX_ASSERT(!database.isNull());
+   TBOX_ASSERT(database);
 
    int ver = database->getInteger("PDAT_EDGEDATA_VERSION");
    if (ver != PDAT_EDGEDATA_VERSION) {
@@ -642,7 +642,7 @@ template<class TYPE>
 void EdgeData<TYPE>::putSpecializedToDatabase(
    tbox::Pointer<tbox::Database> database)
 {
-   TBOX_ASSERT(!database.isNull());
+   TBOX_ASSERT(database);
 
    database->putInteger("PDAT_EDGEDATA_VERSION", PDAT_EDGEDATA_VERSION);
 

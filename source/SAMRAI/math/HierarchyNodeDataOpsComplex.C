@@ -33,7 +33,7 @@ HierarchyNodeDataOpsComplex::HierarchyNodeDataOpsComplex(
    HierarchyDataOpsComplex()
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!hierarchy.isNull());
+   TBOX_ASSERT(hierarchy);
 #endif
    d_hierarchy = hierarchy;
    if ((coarsest_level < 0) || (finest_level < 0)) {
@@ -63,7 +63,7 @@ HierarchyNodeDataOpsComplex::~HierarchyNodeDataOpsComplex()
 void HierarchyNodeDataOpsComplex::setPatchHierarchy(
    tbox::Pointer<hier::PatchHierarchy> hierarchy)
 {
-   TBOX_ASSERT(!hierarchy.isNull());
+   TBOX_ASSERT(hierarchy);
 
    d_hierarchy = hierarchy;
 }
@@ -72,7 +72,7 @@ void HierarchyNodeDataOpsComplex::resetLevels(
    const int coarsest_level,
    const int finest_level)
 {
-   TBOX_ASSERT(!d_hierarchy.isNull());
+   TBOX_ASSERT(d_hierarchy);
    TBOX_ASSERT((coarsest_level >= 0)
       && (finest_level >= coarsest_level)
       && (finest_level <= d_hierarchy->getFinestLevelNumber()));
@@ -115,7 +115,7 @@ void HierarchyNodeDataOpsComplex::copyData(
    const bool interior_only) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!d_hierarchy.isNull());
+   TBOX_ASSERT(d_hierarchy);
    TBOX_ASSERT((d_coarsest_level >= 0)
       && (d_finest_level >= d_coarsest_level)
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
@@ -126,10 +126,14 @@ void HierarchyNodeDataOpsComplex::copyData(
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
          tbox::Pointer<hier::Patch> p = *ip;
 
-         tbox::Pointer<pdat::NodeData<dcomplex> > d = p->getPatchData(dst_id);
-         tbox::Pointer<pdat::NodeData<dcomplex> > s = p->getPatchData(src_id);
+         tbox::Pointer<pdat::NodeData<dcomplex> > d(
+            p->getPatchData(dst_id),
+            tbox::__dynamic_cast_tag());
+         tbox::Pointer<pdat::NodeData<dcomplex> > s(
+            p->getPatchData(src_id),
+            tbox::__dynamic_cast_tag());
 #ifdef DEBUG_CHECK_ASSERTIONS
-         TBOX_ASSERT(!d.isNull());
+         TBOX_ASSERT(d);
 #endif
          hier::Box box = (interior_only ? p->getBox() : d->getGhostBox());
 
@@ -143,17 +147,19 @@ void HierarchyNodeDataOpsComplex::swapData(
    const int data2_id) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   tbox::Pointer<pdat::NodeDataFactory<dcomplex> >
-   d1fact = d_hierarchy->getPatchDescriptor()->getPatchDataFactory(data1_id);
-   TBOX_ASSERT(!d1fact.isNull());
-   tbox::Pointer<pdat::NodeDataFactory<dcomplex> >
-   d2fact = d_hierarchy->getPatchDescriptor()->getPatchDataFactory(data2_id);
-   TBOX_ASSERT(!d2fact.isNull());
+   tbox::Pointer<pdat::NodeDataFactory<dcomplex> > d1fact(
+      d_hierarchy->getPatchDescriptor()->getPatchDataFactory(data1_id),
+      tbox::__dynamic_cast_tag());
+   TBOX_ASSERT(d1fact);
+   tbox::Pointer<pdat::NodeDataFactory<dcomplex> > d2fact(
+      d_hierarchy->getPatchDescriptor()->getPatchDataFactory(data2_id),
+      tbox::__dynamic_cast_tag());
+   TBOX_ASSERT(d2fact);
    TBOX_ASSERT(d1fact->getDepth() == d2fact->getDepth());
    TBOX_ASSERT(d1fact->getGhostCellWidth() == d2fact->getGhostCellWidth());
 #endif
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!d_hierarchy.isNull());
+   TBOX_ASSERT(d_hierarchy);
    TBOX_ASSERT((d_coarsest_level >= 0)
       && (d_finest_level >= d_coarsest_level)
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
@@ -175,7 +181,7 @@ void HierarchyNodeDataOpsComplex::printData(
    const bool interior_only) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!d_hierarchy.isNull());
+   TBOX_ASSERT(d_hierarchy);
    TBOX_ASSERT((d_coarsest_level >= 0)
       && (d_finest_level >= d_coarsest_level)
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
@@ -192,9 +198,11 @@ void HierarchyNodeDataOpsComplex::printData(
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
          tbox::Pointer<hier::Patch> p = *ip;
 
-         tbox::Pointer<pdat::NodeData<dcomplex> > d = p->getPatchData(data_id);
+         tbox::Pointer<pdat::NodeData<dcomplex> > d(
+            p->getPatchData(data_id),
+            tbox::__dynamic_cast_tag());
 #ifdef DEBUG_CHECK_ASSERTIONS
-         TBOX_ASSERT(!d.isNull());
+         TBOX_ASSERT(d);
 #endif
          hier::Box box = (interior_only ? p->getBox() : d->getGhostBox());
 
@@ -209,7 +217,7 @@ void HierarchyNodeDataOpsComplex::setToScalar(
    const bool interior_only) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!d_hierarchy.isNull());
+   TBOX_ASSERT(d_hierarchy);
    TBOX_ASSERT((d_coarsest_level >= 0)
       && (d_finest_level >= d_coarsest_level)
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
@@ -220,9 +228,11 @@ void HierarchyNodeDataOpsComplex::setToScalar(
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
          tbox::Pointer<hier::Patch> p = *ip;
 
-         tbox::Pointer<pdat::NodeData<dcomplex> > d = p->getPatchData(data_id);
+         tbox::Pointer<pdat::NodeData<dcomplex> > d(
+            p->getPatchData(data_id),
+            tbox::__dynamic_cast_tag());
 #ifdef DEBUG_CHECK_ASSERTIONS
-         TBOX_ASSERT(!d.isNull());
+         TBOX_ASSERT(d);
 #endif
          hier::Box box = (interior_only ? p->getBox() : d->getGhostBox());
 
@@ -246,7 +256,7 @@ void HierarchyNodeDataOpsComplex::scale(
    const bool interior_only) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!d_hierarchy.isNull());
+   TBOX_ASSERT(d_hierarchy);
    TBOX_ASSERT((d_coarsest_level >= 0)
       && (d_finest_level >= d_coarsest_level)
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
@@ -257,10 +267,14 @@ void HierarchyNodeDataOpsComplex::scale(
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
          tbox::Pointer<hier::Patch> p = *ip;
 
-         tbox::Pointer<pdat::NodeData<dcomplex> > dst = p->getPatchData(dst_id);
-         tbox::Pointer<pdat::NodeData<dcomplex> > src = p->getPatchData(src_id);
+         tbox::Pointer<pdat::NodeData<dcomplex> > dst(
+            p->getPatchData(dst_id),
+            tbox::__dynamic_cast_tag());
+         tbox::Pointer<pdat::NodeData<dcomplex> > src(
+            p->getPatchData(src_id),
+            tbox::__dynamic_cast_tag());
 #ifdef DEBUG_CHECK_ASSERTIONS
-         TBOX_ASSERT(!dst.isNull());
+         TBOX_ASSERT(dst);
 #endif
          hier::Box box = (interior_only ? p->getBox() : dst->getGhostBox());
 
@@ -276,7 +290,7 @@ void HierarchyNodeDataOpsComplex::addScalar(
    const bool interior_only) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!d_hierarchy.isNull());
+   TBOX_ASSERT(d_hierarchy);
    TBOX_ASSERT((d_coarsest_level >= 0)
       && (d_finest_level >= d_coarsest_level)
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
@@ -287,10 +301,14 @@ void HierarchyNodeDataOpsComplex::addScalar(
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
          tbox::Pointer<hier::Patch> p = *ip;
 
-         tbox::Pointer<pdat::NodeData<dcomplex> > dst = p->getPatchData(dst_id);
-         tbox::Pointer<pdat::NodeData<dcomplex> > src = p->getPatchData(src_id);
+         tbox::Pointer<pdat::NodeData<dcomplex> > dst(
+            p->getPatchData(dst_id),
+            tbox::__dynamic_cast_tag());
+         tbox::Pointer<pdat::NodeData<dcomplex> > src(
+            p->getPatchData(src_id),
+            tbox::__dynamic_cast_tag());
 #ifdef DEBUG_CHECK_ASSERTIONS
-         TBOX_ASSERT(!dst.isNull());
+         TBOX_ASSERT(dst);
 #endif
          hier::Box box = (interior_only ? p->getBox() : dst->getGhostBox());
 
@@ -306,7 +324,7 @@ void HierarchyNodeDataOpsComplex::add(
    const bool interior_only) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!d_hierarchy.isNull());
+   TBOX_ASSERT(d_hierarchy);
    TBOX_ASSERT((d_coarsest_level >= 0)
       && (d_finest_level >= d_coarsest_level)
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
@@ -317,11 +335,17 @@ void HierarchyNodeDataOpsComplex::add(
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
          tbox::Pointer<hier::Patch> p = *ip;
 
-         tbox::Pointer<pdat::NodeData<dcomplex> > d = p->getPatchData(dst_id);
-         tbox::Pointer<pdat::NodeData<dcomplex> > s1 = p->getPatchData(src1_id);
-         tbox::Pointer<pdat::NodeData<dcomplex> > s2 = p->getPatchData(src2_id);
+         tbox::Pointer<pdat::NodeData<dcomplex> > d(
+            p->getPatchData(dst_id),
+            tbox::__dynamic_cast_tag());
+         tbox::Pointer<pdat::NodeData<dcomplex> > s1(
+            p->getPatchData(src1_id),
+            tbox::__dynamic_cast_tag());
+         tbox::Pointer<pdat::NodeData<dcomplex> > s2(
+            p->getPatchData(src2_id),
+            tbox::__dynamic_cast_tag());
 #ifdef DEBUG_CHECK_ASSERTIONS
-         TBOX_ASSERT(!d.isNull());
+         TBOX_ASSERT(d);
 #endif
          hier::Box box = (interior_only ? p->getBox() : d->getGhostBox());
 
@@ -337,7 +361,7 @@ void HierarchyNodeDataOpsComplex::subtract(
    const bool interior_only) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!d_hierarchy.isNull());
+   TBOX_ASSERT(d_hierarchy);
    TBOX_ASSERT((d_coarsest_level >= 0)
       && (d_finest_level >= d_coarsest_level)
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
@@ -348,11 +372,17 @@ void HierarchyNodeDataOpsComplex::subtract(
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
          tbox::Pointer<hier::Patch> p = *ip;
 
-         tbox::Pointer<pdat::NodeData<dcomplex> > d = p->getPatchData(dst_id);
-         tbox::Pointer<pdat::NodeData<dcomplex> > s1 = p->getPatchData(src1_id);
-         tbox::Pointer<pdat::NodeData<dcomplex> > s2 = p->getPatchData(src2_id);
+         tbox::Pointer<pdat::NodeData<dcomplex> > d(
+            p->getPatchData(dst_id),
+            tbox::__dynamic_cast_tag());
+         tbox::Pointer<pdat::NodeData<dcomplex> > s1(
+            p->getPatchData(src1_id),
+            tbox::__dynamic_cast_tag());
+         tbox::Pointer<pdat::NodeData<dcomplex> > s2(
+            p->getPatchData(src2_id),
+            tbox::__dynamic_cast_tag());
 #ifdef DEBUG_CHECK_ASSERTIONS
-         TBOX_ASSERT(!d.isNull());
+         TBOX_ASSERT(d);
 #endif
          hier::Box box = (interior_only ? p->getBox() : d->getGhostBox());
 
@@ -368,7 +398,7 @@ void HierarchyNodeDataOpsComplex::multiply(
    const bool interior_only) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!d_hierarchy.isNull());
+   TBOX_ASSERT(d_hierarchy);
    TBOX_ASSERT((d_coarsest_level >= 0)
       && (d_finest_level >= d_coarsest_level)
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
@@ -379,11 +409,17 @@ void HierarchyNodeDataOpsComplex::multiply(
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
          tbox::Pointer<hier::Patch> p = *ip;
 
-         tbox::Pointer<pdat::NodeData<dcomplex> > d = p->getPatchData(dst_id);
-         tbox::Pointer<pdat::NodeData<dcomplex> > s1 = p->getPatchData(src1_id);
-         tbox::Pointer<pdat::NodeData<dcomplex> > s2 = p->getPatchData(src2_id);
+         tbox::Pointer<pdat::NodeData<dcomplex> > d(
+            p->getPatchData(dst_id),
+            tbox::__dynamic_cast_tag());
+         tbox::Pointer<pdat::NodeData<dcomplex> > s1(
+            p->getPatchData(src1_id),
+            tbox::__dynamic_cast_tag());
+         tbox::Pointer<pdat::NodeData<dcomplex> > s2(
+            p->getPatchData(src2_id),
+            tbox::__dynamic_cast_tag());
 #ifdef DEBUG_CHECK_ASSERTIONS
-         TBOX_ASSERT(!d.isNull());
+         TBOX_ASSERT(d);
 #endif
          hier::Box box = (interior_only ? p->getBox() : d->getGhostBox());
 
@@ -399,7 +435,7 @@ void HierarchyNodeDataOpsComplex::divide(
    const bool interior_only) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!d_hierarchy.isNull());
+   TBOX_ASSERT(d_hierarchy);
    TBOX_ASSERT((d_coarsest_level >= 0)
       && (d_finest_level >= d_coarsest_level)
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
@@ -410,11 +446,17 @@ void HierarchyNodeDataOpsComplex::divide(
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
          tbox::Pointer<hier::Patch> p = *ip;
 
-         tbox::Pointer<pdat::NodeData<dcomplex> > d = p->getPatchData(dst_id);
-         tbox::Pointer<pdat::NodeData<dcomplex> > s1 = p->getPatchData(src1_id);
-         tbox::Pointer<pdat::NodeData<dcomplex> > s2 = p->getPatchData(src2_id);
+         tbox::Pointer<pdat::NodeData<dcomplex> > d(
+            p->getPatchData(dst_id),
+            tbox::__dynamic_cast_tag());
+         tbox::Pointer<pdat::NodeData<dcomplex> > s1(
+            p->getPatchData(src1_id),
+            tbox::__dynamic_cast_tag());
+         tbox::Pointer<pdat::NodeData<dcomplex> > s2(
+            p->getPatchData(src2_id),
+            tbox::__dynamic_cast_tag());
 #ifdef DEBUG_CHECK_ASSERTIONS
-         TBOX_ASSERT(!d.isNull());
+         TBOX_ASSERT(d);
 #endif
          hier::Box box = (interior_only ? p->getBox() : d->getGhostBox());
 
@@ -429,7 +471,7 @@ void HierarchyNodeDataOpsComplex::reciprocal(
    const bool interior_only) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!d_hierarchy.isNull());
+   TBOX_ASSERT(d_hierarchy);
    TBOX_ASSERT((d_coarsest_level >= 0)
       && (d_finest_level >= d_coarsest_level)
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
@@ -440,10 +482,14 @@ void HierarchyNodeDataOpsComplex::reciprocal(
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
          tbox::Pointer<hier::Patch> p = *ip;
 
-         tbox::Pointer<pdat::NodeData<dcomplex> > d = p->getPatchData(dst_id);
-         tbox::Pointer<pdat::NodeData<dcomplex> > src = p->getPatchData(src_id);
+         tbox::Pointer<pdat::NodeData<dcomplex> > d(
+            p->getPatchData(dst_id),
+            tbox::__dynamic_cast_tag());
+         tbox::Pointer<pdat::NodeData<dcomplex> > src(
+            p->getPatchData(src_id),
+            tbox::__dynamic_cast_tag());
 #ifdef DEBUG_CHECK_ASSERTIONS
-         TBOX_ASSERT(!d.isNull());
+         TBOX_ASSERT(d);
 #endif
          hier::Box box = (interior_only ? p->getBox() : d->getGhostBox());
 
@@ -461,7 +507,7 @@ void HierarchyNodeDataOpsComplex::linearSum(
    const bool interior_only) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!d_hierarchy.isNull());
+   TBOX_ASSERT(d_hierarchy);
    TBOX_ASSERT((d_coarsest_level >= 0)
       && (d_finest_level >= d_coarsest_level)
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
@@ -472,11 +518,17 @@ void HierarchyNodeDataOpsComplex::linearSum(
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
          tbox::Pointer<hier::Patch> p = *ip;
 
-         tbox::Pointer<pdat::NodeData<dcomplex> > d = p->getPatchData(dst_id);
-         tbox::Pointer<pdat::NodeData<dcomplex> > s1 = p->getPatchData(src1_id);
-         tbox::Pointer<pdat::NodeData<dcomplex> > s2 = p->getPatchData(src2_id);
+         tbox::Pointer<pdat::NodeData<dcomplex> > d(
+            p->getPatchData(dst_id),
+            tbox::__dynamic_cast_tag());
+         tbox::Pointer<pdat::NodeData<dcomplex> > s1(
+            p->getPatchData(src1_id),
+            tbox::__dynamic_cast_tag());
+         tbox::Pointer<pdat::NodeData<dcomplex> > s2(
+            p->getPatchData(src2_id),
+            tbox::__dynamic_cast_tag());
 #ifdef DEBUG_CHECK_ASSERTIONS
-         TBOX_ASSERT(!d.isNull());
+         TBOX_ASSERT(d);
 #endif
          hier::Box box = (interior_only ? p->getBox() : d->getGhostBox());
 
@@ -493,7 +545,7 @@ void HierarchyNodeDataOpsComplex::axpy(
    const bool interior_only) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!d_hierarchy.isNull());
+   TBOX_ASSERT(d_hierarchy);
    TBOX_ASSERT((d_coarsest_level >= 0)
       && (d_finest_level >= d_coarsest_level)
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
@@ -504,11 +556,17 @@ void HierarchyNodeDataOpsComplex::axpy(
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
          tbox::Pointer<hier::Patch> p = *ip;
 
-         tbox::Pointer<pdat::NodeData<dcomplex> > d = p->getPatchData(dst_id);
-         tbox::Pointer<pdat::NodeData<dcomplex> > s1 = p->getPatchData(src1_id);
-         tbox::Pointer<pdat::NodeData<dcomplex> > s2 = p->getPatchData(src2_id);
+         tbox::Pointer<pdat::NodeData<dcomplex> > d(
+            p->getPatchData(dst_id),
+            tbox::__dynamic_cast_tag());
+         tbox::Pointer<pdat::NodeData<dcomplex> > s1(
+            p->getPatchData(src1_id),
+            tbox::__dynamic_cast_tag());
+         tbox::Pointer<pdat::NodeData<dcomplex> > s2(
+            p->getPatchData(src2_id),
+            tbox::__dynamic_cast_tag());
 #ifdef DEBUG_CHECK_ASSERTIONS
-         TBOX_ASSERT(!d.isNull());
+         TBOX_ASSERT(d);
 #endif
          hier::Box box = (interior_only ? p->getBox() : d->getGhostBox());
 
@@ -525,7 +583,7 @@ void HierarchyNodeDataOpsComplex::axmy(
    const bool interior_only) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!d_hierarchy.isNull());
+   TBOX_ASSERT(d_hierarchy);
    TBOX_ASSERT((d_coarsest_level >= 0)
       && (d_finest_level >= d_coarsest_level)
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
@@ -536,11 +594,17 @@ void HierarchyNodeDataOpsComplex::axmy(
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
          tbox::Pointer<hier::Patch> p = *ip;
 
-         tbox::Pointer<pdat::NodeData<dcomplex> > d = p->getPatchData(dst_id);
-         tbox::Pointer<pdat::NodeData<dcomplex> > s1 = p->getPatchData(src1_id);
-         tbox::Pointer<pdat::NodeData<dcomplex> > s2 = p->getPatchData(src2_id);
+         tbox::Pointer<pdat::NodeData<dcomplex> > d(
+            p->getPatchData(dst_id),
+            tbox::__dynamic_cast_tag());
+         tbox::Pointer<pdat::NodeData<dcomplex> > s1(
+            p->getPatchData(src1_id),
+            tbox::__dynamic_cast_tag());
+         tbox::Pointer<pdat::NodeData<dcomplex> > s2(
+            p->getPatchData(src2_id),
+            tbox::__dynamic_cast_tag());
 #ifdef DEBUG_CHECK_ASSERTIONS
-         TBOX_ASSERT(!d.isNull());
+         TBOX_ASSERT(d);
 #endif
          hier::Box box = (interior_only ? p->getBox() : d->getGhostBox());
 
@@ -555,7 +619,7 @@ void HierarchyNodeDataOpsComplex::abs(
    const bool interior_only) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!d_hierarchy.isNull());
+   TBOX_ASSERT(d_hierarchy);
    TBOX_ASSERT((d_coarsest_level >= 0)
       && (d_finest_level >= d_coarsest_level)
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
@@ -566,10 +630,14 @@ void HierarchyNodeDataOpsComplex::abs(
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
          tbox::Pointer<hier::Patch> p = *ip;
 
-         tbox::Pointer<pdat::NodeData<double> > d = p->getPatchData(dst_id);
-         tbox::Pointer<pdat::NodeData<dcomplex> > src = p->getPatchData(src_id);
+         tbox::Pointer<pdat::NodeData<double> > d(
+            p->getPatchData(dst_id),
+            tbox::__dynamic_cast_tag());
+         tbox::Pointer<pdat::NodeData<dcomplex> > src(
+            p->getPatchData(src_id),
+            tbox::__dynamic_cast_tag());
 #ifdef DEBUG_CHECK_ASSERTIONS
-         TBOX_ASSERT(!d.isNull());
+         TBOX_ASSERT(d);
 #endif
          hier::Box box = (interior_only ? p->getBox() : d->getGhostBox());
 
@@ -585,7 +653,7 @@ void HierarchyNodeDataOpsComplex::setRandomValues(
    const bool interior_only) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!d_hierarchy.isNull());
+   TBOX_ASSERT(d_hierarchy);
    TBOX_ASSERT((d_coarsest_level >= 0)
       && (d_finest_level >= d_coarsest_level)
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
@@ -596,9 +664,11 @@ void HierarchyNodeDataOpsComplex::setRandomValues(
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
          tbox::Pointer<hier::Patch> p = *ip;
 
-         tbox::Pointer<pdat::NodeData<dcomplex> > d = p->getPatchData(data_id);
+         tbox::Pointer<pdat::NodeData<dcomplex> > d(
+            p->getPatchData(data_id),
+            tbox::__dynamic_cast_tag());
 #ifdef DEBUG_CHECK_ASSERTIONS
-         TBOX_ASSERT(!d.isNull());
+         TBOX_ASSERT(d);
 #endif
          hier::Box box = (interior_only ? p->getBox() : d->getGhostBox());
 
@@ -620,7 +690,7 @@ int HierarchyNodeDataOpsComplex::numberOfEntries(
    const bool interior_only) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!d_hierarchy.isNull());
+   TBOX_ASSERT(d_hierarchy);
    TBOX_ASSERT((d_coarsest_level >= 0)
       && (d_finest_level >= d_coarsest_level)
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
@@ -631,10 +701,11 @@ int HierarchyNodeDataOpsComplex::numberOfEntries(
 
    if (interior_only) {
 
-      tbox::Pointer<pdat::NodeDataFactory<dcomplex> >
-      dfact = d_hierarchy->getPatchDescriptor()->getPatchDataFactory(data_id);
+      tbox::Pointer<pdat::NodeDataFactory<dcomplex> > dfact(
+         d_hierarchy->getPatchDescriptor()->getPatchDataFactory(data_id),
+         tbox::__dynamic_cast_tag());
 #ifdef DEBUG_CHECK_ASSERTIONS
-      TBOX_ASSERT(!dfact.isNull());
+      TBOX_ASSERT(dfact);
 #endif
 
       for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
@@ -659,10 +730,11 @@ int HierarchyNodeDataOpsComplex::numberOfEntries(
       for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
          tbox::Pointer<hier::PatchLevel> level = d_hierarchy->getPatchLevel(ln);
          for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-            tbox::Pointer<pdat::NodeData<dcomplex> > d =
-               (*ip)->getPatchData(data_id);
+            tbox::Pointer<pdat::NodeData<dcomplex> > d(
+               (*ip)->getPatchData(data_id),
+               tbox::__dynamic_cast_tag());
 #ifdef DEBUG_CHECK_ASSERTIONS
-            TBOX_ASSERT(!d.isNull());
+            TBOX_ASSERT(d);
 #endif
             entries += d_patch_ops.numberOfEntries(d, d->getGhostBox());
          }
@@ -684,7 +756,7 @@ double HierarchyNodeDataOpsComplex::sumControlVolumes(
    const int vol_id) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!d_hierarchy.isNull());
+   TBOX_ASSERT(d_hierarchy);
    TBOX_ASSERT((d_coarsest_level >= 0)
       && (d_finest_level >= d_coarsest_level)
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
@@ -698,10 +770,14 @@ double HierarchyNodeDataOpsComplex::sumControlVolumes(
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
          tbox::Pointer<hier::Patch> p = *ip;
 
-         tbox::Pointer<pdat::NodeData<dcomplex> > d = p->getPatchData(data_id);
-         tbox::Pointer<pdat::NodeData<double> > cv = p->getPatchData(vol_id);
+         tbox::Pointer<pdat::NodeData<dcomplex> > d(
+            p->getPatchData(data_id),
+            tbox::__dynamic_cast_tag());
+         tbox::Pointer<pdat::NodeData<double> > cv(
+            p->getPatchData(vol_id),
+            tbox::__dynamic_cast_tag());
 #ifdef DEBUG_CHECK_ASSERTIONS
-         TBOX_ASSERT(!cv.isNull());
+         TBOX_ASSERT(cv);
 #endif
          hier::Box box = cv->getGhostBox();
 
@@ -721,7 +797,7 @@ double HierarchyNodeDataOpsComplex::L1Norm(
    const int vol_id) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!d_hierarchy.isNull());
+   TBOX_ASSERT(d_hierarchy);
    TBOX_ASSERT((d_coarsest_level >= 0)
       && (d_finest_level >= d_coarsest_level)
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
@@ -735,18 +811,23 @@ double HierarchyNodeDataOpsComplex::L1Norm(
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
          tbox::Pointer<hier::Patch> p = *ip;
 
-         tbox::Pointer<pdat::NodeData<dcomplex> > d = p->getPatchData(data_id);
-         tbox::Pointer<pdat::NodeData<double> > cv;
+         tbox::Pointer<pdat::NodeData<dcomplex> > d(
+            p->getPatchData(data_id),
+            tbox::__dynamic_cast_tag());
+         tbox::Pointer<hier::PatchData> pd;
 
          hier::Box box = p->getBox();
          if (vol_id >= 0) {
 #ifdef DEBUG_CHECK_ASSERTIONS
-            TBOX_ASSERT(!d.isNull());
+            TBOX_ASSERT(d);
 #endif
             box = d->getGhostBox();
-            cv = p->getPatchData(vol_id);
+            pd = p->getPatchData(vol_id);
          }
 
+         tbox::Pointer<pdat::NodeData<double> > cv(
+            pd,
+            tbox::__dynamic_cast_tag());
          norm += d_patch_ops.L1Norm(d, box, cv);
       }
    }
@@ -775,7 +856,7 @@ double HierarchyNodeDataOpsComplex::weightedL2Norm(
    const int vol_id) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!d_hierarchy.isNull());
+   TBOX_ASSERT(d_hierarchy);
    TBOX_ASSERT((d_coarsest_level >= 0)
       && (d_finest_level >= d_coarsest_level)
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
@@ -789,19 +870,26 @@ double HierarchyNodeDataOpsComplex::weightedL2Norm(
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
          tbox::Pointer<hier::Patch> p = *ip;
 
-         tbox::Pointer<pdat::NodeData<dcomplex> > d = p->getPatchData(data_id);
-         tbox::Pointer<pdat::NodeData<dcomplex> > w = p->getPatchData(wgt_id);
-         tbox::Pointer<pdat::NodeData<double> > cv;
+         tbox::Pointer<pdat::NodeData<dcomplex> > d(
+            p->getPatchData(data_id),
+            tbox::__dynamic_cast_tag());
+         tbox::Pointer<pdat::NodeData<dcomplex> > w(
+            p->getPatchData(wgt_id),
+            tbox::__dynamic_cast_tag());
+         tbox::Pointer<hier::PatchData> pd;
 
          hier::Box box = p->getBox();
          if (vol_id >= 0) {
 #ifdef DEBUG_CHECK_ASSERTIONS
-            TBOX_ASSERT(!d.isNull());
+            TBOX_ASSERT(d);
 #endif
             box = d->getGhostBox();
-            cv = p->getPatchData(vol_id);
+            pd = p->getPatchData(vol_id);
          }
 
+         tbox::Pointer<pdat::NodeData<double> > cv(
+            pd,
+            tbox::__dynamic_cast_tag());
          double pnorm = d_patch_ops.weightedL2Norm(d, w, box, cv);
 
          norm_squared += pnorm * pnorm;
@@ -848,7 +936,7 @@ double HierarchyNodeDataOpsComplex::maxNorm(
    const int vol_id) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!d_hierarchy.isNull());
+   TBOX_ASSERT(d_hierarchy);
    TBOX_ASSERT((d_coarsest_level >= 0)
       && (d_finest_level >= d_coarsest_level)
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
@@ -862,18 +950,23 @@ double HierarchyNodeDataOpsComplex::maxNorm(
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
          tbox::Pointer<hier::Patch> p = *ip;
 
-         tbox::Pointer<pdat::NodeData<dcomplex> > d = p->getPatchData(data_id);
-         tbox::Pointer<pdat::NodeData<double> > cv;
+         tbox::Pointer<pdat::NodeData<dcomplex> > d(
+            p->getPatchData(data_id),
+            tbox::__dynamic_cast_tag());
+         tbox::Pointer<hier::PatchData> pd;
 
          hier::Box box = p->getBox();
          if (vol_id >= 0) {
 #ifdef DEBUG_CHECK_ASSERTIONS
-            TBOX_ASSERT(!d.isNull());
+            TBOX_ASSERT(d);
 #endif
             box = d->getGhostBox();
-            cv = p->getPatchData(vol_id);
+            pd = p->getPatchData(vol_id);
          }
 
+         tbox::Pointer<pdat::NodeData<double> > cv(
+            pd,
+            tbox::__dynamic_cast_tag());
          norm = tbox::MathUtilities<double>::Max(norm,
                d_patch_ops.maxNorm(d, box, cv));
       }
@@ -892,7 +985,7 @@ dcomplex HierarchyNodeDataOpsComplex::dot(
    const int vol_id) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!d_hierarchy.isNull());
+   TBOX_ASSERT(d_hierarchy);
    TBOX_ASSERT((d_coarsest_level >= 0)
       && (d_finest_level >= d_coarsest_level)
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
@@ -906,21 +999,26 @@ dcomplex HierarchyNodeDataOpsComplex::dot(
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
          tbox::Pointer<hier::Patch> p = *ip;
 
-         tbox::Pointer<pdat::NodeData<dcomplex> > d1 =
-            p->getPatchData(data1_id);
-         tbox::Pointer<pdat::NodeData<dcomplex> > d2 =
-            p->getPatchData(data2_id);
-         tbox::Pointer<pdat::NodeData<double> > cv;
+         tbox::Pointer<pdat::NodeData<dcomplex> > d1(
+            p->getPatchData(data1_id),
+            tbox::__dynamic_cast_tag());
+         tbox::Pointer<pdat::NodeData<dcomplex> > d2(
+            p->getPatchData(data2_id),
+            tbox::__dynamic_cast_tag());
+         tbox::Pointer<hier::PatchData> pd;
 
          hier::Box box = p->getBox();
          if (vol_id >= 0) {
 #ifdef DEBUG_CHECK_ASSERTIONS
-            TBOX_ASSERT(!d1.isNull());
+            TBOX_ASSERT(d1);
 #endif
             box = d1->getGhostBox();
-            cv = p->getPatchData(vol_id);
+            pd = p->getPatchData(vol_id);
          }
 
+         tbox::Pointer<pdat::NodeData<double> > cv(
+            pd,
+            tbox::__dynamic_cast_tag());
          dprod += d_patch_ops.dot(d1, d2, box, cv);
       }
    }
@@ -937,7 +1035,7 @@ dcomplex HierarchyNodeDataOpsComplex::integral(
    const int vol_id) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!d_hierarchy.isNull());
+   TBOX_ASSERT(d_hierarchy);
    TBOX_ASSERT((d_coarsest_level >= 0)
       && (d_finest_level >= d_coarsest_level)
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
@@ -951,13 +1049,16 @@ dcomplex HierarchyNodeDataOpsComplex::integral(
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
          tbox::Pointer<hier::Patch> p = *ip;
 
-         tbox::Pointer<pdat::NodeData<dcomplex> > data =
-            p->getPatchData(data_id);
-         tbox::Pointer<pdat::NodeData<double> > vol = p->getPatchData(vol_id);
+         tbox::Pointer<pdat::NodeData<dcomplex> > data(
+            p->getPatchData(data_id),
+            tbox::__dynamic_cast_tag());
+         tbox::Pointer<pdat::NodeData<double> > vol(
+            p->getPatchData(vol_id),
+            tbox::__dynamic_cast_tag());
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-         TBOX_ASSERT(!data.isNull());
-         TBOX_ASSERT(!vol.isNull());
+         TBOX_ASSERT(data);
+         TBOX_ASSERT(vol);
 #endif
 
          hier::Box box = data->getGhostBox();

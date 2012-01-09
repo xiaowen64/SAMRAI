@@ -193,7 +193,7 @@ SparseDataTester::testPackStream()
 
    int strsize = sample->getDataStreamSize(overlap);
 
-   SparseDataType::Iterator iter(sample);
+   SparseDataType::Iterator iter(sample.get());
 
    tbox::MessageStream str(strsize, tbox::MessageStream::Write);
    sample->packStream(str, overlap);
@@ -206,7 +206,7 @@ SparseDataTester::testPackStream()
 
    sample2->unpackStream(upStr, overlap);
 
-   SparseDataType::Iterator iter2(sample2);
+   SparseDataType::Iterator iter2(sample2.get());
 
    sample2->printNames(tbox::plog);
    tbox::plog << "Printing sample2" << std::endl;
@@ -248,8 +248,8 @@ SparseDataTester::testDatabaseInterface()
    tbox::Pointer<SparseDataType> sample2 = _createEmptySparseData();
    sample2->getFromDatabase(input_db);
 
-   SparseDataType::Iterator iter1(sample);
-   SparseDataType::Iterator iter2(sample2);
+   SparseDataType::Iterator iter1(sample.get());
+   SparseDataType::Iterator iter2(sample2.get());
 
    for ( ; iter1 != sample->end() && iter2 != sample2->end() && success;
          ++iter1, ++iter2) {
@@ -319,9 +319,9 @@ SparseDataTester::_testCopy(
    bool success = true;
    src->copy(*dst);
    TBOX_ASSERT(src->size() == dst->size());
-   pdat::SparseData<pdat::CellGeometry>::Iterator me(src);
+   pdat::SparseData<pdat::CellGeometry>::Iterator me(src.get());
    pdat::SparseData<pdat::CellGeometry>::Iterator me_end = src->end();
-   pdat::SparseData<pdat::CellGeometry>::Iterator other(dst);
+   pdat::SparseData<pdat::CellGeometry>::Iterator other(dst.get());
 
    for ( ; me != me_end && success != false; ++me, ++other) {
       if (me != other) {

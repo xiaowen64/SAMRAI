@@ -180,7 +180,7 @@ int main(
       int finest = 1;
       tbox::Pointer<math::HierarchyDataOpsReal<double> > cell_ops =
          new math::HierarchyCellDataOpsReal<double>(hierarchy, coarsest, finest);
-      TBOX_ASSERT(!cell_ops.isNull());
+      TBOX_ASSERT(cell_ops);
 
       tbox::Pointer<math::HierarchyDataOpsReal<double> > cwgt_ops =
          new math::HierarchyCellDataOpsReal<double>(hierarchy, coarsest, finest);
@@ -607,14 +607,14 @@ int main(
       }
 
       for (iv = 0; iv < NVARS; iv++) {
-         cvar[iv].setNull();
+         cvar[iv].reset();
       }
-      cwgt.setNull();
+      cwgt.reset();
 
-      geometry.setNull();
-      hierarchy.setNull();
-      cell_ops.setNull();
-      cwgt_ops.setNull();
+      geometry.reset();
+      hierarchy.reset();
+      cell_ops.reset();
+      cwgt_ops.reset();
 
    }
 

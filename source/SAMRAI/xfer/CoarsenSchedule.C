@@ -102,9 +102,9 @@ CoarsenSchedule::CoarsenSchedule(
    bool fill_coarse_data):
    d_ratio_between_levels(crse_level->getDim())
 {
-   TBOX_ASSERT(!crse_level.isNull());
-   TBOX_ASSERT(!fine_level.isNull());
-   TBOX_ASSERT(!coarsen_classes.isNull());
+   TBOX_ASSERT(crse_level);
+   TBOX_ASSERT(fine_level);
+   TBOX_ASSERT(coarsen_classes);
    TBOX_DIM_ASSERT_CHECK_ARGS2(*crse_level, *fine_level);
 
    const tbox::Dimension& dim(crse_level->getDim());
@@ -115,16 +115,16 @@ CoarsenSchedule::CoarsenSchedule(
    d_crse_level = crse_level;
    d_fine_level = fine_level;
    d_transaction_factory = transaction_factory;
-   d_temp_crse_level.setNull();
+   d_temp_crse_level.reset();
 
    d_coarsen_patch_strategy = patch_strategy;
 
    d_fill_coarse_data = fill_coarse_data;
 
-   d_schedule.setNull();
+   d_schedule.reset();
 
-   d_precoarsen_refine_algorithm.setNull();
-   d_precoarsen_refine_schedule.setNull();
+   d_precoarsen_refine_algorithm.reset();
+   d_precoarsen_refine_schedule.reset();
 
    d_number_coarsen_items = 0;
    d_coarsen_items = (const xfer::CoarsenClasses::Data **)NULL;
@@ -188,15 +188,15 @@ CoarsenSchedule::~CoarsenSchedule()
 {
    clearCoarsenItems();
 
-   d_transaction_factory.setNull();
-   d_crse_level.setNull();
-   d_fine_level.setNull();
-   d_temp_crse_level.setNull();
+   d_transaction_factory.reset();
+   d_crse_level.reset();
+   d_fine_level.reset();
+   d_temp_crse_level.reset();
 
-   d_schedule.setNull();
+   d_schedule.reset();
 
-   d_precoarsen_refine_algorithm.setNull();
-   d_precoarsen_refine_schedule.setNull();
+   d_precoarsen_refine_algorithm.reset();
+   d_precoarsen_refine_schedule.reset();
 }
 
 /*
@@ -210,7 +210,7 @@ CoarsenSchedule::~CoarsenSchedule()
 void CoarsenSchedule::reset(
    const tbox::Pointer<xfer::CoarsenClasses> coarsen_classes)
 {
-   TBOX_ASSERT(!coarsen_classes.isNull());
+   TBOX_ASSERT(coarsen_classes);
 
    setCoarsenItems(coarsen_classes);
 
@@ -401,7 +401,7 @@ void CoarsenSchedule::setupRefineAlgorithm()
    if (d_fill_coarse_data) {
       t_coarse_data_fill->barrierAndStart();
 
-      d_precoarsen_refine_algorithm.setNull();
+      d_precoarsen_refine_algorithm.reset();
       d_precoarsen_refine_algorithm = new RefineAlgorithm(dim);
 
       for (size_t ici = 0; ici < d_number_coarsen_items; ici++) {
@@ -409,7 +409,7 @@ void CoarsenSchedule::setupRefineAlgorithm()
          d_precoarsen_refine_algorithm->registerRefine(src_id,
             src_id,
             src_id,
-            tbox::Pointer<xfer::VariableFillPattern>(NULL));
+            tbox::Pointer<hier::RefineOperator>(NULL));
       }
 
       t_coarse_data_fill->stop();
@@ -701,7 +701,7 @@ hier::IntVector CoarsenSchedule::getMaxGhostsToGrow() const
       // gcw.max(pd->getPatchDataFactory(src_id)->getDefaultGhostCellWidth());
 
       hier::IntVector gcw1 = d_coarsen_items[ici]->d_gcw_to_coarsen;
-      if (!d_coarsen_items[ici]->d_opcoarsen.isNull()) {
+      if (d_coarsen_items[ici]->d_opcoarsen) {
          gcw1 += d_coarsen_items[ici]->d_opcoarsen->getStencilWidth();
       }
       gcw.max(gcw1);
@@ -726,8 +726,8 @@ void CoarsenSchedule::constructScheduleTransactions(
    tbox::Pointer<hier::PatchLevel> src_level,
    const hier::Box& src_mapped_box)
 {
-   TBOX_ASSERT(!dst_level.isNull());
-   TBOX_ASSERT(!src_level.isNull());
+   TBOX_ASSERT(dst_level);
+   TBOX_ASSERT(src_level);
 
    const tbox::Dimension& dim(d_crse_level->getDim());
 
@@ -880,7 +880,7 @@ void CoarsenSchedule::constructScheduleTransactions(
             dst_fill_box,
             true, transformation));
 
-      if (overlap.isNull()) {
+      if (!overlap) {
          TBOX_ERROR("Internal CoarsenSchedule error..."
             << "\n Overlap is NULL for "
             << "\n src box = " << src_box
@@ -909,7 +909,7 @@ void CoarsenSchedule::constructScheduleTransactions(
    }  // iterate over all coarsen equivalence classes
 
    for (int i = 0; i < num_coarsen_items; i++) {
-      if (!(transactions[i].isNull())) {
+      if (transactions[i]) {
          d_schedule->appendTransaction(transactions[i]);
       }
    }
@@ -950,7 +950,7 @@ void CoarsenSchedule::coarsenSourceData(
       for (size_t ici = 0; ici < d_number_coarsen_items; ici++) {
          const xfer::CoarsenClasses::Data * const crs_item =
             d_coarsen_items[ici];
-         if (!(crs_item->d_opcoarsen.isNull())) {
+         if (crs_item->d_opcoarsen) {
             const int source_id = crs_item->d_src;
             crs_item->d_opcoarsen->coarsen(*temp_patch, *fine_patch,
                source_id, source_id,
@@ -1202,10 +1202,10 @@ void CoarsenSchedule::initializeCallback()
 
 void CoarsenSchedule::finalizeCallback()
 {
-   t_coarsen_data.setNull();
-   t_gen_sched_n_squared.setNull();
-   t_gen_sched_dlbg.setNull();
-   t_invert_edges.setNull();
+   t_coarsen_data.reset();
+   t_gen_sched_n_squared.reset();
+   t_gen_sched_dlbg.reset();
+   t_invert_edges.reset();
 }
 
 }

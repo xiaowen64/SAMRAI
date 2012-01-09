@@ -529,7 +529,7 @@ SiloDatabase::putDatabase(
                                      d_directory + "/" + key,
                                      true));
 
-   TBOX_ASSERT(!new_database.isNull());
+   TBOX_ASSERT(new_database);
 
    return new_database;
 }

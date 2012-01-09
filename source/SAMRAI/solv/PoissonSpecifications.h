@@ -46,7 +46,7 @@ public:
     *
     * @param object_name Name of object.
     */
-   PoissonSpecifications(
+   explicit PoissonSpecifications(
       const std::string& object_name);
 
    /*!

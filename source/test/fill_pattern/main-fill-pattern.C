@@ -400,8 +400,9 @@ bool SingleLevelTestCase(
       // Loop over each patch and initialize data
       for (hier::PatchLevel::Iterator p(level); p; p++) {
          tbox::Pointer<hier::Patch> patch(*p);
-         tbox::Pointer<pdat::CellData<int> > cdata =
-            patch->getPatchData(data_id);
+         tbox::Pointer<pdat::CellData<int> > cdata(
+            patch->getPatchData(data_id),
+            tbox::__dynamic_cast_tag());
 
          int data_txt_id = patch->getBox().getLocalId().getValue();
          if (mpi.getRank() == 1) {
@@ -416,8 +417,9 @@ bool SingleLevelTestCase(
       // Loop over each patch and initialize data
       for (hier::PatchLevel::Iterator p(level); p; p++) {
          tbox::Pointer<hier::Patch> patch(*p);
-         tbox::Pointer<pdat::NodeData<int> > ndata =
-            patch->getPatchData(data_id);
+         tbox::Pointer<pdat::NodeData<int> > ndata(
+            patch->getPatchData(data_id),
+            tbox::__dynamic_cast_tag());
 
          int data_txt_id = patch->getBox().getLocalId().getValue();
          if (mpi.getRank() == 1) {
@@ -445,8 +447,9 @@ bool SingleLevelTestCase(
        pattern_name == "FIRST_LAYER_CELL_FILL_PATTERN") {
       for (hier::PatchLevel::Iterator p(level); p; p++) {
          tbox::Pointer<hier::Patch> patch(*p);
-         tbox::Pointer<pdat::CellData<int> > cdata =
-            patch->getPatchData(data_id);
+         tbox::Pointer<pdat::CellData<int> > cdata(
+            patch->getPatchData(data_id),
+            tbox::__dynamic_cast_tag());
 
          pdat::CellData<int> expected(cdata->getBox(),
                                       cdata->getDepth(),
@@ -472,8 +475,9 @@ bool SingleLevelTestCase(
               pattern_name == "SECOND_LAYER_NODE_FILL_PATTERN") {
       for (hier::PatchLevel::Iterator p(level); p; p++) {
          tbox::Pointer<hier::Patch> patch(*p);
-         tbox::Pointer<pdat::NodeData<int> > ndata =
-            patch->getPatchData(data_id);
+         tbox::Pointer<pdat::NodeData<int> > ndata(
+            patch->getPatchData(data_id),
+            tbox::__dynamic_cast_tag());
 
          pdat::NodeData<int> expected(ndata->getBox(),
                                       ndata->getDepth(),

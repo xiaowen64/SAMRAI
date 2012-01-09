@@ -1356,7 +1356,7 @@ void MappingConnectorAlgorithm::privateModify_findOverlapsForOneProcess(
    const IntVector& refinement_ratio) const
 {
    const BoxLevel& old = mapping_connector.getBase();
-   const tbox::ConstPointer<GridGeometry>& grid_geometry(old.getGridGeometry());
+   const tbox::Pointer<const GridGeometry>& grid_geometry(old.getGridGeometry());
    const int rank = old.getMPI().getRank();
 
    while (base_ni != visible_base_nabrs.end() &&
@@ -1695,13 +1695,13 @@ void MappingConnectorAlgorithm::initializeCallback()
 
 void MappingConnectorAlgorithm::finalizeCallback()
 {
-   t_modify.setNull();
-   t_modify_setup_comm.setNull();
-   t_modify_remove_and_cache.setNull();
-   t_modify_discover_and_send.setNull();
-   t_modify_receive_and_unpack.setNull();
-   t_modify_MPI_wait.setNull();
-   t_modify_misc.setNull();
+   t_modify.reset();
+   t_modify_setup_comm.reset();
+   t_modify_remove_and_cache.reset();
+   t_modify_discover_and_send.reset();
+   t_modify_receive_and_unpack.reset();
+   t_modify_MPI_wait.reset();
+   t_modify_misc.reset();
 
    if (s_class_mpi.getCommunicator() != tbox::SAMRAI_MPI::commNull) {
       s_class_mpi.freeCommunicator();

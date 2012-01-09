@@ -14,7 +14,7 @@
 #include "SAMRAI/SAMRAI_config.h"
 
 #include "SAMRAI/hier/BoxTree.h"
-#include "SAMRAI/tbox/ConstPointer.h"
+#include "SAMRAI/tbox/Pointer.h"
 #include "SAMRAI/tbox/DescribedClass.h"
 
 #include <vector>
@@ -55,7 +55,7 @@ public:
     * larger value tends to make tree building faster but tree
     * searching slower, and vice versa.  @b Default: 10
     */
-   explicit MultiblockBoxTree(
+   MultiblockBoxTree(
       const GridGeometry& grid_geometry,
       const BoxContainer& boxes,
       size_t min_number = 10);
@@ -71,7 +71,7 @@ public:
     *
     * @param[in] min_number.  @b Default: 10
     */
-   explicit MultiblockBoxTree(
+   MultiblockBoxTree(
       const GridGeometry& grid_geometry,
       const std::vector<Box>& boxes,
       size_t min_number = 10);
@@ -86,7 +86,7 @@ public:
     *
     * @param[in] min_number.  @b Default: 10
     */
-   explicit MultiblockBoxTree(
+   MultiblockBoxTree(
       const GridGeometry& grid_geometry,
       const std::map<BlockId, BoxContainer>& boxes,
       size_t min_number = 10);
@@ -95,7 +95,7 @@ public:
     * @brief Default constructor constructs an uninitialized
     * MultiblockBoxTree.
     */
-   explicit MultiblockBoxTree();
+   MultiblockBoxTree();
 
    /*!
     * @brief Destructor.

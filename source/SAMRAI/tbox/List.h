@@ -340,7 +340,7 @@ public:
    /**
     * Create a list iterator pointing to the beginning of the specified list.
     */
-   ListIterator(
+   explicit ListIterator(
       const List<TYPE>& list);
 
    /**

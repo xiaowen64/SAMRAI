@@ -158,15 +158,19 @@ bool FaceDataFactory<TYPE>::validCopyTo(
     * Valid options are FaceData and OuterfaceData.
     */
    if (!valid_copy) {
-      tbox::Pointer<FaceDataFactory<TYPE> > fdf = dst_pdf;
-      if (!fdf.isNull()) {
+      tbox::Pointer<FaceDataFactory<TYPE> > fdf(
+         dst_pdf,
+         tbox::__dynamic_cast_tag());
+      if (fdf) {
          valid_copy = true;
       }
    }
 
    if (!valid_copy) {
-      tbox::Pointer<OuterfaceDataFactory<TYPE> > ofdf = dst_pdf;
-      if (!ofdf.isNull()) {
+      tbox::Pointer<OuterfaceDataFactory<TYPE> > ofdf(
+         dst_pdf,
+         tbox::__dynamic_cast_tag());
+      if (ofdf) {
          valid_copy = true;
       }
    }

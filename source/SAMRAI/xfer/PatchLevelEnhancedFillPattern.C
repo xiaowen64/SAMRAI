@@ -70,7 +70,7 @@ void PatchLevelEnhancedFillPattern::computeFillBoxesAndNeighborhoodSets(
    NULL_USE(src_to_dst);
    TBOX_DIM_ASSERT_CHECK_ARGS2(dst_mapped_box_level, fill_ghost_width);
 
-   tbox::ConstPointer<hier::GridGeometry> grid_geometry(
+   tbox::Pointer<const hier::GridGeometry> grid_geometry(
       dst_mapped_box_level.getGridGeometry());
 
    const hier::BoxContainer& dst_mapped_boxes =

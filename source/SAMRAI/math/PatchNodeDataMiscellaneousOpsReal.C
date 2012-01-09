@@ -68,11 +68,11 @@ int PatchNodeDataMiscellaneousOpsReal<TYPE>::computeConstrProdPos(
    const tbox::Pointer<pdat::NodeData<double> > cvol) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!data1.isNull() && !data2.isNull());
+   TBOX_ASSERT(data1 && data2);
 #endif
    int retval;
    const hier::Box node_box = pdat::NodeGeometry::toNodeBox(box);
-   if (cvol.isNull()) {
+   if (!cvol) {
       retval = d_array_ops.computeConstrProdPos(data1->getArrayData(),
             data2->getArrayData(),
             node_box);
@@ -95,10 +95,10 @@ void PatchNodeDataMiscellaneousOpsReal<TYPE>::compareToScalar(
    const tbox::Pointer<pdat::NodeData<double> > cvol) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!dst.isNull() && !src.isNull());
+   TBOX_ASSERT(dst && src);
 #endif
    const hier::Box node_box = pdat::NodeGeometry::toNodeBox(box);
-   if (cvol.isNull()) {
+   if (!cvol) {
       d_array_ops.compareToScalar(dst->getArrayData(),
          src->getArrayData(),
          alpha,
@@ -120,11 +120,11 @@ int PatchNodeDataMiscellaneousOpsReal<TYPE>::testReciprocal(
    const tbox::Pointer<pdat::NodeData<double> > cvol) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!dst.isNull() && !src.isNull());
+   TBOX_ASSERT(dst && src);
 #endif
    int retval;
    const hier::Box node_box = pdat::NodeGeometry::toNodeBox(box);
-   if (cvol.isNull()) {
+   if (!cvol) {
       retval = d_array_ops.testReciprocal(dst->getArrayData(),
             src->getArrayData(),
             node_box);
@@ -145,7 +145,7 @@ TYPE PatchNodeDataMiscellaneousOpsReal<TYPE>::maxPointwiseDivide(
    const hier::Box& box) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!numer.isNull() && !denom.isNull());
+   TBOX_ASSERT(numer && denom);
 #endif
    TYPE retval;
    const hier::Box node_box = pdat::NodeGeometry::toNodeBox(box);
@@ -162,7 +162,7 @@ TYPE PatchNodeDataMiscellaneousOpsReal<TYPE>::minPointwiseDivide(
    const hier::Box& box) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!numer.isNull() && !denom.isNull());
+   TBOX_ASSERT(numer && denom);
 #endif
    TYPE retval;
    const hier::Box node_box = pdat::NodeGeometry::toNodeBox(box);

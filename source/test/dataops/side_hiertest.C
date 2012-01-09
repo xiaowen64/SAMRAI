@@ -208,13 +208,12 @@ int main(
 
       tbox::Pointer<math::HierarchyDataOpsReal<double> > side_ops(
          new math::HierarchySideDataOpsReal<double>(hierarchy, 0, 1));
-      TBOX_ASSERT(!side_ops.isNull());
+      TBOX_ASSERT(side_ops);
 
       tbox::Pointer<math::HierarchyDataOpsReal<double> > swgt_ops(
          new math::HierarchySideDataOpsReal<double>(hierarchy, 0, 1));
 
       tbox::Pointer<hier::Patch> patch;
-      tbox::Pointer<geom::CartesianPatchGeometry> pgeom;
 
       // Initialize control volume data for side-centered components
       hier::Box coarse_fine = fine0 + fine1;
@@ -222,12 +221,15 @@ int main(
       for (ln = 0; ln < 2; ln++) {
          tbox::Pointer<hier::PatchLevel> level = hierarchy->getPatchLevel(ln);
          for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-            tbox::Pointer<pdat::SideData<double> > data;
             patch = *ip;
-            pgeom = patch->getPatchGeometry();
+            tbox::Pointer<geom::CartesianPatchGeometry> pgeom(
+               patch->getPatchGeometry(),
+               tbox::__dynamic_cast_tag());
             const double* dx = pgeom->getDx();
             const double side_vol = dx[0] * dx[1];
-            data = patch->getPatchData(swgt_id);
+            tbox::Pointer<pdat::SideData<double> > data(
+               patch->getPatchData(swgt_id),
+               tbox::__dynamic_cast_tag());
             data->fillAll(side_vol);
             pdat::SideIndex fi(dim);
             int plo0 = patch->getBox().lower(0);
@@ -570,7 +572,8 @@ int main(
       tbox::Pointer<hier::PatchLevel> level_zero = hierarchy->getPatchLevel(0);
       for (hier::PatchLevel::Iterator ip(level_zero); ip; ip++) {
          patch = *ip;
-         cdata = patch->getPatchData(svindx[2]);
+         cdata = tbox::dynamic_pointer_cast<pdat::SideData<double>,
+                                            hier::PatchData>(patch->getPatchData(svindx[2]));
          hier::Index index0(2, 2);
          hier::Index index1(5, 3);
          if (patch->getBox().contains(index0)) {
@@ -587,7 +590,8 @@ int main(
       bool bogus_value_test_passed = true;
       for (hier::PatchLevel::Iterator ipp(level_zero); ipp; ipp++) {
          patch = *ipp;
-         cdata = patch->getPatchData(svindx[2]);
+         cdata = tbox::dynamic_pointer_cast<pdat::SideData<double>,
+                                            hier::PatchData>(patch->getPatchData(svindx[2]));
          pdat::SideIndex index0(hier::Index(2,
                                    2), pdat::SideIndex::Y,
                                 pdat::SideIndex::Lower);
@@ -760,14 +764,14 @@ int main(
       }
 
       for (iv = 0; iv < NVARS; iv++) {
-         fvar[iv].setNull();
+         fvar[iv].reset();
       }
-      swgt.setNull();
+      swgt.reset();
 
-      geometry.setNull();
-      hierarchy.setNull();
-      side_ops.setNull();
-      swgt_ops.setNull();
+      geometry.reset();
+      hierarchy.reset();
+      side_ops.reset();
+      swgt_ops.reset();
 
       if (num_failures == 0) {
          tbox::pout << "\nPASSED:  side hiertest" << std::endl;
@@ -799,8 +803,9 @@ doubleDataSameAsValue(
       tbox::Pointer<hier::PatchLevel> level = hierarchy->getPatchLevel(ln);
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
          patch = *ip;
-         tbox::Pointer<pdat::SideData<double> > cvdata = patch->getPatchData(
-               desc_id);
+         tbox::Pointer<pdat::SideData<double> > cvdata(
+               patch->getPatchData(desc_id),
+               tbox::__dynamic_cast_tag());
 
          for (pdat::SideIterator c(cvdata->getBox(), 1); c && test_passed;
               c++) {

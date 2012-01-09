@@ -53,9 +53,9 @@ BoxLevel::getParallelState() const
 SAMRAI_INLINE_KEYWORD
 void BoxLevel::detachMyHandle() const
 {
-   if (!d_handle.isNull()) {
+   if (d_handle) {
       d_handle->detachMyBoxLevel();
-      d_handle.setNull();
+      d_handle.reset();
    }
 }
 
@@ -502,7 +502,7 @@ BoxLevel::getBoxStrict(
  ***********************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-const tbox::ConstPointer<GridGeometry>&
+const tbox::Pointer<const GridGeometry>&
 BoxLevel::getGridGeometry() const
 {
    return d_grid_geometry;
@@ -516,7 +516,7 @@ SAMRAI_INLINE_KEYWORD
 const tbox::Pointer<BoxLevelHandle>& BoxLevel::
 getBoxLevelHandle() const
 {
-   if (d_handle.isNull()) {
+   if (!d_handle) {
       /*
        * No handle yet.  Generate one attached to this object.
        */

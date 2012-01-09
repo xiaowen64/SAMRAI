@@ -46,7 +46,7 @@ public:
     * @param[in] bytes   Number of bytes in the stream.
     * @param[in] mode    MessageStream::Read or MessageStream::Write.
     */
-   explicit MessageStream(
+   MessageStream(
       const size_t bytes,
       const StreamMode mode);
 

@@ -232,7 +232,7 @@ protected:
     * with the definition of a Singleton class, only a timer manager object
     * can have access to the constructor for the class.
     */
-   TimerManager(
+   explicit TimerManager(
       Pointer<Database> input_db);
 
    /*!

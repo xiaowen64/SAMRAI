@@ -268,7 +268,7 @@ bool Statistician::checkProcStatExists(
    Pointer<Statistic>& stat,
    const std::string& name) const
 {
-   stat.setNull();
+   stat.reset();
 
    bool stat_found = false;
    for (int i = 0; i < d_num_proc_stats; i++) {
@@ -286,7 +286,7 @@ bool Statistician::checkPatchStatExists(
    Pointer<Statistic>& stat,
    const std::string& name) const
 {
-   stat.setNull();
+   stat.reset();
 
    bool stat_found = false;
    for (int i = 0; i < d_num_patch_stats; i++) {
@@ -2563,7 +2563,7 @@ StatisticRestartDatabase::~StatisticRestartDatabase()
 void StatisticRestartDatabase::putToDatabase(
    Pointer<Database> db)
 {
-   TBOX_ASSERT(!db.isNull());
+   TBOX_ASSERT(db);
 
    db->putInteger("TBOX_STATISTICRESTARTDATABASE_VERSION",
       TBOX_STATISTICRESTARTDATABASE_VERSION);

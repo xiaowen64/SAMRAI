@@ -173,7 +173,7 @@ protected:
     *
     * @param dim  Dimension
     */
-   BoundaryLookupTable(
+   explicit BoundaryLookupTable(
       const tbox::Dimension& dim);
 
    /*!

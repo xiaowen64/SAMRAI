@@ -196,12 +196,7 @@ bool BoxLevelConnectorUtils::baseNestsInHead(
 
    const BoxLevel& base = connector.getBase();
    const BoxLevel& head = connector.getHead();
-   const tbox::ConstPointer<GridGeometry>& grid_geom = base.getGridGeometry();
-
-   tbox::Pointer<BoxTree> refined_domain;
-   if (domain != NULL) {
-      refined_domain = domain->createRefinedTree(head.getRefinementRatio());
-   }
+   const tbox::Pointer<const GridGeometry>& grid_geom = base.getGridGeometry();
 
    /*
     * We swell the base then check for the parts outside the head if
@@ -637,7 +632,7 @@ void BoxLevelConnectorUtils::computeInternalOrExternalParts(
 {
    const BoxLevel& input = input_to_reference.getBase();
 
-   const tbox::ConstPointer<GridGeometry>& grid_geometry(
+   const tbox::Pointer<const GridGeometry>& grid_geometry(
       input.getGridGeometry());
 
    const tbox::Dimension& dim(input.getDim());
@@ -932,7 +927,7 @@ void BoxLevelConnectorUtils::computeInternalOrExternalParts(
 void BoxLevelConnectorUtils::computeBoxesAroundBoundary(
    BoxContainer& boundary,
    const IntVector& refinement_ratio,
-   const tbox::ConstPointer<GridGeometry>& grid_geometry,
+   const tbox::Pointer<const GridGeometry>& grid_geometry,
    const bool simplify_boundary_boxes) const
 {
 
@@ -1550,11 +1545,11 @@ void BoxLevelConnectorUtils::initializeCallback()
 
 void BoxLevelConnectorUtils::finalizeCallback()
 {
-   t_make_sorting_map.setNull();
-   t_compute_external_parts.setNull();
-   t_compute_external_parts_intersection.setNull();
-   t_compute_internal_parts.setNull();
-   t_compute_internal_parts_intersection.setNull();
+   t_make_sorting_map.reset();
+   t_compute_external_parts.reset();
+   t_compute_external_parts_intersection.reset();
+   t_compute_internal_parts.reset();
+   t_compute_internal_parts_intersection.reset();
 }
 
 }

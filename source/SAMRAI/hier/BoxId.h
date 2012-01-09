@@ -54,7 +54,7 @@ public:
     *
     * @param[in] periodic_id
     */
-   explicit BoxId(
+   BoxId(
       const LocalId& local_id,
       const int owner_rank,
       const PeriodicId& periodic_id = PeriodicId::zero());

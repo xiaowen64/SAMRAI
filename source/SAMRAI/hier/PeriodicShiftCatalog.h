@@ -144,7 +144,7 @@ private:
     * After construction, the object should be populated with periodic
     * shifts using initializeShiftsByIndexDirections().
     */
-   PeriodicShiftCatalog(
+   explicit PeriodicShiftCatalog(
       const tbox::Dimension& dim);
 
    /*!

@@ -96,7 +96,7 @@ GridGeometry::GridGeometry(
    d_transfer_operator_registry(op_reg)
 {
    TBOX_ASSERT(!object_name.empty());
-   TBOX_ASSERT(!input_db.isNull());
+   TBOX_ASSERT(input_db);
 
    d_registered_for_restart = register_for_restart;
 
@@ -339,7 +339,7 @@ void GridGeometry::findPatchesTouchingBoundaries(
          (*iter_touches_periodic_bdry).second,
          box,
          level.getRatioToLevelZero(),
-         tmp_refined_periodic_domain_tree.isNull() ?
+         !tmp_refined_periodic_domain_tree ?
          d_domain_search_tree :
          *tmp_refined_periodic_domain_tree );
    }
@@ -762,7 +762,7 @@ void GridGeometry::getFromInput(
    bool is_from_restart)
 {
 
-   TBOX_ASSERT(!db.isNull());
+   TBOX_ASSERT(db);
 
    const tbox::Dimension dim(getDim());
 
@@ -830,7 +830,7 @@ void GridGeometry::getFromInput(
 void GridGeometry::putToDatabase(
    tbox::Pointer<tbox::Database> db)
 {
-   TBOX_ASSERT(!db.isNull());
+   TBOX_ASSERT(db);
 
    const tbox::Dimension dim(getDim());
 
@@ -1768,7 +1768,7 @@ bool GridGeometry::checkBoundaryBox(
 void GridGeometry::readBlockDataFromInput(
    const tbox::Pointer<tbox::Database>& input_db)
 {
-   TBOX_ASSERT(!input_db.isNull());
+   TBOX_ASSERT(input_db);
 
    d_singularity.resizeArray(d_number_blocks);
    d_singularity_indices.resizeArray(d_number_blocks);
@@ -2442,28 +2442,28 @@ void GridGeometry::initializeCallback()
 {
    t_find_patches_touching_boundaries = tbox::TimerManager::getManager()->
       getTimer("hier::GridGeometry::findPatchesTouchingBoundaries()");
-   TBOX_ASSERT(!t_find_patches_touching_boundaries.isNull());
+   TBOX_ASSERT(t_find_patches_touching_boundaries);
    t_touching_boundaries_init = tbox::TimerManager::getManager()->
       getTimer("hier::GridGeometry::...TouchingBoundaries()_init");
-   TBOX_ASSERT(!t_touching_boundaries_init.isNull());
+   TBOX_ASSERT(t_touching_boundaries_init);
    t_touching_boundaries_loop = tbox::TimerManager::getManager()->
       getTimer("hier::GridGeometry::...TouchingBoundaries()_loop");
-   TBOX_ASSERT(!t_touching_boundaries_loop.isNull());
+   TBOX_ASSERT(t_touching_boundaries_loop);
    t_set_geometry_on_patches = tbox::TimerManager::getManager()->
       getTimer("hier::GridGeometry::setGeometryOnPatches()");
-   TBOX_ASSERT(!t_set_geometry_on_patches.isNull());
+   TBOX_ASSERT(t_set_geometry_on_patches);
    t_set_boundary_boxes = tbox::TimerManager::getManager()->
       getTimer("hier::GridGeometry::setBoundaryBoxes()");
-   TBOX_ASSERT(!t_set_boundary_boxes.isNull());
+   TBOX_ASSERT(t_set_boundary_boxes);
    t_set_geometry_data_on_patches = tbox::TimerManager::getManager()->
       getTimer("hier::GridGeometry::set_geometry_data_on_patches");
-   TBOX_ASSERT(!t_set_geometry_data_on_patches.isNull());
+   TBOX_ASSERT(t_set_geometry_data_on_patches);
    t_compute_boundary_boxes_on_level = tbox::TimerManager::getManager()->
       getTimer("hier::GridGeometry::computeBoundaryBoxesOnLevel()");
-   TBOX_ASSERT(!t_compute_boundary_boxes_on_level.isNull());
+   TBOX_ASSERT(t_compute_boundary_boxes_on_level);
    t_get_boundary_boxes = tbox::TimerManager::getManager()->
       getTimer("hier::GridGeometry::getBoundaryBoxes()");
-   TBOX_ASSERT(!t_get_boundary_boxes.isNull());
+   TBOX_ASSERT(t_get_boundary_boxes);
 }
 
 /*
@@ -2473,14 +2473,14 @@ void GridGeometry::initializeCallback()
 
 void GridGeometry::finalizeCallback()
 {
-   t_find_patches_touching_boundaries.setNull();
-   t_touching_boundaries_init.setNull();
-   t_touching_boundaries_loop.setNull();
-   t_set_geometry_on_patches.setNull();
-   t_set_boundary_boxes.setNull();
-   t_set_geometry_data_on_patches.setNull();
-   t_compute_boundary_boxes_on_level.setNull();
-   t_get_boundary_boxes.setNull();
+   t_find_patches_touching_boundaries.reset();
+   t_touching_boundaries_init.reset();
+   t_touching_boundaries_loop.reset();
+   t_set_geometry_on_patches.reset();
+   t_set_boundary_boxes.reset();
+   t_set_geometry_data_on_patches.reset();
+   t_compute_boundary_boxes_on_level.reset();
+   t_get_boundary_boxes.reset();
 }
 
 }

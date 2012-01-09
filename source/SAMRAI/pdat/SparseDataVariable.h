@@ -50,7 +50,7 @@ public:
     * @param [in] dim
     * @param [in] name
     */
-   explicit SparseDataVariable(
+   SparseDataVariable(
       const tbox::Dimension& dim,
       const std::string& name,
       const std::vector<std::string>& dbl_attributes,

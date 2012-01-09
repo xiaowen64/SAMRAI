@@ -47,7 +47,7 @@ public:
     * SideIndex::Z (2). The side argument can be one of the constants
     * SideIndex::Lower (0) or SideIndex::Upper (1).
     */
-   explicit SideIndex(
+   SideIndex(
       const hier::Index& rhs,
       const int axis,
       const int side);

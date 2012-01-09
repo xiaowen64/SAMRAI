@@ -69,14 +69,14 @@ int PatchSideDataMiscellaneousOpsReal<TYPE>::computeConstrProdPos(
    const tbox::Pointer<pdat::SideData<double> > cvol) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!data1.isNull() && !data2.isNull());
+   TBOX_ASSERT(data1 && data2);
    TBOX_ASSERT(data1->getDirectionVector() == data2->getDirectionVector());
 #endif
    int retval = 1;
    const tbox::Dimension& dim(data1->getDim());
 
    const hier::IntVector& directions = data1->getDirectionVector();
-   if (cvol.isNull()) {
+   if (!cvol) {
       for (int d = 0; d < dim.getValue(); d++) {
          if (directions(d)) {
             const hier::Box side_box =
@@ -118,13 +118,13 @@ void PatchSideDataMiscellaneousOpsReal<TYPE>::compareToScalar(
    const tbox::Pointer<pdat::SideData<double> > cvol) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!dst.isNull() && !src.isNull());
+   TBOX_ASSERT(dst && src);
    TBOX_ASSERT(dst->getDirectionVector() == src->getDirectionVector());
 #endif
    const tbox::Dimension& dim(dst->getDim());
 
    const hier::IntVector& directions = dst->getDirectionVector();
-   if (cvol.isNull()) {
+   if (!cvol) {
       for (int d = 0; d < dim.getValue(); d++) {
          if (directions(d)) {
             const hier::Box side_box = pdat::SideGeometry::toSideBox(box, d);
@@ -160,14 +160,14 @@ int PatchSideDataMiscellaneousOpsReal<TYPE>::testReciprocal(
    const tbox::Pointer<pdat::SideData<double> > cvol) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!dst.isNull() && !src.isNull());
+   TBOX_ASSERT(dst && src);
    TBOX_ASSERT(dst->getDirectionVector() == src->getDirectionVector());
 #endif
    const tbox::Dimension& dim(dst->getDim());
 
    const hier::IntVector& directions = dst->getDirectionVector();
    int retval = 1;
-   if (cvol.isNull()) {
+   if (!cvol) {
       for (int d = 0; d < dim.getValue(); d++) {
          if (directions(d)) {
             const hier::Box side_box =
@@ -207,7 +207,7 @@ TYPE PatchSideDataMiscellaneousOpsReal<TYPE>::maxPointwiseDivide(
    const hier::Box& box) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!numer.isNull() && !denom.isNull());
+   TBOX_ASSERT(numer && denom);
 #endif
    const tbox::Dimension& dim(numer->getDim());
 
@@ -230,7 +230,7 @@ TYPE PatchSideDataMiscellaneousOpsReal<TYPE>::minPointwiseDivide(
    const hier::Box& box) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!numer.isNull() && !denom.isNull());
+   TBOX_ASSERT(numer && denom);
 #endif
    const tbox::Dimension& dim(numer->getDim());
 

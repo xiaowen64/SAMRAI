@@ -58,11 +58,15 @@ void MultiblockNodeDataTranslator<TYPE>::translateAndCopyData(
 
    const tbox::Dimension& dim(dst_patch.getDim());
 
-   tbox::Pointer<NodeData<TYPE> > dst = dst_patch.getPatchData(dst_id);
-   tbox::Pointer<NodeData<TYPE> > src = src_patch.getPatchData(src_id);
+   tbox::Pointer<NodeData<TYPE> > dst(
+      dst_patch.getPatchData(dst_id),
+      tbox::__dynamic_cast_tag());
+   tbox::Pointer<NodeData<TYPE> > src(
+      src_patch.getPatchData(src_id),
+      tbox::__dynamic_cast_tag());
 
-   TBOX_ASSERT(!(dst.isNull()));
-   TBOX_ASSERT(!(src.isNull()));
+   TBOX_ASSERT(dst);
+   TBOX_ASSERT(src);
 
    bool no_rotate;
    if (rotate != 0) {

@@ -62,7 +62,7 @@ public:
     * direction argument is specified, the only data for the given
     * side normal direction will be maintained and managed for this variable.
     */
-   explicit SideVariable(
+   SideVariable(
       const tbox::Dimension& dim,
       const std::string& name,
       int depth = 1,

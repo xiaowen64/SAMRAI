@@ -58,11 +58,15 @@ void MultiblockSideDataTranslator<TYPE>::translateAndCopyData(
 
    const tbox::Dimension& dim(shift.getDim());
 
-   tbox::Pointer<SideData<TYPE> > dst = dst_patch.getPatchData(dst_id);
-   tbox::Pointer<SideData<TYPE> > src = src_patch.getPatchData(src_id);
+   tbox::Pointer<SideData<TYPE> > dst(
+      dst_patch.getPatchData(dst_id),
+      tbox::__dynamic_cast_tag());
+   tbox::Pointer<SideData<TYPE> > src(
+      src_patch.getPatchData(src_id),
+      tbox::__dynamic_cast_tag());
 
-   TBOX_ASSERT(!(dst.isNull()));
-   TBOX_ASSERT(!(src.isNull()));
+   TBOX_ASSERT(dst);
+   TBOX_ASSERT(src);
    TBOX_ASSERT(dst->getDirectionVector() == src->getDirectionVector());
 
    hier::IntVector dir_vector(dst->getDirectionVector());

@@ -34,7 +34,7 @@ public:
     * The default constructor creates an uninitialized object in
     * distributed state.
     */
-   explicit MappingConnectorAlgorithm();
+   MappingConnectorAlgorithm();
 
    /*!
     * @brief Deallocate internal data.

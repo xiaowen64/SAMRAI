@@ -547,7 +547,7 @@ void SNES_SAMRAIContext::initialize(
    tbox::Pointer<SAMRAIVectorReal<double> > solution)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!solution.isNull());
+   TBOX_ASSERT(solution);
 #endif
 
    /*
@@ -1150,7 +1150,7 @@ void SNES_SAMRAIContext::putToDatabase(
    tbox::Pointer<tbox::Database> db)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!db.isNull());
+   TBOX_ASSERT(db);
 #endif
 
    db->putInteger("SOLV_SNES_SAMRAI_CONTEXT_VERSION",

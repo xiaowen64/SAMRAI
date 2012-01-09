@@ -67,7 +67,7 @@ int PatchEdgeDataNormOpsReal<TYPE>::numberOfEntries(
    const tbox::Pointer<pdat::EdgeData<TYPE> >& data,
    const hier::Box& box) const
 {
-   TBOX_ASSERT(!data.isNull());
+   TBOX_ASSERT(data);
    TBOX_DIM_ASSERT_CHECK_ARGS2(*data, box);
 
    const tbox::Dimension& dim(box.getDim());
@@ -96,7 +96,7 @@ double PatchEdgeDataNormOpsReal<TYPE>::sumControlVolumes(
    const hier::Box& box) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!data.isNull() && !cvol.isNull());
+   TBOX_ASSERT(data && cvol);
 #endif
    const tbox::Dimension& dim(data->getDim());
 
@@ -116,7 +116,7 @@ void PatchEdgeDataNormOpsReal<TYPE>::abs(
    const tbox::Pointer<pdat::EdgeData<TYPE> >& src,
    const hier::Box& box) const
 {
-   TBOX_ASSERT(!dst.isNull() && !src.isNull());
+   TBOX_ASSERT(dst && src);
    TBOX_DIM_ASSERT_CHECK_ARGS3(*dst, *src, box);
 
    const tbox::Dimension& dim(box.getDim());
@@ -135,13 +135,13 @@ double PatchEdgeDataNormOpsReal<TYPE>::L1Norm(
    const hier::Box& box,
    const tbox::Pointer<pdat::EdgeData<double> > cvol) const
 {
-   TBOX_ASSERT(!data.isNull());
+   TBOX_ASSERT(data);
    TBOX_DIM_ASSERT_CHECK_ARGS2(*data, box);
 
    const tbox::Dimension& dim(data->getDim());
 
    double retval = 0.0;
-   if (cvol.isNull()) {
+   if (!cvol) {
       for (int d = 0; d < dim.getValue(); d++) {
          const hier::Box edge_box = pdat::EdgeGeometry::toEdgeBox(box, d);
          retval += d_array_ops.L1Norm(data->getArrayData(d), edge_box);
@@ -165,13 +165,13 @@ double PatchEdgeDataNormOpsReal<TYPE>::L2Norm(
    const hier::Box& box,
    const tbox::Pointer<pdat::EdgeData<double> > cvol) const
 {
-   TBOX_ASSERT(!data.isNull());
+   TBOX_ASSERT(data);
    TBOX_DIM_ASSERT_CHECK_ARGS2(*data, box);
 
    const tbox::Dimension& dim(data->getDim());
 
    double retval = 0.0;
-   if (cvol.isNull()) {
+   if (!cvol) {
       for (int d = 0; d < dim.getValue(); d++) {
          const hier::Box edge_box = pdat::EdgeGeometry::toEdgeBox(box, d);
          double aval = d_array_ops.L2Norm(data->getArrayData(d), edge_box);
@@ -199,13 +199,13 @@ double PatchEdgeDataNormOpsReal<TYPE>::weightedL2Norm(
    const hier::Box& box,
    const tbox::Pointer<pdat::EdgeData<double> > cvol) const
 {
-   TBOX_ASSERT(!data.isNull() && !weight.isNull());
+   TBOX_ASSERT(data && weight);
    TBOX_DIM_ASSERT_CHECK_ARGS3(*data, *weight, box);
 
    const tbox::Dimension& dim(data->getDim());
 
    double retval = 0.0;
-   if (cvol.isNull()) {
+   if (!cvol) {
       for (int d = 0; d < dim.getValue(); d++) {
          const hier::Box edge_box = pdat::EdgeGeometry::toEdgeBox(box, d);
          double aval = d_array_ops.weightedL2Norm(data->getArrayData(d),
@@ -236,10 +236,10 @@ double PatchEdgeDataNormOpsReal<TYPE>::RMSNorm(
    const tbox::Pointer<pdat::EdgeData<double> > cvol) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!data.isNull());
+   TBOX_ASSERT(data);
 #endif
    double retval = L2Norm(data, box, cvol);
-   if (cvol.isNull()) {
+   if (!cvol) {
       retval /= sqrt((double)numberOfEntries(data, box));
    } else {
       retval /= sqrt(sumControlVolumes(data, cvol, box));
@@ -255,10 +255,10 @@ double PatchEdgeDataNormOpsReal<TYPE>::weightedRMSNorm(
    const tbox::Pointer<pdat::EdgeData<double> > cvol) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!data.isNull() && !weight.isNull());
+   TBOX_ASSERT(data && weight);
 #endif
    double retval = weightedL2Norm(data, weight, box, cvol);
-   if (cvol.isNull()) {
+   if (!cvol) {
       retval /= sqrt((double)numberOfEntries(data, box));
    } else {
       retval /= sqrt(sumControlVolumes(data, cvol, box));
@@ -273,12 +273,12 @@ double PatchEdgeDataNormOpsReal<TYPE>::maxNorm(
    const tbox::Pointer<pdat::EdgeData<double> > cvol) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!data.isNull());
+   TBOX_ASSERT(data);
 #endif
    const tbox::Dimension& dim(data->getDim());
 
    double retval = 0.0;
-   if (cvol.isNull()) {
+   if (!cvol) {
       for (int d = 0; d < dim.getValue(); d++) {
          const hier::Box edge_box =
             pdat::EdgeGeometry::toEdgeBox(box, d);
@@ -307,12 +307,12 @@ TYPE PatchEdgeDataNormOpsReal<TYPE>::dot(
    const tbox::Pointer<pdat::EdgeData<double> > cvol) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!data1.isNull() && !data2.isNull());
+   TBOX_ASSERT(data1 && data2);
 #endif
    const tbox::Dimension& dim(data1->getDim());
 
    TYPE retval = 0.0;
-   if (cvol.isNull()) {
+   if (!cvol) {
       for (int d = 0; d < dim.getValue(); d++) {
          const hier::Box edge_box = pdat::EdgeGeometry::toEdgeBox(box, d);
          retval += d_array_ops.dot(data1->getArrayData(d),
@@ -339,7 +339,7 @@ TYPE PatchEdgeDataNormOpsReal<TYPE>::integral(
    const tbox::Pointer<pdat::EdgeData<double> > vol) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!data.isNull());
+   TBOX_ASSERT(data);
 #endif
    const tbox::Dimension& dim(data->getDim());
 

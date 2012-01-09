@@ -51,7 +51,7 @@ public:
     * @param [in] numDblAttributes The number of double (value) attributes
     * @param [in] numIntAttributes The number of integer (value) attributes
     */
-   explicit SparseDataFactory(
+   SparseDataFactory(
       const hier::IntVector& ghosts,
       const std::vector<std::string>& dbl_attributes,
       const std::vector<std::string>& int_attributes);

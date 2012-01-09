@@ -96,7 +96,7 @@ public:
     * @param depth Integer number of data values at each spatial location in
     *              the array.
     */
-   explicit ArrayData(
+   ArrayData(
       const hier::Box& box,
       int depth);
 

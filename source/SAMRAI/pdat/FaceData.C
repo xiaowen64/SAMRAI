@@ -648,7 +648,7 @@ template<class TYPE>
 void FaceData<TYPE>::getSpecializedFromDatabase(
    tbox::Pointer<tbox::Database> database)
 {
-   TBOX_ASSERT(!database.isNull());
+   TBOX_ASSERT(database);
 
    int ver = database->getInteger("PDAT_FACEDATA_VERSION");
    if (ver != PDAT_FACEDATA_VERSION) {
@@ -679,7 +679,7 @@ template<class TYPE>
 void FaceData<TYPE>::putSpecializedToDatabase(
    tbox::Pointer<tbox::Database> database)
 {
-   TBOX_ASSERT(!database.isNull());
+   TBOX_ASSERT(database);
 
    database->putInteger("PDAT_FACEDATA_VERSION", PDAT_FACEDATA_VERSION);
 

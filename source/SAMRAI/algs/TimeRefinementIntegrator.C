@@ -74,9 +74,9 @@ TimeRefinementIntegrator::TimeRefinementIntegrator(
    d_barrier_and_time(false)
 {
    TBOX_ASSERT(!object_name.empty());
-   TBOX_ASSERT(!hierarchy.isNull());
-   TBOX_ASSERT(level_integrator != ((TimeRefinementLevelStrategy *)NULL));
-   TBOX_ASSERT(!gridding_algorithm.isNull());
+   TBOX_ASSERT(hierarchy);
+   TBOX_ASSERT(level_integrator);
+   TBOX_ASSERT(gridding_algorithm);
 
    d_object_name = object_name;
    d_registered_for_restart = register_for_restart;
@@ -1445,11 +1445,11 @@ void TimeRefinementIntegrator::printClassData(
       << "d_grow_dt = " << d_grow_dt << std::endl;
    os << "d_just_regridded = " << d_just_regridded << std::endl;
    os << "d_last_finest_level = " << d_last_finest_level << std::endl;
-   os << "d_patch_hierarchy = " << d_patch_hierarchy.getPointer() << std::endl;
+   os << "d_patch_hierarchy = " << d_patch_hierarchy.get() << std::endl;
    os << "d_refine_level_integrator = "
-      << (TimeRefinementLevelStrategy *)d_refine_level_integrator << std::endl;
+      << d_refine_level_integrator.get() << std::endl;
    os << "d_gridding_algorithm = "
-      << (mesh::GriddingAlgorithmStrategy *)d_gridding_algorithm << std::endl;
+      << d_gridding_algorithm.get() << std::endl;
 
    const int max_levels = d_patch_hierarchy->getMaxNumberOfLevels();
    for (int level_number = 0; level_number < max_levels; level_number++) {
@@ -1502,7 +1502,7 @@ void TimeRefinementIntegrator::putToDatabase(
    tbox::Pointer<tbox::Database> db)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!db.isNull());
+   TBOX_ASSERT(db);
 #endif
 
    db->putInteger("ALGS_TIME_REFINEMENT_INTEGRATOR_VERSION",
@@ -1536,11 +1536,11 @@ void TimeRefinementIntegrator::getFromInput(
    bool is_from_restart)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(is_from_restart || !db.isNull());
+   TBOX_ASSERT(is_from_restart || db);
 #endif
 
    if (is_from_restart) {
-      if (!db.isNull()) {
+      if (db) {
          if (!d_use_refined_timestepping) {
             int regrid_interval =
                db->getIntegerWithDefault("regrid_interval", 1);
@@ -1719,9 +1719,9 @@ void TimeRefinementIntegrator::initializeCallback()
  */
 void TimeRefinementIntegrator::finalizeCallback()
 {
-   t_initialize_hier.setNull();
-   t_advance_hier.setNull();
-   t_advance_level.setNull();
+   t_initialize_hier.reset();
+   t_advance_hier.reset();
+   t_advance_level.reset();
 }
 
 }

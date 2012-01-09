@@ -88,8 +88,10 @@ bool NodeComplexLinearTimeInterpolateOp::findTimeInterpolateOperator(
    const tbox::Pointer<hier::Variable>& var,
    const std::string& op_name) const
 {
-   const tbox::Pointer<NodeVariable<dcomplex> > cast_var(var);
-   if (!cast_var.isNull() && (op_name == "STD_LINEAR_TIME_INTERPOLATE")) {
+   const tbox::Pointer<NodeVariable<dcomplex> > cast_var(
+      var,
+      tbox::__dynamic_cast_tag());
+   if (cast_var && (op_name == "STD_LINEAR_TIME_INTERPOLATE")) {
       return true;
    } else {
       return false;

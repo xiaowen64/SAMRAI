@@ -883,7 +883,7 @@ template<class TYPE>
 void ArrayData<TYPE>::getFromDatabase(
    tbox::Pointer<tbox::Database> database)
 {
-   TBOX_ASSERT(!database.isNull());
+   TBOX_ASSERT(database);
 
    int ver = database->getInteger("PDAT_ARRAYDATA_VERSION");
    if (ver != PDAT_ARRAYDATA_VERSION) {
@@ -913,7 +913,7 @@ void ArrayData<TYPE>::putToDatabase(
    tbox::Pointer<tbox::Database> database,
    bool data_only)
 {
-   TBOX_ASSERT(!database.isNull());
+   TBOX_ASSERT(database);
 
    if (!data_only) {
       database->putInteger("PDAT_ARRAYDATA_VERSION", PDAT_ARRAYDATA_VERSION);

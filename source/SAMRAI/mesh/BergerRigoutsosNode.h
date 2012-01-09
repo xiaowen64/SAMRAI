@@ -101,7 +101,7 @@ public:
     * The root node is used to run the BR algorithm and
     * obtain outputs.
     */
-   explicit BergerRigoutsosNode(
+   BergerRigoutsosNode(
       const tbox::Dimension& dim,
       const hier::BlockId& block_id,
       const hier::LocalId& first_local_id);
@@ -343,7 +343,7 @@ private:
    class CommonParams
    {
 public:
-      CommonParams(
+      explicit CommonParams(
          const tbox::Dimension& dim);
 
       const tbox::Dimension d_dim;

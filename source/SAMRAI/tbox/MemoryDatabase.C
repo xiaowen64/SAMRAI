@@ -1534,7 +1534,7 @@ void MemoryDatabase::printDatabase(
 
    for (List<KeyData>::Iterator j(d_keyvalues); j; j++) {
       if (j().d_type == Database::SAMRAI_DATABASE) {
-         Pointer<MemoryDatabase> db = j().d_database;
+         Pointer<MemoryDatabase> db(j().d_database, __dynamic_cast_tag());
          db->printDatabase(os, indent + 3, toprint);
       }
    }

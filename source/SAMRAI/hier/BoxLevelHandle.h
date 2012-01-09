@@ -75,7 +75,7 @@ private:
     * @param[in] box_level The BoxLevel to be attached to
     * this handle.
     */
-   BoxLevelHandle(
+   explicit BoxLevelHandle(
       const BoxLevel * box_level);
 
    /*!

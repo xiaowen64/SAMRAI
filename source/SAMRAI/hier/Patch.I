@@ -103,7 +103,7 @@ SAMRAI_INLINE_KEYWORD
 bool Patch::checkAllocated(
    const int id) const
 {
-   return (id < d_patch_data.getSize()) && !(d_patch_data[id].isNull());
+   return (id < d_patch_data.getSize()) && d_patch_data[id];
 }
 
 SAMRAI_INLINE_KEYWORD
@@ -125,7 +125,7 @@ void Patch::setTime(
    const int id)
 {
    TBOX_ASSERT((id >= 0) && (id < d_patch_data.getSize()));
-   TBOX_ASSERT(!d_patch_data[id].isNull());
+   TBOX_ASSERT(d_patch_data[id]);
 
    d_patch_data[id]->setTime(timestamp);
 }

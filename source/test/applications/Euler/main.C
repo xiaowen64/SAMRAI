@@ -232,7 +232,7 @@ int main(
        * Create input database and parse all data in input file.
        */
 
-      tbox::Pointer<tbox::Database> input_db(new tbox::InputDatabase("input_db"));
+      tbox::Pointer<tbox::InputDatabase> input_db(new tbox::InputDatabase("input_db"));
       tbox::InputManager::getManager()->parseInputFile(input_filename, input_db);
 
       /*
@@ -437,7 +437,7 @@ int main(
       tbox::Pointer<mesh::StandardTagAndInitialize> error_detector(
          new mesh::StandardTagAndInitialize(dim,
             "StandardTagAndInitialize",
-            hyp_level_integrator,
+            hyp_level_integrator.get(),
             input_db->getDatabase("StandardTagAndInitialize")));
 
       tbox::Pointer<mesh::BergerRigoutsos> box_generator(
@@ -667,17 +667,17 @@ int main(
       /*
        * At conclusion of simulation, deallocate objects.
        */
-      patch_hierarchy.setNull();
-      grid_geometry.setNull();
+      patch_hierarchy.reset();
+      grid_geometry.reset();
 
-      box_generator.setNull();
-      load_balancer.setNull();
-      hyp_level_integrator.setNull();
-      error_detector.setNull();
-      gridding_algorithm.setNull();
-      time_integrator.setNull();
+      box_generator.reset();
+      load_balancer.reset();
+      hyp_level_integrator.reset();
+      error_detector.reset();
+      gridding_algorithm.reset();
+      time_integrator.reset();
 #ifdef HAVE_HDF5
-      visit_data_writer.setNull();
+      visit_data_writer.reset();
 #endif
 
       if (euler_model) delete euler_model;

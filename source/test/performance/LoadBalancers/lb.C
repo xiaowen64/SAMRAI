@@ -219,7 +219,8 @@ int main(
        * Create input database and parse all data in input file.
        */
 
-      Pointer<Database> input_db(new InputDatabase("input_db"));
+      Pointer<InputDatabase> input_db(new InputDatabase("input_db"));
+      Pointer<Database> base_db(input_db);
       tbox::InputManager::getManager()->parseInputFile(input_filename, input_db);
 
       /*
@@ -482,7 +483,7 @@ int main(
          oca.findOverlaps(domain_to_L0);
 
          tbox::Pointer<mesh::LoadBalanceStrategy> lb0
-            = createLoadBalancer( input_db, load_balancer_type, 0, dim );
+            = createLoadBalancer( base_db, load_balancer_type, 0, dim );
 
          tbox::plog << "\n\n\ninitial L0 loads:\n";
          lb0->gatherAndReportLoadBalance(
@@ -574,7 +575,7 @@ int main(
          }
 
          tbox::Pointer<mesh::LoadBalanceStrategy> lb1
-            = createLoadBalancer( input_db, load_balancer_type, 1 , dim);
+            = createLoadBalancer( base_db, load_balancer_type, 1 , dim);
 
          lb1->gatherAndReportLoadBalance(
             (double)L1.getLocalNumberOfCells(),
@@ -670,7 +671,7 @@ int main(
          }
 
          tbox::Pointer<mesh::LoadBalanceStrategy> lb2
-            = createLoadBalancer( input_db, load_balancer_type, 2 , dim);
+            = createLoadBalancer( base_db, load_balancer_type, 2 , dim);
 
          lb2->gatherAndReportLoadBalance(
             (double)L2.getLocalNumberOfCells(),
@@ -948,10 +949,11 @@ void generatePrebalanceByUserShells(
 
    hier::VariableDatabase* vdb =
       hier::VariableDatabase::getDatabase();
-   tbox::Pointer<geom::CartesianGridGeometry> grid_geometry =
-      hierarchy->getGridGeometry();
+   tbox::Pointer<geom::CartesianGridGeometry> grid_geometry(
+      hierarchy->getGridGeometry(),
+      tbox::__dynamic_cast_tag());
 
-   const tbox::ConstPointer<hier::BoxLevel>
+   const tbox::Pointer<const hier::BoxLevel>
    L0_ptr(&L0, false);
 
    tbox::Pointer<hier::PatchLevel> tag_level(
@@ -996,7 +998,9 @@ void generatePrebalanceByUserShells(
          }
       }
 
-      tbox::Pointer<pdat::CellData<int> > tag_data = patch->getPatchData(tag_id);
+      tbox::Pointer<pdat::CellData<int> > tag_data(
+         patch->getPatchData(tag_id),
+         tbox::__dynamic_cast_tag());
 
       tag_data->getArrayData().fillAll(0);
 
@@ -1086,8 +1090,9 @@ void generatePrebalanceByShrinkingLevel(
 
    const tbox::Dimension dim(hierarchy->getDim());
 
-   tbox::Pointer<geom::CartesianGridGeometry> grid_geometry =
-      hierarchy->getGridGeometry();
+   tbox::Pointer<geom::CartesianGridGeometry> grid_geometry(
+      hierarchy->getGridGeometry(),
+      tbox::__dynamic_cast_tag());
 
    // Parameters set by database, with defaults.
    double efficiency_tol = 1.00;
@@ -1150,7 +1155,9 @@ void generatePrebalanceByShrinkingLevel(
    for (hier::PatchLevel::Iterator pi(tag_level); pi; pi++) {
 
       tbox::Pointer<hier::Patch> patch = *pi;
-      tbox::Pointer<pdat::CellData<int> > tag_data = patch->getPatchData(tag_id);
+      tbox::Pointer<pdat::CellData<int> > tag_data(
+         patch->getPatchData(tag_id),
+         tbox::__dynamic_cast_tag());
 
       tag_data->getArrayData().fillAll(0);
 
@@ -1241,8 +1248,9 @@ void generatePrebalanceBySinusoidalFront(
 
    const tbox::Dimension dim(hierarchy->getDim());
 
-   tbox::Pointer<geom::CartesianGridGeometry> grid_geometry =
-      hierarchy->getGridGeometry();
+   tbox::Pointer<geom::CartesianGridGeometry> grid_geometry(
+      hierarchy->getGridGeometry(),
+      tbox::__dynamic_cast_tag());
 
    // Parameters set by database, with defaults.
    double efficiency_tol = 0.70;
@@ -1296,21 +1304,24 @@ void generatePrebalanceBySinusoidalFront(
    SinusoidalFrontTagger sinusoidal_front_tagger(
       "SinusoidalFrontTagger",
       dim,
-      sft_db.getPointer() );
+      sft_db.get() );
    sinusoidal_front_tagger.resetHierarchyConfiguration(hierarchy, 0, 1);
 
    for (hier::PatchLevel::Iterator pi(tag_level); pi; pi++) {
 
       tbox::Pointer<hier::Patch> patch = *pi;
 
-      tbox::Pointer<geom::CartesianPatchGeometry> patch_geom =
-         patch->getPatchGeometry();
+      tbox::Pointer<geom::CartesianPatchGeometry> patch_geom(
+         patch->getPatchGeometry(),
+         tbox::__dynamic_cast_tag());
 
-      tbox::Pointer<pdat::CellData<int> > tag_data = patch->getPatchData(tag_id);
+      tbox::Pointer<pdat::CellData<int> > tag_data(
+         patch->getPatchData(tag_id),
+         tbox::__dynamic_cast_tag());
 
       sinusoidal_front_tagger.computeFrontsData(
          NULL /* distance data */,
-         tag_data.getPointer(),
+         tag_data.get(),
          tag_buffer,
          patch_geom->getXLower(),
          patch_geom->getDx(),

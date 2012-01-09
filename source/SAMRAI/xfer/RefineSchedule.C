@@ -120,9 +120,9 @@ RefineSchedule::RefineSchedule(
    d_dst_level_fill_pattern(dst_level_fill_pattern),
    d_constructing_internal_schedule(false)
 {
-   TBOX_ASSERT(!dst_level.isNull());
-   TBOX_ASSERT(!src_level.isNull());
-   TBOX_ASSERT(!refine_classes.isNull());
+   TBOX_ASSERT(dst_level);
+   TBOX_ASSERT(src_level);
+   TBOX_ASSERT(refine_classes);
 #ifdef DEBUG_CHECK_DIM_ASSERTIONS
    TBOX_DIM_ASSERT_CHECK_ARGS2(*dst_level, *src_level);
    if (patch_strategy) {
@@ -160,8 +160,8 @@ RefineSchedule::RefineSchedule(
    d_coarse_priority_level_schedule->setTimerPrefix("xfer::RefineSchedule");
    d_fine_priority_level_schedule->setTimerPrefix("xfer::RefineSchedule");
 
-   d_coarse_interp_schedule.setNull();
-   d_coarse_interp_level.setNull();
+   d_coarse_interp_schedule.reset();
+   d_coarse_interp_level.reset();
 
    d_max_fill_boxes = 0;
 
@@ -249,7 +249,7 @@ RefineSchedule::RefineSchedule(
       use_time_refinement,
       create_transactions);
 
-   if (!d_coarse_interp_level.isNull()) {
+   if (d_coarse_interp_level) {
       computeRefineOverlaps(d_refine_overlaps,
          d_dst_level,
          d_coarse_interp_level,
@@ -257,7 +257,7 @@ RefineSchedule::RefineSchedule(
          d_coarse_interp_to_unfilled);
    }
 
-   if (!d_coarse_interp_encon_level.isNull()) {
+   if (d_coarse_interp_encon_level) {
       computeRefineOverlaps(d_encon_refine_overlaps,
          d_encon_level,
          d_coarse_interp_encon_level,
@@ -308,14 +308,14 @@ RefineSchedule::RefineSchedule(
    d_dst_level_fill_pattern(dst_level_fill_pattern),
    d_constructing_internal_schedule(false)
 {
-   TBOX_ASSERT(!dst_level.isNull());
-   TBOX_ASSERT((next_coarser_ln == -1) || !hierarchy.isNull());
-   TBOX_ASSERT(!refine_classes.isNull());
+   TBOX_ASSERT(dst_level);
+   TBOX_ASSERT((next_coarser_ln == -1) || hierarchy);
+   TBOX_ASSERT(refine_classes);
 #ifdef DEBUG_CHECK_DIM_ASSERTIONS
-   if (!src_level.isNull()) {
+   if (src_level) {
       TBOX_DIM_ASSERT_CHECK_ARGS2(*dst_level, *src_level);
    }
-   if (!hierarchy.isNull()) {
+   if (hierarchy) {
       TBOX_DIM_ASSERT_CHECK_ARGS2(*dst_level, *hierarchy);
    }
    if (patch_strategy) {
@@ -348,11 +348,11 @@ RefineSchedule::RefineSchedule(
       dst_level->getGridGeometry()->getNumberBlocks(), false);
    d_num_periodic_directions = 0;
 
-   d_coarse_priority_level_schedule.setNull();
-   d_fine_priority_level_schedule.setNull();
+   d_coarse_priority_level_schedule.reset();
+   d_fine_priority_level_schedule.reset();
 
-   d_coarse_interp_schedule.setNull();
-   d_coarse_interp_level.setNull();
+   d_coarse_interp_schedule.reset();
+   d_coarse_interp_level.reset();
 
    d_max_fill_boxes = 0;
 
@@ -369,7 +369,7 @@ RefineSchedule::RefineSchedule(
    const Connector* dst_to_src = &dummy_connector;
    const Connector* src_to_dst = &dummy_connector;
 
-   if (!src_level.isNull()) {
+   if (src_level) {
       hier::IntVector min_connector_width = d_max_scratch_gcw;
       min_connector_width.max(d_boundary_fill_ghost_width);
 
@@ -438,7 +438,7 @@ RefineSchedule::RefineSchedule(
     * Compute the BoxOverlap objects that will be used to refine the
     * data from coarser levels onto the destination.
     */
-   if (!d_coarse_interp_schedule.isNull()) {
+   if (d_coarse_interp_schedule) {
       computeRefineOverlaps(d_refine_overlaps,
          d_dst_level,
          d_coarse_interp_level,
@@ -446,7 +446,7 @@ RefineSchedule::RefineSchedule(
          d_coarse_interp_to_unfilled);
    }
 
-   if (!d_coarse_interp_encon_schedule.isNull()) {
+   if (d_coarse_interp_encon_schedule) {
       computeRefineOverlaps(d_encon_refine_overlaps,
          d_encon_level,
          d_coarse_interp_encon_level,
@@ -485,15 +485,15 @@ RefineSchedule::RefineSchedule(
    d_unfilled_encon_box_level(),
    d_constructing_internal_schedule(true)
 {
-   TBOX_ASSERT(!dst_level.isNull());
-   TBOX_ASSERT(!src_level.isNull());
-   TBOX_ASSERT((next_coarser_ln == -1) || !hierarchy.isNull());
-   TBOX_ASSERT(!refine_classes.isNull());
+   TBOX_ASSERT(dst_level);
+   TBOX_ASSERT(src_level);
+   TBOX_ASSERT((next_coarser_ln == -1) || hierarchy);
+   TBOX_ASSERT(refine_classes);
 #ifdef DEBUG_CHECK_DIM_ASSERTIONS
-   if (!src_level.isNull()) {
+   if (src_level) {
       TBOX_DIM_ASSERT_CHECK_ARGS2(*dst_level, *src_level);
    }
-   if (!hierarchy.isNull()) {
+   if (hierarchy) {
       TBOX_DIM_ASSERT_CHECK_ARGS2(*dst_level, *hierarchy);
    }
    if (patch_strategy) {
@@ -528,11 +528,11 @@ RefineSchedule::RefineSchedule(
       dst_level->getGridGeometry()->getNumberBlocks(), false);
    d_num_periodic_directions = 0;
 
-   d_coarse_priority_level_schedule.setNull();
-   d_fine_priority_level_schedule.setNull();
+   d_coarse_priority_level_schedule.reset();
+   d_fine_priority_level_schedule.reset();
 
-   d_coarse_interp_schedule.setNull();
-   d_coarse_interp_level.setNull();
+   d_coarse_interp_schedule.reset();
+   d_coarse_interp_level.reset();
 
    d_max_fill_boxes = 0;
 
@@ -604,7 +604,7 @@ RefineSchedule::RefineSchedule(
     * data from coarser levels onto the destination.
     */
 
-   if (!d_coarse_interp_schedule.isNull()) {
+   if (d_coarse_interp_schedule) {
       computeRefineOverlaps(d_refine_overlaps,
          d_dst_level,
          d_coarse_interp_level,
@@ -612,7 +612,7 @@ RefineSchedule::RefineSchedule(
          d_coarse_interp_to_unfilled);
    }
 
-   if (!d_coarse_interp_encon_schedule.isNull()) {
+   if (d_coarse_interp_encon_schedule) {
       computeRefineOverlaps(d_encon_refine_overlaps,
          d_encon_level,
          d_coarse_interp_encon_level,
@@ -635,11 +635,11 @@ RefineSchedule::~RefineSchedule()
 {
    clearRefineItems();
 
-   d_coarse_priority_level_schedule.setNull();
-   d_fine_priority_level_schedule.setNull();
+   d_coarse_priority_level_schedule.reset();
+   d_fine_priority_level_schedule.reset();
 
-   d_coarse_interp_schedule.setNull();
-   d_coarse_interp_level.setNull();
+   d_coarse_interp_schedule.reset();
+   d_coarse_interp_level.reset();
 }
 
 /*
@@ -653,13 +653,13 @@ RefineSchedule::~RefineSchedule()
 void RefineSchedule::reset(
    const tbox::Pointer<xfer::RefineClasses> refine_classes)
 {
-   TBOX_ASSERT(!refine_classes.isNull());
+   TBOX_ASSERT(refine_classes);
 
    setRefineItems(refine_classes);
-   if (!d_coarse_interp_schedule.isNull()) {
+   if (d_coarse_interp_schedule) {
       d_coarse_interp_schedule->reset(refine_classes);
    }
-   if (!d_coarse_interp_encon_schedule.isNull()) {
+   if (d_coarse_interp_encon_schedule) {
       d_coarse_interp_encon_schedule->reset(refine_classes);
    }
 }
@@ -715,7 +715,7 @@ void RefineSchedule::finishScheduleConstruction(
    bool skip_generate_schedule)
 {
    t_finish_sched_const->start();
-   TBOX_ASSERT((next_coarser_ln == -1) || !hierarchy.isNull());
+   TBOX_ASSERT((next_coarser_ln == -1) || hierarchy);
 
    // Get data that will be used below.
 
@@ -725,7 +725,7 @@ void RefineSchedule::finishScheduleConstruction(
    hier::OverlapConnectorAlgorithm oca;
 
    const BoxLevel& dst_mapped_box_level = dst_to_fill.getBase();
-   if (!d_src_level.isNull()) {
+   if (d_src_level) {
       // Should never have a source without connection from destination.
       TBOX_ASSERT(dst_to_src.isFinalized());
    }
@@ -750,7 +750,7 @@ void RefineSchedule::finishScheduleConstruction(
    tbox::Pointer<Connector> encon_to_unfilled_encon;
 
    bool create_transactions = true;
-   if (d_src_level.isNull() || skip_generate_schedule) {
+   if (!d_src_level || skip_generate_schedule) {
       create_transactions = false;
    }
 
@@ -829,7 +829,7 @@ void RefineSchedule::finishScheduleConstruction(
             << "\n dst_to_src:\n" << dst_to_src.format("DS->", 2)
             << std::endl);
       } else {
-         if (hierarchy.isNull()) {
+         if (!hierarchy) {
             TBOX_ERROR("Internal RefineSchedule error..."
                << "\n In finishScheduleConstruction() -- "
                << "\n Need to fill from coarser hierarchy level and \n"
@@ -1161,7 +1161,7 @@ void RefineSchedule::shearUnfilledBoxesOutsideNonperiodicBoundaries(
    hier::MappingConnectorAlgorithm mca;
    mca.modify(dst_to_unfilled,
       unfilled_to_sheared,
-      d_unfilled_mapped_box_level.getPointer());
+      d_unfilled_mapped_box_level.get());
    t_modify_connector->stop();
    dst_to_unfilled.eraseEmptyNeighborSets();
 
@@ -1208,7 +1208,7 @@ void RefineSchedule::setupCoarseInterpBoxLevel(
 
    const bool fully_periodic = d_num_periodic_directions == dim.getValue();
 
-   const tbox::ConstPointer<hier::GridGeometry>& grid_geometry(
+   const tbox::Pointer<const hier::GridGeometry>& grid_geometry(
       dst_to_unfilled.getBase().getGridGeometry());
 
    const int nblocks(grid_geometry->getNumberBlocks());
@@ -1428,7 +1428,7 @@ void RefineSchedule::createCoarseInterpPatchLevel(
 
       const hier::BoxLevel& src_mapped_box_level =
          dst_to_src.getHead();
-      if (hierarchy->getBoxLevel(next_coarser_ln + 1).getPointer() !=
+      if (hierarchy->getBoxLevel(next_coarser_ln + 1).get() !=
           &src_mapped_box_level) {
          TBOX_ERROR("Missing dst<==>hiercoarse connector and\n"
             << "src is not from hierarchy.");
@@ -1814,7 +1814,7 @@ void RefineSchedule::recursiveFill(
     * need to get data from a coarser grid level.
     */
 
-   if (!d_coarse_interp_schedule.isNull()) {
+   if (d_coarse_interp_schedule) {
 
       /*
        * Allocate data on the coarser level and keep track of the allocated
@@ -1862,7 +1862,7 @@ void RefineSchedule::recursiveFill(
 
    }
 
-   if (!d_coarse_interp_encon_schedule.isNull()) {
+   if (d_coarse_interp_encon_schedule) {
 
       /*
        * Allocate data on the coarser level and keep track of the allocated
@@ -1940,7 +1940,7 @@ void RefineSchedule::recursiveFill(
 void RefineSchedule::fillPhysicalBoundaries(
    double fill_time) const
 {
-   TBOX_ASSERT(!d_dst_level.isNull());
+   TBOX_ASSERT(d_dst_level);
 
    d_dst_level->setBoundaryBoxes();
 
@@ -1968,7 +1968,7 @@ void RefineSchedule::fillPhysicalBoundaries(
 void RefineSchedule::fillSingularityBoundaries(
    double fill_time) const
 {
-   TBOX_ASSERT(!d_dst_level.isNull());
+   TBOX_ASSERT(d_dst_level);
 
    tbox::Pointer<hier::GridGeometry> grid_geometry(
       d_dst_level->getGridGeometry());
@@ -2084,7 +2084,7 @@ void RefineSchedule::allocateScratchSpace(
    tbox::Pointer<hier::PatchLevel> level,
    double fill_time) const
 {
-   TBOX_ASSERT(!level.isNull());
+   TBOX_ASSERT(level);
 
    allocate_vector.clrAllFlags();
 
@@ -2100,7 +2100,7 @@ void RefineSchedule::allocateScratchSpace(
 
    level->allocatePatchData(allocate_vector, fill_time);
 
-   if (!d_transaction_factory.isNull()) {
+   if (d_transaction_factory) {
       d_transaction_factory->preprocessScratchSpace(level,
          fill_time,
          preprocess_vector);
@@ -2158,7 +2158,7 @@ void RefineSchedule::allocateDestinationSpace(
    hier::ComponentSelector& allocate_vector,
    double fill_time) const
 {
-   TBOX_ASSERT(!d_dst_level.isNull());
+   TBOX_ASSERT(d_dst_level);
 
    allocate_vector.clrAllFlags();
 
@@ -2184,7 +2184,7 @@ void RefineSchedule::allocateDestinationSpace(
 
 void RefineSchedule::copyScratchToDestination() const
 {
-   TBOX_ASSERT(!d_dst_level.isNull());
+   TBOX_ASSERT(d_dst_level);
 
    for (hier::PatchLevel::Iterator p(d_dst_level); p; p++) {
       tbox::Pointer<hier::Patch> patch(*p);
@@ -2277,7 +2277,7 @@ void RefineSchedule::refineScratchData(
 
       for (int iri = 0; iri < d_number_refine_items; iri++) {
          const xfer::RefineClasses::Data * const ref_item = d_refine_items[iri];
-         if (!(ref_item->d_oprefine.isNull())) {
+         if (ref_item->d_oprefine) {
 
             tbox::Pointer<hier::BoxOverlap> refine_overlap(
                overlap_iter()[ref_item->d_class_index]);
@@ -2379,7 +2379,7 @@ void RefineSchedule::computeRefineOverlaps(
          const xfer::RefineClasses::Data& rep_item =
             d_refine_classes->getClassRepresentative(ne);
 
-         if (!(rep_item.d_oprefine.isNull())) {
+         if (rep_item.d_oprefine) {
 
             const int scratch_id = rep_item.d_scratch;
             tbox::Pointer<hier::PatchDataFactory> fine_pdf(
@@ -3051,7 +3051,7 @@ void RefineSchedule::setDefaultFillBoxLevel(
          d_max_fill_boxes,
          d_dst_level_fill_pattern->getMaxFillBoxes());
 
-   if (!d_src_level.isNull()) {
+   if (d_src_level) {
       if (d_dst_level_fill_pattern->needsToCommunicateDestinationFillBoxes()) {
 
          /*
@@ -3287,7 +3287,7 @@ void RefineSchedule::createEnconLevel(const hier::IntVector& fill_gcw)
 
    d_encon_level->setLevelNumber(d_dst_level->getLevelNumber());
 
-   if (!d_src_level.isNull()) {
+   if (d_src_level) {
       d_src_to_encon.clearNeighborhoods();
       d_src_to_encon.setBase(*(d_src_level->getBoxLevel()));
       d_src_to_encon.setHead(*(d_encon_level->getBoxLevel()));
@@ -3550,7 +3550,7 @@ hier::IntVector RefineSchedule::getMaxStencilGhosts() const
    }
 
    for (int iri = 0; iri < d_number_refine_items; iri++) {
-      if (!(d_refine_items[iri]->d_oprefine.isNull())) {
+      if (d_refine_items[iri]->d_oprefine) {
          gcw.max(d_refine_items[iri]->d_oprefine->getStencilWidth());
       }
    }
@@ -3574,8 +3574,8 @@ void RefineSchedule::constructScheduleTransactions(
    const hier::Box& src_mapped_box,
    bool use_time_interpolation)
 {
-   TBOX_ASSERT(!d_dst_level.isNull());
-   TBOX_ASSERT(!d_src_level.isNull());
+   TBOX_ASSERT(d_dst_level);
+   TBOX_ASSERT(d_src_level);
    TBOX_ASSERT(!dst_mapped_box.isPeriodicImage()); // src absorbs the shift, if any.
 
    const tbox::Dimension& dim(d_dst_level->getDim());
@@ -3935,7 +3935,7 @@ void RefineSchedule::constructScheduleTransactions(
          }
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-         if (overlap.isNull()) {
+         if (!overlap) {
             TBOX_ERROR("Internal RefineSchedule error..."
                << "\n Overlap is NULL for "
                << "\n src box = " << src_box
@@ -4002,7 +4002,7 @@ void RefineSchedule::constructScheduleTransactions(
 
                   tbox::Pointer<tbox::Transaction> transaction;
 
-                  if (!d_transaction_factory.isNull()) {
+                  if (d_transaction_factory) {
 
                      transaction =
                         d_transaction_factory->allocate(transaction_dst_level,
@@ -4077,8 +4077,8 @@ void RefineSchedule::constructScheduleTransactions(
    const hier::Box& src_mapped_box,
    bool use_time_interpolation)
 {
-   TBOX_ASSERT(!d_dst_level.isNull());
-   TBOX_ASSERT(!d_src_level.isNull());
+   TBOX_ASSERT(d_dst_level);
+   TBOX_ASSERT(d_src_level);
    TBOX_ASSERT(!dst_mapped_box.isPeriodicImage()); // src absorbs the shift, if any.
 
    const tbox::Dimension& dim(d_dst_level->getDim());
@@ -4438,7 +4438,7 @@ void RefineSchedule::constructScheduleTransactions(
          }
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-         if (overlap.isNull()) {
+         if (!overlap) {
             TBOX_ERROR("Internal RefineSchedule error..."
                << "\n Overlap is NULL for "
                << "\n src box = " << src_box
@@ -4505,7 +4505,7 @@ void RefineSchedule::constructScheduleTransactions(
 
                   tbox::Pointer<tbox::Transaction> transaction;
 
-                  if (!d_transaction_factory.isNull()) {
+                  if (d_transaction_factory) {
 
                      transaction =
                         d_transaction_factory->allocate(transaction_dst_level,
@@ -4739,7 +4739,7 @@ void RefineSchedule::printClassData(
    stream << "Printing fine priority refine schedule...\n";
    d_fine_priority_level_schedule->printClassData(stream);
 
-   if (!d_coarse_interp_schedule.isNull()) {
+   if (d_coarse_interp_schedule) {
       stream << "Printing coarse interpolation refine schedule...\n";
       d_coarse_interp_schedule->printClassData(stream);
    }
@@ -4819,29 +4819,29 @@ void RefineSchedule::initializeCallback()
  */
 void RefineSchedule::finalizeCallback()
 {
-   t_fill_data.setNull();
-   t_recursive_fill.setNull();
-   t_refine_scratch_data.setNull();
-   t_finish_sched_const.setNull();
-   t_finish_sched_const_recurse.setNull();
-   t_gen_comm_sched.setNull();
-   t_bridge_connector.setNull();
-   t_modify_connector.setNull();
-   t_make_seq_map.setNull();
-   t_shear.setNull();
-   t_misc1.setNull();
-   t_barrier_and_time.setNull();
-   t_get_global_mapped_box_count.setNull();
-   t_coarse_shear.setNull();
-   t_setup_coarse_interp_mapped_box_level.setNull();
-   t_misc2.setNull();
-   t_bridge_coarse_interp_hiercoarse.setNull();
-   t_bridge_dst_hiercoarse.setNull();
-   t_make_coarse_interp_level.setNull();
-   t_make_coarse_interp_to_unfilled.setNull();
-   t_invert_edges.setNull();
-   t_construct_send_trans.setNull();
-   t_construct_recv_trans.setNull();
+   t_fill_data.reset();
+   t_recursive_fill.reset();
+   t_refine_scratch_data.reset();
+   t_finish_sched_const.reset();
+   t_finish_sched_const_recurse.reset();
+   t_gen_comm_sched.reset();
+   t_bridge_connector.reset();
+   t_modify_connector.reset();
+   t_make_seq_map.reset();
+   t_shear.reset();
+   t_misc1.reset();
+   t_barrier_and_time.reset();
+   t_get_global_mapped_box_count.reset();
+   t_coarse_shear.reset();
+   t_setup_coarse_interp_mapped_box_level.reset();
+   t_misc2.reset();
+   t_bridge_coarse_interp_hiercoarse.reset();
+   t_bridge_dst_hiercoarse.reset();
+   t_make_coarse_interp_level.reset();
+   t_make_coarse_interp_to_unfilled.reset();
+   t_invert_edges.reset();
+   t_construct_send_trans.reset();
+   t_construct_recv_trans.reset();
 }
 
 }

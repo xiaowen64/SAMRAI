@@ -58,11 +58,15 @@ void MultiblockEdgeDataTranslator<TYPE>::translateAndCopyData(
 
    const tbox::Dimension& dim(dst_patch.getDim());
 
-   tbox::Pointer<EdgeData<TYPE> > dst = dst_patch.getPatchData(dst_id);
-   tbox::Pointer<EdgeData<TYPE> > src = src_patch.getPatchData(src_id);
+   tbox::Pointer<EdgeData<TYPE> > dst(
+      dst_patch.getPatchData(dst_id),
+      tbox::__dynamic_cast_tag());
+   tbox::Pointer<EdgeData<TYPE> > src(
+      src_patch.getPatchData(src_id),
+      tbox::__dynamic_cast_tag());
 
-   TBOX_ASSERT(!(dst.isNull()));
-   TBOX_ASSERT(!(src.isNull()));
+   TBOX_ASSERT(dst);
+   TBOX_ASSERT(src);
 
    if (rotate == 0) {
       for (int axis = 0; axis < dim.getValue(); axis++) {

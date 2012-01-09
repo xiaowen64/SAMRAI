@@ -197,7 +197,7 @@ void HyperbolicPatchStrategy::setDataContext(
 
 void HyperbolicPatchStrategy::clearDataContext()
 {
-   d_data_context.setNull();
+   d_data_context.reset();
 }
 
 const tbox::Dimension& HyperbolicPatchStrategy::getDim() const {

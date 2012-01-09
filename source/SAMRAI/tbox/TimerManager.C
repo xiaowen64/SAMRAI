@@ -168,7 +168,7 @@ TimerManager::~TimerManager()
 {
 #ifdef ENABLE_SAMRAI_TIMERS
    d_main_timer->stop();
-   d_main_timer.setNull();
+   d_main_timer.reset();
 
    d_timers.clear();
    d_inactive_timers.clear();
@@ -212,7 +212,7 @@ bool TimerManager::checkTimerExistsInArray(
    bool timer_found = false;
 #ifdef ENABLE_SAMRAI_TIMERS
 
-   timer.setNull();
+   timer.reset();
    if (!name.empty()) {
       for (size_t i = 0; i < timer_array.size(); i++) {
          if (timer_array[i]->getName() == name) {
@@ -394,7 +394,7 @@ void TimerManager::startTime(
 
    if (d_print_concurrent) {
       for (size_t i = 0; i < d_timers.size(); i++) {
-         if ((d_timers[i] != timer) && d_timers[i]->isRunning()) {
+         if ((d_timers[i].get() != timer) && d_timers[i]->isRunning()) {
             d_timers[i]->addConcurrentTimer(*d_timers[i]);
          }
       }
@@ -2142,7 +2142,7 @@ void TimerManager::getFromInput(
    Pointer<Database> input_db)
 {
 #ifdef ENABLE_SAMRAI_TIMERS
-   if (!input_db.isNull()) {
+   if (input_db) {
 
       d_print_exclusive = input_db->getBoolWithDefault("print_exclusive",
             d_print_exclusive);

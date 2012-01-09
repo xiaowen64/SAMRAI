@@ -210,8 +210,12 @@ int main(
             tbox::Pointer<hier::Patch> patch = ip();
 
             // access sample data from patch
-            tbox::Pointer<LSparseData> sample1(patch->getPatchData(data_id1));
-            tbox::Pointer<LSparseData> sample2(patch->getPatchData(data_id2));
+            tbox::Pointer<LSparseData> sample1(
+               patch->getPatchData(data_id1),
+               tbox::__dynamic_cast_tag());
+            tbox::Pointer<LSparseData> sample2(
+               patch->getPatchData(data_id2),
+               tbox::__dynamic_cast_tag());
 
             // add items to the sparse data objects.
             pdat::CellIterator ic(patch->getBox());
@@ -234,8 +238,8 @@ int main(
                iter2.insert(dvals2, ivals2);
             }
 
-            LSparseData::Iterator iter1(sample1);
-            LSparseData::Iterator iter2(sample2);
+            LSparseData::Iterator iter1(sample1.get());
+            LSparseData::Iterator iter2(sample2.get());
 
             for ( ; iter1 != sample1->end() && iter2 != sample2->end();
                   ++iter1, ++iter2) {
@@ -271,8 +275,8 @@ int main(
       /*
        * Tests Completed.
        */
-      geometry.setNull();
-      hierarchy.setNull();
+      geometry.reset();
+      hierarchy.reset();
    }
 #endif
 
@@ -338,7 +342,9 @@ checkIterators(
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
          tbox::Pointer<hier::Patch> patch = ip();
 
-         tbox::Pointer<LSparseData> sample(patch->getPatchData(data_id1));
+         tbox::Pointer<LSparseData> sample(
+            patch->getPatchData(data_id1),
+            tbox::__dynamic_cast_tag());
 
          // Test #1a: check empty.  This should be false.
          if (sample->empty()) {
@@ -396,12 +402,18 @@ bool checkCopyOps(
       tbox::Pointer<hier::PatchLevel> level = hierarchy->getPatchLevel(ln);
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
          tbox::Pointer<hier::Patch> patch = ip();
-         tbox::Pointer<LSparseData> control = (patch->getPatchData(data_id1));
-         tbox::Pointer<LSparseData> copiedTo = (patch->getPatchData(data_id1));
-         tbox::Pointer<LSparseData> copiedFrom = (patch->getPatchData(data_id2));
+         tbox::Pointer<LSparseData> control(
+            patch->getPatchData(data_id1),
+            tbox::__dynamic_cast_tag());
+         tbox::Pointer<LSparseData> copiedTo(
+            patch->getPatchData(data_id1),
+            tbox::__dynamic_cast_tag());
+         tbox::Pointer<LSparseData> copiedFrom(
+            patch->getPatchData(data_id2),
+            tbox::__dynamic_cast_tag());
 
          int edit = copiedTo->size() / 2;
-         LSparseData::Iterator ct_it(copiedTo);
+         LSparseData::Iterator ct_it(copiedTo.get());
          for ( ; ct_it != copiedTo->end() && edit > 0; ++ct_it, edit--) {
          }
 
@@ -413,7 +425,7 @@ bool checkCopyOps(
          edit = copiedTo->size() / 2;
          ct_it = copiedTo->begin();
 
-         LSparseData::Iterator ctrl_it(control);
+         LSparseData::Iterator ctrl_it(control.get());
          bool first_passed = true;
          for (int i = 0; i < edit; ++i) {
             if (!ct_it.equals(ctrl_it)) {
@@ -423,7 +435,7 @@ bool checkCopyOps(
                ctrl_it++;
             }
          }
-         LSparseData::Iterator cf_it(copiedFrom);
+         LSparseData::Iterator cf_it(copiedFrom.get());
          edit = (copiedTo->size() / 2);
          for (int i = 0; i < edit; ++i) {
             cf_it++;
@@ -465,7 +477,9 @@ bool checkRemoveOps(
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
          tbox::Pointer<hier::Patch> patch = ip();
 
-         tbox::Pointer<LSparseData> sample(patch->getPatchData(data_id1));
+         tbox::Pointer<LSparseData> sample(
+            patch->getPatchData(data_id1),
+            tbox::__dynamic_cast_tag());
 
          LSparseData::Iterator it;
          int stop = sample->size() / 2;

@@ -164,7 +164,7 @@ bool CoarsenClasses::itemIsValid(
    bool item_good = true;
 
    tbox::Pointer<hier::PatchDescriptor> pd = descriptor;
-   if (pd.isNull()) {
+   if (!pd) {
       pd = hier::VariableDatabase::getDatabase()->getPatchDescriptor();
    }
 
@@ -196,7 +196,7 @@ bool CoarsenClasses::itemIsValid(
    }
 
    tbox::Pointer<hier::CoarsenOperator> coarsop = data_item.d_opcoarsen;
-   if (item_good && !coarsop.isNull()) {
+   if (item_good && coarsop) {
       if (coarsop->getStencilWidth() > sfact->getGhostCellWidth()) {
          item_good = false;
          TBOX_ERROR("Bad data given to CoarsenClasses...\n"
@@ -239,7 +239,7 @@ bool CoarsenClasses::classesMatch(
    bool items_match = true;
 
    tbox::Pointer<hier::PatchDescriptor> pd = descriptor;
-   if (pd.isNull()) {
+   if (!pd) {
       pd = hier::VariableDatabase::getDatabase()->getPatchDescriptor();
    }
 
@@ -297,7 +297,7 @@ bool CoarsenClasses::itemsAreEquivalent(
    bool equivalent = true;
 
    tbox::Pointer<hier::PatchDescriptor> pd = descriptor;
-   if (pd.isNull()) {
+   if (!pd) {
       pd = hier::VariableDatabase::getDatabase()->getPatchDescriptor();
    }
 
@@ -309,15 +309,15 @@ bool CoarsenClasses::itemsAreEquivalent(
 
    equivalent &= (data1.d_gcw_to_coarsen == data2.d_gcw_to_coarsen);
 
-   equivalent &= (data1.d_opcoarsen.isNull() == data2.d_opcoarsen.isNull());
-   if (equivalent && !data1.d_opcoarsen.isNull()) {
+   equivalent &= (!data1.d_opcoarsen == !data2.d_opcoarsen);
+   if (equivalent && data1.d_opcoarsen) {
       equivalent &= (data1.d_opcoarsen->getStencilWidth() ==
                      data2.d_opcoarsen->getStencilWidth());
    }
 
-   equivalent &= (data1.d_var_fill_pattern.isNull() ==
-                  data2.d_var_fill_pattern.isNull());
-   if (equivalent && !data1.d_var_fill_pattern.isNull()) {
+   equivalent &= (!data1.d_var_fill_pattern ==
+                  !data2.d_var_fill_pattern);
+   if (equivalent && data1.d_var_fill_pattern) {
       equivalent &= (typeid(*(data1.d_var_fill_pattern)) ==
                      typeid(*(data2.d_var_fill_pattern)));
    }
@@ -389,7 +389,7 @@ void CoarsenClasses::printCoarsenItem(
    stream << "tag:       "
           << data.d_tag << std::endl;
 
-   if (data.d_opcoarsen.isNull()) {
+   if (!data.d_opcoarsen) {
       stream << "NULL coarsening operator" << std::endl;
    } else {
       stream << "coarsen operator name:          "
@@ -460,7 +460,7 @@ int CoarsenClasses::getEquivalenceClassIndex(
    int eq_index = -1;
 
    tbox::Pointer<hier::PatchDescriptor> pd = descriptor;
-   if (pd.isNull()) {
+   if (!pd) {
       pd = hier::VariableDatabase::getDatabase()->getPatchDescriptor();
    }
 

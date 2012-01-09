@@ -51,7 +51,7 @@ exhaustiveFindOverlapBoxes(
    hier::Connector& overlap_connector,
    const hier::Box& mapped_box,
    const hier::IntVector& refinement_ratio,
-   const tbox::ConstPointer<hier::GridGeometry>& grid_geometry,
+   const tbox::Pointer<const hier::GridGeometry>& grid_geometry,
    const hier::BoxContainer& search_mapped_boxes);
 
 /*
@@ -110,7 +110,7 @@ int main(
        * Create input database and parse all data in input file.
        */
 
-      Pointer<Database> input_db(new InputDatabase("input_db"));
+      Pointer<InputDatabase> input_db(new InputDatabase("input_db"));
       tbox::InputManager::getManager()->parseInputFile(input_filename, input_db);
 
       /*
@@ -153,7 +153,7 @@ int main(
       /*
        * Generate the GridGeometry.
        */
-      tbox::ConstPointer<hier::GridGeometry> grid_geometry;
+      tbox::Pointer<const hier::GridGeometry> grid_geometry;
       if (main_db->keyExists("GridGeometry")) {
          grid_geometry = new hier::GridGeometry(
                dim,
@@ -396,8 +396,8 @@ int main(
          tbox::pout << "\nPASSED:  Multiblock tree search" << std::endl;
       }
 
-      input_db.setNull();
-      main_db.setNull();
+      input_db.reset();
+      main_db.reset();
 
       /*
        * Exit properly by shutting down services in correct order.
@@ -474,7 +474,7 @@ void exhaustiveFindOverlapBoxes(
    hier::Connector& overlap_connector,
    const hier::Box& mapped_box,
    const hier::IntVector& refinement_ratio,
-   const tbox::ConstPointer<hier::GridGeometry>& grid_geometry,
+   const tbox::Pointer<const hier::GridGeometry>& grid_geometry,
    const hier::BoxContainer& search_mapped_boxes)
 {
    const hier::BoxId& box_id = mapped_box.getId();

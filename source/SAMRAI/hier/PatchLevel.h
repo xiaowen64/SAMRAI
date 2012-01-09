@@ -83,7 +83,7 @@ public:
     *             construction of the boundary boxes.
     *
     */
-   explicit PatchLevel(
+   PatchLevel(
       const BoxLevel& mapped_box_level,
       const tbox::Pointer<GridGeometry> grid_geometry,
       const tbox::Pointer<PatchDescriptor> descriptor,
@@ -116,7 +116,7 @@ public:
     * @param[in]  defer_boundary_box_creation Flag to indicate suppressing
     *             construction of the boundary boxes.  @b Default: false
     */
-   explicit PatchLevel(
+   PatchLevel(
       tbox::Pointer<tbox::Database> level_database,
       tbox::Pointer<GridGeometry> grid_geometry,
       tbox::Pointer<PatchDescriptor> descriptor,
@@ -731,7 +731,7 @@ public:
        *
        * @param[in]  raw_iter
        */
-      Iterator(
+      explicit Iterator(
          const PatchContainer::const_iterator& raw_iter);
 
       /*!
@@ -739,7 +739,7 @@ public:
        *
        * @param[in]  patch_level
        */
-      Iterator(
+      explicit Iterator(
          const PatchLevel& patch_level);
 
       /*!
@@ -747,7 +747,7 @@ public:
        *
        * @param[in]  patch_level
        */
-      Iterator(
+      explicit Iterator(
          const PatchLevel * patch_level);
 
       /*!
@@ -755,7 +755,7 @@ public:
        *
        * @param[in]  patch_level
        */
-      Iterator(
+      explicit Iterator(
          const tbox::Pointer<PatchLevel>& patch_level);
 
       /*!

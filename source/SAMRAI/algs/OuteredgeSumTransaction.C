@@ -85,9 +85,9 @@ OuteredgeSumTransaction::OuteredgeSumTransaction(
    d_incoming_bytes(0),
    d_outgoing_bytes(0)
 {
-   TBOX_ASSERT(!dst_level.isNull());
-   TBOX_ASSERT(!src_level.isNull());
-   TBOX_ASSERT(!overlap.isNull());
+   TBOX_ASSERT(dst_level);
+   TBOX_ASSERT(src_level);
+   TBOX_ASSERT(overlap);
    TBOX_ASSERT(dst_node.getLocalId() >= 0);
    TBOX_ASSERT(src_node.getLocalId() >= 0);
    TBOX_ASSERT(refine_item_id >= 0);
@@ -176,10 +176,11 @@ void
 OuteredgeSumTransaction::unpackStream(
    tbox::MessageStream& stream)
 {
-   tbox::Pointer<pdat::OuteredgeData<double> > oedge_dst_data =
+   tbox::Pointer<pdat::OuteredgeData<double> > oedge_dst_data(
       d_dst_level->getPatch(d_dst_node.getGlobalId())->
-      getPatchData(s_refine_items[d_refine_item_id]->d_scratch);
-   TBOX_ASSERT(!oedge_dst_data.isNull());
+      getPatchData(s_refine_items[d_refine_item_id]->d_scratch),
+      tbox::__dynamic_cast_tag());
+   TBOX_ASSERT(oedge_dst_data);
 
    oedge_dst_data->unpackStreamAndSum(stream, *d_overlap);
 }
@@ -187,15 +188,17 @@ OuteredgeSumTransaction::unpackStream(
 void
 OuteredgeSumTransaction::copyLocalData()
 {
-   tbox::Pointer<pdat::OuteredgeData<double> > oedge_dst_data =
+   tbox::Pointer<pdat::OuteredgeData<double> > oedge_dst_data(
       d_dst_level->getPatch(d_dst_node.getGlobalId())->
-      getPatchData(s_refine_items[d_refine_item_id]->d_scratch);
-   TBOX_ASSERT(!oedge_dst_data.isNull());
+      getPatchData(s_refine_items[d_refine_item_id]->d_scratch),
+      tbox::__dynamic_cast_tag());
+   TBOX_ASSERT(oedge_dst_data);
 
-   tbox::Pointer<pdat::OuteredgeData<double> > oedge_src_data =
+   tbox::Pointer<pdat::OuteredgeData<double> > oedge_src_data(
       d_src_level->getPatch(d_src_node.getGlobalId())->
-      getPatchData(s_refine_items[d_refine_item_id]->d_src);
-   TBOX_ASSERT(!oedge_src_data.isNull());
+      getPatchData(s_refine_items[d_refine_item_id]->d_src),
+      tbox::__dynamic_cast_tag());
+   TBOX_ASSERT(oedge_src_data);
 
    oedge_dst_data->sum(*oedge_src_data, *d_overlap);
 }
@@ -227,9 +230,9 @@ OuteredgeSumTransaction::printClassData(
    stream << "   incoming bytes:         " << d_incoming_bytes << std::endl;
    stream << "   outgoing bytes:         " << d_outgoing_bytes << std::endl;
    stream << "   destination level:           "
-          << (hier::PatchLevel *)d_src_level << std::endl;
+          << d_dst_level.get() << std::endl;
    stream << "   source level:           "
-          << (hier::PatchLevel *)d_src_level << std::endl;
+          << d_src_level.get() << std::endl;
    stream << "   overlap:                " << std::endl;
    d_overlap->print(stream);
 }

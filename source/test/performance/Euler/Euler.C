@@ -132,14 +132,14 @@ Euler::Euler(
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(!object_name.empty());
-   TBOX_ASSERT(!input_db.isNull());
-   TBOX_ASSERT(!grid_geom.isNull());
+   TBOX_ASSERT(input_db);
+   TBOX_ASSERT(grid_geom);
 #endif
 
    d_object_name = object_name;
    tbox::RestartManager::getManager()->registerRestartItem(d_object_name, this);
 
-   if (t_init.isNull()) {
+   if (!t_init) {
       t_init = tbox::TimerManager::getManager()->
          getTimer("apps::Euler::initializeDataOnPatch()");
       t_compute_dt = tbox::TimerManager::getManager()->
@@ -487,7 +487,7 @@ void Euler::registerModelVariables(
    d_plot_context = integrator->getPlotContext();
 
 #ifdef HAVE_HDF5
-   if (!(d_visit_writer.isNull())) {
+   if (d_visit_writer) {
       d_visit_writer->registerPlotQuantity("Density",
          "SCALAR",
          vardb->mapVariableAndContextToIndex(
@@ -511,7 +511,7 @@ void Euler::registerModelVariables(
          this);
    }
 
-   if (d_visit_writer.isNull()) {
+   if (!d_visit_writer) {
       TBOX_WARNING(d_object_name << ": registerModelVariables()\n"
                                  << "Visit data writer was not registerd\n"
                                  << "Consequently, no plot data will\n"
@@ -541,7 +541,7 @@ void Euler::setupLoadBalancer(
       tbox::Pointer<mesh::DistributedLoadBalancer> load_balancer =
          gridding_algorithm->getLoadBalanceStrategy();
 
-      if (!load_balancer.isNull()) {
+      if (load_balancer) {
          d_workload_variable = new pdat::CellVariable<double>(
                "workload_variable",
                1);
@@ -601,9 +601,9 @@ void Euler::initializeDataOnPatch(
          patch.getPatchData(d_pressure, getDataContext());
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-      TBOX_ASSERT(!density.isNull());
-      TBOX_ASSERT(!velocity.isNull());
-      TBOX_ASSERT(!pressure.isNull());
+      TBOX_ASSERT(density);
+      TBOX_ASSERT(velocity);
+      TBOX_ASSERT(pressure);
 #endif
       hier::IntVector<NDIM> ghost_cells = density->getGhostCellWidth();
 #ifdef DEBUG_CHECK_ASSERTIONS
@@ -714,9 +714,9 @@ double Euler::computeStableDtOnPatch(
       patch.getPatchData(d_pressure, getDataContext());
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!density.isNull());
-   TBOX_ASSERT(!velocity.isNull());
-   TBOX_ASSERT(!pressure.isNull());
+   TBOX_ASSERT(density);
+   TBOX_ASSERT(velocity);
+   TBOX_ASSERT(pressure);
 #endif
    hier::IntVector<NDIM> ghost_cells = density->getGhostCellWidth();
 #ifdef DEBUG_CHECK_ASSERTIONS
@@ -797,10 +797,10 @@ void Euler::computeFluxesOnPatch(
       patch.getPatchData(d_flux, getDataContext());
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!density.isNull());
-   TBOX_ASSERT(!velocity.isNull());
-   TBOX_ASSERT(!pressure.isNull());
-   TBOX_ASSERT(!flux.isNull());
+   TBOX_ASSERT(density);
+   TBOX_ASSERT(velocity);
+   TBOX_ASSERT(pressure);
+   TBOX_ASSERT(flux);
    TBOX_ASSERT(density->getGhostCellWidth() == d_nghosts);
    TBOX_ASSERT(velocity->getGhostCellWidth() == d_nghosts);
    TBOX_ASSERT(pressure->getGhostCellWidth() == d_nghosts);
@@ -1001,10 +1001,10 @@ void Euler::compute3DFluxesWithCornerTransport1(
       patch.getPatchData(d_flux, getDataContext());
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!density.isNull());
-   TBOX_ASSERT(!velocity.isNull());
-   TBOX_ASSERT(!pressure.isNull());
-   TBOX_ASSERT(!flux.isNull());
+   TBOX_ASSERT(density);
+   TBOX_ASSERT(velocity);
+   TBOX_ASSERT(pressure);
+   TBOX_ASSERT(flux);
    TBOX_ASSERT(density->getGhostCellWidth() == d_nghosts);
    TBOX_ASSERT(velocity->getGhostCellWidth() == d_nghosts);
    TBOX_ASSERT(pressure->getGhostCellWidth() == d_nghosts);
@@ -1347,10 +1347,10 @@ void Euler::compute3DFluxesWithCornerTransport2(
       patch.getPatchData(d_flux, getDataContext());
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!density.isNull());
-   TBOX_ASSERT(!velocity.isNull());
-   TBOX_ASSERT(!pressure.isNull());
-   TBOX_ASSERT(!flux.isNull());
+   TBOX_ASSERT(density);
+   TBOX_ASSERT(velocity);
+   TBOX_ASSERT(pressure);
+   TBOX_ASSERT(flux);
    TBOX_ASSERT(density->getGhostCellWidth() == d_nghosts);
    TBOX_ASSERT(velocity->getGhostCellWidth() == d_nghosts);
    TBOX_ASSERT(pressure->getGhostCellWidth() == d_nghosts);
@@ -1624,10 +1624,10 @@ void Euler::conservativeDifferenceOnPatch(
       patch.getPatchData(d_pressure, getDataContext());
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!density.isNull());
-   TBOX_ASSERT(!velocity.isNull());
-   TBOX_ASSERT(!pressure.isNull());
-   TBOX_ASSERT(!flux.isNull());
+   TBOX_ASSERT(density);
+   TBOX_ASSERT(velocity);
+   TBOX_ASSERT(pressure);
+   TBOX_ASSERT(flux);
    TBOX_ASSERT(density->getGhostCellWidth() == d_nghosts);
    TBOX_ASSERT(velocity->getGhostCellWidth() == d_nghosts);
    TBOX_ASSERT(pressure->getGhostCellWidth() == d_nghosts);
@@ -1795,12 +1795,12 @@ void Euler::postprocessRefine(
       fine.getPatchData(d_pressure, getDataContext());
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!cdensity.isNull());
-   TBOX_ASSERT(!cvelocity.isNull());
-   TBOX_ASSERT(!cpressure.isNull());
-   TBOX_ASSERT(!fdensity.isNull());
-   TBOX_ASSERT(!fvelocity.isNull());
-   TBOX_ASSERT(!fpressure.isNull());
+   TBOX_ASSERT(cdensity);
+   TBOX_ASSERT(cvelocity);
+   TBOX_ASSERT(cpressure);
+   TBOX_ASSERT(fdensity);
+   TBOX_ASSERT(fvelocity);
+   TBOX_ASSERT(fpressure);
 
    hier::IntVector<NDIM> gccheck = cdensity->getGhostCellWidth();
    TBOX_ASSERT(cvelocity->getGhostCellWidth() == gccheck);
@@ -1969,12 +1969,12 @@ void Euler::postprocessCoarsen(
          d_pressure, getDataContext());
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!cdensity.isNull());
-   TBOX_ASSERT(!cvelocity.isNull());
-   TBOX_ASSERT(!cpressure.isNull());
-   TBOX_ASSERT(!fdensity.isNull());
-   TBOX_ASSERT(!fvelocity.isNull());
-   TBOX_ASSERT(!fpressure.isNull());
+   TBOX_ASSERT(cdensity);
+   TBOX_ASSERT(cvelocity);
+   TBOX_ASSERT(cpressure);
+   TBOX_ASSERT(fdensity);
+   TBOX_ASSERT(fvelocity);
+   TBOX_ASSERT(fpressure);
 
    hier::IntVector<NDIM> gccheck = cdensity->getGhostCellWidth();
    TBOX_ASSERT(cvelocity->getGhostCellWidth() == gccheck);
@@ -2071,9 +2071,9 @@ void Euler::setPhysicalBoundaryConditions(
       patch.getPatchData(d_pressure, getDataContext());
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!density.isNull());
-   TBOX_ASSERT(!velocity.isNull());
-   TBOX_ASSERT(!pressure.isNull());
+   TBOX_ASSERT(density);
+   TBOX_ASSERT(velocity);
+   TBOX_ASSERT(pressure);
 #endif
    hier::IntVector<NDIM> ghost_cells = density->getGhostCellWidth();
 #ifdef DEBUG_CHECK_ASSERTIONS
@@ -2483,7 +2483,7 @@ void Euler::tagGradientDetectorCells(
       if (time_allowed) {
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-         TBOX_ASSERT(!var.isNull());
+         TBOX_ASSERT(var);
 #endif
 
          hier::IntVector<NDIM> vghost = var->getGhostCellWidth();
@@ -2664,8 +2664,8 @@ void Euler::tagRichardsonExtrapolationCells(
       if (time_allowed) {
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-         TBOX_ASSERT(!coarsened_fine_var.isNull());
-         TBOX_ASSERT(!advanced_coarse_var.isNull());
+         TBOX_ASSERT(coarsened_fine_var);
+         TBOX_ASSERT(advanced_coarse_var);
 #endif
 
          if (ref == "DENSITY_RICHARDSON" || ref == "PRESSURE_RICHARDSON") {
@@ -2785,7 +2785,7 @@ void Euler::registerVisItDataWriter(
    tbox::Pointer<appu::VisItDataWriter> viz_writer)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!(viz_writer.isNull()));
+   TBOX_ASSERT(viz_writer);
 #endif
    d_visit_writer = viz_writer;
 }
@@ -2821,9 +2821,9 @@ bool Euler::packDerivedDataIntoDoubleBuffer(
       patch.getPatchData(d_pressure, d_plot_context);
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!density.isNull());
-   TBOX_ASSERT(!velocity.isNull());
-   TBOX_ASSERT(!pressure.isNull());
+   TBOX_ASSERT(density);
+   TBOX_ASSERT(velocity);
+   TBOX_ASSERT(pressure);
    TBOX_ASSERT(density->getGhostBox() == patch.getBox());
    TBOX_ASSERT(velocity->getGhostBox() == patch.getBox());
    TBOX_ASSERT(pressure->getGhostBox() == patch.getBox());
@@ -2949,9 +2949,9 @@ void Euler::writeData1dPencil(
          patch->getPatchData(d_pressure, getDataContext());
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-      TBOX_ASSERT(!density.isNull());
-      TBOX_ASSERT(!velocity.isNull());
-      TBOX_ASSERT(!pressure.isNull());
+      TBOX_ASSERT(density);
+      TBOX_ASSERT(velocity);
+      TBOX_ASSERT(pressure);
 #endif
 
       const tbox::Pointer<geom::CartesianPatchGeometry> pgeom =
@@ -3315,7 +3315,7 @@ void Euler::getFromInput(
    bool is_from_restart)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!db.isNull());
+   TBOX_ASSERT(db);
 #endif
 
    /*
@@ -3405,7 +3405,7 @@ void Euler::getFromInput(
       for (int i = 0; i < refinement_keys.getSize(); i++) {
 
          string error_key = refinement_keys[i];
-         error_db.setNull();
+         error_db.reset();
 
          if (!(error_key == "refine_criteria")) {
 
@@ -3428,7 +3428,7 @@ void Euler::getFromInput(
                def_key_cnt++;
             }
 
-            if (!error_db.isNull() && error_key == "DENSITY_DEVIATION") {
+            if (error_db && error_key == "DENSITY_DEVIATION") {
 
                if (error_db->keyExists("dev_tol")) {
                   d_density_dev_tol =
@@ -3469,7 +3469,7 @@ void Euler::getFromInput(
 
             }
 
-            if (!error_db.isNull() && error_key == "DENSITY_GRADIENT") {
+            if (error_db && error_key == "DENSITY_GRADIENT") {
 
                if (error_db->keyExists("grad_tol")) {
                   d_density_grad_tol =
@@ -3500,7 +3500,7 @@ void Euler::getFromInput(
 
             }
 
-            if (!error_db.isNull() && error_key == "DENSITY_SHOCK") {
+            if (error_db && error_key == "DENSITY_SHOCK") {
 
                if (error_db->keyExists("shock_onset")) {
                   d_density_shock_onset =
@@ -3541,7 +3541,7 @@ void Euler::getFromInput(
 
             }
 
-            if (!error_db.isNull() && error_key == "DENSITY_RICHARDSON") {
+            if (error_db && error_key == "DENSITY_RICHARDSON") {
 
                if (error_db->keyExists("rich_tol")) {
                   d_density_rich_tol =
@@ -3572,7 +3572,7 @@ void Euler::getFromInput(
 
             }
 
-            if (!error_db.isNull() && error_key == "PRESSURE_DEVIATION") {
+            if (error_db && error_key == "PRESSURE_DEVIATION") {
 
                if (error_db->keyExists("dev_tol")) {
                   d_pressure_dev_tol =
@@ -3613,7 +3613,7 @@ void Euler::getFromInput(
 
             }
 
-            if (!error_db.isNull() && error_key == "PRESSURE_GRADIENT") {
+            if (error_db && error_key == "PRESSURE_GRADIENT") {
 
                if (error_db->keyExists("grad_tol")) {
                   d_pressure_grad_tol =
@@ -3644,7 +3644,7 @@ void Euler::getFromInput(
 
             }
 
-            if (!error_db.isNull() && error_key == "PRESSURE_SHOCK") {
+            if (error_db && error_key == "PRESSURE_SHOCK") {
 
                if (error_db->keyExists("shock_onset")) {
                   d_pressure_shock_onset =
@@ -3685,7 +3685,7 @@ void Euler::getFromInput(
 
             }
 
-            if (!error_db.isNull() && error_key == "PRESSURE_RICHARDSON") {
+            if (error_db && error_key == "PRESSURE_RICHARDSON") {
 
                if (error_db->keyExists("rich_tol")) {
                   d_pressure_rich_tol =
@@ -3972,7 +3972,7 @@ void Euler::putToDatabase(
    tbox::Pointer<tbox::Database> db)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!db.isNull());
+   TBOX_ASSERT(db);
 #endif
 
    db->putInteger("EULER_VERSION", EULER_VERSION);
@@ -4311,7 +4311,7 @@ void Euler::readDirichletBoundaryDataEntry(
    int bdry_location_index)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!db.isNull());
+   TBOX_ASSERT(db);
    TBOX_ASSERT(!db_name.empty());
 #endif
 #if (NDIM == 2)
@@ -4341,7 +4341,7 @@ void Euler::readStateDataEntry(
    tbox::Array<double>& pressure)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!db.isNull());
+   TBOX_ASSERT(db);
    TBOX_ASSERT(!db_name.empty());
    TBOX_ASSERT(array_indx >= 0);
    TBOX_ASSERT(density.getSize() > array_indx);

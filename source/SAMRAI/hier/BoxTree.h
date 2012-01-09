@@ -76,7 +76,7 @@ public:
     * larger value tends to make tree building faster but tree
     * searching slower, and vice versa.  @b Default: 10
     */
-   explicit BoxTree(
+   BoxTree(
       const tbox::Dimension& dim,
       const BoxContainer& mapped_boxes,
       int min_number = 10);
@@ -95,7 +95,7 @@ public:
     *
     * @param[in] min_number  @b Default: 10
     */
-   explicit BoxTree(
+   BoxTree(
       const tbox::Dimension& dim,
       const BoxContainer& boxes,
       const BlockId& block_id,

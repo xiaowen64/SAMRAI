@@ -266,7 +266,7 @@ public:
  * @param[in]  database Database specifying hierarchy parameters.
  * @param[in]  register_for_restart @b Default: true
  */
-   explicit PatchHierarchy(
+   PatchHierarchy(
       const std::string& object_name,
       tbox::Pointer<GridGeometry> geometry,
       const tbox::Pointer<tbox::Database>& database =

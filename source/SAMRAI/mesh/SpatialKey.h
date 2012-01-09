@@ -40,7 +40,7 @@ public:
     * Create a spatial key from given index space coordinates and
     * level number.
     */
-   SpatialKey(
+   explicit SpatialKey(
       const unsigned int i,
       const unsigned int j = 0,
       const unsigned int k = 0,

@@ -148,7 +148,7 @@ public:
     * @param[in]  register_for_restart Flag indicating whether this instance
     *             should be registered for restart.  @b Default: true
     */
-   explicit GridGeometry(
+   GridGeometry(
       const tbox::Dimension& dim,
       const std::string& object_name,
       tbox::Pointer<TransferOperatorRegistry> op_reg,
@@ -171,7 +171,7 @@ public:
     * @param[in]  register_for_restart Flag indicating whether this instance
     *             should be registered for restart.  @b Default: true
     */
-   explicit GridGeometry(
+   GridGeometry(
       const std::string& object_name,
       const BoxContainer& domain,
       tbox::Pointer<TransferOperatorRegistry> op_reg,
@@ -1103,7 +1103,7 @@ protected:
     * @param[in]  dim
     * @param[in]  object_name
     */
-   explicit GridGeometry(
+   GridGeometry(
       const tbox::Dimension& dim,
       const std::string& object_name,
       tbox::Pointer<TransferOperatorRegistry> op_reg);

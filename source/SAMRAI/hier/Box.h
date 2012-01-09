@@ -100,7 +100,7 @@ public:
     * according to the @c periodic_id.  The default argument for @c
     * periodic_id corresponds to the zero-shift.
     */
-   explicit Box(
+   Box(
       const hier::Box& box,
       const LocalId& local_id,
       const int owner_rank,
@@ -124,7 +124,7 @@ public:
     * stl::set<Box>.  We need another way to do it and get rid
     * of these constructors.
     */
-   explicit Box(
+   Box(
       const tbox::Dimension& dim,
       const GlobalId& id,
       const PeriodicId& periodic_id = PeriodicId::zero());
@@ -145,7 +145,7 @@ public:
     * stl::set<Box>.  We need another way to do it and get rid
     * of these constructors.
     */
-   explicit Box(
+   Box(
       const tbox::Dimension& dim,
       const BoxId& mapped_box_id);
 
@@ -164,7 +164,7 @@ public:
     *
     * @see initialize( const Box&, const int, const IntVector&);
     */
-   explicit Box(
+   Box(
       const Box& other,
       const PeriodicId& periodic_id,
       const IntVector& refinement_ratio);
@@ -953,7 +953,7 @@ public:
     * Constructor for the box iterator.  The iterator will enumerate the
     * indices in the argument box.
     */
-   BoxIterator(
+   explicit BoxIterator(
       const Box& box);
 
    /**

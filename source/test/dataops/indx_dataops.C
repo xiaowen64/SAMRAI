@@ -185,8 +185,8 @@ int main(
          }
       }
 
-      geometry.setNull();
-      hierarchy.setNull();
+      geometry.reset();
+      hierarchy.reset();
    }
 
    tbox::SAMRAIManager::shutdown();

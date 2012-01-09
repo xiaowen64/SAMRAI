@@ -43,7 +43,7 @@ HierarchyTester::HierarchyTester(
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(!object_name.empty());
-   TBOX_ASSERT(!hier_test_db.isNull());
+   TBOX_ASSERT(hier_test_db);
 #endif
 
    d_object_name = object_name;
@@ -51,8 +51,8 @@ HierarchyTester::HierarchyTester(
    d_do_refine_test = false;
    d_do_coarsen_test = false;
 
-   d_initial_patch_hierarchy.setNull();
-   d_test_patch_hierarchy.setNull();
+   d_initial_patch_hierarchy.reset();
+   d_test_patch_hierarchy.reset();
 
    if (hier_test_db->keyExists("do_refine_test")) {
       d_do_refine_test = hier_test_db->getBool("do_refine_test");
@@ -97,8 +97,8 @@ HierarchyTester::HierarchyTester(
 
 HierarchyTester::~HierarchyTester()
 {
-   d_initial_patch_hierarchy.setNull();
-   d_test_patch_hierarchy.setNull();
+   d_initial_patch_hierarchy.reset();
+   d_test_patch_hierarchy.reset();
 }
 
 /*
@@ -114,7 +114,7 @@ void HierarchyTester::setupInitialHierarchy(
    Pointer<Database> main_input_db)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!main_input_db.isNull());
+   TBOX_ASSERT(main_input_db);
 #endif
    Pointer<CartesianGridGeometry> grid_geometry(
       new CartesianGridGeometry(

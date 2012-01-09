@@ -249,7 +249,7 @@ void Connector::shrinkWidth(const IntVector& new_width)
    const bool base_coarser = !getHeadCoarserFlag() &&
       getBase().getRefinementRatio() != getHead().getRefinementRatio();
 
-   const tbox::ConstPointer<GridGeometry>& grid_geom(getBase().getGridGeometry());
+   const tbox::Pointer<const GridGeometry>& grid_geom(getBase().getGridGeometry());
 
    for (NeighborhoodIterator ei = begin(); ei != end(); ++ei) {
       const BoxId& mapped_box_id = *ei;
@@ -456,8 +456,8 @@ void Connector::setParallelState(
  */
 void Connector::finalizeContext()
 {
-   TBOX_ASSERT(!d_base_handle.isNull());
-   TBOX_ASSERT(!d_head_handle.isNull());
+   TBOX_ASSERT(d_base_handle);
+   TBOX_ASSERT(d_head_handle);
    TBOX_ASSERT(d_base_width.getDim().isValid());
 
    const BoxLevel& base = d_base_handle->getBoxLevel();
@@ -688,12 +688,12 @@ void Connector::writeNeighborhoodToErrorStream(
 
 void Connector::clear()
 {
-   if ( !d_base_handle.isNull() ) {
+   if ( d_base_handle ) {
       d_relationships.clear();
       d_global_relationships.clear();
       d_mpi.setCommunicator(tbox::SAMRAI_MPI::commNull);
-      d_base_handle.setNull();
-      d_head_handle.setNull();
+      d_base_handle.reset();
+      d_head_handle.reset();
       d_base_width(0) = d_ratio(0) = 0;
       d_parallel_state = BoxLevel::DISTRIBUTED;
    }
@@ -1632,8 +1632,8 @@ void Connector::initializeCallback()
 
 void Connector::finalizeCallback()
 {
-   t_acquire_remote_relationships.setNull();
-   t_cache_global_reduced_data.setNull();
+   t_acquire_remote_relationships.reset();
+   t_cache_global_reduced_data.reset();
 }
 
 }

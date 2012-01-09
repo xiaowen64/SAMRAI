@@ -81,7 +81,7 @@ MblkPatchBoundaryNodeSum::MblkPatchBoundaryNodeSum(
 
    d_num_reg_sum = 0;
 
-   d_level.setNull();
+   d_level.reset();
    d_hierarchy = hierarchy;
    d_coarsest_level = -1;
    d_finest_level = -1;
@@ -173,7 +173,7 @@ void MblkPatchBoundaryNodeSum::registerSum(
    tbox::Pointer<pdat::NodeDataFactory<double> > node_factory =
       var_db->getPatchDescriptor()->getPatchDataFactory(node_data_id);
 
-   if (node_factory.isNull()) {
+   if (!node_factory) {
 
       TBOX_ERROR("MblkPatchBoundaryNodeSum register error..."
          << "\nobject named " << d_object_name
@@ -243,7 +243,7 @@ void MblkPatchBoundaryNodeSum::registerSum(
 
       d_tmp_onode_src_variable[reg_sum_id] = var_db->getVariable(
             tonode_src_var_name);
-      if (d_tmp_onode_src_variable[reg_sum_id].isNull()) {
+      if (!d_tmp_onode_src_variable[reg_sum_id]) {
          d_tmp_onode_src_variable[reg_sum_id] =
             new pdat::OuternodeVariable<double>(tonode_src_var_name, data_depth);
       }
@@ -252,7 +252,7 @@ void MblkPatchBoundaryNodeSum::registerSum(
          + var_suffix;
       d_tmp_onode_dst_variable[reg_sum_id] = var_db->getVariable(
             tonode_dst_var_name);
-      if (d_tmp_onode_dst_variable[reg_sum_id].isNull()) {
+      if (!d_tmp_onode_dst_variable[reg_sum_id]) {
          d_tmp_onode_dst_variable[reg_sum_id] =
             new pdat::OuternodeVariable<double>(tonode_dst_var_name, data_depth);
       }
@@ -300,7 +300,7 @@ void MblkPatchBoundaryNodeSum::setupSum(
    tbox::Pointer<hier::PatchLevel> level)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!level.isNull());
+   TBOX_ASSERT(level);
 #endif
 
    if (d_hierarchy_setup_called) {
@@ -407,7 +407,7 @@ void MblkPatchBoundaryNodeSum::doLevelSum(
    tbox::Pointer<hier::PatchLevel> level) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!level.isNull());
+   TBOX_ASSERT(level);
 #endif
 
    copyNodeToOuternodeOnLevel(level,
@@ -440,14 +440,14 @@ void MblkPatchBoundaryNodeSum::copyNodeToOuternodeOnLevel(
    const tbox::Array<int>& node_data_id,
    const tbox::Array<int>& onode_data_id) const
 {
-   TBOX_ASSERT(!level.isNull());
+   TBOX_ASSERT(level);
    TBOX_ASSERT(node_data_id.size() == onode_data_id.size());
 
    for (int bn = 0; bn < level->getNumberOfBlocks(); bn++) {
       tbox::Pointer<hier::PatchLevel> patch_level =
          level->getPatchLevelForBlock(bn);
 
-      if (!(patch_level.isNull())) {
+      if (patch_level) {
 
          for (hier::PatchLevel::Iterator ip(patch_level);
               ip; ip++) {
@@ -473,7 +473,7 @@ void MblkPatchBoundaryNodeSum::copyOuternodeToNodeOnLevel(
    const tbox::Array<int>& node_data_id) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!level.isNull());
+   TBOX_ASSERT(level);
    TBOX_ASSERT(node_data_id.size() == onode_data_id.size());
 #endif
 
@@ -481,7 +481,7 @@ void MblkPatchBoundaryNodeSum::copyOuternodeToNodeOnLevel(
       tbox::Pointer<hier::PatchLevel> patch_level =
          level->getPatchLevelForBlock(bn);
 
-      if (!(patch_level.isNull())) {
+      if (patch_level) {
 
          for (hier::PatchLevel::Iterator ip(patch_level);
               ip; ip++) {

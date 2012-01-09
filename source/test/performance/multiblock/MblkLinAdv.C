@@ -432,7 +432,7 @@ MblkLinAdv::MblkLinAdv(
    d_nodeghosts(hier::IntVector(dim, NODEG))
 {
    TBOX_ASSERT(!object_name.empty());
-   TBOX_ASSERT(!input_db.isNull());
+   TBOX_ASSERT(input_db);
 
    d_object_name = object_name;
    tbox::RestartManager::getManager()->registerRestartItem(d_object_name, this);
@@ -712,7 +712,7 @@ void MblkLinAdv::registerModelVariables(
    hier::VariableDatabase* vardb = hier::VariableDatabase::getDatabase();
 
 #ifdef HAVE_HDF5
-   if (!(d_visit_writer.isNull())) {
+   if (d_visit_writer) {
       d_visit_writer->
       registerPlotQuantity("U",
          "SCALAR",
@@ -724,7 +724,7 @@ void MblkLinAdv::registerModelVariables(
             d_xyz, integrator->getPlotContext()));
    }
 
-   if (d_visit_writer.isNull()) {
+   if (!d_visit_writer) {
       TBOX_WARNING(
          d_object_name << ": registerModelVariables()"
                        << "\nVisit data writer was"
@@ -790,8 +790,8 @@ void MblkLinAdv::initializeDataOnPatch(
       tbox::Pointer<pdat::CellData<double> > uval =
          patch.getPatchData(d_uval, getDataContext());
 
-      TBOX_ASSERT(!uval.isNull());
-      TBOX_ASSERT(!xyz.isNull());
+      TBOX_ASSERT(uval);
+      TBOX_ASSERT(xyz);
 
       hier::IntVector ghost_cells(uval->getGhostCellWidth());
 
@@ -945,7 +945,7 @@ double MblkLinAdv::computeStableDtOnPatch(
       patch.getPatchData(d_uval, getDataContext());
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!uval.isNull());
+   TBOX_ASSERT(uval);
 #endif
    hier::IntVector ghost_cells(uval->getGhostCellWidth());
 
@@ -1029,8 +1029,8 @@ void MblkLinAdv::computeFluxesOnPatch(
        * context matches the ghosts defined in this class...
        */
 #ifdef DEBUG_CHECK_ASSERTIONS
-      TBOX_ASSERT(!uval.isNull());
-      TBOX_ASSERT(!flux.isNull());
+      TBOX_ASSERT(uval);
+      TBOX_ASSERT(flux);
       TBOX_ASSERT(uval->getGhostCellWidth() == d_nghosts);
       TBOX_ASSERT(flux->getGhostCellWidth() == d_fluxghosts);
 #endif
@@ -1203,8 +1203,8 @@ void MblkLinAdv::compute3DFluxesWithCornerTransport1(
       patch.getPatchData(d_flux, getDataContext());
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!uval.isNull());
-   TBOX_ASSERT(!flux.isNull());
+   TBOX_ASSERT(uval);
+   TBOX_ASSERT(flux);
    TBOX_ASSERT(uval->getGhostCellWidth() == d_nghosts);
    TBOX_ASSERT(flux->getGhostCellWidth() == d_fluxghosts);
 #endif
@@ -1507,8 +1507,8 @@ void MblkLinAdv::compute3DFluxesWithCornerTransport2(
       patch.getPatchData(d_flux, getDataContext());
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!uval.isNull());
-   TBOX_ASSERT(!flux.isNull());
+   TBOX_ASSERT(uval);
+   TBOX_ASSERT(flux);
    TBOX_ASSERT(uval->getGhostCellWidth() == d_nghosts);
    TBOX_ASSERT(flux->getGhostCellWidth() == d_fluxghosts);
 #endif
@@ -1744,8 +1744,8 @@ void MblkLinAdv::conservativeDifferenceOnPatch(
       patch.getPatchData(d_flux, getDataContext());
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!uval.isNull());
-   TBOX_ASSERT(!flux.isNull());
+   TBOX_ASSERT(uval);
+   TBOX_ASSERT(flux);
    TBOX_ASSERT(uval->getGhostCellWidth() == d_nghosts);
    TBOX_ASSERT(flux->getGhostCellWidth() == d_fluxghosts);
 #endif
@@ -1792,7 +1792,7 @@ void MblkLinAdv::setPhysicalBoundaryConditions(
       patch.getPatchData(d_uval, getDataContext());
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!uval.isNull());
+   TBOX_ASSERT(uval);
 #endif
    hier::IntVector uval_ghosts = uval->getGhostCellWidth();
 #ifdef DEBUG_CHECK_ASSERTIONS
@@ -2037,7 +2037,7 @@ void MblkLinAdv::tagGradientDetectorCells(
       tbox::Pointer<pdat::CellData<double> > var =
          patch.getPatchData(d_uval, getDataContext());
 #ifdef DEBUG_CHECK_ASSERTIONS
-      TBOX_ASSERT(!var.isNull());
+      TBOX_ASSERT(var);
 #endif
       hier::IntVector vghost(var->getGhostCellWidth());
       hier::IntVector tagghost(tags->getGhostCellWidth());
@@ -2291,7 +2291,7 @@ void MblkLinAdv::registerVisItDataWriter(
    tbox::Pointer<appu::VisItDataWriter> viz_writer)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!(viz_writer.isNull()));
+   TBOX_ASSERT(viz_writer);
 #endif
    d_visit_writer = viz_writer;
 }
@@ -2484,7 +2484,7 @@ void MblkLinAdv::getFromInput(
    bool is_from_restart)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!input_db.isNull());
+   TBOX_ASSERT(input_db);
 #endif
 
    tbox::Pointer<tbox::Database> db = input_db->getDatabase("MblkLinAdv");
@@ -2563,7 +2563,7 @@ void MblkLinAdv::getFromInput(
       for (int i = 0; i < refinement_keys.getSize(); i++) {
 
          string error_key = refinement_keys[i];
-         error_db.setNull();
+         error_db.reset();
 
          if (!(error_key == "refine_criteria")) {
 
@@ -2582,7 +2582,7 @@ void MblkLinAdv::getFromInput(
                def_key_cnt++;
             }
 
-            if (!error_db.isNull() && error_key == "UVAL_DEVIATION") {
+            if (error_db && error_key == "UVAL_DEVIATION") {
 
                if (error_db->keyExists("dev_tol")) {
                   d_dev_tol =
@@ -2622,7 +2622,7 @@ void MblkLinAdv::getFromInput(
 
             }
 
-            if (!error_db.isNull() && error_key == "UVAL_GRADIENT") {
+            if (error_db && error_key == "UVAL_GRADIENT") {
 
                if (error_db->keyExists("grad_tol")) {
                   d_grad_tol =
@@ -2652,7 +2652,7 @@ void MblkLinAdv::getFromInput(
 
             }
 
-            if (!error_db.isNull() && error_key == "UVAL_SHOCK") {
+            if (error_db && error_key == "UVAL_SHOCK") {
 
                if (error_db->keyExists("shock_onset")) {
                   d_shock_onset =
@@ -2692,7 +2692,7 @@ void MblkLinAdv::getFromInput(
 
             }
 
-            if (!error_db.isNull() && error_key == "UVAL_RICHARDSON") {
+            if (error_db && error_key == "UVAL_RICHARDSON") {
 
                if (error_db->keyExists("rich_tol")) {
                   d_rich_tol =
@@ -2948,7 +2948,7 @@ void MblkLinAdv::putToDatabase(
    tbox::Pointer<tbox::Database> db)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!db.isNull());
+   TBOX_ASSERT(db);
 #endif
 
    db->putInteger("MBLKLINADV_VERSION", MBLKLINADV_VERSION);
@@ -3127,7 +3127,7 @@ void MblkLinAdv::readDirichletBoundaryDataEntry(
    int bdry_location_index)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!db.isNull());
+   TBOX_ASSERT(db);
    TBOX_ASSERT(!db_name.empty());
 #endif
    if (d_dim == tbox::Dimension(2)) {
@@ -3151,7 +3151,7 @@ void MblkLinAdv::readStateDataEntry(
    tbox::Array<double>& uval)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!db.isNull());
+   TBOX_ASSERT(db);
    TBOX_ASSERT(!db_name.empty());
    TBOX_ASSERT(array_indx >= 0);
    TBOX_ASSERT(uval.getSize() > array_indx);

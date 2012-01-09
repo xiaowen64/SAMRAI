@@ -697,7 +697,7 @@ template<class TYPE>
 void SideData<TYPE>::getSpecializedFromDatabase(
    tbox::Pointer<tbox::Database> database)
 {
-   TBOX_ASSERT(!database.isNull());
+   TBOX_ASSERT(database);
 
    int ver = database->getInteger("PDAT_SIDEDATA_VERSION");
    if (ver != PDAT_SIDEDATA_VERSION) {
@@ -730,7 +730,7 @@ template<class TYPE>
 void SideData<TYPE>::putSpecializedToDatabase(
    tbox::Pointer<tbox::Database> database)
 {
-   TBOX_ASSERT(!database.isNull());
+   TBOX_ASSERT(database);
 
    database->putInteger("PDAT_SIDEDATA_VERSION", PDAT_SIDEDATA_VERSION);
 

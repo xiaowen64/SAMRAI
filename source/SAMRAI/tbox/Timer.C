@@ -294,7 +294,7 @@ void Timer::putToDatabase(
    Pointer<Database> db)
 {
 #ifdef ENABLE_SAMRAI_TIMERS
-   TBOX_ASSERT(!db.isNull());
+   TBOX_ASSERT(db);
 
    db->putInteger("TBOX_TIMER_VERSION",
       TBOX_TIMER_VERSION);
@@ -315,7 +315,7 @@ void Timer::getFromRestart(
    Pointer<Database> db)
 {
 #ifdef ENABLE_SAMRAI_TIMERS
-   TBOX_ASSERT(!db.isNull());
+   TBOX_ASSERT(db);
 
    int ver = db->getInteger("TBOX_TIMER_VERSION");
    if (ver != TBOX_TIMER_VERSION) {

@@ -150,7 +150,7 @@ public:
     * @param[in] base_width
     * @param[in] parallel_state
     */
-   explicit Connector(
+   Connector(
       const BoxLevel& base_mapped_box_level,
       const BoxLevel& head_mapped_box_level,
       const IntVector& base_width,

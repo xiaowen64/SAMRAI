@@ -209,7 +209,7 @@ class BoxNeighborhoodCollection
              *
              * @param nbrhds
              */
-            Iterator(
+            explicit Iterator(
                BoxNeighborhoodCollection& nbrhds,
                bool from_start = true);
 
@@ -322,7 +322,7 @@ class BoxNeighborhoodCollection
              *
              * @param nbrhds
              */
-            ConstIterator(
+            explicit ConstIterator(
                const BoxNeighborhoodCollection& nbrhds,
                bool from_start = true);
 

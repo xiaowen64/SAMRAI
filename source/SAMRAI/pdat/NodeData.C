@@ -476,7 +476,7 @@ template<class TYPE>
 void NodeData<TYPE>::getSpecializedFromDatabase(
    tbox::Pointer<tbox::Database> database)
 {
-   TBOX_ASSERT(!database.isNull());
+   TBOX_ASSERT(database);
 
    int ver = database->getInteger("PDAT_NODEDATA_VERSION");
    if (ver != PDAT_NODEDATA_VERSION) {
@@ -505,7 +505,7 @@ void NodeData<TYPE>::putSpecializedToDatabase(
    tbox::Pointer<tbox::Database> database)
 {
 
-   TBOX_ASSERT(!database.isNull());
+   TBOX_ASSERT(database);
 
    database->putInteger("PDAT_NODEDATA_VERSION", PDAT_NODEDATA_VERSION);
 

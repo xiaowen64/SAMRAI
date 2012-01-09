@@ -35,8 +35,6 @@ DEPENDS_1:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Complex.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointerBase.I			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointerBase.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/DescribedClass.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/IOStream.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.h				\
@@ -44,8 +42,6 @@ DEPENDS_1:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/PointerBase.I			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/PointerBase.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
@@ -190,10 +186,6 @@ DEPENDS_2:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Clock.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Complex.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.I			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointerBase.I			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointerBase.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/DatabaseBox.I			\
@@ -213,8 +205,6 @@ DEPENDS_2:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/PointerBase.I			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/PointerBase.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAIManager.h			\
@@ -248,7 +238,6 @@ DEPENDS_2 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/NodeData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database_template_methods.C		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/List.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C			\
@@ -515,10 +504,6 @@ DEPENDS_3:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/AsyncCommStage.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Clock.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Complex.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.I			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointerBase.I			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointerBase.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/DatabaseBox.I			\
@@ -538,8 +523,6 @@ DEPENDS_3:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/PointerBase.I			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/PointerBase.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAIManager.h			\
@@ -639,7 +622,6 @@ DEPENDS_3 +=\
 	$(INCLUDE_SAM)/SAMRAI/solv/SAMRAIVectorReal.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/AsyncCommPeer.C			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database_template_methods.C		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/List.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C			\
@@ -903,10 +885,6 @@ DEPENDS_4:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/AsyncCommStage.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Clock.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Complex.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.I			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointerBase.I			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointerBase.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/DatabaseBox.I			\
@@ -926,8 +904,6 @@ DEPENDS_4:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/PointerBase.I			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/PointerBase.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAIManager.h			\
@@ -1025,7 +1001,6 @@ DEPENDS_4 +=\
 	$(INCLUDE_SAM)/SAMRAI/solv/SAMRAIVectorReal.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/AsyncCommPeer.C			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database_template_methods.C		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/List.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C			\
@@ -1193,10 +1168,6 @@ DEPENDS_5:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Clock.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Complex.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.I			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointerBase.I			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointerBase.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/DatabaseBox.I			\
@@ -1216,8 +1187,6 @@ DEPENDS_5:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/PointerBase.I			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/PointerBase.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAIManager.h			\
@@ -1249,7 +1218,6 @@ DEPENDS_5 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SideVariable.C			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database_template_methods.C		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/List.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C			\
@@ -1484,10 +1452,6 @@ DEPENDS_6:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Clock.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Complex.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.I			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointerBase.I			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointerBase.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/DatabaseBox.I			\
@@ -1507,8 +1471,6 @@ DEPENDS_6:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/PointerBase.I			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/PointerBase.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAIManager.h			\
@@ -1585,7 +1547,6 @@ DEPENDS_6 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/solv/SAMRAIVectorReal.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database_template_methods.C		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/List.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C			\
@@ -1825,10 +1786,6 @@ DEPENDS_7:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Clock.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Complex.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.I			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointerBase.I			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointerBase.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/DatabaseBox.I			\
@@ -1848,8 +1805,6 @@ DEPENDS_7:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/PointerBase.I			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/PointerBase.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAIManager.h			\
@@ -1927,7 +1882,6 @@ DEPENDS_7 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/solv/SAMRAIVectorReal.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database_template_methods.C		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/List.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C			\
@@ -2038,10 +1992,6 @@ DEPENDS_8:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Clock.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Complex.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.I			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointerBase.I			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointerBase.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/DatabaseBox.I			\
@@ -2061,8 +2011,6 @@ DEPENDS_8:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/PointerBase.I			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/PointerBase.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAIManager.h			\
@@ -2087,7 +2035,6 @@ DEPENDS_8 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/MultiblockCellDataTranslator.C	\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database_template_methods.C		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/List.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C			\
@@ -2118,15 +2065,11 @@ DEPENDS_10:=\
 	$(INCLUDE_SAM)/SAMRAI/solv/KINSOLSolver.I			\
 	$(INCLUDE_SAM)/SAMRAI/solv/KINSOLSolver.h			\
 	$(INCLUDE_SAM)/SAMRAI/solv/SundialsAbstractVector.h		\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointerBase.I			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointerBase.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/DescribedClass.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/IOStream.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/PointerBase.I			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/PointerBase.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
@@ -2372,10 +2315,6 @@ DEPENDS_11:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Clock.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Complex.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.I			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointerBase.I			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointerBase.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/DatabaseBox.I			\
@@ -2396,8 +2335,6 @@ DEPENDS_11:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/PointerBase.I			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/PointerBase.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/RestartManager.I			\
@@ -2476,7 +2413,6 @@ DEPENDS_11 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/solv/SAMRAIVectorReal.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database_template_methods.C		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/List.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C			\
@@ -2560,8 +2496,6 @@ DEPENDS_12:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Complex.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointerBase.I			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointerBase.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/DatabaseBox.I			\
@@ -2581,8 +2515,6 @@ DEPENDS_12:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/PointerBase.I			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/PointerBase.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAIManager.h			\
@@ -2833,10 +2765,6 @@ DEPENDS_13:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Clock.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Complex.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.I			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointerBase.I			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointerBase.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/DatabaseBox.I			\
@@ -2856,8 +2784,6 @@ DEPENDS_13:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/PointerBase.I			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/PointerBase.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAIManager.h			\
@@ -2934,7 +2860,6 @@ DEPENDS_13 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/solv/SAMRAIVectorReal.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database_template_methods.C		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/List.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C			\
@@ -2950,16 +2875,12 @@ DEPENDS_14:=\
 	$(INCLUDE_SAM)/SAMRAI/solv/PETScAbstractVectorReal.C		\
 	$(INCLUDE_SAM)/SAMRAI/solv/PETScAbstractVectorReal.h		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Complex.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointerBase.I			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointerBase.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/DescribedClass.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/IOStream.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/PointerBase.I			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/PointerBase.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.I				\
@@ -3202,10 +3123,6 @@ DEPENDS_15:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Clock.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Complex.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.I			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointerBase.I			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointerBase.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/DatabaseBox.I			\
@@ -3225,8 +3142,6 @@ DEPENDS_15:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/PointerBase.I			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/PointerBase.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAIManager.h			\
@@ -3304,7 +3219,6 @@ DEPENDS_15 +=\
 	$(INCLUDE_SAM)/SAMRAI/solv/PETScAbstractVectorReal.C		\
 	$(INCLUDE_SAM)/SAMRAI/solv/SAMRAIVectorReal.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database_template_methods.C		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/List.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C			\
@@ -3319,15 +3233,11 @@ DEPENDS_16:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/solv/PoissonSpecifications.I		\
 	$(INCLUDE_SAM)/SAMRAI/solv/PoissonSpecifications.h		\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointerBase.I			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointerBase.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/DescribedClass.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/IOStream.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/PointerBase.I			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/PointerBase.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
@@ -3410,8 +3320,6 @@ DEPENDS_17:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Complex.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointerBase.I			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointerBase.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/DatabaseBox.I			\
@@ -3431,8 +3339,6 @@ DEPENDS_17:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/PointerBase.I			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/PointerBase.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAIManager.h			\
@@ -3682,10 +3588,6 @@ DEPENDS_18:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Clock.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Complex.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.I			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointerBase.I			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointerBase.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/DatabaseBox.I			\
@@ -3705,8 +3607,6 @@ DEPENDS_18:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/PointerBase.I			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/PointerBase.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAIManager.h			\
@@ -3782,7 +3682,6 @@ DEPENDS_18 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SideVariable.C			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database_template_methods.C		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/List.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C			\
@@ -4036,10 +3935,6 @@ DEPENDS_20:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Clock.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Complex.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.I			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointerBase.I			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointerBase.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/DatabaseBox.I			\
@@ -4060,8 +3955,6 @@ DEPENDS_20:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/PointerBase.I			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/PointerBase.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/RestartManager.I			\
@@ -4142,7 +4035,6 @@ DEPENDS_20 +=\
 	$(INCLUDE_SAM)/SAMRAI/solv/PETSc_SAMRAIVectorReal.C		\
 	$(INCLUDE_SAM)/SAMRAI/solv/SAMRAIVectorReal.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database_template_methods.C		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/List.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C			\
@@ -4287,10 +4179,6 @@ DEPENDS_21:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Clock.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Complex.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.I			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointerBase.I			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointerBase.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/DatabaseBox.I			\
@@ -4310,8 +4198,6 @@ DEPENDS_21:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/PointerBase.I			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/PointerBase.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAIManager.h			\
@@ -4336,7 +4222,6 @@ DEPENDS_21 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SideData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database_template_methods.C		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/List.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C			\
@@ -4350,15 +4235,11 @@ FILE_22=SundialsAbstractVector.o
 DEPENDS_22:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/solv/SundialsAbstractVector.h		\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointerBase.I			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointerBase.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/DescribedClass.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/IOStream.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/PointerBase.I			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/PointerBase.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
@@ -4598,10 +4479,6 @@ DEPENDS_23:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Clock.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Complex.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.I			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointerBase.I			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointerBase.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/DatabaseBox.I			\
@@ -4621,8 +4498,6 @@ DEPENDS_23:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/PointerBase.I			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/PointerBase.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAIManager.h			\
@@ -4699,7 +4574,6 @@ DEPENDS_23 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/solv/SAMRAIVectorReal.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointer.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database_template_methods.C		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/List.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C			\
@@ -4714,15 +4588,11 @@ DEPENDS_24:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/solv/SundialsAbstractVector.h		\
 	$(INCLUDE_SAM)/SAMRAI/solv/solv_NVector.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointerBase.I			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ConstPointerBase.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/DescribedClass.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/IOStream.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/PointerBase.I			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/PointerBase.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\

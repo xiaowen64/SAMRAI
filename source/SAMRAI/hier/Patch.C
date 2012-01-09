@@ -155,7 +155,7 @@ void Patch::deallocatePatchData(
       (id < d_descriptor->getMaxNumberRegisteredComponents()));
 
    if (id < d_patch_data.getSize()) {
-      d_patch_data[id].setNull();
+      d_patch_data[id].reset();
    }
 }
 
@@ -165,7 +165,7 @@ void Patch::deallocatePatchData(
    const int ncomponents = d_patch_data.getSize();
    for (int i = 0; i < ncomponents; i++) {
       if (components.isSet(i)) {
-         d_patch_data[i].setNull();
+         d_patch_data[i].reset();
       }
    }
 }
@@ -184,7 +184,7 @@ void Patch::setTime(
 {
    const int ncomponents = d_patch_data.getSize();
    for (int i = 0; i < ncomponents; i++) {
-      if (components.isSet(i) && !d_patch_data[i].isNull()) {
+      if (components.isSet(i) && d_patch_data[i]) {
          d_patch_data[i]->setTime(timestamp);
       }
    }
@@ -195,7 +195,7 @@ void Patch::setTime(
 {
    const int ncomponents = d_patch_data.getSize();
    for (int i = 0; i < ncomponents; i++) {
-      if (!d_patch_data[i].isNull()) {
+      if (d_patch_data[i]) {
          d_patch_data[i]->setTime(timestamp);
       }
    }
@@ -215,7 +215,7 @@ void Patch::getFromDatabase(
    tbox::Pointer<tbox::Database> database,
    const ComponentSelector& component_selector)
 {
-   TBOX_ASSERT(!database.isNull());
+   TBOX_ASSERT(database);
 
    int ver = database->getInteger("HIER_PATCH_VERSION");
    if (ver != HIER_PATCH_VERSION) {
@@ -307,7 +307,7 @@ void Patch::putToDatabase(
    tbox::Pointer<tbox::Database> database,
    const ComponentSelector& patchdata_write_table)
 {
-   TBOX_ASSERT(!database.isNull());
+   TBOX_ASSERT(database);
 
    int i;
 
@@ -392,7 +392,7 @@ std::ostream& operator << (
    const int ncomponents = patch.d_patch_data.getSize();
    for (int i = 0; i < ncomponents; i++) {
       s << "Component(" << i << ")=";
-      if (patch.d_patch_data[i].isNull()) {
+      if (!patch.d_patch_data[i]) {
          s << "NULL\n";
       } else {
          s << typeid(*patch.d_patch_data[i]).name()

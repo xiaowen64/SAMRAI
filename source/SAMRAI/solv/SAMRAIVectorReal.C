@@ -88,7 +88,7 @@ SAMRAIVectorReal<TYPE>::SAMRAIVectorReal(
    d_finest_level(finest_level),
    d_number_components(0)
 {
-   TBOX_ASSERT(!hierarchy.isNull());
+   TBOX_ASSERT(hierarchy);
    TBOX_ASSERT((coarsest_level >= 0)
       && (finest_level >= coarsest_level)
       && (finest_level <= hierarchy->getFinestLevelNumber()));
@@ -133,20 +133,20 @@ SAMRAIVectorReal<TYPE>::~SAMRAIVectorReal()
    d_variableid_2_vectorcomponent_map.resizeArray(0);
 
    if (SAMRAIVectorReal<TYPE>::s_instance_counter[dim.getValue() - 1] == 0) {
-      if (!((SAMRAIVectorReal<TYPE>::s_cell_ops[dim.getValue() - 1]).isNull())) {
-         SAMRAIVectorReal<TYPE>::s_cell_ops[dim.getValue() - 1].setNull();
+      if (SAMRAIVectorReal<TYPE>::s_cell_ops[dim.getValue() - 1]) {
+         SAMRAIVectorReal<TYPE>::s_cell_ops[dim.getValue() - 1].reset();
       }
-      if (!((SAMRAIVectorReal<TYPE>::s_edge_ops)[dim.getValue() - 1].isNull())) {
-         SAMRAIVectorReal<TYPE>::s_edge_ops[dim.getValue() - 1].setNull();
+      if (SAMRAIVectorReal<TYPE>::s_edge_ops[dim.getValue() - 1]) {
+         SAMRAIVectorReal<TYPE>::s_edge_ops[dim.getValue() - 1].reset();
       }
-      if (!((SAMRAIVectorReal<TYPE>::s_face_ops[dim.getValue() - 1]).isNull())) {
-         SAMRAIVectorReal<TYPE>::s_face_ops[dim.getValue() - 1].setNull();
+      if (SAMRAIVectorReal<TYPE>::s_face_ops[dim.getValue() - 1]) {
+         SAMRAIVectorReal<TYPE>::s_face_ops[dim.getValue() - 1].reset();
       }
-      if (!((SAMRAIVectorReal<TYPE>::s_node_ops)[dim.getValue() - 1].isNull())) {
-         SAMRAIVectorReal<TYPE>::s_node_ops[dim.getValue() - 1].setNull();
+      if (SAMRAIVectorReal<TYPE>::s_node_ops[dim.getValue() - 1]) {
+         SAMRAIVectorReal<TYPE>::s_node_ops[dim.getValue() - 1].reset();
       }
-      if (!((SAMRAIVectorReal<TYPE>::s_side_ops)[dim.getValue() - 1].isNull())) {
-         SAMRAIVectorReal<TYPE>::s_side_ops[dim.getValue() - 1].setNull();
+      if (SAMRAIVectorReal<TYPE>::s_side_ops[dim.getValue() - 1]) {
+         SAMRAIVectorReal<TYPE>::s_side_ops[dim.getValue() - 1].reset();
       }
    }
 
@@ -361,7 +361,7 @@ void SAMRAIVectorReal<TYPE>::allocateVectorData(
    const double timestamp)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!d_hierarchy.isNull());
+   TBOX_ASSERT(d_hierarchy);
    TBOX_ASSERT((d_coarsest_level >= 0)
       && (d_finest_level >= d_coarsest_level)
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
@@ -380,7 +380,7 @@ template<class TYPE>
 void SAMRAIVectorReal<TYPE>::deallocateVectorData()
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!d_hierarchy.isNull());
+   TBOX_ASSERT(d_hierarchy);
    TBOX_ASSERT((d_coarsest_level >= 0)
       && (d_finest_level >= d_coarsest_level)
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
@@ -463,15 +463,25 @@ void SAMRAIVectorReal<TYPE>::setComponent(
 
    d_component_variable[comp_id] = var;
    d_component_data_id[comp_id] = data_id;
-   if (vop.isNull()) {
+   if (!vop) {
 
-      const tbox::Pointer<pdat::CellVariable<TYPE> > cellvar(var);
-      const tbox::Pointer<pdat::EdgeVariable<TYPE> > edgevar(var);
-      const tbox::Pointer<pdat::FaceVariable<TYPE> > facevar(var);
-      const tbox::Pointer<pdat::NodeVariable<TYPE> > nodevar(var);
-      const tbox::Pointer<pdat::SideVariable<TYPE> > sidevar(var);
+      const tbox::Pointer<pdat::CellVariable<TYPE> > cellvar(
+         var,
+         tbox::__dynamic_cast_tag());
+      const tbox::Pointer<pdat::EdgeVariable<TYPE> > edgevar(
+         var,
+         tbox::__dynamic_cast_tag());
+      const tbox::Pointer<pdat::FaceVariable<TYPE> > facevar(
+         var,
+         tbox::__dynamic_cast_tag());
+      const tbox::Pointer<pdat::NodeVariable<TYPE> > nodevar(
+         var,
+         tbox::__dynamic_cast_tag());
+      const tbox::Pointer<pdat::SideVariable<TYPE> > sidevar(
+         var,
+         tbox::__dynamic_cast_tag());
 
-      if (!(cellvar.isNull())) {
+      if (cellvar) {
          if (!SAMRAIVectorReal<TYPE>::s_cell_ops[dim.getValue() - 1]) {
             SAMRAIVectorReal<TYPE>::s_cell_ops[dim.getValue() - 1] =
                new math::HierarchyCellDataOpsReal<TYPE>(d_hierarchy,
@@ -480,7 +490,7 @@ void SAMRAIVectorReal<TYPE>::setComponent(
          }
          d_component_operations[comp_id] =
             SAMRAIVectorReal<TYPE>::s_cell_ops[dim.getValue() - 1];
-      } else if (!(edgevar.isNull())) {
+      } else if (edgevar) {
          if (!SAMRAIVectorReal<TYPE>::s_edge_ops[dim.getValue() - 1]) {
             SAMRAIVectorReal<TYPE>::s_edge_ops[dim.getValue() - 1] =
                new math::HierarchyEdgeDataOpsReal<TYPE>(d_hierarchy,
@@ -489,7 +499,7 @@ void SAMRAIVectorReal<TYPE>::setComponent(
          }
          d_component_operations[comp_id] =
             SAMRAIVectorReal<TYPE>::s_edge_ops[dim.getValue() - 1];
-      } else if (!(facevar.isNull())) {
+      } else if (facevar) {
          if (!SAMRAIVectorReal<TYPE>::s_face_ops[dim.getValue() - 1]) {
             SAMRAIVectorReal<TYPE>::s_face_ops[dim.getValue() - 1] =
                new math::HierarchyFaceDataOpsReal<TYPE>(d_hierarchy,
@@ -498,7 +508,7 @@ void SAMRAIVectorReal<TYPE>::setComponent(
          }
          d_component_operations[comp_id] =
             SAMRAIVectorReal<TYPE>::s_face_ops[dim.getValue() - 1];
-      } else if (!(nodevar.isNull())) {
+      } else if (nodevar) {
          if (!SAMRAIVectorReal<TYPE>::s_node_ops[dim.getValue() - 1]) {
             SAMRAIVectorReal<TYPE>::s_node_ops[dim.getValue() - 1] =
                new math::HierarchyNodeDataOpsReal<TYPE>(d_hierarchy,
@@ -507,7 +517,7 @@ void SAMRAIVectorReal<TYPE>::setComponent(
          }
          d_component_operations[comp_id] =
             SAMRAIVectorReal<TYPE>::s_node_ops[dim.getValue() - 1];
-      } else if (!(sidevar.isNull())) {
+      } else if (sidevar) {
          if (!SAMRAIVectorReal<TYPE>::s_side_ops[dim.getValue() - 1]) {
             SAMRAIVectorReal<TYPE>::s_side_ops[dim.getValue() - 1] =
                new math::HierarchySideDataOpsReal<TYPE>(d_hierarchy,
@@ -521,7 +531,7 @@ void SAMRAIVectorReal<TYPE>::setComponent(
       d_component_operations[comp_id] = vop;
    }
 
-   TBOX_ASSERT(!(d_component_operations[comp_id].isNull()));
+   TBOX_ASSERT(d_component_operations[comp_id]);
 
    d_control_volume_data_id[comp_id] = vol_id;
 

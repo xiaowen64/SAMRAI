@@ -38,7 +38,7 @@ public:
    /*!
     * @brief Constructor.
     */
-   explicit OverlapConnectorAlgorithm();
+   OverlapConnectorAlgorithm();
 
    /*!
     * @brief Destructor.

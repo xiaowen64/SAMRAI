@@ -96,8 +96,9 @@ void PoissonPolynomialSolution::setGridData(
    (void)ccoef_data;
 
    hier::Box pbox = patch.getBox();
-   tbox::Pointer<geom::CartesianPatchGeometry> patch_geom =
-      patch.getPatchGeometry();
+   tbox::Pointer<geom::CartesianPatchGeometry> patch_geom(
+      patch.getPatchGeometry(),
+      tbox::__dynamic_cast_tag());
 
    /* Set source function and exact solution. */
    setCellDataToQuartic(exact_data,
@@ -128,8 +129,9 @@ void PoissonPolynomialSolution::setBcCoefs(
    (void)variable;
    (void)fill_time;
 
-   tbox::Pointer<geom::CartesianPatchGeometry> patch_geom =
-      patch.getPatchGeometry();
+   tbox::Pointer<geom::CartesianPatchGeometry> patch_geom(
+      patch.getPatchGeometry(),
+      tbox::__dynamic_cast_tag());
    /*
     * Set to an inhomogeneous Dirichlet boundary condition.
     */

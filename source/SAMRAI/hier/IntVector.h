@@ -43,7 +43,7 @@ public:
    /**
     * Construct an integer vector with all components equal to the argument.
     */
-   explicit IntVector(
+   IntVector(
       const tbox::Dimension& dim,
       const int i);
 
@@ -61,7 +61,7 @@ public:
     * values provided by the array.
     *
     */
-   explicit IntVector(
+   IntVector(
       const tbox::Dimension& dim,
       const int array[]);
 

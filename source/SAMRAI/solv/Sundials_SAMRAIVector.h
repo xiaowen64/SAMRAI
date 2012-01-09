@@ -106,7 +106,7 @@ protected:
    /*
     * Constructor for Sundials_SAMRAIVector.
     */
-   Sundials_SAMRAIVector(
+   explicit Sundials_SAMRAIVector(
       tbox::Pointer<SAMRAIVectorReal<double> > samrai_vector);
 
    /*

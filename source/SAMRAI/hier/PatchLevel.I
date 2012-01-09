@@ -362,7 +362,7 @@ SAMRAI_INLINE_KEYWORD
 PatchLevel::Iterator PatchLevel::Iterator::operator ++ (
    int)
 {
-   Iterator tmp_iterator = d_iterator;
+   Iterator tmp_iterator = *this;
    ++d_iterator;
    return tmp_iterator;
 }

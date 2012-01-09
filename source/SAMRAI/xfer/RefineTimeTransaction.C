@@ -97,9 +97,9 @@ RefineTimeTransaction::RefineTimeTransaction(
    d_box(box),
    d_refine_item_id(refine_item_id)
 {
-   TBOX_ASSERT(!dst_level.isNull());
-   TBOX_ASSERT(!src_level.isNull());
-   TBOX_ASSERT(!overlap.isNull());
+   TBOX_ASSERT(dst_level);
+   TBOX_ASSERT(src_level);
+   TBOX_ASSERT(overlap);
    TBOX_ASSERT(dst_mapped_box.getLocalId() >= 0);
    TBOX_ASSERT(src_mapped_box.getLocalId() >= 0);
    TBOX_ASSERT(refine_item_id >= 0);
@@ -134,7 +134,7 @@ RefineTimeTransaction::~RefineTimeTransaction()
 bool RefineTimeTransaction::canEstimateIncomingMessageSize()
 {
    bool can_estimate = false;
-   if (!d_src_patch.isNull()) {
+   if (d_src_patch) {
       can_estimate =
          d_src_patch->getPatchData(s_refine_items[d_refine_item_id]->
             d_src_told)
@@ -253,8 +253,8 @@ void RefineTimeTransaction::timeInterpolate(
    const tbox::Pointer<hier::PatchData>& pd_old,
    const tbox::Pointer<hier::PatchData>& pd_new)
 {
-   TBOX_ASSERT(!pd_old.isNull());
-   TBOX_ASSERT(!pd_dst.isNull());
+   TBOX_ASSERT(pd_old);
+   TBOX_ASSERT(pd_dst);
    TBOX_DIM_ASSERT_CHECK_ARGS2(*pd_dst, *pd_old);
    TBOX_ASSERT(tbox::MathUtilities<double>::equalEps(pd_dst->getTime(), s_time));
 
@@ -263,7 +263,7 @@ void RefineTimeTransaction::timeInterpolate(
       d_optime->timeInterpolate(*pd_dst, d_box, *pd_old, *pd_old);
    } else {
 
-      TBOX_ASSERT(!pd_new.isNull());
+      TBOX_ASSERT(pd_new);
       TBOX_DIM_ASSERT_CHECK_ARGS2(*pd_dst, *pd_new);
       TBOX_ASSERT(pd_old->getTime() < s_time);
       TBOX_ASSERT(pd_new->getTime() >= s_time);
@@ -306,9 +306,9 @@ void RefineTimeTransaction::printClassData(
    stream << "   incoming bytes:          " << d_incoming_bytes << std::endl;
    stream << "   outgoing bytes:          " << d_outgoing_bytes << std::endl;
    stream << "   destination patch:           "
-          << (hier::Patch *)d_src_patch << std::endl;
+          << d_dst_patch.get() << std::endl;
    stream << "   source level:           "
-          << (hier::Patch *)d_src_patch << std::endl;
+          << d_src_patch.get() << std::endl;
    stream << "   overlap:                 " << std::endl;
    d_overlap->print(stream);
 }

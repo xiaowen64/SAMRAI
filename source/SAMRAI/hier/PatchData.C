@@ -55,7 +55,7 @@ PatchData::~PatchData()
 void PatchData::getFromDatabase(
    tbox::Pointer<tbox::Database> database)
 {
-   TBOX_ASSERT(!database.isNull());
+   TBOX_ASSERT(database);
 
    int ver = database->getInteger("HIER_PATCH_DATA_VERSION");
    if (ver != HIER_PATCH_DATA_VERSION) {
@@ -84,7 +84,7 @@ void PatchData::getFromDatabase(
 void PatchData::putToDatabase(
    tbox::Pointer<tbox::Database> database)
 {
-   TBOX_ASSERT(!database.isNull());
+   TBOX_ASSERT(database);
 
    database->putInteger("HIER_PATCH_DATA_VERSION", HIER_PATCH_DATA_VERSION);
    database->putDatabaseBox("d_box", d_box);

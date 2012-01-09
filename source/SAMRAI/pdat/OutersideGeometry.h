@@ -52,7 +52,7 @@ public:
     * @brief Construct an outerside geometry object given an AMR index
     * space box and ghost cell width.
     */
-   explicit OutersideGeometry(
+   OutersideGeometry(
       const hier::Box& box,
       const hier::IntVector& ghosts);
 

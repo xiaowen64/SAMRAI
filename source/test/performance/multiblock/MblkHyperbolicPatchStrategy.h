@@ -513,7 +513,7 @@ public:
     */
    void clearDataContext()
    {
-      d_data_context.setNull();
+      d_data_context.reset();
    }
 
 private:

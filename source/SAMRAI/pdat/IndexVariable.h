@@ -48,7 +48,7 @@ public:
    /**
     * Create an index variable object with the specified name.
     */
-   explicit IndexVariable(
+   IndexVariable(
       const tbox::Dimension& dim,
       const std::string& name);
 

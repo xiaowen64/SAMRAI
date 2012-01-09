@@ -91,7 +91,7 @@ int main(
        * Create input database and parse all data in input file.
        */
 
-      Pointer<Database> input_db(new InputDatabase("input_db"));
+      Pointer<InputDatabase> input_db(new InputDatabase("input_db"));
       tbox::InputManager::getManager()->parseInputFile(input_filename, input_db);
 
       /*
@@ -312,10 +312,10 @@ int main(
 
       tbox::pout << "\nPASSED:  Tree search" << std::endl;
 
-      input_db.setNull();
-      main_db.setNull();
-      t_search_tree_for_set.setNull();
-      t_search_tree_for_vec.setNull();
+      input_db.reset();
+      main_db.reset();
+      t_search_tree_for_set.reset();
+      t_search_tree_for_vec.reset();
 
       /*
        * Exit properly by shutting down services in correct order.
@@ -369,10 +369,10 @@ void generateBoxesUniform(
    /*
     * Create an array of boxes by repeating the given box.
     */
-   hier::IntVector index(dim, 0);
+   hier::Index index(dim, 0);
    do {
-      hier::IntVector lower(index * boxsize);
-      hier::IntVector upper(lower + boxsize - 1);
+      hier::Index lower(index * boxsize);
+      hier::Index upper(lower + boxsize - 1);
       int& e = index(0);
       for (e = 0; e < boxrepeat(0); ++e) {
          lower(0) = e * boxsize(0);

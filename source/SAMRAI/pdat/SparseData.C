@@ -624,7 +624,7 @@ void
 SparseData<BOX_GEOMETRY>::getSpecializedFromDatabase(
    tbox::Pointer<tbox::Database> db)
 {
-   TBOX_ASSERT(!db.isNull());
+   TBOX_ASSERT(db);
 
    // get and check the version
    int ver = db->getInteger("PDAT_SPARSEDATA_VERSION");
@@ -755,7 +755,7 @@ void
 SparseData<BOX_GEOMETRY>::putSpecializedToDatabase(
    tbox::Pointer<tbox::Database> db)
 {
-   TBOX_ASSERT(!db.isNull());
+   TBOX_ASSERT(db);
 
    // record the version
    db->putInteger("PDAT_SPARSEDATA_VERSION", PDAT_SPARSEDATA_VERSION);

@@ -69,8 +69,10 @@ bool SkeletonCellDoubleWeightedAverage::findCoarsenOperator(
    const tbox::Pointer<hier::Variable>& var,
    const string& op_name) const
 {
-   const tbox::Pointer<pdat::CellVariable<double> > cast_var(var);
-   if (!cast_var.isNull() && (op_name == getOperatorName())) {
+   const tbox::Pointer<pdat::CellVariable<double> > cast_var(
+      var,
+      tbox::__dynamic_cast_tag());
+   if (cast_var && (op_name == getOperatorName())) {
       return true;
    } else {
       return false;
@@ -95,13 +97,15 @@ void SkeletonCellDoubleWeightedAverage::coarsen(
    const hier::Box& coarse_box,
    const hier::IntVector& ratio) const
 {
-   tbox::Pointer<pdat::CellData<double> >
-   fdata = fine.getPatchData(src_component);
-   tbox::Pointer<pdat::CellData<double> >
-   cdata = coarse.getPatchData(dst_component);
+   tbox::Pointer<pdat::CellData<double> > fdata(
+      fine.getPatchData(src_component),
+      tbox::__dynamic_cast_tag());
+   tbox::Pointer<pdat::CellData<double> > cdata(
+      coarse.getPatchData(dst_component),
+      tbox::__dynamic_cast_tag());
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!fdata.isNull());
-   TBOX_ASSERT(!cdata.isNull());
+   TBOX_ASSERT(fdata);
+   TBOX_ASSERT(cdata);
    TBOX_ASSERT(cdata->getDepth() == fdata->getDepth());
 #endif
 
@@ -110,10 +114,12 @@ void SkeletonCellDoubleWeightedAverage::coarsen(
    const hier::Index cilo = cdata->getGhostBox().lower();
    const hier::Index cihi = cdata->getGhostBox().upper();
 
-   const tbox::Pointer<hier::PatchGeometry> fgeom =
-      fine.getPatchGeometry();
-   const tbox::Pointer<hier::PatchGeometry> cgeom =
-      coarse.getPatchGeometry();
+   const tbox::Pointer<hier::PatchGeometry> fgeom(
+      fine.getPatchGeometry(),
+      tbox::__dynamic_cast_tag());
+   const tbox::Pointer<hier::PatchGeometry> cgeom(
+      coarse.getPatchGeometry(),
+      tbox::__dynamic_cast_tag());
 
    const hier::Index ifirstc = coarse_box.lower();
    const hier::Index ilastc = coarse_box.upper();

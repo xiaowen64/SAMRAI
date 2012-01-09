@@ -180,7 +180,7 @@ int main(
       int finest = 1;
       tbox::Pointer<math::HierarchyDataOpsReal<double> > node_ops =
          new math::HierarchyNodeDataOpsReal<double>(hierarchy, coarsest, finest);
-      TBOX_ASSERT(!node_ops.isNull());
+      TBOX_ASSERT(node_ops);
 
       tbox::Pointer<math::HierarchyDataOpsReal<double> > nwgt_ops =
          new math::HierarchyNodeDataOpsReal<double>(hierarchy, coarsest, finest);
@@ -671,14 +671,14 @@ int main(
       }
 
       for (iv = 0; iv < NVARS; iv++) {
-         nvar[iv].setNull();
+         nvar[iv].reset();
       }
-      nwgt.setNull();
+      nwgt.reset();
 
-      geometry.setNull();
-      hierarchy.setNull();
-      node_ops.setNull();
-      nwgt_ops.setNull();
+      geometry.reset();
+      hierarchy.reset();
+      node_ops.reset();
+      nwgt_ops.reset();
    }
 
    tbox::SAMRAIManager::shutdown();

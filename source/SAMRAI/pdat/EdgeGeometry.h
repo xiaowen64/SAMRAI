@@ -93,7 +93,7 @@ public:
     * @brief Construct the edge geometry object given an AMR index
     * space box and ghost cell width.
     */
-   explicit EdgeGeometry(
+   EdgeGeometry(
       const hier::Box& box,
       const hier::IntVector& ghosts);
 

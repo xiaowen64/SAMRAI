@@ -101,7 +101,7 @@ public:
     *              of the ghost cell region around the box over which
     *              the node data will be allocated.
     */
-   explicit CellData(
+   CellData(
       const hier::Box& box,
       int depth,
       const hier::IntVector& ghosts);

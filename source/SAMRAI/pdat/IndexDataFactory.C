@@ -139,8 +139,9 @@ bool IndexDataFactory<TYPE, BOX_GEOMETRY>::validCopyTo(
     * and type.
     */
    if (!valid_copy) {
-      tbox::Pointer<IndexDataFactory<TYPE, BOX_GEOMETRY> > idf = dst_pdf;
-      if (!idf.isNull()) {
+      tbox::Pointer<IndexDataFactory<TYPE, BOX_GEOMETRY> > idf(
+         dst_pdf, tbox::__dynamic_cast_tag());
+      if (idf) {
          valid_copy = true;
       }
    }

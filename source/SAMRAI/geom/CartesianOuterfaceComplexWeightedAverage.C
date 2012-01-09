@@ -116,8 +116,10 @@ bool CartesianOuterfaceComplexWeightedAverage::findCoarsenOperator(
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, *var);
 
-   const tbox::Pointer<pdat::OuterfaceVariable<dcomplex> > cast_var(var);
-   if (!cast_var.isNull() && (op_name == getOperatorName())) {
+   const tbox::Pointer<pdat::OuterfaceVariable<dcomplex> > cast_var(
+      var,
+      tbox::__dynamic_cast_tag());
+   if (cast_var && (op_name == getOperatorName())) {
       return true;
    } else {
       return false;
@@ -146,13 +148,15 @@ void CartesianOuterfaceComplexWeightedAverage::coarsen(
 
    TBOX_DIM_ASSERT_CHECK_DIM_ARGS4(dim, coarse, fine, coarse_box, ratio);
 
-   tbox::Pointer<pdat::OuterfaceData<dcomplex> >
-   fdata = fine.getPatchData(src_component);
-   tbox::Pointer<pdat::OuterfaceData<dcomplex> >
-   cdata = coarse.getPatchData(dst_component);
+   tbox::Pointer<pdat::OuterfaceData<dcomplex> > fdata(
+      fine.getPatchData(src_component),
+      tbox::__dynamic_cast_tag());
+   tbox::Pointer<pdat::OuterfaceData<dcomplex> > cdata(
+      coarse.getPatchData(dst_component),
+      tbox::__dynamic_cast_tag());
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!fdata.isNull());
-   TBOX_ASSERT(!cdata.isNull());
+   TBOX_ASSERT(fdata);
+   TBOX_ASSERT(cdata);
    TBOX_ASSERT(cdata->getDepth() == fdata->getDepth());
 #endif
 
@@ -161,10 +165,12 @@ void CartesianOuterfaceComplexWeightedAverage::coarsen(
    const hier::Index cilo = cdata->getGhostBox().lower();
    const hier::Index cihi = cdata->getGhostBox().upper();
 
-   const tbox::Pointer<CartesianPatchGeometry> fgeom =
-      fine.getPatchGeometry();
-   const tbox::Pointer<CartesianPatchGeometry> cgeom =
-      coarse.getPatchGeometry();
+   const tbox::Pointer<CartesianPatchGeometry> fgeom(
+      fine.getPatchGeometry(),
+      tbox::__dynamic_cast_tag());
+   const tbox::Pointer<CartesianPatchGeometry> cgeom(
+      coarse.getPatchGeometry(),
+      tbox::__dynamic_cast_tag());
 
    const hier::Index ifirstc = coarse_box.lower();
    const hier::Index ilastc = coarse_box.upper();

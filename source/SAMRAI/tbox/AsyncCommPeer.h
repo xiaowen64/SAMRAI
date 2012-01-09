@@ -70,7 +70,7 @@ public:
     *
     * @see initialize().
     */
-   AsyncCommPeer(
+   explicit AsyncCommPeer(
       AsyncCommStage* stage,
       AsyncCommStage::Handler* handler = NULL);
 

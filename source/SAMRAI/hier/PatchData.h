@@ -62,7 +62,7 @@ public:
     * manage the interior box over which they are defined and the associated
     * ghost cell width.
     */
-   explicit PatchData(
+   PatchData(
       const Box& domain,
       const IntVector& ghosts);
 

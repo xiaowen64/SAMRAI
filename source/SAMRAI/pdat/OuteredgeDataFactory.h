@@ -46,7 +46,7 @@ public:
     * The depth (number of components) gives the default for all of
     * the outeredge data objects created with this factory.
     */
-   explicit OuteredgeDataFactory(
+   OuteredgeDataFactory(
       const tbox::Dimension& dim,
       int depth);
 

@@ -91,7 +91,7 @@ bool SkeletonCellDoubleConservativeLinearRefine::findRefineOperator(
    const string& op_name) const
 {
    const tbox::Pointer<pdat::CellVariable<double> > cast_var(var);
-   if (!cast_var.isNull() && (op_name == getOperatorName())) {
+   if (cast_var && (op_name == getOperatorName())) {
       return true;
    } else {
       return false;
@@ -146,8 +146,8 @@ void SkeletonCellDoubleConservativeLinearRefine::refine(
    tbox::Pointer<pdat::CellData<double> >
    fdata = fine.getPatchData(dst_component);
 
-   TBOX_ASSERT(!cdata.isNull());
-   TBOX_ASSERT(!fdata.isNull());
+   TBOX_ASSERT(cdata);
+   TBOX_ASSERT(fdata);
    TBOX_ASSERT(cdata->getDepth() == fdata->getDepth());
 
    const hier::Box cgbox(cdata->getGhostBox());

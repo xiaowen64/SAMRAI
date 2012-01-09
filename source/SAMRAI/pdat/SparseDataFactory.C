@@ -99,10 +99,11 @@ SparseDataFactory<BOX_GEOMETRY>::validCopyTo(
 
    if (!valid_copy) {
 
-      tbox::Pointer<SparseDataFactory<BOX_GEOMETRY> >
-      idf = dst_pdf;
+      tbox::Pointer<SparseDataFactory<BOX_GEOMETRY> > idf(
+         dst_pdf,
+         tbox::__dynamic_cast_tag());
 
-      if (!idf.isNull()) {
+      if (idf) {
          valid_copy = true;
       }
    }

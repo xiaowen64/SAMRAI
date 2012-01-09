@@ -153,7 +153,7 @@ int main(
        * Create input database and parse all data in input file.
        */
 
-      Pointer<Database> input_db(new InputDatabase("input_db"));
+      Pointer<InputDatabase> input_db(new InputDatabase("input_db"));
       tbox::InputManager::getManager()->parseInputFile(input_filename, input_db);
 
       /*
@@ -186,7 +186,7 @@ int main(
       /*
        * Generate the GridGeometry.
        */
-      tbox::ConstPointer<hier::GridGeometry> grid_geometry;
+      tbox::Pointer<const hier::GridGeometry> grid_geometry;
       if (input_db->keyExists("GridGeometry")) {
          grid_geometry = new hier::GridGeometry(
                dim,
@@ -667,8 +667,8 @@ int main(
          tbox::pout << "\nPASSED:  MappedBoxLevelConnector test" << std::endl;
       }
 
-      input_db.setNull();
-      main_db.setNull();
+      input_db.reset();
+      main_db.reset();
 
       /*
        * Exit properly by shutting down services in correct order.
@@ -742,7 +742,7 @@ void shrinkBoxLevel(
    const hier::IntVector& shrinkage,
    const tbox::Array<int>& unshrunken_blocks)
 {
-   const tbox::ConstPointer<hier::GridGeometry>& grid_geometry(big_mapped_box_level.getGridGeometry());
+   const tbox::Pointer<const hier::GridGeometry>& grid_geometry(big_mapped_box_level.getGridGeometry());
 
    const int local_rank = big_mapped_box_level.getMPI().getRank();
 

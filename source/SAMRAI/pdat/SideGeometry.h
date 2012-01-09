@@ -93,7 +93,7 @@ public:
     * space box, ghost cell width and directions vector indicating
     * which coordinate directions are allocated.
     */
-   explicit SideGeometry(
+   SideGeometry(
       const hier::Box& box,
       const hier::IntVector& ghosts,
       const hier::IntVector& directions);

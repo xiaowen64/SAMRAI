@@ -90,7 +90,7 @@ int main(
        * Create input database and parse all data in input file.
        */
 
-      tbox::Pointer<tbox::Database> input_db(new tbox::InputDatabase("input_db"));
+      tbox::Pointer<tbox::InputDatabase> input_db(new tbox::InputDatabase("input_db"));
       tbox::InputManager::getManager()->parseInputFile(input_filename, input_db);
 
       /*
@@ -235,8 +235,8 @@ int main(
       /*
        * At conclusion of test, deallocate objects.
        */
-      patch_hierarchy.setNull();
-      grid_geometry.setNull();
+      patch_hierarchy.reset();
+      grid_geometry.reset();
 
       if (btester) delete btester;
 

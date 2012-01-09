@@ -146,7 +146,7 @@ void MethodOfLinesIntegrator::initializeIntegrator(
    tbox::Pointer<mesh::GriddingAlgorithm> gridding_alg)
 {
    NULL_USE(gridding_alg);
-   TBOX_ASSERT(!gridding_alg.isNull());
+   TBOX_ASSERT(gridding_alg);
 
    /*
     * We may eventually need support for three (or more) time
@@ -173,7 +173,7 @@ double MethodOfLinesIntegrator::getTimestep(
    const tbox::Pointer<hier::PatchHierarchy> hierarchy,
    const double time) const
 {
-   TBOX_ASSERT(!(hierarchy.isNull()));
+   TBOX_ASSERT(hierarchy);
 
    double dt = tbox::MathUtilities<double>::getMax();
    const int nlevels = hierarchy->getNumberOfLevels();
@@ -182,7 +182,7 @@ double MethodOfLinesIntegrator::getTimestep(
       tbox::Pointer<hier::PatchLevel> level = hierarchy->
          getPatchLevel(l);
 
-      TBOX_ASSERT(!(level.isNull()));
+      TBOX_ASSERT(level);
 
       for (hier::PatchLevel::Iterator p(level); p; p++) {
 
@@ -231,7 +231,7 @@ void MethodOfLinesIntegrator::advanceHierarchy(
    const double time,
    const double dt)
 {
-   TBOX_ASSERT(!(hierarchy.isNull()));
+   TBOX_ASSERT(hierarchy);
 
    /*
     * Stamp data on all levels to current simulation time.
@@ -241,7 +241,7 @@ void MethodOfLinesIntegrator::advanceHierarchy(
    for (int ln = 0; ln < nlevels; ln++) {
       tbox::Pointer<hier::PatchLevel> level = hierarchy->getPatchLevel(ln);
 
-      TBOX_ASSERT(!(level.isNull()));
+      TBOX_ASSERT(level);
 
       level->setTime(time, d_current_data);
       level->setTime(time, d_scratch_data);
@@ -278,7 +278,7 @@ void MethodOfLinesIntegrator::advanceHierarchy(
           */
          tbox::Pointer<hier::PatchLevel> level = hierarchy->getPatchLevel(ln);
 
-         TBOX_ASSERT(!(level.isNull()));
+         TBOX_ASSERT(level);
 
          for (hier::PatchLevel::Iterator p(level); p; p++) {
 
@@ -366,8 +366,8 @@ void MethodOfLinesIntegrator::registerVariable(
    const std::string& coarsen_name,
    const std::string& refine_name)
 {
-   TBOX_ASSERT(!(variable.isNull()));
-   TBOX_ASSERT(!(transfer_geom.isNull()));
+   TBOX_ASSERT(variable);
+   TBOX_ASSERT(transfer_geom);
    TBOX_DIM_ASSERT_CHECK_ARGS2(*variable, ghosts);
 
    tbox::Dimension dim(ghosts.getDim());
@@ -511,10 +511,10 @@ void MethodOfLinesIntegrator::initializeLevelData(
    NULL_USE(allocate_data);
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!(hierarchy.isNull()));
-   TBOX_ASSERT(!(hierarchy->getPatchLevel(level_number).isNull()));
+   TBOX_ASSERT(hierarchy);
+   TBOX_ASSERT(hierarchy->getPatchLevel(level_number));
    TBOX_ASSERT(level_number >= 0);
-   if (!(old_level.isNull())) {
+   if (old_level) {
       TBOX_ASSERT(level_number == old_level->getLevelNumber());
       TBOX_DIM_ASSERT_CHECK_ARGS2(*hierarchy, *old_level);
    }
@@ -530,7 +530,7 @@ void MethodOfLinesIntegrator::initializeLevelData(
    level->allocatePatchData(d_current_data, time);
    level->allocatePatchData(d_scratch_data, time);
 
-   if ((level_number > 0) || !old_level.isNull()) {
+   if ((level_number > 0) || old_level) {
       const tbox::Pointer<hier::PatchHierarchy> patch_hierarchy = hierarchy;
       d_fill_after_regrid->createSchedule(
          level,
@@ -569,7 +569,7 @@ void MethodOfLinesIntegrator::resetHierarchyConfiguration(
 {
    NULL_USE(finest_level);
 
-   TBOX_ASSERT(!(hierarchy.isNull()));
+   TBOX_ASSERT(hierarchy);
    TBOX_ASSERT((coarsest_level >= 0)
       && (coarsest_level <= finest_level)
       && (finest_level <= hierarchy->getFinestLevelNumber()));
@@ -586,7 +586,7 @@ void MethodOfLinesIntegrator::resetHierarchyConfiguration(
    for (int ln = coarsest_level; ln <= finest_hiera_level; ln++) {
       tbox::Pointer<hier::PatchLevel> level = hierarchy->getPatchLevel(ln);
 
-      TBOX_ASSERT(!(level.isNull()));
+      TBOX_ASSERT(level);
 
       d_bdry_sched_advance[ln] =
          d_bdry_fill_advance->createSchedule(
@@ -626,8 +626,8 @@ void MethodOfLinesIntegrator::applyGradientDetector(
    const bool initial_time,
    const bool uses_richardson_extrapolation_too)
 {
-   TBOX_ASSERT(!(hierarchy.isNull()));
-   TBOX_ASSERT(!(hierarchy->getPatchLevel(ln).isNull()));
+   TBOX_ASSERT(hierarchy);
+   TBOX_ASSERT(hierarchy->getPatchLevel(ln));
 
    tbox::Pointer<hier::PatchLevel> level =
       hierarchy->getPatchLevel(ln);
@@ -676,7 +676,7 @@ void MethodOfLinesIntegrator::applyGradientDetector(
 void MethodOfLinesIntegrator::putToDatabase(
    tbox::Pointer<tbox::Database> db)
 {
-   TBOX_ASSERT(!db.isNull());
+   TBOX_ASSERT(db);
 
    db->putInteger("ALGS_METHOD_OF_LINES_INTEGRATOR_VERSION",
       ALGS_METHOD_OF_LINES_INTEGRATOR_VERSION);
@@ -701,11 +701,11 @@ void MethodOfLinesIntegrator::getFromInput(
    tbox::Pointer<tbox::Database> input_db,
    bool is_from_restart)
 {
-   TBOX_ASSERT(is_from_restart || !input_db.isNull());
+   TBOX_ASSERT(is_from_restart || input_db);
 
    if (is_from_restart) {
 
-      if (!input_db.isNull()) {
+      if (input_db) {
          if (input_db->keyExists("order")) {
             d_order = input_db->getInteger("order");
             if (d_order < 0) {
@@ -825,7 +825,7 @@ void MethodOfLinesIntegrator::getFromRestart()
 void MethodOfLinesIntegrator::copyCurrentToScratch(
    const tbox::Pointer<hier::PatchLevel> level) const
 {
-   TBOX_ASSERT(!(level.isNull()));
+   TBOX_ASSERT(level);
 
    for (hier::PatchLevel::Iterator p(level); p; p++) {
       tbox::Pointer<hier::Patch> patch = *p;
@@ -860,7 +860,7 @@ void MethodOfLinesIntegrator::copyCurrentToScratch(
 void MethodOfLinesIntegrator::copyScratchToCurrent(
    const tbox::Pointer<hier::PatchLevel> level) const
 {
-   TBOX_ASSERT(!(level.isNull()));
+   TBOX_ASSERT(level);
 
    for (hier::PatchLevel::Iterator p(level); p; p++) {
       tbox::Pointer<hier::Patch> patch = *p;

@@ -88,7 +88,7 @@ public:
     * @brief Construct the node geometry object given an AMR index
     * space box and ghost cell width.
     */
-   explicit NodeGeometry(
+   NodeGeometry(
       const hier::Box& box,
       const hier::IntVector& ghosts);
 

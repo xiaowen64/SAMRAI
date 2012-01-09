@@ -416,16 +416,20 @@ void VisItDataWriter::resetLevelPlotQuantity(
    variable_centering vc = VISIT_CENTERING_BAD;
 
    if (!found_type) {
-      tbox::Pointer<pdat::CellDataFactory<float> > ffactory = factory;
-      if (!ffactory.isNull()) {
+      tbox::Pointer<pdat::CellDataFactory<float> > ffactory(
+         factory,
+         tbox::__dynamic_cast_tag());
+      if (ffactory) {
          vdt = VISIT_FLOAT;
          vc = VISIT_CELL;
          found_type = true;
       }
    }
    if (!found_type) {
-      tbox::Pointer<pdat::NodeDataFactory<float> > ffactory = factory;
-      if (!ffactory.isNull()) {
+      tbox::Pointer<pdat::NodeDataFactory<float> > ffactory(
+         factory,
+         tbox::__dynamic_cast_tag());
+      if (ffactory) {
          vdt = VISIT_FLOAT;
          vc = VISIT_NODE;
          found_type = true;
@@ -433,32 +437,40 @@ void VisItDataWriter::resetLevelPlotQuantity(
    }
 
    if (!found_type) {
-      tbox::Pointer<pdat::CellDataFactory<double> > dfactory = factory;
-      if (!dfactory.isNull()) {
+      tbox::Pointer<pdat::CellDataFactory<double> > dfactory(
+         factory,
+         tbox::__dynamic_cast_tag());
+      if (dfactory) {
          vdt = VISIT_DOUBLE;
          vc = VISIT_CELL;
          found_type = true;
       }
    }
    if (!found_type) {
-      tbox::Pointer<pdat::NodeDataFactory<double> > dfactory = factory;
-      if (!dfactory.isNull()) {
+      tbox::Pointer<pdat::NodeDataFactory<double> > dfactory(
+         factory,
+         tbox::__dynamic_cast_tag());
+      if (dfactory) {
          vdt = VISIT_DOUBLE;
          vc = VISIT_NODE;
          found_type = true;
       }
    }
    if (!found_type) {
-      tbox::Pointer<pdat::CellDataFactory<int> > ifactory = factory;
-      if (!ifactory.isNull()) {
+      tbox::Pointer<pdat::CellDataFactory<int> > ifactory(
+         factory,
+         tbox::__dynamic_cast_tag());
+      if (ifactory) {
          vdt = VISIT_INT;
          vc = VISIT_CELL;
          found_type = true;
       }
    }
    if (!found_type) {
-      tbox::Pointer<pdat::NodeDataFactory<int> > ifactory = factory;
-      if (!ifactory.isNull()) {
+      tbox::Pointer<pdat::NodeDataFactory<int> > ifactory(
+         factory,
+         tbox::__dynamic_cast_tag());
+      if (ifactory) {
          vdt = VISIT_INT;
          vc = VISIT_NODE;
          found_type = true;
@@ -556,15 +568,19 @@ void VisItDataWriter::registerNodeCoordinates(
    int var_depth = VISIT_UNDEFINED_INDEX;
    if (!found_type) {
 
-      tbox::Pointer<pdat::NodeDataFactory<float> > ffactory = factory;
-      if (!ffactory.isNull()) {
+      tbox::Pointer<pdat::NodeDataFactory<float> > ffactory(
+         factory,
+         tbox::__dynamic_cast_tag());
+      if (ffactory) {
          var_depth = ffactory->getDepth();
          found_type = true;
       }
    }
    if (!found_type) {
-      tbox::Pointer<pdat::NodeDataFactory<double> > dfactory = factory;
-      if (!dfactory.isNull()) {
+      tbox::Pointer<pdat::NodeDataFactory<double> > dfactory(
+         factory,
+         tbox::__dynamic_cast_tag());
+      if (dfactory) {
          var_depth = dfactory->getDepth();
          found_type = true;
       }
@@ -663,14 +679,18 @@ void VisItDataWriter::registerSingleNodeCoordinate(
 
    bool found_type = false;
    if (!found_type) {
-      tbox::Pointer<pdat::NodeDataFactory<float> > ffactory = factory;
-      if (!ffactory.isNull()) {
+      tbox::Pointer<pdat::NodeDataFactory<float> > ffactory(
+         factory,
+         tbox::__dynamic_cast_tag());
+      if (ffactory) {
          found_type = true;
       }
    }
    if (!found_type) {
-      tbox::Pointer<pdat::NodeDataFactory<double> > dfactory = factory;
-      if (!dfactory.isNull()) {
+      tbox::Pointer<pdat::NodeDataFactory<double> > dfactory(
+         factory,
+         tbox::__dynamic_cast_tag());
+      if (dfactory) {
          found_type = true;
       }
    }
@@ -1117,7 +1137,7 @@ void VisItDataWriter::initializePlotItem(
          hier::VariableDatabase::getDatabase()->
          getPatchDescriptor()->
          getPatchDataFactory(patch_data_index);
-      if (factory.isNull()) {
+      if (!factory) {
          TBOX_ERROR("VisItDataWriter::registerPlotQuantity"
             << "\n    patch data array index = " << patch_data_index
             << "\n    for variable = " << variable_name
@@ -1125,8 +1145,10 @@ void VisItDataWriter::initializePlotItem(
       } else {
 
          if (!found_type) {
-            tbox::Pointer<pdat::CellDataFactory<float> > ffactory = factory;
-            if (!ffactory.isNull()) {
+            tbox::Pointer<pdat::CellDataFactory<float> > ffactory(
+               factory,
+               tbox::__dynamic_cast_tag());
+            if (ffactory) {
                plotitem.d_var_centering = VISIT_CELL;
                plotitem.d_var_data_type = VISIT_FLOAT;
                var_depth = ffactory->getDepth();
@@ -1134,8 +1156,10 @@ void VisItDataWriter::initializePlotItem(
             }
          }
          if (!found_type) {
-            tbox::Pointer<pdat::CellDataFactory<double> > dfactory = factory;
-            if (!dfactory.isNull()) {
+            tbox::Pointer<pdat::CellDataFactory<double> > dfactory(
+               factory,
+               tbox::__dynamic_cast_tag());
+            if (dfactory) {
                plotitem.d_var_centering = VISIT_CELL;
                plotitem.d_var_data_type = VISIT_DOUBLE;
                var_depth = dfactory->getDepth();
@@ -1143,8 +1167,10 @@ void VisItDataWriter::initializePlotItem(
             }
          }
          if (!found_type) {
-            tbox::Pointer<pdat::CellDataFactory<int> > ifactory = factory;
-            if (!ifactory.isNull()) {
+            tbox::Pointer<pdat::CellDataFactory<int> > ifactory(
+               factory,
+               tbox::__dynamic_cast_tag());
+            if (ifactory) {
                plotitem.d_var_centering = VISIT_CELL;
                plotitem.d_var_data_type = VISIT_INT;
                var_depth = ifactory->getDepth();
@@ -1152,8 +1178,10 @@ void VisItDataWriter::initializePlotItem(
             }
          }
          if (!found_type) {
-            tbox::Pointer<pdat::NodeDataFactory<float> > ffactory = factory;
-            if (!ffactory.isNull()) {
+            tbox::Pointer<pdat::NodeDataFactory<float> > ffactory(
+               factory,
+               tbox::__dynamic_cast_tag());
+            if (ffactory) {
                plotitem.d_var_centering = VISIT_NODE;
                plotitem.d_var_data_type = VISIT_FLOAT;
                var_depth = ffactory->getDepth();
@@ -1161,8 +1189,10 @@ void VisItDataWriter::initializePlotItem(
             }
          }
          if (!found_type) {
-            tbox::Pointer<pdat::NodeDataFactory<double> > dfactory = factory;
-            if (!dfactory.isNull()) {
+            tbox::Pointer<pdat::NodeDataFactory<double> > dfactory(
+               factory,
+               tbox::__dynamic_cast_tag());
+            if (dfactory) {
                plotitem.d_var_centering = VISIT_NODE;
                plotitem.d_var_data_type = VISIT_DOUBLE;
                var_depth = dfactory->getDepth();
@@ -1170,8 +1200,10 @@ void VisItDataWriter::initializePlotItem(
             }
          }
          if (!found_type) {
-            tbox::Pointer<pdat::NodeDataFactory<int> > ifactory = factory;
-            if (!ifactory.isNull()) {
+            tbox::Pointer<pdat::NodeDataFactory<int> > ifactory(
+               factory,
+               tbox::__dynamic_cast_tag());
+            if (ifactory) {
                plotitem.d_var_centering = VISIT_NODE;
                plotitem.d_var_data_type = VISIT_INT;
                var_depth = ifactory->getDepth();
@@ -1195,7 +1227,7 @@ void VisItDataWriter::initializePlotItem(
                << std::endl);
          }
 
-      } // factory.isNull
+      } // factory is Null
 
    } // valid patch data index
 
@@ -1335,7 +1367,7 @@ void VisItDataWriter::writePlotData(
    int time_step_number,
    double simulation_time)
 {
-   TBOX_ASSERT(!hierarchy.isNull());
+   TBOX_ASSERT(hierarchy);
    TBOX_ASSERT(time_step_number >= 0);
    TBOX_ASSERT(!d_top_level_directory_name.empty());
 
@@ -1458,7 +1490,7 @@ void VisItDataWriter::setSummaryFilename(
 void VisItDataWriter::initializePlotVariableMinMaxInfo(
    const tbox::Pointer<hier::PatchHierarchy> hierarchy)
 {
-   TBOX_ASSERT(!hierarchy.isNull());
+   TBOX_ASSERT(hierarchy);
    const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
 
    /*
@@ -1577,7 +1609,7 @@ void VisItDataWriter::writeHDFFiles(
    double simulation_time)
 {
 
-   TBOX_ASSERT(!hierarchy.isNull());
+   TBOX_ASSERT(hierarchy);
 
 // Disable Intel warning about conversions
 #ifdef __INTEL_COMPILER
@@ -1720,7 +1752,7 @@ int VisItDataWriter::getGlobalPatchNumber(
    const int level_number,
    const int patch_number)
 {
-   TBOX_ASSERT(!hierarchy.isNull());
+   TBOX_ASSERT(hierarchy);
    TBOX_ASSERT(level_number >= 0);
    TBOX_ASSERT(patch_number >= 0);
 
@@ -1750,7 +1782,7 @@ void VisItDataWriter::writeVisItVariablesToHDFFile(
    int coarsest_level,
    int finest_level)
 {
-   TBOX_ASSERT(!hierarchy.isNull());
+   TBOX_ASSERT(hierarchy);
    TBOX_ASSERT(coarsest_level >= 0);
    TBOX_ASSERT(finest_level >= 0);
 
@@ -1836,7 +1868,7 @@ void VisItDataWriter::packRegularAndDerivedData(
    const int level_number,
    hier::Patch& patch)
 {
-   TBOX_ASSERT(!hierarchy.isNull());
+   TBOX_ASSERT(hierarchy);
    TBOX_ASSERT(level_number >= 0);
 
    const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
@@ -2194,7 +2226,7 @@ void VisItDataWriter::packMaterialsData(
    const int level_number,
    hier::Patch& patch)
 {
-   TBOX_ASSERT(!hierarchy.isNull());
+   TBOX_ASSERT(hierarchy);
    TBOX_ASSERT(level_number >= 0);
 
    const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
@@ -2239,7 +2271,7 @@ void VisItDataWriter::packMaterialsData(
              *       material_name
              *          "species"    (only if matl has species)
              */
-            if (materials_HDFGroup.isNull()) {
+            if (!materials_HDFGroup) {
                materials_HDFGroup =
                   patch_HDFGroup->putDatabase("materials");
             }
@@ -2537,7 +2569,7 @@ void VisItDataWriter::packSpeciesData(
    const int level_number,
    hier::Patch& patch)
 {
-   TBOX_ASSERT(!hierarchy.isNull());
+   TBOX_ASSERT(hierarchy);
    TBOX_ASSERT(level_number >= 0);
 
    const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
@@ -2763,7 +2795,7 @@ void VisItDataWriter::writeSummaryToHDFFile(
    int finest_plot_level,
    double simulation_time)
 {
-   TBOX_ASSERT(!hierarchy.isNull());
+   TBOX_ASSERT(hierarchy);
    TBOX_ASSERT(coarsest_plot_level >= 0);
    TBOX_ASSERT(finest_plot_level >= 0);
 
@@ -2820,7 +2852,9 @@ void VisItDataWriter::writeSummaryToHDFFile(
       tbox::Pointer<tbox::Database> basic_HDFGroup =
          summary_HDFFilePointer->putDatabase(std::string(temp_buf));
 
-      tbox::Pointer<tbox::HDFDatabase> hdf_database = basic_HDFGroup;
+      tbox::Pointer<tbox::HDFDatabase> hdf_database(
+         basic_HDFGroup,
+         tbox::__dynamic_cast_tag());
       hid_t basic_group_id = hdf_database->getGroupId();
 
       std::string key_string = "VDR_version_number";
@@ -3144,8 +3178,9 @@ void VisItDataWriter::writeSummaryToHDFFile(
          //This is never entered in multiblock case
          tbox::Pointer<hier::PatchHierarchy> patch_hierarchy =
             hierarchy;
-         const tbox::Pointer<geom::CartesianGridGeometry> ggeom =
-            patch_hierarchy->getGridGeometry();
+         const tbox::Pointer<geom::CartesianGridGeometry> ggeom(
+            patch_hierarchy->getGridGeometry(),
+            tbox::__dynamic_cast_tag());
          int next = 0;
          for (ln = coarsest_plot_level; ln <= finest_plot_level; ln++) {
             for (i = 0; i < VISIT_FIXED_DIM; i++) {
@@ -3192,11 +3227,13 @@ void VisItDataWriter::writeSummaryToHDFFile(
        * for each patch.
        */
 
-      tbox::Pointer<tbox::Database> extents_HDFGroup;
       sprintf(temp_buf, "extents");
-      extents_HDFGroup =
-         summary_HDFFilePointer->putDatabase(std::string(temp_buf));
-      hdf_database = extents_HDFGroup;
+      tbox::Pointer<tbox::Database> extents_HDFGroup(
+         summary_HDFFilePointer->putDatabase(std::string(temp_buf)),
+         tbox::__dynamic_cast_tag());
+      hdf_database =
+         tbox::dynamic_pointer_cast<tbox::HDFDatabase,
+                                    tbox::Database>(extents_HDFGroup);
       hid_t extents_group_id = hdf_database->getGroupId();
 
       /*
@@ -3262,8 +3299,9 @@ void VisItDataWriter::writeSummaryToHDFFile(
          //This is never entered in multiblock case
          tbox::Pointer<hier::PatchHierarchy> patch_hierarchy =
             hierarchy;
-         const tbox::Pointer<geom::CartesianGridGeometry> ggeom =
-            patch_hierarchy->getGridGeometry();
+         const tbox::Pointer<geom::CartesianGridGeometry> ggeom(
+            patch_hierarchy->getGridGeometry(),
+            tbox::__dynamic_cast_tag());
          for (i = 0; i < d_dim.getValue(); i++) {
             geom_lo[i] = ggeom->getXLower()[i];
             dx_curr_lev[i] = ggeom->getDx()[i]; // coarsest level dx
@@ -3351,7 +3389,7 @@ void VisItDataWriter::writeSummaryToHDFFile(
                 *         material_name group
                 *            species group
                 */
-               if (extents_materials_HDFGroup.isNull()) {
+               if (!extents_materials_HDFGroup) {
                   extents_materials_HDFGroup =
                      extents_HDFGroup->putDatabase("materials");
                }
@@ -3369,8 +3407,9 @@ void VisItDataWriter::writeSummaryToHDFFile(
                   // Sparse Format does not need additional group
                   extents_material_name_HDFGroup = extents_materials_HDFGroup;
                }
-               tbox::Pointer<tbox::HDFDatabase> extents_database =
-                  extents_material_name_HDFGroup;
+               tbox::Pointer<tbox::HDFDatabase> extents_database(
+                  extents_material_name_HDFGroup,
+                  tbox::__dynamic_cast_tag());
                hid_t extents_material_name_group_id =
                   extents_database->getGroupId();
 
@@ -3390,8 +3429,9 @@ void VisItDataWriter::writeSummaryToHDFFile(
 
                // species
                key_string = ipi().d_species_name;
-               tbox::Pointer<tbox::HDFDatabase> extents_database =
-                  ipi().d_parent_material_pointer->d_extents_species_HDFGroup;
+               tbox::Pointer<tbox::HDFDatabase> extents_database(
+                  ipi().d_parent_material_pointer->d_extents_species_HDFGroup,
+                  tbox::__dynamic_cast_tag());
 
                /*
                 * species group
@@ -3468,7 +3508,7 @@ void VisItDataWriter::exchangeMinMaxPatchInformation(
    const int coarsest_plot_level,
    const int finest_plot_level)
 {
-   TBOX_ASSERT(!hierarchy.isNull());
+   TBOX_ASSERT(hierarchy);
    TBOX_ASSERT(coarsest_plot_level >= 0);
    TBOX_ASSERT(finest_plot_level >= 0);
 
@@ -3616,7 +3656,7 @@ void VisItDataWriter::writeParentChildInfoToSummaryHDFFile(
    const tbox::Pointer<hier::PatchHierarchy> hierarchy,
    tbox::Pointer<tbox::Database> basic_HDFGroup)
 {
-   TBOX_ASSERT(!hierarchy.isNull());
+   TBOX_ASSERT(hierarchy);
 
    struct cpPointerStruct {  // auxiliary info for child/parent data struct
       int offset;
@@ -3818,7 +3858,9 @@ void VisItDataWriter::writeParentChildInfoToSummaryHDFFile(
    basic_HDFGroup->putInteger(key_string, child_array_length);
    key_string = "parent_array_length";
    basic_HDFGroup->putInteger(key_string, parent_array_length);
-   tbox::Pointer<tbox::HDFDatabase> hdf_database = basic_HDFGroup;
+   tbox::Pointer<tbox::HDFDatabase> hdf_database(
+      basic_HDFGroup,
+      tbox::__dynamic_cast_tag());
    hid_t basic_group_id = hdf_database->getGroupId();
    if (child_array_length > 0) {
       key_string = "child_array";
@@ -3942,9 +3984,11 @@ void VisItDataWriter::packPatchDataIntoDoubleBuffer(
       case VISIT_FLOAT: {
          float* dat_ptr = NULL;
          if (centering == VISIT_CELL) {
-            const tbox::Pointer<pdat::CellData<float> > fpdata = pdata;
+            const tbox::Pointer<pdat::CellData<float> > fpdata(
+               pdata,
+               tbox::__dynamic_cast_tag());
 
-            TBOX_ASSERT(!fpdata.isNull());
+            TBOX_ASSERT(fpdata);
 
             dat_ptr = fpdata->getPointer(depth_index);
          } else if (centering == VISIT_UNKNOWN_CELL) {
@@ -3954,9 +3998,11 @@ void VisItDataWriter::packPatchDataIntoDoubleBuffer(
             pdata->copy2(cell_copy);
             dat_ptr = cell_copy.getPointer();
          } else if (centering == VISIT_NODE) {
-            const tbox::Pointer<pdat::NodeData<float> > fpdata = pdata;
+            const tbox::Pointer<pdat::NodeData<float> > fpdata(
+               pdata,
+               tbox::__dynamic_cast_tag());
 
-            TBOX_ASSERT(!fpdata.isNull());
+            TBOX_ASSERT(fpdata);
 
             dat_ptr = fpdata->getPointer(depth_index);
          } else if (centering == VISIT_UNKNOWN_NODE) {
@@ -3987,8 +4033,10 @@ void VisItDataWriter::packPatchDataIntoDoubleBuffer(
       case VISIT_DOUBLE: {
          double* dat_ptr = NULL;
          if (centering == VISIT_CELL) {
-            const tbox::Pointer<pdat::CellData<double> > dpdata = pdata;
-            TBOX_ASSERT(!dpdata.isNull());
+            const tbox::Pointer<pdat::CellData<double> > dpdata( 
+               pdata,
+               tbox::__dynamic_cast_tag());
+            TBOX_ASSERT(dpdata);
 
             dat_ptr = dpdata->getPointer(depth_index);
          } else if (centering == VISIT_UNKNOWN_CELL) {
@@ -3998,8 +4046,10 @@ void VisItDataWriter::packPatchDataIntoDoubleBuffer(
             pdata->copy2(cell_copy);
             dat_ptr = cell_copy.getPointer();
          } else if (centering == VISIT_NODE) {
-            const tbox::Pointer<pdat::NodeData<double> > dpdata = pdata;
-            TBOX_ASSERT(!dpdata.isNull());
+            const tbox::Pointer<pdat::NodeData<double> > dpdata(
+               pdata,
+               tbox::__dynamic_cast_tag());
+            TBOX_ASSERT(dpdata);
 
             dat_ptr = dpdata->getPointer(depth_index);
          } else if (centering == VISIT_UNKNOWN_NODE) {
@@ -4030,9 +4080,11 @@ void VisItDataWriter::packPatchDataIntoDoubleBuffer(
       case VISIT_INT: {
          int* dat_ptr = NULL;
          if (centering == VISIT_CELL) {
-            const tbox::Pointer<pdat::CellData<int> > ipdata = pdata;
+            const tbox::Pointer<pdat::CellData<int> > ipdata(
+               pdata,
+               tbox::__dynamic_cast_tag());
 
-            TBOX_ASSERT(!ipdata.isNull());
+            TBOX_ASSERT(ipdata);
 
             dat_ptr = ipdata->getPointer(depth_index);
          } else if (centering == VISIT_UNKNOWN_CELL) {
@@ -4041,9 +4093,11 @@ void VisItDataWriter::packPatchDataIntoDoubleBuffer(
             pdata->copy2(cell_copy);
             dat_ptr = cell_copy.getPointer();
          } else if (centering == VISIT_NODE) {
-            const tbox::Pointer<pdat::NodeData<int> > ipdata = pdata;
+            const tbox::Pointer<pdat::NodeData<int> > ipdata(
+               pdata,
+               tbox::__dynamic_cast_tag());
 
-            TBOX_ASSERT(!ipdata.isNull());
+            TBOX_ASSERT(ipdata);
 
             dat_ptr = ipdata->getPointer(depth_index);
          } else if (centering == VISIT_UNKNOWN_NODE) {
@@ -4737,7 +4791,7 @@ void VisItDataWriter::initializeCallback()
  */
 void VisItDataWriter::finalizeCallback()
 {
-   t_write_plot_data.setNull();
+   t_write_plot_data.reset();
 }
 
 }

@@ -98,7 +98,7 @@ PatchLevelBorderAndInteriorFillPattern::computeFillBoxesAndNeighborhoodSets(
                fill_boxes.removeIntersections(*na);
             } else {
 
-               tbox::ConstPointer<hier::GridGeometry> grid_geometry(
+               tbox::Pointer<const hier::GridGeometry> grid_geometry(
                   dst_mapped_box_level.getGridGeometry());
 
                const hier::BlockId& dst_block_id = dst_mapped_box.getBlockId();

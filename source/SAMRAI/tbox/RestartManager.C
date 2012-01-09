@@ -172,9 +172,9 @@ bool RestartManager::openRestartFile(
 
 void RestartManager::closeRestartFile()
 {
-   if (!d_database_root.isNull()) {
+   if (d_database_root) {
       d_database_root->close();
-      d_database_root.setNull();
+      d_database_root.reset();
    }
 
    d_database_root = new NullDatabase();
@@ -299,7 +299,7 @@ void RestartManager::writeRestartFile(
 
       new_restartDB->close();
 
-      new_restartDB.setNull();
+      new_restartDB.reset();
    } else {
       TBOX_ERROR(
          "No DatabaseFactory supplied to RestartManager for writeRestartFile "

@@ -66,7 +66,7 @@ public:
     * @param[in]  mapped_box
     * @param[in]  descriptor
     */
-   explicit Patch(
+   Patch(
       const Box& mapped_box,
       tbox::Pointer<PatchDescriptor> descriptor);
 

@@ -164,7 +164,7 @@ void OverlapConnectorAlgorithm::extractNeighbors(
     */
    TBOX_ASSERT(mapped_box_id.getOwnerRank() == connector.getMPI().getRank());
 
-   const tbox::ConstPointer<GridGeometry>& grid_geom(
+   const tbox::Pointer<const GridGeometry>& grid_geom(
       connector.getBase().getGridGeometry());
 
    const Box& mapped_box(*connector.getBase().getBox(Box(dim, mapped_box_id)));
@@ -257,7 +257,7 @@ void OverlapConnectorAlgorithm::extractNeighbors(
        */
       TBOX_ASSERT(mapped_box_id.getOwnerRank() == connector.getMPI().getRank());
 
-      const tbox::ConstPointer<GridGeometry>& grid_geom = 
+      const tbox::Pointer<const GridGeometry>& grid_geom = 
          connector.getBase().getGridGeometry();
 
       const Box& mapped_box =
@@ -1334,7 +1334,7 @@ void OverlapConnectorAlgorithm::privateBridge_discoverAndSend(
          (east_to_west != NULL && east_to_west != &west_to_east);
 
       const BoxLevel& east(west_to_east.getBase());
-      const tbox::ConstPointer<GridGeometry> &grid_geometry(
+      const tbox::Pointer<const GridGeometry> &grid_geometry(
          east.getGridGeometry());
 
       const tbox::Dimension& dim(east.getDim());
@@ -2243,17 +2243,17 @@ void OverlapConnectorAlgorithm::initializeCallback()
 
 void OverlapConnectorAlgorithm::finalizeCallback()
 {
-   t_find_overlaps_rbbt.setNull();
-   t_bridge.setNull();
-   t_bridge_setup_comm.setNull();
-   t_bridge_remove_and_cache.setNull();
-   t_bridge_discover.setNull();
-   t_bridge_discover_get_neighbors.setNull();
-   t_bridge_discover_form_rbbt.setNull();
-   t_bridge_discover_find_overlaps.setNull();
-   t_bridge_share.setNull();
-   t_bridge_receive_and_unpack.setNull();
-   t_bridge_MPI_wait.setNull();
+   t_find_overlaps_rbbt.reset();
+   t_bridge.reset();
+   t_bridge_setup_comm.reset();
+   t_bridge_remove_and_cache.reset();
+   t_bridge_discover.reset();
+   t_bridge_discover_get_neighbors.reset();
+   t_bridge_discover_form_rbbt.reset();
+   t_bridge_discover_find_overlaps.reset();
+   t_bridge_share.reset();
+   t_bridge_receive_and_unpack.reset();
+   t_bridge_MPI_wait.reset();
 
    if (s_class_mpi.getCommunicator() != tbox::SAMRAI_MPI::commNull) {
       s_class_mpi.freeCommunicator();

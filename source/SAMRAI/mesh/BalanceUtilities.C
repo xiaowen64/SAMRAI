@@ -782,7 +782,7 @@ void BalanceUtilities::privateRecursiveBisectionNonuniformSingleBox(
    const hier::IntVector& cut_factor,
    tbox::Array<tbox::Array<bool> >& bad_cut_points)
 {
-   TBOX_ASSERT(!patch.isNull());
+   TBOX_ASSERT(patch);
    TBOX_DIM_ASSERT_CHECK_ARGS4(*patch, in_box, min_size, cut_factor);
 
    const tbox::Dimension dim(in_box.getDim());
@@ -919,11 +919,12 @@ double BalanceUtilities::computeNonUniformWorkload(
    int wrk_indx,
    const hier::Box& box)
 {
-   TBOX_ASSERT(!patch.isNull());
+   TBOX_ASSERT(patch);
    TBOX_DIM_ASSERT_CHECK_ARGS2(*patch, box);
 
-   const tbox::Pointer<pdat::CellData<double> > work_data =
-      patch->getPatchData(wrk_indx);
+   const tbox::Pointer<pdat::CellData<double> > work_data(
+      patch->getPatchData(wrk_indx),
+      tbox::__dynamic_cast_tag());
 
    double workload = s_norm_ops.L1Norm(work_data, box);
 
@@ -1662,7 +1663,7 @@ double BalanceUtilities::computeLoadBalanceEfficiency(
    int workload_data_id)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!level.isNull());
+   TBOX_ASSERT(level);
 #endif
 
    NULL_USE(os);
@@ -1690,8 +1691,9 @@ double BalanceUtilities::computeLoadBalanceEfficiency(
 
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
          tbox::Pointer<hier::Patch> patch = *ip;
-         tbox::Pointer<pdat::CellData<double> > weight =
-            patch->getPatchData(workload_data_id);
+         tbox::Pointer<pdat::CellData<double> > weight(
+            patch->getPatchData(workload_data_id),
+            tbox::__dynamic_cast_tag());
 
          work[mapping.getProcessorAssignment(ip->getLocalId().getValue())] +=
             s_norm_ops.L1Norm(weight, patch->getBox());

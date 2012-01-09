@@ -139,7 +139,7 @@ void SkeletonBoundaryUtilities3::readBoundaryInput(
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(bdry_strategy != (BoundaryUtilityStrategy *)NULL);
-   TBOX_ASSERT(!bdry_db.isNull());
+   TBOX_ASSERT(bdry_db);
    TBOX_ASSERT(face_conds.getSize() == NUM_3D_FACES);
    TBOX_ASSERT(edge_conds.getSize() == NUM_3D_EDGES);
    TBOX_ASSERT(node_conds.getSize() == NUM_3D_NODES);
@@ -190,7 +190,7 @@ void SkeletonBoundaryUtilities3::fillFaceBoundaryData(
 {
    NULL_USE(varname);
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!vardata.isNull());
+   TBOX_ASSERT(vardata);
    TBOX_ASSERT(bdry_face_conds.getSize() == NUM_3D_FACES);
 //   TBOX_ASSERT(bdry_face_values.getSize() == NUM_3D_FACES*(vardata->getDepth()));
 #endif
@@ -270,7 +270,7 @@ void SkeletonBoundaryUtilities3::fillEdgeBoundaryData(
 {
    NULL_USE(varname);
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!vardata.isNull());
+   TBOX_ASSERT(vardata);
    TBOX_ASSERT(bdry_edge_conds.getSize() == NUM_3D_EDGES);
    TBOX_ASSERT(bdry_face_values.getSize() == NUM_3D_FACES * (vardata->getDepth()));
 #endif
@@ -351,7 +351,7 @@ void SkeletonBoundaryUtilities3::fillNodeBoundaryData(
 {
    NULL_USE(varname);
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!vardata.isNull());
+   TBOX_ASSERT(vardata);
    TBOX_ASSERT(bdry_node_conds.getSize() == NUM_3D_NODES);
    TBOX_ASSERT(bdry_face_values.getSize() == NUM_3D_FACES * (vardata->getDepth()));
 #endif
@@ -762,7 +762,7 @@ void SkeletonBoundaryUtilities3::read3dBdryFaces(
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(bdry_strategy != (BoundaryUtilityStrategy *)NULL);
-   TBOX_ASSERT(!bdry_db.isNull());
+   TBOX_ASSERT(bdry_db);
    TBOX_ASSERT(face_conds.getSize() == NUM_3D_FACES);
 #endif
 
@@ -813,7 +813,7 @@ void SkeletonBoundaryUtilities3::read3dBdryFaces(
             if (bdry_db->keyExists(bdry_loc_str)) {
                tbox::Pointer<tbox::Database> bdry_loc_db =
                   bdry_db->getDatabase(bdry_loc_str);
-               if (!bdry_loc_db.isNull()) {
+               if (bdry_loc_db) {
                   if (bdry_loc_db->keyExists("boundary_condition")) {
                      string bdry_cond_str =
                         bdry_loc_db->getString("boundary_condition");
@@ -865,7 +865,7 @@ void SkeletonBoundaryUtilities3::read3dBdryEdges(
    const hier::IntVector& periodic)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!bdry_db.isNull());
+   TBOX_ASSERT(bdry_db);
    TBOX_ASSERT(face_conds.getSize() == NUM_3D_FACES);
    TBOX_ASSERT(edge_conds.getSize() == NUM_3D_EDGES);
 #endif
@@ -941,7 +941,7 @@ void SkeletonBoundaryUtilities3::read3dBdryEdges(
             if (bdry_db->keyExists(bdry_loc_str)) {
                tbox::Pointer<tbox::Database> bdry_loc_db =
                   bdry_db->getDatabase(bdry_loc_str);
-               if (!bdry_loc_db.isNull()) {
+               if (bdry_loc_db) {
                   if (bdry_loc_db->keyExists("boundary_condition")) {
                      string bdry_cond_str =
                         bdry_loc_db->getString("boundary_condition");
@@ -1199,7 +1199,7 @@ void SkeletonBoundaryUtilities3::read3dBdryNodes(
    const hier::IntVector& periodic)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!bdry_db.isNull());
+   TBOX_ASSERT(bdry_db);
    TBOX_ASSERT(face_conds.getSize() == NUM_3D_FACES);
    TBOX_ASSERT(node_conds.getSize() == NUM_3D_NODES);
 #endif
@@ -1245,7 +1245,7 @@ void SkeletonBoundaryUtilities3::read3dBdryNodes(
          if (bdry_db->keyExists(bdry_loc_str)) {
             tbox::Pointer<tbox::Database> bdry_loc_db =
                bdry_db->getDatabase(bdry_loc_str);
-            if (!bdry_loc_db.isNull()) {
+            if (bdry_loc_db) {
                if (bdry_loc_db->keyExists("boundary_condition")) {
                   string bdry_cond_str =
                      bdry_loc_db->getString("boundary_condition");

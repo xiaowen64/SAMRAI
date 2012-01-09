@@ -39,7 +39,7 @@ NodeDataTest::NodeDataTest(
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(!object_name.empty());
-   TBOX_ASSERT(!main_input_db.isNull());
+   TBOX_ASSERT(main_input_db);
    TBOX_ASSERT(!refine_option.empty());
 #endif
 
@@ -81,7 +81,7 @@ void NodeDataTest::readTestInput(
    tbox::Pointer<tbox::Database> db)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!db.isNull());
+   TBOX_ASSERT(db);
 #endif
 
    /*
@@ -162,10 +162,12 @@ void NodeDataTest::setLinearData(
    const hier::Patch& patch) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!data.isNull());
+   TBOX_ASSERT(data);
 #endif
 
-   tbox::Pointer<geom::CartesianPatchGeometry> pgeom = patch.getPatchGeometry();
+   tbox::Pointer<geom::CartesianPatchGeometry> pgeom(
+      patch.getPatchGeometry(),
+      tbox::__dynamic_cast_tag());
    const pdat::NodeIndex loweri(
       patch.getBox().lower(), (pdat::NodeIndex::Corner)0);
    const double* dx = pgeom->getDx();
@@ -206,7 +208,7 @@ void NodeDataTest::setPeriodicData(
    const hier::Patch& patch) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!data.isNull());
+   TBOX_ASSERT(data);
 #endif
    NULL_USE(patch);
 
@@ -217,8 +219,9 @@ void NodeDataTest::setPeriodicData(
       domain_len[d] = xup[d] - xlo[d];
    }
 
-   const tbox::Pointer<geom::CartesianPatchGeometry> patch_geom =
-      patch.getPatchGeometry();
+   const tbox::Pointer<geom::CartesianPatchGeometry> patch_geom(
+      patch.getPatchGeometry(),
+      tbox::__dynamic_cast_tag());
    const double* dx = patch_geom->getDx();
 
    const int depth = data->getDepth();
@@ -260,8 +263,9 @@ void NodeDataTest::initializeDataOnPatch(
 
       for (int i = 0; i < d_variables.getSize(); i++) {
 
-         tbox::Pointer<pdat::NodeData<double> > node_data =
-            patch.getPatchData(d_variables[i], getDataContext());
+         tbox::Pointer<pdat::NodeData<double> > node_data(
+            patch.getPatchData(d_variables[i], getDataContext()),
+            tbox::__dynamic_cast_tag());
 
          hier::Box dbox = node_data->getBox();
 
@@ -277,8 +281,9 @@ void NodeDataTest::initializeDataOnPatch(
 
       for (int i = 0; i < d_variables.getSize(); i++) {
 
-         tbox::Pointer<pdat::NodeData<double> > node_data =
-            patch.getPatchData(d_variables[i], getDataContext());
+         tbox::Pointer<pdat::NodeData<double> > node_data(
+            patch.getPatchData(d_variables[i], getDataContext()),
+            tbox::__dynamic_cast_tag());
 
          hier::Box dbox = node_data->getGhostBox();
 
@@ -300,7 +305,7 @@ void NodeDataTest::checkPatchInteriorData(
    const hier::Patch& patch) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!data.isNull());
+   TBOX_ASSERT(data);
 #endif
 
    const bool is_periodic =
@@ -342,7 +347,9 @@ void NodeDataTest::setPhysicalBoundaryConditions(
       d_cart_grid_geometry->getPeriodicShift(hier::IntVector(d_dim, 1));
    bool is_periodic = periodic_shift.max() > 0;
 
-   tbox::Pointer<geom::CartesianPatchGeometry> pgeom = patch.getPatchGeometry();
+   tbox::Pointer<geom::CartesianPatchGeometry> pgeom(
+      patch.getPatchGeometry(),
+      tbox::__dynamic_cast_tag());
 
    const tbox::Array<hier::BoundaryBox> node_bdry =
       pgeom->getCodimensionBoundaries(d_dim.getValue());
@@ -362,8 +369,9 @@ void NodeDataTest::setPhysicalBoundaryConditions(
 
    for (int i = 0; i < d_variables.getSize(); i++) {
 
-      tbox::Pointer<pdat::NodeData<double> > node_data =
-         patch.getPatchData(d_variables[i], getDataContext());
+      tbox::Pointer<pdat::NodeData<double> > node_data(
+         patch.getPatchData(d_variables[i], getDataContext()),
+         tbox::__dynamic_cast_tag());
 
       hier::Box patch_interior = node_data->getBox();
       checkPatchInteriorData(node_data, patch_interior, patch);
@@ -480,8 +488,9 @@ bool NodeDataTest::verifyResults(
 
       for (int i = 0; i < d_variables.getSize(); i++) {
 
-         tbox::Pointer<pdat::NodeData<double> > node_data =
-            patch.getPatchData(d_variables[i], getDataContext());
+         tbox::Pointer<pdat::NodeData<double> > node_data(
+            patch.getPatchData(d_variables[i], getDataContext()),
+            tbox::__dynamic_cast_tag());
          int depth = node_data->getDepth();
          hier::Box dbox = node_data->getGhostBox();
 
@@ -510,7 +519,7 @@ bool NodeDataTest::verifyResults(
          tbox::plog << "Node test Successful!" << endl;
       }
 
-      solution.setNull();   // just to be anal...
+      solution.reset();   // just to be anal...
 
       tbox::plog << "\nExiting NodeDataTest::verifyResults..." << endl;
       tbox::plog << "level_number = " << level_number << endl;

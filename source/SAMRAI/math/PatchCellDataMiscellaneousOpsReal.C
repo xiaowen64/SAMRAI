@@ -66,11 +66,11 @@ int PatchCellDataMiscellaneousOpsReal<TYPE>::computeConstrProdPos(
    const hier::Box& box,
    const tbox::Pointer<pdat::CellData<double> > cvol) const
 {
-   TBOX_ASSERT(!data1.isNull() && !data2.isNull());
+   TBOX_ASSERT(data1 && data2);
    TBOX_DIM_ASSERT_CHECK_ARGS3(*data1, *data2, box);
 
    int retval;
-   if (cvol.isNull()) {
+   if (!cvol) {
       retval = d_array_ops.computeConstrProdPos(data1->getArrayData(),
             data2->getArrayData(),
             box);
@@ -94,10 +94,10 @@ void PatchCellDataMiscellaneousOpsReal<TYPE>::compareToScalar(
    const hier::Box& box,
    const tbox::Pointer<pdat::CellData<double> > cvol) const
 {
-   TBOX_ASSERT(!dst.isNull() && !src.isNull());
+   TBOX_ASSERT(dst && src);
    TBOX_DIM_ASSERT_CHECK_ARGS3(*dst, *src, box);
 
-   if (cvol.isNull()) {
+   if (!cvol) {
       d_array_ops.compareToScalar(dst->getArrayData(),
          src->getArrayData(),
          alpha,
@@ -119,11 +119,11 @@ int PatchCellDataMiscellaneousOpsReal<TYPE>::testReciprocal(
    const hier::Box& box,
    const tbox::Pointer<pdat::CellData<double> > cvol) const
 {
-   TBOX_ASSERT(!dst.isNull() && !src.isNull());
+   TBOX_ASSERT(dst && src);
    TBOX_DIM_ASSERT_CHECK_ARGS3(*dst, *src, box);
 
    int retval;
-   if (cvol.isNull()) {
+   if (!cvol) {
       retval = d_array_ops.testReciprocal(dst->getArrayData(),
             src->getArrayData(),
             box);
@@ -145,7 +145,7 @@ TYPE PatchCellDataMiscellaneousOpsReal<TYPE>::maxPointwiseDivide(
    const tbox::Pointer<pdat::CellData<TYPE> >& denom,
    const hier::Box& box) const
 {
-   TBOX_ASSERT(!numer.isNull() && !denom.isNull());
+   TBOX_ASSERT(numer && denom);
    TBOX_DIM_ASSERT_CHECK_ARGS3(*numer, *denom, box);
 
    TYPE retval;
@@ -162,7 +162,7 @@ TYPE PatchCellDataMiscellaneousOpsReal<TYPE>::minPointwiseDivide(
    const hier::Box& box) const
 {
 
-   TBOX_ASSERT(!numer.isNull() && !denom.isNull());
+   TBOX_ASSERT(numer && denom);
    TBOX_DIM_ASSERT_CHECK_ARGS3(*numer, *denom, box);
 
    TYPE retval;

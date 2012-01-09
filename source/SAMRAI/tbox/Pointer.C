@@ -22,7 +22,7 @@
 namespace SAMRAI {
 namespace tbox {
 
-template<class TYPE>
+template<typename TYPE>
 Pointer<TYPE>::Pointer(
    TYPE* ptr,
    const bool managed):
@@ -35,40 +35,23 @@ Pointer<TYPE>::Pointer(
    }
 }
 
-template<class TYPE>
-Pointer<TYPE>::Pointer(
-   const PointerBase& ptr)
-{
-   const DescribedClass* sub_ptr = ptr.getSubclassPointer();
-   if (sub_ptr) {
-      d_object = (TYPE *)dynamic_cast<const TYPE *>(sub_ptr);
-   } else {
-      d_object = NULL;
-   }
-
-   if (d_object) {
-      d_counter = ptr.getSubclassReferenceCounter();
-      if (d_counter) d_counter->addReference();
-   } else {
-      d_counter = (ReferenceCounter *)NULL;
-   }
-}
-
-template<class TYPE>
+template<typename TYPE>
 Pointer<TYPE>& Pointer<TYPE>::operator = (
    TYPE* ptr)
 {
-   if (d_counter && d_counter->deleteReference()) deleteObject();
-   d_object = ptr;
-   if (d_object) {
-      d_counter = new ReferenceCounter;
-   } else {
-      d_counter = (ReferenceCounter *)NULL;
+   if (d_object != ptr) {
+      if (d_counter && d_counter->deleteReference()) deleteObject();
+      d_object = ptr;
+      if (d_object) {
+         d_counter = new ReferenceCounter;
+      } else {
+         d_counter = (ReferenceCounter *)NULL;
+      }
    }
    return *this;
 }
 
-template<class TYPE>
+template<typename TYPE>
 void Pointer<TYPE>::reset(
    TYPE* ptr)
 {
@@ -79,30 +62,6 @@ void Pointer<TYPE>::reset(
    } else {
       d_counter = (ReferenceCounter *)NULL;
    }
-}
-
-template<class TYPE>
-Pointer<TYPE>& Pointer<TYPE>::operator = (
-   const PointerBase& ptr)
-{
-   if (this != &ptr) {
-      if (d_counter && d_counter->deleteReference()) deleteObject();
-
-      const DescribedClass* sub_ptr = ptr.getSubclassPointer();
-      if (sub_ptr) {
-         d_object = (TYPE *)dynamic_cast<const TYPE *>(sub_ptr);
-      } else {
-         d_object = NULL;
-      }
-
-      if (d_object) {
-         d_counter = ptr.getSubclassReferenceCounter();
-         if (d_counter) d_counter->addReference();
-      } else {
-         d_counter = (ReferenceCounter *)NULL;
-      }
-   }
-   return *this;
 }
 
 }

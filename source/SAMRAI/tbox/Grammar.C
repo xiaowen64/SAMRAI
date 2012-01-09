@@ -2878,7 +2878,7 @@ static KeyData* lookup_variable(
    Parser *parser = Parser::getParser();
    Pointer<Database> db = parser->getDatabaseWithKey(key);
 
-   if (db.isNull()) {
+   if (!db) {
       string tmp("Variable ``");
       tmp += key;
       tmp += "'' not found in database";

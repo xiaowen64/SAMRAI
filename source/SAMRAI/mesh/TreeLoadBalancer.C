@@ -147,10 +147,11 @@ void TreeLoadBalancer::setWorkloadPatchDataIndex(
    int data_id,
    int level_number)
 {
-   tbox::Pointer<pdat::CellDataFactory<double> > datafact =
+   tbox::Pointer<pdat::CellDataFactory<double> > datafact(
       hier::VariableDatabase::getDatabase()->getPatchDescriptor()->
-      getPatchDataFactory(data_id);
-   if (datafact.isNull()) {
+      getPatchDataFactory(data_id),
+      tbox::__dynamic_cast_tag());
+   if (!datafact) {
       TBOX_ERROR(
          d_object_name << " error: "
                        << "\n   data_id " << data_id << " passed to "
@@ -237,7 +238,7 @@ void TreeLoadBalancer::loadBalanceBoxLevel(
       domain_box_level,
       bad_interval,
       cut_factor);
-   if (!hierarchy.isNull()) {
+   if (hierarchy) {
       TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(d_dim, *hierarchy);
    }
 
@@ -1847,16 +1848,17 @@ void TreeLoadBalancer::constructSemilocalUnbalancedToBalanced(
       recip_itr = outgoing_messages.begin();
    }
 
+   int outgoing_messages_size = static_cast<int>(outgoing_messages.size());
    std::vector<tbox::SAMRAI_MPI::Request>
-      send_requests( outgoing_messages.size(), MPI_REQUEST_NULL );
-   for ( int send_number = 0; send_number < outgoing_messages.size(); ++send_number ) {
+      send_requests( outgoing_messages_size, MPI_REQUEST_NULL );
+   for ( int send_number = 0; send_number < outgoing_messages_size; ++send_number ) {
 
       int recipient = recip_itr->first;
       std::vector<int> &message = recip_itr->second;
 
       d_mpi.Isend(
          static_cast<void*>(&message[0]),
-         message.size(),
+         static_cast<int>(message.size()),
          MPI_INT,
          recipient,
          TreeLoadBalancer_EDGETAG0,
@@ -1874,7 +1876,8 @@ void TreeLoadBalancer::constructSemilocalUnbalancedToBalanced(
     * Determine number of cells in unbalanced that are not yet accounted
     * for in balanced.
     */
-   int num_unaccounted_cells = unbalanced_to_balanced.getBase().getLocalNumberOfCells();
+   int num_unaccounted_cells = static_cast<int>(
+      unbalanced_to_balanced.getBase().getLocalNumberOfCells());
 
    const hier::BoxContainer &unbalanced_boxes = unbalanced_to_balanced.getBase().getBoxes();
    for ( hier::BoxContainer::ConstIterator bi=unbalanced_boxes.begin();
@@ -1953,7 +1956,10 @@ void TreeLoadBalancer::constructSemilocalUnbalancedToBalanced(
    // Wait for the sends to complete before clearing outgoing_messages.
    std::vector<tbox::SAMRAI_MPI::Status> status(send_requests.size());
    t_construct_semilocal_comm_wait->start();
-   d_mpi.Waitall( send_requests.size(), &send_requests[0], &status[0] );
+   d_mpi.Waitall(
+      static_cast<int>(send_requests.size()),
+      &send_requests[0],
+      &status[0]);
    t_construct_semilocal_comm_wait->stop();
    outgoing_messages.clear();
 
@@ -3519,7 +3525,7 @@ void TreeLoadBalancer::getFromInput(
    tbox::Pointer<tbox::Database> db)
 {
 
-   if (!db.isNull()) {
+   if (db) {
 
       d_print_steps =
          db->getBoolWithDefault("print_steps",
@@ -4511,7 +4517,7 @@ void TreeLoadBalancer::setTimers()
     * The first constructor gets timers from the TimerManager.
     * and sets up their deallocation.
     */
-   if (t_load_balance_box_level.isNull()) {
+   if (!t_load_balance_box_level) {
       t_load_balance_box_level = tbox::TimerManager::getManager()->
          getTimer(d_object_name + "::loadBalanceBoxLevel()");
       t_get_map = tbox::TimerManager::getManager()->

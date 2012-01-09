@@ -33,7 +33,7 @@ EdgeMultiblockTest::EdgeMultiblockTest(
    NULL_USE(do_coarsen);
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(!object_name.empty());
-   TBOX_ASSERT(!main_input_db.isNull());
+   TBOX_ASSERT(main_input_db);
    TBOX_ASSERT(!refine_option.empty());
 #endif
 
@@ -73,7 +73,7 @@ void EdgeMultiblockTest::readTestInput(
    tbox::Pointer<tbox::Database> db)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!db.isNull());
+   TBOX_ASSERT(db);
 #endif
 
    /*
@@ -126,8 +126,9 @@ void EdgeMultiblockTest::initializeDataOnPatch(
 
       for (int i = 0; i < d_variables.getSize(); i++) {
 
-         tbox::Pointer<pdat::EdgeData<double> > edge_data =
-            patch.getPatchData(d_variables[i], getDataContext());
+         tbox::Pointer<pdat::EdgeData<double> > edge_data(
+            patch.getPatchData(d_variables[i], getDataContext()),
+            tbox::__dynamic_cast_tag());
 
          hier::Box dbox = edge_data->getGhostBox();
 
@@ -159,8 +160,7 @@ void EdgeMultiblockTest::setPhysicalBoundaryConditions(
 {
    (void)time;
 
-   tbox::Pointer<hier::PatchGeometry>
-   pgeom = patch.getPatchGeometry();
+   tbox::Pointer<hier::PatchGeometry> pgeom = patch.getPatchGeometry();
 
    const tbox::Array<hier::BoundaryBox> node_bdry =
       pgeom->getCodimensionBoundaries(d_dim.getValue());
@@ -182,8 +182,9 @@ void EdgeMultiblockTest::setPhysicalBoundaryConditions(
 
    for (int i = 0; i < d_variables.getSize(); i++) {
 
-      tbox::Pointer<pdat::EdgeData<double> > edge_data =
-         patch.getPatchData(d_variables[i], getDataContext());
+      tbox::Pointer<pdat::EdgeData<double> > edge_data(
+         patch.getPatchData(d_variables[i], getDataContext()),
+         tbox::__dynamic_cast_tag());
 
       /*
        * Set node boundary data.
@@ -321,8 +322,9 @@ void EdgeMultiblockTest::fillSingularityBoundaryConditions(
 
    for (int i = 0; i < d_variables.getSize(); i++) {
 
-      tbox::Pointer<pdat::EdgeData<double> > edge_data =
-         patch.getPatchData(d_variables[i], getDataContext());
+      tbox::Pointer<pdat::EdgeData<double> > edge_data(
+         patch.getPatchData(d_variables[i], getDataContext()),
+         tbox::__dynamic_cast_tag());
 
       hier::Box sing_fill_box(edge_data->getGhostBox() * fill_box);
 
@@ -407,7 +409,8 @@ void EdgeMultiblockTest::fillSingularityBoundaryConditions(
                                                   encon_blk_id);
 
                   tbox::Pointer<pdat::EdgeData<double> > sing_data(
-                     encon_patch->getPatchData(d_variables[i], getDataContext()));
+                     encon_patch->getPatchData(d_variables[i], getDataContext()),
+                     tbox::__dynamic_cast_tag());
 
                   for (int axis = 0; axis < d_dim.getValue(); axis++) {
 
@@ -559,8 +562,9 @@ bool EdgeMultiblockTest::verifyResults(
 
       double correct = (double)block_id.getBlockValue();
 
-      tbox::Pointer<pdat::EdgeData<double> > edge_data =
-         patch.getPatchData(d_variables[i], getDataContext());
+      tbox::Pointer<pdat::EdgeData<double> > edge_data(
+         patch.getPatchData(d_variables[i], getDataContext()),
+         tbox::__dynamic_cast_tag());
       int depth = edge_data->getDepth();
 
       hier::Box interior_box(pbox);
@@ -656,8 +660,7 @@ bool EdgeMultiblockTest::verifyResults(
          }
       }
 
-      tbox::Pointer<hier::PatchGeometry> pgeom =
-         patch.getPatchGeometry();
+      tbox::Pointer<hier::PatchGeometry> pgeom = patch.getPatchGeometry();
 
       for (int b = 0; b < d_dim.getValue(); b++) {
          tbox::Array<hier::BoundaryBox> bdry =
@@ -752,7 +755,7 @@ bool EdgeMultiblockTest::verifyResults(
       tbox::perr << "Multiblock EdgeMultiblockTest FAILED: \n" << endl;
    }
 
-   solution.setNull();   // just to be anal...
+   solution.reset();   // just to be anal...
 
    tbox::plog << "\nExiting EdgeMultiblockTest::verifyResults..." << endl;
    tbox::plog << "level_number = " << level_number << endl;

@@ -111,8 +111,9 @@ void PoissonSineSolution::setGridData(
    (void)ccoef_data;
 
    hier::Box pbox = patch.getBox();
-   tbox::Pointer<geom::CartesianPatchGeometry> patch_geom =
-      patch.getPatchGeometry();
+   tbox::Pointer<geom::CartesianPatchGeometry> patch_geom(
+      patch.getPatchGeometry(),
+      tbox::__dynamic_cast_tag());
 
    /* Set linear source coefficients */
    // ccoef_data.getArrayData().fill(d_linear_coef);
@@ -176,9 +177,9 @@ void PoissonSineSolution::setBcCoefs(
    const int location_index = bdry_box.getLocationIndex();
 
    // a is either 0 (Neumann) or 1 (Dirichlet).
-   if (!acoef_data.isNull())
+   if (acoef_data)
       acoef_data->fill(d_neumann_location[location_index] ? 0.0 : 1.0, 0);
-   if (!bcoef_data.isNull())
+   if (bcoef_data)
       bcoef_data->fill(d_neumann_location[location_index] ? 1.0 : 0.0, 0);
 
    /*
@@ -186,8 +187,9 @@ void PoissonSineSolution::setBcCoefs(
     * of side centers.
     */
    hier::Box patch_box(patch.getBox());
-   tbox::Pointer<geom::CartesianPatchGeometry> patch_geom =
-      patch.getPatchGeometry();
+   tbox::Pointer<geom::CartesianPatchGeometry> patch_geom(
+      patch.getPatchGeometry(),
+      tbox::__dynamic_cast_tag());
    const double* xlo = patch_geom->getXLower();
    const double* xup = patch_geom->getXUpper();
    const double* dx = patch_geom->getDx();

@@ -129,8 +129,9 @@ void setCellDataToSinusoid(
    const hier::Patch& patch,
    const SinusoidFcn& fcn)
 {
-   tbox::Pointer<geom::CartesianPatchGeometry>
-   patch_geom = patch.getPatchGeometry();
+   tbox::Pointer<geom::CartesianPatchGeometry> patch_geom(
+      patch.getPatchGeometry(),
+      tbox::__dynamic_cast_tag());
    if (cd.getDim() == tbox::Dimension(2)) {
       MDA_Access<double, 2, MDA_OrderColMajor<2> >
       t4 = pdat::ArrayDataAccess::access<2, double>(cd.getArrayData());
@@ -222,8 +223,9 @@ void setCellDataToQuartic(
    const hier::Patch& patch,
    const QuarticFcn& fcn)
 {
-   tbox::Pointer<geom::CartesianPatchGeometry>
-   patch_geom = patch.getPatchGeometry();
+   tbox::Pointer<geom::CartesianPatchGeometry> patch_geom(
+      patch.getPatchGeometry(),
+      tbox::__dynamic_cast_tag());
    if (cd.getDim() == tbox::Dimension(2)) {
       MDA_Access<double, 2, MDA_OrderColMajor<2> >
       t4 = pdat::ArrayDataAccess::access<2, double>(cd.getArrayData());

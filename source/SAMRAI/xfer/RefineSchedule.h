@@ -111,7 +111,7 @@ public:
     *                                    data on the destination level.
     *                                    Default is no time interpolation.
     */
-   explicit RefineSchedule(
+   RefineSchedule(
       tbox::Pointer<PatchLevelFillPattern> dst_level_fill_pattern,
       tbox::Pointer<hier::PatchLevel> dst_level,
       tbox::Pointer<hier::PatchLevel> src_level,
@@ -176,7 +176,7 @@ public:
     *                                    on the destination level.  Default
     *                                    is no time interpolation.
     */
-   explicit RefineSchedule(
+   RefineSchedule(
       tbox::Pointer<PatchLevelFillPattern> dst_level_fill_pattern,
       tbox::Pointer<hier::PatchLevel> dst_level,
       tbox::Pointer<hier::PatchLevel> src_level,

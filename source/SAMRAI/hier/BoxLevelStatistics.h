@@ -30,7 +30,8 @@ public:
     *
     * @param[i] box_level
     */
-   explicit BoxLevelStatistics(const BoxLevel &box_level);
+   explicit BoxLevelStatistics(
+      const BoxLevel &box_level);
 
    /*!
     * @brief Print out local and globally reduced statistics on the
@@ -91,7 +92,9 @@ private:
       double d_values[NUMBER_OF_QUANTITIES];
    };
 
-   void computeLocalBoxLevelStatistics(StatisticalQuantities &sq) const;
+   void
+   computeLocalBoxLevelStatistics(
+      StatisticalQuantities &sq) const;
 
    //! @brief BoxLevel to compute statistics for.
    const BoxLevel &d_box_level;

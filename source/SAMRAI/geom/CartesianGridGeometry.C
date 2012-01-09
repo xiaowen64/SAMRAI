@@ -172,7 +172,7 @@ CartesianGridGeometry::CartesianGridGeometry(
    d_domain_box(dim)
 {
    TBOX_ASSERT(!object_name.empty());
-   TBOX_ASSERT(!input_db.isNull());
+   TBOX_ASSERT(input_db);
 
    d_registered_for_restart = register_for_restart;
 
@@ -501,7 +501,7 @@ void CartesianGridGeometry::printClassData(
 void CartesianGridGeometry::putToDatabase(
    tbox::Pointer<tbox::Database> db)
 {
-   TBOX_ASSERT(!db.isNull());
+   TBOX_ASSERT(db);
 
    const tbox::Dimension& dim(getDim());
 
@@ -537,7 +537,7 @@ void CartesianGridGeometry::getFromInput(
    tbox::Pointer<tbox::Database> db,
    bool is_from_restart)
 {
-   TBOX_ASSERT(!db.isNull());
+   TBOX_ASSERT(db);
 
    const tbox::Dimension& dim(getDim());
 

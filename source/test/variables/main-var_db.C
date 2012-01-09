@@ -208,7 +208,7 @@ int main(
       tbox::plog << "Test #3a: hier::VariableDatabase::getVariable()..."
                  << endl;
       tbox::Pointer<hier::Variable> tvar_uval = var_db->getVariable("uval");
-      if (tvar_uval.isNull()) {
+      if (!tvar_uval) {
          fail_count++;
          tbox::perr
          << "FAILED: - Test #3a: hier::VariableDatabase::getVariable()\n"
@@ -220,7 +220,7 @@ int main(
       tbox::plog << "Test #3b: hier::VariableDatabase::getVariable()..."
                  << endl;
       tbox::Pointer<hier::Variable> tvar_flux = var_db->getVariable("flux");
-      if (tvar_flux.isNull()) {
+      if (!tvar_flux) {
          fail_count++;
          tbox::perr
          << "FAILED: - Test #3b: hier::VariableDatabase::getVariable()\n"
@@ -233,7 +233,7 @@ int main(
                  << endl;
       tbox::Pointer<hier::Variable> tvar_fluxsum = var_db->getVariable(
             "fluxsum");
-      if (tvar_fluxsum.isNull()) {
+      if (!tvar_fluxsum) {
          fail_count++;
          tbox::perr
          << "FAILED: - Test #3c: hier::VariableDatabase::getVariable()\n"
@@ -246,7 +246,7 @@ int main(
                  << endl;
       //   tbox::perr << "Attempt to get variable named dummy..." << endl;
       tbox::Pointer<hier::Variable> tvar_dummy = var_db->getVariable("dummy");
-      if (!tvar_dummy.isNull()) {
+      if (tvar_dummy) {
          fail_count++;
          tbox::perr
          << "FAILED: - Test #3d: hier::VariableDatabase::getVariable()\n"
@@ -428,13 +428,13 @@ int main(
          << endl;
       } else {
 
-         if (!search_var.isNull()) {
+         if (search_var) {
             fail_count++;
             tbox::perr
             << "FAILED: - Test #7b.2: hier::VariableDatabase::mapIndexToVariableAndContext()\n"
             << "search_var should be NULL" << endl;
          }
-         if (!search_ctxt.isNull()) {
+         if (search_ctxt) {
             fail_count++;
             tbox::perr
             << "FAILED: - Test #7b.3: hier::VariableDatabase::mapIndexToVariableAndContext()\n"
@@ -479,7 +479,7 @@ int main(
          << endl;
       } else {
 
-         if (!search_var.isNull()) {
+         if (search_var) {
             fail_count++;
             tbox::perr
             << "FAILED: - Test #7d.2: hier::VariableDatabase::mapIndexToVariable()\n"
@@ -576,7 +576,7 @@ int main(
       << " should no longer be mapped to a variable)..." << endl;
       var_db->printClassData(tbox::plog);
 
-      tvar.setNull();
+      tvar.reset();
       if (var_db->mapIndexToVariable(new_id, tvar)) {
          fail_count++;
          tbox::perr << "FAILED: - Test #8f: "
@@ -618,7 +618,7 @@ int main(
                     << endl;
       }
 
-      tvar.setNull();
+      tvar.reset();
       if (var_db->mapIndexToVariable(flux_scratch_id, tvar)) {
          fail_count++;
          tbox::perr << "FAILED: - Test #8j: "

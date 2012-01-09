@@ -147,10 +147,11 @@ void TreeLoadBalancerOld::setWorkloadPatchDataIndex(
    int data_id,
    int level_number)
 {
-   tbox::Pointer<pdat::CellDataFactory<double> > datafact =
+   tbox::Pointer<pdat::CellDataFactory<double> > datafact(
       hier::VariableDatabase::getDatabase()->getPatchDescriptor()->
-      getPatchDataFactory(data_id);
-   if (datafact.isNull()) {
+      getPatchDataFactory(data_id),
+      tbox::__dynamic_cast_tag());
+   if (!datafact) {
       TBOX_ERROR(
          d_object_name << " error: "
                        << "\n   data_id " << data_id << " passed to "
@@ -237,7 +238,7 @@ void TreeLoadBalancerOld::loadBalanceBoxLevel(
       domain_box_level,
       bad_interval,
       cut_factor);
-   if (!hierarchy.isNull()) {
+   if (hierarchy) {
       TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(d_dim, *hierarchy);
    }
 
@@ -3589,7 +3590,7 @@ void TreeLoadBalancerOld::getFromInput(
    tbox::Pointer<tbox::Database> db)
 {
 
-   if (!db.isNull()) {
+   if (db) {
 
       d_print_steps =
          db->getBoolWithDefault("print_steps",
@@ -4581,7 +4582,7 @@ void TreeLoadBalancerOld::setTimers()
     * The first constructor gets timers from the TimerManager.
     * and sets up their deallocation.
     */
-   if (t_load_balance_box_level.isNull()) {
+   if (!t_load_balance_box_level) {
       t_load_balance_box_level = tbox::TimerManager::getManager()->
          getTimer(d_object_name + "::loadBalanceBoxLevel()");
       t_get_map = tbox::TimerManager::getManager()->

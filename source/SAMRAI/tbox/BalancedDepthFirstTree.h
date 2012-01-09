@@ -61,7 +61,7 @@ public:
     *
     * @see initialize().
     */
-   explicit BalancedDepthFirstTree(
+   BalancedDepthFirstTree(
       unsigned int first_rank,
       unsigned int last_rank,
       unsigned int rank,
@@ -72,8 +72,7 @@ public:
     *
     * Deallocate internal data.
     */
-   virtual ~BalancedDepthFirstTree(
-      void);
+   virtual ~BalancedDepthFirstTree();
 
    /*!
     * @brief Construct the tree.

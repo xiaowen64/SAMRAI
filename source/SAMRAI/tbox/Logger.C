@@ -103,9 +103,9 @@ Logger::Logger():
  */
 Logger::~Logger()
 {
-   d_abort_appender.setNull();
-   d_warning_appender.setNull();
-   d_debug_appender.setNull();
+   d_abort_appender.reset();
+   d_warning_appender.reset();
+   d_debug_appender.reset();
 }
 
 void Logger::finalizeCallback()

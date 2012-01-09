@@ -96,7 +96,7 @@ public:
     * When assertion checking is active, an assertion will result if any of the pointer
     * arguments is null, or if any of the integer arguments are invalid (i.e., < 0);
     */
-   explicit RefineTimeTransaction(
+   RefineTimeTransaction(
       tbox::Pointer<hier::PatchLevel>& dst_level,
       tbox::Pointer<hier::PatchLevel>& src_level,
       tbox::Pointer<hier::BoxOverlap> overlap,

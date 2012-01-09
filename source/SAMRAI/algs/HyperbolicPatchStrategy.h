@@ -65,7 +65,7 @@ public:
    /**
     * Blank constructor for HyperbolicPatchStrategy.
     */
-   HyperbolicPatchStrategy(
+   explicit HyperbolicPatchStrategy(
       const tbox::Dimension& dim);
 
    /**

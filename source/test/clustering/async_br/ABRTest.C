@@ -34,7 +34,7 @@ ABRTest::ABRTest(
    d_tagger(object_name + ":tagger",
             dim,
             database->isDatabase("sine_tagger") ?
-            database->getDatabase("sine_tagger").getPointer() : NULL),
+            database->getDatabase("sine_tagger").get() : NULL),
    d_time(0.5)
 {
    d_tagger.resetHierarchyConfiguration(d_hierarchy, 0, 0);
@@ -81,7 +81,7 @@ void ABRTest::deallocatePatchData(
 int ABRTest::registerVariablesWithPlotter(
    tbox::Pointer<appu::VisItDataWriter> writer)
 {
-   if (!writer.isNull())
+   if (writer)
       d_tagger.registerVariablesWithPlotter(*writer);
    return 0;
 }

@@ -48,7 +48,7 @@ void CellPoissonHypreSolver::setBoundaries(
       flags,
       bdry_types);
    d_physical_bc_coef_strategy = &d_physical_bc_simple_case;
-   d_physical_bc_variable.setNull();
+   d_physical_bc_variable.reset();
 }
 
 /*
@@ -83,7 +83,7 @@ void CellPoissonHypreSolver::setNumPreRelaxSteps(
    const int steps)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!d_hierarchy.isNull());
+   TBOX_ASSERT(d_hierarchy);
 #endif
    d_num_pre_relax_steps = steps;
 }
@@ -93,7 +93,7 @@ void CellPoissonHypreSolver::setNumPostRelaxSteps(
    const int steps)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!d_hierarchy.isNull());
+   TBOX_ASSERT(d_hierarchy);
 #endif
    d_num_post_relax_steps = steps;
 }

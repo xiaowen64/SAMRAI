@@ -279,7 +279,7 @@ void BergerRigoutsosNode::clusterAndComputeRelationships(
       *tag_level);
 
    d_common->tag_level = tag_level;
-   d_common->tag_mapped_box_level = tag_level->getBoxLevel().getPointer();
+   d_common->tag_mapped_box_level = tag_level->getBoxLevel().get();
 
    setMPI(mpi_object);
 
@@ -327,7 +327,7 @@ void BergerRigoutsosNode::clusterAndComputeRelationships(
    d_common->tag_to_new = NULL;
    d_common->new_to_tag = NULL;
    d_common->tag_mapped_box_level = NULL;
-   d_common->tag_level.setNull();
+   d_common->tag_level.reset();
 }
 
 /*
@@ -1694,8 +1694,9 @@ void BergerRigoutsosNode::makeLocalTagHistogram()
 
          if (!(intersection.empty())) {
 
-            tbox::Pointer<pdat::CellData<int> >
-            tag_data_ = patch.getPatchData(d_common->tag_data_index);
+            tbox::Pointer<pdat::CellData<int> > tag_data_(
+               patch.getPatchData(d_common->tag_data_index),
+               tbox::__dynamic_cast_tag());
 
             pdat::CellData<int>& tag_data = *tag_data_;
 
@@ -3252,24 +3253,24 @@ void BergerRigoutsosNode::initializeCallback()
  */
 void BergerRigoutsosNode::finalizeCallback()
 {
-   CommonParams::t_cluster.setNull();
-   CommonParams::t_cluster_and_compute_relationships.setNull();
-   CommonParams::t_continue_algorithm.setNull();
-   CommonParams::t_compute.setNull();
-   CommonParams::t_comm_wait.setNull();
-   CommonParams::t_MPI_wait.setNull();
-   CommonParams::t_compute_new_graph_relationships.setNull();
-   CommonParams::t_share_new_relationships.setNull();
-   CommonParams::t_share_new_relationships_send.setNull();
-   CommonParams::t_share_new_relationships_recv.setNull();
-   CommonParams::t_share_new_relationships_unpack.setNull();
-   CommonParams::t_local_tasks.setNull();
-   CommonParams::t_local_histogram.setNull();
-   CommonParams::t_reduce_histogram.setNull();
-   CommonParams::t_bcast_acceptability.setNull();
-   CommonParams::t_gather_grouping_criteria.setNull();
-   CommonParams::t_bcast_child_groups.setNull();
-   CommonParams::t_bcast_to_dropouts.setNull();
+   CommonParams::t_cluster.reset();
+   CommonParams::t_cluster_and_compute_relationships.reset();
+   CommonParams::t_continue_algorithm.reset();
+   CommonParams::t_compute.reset();
+   CommonParams::t_comm_wait.reset();
+   CommonParams::t_MPI_wait.reset();
+   CommonParams::t_compute_new_graph_relationships.reset();
+   CommonParams::t_share_new_relationships.reset();
+   CommonParams::t_share_new_relationships_send.reset();
+   CommonParams::t_share_new_relationships_recv.reset();
+   CommonParams::t_share_new_relationships_unpack.reset();
+   CommonParams::t_local_tasks.reset();
+   CommonParams::t_local_histogram.reset();
+   CommonParams::t_reduce_histogram.reset();
+   CommonParams::t_bcast_acceptability.reset();
+   CommonParams::t_gather_grouping_criteria.reset();
+   CommonParams::t_bcast_child_groups.reset();
+   CommonParams::t_bcast_to_dropouts.reset();
 }
 
 }

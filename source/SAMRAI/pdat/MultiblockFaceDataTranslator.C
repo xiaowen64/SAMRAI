@@ -58,11 +58,15 @@ void MultiblockFaceDataTranslator<TYPE>::translateAndCopyData(
 
    const tbox::Dimension& dim(shift.getDim());
 
-   tbox::Pointer<FaceData<TYPE> > dst = dst_patch.getPatchData(dst_id);
-   tbox::Pointer<FaceData<TYPE> > src = src_patch.getPatchData(src_id);
+   tbox::Pointer<FaceData<TYPE> > dst(
+      dst_patch.getPatchData(dst_id),
+      tbox::__dynamic_cast_tag());
+   tbox::Pointer<FaceData<TYPE> > src(
+      src_patch.getPatchData(src_id),
+      tbox::__dynamic_cast_tag());
 
-   TBOX_ASSERT(!(dst.isNull()));
-   TBOX_ASSERT(!(src.isNull()));
+   TBOX_ASSERT(dst);
+   TBOX_ASSERT(src);
 
    if (rotate == 0) {
       for (int axis = 0; axis < dim.getValue(); axis++) {

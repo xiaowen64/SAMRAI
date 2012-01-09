@@ -83,7 +83,7 @@ SAMRAIVectorReal<TYPE>::getComponentPatchData(
    const hier::Patch& patch) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!var.isNull());
+   TBOX_ASSERT(var);
    TBOX_ASSERT(d_variableid_2_vectorcomponent_map[
          var->getInstanceIdentifier()] >= 0);
 #endif

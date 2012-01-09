@@ -58,15 +58,17 @@ void MultiblockGriddingTagger::setScratchTagPatchDataIndex(
    bool indx_maps_to_variable =
       hier::VariableDatabase::getDatabase()->mapIndexToVariable(buf_tag_indx,
          check_var);
-   if (!indx_maps_to_variable || check_var.isNull()) {
+   if (!indx_maps_to_variable || !check_var) {
       TBOX_ERROR(
          "MultiblockGriddingTagger::setScratchTagPatchDataIndex error...\n"
          << "Given patch data index = " << buf_tag_indx
          << " is not in VariableDatabase."
          << std::endl);
    } else {
-      tbox::Pointer<pdat::CellVariable<int> > t_check_var = check_var;
-      if (t_check_var.isNull()) {
+      tbox::Pointer<pdat::CellVariable<int> > t_check_var(
+         check_var,
+         tbox::__dynamic_cast_tag());
+      if (!t_check_var) {
          TBOX_ERROR(
             "MultiblockGriddingTagger::setScratchTagPatchDataIndex error...\n"
             << "Given patch data index = " << buf_tag_indx
@@ -87,8 +89,9 @@ void MultiblockGriddingTagger::setPhysicalBoundaryConditions(
 
    NULL_USE(fill_time);
 
-   const tbox::Pointer<pdat::CellData<int> > tag_data =
-      patch.getPatchData(d_buf_tag_indx);
+   const tbox::Pointer<pdat::CellData<int> > tag_data(
+      patch.getPatchData(d_buf_tag_indx),
+      tbox::__dynamic_cast_tag());
 
    hier::IntVector gcw =
       hier::IntVector::min(ghost_width_to_fill,
@@ -134,8 +137,9 @@ void MultiblockGriddingTagger::fillSingularityBoundaryConditions(
 
    const hier::BlockId& patch_blk_id = patch.getBox().getBlockId();
 
-   const tbox::Pointer<pdat::CellData<int> > tag_data =
-      patch.getPatchData(d_buf_tag_indx);
+   const tbox::Pointer<pdat::CellData<int> > tag_data(
+      patch.getPatchData(d_buf_tag_indx),
+      tbox::__dynamic_cast_tag());
 
    hier::Box sing_fill_box(tag_data->getGhostBox() * fill_box);
    tag_data->fillAll(0, sing_fill_box);
@@ -197,7 +201,8 @@ void MultiblockGriddingTagger::fillSingularityBoundaryConditions(
                                                
 
                tbox::Pointer<pdat::CellData<int> > sing_data(
-                  encon_patch->getPatchData(d_buf_tag_indx));
+                  encon_patch->getPatchData(d_buf_tag_indx),
+                  tbox::__dynamic_cast_tag());
 
                for (pdat::CellIterator ci(encon_fill_box); ci; ci++) {
                   pdat::CellIndex src_index(ci());

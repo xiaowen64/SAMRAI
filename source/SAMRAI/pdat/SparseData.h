@@ -165,7 +165,7 @@ public:
     * @param [in] dbl_attributes The double (named) attributes
     * @param [in] int_attributes The integer (named) attributes
     */
-   explicit SparseData(
+   SparseData(
       const hier::Box& box,
       const hier::IntVector& ghosts,
       const std::vector<std::string>& dbl_names,
@@ -693,7 +693,7 @@ public:
     *
     * @param [in] sparse_data the SparseData oject
     */
-   SparseDataIterator(
+   explicit SparseDataIterator(
       SparseData<BOX_GEOMETRY>& sparse_data);
 
    /*!
@@ -702,7 +702,7 @@ public:
     *
     * @param [in] sparse_data the SparseData oject
     */
-   SparseDataIterator(
+   explicit SparseDataIterator(
       SparseData<BOX_GEOMETRY> * sparse_data);
 
    /*!

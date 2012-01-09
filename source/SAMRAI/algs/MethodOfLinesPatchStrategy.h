@@ -52,7 +52,7 @@ public:
    /*!
     * Blank constructor for MethodOfLinesPatchStrategy.
     */
-   MethodOfLinesPatchStrategy(
+   explicit MethodOfLinesPatchStrategy(
       const tbox::Dimension& dim);
 
    /*!

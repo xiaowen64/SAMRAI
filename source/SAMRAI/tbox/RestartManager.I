@@ -62,7 +62,7 @@ SAMRAI_INLINE_KEYWORD
 void RestartManager::setRootDatabase(
    Pointer<Database> database)
 {
-   if (database.isNull()) {
+   if (!database) {
       d_database_root = NULL;
       d_is_from_restart = false;
    } else {

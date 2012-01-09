@@ -117,7 +117,7 @@ public:
     * of the index space and the ghosts vector describes the ghost nodes in
     * each coordinate direction.
     */
-   explicit IndexData(
+   IndexData(
       const hier::Box& box,
       const hier::IntVector& ghosts);
 
@@ -511,13 +511,13 @@ public:
     * Constructor for the index list iterator.  The iterator will iterate
     * over the irregular index set of the argument data object.
     */
-   IndexIterator(
+   explicit IndexIterator(
       const IndexData<TYPE, BOX_GEOMETRY>& data);
 
    /**
     * Copy constructor for the index list iterator.
     */
-   IndexIterator(
+   explicit IndexIterator(
       const IndexIterator<TYPE, BOX_GEOMETRY>& iterator);
 
    /**
@@ -657,7 +657,7 @@ public:
     * Constructor for the index list iterator.  The iterator will iterate
     * over the irregular index set of the argument data object.
     */
-   ConstIndexIterator(
+   explicit ConstIndexIterator(
       const IndexData<TYPE, BOX_GEOMETRY>& data);
 
    /**

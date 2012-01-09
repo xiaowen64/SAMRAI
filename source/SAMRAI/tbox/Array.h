@@ -110,7 +110,7 @@ public:
     *
     */
 
-   explicit Array(
+   Array(
       const int n,
       const typename Array::DoNotInitialize& do_not_initialize_flag);
 

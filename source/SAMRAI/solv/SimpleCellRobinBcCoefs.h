@@ -51,7 +51,7 @@ public:
    /*!
     * @brief Constructor
     */
-   SimpleCellRobinBcCoefs(
+   explicit SimpleCellRobinBcCoefs(
       const tbox::Dimension& dim,
       const std::string& object_name = std::string());
 

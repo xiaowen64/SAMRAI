@@ -200,7 +200,7 @@ int main(
 
       tbox::Pointer<math::HierarchyDataOpsComplex> node_ops(
          new math::HierarchyNodeDataOpsComplex(hierarchy, 0, 1));
-      TBOX_ASSERT(!node_ops.isNull());
+      TBOX_ASSERT(node_ops);
 
       tbox::Pointer<math::HierarchyDataOpsReal<double> > nwgt_ops(
          new math::HierarchyNodeDataOpsReal<double>(hierarchy, 0, 1));
@@ -763,14 +763,14 @@ int main(
       }
 
       for (iv = 0; iv < NVARS; iv++) {
-         nvar[iv].setNull();
+         nvar[iv].reset();
       }
-      nwgt.setNull();
+      nwgt.reset();
 
-      geometry.setNull();
-      hierarchy.setNull();
-      node_ops.setNull();
-      nwgt_ops.setNull();
+      geometry.reset();
+      hierarchy.reset();
+      node_ops.reset();
+      nwgt_ops.reset();
 
       if (num_failures == 0) {
          tbox::pout << "\nPASSED:  node cplxtest" << std::endl;

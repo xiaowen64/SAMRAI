@@ -157,15 +157,19 @@ bool NodeDataFactory<TYPE>::validCopyTo(
     * Valid options are NodeData and OuternodeData.
     */
    if (!valid_copy) {
-      tbox::Pointer<NodeDataFactory<TYPE> > ndf = dst_pdf;
-      if (!ndf.isNull()) {
+      tbox::Pointer<NodeDataFactory<TYPE> > ndf(
+         dst_pdf,
+         tbox::__dynamic_cast_tag());
+      if (ndf) {
          valid_copy = true;
       }
    }
 
    if (!valid_copy) {
-      tbox::Pointer<OuternodeDataFactory<TYPE> > ondf = dst_pdf;
-      if (!ondf.isNull()) {
+      tbox::Pointer<OuternodeDataFactory<TYPE> > ondf(
+         dst_pdf,
+         tbox::__dynamic_cast_tag());
+      if (ondf) {
          valid_copy = true;
       }
    }

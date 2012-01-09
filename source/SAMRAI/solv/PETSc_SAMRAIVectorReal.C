@@ -43,7 +43,7 @@ PETSc_SAMRAIVectorReal<TYPE>::createPETScVector(
    MPI_Comm comm)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!samrai_vec.isNull());
+   TBOX_ASSERT(samrai_vec);
 #endif
 
    static const bool vector_created_via_duplicate = false;
@@ -152,7 +152,7 @@ void PETSc_SAMRAIVectorReal<TYPE>::freeVector()
 
    if (d_vector_created_via_duplicate) {
       d_samrai_vector->freeVectorComponents();
-      d_samrai_vector.setNull();
+      d_samrai_vector.reset();
       Vec petsc_vec = this->getPETScVector();
 
 #ifdef DEBUG_CHECK_TBOX_ASSERTIONS

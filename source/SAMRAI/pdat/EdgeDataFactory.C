@@ -159,15 +159,19 @@ bool EdgeDataFactory<TYPE>::validCopyTo(
     * Valid options are EdgeData and OuteredgeData.
     */
    if (!valid_copy) {
-      tbox::Pointer<EdgeDataFactory<TYPE> > edf = dst_pdf;
-      if (!edf.isNull()) {
+      tbox::Pointer<EdgeDataFactory<TYPE> > edf(
+         dst_pdf,
+         tbox::__dynamic_cast_tag());
+      if (edf) {
          valid_copy = true;
       }
    }
 
    if (!valid_copy) {
-      tbox::Pointer<OuteredgeDataFactory<TYPE> > oedf = dst_pdf;
-      if (!oedf.isNull()) {
+      tbox::Pointer<OuteredgeDataFactory<TYPE> > oedf(
+         dst_pdf,
+         tbox::__dynamic_cast_tag());
+      if (oedf) {
          valid_copy = true;
       }
    }

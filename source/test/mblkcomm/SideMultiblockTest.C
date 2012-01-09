@@ -33,7 +33,7 @@ SideMultiblockTest::SideMultiblockTest(
    NULL_USE(do_refine);
    NULL_USE(do_coarsen);
    TBOX_ASSERT(!object_name.empty());
-   TBOX_ASSERT(!main_input_db.isNull());
+   TBOX_ASSERT(main_input_db);
    TBOX_ASSERT(!refine_option.empty());
 
    d_object_name = object_name;
@@ -71,7 +71,7 @@ SideMultiblockTest::~SideMultiblockTest()
 void SideMultiblockTest::readTestInput(
    tbox::Pointer<tbox::Database> db)
 {
-   TBOX_ASSERT(!db.isNull());
+   TBOX_ASSERT(db);
 
    /*
     * Base class reads variable parameters and boxes to refine.
@@ -124,8 +124,9 @@ void SideMultiblockTest::initializeDataOnPatch(
 
       for (int i = 0; i < d_variables.getSize(); i++) {
 
-         tbox::Pointer<pdat::SideData<double> > side_data =
-            patch.getPatchData(d_variables[i], getDataContext());
+         tbox::Pointer<pdat::SideData<double> > side_data(
+            patch.getPatchData(d_variables[i], getDataContext()),
+            tbox::__dynamic_cast_tag());
 
          hier::Box dbox = side_data->getGhostBox();
 
@@ -157,8 +158,7 @@ void SideMultiblockTest::setPhysicalBoundaryConditions(
 {
    (void)time;
 
-   tbox::Pointer<hier::PatchGeometry>
-   pgeom = patch.getPatchGeometry();
+   tbox::Pointer<hier::PatchGeometry> pgeom = patch.getPatchGeometry();
 
    const tbox::Array<hier::BoundaryBox> node_bdry =
       pgeom->getCodimensionBoundaries(d_dim.getValue());
@@ -180,8 +180,9 @@ void SideMultiblockTest::setPhysicalBoundaryConditions(
 
    for (int i = 0; i < d_variables.getSize(); i++) {
 
-      tbox::Pointer<pdat::SideData<double> > side_data =
-         patch.getPatchData(d_variables[i], getDataContext());
+      tbox::Pointer<pdat::SideData<double> > side_data(
+         patch.getPatchData(d_variables[i], getDataContext()),
+         tbox::__dynamic_cast_tag());
 
       /*
        * Set node boundary data.
@@ -320,8 +321,9 @@ void SideMultiblockTest::fillSingularityBoundaryConditions(
 
    for (int i = 0; i < d_variables.getSize(); i++) {
 
-      tbox::Pointer<pdat::SideData<double> > side_data =
-         patch.getPatchData(d_variables[i], getDataContext());
+      tbox::Pointer<pdat::SideData<double> > side_data(
+         patch.getPatchData(d_variables[i], getDataContext()),
+         tbox::__dynamic_cast_tag());
 
       hier::Box sing_fill_box(side_data->getGhostBox() * fill_box);
 
@@ -407,7 +409,8 @@ void SideMultiblockTest::fillSingularityBoundaryConditions(
                                                   encon_blk_id);
 
                   tbox::Pointer<pdat::SideData<double> > sing_data(
-                     encon_patch->getPatchData(d_variables[i], getDataContext()));
+                     encon_patch->getPatchData(d_variables[i], getDataContext()),
+                     tbox::__dynamic_cast_tag());
 
                   for (int axis = 0; axis < d_dim.getValue(); axis++) {
 
@@ -558,8 +561,9 @@ bool SideMultiblockTest::verifyResults(
 
       double correct = (double)block_id.getBlockValue();
 
-      tbox::Pointer<pdat::SideData<double> > side_data =
-         patch.getPatchData(d_variables[i], getDataContext());
+      tbox::Pointer<pdat::SideData<double> > side_data(
+         patch.getPatchData(d_variables[i], getDataContext()),
+         tbox::__dynamic_cast_tag());
       int depth = side_data->getDepth();
 
       hier::Box interior_box(pbox);
@@ -643,8 +647,7 @@ bool SideMultiblockTest::verifyResults(
          }
       }
 
-      tbox::Pointer<hier::PatchGeometry> pgeom =
-         patch.getPatchGeometry();
+      tbox::Pointer<hier::PatchGeometry> pgeom = patch.getPatchGeometry();
 
       for (int b = 0; b < d_dim.getValue(); b++) {
          tbox::Array<hier::BoundaryBox> bdry =
@@ -739,7 +742,7 @@ bool SideMultiblockTest::verifyResults(
       tbox::perr << "Multiblock SideMultiblockTest FAILED: .\n" << endl;
    }
 
-   solution.setNull();   // just to be anal...
+   solution.reset();   // just to be anal...
 
    tbox::plog << "\nExiting SideMultiblockTest::verifyResults..." << endl;
    tbox::plog << "level_number = " << level_number << endl;

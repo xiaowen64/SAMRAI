@@ -110,7 +110,7 @@ public:
     *  in error reporting.  When assertion checking is on, the string
     *  cannot be empty.
     */
-   PatchBoundaryNodeSum(
+   explicit PatchBoundaryNodeSum(
       const std::string& object_name);
 
    /*!

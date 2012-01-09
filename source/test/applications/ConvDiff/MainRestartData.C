@@ -26,7 +26,7 @@ MainRestartData::MainRestartData(
    tbox::Pointer<tbox::Database> input_db):
    d_object_name(object_name)
 {
-   TBOX_ASSERT(!input_db.isNull());
+   TBOX_ASSERT(input_db);
 
    tbox::RestartManager::getManager()->registerRestartItem(d_object_name, this);
 
@@ -122,7 +122,7 @@ void MainRestartData::setIterationNumber(
 void MainRestartData::putToDatabase(
    tbox::Pointer<tbox::Database> db)
 {
-   TBOX_ASSERT(!db.isNull());
+   TBOX_ASSERT(db);
 
    db->putInteger("d_max_timesteps", d_max_timesteps);
    db->putDouble("d_start_time", d_start_time);
@@ -137,7 +137,7 @@ void MainRestartData::getFromInput(
    tbox::Pointer<tbox::Database> input_db,
    bool is_from_restart)
 {
-   TBOX_ASSERT(!input_db.isNull());
+   TBOX_ASSERT(input_db);
 
    if (input_db->keyExists("max_timesteps")) {
       d_max_timesteps = input_db->getInteger("max_timesteps");

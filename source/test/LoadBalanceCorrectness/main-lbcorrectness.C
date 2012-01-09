@@ -139,7 +139,7 @@ int main(
        * Create input database and parse all data in input file.
        */
 
-      Pointer<Database> input_db(new InputDatabase("input_db"));
+      Pointer<InputDatabase> input_db(new InputDatabase("input_db"));
       tbox::InputManager::getManager()->parseInputFile(input_filename, input_db);
 
       /*
@@ -667,10 +667,11 @@ void generatePrebalanceByUserShells(
 
    hier::VariableDatabase* vdb =
       hier::VariableDatabase::getDatabase();
-   tbox::Pointer<geom::CartesianGridGeometry> grid_geometry =
-      hierarchy->getGridGeometry();
+   tbox::Pointer<geom::CartesianGridGeometry> grid_geometry(
+      hierarchy->getGridGeometry(),
+      tbox::__dynamic_cast_tag());
 
-   const tbox::ConstPointer<hier::BoxLevel>
+   const tbox::Pointer<const hier::BoxLevel>
    anchor_mapped_box_level_ptr(&anchor_mapped_box_level, false);
 
    tbox::Pointer<hier::PatchLevel> tag_level(
@@ -695,7 +696,9 @@ void generatePrebalanceByUserShells(
    const double* h = grid_geometry->getDx();
    for (hier::PatchLevel::Iterator pi(tag_level); pi; pi++) {
       tbox::Pointer<hier::Patch> patch = *pi;
-      tbox::Pointer<pdat::CellData<int> > tag_data = patch->getPatchData(tag_id);
+      tbox::Pointer<pdat::CellData<int> > tag_data(
+         patch->getPatchData(tag_id),
+         tbox::__dynamic_cast_tag());
 
       tag_data->getArrayData().undefineData();
 

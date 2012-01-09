@@ -83,7 +83,7 @@ public:
    /*!
     * @brief Default constructor creates empty container in unordered state.
     */
-   explicit BoxContainer();
+   BoxContainer();
 
    /*!
     * @brief Creates empty container in state determined by boolean
@@ -101,7 +101,7 @@ public:
     * @param[in] last
     * @param[in] ordered  Container will be ordered if true, unordered if false.
     */
-   explicit BoxContainer(
+   BoxContainer(
       ConstIterator first,
       ConstIterator last,
       const bool ordered = false);
@@ -147,7 +147,7 @@ public:
     * @param[in] other
     * @param[in] block_id
     */
-   explicit BoxContainer(
+   BoxContainer(
       const BoxContainer& other,
       const BlockId& block_id);
 

@@ -60,7 +60,7 @@ public:
     * @param object_name Name of the object, for general referencing.
     * @param coef_strategy Coefficients strategy being helped.
     */
-   CartesianRobinBcHelper(
+   explicit CartesianRobinBcHelper(
       const tbox::Dimension& dim,
       std::string object_name = std::string(),
       RobinBcCoefStrategy* coef_strategy = NULL);

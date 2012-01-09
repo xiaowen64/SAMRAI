@@ -61,7 +61,7 @@ public:
     * @param[in] bdry_type
     * @param[in] location_index
     */
-   explicit BoundaryBox(
+   BoundaryBox(
       const Box& box,
       const int bdry_type,
       const int location_index);

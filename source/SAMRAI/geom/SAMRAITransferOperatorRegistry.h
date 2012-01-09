@@ -35,7 +35,7 @@ public:
     *
     * @param[in]  dim
     */
-   SAMRAITransferOperatorRegistry(
+   explicit SAMRAITransferOperatorRegistry(
       const tbox::Dimension& dim);
 
    /*!

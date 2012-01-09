@@ -40,7 +40,7 @@ public:
     * source to destination index spaces.  This information is used later
     * in the generation of communication schedules.
     */
-   explicit EdgeOverlap(
+   EdgeOverlap(
       const tbox::Array<hier::BoxContainer>& boxes,
       const hier::Transformation& transformation);
 

@@ -40,7 +40,7 @@ int PatchSideDataOpsInteger::numberOfEntries(
    const tbox::Pointer<pdat::SideData<int> >& data,
    const hier::Box& box) const
 {
-   TBOX_ASSERT(!data.isNull());
+   TBOX_ASSERT(data);
    TBOX_DIM_ASSERT_CHECK_ARGS2(*data, box);
 
    const tbox::Dimension& dim(box.getDim());
@@ -70,12 +70,16 @@ void PatchSideDataOpsInteger::swapData(
    const int data1_id,
    const int data2_id) const
 {
-   TBOX_ASSERT(!patch.isNull());
+   TBOX_ASSERT(patch);
 
-   tbox::Pointer<pdat::SideData<int> > d1 = patch->getPatchData(data1_id);
-   tbox::Pointer<pdat::SideData<int> > d2 = patch->getPatchData(data2_id);
+   tbox::Pointer<pdat::SideData<int> > d1(
+      patch->getPatchData(data1_id),
+      tbox::__dynamic_cast_tag());
+   tbox::Pointer<pdat::SideData<int> > d2(
+      patch->getPatchData(data2_id),
+      tbox::__dynamic_cast_tag());
 
-   TBOX_ASSERT(!d1.isNull() && !d2.isNull());
+   TBOX_ASSERT(d1 && d2);
    TBOX_ASSERT(d1->getDepth() && d2->getDepth());
    TBOX_ASSERT(d1->getBox().isSpatiallyEqual(d2->getBox()));
    TBOX_ASSERT(d1->getDirectionVector() == d2->getDirectionVector());
@@ -90,7 +94,7 @@ void PatchSideDataOpsInteger::printData(
    const hier::Box& box,
    std::ostream& s) const
 {
-   TBOX_ASSERT(!data.isNull());
+   TBOX_ASSERT(data);
    TBOX_DIM_ASSERT_CHECK_ARGS2(*data, box);
 
    s << "Data box = " << box << std::endl;
@@ -103,7 +107,7 @@ void PatchSideDataOpsInteger::copyData(
    const tbox::Pointer<pdat::SideData<int> >& src,
    const hier::Box& box) const
 {
-   TBOX_ASSERT(!dst.isNull() && !src.isNull());
+   TBOX_ASSERT(dst && src);
    TBOX_ASSERT(dst->getDirectionVector() == src->getDirectionVector());
    TBOX_DIM_ASSERT_CHECK_ARGS3(*dst, *src, box);
 
@@ -123,7 +127,7 @@ void PatchSideDataOpsInteger::setToScalar(
    const int& alpha,
    const hier::Box& box) const
 {
-   TBOX_ASSERT(!dst.isNull());
+   TBOX_ASSERT(dst);
    TBOX_DIM_ASSERT_CHECK_ARGS2(*dst, box);
 
    dst->fillAll(alpha, box);
@@ -134,7 +138,7 @@ void PatchSideDataOpsInteger::abs(
    const tbox::Pointer<pdat::SideData<int> >& src,
    const hier::Box& box) const
 {
-   TBOX_ASSERT(!dst.isNull() && !src.isNull());
+   TBOX_ASSERT(dst && src);
    TBOX_ASSERT(dst->getDirectionVector() == src->getDirectionVector());
    TBOX_DIM_ASSERT_CHECK_ARGS3(*dst, *src, box);
 

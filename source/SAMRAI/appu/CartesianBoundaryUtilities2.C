@@ -112,7 +112,7 @@ void CartesianBoundaryUtilities2::readBoundaryInput(
 {
    TBOX_DIM_ASSERT(periodic.getDim() == tbox::Dimension(2));
    TBOX_ASSERT(bdry_strategy != (BoundaryUtilityStrategy *)NULL);
-   TBOX_ASSERT(!bdry_db.isNull());
+   TBOX_ASSERT(bdry_db);
    TBOX_ASSERT(edge_conds.getSize() == NUM_2D_EDGES);
    TBOX_ASSERT(node_conds.getSize() == NUM_2D_NODES);
 
@@ -155,7 +155,7 @@ void CartesianBoundaryUtilities2::fillEdgeBoundaryData(
    const tbox::Array<double>& bdry_edge_values)
 {
    TBOX_ASSERT(!varname.empty());
-   TBOX_ASSERT(!vardata.isNull());
+   TBOX_ASSERT(vardata);
    TBOX_ASSERT(bdry_edge_conds.getSize() == NUM_2D_EDGES);
    TBOX_ASSERT(bdry_edge_values.getSize() == NUM_2D_EDGES * (vardata->getDepth()));
 
@@ -168,8 +168,9 @@ void CartesianBoundaryUtilities2::fillEdgeBoundaryData(
       stuff2dBdryFortConst();
    }
 
-   const tbox::Pointer<geom::CartesianPatchGeometry> pgeom =
-      patch.getPatchGeometry();
+   const tbox::Pointer<geom::CartesianPatchGeometry> pgeom(
+      patch.getPatchGeometry(),
+      tbox::__dynamic_cast_tag());
    const double* dx = pgeom->getDx();
 
    const hier::Box& interior(patch.getBox());
@@ -234,7 +235,7 @@ void CartesianBoundaryUtilities2::fillNodeBoundaryData(
    const tbox::Array<double>& bdry_edge_values)
 {
    TBOX_ASSERT(!varname.empty());
-   TBOX_ASSERT(!vardata.isNull());
+   TBOX_ASSERT(vardata);
    TBOX_ASSERT(bdry_node_conds.getSize() == NUM_2D_NODES);
    TBOX_ASSERT(bdry_edge_values.getSize() == NUM_2D_EDGES * (vardata->getDepth()));
 
@@ -247,8 +248,9 @@ void CartesianBoundaryUtilities2::fillNodeBoundaryData(
       stuff2dBdryFortConst();
    }
 
-   const tbox::Pointer<geom::CartesianPatchGeometry> pgeom =
-      patch.getPatchGeometry();
+   const tbox::Pointer<geom::CartesianPatchGeometry> pgeom(
+      patch.getPatchGeometry(),
+      tbox::__dynamic_cast_tag());
    const double* dx = pgeom->getDx();
 
    const hier::Box& interior(patch.getBox());
@@ -390,11 +392,13 @@ int CartesianBoundaryUtilities2::checkBdryData(
    int btype = bbox.getBoundaryType();
    int bloc = bbox.getLocationIndex();
 
-   tbox::Pointer<geom::CartesianPatchGeometry> pgeom =
-      patch.getPatchGeometry();
+   tbox::Pointer<geom::CartesianPatchGeometry> pgeom(
+      patch.getPatchGeometry(),
+      tbox::__dynamic_cast_tag());
 
-   tbox::Pointer<pdat::CellData<double> > vardata =
-      patch.getPatchData(data_id);
+   tbox::Pointer<pdat::CellData<double> > vardata(
+      patch.getPatchData(data_id),
+      tbox::__dynamic_cast_tag());
 
    std::string bdry_type_str;
    if (btype == Bdry::EDGE2D) {
@@ -539,7 +543,7 @@ void CartesianBoundaryUtilities2::read2dBdryEdges(
    TBOX_DIM_ASSERT(periodic.getDim() == tbox::Dimension(2));
 
    TBOX_ASSERT(bdry_strategy != (BoundaryUtilityStrategy *)NULL);
-   TBOX_ASSERT(!bdry_db.isNull());
+   TBOX_ASSERT(bdry_db);
    TBOX_ASSERT(edge_conds.getSize() == NUM_2D_EDGES);
 
    int num_per_dirs = 0;
@@ -581,7 +585,7 @@ void CartesianBoundaryUtilities2::read2dBdryEdges(
             if (bdry_db->keyExists(bdry_loc_str)) {
                tbox::Pointer<tbox::Database> bdry_loc_db =
                   bdry_db->getDatabase(bdry_loc_str);
-               if (!bdry_loc_db.isNull()) {
+               if (bdry_loc_db) {
                   if (bdry_loc_db->keyExists("boundary_condition")) {
                      std::string bdry_cond_str =
                         bdry_loc_db->getString("boundary_condition");
@@ -634,7 +638,7 @@ void CartesianBoundaryUtilities2::read2dBdryNodes(
 {
    TBOX_DIM_ASSERT(periodic.getDim() == tbox::Dimension(2));
 
-   TBOX_ASSERT(!bdry_db.isNull());
+   TBOX_ASSERT(bdry_db);
    TBOX_ASSERT(edge_conds.getSize() == NUM_2D_EDGES);
    TBOX_ASSERT(node_conds.getSize() == NUM_2D_NODES);
 
@@ -671,7 +675,7 @@ void CartesianBoundaryUtilities2::read2dBdryNodes(
          if (bdry_db->keyExists(bdry_loc_str)) {
             tbox::Pointer<tbox::Database> bdry_loc_db =
                bdry_db->getDatabase(bdry_loc_str);
-            if (!bdry_loc_db.isNull()) {
+            if (bdry_loc_db) {
                if (bdry_loc_db->keyExists("boundary_condition")) {
                   std::string bdry_cond_str =
                      bdry_loc_db->getString("boundary_condition");

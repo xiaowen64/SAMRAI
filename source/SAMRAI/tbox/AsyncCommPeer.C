@@ -873,9 +873,9 @@ void AsyncCommPeer<TYPE>::logCurrentState(
 template<class TYPE>
 void AsyncCommPeer<TYPE>::finalizeCallback()
 {
-   t_send_timer.setNull();
-   t_recv_timer.setNull();
-   t_waitall_timer.setNull();
+   t_send_timer.reset();
+   t_recv_timer.reset();
+   t_waitall_timer.reset();
    s_initialized = false;
 }
 

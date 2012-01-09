@@ -79,7 +79,7 @@ public:
     *                            each box will always be one cell wide in the
     *                            direction perpendicular to the patch boundary.
     */
-   explicit CoarseFineBoundary(
+   CoarseFineBoundary(
       const PatchHierarchy& hierarchy,
       int level_num,
       const IntVector& max_ghost_width);
@@ -104,7 +104,7 @@ public:
     *                            each box will always be one cell wide in the
     *                            direction perpendicular to the patch boundary.
     */
-   explicit CoarseFineBoundary(
+   CoarseFineBoundary(
       const PatchLevel& level,
       const Connector& mapped_box_level_to_domain,
       const Connector& mapped_box_level_to_self,

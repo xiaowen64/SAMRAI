@@ -474,7 +474,7 @@ void CellData<TYPE>::getSpecializedFromDatabase(
    tbox::Pointer<tbox::Database> database)
 {
 
-   TBOX_ASSERT(!database.isNull());
+   TBOX_ASSERT(database);
 
    int ver = database->getInteger("PDAT_CELLDATA_VERSION");
    if (ver != PDAT_CELLDATA_VERSION) {
@@ -502,7 +502,7 @@ template<class TYPE>
 void CellData<TYPE>::putSpecializedToDatabase(
    tbox::Pointer<tbox::Database> database)
 {
-   TBOX_ASSERT(!database.isNull());
+   TBOX_ASSERT(database);
 
    database->putInteger("PDAT_CELLDATA_VERSION", PDAT_CELLDATA_VERSION);
 

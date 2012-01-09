@@ -48,7 +48,7 @@ public:
     * operations.  The default is that fine data values take precedence
     * on coarse-fine interfaces.
     */
-   explicit NodeVariable(
+   NodeVariable(
       const tbox::Dimension& dim,
       const std::string& name,
       int depth = 1,

@@ -41,7 +41,7 @@ int PatchFaceDataNormOpsComplex::numberOfEntries(
    const tbox::Pointer<pdat::FaceData<dcomplex> >& data,
    const hier::Box& box) const
 {
-   TBOX_ASSERT(!data.isNull());
+   TBOX_ASSERT(data);
    TBOX_DIM_ASSERT_CHECK_ARGS2(*data, box);
 
    const tbox::Dimension& dim(box.getDim());
@@ -69,7 +69,7 @@ double PatchFaceDataNormOpsComplex::sumControlVolumes(
    const hier::Box& box) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!data.isNull() && !cvol.isNull());
+   TBOX_ASSERT(data && cvol);
 #endif
    const tbox::Dimension& dim(box.getDim());
 
@@ -88,7 +88,7 @@ void PatchFaceDataNormOpsComplex::abs(
    const tbox::Pointer<pdat::FaceData<dcomplex> >& src,
    const hier::Box& box) const
 {
-   TBOX_ASSERT(!dst.isNull() && !src.isNull());
+   TBOX_ASSERT(dst && src);
    TBOX_DIM_ASSERT_CHECK_ARGS3(*dst, *src, box);
 
    const tbox::Dimension& dim(box.getDim());
@@ -106,13 +106,13 @@ double PatchFaceDataNormOpsComplex::L1Norm(
    const hier::Box& box,
    const tbox::Pointer<pdat::FaceData<double> > cvol) const
 {
-   TBOX_ASSERT(!data.isNull());
+   TBOX_ASSERT(data);
    TBOX_DIM_ASSERT_CHECK_ARGS2(*data, box);
 
    const tbox::Dimension& dim(box.getDim());
 
    double retval = 0.0;
-   if (cvol.isNull()) {
+   if (!cvol) {
       for (int d = 0; d < dim.getValue(); d++) {
          const hier::Box face_box = pdat::FaceGeometry::toFaceBox(box, d);
          retval += d_array_ops.L1Norm(data->getArrayData(d), face_box);
@@ -135,13 +135,13 @@ double PatchFaceDataNormOpsComplex::L2Norm(
    const hier::Box& box,
    const tbox::Pointer<pdat::FaceData<double> > cvol) const
 {
-   TBOX_ASSERT(!data.isNull());
+   TBOX_ASSERT(data);
    TBOX_DIM_ASSERT_CHECK_ARGS2(*data, box);
 
    const tbox::Dimension& dim(box.getDim());
 
    double retval = 0.0;
-   if (cvol.isNull()) {
+   if (!cvol) {
       for (int d = 0; d < dim.getValue(); d++) {
          const hier::Box face_box = pdat::FaceGeometry::toFaceBox(box, d);
          double aval = d_array_ops.L2Norm(data->getArrayData(d), face_box);
@@ -168,13 +168,13 @@ double PatchFaceDataNormOpsComplex::weightedL2Norm(
    const hier::Box& box,
    const tbox::Pointer<pdat::FaceData<double> > cvol) const
 {
-   TBOX_ASSERT(!data.isNull() && !weight.isNull());
+   TBOX_ASSERT(data && weight);
    TBOX_DIM_ASSERT_CHECK_ARGS3(*data, *weight, box);
 
    const tbox::Dimension& dim(box.getDim());
 
    double retval = 0.0;
-   if (cvol.isNull()) {
+   if (!cvol) {
       for (int d = 0; d < dim.getValue(); d++) {
          const hier::Box face_box = pdat::FaceGeometry::toFaceBox(box, d);
          double aval = d_array_ops.weightedL2Norm(data->getArrayData(d),
@@ -204,10 +204,10 @@ double PatchFaceDataNormOpsComplex::RMSNorm(
    const tbox::Pointer<pdat::FaceData<double> > cvol) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!data.isNull());
+   TBOX_ASSERT(data);
 #endif
    double retval = L2Norm(data, box, cvol);
-   if (cvol.isNull()) {
+   if (!cvol) {
       retval /= sqrt((double)numberOfEntries(data, box));
    } else {
       retval /= sqrt(sumControlVolumes(data, cvol, box));
@@ -222,10 +222,10 @@ double PatchFaceDataNormOpsComplex::weightedRMSNorm(
    const tbox::Pointer<pdat::FaceData<double> > cvol) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!data.isNull() && !weight.isNull());
+   TBOX_ASSERT(data && weight);
 #endif
    double retval = weightedL2Norm(data, weight, box, cvol);
-   if (cvol.isNull()) {
+   if (!cvol) {
       retval /= sqrt((double)numberOfEntries(data, box));
    } else {
       retval /= sqrt(sumControlVolumes(data, cvol, box));
@@ -239,12 +239,12 @@ double PatchFaceDataNormOpsComplex::maxNorm(
    const tbox::Pointer<pdat::FaceData<double> > cvol) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!data.isNull());
+   TBOX_ASSERT(data);
 #endif
    const tbox::Dimension& dim(box.getDim());
 
    double retval = 0.0;
-   if (cvol.isNull()) {
+   if (!cvol) {
       for (int d = 0; d < dim.getValue(); d++) {
          const hier::Box face_box =
             pdat::FaceGeometry::toFaceBox(box, d);
@@ -270,12 +270,12 @@ dcomplex PatchFaceDataNormOpsComplex::dot(
    const tbox::Pointer<pdat::FaceData<double> > cvol) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!data1.isNull() && !data2.isNull());
+   TBOX_ASSERT(data1 && data2);
 #endif
    const tbox::Dimension& dim(box.getDim());
 
    dcomplex retval = dcomplex(0.0, 0.0);
-   if (cvol.isNull()) {
+   if (!cvol) {
       for (int d = 0; d < dim.getValue(); d++) {
          const hier::Box face_box = pdat::FaceGeometry::toFaceBox(box, d);
          retval += d_array_ops.dot(data1->getArrayData(d),
@@ -301,7 +301,7 @@ dcomplex PatchFaceDataNormOpsComplex::integral(
    const tbox::Pointer<pdat::FaceData<double> > vol) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!data.isNull());
+   TBOX_ASSERT(data);
 #endif
    const tbox::Dimension& dim(box.getDim());
 

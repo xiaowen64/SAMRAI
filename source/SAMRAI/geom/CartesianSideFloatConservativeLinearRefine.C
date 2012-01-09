@@ -126,8 +126,10 @@ bool CartesianSideFloatConservativeLinearRefine::findRefineOperator(
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, *var);
 
-   const tbox::Pointer<pdat::SideVariable<float> > cast_var(var);
-   if (!cast_var.isNull() && (op_name == getOperatorName())) {
+   const tbox::Pointer<pdat::SideVariable<float> > cast_var(
+      var,
+      tbox::__dynamic_cast_tag());
+   if (cast_var && (op_name == getOperatorName())) {
       return true;
    } else {
       return false;
@@ -156,18 +158,20 @@ void CartesianSideFloatConservativeLinearRefine::refine(
    const tbox::Dimension& dim(getDim());
    TBOX_DIM_ASSERT_CHECK_DIM_ARGS3(dim, fine, coarse, ratio);
 
-   tbox::Pointer<pdat::SideData<float> >
-   cdata = coarse.getPatchData(src_component);
-   tbox::Pointer<pdat::SideData<float> >
-   fdata = fine.getPatchData(dst_component);
+   tbox::Pointer<pdat::SideData<float> > cdata(
+      coarse.getPatchData(src_component),
+      tbox::__dynamic_cast_tag());
+   tbox::Pointer<pdat::SideData<float> > fdata(
+      fine.getPatchData(dst_component),
+      tbox::__dynamic_cast_tag());
 
    const pdat::SideOverlap* t_overlap =
       dynamic_cast<const pdat::SideOverlap *>(&fine_overlap);
 
    TBOX_ASSERT(t_overlap != NULL);
 
-   TBOX_ASSERT(!cdata.isNull());
-   TBOX_ASSERT(!fdata.isNull());
+   TBOX_ASSERT(cdata);
+   TBOX_ASSERT(fdata);
    TBOX_ASSERT(cdata->getDepth() == fdata->getDepth());
 
    const hier::IntVector& directions(fdata->getDirectionVector());
@@ -182,10 +186,12 @@ void CartesianSideFloatConservativeLinearRefine::refine(
    const hier::Index filo = fdata->getGhostBox().lower();
    const hier::Index fihi = fdata->getGhostBox().upper();
 
-   const tbox::Pointer<CartesianPatchGeometry> cgeom =
-      coarse.getPatchGeometry();
-   const tbox::Pointer<CartesianPatchGeometry> fgeom =
-      fine.getPatchGeometry();
+   const tbox::Pointer<CartesianPatchGeometry> cgeom(
+      coarse.getPatchGeometry(),
+      tbox::__dynamic_cast_tag());
+   const tbox::Pointer<CartesianPatchGeometry> fgeom(
+      fine.getPatchGeometry(),
+      tbox::__dynamic_cast_tag());
 
    for (int axis = 0; axis < dim.getValue(); axis++) {
       const hier::BoxContainer& boxes = t_overlap->getDestinationBoxContainer(axis);

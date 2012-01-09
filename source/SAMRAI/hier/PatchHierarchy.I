@@ -50,14 +50,14 @@ SAMRAI_INLINE_KEYWORD
 bool PatchHierarchy::levelExists(
    const int l) const
 {
-   return (l < d_number_levels) && !(d_patch_levels[l].isNull());
+   return (l < d_number_levels) && d_patch_levels[l];
 }
 
 SAMRAI_INLINE_KEYWORD
 bool PatchHierarchy::finerLevelExists(
    const int l) const
 {
-   return (l + 1 < d_number_levels) && !(d_patch_levels[l + 1].isNull());
+   return (l + 1 < d_number_levels) && d_patch_levels[l + 1];
 }
 
 SAMRAI_INLINE_KEYWORD

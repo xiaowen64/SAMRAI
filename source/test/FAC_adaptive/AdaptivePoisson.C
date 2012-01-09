@@ -17,7 +17,6 @@
 #include "SAMRAI/solv/CellPoissonFACOps.h"
 
 #include "SAMRAI/tbox/Pointer.h"
-#include "SAMRAI/tbox/ConstPointer.h"
 #include "SAMRAI/tbox/Array.h"
 #include "SAMRAI/tbox/Utilities.h"
 #include "SAMRAI/tbox/MathUtilities.h"
@@ -344,16 +343,21 @@ void AdaptivePoisson::initializeLevelData(
       hier::Patch& patch = **pi;
       hier::Box pbox = patch.getBox();
 
-      tbox::Pointer<pdat::SideData<double> > diffcoef_data =
-         patch.getPatchData(d_diffcoef_persistent);
-      tbox::Pointer<pdat::CellData<double> > scalar_data =
-         patch.getPatchData(d_scalar_persistent);
-      tbox::Pointer<pdat::CellData<double> > ccoef_data =
-         patch.getPatchData(d_ccoef_persistent);
-      tbox::Pointer<pdat::CellData<double> > exact_data =
-         patch.getPatchData(d_exact_persistent);
-      tbox::Pointer<pdat::CellData<double> > source_data =
-         patch.getPatchData(d_constant_source_persistent);
+      tbox::Pointer<pdat::SideData<double> > diffcoef_data(
+         patch.getPatchData(d_diffcoef_persistent),
+         tbox::__dynamic_cast_tag());
+      tbox::Pointer<pdat::CellData<double> > scalar_data(
+         patch.getPatchData(d_scalar_persistent),
+         tbox::__dynamic_cast_tag());
+      tbox::Pointer<pdat::CellData<double> > ccoef_data(
+         patch.getPatchData(d_ccoef_persistent),
+         tbox::__dynamic_cast_tag());
+      tbox::Pointer<pdat::CellData<double> > exact_data(
+         patch.getPatchData(d_exact_persistent),
+         tbox::__dynamic_cast_tag());
+      tbox::Pointer<pdat::CellData<double> > source_data(
+         patch.getPatchData(d_constant_source_persistent),
+         tbox::__dynamic_cast_tag());
 
       /* Set source function and exact solution. */
       if (d_problem_name == "sine") {
@@ -397,8 +401,9 @@ void AdaptivePoisson::initializeLevelData(
     */
    {
       xfer::RefineAlgorithm refiner(d_dim);
-      tbox::Pointer<geom::CartesianGridGeometry>
-      grid_geometry_ = patch_hierarchy->getGridGeometry();
+      tbox::Pointer<geom::CartesianGridGeometry> grid_geometry_(
+         patch_hierarchy->getGridGeometry(),
+         tbox::__dynamic_cast_tag());
       geom::CartesianGridGeometry& grid_geometry = *grid_geometry_;
       tbox::Pointer<hier::RefineOperator> accurate_refine_op =
          grid_geometry.
@@ -496,8 +501,9 @@ void AdaptivePoisson::applyGradientDetector(
    }
    const tbox::Pointer<hier::PatchHierarchy> hierarchy__ = hierarchy_;
    hier::PatchHierarchy& hierarchy = *hierarchy__;
-   tbox::Pointer<geom::CartesianGridGeometry>
-   grid_geometry_ = hierarchy.getGridGeometry();
+   tbox::Pointer<geom::CartesianGridGeometry> grid_geometry_(
+      hierarchy.getGridGeometry(),
+      tbox::__dynamic_cast_tag());
    hier::PatchLevel& level =
       (hier::PatchLevel &) * hierarchy.getPatchLevel(ln);
    hier::PatchLevel::Iterator pi;
@@ -508,22 +514,26 @@ void AdaptivePoisson::applyGradientDetector(
       tbox::Pointer<hier::PatchData>
       tag_data = patch.getPatchData(tag_index);
       ntotal += patch.getBox().numberCells().getProduct();
-      if (tag_data.isNull()) {
+      if (!tag_data) {
          TBOX_ERROR(
             "Data index " << tag_index << " does not exist for patch.\n");
       }
-      tbox::Pointer<pdat::CellData<int> > tag_cell_data_ = tag_data;
-      if (tag_cell_data_.isNull()) {
+      tbox::Pointer<pdat::CellData<int> > tag_cell_data_(
+         tag_data,
+         tbox::__dynamic_cast_tag());
+      if (!tag_cell_data_) {
          TBOX_ERROR("Data index " << tag_index << " is not cell int data.\n");
       }
       tbox::Pointer<hier::PatchData>
       soln_data = patch.getPatchData(d_scalar_persistent);
-      if (soln_data.isNull()) {
+      if (!soln_data) {
          TBOX_ERROR("Data index " << d_scalar_persistent
                                   << " does not exist for patch.\n");
       }
-      tbox::Pointer<pdat::CellData<double> > soln_cell_data_ = soln_data;
-      if (soln_cell_data_.isNull()) {
+      tbox::Pointer<pdat::CellData<double> > soln_cell_data_(
+         soln_data,
+         tbox::__dynamic_cast_tag());
+      if (!soln_cell_data_) {
          TBOX_ERROR("Data index " << d_scalar_persistent
                                   << " is not cell int data.\n");
       }
@@ -613,8 +623,9 @@ bool AdaptivePoisson::packDerivedDataIntoDoubleBuffer(
    // end debug code
 
    if (variable_name == "Gradient Function") {
-      tbox::Pointer<pdat::CellData<double> > soln_cell_data_ =
-         patch.getPatchData(d_scalar_persistent);
+      tbox::Pointer<pdat::CellData<double> > soln_cell_data_(
+         patch.getPatchData(d_scalar_persistent),
+         tbox::__dynamic_cast_tag());
       const pdat::CellData<double>& soln_cell_data = *soln_cell_data_;
       pdat::CellData<double> estimate_data(region,
                                            1,
@@ -770,12 +781,15 @@ int AdaptivePoisson::computeError(
          /*
           * Get the patch data.
           */
-         tbox::Pointer<pdat::CellData<double> > current_solution =
-            patch->getPatchData(d_scalar_persistent);
-         tbox::Pointer<pdat::CellData<double> > exact_solution =
-            patch->getPatchData(d_exact_persistent);
-         tbox::Pointer<pdat::CellData<double> > weight =
-            patch->getPatchData(d_weight_persistent);
+         tbox::Pointer<pdat::CellData<double> > current_solution(
+            patch->getPatchData(d_scalar_persistent),
+            tbox::__dynamic_cast_tag());
+         tbox::Pointer<pdat::CellData<double> > exact_solution(
+            patch->getPatchData(d_exact_persistent),
+            tbox::__dynamic_cast_tag());
+         tbox::Pointer<pdat::CellData<double> > weight(
+            patch->getPatchData(d_weight_persistent),
+            tbox::__dynamic_cast_tag());
 
          {
             const int* lower = &current_solution->getBox().lower()[0];
@@ -927,12 +941,15 @@ int AdaptivePoisson::solvePoisson(
 
          const hier::Box& box = patch->getBox();
 
-         tbox::Pointer<pdat::CellData<double> >
-         source_data = patch->getPatchData(d_constant_source_persistent);
-         tbox::Pointer<pdat::CellData<double> >
-         rhs_data = patch->getPatchData(d_rhs_scratch);
-         tbox::Pointer<pdat::CellData<double> >
-         scalar_data = patch->getPatchData(d_scalar_persistent);
+         tbox::Pointer<pdat::CellData<double> > source_data(
+            patch->getPatchData(d_constant_source_persistent),
+            tbox::__dynamic_cast_tag());
+         tbox::Pointer<pdat::CellData<double> > rhs_data(
+            patch->getPatchData(d_rhs_scratch),
+            tbox::__dynamic_cast_tag());
+         tbox::Pointer<pdat::CellData<double> > scalar_data(
+            patch->getPatchData(d_scalar_persistent),
+            tbox::__dynamic_cast_tag());
          math::PatchCellDataOpsReal<double> cell_ops;
          cell_ops.scale(rhs_data, 1.0, source_data, box);
 
@@ -1014,8 +1031,9 @@ int AdaptivePoisson::solvePoisson(
     */
    {
       xfer::RefineAlgorithm refiner(d_dim);
-      tbox::Pointer<geom::CartesianGridGeometry>
-      grid_geometry_ = hierarchy->getGridGeometry();
+      tbox::Pointer<geom::CartesianGridGeometry> grid_geometry_(
+         hierarchy->getGridGeometry(),
+         tbox::__dynamic_cast_tag());
       geom::CartesianGridGeometry& grid_geometry = *grid_geometry_;
       tbox::Pointer<hier::RefineOperator> accurate_refine_op =
          grid_geometry.
@@ -1062,7 +1080,7 @@ int AdaptivePoisson::solvePoisson(
    /*
     * Destroy the viz data writer used for debugging.
     */
-   d_visit_writer.setNull();
+   d_visit_writer.reset();
 #endif
 
    return 0;

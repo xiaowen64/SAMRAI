@@ -561,25 +561,25 @@ int main(
        */
 
 #ifdef HAVE_HDF5
-      visit_data_writer.setNull();
+      visit_data_writer.reset();
 #endif
 
-      time_integrator.setNull();
-      mblk_gridding_algorithm.setNull();
-      load_balancer.setNull();
-      box_generator.setNull();
-      error_detector.setNull();
-      mblk_hyp_level_integrator.setNull();
+      time_integrator.reset();
+      mblk_gridding_algorithm.reset();
+      load_balancer.reset();
+      box_generator.reset();
+      error_detector.reset();
+      mblk_hyp_level_integrator.reset();
 
       if (linear_advection_model) {
          delete linear_advection_model;
       }
 
-      mblk_patch_hierarchy.setNull();
-      geom.setNull();
+      mblk_patch_hierarchy.reset();
+      geom.reset();
 
-      input_db.setNull();
-      main_db.setNull();
+      input_db.reset();
+      main_db.reset();
 
       tbox::SAMRAIManager::shutdown();
    }
@@ -599,7 +599,7 @@ void setupHierarchy(
    tbox::Pointer<hier::PatchHierarchy>& mblk_hierarchy)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!main_input_db.isNull());
+   TBOX_ASSERT(main_input_db);
 #endif
 
    tbox::Pointer<tbox::Database> mult_db =

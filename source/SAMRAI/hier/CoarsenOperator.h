@@ -74,7 +74,7 @@ public:
     * registered under this name with the hier::TransferOperatorRegistry class.
     * The name must be unique, as duplicate names are not allowed.
     */
-   explicit CoarsenOperator(
+   CoarsenOperator(
       const tbox::Dimension& dim,
       const std::string& name);
 

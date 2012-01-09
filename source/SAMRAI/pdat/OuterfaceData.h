@@ -118,7 +118,7 @@ public:
     * @param depth gives the number of data values for each
     *              spatial location in the array.
     */
-   explicit OuterfaceData(
+   OuterfaceData(
       const hier::Box& box,
       int depth);
 

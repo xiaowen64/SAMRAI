@@ -33,8 +33,8 @@ MethodOfLinesPatchStrategy::MethodOfLinesPatchStrategy(
    xfer::CoarsenPatchStrategy(dim),
    d_dim(dim)
 {
-   d_interior_with_ghosts.setNull();
-   d_interior.setNull();
+   d_interior_with_ghosts.reset();
+   d_interior.reset();
 }
 
 MethodOfLinesPatchStrategy::~MethodOfLinesPatchStrategy()

@@ -730,10 +730,10 @@ void BoxTree::findOverlapBoxes(
 void BoxTree::clear()
 {
    d_bounding_box.setEmpty();
-   d_left_child.setNull();
-   d_right_child.setNull();
+   d_left_child.reset();
+   d_right_child.reset();
    d_mapped_boxes.clear();
-   d_center_child.setNull();
+   d_center_child.reset();
 }
 
 bool BoxTree::isInitialized() const
@@ -855,13 +855,13 @@ tbox::Pointer<BoxTree> BoxTree::createRefinedTree(
       rval->d_mapped_boxes.insert(refined_box);
    }
 
-   if (!d_center_child.isNull()) {
+   if (d_center_child) {
       rval->d_center_child = d_center_child->createRefinedTree(ratio);
    }
-   if (!d_left_child.isNull()) {
+   if (d_left_child) {
       rval->d_left_child = d_left_child->createRefinedTree(ratio);
    }
-   if (!d_right_child.isNull()) {
+   if (d_right_child) {
       rval->d_right_child = d_right_child->createRefinedTree(ratio);
    }
 
@@ -892,8 +892,8 @@ void BoxTree::initializeCallback()
 void BoxTree::finalizeCallback()
 {
    for (int i = 0; i < tbox::Dimension::MAXIMUM_DIMENSION_VALUE; ++i) {
-      t_build_tree[i].setNull();
-      t_search[i].setNull();
+      t_build_tree[i].reset();
+      t_search[i].reset();
    }
 }
 

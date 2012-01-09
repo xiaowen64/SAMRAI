@@ -80,7 +80,7 @@ SkeletonGridGeometry::SkeletonGridGeometry(
                          new SAMRAITransferOperatorRegistry(dim)))
 {
    TBOX_ASSERT(!object_name.empty());
-   TBOX_ASSERT(!input_db.isNull());
+   TBOX_ASSERT(input_db);
 
    d_registered_for_restart = register_for_restart;
 
@@ -291,7 +291,7 @@ void SkeletonGridGeometry::putToDatabase(
    tbox::Pointer<tbox::Database> db)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!db.isNull());
+   TBOX_ASSERT(db);
 #endif
 
    const tbox::Dimension& dim(getDim());
@@ -323,7 +323,7 @@ void SkeletonGridGeometry::getFromInput(
    tbox::Pointer<tbox::Database> db,
    bool is_from_restart)
 {
-   TBOX_ASSERT(!db.isNull());
+   TBOX_ASSERT(db);
 
    tbox::Dimension dim(getDim());
 

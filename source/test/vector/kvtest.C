@@ -263,15 +263,18 @@ int main(
          hierarchy->getPatchLevel(ln)->allocatePatchData(nwgt_id);
       }
 
-      tbox::Pointer<math::HierarchyCellDataOpsReal<double> > cell_ops =
+      tbox::Pointer<math::HierarchyCellDataOpsReal<double> > cell_ops(
          math::HierarchyDataOpsManager::getManager()->getOperationsDouble(cwgt,
-            hierarchy);
-      tbox::Pointer<math::HierarchyFaceDataOpsReal<double> > face_ops =
+            hierarchy),
+         tbox::__dynamic_cast_tag());
+      tbox::Pointer<math::HierarchyFaceDataOpsReal<double> > face_ops(
          math::HierarchyDataOpsManager::getManager()->getOperationsDouble(fwgt,
-            hierarchy);
-      tbox::Pointer<math::HierarchyNodeDataOpsReal<double> > node_ops =
+            hierarchy),
+         tbox::__dynamic_cast_tag());
+      tbox::Pointer<math::HierarchyNodeDataOpsReal<double> > node_ops(
          math::HierarchyDataOpsManager::getManager()->getOperationsDouble(nwgt,
-            hierarchy);
+            hierarchy),
+         tbox::__dynamic_cast_tag());
 
       cell_ops->resetLevels(0, 1);
       face_ops->resetLevels(0, 1);
@@ -293,11 +296,13 @@ int main(
          tbox::Pointer<hier::PatchLevel> level = hierarchy->getPatchLevel(ln);
          for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
             patch = *ip;
-            pgeom = patch->getPatchGeometry();
+            pgeom = tbox::dynamic_pointer_cast<geom::CartesianPatchGeometry,
+                                               hier::PatchGeometry>(patch->getPatchGeometry());
             const double* dx = pgeom->getDx();
             const double cell_vol = dx[0] * dx[1] * dx[2];
-            tbox::Pointer<pdat::CellData<double> > cvdata = patch->getPatchData(
-                  cwgt_id);
+            tbox::Pointer<pdat::CellData<double> > cvdata(
+               patch->getPatchData(cwgt_id),
+               tbox::__dynamic_cast_tag());
             cvdata->fillAll(cell_vol);
             if (ln == 0) cvdata->fillAll(0.0, (coarse_fine * patch->getBox()));
          }
@@ -308,12 +313,14 @@ int main(
 
          tbox::Pointer<hier::PatchLevel> level = hierarchy->getPatchLevel(ln);
          for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-            tbox::Pointer<pdat::FaceData<double> > data;
             patch = *ip;
-            pgeom = patch->getPatchGeometry();
+            pgeom = tbox::dynamic_pointer_cast<geom::CartesianPatchGeometry,
+                                               hier::PatchGeometry>(patch->getPatchGeometry());
             const double* dx = pgeom->getDx();
             const double face_vol = dx[0] * dx[1] * dx[2];
-            data = patch->getPatchData(fwgt_id);
+            tbox::Pointer<pdat::FaceData<double> > data(
+               patch->getPatchData(fwgt_id),
+               tbox::__dynamic_cast_tag());
             data->fillAll(face_vol);
             pdat::FaceIndex fi(dim3d);
             int plo0 = patch->getBox().lower(0);
@@ -433,12 +440,14 @@ int main(
 
          tbox::Pointer<hier::PatchLevel> level = hierarchy->getPatchLevel(ln);
          for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-            tbox::Pointer<pdat::NodeData<double> > data;
             patch = *ip;
-            pgeom = patch->getPatchGeometry();
+            pgeom = tbox::dynamic_pointer_cast<geom::CartesianPatchGeometry,
+                                               hier::PatchGeometry>(patch->getPatchGeometry());
             const double* dx = pgeom->getDx();
             const double node_vol = dx[0] * dx[1] * dx[2];
-            data = patch->getPatchData(nwgt_id);
+            tbox::Pointer<pdat::NodeData<double> > data(
+               patch->getPatchData(nwgt_id),
+               tbox::__dynamic_cast_tag());
             data->fillAll(node_vol);
             pdat::NodeIndex ni(dim3d);
             hier::Index plo = patch->getBox().lower();
@@ -1026,7 +1035,8 @@ int main(
       for (hier::PatchLevel::Iterator ip(level_zero); ip; ip++) {
          patch = *ip;
 
-         cdata = patch->getPatchData(cvindx[1]);
+         cdata = tbox::dynamic_pointer_cast<pdat::CellData<double>,
+                                            hier::PatchData>(patch->getPatchData(cvindx[1]));
          hier::Index cindex0(2, 2, 2);
          hier::Index cindex1(5, 3, 2);
          hier::Index cindex2(4, 2, 2);
@@ -1044,7 +1054,8 @@ int main(
             (*cdata)(pdat::CellIndex(cindex3), 1) = -10.0;
          }
 
-         fdata = patch->getPatchData(fvindx[1]);
+         fdata = tbox::dynamic_pointer_cast<pdat::FaceData<double>,
+                                            hier::PatchData>(patch->getPatchData(fvindx[1]));
          hier::Index findex0(2, 2, 2);
          hier::Index findex1(5, 3, 2);
          if (patch->getBox().contains(findex0)) {
@@ -1061,15 +1072,19 @@ int main(
          hier::Index nindex0(2, 2, 2);
          hier::Index nindex1(5, 3, 2);
          if (patch->getBox().contains(nindex0)) {
-            ndata = patch->getPatchData(nvindx[2]);
+            ndata = tbox::dynamic_pointer_cast<pdat::NodeData<double>,
+                                               hier::PatchData>(patch->getPatchData(nvindx[2]));
             (*ndata)(pdat::NodeIndex(nindex0, pdat::NodeIndex::LLL)) = 300.0;
-            ndata = patch->getPatchData(nvindx[3]);
+            ndata = tbox::dynamic_pointer_cast<pdat::NodeData<double>,
+                                               hier::PatchData>(patch->getPatchData(nvindx[3]));
             (*ndata)(pdat::NodeIndex(nindex0, pdat::NodeIndex::LUL)) = 30.0;
          }
          if (patch->getBox().contains(nindex1)) {
-            ndata = patch->getPatchData(nvindx[2]);
+            ndata = tbox::dynamic_pointer_cast<pdat::NodeData<double>,
+                                               hier::PatchData>(patch->getPatchData(nvindx[2]));
             (*ndata)(pdat::NodeIndex(nindex1, pdat::NodeIndex::UUL)) = -300.0;
-            ndata = patch->getPatchData(nvindx[3]);
+            ndata = tbox::dynamic_pointer_cast<pdat::NodeData<double>,
+                                               hier::PatchData>(patch->getPatchData(nvindx[3]));
             (*ndata)(pdat::NodeIndex(nindex1, pdat::NodeIndex::ULL)) = -3300.0;
          }
       }
@@ -1274,23 +1289,23 @@ int main(
       }
 
       for (iv = 0; iv < NCELL_VARS; iv++) {
-         cvar[iv].setNull();
+         cvar[iv].reset();
       }
       for (iv = 0; iv < NFACE_VARS; iv++) {
-         fvar[iv].setNull();
+         fvar[iv].reset();
       }
       for (iv = 0; iv < NNODE_VARS; iv++) {
-         nvar[iv].setNull();
+         nvar[iv].reset();
       }
-      cwgt.setNull();
-      fwgt.setNull();
-      nwgt.setNull();
-      cell_ops.setNull();
-      face_ops.setNull();
-      node_ops.setNull();
+      cwgt.reset();
+      fwgt.reset();
+      nwgt.reset();
+      cell_ops.reset();
+      face_ops.reset();
+      node_ops.reset();
 
-      geometry.setNull();
-      hierarchy.setNull();
+      geometry.reset();
+      hierarchy.reset();
 
 #endif
 

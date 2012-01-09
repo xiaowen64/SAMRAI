@@ -87,7 +87,7 @@ public:
    /*!
     * @brief Constructor.
     */
-   BergerRigoutsos(
+   explicit BergerRigoutsos(
       const tbox::Dimension& dim,
       tbox::Pointer<tbox::Database> database =
          tbox::Pointer<tbox::Database>(NULL));
