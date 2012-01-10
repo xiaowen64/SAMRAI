@@ -1992,8 +1992,12 @@ void MblkHyperbolicLevelIntegrator::registerVariable(
           * a corresponding "fluxsum" variable is created to manage
           * synchronization of data betweeen patch levels in the hierarchy.
           */
-         const tbox::Pointer<pdat::FaceVariable<double> > face_var(var);
-         const tbox::Pointer<pdat::SideVariable<double> > side_var(var);
+         const tbox::Pointer<pdat::FaceVariable<double> > face_var(
+            var,
+            tbox::__dynamic_cast_tag());
+         const tbox::Pointer<pdat::SideVariable<double> > side_var(
+            var,
+            tbox::__dynamic_cast_tag());
 
          if (face_var) {
             if (d_flux_side_registered) {
@@ -2039,18 +2043,22 @@ void MblkHyperbolicLevelIntegrator::registerVariable(
          tbox::Pointer<hier::Variable> fluxsum;
 
          if (d_flux_is_face) {
+            tbox::Pointer<pdat::FaceDataFactory<double> > fdf(
+               var->getPatchDataFactory(),
+               tbox::__dynamic_cast_tag());
             fluxsum = new pdat::OuterfaceVariable<double>(
                   d_dim,
                   fsum_name,
-                  ((tbox::Pointer<pdat::FaceDataFactory<double> >)
-                   var->getPatchDataFactory())->getDepth());
+                  fdf->getDepth());
             d_flux_face_registered = true;
          } else {
+            tbox::Pointer<pdat::SideDataFactory<double> > sdf(
+               var->getPatchDataFactory(),
+               tbox::__dynamic_cast_tag());
             fluxsum = new pdat::OutersideVariable<double>(
                   d_dim,
                   fsum_name,
-                  ((tbox::Pointer<pdat::SideDataFactory<double> >)
-                   var->getPatchDataFactory())->getDepth());
+                  sdf->getDepth());
             d_flux_side_registered = true;
          }
 
@@ -2156,16 +2164,18 @@ void MblkHyperbolicLevelIntegrator::preprocessFluxData(
                      d_scratch);
 
                if (d_flux_is_face) {
-                  tbox::Pointer<pdat::OuterfaceData<double> > fsum_data =
-                     (*mi)->getPatchData(fsum_id);
+                  tbox::Pointer<pdat::OuterfaceData<double> > fsum_data(
+                     (*mi)->getPatchData(fsum_id),
+                     tbox::__dynamic_cast_tag());
 
 #ifdef DEBUG_CHECK_ASSERTIONS
                   TBOX_ASSERT(fsum_data);
 #endif
                   fsum_data->fillAll(0.0);
                } else {
-                  tbox::Pointer<pdat::OutersideData<double> > fsum_data =
-                     (*mi)->getPatchData(fsum_id);
+                  tbox::Pointer<pdat::OutersideData<double> > fsum_data(
+                     (*mi)->getPatchData(fsum_id),
+                     tbox::__dynamic_cast_tag());
 
 #ifdef DEBUG_CHECK_ASSERTIONS
                   TBOX_ASSERT(fsum_data);
@@ -2250,9 +2260,12 @@ void MblkHyperbolicLevelIntegrator::postprocessFluxData(
             hier::IntVector flux_ghosts(d_dim);
 
             if (d_flux_is_face) {
-               fflux_data = flux_data;
-               ffsum_data = fsum_data;
-
+               fflux_data =
+                  tbox::dynamic_pointer_cast<pdat::FaceData<double>,
+                                             hier::PatchData>(flux_data);
+               ffsum_data =
+                  tbox::dynamic_pointer_cast<pdat::OuterfaceData<double>,
+                                             hier::PatchData>(fsum_data);
 #ifdef DEBUG_CHECK_ASSERTIONS
                TBOX_ASSERT(fflux_data && ffsum_data);
                TBOX_ASSERT(fflux_data->getDepth() == ffsum_data->getDepth());
@@ -2260,8 +2273,12 @@ void MblkHyperbolicLevelIntegrator::postprocessFluxData(
                ddepth = fflux_data->getDepth();
                flux_ghosts = fflux_data->getGhostCellWidth();
             } else {
-               sflux_data = flux_data;
-               sfsum_data = fsum_data;
+               sflux_data =
+                  tbox::dynamic_pointer_cast<pdat::SideData<double>,
+                                             hier::PatchData>(flux_data);
+               sfsum_data =
+                  tbox::dynamic_pointer_cast<pdat::OutersideData<double>,
+                                             hier::PatchData>(fsum_data);
 
 #ifdef DEBUG_CHECK_ASSERTIONS
                TBOX_ASSERT(sflux_data && sfsum_data);

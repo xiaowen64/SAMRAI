@@ -603,8 +603,9 @@ int SkeletonBoundaryUtilities3::checkBdryData(
    tbox::Pointer<hier::PatchGeometry> pgeom =
       patch.getPatchGeometry();
 
-   tbox::Pointer<pdat::CellData<double> > vardata =
-      patch.getPatchData(data_id);
+   tbox::Pointer<pdat::CellData<double> > vardata(
+      patch.getPatchData(data_id),
+      tbox::__dynamic_cast_tag());
 
    string bdry_type_str;
    if (btype == Bdry::FACE3D) {

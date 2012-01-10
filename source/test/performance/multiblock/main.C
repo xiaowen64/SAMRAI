@@ -204,7 +204,7 @@ int main(
        * Create input database and parse all data in input file.
        */
 
-      tbox::Pointer<tbox::Database> input_db(new tbox::InputDatabase("input_db"));
+      tbox::Pointer<tbox::InputDatabase> input_db(new tbox::InputDatabase("input_db"));
       tbox::InputManager::getManager()->parseInputFile(input_filename, input_db);
 
       /*
@@ -376,7 +376,7 @@ int main(
       tbox::Pointer<mesh::StandardTagAndInitialize> error_detector(
          new mesh::StandardTagAndInitialize(dim,
             "StandardTagAndInitialize",
-            mblk_hyp_level_integrator,
+            mblk_hyp_level_integrator.get(),
             input_db->getDatabase("StandardTagAndInitialize")));
 
       tbox::Pointer<mesh::BergerRigoutsos> box_generator(

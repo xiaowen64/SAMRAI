@@ -769,8 +769,9 @@ void MblkLinAdv::initializeDataOnPatch(
    double dx[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
    d_mblk_geometry->getDx(level_number, dx);
 
-   tbox::Pointer<pdat::NodeData<double> > xyz =
-      patch.getPatchData(d_xyz, getDataContext());
+   tbox::Pointer<pdat::NodeData<double> > xyz(
+      patch.getPatchData(d_xyz, getDataContext()),
+      tbox::__dynamic_cast_tag());
 
    double xlo[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
    double xhi[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
@@ -787,8 +788,9 @@ void MblkLinAdv::initializeDataOnPatch(
 
    if (initial_time) {
 
-      tbox::Pointer<pdat::CellData<double> > uval =
-         patch.getPatchData(d_uval, getDataContext());
+      tbox::Pointer<pdat::CellData<double> > uval(
+         patch.getPatchData(d_uval, getDataContext()),
+         tbox::__dynamic_cast_tag());
 
       TBOX_ASSERT(uval);
       TBOX_ASSERT(xyz);
@@ -901,8 +903,9 @@ void MblkLinAdv::initializeDataOnPatch(
       if (!patch.checkAllocated(d_workload_data_id)) {
          patch.allocatePatchData(d_workload_data_id);
       }
-      tbox::Pointer<pdat::CellData<double> > workload_data =
-         patch.getPatchData(d_workload_data_id);
+      tbox::Pointer<pdat::CellData<double> > workload_data(
+         patch.getPatchData(d_workload_data_id),
+         tbox::__dynamic_cast_tag());
       workload_data->fillAll(1.0);
    }
 
@@ -941,8 +944,9 @@ double MblkLinAdv::computeStableDtOnPatch(
    double dx[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
    d_mblk_geometry->getDx(level_number, dx);
 
-   tbox::Pointer<pdat::CellData<double> > uval =
-      patch.getPatchData(d_uval, getDataContext());
+   tbox::Pointer<pdat::CellData<double> > uval(
+      patch.getPatchData(d_uval, getDataContext()),
+      tbox::__dynamic_cast_tag());
 
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(uval);
@@ -1018,10 +1022,12 @@ void MblkLinAdv::computeFluxesOnPatch(
       const hier::Index ifirst = patch.getBox().lower();
       const hier::Index ilast = patch.getBox().upper();
 
-      tbox::Pointer<pdat::CellData<double> > uval =
-         patch.getPatchData(d_uval, getDataContext());
-      tbox::Pointer<pdat::FaceData<double> > flux =
-         patch.getPatchData(d_flux, getDataContext());
+      tbox::Pointer<pdat::CellData<double> > uval(
+         patch.getPatchData(d_uval, getDataContext()),
+         tbox::__dynamic_cast_tag());
+      tbox::Pointer<pdat::FaceData<double> > flux(
+         patch.getPatchData(d_flux, getDataContext()),
+         tbox::__dynamic_cast_tag());
 
       /*
        * Verify that the integrator providing the context correctly
@@ -1197,10 +1203,12 @@ void MblkLinAdv::compute3DFluxesWithCornerTransport1(
    const hier::Index ifirst = patch.getBox().lower();
    const hier::Index ilast = patch.getBox().upper();
 
-   tbox::Pointer<pdat::CellData<double> > uval =
-      patch.getPatchData(d_uval, getDataContext());
-   tbox::Pointer<pdat::FaceData<double> > flux =
-      patch.getPatchData(d_flux, getDataContext());
+   tbox::Pointer<pdat::CellData<double> > uval(
+      patch.getPatchData(d_uval, getDataContext()),
+      tbox::__dynamic_cast_tag());
+   tbox::Pointer<pdat::FaceData<double> > flux(
+      patch.getPatchData(d_flux, getDataContext()),
+      tbox::__dynamic_cast_tag());
 
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(uval);
@@ -1501,10 +1509,12 @@ void MblkLinAdv::compute3DFluxesWithCornerTransport2(
    const hier::Index ifirst = patch.getBox().lower();
    const hier::Index ilast = patch.getBox().upper();
 
-   tbox::Pointer<pdat::CellData<double> > uval =
-      patch.getPatchData(d_uval, getDataContext());
-   tbox::Pointer<pdat::FaceData<double> > flux =
-      patch.getPatchData(d_flux, getDataContext());
+   tbox::Pointer<pdat::CellData<double> > uval(
+      patch.getPatchData(d_uval, getDataContext()),
+      tbox::__dynamic_cast_tag());
+   tbox::Pointer<pdat::FaceData<double> > flux(
+      patch.getPatchData(d_flux, getDataContext()),
+      tbox::__dynamic_cast_tag());
 
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(uval);
@@ -1738,10 +1748,12 @@ void MblkLinAdv::conservativeDifferenceOnPatch(
    const hier::Index ifirst = patch.getBox().lower();
    const hier::Index ilast = patch.getBox().upper();
 
-   tbox::Pointer<pdat::CellData<double> > uval =
-      patch.getPatchData(d_uval, getDataContext());
-   tbox::Pointer<pdat::FaceData<double> > flux =
-      patch.getPatchData(d_flux, getDataContext());
+   tbox::Pointer<pdat::CellData<double> > uval(
+      patch.getPatchData(d_uval, getDataContext()),
+      tbox::__dynamic_cast_tag());
+   tbox::Pointer<pdat::FaceData<double> > flux(
+      patch.getPatchData(d_flux, getDataContext()),
+      tbox::__dynamic_cast_tag());
 
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(uval);
@@ -1788,8 +1800,9 @@ void MblkLinAdv::setPhysicalBoundaryConditions(
 {
    NULL_USE(fill_time);
 
-   tbox::Pointer<pdat::CellData<double> > uval =
-      patch.getPatchData(d_uval, getDataContext());
+   tbox::Pointer<pdat::CellData<double> > uval(
+      patch.getPatchData(d_uval, getDataContext()),
+      tbox::__dynamic_cast_tag());
 
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(uval);
@@ -2003,7 +2016,9 @@ void MblkLinAdv::tagGradientDetectorCells(
    double dx[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
    d_mblk_geometry->getDx(level_number, dx);
 
-   tbox::Pointer<pdat::CellData<int> > tags = patch.getPatchData(tag_indx);
+   tbox::Pointer<pdat::CellData<int> > tags(
+      patch.getPatchData(tag_indx),
+      tbox::__dynamic_cast_tag());
 
    hier::Box pbox(patch.getBox());
 
@@ -2034,8 +2049,10 @@ void MblkLinAdv::tagGradientDetectorCells(
    for (int ncrit = 0; ncrit < d_refinement_criteria.getSize(); ncrit++) {
 
       string ref = d_refinement_criteria[ncrit];
-      tbox::Pointer<pdat::CellData<double> > var =
-         patch.getPatchData(d_uval, getDataContext());
+      tbox::Pointer<pdat::CellData<double> > var(
+         patch.getPatchData(d_uval, getDataContext()),
+         tbox::__dynamic_cast_tag());
+
 #ifdef DEBUG_CHECK_ASSERTIONS
       TBOX_ASSERT(var);
 #endif
