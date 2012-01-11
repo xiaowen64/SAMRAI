@@ -4122,6 +4122,7 @@ bool TreeLoadBalancerOld::breakOffLoad_cubic(
     * placement_impossible to true.
     */
    hier::Box breakoff_box(d_dim);
+   breakoff_box.setBlockId(box.getBlockId());
    const hier::IntVector& lower(box.lower());
    const hier::IntVector& upper(box.upper());
    bool placement_impossible = false;
