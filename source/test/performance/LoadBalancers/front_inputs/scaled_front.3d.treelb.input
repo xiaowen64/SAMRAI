@@ -62,7 +62,7 @@ Main {
       tag_buffer = 2, 2, 2
       SinusoidalFrontTagger {
          init_disp = 1.0, 1.0, 1.0
-         period = 8.0, 4.0, 4.0
+         period = 2.0, 4.0, 4.0
          amplitude = 0.5
       }
       BergerRigoutsos {
