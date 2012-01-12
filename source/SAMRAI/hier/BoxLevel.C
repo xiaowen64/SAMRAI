@@ -82,7 +82,7 @@ BoxLevel::BoxLevel():
    d_globalized_version(NULL),
    d_persistent_overlap_connectors(NULL),
    d_handle(NULL),
-   d_grid_geometry(tbox::ConstPointer<GridGeometry>(NULL))
+   d_grid_geometry(tbox::Pointer<const GridGeometry>(NULL))
 {
    // This ctor should never be invoked.
    TBOX_ERROR("Somehow, we entered code that was never meant to be used.");
@@ -118,7 +118,7 @@ BoxLevel::BoxLevel(
    d_globalized_version(NULL),
    d_persistent_overlap_connectors(NULL),
    d_handle(NULL),
-   d_grid_geometry(tbox::ConstPointer<GridGeometry>(NULL))
+   d_grid_geometry(tbox::Pointer<const GridGeometry>(NULL))
 {
 }
 
@@ -161,7 +161,7 @@ BoxLevel::BoxLevel(
 
 BoxLevel::BoxLevel(
    const IntVector& ratio,
-   const tbox::ConstPointer<GridGeometry>& grid_geom,
+   const tbox::Pointer<const GridGeometry>& grid_geom,
    const tbox::SAMRAI_MPI& mpi,
    const ParallelState parallel_state):
    d_mpi(tbox::SAMRAI_MPI::commNull),
@@ -191,7 +191,7 @@ BoxLevel::BoxLevel(
    d_globalized_version(NULL),
    d_persistent_overlap_connectors(NULL),
    d_handle(NULL),
-   d_grid_geometry(tbox::ConstPointer<GridGeometry>(NULL))
+   d_grid_geometry(tbox::Pointer<const GridGeometry>(NULL))
 {
    initialize(ratio, grid_geom, mpi, parallel_state);
 }
@@ -207,7 +207,7 @@ BoxLevel::~BoxLevel()
 
 void BoxLevel::initialize(
    const IntVector& ratio,
-   const tbox::ConstPointer<GridGeometry>& grid_geom,
+   const tbox::Pointer<const GridGeometry>& grid_geom,
    const tbox::SAMRAI_MPI& mpi,
    const ParallelState parallel_state)
 {
@@ -223,7 +223,7 @@ void BoxLevel::initialize(
 void BoxLevel::swapInitialize(
    BoxContainer& boxes,
    const IntVector& ratio,
-   const tbox::ConstPointer<GridGeometry>& grid_geom,
+   const tbox::Pointer<const GridGeometry>& grid_geom,
    const tbox::SAMRAI_MPI& mpi,
    const ParallelState parallel_state)
 {
@@ -254,7 +254,7 @@ void BoxLevel::finalize()
 
 void BoxLevel::initializePrivate(
    const IntVector& ratio,
-   const tbox::ConstPointer<GridGeometry>& grid_geom,
+   const tbox::Pointer<const GridGeometry>& grid_geom,
    const tbox::SAMRAI_MPI& mpi,
    const ParallelState parallel_state)
 {
@@ -341,7 +341,7 @@ void BoxLevel::clear()
       d_global_max_box_size.clear();
       d_global_min_box_size.clear();
       d_parallel_state = DISTRIBUTED;
-      d_grid_geometry = tbox::ConstPointer<GridGeometry>(NULL);
+      d_grid_geometry = tbox::Pointer<const GridGeometry>(NULL);
    }
 }
 
@@ -378,7 +378,7 @@ void BoxLevel::swap(
       ParallelState tmpstate;
       const BoxLevel* tmpmbl;
       tbox::SAMRAI_MPI tmpmpi(tbox::SAMRAI_MPI::commNull);
-      tbox::ConstPointer<GridGeometry> tmpgridgeom(level_a.getGridGeometry());
+      tbox::Pointer<const GridGeometry> tmpgridgeom(level_a.getGridGeometry());
 
       tmpstate = level_a.d_parallel_state;
       level_a.d_parallel_state = level_b.d_parallel_state;
@@ -572,6 +572,7 @@ void BoxLevel::cacheGlobalReducedData() const
                d_global_min_box_size[bn][i] = -recv_mesg[++tmpi];
                d_global_max_box_size[bn][i] = recv_mesg[++tmpi];
             }
+            d_global_bounding_box[bn].setBlockId(BlockId(bn));
          }
          d_max_number_of_boxes = recv_mesg[++tmpi];
          d_min_number_of_boxes = -recv_mesg[++tmpi];
@@ -930,6 +931,9 @@ BoxContainer::ConstIterator BoxLevel::addBox(
          << "so it can only be performed in\n"
          << "distributed state.");
    }
+   if (box.getBlockId() != BlockId::invalidId()) {
+      TBOX_ASSERT(box.getBlockId() == block_id);
+   }
 #endif
 
    clearForBoxChanges(false);
@@ -941,8 +945,8 @@ BoxContainer::ConstIterator BoxLevel::addBox(
          box,
          LocalId::getZero(),
          d_mpi.getRank(),
-         block_id,
          PeriodicShiftCatalog::getCatalog(dim)->getZeroShiftNumber());
+      new_box.setBlockId(block_id);
       new_iterator = d_boxes.insert(d_boxes.end(), new_box);
    } else {
       // Set new_index to one more than the largest index used.
@@ -963,13 +967,11 @@ BoxContainer::ConstIterator BoxLevel::addBox(
             for (new_index = 0, ni = d_boxes.begin();
                  ni != d_boxes.end();
                  ++ni) {
-               if ((*ni).getBlockId() == block_id) {
-                  if (new_index != (*ni).getLocalId()) {
-                     break;
-                  }
-                  if (!ni->isPeriodicImage()) {
-                     ++new_index;
-                  }
+               if (new_index != (*ni).getLocalId()) {
+                  break;
+               }
+               if (!ni->isPeriodicImage()) {
+                  ++new_index;
                }
             }
             // We should have found an unused index.
@@ -977,15 +979,16 @@ BoxContainer::ConstIterator BoxLevel::addBox(
          }
       }
 
-      const Box new_box(
-         box, new_index, d_mpi.getRank(), block_id);
+      Box new_box(
+         box, new_index, d_mpi.getRank());
+      new_box.setBlockId(block_id);
       new_iterator = d_boxes.insert(ni, new_box);
    }
 
-   const IntVector box_size(box.numberCells());
+   const IntVector box_size(new_iterator->numberCells());
    ++d_local_number_of_boxes;
    d_local_number_of_cells += box.size();
-   d_local_bounding_box[block_id.getBlockValue()] += box;
+   d_local_bounding_box[block_id.getBlockValue()] += *new_iterator;
    d_local_max_box_size[block_id.getBlockValue()].max(box_size);
    d_local_min_box_size[block_id.getBlockValue()].min(box_size);
    d_global_data_up_to_date = false;
@@ -1032,11 +1035,9 @@ BoxLevel::addPeriodicBox(
     *   before adding the periodic image Box.
     */
    Box real_box(getDim(),
-                       ref_box.getLocalId(),
-                       ref_box.getOwnerRank(),
-                       ref_box.getBlockId(),
-                       PeriodicShiftCatalog::getCatalog(
-                          getDim())->getZeroShiftNumber());
+                ref_box.getGlobalId(),
+                PeriodicShiftCatalog::getCatalog(
+                   getDim())->getZeroShiftNumber());
    if (boxes.find(real_box) == boxes.end()) {
       TBOX_ERROR(
          "BoxLevel::addPeriodicBox: cannot add periodic image Box "
@@ -1079,11 +1080,9 @@ BoxLevel::addBox(
     */
    if (box.isPeriodicImage()) {
       Box real_box(getDim(),
-                          box.getLocalId(),
-                          box.getOwnerRank(),
-                          box.getBlockId(),
-                          PeriodicShiftCatalog::getCatalog(
-                             getDim())->getZeroShiftNumber());
+                   box.getGlobalId(),
+                   PeriodicShiftCatalog::getCatalog(
+                      getDim())->getZeroShiftNumber());
       BoxContainer& boxes = box.getOwnerRank() ==
          d_mpi.getRank() ? d_boxes : d_global_boxes;
       if (boxes.find(real_box) == boxes.end()) {
@@ -1247,6 +1246,10 @@ void BoxLevel::eraseBoxWithoutUpdate(
 
 /*
  ****************************************************************************
+ * TODO: This method puts finer in an inconsistent state by not
+ * updating the attributes depenent on what has been changed.  This
+ * method seems to be an initializer, but it is not clear from the
+ * name or documentation if that is so.  The same goes for coarsenBoxes.
  ****************************************************************************
  */
 void BoxLevel::refineBoxes(
@@ -1353,7 +1356,7 @@ void BoxLevel::putToDatabase(
 
 void BoxLevel::getFromDatabase(
    tbox::Database& database,
-   const tbox::ConstPointer<GridGeometry>& grid_geom)
+   const tbox::Pointer<const GridGeometry>& grid_geom)
 {
    TBOX_ASSERT(database.isInteger("dim"));
    const tbox::Dimension dim(static_cast<unsigned short>(database.getInteger("dim")));
@@ -1535,9 +1538,9 @@ void BoxLevel::initializeCallback()
 
 void BoxLevel::finalizeCallback()
 {
-   t_initialize_private.setNull();
-   t_acquire_remote_boxes.setNull();
-   t_cache_global_reduced_data.setNull();
+   t_initialize_private.reset();
+   t_acquire_remote_boxes.reset();
+   t_cache_global_reduced_data.reset();
 }
 
 }

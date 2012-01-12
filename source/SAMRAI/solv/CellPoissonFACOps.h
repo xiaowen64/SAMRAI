@@ -126,7 +126,7 @@ public:
     * @param object_name Ojbect name
     * @param database Input database
     */
-   CellPoissonFACOps(
+   explicit CellPoissonFACOps(
       const tbox::Dimension& dim,
       const std::string& object_name = std::string(),
       tbox::Pointer<tbox::Database> database =

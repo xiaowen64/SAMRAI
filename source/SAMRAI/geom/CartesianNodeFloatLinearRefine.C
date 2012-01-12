@@ -84,8 +84,10 @@ bool CartesianNodeFloatLinearRefine::findRefineOperator(
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, *var);
 
-   const tbox::Pointer<pdat::NodeVariable<float> > cast_var(var);
-   if (!cast_var.isNull() && (op_name == getOperatorName())) {
+   const tbox::Pointer<pdat::NodeVariable<float> > cast_var(
+      var,
+      tbox::__dynamic_cast_tag());
+   if (cast_var && (op_name == getOperatorName())) {
       return true;
    } else {
       return false;
@@ -139,13 +141,15 @@ void CartesianNodeFloatLinearRefine::refine(
    const tbox::Dimension& dim(getDim());
    TBOX_DIM_ASSERT_CHECK_DIM_ARGS4(dim, fine, coarse, fine_box, ratio);
 
-   tbox::Pointer<pdat::NodeData<float> >
-   cdata = coarse.getPatchData(src_component);
-   tbox::Pointer<pdat::NodeData<float> >
-   fdata = fine.getPatchData(dst_component);
+   tbox::Pointer<pdat::NodeData<float> > cdata(
+      coarse.getPatchData(src_component),
+      tbox::__dynamic_cast_tag());
+   tbox::Pointer<pdat::NodeData<float> > fdata(
+      fine.getPatchData(dst_component),
+      tbox::__dynamic_cast_tag());
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!cdata.isNull());
-   TBOX_ASSERT(!fdata.isNull());
+   TBOX_ASSERT(cdata);
+   TBOX_ASSERT(fdata);
    TBOX_ASSERT(cdata->getDepth() == fdata->getDepth());
 #endif
 
@@ -156,10 +160,12 @@ void CartesianNodeFloatLinearRefine::refine(
    const hier::Index filo = fdata->getGhostBox().lower();
    const hier::Index fihi = fdata->getGhostBox().upper();
 
-   const tbox::Pointer<CartesianPatchGeometry> cgeom =
-      coarse.getPatchGeometry();
-   const tbox::Pointer<CartesianPatchGeometry> fgeom =
-      fine.getPatchGeometry();
+   const tbox::Pointer<CartesianPatchGeometry> cgeom(
+      coarse.getPatchGeometry(),
+      tbox::__dynamic_cast_tag());
+   const tbox::Pointer<CartesianPatchGeometry> fgeom(
+      fine.getPatchGeometry(),
+      tbox::__dynamic_cast_tag());
 
    const hier::Box coarse_box = hier::Box::coarsen(fine_box, ratio);
    const hier::Index ifirstc = coarse_box.lower();

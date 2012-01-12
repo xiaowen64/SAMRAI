@@ -84,7 +84,7 @@ public:
    /*!
     * @brief Default constructor creates empty container in unordered state.
     */
-   explicit BoxContainer();
+   BoxContainer();
 
    /*!
     * @brief Creates empty container in state determined by boolean
@@ -102,7 +102,7 @@ public:
     * @param[in] last
     * @param[in] ordered  Container will be ordered if true, unordered if false.
     */
-   explicit BoxContainer(
+   BoxContainer(
       ConstIterator first,
       ConstIterator last,
       const bool ordered = false);
@@ -148,7 +148,7 @@ public:
     * @param[in] other
     * @param[in] block_id
     */
-   explicit BoxContainer(
+   BoxContainer(
       const BoxContainer& other,
       const BlockId& block_id);
 
@@ -352,13 +352,17 @@ public:
    /*!
     * @brief Determine if "idx" lies within bounds of boxes in container.
     *
+    * Only boxes of the given BlockId will be checked.
+    *
     * @return true if idx lies within bounds of boxes in container.
     *
     * @param[in] idx
+    * @param[in] block_id
     */
    bool
    contains(
-      const Index& idx) const;
+      const Index& idx,
+      const BlockId& block_id) const;
 
    /*!
     * @brief  Returns the bounding box for all the boxes in the container.
@@ -542,12 +546,6 @@ public:
    /*!
     * @brief Rotate boxes in container according to a RotationIdentifier
     *
-    * Can only be called on an unordered container.  The reason it may
-    * not be called on an ordered container is that it rotates the  
-    * Boxes' spatial indices to a different coordinate system but does not
-    * update their BlockId.  A run-time error will occur if called on a
-    * container with member Boxes having different BlockId values.
-    *
     * @note Works only in 2D or 3D.
     *
     * @param[in] rotation_ident
@@ -605,10 +603,6 @@ public:
     * MultiblockBoxTree has an efficient overlap search method so this
     * version of removeIntersection is relatively fast.
     *
-    * @param[in] block_id  Assume all Boxes in this BoxContainer belong in
-    * the index space specified this BlockId.  A run-time error will occur
-    * if this is not so.
-    *
     * @param[in] refinement_ratio  Assume all boxes in this BoxContainer
     * belong in this refinement ratio.
     *
@@ -618,7 +612,6 @@ public:
     */
    void
    removeIntersections(
-      const BlockId& block_id,
       const IntVector& refinement_ratio,
       const MultiblockBoxTree& takeaway,
       const bool include_singularity_block_neighbors = false);
@@ -689,9 +682,6 @@ public:
     * version of intersectBoxes is relatively fast.  The complement of
     * removeIntersection.
     *
-    * @param[in]  block_id  Assume all boxes in this BoxContainer belong in
-    * the index space specified this BlockId.
-    *
     * @param[in]  refinement_ratio  Assume all boxes in this BoxContainer
     * belong in this refefinement ratio.
     *
@@ -701,7 +691,6 @@ public:
     */
    void
    intersectBoxes(
-      const BlockId& block_id,
       const IntVector& refinement_ratio,
       const MultiblockBoxTree& keep,
       bool include_singularity_block_neighbors = false);
@@ -1092,7 +1081,7 @@ private:
 
    bool d_ordered;
 
-   mutable tbox::Pointer<MultiblockBoxTree> d_tree;
+   mutable tbox::Pointer<BoxTree> d_tree;
 };
 
 }

@@ -44,7 +44,7 @@ public:
     * depth (i.e., number of data values at each cell index location).
     * A default depth of one is provided.
     */
-   explicit CellVariable(
+   CellVariable(
       const tbox::Dimension& dim,
       const std::string& name,
       int depth = 1);

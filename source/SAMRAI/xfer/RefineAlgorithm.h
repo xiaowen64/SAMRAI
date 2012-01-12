@@ -166,7 +166,7 @@ public:
       const int scratch,
       tbox::Pointer<hier::RefineOperator> oprefine,
       tbox::Pointer<VariableFillPattern> var_fill_pattern =
-         (tbox::Pointer<BoxGeometryVariableFillPattern>) NULL);
+         (tbox::Pointer<VariableFillPattern>) NULL);
 
    /*!
     * @brief Register a refine operation with the refine algorithm object.
@@ -213,7 +213,7 @@ public:
       tbox::Pointer<hier::RefineOperator> oprefine,
       tbox::Pointer<hier::TimeInterpolateOperator> optime,
       tbox::Pointer<VariableFillPattern> var_fill_pattern =
-         (tbox::Pointer<BoxGeometryVariableFillPattern>) NULL);
+         (tbox::Pointer<VariableFillPattern>) NULL);
 
    /*!
     * @brief Create a communication schedule for communicating data within a

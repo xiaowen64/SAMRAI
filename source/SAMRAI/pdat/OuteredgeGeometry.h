@@ -65,7 +65,7 @@ public:
     * @brief Construct an outeredge geometry object given an AMR index
     * space box and ghost cell width.
     */
-   explicit OuteredgeGeometry(
+   OuteredgeGeometry(
       const hier::Box& box,
       const hier::IntVector& ghosts);
 

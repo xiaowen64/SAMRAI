@@ -79,8 +79,10 @@ bool NodeFloatInjection::findCoarsenOperator(
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, *var);
 
-   const tbox::Pointer<NodeVariable<float> > cast_var(var);
-   if (!cast_var.isNull() && (op_name == getOperatorName())) {
+   const tbox::Pointer<NodeVariable<float> > cast_var(
+      var,
+      tbox::__dynamic_cast_tag());
+   if (cast_var && (op_name == getOperatorName())) {
       return true;
    } else {
       return false;
@@ -105,13 +107,15 @@ void NodeFloatInjection::coarsen(
    const hier::Box& coarse_box,
    const hier::IntVector& ratio) const
 {
-   tbox::Pointer<NodeData<float> >
-   fdata = fine.getPatchData(src_component);
-   tbox::Pointer<NodeData<float> >
-   cdata = coarse.getPatchData(dst_component);
+   tbox::Pointer<NodeData<float> > fdata(
+      fine.getPatchData(src_component),
+      tbox::__dynamic_cast_tag());
+   tbox::Pointer<NodeData<float> > cdata(
+      coarse.getPatchData(dst_component),
+      tbox::__dynamic_cast_tag());
 
-   TBOX_ASSERT(!fdata.isNull());
-   TBOX_ASSERT(!cdata.isNull());
+   TBOX_ASSERT(fdata);
+   TBOX_ASSERT(cdata);
    TBOX_ASSERT(cdata->getDepth() == fdata->getDepth());
    TBOX_DIM_ASSERT_CHECK_ARGS5(*this, coarse, fine, coarse_box, ratio);
 

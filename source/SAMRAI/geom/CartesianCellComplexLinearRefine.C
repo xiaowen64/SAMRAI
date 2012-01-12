@@ -89,8 +89,10 @@ bool CartesianCellComplexLinearRefine::findRefineOperator(
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, *var);
 
-   const tbox::Pointer<pdat::CellVariable<dcomplex> > cast_var(var);
-   if (!cast_var.isNull() && (op_name == getOperatorName())) {
+   const tbox::Pointer<pdat::CellVariable<dcomplex> > cast_var(
+      var,
+      tbox::__dynamic_cast_tag());
+   if (cast_var && (op_name == getOperatorName())) {
       return true;
    } else {
       return false;
@@ -142,13 +144,15 @@ void CartesianCellComplexLinearRefine::refine(
    const tbox::Dimension& dim(getDim());
    TBOX_DIM_ASSERT_CHECK_DIM_ARGS4(dim, fine, coarse, fine_box, ratio);
 
-   tbox::Pointer<pdat::CellData<dcomplex> >
-   cdata = coarse.getPatchData(src_component);
-   tbox::Pointer<pdat::CellData<dcomplex> >
-   fdata = fine.getPatchData(dst_component);
+   tbox::Pointer<pdat::CellData<dcomplex> > cdata(
+      coarse.getPatchData(src_component),
+      tbox::__dynamic_cast_tag());
+   tbox::Pointer<pdat::CellData<dcomplex> > fdata(
+      fine.getPatchData(dst_component),
+      tbox::__dynamic_cast_tag());
 
-   TBOX_ASSERT(!cdata.isNull());
-   TBOX_ASSERT(!fdata.isNull());
+   TBOX_ASSERT(cdata);
+   TBOX_ASSERT(fdata);
    TBOX_ASSERT(cdata->getDepth() == fdata->getDepth());
 
    const hier::Box cgbox(cdata->getGhostBox());
@@ -158,10 +162,12 @@ void CartesianCellComplexLinearRefine::refine(
    const hier::Index filo = fdata->getGhostBox().lower();
    const hier::Index fihi = fdata->getGhostBox().upper();
 
-   const tbox::Pointer<CartesianPatchGeometry> cgeom =
-      coarse.getPatchGeometry();
-   const tbox::Pointer<CartesianPatchGeometry> fgeom =
-      fine.getPatchGeometry();
+   const tbox::Pointer<CartesianPatchGeometry> cgeom(
+      coarse.getPatchGeometry(),
+      tbox::__dynamic_cast_tag());
+   const tbox::Pointer<CartesianPatchGeometry> fgeom(
+      fine.getPatchGeometry(),
+      tbox::__dynamic_cast_tag());
 
    const hier::Box coarse_box = hier::Box::coarsen(fine_box, ratio);
    const hier::Index ifirstc = coarse_box.lower();

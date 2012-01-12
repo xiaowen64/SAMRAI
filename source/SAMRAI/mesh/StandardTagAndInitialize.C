@@ -18,7 +18,6 @@
 #include "SAMRAI/pdat/CellData.h"
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/hier/BoxContainerIterator.h"
-#include "SAMRAI/hier/NeighborhoodSet.h"
 #include "SAMRAI/hier/OverlapConnectorAlgorithm.h"
 #include "SAMRAI/hier/Patch.h"
 #include "SAMRAI/tbox/MathUtilities.h"
@@ -122,7 +121,7 @@ StandardTagAndInitialize::StandardTagAndInitialize(
     * so cell-tagging will not occur.  Print a warning to indicate if
     * this is the case.
     */
-   if (input_db.isNull()) {
+   if (!input_db) {
       TBOX_WARNING(
          getObjectName() << ":constructor \n"
                          << "no input database specified - NO METHOD IS SPECIFIED TO TAG \n"
@@ -173,13 +172,13 @@ void StandardTagAndInitialize::initializeLevelData(
    const bool allocate_data)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!hierarchy.isNull());
+   TBOX_ASSERT(hierarchy);
    TBOX_ASSERT((level_number >= 0)
       && (level_number <= hierarchy->getFinestLevelNumber()));
-   if (!(old_level.isNull())) {
+   if (old_level) {
       TBOX_ASSERT(level_number == old_level->getLevelNumber());
    }
-   TBOX_ASSERT(!(hierarchy->getPatchLevel(level_number)).isNull());
+   TBOX_ASSERT(hierarchy->getPatchLevel(level_number));
 #endif
    TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(getDim(), *hierarchy);
 
@@ -210,13 +209,13 @@ void StandardTagAndInitialize::resetHierarchyConfiguration(
    const int finest_level)
 {
 
-   TBOX_ASSERT(!hierarchy.isNull());
+   TBOX_ASSERT(hierarchy);
    TBOX_ASSERT((coarsest_level >= 0)
       && (coarsest_level <= finest_level)
       && (finest_level <= hierarchy->getFinestLevelNumber()));
 #ifdef DEBUG_CHECK_ASSERTIONS
    for (int ln0 = 0; ln0 <= finest_level; ln0++) {
-      TBOX_ASSERT(!(hierarchy->getPatchLevel(ln0)).isNull());
+      TBOX_ASSERT(hierarchy->getPatchLevel(ln0));
    }
 #endif
    TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(getDim(), *hierarchy);
@@ -259,10 +258,10 @@ void StandardTagAndInitialize::tagCellsForRefinement(
    const bool can_be_refined,
    const double regrid_start_time)
 {
-   TBOX_ASSERT(!(hierarchy.isNull()));
+   TBOX_ASSERT(hierarchy);
    TBOX_ASSERT((level_number >= 0)
       && (level_number <= hierarchy->getFinestLevelNumber()));
-   TBOX_ASSERT(!(hierarchy->getPatchLevel(level_number).isNull()));
+   TBOX_ASSERT(hierarchy->getPatchLevel(level_number));
    TBOX_ASSERT(tag_index >= 0);
    TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(getDim(), *hierarchy);
 
@@ -310,10 +309,11 @@ void StandardTagAndInitialize::tagCellsForRefinement(
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
          tbox::Pointer<hier::Patch> patch = *ip;
 
-         tbox::Pointer<pdat::CellData<int> > tag_data =
-            patch->getPatchData(tag_index);
+         tbox::Pointer<pdat::CellData<int> > tag_data(
+            patch->getPatchData(tag_index),
+            tbox::__dynamic_cast_tag());
 #ifdef DEBUG_CHECK_ASSERTIONS
-         TBOX_ASSERT(!(tag_data.isNull()));
+         TBOX_ASSERT(tag_data);
 #endif
 
          for (hier::BoxContainer::Iterator ib(refine_boxes); ib != refine_boxes.end();
@@ -506,15 +506,16 @@ StandardTagAndInitialize::tagCellsUsingRichardsonExtrapolation(
    for (hier::PatchLevel::Iterator ip(coarser_level); ip; ip++) {
       tbox::Pointer<hier::Patch> coarse_patch = *ip;
       tbox::Pointer<hier::Patch> fine_patch =
-         patch_level->getPatch(coarse_patch->getGlobalId(),
-            coarse_patch->getBox().getBlockId());
-      tbox::Pointer<pdat::CellData<int> >
-      ftags = fine_patch->getPatchData(tag_index);
-      tbox::Pointer<pdat::CellData<int> >
-      ctags = coarse_patch->getPatchData(tag_index);
+         patch_level->getPatch(coarse_patch->getGlobalId());
+      tbox::Pointer<pdat::CellData<int> > ftags(
+         fine_patch->getPatchData(tag_index),
+         tbox::__dynamic_cast_tag());
+      tbox::Pointer<pdat::CellData<int> > ctags(
+         coarse_patch->getPatchData(tag_index),
+         tbox::__dynamic_cast_tag());
 
-      TBOX_ASSERT(!ftags.isNull());
-      TBOX_ASSERT(!ctags.isNull());
+      TBOX_ASSERT(ftags);
+      TBOX_ASSERT(ctags);
       TBOX_ASSERT(ctags->getDepth() == ftags->getDepth());
 
       const hier::Index filo = ftags->getGhostBox().lower();
@@ -581,8 +582,7 @@ StandardTagAndInitialize::tagCellsUsingRichardsonExtrapolation(
 
       tbox::Pointer<hier::Patch> coarse_patch = *ip;
       tbox::Pointer<hier::Patch> fine_patch =
-         patch_level->getPatch(coarse_patch->getGlobalId(),
-            coarse_patch->getBox().getBlockId());
+         patch_level->getPatch(coarse_patch->getGlobalId());
       copytags.refine(*fine_patch, *coarse_patch,
          tag_index, tag_index,
          fine_patch->getBox(), coarsen_ratio);
@@ -621,10 +621,10 @@ StandardTagAndInitialize::preprocessErrorEstimation(
    const double regrid_start_time,
    const bool initial_time)
 {
-   TBOX_ASSERT(!(hierarchy.isNull()));
+   TBOX_ASSERT(hierarchy);
    TBOX_ASSERT((level_number >= 0)
       && (level_number <= hierarchy->getFinestLevelNumber()));
-   TBOX_ASSERT(!(hierarchy->getPatchLevel(level_number).isNull()));
+   TBOX_ASSERT(hierarchy->getPatchLevel(level_number));
    TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(getDim(), *hierarchy);
 
    if (d_use_richardson_extrapolation) {
@@ -679,7 +679,7 @@ StandardTagAndInitialize::preprocessRichardsonExtrapolation(
    const double regrid_start_time,
    const bool initial_time)
 {
-   TBOX_ASSERT(!hierarchy.isNull());
+   TBOX_ASSERT(hierarchy);
    TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(getDim(), *hierarchy);
    TBOX_ASSERT(regrid_start_time <= regrid_time);
    TBOX_ASSERT(d_tag_strategy != ((mesh::StandardTagAndInitStrategy *)NULL));
@@ -774,11 +774,10 @@ StandardTagAndInitialize::preprocessRichardsonExtrapolation(
       hier::IntVector::ceilingDivide(level_to_level_gcw, coarsen_ratio),
       true);
 
-   hier::Connector tmp_coarsened(
-      *patch_level->getBoxLevel(),
-      *coarsened_level->getBoxLevel(),
-      level_to_level.getConnectorWidth());
-   level_to_level.coarsenLocalNeighbors(tmp_coarsened, coarsen_ratio);
+   hier::Connector tmp_coarsened(level_to_level);
+   tmp_coarsened.setBase( *patch_level->getBoxLevel());
+   tmp_coarsened.setHead(*coarsened_level->getBoxLevel(), true);
+   tmp_coarsened.coarsenLocalNeighbors(coarsen_ratio);
    tmp_coarsened.setConnectorType(hier::Connector::COMPLETE_OVERLAP);
 
    const hier::Connector& level_to_coarsened =
@@ -1014,7 +1013,7 @@ void StandardTagAndInitialize::getFromInput(
    tbox::Pointer<tbox::Database> db)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!db.isNull());
+   TBOX_ASSERT(db);
 #endif
 
    tbox::Array<std::string> tagging_method;

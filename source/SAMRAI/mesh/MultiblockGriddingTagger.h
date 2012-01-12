@@ -43,7 +43,7 @@ public:
    /*!
     * @brief The constructor does nothing interesting.
     */
-   MultiblockGriddingTagger(
+   explicit MultiblockGriddingTagger(
       const tbox::Dimension& dim);
 
    /*!

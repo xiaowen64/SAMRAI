@@ -60,13 +60,13 @@ HyprePoisson::HyprePoisson(
    d_hierarchy(NULL),
    d_poisson_hypre(dim,
                    object_name + "::poisson_hypre",
-                   (!database.isNull() &&
+                   (database &&
                     database->isDatabase("CellPoissonHypreSolver")) ?
                    database->getDatabase("CellPoissonHypreSolver") :
                    tbox::Pointer<tbox::Database>(NULL)),
    d_bc_coefs(dim,
               object_name + "::bc_coefs",
-              (!database.isNull() &&
+              (database &&
                database->isDatabase("bc_coefs")) ?
               database->getDatabase("bc_coefs") :
               tbox::Pointer<tbox::Database>(NULL)),
@@ -144,8 +144,9 @@ void HyprePoisson::initializeLevelData(
    (void)old_level;
 
    tbox::Pointer<hier::PatchHierarchy> patch_hierarchy = hierarchy;
-   tbox::Pointer<geom::CartesianGridGeometry> grid_geom =
-      patch_hierarchy->getGridGeometry();
+   tbox::Pointer<geom::CartesianGridGeometry> grid_geom(
+      patch_hierarchy->getGridGeometry(),
+      tbox::__dynamic_cast_tag());
 
    tbox::Pointer<hier::PatchLevel> level =
       hierarchy->getPatchLevel(level_number);
@@ -166,18 +167,21 @@ void HyprePoisson::initializeLevelData(
    for (pi.initialize(*level); pi; pi++) {
 
       tbox::Pointer<hier::Patch> patch = *pi;
-      if (patch.isNull()) {
+      if (!patch) {
          TBOX_ERROR(d_object_name
             << ": Cannot find patch.  Null patch pointer.");
       }
       hier::Box pbox = patch->getBox();
-      tbox::Pointer<geom::CartesianPatchGeometry> patch_geom =
-         patch->getPatchGeometry();
+      tbox::Pointer<geom::CartesianPatchGeometry> patch_geom(
+         patch->getPatchGeometry(),
+         tbox::__dynamic_cast_tag());
 
-      tbox::Pointer<pdat::CellData<double> > exact_data =
-         patch->getPatchData(d_exact_id);
-      tbox::Pointer<pdat::CellData<double> > rhs_data =
-         patch->getPatchData(d_rhs_id);
+      tbox::Pointer<pdat::CellData<double> > exact_data(
+         patch->getPatchData(d_exact_id),
+        tbox::__dynamic_cast_tag());
+      tbox::Pointer<pdat::CellData<double> > rhs_data(
+         patch->getPatchData(d_rhs_id),
+         tbox::__dynamic_cast_tag());
 
       /*
        * Set source function and exact solution.
@@ -234,7 +238,7 @@ void HyprePoisson::resetHierarchyConfiguration(
 bool HyprePoisson::solvePoisson()
 {
 
-   if (d_hierarchy.isNull()) {
+   if (!d_hierarchy) {
       TBOX_ERROR("Cannot solve using an uninitialized object.\n");
    }
 
@@ -251,8 +255,9 @@ bool HyprePoisson::solvePoisson()
    hier::PatchLevel::Iterator ip(level);
    for ( ; ip; ip++) {
       tbox::Pointer<hier::Patch> patch = *ip;
-      tbox::Pointer<pdat::CellData<double> > data = patch->getPatchData(
-            d_comp_soln_id);
+      tbox::Pointer<pdat::CellData<double> > data(
+         patch->getPatchData(d_comp_soln_id),
+         tbox::__dynamic_cast_tag());
       data->fill(0.0);
    }
    // d_poisson_hypre.setBoundaries( "Dirichlet" );
@@ -313,7 +318,7 @@ int HyprePoisson::registerVariablesWithPlotter(
    /*
     * This must be done once.
     */
-   if (d_hierarchy.isNull()) {
+   if (!d_hierarchy) {
       TBOX_ERROR(
          d_object_name << ": No hierarchy in\n"
                        << " HyprePoisson::registerVariablesWithPlotter\n"
@@ -361,10 +366,12 @@ bool HyprePoisson::packDerivedDataIntoDoubleBuffer(
    pdat::CellData<double>::Iterator icell(patch.getBox());
 
    if (variable_name == "Error") {
-      tbox::Pointer<pdat::CellData<double> > current_solution_ =
-         patch.getPatchData(d_comp_soln_id);
-      tbox::Pointer<pdat::CellData<double> > exact_solution_ =
-         patch.getPatchData(d_exact_id);
+      tbox::Pointer<pdat::CellData<double> > current_solution_(
+         patch.getPatchData(d_comp_soln_id),
+         tbox::__dynamic_cast_tag());
+      tbox::Pointer<pdat::CellData<double> > exact_solution_(
+         patch.getPatchData(d_exact_id),
+         tbox::__dynamic_cast_tag());
       pdat::CellData<double>& current_solution = *current_solution_;
       pdat::CellData<double>& exact_solution = *exact_solution_;
       for ( ; icell; icell++) {

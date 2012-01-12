@@ -130,7 +130,7 @@ public:
    /*!
     * Empty constructor for TagAndInitializeStrategy.
     */
-   explicit TagAndInitializeStrategy(
+   TagAndInitializeStrategy(
       const tbox::Dimension& dim,
       const std::string& object_name);
 

@@ -245,7 +245,7 @@ suppress COPY_WILD in BergerRigoutsosNode.C:395
 
 # SGS 7/12/11
 # Insure++ is getting confused by this code; causing bogus leaks to be detected.
-file_ignore MappedBoxTree.C
+file_ignore BoxTree.C
 
 #=============================================================================
 # These lines should improve insure++ performance but will result in

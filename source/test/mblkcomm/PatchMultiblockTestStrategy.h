@@ -126,7 +126,7 @@ public:
       tbox::Pointer<hier::VariableContext> context)
    {
 #ifdef DEBUG_CHECK_ASSERTIONS
-      TBOX_ASSERT(!context.isNull());
+      TBOX_ASSERT(context);
 #endif
       d_data_context = context;
    }
@@ -135,7 +135,7 @@ public:
       tbox::Pointer<hier::VariableContext> context)
    {
 #ifdef DEBUG_CHECK_ASSERTIONS
-      TBOX_ASSERT(!context.isNull());
+      TBOX_ASSERT(context);
 #endif
       d_dst_context = context;
    }
@@ -144,7 +144,7 @@ public:
       tbox::Pointer<hier::VariableContext> context)
    {
 #ifdef DEBUG_CHECK_ASSERTIONS
-      TBOX_ASSERT(!context.isNull());
+      TBOX_ASSERT(context);
 #endif
       d_scr_context = context;
    }
@@ -169,17 +169,17 @@ public:
 
    void clearDataContext()
    {
-      d_data_context.setNull();
+      d_data_context.reset();
    }
 
    void clearDestinationContext()
    {
-      d_dst_context.setNull();
+      d_dst_context.reset();
    }
 
    void clearScratchContext()
    {
-      d_scr_context.setNull();
+      d_scr_context.reset();
    }
 
    /**

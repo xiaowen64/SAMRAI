@@ -100,8 +100,9 @@ bool SkeletonOutersideDoubleWeightedAverage::findCoarsenOperator(
    const tbox::Pointer<hier::Variable>& var,
    const string& op_name) const
 {
-   const tbox::Pointer<pdat::OuterfaceVariable<double> > cast_var(var);
-   if (!cast_var.isNull() && (op_name == getOperatorName())) {
+   const tbox::Pointer<pdat::OuterfaceVariable<double> > cast_var(
+      var, tbox::__dynamic_cast_tag());
+   if (cast_var && (op_name == getOperatorName())) {
       return true;
    } else {
       return false;
@@ -126,13 +127,15 @@ void SkeletonOutersideDoubleWeightedAverage::coarsen(
    const hier::Box& coarse_box,
    const hier::IntVector& ratio) const
 {
-   tbox::Pointer<pdat::OuterfaceData<double> >
-   fdata = fine.getPatchData(src_component);
-   tbox::Pointer<pdat::OuterfaceData<double> >
-   cdata = coarse.getPatchData(dst_component);
+   tbox::Pointer<pdat::OuterfaceData<double> > cdata(
+      coarse.getPatchData(dst_component),
+      tbox::__dynamic_cast_tag());
+   tbox::Pointer<pdat::OuterfaceData<double> > fdata(
+      fine.getPatchData(src_component),
+      tbox::__dynamic_cast_tag());
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!fdata.isNull());
-   TBOX_ASSERT(!cdata.isNull());
+   TBOX_ASSERT(fdata);
+   TBOX_ASSERT(cdata);
    TBOX_ASSERT(cdata->getDepth() == fdata->getDepth());
 #endif
 

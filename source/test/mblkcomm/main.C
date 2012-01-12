@@ -198,8 +198,9 @@ int main(
        * Create input database and parse all data in input file.
        */
 
-      tbox::Pointer<tbox::Database> input_db(
+      tbox::Pointer<tbox::InputDatabase> input_db(
          new tbox::InputDatabase("input_db"));
+      tbox::Pointer<tbox::Database> base_db = input_db;
       tbox::InputManager::getManager()->parseInputFile(input_filename, input_db);
 
       /*
@@ -326,7 +327,7 @@ int main(
       tbox::Pointer<MultiblockTester> comm_tester(new MultiblockTester(
                                                      "MultiblockTester",
                                                      dim,
-                                                     input_db,
+                                                     base_db,
                                                      hierarchy,
                                                      patch_data_test,
                                                      do_refine,
@@ -337,7 +338,7 @@ int main(
          new mesh::StandardTagAndInitialize(
             dim,
             "StandardTagggingAndInitializer",
-            comm_tester,
+            comm_tester.get(),
             input_db->getDatabase("StandardTaggingAndInitializer")));
 
       comm_tester->setupHierarchy(input_db, cell_tagger);
@@ -409,7 +410,7 @@ int main(
 
       if (patch_data_test) delete patch_data_test;
 
-//      comm_tester.setNull();
+//      comm_tester.reset();
 
       tbox::TimerManager::getManager()->print(tbox::plog);
 

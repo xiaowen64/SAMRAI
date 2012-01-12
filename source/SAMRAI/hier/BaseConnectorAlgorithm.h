@@ -26,7 +26,7 @@ protected:
    /*!
     * @brief Constructor
     */
-   explicit BaseConnectorAlgorithm();
+   BaseConnectorAlgorithm();
 
    /*!
     * @brief Destructor.

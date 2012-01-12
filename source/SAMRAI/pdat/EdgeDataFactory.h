@@ -45,7 +45,7 @@ public:
     * defaults for all edge data objects created with this factory.  See
     * the EdgeVariable<DIM> class header file for more information.
     */
-   explicit EdgeDataFactory(
+   EdgeDataFactory(
       int depth,
       const hier::IntVector& ghosts,
       bool fine_boundary_represents_var);

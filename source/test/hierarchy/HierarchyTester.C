@@ -43,7 +43,7 @@ HierarchyTester::HierarchyTester(
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(!object_name.empty());
-   TBOX_ASSERT(!hier_test_db.isNull());
+   TBOX_ASSERT(hier_test_db);
 #endif
 
    d_object_name = object_name;
@@ -51,8 +51,8 @@ HierarchyTester::HierarchyTester(
    d_do_refine_test = false;
    d_do_coarsen_test = false;
 
-   d_initial_patch_hierarchy.setNull();
-   d_test_patch_hierarchy.setNull();
+   d_initial_patch_hierarchy.reset();
+   d_test_patch_hierarchy.reset();
 
    if (hier_test_db->keyExists("do_refine_test")) {
       d_do_refine_test = hier_test_db->getBool("do_refine_test");
@@ -97,8 +97,8 @@ HierarchyTester::HierarchyTester(
 
 HierarchyTester::~HierarchyTester()
 {
-   d_initial_patch_hierarchy.setNull();
-   d_test_patch_hierarchy.setNull();
+   d_initial_patch_hierarchy.reset();
+   d_test_patch_hierarchy.reset();
 }
 
 /*
@@ -114,7 +114,7 @@ void HierarchyTester::setupInitialHierarchy(
    Pointer<Database> main_input_db)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!main_input_db.isNull());
+   TBOX_ASSERT(main_input_db);
 #endif
    Pointer<CartesianGridGeometry> grid_geometry(
       new CartesianGridGeometry(
@@ -448,21 +448,11 @@ int HierarchyTester::runHierarchyTestAndVerify()
                        << "patchTouchesRegularBoundary() "
                        << "for patch number " << mapped_box_id << std::endl;
          }
-
-         // Test #13:
-         if (init_level->patchTouchesPeriodicBoundary(mapped_box_id) !=
-             test_level->patchTouchesPeriodicBoundary(mapped_box_id)) {
-            fail_count++;
-            tbox::perr << "FAILED: - Test #12: for level number " << ln
-                       << " initial and test level do not match for "
-                       << "patchTouchesPeriodicBoundary() "
-                       << "for patch number " << mapped_box_id << std::endl;
-         }
       }
 
       /*
        **************************************************************
-       *  Tests 14-20 check local data for patches on each level.
+       *  Tests 13-19 check local data for patches on each level.
        **************************************************************
        */
       for (PatchLevel::Iterator tip(test_level); tip; tip++) {
@@ -470,12 +460,12 @@ int HierarchyTester::runHierarchyTestAndVerify()
          Pointer<Patch> test_patch = test_level->getPatch(mapped_box_id);
          Pointer<Patch> init_patch = init_level->getPatch(mapped_box_id);
 
-         // Test #14:
+         // Test #13:
          if (d_do_refine_test) {
             if (!Box::refine(init_patch->getBox(), d_ratio).isSpatiallyEqual(
                    test_patch->getBox())) {
                fail_count++;
-               tbox::perr << "FAILED: - Test #14: for level number " << ln
+               tbox::perr << "FAILED: - Test #13: for level number " << ln
                           << " box for test level patch " << mapped_box_id
                           << " is not a proper refinement of box "
                           << "for initial level patch with same number"
@@ -486,7 +476,7 @@ int HierarchyTester::runHierarchyTestAndVerify()
             if (!Box::coarsen(init_patch->getBox(), d_ratio).isSpatiallyEqual(
                    test_patch->getBox())) {
                fail_count++;
-               tbox::perr << "FAILED: - Test #14: for level number " << ln
+               tbox::perr << "FAILED: - Test #13: for level number " << ln
                           << " box for test level patch " << mapped_box_id
                           << " is not a proper coarsening of box "
                           << "for initial level patch with same number"
@@ -494,58 +484,48 @@ int HierarchyTester::runHierarchyTestAndVerify()
             }
          }
 
-         // Test #15:
+         // Test #14:
          if (init_patch->getLocalId() !=
              test_patch->getLocalId()) {
             fail_count++;
-            tbox::perr << "FAILED: - Test #15: for level number " << ln
+            tbox::perr << "FAILED: - Test #14: for level number " << ln
                        << " initial and test level patches have different patch "
                        << "numbers for patch with index " << tip->getLocalId() << std::endl;
          }
 
-         // Test #16:
+         // Test #15:
          if (init_patch->getPatchLevelNumber() !=
              test_patch->getPatchLevelNumber()) {
             fail_count++;
-            tbox::perr << "FAILED: - Test #16: for level number " << ln
+            tbox::perr << "FAILED: - Test #15: for level number " << ln
                        << " initial and test level patches have different patch "
                        << "level numbers for patch number " << tip->getLocalId()
                        << std::endl;
          }
 
-         // Test #17:
+         // Test #16:
          if (init_patch->inHierarchy() !=
              test_patch->inHierarchy()) {
             fail_count++;
-            tbox::perr << "FAILED: - Test #17: for level number " << ln
+            tbox::perr << "FAILED: - Test #16: for level number " << ln
                        << " initial and test level do not match for "
                        << "inHierarchy() "
                        << "for patch number " << tip->getLocalId() << std::endl;
          }
 
-         // Test #18:
+         // Test #17:
          if (init_patch->getPatchGeometry()->getTouchesRegularBoundary() !=
              test_patch->getPatchGeometry()->getTouchesRegularBoundary()) {
             fail_count++;
-            tbox::perr << "FAILED: - Test #18: for level number " << ln
+            tbox::perr << "FAILED: - Test #17: for level number " << ln
                        << " initial and test level do not match for "
                        << "getTouchesRegularBoundary() "
                        << "for patch number " << tip->getLocalId() << std::endl;
          }
 
-         // Test #19:
-         if (init_patch->getPatchGeometry()->getTouchesPeriodicBoundary() !=
-             test_patch->getPatchGeometry()->getTouchesPeriodicBoundary()) {
-            fail_count++;
-            tbox::perr << "FAILED: - Test #19: for level number " << ln
-                       << " initial and test level do not match for "
-                       << "getTouchesPeriodicBoundary() "
-                       << "for patch number " << tip->getLocalId() << std::endl;
-         }
-
          /*
           **************************************************************
-          * Tests 20a-20c check patch geometry data.
+          * Tests 18a-18c check patch geometry data.
           **************************************************************
           */
 
@@ -554,30 +534,30 @@ int HierarchyTester::runHierarchyTestAndVerify()
          Pointer<PatchGeometry> test_patch_geom =
             test_patch->getPatchGeometry();
 
-         // Test #20a:
+         // Test #18a:
          if (init_patch_geom->getRatio() !=
              test_patch_geom->getRatio()) {
             fail_count++;
-            tbox::perr << "FAILED: - Test #20a: for level number " << ln
+            tbox::perr << "FAILED: - Test #18a: for level number " << ln
                        << " patch geometry ratio data does not match "
                        << "for patch number " << tip->getLocalId() << std::endl;
          }
 
-         // Test #20b:
+         // Test #18b:
          if (init_patch_geom->intersectsPhysicalBoundary() !=
              test_patch_geom->intersectsPhysicalBoundary()) {
             fail_count++;
-            tbox::perr << "FAILED: - Test #20b: for level number " << ln
+            tbox::perr << "FAILED: - Test #18b: for level number " << ln
                        << " intersectsPhysicalBoundary() does not match "
                        << "for patch number " << tip->getLocalId() << std::endl;
          }
 
-         // Test #20c:
+         // Test #18c:
          for (int id = 1; id <= d_dim.getValue(); id++) {
             if ((init_patch_geom->getCodimensionBoundaries(id)).getSize() !=
                 (test_patch_geom->getCodimensionBoundaries(id)).getSize()) {
                fail_count++;
-               tbox::perr << "FAILED: - Test #20c: for level number " << ln
+               tbox::perr << "FAILED: - Test #18c: for level number " << ln
                           << " number of codimension " << id
                           << " boundary boxes does not match "
                           << "for patch number " << tip->getLocalId() << std::endl;

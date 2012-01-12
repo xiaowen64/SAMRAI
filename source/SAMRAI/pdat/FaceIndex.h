@@ -47,7 +47,7 @@ public:
     * FaceIndex::Z (2). The face argument can be one of the constants
     * FaceIndex::Lower (0) or FaceIndex::Upper (1).
     */
-   explicit FaceIndex(
+   FaceIndex(
       const hier::Index& rhs,
       const int axis,
       const int face);

@@ -125,10 +125,10 @@ int main(
          }
       }
 
-      hier::Box coarse0(clo0, chi0);
-      hier::Box coarse1(clo1, chi1);
-      hier::Box fine0(flo0, fhi0);
-      hier::Box fine1(flo1, fhi1);
+      hier::Box coarse0(clo0, chi0, hier::BlockId(0));
+      hier::Box coarse1(clo1, chi1, hier::BlockId(0));
+      hier::Box fine0(flo0, fhi0, hier::BlockId(0));
+      hier::Box fine1(flo1, fhi1, hier::BlockId(0));
       hier::IntVector ratio(dim, 2);
 
       coarse0.initialize(coarse0, hier::LocalId(0), 0);
@@ -229,13 +229,12 @@ int main(
 
       tbox::Pointer<math::HierarchyDataOpsReal<double> > cell_ops(
          new math::HierarchyCellDataOpsReal<double>(hierarchy, 0, 1));
-      TBOX_ASSERT(!cell_ops.isNull());
+      TBOX_ASSERT(cell_ops);
 
       tbox::Pointer<math::HierarchyDataOpsReal<double> > cwgt_ops(
          new math::HierarchyCellDataOpsReal<double>(hierarchy, 0, 1));
 
       tbox::Pointer<hier::Patch> patch;
-      tbox::Pointer<geom::CartesianPatchGeometry> pgeom;
 
       // Initialize control volume data for cell-centered components
       hier::Box coarse_fine = fine0 + fine1;
@@ -244,14 +243,17 @@ int main(
          tbox::Pointer<hier::PatchLevel> level = hierarchy->getPatchLevel(ln);
          for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
             patch = *ip;
-            pgeom = patch->getPatchGeometry();
+            tbox::Pointer<geom::CartesianPatchGeometry> pgeom(
+               patch->getPatchGeometry(),
+               tbox::__dynamic_cast_tag());
             const double* dx = pgeom->getDx();
             double cell_vol = dx[0];
             for (int i = 1; i < dim.getValue(); i++) {
                cell_vol *= dx[i];
             }
-            tbox::Pointer<pdat::CellData<double> > cvdata =
-               patch->getPatchData(cwgt_id);
+            tbox::Pointer<pdat::CellData<double> > cvdata(
+               patch->getPatchData(cwgt_id),
+               tbox::__dynamic_cast_tag());
             cvdata->fillAll(cell_vol);
             if (ln == 0) cvdata->fillAll(0.0, (coarse_fine * patch->getBox()));
          }
@@ -268,8 +270,9 @@ int main(
          tbox::Pointer<hier::PatchLevel> level = hierarchy->getPatchLevel(ln);
          for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
             patch = *ip;
-            tbox::Pointer<pdat::CellData<double> > cvdata =
-               patch->getPatchData(cwgt_id);
+            tbox::Pointer<pdat::CellData<double> > cvdata(
+               patch->getPatchData(cwgt_id),
+               tbox::__dynamic_cast_tag());
 
             for (pdat::CellIterator c(cvdata->getBox());
                  c && vol_test_passed; c++) {
@@ -515,7 +518,8 @@ int main(
          hierarchy->getPatchLevel(0);
       for (hier::PatchLevel::Iterator ip(level_zero); ip; ip++) {
          patch = *ip;
-         cdata = patch->getPatchData(cvindx[2]);
+         cdata = tbox::dynamic_pointer_cast<pdat::CellData<double>,
+                                            hier::PatchData>(patch->getPatchData(cvindx[2]));
          hier::Index index0(dim, 2);
          hier::Index index1(dim, 3);
          index1(0) = 5;
@@ -531,7 +535,8 @@ int main(
       bool bogus_value_test_passed = true;
       for (hier::PatchLevel::Iterator ipp(level_zero); ipp; ipp++) {
          patch = *ipp;
-         cdata = patch->getPatchData(cvindx[2]);
+         cdata = tbox::dynamic_pointer_cast<pdat::CellData<double>,
+                                            hier::PatchData>(patch->getPatchData(cvindx[2]));
          hier::Index index0(dim, 2);
          hier::Index index1(dim, 3);
          index1(0) = 5;
@@ -689,14 +694,14 @@ int main(
       }
 
       for (iv = 0; iv < NVARS; iv++) {
-         cvar[iv].setNull();
+         cvar[iv].reset();
       }
-      cwgt.setNull();
+      cwgt.reset();
 
-      geometry.setNull();
-      hierarchy.setNull();
-      cell_ops.setNull();
-      cwgt_ops.setNull();
+      geometry.reset();
+      hierarchy.reset();
+      cell_ops.reset();
+      cwgt_ops.reset();
 
       if (num_failures == 0) {
          tbox::pout << "\nPASSED:  cell hiertest" << std::endl;
@@ -728,8 +733,9 @@ doubleDataSameAsValue(
       tbox::Pointer<hier::PatchLevel> level = hierarchy->getPatchLevel(ln);
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
          patch = *ip;
-         tbox::Pointer<pdat::CellData<double> > cvdata = patch->getPatchData(
-               desc_id);
+         tbox::Pointer<pdat::CellData<double> > cvdata(
+            patch->getPatchData(desc_id),
+            tbox::__dynamic_cast_tag());
 
          for (pdat::CellIterator c(cvdata->getBox()); c && test_passed; c++) {
             pdat::CellIndex cell_index = c();

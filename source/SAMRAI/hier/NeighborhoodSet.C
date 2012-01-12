@@ -263,7 +263,7 @@ void NeighborhoodSet::putToDatabase(
       local_indices.reserve(size());
       periodic_ids.reserve(size());
       for (const_iterator ei = begin(); ei != end(); ++ei) {
-         block_ids.push_back(ei->first.getBlockId().getBlockValue());
+         block_ids.push_back(-1);
          owners.push_back(ei->first.getOwnerRank());
          local_indices.push_back(ei->first.getLocalId().getValue());
          periodic_ids.push_back(ei->first.getPeriodicId().getPeriodicValue());
@@ -281,7 +281,6 @@ void NeighborhoodSet::putToDatabase(
          const NeighborSet& mapped_boxes = ei->second;
          const std::string set_name =
             set_db_string
-            + tbox::Utilities::blockToString(mbid.getBlockId().getBlockValue())
             + tbox::Utilities::processorToString(mbid.getOwnerRank())
             + tbox::Utilities::patchToString(mbid.getLocalId().getValue())
             + tbox::Utilities::intToString(mbid.getPeriodicId().getPeriodicValue());
@@ -317,11 +316,9 @@ void NeighborhoodSet::getFromDatabase(
       for (size_t i = 0; i < number_of_sets; ++i) {
          BoxId box_id(LocalId(local_indices[i]),
             owners[i],
-            BlockId(block_ids[i]),
             PeriodicId(periodic_ids[i]));
          const std::string set_name =
             set_db_string
-            + tbox::Utilities::blockToString(box_id.getBlockId().getBlockValue())
             + tbox::Utilities::processorToString(box_id.getOwnerRank())
             + tbox::Utilities::patchToString(box_id.getLocalId().getValue())
             + tbox::Utilities::intToString(box_id.getPeriodicId().getPeriodicValue());

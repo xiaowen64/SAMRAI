@@ -40,7 +40,7 @@ int PatchEdgeDataOpsInteger::numberOfEntries(
    const tbox::Pointer<pdat::EdgeData<int> >& data,
    const hier::Box& box) const
 {
-   TBOX_ASSERT(!data.isNull());
+   TBOX_ASSERT(data);
    TBOX_DIM_ASSERT_CHECK_ARGS2(*data, box);
 
    const tbox::Dimension& dim(box.getDim());
@@ -67,12 +67,16 @@ void PatchEdgeDataOpsInteger::swapData(
    const int data1_id,
    const int data2_id) const
 {
-   TBOX_ASSERT(!patch.isNull());
+   TBOX_ASSERT(patch);
 
-   tbox::Pointer<pdat::EdgeData<int> > d1 = patch->getPatchData(data1_id);
-   tbox::Pointer<pdat::EdgeData<int> > d2 = patch->getPatchData(data2_id);
+   tbox::Pointer<pdat::EdgeData<int> > d1(
+      patch->getPatchData(data1_id),
+      tbox::__dynamic_cast_tag());
+   tbox::Pointer<pdat::EdgeData<int> > d2(
+      patch->getPatchData(data2_id),
+      tbox::__dynamic_cast_tag());
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!d1.isNull() && !d2.isNull());
+   TBOX_ASSERT(d1 && d2);
    TBOX_ASSERT(d1->getDepth() && d2->getDepth());
    TBOX_ASSERT(d1->getBox().isSpatiallyEqual(d2->getBox()));
    TBOX_ASSERT(d1->getGhostBox().isSpatiallyEqual(d2->getGhostBox()));
@@ -86,7 +90,7 @@ void PatchEdgeDataOpsInteger::printData(
    const hier::Box& box,
    std::ostream& s) const
 {
-   TBOX_ASSERT(!data.isNull());
+   TBOX_ASSERT(data);
    TBOX_DIM_ASSERT_CHECK_ARGS2(*data, box);
 
    s << "Data box = " << box << std::endl;
@@ -99,7 +103,7 @@ void PatchEdgeDataOpsInteger::copyData(
    const tbox::Pointer<pdat::EdgeData<int> >& src,
    const hier::Box& box) const
 {
-   TBOX_ASSERT(!dst.isNull() && !src.isNull());
+   TBOX_ASSERT(dst && src);
    TBOX_DIM_ASSERT_CHECK_ARGS3(*dst, *src, box);
 
    const tbox::Dimension& dim(box.getDim());
@@ -115,7 +119,7 @@ void PatchEdgeDataOpsInteger::setToScalar(
    const int& alpha,
    const hier::Box& box) const
 {
-   TBOX_ASSERT(!dst.isNull());
+   TBOX_ASSERT(dst);
    TBOX_DIM_ASSERT_CHECK_ARGS2(*dst, box);
 
    dst->fillAll(alpha, box);
@@ -126,7 +130,7 @@ void PatchEdgeDataOpsInteger::abs(
    const tbox::Pointer<pdat::EdgeData<int> >& src,
    const hier::Box& box) const
 {
-   TBOX_ASSERT(!dst.isNull() && !src.isNull());
+   TBOX_ASSERT(dst && src);
    TBOX_DIM_ASSERT_CHECK_ARGS3(*dst, *src, box);
 
    const tbox::Dimension& dim(box.getDim());

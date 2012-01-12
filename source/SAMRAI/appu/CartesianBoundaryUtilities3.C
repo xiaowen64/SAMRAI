@@ -144,7 +144,7 @@ void CartesianBoundaryUtilities3::readBoundaryInput(
    TBOX_DIM_ASSERT(periodic.getDim() == tbox::Dimension(3));
 
    TBOX_ASSERT(bdry_strategy != (BoundaryUtilityStrategy *)NULL);
-   TBOX_ASSERT(!bdry_db.isNull());
+   TBOX_ASSERT(bdry_db);
    TBOX_ASSERT(face_conds.getSize() == NUM_3D_FACES);
    TBOX_ASSERT(edge_conds.getSize() == NUM_3D_EDGES);
    TBOX_ASSERT(node_conds.getSize() == NUM_3D_NODES);
@@ -193,7 +193,7 @@ void CartesianBoundaryUtilities3::fillFaceBoundaryData(
    const tbox::Array<double>& bdry_face_values)
 {
    TBOX_ASSERT(!varname.empty());
-   TBOX_ASSERT(!vardata.isNull());
+   TBOX_ASSERT(vardata);
    TBOX_ASSERT(bdry_face_conds.getSize() == NUM_3D_FACES);
    TBOX_ASSERT(bdry_face_values.getSize() == NUM_3D_FACES * (vardata->getDepth()));
 
@@ -206,8 +206,9 @@ void CartesianBoundaryUtilities3::fillFaceBoundaryData(
       stuff3dBdryFortConst();
    }
 
-   const tbox::Pointer<geom::CartesianPatchGeometry> pgeom =
-      patch.getPatchGeometry();
+   const tbox::Pointer<geom::CartesianPatchGeometry> pgeom(
+      patch.getPatchGeometry(),
+      tbox::__dynamic_cast_tag());
    const double* dx = pgeom->getDx();
 
    const hier::Box& interior(patch.getBox());
@@ -274,7 +275,7 @@ void CartesianBoundaryUtilities3::fillEdgeBoundaryData(
    const tbox::Array<double>& bdry_face_values)
 {
    TBOX_ASSERT(!varname.empty());
-   TBOX_ASSERT(!vardata.isNull());
+   TBOX_ASSERT(vardata);
    TBOX_ASSERT(bdry_edge_conds.getSize() == NUM_3D_EDGES);
    TBOX_ASSERT(bdry_face_values.getSize() == NUM_3D_FACES * (vardata->getDepth()));
 
@@ -287,8 +288,9 @@ void CartesianBoundaryUtilities3::fillEdgeBoundaryData(
       stuff3dBdryFortConst();
    }
 
-   const tbox::Pointer<geom::CartesianPatchGeometry> pgeom =
-      patch.getPatchGeometry();
+   const tbox::Pointer<geom::CartesianPatchGeometry> pgeom(
+      patch.getPatchGeometry(),
+      tbox::__dynamic_cast_tag());
    const double* dx = pgeom->getDx();
 
    const hier::Box& interior(patch.getBox());
@@ -355,7 +357,7 @@ void CartesianBoundaryUtilities3::fillNodeBoundaryData(
    const tbox::Array<double>& bdry_face_values)
 {
    TBOX_ASSERT(!varname.empty());
-   TBOX_ASSERT(!vardata.isNull());
+   TBOX_ASSERT(vardata);
    TBOX_ASSERT(bdry_node_conds.getSize() == NUM_3D_NODES);
    TBOX_ASSERT(bdry_face_values.getSize() == NUM_3D_FACES * (vardata->getDepth()));
 
@@ -368,8 +370,9 @@ void CartesianBoundaryUtilities3::fillNodeBoundaryData(
       stuff3dBdryFortConst();
    }
 
-   const tbox::Pointer<geom::CartesianPatchGeometry> pgeom =
-      patch.getPatchGeometry();
+   const tbox::Pointer<geom::CartesianPatchGeometry> pgeom(
+      patch.getPatchGeometry(),
+      tbox::__dynamic_cast_tag());
    const double* dx = pgeom->getDx();
 
    const hier::Box& interior(patch.getBox());
@@ -624,11 +627,13 @@ int CartesianBoundaryUtilities3::checkBdryData(
    int btype = bbox.getBoundaryType();
    int bloc = bbox.getLocationIndex();
 
-   tbox::Pointer<geom::CartesianPatchGeometry> pgeom =
-      patch.getPatchGeometry();
+   tbox::Pointer<geom::CartesianPatchGeometry> pgeom(
+      patch.getPatchGeometry(),
+      tbox::__dynamic_cast_tag());
 
-   tbox::Pointer<pdat::CellData<double> > vardata =
-      patch.getPatchData(data_id);
+   tbox::Pointer<pdat::CellData<double> > vardata(
+      patch.getPatchData(data_id),
+      tbox::__dynamic_cast_tag());
 
    std::string bdry_type_str;
    if (btype == Bdry::FACE3D) {
@@ -808,7 +813,7 @@ void CartesianBoundaryUtilities3::read3dBdryFaces(
    TBOX_DIM_ASSERT(periodic.getDim() == tbox::Dimension(3));
 
    TBOX_ASSERT(bdry_strategy != (BoundaryUtilityStrategy *)NULL);
-   TBOX_ASSERT(!bdry_db.isNull());
+   TBOX_ASSERT(bdry_db);
    TBOX_ASSERT(face_conds.getSize() == NUM_3D_FACES);
 
    int num_per_dirs = 0;
@@ -858,7 +863,7 @@ void CartesianBoundaryUtilities3::read3dBdryFaces(
             if (bdry_db->keyExists(bdry_loc_str)) {
                tbox::Pointer<tbox::Database> bdry_loc_db =
                   bdry_db->getDatabase(bdry_loc_str);
-               if (!bdry_loc_db.isNull()) {
+               if (bdry_loc_db) {
                   if (bdry_loc_db->keyExists("boundary_condition")) {
                      std::string bdry_cond_str =
                         bdry_loc_db->getString("boundary_condition");
@@ -911,7 +916,7 @@ void CartesianBoundaryUtilities3::read3dBdryEdges(
 {
    TBOX_DIM_ASSERT(periodic.getDim() == tbox::Dimension(3));
 
-   TBOX_ASSERT(!bdry_db.isNull());
+   TBOX_ASSERT(bdry_db);
    TBOX_ASSERT(face_conds.getSize() == NUM_3D_FACES);
    TBOX_ASSERT(edge_conds.getSize() == NUM_3D_EDGES);
 
@@ -1004,7 +1009,7 @@ void CartesianBoundaryUtilities3::read3dBdryEdges(
             if (bdry_db->keyExists(bdry_loc_str)) {
                tbox::Pointer<tbox::Database> bdry_loc_db =
                   bdry_db->getDatabase(bdry_loc_str);
-               if (!bdry_loc_db.isNull()) {
+               if (bdry_loc_db) {
                   if (bdry_loc_db->keyExists("boundary_condition")) {
                      std::string bdry_cond_str =
                         bdry_loc_db->getString("boundary_condition");
@@ -1275,7 +1280,7 @@ void CartesianBoundaryUtilities3::read3dBdryNodes(
 {
    TBOX_DIM_ASSERT(periodic.getDim() == tbox::Dimension(3));
 
-   TBOX_ASSERT(!bdry_db.isNull());
+   TBOX_ASSERT(bdry_db);
    TBOX_ASSERT(face_conds.getSize() == NUM_3D_FACES);
    TBOX_ASSERT(node_conds.getSize() == NUM_3D_NODES);
 
@@ -1328,7 +1333,7 @@ void CartesianBoundaryUtilities3::read3dBdryNodes(
          if (bdry_db->keyExists(bdry_loc_str)) {
             tbox::Pointer<tbox::Database> bdry_loc_db =
                bdry_db->getDatabase(bdry_loc_str);
-            if (!bdry_loc_db.isNull()) {
+            if (bdry_loc_db) {
                if (bdry_loc_db->keyExists("boundary_condition")) {
                   std::string bdry_cond_str =
                      bdry_loc_db->getString("boundary_condition");

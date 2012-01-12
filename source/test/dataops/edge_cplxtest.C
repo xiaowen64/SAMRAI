@@ -200,7 +200,7 @@ int main(
 
       tbox::Pointer<math::HierarchyDataOpsComplex> edge_ops(
          new math::HierarchyEdgeDataOpsComplex(hierarchy, 0, 1));
-      TBOX_ASSERT(!edge_ops.isNull());
+      TBOX_ASSERT(edge_ops);
 
       tbox::Pointer<math::HierarchyDataOpsReal<double> > swgt_ops(
          new math::HierarchyEdgeDataOpsReal<double>(hierarchy, 0, 1));
@@ -773,14 +773,14 @@ int main(
       }
 
       for (iv = 0; iv < NVARS; iv++) {
-         fvar[iv].setNull();
+         fvar[iv].reset();
       }
-      swgt.setNull();
+      swgt.reset();
 
-      geometry.setNull();
-      hierarchy.setNull();
-      edge_ops.setNull();
-      swgt_ops.setNull();
+      geometry.reset();
+      hierarchy.reset();
+      edge_ops.reset();
+      swgt_ops.reset();
 
       if (num_failures == 0) {
          tbox::pout << "\nPASSED:  edge cplxtest" << std::endl;

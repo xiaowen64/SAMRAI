@@ -33,7 +33,7 @@ HierarchyCellDataOpsReal<TYPE>::HierarchyCellDataOpsReal(
    HierarchyDataOpsReal<TYPE>()
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!hierarchy.isNull());
+   TBOX_ASSERT(hierarchy);
 #endif
    d_hierarchy = hierarchy;
    if ((coarsest_level < 0) || (finest_level < 0)) {
@@ -65,7 +65,7 @@ template<class TYPE>
 void HierarchyCellDataOpsReal<TYPE>::setPatchHierarchy(
    tbox::Pointer<hier::PatchHierarchy> hierarchy)
 {
-   TBOX_ASSERT(!hierarchy.isNull());
+   TBOX_ASSERT(hierarchy);
 
    d_hierarchy = hierarchy;
 }
@@ -76,7 +76,7 @@ void HierarchyCellDataOpsReal<TYPE>::resetLevels(
    const int finest_level)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!d_hierarchy.isNull());
+   TBOX_ASSERT(d_hierarchy);
    TBOX_ASSERT((coarsest_level >= 0)
       && (finest_level >= coarsest_level)
       && (finest_level <= d_hierarchy->getFinestLevelNumber()));
@@ -133,7 +133,7 @@ void HierarchyCellDataOpsReal<TYPE>::copyData(
    const bool interior_only) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!d_hierarchy.isNull());
+   TBOX_ASSERT(d_hierarchy);
    TBOX_ASSERT((d_coarsest_level >= 0)
       && (d_finest_level >= d_coarsest_level)
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
@@ -144,10 +144,14 @@ void HierarchyCellDataOpsReal<TYPE>::copyData(
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
          tbox::Pointer<hier::Patch> p = *ip;
 
-         tbox::Pointer<pdat::CellData<TYPE> > dst = p->getPatchData(dst_id);
-         tbox::Pointer<pdat::CellData<TYPE> > src = p->getPatchData(src_id);
+         tbox::Pointer<pdat::CellData<TYPE> > dst(
+            p->getPatchData(dst_id),
+            tbox::__dynamic_cast_tag());
+         tbox::Pointer<pdat::CellData<TYPE> > src(
+            p->getPatchData(src_id),
+            tbox::__dynamic_cast_tag());
 #ifdef DEBUG_CHECK_ASSERTIONS
-         TBOX_ASSERT(!dst.isNull());
+         TBOX_ASSERT(dst);
 #endif
          hier::Box box = (interior_only ? p->getBox() : dst->getGhostBox());
 
@@ -162,17 +166,19 @@ void HierarchyCellDataOpsReal<TYPE>::swapData(
    const int data2_id) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   tbox::Pointer<pdat::CellDataFactory<TYPE> >
-   d1fact = d_hierarchy->getPatchDescriptor()->getPatchDataFactory(data1_id);
-   TBOX_ASSERT(!d1fact.isNull());
-   tbox::Pointer<pdat::CellDataFactory<TYPE> >
-   d2fact = d_hierarchy->getPatchDescriptor()->getPatchDataFactory(data2_id);
-   TBOX_ASSERT(!d2fact.isNull());
+   tbox::Pointer<pdat::CellDataFactory<TYPE> > d1fact(
+      d_hierarchy->getPatchDescriptor()->getPatchDataFactory(data1_id),
+      tbox::__dynamic_cast_tag());
+   TBOX_ASSERT(d1fact);
+   tbox::Pointer<pdat::CellDataFactory<TYPE> > d2fact(
+      d_hierarchy->getPatchDescriptor()->getPatchDataFactory(data2_id),
+      tbox::__dynamic_cast_tag());
+   TBOX_ASSERT(d2fact);
    TBOX_ASSERT(d1fact->getDepth() == d2fact->getDepth());
    TBOX_ASSERT(d1fact->getGhostCellWidth() == d2fact->getGhostCellWidth());
 #endif
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!d_hierarchy.isNull());
+   TBOX_ASSERT(d_hierarchy);
    TBOX_ASSERT((d_coarsest_level >= 0)
       && (d_finest_level >= d_coarsest_level)
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
@@ -195,7 +201,7 @@ void HierarchyCellDataOpsReal<TYPE>::printData(
    const bool interior_only) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!d_hierarchy.isNull());
+   TBOX_ASSERT(d_hierarchy);
    TBOX_ASSERT((d_coarsest_level >= 0)
       && (d_finest_level >= d_coarsest_level)
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
@@ -212,9 +218,11 @@ void HierarchyCellDataOpsReal<TYPE>::printData(
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
          tbox::Pointer<hier::Patch> p = *ip;
 
-         tbox::Pointer<pdat::CellData<TYPE> > d = p->getPatchData(data_id);
+         tbox::Pointer<pdat::CellData<TYPE> > d(
+            p->getPatchData(data_id),
+            tbox::__dynamic_cast_tag());
 #ifdef DEBUG_CHECK_ASSERTIONS
-         TBOX_ASSERT(!d.isNull());
+         TBOX_ASSERT(d);
 #endif
          hier::Box box = (interior_only ? p->getBox() : d->getGhostBox());
 
@@ -230,7 +238,7 @@ void HierarchyCellDataOpsReal<TYPE>::setToScalar(
    const bool interior_only) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!d_hierarchy.isNull());
+   TBOX_ASSERT(d_hierarchy);
    TBOX_ASSERT((d_coarsest_level >= 0)
       && (d_finest_level >= d_coarsest_level)
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
@@ -241,9 +249,11 @@ void HierarchyCellDataOpsReal<TYPE>::setToScalar(
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
          tbox::Pointer<hier::Patch> p = *ip;
 
-         tbox::Pointer<pdat::CellData<TYPE> > d = p->getPatchData(data_id);
+         tbox::Pointer<pdat::CellData<TYPE> > d(
+            p->getPatchData(data_id),
+            tbox::__dynamic_cast_tag());
 #ifdef DEBUG_CHECK_ASSERTIONS
-         TBOX_ASSERT(!d.isNull());
+         TBOX_ASSERT(d);
 #endif
          hier::Box box = (interior_only ? p->getBox() : d->getGhostBox());
 
@@ -268,7 +278,7 @@ void HierarchyCellDataOpsReal<TYPE>::scale(
    const bool interior_only) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!d_hierarchy.isNull());
+   TBOX_ASSERT(d_hierarchy);
    TBOX_ASSERT((d_coarsest_level >= 0)
       && (d_finest_level >= d_coarsest_level)
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
@@ -279,10 +289,14 @@ void HierarchyCellDataOpsReal<TYPE>::scale(
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
          tbox::Pointer<hier::Patch> p = *ip;
 
-         tbox::Pointer<pdat::CellData<TYPE> > dst = p->getPatchData(dst_id);
-         tbox::Pointer<pdat::CellData<TYPE> > src = p->getPatchData(src_id);
+         tbox::Pointer<pdat::CellData<TYPE> > dst(
+            p->getPatchData(dst_id),
+            tbox::__dynamic_cast_tag());
+         tbox::Pointer<pdat::CellData<TYPE> > src(
+            p->getPatchData(src_id),
+            tbox::__dynamic_cast_tag());
 #ifdef DEBUG_CHECK_ASSERTIONS
-         TBOX_ASSERT(!dst.isNull());
+         TBOX_ASSERT(dst);
 #endif
          hier::Box box = (interior_only ? p->getBox() : dst->getGhostBox());
 
@@ -299,7 +313,7 @@ void HierarchyCellDataOpsReal<TYPE>::addScalar(
    const bool interior_only) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!d_hierarchy.isNull());
+   TBOX_ASSERT(d_hierarchy);
    TBOX_ASSERT((d_coarsest_level >= 0)
       && (d_finest_level >= d_coarsest_level)
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
@@ -310,10 +324,14 @@ void HierarchyCellDataOpsReal<TYPE>::addScalar(
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
          tbox::Pointer<hier::Patch> p = *ip;
 
-         tbox::Pointer<pdat::CellData<TYPE> > dst = p->getPatchData(dst_id);
-         tbox::Pointer<pdat::CellData<TYPE> > src = p->getPatchData(src_id);
+         tbox::Pointer<pdat::CellData<TYPE> > dst(
+            p->getPatchData(dst_id),
+            tbox::__dynamic_cast_tag());
+         tbox::Pointer<pdat::CellData<TYPE> > src(
+            p->getPatchData(src_id),
+            tbox::__dynamic_cast_tag());
 #ifdef DEBUG_CHECK_ASSERTIONS
-         TBOX_ASSERT(!dst.isNull());
+         TBOX_ASSERT(dst);
 #endif
          hier::Box box = (interior_only ? p->getBox() : dst->getGhostBox());
 
@@ -330,7 +348,7 @@ void HierarchyCellDataOpsReal<TYPE>::add(
    const bool interior_only) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!d_hierarchy.isNull());
+   TBOX_ASSERT(d_hierarchy);
    TBOX_ASSERT((d_coarsest_level >= 0)
       && (d_finest_level >= d_coarsest_level)
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
@@ -341,11 +359,17 @@ void HierarchyCellDataOpsReal<TYPE>::add(
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
          tbox::Pointer<hier::Patch> p = *ip;
 
-         tbox::Pointer<pdat::CellData<TYPE> > dst = p->getPatchData(dst_id);
-         tbox::Pointer<pdat::CellData<TYPE> > src1 = p->getPatchData(src1_id);
-         tbox::Pointer<pdat::CellData<TYPE> > src2 = p->getPatchData(src2_id);
+         tbox::Pointer<pdat::CellData<TYPE> > dst(
+            p->getPatchData(dst_id),
+            tbox::__dynamic_cast_tag());
+         tbox::Pointer<pdat::CellData<TYPE> > src1(
+            p->getPatchData(src1_id),
+            tbox::__dynamic_cast_tag());
+         tbox::Pointer<pdat::CellData<TYPE> > src2(
+            p->getPatchData(src2_id),
+            tbox::__dynamic_cast_tag());
 #ifdef DEBUG_CHECK_ASSERTIONS
-         TBOX_ASSERT(!dst.isNull());
+         TBOX_ASSERT(dst);
 #endif
          hier::Box box = (interior_only ? p->getBox() : dst->getGhostBox());
 
@@ -362,7 +386,7 @@ void HierarchyCellDataOpsReal<TYPE>::subtract(
    const bool interior_only) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!d_hierarchy.isNull());
+   TBOX_ASSERT(d_hierarchy);
    TBOX_ASSERT((d_coarsest_level >= 0)
       && (d_finest_level >= d_coarsest_level)
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
@@ -373,11 +397,17 @@ void HierarchyCellDataOpsReal<TYPE>::subtract(
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
          tbox::Pointer<hier::Patch> p = *ip;
 
-         tbox::Pointer<pdat::CellData<TYPE> > dst = p->getPatchData(dst_id);
-         tbox::Pointer<pdat::CellData<TYPE> > src1 = p->getPatchData(src1_id);
-         tbox::Pointer<pdat::CellData<TYPE> > src2 = p->getPatchData(src2_id);
+         tbox::Pointer<pdat::CellData<TYPE> > dst(
+            p->getPatchData(dst_id),
+            tbox::__dynamic_cast_tag());
+         tbox::Pointer<pdat::CellData<TYPE> > src1(
+            p->getPatchData(src1_id),
+            tbox::__dynamic_cast_tag());
+         tbox::Pointer<pdat::CellData<TYPE> > src2(
+            p->getPatchData(src2_id),
+            tbox::__dynamic_cast_tag());
 #ifdef DEBUG_CHECK_ASSERTIONS
-         TBOX_ASSERT(!dst.isNull());
+         TBOX_ASSERT(dst);
 #endif
          hier::Box box = (interior_only ? p->getBox() : dst->getGhostBox());
 
@@ -394,7 +424,7 @@ void HierarchyCellDataOpsReal<TYPE>::multiply(
    const bool interior_only) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!d_hierarchy.isNull());
+   TBOX_ASSERT(d_hierarchy);
    TBOX_ASSERT((d_coarsest_level >= 0)
       && (d_finest_level >= d_coarsest_level)
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
@@ -405,11 +435,17 @@ void HierarchyCellDataOpsReal<TYPE>::multiply(
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
          tbox::Pointer<hier::Patch> p = *ip;
 
-         tbox::Pointer<pdat::CellData<TYPE> > dst = p->getPatchData(dst_id);
-         tbox::Pointer<pdat::CellData<TYPE> > src1 = p->getPatchData(src1_id);
-         tbox::Pointer<pdat::CellData<TYPE> > src2 = p->getPatchData(src2_id);
+         tbox::Pointer<pdat::CellData<TYPE> > dst(
+            p->getPatchData(dst_id),
+            tbox::__dynamic_cast_tag());
+         tbox::Pointer<pdat::CellData<TYPE> > src1(
+            p->getPatchData(src1_id),
+            tbox::__dynamic_cast_tag());
+         tbox::Pointer<pdat::CellData<TYPE> > src2(
+            p->getPatchData(src2_id),
+            tbox::__dynamic_cast_tag());
 #ifdef DEBUG_CHECK_ASSERTIONS
-         TBOX_ASSERT(!dst.isNull());
+         TBOX_ASSERT(dst);
 #endif
          hier::Box box = (interior_only ? p->getBox() : dst->getGhostBox());
 
@@ -426,7 +462,7 @@ void HierarchyCellDataOpsReal<TYPE>::divide(
    const bool interior_only) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!d_hierarchy.isNull());
+   TBOX_ASSERT(d_hierarchy);
    TBOX_ASSERT((d_coarsest_level >= 0)
       && (d_finest_level >= d_coarsest_level)
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
@@ -437,11 +473,17 @@ void HierarchyCellDataOpsReal<TYPE>::divide(
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
          tbox::Pointer<hier::Patch> p = *ip;
 
-         tbox::Pointer<pdat::CellData<TYPE> > dst = p->getPatchData(dst_id);
-         tbox::Pointer<pdat::CellData<TYPE> > src1 = p->getPatchData(src1_id);
-         tbox::Pointer<pdat::CellData<TYPE> > src2 = p->getPatchData(src2_id);
+         tbox::Pointer<pdat::CellData<TYPE> > dst(
+            p->getPatchData(dst_id),
+            tbox::__dynamic_cast_tag());
+         tbox::Pointer<pdat::CellData<TYPE> > src1(
+            p->getPatchData(src1_id),
+            tbox::__dynamic_cast_tag());
+         tbox::Pointer<pdat::CellData<TYPE> > src2(
+            p->getPatchData(src2_id),
+            tbox::__dynamic_cast_tag());
 #ifdef DEBUG_CHECK_ASSERTIONS
-         TBOX_ASSERT(!dst.isNull());
+         TBOX_ASSERT(dst);
 #endif
          hier::Box box = (interior_only ? p->getBox() : dst->getGhostBox());
 
@@ -457,7 +499,7 @@ void HierarchyCellDataOpsReal<TYPE>::reciprocal(
    const bool interior_only) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!d_hierarchy.isNull());
+   TBOX_ASSERT(d_hierarchy);
    TBOX_ASSERT((d_coarsest_level >= 0)
       && (d_finest_level >= d_coarsest_level)
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
@@ -468,10 +510,14 @@ void HierarchyCellDataOpsReal<TYPE>::reciprocal(
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
          tbox::Pointer<hier::Patch> p = *ip;
 
-         tbox::Pointer<pdat::CellData<TYPE> > dst = p->getPatchData(dst_id);
-         tbox::Pointer<pdat::CellData<TYPE> > src = p->getPatchData(src_id);
+         tbox::Pointer<pdat::CellData<TYPE> > dst(
+            p->getPatchData(dst_id),
+            tbox::__dynamic_cast_tag());
+         tbox::Pointer<pdat::CellData<TYPE> > src(
+            p->getPatchData(src_id),
+            tbox::__dynamic_cast_tag());
 #ifdef DEBUG_CHECK_ASSERTIONS
-         TBOX_ASSERT(!dst.isNull());
+         TBOX_ASSERT(dst);
 #endif
          hier::Box box = (interior_only ? p->getBox() : dst->getGhostBox());
 
@@ -490,7 +536,7 @@ void HierarchyCellDataOpsReal<TYPE>::linearSum(
    const bool interior_only) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!d_hierarchy.isNull());
+   TBOX_ASSERT(d_hierarchy);
    TBOX_ASSERT((d_coarsest_level >= 0)
       && (d_finest_level >= d_coarsest_level)
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
@@ -501,11 +547,17 @@ void HierarchyCellDataOpsReal<TYPE>::linearSum(
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
          tbox::Pointer<hier::Patch> p = *ip;
 
-         tbox::Pointer<pdat::CellData<TYPE> > dst = p->getPatchData(dst_id);
-         tbox::Pointer<pdat::CellData<TYPE> > src1 = p->getPatchData(src1_id);
-         tbox::Pointer<pdat::CellData<TYPE> > src2 = p->getPatchData(src2_id);
+         tbox::Pointer<pdat::CellData<TYPE> > dst(
+            p->getPatchData(dst_id),
+            tbox::__dynamic_cast_tag());
+         tbox::Pointer<pdat::CellData<TYPE> > src1(
+            p->getPatchData(src1_id),
+            tbox::__dynamic_cast_tag());
+         tbox::Pointer<pdat::CellData<TYPE> > src2(
+            p->getPatchData(src2_id),
+            tbox::__dynamic_cast_tag());
 #ifdef DEBUG_CHECK_ASSERTIONS
-         TBOX_ASSERT(!dst.isNull());
+         TBOX_ASSERT(dst);
 #endif
          hier::Box box = (interior_only ? p->getBox() : dst->getGhostBox());
 
@@ -523,7 +575,7 @@ void HierarchyCellDataOpsReal<TYPE>::axpy(
    const bool interior_only) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!d_hierarchy.isNull());
+   TBOX_ASSERT(d_hierarchy);
    TBOX_ASSERT((d_coarsest_level >= 0)
       && (d_finest_level >= d_coarsest_level)
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
@@ -534,11 +586,17 @@ void HierarchyCellDataOpsReal<TYPE>::axpy(
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
          tbox::Pointer<hier::Patch> p = *ip;
 
-         tbox::Pointer<pdat::CellData<TYPE> > dst = p->getPatchData(dst_id);
-         tbox::Pointer<pdat::CellData<TYPE> > src1 = p->getPatchData(src1_id);
-         tbox::Pointer<pdat::CellData<TYPE> > src2 = p->getPatchData(src2_id);
+         tbox::Pointer<pdat::CellData<TYPE> > dst(
+            p->getPatchData(dst_id),
+            tbox::__dynamic_cast_tag());
+         tbox::Pointer<pdat::CellData<TYPE> > src1(
+            p->getPatchData(src1_id),
+            tbox::__dynamic_cast_tag());
+         tbox::Pointer<pdat::CellData<TYPE> > src2(
+            p->getPatchData(src2_id),
+            tbox::__dynamic_cast_tag());
 #ifdef DEBUG_CHECK_ASSERTIONS
-         TBOX_ASSERT(!dst.isNull());
+         TBOX_ASSERT(dst);
 #endif
          hier::Box box = (interior_only ? p->getBox() : dst->getGhostBox());
 
@@ -556,7 +614,7 @@ void HierarchyCellDataOpsReal<TYPE>::axmy(
    const bool interior_only) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!d_hierarchy.isNull());
+   TBOX_ASSERT(d_hierarchy);
    TBOX_ASSERT((d_coarsest_level >= 0)
       && (d_finest_level >= d_coarsest_level)
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
@@ -567,11 +625,17 @@ void HierarchyCellDataOpsReal<TYPE>::axmy(
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
          tbox::Pointer<hier::Patch> p = *ip;
 
-         tbox::Pointer<pdat::CellData<TYPE> > dst = p->getPatchData(dst_id);
-         tbox::Pointer<pdat::CellData<TYPE> > src1 = p->getPatchData(src1_id);
-         tbox::Pointer<pdat::CellData<TYPE> > src2 = p->getPatchData(src2_id);
+         tbox::Pointer<pdat::CellData<TYPE> > dst(
+            p->getPatchData(dst_id),
+            tbox::__dynamic_cast_tag());
+         tbox::Pointer<pdat::CellData<TYPE> > src1(
+            p->getPatchData(src1_id),
+            tbox::__dynamic_cast_tag());
+         tbox::Pointer<pdat::CellData<TYPE> > src2(
+            p->getPatchData(src2_id),
+            tbox::__dynamic_cast_tag());
 #ifdef DEBUG_CHECK_ASSERTIONS
-         TBOX_ASSERT(!dst.isNull());
+         TBOX_ASSERT(dst);
 #endif
          hier::Box box = (interior_only ? p->getBox() : dst->getGhostBox());
 
@@ -587,7 +651,7 @@ void HierarchyCellDataOpsReal<TYPE>::abs(
    const bool interior_only) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!d_hierarchy.isNull());
+   TBOX_ASSERT(d_hierarchy);
    TBOX_ASSERT((d_coarsest_level >= 0)
       && (d_finest_level >= d_coarsest_level)
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
@@ -598,10 +662,14 @@ void HierarchyCellDataOpsReal<TYPE>::abs(
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
          tbox::Pointer<hier::Patch> p = *ip;
 
-         tbox::Pointer<pdat::CellData<TYPE> > dst = p->getPatchData(dst_id);
-         tbox::Pointer<pdat::CellData<TYPE> > src = p->getPatchData(src_id);
+         tbox::Pointer<pdat::CellData<TYPE> > dst(
+            p->getPatchData(dst_id),
+            tbox::__dynamic_cast_tag());
+         tbox::Pointer<pdat::CellData<TYPE> > src(
+            p->getPatchData(src_id),
+            tbox::__dynamic_cast_tag());
 #ifdef DEBUG_CHECK_ASSERTIONS
-         TBOX_ASSERT(!dst.isNull());
+         TBOX_ASSERT(dst);
 #endif
          hier::Box box = (interior_only ? p->getBox() : dst->getGhostBox());
 
@@ -618,7 +686,7 @@ void HierarchyCellDataOpsReal<TYPE>::setRandomValues(
    const bool interior_only) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!d_hierarchy.isNull());
+   TBOX_ASSERT(d_hierarchy);
    TBOX_ASSERT((d_coarsest_level >= 0)
       && (d_finest_level >= d_coarsest_level)
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
@@ -629,9 +697,11 @@ void HierarchyCellDataOpsReal<TYPE>::setRandomValues(
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
          tbox::Pointer<hier::Patch> p = *ip;
 
-         tbox::Pointer<pdat::CellData<TYPE> > data = p->getPatchData(data_id);
+         tbox::Pointer<pdat::CellData<TYPE> > data(
+            p->getPatchData(data_id),
+            tbox::__dynamic_cast_tag());
 #ifdef DEBUG_CHECK_ASSERTIONS
-         TBOX_ASSERT(!data.isNull());
+         TBOX_ASSERT(data);
 #endif
          hier::Box box = (interior_only ? p->getBox() : data->getGhostBox());
 
@@ -654,7 +724,7 @@ int HierarchyCellDataOpsReal<TYPE>::numberOfEntries(
    const bool interior_only) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!d_hierarchy.isNull());
+   TBOX_ASSERT(d_hierarchy);
    TBOX_ASSERT((d_coarsest_level >= 0)
       && (d_finest_level >= d_coarsest_level)
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
@@ -668,13 +738,15 @@ int HierarchyCellDataOpsReal<TYPE>::numberOfEntries(
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
          tbox::Pointer<hier::Patch> p = *ip;
 
-         tbox::Pointer<pdat::CellData<TYPE> > d = p->getPatchData(data_id);
+         tbox::Pointer<pdat::CellData<TYPE> > d(
+            p->getPatchData(data_id),
+            tbox::__dynamic_cast_tag());
 #ifdef DEBUG_CHECK_ASSERTIONS
-         TBOX_ASSERT(!d.isNull());
+         TBOX_ASSERT(d);
 #endif
          hier::Box box = (interior_only ? p->getBox() : d->getGhostBox());
 
-         if (!d.isNull()) {
+         if (d) {
             entries += d_patch_ops.numberOfEntries(d, box);
          }
       }
@@ -694,7 +766,7 @@ double HierarchyCellDataOpsReal<TYPE>::sumControlVolumes(
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(vol_id >= 0);
-   TBOX_ASSERT(!d_hierarchy.isNull());
+   TBOX_ASSERT(d_hierarchy);
    TBOX_ASSERT((d_coarsest_level >= 0)
       && (d_finest_level >= d_coarsest_level)
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
@@ -708,10 +780,14 @@ double HierarchyCellDataOpsReal<TYPE>::sumControlVolumes(
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
          tbox::Pointer<hier::Patch> p = *ip;
 
-         tbox::Pointer<pdat::CellData<TYPE> > data = p->getPatchData(data_id);
-         tbox::Pointer<pdat::CellData<double> > cv = p->getPatchData(vol_id);
+         tbox::Pointer<pdat::CellData<TYPE> > data(
+            p->getPatchData(data_id),
+            tbox::__dynamic_cast_tag());
+         tbox::Pointer<pdat::CellData<double> > cv(
+            p->getPatchData(vol_id),
+            tbox::__dynamic_cast_tag());
 #ifdef DEBUG_CHECK_ASSERTIONS
-         TBOX_ASSERT(!cv.isNull());
+         TBOX_ASSERT(cv);
 #endif
          hier::Box box = cv->getGhostBox();
 
@@ -733,7 +809,7 @@ double HierarchyCellDataOpsReal<TYPE>::L1Norm(
    bool local_only) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!d_hierarchy.isNull());
+   TBOX_ASSERT(d_hierarchy);
    TBOX_ASSERT((d_coarsest_level >= 0)
       && (d_finest_level >= d_coarsest_level)
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
@@ -747,18 +823,23 @@ double HierarchyCellDataOpsReal<TYPE>::L1Norm(
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
          tbox::Pointer<hier::Patch> p = *ip;
 
-         tbox::Pointer<pdat::CellData<TYPE> > data = p->getPatchData(data_id);
-         tbox::Pointer<pdat::CellData<double> > cv;
+         tbox::Pointer<pdat::CellData<TYPE> > data(
+            p->getPatchData(data_id),
+            tbox::__dynamic_cast_tag());
+         tbox::Pointer<hier::PatchData> pd;
 
          hier::Box box = p->getBox();
          if (vol_id >= 0) {
 #ifdef DEBUG_CHECK_ASSERTIONS
-            TBOX_ASSERT(!data.isNull());
+            TBOX_ASSERT(data);
 #endif
             box = data->getGhostBox();
-            cv = p->getPatchData(vol_id);
+            pd = p->getPatchData(vol_id);
          }
 
+         tbox::Pointer<pdat::CellData<double> > cv(
+            pd,
+            tbox::__dynamic_cast_tag());
          norm += d_patch_ops.L1Norm(data, box, cv);
       }
    }
@@ -794,7 +875,7 @@ double HierarchyCellDataOpsReal<TYPE>::weightedL2Norm(
    const int vol_id) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!d_hierarchy.isNull());
+   TBOX_ASSERT(d_hierarchy);
    TBOX_ASSERT((d_coarsest_level >= 0)
       && (d_finest_level >= d_coarsest_level)
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
@@ -808,19 +889,26 @@ double HierarchyCellDataOpsReal<TYPE>::weightedL2Norm(
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
          tbox::Pointer<hier::Patch> p = *ip;
 
-         tbox::Pointer<pdat::CellData<TYPE> > data = p->getPatchData(data_id);
-         tbox::Pointer<pdat::CellData<TYPE> > weight = p->getPatchData(wgt_id);
-         tbox::Pointer<pdat::CellData<double> > cv;
+         tbox::Pointer<pdat::CellData<TYPE> > data(
+            p->getPatchData(data_id),
+            tbox::__dynamic_cast_tag());
+         tbox::Pointer<pdat::CellData<TYPE> > weight(
+            p->getPatchData(wgt_id),
+            tbox::__dynamic_cast_tag());
+         tbox::Pointer<hier::PatchData> pd;
 
          hier::Box box = p->getBox();
          if (vol_id >= 0) {
 #ifdef DEBUG_CHECK_ASSERTIONS
-            TBOX_ASSERT(!data.isNull());
+            TBOX_ASSERT(data);
 #endif
             box = data->getGhostBox();
-            cv = p->getPatchData(vol_id);
+            pd = p->getPatchData(vol_id);
          }
 
+         tbox::Pointer<pdat::CellData<double> > cv(
+            pd,
+            tbox::__dynamic_cast_tag());
          double pnorm = d_patch_ops.weightedL2Norm(data, weight, box, cv);
 
          norm_squared += pnorm * pnorm;
@@ -871,7 +959,7 @@ double HierarchyCellDataOpsReal<TYPE>::maxNorm(
    bool local_only) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!d_hierarchy.isNull());
+   TBOX_ASSERT(d_hierarchy);
    TBOX_ASSERT((d_coarsest_level >= 0)
       && (d_finest_level >= d_coarsest_level)
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
@@ -886,19 +974,23 @@ double HierarchyCellDataOpsReal<TYPE>::maxNorm(
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
          tbox::Pointer<hier::Patch> p = *ip;
 
-         tbox::Pointer<pdat::CellData<TYPE> > data =
-            p->getPatchData(data_id);
-         tbox::Pointer<pdat::CellData<double> > cv;
+         tbox::Pointer<pdat::CellData<TYPE> > data(
+            p->getPatchData(data_id),
+            tbox::__dynamic_cast_tag());
+         tbox::Pointer<hier::PatchData> pd;
 
          hier::Box box = p->getBox();
          if (vol_id >= 0) {
 #ifdef DEBUG_CHECK_ASSERTIONS
-            TBOX_ASSERT(!data.isNull());
+            TBOX_ASSERT(data);
 #endif
             box = data->getGhostBox();
-            cv = p->getPatchData(vol_id);
+            pd = p->getPatchData(vol_id);
          }
 
+         tbox::Pointer<pdat::CellData<double> > cv(
+            pd,
+            tbox::__dynamic_cast_tag());
          norm = tbox::MathUtilities<double>::Max(norm,
                d_patch_ops.maxNorm(data, box, cv));
       }
@@ -922,7 +1014,7 @@ TYPE HierarchyCellDataOpsReal<TYPE>::dot(
    bool local_only) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!d_hierarchy.isNull());
+   TBOX_ASSERT(d_hierarchy);
    TBOX_ASSERT((d_coarsest_level >= 0)
       && (d_finest_level >= d_coarsest_level)
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
@@ -936,19 +1028,26 @@ TYPE HierarchyCellDataOpsReal<TYPE>::dot(
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
          tbox::Pointer<hier::Patch> p = *ip;
 
-         tbox::Pointer<pdat::CellData<TYPE> > data1 = p->getPatchData(data1_id);
-         tbox::Pointer<pdat::CellData<TYPE> > data2 = p->getPatchData(data2_id);
-         tbox::Pointer<pdat::CellData<double> > cv;
+         tbox::Pointer<pdat::CellData<TYPE> > data1(
+            p->getPatchData(data1_id),
+            tbox::__dynamic_cast_tag());
+         tbox::Pointer<pdat::CellData<TYPE> > data2(
+            p->getPatchData(data2_id),
+            tbox::__dynamic_cast_tag());
+         tbox::Pointer<hier::PatchData> pd;
 
          hier::Box box = p->getBox();
          if (vol_id >= 0) {
 #ifdef DEBUG_CHECK_ASSERTIONS
-            TBOX_ASSERT(!data1.isNull());
+            TBOX_ASSERT(data1);
 #endif
             box = data1->getGhostBox();
-            cv = p->getPatchData(vol_id);
+            pd = p->getPatchData(vol_id);
          }
 
+         tbox::Pointer<pdat::CellData<double> > cv(
+            pd,
+            tbox::__dynamic_cast_tag());
          dprod += d_patch_ops.dot(data1, data2, box, cv);
       }
    }
@@ -967,7 +1066,7 @@ TYPE HierarchyCellDataOpsReal<TYPE>::integral(
    const int vol_id) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!d_hierarchy.isNull());
+   TBOX_ASSERT(d_hierarchy);
    TBOX_ASSERT((d_coarsest_level >= 0)
       && (d_finest_level >= d_coarsest_level)
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
@@ -981,13 +1080,16 @@ TYPE HierarchyCellDataOpsReal<TYPE>::integral(
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
          tbox::Pointer<hier::Patch> p = *ip;
 
-         tbox::Pointer<pdat::CellData<TYPE> > data =
-            p->getPatchData(data_id);
-         tbox::Pointer<pdat::CellData<double> > vol = p->getPatchData(vol_id);
+         tbox::Pointer<pdat::CellData<TYPE> > data(
+            p->getPatchData(data_id),
+            tbox::__dynamic_cast_tag());
+         tbox::Pointer<pdat::CellData<double> > vol(
+            p->getPatchData(vol_id),
+            tbox::__dynamic_cast_tag());
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-         TBOX_ASSERT(!data.isNull());
-         TBOX_ASSERT(!vol.isNull());
+         TBOX_ASSERT(data);
+         TBOX_ASSERT(vol);
 #endif
 
          hier::Box box = data->getGhostBox();
@@ -1018,7 +1120,7 @@ int HierarchyCellDataOpsReal<TYPE>::computeConstrProdPos(
    const int vol_id) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!d_hierarchy.isNull());
+   TBOX_ASSERT(d_hierarchy);
    TBOX_ASSERT((d_coarsest_level >= 0)
       && (d_finest_level >= d_coarsest_level)
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
@@ -1033,21 +1135,26 @@ int HierarchyCellDataOpsReal<TYPE>::computeConstrProdPos(
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
          tbox::Pointer<hier::Patch> p = *ip;
 
-         tbox::Pointer<pdat::CellData<TYPE> > data1 =
-            p->getPatchData(data1_id);
-         tbox::Pointer<pdat::CellData<TYPE> > data2 =
-            p->getPatchData(data2_id);
-         tbox::Pointer<pdat::CellData<double> > cv;
+         tbox::Pointer<pdat::CellData<TYPE> > data1(
+            p->getPatchData(data1_id),
+            tbox::__dynamic_cast_tag());
+         tbox::Pointer<pdat::CellData<TYPE> > data2(
+            p->getPatchData(data2_id),
+            tbox::__dynamic_cast_tag());
+         tbox::Pointer<hier::PatchData> pd;
 
          hier::Box box = p->getBox();
          if (vol_id >= 0) {
 #ifdef DEBUG_CHECK_ASSERTIONS
-            TBOX_ASSERT(!data1.isNull());
+            TBOX_ASSERT(data1);
 #endif
             box = data1->getGhostBox();
-            cv = p->getPatchData(vol_id);
+            pd = p->getPatchData(vol_id);
          }
 
+         tbox::Pointer<pdat::CellData<double> > cv(
+            pd,
+            tbox::__dynamic_cast_tag());
          test = tbox::MathUtilities<int>::Min(
                test,
                d_patch_ops.computeConstrProdPos(data1, data2, box, cv));
@@ -1069,7 +1176,7 @@ void HierarchyCellDataOpsReal<TYPE>::compareToScalar(
    const int vol_id) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!d_hierarchy.isNull());
+   TBOX_ASSERT(d_hierarchy);
    TBOX_ASSERT((d_coarsest_level >= 0)
       && (d_finest_level >= d_coarsest_level)
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
@@ -1080,19 +1187,26 @@ void HierarchyCellDataOpsReal<TYPE>::compareToScalar(
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
          tbox::Pointer<hier::Patch> p = *ip;
 
-         tbox::Pointer<pdat::CellData<TYPE> > dst = p->getPatchData(dst_id);
-         tbox::Pointer<pdat::CellData<TYPE> > src = p->getPatchData(src_id);
-         tbox::Pointer<pdat::CellData<double> > cv;
+         tbox::Pointer<pdat::CellData<TYPE> > dst(
+            p->getPatchData(dst_id),
+            tbox::__dynamic_cast_tag());
+         tbox::Pointer<pdat::CellData<TYPE> > src(
+            p->getPatchData(src_id),
+            tbox::__dynamic_cast_tag());
+         tbox::Pointer<hier::PatchData> pd;
 
          hier::Box box = p->getBox();
          if (vol_id >= 0) {
 #ifdef DEBUG_CHECK_ASSERTIONS
-            TBOX_ASSERT(!dst.isNull());
+            TBOX_ASSERT(dst);
 #endif
             box = dst->getGhostBox();
-            cv = p->getPatchData(vol_id);
+            pd = p->getPatchData(vol_id);
          }
 
+         tbox::Pointer<pdat::CellData<double> > cv(
+            pd,
+            tbox::__dynamic_cast_tag());
          d_patch_ops.compareToScalar(dst, src, alpha, box, cv);
       }
    }
@@ -1105,7 +1219,7 @@ int HierarchyCellDataOpsReal<TYPE>::testReciprocal(
    const int vol_id) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!d_hierarchy.isNull());
+   TBOX_ASSERT(d_hierarchy);
    TBOX_ASSERT((d_coarsest_level >= 0)
       && (d_finest_level >= d_coarsest_level)
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
@@ -1119,19 +1233,26 @@ int HierarchyCellDataOpsReal<TYPE>::testReciprocal(
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
          tbox::Pointer<hier::Patch> p = *ip;
 
-         tbox::Pointer<pdat::CellData<TYPE> > dst = p->getPatchData(dst_id);
-         tbox::Pointer<pdat::CellData<TYPE> > src = p->getPatchData(src_id);
-         tbox::Pointer<pdat::CellData<double> > cv;
+         tbox::Pointer<pdat::CellData<TYPE> > dst(
+            p->getPatchData(dst_id),
+            tbox::__dynamic_cast_tag());
+         tbox::Pointer<pdat::CellData<TYPE> > src(
+            p->getPatchData(src_id),
+            tbox::__dynamic_cast_tag());
+         tbox::Pointer<hier::PatchData> pd;
 
          hier::Box box = p->getBox();
          if (vol_id >= 0) {
 #ifdef DEBUG_CHECK_ASSERTIONS
-            TBOX_ASSERT(!dst.isNull());
+            TBOX_ASSERT(dst);
 #endif
             box = dst->getGhostBox();
-            cv = p->getPatchData(vol_id);
+            pd = p->getPatchData(vol_id);
          }
 
+         tbox::Pointer<pdat::CellData<double> > cv(
+            pd,
+            tbox::__dynamic_cast_tag());
          test = tbox::MathUtilities<int>::Min(
                test,
                d_patch_ops.testReciprocal(dst, src, box, cv));
@@ -1152,7 +1273,7 @@ TYPE HierarchyCellDataOpsReal<TYPE>::maxPointwiseDivide(
    bool local_only) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!d_hierarchy.isNull());
+   TBOX_ASSERT(d_hierarchy);
    TBOX_ASSERT((d_coarsest_level >= 0)
       && (d_finest_level >= d_coarsest_level)
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
@@ -1166,8 +1287,12 @@ TYPE HierarchyCellDataOpsReal<TYPE>::maxPointwiseDivide(
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
          tbox::Pointer<hier::Patch> p = *ip;
 
-         tbox::Pointer<pdat::CellData<TYPE> > numer = p->getPatchData(numer_id);
-         tbox::Pointer<pdat::CellData<TYPE> > denom = p->getPatchData(denom_id);
+         tbox::Pointer<pdat::CellData<TYPE> > numer(
+            p->getPatchData(numer_id),
+            tbox::__dynamic_cast_tag());
+         tbox::Pointer<pdat::CellData<TYPE> > denom(
+            p->getPatchData(denom_id),
+            tbox::__dynamic_cast_tag());
 
          hier::Box box = p->getBox();
 
@@ -1191,7 +1316,7 @@ TYPE HierarchyCellDataOpsReal<TYPE>::minPointwiseDivide(
    bool local_only) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!d_hierarchy.isNull());
+   TBOX_ASSERT(d_hierarchy);
    TBOX_ASSERT((d_coarsest_level >= 0)
       && (d_finest_level >= d_coarsest_level)
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
@@ -1205,8 +1330,12 @@ TYPE HierarchyCellDataOpsReal<TYPE>::minPointwiseDivide(
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
          tbox::Pointer<hier::Patch> p = *ip;
 
-         tbox::Pointer<pdat::CellData<TYPE> > numer = p->getPatchData(numer_id);
-         tbox::Pointer<pdat::CellData<TYPE> > denom = p->getPatchData(denom_id);
+         tbox::Pointer<pdat::CellData<TYPE> > numer(
+            p->getPatchData(numer_id),
+            tbox::__dynamic_cast_tag());
+         tbox::Pointer<pdat::CellData<TYPE> > denom(
+            p->getPatchData(denom_id),
+            tbox::__dynamic_cast_tag());
 
          hier::Box box = p->getBox();
 
@@ -1229,7 +1358,7 @@ TYPE HierarchyCellDataOpsReal<TYPE>::min(
    const bool interior_only) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!d_hierarchy.isNull());
+   TBOX_ASSERT(d_hierarchy);
    TBOX_ASSERT((d_coarsest_level >= 0)
       && (d_finest_level >= d_coarsest_level)
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
@@ -1243,9 +1372,11 @@ TYPE HierarchyCellDataOpsReal<TYPE>::min(
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
          tbox::Pointer<hier::Patch> p = *ip;
 
-         tbox::Pointer<pdat::CellData<TYPE> > d = p->getPatchData(data_id);
+         tbox::Pointer<pdat::CellData<TYPE> > d(
+            p->getPatchData(data_id),
+            tbox::__dynamic_cast_tag());
 #ifdef DEBUG_CHECK_ASSERTIONS
-         TBOX_ASSERT(!d.isNull());
+         TBOX_ASSERT(d);
 #endif
          hier::Box box = (interior_only ? p->getBox() : d->getGhostBox());
 
@@ -1266,7 +1397,7 @@ TYPE HierarchyCellDataOpsReal<TYPE>::max(
    const bool interior_only) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!d_hierarchy.isNull());
+   TBOX_ASSERT(d_hierarchy);
    TBOX_ASSERT((d_coarsest_level >= 0)
       && (d_finest_level >= d_coarsest_level)
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
@@ -1280,9 +1411,11 @@ TYPE HierarchyCellDataOpsReal<TYPE>::max(
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
          tbox::Pointer<hier::Patch> p = *ip;
 
-         tbox::Pointer<pdat::CellData<TYPE> > d = p->getPatchData(data_id);
+         tbox::Pointer<pdat::CellData<TYPE> > d(
+            p->getPatchData(data_id),
+            tbox::__dynamic_cast_tag());
 #ifdef DEBUG_CHECK_ASSERTIONS
-         TBOX_ASSERT(!d.isNull());
+         TBOX_ASSERT(d);
 #endif
          hier::Box box = (interior_only ? p->getBox() : d->getGhostBox());
 

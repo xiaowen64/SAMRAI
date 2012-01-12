@@ -43,21 +43,21 @@ public:
    /**
     * Construct an index with all components equal to the argument.
     */
-   explicit Index(
+   Index(
       const tbox::Dimension& dim,
       const int i);
 
    /**
     * Construct a two-dimensional index with the value (i,j).
     */
-   explicit Index(
+   Index(
       const int i,
       const int j);
 
    /**
     * Construct a three-dimensional index with the value (i,j,k).
     */
-   explicit Index(
+   Index(
       const int i,
       const int j,
       const int k);
@@ -78,13 +78,13 @@ public:
    /**
     * Construct an index equal to the argument IntVector.
     */
-   Index(
+   explicit Index(
       const IntVector& rhs);
 
    /**
     * Construct an index equal to the argument array.
     */
-   explicit Index(
+   Index(
       const tbox::Dimension& dim,
       const int array[]);
 

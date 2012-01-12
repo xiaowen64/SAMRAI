@@ -53,14 +53,14 @@ ImplicitIntegrator::ImplicitIntegrator(
    TBOX_ASSERT(!object_name.empty());
    TBOX_ASSERT(implicit_equations != ((ImplicitEquationStrategy *)NULL));
    TBOX_ASSERT(nonlinear_solver != ((solv::NonlinearSolverStrategy *)NULL));
-   TBOX_ASSERT(!hierarchy.isNull());
+   TBOX_ASSERT(hierarchy);
 
    d_object_name = object_name;
    d_implicit_equations = implicit_equations;
    d_nonlinear_solver = nonlinear_solver;
    d_patch_hierarchy = hierarchy;
 
-   d_solution_vector.setNull();
+   d_solution_vector.reset();
 
    d_initial_time =
       d_final_time =
@@ -275,12 +275,12 @@ void ImplicitIntegrator::getFromInput(
    bool is_from_restart)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(is_from_restart || !db.isNull());
+   TBOX_ASSERT(is_from_restart || db);
 #endif
 
    if (is_from_restart) {
 
-      if (!db.isNull()) {
+      if (db) {
          if (db->keyExists("final_time")) {
             d_final_time = db->getDouble("final_time");
             if (d_final_time < d_initial_time) {
@@ -352,7 +352,7 @@ void ImplicitIntegrator::putToDatabase(
    tbox::Pointer<tbox::Database> db)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!db.isNull());
+   TBOX_ASSERT(db);
 #endif
 
    db->putInteger("ALGS_IMPLICIT_INTEGRATOR_VERSION",
@@ -431,9 +431,9 @@ void ImplicitIntegrator::printClassData(
    os << "d_nonlinear_solver = "
       << (solv::NonlinearSolverStrategy *)d_nonlinear_solver << std::endl;
    os << "d_patch_hierarchy = "
-      << (hier::PatchHierarchy *)d_patch_hierarchy << std::endl;
+      << d_patch_hierarchy.get() << std::endl;
    os << "d_solution_vector = "
-      << (solv::SAMRAIVectorReal<double> *)d_solution_vector << std::endl;
+      << d_solution_vector.get() << std::endl;
 
    os << "d_finest_level = " << d_finest_level << std::endl;
    os << "d_initial_time = " << d_initial_time << std::endl;

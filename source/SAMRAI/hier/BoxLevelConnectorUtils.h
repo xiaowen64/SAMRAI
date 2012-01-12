@@ -187,12 +187,15 @@ public:
     * discarded.
     *
     * @param[in] input_to_reference Overlap Connector from input to
-    * reference BoxLevel.
+    * reference BoxLevel.  The width of input_to_reference must be
+    * at least one and at least the absolute value of nesting_width.
     *
-    * @param[in] nesting_width Growth of the reference BoxLevel
-    * for the purpose of comparing to input.  Must be in resolution of
-    * input BoxLevel.  Must be either non-negative or
-    * non-positive but not mixed.
+    * @param[in] nesting_width Growth of the reference BoxLevel for
+    * the purpose of comparing to input.  Must be in resolution of
+    * input BoxLevel.  Must be either non-negative or non-positive but
+    * not mixed.  If any width is negative, then input_to_reference
+    * must have a Connector width of at least 1.  Otherwise, an error
+    * is thrown (because correct results cannot be guaranteed).
     *
     * @param[in] domain The domain representation, without periodic
     * images, in search tree form.  These boxes should be in the
@@ -234,12 +237,15 @@ public:
     * discarded.
     *
     * @param[in] input_to_reference Overlap Connector from input to
-    * reference BoxLevel.
+    * reference BoxLevel.  The width of input_to_reference must be
+    * at least one and at least the absolute value of nesting_width.
     *
-    * @param[in] nesting_width Growth of the reference BoxLevel
-    * for the purpose of comparing to input.  Must be in resolution of
-    * input BoxLevel.  Must be either non-negative or
-    * non-positive but not mixed.
+    * @param[in] nesting_width Growth of the reference BoxLevel for
+    * the purpose of comparing to input.  Must be in resolution of
+    * input BoxLevel.  Must be either non-negative or non-positive but
+    * not mixed.  If any width is negative, then input_to_reference
+    * must have a Connector width of at least 1.  Otherwise, an error
+    * is thrown (because correct results cannot be guaranteed).
     *
     * @param[in] domain The domain representation, without periodic
     * images, in search tree form.  These boxes should be in the
@@ -274,9 +280,9 @@ public:
     */
    void
    computeBoxesAroundBoundary(
-      std::map<BlockId, BoxContainer>& boundary,
+      BoxContainer& boundary,
       const IntVector& refinement_ratio,
-      const tbox::ConstPointer<GridGeometry>& grid_geometry,
+      const tbox::Pointer<const GridGeometry>& grid_geometry,
       const bool simplify_boundary_boxes = true) const;
 
    //@{
@@ -384,7 +390,7 @@ public:
    void
    addPeriodicImages(
       BoxLevel& mapped_box_level,
-      const BoxTree& domain_search_tree,
+      const BoxContainer& domain_search_tree,
       const IntVector& threshold_distance) const;
 
    /*!

@@ -87,8 +87,9 @@ void GhostCellRobinBcCoefs::setGhostDataId(
          TBOX_ERROR(d_object_name << ": hier::Index " << ghost_data_id
                                   << " does not correspond to any variable.");
       }
-      tbox::Pointer<pdat::CellVariable<double> >
-      cell_variable_ptr = variable_ptr;
+      tbox::Pointer<pdat::CellVariable<double> > cell_variable_ptr(
+         variable_ptr,
+         tbox::__dynamic_cast_tag());
       if (!cell_variable_ptr) {
          TBOX_ERROR(
             d_object_name << ": hier::Index " << ghost_data_id
@@ -123,8 +124,9 @@ void GhostCellRobinBcCoefs::setBcCoefs(
 
    t_set_bc_coefs->start();
 
-   tbox::Pointer<geom::CartesianPatchGeometry>
-   patch_geom = patch.getPatchGeometry();
+   tbox::Pointer<geom::CartesianPatchGeometry> patch_geom(
+      patch.getPatchGeometry(),
+      tbox::__dynamic_cast_tag());
    const int norm_dir = bdry_box.getLocationIndex() / 2;
    const double* dx = patch_geom->getDx();
    const double h = dx[norm_dir];
@@ -134,18 +136,18 @@ void GhostCellRobinBcCoefs::setBcCoefs(
     * corresponds to the fact that the solution is fixed at
     * the ghost cell centers.  bcoef_data is 1-acoef_data.
     */
-   if (!acoef_data.isNull()) {
+   if (acoef_data) {
       TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(d_dim, *acoef_data);
 
       acoef_data->fill(1.0 / (1 + 0.5 * h));
    }
-   if (!bcoef_data.isNull()) {
+   if (bcoef_data) {
       TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(d_dim, *bcoef_data);
 
       bcoef_data->fill(0.5 * h / (1 + 0.5 * h));
    }
 
-   if (!gcoef_data.isNull()) {
+   if (gcoef_data) {
       TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(d_dim, *gcoef_data);
 
       if (d_ghost_data_id == -1) {
@@ -161,12 +163,14 @@ void GhostCellRobinBcCoefs::setBcCoefs(
        */
       tbox::Pointer<hier::PatchData> patch_data =
          patch.getPatchData(d_ghost_data_id);
-      if (patch_data.isNull()) {
+      if (!patch_data) {
          TBOX_ERROR(d_object_name << ": hier::Patch data for index "
                                   << d_ghost_data_id << " does not exist.");
       }
-      tbox::Pointer<pdat::CellData<double> > cell_data = patch_data;
-      if (cell_data.isNull()) {
+      tbox::Pointer<pdat::CellData<double> > cell_data(
+         patch_data,
+         tbox::__dynamic_cast_tag());
+      if (!cell_data) {
          TBOX_ERROR(
             d_object_name << ": hier::Patch data for index "
                           << d_ghost_data_id

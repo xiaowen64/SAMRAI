@@ -1334,8 +1334,8 @@ void AsyncCommGroup::initializeCallback(
  */
 void AsyncCommGroup::finalizeCallback()
 {
-   t_reduce_data.setNull();
-   t_wait_all.setNull();
+   t_reduce_data.reset();
+   t_wait_all.reset();
 }
 
 }

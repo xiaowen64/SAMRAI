@@ -41,12 +41,16 @@ void PatchNodeDataOpsComplex::swapData(
    const int data1_id,
    const int data2_id) const
 {
-   TBOX_ASSERT(!patch.isNull());
+   TBOX_ASSERT(patch);
 
-   tbox::Pointer<pdat::NodeData<dcomplex> > d1 = patch->getPatchData(data1_id);
-   tbox::Pointer<pdat::NodeData<dcomplex> > d2 = patch->getPatchData(data2_id);
+   tbox::Pointer<pdat::NodeData<dcomplex> > d1(
+      patch->getPatchData(data1_id),
+      tbox::__dynamic_cast_tag());
+   tbox::Pointer<pdat::NodeData<dcomplex> > d2(
+      patch->getPatchData(data2_id),
+      tbox::__dynamic_cast_tag());
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!d1.isNull() && !d2.isNull());
+   TBOX_ASSERT(d1 && d2);
    TBOX_ASSERT(d1->getDepth() && d2->getDepth());
    TBOX_ASSERT(d1->getBox().isSpatiallyEqual(d2->getBox()));
    TBOX_ASSERT(d1->getGhostBox().isSpatiallyEqual(d2->getGhostBox()));
@@ -60,7 +64,7 @@ void PatchNodeDataOpsComplex::printData(
    const hier::Box& box,
    std::ostream& s) const
 {
-   TBOX_ASSERT(!data.isNull());
+   TBOX_ASSERT(data);
    TBOX_DIM_ASSERT_CHECK_ARGS2(*data, box);
 
    s << "Data box = " << box << std::endl;
@@ -73,7 +77,7 @@ void PatchNodeDataOpsComplex::copyData(
    const tbox::Pointer<pdat::NodeData<dcomplex> >& src,
    const hier::Box& box) const
 {
-   TBOX_ASSERT(!dst.isNull() && !src.isNull());
+   TBOX_ASSERT(dst && src);
    TBOX_DIM_ASSERT_CHECK_ARGS3(*dst, *src, box);
 
    const hier::Box node_box = pdat::NodeGeometry::toNodeBox(box);
@@ -85,7 +89,7 @@ void PatchNodeDataOpsComplex::setToScalar(
    const dcomplex& alpha,
    const hier::Box& box) const
 {
-   TBOX_ASSERT(!dst.isNull());
+   TBOX_ASSERT(dst);
    TBOX_DIM_ASSERT_CHECK_ARGS2(*dst, box);
 
    dst->fillAll(alpha, box);

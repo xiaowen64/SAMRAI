@@ -63,15 +63,14 @@ public:
     *
     * @param object_name Name of object for output purposes.
     */
-   GhostCellRobinBcCoefs(
+   explicit GhostCellRobinBcCoefs(
       const tbox::Dimension& dim,
       std::string object_name = "");
 
    /*!
     * @brief Destructor.
     */
-   virtual ~GhostCellRobinBcCoefs(
-      void);
+   virtual ~GhostCellRobinBcCoefs();
 
    /*!
     * @brief Function to fill arrays of Robin boundary

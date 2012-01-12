@@ -70,7 +70,7 @@ void PatchLevelEnhancedFillPattern::computeFillBoxesAndNeighborhoodSets(
    NULL_USE(src_to_dst);
    TBOX_DIM_ASSERT_CHECK_ARGS2(dst_mapped_box_level, fill_ghost_width);
 
-   tbox::ConstPointer<hier::GridGeometry> grid_geometry(
+   tbox::Pointer<const hier::GridGeometry> grid_geometry(
       dst_mapped_box_level.getGridGeometry());
 
    const hier::BoxContainer& dst_mapped_boxes =
@@ -80,6 +80,7 @@ void PatchLevelEnhancedFillPattern::computeFillBoxesAndNeighborhoodSets(
    for (hier::RealBoxConstIterator ni(dst_mapped_boxes);
         ni.isValid(); ++ni) {
       const hier::Box& dst_mapped_box = *ni;
+      const hier::BoxId& dst_mapped_box_id = dst_mapped_box.getId();
       hier::BoxContainer fill_boxes(
          hier::Box::grow(dst_mapped_box, fill_ghost_width));
 
@@ -87,6 +88,10 @@ void PatchLevelEnhancedFillPattern::computeFillBoxesAndNeighborhoodSets(
          grid_geometry->getNeighbors(dst_mapped_box.getBlockId());
 
       hier::BoxContainer constructed_fill_boxes;
+
+      hier::Connector::NeighborhoodIterator base_box_itr =
+         dst_to_fill.findLocal(dst_mapped_box_id);
+      bool has_base_box = base_box_itr != dst_to_fill.end();
 
       for (tbox::List<hier::GridGeometry::Neighbor>::Iterator ni(neighbors);
            ni; ni++) {
@@ -100,20 +105,27 @@ void PatchLevelEnhancedFillPattern::computeFillBoxesAndNeighborhoodSets(
 
             if (encon_boxes.size()) {
 
-               dst_to_fill.makeEmptyLocalNeighborhood(dst_mapped_box.getId());
+               if (!has_base_box) {
+                  base_box_itr = dst_to_fill.makeEmptyLocalNeighborhood(
+                     dst_mapped_box_id);
+                  has_base_box = true;
+               }
                for (hier::BoxContainer::Iterator ei(encon_boxes);
                     ei != encon_boxes.end(); ei++) {
 
                   hier::Box fill_mapped_box(
                      *ei,
                      ++last_id,
-                     dst_mapped_box.getOwnerRank(),
-                     dst_mapped_box.getBlockId());
+                     dst_mapped_box.getOwnerRank());
+
+                  TBOX_ASSERT(fill_mapped_box.getBlockId() ==
+                              dst_mapped_box.getBlockId());
 
                   fill_mapped_boxes.addBoxWithoutUpdate(fill_mapped_box);
 
-                  dst_to_fill.insertLocalNeighbor(fill_mapped_box,
-                     dst_mapped_box.getId());
+                  dst_to_fill.insertLocalNeighbor(
+                     fill_mapped_box,
+                     base_box_itr);
 
                   constructed_fill_boxes.pushBack(*ei);
                }

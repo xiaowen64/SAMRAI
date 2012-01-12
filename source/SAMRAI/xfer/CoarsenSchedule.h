@@ -105,7 +105,7 @@ public:
     *                              should be filled before coarsening
     *                              operations are done.
     */
-   explicit CoarsenSchedule(
+   CoarsenSchedule(
       tbox::Pointer<hier::PatchLevel> crse_level,
       tbox::Pointer<hier::PatchLevel> fine_level,
       const tbox::Pointer<xfer::CoarsenClasses> coarsen_classes,

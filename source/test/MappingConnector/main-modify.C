@@ -118,7 +118,7 @@ int main(
        * Create input database and parse all data in input file.
        */
 
-      Pointer<Database> input_db(new InputDatabase("input_db"));
+      Pointer<InputDatabase> input_db(new InputDatabase("input_db"));
       tbox::InputManager::getManager()->parseInputFile(input_filename, input_db);
 
       /*
@@ -154,7 +154,7 @@ int main(
       /*
        * Generate the GridGeometry.
        */
-      tbox::ConstPointer<hier::GridGeometry> grid_geometry;
+      tbox::Pointer<const hier::GridGeometry> grid_geometry;
       if (main_db->keyExists("GridGeometry")) {
          grid_geometry = new hier::GridGeometry(
                dim,
@@ -280,7 +280,7 @@ int main(
       b_to_a.checkConsistencyWithHead();
 
       tbox::pout << "Checking for a--->b errors:" << std::endl;
-      const size_t a_to_b_errors = oca.checkOverlapCorrectness(a_to_b);
+      const int a_to_b_errors = oca.checkOverlapCorrectness(a_to_b);
       if (a_to_b_errors) {
          tbox::pout << "... " << a_to_b_errors << " errors." << std::endl;
       } else {
@@ -288,7 +288,7 @@ int main(
       }
 
       tbox::pout << "Checking for b--->a errors:" << std::endl;
-      const size_t b_to_a_errors = oca.checkOverlapCorrectness(b_to_a);
+      const int b_to_a_errors = oca.checkOverlapCorrectness(b_to_a);
       if (b_to_a_errors) {
          tbox::pout << "... " << b_to_a_errors << " errors." << std::endl;
       } else {
@@ -301,8 +301,8 @@ int main(
          tbox::pout << "\nPASSED:  Connector modify" << std::endl;
       }
 
-      input_db.setNull();
-      main_db.setNull();
+      input_db.reset();
+      main_db.reset();
 
       /*
        * Exit properly by shutting down services in correct order.
@@ -432,7 +432,6 @@ void alterAndGenerateMapping(
       hier::Box mapped_box_c(mapped_box_b,
                              mapped_box_b.getLocalId() + local_id_increment,
                              mapped_box_b.getOwnerRank(),
-                             mapped_box_b.getBlockId(),
                              mapped_box_b.getPeriodicId());
       mapped_box_level_c.addBoxWithoutUpdate(mapped_box_c);
       b_to_c.insertLocalNeighbor(mapped_box_c, mapped_box_b.getId());

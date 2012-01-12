@@ -64,7 +64,7 @@ public:
     * the next constructor with an hier::IntVector argument when using higher
     * dimensions.
     */
-   explicit NodeIndex(
+   NodeIndex(
       const hier::Index& rhs,
       const Corner corner);
 
@@ -76,7 +76,7 @@ public:
     * dimensional direction, and if 1 will represent an upper bound in that
     * direction.
     */
-   explicit NodeIndex(
+   NodeIndex(
       const hier::Index& rhs,
       const hier::IntVector& corner);
 

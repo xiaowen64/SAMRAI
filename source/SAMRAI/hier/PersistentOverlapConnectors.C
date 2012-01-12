@@ -116,10 +116,8 @@ const Connector& PersistentOverlapConnectors::createConnector(
       TBOX_ASSERT(d_cons_from_me[i]->isFinalized());
       TBOX_ASSERT(d_cons_from_me[i]->getBase().isInitialized());
       TBOX_ASSERT(d_cons_from_me[i]->getHead().isInitialized());
-      TBOX_ASSERT(
-         !d_cons_from_me[i]->getBase().getBoxLevelHandle().isNull());
-      TBOX_ASSERT(
-         !d_cons_from_me[i]->getHead().getBoxLevelHandle().isNull());
+      TBOX_ASSERT(d_cons_from_me[i]->getBase().getBoxLevelHandle());
+      TBOX_ASSERT(d_cons_from_me[i]->getHead().getBoxLevelHandle());
       TBOX_ASSERT(&d_cons_from_me[i]->getBase() ==
          &d_cons_from_me[i]->getBase().getBoxLevelHandle()->
          getBoxLevel());
@@ -167,10 +165,8 @@ void PersistentOverlapConnectors::cacheConnector(
       TBOX_ASSERT(d_cons_from_me[i]->isFinalized());
       TBOX_ASSERT(d_cons_from_me[i]->getBase().isInitialized());
       TBOX_ASSERT(d_cons_from_me[i]->getHead().isInitialized());
-      TBOX_ASSERT(
-         !d_cons_from_me[i]->getBase().getBoxLevelHandle().isNull());
-      TBOX_ASSERT(
-         !d_cons_from_me[i]->getHead().getBoxLevelHandle().isNull());
+      TBOX_ASSERT(d_cons_from_me[i]->getBase().getBoxLevelHandle());
+      TBOX_ASSERT(d_cons_from_me[i]->getHead().getBoxLevelHandle());
       TBOX_ASSERT(&d_cons_from_me[i]->getBase() ==
          &d_cons_from_me[i]->getBase().getBoxLevelHandle()->
          getBoxLevel());
@@ -222,10 +218,8 @@ const Connector& PersistentOverlapConnectors::findConnector(
       TBOX_ASSERT(d_cons_from_me[i]->isFinalized());
       TBOX_ASSERT(d_cons_from_me[i]->getBase().isInitialized());
       TBOX_ASSERT(d_cons_from_me[i]->getHead().isInitialized());
-      TBOX_ASSERT(
-         !d_cons_from_me[i]->getBase().getBoxLevelHandle().isNull());
-      TBOX_ASSERT(
-         !d_cons_from_me[i]->getHead().getBoxLevelHandle().isNull());
+      TBOX_ASSERT(d_cons_from_me[i]->getBase().getBoxLevelHandle());
+      TBOX_ASSERT(d_cons_from_me[i]->getHead().getBoxLevelHandle());
       TBOX_ASSERT(&d_cons_from_me[i]->getBase() ==
          &d_cons_from_me[i]->getBase().getBoxLevelHandle()->
          getBoxLevel());
@@ -292,7 +286,6 @@ const Connector& PersistentOverlapConnectors::findConnector(
        * overlap Connector.
        */
       new_connector->eraseEmptyNeighborSets();
-      TBOX_ASSERT(oca.checkOverlapCorrectness(*found) == 0);
 
       d_cons_from_me.push_back(new_connector);
       head.getPersistentOverlapConnectors().d_cons_to_me.push_back(
@@ -328,10 +321,8 @@ const Connector& PersistentOverlapConnectors::findOrCreateConnector(
       TBOX_ASSERT(d_cons_from_me[i]->isFinalized());
       TBOX_ASSERT(d_cons_from_me[i]->getBase().isInitialized());
       TBOX_ASSERT(d_cons_from_me[i]->getHead().isInitialized());
-      TBOX_ASSERT(
-         !d_cons_from_me[i]->getBase().getBoxLevelHandle().isNull());
-      TBOX_ASSERT(
-         !d_cons_from_me[i]->getHead().getBoxLevelHandle().isNull());
+      TBOX_ASSERT(d_cons_from_me[i]->getBase().getBoxLevelHandle());
+      TBOX_ASSERT(d_cons_from_me[i]->getHead().getBoxLevelHandle());
       TBOX_ASSERT(&d_cons_from_me[i]->getBase() ==
          &d_cons_from_me[i]->getBase().getBoxLevelHandle()->
          getBoxLevel());
@@ -400,7 +391,6 @@ const Connector& PersistentOverlapConnectors::findOrCreateConnector(
        * overlap Connector.
        */
       new_connector->eraseEmptyNeighborSets();
-      TBOX_ASSERT(oca.checkOverlapCorrectness(*found) == 0);
 
       d_cons_from_me.push_back(new_connector);
       head.getPersistentOverlapConnectors().d_cons_to_me.push_back(

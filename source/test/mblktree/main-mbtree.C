@@ -51,7 +51,7 @@ exhaustiveFindOverlapBoxes(
    hier::Connector& overlap_connector,
    const hier::Box& mapped_box,
    const hier::IntVector& refinement_ratio,
-   const tbox::ConstPointer<hier::GridGeometry>& grid_geometry,
+   const tbox::Pointer<const hier::GridGeometry>& grid_geometry,
    const hier::BoxContainer& search_mapped_boxes);
 
 /*
@@ -110,7 +110,7 @@ int main(
        * Create input database and parse all data in input file.
        */
 
-      Pointer<Database> input_db(new InputDatabase("input_db"));
+      Pointer<InputDatabase> input_db(new InputDatabase("input_db"));
       tbox::InputManager::getManager()->parseInputFile(input_filename, input_db);
 
       /*
@@ -153,7 +153,7 @@ int main(
       /*
        * Generate the GridGeometry.
        */
-      tbox::ConstPointer<hier::GridGeometry> grid_geometry;
+      tbox::Pointer<const hier::GridGeometry> grid_geometry;
       if (main_db->keyExists("GridGeometry")) {
          grid_geometry = new hier::GridGeometry(
                dim,
@@ -253,7 +253,7 @@ int main(
        */
 
       hier::MultiblockBoxTree multiblock_mapped_box_tree(
-         grid_geometry,
+         *grid_geometry,
          mapped_box_level.getBoxes());
 
       /*
@@ -396,8 +396,8 @@ int main(
          tbox::pout << "\nPASSED:  Multiblock tree search" << std::endl;
       }
 
-      input_db.setNull();
-      main_db.setNull();
+      input_db.reset();
+      main_db.reset();
 
       /*
        * Exit properly by shutting down services in correct order.
@@ -474,12 +474,15 @@ void exhaustiveFindOverlapBoxes(
    hier::Connector& overlap_connector,
    const hier::Box& mapped_box,
    const hier::IntVector& refinement_ratio,
-   const tbox::ConstPointer<hier::GridGeometry>& grid_geometry,
+   const tbox::Pointer<const hier::GridGeometry>& grid_geometry,
    const hier::BoxContainer& search_mapped_boxes)
 {
-
+   const hier::BoxId& box_id = mapped_box.getId();
    hier::Box transformed_box(mapped_box);
    hier::BlockId transformed_block_id(mapped_box.getBlockId());
+   hier::Connector::NeighborhoodIterator base_box_itr =
+      overlap_connector.findLocal(box_id);
+   bool has_base_box = base_box_itr != overlap_connector.end();
 
    for (hier::BoxContainer::ConstIterator bi = search_mapped_boxes.begin();
         bi != search_mapped_boxes.end(); ++bi) {
@@ -505,10 +508,15 @@ void exhaustiveFindOverlapBoxes(
 
       if (transformed_block_id == search_mapped_box.getBlockId()) {
          if (transformed_box.intersects(search_mapped_box)) {
-	   overlap_connector.insertLocalNeighbor(search_mapped_box,
-              mapped_box.getId());
+            if (!has_base_box) {
+               base_box_itr = overlap_connector.makeEmptyLocalNeighborhood(
+                  box_id);
+               has_base_box = true;
+            }
+            overlap_connector.insertLocalNeighbor(
+               search_mapped_box,
+               base_box_itr);
          }
       }
-
    }
 }

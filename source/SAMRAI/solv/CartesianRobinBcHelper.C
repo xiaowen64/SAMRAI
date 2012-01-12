@@ -160,8 +160,9 @@ void CartesianRobinBcHelper::setBoundaryValuesInCells(
       hier::VariableDatabase::getDatabase();
    tbox::Pointer<hier::Variable> variable_ptr;
    vdb->mapIndexToVariable(target_data_id, variable_ptr);
-   tbox::Pointer<pdat::CellVariable<double> > cell_variable_ptr =
-      variable_ptr;
+   tbox::Pointer<pdat::CellVariable<double> > cell_variable_ptr(
+      variable_ptr,
+      tbox::__dynamic_cast_tag());
    if (!variable_ptr) {
       TBOX_ERROR(d_object_name << ": No variable for index "
                                << target_data_id);
@@ -177,8 +178,9 @@ void CartesianRobinBcHelper::setBoundaryValuesInCells(
     */
    tbox::Pointer<hier::PatchData>
    data_ptr = patch.getPatchData(target_data_id);
-   tbox::Pointer<pdat::CellData<double> >
-   cell_data_ptr = data_ptr;
+   tbox::Pointer<pdat::CellData<double> > cell_data_ptr(
+      data_ptr,
+      tbox::__dynamic_cast_tag());
    if (!data_ptr) {
       TBOX_ERROR(d_object_name << ": No data for index " << target_data_id);
    }
@@ -211,8 +213,9 @@ void CartesianRobinBcHelper::setBoundaryValuesInCells(
        * These definitions can go in the next block.
        * They are kept her for debugging.
        */
-      tbox::Pointer<geom::CartesianPatchGeometry> pg =
-         patch.getPatchGeometry();
+      tbox::Pointer<geom::CartesianPatchGeometry> pg(
+         patch.getPatchGeometry(),
+         tbox::__dynamic_cast_tag());
 
       const tbox::Array<hier::BoundaryBox>& codim1_boxes =
          pg->getCodimensionBoundaries(1);
@@ -834,7 +837,7 @@ hier::BoundaryBox CartesianRobinBcHelper::trimBoundaryBox(
          }
          break;
    }
-   const hier::Box newbox(newlo, newup);
+   const hier::Box newbox(newlo, newup, boundary_box.getBox().getBlockId());
    const hier::BoundaryBox newbbox(newbox,
                                    boundary_box.getBoundaryType(),
                                    boundary_box.getLocationIndex());

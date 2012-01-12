@@ -245,7 +245,7 @@ int main(
       } else {
          tbox::plog << "Test #2e successful" << endl;
       }
-      tstat.setNull();
+      tstat.reset();
 
       // Test #3:
       if (statistician->getProcStatId(procstat1->getName())

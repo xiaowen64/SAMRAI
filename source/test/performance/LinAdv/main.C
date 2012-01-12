@@ -43,6 +43,7 @@ using namespace std;
 #include "SAMRAI/geom/CartesianGridGeometry.h"
 #include "SAMRAI/mesh/GriddingAlgorithm.h"
 #include "SAMRAI/algs/HyperbolicLevelIntegrator.h"
+#include "SAMRAI/mesh/ChopAndPackLoadBalancer.h"
 #include "SAMRAI/mesh/TreeLoadBalancer.h"
 #include "SAMRAI/hier/PatchHierarchy.h"
 #include "SAMRAI/mesh/StandardTagAndInitialize.h"
@@ -226,7 +227,7 @@ int main(
        * Create input database and parse all data in input file.
        */
 
-      Pointer<Database> input_db(new InputDatabase("input_db"));
+      Pointer<InputDatabase> input_db(new InputDatabase("input_db"));
       InputManager::getManager()->parseInputFile(input_filename, input_db);
 
       if (input_db->isDatabase("TimerManager")) {
@@ -375,7 +376,7 @@ int main(
          "SinusoidalFrontTagger",
          dim,
          input_db->getDatabaseWithDefault("SinusoidalFrontTagger",
-            tbox::Pointer<SAMRAI::tbox::Database>(NULL)).getPointer());
+            tbox::Pointer<SAMRAI::tbox::Database>(NULL)).get());
       analytical_tagger.resetHierarchyConfiguration(patch_hierarchy, 0, 3);
 
       LinAdv* linear_advection_model = new LinAdv(
@@ -399,7 +400,7 @@ int main(
       Pointer<mesh::StandardTagAndInitialize> error_detector(
          new mesh::StandardTagAndInitialize(dim,
             "StandardTagAndInitialize",
-            hyp_level_integrator,
+             hyp_level_integrator.get(),
             input_db->getDatabase("StandardTagAndInitialize")));
 
       Pointer<Database> abr_db =
@@ -409,16 +410,43 @@ int main(
       Pointer<mesh::BoxGeneratorStrategy> box_generator =
          Pointer<mesh::BoxGeneratorStrategy>(new_box_generator);
 
-      Pointer<mesh::TreeLoadBalancer> load_balancer(
-         new mesh::TreeLoadBalancer(dim,
-            "mesh::TreeLoadBalancer",
-            input_db->getDatabase("TreeLoadBalancer")));
-      load_balancer->setSAMRAI_MPI(tbox::SAMRAI_MPI::getSAMRAIWorld());
-      Pointer<mesh::TreeLoadBalancer> load_balancer0(
-         new mesh::TreeLoadBalancer(dim,
-            "mesh::TreeLoadBalancer0",
-            input_db->getDatabase("TreeLoadBalancer")));
-      load_balancer0->setSAMRAI_MPI(tbox::SAMRAI_MPI::getSAMRAIWorld());
+
+      // Set up the load balancer.
+
+      Pointer<mesh::LoadBalanceStrategy> load_balancer;
+      Pointer<mesh::LoadBalanceStrategy> load_balancer0;
+
+      const std::string load_balancer_type =
+         main_db->getStringWithDefault("load_balancer_type", "TreeLoadBalancer");
+
+      if ( load_balancer_type == "TreeLoadBalancer" ) {
+
+         Pointer<mesh::TreeLoadBalancer> tree_load_balancer(
+            new mesh::TreeLoadBalancer(dim,
+                                       "mesh::TreeLoadBalancer",
+                                       input_db->getDatabase("TreeLoadBalancer")));
+         tree_load_balancer->setSAMRAI_MPI(tbox::SAMRAI_MPI::getSAMRAIWorld());
+
+         Pointer<mesh::TreeLoadBalancer> tree_load_balancer0(
+            new mesh::TreeLoadBalancer(dim,
+                                       "mesh::TreeLoadBalancer0",
+                                       input_db->getDatabase("TreeLoadBalancer")));
+         tree_load_balancer0->setSAMRAI_MPI(tbox::SAMRAI_MPI::getSAMRAIWorld());
+
+         load_balancer = tree_load_balancer;
+         load_balancer0 = tree_load_balancer0;
+      }
+      else if ( load_balancer_type == "ChopAndPackLoadBalancer" ) {
+
+         Pointer<mesh::ChopAndPackLoadBalancer> cap_load_balancer(
+            new mesh::ChopAndPackLoadBalancer(dim,
+                                       "mesh::ChopAndPackLoadBalancer",
+                                       input_db->getDatabase("ChopAndPackLoadBalancer")));
+
+         load_balancer = cap_load_balancer;
+         load_balancer0 = cap_load_balancer;
+      }
+
 
       Pointer<mesh::GriddingAlgorithm> gridding_algorithm(
          new mesh::GriddingAlgorithm(
@@ -602,11 +630,16 @@ int main(
       gridding_algorithm->printStatistics(tbox::plog);
 #endif
 
-      /*
-       * Output load balancing results.
-       */
-      tbox::plog << "\n\nLoad balancing results:\n";
-      load_balancer->printStatistics(tbox::plog);
+      if ( load_balancer_type == "TreeLoadBalancer" ) {
+         /*
+          * Output load balancing results for TreeLoadBalancer.
+          */
+         Pointer<mesh::TreeLoadBalancer> tree_load_balancer =
+            tbox::dynamic_pointer_cast<mesh::TreeLoadBalancer,
+                                       mesh::LoadBalanceStrategy>(load_balancer);
+         tbox::plog << "\n\nLoad balancing results:\n";
+         tree_load_balancer->printStatistics(tbox::plog);
+      }
 
       /*
        * Output box search results.
@@ -619,22 +652,22 @@ int main(
        */
 
 #ifdef HAVE_HDF5
-      visit_data_writer.setNull();
+      visit_data_writer.reset();
 #endif
 
-      gridding_algorithm.setNull();
-      load_balancer.setNull();
-      new_box_generator.setNull();
-      error_detector.setNull();
-      hyp_level_integrator.setNull();
+      gridding_algorithm.reset();
+      load_balancer.reset();
+      new_box_generator.reset();
+      error_detector.reset();
+      hyp_level_integrator.reset();
 
       if (linear_advection_model) delete linear_advection_model;
 
-      patch_hierarchy.setNull();
-      grid_geometry.setNull();
+      patch_hierarchy.reset();
+      grid_geometry.reset();
 
-      input_db.setNull();
-      main_db.setNull();
+      input_db.reset();
+      main_db.reset();
 
    }
 

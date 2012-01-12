@@ -155,7 +155,7 @@ void NodeData<TYPE>::copy(
           hier::Transformation::NO_ROTATE) {
          d_data.copy(t_src->d_data,
             t_overlap->getDestinationBoxContainer(),
-            t_overlap->getSourceOffset());
+            t_overlap->getTransformation());
       } else {
          copyWithRotation(*t_src, *t_overlap);
       }
@@ -181,7 +181,7 @@ void NodeData<TYPE>::copy2(
        hier::Transformation::NO_ROTATE) {
       t_dst->d_data.copy(d_data,
          t_overlap->getDestinationBoxContainer(),
-         t_overlap->getSourceOffset());
+         t_overlap->getTransformation());
    } else {
       t_dst->copyWithRotation(*this, *t_overlap);
    }
@@ -215,7 +215,9 @@ void NodeData<TYPE>::copyWithRotation(
    hier::Transformation::calculateReverseShift(
       back_shift, shift, rotate);
 
-   hier::Transformation back_trans(back_rotate, back_shift);
+   hier::Transformation back_trans(back_rotate, back_shift,
+                                   node_rotatebox.getBlockId(),
+                                   getBox().getBlockId());
 
    for (hier::BoxContainer::ConstIterator bi(overlap_boxes);
         bi != overlap_boxes.end(); ++bi) {
@@ -315,7 +317,7 @@ void NodeData<TYPE>::packStream(
        hier::Transformation::NO_ROTATE) {
       d_data.packStream(stream,
          t_overlap->getDestinationBoxContainer(),
-         t_overlap->getSourceOffset());
+         t_overlap->getTransformation());
    } else {
       packWithRotation(stream, *t_overlap);
    }
@@ -349,7 +351,9 @@ void NodeData<TYPE>::packWithRotation(
    hier::Transformation::calculateReverseShift(
       back_shift, shift, rotate);
 
-   hier::Transformation back_trans(back_rotate, back_shift);
+   hier::Transformation back_trans(back_rotate, back_shift,
+                                   rotatebox.getBlockId(),
+                                   getBox().getBlockId());
 
    const int depth = getDepth();
 
@@ -472,7 +476,7 @@ template<class TYPE>
 void NodeData<TYPE>::getSpecializedFromDatabase(
    tbox::Pointer<tbox::Database> database)
 {
-   TBOX_ASSERT(!database.isNull());
+   TBOX_ASSERT(database);
 
    int ver = database->getInteger("PDAT_NODEDATA_VERSION");
    if (ver != PDAT_NODEDATA_VERSION) {
@@ -501,7 +505,7 @@ void NodeData<TYPE>::putSpecializedToDatabase(
    tbox::Pointer<tbox::Database> database)
 {
 
-   TBOX_ASSERT(!database.isNull());
+   TBOX_ASSERT(database);
 
    database->putInteger("PDAT_NODEDATA_VERSION", PDAT_NODEDATA_VERSION);
 

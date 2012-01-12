@@ -15,6 +15,7 @@
 #include "SAMRAI/mesh/LoadBalanceStrategy.h"
 #include "SAMRAI/tbox/AsyncCommPeer.h"
 #include "SAMRAI/tbox/AsyncCommStage.h"
+#include "SAMRAI/tbox/BalancedDepthFirstTree.h"
 #include "SAMRAI/tbox/Database.h"
 #include "SAMRAI/tbox/SAMRAI_MPI.h"
 #include "SAMRAI/tbox/Pointer.h"
@@ -120,6 +121,8 @@ public:
 
    /*!
     * @brief Free the internal MPI communicator, if any has been set.
+    *
+    * This is automatically done by the destructor, if needed.
     *
     * @see setSAMRAI_MPI().
     */
@@ -229,8 +232,7 @@ private:
     * The purpose of the BoxInTransit is to associate extra data with
     * a Box as it is broken up and passed from process to process.  A
     * BoxInTransit is a Box going through these changes.  It has a
-    * current work load, an orginating Box and a history of the
-    * processes it passed through.
+    * current work load and an orginating Box.
     */
    struct BoxInTransit {
 
@@ -308,17 +310,12 @@ private:
        * @brief Put self into a int buffer.
        *
        * This is the opposite of getFromIntBuffer().  Number of ints
-       * written is given by commBufferSize(), except when
-       * skip_last_owner is true.  If skip_last_owner is true, and the
-       * last owner in proc_hist will be skipped (proc_hist must be
-       * non-empty) and the number of integers put in the buffer would be
-       * commBufferSize()-1.
+       * written is given by commBufferSize().
        *
        * @return The next unwritten position in the buffer.
        */
       int *putToIntBuffer(
-         int* buffer,
-         bool skip_last_owner=false) const;
+         int* buffer) const;
 
       /*!
        * @brief Set attributes according to data in int buffer.
@@ -331,19 +328,6 @@ private:
       const int *getFromIntBuffer(
          const int* buffer);
 
-      /*!
-       * @brief Stuff into an outgoing message destined for the previous
-       * owner.
-       *
-       * prev_owner must not be empty.
-       *
-       * @param outgoing_messages Map of outgoing messages, indexed by
-       * recipient rank.  On return, the message corresponding to the
-       * previous owner will be grown by commBufferSize()-1.
-       */
-      void packForPreviousOwner(
-         std::map<int,std::vector<int> > &outgoing_messages ) const;
-
       //! @brief The Box.
       hier::Box d_box;
 
@@ -352,13 +336,6 @@ private:
 
       //! @brief Work load.
       int d_load;
-
-      /*!
-       * @brief History of processors passed in transit.  Each time a
-       * process receives a Box, it should append its rank to the
-       * proc_hist.
-       */
-      std::vector<int> d_proc_hist;
    };
 
 
@@ -391,13 +368,15 @@ private:
     * Static integer constants.  Tags are for isolating messages
     * from different phases of the algorithm.
     */
-   static const int TreeLoadBalancer_LOADTAG0 = 1212001;
-   static const int TreeLoadBalancer_LOADTAG1 = 1212002;
-   static const int TreeLoadBalancer_EDGETAG0 = 1212003;
-   static const int TreeLoadBalancer_EDGETAG1 = 1212004;
-   static const int TreeLoadBalancer_PREBALANCE0 = 1212005;
-   static const int TreeLoadBalancer_PREBALANCE1 = 1212006;
+   static const int TreeLoadBalancer_LOADTAG0 = 1;
+   static const int TreeLoadBalancer_LOADTAG1 = 2;
+   static const int TreeLoadBalancer_EDGETAG0 = 3;
+   static const int TreeLoadBalancer_EDGETAG1 = 4;
+   static const int TreeLoadBalancer_PREBALANCE0 = 5;
+   static const int TreeLoadBalancer_PREBALANCE1 = 6;
    static const int TreeLoadBalancer_FIRSTDATALEN = 1000;
+
+   static const int TreeLoadBalancer_MIN_NPROC_FOR_AUTOMATIC_MULTICYCLE = 65;
 
    // The following are not implemented, but are provided here for
    // dumb compilers.
@@ -525,7 +504,7 @@ private:
     * @param[i] ideal_transfer Amount of load to reassign from src to
     * dst.  If negative, reassign the load from dst to src.
     *
-    * @return Amount of load transfered.  If positive, transfer load
+    * @return Amount of load transfered.  If positive, load went
     * from src to dst (if negative, from dst to src).
     */
    int
@@ -542,35 +521,32 @@ private:
     *
     * @param[io] dst Destination of work, for a positive ideal_transfer.
     *
-    * @param actual_transfer Amount of load transfered.  If positive,
-    * transfer load from src to dst (if negative, from dst to src).
-    *
     * @param next_available_index Index for guaranteeing new
     * Boxes are uniquely numbered.
     *
     * @param ideal_transfer Amount of load to reassign from src to
     * dst.  If negative, reassign the load from dst to src.
+    *
+    * @return Amount of load transfered.  If positive, load went
+    * from src to dst (if negative, from dst to src).
     */
-   bool
+   int
    shiftLoadsByBreaking(
       TransitSet& src,
       TransitSet& dst,
-      int& actual_transfer,
       hier::LocalId& next_available_index,
       int ideal_transfer ) const;
 
    /*!
     * @brief Find a BoxInTransit in each of the source and destination
     * containers that, when swapped, effects a transfer of the given
-    * amount of work from the source to the destination.
+    * amount of work from the source to the destination.  Swap the boxes.
     */
    bool
-   findLoadSwapPair(
+   swapLoadPair(
       TransitSet& src,
       TransitSet& dst,
       int& actual_transfer,
-      TransitSet::iterator& isrc,
-      TransitSet::iterator& idst,
       int ideal_transfer ) const;
 
    /*!
@@ -593,22 +569,6 @@ private:
       int received_data_length ) const;
 
    /*!
-    * @brief Unpack and route neighborhood sets in
-    * unbalanced--->balanced Connector.
-    *
-    * Neighborhood sets for local boxes are directly stored in the
-    * Connector.  Other neighborhood sets are packed into an outgoing
-    * message depending according to where they should be rerouted
-    * to get to their eventual owners.
-    */
-   void
-   unpackAndRouteNeighborhoodSets(
-      std::map<int,std::vector<int> > &outgoing_messages,
-      hier::Connector& unbalanced_to_balanced,
-      const int* received_data,
-      int received_data_length ) const;
-
-   /*!
     * @brief Construct semilocal relationships in
     * unbalanced--->balanced Connector.
     *
@@ -620,18 +580,10 @@ private:
     * @param [o] unbalanced_to_balanced Connector to store
     * relationships in.
     *
-    * @param [i] exported_to Ranks of processes that the local process
-    * exported work to.
-    *
-    * @param [i] imported_from Ranks of processes that the local
-    * process imported work from.
-    *
     * @param [i] kept_imports Work that was imported and locally kept.
     */
    void constructSemilocalUnbalancedToBalanced(
       hier::Connector &unbalanced_to_balanced,
-      const std::vector<int> &exported_to,
-      const std::vector<int> &imported_from,
       const TreeLoadBalancer::TransitSet &kept_imports ) const;
 
    /*!
@@ -819,20 +771,20 @@ private:
     * set the AsyncCommPeer objects for communication with children
     * and parent.
     *
-    * @param [o] num_children
+    * @param [o] child_stage
     * @param [o] child_comms
-    * @param [o] parent_send
-    * @param [o] parent_recv
-    * @param [o] parent_recv
+    * @param [o] parent_stage
+    * @param [o] parent_comm
     * @param [i] rank_group
+    * @param [i] bdfs
     */
    void setupAsyncCommObjects(
-      int& num_children,
+      tbox::AsyncCommStage& child_stage,
       tbox::AsyncCommPeer<int> *& child_comms,
-      tbox::AsyncCommPeer<int> *& parent_send,
-      tbox::AsyncCommPeer<int> *& parent_recv,
-      tbox::AsyncCommStage& comm_stage,
-      const tbox::RankGroup &rank_group ) const;
+      tbox::AsyncCommStage& parent_stage,
+      tbox::AsyncCommPeer<int> *& parent_comm,
+      const tbox::RankGroup &rank_group,
+      const tbox::BalancedDepthFirstTree &bdfs ) const;
 
    /*
     * @brief Undo the set-up done by setupAsyncCommObjects.
@@ -840,19 +792,7 @@ private:
    void
    destroyAsyncCommObjects(
       tbox::AsyncCommPeer<int> *& child_comms,
-      tbox::AsyncCommPeer<int> *& parent_send,
-      tbox::AsyncCommPeer<int> *& parent_recv) const;
-
-   void
-   setShadowData(
-      const hier::IntVector& min_size,
-      const hier::IntVector& max_size,
-      const hier::BoxLevel& domain_box_level,
-      const hier::IntVector& bad_interval,
-      const hier::IntVector& cut_factor,
-      const hier::IntVector& refinement_ratio) const;
-   void
-   unsetShadowData() const;
+      tbox::AsyncCommPeer<int> *& parent_comm) const;
 
    /*!
     * @brief Set up timers for the object.
@@ -871,7 +811,10 @@ private:
    std::string d_object_name;
 
    //! @brief Duplicated communicator object.  See setSAMRAI_MPI().
-   tbox::SAMRAI_MPI d_mpi_dup;
+   mutable tbox::SAMRAI_MPI d_mpi;
+
+   //! @brief Whether d_mpi is an internal duplicate.  See setSAMRAI_MPI().
+   bool d_mpi_is_dupe;
 
    int d_n_root_cycles;
 
@@ -922,7 +865,6 @@ private:
 
    //@{
    //! @name Data shared with private methods during balancing.
-   mutable tbox::SAMRAI_MPI d_mpi;
    mutable hier::IntVector d_min_size;
    mutable hier::IntVector d_max_size;
    mutable std::vector<hier::BoxContainer> d_block_domain_boxes;
@@ -956,12 +898,11 @@ private:
    tbox::Pointer<tbox::Timer> t_use_map;
    tbox::Pointer<tbox::Timer> t_constrain_size;
    tbox::Pointer<tbox::Timer> t_map_big_boxes;
+   tbox::Pointer<tbox::Timer> t_load_distribution;
    tbox::Pointer<tbox::Timer> t_compute_local_load;
    tbox::Pointer<tbox::Timer> t_compute_global_load;
    tbox::Pointer<tbox::Timer> t_compute_tree_load;
-   tbox::Pointer<tbox::Timer> t_compute_tree_load0;
-   tbox::Pointer<tbox::Timer> t_compute_tree_load1;
-   tbox::Pointer<tbox::Timer> t_compute_tree_load2;
+   std::vector<tbox::Pointer<tbox::Timer> > t_compute_tree_load_for_cycle;
    tbox::Pointer<tbox::Timer> t_reassign_loads;
    tbox::Pointer<tbox::Timer> t_shift_loads_by_swapping;
    tbox::Pointer<tbox::Timer> t_shift_loads_by_breaking;
@@ -972,19 +913,18 @@ private:
    tbox::Pointer<tbox::Timer> t_send_load_to_parent;
    tbox::Pointer<tbox::Timer> t_get_load_from_children;
    tbox::Pointer<tbox::Timer> t_get_load_from_parent;
+   tbox::Pointer<tbox::Timer> t_construct_semilocal;
+   tbox::Pointer<tbox::Timer> t_construct_semilocal_comm_wait;
    tbox::Pointer<tbox::Timer> t_send_edge_to_children;
    tbox::Pointer<tbox::Timer> t_send_edge_to_parent;
    tbox::Pointer<tbox::Timer> t_get_edge_from_children;
    tbox::Pointer<tbox::Timer> t_get_edge_from_parent;
    tbox::Pointer<tbox::Timer> t_report_loads;
    tbox::Pointer<tbox::Timer> t_local_balancing;
-   tbox::Pointer<tbox::Timer> t_local_edges;
-   tbox::Pointer<tbox::Timer> t_finish_comms;
-   tbox::Pointer<tbox::Timer> t_misc1;
-   tbox::Pointer<tbox::Timer> t_misc2;
-   tbox::Pointer<tbox::Timer> t_misc3;
+   tbox::Pointer<tbox::Timer> t_finish_sends;
    tbox::Pointer<tbox::Timer> t_pack_load;
    tbox::Pointer<tbox::Timer> t_unpack_load;
+   tbox::Pointer<tbox::Timer> t_pack_edge;
    tbox::Pointer<tbox::Timer> t_unpack_edge;
    tbox::Pointer<tbox::Timer> t_children_load_comm;
    tbox::Pointer<tbox::Timer> t_parent_load_comm;
@@ -992,7 +932,10 @@ private:
    tbox::Pointer<tbox::Timer> t_parent_edge_comm;
    tbox::Pointer<tbox::Timer> t_barrier_before;
    tbox::Pointer<tbox::Timer> t_barrier_after;
-   tbox::Pointer<tbox::Timer> t_MPI_wait;
+   tbox::Pointer<tbox::Timer> t_child_send_wait;
+   tbox::Pointer<tbox::Timer> t_child_recv_wait;
+   tbox::Pointer<tbox::Timer> t_parent_send_wait;
+   tbox::Pointer<tbox::Timer> t_parent_recv_wait;
 
    /*
     * Statistics on number of cells and patches generated.

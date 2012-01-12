@@ -12,8 +12,8 @@
 #define included_tbox_Pointer
 
 #include "SAMRAI/SAMRAI_config.h"
+#include "SAMRAI/tbox/DescribedClass.h"
 #include "SAMRAI/tbox/ReferenceCounter.h"
-#include "SAMRAI/tbox/PointerBase.h"
 
 namespace SAMRAI {
 namespace tbox {
@@ -42,13 +42,15 @@ namespace tbox {
  *
  * @see tbox::DescribedClass
  * @see tbox::Array
- * @see tbox::ConstPointer
- * @see tbox::PointerBase
  * @see tbox::ReferenceCounter
  */
 
-template<class TYPE>
-class Pointer:public PointerBase
+struct __static_cast_tag {};
+struct __const_cast_tag {};
+struct __dynamic_cast_tag {};
+
+template<typename TYPE>
+class Pointer
 {
 public:
    /**
@@ -71,15 +73,79 @@ public:
     * aliased to the argument.
     */
    Pointer(
-      const Pointer<TYPE>& ptr);
+      const Pointer& ptr);
 
    /**
     * Create a pointer by attempting to type-cast the argument to TYPE.
     * If the type-cast fails, then the destination pointer will be set
     * to NULL.
     */
+   template<typename TYPE1>
    Pointer(
-      const PointerBase& ptr);
+      const Pointer<TYPE1>& ptr) :
+      d_object(ptr.get())
+   {
+      if (d_object) {
+         d_counter = ptr.getReferenceCounter();
+         if (d_counter) {
+            d_counter->addReference();
+         }
+      }
+      else {
+         d_counter = (ReferenceCounter *)NULL;
+      }
+   }
+
+   template<typename TYPE1>
+   Pointer(
+      const Pointer<TYPE1>& ptr,
+      __static_cast_tag) :
+      d_object(static_cast<TYPE*>(ptr.get()))
+   {
+      if (d_object) {
+         d_counter = ptr.getReferenceCounter();
+         if (d_counter) {
+            d_counter->addReference();
+         }
+      }
+      else {
+         d_counter = (ReferenceCounter *)NULL;
+      }
+   }
+
+   template<typename TYPE1>
+   Pointer(
+      const Pointer<TYPE1>& ptr,
+      __const_cast_tag) :
+      d_object(const_cast<TYPE*>(ptr.get()))
+   {
+      if (d_object) {
+         d_counter = ptr.getReferenceCounter();
+         if (d_counter) {
+            d_counter->addReference();
+         }
+      }
+      else {
+         d_counter = (ReferenceCounter *)NULL;
+      }
+   }
+
+   template<typename TYPE1>
+   Pointer(
+      const Pointer<TYPE1>& ptr,
+      __dynamic_cast_tag) :
+      d_object(dynamic_cast<TYPE*>(ptr.get()))
+   {
+      if (d_object) {
+         d_counter = ptr.getReferenceCounter();
+         if (d_counter) {
+            d_counter->addReference();
+         }
+      }
+      else {
+         d_counter = (ReferenceCounter *)NULL;
+      }
+   }
 
    /**
     * The pointer destructor frees the pointer data if the reference
@@ -89,19 +155,11 @@ public:
    ~Pointer();
 
    /**
-    * Smart pointer assignment.  The left hand side points to the
-    * right hand side and the reference count is incremented by one.
-    */
-   Pointer<TYPE>&
-   operator = (
-      const Pointer<TYPE>& ptr);
-
-   /**
     * Create a managed smart pointer with value ptr.  The object pointed
     * to by ptr will be deallocated via delete when the reference count
     * goes to zero.
     */
-   Pointer<TYPE>&
+   Pointer&
    operator = (
       TYPE * ptr);
 
@@ -110,23 +168,59 @@ public:
     * If the type conversion fails, then the destination pointer will be
     * set to NULL.
     */
-   Pointer<TYPE>&
+   template<typename TYPE1>
+   Pointer&
    operator = (
-      const PointerBase& ptr);
+      const Pointer<TYPE1>& ptr)
+   {
+      if (this != (Pointer<TYPE>*)&ptr) {
+         if (d_counter && d_counter->deleteReference()) {
+            deleteObject();
+         }
+
+         d_object = ptr.get();
+
+         if (d_object) {
+            d_counter = ptr.getReferenceCounter();
+            if (d_counter) {
+               d_counter->addReference();
+            }
+         }
+         else {
+            d_counter = (ReferenceCounter *)NULL;
+         }
+      }
+      return *this;
+   }
 
    /**
-    * Check whether two smart pointers point to the same object.
+    * Attempt to convert the argument pointer to a Pointer<TYPE>.
+    * If the type conversion fails, then the destination pointer will be
+    * set to NULL.
     */
-   bool
-   operator == (
-      const Pointer<TYPE>& rhs) const;
+   Pointer&
+   operator = (
+      const Pointer& ptr)
+   {
+      if (this != &ptr) {
+         if (d_counter && d_counter->deleteReference()) {
+            deleteObject();
+         }
 
-   /**
-    * Check whether two smart pointers point to different objects.
-    */
-   bool
-   operator != (
-      const Pointer<TYPE>& rhs) const;
+         d_object = ptr.get();
+
+         if (d_object) {
+            d_counter = ptr.getReferenceCounter();
+            if (d_counter) {
+               d_counter->addReference();
+            }
+         }
+         else {
+            d_counter = (ReferenceCounter *)NULL;
+         }
+      }
+      return *this;
+   }
 
    /**
     * Delegate member operations to the pointed-to object.  C++ defines
@@ -148,20 +242,18 @@ public:
    operator * () const;
 
    /**
-    * Implicit conversion of the smart pointer to the pointed-to object.
-    * This conversion operator is const since it cannot change the pointer,
-    * although the pointed-to object may change.
-    */
-   operator TYPE
-   * () const;
-
-   /**
     * Explicitly convert the smart pointer to the pointed-to object.
     * This member function is const since it cannot change the pointer,
     * although the pointed-to object may change.
     */
    TYPE *
-   getPointer() const;
+   get() const;
+
+   /**
+    * Set the smart pointer to NULL.
+    */
+   void
+   reset();
 
    /**
     * Set the pointed-to object to ptr.
@@ -173,28 +265,9 @@ public:
       TYPE * ptr);
 
    /**
-    * Check whether the smart pointer points to NULL.
-    */
-   bool
-   isNull() const;
-
-   /**
     * Return true if the pointer is non-NULL.
     */
    operator bool () const;
-
-   /**
-    * Return true if the pointer is NULL and false otherwise.  This operator
-    * mimics the semantics of !p applied to a (regular) pointer p.
-    */
-   bool
-   operator ! () const;
-
-   /**
-    * Set the smart pointer to NULL.
-    */
-   void
-   setNull();
 
    /**
     * Return a pointer to the internal reference counter.  This routine
@@ -210,6 +283,30 @@ private:
     */
    operator int () const;
 
+   /**
+    * Check whether two smart pointers point to the same object.
+    */
+   template<typename TYPE1>
+   friend inline bool
+   operator == (
+      const Pointer& a,
+      const Pointer<TYPE1> b)
+   {
+      return a.get() == b.get();
+   }
+
+   /**
+    * Check whether two smart pointers point to different objects.
+    */
+   template<typename TYPE1>
+   friend inline bool
+   operator != (
+      const Pointer& a,
+      const Pointer<TYPE1> b)
+   {
+      return a.get() != b.get();
+   }
+
    void
    deleteObject();
    ReferenceCounter *
@@ -221,6 +318,30 @@ private:
    TYPE* d_object;
    ReferenceCounter* d_counter;
 };
+
+template<typename TYPE, typename TYPE1>
+inline Pointer<TYPE>
+static_pointer_cast(
+   const Pointer<TYPE1>& rhs)
+{
+   return Pointer<TYPE>(rhs, __static_cast_tag());
+}
+
+template<typename TYPE, typename TYPE1>
+inline Pointer<TYPE>
+const_pointer_cast(
+   const Pointer<TYPE1>& rhs)
+{
+   return Pointer<TYPE>(rhs, __const_cast_tag());
+}
+
+template<typename TYPE, typename TYPE1>
+inline Pointer<TYPE>
+dynamic_pointer_cast(
+   const Pointer<TYPE1>& rhs)
+{
+   return Pointer<TYPE>(rhs, __dynamic_cast_tag());
+}
 
 }
 }

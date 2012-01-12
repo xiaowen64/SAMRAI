@@ -161,8 +161,10 @@ bool CellDataFactory<TYPE>::validCopyTo(
    /*
     * Only valid option is CellData.
     */
-   tbox::Pointer<CellDataFactory<TYPE> > cdf = dst_pdf;
-   if (!cdf.isNull()) {
+   tbox::Pointer<CellDataFactory<TYPE> > cdf(
+      dst_pdf,
+      tbox::__dynamic_cast_tag());
+   if (cdf) {
       valid_copy = true;
    }
    return valid_copy;

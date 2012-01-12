@@ -226,7 +226,7 @@ private:
     * @param my_mapped_box_level The BoxLevel served by this
     * object.
     */
-   PersistentOverlapConnectors(
+   explicit PersistentOverlapConnectors(
       const BoxLevel& my_mapped_box_level);
 
    //@}

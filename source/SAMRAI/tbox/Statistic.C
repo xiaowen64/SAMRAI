@@ -433,7 +433,7 @@ void Statistic::checkArraySizes(
 void Statistic::putToDatabase(
    Pointer<Database> db)
 {
-   TBOX_ASSERT(!db.isNull());
+   TBOX_ASSERT(db);
 
    db->putInteger("TBOX_STATISTIC_VERSION",
       TBOX_STATISTIC_VERSION);
@@ -491,7 +491,7 @@ void Statistic::putToDatabase(
 void Statistic::getFromRestart(
    Pointer<Database> db)
 {
-   TBOX_ASSERT(!db.isNull());
+   TBOX_ASSERT(db);
 
    int ver = db->getInteger("TBOX_STATISTIC_VERSION");
    if (ver != TBOX_STATISTIC_VERSION) {

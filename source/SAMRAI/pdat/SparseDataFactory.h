@@ -8,8 +8,17 @@
  *
  ************************************************************************/
 
-#ifndef included_pdat_IndexDataFactory
-#define included_pdat_IndexDataFactory
+#ifndef included_pdat_SparseDataFactory
+#define included_pdat_SparseDataFactory
+
+#include "SAMRAI/SAMRAI_config.h"
+
+/*
+ ************************************************************************
+ *  THIS CLASS WILL BE UNDEFINED IF THE LIBRARY IS BUILT WITHOUT BOOST
+ ************************************************************************
+ */
+#ifdef HAVE_BOOST_HEADERS
 
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/hier/IntVector.h"
@@ -42,7 +51,7 @@ public:
     * @param [in] numDblAttributes The number of double (value) attributes
     * @param [in] numIntAttributes The number of integer (value) attributes
     */
-   explicit SparseDataFactory(
+   SparseDataFactory(
       const hier::IntVector& ghosts,
       const std::vector<std::string>& dbl_attributes,
       const std::vector<std::string>& int_attributes);
@@ -155,4 +164,5 @@ private:
 #include "SAMRAI/pdat/SparseDataFactory.C"
 #endif
 
+#endif
 #endif

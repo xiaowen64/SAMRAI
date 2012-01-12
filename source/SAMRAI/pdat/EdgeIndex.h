@@ -48,7 +48,7 @@ public:
     * EdgeIndex::LowerLeft (0), EdgeIndex::LowerRight(1),
     * EdgeIndex::UpperLeft (2) or EdgeIndex::UpperRight(3).
     */
-   explicit EdgeIndex(
+   EdgeIndex(
       const hier::Index& rhs,
       const int axis,
       const int edge);

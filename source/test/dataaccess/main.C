@@ -57,7 +57,7 @@ int main(
       /*
        * Create input database and parse all data in input file.
        */
-      tbox::Pointer<tbox::Database> input_db(new tbox::InputDatabase("input_db"));
+      tbox::Pointer<tbox::InputDatabase> input_db(new tbox::InputDatabase("input_db"));
       tbox::InputManager::getManager()->parseInputFile(input_filename, input_db);
 
       /**************************************************************************
@@ -86,7 +86,7 @@ int main(
          box_upper(d) = (d + 4) * 3;
       }
 
-      hier::Box box(box_lower, box_upper);
+      hier::Box box(box_lower, box_upper, hier::BlockId(0));
 
       pdat::CellData<double> cell_data(box, 1, hier::IntVector(dim, 0));
       pdat::FaceData<double> face_data(box, 1, hier::IntVector(dim, 0));

@@ -157,7 +157,7 @@ HierSumTest::HierSumTest(
    /*
     * Register u values to be written by the viz writer.
     */
-   if (!viz_writer.isNull()) {
+   if (viz_writer) {
       viz_writer->registerPlotQuantity("ucell::node", "SCALAR",
          d_ucell_node_id, 0);
       viz_writer->registerPlotQuantity("ucell::edge", "SCALAR",
@@ -194,9 +194,12 @@ HierSumTest::setInitialNodeValues(
       for (PatchLevel::Iterator ip(level); ip; ip++) {
          Pointer<Patch> patch = *ip;
 
-         Pointer<NodeData<double> > unode = patch->getPatchData(d_unode_id);
-         Pointer<CellData<double> > ucell =
-            patch->getPatchData(d_ucell_node_id);
+         Pointer<NodeData<double> > unode(
+            patch->getPatchData(d_unode_id),
+            tbox::__dynamic_cast_tag());
+         Pointer<CellData<double> > ucell(
+            patch->getPatchData(d_ucell_node_id),
+            tbox::__dynamic_cast_tag());
 
          // output initial cell values
          int level_number = level->getLevelNumber();
@@ -274,8 +277,9 @@ HierSumTest::setInitialNodeValues(
          for (PatchLevel::Iterator ip(level); ip; ip++) {
             Pointer<Patch> patch = *ip;
 
-            Pointer<NodeData<double> > unode =
-               patch->getPatchData(d_unode_id);
+            Pointer<NodeData<double> > unode(
+               patch->getPatchData(d_unode_id),
+               tbox::__dynamic_cast_tag());
 
             for (BoxContainer::Iterator b = fine_overlap_shrunk.begin();
                  b != fine_overlap_shrunk.end(); ++b) {
@@ -299,8 +303,9 @@ HierSumTest::setInitialNodeValues(
       for (PatchLevel::Iterator ip(level); ip; ip++) {
          Pointer<Patch> patch = *ip;
 
-         Pointer<NodeData<double> > unode =
-            patch->getPatchData(d_unode_id);
+         Pointer<NodeData<double> > unode(
+            patch->getPatchData(d_unode_id),
+            tbox::__dynamic_cast_tag());
 
          // output initial node values
          tbox::plog << "INITIAL Node values - Level: " << level->getLevelNumber()
@@ -335,9 +340,12 @@ HierSumTest::setInitialEdgeValues(
    for (PatchLevel::Iterator ip(level); ip; ip++) {
       Pointer<Patch> patch = *ip;
 
-      Pointer<EdgeData<double> > uedge = patch->getPatchData(d_uedge_id);
-      Pointer<CellData<double> > ucell =
-         patch->getPatchData(d_ucell_edge_id);
+      Pointer<EdgeData<double> > uedge(
+         patch->getPatchData(d_uedge_id),
+         tbox::__dynamic_cast_tag());
+      Pointer<CellData<double> > ucell(
+         patch->getPatchData(d_ucell_edge_id),
+         tbox::__dynamic_cast_tag());
 
       // output initial cell values
       int level_number = level->getLevelNumber();
@@ -476,7 +484,7 @@ void
 HierSumTest::doOuternodeSum()
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!d_node_sum_util.isNull());
+   TBOX_ASSERT(d_node_sum_util);
 #endif
 
    bool fill_hanging_nodes = true;
@@ -517,7 +525,7 @@ HierSumTest::doOuteredgeSum(
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(level_num < d_edge_sum_util.getSize());
-   TBOX_ASSERT(!d_edge_sum_util[level_num].isNull());
+   TBOX_ASSERT(d_edge_sum_util[level_num]);
 #endif
 
    d_edge_sum_util[level_num]->computeSum();
@@ -565,8 +573,9 @@ int HierSumTest::checkNodeResult(
       for (PatchLevel::Iterator ip(level); ip; ip++) {
          Pointer<Patch> patch = *ip;
 
-         Pointer<NodeData<double> > unode =
-            patch->getPatchData(d_unode_id);
+         Pointer<NodeData<double> > unode(
+            patch->getPatchData(d_unode_id),
+            tbox::__dynamic_cast_tag());
 
          // loop over Level complement boxlist
          for (BoxContainer::Iterator b = level_boxes_complement.begin();
@@ -622,8 +631,9 @@ int HierSumTest::checkNodeResult(
             << "\tare correct." << endl;
          }
 
-         Pointer<CellData<double> > ucell_node =
-            patch->getPatchData(d_ucell_node_id);
+         Pointer<CellData<double> > ucell_node(
+            patch->getPatchData(d_ucell_node_id),
+            tbox::__dynamic_cast_tag());
 
 #if (TESTING == 1)
          tbox::plog << "FINAL Cell values for NODE - Level: "
@@ -671,8 +681,9 @@ int HierSumTest::checkEdgeResult(
    for (PatchLevel::Iterator ip(level); ip; ip++) {
       Pointer<Patch> patch = *ip;
 
-      Pointer<EdgeData<double> > uedge =
-         patch->getPatchData(d_uedge_id);
+      Pointer<EdgeData<double> > uedge(
+         patch->getPatchData(d_uedge_id),
+         tbox::__dynamic_cast_tag());
 
       const Index ifirst(patch->getBox().lower());
       const Index ilast(patch->getBox().upper());
@@ -727,8 +738,9 @@ int HierSumTest::checkEdgeResult(
 
       } // loop over depth
 
-      Pointer<CellData<double> > ucell_edge =
-         patch->getPatchData(d_ucell_edge_id);
+      Pointer<CellData<double> > ucell_edge(
+         patch->getPatchData(d_ucell_edge_id),
+         tbox::__dynamic_cast_tag());
 
 #if (TESTING == 1)
       tbox::plog << "FINAL Cell values for EDGE - Level: "
@@ -798,10 +810,12 @@ void HierSumTest::initializeLevelData(
    for (PatchLevel::Iterator p0(level); p0; p0++) {
       Pointer<Patch> patch = *p0;
 
-      Pointer<NodeData<double> > unode =
-         patch->getPatchData(d_unode_id);
-      Pointer<EdgeData<double> > uedge =
-         patch->getPatchData(d_uedge_id);
+      Pointer<NodeData<double> > unode(
+         patch->getPatchData(d_unode_id),
+         tbox::__dynamic_cast_tag());
+      Pointer<EdgeData<double> > uedge(
+         patch->getPatchData(d_uedge_id),
+         tbox::__dynamic_cast_tag());
       unode->fillAll(0.0);
       uedge->fillAll(0.0);
    }
@@ -815,10 +829,12 @@ void HierSumTest::initializeLevelData(
    for (PatchLevel::Iterator p0(level); p0; p0++) {
       Pointer<Patch> patch = *p0;
 
-      Pointer<CellData<double> > ucell_node =
-         patch->getPatchData(d_ucell_node_id);
-      Pointer<CellData<double> > ucell_edge =
-         patch->getPatchData(d_ucell_edge_id);
+      Pointer<CellData<double> > ucell_node(
+         patch->getPatchData(d_ucell_node_id),
+         tbox::__dynamic_cast_tag());
+      Pointer<CellData<double> > ucell_edge(
+         patch->getPatchData(d_ucell_edge_id),
+         tbox::__dynamic_cast_tag());
 
       ucell_node->fillAll(0.0, ucell_node->getGhostBox()); // ghost box
       ucell_node->fillAll(1.0, patch->getBox());          // interior patch box
@@ -827,8 +843,9 @@ void HierSumTest::initializeLevelData(
       ucell_edge->fillAll(1.0, patch->getBox());          // interior patch box
 
       // set cell values at physical boundary
-      const Pointer<CartesianPatchGeometry> patch_geom =
-         patch->getPatchGeometry();
+      const Pointer<CartesianPatchGeometry> patch_geom(
+         patch->getPatchGeometry(),
+         tbox::__dynamic_cast_tag());
       const tbox::Array<BoundaryBox> node_bdry =
          patch_geom->getCodimensionBoundaries(d_dim.getValue());
       const tbox::Array<BoundaryBox> edge_bdry =
@@ -869,8 +886,9 @@ void HierSumTest::initializeLevelData(
       for (PatchLevel::Iterator p1(coarser_level); p1; p1++) {
          Pointer<Patch> cpatch = *p1;
 
-         Pointer<CellData<double> > ucell_node =
-            cpatch->getPatchData(d_ucell_node_id);
+         Pointer<CellData<double> > ucell_node(
+            cpatch->getPatchData(d_ucell_node_id),
+            tbox::__dynamic_cast_tag());
 
          Box cpbox = cpatch->getBox();
          for (BoxContainer::Iterator fine_level_itr = fine_level_boxes.begin();
@@ -975,16 +993,19 @@ HierSumTest::setBoundaryConditions(
    const int num_edge_bdry_boxes = edge_bdry.getSize();
    const int num_face_bdry_boxes = face_bdry.getSize();
 
-   const Pointer<CartesianPatchGeometry> patch_geom =
-      patch.getPatchGeometry();
+   const Pointer<CartesianPatchGeometry> patch_geom(
+      patch.getPatchGeometry(),
+      tbox::__dynamic_cast_tag());
 
    /*
     * Pointer to data in ghost regions.
     */
-   Pointer<CellData<double> > ucell = patch.getPatchData(cell_data_id);
+   Pointer<CellData<double> > ucell(
+      patch.getPatchData(cell_data_id),
+      tbox::__dynamic_cast_tag());
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!ucell.isNull());
+   TBOX_ASSERT(ucell);
 #endif
    IntVector ghost_cells(ucell->getGhostCellWidth());
    const Box pbox(patch.getBox());
@@ -1153,7 +1174,9 @@ void HierSumTest::zeroOutPhysicalBoundaryCellsAtCoarseFineBoundary(
    const int cell_data_id)
 {
 
-   const Pointer<CartesianPatchGeometry> patch_geom = cpatch.getPatchGeometry();
+   const Pointer<CartesianPatchGeometry> patch_geom(
+      cpatch.getPatchGeometry(),
+      tbox::__dynamic_cast_tag());
 
    /*
     * Get node and edge boundary boxes.
@@ -1173,10 +1196,12 @@ void HierSumTest::zeroOutPhysicalBoundaryCellsAtCoarseFineBoundary(
    /*
     * Pointer to data in ghost regions.
     */
-   Pointer<CellData<double> > ucell = cpatch.getPatchData(cell_data_id);
+   Pointer<CellData<double> > ucell(
+      cpatch.getPatchData(cell_data_id),
+      tbox::__dynamic_cast_tag());
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!ucell.isNull());
+   TBOX_ASSERT(ucell);
 #endif
    IntVector ghost_cells(ucell->getGhostCellWidth());
 

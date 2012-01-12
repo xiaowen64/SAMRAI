@@ -104,7 +104,7 @@ MblkEuler::MblkEuler(
    d_nodeghosts(hier::IntVector(d_dim, NODEG))
 {
    TBOX_ASSERT(!object_name.empty());
-   TBOX_ASSERT(!input_db.isNull());
+   TBOX_ASSERT(input_db);
 
    d_object_name = object_name;
    tbox::RestartManager::getManager()->registerRestartItem(d_object_name, this);
@@ -250,7 +250,7 @@ void MblkEuler::registerModelVariables(
    hier::VariableDatabase* vardb = hier::VariableDatabase::getDatabase();
 
 #ifdef HAVE_HDF5
-   if (d_visit_writer.isNull()) {
+   if (!d_visit_writer) {
       TBOX_WARNING(
          d_object_name << ": registerModelVariables()"
                        << "\nVisit data writer was"
@@ -300,17 +300,20 @@ void MblkEuler::initializeDataOnPatch(
 
    if (initial_time) {
 
-      tbox::Pointer<pdat::CellData<double> > state = patch.getPatchData(d_state,
-            getDataContext());
-      tbox::Pointer<pdat::CellData<double> > vol = patch.getPatchData(d_vol,
-            getDataContext());
-      tbox::Pointer<pdat::NodeData<double> > xyz = patch.getPatchData(d_xyz,
-            getDataContext());
+      tbox::Pointer<pdat::CellData<double> > state(
+         patch.getPatchData(d_state, getDataContext()),
+         tbox::__dynamic_cast_tag());
+      tbox::Pointer<pdat::CellData<double> > vol(
+         patch.getPatchData(d_vol, getDataContext()),
+         tbox::__dynamic_cast_tag());
+      tbox::Pointer<pdat::NodeData<double> > xyz(
+         patch.getPatchData(d_xyz, getDataContext()),
+         tbox::__dynamic_cast_tag());
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-      TBOX_ASSERT(!state.isNull());
-      TBOX_ASSERT(!vol.isNull());
-      TBOX_ASSERT(!xyz.isNull());
+      TBOX_ASSERT(state);
+      TBOX_ASSERT(vol);
+      TBOX_ASSERT(xyz);
       TBOX_ASSERT(state->getGhostCellWidth() == vol->getGhostCellWidth());
 #endif
 
@@ -642,8 +645,9 @@ void MblkEuler::initializeDataOnPatch(
       if (!patch.checkAllocated(d_workload_data_id)) {
          patch.allocatePatchData(d_workload_data_id);
       }
-      tbox::Pointer<pdat::CellData<double> > workload_data =
-         patch.getPatchData(d_workload_data_id);
+      tbox::Pointer<pdat::CellData<double> > workload_data(
+         patch.getPatchData(d_workload_data_id),
+         tbox::__dynamic_cast_tag());
       workload_data->fillAll(1.0);
    }
 
@@ -684,17 +688,19 @@ double MblkEuler::computeStableDtOnPatch(
    //
    // get the cell data and their bounds
    //
-   tbox::Pointer<pdat::CellData<double> > state = patch.getPatchData(d_state,
-         getDataContext());
-   tbox::Pointer<pdat::NodeData<double> > xyz = patch.getPatchData(d_xyz,
-         getDataContext());
+   tbox::Pointer<pdat::CellData<double> > state(
+      patch.getPatchData(d_state, getDataContext()),
+      tbox::__dynamic_cast_tag());
+   tbox::Pointer<pdat::NodeData<double> > xyz(
+      patch.getPatchData(d_xyz, getDataContext()),
+      tbox::__dynamic_cast_tag());
    hier::IntVector state_ghosts = state->getGhostCellWidth();
    hier::IntVector xyz_ghosts = xyz->getGhostCellWidth();
 
    pdat::CellData<double> Aii(patch.getBox(), 9, hier::IntVector(d_dim, 0));
 
-   TBOX_ASSERT(!state.isNull());
-   TBOX_ASSERT(!xyz.isNull());
+   TBOX_ASSERT(state);
+   TBOX_ASSERT(xyz);
 
    int imin = ifirst(0);
    int imax = ilast(0);
@@ -912,8 +918,9 @@ void MblkEuler::testPatchExtrema(
    hier::Patch& patch,
    const char* pos)
 {
-   tbox::Pointer<pdat::CellData<double> > state = patch.getPatchData(d_state,
-         getDataContext());
+   tbox::Pointer<pdat::CellData<double> > state(
+      patch.getPatchData(d_state, getDataContext()),
+      tbox::__dynamic_cast_tag());
    hier::IntVector state_ghosts = state->getGhostCellWidth();
 
    const hier::Index ifirst = patch.getBox().lower();
@@ -995,18 +1002,22 @@ void MblkEuler::computeFluxesOnPatch(
    const hier::Index ifirst = patch.getBox().lower();
    const hier::Index ilast = patch.getBox().upper();
 
-   tbox::Pointer<pdat::CellData<double> > state = patch.getPatchData(d_state,
-         getDataContext());
-   tbox::Pointer<pdat::CellData<double> > vol = patch.getPatchData(d_vol,
-         getDataContext());
-   tbox::Pointer<pdat::SideData<double> > flux = patch.getPatchData(d_flux,
-         getDataContext());
-   tbox::Pointer<pdat::NodeData<double> > xyz = patch.getPatchData(d_xyz,
-         getDataContext());
+   tbox::Pointer<pdat::CellData<double> > state(
+      patch.getPatchData(d_state, getDataContext()),
+      tbox::__dynamic_cast_tag());
+   tbox::Pointer<pdat::CellData<double> > vol(
+      patch.getPatchData(d_vol, getDataContext()),
+      tbox::__dynamic_cast_tag());
+   tbox::Pointer<pdat::SideData<double> > flux(
+      patch.getPatchData(d_flux, getDataContext()),
+      tbox::__dynamic_cast_tag());
+   tbox::Pointer<pdat::NodeData<double> > xyz(
+      patch.getPatchData(d_xyz, getDataContext()),
+      tbox::__dynamic_cast_tag());
 
-   TBOX_ASSERT(!state.isNull());
-   TBOX_ASSERT(!flux.isNull());
-   TBOX_ASSERT(!vol.isNull());
+   TBOX_ASSERT(state);
+   TBOX_ASSERT(flux);
+   TBOX_ASSERT(vol);
    TBOX_ASSERT(state->getGhostCellWidth() == d_nghosts);
    TBOX_ASSERT(vol->getGhostCellWidth() == d_nghosts);
    TBOX_ASSERT(flux->getGhostCellWidth() == d_fluxghosts);
@@ -1495,8 +1506,9 @@ void MblkEuler::markPhysicalBoundaryConditions(
    hier::Patch& patch,
    const hier::IntVector& ghost_width_to_fill)
 {
-   tbox::Pointer<pdat::CellData<double> > state = patch.getPatchData(d_state,
-         getDataContext());
+   tbox::Pointer<pdat::CellData<double> > state(
+      patch.getPatchData(d_state, getDataContext()),
+      tbox::__dynamic_cast_tag());
 
    //
    // the domain and its ghost box
@@ -1602,10 +1614,12 @@ void MblkEuler::setPhysicalBoundaryConditions(
 
    (void)fill_time;
 
-   tbox::Pointer<pdat::NodeData<double> > position = patch.getPatchData(d_xyz,
-         getDataContext());
-   tbox::Pointer<pdat::CellData<double> > state = patch.getPatchData(d_state,
-         getDataContext());
+   tbox::Pointer<pdat::NodeData<double> > position(
+      patch.getPatchData(d_xyz, getDataContext()),
+      tbox::__dynamic_cast_tag());
+   tbox::Pointer<pdat::CellData<double> > state(
+      patch.getPatchData(d_state, getDataContext()),
+      tbox::__dynamic_cast_tag());
 
    //
    // the patch and its ghost box
@@ -1754,23 +1768,27 @@ void MblkEuler::postprocessRefine(
    const hier::Box& fine_box,                                 // where the fine data is needed
    const hier::IntVector& ratio)
 {
-   tbox::Pointer<pdat::CellData<double> > cstate = coarse.getPatchData(d_state,
-         getDataContext());
-   tbox::Pointer<pdat::CellData<double> > cvol = coarse.getPatchData(d_vol,
-         getDataContext());
+   tbox::Pointer<pdat::CellData<double> > cstate(
+      coarse.getPatchData(d_state, getDataContext()),
+      tbox::__dynamic_cast_tag());
+   tbox::Pointer<pdat::CellData<double> > cvol(
+      coarse.getPatchData(d_vol, getDataContext()),
+      tbox::__dynamic_cast_tag());
 
-   tbox::Pointer<pdat::CellData<double> > fstate = fine.getPatchData(d_state,
-         getDataContext());
-   tbox::Pointer<pdat::CellData<double> > fvol = fine.getPatchData(d_vol,
-         getDataContext());
+   tbox::Pointer<pdat::CellData<double> > fstate(
+      fine.getPatchData(d_state, getDataContext()),
+      tbox::__dynamic_cast_tag());
+   tbox::Pointer<pdat::CellData<double> > fvol(
+      fine.getPatchData(d_vol, getDataContext()),
+      tbox::__dynamic_cast_tag());
 
    int depth = cstate->getDepth();
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!cstate.isNull());
-   TBOX_ASSERT(!fstate.isNull());
-   TBOX_ASSERT(!cvol.isNull());
-   TBOX_ASSERT(!fvol.isNull());
+   TBOX_ASSERT(cstate);
+   TBOX_ASSERT(fstate);
+   TBOX_ASSERT(cvol);
+   TBOX_ASSERT(fvol);
    TBOX_ASSERT(cstate->getDepth() == fstate->getDepth());
 #endif
 
@@ -2020,22 +2038,26 @@ void MblkEuler::postprocessCoarsen(
    const hier::Box& coarse_box,
    const hier::IntVector& ratio)
 {
-   tbox::Pointer<pdat::CellData<double> > cstate =
-      coarse.getPatchData(d_state, getDataContext());
-   tbox::Pointer<pdat::CellData<double> > cvol =
-      coarse.getPatchData(d_vol, getDataContext());
+   tbox::Pointer<pdat::CellData<double> > cstate(
+      coarse.getPatchData(d_state, getDataContext()),
+      tbox::__dynamic_cast_tag());
+   tbox::Pointer<pdat::CellData<double> > cvol(
+      coarse.getPatchData(d_vol, getDataContext()),
+      tbox::__dynamic_cast_tag());
 
-   tbox::Pointer<pdat::CellData<double> > fstate =
-      fine.getPatchData(d_state, getDataContext());
-   tbox::Pointer<pdat::CellData<double> > fvol =
-      fine.getPatchData(d_vol, getDataContext());
+   tbox::Pointer<pdat::CellData<double> > fstate(
+      fine.getPatchData(d_state, getDataContext()),
+      tbox::__dynamic_cast_tag());
+   tbox::Pointer<pdat::CellData<double> > fvol(
+      fine.getPatchData(d_vol, getDataContext()),
+      tbox::__dynamic_cast_tag());
 
    int depth = cstate->getDepth();
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!cstate.isNull());
-   TBOX_ASSERT(!cvol.isNull());
-   TBOX_ASSERT(!fstate.isNull());
-   TBOX_ASSERT(!fvol.isNull());
+   TBOX_ASSERT(cstate);
+   TBOX_ASSERT(cvol);
+   TBOX_ASSERT(fstate);
+   TBOX_ASSERT(fvol);
    TBOX_ASSERT(cstate->getDepth() == fstate->getDepth());
 #endif
 
@@ -2215,8 +2237,9 @@ void MblkEuler::tagGradientDetectorCells(
    //
    const int error_level_number = patch.getPatchLevelNumber();
 
-   tbox::Pointer<pdat::NodeData<double> > xyz = patch.getPatchData(d_xyz,
-         getDataContext());
+   tbox::Pointer<pdat::NodeData<double> > xyz(
+      patch.getPatchData(d_xyz, getDataContext()),
+      tbox::__dynamic_cast_tag());
    double* x = xyz->getPointer(0);
    double* y = xyz->getPointer(1);
    double* z = xyz->getPointer(2);
@@ -2231,9 +2254,12 @@ void MblkEuler::tagGradientDetectorCells(
    tbox::plog << "level  = " << level << endl;
    tbox::plog << "box    = " << patch.getBox() << endl;
 
-   tbox::Pointer<pdat::CellData<int> > tags = patch.getPatchData(tag_indx);
-   tbox::Pointer<pdat::CellData<double> > var = patch.getPatchData(d_state,
-         getDataContext());
+   tbox::Pointer<pdat::CellData<int> > tags(
+      patch.getPatchData(tag_indx),
+      tbox::__dynamic_cast_tag());
+   tbox::Pointer<pdat::CellData<double> > var(
+      patch.getPatchData(d_state, getDataContext()),
+      tbox::__dynamic_cast_tag());
 
    //
    // Create a set of temporary tags and set to untagged value.
@@ -2294,7 +2320,7 @@ void MblkEuler::tagGradientDetectorCells(
    for (int ncrit = 0; ncrit < d_refinement_criteria.getSize(); ncrit++) {
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-      TBOX_ASSERT(!var.isNull());
+      TBOX_ASSERT(var);
 #endif
       string ref = d_refinement_criteria[ncrit];
 
@@ -2590,11 +2616,13 @@ void MblkEuler::setMappedGridOnPatch(
 void MblkEuler::setVolumeOnPatch(
    const hier::Patch& patch)
 {
-   tbox::Pointer<pdat::CellData<double> > vol =
-      patch.getPatchData(d_vol, getDataContext());
+   tbox::Pointer<pdat::CellData<double> > vol(
+      patch.getPatchData(d_vol, getDataContext()),
+      tbox::__dynamic_cast_tag());
 
-   tbox::Pointer<pdat::NodeData<double> > xyz =
-      patch.getPatchData(d_xyz, getDataContext());
+   tbox::Pointer<pdat::NodeData<double> > xyz(
+      patch.getPatchData(d_xyz, getDataContext()),
+      tbox::__dynamic_cast_tag());
 
    hier::IntVector vol_ghosts = vol->getGhostCellWidth();
    hier::IntVector xyz_ghosts = xyz->getGhostCellWidth();
@@ -2673,7 +2701,7 @@ void MblkEuler::registerVisItDataWriter(
    tbox::Pointer<appu::VisItDataWriter> viz_writer)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!(viz_writer.isNull()));
+   TBOX_ASSERT(viz_writer);
 #endif
    d_visit_writer = viz_writer;
 }
@@ -2727,7 +2755,7 @@ void MblkEuler::getFromInput(
    bool is_from_restart)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!input_db.isNull());
+   TBOX_ASSERT(input_db);
 #endif
 
    tbox::Pointer<tbox::Database> db = input_db->getDatabase("MblkEuler");
@@ -2961,7 +2989,7 @@ void MblkEuler::getFromInput(
       for (int i = 0; i < refinement_keys.getSize(); i++) {
 
          string error_key = refinement_keys[i];
-         error_db.setNull();
+         error_db.reset();
 
          if (!(error_key == "refine_criteria")) {
 
@@ -2984,7 +3012,7 @@ void MblkEuler::getFromInput(
             //
             // process the specific keys
             //
-            if (!error_db.isNull() && error_key == "GRADIENT") {
+            if (error_db && error_key == "GRADIENT") {
 
                d_state_grad_names = error_db->getStringArray("names");
                int nStateLocal = d_state_grad_names.getSize();
@@ -3054,7 +3082,7 @@ void MblkEuler::putToDatabase(
    tbox::Pointer<tbox::Database> db)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!db.isNull());
+   TBOX_ASSERT(db);
 #endif
 
    db->putInteger("MBLKEULER_VERSION", MBLKEULER_VERSION);

@@ -118,7 +118,7 @@ public:
     *              of the ghost cell region around the box over which
     *              the edge data will be allocated.
     */
-   explicit EdgeData(
+   EdgeData(
       const hier::Box& box,
       int depth,
       const hier::IntVector& ghosts);

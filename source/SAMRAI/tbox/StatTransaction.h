@@ -50,7 +50,7 @@ public:
     * if the source and destination processors are the same.  Also, note
     * that the copyLocalData() routine has an empty implementation.
     */
-   explicit StatTransaction(
+   StatTransaction(
       Pointer<Statistic> stat,
       int src_proc_id,
       int dst_proc_id);

@@ -171,7 +171,7 @@ private:
    /*!
     * @brief Default constructor is defined but accessible only by friends.
     */
-   explicit BoxContainerIterator();
+   BoxContainerIterator();
 
    /*
     * Underlying iterator to be used when unordered.

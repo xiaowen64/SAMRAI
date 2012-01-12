@@ -172,7 +172,7 @@ CartesianGridGeometry::CartesianGridGeometry(
    d_domain_box(dim)
 {
    TBOX_ASSERT(!object_name.empty());
-   TBOX_ASSERT(!input_db.isNull());
+   TBOX_ASSERT(input_db);
 
    d_registered_for_restart = register_for_restart;
 
@@ -501,7 +501,7 @@ void CartesianGridGeometry::printClassData(
 void CartesianGridGeometry::putToDatabase(
    tbox::Pointer<tbox::Database> db)
 {
-   TBOX_ASSERT(!db.isNull());
+   TBOX_ASSERT(db);
 
    const tbox::Dimension& dim(getDim());
 
@@ -537,7 +537,7 @@ void CartesianGridGeometry::getFromInput(
    tbox::Pointer<tbox::Database> db,
    bool is_from_restart)
 {
-   TBOX_ASSERT(!db.isNull());
+   TBOX_ASSERT(db);
 
    const tbox::Dimension& dim(getDim());
 
@@ -557,6 +557,7 @@ void CartesianGridGeometry::getFromInput(
          hier::LocalId local_id(0);
          for (hier::BoxContainer::Iterator itr = input_domain.begin();
               itr != input_domain.end(); ++itr) {
+            itr->setBlockId(hier::BlockId(0));
             domain.pushBack(hier::Box(*itr, local_id++, 0));
          }
       } else {
@@ -593,9 +594,9 @@ void CartesianGridGeometry::getFromInput(
       }
 
 
-      setGeometryData(x_lo, x_up, domain);
-
       this->initializePeriodicShift(per_bc);
+
+      setGeometryData(x_lo, x_up, domain);
 
    }
 }
@@ -645,6 +646,7 @@ void CartesianGridGeometry::getFromRestart()
    hier::LocalId local_id(0);
    for (hier::BoxContainer::Iterator itr = restart_domain.begin();
         itr != restart_domain.end(); ++itr) {
+      itr->setBlockId(hier::BlockId(0));
       domain.pushBack(hier::Box(*itr, local_id++, 0));
    }
 

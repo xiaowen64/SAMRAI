@@ -90,14 +90,13 @@ GridGeometry::GridGeometry(
    bool register_for_restart):
    d_dim(dim),
    d_object_name(object_name),
-   d_domain_tree(0),
    d_periodic_shift(IntVector::getZero(d_dim)),
    d_max_data_ghost_width(IntVector(d_dim, -1)),
    d_has_enhanced_connectivity(false),
    d_transfer_operator_registry(op_reg)
 {
    TBOX_ASSERT(!object_name.empty());
-   TBOX_ASSERT(!input_db.isNull());
+   TBOX_ASSERT(input_db);
 
    d_registered_for_restart = register_for_restart;
 
@@ -129,7 +128,6 @@ GridGeometry::GridGeometry(
    tbox::Pointer<TransferOperatorRegistry> op_reg):
    d_dim(dim),
    d_object_name(object_name),
-   d_domain_tree(0),
    d_periodic_shift(IntVector::getZero(d_dim)),
    d_max_data_ghost_width(IntVector(d_dim, -1)),
    d_number_blocks(1),
@@ -155,7 +153,6 @@ GridGeometry::GridGeometry(
    d_dim((*(domain.begin())).getDim()),
    d_object_name(object_name),
    d_physical_domain(domain),
-   d_domain_tree(0),
    d_periodic_shift(IntVector::getZero(d_dim)),
    d_max_data_ghost_width(IntVector(d_dim, -1)),
    d_number_of_block_singularities(0),
@@ -241,7 +238,7 @@ void GridGeometry::computeBoundaryBoxesOnLevel(
    for (PatchLevel::Iterator ip(&level); ip; ip++) {
       tbox::Pointer<Patch> patch = *ip;
       const BoxId& patch_id = patch->getBox().getId();
-      const int block_num = patch_id.getBlockId().getBlockValue();
+      const int block_num = patch->getBox().getBlockId().getBlockValue();
 
       if (patch->getPatchGeometry()->getTouchesRegularBoundary() ||
           do_all_patches) {
@@ -301,33 +298,8 @@ void GridGeometry::computeBoundaryBoxesOnLevel(
 void GridGeometry::findPatchesTouchingBoundaries(
    std::map<BoxId, TwoDimBool>& touches_regular_bdry,
    std::map<BoxId, TwoDimBool>& touches_periodic_bdry,
-   const PatchLevel& level,
-   const IntVector& periodic_shift,
-   const tbox::Array<BoxContainer>& domain) const
+   const PatchLevel& level) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(level, periodic_shift);
-
-   tbox::Array<tbox::Pointer<BoxContainer> > domain_tree(d_number_blocks);
-   for (int nb = 0; nb < d_number_blocks; nb++) {
-      domain_tree[nb] = new BoxContainer(domain[nb]);
-      domain_tree[nb]->makeTree();
-   }
-   findPatchesTouchingBoundaries(touches_regular_bdry,
-      touches_periodic_bdry,
-      level,
-      periodic_shift,
-      domain_tree);
-}
-
-void GridGeometry::findPatchesTouchingBoundaries(
-   std::map<BoxId, TwoDimBool>& touches_regular_bdry,
-   std::map<BoxId, TwoDimBool>& touches_periodic_bdry,
-   const PatchLevel& level,
-   const IntVector& periodic_shift,
-   const tbox::Array<tbox::Pointer<BoxContainer> >& domain_tree) const
-{
-   TBOX_DIM_ASSERT_CHECK_ARGS2(level, periodic_shift);
-
    t_find_patches_touching_boundaries->start();
 
    t_touching_boundaries_init->start();
@@ -335,11 +307,16 @@ void GridGeometry::findPatchesTouchingBoundaries(
    touches_periodic_bdry.clear();
    t_touching_boundaries_init->stop();
 
+   tbox::Pointer<MultiblockBoxTree> tmp_refined_periodic_domain_tree;
+   if ( level.getRatioToLevelZero() != hier::IntVector::getZero(level.getDim()) ) {
+      tmp_refined_periodic_domain_tree = d_domain_search_tree_periodic.createRefinedTree(
+         level.getRatioToLevelZero());
+   }
+
    t_touching_boundaries_loop->start();
    for (PatchLevel::Iterator ip(&level); ip; ip++) {
       tbox::Pointer<Patch> patch = *ip;
       const Box& box(patch->getBox());
-      const int block_number = patch->getBox().getBlockId().getBlockValue();
 
       std::map<BoxId, TwoDimBool>::iterator iter_touches_regular_bdry(
          touches_regular_bdry.find(ip->getBox().getId()));
@@ -357,11 +334,14 @@ void GridGeometry::findPatchesTouchingBoundaries(
                std::pair<BoxId, TwoDimBool>(ip->getBox().getId(), TwoDimBool(d_dim)));
       }
 
-      computeBoxTouchingBoundaries((*iter_touches_regular_bdry).second,
+      computeBoxTouchingBoundaries(
+         (*iter_touches_regular_bdry).second,
          (*iter_touches_periodic_bdry).second,
          box,
-         periodic_shift,
-         *(domain_tree[block_number]));
+         level.getRatioToLevelZero(),
+         !tmp_refined_periodic_domain_tree ?
+         d_domain_search_tree :
+         *tmp_refined_periodic_domain_tree );
    }
    t_touching_boundaries_loop->stop();
    t_find_patches_touching_boundaries->stop();
@@ -371,10 +351,9 @@ void GridGeometry::computeBoxTouchingBoundaries(
    TwoDimBool& touches_regular_bdry,
    TwoDimBool& touches_periodic_bdry,
    const Box& box,
-   const IntVector& periodic_shift,
-   const BoxContainer& domain_tree) const
+   const hier::IntVector &refinement_ratio,
+   const MultiblockBoxTree& refined_periodic_domain_tree) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(box, periodic_shift);
 
    /*
     * Create a list of boxes inside a mapped_box_level of one cell outside the
@@ -383,7 +362,7 @@ void GridGeometry::computeBoxTouchingBoundaries(
     */
    BoxContainer bdry_list(box);
    bdry_list.grow(IntVector::getOne(d_dim));
-   bdry_list.removeIntersections(domain_tree);
+   bdry_list.removeIntersections(refinement_ratio, refined_periodic_domain_tree);
    const bool touches_any_boundary = (bdry_list.size() > 0);
 
    if (!touches_any_boundary) {
@@ -408,15 +387,15 @@ void GridGeometry::computeBoxTouchingBoundaries(
 
          if (lower_list.size()) {
             // Touches regular or periodic bdry on lower side.
-            touches_periodic_bdry(nd, 0) = (periodic_shift(nd) != 0);
-            touches_regular_bdry(nd, 0) = (periodic_shift(nd) == 0);
+            touches_periodic_bdry(nd, 0) = (d_periodic_shift(nd) != 0);
+            touches_regular_bdry(nd, 0) = (d_periodic_shift(nd) == 0);
             bdry_located = true;
          }
 
          if (upper_list.size()) {
             // Touches regular or periodic bdry on upper side.
-            touches_periodic_bdry(nd, 1) = (periodic_shift(nd) != 0);
-            touches_regular_bdry(nd, 1) = (periodic_shift(nd) == 0);
+            touches_periodic_bdry(nd, 1) = (d_periodic_shift(nd) != 0);
+            touches_regular_bdry(nd, 1) = (d_periodic_shift(nd) == 0);
             bdry_located = true;
          }
       }
@@ -752,7 +731,8 @@ void GridGeometry::getFromRestart()
 
       for (BoxContainer::Iterator itr = block_domain_boxes.begin();
            itr != block_domain_boxes.end(); ++itr) {
-         Box box(*itr, local_id++, 0, BlockId(b));
+         Box box(*itr, local_id++, 0);
+         box.setBlockId(BlockId(b));
          domain.pushBack(box);
       }
    }
@@ -782,7 +762,7 @@ void GridGeometry::getFromInput(
    bool is_from_restart)
 {
 
-   TBOX_ASSERT(!db.isNull());
+   TBOX_ASSERT(db);
 
    const tbox::Dimension dim(getDim());
 
@@ -815,7 +795,8 @@ void GridGeometry::getFromInput(
 
          for (BoxContainer::Iterator itr = block_domain_boxes.begin();
               itr != block_domain_boxes.end(); ++itr) {
-            Box box(*itr, local_id++, 0, BlockId(b));
+            Box box(*itr, local_id++, 0);
+            box.setBlockId(BlockId(b));
             domain.pushBack(box);
          }
 
@@ -849,7 +830,7 @@ void GridGeometry::getFromInput(
 void GridGeometry::putToDatabase(
    tbox::Pointer<tbox::Database> db)
 {
-   TBOX_ASSERT(!db.isNull());
+   TBOX_ASSERT(db);
 
    const tbox::Dimension dim(getDim());
 
@@ -1425,7 +1406,6 @@ void GridGeometry::setPhysicalDomain(
 #endif
 
    d_domain_is_single_box.resizeArray(number_blocks);
-   d_domain_tree.resizeArray(number_blocks);
    d_number_blocks = number_blocks;
    LocalId local_id(0);
 
@@ -1438,26 +1418,54 @@ void GridGeometry::setPhysicalDomain(
       bounding_cntnr.removeIntersections(block_domain);
       if (bounding_cntnr.size() == 0) {
          d_domain_is_single_box[b] = true;
-         Box box(bounding_box, local_id++, 0, block_id);
+         Box box(bounding_box, local_id++, 0);
+         box.setBlockId(block_id);
          d_physical_domain.pushBack(box);
-
-         d_domain_tree[b] = new BoxContainer(box);
-         d_domain_tree[b]->order();
-         d_domain_tree[b]->makeTree();
       } else {
          d_domain_is_single_box[b] = false;
-         d_domain_tree[b] = new BoxContainer(true);
          for (BoxContainer::Iterator itr = block_domain.begin();
               itr != block_domain.end(); ++itr) {
-            Box box(*itr, local_id++, 0, block_id);
-            d_domain_tree[b]->insert(d_domain_tree[b]->end(), box);
+            Box box(*itr, local_id++, 0);
             d_physical_domain.pushBack(box);
          }
-         d_domain_tree[b]->makeTree();
+      }
+   }
+
+   if (d_physical_domain.size() == 1 &&
+       d_periodic_shift != hier::IntVector::getZero(d_dim) ) {
+
+      /*
+       * Check incoming array and reset values if necessary.
+       */
+      for (int id = 0; id < d_dim.getValue(); id++) {
+         d_periodic_shift(id) = ((d_periodic_shift(id) == 0) ? 0 : 1);
+      }
+
+      if (d_periodic_shift != hier::IntVector::getZero(d_dim)) {
+         /*
+          * Check if the physical domain is valid for the specified
+          * periodic conditions.  If so, compute the shift in each
+          * dimension based on the the number of cells.
+          */
+         if (checkPeriodicValidity(d_physical_domain)) {
+
+            Box bounding_box(d_physical_domain.getBoundingBox());
+
+            for (int id = 0; id < d_dim.getValue(); id++) {
+               d_periodic_shift(id) *= bounding_box.numberCells(id);
+            }
+
+         } else {
+            TBOX_ERROR("Error in GridGeometry object with name = "
+               << d_object_name << ": in initializePeriodicShift():  "
+               << "Domain is not periodic for one (or more) of the dimensions "
+               << "specified in the geometry input file!");
+         }
       }
    }
 
    resetDomainBoxContainer();
+
 }
 
 /*
@@ -1471,46 +1479,45 @@ void GridGeometry::setPhysicalDomain(
 
 void GridGeometry::resetDomainBoxContainer()
 {
-   d_domain_with_images = d_physical_domain;
-   d_domain_with_images.order();
 
-   const IntVector periodic_shift_distances = getPeriodicShift(
-         IntVector::getOne(d_dim));
-   bool is_periodic = false;
-   for (int i = 0; i < d_dim.getValue(); i++) {
-      if (periodic_shift_distances(i) != 0) {
-         is_periodic = true;
-         break;
-      }
-   }
+   d_domain_search_tree.generateTree(*this, d_physical_domain);
+
+   const bool is_periodic =
+      d_periodic_shift != IntVector::getZero(d_periodic_shift.getDim());
+
+   d_domain_with_images = d_physical_domain; // Images added next if is_periodic.
+
    if (is_periodic) {
 
       PeriodicShiftCatalog::initializeShiftsByIndexDirections(d_periodic_shift);
       const PeriodicShiftCatalog* periodic_shift_catalog =
          PeriodicShiftCatalog::getCatalog(d_dim);
 
-      // Add periodic images of the domain d_domain_with_images.
-      std::vector<IntVector> shifts;
-      const BoxContainer& mapped_boxes = d_domain_with_images;
-      for (RealBoxConstIterator ni(mapped_boxes); ni.isValid(); ++ni) {
-         const Box& mapped_box = *ni;
-         computeShiftsForBox(shifts,
-            mapped_box,
-            *d_domain_tree[0],
-            periodic_shift_distances);
-         for (std::vector<IntVector>::const_iterator si = shifts.begin();
-              si != shifts.end(); ++si) {
-            PeriodicId shift_number =
-               periodic_shift_catalog->shiftDistanceToShiftNumber(*si);
-            Box image_mapped_box(
-               mapped_box,
-               shift_number,
-               IntVector::getOne(d_dim));
-            d_domain_with_images.insert(image_mapped_box);
+      const IntVector &one_vector(IntVector::getOne(d_dim));
+
+      for ( BoxContainer::ConstIterator ni(d_physical_domain.begin());
+            ni!=d_physical_domain.end(); ++ni ) {
+
+         const Box &real_box = *ni;
+         TBOX_ASSERT(real_box.getPeriodicId() == periodic_shift_catalog->getZeroShiftNumber());
+
+         for ( int ishift=1; ishift<periodic_shift_catalog->getNumberOfShifts();
+               ++ishift ) {
+            const Box image_box( real_box, PeriodicId(ishift), one_vector );
+            d_domain_with_images.pushBack(image_box);
          }
+
       }
+
+      d_domain_search_tree_periodic.generateTree(*this, d_domain_with_images);
+
+   }
+   else {
+      d_domain_search_tree_periodic = d_domain_search_tree;
    }
 }
+
+
 
 /*
  *************************************************************************
@@ -1532,41 +1539,8 @@ void GridGeometry::initializePeriodicShift(
    d_periodic_shift = directions;
 
    if (d_physical_domain.size() == 1) {
-
-      int id;
-      /*
-       * Check incoming array and reset values if necessary.
-       */
-      for (id = 0; id < d_dim.getValue(); id++) {
-         d_periodic_shift(id) = ((d_periodic_shift(id) == 0) ? 0 : 1);
-      }
-
-      if (d_periodic_shift != hier::IntVector::getZero(d_dim)) {
-         /*
-          * Check if the physical domain is valid for the specified
-          * periodic conditions.  If so, compute the shift in each
-          * dimension based on the the number of cells.
-          */
-         if (checkPeriodicValidity(d_physical_domain)) {
-
-            Box bounding_box(d_physical_domain.getBoundingBox());
-
-            for (id = 0; id < d_dim.getValue(); id++) {
-               d_periodic_shift(id) *= bounding_box.numberCells(id);
-            }
-
-         } else {
-            TBOX_ERROR("Error in GridGeometry object with name = "
-               << d_object_name << ": in intializePeriodicShift():  "
-               << "Domain is not periodic for one (or more) of the dimensions "
-               << "specified in the geometry input file!");
-         }
-      }
-   } else {
-      TBOX_ASSERT(directions == IntVector::getZero(d_dim));
+      resetDomainBoxContainer();
    }
-
-   resetDomainBoxContainer();
 }
 
 /*
@@ -1795,7 +1769,7 @@ bool GridGeometry::checkBoundaryBox(
 void GridGeometry::readBlockDataFromInput(
    const tbox::Pointer<tbox::Database>& input_db)
 {
-   TBOX_ASSERT(!input_db.isNull());
+   TBOX_ASSERT(input_db);
 
    d_singularity.resizeArray(d_number_blocks);
    d_singularity_indices.resizeArray(d_number_blocks);
@@ -1832,6 +1806,7 @@ void GridGeometry::readBlockDataFromInput(
             + tbox::Utilities::intToString(block_number);
 
          Box sing_box(sing_db->getDatabaseBox(block_box_name));
+         sing_box.setBlockId(BlockId(block_number));
 
          d_singularity[block_number].pushFront(sing_box);
 
@@ -1873,8 +1848,8 @@ void GridGeometry::readBlockDataFromInput(
             a_index(p) = a_array[p];
          }
 
-         Box b_box(b_index, b_index);
-         Box a_box(a_index, a_index);
+         Box b_box(b_index, b_index, block_b);
+         Box a_box(a_index, a_index, block_a);
 
          b_box.rotate(rotation_b_to_a);
          Index b_rotated_point(b_box.lower());
@@ -1983,8 +1958,19 @@ void GridGeometry::registerNeighbors(
    b_domain_in_a_space.shift(shift);
    a_domain_in_b_space.shift(back_shift);
 
-   Transformation transformation(rotation, shift);
-   Transformation back_transformation(back_rotation, back_shift);
+   for (BoxContainer::Iterator itr = b_domain_in_a_space.begin();
+        itr != b_domain_in_a_space.end(); ++itr) {
+      itr->setBlockId(block_a);
+   }
+   for (BoxContainer::Iterator itr = a_domain_in_b_space.begin();
+        itr != a_domain_in_b_space.end(); ++itr) {
+      itr->setBlockId(block_b);
+   }
+
+   Transformation transformation(rotation, shift, block_b, block_a);
+   Transformation back_transformation(back_rotation, back_shift,
+                                      block_a, block_b);
+
    Neighbor neighbor_of_b(block_a, a_domain_in_b_space,
                           back_transformation,
                           is_singularity);
@@ -2024,6 +2010,7 @@ GridGeometry::transformBox(
          IntVector refined_shift = (ni().getShift()) * (ratio);
          box.rotate(ni().getRotationIdentifier());
          box.shift(refined_shift);
+         box.setBlockId(output_block);
          return true;
       }
    }
@@ -2053,6 +2040,10 @@ GridGeometry::transformBoxContainer(
          IntVector refined_shift = (ni().getShift()) * (ratio);
          boxes.rotate(ni().getRotationIdentifier());
          boxes.shift(refined_shift);
+         for (BoxContainer::Iterator itr = boxes.begin(); itr != boxes.end();
+              ++itr) {
+            itr->setBlockId(output_block);
+         }
          return true;
       }
    }
@@ -2452,28 +2443,28 @@ void GridGeometry::initializeCallback()
 {
    t_find_patches_touching_boundaries = tbox::TimerManager::getManager()->
       getTimer("hier::GridGeometry::findPatchesTouchingBoundaries()");
-   TBOX_ASSERT(!t_find_patches_touching_boundaries.isNull());
+   TBOX_ASSERT(t_find_patches_touching_boundaries);
    t_touching_boundaries_init = tbox::TimerManager::getManager()->
       getTimer("hier::GridGeometry::...TouchingBoundaries()_init");
-   TBOX_ASSERT(!t_touching_boundaries_init.isNull());
+   TBOX_ASSERT(t_touching_boundaries_init);
    t_touching_boundaries_loop = tbox::TimerManager::getManager()->
       getTimer("hier::GridGeometry::...TouchingBoundaries()_loop");
-   TBOX_ASSERT(!t_touching_boundaries_loop.isNull());
+   TBOX_ASSERT(t_touching_boundaries_loop);
    t_set_geometry_on_patches = tbox::TimerManager::getManager()->
       getTimer("hier::GridGeometry::setGeometryOnPatches()");
-   TBOX_ASSERT(!t_set_geometry_on_patches.isNull());
+   TBOX_ASSERT(t_set_geometry_on_patches);
    t_set_boundary_boxes = tbox::TimerManager::getManager()->
       getTimer("hier::GridGeometry::setBoundaryBoxes()");
-   TBOX_ASSERT(!t_set_boundary_boxes.isNull());
+   TBOX_ASSERT(t_set_boundary_boxes);
    t_set_geometry_data_on_patches = tbox::TimerManager::getManager()->
       getTimer("hier::GridGeometry::set_geometry_data_on_patches");
-   TBOX_ASSERT(!t_set_geometry_data_on_patches.isNull());
+   TBOX_ASSERT(t_set_geometry_data_on_patches);
    t_compute_boundary_boxes_on_level = tbox::TimerManager::getManager()->
       getTimer("hier::GridGeometry::computeBoundaryBoxesOnLevel()");
-   TBOX_ASSERT(!t_compute_boundary_boxes_on_level.isNull());
+   TBOX_ASSERT(t_compute_boundary_boxes_on_level);
    t_get_boundary_boxes = tbox::TimerManager::getManager()->
       getTimer("hier::GridGeometry::getBoundaryBoxes()");
-   TBOX_ASSERT(!t_get_boundary_boxes.isNull());
+   TBOX_ASSERT(t_get_boundary_boxes);
 }
 
 /*
@@ -2483,14 +2474,14 @@ void GridGeometry::initializeCallback()
 
 void GridGeometry::finalizeCallback()
 {
-   t_find_patches_touching_boundaries.setNull();
-   t_touching_boundaries_init.setNull();
-   t_touching_boundaries_loop.setNull();
-   t_set_geometry_on_patches.setNull();
-   t_set_boundary_boxes.setNull();
-   t_set_geometry_data_on_patches.setNull();
-   t_compute_boundary_boxes_on_level.setNull();
-   t_get_boundary_boxes.setNull();
+   t_find_patches_touching_boundaries.reset();
+   t_touching_boundaries_init.reset();
+   t_touching_boundaries_loop.reset();
+   t_set_geometry_on_patches.reset();
+   t_set_boundary_boxes.reset();
+   t_set_geometry_data_on_patches.reset();
+   t_compute_boundary_boxes_on_level.reset();
+   t_get_boundary_boxes.reset();
 }
 
 }

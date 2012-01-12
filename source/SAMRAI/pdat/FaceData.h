@@ -122,7 +122,7 @@ public:
     *               of the ghost cell region around the box over which
     *               the face data will be allocated.
     */
-   explicit FaceData(
+   FaceData(
       const hier::Box& box,
       int depth,
       const hier::IntVector& ghosts);

@@ -52,7 +52,7 @@ public:
     * @brief Construct an outernode geometry object given an AMR index
     * space box and ghost cell width.
     */
-   explicit OuternodeGeometry(
+   OuternodeGeometry(
       const hier::Box& box,
       const hier::IntVector& ghosts);
 

@@ -16,6 +16,7 @@
 #include "SAMRAI/tbox/MathUtilities.h"
 #include "SAMRAI/tbox/TimerManager.h"
 #include "SAMRAI/hier/GridGeometry.h"
+#include "SAMRAI/hier/BoxContainerIterator.h"
 #include "SAMRAI/hier/RealBoxConstIterator.h"
 
 #include <cstdio>
@@ -77,8 +78,8 @@ PatchLevel::PatchLevel(
    d_next_coarser_level_number = -1;
    d_in_hierarchy = false;
 
-   d_geometry.setNull();
-   d_descriptor.setNull();
+   d_geometry.reset();
+   d_descriptor.reset();
 
    d_factory = new hier::PatchFactory();
 
@@ -117,8 +118,8 @@ PatchLevel::PatchLevel(
    t_level_constructor->start();
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!grid_geometry.isNull());
-   TBOX_ASSERT(!descriptor.isNull());
+   TBOX_ASSERT(grid_geometry);
+   TBOX_ASSERT(descriptor);
    /*
     * All components of ratio must be nonzero.  Additionally, all components
     * of ratio not equal to 1 must have the same sign.
@@ -151,7 +152,7 @@ PatchLevel::PatchLevel(
    d_next_coarser_level_number = -1;
    d_in_hierarchy = false;
 
-   if (!factory.isNull()) {
+   if (factory) {
       d_factory = factory;
    } else {
       d_factory = new hier::PatchFactory();
@@ -183,9 +184,7 @@ PatchLevel::PatchLevel(
    grid_geometry->findPatchesTouchingBoundaries(
       touches_regular_bdry,
       touches_periodic_bdry,
-      *this,
-      grid_geometry->getPeriodicShift(d_ratio_to_level_zero),
-      d_physical_domain);
+      *this);
    t_constructor_touch_boundaries->stop();
 
    t_constructor_set_geometry->start();
@@ -229,16 +228,16 @@ PatchLevel::PatchLevel(
 {
    d_number_blocks = grid_geometry->getNumberBlocks();
 
-   TBOX_ASSERT(!level_database.isNull());
-   TBOX_ASSERT(!grid_geometry.isNull());
-   TBOX_ASSERT(!descriptor.isNull());
+   TBOX_ASSERT(level_database);
+   TBOX_ASSERT(grid_geometry);
+   TBOX_ASSERT(descriptor);
 
    t_level_constructor->start();
 
    d_geometry = grid_geometry;
    d_descriptor = descriptor;
 
-   if (!factory.isNull()) {
+   if (factory) {
       d_factory = factory;
    } else {
       d_factory = new PatchFactory();
@@ -254,9 +253,7 @@ PatchLevel::PatchLevel(
    grid_geometry->findPatchesTouchingBoundaries(
       touches_regular_bdry,
       touches_periodic_bdry,
-      *this,
-      grid_geometry->getPeriodicShift(d_ratio_to_level_zero),
-      d_physical_domain);
+      *this);
    t_constructor_touch_boundaries->stop();
 
    t_constructor_set_geometry->start();
@@ -430,11 +427,11 @@ void PatchLevel::setRefinedPatchLevel(
    const tbox::Pointer<hier::GridGeometry> fine_grid_geometry,
    bool defer_boundary_box_creation)
 {
-   TBOX_ASSERT(!coarse_level.isNull());
+   TBOX_ASSERT(coarse_level);
    TBOX_ASSERT(refine_ratio > hier::IntVector::getZero(getDim()));
 #ifdef DEBUG_CHECK_DIM_ASSERTIONS
    TBOX_DIM_ASSERT_CHECK_ARGS3(*this, *coarse_level, refine_ratio);
-   if (!fine_grid_geometry.isNull()) {
+   if (fine_grid_geometry) {
       TBOX_DIM_ASSERT_CHECK_ARGS2(*this, *fine_grid_geometry);
    }
 #endif
@@ -459,7 +456,7 @@ void PatchLevel::setRefinedPatchLevel(
     * given coarse level.
     */
 
-   if (fine_grid_geometry.isNull()) {
+   if (!fine_grid_geometry) {
 
       d_geometry = coarse_level->d_geometry;
 
@@ -561,17 +558,11 @@ void PatchLevel::setRefinedPatchLevel(
 
       PatchGeometry::TwoDimBool&
       touches_regular_bdry_ip((*iter_touches_regular_bdry).second);
-      PatchGeometry::TwoDimBool&
-      touches_periodic_bdry_ip((*iter_touches_periodic_bdry).second);
 
       for (int axis = 0; axis < getDim().getValue(); axis++) {
          for (int side = 0; side < 2; side++) {
-
             touches_regular_bdry_ip(axis, side) =
                coarse_pgeom->getTouchesRegularBoundary(axis, side);
-
-            touches_periodic_bdry_ip(axis, side) =
-               coarse_pgeom->getTouchesPeriodicBoundary(axis, side);
          }
       }
    }
@@ -604,12 +595,12 @@ void PatchLevel::setCoarsenedPatchLevel(
    const tbox::Pointer<hier::GridGeometry> coarse_grid_geom,
    bool defer_boundary_box_creation)
 {
-   TBOX_ASSERT(!fine_level.isNull());
+   TBOX_ASSERT(fine_level);
    TBOX_ASSERT(coarsen_ratio > hier::IntVector::getZero(getDim()));
 
 #ifdef DEBUG_CHECK_DIM_ASSERTIONS
    TBOX_DIM_ASSERT_CHECK_ARGS3(*this, *fine_level, coarsen_ratio);
-   if (!coarse_grid_geom.isNull()) {
+   if (coarse_grid_geom) {
       TBOX_DIM_ASSERT_CHECK_ARGS2(*this, *coarse_grid_geom);
    }
 #endif
@@ -634,7 +625,7 @@ void PatchLevel::setCoarsenedPatchLevel(
     * from given fine level.
     */
 
-   if (coarse_grid_geom.isNull()) {
+   if (!coarse_grid_geom) {
 
       d_geometry = fine_level->d_geometry;
 
@@ -746,15 +737,11 @@ void PatchLevel::setCoarsenedPatchLevel(
 
       PatchGeometry::TwoDimBool&
       touches_regular_bdry_ip((*iter_touches_regular_bdry).second);
-      PatchGeometry::TwoDimBool&
-      touches_periodic_bdry_ip((*iter_touches_periodic_bdry).second);
 
       for (int axis = 0; axis < getDim().getValue(); axis++) {
          for (int side = 0; side < 2; side++) {
             touches_regular_bdry_ip(axis, side) =
                fine_pgeom->getTouchesRegularBoundary(axis, side);
-            touches_periodic_bdry_ip(axis, side) =
-               fine_pgeom->getTouchesPeriodicBoundary(axis, side);
          }
       }
    }
@@ -802,7 +789,7 @@ void PatchLevel::getFromDatabase(
    tbox::Pointer<tbox::Database> database,
    const ComponentSelector& component_selector)
 {
-   TBOX_ASSERT(!database.isNull());
+   TBOX_ASSERT(database);
 
    int ver = database->getInteger("HIER_PATCH_LEVEL_VERSION");
    if (ver != HIER_PATCH_LEVEL_VERSION) {
@@ -824,6 +811,10 @@ void PatchLevel::getFromDatabase(
       std::string domain_name = "d_physical_domain_"
          + tbox::Utilities::blockToString(nb);
       d_physical_domain[nb] = database->getDatabaseBoxArray(domain_name);
+      for (BoxContainer::Iterator bi = d_physical_domain[nb].begin();
+           bi != d_physical_domain[nb].end(); ++bi) {
+         bi->setBlockId(BlockId(nb));
+      }
    }
 
    d_level_number = database->getInteger("d_level_number");
@@ -841,7 +832,7 @@ void PatchLevel::getFromDatabase(
    tbox::Pointer<tbox::Database> mbl_database = database->getDatabase(
          "mapped_box_level");
    tbox::Pointer<BoxLevel> mapped_box_level(new BoxLevel(getDim()));
-   tbox::ConstPointer<GridGeometry> grid_geometry(getGridGeometry());
+   tbox::Pointer<const GridGeometry> grid_geometry(getGridGeometry());
    mapped_box_level->getFromDatabase(*mbl_database, grid_geometry);
    d_mapped_box_level = mapped_box_level;
 
@@ -859,7 +850,7 @@ void PatchLevel::getFromDatabase(
          + "-patch_" + tbox::Utilities::patchToString(local_id.getValue())
          + "-block_"
          + tbox::Utilities::blockToString(
-            mapped_box_id.getBlockId().getBlockValue());
+            mapped_box.getBlockId().getBlockValue());
       if (!(database->isDatabase(patch_name))) {
          TBOX_ERROR("PatchLevel::getFromDatabase() error...\n"
             << "   patch name " << patch_name
@@ -896,7 +887,7 @@ void PatchLevel::putToDatabase(
    tbox::Pointer<tbox::Database> database,
    const ComponentSelector& patchdata_write_table)
 {
-   TBOX_ASSERT(!database.isNull());
+   TBOX_ASSERT(database);
 
    database->putInteger("HIER_PATCH_LEVEL_VERSION", HIER_PATCH_LEVEL_VERSION);
 
@@ -1059,13 +1050,13 @@ void PatchLevel::initializeCallback()
 
 void PatchLevel::finalizeCallback()
 {
-   t_level_constructor.setNull();
-   t_constructor_setup.setNull();
-   t_constructor_phys_domain.setNull();
-   t_constructor_touch_boundaries.setNull();
-   t_constructor_set_geometry.setNull();
-   t_set_patch_touches.setNull();
-   t_constructor_compute_shifts.setNull();
+   t_level_constructor.reset();
+   t_constructor_setup.reset();
+   t_constructor_phys_domain.reset();
+   t_constructor_touch_boundaries.reset();
+   t_constructor_set_geometry.reset();
+   t_set_patch_touches.reset();
+   t_constructor_compute_shifts.reset();
 }
 
 }

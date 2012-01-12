@@ -54,7 +54,7 @@ public:
     * Note that The ghost cell width for all outerside data is currently
     * fixed at zero; this may be changed in the future if needed.
     */
-   explicit OutersideVariable(
+   OutersideVariable(
       const tbox::Dimension& dim,
       const std::string& name,
       int depth = 1);

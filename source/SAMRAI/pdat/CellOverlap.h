@@ -43,7 +43,7 @@ public:
     * the source to destination index spaces.  This information is used later
     * in the generation of communication schedules.
     */
-   explicit CellOverlap(
+   CellOverlap(
       const hier::BoxContainer& boxes,
       const hier::Transformation& transformation);
 

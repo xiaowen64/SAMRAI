@@ -83,9 +83,9 @@ CoarsenCopyTransaction::CoarsenCopyTransaction(
    d_incoming_bytes(0),
    d_outgoing_bytes(0)
 {
-   TBOX_ASSERT(!dst_level.isNull());
-   TBOX_ASSERT(!src_level.isNull());
-   TBOX_ASSERT(!overlap.isNull());
+   TBOX_ASSERT(dst_level);
+   TBOX_ASSERT(src_level);
+   TBOX_ASSERT(overlap);
    TBOX_DIM_ASSERT_CHECK_ARGS4(*dst_level,
       *src_level,
       dst_mapped_box,
@@ -97,12 +97,10 @@ CoarsenCopyTransaction::CoarsenCopyTransaction(
    // Note: s_num_coarsen_items cannot be used at this point!
 
    if (d_dst_patch_rank == dst_level->getBoxLevel()->getMPI().getRank()) {
-      d_dst_patch = dst_level->getPatch(dst_mapped_box.getGlobalId(),
-            dst_mapped_box.getBlockId());
+      d_dst_patch = dst_level->getPatch(dst_mapped_box.getGlobalId());
    }
    if (d_src_patch_rank == src_level->getBoxLevel()->getMPI().getRank()) {
-      d_src_patch = src_level->getPatch(src_mapped_box.getGlobalId(),
-            src_mapped_box.getBlockId());
+      d_src_patch = src_level->getPatch(src_mapped_box.getGlobalId());
    }
 }
 
@@ -121,7 +119,7 @@ CoarsenCopyTransaction::~CoarsenCopyTransaction()
 bool CoarsenCopyTransaction::canEstimateIncomingMessageSize()
 {
    bool can_estimate = false;
-   if (!d_src_patch.isNull()) {
+   if (d_src_patch) {
       can_estimate =
          d_src_patch->getPatchData(s_coarsen_items[d_coarsen_item_id]->d_src)
          ->canEstimateStreamSizeFromBox();
@@ -201,9 +199,9 @@ void CoarsenCopyTransaction::printClassData(
    stream << "   incoming bytes:         " << d_incoming_bytes << std::endl;
    stream << "   outgoing bytes:         " << d_outgoing_bytes << std::endl;
    stream << "   destination patch:           "
-          << (hier::Patch *)d_dst_patch << std::endl;
+          << d_dst_patch.get() << std::endl;
    stream << "   source patch:           "
-          << (hier::Patch *)d_src_patch << std::endl;
+          << d_src_patch.get() << std::endl;
    stream << "   overlap:                " << std::endl;
    d_overlap->print(stream);
 }

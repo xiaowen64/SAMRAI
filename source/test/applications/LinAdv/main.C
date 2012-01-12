@@ -213,7 +213,7 @@ int main(
           * Create input database and parse all data in input file.
           */
 
-         tbox::Pointer<tbox::Database> input_db(new tbox::InputDatabase("input_db"));
+         tbox::Pointer<tbox::InputDatabase> input_db(new tbox::InputDatabase("input_db"));
          tbox::InputManager::getManager()->parseInputFile(input_filename, input_db);
 
          /*
@@ -355,7 +355,7 @@ int main(
             new mesh::StandardTagAndInitialize(
                dim,
                "StandardTagAndInitialize",
-               hyp_level_integrator,
+               hyp_level_integrator.get(),
                input_db->getDatabase("StandardTagAndInitialize")));
 
          tbox::Pointer<mesh::BergerRigoutsos> box_generator(
@@ -527,23 +527,23 @@ int main(
           */
 
 #ifdef HAVE_HDF5
-         visit_data_writer.setNull();
+         visit_data_writer.reset();
 #endif
 
-         time_integrator.setNull();
-         gridding_algorithm.setNull();
-         load_balancer.setNull();
-         box_generator.setNull();
-         error_detector.setNull();
-         hyp_level_integrator.setNull();
+         time_integrator.reset();
+         gridding_algorithm.reset();
+         load_balancer.reset();
+         box_generator.reset();
+         error_detector.reset();
+         hyp_level_integrator.reset();
 
          if (linear_advection_model) delete linear_advection_model;
 
-         patch_hierarchy.setNull();
-         grid_geometry.setNull();
+         patch_hierarchy.reset();
+         grid_geometry.reset();
 
-         input_db.setNull();
-         main_db.setNull();
+         input_db.reset();
+         main_db.reset();
 
       }
       tbox::SAMRAIManager::shutdown();

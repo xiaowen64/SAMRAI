@@ -676,18 +676,18 @@ int main(
       /*
        * At conclusion of simulation, deallocate objects.
        */
-      patch_hierarchy.setNull();
-      grid_geometry.setNull();
+      patch_hierarchy.reset();
+      grid_geometry.reset();
 
-      new_box_generator.setNull();
-      load_balancer.setNull();
-      hyp_level_integrator.setNull();
-      error_detector.setNull();
-      gridding_algorithm.setNull();
-      time_integrator.setNull();
+      new_box_generator.reset();
+      load_balancer.reset();
+      hyp_level_integrator.reset();
+      error_detector.reset();
+      gridding_algorithm.reset();
+      time_integrator.reset();
 
 #ifdef HAVE_HDF5
-      visit_data_writer.setNull();
+      visit_data_writer.reset();
 #endif
 
       if (euler_model) delete euler_model;

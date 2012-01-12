@@ -200,7 +200,7 @@ int main(
 
       tbox::Pointer<math::HierarchyDataOpsComplex> face_ops(
          new math::HierarchyFaceDataOpsComplex(hierarchy, 0, 1));
-      TBOX_ASSERT(!face_ops.isNull());
+      TBOX_ASSERT(face_ops);
 
       tbox::Pointer<math::HierarchyDataOpsReal<double> > fwgt_ops(
          new math::HierarchyFaceDataOpsReal<double>(hierarchy, 0, 1));
@@ -754,14 +754,14 @@ int main(
       }
 
       for (iv = 0; iv < NVARS; iv++) {
-         fvar[iv].setNull();
+         fvar[iv].reset();
       }
-      fwgt.setNull();
+      fwgt.reset();
 
-      geometry.setNull();
-      hierarchy.setNull();
-      face_ops.setNull();
-      fwgt_ops.setNull();
+      geometry.reset();
+      hierarchy.reset();
+      face_ops.reset();
+      fwgt_ops.reset();
 
       if (num_failures == 0) {
          tbox::pout << "\nPASSED:  face cplxtest" << std::endl;

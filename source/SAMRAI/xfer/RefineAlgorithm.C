@@ -70,7 +70,7 @@ void RefineAlgorithm::registerRefine(
    tbox::Pointer<VariableFillPattern> var_fill_pattern)
 {
 #ifdef DEBUG_CHECK_DIM_ASSERTIONS
-   if (!oprefine.isNull()) {
+   if (oprefine) {
       TBOX_DIM_ASSERT_CHECK_ARGS2(*this, *oprefine);
    }
 #endif
@@ -96,7 +96,7 @@ void RefineAlgorithm::registerRefine(
    data.d_oprefine = oprefine;
    data.d_optime = NULL;
    data.d_tag = -1;
-   if (!(var_fill_pattern.isNull())) {
+   if (var_fill_pattern) {
       data.d_var_fill_pattern = var_fill_pattern;
    } else {
       data.d_var_fill_pattern = new BoxGeometryVariableFillPattern();
@@ -123,7 +123,7 @@ void RefineAlgorithm::registerRefine(
    tbox::Pointer<hier::TimeInterpolateOperator> optime,
    tbox::Pointer<VariableFillPattern> var_fill_pattern)
 {
-   TBOX_ASSERT(!optime.isNull());
+   TBOX_ASSERT(optime);
 
    if (d_schedule_created) {
       TBOX_ERROR("RefineAlgorithm::registerRefine error..."
@@ -146,7 +146,7 @@ void RefineAlgorithm::registerRefine(
    data.d_oprefine = oprefine;
    data.d_optime = optime;
    data.d_tag = -1;
-   if (!(var_fill_pattern.isNull())) {
+   if (var_fill_pattern) {
       data.d_var_fill_pattern = var_fill_pattern;
    } else {
       data.d_var_fill_pattern = new BoxGeometryVariableFillPattern();
@@ -171,7 +171,7 @@ RefineAlgorithm::createSchedule(
    xfer::RefinePatchStrategy* patch_strategy,
    tbox::Pointer<xfer::RefineTransactionFactory> transaction_factory)
 {
-   TBOX_ASSERT(!level.isNull());
+   TBOX_ASSERT(level);
 #ifdef DEBUG_CHECK_DIM_ASSERTIONS
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, *level);
    if (patch_strategy) {
@@ -184,7 +184,7 @@ RefineAlgorithm::createSchedule(
    tbox::Pointer<xfer::RefineTransactionFactory> trans_factory(
       transaction_factory);
 
-   if (trans_factory.isNull()) {
+   if (!trans_factory) {
       trans_factory = new xfer::StandardRefineTransactionFactory;
    }
 
@@ -217,7 +217,7 @@ RefineAlgorithm::createSchedule(
    xfer::RefinePatchStrategy* patch_strategy,
    tbox::Pointer<xfer::RefineTransactionFactory> transaction_factory)
 {
-   TBOX_ASSERT(!level.isNull());
+   TBOX_ASSERT(level);
 #ifdef DEBUG_CHECK_DIM_ASSERTIONS
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, *level);
    if (patch_strategy) {
@@ -230,7 +230,7 @@ RefineAlgorithm::createSchedule(
    tbox::Pointer<xfer::RefineTransactionFactory> trans_factory =
       transaction_factory;
 
-   if (trans_factory.isNull()) {
+   if (!trans_factory) {
       trans_factory = new xfer::StandardRefineTransactionFactory;
    }
 
@@ -264,8 +264,8 @@ RefineAlgorithm::createSchedule(
    // TBOX_ERROR("Untried method!  I think this method should work, but it's never been excercised.  When code crashes here, remove this line and rerun.  If problem continues, it could well be due to excercising this code.  --BTNG");
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!dst_level.isNull());
-   TBOX_ASSERT(!src_level.isNull());
+   TBOX_ASSERT(dst_level);
+   TBOX_ASSERT(src_level);
    hier::OverlapConnectorAlgorithm oca;
 #endif
 #ifdef DEBUG_CHECK_DIM_ASSERTIONS
@@ -280,7 +280,7 @@ RefineAlgorithm::createSchedule(
    tbox::Pointer<xfer::RefineTransactionFactory> trans_factory =
       transaction_factory;
 
-   if (trans_factory.isNull()) {
+   if (!trans_factory) {
       trans_factory = new xfer::StandardRefineTransactionFactory;
    }
 
@@ -317,8 +317,8 @@ RefineAlgorithm::createSchedule(
    tbox::Pointer<xfer::RefineTransactionFactory> transaction_factory)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!dst_level.isNull());
-   TBOX_ASSERT(!src_level.isNull());
+   TBOX_ASSERT(dst_level);
+   TBOX_ASSERT(src_level);
 #endif
 #ifdef DEBUG_CHECK_DIM_ASSERTIONS
    TBOX_DIM_ASSERT_CHECK_ARGS3(*this, *dst_level, *src_level);
@@ -332,7 +332,7 @@ RefineAlgorithm::createSchedule(
    tbox::Pointer<xfer::RefineTransactionFactory> trans_factory =
       transaction_factory;
 
-   if (trans_factory.isNull()) {
+   if (!trans_factory) {
       trans_factory = new xfer::StandardRefineTransactionFactory;
    }
 
@@ -367,11 +367,11 @@ RefineAlgorithm::createSchedule(
 {
 
    // Do we all agree on the destination mapped_box_level?
-   TBOX_ASSERT(!level.isNull());
-   TBOX_ASSERT((next_coarser_level == -1) || !hierarchy.isNull());
+   TBOX_ASSERT(level);
+   TBOX_ASSERT((next_coarser_level == -1) || hierarchy);
 #ifdef DEBUG_CHECK_DIM_ASSERTIONS
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, *level);
-   if (!hierarchy.isNull()) {
+   if (hierarchy) {
       TBOX_DIM_ASSERT_CHECK_ARGS2(*this, *hierarchy);
    }
    if (patch_strategy) {
@@ -384,7 +384,7 @@ RefineAlgorithm::createSchedule(
    tbox::Pointer<xfer::RefineTransactionFactory> trans_factory =
       transaction_factory;
 
-   if (trans_factory.isNull()) {
+   if (!trans_factory) {
       trans_factory = new xfer::StandardRefineTransactionFactory;
    }
 
@@ -425,11 +425,11 @@ RefineAlgorithm::createSchedule(
 {
 
    // Do we all agree on the destination mapped_box_level?
-   TBOX_ASSERT(!level.isNull());
-   TBOX_ASSERT((next_coarser_level == -1) || !hierarchy.isNull());
+   TBOX_ASSERT(level);
+   TBOX_ASSERT((next_coarser_level == -1) || hierarchy);
 #ifdef DEBUG_CHECK_DIM_ASSERTIONS
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, *level);
-   if (!hierarchy.isNull()) {
+   if (hierarchy) {
       TBOX_DIM_ASSERT_CHECK_ARGS2(*this, *hierarchy);
    }
    if (patch_strategy) {
@@ -442,7 +442,7 @@ RefineAlgorithm::createSchedule(
    tbox::Pointer<xfer::RefineTransactionFactory> trans_factory =
       transaction_factory;
 
-   if (trans_factory.isNull()) {
+   if (!trans_factory) {
       trans_factory = new xfer::StandardRefineTransactionFactory;
    }
 
@@ -479,14 +479,14 @@ RefineAlgorithm::createSchedule(
    tbox::Pointer<xfer::RefineTransactionFactory> transaction_factory)
 {
    (void)use_time_refinement;
-   TBOX_ASSERT(!dst_level.isNull());
-   TBOX_ASSERT((next_coarser_level == -1) || !hierarchy.isNull());
+   TBOX_ASSERT(dst_level);
+   TBOX_ASSERT((next_coarser_level == -1) || hierarchy);
 #ifdef DEBUG_CHECK_DIM_ASSERTIONS
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, *dst_level);
-   if (!src_level.isNull()) {
+   if (src_level) {
       TBOX_DIM_ASSERT_CHECK_ARGS2(*this, *src_level);
    }
-   if (!hierarchy.isNull()) {
+   if (hierarchy) {
       TBOX_DIM_ASSERT_CHECK_ARGS2(*this, *hierarchy);
    }
    if (patch_strategy) {
@@ -495,7 +495,7 @@ RefineAlgorithm::createSchedule(
 #endif
 
    // Do we all agree on the destination mapped_box_level?
-   if (!src_level.isNull()) {
+   if (src_level) {
       if (next_coarser_level >= 0) {
       }
    }
@@ -505,7 +505,7 @@ RefineAlgorithm::createSchedule(
    tbox::Pointer<xfer::RefineTransactionFactory> trans_factory =
       transaction_factory;
 
-   if (trans_factory.isNull()) {
+   if (!trans_factory) {
       trans_factory = new xfer::StandardRefineTransactionFactory;
    }
 
@@ -547,15 +547,15 @@ RefineAlgorithm::createSchedule(
 {
    (void)use_time_refinement;
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!dst_level.isNull());
-   TBOX_ASSERT((next_coarser_level == -1) || !hierarchy.isNull());
+   TBOX_ASSERT(dst_level);
+   TBOX_ASSERT((next_coarser_level == -1) || hierarchy);
 #endif
 #ifdef DEBUG_CHECK_DIM_ASSERTIONS
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, *dst_level);
-   if (!src_level.isNull()) {
+   if (src_level) {
       TBOX_DIM_ASSERT_CHECK_ARGS2(*this, *src_level);
    }
-   if (!hierarchy.isNull()) {
+   if (hierarchy) {
       TBOX_DIM_ASSERT_CHECK_ARGS2(*this, *hierarchy);
    }
    if (patch_strategy) {
@@ -564,7 +564,7 @@ RefineAlgorithm::createSchedule(
 #endif
 
    // Do we all agree on the destination mapped_box_level?
-   if (!src_level.isNull()) {
+   if (src_level) {
       if (next_coarser_level >= 0) {
       }
    }
@@ -574,7 +574,7 @@ RefineAlgorithm::createSchedule(
    tbox::Pointer<xfer::RefineTransactionFactory> trans_factory =
       transaction_factory;
 
-   if (trans_factory.isNull()) {
+   if (!trans_factory) {
       trans_factory = new xfer::StandardRefineTransactionFactory;
    }
 
@@ -602,7 +602,7 @@ bool RefineAlgorithm::checkConsistency(
    tbox::Pointer<xfer::RefineSchedule> schedule) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!schedule.isNull());
+   TBOX_ASSERT(schedule);
 #endif
    return d_refine_classes->classesMatch(schedule->getEquivalenceClasses());
 }
@@ -611,7 +611,7 @@ void RefineAlgorithm::resetSchedule(
    tbox::Pointer<xfer::RefineSchedule> schedule) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!schedule.isNull());
+   TBOX_ASSERT(schedule);
 #endif
    if (d_refine_classes->classesMatch(schedule->getEquivalenceClasses())) {
       schedule->reset(d_refine_classes);
@@ -632,7 +632,7 @@ RefineAlgorithm::getEquivalenceClasses() const
 void RefineAlgorithm::setEquivalenceClasses(
    const tbox::Pointer<xfer::RefineClasses> refine_classes)
 {
-   d_refine_classes.setNull();
+   d_refine_classes.reset();
    d_refine_classes = refine_classes;
 }
 

@@ -20,7 +20,7 @@ namespace pdat {
 class IntegerAttributeId
 {
 public:
-   IntegerAttributeId(
+   explicit IntegerAttributeId(
       int value);
    IntegerAttributeId(
       const IntegerAttributeId& other);

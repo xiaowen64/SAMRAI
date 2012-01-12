@@ -83,7 +83,7 @@ public:
     *             construction of the boundary boxes.
     *
     */
-   explicit PatchLevel(
+   PatchLevel(
       const BoxLevel& mapped_box_level,
       const tbox::Pointer<GridGeometry> grid_geometry,
       const tbox::Pointer<PatchDescriptor> descriptor,
@@ -116,7 +116,7 @@ public:
     * @param[in]  defer_boundary_box_creation Flag to indicate suppressing
     *             construction of the boundary boxes.  @b Default: false
     */
-   explicit PatchLevel(
+   PatchLevel(
       tbox::Pointer<tbox::Database> level_database,
       tbox::Pointer<GridGeometry> grid_geometry,
       tbox::Pointer<PatchDescriptor> descriptor,
@@ -246,8 +246,7 @@ public:
     */
    const tbox::Pointer<Patch>&
    getPatch(
-      const GlobalId& gid,
-      const BlockId& bid) const;
+      const GlobalId& gid) const;
 
    /*!
     * @brief Get a Patch based on its BoxId.
@@ -540,19 +539,6 @@ public:
       const BoxId& mapped_box_id) const;
 
    /*!
-    * @brief Determine if the patch is adjacent to a periodic physical
-    * domain boundary.
-    *
-    * @return True if patch with given number is adjacent to a periodic
-    * physical domain boundary.  Otherwise, false.
-    *
-    * @param[in] mapped_box_id Patch's BoxId
-    */
-   bool
-   patchTouchesPeriodicBoundary(
-      const BoxId& mapped_box_id) const;
-
-   /*!
     * @brief Allocate the specified component on all patches.
     *
     * @param[in]  id
@@ -745,7 +731,7 @@ public:
        *
        * @param[in]  raw_iter
        */
-      Iterator(
+      explicit Iterator(
          const PatchContainer::const_iterator& raw_iter);
 
       /*!
@@ -753,7 +739,7 @@ public:
        *
        * @param[in]  patch_level
        */
-      Iterator(
+      explicit Iterator(
          const PatchLevel& patch_level);
 
       /*!
@@ -761,7 +747,7 @@ public:
        *
        * @param[in]  patch_level
        */
-      Iterator(
+      explicit Iterator(
          const PatchLevel * patch_level);
 
       /*!
@@ -769,7 +755,7 @@ public:
        *
        * @param[in]  patch_level
        */
-      Iterator(
+      explicit Iterator(
          const tbox::Pointer<PatchLevel>& patch_level);
 
       /*!

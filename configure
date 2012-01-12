@@ -18051,8 +18051,7 @@ $as_echo_n "checking for BOOST installation... " >&6; }
     if test -f ${with_boost}/include/boost/tr1/unordered_map.hpp; then
         boost_PREFIX=$with_boost
         boost_INCLUDES="-I${boost_PREFIX}/include"
-        boost_LIBS="-L${boost_PREFIX}/lib -lboost_regex"
-        { $as_echo "$as_me:$LINENO: result: $boost_PREFIX" >&5
+                        { $as_echo "$as_me:$LINENO: result: $boost_PREFIX" >&5
 $as_echo "$boost_PREFIX" >&6; }
     else
         { $as_echo "$as_me:$LINENO: result: $boost_PREFIX" >&5
@@ -18064,101 +18063,6 @@ $as_echo "$as_me: error: BOOST not found in $with_boost" >&2;}
   ;;
 esac
 
-
-
-# Test compiling an BOOST application
-
-# NOTE that AC_SEARCH_LIBS didn't work completely so
-# use a more complicated example program to see
-# if that will catch when BOOST is not working.
-if test "${boost_PREFIX+set}" = set; then
-
-
-   { $as_echo "$as_me:$LINENO: checking whether BOOST link works" >&5
-$as_echo_n "checking whether BOOST link works... " >&6; }
-   ac_ext=cpp
-ac_cpp='$CXXCPP $CPPFLAGS'
-ac_compile='$CXX -c $CXXFLAGS $CPPFLAGS conftest.$ac_ext >&5'
-ac_link='$CXX -o conftest$ac_exeext $CXXFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
-ac_compiler_gnu=$ac_cv_cxx_compiler_gnu
-
-
-   casc_save_LIBS=$LIBS
-   casc_save_CXXFLAGS=$CXXFLAGS
-
-   # NOTE lib z and m were from BTNG macro.
-   LIBS="${LIBS} ${boost_LIBS}"
-   CXXFLAGS="${CXXFLAGS} ${boost_INCLUDES}"
-   cat >conftest.$ac_ext <<_ACEOF
-
-      #include <boost/tr1/unordered_map.hpp>
-      #include <boost/tr1/regex.hpp>
-      #include <string>
-
-      int main() {
-         boost::unordered_map<std::string, int> my_map;
-
-         my_map["one"] = 1;
-         my_map["two"] = 2;
-         std::string expr1 = "samrai";
-         const boost::regex e(expr1);
-         return 0;
-      }
-
-_ACEOF
-rm -f conftest.$ac_objext conftest$ac_exeext
-if { (ac_try="$ac_link"
-case "(($ac_try" in
-  *\"* | *\`* | *\\*) ac_try_echo=\$ac_try;;
-  *) ac_try_echo=$ac_try;;
-esac
-eval ac_try_echo="\"\$as_me:$LINENO: $ac_try_echo\""
-$as_echo "$ac_try_echo") >&5
-  (eval "$ac_link") 2>conftest.er1
-  ac_status=$?
-  grep -v '^ *+' conftest.er1 >conftest.err
-  rm -f conftest.er1
-  cat conftest.err >&5
-  $as_echo "$as_me:$LINENO: \$? = $ac_status" >&5
-  (exit $ac_status); } && {
-	 test -z "$ac_cxx_werror_flag" ||
-	 test ! -s conftest.err
-       } && test -s conftest$ac_exeext && {
-	 test "$cross_compiling" = yes ||
-	 $as_test_x conftest$ac_exeext
-       }; then
-  casc_boost_compile=yes
-else
-  $as_echo "$as_me: failed program was:" >&5
-sed 's/^/| /' conftest.$ac_ext >&5
-
-	casc_boost_compile=no
-fi
-
-rm -rf conftest.dSYM
-rm -f core conftest.err conftest.$ac_objext conftest_ipa8_conftest.oo \
-      conftest$ac_exeext conftest.$ac_ext
-
-   LIBS=$casc_save_LIBS
-   unset casc_save_LIBS
-   CXXFLAGS=$casc_save_CXXFLAGS
-   unset casc_save_CXXFLAGS
-
-   ac_ext=c
-ac_cpp='$CPP $CPPFLAGS'
-ac_compile='$CC -c $CFLAGS $CPPFLAGS conftest.$ac_ext >&5'
-ac_link='$CC -o conftest$ac_exeext $CFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
-ac_compiler_gnu=$ac_cv_c_compiler_gnu
-
-   { $as_echo "$as_me:$LINENO: result: $casc_boost_compile" >&5
-$as_echo "$casc_boost_compile" >&6; }
-
-   if test "$casc_boost_compile" = no; then
-      { { $as_echo "$as_me:$LINENO: error: BOOST compile/link test failed" >&5
-$as_echo "$as_me: error: BOOST compile/link test failed" >&2;}
-   { (exit 1); exit 1; }; }
-   fi
-fi
 
 # END CASC_SUPPORT_BOOST
 
@@ -18180,13 +18084,12 @@ fi
    INC_PATH="$boost_INCLUDES $INC_PATH"
 
 cat >>confdefs.h <<\_ACEOF
-#define HAVE_BOOST 1
+#define HAVE_BOOST_HEADERS 1
 _ACEOF
 
 else
-   { { $as_echo "$as_me:$LINENO: error: BOOST is not found. You must specify a valid location via --with-boost=PATH.  SAMRAI requires the use of BOOST." >&5
-$as_echo "$as_me: error: BOOST is not found. You must specify a valid location via --with-boost=PATH.  SAMRAI requires the use of BOOST." >&2;}
-   { (exit 1); exit 1; }; }
+   { $as_echo "$as_me:$LINENO: WARNING: SparseData class is not supported without BOOST" >&5
+$as_echo "$as_me: WARNING: SparseData class is not supported without BOOST" >&2;}
 fi
 
 
@@ -18198,7 +18101,7 @@ for btng_log_vars_index in $btng_log_vars ; do
   else
     btng_log_vars_value="unset";
   fi
-  echo "configure:18201:" "$btng_log_vars_index is $btng_log_vars_value" >&5;
+  echo "configure:18104:" "$btng_log_vars_index is $btng_log_vars_value" >&5;
 done
 
 
@@ -18461,7 +18364,7 @@ for btng_log_vars_index in $btng_log_vars ; do
   else
     btng_log_vars_value="unset";
   fi
-  echo "configure:18464:" "$btng_log_vars_index is $btng_log_vars_value" >&5;
+  echo "configure:18367:" "$btng_log_vars_index is $btng_log_vars_value" >&5;
 done
 
 fi
@@ -18475,7 +18378,7 @@ for btng_log_vars_index in $btng_log_vars ; do
   else
     btng_log_vars_value="unset";
   fi
-  echo "configure:18478:" "$btng_log_vars_index is $btng_log_vars_value" >&5;
+  echo "configure:18381:" "$btng_log_vars_index is $btng_log_vars_value" >&5;
 done
 
 
@@ -18590,7 +18493,7 @@ for btng_log_vars_index in $btng_log_vars ; do
   else
     btng_log_vars_value="unset";
   fi
-  echo "configure:18593:" "$btng_log_vars_index is $btng_log_vars_value" >&5;
+  echo "configure:18496:" "$btng_log_vars_index is $btng_log_vars_value" >&5;
 done
 
 
@@ -18692,7 +18595,7 @@ for btng_log_vars_index in $btng_log_vars ; do
   else
     btng_log_vars_value="unset";
   fi
-  echo "configure:18695:" "$btng_log_vars_index is $btng_log_vars_value" >&5;
+  echo "configure:18598:" "$btng_log_vars_index is $btng_log_vars_value" >&5;
 done
 
 
@@ -18711,7 +18614,7 @@ for btng_log_vars_index in $btng_log_vars ; do
   else
     btng_log_vars_value="unset";
   fi
-  echo "configure:18714:" "$btng_log_vars_index is $btng_log_vars_value" >&5;
+  echo "configure:18617:" "$btng_log_vars_index is $btng_log_vars_value" >&5;
 done
 
 
@@ -18895,7 +18798,7 @@ for btng_log_vars_index in $btng_log_vars ; do
   else
     btng_log_vars_value="unset";
   fi
-  echo "configure:18898:" "$btng_log_vars_index is $btng_log_vars_value" >&5;
+  echo "configure:18801:" "$btng_log_vars_index is $btng_log_vars_value" >&5;
 done
 
 
@@ -18909,7 +18812,7 @@ for btng_log_vars_index in $btng_log_vars ; do
   else
     btng_log_vars_value="unset";
   fi
-  echo "configure:18912:" "$btng_log_vars_index is $btng_log_vars_value" >&5;
+  echo "configure:18815:" "$btng_log_vars_index is $btng_log_vars_value" >&5;
 done
 
 
@@ -18949,7 +18852,7 @@ for btng_log_vars_index in $btng_log_vars ; do
   else
     btng_log_vars_value="unset";
   fi
-  echo "configure:18952:" "$btng_log_vars_index is $btng_log_vars_value" >&5;
+  echo "configure:18855:" "$btng_log_vars_index is $btng_log_vars_value" >&5;
 done
 
 
@@ -19053,7 +18956,7 @@ for btng_log_vars_index in $btng_log_vars ; do
   else
     btng_log_vars_value="unset";
   fi
-  echo "configure:19056:" "$btng_log_vars_index is $btng_log_vars_value" >&5;
+  echo "configure:18959:" "$btng_log_vars_index is $btng_log_vars_value" >&5;
 done
 
 
@@ -19178,7 +19081,7 @@ for btng_log_vars_index in $btng_log_vars ; do
   else
     btng_log_vars_value="unset";
   fi
-  echo "configure:19181:" "$btng_log_vars_index is $btng_log_vars_value" >&5;
+  echo "configure:19084:" "$btng_log_vars_index is $btng_log_vars_value" >&5;
 done
 
 
@@ -19222,7 +19125,7 @@ case "$with_petsc_arch" in
 $as_echo "$as_me: error: If you specify --with-petsc-arch, you must give it the path as in --with-petsc-arch=/installation/path" >&2;}
    { (exit 1); exit 1; }; }
 fi
-echo "configure:19225:" environment PETSC_ARCH not defined >&5
+echo "configure:19128:" environment PETSC_ARCH not defined >&5
 
 
     fi
@@ -19300,7 +19203,7 @@ for btng_log_vars_index in $btng_log_vars ; do
   else
     btng_log_vars_value="unset";
   fi
-  echo "configure:19303:" "$btng_log_vars_index is $btng_log_vars_value" >&5;
+  echo "configure:19206:" "$btng_log_vars_index is $btng_log_vars_value" >&5;
 done
 
 
@@ -19440,7 +19343,7 @@ for btng_log_vars_index in $btng_log_vars ; do
   else
     btng_log_vars_value="unset";
   fi
-  echo "configure:19443:" "$btng_log_vars_index is $btng_log_vars_value" >&5;
+  echo "configure:19346:" "$btng_log_vars_index is $btng_log_vars_value" >&5;
 done
 
 
@@ -19508,7 +19411,7 @@ for btng_log_vars_index in $btng_log_vars ; do
   else
     btng_log_vars_value="unset";
   fi
-  echo "configure:19511:" "$btng_log_vars_index is $btng_log_vars_value" >&5;
+  echo "configure:19414:" "$btng_log_vars_index is $btng_log_vars_value" >&5;
 done
 
 
@@ -19535,7 +19438,7 @@ for btng_log_vars_index in $btng_log_vars ; do
   else
     btng_log_vars_value="unset";
   fi
-  echo "configure:19538:" "$btng_log_vars_index is $btng_log_vars_value" >&5;
+  echo "configure:19441:" "$btng_log_vars_index is $btng_log_vars_value" >&5;
 done
 
 
@@ -19677,7 +19580,7 @@ for btng_log_vars_index in $btng_log_vars ; do
   else
     btng_log_vars_value="unset";
   fi
-  echo "configure:19680:" "$btng_log_vars_index is $btng_log_vars_value" >&5;
+  echo "configure:19583:" "$btng_log_vars_index is $btng_log_vars_value" >&5;
 done
 
 
@@ -19747,7 +19650,7 @@ for btng_log_vars_index in $btng_log_vars ; do
   else
     btng_log_vars_value="unset";
   fi
-  echo "configure:19750:" "$btng_log_vars_index is $btng_log_vars_value" >&5;
+  echo "configure:19653:" "$btng_log_vars_index is $btng_log_vars_value" >&5;
 done
 
 
@@ -19810,9 +19713,9 @@ cat >>confdefs.h <<\_ACEOF
 #define NAN_IS_BROKEN 1
 _ACEOF
 
-echo "configure:19813:" "NAN is broken (not in float.h)" >&5
+echo "configure:19716:" "NAN is broken (not in float.h)" >&5
 else
-  echo "configure:19815:" "NAN is ok (in float.h)" >&5
+  echo "configure:19718:" "NAN is ok (in float.h)" >&5
 
 fi
 rm -f conftest*
@@ -19836,9 +19739,9 @@ cat >>confdefs.h <<\_ACEOF
 #define FLT_SNAN_IS_BROKEN 1
 _ACEOF
 
-echo "configure:19839:" "FLT_NAN is broken (not in float.h)" >&5
+echo "configure:19742:" "FLT_NAN is broken (not in float.h)" >&5
 else
-  echo "configure:19841:" "FLT_NAN is ok (in float.h)" >&5
+  echo "configure:19744:" "FLT_NAN is ok (in float.h)" >&5
 
 fi
 rm -f conftest*
@@ -19862,9 +19765,9 @@ cat >>confdefs.h <<\_ACEOF
 #define DBL_SNAN_IS_BROKEN 1
 _ACEOF
 
-echo "configure:19865:" "DBL_NAN is broken (not in float.h)" >&5
+echo "configure:19768:" "DBL_NAN is broken (not in float.h)" >&5
 else
-  echo "configure:19867:" "DBL_NAN is ok (in float.h)" >&5
+  echo "configure:19770:" "DBL_NAN is ok (in float.h)" >&5
 
 fi
 rm -f conftest*
@@ -19888,9 +19791,9 @@ cat >>confdefs.h <<\_ACEOF
 #define FLT_MAX_IS_BROKEN 1
 _ACEOF
 
-echo "configure:19891:" "FLT_MAX is broken (not in float.h)" >&5
+echo "configure:19794:" "FLT_MAX is broken (not in float.h)" >&5
 else
-  echo "configure:19893:" "FLT_MAX is ok (in float.h)" >&5
+  echo "configure:19796:" "FLT_MAX is ok (in float.h)" >&5
 
 fi
 rm -f conftest*
@@ -19914,9 +19817,9 @@ cat >>confdefs.h <<\_ACEOF
 #define DBL_MAX_IS_BROKEN 1
 _ACEOF
 
-echo "configure:19917:" "DBL_MAX is broken (not in float.h)" >&5
+echo "configure:19820:" "DBL_MAX is broken (not in float.h)" >&5
 else
-  echo "configure:19919:" "DBL_MAX is ok (in float.h)" >&5
+  echo "configure:19822:" "DBL_MAX is ok (in float.h)" >&5
 
 fi
 rm -f conftest*
@@ -19969,7 +19872,7 @@ for btng_log_vars_index in $btng_log_vars ; do
   else
     btng_log_vars_value="unset";
   fi
-  echo "configure:19972:" "before adding rpath syntax: $btng_log_vars_index is $btng_log_vars_value" >&5;
+  echo "configure:19875:" "before adding rpath syntax: $btng_log_vars_index is $btng_log_vars_value" >&5;
 done
 
 
@@ -20476,7 +20379,7 @@ for btng_log_vars_index in $btng_log_vars ; do
   else
     btng_log_vars_value="unset";
   fi
-  echo "configure:20479:" "forming rpaths: $btng_log_vars_index is $btng_log_vars_value" >&5;
+  echo "configure:20382:" "forming rpaths: $btng_log_vars_index is $btng_log_vars_value" >&5;
 done
 
 
@@ -20542,7 +20445,7 @@ for btng_log_vars_index in $btng_log_vars ; do
   else
     btng_log_vars_value="unset";
   fi
-  echo "configure:20545:" "after adding rpath syntax: $btng_log_vars_index is $btng_log_vars_value" >&5;
+  echo "configure:20448:" "after adding rpath syntax: $btng_log_vars_index is $btng_log_vars_value" >&5;
 done
 
 
@@ -20585,7 +20488,7 @@ for btng_log_vars_index in $btng_log_vars ; do
   else
     btng_log_vars_value="unset";
   fi
-  echo "configure:20588:" "with-parallel-run-bin given: $btng_log_vars_index is $btng_log_vars_value" >&5;
+  echo "configure:20491:" "with-parallel-run-bin given: $btng_log_vars_index is $btng_log_vars_value" >&5;
 done
 
 
@@ -20604,7 +20507,7 @@ for btng_log_vars_index in $btng_log_vars ; do
   else
     btng_log_vars_value="unset";
   fi
-  echo "configure:20607:" "with-parallel-run-bin NOT given: $btng_log_vars_index is $btng_log_vars_value" >&5;
+  echo "configure:20510:" "with-parallel-run-bin NOT given: $btng_log_vars_index is $btng_log_vars_value" >&5;
 done
 
 
@@ -20629,7 +20532,7 @@ for btng_log_vars_index in $btng_log_vars ; do
   else
     btng_log_vars_value="unset";
   fi
-  echo "configure:20632:" "after setting PARALLEL_RUN_BIN: $btng_log_vars_index is $btng_log_vars_value" >&5;
+  echo "configure:20535:" "after setting PARALLEL_RUN_BIN: $btng_log_vars_index is $btng_log_vars_value" >&5;
 done
 
 
@@ -20661,7 +20564,7 @@ for btng_log_vars_index in $btng_log_vars ; do
   else
     btng_log_vars_value="unset";
   fi
-  echo "configure:20664:" "in support-serpa-run: $btng_log_vars_index is $btng_log_vars_value" >&5;
+  echo "configure:20567:" "in support-serpa-run: $btng_log_vars_index is $btng_log_vars_value" >&5;
 done
 
 
@@ -20742,7 +20645,7 @@ then
 
 
 test `pwd` = `cd "$srcdir" && pwd` && link_prefix='.unneeded_link.'
-ac_config_links="$ac_config_links source/test/applications/ConvDiff/${link_prefix}example_inputs:source/test/applications/ConvDiff/example_inputs source/test/applications/ConvDiff/${link_prefix}test_inputs:source/test/applications/ConvDiff/test_inputs source/test/applications/Euler/${link_prefix}example_inputs:source/test/applications/Euler/example_inputs source/test/applications/Euler/${link_prefix}test_inputs:source/test/applications/Euler/test_inputs source/test/applications/LinAdv/${link_prefix}example_inputs:source/test/applications/LinAdv/example_inputs source/test/applications/LinAdv/${link_prefix}test_inputs:source/test/applications/LinAdv/test_inputs source/test/async_comm/${link_prefix}test_inputs:source/test/async_comm/test_inputs source/test/boundary/${link_prefix}test_inputs:source/test/boundary/test_inputs source/test/clustering/async_br/${link_prefix}test_inputs:source/test/clustering/async_br/test_inputs source/test/clustering/parallel_br/${link_prefix}test_inputs:source/test/clustering/parallel_br/test_inputs source/test/communication/${link_prefix}test_inputs:source/test/communication/test_inputs source/test/dataaccess/${link_prefix}test_inputs:source/test/dataaccess/test_inputs source/test/dlbg/${link_prefix}test_inputs:source/test/dlbg/test_inputs source/test/FAC_adaptive/${link_prefix}test_inputs:source/test/FAC_adaptive/test_inputs source/test/FAC_nonadaptive/${link_prefix}example_inputs:source/test/FAC_nonadaptive/example_inputs source/test/FAC_nonadaptive/${link_prefix}test_inputs:source/test/FAC_nonadaptive/test_inputs source/test/hierarchy/${link_prefix}test_inputs:source/test/hierarchy/test_inputs source/test/hypre/${link_prefix}test_inputs:source/test/hypre/test_inputs source/test/LoadBalanceCorrectness/${link_prefix}test_inputs:source/test/LoadBalanceCorrectness/test_inputs source/test/MappedBoxLevelConnectorUtilsTests/${link_prefix}test_inputs:source/test/MappedBoxLevelConnectorUtilsTests/test_inputs source/test/MappingConnector/${link_prefix}test_inputs:source/test/MappingConnector/test_inputs source/test/mblkcomm/${link_prefix}test_inputs:source/test/mblkcomm/test_inputs source/test/MblkEuler/${link_prefix}example_inputs:source/test/MblkEuler/example_inputs source/test/MblkEuler/${link_prefix}test_inputs:source/test/MblkEuler/test_inputs source/test/MblkLinAdv/${link_prefix}example_inputs:source/test/MblkLinAdv/example_inputs source/test/MblkLinAdv/${link_prefix}test_inputs:source/test/MblkLinAdv/test_inputs source/test/mblktree/${link_prefix}test_inputs:source/test/mblktree/test_inputs source/test/nonlinear/${link_prefix}test_inputs:source/test/nonlinear/test_inputs source/test/patchbdrysum/${link_prefix}example_inputs:source/test/patchbdrysum/example_inputs source/test/patchbdrysum/${link_prefix}test_inputs:source/test/patchbdrysum/test_inputs source/test/performance/Euler/${link_prefix}performance_inputs:source/test/performance/Euler/performance_inputs source/test/performance/Euler/${link_prefix}sample_inputs:source/test/performance/Euler/sample_inputs source/test/performance/LinAdv/${link_prefix}performance_inputs:source/test/performance/LinAdv/performance_inputs source/test/performance/LinAdv/${link_prefix}sample_inputs:source/test/performance/LinAdv/sample_inputs source/test/performance/LoadBalancers/${link_prefix}cube_inputs:source/test/performance/LoadBalancers/cube_inputs source/test/performance/LoadBalancers/${link_prefix}sphere_inputs:source/test/performance/LoadBalancers/sphere_inputs source/test/performance/LoadBalancers/${link_prefix}test_inputs:source/test/performance/LoadBalancers/test_inputs source/test/performance/multiblock/${link_prefix}test_inputs:source/test/performance/multiblock/test_inputs source/test/performance/treesearch/${link_prefix}test_inputs:source/test/performance/treesearch/test_inputs source/test/rank_group/${link_prefix}test_inputs:source/test/rank_group/test_inputs source/test/sparsedata/${link_prefix}test_inputs:source/test/sparsedata/test_inputs source/test/sundials/${link_prefix}example_inputs:source/test/sundials/example_inputs source/test/sundials/${link_prefix}test_inputs:source/test/sundials/test_inputs source/test/timers/${link_prefix}example_inputs:source/test/timers/example_inputs source/test/timers/${link_prefix}test_inputs:source/test/timers/test_inputs"
+ac_config_links="$ac_config_links source/test/applications/ConvDiff/${link_prefix}example_inputs:source/test/applications/ConvDiff/example_inputs source/test/applications/ConvDiff/${link_prefix}test_inputs:source/test/applications/ConvDiff/test_inputs source/test/applications/Euler/${link_prefix}example_inputs:source/test/applications/Euler/example_inputs source/test/applications/Euler/${link_prefix}test_inputs:source/test/applications/Euler/test_inputs source/test/applications/LinAdv/${link_prefix}example_inputs:source/test/applications/LinAdv/example_inputs source/test/applications/LinAdv/${link_prefix}test_inputs:source/test/applications/LinAdv/test_inputs source/test/async_comm/${link_prefix}test_inputs:source/test/async_comm/test_inputs source/test/boundary/${link_prefix}test_inputs:source/test/boundary/test_inputs source/test/clustering/async_br/${link_prefix}test_inputs:source/test/clustering/async_br/test_inputs source/test/clustering/parallel_br/${link_prefix}test_inputs:source/test/clustering/parallel_br/test_inputs source/test/communication/${link_prefix}test_inputs:source/test/communication/test_inputs source/test/dataaccess/${link_prefix}test_inputs:source/test/dataaccess/test_inputs source/test/dlbg/${link_prefix}test_inputs:source/test/dlbg/test_inputs source/test/FAC_adaptive/${link_prefix}test_inputs:source/test/FAC_adaptive/test_inputs source/test/FAC_nonadaptive/${link_prefix}example_inputs:source/test/FAC_nonadaptive/example_inputs source/test/FAC_nonadaptive/${link_prefix}test_inputs:source/test/FAC_nonadaptive/test_inputs source/test/hierarchy/${link_prefix}test_inputs:source/test/hierarchy/test_inputs source/test/hypre/${link_prefix}test_inputs:source/test/hypre/test_inputs source/test/LoadBalanceCorrectness/${link_prefix}test_inputs:source/test/LoadBalanceCorrectness/test_inputs source/test/MappedBoxLevelConnectorUtilsTests/${link_prefix}test_inputs:source/test/MappedBoxLevelConnectorUtilsTests/test_inputs source/test/MappingConnector/${link_prefix}test_inputs:source/test/MappingConnector/test_inputs source/test/mblkcomm/${link_prefix}test_inputs:source/test/mblkcomm/test_inputs source/test/MblkEuler/${link_prefix}example_inputs:source/test/MblkEuler/example_inputs source/test/MblkEuler/${link_prefix}test_inputs:source/test/MblkEuler/test_inputs source/test/MblkLinAdv/${link_prefix}example_inputs:source/test/MblkLinAdv/example_inputs source/test/MblkLinAdv/${link_prefix}test_inputs:source/test/MblkLinAdv/test_inputs source/test/mblktree/${link_prefix}test_inputs:source/test/mblktree/test_inputs source/test/nonlinear/${link_prefix}test_inputs:source/test/nonlinear/test_inputs source/test/patchbdrysum/${link_prefix}example_inputs:source/test/patchbdrysum/example_inputs source/test/patchbdrysum/${link_prefix}test_inputs:source/test/patchbdrysum/test_inputs source/test/performance/Euler/${link_prefix}performance_inputs:source/test/performance/Euler/performance_inputs source/test/performance/Euler/${link_prefix}sample_inputs:source/test/performance/Euler/sample_inputs source/test/performance/LinAdv/${link_prefix}performance_inputs:source/test/performance/LinAdv/performance_inputs source/test/performance/LinAdv/${link_prefix}sample_inputs:source/test/performance/LinAdv/sample_inputs source/test/performance/LoadBalancers/${link_prefix}cube_inputs:source/test/performance/LoadBalancers/cube_inputs source/test/performance/LoadBalancers/${link_prefix}front_inputs:source/test/performance/LoadBalancers/front_inputs source/test/performance/LoadBalancers/${link_prefix}sphere_inputs:source/test/performance/LoadBalancers/sphere_inputs source/test/performance/LoadBalancers/${link_prefix}test_inputs:source/test/performance/LoadBalancers/test_inputs source/test/performance/multiblock/${link_prefix}test_inputs:source/test/performance/multiblock/test_inputs source/test/performance/treesearch/${link_prefix}test_inputs:source/test/performance/treesearch/test_inputs source/test/rank_group/${link_prefix}test_inputs:source/test/rank_group/test_inputs source/test/sparsedata/${link_prefix}test_inputs:source/test/sparsedata/test_inputs source/test/sundials/${link_prefix}example_inputs:source/test/sundials/example_inputs source/test/sundials/${link_prefix}test_inputs:source/test/sundials/test_inputs source/test/timers/${link_prefix}example_inputs:source/test/timers/example_inputs source/test/timers/${link_prefix}test_inputs:source/test/timers/test_inputs"
 
 
 
@@ -20840,7 +20743,7 @@ for btng_log_vars_index in $btng_log_vars ; do
   else
     btng_log_vars_value="unset";
   fi
-  echo "configure:20843:" "$btng_log_vars_index is $btng_log_vars_value" >&5;
+  echo "configure:20746:" "$btng_log_vars_index is $btng_log_vars_value" >&5;
 done
 
 
@@ -20854,7 +20757,7 @@ for btng_log_vars_index in $btng_log_vars ; do
   else
     btng_log_vars_value="unset";
   fi
-  echo "configure:20857:" "$btng_log_vars_index is $btng_log_vars_value" >&5;
+  echo "configure:20760:" "$btng_log_vars_index is $btng_log_vars_value" >&5;
 done
 
 
@@ -21530,6 +21433,7 @@ do
     "source/test/performance/LinAdv/${link_prefix}performance_inputs") CONFIG_LINKS="$CONFIG_LINKS source/test/performance/LinAdv/${link_prefix}performance_inputs:source/test/performance/LinAdv/performance_inputs" ;;
     "source/test/performance/LinAdv/${link_prefix}sample_inputs") CONFIG_LINKS="$CONFIG_LINKS source/test/performance/LinAdv/${link_prefix}sample_inputs:source/test/performance/LinAdv/sample_inputs" ;;
     "source/test/performance/LoadBalancers/${link_prefix}cube_inputs") CONFIG_LINKS="$CONFIG_LINKS source/test/performance/LoadBalancers/${link_prefix}cube_inputs:source/test/performance/LoadBalancers/cube_inputs" ;;
+    "source/test/performance/LoadBalancers/${link_prefix}front_inputs") CONFIG_LINKS="$CONFIG_LINKS source/test/performance/LoadBalancers/${link_prefix}front_inputs:source/test/performance/LoadBalancers/front_inputs" ;;
     "source/test/performance/LoadBalancers/${link_prefix}sphere_inputs") CONFIG_LINKS="$CONFIG_LINKS source/test/performance/LoadBalancers/${link_prefix}sphere_inputs:source/test/performance/LoadBalancers/sphere_inputs" ;;
     "source/test/performance/LoadBalancers/${link_prefix}test_inputs") CONFIG_LINKS="$CONFIG_LINKS source/test/performance/LoadBalancers/${link_prefix}test_inputs:source/test/performance/LoadBalancers/test_inputs" ;;
     "source/test/performance/multiblock/${link_prefix}test_inputs") CONFIG_LINKS="$CONFIG_LINKS source/test/performance/multiblock/${link_prefix}test_inputs:source/test/performance/multiblock/test_inputs" ;;

@@ -171,8 +171,13 @@ void FaceData<TYPE>::copy(
                   face_offset(i) = src_offset((d + i) % getDim().getValue());
                }
             }
+            hier::Transformation transform(hier::Transformation::NO_ROTATE,
+                                           face_offset,
+                                           t_src->getBox().getBlockId(),
+                                           getBox().getBlockId());
+
             const hier::BoxContainer& box_list = t_overlap->getDestinationBoxContainer(d);
-            d_data[d].copy(t_src->d_data[d], box_list, face_offset);
+            d_data[d].copy(t_src->d_data[d], box_list, transform);
          }
       } else {
          copyWithRotation(*t_src, *t_overlap);
@@ -237,10 +242,12 @@ void FaceData<TYPE>::copyWithRotation(
    hier::Transformation::calculateReverseShift(
       back_shift, shift, rotate);
 
-   hier::Transformation back_trans(back_rotate, back_shift);
-
    hier::Box rotatebox(src.getGhostBox());
    overlap.getTransformation().transform(rotatebox);
+
+   hier::Transformation back_trans(back_rotate, back_shift,
+                                   rotatebox.getBlockId(),
+                                   getBox().getBlockId());
 
    for (int i = 0; i < dim.getValue(); i++) {
       const hier::BoxContainer& overlap_boxes = overlap.getDestinationBoxContainer(i);
@@ -399,10 +406,13 @@ void FaceData<TYPE>::packWithRotation(
    hier::Transformation::calculateReverseShift(
       back_shift, shift, rotate);
 
-   hier::Transformation back_trans(back_rotate, back_shift);
 
    hier::Box rotatebox(getGhostBox());
    overlap.getTransformation().transform(rotatebox);
+
+   hier::Transformation back_trans(back_rotate, back_shift,
+                                   rotatebox.getBlockId(),
+                                   getBox().getBlockId());
 
    const int depth = getDepth();
 
@@ -638,7 +648,7 @@ template<class TYPE>
 void FaceData<TYPE>::getSpecializedFromDatabase(
    tbox::Pointer<tbox::Database> database)
 {
-   TBOX_ASSERT(!database.isNull());
+   TBOX_ASSERT(database);
 
    int ver = database->getInteger("PDAT_FACEDATA_VERSION");
    if (ver != PDAT_FACEDATA_VERSION) {
@@ -669,7 +679,7 @@ template<class TYPE>
 void FaceData<TYPE>::putSpecializedToDatabase(
    tbox::Pointer<tbox::Database> database)
 {
-   TBOX_ASSERT(!database.isNull());
+   TBOX_ASSERT(database);
 
    database->putInteger("PDAT_FACEDATA_VERSION", PDAT_FACEDATA_VERSION);
 

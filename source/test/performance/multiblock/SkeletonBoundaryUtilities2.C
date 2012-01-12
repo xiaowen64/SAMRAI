@@ -106,7 +106,7 @@ void SkeletonBoundaryUtilities2::readBoundaryInput(
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(bdry_strategy != (BoundaryUtilityStrategy *)NULL);
-   TBOX_ASSERT(!bdry_db.isNull());
+   TBOX_ASSERT(bdry_db);
    TBOX_ASSERT(edge_conds.getSize() == NUM_2D_EDGES);
    TBOX_ASSERT(node_conds.getSize() == NUM_2D_NODES);
 #endif
@@ -151,7 +151,7 @@ void SkeletonBoundaryUtilities2::fillEdgeBoundaryData(
 {
    NULL_USE(varname);
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!vardata.isNull());
+   TBOX_ASSERT(vardata);
    TBOX_ASSERT(bdry_edge_conds.getSize() == NUM_2D_EDGES);
    TBOX_ASSERT(bdry_edge_values.getSize() == NUM_2D_EDGES * (vardata->getDepth()));
 #endif
@@ -230,7 +230,7 @@ void SkeletonBoundaryUtilities2::fillNodeBoundaryData(
 {
    NULL_USE(varname);
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!vardata.isNull());
+   TBOX_ASSERT(vardata);
    TBOX_ASSERT(bdry_node_conds.getSize() == NUM_2D_NODES);
    TBOX_ASSERT(bdry_edge_values.getSize() == NUM_2D_EDGES * (vardata->getDepth()));
 #endif
@@ -384,8 +384,9 @@ int SkeletonBoundaryUtilities2::checkBdryData(
    tbox::Pointer<hier::PatchGeometry> pgeom =
       patch.getPatchGeometry();
 
-   tbox::Pointer<pdat::CellData<double> > vardata =
-      patch.getPatchData(data_id);
+   tbox::Pointer<pdat::CellData<double> > vardata(
+      patch.getPatchData(data_id),
+      tbox::__dynamic_cast_tag());
 
    string bdry_type_str;
    if (btype == Bdry::EDGE2D) {
@@ -515,7 +516,7 @@ void SkeletonBoundaryUtilities2::read2dBdryEdges(
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(bdry_strategy != (BoundaryUtilityStrategy *)NULL);
-   TBOX_ASSERT(!bdry_db.isNull());
+   TBOX_ASSERT(bdry_db);
    TBOX_ASSERT(edge_conds.getSize() == NUM_2D_EDGES);
 #endif
 
@@ -558,7 +559,7 @@ void SkeletonBoundaryUtilities2::read2dBdryEdges(
             if (bdry_db->keyExists(bdry_loc_str)) {
                tbox::Pointer<tbox::Database> bdry_loc_db =
                   bdry_db->getDatabase(bdry_loc_str);
-               if (!bdry_loc_db.isNull()) {
+               if (bdry_loc_db) {
                   if (bdry_loc_db->keyExists("boundary_condition")) {
                      string bdry_cond_str =
                         bdry_loc_db->getString("boundary_condition");
@@ -604,7 +605,7 @@ void SkeletonBoundaryUtilities2::read2dBdryNodes(
    const hier::IntVector& periodic)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!bdry_db.isNull());
+   TBOX_ASSERT(bdry_db);
    TBOX_ASSERT(edge_conds.getSize() == NUM_2D_EDGES);
    TBOX_ASSERT(node_conds.getSize() == NUM_2D_NODES);
 #endif
@@ -638,7 +639,7 @@ void SkeletonBoundaryUtilities2::read2dBdryNodes(
          if (bdry_db->keyExists(bdry_loc_str)) {
             tbox::Pointer<tbox::Database> bdry_loc_db =
                bdry_db->getDatabase(bdry_loc_str);
-            if (!bdry_loc_db.isNull()) {
+            if (bdry_loc_db) {
                if (bdry_loc_db->keyExists("boundary_condition")) {
                   string bdry_cond_str =
                      bdry_loc_db->getString("boundary_condition");

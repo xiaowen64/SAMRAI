@@ -66,7 +66,7 @@ void PatchCellDataBasicOps<TYPE>::scale(
    const tbox::Pointer<pdat::CellData<TYPE> >& src,
    const hier::Box& box) const
 {
-   TBOX_ASSERT(!dst.isNull() && !src.isNull());
+   TBOX_ASSERT(dst && src);
    TBOX_DIM_ASSERT_CHECK_ARGS3(*dst, *src, box);
 
    d_array_ops.scale(dst->getArrayData(),
@@ -81,7 +81,7 @@ void PatchCellDataBasicOps<TYPE>::addScalar(
    const TYPE& alpha,
    const hier::Box& box) const
 {
-   TBOX_ASSERT(!dst.isNull() && !src.isNull());
+   TBOX_ASSERT(dst && src);
    TBOX_DIM_ASSERT_CHECK_ARGS3(*dst, *src, box);
 
    d_array_ops.addScalar(dst->getArrayData(),
@@ -96,7 +96,7 @@ void PatchCellDataBasicOps<TYPE>::add(
    const tbox::Pointer<pdat::CellData<TYPE> >& src2,
    const hier::Box& box) const
 {
-   TBOX_ASSERT(!dst.isNull() && !src1.isNull() && !src2.isNull());
+   TBOX_ASSERT(dst && src1 && src2);
    TBOX_DIM_ASSERT_CHECK_ARGS4(*dst, *src1, *src2, box);
 
    d_array_ops.add(dst->getArrayData(),
@@ -111,7 +111,7 @@ void PatchCellDataBasicOps<TYPE>::subtract(
    const tbox::Pointer<pdat::CellData<TYPE> >& src2,
    const hier::Box& box) const
 {
-   TBOX_ASSERT(!dst.isNull() && !src1.isNull() && !src2.isNull());
+   TBOX_ASSERT(dst && src1 && src2);
    TBOX_DIM_ASSERT_CHECK_ARGS4(*dst, *src1, *src2, box);
 
    d_array_ops.subtract(dst->getArrayData(),
@@ -126,7 +126,7 @@ void PatchCellDataBasicOps<TYPE>::multiply(
    const tbox::Pointer<pdat::CellData<TYPE> >& src2,
    const hier::Box& box) const
 {
-   TBOX_ASSERT(!dst.isNull() && !src1.isNull() && !src2.isNull());
+   TBOX_ASSERT(dst && src1 && src2);
    TBOX_DIM_ASSERT_CHECK_ARGS4(*dst, *src1, *src2, box);
 
    d_array_ops.multiply(dst->getArrayData(),
@@ -141,7 +141,7 @@ void PatchCellDataBasicOps<TYPE>::divide(
    const tbox::Pointer<pdat::CellData<TYPE> >& src2,
    const hier::Box& box) const
 {
-   TBOX_ASSERT(!dst.isNull() && !src1.isNull() && !src2.isNull());
+   TBOX_ASSERT(dst && src1 && src2);
    TBOX_DIM_ASSERT_CHECK_ARGS4(*dst, *src1, *src2, box);
 
    d_array_ops.divide(dst->getArrayData(),
@@ -155,7 +155,7 @@ void PatchCellDataBasicOps<TYPE>::reciprocal(
    const tbox::Pointer<pdat::CellData<TYPE> >& src,
    const hier::Box& box) const
 {
-   TBOX_ASSERT(!dst.isNull() && !src.isNull());
+   TBOX_ASSERT(dst && src);
    TBOX_DIM_ASSERT_CHECK_ARGS3(*dst, *src, box);
 
    d_array_ops.reciprocal(dst->getArrayData(),
@@ -172,7 +172,7 @@ void PatchCellDataBasicOps<TYPE>::linearSum(
    const tbox::Pointer<pdat::CellData<TYPE> >& src2,
    const hier::Box& box) const
 {
-   TBOX_ASSERT(!dst.isNull() && !src1.isNull() && !src2.isNull());
+   TBOX_ASSERT(dst && src1 && src2);
    TBOX_DIM_ASSERT_CHECK_ARGS4(*dst, *src1, *src2, box);
 
    d_array_ops.linearSum(dst->getArrayData(),
@@ -189,7 +189,7 @@ void PatchCellDataBasicOps<TYPE>::axpy(
    const tbox::Pointer<pdat::CellData<TYPE> >& src2,
    const hier::Box& box) const
 {
-   TBOX_ASSERT(!dst.isNull() && !src1.isNull() && !src2.isNull());
+   TBOX_ASSERT(dst && src1 && src2);
    TBOX_DIM_ASSERT_CHECK_ARGS4(*dst, *src1, *src2, box);
 
    d_array_ops.axpy(dst->getArrayData(),
@@ -206,7 +206,7 @@ void PatchCellDataBasicOps<TYPE>::axmy(
    const tbox::Pointer<pdat::CellData<TYPE> >& src2,
    const hier::Box& box) const
 {
-   TBOX_ASSERT(!dst.isNull() && !src1.isNull() && !src2.isNull());
+   TBOX_ASSERT(dst && src1 && src2);
    TBOX_DIM_ASSERT_CHECK_ARGS4(*dst, *src1, *src2, box);
 
    d_array_ops.axmy(dst->getArrayData(),
@@ -220,7 +220,7 @@ TYPE PatchCellDataBasicOps<TYPE>::min(
    const tbox::Pointer<pdat::CellData<TYPE> >& data,
    const hier::Box& box) const
 {
-   TBOX_ASSERT(!data.isNull());
+   TBOX_ASSERT(data);
    TBOX_DIM_ASSERT_CHECK_ARGS2(*data, box);
 
    return d_array_ops.min(data->getArrayData(), box);
@@ -231,7 +231,7 @@ TYPE PatchCellDataBasicOps<TYPE>::max(
    const tbox::Pointer<pdat::CellData<TYPE> >& data,
    const hier::Box& box) const
 {
-   TBOX_ASSERT(!data.isNull());
+   TBOX_ASSERT(data);
    TBOX_DIM_ASSERT_CHECK_ARGS2(*data, box);
 
    return d_array_ops.max(data->getArrayData(), box);
@@ -244,7 +244,7 @@ void PatchCellDataBasicOps<TYPE>::setRandomValues(
    const TYPE& low,
    const hier::Box& box) const
 {
-   TBOX_ASSERT(!dst.isNull());
+   TBOX_ASSERT(dst);
    TBOX_DIM_ASSERT_CHECK_ARGS2(*dst, box);
 
    d_array_ops.setRandomValues(dst->getArrayData(),

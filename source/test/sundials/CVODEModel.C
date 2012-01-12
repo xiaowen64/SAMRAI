@@ -338,7 +338,7 @@ CVODEModel::~CVODEModel()
    Sundials_SAMRAIVector::destroySundialsVector(d_solution_vector);
 
    soln_samvect->freeVectorComponents();
-   soln_samvect.setNull();
+   soln_samvect.reset();
 
    // if (d_level_solver_allocated) delete d_level_solver;
    // d_level_solver_allocated = false;
@@ -423,8 +423,9 @@ CVODEModel::applyGradientDetector(
    for (PatchLevel::Iterator p(level); p; p++) {
       Pointer<Patch> patch = *p;
 
-      Pointer<CellData<int> > tag_data =
-         patch->getPatchData(tag_index);
+      Pointer<CellData<int> > tag_data(
+         patch->getPatchData(tag_index),
+         tbox::__dynamic_cast_tag());
 
       // dumb implementation that tags all cells.
       tag_data->fillAll(TRUE);
@@ -448,11 +449,12 @@ CVODEModel::setPhysicalBoundaryConditions(
 
    (void)time;
 
-   Pointer<CellData<double> > soln_data =
-      patch.getPatchData(d_soln_scr_id);
+   Pointer<CellData<double> > soln_data(
+      patch.getPatchData(d_soln_scr_id),
+      tbox::__dynamic_cast_tag());
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!soln_data.isNull());
+   TBOX_ASSERT(soln_data);
 #endif
    IntVector ghost_cells(soln_data->getGhostCellWidth());
 
@@ -657,20 +659,26 @@ CVODEModel::evaluateRHSFunction(
 
       for (PatchLevel::Iterator ip(level); ip; ip++) {
          Pointer<Patch> patch = *ip;
-         Pointer<CartesianPatchGeometry> p_geom = patch->getPatchGeometry();
+         Pointer<CartesianPatchGeometry> p_geom(
+            patch->getPatchGeometry(),
+            tbox::__dynamic_cast_tag());
 
-         Pointer<CellData<double> > y =
-            patch->getPatchData(d_soln_scr_id);
-         Pointer<SideData<double> > diff =
-            patch->getPatchData(d_diff_id);
-         Pointer<CellData<double> > rhs =
-            patch->getPatchData(y_dot_samvect->getComponentDescriptorIndex(0));
+         Pointer<CellData<double> > y(
+            patch->getPatchData(d_soln_scr_id),
+            tbox::__dynamic_cast_tag());
+         Pointer<SideData<double> > diff(
+            patch->getPatchData(d_diff_id),
+            tbox::__dynamic_cast_tag());
+         Pointer<CellData<double> > rhs(
+            patch->getPatchData(y_dot_samvect->getComponentDescriptorIndex(0)),
+            tbox::__dynamic_cast_tag());
 
          const Index ifirst(patch->getBox().lower());
          const Index ilast(patch->getBox().upper());
 
-         const Pointer<CartesianPatchGeometry> patch_geom =
-            patch->getPatchGeometry();
+         const Pointer<CartesianPatchGeometry> patch_geom(
+            patch->getPatchGeometry(),
+            tbox::__dynamic_cast_tag());
          const double* dx = patch_geom->getDx();
 
          IntVector ghost_cells(y->getGhostCellWidth());
@@ -827,15 +835,19 @@ int CVODEModel::CVSpgmrPrecondSet(
       for (PatchLevel::Iterator p(level); p; p++) {
          Pointer<Patch> patch = *p;
 
-         const Pointer<CartesianPatchGeometry> patch_geom =
-            patch->getPatchGeometry();
+         const Pointer<CartesianPatchGeometry> patch_geom(
+            patch->getPatchGeometry(),
+            tbox::__dynamic_cast_tag());
 
          const Index ifirst(patch->getBox().lower());
          const Index ilast(patch->getBox().upper());
 
-         Pointer<CellData<double> > u = patch->getPatchData(y_indx);
-         Pointer<SideData<double> > diffusion =
-            patch->getPatchData(d_diff_id);
+         Pointer<CellData<double> > u(
+            patch->getPatchData(y_indx),
+            tbox::__dynamic_cast_tag());
+         Pointer<SideData<double> > diffusion(
+            patch->getPatchData(d_diff_id),
+            tbox::__dynamic_cast_tag());
 
          diffusion->fillAll(1.0);
 
@@ -849,10 +861,12 @@ int CVODEModel::CVSpgmrPrecondSet(
           */
          if (d_use_neumann_bcs) {
 
-            Pointer<OuterfaceData<int> > flag_data =
-               patch->getPatchData(d_flag_id);
-            Pointer<OuterfaceData<double> > neuf_data =
-               patch->getPatchData(d_neuf_id);
+            Pointer<OuterfaceData<int> > flag_data(
+               patch->getPatchData(d_flag_id),
+               tbox::__dynamic_cast_tag());
+            Pointer<OuterfaceData<double> > neuf_data(
+               patch->getPatchData(d_neuf_id),
+               tbox::__dynamic_cast_tag());
 
             /*
              * Outerface data access:
@@ -1026,11 +1040,13 @@ int CVODEModel::CVSpgmrPrecondSolve(
 
          Pointer<Patch> patch = *p;
 
-         const Pointer<CartesianPatchGeometry> patch_geom =
-            patch->getPatchGeometry();
+         const Pointer<CartesianPatchGeometry> patch_geom(
+            patch->getPatchGeometry(),
+            tbox::__dynamic_cast_tag());
 
-         Pointer<CellData<double> > z_data =
-            patch->getPatchData(z_indx);
+         Pointer<CellData<double> > z_data(
+            patch->getPatchData(z_indx),
+            tbox::__dynamic_cast_tag());
 
          /*
           * Set initial guess for z here.
@@ -1041,14 +1057,17 @@ int CVODEModel::CVSpgmrPrecondSolve(
           * Scale RHS by 1/gamma
           */
          PatchCellDataOpsReal<double> math_ops;
-         Pointer<CellData<double> > r_data = patch->getPatchData(r_indx);
+         Pointer<CellData<double> > r_data(
+            patch->getPatchData(r_indx),
+            tbox::__dynamic_cast_tag());
          math_ops.scale(r_data, 1.0 / gamma, r_data, r_data->getBox());
 
          /*
           * Copy interior data from z vector to soln_scratch
           */
-         Pointer<CellData<double> > z_scr_data =
-            patch->getPatchData(d_soln_scr_id);
+         Pointer<CellData<double> > z_scr_data(
+            patch->getPatchData(d_soln_scr_id),
+            tbox::__dynamic_cast_tag());
          z_scr_data->copy(*z_data);
       }
 
@@ -1130,10 +1149,12 @@ int CVODEModel::CVSpgmrPrecondSolve(
       for (PatchLevel::Iterator p(level); p; p++) {
          Pointer<Patch> patch = *p;
 
-         Pointer<CellData<double> > soln_scratch =
-            patch->getPatchData(d_soln_scr_id);
-         Pointer<CellData<double> > z =
-            patch->getPatchData(z_indx);
+         Pointer<CellData<double> > soln_scratch(
+            patch->getPatchData(d_soln_scr_id),
+            tbox::__dynamic_cast_tag());
+         Pointer<CellData<double> > z(
+            patch->getPatchData(z_indx),
+            tbox::__dynamic_cast_tag());
 
          z->copy(*soln_scratch);
       }
@@ -1203,7 +1224,7 @@ CVODEModel::setupSolutionVector(
    for (int ln = 0; ln < nlevels; ln++) {
       Pointer<PatchLevel> level = hierarchy->getPatchLevel(ln);
 #ifdef DEBUG_CHECK_ASSERTIONS
-      TBOX_ASSERT(!(level.isNull()));
+      TBOX_ASSERT(level);
 #endif
       level->allocatePatchData(d_diff_id);
       if (d_use_neumann_bcs) {
@@ -1245,13 +1266,16 @@ CVODEModel::setInitialConditions(
       for (int cn = 0; cn < soln_init_samvect->getNumberOfComponents(); cn++) {
          for (PatchLevel::Iterator p(level); p; p++) {
             Pointer<Patch> patch = *p;
-            Pointer<CartesianPatchGeometry> p_geom = patch->getPatchGeometry();
+            Pointer<CartesianPatchGeometry> p_geom(
+               patch->getPatchGeometry(),
+               tbox::__dynamic_cast_tag());
 
             /*
              * Set initial conditions for y
              */
-            Pointer<CellData<double> > y_init =
-               soln_init_samvect->getComponentPatchData(cn, *patch);
+            Pointer<CellData<double> > y_init(
+               soln_init_samvect->getComponentPatchData(cn, *patch),
+               tbox::__dynamic_cast_tag());
             y_init->fillAll(d_initial_value);
 
             /*
@@ -1260,8 +1284,9 @@ CVODEModel::setInitialConditions(
              * some function of y.  Here, we just do a simple minded
              * approach and set it to 1.
              */
-            Pointer<SideData<double> > diffusion =
-               patch->getPatchData(d_diff_id);
+            Pointer<SideData<double> > diffusion(
+               patch->getPatchData(d_diff_id),
+               tbox::__dynamic_cast_tag());
 
             diffusion->fillAll(1.0);
          }
@@ -1367,7 +1392,7 @@ void CVODEModel::putToDatabase(
    Pointer<Database> db)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!db.isNull());
+   TBOX_ASSERT(db);
 #endif
 
    db->putInteger("CVODE_MODEL_VERSION", CVODE_MODEL_VERSION);
@@ -1445,7 +1470,7 @@ void CVODEModel::readDirichletBoundaryDataEntry(
    int bdry_location_index)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!db.isNull());
+   TBOX_ASSERT(db);
    TBOX_ASSERT(!db_name.empty());
 #endif
    if (d_dim == tbox::Dimension(2)) {
@@ -1468,7 +1493,7 @@ void CVODEModel::readNeumannBoundaryDataEntry(
    int bdry_location_index)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!db.isNull());
+   TBOX_ASSERT(db);
    TBOX_ASSERT(!db_name.empty());
 #endif
    if (d_dim == tbox::Dimension(2)) {
@@ -1492,7 +1517,7 @@ void CVODEModel::readStateDataEntry(
    Array<double>& val)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!db.isNull());
+   TBOX_ASSERT(db);
    TBOX_ASSERT(!db_name.empty());
    TBOX_ASSERT(array_indx >= 0);
    TBOX_ASSERT(val.getSize() > array_indx);

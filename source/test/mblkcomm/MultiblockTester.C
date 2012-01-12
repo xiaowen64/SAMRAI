@@ -116,9 +116,9 @@ void MultiblockTester::registerVariable(
    const tbox::Pointer<hier::GridGeometry> xfer_geom,
    const string& operator_name)
 {
-   TBOX_ASSERT(!src_variable.isNull());
-   TBOX_ASSERT(!dst_variable.isNull());
-   TBOX_ASSERT(!xfer_geom.isNull());
+   TBOX_ASSERT(src_variable);
+   TBOX_ASSERT(dst_variable);
+   TBOX_ASSERT(xfer_geom);
    TBOX_ASSERT(!operator_name.empty());
 
    hier::VariableDatabase* variable_db =
@@ -151,7 +151,7 @@ void MultiblockTester::registerVariable(
       hier::IntVector scratch_ghosts =
          hier::IntVector::max(src_ghosts, dst_ghosts);
       scratch_ghosts.max(hier::IntVector(d_dim, 1));
-      if (!refine_operator.isNull()) {
+      if (refine_operator) {
          scratch_ghosts.max(refine_operator->getStencilWidth());
       }
       int scratch_id =
@@ -190,9 +190,9 @@ void MultiblockTester::registerVariableForReset(
    const tbox::Pointer<hier::GridGeometry> xfer_geom,
    const string& operator_name)
 {
-   TBOX_ASSERT(!src_variable.isNull());
-   TBOX_ASSERT(!dst_variable.isNull());
-   TBOX_ASSERT(!xfer_geom.isNull());
+   TBOX_ASSERT(src_variable);
+   TBOX_ASSERT(dst_variable);
+   TBOX_ASSERT(xfer_geom);
    TBOX_ASSERT(!operator_name.empty());
 
    hier::VariableDatabase* variable_db =
@@ -220,7 +220,7 @@ void MultiblockTester::registerVariableForReset(
          hier::IntVector::max(src_ghosts, dst_ghosts);
 
       scratch_ghosts.max(hier::IntVector(d_dim, 1));
-      if (!refine_operator.isNull()) {
+      if (refine_operator) {
          scratch_ghosts.max(refine_operator->getStencilWidth());
       }
       int scratch_id =
@@ -268,7 +268,7 @@ void MultiblockTester::createRefineSchedule(
 
       d_refine_schedule.resizeArray(
          d_patch_hierarchy->getFinestLevelNumber() + 1);
-      d_refine_schedule[level_number].setNull();
+      d_refine_schedule[level_number].reset();
 
       if (level_number == 0) {
          d_refine_schedule[level_number] =
@@ -319,7 +319,7 @@ void MultiblockTester::createCoarsenSchedule(
  *
  *    d_coarsen_schedule.resizeArray(
  *       d_patch_hierarchy->getFinestLevelNumber()+1);
- *    d_coarsen_schedule[level_number].setNull();
+ *    d_coarsen_schedule[level_number].reset();
  *
  *
  *
@@ -391,7 +391,7 @@ void MultiblockTester::performRefineOperations(
       } else {
          d_data_test_strategy->setDataContext(d_destination);
       }
-      if (!d_refine_schedule[level_number].isNull()) {
+      if (d_refine_schedule[level_number]) {
          d_refine_schedule[level_number]->fillData(d_fake_time);
       }
       d_data_test_strategy->clearDataContext();
@@ -407,7 +407,7 @@ void MultiblockTester::performCoarsenOperations(
       } else {
          d_data_test_strategy->setDataContext(d_source);
       }
-      if (!d_coarsen_schedule[level_number].isNull()) {
+      if (d_coarsen_schedule[level_number]) {
          d_coarsen_schedule[level_number]->coarsenData();
       }
       d_data_test_strategy->clearDataContext();
@@ -471,8 +471,8 @@ void MultiblockTester::initializeLevelData(
    (void)old_level;
    (void)allocate_data;
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!(hierarchy.isNull()));
-   TBOX_ASSERT(!(hierarchy->getPatchLevel(level_number).isNull()));
+   TBOX_ASSERT(hierarchy);
+   TBOX_ASSERT(hierarchy->getPatchLevel(level_number));
    TBOX_ASSERT(level_number >= 0);
 #endif
 
@@ -547,8 +547,8 @@ void MultiblockTester::applyGradientDetector(
    (void)initial_time;
    (void)uses_richardson_extrapolation_too;
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!(hierarchy.isNull()));
-   TBOX_ASSERT(!(hierarchy->getPatchLevel(level_number).isNull()));
+   TBOX_ASSERT(hierarchy);
+   TBOX_ASSERT(hierarchy->getPatchLevel(level_number));
 #endif
 
    tbox::Pointer<hier::PatchLevel> level =
@@ -696,7 +696,7 @@ void MultiblockTester::setupHierarchy(
    tbox::Pointer<mesh::StandardTagAndInitialize> cell_tagger)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!main_input_db.isNull());
+   TBOX_ASSERT(main_input_db);
 #endif
 
    tbox::Pointer<mesh::BergerRigoutsos> box_generator(

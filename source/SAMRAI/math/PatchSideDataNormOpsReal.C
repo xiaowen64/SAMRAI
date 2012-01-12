@@ -66,7 +66,7 @@ int PatchSideDataNormOpsReal<TYPE>::numberOfEntries(
    const tbox::Pointer<pdat::SideData<TYPE> >& data,
    const hier::Box& box) const
 {
-   TBOX_ASSERT(!data.isNull());
+   TBOX_ASSERT(data);
    TBOX_DIM_ASSERT_CHECK_ARGS2(*data, box);
 
    const tbox::Dimension& dim(box.getDim());
@@ -98,7 +98,7 @@ double PatchSideDataNormOpsReal<TYPE>::sumControlVolumes(
    const hier::Box& box) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!data.isNull() && !cvol.isNull());
+   TBOX_ASSERT(data && cvol);
 #endif
    double retval = 0.0;
    const hier::IntVector& directions = data->getDirectionVector();
@@ -125,7 +125,7 @@ void PatchSideDataNormOpsReal<TYPE>::abs(
    const tbox::Pointer<pdat::SideData<TYPE> >& src,
    const hier::Box& box) const
 {
-   TBOX_ASSERT(!dst.isNull() && !src.isNull());
+   TBOX_ASSERT(dst && src);
    TBOX_ASSERT(dst->getDirectionVector() == src->getDirectionVector());
    TBOX_DIM_ASSERT_CHECK_ARGS3(*dst, *src, box);
 
@@ -148,14 +148,14 @@ double PatchSideDataNormOpsReal<TYPE>::L1Norm(
    const hier::Box& box,
    const tbox::Pointer<pdat::SideData<double> > cvol) const
 {
-   TBOX_ASSERT(!data.isNull());
+   TBOX_ASSERT(data);
    TBOX_DIM_ASSERT_CHECK_ARGS2(*data, box);
 
    const tbox::Dimension& dim(data->getDim());
 
    double retval = 0.0;
    const hier::IntVector& directions = data->getDirectionVector();
-   if (cvol.isNull()) {
+   if (!cvol) {
       for (int d = 0; d < dim.getValue(); d++) {
          if (directions(d)) {
             const hier::Box side_box = pdat::SideGeometry::toSideBox(box, d);
@@ -185,14 +185,14 @@ double PatchSideDataNormOpsReal<TYPE>::L2Norm(
    const hier::Box& box,
    const tbox::Pointer<pdat::SideData<double> > cvol) const
 {
-   TBOX_ASSERT(!data.isNull());
+   TBOX_ASSERT(data);
    TBOX_DIM_ASSERT_CHECK_ARGS2(*data, box);
 
    const tbox::Dimension& dim(data->getDim());
 
    double retval = 0.0;
    const hier::IntVector& directions = data->getDirectionVector();
-   if (cvol.isNull()) {
+   if (!cvol) {
       for (int d = 0; d < dim.getValue(); d++) {
          if (directions(d)) {
             const hier::Box side_box = pdat::SideGeometry::toSideBox(box, d);
@@ -226,7 +226,7 @@ double PatchSideDataNormOpsReal<TYPE>::weightedL2Norm(
    const hier::Box& box,
    const tbox::Pointer<pdat::SideData<double> > cvol) const
 {
-   TBOX_ASSERT(!data.isNull() && !weight.isNull());
+   TBOX_ASSERT(data && weight);
    TBOX_DIM_ASSERT_CHECK_ARGS3(*data, *weight, box);
 
    const tbox::Dimension& dim(data->getDim());
@@ -237,7 +237,7 @@ double PatchSideDataNormOpsReal<TYPE>::weightedL2Norm(
    TBOX_ASSERT(directions ==
       hier::IntVector::min(directions, weight->getDirectionVector()));
 
-   if (cvol.isNull()) {
+   if (!cvol) {
       for (int d = 0; d < dim.getValue(); d++) {
          if (directions(d)) {
             const hier::Box side_box = pdat::SideGeometry::toSideBox(box, d);
@@ -276,10 +276,10 @@ double PatchSideDataNormOpsReal<TYPE>::RMSNorm(
 // SGS
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!data.isNull());
+   TBOX_ASSERT(data);
 #endif
    double retval = L2Norm(data, box, cvol);
-   if (cvol.isNull()) {
+   if (!cvol) {
       retval /= sqrt((double)numberOfEntries(data, box));
    } else {
       TBOX_DIM_ASSERT_CHECK_ARGS2(*data, *cvol);
@@ -295,11 +295,11 @@ double PatchSideDataNormOpsReal<TYPE>::weightedRMSNorm(
    const hier::Box& box,
    const tbox::Pointer<pdat::SideData<double> > cvol) const
 {
-   TBOX_ASSERT(!data.isNull() && !weight.isNull());
+   TBOX_ASSERT(data && weight);
    TBOX_DIM_ASSERT_CHECK_ARGS2(*data, box);
 
    double retval = weightedL2Norm(data, weight, box, cvol);
-   if (cvol.isNull()) {
+   if (!cvol) {
       retval /= sqrt((double)numberOfEntries(data, box));
    } else {
       TBOX_DIM_ASSERT_CHECK_ARGS2(*data, *cvol);
@@ -314,14 +314,14 @@ double PatchSideDataNormOpsReal<TYPE>::maxNorm(
    const hier::Box& box,
    const tbox::Pointer<pdat::SideData<double> > cvol) const
 {
-   TBOX_ASSERT(!data.isNull());
+   TBOX_ASSERT(data);
    TBOX_DIM_ASSERT_CHECK_ARGS2(*data, box);
 
    const tbox::Dimension& dim(data->getDim());
 
    double retval = 0.0;
    const hier::IntVector& directions = data->getDirectionVector();
-   if (cvol.isNull()) {
+   if (!cvol) {
       for (int d = 0; d < dim.getValue(); d++) {
          if (directions(d)) {
             const hier::Box side_box =
@@ -358,14 +358,14 @@ TYPE PatchSideDataNormOpsReal<TYPE>::dot(
    const tbox::Pointer<pdat::SideData<double> > cvol) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!data1.isNull() && !data2.isNull());
+   TBOX_ASSERT(data1 && data2);
    TBOX_ASSERT(data1->getDirectionVector() == data2->getDirectionVector());
 #endif
    const tbox::Dimension& dim(data1->getDim());
 
    TYPE retval = 0.0;
    const hier::IntVector& directions = data1->getDirectionVector();
-   if (cvol.isNull()) {
+   if (!cvol) {
       for (int d = 0; d < dim.getValue(); d++) {
          if (directions(d)) {
             const hier::Box side_box = pdat::SideGeometry::toSideBox(box, d);
@@ -399,8 +399,8 @@ TYPE PatchSideDataNormOpsReal<TYPE>::integral(
    const hier::Box& box,
    const tbox::Pointer<pdat::SideData<double> > vol) const
 {
-   TBOX_ASSERT(!data.isNull());
-   TBOX_ASSERT(!vol.isNull());
+   TBOX_ASSERT(data);
+   TBOX_ASSERT(vol);
    TBOX_DIM_ASSERT_CHECK_ARGS3(*data, box, *vol);
 
    const tbox::Dimension& dim(data->getDim());

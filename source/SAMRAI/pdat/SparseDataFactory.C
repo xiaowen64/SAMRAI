@@ -12,6 +12,8 @@
 
 #include "SAMRAI/pdat/SparseDataFactory.h"
 
+#ifdef HAVE_BOOST_HEADERS
+
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/pdat/SparseData.h"
 #include "SAMRAI/tbox/Pointer.h"
@@ -97,10 +99,11 @@ SparseDataFactory<BOX_GEOMETRY>::validCopyTo(
 
    if (!valid_copy) {
 
-      tbox::Pointer<SparseDataFactory<BOX_GEOMETRY> >
-      idf = dst_pdf;
+      tbox::Pointer<SparseDataFactory<BOX_GEOMETRY> > idf(
+         dst_pdf,
+         tbox::__dynamic_cast_tag());
 
-      if (!idf.isNull()) {
+      if (idf) {
          valid_copy = true;
       }
    }
@@ -110,4 +113,5 @@ SparseDataFactory<BOX_GEOMETRY>::validCopyTo(
 } // end namespace pdat
 } // end namespace SAMRAI
 
+#endif
 #endif

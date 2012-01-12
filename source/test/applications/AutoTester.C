@@ -228,7 +228,7 @@ int AutoTester::evalTestData(
             tbox::Pointer<tbox::Database> level_db =
                step_db->getDatabase(level_name);
             hier::BoxLevel correct_mapped_box_level(d_dim);
-            tbox::ConstPointer<hier::GridGeometry> grid_geometry(hierarchy->getGridGeometry());
+            tbox::Pointer<const hier::GridGeometry> grid_geometry(hierarchy->getGridGeometry());
             correct_mapped_box_level.getFromDatabase(*level_db,
                grid_geometry);
 
@@ -397,7 +397,7 @@ int AutoTester::evalTestData(
             tbox::Pointer<tbox::Database> level_db =
                step_db->getDatabase(level_name);
             hier::BoxLevel correct_mapped_box_level(d_dim);
-            tbox::ConstPointer<hier::GridGeometry> grid_geometry(hierarchy->getGridGeometry());
+            tbox::Pointer<const hier::GridGeometry> grid_geometry(hierarchy->getGridGeometry());
             correct_mapped_box_level.getFromDatabase(*level_db,
                grid_geometry);
 

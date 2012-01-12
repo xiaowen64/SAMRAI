@@ -68,7 +68,7 @@ void PatchFaceDataBasicOps<TYPE>::scale(
    const tbox::Pointer<pdat::FaceData<TYPE> >& src,
    const hier::Box& box) const
 {
-   TBOX_ASSERT(!dst.isNull() && !src.isNull());
+   TBOX_ASSERT(dst && src);
    TBOX_DIM_ASSERT_CHECK_ARGS3(*dst, *src, box);
 
    const tbox::Dimension& dim(dst->getDim());
@@ -88,7 +88,7 @@ void PatchFaceDataBasicOps<TYPE>::addScalar(
    const TYPE& alpha,
    const hier::Box& box) const
 {
-   TBOX_ASSERT(!dst.isNull() && !src.isNull());
+   TBOX_ASSERT(dst && src);
    TBOX_DIM_ASSERT_CHECK_ARGS3(*dst, *src, box);
 
    const tbox::Dimension& dim(dst->getDim());
@@ -108,7 +108,7 @@ void PatchFaceDataBasicOps<TYPE>::add(
    const tbox::Pointer<pdat::FaceData<TYPE> >& src2,
    const hier::Box& box) const
 {
-   TBOX_ASSERT(!dst.isNull() && !src1.isNull() && !src2.isNull());
+   TBOX_ASSERT(dst && src1 && src2);
    TBOX_DIM_ASSERT_CHECK_ARGS4(*dst, *src1, *src2, box);
 
    const tbox::Dimension& dim(dst->getDim());
@@ -128,7 +128,7 @@ void PatchFaceDataBasicOps<TYPE>::subtract(
    const tbox::Pointer<pdat::FaceData<TYPE> >& src2,
    const hier::Box& box) const
 {
-   TBOX_ASSERT(!dst.isNull() && !src1.isNull() && !src2.isNull());
+   TBOX_ASSERT(dst && src1 && src2);
    TBOX_DIM_ASSERT_CHECK_ARGS4(*dst, *src1, *src2, box);
 
    const tbox::Dimension& dim(dst->getDim());
@@ -148,7 +148,7 @@ void PatchFaceDataBasicOps<TYPE>::multiply(
    const tbox::Pointer<pdat::FaceData<TYPE> >& src2,
    const hier::Box& box) const
 {
-   TBOX_ASSERT(!dst.isNull() && !src1.isNull() && !src2.isNull());
+   TBOX_ASSERT(dst && src1 && src2);
    TBOX_DIM_ASSERT_CHECK_ARGS4(*dst, *src1, *src2, box);
 
    const tbox::Dimension& dim(dst->getDim());
@@ -168,7 +168,7 @@ void PatchFaceDataBasicOps<TYPE>::divide(
    const tbox::Pointer<pdat::FaceData<TYPE> >& src2,
    const hier::Box& box) const
 {
-   TBOX_ASSERT(!dst.isNull() && !src1.isNull() && !src2.isNull());
+   TBOX_ASSERT(dst && src1 && src2);
    TBOX_DIM_ASSERT_CHECK_ARGS4(*dst, *src1, *src2, box);
 
    const tbox::Dimension& dim(dst->getDim());
@@ -187,7 +187,7 @@ void PatchFaceDataBasicOps<TYPE>::reciprocal(
    const tbox::Pointer<pdat::FaceData<TYPE> >& src,
    const hier::Box& box) const
 {
-   TBOX_ASSERT(!dst.isNull() && !src.isNull());
+   TBOX_ASSERT(dst && src);
    TBOX_DIM_ASSERT_CHECK_ARGS3(*dst, *src, box);
 
    const tbox::Dimension& dim(dst->getDim());
@@ -209,7 +209,7 @@ void PatchFaceDataBasicOps<TYPE>::linearSum(
    const tbox::Pointer<pdat::FaceData<TYPE> >& src2,
    const hier::Box& box) const
 {
-   TBOX_ASSERT(!dst.isNull() && !src1.isNull() && !src2.isNull());
+   TBOX_ASSERT(dst && src1 && src2);
    TBOX_DIM_ASSERT_CHECK_ARGS4(*dst, *src1, *src2, box);
 
    const tbox::Dimension& dim(dst->getDim());
@@ -231,7 +231,7 @@ void PatchFaceDataBasicOps<TYPE>::axpy(
    const tbox::Pointer<pdat::FaceData<TYPE> >& src2,
    const hier::Box& box) const
 {
-   TBOX_ASSERT(!dst.isNull() && !src1.isNull() && !src2.isNull());
+   TBOX_ASSERT(dst && src1 && src2);
    TBOX_DIM_ASSERT_CHECK_ARGS4(*dst, *src1, *src2, box);
 
    const tbox::Dimension& dim(dst->getDim());
@@ -253,7 +253,7 @@ void PatchFaceDataBasicOps<TYPE>::axmy(
    const tbox::Pointer<pdat::FaceData<TYPE> >& src2,
    const hier::Box& box) const
 {
-   TBOX_ASSERT(!dst.isNull() && !src1.isNull() && !src2.isNull());
+   TBOX_ASSERT(dst && src1 && src2);
    TBOX_DIM_ASSERT_CHECK_ARGS4(*dst, *src1, *src2, box);
 
    const tbox::Dimension& dim(dst->getDim());
@@ -274,7 +274,7 @@ void PatchFaceDataBasicOps<TYPE>::setRandomValues(
    const TYPE& low,
    const hier::Box& box) const
 {
-   TBOX_ASSERT(!dst.isNull());
+   TBOX_ASSERT(dst);
    TBOX_DIM_ASSERT_CHECK_ARGS2(*dst, box);
 
    const tbox::Dimension& dim(dst->getDim());
@@ -291,7 +291,7 @@ TYPE PatchFaceDataBasicOps<TYPE>::min(
    const tbox::Pointer<pdat::FaceData<TYPE> >& data,
    const hier::Box& box) const
 {
-   TBOX_ASSERT(!data.isNull());
+   TBOX_ASSERT(data);
    TBOX_DIM_ASSERT_CHECK_ARGS2(*data, box);
 
    const tbox::Dimension& dim(data->getDim());
@@ -310,7 +310,7 @@ TYPE PatchFaceDataBasicOps<TYPE>::max(
    const tbox::Pointer<pdat::FaceData<TYPE> >& data,
    const hier::Box& box) const
 {
-   TBOX_ASSERT(!data.isNull());
+   TBOX_ASSERT(data);
    TBOX_DIM_ASSERT_CHECK_ARGS2(*data, box);
 
    const tbox::Dimension& dim(data->getDim());

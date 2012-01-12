@@ -88,7 +88,7 @@ public:
     * Errors: passing in a null database pointer or an empty std::string
     * will result in an unrecoverable assertion.
     */
-   explicit SkeletonGridGeometry(
+   SkeletonGridGeometry(
       const tbox::Dimension& dim,
       const std::string& object_name,
       tbox::Pointer<tbox::Database> input_db,
@@ -105,7 +105,7 @@ public:
     * Errors: passing in an empty std::string, or null data pointers will
     * result in an unrecoverable assertion.
     */
-   explicit SkeletonGridGeometry(
+   SkeletonGridGeometry(
       const std::string& object_name,
       const hier::BoxContainer& level_domain,
       bool register_for_restart = true);

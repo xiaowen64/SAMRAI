@@ -200,7 +200,7 @@ int main(
 
       tbox::Pointer<math::HierarchyDataOpsComplex> side_ops(
          new math::HierarchySideDataOpsComplex(hierarchy, 0, 1));
-      TBOX_ASSERT(!side_ops.isNull());
+      TBOX_ASSERT(side_ops);
 
       tbox::Pointer<math::HierarchyDataOpsReal<double> > swgt_ops(
          new math::HierarchySideDataOpsReal<double>(hierarchy, 0, 1));
@@ -759,14 +759,14 @@ int main(
       }
 
       for (iv = 0; iv < NVARS; iv++) {
-         fvar[iv].setNull();
+         fvar[iv].reset();
       }
-      swgt.setNull();
+      swgt.reset();
 
-      geometry.setNull();
-      hierarchy.setNull();
-      side_ops.setNull();
-      swgt_ops.setNull();
+      geometry.reset();
+      hierarchy.reset();
+      side_ops.reset();
+      swgt_ops.reset();
 
       if (num_failures == 0) {
          tbox::pout << "\nPASSED:  side cplxtest" << std::endl;

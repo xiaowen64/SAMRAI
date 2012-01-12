@@ -149,15 +149,19 @@ bool OutersideDataFactory<TYPE>::validCopyTo(
     * Valid options are SideData and OutersideData.
     */
    if (!valid_copy) {
-      tbox::Pointer<SideDataFactory<TYPE> > sdf = dst_pdf;
-      if (!sdf.isNull()) {
+      tbox::Pointer<SideDataFactory<TYPE> > sdf(
+         dst_pdf,
+         tbox::__dynamic_cast_tag());
+      if (sdf) {
          valid_copy = true;
       }
    }
 
    if (!valid_copy) {
-      tbox::Pointer<OutersideDataFactory<TYPE> > osdf = dst_pdf;
-      if (!osdf.isNull()) {
+      tbox::Pointer<OutersideDataFactory<TYPE> > osdf(
+         dst_pdf,
+         tbox::__dynamic_cast_tag());
+      if (osdf) {
          valid_copy = true;
       }
    }

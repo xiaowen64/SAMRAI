@@ -17,8 +17,8 @@ AH_TOP([
 #define INCLUDED_SAMRAI_CONFIG_H
 
 #define SAMRAI_VERSION_MAJOR 3
-#define SAMRAI_VERSION_MINOR 2
-#define SAMRAI_VERSION_PATCHLEVEL 2
+#define SAMRAI_VERSION_MINOR 3
+#define SAMRAI_VERSION_PATCHLEVEL 1
 ])
 AH_BOTTOM([
 
@@ -1160,9 +1160,9 @@ if test "${boost_PREFIX+set}" = set; then
    LIB_PATH="$boost_LIB_PATH $LIB_PATH"
    LIB_NAME="$boost_LIB_NAME $LIB_NAME"
    INC_PATH="$boost_INCLUDES $INC_PATH"
-   AC_DEFINE([HAVE_BOOST],[1],[BOOST headers are available to use])
+   AC_DEFINE([HAVE_BOOST_HEADERS],[1],[BOOST headers are available to use])
 else
-   AC_MSG_ERROR([BOOST is not found. You must specify a valid location via --with-boost=PATH.  SAMRAI requires the use of BOOST.])
+   AC_MSG_WARN([SparseData class is not supported without BOOST])
 fi
 CASC_AC_LOG_VAR(
 [boost_INCLUDES INC_PATH boost_LIBS LIB_PATH LIB_NAME])dnl

@@ -69,12 +69,12 @@ int PatchEdgeDataMiscellaneousOpsReal<TYPE>::computeConstrProdPos(
    const tbox::Pointer<pdat::EdgeData<double> > cvol) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!data1.isNull() && !data2.isNull());
+   TBOX_ASSERT(data1 && data2);
 #endif
    const tbox::Dimension& dim(data1->getDim());
 
    int retval = 1;
-   if (cvol.isNull()) {
+   if (!cvol) {
       for (int d = 0; d < dim.getValue(); d++) {
          const hier::Box edge_box =
             pdat::EdgeGeometry::toEdgeBox(box, d);
@@ -108,11 +108,11 @@ void PatchEdgeDataMiscellaneousOpsReal<TYPE>::compareToScalar(
    const tbox::Pointer<pdat::EdgeData<double> > cvol) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!dst.isNull() && !src.isNull());
+   TBOX_ASSERT(dst && src);
 #endif
    const tbox::Dimension& dim(dst->getDim());
 
-   if (cvol.isNull()) {
+   if (!cvol) {
       for (int d = 0; d < dim.getValue(); d++) {
          const hier::Box edge_box = pdat::EdgeGeometry::toEdgeBox(box, d);
          d_array_ops.compareToScalar(dst->getArrayData(d),
@@ -140,12 +140,12 @@ int PatchEdgeDataMiscellaneousOpsReal<TYPE>::testReciprocal(
    const tbox::Pointer<pdat::EdgeData<double> > cvol) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!dst.isNull() && !src.isNull());
+   TBOX_ASSERT(dst && src);
 #endif
    const tbox::Dimension& dim(dst->getDim());
 
    int retval = 1;
-   if (cvol.isNull()) {
+   if (!cvol) {
       for (int d = 0; d < dim.getValue(); d++) {
          const hier::Box edge_box =
             pdat::EdgeGeometry::toEdgeBox(box, d);
@@ -177,7 +177,7 @@ TYPE PatchEdgeDataMiscellaneousOpsReal<TYPE>::maxPointwiseDivide(
    const hier::Box& box) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!numer.isNull() && !denom.isNull());
+   TBOX_ASSERT(numer && denom);
 #endif
    const tbox::Dimension& dim(numer->getDim());
 
@@ -199,7 +199,7 @@ TYPE PatchEdgeDataMiscellaneousOpsReal<TYPE>::minPointwiseDivide(
    const hier::Box& box) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!numer.isNull() && !denom.isNull());
+   TBOX_ASSERT(numer && denom);
 #endif
    const tbox::Dimension& dim(numer->getDim());
 

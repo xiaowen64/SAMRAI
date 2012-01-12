@@ -126,8 +126,8 @@ LinAdv::LinAdv(
    d_frequency(dim.getValue())
 {
    TBOX_ASSERT(!object_name.empty());
-   TBOX_ASSERT(!input_db.isNull());
-   TBOX_ASSERT(!grid_geom.isNull());
+   TBOX_ASSERT(input_db);
+   TBOX_ASSERT(grid_geom);
 
    d_object_name = object_name;
    tbox::RestartManager::getManager()->registerRestartItem(d_object_name, this);
@@ -378,7 +378,7 @@ void LinAdv::registerModelVariables(
    hier::VariableDatabase* vardb = hier::VariableDatabase::getDatabase();
 
 #ifdef HAVE_HDF5
-   if (!(d_visit_writer.isNull())) {
+   if (d_visit_writer) {
       d_visit_writer->
       registerPlotQuantity("U",
          "SCALAR",
@@ -388,7 +388,7 @@ void LinAdv::registerModelVariables(
 #endif
 
 #ifdef HAVE_HDF5
-   if (d_visit_writer.isNull()) {
+   if (!d_visit_writer) {
       TBOX_WARNING(d_object_name << ": registerModelVariables()"
                                  << "\nVisit data writer was not registered.\n"
                                  << "Consequently, no plot data will"
@@ -417,9 +417,10 @@ void LinAdv::setupLoadBalancer(
    hier::VariableDatabase* vardb = hier::VariableDatabase::getDatabase();
 
    if (d_use_nonuniform_workload && gridding_algorithm) {
-      tbox::Pointer<mesh::TreeLoadBalancer> load_balancer =
-         gridding_algorithm->getLoadBalanceStrategy();
-      if (!load_balancer.isNull()) {
+      tbox::Pointer<mesh::TreeLoadBalancer> load_balancer(
+         gridding_algorithm->getLoadBalanceStrategy(),
+         tbox::__dynamic_cast_tag());
+      if (load_balancer) {
          d_workload_variable = new pdat::CellVariable<double>(
                d_dim,
                "workload_variable",
@@ -464,17 +465,19 @@ void LinAdv::initializeDataOnPatch(
 
    if (initial_time) {
 
-      const tbox::Pointer<geom::CartesianPatchGeometry> pgeom =
-         patch.getPatchGeometry();
+      const tbox::Pointer<geom::CartesianPatchGeometry> pgeom(
+         patch.getPatchGeometry(),
+         tbox::__dynamic_cast_tag());
       const double* dx = pgeom->getDx();
       const double* xlo = pgeom->getXLower();
       const double* xhi = pgeom->getXUpper();
 
-      tbox::Pointer<pdat::CellData<double> > uval =
-         patch.getPatchData(d_uval, getDataContext());
+      tbox::Pointer<pdat::CellData<double> > uval(
+         patch.getPatchData(d_uval, getDataContext()),
+         tbox::__dynamic_cast_tag());
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-      TBOX_ASSERT(!uval.isNull());
+      TBOX_ASSERT(uval);
 #endif
       hier::IntVector ghost_cells(uval->getGhostCellWidth());
 
@@ -589,8 +592,9 @@ void LinAdv::initializeDataOnPatch(
       if (!patch.checkAllocated(d_workload_data_id)) {
          patch.allocatePatchData(d_workload_data_id);
       }
-      tbox::Pointer<pdat::CellData<double> > workload_data =
-         patch.getPatchData(d_workload_data_id);
+      tbox::Pointer<pdat::CellData<double> > workload_data(
+         patch.getPatchData(d_workload_data_id),
+         tbox::__dynamic_cast_tag());
       workload_data->fillAll(1.0);
    }
 
@@ -612,18 +616,20 @@ double LinAdv::computeStableDtOnPatch(
    (void)initial_time;
    (void)dt_time;
 
-   const tbox::Pointer<geom::CartesianPatchGeometry> patch_geom =
-      patch.getPatchGeometry();
+   const tbox::Pointer<geom::CartesianPatchGeometry> patch_geom(
+      patch.getPatchGeometry(),
+      tbox::__dynamic_cast_tag());
    const double* dx = patch_geom->getDx();
 
    const hier::Index ifirst = patch.getBox().lower();
    const hier::Index ilast = patch.getBox().upper();
 
-   tbox::Pointer<pdat::CellData<double> > uval =
-      patch.getPatchData(d_uval, getDataContext());
+   tbox::Pointer<pdat::CellData<double> > uval(
+      patch.getPatchData(d_uval, getDataContext()),
+      tbox::__dynamic_cast_tag());
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!uval.isNull());
+   TBOX_ASSERT(uval);
 #endif
    hier::IntVector ghost_cells(uval->getGhostCellWidth());
 
@@ -687,18 +693,21 @@ void LinAdv::computeFluxesOnPatch(
       TBOX_ASSERT(CELLG == FACEG);
 #endif
 
-      const tbox::Pointer<geom::CartesianPatchGeometry> patch_geom =
-         patch.getPatchGeometry();
+      const tbox::Pointer<geom::CartesianPatchGeometry> patch_geom(
+         patch.getPatchGeometry(),
+         tbox::__dynamic_cast_tag());
       const double* dx = patch_geom->getDx();
 
       hier::Box pbox = patch.getBox();
       const hier::Index ifirst = patch.getBox().lower();
       const hier::Index ilast = patch.getBox().upper();
 
-      tbox::Pointer<pdat::CellData<double> > uval =
-         patch.getPatchData(d_uval, getDataContext());
-      tbox::Pointer<pdat::FaceData<double> > flux =
-         patch.getPatchData(d_flux, getDataContext());
+      tbox::Pointer<pdat::CellData<double> > uval(
+         patch.getPatchData(d_uval, getDataContext()),
+         tbox::__dynamic_cast_tag());
+      tbox::Pointer<pdat::FaceData<double> > flux(
+         patch.getPatchData(d_flux, getDataContext()),
+         tbox::__dynamic_cast_tag());
 
       /*
        * Verify that the integrator providing the context correctly
@@ -706,8 +715,8 @@ void LinAdv::computeFluxesOnPatch(
        * context matches the ghosts defined in this class...
        */
 #ifdef DEBUG_CHECK_ASSERTIONS
-      TBOX_ASSERT(!uval.isNull());
-      TBOX_ASSERT(!flux.isNull());
+      TBOX_ASSERT(uval);
+      TBOX_ASSERT(flux);
       TBOX_ASSERT(uval->getGhostCellWidth() == d_nghosts);
       TBOX_ASSERT(flux->getGhostCellWidth() == d_fluxghosts);
 #endif
@@ -861,22 +870,25 @@ void LinAdv::compute3DFluxesWithCornerTransport1(
    TBOX_ASSERT(d_dim == tbox::Dimension(3));
 #endif
 
-   const tbox::Pointer<geom::CartesianPatchGeometry> patch_geom =
-      patch.getPatchGeometry();
+   const tbox::Pointer<geom::CartesianPatchGeometry> patch_geom(
+      patch.getPatchGeometry(),
+      tbox::__dynamic_cast_tag());
    const double* dx = patch_geom->getDx();
 
    hier::Box pbox = patch.getBox();
    const hier::Index ifirst = patch.getBox().lower();
    const hier::Index ilast = patch.getBox().upper();
 
-   tbox::Pointer<pdat::CellData<double> > uval =
-      patch.getPatchData(d_uval, getDataContext());
-   tbox::Pointer<pdat::FaceData<double> > flux =
-      patch.getPatchData(d_flux, getDataContext());
+   tbox::Pointer<pdat::CellData<double> > uval(
+      patch.getPatchData(d_uval, getDataContext()),
+      tbox::__dynamic_cast_tag());
+   tbox::Pointer<pdat::FaceData<double> > flux(
+      patch.getPatchData(d_flux, getDataContext()),
+      tbox::__dynamic_cast_tag());
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!uval.isNull());
-   TBOX_ASSERT(!flux.isNull());
+   TBOX_ASSERT(uval);
+   TBOX_ASSERT(flux);
    TBOX_ASSERT(uval->getGhostCellWidth() == d_nghosts);
    TBOX_ASSERT(flux->getGhostCellWidth() == d_fluxghosts);
 #endif
@@ -1161,22 +1173,25 @@ void LinAdv::compute3DFluxesWithCornerTransport2(
    TBOX_ASSERT(d_dim == tbox::Dimension(3));
 #endif
 
-   const tbox::Pointer<geom::CartesianPatchGeometry> patch_geom =
-      patch.getPatchGeometry();
+   const tbox::Pointer<geom::CartesianPatchGeometry> patch_geom(
+      patch.getPatchGeometry(),
+      tbox::__dynamic_cast_tag());
    const double* dx = patch_geom->getDx();
 
    hier::Box pbox = patch.getBox();
    const hier::Index ifirst = patch.getBox().lower();
    const hier::Index ilast = patch.getBox().upper();
 
-   tbox::Pointer<pdat::CellData<double> > uval =
-      patch.getPatchData(d_uval, getDataContext());
-   tbox::Pointer<pdat::FaceData<double> > flux =
-      patch.getPatchData(d_flux, getDataContext());
+   tbox::Pointer<pdat::CellData<double> > uval(
+      patch.getPatchData(d_uval, getDataContext()),
+      tbox::__dynamic_cast_tag());
+   tbox::Pointer<pdat::FaceData<double> > flux(
+      patch.getPatchData(d_flux, getDataContext()),
+      tbox::__dynamic_cast_tag());
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!uval.isNull());
-   TBOX_ASSERT(!flux.isNull());
+   TBOX_ASSERT(uval);
+   TBOX_ASSERT(flux);
    TBOX_ASSERT(uval->getGhostCellWidth() == d_nghosts);
    TBOX_ASSERT(flux->getGhostCellWidth() == d_fluxghosts);
 #endif
@@ -1392,21 +1407,24 @@ void LinAdv::conservativeDifferenceOnPatch(
    (void)dt;
    (void)at_syncronization;
 
-   const tbox::Pointer<geom::CartesianPatchGeometry> patch_geom =
-      patch.getPatchGeometry();
+   const tbox::Pointer<geom::CartesianPatchGeometry> patch_geom(
+      patch.getPatchGeometry(),
+      tbox::__dynamic_cast_tag());
    const double* dx = patch_geom->getDx();
 
    const hier::Index ifirst = patch.getBox().lower();
    const hier::Index ilast = patch.getBox().upper();
 
-   tbox::Pointer<pdat::CellData<double> > uval =
-      patch.getPatchData(d_uval, getDataContext());
-   tbox::Pointer<pdat::FaceData<double> > flux =
-      patch.getPatchData(d_flux, getDataContext());
+   tbox::Pointer<pdat::CellData<double> > uval(
+      patch.getPatchData(d_uval, getDataContext()),
+      tbox::__dynamic_cast_tag());
+   tbox::Pointer<pdat::FaceData<double> > flux(
+      patch.getPatchData(d_flux, getDataContext()),
+      tbox::__dynamic_cast_tag());
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!uval.isNull());
-   TBOX_ASSERT(!flux.isNull());
+   TBOX_ASSERT(uval);
+   TBOX_ASSERT(flux);
    TBOX_ASSERT(uval->getGhostCellWidth() == d_nghosts);
    TBOX_ASSERT(flux->getGhostCellWidth() == d_fluxghosts);
 #endif
@@ -1450,8 +1468,9 @@ void LinAdv::boundaryReset(
    int idir;
    bool bdry_cell = true;
 
-   const tbox::Pointer<geom::CartesianPatchGeometry> patch_geom =
-      patch.getPatchGeometry();
+   const tbox::Pointer<geom::CartesianPatchGeometry> patch_geom(
+      patch.getPatchGeometry(),
+      tbox::__dynamic_cast_tag());
    hier::BoxContainer domain_boxes;
    d_grid_geometry->computePhysicalDomain(domain_boxes, patch_geom->getRatio(), hier::BlockId::zero());
 
@@ -1465,11 +1484,11 @@ void LinAdv::boundaryReset(
    for (idir = 0; idir < d_dim.getValue(); idir++) {
       ibfirst(idir) = ifirst(idir) - 1;
       iblast(idir) = ifirst(idir) - 1;
-      bdrybox.pushBack(hier::Box(ibfirst, iblast));
+      bdrybox.pushBack(hier::Box(ibfirst, iblast, hier::BlockId(0)));
 
       ibfirst(idir) = ilast(idir) + 1;
       iblast(idir) = ilast(idir) + 1;
-      bdrybox.pushBack(hier::Box(ibfirst, iblast));
+      bdrybox.pushBack(hier::Box(ibfirst, iblast, hier::BlockId(0)));
    }
 
    hier::BoxContainer::Iterator ib(bdrybox);
@@ -1540,11 +1559,12 @@ void LinAdv::setPhysicalBoundaryConditions(
 {
    (void)fill_time;
 
-   tbox::Pointer<pdat::CellData<double> > uval =
-      patch.getPatchData(d_uval, getDataContext());
+   tbox::Pointer<pdat::CellData<double> > uval(
+      patch.getPatchData(d_uval, getDataContext()),
+      tbox::__dynamic_cast_tag());
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!uval.isNull());
+   TBOX_ASSERT(uval);
 #endif
    hier::IntVector ghost_cells(uval->getGhostCellWidth());
 #ifdef DEBUG_CHECK_ASSERTIONS
@@ -1669,11 +1689,14 @@ void LinAdv::tagRichardsonExtrapolationCells(
 {
    (void)initial_error;
 
-   const tbox::Pointer<geom::CartesianPatchGeometry> patch_geom =
-      patch.getPatchGeometry();
+   const tbox::Pointer<geom::CartesianPatchGeometry> patch_geom(
+      patch.getPatchGeometry(),
+      tbox::__dynamic_cast_tag());
    hier::Box pbox = patch.getBox();
 
-   tbox::Pointer<pdat::CellData<int> > tags = patch.getPatchData(tag_index);
+   tbox::Pointer<pdat::CellData<int> > tags(
+      patch.getPatchData(tag_index),
+      tbox::__dynamic_cast_tag());
 
    /*
     * Possible tagging criteria includes
@@ -1694,8 +1717,12 @@ void LinAdv::tagRichardsonExtrapolationCells(
       bool time_allowed;
 
       if (ref == "UVAL_RICHARDSON") {
-         coarsened_fine_var = patch.getPatchData(d_uval, coarsened_fine);
-         advanced_coarse_var = patch.getPatchData(d_uval, advanced_coarse);
+         coarsened_fine_var =
+            tbox::dynamic_pointer_cast<pdat::CellData<double>,
+                                       hier::PatchData>(patch.getPatchData(d_uval, coarsened_fine));
+         advanced_coarse_var =
+            tbox::dynamic_pointer_cast<pdat::CellData<double>,
+                                       hier::PatchData>(patch.getPatchData(d_uval, advanced_coarse));
          size = d_rich_tol.getSize();
          tol = ((error_level_number < size)
                 ? d_rich_tol[error_level_number]
@@ -1713,8 +1740,8 @@ void LinAdv::tagRichardsonExtrapolationCells(
          if (time_allowed) {
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-            TBOX_ASSERT(!coarsened_fine_var.isNull());
-            TBOX_ASSERT(!advanced_coarse_var.isNull());
+            TBOX_ASSERT(coarsened_fine_var);
+            TBOX_ASSERT(advanced_coarse_var);
 #endif
             /*
              * We tag wherever the global error > specified tolerance
@@ -1837,11 +1864,14 @@ void LinAdv::tagGradientDetectorCells(
 
    const int error_level_number = patch.getPatchLevelNumber();
 
-   const tbox::Pointer<geom::CartesianPatchGeometry> patch_geom =
-      patch.getPatchGeometry();
+   const tbox::Pointer<geom::CartesianPatchGeometry> patch_geom(
+      patch.getPatchGeometry(),
+      tbox::__dynamic_cast_tag());
    const double* dx = patch_geom->getDx();
 
-   tbox::Pointer<pdat::CellData<int> > tags = patch.getPatchData(tag_indx);
+   tbox::Pointer<pdat::CellData<int> > tags(
+      patch.getPatchData(tag_indx),
+      tbox::__dynamic_cast_tag());
 
    hier::Box pbox(patch.getBox());
    hier::BoxContainer domain_boxes;
@@ -1883,10 +1913,11 @@ void LinAdv::tagGradientDetectorCells(
    for (int ncrit = 0; ncrit < d_refinement_criteria.getSize(); ncrit++) {
 
       string ref = d_refinement_criteria[ncrit];
-      tbox::Pointer<pdat::CellData<double> > var =
-         patch.getPatchData(d_uval, getDataContext());
+      tbox::Pointer<pdat::CellData<double> > var(
+         patch.getPatchData(d_uval, getDataContext()),
+         tbox::__dynamic_cast_tag());
 #ifdef DEBUG_CHECK_ASSERTIONS
-      TBOX_ASSERT(!var.isNull());
+      TBOX_ASSERT(var);
 #endif
       hier::IntVector vghost(var->getGhostCellWidth());
       hier::IntVector tagghost(tags->getGhostCellWidth());
@@ -2072,7 +2103,7 @@ void LinAdv::registerVisItDataWriter(
    tbox::Pointer<appu::VisItDataWriter> viz_writer)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!(viz_writer.isNull()));
+   TBOX_ASSERT(viz_writer);
 #endif
    d_visit_writer = viz_writer;
 }
@@ -2095,7 +2126,7 @@ void LinAdv::printClassData(
    os << "LinAdv: this = " << (LinAdv *)this << endl;
    os << "d_object_name = " << d_object_name << endl;
    os << "d_grid_geometry = "
-      << (geom::CartesianGridGeometry *)d_grid_geometry << endl;
+      << d_grid_geometry.get() << endl;
 
    os << "Parameters for numerical method ..." << endl;
    os << "   d_advection_velocity = ";
@@ -2263,7 +2294,7 @@ void LinAdv::getFromInput(
    bool is_from_restart)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!db.isNull());
+   TBOX_ASSERT(db);
 #endif
 
    /*
@@ -2340,7 +2371,7 @@ void LinAdv::getFromInput(
       for (int i = 0; i < refinement_keys.getSize(); i++) {
 
          string error_key = refinement_keys[i];
-         error_db.setNull();
+         error_db.reset();
 
          if (!(error_key == "refine_criteria")) {
 
@@ -2359,7 +2390,7 @@ void LinAdv::getFromInput(
                def_key_cnt++;
             }
 
-            if (!error_db.isNull() && error_key == "UVAL_DEVIATION") {
+            if (error_db && error_key == "UVAL_DEVIATION") {
 
                if (error_db->keyExists("dev_tol")) {
                   d_dev_tol =
@@ -2399,7 +2430,7 @@ void LinAdv::getFromInput(
 
             }
 
-            if (!error_db.isNull() && error_key == "UVAL_GRADIENT") {
+            if (error_db && error_key == "UVAL_GRADIENT") {
 
                if (error_db->keyExists("grad_tol")) {
                   d_grad_tol =
@@ -2429,7 +2460,7 @@ void LinAdv::getFromInput(
 
             }
 
-            if (!error_db.isNull() && error_key == "UVAL_SHOCK") {
+            if (error_db && error_key == "UVAL_SHOCK") {
 
                if (error_db->keyExists("shock_onset")) {
                   d_shock_onset =
@@ -2469,7 +2500,7 @@ void LinAdv::getFromInput(
 
             }
 
-            if (!error_db.isNull() && error_key == "UVAL_RICHARDSON") {
+            if (error_db && error_key == "UVAL_RICHARDSON") {
 
                if (error_db->keyExists("rich_tol")) {
                   d_rich_tol =
@@ -2739,7 +2770,7 @@ void LinAdv::putToDatabase(
    tbox::Pointer<tbox::Database> db)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!db.isNull());
+   TBOX_ASSERT(db);
 #endif
 
    db->putInteger("LINADV_VERSION", LINADV_VERSION);
@@ -2937,7 +2968,7 @@ void LinAdv::readDirichletBoundaryDataEntry(
    int bdry_location_index)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!db.isNull());
+   TBOX_ASSERT(db);
    TBOX_ASSERT(!db_name.empty());
 #endif
    if (d_dim == tbox::Dimension(2)) {
@@ -2961,7 +2992,7 @@ void LinAdv::readStateDataEntry(
    tbox::Array<double>& uval)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!db.isNull());
+   TBOX_ASSERT(db);
    TBOX_ASSERT(!db_name.empty());
    TBOX_ASSERT(array_indx >= 0);
    TBOX_ASSERT(uval.getSize() > array_indx);
@@ -3003,8 +3034,9 @@ void LinAdv::checkBoundaryData(
    }
 #endif
 
-   const tbox::Pointer<geom::CartesianPatchGeometry> pgeom =
-      patch.getPatchGeometry();
+   const tbox::Pointer<geom::CartesianPatchGeometry> pgeom(
+      patch.getPatchGeometry(),
+      tbox::__dynamic_cast_tag());
    const tbox::Array<hier::BoundaryBox> bdry_boxes =
       pgeom->getCodimensionBoundaries(btype);
 

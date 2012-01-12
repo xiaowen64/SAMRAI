@@ -55,7 +55,7 @@ public:
     * Otherwise, data will be created for that direction.  See the
     * SideVariable<DIM> class header file for more information.
     */
-   explicit SideDataFactory(
+   SideDataFactory(
       int depth,
       const hier::IntVector& ghosts,
       bool fine_boundary_represents_var);
@@ -63,7 +63,7 @@ public:
    /**
     * Same as previous constructor but with directions vector of 1's
     */
-   explicit SideDataFactory(
+   SideDataFactory(
       int depth,
       const hier::IntVector& ghosts,
       bool fine_boundary_represents_var,

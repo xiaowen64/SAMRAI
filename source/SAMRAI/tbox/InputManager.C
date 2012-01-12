@@ -96,7 +96,7 @@ InputManager::~InputManager()
 
 bool InputManager::inputDatabaseExists()
 {
-   return !(s_input_db.isNull());
+   return s_input_db;
 }
 
 /*

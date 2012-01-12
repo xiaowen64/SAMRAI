@@ -138,26 +138,26 @@ void FACPreconditioner::deallocateSolverState()
     * Delete hierarchy-dependent state data.
     */
 
-   if (!d_patch_hierarchy.isNull()) {
+   if (d_patch_hierarchy) {
 
       d_coarsest_ln = d_finest_ln = -1;
-      d_patch_hierarchy.setNull();
+      d_patch_hierarchy.reset();
 
       if (d_error_vector) {
          d_error_vector->freeVectorComponents();
-         d_error_vector.setNull();
+         d_error_vector.reset();
       }
       if (d_tmp_error) {
          d_tmp_error->freeVectorComponents();
-         d_tmp_error.setNull();
+         d_tmp_error.reset();
       }
       if (d_residual_vector) {
          d_residual_vector->freeVectorComponents();
-         d_residual_vector.setNull();
+         d_residual_vector.reset();
       }
       if (d_tmp_residual) {
          d_tmp_residual->freeVectorComponents();
-         d_tmp_residual.setNull();
+         d_tmp_residual.reset();
       }
 
       d_controlled_level_ops.setNull();
@@ -228,7 +228,7 @@ void FACPreconditioner::initializeSolverState(
    }
 #endif
    for (int ln = d_coarsest_ln; ln <= d_finest_ln; ln++) {
-      if (d_patch_hierarchy->getPatchLevel(ln).isNull()) {
+      if (!d_patch_hierarchy->getPatchLevel(ln)) {
          TBOX_ERROR("FACPreconditioner::FACPreconditioner error ..."
             << "\n   object name = " << d_object_name
             << "\n   hierarchy level " << ln
@@ -294,7 +294,7 @@ bool FACPreconditioner::solveSystem(
     * Set the solution-vector-dependent data if not preset.
     */
    bool clear_hierarchy_configuration_when_done = false;
-   if (d_patch_hierarchy.isNull()) {
+   if (!d_patch_hierarchy) {
       clear_hierarchy_configuration_when_done = true;
       initializeSolverState(u,
          f);

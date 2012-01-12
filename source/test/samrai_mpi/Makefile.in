@@ -41,7 +41,7 @@ main-runtime-off:	main-runtime-off.o $(CXX_OBJS) $(LIBSAMRAIDEPEND)
 	$(LIBSAMRAI) $(LDLIBS) -o $@
 
 main-runtime-disabled:	main-runtime-disabled.o $(CXX_OBJS) $(LIBSAMRAIDEPEND)
-	$(CXX) $(CXXFLAGS) $(LDFLAGS) main-runtime-off.o $(CXX_OBJS)	\
+	$(CXX) $(CXXFLAGS) $(LDFLAGS) main-runtime-disabled.o $(CXX_OBJS)	\
 	$(LIBSAMRAI) $(LDLIBS) -o $@
 
 check:		checkcompile

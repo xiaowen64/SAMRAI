@@ -71,7 +71,7 @@ public:
     * @brief Construct the cell geometry object given an AMR index
     * space box and ghost cell width.
     */
-   explicit CellGeometry(
+   CellGeometry(
       const hier::Box& box,
       const hier::IntVector& ghosts);
 

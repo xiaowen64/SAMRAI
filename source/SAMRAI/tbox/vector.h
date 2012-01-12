@@ -56,7 +56,7 @@ public:
    vector(
       const vector& r):d_vec(r.d_vec) {
    }
-   vector(
+   explicit vector(
       size_type n):d_vec(n) {
    }
    virtual ~vector() {

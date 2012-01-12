@@ -208,7 +208,7 @@ int main(
        * Create input database and parse all data in input file.
        */
 
-      tbox::Pointer<tbox::Database> input_db(new tbox::InputDatabase("input_db"));
+      tbox::Pointer<tbox::InputDatabase> input_db(new tbox::InputDatabase("input_db"));
       tbox::InputManager::getManager()->parseInputFile(input_filename, input_db);
 
       /*
@@ -374,7 +374,7 @@ int main(
          new mesh::StandardTagAndInitialize(
             dim,
             "StandardTaggingAndInitializer",
-            comm_tester,
+            comm_tester.get(),
             input_db->getDatabase("StandardTaggingAndInitializer")));
 
       comm_tester->setupHierarchy(input_db, cell_tagger);

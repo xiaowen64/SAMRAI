@@ -55,7 +55,7 @@ BoxContainer::BoxContainer(
    if (other.d_ordered) {
       order();
    }
-   if (!other.d_tree.isNull()) {
+   if (other.d_tree) {
       makeTree();
    }
 }
@@ -260,23 +260,14 @@ void BoxContainer::clear()
    d_list.clear();
    d_set.clear();
    d_ordered = false;
-   d_tree.setNull();
+   d_tree.reset();
 }
 
 /*
  *************************************************************************
- * Switch or query the ordered/unordered state
+ * Query the ordered/unordered state
  *************************************************************************
  */
-
-SAMRAI_INLINE_KEYWORD
-void BoxContainer::unorder()
-{
-   if (d_ordered) {
-      d_set.clear();
-      d_ordered = false;
-   }
-}
 
 SAMRAI_INLINE_KEYWORD
 bool BoxContainer::isOrdered() const

@@ -43,7 +43,7 @@ OuterfaceDataTest::OuterfaceDataTest(
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(!object_name.empty());
-   TBOX_ASSERT(!main_input_db.isNull());
+   TBOX_ASSERT(main_input_db);
    TBOX_ASSERT(!refine_option.empty());
 #endif
 
@@ -87,7 +87,7 @@ void OuterfaceDataTest::readTestInput(
    tbox::Pointer<tbox::Database> db)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!db.isNull());
+   TBOX_ASSERT(db);
 #endif
 
    /*
@@ -207,17 +207,21 @@ void OuterfaceDataTest::initializeDataOnPatch(
          tbox::Pointer<hier::PatchData> data =
             patch.getPatchData(variables[i], getDataContext());
 
-         TBOX_ASSERT(!data.isNull());
+         TBOX_ASSERT(data);
 
-         tbox::Pointer<pdat::OuterfaceData<double> > oface_data = data;
-         tbox::Pointer<pdat::FaceData<double> > face_data = data;
+         tbox::Pointer<pdat::OuterfaceData<double> > oface_data(
+            data,
+            tbox::__dynamic_cast_tag());
+         tbox::Pointer<pdat::FaceData<double> > face_data(
+            data,
+            tbox::__dynamic_cast_tag());
 
          hier::Box dbox = data->getBox();
 
-         if (!face_data.isNull()) {
+         if (face_data) {
             setLinearData(face_data, dbox, patch);
          }
-         if (!oface_data.isNull()) {
+         if (oface_data) {
             setLinearData(oface_data, dbox, patch);
          }
 
@@ -230,17 +234,21 @@ void OuterfaceDataTest::initializeDataOnPatch(
          tbox::Pointer<hier::PatchData> data =
             patch.getPatchData(variables[i], getDataContext());
 
-         TBOX_ASSERT(!data.isNull());
+         TBOX_ASSERT(data);
 
-         tbox::Pointer<pdat::OuterfaceData<double> > oface_data = data;
-         tbox::Pointer<pdat::FaceData<double> > face_data = data;
+         tbox::Pointer<pdat::OuterfaceData<double> > oface_data(
+            data,
+            tbox::__dynamic_cast_tag());
+         tbox::Pointer<pdat::FaceData<double> > face_data(
+            data,
+            tbox::__dynamic_cast_tag());
 
          hier::Box dbox = data->getGhostBox();
 
-         if (!face_data.isNull()) {
+         if (face_data) {
             setLinearData(face_data, dbox, patch);
          }
-         if (!oface_data.isNull()) {
+         if (oface_data) {
             setLinearData(oface_data, dbox, patch);
          }
 
@@ -256,7 +264,7 @@ void OuterfaceDataTest::checkPatchInteriorData(
    const tbox::Pointer<geom::CartesianPatchGeometry>& pgeom) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!data.isNull());
+   TBOX_ASSERT(data);
 #endif
 
    const double* dx = pgeom->getDx();
@@ -330,11 +338,12 @@ void OuterfaceDataTest::setLinearData(
    const hier::Patch& patch) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!data.isNull());
+   TBOX_ASSERT(data);
 #endif
 
-   tbox::Pointer<geom::CartesianPatchGeometry>
-   pgeom = patch.getPatchGeometry();
+   tbox::Pointer<geom::CartesianPatchGeometry> pgeom(
+      patch.getPatchGeometry(),
+      tbox::__dynamic_cast_tag());
    const double* dx = pgeom->getDx();
    const double* lowerx = pgeom->getXLower();
    double x = 0., y = 0., z = 0.;
@@ -397,11 +406,12 @@ void OuterfaceDataTest::setLinearData(
    NULL_USE(box);
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!data.isNull());
+   TBOX_ASSERT(data);
 #endif
 
-   tbox::Pointer<geom::CartesianPatchGeometry>
-   pgeom = patch.getPatchGeometry();
+   tbox::Pointer<geom::CartesianPatchGeometry> pgeom(
+      patch.getPatchGeometry(),
+      tbox::__dynamic_cast_tag());
    const double* dx = pgeom->getDx();
    const double* lowerx = pgeom->getXLower();
    double x = 0., y = 0., z = 0.;
@@ -499,8 +509,9 @@ bool OuterfaceDataTest::verifyResults(
 
       for (int i = 0; i < d_variables_dst.getSize(); i++) {
 
-         tbox::Pointer<pdat::FaceData<double> > face_data =
-            patch.getPatchData(d_variables_dst[i], getDataContext());
+         tbox::Pointer<pdat::FaceData<double> > face_data(
+            patch.getPatchData(d_variables_dst[i], getDataContext()),
+            tbox::__dynamic_cast_tag());
          int depth = face_data->getDepth();
          hier::Box dbox = face_data->getGhostBox();
 
@@ -529,7 +540,7 @@ bool OuterfaceDataTest::verifyResults(
          tbox::plog << "Outerface test Successful!" << endl;
       }
 
-      solution.setNull();   // just to be anal...
+      solution.reset();   // just to be anal...
 
       tbox::plog << "\nExiting OuterfaceDataTest::verifyResults..." << endl;
       tbox::plog << "level_number = " << level_number << endl;

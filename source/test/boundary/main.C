@@ -90,7 +90,7 @@ int main(
        * Create input database and parse all data in input file.
        */
 
-      tbox::Pointer<tbox::Database> input_db(new tbox::InputDatabase("input_db"));
+      tbox::Pointer<tbox::InputDatabase> input_db(new tbox::InputDatabase("input_db"));
       tbox::InputManager::getManager()->parseInputFile(input_filename, input_db);
 
       /*
@@ -202,7 +202,7 @@ int main(
       }
       edge_utils.addPeriodicImages(
          layer0,
-         patch_hierarchy->getDomainSearchTree(hier::BlockId::zero()),
+         patch_hierarchy->getGridGeometry()->getDomainSearchTree().getSingleBlockBoxTree(hier::BlockId::zero()),
          hier::IntVector(dim, 2));
 
       patch_hierarchy->makeNewPatchLevel(0, layer0);
@@ -235,8 +235,8 @@ int main(
       /*
        * At conclusion of test, deallocate objects.
        */
-      patch_hierarchy.setNull();
-      grid_geometry.setNull();
+      patch_hierarchy.reset();
+      grid_geometry.reset();
 
       if (btester) delete btester;
 

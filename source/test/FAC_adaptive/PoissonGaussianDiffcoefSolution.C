@@ -185,8 +185,9 @@ void PoissonGaussianDiffcoefSolution::setGridData(
    (void)exact_data;
    (void)source_data;
 
-   tbox::Pointer<geom::CartesianPatchGeometry> patch_geom =
-      patch.getPatchGeometry();
+   tbox::Pointer<geom::CartesianPatchGeometry> patch_geom(
+      patch.getPatchGeometry(),
+      tbox::__dynamic_cast_tag());
 
    const double* h = patch_geom->getDx();
    const double* xl = patch_geom->getXLower();
@@ -274,8 +275,9 @@ void PoissonGaussianDiffcoefSolution::setBcCoefs(
    (void)variable;
    (void)fill_time;
 
-   tbox::Pointer<geom::CartesianPatchGeometry> patch_geom =
-      patch.getPatchGeometry();
+   tbox::Pointer<geom::CartesianPatchGeometry> patch_geom(
+      patch.getPatchGeometry(),
+      tbox::__dynamic_cast_tag());
    /*
     * Set to an inhomogeneous Dirichlet boundary condition.
     */

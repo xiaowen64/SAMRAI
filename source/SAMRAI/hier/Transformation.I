@@ -31,6 +31,8 @@ Transformation::operator = (const Transformation& rhs)
 {
    d_rotation = rhs.d_rotation;
    d_offset = rhs.d_offset;
+   d_begin_block = rhs.d_begin_block;
+   d_end_block = rhs.d_end_block;
 
    return *this;
 }

@@ -108,9 +108,10 @@ CellPoissonFACSolver::CellPoissonFACSolver(
 
    static std::string weight_variable_name("CellPoissonFACSolver_weight");
 
-   tbox::Pointer<pdat::CellVariable<double> > weight = var_db->getVariable(
-         weight_variable_name);
-   if (weight.isNull()) {
+   tbox::Pointer<pdat::CellVariable<double> > weight(
+      var_db->getVariable(weight_variable_name),
+      tbox::__dynamic_cast_tag());
+   if (!weight) {
       weight = new pdat::CellVariable<double>(d_dim, weight_variable_name, 1);
    }
 
@@ -248,7 +249,7 @@ void CellPoissonFACSolver::initializeSolverState(
    const int coarse_level,
    const int fine_level)
 {
-   TBOX_ASSERT(!hierarchy.isNull());
+   TBOX_ASSERT(hierarchy);
    TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(d_dim, *hierarchy);
 
    if (d_bc_object == NULL) {
@@ -333,7 +334,7 @@ void CellPoissonFACSolver::deallocateSolverState()
                                                                          - 1]);
       }
 
-      d_hierarchy.setNull();
+      d_hierarchy.reset();
       d_ln_min = -1;
       d_ln_max = -1;
       d_solver_is_initialized = false;
@@ -468,7 +469,7 @@ bool CellPoissonFACSolver::solveSystem(
    int coarse_ln,
    int fine_ln)
 {
-   TBOX_ASSERT(!hierarchy.isNull());
+   TBOX_ASSERT(hierarchy);
    TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(d_dim, *hierarchy);
 
    if (d_enable_logging) {
@@ -507,7 +508,7 @@ void CellPoissonFACSolver::createVectorWrappers(
    tbox::Pointer<hier::Variable> variable;
 
    if (!d_uv || d_uv->getComponentDescriptorIndex(0) != u) {
-      d_uv.setNull();
+      d_uv.reset();
       d_uv = new SAMRAIVectorReal<double>(d_object_name + "::uv",
                                           d_hierarchy,
                                           d_ln_min,
@@ -518,7 +519,9 @@ void CellPoissonFACSolver::createVectorWrappers(
          TBOX_ERROR(d_object_name << ": No variable for patch data index "
                                   << u << "\n");
       }
-      tbox::Pointer<pdat::CellVariable<double> > cell_variable = variable;
+      tbox::Pointer<pdat::CellVariable<double> > cell_variable(
+         variable,
+         tbox::__dynamic_cast_tag());
       if (!cell_variable) {
          TBOX_ERROR(d_object_name << ": hier::Patch data index " << u
                                   << " is not a cell-double variable.\n");
@@ -528,7 +531,7 @@ void CellPoissonFACSolver::createVectorWrappers(
    }
 
    if (!d_fv || d_fv->getComponentDescriptorIndex(0) != f) {
-      d_fv.setNull();
+      d_fv.reset();
       d_fv = new SAMRAIVectorReal<double>(d_object_name + "::fv",
                                           d_hierarchy,
                                           d_ln_min,
@@ -539,7 +542,9 @@ void CellPoissonFACSolver::createVectorWrappers(
          TBOX_ERROR(d_object_name << ": No variable for patch data index "
                                   << f << "\n");
       }
-      tbox::Pointer<pdat::CellVariable<double> > cell_variable = variable;
+      tbox::Pointer<pdat::CellVariable<double> > cell_variable(
+         variable,
+         tbox::__dynamic_cast_tag());
       if (!cell_variable) {
          TBOX_ERROR(d_object_name << ": hier::Patch data index " << f
                                   << " is not a cell-double variable.\n");
@@ -556,8 +561,8 @@ void CellPoissonFACSolver::createVectorWrappers(
  ***********************************************************************
  */
 void CellPoissonFACSolver::destroyVectorWrappers() {
-   d_uv.setNull();
-   d_fv.setNull();
+   d_uv.reset();
+   d_fv.reset();
 }
 
 void CellPoissonFACSolver::initializeStatics() {

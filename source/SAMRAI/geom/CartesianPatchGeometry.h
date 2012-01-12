@@ -44,7 +44,7 @@ public:
     * patch boundary information to hier::PatchGeometry base class constructor
     * and allocates storage for spatial coordinates on patch.
     */
-   explicit CartesianPatchGeometry(
+   CartesianPatchGeometry(
       const hier::IntVector& ratio_to_level_zero,
       const TwoDimBool& touches_regular_bdry,
       const TwoDimBool& touches_periodic_bdry,

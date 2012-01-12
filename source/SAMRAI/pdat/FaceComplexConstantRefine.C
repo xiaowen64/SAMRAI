@@ -109,8 +109,10 @@ bool FaceComplexConstantRefine::findRefineOperator(
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, *var);
 
-   const tbox::Pointer<FaceVariable<dcomplex> > cast_var(var);
-   if (!cast_var.isNull() && (op_name == getOperatorName())) {
+   const tbox::Pointer<FaceVariable<dcomplex> > cast_var(
+      var,
+      tbox::__dynamic_cast_tag());
+   if (cast_var && (op_name == getOperatorName())) {
       return true;
    } else {
       return false;
@@ -137,18 +139,20 @@ void FaceComplexConstantRefine::refine(
 {
    const tbox::Dimension& dim(getDim());
 
-   tbox::Pointer<FaceData<dcomplex> >
-   cdata = coarse.getPatchData(src_component);
-   tbox::Pointer<FaceData<dcomplex> >
-   fdata = fine.getPatchData(dst_component);
+   tbox::Pointer<FaceData<dcomplex> > cdata(
+      coarse.getPatchData(src_component),
+      tbox::__dynamic_cast_tag());
+   tbox::Pointer<FaceData<dcomplex> > fdata(
+      fine.getPatchData(dst_component),
+      tbox::__dynamic_cast_tag());
 
    const pdat::FaceOverlap* t_overlap =
       dynamic_cast<const pdat::FaceOverlap *>(&fine_overlap);
 
    TBOX_ASSERT(t_overlap != NULL);
 
-   TBOX_ASSERT(!cdata.isNull());
-   TBOX_ASSERT(!fdata.isNull());
+   TBOX_ASSERT(cdata);
+   TBOX_ASSERT(fdata);
    TBOX_ASSERT(cdata->getDepth() == fdata->getDepth());
    TBOX_DIM_ASSERT_CHECK_ARGS4(*this, fine, coarse, ratio);
 

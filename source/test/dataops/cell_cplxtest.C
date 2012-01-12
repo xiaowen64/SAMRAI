@@ -227,7 +227,7 @@ int main(
 
       tbox::Pointer<math::HierarchyDataOpsComplex> cell_ops(
          new math::HierarchyCellDataOpsComplex(hierarchy, 0, 1));
-      TBOX_ASSERT(!cell_ops.isNull());
+      TBOX_ASSERT(cell_ops);
 
       tbox::Pointer<math::HierarchyDataOpsReal<double> > cwgt_ops(
          new math::HierarchyCellDataOpsReal<double>(hierarchy, 0, 1));
@@ -726,14 +726,14 @@ int main(
       }
 
       for (iv = 0; iv < NVARS; iv++) {
-         cvar[iv].setNull();
+         cvar[iv].reset();
       }
-      cwgt.setNull();
+      cwgt.reset();
 
-      geometry.setNull();
-      hierarchy.setNull();
-      cell_ops.setNull();
-      cwgt_ops.setNull();
+      geometry.reset();
+      hierarchy.set();
+      cell_ops.reset();
+      cwgt_ops.reset();
 
       if (num_failures == 0) {
          tbox::pout << "\nPASSED:  cell cplxtest" << std::endl;

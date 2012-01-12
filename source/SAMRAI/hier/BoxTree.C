@@ -258,7 +258,8 @@ TBOX_ASSERT(0);
          d_mapped_boxes.order();
          LocalId count(-1);
          for (BoxContainer::ConstIterator li(boxes); li != boxes.end(); ++li) {
-            const Box n(*li, ++count, 0, d_block_id);
+            Box n(*li, ++count, 0);
+            n.setBlockId(block_id); 
             d_mapped_boxes.insert(d_mapped_boxes.end(), n);
          }
 */
@@ -299,7 +300,8 @@ TBOX_ASSERT(0);
          if (boxes.isOrdered()) {
          } else {
             TBOX_ASSERT(0);
-            //mapped_box.initialize(*li, ++count, 0, d_block_id);
+            //mapped_box.initialize(*li, ++count, 0);
+            //TBOX_ASSERT(mapped_box.getBlockId() == d_block_id);
          }
          if (mapped_box->upper(d_partition_dim) <= midpoint) {
             left_mapped_boxes.push_back(mapped_box);
@@ -741,10 +743,10 @@ void BoxTree::findOverlapBoxes(
 void BoxTree::clear()
 {
    d_bounding_box.setEmpty();
-   d_left_child.setNull();
-   d_right_child.setNull();
+   d_left_child.reset();
+   d_right_child.reset();
    d_mapped_boxes.clear();
-   d_center_child.setNull();
+   d_center_child.reset();
 }
 
 bool BoxTree::isInitialized() const
@@ -787,11 +789,15 @@ void BoxTree::findOverlapBoxes(
       if (d_center_child) {
          d_center_child->findOverlapBoxes(overlap_connector, box, true);
       } else {
-         for (std::list<const Box*>::const_iterator ni = d_mapped_boxes.begin();
-              ni != d_mapped_boxes.end(); ++ni) {
-            const Box* mapped_box = *ni;
-            if (box.intersects(*mapped_box)) {
-	      overlap_connector.insertLocalNeighbor(*mapped_box, box_id);
+         if (!d_mapped_boxes.empty()) {
+            Connector::NeighborhoodIterator base_box_itr =
+               overlap_connector.makeEmptyLocalNeighborhood(box_id);
+            for (std::list<const Box*>::const_iterator ni = d_mapped_boxes.begin();
+                 ni != d_mapped_boxes.end(); ++ni) {
+               const Box* mapped_box = *ni;
+               if (box.intersects(*mapped_box)) {
+	         overlap_connector.insertLocalNeighbor(*mapped_box, base_box_itr);
+               }
             }
          }
       }
@@ -860,13 +866,13 @@ tbox::Pointer<BoxTree> BoxTree::createRefinedTree(
       rval->d_mapped_boxes.push_back(&refined_box);
    }
 
-   if (!d_center_child.isNull()) {
+   if (d_center_child) {
       rval->d_center_child = d_center_child->createRefinedTree(ratio);
    }
-   if (!d_left_child.isNull()) {
+   if (d_left_child) {
       rval->d_left_child = d_left_child->createRefinedTree(ratio);
    }
-   if (!d_right_child.isNull()) {
+   if (d_right_child) {
       rval->d_right_child = d_right_child->createRefinedTree(ratio);
    }
 
@@ -897,8 +903,8 @@ void BoxTree::initializeCallback()
 void BoxTree::finalizeCallback()
 {
    for (int i = 0; i < tbox::Dimension::MAXIMUM_DIMENSION_VALUE; ++i) {
-      t_build_tree[i].setNull();
-      t_search[i].setNull();
+      t_build_tree[i].reset();
+      t_search[i].reset();
    }
 }
 

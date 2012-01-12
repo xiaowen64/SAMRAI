@@ -62,7 +62,7 @@ void PatchMultiblockTestStrategy::readVariableInput(
    tbox::Pointer<tbox::Database> db)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!db.isNull());
+   TBOX_ASSERT(db);
 #endif
 
    tbox::Array<string> var_keys = db->getAllKeys();
@@ -130,7 +130,7 @@ void PatchMultiblockTestStrategy::readRefinementInput(
    tbox::Pointer<tbox::Database> db)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!db.isNull());
+   TBOX_ASSERT(db);
 #endif
 
    tbox::Array<string> box_keys = db->getAllKeys();
@@ -159,10 +159,11 @@ void PatchMultiblockTestStrategy::tagCellsInInputBoxes(
 
    if (level_number < d_refine_level_boxes.getSize()) {
 
-      tbox::Pointer<pdat::CellData<int> > tags =
-         patch.getPatchData(tag_index);
+      tbox::Pointer<pdat::CellData<int> > tags(
+         patch.getPatchData(tag_index),
+         tbox::__dynamic_cast_tag());
 #ifdef DEBUG_CHECK_ASSERTIONS
-      TBOX_ASSERT(!tags.isNull());
+      TBOX_ASSERT(tags);
 #endif
       tags->fillAll(0);
 

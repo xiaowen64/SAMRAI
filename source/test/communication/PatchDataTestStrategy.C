@@ -64,7 +64,7 @@ void PatchDataTestStrategy::readVariableInput(
    tbox::Pointer<tbox::Database> db)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!db.isNull());
+   TBOX_ASSERT(db);
 #endif
 
    tbox::Array<string> var_keys = db->getAllKeys();
@@ -132,7 +132,7 @@ void PatchDataTestStrategy::readRefinementInput(
    tbox::Pointer<tbox::Database> db)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!db.isNull());
+   TBOX_ASSERT(db);
 #endif
 
    tbox::Array<string> box_keys = db->getAllKeys();

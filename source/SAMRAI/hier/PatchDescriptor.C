@@ -83,7 +83,7 @@ int PatchDescriptor::definePatchDataComponent(
    tbox::Pointer<PatchDataFactory> factory)
 {
    TBOX_ASSERT(!name.empty());
-   TBOX_ASSERT(!factory.isNull());
+   TBOX_ASSERT(factory);
 
    int ret_index = INDEX_UNDEFINED;
    if (d_free_indices.isEmpty()) {
@@ -122,8 +122,8 @@ PatchDescriptor::removePatchDataComponent(
       if (!d_names[id].empty()) {
          d_names[id] = std::string();
       }
-      if (!d_factories[id].isNull()) {
-         d_factories[id].setNull();
+      if (d_factories[id]) {
+         d_factories[id].reset();
          d_free_indices.addItem(id);
       }
    }
@@ -196,7 +196,7 @@ void PatchDescriptor::printClassData(
           << std::endl;
    for (int i = 0; i < d_max_number_registered_components; i++) {
       stream << "Patch Data Index=" << i << std::endl;
-      if (!d_factories[i].isNull()) {
+      if (d_factories[i]) {
          stream << "   Patch Data Factory Name = "
                 << d_names[i] << std::endl;
          stream << "   Patch Data Factory = "
@@ -222,7 +222,7 @@ PatchDescriptor::getMaxGhostWidth(
 {
    IntVector max_gcw(d_min_gcw[dim.getValue() - 1]);
    for (int i = 0; i < d_max_number_registered_components; i++) {
-      if ((!d_factories[i].isNull()) && (d_factories[i]->getDim() == dim)) {
+      if (d_factories[i] && (d_factories[i]->getDim() == dim)) {
          max_gcw.max(d_factories[i]->getGhostCellWidth());
       }
    }

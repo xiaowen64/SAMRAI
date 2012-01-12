@@ -179,7 +179,7 @@ int main(
        * Create input database and parse all data in input file.
        */
 
-      tbox::Pointer<tbox::Database> input_db(new tbox::InputDatabase("input_db"));
+      tbox::Pointer<tbox::InputDatabase> input_db(new tbox::InputDatabase("input_db"));
       tbox::InputManager::getManager()->parseInputFile(input_filename, input_db);
 
       /*
@@ -545,14 +545,14 @@ int main(
 
       tbox::TimerManager::getManager()->print(tbox::plog);
 
-      input_db.setNull();
-      patch_hierarchy.setNull();
-      grid_geometry.setNull();
+      input_db.reset();
+      patch_hierarchy.reset();
+      grid_geometry.reset();
 
-      box_generator.setNull();
-      error_detector.setNull();
-      load_balancer.setNull();
-      gridding_algorithm.setNull();
+      box_generator.reset();
+      error_detector.reset();
+      load_balancer.reset();
+      gridding_algorithm.reset();
 
       if (imp_integrator)
          delete imp_integrator;
@@ -562,7 +562,7 @@ int main(
          delete bratu_model;
 
       if (uses_visit) {
-         visit_data_writer.setNull();
+         visit_data_writer.reset();
       }
 
 #endif

@@ -160,7 +160,7 @@ bool RefineClasses::itemIsValid(
    bool item_good = true;
 
    tbox::Pointer<hier::PatchDescriptor> pd = descriptor;
-   if (pd.isNull()) {
+   if (!pd) {
       pd = hier::VariableDatabase::getDatabase()->getPatchDescriptor();
    }
 
@@ -223,7 +223,7 @@ bool RefineClasses::itemIsValid(
    }
 
    tbox::Pointer<hier::RefineOperator> refop = data_item.d_oprefine;
-   if (item_good && !refop.isNull()) {
+   if (item_good && refop) {
       if (refop->getStencilWidth() > scratch_gcw) {
          item_good = false;
          TBOX_ERROR("Bad data given to RefineClasses...\n"
@@ -237,7 +237,7 @@ bool RefineClasses::itemIsValid(
 
    tbox::Pointer<VariableFillPattern> fill_pattern =
       data_item.d_var_fill_pattern;
-   if (item_good && !fill_pattern.isNull()) {
+   if (item_good && fill_pattern) {
       if (fill_pattern->getPatternName() != "BOX_GEOMETRY_FILL_PATTERN") {
          if (fill_pattern->getStencilWidth() > scratch_gcw) {
             item_good = false;
@@ -327,7 +327,7 @@ bool RefineClasses::classesMatch(
    bool items_match = true;
 
    tbox::Pointer<hier::PatchDescriptor> pd = descriptor;
-   if (pd.isNull()) {
+   if (!pd) {
       pd = hier::VariableDatabase::getDatabase()->getPatchDescriptor();
    }
 
@@ -385,7 +385,7 @@ bool RefineClasses::itemsAreEquivalent(
    bool equivalent = true;
 
    tbox::Pointer<hier::PatchDescriptor> pd = descriptor;
-   if (pd.isNull()) {
+   if (!pd) {
       pd = hier::VariableDatabase::getDatabase()->getPatchDescriptor();
    }
 
@@ -403,15 +403,15 @@ bool RefineClasses::itemsAreEquivalent(
 
    equivalent &= (data1.d_fine_bdry_reps_var == data2.d_fine_bdry_reps_var);
 
-   equivalent &= (data1.d_oprefine.isNull() == data2.d_oprefine.isNull());
-   if (equivalent && !data1.d_oprefine.isNull()) {
+   equivalent &= (!data1.d_oprefine == !data2.d_oprefine);
+   if (equivalent && data1.d_oprefine) {
       equivalent &= (data1.d_oprefine->getStencilWidth() ==
                      data2.d_oprefine->getStencilWidth());
    }
 
-   equivalent &= (data1.d_var_fill_pattern.isNull() ==
-                  data2.d_var_fill_pattern.isNull());
-   if (equivalent && !data1.d_var_fill_pattern.isNull()) {
+   equivalent &= (!data1.d_var_fill_pattern ==
+                  !data2.d_var_fill_pattern);
+   if (equivalent && data1.d_var_fill_pattern) {
       equivalent &= (typeid(*(data1.d_var_fill_pattern)) ==
                      typeid(*(data2.d_var_fill_pattern)));
    }
@@ -482,7 +482,7 @@ void RefineClasses::printRefineItem(
    stream << "tag:      "
           << data.d_tag << std::endl;
 
-   if (data.d_oprefine.isNull()) {
+   if (!data.d_oprefine) {
       stream << "NULL refining operator" << std::endl;
    } else {
       stream << "refine operator name:          "
@@ -506,7 +506,7 @@ void RefineClasses::printRefineItem(
              << typeid(*data.d_optime).name()
              << std::endl;
    }
-   if (data.d_var_fill_pattern.isNull()) {
+   if (!data.d_var_fill_pattern) {
       stream << "var fill pattern is null" << std::endl;
    } else {
       stream << "var fill pattern name:          "
@@ -571,7 +571,7 @@ int RefineClasses::getEquivalenceClassIndex(
    int eq_index = -1;
 
    tbox::Pointer<hier::PatchDescriptor> pd = descriptor;
-   if (pd.isNull()) {
+   if (!pd) {
       pd = hier::VariableDatabase::getDatabase()->getPatchDescriptor();
    }
 

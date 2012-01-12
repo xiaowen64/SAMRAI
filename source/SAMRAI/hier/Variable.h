@@ -82,7 +82,7 @@ public:
     * factory.  On creation, each variable is assigned a unique instance
     * identifier.
     */
-   explicit Variable(
+   Variable(
       const std::string& name,
       const tbox::Pointer<PatchDataFactory> factory);
 

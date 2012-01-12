@@ -173,7 +173,10 @@ void OuterfaceData<TYPE>::copy2(
    TBOX_ASSERT(t_dst != NULL);
    TBOX_ASSERT(t_overlap != NULL);
 
-   const hier::IntVector& src_offset = t_overlap->getSourceOffset();
+   const hier::Transformation& transformation = t_overlap->getTransformation();
+   TBOX_ASSERT(transformation.getRotation() == hier::Transformation::NO_ROTATE);
+
+   const hier::IntVector& src_offset = transformation.getOffset();
    for (int d = 0; d < getDim().getValue(); d++) {
       hier::IntVector face_offset(src_offset);
       if (d > 0) {
@@ -181,9 +184,14 @@ void OuterfaceData<TYPE>::copy2(
             face_offset(i) = src_offset((d + i) % getDim().getValue());
          }
       }
+      hier::Transformation face_transform(hier::Transformation::NO_ROTATE,
+                                          face_offset,
+                                          getBox().getBlockId(),
+                                          t_dst->getBox().getBlockId());
+ 
       const hier::BoxContainer& box_list = t_overlap->getDestinationBoxContainer(d);
-      t_dst->getArrayData(d).copy(d_data[d][0], box_list, face_offset);
-      t_dst->getArrayData(d).copy(d_data[d][1], box_list, face_offset);
+      t_dst->getArrayData(d).copy(d_data[d][0], box_list, face_transform);
+      t_dst->getArrayData(d).copy(d_data[d][1], box_list, face_transform);
    }
 }
 
@@ -308,21 +316,31 @@ void OuterfaceData<TYPE>::packStream(
    const hier::IntVector& offset = t_overlap->getSourceOffset();
    for (int d = 0; d < getDim().getValue(); d++) {
       const hier::BoxContainer& boxes = t_overlap->getDestinationBoxContainer(d);
-      hier::IntVector face_offset(offset);
-      if (d > 0) {
-         for (int i = 0; i < getDim().getValue(); i++) {
-            face_offset(i) = offset((d + i) % getDim().getValue());
-         }
-      }
 
-      for (hier::BoxContainer::ConstIterator b(boxes); b != boxes.end(); ++b) {
-         const hier::Box src_box = hier::Box::shift(b(), -face_offset);
-         for (int f = 0; f < 2; f++) {
-            const hier::Box intersect = src_box * d_data[d][f].getBox();
-            if (!intersect.empty()) {
-               d_data[d][f].packStream(stream,
-                  hier::Box::shift(intersect, face_offset),
-                  face_offset);
+      if (boxes.size() > 0) {
+         hier::IntVector face_offset(offset);
+         if (d > 0) {
+            for (int i = 0; i < getDim().getValue(); i++) {
+               face_offset(i) = offset((d + i) % getDim().getValue());
+            }
+         }
+
+         hier::Transformation face_transform(hier::Transformation::NO_ROTATE,
+                                             face_offset,
+                                             getBox().getBlockId(),
+                                             boxes.begin()->getBlockId());
+
+         for (hier::BoxContainer::ConstIterator b(boxes); b != boxes.end(); ++b) {
+            hier::Box src_box(b());
+            face_transform.inverseTransform(src_box);
+            for (int f = 0; f < 2; f++) {
+               hier::Box intersect(src_box * d_data[d][f].getBox());
+               if (!intersect.empty()) {
+                  face_transform.transform(intersect); 
+                  d_data[d][f].packStream(stream,
+                     intersect,
+                     face_transform);
+               }
             }
          }
       }
@@ -546,7 +564,7 @@ template<class TYPE>
 void OuterfaceData<TYPE>::getSpecializedFromDatabase(
    tbox::Pointer<tbox::Database> database)
 {
-   TBOX_ASSERT(!database.isNull());
+   TBOX_ASSERT(database);
 
    int ver = database->getInteger("PDAT_OUTERFACEDATA_VERSION");
    if (ver != PDAT_OUTERFACEDATA_VERSION) {
@@ -584,7 +602,7 @@ void OuterfaceData<TYPE>::putSpecializedToDatabase(
    tbox::Pointer<tbox::Database> database)
 {
 
-   TBOX_ASSERT(!database.isNull());
+   TBOX_ASSERT(database);
 
    database->putInteger("PDAT_OUTERFACEDATA_VERSION",
       PDAT_OUTERFACEDATA_VERSION);

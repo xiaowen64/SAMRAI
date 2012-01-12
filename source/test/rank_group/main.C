@@ -126,7 +126,7 @@ int main(
        * Create input database and parse all data in input file.
        */
 
-      Pointer<Database> input_db(new InputDatabase("input_db"));
+      Pointer<InputDatabase> input_db(new InputDatabase("input_db"));
       tbox::InputManager::getManager()->parseInputFile(input_filename, input_db);
 
       /*
@@ -220,6 +220,7 @@ int main(
       hier::LocalId local_id(0);
       for (hier::BoxContainer::Iterator itr = input_boxes.begin();
            itr != input_boxes.end(); ++itr) {
+         itr->setBlockId(hier::BlockId(0));
          domain_boxes.pushBack(hier::Box(*itr, local_id++, 0));
       }
 
@@ -660,10 +661,11 @@ void generatePrebalanceByUserShells(
 
    hier::VariableDatabase* vdb =
       hier::VariableDatabase::getDatabase();
-   tbox::Pointer<geom::CartesianGridGeometry> grid_geometry =
-      hierarchy->getGridGeometry();
+   tbox::Pointer<geom::CartesianGridGeometry> grid_geometry(
+      hierarchy->getGridGeometry(),
+      tbox::__dynamic_cast_tag());
 
-   const tbox::ConstPointer<hier::BoxLevel>
+   const tbox::Pointer<const hier::BoxLevel>
    anchor_mapped_box_level_ptr(&anchor_mapped_box_level, false);
 
    tbox::Pointer<hier::PatchLevel> tag_level(
@@ -688,7 +690,9 @@ void generatePrebalanceByUserShells(
    const double* h = grid_geometry->getDx();
    for (hier::PatchLevel::Iterator pi(tag_level); pi; pi++) {
       tbox::Pointer<hier::Patch> patch = *pi;
-      tbox::Pointer<pdat::CellData<int> > tag_data = patch->getPatchData(tag_id);
+      tbox::Pointer<pdat::CellData<int> > tag_data(
+         patch->getPatchData(tag_id),
+         tbox::__dynamic_cast_tag());
 
       tag_data->getArrayData().undefineData();
 
@@ -725,7 +729,8 @@ void generatePrebalanceByUserShells(
       efficiency_tol,
       combine_tol,
       max_gcw,
-      hier::BlockId::zero());
+      hier::BlockId::zero(),
+      hier::LocalId(0));
 
    /*
     * The clustering step generated Connectors to/from the temporary
@@ -770,6 +775,7 @@ void generatePrebalanceByUserBoxes(
    for (int i = 0; i < balance_boxes.size(); ++i, balance_boxes_itr++) {
       const int owner = i % initial_owners.size();
       if (owner == balance_mapped_box_level.getMPI().getRank()) {
+         balance_boxes_itr->setBlockId(hier::BlockId(0)); 
          balance_mapped_box_level.addBox(hier::Box(*balance_boxes_itr,
                hier::LocalId(i), owner));
       }

@@ -262,7 +262,7 @@ void MappingConnectorAlgorithm::modify(
       for (Connector::ConstNeighborIterator na = old_to_new.begin(ci);
            na != old_to_new.end(ci); ++na) {
          if (na->getOwnerRank() != old_to_new.getMPI().getRank()) {
-            const hier::Box find_box(na->getDim(), (*ci).first);
+            const hier::Box find_box(na->getDim(), *ci);
             const Box& mapped_box(
                *old_to_new.getBase().getBoxes().find(find_box));
             TBOX_ERROR("MappingConnectorAlgorithm::modify: this version of modify\n"
@@ -393,10 +393,10 @@ void MappingConnectorAlgorithm::modify(
       for (Connector::ConstNeighborIterator na = old_to_new.begin(ci);
            na != old_to_new.end(ci); ++na) {
          if (na->getOwnerRank() != old_to_new.getMPI().getRank()) {
-            const hier::Box find_box(na->getDim(), (*ci).first);
+            const hier::Box find_box(na->getDim(), *ci);
             const Box& mapped_box(
                *old_to_new.getBase().getBoxes().
-               find(Box(na->getDim(), ci->first)));
+               find(Box(na->getDim(), *ci)));
             TBOX_ERROR("MappingConnectorAlgorithm::modify: this version of modify\n"
                "only allows local mappings.  The local mapped_box\n"
                << mapped_box << " has a non-local map to\n"
@@ -634,7 +634,7 @@ void MappingConnectorAlgorithm::privateModify(
    InvertedNeighborhoodSet anchor_eto_old, new_eto_old;
    for (Connector::ConstNeighborhoodIterator ei = old_to_anchor.begin();
         ei != old_to_anchor.end(); ++ei) {
-      const BoxId& old_gid = (*ei).first;
+      const BoxId& old_gid = *ei;
       for (Connector::ConstNeighborIterator na = old_to_anchor.begin(ei);
            na != old_to_anchor.end(ei); ++na) {
          visible_anchor_nabrs.insert(*na);
@@ -650,7 +650,7 @@ void MappingConnectorAlgorithm::privateModify(
    }
    for (Connector::ConstNeighborhoodIterator ei = old_to_new.begin();
         ei != old_to_new.end(); ++ei) {
-      const BoxId& old_gid = (*ei).first;
+      const BoxId& old_gid = *ei;
       for (Connector::ConstNeighborIterator na = old_to_new.begin(ei);
            na != old_to_new.end(ei); ++na) {
          visible_new_nabrs.insert(visible_new_nabrs.end(), *na);
@@ -950,7 +950,7 @@ void MappingConnectorAlgorithm::privateModify_removeAndCache(
    for (Connector::ConstNeighborhoodIterator iold = old_to_new.begin();
         iold != old_to_new.end(); ++iold) {
 
-      const BoxId& old_gid_gone = iold->first;
+      const BoxId& old_gid_gone = *iold;
       const Box old_mapped_box_gone(dim, old_gid_gone);
 
       if (new_to_anchor->hasNeighborSet(old_gid_gone)) {
@@ -987,7 +987,7 @@ void MappingConnectorAlgorithm::privateModify_removeAndCache(
 
                   if (s_print_steps == 'y') {
                      anchor_to_new.writeNeighborhoodToErrorStream(
-                        ianchor->getId(), "XX-> ");
+                        ianchor->getId());
                      tbox::plog << std::endl;
                   }
                   if (anchor_to_new.hasLocalNeighbor(ianchor->getId(),
@@ -1020,7 +1020,7 @@ void MappingConnectorAlgorithm::privateModify_removeAndCache(
                   ++mesg[0];
                }
                mesg.insert(mesg.end(), old_gid_gone.getLocalId().getValue());
-               mesg.insert(mesg.end(), old_gid_gone.getBlockId().getBlockValue());
+               mesg.insert(mesg.end(), -1);
                int i_count = static_cast<int>(mesg.size());
                mesg.insert(mesg.end(), 0);
                do {
@@ -1111,7 +1111,7 @@ void MappingConnectorAlgorithm::privateModify_discoverAndSend(
        * highest of all owners of the visible Boxes, start at
        * the begining.)
        */
-      const Box start_loop_here(dim, LocalId::getZero(), rank + 1);
+      const Box start_loop_here(dim, GlobalId(LocalId::getZero(), rank + 1));
       BoxContainer::Iterator anchor_ni =
          visible_anchor_nabrs.lowerBound(start_loop_here);
       BoxContainer::Iterator new_ni =
@@ -1359,7 +1359,7 @@ void MappingConnectorAlgorithm::privateModify_findOverlapsForOneProcess(
    const IntVector& refinement_ratio) const
 {
    const BoxLevel& old = mapping_connector.getBase();
-   const tbox::ConstPointer<GridGeometry>& grid_geometry(old.getGridGeometry());
+   const tbox::Pointer<const GridGeometry>& grid_geometry(old.getGridGeometry());
    const int rank = old.getMPI().getRank();
 
    while (base_ni != visible_base_nabrs.end() &&
@@ -1449,9 +1449,13 @@ void MappingConnectorAlgorithm::privateModify_findOverlapsForOneProcess(
              * To improve communication time, we should really send
              * the head neighbors before doing anything locally.
              */
-            for (std::vector<Box>::const_iterator na = found_nabrs.begin();
-                 na != found_nabrs.end(); ++na) {
-               mapped_connector.insertLocalNeighbor(*na, base_box.getId());
+            if (!found_nabrs.empty()) {
+               Connector::NeighborhoodIterator base_box_itr =
+                  mapped_connector.makeEmptyLocalNeighborhood(base_box.getId());
+               for (std::vector<Box>::const_iterator na = found_nabrs.begin();
+                    na != found_nabrs.end(); ++na) {
+                  mapped_connector.insertLocalNeighbor(*na, base_box_itr);
+               }
             }
          }
       }
@@ -1583,7 +1587,7 @@ size_t MappingConnectorAlgorithm::findMappingErrors(
    for (Connector::ConstNeighborhoodIterator ei = connector.begin();
         ei != connector.end(); ++ei) {
 
-      const BoxId& gid = (*ei).first;
+      const BoxId& gid = *ei;
 
       if (!connector.getBase().hasBox(gid)) {
          // Mapping does not go from a old mapped_box.
@@ -1694,13 +1698,13 @@ void MappingConnectorAlgorithm::initializeCallback()
 
 void MappingConnectorAlgorithm::finalizeCallback()
 {
-   t_modify.setNull();
-   t_modify_setup_comm.setNull();
-   t_modify_remove_and_cache.setNull();
-   t_modify_discover_and_send.setNull();
-   t_modify_receive_and_unpack.setNull();
-   t_modify_MPI_wait.setNull();
-   t_modify_misc.setNull();
+   t_modify.reset();
+   t_modify_setup_comm.reset();
+   t_modify_remove_and_cache.reset();
+   t_modify_discover_and_send.reset();
+   t_modify_receive_and_unpack.reset();
+   t_modify_MPI_wait.reset();
+   t_modify_misc.reset();
 
    if (s_class_mpi.getCommunicator() != tbox::SAMRAI_MPI::commNull) {
       s_class_mpi.freeCommunicator();

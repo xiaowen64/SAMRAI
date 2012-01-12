@@ -943,7 +943,7 @@ template<class TYPE>
 void OuternodeData<TYPE>::getSpecializedFromDatabase(
    tbox::Pointer<tbox::Database> database)
 {
-   TBOX_ASSERT(!database.isNull());
+   TBOX_ASSERT(database);
 
    int ver = database->getInteger("PDAT_OUTERNODEDATA_VERSION");
    if (ver != PDAT_OUTERNODEDATA_VERSION) {
@@ -983,7 +983,7 @@ template<class TYPE>
 void OuternodeData<TYPE>::putSpecializedToDatabase(
    tbox::Pointer<tbox::Database> database)
 {
-   TBOX_ASSERT(!database.isNull());
+   TBOX_ASSERT(database);
 
    database->putInteger("PDAT_OUTERNODEDATA_VERSION",
       PDAT_OUTERNODEDATA_VERSION);

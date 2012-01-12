@@ -46,7 +46,7 @@ public:
     * The depth (number of components) gives the default for all of
     * the outernode data objects created with this factory.
     */
-   explicit OuternodeDataFactory(
+   OuternodeDataFactory(
       const tbox::Dimension& dim,
       int depth);
 

@@ -129,7 +129,7 @@ void OuteredgeSumTransactionFactory::preprocessScratchSpace(
    const hier::ComponentSelector& preprocess_vector) const
 {
    NULL_USE(fill_time);
-   TBOX_ASSERT(!level.isNull());
+   TBOX_ASSERT(level);
 
    for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
       tbox::Pointer<hier::Patch> patch = *ip;
@@ -137,8 +137,9 @@ void OuteredgeSumTransactionFactory::preprocessScratchSpace(
       const int ncomponents = preprocess_vector.getSize();
       for (int n = 0; n < ncomponents; ++n) {
          if (preprocess_vector.isSet(n)) {
-            tbox::Pointer<pdat::OuteredgeData<double> > oedge_data =
-               patch->getPatchData(n);
+            tbox::Pointer<pdat::OuteredgeData<double> > oedge_data(
+               patch->getPatchData(n),
+               tbox::__dynamic_cast_tag());
             oedge_data->fillAll(0.0);
          }
       }

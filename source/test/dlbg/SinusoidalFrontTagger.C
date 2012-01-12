@@ -142,10 +142,10 @@ void SinusoidalFrontTagger::initializeLevelData(
 
    tbox::Pointer<hier::PatchHierarchy> hierarchy = base_hierarchy;
    tbox::Pointer<hier::PatchLevel> old_level = old_base_level;
-   if (!old_base_level.isNull()) {
-      TBOX_ASSERT(!old_level.isNull());
+   if (old_base_level) {
+      TBOX_ASSERT(old_level);
    }
-   TBOX_ASSERT(!hierarchy.isNull());
+   TBOX_ASSERT(hierarchy);
 
    /*
     * Reference the level object with the given index from the hierarchy.
@@ -199,14 +199,16 @@ void SinusoidalFrontTagger::initializePatchData(
          if (!patch.checkAllocated(d_tag_id)) {
             patch.allocatePatchData(d_tag_id);
          }
-         tbox::Pointer<pdat::NodeData<double> > dist_data =
-            patch.getPatchData(d_dist_id);
-         tbox::Pointer<pdat::CellData<int> > tag_data =
-            patch.getPatchData(d_tag_id);
-         TBOX_ASSERT(!dist_data.isNull());
-         TBOX_ASSERT(!tag_data.isNull());
+         tbox::Pointer<pdat::NodeData<double> > dist_data(
+            patch.getPatchData(d_dist_id),
+            tbox::__dynamic_cast_tag());
+         tbox::Pointer<pdat::CellData<int> > tag_data(
+            patch.getPatchData(d_tag_id),
+            tbox::__dynamic_cast_tag());
+         TBOX_ASSERT(dist_data);
+         TBOX_ASSERT(tag_data);
          computePatchData(patch, init_data_time,
-            dist_data.getPointer(), tag_data.getPointer());
+            dist_data.get(), tag_data.get());
       }
    }
 }
@@ -219,7 +221,7 @@ void SinusoidalFrontTagger::resetHierarchyConfiguration(
    NULL_USE(coarsest_level);
    NULL_USE(finest_level);
    d_hierarchy = new_hierarchy;
-   TBOX_ASSERT(!d_hierarchy.isNull());
+   TBOX_ASSERT(d_hierarchy);
 }
 
 void SinusoidalFrontTagger::applyGradientDetector(
@@ -233,9 +235,9 @@ void SinusoidalFrontTagger::applyGradientDetector(
    NULL_USE(initial_time);
    NULL_USE(uses_richardson_extrapolation);
    tbox::Pointer<hier::PatchHierarchy> hierarchy_ = base_hierarchy_;
-   TBOX_ASSERT(!hierarchy_.isNull());
+   TBOX_ASSERT(hierarchy_);
    tbox::Pointer<hier::PatchLevel> level_ = hierarchy_->getPatchLevel(ln);
-   TBOX_ASSERT(!level_.isNull());
+   TBOX_ASSERT(level_);
 
    hier::PatchLevel& level = *level_;
 
@@ -244,12 +246,14 @@ void SinusoidalFrontTagger::applyGradientDetector(
 
       tbox::Pointer<hier::PatchData>
       tag_data = patch.getPatchData(tag_index);
-      if (tag_data.isNull()) {
+      if (!tag_data) {
          TBOX_ERROR("Data index " << tag_index
                                   << " does not exist for patch.\n");
       }
-      tbox::Pointer<pdat::CellData<int> > tag_cell_data_ = tag_data;
-      if (tag_cell_data_.isNull()) {
+      tbox::Pointer<pdat::CellData<int> > tag_cell_data_(
+         tag_data,
+         tbox::__dynamic_cast_tag());
+      if (!tag_cell_data_) {
          TBOX_ERROR("Data index " << tag_index
                                   << " is not cell int data.\n");
       }
@@ -264,7 +268,7 @@ void SinusoidalFrontTagger::applyGradientDetector(
          computePatchData(patch,
             error_data_time,
             NULL,
-            tag_cell_data_.getPointer());
+            tag_cell_data_.get());
       }
 
    }
@@ -334,13 +338,21 @@ void SinusoidalFrontTagger::computeLevelData(
     */
    for (hier::PatchLevel::Iterator pi(level); pi; pi++) {
       hier::Patch& patch = **pi;
-      tbox::Pointer<pdat::NodeData<double> > dist_data = (dist_id >= 0) ?
-         patch.getPatchData(dist_id) : tbox::Pointer<hier::PatchData>(NULL);
-      tbox::Pointer<pdat::CellData<int> > tag_data = (tag_id >= 0) ?
-         patch.getPatchData(tag_id) : tbox::Pointer<hier::PatchData>(NULL);
+      tbox::Pointer<pdat::NodeData<double> > dist_data;
+      if (dist_id >= 0) {
+         dist_data =
+            tbox::dynamic_pointer_cast<pdat::NodeData<double>,
+                                       hier::PatchData>(patch.getPatchData(dist_id));
+      }
+      tbox::Pointer<pdat::CellData<int> > tag_data;
+      if (tag_id >= 0) {
+         tag_data =
+            tbox::dynamic_pointer_cast<pdat::CellData<int>,
+                                       hier::PatchData>(patch.getPatchData(tag_id));
+      }
       computePatchData(patch, time,
-         dist_data.getPointer(),
-         tag_data.getPointer());
+         dist_data.get(),
+         tag_data.get());
    }
 }
 
@@ -357,7 +369,7 @@ void SinusoidalFrontTagger::computePatchData(
 
    t_setup->start();
 
-   TBOX_ASSERT(!d_hierarchy.isNull());
+   TBOX_ASSERT(d_hierarchy);
    TBOX_ASSERT(patch.inHierarchy());
 
    const int ln = patch.getPatchLevelNumber();
@@ -366,8 +378,9 @@ void SinusoidalFrontTagger::computePatchData(
    const hier::IntVector& ratio(level->getRatioToLevelZero());
 
    const hier::Box& pbox = patch.getBox();
-   tbox::Pointer<geom::CartesianPatchGeometry> patch_geom =
-      patch.getPatchGeometry();
+   tbox::Pointer<geom::CartesianPatchGeometry> patch_geom(
+      patch.getPatchGeometry(),
+      tbox::__dynamic_cast_tag());
 
    const double* xlo = patch_geom->getXLower();
 

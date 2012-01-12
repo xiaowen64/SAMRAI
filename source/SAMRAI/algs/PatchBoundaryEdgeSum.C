@@ -96,7 +96,7 @@ PatchBoundaryEdgeSum::PatchBoundaryEdgeSum(
 
    d_num_reg_sum = 0;
 
-   d_level.setNull();
+   d_level.reset();
 
    d_sum_transaction_factory = new OuteredgeSumTransactionFactory();
 
@@ -175,10 +175,11 @@ void PatchBoundaryEdgeSum::registerSum(
 
    hier::VariableDatabase* var_db = hier::VariableDatabase::getDatabase();
 
-   tbox::Pointer<pdat::EdgeDataFactory<double> > edge_factory =
-      var_db->getPatchDescriptor()->getPatchDataFactory(edge_data_id);
+   tbox::Pointer<pdat::EdgeDataFactory<double> > edge_factory(
+      var_db->getPatchDescriptor()->getPatchDataFactory(edge_data_id),
+      tbox::__dynamic_cast_tag());
 
-   if (edge_factory.isNull()) {
+   if (!edge_factory) {
 
       TBOX_ERROR("PatchBoundaryEdgeSum register error..."
          << "\nobject named " << d_object_name
@@ -249,7 +250,7 @@ void PatchBoundaryEdgeSum::registerSum(
          + var_suffix;
       d_tmp_oedge_src_variable[reg_sum_id] = var_db->getVariable(
             toedge_src_var_name);
-      if (d_tmp_oedge_src_variable[reg_sum_id].isNull()) {
+      if (!d_tmp_oedge_src_variable[reg_sum_id]) {
          d_tmp_oedge_src_variable[reg_sum_id] =
             new pdat::OuteredgeVariable<double>(dim,
                                                 toedge_src_var_name,
@@ -260,7 +261,7 @@ void PatchBoundaryEdgeSum::registerSum(
          + var_suffix;
       d_tmp_oedge_dst_variable[reg_sum_id] = var_db->getVariable(
             toedge_dst_var_name);
-      if (d_tmp_oedge_dst_variable[reg_sum_id].isNull()) {
+      if (!d_tmp_oedge_dst_variable[reg_sum_id]) {
          d_tmp_oedge_dst_variable[reg_sum_id] =
             new pdat::OuteredgeVariable<double>(dim,
                                                 toedge_dst_var_name,
@@ -309,7 +310,7 @@ void PatchBoundaryEdgeSum::registerSum(
 void PatchBoundaryEdgeSum::setupSum(
    tbox::Pointer<hier::PatchLevel> level)
 {
-   TBOX_ASSERT(!level.isNull());
+   TBOX_ASSERT(level);
 
    const tbox::Dimension& dim(level->getDim());
 
@@ -371,16 +372,18 @@ void PatchBoundaryEdgeSum::computeSum() const
 void PatchBoundaryEdgeSum::doLevelSum(
    tbox::Pointer<hier::PatchLevel> level) const
 {
-   TBOX_ASSERT(!level.isNull());
+   TBOX_ASSERT(level);
 
    for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
       tbox::Pointer<hier::Patch> patch = *ip;
 
       for (int i = 0; i < d_user_edge_data_id.size(); i++) {
-         tbox::Pointer<pdat::EdgeData<double> > edge_data =
-            patch->getPatchData(d_user_edge_data_id[i]);
-         tbox::Pointer<pdat::OuteredgeData<double> > oedge_data =
-            patch->getPatchData(d_oedge_src_id[i]);
+         tbox::Pointer<pdat::EdgeData<double> > edge_data(
+            patch->getPatchData(d_user_edge_data_id[i]),
+            tbox::__dynamic_cast_tag());
+         tbox::Pointer<pdat::OuteredgeData<double> > oedge_data(
+            patch->getPatchData(d_oedge_src_id[i]),
+            tbox::__dynamic_cast_tag());
 
          oedge_data->copy(*edge_data);
 
@@ -393,10 +396,12 @@ void PatchBoundaryEdgeSum::doLevelSum(
       tbox::Pointer<hier::Patch> patch = *ip2;
 
       for (int i = 0; i < d_user_edge_data_id.size(); i++) {
-         tbox::Pointer<pdat::EdgeData<double> > edge_data =
-            patch->getPatchData(d_user_edge_data_id[i]);
-         tbox::Pointer<pdat::OuteredgeData<double> > oedge_data =
-            patch->getPatchData(d_oedge_dst_id[i]);
+         tbox::Pointer<pdat::EdgeData<double> > edge_data(
+            patch->getPatchData(d_user_edge_data_id[i]),
+            tbox::__dynamic_cast_tag());
+         tbox::Pointer<pdat::OuteredgeData<double> > oedge_data(
+            patch->getPatchData(d_oedge_dst_id[i]),
+            tbox::__dynamic_cast_tag());
 
          oedge_data->copy2(*edge_data);
 

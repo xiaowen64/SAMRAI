@@ -41,7 +41,7 @@ FaceDataTest::FaceDataTest(
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(!object_name.empty());
-   TBOX_ASSERT(!main_input_db.isNull());
+   TBOX_ASSERT(main_input_db);
    TBOX_ASSERT(!refine_option.empty());
 #endif
 
@@ -85,7 +85,7 @@ void FaceDataTest::readTestInput(
    tbox::Pointer<tbox::Database> db)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!db.isNull());
+   TBOX_ASSERT(db);
 #endif
 
    /*
@@ -184,8 +184,8 @@ void FaceDataTest::setConservativeData(
    int level_number) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!data.isNull());
-   TBOX_ASSERT(!hierarchy.isNull());
+   TBOX_ASSERT(data);
+   TBOX_ASSERT(hierarchy);
    TBOX_ASSERT((level_number >= 0)
       && (level_number <= hierarchy->getFinestLevelNumber()));
 #endif
@@ -247,8 +247,9 @@ void FaceDataTest::setConservativeData(
       hier::IntVector ratio(level->getRatioToLevelZero());
       const int max_ratio = ratio.max();
 
-      tbox::Pointer<geom::CartesianPatchGeometry> pgeom =
-         patch.getPatchGeometry();
+      tbox::Pointer<geom::CartesianPatchGeometry> pgeom(
+         patch.getPatchGeometry(),
+         tbox::__dynamic_cast_tag());
       const double* dx = pgeom->getDx();
 
       int coarse_ncells = ncells;
@@ -311,8 +312,9 @@ void FaceDataTest::initializeDataOnPatch(
 
       for (int i = 0; i < d_variables.getSize(); i++) {
 
-         tbox::Pointer<pdat::FaceData<double> > face_data =
-            patch.getPatchData(d_variables[i], getDataContext());
+         tbox::Pointer<pdat::FaceData<double> > face_data(
+            patch.getPatchData(d_variables[i], getDataContext()),
+            tbox::__dynamic_cast_tag());
 
          hier::Box dbox = face_data->getBox();
 
@@ -323,8 +325,9 @@ void FaceDataTest::initializeDataOnPatch(
 
       for (int i = 0; i < d_variables.getSize(); i++) {
 
-         tbox::Pointer<pdat::FaceData<double> > face_data =
-            patch.getPatchData(d_variables[i], getDataContext());
+         tbox::Pointer<pdat::FaceData<double> > face_data(
+            patch.getPatchData(d_variables[i], getDataContext()),
+            tbox::__dynamic_cast_tag());
 
          hier::Box dbox = face_data->getGhostBox();
 
@@ -343,7 +346,7 @@ void FaceDataTest::checkPatchInteriorData(
    const tbox::Pointer<geom::CartesianPatchGeometry>& pgeom) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!data.isNull());
+   TBOX_ASSERT(data);
 #endif
 
    const double* dx = pgeom->getDx();
@@ -408,7 +411,9 @@ void FaceDataTest::setPhysicalBoundaryConditions(
 {
    (void)time;
 
-   tbox::Pointer<geom::CartesianPatchGeometry> pgeom = patch.getPatchGeometry();
+   tbox::Pointer<geom::CartesianPatchGeometry> pgeom(
+      patch.getPatchGeometry(),
+      tbox::__dynamic_cast_tag());
 
    const tbox::Array<hier::BoundaryBox> node_bdry =
       pgeom->getCodimensionBoundaries(d_dim.getValue());
@@ -428,8 +433,9 @@ void FaceDataTest::setPhysicalBoundaryConditions(
 
    for (int i = 0; i < d_variables.getSize(); i++) {
 
-      tbox::Pointer<pdat::FaceData<double> > face_data =
-         patch.getPatchData(d_variables[i], getDataContext());
+      tbox::Pointer<pdat::FaceData<double> > face_data(
+         patch.getPatchData(d_variables[i], getDataContext()),
+         tbox::__dynamic_cast_tag());
 
       hier::Box patch_interior = face_data->getBox();
       checkPatchInteriorData(face_data, patch_interior, pgeom);
@@ -484,10 +490,12 @@ void FaceDataTest::setLinearData(
    const hier::Patch& patch) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!data.isNull());
+   TBOX_ASSERT(data);
 #endif
 
-   tbox::Pointer<geom::CartesianPatchGeometry> pgeom = patch.getPatchGeometry();
+   tbox::Pointer<geom::CartesianPatchGeometry> pgeom(
+      patch.getPatchGeometry(),
+      tbox::__dynamic_cast_tag());
    const double* dx = pgeom->getDx();
    const double* lowerx = pgeom->getXLower();
    double x = 0., y = 0., z = 0.;
@@ -584,8 +592,9 @@ bool FaceDataTest::verifyResults(
 
       for (int i = 0; i < d_variables.getSize(); i++) {
 
-         tbox::Pointer<pdat::FaceData<double> > face_data =
-            patch.getPatchData(d_variables[i], getDataContext());
+         tbox::Pointer<pdat::FaceData<double> > face_data(
+            patch.getPatchData(d_variables[i], getDataContext()),
+            tbox::__dynamic_cast_tag());
          int depth = face_data->getDepth();
          hier::Box dbox = face_data->getGhostBox();
 
@@ -615,7 +624,7 @@ bool FaceDataTest::verifyResults(
 
       }
 
-      solution.setNull();   // just to be anal...
+      solution.reset();   // just to be anal...
 
       tbox::plog << "\nExiting FaceDataTest::verifyResults..." << endl;
       tbox::plog << "level_number = " << level_number << endl;

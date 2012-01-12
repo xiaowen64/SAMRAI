@@ -49,7 +49,7 @@ public:
     * The constructor requires the name of the HDF database
     * to write or read to, and the IOTYPE.
     */
-   explicit BoxIOUtility(
+   BoxIOUtility(
       const std::string& filename,
       const IOTYPE iotype);
 

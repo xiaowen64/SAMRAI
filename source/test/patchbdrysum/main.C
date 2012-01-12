@@ -99,7 +99,7 @@ int main(
        * Create input database and parse all data in input file.
        */
 
-      Pointer<Database> input_db(new tbox::InputDatabase("input_db"));
+      Pointer<InputDatabase> input_db(new tbox::InputDatabase("input_db"));
       InputManager::getManager()->parseInputFile(input_filename, input_db);
 
       /*
@@ -414,20 +414,20 @@ int main(
        * At conclusion of simulation, deallocate objects.
        */
 #ifdef HAVE_HDF5
-      visit_data_writer.setNull();
+      visit_data_writer.reset();
 #endif
-      gridding_algorithm.setNull();
-      load_balancer.setNull();
-      box_generator.setNull();
-      tag_and_init_ops.setNull();
+      gridding_algorithm.reset();
+      load_balancer.reset();
+      box_generator.reset();
+      tag_and_init_ops.reset();
 
       if (hier_sum_test) delete hier_sum_test;
 
-      patch_hierarchy.setNull();
-      grid_geometry.setNull();
+      patch_hierarchy.reset();
+      grid_geometry.reset();
 
-      input_db.setNull();
-      main_db.setNull();
+      input_db.reset();
+      main_db.reset();
 
       if (fail_count == 0) {
          tbox::pout << "\nPASSED:  patchbdrysum" << endl;

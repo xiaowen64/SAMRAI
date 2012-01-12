@@ -83,9 +83,9 @@ RefineCopyTransaction::RefineCopyTransaction(
    d_incoming_bytes(0),
    d_outgoing_bytes(0)
 {
-   TBOX_ASSERT(!dst_level.isNull());
-   TBOX_ASSERT(!src_level.isNull());
-   TBOX_ASSERT(!overlap.isNull());
+   TBOX_ASSERT(dst_level);
+   TBOX_ASSERT(src_level);
+   TBOX_ASSERT(overlap);
    TBOX_ASSERT(dst_mapped_box.getLocalId() >= 0);
    TBOX_ASSERT(src_mapped_box.getLocalId() >= 0);
    TBOX_ASSERT(refine_item_id >= 0);
@@ -97,12 +97,10 @@ RefineCopyTransaction::RefineCopyTransaction(
    // Note: s_num_coarsen_items cannot be used at this point!
 
    if (d_dst_patch_rank == dst_level->getBoxLevel()->getMPI().getRank()) {
-      d_dst_patch = dst_level->getPatch(dst_mapped_box.getGlobalId(),
-            dst_mapped_box.getBlockId());
+      d_dst_patch = dst_level->getPatch(dst_mapped_box.getGlobalId());
    }
    if (d_src_patch_rank == dst_level->getBoxLevel()->getMPI().getRank()) {
-      d_src_patch = src_level->getPatch(src_mapped_box.getGlobalId(),
-            src_mapped_box.getBlockId());
+      d_src_patch = src_level->getPatch(src_mapped_box.getGlobalId());
    }
 }
 
@@ -121,7 +119,7 @@ RefineCopyTransaction::~RefineCopyTransaction()
 bool RefineCopyTransaction::canEstimateIncomingMessageSize()
 {
    bool can_estimate = false;
-   if (!d_src_patch.isNull()) {
+   if (d_src_patch) {
       can_estimate =
          d_src_patch->getPatchData(s_refine_items[d_refine_item_id]->d_src)
          ->canEstimateStreamSizeFromBox();
@@ -201,9 +199,9 @@ void RefineCopyTransaction::printClassData(
    stream << "   incoming bytes:         " << d_incoming_bytes << std::endl;
    stream << "   outgoing bytes:         " << d_outgoing_bytes << std::endl;
    stream << "   destination patch:           "
-          << (hier::Patch *)d_dst_patch << std::endl;
+          << d_dst_patch.get() << std::endl;
    stream << "   source patch:           "
-          << (hier::Patch *)d_src_patch << std::endl;
+          << d_src_patch.get() << std::endl;
    stream << "   overlap:                " << std::endl;
    d_overlap->print(stream);
 }

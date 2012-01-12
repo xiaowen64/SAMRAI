@@ -185,7 +185,7 @@ void CellData<TYPE>::copy(
           hier::Transformation::NO_ROTATE) {
          d_data.copy(t_src->d_data,
             t_overlap->getDestinationBoxContainer(),
-            t_overlap->getSourceOffset());
+            t_overlap->getTransformation());
       } else {
          copyWithRotation(*t_src, *t_overlap);
       }
@@ -209,7 +209,7 @@ void CellData<TYPE>::copy2(
 
       t_dst->d_data.copy(d_data,
          t_overlap->getDestinationBoxContainer(),
-         t_overlap->getSourceOffset());
+         t_overlap->getTransformation());
    } else {
       t_dst->copyWithRotation(*this, *t_overlap);
    }
@@ -340,7 +340,7 @@ void CellData<TYPE>::packStream(
    if (t_overlap->getTransformation().getRotation() ==
        hier::Transformation::NO_ROTATE) {
       d_data.packStream(stream, t_overlap->getDestinationBoxContainer(),
-         t_overlap->getSourceOffset());
+         t_overlap->getTransformation());
    } else {
       packWithRotation(stream, *t_overlap);
    }
@@ -474,7 +474,7 @@ void CellData<TYPE>::getSpecializedFromDatabase(
    tbox::Pointer<tbox::Database> database)
 {
 
-   TBOX_ASSERT(!database.isNull());
+   TBOX_ASSERT(database);
 
    int ver = database->getInteger("PDAT_CELLDATA_VERSION");
    if (ver != PDAT_CELLDATA_VERSION) {
@@ -502,7 +502,7 @@ template<class TYPE>
 void CellData<TYPE>::putSpecializedToDatabase(
    tbox::Pointer<tbox::Database> database)
 {
-   TBOX_ASSERT(!database.isNull());
+   TBOX_ASSERT(database);
 
    database->putInteger("PDAT_CELLDATA_VERSION", PDAT_CELLDATA_VERSION);
 

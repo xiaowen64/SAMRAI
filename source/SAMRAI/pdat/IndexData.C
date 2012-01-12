@@ -710,7 +710,7 @@ template<class TYPE, class BOX_GEOMETRY>
 void IndexData<TYPE, BOX_GEOMETRY>::getSpecializedFromDatabase(
    tbox::Pointer<tbox::Database> database)
 {
-   TBOX_ASSERT(!database.isNull());
+   TBOX_ASSERT(database);
 
    int ver = database->getInteger("PDAT_INDEXDATA_VERSION");
    if (ver != PDAT_INDEXDATA_VERSION) {
@@ -764,7 +764,7 @@ template<class TYPE, class BOX_GEOMETRY>
 void IndexData<TYPE, BOX_GEOMETRY>::putSpecializedToDatabase(
    tbox::Pointer<tbox::Database> database)
 {
-   TBOX_ASSERT(!database.isNull());
+   TBOX_ASSERT(database);
 
    database->putInteger("PDAT_INDEXDATA_VERSION", PDAT_INDEXDATA_VERSION);
 

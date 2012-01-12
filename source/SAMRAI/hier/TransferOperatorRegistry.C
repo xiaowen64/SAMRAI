@@ -91,7 +91,7 @@ TransferOperatorRegistry::lookupCoarsenOperator(
    const tbox::Pointer<Variable>& var,
    const std::string& op_name)
 {
-   TBOX_ASSERT(!var.isNull());
+   TBOX_ASSERT(var);
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, *var);
 
    tbox::Pointer<CoarsenOperator> coarsen_op(NULL);
@@ -106,7 +106,7 @@ TransferOperatorRegistry::lookupCoarsenOperator(
       tbox::List<tbox::Pointer<CoarsenOperator> >::Iterator
          lop = d_coarsen_operators.listStart();
 
-      while (coarsen_op.isNull() && lop) {
+      while (!coarsen_op && lop) {
          if (lop()->findCoarsenOperator(var, op_name)) {
             found_op = true;
             coarsen_op = lop();
@@ -127,7 +127,7 @@ TransferOperatorRegistry::lookupRefineOperator(
    const tbox::Pointer<Variable>& var,
    const std::string& op_name)
 {
-   TBOX_ASSERT(!var.isNull());
+   TBOX_ASSERT(var);
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, *var);
 
    tbox::Pointer<RefineOperator> refine_op(NULL);
@@ -142,7 +142,7 @@ TransferOperatorRegistry::lookupRefineOperator(
       tbox::List<tbox::Pointer<RefineOperator> >::Iterator
          lop = d_refine_operators.listStart();
 
-      while (refine_op.isNull() && lop) {
+      while (!refine_op && lop) {
          if (lop()->findRefineOperator(var, op_name)) {
             found_op = true;
             refine_op = lop();
@@ -163,7 +163,7 @@ TransferOperatorRegistry::lookupTimeInterpolateOperator(
    const tbox::Pointer<Variable>& var,
    const std::string& op_name)
 {
-   TBOX_ASSERT(!var.isNull());
+   TBOX_ASSERT(var);
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, *var);
 
    tbox::Pointer<TimeInterpolateOperator> time_op(NULL);
@@ -177,7 +177,7 @@ TransferOperatorRegistry::lookupTimeInterpolateOperator(
       tbox::List<tbox::Pointer<TimeInterpolateOperator> >::Iterator
          lop = d_time_operators.listStart();
 
-      while (time_op.isNull() && lop) {
+      while (!time_op && lop) {
          if (lop()->findTimeInterpolateOperator(var, op_name)) {
             found_op = true;
             time_op = lop();
@@ -255,7 +255,7 @@ TransferOperatorRegistry::printClassData(
    tbox::List<tbox::Pointer<CoarsenOperator> >::Iterator
       cop = d_coarsen_operators.listStart();
    while (cop) {
-      os << (CoarsenOperator *)cop() << std::endl;
+      os << cop().get() << std::endl;
       cop++;
    }
 
@@ -263,7 +263,7 @@ TransferOperatorRegistry::printClassData(
    tbox::List<tbox::Pointer<RefineOperator> >::Iterator
       rop = d_refine_operators.listStart();
    while (rop) {
-      os << (RefineOperator *)rop() << std::endl;
+      os << rop().get() << std::endl;
       rop++;
    }
 
@@ -271,7 +271,7 @@ TransferOperatorRegistry::printClassData(
    tbox::List<tbox::Pointer<TimeInterpolateOperator> >::Iterator
       top = d_time_operators.listStart();
    while (top) {
-      os << (TimeInterpolateOperator *)top() << std::endl;
+      os << top().get() << std::endl;
       top++;
    }
 }

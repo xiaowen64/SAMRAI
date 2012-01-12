@@ -31,7 +31,7 @@ NUM_TESTS = 2
 TEST_NPROCS = @TEST_NPROCS@
 
 main: main.o SparseDataTester.o $(LIBSAMRAIDEPEND)
-	$(CXX) $(CXXFLAGS) $(LDFLAGS) main.o SparseDataTester.o $(LIBSAMRAI2D) $(LIBSAMRAI) $(LDLIBS) -lboost_system -o $@
+	$(CXX) $(CXXFLAGS) $(LDFLAGS) main.o SparseDataTester.o $(LIBSAMRAI2D) $(LIBSAMRAI) $(LDLIBS) -o $@
 
 sparse: sparse_dataops.o $(LIBSAMRAIDEPEND)
 	$(CXX) $(CXXFLAGS) $(LDFLAGS) sparse_dataops.o $(LIBSAMRAI2D) $(LIBSAMRAI) $(LDLIBS) -o $@

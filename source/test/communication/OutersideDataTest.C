@@ -43,7 +43,7 @@ OutersideDataTest::OutersideDataTest(
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(!object_name.empty());
-   TBOX_ASSERT(!main_input_db.isNull());
+   TBOX_ASSERT(main_input_db);
    TBOX_ASSERT(!refine_option.empty());
 #endif
 
@@ -94,7 +94,7 @@ void OutersideDataTest::readTestInput(
    tbox::Pointer<tbox::Database> db)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!db.isNull());
+   TBOX_ASSERT(db);
 #endif
 
    /*
@@ -213,17 +213,21 @@ void OutersideDataTest::initializeDataOnPatch(
          tbox::Pointer<hier::PatchData> data =
             patch.getPatchData(variables[i], getDataContext());
 
-         TBOX_ASSERT(!data.isNull());
+         TBOX_ASSERT(data);
 
-         tbox::Pointer<pdat::OutersideData<double> > oside_data = data;
-         tbox::Pointer<pdat::SideData<double> > side_data = data;
+         tbox::Pointer<pdat::OutersideData<double> > oside_data(
+            data,
+            tbox::__dynamic_cast_tag());
+         tbox::Pointer<pdat::SideData<double> > side_data(
+            data,
+            tbox::__dynamic_cast_tag());
 
          hier::Box dbox = data->getBox();
 
-         if (!side_data.isNull()) {
+         if (side_data) {
             setLinearData(side_data, dbox, patch);
          }
-         if (!oside_data.isNull()) {
+         if (oside_data) {
             setLinearData(oside_data, dbox, patch);
          }
 
@@ -236,17 +240,21 @@ void OutersideDataTest::initializeDataOnPatch(
          tbox::Pointer<hier::PatchData> data =
             patch.getPatchData(variables[i], getDataContext());
 
-         TBOX_ASSERT(!data.isNull());
+         TBOX_ASSERT(data);
 
-         tbox::Pointer<pdat::OutersideData<double> > oside_data = data;
-         tbox::Pointer<pdat::SideData<double> > side_data = data;
+         tbox::Pointer<pdat::OutersideData<double> > oside_data(
+            data,
+            tbox::__dynamic_cast_tag());
+         tbox::Pointer<pdat::SideData<double> > side_data(
+            data,
+            tbox::__dynamic_cast_tag());
 
          hier::Box dbox = data->getGhostBox();
 
-         if (!side_data.isNull()) {
+         if (side_data) {
             setLinearData(side_data, dbox, patch);
          }
-         if (!oside_data.isNull()) {
+         if (oside_data) {
             setLinearData(oside_data, dbox, patch);
          }
       }
@@ -261,7 +269,7 @@ void OutersideDataTest::checkPatchInteriorData(
    const tbox::Pointer<geom::CartesianPatchGeometry>& pgeom) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!data.isNull());
+   TBOX_ASSERT(data);
 #endif
 
    const double* dx = pgeom->getDx();
@@ -332,11 +340,12 @@ void OutersideDataTest::setLinearData(
    const hier::Patch& patch) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!data.isNull());
+   TBOX_ASSERT(data);
 #endif
 
-   tbox::Pointer<geom::CartesianPatchGeometry>
-   pgeom = patch.getPatchGeometry();
+   tbox::Pointer<geom::CartesianPatchGeometry> pgeom(
+      patch.getPatchGeometry(),
+      tbox::__dynamic_cast_tag());
    const double* dx = pgeom->getDx();
    const double* lowerx = pgeom->getXLower();
    double x, y, z;
@@ -396,11 +405,12 @@ void OutersideDataTest::setLinearData(
    NULL_USE(box);
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!data.isNull());
+   TBOX_ASSERT(data);
 #endif
 
-   tbox::Pointer<geom::CartesianPatchGeometry>
-   pgeom = patch.getPatchGeometry();
+   tbox::Pointer<geom::CartesianPatchGeometry> pgeom(
+      patch.getPatchGeometry(),
+      tbox::__dynamic_cast_tag());
    const double* dx = pgeom->getDx();
    const double* lowerx = pgeom->getXLower();
    double x = 0., y = 0., z = 0.;
@@ -493,8 +503,9 @@ bool OutersideDataTest::verifyResults(
 
       for (int i = 0; i < d_variables_dst.getSize(); i++) {
 
-         tbox::Pointer<pdat::SideData<double> > side_data =
-            patch.getPatchData(d_variables_dst[i], getDataContext());
+         tbox::Pointer<pdat::SideData<double> > side_data(
+            patch.getPatchData(d_variables_dst[i], getDataContext()),
+            tbox::__dynamic_cast_tag());
          int depth = side_data->getDepth();
          hier::Box dbox = side_data->getGhostBox();
 
@@ -527,7 +538,7 @@ bool OutersideDataTest::verifyResults(
          tbox::plog << "Outerside test Successful!" << endl;
       }
 
-      solution.setNull();   // just to be anal...
+      solution.reset();   // just to be anal...
 
       tbox::plog << "\nExiting OutersidedataTest::verifyResults..." << endl;
       tbox::plog << "level_number = " << level_number << endl;

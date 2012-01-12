@@ -16,6 +16,7 @@
 #include "SAMRAI/tbox/Serializable.h"
 #include "SAMRAI/tbox/Timer.h"
 #include "SAMRAI/hier/CoarsenOperator.h"
+#include "SAMRAI/hier/MultiblockBoxTree.h"
 #include "SAMRAI/hier/Patch.h"
 #include "SAMRAI/hier/PatchGeometry.h"
 #include "SAMRAI/hier/RefineOperator.h"
@@ -147,7 +148,7 @@ public:
     * @param[in]  register_for_restart Flag indicating whether this instance
     *             should be registered for restart.  @b Default: true
     */
-   explicit GridGeometry(
+   GridGeometry(
       const tbox::Dimension& dim,
       const std::string& object_name,
       tbox::Pointer<TransferOperatorRegistry> op_reg,
@@ -170,7 +171,7 @@ public:
     * @param[in]  register_for_restart Flag indicating whether this instance
     *             should be registered for restart.  @b Default: true
     */
-   explicit GridGeometry(
+   GridGeometry(
       const std::string& object_name,
       const BoxContainer& domain,
       tbox::Pointer<TransferOperatorRegistry> op_reg,
@@ -192,45 +193,17 @@ public:
     * For every patch on the given PatchLevel, this routine determines which
     * kinds of boundaries are touched (regular, periodic, both, or neither).
     *
-    * @note
-    * The array arguments should be uninitialized when they are passed into
-    * this function.
-    *
     * @param[out]   touches_regular_bdry map to store which patches touch
     *               non-periodic boundaries.
     * @param[out]   touches_periodic_bdry map to store which patches touch
     *               periodic boundaries.
     * @param[in]    level containing the patches to be checked
-    * @param[in]    periodic_shift periodic shift for the level (see getPeriodicShift())
-    * @param[in]    domain Physical domain (at the same level of refinement as level)
     */
    void
    findPatchesTouchingBoundaries(
       std::map<BoxId, TwoDimBool>& touches_regular_boundary,
       std::map<BoxId, TwoDimBool>& touches_periodic_boundary,
-      const PatchLevel& level,
-      const IntVector& periodic_shift,
-      const tbox::Array<BoxContainer>& domain) const;
-
-   /*!
-    * @brief Version of findPatchTouchingBoundaries using pre-constructed
-    * search tree for domain.
-    *
-    * @param[out]   touches_regular_bdry map to store which patches touch
-    *               non-periodic boundaries.
-    * @param[out]   touches_periodic_bdry map to store which patches touch
-    *               periodic boundaries.
-    * @param[in]    level containing the patches to be checked
-    * @param[in]    periodic_shift periodic shift for the level (see getPeriodicShift())
-    * @param[in]    domain_tree search tree for the domain
-    */
-   void
-   findPatchesTouchingBoundaries(
-      std::map<BoxId, TwoDimBool>& touches_regular_boundary,
-      std::map<BoxId, TwoDimBool>& touches_periodic_boundary,
-      const PatchLevel& level,
-      const IntVector& periodic_shift,
-      const tbox::Array<tbox::Pointer<BoxContainer> >& domain_tree) const;
+      const PatchLevel& level) const;
 
    /*!
     * @brief Version of findPatchTouchingBoundaries for a single box.
@@ -240,16 +213,18 @@ public:
     * @param[out]   touches_periodic_bdry TwoDimBool to store which patches touch
     *               periodic boundaries.
     * @param[in]    box to be checked
-    * @param[in]    periodic_shift periodic shift for the level (see getPeriodicShift())
-    * @param[in]    domain_tree search tree for the domain
+    *
+    * @param[in] refinement_ratio Refinement ratio of given box
+    *
+    * @param[in refined_periodic_domain_tree
     */
    void
    computeBoxTouchingBoundaries(
       TwoDimBool& touches_regular_bdry,
       TwoDimBool& touches_periodic_bdry,
       const Box& box,
-      const IntVector& periodic_shift,
-      const BoxContainer& domain_tree) const;
+      const hier::IntVector &refinement_ratio,
+      const MultiblockBoxTree& refined_periodic_domain_tree) const;
 
    /*!
     * @brief Sets geometry data for patches on a level.
@@ -415,6 +390,28 @@ public:
     */
    const BoxContainer&
    getPhysicalDomain() const;
+
+   /*!
+    * @brief Access the multiblock domain description as a tree
+    * without periodic images.
+    *
+    * This tree does not contain periodic images, even if there is
+    * only one block and the domain is periodic.
+    *
+    * @return The multiblock domain description as a search tree.
+    */
+   const hier::MultiblockBoxTree&
+   getDomainSearchTree() const;
+
+   /*!
+    * @brief Access the multiblock domain description with periodic
+    * images (if any)
+    *
+    * @return The domain description as a search tree with periodic
+    * images (if any).
+    */
+   const hier::MultiblockBoxTree&
+   getPeriodicDomainSearchTree() const;
 
    /*!
     * @brief returns whether the physical domain for a block managed by this
@@ -1106,7 +1103,7 @@ protected:
     * @param[in]  dim
     * @param[in]  object_name
     */
-   explicit GridGeometry(
+   GridGeometry(
       const tbox::Dimension& dim,
       const std::string& object_name,
       tbox::Pointer<TransferOperatorRegistry> op_reg);
@@ -1249,14 +1246,25 @@ private:
    BoxContainer d_physical_domain;
 
    /*!
-    * Tree representation of domain, used for searches.
-    *
-    * This representation does NOT contain any periodic image boxes of
-    * the domain.
-    *
-    * Each entry of the array provides a tree representation for one block.
+    * @brief The domain, excluding periodic images, in
+    * MultiblockBoxTree form, used for overlap searches.
     */
-   tbox::Array<tbox::Pointer<BoxContainer> > d_domain_tree;
+   MultiblockBoxTree d_domain_search_tree;
+
+   /*!
+    * @brief The same as d_domain_search_tree, but with periodic
+    * Boxes.
+    *
+    * For non-periodic domains, this tree is identical to
+    * d_domain_search_tree.
+    */
+   MultiblockBoxTree d_domain_search_tree_periodic;
+
+   /*!
+    * @brief The multiblock domain complement description stored in a
+    * search tree.
+    */
+   MultiblockBoxTree d_complement_searchtree;
 
    /*!
     * Boolean array telling for each block whether the domain of that block

@@ -85,8 +85,10 @@ bool CellComplexConstantRefine::findRefineOperator(
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, *var);
 
-   const tbox::Pointer<CellVariable<dcomplex> > cast_var(var);
-   if (!cast_var.isNull() && (op_name == getOperatorName())) {
+   const tbox::Pointer<CellVariable<dcomplex> > cast_var(
+      var,
+      tbox::__dynamic_cast_tag());
+   if (cast_var && (op_name == getOperatorName())) {
       return true;
    } else {
       return false;
@@ -135,13 +137,15 @@ void CellComplexConstantRefine::refine(
    const hier::Box& fine_box,
    const hier::IntVector& ratio) const
 {
-   tbox::Pointer<CellData<dcomplex> >
-   cdata = coarse.getPatchData(src_component);
-   tbox::Pointer<CellData<dcomplex> >
-   fdata = fine.getPatchData(dst_component);
+   tbox::Pointer<CellData<dcomplex> > cdata(
+      coarse.getPatchData(src_component),
+      tbox::__dynamic_cast_tag());
+   tbox::Pointer<CellData<dcomplex> > fdata(
+      fine.getPatchData(dst_component),
+      tbox::__dynamic_cast_tag());
 
-   TBOX_ASSERT(!cdata.isNull());
-   TBOX_ASSERT(!fdata.isNull());
+   TBOX_ASSERT(cdata);
+   TBOX_ASSERT(fdata);
    TBOX_ASSERT(cdata->getDepth() == fdata->getDepth());
    TBOX_DIM_ASSERT_CHECK_ARGS5(*this, fine, coarse, fine_box, ratio);
 

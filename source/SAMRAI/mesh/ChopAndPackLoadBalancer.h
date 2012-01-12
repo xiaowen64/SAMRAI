@@ -182,7 +182,7 @@ public:
     *                   input file.  This pointer may be null indicating no
     *                   input will be read.
     */
-   ChopAndPackLoadBalancer(
+   explicit ChopAndPackLoadBalancer(
       const tbox::Dimension& dim,
       tbox::Pointer<tbox::Database> input_db =
          tbox::Pointer<tbox::Database>(NULL));

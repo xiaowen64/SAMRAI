@@ -210,15 +210,15 @@ void SideData<TYPE>::copy(
 
       TBOX_ASSERT(t_src->getDirectionVector() == d_directions);
 
-      if (t_overlap->getTransformation().getRotation() ==
-          hier::Transformation::NO_ROTATE) {
+      const hier::Transformation& transformation =
+         t_overlap->getTransformation();         
+      if (transformation.getRotation() == hier::Transformation::NO_ROTATE) {
 
-         const hier::IntVector& src_offset = t_overlap->getSourceOffset();
          for (int d = 0; d < getDim().getValue(); d++) {
             if (d_directions(d)) {
                const hier::BoxContainer& box_list =
                   t_overlap->getDestinationBoxContainer(d);
-               d_data[d].copy(t_src->d_data[d], box_list, src_offset);
+               d_data[d].copy(t_src->d_data[d], box_list, transformation);
             }
          }
       } else {
@@ -280,10 +280,12 @@ void SideData<TYPE>::copyWithRotation(
    hier::Transformation::calculateReverseShift(
       back_shift, shift, rotate);
 
-   hier::Transformation back_trans(back_rotate, back_shift);
-
    hier::Box rotatebox(src.getGhostBox());
    overlap.getTransformation().transform(rotatebox);
+
+   hier::Transformation back_trans(back_rotate, back_shift,
+                                   rotatebox.getBlockId(),
+                                   getBox().getBlockId());
 
    for (int i = 0; i < dim.getValue(); i++) {
       if (d_directions(i)) {
@@ -441,10 +443,12 @@ void SideData<TYPE>::packWithRotation(
    hier::Transformation::calculateReverseShift(
       back_shift, shift, rotate);
 
-   hier::Transformation back_trans(back_rotate, back_shift);
-
    hier::Box rotatebox(getGhostBox());
    overlap.getTransformation().transform(rotatebox);
+
+   hier::Transformation back_trans(back_rotate, back_shift,
+                                   rotatebox.getBlockId(),
+                                   getBox().getBlockId());
 
    const int depth = getDepth();
 
@@ -693,7 +697,7 @@ template<class TYPE>
 void SideData<TYPE>::getSpecializedFromDatabase(
    tbox::Pointer<tbox::Database> database)
 {
-   TBOX_ASSERT(!database.isNull());
+   TBOX_ASSERT(database);
 
    int ver = database->getInteger("PDAT_SIDEDATA_VERSION");
    if (ver != PDAT_SIDEDATA_VERSION) {
@@ -726,7 +730,7 @@ template<class TYPE>
 void SideData<TYPE>::putSpecializedToDatabase(
    tbox::Pointer<tbox::Database> database)
 {
-   TBOX_ASSERT(!database.isNull());
+   TBOX_ASSERT(database);
 
    database->putInteger("PDAT_SIDEDATA_VERSION", PDAT_SIDEDATA_VERSION);
 

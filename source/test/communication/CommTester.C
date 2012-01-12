@@ -53,7 +53,7 @@ CommTester::CommTester(
 
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(!object_name.empty());
-   TBOX_ASSERT(!main_input_db.isNull());
+   TBOX_ASSERT(main_input_db);
    TBOX_ASSERT(data_test != (PatchDataTestStrategy *)NULL);
 #endif
 
@@ -124,9 +124,9 @@ void CommTester::registerVariable(
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(src_ghosts, dst_ghosts);
 
-   TBOX_ASSERT(!src_variable.isNull());
-   TBOX_ASSERT(!dst_variable.isNull());
-   TBOX_ASSERT(!xfer_geom.isNull());
+   TBOX_ASSERT(src_variable);
+   TBOX_ASSERT(dst_variable);
+   TBOX_ASSERT(xfer_geom);
    TBOX_ASSERT(!operator_name.empty());
 
    const tbox::Dimension dim(src_ghosts.getDim());
@@ -157,7 +157,7 @@ void CommTester::registerVariable(
       hier::IntVector scratch_ghosts(hier::IntVector::max(src_ghosts,
                                         dst_ghosts));
       scratch_ghosts.max(hier::IntVector(scratch_ghosts.getDim(), 1));
-      if (!refine_operator.isNull()) {
+      if (refine_operator) {
          scratch_ghosts.max(refine_operator->getStencilWidth());
       }
       int scratch_id =
@@ -202,9 +202,9 @@ void CommTester::registerVariableForReset(
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(src_ghosts, dst_ghosts);
 
-   TBOX_ASSERT(!src_variable.isNull());
-   TBOX_ASSERT(!dst_variable.isNull());
-   TBOX_ASSERT(!xfer_geom.isNull());
+   TBOX_ASSERT(src_variable);
+   TBOX_ASSERT(dst_variable);
+   TBOX_ASSERT(xfer_geom);
    TBOX_ASSERT(!operator_name.empty());
 
    hier::VariableDatabase* variable_db = hier::VariableDatabase::getDatabase();
@@ -230,7 +230,7 @@ void CommTester::registerVariableForReset(
       hier::IntVector scratch_ghosts(hier::IntVector::max(src_ghosts,
                                         dst_ghosts));
       scratch_ghosts.max(hier::IntVector(scratch_ghosts.getDim(), 1));
-      if (!refine_operator.isNull()) {
+      if (refine_operator) {
          scratch_ghosts.max(refine_operator->getStencilWidth());
       }
       int scratch_id =
@@ -277,9 +277,9 @@ void CommTester::createRefineSchedule(
    if (d_do_refine) {
 
       d_fill_source_schedule.resizeArray(d_patch_hierarchy->getNumberOfLevels());
-      d_fill_source_schedule[level_number].setNull();
+      d_fill_source_schedule[level_number].reset();
       d_refine_schedule.resizeArray(d_patch_hierarchy->getNumberOfLevels());
-      d_refine_schedule[level_number].setNull();
+      d_refine_schedule[level_number].reset();
 
       const hier::Connector& peer_cnect =
          d_patch_hierarchy->getConnector(level_number, level_number);
@@ -350,7 +350,7 @@ void CommTester::createCoarsenSchedule(
    if (d_do_coarsen && (level_number > 0)) {
 
       d_coarsen_schedule.resizeArray(d_patch_hierarchy->getNumberOfLevels());
-      d_coarsen_schedule[level_number].setNull();
+      d_coarsen_schedule[level_number].reset();
 
       tbox::Pointer<hier::PatchLevel> level =
          d_patch_hierarchy->getPatchLevel(level_number);
@@ -395,7 +395,7 @@ void CommTester::performRefineOperations(
    const int level_number)
 {
    if (d_do_refine) {
-      if (!d_fill_source_schedule[level_number].isNull() &&
+      if (d_fill_source_schedule[level_number] &&
           level_number < d_fill_source_schedule.size() - 1) {
          d_data_test_strategy->setDataContext(d_source);
          d_fill_source_schedule[level_number]->fillData(d_fake_time);
@@ -405,7 +405,7 @@ void CommTester::performRefineOperations(
       } else {
          d_data_test_strategy->setDataContext(d_refine_scratch);
       }
-      if (!d_refine_schedule[level_number].isNull()) {
+      if (d_refine_schedule[level_number]) {
          d_refine_schedule[level_number]->fillData(d_fake_time);
       }
       d_data_test_strategy->clearDataContext();
@@ -421,7 +421,7 @@ void CommTester::performCoarsenOperations(
       } else {
          d_data_test_strategy->setDataContext(d_source);
       }
-      if (!d_coarsen_schedule[level_number].isNull()) {
+      if (d_coarsen_schedule[level_number]) {
          d_coarsen_schedule[level_number]->coarsenData();
       }
       d_data_test_strategy->clearDataContext();
@@ -485,8 +485,8 @@ void CommTester::initializeLevelData(
    (void)old_level;
    (void)allocate_data;
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!(hierarchy.isNull()));
-   TBOX_ASSERT(!(hierarchy->getPatchLevel(level_number).isNull()));
+   TBOX_ASSERT(hierarchy);
+   TBOX_ASSERT(hierarchy->getPatchLevel(level_number));
    TBOX_ASSERT(level_number >= 0);
 #endif
 
@@ -637,7 +637,7 @@ void CommTester::setupHierarchy(
    tbox::Pointer<mesh::StandardTagAndInitialize> cell_tagger)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!main_input_db.isNull());
+   TBOX_ASSERT(main_input_db);
 #endif
 
    d_patch_hierarchy =

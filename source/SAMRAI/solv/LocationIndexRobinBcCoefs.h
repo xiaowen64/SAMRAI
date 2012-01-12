@@ -78,8 +78,7 @@ public:
    /*!
     * @brief Destructor.
     */
-   virtual ~LocationIndexRobinBcCoefs(
-      void);
+   virtual ~LocationIndexRobinBcCoefs();
 
    /*!
     * @brief Function to fill arrays of Robin boundary

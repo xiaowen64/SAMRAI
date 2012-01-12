@@ -130,8 +130,8 @@ ModifiedBratuProblem::ModifiedBratuProblem(
    d_scratch_soln_coarsen(d_dim)
 {
    TBOX_ASSERT(!object_name.empty());
-   TBOX_ASSERT(!input_db.isNull());
-   TBOX_ASSERT(!grid_geometry.isNull());
+   TBOX_ASSERT(input_db);
+   TBOX_ASSERT(grid_geometry);
 
    d_object_name = object_name;
    tbox::RestartManager::getManager()->registerRestartItem(d_object_name, this);
@@ -176,7 +176,7 @@ ModifiedBratuProblem::ModifiedBratuProblem(
    int soln_id = variable_db->registerVariableAndContext(d_solution,
          d_current,
          hier::IntVector(d_dim, 0));
-   if (!visit_writer.isNull()) {
+   if (visit_writer) {
       visit_writer->registerPlotQuantity("U", "SCALAR", soln_id);
    }
    int soln_new_id = variable_db->registerVariableAndContext(d_solution,
@@ -374,9 +374,9 @@ ModifiedBratuProblem::ModifiedBratuProblem(
 
 ModifiedBratuProblem::~ModifiedBratuProblem()
 {
-   d_FAC_solver.setNull();
-   s_copy_timer.setNull();
-   s_pc_timer.setNull();
+   d_FAC_solver.reset();
+   s_copy_timer.reset();
+   s_pc_timer.reset();
 }
 
 /*
@@ -393,7 +393,7 @@ void ModifiedBratuProblem::setupSolutionVector(
    tbox::Pointer<solv::SAMRAIVectorReal<double> > solution)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!solution.isNull());
+   TBOX_ASSERT(solution);
 #endif
 
    d_solution_vector = solution;
@@ -427,8 +427,9 @@ void ModifiedBratuProblem::setVectorWeights(
             amr_level);
       for (hier::PatchLevel::Iterator p(level); p; p++) {
          tbox::Pointer<hier::Patch> patch = *p;
-         tbox::Pointer<geom::CartesianPatchGeometry> patch_geometry =
-            patch->getPatchGeometry();
+         tbox::Pointer<geom::CartesianPatchGeometry> patch_geometry(
+            patch->getPatchGeometry(),
+            tbox::__dynamic_cast_tag());
          const double* dx = patch_geometry->getDx();
          double cell_vol = dx[0];
          if (d_dim > tbox::Dimension(1)) {
@@ -437,8 +438,9 @@ void ModifiedBratuProblem::setVectorWeights(
          if (d_dim > tbox::Dimension(2)) {
             cell_vol *= dx[2];
          }
-         tbox::Pointer<pdat::CellData<double> > w =
-            patch->getPatchData(d_weight_id);
+         tbox::Pointer<pdat::CellData<double> > w(
+            patch->getPatchData(d_weight_id),
+            tbox::__dynamic_cast_tag());
          w->fillAll(cell_vol);
       }
 
@@ -477,8 +479,9 @@ void ModifiedBratuProblem::setVectorWeights(
                const hier::Box& coarse_box = *i;
                hier::Box intersection = coarse_box * patch->getBox();
                if (!intersection.empty()) {
-                  tbox::Pointer<pdat::CellData<double> > w =
-                     patch->getPatchData(d_weight_id);
+                  tbox::Pointer<pdat::CellData<double> > w(
+                     patch->getPatchData(d_weight_id),
+                     tbox::__dynamic_cast_tag());
                   w->fillAll(0.0, intersection);
 
                }  // assignment only in non-empty intersection
@@ -518,8 +521,8 @@ void ModifiedBratuProblem::setInitialGuess(
 
    if (first_step) {
 
-      if (!d_FAC_solver.isNull()) {
-         d_FAC_solver.setNull();
+      if (d_FAC_solver) {
+         d_FAC_solver.reset();
       }
 
       d_FAC_solver =
@@ -545,26 +548,30 @@ void ModifiedBratuProblem::setInitialGuess(
          for (hier::PatchLevel::Iterator p(patch_level); p; p++) {
             tbox::Pointer<hier::Patch> patch = *p;
 
-            tbox::Pointer<pdat::CellData<double> > y_cur =
-               patch->getPatchData(d_solution, d_current);
-            tbox::Pointer<pdat::CellData<double> > y_new =
-               patch->getPatchData(d_solution, d_new);
+            tbox::Pointer<pdat::CellData<double> > y_cur(
+               patch->getPatchData(d_solution, d_current),
+               tbox::__dynamic_cast_tag());
+            tbox::Pointer<pdat::CellData<double> > y_new(
+               patch->getPatchData(d_solution, d_new),
+               tbox::__dynamic_cast_tag());
             y_new->copy(*y_cur);
 
             y_new->setTime(d_new_time);
 
             patch->getPatchData(d_solution, d_scratch)->setTime(d_new_time);
 
-            tbox::Pointer<geom::CartesianPatchGeometry> patch_geometry =
-               patch->getPatchGeometry();
+            tbox::Pointer<geom::CartesianPatchGeometry> patch_geometry(
+               patch->getPatchGeometry(),
+               tbox::__dynamic_cast_tag());
             const double* dx = patch_geometry->getDx();
             const double* xlo = patch_geometry->getXLower();
             const double* xhi = patch_geometry->getXUpper();
             const hier::Index ifirst = patch->getBox().lower();
             const hier::Index ilast = patch->getBox().upper();
 
-            tbox::Pointer<pdat::SideData<double> > diffusion =
-               patch->getPatchData(d_diffusion_coef, d_scratch);
+            tbox::Pointer<pdat::SideData<double> > diffusion(
+               patch->getPatchData(d_diffusion_coef, d_scratch),
+               tbox::__dynamic_cast_tag());
 
             if (d_dim == tbox::Dimension(1)) {
                FORT_EVALDIFFUSION1D(ifirst(0), ilast(0),
@@ -600,26 +607,30 @@ void ModifiedBratuProblem::setInitialGuess(
          for (hier::PatchLevel::Iterator p(patch_level); p; p++) {
             tbox::Pointer<hier::Patch> patch = *p;
 
-            tbox::Pointer<pdat::CellData<double> > y_cur =
-               patch->getPatchData(d_solution, d_current);
-            tbox::Pointer<pdat::CellData<double> > y_new =
-               patch->getPatchData(d_solution, d_new);
+            tbox::Pointer<pdat::CellData<double> > y_cur(
+               patch->getPatchData(d_solution, d_current),
+               tbox::__dynamic_cast_tag());
+            tbox::Pointer<pdat::CellData<double> > y_new(
+               patch->getPatchData(d_solution, d_new),
+               tbox::__dynamic_cast_tag());
             y_new->copy(*y_cur);
 
             y_new->setTime(d_new_time);
 
             patch->getPatchData(d_solution, d_scratch)->setTime(d_new_time);
 
-            tbox::Pointer<geom::CartesianPatchGeometry> patch_geometry =
-               patch->getPatchGeometry();
+            tbox::Pointer<geom::CartesianPatchGeometry> patch_geometry(
+               patch->getPatchGeometry(),
+               tbox::__dynamic_cast_tag());
             const double* dx = patch_geometry->getDx();
             const double* xlo = patch_geometry->getXLower();
             const double* xhi = patch_geometry->getXUpper();
             const hier::Index ifirst = patch->getBox().lower();
             const hier::Index ilast = patch->getBox().upper();
 
-            tbox::Pointer<pdat::SideData<double> > diffusion =
-               patch->getPatchData(d_diffusion_coef, d_scratch);
+            tbox::Pointer<pdat::SideData<double> > diffusion(
+               patch->getPatchData(d_diffusion_coef, d_scratch),
+               tbox::__dynamic_cast_tag());
             if (d_dim == tbox::Dimension(1)) {
                FORT_EVALDIFFUSION1D(ifirst(0), ilast(0),
                   dx, xlo, xhi,
@@ -735,16 +746,18 @@ bool ModifiedBratuProblem::checkNewSolution(
          tbox::Pointer<hier::Patch> patch = *p;
          const hier::Index ifirst = patch->getBox().lower();
          const hier::Index ilast = patch->getBox().upper();
-         tbox::Pointer<geom::CartesianPatchGeometry> patch_geom =
-            patch->getPatchGeometry();
+         tbox::Pointer<geom::CartesianPatchGeometry> patch_geom(
+            patch->getPatchGeometry(),
+            tbox::__dynamic_cast_tag());
          const double* dx = patch_geom->getDx();
          const double* xlo = patch_geom->getXLower();
          const double* xhi = patch_geom->getXUpper();
-         tbox::Pointer<pdat::CellData<double> > u = patch->getPatchData(
-               d_solution,
-               d_new);
-         tbox::Pointer<pdat::CellData<double> > w = patch->getPatchData(
-               d_weight_id);
+         tbox::Pointer<pdat::CellData<double> > u(
+            patch->getPatchData(d_solution, d_new),
+            tbox::__dynamic_cast_tag());
+         tbox::Pointer<pdat::CellData<double> > w(
+            patch->getPatchData(d_weight_id),
+            tbox::__dynamic_cast_tag());
 
          if (d_dim == tbox::Dimension(1)) {
             FORT_ERROR1D(ifirst(0), ilast(0),
@@ -817,10 +830,12 @@ void ModifiedBratuProblem::updateSolution(
       for (hier::PatchLevel::Iterator p(patch_level); p; p++) {
          tbox::Pointer<hier::Patch> patch = *p;
 
-         tbox::Pointer<pdat::CellData<double> > y_cur =
-            patch->getPatchData(d_solution, d_current);
-         tbox::Pointer<pdat::CellData<double> > y_new =
-            patch->getPatchData(d_solution, d_new);
+         tbox::Pointer<pdat::CellData<double> > y_cur(
+            patch->getPatchData(d_solution, d_current),
+            tbox::__dynamic_cast_tag());
+         tbox::Pointer<pdat::CellData<double> > y_new(
+            patch->getPatchData(d_solution, d_new),
+            tbox::__dynamic_cast_tag());
          y_cur->copy(*y_new);
 
          y_cur->setTime(new_time);
@@ -864,13 +879,13 @@ void ModifiedBratuProblem::initializeLevelData(
    NULL_USE(allocate_data);
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!hierarchy.isNull());
+   TBOX_ASSERT(hierarchy);
    TBOX_ASSERT((level_number >= 0)
       && (level_number <= hierarchy->getFinestLevelNumber()));
-   if (!(old_level.isNull())) {
+   if (old_level) {
       TBOX_ASSERT(level_number == old_level->getLevelNumber());
    }
-   TBOX_ASSERT(!(hierarchy->getPatchLevel(level_number)).isNull());
+   TBOX_ASSERT(hierarchy->getPatchLevel(level_number));
 #endif
 
    tbox::Pointer<hier::PatchHierarchy> patch_hierarchy = hierarchy;
@@ -880,7 +895,7 @@ void ModifiedBratuProblem::initializeLevelData(
 
    level->allocatePatchData(d_new_patch_problem_data, time);
 
-   if ((level_number > 0) || !old_level.isNull()) {
+   if ((level_number > 0) || old_level) {
 
       tbox::Pointer<RefineSchedule> sched = d_fill_new_level.createSchedule(
             level,
@@ -890,7 +905,7 @@ void ModifiedBratuProblem::initializeLevelData(
             NULL);
       sched->fillData(time);
 
-      if (!old_level.isNull()) {
+      if (old_level) {
          old_level->deallocatePatchData(d_new_patch_problem_data);
          old_level->deallocatePatchData(d_problem_data);
       }
@@ -910,22 +925,25 @@ void ModifiedBratuProblem::initializeLevelData(
 
       if (initial_time) {
 
-         tbox::Pointer<pdat::CellData<double> > u =
-            patch->getPatchData(d_solution, d_current);
+	tbox::Pointer<pdat::CellData<double> > u(
+            patch->getPatchData(d_solution, d_current),
+            tbox::__dynamic_cast_tag());
          u->fillAll(0.0);
 
       }
 
-      tbox::Pointer<geom::CartesianPatchGeometry> patch_geometry =
-         patch->getPatchGeometry();
+      tbox::Pointer<geom::CartesianPatchGeometry> patch_geometry(
+         patch->getPatchGeometry(),
+         tbox::__dynamic_cast_tag());
       const double* dx = patch_geometry->getDx();
       const double* xlo = patch_geometry->getXLower();
       const double* xhi = patch_geometry->getXUpper();
       const hier::Index ifirst = patch->getBox().lower();
       const hier::Index ilast = patch->getBox().upper();
 
-      tbox::Pointer<pdat::SideData<double> > diffusion =
-         patch->getPatchData(d_diffusion_coef, d_scratch);
+      tbox::Pointer<pdat::SideData<double> > diffusion(
+         patch->getPatchData(d_diffusion_coef, d_scratch),
+         tbox::__dynamic_cast_tag());
       if (d_dim == tbox::Dimension(1)) {
          FORT_EVALDIFFUSION1D(ifirst(0), ilast(0),
             dx, xlo, xhi,
@@ -970,12 +988,12 @@ void ModifiedBratuProblem::resetHierarchyConfiguration(
    const int finest_level)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!hierarchy.isNull());
+   TBOX_ASSERT(hierarchy);
    TBOX_ASSERT((coarsest_level >= 0)
       && (coarsest_level <= finest_level)
       && (finest_level <= hierarchy->getFinestLevelNumber()));
    for (int ln0 = 0; ln0 <= finest_level; ln0++) {
-      TBOX_ASSERT(!(hierarchy->getPatchLevel(ln0)).isNull());
+      TBOX_ASSERT(hierarchy->getPatchLevel(ln0));
    }
 #endif
    tbox::Pointer<hier::PatchHierarchy> patch_hierarchy = hierarchy;
@@ -1260,8 +1278,8 @@ void ModifiedBratuProblem::evaluateBratuFunction(
    tbox::Pointer<solv::SAMRAIVectorReal<double> > f)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!x.isNull());
-   TBOX_ASSERT(!f.isNull());
+   TBOX_ASSERT(x);
+   TBOX_ASSERT(f);
 #endif
 
    tbox::Pointer<hier::PatchHierarchy> hierarchy =
@@ -1320,20 +1338,25 @@ void ModifiedBratuProblem::evaluateBratuFunction(
       for (hier::PatchLevel::Iterator p(level); p; p++) {
          tbox::Pointer<hier::Patch> patch = *p;
 
-         const tbox::Pointer<geom::CartesianPatchGeometry> patch_geom =
-            patch->getPatchGeometry();
+         const tbox::Pointer<geom::CartesianPatchGeometry> patch_geom(
+            patch->getPatchGeometry(),
+            tbox::__dynamic_cast_tag());
          const double* dx = patch_geom->getDx();
          const hier::Index ifirst = patch->getBox().lower();
          const hier::Index ilast = patch->getBox().upper();
 
-         tbox::Pointer<pdat::CellData<double> > u =
-            patch->getPatchData(d_solution, d_scratch);
-         tbox::Pointer<pdat::SideData<double> > diffusion =
-            patch->getPatchData(d_diffusion_coef, d_scratch);
-         tbox::Pointer<pdat::SideData<double> > flux =
-            patch->getPatchData(d_flux_id);
-         tbox::Pointer<pdat::OutersideData<double> > coarse_fine_flux =
-            patch->getPatchData(d_coarse_fine_flux_id);
+         tbox::Pointer<pdat::CellData<double> > u(
+            patch->getPatchData(d_solution, d_scratch),
+            tbox::__dynamic_cast_tag());
+         tbox::Pointer<pdat::SideData<double> > diffusion(
+            patch->getPatchData(d_diffusion_coef, d_scratch),
+            tbox::__dynamic_cast_tag());
+         tbox::Pointer<pdat::SideData<double> > flux(
+            patch->getPatchData(d_flux_id),
+            tbox::__dynamic_cast_tag());
+         tbox::Pointer<pdat::OutersideData<double> > coarse_fine_flux(
+            patch->getPatchData(d_coarse_fine_flux_id),
+            tbox::__dynamic_cast_tag());
          if (d_dim == tbox::Dimension(1)) {
             FORT_EVALFACEFLUXES1D(ifirst(0), ilast(0),
                NUM_GHOSTS_U,
@@ -1522,8 +1545,9 @@ void ModifiedBratuProblem::evaluateBratuFunction(
       for (hier::PatchLevel::Iterator p(level); p; p++) {
          tbox::Pointer<hier::Patch> patch = *p;
 
-         const tbox::Pointer<geom::CartesianPatchGeometry> patch_geom =
-            patch->getPatchGeometry();
+         const tbox::Pointer<geom::CartesianPatchGeometry> patch_geom(
+            patch->getPatchGeometry(),
+            tbox::__dynamic_cast_tag());
 
          const double* dx = patch_geom->getDx();
          const double* xlo = patch_geom->getXLower();
@@ -1531,20 +1555,27 @@ void ModifiedBratuProblem::evaluateBratuFunction(
          const hier::Index ifirst = patch->getBox().lower();
          const hier::Index ilast = patch->getBox().upper();
 
-         tbox::Pointer<pdat::CellData<double> > u =
-            patch->getPatchData(d_solution, d_scratch);
-         tbox::Pointer<pdat::CellData<double> > u_cur =
-            patch->getPatchData(d_solution, d_current);
-         tbox::Pointer<pdat::CellData<double> > source =
-            patch->getPatchData(d_source_term, d_scratch);
-         tbox::Pointer<pdat::CellData<double> > exponential =
-            patch->getPatchData(d_exponential_term, d_scratch);
-         tbox::Pointer<pdat::SideData<double> > flux =
-            patch->getPatchData(d_flux_id);
-         tbox::Pointer<pdat::CellData<double> > fcur =
-            f->getComponentPatchData(0, *patch);
-         tbox::Pointer<pdat::CellData<double> > xdat =
-            x->getComponentPatchData(0, *patch);
+         tbox::Pointer<pdat::CellData<double> > u(
+            patch->getPatchData(d_solution, d_scratch),
+            tbox::__dynamic_cast_tag());
+         tbox::Pointer<pdat::CellData<double> > u_cur(
+            patch->getPatchData(d_solution, d_current),
+            tbox::__dynamic_cast_tag());
+         tbox::Pointer<pdat::CellData<double> > source(
+            patch->getPatchData(d_source_term, d_scratch),
+            tbox::__dynamic_cast_tag());
+         tbox::Pointer<pdat::CellData<double> > exponential(
+            patch->getPatchData(d_exponential_term, d_scratch),
+            tbox::__dynamic_cast_tag());
+         tbox::Pointer<pdat::SideData<double> > flux(
+            patch->getPatchData(d_flux_id),
+            tbox::__dynamic_cast_tag());
+         tbox::Pointer<pdat::CellData<double> > fcur(
+            f->getComponentPatchData(0, *patch),
+            tbox::__dynamic_cast_tag());
+         tbox::Pointer<pdat::CellData<double> > xdat(
+            x->getComponentPatchData(0, *patch),
+            tbox::__dynamic_cast_tag());
          if (d_dim == tbox::Dimension(1)) {
             FORT_EVALEXPONENTIAL1D(ifirst(0), ilast(0),
                xdat->getPointer(),
@@ -1779,17 +1810,22 @@ ModifiedBratuProblem::jacobianTimesVector(
          const hier::Index ifirst = patch->getBox().lower();
          const hier::Index ilast = patch->getBox().upper();
 
-         tbox::Pointer<geom::CartesianPatchGeometry> patch_geom =
-            patch->getPatchGeometry();
+         tbox::Pointer<geom::CartesianPatchGeometry> patch_geom(
+            patch->getPatchGeometry(),
+            tbox::__dynamic_cast_tag());
          const double* dx = patch_geom->getDx();
-         tbox::Pointer<pdat::CellData<double> > vdat =
-            patch->getPatchData(d_soln_scratch_id);
-         tbox::Pointer<pdat::SideData<double> > diffusion =
-            patch->getPatchData(d_diffusion_coef, d_scratch);
-         tbox::Pointer<pdat::SideData<double> > flux =
-            patch->getPatchData(d_flux_id);
-         tbox::Pointer<pdat::OutersideData<double> > coarse_fine_flux =
-            patch->getPatchData(d_coarse_fine_flux_id);
+         tbox::Pointer<pdat::CellData<double> > vdat(
+            patch->getPatchData(d_soln_scratch_id),
+            tbox::__dynamic_cast_tag());
+         tbox::Pointer<pdat::SideData<double> > diffusion(
+            patch->getPatchData(d_diffusion_coef, d_scratch),
+            tbox::__dynamic_cast_tag());
+         tbox::Pointer<pdat::SideData<double> > flux(
+            patch->getPatchData(d_flux_id),
+            tbox::__dynamic_cast_tag());
+         tbox::Pointer<pdat::OutersideData<double> > coarse_fine_flux(
+            patch->getPatchData(d_coarse_fine_flux_id),
+            tbox::__dynamic_cast_tag());
 
          if (d_dim == tbox::Dimension(1)) {
             FORT_EVALFACEFLUXES1D(ifirst(0), ilast(0),
@@ -1991,22 +2027,27 @@ ModifiedBratuProblem::jacobianTimesVector(
       for (hier::PatchLevel::Iterator p(level); p; p++) {
          tbox::Pointer<hier::Patch> patch = *p;
 
-         const tbox::Pointer<geom::CartesianPatchGeometry> patch_geom =
-            patch->getPatchGeometry();
+         const tbox::Pointer<geom::CartesianPatchGeometry> patch_geom(
+            patch->getPatchGeometry(),
+            tbox::__dynamic_cast_tag());
 
          const hier::Index ifirst = patch->getBox().lower();
          const hier::Index ilast = patch->getBox().upper();
 
          const double* dx = patch_geom->getDx();
 
-         tbox::Pointer<pdat::CellData<double> > jac_a =
-            patch->getPatchData(d_jacobian_a_id);
-         tbox::Pointer<pdat::CellData<double> > Jvdat =
-            Jv->getComponentPatchData(0, *patch);
-         tbox::Pointer<pdat::CellData<double> > vdat =
-            patch->getPatchData(d_soln_scratch_id);
-         tbox::Pointer<pdat::SideData<double> > flux =
-            patch->getPatchData(d_flux_id);
+         tbox::Pointer<pdat::CellData<double> > jac_a(
+            patch->getPatchData(d_jacobian_a_id),
+            tbox::__dynamic_cast_tag());
+         tbox::Pointer<pdat::CellData<double> > Jvdat(
+            Jv->getComponentPatchData(0, *patch),
+            tbox::__dynamic_cast_tag());
+         tbox::Pointer<pdat::CellData<double> > vdat(
+            patch->getPatchData(d_soln_scratch_id),
+            tbox::__dynamic_cast_tag());
+         tbox::Pointer<pdat::SideData<double> > flux(
+            patch->getPatchData(d_flux_id),
+            tbox::__dynamic_cast_tag());
 
 #ifdef DEBUG_CHECK_ASSERTIONS
          TBOX_ASSERT(vdat->getGhostCellWidth() ==
@@ -2094,7 +2135,7 @@ void ModifiedBratuProblem::setupBratuPreconditioner(
    tbox::Pointer<solv::SAMRAIVectorReal<double> > x)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!x.isNull());
+   TBOX_ASSERT(x);
 #endif
 
    tbox::Pointer<hier::PatchHierarchy> hierarchy =
@@ -2119,8 +2160,9 @@ void ModifiedBratuProblem::setupBratuPreconditioner(
       for (hier::PatchLevel::Iterator p(level); p; p++) {
          tbox::Pointer<hier::Patch> patch = *p;
 
-         const tbox::Pointer<geom::CartesianPatchGeometry> patch_geom =
-            patch->getPatchGeometry();
+         const tbox::Pointer<geom::CartesianPatchGeometry> patch_geom(
+            patch->getPatchGeometry(),
+            tbox::__dynamic_cast_tag());
 
          const hier::Index ifirst = patch->getBox().lower();
          const hier::Index ilast = patch->getBox().upper();
@@ -2135,27 +2177,33 @@ void ModifiedBratuProblem::setupBratuPreconditioner(
          if (d_dim > tbox::Dimension(2)) {
             cell_vol *= dx[2];
          }
-         tbox::Pointer<pdat::CellData<double> > u =
-            patch->getPatchData(d_solution, d_scratch);
-         tbox::Pointer<pdat::CellData<double> > exponential =
-            patch->getPatchData(d_exponential_term, d_scratch);
-         tbox::Pointer<pdat::CellData<double> > source =
-            patch->getPatchData(d_source_term, d_scratch);
-         tbox::Pointer<pdat::SideData<double> > diffusion =
-            patch->getPatchData(d_diffusion_coef, d_scratch);
+         tbox::Pointer<pdat::CellData<double> > u(
+            patch->getPatchData(d_solution, d_scratch),
+            tbox::__dynamic_cast_tag());
+         tbox::Pointer<pdat::CellData<double> > exponential(
+            patch->getPatchData(d_exponential_term, d_scratch),
+            tbox::__dynamic_cast_tag());
+         tbox::Pointer<pdat::CellData<double> > source(
+            patch->getPatchData(d_source_term, d_scratch),
+            tbox::__dynamic_cast_tag());
+         tbox::Pointer<pdat::SideData<double> > diffusion(
+            patch->getPatchData(d_diffusion_coef, d_scratch),
+            tbox::__dynamic_cast_tag());
 
-         tbox::Pointer<pdat::CellData<double> > a = patch->getPatchData(
-               d_precond_a_id);
-         tbox::Pointer<pdat::FaceData<double> > b = patch->getPatchData(
-               d_precond_b_id);
+         tbox::Pointer<pdat::CellData<double> > a(
+            patch->getPatchData(d_precond_a_id),
+            tbox::__dynamic_cast_tag());
+         tbox::Pointer<pdat::FaceData<double> > b(
+            patch->getPatchData(d_precond_b_id),
+            tbox::__dynamic_cast_tag());
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-         TBOX_ASSERT(!exponential.isNull());
-         TBOX_ASSERT(!source.isNull());
-         TBOX_ASSERT(!u.isNull());
-         TBOX_ASSERT(!diffusion.isNull());
-         TBOX_ASSERT(!a.isNull());
-         TBOX_ASSERT(!b.isNull());
+         TBOX_ASSERT(exponential);
+         TBOX_ASSERT(source);
+         TBOX_ASSERT(u);
+         TBOX_ASSERT(diffusion);
+         TBOX_ASSERT(a);
+         TBOX_ASSERT(b);
 #endif
 
          /*
@@ -2324,8 +2372,8 @@ int ModifiedBratuProblem::applyBratuPreconditioner(
    tbox::Pointer<solv::SAMRAIVectorReal<double> > z)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!r.isNull());
-   TBOX_ASSERT(!z.isNull());
+   TBOX_ASSERT(r);
+   TBOX_ASSERT(z);
 #endif
 
    int ret_val = 0;
@@ -2403,10 +2451,12 @@ int ModifiedBratuProblem::applyBratuPreconditioner(
       for (hier::PatchLevel::Iterator p(level); p; p++) {
          tbox::Pointer<hier::Patch> patch = *p;
 
-         tbox::Pointer<pdat::CellData<double> > src_data =
-            patch->getPatchData(d_soln_scratch_id);
-         tbox::Pointer<pdat::CellData<double> > dst_data = patch->getPatchData(
-               z_indx);
+         tbox::Pointer<pdat::CellData<double> > src_data(
+            patch->getPatchData(d_soln_scratch_id),
+            tbox::__dynamic_cast_tag());
+         tbox::Pointer<pdat::CellData<double> > dst_data(
+            patch->getPatchData(z_indx),
+            tbox::__dynamic_cast_tag());
 
          dst_data->copy(*src_data);
       }
@@ -2448,8 +2498,9 @@ void ModifiedBratuProblem::evaluateBratuJacobian(
       for (hier::PatchLevel::Iterator p(level); p; p++) {
          tbox::Pointer<hier::Patch> patch = *p;
 
-         const tbox::Pointer<geom::CartesianPatchGeometry> patch_geom =
-            patch->getPatchGeometry();
+         const tbox::Pointer<geom::CartesianPatchGeometry> patch_geom(
+            patch->getPatchGeometry(),
+            tbox::__dynamic_cast_tag());
 
          const hier::Index ifirst = patch->getBox().lower();
          const hier::Index ilast = patch->getBox().upper();
@@ -2465,19 +2516,25 @@ void ModifiedBratuProblem::evaluateBratuJacobian(
             cell_vol *= dx[2];
          }
 
-         tbox::Pointer<pdat::CellData<double> > u =
-            patch->getPatchData(d_solution, d_scratch);
-         tbox::Pointer<pdat::CellData<double> > exponential =
-            patch->getPatchData(d_exponential_term, d_scratch);
-         tbox::Pointer<pdat::CellData<double> > source =
-            patch->getPatchData(d_source_term, d_scratch);
-         tbox::Pointer<pdat::SideData<double> > diffusion =
-            patch->getPatchData(d_diffusion_coef, d_scratch);
+         tbox::Pointer<pdat::CellData<double> > u(
+            patch->getPatchData(d_solution, d_scratch),
+            tbox::__dynamic_cast_tag());
+         tbox::Pointer<pdat::CellData<double> > exponential(
+            patch->getPatchData(d_exponential_term, d_scratch),
+            tbox::__dynamic_cast_tag());
+         tbox::Pointer<pdat::CellData<double> > source(
+            patch->getPatchData(d_source_term, d_scratch),
+            tbox::__dynamic_cast_tag());
+         tbox::Pointer<pdat::SideData<double> > diffusion(
+            patch->getPatchData(d_diffusion_coef, d_scratch),
+            tbox::__dynamic_cast_tag());
 
-         tbox::Pointer<pdat::CellData<double> > a = patch->getPatchData(
-               d_jacobian_a_id);
-         tbox::Pointer<pdat::FaceData<double> > b = patch->getPatchData(
-               d_jacobian_b_id);
+         tbox::Pointer<pdat::CellData<double> > a(
+            patch->getPatchData(d_jacobian_a_id),
+            tbox::__dynamic_cast_tag());
+         tbox::Pointer<pdat::FaceData<double> > b(
+            patch->getPatchData(d_jacobian_b_id),
+            tbox::__dynamic_cast_tag());
 
          if (d_dim == tbox::Dimension(1)) {
             /*
@@ -2581,8 +2638,9 @@ void ModifiedBratuProblem::setPhysicalBoundaryConditions(
     * Grab data to operate on.
     */
 
-   tbox::Pointer<pdat::CellData<double> > u = patch.getPatchData(
-         d_soln_scratch_id);
+   tbox::Pointer<pdat::CellData<double> > u(
+      patch.getPatchData(d_soln_scratch_id),
+      tbox::__dynamic_cast_tag());
 
    const hier::Index ifirst = patch.getBox().lower();
    const hier::Index ilast = patch.getBox().upper();
@@ -2591,8 +2649,9 @@ void ModifiedBratuProblem::setPhysicalBoundaryConditions(
     * Determine boxes that touch the physical boundary.
     */
 
-   const tbox::Pointer<geom::CartesianPatchGeometry> patch_geom =
-      patch.getPatchGeometry();
+   const tbox::Pointer<geom::CartesianPatchGeometry> patch_geom(
+      patch.getPatchGeometry(),
+      tbox::__dynamic_cast_tag());
    const tbox::Array<hier::BoundaryBox> boundary =
       patch_geom->getCodimensionBoundaries(1);
 #if 0
@@ -2659,7 +2718,7 @@ void ModifiedBratuProblem::getFromInput(
    bool is_from_restart)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!db.isNull());
+   TBOX_ASSERT(db);
 #endif
 
    if (db->keyExists("lambda")) {
@@ -2719,7 +2778,7 @@ void ModifiedBratuProblem::putToDatabase(
    tbox::Pointer<tbox::Database> db)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!db.isNull());
+   TBOX_ASSERT(db);
 #endif
 
    db->putInteger("MODIFIED_BRATU_PROBLEM", MODIFIED_BRATU_PROBLEM);
@@ -2747,9 +2806,7 @@ void ModifiedBratuProblem::printClassData(
       << endl;
    os << "d_object_name = " << d_object_name << endl;
    os << "d_grid_geometry = "
-      << (geom::CartesianGridGeometry *)d_grid_geometry << endl;
-   os << "d_grid_geometry = "
-      << (geom::CartesianGridGeometry *)d_grid_geometry << endl;
+      << d_grid_geometry.get() << endl;
 
    os << "d_soln_scratch_id =   " << d_soln_scratch_id << endl;
    os << "d_flux_id =   " << d_flux_id << endl;
@@ -2809,8 +2866,9 @@ void ModifiedBratuProblem::getLevelEdges(
     * physical boundary.
     */
 
-   tbox::Pointer<geom::CartesianPatchGeometry> geometry =
-      patch->getPatchGeometry();
+   tbox::Pointer<geom::CartesianPatchGeometry> geometry(
+      patch->getPatchGeometry(),
+      tbox::__dynamic_cast_tag());
    tbox::Array<hier::BoundaryBox> boundary_boxes =
       geometry->getCodimensionBoundaries(1);
    for (int i = 0; i < boundary_boxes.getSize(); i++) {
@@ -2830,8 +2888,9 @@ void ModifiedBratuProblem::correctLevelFlux(
    for (hier::PatchLevel::Iterator p(level); p; p++) {
       tbox::Pointer<hier::Patch> patch = *p;
       const hier::Box box = patch->getBox();
-      tbox::Pointer<pdat::SideData<double> > flux_data = patch->getPatchData(
-            d_flux_id);
+      tbox::Pointer<pdat::SideData<double> > flux_data(
+         patch->getPatchData(d_flux_id),
+         tbox::__dynamic_cast_tag());
 
       /*
        * For each dimension, for each side:  compute the index space that
@@ -2867,10 +2926,12 @@ void ModifiedBratuProblem::correctPatchFlux(
    tbox::Pointer<pdat::CellData<double> > u)
 {
    const hier::Box box = patch->getBox();
-   tbox::Pointer<pdat::SideData<double> > flux_data = patch->getPatchData(
-         d_flux_id);
-   const tbox::Pointer<geom::CartesianPatchGeometry> geometry =
-      patch->getPatchGeometry();
+   tbox::Pointer<pdat::SideData<double> > flux_data(
+      patch->getPatchData(d_flux_id),
+      tbox::__dynamic_cast_tag());
+   const tbox::Pointer<geom::CartesianPatchGeometry> geometry(
+      patch->getPatchGeometry(),
+      tbox::__dynamic_cast_tag());
    const double* dx = geometry->getDx();
 
    for (int d = 0; d < d_dim.getValue(); d++) {

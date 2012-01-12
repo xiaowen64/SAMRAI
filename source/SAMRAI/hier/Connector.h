@@ -4,7 +4,8 @@
  * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Set of distributed box-graph relationships from one BoxLevel to another.
+ * Description:   Set of distributed box-graph relationships from one BoxLevel
+ *                to another.
  *
  ************************************************************************/
 #ifndef included_hier_Connector
@@ -12,9 +13,9 @@
 
 #include "SAMRAI/SAMRAI_config.h"
 
-#include "SAMRAI/hier/BoxContainerIterator.h"
 #include "SAMRAI/hier/BoxLevel.h"
-#include "SAMRAI/hier/NeighborhoodSet.h"
+#include "SAMRAI/hier/BoxContainerIterator.h"
+#include "SAMRAI/hier/BoxNeighborhoodCollection.h"
 #include "SAMRAI/tbox/Timer.h"
 
 #include <set>
@@ -60,12 +61,22 @@ public:
    /*!
     * @brief Type of the iterator over neighborhoods.
     */
-   typedef NeighborhoodSet::const_iterator ConstNeighborhoodIterator;
+   typedef BoxNeighborhoodCollection::ConstIterator ConstNeighborhoodIterator;
+
+   /*!
+    * @brief Type of the iterator over neighborhoods.
+    */
+   typedef BoxNeighborhoodCollection::Iterator NeighborhoodIterator;
 
    /*!
     * @brief Type of the iterator over neighbors in a neighborhood.
     */
-   typedef NeighborSet::ConstIterator ConstNeighborIterator;
+   typedef BoxNeighborhoodCollection::ConstNeighborIterator ConstNeighborIterator;
+
+   /*!
+    * @brief Type of the iterator over neighbors in a neighborhood.
+    */
+   typedef BoxNeighborhoodCollection::NeighborIterator NeighborIterator;
 
    /// TODO:  Possible refactor?  Since Connectors do not imply relationship
    // meanings, why is this even defined?  The "getConnectorType function
@@ -139,7 +150,7 @@ public:
     * @param[in] base_width
     * @param[in] parallel_state
     */
-   explicit Connector(
+   Connector(
       const BoxLevel& base_mapped_box_level,
       const BoxLevel& head_mapped_box_level,
       const IntVector& base_width,
@@ -175,10 +186,22 @@ public:
    begin() const;
 
    /*!
+    * @brief Iterator pointing to the first neighborhood.
+    */
+   NeighborhoodIterator
+   begin();
+
+   /*!
     * @brief Iterator pointing one past the last neighborhood.
     */
    ConstNeighborhoodIterator
    end() const;
+
+   /*!
+    * @brief Iterator pointing one past the last neighborhood.
+    */
+   NeighborhoodIterator
+   end();
 
    /*!
     * @brief Iterator pointing to the first neighbor in nbrhd.
@@ -186,7 +209,17 @@ public:
     * @param nbrhd The neighborhood whose neighbors are to be iterated.
     */
    ConstNeighborIterator
-   begin(ConstNeighborhoodIterator& nbrhd) const;
+   begin(
+      ConstNeighborhoodIterator& nbrhd) const;
+
+   /*!
+    * @brief Iterator pointing to the first neighbor in nbrhd.
+    *
+    * @param nbrhd The neighborhood whose neighbors are to be iterated.
+    */
+   NeighborIterator
+   begin(
+      NeighborhoodIterator& nbrhd);
 
    /*!
     * @brief Iterator pointing one past the last neighbor in nbrhd.
@@ -194,7 +227,17 @@ public:
     * @param nbrhd The neighborhood whose neighbors are to be iterated.
     */
    ConstNeighborIterator
-   end(ConstNeighborhoodIterator& nbrhd) const;
+   end(
+      ConstNeighborhoodIterator& nbrhd) const;
+
+   /*!
+    * @brief Iterator pointing one past the last neighbor in nbrhd.
+    *
+    * @param nbrhd The neighborhood whose neighbors are to be iterated.
+    */
+   NeighborIterator
+   end(
+      NeighborhoodIterator& nbrhd);
 
    /*!
     * @brief Returns an Iterator pointing to the neighborhood of box_id--
@@ -203,7 +246,18 @@ public:
     * @param[in] box_id
     */
    ConstNeighborhoodIterator
-   findLocal(const BoxId& box_id) const;
+   findLocal(
+      const BoxId& box_id) const;
+
+   /*!
+    * @brief Returns an Iterator pointing to the neighborhood of box_id--
+    * localized version.
+    *
+    * @param[in] box_id
+    */
+   NeighborhoodIterator
+   findLocal(
+      const BoxId& box_id);
 
    /*!
     * @brief Returns an Iterator pointing to the neighborhood of box_id--
@@ -212,7 +266,8 @@ public:
     * @param[in] box_id
     */
    ConstNeighborhoodIterator
-   find(const BoxId& box_id) const;
+   find(
+      const BoxId& box_id) const;
 
    /*!
     * @brief Returns true if the local neighborhoods of this and other are the
@@ -221,7 +276,8 @@ public:
     * @param[in] other
     */
    bool
-   localNeighborhoodsEqual(const Connector& other) const;
+   localNeighborhoodsEqual(
+      const Connector& other) const;
 
    /*!
     * @brief Returns true if the neighborhood of the supplied BoxId of this
@@ -231,7 +287,9 @@ public:
     * @param[in] other
     */
    bool
-   neighborhoodEqual(const BoxId& box_id, const Connector& other) const;
+   neighborhoodEqual(
+      const BoxId& box_id,
+      const Connector& other) const;
 
    /*!
     * @brief Return true if a neighbor set exists for the specified
@@ -258,11 +316,12 @@ public:
    /*!
     * @brief Return the neighbor set for the specified BoxId.
     *
-    * @param[in] mapped_box_id
+    * @param[in] box_id
+    * @param[out] nbr_boxes
     */
    void
    getNeighborBoxes(
-      const BoxId& mapped_box_id,
+      const BoxId& box_id,
       BoxContainer& nbr_boxes) const;
 
    /*!
@@ -272,7 +331,7 @@ public:
     */
    void
    getLocalNeighbors(
-      NeighborSet& neighbors) const;
+      BoxContainer& neighbors) const;
 
    /*!
     * @brief Return all neighbors for all neighborhoods segragated by BlockId.
@@ -290,7 +349,8 @@ public:
     * @param[in] box_id
     */
    int
-   numLocalNeighbors(const BoxId& box_id) const;
+   numLocalNeighbors(
+      const BoxId& box_id) const;
 
    /*!
     * @brief Returns the number of empty neighborhoods in the Connector.
@@ -301,12 +361,26 @@ public:
    numLocalEmptyNeighborhoods() const;
 
    /*!
-    * @brief Places the ranks of the processors owning neighbors into owners.
+    * @brief Places the ranks of the processors owning all neighbors into
+    * owners.
     *
     * @param[out] owners
     */
    void
-   getLocalOwners(std::set<int>& owners) const;
+   getLocalOwners(
+      std::set<int>& owners) const;
+
+   /*!
+    * @brief Places the ranks of the processors owning the neighbors of the Box
+    * pointed to by base_boxes_itr into owners.
+    *
+    * @param[in] base_boxes_itr
+    * @param[out] owners
+    */
+   void
+   getLocalOwners(
+      ConstNeighborhoodIterator& base_boxes_itr,
+      std::set<int>& owners) const;
 
    //@{
    /*!
@@ -314,15 +388,15 @@ public:
     */
 
    /*!
-    * @brief Insert additional neighbors for the specified Box.
+    * @brief Insert additional neighbors for the specified base Box.
     *
     * @param[in] neighbors
-    * @param[in] mapped_box_id
+    * @param[in] base_box
     */
    void
    insertNeighbors(
-      const NeighborSet& neighbors,
-      const BoxId& mapped_box_id);
+      const BoxContainer& neighbors,
+      const BoxId& base_box);
 
    /*!
     * @brief Erase neighbor of the specified BoxId.
@@ -350,6 +424,17 @@ public:
       const BoxId& box_id);
 
    /*!
+    * @brief Adds a neighbor of the base box pointed to by base_box_itr.
+    *
+    * @param[in] neighbor
+    * @param[in] base_box_itr
+    */
+   void
+   insertLocalNeighbor(
+      const Box& neighbor,
+      NeighborhoodIterator& base_box_itr);
+
+   /*!
     * @brief Erases the neighborhood of the specified BoxId.
     *
     * @param[in] box_id
@@ -371,20 +456,19 @@ public:
    removePeriodicLocalNeighbors();
 
    /*!
-    * @brief Check for any neighborhood roots which are periodic.
+    * @brief Check for any base boxes which are periodic.
     *
-    * @return true if any neighborhood root is periodic
+    * @return true if any base box is periodic
     */
    bool
-   hasPeriodicLocalNeighborhoodRoots() const;
+   hasPeriodicLocalNeighborhoodBaseBoxes() const;
 
    /*!
-    * @brief Make and empty set of neighbors of the box with the supplied
-    * box_id.
+    * @brief Make an empty set of neighbors of the supplied box_id.
     *
     * @param[in] box_id
     */
-   void
+   NeighborhoodIterator
    makeEmptyLocalNeighborhood(
       const BoxId& box_id);
 
@@ -404,40 +488,31 @@ public:
       const BoxId& box_id) const;
 
    /*!
-    * @brief Coarsen all neighbors of this connector by ratio placing result
-    * into coarser.
+    * @brief Coarsen all neighbors of this connector by ratio.
     *
-    * @param[out] coarser
     * @param[in] ratio
     */
    void
    coarsenLocalNeighbors(
-      Connector& coarser,
-      const IntVector& ratio) const;
+      const IntVector& ratio);
 
    /*!
-    * @brief Refine all neighbors of this connector by ratio placing result
-    * into finer.
+    * @brief Refine all neighbors of this connector by ratio.
     *
-    * @param[out] finer
     * @param[in] ratio
     */
    void
    refineLocalNeighbors(
-      Connector& finer,
-      const IntVector& ratio) const;
+      const IntVector& ratio);
 
    /*!
-    * @brief Grow all neighbors of this connector by growth placing result
-    * into grown.
+    * @brief Grow all neighbors of this connector by growth.
     *
-    * @param[out] grown
     * @param[in] growth
     */
    void
    growLocalNeighbors(
-      Connector& grown,
-      const IntVector& growth) const;
+      const IntVector& growth);
 
    //@}
 
@@ -535,10 +610,10 @@ public:
     * thrown.
     *
     * Non-periodic relationships in @c connector are simply reversed to get the
-    * transpose relationship.  For each periodic relationships in @c connector, we create a
-    * periodic relationship incident from @c connector's unshifted head neighbor to
-    * @c connectors's shifted base neighbor.  This is because all relationships must be
-    * incident from a real (unshifted) Box.
+    * transpose relationship.  For each periodic relationships in @c connector,
+    * we create a periodic relationship incident from @c connector's unshifted
+    * head neighbor to @c connectors's shifted base neighbor.  This is because
+    * all relationships must be incident from a real (unshifted) Box.
     *
     * @param[in] connector
     */
@@ -675,10 +750,10 @@ public:
     * @brief Return true if two Connector objects are
     * transposes of each other.
     *
-    * Each Connector represents a set of directed relationships incident from its base
-    * to its head.  The transpose represent the relationships in the opposite
-    * direction.  In order for two Connector objects to be transpose of each
-    * other, their Connector widths and base refinement ratios must be
+    * Each Connector represents a set of directed relationships incident from
+    * its base to its head.  The transpose represent the relationships in the
+    * opposite direction.  In order for two Connector objects to be transpose
+    * of each other, their Connector widths and base refinement ratios must be
     * such that an relationship in one set also appears in the other set.
     * A transpose set must have
     * @li base and head BoxLevels reversed from the untransposed set.
@@ -784,9 +859,9 @@ public:
     * @brief Check that the relationships are a correct transpose of another
     * Connector and return the number of erroneous relationships.
     *
-    * For every relationship in this Connector, there should be a corresponding relationship
-    * in the transpose Connector.  Any missing or extra relationship constitutes
-    * an error.
+    * For every relationship in this Connector, there should be a corresponding
+    * relationship in the transpose Connector.  Any missing or extra
+    * relationship constitutes an error.
     *
     * Errors found are written to perr.
     *
@@ -831,18 +906,16 @@ public:
    ConnectorType
    getConnectorType() const;
 
-   // TODO:  refactor size_t
    /*!
     * @brief Return local number of neighbor sets.
     */
-   size_t
+   int
    getLocalNumberOfNeighborSets() const;
 
-   // TODO: refactor size_t
    /*!
     * @brief Return local number of relationships.
     */
-   size_t
+   int
    getLocalNumberOfRelationships() const;
 
    /*!
@@ -887,7 +960,8 @@ public:
     * @param[in] database
     */
    void
-   putNeighborhoodsToDatabase(tbox::Database& database) const;
+   putNeighborhoodsToDatabase(
+      tbox::Database& database) const;
 
    /*!
     * @brief Read the neighborhoods from a database.
@@ -895,7 +969,8 @@ public:
     * @param[in] database
     */
    void
-   getNeighborhoodsFromDatabase(tbox::Database& database);
+   getNeighborhoodsFromDatabase(
+      tbox::Database& database);
 
    /*!
     *
@@ -929,12 +1004,10 @@ public:
     * @brief Writes the requested neighborhood to tbox::perr.
     *
     * @param[in[ box_id
-    * @param[in] border Left border of the output.
     */
    void
    writeNeighborhoodToErrorStream(
-      const BoxId& box_id,
-      const std::string& border) const;
+      const BoxId& box_id) const;
 
    /*!
     * @brief A class for outputting Connector.
@@ -1005,17 +1078,15 @@ private:
     * @par Assertions
     * Throws an unrecoverable assertion if not in GLOBALIZED mode.
     */
-   const NeighborhoodSet&
+   const BoxNeighborhoodCollection&
    getGlobalNeighborhoodSets() const;
 
    /*!
-    * @brief Return the neighbor set for the specified BoxId.
-    *
-    * @param[in] mapped_box_id
+    * @brief Return the relationships appropriate to the parallel state.
     */
-   const NeighborSet&
-   getNeighborSet(
-      const BoxId& mapped_box_id) const;
+   const BoxNeighborhoodCollection&
+   getRelations(
+      const BoxId& box_id) const;
 
    /*!
     * @brief Create a copy of a DISTRIBUTED Connector and
@@ -1041,8 +1112,7 @@ private:
    //! @brief Pack local Boxes into an integer array.
    void
    acquireRemoteNeighborhoods_pack(
-      std::vector<int>& send_mesg,
-      int offset) const;
+      std::vector<int>& send_mesg) const;
 
    //! @brief Unpack Boxes from an integer array into internal storage.
    void
@@ -1090,7 +1160,8 @@ private:
     * @brief Connector width for the base BoxLevel.
     *
     * This is the amount of growth applied to a mapped_box in the base BoxLevel
-    * before checking if the mapped_box overlaps a mapped_box in the head BoxLevel.
+    * before checking if the mapped_box overlaps a mapped_box in the head
+    * BoxLevel.
     */
    IntVector d_base_width;
 
@@ -1129,12 +1200,12 @@ private:
    /*!
     * @brief Neighbor data for local Boxes.
     */
-   NeighborhoodSet d_relationships;
+   BoxNeighborhoodCollection d_relationships;
 
    /*!
     * @brief Neighbor data for global Boxes in GLOBALIZED mode.
     */
-   NeighborhoodSet d_global_relationships;
+   BoxNeighborhoodCollection d_global_relationships;
 
    /*!
     * @brief SAMRAI_MPI object.

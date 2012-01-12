@@ -62,7 +62,7 @@ int main(
       tbox::plog << "\n Starting hierarchy refine/coarsen test..." << std::endl;
       tbox::plog << "Specified input file is: " << input_filename << std::endl;
 
-      Pointer<Database> input_db(new InputDatabase("input_db"));
+      Pointer<InputDatabase> input_db(new InputDatabase("input_db"));
       InputManager::getManager()->parseInputFile(input_filename, input_db);
 
       /*

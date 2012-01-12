@@ -95,7 +95,7 @@ public:
     * @brief Construct the face geometry object given an AMR index
     * space box and ghost cell width.
     */
-   explicit FaceGeometry(
+   FaceGeometry(
       const hier::Box& box,
       const hier::IntVector& ghosts);
 

@@ -60,7 +60,7 @@ const BoxLevel& BoxLevelHandle::getBoxLevel() const
    }
 #ifdef DEBUG_CHECK_ASSERTIONS
    // Sanity check: the BoxLevel's handle should be this handle.
-   if (d_box_level->getBoxLevelHandle().getPointer() != this) {
+   if (d_box_level->getBoxLevelHandle().get() != this) {
       TBOX_ERROR("Library error in BoxLevelHandle::getBoxLevel");
    }
 #endif

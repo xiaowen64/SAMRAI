@@ -43,8 +43,7 @@ TreeLoadBalancer::BoxInTransit::BoxInTransit(
    const hier::Box& origin):
    d_box(origin),
    d_orig_box(origin),
-   d_load(origin.size()),
-   d_proc_hist()
+   d_load(origin.size())
 {
 }
 
@@ -60,8 +59,7 @@ TreeLoadBalancer::BoxInTransit::BoxInTransit(
    const tbox::Dimension &dim ):
    d_box(dim),
    d_orig_box(dim),
-   d_load(0),
-   d_proc_hist(0)
+   d_load(0)
 {
    getFromIntBuffer(ptr);
    ptr += commBufferSize();
@@ -80,14 +78,10 @@ TreeLoadBalancer::BoxInTransit::BoxInTransit(
    const hier::Box& box,
    int rank,
    hier::LocalId local_id):
-   d_box(box, local_id, rank, other.d_orig_box.getBlockId()),
+   d_box(box, local_id, rank),
    d_orig_box(other.d_orig_box),
-   d_load(d_box.size()),
-   d_proc_hist(other.d_proc_hist)
+   d_load(d_box.size())
 {
-   if (rank != other.getOwnerRank()) {
-      d_proc_hist.push_back(other.getOwnerRank());
-   }
 }
 
 
@@ -144,7 +138,7 @@ SAMRAI_INLINE_KEYWORD
 int TreeLoadBalancer::BoxInTransit::commBufferSize() const
 {
    const tbox::Dimension& dim(d_box.getDim());
-   return 2 * hier::Box::commBufferSize(dim) + 2 + static_cast<int>(d_proc_hist.size());
+   return 2 * hier::Box::commBufferSize(dim) + 1;
 }
 
 
@@ -160,7 +154,6 @@ const TreeLoadBalancer::BoxInTransit& TreeLoadBalancer::BoxInTransit::operator =
    d_box = other.d_box;
    d_orig_box = other.d_orig_box;
    d_load = other.d_load;
-   d_proc_hist = other.d_proc_hist;
    return *this;
 }
 
@@ -172,8 +165,7 @@ const TreeLoadBalancer::BoxInTransit& TreeLoadBalancer::BoxInTransit::operator =
  */
 SAMRAI_INLINE_KEYWORD
 int * TreeLoadBalancer::BoxInTransit::putToIntBuffer(
-   int* buffer,
-   bool skip_last_owner) const
+   int* buffer) const
 {
    const tbox::Dimension& dim(d_box.getDim());
    d_box.putToIntBuffer(buffer);
@@ -181,11 +173,6 @@ int * TreeLoadBalancer::BoxInTransit::putToIntBuffer(
    d_orig_box.putToIntBuffer(buffer);
    buffer += hier::Box::commBufferSize(dim);
    *(buffer++) = d_load;
-   if (skip_last_owner) { TBOX_ASSERT( !d_proc_hist.empty() ); }
-   *(buffer++) = static_cast<int>(d_proc_hist.size()-skip_last_owner);
-   for (unsigned int i = 0; i < d_proc_hist.size()-skip_last_owner; ++i) {
-      *(buffer++) = d_proc_hist[i];
-   }
    return buffer;
 }
 
@@ -205,29 +192,7 @@ const int * TreeLoadBalancer::BoxInTransit::getFromIntBuffer(
    d_orig_box.getFromIntBuffer(buffer);
    buffer += hier::Box::commBufferSize(dim);
    d_load = *(buffer++);
-   d_proc_hist.clear();
-   d_proc_hist.insert(d_proc_hist.end(), *(buffer++), 0);
-   for (unsigned int i = 0; i < d_proc_hist.size(); ++i) {
-      d_proc_hist[i] = *(buffer++);
-   }
    return buffer;
-}
-
-
-
-/*
- *************************************************************************
- *************************************************************************
- */
-SAMRAI_INLINE_KEYWORD
-void TreeLoadBalancer::BoxInTransit::packForPreviousOwner(
-   std::map<int,std::vector<int> > &outgoing_messages ) const
-{
-   const int prev_owner = d_proc_hist.back();
-   std::vector<int> &msg(outgoing_messages[prev_owner]);
-   const int cbs1 = commBufferSize()-1;
-   msg.insert(msg.end(), cbs1, 0);
-   putToIntBuffer(&msg[msg.size() - cbs1], true);
 }
 
 

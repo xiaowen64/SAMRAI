@@ -39,7 +39,7 @@ CellDataTest::CellDataTest(
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(!object_name.empty());
-   TBOX_ASSERT(!main_input_db.isNull());
+   TBOX_ASSERT(main_input_db);
    TBOX_ASSERT(!refine_option.empty());
 #endif
 
@@ -80,7 +80,7 @@ CellDataTest::~CellDataTest()
 void CellDataTest::readTestInput(
    tbox::Pointer<tbox::Database> db)
 {
-   TBOX_ASSERT(!db.isNull());
+   TBOX_ASSERT(db);
 
    /*
     * Read coeeficients of linear profile to test interpolation.
@@ -158,10 +158,12 @@ void CellDataTest::setLinearData(
    const hier::Patch& patch) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!data.isNull());
+   TBOX_ASSERT(data);
 #endif
 
-   tbox::Pointer<geom::CartesianPatchGeometry> pgeom = patch.getPatchGeometry();
+   tbox::Pointer<geom::CartesianPatchGeometry> pgeom(
+      patch.getPatchGeometry(),
+      tbox::__dynamic_cast_tag());
    const pdat::CellIndex loweri(patch.getBox().lower());
    const pdat::CellIndex upperi(patch.getBox().upper());
    const double* pdx = pgeom->getDx();
@@ -204,8 +206,8 @@ void CellDataTest::setConservativeData(
    int level_number) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!data.isNull());
-   TBOX_ASSERT(!hierarchy.isNull());
+   TBOX_ASSERT(data);
+   TBOX_ASSERT(hierarchy);
    TBOX_ASSERT((level_number >= 0)
       && (level_number <= hierarchy->getFinestLevelNumber()));
 #endif
@@ -253,8 +255,9 @@ void CellDataTest::setConservativeData(
 
       hier::IntVector ratio(level->getRatioToLevelZero());
 
-      tbox::Pointer<geom::CartesianPatchGeometry> pgeom =
-         patch.getPatchGeometry();
+      tbox::Pointer<geom::CartesianPatchGeometry> pgeom(
+         patch.getPatchGeometry(),
+         tbox::__dynamic_cast_tag());
       const double* dx = pgeom->getDx();
 
       int coarse_ncells = ncells;
@@ -305,7 +308,7 @@ void CellDataTest::setPeriodicData(
    const hier::Patch& patch) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!data.isNull());
+   TBOX_ASSERT(data);
 #endif
    NULL_USE(patch);
 
@@ -316,8 +319,9 @@ void CellDataTest::setPeriodicData(
       domain_len[d] = xup[d] - xlo[d];
    }
 
-   const tbox::Pointer<geom::CartesianPatchGeometry> patch_geom =
-      patch.getPatchGeometry();
+   const tbox::Pointer<geom::CartesianPatchGeometry> patch_geom(
+      patch.getPatchGeometry(),
+      tbox::__dynamic_cast_tag());
    const double* dx = patch_geom->getDx();
 
    const int depth = data->getDepth();
@@ -356,8 +360,9 @@ void CellDataTest::initializeDataOnPatch(
 
       for (int i = 0; i < d_variables.getSize(); i++) {
 
-         tbox::Pointer<pdat::CellData<double> > cell_data =
-            patch.getPatchData(d_variables[i], getDataContext());
+         tbox::Pointer<pdat::CellData<double> > cell_data(
+            patch.getPatchData(d_variables[i], getDataContext()),
+            tbox::__dynamic_cast_tag());
 
          hier::Box dbox = cell_data->getBox();
 
@@ -373,8 +378,9 @@ void CellDataTest::initializeDataOnPatch(
 
       for (int i = 0; i < d_variables.getSize(); i++) {
 
-         tbox::Pointer<pdat::CellData<double> > cell_data =
-            patch.getPatchData(d_variables[i], getDataContext());
+         tbox::Pointer<pdat::CellData<double> > cell_data(
+            patch.getPatchData(d_variables[i], getDataContext()),
+            tbox::__dynamic_cast_tag());
 
          hier::Box dbox = cell_data->getGhostBox();
 
@@ -395,7 +401,7 @@ void CellDataTest::checkPatchInteriorData(
    const hier::Box& interior,
    const hier::Patch& patch) const
 {
-   TBOX_ASSERT(!data.isNull());
+   TBOX_ASSERT(data);
 
    const bool is_periodic =
       d_cart_grid_geometry->getPeriodicShift(hier::IntVector(d_dim,
@@ -436,7 +442,9 @@ void CellDataTest::setPhysicalBoundaryConditions(
       d_cart_grid_geometry->getPeriodicShift(hier::IntVector(d_dim, 1)));
    bool is_periodic = periodic_shift.max() > 0;
 
-   tbox::Pointer<geom::CartesianPatchGeometry> pgeom = patch.getPatchGeometry();
+   tbox::Pointer<geom::CartesianPatchGeometry> pgeom(
+      patch.getPatchGeometry(),
+      tbox::__dynamic_cast_tag());
 
    const tbox::Array<hier::BoundaryBox> node_bdry =
       pgeom->getCodimensionBoundaries(d_dim.getValue());
@@ -456,8 +464,9 @@ void CellDataTest::setPhysicalBoundaryConditions(
 
    for (int i = 0; i < d_variables.getSize(); i++) {
 
-      tbox::Pointer<pdat::CellData<double> > cell_data =
-         patch.getPatchData(d_variables[i], getDataContext());
+      tbox::Pointer<pdat::CellData<double> > cell_data(
+         patch.getPatchData(d_variables[i], getDataContext()),
+         tbox::__dynamic_cast_tag());
 
       hier::Box patch_interior = cell_data->getBox();
       checkPatchInteriorData(cell_data, patch_interior, patch);
@@ -573,8 +582,9 @@ bool CellDataTest::verifyResults(
 
       for (int i = 0; i < d_variables.getSize(); i++) {
 
-         tbox::Pointer<pdat::CellData<double> > cell_data =
-            patch.getPatchData(d_variables[i], getDataContext());
+         tbox::Pointer<pdat::CellData<double> > cell_data(
+            patch.getPatchData(d_variables[i], getDataContext()),
+            tbox::__dynamic_cast_tag());
          int depth = cell_data->getDepth();
          hier::Box dbox = cell_data->getGhostBox();
 
@@ -603,7 +613,7 @@ bool CellDataTest::verifyResults(
          tbox::plog << "CellDataTest Successful!" << endl;
       }
 
-      solution.setNull();   // just to be anal...
+      solution.reset();   // just to be anal...
 
       tbox::plog << "\nExiting CellDataTest::verifyResults..." << endl;
       tbox::plog << "level_number = " << level_number << endl;

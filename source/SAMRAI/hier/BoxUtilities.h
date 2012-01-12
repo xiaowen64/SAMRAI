@@ -391,7 +391,7 @@ struct BoxUtilities {
 
    /*
     * Similar to growBoxesWithinDomain but works on one box at
-    * a time and the domain is defined by the complement of local
+    * a time and the domain is specified by the complement of local
     * parts of the domain.
     */
    static void

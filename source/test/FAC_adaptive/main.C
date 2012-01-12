@@ -88,7 +88,7 @@ int main(
        * Create input database and parse all data in input file into it.
        */
 
-      tbox::Pointer<tbox::Database> input_db(new tbox::InputDatabase("input_db"));
+      tbox::Pointer<tbox::InputDatabase> input_db(new tbox::InputDatabase("input_db"));
       tbox::InputManager::getManager()->parseInputFile(input_filename, input_db);
 
       if (input_db->isDatabase("TimerManager")) {
@@ -181,7 +181,7 @@ int main(
                "CellTaggingMethod",
                tbox::Pointer<mesh::StandardTagAndInitStrategy>(
                   &adaptive_poisson,
-                  false),
+                  false).get(),
                input_db->getDatabase("StandardTagAndInitialize")
                ));
          tbox::Pointer<mesh::BergerRigoutsos> box_generator(

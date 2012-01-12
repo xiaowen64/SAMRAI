@@ -126,7 +126,7 @@ int main(
       /*
        * Create input database and parse all data in input file.
        */
-      tbox::Pointer<tbox::Database> input_db(new tbox::InputDatabase("input_db"));
+      tbox::Pointer<tbox::InputDatabase> input_db(new tbox::InputDatabase("input_db"));
       tbox::InputManager::getManager()->parseInputFile(input_filename, input_db);
 
       /**************************************************************************
@@ -198,7 +198,7 @@ int main(
          new mesh::StandardTagAndInitialize(
             dim,
             "StandardTagAndInitialize",
-            cvode_model,
+            cvode_model.get(),
             input_db->getDatabase("StandardTagAndInitialize")));
 
       tbox::Pointer<mesh::BergerRigoutsos> box_generator(
@@ -269,7 +269,7 @@ int main(
       **************************************************************************/
       solv::CVODESolver* cvode_solver =
          new solv::CVODESolver("cvode_solver",
-            cvode_model,
+            cvode_model.get(),
             uses_preconditioning);
 
       int neq = 0;
@@ -318,8 +318,9 @@ int main(
             for (hier::PatchLevel::Iterator p(level); p; p++) {
                tbox::Pointer<hier::Patch> patch = *p;
 
-               tbox::Pointer<CellData<double> > y_data =
-                  y_init->getComponentPatchData(0, *patch);
+               tbox::Pointer<CellData<double> > y_data(
+                  y_init->getComponentPatchData(0, *patch),
+                  tbox::__dynamic_cast_tag());
             }
          }
       }
@@ -396,8 +397,9 @@ int main(
                for (hier::PatchLevel::Iterator p(level); p; p++) {
                   tbox::Pointer<hier::Patch> patch = *p;
 
-                  tbox::Pointer<CellData<double> > y_data =
-                     y_result->getComponentPatchData(0, *patch);
+                  tbox::Pointer<CellData<double> > y_data(
+                     y_result->getComponentPatchData(0, *patch),
+                     tbox::__dynamic_cast_tag());
                   y_data->print(y_data->getBox());
                }
             }
@@ -487,13 +489,13 @@ int main(
        */
       if (cvode_solver) delete cvode_solver;
 
-      cvode_model.setNull();
-      gridding_algorithm.setNull();
-      error_est.setNull();
-      load_balancer.setNull();
-      box_generator.setNull();
-      hierarchy.setNull();
-      geometry.setNull();
+      cvode_model.reset();
+      gridding_algorithm.reset();
+      error_est.reset();
+      load_balancer.reset();
+      box_generator.reset();
+      hierarchy.reset();
+      geometry.reset();
 
 #endif // HAVE_SUNDIALS
 

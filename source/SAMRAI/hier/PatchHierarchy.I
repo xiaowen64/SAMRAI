@@ -46,59 +46,18 @@ const tbox::SAMRAI_MPI& PatchHierarchy::getMPI() const
    return d_domain_mapped_box_level.getMPI();
 }
 
-/*
- ***********************************************************************
- ***********************************************************************
- */
-
-SAMRAI_INLINE_KEYWORD
-const hier::BoxContainer& PatchHierarchy::
-getDomainSearchTree(const BlockId& block_id) const
-{
-   return d_domain_search_tree.getSingleBlockBoxTree(block_id);
-}
-
-SAMRAI_INLINE_KEYWORD
-const hier::MultiblockBoxTree& PatchHierarchy::
-getDomainSearchTree() const
-{
-   return d_domain_search_tree;
-}
-
-/*
- ***********************************************************************
- ***********************************************************************
- */
-
-SAMRAI_INLINE_KEYWORD const hier::BoxContainer& PatchHierarchy::
-getPeriodicDomainSearchTree(const BlockId& block_id) const
-{
-   return d_domain_search_tree_periodic.getSingleBlockBoxTree(block_id);
-}
-
-/*
- ***********************************************************************
- ***********************************************************************
- */
-
-SAMRAI_INLINE_KEYWORD const hier::MultiblockBoxTree& PatchHierarchy::
-getPeriodicDomainSearchTree() const
-{
-   return d_domain_search_tree_periodic;
-}
-
 SAMRAI_INLINE_KEYWORD
 bool PatchHierarchy::levelExists(
    const int l) const
 {
-   return (l < d_number_levels) && !(d_patch_levels[l].isNull());
+   return (l < d_number_levels) && d_patch_levels[l];
 }
 
 SAMRAI_INLINE_KEYWORD
 bool PatchHierarchy::finerLevelExists(
    const int l) const
 {
-   return (l + 1 < d_number_levels) && !(d_patch_levels[l + 1].isNull());
+   return (l + 1 < d_number_levels) && d_patch_levels[l + 1];
 }
 
 SAMRAI_INLINE_KEYWORD

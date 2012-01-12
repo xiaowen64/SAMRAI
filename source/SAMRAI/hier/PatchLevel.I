@@ -39,10 +39,10 @@ bool PatchLevel::inHierarchy() const
 
 SAMRAI_INLINE_KEYWORD
 const tbox::Pointer<Patch>& PatchLevel::getPatch(
-   const GlobalId& gid,
-   const BlockId& bid) const
+   const GlobalId& gid) const
+//   const BlockId& bid) const
 {
-   BoxId mbid(gid, bid);
+   BoxId mbid(gid);
    PatchContainer::const_iterator it = d_patches.find(mbid);
    TBOX_ASSERT(it != d_patches.end());
    return it->second;
@@ -230,15 +230,6 @@ bool PatchLevel::patchTouchesRegularBoundary(
    return rval;
 }
 
-SAMRAI_INLINE_KEYWORD
-bool PatchLevel::patchTouchesPeriodicBoundary(
-   const BoxId& mapped_box_id) const
-{
-   TBOX_ASSERT(mapped_box_id.getOwnerRank() == d_mapped_box_level->getMPI().getRank());
-   bool rval = getPatch(mapped_box_id)->getPatchGeometry()->getTouchesPeriodicBoundary();
-   return rval;
-}
-
 // Iterator implementation
 
 /*
@@ -371,7 +362,7 @@ SAMRAI_INLINE_KEYWORD
 PatchLevel::Iterator PatchLevel::Iterator::operator ++ (
    int)
 {
-   Iterator tmp_iterator = d_iterator;
+   Iterator tmp_iterator = *this;
    ++d_iterator;
    return tmp_iterator;
 }

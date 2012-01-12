@@ -68,7 +68,7 @@ void PatchSideDataBasicOps<TYPE>::scale(
    const tbox::Pointer<pdat::SideData<TYPE> >& src,
    const hier::Box& box) const
 {
-   TBOX_ASSERT(!dst.isNull() && !src.isNull());
+   TBOX_ASSERT(dst && src);
    TBOX_ASSERT(dst->getDirectionVector() == src->getDirectionVector());
    TBOX_DIM_ASSERT_CHECK_ARGS3(*dst, *src, box);
 
@@ -92,7 +92,7 @@ void PatchSideDataBasicOps<TYPE>::addScalar(
    const TYPE& alpha,
    const hier::Box& box) const
 {
-   TBOX_ASSERT(!dst.isNull() && !src.isNull());
+   TBOX_ASSERT(dst && src);
    TBOX_ASSERT(dst->getDirectionVector() == src->getDirectionVector());
    TBOX_DIM_ASSERT_CHECK_ARGS3(*dst, *src, box);
 
@@ -116,7 +116,7 @@ void PatchSideDataBasicOps<TYPE>::add(
    const tbox::Pointer<pdat::SideData<TYPE> >& src2,
    const hier::Box& box) const
 {
-   TBOX_ASSERT(!dst.isNull() && !src1.isNull() && !src2.isNull());
+   TBOX_ASSERT(dst && src1 && src2);
    TBOX_ASSERT(dst->getDirectionVector() == src1->getDirectionVector());
    TBOX_ASSERT(dst->getDirectionVector() == src2->getDirectionVector());
    TBOX_DIM_ASSERT_CHECK_ARGS4(*dst, *src1, *src2, box);
@@ -141,7 +141,7 @@ void PatchSideDataBasicOps<TYPE>::subtract(
    const tbox::Pointer<pdat::SideData<TYPE> >& src2,
    const hier::Box& box) const
 {
-   TBOX_ASSERT(!dst.isNull() && !src1.isNull() && !src2.isNull());
+   TBOX_ASSERT(dst && src1 && src2);
    TBOX_ASSERT(dst->getDirectionVector() == src1->getDirectionVector());
    TBOX_ASSERT(dst->getDirectionVector() == src2->getDirectionVector());
    TBOX_DIM_ASSERT_CHECK_ARGS4(*dst, *src1, *src2, box);
@@ -166,7 +166,7 @@ void PatchSideDataBasicOps<TYPE>::multiply(
    const tbox::Pointer<pdat::SideData<TYPE> >& src2,
    const hier::Box& box) const
 {
-   TBOX_ASSERT(!dst.isNull() && !src1.isNull() && !src2.isNull());
+   TBOX_ASSERT(dst && src1 && src2);
    TBOX_ASSERT(dst->getDirectionVector() == src1->getDirectionVector());
    TBOX_ASSERT(dst->getDirectionVector() == src2->getDirectionVector());
    TBOX_DIM_ASSERT_CHECK_ARGS4(*dst, *src1, *src2, box);
@@ -191,7 +191,7 @@ void PatchSideDataBasicOps<TYPE>::divide(
    const tbox::Pointer<pdat::SideData<TYPE> >& src2,
    const hier::Box& box) const
 {
-   TBOX_ASSERT(!dst.isNull() && !src1.isNull() && !src2.isNull());
+   TBOX_ASSERT(dst && src1 && src2);
    TBOX_ASSERT(dst->getDirectionVector() == src1->getDirectionVector());
    TBOX_ASSERT(dst->getDirectionVector() == src2->getDirectionVector());
    TBOX_DIM_ASSERT_CHECK_ARGS4(*dst, *src1, *src2, box);
@@ -215,7 +215,7 @@ void PatchSideDataBasicOps<TYPE>::reciprocal(
    const tbox::Pointer<pdat::SideData<TYPE> >& src,
    const hier::Box& box) const
 {
-   TBOX_ASSERT(!dst.isNull() && !src.isNull());
+   TBOX_ASSERT(dst && src);
    TBOX_ASSERT(dst->getDirectionVector() == src->getDirectionVector());
    TBOX_DIM_ASSERT_CHECK_ARGS3(*dst, *src, box);
 
@@ -241,7 +241,7 @@ void PatchSideDataBasicOps<TYPE>::linearSum(
    const tbox::Pointer<pdat::SideData<TYPE> >& src2,
    const hier::Box& box) const
 {
-   TBOX_ASSERT(!dst.isNull() && !src1.isNull() && !src2.isNull());
+   TBOX_ASSERT(dst && src1 && src2);
    TBOX_ASSERT(dst->getDirectionVector() == src1->getDirectionVector());
    TBOX_ASSERT(dst->getDirectionVector() == src2->getDirectionVector());
    TBOX_DIM_ASSERT_CHECK_ARGS4(*dst, *src1, *src2, box);
@@ -268,7 +268,7 @@ void PatchSideDataBasicOps<TYPE>::axpy(
    const tbox::Pointer<pdat::SideData<TYPE> >& src2,
    const hier::Box& box) const
 {
-   TBOX_ASSERT(!dst.isNull() && !src1.isNull() && !src2.isNull());
+   TBOX_ASSERT(dst && src1 && src2);
    TBOX_ASSERT(dst->getDirectionVector() == src1->getDirectionVector());
    TBOX_ASSERT(dst->getDirectionVector() == src2->getDirectionVector());
    TBOX_DIM_ASSERT_CHECK_ARGS4(*dst, *src1, *src2, box);
@@ -295,7 +295,7 @@ void PatchSideDataBasicOps<TYPE>::axmy(
    const tbox::Pointer<pdat::SideData<TYPE> >& src2,
    const hier::Box& box) const
 {
-   TBOX_ASSERT(!dst.isNull() && !src1.isNull() && !src2.isNull());
+   TBOX_ASSERT(dst && src1 && src2);
    TBOX_ASSERT(dst->getDirectionVector() == src1->getDirectionVector());
    TBOX_ASSERT(dst->getDirectionVector() == src2->getDirectionVector());
    TBOX_DIM_ASSERT_CHECK_ARGS4(*dst, *src1, *src2, box);
@@ -321,7 +321,7 @@ void PatchSideDataBasicOps<TYPE>::setRandomValues(
    const TYPE& low,
    const hier::Box& box) const
 {
-   TBOX_ASSERT(!dst.isNull());
+   TBOX_ASSERT(dst);
    TBOX_DIM_ASSERT_CHECK_ARGS2(*dst, box);
 
    const tbox::Dimension& dim(dst->getDim());
@@ -341,7 +341,7 @@ TYPE PatchSideDataBasicOps<TYPE>::min(
    const tbox::Pointer<pdat::SideData<TYPE> >& data,
    const hier::Box& box) const
 {
-   TBOX_ASSERT(!data.isNull());
+   TBOX_ASSERT(data);
    TBOX_DIM_ASSERT_CHECK_ARGS2(*data, box);
 
    const tbox::Dimension& dim(data->getDim());
@@ -363,7 +363,7 @@ TYPE PatchSideDataBasicOps<TYPE>::max(
    const tbox::Pointer<pdat::SideData<TYPE> >& data,
    const hier::Box& box) const
 {
-   TBOX_ASSERT(!data.isNull());
+   TBOX_ASSERT(data);
    TBOX_DIM_ASSERT_CHECK_ARGS2(*data, box);
 
    const tbox::Dimension& dim(data->getDim());

@@ -71,7 +71,7 @@ public:
     *
     * @param[in]  dim
     */
-   TransferOperatorRegistry(
+   explicit TransferOperatorRegistry(
       const tbox::Dimension& dim);
 
    /*!

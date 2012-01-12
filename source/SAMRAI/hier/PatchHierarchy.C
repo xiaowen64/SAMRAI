@@ -72,7 +72,7 @@ PatchHierarchy::PatchHierarchy(
    d_domain_mapped_box_level(d_dim)
 {
    TBOX_ASSERT(!object_name.empty());
-   TBOX_ASSERT(!geometry.isNull());
+   TBOX_ASSERT(geometry);
 
    d_object_name = object_name;
    d_registered_for_restart = register_for_restart;
@@ -84,11 +84,22 @@ PatchHierarchy::PatchHierarchy(
    d_patch_level_factory = new PatchLevelFactory;
    d_number_blocks = d_grid_geometry->getNumberBlocks();
 
-   setupDomainData();
+   /*
+    * Grab the physical domain (including periodic images) from the
+    * GridGeometry and set up domain data dependent on it.
+    */
+   d_domain_mapped_box_level.initialize(
+      IntVector::getOne(d_dim),
+      getGridGeometry(),
+      tbox::SAMRAI_MPI::getSAMRAIWorld(),
+      BoxLevel::GLOBALIZED);
+   d_grid_geometry->computePhysicalDomain(d_domain_mapped_box_level,
+      IntVector::getOne(d_dim));
+   d_domain_mapped_box_level.finalize();
 
    d_individual_cwrs = s_class_cwrs;
 
-   if (!database.isNull()) {
+   if (database) {
       getFromInput(database);
    } else {
       /*
@@ -131,7 +142,7 @@ PatchHierarchy::~PatchHierarchy()
 void PatchHierarchy::getFromInput(
    const tbox::Pointer<tbox::Database>& db)
 {
-   TBOX_ASSERT(!db.isNull());
+   TBOX_ASSERT(db);
 
    /*
     * Read input for maximum number of levels.
@@ -616,7 +627,7 @@ void PatchHierarchy::makeNewPatchLevel(
    d_patch_levels[ln]->setNextCoarserHierarchyLevelNumber(ln - 1);
    d_patch_levels[ln]->setLevelInHierarchy(true);
 
-   if ((ln > 0) && (!d_patch_levels[ln - 1].isNull())) {
+   if ((ln > 0) && d_patch_levels[ln - 1]) {
       d_patch_levels[ln]->setRatioToCoarserLevel(
          d_patch_levels[ln]->getRatioToLevelZero()
          / (d_patch_levels[ln - 1]->getRatioToLevelZero()));
@@ -637,68 +648,10 @@ void PatchHierarchy::removePatchLevel(
 {
    TBOX_ASSERT((l >= 0) && (l < d_number_levels));
 
-   d_patch_levels[l].setNull();
+   d_patch_levels[l].reset();
    if (d_number_levels == l + 1) {
       d_number_levels--;
    }
-}
-
-/*
- ****************************************************************************
- * Set the various physical domain description in various forms.  If
- * the domain is periodic, the input mapped_boxes must include the
- * periodic image mapped_boxes.
- ****************************************************************************
- */
-
-void PatchHierarchy::setupDomainData()
-{
-
-   /*
-    * Grab the physical domain (including periodic images) from the
-    * GridGeometry and set up domain data dependent on it.
-    */
-   d_domain_mapped_box_level.initialize(
-      IntVector::getOne(d_dim),
-      getGridGeometry(),
-      tbox::SAMRAI_MPI::getSAMRAIWorld(),
-      BoxLevel::GLOBALIZED);
-   d_grid_geometry->computePhysicalDomain(d_domain_mapped_box_level,
-      IntVector::getOne(d_dim));
-
-   // Initialize the multiblock domain search tree.
-   d_domain_search_tree_periodic.generateTree(
-      d_grid_geometry,
-      d_domain_mapped_box_level.getBoxes());
-
-   // Generate the non-periodic multiblock domain search tree.
-   if (PeriodicShiftCatalog::getCatalog(d_dim)->isPeriodic()) {
-      d_domain_search_tree.generateNonPeriodicTree(
-         d_grid_geometry,
-         d_domain_mapped_box_level.getBoxes());
-   } else {
-      d_domain_search_tree = d_domain_search_tree_periodic;
-   }
-   d_domain_mapped_box_level.finalize();
-
-   std::map<BlockId, BoxContainer> multiblock_complement_boxes;
-
-   for (int nb = 0; nb < d_number_blocks; nb++) {
-
-      /*
-       * Set up the search tree for the domain's complement.
-       */
-      BlockId block_id(nb);
-      multiblock_complement_boxes[block_id].pushBack(
-         hier::Box::getUniverse(d_dim));
-      multiblock_complement_boxes[block_id].removeIntersections(
-         d_domain_search_tree_periodic.getSingleBlockBoxTree(block_id));
-
-   }
-
-   d_complement_searchtree.generateTree(
-      d_grid_geometry,
-      multiblock_complement_boxes);
 }
 
 /*
@@ -743,7 +696,7 @@ void PatchHierarchy::putToDatabase(
    tbox::Pointer<tbox::Database> database,
    const ComponentSelector& patchdata_write_table)
 {
-   TBOX_ASSERT(!database.isNull());
+   TBOX_ASSERT(database);
 
    database->putInteger("HIER_PATCH_HIERARCHY_VERSION",
       HIER_PATCH_HIERARCHY_VERSION);
@@ -862,7 +815,7 @@ void PatchHierarchy::getFromDatabase(
    tbox::Pointer<tbox::Database> database,
    const ComponentSelector& component_selector)
 {
-   TBOX_ASSERT(!database.isNull());
+   TBOX_ASSERT(database);
 
    d_number_levels = database->getInteger("d_number_levels");
    if (d_number_levels <= 0) {

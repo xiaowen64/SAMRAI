@@ -7,8 +7,18 @@
  * Description:   pdat
  *
  ************************************************************************/
+
 #ifndef included_pdat_SparseData_h
 #define included_pdat_SparseData_h
+
+#include "SAMRAI/SAMRAI_config.h"
+
+/*
+ ************************************************************************
+ *  THIS CLASS WILL BE UNDEFINED IF THE LIBRARY IS BUILT WITHOUT BOOST
+ ************************************************************************
+ */
+#ifdef HAVE_BOOST_HEADERS
 
 #include "SAMRAI/hier/Index.h"
 #include "SAMRAI/hier/PatchData.h"
@@ -155,7 +165,7 @@ public:
     * @param [in] dbl_attributes The double (named) attributes
     * @param [in] int_attributes The integer (named) attributes
     */
-   explicit SparseData(
+   SparseData(
       const hier::Box& box,
       const hier::IntVector& ghosts,
       const std::vector<std::string>& dbl_names,
@@ -683,7 +693,7 @@ public:
     *
     * @param [in] sparse_data the SparseData oject
     */
-   SparseDataIterator(
+   explicit SparseDataIterator(
       SparseData<BOX_GEOMETRY>& sparse_data);
 
    /*!
@@ -692,7 +702,7 @@ public:
     *
     * @param [in] sparse_data the SparseData oject
     */
-   SparseDataIterator(
+   explicit SparseDataIterator(
       SparseData<BOX_GEOMETRY> * sparse_data);
 
    /*!
@@ -975,4 +985,5 @@ private:
 #include "SAMRAI/pdat/SparseData.C"
 #endif
 
+#endif
 #endif // included_pdat_SparseData

@@ -454,7 +454,7 @@ void BoxUtilities::chopBox(
 #endif
                   ihi(id) = cut_val - 1;
                   if ((ilo(id) < cut_val) && (ihi(id) <= boxhi(id))) {
-                     Box new_box(ilo, ihi);
+                     Box new_box(ilo, ihi, box.getBlockId());
                      tmp_boxes.pushBack(new_box);
                      ilo(id) = cut_val;
                   }
@@ -462,7 +462,7 @@ void BoxUtilities::chopBox(
                }
 
                ihi(id) = chop_box.upper(id);
-               Box last_box(ilo, ihi);
+               Box last_box(ilo, ihi, box.getBlockId());
                tmp_boxes.pushBack(last_box);
 
             } else {
@@ -721,7 +721,7 @@ void BoxUtilities::growBoxesWithinDomain(
  *
  * Grow each box in the list that is smaller than the specified minimum
  * size.  Each box that is grown must remain within the union of the
- * boxes of the given domain.  The domain is defined by the complement
+ * boxes of the given domain.  The domain is specified by the complement
  * of the local portion of the domain.
  *
  *************************************************************************
@@ -754,6 +754,7 @@ void BoxUtilities::growBoxWithinDomain(
          test_region.upper(id) = try_box.lower(id) - 1;
 
          outside_boxes = local_domain_complement;
+         outside_boxes.unorder();
          outside_boxes.intersectBoxes(test_region);
 
          BoxContainer::Iterator lb = outside_boxes.begin(); 
@@ -769,6 +770,7 @@ void BoxUtilities::growBoxWithinDomain(
          test_region.lower(id) = try_box.upper(id) + 1;
 
          outside_boxes = local_domain_complement;
+         outside_boxes.unorder();
          outside_boxes.intersectBoxes(test_region);
 
          int grow_up = try_box.upper(id) + grow;

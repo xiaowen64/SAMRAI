@@ -25,7 +25,6 @@
 #include "SAMRAI/pdat/CellData.h"
 #include "SAMRAI/pdat/CellDataFactory.h"
 #include "SAMRAI/tbox/Array.h"
-#include "SAMRAI/tbox/BalancedDepthFirstTree.h"
 #include "SAMRAI/tbox/InputManager.h"
 #include "SAMRAI/tbox/MathUtilities.h"
 #include "SAMRAI/tbox/SAMRAI_MPI.h"
@@ -63,6 +62,7 @@ const int TreeLoadBalancer::TreeLoadBalancer_EDGETAG1;
 const int TreeLoadBalancer::TreeLoadBalancer_PREBALANCE0;
 const int TreeLoadBalancer::TreeLoadBalancer_PREBALANCE1;
 const int TreeLoadBalancer::TreeLoadBalancer_FIRSTDATALEN;
+const int TreeLoadBalancer::TreeLoadBalancer_MIN_NPROC_FOR_AUTOMATIC_MULTICYCLE;
 
 const int TreeLoadBalancer::d_default_data_id = -1;
 
@@ -78,7 +78,8 @@ TreeLoadBalancer::TreeLoadBalancer(
    tbox::Pointer<tbox::Database> input_db):
    d_dim(dim),
    d_object_name(name),
-   d_mpi_dup(tbox::SAMRAI_MPI::commNull),
+   d_mpi(tbox::SAMRAI_MPI::commNull),
+   d_mpi_is_dupe(false),
    d_n_root_cycles(-1),
    d_degree(2),
    d_master_workload_data_id(d_default_data_id),
@@ -88,7 +89,6 @@ TreeLoadBalancer::TreeLoadBalancer(
    d_slender_penalty_threshold(3.0),
    d_precut_penalty_wt(1.0),
    // Data shared during balancing.
-   d_mpi(tbox::SAMRAI_MPI::commNull),
    d_min_size(d_dim),
    d_max_size(d_dim),
    d_bad_interval(d_dim),
@@ -147,10 +147,11 @@ void TreeLoadBalancer::setWorkloadPatchDataIndex(
    int data_id,
    int level_number)
 {
-   tbox::Pointer<pdat::CellDataFactory<double> > datafact =
+   tbox::Pointer<pdat::CellDataFactory<double> > datafact(
       hier::VariableDatabase::getDatabase()->getPatchDescriptor()->
-      getPatchDataFactory(data_id);
-   if (datafact.isNull()) {
+      getPatchDataFactory(data_id),
+      tbox::__dynamic_cast_tag());
+   if (!datafact) {
       TBOX_ERROR(
          d_object_name << " error: "
                        << "\n   data_id " << data_id << " passed to "
@@ -196,7 +197,7 @@ void TreeLoadBalancer::setUniformWorkload(
  * but it is not where the tree load balancer algorithm is implemented.
  *
  * This method does some preliminary setup then calls
- * computeLoadBalancingMapWithinRankGroup to compute the new balanced
+ * loadBalanceWithinRankGroup to compute the new balanced
  * BoxLevel and the mapping Connectors between the old and the new.
  * Then it applies the mapping to update the balance<==>anchor
  * Connectors.  It may do this multiple times, as specified by the
@@ -237,14 +238,38 @@ void TreeLoadBalancer::loadBalanceBoxLevel(
       domain_box_level,
       bad_interval,
       cut_factor);
-   if (!hierarchy.isNull()) {
+   if (hierarchy) {
       TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(d_dim, *hierarchy);
    }
 
 
-   d_mpi =
-      d_mpi_dup.getCommunicator() == tbox::SAMRAI_MPI::commNull ?
-      balance_box_level.getMPI() : d_mpi_dup;
+   if ( d_mpi_is_dupe ) {
+      /*
+       * If user has set the duplicate communicator, make sure it is
+       * compatible with the BoxLevel involved.
+       */
+      TBOX_ASSERT(d_mpi.getSize() == balance_box_level.getMPI().getSize());
+      TBOX_ASSERT(d_mpi.getRank() == balance_box_level.getMPI().getRank());
+#ifdef DEBUG_CHECK_ASSERTIONS
+      if (d_mpi.getSize() > 1) {
+         int compare_result;
+         tbox::SAMRAI_MPI::Comm_compare(
+            d_mpi.getCommunicator(),
+            balance_box_level.getMPI().getCommunicator(),
+            &compare_result);
+         if (compare_result != MPI_CONGRUENT) {
+            TBOX_ERROR("TreeLoadBalancer::loadBalanceBoxLevel:\n"
+               << "The input balance_box_level has a SAMRAI_MPI that is\n"
+               << "not congruent with the one set with setSAMRAI_MPI().\n"
+               << "You must use freeMPICommunicator() before balancing\n"
+               << "a BoxLevel with an incongruent SAMRAI_MPI.");
+         }
+      }
+#endif
+   }
+   else {
+      d_mpi = balance_box_level.getMPI();
+   }
 
    if (d_print_steps ||
        d_print_break_steps) {
@@ -295,16 +320,39 @@ void TreeLoadBalancer::loadBalanceBoxLevel(
 
    t_load_balance_box_level->start();
 
+   d_min_size = min_size;
+   d_max_size = max_size;
+   d_bad_interval = bad_interval;
+   d_cut_factor = cut_factor;
    /*
-    * Shadow data is internal duplicates of some parameters
-    * so they do not have to appear in all the interfaces.
+    * Domain boxes are used by breakOffLoad to determine where
+    * the bad cuts are.  Computing domain_boxes from domain_box_level
+    * should be moved above the this method.
     */
-   setShadowData(min_size,
-      max_size,
-      domain_box_level,
-      bad_interval,
-      cut_factor,
-      balance_box_level.getRefinementRatio());
+
+   /*
+    * We expect the domain box_level to be in globalized state.
+    */
+   TBOX_ASSERT(
+      domain_box_level.getParallelState() ==
+      hier::BoxLevel::GLOBALIZED);
+
+   d_block_domain_boxes.clear();
+   int nblocks =
+      domain_box_level.getGridGeometry()->getNumberBlocks();
+   d_block_domain_boxes.resize(nblocks);
+
+   if (nblocks == 1) {
+      domain_box_level.getGlobalBoxes(d_block_domain_boxes[0]);
+      d_block_domain_boxes[0].refine(balance_box_level.getRefinementRatio());
+   } else {
+      for (int b = 0; b < nblocks; ++b) {
+         d_block_domain_boxes[b] = hier::BoxContainer(
+            domain_box_level.getGlobalBoxes(), hier::BlockId(b));
+
+         d_block_domain_boxes[b].refine(balance_box_level.getRefinementRatio());
+      }
+   }
 
    if (d_print_steps) {
       tbox::plog << "Pre balanced:\n" << balance_box_level.format("", 2);
@@ -385,7 +433,7 @@ void TreeLoadBalancer::loadBalanceBoxLevel(
     * automatically using the following heuristic algorithm:
     *
     * If machine size is small enough to have negligible scaling
-    * issues (<= 64), use 1 cycle.
+    * issues (< TreeLoadBalancer_MIN_NPROC_FOR_AUTOMATIC_MULTICYCLE), use 1 cycle.
     *
     * Else if the initial load is sufficiently spread out (across at
     * least sqrt(nproc)) processes, use 1 cycle.
@@ -395,7 +443,7 @@ void TreeLoadBalancer::loadBalanceBoxLevel(
    int number_of_cycles = d_n_root_cycles;
    if (number_of_cycles < 0) {
       // User requested automatic number of cycles.
-      if (balance_box_level.getMPI().getSize() <= 64 ) {
+      if (balance_box_level.getMPI().getSize() < TreeLoadBalancer_MIN_NPROC_FOR_AUTOMATIC_MULTICYCLE ) {
          number_of_cycles = 1;
       }
       else if ( int(nproc_with_initial_load * nproc_with_initial_load) >=
@@ -473,14 +521,7 @@ void TreeLoadBalancer::loadBalanceBoxLevel(
 
       } else {
 
-         switch (icycle) {
-         case 0: t_compute_tree_load0->start();
-            break;
-         case 1: t_compute_tree_load1->start();
-            break;
-         case 2: t_compute_tree_load2->start();
-            break;
-         }
+         t_compute_tree_load_for_cycle[icycle]->start();
 
          /*
           * Use MPI's vector all-reduce to get individual group loads.
@@ -497,23 +538,16 @@ void TreeLoadBalancer::loadBalanceBoxLevel(
          }
          group_sum_load = group_loads[group_num];
 
-         switch (icycle) {
-         case 0: t_compute_tree_load0->stop();
-            break;
-         case 1: t_compute_tree_load1->stop();
-            break;
-         case 2: t_compute_tree_load2->stop();
-            break;
-         }
+         t_compute_tree_load_for_cycle[icycle]->stop();
 
       }
+
+      t_compute_tree_load->stop();
 
 
       /*
        * Compute the load-balancing map.
        */
-
-      t_get_map->start();
 
       loadBalanceWithinRankGroup(
          balance_box_level,
@@ -527,7 +561,6 @@ void TreeLoadBalancer::loadBalanceBoxLevel(
          d_mpi.Barrier();
          t_barrier_after->stop();
       }
-      t_get_map->stop();
 
    }
 
@@ -559,7 +592,11 @@ void TreeLoadBalancer::loadBalanceBoxLevel(
     * Finished load balancing.  Clean up and wrap up.
     */
 
-   unsetShadowData();
+   d_min_size = hier::IntVector(d_dim, -1);
+   d_max_size = hier::IntVector(d_dim, -1);
+   d_block_domain_boxes.clear();
+   d_bad_interval = hier::IntVector(d_dim, -1);
+   d_cut_factor = hier::IntVector(d_dim, -1);
 
    t_load_balance_box_level->stop();
 
@@ -614,7 +651,6 @@ void TreeLoadBalancer::loadBalanceBoxLevel(
       t_barrier_after->stop();
    }
 
-   d_mpi.setCommunicator(tbox::SAMRAI_MPI::commNull);
 }
 
 
@@ -696,8 +732,9 @@ void TreeLoadBalancer::constrainMaxBoxSizes(
 
          if (chopped.size() != 1) {
 
-            unconstrained_to_constrained.makeEmptyLocalNeighborhood(
-               box.getId());
+            hier::Connector::NeighborhoodIterator base_box_itr =
+               unconstrained_to_constrained.makeEmptyLocalNeighborhood(
+                  box.getId());
 
             for (hier::BoxContainer::Iterator li(chopped);
                  li != chopped.end(); ++li) {
@@ -706,8 +743,8 @@ void TreeLoadBalancer::constrainMaxBoxSizes(
 
                const hier::Box new_box(fragment,
                                        next_available_index++,
-                                       d_mpi.getRank(),
-                                       (*ni).getBlockId());
+                                       d_mpi.getRank());
+               TBOX_ASSERT(new_box.getBlockId() == ni->getBlockId());
 
                if (d_print_break_steps) {
                   tbox::plog << "  " << new_box
@@ -716,8 +753,9 @@ void TreeLoadBalancer::constrainMaxBoxSizes(
 
                constrained.addBox(new_box);
 
-               unconstrained_to_constrained.insertLocalNeighbor(new_box,
-                  box.getId());
+               unconstrained_to_constrained.insertLocalNeighbor(
+                  new_box,
+                  base_box_itr);
 
             }
 
@@ -798,12 +836,29 @@ void TreeLoadBalancer::loadBalanceWithinRankGroup(
 
    double group_avg_load = group_sum_load / rank_group.size();
 
-   t_compute_tree_load->stop();
-
 
    hier::BoxLevel balanced_box_level(balance_box_level.getDim());
    hier::Connector unbalanced_to_balanced;
    hier::Connector balanced_to_unbalanced;
+
+   /*
+    * Initialize empty balanced_box_level and mappings.
+    */
+   balanced_box_level.initialize(
+      balance_box_level.getRefinementRatio(),
+      balance_box_level.getGridGeometry(),
+      balance_box_level.getMPI());
+   balanced_to_unbalanced.setConnectorType(hier::Connector::MAPPING);
+   balanced_to_unbalanced.clearNeighborhoods();
+   balanced_to_unbalanced.setBase(balanced_box_level);
+   balanced_to_unbalanced.setHead(balance_box_level);
+   balanced_to_unbalanced.setWidth(hier::IntVector::getZero(d_dim), true);
+   unbalanced_to_balanced.setConnectorType(hier::Connector::MAPPING);
+   unbalanced_to_balanced.clearNeighborhoods();
+   unbalanced_to_balanced.setBase(balance_box_level);
+   unbalanced_to_balanced.setHead(balanced_box_level);
+   unbalanced_to_balanced.setWidth(hier::IntVector::getZero(d_dim), true);
+
 
    if ( !rank_group.isMember(d_mpi.getRank()) ) {
       /*
@@ -812,21 +867,6 @@ void TreeLoadBalancer::loadBalanceWithinRankGroup(
        * given rank group leads to undefined results.
        */
       TBOX_ASSERT( balance_box_level.getLocalNumberOfBoxes() == 0 );
-      // Initialize empty outputs.
-      balanced_box_level.initialize(
-         balance_box_level.getRefinementRatio(),
-         balance_box_level.getGridGeometry(),
-         balance_box_level.getMPI());
-      balanced_to_unbalanced.setConnectorType(hier::Connector::MAPPING);
-      balanced_to_unbalanced.clearNeighborhoods();
-      balanced_to_unbalanced.setBase(balanced_box_level);
-      balanced_to_unbalanced.setHead(balance_box_level);
-      balanced_to_unbalanced.setWidth(hier::IntVector::getZero(d_dim), true);
-      unbalanced_to_balanced.setConnectorType(hier::Connector::MAPPING);
-      unbalanced_to_balanced.clearNeighborhoods();
-      unbalanced_to_balanced.setBase(balance_box_level);
-      unbalanced_to_balanced.setHead(balanced_box_level);
-      unbalanced_to_balanced.setWidth(hier::IntVector::getZero(d_dim), true);
 
       if (anchor_to_balance.isFinalized()) {
          const hier::MappingConnectorAlgorithm mca;
@@ -846,6 +886,10 @@ void TreeLoadBalancer::loadBalanceWithinRankGroup(
    }
 
 
+   t_get_map->start();
+
+   t_load_distribution->start();
+
    /*
     * Before the last cycle, it is possible for the group average load
     * to be below the global average, if the group just happens to have
@@ -860,23 +904,58 @@ void TreeLoadBalancer::loadBalanceWithinRankGroup(
 
 
    /*
-    * Determine the parent and children (on the tree) of the local
-    * process and set up the objects for communicating with those
-    * processes.
+    * Arrange the group ranks in a BalancedDepthFirstTree in order to get
+    * the parent/children in the group.
+    *
+    * By the way, the BalancedDepthFirstTree currently assumes a binary
+    * tree, d_degree = 2.
     */
-   tbox::AsyncCommStage comm_stage;
-   tbox::AsyncCommPeer<int>* child_comms = NULL;
+   TBOX_ASSERT(d_degree == 2);
+   // FIXME: BalancedDepthFirstTree could use a constructor that takes a RankGroup.
+   tbox::BalancedDepthFirstTree bdfs(0,
+                                     rank_group.size()-1,
+                                     rank_group.getMapIndex(d_mpi.getRank()),
+                                     true);
+   const int num_children = bdfs.getNumberOfChildren();
+
+
+   /*
+    * Communication objects for sending to/receiving from
+    * parent/children: We could combine all of these AsyncCommStages
+    * and most of the AsyncCommPeers, but we intentionally keep them
+    * separate to aid performance analysis.
+    */
+
+   tbox::AsyncCommStage child_send_stage;
+   tbox::AsyncCommPeer<int>* child_sends = NULL;
+   tbox::AsyncCommStage parent_send_stage;
    tbox::AsyncCommPeer<int>* parent_send = NULL;
-   tbox::AsyncCommPeer<int>* parent_recv = NULL;
-   int num_children = 0;
 
    setupAsyncCommObjects(
-      num_children,
-      child_comms,
+      child_send_stage,
+      child_sends,
+      parent_send_stage,
       parent_send,
+      rank_group,
+      bdfs );
+   child_send_stage.setCommunicationWaitTimer(t_child_send_wait);
+   parent_send_stage.setCommunicationWaitTimer(t_parent_send_wait);
+
+   tbox::AsyncCommStage child_recv_stage;
+   tbox::AsyncCommPeer<int>* child_recvs = NULL;
+   tbox::AsyncCommStage parent_recv_stage;
+   tbox::AsyncCommPeer<int>* parent_recv = NULL;
+
+   setupAsyncCommObjects(
+      child_recv_stage,
+      child_recvs,
+      parent_recv_stage,
       parent_recv,
-      comm_stage,
-      rank_group);
+      rank_group,
+      bdfs );
+   child_recv_stage.setCommunicationWaitTimer(t_child_recv_wait);
+   parent_recv_stage.setCommunicationWaitTimer(t_parent_send_wait);
+
 
 
    /*
@@ -906,28 +985,25 @@ void TreeLoadBalancer::loadBalanceWithinRankGroup(
    tbox::AsyncCommStage::MemberVec completed;
 
    /*
+    * Step 1:
+    *
     * Post receive for data from subtree rooted at children.
     * We have to do a few local setups, but post the receive
     * now to overlap communication.
     */
    t_get_load_from_children->start();
    for (int c = 0; c < num_children; ++c) {
-      child_comms[c].beginRecv();
-      if (child_comms[c].isDone()) {
-         completed.insert(completed.end(), &child_comms[c]);
+      child_recvs[c].beginRecv();
+      if (child_recvs[c].isDone()) {
+         completed.insert(completed.end(), &child_recvs[c]);
       }
    }
    t_get_load_from_children->stop();
 
 
    /*
-    * Data for storing and transfering subtree info.
-    */
-   SubtreeLoadData* child_load_data = new SubtreeLoadData[num_children];
-   SubtreeLoadData my_load_data;
-
-
-   /*
+    * Step 2, local part:
+    *
     * The local process must generate indices for new and imported
     * boxes.  To do it deterministically, no generated index should
     * depend on message arrival order.  To achieve this, we maintain
@@ -960,20 +1036,10 @@ void TreeLoadBalancer::loadBalanceWithinRankGroup(
 
 
    /*
-    * Initialize output objects.
+    * Data for storing and transfering subtree info.
     */
-   balanced_box_level.initialize(
-      balance_box_level.getRefinementRatio(),
-      balance_box_level.getGridGeometry(),
-      balance_box_level.getMPI());
-   balanced_to_unbalanced.clearNeighborhoods();
-   balanced_to_unbalanced.setBase(balanced_box_level);
-   balanced_to_unbalanced.setHead(balance_box_level);
-   balanced_to_unbalanced.setWidth(hier::IntVector::getZero(d_dim), true);
-   unbalanced_to_balanced.clearNeighborhoods();
-   unbalanced_to_balanced.setBase(balance_box_level);
-   unbalanced_to_balanced.setHead(balanced_box_level);
-   unbalanced_to_balanced.setWidth(hier::IntVector::getZero(d_dim), true);
+   SubtreeLoadData* child_load_data = new SubtreeLoadData[num_children];
+   SubtreeLoadData my_load_data;
 
 
    /*
@@ -1073,6 +1139,15 @@ void TreeLoadBalancer::loadBalanceWithinRankGroup(
                box_in_transit.d_orig_box.getId());
          }
       }
+      /*
+       * unassigned now contains boxes originating from unbalanced, so
+       * they need a neighborhood in unbalanced_to_balanced.  We don't
+       * know where they'll end up, so we just leave the neighborhood
+       * empty for now.
+       */
+      for (TransitSet::const_iterator ni=unassigned.begin(); ni!=unassigned.end(); ++ni ) {
+         unbalanced_to_balanced.makeEmptyLocalNeighborhood(ni->d_orig_box.getId());
+      }
 
       if (d_print_steps) {
          tbox::plog << "    Unassigning " << unassigned.size()
@@ -1091,7 +1166,9 @@ void TreeLoadBalancer::loadBalanceWithinRankGroup(
 
 
    /*
-    * Complete load-receive communications with children.
+    * Step 2, remote part:
+    *
+    * Finish getting tree and load data from children.
     * Add imported BoxInTransit to unassigned bin.
     */
    t_get_load_from_children->start();
@@ -1099,13 +1176,14 @@ void TreeLoadBalancer::loadBalanceWithinRankGroup(
 
       for (unsigned int i = 0; i < completed.size(); ++i) {
 
-         tbox::AsyncCommPeer<int>* peer_comm =
+         tbox::AsyncCommPeer<int>* child_recv =
             dynamic_cast<tbox::AsyncCommPeer<int> *>(completed[i]);
 
-         TBOX_ASSERT(peer_comm >= child_comms);
-         TBOX_ASSERT(peer_comm <= child_comms + num_children);
+         TBOX_ASSERT(child_recv != NULL);
+         TBOX_ASSERT(child_recv >= child_recvs);
+         TBOX_ASSERT(child_recv < child_recvs + num_children);
 
-         const int cindex = static_cast<int>(peer_comm - child_comms);
+         const int cindex = static_cast<int>(child_recv - child_recvs);
 
          TBOX_ASSERT(cindex >= 0 && cindex < num_children);
 
@@ -1119,8 +1197,8 @@ void TreeLoadBalancer::loadBalanceWithinRankGroup(
             child_load_data[cindex],
             unassigned,
             next_available_index[cindex],
-            peer_comm->getRecvData(),
-            peer_comm->getRecvSize() );
+            child_recv->getRecvData(),
+            child_recv->getRecvSize() );
 
          child_load_data[cindex].d_ideal_work =
             int(group_avg_load * child_load_data[cindex].d_num_procs + 0.5);
@@ -1133,7 +1211,7 @@ void TreeLoadBalancer::loadBalanceWithinRankGroup(
                tbox::plog << "    Got " << unassigned.size() - old_size
                           << " boxes (" << child_load_data[cindex].d_load_imported
                           << " units) from child "
-                          << peer_comm->getPeerRank() << ":";
+                          << child_recv->getPeerRank() << ":";
                for ( ; ni != unassigned.end(); ++ni) {
                   const BoxInTransit& box_in_transit = *ni;
                   tbox::plog << "  " << box_in_transit;
@@ -1152,7 +1230,7 @@ void TreeLoadBalancer::loadBalanceWithinRankGroup(
 
       completed.clear();
       t_children_load_comm->start();
-      comm_stage.advanceSome(completed);
+      child_recv_stage.advanceSome(completed);
       t_children_load_comm->stop();
 
    } while (!completed.empty());
@@ -1160,14 +1238,14 @@ void TreeLoadBalancer::loadBalanceWithinRankGroup(
 
 
    // We should have received everything at this point.
-   TBOX_ASSERT(!comm_stage.hasPendingRequests());
+   TBOX_ASSERT(!child_recv_stage.hasPendingRequests());
 
    my_load_data.d_ideal_work = int(group_avg_load * my_load_data.d_num_procs + 0.5);
 
    if (d_print_steps) {
       tbox::plog << "Received children subtree data." << std::endl;
       for (int c = 0; c < num_children; ++c) {
-         tbox::plog << "Child " << child_comms[c].getPeerRank()
+         tbox::plog << "Child " << child_recvs[c].getPeerRank()
                     << " subtree data: " << child_load_data[c].d_total_work
                     << "/" << child_load_data[c].d_ideal_work
                     << " for " << child_load_data[c].d_num_procs << " procs averaging "
@@ -1188,6 +1266,8 @@ void TreeLoadBalancer::loadBalanceWithinRankGroup(
 
 
    /*
+    * Step 3:
+    *
     * Send subtree info and excess work (if any) up to parent.
     */
    t_send_load_to_parent->start();
@@ -1244,6 +1324,8 @@ void TreeLoadBalancer::loadBalanceWithinRankGroup(
 
 
    /*
+    * Step 4:
+    *
     * Finish the send-up.
     * To preclude sending work in both directions, the parent
     * will *not* send a work message down if we sent work up.
@@ -1324,6 +1406,8 @@ void TreeLoadBalancer::loadBalanceWithinRankGroup(
 
 
    /*
+    * Step 5 and 6:
+    *
     * Reassign unassigned load to children subtrees as needed.
     */
 
@@ -1345,7 +1429,7 @@ void TreeLoadBalancer::loadBalanceWithinRankGroup(
          if (d_print_steps) {
             tbox::plog << "  Attempting to reassign " << ideal_transfer
                        << " of unassigned load to child "
-                       << child_comms[ichild].getPeerRank() << "\n";
+                       << child_sends[ichild].getPeerRank() << "\n";
          }
 
          if (ideal_transfer > 0) {
@@ -1362,7 +1446,7 @@ void TreeLoadBalancer::loadBalanceWithinRankGroup(
             tbox::plog << "  Giving " << recip_data.d_for_export.size()
                        << " boxes (" << actual_transfer << " / " << ideal_transfer
                        << " units) to child " << ichild << ':'
-                       << child_comms[ichild].getPeerRank() << " for "
+                       << child_sends[ichild].getPeerRank() << " for "
                        << recip_data.d_num_procs
                        << " procs:";
             for (TransitSet::const_iterator ni = recip_data.d_for_export.begin();
@@ -1374,7 +1458,7 @@ void TreeLoadBalancer::loadBalanceWithinRankGroup(
 
          std::vector<int> msg;
          packSubtreeLoadData(msg, recip_data);
-         child_comms[ichild].beginSend(&msg[0], static_cast<int>(msg.size()));
+         child_sends[ichild].beginSend(&msg[0], static_cast<int>(msg.size()));
 
       }
 
@@ -1405,7 +1489,9 @@ void TreeLoadBalancer::loadBalanceWithinRankGroup(
       balanced_box_level.addBox(box_in_transit.d_box);
 
       if (box_in_transit.d_box.isIdEqual(box_in_transit.d_orig_box)) {
-         // Unchanged box requires no edge.  Nothing else need to be done.
+         // Unchanged box requires no mapping.  Nothing else need to be done.
+         TBOX_ASSERT( unbalanced_to_balanced.isEmptyNeighborhood(ni->d_box.getId()) );
+         unbalanced_to_balanced.eraseLocalNeighborhood(ni->d_box.getId());
          unassigned.erase(ni++);
       } else {
 
@@ -1428,24 +1514,25 @@ void TreeLoadBalancer::loadBalanceWithinRankGroup(
 
    }
 
-
-   balanced_to_unbalanced.setConnectorType(hier::Connector::MAPPING);
-   unbalanced_to_balanced.setConnectorType(hier::Connector::MAPPING);
-
    t_local_balancing->stop();
+
+   t_load_distribution->stop();
+
 
    /*
     * Finish messages before starting edge info exchange.
     * We have only sends to complete, so it should not take
     * long to advance them all to completion.
     */
-   t_finish_comms->start();
-   comm_stage.advanceAll(completed);
-   t_finish_comms->stop();
+   t_finish_sends->start();
+   child_send_stage.advanceAll(completed);
+   parent_send_stage.advanceAll(completed);
+   t_finish_sends->stop();
    completed.clear();
 #ifdef DEBUG_CHECK_ASSERTIONS
    for (int i = 0; i < num_children; ++i) {
-      TBOX_ASSERT(child_comms[i].isDone());
+      TBOX_ASSERT(child_sends[i].isDone());
+      TBOX_ASSERT(child_recvs[i].isDone());
    }
    if (parent_send != NULL) {
       TBOX_ASSERT(parent_send->isDone());
@@ -1454,34 +1541,8 @@ void TreeLoadBalancer::loadBalanceWithinRankGroup(
 #endif
 
 
-   /*
-    * Ranks that we exported work to and imported work from, for use
-    * when constructing semilocal unbalanced--->balanced
-    * relationships.
-    */
-   std::vector<int> exported_to;
-   std::vector<int> imported_from;
-
-   for ( int ichild=0; ichild<num_children; ++ichild ) {
-      if ( child_load_data[ichild].d_load_imported > 0 ) {
-         imported_from.push_back(child_comms[ichild].getPeerRank());
-      }
-      if ( child_load_data[ichild].d_load_exported > 0 ) {
-         exported_to.push_back(child_comms[ichild].getPeerRank());
-      }
-   }
-
-   if ( my_load_data.d_load_imported > 0 ) {
-      imported_from.push_back(parent_send->getPeerRank());
-   }
-   if ( my_load_data.d_load_exported > 0 ) {
-      exported_to.push_back(parent_send->getPeerRank());
-   }
-
    constructSemilocalUnbalancedToBalanced(
       unbalanced_to_balanced,
-      exported_to,
-      imported_from,
       unassigned );
 
 
@@ -1529,8 +1590,10 @@ void TreeLoadBalancer::loadBalanceWithinRankGroup(
 
 
    delete[] child_load_data;
-   destroyAsyncCommObjects(child_comms, parent_send, parent_recv);
+   destroyAsyncCommObjects(child_sends, parent_send);
+   destroyAsyncCommObjects(child_recvs, parent_recv);
 
+   t_get_map->stop();
 
    if (anchor_to_balance.isFinalized()) {
       t_use_map->start();
@@ -1559,7 +1622,7 @@ void TreeLoadBalancer::loadBalanceWithinRankGroup(
  * two-bin load balancer.  Given two sets of BoxInTransit (the bins)
  * and an amount of work to move from one set to the other, this
  * method makes a best effort to effect the work transfer between the
- * two bins.  This can move BoxInTransit between given sets and, if
+ * two bins.  It can move BoxInTransit between given sets and, if
  * needed, break some BoxInTransit up to move part of the work.
  *
  * This method is purely local--it reassigns the load but does not
@@ -1633,11 +1696,9 @@ int TreeLoadBalancer::reassignLoads(
        * in the overloaded side for partial transfer to the
        * underloaded side.
        */
-      int brk_transfer;
-      shiftLoadsByBreaking(
+      int brk_transfer = shiftLoadsByBreaking(
          src,
          dst,
-         brk_transfer,
          next_available_index,
          ideal_transfer - actual_transfer );
       actual_transfer += brk_transfer;
@@ -1656,9 +1717,11 @@ int TreeLoadBalancer::reassignLoads(
       }
       if (brk_transfer == 0) {
          /*
-          * If no Box can be broken to improve the actual_transfer,
-          * there is nothing further we can do.  (The swap phase, tried
-          * before the break phase, also generated no transfer.)
+          * If no box can be broken to improve the actual_transfer,
+          * there is nothing further we can do.  The swap phase, tried
+          * before the break phase, also generated no transfer, so
+          * there's no point trying again.  Break out now to save
+          * retrying the swap phase.
           */
          break;
       }
@@ -1745,205 +1808,164 @@ void TreeLoadBalancer::unpackSubtreeLoadData(
 /*
  *************************************************************************
  * Construct semilocal relationships in unbalanced--->balanced
- * Connector.  Constructing these relationships require communication
- * to determine where exported work ended up.
+ * Connector.
+ *
+ * Determine edges in unbalanced_to_balanced by sending balanced
+ * BoxInTransit back to the owners of the unbalanced Boxes that
+ * originated them.  We don't know what ranks will send back the
+ * balanced boxes, so we keep receiving messages from any rank until
+ * we have accounted for all the cells in the unbalanced BoxLevel.
  *************************************************************************
  */
 void TreeLoadBalancer::constructSemilocalUnbalancedToBalanced(
    hier::Connector &unbalanced_to_balanced,
-   const std::vector<int> &export_dsts,
-   const std::vector<int> &import_srcs,
    const TreeLoadBalancer::TransitSet &kept_imports ) const
 {
-   /*
-    * Determine edges from unbalanced to balanced BoxLevels by sending
-    * balanced Boxes back to the owners of the unbalanced Boxes that
-    * originated them.  Use the proc_hist data from each balanced
-    * BoxInTransit to send it back along the path it took to get to
-    * the process that eventually kept it.
-    *
-    * Any process we exported work to should send back a message about
-    * where that work went.  Any process we imported work from expects
-    * us to send a message about what happened to that work.  So we
-    * receive messages from procs in export_dsts and send messages to
-    * procs in import_srcs.
-    *
-    * For work that originated locally, construct relationships when
-    * an incoming message tells us where that work ended up.  For work
-    * that originated elsewhere, forward the information to the
-    * process that sent it to us.
-    *
-    * TODO: Implement alternate edge generation method where terminal
-    * owners send edge info directly back to initial owners.  No need
-    * for trails.  Initial owners receive from MPI_ANY and stops
-    * receiving when it can account for the number of cells it started
-    * with.  We should retain both methods for edge generation because
-    * we don't know which is faster on any given machine.  BTNG.
-    */
+   t_construct_semilocal->start();
 
-
-   /*
-    * Set up objects for asynchronous communication.
-    */
-   tbox::AsyncCommStage comm_stage;
-   tbox::AsyncCommPeer<int> *importer_comms = import_srcs.empty() ? NULL : new tbox::AsyncCommPeer<int>[import_srcs.size()];
-   tbox::AsyncCommPeer<int> *exporter_comms = export_dsts.empty() ? NULL : new tbox::AsyncCommPeer<int>[export_dsts.size()];
-   tbox::AsyncCommStage::MemberVec completed;
-
-   for ( size_t i=0; i<export_dsts.size(); ++i ) {
-      exporter_comms[i].initialize(&comm_stage);
-      exporter_comms[i].setPeerRank(export_dsts[i]);
-      exporter_comms[i].setMPI(d_mpi);
-      exporter_comms[i].setMPITag(TreeLoadBalancer_EDGETAG0,
-                                  TreeLoadBalancer_EDGETAG1);
-      exporter_comms[i].limitFirstDataLength(TreeLoadBalancer_FIRSTDATALEN);
-      exporter_comms[i].beginRecv();
-      if ( exporter_comms[i].isDone() ) {
-         completed.push_back(&exporter_comms[i]);
-      }
-   }
-
-   for ( size_t i=0; i<import_srcs.size(); ++i ) {
-      importer_comms[i].initialize(&comm_stage);
-      importer_comms[i].setPeerRank(import_srcs[i]);
-      importer_comms[i].setMPI(d_mpi);
-      importer_comms[i].setMPITag(TreeLoadBalancer_EDGETAG0,
-                                  TreeLoadBalancer_EDGETAG1);
-      importer_comms[i].limitFirstDataLength(TreeLoadBalancer_FIRSTDATALEN);
-   }
-
-
-   // Buffers for staging data to send.  Indexed by recipient rank.
+   // Stuff the imported BoxInTransits into buffers by their original owners.
+   t_pack_edge->start();
    std::map<int,std::vector<int> > outgoing_messages;
-
-
-   /*
-    * Prepare messages to tell processes that sent work to us about
-    * the work that we kept.
-    */
-   t_local_edges->start();
-   for (TransitSet::const_iterator ni = kept_imports.begin();
-        ni != kept_imports.end(); ++ni) {
-      const BoxInTransit &box_in_transit = *ni;
-      TBOX_ASSERT(!box_in_transit.d_proc_hist.empty());
-      TBOX_ASSERT(box_in_transit.d_orig_box.getOwnerRank() != d_mpi.getRank());
-      box_in_transit.packForPreviousOwner(outgoing_messages);
+   for ( TransitSet::const_iterator bi=kept_imports.begin();
+         bi!=kept_imports.end(); ++bi ) {
+      const BoxInTransit &bit = *bi;
+      std::vector<int> &message = outgoing_messages[bit.d_orig_box.getOwnerRank()];
+      message.insert( message.end(), bit.commBufferSize(), -1 );
+      bit.putToIntBuffer( &message[message.size() - bit.commBufferSize()] );
    }
-   t_local_edges->stop();
+   t_pack_edge->stop();
+
 
    /*
-    * Receive and unpack incoming messages.
+    * Send outgoing_messages.  Optimization for mitigating contention:
+    * Start by sending to the first recipient with a rank higher than
+    * the local rank.
     */
-   do {
-      for (unsigned int i = 0; i < completed.size(); ++i) {
 
-         tbox::AsyncCommPeer<int>* peer_comm =
-            dynamic_cast<tbox::AsyncCommPeer<int> *>(completed[i]);
+   std::map<int,std::vector<int> >::iterator recip_itr =
+      outgoing_messages.upper_bound(d_mpi.getRank());
+   if ( recip_itr == outgoing_messages.end() ) {
+      recip_itr = outgoing_messages.begin();
+   }
 
-#ifdef DEBUG_CHECK_ASSERTIONS
-         size_t j;
-         for ( j=0; j<export_dsts.size(); ++j ) {
-            if ( export_dsts[j] == peer_comm->getPeerRank() ) break;
-         }
-         TBOX_ASSERT( j < export_dsts.size() );
-#endif
+   int outgoing_messages_size = static_cast<int>(outgoing_messages.size());
+   std::vector<tbox::SAMRAI_MPI::Request>
+      send_requests( outgoing_messages_size, MPI_REQUEST_NULL );
+   for ( int send_number = 0; send_number < outgoing_messages_size; ++send_number ) {
 
-         const int* received_data = peer_comm->getRecvData();
-         int received_data_length = peer_comm->getRecvSize();
-         unpackAndRouteNeighborhoodSets(
-            outgoing_messages,
-            unbalanced_to_balanced,
-            received_data,
-            received_data_length );
+      int recipient = recip_itr->first;
+      std::vector<int> &message = recip_itr->second;
+
+      d_mpi.Isend(
+         static_cast<void*>(&message[0]),
+         static_cast<int>(message.size()),
+         MPI_INT,
+         recipient,
+         TreeLoadBalancer_EDGETAG0,
+         &send_requests[send_number]);
+
+      ++recip_itr;
+      if ( recip_itr == outgoing_messages.end() ) {
+         recip_itr = outgoing_messages.begin();
       }
 
-      completed.clear();
-      t_children_edge_comm->start();
-      comm_stage.advanceSome(completed);
-      t_children_edge_comm->stop();
-
-   } while (!completed.empty());
+   }
 
 
    /*
-    * Send outgoing messages.
+    * Determine number of cells in unbalanced that are not yet accounted
+    * for in balanced.
     */
-   TBOX_ASSERT( outgoing_messages.size() == import_srcs.size() );
-   for ( size_t i=0; i<import_srcs.size(); ++i ) {
-      tbox::AsyncCommPeer<int> &peer_comm = importer_comms[i];
-      std::map<int,std::vector<int> >::const_iterator recip =
-         outgoing_messages.find(peer_comm.getPeerRank());
-      TBOX_ASSERT( recip != outgoing_messages.end() );
-      const std::vector<int> &message = recip->second;
-      peer_comm.beginSend( &message[0], static_cast<int>(message.size()) );
+   int num_unaccounted_cells = static_cast<int>(
+      unbalanced_to_balanced.getBase().getLocalNumberOfCells());
+
+   const hier::BoxContainer &unbalanced_boxes = unbalanced_to_balanced.getBase().getBoxes();
+   for ( hier::BoxContainer::ConstIterator bi=unbalanced_boxes.begin();
+         bi!=unbalanced_boxes.end(); ++bi ) {
+
+      const hier::Box &unbalanced_box = *bi;
+
+      hier::Connector::ConstNeighborhoodIterator neighborhood_itr =
+         unbalanced_to_balanced.findLocal(unbalanced_box.getId());
+
+      if ( neighborhood_itr != unbalanced_to_balanced.end() ) {
+
+         for ( hier::Connector::ConstNeighborIterator ni=unbalanced_to_balanced.begin(neighborhood_itr);
+               ni!=unbalanced_to_balanced.end(neighborhood_itr); ++ni ) {
+            TBOX_ASSERT( ni->getOwnerRank() == d_mpi.getRank() );
+            num_unaccounted_cells -= ni->size();
+         }
+
+      }
+      else {
+         num_unaccounted_cells -= unbalanced_box.size();
+      }
+
    }
 
-   t_finish_comms->start();
-   comm_stage.advanceAll(completed);
-   t_finish_comms->stop();
 
-   delete [] importer_comms;
-   delete [] exporter_comms;
+   /*
+    * Receive info about exported cells from processes that now own
+    * those cells.  Receive until all cells are accounted for.
+    */
+
+   std::vector<int> incoming_message; // Keep outside loop to avoid reconstructions.
+   BoxInTransit balanced_box_in_transit(d_dim);
+   while ( num_unaccounted_cells > 0 ) {
+
+      t_construct_semilocal_comm_wait->start();
+      tbox::SAMRAI_MPI::Status status;
+      d_mpi.Probe( MPI_ANY_SOURCE,
+                   TreeLoadBalancer_EDGETAG0,
+                   &status );
+
+      int source = status.MPI_SOURCE;
+      int count = -1;
+      tbox::SAMRAI_MPI::Get_count( &status, MPI_INT, &count );
+      incoming_message.resize( count, -1 );
+
+      d_mpi.Recv(
+         static_cast<void*>(&incoming_message[0]),
+         count,
+         MPI_INT,
+         source,
+         TreeLoadBalancer_EDGETAG0,
+         &status );
+      t_construct_semilocal_comm_wait->stop();
+
+      const int *ptr = &incoming_message[0];
+      t_unpack_edge->start();
+      while ( ptr <= &incoming_message.back() ) {
+
+         ptr = balanced_box_in_transit.getFromIntBuffer(ptr);
+         TBOX_ASSERT( balanced_box_in_transit.d_orig_box.getOwnerRank() == d_mpi.getRank() );
+         unbalanced_to_balanced.insertLocalNeighbor(
+            balanced_box_in_transit.d_box,
+            balanced_box_in_transit.d_orig_box.getId() );
+         num_unaccounted_cells -= balanced_box_in_transit.d_box.size();
+
+      }
+      t_unpack_edge->stop();
+      TBOX_ASSERT( ptr == &incoming_message.back() + 1 );
+
+   }
+   TBOX_ASSERT( num_unaccounted_cells == 0 );
+   incoming_message.clear();
+
+
+   // Wait for the sends to complete before clearing outgoing_messages.
+   std::vector<tbox::SAMRAI_MPI::Status> status(send_requests.size());
+   t_construct_semilocal_comm_wait->start();
+   d_mpi.Waitall(
+      static_cast<int>(send_requests.size()),
+      &send_requests[0],
+      &status[0]);
+   t_construct_semilocal_comm_wait->stop();
+   outgoing_messages.clear();
+
+   t_construct_semilocal->stop();
 
    return;
-}
-
-
-
-
-/*
- *************************************************************************
- * Unpack BoxInTransit objects from relationship message and either
- * use data to set up local edges in unbalanced--->balanced or route
- * data in the direction of the origin of the BoxInTransit.
- *************************************************************************
- */
-void TreeLoadBalancer::unpackAndRouteNeighborhoodSets(
-   std::map<int,std::vector<int> > &outgoing_messages,
-   hier::Connector& unbalanced_to_balanced,
-   const int* received_data,
-   int received_data_length ) const
-{
-   t_unpack_edge->start();
-
-   const int* beg = received_data;
-   const int* end = received_data + received_data_length;
-
-   while (beg < end) {
-
-      const BoxInTransit box_in_transit(beg, d_dim);
-      if (d_print_edge_steps) {
-         tbox::plog << "Unpacked edge " << box_in_transit << std::endl;
-      }
-
-      TBOX_ASSERT(beg <= end);
-
-      // Empty proc_hist must mean that local process is the originator.
-      TBOX_ASSERT(box_in_transit.d_proc_hist.empty() ==
-                  ( box_in_transit.d_orig_box.getOwnerRank() ==
-                    d_mpi.getRank() ) );
-
-      /*
-       * If the local process originated this box, generate the
-       * relationship here.  Else, pack the box to forward to its
-       * previous owner (and eventually to its originator).
-       */
-
-      if (box_in_transit.d_orig_box.getOwnerRank() == d_mpi.getRank()) {
-
-         if (d_print_edge_steps) {
-            tbox::plog << "Keeping edge " << box_in_transit << std::endl;
-         }
-
-         unbalanced_to_balanced.insertLocalNeighbor(
-            box_in_transit.d_box,
-            box_in_transit.d_orig_box.getId());
-
-      } else {
-         box_in_transit.packForPreviousOwner(outgoing_messages);
-      }
-   }
-   t_unpack_edge->stop();
 }
 
 
@@ -1963,10 +1985,13 @@ void TreeLoadBalancer::setSAMRAI_MPI(
          << "communicator is invalid.");
    }
 
-   d_mpi_dup.freeCommunicator();
+   if ( d_mpi_is_dupe ) {
+      d_mpi.freeCommunicator();
+   }
 
    // Enable private communicator.
-   d_mpi_dup.dupCommunicator(samrai_mpi);
+   d_mpi.dupCommunicator(samrai_mpi);
+   d_mpi_is_dupe = true;
 }
 
 
@@ -1978,12 +2003,16 @@ void TreeLoadBalancer::setSAMRAI_MPI(
  */
 void TreeLoadBalancer::freeMPICommunicator()
 {
-   // Free the private communicator (if MPI has not been finalized).
-   int flag;
-   tbox::SAMRAI_MPI::Finalized(&flag);
-   if (!flag) {
-      d_mpi_dup.freeCommunicator();
+   if ( d_mpi_is_dupe ) {
+      // Free the private communicator (if MPI has not been finalized).
+      int flag;
+      tbox::SAMRAI_MPI::Finalized(&flag);
+      if (!flag) {
+         d_mpi.freeCommunicator();
+      }
    }
+   d_mpi.setCommunicator(tbox::SAMRAI_MPI::commNull);
+   d_mpi_is_dupe = false;
 }
 
 
@@ -2070,39 +2099,28 @@ void TreeLoadBalancer::createBalanceRankGroupBasedOnCycles(
  *************************************************************************
  */
 void TreeLoadBalancer::setupAsyncCommObjects(
-   int& num_children,
+   tbox::AsyncCommStage& child_stage,
    tbox::AsyncCommPeer<int> *& child_comms,
-   tbox::AsyncCommPeer<int> *& parent_send,
-   tbox::AsyncCommPeer<int> *& parent_recv,
-   tbox::AsyncCommStage& comm_stage,
-   const tbox::RankGroup &rank_group ) const
+   tbox::AsyncCommStage& parent_stage,
+   tbox::AsyncCommPeer<int> *& parent_comm,
+   const tbox::RankGroup &rank_group,
+   const tbox::BalancedDepthFirstTree &bdfs ) const
 {
-   comm_stage.setCommunicationWaitTimer(t_MPI_wait);
 
-   child_comms = parent_send = parent_recv = NULL;
+   child_comms = parent_comm = NULL;
 
-   /*
-    * Arrange the group ranks in a BalancedDepthFirstTree in order to get
-    * the parent/children in the group.
-    *
-    * By the way, the BalancedDepthFirstTree currently assumes a binary
-    * tree, d_degree = 2.
-    */
-   TBOX_ASSERT(d_degree == 2);
-   // FIXME: BalancedDepthFirstTree could use a constructor that takes a RankGroup.
-   tbox::BalancedDepthFirstTree bdfs(0,
-                                     rank_group.size()-1,
-                                     rank_group.getMapIndex(d_mpi.getRank()),
-                                     true);
-
-   num_children = bdfs.getNumberOfChildren();
+   const int num_children = bdfs.getNumberOfChildren();
 
    if ( num_children > 0 ) {
+
       child_comms = new tbox::AsyncCommPeer<int>[num_children];
+
       for (int child_num = 0; child_num < num_children; ++child_num) {
+
          const int child_rank_in_grp = bdfs.getChildRank(child_num);
          const int child_true_rank = rank_group.getMappedRank(child_rank_in_grp);
-         child_comms[child_num].initialize(&comm_stage);
+
+         child_comms[child_num].initialize(&child_stage);
          child_comms[child_num].setPeerRank(child_true_rank);
          child_comms[child_num].setMPI(d_mpi);
          child_comms[child_num].setMPITag(TreeLoadBalancer_LOADTAG0,
@@ -2116,21 +2134,13 @@ void TreeLoadBalancer::setupAsyncCommObjects(
       const int parent_rank_in_grp = bdfs.getParentRank();
       int parent_true_rank = rank_group.getMappedRank(parent_rank_in_grp);
 
-      parent_send = new tbox::AsyncCommPeer<int>;
-      parent_send->initialize(&comm_stage);
-      parent_send->setPeerRank(parent_true_rank);
-      parent_send->setMPI(d_mpi);
-      parent_send->setMPITag(TreeLoadBalancer_LOADTAG0,
+      parent_comm = new tbox::AsyncCommPeer<int>;
+      parent_comm->initialize(&parent_stage);
+      parent_comm->setPeerRank(parent_true_rank);
+      parent_comm->setMPI(d_mpi);
+      parent_comm->setMPITag(TreeLoadBalancer_LOADTAG0,
          TreeLoadBalancer_LOADTAG1);
-      parent_send->limitFirstDataLength(TreeLoadBalancer_FIRSTDATALEN);
-
-      parent_recv = new tbox::AsyncCommPeer<int>;
-      parent_recv->initialize(&comm_stage);
-      parent_recv->setPeerRank(parent_true_rank);
-      parent_recv->setMPI(d_mpi);
-      parent_recv->setMPITag(TreeLoadBalancer_LOADTAG0,
-         TreeLoadBalancer_LOADTAG1);
-      parent_recv->limitFirstDataLength(TreeLoadBalancer_FIRSTDATALEN);
+      parent_comm->limitFirstDataLength(TreeLoadBalancer_FIRSTDATALEN);
 
    }
 
@@ -2145,22 +2155,19 @@ void TreeLoadBalancer::setupAsyncCommObjects(
  */
 void TreeLoadBalancer::destroyAsyncCommObjects(
    tbox::AsyncCommPeer<int> *& child_comms,
-   tbox::AsyncCommPeer<int> *& parent_send,
-   tbox::AsyncCommPeer<int> *& parent_recv) const
+   tbox::AsyncCommPeer<int> *& parent_comm) const
 {
    if (d_mpi.getSize() == 1) {
       TBOX_ASSERT(child_comms == NULL);
-      TBOX_ASSERT(parent_send == NULL);
-      TBOX_ASSERT(parent_recv == NULL);
+      TBOX_ASSERT(parent_comm == NULL);
    } else {
       if ( child_comms != NULL ) {
          delete[] child_comms;
       }
-      if ( parent_send != NULL ) {
-         delete parent_send;
-         delete parent_recv;
+      if ( parent_comm != NULL ) {
+         delete parent_comm;
       }
-      child_comms = parent_send = parent_recv = NULL;
+      child_comms = parent_comm = NULL;
    }
 }
 
@@ -2180,21 +2187,22 @@ void TreeLoadBalancer::destroyAsyncCommObjects(
  * Return whether any changes were made.
  *************************************************************************
  */
-bool TreeLoadBalancer::shiftLoadsByBreaking(
+int TreeLoadBalancer::shiftLoadsByBreaking(
    TransitSet& src,
    TransitSet& dst,
-   int& actual_transfer,
    hier::LocalId& next_available_index,
    const int ideal_transfer ) const
 {
+   int actual_transfer = 0;
+
    if (ideal_transfer < 0) {
-      bool rval = shiftLoadsByBreaking(dst,
-            src,
-            actual_transfer,
-            next_available_index,
-            -ideal_transfer );
-      actual_transfer = -actual_transfer;
-      return rval;
+      // The logic below does not handle bi-directional transfers, so handle it here.
+      actual_transfer = -shiftLoadsByBreaking(
+         dst,
+         src,
+         next_available_index,
+         -ideal_transfer );
+      return actual_transfer;
    }
 
    TBOX_ASSERT(src.size() + dst.size() > 0);
@@ -2209,8 +2217,6 @@ bool TreeLoadBalancer::shiftLoadsByBreaking(
                  << " Boxes."
                  << std::endl;
    }
-
-   actual_transfer = 0;
 
    /*
     * The best results so far (from not transfering anything).
@@ -2366,19 +2372,20 @@ bool TreeLoadBalancer::shiftLoadsByBreaking(
                        << std::endl;
          }
 
-         if (trial_combined_penalty < best_combined_penalty) {
-            if (d_print_steps) {
+         if (d_print_steps) {
+            if (trial_combined_penalty < best_combined_penalty) {
                tbox::plog << "    Keeping this trial." << std::endl;
+            } else {
+               tbox::plog << "    Rejecting this trial." << std::endl;
             }
+         }
+
+         if (trial_combined_penalty < best_combined_penalty) {
             found_breakage = true;
             best_actual_transfer = static_cast<int>(breakoff_amt);
             best_src = trial_src;
             best_dst = trial_dst;
             best_combined_penalty = trial_combined_penalty;
-         } else {
-            if (d_print_steps) {
-               tbox::plog << "    Rejecting this trial." << std::endl;
-            }
          }
 
       } else {
@@ -2397,7 +2404,7 @@ bool TreeLoadBalancer::shiftLoadsByBreaking(
    }
 
    t_shift_loads_by_breaking->stop();
-   return found_breakage;
+   return actual_transfer;
 }
 
 
@@ -2452,46 +2459,15 @@ int TreeLoadBalancer::shiftLoadsBySwapping(
 
       found_swap = false;
 
-      TransitSet::iterator isrc;
-      TransitSet::iterator idst;
       int swap_transfer;
-      found_swap = findLoadSwapPair(
+      found_swap = swapLoadPair(
          src,
          dst,
          swap_transfer,
-         isrc,
-         idst,
          rem_transfer );
 
       if (found_swap) {
-
-         // We can improve balance_penalty by swapping isrc with idst.
-         if (d_print_steps) {
-            tbox::plog << "    Swapping " << swap_transfer << " units using ";
-            if (isrc != src.end()) tbox::plog << *isrc;
-            else tbox::plog << "X";
-            tbox::plog << " <--> ";
-            if (idst != dst.end()) tbox::plog << *idst;
-            else tbox::plog << "X";
-            tbox::plog << std::endl;
-         }
-
-         if (isrc != src.end()) {
-            dst.insert(*isrc);
-            src.erase(isrc);
-         }
-         if (idst != dst.end()) {
-            src.insert(*idst);
-            dst.erase(idst);
-         }
-
          actual_transfer += swap_transfer;
-
-      } else {
-         if (d_print_steps) {
-            tbox::plog << "    Cannot find swap pair for " << rem_transfer
-                       << " units." << std::endl;
-         }
       }
 
    } while (found_swap && (actual_transfer != ideal_transfer));
@@ -2520,22 +2496,18 @@ int TreeLoadBalancer::shiftLoadsBySwapping(
  * load.
  *************************************************************************
  */
-bool TreeLoadBalancer::findLoadSwapPair(
+bool TreeLoadBalancer::swapLoadPair(
    TransitSet& src,
    TransitSet& dst,
    int& actual_transfer,
-   TransitSet::iterator& isrc,
-   TransitSet::iterator& idst,
    int ideal_transfer ) const
 {
    if (ideal_transfer < 0) {
-      // The logic below does not handle bi-directional so handle it here.
-      bool rval = findLoadSwapPair(
+      // The logic below does not handle bi-directional transfers, so handle it here.
+      bool rval = swapLoadPair(
          dst,
          src,
          actual_transfer,
-         idst,
-         isrc,
          -ideal_transfer );
       actual_transfer = -actual_transfer;
       return rval;
@@ -2544,7 +2516,7 @@ bool TreeLoadBalancer::findLoadSwapPair(
    t_find_swap_pair->start();
 
    if (d_print_steps) {
-      tbox::plog << "  findLoadSwapPair looking for transfer of "
+      tbox::plog << "  swapLoadPair looking for transfer of "
                  << ideal_transfer
                  << " between " << src.size() << "-BoxInTransit src and "
                  << dst.size() << "-BoxInTransit dst." << std::endl;
@@ -2561,79 +2533,79 @@ bool TreeLoadBalancer::findLoadSwapPair(
    }
 
    /*
-    * Look for a high and a low NodeInTransit to swap, subject to condition
+    * Look for two swap options.  The "high side" option would
+    * transfer at least ideal_transfer.  The "low side" option would
+    * transfer up to ideal_transfer.
     *
-    * 0 < load(high) - load(low) < lim_transfer.
+    * Each option is defined by a box from src and a box from dst,
+    * designated by the iterators src_hiside, dst_hiside, src_loside
+    * and dst_loside.  src_hiside points to the box in the src for the
+    * high-side transfer, and similarly for dst_hiside.  src_loside
+    * points to the box in the src for the low-side transfer, and
+    * similarly for dst_loside.
     *
-    * Compute the
-    * balance_penalty if high and low were swapped.  Keep looking
-    * until we find the pair giving the lowest balance_penalty on swapping.
+    * Note that in the degenerate case, the dst box does not exist,
+    * and the swap degenerates to moving a box from the src to the
+    * dst.
+    *
+    * Compute the balance_penalty if high and low were swapped.  Keep
+    * looking until we find the pair giving the lowest balance_penalty
+    * on swapping.
     *
     * isrc and idst point to the current best pair to swap.  new_balance_penalty
     * is the balance_penalty if we swap them.
     *
-    * jsrc and jdst are trial pairs to check to see if we can improve on
+    * src_test and dst_test are trial pairs to check to see if we can improve on
     * new_balance_penalty.
     *
     * We will look for two "best" pairs:
-    *
-    * On the high side, swapping more than ideal_transfer:
-    * (jsrc_hiside , jdst_hiside) are the best swap pair such that
-    * jsrc_hiside->load - jdst_hiside->load >= ideal_transfer
-    *
-    * On the low side, swapping less than ideal_transfer:
-    * (jsrc_loside, jdst_loside are the best swap pair such that
-    * jsrc_loside->load - jdst_loside->load < ideal_transfer
-    *
-    * Then we decide on whether to choose the hig-hside swap or the
-    * low-side swap based on balance_penalty of each candidate swap.
     */
 
-   // Initialization indicating no swap pair found.
-   TransitSet::iterator jsrc_hiside = src.end();
-   TransitSet::iterator jdst_hiside = dst.end();
-   TransitSet::iterator jsrc_loside = src.end();
-   TransitSet::iterator jdst_loside = dst.end();
+   // Initialization indicating no swap pair found yet.
+   TransitSet::iterator src_hiside = src.end();
+   TransitSet::iterator dst_hiside = dst.end();
+   TransitSet::iterator src_loside = src.end();
+   TransitSet::iterator dst_loside = dst.end();
 
    // A dummy BoxInTransit for set searches.
    hier::Box dummy_box(d_dim);
    BoxInTransit dummy_search_target(d_dim);
 
-   // Distance between ideal and candidate, >= 0
+   // Difference between swap results and ideal, >= 0
    int imbalance_loside = tbox::MathUtilities<int>::getMax();
    int imbalance_hiside = tbox::MathUtilities<int>::getMax();
 
    if (dst.empty()) {
       /*
        * There is no dst BoxInTransit, so the swap would
-       * degnerate to moving a src BoxInTransit to dst.  Find
+       * degnerate to moving a box from src to dst.  Find
        * the best src BoxInTransit to move.
        */
       dummy_search_target = BoxInTransit(hier::Box(dummy_box, hier::LocalId::getZero(), 0));
       dummy_search_target.d_load = ideal_transfer;
-      TransitSet::iterator jsrc = src.lower_bound(dummy_search_target);
+      TransitSet::iterator src_test = src.lower_bound(dummy_search_target);
 
       if (d_print_swap_steps) {
-         tbox::plog << "  findLoadSwapPair with empty dst: ";
-      }
-      if (jsrc != src.begin()) {
-         jsrc_hiside = jsrc;
-         --jsrc_hiside;
-         imbalance_hiside = jsrc_hiside->d_load - ideal_transfer;
-         if (d_print_swap_steps) {
-            tbox::plog << "  hi src: " << (*jsrc_hiside)
-                       << " with transfer " << (*jsrc_hiside).d_load
-                       << " missing by " << imbalance_hiside;
-         }
+         tbox::plog << "  swapLoadPair with empty dst: ";
       }
 
-      if (jsrc != src.end()) {
-         jsrc_loside = jsrc;
-         imbalance_loside = ideal_transfer - jsrc_loside->d_load;
+      if (src_test != src.begin()) {
+         src_hiside = src_test;
+         --src_hiside;
+         imbalance_hiside = src_hiside->d_load - ideal_transfer;
          if (d_print_swap_steps) {
-            tbox::plog << "  lo src: " << (*jsrc_loside)
-                       << " with transfer " << (*jsrc_loside).d_load
-                       << " missing by " << imbalance_loside;
+            tbox::plog << "  hi src: " << (*src_hiside)
+                       << " with transfer " << src_hiside->d_load
+                       << ", off by " << imbalance_hiside;
+         }
+      }
+      if (src_test != src.end()) {
+         src_loside = src_test;
+         imbalance_loside = ideal_transfer - src_loside->d_load;
+         if (d_print_swap_steps) {
+            tbox::plog << "  lo src: " << (*src_loside)
+                       << " with transfer " << src_loside->d_load
+                       << ", off by " << imbalance_loside;
          }
       }
       if (d_print_swap_steps) {
@@ -2643,62 +2615,65 @@ bool TreeLoadBalancer::findLoadSwapPair(
    } else {
 
       /*
-       * Start search through src beginning with the NodeInTransit
-       * whose load exceed the biggest dst BoxInTransit by at
-       * least ideal_transfer.
+       * Start search through src beginning with the box whose load
+       * exceed the biggest dst box by at least ideal_transfer.
        */
       dummy_search_target = *dst.begin();
       dummy_search_target.d_load += ideal_transfer;
-      TransitSet::iterator jsrc_beg = src.lower_bound(dummy_search_target);
+      TransitSet::iterator src_beg = src.lower_bound(dummy_search_target);
 
-      for (TransitSet::iterator jsrc = jsrc_beg; jsrc != src.end(); ++jsrc) {
+      for (TransitSet::iterator src_test = src_beg; src_test != src.end(); ++src_test) {
 
          /*
-          * Set jdst pointing to where we should start looking in dst.
-          * Look for a load less than the load of jsrc by
+          * Set dst_test pointing to where we should start looking in dst.
+          * Look for a load less than the load of src_test by
           * ideal_transfer.
           */
          dummy_search_target = BoxInTransit(hier::Box(dummy_box, hier::LocalId::getZero(), 0));
          dummy_search_target.d_load = tbox::MathUtilities<int>::Max(
-               jsrc->d_load - ideal_transfer,
+               src_test->d_load - ideal_transfer,
                0);
-         TransitSet::iterator jdst = dst.lower_bound(dummy_search_target);
+         TransitSet::iterator dst_test = dst.lower_bound(dummy_search_target);
 
-         if (jdst != dst.end()) {
+         if (dst_test != dst.end()) {
 
             /*
-             * lower_bound returns jdst that gives >= ideal_transfer
-             * when swapped with jsrc.  Check transfererence between
-             * jsrc and two dst NodeInTransit on either side of the
-             * ideal dst BoxInTransit to swap.
+             * lower_bound returned dst_test that would transfer >=
+             * ideal_transfer when swapped with src_test.  Check
+             * transfererence between src_test and dst_test for the
+             * high-side transfer.  Also check the next smaller box in
+             * dst for the low-side transfer.
              */
-            int tmp_miss = (jsrc->d_load - jdst->d_load) - ideal_transfer;
+
+            // tmp_miss is the difference between the test swap amount and ideal_transfer.
+            int tmp_miss = (src_test->d_load - dst_test->d_load) - ideal_transfer;
             TBOX_ASSERT(tmp_miss >= 0);
+
             if ((tmp_miss < imbalance_hiside)) {
-               jsrc_hiside = jsrc;
-               jdst_hiside = jdst;
+               src_hiside = src_test;
+               dst_hiside = dst_test;
                imbalance_hiside = tmp_miss;
                if (d_print_swap_steps) {
-                  tbox::plog << "    new hi-swap pair: " << (*jsrc_hiside)
-                             << " & " << (*jdst_hiside) << " with transfer "
-                             << (jsrc_hiside->d_load - jdst_hiside->d_load)
+                  tbox::plog << "    new hi-swap pair: " << (*src_hiside)
+                             << " & " << (*dst_hiside) << " with transfer "
+                             << (src_hiside->d_load - dst_hiside->d_load)
                              << " missing by " << imbalance_hiside
                              << std::endl;
                }
             }
 
-            if (jdst != dst.begin()) {
-               --jdst; // Now, jsrc and jdst transferer by *less* than ideal_transfer.
-               tmp_miss = ideal_transfer - (jsrc->d_load - jdst->d_load);
+            if (dst_test != dst.begin()) {
+               --dst_test; // Now, src_test and dst_test transferer by *less* than ideal_transfer.
+               tmp_miss = ideal_transfer - (src_test->d_load - dst_test->d_load);
                TBOX_ASSERT(tmp_miss >= 0);
                if (tmp_miss < imbalance_loside) {
-                  jsrc_loside = jsrc;
-                  jdst_loside = jdst;
+                  src_loside = src_test;
+                  dst_loside = dst_test;
                   imbalance_loside = tmp_miss;
                   if (d_print_swap_steps) {
-                     tbox::plog << "    new lo-swap pair: " << (*jsrc_loside)
-                                << " & " << (*jdst_loside) << " with transfer "
-                                << (jsrc_loside->d_load - jdst_loside->d_load)
+                     tbox::plog << "    new lo-swap pair: " << (*src_loside)
+                                << " & " << (*dst_loside) << " with transfer "
+                                << (src_loside->d_load - dst_loside->d_load)
                                 << " missing by " << imbalance_loside
                                 << std::endl;
                   }
@@ -2709,45 +2684,44 @@ bool TreeLoadBalancer::findLoadSwapPair(
 
             /*
              * The ideal dst to swap is smaller than the smallest dst
-             * BoxInTransit.  Check the transfererence between
-             * jsrc and smallest BoxInTransit, the case of
-             * moving jsrc in whole.
+             * box.  So the only choice is swapping src_test for nothing.
+             * Chech this against the current high- and low-side choices.
              */
-            if (jsrc->d_load > ideal_transfer) {
-               // Moving jsrc to src is moving too much--hiside.
-               int tmp_miss = jsrc->d_load - ideal_transfer;
+            if (src_test->d_load > ideal_transfer) {
+               // Moving src_test to src is moving too much--hiside.
+               int tmp_miss = src_test->d_load - ideal_transfer;
                TBOX_ASSERT(tmp_miss >= 0);
                if (tmp_miss < imbalance_hiside) {
-                  jsrc_hiside = jsrc;
-                  jdst_hiside = dst.end();
+                  src_hiside = src_test;
+                  dst_hiside = dst.end();
                   imbalance_hiside = tmp_miss;
                   if (d_print_swap_steps) {
-                     tbox::plog << "    new hi-swap source: " << (*jsrc_hiside)
+                     tbox::plog << "    new hi-swap source: " << (*src_hiside)
                                 << " & " << "no dst" << " with transfer "
-                                << (jsrc_hiside->d_load)
+                                << (src_hiside->d_load)
                                 << " missing by " << imbalance_hiside
                                 << std::endl;
                   }
                }
             } else {
-               // Moving jsrc to src is moving (just right or) too little--loside.
-               int tmp_miss = ideal_transfer - jsrc->d_load;
+               // Moving src_test to src is moving (just right or) too little--loside.
+               int tmp_miss = ideal_transfer - src_test->d_load;
                TBOX_ASSERT(tmp_miss >= 0);
                if (tmp_miss < imbalance_loside) {
-                  jsrc_loside = jsrc;
-                  jdst_loside = dst.end();
+                  src_loside = src_test;
+                  dst_loside = dst.end();
                   imbalance_loside = tmp_miss;
                   if (d_print_swap_steps) {
-                     tbox::plog << "    new lo-swap source: " << (*jsrc_loside)
+                     tbox::plog << "    new lo-swap source: " << (*src_loside)
                                 << " & " << "no dst" << " with transfer "
-                                << (jsrc_loside->d_load)
+                                << (src_loside->d_load)
                                 << " missing by " << imbalance_loside
                                 << std::endl;
                   }
                }
                /*
                 * Break out of the loop early because there is no
-                * point checking smaller src NodeInTransit.
+                * point checking smaller src boxes.
                 */
                break;
             }
@@ -2770,20 +2744,23 @@ bool TreeLoadBalancer::findLoadSwapPair(
                  << " , " << balance_penalty_hiside << std::endl;
    }
 
-   bool return_value = false;
+   bool found_swap = false;
+   TransitSet::iterator isrc;
+   TransitSet::iterator idst;
+
    if (balance_penalty_loside < current_balance_penalty &&
        balance_penalty_loside <= balance_penalty_hiside) {
-      isrc = jsrc_loside;
-      idst = jdst_loside;
-      return_value = true;
+      isrc = src_loside;
+      idst = dst_loside;
+      found_swap = true;
       if (d_print_swap_steps) {
          tbox::plog << "    Taking loside." << std::endl;
       }
    } else if (balance_penalty_hiside < current_balance_penalty &&
               balance_penalty_hiside <= balance_penalty_loside) {
-      isrc = jsrc_hiside;
-      idst = jdst_hiside;
-      return_value = true;
+      isrc = src_hiside;
+      idst = dst_hiside;
+      found_swap = true;
       if (d_print_swap_steps) {
          tbox::plog << "    Taking hiside." << std::endl;
       }
@@ -2793,15 +2770,45 @@ bool TreeLoadBalancer::findLoadSwapPair(
       }
    }
 
-   if (return_value) {
+   if (found_swap) {
       actual_transfer = isrc->d_load;
       if (idst != dst.end()) {
          actual_transfer -= idst->d_load;
       }
    }
 
+   if (found_swap) {
+
+      // We can improve balance_penalty by swapping isrc with idst.
+      if (d_print_steps) {
+         tbox::plog << "    Swapping " << actual_transfer << " units using ";
+         if (isrc != src.end()) tbox::plog << *isrc;
+         else tbox::plog << "X";
+         tbox::plog << " <--> ";
+         if (idst != dst.end()) tbox::plog << *idst;
+         else tbox::plog << "X";
+         tbox::plog << std::endl;
+      }
+
+      if (isrc != src.end()) {
+         dst.insert(*isrc);
+         src.erase(isrc);
+      }
+      if (idst != dst.end()) {
+         src.insert(*idst);
+         dst.erase(idst);
+      }
+
+
+   } else {
+      if (d_print_steps) {
+         tbox::plog << "    Cannot find swap pair for " << ideal_transfer
+                    << " units." << std::endl;
+      }
+   }
+
    t_find_swap_pair->stop();
-   return return_value;
+   return found_swap;
 }
 
 
@@ -3518,7 +3525,7 @@ void TreeLoadBalancer::getFromInput(
    tbox::Pointer<tbox::Database> db)
 {
 
-   if (!db.isNull()) {
+   if (db) {
 
       d_print_steps =
          db->getBoolWithDefault("print_steps",
@@ -3599,10 +3606,10 @@ void TreeLoadBalancer::assertNoMessageForPrivateCommunicator() const
     * that there is no messages in transit, but it can find
     * messages that have arrived but not received.
     */
-   if (d_mpi_dup.getCommunicator() != tbox::SAMRAI_MPI::commNull) {
+   if (d_mpi.getCommunicator() != tbox::SAMRAI_MPI::commNull) {
       int flag;
       tbox::SAMRAI_MPI::Status mpi_status;
-      int mpi_err = d_mpi_dup.Iprobe(MPI_ANY_SOURCE,
+      int mpi_err = d_mpi.Iprobe(MPI_ANY_SOURCE,
             MPI_ANY_TAG,
             &flag,
             &mpi_status);
@@ -3693,6 +3700,8 @@ bool TreeLoadBalancer::breakOffLoad_planar(
    double best_difference = static_cast<double>(ideal_load_to_break);
    hier::Box best_breakoff_box(dim);
    hier::Box best_leftover_box(dim);
+   best_breakoff_box.setBlockId(box.getBlockId());
+   best_leftover_box.setBlockId(box.getBlockId());
 
    for (int d = d_dim.getValue() - 1; d >= 0; --d) {
 
@@ -4050,6 +4059,7 @@ bool TreeLoadBalancer::breakOffLoad_cubic(
     * placement_impossible to true.
     */
    hier::Box breakoff_box(d_dim);
+   breakoff_box.setBlockId(box.getBlockId());
    const hier::IntVector& lower(box.lower());
    const hier::IntVector& upper(box.upper());
    bool placement_impossible = false;
@@ -4179,71 +4189,6 @@ bool TreeLoadBalancer::breakOffLoad_cubic(
 #endif
 
    return true;
-}
-
-
-
-/*
-**************************************************************************
-**************************************************************************
-*/
-
-void TreeLoadBalancer::setShadowData(
-   const hier::IntVector& min_size,
-   const hier::IntVector& max_size,
-   const hier::BoxLevel& domain_box_level,
-   const hier::IntVector& bad_interval,
-   const hier::IntVector& cut_factor,
-   const hier::IntVector& refinement_ratio) const
-{
-   d_min_size = min_size;
-   d_max_size = max_size;
-   d_bad_interval = bad_interval;
-   d_cut_factor = cut_factor;
-   /*
-    * Domain boxes are used by breakOffLoad to determine where
-    * the bad cuts are.  Computing domain_boxes from domain_box_level
-    * should be moved above the this method.
-    */
-
-   /*
-    * We expect the domain box_level to be in globalized state.
-    */
-   TBOX_ASSERT(
-      domain_box_level.getParallelState() ==
-      hier::BoxLevel::GLOBALIZED);
-
-   d_block_domain_boxes.clear();
-   int nblocks =
-      domain_box_level.getGridGeometry()->getNumberBlocks();
-   d_block_domain_boxes.resize(nblocks);
-
-   if (nblocks == 1) {
-      domain_box_level.getGlobalBoxes(d_block_domain_boxes[0]);
-      d_block_domain_boxes[0].refine(refinement_ratio);
-   } else {
-      for (int b = 0; b < nblocks; ++b) {
-         d_block_domain_boxes[b] = hier::BoxContainer(
-            domain_box_level.getGlobalBoxes(), hier::BlockId(b));
-
-         d_block_domain_boxes[b].refine(refinement_ratio);
-      }
-   }
-}
-
-
-
-/*
-**************************************************************************
-**************************************************************************
-*/
-
-void TreeLoadBalancer::unsetShadowData() const {
-   d_min_size = hier::IntVector(d_dim, -1);
-   d_max_size = hier::IntVector(d_dim, -1);
-   d_block_domain_boxes.clear();
-   d_bad_interval = hier::IntVector(d_dim, -1);
-   d_cut_factor = hier::IntVector(d_dim, -1);
 }
 
 
@@ -4452,8 +4397,7 @@ void TreeLoadBalancer::prebalanceBoxLevel(
 
                   hier::BoxId tmp_box_id = (*tmp_iter).getId();
 
-                  tmp_to_balance.insertLocalNeighbor(box,
-                     tmp_box_id);
+                  tmp_to_balance.insertLocalNeighbor(box, tmp_box_id);
 
                   id_buffer[b] = tmp_box_id.getLocalId().getValue();
                }
@@ -4498,8 +4442,7 @@ void TreeLoadBalancer::prebalanceBoxLevel(
          hier::Box new_box(
             (*ni),
             (hier::LocalId)buffer[box_count],
-            rank_group.getMappedRank(d_mpi.getRank() % output_nproc),
-            (*ni).getBlockId());
+            rank_group.getMappedRank(d_mpi.getRank() % output_nproc));
 
          balance_to_tmp.insertLocalNeighbor(new_box, (*ni).getId());
          box_count++;
@@ -4556,9 +4499,6 @@ std::ostream& operator << (
    co << r.d_box
    << r.d_box.numberCells() << '|'
    << r.d_box.numberCells().getProduct();
-   for (int i = static_cast<int>(r.d_proc_hist.size()) - 1; i >= 0; --i) {
-      co << '-' << r.d_proc_hist[i];
-   }
    co << '-' << r.d_orig_box
    << r.d_box.numberCells() << '|'
    << r.d_box.numberCells().getProduct();
@@ -4577,7 +4517,7 @@ void TreeLoadBalancer::setTimers()
     * The first constructor gets timers from the TimerManager.
     * and sets up their deallocation.
     */
-   if (t_load_balance_box_level.isNull()) {
+   if (!t_load_balance_box_level) {
       t_load_balance_box_level = tbox::TimerManager::getManager()->
          getTimer(d_object_name + "::loadBalanceBoxLevel()");
       t_get_map = tbox::TimerManager::getManager()->
@@ -4588,18 +4528,24 @@ void TreeLoadBalancer::setTimers()
          getTimer(d_object_name + "::constrain_size");
       t_map_big_boxes = tbox::TimerManager::getManager()->
          getTimer(d_object_name + "::mapOversizedBoxes()");
+      t_load_distribution = tbox::TimerManager::getManager()->
+         getTimer(d_object_name + "::load_distribution");
       t_compute_local_load = tbox::TimerManager::getManager()->
          getTimer(d_object_name + "::compute_local_load");
       t_compute_global_load = tbox::TimerManager::getManager()->
          getTimer(d_object_name + "::compute_global_load");
       t_compute_tree_load = tbox::TimerManager::getManager()->
          getTimer(d_object_name + "::compute_tree_load");
-      t_compute_tree_load0 = tbox::TimerManager::getManager()->
-         getTimer(d_object_name + "::compute_tree_load0");
-      t_compute_tree_load1 = tbox::TimerManager::getManager()->
-         getTimer(d_object_name + "::compute_tree_load1");
-      t_compute_tree_load2 = tbox::TimerManager::getManager()->
-         getTimer(d_object_name + "::compute_tree_load2");
+
+      const int max_cycles_to_time = 4;
+      t_compute_tree_load_for_cycle.resize( max_cycles_to_time,
+                                            tbox::Pointer<tbox::Timer>(NULL) );
+      for ( int i=0; i<max_cycles_to_time; ++i ) {
+         t_compute_tree_load_for_cycle[i] = tbox::TimerManager::getManager()->
+            getTimer(d_object_name + "::compute_tree_load_for_cycle["
+                     + tbox::Utilities::intToString(i) + "]");
+      }
+
       t_break_off_load = tbox::TimerManager::getManager()->
          getTimer(d_object_name + "::breakOffLoad()");
       t_find_bad_cuts = tbox::TimerManager::getManager()->
@@ -4611,7 +4557,7 @@ void TreeLoadBalancer::setTimers()
       t_shift_loads_by_breaking = tbox::TimerManager::getManager()->
          getTimer(d_object_name + "::shiftLoadsByBreaking()");
       t_find_swap_pair = tbox::TimerManager::getManager()->
-         getTimer(d_object_name + "::findLoadSwapPair()");
+         getTimer(d_object_name + "::swapLoadPair()");
       t_send_load_to_children = tbox::TimerManager::getManager()->
          getTimer(d_object_name + "::send_load_to_children");
       t_send_load_to_parent = tbox::TimerManager::getManager()->
@@ -4620,6 +4566,10 @@ void TreeLoadBalancer::setTimers()
          getTimer(d_object_name + "::get_load_from_children");
       t_get_load_from_parent = tbox::TimerManager::getManager()->
          getTimer(d_object_name + "::get_load_from_parent");
+      t_construct_semilocal = tbox::TimerManager::getManager()->
+         getTimer(d_object_name + "::constructSemilocalUnbalancedToBalanced()");
+      t_construct_semilocal_comm_wait = tbox::TimerManager::getManager()->
+         getTimer(d_object_name + "::constructSemilocalUnbalancedToBalanced()_comm_wait");
       t_send_edge_to_children = tbox::TimerManager::getManager()->
          getTimer(d_object_name + "::send_edge_to_children");
       t_send_edge_to_parent = tbox::TimerManager::getManager()->
@@ -4630,22 +4580,16 @@ void TreeLoadBalancer::setTimers()
          getTimer(d_object_name + "::get_edge_from_parent");
       t_report_loads = tbox::TimerManager::getManager()->
          getTimer(d_object_name + "::report_loads");
-      t_misc1 = tbox::TimerManager::getManager()->
-         getTimer(d_object_name + "::misc1");
-      t_misc2 = tbox::TimerManager::getManager()->
-         getTimer(d_object_name + "::misc2");
-      t_misc3 = tbox::TimerManager::getManager()->
-         getTimer(d_object_name + "::misc3");
-      t_finish_comms = tbox::TimerManager::getManager()->
-         getTimer(d_object_name + "::finish_comms");
+      t_finish_sends = tbox::TimerManager::getManager()->
+         getTimer(d_object_name + "::finish_sends");
       t_local_balancing = tbox::TimerManager::getManager()->
          getTimer(d_object_name + "::local_balancing");
-      t_local_edges = tbox::TimerManager::getManager()->
-         getTimer(d_object_name + "::local_edges");
       t_pack_load = tbox::TimerManager::getManager()->
          getTimer(d_object_name + "::pack_load");
       t_unpack_load = tbox::TimerManager::getManager()->
          getTimer(d_object_name + "::unpack_load");
+      t_pack_edge = tbox::TimerManager::getManager()->
+         getTimer(d_object_name + "::pack_edge");
       t_unpack_edge = tbox::TimerManager::getManager()->
          getTimer(d_object_name + "::unpack_edge");
       t_parent_load_comm = tbox::TimerManager::getManager()->
@@ -4660,8 +4604,14 @@ void TreeLoadBalancer::setTimers()
          getTimer(d_object_name + "::barrier_before");
       t_barrier_after = tbox::TimerManager::getManager()->
          getTimer(d_object_name + "::barrier_after");
-      t_MPI_wait = tbox::TimerManager::getManager()->
-         getTimer(d_object_name + "::MPI_wait");
+      t_child_send_wait = tbox::TimerManager::getManager()->
+         getTimer(d_object_name + "::child_send_wait");
+      t_child_recv_wait = tbox::TimerManager::getManager()->
+         getTimer(d_object_name + "::child_recv_wait");
+      t_parent_send_wait = tbox::TimerManager::getManager()->
+         getTimer(d_object_name + "::parent_send_wait");
+      t_parent_recv_wait = tbox::TimerManager::getManager()->
+         getTimer(d_object_name + "::parent_recv_wait");
    }
 }
 

@@ -43,7 +43,7 @@ public:
     * The depth (number of components) gives the default for all of
     * the outerface data objects created with this factory.
     */
-   explicit OuterfaceDataFactory(
+   OuterfaceDataFactory(
       const tbox::Dimension& dim,
       int depth);
 

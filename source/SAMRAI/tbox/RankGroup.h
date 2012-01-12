@@ -53,7 +53,7 @@ public:
     * This constructor constructs a RankGroup representing the full
     * set of available ranks in the given communicator.
     */
-   RankGroup(
+   explicit RankGroup(
       const SAMRAI_MPI& d_samrai_mpi);
 
    /*!
@@ -77,7 +77,7 @@ public:
     *
     * An assertion failure will result if the array is empty.
     */
-   RankGroup(
+   explicit RankGroup(
       const tbox::Array<int>& rank_group,
       const SAMRAI_MPI& samrai_mpi =
          SAMRAI_MPI(SAMRAI_MPI::getSAMRAIWorld()));

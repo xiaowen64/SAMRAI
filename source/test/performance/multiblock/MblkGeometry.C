@@ -38,7 +38,7 @@ MblkGeometry::MblkGeometry(
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(!object_name.empty());
-   TBOX_ASSERT(!input_db.isNull());
+   TBOX_ASSERT(input_db);
 #endif
 
    d_object_name = object_name;
@@ -126,11 +126,12 @@ void MblkGeometry::tagOctantCells(
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(d_geom_problem == "SPHERICAL_SHELL" &&
       d_sshell_type == "OCTANT");
-   TBOX_ASSERT(!temp_tags.isNull());
+   TBOX_ASSERT(temp_tags);
 #endif
 
-   tbox::Pointer<pdat::NodeData<double> > xyz =
-      patch.getPatchData(xyz_id);
+   tbox::Pointer<pdat::NodeData<double> > xyz(
+      patch.getPatchData(xyz_id),
+      tbox::__dynamic_cast_tag());
 
    if (d_dim == tbox::Dimension(3)) {
       /*
@@ -176,7 +177,7 @@ void MblkGeometry::getFromInput(
    bool is_from_restart)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!input_db.isNull());
+   TBOX_ASSERT(input_db);
 #endif
 
    (void)is_from_restart;
@@ -563,11 +564,12 @@ void MblkGeometry::buildCartesianGridOnPatch(
    const int block_number)
 {
 
-   tbox::Pointer<pdat::NodeData<double> > xyz =
-      patch.getPatchData(xyz_id);
+   tbox::Pointer<pdat::NodeData<double> > xyz(
+      patch.getPatchData(xyz_id),
+      tbox::__dynamic_cast_tag());
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!xyz.isNull());
+   TBOX_ASSERT(xyz);
 #endif
 
    for (pdat::NodeIterator ni(patch.getBox()); ni; ni++) {
@@ -646,10 +648,11 @@ void MblkGeometry::buildWedgeGridOnPatch(
    const int block_number)
 {
 
-   tbox::Pointer<pdat::NodeData<double> > xyz =
-      patch.getPatchData(xyz_id);
+   tbox::Pointer<pdat::NodeData<double> > xyz(
+      patch.getPatchData(xyz_id),
+      tbox::__dynamic_cast_tag());
 
-   TBOX_ASSERT(!xyz.isNull());
+   TBOX_ASSERT(xyz);
 
    const hier::Index ifirst = patch.getBox().lower();
    const hier::Index ilast = patch.getBox().upper();
@@ -790,11 +793,12 @@ void MblkGeometry::buildSShellGridOnPatch(
       //patch.allocatePatchData(xyz_id);
    }
 
-   tbox::Pointer<pdat::NodeData<double> > xyz =
-      patch.getPatchData(xyz_id);
+   tbox::Pointer<pdat::NodeData<double> > xyz(
+      patch.getPatchData(xyz_id),
+      tbox::__dynamic_cast_tag());
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!xyz.isNull());
+   TBOX_ASSERT(xyz);
 #endif
 
    if (d_dim == tbox::Dimension(3)) {

@@ -151,6 +151,8 @@ Main {
    base_name    = "domex"
    log_all_nodes    = FALSE
 
+   // load_balancer_type = "ChopAndPackLoadBalancer"
+
 // visualization dump parameters
    viz_writer            = "VisIt" // use: "Vizamrai", "VisIt" for both
    viz_dump_interval     = 0          // zero to turn off
@@ -282,7 +284,7 @@ TimeRefinementIntegrator {
    barrier_and_time        = TRUE
 }
 
-LoadBalancer{
+ChopAndPackLoadBalancer{
   processors = 1, 1
   bin_pack_method = "GREEDY"
   // bin_pack_method = "SPATIAL"

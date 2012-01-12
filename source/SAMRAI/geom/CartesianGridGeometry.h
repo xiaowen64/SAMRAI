@@ -118,7 +118,7 @@ public:
     * Errors: passing in a null database pointer or an empty std::string
     * will result in an unrecoverable assertion.
     */
-   explicit CartesianGridGeometry(
+   CartesianGridGeometry(
       const tbox::Dimension& dim,
       const std::string& object_name,
       tbox::Pointer<tbox::Database> input_db,
@@ -135,7 +135,7 @@ public:
     * Errors: passing in an empty std::string, or null data pointers will
     * result in an unrecoverable assertion.
     */
-   explicit CartesianGridGeometry(
+   CartesianGridGeometry(
       const std::string& object_name,
       const double* x_lo,
       const double* x_up,

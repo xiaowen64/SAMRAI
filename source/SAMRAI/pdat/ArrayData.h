@@ -96,7 +96,7 @@ public:
     * @param depth Integer number of data values at each spatial location in
     *              the array.
     */
-   explicit ArrayData(
+   ArrayData(
       const hier::Box& box,
       int depth);
 
@@ -238,6 +238,12 @@ public:
       const hier::Box& box,
       const hier::IntVector& src_shift);
 
+   void
+   copy(
+      const ArrayData<TYPE>& src,
+      const hier::Box& box,
+      const hier::Transformation& transformation);
+
    /*!
     * Copy data from the source array data object to this array data object
     * on the specified index space regions.
@@ -259,6 +265,12 @@ public:
       const ArrayData<TYPE>& src,
       const hier::BoxContainer& boxes,
       const hier::IntVector& src_shift);
+
+   void
+   copy(
+      const ArrayData<TYPE>& src,
+      const hier::BoxContainer& boxes,
+      const hier::Transformation& transformation);
 
    /*!
     * Copy given source depth of source array data object to given destination
@@ -390,6 +402,12 @@ public:
       const hier::Box& dest_box,
       const hier::IntVector& src_shift) const;
 
+   void
+   packStream(
+      tbox::MessageStream& stream,
+      const hier::Box& dest_box,
+      const hier::Transformation& src_shift) const;
+
    /*!
     * Pack data living on the specified index regions into the stream.
     *
@@ -412,6 +430,12 @@ public:
       tbox::MessageStream& stream,
       const hier::BoxContainer& dest_boxes,
       const hier::IntVector& src_shift) const;
+
+   void
+   packStream(
+      tbox::MessageStream& stream,
+      const hier::BoxContainer& dest_boxes,
+      const hier::Transformation& transformation) const;
 
    /*!
     * Unpack data from the stream into the index region specified.

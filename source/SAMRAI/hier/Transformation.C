@@ -38,23 +38,31 @@ namespace hier {
 
 Transformation::Transformation(
    RotationIdentifier rotation,
-   const IntVector& src_offset):
+   const IntVector& src_offset,
+   const BlockId& begin_block,
+   const BlockId& end_block):
    d_rotation(rotation),
-   d_offset(src_offset)
+   d_offset(src_offset),
+   d_begin_block(begin_block),
+   d_end_block(end_block)
 {
 }
 
 Transformation::Transformation(
    const IntVector& src_offset):
    d_rotation(NO_ROTATE),
-   d_offset(src_offset)
+   d_offset(src_offset),
+   d_begin_block(BlockId::invalidId()),
+   d_end_block(BlockId::invalidId())
 {
 }
 
 Transformation::Transformation(
    const Transformation& copy_trans):
    d_rotation(copy_trans.d_rotation),
-   d_offset(copy_trans.d_offset)
+   d_offset(copy_trans.d_offset),
+   d_begin_block(copy_trans.d_begin_block),
+   d_end_block(copy_trans.d_end_block)
 {
 }
 
@@ -80,8 +88,13 @@ Transformation::~Transformation()
 void
 Transformation::transform(Box& box) const
 {
+   TBOX_ASSERT(box.getBlockId() == d_begin_block ||
+               d_begin_block == BlockId::invalidId());
    box.rotate(d_rotation);
    box.shift(d_offset);
+   if (d_begin_block != d_end_block) {
+      box.setBlockId(d_end_block);
+   }
 }
 
 /*
@@ -94,11 +107,16 @@ Transformation::transform(Box& box) const
 void
 Transformation::inverseTransform(Box& box) const
 {
+   TBOX_ASSERT(box.getBlockId() == d_end_block ||
+               d_end_block == BlockId::invalidId());
    hier::IntVector reverse_offset(d_offset.getDim());
    calculateReverseShift(reverse_offset, d_offset, d_rotation);
 
    box.rotate(getReverseRotationIdentifier(d_rotation, d_offset.getDim()));
    box.shift(reverse_offset);
+   if (d_begin_block != d_end_block) {
+      box.setBlockId(d_begin_block);
+   }
 }
 
 /*

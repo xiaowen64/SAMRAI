@@ -34,7 +34,7 @@ SundialsAbstractVector *Sundials_SAMRAIVector::createSundialsVector(
    tbox::Pointer<SAMRAIVectorReal<double> > samrai_vec)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!samrai_vec.isNull());
+   TBOX_ASSERT(samrai_vec);
 #endif
    SundialsAbstractVector* skv = new Sundials_SAMRAIVector(samrai_vec);
 
@@ -110,7 +110,7 @@ SundialsAbstractVector *Sundials_SAMRAIVector::makeNewVector()
 void Sundials_SAMRAIVector::freeVector()
 {
    d_samrai_vector->freeVectorComponents();
-   d_samrai_vector.setNull();
+   d_samrai_vector.reset();
    delete this;
 }
 

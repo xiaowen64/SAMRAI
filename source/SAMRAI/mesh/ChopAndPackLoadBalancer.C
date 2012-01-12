@@ -189,10 +189,11 @@ void ChopAndPackLoadBalancer::setWorkloadPatchDataIndex(
    int data_id,
    int level_number)
 {
-   tbox::Pointer<pdat::CellDataFactory<double> > datafact =
+  tbox::Pointer<pdat::CellDataFactory<double> > datafact(
       hier::VariableDatabase::getDatabase()->getPatchDescriptor()->
-      getPatchDataFactory(data_id);
-   if (datafact.isNull()) {
+      getPatchDataFactory(data_id),
+      tbox::__dynamic_cast_tag());
+   if (!datafact) {
       TBOX_ERROR(
          d_object_name << " error: "
                        << "\n   data_id " << data_id << " passed to "
@@ -446,7 +447,7 @@ void ChopAndPackLoadBalancer::loadBalanceBoxes(
       bad_interval);
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!hierarchy.isNull());
+   TBOX_ASSERT(hierarchy);
    TBOX_ASSERT(level_number >= 0);
    TBOX_ASSERT(physical_domain.size() > 0);
    TBOX_ASSERT(min_size > hier::IntVector::getZero(d_dim));
@@ -949,7 +950,7 @@ void ChopAndPackLoadBalancer::chopBoxesWithNonuniformWorkload(
       physical_domain);
 
    tmp_level->deallocatePatchData(wrk_indx);
-   tmp_level.setNull();
+   tmp_level.reset();
 
    if (tmp_box_list.size() != tmp_work_list.size()) {
       TBOX_ERROR(
@@ -1169,7 +1170,7 @@ void ChopAndPackLoadBalancer::getFromInput(
    tbox::Pointer<tbox::Database> db)
 {
 
-   if (!db.isNull()) {
+   if (db) {
 
       const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
 
@@ -1402,12 +1403,12 @@ void ChopAndPackLoadBalancer::initializeCallback()
  */
 void ChopAndPackLoadBalancer::finalizeCallback()
 {
-   t_load_balance_boxes.setNull();
-   t_load_balance_boxes_remove_intersection.setNull();
-   t_bin_pack_boxes.setNull();
-   t_bin_pack_boxes_sort.setNull();
-   t_bin_pack_boxes_pack.setNull();
-   t_chop_boxes.setNull();
+   t_load_balance_boxes.reset();
+   t_load_balance_boxes_remove_intersection.reset();
+   t_bin_pack_boxes.reset();
+   t_bin_pack_boxes_sort.reset();
+   t_bin_pack_boxes_pack.reset();
+   t_chop_boxes.reset();
 }
 
 }

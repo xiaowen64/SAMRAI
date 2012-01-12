@@ -11,6 +11,9 @@
 #define included_pdat_SparseData_C
 
 #include "SAMRAI/pdat/SparseData.h"
+
+#ifdef HAVE_BOOST_HEADERS
+
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/hier/BoxContainerConstIterator.h"
@@ -621,7 +624,7 @@ void
 SparseData<BOX_GEOMETRY>::getSpecializedFromDatabase(
    tbox::Pointer<tbox::Database> db)
 {
-   TBOX_ASSERT(!db.isNull());
+   TBOX_ASSERT(db);
 
    // get and check the version
    int ver = db->getInteger("PDAT_SPARSEDATA_VERSION");
@@ -752,7 +755,7 @@ void
 SparseData<BOX_GEOMETRY>::putSpecializedToDatabase(
    tbox::Pointer<tbox::Database> db)
 {
-   TBOX_ASSERT(!db.isNull());
+   TBOX_ASSERT(db);
 
    // record the version
    db->putInteger("PDAT_SPARSEDATA_VERSION", PDAT_SPARSEDATA_VERSION);
@@ -1267,4 +1270,5 @@ std::ostream& operator << (std::ostream& out,
 
 } // namespace pdat
 } // namespace SAMRAI
+#endif
 #endif

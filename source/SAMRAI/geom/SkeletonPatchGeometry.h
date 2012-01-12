@@ -45,7 +45,7 @@ public:
     * patch boundary information and the ratio to the coarsest level to
     * hier::PatchGeometry constructor.
     */
-   explicit SkeletonPatchGeometry(
+   SkeletonPatchGeometry(
       const hier::IntVector& ratio_to_level_zero,
       const TwoDimBool& touches_regular_bdry,
       const TwoDimBool& touches_periodic_bdry);

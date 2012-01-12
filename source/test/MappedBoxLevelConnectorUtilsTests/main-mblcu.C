@@ -153,7 +153,7 @@ int main(
        * Create input database and parse all data in input file.
        */
 
-      Pointer<Database> input_db(new InputDatabase("input_db"));
+      Pointer<InputDatabase> input_db(new InputDatabase("input_db"));
       tbox::InputManager::getManager()->parseInputFile(input_filename, input_db);
 
       /*
@@ -186,7 +186,7 @@ int main(
       /*
        * Generate the GridGeometry.
        */
-      tbox::ConstPointer<hier::GridGeometry> grid_geometry;
+      tbox::Pointer<const hier::GridGeometry> grid_geometry;
       if (input_db->keyExists("GridGeometry")) {
          grid_geometry = new hier::GridGeometry(
                dim,
@@ -241,7 +241,7 @@ int main(
                  << std::endl;
 
       const hier::MultiblockBoxTree domain_mapped_box_tree(
-         grid_geometry, domain_mapped_boxes);
+         *grid_geometry, domain_mapped_boxes);
 
       /*
        * Construct the big_mapped_box_level.  It is a refinement of
@@ -272,6 +272,10 @@ int main(
 
             hier::BoxContainer exclude_boxes;
             exclude_boxes = main_db->getDatabaseBoxArray(exclude_boxes_name);
+            for (hier::BoxContainer::Iterator itr = exclude_boxes.begin();
+                 itr != exclude_boxes.end(); ++itr) {
+               itr->setBlockId(block_id);
+            }
             block_domain.unorder();
             block_domain.removeIntersections(exclude_boxes);
 
@@ -281,8 +285,7 @@ int main(
                big_mapped_box_level.addBoxWithoutUpdate(
                   hier::Box(*bi,
                      ++last_local_id,
-                     0,
-                     block_id));
+                     0));
             }
 
          } else {
@@ -369,7 +372,7 @@ int main(
 
       const hier::BoxContainer& small_mapped_box_set(small_mapped_box_level.getBoxes());
 
-      const hier::MultiblockBoxTree small_box_tree(grid_geometry,
+      const hier::MultiblockBoxTree small_box_tree(*grid_geometry,
                                                    small_mapped_box_level.getGlobalizedVersion().
                                                    getGlobalBoxes());
 
@@ -473,8 +476,7 @@ int main(
                   tbox::perr << "Mapping small_to_everything erroneously mapped "
                              << small_mapped_box << " to something less than itself:\n";
                   small_to_everything.writeNeighborhoodToErrorStream(
-                     small_mapped_box.getId(),
-                     "");
+                     small_mapped_box.getId());
                }
 
             }
@@ -485,7 +487,7 @@ int main(
                   tbox::perr << "Mapping small_to_nothing erroneously mapped " << small_mapped_box
                              << " to:\n";
                   small_to_nothing.writeNeighborhoodToErrorStream(
-                     small_mapped_box.getId(), "");
+                     small_mapped_box.getId());
                   tbox::perr << "\nIt should be mapped to nothing\n";
                   ++fail_count;
                }
@@ -525,7 +527,7 @@ int main(
                     << big_to_internal.format("", 2);
 
          hier::MultiblockBoxTree internal_box_tree(
-            grid_geometry,
+            *grid_geometry,
             internal_mapped_box_level.getGlobalizedVersion().getGlobalBoxes());
 
          for (hier::BoxContainer::ConstIterator ni = small_mapped_box_set.begin();
@@ -534,7 +536,7 @@ int main(
             small_to_big.getHeadCoarserFlag() ?
             tmp_box_list.coarsen(small_to_big.getRatio()) :
             tmp_box_list.refine(small_to_big.getRatio());
-            tmp_box_list.removeIntersections(ni->getBlockId(),
+            tmp_box_list.removeIntersections(
                big_mapped_box_level.getRefinementRatio(),
                internal_box_tree);
             if (tmp_box_list.size() > 0) {
@@ -550,7 +552,7 @@ int main(
             big_to_small.getHeadCoarserFlag() ?
             tmp_box_list.coarsen(big_to_small.getRatio()) :
             tmp_box_list.refine(big_to_small.getRatio());
-            tmp_box_list.removeIntersections(ni->getBlockId(),
+            tmp_box_list.removeIntersections(
                small_mapped_box_level.getRefinementRatio(),
                small_box_tree);
             if (tmp_box_list.size() > 0) {
@@ -593,7 +595,7 @@ int main(
                     << big_to_external.format("", 2);
 
          hier::MultiblockBoxTree external_box_tree(
-            grid_geometry,
+            *grid_geometry,
             external_mapped_box_level.getGlobalizedVersion().getGlobalBoxes());
 
          for (hier::BoxContainer::ConstIterator ni = external_mapped_box_set.begin();
@@ -602,7 +604,7 @@ int main(
             big_to_small.getHeadCoarserFlag() ?
             tmp_box_list.coarsen(big_to_small.getRatio()) :
             tmp_box_list.refine(big_to_small.getRatio());
-            tmp_box_list.intersectBoxes(ni->getBlockId(),
+            tmp_box_list.intersectBoxes(
                small_mapped_box_level.getRefinementRatio(),
                small_box_tree);
             if (tmp_box_list.size() != 0) {
@@ -621,7 +623,7 @@ int main(
             small_to_big.getHeadCoarserFlag() ?
             tmp_box_list.coarsen(small_to_big.getRatio()) :
             tmp_box_list.refine(small_to_big.getRatio());
-            tmp_box_list.intersectBoxes(ni->getBlockId(),
+            tmp_box_list.intersectBoxes(
                big_mapped_box_level.getRefinementRatio(),
                external_box_tree);
             if (tmp_box_list.size() != 0) {
@@ -640,13 +642,13 @@ int main(
             big_to_small.getHeadCoarserFlag() ?
             tmp_box_list.coarsen(big_to_small.getRatio()) :
             tmp_box_list.refine(big_to_small.getRatio());
-            tmp_box_list.removeIntersections(ni->getBlockId(),
+            tmp_box_list.removeIntersections(
                small_mapped_box_level.getRefinementRatio(),
                small_box_tree);
             small_to_big.getHeadCoarserFlag() ?
             tmp_box_list.coarsen(small_to_big.getRatio()) :
             tmp_box_list.refine(small_to_big.getRatio());
-            tmp_box_list.removeIntersections(ni->getBlockId(),
+            tmp_box_list.removeIntersections(
                big_mapped_box_level.getRefinementRatio(),
                external_box_tree);
             if (tmp_box_list.size() > 0) {
@@ -665,8 +667,8 @@ int main(
          tbox::pout << "\nPASSED:  MappedBoxLevelConnector test" << std::endl;
       }
 
-      input_db.setNull();
-      main_db.setNull();
+      input_db.reset();
+      main_db.reset();
 
       /*
        * Exit properly by shutting down services in correct order.
@@ -740,7 +742,7 @@ void shrinkBoxLevel(
    const hier::IntVector& shrinkage,
    const tbox::Array<int>& unshrunken_blocks)
 {
-   const tbox::ConstPointer<hier::GridGeometry>& grid_geometry(big_mapped_box_level.getGridGeometry());
+   const tbox::Pointer<const hier::GridGeometry>& grid_geometry(big_mapped_box_level.getGridGeometry());
 
    const int local_rank = big_mapped_box_level.getMPI().getRank();
 
@@ -760,6 +762,9 @@ void shrinkBoxLevel(
       }
    }
 
+#if 1
+   hier::BoxContainer boundary_boxes = visible_mapped_boxes;
+#else
    std::map<hier::BlockId, hier::BoxContainer> boundary_boxes;
    for (hier::BoxContainer::ConstIterator si = visible_mapped_boxes.begin();
         si != visible_mapped_boxes.end(); ++si) {
@@ -777,9 +782,10 @@ void shrinkBoxLevel(
       }
 
    }
+#endif
 
    hier::MultiblockBoxTree visible_box_tree(
-      grid_geometry,
+      *grid_geometry,
       visible_mapped_boxes);
 
    hier::BoxLevelConnectorUtils mblcu;
@@ -789,6 +795,10 @@ void shrinkBoxLevel(
       big_mapped_box_level.getRefinementRatio(),
       big_mapped_box_level.getGridGeometry());
 
+#if 1
+   tbox::plog << "shrinkBoxLevel: Boundary plain boxes:\n"
+              << boundary_boxes.format("\n", 2);
+#else
    tbox::plog << "shrinkBoxLevel: Boundary plain boxes:\n";
    for (std::map<hier::BlockId, hier::BoxContainer>::iterator mi = boundary_boxes.begin();
         mi != boundary_boxes.end(); ++mi) {
@@ -798,6 +808,7 @@ void shrinkBoxLevel(
          tbox::plog << "  " << *bi << '\t' << (*bi).numberCells() << '\n';
       }
    }
+#endif
 
    /*
     * Construct the complement of the small_mapped_box_level by
@@ -807,6 +818,16 @@ void shrinkBoxLevel(
    hier::BoxContainer complement_mapped_boxes;
 
    hier::LocalId last_local_id(-1);
+#if 1
+   for (hier::BoxContainer::ConstIterator bi = boundary_boxes.begin();
+        bi != boundary_boxes.end(); ++bi) {
+      hier::Box box(*bi);
+      box.grow(shrinkage);
+      hier::Box complement_mapped_box(
+         box, ++last_local_id, local_rank);
+      complement_mapped_boxes.insert(complement_mapped_box);
+   }
+#else
    for (std::map<hier::BlockId, hier::BoxContainer>::iterator mi = boundary_boxes.begin();
         mi != boundary_boxes.end(); ++mi) {
 
@@ -816,16 +837,18 @@ void shrinkBoxLevel(
       for (hier::BoxContainer::Iterator bi(boundary_for_block);
            bi != boundary_for_block.end(); bi++) {
          hier::Box box(*bi);
+         assert( box.getBlockId() == block_id );
          box.grow(shrinkage);
          hier::Box complement_mapped_box(
-            box, ++last_local_id, local_rank, block_id);
+            box, ++last_local_id, local_rank);
          complement_mapped_boxes.insert(complement_mapped_box);
       }
 
    }
+#endif
 
    const hier::MultiblockBoxTree complement_mapped_box_tree(
-      grid_geometry,
+      *grid_geometry,
       complement_mapped_boxes);
 
    /*
@@ -858,7 +881,7 @@ void shrinkBoxLevel(
 
          hier::BoxContainer shrunken_boxes(mapped_box);
 
-         shrunken_boxes.removeIntersections(mapped_box.getBlockId(),
+         shrunken_boxes.removeIntersections(
             big_mapped_box_level.getRefinementRatio(),
             complement_mapped_box_tree);
          shrunken_boxes.simplify();
@@ -868,8 +891,9 @@ void shrinkBoxLevel(
             const hier::Box shrunken_mapped_box(
                *li,
                ++last_local_id,
-               mapped_box.getOwnerRank(),
-               mapped_box.getBlockId());
+               mapped_box.getOwnerRank());
+            TBOX_ASSERT(shrunken_mapped_box.getBlockId() ==
+                        mapped_box.getBlockId()); 
 
             small_mapped_box_level.addBoxWithoutUpdate(shrunken_mapped_box);
          }

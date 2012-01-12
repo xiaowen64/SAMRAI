@@ -69,7 +69,7 @@ BergerRigoutsos::BergerRigoutsos(
     * Set database-dependent parameters or cache them for use
     * when we construct a dendogram root.
     */
-   if (!database.isNull()) {
+   if (database) {
       if (database->isInteger("max_box_size")) {
          database->getIntegerArray("max_box_size", &d_max_box_size[0], d_dim.getValue());
       }
@@ -174,7 +174,8 @@ void BergerRigoutsos::findBoxesContainingTags(
    const double efficiency_tol,
    const double combine_tol,
    const hier::IntVector& max_gcw,
-   const hier::BlockId& block_id) const
+   const hier::BlockId& block_id,
+   const hier::LocalId& first_local_id) const
 {
    TBOX_DIM_ASSERT_CHECK_ARGS5(new_mapped_box_level,
       *tag_level,
@@ -241,7 +242,7 @@ void BergerRigoutsos::findBoxesContainingTags(
 
    t_find_boxes_with_tags->start();
 
-   BergerRigoutsosNode root_node(d_dim, block_id);
+   BergerRigoutsosNode root_node(d_dim, block_id, first_local_id);
 
    // Set standard Berger-Rigoutsos clustering parameters.
    root_node.setClusteringParameters(tag_data_index,
@@ -310,7 +311,7 @@ void BergerRigoutsos::findBoxesContainingTags(
                  << ") in " << root_node.getMaxGeneration() << " generations,"
                  << "   " << root_node.getNumBoxesGenerated()
                  << " boxes generated.\n"
-                 << root_node.getMaxTagsOwned() << " locally owned tags.\n"
+                 << root_node.getMaxTagsOwned() << " locally owned tags on new BoxLevel.\n"
                  << "Initial bounding box = " << bound_box << ", "
                  << bound_box.size() << " cells, "
                  << "final global bounding box = "
@@ -489,7 +490,7 @@ void BergerRigoutsos::assertNoMessageForPrivateCommunicator() const
 void BergerRigoutsos::initializeCallback()
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(t_global_reductions.isNull());
+   TBOX_ASSERT(!t_global_reductions);
 #endif
    t_run_abr = tbox::TimerManager::getManager()->
       getTimer("mesh::BergerRigoutsos::run_abr");
@@ -515,12 +516,12 @@ void BergerRigoutsos::initializeCallback()
  */
 void BergerRigoutsos::finalizeCallback()
 {
-   t_barrier_before.setNull();
-   t_barrier_after.setNull();
-   t_find_boxes_with_tags.setNull();
-   t_run_abr.setNull();
-   t_global_reductions.setNull();
-   t_sort_output_nodes.setNull();
+   t_barrier_before.reset();
+   t_barrier_after.reset();
+   t_find_boxes_with_tags.reset();
+   t_run_abr.reset();
+   t_global_reductions.reset();
+   t_sort_output_nodes.reset();
 }
 
 }

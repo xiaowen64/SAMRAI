@@ -67,7 +67,7 @@ void PatchNodeDataBasicOps<TYPE>::scale(
    const tbox::Pointer<pdat::NodeData<TYPE> >& src,
    const hier::Box& box) const
 {
-   TBOX_ASSERT(!dst.isNull() && !src.isNull());
+   TBOX_ASSERT(dst && src);
    TBOX_DIM_ASSERT_CHECK_ARGS3(*dst, *src, box);
 
    const hier::Box node_box = pdat::NodeGeometry::toNodeBox(box);
@@ -83,7 +83,7 @@ void PatchNodeDataBasicOps<TYPE>::addScalar(
    const TYPE& alpha,
    const hier::Box& box) const
 {
-   TBOX_ASSERT(!dst.isNull() && !src.isNull());
+   TBOX_ASSERT(dst && src);
    TBOX_DIM_ASSERT_CHECK_ARGS3(*dst, *src, box);
 
    const hier::Box node_box = pdat::NodeGeometry::toNodeBox(box);
@@ -99,7 +99,7 @@ void PatchNodeDataBasicOps<TYPE>::add(
    const tbox::Pointer<pdat::NodeData<TYPE> >& src2,
    const hier::Box& box) const
 {
-   TBOX_ASSERT(!dst.isNull() && !src1.isNull() && !src2.isNull());
+   TBOX_ASSERT(dst && src1 && src2);
    TBOX_DIM_ASSERT_CHECK_ARGS4(*dst, *src1, *src2, box);
 
    const hier::Box node_box = pdat::NodeGeometry::toNodeBox(box);
@@ -115,7 +115,7 @@ void PatchNodeDataBasicOps<TYPE>::subtract(
    const tbox::Pointer<pdat::NodeData<TYPE> >& src2,
    const hier::Box& box) const
 {
-   TBOX_ASSERT(!dst.isNull() && !src1.isNull() && !src2.isNull());
+   TBOX_ASSERT(dst && src1 && src2);
    TBOX_DIM_ASSERT_CHECK_ARGS4(*dst, *src1, *src2, box);
 
    const hier::Box node_box = pdat::NodeGeometry::toNodeBox(box);
@@ -131,7 +131,7 @@ void PatchNodeDataBasicOps<TYPE>::multiply(
    const tbox::Pointer<pdat::NodeData<TYPE> >& src2,
    const hier::Box& box) const
 {
-   TBOX_ASSERT(!dst.isNull() && !src1.isNull() && !src2.isNull());
+   TBOX_ASSERT(dst && src1 && src2);
    TBOX_DIM_ASSERT_CHECK_ARGS4(*dst, *src1, *src2, box);
 
    const hier::Box node_box = pdat::NodeGeometry::toNodeBox(box);
@@ -147,7 +147,7 @@ void PatchNodeDataBasicOps<TYPE>::divide(
    const tbox::Pointer<pdat::NodeData<TYPE> >& src2,
    const hier::Box& box) const
 {
-   TBOX_ASSERT(!dst.isNull() && !src1.isNull() && !src2.isNull());
+   TBOX_ASSERT(dst && src1 && src2);
    TBOX_DIM_ASSERT_CHECK_ARGS4(*dst, *src1, *src2, box);
 
    const hier::Box node_box = pdat::NodeGeometry::toNodeBox(box);
@@ -162,7 +162,7 @@ void PatchNodeDataBasicOps<TYPE>::reciprocal(
    const tbox::Pointer<pdat::NodeData<TYPE> >& src,
    const hier::Box& box) const
 {
-   TBOX_ASSERT(!dst.isNull() && !src.isNull());
+   TBOX_ASSERT(dst && src);
    TBOX_DIM_ASSERT_CHECK_ARGS3(*dst, *src, box);
 
    const hier::Box node_box = pdat::NodeGeometry::toNodeBox(box);
@@ -180,7 +180,7 @@ void PatchNodeDataBasicOps<TYPE>::linearSum(
    const tbox::Pointer<pdat::NodeData<TYPE> >& src2,
    const hier::Box& box) const
 {
-   TBOX_ASSERT(!dst.isNull() && !src1.isNull() && !src2.isNull());
+   TBOX_ASSERT(dst && src1 && src2);
    TBOX_DIM_ASSERT_CHECK_ARGS4(*dst, *src1, *src2, box);
 
    const hier::Box node_box = pdat::NodeGeometry::toNodeBox(box);
@@ -198,7 +198,7 @@ void PatchNodeDataBasicOps<TYPE>::axpy(
    const tbox::Pointer<pdat::NodeData<TYPE> >& src2,
    const hier::Box& box) const
 {
-   TBOX_ASSERT(!dst.isNull() && !src1.isNull() && !src2.isNull());
+   TBOX_ASSERT(dst && src1 && src2);
    TBOX_DIM_ASSERT_CHECK_ARGS4(*dst, *src1, *src2, box);
 
    const hier::Box node_box = pdat::NodeGeometry::toNodeBox(box);
@@ -216,7 +216,7 @@ void PatchNodeDataBasicOps<TYPE>::axmy(
    const tbox::Pointer<pdat::NodeData<TYPE> >& src2,
    const hier::Box& box) const
 {
-   TBOX_ASSERT(!dst.isNull() && !src1.isNull() && !src2.isNull());
+   TBOX_ASSERT(dst && src1 && src2);
    TBOX_DIM_ASSERT_CHECK_ARGS4(*dst, *src1, *src2, box);
 
    const hier::Box node_box = pdat::NodeGeometry::toNodeBox(box);
@@ -231,7 +231,7 @@ TYPE PatchNodeDataBasicOps<TYPE>::min(
    const tbox::Pointer<pdat::NodeData<TYPE> >& data,
    const hier::Box& box) const
 {
-   TBOX_ASSERT(!data.isNull());
+   TBOX_ASSERT(data);
    TBOX_DIM_ASSERT_CHECK_ARGS2(*data, box);
 
    const hier::Box node_box = pdat::NodeGeometry::toNodeBox(box);
@@ -243,7 +243,7 @@ TYPE PatchNodeDataBasicOps<TYPE>::max(
    const tbox::Pointer<pdat::NodeData<TYPE> >& data,
    const hier::Box& box) const
 {
-   TBOX_ASSERT(!data.isNull());
+   TBOX_ASSERT(data);
    TBOX_DIM_ASSERT_CHECK_ARGS2(*data, box);
 
    const hier::Box node_box = pdat::NodeGeometry::toNodeBox(box);
@@ -257,7 +257,7 @@ void PatchNodeDataBasicOps<TYPE>::setRandomValues(
    const TYPE& low,
    const hier::Box& box) const
 {
-   TBOX_ASSERT(!dst.isNull());
+   TBOX_ASSERT(dst);
    TBOX_DIM_ASSERT_CHECK_ARGS2(*dst, box);
 
    const hier::Box node_box = pdat::NodeGeometry::toNodeBox(box);
