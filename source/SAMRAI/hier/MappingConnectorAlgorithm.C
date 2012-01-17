@@ -62,20 +62,6 @@ MappingConnectorAlgorithm::MappingConnectorAlgorithm():
    d_sanity_check_inputs(false),
    d_sanity_check_outputs(false)
 {
-   /*
-    * While we figure out how to use multiple communicators in SAMRAI,
-    * we are still assuming that all communications use congruent
-    * communicators.  This class just makes a duplicate communicator
-    * to protect itself from unrelated communications in shared
-    * communicators.
-    */
-   if (s_class_mpi.getCommunicator() == tbox::SAMRAI_MPI::commNull) {
-      if (tbox::SAMRAI_MPI::usingMPI()) {
-         const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
-         s_class_mpi.dupCommunicator(mpi);
-      }
-   }
-
 }
 
 /*
@@ -1650,7 +1636,18 @@ size_t MappingConnectorAlgorithm::findMappingErrors(
 void MappingConnectorAlgorithm::initializeCallback()
 {
    /*
-    * The first constructor:
+    * While we figure out how to use multiple communicators in SAMRAI,
+    * we are still assuming that all communications use congruent
+    * communicators.  This class just makes a duplicate communicator
+    * to protect itself from unrelated communications in shared
+    * communicators.
+    */
+   if (tbox::SAMRAI_MPI::usingMPI()) {
+      const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
+      s_class_mpi.dupCommunicator(mpi);
+   }
+
+   /*
     * - gets timers from the TimerManager.
     * - sets up their deallocation.
     * - sets up debugging flags.
