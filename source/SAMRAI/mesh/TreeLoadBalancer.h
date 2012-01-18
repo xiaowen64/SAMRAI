@@ -56,7 +56,8 @@ namespace mesh {
  *                           // Additional restriction on box size.
  *                           // Will not generate a box that has less
  *                           // than this fraction of the global average
- *                           // work load.  Set to negative to disable.
+ *                           // work load in order to move work load.
+ *                           // Set to negative to disable.
  * report_load_balance = TRUE // Write out load balance report in log
  * n_root_cycles = -1         // Number of steps over which to smoothly spread
  *                            // out work load.  This helps scalability when

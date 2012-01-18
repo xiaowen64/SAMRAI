@@ -587,6 +587,14 @@ void TreeLoadBalancer::loadBalanceBoxLevel(
 
 
    /*
+    * Undo effects of min_load_fraction_per_box on d_min_size.  We do
+    * not want that constraint during the remaining load balance
+    * steps.
+    */
+   d_min_size = min_size;
+
+
+   /*
     * If max_size is given (positive), constrain boxes to the given
     * max_size.  If not given, skip the enforcement step to save some
     * communications.
