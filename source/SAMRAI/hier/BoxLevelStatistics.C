@@ -97,6 +97,8 @@ void BoxLevelStatistics::computeLocalBoxLevelStatistics(
       static_cast<double>(d_box_level.getLocalNumberOfCells());
    sq.d_values[NUMBER_OF_BOXES] =
       static_cast<double>(d_box_level.getLocalNumberOfBoxes());
+   sq.d_values[LARGEST_BOX] = 0;
+   sq.d_values[SMALLEST_BOX] = tbox::MathUtilities<double>::getMax();
    sq.d_values[LARGEST_DIMENSION] = 0;
    sq.d_values[SMALLEST_DIMENSION] =
       (d_box_level.getLocalNumberOfBoxes() == 0 ?
@@ -120,6 +122,13 @@ void BoxLevelStatistics::computeLocalBoxLevelStatistics(
       for (int d = 0; d < dim.getValue(); ++d) {
          surfarea += 2 * double(boxvol) / boxdims(d);
       }
+
+      sq.d_values[LARGEST_BOX] =
+         tbox::MathUtilities<double>::Max(sq.d_values[LARGEST_BOX],
+                                          boxvol);
+      sq.d_values[SMALLEST_BOX] =
+         tbox::MathUtilities<double>::Min(sq.d_values[SMALLEST_BOX],
+                                          boxvol);
 
       sq.d_values[LARGEST_DIMENSION] =
          tbox::MathUtilities<double>::Max(sq.d_values[LARGEST_DIMENSION],
@@ -250,8 +259,10 @@ void BoxLevelStatistics::initializeCallback()
    s_quantity_names[HAS_ANY_BOX] = "has any box";
    s_quantity_names[NUMBER_OF_CELLS] = "num cells";
    s_quantity_names[NUMBER_OF_BOXES] = "num boxes";
-   s_quantity_names[LARGEST_DIMENSION] = "largest dim";
-   s_quantity_names[SMALLEST_DIMENSION] = "smallest dim";
+   s_quantity_names[LARGEST_BOX] = "largest box";
+   s_quantity_names[SMALLEST_BOX] = "smallest box";
+   s_quantity_names[LARGEST_DIMENSION] = "largest box dim";
+   s_quantity_names[SMALLEST_DIMENSION] = "smallest box dim";
    s_quantity_names[LARGEST_ASPECT_RATIO] = "largest aspect ratio";
    s_quantity_names[SMALLEST_ASPECT_RATIO] = "smallest aspect ratio";
    s_quantity_names[SUM_SURFACE_AREA] = "sum surf area";

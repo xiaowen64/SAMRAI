@@ -72,6 +72,8 @@ private:
    enum { HAS_ANY_BOX,
           NUMBER_OF_CELLS,
           NUMBER_OF_BOXES,
+          LARGEST_BOX,
+          SMALLEST_BOX,
           LARGEST_DIMENSION,
           SMALLEST_DIMENSION,
           LARGEST_ASPECT_RATIO,
