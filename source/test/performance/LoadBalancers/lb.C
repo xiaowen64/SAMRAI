@@ -126,6 +126,11 @@ refineHead(
    hier::Connector& head_to_ref,
    const hier::IntVector &refinement_ratio );
 
+void
+outputMetadataL0(
+   const hier::BoxLevel &L0,
+   const std::string &L0_name );
+
 void outputMetadataBefore(
    const hier::Connector &La_to_Lb,
    const hier::Connector &Lb_to_La,
@@ -520,6 +525,8 @@ int main(
          lb->gatherAndReportLoadBalance(
             (double)L0.getLocalNumberOfCells(),
             L0.getMPI());
+
+         outputMetadataL0(L0, "L0");
       }
 
 
@@ -629,6 +636,9 @@ int main(
          lb->gatherAndReportLoadBalance(
             (double)L1.getLocalNumberOfCells(),
             L1.getMPI());
+
+         tbox::plog << "\n\n\nLevel 0:\n"
+                    << L0.format("L0-> ", 2);
       }
 
 
@@ -802,6 +812,31 @@ int main(
    }
 
    return fail_count;
+}
+
+
+
+/*
+****************************************************************************
+* Output L0 data.
+****************************************************************************
+*/
+void outputMetadataL0(
+   const hier::BoxLevel &L0,
+   const std::string &L0_name )
+{
+   const std::string arrow("-> ");
+
+   L0.cacheGlobalReducedData();
+
+   tbox::plog << "\n\n\n" << L0_name << ":\n";
+
+   hier::BoxLevelStatistics L0_stats(L0);
+   tbox::plog << L0_name << " stats:\n";
+   L0_stats.printBoxStats(tbox::plog, L0_name + arrow);
+   tbox::plog << L0_name << ":\n" << L0.format( L0_name + arrow, 2 );
+
+   return;
 }
 
 
