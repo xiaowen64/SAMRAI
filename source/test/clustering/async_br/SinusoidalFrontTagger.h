@@ -17,10 +17,11 @@
 /*
  * SAMRAI classes
  */
+#include "SAMRAI/appu/VisItDataWriter.h"
+#include "SAMRAI/appu/VisDerivedDataStrategy.h"
+#include "SAMRAI/mesh/StandardTagAndInitStrategy.h"
 #include "SAMRAI/pdat/CellData.h"
 #include "SAMRAI/pdat/NodeData.h"
-#include "SAMRAI/mesh/StandardTagAndInitStrategy.h"
-#include "SAMRAI/appu/VisItDataWriter.h"
 
 using namespace std;
 using namespace SAMRAI;

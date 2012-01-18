@@ -108,7 +108,7 @@ public:
  * http://publib.boulder.ibm.com/infocenter/lnxpcomp/v9v111/index.jsp?topic=/com.ibm.xlcpp9.linux.doc/language_ref/templates.htm
  *
  */
-#ifndef __BGL_FAMILY__
+#ifndef __xlC__
 template class pdat::IndexData<Item, pdat::CellGeometry>;
 template class pdat::IndexDataFactory<Item, pdat::CellGeometry>;
 template class pdat::IndexDataNode<Item, pdat::CellGeometry>;
