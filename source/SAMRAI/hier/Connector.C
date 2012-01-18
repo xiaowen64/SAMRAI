@@ -648,7 +648,7 @@ void Connector::writeNeighborhoodsToErrorStream(
                  << d_relationships.numNeighbors(ei) << "):\n";
       for (ConstNeighborIterator bi = begin(ei); bi != end(ei); ++bi) {
          const Box& box = *bi;
-         tbox::perr << "    "
+         tbox::perr << border << "    "
                     << box << "   "
                     << box.numberCells() << '\n';
       }
