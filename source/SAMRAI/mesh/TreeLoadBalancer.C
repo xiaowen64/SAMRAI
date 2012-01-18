@@ -83,6 +83,7 @@ TreeLoadBalancer::TreeLoadBalancer(
    d_n_root_cycles(-1),
    d_degree(2),
    d_master_workload_data_id(d_default_data_id),
+   d_min_load_fraction_per_box(0.03),
    d_balance_penalty_wt(1.0),
    d_surface_penalty_wt(1.0),
    d_slender_penalty_wt(1.0),
@@ -425,6 +426,26 @@ void TreeLoadBalancer::loadBalanceBoxLevel(
 
 
    d_global_avg_load = global_sum_load / rank_group.size();
+
+
+   /*
+    * Add additional minimum box size restriction based on
+    * d_min_load_fraction_per_box: Should be no smaller than a cubic
+    * box that satisfies this work load.
+    */
+   if ( d_min_load_fraction_per_box > 0.0 ) {
+      const hier::IntVector tmp_vec(d_min_size);
+
+      int box_size_for_min_load_restriction =
+         static_cast<int>(pow(d_global_avg_load*d_min_load_fraction_per_box,
+                              1.0/d_dim.getValue())+ 0.5);
+      d_min_size.max( hier::IntVector( d_dim, box_size_for_min_load_restriction ) );
+
+      if (d_print_steps) {
+         tbox::plog << "min_load_fraction_per_box changed min_size from " << tmp_vec;
+         tbox::plog << " to " << d_min_size << '\n';
+      }
+   }
 
 
    /*
@@ -3555,6 +3576,14 @@ void TreeLoadBalancer::getFromInput(
 
       d_n_root_cycles = db->getIntegerWithDefault("n_root_cycles",
             d_n_root_cycles);
+
+      d_min_load_fraction_per_box = db->getDoubleWithDefault("min_load_fraction_per_box",
+            d_min_load_fraction_per_box);
+      if ( d_min_load_fraction_per_box >= 1.0 ) {
+         TBOX_ERROR("TreeLoadBalancer::getFromInput: min_load_fraction_per_box value of "
+                    << d_min_load_fraction_per_box
+                    << " is excessive.  It should be on the order of 0.01.");
+      }
 
       d_balance_penalty_wt = db->getDoubleWithDefault("balance_penalty_wt",
             d_balance_penalty_wt);

@@ -52,6 +52,11 @@ namespace mesh {
  * No special inputs are required for this class.
  *
  * @verbatim
+ * min_load_fraction_per_box = 0.03
+ *                           // Additional restriction on box size.
+ *                           // Will not generate a box that has less
+ *                           // than this fraction of the global average
+ *                           // work load.  Set to negative to disable.
  * report_load_balance = TRUE // Write out load balance report in log
  * n_root_cycles = -1         // Number of steps over which to smoothly spread
  *                            // out work load.  This helps scalability when
@@ -828,6 +833,13 @@ private:
    tbox::Array<int> d_workload_data_id;
 
    int d_master_workload_data_id;
+
+   /*!
+    * @brief Additional minimum box size restriction.
+    *
+    * See input parameter "min_load_fraction_per_box".
+    */
+   double d_min_load_fraction_per_box;
 
    /*!
     * @brief Weighting factor for penalizing imbalance.
