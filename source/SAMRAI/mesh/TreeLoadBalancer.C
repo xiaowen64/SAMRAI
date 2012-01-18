@@ -2339,7 +2339,9 @@ int TreeLoadBalancer::shiftLoadsByBreaking(
             trial_dst.insert(give_box_in_transit);
             trial_actual_transfer += give_box_in_transit.d_load;
             if (d_print_steps) {
-               tbox::plog << "    Breakoff box " << *bi << " -> " << give_box_in_transit
+               tbox::plog << "    Breakoff box " << *bi << bi->numberCells()
+                          << '|' << bi->size()
+                          << " -> " << give_box_in_transit
                           << std::endl;
             }
          }
