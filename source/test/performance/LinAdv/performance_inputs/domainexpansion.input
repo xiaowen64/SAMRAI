@@ -292,6 +292,7 @@ ChopAndPackLoadBalancer{
 }
 
 TreeLoadBalancer {
+  min_load_fraction_per_box = 0.03
   report_load_balance = FALSE
   barrier_before = TRUE
   barrier_after = TRUE
