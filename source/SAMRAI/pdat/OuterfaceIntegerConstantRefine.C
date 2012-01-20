@@ -114,14 +114,14 @@ OuterfaceIntegerConstantRefine::~OuterfaceIntegerConstantRefine()
 }
 
 bool OuterfaceIntegerConstantRefine::findRefineOperator(
-   const tbox::Pointer<hier::Variable>& var,
+   const boost::shared_ptr<hier::Variable>& var,
    const std::string& op_name) const
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, *var);
 
-   const tbox::Pointer<OuterfaceVariable<int> > cast_var(
+   const boost::shared_ptr<OuterfaceVariable<int> > cast_var(
       var,
-      tbox::__dynamic_cast_tag());
+      boost::detail::dynamic_cast_tag());
    if (cast_var && (op_name == getOperatorName())) {
       return true;
    } else {
@@ -149,15 +149,15 @@ void OuterfaceIntegerConstantRefine::refine(
 {
    const tbox::Dimension& dim(getDim());
 
-   tbox::Pointer<OuterfaceData<int> > cdata(
+   boost::shared_ptr<OuterfaceData<int> > cdata(
       coarse.getPatchData(src_component),
-      tbox::__dynamic_cast_tag());
-   tbox::Pointer<OuterfaceData<int> > fdata(
+      boost::detail::dynamic_cast_tag());
+   boost::shared_ptr<OuterfaceData<int> > fdata(
       fine.getPatchData(dst_component),
-      tbox::__dynamic_cast_tag());
+      boost::detail::dynamic_cast_tag());
 
-   const pdat::FaceOverlap* t_overlap =
-      dynamic_cast<const pdat::FaceOverlap *>(&fine_overlap);
+   const FaceOverlap* t_overlap =
+      dynamic_cast<const FaceOverlap *>(&fine_overlap);
 
    TBOX_ASSERT(t_overlap != NULL);
 

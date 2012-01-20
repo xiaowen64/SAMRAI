@@ -19,7 +19,8 @@
 #include "SAMRAI/hier/BoxGeometry.h"
 #include "SAMRAI/hier/BoxOverlap.h"
 #include "SAMRAI/hier/IntVector.h"
-#include "SAMRAI/tbox/Pointer.h"
+
+#include <boost/shared_ptr.hpp>
 
 namespace SAMRAI {
 namespace pdat {
@@ -106,7 +107,7 @@ public:
     * @brief Compute the overlap in edge-centered index space between
     * the source box geometry and the destination box geometry.
     */
-   virtual tbox::Pointer<hier::BoxOverlap>
+   virtual boost::shared_ptr<hier::BoxOverlap>
    calculateOverlap(
       const hier::BoxGeometry& dst_geometry,
       const hier::BoxGeometry& src_geometry,
@@ -121,7 +122,7 @@ public:
     * @brief Set up a EdgeOverlap object based on the given boxes and the
     * transformation
     */
-   virtual tbox::Pointer<hier::BoxOverlap>
+   virtual boost::shared_ptr<hier::BoxOverlap>
    setUpOverlap(
       const hier::BoxContainer& boxes,
       const hier::Transformation& transformation) const;
@@ -146,7 +147,7 @@ private:
     * between the source and destination objects, where both box geometry
     * objects are guaranteed to have edge centered geometry.
     */
-   static tbox::Pointer<hier::BoxOverlap>
+   static boost::shared_ptr<hier::BoxOverlap>
    doOverlap(
       const EdgeGeometry& dst_geometry,
       const EdgeGeometry& src_geometry,
@@ -158,7 +159,7 @@ private:
 
    static void
    rotateAboutAxis(
-      pdat::EdgeIndex& index,
+      EdgeIndex& index,
       const int axis,
       const int num_rotations);
 

@@ -44,19 +44,19 @@ public:
    ~SAMRAITransferOperatorRegistry();
 
 protected:
-   tbox::Pointer<hier::CoarsenOperator>
+   boost::shared_ptr<hier::CoarsenOperator>
    buildCoarsenOperator(
-      const tbox::Pointer<hier::Variable>& var,
+      const boost::shared_ptr<hier::Variable>& var,
       const std::string& op_name);
 
-   tbox::Pointer<hier::RefineOperator>
+   boost::shared_ptr<hier::RefineOperator>
    buildRefineOperator(
-      const tbox::Pointer<hier::Variable>& var,
+      const boost::shared_ptr<hier::Variable>& var,
       const std::string& op_name);
 
-   tbox::Pointer<hier::TimeInterpolateOperator>
+   boost::shared_ptr<hier::TimeInterpolateOperator>
    buildTimeInterpolateOperator(
-      const tbox::Pointer<hier::Variable>& var,
+      const boost::shared_ptr<hier::Variable>& var,
       const std::string& op_name);
 };
 

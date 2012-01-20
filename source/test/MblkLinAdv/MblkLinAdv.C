@@ -566,8 +566,8 @@ SAMRAI_INLINE_KEYWORD void my_slopes(
 MblkLinAdv::MblkLinAdv(
    const string& object_name,
    const tbox::Dimension& dim,
-   tbox::Pointer<tbox::Database> input_db,
-   tbox::Pointer<hier::GridGeometry>& grid_geom):
+   boost::shared_ptr<tbox::Database> input_db,
+   boost::shared_ptr<hier::GridGeometry>& grid_geom):
    MblkHyperbolicPatchStrategy(dim),
    d_dim(dim),
    d_nghosts(hier::IntVector(dim, CELLG)),
@@ -595,10 +595,10 @@ MblkLinAdv::MblkLinAdv(
    /*
     * hier::Variable quantities that define state of linear advection problem.
     */
-   d_uval = new pdat::CellVariable<double>(dim, "uval", DEPTH);
-   d_vol = new pdat::CellVariable<double>(dim, "vol", 1);
-   d_flux = new pdat::SideVariable<double>(dim, "flux", 1);
-   d_xyz = new pdat::NodeVariable<double>(dim, "xyz", d_dim.getValue());
+   d_uval.reset(new pdat::CellVariable<double>(dim, "uval", DEPTH));
+   d_vol.reset(new pdat::CellVariable<double>(dim, "vol", 1));
+   d_flux.reset(new pdat::SideVariable<double>(dim, "flux", 1));
+   d_xyz.reset(new pdat::NodeVariable<double>(dim, "xyz", d_dim.getValue()));
 
    d_dx_set = false;
 
@@ -816,20 +816,20 @@ void MblkLinAdv::registerModelVariables(
    TBOX_ASSERT(integrator != (MblkHyperbolicLevelIntegrator *)NULL);
    TBOX_ASSERT(CELLG == FACEG);
 
-   d_cell_cons_linear_refine_op =
-      new SkeletonCellDoubleConservativeLinearRefine(d_dim);
-   d_cell_cons_coarsen_op =
-      new SkeletonCellDoubleWeightedAverage(d_dim);
-   d_cell_time_interp_op =
-      new pdat::CellDoubleLinearTimeInterpolateOp();
-   d_side_cons_coarsen_op =
-      new SkeletonOutersideDoubleWeightedAverage(d_dim);
+   d_cell_cons_linear_refine_op.reset(
+      new SkeletonCellDoubleConservativeLinearRefine(d_dim));
+   d_cell_cons_coarsen_op.reset(
+      new SkeletonCellDoubleWeightedAverage(d_dim));
+   d_cell_time_interp_op.reset(
+      new pdat::CellDoubleLinearTimeInterpolateOp());
+   d_side_cons_coarsen_op.reset(
+      new SkeletonOutersideDoubleWeightedAverage(d_dim));
 
    // Note that the Node linear refine operator is null for this case,
    // which is OK because the only node data is the grid coordinates,
    // which we explicitly set on any new patch
-   tbox::Pointer<hier::RefineOperator> node_linear_refine_op;
-   tbox::Pointer<pdat::NodeDoubleInjection> node_cons_coarsen_op(
+   boost::shared_ptr<hier::RefineOperator> node_linear_refine_op;
+   boost::shared_ptr<pdat::NodeDoubleInjection> node_cons_coarsen_op(
       new pdat::NodeDoubleInjection(d_dim));
 
    integrator->registerVariable(d_uval, d_nghosts,
@@ -848,7 +848,7 @@ void MblkLinAdv::registerModelVariables(
       MblkHyperbolicLevelIntegrator::FLUX,
       d_side_cons_coarsen_op);
 
-   tbox::Pointer<hier::TimeInterpolateOperator> node_time_interp_op(
+   boost::shared_ptr<hier::TimeInterpolateOperator> node_time_interp_op(
       new pdat::NodeDoubleLinearTimeInterpolateOp());
    integrator->registerVariable(d_xyz, d_nodeghosts,
       MblkHyperbolicLevelIntegrator::TIME_DEP,
@@ -925,15 +925,15 @@ void MblkLinAdv::initializeDataOnPatch(
 
    if (initial_time) {
 
-      tbox::Pointer<pdat::CellData<double> > uval(
+      boost::shared_ptr<pdat::CellData<double> > uval(
          patch.getPatchData(d_uval, getDataContext()),
-         tbox::__dynamic_cast_tag());
-      tbox::Pointer<pdat::CellData<double> > vol(
+         boost::detail::dynamic_cast_tag());
+      boost::shared_ptr<pdat::CellData<double> > vol(
          patch.getPatchData(d_vol, getDataContext()),
-            tbox::__dynamic_cast_tag());
-      tbox::Pointer<pdat::NodeData<double> > xyz(
+            boost::detail::dynamic_cast_tag());
+      boost::shared_ptr<pdat::NodeData<double> > xyz(
          patch.getPatchData(d_xyz, getDataContext()),
-         tbox::__dynamic_cast_tag());
+         boost::detail::dynamic_cast_tag());
 
       TBOX_ASSERT(uval);
       TBOX_ASSERT(vol);
@@ -1050,9 +1050,9 @@ void MblkLinAdv::initializeDataOnPatch(
       if (!patch.checkAllocated(d_workload_data_id)) {
          patch.allocatePatchData(d_workload_data_id);
       }
-      tbox::Pointer<pdat::CellData<double> > workload_data(
+      boost::shared_ptr<pdat::CellData<double> > workload_data(
          patch.getPatchData(d_workload_data_id),
-         tbox::__dynamic_cast_tag());
+         boost::detail::dynamic_cast_tag());
       workload_data->fillAll(1.0);
    }
 
@@ -1090,15 +1090,15 @@ double MblkLinAdv::computeStableDtOnPatch(
    const hier::Index ifirst = patch.getBox().lower();
    const hier::Index ilast = patch.getBox().upper();
 
-   tbox::Pointer<pdat::CellData<double> > uval(
+   boost::shared_ptr<pdat::CellData<double> > uval(
       patch.getPatchData(d_uval, getDataContext()),
-      tbox::__dynamic_cast_tag());
-   tbox::Pointer<pdat::CellData<double> > vol(
+      boost::detail::dynamic_cast_tag());
+   boost::shared_ptr<pdat::CellData<double> > vol(
       patch.getPatchData(d_vol, getDataContext()),
-      tbox::__dynamic_cast_tag());
-   tbox::Pointer<pdat::NodeData<double> > xyz(
+      boost::detail::dynamic_cast_tag());
+   boost::shared_ptr<pdat::NodeData<double> > xyz(
       patch.getPatchData(d_xyz, getDataContext()),
-      tbox::__dynamic_cast_tag());
+      boost::detail::dynamic_cast_tag());
 
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(uval);
@@ -1259,21 +1259,21 @@ void MblkLinAdv::computeFluxesOnPatch(
    const hier::Index ifirst = patch.getBox().lower();
    const hier::Index ilast = patch.getBox().upper();
 
-   tbox::Pointer<pdat::CellData<double> > uval(
+   boost::shared_ptr<pdat::CellData<double> > uval(
       patch.getPatchData(d_uval, getDataContext()),
-      tbox::__dynamic_cast_tag());
+      boost::detail::dynamic_cast_tag());
 
-   tbox::Pointer<pdat::CellData<double> > vol(
+   boost::shared_ptr<pdat::CellData<double> > vol(
       patch.getPatchData(d_vol, getDataContext()),
-      tbox::__dynamic_cast_tag());
+      boost::detail::dynamic_cast_tag());
 
-   tbox::Pointer<pdat::SideData<double> > flux(
+   boost::shared_ptr<pdat::SideData<double> > flux(
       patch.getPatchData(d_flux, getDataContext()),
-      tbox::__dynamic_cast_tag());
+      boost::detail::dynamic_cast_tag());
 
-   tbox::Pointer<pdat::NodeData<double> > xyz(
+   boost::shared_ptr<pdat::NodeData<double> > xyz(
       patch.getPatchData(d_xyz, getDataContext()),
-      tbox::__dynamic_cast_tag());
+      boost::detail::dynamic_cast_tag());
 
    /*
     * Verify that the integrator providing the context correctly
@@ -1546,9 +1546,9 @@ void MblkLinAdv::setPhysicalBoundaryConditions(
 {
    (void)fill_time;
 
-   tbox::Pointer<pdat::CellData<double> > uval(
+   boost::shared_ptr<pdat::CellData<double> > uval(
       patch.getPatchData(d_uval, getDataContext()),
-      tbox::__dynamic_cast_tag());
+      boost::detail::dynamic_cast_tag());
 
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(uval);
@@ -1670,19 +1670,19 @@ void MblkLinAdv::postprocessRefine(
    const hier::IntVector& ratio)
 {
 
-   tbox::Pointer<pdat::CellData<double> > cuval(
+   boost::shared_ptr<pdat::CellData<double> > cuval(
       coarse.getPatchData(d_uval, getDataContext()),
-      tbox::__dynamic_cast_tag());
-   tbox::Pointer<pdat::CellData<double> > cvol(
+      boost::detail::dynamic_cast_tag());
+   boost::shared_ptr<pdat::CellData<double> > cvol(
       coarse.getPatchData(d_vol, getDataContext()),
-      tbox::__dynamic_cast_tag());
+      boost::detail::dynamic_cast_tag());
 
-   tbox::Pointer<pdat::CellData<double> > fuval(
+   boost::shared_ptr<pdat::CellData<double> > fuval(
       fine.getPatchData(d_uval, getDataContext()),
-      tbox::__dynamic_cast_tag());
-   tbox::Pointer<pdat::CellData<double> > fvol(
+      boost::detail::dynamic_cast_tag());
+   boost::shared_ptr<pdat::CellData<double> > fvol(
       fine.getPatchData(d_vol, getDataContext()),
-      tbox::__dynamic_cast_tag());
+      boost::detail::dynamic_cast_tag());
 
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(cuval);
@@ -1939,19 +1939,19 @@ void MblkLinAdv::postprocessCoarsen(
    const hier::IntVector& ratio)
 {
 
-   tbox::Pointer<pdat::CellData<double> > cuval(
+   boost::shared_ptr<pdat::CellData<double> > cuval(
       coarse.getPatchData(d_uval, getDataContext()),
-      tbox::__dynamic_cast_tag());
-   tbox::Pointer<pdat::CellData<double> > cvol(
+      boost::detail::dynamic_cast_tag());
+   boost::shared_ptr<pdat::CellData<double> > cvol(
       coarse.getPatchData(d_vol, getDataContext()),
-      tbox::__dynamic_cast_tag());
+      boost::detail::dynamic_cast_tag());
 
-   tbox::Pointer<pdat::CellData<double> > fuval(
+   boost::shared_ptr<pdat::CellData<double> > fuval(
       fine.getPatchData(d_uval, getDataContext()),
-      tbox::__dynamic_cast_tag());
-   tbox::Pointer<pdat::CellData<double> > fvol(
+      boost::detail::dynamic_cast_tag());
+   boost::shared_ptr<pdat::CellData<double> > fvol(
       fine.getPatchData(d_vol, getDataContext()),
-      tbox::__dynamic_cast_tag());
+      boost::detail::dynamic_cast_tag());
 
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(cuval);
@@ -2138,9 +2138,9 @@ void MblkLinAdv::tagGradientDetectorCells(
    //
    const int error_level_number = patch.getPatchLevelNumber();
 
-   tbox::Pointer<pdat::NodeData<double> > xyz(
+   boost::shared_ptr<pdat::NodeData<double> > xyz(
       patch.getPatchData(d_xyz, getDataContext()),
-      tbox::__dynamic_cast_tag());
+      boost::detail::dynamic_cast_tag());
    double* x = xyz->getPointer(0);
    double* y = xyz->getPointer(1);
    double* z = xyz->getPointer(2);
@@ -2155,17 +2155,17 @@ void MblkLinAdv::tagGradientDetectorCells(
    tbox::plog << "level  = " << level << endl;
    tbox::plog << "box    = " << patch.getBox() << endl;
 
-   tbox::Pointer<pdat::CellData<int> > tags(
+   boost::shared_ptr<pdat::CellData<int> > tags(
       patch.getPatchData(tag_indx),
-      tbox::__dynamic_cast_tag());
-   tbox::Pointer<pdat::CellData<double> > var(
+      boost::detail::dynamic_cast_tag());
+   boost::shared_ptr<pdat::CellData<double> > var(
       patch.getPatchData(d_uval, getDataContext()),
-      tbox::__dynamic_cast_tag());
+      boost::detail::dynamic_cast_tag());
 
    //
    // Create a set of temporary tags and set to untagged value.
    //
-   tbox::Pointer<pdat::CellData<int> > temp_tags(
+   boost::shared_ptr<pdat::CellData<int> > temp_tags(
       new pdat::CellData<int>(pbox, 1, d_nghosts));
    temp_tags->fillAll(FALSE);
 
@@ -2441,7 +2441,7 @@ void MblkLinAdv::fillSingularityBoundaryConditions(
    const double fill_time,
    const hier::Box& fill_box,
    const hier::BoundaryBox& boundary_box,
-   const tbox::Pointer<hier::GridGeometry>& grid_geometry)
+   const boost::shared_ptr<hier::GridGeometry>& grid_geometry)
 {
 
    NULL_USE(patch);
@@ -2471,8 +2471,8 @@ void MblkLinAdv::setMappedGridOnPatch(
 #endif
 
    // compute level domain
-   const tbox::Pointer<hier::PatchGeometry>
-   patch_geom = patch.getPatchGeometry();
+   const boost::shared_ptr<hier::PatchGeometry> patch_geom =
+      patch.getPatchGeometry();
    hier::IntVector ratio = patch_geom->getRatio();
    hier::BoxContainer domain_boxes;
    d_grid_geometry->computePhysicalDomain(domain_boxes, ratio,
@@ -2504,7 +2504,7 @@ void MblkLinAdv::setMappedGridOnPatch(
 
 #ifdef HAVE_HDF5
 void MblkLinAdv::registerVisItDataWriter(
-   tbox::Pointer<appu::VisItDataWriter> viz_writer)
+   boost::shared_ptr<appu::VisItDataWriter> viz_writer)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(viz_writer);
@@ -2531,7 +2531,7 @@ void MblkLinAdv::printClassData(
    os << "d_object_name = " << d_object_name << endl;
    os << "d_grid_geometry = " << endl;
 //   for (j=0; j < d_grid_geometry.getSize(); j++) {
-//      os << (*((tbox::Pointer<geom::BlockGridGeometry >)(d_grid_geometry[j]))) << endl;
+//      os << (*((boost::shared_ptr<geom::BlockGridGeometry >)(d_grid_geometry[j]))) << endl;
 //   }
 
    os << "Parameters for numerical method ..." << endl;
@@ -2696,14 +2696,14 @@ void MblkLinAdv::printClassData(
  *************************************************************************
  */
 void MblkLinAdv::getFromInput(
-   tbox::Pointer<tbox::Database> input_db,
+   boost::shared_ptr<tbox::Database> input_db,
    bool is_from_restart)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(input_db);
 #endif
 
-   tbox::Pointer<tbox::Database> db = input_db->getDatabase("MblkLinAdv");
+   boost::shared_ptr<tbox::Database> db = input_db->getDatabase("MblkLinAdv");
 
    /*
     * Note: if we are restarting, then we only allow nonuniform
@@ -2758,7 +2758,7 @@ void MblkLinAdv::getFromInput(
    }
 
    if (db->keyExists("Refinement_data")) {
-      tbox::Pointer<tbox::Database> refine_db = db->getDatabase(
+      boost::shared_ptr<tbox::Database> refine_db = db->getDatabase(
             "Refinement_data");
       tbox::Array<string> refinement_keys = refine_db->getAllKeys();
       int num_keys = refinement_keys.getSize();
@@ -2775,7 +2775,7 @@ void MblkLinAdv::getFromInput(
 
       tbox::Array<string> ref_keys_defined(num_keys);
       int def_key_cnt = 0;
-      tbox::Pointer<tbox::Database> error_db;
+      boost::shared_ptr<tbox::Database> error_db;
       for (int i = 0; i < refinement_keys.getSize(); i++) {
 
          string error_key = refinement_keys[i];
@@ -2955,7 +2955,7 @@ void MblkLinAdv::getFromInput(
                           << endl);
       }
 
-      tbox::Pointer<tbox::Database> init_data_db;
+      boost::shared_ptr<tbox::Database> init_data_db;
       if (db->keyExists("Initial_data")) {
          init_data_db = db->getDatabase("Initial_data");
       } else {
@@ -3055,7 +3055,7 @@ void MblkLinAdv::getFromInput(
 
             if (!(init_data_keys[nkey] == "front_position")) {
 
-               tbox::Pointer<tbox::Database> interval_db =
+               boost::shared_ptr<tbox::Database> interval_db =
                   init_data_db->getDatabase(init_data_keys[nkey]);
 
                if (interval_db->keyExists("uval")) {
@@ -3126,7 +3126,8 @@ void MblkLinAdv::getFromInput(
 
    if (db->keyExists("Boundary_data")) {
 
-      tbox::Pointer<tbox::Database> bdry_db = db->getDatabase("Boundary_data");
+      boost::shared_ptr<tbox::Database> bdry_db =
+         db->getDatabase("Boundary_data");
 
       if (d_dim == tbox::Dimension(2)) {
          SkeletonBoundaryUtilities2::readBoundaryInput(this,
@@ -3161,7 +3162,7 @@ void MblkLinAdv::getFromInput(
  */
 
 void MblkLinAdv::putToDatabase(
-   tbox::Pointer<tbox::Database> db)
+   boost::shared_ptr<tbox::Database> db)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(db);
@@ -3243,10 +3244,10 @@ void MblkLinAdv::putToDatabase(
  */
 void MblkLinAdv::getFromRestart()
 {
-   tbox::Pointer<tbox::Database> root_db =
+   boost::shared_ptr<tbox::Database> root_db =
       tbox::RestartManager::getManager()->getRootDatabase();
 
-   tbox::Pointer<tbox::Database> db;
+   boost::shared_ptr<tbox::Database> db;
    if (root_db->isDatabase(d_object_name)) {
       db = root_db->getDatabase(d_object_name);
    } else {
@@ -3355,7 +3356,7 @@ void MblkLinAdv::getFromRestart()
  */
 
 void MblkLinAdv::readDirichletBoundaryDataEntry(
-   tbox::Pointer<tbox::Database> db,
+   boost::shared_ptr<tbox::Database> db,
    string& db_name,
    int bdry_location_index)
 {
@@ -3378,7 +3379,7 @@ void MblkLinAdv::readDirichletBoundaryDataEntry(
 }
 
 void MblkLinAdv::readStateDataEntry(
-   tbox::Pointer<tbox::Database> db,
+   boost::shared_ptr<tbox::Database> db,
    const string& db_name,
    int array_indx,
    tbox::Array<double>& uval)
@@ -3426,7 +3427,8 @@ void MblkLinAdv::checkBoundaryData(
    }
 #endif
 
-   const tbox::Pointer<hier::PatchGeometry> pgeom = patch.getPatchGeometry();
+   const boost::shared_ptr<hier::PatchGeometry> pgeom =
+      patch.getPatchGeometry();
    const tbox::Array<hier::BoundaryBox> bdry_boxes =
       pgeom->getCodimensionBoundaries(btype);
 

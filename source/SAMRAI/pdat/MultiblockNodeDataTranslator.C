@@ -58,12 +58,12 @@ void MultiblockNodeDataTranslator<TYPE>::translateAndCopyData(
 
    const tbox::Dimension& dim(dst_patch.getDim());
 
-   tbox::Pointer<NodeData<TYPE> > dst(
+   boost::shared_ptr<NodeData<TYPE> > dst(
       dst_patch.getPatchData(dst_id),
-      tbox::__dynamic_cast_tag());
-   tbox::Pointer<NodeData<TYPE> > src(
+      boost::detail::dynamic_cast_tag());
+   boost::shared_ptr<NodeData<TYPE> > src(
       src_patch.getPatchData(src_id),
-      tbox::__dynamic_cast_tag());
+      boost::detail::dynamic_cast_tag());
 
    TBOX_ASSERT(dst);
    TBOX_ASSERT(src);
@@ -85,8 +85,7 @@ void MultiblockNodeDataTranslator<TYPE>::translateAndCopyData(
       rotatebox.rotate(rotate);
 
       const hier::Box copybox = dst->getArrayData().getBox()
-         * (pdat::NodeGeometry::toNodeBox(
-               hier::Box::shift(rotatebox, shift)));
+         * (NodeGeometry::toNodeBox(hier::Box::shift(rotatebox, shift)));
 
       if (!copybox.empty()) {
          TYPE * const dst_ptr = dst->getArrayData().getPointer();
@@ -157,8 +156,8 @@ void MultiblockNodeDataTranslator<TYPE>::translateAndCopyData(
       }
    } else if (dim == tbox::Dimension(3)) {
       const hier::BlockId& block_id = dst->getBox().getBlockId();
-      for (pdat::NodeIterator ni(dst->getBox()); ni; ni++) {
-         pdat::NodeIndex dst_index(ni());
+      for (NodeIterator ni(dst->getBox()); ni; ni++) {
+         NodeIndex dst_index(ni());
 
          hier::Transformation::RotationIdentifier back_rotate =
             hier::Transformation::getReverseRotationIdentifier(rotate, dim);
@@ -173,7 +172,7 @@ void MultiblockNodeDataTranslator<TYPE>::translateAndCopyData(
 
          src_box.shift(back_shift);
 
-         pdat::NodeIndex src_index(dim);
+         NodeIndex src_index(dim);
          for (int n = 0; n < dim.getValue(); n++) {
             src_index(n) = src_box.lower() (n);
          }

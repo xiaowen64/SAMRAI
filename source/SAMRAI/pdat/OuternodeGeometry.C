@@ -61,7 +61,7 @@ OuternodeGeometry::~OuternodeGeometry()
  *************************************************************************
  */
 
-tbox::Pointer<hier::BoxOverlap>
+boost::shared_ptr<hier::BoxOverlap>
 OuternodeGeometry::calculateOverlap(
    const hier::BoxGeometry& dst_geometry,
    const hier::BoxGeometry& src_geometry,
@@ -83,7 +83,7 @@ OuternodeGeometry::calculateOverlap(
    const OuternodeGeometry* t_src_onode =
       dynamic_cast<const OuternodeGeometry *>(&src_geometry);
 
-   tbox::Pointer<hier::BoxOverlap> over(NULL);
+   boost::shared_ptr<hier::BoxOverlap> over;
    if ((t_src_onode != NULL) && (t_dst_node != NULL)) {
       over = doOverlap(*t_dst_node, *t_src_onode, src_mask, fill_box,
             overwrite_interior,
@@ -115,7 +115,7 @@ OuternodeGeometry::calculateOverlap(
  *************************************************************************
  */
 
-tbox::Pointer<hier::BoxOverlap>
+boost::shared_ptr<hier::BoxOverlap>
 OuternodeGeometry::doOverlap(
    const NodeGeometry& dst_geometry,
    const OuternodeGeometry& src_geometry,
@@ -208,7 +208,7 @@ OuternodeGeometry::doOverlap(
    // Create the outernode overlap data object using the boxes and source shift
 
    hier::BoxOverlap* overlap = new NodeOverlap(dst_boxes, transformation);
-   return tbox::Pointer<hier::BoxOverlap>(overlap);
+   return boost::shared_ptr<hier::BoxOverlap>(overlap);
 }
 
 /*
@@ -222,7 +222,7 @@ OuternodeGeometry::doOverlap(
  *************************************************************************
  */
 
-tbox::Pointer<hier::BoxOverlap>
+boost::shared_ptr<hier::BoxOverlap>
 OuternodeGeometry::doOverlap(
    const OuternodeGeometry& dst_geometry,
    const NodeGeometry& src_geometry,
@@ -314,7 +314,7 @@ OuternodeGeometry::doOverlap(
    // Create the side overlap data object using the boxes and source shift
 
    hier::BoxOverlap* overlap = new NodeOverlap(src_boxes, transformation);
-   return tbox::Pointer<hier::BoxOverlap>(overlap);
+   return boost::shared_ptr<hier::BoxOverlap>(overlap);
 }
 
 /*
@@ -328,7 +328,7 @@ OuternodeGeometry::doOverlap(
  *************************************************************************
  */
 
-tbox::Pointer<hier::BoxOverlap>
+boost::shared_ptr<hier::BoxOverlap>
 OuternodeGeometry::doOverlap(
    const OuternodeGeometry& dst_geometry,
    const OuternodeGeometry& src_geometry,
@@ -445,7 +445,7 @@ OuternodeGeometry::doOverlap(
    // Create the side overlap data object using the boxes and source shift
 
    hier::BoxOverlap* overlap = new NodeOverlap(dst_boxes, transformation);
-   return tbox::Pointer<hier::BoxOverlap>(overlap);
+   return boost::shared_ptr<hier::BoxOverlap>(overlap);
 
 }
 
@@ -456,7 +456,7 @@ OuternodeGeometry::doOverlap(
  *
  *************************************************************************
  */
-tbox::Pointer<hier::BoxOverlap>
+boost::shared_ptr<hier::BoxOverlap>
 OuternodeGeometry::setUpOverlap(
    const hier::BoxContainer& boxes,
    const hier::Transformation& transformation) const
@@ -470,7 +470,7 @@ OuternodeGeometry::setUpOverlap(
 
    // Create the node overlap data object using the boxes and source shift
    hier::BoxOverlap* overlap = new NodeOverlap(dst_boxes, transformation);
-   return tbox::Pointer<hier::BoxOverlap>(overlap);
+   return boost::shared_ptr<hier::BoxOverlap>(overlap);
 
 }
 

@@ -61,7 +61,7 @@ void PatchCellDataNormOpsReal<TYPE>::operator = (
 
 template<class TYPE>
 int PatchCellDataNormOpsReal<TYPE>::numberOfEntries(
-   const tbox::Pointer<pdat::CellData<TYPE> >& data,
+   const boost::shared_ptr<pdat::CellData<TYPE> >& data,
    const hier::Box& box) const
 {
    TBOX_ASSERT(data);
@@ -82,8 +82,8 @@ int PatchCellDataNormOpsReal<TYPE>::numberOfEntries(
 
 template<class TYPE>
 double PatchCellDataNormOpsReal<TYPE>::sumControlVolumes(
-   const tbox::Pointer<pdat::CellData<TYPE> >& data,
-   const tbox::Pointer<pdat::CellData<double> >& cvol,
+   const boost::shared_ptr<pdat::CellData<TYPE> >& data,
+   const boost::shared_ptr<pdat::CellData<double> >& cvol,
    const hier::Box& box) const
 {
    TBOX_ASSERT(data && cvol);
@@ -96,8 +96,8 @@ double PatchCellDataNormOpsReal<TYPE>::sumControlVolumes(
 
 template<class TYPE>
 void PatchCellDataNormOpsReal<TYPE>::abs(
-   tbox::Pointer<pdat::CellData<TYPE> >& dst,
-   const tbox::Pointer<pdat::CellData<TYPE> >& src,
+   boost::shared_ptr<pdat::CellData<TYPE> >& dst,
+   const boost::shared_ptr<pdat::CellData<TYPE> >& src,
    const hier::Box& box) const
 {
    TBOX_ASSERT(dst && src);
@@ -110,9 +110,9 @@ void PatchCellDataNormOpsReal<TYPE>::abs(
 
 template<class TYPE>
 double PatchCellDataNormOpsReal<TYPE>::L1Norm(
-   const tbox::Pointer<pdat::CellData<TYPE> >& data,
+   const boost::shared_ptr<pdat::CellData<TYPE> >& data,
    const hier::Box& box,
-   const tbox::Pointer<pdat::CellData<double> > cvol) const
+   const boost::shared_ptr<pdat::CellData<double> > cvol) const
 {
    TBOX_ASSERT(data);
    TBOX_DIM_ASSERT_CHECK_ARGS2(*data, box);
@@ -132,9 +132,9 @@ double PatchCellDataNormOpsReal<TYPE>::L1Norm(
 
 template<class TYPE>
 double PatchCellDataNormOpsReal<TYPE>::L2Norm(
-   const tbox::Pointer<pdat::CellData<TYPE> >& data,
+   const boost::shared_ptr<pdat::CellData<TYPE> >& data,
    const hier::Box& box,
-   const tbox::Pointer<pdat::CellData<double> > cvol) const
+   const boost::shared_ptr<pdat::CellData<double> > cvol) const
 {
    TBOX_ASSERT(data);
    TBOX_DIM_ASSERT_CHECK_ARGS2(*data, box);
@@ -154,10 +154,10 @@ double PatchCellDataNormOpsReal<TYPE>::L2Norm(
 
 template<class TYPE>
 double PatchCellDataNormOpsReal<TYPE>::weightedL2Norm(
-   const tbox::Pointer<pdat::CellData<TYPE> >& data,
-   const tbox::Pointer<pdat::CellData<TYPE> >& weight,
+   const boost::shared_ptr<pdat::CellData<TYPE> >& data,
+   const boost::shared_ptr<pdat::CellData<TYPE> >& weight,
    const hier::Box& box,
-   const tbox::Pointer<pdat::CellData<double> > cvol) const
+   const boost::shared_ptr<pdat::CellData<double> > cvol) const
 {
    TBOX_ASSERT(data && weight);
    TBOX_DIM_ASSERT_CHECK_ARGS3(*data, *weight, box);
@@ -181,9 +181,9 @@ double PatchCellDataNormOpsReal<TYPE>::weightedL2Norm(
 
 template<class TYPE>
 double PatchCellDataNormOpsReal<TYPE>::RMSNorm(
-   const tbox::Pointer<pdat::CellData<TYPE> >& data,
+   const boost::shared_ptr<pdat::CellData<TYPE> >& data,
    const hier::Box& box,
-   const tbox::Pointer<pdat::CellData<double> > cvol) const
+   const boost::shared_ptr<pdat::CellData<double> > cvol) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(data);
@@ -199,10 +199,10 @@ double PatchCellDataNormOpsReal<TYPE>::RMSNorm(
 
 template<class TYPE>
 double PatchCellDataNormOpsReal<TYPE>::weightedRMSNorm(
-   const tbox::Pointer<pdat::CellData<TYPE> >& data,
-   const tbox::Pointer<pdat::CellData<TYPE> >& weight,
+   const boost::shared_ptr<pdat::CellData<TYPE> >& data,
+   const boost::shared_ptr<pdat::CellData<TYPE> >& weight,
    const hier::Box& box,
-   const tbox::Pointer<pdat::CellData<double> > cvol) const
+   const boost::shared_ptr<pdat::CellData<double> > cvol) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(data && weight);
@@ -218,9 +218,9 @@ double PatchCellDataNormOpsReal<TYPE>::weightedRMSNorm(
 
 template<class TYPE>
 double PatchCellDataNormOpsReal<TYPE>::maxNorm(
-   const tbox::Pointer<pdat::CellData<TYPE> >& data,
+   const boost::shared_ptr<pdat::CellData<TYPE> >& data,
    const hier::Box& box,
-   const tbox::Pointer<pdat::CellData<double> > cvol) const
+   const boost::shared_ptr<pdat::CellData<double> > cvol) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(data);
@@ -238,10 +238,10 @@ double PatchCellDataNormOpsReal<TYPE>::maxNorm(
 
 template<class TYPE>
 TYPE PatchCellDataNormOpsReal<TYPE>::dot(
-   const tbox::Pointer<pdat::CellData<TYPE> >& data1,
-   const tbox::Pointer<pdat::CellData<TYPE> >& data2,
+   const boost::shared_ptr<pdat::CellData<TYPE> >& data1,
+   const boost::shared_ptr<pdat::CellData<TYPE> >& data2,
    const hier::Box& box,
-   const tbox::Pointer<pdat::CellData<double> > cvol) const
+   const boost::shared_ptr<pdat::CellData<double> > cvol) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(data1 && data2);
@@ -263,9 +263,9 @@ TYPE PatchCellDataNormOpsReal<TYPE>::dot(
 
 template<class TYPE>
 TYPE PatchCellDataNormOpsReal<TYPE>::integral(
-   const tbox::Pointer<pdat::CellData<TYPE> >& data,
+   const boost::shared_ptr<pdat::CellData<TYPE> >& data,
    const hier::Box& box,
-   const tbox::Pointer<pdat::CellData<double> > vol) const
+   const boost::shared_ptr<pdat::CellData<double> > vol) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(data);

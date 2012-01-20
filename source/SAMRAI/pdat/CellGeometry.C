@@ -58,7 +58,7 @@ CellGeometry::~CellGeometry()
  *************************************************************************
  */
 
-tbox::Pointer<hier::BoxOverlap> CellGeometry::calculateOverlap(
+boost::shared_ptr<hier::BoxOverlap> CellGeometry::calculateOverlap(
    const hier::BoxGeometry& dst_geometry,
    const hier::BoxGeometry& src_geometry,
    const hier::Box& src_mask,
@@ -75,7 +75,7 @@ tbox::Pointer<hier::BoxOverlap> CellGeometry::calculateOverlap(
    const CellGeometry* t_src =
       dynamic_cast<const CellGeometry *>(&src_geometry);
 
-   tbox::Pointer<hier::BoxOverlap> over(NULL);
+   boost::shared_ptr<hier::BoxOverlap> over;
    if ((t_src != NULL) && (t_dst != NULL)) {
       over = doOverlap(*t_dst, *t_src, src_mask, fill_box, overwrite_interior,
             transformation, dst_restrict_boxes);
@@ -98,7 +98,7 @@ tbox::Pointer<hier::BoxOverlap> CellGeometry::calculateOverlap(
  *************************************************************************
  */
 
-tbox::Pointer<hier::BoxOverlap> CellGeometry::doOverlap(
+boost::shared_ptr<hier::BoxOverlap> CellGeometry::doOverlap(
    const CellGeometry& dst_geometry,
    const CellGeometry& src_geometry,
    const hier::Box& src_mask,
@@ -119,7 +119,7 @@ tbox::Pointer<hier::BoxOverlap> CellGeometry::doOverlap(
    // Create the cell overlap data object using the boxes and source shift
 
    hier::BoxOverlap* overlap = new CellOverlap(dst_boxes, transformation);
-   return tbox::Pointer<hier::BoxOverlap>(overlap);
+   return boost::shared_ptr<hier::BoxOverlap>(overlap);
 }
 
 /*
@@ -179,14 +179,14 @@ void CellGeometry::computeDestinationBoxes(
  *************************************************************************
  */
 
-tbox::Pointer<hier::BoxOverlap>
+boost::shared_ptr<hier::BoxOverlap>
 CellGeometry::setUpOverlap(
    const hier::BoxContainer& boxes,
    const hier::Transformation& transformation) const
 {
    // Create the cell overlap data object using the boxes and source shift
    hier::BoxOverlap* overlap = new CellOverlap(boxes, transformation);
-   return tbox::Pointer<hier::BoxOverlap>(overlap);
+   return boost::shared_ptr<hier::BoxOverlap>(overlap);
 
 }
 
@@ -200,7 +200,7 @@ CellGeometry::setUpOverlap(
 
 void
 CellGeometry::transform(
-   pdat::CellIndex& index,
+   CellIndex& index,
    const hier::Transformation& transformation)
 {
    const tbox::Dimension& dim = index.getDim();
@@ -216,7 +216,7 @@ CellGeometry::transform(
       const int rotation_num = static_cast<int>(rotation);
 
       if (rotation_num) {
-         pdat::CellIndex tmp_index(dim);
+         CellIndex tmp_index(dim);
          for (int r = 0; r < rotation_num; r++) {
             tmp_index = index;
             index(0) = tmp_index(1);
@@ -349,7 +349,7 @@ CellGeometry::transform(
 }
 
 void
-CellGeometry::rotateAboutAxis(pdat::CellIndex& index,
+CellGeometry::rotateAboutAxis(CellIndex& index,
                               const int axis,
                               const int num_rotations)
 {
@@ -357,7 +357,7 @@ CellGeometry::rotateAboutAxis(pdat::CellIndex& index,
    const int a = (axis + 1) % dim.getValue();
    const int b = (axis + 2) % dim.getValue();
 
-   pdat::CellIndex tmp_index(dim);
+   CellIndex tmp_index(dim);
    for (int j = 0; j < num_rotations; j++) {
       tmp_index = index;
       index(a) = tmp_index(b);

@@ -61,7 +61,7 @@ void RedistributedRestartUtility::writeRedistributedRestartFiles(
       }
 
       //Mount the output files on an array of output databases
-      tbox::Array<tbox::Pointer<tbox::Database> >
+      tbox::Array<boost::shared_ptr<tbox::Database> >
       output_dbs(num_files_to_write);
 
       string proc_buf;
@@ -72,7 +72,7 @@ void RedistributedRestartUtility::writeRedistributedRestartFiles(
 
          string output_filename = restart_dirname + proc_buf;
 
-         output_dbs[j] = new tbox::HDFDatabase(output_filename);
+         output_dbs[j].reset(new tbox::HDFDatabase(output_filename));
 
          int open_success = output_dbs[j]->create(output_filename);
 
@@ -86,7 +86,7 @@ void RedistributedRestartUtility::writeRedistributedRestartFiles(
       }
 
       //Mount the input files on an array of input databases.
-      tbox::Array<tbox::Pointer<tbox::Database> >
+      tbox::Array<boost::shared_ptr<tbox::Database> >
       input_dbs(num_files_to_read);
 
       nodes_buf = "/nodes." + tbox::Utilities::nodeToString(total_input_files);
@@ -111,7 +111,7 @@ void RedistributedRestartUtility::writeRedistributedRestartFiles(
          string restart_filename = input_dirname + restore_buf + nodes_buf
             + proc_buf;
 
-         input_dbs[i] = new tbox::HDFDatabase(restart_filename);
+         input_dbs[i].reset(new tbox::HDFDatabase(restart_filename));
 
          int open_success = input_dbs[i]->open(restart_filename);
 
@@ -167,8 +167,8 @@ void RedistributedRestartUtility::writeRedistributedRestartFiles(
  */
 
 void RedistributedRestartUtility::readAndWriteRestartData(
-   tbox::Array<tbox::Pointer<tbox::Database> >& output_dbs,
-   const tbox::Array<tbox::Pointer<tbox::Database> >& input_dbs,
+   tbox::Array<boost::shared_ptr<tbox::Database> >& output_dbs,
+   const tbox::Array<boost::shared_ptr<tbox::Database> >& input_dbs,
    const string& key,
    const tbox::Array<tbox::Array<int> >* file_mapping,  // = NULL
    const int num_files_written, // = -1,
@@ -193,7 +193,7 @@ void RedistributedRestartUtility::readAndWriteRestartData(
    //The Database case is handled separately.
 
    if (input_dbs[0]->isDatabase(key)) {
-      tbox::Pointer<tbox::Database> db = input_dbs[0]->getDatabase(key);
+      boost::shared_ptr<tbox::Database> db = input_dbs[0]->getDatabase(key);
 
       if (db->keyExists("d_is_patch_level") &&
           db->getBool("d_is_patch_level")) {
@@ -201,7 +201,7 @@ void RedistributedRestartUtility::readAndWriteRestartData(
          //Here we are handling the input database(s) for a PatchLevel.
 
          //Create array of level input databases.
-         tbox::Array<tbox::Pointer<tbox::Database> > level_in_dbs;
+         tbox::Array<boost::shared_ptr<tbox::Database> > level_in_dbs;
          level_in_dbs.resizeArray(input_dbs.size());
 
          for (int i = 0; i < input_dbs.size(); i++) {
@@ -230,7 +230,7 @@ void RedistributedRestartUtility::readAndWriteRestartData(
                  db->getBool("d_is_mapped_box_level")) {
 
          //Create array of level input databases.
-         tbox::Array<tbox::Pointer<tbox::Database> > level_in_dbs;
+         tbox::Array<boost::shared_ptr<tbox::Database> > level_in_dbs;
          level_in_dbs.resizeArray(input_dbs.size());
 
          for (int i = 0; i < input_dbs.size(); i++) {
@@ -267,14 +267,14 @@ void RedistributedRestartUtility::readAndWriteRestartData(
          //for input_dbs and output_dbs, and then call readAndWriteRestartData
          //recursively.
 
-         tbox::Array<tbox::Pointer<tbox::Database> > child_in_dbs;
+         tbox::Array<boost::shared_ptr<tbox::Database> > child_in_dbs;
          child_in_dbs.resizeArray(input_dbs.size());
 
          for (int i = 0; i < input_dbs.size(); i++) {
             child_in_dbs[i] = input_dbs[i]->getDatabase(key);
          }
 
-         tbox::Array<tbox::Pointer<tbox::Database> > child_out_dbs;
+         tbox::Array<boost::shared_ptr<tbox::Database> > child_out_dbs;
          child_out_dbs.resizeArray(output_dbs.size());
 
          for (int i = 0; i < output_dbs.size(); i++) {
@@ -396,8 +396,8 @@ void RedistributedRestartUtility::readAndWriteRestartData(
  */
 
 void RedistributedRestartUtility::readAndWritePatchLevelRestartData(
-   tbox::Array<tbox::Pointer<tbox::Database> >& output_dbs,
-   const tbox::Array<tbox::Pointer<tbox::Database> >& level_in_dbs,
+   tbox::Array<boost::shared_ptr<tbox::Database> >& output_dbs,
+   const tbox::Array<boost::shared_ptr<tbox::Database> >& level_in_dbs,
    const string& key,
    const int num_files_written,
    const tbox::Array<int>& input_proc_nums,
@@ -410,7 +410,7 @@ void RedistributedRestartUtility::readAndWritePatchLevelRestartData(
 #endif
 
    //Create an array of level output databases
-   tbox::Array<tbox::Pointer<tbox::Database> > level_out_dbs;
+   tbox::Array<boost::shared_ptr<tbox::Database> > level_out_dbs;
    level_out_dbs.resizeArray(output_dbs.size());
 
    for (int i = 0; i < output_dbs.size(); i++) {
@@ -469,7 +469,7 @@ void RedistributedRestartUtility::readAndWritePatchLevelRestartData(
 
    }
 
-   tbox::Array<tbox::Pointer<tbox::Database> >
+   tbox::Array<boost::shared_ptr<tbox::Database> >
    mapped_box_level_dbs_in(input_proc_nums.size());
 
    tbox::List<int> local_indices_used;
@@ -479,12 +479,12 @@ void RedistributedRestartUtility::readAndWritePatchLevelRestartData(
    //database.
    for (int i = 0; i < input_proc_nums.size(); i++) {
 
-      tbox::Pointer<tbox::Database> mbl_database =
+      boost::shared_ptr<tbox::Database> mbl_database =
          level_in_dbs[i]->getDatabase("mapped_box_level");
 
       mapped_box_level_dbs_in[i] = mbl_database;
 
-      tbox::Pointer<tbox::Database> mapped_boxes_db =
+      boost::shared_ptr<tbox::Database> mapped_boxes_db =
          mbl_database->getDatabase("mapped_boxes");
 
       tbox::Array<int> local_indices(0);
@@ -628,10 +628,10 @@ void RedistributedRestartUtility::readAndWritePatchLevelRestartData(
             + "-patch_" + tbox::Utilities::patchToString(olp())
             + "-block_" + tbox::Utilities::blockToString(olb());
 
-         tbox::Pointer<tbox::Database> patch_in_db =
+         boost::shared_ptr<tbox::Database> patch_in_db =
             level_in_dbs[i]->getDatabase(in_patch_name);
 
-         tbox::Pointer<tbox::Database> patch_out_db =
+         boost::shared_ptr<tbox::Database> patch_out_db =
             level_out_dbs[output_id]->putDatabase(out_patch_name);
 
          int output_proc = num_files_written + output_id;
@@ -658,16 +658,16 @@ void RedistributedRestartUtility::readAndWritePatchLevelRestartData(
  */
 
 void RedistributedRestartUtility::readAndWritePatchRestartData(
-   tbox::Pointer<tbox::Database>& patch_out_db,
-   const tbox::Pointer<tbox::Database>& patch_in_db,
+   boost::shared_ptr<tbox::Database>& patch_out_db,
+   const boost::shared_ptr<tbox::Database>& patch_in_db,
    const int output_proc)
 {
    //Get the keys in the patch input database.
    tbox::Array<string> keys = patch_in_db->getAllKeys();
 
    //Place the database on arrays of length 1.
-   tbox::Array<tbox::Pointer<tbox::Database> > in_db_array(1);
-   tbox::Array<tbox::Pointer<tbox::Database> > out_db_array(1);
+   tbox::Array<boost::shared_ptr<tbox::Database> > in_db_array(1);
+   tbox::Array<boost::shared_ptr<tbox::Database> > out_db_array(1);
 
    in_db_array[0] = patch_in_db;
    out_db_array[0] = patch_out_db;
@@ -690,8 +690,8 @@ void RedistributedRestartUtility::readAndWritePatchRestartData(
  */
 
 void RedistributedRestartUtility::readAndWriteBoxLevelRestartData(
-   tbox::Array<tbox::Pointer<tbox::Database> >& output_dbs,
-   const tbox::Array<tbox::Pointer<tbox::Database> >& level_in_dbs,
+   tbox::Array<boost::shared_ptr<tbox::Database> >& output_dbs,
+   const tbox::Array<boost::shared_ptr<tbox::Database> >& level_in_dbs,
    const string& key,
    const int num_files_written,
    const tbox::Array<int>& input_proc_nums,
@@ -706,7 +706,7 @@ void RedistributedRestartUtility::readAndWriteBoxLevelRestartData(
    const int out_size = output_dbs.size();
 
    //Create an array of level output databases
-   tbox::Array<tbox::Pointer<tbox::Database> > level_out_dbs;
+   tbox::Array<boost::shared_ptr<tbox::Database> > level_out_dbs;
    level_out_dbs.resizeArray(out_size);
 
    for (int i = 0; i < out_size; i++) {
@@ -746,7 +746,7 @@ void RedistributedRestartUtility::readAndWriteBoxLevelRestartData(
    //database.
    for (int i = 0; i < input_proc_nums.size(); i++) {
 
-      tbox::Pointer<tbox::Database> mapped_boxes_in_db =
+      boost::shared_ptr<tbox::Database> mapped_boxes_in_db =
          level_in_dbs[i]->getDatabase("mapped_boxes");
 
       int mbs_size = mapped_boxes_in_db->getInteger("mapped_box_set_size");
@@ -870,7 +870,7 @@ void RedistributedRestartUtility::readAndWriteBoxLevelRestartData(
    }
 
    for (int j = 0; j < out_size; j++) {
-      tbox::Pointer<tbox::Database> mapped_boxes_out_db =
+      boost::shared_ptr<tbox::Database> mapped_boxes_out_db =
          level_out_dbs[j]->putDatabase("mapped_boxes");
 
       mapped_boxes_out_db->
@@ -927,7 +927,7 @@ void RedistributedRestartUtility::readAndWriteBoxLevelRestartData(
  *          }
  *       }
  *
- *       tbox::Pointer<tbox::Database> mapped_boxes_out_db =
+ *       boost::shared_ptr<tbox::Database> mapped_boxes_out_db =
  *          level_out_dbs[j]->putDatabase("mapped_boxes");
  *
  *       mapped_boxes_out_db->

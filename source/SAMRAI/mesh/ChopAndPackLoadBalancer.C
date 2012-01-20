@@ -54,12 +54,12 @@ ChopAndPackLoadBalancer::s_initialize_handler(
    ChopAndPackLoadBalancer::finalizeCallback,
    tbox::StartupShutdownManager::priorityTimers);
 
-tbox::Pointer<tbox::Timer> ChopAndPackLoadBalancer::t_load_balance_boxes;
-tbox::Pointer<tbox::Timer> ChopAndPackLoadBalancer::t_load_balance_boxes_remove_intersection;
-tbox::Pointer<tbox::Timer> ChopAndPackLoadBalancer::t_bin_pack_boxes;
-tbox::Pointer<tbox::Timer> ChopAndPackLoadBalancer::t_bin_pack_boxes_sort;
-tbox::Pointer<tbox::Timer> ChopAndPackLoadBalancer::t_bin_pack_boxes_pack;
-tbox::Pointer<tbox::Timer> ChopAndPackLoadBalancer::t_chop_boxes;
+boost::shared_ptr<tbox::Timer> ChopAndPackLoadBalancer::t_load_balance_boxes;
+boost::shared_ptr<tbox::Timer> ChopAndPackLoadBalancer::t_load_balance_boxes_remove_intersection;
+boost::shared_ptr<tbox::Timer> ChopAndPackLoadBalancer::t_bin_pack_boxes;
+boost::shared_ptr<tbox::Timer> ChopAndPackLoadBalancer::t_bin_pack_boxes_sort;
+boost::shared_ptr<tbox::Timer> ChopAndPackLoadBalancer::t_bin_pack_boxes_pack;
+boost::shared_ptr<tbox::Timer> ChopAndPackLoadBalancer::t_chop_boxes;
 
 /*
  *************************************************************************
@@ -72,7 +72,7 @@ tbox::Pointer<tbox::Timer> ChopAndPackLoadBalancer::t_chop_boxes;
 ChopAndPackLoadBalancer::ChopAndPackLoadBalancer(
    const tbox::Dimension& dim,
    const std::string& name,
-   tbox::Pointer<tbox::Database> input_db):
+   boost::shared_ptr<tbox::Database> input_db):
    d_dim(dim),
    d_object_name(name),
    d_processor_layout_specified(false),
@@ -95,7 +95,7 @@ ChopAndPackLoadBalancer::ChopAndPackLoadBalancer(
 
 ChopAndPackLoadBalancer::ChopAndPackLoadBalancer(
    const tbox::Dimension& dim,
-   tbox::Pointer<tbox::Database> input_db):
+   boost::shared_ptr<tbox::Database> input_db):
    d_dim(dim),
    d_object_name("ChopAndPackLoadBalancer"),
    d_processor_layout_specified(false),
@@ -189,10 +189,10 @@ void ChopAndPackLoadBalancer::setWorkloadPatchDataIndex(
    int data_id,
    int level_number)
 {
-  tbox::Pointer<pdat::CellDataFactory<double> > datafact(
+  boost::shared_ptr<pdat::CellDataFactory<double> > datafact(
       hier::VariableDatabase::getDatabase()->getPatchDescriptor()->
       getPatchDataFactory(data_id),
-      tbox::__dynamic_cast_tag());
+      boost::detail::dynamic_cast_tag());
    if (!datafact) {
       TBOX_ERROR(
          d_object_name << " error: "
@@ -288,7 +288,7 @@ void ChopAndPackLoadBalancer::loadBalanceBoxLevel(
    hier::BoxLevel& balance_mapped_box_level,
    hier::Connector& balance_to_anchor,
    hier::Connector& anchor_to_balance,
-   const tbox::Pointer<hier::PatchHierarchy> hierarchy,
+   const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
    const int level_number,
    const hier::Connector& balance_to_attractor,
    const hier::Connector& attractor_to_balance,
@@ -429,7 +429,7 @@ void ChopAndPackLoadBalancer::loadBalanceBoxes(
    hier::BoxContainer& out_boxes,
    hier::ProcessorMapping& mapping,
    const hier::BoxContainer& in_boxes,
-   const tbox::Pointer<hier::PatchHierarchy> hierarchy,
+   const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
    int level_number,
    const hier::BoxContainer& physical_domain,
    const hier::IntVector& ratio_to_hierarchy_level_zero,
@@ -728,7 +728,7 @@ void ChopAndPackLoadBalancer::chopBoxesWithUniformWorkload(
    hier::BoxContainer& out_boxes,
    tbox::Array<double>& out_workloads,
    const hier::BoxContainer& in_boxes,
-   const tbox::Pointer<hier::PatchHierarchy> hierarchy,
+   const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
    int level_number,
    const hier::IntVector& min_size,
    const hier::IntVector& max_size,
@@ -821,7 +821,7 @@ void ChopAndPackLoadBalancer::chopBoxesWithNonuniformWorkload(
    hier::BoxContainer& out_boxes,
    tbox::Array<double>& out_workloads,
    const hier::BoxContainer& in_boxes,
-   const tbox::Pointer<hier::PatchHierarchy> hierarchy,
+   const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
    int level_number,
    const hier::IntVector& ratio_to_hierarchy_level_zero,
    int wrk_indx,
@@ -876,7 +876,7 @@ void ChopAndPackLoadBalancer::chopBoxesWithNonuniformWorkload(
       tmp_level_workloads,
       "GREEDY");
 
-   tbox::Pointer<hier::BoxLevel> tmp_mapped_box_level(
+   boost::shared_ptr<hier::BoxLevel> tmp_mapped_box_level(
       new hier::BoxLevel(ratio_to_hierarchy_level_zero,
          hierarchy->getGridGeometry(),
          mpi,
@@ -889,7 +889,7 @@ void ChopAndPackLoadBalancer::chopBoxesWithNonuniformWorkload(
       tmp_mapped_box_level->addBox(node);
    }
 
-   tbox::Pointer<hier::PatchLevel> tmp_level(
+   boost::shared_ptr<hier::PatchLevel> tmp_level(
       new hier::PatchLevel(*tmp_mapped_box_level,
          hierarchy->getGridGeometry(),
          hierarchy->getPatchDescriptor()));
@@ -898,7 +898,7 @@ void ChopAndPackLoadBalancer::chopBoxesWithNonuniformWorkload(
 
    xfer::RefineAlgorithm fill_work_algorithm(d_dim);
 
-   tbox::Pointer<hier::RefineOperator> work_refine_op(
+   boost::shared_ptr<hier::RefineOperator> work_refine_op(
       new pdat::CellDoubleConstantRefine(d_dim));
 
    fill_work_algorithm.registerRefine(wrk_indx,
@@ -906,7 +906,7 @@ void ChopAndPackLoadBalancer::chopBoxesWithNonuniformWorkload(
       wrk_indx,
       work_refine_op);
 
-   tbox::Pointer<hier::PatchLevel> current_level(NULL);
+   boost::shared_ptr<hier::PatchLevel> current_level((hier::PatchLevel*)NULL);
    if (level_number <= hierarchy->getFinestLevelNumber()) {
       current_level = hierarchy->getPatchLevel(level_number);
    }
@@ -918,7 +918,7 @@ void ChopAndPackLoadBalancer::chopBoxesWithNonuniformWorkload(
 
    double local_work = 0;
    for (hier::PatchLevel::Iterator ip(tmp_level); ip; ip++) {
-      tbox::Pointer<hier::Patch> patch = *ip;
+      boost::shared_ptr<hier::Patch> patch = *ip;
 
       double patch_work =
          BalanceUtilities::computeNonUniformWorkload(patch,
@@ -1167,7 +1167,7 @@ void ChopAndPackLoadBalancer::printClassData(
  */
 
 void ChopAndPackLoadBalancer::getFromInput(
-   tbox::Pointer<tbox::Database> db)
+   boost::shared_ptr<tbox::Database> db)
 {
 
    if (db) {

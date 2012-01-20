@@ -64,7 +64,7 @@ void PatchEdgeDataNormOpsReal<TYPE>::operator = (
 
 template<class TYPE>
 int PatchEdgeDataNormOpsReal<TYPE>::numberOfEntries(
-   const tbox::Pointer<pdat::EdgeData<TYPE> >& data,
+   const boost::shared_ptr<pdat::EdgeData<TYPE> >& data,
    const hier::Box& box) const
 {
    TBOX_ASSERT(data);
@@ -91,8 +91,8 @@ int PatchEdgeDataNormOpsReal<TYPE>::numberOfEntries(
 
 template<class TYPE>
 double PatchEdgeDataNormOpsReal<TYPE>::sumControlVolumes(
-   const tbox::Pointer<pdat::EdgeData<TYPE> >& data,
-   const tbox::Pointer<pdat::EdgeData<double> >& cvol,
+   const boost::shared_ptr<pdat::EdgeData<TYPE> >& data,
+   const boost::shared_ptr<pdat::EdgeData<double> >& cvol,
    const hier::Box& box) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
@@ -112,8 +112,8 @@ double PatchEdgeDataNormOpsReal<TYPE>::sumControlVolumes(
 
 template<class TYPE>
 void PatchEdgeDataNormOpsReal<TYPE>::abs(
-   tbox::Pointer<pdat::EdgeData<TYPE> >& dst,
-   const tbox::Pointer<pdat::EdgeData<TYPE> >& src,
+   boost::shared_ptr<pdat::EdgeData<TYPE> >& dst,
+   const boost::shared_ptr<pdat::EdgeData<TYPE> >& src,
    const hier::Box& box) const
 {
    TBOX_ASSERT(dst && src);
@@ -131,9 +131,9 @@ void PatchEdgeDataNormOpsReal<TYPE>::abs(
 
 template<class TYPE>
 double PatchEdgeDataNormOpsReal<TYPE>::L1Norm(
-   const tbox::Pointer<pdat::EdgeData<TYPE> >& data,
+   const boost::shared_ptr<pdat::EdgeData<TYPE> >& data,
    const hier::Box& box,
-   const tbox::Pointer<pdat::EdgeData<double> > cvol) const
+   const boost::shared_ptr<pdat::EdgeData<double> > cvol) const
 {
    TBOX_ASSERT(data);
    TBOX_DIM_ASSERT_CHECK_ARGS2(*data, box);
@@ -161,9 +161,9 @@ double PatchEdgeDataNormOpsReal<TYPE>::L1Norm(
 
 template<class TYPE>
 double PatchEdgeDataNormOpsReal<TYPE>::L2Norm(
-   const tbox::Pointer<pdat::EdgeData<TYPE> >& data,
+   const boost::shared_ptr<pdat::EdgeData<TYPE> >& data,
    const hier::Box& box,
-   const tbox::Pointer<pdat::EdgeData<double> > cvol) const
+   const boost::shared_ptr<pdat::EdgeData<double> > cvol) const
 {
    TBOX_ASSERT(data);
    TBOX_DIM_ASSERT_CHECK_ARGS2(*data, box);
@@ -194,10 +194,10 @@ double PatchEdgeDataNormOpsReal<TYPE>::L2Norm(
 
 template<class TYPE>
 double PatchEdgeDataNormOpsReal<TYPE>::weightedL2Norm(
-   const tbox::Pointer<pdat::EdgeData<TYPE> >& data,
-   const tbox::Pointer<pdat::EdgeData<TYPE> >& weight,
+   const boost::shared_ptr<pdat::EdgeData<TYPE> >& data,
+   const boost::shared_ptr<pdat::EdgeData<TYPE> >& weight,
    const hier::Box& box,
-   const tbox::Pointer<pdat::EdgeData<double> > cvol) const
+   const boost::shared_ptr<pdat::EdgeData<double> > cvol) const
 {
    TBOX_ASSERT(data && weight);
    TBOX_DIM_ASSERT_CHECK_ARGS3(*data, *weight, box);
@@ -231,9 +231,9 @@ double PatchEdgeDataNormOpsReal<TYPE>::weightedL2Norm(
 
 template<class TYPE>
 double PatchEdgeDataNormOpsReal<TYPE>::RMSNorm(
-   const tbox::Pointer<pdat::EdgeData<TYPE> >& data,
+   const boost::shared_ptr<pdat::EdgeData<TYPE> >& data,
    const hier::Box& box,
-   const tbox::Pointer<pdat::EdgeData<double> > cvol) const
+   const boost::shared_ptr<pdat::EdgeData<double> > cvol) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(data);
@@ -249,10 +249,10 @@ double PatchEdgeDataNormOpsReal<TYPE>::RMSNorm(
 
 template<class TYPE>
 double PatchEdgeDataNormOpsReal<TYPE>::weightedRMSNorm(
-   const tbox::Pointer<pdat::EdgeData<TYPE> >& data,
-   const tbox::Pointer<pdat::EdgeData<TYPE> >& weight,
+   const boost::shared_ptr<pdat::EdgeData<TYPE> >& data,
+   const boost::shared_ptr<pdat::EdgeData<TYPE> >& weight,
    const hier::Box& box,
-   const tbox::Pointer<pdat::EdgeData<double> > cvol) const
+   const boost::shared_ptr<pdat::EdgeData<double> > cvol) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(data && weight);
@@ -268,9 +268,9 @@ double PatchEdgeDataNormOpsReal<TYPE>::weightedRMSNorm(
 
 template<class TYPE>
 double PatchEdgeDataNormOpsReal<TYPE>::maxNorm(
-   const tbox::Pointer<pdat::EdgeData<TYPE> >& data,
+   const boost::shared_ptr<pdat::EdgeData<TYPE> >& data,
    const hier::Box& box,
-   const tbox::Pointer<pdat::EdgeData<double> > cvol) const
+   const boost::shared_ptr<pdat::EdgeData<double> > cvol) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(data);
@@ -301,10 +301,10 @@ double PatchEdgeDataNormOpsReal<TYPE>::maxNorm(
 
 template<class TYPE>
 TYPE PatchEdgeDataNormOpsReal<TYPE>::dot(
-   const tbox::Pointer<pdat::EdgeData<TYPE> >& data1,
-   const tbox::Pointer<pdat::EdgeData<TYPE> >& data2,
+   const boost::shared_ptr<pdat::EdgeData<TYPE> >& data1,
+   const boost::shared_ptr<pdat::EdgeData<TYPE> >& data2,
    const hier::Box& box,
-   const tbox::Pointer<pdat::EdgeData<double> > cvol) const
+   const boost::shared_ptr<pdat::EdgeData<double> > cvol) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(data1 && data2);
@@ -334,9 +334,9 @@ TYPE PatchEdgeDataNormOpsReal<TYPE>::dot(
 
 template<class TYPE>
 TYPE PatchEdgeDataNormOpsReal<TYPE>::integral(
-   const tbox::Pointer<pdat::EdgeData<TYPE> >& data,
+   const boost::shared_ptr<pdat::EdgeData<TYPE> >& data,
    const hier::Box& box,
-   const tbox::Pointer<pdat::EdgeData<double> > vol) const
+   const boost::shared_ptr<pdat::EdgeData<double> > vol) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(data);

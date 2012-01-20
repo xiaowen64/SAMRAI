@@ -16,7 +16,8 @@
 #include "SAMRAI/pdat/FaceData.h"
 #include "SAMRAI/math/ArrayDataMiscellaneousOpsReal.h"
 #include "SAMRAI/hier/Box.h"
-#include "SAMRAI/tbox/Pointer.h"
+
+#include <boost/shared_ptr.hpp>
 
 namespace SAMRAI {
 namespace math {
@@ -71,11 +72,12 @@ public:
     */
    int
    computeConstrProdPos(
-      const tbox::Pointer<pdat::FaceData<TYPE> >& data1,
-      const tbox::Pointer<pdat::FaceData<TYPE> >& data2,
+      const boost::shared_ptr<pdat::FaceData<TYPE> >& data1,
+      const boost::shared_ptr<pdat::FaceData<TYPE> >& data2,
       const hier::Box& box,
-      const tbox::Pointer<pdat::FaceData<double> > cvol =
-         tbox::Pointer<pdat::FaceData<double> >(NULL)) const;
+      const boost::shared_ptr<pdat::FaceData<double> > cvol =
+         boost::shared_ptr<pdat::FaceData<double> >(
+            (pdat::FaceData<double>*)NULL)) const;
 
    /**
     * Wherever \f$cvol_i > 0\f$ in the index region, set \f$dst_i = 1\f$
@@ -84,12 +86,13 @@ public:
     */
    void
    compareToScalar(
-      tbox::Pointer<pdat::FaceData<TYPE> >& dst,
-      const tbox::Pointer<pdat::FaceData<TYPE> >& src,
+      boost::shared_ptr<pdat::FaceData<TYPE> >& dst,
+      const boost::shared_ptr<pdat::FaceData<TYPE> >& src,
       const TYPE& alpha,
       const hier::Box& box,
-      const tbox::Pointer<pdat::FaceData<double> > cvol =
-         tbox::Pointer<pdat::FaceData<double> >(NULL)) const;
+      const boost::shared_ptr<pdat::FaceData<double> > cvol =
+         boost::shared_ptr<pdat::FaceData<double> >(
+            (pdat::FaceData<double>*)NULL)) const;
 
    /**
     * Wherever \f$cvol_i > 0\f$ in the index region, set \f$dst_i = 1/src_i\f$ if
@@ -99,11 +102,12 @@ public:
     */
    int
    testReciprocal(
-      tbox::Pointer<pdat::FaceData<TYPE> >& dst,
-      const tbox::Pointer<pdat::FaceData<TYPE> >& src,
+      boost::shared_ptr<pdat::FaceData<TYPE> >& dst,
+      const boost::shared_ptr<pdat::FaceData<TYPE> >& src,
       const hier::Box& box,
-      const tbox::Pointer<pdat::FaceData<double> > cvol =
-         tbox::Pointer<pdat::FaceData<double> >(NULL)) const;
+      const boost::shared_ptr<pdat::FaceData<double> > cvol =
+         boost::shared_ptr<pdat::FaceData<double> >(
+           (pdat::FaceData<double>*)NULL)) const;
 
    /*!
     * @brief Compute max of "conditional" quotients of two arrays.
@@ -120,8 +124,8 @@ public:
     */
    TYPE
    maxPointwiseDivide(
-      const tbox::Pointer<pdat::FaceData<TYPE> >& numer,
-      const tbox::Pointer<pdat::FaceData<TYPE> >& denom,
+      const boost::shared_ptr<pdat::FaceData<TYPE> >& numer,
+      const boost::shared_ptr<pdat::FaceData<TYPE> >& denom,
       const hier::Box& box) const;
 
    /*!
@@ -140,8 +144,8 @@ public:
     */
    TYPE
    minPointwiseDivide(
-      const tbox::Pointer<pdat::FaceData<TYPE> >& numer,
-      const tbox::Pointer<pdat::FaceData<TYPE> >& denom,
+      const boost::shared_ptr<pdat::FaceData<TYPE> >& numer,
+      const boost::shared_ptr<pdat::FaceData<TYPE> >& denom,
       const hier::Box& box) const;
 
 private:

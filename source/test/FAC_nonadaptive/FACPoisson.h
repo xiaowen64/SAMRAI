@@ -18,12 +18,13 @@
 #include "SAMRAI/hier/Patch.h"
 #include "SAMRAI/hier/PatchHierarchy.h"
 #include "SAMRAI/hier/PatchLevel.h"
-#include "SAMRAI/tbox/Pointer.h"
 #include "SAMRAI/pdat/SideVariable.h"
 #include "SAMRAI/mesh/StandardTagAndInitStrategy.h"
 #include "SAMRAI/hier/VariableContext.h"
 #include "SAMRAI/appu/VisDerivedDataStrategy.h"
 #include "SAMRAI/appu/VisItDataWriter.h"
+
+#include <boost/shared_ptr.hpp>
 
 namespace SAMRAI {
 
@@ -75,8 +76,8 @@ public:
    FACPoisson(
       const std::string& object_name,
       const tbox::Dimension& dim,
-      tbox::Pointer<tbox::Database> database =
-         tbox::Pointer<tbox::Database>(NULL));
+      boost::shared_ptr<tbox::Database> database =
+         boost::shared_ptr<tbox::Database>());
 
    virtual ~FACPoisson();
 
@@ -94,12 +95,12 @@ public:
     */
    virtual void
    initializeLevelData(
-      const tbox::Pointer<hier::PatchHierarchy> hierarchy,
+      const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
       const int level_number,
       const double init_data_time,
       const bool can_be_refined,
       const bool initial_time,
-      const tbox::Pointer<hier::PatchLevel> old_level,
+      const boost::shared_ptr<hier::PatchLevel> old_level,
       const bool allocate_data);
 
    /*!
@@ -107,7 +108,7 @@ public:
     */
    virtual void
    resetHierarchyConfiguration(
-      tbox::Pointer<hier::PatchHierarchy> new_hierarchy,
+      boost::shared_ptr<hier::PatchHierarchy> new_hierarchy,
       int coarsest_level,
       int finest_level);
 
@@ -165,7 +166,7 @@ private:
 
    const tbox::Dimension d_dim;
 
-   tbox::Pointer<hier::PatchHierarchy> d_hierarchy;
+   boost::shared_ptr<hier::PatchHierarchy> d_hierarchy;
 
    //@{
    /*!
@@ -193,7 +194,7 @@ private:
    /*!
     * @brief Context owned by this object.
     */
-   tbox::Pointer<hier::VariableContext> d_context;
+   boost::shared_ptr<hier::VariableContext> d_context;
 
    /*!
     * @brief Descriptor indices of internal data.

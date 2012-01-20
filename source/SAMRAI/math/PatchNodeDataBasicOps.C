@@ -62,9 +62,9 @@ void PatchNodeDataBasicOps<TYPE>::operator = (
 
 template<class TYPE>
 void PatchNodeDataBasicOps<TYPE>::scale(
-   tbox::Pointer<pdat::NodeData<TYPE> >& dst,
+   boost::shared_ptr<pdat::NodeData<TYPE> >& dst,
    const TYPE& alpha,
-   const tbox::Pointer<pdat::NodeData<TYPE> >& src,
+   const boost::shared_ptr<pdat::NodeData<TYPE> >& src,
    const hier::Box& box) const
 {
    TBOX_ASSERT(dst && src);
@@ -78,8 +78,8 @@ void PatchNodeDataBasicOps<TYPE>::scale(
 
 template<class TYPE>
 void PatchNodeDataBasicOps<TYPE>::addScalar(
-   tbox::Pointer<pdat::NodeData<TYPE> >& dst,
-   const tbox::Pointer<pdat::NodeData<TYPE> >& src,
+   boost::shared_ptr<pdat::NodeData<TYPE> >& dst,
+   const boost::shared_ptr<pdat::NodeData<TYPE> >& src,
    const TYPE& alpha,
    const hier::Box& box) const
 {
@@ -94,9 +94,9 @@ void PatchNodeDataBasicOps<TYPE>::addScalar(
 
 template<class TYPE>
 void PatchNodeDataBasicOps<TYPE>::add(
-   tbox::Pointer<pdat::NodeData<TYPE> >& dst,
-   const tbox::Pointer<pdat::NodeData<TYPE> >& src1,
-   const tbox::Pointer<pdat::NodeData<TYPE> >& src2,
+   boost::shared_ptr<pdat::NodeData<TYPE> >& dst,
+   const boost::shared_ptr<pdat::NodeData<TYPE> >& src1,
+   const boost::shared_ptr<pdat::NodeData<TYPE> >& src2,
    const hier::Box& box) const
 {
    TBOX_ASSERT(dst && src1 && src2);
@@ -110,9 +110,9 @@ void PatchNodeDataBasicOps<TYPE>::add(
 
 template<class TYPE>
 void PatchNodeDataBasicOps<TYPE>::subtract(
-   tbox::Pointer<pdat::NodeData<TYPE> >& dst,
-   const tbox::Pointer<pdat::NodeData<TYPE> >& src1,
-   const tbox::Pointer<pdat::NodeData<TYPE> >& src2,
+   boost::shared_ptr<pdat::NodeData<TYPE> >& dst,
+   const boost::shared_ptr<pdat::NodeData<TYPE> >& src1,
+   const boost::shared_ptr<pdat::NodeData<TYPE> >& src2,
    const hier::Box& box) const
 {
    TBOX_ASSERT(dst && src1 && src2);
@@ -126,9 +126,9 @@ void PatchNodeDataBasicOps<TYPE>::subtract(
 
 template<class TYPE>
 void PatchNodeDataBasicOps<TYPE>::multiply(
-   tbox::Pointer<pdat::NodeData<TYPE> >& dst,
-   const tbox::Pointer<pdat::NodeData<TYPE> >& src1,
-   const tbox::Pointer<pdat::NodeData<TYPE> >& src2,
+   boost::shared_ptr<pdat::NodeData<TYPE> >& dst,
+   const boost::shared_ptr<pdat::NodeData<TYPE> >& src1,
+   const boost::shared_ptr<pdat::NodeData<TYPE> >& src2,
    const hier::Box& box) const
 {
    TBOX_ASSERT(dst && src1 && src2);
@@ -142,9 +142,9 @@ void PatchNodeDataBasicOps<TYPE>::multiply(
 
 template<class TYPE>
 void PatchNodeDataBasicOps<TYPE>::divide(
-   tbox::Pointer<pdat::NodeData<TYPE> >& dst,
-   const tbox::Pointer<pdat::NodeData<TYPE> >& src1,
-   const tbox::Pointer<pdat::NodeData<TYPE> >& src2,
+   boost::shared_ptr<pdat::NodeData<TYPE> >& dst,
+   const boost::shared_ptr<pdat::NodeData<TYPE> >& src1,
+   const boost::shared_ptr<pdat::NodeData<TYPE> >& src2,
    const hier::Box& box) const
 {
    TBOX_ASSERT(dst && src1 && src2);
@@ -158,8 +158,8 @@ void PatchNodeDataBasicOps<TYPE>::divide(
 
 template<class TYPE>
 void PatchNodeDataBasicOps<TYPE>::reciprocal(
-   tbox::Pointer<pdat::NodeData<TYPE> >& dst,
-   const tbox::Pointer<pdat::NodeData<TYPE> >& src,
+   boost::shared_ptr<pdat::NodeData<TYPE> >& dst,
+   const boost::shared_ptr<pdat::NodeData<TYPE> >& src,
    const hier::Box& box) const
 {
    TBOX_ASSERT(dst && src);
@@ -173,11 +173,11 @@ void PatchNodeDataBasicOps<TYPE>::reciprocal(
 
 template<class TYPE>
 void PatchNodeDataBasicOps<TYPE>::linearSum(
-   tbox::Pointer<pdat::NodeData<TYPE> >& dst,
+   boost::shared_ptr<pdat::NodeData<TYPE> >& dst,
    const TYPE& alpha,
-   const tbox::Pointer<pdat::NodeData<TYPE> >& src1,
+   const boost::shared_ptr<pdat::NodeData<TYPE> >& src1,
    const TYPE& beta,
-   const tbox::Pointer<pdat::NodeData<TYPE> >& src2,
+   const boost::shared_ptr<pdat::NodeData<TYPE> >& src2,
    const hier::Box& box) const
 {
    TBOX_ASSERT(dst && src1 && src2);
@@ -192,10 +192,10 @@ void PatchNodeDataBasicOps<TYPE>::linearSum(
 
 template<class TYPE>
 void PatchNodeDataBasicOps<TYPE>::axpy(
-   tbox::Pointer<pdat::NodeData<TYPE> >& dst,
+   boost::shared_ptr<pdat::NodeData<TYPE> >& dst,
    const TYPE& alpha,
-   const tbox::Pointer<pdat::NodeData<TYPE> >& src1,
-   const tbox::Pointer<pdat::NodeData<TYPE> >& src2,
+   const boost::shared_ptr<pdat::NodeData<TYPE> >& src1,
+   const boost::shared_ptr<pdat::NodeData<TYPE> >& src2,
    const hier::Box& box) const
 {
    TBOX_ASSERT(dst && src1 && src2);
@@ -210,10 +210,10 @@ void PatchNodeDataBasicOps<TYPE>::axpy(
 
 template<class TYPE>
 void PatchNodeDataBasicOps<TYPE>::axmy(
-   tbox::Pointer<pdat::NodeData<TYPE> >& dst,
+   boost::shared_ptr<pdat::NodeData<TYPE> >& dst,
    const TYPE& alpha,
-   const tbox::Pointer<pdat::NodeData<TYPE> >& src1,
-   const tbox::Pointer<pdat::NodeData<TYPE> >& src2,
+   const boost::shared_ptr<pdat::NodeData<TYPE> >& src1,
+   const boost::shared_ptr<pdat::NodeData<TYPE> >& src2,
    const hier::Box& box) const
 {
    TBOX_ASSERT(dst && src1 && src2);
@@ -228,7 +228,7 @@ void PatchNodeDataBasicOps<TYPE>::axmy(
 
 template<class TYPE>
 TYPE PatchNodeDataBasicOps<TYPE>::min(
-   const tbox::Pointer<pdat::NodeData<TYPE> >& data,
+   const boost::shared_ptr<pdat::NodeData<TYPE> >& data,
    const hier::Box& box) const
 {
    TBOX_ASSERT(data);
@@ -240,7 +240,7 @@ TYPE PatchNodeDataBasicOps<TYPE>::min(
 
 template<class TYPE>
 TYPE PatchNodeDataBasicOps<TYPE>::max(
-   const tbox::Pointer<pdat::NodeData<TYPE> >& data,
+   const boost::shared_ptr<pdat::NodeData<TYPE> >& data,
    const hier::Box& box) const
 {
    TBOX_ASSERT(data);
@@ -252,7 +252,7 @@ TYPE PatchNodeDataBasicOps<TYPE>::max(
 
 template<class TYPE>
 void PatchNodeDataBasicOps<TYPE>::setRandomValues(
-   tbox::Pointer<pdat::NodeData<TYPE> >& dst,
+   boost::shared_ptr<pdat::NodeData<TYPE> >& dst,
    const TYPE& width,
    const TYPE& low,
    const hier::Box& box) const

@@ -66,16 +66,16 @@ EdgeDataFactory<TYPE>::~EdgeDataFactory()
  */
 
 template<class TYPE>
-tbox::Pointer<hier::PatchDataFactory>
+boost::shared_ptr<hier::PatchDataFactory>
 EdgeDataFactory<TYPE>::cloneFactory(
    const hier::IntVector& ghosts)
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, ghosts);
 
-   return tbox::Pointer<hier::PatchDataFactory>(new EdgeDataFactory<TYPE>(
-                                                   d_depth,
-                                                   ghosts,
-                                                   d_fine_boundary_represents_var));
+   return boost::shared_ptr<hier::PatchDataFactory>(
+      new EdgeDataFactory<TYPE>(d_depth,
+                                ghosts,
+                                d_fine_boundary_represents_var));
 }
 
 /*
@@ -87,7 +87,7 @@ EdgeDataFactory<TYPE>::cloneFactory(
  */
 
 template<class TYPE>
-tbox::Pointer<hier::PatchData>
+boost::shared_ptr<hier::PatchData>
 EdgeDataFactory<TYPE>::allocate(
    const hier::Patch& patch) const
 {
@@ -95,7 +95,7 @@ EdgeDataFactory<TYPE>::allocate(
 
    hier::PatchData* patchdata =
       new EdgeData<TYPE>(patch.getBox(), d_depth, this->d_ghosts);
-   return tbox::Pointer<hier::PatchData>(patchdata);
+   return boost::shared_ptr<hier::PatchData>(patchdata);
 }
 
 /*
@@ -107,14 +107,14 @@ EdgeDataFactory<TYPE>::allocate(
  */
 
 template<class TYPE>
-tbox::Pointer<hier::BoxGeometry>
+boost::shared_ptr<hier::BoxGeometry>
 EdgeDataFactory<TYPE>::getBoxGeometry(
    const hier::Box& box) const
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, box);
 
    hier::BoxGeometry* boxgeometry = new EdgeGeometry(box, this->d_ghosts);
-   return tbox::Pointer<hier::BoxGeometry>(boxgeometry);
+   return boost::shared_ptr<hier::BoxGeometry>(boxgeometry);
 }
 
 /*
@@ -149,7 +149,7 @@ size_t EdgeDataFactory<TYPE>::getSizeOfMemory(
 
 template<class TYPE>
 bool EdgeDataFactory<TYPE>::validCopyTo(
-   const tbox::Pointer<hier::PatchDataFactory>& dst_pdf) const
+   const boost::shared_ptr<hier::PatchDataFactory>& dst_pdf) const
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, *dst_pdf);
 
@@ -159,18 +159,18 @@ bool EdgeDataFactory<TYPE>::validCopyTo(
     * Valid options are EdgeData and OuteredgeData.
     */
    if (!valid_copy) {
-      tbox::Pointer<EdgeDataFactory<TYPE> > edf(
+      boost::shared_ptr<EdgeDataFactory<TYPE> > edf(
          dst_pdf,
-         tbox::__dynamic_cast_tag());
+         boost::detail::dynamic_cast_tag());
       if (edf) {
          valid_copy = true;
       }
    }
 
    if (!valid_copy) {
-      tbox::Pointer<OuteredgeDataFactory<TYPE> > oedf(
+      boost::shared_ptr<OuteredgeDataFactory<TYPE> > oedf(
          dst_pdf,
-         tbox::__dynamic_cast_tag());
+         boost::detail::dynamic_cast_tag());
       if (oedf) {
          valid_copy = true;
       }

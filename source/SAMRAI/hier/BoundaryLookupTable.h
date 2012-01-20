@@ -253,7 +253,7 @@ private:
     * @brief Array to hold information about possible directions for each
     * codimension.
     */
-   tbox::Array<tbox::Array<hier::IntVector> > d_bdry_dirs;
+   tbox::Array<tbox::Array<IntVector> > d_bdry_dirs;
 
    static tbox::StartupShutdownManager::Handler
       s_finalize_handler;

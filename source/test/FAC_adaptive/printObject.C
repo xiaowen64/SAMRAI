@@ -14,12 +14,13 @@
 #include "SAMRAI/pdat/MDA_Access.h"
 
 #include "SAMRAI/SAMRAI_config.h"
-#include "SAMRAI/tbox/Pointer.h"
 #include "SAMRAI/hier/PatchHierarchy.h"
 #include "SAMRAI/hier/PatchLevel.h"
 #include "SAMRAI/hier/PatchData.h"
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/pdat/ArrayData.h"
+
+#include <boost/shared_ptr.hpp>
 
 using namespace SAMRAI;
 

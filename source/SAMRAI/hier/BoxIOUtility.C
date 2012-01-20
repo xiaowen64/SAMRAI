@@ -189,7 +189,7 @@ void BoxIOUtility::readLevelBoxesDatabase()
    /*
     * Open the HDF5 database.
     */
-   tbox::Pointer<tbox::HDFDatabase> db(new tbox::HDFDatabase("root"));
+   boost::shared_ptr<tbox::HDFDatabase> db(new tbox::HDFDatabase("root"));
    int stat = db->open(d_hdf_filename);
    if (stat < 0) {
       TBOX_ERROR("BoxIOUtility::readLevelBoxesDatabase() error: "
@@ -262,7 +262,7 @@ void BoxIOUtility::writeLevelBoxesDatabase()
    /*
     * Open the HDF5 database.
     */
-   tbox::Pointer<tbox::Database> db(new tbox::HDFDatabase("root"));
+   boost::shared_ptr<tbox::Database> db(new tbox::HDFDatabase("root"));
    int stat = db->create(d_hdf_filename);
    if (stat < 0) {
       TBOX_ERROR("BoxIOUtility::writeLevelBoxesDatabase() error"

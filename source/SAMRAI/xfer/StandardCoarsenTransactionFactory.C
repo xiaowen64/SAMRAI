@@ -47,7 +47,7 @@ void StandardCoarsenTransactionFactory::setCoarsenItems(
    const CoarsenClasses::Data** coarsen_items,
    int num_coarsen_items)
 {
-   xfer::CoarsenCopyTransaction::setCoarsenItems(coarsen_items,
+   CoarsenCopyTransaction::setCoarsenItems(coarsen_items,
       num_coarsen_items);
    d_coarsen_items = coarsen_items;
    d_num_coarsen_items = num_coarsen_items;
@@ -55,8 +55,8 @@ void StandardCoarsenTransactionFactory::setCoarsenItems(
 
 void StandardCoarsenTransactionFactory::unsetCoarsenItems()
 {
-   xfer::CoarsenCopyTransaction::unsetCoarsenItems();
-   d_coarsen_items = (const xfer::CoarsenClasses::Data **)NULL;
+   CoarsenCopyTransaction::unsetCoarsenItems();
+   d_coarsen_items = (const CoarsenClasses::Data **)NULL;
    d_num_coarsen_items = 0;
 }
 
@@ -68,11 +68,11 @@ void StandardCoarsenTransactionFactory::unsetCoarsenItems()
  *************************************************************************
  */
 
-tbox::Pointer<tbox::Transaction>
+boost::shared_ptr<tbox::Transaction>
 StandardCoarsenTransactionFactory::allocate(
-   tbox::Pointer<hier::PatchLevel> dst_level,
-   tbox::Pointer<hier::PatchLevel> src_level,
-   tbox::Pointer<hier::BoxOverlap> overlap,
+   boost::shared_ptr<hier::PatchLevel> dst_level,
+   boost::shared_ptr<hier::PatchLevel> src_level,
+   boost::shared_ptr<hier::BoxOverlap> overlap,
    const hier::Box& dst_mapped_box,
    const hier::Box& src_mapped_box,
    int citem_id) const
@@ -88,7 +88,7 @@ StandardCoarsenTransactionFactory::allocate(
          dst_mapped_box,
          src_mapped_box,
          citem_id);
-   return tbox::Pointer<tbox::Transaction>(transaction);
+   return boost::shared_ptr<tbox::Transaction>(transaction);
 }
 
 }

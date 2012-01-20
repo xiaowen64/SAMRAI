@@ -16,9 +16,9 @@
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/hier/IntVector.h"
 #include "SAMRAI/hier/Patch.h"
-#include "SAMRAI/tbox/Pointer.h"
 #include "SAMRAI/hier/CoarsenOperator.h"
 
+#include <boost/shared_ptr.hpp>
 #include <string>
 
 namespace SAMRAI {
@@ -58,7 +58,7 @@ public:
     */
    bool
    findCoarsenOperator(
-      const tbox::Pointer<hier::Variable>& var,
+      const boost::shared_ptr<hier::Variable>& var,
       const std::string& op_name) const;
 
    /**

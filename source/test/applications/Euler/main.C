@@ -41,12 +41,12 @@
 #include "SAMRAI/tbox/SAMRAIManager.h"
 #include "SAMRAI/tbox/Array.h"
 #include "SAMRAI/tbox/PIO.h"
-#include "SAMRAI/tbox/Pointer.h"
 #include "SAMRAI/tbox/RestartManager.h"
 #include "SAMRAI/tbox/Utilities.h"
 #include "SAMRAI/tbox/Timer.h"
 #include "SAMRAI/tbox/TimerManager.h"
 
+#include <boost/shared_ptr.hpp>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string>
@@ -176,7 +176,7 @@ dumpMatlabData1dPencil(
    const string& filename,
    const int ext,
    const double plot_time,
-   const tbox::Pointer<hier::PatchHierarchy> hierarchy,
+   const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
    const int pencil_direction,
    const bool default_pencil,
    const tbox::Array<int>& pencil_index,
@@ -232,7 +232,8 @@ int main(
        * Create input database and parse all data in input file.
        */
 
-      tbox::Pointer<tbox::InputDatabase> input_db(new tbox::InputDatabase("input_db"));
+      boost::shared_ptr<tbox::InputDatabase> input_db(
+         new tbox::InputDatabase("input_db"));
       tbox::InputManager::getManager()->parseInputFile(input_filename, input_db);
 
       /*
@@ -241,7 +242,7 @@ int main(
        */
 
       if (input_db->keyExists("GlobalInputs")) {
-         tbox::Pointer<tbox::Database> global_db =
+         boost::shared_ptr<tbox::Database> global_db =
             input_db->getDatabase("GlobalInputs");
 
 #ifdef SGS
@@ -267,7 +268,8 @@ int main(
        * restart interval is non-zero, create a restart database.
        */
 
-      tbox::Pointer<tbox::Database> main_db = input_db->getDatabase("Main");
+      boost::shared_ptr<tbox::Database> main_db =
+         input_db->getDatabase("Main");
 
       const tbox::Dimension dim(static_cast<unsigned short>(main_db->getInteger("dim")));
 
@@ -383,7 +385,7 @@ int main(
        * If SILO is present then use SILO as the file storage format
        * for this example, otherwise it will default to HDF5.
        */
-      tbox::Pointer<tbox::SiloDatabaseFactory> silo_database_factory(
+      boost::shared_ptr<tbox::SiloDatabaseFactory> silo_database_factory(
          new tbox::SiloDatabaseFactory());
       restart_manager->setDatabaseFactory(silo_database_factory);
 #endif
@@ -413,12 +415,12 @@ int main(
        * and the roles they play in this application, see comments at top of file.
        */
 
-      tbox::Pointer<geom::CartesianGridGeometry> grid_geometry(
+      boost::shared_ptr<geom::CartesianGridGeometry> grid_geometry(
          new geom::CartesianGridGeometry(dim,
             "CartesianGeometry",
             input_db->getDatabase("CartesianGeometry")));
 
-      tbox::Pointer<hier::PatchHierarchy> patch_hierarchy(
+      boost::shared_ptr<hier::PatchHierarchy> patch_hierarchy(
          new hier::PatchHierarchy("PatchHierarchy", grid_geometry,
             input_db->getDatabase("PatchHierarchy")));
 
@@ -427,33 +429,33 @@ int main(
             input_db->getDatabase("Euler"),
             grid_geometry);
 
-      tbox::Pointer<algs::HyperbolicLevelIntegrator> hyp_level_integrator(
+      boost::shared_ptr<algs::HyperbolicLevelIntegrator> hyp_level_integrator(
          new algs::HyperbolicLevelIntegrator("HyperbolicLevelIntegrator",
             input_db->getDatabase(
                "HyperbolicLevelIntegrator"),
             euler_model, true,
             use_refined_timestepping));
 
-      tbox::Pointer<mesh::StandardTagAndInitialize> error_detector(
+      boost::shared_ptr<mesh::StandardTagAndInitialize> error_detector(
          new mesh::StandardTagAndInitialize(dim,
             "StandardTagAndInitialize",
             hyp_level_integrator.get(),
             input_db->getDatabase("StandardTagAndInitialize")));
 
-      tbox::Pointer<mesh::BergerRigoutsos> box_generator(
+      boost::shared_ptr<mesh::BergerRigoutsos> box_generator(
          new mesh::BergerRigoutsos(
             dim,
             input_db->getDatabaseWithDefault(
                "BergerRigoutsos",
-               SAMRAI::tbox::Pointer<SAMRAI::tbox::Database>(NULL))));
+               boost::shared_ptr<tbox::Database>())));
 
-      tbox::Pointer<mesh::TreeLoadBalancer> load_balancer(
+      boost::shared_ptr<mesh::TreeLoadBalancer> load_balancer(
          new mesh::TreeLoadBalancer(dim,
             "LoadBalancer", input_db->getDatabase("LoadBalancer")));
       load_balancer->setSAMRAI_MPI(
-         SAMRAI::tbox::SAMRAI_MPI::getSAMRAIWorld());
+         tbox::SAMRAI_MPI::getSAMRAIWorld());
 
-      tbox::Pointer<mesh::GriddingAlgorithm> gridding_algorithm(
+      boost::shared_ptr<mesh::GriddingAlgorithm> gridding_algorithm(
          new mesh::GriddingAlgorithm(
             patch_hierarchy,
             "GriddingAlgorithm",
@@ -462,7 +464,7 @@ int main(
             box_generator,
             load_balancer));
 
-      tbox::Pointer<algs::TimeRefinementIntegrator> time_integrator(
+      boost::shared_ptr<algs::TimeRefinementIntegrator> time_integrator(
          new algs::TimeRefinementIntegrator("TimeRefinementIntegrator",
             input_db->getDatabase(
                "TimeRefinementIntegrator"),
@@ -477,7 +479,7 @@ int main(
        * is not necessary.
        */
 #ifdef HAVE_HDF5
-      tbox::Pointer<appu::VisItDataWriter> visit_data_writer(
+      boost::shared_ptr<appu::VisItDataWriter> visit_data_writer(
          new appu::VisItDataWriter(dim,
             "Euler VisIt Writer",
             visit_dump_dirname,
@@ -524,12 +526,11 @@ int main(
       /*
        * Create timers for measuring I/O.
        */
-      tbox::Pointer<tbox::Timer> t_write_viz =
-         tbox::TimerManager::getManager()->
-         getTimer("apps::main::write_viz");
-      tbox::Pointer<tbox::Timer> t_write_restart =
-         tbox::TimerManager::getManager()->
-         getTimer("apps::main::write_restart");
+      boost::shared_ptr<tbox::Timer> t_write_viz =
+         tbox::TimerManager::getManager()->getTimer("apps::main::write_viz");
+      boost::shared_ptr<tbox::Timer> t_write_restart =
+         tbox::TimerManager::getManager()->getTimer(
+            "apps::main::write_restart");
 
       t_write_viz->start();
       if (matlab_dump_interval > 0) {
@@ -700,7 +701,7 @@ static void dumpMatlabData1dPencil(
    const string& filename,
    const int ext,
    const double plot_time,
-   const tbox::Pointer<hier::PatchHierarchy> hierarchy,
+   const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
    const int pencil_direction,
    const bool default_pencil,
    const tbox::Array<int>& pencil_index,
@@ -753,12 +754,12 @@ static void dumpMatlabData1dPencil(
    tbox::Array<hier::BoxContainer> outboxes(nlevels);
 
    for (int l1 = 0; l1 < nlevels; l1++) {
-      tbox::Pointer<hier::PatchLevel> level = hierarchy->getPatchLevel(l1);
+      boost::shared_ptr<hier::PatchLevel> level = hierarchy->getPatchLevel(l1);
       outboxes[l1] = hier::BoxContainer(level->getBoxes());
 
       if (l1 < nlevels - 1) {
 
-         tbox::Pointer<hier::PatchLevel> finer_level =
+         boost::shared_ptr<hier::PatchLevel> finer_level =
             hierarchy->getPatchLevel(l1 + 1);
          hier::IntVector coarsen_ratio =
             finer_level->getRatioToCoarserLevel();
@@ -813,7 +814,7 @@ static void dumpMatlabData1dPencil(
       hier::VariableDatabase::getDatabase()->getContext("CURRENT"));
 
    for (int l5 = 0; l5 < nlevels; l5++) {
-      tbox::Pointer<hier::PatchLevel> level = hierarchy->getPatchLevel(l5);
+      boost::shared_ptr<hier::PatchLevel> level = hierarchy->getPatchLevel(l5);
 
       hier::Box level_pencil_box = pencil_box;
       if (l5 > 0) {
@@ -821,7 +822,7 @@ static void dumpMatlabData1dPencil(
       }
 
       for (hier::PatchLevel::Iterator i(level); i; i++) {
-         tbox::Pointer<hier::Patch> patch = *i;
+         boost::shared_ptr<hier::Patch> patch = *i;
          hier::Box pbox = patch->getBox();
 
          for (hier::BoxContainer::Iterator b(outboxes[l5]);

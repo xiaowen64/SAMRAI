@@ -20,8 +20,8 @@
 #include "SAMRAI/hier/Patch.h"
 #include "SAMRAI/tbox/Complex.h"
 #include "SAMRAI/tbox/PIO.h"
-#include "SAMRAI/tbox/Pointer.h"
 
+#include <boost/shared_ptr.hpp>
 #include <iostream>
 
 namespace SAMRAI {
@@ -63,8 +63,8 @@ public:
     */
    void
    copyData(
-      tbox::Pointer<pdat::EdgeData<dcomplex> >& dst,
-      const tbox::Pointer<pdat::EdgeData<dcomplex> >& src,
+      boost::shared_ptr<pdat::EdgeData<dcomplex> >& dst,
+      const boost::shared_ptr<pdat::EdgeData<dcomplex> >& src,
       const hier::Box& box) const;
 
    /**
@@ -73,7 +73,7 @@ public:
     */
    void
    swapData(
-      tbox::Pointer<hier::Patch> patch,
+      boost::shared_ptr<hier::Patch> patch,
       const int data1_id,
       const int data2_id) const;
 
@@ -82,7 +82,7 @@ public:
     */
    void
    printData(
-      const tbox::Pointer<pdat::EdgeData<dcomplex> >& data,
+      const boost::shared_ptr<pdat::EdgeData<dcomplex> >& data,
       const hier::Box& box,
       std::ostream& s = tbox::plog) const;
 
@@ -91,7 +91,7 @@ public:
     */
    void
    setToScalar(
-      tbox::Pointer<pdat::EdgeData<dcomplex> >& dst,
+      boost::shared_ptr<pdat::EdgeData<dcomplex> >& dst,
       const dcomplex& alpha,
       const hier::Box& box) const;
 

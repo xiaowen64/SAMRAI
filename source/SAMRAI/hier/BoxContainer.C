@@ -258,7 +258,7 @@ void BoxContainer::simplify()
 
 #ifdef DEBUG_CHECK_ASSERTIONS
    if (size() > 0) {
-      const hier::BlockId& front_block_id = front().getBlockId();
+      const BlockId& front_block_id = front().getBlockId();
       for (ConstIterator itr = begin(); itr != end(); ++itr) {
          TBOX_ASSERT(itr->getBlockId() == front_block_id);
       }
@@ -376,7 +376,7 @@ void BoxContainer::coalesce()
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    if (size() > 0) {
-      const hier::BlockId& front_block_id = front().getBlockId();
+      const BlockId& front_block_id = front().getBlockId();
       for (ConstIterator itr = begin(); itr != end(); ++itr) {
          TBOX_ASSERT(itr->getBlockId() == front_block_id);
       }
@@ -480,7 +480,7 @@ void BoxContainer::rotate(
 {
    if (!isEmpty()) {
       const tbox::Dimension& dim = d_list.front().getDim();
-      const hier::BlockId& block_id = d_list.front().getBlockId();
+      const BlockId& block_id = d_list.front().getBlockId();
       if (dim.getValue() == 2 || dim.getValue() == 3) {
          for (Iterator i(*this); i != end(); ++i) {
             if (i->getBlockId() != block_id) {

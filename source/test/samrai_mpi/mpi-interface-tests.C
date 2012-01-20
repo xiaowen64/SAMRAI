@@ -14,7 +14,7 @@
 #include "mpi-interface-tests.h"
 
 using namespace SAMRAI;
-using namespace SAMRAI::tbox;
+using namespace tbox;
 
 /*
  * Start up MPI, SAMRAI and run various test of the SAMRAI_MPI interfaces.

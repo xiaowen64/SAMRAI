@@ -574,7 +574,7 @@ void MultiblockBoxTree::findOverlapBoxes(
  *************************************************************************
  *************************************************************************
  */
-tbox::Pointer<MultiblockBoxTree> MultiblockBoxTree::createRefinedTree(
+boost::shared_ptr<MultiblockBoxTree> MultiblockBoxTree::createRefinedTree(
    const IntVector& ratio) const
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*d_grid_geometry, ratio);
@@ -605,7 +605,7 @@ tbox::Pointer<MultiblockBoxTree> MultiblockBoxTree::createRefinedTree(
       TBOX_ASSERT(insert_return_value.second);
    }
 
-   return tbox::Pointer<MultiblockBoxTree>(rval);
+   return boost::shared_ptr<MultiblockBoxTree>(rval);
 }
 
 /*

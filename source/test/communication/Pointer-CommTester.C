@@ -8,12 +8,8 @@
  *
  ************************************************************************/
 
-#include "SAMRAI/tbox/Pointer.h"
-#include "SAMRAI/tbox/Pointer.C"
 #include "CommTester.h"
 
-namespace SAMRAI {
+using namespace SAMRAI;
 
-template class tbox::Pointer<CommTester>;
-
-}
+template class boost::shared_ptr<CommTester>;

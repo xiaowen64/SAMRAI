@@ -58,7 +58,7 @@ FirstLayerCellNoCornersVariableFillPattern()
  *************************************************************************
  */
 
-tbox::Pointer<hier::BoxOverlap>
+boost::shared_ptr<hier::BoxOverlap>
 FirstLayerCellNoCornersVariableFillPattern::calculateOverlap(
    const hier::BoxGeometry& dst_geometry,
    const hier::BoxGeometry& src_geometry,
@@ -145,7 +145,7 @@ void FirstLayerCellNoCornersVariableFillPattern::computeStencilBoxes(
  *
  *************************************************************************
  */
-tbox::Pointer<hier::BoxOverlap>
+boost::shared_ptr<hier::BoxOverlap>
 FirstLayerCellNoCornersVariableFillPattern::computeFillBoxesOverlap(
    const hier::BoxContainer& fill_boxes,
    const hier::Box& patch_box,
@@ -162,10 +162,10 @@ FirstLayerCellNoCornersVariableFillPattern::computeFillBoxesOverlap(
    overlap_boxes.intersectBoxes(stencil_boxes);
 
    hier::BoxOverlap* overlap =
-      new pdat::CellOverlap(
+      new CellOverlap(
          overlap_boxes,
          hier::Transformation(hier::IntVector::getZero(patch_box.getDim())));
-   return tbox::Pointer<hier::BoxOverlap>(overlap);
+   return boost::shared_ptr<hier::BoxOverlap>(overlap);
 }
 
 }

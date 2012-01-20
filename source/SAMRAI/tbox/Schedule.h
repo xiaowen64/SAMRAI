@@ -15,11 +15,11 @@
 #include "SAMRAI/tbox/AsyncCommPeer.h"
 #include "SAMRAI/tbox/AsyncCommStage.h"
 #include "SAMRAI/tbox/List.h"
-#include "SAMRAI/tbox/Pointer.h"
 #include "SAMRAI/tbox/SAMRAI_MPI.h"
 #include "SAMRAI/tbox/MessageStream.h"
 #include "SAMRAI/tbox/Transaction.h"
 
+#include <boost/shared_ptr.hpp>
 #include <iostream>
 #include <map>
 
@@ -77,11 +77,12 @@ public:
     * include the local processor, then the transaction is not placed
     * on the schedule.
     *
-    * @param transaction  Pointer to transaction added to the schedule.
+    * @param transaction  boost::shared_ptr to transaction added to the
+    * schedule.
     */
    void
    addTransaction(
-      const Pointer<Transaction>& transaction);
+      const boost::shared_ptr<Transaction>& transaction);
 
    /*!
     * @brief Append a data transaction to the tail of the list of
@@ -92,11 +93,12 @@ public:
     * include the local processor, then the transaction will not be
     * not placed on the schedule.
     *
-    * @param transaction  Pointer to transaction appended to the schedule.
+    * @param transaction  boost::shared_ptr to transaction appended to the
+    * schedule.
     */
    void
    appendTransaction(
-      const Pointer<Transaction>& transaction);
+      const boost::shared_ptr<Transaction>& transaction);
 
    /*!
     * @brief Return number of send transactions in the schedule.
@@ -275,7 +277,7 @@ private:
     * Three containers of transactions are maintained based on
     * source and destination.
     */
-   typedef std::map<int, List<Pointer<Transaction> > > TransactionSets;
+   typedef std::map<int, List<boost::shared_ptr<Transaction> > > TransactionSets;
    TransactionSets d_send_sets;
    TransactionSets d_recv_sets;
 
@@ -283,7 +285,7 @@ private:
     * @brief Transactions where the source and destination are the
     * local process.
     */
-   List<Pointer<Transaction> > d_local_set;
+   List<boost::shared_ptr<Transaction> > d_local_set;
 
    //@{ @name High-level asynchronous messages passing objects
 
@@ -349,16 +351,16 @@ private:
     * corresponding to a prefix.
     */
    struct TimerStruct {
-      tbox::Pointer<tbox::Timer> t_communicate;
-      tbox::Pointer<tbox::Timer> t_begin_communication;
-      tbox::Pointer<tbox::Timer> t_finalize_communication;
-      tbox::Pointer<tbox::Timer> t_post_receives;
-      tbox::Pointer<tbox::Timer> t_post_sends;
-      tbox::Pointer<tbox::Timer> t_process_incoming_messages;
-      tbox::Pointer<tbox::Timer> t_MPI_wait;
-      tbox::Pointer<tbox::Timer> t_pack_stream;
-      tbox::Pointer<tbox::Timer> t_unpack_stream;
-      tbox::Pointer<tbox::Timer> t_local_copies;
+      boost::shared_ptr<tbox::Timer> t_communicate;
+      boost::shared_ptr<tbox::Timer> t_begin_communication;
+      boost::shared_ptr<tbox::Timer> t_finalize_communication;
+      boost::shared_ptr<tbox::Timer> t_post_receives;
+      boost::shared_ptr<tbox::Timer> t_post_sends;
+      boost::shared_ptr<tbox::Timer> t_process_incoming_messages;
+      boost::shared_ptr<tbox::Timer> t_MPI_wait;
+      boost::shared_ptr<tbox::Timer> t_pack_stream;
+      boost::shared_ptr<tbox::Timer> t_unpack_stream;
+      boost::shared_ptr<tbox::Timer> t_local_copies;
    };
 
    //! @brief Default prefix for Timers.

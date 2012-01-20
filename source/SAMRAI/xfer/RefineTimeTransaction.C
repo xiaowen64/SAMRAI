@@ -82,16 +82,16 @@ void RefineTimeTransaction::unsetRefineItems()
  */
 
 RefineTimeTransaction::RefineTimeTransaction(
-   tbox::Pointer<hier::PatchLevel>& dst_level,
-   tbox::Pointer<hier::PatchLevel>& src_level,
-   tbox::Pointer<hier::BoxOverlap> overlap,
+   boost::shared_ptr<hier::PatchLevel>& dst_level,
+   boost::shared_ptr<hier::PatchLevel>& src_level,
+   boost::shared_ptr<hier::BoxOverlap> overlap,
    const hier::Box& dst_mapped_box,
    const hier::Box& src_mapped_box,
    const hier::Box& box,
    int refine_item_id):
-   d_dst_patch(0),
+   d_dst_patch((hier::Patch*)0),
    d_dst_patch_rank(dst_mapped_box.getOwnerRank()),
-   d_src_patch(0),
+   d_src_patch((hier::Patch*)0),
    d_src_patch_rank(src_mapped_box.getOwnerRank()),
    d_overlap(overlap),
    d_box(box),
@@ -176,7 +176,7 @@ void RefineTimeTransaction::packStream(
       temporary_mapped_box,
       d_src_patch->getPatchDescriptor());
 
-   tbox::Pointer<hier::PatchData> temporary_patch_data(
+   boost::shared_ptr<hier::PatchData> temporary_patch_data(
       d_src_patch->getPatchDescriptor()
       ->getPatchDataFactory(s_refine_items[d_refine_item_id]->
          d_src_told)
@@ -226,7 +226,7 @@ void RefineTimeTransaction::copyLocalData()
          temporary_mapped_box,
          d_src_patch->getPatchDescriptor());
 
-      tbox::Pointer<hier::PatchData> temp =
+      boost::shared_ptr<hier::PatchData> temp =
          d_src_patch->getPatchDescriptor()
          ->getPatchDataFactory(s_refine_items[d_refine_item_id]->
             d_src_told)
@@ -249,9 +249,9 @@ void RefineTimeTransaction::copyLocalData()
 }
 
 void RefineTimeTransaction::timeInterpolate(
-   const tbox::Pointer<hier::PatchData>& pd_dst,
-   const tbox::Pointer<hier::PatchData>& pd_old,
-   const tbox::Pointer<hier::PatchData>& pd_new)
+   const boost::shared_ptr<hier::PatchData>& pd_dst,
+   const boost::shared_ptr<hier::PatchData>& pd_old,
+   const boost::shared_ptr<hier::PatchData>& pd_new)
 {
    TBOX_ASSERT(pd_old);
    TBOX_ASSERT(pd_dst);

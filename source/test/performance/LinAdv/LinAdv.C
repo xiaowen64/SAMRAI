@@ -118,8 +118,8 @@ using namespace std;
 LinAdv::LinAdv(
    const string& object_name,
    const tbox::Dimension& dim,
-   tbox::Pointer<tbox::Database> input_db,
-   tbox::Pointer<geom::CartesianGridGeometry> grid_geom,
+   boost::shared_ptr<tbox::Database> input_db,
+   boost::shared_ptr<geom::CartesianGridGeometry> grid_geom,
    SinusoidalFrontTagger* analytical_tagger):
    algs::HyperbolicPatchStrategy(dim),
    d_dim(dim),
@@ -150,8 +150,8 @@ LinAdv::LinAdv(
    /*
     * hier::Variable quantities that define state of linear advection problem.
     */
-   d_uval = new pdat::CellVariable<double>(dim, "uval", 1);
-   d_flux = new pdat::FaceVariable<double>(dim, "flux", 1);
+   d_uval.reset(new pdat::CellVariable<double>(dim, "uval", 1));
+   d_flux.reset(new pdat::FaceVariable<double>(dim, "flux", 1));
 
    /*
     * Default parameters for the numerical method.
@@ -436,15 +436,15 @@ void LinAdv::setupLoadBalancer(
    hier::VariableDatabase* vardb = hier::VariableDatabase::getDatabase();
 
    if (d_use_nonuniform_workload && gridding_algorithm) {
-      tbox::Pointer<mesh::TreeLoadBalancer> load_balancer(
+      boost::shared_ptr<mesh::TreeLoadBalancer> load_balancer(
          gridding_algorithm->getLoadBalanceStrategy(),
-         tbox::__dynamic_cast_tag());
+         boost::detail::dynamic_cast_tag());
 
       if (load_balancer) {
-         d_workload_variable = new pdat::CellVariable<double>(
+         d_workload_variable.reset(new pdat::CellVariable<double>(
                d_dim,
                "workload_variable",
-               1);
+               1));
          d_workload_data_id =
             vardb->registerVariableAndContext(d_workload_variable,
                vardb->getContext("WORKLOAD"),
@@ -488,16 +488,16 @@ void LinAdv::initializeDataOnPatch(
    if (initial_time) {
 
       t_init_first_time->start();
-      const tbox::Pointer<geom::CartesianPatchGeometry> pgeom(
+      const boost::shared_ptr<geom::CartesianPatchGeometry> pgeom(
          patch.getPatchGeometry(),
-         tbox::__dynamic_cast_tag());
+         boost::detail::dynamic_cast_tag());
       const double* dx = pgeom->getDx();
       const double* xlo = pgeom->getXLower();
       const double* xhi = pgeom->getXUpper();
 
-      tbox::Pointer<pdat::CellData<double> > uval(
+      boost::shared_ptr<pdat::CellData<double> > uval(
          patch.getPatchData(d_uval, getDataContext()),
-         tbox::__dynamic_cast_tag());
+         boost::detail::dynamic_cast_tag());
 
 #ifdef DEBUG_CHECK_ASSERTIONS
       TBOX_ASSERT(uval);
@@ -611,9 +611,9 @@ void LinAdv::initializeDataOnPatch(
       if (!patch.checkAllocated(d_workload_data_id)) {
          patch.allocatePatchData(d_workload_data_id);
       }
-      tbox::Pointer<pdat::CellData<double> > workload_data(
+      boost::shared_ptr<pdat::CellData<double> > workload_data(
          patch.getPatchData(d_workload_data_id),
-         tbox::__dynamic_cast_tag());
+         boost::detail::dynamic_cast_tag());
       workload_data->fillAll(1.0);
    }
 
@@ -643,17 +643,17 @@ double LinAdv::computeStableDtOnPatch(
    (void)initial_time;
    (void)dt_time;
 
-   const tbox::Pointer<geom::CartesianPatchGeometry> patch_geom(
+   const boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
       patch.getPatchGeometry(),
-      tbox::__dynamic_cast_tag());
+      boost::detail::dynamic_cast_tag());
    const double* dx = patch_geom->getDx();
 
    const hier::Index ifirst = patch.getBox().lower();
    const hier::Index ilast = patch.getBox().upper();
 
-   tbox::Pointer<pdat::CellData<double> > uval(
+   boost::shared_ptr<pdat::CellData<double> > uval(
       patch.getPatchData(d_uval, getDataContext()),
-      tbox::__dynamic_cast_tag());
+      boost::detail::dynamic_cast_tag());
 
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(uval);
@@ -719,21 +719,21 @@ void LinAdv::computeFluxesOnPatch(
       TBOX_ASSERT(CELLG == FACEG);
 #endif
 
-      const tbox::Pointer<geom::CartesianPatchGeometry> patch_geom(
+      const boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
          patch.getPatchGeometry(),
-         tbox::__dynamic_cast_tag());
+         boost::detail::dynamic_cast_tag());
       const double* dx = patch_geom->getDx();
 
       hier::Box pbox = patch.getBox();
       const hier::Index ifirst = patch.getBox().lower();
       const hier::Index ilast = patch.getBox().upper();
 
-      tbox::Pointer<pdat::CellData<double> > uval(
+      boost::shared_ptr<pdat::CellData<double> > uval(
          patch.getPatchData(d_uval, getDataContext()),
-         tbox::__dynamic_cast_tag());
-      tbox::Pointer<pdat::FaceData<double> > flux(
+         boost::detail::dynamic_cast_tag());
+      boost::shared_ptr<pdat::FaceData<double> > flux(
          patch.getPatchData(d_flux, getDataContext()),
-         tbox::__dynamic_cast_tag());
+         boost::detail::dynamic_cast_tag());
 
       /*
        * Verify that the integrator providing the context correctly
@@ -897,21 +897,21 @@ void LinAdv::compute3DFluxesWithCornerTransport1(
    TBOX_ASSERT(CELLG == FACEG);
 #endif
 
-   const tbox::Pointer<geom::CartesianPatchGeometry> patch_geom(
+   const boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
       patch.getPatchGeometry(),
-      tbox::__dynamic_cast_tag());
+      boost::detail::dynamic_cast_tag());
    const double* dx = patch_geom->getDx();
 
    hier::Box pbox = patch.getBox();
    const hier::Index ifirst = patch.getBox().lower();
    const hier::Index ilast = patch.getBox().upper();
 
-   tbox::Pointer<pdat::CellData<double> > uval(
+   boost::shared_ptr<pdat::CellData<double> > uval(
       patch.getPatchData(d_uval, getDataContext()),
-      tbox::__dynamic_cast_tag());
-   tbox::Pointer<pdat::FaceData<double> > flux(
+      boost::detail::dynamic_cast_tag());
+   boost::shared_ptr<pdat::FaceData<double> > flux(
       patch.getPatchData(d_flux, getDataContext()),
-      tbox::__dynamic_cast_tag());
+      boost::detail::dynamic_cast_tag());
 
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(uval);
@@ -1199,21 +1199,21 @@ void LinAdv::compute3DFluxesWithCornerTransport2(
    TBOX_ASSERT(CELLG == FACEG);
 #endif
 
-   const tbox::Pointer<geom::CartesianPatchGeometry> patch_geom(
+   const boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
       patch.getPatchGeometry(),
-      tbox::__dynamic_cast_tag());
+      boost::detail::dynamic_cast_tag());
    const double* dx = patch_geom->getDx();
 
    hier::Box pbox = patch.getBox();
    const hier::Index ifirst = patch.getBox().lower();
    const hier::Index ilast = patch.getBox().upper();
 
-   tbox::Pointer<pdat::CellData<double> > uval(
+   boost::shared_ptr<pdat::CellData<double> > uval(
       patch.getPatchData(d_uval, getDataContext()),
-      tbox::__dynamic_cast_tag());
-   tbox::Pointer<pdat::FaceData<double> > flux(
+      boost::detail::dynamic_cast_tag());
+   boost::shared_ptr<pdat::FaceData<double> > flux(
       patch.getPatchData(d_flux, getDataContext()),
-      tbox::__dynamic_cast_tag());
+      boost::detail::dynamic_cast_tag());
 
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(uval);
@@ -1432,20 +1432,20 @@ void LinAdv::conservativeDifferenceOnPatch(
    (void)dt;
    (void)at_syncronization;
 
-   const tbox::Pointer<geom::CartesianPatchGeometry> patch_geom(
+   const boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
       patch.getPatchGeometry(),
-      tbox::__dynamic_cast_tag());
+      boost::detail::dynamic_cast_tag());
    const double* dx = patch_geom->getDx();
 
    const hier::Index ifirst = patch.getBox().lower();
    const hier::Index ilast = patch.getBox().upper();
 
-   tbox::Pointer<pdat::CellData<double> > uval(
+   boost::shared_ptr<pdat::CellData<double> > uval(
       patch.getPatchData(d_uval, getDataContext()),
-      tbox::__dynamic_cast_tag());
-   tbox::Pointer<pdat::FaceData<double> > flux(
+      boost::detail::dynamic_cast_tag());
+   boost::shared_ptr<pdat::FaceData<double> > flux(
       patch.getPatchData(d_flux, getDataContext()),
-      tbox::__dynamic_cast_tag());
+      boost::detail::dynamic_cast_tag());
 
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(uval);
@@ -1493,9 +1493,9 @@ void LinAdv::boundaryReset(
    int idir;
    bool bdry_cell = true;
 
-   const tbox::Pointer<geom::CartesianPatchGeometry> patch_geom(
+   const boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
       patch.getPatchGeometry(),
-      tbox::__dynamic_cast_tag());
+      boost::detail::dynamic_cast_tag());
    hier::BoxContainer domain_boxes;
    d_grid_geometry->computePhysicalDomain(domain_boxes,
       patch_geom->getRatio(),
@@ -1612,9 +1612,9 @@ void LinAdv::setPhysicalBoundaryConditions(
    (void)fill_time;
    (void)ghost_width_to_fill;
 
-   tbox::Pointer<pdat::CellData<double> > uval(
+   boost::shared_ptr<pdat::CellData<double> > uval(
       patch.getPatchData(d_uval, getDataContext()),
-      tbox::__dynamic_cast_tag());
+      boost::detail::dynamic_cast_tag());
 
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(uval);
@@ -1731,8 +1731,8 @@ void LinAdv::setPhysicalBoundaryConditions(
 void LinAdv::tagRichardsonExtrapolationCells(
    hier::Patch& patch,
    const int error_level_number,
-   const tbox::Pointer<hier::VariableContext> coarsened_fine,
-   const tbox::Pointer<hier::VariableContext> advanced_coarse,
+   const boost::shared_ptr<hier::VariableContext> coarsened_fine,
+   const boost::shared_ptr<hier::VariableContext> advanced_coarse,
    const double regrid_time,
    const double deltat,
    const int error_coarsen_ratio,
@@ -1742,14 +1742,14 @@ void LinAdv::tagRichardsonExtrapolationCells(
 {
    (void)initial_error;
 
-   const tbox::Pointer<geom::CartesianPatchGeometry> patch_geom(
+   const boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
       patch.getPatchGeometry(),
-      tbox::__dynamic_cast_tag());
+      boost::detail::dynamic_cast_tag());
    hier::Box pbox = patch.getBox();
 
-   tbox::Pointer<pdat::CellData<int> > tags(
+   boost::shared_ptr<pdat::CellData<int> > tags(
       patch.getPatchData(tag_index),
-      tbox::__dynamic_cast_tag());
+      boost::detail::dynamic_cast_tag());
 
    /*
     * Possible tagging criteria includes
@@ -1763,19 +1763,19 @@ void LinAdv::tagRichardsonExtrapolationCells(
    for (int ncrit = 0; ncrit < d_refinement_criteria.getSize(); ncrit++) {
 
       string ref = d_refinement_criteria[ncrit];
-      tbox::Pointer<pdat::CellData<double> > coarsened_fine_var;
-      tbox::Pointer<pdat::CellData<double> > advanced_coarse_var;
+      boost::shared_ptr<pdat::CellData<double> > coarsened_fine_var;
+      boost::shared_ptr<pdat::CellData<double> > advanced_coarse_var;
       int size;
       double tol;
       bool time_allowed;
 
       if (ref == "UVAL_RICHARDSON") {
          coarsened_fine_var =
-            tbox::dynamic_pointer_cast<pdat::CellData<double>,
-                                       hier::PatchData>(patch.getPatchData(d_uval, coarsened_fine));
+            boost::dynamic_pointer_cast<pdat::CellData<double>,
+                                        hier::PatchData>(patch.getPatchData(d_uval, coarsened_fine));
          advanced_coarse_var =
-            tbox::dynamic_pointer_cast<pdat::CellData<double>,
-                                       hier::PatchData>(patch.getPatchData(d_uval, advanced_coarse));
+            boost::dynamic_pointer_cast<pdat::CellData<double>,
+                                        hier::PatchData>(patch.getPatchData(d_uval, advanced_coarse));
          size = d_rich_tol.getSize();
          tol = ((error_level_number < size)
                 ? d_rich_tol[error_level_number]
@@ -1917,14 +1917,14 @@ void LinAdv::tagGradientDetectorCells(
 
    const int error_level_number = patch.getPatchLevelNumber();
 
-   const tbox::Pointer<geom::CartesianPatchGeometry> patch_geom(
+   const boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
       patch.getPatchGeometry(),
-      tbox::__dynamic_cast_tag());
+      boost::detail::dynamic_cast_tag());
    const double* dx = patch_geom->getDx();
 
-   tbox::Pointer<pdat::CellData<int> > tags(
+   boost::shared_ptr<pdat::CellData<int> > tags(
       patch.getPatchData(tag_indx),
-      tbox::__dynamic_cast_tag());
+      boost::detail::dynamic_cast_tag());
 
    hier::Box pbox = patch.getBox();
 
@@ -1939,7 +1939,7 @@ void LinAdv::tagGradientDetectorCells(
    /*
     * Create a set of temporary tags and set to untagged value.
     */
-   tbox::Pointer<pdat::CellData<int> > temp_tags(
+   boost::shared_ptr<pdat::CellData<int> > temp_tags(
       new pdat::CellData<int>(pbox, 1, d_nghosts));
    temp_tags->fillAll(not_refine_tag_val);
 
@@ -1963,9 +1963,9 @@ void LinAdv::tagGradientDetectorCells(
       for (int ncrit = 0; ncrit < d_refinement_criteria.getSize(); ncrit++) {
 
          string ref = d_refinement_criteria[ncrit];
-         tbox::Pointer<pdat::CellData<double> > var(
+         boost::shared_ptr<pdat::CellData<double> > var(
             patch.getPatchData(d_uval, getDataContext()),
-            tbox::__dynamic_cast_tag());
+            boost::detail::dynamic_cast_tag());
 
          TBOX_ASSERT(var);
 
@@ -2152,7 +2152,7 @@ void LinAdv::tagGradientDetectorCells(
 
 #ifdef HAVE_HDF5
 void LinAdv::registerVisItDataWriter(
-   tbox::Pointer<appu::VisItDataWriter> viz_writer)
+   boost::shared_ptr<appu::VisItDataWriter> viz_writer)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(viz_writer);
@@ -2370,7 +2370,7 @@ void LinAdv::printClassData(
  *************************************************************************
  */
 void LinAdv::getFromInput(
-   tbox::Pointer<tbox::Database> db,
+   boost::shared_ptr<tbox::Database> db,
    bool is_from_restart)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
@@ -2430,7 +2430,7 @@ void LinAdv::getFromInput(
    }
 
    if (db->keyExists("Refinement_data")) {
-      tbox::Pointer<tbox::Database> refine_db = db->getDatabase(
+      boost::shared_ptr<tbox::Database> refine_db = db->getDatabase(
             "Refinement_data");
       tbox::Array<string> refinement_keys = refine_db->getAllKeys();
       int num_keys = refinement_keys.getSize();
@@ -2447,7 +2447,7 @@ void LinAdv::getFromInput(
 
       tbox::Array<string> ref_keys_defined(num_keys);
       int def_key_cnt = 0;
-      tbox::Pointer<tbox::Database> error_db;
+      boost::shared_ptr<tbox::Database> error_db;
       for (int i = 0; i < refinement_keys.getSize(); i++) {
 
          string error_key = refinement_keys[i];
@@ -2645,7 +2645,7 @@ void LinAdv::getFromInput(
                           << endl);
       }
 
-      tbox::Pointer<tbox::Database> init_data_db;
+      boost::shared_ptr<tbox::Database> init_data_db;
       if (db->keyExists("Initial_data")) {
          init_data_db = db->getDatabase("Initial_data");
       } else {
@@ -2749,7 +2749,7 @@ void LinAdv::getFromInput(
 
             if (!(init_data_keys[nkey] == "front_position")) {
 
-               tbox::Pointer<tbox::Database> interval_db =
+               boost::shared_ptr<tbox::Database> interval_db =
                   init_data_db->getDatabase(init_data_keys[nkey]);
 
                if (interval_db->keyExists("uval")) {
@@ -2813,7 +2813,8 @@ void LinAdv::getFromInput(
 
    if (db->keyExists("Boundary_data")) {
 
-      tbox::Pointer<tbox::Database> bdry_db = db->getDatabase("Boundary_data");
+      boost::shared_ptr<tbox::Database> bdry_db =
+         db->getDatabase("Boundary_data");
 
       if (d_dim == tbox::Dimension(2)) {
          appu::CartesianBoundaryUtilities2::readBoundaryInput(this,
@@ -2848,7 +2849,7 @@ void LinAdv::getFromInput(
  */
 
 void LinAdv::putToDatabase(
-   tbox::Pointer<tbox::Database> db)
+   boost::shared_ptr<tbox::Database> db)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(db);
@@ -2934,10 +2935,10 @@ void LinAdv::putToDatabase(
  */
 void LinAdv::getFromRestart()
 {
-   tbox::Pointer<tbox::Database> root_db =
+   boost::shared_ptr<tbox::Database> root_db =
       tbox::RestartManager::getManager()->getRootDatabase();
 
-   tbox::Pointer<tbox::Database> db;
+   boost::shared_ptr<tbox::Database> db;
    if (root_db->isDatabase(d_object_name)) {
       db = root_db->getDatabase(d_object_name);
    } else {
@@ -3044,7 +3045,7 @@ void LinAdv::getFromRestart()
  */
 
 void LinAdv::readDirichletBoundaryDataEntry(
-   tbox::Pointer<tbox::Database> db,
+   boost::shared_ptr<tbox::Database> db,
    string& db_name,
    int bdry_location_index)
 {
@@ -3067,7 +3068,7 @@ void LinAdv::readDirichletBoundaryDataEntry(
 }
 
 void LinAdv::readStateDataEntry(
-   tbox::Pointer<tbox::Database> db,
+   boost::shared_ptr<tbox::Database> db,
    const string& db_name,
    int array_indx,
    tbox::Array<double>& uval)
@@ -3115,9 +3116,9 @@ void LinAdv::checkBoundaryData(
    }
 #endif
 
-   const tbox::Pointer<geom::CartesianPatchGeometry> pgeom(
+   const boost::shared_ptr<geom::CartesianPatchGeometry> pgeom(
       patch.getPatchGeometry(),
-      tbox::__dynamic_cast_tag());
+      boost::detail::dynamic_cast_tag());
    const tbox::Array<hier::BoundaryBox> bdry_boxes =
       pgeom->getCodimensionBoundaries(btype);
 

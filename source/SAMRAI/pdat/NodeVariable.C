@@ -33,17 +33,11 @@ NodeVariable<TYPE>::NodeVariable(
    int depth,
    bool fine_boundary_represents_var):
    hier::Variable(name,
-                  tbox::Pointer<SAMRAI::hier::PatchDataFactory>(new
-                                                                NodeDataFactory
-                                                                <TYPE>(depth,
-                                                                       // default zero ghost cells
-                                                                       hier
-                                                                       ::
-                                                                       IntVector
-                                                                       ::
-                                                                       getZero(
-                                                                          dim),
-                                                                       fine_boundary_represents_var))),
+                  boost::shared_ptr<hier::PatchDataFactory>(
+                     new NodeDataFactory<TYPE>(depth,
+                                               // default zero ghost cells
+                                               hier::IntVector::getZero(dim),
+                                               fine_boundary_represents_var))),
 
    d_fine_boundary_represents_var(fine_boundary_represents_var)
 {
@@ -57,7 +51,8 @@ NodeVariable<TYPE>::~NodeVariable()
 template<class TYPE>
 int NodeVariable<TYPE>::getDepth() const
 {
-   tbox::Pointer<NodeDataFactory<TYPE> > factory = this->getPatchDataFactory();
+   boost::shared_ptr<NodeDataFactory<TYPE> > factory =
+      this->getPatchDataFactory();
    TBOX_ASSERT(factory);
    return factory->getDepth();
 }
@@ -75,7 +70,8 @@ int NodeVariable<TYPE>::getDepth() const
 template<class TYPE>
 NodeVariable<TYPE>::NodeVariable(
    const NodeVariable<TYPE>& foo):
-   hier::Variable(NULL, tbox::Pointer<SAMRAI::hier::PatchDataFactory>(NULL))
+   hier::Variable(NULL,
+                  boost::shared_ptr<hier::PatchDataFactory>(NULL))
 {
    NULL_USE(foo);
 }

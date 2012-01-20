@@ -26,7 +26,6 @@
 #include "SAMRAI/algs/HyperbolicPatchStrategy.h"
 #include "SAMRAI/hier/IntVector.h"
 #include "SAMRAI/hier/Patch.h"
-#include "SAMRAI/tbox/Pointer.h"
 #include "SAMRAI/tbox/Serializable.h"
 #include <string>
 using namespace std;
@@ -36,6 +35,8 @@ using namespace std;
 #include "SAMRAI/appu/VisDerivedDataStrategy.h"
 
 #include "SinusoidalFrontTagger.h"
+
+#include <boost/shared_ptr.hpp>
 
 /**
  * The LinAdv class provides routines for a sample application code that
@@ -79,8 +80,8 @@ public:
    LinAdv(
       const string& object_name,
       const tbox::Dimension& dim,
-      tbox::Pointer<tbox::Database> input_db,
-      tbox::Pointer<geom::CartesianGridGeometry> grid_geom,
+      boost::shared_ptr<tbox::Database> input_db,
+      boost::shared_ptr<geom::CartesianGridGeometry> grid_geom,
       SinusoidalFrontTagger* analytical_tagger = NULL);
 
    /**
@@ -197,8 +198,8 @@ public:
    tagRichardsonExtrapolationCells(
       hier::Patch& patch,
       const int error_level_number,
-      const tbox::Pointer<hier::VariableContext> coarsened_fine,
-      const tbox::Pointer<hier::VariableContext> advanced_coarse,
+      const boost::shared_ptr<hier::VariableContext> coarsened_fine,
+      const boost::shared_ptr<hier::VariableContext> advanced_coarse,
       const double regrid_time,
       const double deltat,
       const int error_coarsen_ratio,
@@ -235,7 +236,7 @@ public:
     */
    void
    putToDatabase(
-      tbox::Pointer<tbox::Database> db);
+      boost::shared_ptr<tbox::Database> db);
 
    /**
     * This routine is a concrete implementation of the virtual function
@@ -247,7 +248,7 @@ public:
     */
    void
    readDirichletBoundaryDataEntry(
-      tbox::Pointer<tbox::Database> db,
+      boost::shared_ptr<tbox::Database> db,
       string& db_name,
       int bdry_location_index);
 
@@ -259,7 +260,7 @@ public:
     */
    void
    registerVisItDataWriter(
-      tbox::Pointer<appu::VisItDataWriter> viz_writer);
+      boost::shared_ptr<appu::VisItDataWriter> viz_writer);
 #endif
 
    /**
@@ -305,7 +306,7 @@ private:
     */
    void
    getFromInput(
-      tbox::Pointer<tbox::Database> db,
+      boost::shared_ptr<tbox::Database> db,
       bool is_from_restart);
 
    void
@@ -313,7 +314,7 @@ private:
 
    void
    readStateDataEntry(
-      tbox::Pointer<tbox::Database> db,
+      boost::shared_ptr<tbox::Database> db,
       const string& db_name,
       int array_indx,
       tbox::Array<double>& uval);
@@ -357,28 +358,28 @@ private:
     * object to set up initial data, set physical boundary conditions,
     * and register plot variables.
     */
-   tbox::Pointer<geom::CartesianGridGeometry> d_grid_geometry;
+   boost::shared_ptr<geom::CartesianGridGeometry> d_grid_geometry;
 
 #ifdef HAVE_HDF5
-   tbox::Pointer<appu::VisItDataWriter> d_visit_writer;
+   boost::shared_ptr<appu::VisItDataWriter> d_visit_writer;
 #endif
 
    /*
     * Data items used for nonuniform load balance, if used.
     */
-   tbox::Pointer<pdat::CellVariable<double> > d_workload_variable;
+   boost::shared_ptr<pdat::CellVariable<double> > d_workload_variable;
    int d_workload_data_id;
    bool d_use_nonuniform_workload;
 
    /**
-    * tbox::Pointer to state variable vector - [u]
+    * boost::shared_ptr to state variable vector - [u]
     */
-   tbox::Pointer<pdat::CellVariable<double> > d_uval;
+   boost::shared_ptr<pdat::CellVariable<double> > d_uval;
 
    /**
-    * tbox::Pointer to flux variable vector  - [F]
+    * boost::shared_ptr to flux variable vector  - [F]
     */
-   tbox::Pointer<pdat::FaceVariable<double> > d_flux;
+   boost::shared_ptr<pdat::FaceVariable<double> > d_flux;
 
    /**
     * linear advection velocity vector
@@ -477,9 +478,9 @@ private:
    tbox::Array<double> d_rich_time_max;
    tbox::Array<double> d_rich_time_min;
 
-   tbox::Pointer<tbox::Timer> t_analytical_tag;
-   tbox::Pointer<tbox::Timer> t_init;
-   tbox::Pointer<tbox::Timer> t_init_first_time;
+   boost::shared_ptr<tbox::Timer> t_analytical_tag;
+   boost::shared_ptr<tbox::Timer> t_init;
+   boost::shared_ptr<tbox::Timer> t_init_first_time;
 
 };
 

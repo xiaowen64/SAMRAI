@@ -18,12 +18,12 @@
 #include "SAMRAI/tbox/BalancedDepthFirstTree.h"
 #include "SAMRAI/tbox/Database.h"
 #include "SAMRAI/tbox/SAMRAI_MPI.h"
-#include "SAMRAI/tbox/Pointer.h"
 #include "SAMRAI/tbox/RankGroup.h"
 #include "SAMRAI/tbox/Statistic.h"
 #include "SAMRAI/tbox/Statistician.h"
 #include "SAMRAI/tbox/Timer.h"
 
+#include <boost/shared_ptr.hpp>
 #include <iostream>
 #include <vector>
 #include <set>
@@ -94,8 +94,8 @@ public:
    TreeLoadBalancer(
       const tbox::Dimension& dim,
       const std::string& name = std::string("TreeLoadBalancer"),
-      tbox::Pointer<tbox::Database> input_db =
-         tbox::Pointer<tbox::Database>(NULL));
+      boost::shared_ptr<tbox::Database> input_db =
+         boost::shared_ptr<tbox::Database>((tbox::Database*)NULL));
 
    /*!
     * @brief Virtual destructor releases all internal storage.
@@ -196,7 +196,7 @@ public:
       hier::BoxLevel& balance_box_level,
       hier::Connector& balance_to_anchor,
       hier::Connector& anchor_to_balance,
-      const tbox::Pointer<hier::PatchHierarchy> hierarchy,
+      const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
       const int level_number,
       const hier::Connector& unbalanced_to_attractor,
       const hier::Connector& attractor_to_unbalanced,
@@ -465,7 +465,7 @@ private:
     */
    void
    getFromInput(
-      tbox::Pointer<tbox::Database> db);
+      boost::shared_ptr<tbox::Database> db);
 
    /*!
     * Move Boxes in balance_box_level from ranks outside of
@@ -906,49 +906,49 @@ private:
    /*
     * Performance timers.
     */
-   tbox::Pointer<tbox::Timer> t_load_balance_box_level;
-   tbox::Pointer<tbox::Timer> t_get_map;
-   tbox::Pointer<tbox::Timer> t_use_map;
-   tbox::Pointer<tbox::Timer> t_constrain_size;
-   tbox::Pointer<tbox::Timer> t_map_big_boxes;
-   tbox::Pointer<tbox::Timer> t_load_distribution;
-   tbox::Pointer<tbox::Timer> t_compute_local_load;
-   tbox::Pointer<tbox::Timer> t_compute_global_load;
-   tbox::Pointer<tbox::Timer> t_compute_tree_load;
-   std::vector<tbox::Pointer<tbox::Timer> > t_compute_tree_load_for_cycle;
-   tbox::Pointer<tbox::Timer> t_reassign_loads;
-   tbox::Pointer<tbox::Timer> t_shift_loads_by_swapping;
-   tbox::Pointer<tbox::Timer> t_shift_loads_by_breaking;
-   tbox::Pointer<tbox::Timer> t_find_swap_pair;
-   tbox::Pointer<tbox::Timer> t_break_off_load;
-   tbox::Pointer<tbox::Timer> t_find_bad_cuts;
-   tbox::Pointer<tbox::Timer> t_send_load_to_children;
-   tbox::Pointer<tbox::Timer> t_send_load_to_parent;
-   tbox::Pointer<tbox::Timer> t_get_load_from_children;
-   tbox::Pointer<tbox::Timer> t_get_load_from_parent;
-   tbox::Pointer<tbox::Timer> t_construct_semilocal;
-   tbox::Pointer<tbox::Timer> t_construct_semilocal_comm_wait;
-   tbox::Pointer<tbox::Timer> t_send_edge_to_children;
-   tbox::Pointer<tbox::Timer> t_send_edge_to_parent;
-   tbox::Pointer<tbox::Timer> t_get_edge_from_children;
-   tbox::Pointer<tbox::Timer> t_get_edge_from_parent;
-   tbox::Pointer<tbox::Timer> t_report_loads;
-   tbox::Pointer<tbox::Timer> t_local_balancing;
-   tbox::Pointer<tbox::Timer> t_finish_sends;
-   tbox::Pointer<tbox::Timer> t_pack_load;
-   tbox::Pointer<tbox::Timer> t_unpack_load;
-   tbox::Pointer<tbox::Timer> t_pack_edge;
-   tbox::Pointer<tbox::Timer> t_unpack_edge;
-   tbox::Pointer<tbox::Timer> t_children_load_comm;
-   tbox::Pointer<tbox::Timer> t_parent_load_comm;
-   tbox::Pointer<tbox::Timer> t_children_edge_comm;
-   tbox::Pointer<tbox::Timer> t_parent_edge_comm;
-   tbox::Pointer<tbox::Timer> t_barrier_before;
-   tbox::Pointer<tbox::Timer> t_barrier_after;
-   tbox::Pointer<tbox::Timer> t_child_send_wait;
-   tbox::Pointer<tbox::Timer> t_child_recv_wait;
-   tbox::Pointer<tbox::Timer> t_parent_send_wait;
-   tbox::Pointer<tbox::Timer> t_parent_recv_wait;
+   boost::shared_ptr<tbox::Timer> t_load_balance_box_level;
+   boost::shared_ptr<tbox::Timer> t_get_map;
+   boost::shared_ptr<tbox::Timer> t_use_map;
+   boost::shared_ptr<tbox::Timer> t_constrain_size;
+   boost::shared_ptr<tbox::Timer> t_map_big_boxes;
+   boost::shared_ptr<tbox::Timer> t_load_distribution;
+   boost::shared_ptr<tbox::Timer> t_compute_local_load;
+   boost::shared_ptr<tbox::Timer> t_compute_global_load;
+   boost::shared_ptr<tbox::Timer> t_compute_tree_load;
+   std::vector<boost::shared_ptr<tbox::Timer> > t_compute_tree_load_for_cycle;
+   boost::shared_ptr<tbox::Timer> t_reassign_loads;
+   boost::shared_ptr<tbox::Timer> t_shift_loads_by_swapping;
+   boost::shared_ptr<tbox::Timer> t_shift_loads_by_breaking;
+   boost::shared_ptr<tbox::Timer> t_find_swap_pair;
+   boost::shared_ptr<tbox::Timer> t_break_off_load;
+   boost::shared_ptr<tbox::Timer> t_find_bad_cuts;
+   boost::shared_ptr<tbox::Timer> t_send_load_to_children;
+   boost::shared_ptr<tbox::Timer> t_send_load_to_parent;
+   boost::shared_ptr<tbox::Timer> t_get_load_from_children;
+   boost::shared_ptr<tbox::Timer> t_get_load_from_parent;
+   boost::shared_ptr<tbox::Timer> t_construct_semilocal;
+   boost::shared_ptr<tbox::Timer> t_construct_semilocal_comm_wait;
+   boost::shared_ptr<tbox::Timer> t_send_edge_to_children;
+   boost::shared_ptr<tbox::Timer> t_send_edge_to_parent;
+   boost::shared_ptr<tbox::Timer> t_get_edge_from_children;
+   boost::shared_ptr<tbox::Timer> t_get_edge_from_parent;
+   boost::shared_ptr<tbox::Timer> t_report_loads;
+   boost::shared_ptr<tbox::Timer> t_local_balancing;
+   boost::shared_ptr<tbox::Timer> t_finish_sends;
+   boost::shared_ptr<tbox::Timer> t_pack_load;
+   boost::shared_ptr<tbox::Timer> t_unpack_load;
+   boost::shared_ptr<tbox::Timer> t_pack_edge;
+   boost::shared_ptr<tbox::Timer> t_unpack_edge;
+   boost::shared_ptr<tbox::Timer> t_children_load_comm;
+   boost::shared_ptr<tbox::Timer> t_parent_load_comm;
+   boost::shared_ptr<tbox::Timer> t_children_edge_comm;
+   boost::shared_ptr<tbox::Timer> t_parent_edge_comm;
+   boost::shared_ptr<tbox::Timer> t_barrier_before;
+   boost::shared_ptr<tbox::Timer> t_barrier_after;
+   boost::shared_ptr<tbox::Timer> t_child_send_wait;
+   boost::shared_ptr<tbox::Timer> t_child_recv_wait;
+   boost::shared_ptr<tbox::Timer> t_parent_send_wait;
+   boost::shared_ptr<tbox::Timer> t_parent_recv_wait;
 
    /*
     * Statistics on number of cells and patches generated.

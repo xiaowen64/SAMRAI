@@ -42,8 +42,8 @@ namespace hier {
 
 const int Connector::HIER_CONNECTOR_VERSION = 0;
 
-tbox::Pointer<tbox::Timer> Connector::t_acquire_remote_relationships;
-tbox::Pointer<tbox::Timer> Connector::t_cache_global_reduced_data;
+boost::shared_ptr<tbox::Timer> Connector::t_acquire_remote_relationships;
+boost::shared_ptr<tbox::Timer> Connector::t_cache_global_reduced_data;
 
 tbox::StartupShutdownManager::Handler
 Connector::s_initialize_finalize_handler(
@@ -249,7 +249,7 @@ void Connector::shrinkWidth(const IntVector& new_width)
    const bool base_coarser = !getHeadCoarserFlag() &&
       getBase().getRefinementRatio() != getHead().getRefinementRatio();
 
-   const tbox::Pointer<const GridGeometry>& grid_geom(getBase().getGridGeometry());
+   const boost::shared_ptr<const GridGeometry>& grid_geom(getBase().getGridGeometry());
 
    for (NeighborhoodIterator ei = begin(); ei != end(); ++ei) {
       const BoxId& mapped_box_id = *ei;

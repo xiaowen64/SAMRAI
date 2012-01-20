@@ -38,7 +38,7 @@ bool PatchLevel::inHierarchy() const
 }
 
 SAMRAI_INLINE_KEYWORD
-const tbox::Pointer<Patch>& PatchLevel::getPatch(
+const boost::shared_ptr<Patch>& PatchLevel::getPatch(
    const GlobalId& gid) const
 //   const BlockId& bid) const
 {
@@ -49,7 +49,7 @@ const tbox::Pointer<Patch>& PatchLevel::getPatch(
 }
 
 SAMRAI_INLINE_KEYWORD
-tbox::Pointer<Patch> PatchLevel::getPatch(
+boost::shared_ptr<Patch> PatchLevel::getPatch(
    const BoxId& mapped_box_id) const
 {
    const PatchContainer::const_iterator mi = d_patches.find(mapped_box_id);
@@ -92,19 +92,19 @@ int PatchLevel::getGlobalNumberOfCells() const
 }
 
 SAMRAI_INLINE_KEYWORD
-tbox::Pointer<PatchDescriptor> PatchLevel::getPatchDescriptor() const
+boost::shared_ptr<PatchDescriptor> PatchLevel::getPatchDescriptor() const
 {
    return d_descriptor;
 }
 
 SAMRAI_INLINE_KEYWORD
-tbox::Pointer<PatchFactory> PatchLevel::getPatchFactory() const
+boost::shared_ptr<PatchFactory> PatchLevel::getPatchFactory() const
 {
    return d_factory;
 }
 
 SAMRAI_INLINE_KEYWORD
-tbox::Pointer<GridGeometry> PatchLevel::getGridGeometry() const
+boost::shared_ptr<GridGeometry> PatchLevel::getGridGeometry() const
 {
    return d_geometry;
 }
@@ -167,7 +167,7 @@ void PatchLevel::getBoxes(BoxContainer& boxes, const BlockId& block_id) const
 }
 
 SAMRAI_INLINE_KEYWORD
-const tbox::Pointer<BoxLevel>& PatchLevel::getBoxLevel() const
+const boost::shared_ptr<BoxLevel>& PatchLevel::getBoxLevel() const
 {
    return d_mapped_box_level;
 }
@@ -290,7 +290,7 @@ PatchLevel::Iterator& PatchLevel::Iterator::operator = (
  *************************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-const tbox::Pointer<Patch>& PatchLevel::Iterator::operator * () const
+const boost::shared_ptr<Patch>& PatchLevel::Iterator::operator * () const
 {
    return d_iterator->second;
 }
@@ -301,18 +301,18 @@ const tbox::Pointer<Patch>& PatchLevel::Iterator::operator * () const
  *************************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-const tbox::Pointer<Patch>& PatchLevel::Iterator::operator () () const
+const boost::shared_ptr<Patch>& PatchLevel::Iterator::operator () () const
 {
    return d_iterator->second;
 }
 
 /*
  *************************************************************************
- * Delegate Pointer operations to the Patch pointer.
+ * Delegate boost::shared_ptr operations to the Patch pointer.
  *************************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-const tbox::Pointer<Patch>& PatchLevel::Iterator::operator -> () const
+const boost::shared_ptr<Patch>& PatchLevel::Iterator::operator -> () const
 {
    return d_iterator->second;
 }
@@ -379,7 +379,7 @@ PatchLevel::Iterator::Iterator(
 // Support for backward compatible interface by new PatchLevel::Iterator.
 SAMRAI_INLINE_KEYWORD
 PatchLevel::Iterator::Iterator(
-   const tbox::Pointer<PatchLevel>& patch_level):
+   const boost::shared_ptr<PatchLevel>& patch_level):
    d_iterator(patch_level->d_patches.begin()),
    d_patches(&patch_level->d_patches)
 {
@@ -397,7 +397,7 @@ PatchLevel::Iterator::Iterator(
 // Support for backward compatible interface by new PatchLevel::Iterator.
 SAMRAI_INLINE_KEYWORD
 void PatchLevel::Iterator::initialize(
-   const tbox::Pointer<PatchLevel>& patch_level)
+   const boost::shared_ptr<PatchLevel>& patch_level)
 {
    d_iterator = patch_level->d_patches.begin();
    d_patches = &patch_level->d_patches;

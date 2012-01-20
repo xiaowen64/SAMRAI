@@ -153,7 +153,7 @@ int main(
        * Create input database and parse all data in input file.
        */
 
-      Pointer<InputDatabase> input_db(new InputDatabase("input_db"));
+      boost::shared_ptr<InputDatabase> input_db(new InputDatabase("input_db"));
       tbox::InputManager::getManager()->parseInputFile(input_filename, input_db);
 
       /*
@@ -163,7 +163,7 @@ int main(
        * all name strings in this program.
        */
 
-      Pointer<Database> main_db = input_db->getDatabase("Main");
+      boost::shared_ptr<Database> main_db = input_db->getDatabase("Main");
 
       const tbox::Dimension dim(static_cast<unsigned short>(main_db->getInteger("dim")));
 
@@ -186,13 +186,13 @@ int main(
       /*
        * Generate the GridGeometry.
        */
-      tbox::Pointer<const hier::GridGeometry> grid_geometry;
+      boost::shared_ptr<const hier::GridGeometry> grid_geometry;
       if (input_db->keyExists("GridGeometry")) {
-         grid_geometry = new hier::GridGeometry(
-               dim,
-               "GridGeometry",
-               tbox::Pointer<hier::TransferOperatorRegistry>(),
-               input_db->getDatabase("GridGeometry"));
+         grid_geometry.reset(new hier::GridGeometry(
+            dim,
+            "GridGeometry",
+            boost::shared_ptr<hier::TransferOperatorRegistry>(),
+            input_db->getDatabase("GridGeometry")));
       } else {
          TBOX_ERROR("BoxLevelConnectorUtils test: could not find entry GridGeometry"
             << "\nin input.");
@@ -688,7 +688,7 @@ int main(
    } else {
       tbox::pout << "Process " << std::setw(5) << rank << " aborting."
                  << std::endl;
-      SAMRAI::tbox::Utilities::abort("Aborting due to nonzero fail count",
+      tbox::Utilities::abort("Aborting due to nonzero fail count",
          __FILE__, __LINE__);
    }
 
@@ -714,7 +714,7 @@ void partitionBoxes(
 
    mesh::TreeLoadBalancer load_balancer(mapped_box_level.getDim());
 
-   const tbox::Pointer<hier::PatchHierarchy> hierarchy;
+   const boost::shared_ptr<hier::PatchHierarchy> hierarchy;
 
    hier::Connector dummy_connector;
 
@@ -725,7 +725,7 @@ void partitionBoxes(
       mapped_box_level,
       dummy_connector,
       dummy_connector,
-      tbox::Pointer<hier::PatchHierarchy>(),
+      boost::shared_ptr<hier::PatchHierarchy>(),
       0,
       dummy_connector,
       dummy_connector,
@@ -742,7 +742,8 @@ void shrinkBoxLevel(
    const hier::IntVector& shrinkage,
    const tbox::Array<int>& unshrunken_blocks)
 {
-   const tbox::Pointer<const hier::GridGeometry>& grid_geometry(big_mapped_box_level.getGridGeometry());
+   const boost::shared_ptr<const hier::GridGeometry>& grid_geometry(
+      big_mapped_box_level.getGridGeometry());
 
    const int local_rank = big_mapped_box_level.getMPI().getRank();
 

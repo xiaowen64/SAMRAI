@@ -731,7 +731,7 @@ AsyncCommStage::Member *AsyncCommStage::advanceAny()
  ***********************************************************************
  */
 void AsyncCommStage::setCommunicationWaitTimer(
-   Pointer<Timer> communication_timer)
+   boost::shared_ptr<Timer> communication_timer)
 {
    d_communication_timer = communication_timer;
 }

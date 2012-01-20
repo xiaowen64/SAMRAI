@@ -51,7 +51,7 @@ exhaustiveFindOverlapBoxes(
    hier::Connector& overlap_connector,
    const hier::Box& mapped_box,
    const hier::IntVector& refinement_ratio,
-   const tbox::Pointer<const hier::GridGeometry>& grid_geometry,
+   const boost::shared_ptr<const hier::GridGeometry>& grid_geometry,
    const hier::BoxContainer& search_mapped_boxes);
 
 /*
@@ -110,7 +110,7 @@ int main(
        * Create input database and parse all data in input file.
        */
 
-      Pointer<InputDatabase> input_db(new InputDatabase("input_db"));
+      boost::shared_ptr<InputDatabase> input_db(new InputDatabase("input_db"));
       tbox::InputManager::getManager()->parseInputFile(input_filename, input_db);
 
       /*
@@ -127,7 +127,7 @@ int main(
        * all name strings in this program.
        */
 
-      Pointer<Database> main_db = input_db->getDatabase("Main");
+      boost::shared_ptr<Database> main_db = input_db->getDatabase("Main");
 
       const tbox::Dimension dim(static_cast<unsigned short>(main_db->getInteger("dim")));
 
@@ -153,13 +153,13 @@ int main(
       /*
        * Generate the GridGeometry.
        */
-      tbox::Pointer<const hier::GridGeometry> grid_geometry;
+      boost::shared_ptr<const hier::GridGeometry> grid_geometry;
       if (main_db->keyExists("GridGeometry")) {
-         grid_geometry = new hier::GridGeometry(
-               dim,
-               "GridGeometry",
-               tbox::Pointer<hier::TransferOperatorRegistry>(),
-               main_db->getDatabase("GridGeometry"));
+         grid_geometry.reset(new hier::GridGeometry(
+            dim,
+            "GridGeometry",
+            boost::shared_ptr<hier::TransferOperatorRegistry>(),
+            main_db->getDatabase("GridGeometry")));
       } else {
          TBOX_ERROR("Multiblock tree search test: could not find entry GridGeometry"
             << "\nin input.");
@@ -179,9 +179,10 @@ int main(
       const bool generate_baseline =
          main_db->getBoolWithDefault("generate_baseline", false);
 
-      tbox::Pointer<tbox::HDFDatabase> baseline_db(new tbox::HDFDatabase("mbtree baseline"));
-      tbox::Pointer<tbox::Database> mapped_box_level_db;
-      tbox::Pointer<tbox::Database> connector_db;
+      boost::shared_ptr<tbox::HDFDatabase> baseline_db(
+         new tbox::HDFDatabase("mbtree baseline"));
+      boost::shared_ptr<tbox::Database> mapped_box_level_db;
+      boost::shared_ptr<tbox::Database> connector_db;
       if (generate_baseline) {
          baseline_db->create(baseline_filename);
          mapped_box_level_db = baseline_db->putDatabase("MappedBoxLevel");
@@ -417,7 +418,7 @@ int main(
    } else {
       tbox::pout << "Process " << std::setw(5) << rank << " aborting."
                  << std::endl;
-      SAMRAI::tbox::Utilities::abort("Aborting due to nonzero fail count",
+      tbox::Utilities::abort("Aborting due to nonzero fail count",
          __FILE__, __LINE__);
    }
 
@@ -441,7 +442,7 @@ void breakUpBoxes(
 
    mesh::TreeLoadBalancer load_balancer(mapped_box_level.getDim());
 
-   const tbox::Pointer<hier::PatchHierarchy> hierarchy;
+   const boost::shared_ptr<hier::PatchHierarchy> hierarchy;
 
    hier::Connector dummy_connector;
 
@@ -453,7 +454,7 @@ void breakUpBoxes(
       mapped_box_level,
       dummy_connector,
       dummy_connector,
-      tbox::Pointer<hier::PatchHierarchy>(),
+      boost::shared_ptr<hier::PatchHierarchy>(),
       0,
       dummy_connector,
       dummy_connector,
@@ -474,7 +475,7 @@ void exhaustiveFindOverlapBoxes(
    hier::Connector& overlap_connector,
    const hier::Box& mapped_box,
    const hier::IntVector& refinement_ratio,
-   const tbox::Pointer<const hier::GridGeometry>& grid_geometry,
+   const boost::shared_ptr<const hier::GridGeometry>& grid_geometry,
    const hier::BoxContainer& search_mapped_boxes)
 {
    const hier::BoxId& box_id = mapped_box.getId();

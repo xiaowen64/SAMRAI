@@ -45,7 +45,7 @@ class Statistician;
  * An example use of a Statistic to record the number of gridcells on each
  * processor is as follows:
  *
- *    Pointer<Statistic> stat_num_gridcells =
+ *    boost::shared_ptr<Statistic> stat_num_gridcells =
  *        Statistician::getStatistician()->
  *        getStatistic("NumberGridcells", "PROC_STAT");
  *    ...
@@ -190,7 +190,7 @@ public:
     */
    virtual void
    putToDatabase(
-      Pointer<Database> db);
+      boost::shared_ptr<Database> db);
 
    /**
     * Read restarted times from restart database.  When assertion checking
@@ -198,7 +198,7 @@ public:
     */
    virtual void
    getFromRestart(
-      Pointer<Database> db);
+      boost::shared_ptr<Database> db);
 
    /*
     * These structures are used to store statistic data entries.

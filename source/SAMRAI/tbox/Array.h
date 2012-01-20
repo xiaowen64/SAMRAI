@@ -17,9 +17,6 @@
 namespace SAMRAI {
 namespace tbox {
 
-template<class TYPE>
-class Pointer;
-
 /**
  * Class Array<TYPE> defines a smart pointer to an array of TYPE and
  * manages all reference counting and deallocation of the array (even
@@ -36,7 +33,6 @@ class Pointer;
  * operator.
  *
  * @see tbox::ReferenceCounter
- * @see tbox::Pointer
  */
 
 template<class TYPE>
@@ -59,8 +55,7 @@ public:
    /*
     * The flag value for use in the Array uninitialized constructor.
     */
-   static const typename SAMRAI::tbox::Array<TYPE>::DoNotInitialize
-   UNINITIALIZED;
+   static const typename tbox::Array<TYPE>::DoNotInitialize UNINITIALIZED;
 
    /**
     * Create an array of zero elements.

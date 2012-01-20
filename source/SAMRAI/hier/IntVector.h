@@ -411,7 +411,7 @@ public:
     */
    void
    sortIntVector(
-      const hier::IntVector& values);
+      const IntVector& values);
 
    /**
     * Read an integer vector from an input stream.  The format for
@@ -462,7 +462,7 @@ private:
 
    tbox::Dimension d_dim;
 
-   int d_vector[SAMRAI::tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+   int d_vector[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
 
    static IntVector* s_zeros[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
    static IntVector* s_ones[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];

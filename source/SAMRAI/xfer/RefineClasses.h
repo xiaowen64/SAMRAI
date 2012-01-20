@@ -15,11 +15,11 @@
 
 #include "SAMRAI/tbox/Array.h"
 #include "SAMRAI/tbox/List.h"
-#include "SAMRAI/tbox/Pointer.h"
 #include "SAMRAI/hier/RefineOperator.h"
 #include "SAMRAI/hier/TimeInterpolateOperator.h"
 #include "SAMRAI/xfer/VariableFillPattern.h"
 
+#include <boost/shared_ptr.hpp>
 #include <iostream>
 
 namespace SAMRAI {
@@ -89,12 +89,12 @@ public:
       /*!
        * @brief Refinement operator
        */
-      tbox::Pointer<hier::RefineOperator> d_oprefine;
+      boost::shared_ptr<hier::RefineOperator> d_oprefine;
 
       /*!
        * @brief Time interpolation operator
        */
-      tbox::Pointer<hier::TimeInterpolateOperator> d_optime;
+      boost::shared_ptr<hier::TimeInterpolateOperator> d_optime;
 
       /*!
        * @brief Index of equivalence class where this item belongs.  All
@@ -112,7 +112,7 @@ public:
        * @brief VariableFillPattern that can restrict the stencil of the data
        * filled by the RefineSchedule.
        */
-      tbox::Pointer<VariableFillPattern> d_var_fill_pattern;
+      boost::shared_ptr<VariableFillPattern> d_var_fill_pattern;
    };
 
    /*!
@@ -214,8 +214,8 @@ public:
    void
    insertEquivalenceClassItem(
       RefineClasses::Data& data_item,
-      tbox::Pointer<hier::PatchDescriptor> descriptor =
-         tbox::Pointer<hier::PatchDescriptor>(NULL));
+      boost::shared_ptr<hier::PatchDescriptor> descriptor =
+         boost::shared_ptr<hier::PatchDescriptor>((hier::PatchDescriptor*)NULL));
 
    /*!
     * @brief Check refine data item for validity.
@@ -242,8 +242,8 @@ public:
    bool
    itemIsValid(
       const RefineClasses::Data& data_item,
-      tbox::Pointer<hier::PatchDescriptor> descriptor =
-         tbox::Pointer<hier::PatchDescriptor>(NULL)) const;
+      boost::shared_ptr<hier::PatchDescriptor> descriptor =
+         boost::shared_ptr<hier::PatchDescriptor>((hier::PatchDescriptor*)NULL)) const;
 
    /*!
     * @brief Compare RefineClasses object with another RefineClasses object;
@@ -268,9 +268,9 @@ public:
     */
    bool
    classesMatch(
-      tbox::Pointer<RefineClasses> test_classes,
-      tbox::Pointer<hier::PatchDescriptor> descriptor =
-         tbox::Pointer<hier::PatchDescriptor>(NULL)) const;
+      boost::shared_ptr<RefineClasses> test_classes,
+      boost::shared_ptr<hier::PatchDescriptor> descriptor =
+         boost::shared_ptr<hier::PatchDescriptor>((hier::PatchDescriptor*)NULL)) const;
 
    /*!
     * @brief Compare RefineClasses::Data objects for equivalence;
@@ -310,8 +310,8 @@ public:
    itemsAreEquivalent(
       const RefineClasses::Data& data1,
       const RefineClasses::Data& data2,
-      tbox::Pointer<hier::PatchDescriptor> descriptor =
-         tbox::Pointer<hier::PatchDescriptor>(NULL)) const;
+      boost::shared_ptr<hier::PatchDescriptor> descriptor =
+         boost::shared_ptr<hier::PatchDescriptor>((hier::PatchDescriptor*)NULL)) const;
 
    /*!
     * @brief Get the size that has been allocated for the array storing refine
@@ -383,7 +383,7 @@ private:
    patchDataMatch(
       int item_id1,
       int item_id2,
-      tbox::Pointer<hier::PatchDescriptor> pd) const;
+      boost::shared_ptr<hier::PatchDescriptor> pd) const;
 
    /*!
     * @brief Determine the equivalence class index of given RefineClasses::Data
@@ -402,7 +402,7 @@ private:
    int
    getEquivalenceClassIndex(
       const RefineClasses::Data& data,
-      tbox::Pointer<hier::PatchDescriptor> descriptor) const;
+      boost::shared_ptr<hier::PatchDescriptor> descriptor) const;
 
    /*!
     * The default length of the refine item array.

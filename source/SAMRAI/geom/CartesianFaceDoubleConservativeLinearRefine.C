@@ -122,14 +122,14 @@ CartesianFaceDoubleConservativeLinearRefine()
 }
 
 bool CartesianFaceDoubleConservativeLinearRefine::findRefineOperator(
-   const tbox::Pointer<hier::Variable>& var,
+   const boost::shared_ptr<hier::Variable>& var,
    const std::string& op_name) const
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, *var);
 
-   const tbox::Pointer<pdat::FaceVariable<double> > cast_var(
+   const boost::shared_ptr<pdat::FaceVariable<double> > cast_var(
       var,
-      tbox::__dynamic_cast_tag());
+      boost::detail::dynamic_cast_tag());
    if (cast_var && (op_name == getOperatorName())) {
       return true;
    } else {
@@ -159,12 +159,12 @@ void CartesianFaceDoubleConservativeLinearRefine::refine(
    const tbox::Dimension& dim(getDim());
    TBOX_DIM_ASSERT_CHECK_DIM_ARGS3(dim, fine, coarse, ratio);
 
-   tbox::Pointer<pdat::FaceData<double> > cdata(
+   boost::shared_ptr<pdat::FaceData<double> > cdata(
       coarse.getPatchData(src_component),
-      tbox::__dynamic_cast_tag());
-   tbox::Pointer<pdat::FaceData<double> > fdata(
+      boost::detail::dynamic_cast_tag());
+   boost::shared_ptr<pdat::FaceData<double> > fdata(
       fine.getPatchData(dst_component),
-      tbox::__dynamic_cast_tag());
+      boost::detail::dynamic_cast_tag());
 
    const pdat::FaceOverlap* t_overlap =
       dynamic_cast<const pdat::FaceOverlap *>(&fine_overlap);
@@ -182,12 +182,12 @@ void CartesianFaceDoubleConservativeLinearRefine::refine(
    const hier::Index filo = fdata->getGhostBox().lower();
    const hier::Index fihi = fdata->getGhostBox().upper();
 
-   const tbox::Pointer<CartesianPatchGeometry> cgeom(
+   const boost::shared_ptr<CartesianPatchGeometry> cgeom(
       coarse.getPatchGeometry(),
-      tbox::__dynamic_cast_tag());
-   const tbox::Pointer<CartesianPatchGeometry> fgeom(
+      boost::detail::dynamic_cast_tag());
+   const boost::shared_ptr<CartesianPatchGeometry> fgeom(
       fine.getPatchGeometry(),
-      tbox::__dynamic_cast_tag());
+      boost::detail::dynamic_cast_tag());
 
    for (int axis = 0; axis < dim.getValue(); axis++) {
       const hier::BoxContainer& boxes = t_overlap->getDestinationBoxContainer(axis);

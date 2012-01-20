@@ -38,9 +38,9 @@ Database::Serializable::~Serializable()
  ************************************************************************
  */
 
-Pointer<Database> Database::getDatabaseWithDefault(
+boost::shared_ptr<Database> Database::getDatabaseWithDefault(
    const std::string& key,
-   const Pointer<Database>& defaultvalue)
+   const boost::shared_ptr<Database>& defaultvalue)
 {
    TBOX_ASSERT(!key.empty());
 

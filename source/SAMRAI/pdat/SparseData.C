@@ -622,7 +622,7 @@ SparseData<BOX_GEOMETRY>::unpackStream(
 template<typename BOX_GEOMETRY>
 void
 SparseData<BOX_GEOMETRY>::getSpecializedFromDatabase(
-   tbox::Pointer<tbox::Database> db)
+   boost::shared_ptr<tbox::Database> db)
 {
    TBOX_ASSERT(db);
 
@@ -685,7 +685,7 @@ SparseData<BOX_GEOMETRY>::getSpecializedFromDatabase(
 
       // get the next item
       if (db->isDatabase(index_keyword)) {
-         tbox::Pointer<tbox::Database> item_db =
+         boost::shared_ptr<tbox::Database> item_db =
             db->getDatabase(index_keyword);
 
          // unpack the index
@@ -753,7 +753,7 @@ SparseData<BOX_GEOMETRY>::getSpecializedFromDatabase(
 template<typename BOX_GEOMETRY>
 void
 SparseData<BOX_GEOMETRY>::putSpecializedToDatabase(
-   tbox::Pointer<tbox::Database> db)
+   boost::shared_ptr<tbox::Database> db)
 {
    TBOX_ASSERT(db);
 
@@ -821,7 +821,7 @@ SparseData<BOX_GEOMETRY>::putSpecializedToDatabase(
          index_array[i] = index(i);
       }
 
-      tbox::Pointer<tbox::Database> item_db =
+      boost::shared_ptr<tbox::Database> item_db =
          db->putDatabase(index_keyword);
 
       item_db->putIntegerArray(index_keyword, index_array);

@@ -34,7 +34,7 @@ int Variable::s_instance_counter = 0;
 
 Variable::Variable(
    const std::string& name,
-   const tbox::Pointer<PatchDataFactory> factory):
+   const boost::shared_ptr<PatchDataFactory> factory):
    d_dim(factory->getDim()),
    d_name(name),
    d_factory(factory)

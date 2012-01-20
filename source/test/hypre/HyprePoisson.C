@@ -54,22 +54,22 @@ namespace SAMRAI {
 HyprePoisson::HyprePoisson(
    const string& object_name,
    const tbox::Dimension& dim,
-   tbox::Pointer<tbox::Database> database):
+   boost::shared_ptr<tbox::Database> database):
    d_object_name(object_name),
    d_dim(dim),
-   d_hierarchy(NULL),
+   d_hierarchy(),
    d_poisson_hypre(dim,
                    object_name + "::poisson_hypre",
                    (database &&
                     database->isDatabase("CellPoissonHypreSolver")) ?
                    database->getDatabase("CellPoissonHypreSolver") :
-                   tbox::Pointer<tbox::Database>(NULL)),
+                   boost::shared_ptr<tbox::Database>()),
    d_bc_coefs(dim,
               object_name + "::bc_coefs",
               (database &&
                database->isDatabase("bc_coefs")) ?
               database->getDatabase("bc_coefs") :
-              tbox::Pointer<tbox::Database>(NULL)),
+              boost::shared_ptr<tbox::Database>()),
    d_context()
 {
 
@@ -84,7 +84,7 @@ HyprePoisson::HyprePoisson(
     * Register variables with hier::VariableDatabase
     * and get the descriptor indices for those variables.
     */
-   tbox::Pointer<pdat::CellVariable<double> > comp_soln(
+   boost::shared_ptr<pdat::CellVariable<double> > comp_soln(
       new pdat::CellVariable<double>(d_dim,
                                      object_name + ":computed solution",
                                      1));
@@ -93,14 +93,14 @@ HyprePoisson::HyprePoisson(
          comp_soln,
          d_context,
          hier::IntVector(d_dim, 1) /* ghost cell width is 1 for stencil widths */);
-   tbox::Pointer<pdat::CellVariable<double> > exact_solution(
+   boost::shared_ptr<pdat::CellVariable<double> > exact_solution(
       new pdat::CellVariable<double>(d_dim, object_name + ":exact solution"));
    d_exact_id =
       vdb->registerVariableAndContext(
          exact_solution,
          d_context,
          hier::IntVector(d_dim, 1) /* ghost cell width is 1 in case needed */);
-   tbox::Pointer<pdat::CellVariable<double> > rhs_variable(
+   boost::shared_ptr<pdat::CellVariable<double> > rhs_variable(
       new pdat::CellVariable<double>(
          d_dim,
          object_name
@@ -130,12 +130,12 @@ HyprePoisson::~HyprePoisson()
  *************************************************************************
  */
 void HyprePoisson::initializeLevelData(
-   const tbox::Pointer<hier::PatchHierarchy> hierarchy,
+   const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
    const int level_number,
    const double init_data_time,
    const bool can_be_refined,
    const bool initial_time,
-   const tbox::Pointer<hier::PatchLevel> old_level,
+   const boost::shared_ptr<hier::PatchLevel> old_level,
    const bool allocate_data)
 {
    (void)init_data_time;
@@ -143,12 +143,12 @@ void HyprePoisson::initializeLevelData(
    (void)initial_time;
    (void)old_level;
 
-   tbox::Pointer<hier::PatchHierarchy> patch_hierarchy = hierarchy;
-   tbox::Pointer<geom::CartesianGridGeometry> grid_geom(
+   boost::shared_ptr<hier::PatchHierarchy> patch_hierarchy = hierarchy;
+   boost::shared_ptr<geom::CartesianGridGeometry> grid_geom(
       patch_hierarchy->getGridGeometry(),
-      tbox::__dynamic_cast_tag());
+      boost::detail::dynamic_cast_tag());
 
-   tbox::Pointer<hier::PatchLevel> level =
+   boost::shared_ptr<hier::PatchLevel> level =
       hierarchy->getPatchLevel(level_number);
 
    /*
@@ -166,22 +166,22 @@ void HyprePoisson::initializeLevelData(
    hier::PatchLevel::Iterator pi(*level);
    for (pi.initialize(*level); pi; pi++) {
 
-      tbox::Pointer<hier::Patch> patch = *pi;
+      boost::shared_ptr<hier::Patch> patch = *pi;
       if (!patch) {
          TBOX_ERROR(d_object_name
             << ": Cannot find patch.  Null patch pointer.");
       }
       hier::Box pbox = patch->getBox();
-      tbox::Pointer<geom::CartesianPatchGeometry> patch_geom(
+      boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
          patch->getPatchGeometry(),
-         tbox::__dynamic_cast_tag());
+         boost::detail::dynamic_cast_tag());
 
-      tbox::Pointer<pdat::CellData<double> > exact_data(
+      boost::shared_ptr<pdat::CellData<double> > exact_data(
          patch->getPatchData(d_exact_id),
-        tbox::__dynamic_cast_tag());
-      tbox::Pointer<pdat::CellData<double> > rhs_data(
+        boost::detail::dynamic_cast_tag());
+      boost::shared_ptr<pdat::CellData<double> > rhs_data(
          patch->getPatchData(d_rhs_id),
-         tbox::__dynamic_cast_tag());
+         boost::detail::dynamic_cast_tag());
 
       /*
        * Set source function and exact solution.
@@ -220,7 +220,7 @@ void HyprePoisson::initializeLevelData(
  *************************************************************************
  */
 void HyprePoisson::resetHierarchyConfiguration(
-   tbox::Pointer<hier::PatchHierarchy> new_hierarchy,
+   boost::shared_ptr<hier::PatchHierarchy> new_hierarchy,
    int coarsest_level,
    int finest_level)
 {
@@ -250,14 +250,14 @@ bool HyprePoisson::solvePoisson()
     * The easiest way to do this is to just write 0 everywhere,
     * simultaneous setting the boundary values and initial guess.
     */
-   tbox::Pointer<hier::PatchLevel> level = d_hierarchy->getPatchLevel(
+   boost::shared_ptr<hier::PatchLevel> level = d_hierarchy->getPatchLevel(
          level_number);
    hier::PatchLevel::Iterator ip(level);
    for ( ; ip; ip++) {
-      tbox::Pointer<hier::Patch> patch = *ip;
-      tbox::Pointer<pdat::CellData<double> > data(
+      boost::shared_ptr<hier::Patch> patch = *ip;
+      boost::shared_ptr<pdat::CellData<double> > data(
          patch->getPatchData(d_comp_soln_id),
-         tbox::__dynamic_cast_tag());
+         boost::detail::dynamic_cast_tag());
       data->fill(0.0);
    }
    // d_poisson_hypre.setBoundaries( "Dirichlet" );
@@ -366,12 +366,12 @@ bool HyprePoisson::packDerivedDataIntoDoubleBuffer(
    pdat::CellData<double>::Iterator icell(patch.getBox());
 
    if (variable_name == "Error") {
-      tbox::Pointer<pdat::CellData<double> > current_solution_(
+      boost::shared_ptr<pdat::CellData<double> > current_solution_(
          patch.getPatchData(d_comp_soln_id),
-         tbox::__dynamic_cast_tag());
-      tbox::Pointer<pdat::CellData<double> > exact_solution_(
+         boost::detail::dynamic_cast_tag());
+      boost::shared_ptr<pdat::CellData<double> > exact_solution_(
          patch.getPatchData(d_exact_id),
-         tbox::__dynamic_cast_tag());
+         boost::detail::dynamic_cast_tag());
       pdat::CellData<double>& current_solution = *current_solution_;
       pdat::CellData<double>& exact_solution = *exact_solution_;
       for ( ; icell; icell++) {

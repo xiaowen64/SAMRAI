@@ -10,7 +10,6 @@
 
 #include "SAMRAI/tbox/Logger.h"
 #include "SAMRAI/tbox/PIO.h"
-#include "SAMRAI/tbox/StartupShutdownManager.h"
 
 namespace SAMRAI {
 namespace tbox {
@@ -90,11 +89,11 @@ Logger::Logger():
    /*
     * Initializers for default logging methods.
     */
-   d_abort_appender = new AbortAppender();
+   d_abort_appender.reset(new AbortAppender());
 
-   d_warning_appender = new WarningAppender();
+   d_warning_appender.reset(new WarningAppender());
 
-   d_debug_appender = new DebugAppender();
+   d_debug_appender.reset(new DebugAppender());
 
 }
 
@@ -166,17 +165,17 @@ void Logger::logDebug(
  * Set appenders.
  */
 void Logger::setAbortAppender(
-   tbox::Pointer<Appender> appender) {
+   boost::shared_ptr<Appender> appender) {
    d_abort_appender = appender;
 }
 
 void Logger::setWarningAppender(
-   tbox::Pointer<Appender> appender) {
+   boost::shared_ptr<Appender> appender) {
    d_warning_appender = appender;
 }
 
 void Logger::setDebugAppender(
-   tbox::Pointer<Appender> appender) {
+   boost::shared_ptr<Appender> appender) {
    d_debug_appender = appender;
 }
 

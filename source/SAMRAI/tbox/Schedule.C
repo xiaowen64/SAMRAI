@@ -26,7 +26,7 @@
 namespace SAMRAI {
 namespace tbox {
 
-typedef List<Pointer<Transaction> >::Iterator Iterator;
+typedef List<boost::shared_ptr<Transaction> >::Iterator Iterator;
 
 const int Schedule::s_default_first_tag = 0;
 const int Schedule::s_default_second_tag = 1;
@@ -87,7 +87,7 @@ Schedule::~Schedule()
  *************************************************************************
  */
 void Schedule::addTransaction(
-   const Pointer<Transaction>& transaction)
+   const boost::shared_ptr<Transaction>& transaction)
 {
    const int src_id = transaction->getSourceProcessor();
    const int dst_id = transaction->getDestinationProcessor();
@@ -111,7 +111,7 @@ void Schedule::addTransaction(
  *************************************************************************
  */
 void Schedule::appendTransaction(
-   const Pointer<Transaction>& transaction)
+   const boost::shared_ptr<Transaction>& transaction)
 {
    const int src_id = transaction->getSourceProcessor();
    const int dst_id = transaction->getDestinationProcessor();
@@ -263,7 +263,7 @@ void Schedule::postReceives()
       TBOX_ASSERT(mi->first == recv_coms[icom].getPeerRank());
 
       // Compute incoming message size, if possible.
-      const List<Pointer<Transaction> >& transactions = mi->second;
+      const List<boost::shared_ptr<Transaction> >& transactions = mi->second;
       unsigned int byte_count = 0;
       bool can_estimate_incoming_message_size = true;
       for (Iterator r(transactions); r; r++) {
@@ -337,7 +337,7 @@ void Schedule::postSends()
       TBOX_ASSERT(mi->first == send_coms[icom].getPeerRank());
 
       // Compute message size and whether receiver can estimate it.
-      const List<Pointer<Transaction> >& transactions = mi->second;
+      const List<boost::shared_ptr<Transaction> >& transactions = mi->second;
       size_t byte_count = 0;
       bool can_estimate_incoming_message_size = true;
       for (Iterator pack(transactions); pack; pack++) {
@@ -522,7 +522,7 @@ void Schedule::printClassData(
 
    for (TransactionSets::const_iterator ss = d_send_sets.begin();
         ss != d_send_sets.end(); ++ss) {
-      const List<Pointer<Transaction> >& send_set = ss->second;
+      const List<boost::shared_ptr<Transaction> >& send_set = ss->second;
       stream << "Send Set: " << ss->first << std::endl;
       for (Iterator send(send_set); send; send++) {
          send()->printClassData(stream);
@@ -531,7 +531,7 @@ void Schedule::printClassData(
 
    for (TransactionSets::const_iterator rs = d_recv_sets.begin();
         rs != d_recv_sets.end(); ++rs) {
-      const List<Pointer<Transaction> >& recv_set = rs->second;
+      const List<boost::shared_ptr<Transaction> >& recv_set = rs->second;
       stream << "Recv Set: " << rs->first << std::endl;
       for (Iterator recv(recv_set); recv; recv++) {
          recv()->printClassData(stream);

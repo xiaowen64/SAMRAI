@@ -11,6 +11,8 @@
 #ifndef included_hier_BoxContainerIterator
 #define included_hier_BoxContainerIterator
 
+#include "SAMRAI/SAMRAI_config.h"
+
 #include <list>
 #include <set>
 

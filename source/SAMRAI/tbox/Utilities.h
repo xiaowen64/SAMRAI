@@ -151,7 +151,7 @@ private:
    do {                                      \
       std::ostringstream tboxos;                                        \
       tboxos << X << std::ends;                                 \
-      SAMRAI::tbox::Utilities::abort(tboxos.str(), __FILE__, __LINE__); \
+      tbox::Utilities::abort(tboxos.str(), __FILE__, __LINE__); \
    } while (0)
 
 /*!
@@ -161,7 +161,7 @@ private:
    do {                                    \
       std::ostringstream tboxos;                                        \
       tboxos << X << std::ends;                                 \
-      SAMRAI::tbox::Logger::getInstance()->logWarning( \
+      tbox::Logger::getInstance()->logWarning( \
          tboxos.str(), __FILE__, __LINE__); \
    } while (0)
 
@@ -172,7 +172,7 @@ private:
    do {                                      \
       std::ostringstream tboxos;                                        \
       tboxos << X << std::ends;                                 \
-      SAMRAI::tbox::Logger::getInstance()->logDebug( \
+      tbox::Logger::getInstance()->logDebug( \
          tboxos.str(), __FILE__, __LINE__); \
    } while (0)
 
@@ -189,7 +189,7 @@ private:
       if (!(EXP)) {                                           \
          std::ostringstream tboxos;                             \
          tboxos << "Failed assertion: " << # EXP << std::ends;        \
-         SAMRAI::tbox::Utilities::abort(tboxos.str(), __FILE__, __LINE__); \
+         tbox::Utilities::abort(tboxos.str(), __FILE__, __LINE__); \
       }                                                         \
    } while (0)
 #else
@@ -215,7 +215,7 @@ private:
       if (!(EXP)) {                                           \
          std::ostringstream tboxos;                             \
          tboxos << "Failed assertion: " << # EXP << std::endl << # MSG << std::ends; \
-         SAMRAI::tbox::Utilities::abort(tboxos.str(), __FILE__, __LINE__); \
+         tbox::Utilities::abort(tboxos.str(), __FILE__, __LINE__); \
       }                                                         \
    } while (0)
 #else
@@ -243,7 +243,7 @@ private:
       if (!(EXP)) {                                           \
          std::ostringstream tboxos;                             \
          tboxos << "Failed assertion: " << # EXP << std::ends;        \
-         SAMRAI::tbox::Utilities::abort(tboxos.str(), __FILE__, __LINE__); \
+         tbox::Utilities::abort(tboxos.str(), __FILE__, __LINE__); \
       }                                                         \
    } while (0)
 #else
@@ -419,7 +419,7 @@ private:
       if (!(EXP)) {                                                   \
          std::ostringstream tboxos;                                     \
          tboxos << "Failed dimension assertion: " << # EXP << std::ends; \
-         SAMRAI::tbox::Utilities::abort(tboxos.str(), __FILE__, __LINE__); \
+         tbox::Utilities::abort(tboxos.str(), __FILE__, __LINE__); \
       }                                                                 \
    } while (0)
 
@@ -449,7 +449,7 @@ private:
    do {                                           \
       if (ierr) {                                                               \
          std::ostringstream tboxos;                                                     \
-         SAMRAI::tbox::Utilities::abort(tboxos.str(), __FILE__, __LINE__);      \
+         tbox::Utilities::abort(tboxos.str(), __FILE__, __LINE__);      \
       }                                                                         \
    } while (0)
 #endif

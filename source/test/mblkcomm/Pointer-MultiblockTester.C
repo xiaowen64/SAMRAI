@@ -8,12 +8,12 @@
  *
  ************************************************************************/
 
-#include "SAMRAI/tbox/Pointer.h"
-#include "SAMRAI/tbox/Pointer.C"
 #include "MultiblockTester.h"
+
+#include <boost/shared_ptr.hpp>
 
 using namespace SAMRAI;
 
 #ifndef LACKS_EXPLICIT_TEMPLATE_INSTANTIATION
-template class tbox::Pointer<MultiblockTester>;
+template class boost::shared_ptr<MultiblockTester>;
 #endif

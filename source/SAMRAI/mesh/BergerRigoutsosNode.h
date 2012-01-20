@@ -245,7 +245,7 @@ public:
       hier::Connector& tag_to_new,
       hier::Connector& new_to_tag,
       const hier::Box& bound_box,
-      const tbox::Pointer<hier::PatchLevel> tag_level,
+      const boost::shared_ptr<hier::PatchLevel> tag_level,
       const tbox::SAMRAI_MPI& mpi_object);
 
    //@{
@@ -371,7 +371,7 @@ public:
       /*!
        * @brief Level where tags live.
        */
-      tbox::Pointer<hier::PatchLevel> tag_level;
+      boost::shared_ptr<hier::PatchLevel> tag_level;
 
       /*!
        * @brief BoxLevel associated with tag_level.
@@ -477,19 +477,19 @@ public:
 
       //@{
       //! @name Performance monitors
-      static tbox::Pointer<tbox::Timer> t_cluster;
-      static tbox::Pointer<tbox::Timer> t_cluster_and_compute_relationships;
-      static tbox::Pointer<tbox::Timer> t_continue_algorithm;
-      static tbox::Pointer<tbox::Timer> t_compute;
-      static tbox::Pointer<tbox::Timer> t_comm_wait;
-      static tbox::Pointer<tbox::Timer> t_MPI_wait;
-      static tbox::Pointer<tbox::Timer> t_compute_new_graph_relationships;
-      static tbox::Pointer<tbox::Timer> t_share_new_relationships;
-      static tbox::Pointer<tbox::Timer> t_share_new_relationships_send;
-      static tbox::Pointer<tbox::Timer> t_share_new_relationships_recv;
-      static tbox::Pointer<tbox::Timer> t_share_new_relationships_unpack;
-      static tbox::Pointer<tbox::Timer> t_local_tasks;
-      static tbox::Pointer<tbox::Timer> t_local_histogram;
+      static boost::shared_ptr<tbox::Timer> t_cluster;
+      static boost::shared_ptr<tbox::Timer> t_cluster_and_compute_relationships;
+      static boost::shared_ptr<tbox::Timer> t_continue_algorithm;
+      static boost::shared_ptr<tbox::Timer> t_compute;
+      static boost::shared_ptr<tbox::Timer> t_comm_wait;
+      static boost::shared_ptr<tbox::Timer> t_MPI_wait;
+      static boost::shared_ptr<tbox::Timer> t_compute_new_graph_relationships;
+      static boost::shared_ptr<tbox::Timer> t_share_new_relationships;
+      static boost::shared_ptr<tbox::Timer> t_share_new_relationships_send;
+      static boost::shared_ptr<tbox::Timer> t_share_new_relationships_recv;
+      static boost::shared_ptr<tbox::Timer> t_share_new_relationships_unpack;
+      static boost::shared_ptr<tbox::Timer> t_local_tasks;
+      static boost::shared_ptr<tbox::Timer> t_local_histogram;
       /*
        * Multi-stage timers.  These are used in continueAlgorithm()
        * instead of the methods they time, because what they time may
@@ -497,11 +497,11 @@ public:
        * timer t_continue_algorithm.  They provide timing breakdown
        * for the different stages.
        */
-      static tbox::Pointer<tbox::Timer> t_reduce_histogram;
-      static tbox::Pointer<tbox::Timer> t_bcast_acceptability;
-      static tbox::Pointer<tbox::Timer> t_gather_grouping_criteria;
-      static tbox::Pointer<tbox::Timer> t_bcast_child_groups;
-      static tbox::Pointer<tbox::Timer> t_bcast_to_dropouts;
+      static boost::shared_ptr<tbox::Timer> t_reduce_histogram;
+      static boost::shared_ptr<tbox::Timer> t_bcast_acceptability;
+      static boost::shared_ptr<tbox::Timer> t_gather_grouping_criteria;
+      static boost::shared_ptr<tbox::Timer> t_bcast_child_groups;
+      static boost::shared_ptr<tbox::Timer> t_bcast_to_dropouts;
       //@}
 
       //@{
@@ -547,7 +547,7 @@ public:
     */
    BergerRigoutsosNode(
       CommonParams* common_params,
-      mesh::BergerRigoutsosNode* parent,
+      BergerRigoutsosNode* parent,
       const int child_number,
       const hier::BlockId& block_id, 
       const hier::LocalId& first_local_id);
@@ -1001,4 +1001,4 @@ public:
 }
 }
 
-#endif  // included_mesh::BergerRigoutsosNode
+#endif  // included_mesh_BergerRigoutsosNode

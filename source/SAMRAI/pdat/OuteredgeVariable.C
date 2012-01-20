@@ -32,11 +32,8 @@ OuteredgeVariable<TYPE>::OuteredgeVariable(
    const std::string& name,
    int depth):
    hier::Variable(name,
-                  tbox::Pointer<SAMRAI::hier::PatchDataFactory>(new
-                                                                OuteredgeDataFactory
-                                                                <
-                                                                   TYPE>(dim,
-                                                                         depth)))
+                  boost::shared_ptr<hier::PatchDataFactory>(
+                     new OuteredgeDataFactory<TYPE>(dim, depth)))
 {
 }
 
@@ -48,7 +45,7 @@ OuteredgeVariable<TYPE>::~OuteredgeVariable()
 template<class TYPE>
 int OuteredgeVariable<TYPE>::getDepth() const
 {
-   tbox::Pointer<OuteredgeDataFactory<TYPE> > factory =
+   boost::shared_ptr<OuteredgeDataFactory<TYPE> > factory =
       this->getPatchDataFactory();
    TBOX_ASSERT(factory);
    return factory->getDepth();
@@ -67,7 +64,8 @@ int OuteredgeVariable<TYPE>::getDepth() const
 template<class TYPE>
 OuteredgeVariable<TYPE>::OuteredgeVariable(
    const OuteredgeVariable<TYPE>& foo):
-   hier::Variable(NULL, tbox::Pointer<SAMRAI::hier::PatchDataFactory>(NULL))
+   hier::Variable(NULL,
+                  boost::shared_ptr<hier::PatchDataFactory>(NULL))
 {
    NULL_USE(foo);
 }

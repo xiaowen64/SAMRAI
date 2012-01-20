@@ -19,7 +19,7 @@ BoxGeometry::BoxGeometry()
 }
 
 SAMRAI_INLINE_KEYWORD
-tbox::Pointer<BoxOverlap>
+boost::shared_ptr<BoxOverlap>
 BoxGeometry::calculateOverlap(
    const BoxGeometry& src_geometry,
    const Box& src_mask,

@@ -38,7 +38,6 @@
 #include "SAMRAI/hier/IntVector.h"
 #include "SAMRAI/hier/Patch.h"
 #include "SAMRAI/hier/PatchDataFactory.h"
-#include "SAMRAI/tbox/Pointer.h"
 #include "SAMRAI/hier/ProcessorMapping.h"
 #include <string>
 
@@ -49,6 +48,8 @@
 
 #include "SAMRAI/math/PatchCellDataOpsReal.h"
 
+#include <boost/shared_ptr.hpp>
+
 // using namespace std;
 using namespace SAMRAI;
 
@@ -57,7 +58,7 @@ static bool
 doubleDataSameAsValue(
    int desc_id,
    double value,
-   tbox::Pointer<hier::Patch> patch);
+   boost::shared_ptr<hier::Patch> patch);
 
 int main(
    int argc,
@@ -114,7 +115,7 @@ int main(
       hier::ComponentSelector patch_components;
 
       hier::Box patch_node(patch_box, hier::LocalId::getZero(), mpi.getRank());
-      tbox::Pointer<hier::Patch> tpatch(
+      boost::shared_ptr<hier::Patch> tpatch(
          new hier::Patch(
             patch_node,
             hier::VariableDatabase::getDatabase()->getPatchDescriptor()));
@@ -122,11 +123,11 @@ int main(
       /* Make a variety of data on the patch. */
 
       /* Make three contexts for patch */
-      tbox::Pointer<hier::VariableContext> ghost_width_1_context =
+      boost::shared_ptr<hier::VariableContext> ghost_width_1_context =
          hier::VariableDatabase::getDatabase()->getContext("ghost_width_1");
-      tbox::Pointer<hier::VariableContext> ghost_width_2_context =
+      boost::shared_ptr<hier::VariableContext> ghost_width_2_context =
          hier::VariableDatabase::getDatabase()->getContext("ghost_width_2");
-      tbox::Pointer<hier::VariableContext> ghost_width_3_context =
+      boost::shared_ptr<hier::VariableContext> ghost_width_3_context =
          hier::VariableDatabase::getDatabase()->getContext("ghost_width_3");
 
       /* Make ghost cell IntVectors which are used when variables
@@ -137,7 +138,7 @@ int main(
       hier::IntVector nghosts_3(dim, 3);
 
       /* Make cell-centered double variable for patch */
-      tbox::Pointer<pdat::CellVariable<double> > cell_double_variable(
+      boost::shared_ptr<pdat::CellVariable<double> > cell_double_variable(
          new pdat::CellVariable<double>(dim, "cell_double_variable", 1));
 
       int cdvindx[3];
@@ -162,10 +163,10 @@ int main(
       patch_components.setFlag(cdvindx[2]);
 
       /* Make control volume for cell-centered patch variables */
-      tbox::Pointer<hier::VariableContext> ghost_width_0_context =
+      boost::shared_ptr<hier::VariableContext> ghost_width_0_context =
          hier::VariableDatabase::getDatabase()->getContext("ghost_width_0");
       hier::IntVector nghosts_0(dim, 0);
-      tbox::Pointer<pdat::CellVariable<double> > cwgt(
+      boost::shared_ptr<pdat::CellVariable<double> > cwgt(
          new pdat::CellVariable<double>(dim, "cwgt", 1));
       int cwgt_id =
          hier::VariableDatabase::getDatabase()->registerVariableAndContext(
@@ -185,7 +186,7 @@ int main(
       patch_components.setFlag(ccvindx[1]);
 
       // Make two cell-centered int variables for the patch
-      tbox::Pointer<pdat::CellVariable<int> > cell_int_variable(
+      boost::shared_ptr<pdat::CellVariable<int> > cell_int_variable(
          new pdat::CellVariable<int>(dim, "cell_int_variable", 1));
 
       int civindx[3];
@@ -530,9 +531,9 @@ int main(
          cell_vol *= dx[i];
       }
 
-      tbox::Pointer<pdat::CellData<double> > weight(
+      boost::shared_ptr<pdat::CellData<double> > weight(
          tpatch->getPatchData(cwgt_id),
-         tbox::__dynamic_cast_tag());
+         boost::detail::dynamic_cast_tag());
       weight->fillAll(cell_vol);
 
       // Simple tests of cell data operations
@@ -540,22 +541,22 @@ int main(
       math::PatchCellDataOpsReal<double> cdops_double;
 
       // Get pointers to patch data objects
-      tbox::Pointer<pdat::CellData<double> > cddata0(
+      boost::shared_ptr<pdat::CellData<double> > cddata0(
          tpatch->getPatchData(cdvindx[0]),
-         tbox::__dynamic_cast_tag());
-      tbox::Pointer<pdat::CellData<double> > cddata1(
+         boost::detail::dynamic_cast_tag());
+      boost::shared_ptr<pdat::CellData<double> > cddata1(
          tpatch->getPatchData(cdvindx[1]),
-         tbox::__dynamic_cast_tag());
-      tbox::Pointer<pdat::CellData<double> > cddata2(
+         boost::detail::dynamic_cast_tag());
+      boost::shared_ptr<pdat::CellData<double> > cddata2(
          tpatch->getPatchData(cdvindx[2]),
-         tbox::__dynamic_cast_tag());
+         boost::detail::dynamic_cast_tag());
 
-      tbox::Pointer<pdat::CellData<int> > cidata0(
+      boost::shared_ptr<pdat::CellData<int> > cidata0(
          tpatch->getPatchData(civindx[0]),
-         tbox::__dynamic_cast_tag());
-      tbox::Pointer<pdat::CellData<int> > cidata1(
+         boost::detail::dynamic_cast_tag());
+      boost::shared_ptr<pdat::CellData<int> > cidata1(
          tpatch->getPatchData(civindx[1]),
-         tbox::__dynamic_cast_tag());
+         boost::detail::dynamic_cast_tag());
 
       // Test #4a: math::PatchCellDataOpsReal::setToScalar()
       // Expected: cddata0 = 0.0
@@ -616,9 +617,9 @@ int main(
       hier::Box inbox(indx0, indx1, hier::BlockId(0));
       double val_inbox = 1.0;
       double val_not_inbox = 3.0;
-      tbox::Pointer<pdat::CellData<double> > cvdata(
+      boost::shared_ptr<pdat::CellData<double> > cvdata(
          tpatch->getPatchData(cdvindx[0]),
-         tbox::__dynamic_cast_tag());
+         boost::detail::dynamic_cast_tag());
 
       for (pdat::CellIterator c(cvdata->getBox()); c &&
            subtract_inbox_test_passed; c++) {
@@ -677,8 +678,8 @@ int main(
       bool divide_inbox_test_passed = true;
       val_inbox = 0.8;
       val_not_inbox = 1.6;
-      cvdata = tbox::dynamic_pointer_cast<pdat::CellData<double>,
-                                          hier::PatchData>(tpatch->getPatchData(cdvindx[0]));
+      cvdata = boost::dynamic_pointer_cast<pdat::CellData<double>,
+                                           hier::PatchData>(tpatch->getPatchData(cdvindx[0]));
 
       for (pdat::CellIterator cc(cvdata->getBox()); cc &&
            divide_inbox_test_passed; cc++) {
@@ -757,8 +758,8 @@ int main(
       bool restricted_linSum_test_passed = true;
       val_inbox = 50.0;
       val_not_inbox = 0.0;
-      cvdata = tbox::dynamic_pointer_cast<pdat::CellData<double>,
-                                          hier::PatchData>(tpatch->getPatchData(cdvindx[0]));
+      cvdata = boost::dynamic_pointer_cast<pdat::CellData<double>,
+                                           hier::PatchData>(tpatch->getPatchData(cdvindx[0]));
 
       for (pdat::CellIterator cci(cvdata->getBox()); cci &&
            restricted_linSum_test_passed; cci++) {
@@ -820,8 +821,8 @@ int main(
       double val_inbox3 = 21.0;
       val_not_inbox = 1.0;
 
-      cvdata = tbox::dynamic_pointer_cast<pdat::CellData<double>,
-                                          hier::PatchData>(tpatch->getPatchData(cdvindx[1]));
+      cvdata = boost::dynamic_pointer_cast<pdat::CellData<double>,
+                                           hier::PatchData>(tpatch->getPatchData(cdvindx[1]));
       for (pdat::CellIterator ci(cvdata->getBox()); ci &&
            setToScalar_onBox_test_passed; ci++) {
          pdat::CellIndex cell_index = ci();
@@ -1237,13 +1238,13 @@ static bool
 doubleDataSameAsValue(
    int desc_id,
    double value,
-   tbox::Pointer<hier::Patch> patch)
+   boost::shared_ptr<hier::Patch> patch)
 {
    bool test_passed = true;
 
-   tbox::Pointer<pdat::CellData<double> > cvdata(
+   boost::shared_ptr<pdat::CellData<double> > cvdata(
       patch->getPatchData(desc_id),
-      tbox::__dynamic_cast_tag());
+      boost::detail::dynamic_cast_tag());
 
    for (pdat::CellIterator c(cvdata->getBox()); c && test_passed; c++) {
       pdat::CellIndex cell_index = c();

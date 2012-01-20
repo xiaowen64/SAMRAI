@@ -12,7 +12,7 @@ namespace SAMRAI {
 namespace hier {
 
 SAMRAI_INLINE_KEYWORD
-tbox::Pointer<PatchLevel>
+boost::shared_ptr<PatchLevel>
 PatchHierarchy::getPatchLevel(
    const int l) const
 {
@@ -22,13 +22,13 @@ PatchHierarchy::getPatchLevel(
 }
 
 SAMRAI_INLINE_KEYWORD
-const tbox::Pointer<BoxLevel>& PatchHierarchy::getBoxLevel(int level) const
+const boost::shared_ptr<BoxLevel>& PatchHierarchy::getBoxLevel(int level) const
 {
    return d_patch_levels[level]->getBoxLevel();
 }
 
 SAMRAI_INLINE_KEYWORD
-tbox::Pointer<PatchDescriptor>
+boost::shared_ptr<PatchDescriptor>
 PatchHierarchy::getPatchDescriptor() const
 {
    return d_patch_descriptor;
@@ -169,20 +169,20 @@ int PatchHierarchy::getFinestLevelNumber() const
 
 SAMRAI_INLINE_KEYWORD
 void PatchHierarchy::setPatchFactory(
-   tbox::Pointer<PatchFactory> factory)
+   boost::shared_ptr<PatchFactory> factory)
 {
    d_patch_factory = factory;
 }
 
 SAMRAI_INLINE_KEYWORD
 void PatchHierarchy::setPatchLevelFactory(
-   tbox::Pointer<PatchLevelFactory> factory)
+   boost::shared_ptr<PatchLevelFactory> factory)
 {
    d_patch_level_factory = factory;
 }
 
 SAMRAI_INLINE_KEYWORD
-tbox::Pointer<GridGeometry>
+boost::shared_ptr<GridGeometry>
 PatchHierarchy::getGridGeometry() const
 {
    return d_grid_geometry;

@@ -19,11 +19,11 @@
 #include "SAMRAI/hier/PatchLevel.h"
 #include "SAMRAI/pdat/NodeVariable.h"
 #include "SAMRAI/pdat/OuternodeVariable.h"
-#include "SAMRAI/tbox/Pointer.h"
 #include "SAMRAI/xfer/CoarsenSchedule.h"
 #include "SAMRAI/xfer/RefineSchedule.h"
 #include "SAMRAI/xfer/RefineTransactionFactory.h"
 
+#include <boost/shared_ptr.hpp>
 #include <string>
 
 namespace SAMRAI {
@@ -143,7 +143,7 @@ public:
     */
    void
    setupSum(
-      tbox::Pointer<hier::PatchLevel> level);
+      boost::shared_ptr<hier::PatchLevel> level);
 
    /*!
     *  @brief Set up for summation operations for node data at shared nodes
@@ -161,7 +161,7 @@ public:
     */
    void
    setupSum(
-      tbox::Pointer<hier::PatchHierarchy> hierarchy,
+      boost::shared_ptr<hier::PatchHierarchy> hierarchy,
       const int coarsest_level,
       const int finest_level);
 
@@ -215,7 +215,7 @@ private:
     */
    void
    doLevelSum(
-      tbox::Pointer<hier::PatchLevel> level) const;
+      boost::shared_ptr<hier::PatchLevel> level) const;
 
    /*
     * Private member function to set node node data on a fine level at a
@@ -224,8 +224,8 @@ private:
     */
    void
    doLocalCoarseFineBoundarySum(
-      tbox::Pointer<hier::PatchLevel> fine_level,
-      tbox::Pointer<hier::PatchLevel> coarsened_fine_level,
+      boost::shared_ptr<hier::PatchLevel> fine_level,
+      boost::shared_ptr<hier::PatchLevel> coarsened_fine_level,
       const tbox::Array<int>& node_data_id,
       const tbox::Array<int>& onode_data_id,
       bool fill_hanging_nodes) const;
@@ -236,7 +236,7 @@ private:
     */
    void
    copyNodeToOuternodeOnLevel(
-      tbox::Pointer<hier::PatchLevel> level,
+      boost::shared_ptr<hier::PatchLevel> level,
       const tbox::Array<int>& node_data_id,
       const tbox::Array<int>& onode_data_id) const;
 
@@ -246,7 +246,7 @@ private:
     */
    void
    copyOuternodeToNodeOnLevel(
-      tbox::Pointer<hier::PatchLevel> level,
+      boost::shared_ptr<hier::PatchLevel> level,
       const tbox::Array<int>& onode_data_id,
       const tbox::Array<int>& node_data_id) const;
 
@@ -277,8 +277,8 @@ private:
     * Node-centered variables and patch data indices used as internal work quantities.
     */
    // These arrays are indexed [variable registration sequence number]
-   tbox::Array<tbox::Pointer<hier::Variable> > d_tmp_onode_src_variable;
-   tbox::Array<tbox::Pointer<hier::Variable> > d_tmp_onode_dst_variable;
+   tbox::Array<boost::shared_ptr<hier::Variable> > d_tmp_onode_src_variable;
+   tbox::Array<boost::shared_ptr<hier::Variable> > d_tmp_onode_dst_variable;
 
    // These arrays are indexed [variable registration sequence number]
    tbox::Array<int> d_onode_src_id;
@@ -290,25 +290,28 @@ private:
    hier::ComponentSelector d_onode_src_data_set;
    hier::ComponentSelector d_onode_dst_data_set;
 
-   tbox::Pointer<hier::PatchLevel> d_level;
+   boost::shared_ptr<hier::PatchLevel> d_level;
 
-   tbox::Pointer<hier::PatchHierarchy> d_hierarchy;
+   boost::shared_ptr<hier::PatchHierarchy> d_hierarchy;
    int d_coarsest_level;
    int d_finest_level;
 
    bool d_level_setup_called;
    bool d_hierarchy_setup_called;
 
-   tbox::Pointer<xfer::RefineTransactionFactory> d_sum_transaction_factory;
+   boost::shared_ptr<xfer::RefineTransactionFactory> d_sum_transaction_factory;
 
-   tbox::Array<tbox::Pointer<xfer::RefineSchedule> >
-   d_single_level_sum_schedule;
-   tbox::Array<tbox::Pointer<xfer::RefineSchedule> > d_cfbdry_copy_schedule;
-   tbox::Array<tbox::Pointer<xfer::CoarsenSchedule> > d_sync_coarsen_schedule;
+   tbox::Array<boost::shared_ptr<xfer::RefineSchedule> >
+      d_single_level_sum_schedule;
+   tbox::Array<boost::shared_ptr<xfer::RefineSchedule> >
+      d_cfbdry_copy_schedule;
+   tbox::Array<boost::shared_ptr<xfer::CoarsenSchedule> >
+      d_sync_coarsen_schedule;
 
-   tbox::Array<tbox::Pointer<hier::PatchLevel> > d_cfbdry_tmp_level;
+   tbox::Array<boost::shared_ptr<hier::PatchLevel> > d_cfbdry_tmp_level;
 
-   tbox::Array<tbox::Pointer<hier::CoarseFineBoundary> > d_coarse_fine_boundary;
+   tbox::Array<boost::shared_ptr<hier::CoarseFineBoundary> >
+      d_coarse_fine_boundary;
 
 };
 

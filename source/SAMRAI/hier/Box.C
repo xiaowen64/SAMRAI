@@ -87,7 +87,7 @@ Box::Box(
    TBOX_ASSERT(periodic_id.isValid());
    TBOX_ASSERT(periodic_id.getPeriodicValue() < shift_catalog->getNumberOfShifts());
 
-   if (refinement_ratio > hier::IntVector::getZero(dim)) {
+   if (refinement_ratio > IntVector::getZero(dim)) {
 
       if (other.getPeriodicId() != shift_catalog->getZeroShiftNumber()) {
          // Undo the shift that existed in other's Box.
@@ -102,7 +102,7 @@ Box::Box(
             * refinement_ratio);
       }
 
-   } else if (refinement_ratio < hier::IntVector::getZero(dim)) {
+   } else if (refinement_ratio < IntVector::getZero(dim)) {
 
       if (other.getPeriodicId() != shift_catalog->getZeroShiftNumber()) {
          // Undo the shift that existed in other's Box.
@@ -157,7 +157,7 @@ void Box::initialize(
    d_lo = other.d_lo;
    d_hi = other.d_hi;
 
-   if (refinement_ratio > hier::IntVector::getZero(dim)) {
+   if (refinement_ratio > IntVector::getZero(dim)) {
 
       if (other.getPeriodicId() != shift_catalog->getZeroShiftNumber()) {
          // Undo the shift that existed in r's Box.
@@ -172,7 +172,7 @@ void Box::initialize(
             * refinement_ratio);
       }
 
-   } else if (refinement_ratio < hier::IntVector::getZero(dim)) {
+   } else if (refinement_ratio < IntVector::getZero(dim)) {
 
       if (other.getPeriodicId() != shift_catalog->getZeroShiftNumber()) {
          // Undo the shift that existed in r's Box.
@@ -593,10 +593,10 @@ void Box::initializeCallback()
        * Note we can't use Index getMin, getMax here as that
        * would create a dependency between static initializers
        */
-      s_universes[d] = new hier::Box(
-            hier::Index(dim, tbox::MathUtilities<int>::getMin()),
-            hier::Index(dim, tbox::MathUtilities<int>::getMax()),
-            hier::BlockId(0));
+      s_universes[d] = new Box(
+            Index(dim, tbox::MathUtilities<int>::getMin()),
+            Index(dim, tbox::MathUtilities<int>::getMax()),
+            BlockId(0));
    }
 }
 

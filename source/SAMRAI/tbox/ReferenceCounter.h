@@ -4,7 +4,7 @@
  * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Reference counting class for Array and Pointer
+ * Description:   Reference counting class for Array
  *
  ************************************************************************/
 
@@ -22,7 +22,7 @@ namespace tbox {
 
 /**
  * Class ReferenceCounter manages the shared reference counter and
- * arena resources used by Pointer and Array.  It uses a local
+ * arena resources used by Array.  It uses a local
  * free pool of objects to speed memory allocation and deallocation.  The
  * locally cached free pool can be freed by calling freeCachedCopies().
  *
@@ -31,7 +31,6 @@ namespace tbox {
  * horrible and disgusting ways.
  *
  * @see tbox::Array
- * @see tbox::Pointer
  */
 
 class ReferenceCounter

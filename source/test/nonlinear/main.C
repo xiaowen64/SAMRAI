@@ -22,7 +22,6 @@ using namespace std;
 #include "SAMRAI/hier/GridGeometry.h"
 #include "SAMRAI/tbox/InputManager.h"
 #include "SAMRAI/tbox/PIO.h"
-#include "SAMRAI/tbox/Pointer.h"
 #include "SAMRAI/tbox/RestartManager.h"
 #include "SAMRAI/tbox/SAMRAIManager.h"
 #include "SAMRAI/tbox/Array.h"
@@ -55,6 +54,8 @@ using namespace std;
 #endif
 #include "ModifiedBratuProblem.h"
 #include "SAMRAI/solv/NonlinearSolverStrategy.h"
+
+#include <boost/shared_ptr.hpp>
 
 using namespace SAMRAI;
 
@@ -179,7 +180,8 @@ int main(
        * Create input database and parse all data in input file.
        */
 
-      tbox::Pointer<tbox::InputDatabase> input_db(new tbox::InputDatabase("input_db"));
+      boost::shared_ptr<tbox::InputDatabase> input_db(
+         new tbox::InputDatabase("input_db"));
       tbox::InputManager::getManager()->parseInputFile(input_filename, input_db);
 
       /*
@@ -187,7 +189,8 @@ int main(
        * dump information, which is used for writing plot files.
        */
 
-      tbox::Pointer<tbox::Database> main_db = input_db->getDatabase("Main");
+      boost::shared_ptr<tbox::Database> main_db =
+         input_db->getDatabase("Main");
 
       const tbox::Dimension dim(static_cast<unsigned short>(main_db->getInteger("dim")));
 
@@ -265,21 +268,21 @@ int main(
        * of file.
        */
 
-      tbox::Pointer<appu::VisItDataWriter> visit_data_writer;
+      boost::shared_ptr<appu::VisItDataWriter> visit_data_writer;
       if (uses_visit) {
-         visit_data_writer =
+         visit_data_writer.reset(
             new appu::VisItDataWriter(dim,
                "Bratu VisIt Writer",
                visit_dump_dirname,
-               visit_number_procs_per_file);
+               visit_number_procs_per_file));
       }
 
-      tbox::Pointer<geom::CartesianGridGeometry> grid_geometry(
+      boost::shared_ptr<geom::CartesianGridGeometry> grid_geometry(
          new geom::CartesianGridGeometry(dim,
             "CartesianGeometry",
             input_db->getDatabase("CartesianGeometry")));
 
-      tbox::Pointer<hier::PatchHierarchy> patch_hierarchy(
+      boost::shared_ptr<hier::PatchHierarchy> patch_hierarchy(
          new hier::PatchHierarchy("PatchHierarchy", grid_geometry,
             input_db->getDatabase("PatchHierarchy")));
 
@@ -329,22 +332,22 @@ int main(
             nonlinear_solver,
             patch_hierarchy);
 
-      tbox::Pointer<mesh::StandardTagAndInitialize> error_detector(
+      boost::shared_ptr<mesh::StandardTagAndInitialize> error_detector(
          new mesh::StandardTagAndInitialize(dim,
             "CellTaggingMethod",
             bratu_model,
             input_db->
             getDatabase("StandardTagAndInitialize")));
 
-      tbox::Pointer<mesh::BergerRigoutsos> box_generator(
+      boost::shared_ptr<mesh::BergerRigoutsos> box_generator(
          new mesh::BergerRigoutsos(dim));
 
-      tbox::Pointer<mesh::TreeLoadBalancer> load_balancer(
+      boost::shared_ptr<mesh::TreeLoadBalancer> load_balancer(
          new mesh::TreeLoadBalancer(dim, "LoadBalancer",
             input_db->getDatabase("LoadBalancer")));
       load_balancer->setSAMRAI_MPI(tbox::SAMRAI_MPI::getSAMRAIWorld());
 
-      tbox::Pointer<mesh::GriddingAlgorithm> gridding_algorithm(
+      boost::shared_ptr<mesh::GriddingAlgorithm> gridding_algorithm(
          new mesh::GriddingAlgorithm(
             patch_hierarchy,
             "GriddingAlgorithm",
@@ -398,12 +401,10 @@ int main(
        * simulation part of the main program.
        */
 
-      tbox::Pointer<tbox::Timer> main_timer =
-         tbox::TimerManager::getManager()->
-         getTimer("apps::main::main");
-      tbox::Pointer<tbox::Timer> solve_timer =
-         tbox::TimerManager::getManager()->
-         getTimer("apps::main::solve");
+      boost::shared_ptr<tbox::Timer> main_timer =
+         tbox::TimerManager::getManager()->getTimer("apps::main::main");
+      boost::shared_ptr<tbox::Timer> solve_timer =
+         tbox::TimerManager::getManager()->getTimer("apps::main::solve");
 
       main_timer->start();
 

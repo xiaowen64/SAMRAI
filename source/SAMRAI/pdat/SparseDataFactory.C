@@ -16,8 +16,9 @@
 
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/pdat/SparseData.h"
-#include "SAMRAI/tbox/Pointer.h"
 #include "SAMRAI/tbox/MemoryUtilities.h"
+
+#include <boost/shared_ptr.hpp>
 
 namespace SAMRAI {
 namespace pdat {
@@ -45,18 +46,18 @@ SparseDataFactory<BOX_GEOMETRY>::~SparseDataFactory()
  * Implementation of base class pure virtual functions
  */
 template<typename BOX_GEOMETRY>
-tbox::Pointer<hier::PatchDataFactory>
+boost::shared_ptr<hier::PatchDataFactory>
 SparseDataFactory<BOX_GEOMETRY>::cloneFactory(
    const hier::IntVector& ghosts)
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, ghosts);
-   return tbox::Pointer<hier::PatchDataFactory>(
+   return boost::shared_ptr<hier::PatchDataFactory>(
              new SparseDataFactory<BOX_GEOMETRY>(ghosts, d_dbl_attributes,
                 d_int_attributes));
 }
 
 template<typename BOX_GEOMETRY>
-tbox::Pointer<hier::PatchData>
+boost::shared_ptr<hier::PatchData>
 SparseDataFactory<BOX_GEOMETRY>::allocate(
    const hier::Patch& patch) const
 {
@@ -64,18 +65,18 @@ SparseDataFactory<BOX_GEOMETRY>::allocate(
    hier::PatchData* pd = new SparseData<BOX_GEOMETRY>(
          patch.getBox(), this->d_ghosts, this->d_dbl_attributes,
          this->d_int_attributes);
-   return tbox::Pointer<hier::PatchData>(pd);
+   return boost::shared_ptr<hier::PatchData>(pd);
 }
 
 template<typename BOX_GEOMETRY>
-tbox::Pointer<hier::BoxGeometry>
+boost::shared_ptr<hier::BoxGeometry>
 SparseDataFactory<BOX_GEOMETRY>::getBoxGeometry(
    const hier::Box& box) const
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, box);
    hier::BoxGeometry* boxGeometry =
       new BOX_GEOMETRY(box, this->d_ghosts);
-   return tbox::Pointer<hier::BoxGeometry>(boxGeometry);
+   return boost::shared_ptr<hier::BoxGeometry>(boxGeometry);
 }
 
 template<typename BOX_GEOMETRY>
@@ -92,16 +93,16 @@ SparseDataFactory<BOX_GEOMETRY>::getSizeOfMemory(
 template<typename BOX_GEOMETRY>
 bool
 SparseDataFactory<BOX_GEOMETRY>::validCopyTo(
-   const tbox::Pointer<PatchDataFactory>& dst_pdf) const
+   const boost::shared_ptr<PatchDataFactory>& dst_pdf) const
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, *dst_pdf);
    bool valid_copy = false;
 
    if (!valid_copy) {
 
-      tbox::Pointer<SparseDataFactory<BOX_GEOMETRY> > idf(
+      boost::shared_ptr<SparseDataFactory<BOX_GEOMETRY> > idf(
          dst_pdf,
-         tbox::__dynamic_cast_tag());
+         boost::detail::dynamic_cast_tag());
 
       if (idf) {
          valid_copy = true;

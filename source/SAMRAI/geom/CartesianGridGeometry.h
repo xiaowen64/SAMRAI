@@ -18,10 +18,10 @@
 #include "SAMRAI/hier/IntVector.h"
 #include "SAMRAI/hier/Patch.h"
 #include "SAMRAI/hier/PatchLevel.h"
-#include "SAMRAI/tbox/Pointer.h"
 #include "SAMRAI/tbox/Database.h"
 #include "SAMRAI/tbox/Serializable.h"
 
+#include <boost/shared_ptr.hpp>
 #include <string>
 
 namespace SAMRAI {
@@ -121,7 +121,7 @@ public:
    CartesianGridGeometry(
       const tbox::Dimension& dim,
       const std::string& object_name,
-      tbox::Pointer<tbox::Database> input_db,
+      boost::shared_ptr<tbox::Database> input_db,
       bool register_for_restart = true);
 
    /**
@@ -154,7 +154,7 @@ public:
     * geometry object. This function is pure virtual in the
     * hier::GridGeometry base class.
     */
-   tbox::Pointer<hier::GridGeometry>
+   boost::shared_ptr<hier::GridGeometry>
    makeRefinedGridGeometry(
       const std::string& fine_geom_name,
       const hier::IntVector& refine_ratio,
@@ -165,7 +165,7 @@ public:
     * geometry object. This function is pure virtual in the
     * hier::GridGeometry base class.
     */
-   tbox::Pointer<hier::GridGeometry>
+   boost::shared_ptr<hier::GridGeometry>
    makeCoarsenedGridGeometry(
       const std::string& coarse_geom_name,
       const hier::IntVector& coarsen_ratio,
@@ -227,7 +227,7 @@ public:
     */
    virtual void
    putToDatabase(
-      tbox::Pointer<tbox::Database> db);
+      boost::shared_ptr<tbox::Database> db);
 
 private:
    /*
@@ -245,7 +245,7 @@ private:
     */
    void
    getFromInput(
-      tbox::Pointer<tbox::Database> db,
+      boost::shared_ptr<tbox::Database> db,
       bool is_from_restart);
 
    /*

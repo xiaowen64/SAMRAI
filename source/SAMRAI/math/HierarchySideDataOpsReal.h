@@ -19,7 +19,8 @@
 #include "SAMRAI/math/PatchSideDataOpsReal.h"
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/hier/PatchHierarchy.h"
-#include "SAMRAI/tbox/Pointer.h"
+
+#include <boost/shared_ptr.hpp>
 
 namespace SAMRAI {
 namespace math {
@@ -71,7 +72,7 @@ public:
     * reset by calling the resetLevels() function.
     */
    explicit HierarchySideDataOpsReal(
-      tbox::Pointer<hier::PatchHierarchy> hierarchy,
+      boost::shared_ptr<hier::PatchHierarchy> hierarchy,
       const int coarsest_level = -1,
       const int finest_level = -1);
 
@@ -85,7 +86,7 @@ public:
     */
    void
    setPatchHierarchy(
-      tbox::Pointer<hier::PatchHierarchy> hierarchy);
+      boost::shared_ptr<hier::PatchHierarchy> hierarchy);
 
    /**
     * Reset range of patch levels over which operations occur.
@@ -99,7 +100,7 @@ public:
    /**
     * Return const pointer to patch hierarchy associated with operations.
     */
-   const tbox::Pointer<hier::PatchHierarchy>
+   const boost::shared_ptr<hier::PatchHierarchy>
    getPatchHierarchy() const;
 
    /**
@@ -503,7 +504,7 @@ private:
    operator = (
       const HierarchySideDataOpsReal<TYPE>&);
 
-   tbox::Pointer<hier::PatchHierarchy> d_hierarchy;
+   boost::shared_ptr<hier::PatchHierarchy> d_hierarchy;
    int d_coarsest_level;
    int d_finest_level;
    tbox::Array<tbox::Array<hier::BoxContainer> > d_nonoverlapping_side_boxes[tbox::

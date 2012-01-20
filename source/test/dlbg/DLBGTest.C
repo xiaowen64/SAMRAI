@@ -30,9 +30,9 @@ DLBGTest::DLBGTest(
    ,
    const tbox::Dimension& dim
    ,
-   tbox::Pointer<hier::PatchHierarchy> patch_hierarchy
+   boost::shared_ptr<hier::PatchHierarchy> patch_hierarchy
    ,
-   tbox::Pointer<tbox::Database> database):
+   boost::shared_ptr<tbox::Database> database):
    d_name(object_name),
    d_dim(dim),
    d_hierarchy(patch_hierarchy),
@@ -84,7 +84,7 @@ void DLBGTest::deallocatePatchData(
 
 #ifdef HAVE_HDF5
 int DLBGTest::registerVariablesWithPlotter(
-   tbox::Pointer<appu::VisItDataWriter> writer)
+   boost::shared_ptr<appu::VisItDataWriter> writer)
 {
    if (writer) {
       d_tagger.registerVariablesWithPlotter(*writer);

@@ -157,19 +157,19 @@ bool NullDatabase::isDatabase(
 }
 
 SAMRAI_INLINE_KEYWORD
-Pointer<Database> NullDatabase::putDatabase(
+boost::shared_ptr<Database> NullDatabase::putDatabase(
    const std::string& key)
 {
    NULL_USE(key);
-   return Pointer<Database>(this);
+   return boost::shared_ptr<Database>(this);
 }
 
 SAMRAI_INLINE_KEYWORD
-Pointer<Database> NullDatabase::getDatabase(
+boost::shared_ptr<Database> NullDatabase::getDatabase(
    const std::string& key)
 {
    NULL_USE(key);
-   Pointer<Database> new_NullDatabase(new NullDatabase());
+   boost::shared_ptr<Database> new_NullDatabase(new NullDatabase());
    return new_NullDatabase;
 }
 

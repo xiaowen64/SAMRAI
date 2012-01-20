@@ -44,24 +44,24 @@ BergerRigoutsosNode::s_initialize_handler(
    BergerRigoutsosNode::finalizeCallback,
    tbox::StartupShutdownManager::priorityTimers);
 
-tbox::Pointer<tbox::Timer> BergerRigoutsosNode::CommonParams::t_cluster;
-tbox::Pointer<tbox::Timer> BergerRigoutsosNode::CommonParams::t_cluster_and_compute_relationships;
-tbox::Pointer<tbox::Timer> BergerRigoutsosNode::CommonParams::t_continue_algorithm;
-tbox::Pointer<tbox::Timer> BergerRigoutsosNode::CommonParams::t_compute;
-tbox::Pointer<tbox::Timer> BergerRigoutsosNode::CommonParams::t_comm_wait;
-tbox::Pointer<tbox::Timer> BergerRigoutsosNode::CommonParams::t_MPI_wait;
-tbox::Pointer<tbox::Timer> BergerRigoutsosNode::CommonParams::t_compute_new_graph_relationships;
-tbox::Pointer<tbox::Timer> BergerRigoutsosNode::CommonParams::t_share_new_relationships;
-tbox::Pointer<tbox::Timer> BergerRigoutsosNode::CommonParams::t_share_new_relationships_send;
-tbox::Pointer<tbox::Timer> BergerRigoutsosNode::CommonParams::t_share_new_relationships_recv;
-tbox::Pointer<tbox::Timer> BergerRigoutsosNode::CommonParams::t_share_new_relationships_unpack;
-tbox::Pointer<tbox::Timer> BergerRigoutsosNode::CommonParams::t_local_tasks;
-tbox::Pointer<tbox::Timer> BergerRigoutsosNode::CommonParams::t_local_histogram;
-tbox::Pointer<tbox::Timer> BergerRigoutsosNode::CommonParams::t_reduce_histogram;
-tbox::Pointer<tbox::Timer> BergerRigoutsosNode::CommonParams::t_bcast_acceptability;
-tbox::Pointer<tbox::Timer> BergerRigoutsosNode::CommonParams::t_gather_grouping_criteria;
-tbox::Pointer<tbox::Timer> BergerRigoutsosNode::CommonParams::t_bcast_child_groups;
-tbox::Pointer<tbox::Timer> BergerRigoutsosNode::CommonParams::t_bcast_to_dropouts;
+boost::shared_ptr<tbox::Timer> BergerRigoutsosNode::CommonParams::t_cluster;
+boost::shared_ptr<tbox::Timer> BergerRigoutsosNode::CommonParams::t_cluster_and_compute_relationships;
+boost::shared_ptr<tbox::Timer> BergerRigoutsosNode::CommonParams::t_continue_algorithm;
+boost::shared_ptr<tbox::Timer> BergerRigoutsosNode::CommonParams::t_compute;
+boost::shared_ptr<tbox::Timer> BergerRigoutsosNode::CommonParams::t_comm_wait;
+boost::shared_ptr<tbox::Timer> BergerRigoutsosNode::CommonParams::t_MPI_wait;
+boost::shared_ptr<tbox::Timer> BergerRigoutsosNode::CommonParams::t_compute_new_graph_relationships;
+boost::shared_ptr<tbox::Timer> BergerRigoutsosNode::CommonParams::t_share_new_relationships;
+boost::shared_ptr<tbox::Timer> BergerRigoutsosNode::CommonParams::t_share_new_relationships_send;
+boost::shared_ptr<tbox::Timer> BergerRigoutsosNode::CommonParams::t_share_new_relationships_recv;
+boost::shared_ptr<tbox::Timer> BergerRigoutsosNode::CommonParams::t_share_new_relationships_unpack;
+boost::shared_ptr<tbox::Timer> BergerRigoutsosNode::CommonParams::t_local_tasks;
+boost::shared_ptr<tbox::Timer> BergerRigoutsosNode::CommonParams::t_local_histogram;
+boost::shared_ptr<tbox::Timer> BergerRigoutsosNode::CommonParams::t_reduce_histogram;
+boost::shared_ptr<tbox::Timer> BergerRigoutsosNode::CommonParams::t_bcast_acceptability;
+boost::shared_ptr<tbox::Timer> BergerRigoutsosNode::CommonParams::t_gather_grouping_criteria;
+boost::shared_ptr<tbox::Timer> BergerRigoutsosNode::CommonParams::t_bcast_child_groups;
+boost::shared_ptr<tbox::Timer> BergerRigoutsosNode::CommonParams::t_bcast_to_dropouts;
 
 /*
  *******************************************************************
@@ -269,7 +269,7 @@ void BergerRigoutsosNode::clusterAndComputeRelationships(
    hier::Connector& tag_to_new,
    hier::Connector& new_to_tag,
    const hier::Box& bound_box,
-   const tbox::Pointer<hier::PatchLevel> tag_level,
+   const boost::shared_ptr<hier::PatchLevel> tag_level,
    const tbox::SAMRAI_MPI& mpi_object)
 {
    TBOX_ASSERT(d_parent == NULL);
@@ -1227,7 +1227,7 @@ bool BergerRigoutsosNode::runChildren_check()
 BergerRigoutsosNode::CommonParams::CommonParams(
    const tbox::Dimension& dim):
    d_dim(dim),
-   tag_level(NULL),
+   tag_level((hier::PatchLevel*)NULL),
    tag_mapped_box_level(NULL),
    new_mapped_box_level(NULL),
    tag_to_new(NULL),
@@ -1694,9 +1694,9 @@ void BergerRigoutsosNode::makeLocalTagHistogram()
 
          if (!(intersection.empty())) {
 
-            tbox::Pointer<pdat::CellData<int> > tag_data_(
+            boost::shared_ptr<pdat::CellData<int> > tag_data_(
                patch.getPatchData(d_common->tag_data_index),
-               tbox::__dynamic_cast_tag());
+               boost::detail::dynamic_cast_tag());
 
             pdat::CellData<int>& tag_data = *tag_data_;
 

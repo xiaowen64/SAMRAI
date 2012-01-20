@@ -17,11 +17,8 @@ DEPENDS_0:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/DescribedClass.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/IOStream.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.I				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
@@ -29,7 +26,7 @@ DEPENDS_0:=\
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_0 +=\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.C
+	
 endif
 
 ${FILE_0:X.o=${NDIM}.o}: ${DEPENDS_0}
@@ -39,11 +36,8 @@ DEPENDS_1:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/DescribedClass.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/IOStream.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.I				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
@@ -51,8 +45,7 @@ DEPENDS_1:=\
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_1 +=\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.C
+	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C
 endif
 
 ${FILE_1:X.o=${NDIM}.o}: ${DEPENDS_1}
@@ -81,8 +74,6 @@ DEPENDS_2:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.I				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAIManager.h			\
@@ -100,8 +91,7 @@ DEPENDS_2 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database_template_methods.C		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/List.C				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.C
+	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
 endif
 
 ${FILE_2:X.o=${NDIM}.o}: ${DEPENDS_2}
@@ -129,8 +119,6 @@ DEPENDS_3:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/List.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.I				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAIManager.h			\
@@ -147,8 +135,7 @@ ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_3 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database_template_methods.C		\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.C				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.C
+	$(INCLUDE_SAM)/SAMRAI/tbox/List.C
 endif
 
 ${FILE_3:X.o=${NDIM}.o}: ${DEPENDS_3}
@@ -175,8 +162,6 @@ DEPENDS_4:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.I				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAIManager.h			\
@@ -194,8 +179,7 @@ DEPENDS_4 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database_template_methods.C		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/List.C				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.C
+	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
 endif
 
 ${FILE_4:X.o=${NDIM}.o}: ${DEPENDS_4}
@@ -204,20 +188,15 @@ FILE_5=BalancedDepthFirstTree.o
 DEPENDS_5:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/BalancedDepthFirstTree.h		\
-	$(INCLUDE_SAM)/SAMRAI/tbox/DescribedClass.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/IOStream.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.I				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.I			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h BalancedDepthFirstTree.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_5 +=\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.C
+	
 endif
 
 ${FILE_5:X.o=${NDIM}.o}: ${DEPENDS_5}
@@ -227,13 +206,8 @@ DEPENDS_6:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Clock.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Complex.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/DescribedClass.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/IOStream.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.I				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.I			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
@@ -241,7 +215,7 @@ DEPENDS_6:=\
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_6 +=\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.C
+	
 endif
 
 ${FILE_6:X.o=${NDIM}.o}: ${DEPENDS_6}
@@ -262,8 +236,6 @@ DEPENDS_7:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/IOStream.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.I				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
@@ -272,8 +244,7 @@ DEPENDS_7:=\
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_7 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Database_template_methods.C		\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.C
+	$(INCLUDE_SAM)/SAMRAI/tbox/Database_template_methods.C
 endif
 
 ${FILE_7:X.o=${NDIM}.o}: ${DEPENDS_7}
@@ -283,21 +254,16 @@ DEPENDS_8:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/DatabaseBox.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/DatabaseBox.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/DescribedClass.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/IOStream.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.I				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.I			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h DatabaseBox.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_8 +=\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.C
+	
 endif
 
 ${FILE_8:X.o=${NDIM}.o}: ${DEPENDS_8}
@@ -319,8 +285,6 @@ DEPENDS_9:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/IOStream.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.I				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
@@ -329,8 +293,7 @@ DEPENDS_9:=\
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_9 +=\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.C
+	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C
 endif
 
 ${FILE_9:X.o=${NDIM}.o}: ${DEPENDS_9}
@@ -350,21 +313,16 @@ ${FILE_10:X.o=${NDIM}.o}: ${DEPENDS_10}
 FILE_11=Dimension.o
 DEPENDS_11:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/DescribedClass.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/IOStream.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.I				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.I			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h Dimension.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_11 +=\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.C
+	
 endif
 
 ${FILE_11:X.o=${NDIM}.o}: ${DEPENDS_11}
@@ -389,8 +347,6 @@ DEPENDS_12:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Parser.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Parser.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.I				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
@@ -400,8 +356,7 @@ ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_12 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database_template_methods.C		\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.C				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.C
+	$(INCLUDE_SAM)/SAMRAI/tbox/List.C
 endif
 
 ${FILE_12:X.o=${NDIM}.o}: ${DEPENDS_12}
@@ -427,8 +382,6 @@ DEPENDS_13:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.I				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
@@ -439,8 +392,7 @@ DEPENDS_13 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database_template_methods.C		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/List.C				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.C
+	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
 endif
 
 ${FILE_13:X.o=${NDIM}.o}: ${DEPENDS_13}
@@ -466,8 +418,6 @@ DEPENDS_14:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/List.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.I				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
@@ -477,8 +427,7 @@ ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_14 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database_template_methods.C		\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.C				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.C
+	$(INCLUDE_SAM)/SAMRAI/tbox/List.C
 endif
 
 ${FILE_14:X.o=${NDIM}.o}: ${DEPENDS_14}
@@ -489,15 +438,12 @@ DEPENDS_15:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Complex.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/DescribedClass.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/IEEE.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/IEEE.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/IOStream.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.I				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.I				\
@@ -508,8 +454,7 @@ DEPENDS_15:=\
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_15 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.C
+	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
 endif
 
 ${FILE_15:X.o=${NDIM}.o}: ${DEPENDS_15}
@@ -538,8 +483,6 @@ DEPENDS_16:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Parser.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Parser.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.I				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAIManager.h			\
@@ -552,8 +495,7 @@ ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_16 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database_template_methods.C		\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.C				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.C
+	$(INCLUDE_SAM)/SAMRAI/tbox/List.C
 endif
 
 ${FILE_16:X.o=${NDIM}.o}: ${DEPENDS_16}
@@ -561,22 +503,17 @@ ${FILE_16:X.o=${NDIM}.o}: ${DEPENDS_16}
 FILE_17=List.o
 DEPENDS_17:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/DescribedClass.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/IOStream.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/List.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/List.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/List.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.I				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.I			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h List.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_17 +=\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.C
+	
 endif
 
 ${FILE_17:X.o=${NDIM}.o}: ${DEPENDS_17}
@@ -584,18 +521,13 @@ ${FILE_17:X.o=${NDIM}.o}: ${DEPENDS_17}
 FILE_18=Logger.o
 DEPENDS_18:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/DescribedClass.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.I				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.I			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h Logger.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_18 +=\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.C
+	
 endif
 
 ${FILE_18:X.o=${NDIM}.o}: ${DEPENDS_18}
@@ -606,14 +538,11 @@ DEPENDS_19:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Complex.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/DescribedClass.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/IOStream.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.I				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
@@ -621,8 +550,7 @@ DEPENDS_19:=\
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_19 +=\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.C
+	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C
 endif
 
 ${FILE_19:X.o=${NDIM}.o}: ${DEPENDS_19}
@@ -633,13 +561,10 @@ DEPENDS_20:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Complex.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/DescribedClass.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/IOStream.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.I				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
@@ -648,8 +573,7 @@ DEPENDS_20:=\
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_20 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.C
+	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
 endif
 
 ${FILE_20:X.o=${NDIM}.o}: ${DEPENDS_20}
@@ -674,8 +598,6 @@ DEPENDS_21:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MemoryDatabase.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MemoryDatabase.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.I				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.I				\
@@ -687,8 +609,7 @@ ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_21 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database_template_methods.C		\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.C				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.C
+	$(INCLUDE_SAM)/SAMRAI/tbox/List.C
 endif
 
 ${FILE_21:X.o=${NDIM}.o}: ${DEPENDS_21}
@@ -715,8 +636,6 @@ DEPENDS_22:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MemoryDatabase.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MemoryDatabaseFactory.h		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.I				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
@@ -726,8 +645,7 @@ ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_22 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database_template_methods.C		\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.C				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.C
+	$(INCLUDE_SAM)/SAMRAI/tbox/List.C
 endif
 
 ${FILE_22:X.o=${NDIM}.o}: ${DEPENDS_22}
@@ -751,8 +669,6 @@ DEPENDS_23:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MemoryUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.I				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAIManager.h			\
@@ -765,8 +681,7 @@ ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_23 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database_template_methods.C		\
-	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.C
+	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
 endif
 
 ${FILE_23:X.o=${NDIM}.o}: ${DEPENDS_23}
@@ -775,22 +690,16 @@ FILE_24=MessageStream.o
 DEPENDS_24:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Complex.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/DescribedClass.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/IOStream.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MessageStream.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MessageStream.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.I				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.I			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h MessageStream.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_24 +=\
-	$(INCLUDE_SAM)/SAMRAI/tbox/MessageStream_template_methods.C	\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.C
+	$(INCLUDE_SAM)/SAMRAI/tbox/MessageStream_template_methods.C
 endif
 
 ${FILE_24:X.o=${NDIM}.o}: ${DEPENDS_24}
@@ -799,23 +708,18 @@ FILE_25=MessageStream_template_methods.o
 DEPENDS_25:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Complex.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/DescribedClass.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/IOStream.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MessageStream.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MessageStream.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MessageStream_template_methods.C	\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.I				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.I			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h				\
 	MessageStream_template_methods.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_25 +=\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.C
+	
 endif
 
 ${FILE_25:X.o=${NDIM}.o}: ${DEPENDS_25}
@@ -840,8 +744,6 @@ DEPENDS_26:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/NullDatabase.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/NullDatabase.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.I				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
@@ -851,8 +753,7 @@ ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_26 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database_template_methods.C		\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.C				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.C
+	$(INCLUDE_SAM)/SAMRAI/tbox/List.C
 endif
 
 ${FILE_26:X.o=${NDIM}.o}: ${DEPENDS_26}
@@ -874,8 +775,6 @@ DEPENDS_27:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ParallelBuffer.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.I				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAIManager.h			\
@@ -887,8 +786,7 @@ DEPENDS_27:=\
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_27 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Database_template_methods.C		\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.C
+	$(INCLUDE_SAM)/SAMRAI/tbox/Database_template_methods.C
 endif
 
 ${FILE_27:X.o=${NDIM}.o}: ${DEPENDS_27}
@@ -899,14 +797,11 @@ DEPENDS_28:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Complex.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/DescribedClass.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/IOStream.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ParallelBuffer.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.I				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
@@ -915,8 +810,7 @@ DEPENDS_28:=\
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_28 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.C
+	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
 endif
 
 ${FILE_28:X.o=${NDIM}.o}: ${DEPENDS_28}
@@ -941,8 +835,6 @@ DEPENDS_29:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Parser.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Parser.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.I				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAIManager.h			\
@@ -955,32 +847,13 @@ ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_29 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database_template_methods.C		\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.C				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.C
+	$(INCLUDE_SAM)/SAMRAI/tbox/List.C
 endif
 
 ${FILE_29:X.o=${NDIM}.o}: ${DEPENDS_29}
 
-FILE_30=Pointer.o
+FILE_30=RankGroup.o
 DEPENDS_30:=\
-	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/DescribedClass.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.C				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.I				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.I			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h Pointer.C
-
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_30 +=\
-	
-endif
-
-${FILE_30:X.o=${NDIM}.o}: ${DEPENDS_30}
-
-FILE_31=RankGroup.o
-DEPENDS_31:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
@@ -999,8 +872,6 @@ DEPENDS_31:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.I				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/RankGroup.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/RankGroup.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.I			\
@@ -1012,18 +883,17 @@ DEPENDS_31:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h RankGroup.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_31 +=\
+DEPENDS_30 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database_template_methods.C		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/List.C				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.C
+	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
 endif
 
-${FILE_31:X.o=${NDIM}.o}: ${DEPENDS_31}
+${FILE_30:X.o=${NDIM}.o}: ${DEPENDS_30}
 
-FILE_32=ReferenceCounter.o
-DEPENDS_32:=\
+FILE_31=ReferenceCounter.o
+DEPENDS_31:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.h			\
@@ -1031,14 +901,14 @@ DEPENDS_32:=\
 	ReferenceCounter.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_32 +=\
+DEPENDS_31 +=\
 	
 endif
 
-${FILE_32:X.o=${NDIM}.o}: ${DEPENDS_32}
+${FILE_31:X.o=${NDIM}.o}: ${DEPENDS_31}
 
-FILE_33=RestartManager.o
-DEPENDS_33:=\
+FILE_32=RestartManager.o
+DEPENDS_32:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
@@ -1061,8 +931,6 @@ DEPENDS_33:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Parser.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Parser.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.I				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/RestartManager.I			\
@@ -1075,17 +943,16 @@ DEPENDS_33:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h RestartManager.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_33 +=\
+DEPENDS_32 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database_template_methods.C		\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.C				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.C
+	$(INCLUDE_SAM)/SAMRAI/tbox/List.C
 endif
 
-${FILE_33:X.o=${NDIM}.o}: ${DEPENDS_33}
+${FILE_32:X.o=${NDIM}.o}: ${DEPENDS_32}
 
-FILE_34=SAMRAIManager.o
-DEPENDS_34:=\
+FILE_33=SAMRAIManager.o
+DEPENDS_33:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
@@ -1104,8 +971,6 @@ DEPENDS_34:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.I				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAIManager.h			\
@@ -1115,17 +980,16 @@ DEPENDS_34:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h SAMRAIManager.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_34 +=\
+DEPENDS_33 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database_template_methods.C		\
-	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.C
+	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
 endif
 
-${FILE_34:X.o=${NDIM}.o}: ${DEPENDS_34}
+${FILE_33:X.o=${NDIM}.o}: ${DEPENDS_33}
 
-FILE_35=SAMRAI_MPI.o
-DEPENDS_35:=\
+FILE_34=SAMRAI_MPI.o
+DEPENDS_34:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
@@ -1140,8 +1004,6 @@ DEPENDS_35:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/IOStream.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.I				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAIManager.h			\
@@ -1151,16 +1013,15 @@ DEPENDS_35:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h SAMRAI_MPI.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_35 +=\
+DEPENDS_34 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Database_template_methods.C		\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.C
+	$(INCLUDE_SAM)/SAMRAI/tbox/Database_template_methods.C
 endif
 
-${FILE_35:X.o=${NDIM}.o}: ${DEPENDS_35}
+${FILE_34:X.o=${NDIM}.o}: ${DEPENDS_34}
 
-FILE_36=Scanner.o
-DEPENDS_36:=\
+FILE_35=Scanner.o
+DEPENDS_35:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
@@ -1179,25 +1040,22 @@ DEPENDS_36:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Parser.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Parser.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.I				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h Grammar.h Scanner.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_36 +=\
+DEPENDS_35 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database_template_methods.C		\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.C				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.C
+	$(INCLUDE_SAM)/SAMRAI/tbox/List.C
 endif
 
-${FILE_36:X.o=${NDIM}.o}: ${DEPENDS_36}
+${FILE_35:X.o=${NDIM}.o}: ${DEPENDS_35}
 
-FILE_37=Schedule.o
-DEPENDS_37:=\
+FILE_36=Schedule.o
+DEPENDS_36:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
@@ -1220,8 +1078,6 @@ DEPENDS_37:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MessageStream.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MessageStream.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.I				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAIManager.h			\
@@ -1237,19 +1093,18 @@ DEPENDS_37:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h Schedule.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_37 +=\
+DEPENDS_36 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/AsyncCommPeer.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database_template_methods.C		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/List.C				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/MessageStream_template_methods.C	\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.C
+	$(INCLUDE_SAM)/SAMRAI/tbox/MessageStream_template_methods.C
 endif
 
-${FILE_37:X.o=${NDIM}.o}: ${DEPENDS_37}
+${FILE_36:X.o=${NDIM}.o}: ${DEPENDS_36}
 
-FILE_38=SiloDatabase.o
-DEPENDS_38:=\
+FILE_37=SiloDatabase.o
+DEPENDS_37:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
@@ -1268,8 +1123,6 @@ DEPENDS_38:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.I				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SiloDatabase.h			\
@@ -1277,18 +1130,17 @@ DEPENDS_38:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h SiloDatabase.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_38 +=\
+DEPENDS_37 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database_template_methods.C		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/List.C				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.C
+	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
 endif
 
-${FILE_38:X.o=${NDIM}.o}: ${DEPENDS_38}
+${FILE_37:X.o=${NDIM}.o}: ${DEPENDS_37}
 
-FILE_39=SiloDatabaseFactory.o
-DEPENDS_39:=\
+FILE_38=SiloDatabaseFactory.o
+DEPENDS_38:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
@@ -1306,8 +1158,6 @@ DEPENDS_39:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/List.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.I				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SiloDatabase.h			\
@@ -1316,36 +1166,69 @@ DEPENDS_39:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h SiloDatabaseFactory.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_39 +=\
+DEPENDS_38 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database_template_methods.C		\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.C				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.C
+	$(INCLUDE_SAM)/SAMRAI/tbox/List.C
 endif
 
-${FILE_39:X.o=${NDIM}.o}: ${DEPENDS_39}
+${FILE_38:X.o=${NDIM}.o}: ${DEPENDS_38}
 
-FILE_40=StartupShutdownManager.o
-DEPENDS_40:=\
+FILE_39=StartupShutdownManager.o
+DEPENDS_39:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/DescribedClass.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/IOStream.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.I				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.I			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h StartupShutdownManager.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
+DEPENDS_39 +=\
+	
+endif
+
+${FILE_39:X.o=${NDIM}.o}: ${DEPENDS_39}
+
+FILE_40=StatTransaction.o
+DEPENDS_40:=\
+	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
+	$(INCLUDE_SAM)/SAMRAI/tbox/Array.I				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/Complex.h				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/Database.I				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/Database.h				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/DatabaseBox.I			\
+	$(INCLUDE_SAM)/SAMRAI/tbox/DatabaseBox.h			\
+	$(INCLUDE_SAM)/SAMRAI/tbox/DescribedClass.h			\
+	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.I				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.h				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/IOStream.h				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/List.I				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/List.h				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.h				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/MessageStream.I			\
+	$(INCLUDE_SAM)/SAMRAI/tbox/MessageStream.h			\
+	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.h				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.I			\
+	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.h			\
+	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
+	$(INCLUDE_SAM)/SAMRAI/tbox/StatTransaction.h			\
+	$(INCLUDE_SAM)/SAMRAI/tbox/Statistic.I				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/Statistic.h				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/Transaction.h			\
+	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h StatTransaction.C
+
+ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_40 +=\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.C
+	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/Database_template_methods.C		\
+	$(INCLUDE_SAM)/SAMRAI/tbox/List.C				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/MessageStream_template_methods.C
 endif
 
 ${FILE_40:X.o=${NDIM}.o}: ${DEPENDS_40}
 
-FILE_41=StatTransaction.o
+FILE_41=Statistic.o
 DEPENDS_41:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.I				\
@@ -1362,55 +1245,11 @@ DEPENDS_41:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/List.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/List.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/MessageStream.I			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/MessageStream.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.I				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.I			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
-	$(INCLUDE_SAM)/SAMRAI/tbox/StatTransaction.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Statistic.I				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Statistic.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Transaction.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h StatTransaction.C
-
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_41 +=\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Database_template_methods.C		\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.C				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/MessageStream_template_methods.C	\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.C
-endif
-
-${FILE_41:X.o=${NDIM}.o}: ${DEPENDS_41}
-
-FILE_42=Statistic.o
-DEPENDS_42:=\
-	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Array.I				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Complex.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Database.I				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Database.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/DatabaseBox.I			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/DatabaseBox.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/DescribedClass.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.I				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/IOStream.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.I				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MessageStream.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MessageStream.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.I				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAIManager.h			\
@@ -1422,19 +1261,18 @@ DEPENDS_42:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h Statistic.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_42 +=\
+DEPENDS_41 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database_template_methods.C		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/List.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/MessageStream_template_methods.C	\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.C
+	$(INCLUDE_SAM)/SAMRAI/tbox/MessageStream_template_methods.C
 endif
 
-${FILE_42:X.o=${NDIM}.o}: ${DEPENDS_42}
+${FILE_41:X.o=${NDIM}.o}: ${DEPENDS_41}
 
-FILE_43=Statistician.o
-DEPENDS_43:=\
+FILE_42=Statistician.o
+DEPENDS_42:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
@@ -1460,8 +1298,6 @@ DEPENDS_43:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MessageStream.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MessageStream.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.I				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/RestartManager.I			\
@@ -1484,20 +1320,19 @@ DEPENDS_43:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h Statistician.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_43 +=\
+DEPENDS_42 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/AsyncCommPeer.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database_template_methods.C		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/List.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/MessageStream_template_methods.C	\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.C
+	$(INCLUDE_SAM)/SAMRAI/tbox/MessageStream_template_methods.C
 endif
 
-${FILE_43:X.o=${NDIM}.o}: ${DEPENDS_43}
+${FILE_42:X.o=${NDIM}.o}: ${DEPENDS_42}
 
-FILE_44=Timer.o
-DEPENDS_44:=\
+FILE_43=Timer.o
+DEPENDS_43:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
@@ -1515,8 +1350,6 @@ DEPENDS_44:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/List.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.I				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAIManager.h			\
@@ -1530,17 +1363,16 @@ DEPENDS_44:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h Timer.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_44 +=\
+DEPENDS_43 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database_template_methods.C		\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.C				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.C
+	$(INCLUDE_SAM)/SAMRAI/tbox/List.C
 endif
 
-${FILE_44:X.o=${NDIM}.o}: ${DEPENDS_44}
+${FILE_43:X.o=${NDIM}.o}: ${DEPENDS_43}
 
-FILE_45=TimerManager.o
-DEPENDS_45:=\
+FILE_44=TimerManager.o
+DEPENDS_44:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
@@ -1562,8 +1394,6 @@ DEPENDS_45:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MemoryDatabase.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MemoryDatabase.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.I				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/RestartManager.I			\
@@ -1579,31 +1409,30 @@ DEPENDS_45:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h TimerManager.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_45 +=\
+DEPENDS_44 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database_template_methods.C		\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.C				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.C
+	$(INCLUDE_SAM)/SAMRAI/tbox/List.C
 endif
 
-${FILE_45:X.o=${NDIM}.o}: ${DEPENDS_45}
+${FILE_44:X.o=${NDIM}.o}: ${DEPENDS_44}
 
-FILE_46=Tracer.o
-DEPENDS_46:=\
+FILE_45=Tracer.o
+DEPENDS_45:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Tracer.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Tracer.h Tracer.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_46 +=\
+DEPENDS_45 +=\
 	
 endif
 
-${FILE_46:X.o=${NDIM}.o}: ${DEPENDS_46}
+${FILE_45:X.o=${NDIM}.o}: ${DEPENDS_45}
 
-FILE_47=Transaction.o
-DEPENDS_47:=\
+FILE_46=Transaction.o
+DEPENDS_46:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Complex.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/DescribedClass.h			\
@@ -1611,24 +1440,19 @@ DEPENDS_47:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MessageStream.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MessageStream.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.I				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.I			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Transaction.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h Transaction.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_47 +=\
-	$(INCLUDE_SAM)/SAMRAI/tbox/MessageStream_template_methods.C	\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.C
+DEPENDS_46 +=\
+	$(INCLUDE_SAM)/SAMRAI/tbox/MessageStream_template_methods.C
 endif
 
-${FILE_47:X.o=${NDIM}.o}: ${DEPENDS_47}
+${FILE_46:X.o=${NDIM}.o}: ${DEPENDS_46}
 
-FILE_48=Utilities.o
-DEPENDS_48:=\
+FILE_47=Utilities.o
+DEPENDS_47:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
@@ -1643,8 +1467,6 @@ DEPENDS_48:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/IOStream.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.I				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAIManager.h			\
@@ -1654,11 +1476,10 @@ DEPENDS_48:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h Utilities.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_48 +=\
+DEPENDS_47 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Database_template_methods.C		\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.C
+	$(INCLUDE_SAM)/SAMRAI/tbox/Database_template_methods.C
 endif
 
-${FILE_48:X.o=${NDIM}.o}: ${DEPENDS_48}
+${FILE_47:X.o=${NDIM}.o}: ${DEPENDS_47}
 

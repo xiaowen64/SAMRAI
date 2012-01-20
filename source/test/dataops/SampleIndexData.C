@@ -230,7 +230,7 @@ void SampleIndexData::unpackStream(
  */
 
 void SampleIndexData::putToDatabase(
-   tbox::Pointer<tbox::Database>& database)
+   boost::shared_ptr<tbox::Database>& database)
 {
 
    int counter = 0;
@@ -247,7 +247,7 @@ void SampleIndexData::putToDatabase(
 }
 
 void SampleIndexData::getFromDatabase(
-   tbox::Pointer<tbox::Database>& database)
+   boost::shared_ptr<tbox::Database>& database)
 {
    int dim = d_index.getDim().getValue();
    int ibuffer[dim + 1];
@@ -273,7 +273,6 @@ void SampleIndexData::getFromDatabase(
 //#include "SAMRAI/pdat/IndexData.C"
 //#include "SAMRAI/pdat/IndexDataFactory.C"
 //#include "SAMRAI/pdat/IndexVariable.C"
-//#include "SAMRAI/tbox/Pointer.C"
 //#include "SAMRAI/pdat/CellGeometry.h"
 //
 //namespace SAMRAI {
@@ -288,11 +287,11 @@ void SampleIndexData::getFromDatabase(
 //template class tbox::Array<SampleIndexData>;
 //template class tbox::Array<pdat::IndexDataNode<NDIM, SampleIndexData,
 //                                               pdat::CellGeometry> >;
-//template class tbox::Pointer<pdat::IndexData<NDIM, SampleIndexData,
-//                                             pdat::CellGeometry> >;
-//template class tbox::Pointer<pdat::IndexVariable<SampleIndexData,
+//template class boost::shared_ptr<pdat::IndexData<NDIM, SampleIndexData,
 //                                                 pdat::CellGeometry> >;
-//template class tbox::Pointer<pdat::IndexDataFactory<SampleIndexData,
-//                                                    pdat::CellGeometry> >;
+//template class boost::shared_ptr<pdat::IndexVariable<SampleIndexData,
+//                                                     pdat::CellGeometry> >;
+//template class boost::shared_ptr<pdat::IndexDataFactory<SampleIndexData,
+//                                                        pdat::CellGeometry> >;
 //
 //}

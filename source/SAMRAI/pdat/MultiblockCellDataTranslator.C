@@ -58,12 +58,12 @@ void MultiblockCellDataTranslator<TYPE>::translateAndCopyData(
 
    const tbox::Dimension& dim(shift.getDim());
 
-   tbox::Pointer<CellData<TYPE> > dst(
+   boost::shared_ptr<CellData<TYPE> > dst(
       dst_patch.getPatchData(dst_id),
-      tbox::__dynamic_cast_tag());
-   tbox::Pointer<CellData<TYPE> > src(
+      boost::detail::dynamic_cast_tag());
+   boost::shared_ptr<CellData<TYPE> > src(
       src_patch.getPatchData(src_id),
-      tbox::__dynamic_cast_tag());
+      boost::detail::dynamic_cast_tag());
 
    TBOX_ASSERT(dst);
    TBOX_ASSERT(src);

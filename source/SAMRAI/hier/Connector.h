@@ -1146,7 +1146,7 @@ private:
     * We don't use a pointer to the BoxLevel, because it would
     * become dangling when the BoxLevel goes out of scope.
     */
-   tbox::Pointer<BoxLevelHandle> d_base_handle;
+   boost::shared_ptr<BoxLevelHandle> d_base_handle;
 
    /*!
     * @brief Handle for access to the base BoxLevel.
@@ -1154,7 +1154,7 @@ private:
     * We don't use a pointer to the BoxLevel, because it would
     * become dangling when the BoxLevel goes out of scope.
     */
-   tbox::Pointer<BoxLevelHandle> d_head_handle;
+   boost::shared_ptr<BoxLevelHandle> d_head_handle;
 
    /*!
     * @brief Connector width for the base BoxLevel.
@@ -1247,8 +1247,8 @@ private:
 
    ConnectorType d_connector_type;
 
-   static tbox::Pointer<tbox::Timer> t_acquire_remote_relationships;
-   static tbox::Pointer<tbox::Timer> t_cache_global_reduced_data;
+   static boost::shared_ptr<tbox::Timer> t_acquire_remote_relationships;
+   static boost::shared_ptr<tbox::Timer> t_cache_global_reduced_data;
 
    static tbox::StartupShutdownManager::Handler
       s_initialize_finalize_handler;

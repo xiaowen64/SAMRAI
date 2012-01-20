@@ -20,7 +20,7 @@ namespace hier {
  */
 
 SAMRAI_INLINE_KEYWORD
-tbox::Pointer<hier::PatchDescriptor>
+boost::shared_ptr<PatchDescriptor>
 VariableDatabase::getPatchDescriptor() const
 {
    return d_patch_descriptor;

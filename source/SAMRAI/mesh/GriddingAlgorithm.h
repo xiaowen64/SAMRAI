@@ -23,9 +23,9 @@
 #include "SAMRAI/xfer/RefineAlgorithm.h"
 #include "SAMRAI/tbox/Array.h"
 #include "SAMRAI/tbox/Database.h"
-#include "SAMRAI/tbox/Pointer.h"
 #include "SAMRAI/tbox/Timer.h"
 
+#include <boost/shared_ptr.hpp>
 #include <iostream>
 #include <string>
 #include <vector>
@@ -253,13 +253,14 @@ public:
     * @param[in] register_for_restart
     */
    GriddingAlgorithm(
-      const tbox::Pointer<hier::PatchHierarchy>& hierarchy,
+      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
       const std::string& object_name,
-      tbox::Pointer<tbox::Database> input_db,
-      tbox::Pointer<TagAndInitializeStrategy> level_strategy,
-      tbox::Pointer<BoxGeneratorStrategy> generator,
-      tbox::Pointer<LoadBalanceStrategy> balancer,
-      tbox::Pointer<LoadBalanceStrategy> balancer_zero = tbox::Pointer<LoadBalanceStrategy>(NULL),
+      boost::shared_ptr<tbox::Database> input_db,
+      boost::shared_ptr<TagAndInitializeStrategy> level_strategy,
+      boost::shared_ptr<BoxGeneratorStrategy> generator,
+      boost::shared_ptr<LoadBalanceStrategy> balancer,
+      boost::shared_ptr<LoadBalanceStrategy> balancer_zero =
+         boost::shared_ptr<LoadBalanceStrategy>((LoadBalanceStrategy*)NULL),
       bool register_for_restart = true);
 
    /*!
@@ -384,14 +385,14 @@ public:
     * @return pointer to TagAndInitializeStrategy data member.
     */
    virtual
-   tbox::Pointer<TagAndInitializeStrategy>
+   boost::shared_ptr<TagAndInitializeStrategy>
    getTagAndInitializeStrategy() const;
 
    /*!
     * @brief Return pointer to load balance strategy data member.
     */
    virtual
-   tbox::Pointer<LoadBalanceStrategy>
+   boost::shared_ptr<LoadBalanceStrategy>
    getLoadBalanceStrategy() const;
 
    /*!
@@ -402,7 +403,7 @@ public:
     * where one processor owns all the initial loads.
     */
    virtual
-   tbox::Pointer<LoadBalanceStrategy>
+   boost::shared_ptr<LoadBalanceStrategy>
    getLoadBalanceStrategyZero() const;
 
    /*!
@@ -459,7 +460,7 @@ public:
     */
    void
    putToDatabase(
-      tbox::Pointer<tbox::Database> db);
+      boost::shared_ptr<tbox::Database> db);
 
    /*
     * @brief Write out statistics recorded on numbers of cells and patches generated.
@@ -490,7 +491,7 @@ private:
     */
    void
    getFromInput(
-      tbox::Pointer<tbox::Database> db,
+      boost::shared_ptr<tbox::Database> db,
       bool is_from_restart);
 
    /*
@@ -577,7 +578,7 @@ private:
    void
    fillTags(
       const int tag_value,
-      const tbox::Pointer<hier::PatchLevel> tag_level,
+      const boost::shared_ptr<hier::PatchLevel> tag_level,
       const int tag_index) const;
 
    /*
@@ -607,7 +608,7 @@ private:
    void
    fillTagsFromBoxLevel(
       const int tag_value,
-      const tbox::Pointer<hier::PatchLevel> tag_level,
+      const boost::shared_ptr<hier::PatchLevel> tag_level,
       const int index,
       const hier::Connector& tag_level_to_fill_mapped_box_level,
       const bool interior_only,
@@ -803,7 +804,7 @@ private:
    void
    bufferTagsOnLevel(
       const int tag_value,
-      const tbox::Pointer<hier::PatchLevel> level,
+      const boost::shared_ptr<hier::PatchLevel> level,
       const int buffer_size) const;
 
    /*
@@ -999,7 +1000,7 @@ private:
    /*!
     * @brief The hierarchy that this GriddingAlgorithm works on.
     */
-   tbox::Pointer<hier::PatchHierarchy> d_hierarchy;
+   boost::shared_ptr<hier::PatchHierarchy> d_hierarchy;
 
    /*!
     * @brief Implementation registered with the hierarchy, telling the
@@ -1030,10 +1031,10 @@ private:
     * and cell tagging, clustering of tagged cells into boxes, and load
     * balancing of patches to processors, respectively.
     */
-   tbox::Pointer<TagAndInitializeStrategy> d_tag_init_strategy;
-   tbox::Pointer<BoxGeneratorStrategy> d_box_generator;
-   tbox::Pointer<LoadBalanceStrategy> d_load_balancer;
-   tbox::Pointer<LoadBalanceStrategy> d_load_balancer0;
+   boost::shared_ptr<TagAndInitializeStrategy> d_tag_init_strategy;
+   boost::shared_ptr<BoxGeneratorStrategy> d_box_generator;
+   boost::shared_ptr<LoadBalanceStrategy> d_load_balancer;
+   boost::shared_ptr<LoadBalanceStrategy> d_load_balancer0;
 
    /*
     * MultiblockGriddingTagger is the RefinePatchStrategy
@@ -1052,13 +1053,13 @@ private:
     * distributed across processors.  The refine algorithm and schedule are
     * used for interprocessor communication.
     */
-   tbox::Pointer<pdat::CellVariable<int> > d_tag;
-   tbox::Pointer<pdat::CellVariable<int> > d_buf_tag;
+   boost::shared_ptr<pdat::CellVariable<int> > d_tag;
+   boost::shared_ptr<pdat::CellVariable<int> > d_buf_tag;
    int d_tag_indx;
    int d_buf_tag_indx;
 
-   tbox::Pointer<xfer::RefineAlgorithm> d_bdry_fill_tags;
-   tbox::Array<tbox::Pointer<xfer::RefineSchedule> > d_bdry_sched_tags;
+   boost::shared_ptr<xfer::RefineAlgorithm> d_bdry_fill_tags;
+   tbox::Array<boost::shared_ptr<xfer::RefineSchedule> > d_bdry_sched_tags;
 
    /*
     * True and false integer tag values set in constructor and used to
@@ -1099,7 +1100,7 @@ private:
     * Has length d_hierarchy->getMaxNumberOfLevels().  The objects are
     * initialized only during gridding/regridding.
     */
-   std::vector<SAMRAI::hier::BoxLevel> d_proper_nesting_complement;
+   std::vector<hier::BoxLevel> d_proper_nesting_complement;
 
    /*
     * @brief Connectors from the hierarchy to d_proper_nesting_complement.
@@ -1107,7 +1108,7 @@ private:
     * d_to_nesting_complement[ln] goes from level ln to
     * d_proper_nesting_complelemt[ln].
     */
-   std::vector<SAMRAI::hier::Connector> d_to_nesting_complement;
+   std::vector<hier::Connector> d_to_nesting_complement;
 
    /*
     * @brief Connectors from d_proper_nesting_complement to the hierarchy.
@@ -1115,7 +1116,7 @@ private:
     * d_from_nesting_complement[ln] goes from
     * d_proper_nesting_complement[ln] to level ln.
     */
-   std::vector<SAMRAI::hier::Connector> d_from_nesting_complement;
+   std::vector<hier::Connector> d_from_nesting_complement;
 
    /*!
     * @brief How to resolve user tags that violate nesting requirements.
@@ -1169,68 +1170,68 @@ private:
    /*
     * Timers interspersed throughout the class.
     */
-   tbox::Pointer<tbox::Timer> t_find_domain_complement;
-   tbox::Pointer<tbox::Timer> t_load_balance;
-   tbox::Pointer<tbox::Timer> t_load_balance0;
-   tbox::Pointer<tbox::Timer> t_load_balance_setup;
-   tbox::Pointer<tbox::Timer> t_bdry_fill_tags_create;
-   tbox::Pointer<tbox::Timer> t_make_coarsest;
-   tbox::Pointer<tbox::Timer> t_make_finer;
-   tbox::Pointer<tbox::Timer> t_make_finer_setup;
-   tbox::Pointer<tbox::Timer> t_make_finer_tagging;
-   tbox::Pointer<tbox::Timer> t_make_finer_create;
-   tbox::Pointer<tbox::Timer> t_regrid_all_finer;
-   tbox::Pointer<tbox::Timer> t_regrid_finer_create;
-   tbox::Pointer<tbox::Timer> t_bridge_links;
-   tbox::Pointer<tbox::Timer> t_fill_tags;
-   tbox::Pointer<tbox::Timer> t_tag_cells_for_refinement;
-   tbox::Pointer<tbox::Timer> t_buffer_tags;
-   tbox::Pointer<tbox::Timer> t_bdry_fill_tags_comm;
-   tbox::Pointer<tbox::Timer> t_second_finer_tagging;
-   tbox::Pointer<tbox::Timer> t_find_refinement;
-   tbox::Pointer<tbox::Timer> t_bridge_new_to_new;
-   tbox::Pointer<tbox::Timer> t_find_new_to_new;
-   tbox::Pointer<tbox::Timer> t_bridge_new_to_coarser;
-   tbox::Pointer<tbox::Timer> t_bridge_new_to_finer;
-   tbox::Pointer<tbox::Timer> t_bridge_new_to_old;
-   tbox::Pointer<tbox::Timer> t_find_boxes_containing_tags;
-   tbox::Pointer<tbox::Timer> t_enforce_nesting;
-   tbox::Pointer<tbox::Timer> t_make_nesting_map;
-   tbox::Pointer<tbox::Timer> t_make_nesting_map_compute;
-   tbox::Pointer<tbox::Timer> t_make_nesting_map_convert;
-   tbox::Pointer<tbox::Timer> t_use_nesting_map;
-   tbox::Pointer<tbox::Timer> t_make_overflow_map;
-   tbox::Pointer<tbox::Timer> t_make_overflow_map_compute;
-   tbox::Pointer<tbox::Timer> t_make_overflow_map_convert;
-   tbox::Pointer<tbox::Timer> t_use_overflow_map;
-   tbox::Pointer<tbox::Timer> t_compute_external_parts;
-   tbox::Pointer<tbox::Timer> t_compute_nesting_violator;
-   tbox::Pointer<tbox::Timer> t_extend_to_domain_boundary;
-   tbox::Pointer<tbox::Timer> t_extend_within_domain;
-   tbox::Pointer<tbox::Timer> t_grow_boxes_within_domain;
-   tbox::Pointer<tbox::Timer> t_sort_nodes;
-   tbox::Pointer<tbox::Timer> t_modify_connector;
-   tbox::Pointer<tbox::Timer> t_misc1;
-   tbox::Pointer<tbox::Timer> t_misc2;
-   tbox::Pointer<tbox::Timer> t_misc3;
-   tbox::Pointer<tbox::Timer> t_misc4;
-   tbox::Pointer<tbox::Timer> t_misc5;
-   tbox::Pointer<tbox::Timer> t_make_domain;
-   tbox::Pointer<tbox::Timer> t_get_balance;
-   tbox::Pointer<tbox::Timer> t_use_balance;
-   tbox::Pointer<tbox::Timer> t_make_new;
-   tbox::Pointer<tbox::Timer> t_process_error;
-   tbox::Pointer<tbox::Timer> t_limit_overflow;
-   tbox::Pointer<tbox::Timer> t_reset_hier;
-   tbox::Pointer<tbox::Timer> t_box_massage;
+   boost::shared_ptr<tbox::Timer> t_find_domain_complement;
+   boost::shared_ptr<tbox::Timer> t_load_balance;
+   boost::shared_ptr<tbox::Timer> t_load_balance0;
+   boost::shared_ptr<tbox::Timer> t_load_balance_setup;
+   boost::shared_ptr<tbox::Timer> t_bdry_fill_tags_create;
+   boost::shared_ptr<tbox::Timer> t_make_coarsest;
+   boost::shared_ptr<tbox::Timer> t_make_finer;
+   boost::shared_ptr<tbox::Timer> t_make_finer_setup;
+   boost::shared_ptr<tbox::Timer> t_make_finer_tagging;
+   boost::shared_ptr<tbox::Timer> t_make_finer_create;
+   boost::shared_ptr<tbox::Timer> t_regrid_all_finer;
+   boost::shared_ptr<tbox::Timer> t_regrid_finer_create;
+   boost::shared_ptr<tbox::Timer> t_bridge_links;
+   boost::shared_ptr<tbox::Timer> t_fill_tags;
+   boost::shared_ptr<tbox::Timer> t_tag_cells_for_refinement;
+   boost::shared_ptr<tbox::Timer> t_buffer_tags;
+   boost::shared_ptr<tbox::Timer> t_bdry_fill_tags_comm;
+   boost::shared_ptr<tbox::Timer> t_second_finer_tagging;
+   boost::shared_ptr<tbox::Timer> t_find_refinement;
+   boost::shared_ptr<tbox::Timer> t_bridge_new_to_new;
+   boost::shared_ptr<tbox::Timer> t_find_new_to_new;
+   boost::shared_ptr<tbox::Timer> t_bridge_new_to_coarser;
+   boost::shared_ptr<tbox::Timer> t_bridge_new_to_finer;
+   boost::shared_ptr<tbox::Timer> t_bridge_new_to_old;
+   boost::shared_ptr<tbox::Timer> t_find_boxes_containing_tags;
+   boost::shared_ptr<tbox::Timer> t_enforce_nesting;
+   boost::shared_ptr<tbox::Timer> t_make_nesting_map;
+   boost::shared_ptr<tbox::Timer> t_make_nesting_map_compute;
+   boost::shared_ptr<tbox::Timer> t_make_nesting_map_convert;
+   boost::shared_ptr<tbox::Timer> t_use_nesting_map;
+   boost::shared_ptr<tbox::Timer> t_make_overflow_map;
+   boost::shared_ptr<tbox::Timer> t_make_overflow_map_compute;
+   boost::shared_ptr<tbox::Timer> t_make_overflow_map_convert;
+   boost::shared_ptr<tbox::Timer> t_use_overflow_map;
+   boost::shared_ptr<tbox::Timer> t_compute_external_parts;
+   boost::shared_ptr<tbox::Timer> t_compute_nesting_violator;
+   boost::shared_ptr<tbox::Timer> t_extend_to_domain_boundary;
+   boost::shared_ptr<tbox::Timer> t_extend_within_domain;
+   boost::shared_ptr<tbox::Timer> t_grow_boxes_within_domain;
+   boost::shared_ptr<tbox::Timer> t_sort_nodes;
+   boost::shared_ptr<tbox::Timer> t_modify_connector;
+   boost::shared_ptr<tbox::Timer> t_misc1;
+   boost::shared_ptr<tbox::Timer> t_misc2;
+   boost::shared_ptr<tbox::Timer> t_misc3;
+   boost::shared_ptr<tbox::Timer> t_misc4;
+   boost::shared_ptr<tbox::Timer> t_misc5;
+   boost::shared_ptr<tbox::Timer> t_make_domain;
+   boost::shared_ptr<tbox::Timer> t_get_balance;
+   boost::shared_ptr<tbox::Timer> t_use_balance;
+   boost::shared_ptr<tbox::Timer> t_make_new;
+   boost::shared_ptr<tbox::Timer> t_process_error;
+   boost::shared_ptr<tbox::Timer> t_limit_overflow;
+   boost::shared_ptr<tbox::Timer> t_reset_hier;
+   boost::shared_ptr<tbox::Timer> t_box_massage;
 
 #ifdef GA_RECORD_STATS
    /*
     * Statistics on number of cells and patches generated.
     */
-   tbox::Array<tbox::Pointer<tbox::Statistic> > d_boxes_stat;
-   tbox::Array<tbox::Pointer<tbox::Statistic> > d_cells_stat;
-   tbox::Array<tbox::Pointer<tbox::Statistic> > d_timestamp_stat;
+   tbox::Array<boost::shared_ptr<tbox::Statistic> > d_boxes_stat;
+   tbox::Array<boost::shared_ptr<tbox::Statistic> > d_cells_stat;
+   tbox::Array<boost::shared_ptr<tbox::Statistic> > d_timestamp_stat;
 #endif
 
    // The following are not yet implemented:

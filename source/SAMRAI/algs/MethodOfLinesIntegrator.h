@@ -23,7 +23,6 @@
 #include "SAMRAI/algs/MethodOfLinesPatchStrategy.h"
 #include "SAMRAI/hier/PatchHierarchy.h"
 #include "SAMRAI/hier/PatchLevel.h"
-#include "SAMRAI/tbox/Pointer.h"
 #include "SAMRAI/xfer/RefineAlgorithm.h"
 #include "SAMRAI/xfer/RefineSchedule.h"
 #include "SAMRAI/tbox/Serializable.h"
@@ -32,6 +31,7 @@
 #include "SAMRAI/hier/Variable.h"
 #include "SAMRAI/hier/VariableContext.h"
 
+#include <boost/shared_ptr.hpp>
 #include <iostream>
 #include <string>
 
@@ -134,7 +134,7 @@ public:
     */
    MethodOfLinesIntegrator(
       const std::string& object_name,
-      tbox::Pointer<tbox::Database> input_db,
+      boost::shared_ptr<tbox::Database> input_db,
       MethodOfLinesPatchStrategy* patch_strategy,
       bool register_for_restart = true);
 
@@ -152,7 +152,7 @@ public:
     */
    void
    initializeIntegrator(
-      tbox::Pointer<mesh::GriddingAlgorithm> gridding_alg);
+      boost::shared_ptr<mesh::GriddingAlgorithm> gridding_alg);
 
    /*!
     * Return a suitable time increment over which to integrate the ODE
@@ -161,7 +161,7 @@ public:
     */
    double
    getTimestep(
-      const tbox::Pointer<hier::PatchHierarchy> hierarchy,
+      const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
       const double time) const;
 
    /*!
@@ -171,7 +171,7 @@ public:
     */
    void
    advanceHierarchy(
-      const tbox::Pointer<hier::PatchHierarchy> hierarchy,
+      const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
       const double time,
       const double dt);
 
@@ -181,10 +181,10 @@ public:
     */
    void
    registerVariable(
-      const tbox::Pointer<hier::Variable> variable,
+      const boost::shared_ptr<hier::Variable> variable,
       const hier::IntVector& ghosts,
       const MOL_VAR_TYPE m_v_type,
-      const tbox::Pointer<hier::GridGeometry>& transfer_geom,
+      const boost::shared_ptr<hier::GridGeometry>& transfer_geom,
       const std::string& coarsen_name = std::string(),
       const std::string& refine_name = std::string());
 
@@ -229,13 +229,13 @@ public:
     */
    void
    initializeLevelData(
-      const tbox::Pointer<hier::PatchHierarchy> hierarchy,
+      const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
       const int level_number,
       const double init_time,
       const bool can_be_refined,
       const bool initial_time,
-      const tbox::Pointer<hier::PatchLevel> old_level =
-         tbox::Pointer<hier::PatchLevel>(NULL),
+      const boost::shared_ptr<hier::PatchLevel> old_level =
+         boost::shared_ptr<hier::PatchLevel>((hier::PatchLevel*)NULL),
       const bool allocate_data = true);
 
 #if !defined(__xlC__)
@@ -256,7 +256,7 @@ public:
     */
    void
    resetHierarchyConfiguration(
-      const tbox::Pointer<hier::PatchHierarchy> hierarchy,
+      const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
       const int coarsest_level,
       const int finest_level);
 
@@ -280,7 +280,7 @@ public:
     */
    virtual void
    applyGradientDetector(
-      const tbox::Pointer<hier::PatchHierarchy> hierarchy,
+      const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
       const int level_number,
       const double time,
       const int tag_index,
@@ -294,7 +294,7 @@ public:
     */
    void
    putToDatabase(
-      tbox::Pointer<tbox::Database> db);
+      boost::shared_ptr<tbox::Database> db);
 
    /*!
     * Returns the object name.
@@ -313,14 +313,14 @@ private:
     */
    void
    copyCurrentToScratch(
-      const tbox::Pointer<hier::PatchLevel> level) const;
+      const boost::shared_ptr<hier::PatchLevel> level) const;
 
    /*
     * Copy all solution data from scratch context to current context.
     */
    void
    copyScratchToCurrent(
-      const tbox::Pointer<hier::PatchLevel> level) const;
+      const boost::shared_ptr<hier::PatchLevel> level) const;
 
    /*
     * Reads in parameters from the input database.  All
@@ -331,7 +331,7 @@ private:
     */
    void
    getFromInput(
-      tbox::Pointer<tbox::Database> db,
+      boost::shared_ptr<tbox::Database> db,
       bool is_from_restart);
 
    /*
@@ -389,27 +389,27 @@ private:
     * time a level is regridded.  All ghosts are filled with current
     * data at specified time.
     */
-   tbox::Pointer<xfer::RefineAlgorithm> d_bdry_fill_advance;
-   tbox::Array<tbox::Pointer<xfer::RefineSchedule> > d_bdry_sched_advance;
+   boost::shared_ptr<xfer::RefineAlgorithm> d_bdry_fill_advance;
+   tbox::Array<boost::shared_ptr<xfer::RefineSchedule> > d_bdry_sched_advance;
 
    /*
     * Algorithm for transferring data from coarse patch to fine patch
     * after a regrid.
     */
-   tbox::Pointer<xfer::RefineAlgorithm> d_fill_after_regrid;
+   boost::shared_ptr<xfer::RefineAlgorithm> d_fill_after_regrid;
 
    /*
     * Algorithm for copying data from current context to scratch context,
     * on the same level.
     */
-   tbox::Pointer<xfer::RefineAlgorithm> d_fill_before_tagging;
+   boost::shared_ptr<xfer::RefineAlgorithm> d_fill_before_tagging;
 
    /*
     * Algorithm and communication schedule for transferring data from
     * fine to coarse grid.
     */
-   tbox::Pointer<xfer::CoarsenAlgorithm> d_coarsen_algorithm;
-   tbox::Array<tbox::Pointer<xfer::CoarsenSchedule> > d_coarsen_schedule;
+   boost::shared_ptr<xfer::CoarsenAlgorithm> d_coarsen_algorithm;
+   tbox::Array<boost::shared_ptr<xfer::CoarsenSchedule> > d_coarsen_schedule;
 
    /*
     * This algorithm has two variable contexts.  The current context is the
@@ -418,11 +418,11 @@ private:
     * state during the time integration process.  These variables will require
     * ghost cell widths that depend on the spatial discretization.
     */
-   tbox::Pointer<hier::VariableContext> d_current;
-   tbox::Pointer<hier::VariableContext> d_scratch;
+   boost::shared_ptr<hier::VariableContext> d_current;
+   boost::shared_ptr<hier::VariableContext> d_scratch;
 
-   tbox::List<tbox::Pointer<hier::Variable> > d_soln_variables;
-   tbox::List<tbox::Pointer<hier::Variable> > d_rhs_variables;
+   tbox::List<boost::shared_ptr<hier::Variable> > d_soln_variables;
+   tbox::List<boost::shared_ptr<hier::Variable> > d_rhs_variables;
 
    /*
     * The component selectors for current and scratch are used by the

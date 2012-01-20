@@ -65,16 +65,16 @@ FaceDataFactory<TYPE>::~FaceDataFactory()
  */
 
 template<class TYPE>
-tbox::Pointer<hier::PatchDataFactory>
+boost::shared_ptr<hier::PatchDataFactory>
 FaceDataFactory<TYPE>::cloneFactory(
    const hier::IntVector& ghosts)
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, ghosts);
 
-   return tbox::Pointer<hier::PatchDataFactory>(new FaceDataFactory<TYPE>(
-                                                   d_depth,
-                                                   ghosts,
-                                                   d_fine_boundary_represents_var));
+   return boost::shared_ptr<hier::PatchDataFactory>(
+      new FaceDataFactory<TYPE>(d_depth,
+                                ghosts,
+                                d_fine_boundary_represents_var));
 }
 
 /*
@@ -86,7 +86,7 @@ FaceDataFactory<TYPE>::cloneFactory(
  */
 
 template<class TYPE>
-tbox::Pointer<hier::PatchData>
+boost::shared_ptr<hier::PatchData>
 FaceDataFactory<TYPE>::allocate(
    const hier::Patch& patch) const
 {
@@ -94,7 +94,7 @@ FaceDataFactory<TYPE>::allocate(
 
    hier::PatchData* patchdata =
       new FaceData<TYPE>(patch.getBox(), d_depth, this->d_ghosts);
-   return tbox::Pointer<hier::PatchData>(patchdata);
+   return boost::shared_ptr<hier::PatchData>(patchdata);
 }
 
 /*
@@ -106,14 +106,14 @@ FaceDataFactory<TYPE>::allocate(
  */
 
 template<class TYPE>
-tbox::Pointer<hier::BoxGeometry>
+boost::shared_ptr<hier::BoxGeometry>
 FaceDataFactory<TYPE>::getBoxGeometry(
    const hier::Box& box) const
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, box);
 
    hier::BoxGeometry* boxgeometry = new FaceGeometry(box, this->d_ghosts);
-   return tbox::Pointer<hier::BoxGeometry>(boxgeometry);
+   return boost::shared_ptr<hier::BoxGeometry>(boxgeometry);
 }
 
 /*
@@ -148,7 +148,7 @@ size_t FaceDataFactory<TYPE>::getSizeOfMemory(
 
 template<class TYPE>
 bool FaceDataFactory<TYPE>::validCopyTo(
-   const tbox::Pointer<hier::PatchDataFactory>& dst_pdf) const
+   const boost::shared_ptr<hier::PatchDataFactory>& dst_pdf) const
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, *dst_pdf);
 
@@ -158,18 +158,18 @@ bool FaceDataFactory<TYPE>::validCopyTo(
     * Valid options are FaceData and OuterfaceData.
     */
    if (!valid_copy) {
-      tbox::Pointer<FaceDataFactory<TYPE> > fdf(
+      boost::shared_ptr<FaceDataFactory<TYPE> > fdf(
          dst_pdf,
-         tbox::__dynamic_cast_tag());
+         boost::detail::dynamic_cast_tag());
       if (fdf) {
          valid_copy = true;
       }
    }
 
    if (!valid_copy) {
-      tbox::Pointer<OuterfaceDataFactory<TYPE> > ofdf(
+      boost::shared_ptr<OuterfaceDataFactory<TYPE> > ofdf(
          dst_pdf,
-         tbox::__dynamic_cast_tag());
+         boost::detail::dynamic_cast_tag());
       if (ofdf) {
          valid_copy = true;
       }

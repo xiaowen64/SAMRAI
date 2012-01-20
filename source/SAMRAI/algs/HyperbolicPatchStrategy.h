@@ -17,10 +17,11 @@
 #include "SAMRAI/hier/PatchLevel.h"
 #include "SAMRAI/hier/Variable.h"
 #include "SAMRAI/hier/VariableContext.h"
-#include "SAMRAI/tbox/Pointer.h"
 #include "SAMRAI/xfer/RefinePatchStrategy.h"
 #include "SAMRAI/xfer/CoarsenPatchStrategy.h"
 #include "SAMRAI/mesh/GriddingAlgorithm.h"
+
+#include <boost/shared_ptr.hpp>
 
 namespace SAMRAI {
 namespace algs {
@@ -197,7 +198,7 @@ public:
     */
    virtual void
    preprocessAdvanceLevelState(
-      const tbox::Pointer<hier::PatchLevel>& level,
+      const boost::shared_ptr<hier::PatchLevel>& level,
       double current_time,
       double dt,
       bool first_step,
@@ -232,7 +233,7 @@ public:
     */
    virtual void
    postprocessAdvanceLevelState(
-      const tbox::Pointer<hier::PatchLevel>& level,
+      const boost::shared_ptr<hier::PatchLevel>& level,
       double current_time,
       double dt,
       bool first_step,
@@ -306,8 +307,8 @@ public:
    tagRichardsonExtrapolationCells(
       hier::Patch& patch,
       const int error_level_number,
-      const tbox::Pointer<hier::VariableContext> coarsened_fine,
-      const tbox::Pointer<hier::VariableContext> advanced_coarse,
+      const boost::shared_ptr<hier::VariableContext> coarsened_fine,
+      const boost::shared_ptr<hier::VariableContext> advanced_coarse,
       const double regrid_time,
       const double deltat,
       const int error_coarsen_ratio,
@@ -434,7 +435,7 @@ public:
    /**
     * Return pointer to patch data context.
     */
-   tbox::Pointer<hier::VariableContext>
+   boost::shared_ptr<hier::VariableContext>
    getDataContext() const;
 
    /**
@@ -445,7 +446,7 @@ public:
     */
    void
    setDataContext(
-      tbox::Pointer<hier::VariableContext> context);
+      boost::shared_ptr<hier::VariableContext> context);
 
    /**
     * The clearDataContext() routine resets the data context to be null.
@@ -459,7 +460,7 @@ public:
 private:
    const tbox::Dimension d_dim;
 
-   tbox::Pointer<hier::VariableContext> d_data_context;
+   boost::shared_ptr<hier::VariableContext> d_data_context;
 };
 
 }

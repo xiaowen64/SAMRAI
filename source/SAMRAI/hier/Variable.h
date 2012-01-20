@@ -14,9 +14,9 @@
 #include "SAMRAI/SAMRAI_config.h"
 
 #include "SAMRAI/hier/PatchDataFactory.h"
-#include "SAMRAI/tbox/Pointer.h"
 #include "SAMRAI/tbox/DescribedClass.h"
 
+#include <boost/shared_ptr.hpp>
 #include <string>
 
 namespace SAMRAI {
@@ -84,7 +84,7 @@ public:
     */
    Variable(
       const std::string& name,
-      const tbox::Pointer<PatchDataFactory> factory);
+      const boost::shared_ptr<PatchDataFactory> factory);
 
    /**
     * Virtual destructor for variable objects.
@@ -127,14 +127,14 @@ public:
     */
    void
    setPatchDataFactory(
-      tbox::Pointer<PatchDataFactory> factory);
+      boost::shared_ptr<PatchDataFactory> factory);
 
    /**
     * Return a non-const pointer to a patch data factory that will be used
     * to instantiate instances of this variable on the patches.  The factory
     * returned will have been set by the variable subclasses.
     */
-   tbox::Pointer<PatchDataFactory>
+   boost::shared_ptr<PatchDataFactory>
    getPatchDataFactory() const;
 
    /**
@@ -154,7 +154,7 @@ private:
 
    std::string d_name;
    int d_instance;
-   tbox::Pointer<PatchDataFactory> d_factory;
+   boost::shared_ptr<PatchDataFactory> d_factory;
 
    static int s_instance_counter;
 

@@ -34,9 +34,9 @@ namespace solv {
 const int CVODESolver::STAT_OUTPUT_BUFFER_SIZE = 256;
 
 #define SABSVEC_CAST(v) \
-   (static_cast<SAMRAI::solv::SundialsAbstractVector *>(v \
-                                                        -> \
-                                                        content))
+   (static_cast<SundialsAbstractVector *>(v \
+                                          -> \
+                                          content))
 
 /*
  *************************************************************************

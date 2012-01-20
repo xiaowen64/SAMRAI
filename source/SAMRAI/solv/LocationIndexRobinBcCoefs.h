@@ -16,7 +16,8 @@
 #include "SAMRAI/pdat/ArrayData.h"
 #include "SAMRAI/hier/BoundaryBox.h"
 #include "SAMRAI/hier/Patch.h"
-#include "SAMRAI/tbox/Pointer.h"
+
+#include <boost/shared_ptr.hpp>
 
 namespace SAMRAI {
 namespace solv {
@@ -73,7 +74,7 @@ public:
    LocationIndexRobinBcCoefs(
       const tbox::Dimension& dim,
       const std::string& object_name,
-      tbox::Pointer<tbox::Database> database);
+      boost::shared_ptr<tbox::Database> database);
 
    /*!
     * @brief Destructor.
@@ -109,10 +110,10 @@ public:
     */
    void
    setBcCoefs(
-      tbox::Pointer<pdat::ArrayData<double> >& acoef_data,
-      tbox::Pointer<pdat::ArrayData<double> >& bcoef_data,
-      tbox::Pointer<pdat::ArrayData<double> >& gcoef_data,
-      const tbox::Pointer<hier::Variable>& variable,
+      boost::shared_ptr<pdat::ArrayData<double> >& acoef_data,
+      boost::shared_ptr<pdat::ArrayData<double> >& bcoef_data,
+      boost::shared_ptr<pdat::ArrayData<double> >& gcoef_data,
+      const boost::shared_ptr<hier::Variable>& variable,
       const hier::Patch& patch,
       const hier::BoundaryBox& bdry_box,
       double fill_time = 0.0) const;
@@ -206,7 +207,7 @@ private:
     */
    void
    getFromInput(
-      tbox::Pointer<tbox::Database> database);
+      boost::shared_ptr<tbox::Database> database);
 
    /*
     * @brief Object dimension

@@ -502,7 +502,7 @@ BoxLevel::getBoxStrict(
  ***********************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-const tbox::Pointer<const GridGeometry>&
+const boost::shared_ptr<const GridGeometry>&
 BoxLevel::getGridGeometry() const
 {
    return d_grid_geometry;
@@ -513,14 +513,14 @@ BoxLevel::getGridGeometry() const
  ***********************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-const tbox::Pointer<BoxLevelHandle>& BoxLevel::
+const boost::shared_ptr<BoxLevelHandle>& BoxLevel::
 getBoxLevelHandle() const
 {
    if (!d_handle) {
       /*
        * No handle yet.  Generate one attached to this object.
        */
-      tbox::Pointer<BoxLevelHandle> ptr(new BoxLevelHandle(this));
+      boost::shared_ptr<BoxLevelHandle> ptr(new BoxLevelHandle(this));
       d_handle = ptr;
    }
    if (d_handle->d_box_level != this) {

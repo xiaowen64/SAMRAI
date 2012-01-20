@@ -164,10 +164,10 @@ const int CartesianGridGeometry::GEOM_CARTESIAN_GRID_GEOMETRY_VERSION = 2;
 CartesianGridGeometry::CartesianGridGeometry(
    const tbox::Dimension& dim,
    const std::string& object_name,
-   tbox::Pointer<tbox::Database> input_db,
+   boost::shared_ptr<tbox::Database> input_db,
    bool register_for_restart):
    hier::GridGeometry(dim, object_name,
-                      tbox::Pointer<hier::TransferOperatorRegistry>(
+                      boost::shared_ptr<hier::TransferOperatorRegistry>(
                          new SAMRAITransferOperatorRegistry(dim))),
    d_domain_box(dim)
 {
@@ -197,7 +197,7 @@ CartesianGridGeometry::CartesianGridGeometry(
    const hier::BoxContainer& domain,
    bool register_for_restart):
    hier::GridGeometry(domain.front().getDim(), object_name,
-                      tbox::Pointer<hier::TransferOperatorRegistry>(
+                      boost::shared_ptr<hier::TransferOperatorRegistry>(
                          new SAMRAITransferOperatorRegistry(domain.front().getDim()))),
    d_domain_box(domain.front().getDim())
 {
@@ -226,7 +226,7 @@ CartesianGridGeometry::CartesianGridGeometry(
  *************************************************************************
  */
 
-tbox::Pointer<hier::GridGeometry>
+boost::shared_ptr<hier::GridGeometry>
 CartesianGridGeometry::makeRefinedGridGeometry(
    const std::string& fine_geom_name,
    const hier::IntVector& refine_ratio,
@@ -251,7 +251,7 @@ CartesianGridGeometry::makeRefinedGridGeometry(
    fine_geometry->initializePeriodicShift(this->getPeriodicShift(hier::
          IntVector::getOne(dim)));
 
-   return tbox::Pointer<hier::GridGeometry>(fine_geometry);
+   return boost::shared_ptr<hier::GridGeometry>(fine_geometry);
 }
 
 /*
@@ -263,7 +263,7 @@ CartesianGridGeometry::makeRefinedGridGeometry(
  *************************************************************************
  */
 
-tbox::Pointer<hier::GridGeometry> CartesianGridGeometry::
+boost::shared_ptr<hier::GridGeometry> CartesianGridGeometry::
 makeCoarsenedGridGeometry(
    const std::string& coarse_geom_name,
    const hier::IntVector& coarsen_ratio,
@@ -305,7 +305,7 @@ makeCoarsenedGridGeometry(
    }
 
    hier::GridGeometry* coarse_geometry =
-      new geom::CartesianGridGeometry(coarse_geom_name,
+      new CartesianGridGeometry(coarse_geom_name,
          d_x_lo,
          d_x_up,
          coarse_domain,
@@ -314,7 +314,7 @@ makeCoarsenedGridGeometry(
    coarse_geometry->initializePeriodicShift(this->getPeriodicShift(hier::
          IntVector::getOne(dim)));
 
-   return tbox::Pointer<hier::GridGeometry>(coarse_geometry);
+   return boost::shared_ptr<hier::GridGeometry>(coarse_geometry);
 }
 
 /*
@@ -441,7 +441,7 @@ void CartesianGridGeometry::setGeometryDataOnPatch(
       x_up[id5] = x_lo[id5] + ((double)box.numberCells(id5)) * dx[id5];
    }
 
-   tbox::Pointer<CartesianPatchGeometry> geom(
+   boost::shared_ptr<CartesianPatchGeometry> geom(
       new CartesianPatchGeometry(ratio_to_level_zero,
          touches_regular_bdry,
          touches_periodic_bdry,
@@ -499,7 +499,7 @@ void CartesianGridGeometry::printClassData(
  */
 
 void CartesianGridGeometry::putToDatabase(
-   tbox::Pointer<tbox::Database> db)
+   boost::shared_ptr<tbox::Database> db)
 {
    TBOX_ASSERT(db);
 
@@ -534,7 +534,7 @@ void CartesianGridGeometry::putToDatabase(
  */
 
 void CartesianGridGeometry::getFromInput(
-   tbox::Pointer<tbox::Database> db,
+   boost::shared_ptr<tbox::Database> db,
    bool is_from_restart)
 {
    TBOX_ASSERT(db);
@@ -616,10 +616,10 @@ void CartesianGridGeometry::getFromRestart()
 {
    const tbox::Dimension& dim(getDim());
 
-   tbox::Pointer<tbox::Database> restart_db =
+   boost::shared_ptr<tbox::Database> restart_db =
       tbox::RestartManager::getManager()->getRootDatabase();
 
-   tbox::Pointer<tbox::Database> db;
+   boost::shared_ptr<tbox::Database> db;
 
    if (restart_db->isDatabase(getObjectName())) {
       db = restart_db->getDatabase(getObjectName());

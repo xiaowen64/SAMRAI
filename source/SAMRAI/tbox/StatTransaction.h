@@ -13,10 +13,10 @@
 
 #include "SAMRAI/SAMRAI_config.h"
 
-#include "SAMRAI/tbox/Pointer.h"
 #include "SAMRAI/tbox/Statistic.h"
 #include "SAMRAI/tbox/Transaction.h"
 
+#include <boost/shared_ptr.hpp>
 #include <iostream>
 
 namespace SAMRAI {
@@ -51,7 +51,7 @@ public:
     * that the copyLocalData() routine has an empty implementation.
     */
    StatTransaction(
-      Pointer<Statistic> stat,
+      boost::shared_ptr<Statistic> stat,
       int src_proc_id,
       int dst_proc_id);
 
@@ -131,7 +131,7 @@ private:
    operator = (
       const StatTransaction&);                  // not implemented
 
-   Pointer<Statistic> d_stat;
+   boost::shared_ptr<Statistic> d_stat;
    int d_src_id;
    int d_dst_id;
 

@@ -18,8 +18,9 @@
 #include "SAMRAI/hier/IntVector.h"
 #include "SAMRAI/tbox/MessageStream.h"
 #include "SAMRAI/tbox/Database.h"
-#include "SAMRAI/tbox/Pointer.h"
 #include "SAMRAI/tbox/IOStream.h"
+
+#include <boost/shared_ptr.hpp>
 
 /**
  * The SampleClass struct holds some dummy data and methods.  It's intent
@@ -125,10 +126,10 @@ public:
     */
    void
    getFromDatabase(
-      tbox::Pointer<tbox::Database>& database);
+      boost::shared_ptr<tbox::Database>& database);
    void
    putToDatabase(
-      tbox::Pointer<tbox::Database>& database);
+      boost::shared_ptr<tbox::Database>& database);
 
 private:
    /*

@@ -25,12 +25,14 @@
 #include "SAMRAI/mesh/StandardTagAndInitStrategy.h"
 #include "SAMRAI/tbox/Database.h"
 #include "SAMRAI/tbox/List.h"
-#include "SAMRAI/tbox/Pointer.h"
 #include "SAMRAI/tbox/Serializable.h"
 #include "SAMRAI/xfer/CoarsenAlgorithm.h"
 #include "SAMRAI/xfer/RefineAlgorithm.h"
 #include "SAMRAI/xfer/RefineSchedule.h"
 #include "SAMRAI/tbox/Timer.h"
+
+
+#include <boost/shared_ptr.hpp>
 
 #define HLI_RECORD_STATS
 // #undef DGA_RECORD_STATS
@@ -201,7 +203,7 @@ public:
     */
    HyperbolicLevelIntegrator(
       const std::string& object_name,
-      tbox::Pointer<tbox::Database> input_db,
+      boost::shared_ptr<tbox::Database> input_db,
       HyperbolicPatchStrategy* patch_strategy,
       bool register_for_restart = true,
       bool use_time_refinement = true);
@@ -223,7 +225,7 @@ public:
     */
    virtual void
    initializeLevelIntegrator(
-      tbox::Pointer<mesh::GriddingAlgorithmStrategy> gridding_alg_strategy);
+      boost::shared_ptr<mesh::GriddingAlgorithmStrategy> gridding_alg_strategy);
 
    /**
     * Determine time increment to advance data on level and return that
@@ -241,7 +243,7 @@ public:
     */
    virtual double
    getLevelDt(
-      const tbox::Pointer<hier::PatchLevel> level,
+      const boost::shared_ptr<hier::PatchLevel> level,
       const double dt_time,
       const bool initial_time);
 
@@ -359,8 +361,8 @@ public:
 
    virtual double
    advanceLevel(
-      const tbox::Pointer<hier::PatchLevel> level,
-      const tbox::Pointer<hier::PatchHierarchy> hierarchy,
+      const boost::shared_ptr<hier::PatchLevel> level,
+      const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
       const double current_time,
       const double new_time,
       const bool first_step,
@@ -383,7 +385,7 @@ public:
     */
    virtual void
    standardLevelSynchronization(
-      const tbox::Pointer<hier::PatchHierarchy> hierarchy,
+      const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
       const int coarsest_level,
       const int finest_level,
       const double sync_time,
@@ -397,7 +399,7 @@ public:
     */
    virtual void
    standardLevelSynchronization(
-      const tbox::Pointer<hier::PatchHierarchy> hierarchy,
+      const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
       const int coarsest_level,
       const int finest_level,
       const double sync_time,
@@ -426,7 +428,7 @@ public:
     */
    virtual void
    synchronizeNewLevels(
-      const tbox::Pointer<hier::PatchHierarchy> hierarchy,
+      const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
       const int coarsest_level,
       const int finest_level,
       const double sync_time,
@@ -440,7 +442,7 @@ public:
     */
    virtual void
    resetTimeDependentData(
-      const tbox::Pointer<hier::PatchLevel> level,
+      const boost::shared_ptr<hier::PatchLevel> level,
       const double new_time,
       const bool can_be_refined);
 
@@ -453,7 +455,7 @@ public:
     */
    virtual void
    resetDataToPreadvanceState(
-      const tbox::Pointer<hier::PatchLevel> level);
+      const boost::shared_ptr<hier::PatchLevel> level);
 
    /**
     * Initialize data on a new level after it is inserted into an AMR patch
@@ -491,13 +493,13 @@ public:
     */
    virtual void
    initializeLevelData(
-      const tbox::Pointer<hier::PatchHierarchy> hierarchy,
+      const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
       const int level_number,
       const double init_data_time,
       const bool can_be_refined,
       const bool initial_time,
-      const tbox::Pointer<hier::PatchLevel> old_level =
-         tbox::Pointer<hier::PatchLevel>(NULL),
+      const boost::shared_ptr<hier::PatchLevel> old_level =
+         boost::shared_ptr<hier::PatchLevel>((hier::PatchLevel*)NULL),
       const bool allocate_data = true);
 
 #if !defined(__xlC__)
@@ -522,7 +524,7 @@ public:
     */
    virtual void
    resetHierarchyConfiguration(
-      const tbox::Pointer<hier::PatchHierarchy> hierarchy,
+      const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
       const int coarsest_level,
       const int finest_level);
 
@@ -549,7 +551,7 @@ public:
     */
    virtual void
    applyGradientDetector(
-      const tbox::Pointer<hier::PatchHierarchy> hierarchy,
+      const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
       const int level_number,
       const double error_data_time,
       const int tag_index,
@@ -587,7 +589,7 @@ public:
     */
    virtual void
    applyRichardsonExtrapolation(
-      const tbox::Pointer<hier::PatchLevel> level,
+      const boost::shared_ptr<hier::PatchLevel> level,
       const double error_data_time,
       const int tag_index,
       const double deltat,
@@ -609,9 +611,9 @@ public:
     */
    virtual void
    coarsenDataForRichardsonExtrapolation(
-      const tbox::Pointer<hier::PatchHierarchy> hierarchy,
+      const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
       const int level_number,
-      const tbox::Pointer<hier::PatchLevel> coarse_level,
+      const boost::shared_ptr<hier::PatchLevel> coarse_level,
       const double coarsen_data_time,
       const bool before_advance);
 
@@ -628,10 +630,10 @@ public:
     */
    virtual void
    registerVariable(
-      const tbox::Pointer<hier::Variable> var,
+      const boost::shared_ptr<hier::Variable> var,
       const hier::IntVector ghosts,
       const HYP_VAR_TYPE h_v_type,
-      const tbox::Pointer<hier::GridGeometry> transfer_geom,
+      const boost::shared_ptr<hier::GridGeometry> transfer_geom,
       const std::string& coarsen_name = std::string(),
       const std::string& refine_name = std::string());
 
@@ -651,14 +653,14 @@ public:
     */
    virtual void
    putToDatabase(
-      tbox::Pointer<tbox::Database> db);
+      boost::shared_ptr<tbox::Database> db);
 
    /**
     * Return pointer to "current" variable context used by integrator.
     * Current data corresponds to state data at the beginning of a
     * timestep, or when a new level is initialized.
     */
-   tbox::Pointer<hier::VariableContext>
+   boost::shared_ptr<hier::VariableContext>
    getCurrentContext() const;
 
    /**
@@ -666,7 +668,7 @@ public:
     * New data corresponds to advanced state data at the end of a timestep.
     * The data is one timestep later than the "current" data.
     */
-   tbox::Pointer<hier::VariableContext>
+   boost::shared_ptr<hier::VariableContext>
    getNewContext() const;
 
    /**
@@ -679,7 +681,7 @@ public:
     * estimation, such as Richardson extrapolation, is the returned
     * pointer will non-null.  See contructor for more information.
     */
-   tbox::Pointer<hier::VariableContext>
+   boost::shared_ptr<hier::VariableContext>
    getOldContext() const;
 
    /**
@@ -688,7 +690,7 @@ public:
     * in the concrete HyperbolicPatchStrategy object manipulate;
     * in particular, scratch data contains ghost cells.
     */
-   tbox::Pointer<hier::VariableContext>
+   boost::shared_ptr<hier::VariableContext>
    getScratchContext() const;
 
    /**
@@ -696,7 +698,7 @@ public:
     * context corresponds to the data storage that should be written
     * to plot files.  Typically, this is the same as the "current" context.
     */
-   tbox::Pointer<hier::VariableContext>
+   boost::shared_ptr<hier::VariableContext>
    getPlotContext() const;
 
    /**
@@ -730,7 +732,7 @@ protected:
     */
    virtual void
    getFromInput(
-      tbox::Pointer<tbox::Database> db,
+      boost::shared_ptr<tbox::Database> db,
       bool is_from_restart);
 
    /**
@@ -771,7 +773,7 @@ protected:
     */
    virtual void
    preprocessFluxData(
-      const tbox::Pointer<hier::PatchLevel> level,
+      const boost::shared_ptr<hier::PatchLevel> level,
       const double cur_time,
       const double new_time,
       const bool regrid_advance,
@@ -789,7 +791,7 @@ protected:
     */
    virtual void
    postprocessFluxData(
-      const tbox::Pointer<hier::PatchLevel> level,
+      const boost::shared_ptr<hier::PatchLevel> level,
       const bool regrid_advance,
       const bool first_step,
       const bool last_step);
@@ -802,9 +804,9 @@ protected:
     */
    virtual void
    copyTimeDependentData(
-      const tbox::Pointer<hier::PatchLevel> level,
-      const tbox::Pointer<hier::VariableContext> src_context,
-      const tbox::Pointer<hier::VariableContext> dst_context);
+      const boost::shared_ptr<hier::PatchLevel> level,
+      const boost::shared_ptr<hier::VariableContext> src_context,
+      const boost::shared_ptr<hier::VariableContext> dst_context);
 
    /**
     * Apply the standard AMR hyperbolic flux synchronization process preserve
@@ -824,8 +826,8 @@ protected:
     */
    virtual void
    synchronizeLevelWithCoarser(
-      const tbox::Pointer<hier::PatchLevel> fine,
-      const tbox::Pointer<hier::PatchLevel> coarse,
+      const boost::shared_ptr<hier::PatchLevel> fine,
+      const boost::shared_ptr<hier::PatchLevel> coarse,
       const double sync_time,
       const double coarse_sim_time);
 
@@ -858,7 +860,7 @@ private:
     * The gridding algorithm is used to generate some DLBG data for
     * levels not on a hiearchy.
     */
-   tbox::Pointer<mesh::GriddingAlgorithm> d_gridding_alg;
+   boost::shared_ptr<mesh::GriddingAlgorithm> d_gridding_alg;
 
    /*
     * The object name is used as a handle to databases stored in
@@ -919,8 +921,8 @@ private:
     * and INPUT data at specified time. TIME_DEP data in patch interiors
     * will be filled with CURRENT_VAR values.
     */
-   tbox::Pointer<xfer::RefineAlgorithm> d_bdry_fill_advance;
-   tbox::Array<tbox::Pointer<xfer::RefineSchedule> > d_bdry_sched_advance;
+   boost::shared_ptr<xfer::RefineAlgorithm> d_bdry_fill_advance;
+   tbox::Array<boost::shared_ptr<xfer::RefineSchedule> > d_bdry_sched_advance;
 
    /*
     * The "advance new" schedule can be used twice during a time integration
@@ -937,8 +939,8 @@ private:
     * with values corresponding to NEW descriptor indices.  See notes
     * accompanying HyperbolicLevelIntegrator::advanceLevel.
     */
-   tbox::Pointer<xfer::RefineAlgorithm> d_bdry_fill_advance_new;
-   tbox::Array<tbox::Pointer<xfer::RefineSchedule> >
+   boost::shared_ptr<xfer::RefineAlgorithm> d_bdry_fill_advance_new;
+   tbox::Array<boost::shared_ptr<xfer::RefineSchedule> >
    d_bdry_sched_advance_new;
 
    /*
@@ -949,26 +951,26 @@ private:
     * data is required only when three time levels are used
     * (i.e. d_number_time_data_levels=3).
     */
-   tbox::Pointer<xfer::RefineAlgorithm> d_bdry_fill_advance_old;
+   boost::shared_ptr<xfer::RefineAlgorithm> d_bdry_fill_advance_old;
 
    /*
     * Coarsen algorithms for conservative data synchronization
     * (e.g., flux correction or refluxing).
     */
-   tbox::Pointer<xfer::CoarsenAlgorithm> d_coarsen_fluxsum;
-   tbox::Pointer<xfer::CoarsenAlgorithm> d_coarsen_sync_data;
-   tbox::Pointer<xfer::CoarsenAlgorithm> d_sync_initial_data;
+   boost::shared_ptr<xfer::CoarsenAlgorithm> d_coarsen_fluxsum;
+   boost::shared_ptr<xfer::CoarsenAlgorithm> d_coarsen_sync_data;
+   boost::shared_ptr<xfer::CoarsenAlgorithm> d_sync_initial_data;
 
    /*
     * Coarsen algorithms for Richardson extrapolation.
     */
-   tbox::Pointer<xfer::CoarsenAlgorithm> d_coarsen_rich_extrap_init;
-   tbox::Pointer<xfer::CoarsenAlgorithm> d_coarsen_rich_extrap_final;
+   boost::shared_ptr<xfer::CoarsenAlgorithm> d_coarsen_rich_extrap_init;
+   boost::shared_ptr<xfer::CoarsenAlgorithm> d_coarsen_rich_extrap_final;
 
    /*
     * Algorithm for filling a new patch level in the hierarchy.
     */
-   tbox::Pointer<xfer::RefineAlgorithm> d_fill_new_level;
+   boost::shared_ptr<xfer::RefineAlgorithm> d_fill_new_level;
 
    /*
     * Number of levels of time-dependent data that must be maintained
@@ -986,16 +988,16 @@ private:
     * and component selectors are set in the registerVariable() function.
     */
 
-   tbox::Pointer<hier::VariableContext> d_scratch;
-   tbox::Pointer<hier::VariableContext> d_current;
-   tbox::Pointer<hier::VariableContext> d_new;
-   tbox::Pointer<hier::VariableContext> d_old;
-   tbox::Pointer<hier::VariableContext> d_plot_context;
+   boost::shared_ptr<hier::VariableContext> d_scratch;
+   boost::shared_ptr<hier::VariableContext> d_current;
+   boost::shared_ptr<hier::VariableContext> d_new;
+   boost::shared_ptr<hier::VariableContext> d_old;
+   boost::shared_ptr<hier::VariableContext> d_plot_context;
 
-   tbox::List<tbox::Pointer<hier::Variable> > d_all_variables;
-   tbox::List<tbox::Pointer<hier::Variable> > d_time_dep_variables;
-   tbox::List<tbox::Pointer<hier::Variable> > d_flux_variables;
-   tbox::List<tbox::Pointer<hier::Variable> > d_fluxsum_variables;
+   tbox::List<boost::shared_ptr<hier::Variable> > d_all_variables;
+   tbox::List<boost::shared_ptr<hier::Variable> > d_time_dep_variables;
+   tbox::List<boost::shared_ptr<hier::Variable> > d_flux_variables;
+   tbox::List<boost::shared_ptr<hier::Variable> > d_fluxsum_variables;
 
    /*
     * SCRATCH descriptor indices for (non-TEMPORARY) variables
@@ -1052,42 +1054,42 @@ private:
    /*
     * Timers interspersed throughout the class.
     */
-   static tbox::Pointer<tbox::Timer> t_advance_bdry_fill_comm;
-   static tbox::Pointer<tbox::Timer> t_error_bdry_fill_create;
-   static tbox::Pointer<tbox::Timer> t_error_bdry_fill_comm;
-   static tbox::Pointer<tbox::Timer> t_mpi_reductions;
-   static tbox::Pointer<tbox::Timer> t_initialize_level_data;
-   static tbox::Pointer<tbox::Timer> t_init_level_create_sched;
-   static tbox::Pointer<tbox::Timer> t_init_level_fill_data;
-   static tbox::Pointer<tbox::Timer> t_init_level_fill_interior;
-   static tbox::Pointer<tbox::Timer> t_advance_bdry_fill_create;
-   static tbox::Pointer<tbox::Timer> t_new_advance_bdry_fill_create;
-   static tbox::Pointer<tbox::Timer> t_apply_gradient_detector;
-   static tbox::Pointer<tbox::Timer> t_tag_cells;
-   static tbox::Pointer<tbox::Timer> t_coarsen_rich_extrap;
-   static tbox::Pointer<tbox::Timer> t_get_level_dt;
-   static tbox::Pointer<tbox::Timer> t_get_level_dt_sync;
-   static tbox::Pointer<tbox::Timer> t_advance_level;
-   static tbox::Pointer<tbox::Timer> t_new_advance_bdry_fill_comm;
-   static tbox::Pointer<tbox::Timer> t_patch_num_kernel;
-   static tbox::Pointer<tbox::Timer> t_advance_level_sync;
-   static tbox::Pointer<tbox::Timer> t_std_level_sync;
-   static tbox::Pointer<tbox::Timer> t_sync_new_levels;
-   static tbox::Pointer<tbox::Timer> t_barrier_after_error_bdry_fill_comm;
-   static tbox::Pointer<tbox::Timer> t_sync_initial_comm;
-   static tbox::Pointer<tbox::Timer> t_sync_initial_create;
-   static tbox::Pointer<tbox::Timer> t_coarsen_fluxsum_create;
-   static tbox::Pointer<tbox::Timer> t_coarsen_fluxsum_comm;
-   static tbox::Pointer<tbox::Timer> t_coarsen_sync_create;
-   static tbox::Pointer<tbox::Timer> t_coarsen_sync_comm;
+   static boost::shared_ptr<tbox::Timer> t_advance_bdry_fill_comm;
+   static boost::shared_ptr<tbox::Timer> t_error_bdry_fill_create;
+   static boost::shared_ptr<tbox::Timer> t_error_bdry_fill_comm;
+   static boost::shared_ptr<tbox::Timer> t_mpi_reductions;
+   static boost::shared_ptr<tbox::Timer> t_initialize_level_data;
+   static boost::shared_ptr<tbox::Timer> t_init_level_create_sched;
+   static boost::shared_ptr<tbox::Timer> t_init_level_fill_data;
+   static boost::shared_ptr<tbox::Timer> t_init_level_fill_interior;
+   static boost::shared_ptr<tbox::Timer> t_advance_bdry_fill_create;
+   static boost::shared_ptr<tbox::Timer> t_new_advance_bdry_fill_create;
+   static boost::shared_ptr<tbox::Timer> t_apply_gradient_detector;
+   static boost::shared_ptr<tbox::Timer> t_tag_cells;
+   static boost::shared_ptr<tbox::Timer> t_coarsen_rich_extrap;
+   static boost::shared_ptr<tbox::Timer> t_get_level_dt;
+   static boost::shared_ptr<tbox::Timer> t_get_level_dt_sync;
+   static boost::shared_ptr<tbox::Timer> t_advance_level;
+   static boost::shared_ptr<tbox::Timer> t_new_advance_bdry_fill_comm;
+   static boost::shared_ptr<tbox::Timer> t_patch_num_kernel;
+   static boost::shared_ptr<tbox::Timer> t_advance_level_sync;
+   static boost::shared_ptr<tbox::Timer> t_std_level_sync;
+   static boost::shared_ptr<tbox::Timer> t_sync_new_levels;
+   static boost::shared_ptr<tbox::Timer> t_barrier_after_error_bdry_fill_comm;
+   static boost::shared_ptr<tbox::Timer> t_sync_initial_comm;
+   static boost::shared_ptr<tbox::Timer> t_sync_initial_create;
+   static boost::shared_ptr<tbox::Timer> t_coarsen_fluxsum_create;
+   static boost::shared_ptr<tbox::Timer> t_coarsen_fluxsum_comm;
+   static boost::shared_ptr<tbox::Timer> t_coarsen_sync_create;
+   static boost::shared_ptr<tbox::Timer> t_coarsen_sync_comm;
 
 #ifdef HLI_RECORD_STATS
    /*
     * Statistics on number of cells and patches generated.
     */
-   static tbox::Array<tbox::Pointer<tbox::Statistic> > s_boxes_stat;
-   static tbox::Array<tbox::Pointer<tbox::Statistic> > s_cells_stat;
-   static tbox::Array<tbox::Pointer<tbox::Statistic> > s_timestamp_stat;
+   static tbox::Array<boost::shared_ptr<tbox::Statistic> > s_boxes_stat;
+   static tbox::Array<boost::shared_ptr<tbox::Statistic> > s_cells_stat;
+   static tbox::Array<boost::shared_ptr<tbox::Statistic> > s_timestamp_stat;
 #endif
 
    /*!

@@ -59,7 +59,7 @@ EdgeGeometry::~EdgeGeometry()
  *************************************************************************
  */
 
-tbox::Pointer<hier::BoxOverlap> EdgeGeometry::calculateOverlap(
+boost::shared_ptr<hier::BoxOverlap> EdgeGeometry::calculateOverlap(
    const hier::BoxGeometry& dst_geometry,
    const hier::BoxGeometry& src_geometry,
    const hier::Box& src_mask,
@@ -76,7 +76,7 @@ tbox::Pointer<hier::BoxOverlap> EdgeGeometry::calculateOverlap(
    const EdgeGeometry* t_src =
       dynamic_cast<const EdgeGeometry *>(&src_geometry);
 
-   tbox::Pointer<hier::BoxOverlap> over(NULL);
+   boost::shared_ptr<hier::BoxOverlap> over;
 
    if ((t_src != NULL) && (t_dst != NULL)) {
       over = doOverlap(*t_dst, *t_src, src_mask, fill_box, overwrite_interior,
@@ -135,7 +135,7 @@ hier::Box EdgeGeometry::toEdgeBox(
  *************************************************************************
  */
 
-tbox::Pointer<hier::BoxOverlap> EdgeGeometry::doOverlap(
+boost::shared_ptr<hier::BoxOverlap> EdgeGeometry::doOverlap(
    const EdgeGeometry& dst_geometry,
    const EdgeGeometry& src_geometry,
    const hier::Box& src_mask,
@@ -201,7 +201,7 @@ tbox::Pointer<hier::BoxOverlap> EdgeGeometry::doOverlap(
    // Create the edge overlap data object using the boxes and source shift
 
    hier::BoxOverlap* overlap = new EdgeOverlap(dst_boxes, transformation);
-   return tbox::Pointer<hier::BoxOverlap>(overlap);
+   return boost::shared_ptr<hier::BoxOverlap>(overlap);
 }
 
 /*
@@ -211,7 +211,7 @@ tbox::Pointer<hier::BoxOverlap> EdgeGeometry::doOverlap(
  *
  *************************************************************************
  */
-tbox::Pointer<hier::BoxOverlap>
+boost::shared_ptr<hier::BoxOverlap>
 EdgeGeometry::setUpOverlap(
    const hier::BoxContainer& boxes,
    const hier::Transformation& transformation) const
@@ -228,7 +228,7 @@ EdgeGeometry::setUpOverlap(
 
    // Create the edge overlap data object using the boxes and source shift
    hier::BoxOverlap* overlap = new EdgeOverlap(dst_boxes, transformation);
-   return tbox::Pointer<hier::BoxOverlap>(overlap);
+   return boost::shared_ptr<hier::BoxOverlap>(overlap);
 
 }
 
@@ -567,7 +567,7 @@ EdgeGeometry::transform(
 }
 
 void
-EdgeGeometry::rotateAboutAxis(pdat::EdgeIndex& index,
+EdgeGeometry::rotateAboutAxis(EdgeIndex& index,
                               const int axis,
                               const int num_rotations)
 {
@@ -575,7 +575,7 @@ EdgeGeometry::rotateAboutAxis(pdat::EdgeIndex& index,
    const int a = (axis + 1) % dim.getValue();
    const int b = (axis + 2) % dim.getValue();
 
-   pdat::EdgeIndex tmp_index(dim);
+   EdgeIndex tmp_index(dim);
    for (int j = 0; j < num_rotations; j++) {
       tmp_index = index;
       index(a) = tmp_index(b);

@@ -89,13 +89,13 @@ SideDataFactory<TYPE>::~SideDataFactory()
  */
 
 template<class TYPE>
-tbox::Pointer<hier::PatchDataFactory>
+boost::shared_ptr<hier::PatchDataFactory>
 SideDataFactory<TYPE>::cloneFactory(
    const hier::IntVector& ghosts)
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, ghosts);
 
-   return tbox::Pointer<hier::PatchDataFactory>(new SideDataFactory<TYPE>(
+   return boost::shared_ptr<hier::PatchDataFactory>(new SideDataFactory<TYPE>(
                                                    d_depth,
                                                    ghosts,
                                                    d_fine_boundary_represents_var,
@@ -111,7 +111,7 @@ SideDataFactory<TYPE>::cloneFactory(
  */
 
 template<class TYPE>
-tbox::Pointer<hier::PatchData>
+boost::shared_ptr<hier::PatchData>
 SideDataFactory<TYPE>::allocate(
    const hier::Patch& patch) const
 {
@@ -122,7 +122,7 @@ SideDataFactory<TYPE>::allocate(
                          d_depth,
                          this->d_ghosts,
                          d_directions);
-   return tbox::Pointer<hier::PatchData>(patchdata);
+   return boost::shared_ptr<hier::PatchData>(patchdata);
 }
 
 /*
@@ -134,7 +134,7 @@ SideDataFactory<TYPE>::allocate(
  */
 
 template<class TYPE>
-tbox::Pointer<hier::BoxGeometry>
+boost::shared_ptr<hier::BoxGeometry>
 SideDataFactory<TYPE>::getBoxGeometry(
    const hier::Box& box) const
 {
@@ -143,7 +143,7 @@ SideDataFactory<TYPE>::getBoxGeometry(
    hier::BoxGeometry* boxgeometry = new SideGeometry(box,
          this->d_ghosts,
          d_directions);
-   return tbox::Pointer<hier::BoxGeometry>(boxgeometry);
+   return boost::shared_ptr<hier::BoxGeometry>(boxgeometry);
 }
 
 /*
@@ -178,7 +178,7 @@ size_t SideDataFactory<TYPE>::getSizeOfMemory(
 
 template<class TYPE>
 bool SideDataFactory<TYPE>::validCopyTo(
-   const tbox::Pointer<hier::PatchDataFactory>& dst_pdf) const
+   const boost::shared_ptr<hier::PatchDataFactory>& dst_pdf) const
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, *dst_pdf);
 
@@ -188,18 +188,18 @@ bool SideDataFactory<TYPE>::validCopyTo(
     * Valid options are SideData and OutersideData.
     */
    if (!valid_copy) {
-      tbox::Pointer<SideDataFactory<TYPE> > sdf(
+      boost::shared_ptr<SideDataFactory<TYPE> > sdf(
          dst_pdf,
-         tbox::__dynamic_cast_tag());
+         boost::detail::dynamic_cast_tag());
       if (sdf) {
          valid_copy = true;
       }
    }
 
    if (!valid_copy) {
-      tbox::Pointer<OutersideDataFactory<TYPE> > osdf(
+      boost::shared_ptr<OutersideDataFactory<TYPE> > osdf(
          dst_pdf,
-         tbox::__dynamic_cast_tag());
+         boost::detail::dynamic_cast_tag());
       if (osdf) {
          valid_copy = true;
       }

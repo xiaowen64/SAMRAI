@@ -15,7 +15,7 @@
 
 #include <iostream>
 
-#include "SAMRAI/tbox/Pointer.h"
+#include <boost/shared_ptr.hpp>
 #include "SAMRAI/hier/PatchHierarchy.h"
 
 namespace SAMRAI {
@@ -64,7 +64,7 @@ public:
    virtual
    void
    setPatchHierarchy(
-      tbox::Pointer<hier::PatchHierarchy> hierarchy) = 0;
+      boost::shared_ptr<hier::PatchHierarchy> hierarchy) = 0;
 
    /**
     * Reset range of patch levels over which operations occur.
@@ -79,7 +79,7 @@ public:
     * Return const pointer to patch hierarchy associated with operations.
     */
    virtual
-   const tbox::Pointer<hier::PatchHierarchy>
+   const boost::shared_ptr<hier::PatchHierarchy>
    getPatchHierarchy() const = 0;
 
    /**

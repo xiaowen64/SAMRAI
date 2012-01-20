@@ -59,14 +59,14 @@ OuteredgeDataFactory<TYPE>::~OuteredgeDataFactory()
  */
 
 template<class TYPE>
-tbox::Pointer<hier::PatchDataFactory>
+boost::shared_ptr<hier::PatchDataFactory>
 OuteredgeDataFactory<TYPE>::cloneFactory(
    const hier::IntVector& ghosts)
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, ghosts);
 
-   return tbox::Pointer<hier::PatchDataFactory>(new OuteredgeDataFactory<TYPE>(
-                                                   ghosts.getDim(), d_depth));
+   return boost::shared_ptr<hier::PatchDataFactory>(
+      new OuteredgeDataFactory<TYPE>(ghosts.getDim(), d_depth));
 }
 
 /*
@@ -78,7 +78,7 @@ OuteredgeDataFactory<TYPE>::cloneFactory(
  */
 
 template<class TYPE>
-tbox::Pointer<hier::PatchData>
+boost::shared_ptr<hier::PatchData>
 OuteredgeDataFactory<TYPE>::allocate(
    const hier::Patch& patch) const
 {
@@ -86,7 +86,7 @@ OuteredgeDataFactory<TYPE>::allocate(
 
    hier::PatchData* patchdata =
       new OuteredgeData<TYPE>(patch.getBox(), d_depth);
-   return tbox::Pointer<hier::PatchData>(patchdata);
+   return boost::shared_ptr<hier::PatchData>(patchdata);
 }
 
 /*
@@ -98,7 +98,7 @@ OuteredgeDataFactory<TYPE>::allocate(
  */
 
 template<class TYPE>
-tbox::Pointer<hier::BoxGeometry>
+boost::shared_ptr<hier::BoxGeometry>
 OuteredgeDataFactory<TYPE>::getBoxGeometry(
    const hier::Box& box) const
 {
@@ -107,7 +107,7 @@ OuteredgeDataFactory<TYPE>::getBoxGeometry(
    const hier::IntVector& zero_vector(hier::IntVector::getZero(getDim()));
 
    hier::BoxGeometry* boxgeometry = new OuteredgeGeometry(box, zero_vector);
-   return tbox::Pointer<hier::BoxGeometry>(boxgeometry);
+   return boost::shared_ptr<hier::BoxGeometry>(boxgeometry);
 }
 
 /*
@@ -141,7 +141,7 @@ size_t OuteredgeDataFactory<TYPE>::getSizeOfMemory(
 
 template<class TYPE>
 bool OuteredgeDataFactory<TYPE>::validCopyTo(
-   const tbox::Pointer<hier::PatchDataFactory>& dst_pdf) const
+   const boost::shared_ptr<hier::PatchDataFactory>& dst_pdf) const
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, *dst_pdf);
 
@@ -151,18 +151,18 @@ bool OuteredgeDataFactory<TYPE>::validCopyTo(
     * Valid options are EdgeData and OuteredgeData.
     */
    if (!valid_copy) {
-      tbox::Pointer<EdgeDataFactory<TYPE> > edf(
+      boost::shared_ptr<EdgeDataFactory<TYPE> > edf(
          dst_pdf,
-         tbox::__dynamic_cast_tag());
+         boost::detail::dynamic_cast_tag());
       if (edf) {
          valid_copy = true;
       }
    }
 
    if (!valid_copy) {
-      tbox::Pointer<OuteredgeDataFactory<TYPE> > oedf(
+      boost::shared_ptr<OuteredgeDataFactory<TYPE> > oedf(
          dst_pdf,
-         tbox::__dynamic_cast_tag());
+         boost::detail::dynamic_cast_tag());
       if (oedf) {
          valid_copy = true;
       }

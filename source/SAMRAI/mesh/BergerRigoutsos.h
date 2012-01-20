@@ -17,8 +17,9 @@
 #include "SAMRAI/hier/BoxLevel.h"
 #include "SAMRAI/hier/PatchLevel.h"
 #include "SAMRAI/tbox/Database.h"
-#include "SAMRAI/tbox/Pointer.h"
 #include "SAMRAI/tbox/Utilities.h"
+
+#include <boost/shared_ptr.hpp>
 
 namespace SAMRAI {
 namespace mesh {
@@ -80,7 +81,7 @@ namespace mesh {
  * - bool @b log_cluster (false):
  *   Whether to log the results of the clustering.
  */
-class BergerRigoutsos:public mesh::BoxGeneratorStrategy
+class BergerRigoutsos:public BoxGeneratorStrategy
 {
 
 public:
@@ -89,8 +90,8 @@ public:
     */
    explicit BergerRigoutsos(
       const tbox::Dimension& dim,
-      tbox::Pointer<tbox::Database> database =
-         tbox::Pointer<tbox::Database>(NULL));
+      boost::shared_ptr<tbox::Database> database =
+         boost::shared_ptr<tbox::Database>((tbox::Database*)NULL));
 
    /*!
     * @brief Destructor.
@@ -147,7 +148,7 @@ public:
       hier::BoxLevel& new_mapped_box_level,
       hier::Connector& tag_to_new,
       hier::Connector& new_to_tag,
-      const tbox::Pointer<hier::PatchLevel> tag_level,
+      const boost::shared_ptr<hier::PatchLevel> tag_level,
       const int tag_data_index,
       const int tag_val,
       const hier::Box& bound_box,
@@ -222,12 +223,12 @@ private:
    bool d_barrier_after;
    //@}
 
-   static tbox::Pointer<tbox::Timer> t_barrier_before;
-   static tbox::Pointer<tbox::Timer> t_barrier_after;
-   static tbox::Pointer<tbox::Timer> t_find_boxes_with_tags;
-   static tbox::Pointer<tbox::Timer> t_run_abr;
-   static tbox::Pointer<tbox::Timer> t_global_reductions;
-   static tbox::Pointer<tbox::Timer> t_sort_output_nodes;
+   static boost::shared_ptr<tbox::Timer> t_barrier_before;
+   static boost::shared_ptr<tbox::Timer> t_barrier_after;
+   static boost::shared_ptr<tbox::Timer> t_find_boxes_with_tags;
+   static boost::shared_ptr<tbox::Timer> t_run_abr;
+   static boost::shared_ptr<tbox::Timer> t_global_reductions;
+   static boost::shared_ptr<tbox::Timer> t_sort_output_nodes;
 
    static tbox::StartupShutdownManager::Handler
       s_initialize_finalize_handler;

@@ -23,7 +23,7 @@ using namespace SAMRAI;
 CellMultiblockTest::CellMultiblockTest(
    const string& object_name,
    const tbox::Dimension& dim,
-   tbox::Pointer<tbox::Database> main_input_db,
+   boost::shared_ptr<tbox::Database> main_input_db,
    bool do_refine,
    bool do_coarsen,
    const string& refine_option):
@@ -56,12 +56,13 @@ CellMultiblockTest::CellMultiblockTest(
    sprintf(geom_name, "BlockGridGeometry");
 
    if (main_input_db->keyExists(geom_name)) {
-      getGridGeometry() = new hier::GridGeometry(
+      getGridGeometry().reset(
+         new hier::GridGeometry(
             dim,
             geom_name,
-            tbox::Pointer<hier::TransferOperatorRegistry>(
+            boost::shared_ptr<hier::TransferOperatorRegistry>(
                new geom::SAMRAITransferOperatorRegistry(dim)),
-            main_input_db->getDatabase(geom_name));
+            main_input_db->getDatabase(geom_name)));
 
    } else {
       TBOX_ERROR("CellMultiblockTest: could not find entry `"
@@ -77,7 +78,7 @@ CellMultiblockTest::~CellMultiblockTest()
 }
 
 void CellMultiblockTest::readTestInput(
-   tbox::Pointer<tbox::Database> db)
+   boost::shared_ptr<tbox::Database> db)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(db);
@@ -101,10 +102,10 @@ void CellMultiblockTest::registerVariables(
    d_variables.resizeArray(nvars);
 
    for (int i = 0; i < nvars; i++) {
-      d_variables[i] =
+      d_variables[i].reset(
          new pdat::CellVariable<double>(d_dim,
                                         d_variable_src_name[i],
-                                        d_variable_depth[i]);
+                                        d_variable_depth[i]));
 
       commtest->registerVariable(d_variables[i],
          d_variables[i],
@@ -119,7 +120,7 @@ void CellMultiblockTest::registerVariables(
 
 void CellMultiblockTest::initializeDataOnPatch(
    hier::Patch& patch,
-   const tbox::Pointer<hier::PatchHierarchy> hierarchy,
+   const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
    const int level_number,
    const hier::BlockId& block_id,
    char src_or_dst)
@@ -133,9 +134,9 @@ void CellMultiblockTest::initializeDataOnPatch(
 
       for (int i = 0; i < d_variables.getSize(); i++) {
 
-         tbox::Pointer<pdat::CellData<double> > cell_data(
+         boost::shared_ptr<pdat::CellData<double> > cell_data(
             patch.getPatchData(d_variables[i], getDataContext()),
-            tbox::__dynamic_cast_tag());
+            boost::detail::dynamic_cast_tag());
 
          hier::Box dbox = cell_data->getGhostBox();
 
@@ -147,7 +148,7 @@ void CellMultiblockTest::initializeDataOnPatch(
 
 void CellMultiblockTest::tagCellsToRefine(
    hier::Patch& patch,
-   const tbox::Pointer<hier::PatchHierarchy> hierarchy,
+   const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
    int level_number,
    int tag_index)
 {
@@ -167,7 +168,7 @@ void CellMultiblockTest::setPhysicalBoundaryConditions(
 {
    (void)time;
 
-   tbox::Pointer<hier::PatchGeometry> pgeom = patch.getPatchGeometry();
+   boost::shared_ptr<hier::PatchGeometry> pgeom = patch.getPatchGeometry();
 
    const tbox::Array<hier::BoundaryBox> node_bdry =
       pgeom->getCodimensionBoundaries(d_dim.getValue());
@@ -189,9 +190,9 @@ void CellMultiblockTest::setPhysicalBoundaryConditions(
 
    for (int i = 0; i < d_variables.getSize(); i++) {
 
-      tbox::Pointer<pdat::CellData<double> > cell_data(
+      boost::shared_ptr<pdat::CellData<double> > cell_data(
          patch.getPatchData(d_variables[i], getDataContext()),
-         tbox::__dynamic_cast_tag());
+         boost::detail::dynamic_cast_tag());
 
       /*
        * Set node boundary data.
@@ -254,7 +255,7 @@ void CellMultiblockTest::fillSingularityBoundaryConditions(
    const hier::Connector& dst_to_encon,
    const hier::Box& fill_box,
    const hier::BoundaryBox& bbox,
-   const tbox::Pointer<hier::GridGeometry>& grid_geometry)
+   const boost::shared_ptr<hier::GridGeometry>& grid_geometry)
 {
    const tbox::Dimension& dim = fill_box.getDim();
 
@@ -267,9 +268,9 @@ void CellMultiblockTest::fillSingularityBoundaryConditions(
 
    for (int i = 0; i < d_variables.getSize(); i++) {
 
-      tbox::Pointer<pdat::CellData<double> > cell_data(
+      boost::shared_ptr<pdat::CellData<double> > cell_data(
          patch.getPatchData(d_variables[i], getDataContext()),
-         tbox::__dynamic_cast_tag());
+         boost::detail::dynamic_cast_tag());
 
       hier::Box sing_fill_box(cell_data->getGhostBox() * fill_box);
       cell_data->fillAll(0.0, sing_fill_box);
@@ -287,7 +288,7 @@ void CellMultiblockTest::fillSingularityBoundaryConditions(
             for (hier::Connector::ConstNeighborIterator ei = dst_to_encon.begin(ni);
                  ei != dst_to_encon.end(ni); ++ei) {
 
-               tbox::Pointer<hier::Patch> encon_patch(
+               boost::shared_ptr<hier::Patch> encon_patch(
                   encon_level.getPatch(ei->getId()));
 
                const hier::BlockId& encon_blk_id = ei->getBlockId();
@@ -330,9 +331,9 @@ void CellMultiblockTest::fillSingularityBoundaryConditions(
                                                   patch_blk_id,
                                                   encon_blk_id);
 
-                  tbox::Pointer<pdat::CellData<double> > sing_data(
+                  boost::shared_ptr<pdat::CellData<double> > sing_data(
                      encon_patch->getPatchData(d_variables[i], getDataContext()),
-                     tbox::__dynamic_cast_tag());
+                     boost::detail::dynamic_cast_tag());
 
                   for (pdat::CellIterator ci(encon_fill_box); ci; ci++) {
                      pdat::CellIndex src_index(ci());
@@ -364,7 +365,7 @@ void CellMultiblockTest::fillSingularityBoundaryConditions(
 void CellMultiblockTest::postprocessRefine(
    hier::Patch& fine,
    const hier::Patch& coarse,
-   const tbox::Pointer<hier::VariableContext>& context,
+   const boost::shared_ptr<hier::VariableContext>& context,
    const hier::Box& fine_box,
    const hier::IntVector& ratio) const
 {
@@ -390,7 +391,7 @@ void CellMultiblockTest::postprocessRefine(
  */
 bool CellMultiblockTest::verifyResults(
    const hier::Patch& patch,
-   const tbox::Pointer<hier::PatchHierarchy> hierarchy,
+   const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
    const int level_number,
    const hier::BlockId& block_id)
 {
@@ -406,7 +407,7 @@ bool CellMultiblockTest::verifyResults(
    }
    hier::Box pbox = patch.getBox();
 
-   tbox::Pointer<pdat::CellData<double> > solution(
+   boost::shared_ptr<pdat::CellData<double> > solution(
       new pdat::CellData<double>(pbox, 1, tgcw));
 
    hier::Box tbox(pbox);
@@ -428,9 +429,9 @@ bool CellMultiblockTest::verifyResults(
 
       double correct = (double)block_id.getBlockValue();
 
-      tbox::Pointer<pdat::CellData<double> > cell_data(
+      boost::shared_ptr<pdat::CellData<double> > cell_data(
          patch.getPatchData(d_variables[i], getDataContext()),
-         tbox::__dynamic_cast_tag());
+         boost::detail::dynamic_cast_tag());
       int depth = cell_data->getDepth();
 
       for (pdat::CellIterator ci(pbox); ci; ci++) {
@@ -484,9 +485,9 @@ bool CellMultiblockTest::verifyResults(
          }
       }
 
-      tbox::Pointer<hier::PatchGeometry> pgeom(
+      boost::shared_ptr<hier::PatchGeometry> pgeom(
          patch.getPatchGeometry(),
-         tbox::__dynamic_cast_tag());
+         boost::detail::dynamic_cast_tag());
 
       for (int b = 0; b < d_dim.getValue(); b++) {
          tbox::Array<hier::BoundaryBox> bdry =

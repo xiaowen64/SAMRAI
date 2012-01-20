@@ -58,12 +58,12 @@ void MultiblockFaceDataTranslator<TYPE>::translateAndCopyData(
 
    const tbox::Dimension& dim(shift.getDim());
 
-   tbox::Pointer<FaceData<TYPE> > dst(
+   boost::shared_ptr<FaceData<TYPE> > dst(
       dst_patch.getPatchData(dst_id),
-      tbox::__dynamic_cast_tag());
-   tbox::Pointer<FaceData<TYPE> > src(
+      boost::detail::dynamic_cast_tag());
+   boost::shared_ptr<FaceData<TYPE> > src(
       src_patch.getPatchData(src_id),
-      tbox::__dynamic_cast_tag());
+      boost::detail::dynamic_cast_tag());
 
    TBOX_ASSERT(dst);
    TBOX_ASSERT(src);
@@ -81,8 +81,8 @@ void MultiblockFaceDataTranslator<TYPE>::translateAndCopyData(
       }
    } else if (dim == tbox::Dimension(2)) {
       for (int axis = 0; axis < dim.getValue(); axis++) {
-         for (pdat::FaceIterator fi(dst->getBox(), axis); fi; fi++) {
-            pdat::FaceIndex dst_index(fi());
+         for (FaceIterator fi(dst->getBox(), axis); fi; fi++) {
+            FaceIndex dst_index(fi());
             hier::Index dst_xyz_index(dst_index);
             if (axis == 1) {
                dst_xyz_index(0) = dst_index(1);
@@ -114,7 +114,7 @@ void MultiblockFaceDataTranslator<TYPE>::translateAndCopyData(
                src_xyz_index(i) -= copy_shift(i);
             }
 
-            pdat::FaceIndex src_index(dim);
+            FaceIndex src_index(dim);
             if (src_axis == 1) {
                src_index(0) = src_xyz_index(1);
                if (num_rotations == 1 || num_rotations == 2) {
@@ -238,8 +238,8 @@ void MultiblockFaceDataTranslator<TYPE>::translateAndCopyData(
             }
          }
          const hier::BlockId& block_id = dst->getBox().getBlockId();
-         for (pdat::FaceIterator fi(dst->getBox(), axis); fi; fi++) {
-            pdat::FaceIndex dst_index(fi());
+         for (FaceIterator fi(dst->getBox(), axis); fi; fi++) {
+            FaceIndex dst_index(fi());
             hier::Index dst_xyz_index(dst_index);
             if (axis == 1) {
                dst_xyz_index(0) = dst_index(2);
@@ -270,7 +270,7 @@ void MultiblockFaceDataTranslator<TYPE>::translateAndCopyData(
                src_xyz_index(i) = src_box.lower() (i);
             }
 
-            pdat::FaceIndex src_index(dim);
+            FaceIndex src_index(dim);
             if (src_axis == 0) {
                src_index(0) = src_xyz_index(0);
                src_index(1) = src_xyz_index(1);
@@ -415,8 +415,8 @@ void MultiblockFaceDataTranslator<TYPE>::translateAndCopyData(
 
 template<class TYPE>
 void MultiblockFaceDataTranslator<TYPE>::translateAndCopyArrayData(
-   pdat::ArrayData<TYPE>& dst,
-   const pdat::ArrayData<TYPE>& src,
+   ArrayData<TYPE>& dst,
+   const ArrayData<TYPE>& src,
    const hier::IntVector& shift,
    const hier::Transformation::RotationIdentifier rotate)
 {

@@ -12,9 +12,9 @@
 #define included_pdat_NodeFloatLinearTimeInterpolateOp
 
 #include "SAMRAI/SAMRAI_config.h"
-#include "SAMRAI/tbox/Pointer.h"
 #include "SAMRAI/hier/TimeInterpolateOperator.h"
 
+#include <boost/shared_ptr.hpp>
 #include <string>
 
 namespace SAMRAI {
@@ -53,7 +53,7 @@ public:
     */
    bool
    findTimeInterpolateOperator(
-      const tbox::Pointer<hier::Variable>& var,
+      const boost::shared_ptr<hier::Variable>& var,
       const std::string& op_name) const;
 
    /**

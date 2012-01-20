@@ -14,10 +14,10 @@
 #include "SAMRAI/SAMRAI_config.h"
 #include "SAMRAI/tbox/Array.h"
 #include "SAMRAI/tbox/Database.h"
-#include "SAMRAI/tbox/Pointer.h"
 #include "SAMRAI/tbox/Serializable.h"
 #include "SAMRAI/tbox/Statistic.h"
 
+#include <boost/shared_ptr.hpp>
 #include <string>
 
 namespace SAMRAI {
@@ -36,7 +36,7 @@ class StatisticRestartDatabase;
  *
  * Statistic objects can be to the database or accessed in code as follows:
  *
- *     Pointer<Statistic> stat =
+ *     boost::shared_ptr<Statistic> stat =
  *           Statistician::getStatistician->
  *           getStatistic("name", "PROC_STAT");
  *
@@ -114,7 +114,7 @@ public:
     * When assertion checking is active, an assertion will result if wither
     * string is empty.
     */
-   virtual Pointer<Statistic>
+   virtual boost::shared_ptr<Statistic>
    getStatistic(
       const std::string& name,
       const std::string& stat_type);
@@ -128,7 +128,7 @@ public:
     */
    virtual bool
    checkStatisticExists(
-      Pointer<Statistic>& stat,
+      boost::shared_ptr<Statistic>& stat,
       const std::string& name) const;
 
    /**
@@ -747,7 +747,7 @@ protected:
     */
    virtual bool
    checkProcStatExists(
-      Pointer<Statistic>& stat,
+      boost::shared_ptr<Statistic>& stat,
       const std::string& name) const;
 
    /**
@@ -759,7 +759,7 @@ protected:
     */
    virtual bool
    checkPatchStatExists(
-      Pointer<Statistic>& stat,
+      boost::shared_ptr<Statistic>& stat,
       const std::string& name) const;
 
 private:
@@ -841,9 +841,9 @@ private:
     * pointers to those statistics.
     */
    int d_num_proc_stats;
-   Array<Pointer<Statistic> > d_proc_statistics;
+   Array<boost::shared_ptr<Statistic> > d_proc_statistics;
    int d_num_patch_stats;
-   Array<Pointer<Statistic> > d_patch_statistics;
+   Array<boost::shared_ptr<Statistic> > d_patch_statistics;
 
    /*
     * Arrays of global statistic data assembled by the finalize() function.
@@ -959,7 +959,7 @@ public:
     */
    void
    putToDatabase(
-      Pointer<Database> db);
+      boost::shared_ptr<Database> db);
 
    /*
     * Construct those statistics saved in the restart database.

@@ -23,7 +23,7 @@ PatchDataFactory::~PatchDataFactory()
 {
 }
 
-const hier::IntVector&
+const IntVector&
 PatchDataFactory::getGhostCellWidth() const
 {
    return d_ghosts;

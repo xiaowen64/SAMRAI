@@ -18,9 +18,9 @@
 #include "SAMRAI/hier/Index.h"
 #include "SAMRAI/hier/IntVector.h"
 #include "SAMRAI/tbox/List.h"
-#include "SAMRAI/tbox/Pointer.h"
 #include "SAMRAI/tbox/Database.h"
 
+#include <boost/shared_ptr.hpp>
 #include <vector>
 
 namespace SAMRAI {
@@ -80,9 +80,9 @@ class ConstIndexIterator;
  *             unpackStream(MessageStream\& stream,
  *             const hier::IntVector\& offset)
  *    - \b - Write to restart;
- *             putToDatabase(tbox::Pointer<tbox::Database>\& database)
+ *             putToDatabase(boost::shared_ptr<tbox::Database>\& database)
  *    - \b - Retrieve from restart;
- *             getFromDatabase(tbox::Pointer<tbox::Database>\& database)
+ *             getFromDatabase(boost::shared_ptr<tbox::Database>\& database)
  *
  * The BOX_GEOMETRY template parameter defines the geometry.   BOX_GEOMETRY must
  * have a nested class name Overlap that implements he following methods:
@@ -361,7 +361,7 @@ public:
     */
    virtual void
    getSpecializedFromDatabase(
-      tbox::Pointer<tbox::Database> database);
+      boost::shared_ptr<tbox::Database> database);
 
    /**
     * Write out the class version number to the database.
@@ -370,7 +370,7 @@ public:
     */
    virtual void
    putSpecializedToDatabase(
-      tbox::Pointer<tbox::Database> database);
+      boost::shared_ptr<tbox::Database> database);
 
 private:
    friend class IndexIterator<TYPE, BOX_GEOMETRY>;

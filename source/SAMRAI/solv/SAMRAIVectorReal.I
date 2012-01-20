@@ -35,7 +35,7 @@ const std::string& SAMRAIVectorReal<TYPE>::getName() const
 
 template<class TYPE>
 SAMRAI_INLINE_KEYWORD
-tbox::Pointer<hier::PatchHierarchy>
+boost::shared_ptr<hier::PatchHierarchy>
 SAMRAIVectorReal<TYPE>::getPatchHierarchy() const
 {
    return d_hierarchy;
@@ -64,7 +64,7 @@ int SAMRAIVectorReal<TYPE>::getNumberOfComponents() const
 
 template<class TYPE>
 SAMRAI_INLINE_KEYWORD
-tbox::Pointer<hier::PatchData>
+boost::shared_ptr<hier::PatchData>
 SAMRAIVectorReal<TYPE>::getComponentPatchData(
    const int comp_id,
    const hier::Patch& patch) const
@@ -77,9 +77,9 @@ SAMRAIVectorReal<TYPE>::getComponentPatchData(
 
 template<class TYPE>
 SAMRAI_INLINE_KEYWORD
-tbox::Pointer<hier::PatchData>
+boost::shared_ptr<hier::PatchData>
 SAMRAIVectorReal<TYPE>::getComponentPatchData(
-   const tbox::Pointer<hier::Variable>& var,
+   const boost::shared_ptr<hier::Variable>& var,
    const hier::Patch& patch) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
@@ -95,7 +95,7 @@ SAMRAIVectorReal<TYPE>::getComponentPatchData(
 
 template<class TYPE>
 SAMRAI_INLINE_KEYWORD
-tbox::Pointer<hier::Variable>
+boost::shared_ptr<hier::Variable>
 SAMRAIVectorReal<TYPE>::getComponentVariable(
    const int comp_id) const
 {

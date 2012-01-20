@@ -71,14 +71,14 @@ CellDataFactory<TYPE>::~CellDataFactory()
  */
 
 template<class TYPE>
-tbox::Pointer<hier::PatchDataFactory>
+boost::shared_ptr<hier::PatchDataFactory>
 CellDataFactory<TYPE>::cloneFactory(
    const hier::IntVector& ghosts)
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, ghosts);
 
-   return tbox::Pointer<hier::PatchDataFactory>(new CellDataFactory<TYPE>(
-                                                   d_depth, ghosts));
+   return boost::shared_ptr<hier::PatchDataFactory>(
+      new CellDataFactory<TYPE>(d_depth, ghosts));
 }
 
 /*
@@ -90,7 +90,7 @@ CellDataFactory<TYPE>::cloneFactory(
  */
 
 template<class TYPE>
-tbox::Pointer<hier::PatchData>
+boost::shared_ptr<hier::PatchData>
 CellDataFactory<TYPE>::allocate(
    const hier::Patch& patch) const
 {
@@ -98,7 +98,7 @@ CellDataFactory<TYPE>::allocate(
 
    hier::PatchData* patchdata =
       new CellData<TYPE>(patch.getBox(), this->d_depth, this->d_ghosts);
-   return tbox::Pointer<hier::PatchData>(patchdata);
+   return boost::shared_ptr<hier::PatchData>(patchdata);
 }
 
 /*
@@ -110,14 +110,14 @@ CellDataFactory<TYPE>::allocate(
  */
 
 template<class TYPE>
-tbox::Pointer<hier::BoxGeometry>
+boost::shared_ptr<hier::BoxGeometry>
 CellDataFactory<TYPE>::getBoxGeometry(
    const hier::Box& box) const
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, box);
 
    hier::BoxGeometry* boxgeometry = new CellGeometry(box, this->d_ghosts);
-   return tbox::Pointer<hier::BoxGeometry>(boxgeometry);
+   return boost::shared_ptr<hier::BoxGeometry>(boxgeometry);
 }
 
 /*
@@ -152,7 +152,7 @@ size_t CellDataFactory<TYPE>::getSizeOfMemory(
 
 template<class TYPE>
 bool CellDataFactory<TYPE>::validCopyTo(
-   const tbox::Pointer<hier::PatchDataFactory>& dst_pdf) const
+   const boost::shared_ptr<hier::PatchDataFactory>& dst_pdf) const
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, *dst_pdf);
 
@@ -161,9 +161,9 @@ bool CellDataFactory<TYPE>::validCopyTo(
    /*
     * Only valid option is CellData.
     */
-   tbox::Pointer<CellDataFactory<TYPE> > cdf(
+   boost::shared_ptr<CellDataFactory<TYPE> > cdf(
       dst_pdf,
-      tbox::__dynamic_cast_tag());
+      boost::detail::dynamic_cast_tag());
    if (cdf) {
       valid_copy = true;
    }

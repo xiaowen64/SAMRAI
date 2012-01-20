@@ -17,7 +17,8 @@
 #include "SAMRAI/math/ArrayDataNormOpsComplex.h"
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/tbox/Complex.h"
-#include "SAMRAI/tbox/Pointer.h"
+
+#include <boost/shared_ptr.hpp>
 
 namespace SAMRAI {
 namespace math {
@@ -65,7 +66,7 @@ public:
     */
    int
    numberOfEntries(
-      const tbox::Pointer<pdat::CellData<dcomplex> >& data,
+      const boost::shared_ptr<pdat::CellData<dcomplex> >& data,
       const hier::Box& box) const;
 
    /**
@@ -73,8 +74,8 @@ public:
     */
    double
    sumControlVolumes(
-      const tbox::Pointer<pdat::CellData<dcomplex> >& data,
-      const tbox::Pointer<pdat::CellData<double> >& cvol,
+      const boost::shared_ptr<pdat::CellData<dcomplex> >& data,
+      const boost::shared_ptr<pdat::CellData<double> >& cvol,
       const hier::Box& box) const;
 
    /**
@@ -84,8 +85,8 @@ public:
     */
    void
    abs(
-      tbox::Pointer<pdat::CellData<double> >& dst,
-      const tbox::Pointer<pdat::CellData<dcomplex> >& src,
+      boost::shared_ptr<pdat::CellData<double> >& dst,
+      const boost::shared_ptr<pdat::CellData<dcomplex> >& src,
       const hier::Box& box) const;
 
    /**
@@ -97,10 +98,11 @@ public:
     */
    double
    L1Norm(
-      const tbox::Pointer<pdat::CellData<dcomplex> >& data,
+      const boost::shared_ptr<pdat::CellData<dcomplex> >& data,
       const hier::Box& box,
-      const tbox::Pointer<pdat::CellData<double> > cvol =
-         tbox::Pointer<pdat::CellData<double> >(NULL)) const;
+      const boost::shared_ptr<pdat::CellData<double> > cvol =
+         boost::shared_ptr<pdat::CellData<double> >(
+            (pdat::CellData<double>*)NULL)) const;
 
    /**
     * Return discrete \f$L_2\f$-norm of the data using the control volume to
@@ -112,10 +114,11 @@ public:
     */
    double
    L2Norm(
-      const tbox::Pointer<pdat::CellData<dcomplex> >& data,
+      const boost::shared_ptr<pdat::CellData<dcomplex> >& data,
       const hier::Box& box,
-      const tbox::Pointer<pdat::CellData<double> > cvol =
-         tbox::Pointer<pdat::CellData<double> >(NULL)) const;
+      const boost::shared_ptr<pdat::CellData<double> > cvol =
+         boost::shared_ptr<pdat::CellData<double> >(
+            (pdat::CellData<double>*)NULL)) const;
 
    /**
     * Return discrete weighted \f$L_2\f$-norm of the data using the control
@@ -127,11 +130,12 @@ public:
     */
    double
    weightedL2Norm(
-      const tbox::Pointer<pdat::CellData<dcomplex> >& data,
-      const tbox::Pointer<pdat::CellData<dcomplex> >& weight,
+      const boost::shared_ptr<pdat::CellData<dcomplex> >& data,
+      const boost::shared_ptr<pdat::CellData<dcomplex> >& weight,
       const hier::Box& box,
-      const tbox::Pointer<pdat::CellData<double> > cvol =
-         tbox::Pointer<pdat::CellData<double> >(NULL)) const;
+      const boost::shared_ptr<pdat::CellData<double> > cvol =
+         boost::shared_ptr<pdat::CellData<double> >(
+            (pdat::CellData<double>*)NULL)) const;
 
    /**
     * Return discrete root mean squared norm of the data.  If the control
@@ -142,10 +146,11 @@ public:
     */
    double
    RMSNorm(
-      const tbox::Pointer<pdat::CellData<dcomplex> >& data,
+      const boost::shared_ptr<pdat::CellData<dcomplex> >& data,
       const hier::Box& box,
-      const tbox::Pointer<pdat::CellData<double> > cvol =
-         tbox::Pointer<pdat::CellData<double> >(NULL)) const;
+      const boost::shared_ptr<pdat::CellData<double> > cvol =
+         boost::shared_ptr<pdat::CellData<double> >(
+            (pdat::CellData<double>*)NULL)) const;
 
    /**
     * Return discrete weighted root mean squared norm of the data.  If the
@@ -156,11 +161,12 @@ public:
     */
    double
    weightedRMSNorm(
-      const tbox::Pointer<pdat::CellData<dcomplex> >& data,
-      const tbox::Pointer<pdat::CellData<dcomplex> >& weight,
+      const boost::shared_ptr<pdat::CellData<dcomplex> >& data,
+      const boost::shared_ptr<pdat::CellData<dcomplex> >& weight,
       const hier::Box& box,
-      const tbox::Pointer<pdat::CellData<double> > cvol =
-         tbox::Pointer<pdat::CellData<double> >(NULL)) const;
+      const boost::shared_ptr<pdat::CellData<double> > cvol =
+         boost::shared_ptr<pdat::CellData<double> >(
+            (pdat::CellData<double>*)NULL)) const;
 
    /**
     * Return the \f$\max\f$-norm of the data using the control volume to weight
@@ -171,10 +177,11 @@ public:
     */
    double
    maxNorm(
-      const tbox::Pointer<pdat::CellData<dcomplex> >& data,
+      const boost::shared_ptr<pdat::CellData<dcomplex> >& data,
       const hier::Box& box,
-      const tbox::Pointer<pdat::CellData<double> > cvol =
-         tbox::Pointer<pdat::CellData<double> >(NULL)) const;
+      const boost::shared_ptr<pdat::CellData<double> > cvol =
+         boost::shared_ptr<pdat::CellData<double> >(
+            (pdat::CellData<double>*)NULL)) const;
 
    /**
     * Return the dot product of the two data arrays using the control volume
@@ -184,11 +191,12 @@ public:
     */
    dcomplex
    dot(
-      const tbox::Pointer<pdat::CellData<dcomplex> >& data1,
-      const tbox::Pointer<pdat::CellData<dcomplex> >& data2,
+      const boost::shared_ptr<pdat::CellData<dcomplex> >& data1,
+      const boost::shared_ptr<pdat::CellData<dcomplex> >& data2,
       const hier::Box& box,
-      const tbox::Pointer<pdat::CellData<double> > cvol =
-         tbox::Pointer<pdat::CellData<double> >(NULL)) const;
+      const boost::shared_ptr<pdat::CellData<double> > cvol =
+         boost::shared_ptr<pdat::CellData<double> >(
+            (pdat::CellData<double>*)NULL)) const;
 
    /**
     * Return the integral of the function represented by the data array.
@@ -196,9 +204,9 @@ public:
     */
    dcomplex
    integral(
-      const tbox::Pointer<pdat::CellData<dcomplex> >& data,
+      const boost::shared_ptr<pdat::CellData<dcomplex> >& data,
       const hier::Box& box,
-      const tbox::Pointer<pdat::CellData<double> > vol) const;
+      const boost::shared_ptr<pdat::CellData<double> > vol) const;
 
 private:
    // The following are not implemented:

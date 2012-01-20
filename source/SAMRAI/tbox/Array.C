@@ -12,7 +12,6 @@
 #define included_tbox_Array_C
 
 #include "SAMRAI/tbox/Array.h"
-#include "SAMRAI/tbox/Pointer.h"
 
 #include <new>
 #include <cstdlib>
@@ -33,7 +32,7 @@ namespace SAMRAI {
 namespace tbox {
 
 template<class TYPE>
-const typename SAMRAI::tbox::Array<TYPE>::DoNotInitialize SAMRAI::tbox::Array<
+const typename tbox::Array<TYPE>::DoNotInitialize tbox::Array<
    TYPE>::UNINITIALIZED;
 
 /*

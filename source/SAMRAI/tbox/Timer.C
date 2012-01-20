@@ -291,7 +291,7 @@ void Timer::computeMaxWallclock()
 }
 
 void Timer::putToDatabase(
-   Pointer<Database> db)
+   boost::shared_ptr<Database> db)
 {
 #ifdef ENABLE_SAMRAI_TIMERS
    TBOX_ASSERT(db);
@@ -312,7 +312,7 @@ void Timer::putToDatabase(
 }
 
 void Timer::getFromRestart(
-   Pointer<Database> db)
+   boost::shared_ptr<Database> db)
 {
 #ifdef ENABLE_SAMRAI_TIMERS
    TBOX_ASSERT(db);

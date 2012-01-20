@@ -23,11 +23,11 @@
 #include "SAMRAI/hier/PatchFactory.h"
 #include "SAMRAI/hier/PatchLevel.h"
 #include "SAMRAI/hier/PatchLevelFactory.h"
-#include "SAMRAI/tbox/Pointer.h"
 #include "SAMRAI/tbox/Database.h"
 #include "SAMRAI/tbox/Serializable.h"
 #include "SAMRAI/tbox/DescribedClass.h"
 
+#include <boost/shared_ptr.hpp>
 #include <string>
 
 namespace SAMRAI {
@@ -239,8 +239,8 @@ public:
        */
       virtual void
       computeRequiredConnectorWidths(
-         std::vector<hier::IntVector>& self_connector_widths,
-         std::vector<hier::IntVector>& fine_connector_widths,
+         std::vector<IntVector>& self_connector_widths,
+         std::vector<IntVector>& fine_connector_widths,
          const PatchHierarchy& patch_hierarchy) const = 0;
    };
 
@@ -268,9 +268,9 @@ public:
  */
    PatchHierarchy(
       const std::string& object_name,
-      tbox::Pointer<GridGeometry> geometry,
-      const tbox::Pointer<tbox::Database>& database =
-         tbox::Pointer<tbox::Database>(NULL),
+      boost::shared_ptr<GridGeometry> geometry,
+      const boost::shared_ptr<tbox::Database>& database =
+         boost::shared_ptr<tbox::Database>((tbox::Database*)NULL),
       bool register_for_restart = true);
 
    /*!
@@ -300,10 +300,10 @@ public:
     * @param[in]  refine_ratio
     * @param[in]  register_for_restart
     */
-   tbox::Pointer<hier::PatchHierarchy>
+   boost::shared_ptr<PatchHierarchy>
    makeRefinedPatchHierarchy(
       const std::string& fine_hierarchy_name,
-      const hier::IntVector& refine_ratio,
+      const IntVector& refine_ratio,
       bool register_for_restart) const;
 
    /*!
@@ -323,16 +323,16 @@ public:
     * this must be done before any data operations can be performed on
     * the new hierarchy.
     *
-    * @return Pointer to the coarsened patch hierarchy.
+    * @return boost::shared_ptr to the coarsened patch hierarchy.
     *
     * @param[in]  coarse_hierarchy_name
     * @param[in]  coarsen_ratio
     * @param[in]  register_for_restart
     */
-   tbox::Pointer<hier::PatchHierarchy>
+   boost::shared_ptr<PatchHierarchy>
    makeCoarsenedPatchHierarchy(
       const std::string& coarse_hierarchy_name,
-      const hier::IntVector& coarsen_ratio,
+      const IntVector& coarsen_ratio,
       bool register_for_restart) const;
 
 /*
@@ -372,7 +372,7 @@ public:
     *
     * @param[in]  level
     */
-   tbox::Pointer<PatchLevel>
+   boost::shared_ptr<PatchLevel>
    getPatchLevel(
       const int level) const;
 
@@ -382,7 +382,7 @@ public:
     * @return a pointer to the patch descriptor used for the patches in
     * the patch hierarchy.
     */
-   tbox::Pointer<PatchDescriptor>
+   boost::shared_ptr<PatchDescriptor>
    getPatchDescriptor() const;
 
    /*!
@@ -445,7 +445,7 @@ public:
     *
     * @param[in]  level
     */
-   const tbox::Pointer<BoxLevel>&
+   const boost::shared_ptr<BoxLevel>&
    getBoxLevel(
       const int level) const;
 
@@ -675,21 +675,21 @@ public:
 
    //@}
 
-/*
- * TODO: Since we have really never used the patch factory and patch
- * level factory concepts beyond their defaults, should we remove them?
- */
-/*!
- * @brief Set the factory used to create patch objects.
- *
- * If a factory is not specified, then the default factory will create
- * patch objects of type Patch.
- *
- * @param[in]  factory
- */
+   /*
+    * TODO: Since we have really never used the patch factory and patch
+    * level factory concepts beyond their defaults, should we remove them?
+    */
+   /*!
+    * @brief Set the factory used to create patch objects.
+    *
+    * If a factory is not specified, then the default factory will create
+    * patch objects of type Patch.
+    *
+    * @param[in]  factory
+    */
    void
    setPatchFactory(
-      tbox::Pointer<PatchFactory> factory);
+      boost::shared_ptr<PatchFactory> factory);
 
    /*!
     * @brief Set the factory used to create patch level objects.
@@ -701,14 +701,14 @@ public:
     */
    void
    setPatchLevelFactory(
-      tbox::Pointer<PatchLevelFactory> factory);
+      boost::shared_ptr<PatchLevelFactory> factory);
 
    /*!
     * @brief Get the grid geometry.
     *
     * @return a pointer to the grid geometry object.
     */
-   tbox::Pointer<GridGeometry>
+   boost::shared_ptr<GridGeometry>
    getGridGeometry() const;
 
    /*!
@@ -728,7 +728,7 @@ public:
     */
    void
    putToDatabase(
-      tbox::Pointer<tbox::Database> database);
+      boost::shared_ptr<tbox::Database> database);
 
    /*!
     * @brief Writes the state of the PatchHierarchy object and the PatchLevels
@@ -745,7 +745,7 @@ public:
     */
    void
    putToDatabase(
-      tbox::Pointer<tbox::Database> database,
+      boost::shared_ptr<tbox::Database> database,
       const ComponentSelector& patchdata_write_table);
 
    /*!
@@ -792,7 +792,7 @@ public:
     */
    void
    getFromDatabase(
-      tbox::Pointer<tbox::Database> database,
+      boost::shared_ptr<tbox::Database> database,
       const ComponentSelector& component_selector);
 
    /*!
@@ -854,7 +854,7 @@ private:
     */
    void
    getFromInput(
-      const tbox::Pointer<tbox::Database>& database);
+      const boost::shared_ptr<tbox::Database>& database);
 
    /*!
     * @brief Set up things for the entire class.
@@ -897,17 +897,17 @@ private:
    /*!
     * @brief Array of pointers to PatchLevels that make up the hierarchy
     */
-   tbox::Array<tbox::Pointer<PatchLevel> > d_patch_levels;
+   tbox::Array<boost::shared_ptr<PatchLevel> > d_patch_levels;
 
    /*!
     * @brief GridGeometry that was used to construct the hierarchy
     */
-   tbox::Pointer<GridGeometry> d_grid_geometry;
+   boost::shared_ptr<GridGeometry> d_grid_geometry;
 
    /*!
     * @brief PatchDescriptor that is shared by every patch on the hierarchy
     */
-   tbox::Pointer<PatchDescriptor> d_patch_descriptor;
+   boost::shared_ptr<PatchDescriptor> d_patch_descriptor;
 
 /*
  * TODO: Since we have really never used the patch factory and patch
@@ -916,12 +916,12 @@ private:
 /*!
  * @brief Factory used to create patches on the hierarchy
  */
-   tbox::Pointer<PatchFactory> d_patch_factory;
+   boost::shared_ptr<PatchFactory> d_patch_factory;
 
    /*!
     * @brief Factory used to create levels on the hierarchy
     */
-   tbox::Pointer<PatchLevelFactory> d_patch_level_factory;
+   boost::shared_ptr<PatchLevelFactory> d_patch_level_factory;
 
    //@{
    //! @name Parameters for setting up the hierarchy.
@@ -937,7 +937,7 @@ private:
     * The vector will be sized to d_max_levels.  d_ratio_to_coarser[n] is
     * the refinement ratio betwee level @c n and level @c n-1.
     */
-   std::vector<hier::IntVector> d_ratio_to_coarser;
+   std::vector<IntVector> d_ratio_to_coarser;
 
    /*
     * @brief Proper nesting buffer for each level.
@@ -970,13 +970,13 @@ private:
    /*!
     * @brief Smallest patch sizes for each level.
     */
-   std::vector<hier::IntVector> d_smallest_patch_size;
+   std::vector<IntVector> d_smallest_patch_size;
 
    /*!
     * @brief Largest patch sizes for each level.  A negative value means
     * unlimited.
     */
-   std::vector<hier::IntVector> d_largest_patch_size;
+   std::vector<IntVector> d_largest_patch_size;
 
    /*!
     * @brief Whether to normally allow patches smaller than the max
@@ -1056,7 +1056,7 @@ private:
 /*
  * TODO: These things (if really needed) should be moved to the GridGeometry
  * class.  However, the GridGeometry object cannot own a MappedBoxLevel
- * because the GridGeometry object is incapable of creating a tbox::Pointer
+ * because the GridGeometry object is incapable of creating a boost::shared_ptr
  * to itself.  Might need to change BoxLevel to take a raw pointer to
  * GridGeometry.
  */

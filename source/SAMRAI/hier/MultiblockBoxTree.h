@@ -14,9 +14,9 @@
 #include "SAMRAI/SAMRAI_config.h"
 
 #include "SAMRAI/hier/BoxTree.h"
-#include "SAMRAI/tbox/Pointer.h"
 #include "SAMRAI/tbox/DescribedClass.h"
 
+#include <boost/shared_ptr.hpp>
 #include <vector>
 #include <map>
 
@@ -345,7 +345,7 @@ public:
     * manually get the boxes, coarsen them and use them to build a new
     * tree.
     */
-   tbox::Pointer<MultiblockBoxTree>
+   boost::shared_ptr<MultiblockBoxTree>
    createRefinedTree(
       const IntVector& ratio) const;
 

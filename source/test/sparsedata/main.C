@@ -14,7 +14,7 @@
 #include "SAMRAI/tbox/PIO.h"
 
 using namespace sam_test;
-using namespace SAMRAI::tbox;
+using namespace tbox;
 
 int main(
    int argc,

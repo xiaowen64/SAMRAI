@@ -95,7 +95,7 @@ int main(
        * Create input database and parse all data in input file.
        */
 
-      Pointer<InputDatabase> input_db(new InputDatabase("input_db"));
+      boost::shared_ptr<InputDatabase> input_db(new InputDatabase("input_db"));
       InputManager::getManager()->parseInputFile(input_filename, input_db);
 
       /*
@@ -112,7 +112,7 @@ int main(
        * all name strings in this program.
        */
 
-      Pointer<Database> main_db = input_db->getDatabase("Main");
+      boost::shared_ptr<Database> main_db = input_db->getDatabase("Main");
       std::string base_name = "unnamed";
       base_name = main_db->getStringWithDefault("base_name", base_name);
 
@@ -647,7 +647,7 @@ int main(
       SAMRAI_MPI::finalize();
    } else {
       plog << "Process " << std::setw(5) << rank << " aborting." << std::endl;
-      SAMRAI::tbox::Utilities::abort("Aborting due to nonzero fail count",
+      tbox::Utilities::abort("Aborting due to nonzero fail count",
          __FILE__, __LINE__);
    }
 

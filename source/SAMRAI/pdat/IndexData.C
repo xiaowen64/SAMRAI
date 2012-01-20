@@ -708,7 +708,7 @@ bool IndexData<TYPE, BOX_GEOMETRY>::isElement(
 
 template<class TYPE, class BOX_GEOMETRY>
 void IndexData<TYPE, BOX_GEOMETRY>::getSpecializedFromDatabase(
-   tbox::Pointer<tbox::Database> database)
+   boost::shared_ptr<tbox::Database> database)
 {
    TBOX_ASSERT(database);
 
@@ -728,7 +728,7 @@ void IndexData<TYPE, BOX_GEOMETRY>::getSpecializedFromDatabase(
 
       if (database->isDatabase(index_keyword)) {
 
-         tbox::Pointer<tbox::Database> item_db =
+         boost::shared_ptr<tbox::Database> item_db =
             database->getDatabase(index_keyword);
 
          tbox::Array<int> index_array = item_db->getIntegerArray(index_keyword);
@@ -762,7 +762,7 @@ void IndexData<TYPE, BOX_GEOMETRY>::getSpecializedFromDatabase(
 
 template<class TYPE, class BOX_GEOMETRY>
 void IndexData<TYPE, BOX_GEOMETRY>::putSpecializedToDatabase(
-   tbox::Pointer<tbox::Database> database)
+   boost::shared_ptr<tbox::Database> database)
 {
    TBOX_ASSERT(database);
 
@@ -780,7 +780,7 @@ void IndexData<TYPE, BOX_GEOMETRY>::putSpecializedToDatabase(
          index_array[i] = index(i);
       }
 
-      tbox::Pointer<tbox::Database> item_db =
+      boost::shared_ptr<tbox::Database> item_db =
          database->putDatabase(index_keyword);
 
       item_db->putIntegerArray(index_keyword, index_array);

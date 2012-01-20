@@ -118,14 +118,14 @@ public:
    /**
     * Returns a pointer to the null database.
     */
-   virtual Pointer<Database>
+   virtual boost::shared_ptr<Database>
    putDatabase(
       const std::string& key);
 
    /**
     * Returns a pointer to the null database.
     */
-   virtual Pointer<Database>
+   virtual boost::shared_ptr<Database>
    getDatabase(
       const std::string& key);
 

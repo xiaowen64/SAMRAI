@@ -53,7 +53,6 @@ using namespace std;
 #include "SAMRAI/hier/Patch.h"
 #include "SAMRAI/hier/PatchHierarchy.h"
 #include "SAMRAI/hier/PatchLevel.h"
-#include "SAMRAI/tbox/Pointer.h"
 #include "SAMRAI/pdat/OuterfaceVariable.h"
 #include "SAMRAI/pdat/SideVariable.h"
 #include "SAMRAI/hier/VariableContext.h"
@@ -72,6 +71,8 @@ using namespace std;
  */
 #include "SAMRAI/solv/SundialsAbstractVector.h"
 #include "SAMRAI/solv/Sundials_SAMRAIVector.h"
+
+#include <boost/shared_ptr.hpp>
 
 using namespace SAMRAI;
 using namespace tbox;
@@ -133,8 +134,8 @@ public:
    CVODEModel(
       const string& object_name,
       const tbox::Dimension& dim,
-      tbox::Pointer<tbox::Database> input_db,
-      tbox::Pointer<geom::CartesianGridGeometry> grid_geom);
+      boost::shared_ptr<tbox::Database> input_db,
+      boost::shared_ptr<geom::CartesianGridGeometry> grid_geom);
 
    /**
     * Empty destructor for CVODEModel.
@@ -171,13 +172,13 @@ public:
     */
    virtual void
    initializeLevelData(
-      const tbox::Pointer<PatchHierarchy> hierarchy,
+      const boost::shared_ptr<PatchHierarchy> hierarchy,
       const int level_number,
       const double time,
       const bool can_be_refined,
       const bool initial_time,
-      const tbox::Pointer<PatchLevel> old_level =
-         tbox::Pointer<PatchLevel>(NULL),
+      const boost::shared_ptr<PatchLevel> old_level =
+         boost::shared_ptr<PatchLevel>(),
       const bool allocate_data = true);
 
    /**
@@ -200,7 +201,7 @@ public:
     */
    virtual void
    resetHierarchyConfiguration(
-      const tbox::Pointer<PatchHierarchy> hierarchy,
+      const boost::shared_ptr<PatchHierarchy> hierarchy,
       const int coarsest_level,
       const int finest_level);
 
@@ -218,7 +219,7 @@ public:
     */
    virtual void
    applyGradientDetector(
-      const tbox::Pointer<PatchHierarchy> hierarchy,
+      const boost::shared_ptr<PatchHierarchy> hierarchy,
       const int level_number,
       const double time,
       const int tag_index,
@@ -398,7 +399,7 @@ public:
     */
    void
    setupSolutionVector(
-      tbox::Pointer<PatchHierarchy> hierarchy);
+      boost::shared_ptr<PatchHierarchy> hierarchy);
 
    /**
     * Get pointer to the solution vector.
@@ -429,7 +430,7 @@ public:
     */
    void
    putToDatabase(
-      tbox::Pointer<tbox::Database> db);
+      boost::shared_ptr<tbox::Database> db);
 
    /**
     * This routine is a concrete implementation of the virtual function
@@ -441,13 +442,13 @@ public:
     */
    void
    readDirichletBoundaryDataEntry(
-      tbox::Pointer<tbox::Database> db,
+      boost::shared_ptr<tbox::Database> db,
       string& db_name,
       int bdry_location_index);
 
    void
    readNeumannBoundaryDataEntry(
-      tbox::Pointer<tbox::Database> db,
+      boost::shared_ptr<tbox::Database> db,
       string& db_name,
       int bdry_location_index);
 
@@ -470,7 +471,7 @@ private:
     */
    virtual void
    getFromInput(
-      tbox::Pointer<tbox::Database> db,
+      boost::shared_ptr<tbox::Database> db,
       bool is_from_restart);
 
    virtual void
@@ -478,7 +479,7 @@ private:
 
    void
    readStateDataEntry(
-      tbox::Pointer<tbox::Database> db,
+      boost::shared_ptr<tbox::Database> db,
       const string& db_name,
       int array_indx,
       tbox::Array<double>& uval);
@@ -492,20 +493,20 @@ private:
    const tbox::Dimension d_dim;
 
    /*
-    * tbox::Pointer to solution vector
+    * Pointer to solution vector
     */
    SundialsAbstractVector* d_solution_vector;
 
    /*
     * Variables
     */
-   tbox::Pointer<CellVariable<double> > d_soln_var;
+   boost::shared_ptr<CellVariable<double> > d_soln_var;
 
    /*
     * Variable Contexts
     */
-   tbox::Pointer<VariableContext> d_cur_cxt;
-   tbox::Pointer<VariableContext> d_scr_cxt;
+   boost::shared_ptr<VariableContext> d_cur_cxt;
+   boost::shared_ptr<VariableContext> d_scr_cxt;
 
    /*
     * Patch Data ids
@@ -514,9 +515,9 @@ private:
    int d_soln_scr_id;
 
 #ifdef USE_FAC_PRECONDITIONER
-   tbox::Pointer<SideVariable<double> > d_diff_var;
-   tbox::Pointer<OuterfaceVariable<int> > d_flag_var;
-   tbox::Pointer<OuterfaceVariable<double> > d_neuf_var;
+   boost::shared_ptr<SideVariable<double> > d_diff_var;
+   boost::shared_ptr<OuterfaceVariable<int> > d_flag_var;
+   boost::shared_ptr<OuterfaceVariable<double> > d_neuf_var;
 
    int d_diff_id;
    int d_flag_id;
@@ -543,7 +544,7 @@ private:
    /*
     * Grid geometry
     */
-   tbox::Pointer<geom::CartesianGridGeometry> d_grid_geometry;
+   boost::shared_ptr<geom::CartesianGridGeometry> d_grid_geometry;
 
    /*
     * Initial value

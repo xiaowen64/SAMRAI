@@ -77,7 +77,7 @@ public:
       const tbox::Dimension&
       getDim() const;
 
-      friend class::std::map<LocalId, SAMRAI::hier::PatchGeometry::TwoDimBool>;
+      friend class::std::map<LocalId, PatchGeometry::TwoDimBool>;
 
 private:
       /*

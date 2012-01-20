@@ -16,7 +16,6 @@
 #include "SAMRAI/tbox/InputDatabase.h"
 #include "SAMRAI/tbox/InputManager.h"
 #include "SAMRAI/tbox/SAMRAI_MPI.h"
-#include "SAMRAI/tbox/Pointer.h"
 #include "SAMRAI/tbox/PIO.h"
 #include "SAMRAI/tbox/Utilities.h"
 #include "SAMRAI/hier/VariableDatabase.h"
@@ -32,6 +31,8 @@
 
 // Header for application-specific algorithm/data structure object
 #include "HierSumTest.h"
+
+#include <boost/shared_ptr.hpp>
 
 using namespace SAMRAI;
 using namespace tbox;
@@ -99,14 +100,15 @@ int main(
        * Create input database and parse all data in input file.
        */
 
-      Pointer<InputDatabase> input_db(new tbox::InputDatabase("input_db"));
+      boost::shared_ptr<InputDatabase> input_db(
+         new tbox::InputDatabase("input_db"));
       InputManager::getManager()->parseInputFile(input_filename, input_db);
 
       /*
        * Retrieve "Main" section of the input database.
        */
 
-      Pointer<Database> main_db = input_db->getDatabase("Main");
+      boost::shared_ptr<Database> main_db = input_db->getDatabase("Main");
 
       const tbox::Dimension dim(static_cast<unsigned short>(main_db->getInteger("dim")));
 
@@ -164,7 +166,7 @@ int main(
        * support any grid geometry that may be represented as an orthogonal
        * grid.
        */
-      Pointer<CartesianGridGeometry> grid_geometry(
+      boost::shared_ptr<CartesianGridGeometry> grid_geometry(
          new CartesianGridGeometry(dim,
             "CartesianGeometry",
             input_db->getDatabase("CartesianGeometry")));
@@ -172,7 +174,7 @@ int main(
       /*
        * The patch hierarchy defines the adaptive grid system.
        */
-      Pointer<PatchHierarchy> patch_hierarchy(
+      boost::shared_ptr<PatchHierarchy> patch_hierarchy(
          new PatchHierarchy("PatchHierarchy", grid_geometry,
             input_db->getDatabase("PatchHierarchy")));
 
@@ -180,13 +182,14 @@ int main(
       /*
        * Set up Visualization writer.
        */
-      Pointer<appu::VisItDataWriter> visit_data_writer;
+      boost::shared_ptr<appu::VisItDataWriter> visit_data_writer;
       if (visit_dump_interval > 0) {
-         visit_data_writer = new appu::VisItDataWriter(
+         visit_data_writer.reset(
+            new appu::VisItDataWriter(
                dim,
                "HierSumTest VisIt Writer",
                visit_dump_dirname,
-               visit_number_procs_per_file);
+               visit_number_procs_per_file));
       }
 #endif
 
@@ -209,7 +212,7 @@ int main(
        * detector, and methods to reset data after the hierarchy has been
        * regridded.
        */
-      Pointer<StandardTagAndInitialize> tag_and_init_ops(
+      boost::shared_ptr<StandardTagAndInitialize> tag_and_init_ops(
          new StandardTagAndInitialize(
             dim,
             "StandardTagAndInitialize",
@@ -226,16 +229,16 @@ int main(
        * this, we use the "tag_and_init_ops" above, which references our
        * "wave_eqn_model" problem class to define the user-specific operations.
        */
-      Pointer<BergerRigoutsos> box_generator(
+      boost::shared_ptr<BergerRigoutsos> box_generator(
          new BergerRigoutsos(dim));
 
-      Pointer<TreeLoadBalancer> load_balancer(
+      boost::shared_ptr<TreeLoadBalancer> load_balancer(
          new TreeLoadBalancer(dim,
             "LoadBalancer",
             input_db->getDatabase("LoadBalancer")));
       load_balancer->setSAMRAI_MPI(tbox::SAMRAI_MPI::getSAMRAIWorld());
 
-      Pointer<GriddingAlgorithm> gridding_algorithm(
+      boost::shared_ptr<GriddingAlgorithm> gridding_algorithm(
          new GriddingAlgorithm(
             patch_hierarchy,
             "GriddingAlgorithm",
@@ -307,7 +310,8 @@ int main(
 
       for (int pln = 0; pln <= patch_hierarchy->getFinestLevelNumber();
            pln++) {
-         Pointer<PatchLevel> level = patch_hierarchy->getPatchLevel(pln);
+         boost::shared_ptr<PatchLevel> level =
+            patch_hierarchy->getPatchLevel(pln);
 
          tbox::plog << "\n PRINTING PATCHES ON LEVEL " << pln << endl;
 
@@ -355,7 +359,8 @@ int main(
          }
          if (do_edge_sum) {
             for (int ln = 0; ln < nlevels; ln++) {
-               Pointer<PatchLevel> level = patch_hierarchy->getPatchLevel(ln);
+               boost::shared_ptr<PatchLevel> level =
+                  patch_hierarchy->getPatchLevel(ln);
                fail_count += hier_sum_test->setInitialEdgeValues(level);
             }
          }
@@ -394,7 +399,8 @@ int main(
 
       if (do_edge_sum) {
          for (int ln = 0; ln < nlevels; ln++) {
-            Pointer<PatchLevel> level = patch_hierarchy->getPatchLevel(ln);
+            boost::shared_ptr<PatchLevel> level =
+               patch_hierarchy->getPatchLevel(ln);
             fail_count += hier_sum_test->checkEdgeResult(level);
          }
       }

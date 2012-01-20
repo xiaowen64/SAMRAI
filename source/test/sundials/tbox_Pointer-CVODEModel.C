@@ -7,15 +7,12 @@
  * Description:
  *
  ************************************************************************/
-#include "SAMRAI/tbox/Pointer.h"
-#include "SAMRAI/tbox/Pointer.C"
 #include "CVODEModel.h"
+
+#include <boost/shared_ptr.hpp>
 
 #if defined(HAVE_SUNDIALS) && defined(HAVE_HYPRE)
 
-namespace SAMRAI {
+template class boost::shared_ptr<CVODEModel>;
 
-template class tbox::Pointer<CVODEModel>;
-
-}
 #endif

@@ -19,21 +19,21 @@ namespace SAMRAI {
 namespace mesh {
 
 SAMRAI_INLINE_KEYWORD
-tbox::Pointer<TagAndInitializeStrategy>
+boost::shared_ptr<TagAndInitializeStrategy>
 GriddingAlgorithm::getTagAndInitializeStrategy() const
 {
    return d_tag_init_strategy;
 }
 
 SAMRAI_INLINE_KEYWORD
-tbox::Pointer<LoadBalanceStrategy>
+boost::shared_ptr<LoadBalanceStrategy>
 GriddingAlgorithm::getLoadBalanceStrategy() const
 {
    return d_load_balancer;
 }
 
 SAMRAI_INLINE_KEYWORD
-tbox::Pointer<LoadBalanceStrategy>
+boost::shared_ptr<LoadBalanceStrategy>
 GriddingAlgorithm::getLoadBalanceStrategyZero() const
 {
    return d_load_balancer0;

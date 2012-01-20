@@ -21,10 +21,11 @@
 #include "SAMRAI/pdat/FaceVariable.h"
 #include "SAMRAI/hier/IntVector.h"
 #include "SAMRAI/pdat/OuterfaceVariable.h"
-#include "SAMRAI/tbox/Pointer.h"
 #include "SAMRAI/hier/Variable.h"
 #include "SAMRAI/hier/VariableContext.h"
 #include "SAMRAI/hier/VariableDatabase.h"
+
+#include <boost/shared_ptr.hpp>
 #include <string>
 using namespace std;
 
@@ -53,19 +54,19 @@ int main(
 
       hier::VariableDatabase* var_db = hier::VariableDatabase::getDatabase();
 
-      tbox::Pointer<hier::VariableContext> current_context = var_db->getContext(
-            "CURRENT");
+      boost::shared_ptr<hier::VariableContext> current_context =
+         var_db->getContext("CURRENT");
 
       hier::IntVector nghosts(dim, 4);
       hier::IntVector fluxghosts(dim, 1);
       hier::IntVector zero_ghosts(dim, 0);
 
       /* State variable */
-      tbox::Pointer<pdat::CellVariable<double> > uval(
+      boost::shared_ptr<pdat::CellVariable<double> > uval(
          new pdat::CellVariable<double>(dim, "uval", 1));
 
       /* Flux variable */
-      tbox::Pointer<pdat::FaceVariable<double> > flux(
+      boost::shared_ptr<pdat::FaceVariable<double> > flux(
          new pdat::FaceVariable<double>(dim, "flux", 1));
 
       /* Register uval using ready made context
@@ -91,7 +92,7 @@ int main(
             var_db->getContext("SCRATCH"),
             nghosts);
 
-      tbox::Pointer<pdat::OuterfaceVariable<double> > fluxsum(
+      boost::shared_ptr<pdat::OuterfaceVariable<double> > fluxsum(
          new pdat::OuterfaceVariable<double>(dim, "fluxsum", 1));
 
 // use of void eliminates compiler warning
@@ -147,8 +148,8 @@ int main(
        * Although the dummy_ctxt is unused, we are checking for it in
        * the test.  So leave it in despite possible compiler warnings.
        */
-      tbox::Pointer<hier::VariableContext> dummy_ctxt = var_db->getContext(
-            "dummy");
+      boost::shared_ptr<hier::VariableContext> dummy_ctxt =
+         var_db->getContext("dummy");
       NULL_USE(dummy_ctxt);
 
       // Test #1d: hier::VariableDatabase::checkContextExists()
@@ -207,7 +208,8 @@ int main(
       // Test #3a: hier::VariableDatabase::getVariable()
       tbox::plog << "Test #3a: hier::VariableDatabase::getVariable()..."
                  << endl;
-      tbox::Pointer<hier::Variable> tvar_uval = var_db->getVariable("uval");
+      boost::shared_ptr<hier::Variable> tvar_uval =
+         var_db->getVariable("uval");
       if (!tvar_uval) {
          fail_count++;
          tbox::perr
@@ -219,7 +221,8 @@ int main(
       // Test #3b: hier::VariableDatabase::getVariable()
       tbox::plog << "Test #3b: hier::VariableDatabase::getVariable()..."
                  << endl;
-      tbox::Pointer<hier::Variable> tvar_flux = var_db->getVariable("flux");
+      boost::shared_ptr<hier::Variable> tvar_flux =
+         var_db->getVariable("flux");
       if (!tvar_flux) {
          fail_count++;
          tbox::perr
@@ -231,8 +234,8 @@ int main(
       // Test #3c: hier::VariableDatabase::getVariable()
       tbox::plog << "Test #3c: hier::VariableDatabase::getVariable()..."
                  << endl;
-      tbox::Pointer<hier::Variable> tvar_fluxsum = var_db->getVariable(
-            "fluxsum");
+      boost::shared_ptr<hier::Variable> tvar_fluxsum =
+         var_db->getVariable("fluxsum");
       if (!tvar_fluxsum) {
          fail_count++;
          tbox::perr
@@ -245,7 +248,8 @@ int main(
       tbox::plog << "Test #3d: hier::VariableDatabase::getVariable()..."
                  << endl;
       //   tbox::perr << "Attempt to get variable named dummy..." << endl;
-      tbox::Pointer<hier::Variable> tvar_dummy = var_db->getVariable("dummy");
+      boost::shared_ptr<hier::Variable> tvar_dummy =
+         var_db->getVariable("dummy");
       if (tvar_dummy) {
          fail_count++;
          tbox::perr
@@ -295,8 +299,8 @@ int main(
       // Test #5: Attempt to register (uval,CURRENT) again
       tbox::plog << "Test #5: Attempt to register (uval,CURRENT) again..."
                  << endl;
-      tbox::Pointer<hier::VariableContext> tctxt_current = var_db->getContext(
-            "CURRENT");
+      boost::shared_ptr<hier::VariableContext> tctxt_current =
+         var_db->getContext("CURRENT");
       hier::IntVector tzero_ghosts(dim, 0);
       int ti = var_db->registerVariableAndContext(
             tvar_uval, tctxt_current, tzero_ghosts);
@@ -326,8 +330,8 @@ int main(
       << "Test #6b: hier::VariableDatabase::mapVariableAndContextToIndex()..."
       << endl;
       tvar_uval = var_db->getVariable("uval");
-      tbox::Pointer<hier::VariableContext> tctxt_scratch = var_db->getContext(
-            "SCRATCH");
+      boost::shared_ptr<hier::VariableContext> tctxt_scratch =
+         var_db->getContext("SCRATCH");
       ti = var_db->mapVariableAndContextToIndex(tvar_uval, tctxt_scratch);
       if (ti != -1) {
          fail_count++;
@@ -341,7 +345,7 @@ int main(
       tbox::plog
       << "Test #6c: hier::VariableDatabase::mapVariableAndContextToIndex()..."
       << endl;
-      tbox::Pointer<pdat::CellVariable<double> > dummy_var(
+      boost::shared_ptr<pdat::CellVariable<double> > dummy_var(
          new pdat::CellVariable<double>(dim, "dummy", 3));
       tctxt_scratch = var_db->getContext("SCRATCH");
       ti = var_db->mapVariableAndContextToIndex(dummy_var, tctxt_scratch);
@@ -358,7 +362,7 @@ int main(
       << "Test #6d: hier::VariableDatabase::mapVariableAndContextToIndex()..."
       << endl;
       tvar_uval = var_db->getVariable("uval");
-      tbox::Pointer<hier::VariableContext> tctxt_random(
+      boost::shared_ptr<hier::VariableContext> tctxt_random(
          new hier::VariableContext("RANDOM"));
       ti = var_db->mapVariableAndContextToIndex(tvar_uval, tctxt_random);
       if (ti != -1) {
@@ -374,8 +378,8 @@ int main(
       << "Test #7a: hier::VariableDatabase::mapIndexToVariableAndContext()..."
       << endl;
       int search_id = 2;
-      tbox::Pointer<hier::Variable> search_var;
-      tbox::Pointer<hier::VariableContext> search_ctxt;
+      boost::shared_ptr<hier::Variable> search_var;
+      boost::shared_ptr<hier::VariableContext> search_ctxt;
       string flux_variable("flux");
       string scratch_variable("SCRATCH");
 
@@ -550,7 +554,7 @@ int main(
       tbox::plog
       << "Test #8e: Testing registration of new cloned factory to variable..."
       << endl;
-      tbox::Pointer<hier::Variable> tvar;
+      boost::shared_ptr<hier::Variable> tvar;
       if (!var_db->mapIndexToVariable(new_id, tvar)
           || (tvar->getName() != "uval")) {
          fail_count++;
@@ -645,7 +649,7 @@ int main(
        */
 #if 0
       // Abort Test #1
-      tbox::Pointer<pdat::CellVariable<double> > dummy =
+      boost::shared_ptr<pdat::CellVariable<double> > dummy =
          new pdat::CellVariable<double>("uval", 2);
 
       tbox::plog << "Attempt to add a different variable named uval."

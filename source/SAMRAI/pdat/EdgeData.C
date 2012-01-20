@@ -609,7 +609,7 @@ void EdgeData<TYPE>::printAxis(
 
 template<class TYPE>
 void EdgeData<TYPE>::getSpecializedFromDatabase(
-   tbox::Pointer<tbox::Database> database)
+   boost::shared_ptr<tbox::Database> database)
 {
    TBOX_ASSERT(database);
 
@@ -621,7 +621,7 @@ void EdgeData<TYPE>::getSpecializedFromDatabase(
 
    d_depth = database->getInteger("d_depth");
 
-   tbox::Pointer<tbox::Database> array_database;
+   boost::shared_ptr<tbox::Database> array_database;
    for (int i = 0; i < getDim().getValue(); i++) {
       std::string array_name = "d_data" + tbox::Utilities::intToString(i);
       array_database = database->getDatabase(array_name);
@@ -640,7 +640,7 @@ void EdgeData<TYPE>::getSpecializedFromDatabase(
 
 template<class TYPE>
 void EdgeData<TYPE>::putSpecializedToDatabase(
-   tbox::Pointer<tbox::Database> database)
+   boost::shared_ptr<tbox::Database> database)
 {
    TBOX_ASSERT(database);
 
@@ -648,7 +648,7 @@ void EdgeData<TYPE>::putSpecializedToDatabase(
 
    database->putInteger("d_depth", d_depth);
 
-   tbox::Pointer<tbox::Database> array_database;
+   boost::shared_ptr<tbox::Database> array_database;
    for (int i = 0; i < getDim().getValue(); i++) {
       std::string array_name = "d_data" + tbox::Utilities::intToString(i);
       array_database = database->putDatabase(array_name);

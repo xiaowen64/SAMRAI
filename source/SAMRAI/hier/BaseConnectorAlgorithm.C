@@ -49,7 +49,7 @@ void BaseConnectorAlgorithm::setupCommunication(
    const tbox::SAMRAI_MPI& mpi,
    const std::set<int>& incoming_ranks,
    const std::set<int>& outgoing_ranks,
-   tbox::Pointer<tbox::Timer>& mpi_wait_timer,
+   boost::shared_ptr<tbox::Timer>& mpi_wait_timer,
    int& operation_mpi_tag) const
 {
    /*
@@ -189,7 +189,7 @@ void BaseConnectorAlgorithm::receiveAndUnpack(
    tbox::AsyncCommPeer<int> all_comms[],
    tbox::AsyncCommStage& comm_stage,
    tbox::AsyncCommStage::MemberVec& completed,
-   tbox::Pointer<tbox::Timer>& receive_and_unpack_timer) const
+   boost::shared_ptr<tbox::Timer>& receive_and_unpack_timer) const
 {
    receive_and_unpack_timer->start();
    /*
@@ -368,7 +368,7 @@ void BaseConnectorAlgorithm::unpackDiscoveryMessage(
       if (n_new_head_nabrs_found > 0) {
          Connector::NeighborhoodIterator base_box_itr =
             new_base_to_new_head.makeEmptyLocalNeighborhood(new_base_box_id);
-         hier::BoxId box_id;
+         BoxId box_id;
          for (int j = 0; j < n_new_head_nabrs_found; ++j) {
             box_id.getFromIntBuffer(ptr);
             tmp_box.setId(box_id);
@@ -392,7 +392,7 @@ void BaseConnectorAlgorithm::unpackDiscoveryMessage(
       if (n_new_base_nabrs_found > 0) {
          Connector::NeighborhoodIterator base_box_itr =
             new_head_to_new_base->makeEmptyLocalNeighborhood(new_head_box_id);
-         hier::BoxId box_id;
+         BoxId box_id;
          for (int j = 0; j < n_new_base_nabrs_found; ++j) {
             box_id.getFromIntBuffer(ptr);
             tmp_box.setId(box_id);

@@ -166,7 +166,7 @@ public:
     * is specified (the default is 3).  This method is typically used
     * to allocate arrays.
     *
-    *  double array[SAMRAI::tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+    *  double array[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
     *
     * The value must be >= 1 and < numeric_limits<unsigned short>::max()
     */
@@ -213,9 +213,9 @@ public:
     * error prone.
     */
    template<class>
-   friend class::SAMRAI::pdat::ArrayData;
-   friend class::SAMRAI::hier::IntVector;
-   friend class::SAMRAI::tbox::DatabaseBox;
+   friend class pdat::ArrayData;
+   friend class hier::IntVector;
+   friend class tbox::DatabaseBox;
 
    /**
     * Output operator for debugging and error messages.

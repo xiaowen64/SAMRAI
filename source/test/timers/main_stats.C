@@ -17,12 +17,13 @@
 #include "SAMRAI/tbox/Database.h"
 #include "SAMRAI/tbox/SAMRAI_MPI.h"
 #include "SAMRAI/tbox/PIO.h"
-#include "SAMRAI/tbox/Pointer.h"
 #include "SAMRAI/tbox/RestartManager.h"
 #include "SAMRAI/tbox/Statistic.h"
 #include "SAMRAI/tbox/Statistician.h"
 #include "SAMRAI/tbox/Utilities.h"
 #include "SAMRAI/tbox/MathUtilities.h"
+
+#include <boost/shared_ptr.hpp>
 #include <string>
 using namespace std;
 
@@ -85,7 +86,7 @@ int main(
             mpi.getSize());
       }
 
-      tbox::Pointer<tbox::Database> restart_db =
+      boost::shared_ptr<tbox::Database> restart_db =
          tbox::RestartManager::getManager()->getRootDatabase();
       NULL_USE(restart_db);
 
@@ -104,19 +105,19 @@ int main(
        * Create statistics.
        */
 
-      tbox::Pointer<tbox::Statistic> procstat1 =
+      boost::shared_ptr<tbox::Statistic> procstat1 =
          statistician->getStatistic("procstat1", "PROC_STAT");
-      tbox::Pointer<tbox::Statistic> procstat2 =
+      boost::shared_ptr<tbox::Statistic> procstat2 =
          statistician->getStatistic("procstat2", "PROC_STAT");
-      tbox::Pointer<tbox::Statistic> procstat3 =
+      boost::shared_ptr<tbox::Statistic> procstat3 =
          statistician->getStatistic("procstat3", "PROC_STAT");
       NULL_USE(procstat3);
 
-      tbox::Pointer<tbox::Statistic> patchstat1 =
+      boost::shared_ptr<tbox::Statistic> patchstat1 =
          statistician->getStatistic("patchstat1", "PATCH_STAT");
-      tbox::Pointer<tbox::Statistic> patchstat2 =
+      boost::shared_ptr<tbox::Statistic> patchstat2 =
          statistician->getStatistic("patchstat2", "PATCH_STAT");
-      tbox::Pointer<tbox::Statistic> patchstat3 =
+      boost::shared_ptr<tbox::Statistic> patchstat3 =
          statistician->getStatistic("patchstat3", "PATCH_STAT");
       NULL_USE(patchstat3);
 
@@ -199,7 +200,7 @@ int main(
       }
 
       // Test #2:
-      tbox::Pointer<tbox::Statistic> tstat;
+      boost::shared_ptr<tbox::Statistic> tstat;
       if (!statistician->checkStatisticExists(tstat, "procstat2")) {
          fail_count++;
          tbox::perr

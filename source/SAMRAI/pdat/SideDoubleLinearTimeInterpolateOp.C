@@ -17,9 +17,10 @@
 #include "SAMRAI/hier/Index.h"
 #include "SAMRAI/pdat/SideData.h"
 #include "SAMRAI/pdat/SideVariable.h"
-#include "SAMRAI/tbox/Pointer.h"
 #include "SAMRAI/tbox/Utilities.h"
 #include "SAMRAI/tbox/MathUtilities.h"
+
+#include <boost/shared_ptr.hpp>
 
 /*
  *************************************************************************
@@ -120,12 +121,12 @@ SideDoubleLinearTimeInterpolateOp::~SideDoubleLinearTimeInterpolateOp()
 }
 
 bool SideDoubleLinearTimeInterpolateOp::findTimeInterpolateOperator(
-   const tbox::Pointer<hier::Variable>& var,
+   const boost::shared_ptr<hier::Variable>& var,
    const std::string& op_name) const
 {
-   const tbox::Pointer<SideVariable<double> > cast_var(
+   const boost::shared_ptr<SideVariable<double> > cast_var(
       var,
-      tbox::__dynamic_cast_tag());
+      boost::detail::dynamic_cast_tag());
    if (cast_var && (op_name == "STD_LINEAR_TIME_INTERPOLATE")) {
       return true;
    } else {

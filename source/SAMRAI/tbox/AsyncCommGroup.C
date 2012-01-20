@@ -48,8 +48,8 @@ namespace tbox {
  */
 // #define AsyncCommGroup_DEBUG_OUTPUT
 
-Pointer<Timer> AsyncCommGroup::t_reduce_data;
-Pointer<Timer> AsyncCommGroup::t_wait_all;
+boost::shared_ptr<Timer> AsyncCommGroup::t_reduce_data;
+boost::shared_ptr<Timer> AsyncCommGroup::t_wait_all;
 
 tbox::StartupShutdownManager::Handler
 AsyncCommGroup::s_initialize_finalize_handler(

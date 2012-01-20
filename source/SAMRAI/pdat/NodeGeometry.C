@@ -60,7 +60,7 @@ NodeGeometry::~NodeGeometry()
  *************************************************************************
  */
 
-tbox::Pointer<hier::BoxOverlap> NodeGeometry::calculateOverlap(
+boost::shared_ptr<hier::BoxOverlap> NodeGeometry::calculateOverlap(
    const hier::BoxGeometry& dst_geometry,
    const hier::BoxGeometry& src_geometry,
    const hier::Box& src_mask,
@@ -77,7 +77,7 @@ tbox::Pointer<hier::BoxOverlap> NodeGeometry::calculateOverlap(
    const NodeGeometry* t_src =
       dynamic_cast<const NodeGeometry *>(&src_geometry);
 
-   tbox::Pointer<hier::BoxOverlap> over(NULL);
+   boost::shared_ptr<hier::BoxOverlap> over;
    if ((t_src != NULL) && (t_dst != NULL)) {
       over = doOverlap(*t_dst, *t_src, src_mask, fill_box, overwrite_interior,
             transformation, dst_restrict_boxes);
@@ -101,7 +101,7 @@ tbox::Pointer<hier::BoxOverlap> NodeGeometry::calculateOverlap(
  *************************************************************************
  */
 
-tbox::Pointer<hier::BoxOverlap> NodeGeometry::doOverlap(
+boost::shared_ptr<hier::BoxOverlap> NodeGeometry::doOverlap(
    const NodeGeometry& dst_geometry,
    const NodeGeometry& src_geometry,
    const hier::Box& src_mask,
@@ -122,7 +122,7 @@ tbox::Pointer<hier::BoxOverlap> NodeGeometry::doOverlap(
    // Create the node overlap data object using the boxes and source shift
 
    hier::BoxOverlap* overlap = new NodeOverlap(dst_boxes, transformation);
-   return tbox::Pointer<hier::BoxOverlap>(overlap);
+   return boost::shared_ptr<hier::BoxOverlap>(overlap);
 }
 
 /*
@@ -187,7 +187,7 @@ void NodeGeometry::computeDestinationBoxes(
  *
  *************************************************************************
  */
-tbox::Pointer<hier::BoxOverlap>
+boost::shared_ptr<hier::BoxOverlap>
 NodeGeometry::setUpOverlap(
    const hier::BoxContainer& boxes,
    const hier::Transformation& transformation) const
@@ -201,7 +201,7 @@ NodeGeometry::setUpOverlap(
 
    // Create the node overlap data object using the boxes and source shift
    hier::BoxOverlap* overlap = new NodeOverlap(dst_boxes, transformation);
-   return tbox::Pointer<hier::BoxOverlap>(overlap);
+   return boost::shared_ptr<hier::BoxOverlap>(overlap);
 
 }
 
@@ -240,7 +240,7 @@ NodeGeometry::transform(
 
 void
 NodeGeometry::transform(
-   pdat::NodeIndex& index,
+   NodeIndex& index,
    const hier::Transformation& transformation)
 {
    const tbox::Dimension& dim = index.getDim();
@@ -256,7 +256,7 @@ NodeGeometry::transform(
       const int rotation_num = static_cast<int>(rotation);
 
       if (rotation_num) {
-         pdat::NodeIndex tmp_index(dim);
+         NodeIndex tmp_index(dim);
          for (int r = 0; r < rotation_num; r++) {
             tmp_index = index;
             index(0) = tmp_index(1);
@@ -387,7 +387,7 @@ NodeGeometry::transform(
 }
 
 void
-NodeGeometry::rotateAboutAxis(pdat::NodeIndex& index,
+NodeGeometry::rotateAboutAxis(NodeIndex& index,
                               const int axis,
                               const int num_rotations)
 {
@@ -395,7 +395,7 @@ NodeGeometry::rotateAboutAxis(pdat::NodeIndex& index,
    const int a = (axis + 1) % dim.getValue();
    const int b = (axis + 2) % dim.getValue();
 
-   pdat::NodeIndex tmp_index(dim);
+   NodeIndex tmp_index(dim);
    for (int j = 0; j < num_rotations; j++) {
       tmp_index = index;
       index(a) = tmp_index(b);

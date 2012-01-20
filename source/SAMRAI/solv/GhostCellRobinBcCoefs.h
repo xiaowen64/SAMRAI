@@ -16,8 +16,9 @@
 #include "SAMRAI/pdat/ArrayData.h"
 #include "SAMRAI/hier/BoundaryBox.h"
 #include "SAMRAI/hier/Patch.h"
-#include "SAMRAI/tbox/Pointer.h"
 #include "SAMRAI/tbox/Timer.h"
+
+#include <boost/shared_ptr.hpp>
 
 namespace SAMRAI {
 namespace solv {
@@ -101,10 +102,10 @@ public:
     */
    void
    setBcCoefs(
-      tbox::Pointer<pdat::ArrayData<double> >& acoef_data,
-      tbox::Pointer<pdat::ArrayData<double> >& bcoef_data,
-      tbox::Pointer<pdat::ArrayData<double> >& gcoef_data,
-      const tbox::Pointer<hier::Variable>& variable,
+      boost::shared_ptr<pdat::ArrayData<double> >& acoef_data,
+      boost::shared_ptr<pdat::ArrayData<double> >& bcoef_data,
+      boost::shared_ptr<pdat::ArrayData<double> >& gcoef_data,
+      const boost::shared_ptr<hier::Variable>& variable,
       const hier::Patch& patch,
       const hier::BoundaryBox& bdry_box,
       double fill_time = 0.0) const;
@@ -186,7 +187,7 @@ private:
    /*
     * @brief tbox::Timer classes for performance measurement
     */
-   tbox::Pointer<tbox::Timer> t_set_bc_coefs;
+   boost::shared_ptr<tbox::Timer> t_set_bc_coefs;
 
 };
 

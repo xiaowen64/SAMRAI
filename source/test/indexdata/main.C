@@ -17,8 +17,6 @@
 #include "SAMRAI/tbox/Array.C"
 #include "SAMRAI/tbox/List.h"
 #include "SAMRAI/tbox/List.C"
-#include "SAMRAI/tbox/Pointer.h"
-#include "SAMRAI/tbox/Pointer.C"
 #include "SAMRAI/tbox/SAMRAI_MPI.h"
 #include "SAMRAI/tbox/SAMRAIManager.h"
 #include "SAMRAI/tbox/TimerManager.h"
@@ -29,6 +27,8 @@
 #include "SAMRAI/pdat/IndexData.C"
 #include "SAMRAI/pdat/IndexDataFactory.h"
 #include "SAMRAI/pdat/IndexDataFactory.C"
+
+#include <boost/shared_ptr.hpp>
 
 using namespace SAMRAI;
 using namespace hier;
@@ -83,12 +83,12 @@ public:
    }
 
    void putToDatabase(
-      tbox::Pointer<tbox::Database> dbase)
+      boost::shared_ptr<tbox::Database> dbase)
    {
       NULL_USE(dbase);
    }
    void getFromDatabase(
-      tbox::Pointer<tbox::Database> dbase)
+      boost::shared_ptr<tbox::Database> dbase)
    {
       NULL_USE(dbase);
    }
@@ -119,9 +119,9 @@ template class tbox::Array<pdat::IndexDataNode<Item, pdat::CellGeometry> >;
 template class tbox::List<pdat::IndexDataNode<Item, pdat::CellGeometry> >;
 template class tbox::ListIterator<pdat::IndexDataNode<Item, pdat::CellGeometry> >;
 template class tbox::ListNode<pdat::IndexDataNode<Item, pdat::CellGeometry> >;
-template class tbox::Pointer<pdat::IndexData<Item, pdat::CellGeometry> >;
-template class tbox::Pointer<pdat::IndexVariable<Item, pdat::CellGeometry> >;
-template class tbox::Pointer<pdat::IndexDataFactory<Item, pdat::CellGeometry> >;
+template class boost::shared_ptr<pdat::IndexData<Item, pdat::CellGeometry> >;
+template class boost::shared_ptr<pdat::IndexVariable<Item, pdat::CellGeometry> >;
+template class boost::shared_ptr<pdat::IndexDataFactory<Item, pdat::CellGeometry> >;
 #endif
 
 int main(
@@ -577,7 +577,7 @@ int main(
 
       int size = 100;
       {
-         tbox::Pointer<tbox::Timer> timer;
+         boost::shared_ptr<tbox::Timer> timer;
 
          timer = tbox::TimerManager::getManager()->
             getTimer("IndexDataAppendItemSequential", true);
@@ -617,7 +617,7 @@ int main(
       }
 
       {
-         tbox::Pointer<tbox::Timer> timer;
+         boost::shared_ptr<tbox::Timer> timer;
 
          timer = tbox::TimerManager::getManager()->
             getTimer("IndexDataAppendItemPointerSequential", true);
@@ -657,7 +657,7 @@ int main(
       int num_inserts = 100000;
 
       {
-         tbox::Pointer<tbox::Timer> timer;
+         boost::shared_ptr<tbox::Timer> timer;
 
          timer = tbox::TimerManager::getManager()->
             getTimer("IndexDataAppendItemRandom", true);
@@ -698,7 +698,7 @@ int main(
       }
 
       {
-         tbox::Pointer<tbox::Timer> timer;
+         boost::shared_ptr<tbox::Timer> timer;
 
          timer = tbox::TimerManager::getManager()->
             getTimer("IndexDataAppendItemPointerRandom", true);
@@ -738,7 +738,7 @@ int main(
       size = 100;
 
       {
-         tbox::Pointer<tbox::Timer> timer;
+         boost::shared_ptr<tbox::Timer> timer;
 
          timer = tbox::TimerManager::getManager()->
             getTimer("IndexDataReplace", true);

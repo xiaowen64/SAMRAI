@@ -62,10 +62,10 @@ void PatchNodeDataMiscellaneousOpsReal<TYPE>::operator = (
 
 template<class TYPE>
 int PatchNodeDataMiscellaneousOpsReal<TYPE>::computeConstrProdPos(
-   const tbox::Pointer<pdat::NodeData<TYPE> >& data1,
-   const tbox::Pointer<pdat::NodeData<TYPE> >& data2,
+   const boost::shared_ptr<pdat::NodeData<TYPE> >& data1,
+   const boost::shared_ptr<pdat::NodeData<TYPE> >& data2,
    const hier::Box& box,
-   const tbox::Pointer<pdat::NodeData<double> > cvol) const
+   const boost::shared_ptr<pdat::NodeData<double> > cvol) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(data1 && data2);
@@ -88,11 +88,11 @@ int PatchNodeDataMiscellaneousOpsReal<TYPE>::computeConstrProdPos(
 
 template<class TYPE>
 void PatchNodeDataMiscellaneousOpsReal<TYPE>::compareToScalar(
-   tbox::Pointer<pdat::NodeData<TYPE> >& dst,
-   const tbox::Pointer<pdat::NodeData<TYPE> >& src,
+   boost::shared_ptr<pdat::NodeData<TYPE> >& dst,
+   const boost::shared_ptr<pdat::NodeData<TYPE> >& src,
    const TYPE& alpha,
    const hier::Box& box,
-   const tbox::Pointer<pdat::NodeData<double> > cvol) const
+   const boost::shared_ptr<pdat::NodeData<double> > cvol) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(dst && src);
@@ -114,10 +114,10 @@ void PatchNodeDataMiscellaneousOpsReal<TYPE>::compareToScalar(
 
 template<class TYPE>
 int PatchNodeDataMiscellaneousOpsReal<TYPE>::testReciprocal(
-   tbox::Pointer<pdat::NodeData<TYPE> >& dst,
-   const tbox::Pointer<pdat::NodeData<TYPE> >& src,
+   boost::shared_ptr<pdat::NodeData<TYPE> >& dst,
+   const boost::shared_ptr<pdat::NodeData<TYPE> >& src,
    const hier::Box& box,
-   const tbox::Pointer<pdat::NodeData<double> > cvol) const
+   const boost::shared_ptr<pdat::NodeData<double> > cvol) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(dst && src);
@@ -140,8 +140,8 @@ int PatchNodeDataMiscellaneousOpsReal<TYPE>::testReciprocal(
 
 template<class TYPE>
 TYPE PatchNodeDataMiscellaneousOpsReal<TYPE>::maxPointwiseDivide(
-   const tbox::Pointer<pdat::NodeData<TYPE> >& numer,
-   const tbox::Pointer<pdat::NodeData<TYPE> >& denom,
+   const boost::shared_ptr<pdat::NodeData<TYPE> >& numer,
+   const boost::shared_ptr<pdat::NodeData<TYPE> >& denom,
    const hier::Box& box) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
@@ -157,8 +157,8 @@ TYPE PatchNodeDataMiscellaneousOpsReal<TYPE>::maxPointwiseDivide(
 
 template<class TYPE>
 TYPE PatchNodeDataMiscellaneousOpsReal<TYPE>::minPointwiseDivide(
-   const tbox::Pointer<pdat::NodeData<TYPE> >& numer,
-   const tbox::Pointer<pdat::NodeData<TYPE> >& denom,
+   const boost::shared_ptr<pdat::NodeData<TYPE> >& numer,
+   const boost::shared_ptr<pdat::NodeData<TYPE> >& denom,
    const hier::Box& box) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS

@@ -518,13 +518,13 @@ bool SiloDatabase::isDatabase(
  *************************************************************************
  */
 
-Pointer<Database>
+boost::shared_ptr<Database>
 SiloDatabase::putDatabase(
    const std::string& key)
 {
    TBOX_ASSERT(!key.empty());
 
-   Pointer<Database> new_database(new SiloDatabase(key,
+   boost::shared_ptr<Database> new_database(new SiloDatabase(key,
                                      d_file,
                                      d_directory + "/" + key,
                                      true));
@@ -542,7 +542,7 @@ SiloDatabase::putDatabase(
  ************************************************************************
  */
 
-Pointer<Database>
+boost::shared_ptr<Database>
 SiloDatabase::getDatabase(
    const std::string& key)
 {
@@ -554,10 +554,10 @@ SiloDatabase::getDatabase(
          << "\n    Key = " << key << " is not a database." << std::endl);
    }
 
-   Pointer<Database> new_database(new SiloDatabase(key,
-                                     d_file,
-                                     d_directory + "/" + key,
-                                     false));
+   boost::shared_ptr<Database> new_database(new SiloDatabase(key,
+                                            d_file,
+                                            d_directory + "/" + key,
+                                            false));
 
    return new_database;
 }

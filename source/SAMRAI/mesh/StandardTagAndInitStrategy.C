@@ -37,7 +37,7 @@ StandardTagAndInitStrategy::~StandardTagAndInitStrategy()
  */
 
 void StandardTagAndInitStrategy::applyGradientDetector(
-   const tbox::Pointer<hier::PatchHierarchy> hierarchy,
+   const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
    const int level_number,
    const double error_data_time,
    const int tag_index,
@@ -57,9 +57,9 @@ void StandardTagAndInitStrategy::applyGradientDetector(
 }
 
 void StandardTagAndInitStrategy::coarsenDataForRichardsonExtrapolation(
-   const tbox::Pointer<hier::PatchHierarchy> hierarchy,
+   const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
    const int level_number,
-   const tbox::Pointer<hier::PatchLevel> coarser_level,
+   const boost::shared_ptr<hier::PatchLevel> coarser_level,
    const double coarsen_data_time,
    const bool before_advance)
 {
@@ -76,7 +76,7 @@ void StandardTagAndInitStrategy::coarsenDataForRichardsonExtrapolation(
 }
 
 void StandardTagAndInitStrategy::applyRichardsonExtrapolation(
-   const tbox::Pointer<hier::PatchLevel> level,
+   const boost::shared_ptr<hier::PatchLevel> level,
    const double error_data_time,
    const int tag_index,
    const double deltat,
@@ -99,7 +99,7 @@ void StandardTagAndInitStrategy::applyRichardsonExtrapolation(
 }
 
 double StandardTagAndInitStrategy::getLevelDt(
-   const tbox::Pointer<hier::PatchLevel> level,
+   const boost::shared_ptr<hier::PatchLevel> level,
    const double dt_time,
    const bool initial_time)
 {
@@ -114,7 +114,7 @@ double StandardTagAndInitStrategy::getLevelDt(
 }
 
 void StandardTagAndInitStrategy::resetTimeDependentData(
-   const tbox::Pointer<hier::PatchLevel> level,
+   const boost::shared_ptr<hier::PatchLevel> level,
    const double new_time,
    const bool can_be_refined)
 {
@@ -128,8 +128,8 @@ void StandardTagAndInitStrategy::resetTimeDependentData(
 }
 
 double StandardTagAndInitStrategy::advanceLevel(
-   const tbox::Pointer<hier::PatchLevel> level,
-   const tbox::Pointer<hier::PatchHierarchy> hierarchy,
+   const boost::shared_ptr<hier::PatchLevel> level,
+   const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
    const double current_time,
    const double new_time,
    const bool first_step,
@@ -151,7 +151,7 @@ double StandardTagAndInitStrategy::advanceLevel(
 }
 
 void StandardTagAndInitStrategy::resetDataToPreadvanceState(
-   const tbox::Pointer<hier::PatchLevel> level)
+   const boost::shared_ptr<hier::PatchLevel> level)
 {
    NULL_USE(level);
    TBOX_WARNING("StandardTagAndInitStrategy::"

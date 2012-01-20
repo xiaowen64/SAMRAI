@@ -19,12 +19,12 @@
 #include "SAMRAI/tbox/InputManager.h"
 #include "SAMRAI/tbox/SAMRAI_MPI.h"
 #include "SAMRAI/tbox/PIO.h"
-#include "SAMRAI/tbox/Pointer.h"
 #include "SAMRAI/tbox/RestartManager.h"
 #include "SAMRAI/tbox/Timer.h"
 #include "SAMRAI/tbox/TimerManager.h"
 #include "SAMRAI/tbox/Utilities.h"
 
+#include <boost/shared_ptr.hpp>
 #include <string>
 using namespace std;
 
@@ -147,7 +147,7 @@ int main(
        * Create an input database "input_db" and parse input file (specified
        * on the command line.
        */
-      tbox::Pointer<tbox::InputDatabase> input_db(new tbox::InputDatabase("input_db"));
+      boost::shared_ptr<tbox::InputDatabase> input_db(new tbox::InputDatabase("input_db"));
       tbox::InputManager::getManager()->parseInputFile(input_filename, input_db);
 
       /*
@@ -155,7 +155,7 @@ int main(
        * which is the number of times the functions are called, and
        * depth, which is the depth of the exclusive timer tree.
        */
-      tbox::Pointer<tbox::Database> main_db = input_db->getDatabase("Main");
+      boost::shared_ptr<tbox::Database> main_db = input_db->getDatabase("Main");
 
       int ntimes = 1;
       if (main_db->keyExists("ntimes")) {
@@ -178,7 +178,7 @@ int main(
             mpi.getSize());
       }
 
-      tbox::Pointer<tbox::Database> restart_db =
+      boost::shared_ptr<tbox::Database> restart_db =
          tbox::RestartManager::getManager()->getRootDatabase();
       NULL_USE(restart_db);
 
@@ -190,7 +190,7 @@ int main(
       /*
        * Add a timer "manually" (that is, not thru the input file).
        */
-      tbox::Pointer<tbox::Timer> timer = tbox::TimerManager::getManager()->
+      boost::shared_ptr<tbox::Timer> timer = tbox::TimerManager::getManager()->
          getTimer("apps::main::main");
       timer->start();
 
@@ -208,7 +208,7 @@ int main(
        * Check time to call function with timer name that is NOT
        * registered.  That is, time a NULL timer call.
        */
-      tbox::Pointer<tbox::Timer> timer_off = tbox::TimerManager::getManager()->
+      boost::shared_ptr<tbox::Timer> timer_off = tbox::TimerManager::getManager()->
          getTimer("apps::main::timer_off");
       timer_off->start();
       for (i = 0; i < ntimes; i++) {
@@ -220,9 +220,9 @@ int main(
        * Check time to call function with timer name that IS
        * registered.
        */
-      tbox::Pointer<tbox::Timer> timer_on = tbox::TimerManager::getManager()->
+      boost::shared_ptr<tbox::Timer> timer_on = tbox::TimerManager::getManager()->
          getTimer("apps::main::timer_on");
-      tbox::Pointer<tbox::Timer> dummy_timer =
+      boost::shared_ptr<tbox::Timer> dummy_timer =
          tbox::TimerManager::getManager()->
          getTimer("apps::Foo::timerOn()");
       NULL_USE(dummy_timer);
@@ -237,7 +237,7 @@ int main(
        * Foo->zero() calls Foo->one(), which calls Foo->two(), ...
        * and so forth until we reach specified "exclusive_tree_depth.
        */
-      tbox::Pointer<tbox::Timer> timer_excl =
+      boost::shared_ptr<tbox::Timer> timer_excl =
          tbox::TimerManager::getManager()->
          getTimer("apps::main::exclusive_timer");
       timer_excl->start();
@@ -293,7 +293,7 @@ int main(
        */
       const int max_timers = 575;
 
-      tbox::Pointer<tbox::Timer> timers[max_timers];
+      boost::shared_ptr<tbox::Timer> timers[max_timers];
       for (int timer_number = 0; timer_number < max_timers; timer_number++) {
 
          std::string timer_name = "testcount-" + tbox::Utilities::intToString(
@@ -317,8 +317,8 @@ int main(
       const int nsleepsec = 1;
       const int testit = 3;
 
-      tbox::Pointer<tbox::Timer> tarray1[testit];
-      tbox::Pointer<tbox::Timer> tarray2[testit];
+      boost::shared_ptr<tbox::Timer> tarray1[testit];
+      boost::shared_ptr<tbox::Timer> tarray2[testit];
 
       for (int tcnt = 0; tcnt < testit; tcnt++) {
 

@@ -23,7 +23,7 @@
 
 MainRestartData::MainRestartData(
    const string& object_name,
-   tbox::Pointer<tbox::Database> input_db):
+   boost::shared_ptr<tbox::Database> input_db):
    d_object_name(object_name)
 {
    TBOX_ASSERT(input_db);
@@ -120,7 +120,7 @@ void MainRestartData::setIterationNumber(
  *************************************************************************
  */
 void MainRestartData::putToDatabase(
-   tbox::Pointer<tbox::Database> db)
+   boost::shared_ptr<tbox::Database> db)
 {
    TBOX_ASSERT(db);
 
@@ -134,7 +134,7 @@ void MainRestartData::putToDatabase(
 }
 
 void MainRestartData::getFromInput(
-   tbox::Pointer<tbox::Database> input_db,
+   boost::shared_ptr<tbox::Database> input_db,
    bool is_from_restart)
 {
    TBOX_ASSERT(input_db);
@@ -174,10 +174,10 @@ void MainRestartData::getFromInput(
 
 void MainRestartData::getFromRestart()
 {
-   tbox::Pointer<tbox::Database> root_db =
+   boost::shared_ptr<tbox::Database> root_db =
       tbox::RestartManager::getManager()->getRootDatabase();
 
-   tbox::Pointer<tbox::Database> restart_db;
+   boost::shared_ptr<tbox::Database> restart_db;
 
    if (root_db->isDatabase(d_object_name)) {
       restart_db = root_db->getDatabase(d_object_name);

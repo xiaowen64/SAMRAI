@@ -98,7 +98,7 @@ void BoxId::initialize(
  ************************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-const hier::GlobalId& BoxId::getGlobalId() const {
+const GlobalId& BoxId::getGlobalId() const {
    return d_global_id;
 }
 

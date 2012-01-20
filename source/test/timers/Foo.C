@@ -8,10 +8,12 @@
  *
  ************************************************************************/
 #include "Foo.h"
-#include "SAMRAI/tbox/Pointer.h"
 #include "SAMRAI/tbox/TimerManager.h"
 #include "SAMRAI/tbox/Timer.h"
 #include "SAMRAI/tbox/Utilities.h"
+
+
+#include <boost/shared_ptr.hpp>
 
 #define LOOP_MAX (10000000)
 
@@ -27,7 +29,7 @@ Foo::~Foo()
 
 void Foo::timerOff()
 {
-   tbox::Pointer<tbox::Timer> timer = tbox::TimerManager::getManager()->
+   boost::shared_ptr<tbox::Timer> timer = tbox::TimerManager::getManager()->
       getTimer("dummy::SomeClassName::shouldBeTurnedOff");
    timer->start();
 
@@ -36,7 +38,7 @@ void Foo::timerOff()
 
 void Foo::timerOn()
 {
-   tbox::Pointer<tbox::Timer> timer =
+   boost::shared_ptr<tbox::Timer> timer =
       tbox::TimerManager::getManager()->
       getTimer("apps::Foo::timerOn()");
    timer->start();
@@ -47,7 +49,7 @@ void Foo::timerOn()
 void Foo::zero(
    int depth)
 {
-   tbox::Pointer<tbox::Timer> timer =
+   boost::shared_ptr<tbox::Timer> timer =
       tbox::TimerManager::getManager()->
       getTimer("apps::Foo::zero()");
    if (depth > 0) {
@@ -60,7 +62,7 @@ void Foo::zero(
 void Foo::one(
    int depth)
 {
-   tbox::Pointer<tbox::Timer> timer =
+   boost::shared_ptr<tbox::Timer> timer =
       tbox::TimerManager::getManager()->
       getTimer("apps::Foo::one()");
    if (depth > 1) {
@@ -73,7 +75,7 @@ void Foo::one(
 void Foo::two(
    int depth)
 {
-   tbox::Pointer<tbox::Timer> timer =
+   boost::shared_ptr<tbox::Timer> timer =
       tbox::TimerManager::getManager()->
       getTimer("apps::Foo::two()");
    if (depth > 2) {
@@ -86,7 +88,7 @@ void Foo::two(
 void Foo::three(
    int depth)
 {
-   tbox::Pointer<tbox::Timer> timer =
+   boost::shared_ptr<tbox::Timer> timer =
       tbox::TimerManager::getManager()->
       getTimer("apps::Foo::three()");
    if (depth > 3) {
@@ -99,7 +101,7 @@ void Foo::three(
 void Foo::four(
    int depth)
 {
-   tbox::Pointer<tbox::Timer> timer =
+   boost::shared_ptr<tbox::Timer> timer =
       tbox::TimerManager::getManager()->
       getTimer("apps::Foo::four()");
    if (depth > 4) {
@@ -112,7 +114,7 @@ void Foo::four(
 void Foo::five(
    int depth)
 {
-   tbox::Pointer<tbox::Timer> timer =
+   boost::shared_ptr<tbox::Timer> timer =
       tbox::TimerManager::getManager()->
       getTimer("apps::Foo::five()");
    if (depth > 5) {
@@ -125,7 +127,7 @@ void Foo::five(
 void Foo::six(
    int depth)
 {
-   tbox::Pointer<tbox::Timer> timer =
+   boost::shared_ptr<tbox::Timer> timer =
       tbox::TimerManager::getManager()->
       getTimer("apps::Foo::six()");
    if (depth > 6) {
@@ -138,7 +140,7 @@ void Foo::six(
 void Foo::seven(
    int depth)
 {
-   tbox::Pointer<tbox::Timer> timer =
+   boost::shared_ptr<tbox::Timer> timer =
       tbox::TimerManager::getManager()->
       getTimer("apps::Foo::seven()");
 
@@ -153,7 +155,7 @@ void Foo::seven(
 void Foo::startAndStop(
    std::string& name)
 {
-   tbox::Pointer<tbox::Timer> timer =
+   boost::shared_ptr<tbox::Timer> timer =
       tbox::TimerManager::getManager()->getTimer(name);
    timer->start();
 
@@ -171,7 +173,7 @@ void Foo::start(
 {
    d_depth++;
 
-   tbox::Pointer<tbox::Timer> timer =
+   boost::shared_ptr<tbox::Timer> timer =
       tbox::TimerManager::getManager()->getTimer(name);
    timer->start();
 
@@ -190,7 +192,7 @@ void Foo::start(
 void Foo::stop(
    std::string& name)
 {
-   tbox::Pointer<tbox::Timer> timer =
+   boost::shared_ptr<tbox::Timer> timer =
       tbox::TimerManager::getManager()->getTimer(name);
    timer->stop();
 }

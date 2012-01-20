@@ -169,7 +169,7 @@ public:
     */
    KINSOL_SAMRAIContext(
       const std::string& object_name,
-      tbox::Pointer<tbox::Database> input_db,
+      boost::shared_ptr<tbox::Database> input_db,
       KINSOLAbstractFunctions* my_functions);
 
    /**
@@ -185,7 +185,7 @@ public:
     */
    void
    initialize(
-      tbox::Pointer<SAMRAIVectorReal<double> > solution);
+      boost::shared_ptr<SAMRAIVectorReal<double> > solution);
 
    /**
     * Solve the nonlinear problem and return and integer value defined by
@@ -212,7 +212,7 @@ public:
     */
    void
    getFromInput(
-      tbox::Pointer<tbox::Database> db);
+      boost::shared_ptr<tbox::Database> db);
 
    /**
     * Retrieve solver parameters from restart database matching object name.
@@ -232,7 +232,7 @@ public:
     */
    void
    putToDatabase(
-      tbox::Pointer<tbox::Database> db);
+      boost::shared_ptr<tbox::Database> db);
 
    /**
     * Print out all members of integrator instance to given output stream.

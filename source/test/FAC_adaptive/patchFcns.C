@@ -17,12 +17,13 @@
 #include "setArrayData.h"
 
 #include "SAMRAI/hier/Patch.h"
-#include "SAMRAI/tbox/Pointer.h"
 #include "SAMRAI/geom/CartesianPatchGeometry.h"
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/pdat/CellData.h"
 #include "SAMRAI/pdat/SideData.h"
 #include "SAMRAI/pdat/OutersideData.h"
+
+#include <boost/shared_ptr.hpp>
 
 using namespace SAMRAI;
 
@@ -129,9 +130,9 @@ void setCellDataToSinusoid(
    const hier::Patch& patch,
    const SinusoidFcn& fcn)
 {
-   tbox::Pointer<geom::CartesianPatchGeometry> patch_geom(
+   boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
       patch.getPatchGeometry(),
-      tbox::__dynamic_cast_tag());
+      boost::detail::dynamic_cast_tag());
    if (cd.getDim() == tbox::Dimension(2)) {
       MDA_Access<double, 2, MDA_OrderColMajor<2> >
       t4 = pdat::ArrayDataAccess::access<2, double>(cd.getArrayData());
@@ -223,9 +224,9 @@ void setCellDataToQuartic(
    const hier::Patch& patch,
    const QuarticFcn& fcn)
 {
-   tbox::Pointer<geom::CartesianPatchGeometry> patch_geom(
+   boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
       patch.getPatchGeometry(),
-      tbox::__dynamic_cast_tag());
+      boost::detail::dynamic_cast_tag());
    if (cd.getDim() == tbox::Dimension(2)) {
       MDA_Access<double, 2, MDA_OrderColMajor<2> >
       t4 = pdat::ArrayDataAccess::access<2, double>(cd.getArrayData());

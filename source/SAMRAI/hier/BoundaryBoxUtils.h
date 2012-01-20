@@ -101,7 +101,7 @@ public:
    void
    stretchBoxToGhostWidth(
       Box& box,
-      const hier::IntVector& ghost_cell_width) const;
+      const IntVector& ghost_cell_width) const;
 
    /*!
     * @brief Extend box outward by the given amount.
@@ -150,9 +150,9 @@ public:
     *
     * @return New trimmed boundary box.
     */
-   hier::BoundaryBox
+   BoundaryBox
    trimBoundaryBox(
-      const hier::Box& limit_box) const;
+      const Box& limit_box) const;
 
    /*!
     * @brief Return box describing the index space of the outer surface of
@@ -171,7 +171,7 @@ public:
     * @return a box to define the side indices corresponding to the
     * BoundaryBox
     */
-   hier::Box
+   Box
    getSurfaceBoxFromBoundaryBox() const;
 
 private:

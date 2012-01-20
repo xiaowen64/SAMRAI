@@ -38,7 +38,7 @@ PatchSideDataNormOpsComplex::~PatchSideDataNormOpsComplex()
  */
 
 int PatchSideDataNormOpsComplex::numberOfEntries(
-   const tbox::Pointer<pdat::SideData<dcomplex> >& data,
+   const boost::shared_ptr<pdat::SideData<dcomplex> >& data,
    const hier::Box& box) const
 {
    TBOX_ASSERT(data);
@@ -67,8 +67,8 @@ int PatchSideDataNormOpsComplex::numberOfEntries(
  */
 
 double PatchSideDataNormOpsComplex::sumControlVolumes(
-   const tbox::Pointer<pdat::SideData<dcomplex> >& data,
-   const tbox::Pointer<pdat::SideData<double> >& cvol,
+   const boost::shared_ptr<pdat::SideData<dcomplex> >& data,
+   const boost::shared_ptr<pdat::SideData<double> >& cvol,
    const hier::Box& box) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
@@ -94,8 +94,8 @@ double PatchSideDataNormOpsComplex::sumControlVolumes(
 }
 
 void PatchSideDataNormOpsComplex::abs(
-   tbox::Pointer<pdat::SideData<double> >& dst,
-   const tbox::Pointer<pdat::SideData<dcomplex> >& src,
+   boost::shared_ptr<pdat::SideData<double> >& dst,
+   const boost::shared_ptr<pdat::SideData<dcomplex> >& src,
    const hier::Box& box) const
 {
    TBOX_ASSERT(dst && src);
@@ -116,9 +116,9 @@ void PatchSideDataNormOpsComplex::abs(
 }
 
 double PatchSideDataNormOpsComplex::L1Norm(
-   const tbox::Pointer<pdat::SideData<dcomplex> >& data,
+   const boost::shared_ptr<pdat::SideData<dcomplex> >& data,
    const hier::Box& box,
-   const tbox::Pointer<pdat::SideData<double> > cvol) const
+   const boost::shared_ptr<pdat::SideData<double> > cvol) const
 {
    TBOX_ASSERT(data);
    TBOX_DIM_ASSERT_CHECK_ARGS2(*data, box);
@@ -152,9 +152,9 @@ double PatchSideDataNormOpsComplex::L1Norm(
 }
 
 double PatchSideDataNormOpsComplex::L2Norm(
-   const tbox::Pointer<pdat::SideData<dcomplex> >& data,
+   const boost::shared_ptr<pdat::SideData<dcomplex> >& data,
    const hier::Box& box,
-   const tbox::Pointer<pdat::SideData<double> > cvol) const
+   const boost::shared_ptr<pdat::SideData<double> > cvol) const
 {
    TBOX_ASSERT(data);
    TBOX_DIM_ASSERT_CHECK_ARGS2(*data, box);
@@ -191,10 +191,10 @@ double PatchSideDataNormOpsComplex::L2Norm(
 }
 
 double PatchSideDataNormOpsComplex::weightedL2Norm(
-   const tbox::Pointer<pdat::SideData<dcomplex> >& data,
-   const tbox::Pointer<pdat::SideData<dcomplex> >& weight,
+   const boost::shared_ptr<pdat::SideData<dcomplex> >& data,
+   const boost::shared_ptr<pdat::SideData<dcomplex> >& weight,
    const hier::Box& box,
-   const tbox::Pointer<pdat::SideData<double> > cvol) const
+   const boost::shared_ptr<pdat::SideData<double> > cvol) const
 {
    TBOX_ASSERT(data && weight);
    TBOX_DIM_ASSERT_CHECK_ARGS3(*data, *weight, box);
@@ -238,9 +238,9 @@ double PatchSideDataNormOpsComplex::weightedL2Norm(
 }
 
 double PatchSideDataNormOpsComplex::RMSNorm(
-   const tbox::Pointer<pdat::SideData<dcomplex> >& data,
+   const boost::shared_ptr<pdat::SideData<dcomplex> >& data,
    const hier::Box& box,
-   const tbox::Pointer<pdat::SideData<double> > cvol) const
+   const boost::shared_ptr<pdat::SideData<double> > cvol) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(data);
@@ -255,10 +255,10 @@ double PatchSideDataNormOpsComplex::RMSNorm(
 }
 
 double PatchSideDataNormOpsComplex::weightedRMSNorm(
-   const tbox::Pointer<pdat::SideData<dcomplex> >& data,
-   const tbox::Pointer<pdat::SideData<dcomplex> >& weight,
+   const boost::shared_ptr<pdat::SideData<dcomplex> >& data,
+   const boost::shared_ptr<pdat::SideData<dcomplex> >& weight,
    const hier::Box& box,
-   const tbox::Pointer<pdat::SideData<double> > cvol) const
+   const boost::shared_ptr<pdat::SideData<double> > cvol) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(data && weight);
@@ -273,9 +273,9 @@ double PatchSideDataNormOpsComplex::weightedRMSNorm(
 }
 
 double PatchSideDataNormOpsComplex::maxNorm(
-   const tbox::Pointer<pdat::SideData<dcomplex> >& data,
+   const boost::shared_ptr<pdat::SideData<dcomplex> >& data,
    const hier::Box& box,
-   const tbox::Pointer<pdat::SideData<double> > cvol) const
+   const boost::shared_ptr<pdat::SideData<double> > cvol) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(data);
@@ -313,10 +313,10 @@ double PatchSideDataNormOpsComplex::maxNorm(
 }
 
 dcomplex PatchSideDataNormOpsComplex::dot(
-   const tbox::Pointer<pdat::SideData<dcomplex> >& data1,
-   const tbox::Pointer<pdat::SideData<dcomplex> >& data2,
+   const boost::shared_ptr<pdat::SideData<dcomplex> >& data1,
+   const boost::shared_ptr<pdat::SideData<dcomplex> >& data2,
    const hier::Box& box,
-   const tbox::Pointer<pdat::SideData<double> > cvol) const
+   const boost::shared_ptr<pdat::SideData<double> > cvol) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(data1 && data2);
@@ -355,9 +355,9 @@ dcomplex PatchSideDataNormOpsComplex::dot(
 }
 
 dcomplex PatchSideDataNormOpsComplex::integral(
-   const tbox::Pointer<pdat::SideData<dcomplex> >& data,
+   const boost::shared_ptr<pdat::SideData<dcomplex> >& data,
    const hier::Box& box,
-   const tbox::Pointer<pdat::SideData<double> > vol) const
+   const boost::shared_ptr<pdat::SideData<double> > vol) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(data);

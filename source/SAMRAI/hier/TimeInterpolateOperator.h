@@ -17,8 +17,8 @@
 #include "SAMRAI/hier/PatchData.h"
 #include "SAMRAI/hier/Variable.h"
 #include "SAMRAI/tbox/DescribedClass.h"
-#include "SAMRAI/tbox/Pointer.h"
 
+#include <boost/shared_ptr.hpp>
 #include <string>
 
 namespace SAMRAI {
@@ -77,7 +77,7 @@ public:
     */
    virtual bool
    findTimeInterpolateOperator(
-      const tbox::Pointer<Variable>& var,
+      const boost::shared_ptr<Variable>& var,
       const std::string& op_name) const = 0;
 
    /**

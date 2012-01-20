@@ -26,12 +26,13 @@ using namespace std;
 #include "SAMRAI/tbox/InputManager.h"
 #include "SAMRAI/hier/IntVector.h"
 #include "SAMRAI/tbox/PIO.h"
-#include "SAMRAI/tbox/Pointer.h"
 #include "SAMRAI/tbox/SAMRAI_MPI.h"
 #include "SAMRAI/tbox/Utilities.h"
 
 // Headers for classes specific to this example
 #include "BoundaryDataTester.h"
+
+#include <boost/shared_ptr.hpp>
 
 using namespace SAMRAI;
 
@@ -90,7 +91,8 @@ int main(
        * Create input database and parse all data in input file.
        */
 
-      tbox::Pointer<tbox::InputDatabase> input_db(new tbox::InputDatabase("input_db"));
+      boost::shared_ptr<tbox::InputDatabase> input_db(
+         new tbox::InputDatabase("input_db"));
       tbox::InputManager::getManager()->parseInputFile(input_filename, input_db);
 
       /*
@@ -99,7 +101,7 @@ int main(
        */
 
       if (input_db->keyExists("GlobalInputs")) {
-         tbox::Pointer<tbox::Database> global_db =
+         boost::shared_ptr<tbox::Database> global_db =
             input_db->getDatabase("GlobalInputs");
          if (global_db->keyExists("call_abort_in_serial_instead_of_exit")) {
             bool flag = global_db->
@@ -112,7 +114,8 @@ int main(
        * Read "Main" input data.
        */
 
-      tbox::Pointer<tbox::Database> main_db = input_db->getDatabase("Main");
+      boost::shared_ptr<tbox::Database> main_db =
+         input_db->getDatabase("Main");
 
       const tbox::Dimension dim(static_cast<unsigned short>(main_db->getInteger("dim")));
 
@@ -133,13 +136,13 @@ int main(
        * state of BoundaryDataTester to log file for checking.
        */
 
-      tbox::Pointer<geom::CartesianGridGeometry> grid_geometry(
+      boost::shared_ptr<geom::CartesianGridGeometry> grid_geometry(
          new geom::CartesianGridGeometry(
             dim,
             "CartesianGridGeometry",
             input_db->getDatabase("CartesianGridGeometry")));
 
-      tbox::Pointer<hier::PatchHierarchy> patch_hierarchy(
+      boost::shared_ptr<hier::PatchHierarchy> patch_hierarchy(
          new hier::PatchHierarchy("PatchHierarchy", grid_geometry));
 
       BoundaryDataTester* btester =
@@ -208,7 +211,8 @@ int main(
       patch_hierarchy->makeNewPatchLevel(0, layer0);
 
       // Add Connector required for schedule construction.
-      tbox::Pointer<hier::PatchLevel> level0 = patch_hierarchy->getPatchLevel(0);
+      boost::shared_ptr<hier::PatchLevel> level0 =
+         patch_hierarchy->getPatchLevel(0);
       level0->getBoxLevel()->getPersistentOverlapConnectors().
       createConnector(
          *level0->getBoxLevel(),

@@ -8,7 +8,8 @@
  *
  ************************************************************************/
 #include "SAMRAI/tbox/Utilities.h"
-#include "SAMRAI/tbox/Pointer.h"
+
+#include <boost/shared_ptr.hpp>
 
 namespace SAMRAI {
 namespace solv {

@@ -14,16 +14,15 @@
 #include "SAMRAI/SAMRAI_config.h"
 
 #include "SAMRAI/tbox/Database.h"
-#include "SAMRAI/tbox/Pointer.h"
 #include "SAMRAI/tbox/Serializable.h"
 #include "SAMRAI/algs/ImplicitEquationStrategy.h"
 #include "SAMRAI/solv/NonlinearSolverStrategy.h"
 #include "SAMRAI/solv/SAMRAIVectorReal.h"
 #include "SAMRAI/hier/PatchHierarchy.h"
 #include "SAMRAI/tbox/InputDatabase.h"
-#include "SAMRAI/tbox/Pointer.h"
 #include "SAMRAI/tbox/Serializable.h"
 
+#include <boost/shared_ptr.hpp>
 #include <string>
 
 namespace SAMRAI {
@@ -87,10 +86,10 @@ public:
     */
    ImplicitIntegrator(
       const std::string& object_name,
-      tbox::Pointer<tbox::Database> input_db,
+      boost::shared_ptr<tbox::Database> input_db,
       ImplicitEquationStrategy * implicit_equations,
       solv::NonlinearSolverStrategy * nonlinear_solver,
-      const tbox::Pointer<hier::PatchHierarchy> hierarchy);
+      const boost::shared_ptr<hier::PatchHierarchy> hierarchy);
 
    /**
     * Empty destructor for ImplicitIntegrator
@@ -228,7 +227,7 @@ public:
     */
    void
    putToDatabase(
-      tbox::Pointer<tbox::Database> db);
+      boost::shared_ptr<tbox::Database> db);
 
    /**
     * Returns the object name.
@@ -251,7 +250,7 @@ private:
     */
    void
    getFromInput(
-      tbox::Pointer<tbox::Database> db,
+      boost::shared_ptr<tbox::Database> db,
       bool is_from_restart);
 
    /*
@@ -273,14 +272,14 @@ private:
     */
    ImplicitEquationStrategy * d_implicit_equations;
    solv::NonlinearSolverStrategy * d_nonlinear_solver;
-   tbox::Pointer<hier::PatchHierarchy> d_patch_hierarchy;
+   boost::shared_ptr<hier::PatchHierarchy> d_patch_hierarchy;
 
    int d_finest_level;
 
    /*
     * Solution vector advanced during the time integration process.
     */
-   tbox::Pointer<solv::SAMRAIVectorReal<double> > d_solution_vector;
+   boost::shared_ptr<solv::SAMRAIVectorReal<double> > d_solution_vector;
 
    /*
     * Data members representing integrator times, time increments,

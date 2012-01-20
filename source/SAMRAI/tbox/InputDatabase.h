@@ -29,7 +29,7 @@ namespace tbox {
  * to constructors for problem setup.
  *
  */
-typedef SAMRAI::tbox::MemoryDatabase InputDatabase;
+typedef tbox::MemoryDatabase InputDatabase;
 
 }
 }

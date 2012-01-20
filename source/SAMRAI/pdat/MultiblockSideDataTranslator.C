@@ -58,12 +58,12 @@ void MultiblockSideDataTranslator<TYPE>::translateAndCopyData(
 
    const tbox::Dimension& dim(shift.getDim());
 
-   tbox::Pointer<SideData<TYPE> > dst(
+   boost::shared_ptr<SideData<TYPE> > dst(
       dst_patch.getPatchData(dst_id),
-      tbox::__dynamic_cast_tag());
-   tbox::Pointer<SideData<TYPE> > src(
+      boost::detail::dynamic_cast_tag());
+   boost::shared_ptr<SideData<TYPE> > src(
       src_patch.getPatchData(src_id),
-      tbox::__dynamic_cast_tag());
+      boost::detail::dynamic_cast_tag());
 
    TBOX_ASSERT(dst);
    TBOX_ASSERT(src);
@@ -82,8 +82,8 @@ void MultiblockSideDataTranslator<TYPE>::translateAndCopyData(
    } else if (dim == tbox::Dimension(2)) {
       for (int axis = 0; axis < dim.getValue(); axis++) {
          if (dir_vector(axis)) {
-            for (pdat::SideIterator fi(dst->getBox(), axis); fi; fi++) {
-               pdat::SideIndex dst_index(fi());
+            for (SideIterator fi(dst->getBox(), axis); fi; fi++) {
+               SideIndex dst_index(fi());
                hier::Index dst_xyz_index(dst_index);
 
                hier::Index src_xyz_index(dst_xyz_index);
@@ -111,7 +111,7 @@ void MultiblockSideDataTranslator<TYPE>::translateAndCopyData(
                   src_xyz_index(i) -= copy_shift(i);
                }
 
-               pdat::SideIndex src_index(dim);
+               SideIndex src_index(dim);
                if (src_axis == 1) {
                   src_index(0) = src_xyz_index(0);
                   src_index(1) = src_xyz_index(1);
@@ -239,8 +239,8 @@ void MultiblockSideDataTranslator<TYPE>::translateAndCopyData(
             }
 
             const hier::BlockId& block_id = dst->getBox().getBlockId();
-            for (pdat::SideIterator si(dst->getBox(), axis); si; si++) {
-               pdat::SideIndex dst_index(si());
+            for (SideIterator si(dst->getBox(), axis); si; si++) {
+               SideIndex dst_index(si());
                hier::Index dst_xyz_index(dst_index);
 
                hier::Transformation::RotationIdentifier back_rotate =
@@ -262,7 +262,7 @@ void MultiblockSideDataTranslator<TYPE>::translateAndCopyData(
                   src_xyz_index(i) = src_box.lower() (i);
                }
 
-               pdat::SideIndex src_index(dim);
+               SideIndex src_index(dim);
                src_index(0) = src_xyz_index(0);
                src_index(1) = src_xyz_index(1);
                src_index(2) = src_xyz_index(2);
@@ -398,8 +398,8 @@ void MultiblockSideDataTranslator<TYPE>::translateAndCopyData(
 
 template<class TYPE>
 void MultiblockSideDataTranslator<TYPE>::translateAndCopyArrayData(
-   pdat::ArrayData<TYPE>& dst,
-   const pdat::ArrayData<TYPE>& src,
+   ArrayData<TYPE>& dst,
+   const ArrayData<TYPE>& src,
    const hier::IntVector& shift,
    const hier::Transformation::RotationIdentifier rotate)
 {

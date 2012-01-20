@@ -29,7 +29,7 @@ const tbox::Dimension& GridGeometry::getDim() const {
 }
 
 SAMRAI_INLINE_KEYWORD
-const hier::MultiblockBoxTree& GridGeometry::
+const MultiblockBoxTree& GridGeometry::
 getDomainSearchTree() const
 {
    return d_domain_search_tree;
@@ -40,7 +40,7 @@ getDomainSearchTree() const
  ***********************************************************************
  */
 
-SAMRAI_INLINE_KEYWORD const hier::MultiblockBoxTree& GridGeometry::
+SAMRAI_INLINE_KEYWORD const MultiblockBoxTree& GridGeometry::
 getPeriodicDomainSearchTree() const
 {
    return d_domain_search_tree_periodic;
@@ -139,7 +139,7 @@ GridGeometry::Neighbor::getRotationIdentifier() const
 }
 
 SAMRAI_INLINE_KEYWORD
-const hier::IntVector& GridGeometry::Neighbor::getShift() const
+const IntVector& GridGeometry::Neighbor::getShift() const
 {
    return d_transformation.getOffset();
 }

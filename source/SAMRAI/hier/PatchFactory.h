@@ -16,9 +16,10 @@
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/hier/Patch.h"
 #include "SAMRAI/hier/PatchDescriptor.h"
-#include "SAMRAI/tbox/Pointer.h"
 #include "SAMRAI/tbox/Database.h"
 #include "SAMRAI/tbox/DescribedClass.h"
+
+#include <boost/shared_ptr.hpp>
 
 namespace SAMRAI {
 namespace hier {
@@ -49,10 +50,10 @@ public:
    /**
     * Allocate a patch with the specified domain and patch descriptor.
     */
-   virtual tbox::Pointer<Patch>
+   virtual boost::shared_ptr<Patch>
    allocate(
       const Box& mapped_box_level_mapped_box,
-      tbox::Pointer<PatchDescriptor> descriptor) const;
+      boost::shared_ptr<PatchDescriptor> descriptor) const;
 
 private:
    PatchFactory(

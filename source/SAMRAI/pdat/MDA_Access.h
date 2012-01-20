@@ -10,6 +10,8 @@
 #ifndef include_MDA_Access_h
 #define include_MDA_Access_h
 
+#include "SAMRAI/SAMRAI_config.h"
+
 #include <sys/types.h>
 #include <cassert>
 #include <iostream>

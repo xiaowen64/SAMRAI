@@ -63,10 +63,10 @@ void PatchFaceDataMiscellaneousOpsReal<TYPE>::operator = (
 
 template<class TYPE>
 int PatchFaceDataMiscellaneousOpsReal<TYPE>::computeConstrProdPos(
-   const tbox::Pointer<pdat::FaceData<TYPE> >& data1,
-   const tbox::Pointer<pdat::FaceData<TYPE> >& data2,
+   const boost::shared_ptr<pdat::FaceData<TYPE> >& data1,
+   const boost::shared_ptr<pdat::FaceData<TYPE> >& data2,
    const hier::Box& box,
-   const tbox::Pointer<pdat::FaceData<double> > cvol) const
+   const boost::shared_ptr<pdat::FaceData<double> > cvol) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(data1 && data2);
@@ -101,11 +101,11 @@ int PatchFaceDataMiscellaneousOpsReal<TYPE>::computeConstrProdPos(
 
 template<class TYPE>
 void PatchFaceDataMiscellaneousOpsReal<TYPE>::compareToScalar(
-   tbox::Pointer<pdat::FaceData<TYPE> >& dst,
-   const tbox::Pointer<pdat::FaceData<TYPE> >& src,
+   boost::shared_ptr<pdat::FaceData<TYPE> >& dst,
+   const boost::shared_ptr<pdat::FaceData<TYPE> >& src,
    const TYPE& alpha,
    const hier::Box& box,
-   const tbox::Pointer<pdat::FaceData<double> > cvol) const
+   const boost::shared_ptr<pdat::FaceData<double> > cvol) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(dst && src);
@@ -134,10 +134,10 @@ void PatchFaceDataMiscellaneousOpsReal<TYPE>::compareToScalar(
 
 template<class TYPE>
 int PatchFaceDataMiscellaneousOpsReal<TYPE>::testReciprocal(
-   tbox::Pointer<pdat::FaceData<TYPE> >& dst,
-   const tbox::Pointer<pdat::FaceData<TYPE> >& src,
+   boost::shared_ptr<pdat::FaceData<TYPE> >& dst,
+   const boost::shared_ptr<pdat::FaceData<TYPE> >& src,
    const hier::Box& box,
-   const tbox::Pointer<pdat::FaceData<double> > cvol) const
+   const boost::shared_ptr<pdat::FaceData<double> > cvol) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(dst && src);
@@ -172,8 +172,8 @@ int PatchFaceDataMiscellaneousOpsReal<TYPE>::testReciprocal(
 
 template<class TYPE>
 TYPE PatchFaceDataMiscellaneousOpsReal<TYPE>::maxPointwiseDivide(
-   const tbox::Pointer<pdat::FaceData<TYPE> >& numer,
-   const tbox::Pointer<pdat::FaceData<TYPE> >& denom,
+   const boost::shared_ptr<pdat::FaceData<TYPE> >& numer,
+   const boost::shared_ptr<pdat::FaceData<TYPE> >& denom,
    const hier::Box& box) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
@@ -195,8 +195,8 @@ TYPE PatchFaceDataMiscellaneousOpsReal<TYPE>::maxPointwiseDivide(
 
 template<class TYPE>
 TYPE PatchFaceDataMiscellaneousOpsReal<TYPE>::minPointwiseDivide(
-   const tbox::Pointer<pdat::FaceData<TYPE> >& numer,
-   const tbox::Pointer<pdat::FaceData<TYPE> >& denom,
+   const boost::shared_ptr<pdat::FaceData<TYPE> >& numer,
+   const boost::shared_ptr<pdat::FaceData<TYPE> >& denom,
    const hier::Box& box) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS

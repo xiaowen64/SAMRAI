@@ -126,7 +126,7 @@ Box::Box(
 
 SAMRAI_INLINE_KEYWORD
 Box::Box(
-   const hier::Box& box,
+   const Box& box,
    const LocalId& local_id,
    const int owner,
    const PeriodicId& periodic_id):
@@ -201,7 +201,7 @@ Box::Box(
 
 SAMRAI_INLINE_KEYWORD
 void Box::initialize(
-   const hier::Box& box,
+   const Box& box,
    const LocalId& local_id,
    const int owner,
    const PeriodicId& periodic_id)
@@ -515,8 +515,8 @@ Index Box::index(
    TBOX_ASSERT(offset >= 0);
    TBOX_ASSERT(offset <= size());
 
-   hier::IntVector n(getDim());
-   hier::IntVector index(getDim());
+   IntVector n(getDim());
+   IntVector index(getDim());
 
    n = numberCells();
 
@@ -537,7 +537,7 @@ Index Box::index(
       index[getDim().getValue()] += lower(d);
    }
 
-   hier::Index idx(index);
+   Index idx(index);
 
    return idx;
 }

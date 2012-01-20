@@ -21,7 +21,6 @@
 
 #include <string>
 
-#include "SAMRAI/tbox/Pointer.h"
 #include "SAMRAI/tbox/Database.h"
 
 /*
@@ -52,6 +51,8 @@
 #include "SAMRAI/solv/RobinBcCoefStrategy.h"
 #include "SAMRAI/solv/SAMRAIVectorReal.h"
 #include "SAMRAI/xfer/RefinePatchStrategy.h"
+
+#include <boost/shared_ptr.hpp>
 
 using namespace SAMRAI;
 
@@ -107,7 +108,7 @@ public:
    virtual void
    initializeLevelData(
       /*! Hierarchy to initialize */
-      const tbox::Pointer<hier::PatchHierarchy> hierarchy,
+      const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
       /*! Level to initialize */
       const int level_number,
       const double init_data_time,
@@ -115,21 +116,21 @@ public:
       /*! Whether level is being introduced for the first time */
       const bool initial_time,
       /*! Level to copy data from */
-      const tbox::Pointer<hier::PatchLevel> old_level =
-         tbox::Pointer<hier::PatchLevel>((0)),
+      const boost::shared_ptr<hier::PatchLevel> old_level =
+         boost::shared_ptr<hier::PatchLevel>(),
       /*! Whether data on new patch needs to be allocated */
       const bool allocate_data = true);
 
    virtual void
    resetHierarchyConfiguration(
       /*! New hierarchy */
-      tbox::Pointer<hier::PatchHierarchy> new_hierarchy,
+      boost::shared_ptr<hier::PatchHierarchy> new_hierarchy,
       /*! Coarsest level */ int coarsest_level,
       /*! Finest level */ int finest_level);
 
    virtual void
    applyGradientDetector(
-      const tbox::Pointer<hier::PatchHierarchy> hierarchy,
+      const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
       const int level_number,
       const double error_data_time,
       const int tag_index,
@@ -181,7 +182,7 @@ public:
     */
    int
    solvePoisson(
-      tbox::Pointer<hier::PatchHierarchy> hierarchy,
+      boost::shared_ptr<hier::PatchHierarchy> hierarchy,
       int max_cycles = 10,
       double residual_tol = 1e-6,
       int pre_sweeps = 5,
@@ -225,7 +226,7 @@ private:
    std::string d_name;
    const tbox::Dimension d_dim;
 
-   tbox::Pointer<hier::PatchHierarchy> d_hierarchy;
+   boost::shared_ptr<hier::PatchHierarchy> d_hierarchy;
 
    //@{
    /*!
@@ -247,52 +248,52 @@ private:
    /*!
     * @brief Context for persistent data.
     */
-   hier::VariableContext d_context_persistent;
+   boost::shared_ptr<hier::VariableContext> d_context_persistent;
 
    /*!
     * @brief Context for scratch data.
     */
-   hier::VariableContext d_context_scratch;
+   boost::shared_ptr<hier::VariableContext> d_context_scratch;
 
    /*!
     * @brief Diffusion coefficient.
     */
-   pdat::SideVariable<double> d_diffcoef;
+   boost::shared_ptr<pdat::SideVariable<double> > d_diffcoef;
 
    /*!
     * @brief Flux.
     */
-   pdat::SideVariable<double> d_flux;
+   boost::shared_ptr<pdat::SideVariable<double> > d_flux;
 
    /*!
     * @brief Scalar solution of Poisson's equation.
     */
-   pdat::CellVariable<double> d_scalar;
+   boost::shared_ptr<pdat::CellVariable<double> > d_scalar;
 
    /*!
     * @brief Source for Poisson's equation.
     */
-   pdat::CellVariable<double> d_constant_source;
+   boost::shared_ptr<pdat::CellVariable<double> > d_constant_source;
 
    /*!
     * @brief Linear source operator for linear system.
     */
-   pdat::CellVariable<double> d_ccoef;
+   boost::shared_ptr<pdat::CellVariable<double> > d_ccoef;
 
    /*!
     * @brief Right hand side for linear system.
     */
-   pdat::CellVariable<double> d_rhs;
+   boost::shared_ptr<pdat::CellVariable<double> > d_rhs;
 
    /*!
     * @brief Exact solution.
     */
-   pdat::CellVariable<double> d_exact;
+   boost::shared_ptr<pdat::CellVariable<double> > d_exact;
 
    /*!
     * @brief Residual.
     */
-   tbox::Pointer<pdat::CellVariable<double> > d_resid;
+   boost::shared_ptr<pdat::CellVariable<double> > d_resid;
 
    /*!
     * @brief Vector weights.
@@ -301,7 +302,7 @@ private:
     * is the volume.  For cells that are, the weight is zero.
     * This is used in computing norms on the AMR grid.
     */
-   pdat::CellVariable<double> d_weight;
+   boost::shared_ptr<pdat::CellVariable<double> > d_weight;
 
    /*!
     * @brief Saved variable-context index.
@@ -378,7 +379,7 @@ private:
     * @name Objects to help debugging.
     */
 #ifdef HAVE_HDF5
-   tbox::Pointer<appu::VisItDataWriter> d_visit_writer;
+   boost::shared_ptr<appu::VisItDataWriter> d_visit_writer;
 #endif
    int d_finest_dbg_plot_ln;
    //@}

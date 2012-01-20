@@ -253,8 +253,8 @@ void CellData<TYPE>::copyWithRotation(
 
          for (CellData<double>::Iterator ci(copybox); ci; ci++) {
 
-            const pdat::CellIndex& dst_index = ci();
-            pdat::CellIndex src_index(dst_index);
+            const CellIndex& dst_index = ci();
+            CellIndex src_index(dst_index);
             hier::Transformation::rotateIndex(src_index, back_rotate);
             src_index += back_shift;
 
@@ -471,7 +471,7 @@ void CellData<TYPE>::print(
 
 template<class TYPE>
 void CellData<TYPE>::getSpecializedFromDatabase(
-   tbox::Pointer<tbox::Database> database)
+   boost::shared_ptr<tbox::Database> database)
 {
 
    TBOX_ASSERT(database);
@@ -484,7 +484,7 @@ void CellData<TYPE>::getSpecializedFromDatabase(
 
    d_depth = database->getInteger("d_depth");
 
-   tbox::Pointer<tbox::Database> array_database;
+   boost::shared_ptr<tbox::Database> array_database;
    array_database = database->getDatabase("d_data");
    d_data.getFromDatabase(array_database);
 }
@@ -500,7 +500,7 @@ void CellData<TYPE>::getSpecializedFromDatabase(
 
 template<class TYPE>
 void CellData<TYPE>::putSpecializedToDatabase(
-   tbox::Pointer<tbox::Database> database)
+   boost::shared_ptr<tbox::Database> database)
 {
    TBOX_ASSERT(database);
 
@@ -508,7 +508,7 @@ void CellData<TYPE>::putSpecializedToDatabase(
 
    database->putInteger("d_depth", d_depth);
 
-   tbox::Pointer<tbox::Database> array_database;
+   boost::shared_ptr<tbox::Database> array_database;
    array_database = database->putDatabase("d_data");
    d_data.putToDatabase(array_database);
 }

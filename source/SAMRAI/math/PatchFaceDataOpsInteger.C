@@ -37,7 +37,7 @@ PatchFaceDataOpsInteger::~PatchFaceDataOpsInteger()
  */
 
 int PatchFaceDataOpsInteger::numberOfEntries(
-   const tbox::Pointer<pdat::FaceData<int> >& data,
+   const boost::shared_ptr<pdat::FaceData<int> >& data,
    const hier::Box& box) const
 {
    TBOX_ASSERT(data);
@@ -63,18 +63,18 @@ int PatchFaceDataOpsInteger::numberOfEntries(
  */
 
 void PatchFaceDataOpsInteger::swapData(
-   tbox::Pointer<hier::Patch> patch,
+   boost::shared_ptr<hier::Patch> patch,
    const int data1_id,
    const int data2_id) const
 {
    TBOX_ASSERT(patch);
 
-   tbox::Pointer<pdat::FaceData<int> > d1(
+   boost::shared_ptr<pdat::FaceData<int> > d1(
       patch->getPatchData(data1_id),
-      tbox::__dynamic_cast_tag());
-   tbox::Pointer<pdat::FaceData<int> > d2(
+      boost::detail::dynamic_cast_tag());
+   boost::shared_ptr<pdat::FaceData<int> > d2(
       patch->getPatchData(data2_id),
-      tbox::__dynamic_cast_tag());
+      boost::detail::dynamic_cast_tag());
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(d1 && d2);
    TBOX_ASSERT(d1->getDepth() && d2->getDepth());
@@ -86,7 +86,7 @@ void PatchFaceDataOpsInteger::swapData(
 }
 
 void PatchFaceDataOpsInteger::printData(
-   const tbox::Pointer<pdat::FaceData<int> >& data,
+   const boost::shared_ptr<pdat::FaceData<int> >& data,
    const hier::Box& box,
    std::ostream& s) const
 {
@@ -99,8 +99,8 @@ void PatchFaceDataOpsInteger::printData(
 }
 
 void PatchFaceDataOpsInteger::copyData(
-   tbox::Pointer<pdat::FaceData<int> >& dst,
-   const tbox::Pointer<pdat::FaceData<int> >& src,
+   boost::shared_ptr<pdat::FaceData<int> >& dst,
+   const boost::shared_ptr<pdat::FaceData<int> >& src,
    const hier::Box& box) const
 {
    TBOX_ASSERT(dst && src);
@@ -115,7 +115,7 @@ void PatchFaceDataOpsInteger::copyData(
 }
 
 void PatchFaceDataOpsInteger::setToScalar(
-   tbox::Pointer<pdat::FaceData<int> >& dst,
+   boost::shared_ptr<pdat::FaceData<int> >& dst,
    const int& alpha,
    const hier::Box& box) const
 {
@@ -126,8 +126,8 @@ void PatchFaceDataOpsInteger::setToScalar(
 }
 
 void PatchFaceDataOpsInteger::abs(
-   tbox::Pointer<pdat::FaceData<int> >& dst,
-   const tbox::Pointer<pdat::FaceData<int> >& src,
+   boost::shared_ptr<pdat::FaceData<int> >& dst,
+   const boost::shared_ptr<pdat::FaceData<int> >& src,
    const hier::Box& box) const
 {
    TBOX_ASSERT(dst && src);

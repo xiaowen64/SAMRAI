@@ -15,13 +15,14 @@
 
 #include "SAMRAI/tbox/Array.h"
 #include "SAMRAI/tbox/Database.h"
-#include "SAMRAI/tbox/Pointer.h"
 #include "SAMRAI/hier/Box.h"
 #include "MultiblockTester.h"
 #include "SAMRAI/hier/IntVector.h"
 #include "SAMRAI/hier/Patch.h"
 #include "SAMRAI/hier/PatchHierarchy.h"
 #include "SAMRAI/hier/VariableContext.h"
+
+#include <boost/shared_ptr.hpp>
 
 using namespace SAMRAI;
 
@@ -108,12 +109,12 @@ public:
    virtual ~PatchMultiblockTestStrategy();
 
    void setGridGeometry(
-      tbox::Pointer<hier::GridGeometry>& grid_geom)
+      boost::shared_ptr<hier::GridGeometry>& grid_geom)
    {
       d_grid_geometry = grid_geom;
    }
 
-   tbox::Pointer<hier::GridGeometry>&
+   boost::shared_ptr<hier::GridGeometry>&
    getGridGeometry()
    {
       return d_grid_geometry;
@@ -123,7 +124,7 @@ public:
     * Utility functions for managing patch data context.
     */
    void setDataContext(
-      tbox::Pointer<hier::VariableContext> context)
+      boost::shared_ptr<hier::VariableContext> context)
    {
 #ifdef DEBUG_CHECK_ASSERTIONS
       TBOX_ASSERT(context);
@@ -132,7 +133,7 @@ public:
    }
 
    void setDestinationContext(
-      tbox::Pointer<hier::VariableContext> context)
+      boost::shared_ptr<hier::VariableContext> context)
    {
 #ifdef DEBUG_CHECK_ASSERTIONS
       TBOX_ASSERT(context);
@@ -141,7 +142,7 @@ public:
    }
 
    void setScratchContext(
-      tbox::Pointer<hier::VariableContext> context)
+      boost::shared_ptr<hier::VariableContext> context)
    {
 #ifdef DEBUG_CHECK_ASSERTIONS
       TBOX_ASSERT(context);
@@ -150,19 +151,19 @@ public:
    }
 
    ///
-   tbox::Pointer<hier::VariableContext> getDataContext() const
+   boost::shared_ptr<hier::VariableContext> getDataContext() const
    {
       return d_data_context;
    }
 
    ///
-   tbox::Pointer<hier::VariableContext> getDestinationContext() const
+   boost::shared_ptr<hier::VariableContext> getDestinationContext() const
    {
       return d_dst_context;
    }
 
    ///
-   tbox::Pointer<hier::VariableContext> getScratchContext() const
+   boost::shared_ptr<hier::VariableContext> getScratchContext() const
    {
       return d_scr_context;
    }
@@ -187,14 +188,14 @@ public:
     */
    void
    readVariableInput(
-      tbox::Pointer<tbox::Database> db);
+      boost::shared_ptr<tbox::Database> db);
 
    /**
     * Read arrays of refinement boxes from input database.
     */
    void
    readRefinementInput(
-      tbox::Pointer<tbox::Database> db);
+      boost::shared_ptr<tbox::Database> db);
 
    /**
     * Set tags in cells to refine based on boxes provided in input.
@@ -221,7 +222,7 @@ public:
       const hier::Connector& dst_to_encon,
       const hier::Box& fill_box,
       const hier::BoundaryBox& boundary_box,
-      const tbox::Pointer<hier::GridGeometry>& grid_geometry)
+      const boost::shared_ptr<hier::GridGeometry>& grid_geometry)
    {
       NULL_USE(patch);
       NULL_USE(encon_level);
@@ -236,7 +237,7 @@ public:
    preprocessRefine(
       hier::Patch& fine,
       const hier::Patch& coarse,
-      const tbox::Pointer<hier::VariableContext>& context,
+      const boost::shared_ptr<hier::VariableContext>& context,
       const hier::Box& fine_box,
       const hier::IntVector& ratio) const;
 
@@ -245,7 +246,7 @@ public:
    postprocessRefine(
       hier::Patch& fine,
       const hier::Patch& coarse,
-      const tbox::Pointer<hier::VariableContext>& context,
+      const boost::shared_ptr<hier::VariableContext>& context,
       const hier::Box& fine_box,
       const hier::IntVector& ratio) const;
 
@@ -254,7 +255,7 @@ public:
    preprocessCoarsen(
       hier::Patch& coarse,
       const hier::Patch& fine,
-      const tbox::Pointer<hier::VariableContext>& context,
+      const boost::shared_ptr<hier::VariableContext>& context,
       const hier::Box& coarse_box,
       const hier::IntVector& ratio) const;
 
@@ -263,7 +264,7 @@ public:
    postprocessCoarsen(
       hier::Patch& coarse,
       const hier::Patch& fine,
-      const tbox::Pointer<hier::VariableContext>& context,
+      const boost::shared_ptr<hier::VariableContext>& context,
       const hier::Box& coarse_box,
       const hier::IntVector& ratio) const;
 
@@ -287,7 +288,7 @@ public:
    virtual void
    initializeDataOnPatch(
       hier::Patch& patch,
-      const tbox::Pointer<hier::PatchHierarchy> hierarchy,
+      const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
       const int level_number,
       const hier::BlockId& block_id,
       char src_or_dst) = 0;
@@ -298,7 +299,7 @@ public:
    virtual void
    tagCellsToRefine(
       hier::Patch& patch,
-      const tbox::Pointer<hier::PatchHierarchy> hierarchy,
+      const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
       int level_number,
       int tag_index) = 0;
 
@@ -308,7 +309,7 @@ public:
    virtual bool
    verifyResults(
       const hier::Patch& patch,
-      const tbox::Pointer<hier::PatchHierarchy> hierarchy,
+      const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
       const int level_number,
       const hier::BlockId& block_id) = 0;
 
@@ -332,11 +333,11 @@ protected:
    tbox::Array<hier::BoxContainer> d_refine_level_boxes;
 
 private:
-   tbox::Pointer<hier::GridGeometry> d_grid_geometry;
+   boost::shared_ptr<hier::GridGeometry> d_grid_geometry;
 
-   tbox::Pointer<hier::VariableContext> d_data_context;
-   tbox::Pointer<hier::VariableContext> d_dst_context;
-   tbox::Pointer<hier::VariableContext> d_scr_context;
+   boost::shared_ptr<hier::VariableContext> d_data_context;
+   boost::shared_ptr<hier::VariableContext> d_dst_context;
+   boost::shared_ptr<hier::VariableContext> d_scr_context;
 
 };
 

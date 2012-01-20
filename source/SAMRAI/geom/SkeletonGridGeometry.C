@@ -73,10 +73,10 @@ const int SkeletonGridGeometry::GEOM_SKELETON_GRID_GEOMETRY_VERSION = 2;
 SkeletonGridGeometry::SkeletonGridGeometry(
    const tbox::Dimension& dim,
    const std::string& object_name,
-   tbox::Pointer<tbox::Database> input_db,
+   boost::shared_ptr<tbox::Database> input_db,
    bool register_for_restart):
    hier::GridGeometry(dim, object_name,
-                      tbox::Pointer<hier::TransferOperatorRegistry>(
+                      boost::shared_ptr<hier::TransferOperatorRegistry>(
                          new SAMRAITransferOperatorRegistry(dim)))
 {
    TBOX_ASSERT(!object_name.empty());
@@ -103,7 +103,7 @@ SkeletonGridGeometry::SkeletonGridGeometry(
    const hier::BoxContainer& domain,
    bool register_for_restart):
    hier::GridGeometry(domain.front().getDim(), object_name,
-                      tbox::Pointer<hier::TransferOperatorRegistry>(
+                      boost::shared_ptr<hier::TransferOperatorRegistry>(
                          new SAMRAITransferOperatorRegistry(domain.front().getDim())))
 {
    TBOX_ASSERT(domain.size() > 0);
@@ -144,7 +144,7 @@ SkeletonGridGeometry::~SkeletonGridGeometry()
  *************************************************************************
  */
 
-tbox::Pointer<hier::GridGeometry>
+boost::shared_ptr<hier::GridGeometry>
 SkeletonGridGeometry::makeRefinedGridGeometry(
    const std::string& fine_geom_name,
    const hier::IntVector& refine_ratio,
@@ -160,15 +160,15 @@ SkeletonGridGeometry::makeRefinedGridGeometry(
    hier::BoxContainer fine_domain(this->getPhysicalDomain());
    fine_domain.refine(refine_ratio);
 
-   geom::SkeletonGridGeometry* fine_geometry =
-      new geom::SkeletonGridGeometry(fine_geom_name,
+   SkeletonGridGeometry* fine_geometry =
+      new SkeletonGridGeometry(fine_geom_name,
          fine_domain,
          register_for_restart);
 
    fine_geometry->initializePeriodicShift(this->getPeriodicShift(hier::
          IntVector::getOne(dim)));
 
-   return tbox::Pointer<hier::GridGeometry>(fine_geometry);
+   return boost::shared_ptr<hier::GridGeometry>(fine_geometry);
 }
 
 /*
@@ -180,7 +180,7 @@ SkeletonGridGeometry::makeRefinedGridGeometry(
  *************************************************************************
  */
 
-tbox::Pointer<hier::GridGeometry>
+boost::shared_ptr<hier::GridGeometry>
 SkeletonGridGeometry::makeCoarsenedGridGeometry(
    const std::string& coarse_geom_name,
    const hier::IntVector& coarsen_ratio,
@@ -221,15 +221,15 @@ SkeletonGridGeometry::makeCoarsenedGridGeometry(
       }
    }
 
-   geom::SkeletonGridGeometry* coarse_geometry =
-      new geom::SkeletonGridGeometry(coarse_geom_name,
+   SkeletonGridGeometry* coarse_geometry =
+      new SkeletonGridGeometry(coarse_geom_name,
          coarse_domain,
          register_for_restart);
 
    coarse_geometry->initializePeriodicShift(this->getPeriodicShift(hier::
          IntVector::getOne(dim)));
 
-   return tbox::Pointer<hier::GridGeometry>(coarse_geometry);
+   return boost::shared_ptr<hier::GridGeometry>(coarse_geometry);
 }
 
 /*
@@ -271,7 +271,7 @@ void SkeletonGridGeometry::setGeometryDataOnPatch(
    }
 #endif
 
-   tbox::Pointer<SkeletonPatchGeometry>
+   boost::shared_ptr<SkeletonPatchGeometry>
    geometry(new SkeletonPatchGeometry(ratio_to_level_zero,
                touches_regular_bdry,
                touches_periodic_bdry));
@@ -288,7 +288,7 @@ void SkeletonGridGeometry::setGeometryDataOnPatch(
  */
 
 void SkeletonGridGeometry::putToDatabase(
-   tbox::Pointer<tbox::Database> db)
+   boost::shared_ptr<tbox::Database> db)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(db);
@@ -320,7 +320,7 @@ void SkeletonGridGeometry::putToDatabase(
  */
 
 void SkeletonGridGeometry::getFromInput(
-   tbox::Pointer<tbox::Database> db,
+   boost::shared_ptr<tbox::Database> db,
    bool is_from_restart)
 {
    TBOX_ASSERT(db);
@@ -381,10 +381,10 @@ void SkeletonGridGeometry::getFromRestart()
 {
    const tbox::Dimension dim(getDim());
 
-   tbox::Pointer<tbox::Database> restart_db =
+   boost::shared_ptr<tbox::Database> restart_db =
       tbox::RestartManager::getManager()->getRootDatabase();
 
-   tbox::Pointer<tbox::Database> db;
+   boost::shared_ptr<tbox::Database> db;
 
    if (restart_db->isDatabase(getObjectName())) {
       db = restart_db->getDatabase(getObjectName());

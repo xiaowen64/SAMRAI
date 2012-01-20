@@ -36,7 +36,7 @@ PatchCellDataOpsInteger::~PatchCellDataOpsInteger()
  */
 
 int PatchCellDataOpsInteger::numberOfEntries(
-   const tbox::Pointer<pdat::CellData<int> >& data,
+   const boost::shared_ptr<pdat::CellData<int> >& data,
    const hier::Box& box) const
 {
    TBOX_ASSERT(data);
@@ -56,18 +56,18 @@ int PatchCellDataOpsInteger::numberOfEntries(
  */
 
 void PatchCellDataOpsInteger::swapData(
-   tbox::Pointer<hier::Patch> patch,
+   boost::shared_ptr<hier::Patch> patch,
    const int data1_id,
    const int data2_id) const
 {
    TBOX_ASSERT(patch);
 
-   tbox::Pointer<pdat::CellData<int> > d1(
+   boost::shared_ptr<pdat::CellData<int> > d1(
       patch->getPatchData(data1_id),
-      tbox::__dynamic_cast_tag());
-   tbox::Pointer<pdat::CellData<int> > d2(
+      boost::detail::dynamic_cast_tag());
+   boost::shared_ptr<pdat::CellData<int> > d2(
       patch->getPatchData(data2_id),
-      tbox::__dynamic_cast_tag());
+      boost::detail::dynamic_cast_tag());
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(d1 && d2);
    TBOX_ASSERT(d1->getDepth() && d2->getDepth());
@@ -79,7 +79,7 @@ void PatchCellDataOpsInteger::swapData(
 }
 
 void PatchCellDataOpsInteger::printData(
-   const tbox::Pointer<pdat::CellData<int> >& data,
+   const boost::shared_ptr<pdat::CellData<int> >& data,
    const hier::Box& box,
    std::ostream& s) const
 {
@@ -92,8 +92,8 @@ void PatchCellDataOpsInteger::printData(
 }
 
 void PatchCellDataOpsInteger::copyData(
-   tbox::Pointer<pdat::CellData<int> >& dst,
-   const tbox::Pointer<pdat::CellData<int> >& src,
+   boost::shared_ptr<pdat::CellData<int> >& dst,
+   const boost::shared_ptr<pdat::CellData<int> >& src,
    const hier::Box& box) const
 {
    TBOX_ASSERT(dst && src);
@@ -103,7 +103,7 @@ void PatchCellDataOpsInteger::copyData(
 }
 
 void PatchCellDataOpsInteger::setToScalar(
-   tbox::Pointer<pdat::CellData<int> >& dst,
+   boost::shared_ptr<pdat::CellData<int> >& dst,
    const int& alpha,
    const hier::Box& box) const
 {
@@ -114,8 +114,8 @@ void PatchCellDataOpsInteger::setToScalar(
 }
 
 void PatchCellDataOpsInteger::abs(
-   tbox::Pointer<pdat::CellData<int> >& dst,
-   const tbox::Pointer<pdat::CellData<int> >& src,
+   boost::shared_ptr<pdat::CellData<int> >& dst,
+   const boost::shared_ptr<pdat::CellData<int> >& src,
    const hier::Box& box) const
 {
    TBOX_ASSERT(dst && src);

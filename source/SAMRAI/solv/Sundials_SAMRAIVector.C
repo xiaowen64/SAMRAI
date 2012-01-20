@@ -31,7 +31,7 @@ namespace solv {
  */
 
 SundialsAbstractVector *Sundials_SAMRAIVector::createSundialsVector(
-   tbox::Pointer<SAMRAIVectorReal<double> > samrai_vec)
+   boost::shared_ptr<SAMRAIVectorReal<double> > samrai_vec)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(samrai_vec);
@@ -49,7 +49,7 @@ void Sundials_SAMRAIVector::destroySundialsVector(
    }
 }
 
-tbox::Pointer<SAMRAIVectorReal<double> >
+boost::shared_ptr<SAMRAIVectorReal<double> >
 Sundials_SAMRAIVector::getSAMRAIVector(
    SundialsAbstractVector* sundials_vec)
 {
@@ -60,7 +60,7 @@ Sundials_SAMRAIVector::getSAMRAIVector(
           getSAMRAIVector();
 }
 
-tbox::Pointer<SAMRAIVectorReal<double> >
+boost::shared_ptr<SAMRAIVectorReal<double> >
 Sundials_SAMRAIVector::getSAMRAIVector(
    N_Vector sundials_vec)
 {
@@ -81,7 +81,7 @@ Sundials_SAMRAIVector::getSAMRAIVector(
  */
 
 Sundials_SAMRAIVector::Sundials_SAMRAIVector(
-   tbox::Pointer<SAMRAIVectorReal<double> > samrai_vector):
+   boost::shared_ptr<SAMRAIVectorReal<double> > samrai_vector):
    SundialsAbstractVector(),
    d_samrai_vector(samrai_vector)
 {

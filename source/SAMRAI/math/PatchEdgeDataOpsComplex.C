@@ -37,18 +37,18 @@ PatchEdgeDataOpsComplex::~PatchEdgeDataOpsComplex()
  */
 
 void PatchEdgeDataOpsComplex::swapData(
-   tbox::Pointer<hier::Patch> patch,
+   boost::shared_ptr<hier::Patch> patch,
    const int data1_id,
    const int data2_id) const
 {
    TBOX_ASSERT(patch);
 
-   tbox::Pointer<pdat::EdgeData<dcomplex> > d1(
+   boost::shared_ptr<pdat::EdgeData<dcomplex> > d1(
       patch->getPatchData(data1_id),
-      tbox::__dynamic_cast_tag());
-   tbox::Pointer<pdat::EdgeData<dcomplex> > d2(
+      boost::detail::dynamic_cast_tag());
+   boost::shared_ptr<pdat::EdgeData<dcomplex> > d2(
       patch->getPatchData(data2_id),
-      tbox::__dynamic_cast_tag());
+      boost::detail::dynamic_cast_tag());
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(d1 && d2);
    TBOX_ASSERT(d1->getDepth() && d2->getDepth());
@@ -60,7 +60,7 @@ void PatchEdgeDataOpsComplex::swapData(
 }
 
 void PatchEdgeDataOpsComplex::printData(
-   const tbox::Pointer<pdat::EdgeData<dcomplex> >& data,
+   const boost::shared_ptr<pdat::EdgeData<dcomplex> >& data,
    const hier::Box& box,
    std::ostream& s) const
 {
@@ -73,8 +73,8 @@ void PatchEdgeDataOpsComplex::printData(
 }
 
 void PatchEdgeDataOpsComplex::copyData(
-   tbox::Pointer<pdat::EdgeData<dcomplex> >& dst,
-   const tbox::Pointer<pdat::EdgeData<dcomplex> >& src,
+   boost::shared_ptr<pdat::EdgeData<dcomplex> >& dst,
+   const boost::shared_ptr<pdat::EdgeData<dcomplex> >& src,
    const hier::Box& box) const
 {
    TBOX_ASSERT(dst && src);
@@ -89,7 +89,7 @@ void PatchEdgeDataOpsComplex::copyData(
 }
 
 void PatchEdgeDataOpsComplex::setToScalar(
-   tbox::Pointer<pdat::EdgeData<dcomplex> >& dst,
+   boost::shared_ptr<pdat::EdgeData<dcomplex> >& dst,
    const dcomplex& alpha,
    const hier::Box& box) const
 {

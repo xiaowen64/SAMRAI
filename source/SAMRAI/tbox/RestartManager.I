@@ -46,7 +46,7 @@ bool RestartManager::isFromRestart()
  *************************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-Pointer<Database> RestartManager::getRootDatabase()
+boost::shared_ptr<Database> RestartManager::getRootDatabase()
 {
    return d_database_root;
 }
@@ -60,10 +60,10 @@ Pointer<Database> RestartManager::getRootDatabase()
  */
 SAMRAI_INLINE_KEYWORD
 void RestartManager::setRootDatabase(
-   Pointer<Database> database)
+   boost::shared_ptr<Database> database)
 {
    if (!database) {
-      d_database_root = NULL;
+      d_database_root.reset();
       d_is_from_restart = false;
    } else {
       d_database_root = database;
@@ -80,7 +80,7 @@ void RestartManager::setRootDatabase(
  */
 SAMRAI_INLINE_KEYWORD
 void RestartManager::setDatabaseFactory(
-   Pointer<DatabaseFactory> database_factory)
+   boost::shared_ptr<DatabaseFactory> database_factory)
 {
    d_database_factory = database_factory;
 }

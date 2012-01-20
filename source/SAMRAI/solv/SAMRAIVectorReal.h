@@ -20,8 +20,8 @@
 #include "SAMRAI/hier/Variable.h"
 #include "SAMRAI/tbox/Array.h"
 #include "SAMRAI/tbox/PIO.h"
-#include "SAMRAI/tbox/Pointer.h"
 
+#include <boost/shared_ptr.hpp>
 #include <string>
 #include <iostream>
 
@@ -126,7 +126,7 @@ public:
     */
    SAMRAIVectorReal(
       const std::string& name,
-      tbox::Pointer<hier::PatchHierarchy> hierarchy,
+      boost::shared_ptr<hier::PatchHierarchy> hierarchy,
       const int coarsest_level,
       const int finest_level);
 
@@ -187,7 +187,7 @@ public:
    /**
     * Return pointer to patch hierarchy associated with the vector.
     */
-   tbox::Pointer<hier::PatchHierarchy>
+   boost::shared_ptr<hier::PatchHierarchy>
    getPatchHierarchy() const;
 
    /**
@@ -211,7 +211,7 @@ public:
    /**
     * Return patch data object for given vector component index.
     */
-   tbox::Pointer<hier::PatchData>
+   boost::shared_ptr<hier::PatchData>
    getComponentPatchData(
       const int comp_id,
       const hier::Patch& patch) const;
@@ -219,15 +219,15 @@ public:
    /**
     * Return patch data object associated with given variable.
     */
-   tbox::Pointer<hier::PatchData>
+   boost::shared_ptr<hier::PatchData>
    getComponentPatchData(
-      const tbox::Pointer<hier::Variable>& var,
+      const boost::shared_ptr<hier::Variable>& var,
       const hier::Patch& patch) const;
 
    /**
     * Return pointer to variable for specified vector component.
     */
-   tbox::Pointer<hier::Variable>
+   boost::shared_ptr<hier::Variable>
    getComponentVariable(
       const int component) const;
 
@@ -264,7 +264,7 @@ public:
     * If an empty std::string is passed in, the name of this vector object
     * is used for the new vector.
     */
-   tbox::Pointer<SAMRAIVectorReal<TYPE> >
+   boost::shared_ptr<SAMRAIVectorReal<TYPE> >
    cloneVector(
       const std::string& name) const;
 
@@ -299,11 +299,12 @@ public:
     */
    void
    addComponent(
-      const tbox::Pointer<hier::Variable>& var,
+      const boost::shared_ptr<hier::Variable>& var,
       const int comp_data_id,
       const int control_vol_id = -1,
-      const tbox::Pointer<math::HierarchyDataOpsReal<TYPE> > vop =
-         (tbox::Pointer<math::HierarchyDataOpsReal<TYPE> >)(NULL));
+      const boost::shared_ptr<math::HierarchyDataOpsReal<TYPE> > vop =
+         boost::shared_ptr<math::HierarchyDataOpsReal<TYPE> >(
+            (math::HierarchyDataOpsReal<TYPE>*)NULL));
 
    /**
     * Allocate data storage for all components of this vector object.
@@ -333,7 +334,7 @@ public:
     */
    void
    copyVector(
-      const tbox::Pointer<SAMRAIVectorReal<TYPE> > src_vec,
+      const boost::shared_ptr<SAMRAIVectorReal<TYPE> > src_vec,
       const bool interior_only = true);
 
    /**
@@ -342,7 +343,7 @@ public:
     */
    void
    swapVectors(
-      tbox::Pointer<SAMRAIVectorReal<TYPE> > other);
+      boost::shared_ptr<SAMRAIVectorReal<TYPE> > other);
 
    //@{
    /*!
@@ -363,7 +364,7 @@ public:
    void
    scale(
       const TYPE& alpha,
-      const tbox::Pointer<SAMRAIVectorReal<TYPE> > x,
+      const boost::shared_ptr<SAMRAIVectorReal<TYPE> > x,
       const bool interior_only = true);
 
    /**
@@ -371,7 +372,7 @@ public:
     */
    void
    addScalar(
-      const tbox::Pointer<SAMRAIVectorReal<TYPE> > x,
+      const boost::shared_ptr<SAMRAIVectorReal<TYPE> > x,
       const TYPE& alpha,
       const bool interior_only = true);
 
@@ -380,8 +381,8 @@ public:
     */
    void
    add(
-      const tbox::Pointer<SAMRAIVectorReal<TYPE> > x,
-      const tbox::Pointer<SAMRAIVectorReal<TYPE> > y,
+      const boost::shared_ptr<SAMRAIVectorReal<TYPE> > x,
+      const boost::shared_ptr<SAMRAIVectorReal<TYPE> > y,
       const bool interior_only = true);
 
    /**
@@ -389,8 +390,8 @@ public:
     */
    void
    subtract(
-      const tbox::Pointer<SAMRAIVectorReal<TYPE> > x,
-      const tbox::Pointer<SAMRAIVectorReal<TYPE> > y,
+      const boost::shared_ptr<SAMRAIVectorReal<TYPE> > x,
+      const boost::shared_ptr<SAMRAIVectorReal<TYPE> > y,
       const bool interior_only = true);
 
    /**
@@ -399,8 +400,8 @@ public:
     */
    void
    multiply(
-      const tbox::Pointer<SAMRAIVectorReal<TYPE> > x,
-      const tbox::Pointer<SAMRAIVectorReal<TYPE> > y,
+      const boost::shared_ptr<SAMRAIVectorReal<TYPE> > x,
+      const boost::shared_ptr<SAMRAIVectorReal<TYPE> > y,
       const bool interior_only = true);
 
    /**
@@ -409,8 +410,8 @@ public:
     */
    void
    divide(
-      const tbox::Pointer<SAMRAIVectorReal<TYPE> > x,
-      const tbox::Pointer<SAMRAIVectorReal<TYPE> > y,
+      const boost::shared_ptr<SAMRAIVectorReal<TYPE> > x,
+      const boost::shared_ptr<SAMRAIVectorReal<TYPE> > y,
       const bool interior_only = true);
 
    /**
@@ -419,7 +420,7 @@ public:
     */
    void
    reciprocal(
-      const tbox::Pointer<SAMRAIVectorReal<TYPE> > x,
+      const boost::shared_ptr<SAMRAIVectorReal<TYPE> > x,
       const bool interior_only = true);
 
    /**
@@ -429,9 +430,9 @@ public:
    void
    linearSum(
       const TYPE& alpha,
-      const tbox::Pointer<SAMRAIVectorReal<TYPE> > x,
+      const boost::shared_ptr<SAMRAIVectorReal<TYPE> > x,
       const TYPE& beta,
-      const tbox::Pointer<SAMRAIVectorReal<TYPE> > y,
+      const boost::shared_ptr<SAMRAIVectorReal<TYPE> > y,
       const bool interior_only = true);
 
    /**
@@ -441,8 +442,8 @@ public:
    void
    axpy(
       const TYPE& alpha,
-      const tbox::Pointer<SAMRAIVectorReal<TYPE> > x,
-      const tbox::Pointer<SAMRAIVectorReal<TYPE> > y,
+      const boost::shared_ptr<SAMRAIVectorReal<TYPE> > x,
+      const boost::shared_ptr<SAMRAIVectorReal<TYPE> > y,
       const bool interior_only = true);
 
    /**
@@ -451,7 +452,7 @@ public:
     */
    void
    abs(
-      const tbox::Pointer<SAMRAIVectorReal<TYPE> > x,
+      const boost::shared_ptr<SAMRAIVectorReal<TYPE> > x,
       const bool interior_only = true);
 
    /**
@@ -523,7 +524,7 @@ public:
     */
    double
    weightedL2Norm(
-      const tbox::Pointer<SAMRAIVectorReal<TYPE> > wgt) const;
+      const boost::shared_ptr<SAMRAIVectorReal<TYPE> > wgt) const;
 
    /**
     * Return discrete root mean squared norm of this vector.  If control
@@ -550,7 +551,7 @@ public:
     */
    double
    weightedRMSNorm(
-      const tbox::Pointer<SAMRAIVectorReal<TYPE> > wgt) const;
+      const boost::shared_ptr<SAMRAIVectorReal<TYPE> > wgt) const;
 
    /**
     * Return the @f$ \max @f$ -norm of this vector.  If control volumes are defined
@@ -576,7 +577,7 @@ public:
     */
    TYPE
    dot(
-      const tbox::Pointer<SAMRAIVectorReal<TYPE> > x,
+      const boost::shared_ptr<SAMRAIVectorReal<TYPE> > x,
       bool local_only = false) const;
 
    /**
@@ -590,7 +591,7 @@ public:
     */
    int
    computeConstrProdPos(
-      const tbox::Pointer<SAMRAIVectorReal<TYPE> > x) const;
+      const boost::shared_ptr<SAMRAIVectorReal<TYPE> > x) const;
 
    /**
     * Wherever @f$ cvol_i > 0 @f$  in the set of vector data indices, set @f$ w_i = 1 @f$
@@ -602,7 +603,7 @@ public:
     */
    void
    compareToScalar(
-      const tbox::Pointer<SAMRAIVectorReal<TYPE> > x,
+      const boost::shared_ptr<SAMRAIVectorReal<TYPE> > x,
       const TYPE& alpha);
 
    /**
@@ -615,7 +616,7 @@ public:
     */
    int
    testReciprocal(
-      const tbox::Pointer<SAMRAIVectorReal<TYPE> > x);
+      const boost::shared_ptr<SAMRAIVectorReal<TYPE> > x);
 
    /*!
     * @brief Compute max of "conditional" quotients of two arrays.
@@ -632,7 +633,7 @@ public:
     */
    TYPE
    maxPointwiseDivide(
-      const tbox::Pointer<SAMRAIVectorReal<TYPE> > denom)
+      const boost::shared_ptr<SAMRAIVectorReal<TYPE> > denom)
    const;
 
    //@}
@@ -669,53 +670,44 @@ private:
     * greater than the number of componenents in the vector.
     */
 #ifdef _MSC_VER
-   tbox::Pointer<math::HierarchyDataOpsReal<TYPE> > _bug_in_msvc;
+   boost::shared_ptr<math::HierarchyDataOpsReal<TYPE> > _bug_in_msvc;
 #endif
    void
    setComponent(
       const int comp_id,
-      const tbox::Pointer<hier::Variable>& var,
+      const boost::shared_ptr<hier::Variable>& var,
       const int data_id,
       const int control_vol_id = -1,
-      const tbox::Pointer<math::HierarchyDataOpsReal<TYPE> > vop =
-         (tbox::Pointer<math::HierarchyDataOpsReal<TYPE> >)(NULL));
+      const boost::shared_ptr<math::HierarchyDataOpsReal<TYPE> > vop =
+         boost::shared_ptr<math::HierarchyDataOpsReal<TYPE> >(
+            (math::HierarchyDataOpsReal<TYPE>*)NULL));
 
    static int s_instance_counter[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
 
    // shared data operations for variaous array-based types...
-   static tbox::Pointer<math::HierarchyDataOpsReal<TYPE> > s_cell_ops[tbox::
-                                                                      Dimension
-                                                                      ::
-                                                                      MAXIMUM_DIMENSION_VALUE];
-   static tbox::Pointer<math::HierarchyDataOpsReal<TYPE> > s_edge_ops[tbox::
-                                                                      Dimension
-                                                                      ::
-                                                                      MAXIMUM_DIMENSION_VALUE];
-   static tbox::Pointer<math::HierarchyDataOpsReal<TYPE> > s_face_ops[tbox::
-                                                                      Dimension
-                                                                      ::
-                                                                      MAXIMUM_DIMENSION_VALUE];
-   static tbox::Pointer<math::HierarchyDataOpsReal<TYPE> > s_node_ops[tbox::
-                                                                      Dimension
-                                                                      ::
-                                                                      MAXIMUM_DIMENSION_VALUE];
-   static tbox::Pointer<math::HierarchyDataOpsReal<TYPE> > s_side_ops[tbox::
-                                                                      Dimension
-                                                                      ::
-                                                                      MAXIMUM_DIMENSION_VALUE];
+   static boost::shared_ptr<math::HierarchyDataOpsReal<TYPE> >
+      s_cell_ops[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+   static boost::shared_ptr<math::HierarchyDataOpsReal<TYPE> >
+      s_edge_ops[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+   static boost::shared_ptr<math::HierarchyDataOpsReal<TYPE> >
+      s_face_ops[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+   static boost::shared_ptr<math::HierarchyDataOpsReal<TYPE> >
+      s_node_ops[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+   static boost::shared_ptr<math::HierarchyDataOpsReal<TYPE> >
+      s_side_ops[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
 
    std::string d_vector_name;
 
-   tbox::Pointer<hier::PatchHierarchy> d_hierarchy;
+   boost::shared_ptr<hier::PatchHierarchy> d_hierarchy;
    int d_coarsest_level;
    int d_finest_level;
 
    int d_number_components;
 
    // arrays for component information whose size is the number of components
-   tbox::Array<tbox::Pointer<hier::Variable> > d_component_variable;
+   tbox::Array<boost::shared_ptr<hier::Variable> > d_component_variable;
    tbox::Array<int> d_component_data_id;
-   tbox::Array<tbox::Pointer<math::HierarchyDataOpsReal<TYPE> > >
+   tbox::Array<boost::shared_ptr<math::HierarchyDataOpsReal<TYPE> > >
    d_component_operations;
    tbox::Array<int> d_control_volume_data_id;
 

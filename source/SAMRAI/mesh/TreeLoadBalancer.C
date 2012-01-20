@@ -75,7 +75,7 @@ const int TreeLoadBalancer::d_default_data_id = -1;
 TreeLoadBalancer::TreeLoadBalancer(
    const tbox::Dimension& dim,
    const std::string& name,
-   tbox::Pointer<tbox::Database> input_db):
+   boost::shared_ptr<tbox::Database> input_db):
    d_dim(dim),
    d_object_name(name),
    d_mpi(tbox::SAMRAI_MPI::commNull),
@@ -148,10 +148,10 @@ void TreeLoadBalancer::setWorkloadPatchDataIndex(
    int data_id,
    int level_number)
 {
-   tbox::Pointer<pdat::CellDataFactory<double> > datafact(
+   boost::shared_ptr<pdat::CellDataFactory<double> > datafact(
       hier::VariableDatabase::getDatabase()->getPatchDescriptor()->
       getPatchDataFactory(data_id),
-      tbox::__dynamic_cast_tag());
+      boost::detail::dynamic_cast_tag());
    if (!datafact) {
       TBOX_ERROR(
          d_object_name << " error: "
@@ -212,7 +212,7 @@ void TreeLoadBalancer::loadBalanceBoxLevel(
    hier::BoxLevel& balance_box_level,
    hier::Connector& balance_to_anchor,
    hier::Connector& anchor_to_balance,
-   const tbox::Pointer<hier::PatchHierarchy> hierarchy,
+   const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
    const int level_number,
    const hier::Connector& balance_to_attractor,
    const hier::Connector& attractor_to_balance,
@@ -3553,7 +3553,7 @@ void TreeLoadBalancer::printClassData(
  */
 
 void TreeLoadBalancer::getFromInput(
-   tbox::Pointer<tbox::Database> db)
+   boost::shared_ptr<tbox::Database> db)
 {
 
    if (db) {
@@ -4577,8 +4577,9 @@ void TreeLoadBalancer::setTimers()
          getTimer(d_object_name + "::compute_tree_load");
 
       const int max_cycles_to_time = 4;
-      t_compute_tree_load_for_cycle.resize( max_cycles_to_time,
-                                            tbox::Pointer<tbox::Timer>(NULL) );
+      t_compute_tree_load_for_cycle.resize(
+         max_cycles_to_time,
+         boost::shared_ptr<tbox::Timer>((tbox::Timer*)NULL) );
       for ( int i=0; i<max_cycles_to_time; ++i ) {
          t_compute_tree_load_for_cycle[i] = tbox::TimerManager::getManager()->
             getTimer(d_object_name + "::compute_tree_load_for_cycle["

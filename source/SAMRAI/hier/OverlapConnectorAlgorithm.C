@@ -34,19 +34,19 @@
 namespace SAMRAI {
 namespace hier {
 
-tbox::Pointer<tbox::Timer> OverlapConnectorAlgorithm::t_find_overlaps_rbbt;
-tbox::Pointer<tbox::Timer> OverlapConnectorAlgorithm::t_bridge;
-tbox::Pointer<tbox::Timer> OverlapConnectorAlgorithm::t_bridge_setup_comm;
-tbox::Pointer<tbox::Timer> OverlapConnectorAlgorithm::t_bridge_remove_and_cache;
-tbox::Pointer<tbox::Timer> OverlapConnectorAlgorithm::t_bridge_discover;
-tbox::Pointer<tbox::Timer> OverlapConnectorAlgorithm::
+boost::shared_ptr<tbox::Timer> OverlapConnectorAlgorithm::t_find_overlaps_rbbt;
+boost::shared_ptr<tbox::Timer> OverlapConnectorAlgorithm::t_bridge;
+boost::shared_ptr<tbox::Timer> OverlapConnectorAlgorithm::t_bridge_setup_comm;
+boost::shared_ptr<tbox::Timer> OverlapConnectorAlgorithm::t_bridge_remove_and_cache;
+boost::shared_ptr<tbox::Timer> OverlapConnectorAlgorithm::t_bridge_discover;
+boost::shared_ptr<tbox::Timer> OverlapConnectorAlgorithm::
 t_bridge_discover_get_neighbors;
-tbox::Pointer<tbox::Timer> OverlapConnectorAlgorithm::t_bridge_discover_form_rbbt;
-tbox::Pointer<tbox::Timer> OverlapConnectorAlgorithm::
+boost::shared_ptr<tbox::Timer> OverlapConnectorAlgorithm::t_bridge_discover_form_rbbt;
+boost::shared_ptr<tbox::Timer> OverlapConnectorAlgorithm::
 t_bridge_discover_find_overlaps;
-tbox::Pointer<tbox::Timer> OverlapConnectorAlgorithm::t_bridge_share;
-tbox::Pointer<tbox::Timer> OverlapConnectorAlgorithm::t_bridge_receive_and_unpack;
-tbox::Pointer<tbox::Timer> OverlapConnectorAlgorithm::t_bridge_MPI_wait;
+boost::shared_ptr<tbox::Timer> OverlapConnectorAlgorithm::t_bridge_share;
+boost::shared_ptr<tbox::Timer> OverlapConnectorAlgorithm::t_bridge_receive_and_unpack;
+boost::shared_ptr<tbox::Timer> OverlapConnectorAlgorithm::t_bridge_MPI_wait;
 
 int OverlapConnectorAlgorithm::s_operation_mpi_tag = 0;
 /*
@@ -164,7 +164,7 @@ void OverlapConnectorAlgorithm::extractNeighbors(
     */
    TBOX_ASSERT(mapped_box_id.getOwnerRank() == connector.getMPI().getRank());
 
-   const tbox::Pointer<const GridGeometry>& grid_geom(
+   const boost::shared_ptr<const GridGeometry>& grid_geom(
       connector.getBase().getGridGeometry());
 
    const Box& mapped_box(*connector.getBase().getBox(Box(dim, mapped_box_id)));
@@ -257,7 +257,7 @@ void OverlapConnectorAlgorithm::extractNeighbors(
        */
       TBOX_ASSERT(mapped_box_id.getOwnerRank() == connector.getMPI().getRank());
 
-      const tbox::Pointer<const GridGeometry>& grid_geom = 
+      const boost::shared_ptr<const GridGeometry>& grid_geom = 
          connector.getBase().getGridGeometry();
 
       const Box& mapped_box =
@@ -1334,7 +1334,7 @@ void OverlapConnectorAlgorithm::privateBridge_discoverAndSend(
          (east_to_west != NULL && east_to_west != &west_to_east);
 
       const BoxLevel& east(west_to_east.getBase());
-      const tbox::Pointer<const GridGeometry> &grid_geometry(
+      const boost::shared_ptr<const GridGeometry> &grid_geometry(
          east.getGridGeometry());
 
       const tbox::Dimension& dim(east.getDim());
@@ -2196,10 +2196,10 @@ void OverlapConnectorAlgorithm::initializeCallback()
    if (s_print_steps == '\0') {
       if (tbox::InputManager::inputDatabaseExists()) {
          s_print_steps = 'n';
-         tbox::Pointer<tbox::Database> idb =
+         boost::shared_ptr<tbox::Database> idb =
             tbox::InputManager::getInputDatabase();
          if (idb->isDatabase("OverlapConnectorAlgorithm")) {
-            tbox::Pointer<tbox::Database> ocu_db =
+            boost::shared_ptr<tbox::Database> ocu_db =
                idb->getDatabase("OverlapConnectorAlgorithm");
             s_print_steps = ocu_db->getCharWithDefault("print_bridge_steps",
                   s_print_steps);

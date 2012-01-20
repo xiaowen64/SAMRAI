@@ -101,7 +101,7 @@ public:
     * periodic_id corresponds to the zero-shift.
     */
    Box(
-      const hier::Box& box,
+      const Box& box,
       const LocalId& local_id,
       const int owner_rank,
       const PeriodicId& periodic_id = PeriodicId::zero());
@@ -185,7 +185,7 @@ public:
     */
    void
    initialize(
-      const hier::Box& box,
+      const Box& box,
       const LocalId& local_id,
       const int owner_rank,
       const PeriodicId& periodic_id = PeriodicId::zero());
@@ -834,7 +834,7 @@ public:
    typedef BoxIterator Iterator;
 
    template<class>
-   friend class::SAMRAI::pdat::ArrayData;
+   friend class pdat::ArrayData;
    friend class BoxIterator;
    friend class std::vector<Box>;
 

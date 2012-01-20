@@ -282,7 +282,7 @@ public:
    computeBoxesAroundBoundary(
       BoxContainer& boundary,
       const IntVector& refinement_ratio,
-      const tbox::Pointer<const GridGeometry>& grid_geometry,
+      const boost::shared_ptr<const GridGeometry>& grid_geometry,
       const bool simplify_boundary_boxes = true) const;
 
    //@{
@@ -449,12 +449,12 @@ private:
     */
    void
    computeInternalOrExternalParts(
-      hier::BoxLevel& parts,
-      hier::Connector& input_to_parts,
+      BoxLevel& parts,
+      Connector& input_to_parts,
       char internal_or_external,
-      const hier::Connector& input_to_reference,
-      const hier::IntVector& nesting_width,
-      const hier::MultiblockBoxTree& domain) const;
+      const Connector& input_to_reference,
+      const IntVector& nesting_width,
+      const MultiblockBoxTree& domain) const;
 
    /*!
     * @brief Call-back function to sort boxes.
@@ -480,11 +480,11 @@ private:
    static void
    finalizeCallback();
 
-   static tbox::Pointer<tbox::Timer> t_make_sorting_map;
-   static tbox::Pointer<tbox::Timer> t_compute_external_parts;
-   static tbox::Pointer<tbox::Timer> t_compute_external_parts_intersection;
-   static tbox::Pointer<tbox::Timer> t_compute_internal_parts;
-   static tbox::Pointer<tbox::Timer> t_compute_internal_parts_intersection;
+   static boost::shared_ptr<tbox::Timer> t_make_sorting_map;
+   static boost::shared_ptr<tbox::Timer> t_compute_external_parts;
+   static boost::shared_ptr<tbox::Timer> t_compute_external_parts_intersection;
+   static boost::shared_ptr<tbox::Timer> t_compute_internal_parts;
+   static boost::shared_ptr<tbox::Timer> t_compute_internal_parts_intersection;
 
    bool d_sanity_check_precond;
    bool d_sanity_check_postcond;

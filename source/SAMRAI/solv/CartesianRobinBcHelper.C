@@ -158,11 +158,11 @@ void CartesianRobinBcHelper::setBoundaryValuesInCells(
     */
    hier::VariableDatabase* vdb =
       hier::VariableDatabase::getDatabase();
-   tbox::Pointer<hier::Variable> variable_ptr;
+   boost::shared_ptr<hier::Variable> variable_ptr;
    vdb->mapIndexToVariable(target_data_id, variable_ptr);
-   tbox::Pointer<pdat::CellVariable<double> > cell_variable_ptr(
+   boost::shared_ptr<pdat::CellVariable<double> > cell_variable_ptr(
       variable_ptr,
-      tbox::__dynamic_cast_tag());
+      boost::detail::dynamic_cast_tag());
    if (!variable_ptr) {
       TBOX_ERROR(d_object_name << ": No variable for index "
                                << target_data_id);
@@ -176,11 +176,11 @@ void CartesianRobinBcHelper::setBoundaryValuesInCells(
    /*
     * Get the data.
     */
-   tbox::Pointer<hier::PatchData>
+   boost::shared_ptr<hier::PatchData>
    data_ptr = patch.getPatchData(target_data_id);
-   tbox::Pointer<pdat::CellData<double> > cell_data_ptr(
+   boost::shared_ptr<pdat::CellData<double> > cell_data_ptr(
       data_ptr,
-      tbox::__dynamic_cast_tag());
+      boost::detail::dynamic_cast_tag());
    if (!data_ptr) {
       TBOX_ERROR(d_object_name << ": No data for index " << target_data_id);
    }
@@ -213,9 +213,9 @@ void CartesianRobinBcHelper::setBoundaryValuesInCells(
        * These definitions can go in the next block.
        * They are kept her for debugging.
        */
-      tbox::Pointer<geom::CartesianPatchGeometry> pg(
+      boost::shared_ptr<geom::CartesianPatchGeometry> pg(
          patch.getPatchGeometry(),
-         tbox::__dynamic_cast_tag());
+         boost::detail::dynamic_cast_tag());
 
       const tbox::Array<hier::BoundaryBox>& codim1_boxes =
          pg->getCodimensionBoundaries(1);
@@ -244,7 +244,7 @@ void CartesianRobinBcHelper::setBoundaryValuesInCells(
          const hier::Index& lower = boundary_box.getBox().lower();
          const hier::Index& upper = boundary_box.getBox().upper();
          const hier::Box coefbox = makeFaceBoundaryBox(boundary_box);
-         tbox::Pointer<pdat::ArrayData<double> >
+         boost::shared_ptr<pdat::ArrayData<double> >
          acoef_data(new pdat::ArrayData<double>(coefbox, 1)),
          bcoef_data(new pdat::ArrayData<double>(coefbox, 1)),
          gcoef_data(homogeneous_bc ? NULL :
@@ -619,7 +619,7 @@ void CartesianRobinBcHelper::setBoundaryValuesInCells(
    TBOX_DIM_ASSERT_CHECK_ARGS3(*this, level, ghost_width_to_fill);
 
    for (hier::PatchLevel::Iterator p(level); p; p++) {
-      tbox::Pointer<hier::Patch> patch = *p;
+      boost::shared_ptr<hier::Patch> patch = *p;
       setBoundaryValuesInCells(*patch,
          fill_time,
          ghost_width_to_fill,
@@ -766,7 +766,7 @@ void CartesianRobinBcHelper::fillSingularityBoundaryConditions(
    const double fill_time,
    const hier::Box& fill_box,
    const hier::BoundaryBox& boundary_box,
-   const tbox::Pointer<hier::GridGeometry>& grid_geometry)
+   const boost::shared_ptr<hier::GridGeometry>& grid_geometry)
 {
    NULL_USE(patch);
    NULL_USE(encon_level);

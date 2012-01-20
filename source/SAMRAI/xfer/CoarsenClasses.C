@@ -108,7 +108,7 @@ CoarsenClasses::getIterator(
 
 void CoarsenClasses::insertEquivalenceClassItem(
    CoarsenClasses::Data& data,
-   tbox::Pointer<hier::PatchDescriptor> descriptor)
+   boost::shared_ptr<hier::PatchDescriptor> descriptor)
 {
 
    if (!itemIsValid(data, descriptor)) {
@@ -158,12 +158,12 @@ void CoarsenClasses::insertEquivalenceClassItem(
 
 bool CoarsenClasses::itemIsValid(
    const CoarsenClasses::Data& data_item,
-   tbox::Pointer<hier::PatchDescriptor> descriptor) const
+   boost::shared_ptr<hier::PatchDescriptor> descriptor) const
 {
 
    bool item_good = true;
 
-   tbox::Pointer<hier::PatchDescriptor> pd = descriptor;
+   boost::shared_ptr<hier::PatchDescriptor> pd = descriptor;
    if (!pd) {
       pd = hier::VariableDatabase::getDatabase()->getPatchDescriptor();
    }
@@ -182,9 +182,9 @@ bool CoarsenClasses::itemIsValid(
          << "`Source' patch data id invalid (< 0!)" << std::endl);
    }
 
-   tbox::Pointer<hier::PatchDataFactory> dfact =
+   boost::shared_ptr<hier::PatchDataFactory> dfact =
       pd->getPatchDataFactory(dst_id);
-   tbox::Pointer<hier::PatchDataFactory> sfact =
+   boost::shared_ptr<hier::PatchDataFactory> sfact =
       pd->getPatchDataFactory(src_id);
 
    if (item_good && !(sfact->validCopyTo(dfact))) {
@@ -195,7 +195,7 @@ bool CoarsenClasses::itemIsValid(
          << pd->mapIndexToName(dst_id) << std::endl);
    }
 
-   tbox::Pointer<hier::CoarsenOperator> coarsop = data_item.d_opcoarsen;
+   boost::shared_ptr<hier::CoarsenOperator> coarsop = data_item.d_opcoarsen;
    if (item_good && coarsop) {
       if (coarsop->getStencilWidth() > sfact->getGhostCellWidth()) {
          item_good = false;
@@ -232,13 +232,13 @@ bool CoarsenClasses::itemIsValid(
  */
 
 bool CoarsenClasses::classesMatch(
-   tbox::Pointer<CoarsenClasses> test_classes,
-   tbox::Pointer<hier::PatchDescriptor> descriptor) const
+   boost::shared_ptr<CoarsenClasses> test_classes,
+   boost::shared_ptr<hier::PatchDescriptor> descriptor) const
 {
 
    bool items_match = true;
 
-   tbox::Pointer<hier::PatchDescriptor> pd = descriptor;
+   boost::shared_ptr<hier::PatchDescriptor> pd = descriptor;
    if (!pd) {
       pd = hier::VariableDatabase::getDatabase()->getPatchDescriptor();
    }
@@ -292,11 +292,11 @@ bool CoarsenClasses::classesMatch(
 bool CoarsenClasses::itemsAreEquivalent(
    const CoarsenClasses::Data& data1,
    const CoarsenClasses::Data& data2,
-   tbox::Pointer<hier::PatchDescriptor> descriptor) const
+   boost::shared_ptr<hier::PatchDescriptor> descriptor) const
 {
    bool equivalent = true;
 
-   tbox::Pointer<hier::PatchDescriptor> pd = descriptor;
+   boost::shared_ptr<hier::PatchDescriptor> pd = descriptor;
    if (!pd) {
       pd = hier::VariableDatabase::getDatabase()->getPatchDescriptor();
    }
@@ -417,16 +417,16 @@ void CoarsenClasses::printCoarsenItem(
 bool CoarsenClasses::patchDataMatch(
    int item_id1,
    int item_id2,
-   tbox::Pointer<hier::PatchDescriptor> pd) const
+   boost::shared_ptr<hier::PatchDescriptor> pd) const
 {
 
    bool items_match = ((item_id1 >= 0) && (item_id2 >= 0));
 
    if (items_match) {
 
-      tbox::Pointer<hier::PatchDataFactory> pdf1 =
+      boost::shared_ptr<hier::PatchDataFactory> pdf1 =
          pd->getPatchDataFactory(item_id1);
-      tbox::Pointer<hier::PatchDataFactory> pdf2 =
+      boost::shared_ptr<hier::PatchDataFactory> pdf2 =
          pd->getPatchDataFactory(item_id2);
 
       items_match = (typeid(*pdf1) == typeid(*pdf2));
@@ -454,12 +454,12 @@ bool CoarsenClasses::patchDataMatch(
 
 int CoarsenClasses::getEquivalenceClassIndex(
    const CoarsenClasses::Data& data,
-   tbox::Pointer<hier::PatchDescriptor> descriptor) const
+   boost::shared_ptr<hier::PatchDescriptor> descriptor) const
 {
 
    int eq_index = -1;
 
-   tbox::Pointer<hier::PatchDescriptor> pd = descriptor;
+   boost::shared_ptr<hier::PatchDescriptor> pd = descriptor;
    if (!pd) {
       pd = hier::VariableDatabase::getDatabase()->getPatchDescriptor();
    }

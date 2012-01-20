@@ -59,7 +59,7 @@ PatchMultiblockTestStrategy::~PatchMultiblockTestStrategy()
  */
 
 void PatchMultiblockTestStrategy::readVariableInput(
-   tbox::Pointer<tbox::Database> db)
+   boost::shared_ptr<tbox::Database> db)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(db);
@@ -78,7 +78,7 @@ void PatchMultiblockTestStrategy::readVariableInput(
 
    for (int i = 0; i < nkeys; i++) {
 
-      tbox::Pointer<tbox::Database> var_db = db->getDatabase(var_keys[i]);
+      boost::shared_ptr<tbox::Database> var_db = db->getDatabase(var_keys[i]);
 
       if (var_db->keyExists("src_name")) {
          d_variable_src_name[i] = var_db->getString("src_name");
@@ -127,7 +127,7 @@ void PatchMultiblockTestStrategy::readVariableInput(
 }
 
 void PatchMultiblockTestStrategy::readRefinementInput(
-   tbox::Pointer<tbox::Database> db)
+   boost::shared_ptr<tbox::Database> db)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(db);
@@ -159,9 +159,9 @@ void PatchMultiblockTestStrategy::tagCellsInInputBoxes(
 
    if (level_number < d_refine_level_boxes.getSize()) {
 
-      tbox::Pointer<pdat::CellData<int> > tags(
+      boost::shared_ptr<pdat::CellData<int> > tags(
          patch.getPatchData(tag_index),
-         tbox::__dynamic_cast_tag());
+         boost::detail::dynamic_cast_tag());
 #ifdef DEBUG_CHECK_ASSERTIONS
       TBOX_ASSERT(tags);
 #endif
@@ -200,7 +200,7 @@ void PatchMultiblockTestStrategy::setPhysicalBoundaryConditions(
 void PatchMultiblockTestStrategy::preprocessRefine(
    hier::Patch& fine,
    const hier::Patch& coarse,
-   const tbox::Pointer<hier::VariableContext>& context,
+   const boost::shared_ptr<hier::VariableContext>& context,
    const hier::Box& fine_box,
    const hier::IntVector& ratio) const
 {
@@ -214,7 +214,7 @@ void PatchMultiblockTestStrategy::preprocessRefine(
 void PatchMultiblockTestStrategy::postprocessRefine(
    hier::Patch& fine,
    const hier::Patch& coarse,
-   const tbox::Pointer<hier::VariableContext>& context,
+   const boost::shared_ptr<hier::VariableContext>& context,
    const hier::Box& fine_box,
    const hier::IntVector& ratio) const
 {
@@ -228,7 +228,7 @@ void PatchMultiblockTestStrategy::postprocessRefine(
 void PatchMultiblockTestStrategy::preprocessCoarsen(
    hier::Patch& coarse,
    const hier::Patch& fine,
-   const tbox::Pointer<hier::VariableContext>& context,
+   const boost::shared_ptr<hier::VariableContext>& context,
    const hier::Box& coarse_box,
    const hier::IntVector& ratio) const
 {
@@ -242,7 +242,7 @@ void PatchMultiblockTestStrategy::preprocessCoarsen(
 void PatchMultiblockTestStrategy::postprocessCoarsen(
    hier::Patch& coarse,
    const hier::Patch& fine,
-   const tbox::Pointer<hier::VariableContext>& context,
+   const boost::shared_ptr<hier::VariableContext>& context,
    const hier::Box& coarse_box,
    const hier::IntVector& ratio) const
 {

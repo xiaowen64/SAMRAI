@@ -39,7 +39,7 @@ namespace solv {
 template<class TYPE>
 Vec
 PETSc_SAMRAIVectorReal<TYPE>::createPETScVector(
-   SAMRAI::tbox::Pointer<SAMRAI::solv::SAMRAIVectorReal<TYPE> > samrai_vec,
+   boost::shared_ptr<SAMRAIVectorReal<TYPE> > samrai_vec,
    MPI_Comm comm)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
@@ -72,7 +72,7 @@ PETSc_SAMRAIVectorReal<TYPE>::destroyPETScVector(
 }
 
 template<class TYPE>
-SAMRAI::tbox::Pointer<SAMRAI::solv::SAMRAIVectorReal<TYPE> >
+boost::shared_ptr<SAMRAIVectorReal<TYPE> >
 PETSc_SAMRAIVectorReal<TYPE>::getSAMRAIVector(
    Vec petsc_vec)
 {
@@ -100,7 +100,7 @@ PETSc_SAMRAIVectorReal<TYPE>::getSAMRAIVector(
 
 template<class TYPE>
 PETSc_SAMRAIVectorReal<TYPE>::PETSc_SAMRAIVectorReal(
-   SAMRAI::tbox::Pointer<SAMRAI::solv::SAMRAIVectorReal<TYPE> > samrai_vector,
+   boost::shared_ptr<SAMRAIVectorReal<TYPE> > samrai_vector,
    bool vector_created_via_duplicate,
    MPI_Comm comm):
    PETScAbstractVectorReal<TYPE>(vector_created_via_duplicate, comm),
@@ -135,7 +135,7 @@ PETSc_SAMRAIVectorReal<TYPE>::makeNewVector()
          &comm);
    PETSC_SAMRAI_ERROR(ierr);
 
-   tbox::Pointer<SAMRAIVectorReal<TYPE> > sam_vec =
+   boost::shared_ptr<SAMRAIVectorReal<TYPE> > sam_vec =
       d_samrai_vector->cloneVector(d_samrai_vector->getName());
    sam_vec->allocateVectorData();
    const bool vector_created_via_duplicate = true;

@@ -19,10 +19,10 @@
 #include "SAMRAI/tbox/Array.h"
 #include "SAMRAI/tbox/Database.h"
 #include "SAMRAI/tbox/DescribedClass.h"
-#include "SAMRAI/tbox/Pointer.h"
 #include "SAMRAI/tbox/Serializable.h"
 #include "SAMRAI/tbox/Timer.h"
 
+#include <boost/shared_ptr.hpp>
 #include <string>
 #include <iostream>
 
@@ -169,10 +169,10 @@ public:
     */
    TimeRefinementIntegrator(
       const std::string& object_name,
-      tbox::Pointer<tbox::Database> input_db,
-      tbox::Pointer<hier::PatchHierarchy> hierarchy,
-      tbox::Pointer<TimeRefinementLevelStrategy> level_integrator,
-      tbox::Pointer<mesh::GriddingAlgorithmStrategy> gridding_algorithm,
+      boost::shared_ptr<tbox::Database> input_db,
+      boost::shared_ptr<hier::PatchHierarchy> hierarchy,
+      boost::shared_ptr<TimeRefinementLevelStrategy> level_integrator,
+      boost::shared_ptr<mesh::GriddingAlgorithmStrategy> gridding_algorithm,
       bool register_for_restart = true);
 
    /**
@@ -338,19 +338,19 @@ public:
    /**
     * Return const pointer to patch hierarchy managed by integrator.
     */
-   const tbox::Pointer<hier::PatchHierarchy>
+   const boost::shared_ptr<hier::PatchHierarchy>
    getPatchHierarchy() const;
 
    /**
     * Return pointer to level integrator.
     */
-   tbox::Pointer<TimeRefinementLevelStrategy>
+   boost::shared_ptr<TimeRefinementLevelStrategy>
    getLevelIntegrator() const;
 
    /**
     * Return pointer to gridding algorithm object.
     */
-   tbox::Pointer<mesh::GriddingAlgorithmStrategy>
+   boost::shared_ptr<mesh::GriddingAlgorithmStrategy>
    getGriddingAlgorithm() const;
 
    /**
@@ -399,7 +399,7 @@ public:
     */
    void
    putToDatabase(
-      tbox::Pointer<tbox::Database> db);
+      boost::shared_ptr<tbox::Database> db);
 
    /**
     * Returns the object name.
@@ -486,7 +486,7 @@ private:
     */
    virtual void
    getFromInput(
-      tbox::Pointer<tbox::Database> db,
+      boost::shared_ptr<tbox::Database> db,
       bool is_from_restart);
 
    /*
@@ -521,9 +521,9 @@ private:
     * individual levels in the AMR patch hierarchy.  The gridding algorithm
     * provides grid generation and regridding routines for the AMR hierarchy.
     */
-   tbox::Pointer<hier::PatchHierarchy> d_patch_hierarchy;
-   tbox::Pointer<TimeRefinementLevelStrategy> d_refine_level_integrator;
-   tbox::Pointer<mesh::GriddingAlgorithmStrategy> d_gridding_algorithm;
+   boost::shared_ptr<hier::PatchHierarchy> d_patch_hierarchy;
+   boost::shared_ptr<TimeRefinementLevelStrategy> d_refine_level_integrator;
+   boost::shared_ptr<mesh::GriddingAlgorithmStrategy> d_gridding_algorithm;
 
    /*
     */
@@ -591,9 +591,9 @@ private:
    /*
     * tbox::Timer objects for performance measurement.
     */
-   static tbox::Pointer<tbox::Timer> t_initialize_hier;
-   static tbox::Pointer<tbox::Timer> t_advance_hier;
-   static tbox::Pointer<tbox::Timer> t_advance_level;
+   static boost::shared_ptr<tbox::Timer> t_initialize_hier;
+   static boost::shared_ptr<tbox::Timer> t_advance_hier;
+   static boost::shared_ptr<tbox::Timer> t_advance_level;
 
    // The following are not implemented:
    TimeRefinementIntegrator(

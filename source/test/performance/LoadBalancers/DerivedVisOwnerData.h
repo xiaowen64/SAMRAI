@@ -15,13 +15,14 @@
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/hier/Patch.h"
 
-#include "SAMRAI/tbox/Pointer.h"
 #include "SAMRAI/tbox/Database.h"
 
 /*
  * SAMRAI classes
  */
 #include "SAMRAI/appu/VisDerivedDataStrategy.h"
+
+#include <boost/shared_ptr.hpp>
 
 using namespace SAMRAI;
 

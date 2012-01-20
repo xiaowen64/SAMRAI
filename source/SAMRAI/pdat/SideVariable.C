@@ -37,7 +37,7 @@ SideVariable<TYPE>::SideVariable(
    bool fine_boundary_represents_var,
    int direction):
    hier::Variable(name,
-                  tbox::Pointer<SAMRAI::hier::PatchDataFactory>(
+                  boost::shared_ptr<hier::PatchDataFactory>(
                      new SideDataFactory<TYPE>(depth,
                                                // default zero ghost cells
                                                hier::IntVector::getZero(dim),
@@ -54,7 +54,7 @@ SideVariable<TYPE>::SideVariable(
          d_directions(id) = ((direction == id) ? 1 : 0);
       }
       const hier::IntVector& zero_vector(hier::IntVector::getZero(getDim()));
-      setPatchDataFactory(tbox::Pointer<SAMRAI::hier::PatchDataFactory>(new
+      setPatchDataFactory(boost::shared_ptr<hier::PatchDataFactory>(new
             SideDataFactory<TYPE>(
                depth,
                zero_vector,
@@ -77,7 +77,7 @@ const hier::IntVector& SideVariable<TYPE>::getDirectionVector() const
 template<class TYPE>
 int SideVariable<TYPE>::getDepth() const
 {
-   tbox::Pointer<SideDataFactory<TYPE> > factory = this->getPatchDataFactory();
+   boost::shared_ptr<SideDataFactory<TYPE> > factory = this->getPatchDataFactory();
    TBOX_ASSERT(factory);
    return factory->getDepth();
 }
@@ -95,7 +95,7 @@ int SideVariable<TYPE>::getDepth() const
 template<class TYPE>
 SideVariable<TYPE>::SideVariable(
    const SideVariable<TYPE>& foo):
-   hier::Variable(NULL, tbox::Pointer<SAMRAI::hier::PatchDataFactory>(NULL)),
+   hier::Variable(NULL, boost::shared_ptr<hier::PatchDataFactory>(NULL)),
    d_directions(hier::IntVector(foo.getDim()))
 {
    NULL_USE(foo);

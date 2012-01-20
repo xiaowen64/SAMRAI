@@ -18,8 +18,9 @@
 #include "SAMRAI/mesh/GriddingAlgorithmStrategy.h"
 #include "SAMRAI/tbox/DescribedClass.h"
 #include "SAMRAI/hier/IntVector.h"
-#include "SAMRAI/tbox/Pointer.h"
 #include "SAMRAI/tbox/Utilities.h"
+
+#include <boost/shared_ptr.hpp>
 
 namespace SAMRAI {
 namespace algs {
@@ -78,7 +79,7 @@ public:
     */
    virtual void
    initializeLevelIntegrator(
-      tbox::Pointer<mesh::GriddingAlgorithmStrategy> gridding_alg) = 0;
+      boost::shared_ptr<mesh::GriddingAlgorithmStrategy> gridding_alg) = 0;
 
    /**
     * Return appropriate time increment for given level in the patch
@@ -98,7 +99,7 @@ public:
     */
    virtual double
    getLevelDt(
-      const tbox::Pointer<hier::PatchLevel> level,
+      const boost::shared_ptr<hier::PatchLevel> level,
       const double dt_time,
       const bool initial_time) = 0;
 
@@ -190,8 +191,8 @@ public:
     */
    virtual double
    advanceLevel(
-      const tbox::Pointer<hier::PatchLevel> level,
-      const tbox::Pointer<hier::PatchHierarchy> hierarchy,
+      const boost::shared_ptr<hier::PatchLevel> level,
+      const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
       const double current_time,
       const double new_time,
       const bool first_step,
@@ -228,7 +229,7 @@ public:
     */
    virtual void
    standardLevelSynchronization(
-      const tbox::Pointer<hier::PatchHierarchy> hierarchy,
+      const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
       const int coarsest_level,
       const int finest_level,
       const double sync_time,
@@ -251,7 +252,7 @@ public:
     */
    virtual void
    standardLevelSynchronization(
-      const tbox::Pointer<hier::PatchHierarchy> hierarchy,
+      const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
       const int coarsest_level,
       const int finest_level,
       const double sync_time,
@@ -278,7 +279,7 @@ public:
     */
    virtual void
    synchronizeNewLevels(
-      const tbox::Pointer<hier::PatchHierarchy> hierarchy,
+      const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
       const int coarsest_level,
       const int finest_level,
       const double sync_time,
@@ -292,7 +293,7 @@ public:
     */
    virtual void
    resetTimeDependentData(
-      const tbox::Pointer<hier::PatchLevel> level,
+      const boost::shared_ptr<hier::PatchLevel> level,
       const double new_time,
       const bool can_be_refined) = 0;
 
@@ -307,7 +308,7 @@ public:
     */
    virtual void
    resetDataToPreadvanceState(
-      const tbox::Pointer<hier::PatchLevel> level) = 0;
+      const boost::shared_ptr<hier::PatchLevel> level) = 0;
 
    /**
     * Return true if the implementation of this class is constructed

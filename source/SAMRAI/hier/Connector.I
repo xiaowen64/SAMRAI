@@ -34,28 +34,28 @@ const tbox::SAMRAI_MPI& Connector::getMPI() const
 }
 
 SAMRAI_INLINE_KEYWORD
-const hier::IntVector& Connector::getConnectorWidth() const
+const IntVector& Connector::getConnectorWidth() const
 {
    TBOX_ASSERT(isFinalized());
    return d_base_width;
 }
 
 SAMRAI_INLINE_KEYWORD
-const hier::BoxLevel& Connector::getBase() const
+const BoxLevel& Connector::getBase() const
 {
    TBOX_ASSERT(isFinalized());
    return d_base_handle->getBoxLevel();
 }
 
 SAMRAI_INLINE_KEYWORD
-const hier::BoxLevel& Connector::getHead() const
+const BoxLevel& Connector::getHead() const
 {
    TBOX_ASSERT(isFinalized());
    return d_head_handle->getBoxLevel();
 }
 
 SAMRAI_INLINE_KEYWORD
-const hier::IntVector& Connector::getRatio() const
+const IntVector& Connector::getRatio() const
 {
    TBOX_ASSERT(isFinalized());
    return d_ratio;

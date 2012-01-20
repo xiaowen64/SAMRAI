@@ -35,7 +35,6 @@
 #include "SAMRAI/tbox/Database.h"
 #include "SAMRAI/tbox/InputDatabase.h"
 #include "SAMRAI/tbox/InputManager.h"
-#include "SAMRAI/tbox/Pointer.h"
 #include "SAMRAI/tbox/SAMRAI_MPI.h"
 #include "SAMRAI/tbox/PIO.h"
 #include "SAMRAI/tbox/RestartManager.h"
@@ -46,6 +45,8 @@
 #if (TESTING == 1)
 #include "AutoTester.h"
 #endif
+
+#include <boost/shared_ptr.hpp>
 
 #ifndef _MSC_VER
 #include <unistd.h>
@@ -213,7 +214,8 @@ int main(
           * Create input database and parse all data in input file.
           */
 
-         tbox::Pointer<tbox::InputDatabase> input_db(new tbox::InputDatabase("input_db"));
+         boost::shared_ptr<tbox::InputDatabase> input_db(
+            new tbox::InputDatabase("input_db"));
          tbox::InputManager::getManager()->parseInputFile(input_filename, input_db);
 
          /*
@@ -222,7 +224,7 @@ int main(
           */
 
          if (input_db->keyExists("GlobalInputs")) {
-            tbox::Pointer<tbox::Database> global_db =
+            boost::shared_ptr<tbox::Database> global_db =
                input_db->getDatabase("GlobalInputs");
 #ifdef SGS
             if (global_db->keyExists("tag_clustering_method")) {
@@ -246,7 +248,8 @@ int main(
           * database.
           */
 
-         tbox::Pointer<tbox::Database> main_db = input_db->getDatabase("Main");
+         boost::shared_ptr<tbox::Database> main_db =
+            input_db->getDatabase("Main");
 
          const tbox::Dimension dim(static_cast<unsigned short>(main_db->getInteger("dim")));
 
@@ -329,13 +332,13 @@ int main(
           * for this application, see comments at top of file.
           */
 
-         tbox::Pointer<geom::CartesianGridGeometry> grid_geometry(
+         boost::shared_ptr<geom::CartesianGridGeometry> grid_geometry(
             new geom::CartesianGridGeometry(
                dim,
                "CartesianGeometry",
                input_db->getDatabase("CartesianGeometry")));
 
-         tbox::Pointer<hier::PatchHierarchy> patch_hierarchy(
+         boost::shared_ptr<hier::PatchHierarchy> patch_hierarchy(
             new hier::PatchHierarchy("PatchHierarchy", grid_geometry,
                input_db->getDatabase("PatchHierarchy")));
 
@@ -345,34 +348,34 @@ int main(
                input_db->getDatabase("LinAdv"),
                grid_geometry);
 
-         tbox::Pointer<algs::HyperbolicLevelIntegrator> hyp_level_integrator(
+         boost::shared_ptr<algs::HyperbolicLevelIntegrator> hyp_level_integrator(
             new algs::HyperbolicLevelIntegrator(
                "HyperbolicLevelIntegrator",
                input_db->getDatabase("HyperbolicLevelIntegrator"),
                linear_advection_model, true, use_refined_timestepping));
 
-         tbox::Pointer<mesh::StandardTagAndInitialize> error_detector(
+         boost::shared_ptr<mesh::StandardTagAndInitialize> error_detector(
             new mesh::StandardTagAndInitialize(
                dim,
                "StandardTagAndInitialize",
                hyp_level_integrator.get(),
                input_db->getDatabase("StandardTagAndInitialize")));
 
-         tbox::Pointer<mesh::BergerRigoutsos> box_generator(
+         boost::shared_ptr<mesh::BergerRigoutsos> box_generator(
             new mesh::BergerRigoutsos(
                dim,
                input_db->getDatabaseWithDefault(
                   "BergerRigoutsos",
-                  SAMRAI::tbox::Pointer<SAMRAI::tbox::Database>(NULL))));
+                  boost::shared_ptr<tbox::Database>())));
 
-         tbox::Pointer<mesh::TreeLoadBalancer> load_balancer(
+         boost::shared_ptr<mesh::TreeLoadBalancer> load_balancer(
             new mesh::TreeLoadBalancer(dim,
                "LoadBalancer",
                input_db->getDatabase("LoadBalancer")));
          load_balancer->setSAMRAI_MPI(
-            SAMRAI::tbox::SAMRAI_MPI::getSAMRAIWorld());
+            tbox::SAMRAI_MPI::getSAMRAIWorld());
 
-         tbox::Pointer<mesh::GriddingAlgorithm> gridding_algorithm(
+         boost::shared_ptr<mesh::GriddingAlgorithm> gridding_algorithm(
             new mesh::GriddingAlgorithm(patch_hierarchy,
                "GriddingAlgorithm",
                input_db->getDatabase("GriddingAlgorithm"),
@@ -380,7 +383,7 @@ int main(
                box_generator,
                load_balancer));
 
-         tbox::Pointer<algs::TimeRefinementIntegrator> time_integrator(
+         boost::shared_ptr<algs::TimeRefinementIntegrator> time_integrator(
             new algs::TimeRefinementIntegrator("TimeRefinementIntegrator",
                input_db->getDatabase(
                   "TimeRefinementIntegrator"),
@@ -390,7 +393,7 @@ int main(
 
          // VisitDataWriter is only present if HDF is available
 #ifdef HAVE_HDF5
-         tbox::Pointer<appu::VisItDataWriter> visit_data_writer(
+         boost::shared_ptr<appu::VisItDataWriter> visit_data_writer(
             new appu::VisItDataWriter(dim,
                "LinAdv VisIt Writer",
                viz_dump_dirname,

@@ -12,7 +12,7 @@ namespace SAMRAI {
 namespace hier {
 
 SAMRAI_INLINE_KEYWORD
-tbox::Pointer<PatchDataFactory>
+boost::shared_ptr<PatchDataFactory>
 PatchDescriptor::getPatchDataFactory(
    const int id) const
 {

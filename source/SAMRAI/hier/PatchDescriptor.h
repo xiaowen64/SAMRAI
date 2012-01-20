@@ -16,11 +16,11 @@
 #include "SAMRAI/hier/PatchDataFactory.h"
 #include "SAMRAI/hier/IntVector.h"
 #include "SAMRAI/tbox/PIO.h"
-#include "SAMRAI/tbox/Pointer.h"
 #include "SAMRAI/tbox/DescribedClass.h"
 #include "SAMRAI/tbox/Array.h"
 #include "SAMRAI/tbox/List.h"
 
+#include <boost/shared_ptr.hpp>
 #include <string>
 #include <iostream>
 
@@ -87,7 +87,7 @@ public:
    int
    definePatchDataComponent(
       const std::string& name,
-      tbox::Pointer<PatchDataFactory> factory);
+      boost::shared_ptr<PatchDataFactory> factory);
 
    /*!
     * Deallocate the patch data factory in the patch descriptor identified by the
@@ -112,7 +112,7 @@ public:
     * @param id      int index of factory to return, which must be >= 0 and
     *                < the return value of getMaxNumberRegisteredComponents();
     */
-   tbox::Pointer<PatchDataFactory>
+   boost::shared_ptr<PatchDataFactory>
    getPatchDataFactory(
       int id) const;
 
@@ -126,7 +126,7 @@ public:
     *
     * @param name    std::string name of factory.
     */
-   tbox::Pointer<PatchDataFactory>
+   boost::shared_ptr<PatchDataFactory>
    getPatchDataFactory(
       const std::string& name) const;
 
@@ -214,7 +214,7 @@ private:
 
    int d_max_number_registered_components;
    tbox::Array<std::string> d_names;
-   tbox::Array<tbox::Pointer<PatchDataFactory> > d_factories;
+   tbox::Array<boost::shared_ptr<PatchDataFactory> > d_factories;
    tbox::List<int> d_free_indices;
 
    /*!

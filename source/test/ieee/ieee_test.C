@@ -18,10 +18,11 @@
 
 #include "SAMRAI/tbox/SAMRAIManager.h"
 #include "SAMRAI/tbox/Array.h"
-#include "SAMRAI/tbox/Pointer.h"
 #include "SAMRAI/tbox/SAMRAI_MPI.h"
 #include "SAMRAI/tbox/PIO.h"
 #include "SAMRAI/tbox/IEEE.h"
+
+#include <boost/shared_ptr.hpp>
 
 using namespace SAMRAI;
 

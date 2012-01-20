@@ -789,7 +789,7 @@ void BoxNeighborhoodCollection::getFromDatabase(
             + tbox::Utilities::processorToString(box_id.getOwnerRank())
             + tbox::Utilities::patchToString(box_id.getLocalId().getValue())
             + tbox::Utilities::intToString(box_id.getPeriodicId().getPeriodicValue());
-         tbox::Pointer<tbox::Database> nbr_db = database.getDatabase(set_name);
+         boost::shared_ptr<tbox::Database> nbr_db = database.getDatabase(set_name);
          const unsigned int mbs_size =
             nbr_db->getInteger("mapped_box_set_size");
          Iterator base_box_loc = insert(box_id).first;
@@ -824,9 +824,9 @@ void BoxNeighborhoodCollection::getFromDatabase(
             for (unsigned int i = 0; i < mbs_size; ++i) {
                Box nbr(db_box_array[i]);
                nbr.setBlockId(BlockId(block_ids[i]));
-               hier::BoxId box_id(LocalId(local_ids[i]),
-                                  ranks[i],
-                                  PeriodicId(periodic_ids[i]));
+               BoxId box_id(LocalId(local_ids[i]),
+                            ranks[i],
+                            PeriodicId(periodic_ids[i]));
                nbr.setId(box_id);
                insert(base_box_loc, nbr);
             }

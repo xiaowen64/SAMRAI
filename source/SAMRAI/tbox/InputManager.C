@@ -23,8 +23,7 @@ namespace tbox {
 
 InputManager * InputManager::s_manager_instance = NULL;
 
-Pointer<Database> InputManager::s_input_db =
-   Pointer<Database>(NULL);
+boost::shared_ptr<Database> InputManager::s_input_db((Database*)NULL);
 
 StartupShutdownManager::Handler InputManager::s_finalize_handler(
    0,
@@ -66,7 +65,7 @@ void InputManager::finalizeCallback()
       s_manager_instance = ((InputManager *)NULL);
    }
 
-   s_input_db = ((InputDatabase *)NULL);
+   s_input_db.reset();
 }
 
 /*
@@ -107,11 +106,11 @@ bool InputManager::inputDatabaseExists()
  *************************************************************************
  */
 
-Pointer<InputDatabase>
+boost::shared_ptr<InputDatabase>
 InputManager::parseInputFile(
    const std::string& filename)
 {
-   Pointer<InputDatabase> db(new InputDatabase("main"));
+   boost::shared_ptr<InputDatabase> db(new InputDatabase("main"));
    this->parseInputFile(filename, db);
    return db;
 }
@@ -123,7 +122,7 @@ InputManager::parseInputFile(
  *
  *************************************************************************
  */
-Pointer<Database> InputManager::getInputDatabase()
+boost::shared_ptr<Database> InputManager::getInputDatabase()
 {
    return s_input_db;
 }
@@ -138,7 +137,7 @@ Pointer<Database> InputManager::getInputDatabase()
 
 void InputManager::parseInputFile(
    const std::string& filename,
-   Pointer<InputDatabase> db)
+   boost::shared_ptr<InputDatabase> db)
 {
    FILE* fstream = NULL;
    const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());

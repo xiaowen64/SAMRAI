@@ -207,7 +207,7 @@ public:
     */
    virtual void
    getFromDatabase(
-      tbox::Pointer<tbox::Database> database);
+      boost::shared_ptr<tbox::Database> database);
 
    /**
     * Writes out the class version number to the database.  Then,
@@ -217,7 +217,7 @@ public:
     */
    virtual void
    putToDatabase(
-      tbox::Pointer<tbox::Database> database);
+      boost::shared_ptr<tbox::Database> database);
 
    /**
     * This pure abstract method is used by concrete patch data subclasses
@@ -225,7 +225,7 @@ public:
     */
    virtual void
    getSpecializedFromDatabase(
-      tbox::Pointer<tbox::Database> database) = 0;
+      boost::shared_ptr<tbox::Database> database) = 0;
 
    /**
     * This pure abstract method is used by concrete patch data subclasses
@@ -233,7 +233,7 @@ public:
     */
    virtual void
    putSpecializedToDatabase(
-      tbox::Pointer<tbox::Database> database) = 0;
+      boost::shared_ptr<tbox::Database> database) = 0;
 
    /**
     * Return the dimension of this object.

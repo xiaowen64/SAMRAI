@@ -33,7 +33,7 @@ PatchBoundaries::PatchBoundaries():
  *************************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-tbox::Array<hier::BoundaryBox>&
+tbox::Array<BoundaryBox>&
 PatchBoundaries::operator [] (unsigned int i)
 {
    TBOX_ASSERT(i < d_dim.getValue());
@@ -48,7 +48,7 @@ PatchBoundaries::operator [] (unsigned int i)
  *************************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-const tbox::Array<hier::BoundaryBox>&
+const tbox::Array<BoundaryBox>&
 PatchBoundaries::operator [] (unsigned int i) const
 {
    TBOX_ASSERT(i < d_dim.getValue());
@@ -63,7 +63,7 @@ PatchBoundaries::operator [] (unsigned int i) const
  *************************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-tbox::Array<tbox::Array<hier::BoundaryBox> >
+tbox::Array<tbox::Array<BoundaryBox> >
 PatchBoundaries::getArrays()
 {
    return d_array_of_bboxes;
@@ -77,7 +77,7 @@ PatchBoundaries::getArrays()
  *************************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-const tbox::Array<tbox::Array<hier::BoundaryBox> >
+const tbox::Array<tbox::Array<BoundaryBox> >
 PatchBoundaries::getArrays() const
 {
    return d_array_of_bboxes;

@@ -13,7 +13,8 @@
 #include "SAMRAI/tbox/SAMRAIManager.h"
 #include "SAMRAI/tbox/SAMRAI_MPI.h"
 #include "SAMRAI/tbox/PIO.h"
-#include "SAMRAI/tbox/Pointer.h"
+
+#include <boost/shared_ptr.hpp>
 
 using namespace std;
 using namespace SAMRAI;
@@ -74,8 +75,8 @@ public:
       int& fail_count,
       A* a_ptr,
       const A* a_constptr,
-      tbox::Pointer<A> a_smartptr,
-      const tbox::Pointer<A> a_constsmartptr)
+      boost::shared_ptr<A> a_smartptr,
+      const boost::shared_ptr<A> a_constsmartptr)
    {
       if (a_ptr != a_constptr) {
          fail_count++;
@@ -130,7 +131,7 @@ public:
    }
 private:
    A* d_a_ptr;
-   tbox::Pointer<A> d_a_smartptr;
+   boost::shared_ptr<A> d_a_smartptr;
 };
 
 class HaveB
@@ -140,8 +141,8 @@ public:
       int& fail_count,
       B* b_ptr,
       const B* b_constptr,
-      tbox::Pointer<B> b_smartptr,
-      const tbox::Pointer<B> b_constsmartptr)
+      boost::shared_ptr<B> b_smartptr,
+      const boost::shared_ptr<B> b_constsmartptr)
    {
       if (b_ptr != b_constptr) {
          fail_count++;
@@ -196,7 +197,7 @@ public:
    }
 private:
    B* d_b_ptr;
-   tbox::Pointer<B> d_b_smartptr;
+   boost::shared_ptr<B> d_b_smartptr;
 };
 
 class Derived:public tbox::DescribedClass
@@ -226,22 +227,21 @@ public:
    }
 };
 
-#include "SAMRAI/tbox/Pointer.C"
-template class tbox::Pointer<A>;
-template class tbox::Pointer<B>;
-template class tbox::Pointer<C>;
-template class tbox::Pointer<Derived>;
-template class tbox::Pointer<ReallyDerived>;
-template class tbox::Pointer<ReallyReallyDerived>;
+template class boost::shared_ptr<A>;
+template class boost::shared_ptr<B>;
+template class boost::shared_ptr<C>;
+template class boost::shared_ptr<Derived>;
+template class boost::shared_ptr<ReallyDerived>;
+template class boost::shared_ptr<ReallyReallyDerived>;
 
 /*
  * Function to test casting in function call.
  */
 
 int test(
-   tbox::Pointer<ReallyDerived> a,
-   tbox::Pointer<ReallyDerived> b,
-   tbox::Pointer<ReallyDerived> c)
+   boost::shared_ptr<ReallyDerived> a,
+   boost::shared_ptr<ReallyDerived> b,
+   boost::shared_ptr<ReallyDerived> c)
 {
    int fail_count = 0;
    if (a) {
@@ -257,16 +257,16 @@ int test(
       tbox::perr << "FAILED: - Test #2c: in test(), c is null" << endl;
    }
 
-   tbox::Pointer<ReallyReallyDerived> d(
+   boost::shared_ptr<ReallyReallyDerived> d(
       b,
-      tbox::__dynamic_cast_tag());
+      boost::detail::dynamic_cast_tag());
    if (d) {
       fail_count++;
       tbox::perr << "FAILED: - Test #2d: in test(), d is non-null" << endl;
    }
-   tbox::Pointer<ReallyReallyDerived> e(
+   boost::shared_ptr<ReallyReallyDerived> e(
       c,
-      tbox::__dynamic_cast_tag());
+      boost::detail::dynamic_cast_tag());
    if (!e) {
       fail_count++;
       tbox::perr << "FAILED: - Test #2e: in test(), e is null" << endl;
@@ -294,25 +294,25 @@ int main(
        * Regular pointer tests.
        */
 
-      tbox::Pointer<Derived> derived(new Derived);
-      tbox::Pointer<ReallyDerived> really_derived(new ReallyDerived);
-      tbox::Pointer<ReallyReallyDerived> really_really_derived(
+      boost::shared_ptr<Derived> derived(new Derived);
+      boost::shared_ptr<ReallyDerived> really_derived(new ReallyDerived);
+      boost::shared_ptr<ReallyReallyDerived> really_really_derived(
          new ReallyReallyDerived);
 
       /*
        * Test casting to base class Derived.
        */
-      tbox::Pointer<Derived> a = derived;
+      boost::shared_ptr<Derived> a = derived;
       if (!a) {
          fail_count++;
          tbox::perr << "FAILED: - Test #1a: a is null" << endl;
       }
-      tbox::Pointer<Derived> b = really_derived;
+      boost::shared_ptr<Derived> b = really_derived;
       if (!b) {
          fail_count++;
          tbox::perr << "FAILED: - Test #1b: b is null" << endl;
       }
-      tbox::Pointer<Derived> c = really_really_derived;
+      boost::shared_ptr<Derived> c = really_really_derived;
       if (!c) {
          fail_count++;
          tbox::perr << "FAILED: - Test #1c: c is null" << endl;
@@ -321,19 +321,19 @@ int main(
       /*
        * Test casting to intermediate class ReallyDerived.
        */
-      tbox::Pointer<ReallyDerived> d(
+      boost::shared_ptr<ReallyDerived> d(
          derived,
-         tbox::__dynamic_cast_tag());
+         boost::detail::dynamic_cast_tag());
       if (d) {
          fail_count++;
          tbox::perr << "FAILED: - Test #1d: d is non-null" << endl;
       }
-      tbox::Pointer<ReallyDerived> e = really_derived;
+      boost::shared_ptr<ReallyDerived> e = really_derived;
       if (!e) {
          fail_count++;
          tbox::perr << "FAILED: - Test #1e: e is null" << endl;
       }
-      tbox::Pointer<ReallyDerived> f = really_really_derived;
+      boost::shared_ptr<ReallyDerived> f = really_really_derived;
       if (!f) {
          fail_count++;
          tbox::perr << "FAILED: - Test #1f: f is null" << endl;
@@ -342,21 +342,21 @@ int main(
       /*
        * Test casting to most derived class ReallyReallyDerived.
        */
-      tbox::Pointer<ReallyReallyDerived> g(
+      boost::shared_ptr<ReallyReallyDerived> g(
          derived,
-         tbox::__dynamic_cast_tag());
+         boost::detail::dynamic_cast_tag());
       if (g) {
          fail_count++;
          tbox::perr << "FAILED: - Test #1g: g is non-null" << endl;
       }
-      tbox::Pointer<ReallyReallyDerived> h(
+      boost::shared_ptr<ReallyReallyDerived> h(
          really_derived,
-         tbox::__dynamic_cast_tag());
+         boost::detail::dynamic_cast_tag());
       if (h) {
          fail_count++;
          tbox::perr << "FAILED: - Test #1h: h is non-null" << endl;
       }
-      tbox::Pointer<ReallyReallyDerived> i = really_really_derived;
+      boost::shared_ptr<ReallyReallyDerived> i = really_really_derived;
       if (!i) {
          fail_count++;
          tbox::perr << "FAILED: - Test #1i: i is null" << endl;
@@ -366,7 +366,7 @@ int main(
        * Test casting in function call (#2 tests).
        */
       fail_count += test(
-         tbox::dynamic_pointer_cast<ReallyDerived, Derived>(derived),
+         boost::dynamic_pointer_cast<ReallyDerived, Derived>(derived),
          really_derived,
          really_really_derived);
 
@@ -377,17 +377,17 @@ int main(
       /*
        * Test casting to base class Derived.
        */
-      const tbox::Pointer<Derived> j = derived;
+      const boost::shared_ptr<Derived> j = derived;
       if (!j) {
          fail_count++;
          tbox::perr << "FAILED: - Test #3j: j is null" << endl;
       }
-      const tbox::Pointer<Derived> k = really_derived;
+      const boost::shared_ptr<Derived> k = really_derived;
       if (!k) {
          fail_count++;
          tbox::perr << "FAILED: - Test #3k: k is null" << endl;
       }
-      const tbox::Pointer<Derived> l = really_really_derived;
+      const boost::shared_ptr<Derived> l = really_really_derived;
       if (!l) {
          fail_count++;
          tbox::perr << "FAILED: - Test #3l: l is null" << endl;
@@ -396,19 +396,19 @@ int main(
       /*
        * Test casting to intermediate class ReallyDerived.
        */
-      const tbox::Pointer<ReallyDerived> m(
+      const boost::shared_ptr<ReallyDerived> m(
          derived,
-         tbox::__dynamic_cast_tag());
+         boost::detail::dynamic_cast_tag());
       if (m) {
          fail_count++;
          tbox::perr << "FAILED: - Test #3m: m is non-null" << endl;
       }
-      const tbox::Pointer<ReallyDerived> n = really_derived;
+      const boost::shared_ptr<ReallyDerived> n = really_derived;
       if (!n) {
          fail_count++;
          tbox::perr << "FAILED: - Test #3n: n is null" << endl;
       }
-      const tbox::Pointer<ReallyDerived> o = really_really_derived;
+      const boost::shared_ptr<ReallyDerived> o = really_really_derived;
       if (!o) {
          fail_count++;
          tbox::perr << "FAILED: - Test #3o: o is null" << endl;
@@ -417,21 +417,21 @@ int main(
       /*
        * Test casting to most derived class ReallyDerived.
        */
-      const tbox::Pointer<ReallyReallyDerived> p(
+      const boost::shared_ptr<ReallyReallyDerived> p(
          derived,
-         tbox::__dynamic_cast_tag());
+         boost::detail::dynamic_cast_tag());
       if (p) {
          fail_count++;
          tbox::perr << "FAILED: - Test #3p: p is non-null" << endl;
       }
-      const tbox::Pointer<ReallyReallyDerived> q(
+      const boost::shared_ptr<ReallyReallyDerived> q(
          really_derived,
-         tbox::__dynamic_cast_tag());
+         boost::detail::dynamic_cast_tag());
       if (q) {
          fail_count++;
          tbox::perr << "FAILED: - Test #3q: q is non-null" << endl;
       }
-      const tbox::Pointer<ReallyReallyDerived> r = really_really_derived;
+      const boost::shared_ptr<ReallyReallyDerived> r = really_really_derived;
       if (!r) {
          fail_count++;
          tbox::perr << "FAILED: - Test #3r: r is null" << endl;
@@ -441,17 +441,17 @@ int main(
        * Test casting const pointer to regular pointers.
        */
 #if 0
-      const tbox::Pointer<ReallyReallyDerived> s = derived;
+      const boost::shared_ptr<ReallyReallyDerived> s = derived;
       if (s) {
          fail_count++;
          tbox::perr << "FAILED: - Test #3s: s is non-null" << endl;
       }
-      const tbox::Pointer<ReallyReallyDerived> t = really_derived;
+      const boost::shared_ptr<ReallyReallyDerived> t = really_derived;
       if (t) {
          fail_count++;
          tbox::perr << "FAILED: - Test #3t: t is non-null" << endl;
       }
-      const tbox::Pointer<ReallyReallyDerived> u = really_really_derived;
+      const boost::shared_ptr<ReallyReallyDerived> u = really_really_derived;
       if (u) {
          fail_count++;
          tbox::perr << "FAILED: - Test #3u: u is non-null" << endl;
@@ -462,7 +462,7 @@ int main(
        * Virtual base class pointer tests.
        */
 
-      tbox::Pointer<C> my_C(new C());
+      boost::shared_ptr<C> my_C(new C());
 
       // #4 tests
       HaveA my_HaveA(fail_count, my_C.get(), my_C.get(), my_C, my_C);

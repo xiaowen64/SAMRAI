@@ -29,13 +29,13 @@
 #include "SAMRAI/hier/PeriodicShiftCatalog.h"
 #include "SAMRAI/hier/RealBoxConstIterator.h"
 #include "SAMRAI/tbox/SAMRAI_MPI.h"
-#include "SAMRAI/tbox/Pointer.h"
 #include "SAMRAI/tbox/RestartManager.h"
 #include "SAMRAI/tbox/StartupShutdownManager.h"
 #include "SAMRAI/tbox/TimerManager.h"
 #include "SAMRAI/tbox/Timer.h"
 #include "SAMRAI/tbox/Utilities.h"
 
+#include <boost/shared_ptr.hpp>
 #include <map>
 #include <stdlib.h>
 
@@ -64,14 +64,14 @@ GridGeometry::s_initialize_handler(
    GridGeometry::finalizeCallback,
    tbox::StartupShutdownManager::priorityTimers);
 
-tbox::Pointer<tbox::Timer> GridGeometry::t_find_patches_touching_boundaries;
-tbox::Pointer<tbox::Timer> GridGeometry::t_touching_boundaries_init;
-tbox::Pointer<tbox::Timer> GridGeometry::t_touching_boundaries_loop;
-tbox::Pointer<tbox::Timer> GridGeometry::t_set_geometry_on_patches;
-tbox::Pointer<tbox::Timer> GridGeometry::t_set_boundary_boxes;
-tbox::Pointer<tbox::Timer> GridGeometry::t_set_geometry_data_on_patches;
-tbox::Pointer<tbox::Timer> GridGeometry::t_compute_boundary_boxes_on_level;
-tbox::Pointer<tbox::Timer> GridGeometry::t_get_boundary_boxes;
+boost::shared_ptr<tbox::Timer> GridGeometry::t_find_patches_touching_boundaries;
+boost::shared_ptr<tbox::Timer> GridGeometry::t_touching_boundaries_init;
+boost::shared_ptr<tbox::Timer> GridGeometry::t_touching_boundaries_loop;
+boost::shared_ptr<tbox::Timer> GridGeometry::t_set_geometry_on_patches;
+boost::shared_ptr<tbox::Timer> GridGeometry::t_set_boundary_boxes;
+boost::shared_ptr<tbox::Timer> GridGeometry::t_set_geometry_data_on_patches;
+boost::shared_ptr<tbox::Timer> GridGeometry::t_compute_boundary_boxes_on_level;
+boost::shared_ptr<tbox::Timer> GridGeometry::t_get_boundary_boxes;
 
 /*
  *************************************************************************
@@ -85,8 +85,8 @@ tbox::Pointer<tbox::Timer> GridGeometry::t_get_boundary_boxes;
 GridGeometry::GridGeometry(
    const tbox::Dimension& dim,
    const std::string& object_name,
-   tbox::Pointer<TransferOperatorRegistry> op_reg,
-   tbox::Pointer<tbox::Database> input_db,
+   boost::shared_ptr<TransferOperatorRegistry> op_reg,
+   boost::shared_ptr<tbox::Database> input_db,
    bool register_for_restart):
    d_dim(dim),
    d_object_name(object_name),
@@ -125,7 +125,7 @@ GridGeometry::GridGeometry(
 GridGeometry::GridGeometry(
    const tbox::Dimension& dim,
    const std::string& object_name,
-   tbox::Pointer<TransferOperatorRegistry> op_reg):
+   boost::shared_ptr<TransferOperatorRegistry> op_reg):
    d_dim(dim),
    d_object_name(object_name),
    d_periodic_shift(IntVector::getZero(d_dim)),
@@ -148,7 +148,7 @@ GridGeometry::GridGeometry(
 GridGeometry::GridGeometry(
    const std::string& object_name,
    const BoxContainer& domain,
-   tbox::Pointer<TransferOperatorRegistry> op_reg,
+   boost::shared_ptr<TransferOperatorRegistry> op_reg,
    bool register_for_restart):
    d_dim((*(domain.begin())).getDim()),
    d_object_name(object_name),
@@ -236,7 +236,7 @@ void GridGeometry::computeBoundaryBoxesOnLevel(
 #endif
 
    for (PatchLevel::Iterator ip(&level); ip; ip++) {
-      tbox::Pointer<Patch> patch = *ip;
+      boost::shared_ptr<Patch> patch = *ip;
       const BoxId& patch_id = patch->getBox().getId();
       const int block_num = patch->getBox().getBlockId().getBlockValue();
 
@@ -307,15 +307,15 @@ void GridGeometry::findPatchesTouchingBoundaries(
    touches_periodic_bdry.clear();
    t_touching_boundaries_init->stop();
 
-   tbox::Pointer<MultiblockBoxTree> tmp_refined_periodic_domain_tree;
-   if ( level.getRatioToLevelZero() != hier::IntVector::getZero(level.getDim()) ) {
+   boost::shared_ptr<MultiblockBoxTree> tmp_refined_periodic_domain_tree;
+   if ( level.getRatioToLevelZero() != IntVector::getZero(level.getDim()) ) {
       tmp_refined_periodic_domain_tree = d_domain_search_tree_periodic.createRefinedTree(
          level.getRatioToLevelZero());
    }
 
    t_touching_boundaries_loop->start();
    for (PatchLevel::Iterator ip(&level); ip; ip++) {
-      tbox::Pointer<Patch> patch = *ip;
+      boost::shared_ptr<Patch> patch = *ip;
       const Box& box(patch->getBox());
 
       std::map<BoxId, TwoDimBool>::iterator iter_touches_regular_bdry(
@@ -351,7 +351,7 @@ void GridGeometry::computeBoxTouchingBoundaries(
    TwoDimBool& touches_regular_bdry,
    TwoDimBool& touches_periodic_bdry,
    const Box& box,
-   const hier::IntVector &refinement_ratio,
+   const IntVector &refinement_ratio,
    const MultiblockBoxTree& refined_periodic_domain_tree) const
 {
 
@@ -467,7 +467,7 @@ void GridGeometry::setGeometryOnPatches(
 
    t_set_geometry_data_on_patches->start();
    for (PatchLevel::Iterator ip(&level); ip; ip++) {
-      tbox::Pointer<Patch> patch = *ip;
+      boost::shared_ptr<Patch> patch = *ip;
       setGeometryDataOnPatch(*patch, ratio_to_level_zero,
          (*touches_regular_bdry.find(ip->getBox().getId())).second,
          (*touches_periodic_bdry.find(ip->getBox().getId())).second);
@@ -521,7 +521,7 @@ void GridGeometry::setBoundaryBoxes(
 
    for (std::map<BoxId, PatchBoundaries>::const_iterator mi = boundaries.begin();
         mi != boundaries.end(); ++mi) {
-      tbox::Pointer<Patch> patch = level.getPatch((*mi).first);
+      boost::shared_ptr<Patch> patch = level.getPatch((*mi).first);
       patch->getPatchGeometry()->setBoundaryBoxesOnPatch((*mi).second.getArrays());
    }
 
@@ -568,7 +568,7 @@ const
    }
 #endif
 
-   tbox::Pointer<PatchGeometry>
+   boost::shared_ptr<PatchGeometry>
    geometry(new PatchGeometry(ratio_to_level_zero,
                touches_regular_bdry,
                touches_periodic_bdry));
@@ -586,7 +586,7 @@ const
  *************************************************************************
  */
 
-tbox::Pointer<GridGeometry>
+boost::shared_ptr<GridGeometry>
 GridGeometry::makeCoarsenedGridGeometry(
    const std::string& coarse_geom_name,
    const IntVector& coarsen_ratio,
@@ -639,7 +639,7 @@ GridGeometry::makeCoarsenedGridGeometry(
    coarse_geometry->initializePeriodicShift(getPeriodicShift(
          IntVector::getOne(dim)));
 
-   return tbox::Pointer<GridGeometry>(coarse_geometry);
+   return boost::shared_ptr<GridGeometry>(coarse_geometry);
 }
 
 /*
@@ -651,7 +651,7 @@ GridGeometry::makeCoarsenedGridGeometry(
  *************************************************************************
  */
 
-tbox::Pointer<GridGeometry>
+boost::shared_ptr<GridGeometry>
 GridGeometry::makeRefinedGridGeometry(
    const std::string& fine_geom_name,
    const IntVector& refine_ratio,
@@ -676,7 +676,7 @@ GridGeometry::makeRefinedGridGeometry(
    fine_geometry->initializePeriodicShift(getPeriodicShift(
          IntVector::getOne(dim)));
 
-   return tbox::Pointer<GridGeometry>(fine_geometry);
+   return boost::shared_ptr<GridGeometry>(fine_geometry);
 }
 
 /*
@@ -692,10 +692,10 @@ void GridGeometry::getFromRestart()
 {
    const tbox::Dimension dim(getDim());
 
-   tbox::Pointer<tbox::Database> restart_db =
+   boost::shared_ptr<tbox::Database> restart_db =
       tbox::RestartManager::getManager()->getRootDatabase();
 
-   tbox::Pointer<tbox::Database> db;
+   boost::shared_ptr<tbox::Database> db;
 
    if (restart_db->isDatabase(getObjectName())) {
       db = restart_db->getDatabase(getObjectName());
@@ -758,7 +758,7 @@ void GridGeometry::getFromRestart()
  */
 
 void GridGeometry::getFromInput(
-   tbox::Pointer<tbox::Database> db,
+   boost::shared_ptr<tbox::Database> db,
    bool is_from_restart)
 {
 
@@ -803,7 +803,7 @@ void GridGeometry::getFromInput(
       }
 
       int pbc[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-      hier::IntVector per_bc(dim, 0);
+      IntVector per_bc(dim, 0);
       if (db->keyExists("periodic_dimension")) {
          db->getIntegerArray("periodic_dimension", pbc, dim.getValue());
          for (int i = 0; i < dim.getValue(); i++) {
@@ -828,7 +828,7 @@ void GridGeometry::getFromInput(
  */
 
 void GridGeometry::putToDatabase(
-   tbox::Pointer<tbox::Database> db)
+   boost::shared_ptr<tbox::Database> db)
 {
    TBOX_ASSERT(db);
 
@@ -1431,7 +1431,7 @@ void GridGeometry::setPhysicalDomain(
    }
 
    if (d_physical_domain.size() == 1 &&
-       d_periodic_shift != hier::IntVector::getZero(d_dim) ) {
+       d_periodic_shift != IntVector::getZero(d_dim) ) {
 
       /*
        * Check incoming array and reset values if necessary.
@@ -1440,7 +1440,7 @@ void GridGeometry::setPhysicalDomain(
          d_periodic_shift(id) = ((d_periodic_shift(id) == 0) ? 0 : 1);
       }
 
-      if (d_periodic_shift != hier::IntVector::getZero(d_dim)) {
+      if (d_periodic_shift != IntVector::getZero(d_dim)) {
          /*
           * Check if the physical domain is valid for the specified
           * periodic conditions.  If so, compute the shift in each
@@ -1766,7 +1766,7 @@ bool GridGeometry::checkBoundaryBox(
  ***************************************************************************
  */
 void GridGeometry::readBlockDataFromInput(
-   const tbox::Pointer<tbox::Database>& input_db)
+   const boost::shared_ptr<tbox::Database>& input_db)
 {
    TBOX_ASSERT(input_db);
 
@@ -1792,7 +1792,7 @@ void GridGeometry::readBlockDataFromInput(
          break;
       }
 
-      tbox::Pointer<tbox::Database> sing_db =
+      boost::shared_ptr<tbox::Database> sing_db =
          input_db->getDatabase(sing_name);
 
       tbox::Array<int> blocks = sing_db->getIntegerArray("blocks");
@@ -1819,7 +1819,7 @@ void GridGeometry::readBlockDataFromInput(
       if (!input_db->keyExists(neighbor_name)) {
          break;
       }
-      tbox::Pointer<tbox::Database> pair_db =
+      boost::shared_ptr<tbox::Database> pair_db =
          input_db->getDatabase(neighbor_name);
 
       BlockId block_a(pair_db->getInteger("block_a"));
@@ -1867,11 +1867,11 @@ void GridGeometry::readBlockDataFromInput(
 
    if (d_number_blocks > 1) {
       for (int b = 0; b < d_number_blocks; b++) {
-         hier::BlockId block_id(b);
+         BlockId block_id(b);
          BoxContainer pseudo_domain;
          getDomainOutsideBlock(pseudo_domain, block_id);
 
-         hier::BoxContainer block_domain(d_physical_domain, block_id);
+         BoxContainer block_domain(d_physical_domain, block_id);
          pseudo_domain.spliceFront(block_domain);
 
          for (BoxContainer::Iterator
@@ -1902,7 +1902,7 @@ GridGeometry::getDomainOutsideBlock(
 {
    for (tbox::List<Neighbor>::Iterator
         nei(d_block_neighbors[block_id.getBlockValue()]); nei; nei++) {
-      hier::BoxContainer transformed_domain(nei().getTransformedDomain()); 
+      BoxContainer transformed_domain(nei().getTransformedDomain()); 
       domain_outside_block.spliceFront(transformed_domain);
    }
 }
@@ -2106,14 +2106,14 @@ void GridGeometry::adjustMultiblockPatchLevelBoundaries(
 
          for (tbox::List<GridGeometry::Neighbor>::Iterator
               nei(d_block_neighbors[nb]); nei; nei++) {
-            hier::BoxContainer transformed_domain(nei().getTransformedDomain());
+            BoxContainer transformed_domain(nei().getTransformedDomain());
             pseudo_domain.spliceFront(transformed_domain);
          }
 
          pseudo_domain.refine(patch_level.getRatioToLevelZero());
 
-         hier::BoxContainer physical_domain(patch_level.getPhysicalDomain(block_id));
-         hier::BoxContainer sing_boxes(singularity); 
+         BoxContainer physical_domain(patch_level.getPhysicalDomain(block_id));
+         BoxContainer sing_boxes(singularity); 
          pseudo_domain.spliceFront(physical_domain);
          pseudo_domain.spliceFront(sing_boxes);
          pseudo_domain.coalesce();
@@ -2122,7 +2122,7 @@ void GridGeometry::adjustMultiblockPatchLevelBoundaries(
 
          for ( ; mbi.isValid(); mbi++) {
             const BoxId& mapped_box_id = (*mbi).getId();
-            tbox::Pointer<Patch> patch(patch_level.getPatch(mapped_box_id));
+            boost::shared_ptr<Patch> patch(patch_level.getPatch(mapped_box_id));
 
             adjustBoundaryBoxesOnPatch(*patch,
                pseudo_domain,
@@ -2302,19 +2302,19 @@ bool GridGeometry::areSingularityNeighbors(const BlockId& block_a,
  */
 
 void GridGeometry::addCoarsenOperator(
-   tbox::Pointer<CoarsenOperator> coarsen_op)
+   boost::shared_ptr<CoarsenOperator> coarsen_op)
 {
    d_transfer_operator_registry->addCoarsenOperator(coarsen_op);
 }
 
 void GridGeometry::addRefineOperator(
-   tbox::Pointer<RefineOperator> refine_op)
+   boost::shared_ptr<RefineOperator> refine_op)
 {
    d_transfer_operator_registry->addRefineOperator(refine_op);
 }
 
 void GridGeometry::addTimeInterpolateOperator(
-   tbox::Pointer<TimeInterpolateOperator> time_op)
+   boost::shared_ptr<TimeInterpolateOperator> time_op)
 {
    d_transfer_operator_registry->addTimeInterpolateOperator(time_op);
 }
@@ -2327,27 +2327,27 @@ void GridGeometry::addTimeInterpolateOperator(
  *************************************************************************
  */
 
-tbox::Pointer<CoarsenOperator>
+boost::shared_ptr<CoarsenOperator>
 GridGeometry::lookupCoarsenOperator(
-   const tbox::Pointer<Variable>& var,
+   const boost::shared_ptr<Variable>& var,
    const std::string& op_name)
 {
    return d_transfer_operator_registry->lookupCoarsenOperator(
       var, op_name);
 }
 
-tbox::Pointer<RefineOperator>
+boost::shared_ptr<RefineOperator>
 GridGeometry::lookupRefineOperator(
-   const tbox::Pointer<Variable>& var,
+   const boost::shared_ptr<Variable>& var,
    const std::string& op_name)
 {
    return d_transfer_operator_registry->lookupRefineOperator(
       var, op_name);
 }
 
-tbox::Pointer<TimeInterpolateOperator>
+boost::shared_ptr<TimeInterpolateOperator>
 GridGeometry::lookupTimeInterpolateOperator(
-   const tbox::Pointer<Variable>& var,
+   const boost::shared_ptr<Variable>& var,
    const std::string& op_name)
 {
    return d_transfer_operator_registry->lookupTimeInterpolateOperator(

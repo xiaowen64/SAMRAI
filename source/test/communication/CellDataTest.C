@@ -30,7 +30,7 @@ using namespace std;
 CellDataTest::CellDataTest(
    const string& object_name,
    const tbox::Dimension& dim,
-   tbox::Pointer<tbox::Database> main_input_db,
+   boost::shared_ptr<tbox::Database> main_input_db,
    bool do_refine,
    bool do_coarsen,
    const string& refine_option):
@@ -62,10 +62,10 @@ CellDataTest::CellDataTest(
       getDatabase("PatchHierarchy")->
       getInteger("max_levels") - 1;
 
-   d_cart_grid_geometry = new geom::CartesianGridGeometry(
-         dim,
+   d_cart_grid_geometry.reset(
+      new geom::CartesianGridGeometry(dim,
          "CartesianGridGeometry",
-         main_input_db->getDatabase("CartesianGridGeometry"));
+         main_input_db->getDatabase("CartesianGridGeometry")));
 
    setGridGeometry(d_cart_grid_geometry);
 
@@ -78,7 +78,7 @@ CellDataTest::~CellDataTest()
 }
 
 void CellDataTest::readTestInput(
-   tbox::Pointer<tbox::Database> db)
+   boost::shared_ptr<tbox::Database> db)
 {
    TBOX_ASSERT(db);
 
@@ -128,9 +128,10 @@ void CellDataTest::registerVariables(
    d_variables.resizeArray(nvars);
 
    for (int i = 0; i < nvars; i++) {
-      d_variables[i] = new pdat::CellVariable<double>(d_dim,
-                                                      d_variable_src_name[i],
-                                                      d_variable_depth[i]);
+      d_variables[i].reset(
+         new pdat::CellVariable<double>(d_dim,
+                                        d_variable_src_name[i],
+                                        d_variable_depth[i]));
 
       if (d_do_refine) {
          commtest->registerVariable(d_variables[i],
@@ -153,7 +154,7 @@ void CellDataTest::registerVariables(
 }
 
 void CellDataTest::setLinearData(
-   tbox::Pointer<pdat::CellData<double> > data,
+   boost::shared_ptr<pdat::CellData<double> > data,
    const hier::Box& box,
    const hier::Patch& patch) const
 {
@@ -161,9 +162,9 @@ void CellDataTest::setLinearData(
    TBOX_ASSERT(data);
 #endif
 
-   tbox::Pointer<geom::CartesianPatchGeometry> pgeom(
+   boost::shared_ptr<geom::CartesianPatchGeometry> pgeom(
       patch.getPatchGeometry(),
-      tbox::__dynamic_cast_tag());
+      boost::detail::dynamic_cast_tag());
    const pdat::CellIndex loweri(patch.getBox().lower());
    const pdat::CellIndex upperi(patch.getBox().upper());
    const double* pdx = pgeom->getDx();
@@ -199,10 +200,10 @@ void CellDataTest::setLinearData(
 }
 
 void CellDataTest::setConservativeData(
-   tbox::Pointer<pdat::CellData<double> > data,
+   boost::shared_ptr<pdat::CellData<double> > data,
    const hier::Box& box,
    const hier::Patch& patch,
-   const tbox::Pointer<hier::PatchHierarchy> hierarchy,
+   const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
    int level_number) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
@@ -212,7 +213,7 @@ void CellDataTest::setConservativeData(
       && (level_number <= hierarchy->getFinestLevelNumber()));
 #endif
 
-   tbox::Pointer<hier::PatchLevel> level = hierarchy->getPatchLevel(
+   boost::shared_ptr<hier::PatchLevel> level = hierarchy->getPatchLevel(
          level_number);
 
    const hier::BoxContainer& domain =
@@ -255,9 +256,9 @@ void CellDataTest::setConservativeData(
 
       hier::IntVector ratio(level->getRatioToLevelZero());
 
-      tbox::Pointer<geom::CartesianPatchGeometry> pgeom(
+      boost::shared_ptr<geom::CartesianPatchGeometry> pgeom(
          patch.getPatchGeometry(),
-         tbox::__dynamic_cast_tag());
+         boost::detail::dynamic_cast_tag());
       const double* dx = pgeom->getDx();
 
       int coarse_ncells = ncells;
@@ -303,7 +304,7 @@ void CellDataTest::setConservativeData(
 }
 
 void CellDataTest::setPeriodicData(
-   tbox::Pointer<pdat::CellData<double> > data,
+   boost::shared_ptr<pdat::CellData<double> > data,
    const hier::Box& box,
    const hier::Patch& patch) const
 {
@@ -319,9 +320,9 @@ void CellDataTest::setPeriodicData(
       domain_len[d] = xup[d] - xlo[d];
    }
 
-   const tbox::Pointer<geom::CartesianPatchGeometry> patch_geom(
+   const boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
       patch.getPatchGeometry(),
-      tbox::__dynamic_cast_tag());
+      boost::detail::dynamic_cast_tag());
    const double* dx = patch_geom->getDx();
 
    const int depth = data->getDepth();
@@ -346,7 +347,7 @@ void CellDataTest::setPeriodicData(
 
 void CellDataTest::initializeDataOnPatch(
    const hier::Patch& patch,
-   const tbox::Pointer<hier::PatchHierarchy> hierarchy,
+   const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
    int level_number,
    char src_or_dst)
 {
@@ -360,9 +361,9 @@ void CellDataTest::initializeDataOnPatch(
 
       for (int i = 0; i < d_variables.getSize(); i++) {
 
-         tbox::Pointer<pdat::CellData<double> > cell_data(
+         boost::shared_ptr<pdat::CellData<double> > cell_data(
             patch.getPatchData(d_variables[i], getDataContext()),
-            tbox::__dynamic_cast_tag());
+            boost::detail::dynamic_cast_tag());
 
          hier::Box dbox = cell_data->getBox();
 
@@ -378,9 +379,9 @@ void CellDataTest::initializeDataOnPatch(
 
       for (int i = 0; i < d_variables.getSize(); i++) {
 
-         tbox::Pointer<pdat::CellData<double> > cell_data(
+         boost::shared_ptr<pdat::CellData<double> > cell_data(
             patch.getPatchData(d_variables[i], getDataContext()),
-            tbox::__dynamic_cast_tag());
+            boost::detail::dynamic_cast_tag());
 
          hier::Box dbox = cell_data->getGhostBox();
 
@@ -397,7 +398,7 @@ void CellDataTest::initializeDataOnPatch(
 }
 
 void CellDataTest::checkPatchInteriorData(
-   const tbox::Pointer<pdat::CellData<double> >& data,
+   const boost::shared_ptr<pdat::CellData<double> >& data,
    const hier::Box& interior,
    const hier::Patch& patch) const
 {
@@ -409,7 +410,7 @@ void CellDataTest::checkPatchInteriorData(
 
    const int depth = data->getDepth();
 
-   tbox::Pointer<pdat::CellData<double> > correct_data(
+   boost::shared_ptr<pdat::CellData<double> > correct_data(
       new pdat::CellData<double>(data->getBox(),
                                  depth,
                                  data->getGhostCellWidth()));
@@ -442,9 +443,9 @@ void CellDataTest::setPhysicalBoundaryConditions(
       d_cart_grid_geometry->getPeriodicShift(hier::IntVector(d_dim, 1)));
    bool is_periodic = periodic_shift.max() > 0;
 
-   tbox::Pointer<geom::CartesianPatchGeometry> pgeom(
+   boost::shared_ptr<geom::CartesianPatchGeometry> pgeom(
       patch.getPatchGeometry(),
-      tbox::__dynamic_cast_tag());
+      boost::detail::dynamic_cast_tag());
 
    const tbox::Array<hier::BoundaryBox> node_bdry =
       pgeom->getCodimensionBoundaries(d_dim.getValue());
@@ -464,9 +465,9 @@ void CellDataTest::setPhysicalBoundaryConditions(
 
    for (int i = 0; i < d_variables.getSize(); i++) {
 
-      tbox::Pointer<pdat::CellData<double> > cell_data(
+      boost::shared_ptr<pdat::CellData<double> > cell_data(
          patch.getPatchData(d_variables[i], getDataContext()),
-         tbox::__dynamic_cast_tag());
+         boost::detail::dynamic_cast_tag());
 
       hier::Box patch_interior = cell_data->getBox();
       checkPatchInteriorData(cell_data, patch_interior, patch);
@@ -537,7 +538,7 @@ void CellDataTest::setPhysicalBoundaryConditions(
  */
 bool CellDataTest::verifyResults(
    const hier::Patch& patch,
-   const tbox::Pointer<hier::PatchHierarchy> hierarchy,
+   const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
    int level_number)
 {
 
@@ -560,7 +561,7 @@ bool CellDataTest::verifyResults(
       }
       hier::Box pbox = patch.getBox();
 
-      tbox::Pointer<pdat::CellData<double> > solution(
+      boost::shared_ptr<pdat::CellData<double> > solution(
          new pdat::CellData<double>(pbox, 1, tgcw));
 
       hier::Box tbox(pbox);
@@ -582,9 +583,9 @@ bool CellDataTest::verifyResults(
 
       for (int i = 0; i < d_variables.getSize(); i++) {
 
-         tbox::Pointer<pdat::CellData<double> > cell_data(
+         boost::shared_ptr<pdat::CellData<double> > cell_data(
             patch.getPatchData(d_variables[i], getDataContext()),
-            tbox::__dynamic_cast_tag());
+            boost::detail::dynamic_cast_tag());
          int depth = cell_data->getDepth();
          hier::Box dbox = cell_data->getGhostBox();
 

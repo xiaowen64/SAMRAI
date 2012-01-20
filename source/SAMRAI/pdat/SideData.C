@@ -695,7 +695,7 @@ void SideData<TYPE>::printAxis(
 
 template<class TYPE>
 void SideData<TYPE>::getSpecializedFromDatabase(
-   tbox::Pointer<tbox::Database> database)
+   boost::shared_ptr<tbox::Database> database)
 {
    TBOX_ASSERT(database);
 
@@ -707,7 +707,7 @@ void SideData<TYPE>::getSpecializedFromDatabase(
 
    d_depth = database->getInteger("d_depth");
 
-   tbox::Pointer<tbox::Database> array_database;
+   boost::shared_ptr<tbox::Database> array_database;
    for (int i = 0; i < getDim().getValue(); i++) {
       if (d_directions(i)) {
          std::string array_name = "d_data" + tbox::Utilities::intToString(i);
@@ -728,7 +728,7 @@ void SideData<TYPE>::getSpecializedFromDatabase(
 
 template<class TYPE>
 void SideData<TYPE>::putSpecializedToDatabase(
-   tbox::Pointer<tbox::Database> database)
+   boost::shared_ptr<tbox::Database> database)
 {
    TBOX_ASSERT(database);
 
@@ -736,7 +736,7 @@ void SideData<TYPE>::putSpecializedToDatabase(
 
    database->putInteger("d_depth", d_depth);
 
-   tbox::Pointer<tbox::Database> array_database;
+   boost::shared_ptr<tbox::Database> array_database;
    for (int i = 0; i < getDim().getValue(); i++) {
       if (d_directions(i)) {
          std::string array_name = "d_data" + tbox::Utilities::intToString(i);

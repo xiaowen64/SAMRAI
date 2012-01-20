@@ -63,9 +63,9 @@ void PatchFaceDataBasicOps<TYPE>::operator = (
 
 template<class TYPE>
 void PatchFaceDataBasicOps<TYPE>::scale(
-   tbox::Pointer<pdat::FaceData<TYPE> >& dst,
+   boost::shared_ptr<pdat::FaceData<TYPE> >& dst,
    const TYPE& alpha,
-   const tbox::Pointer<pdat::FaceData<TYPE> >& src,
+   const boost::shared_ptr<pdat::FaceData<TYPE> >& src,
    const hier::Box& box) const
 {
    TBOX_ASSERT(dst && src);
@@ -83,8 +83,8 @@ void PatchFaceDataBasicOps<TYPE>::scale(
 
 template<class TYPE>
 void PatchFaceDataBasicOps<TYPE>::addScalar(
-   tbox::Pointer<pdat::FaceData<TYPE> >& dst,
-   const tbox::Pointer<pdat::FaceData<TYPE> >& src,
+   boost::shared_ptr<pdat::FaceData<TYPE> >& dst,
+   const boost::shared_ptr<pdat::FaceData<TYPE> >& src,
    const TYPE& alpha,
    const hier::Box& box) const
 {
@@ -103,9 +103,9 @@ void PatchFaceDataBasicOps<TYPE>::addScalar(
 
 template<class TYPE>
 void PatchFaceDataBasicOps<TYPE>::add(
-   tbox::Pointer<pdat::FaceData<TYPE> >& dst,
-   const tbox::Pointer<pdat::FaceData<TYPE> >& src1,
-   const tbox::Pointer<pdat::FaceData<TYPE> >& src2,
+   boost::shared_ptr<pdat::FaceData<TYPE> >& dst,
+   const boost::shared_ptr<pdat::FaceData<TYPE> >& src1,
+   const boost::shared_ptr<pdat::FaceData<TYPE> >& src2,
    const hier::Box& box) const
 {
    TBOX_ASSERT(dst && src1 && src2);
@@ -123,9 +123,9 @@ void PatchFaceDataBasicOps<TYPE>::add(
 
 template<class TYPE>
 void PatchFaceDataBasicOps<TYPE>::subtract(
-   tbox::Pointer<pdat::FaceData<TYPE> >& dst,
-   const tbox::Pointer<pdat::FaceData<TYPE> >& src1,
-   const tbox::Pointer<pdat::FaceData<TYPE> >& src2,
+   boost::shared_ptr<pdat::FaceData<TYPE> >& dst,
+   const boost::shared_ptr<pdat::FaceData<TYPE> >& src1,
+   const boost::shared_ptr<pdat::FaceData<TYPE> >& src2,
    const hier::Box& box) const
 {
    TBOX_ASSERT(dst && src1 && src2);
@@ -143,9 +143,9 @@ void PatchFaceDataBasicOps<TYPE>::subtract(
 
 template<class TYPE>
 void PatchFaceDataBasicOps<TYPE>::multiply(
-   tbox::Pointer<pdat::FaceData<TYPE> >& dst,
-   const tbox::Pointer<pdat::FaceData<TYPE> >& src1,
-   const tbox::Pointer<pdat::FaceData<TYPE> >& src2,
+   boost::shared_ptr<pdat::FaceData<TYPE> >& dst,
+   const boost::shared_ptr<pdat::FaceData<TYPE> >& src1,
+   const boost::shared_ptr<pdat::FaceData<TYPE> >& src2,
    const hier::Box& box) const
 {
    TBOX_ASSERT(dst && src1 && src2);
@@ -163,9 +163,9 @@ void PatchFaceDataBasicOps<TYPE>::multiply(
 
 template<class TYPE>
 void PatchFaceDataBasicOps<TYPE>::divide(
-   tbox::Pointer<pdat::FaceData<TYPE> >& dst,
-   const tbox::Pointer<pdat::FaceData<TYPE> >& src1,
-   const tbox::Pointer<pdat::FaceData<TYPE> >& src2,
+   boost::shared_ptr<pdat::FaceData<TYPE> >& dst,
+   const boost::shared_ptr<pdat::FaceData<TYPE> >& src1,
+   const boost::shared_ptr<pdat::FaceData<TYPE> >& src2,
    const hier::Box& box) const
 {
    TBOX_ASSERT(dst && src1 && src2);
@@ -183,8 +183,8 @@ void PatchFaceDataBasicOps<TYPE>::divide(
 
 template<class TYPE>
 void PatchFaceDataBasicOps<TYPE>::reciprocal(
-   tbox::Pointer<pdat::FaceData<TYPE> >& dst,
-   const tbox::Pointer<pdat::FaceData<TYPE> >& src,
+   boost::shared_ptr<pdat::FaceData<TYPE> >& dst,
+   const boost::shared_ptr<pdat::FaceData<TYPE> >& src,
    const hier::Box& box) const
 {
    TBOX_ASSERT(dst && src);
@@ -202,11 +202,11 @@ void PatchFaceDataBasicOps<TYPE>::reciprocal(
 
 template<class TYPE>
 void PatchFaceDataBasicOps<TYPE>::linearSum(
-   tbox::Pointer<pdat::FaceData<TYPE> >& dst,
+   boost::shared_ptr<pdat::FaceData<TYPE> >& dst,
    const TYPE& alpha,
-   const tbox::Pointer<pdat::FaceData<TYPE> >& src1,
+   const boost::shared_ptr<pdat::FaceData<TYPE> >& src1,
    const TYPE& beta,
-   const tbox::Pointer<pdat::FaceData<TYPE> >& src2,
+   const boost::shared_ptr<pdat::FaceData<TYPE> >& src2,
    const hier::Box& box) const
 {
    TBOX_ASSERT(dst && src1 && src2);
@@ -225,10 +225,10 @@ void PatchFaceDataBasicOps<TYPE>::linearSum(
 
 template<class TYPE>
 void PatchFaceDataBasicOps<TYPE>::axpy(
-   tbox::Pointer<pdat::FaceData<TYPE> >& dst,
+   boost::shared_ptr<pdat::FaceData<TYPE> >& dst,
    const TYPE& alpha,
-   const tbox::Pointer<pdat::FaceData<TYPE> >& src1,
-   const tbox::Pointer<pdat::FaceData<TYPE> >& src2,
+   const boost::shared_ptr<pdat::FaceData<TYPE> >& src1,
+   const boost::shared_ptr<pdat::FaceData<TYPE> >& src2,
    const hier::Box& box) const
 {
    TBOX_ASSERT(dst && src1 && src2);
@@ -247,10 +247,10 @@ void PatchFaceDataBasicOps<TYPE>::axpy(
 
 template<class TYPE>
 void PatchFaceDataBasicOps<TYPE>::axmy(
-   tbox::Pointer<pdat::FaceData<TYPE> >& dst,
+   boost::shared_ptr<pdat::FaceData<TYPE> >& dst,
    const TYPE& alpha,
-   const tbox::Pointer<pdat::FaceData<TYPE> >& src1,
-   const tbox::Pointer<pdat::FaceData<TYPE> >& src2,
+   const boost::shared_ptr<pdat::FaceData<TYPE> >& src1,
+   const boost::shared_ptr<pdat::FaceData<TYPE> >& src2,
    const hier::Box& box) const
 {
    TBOX_ASSERT(dst && src1 && src2);
@@ -269,7 +269,7 @@ void PatchFaceDataBasicOps<TYPE>::axmy(
 
 template<class TYPE>
 void PatchFaceDataBasicOps<TYPE>::setRandomValues(
-   tbox::Pointer<pdat::FaceData<TYPE> >& dst,
+   boost::shared_ptr<pdat::FaceData<TYPE> >& dst,
    const TYPE& width,
    const TYPE& low,
    const hier::Box& box) const
@@ -288,7 +288,7 @@ void PatchFaceDataBasicOps<TYPE>::setRandomValues(
 
 template<class TYPE>
 TYPE PatchFaceDataBasicOps<TYPE>::min(
-   const tbox::Pointer<pdat::FaceData<TYPE> >& data,
+   const boost::shared_ptr<pdat::FaceData<TYPE> >& data,
    const hier::Box& box) const
 {
    TBOX_ASSERT(data);
@@ -307,7 +307,7 @@ TYPE PatchFaceDataBasicOps<TYPE>::min(
 
 template<class TYPE>
 TYPE PatchFaceDataBasicOps<TYPE>::max(
-   const tbox::Pointer<pdat::FaceData<TYPE> >& data,
+   const boost::shared_ptr<pdat::FaceData<TYPE> >& data,
    const hier::Box& box) const
 {
    TBOX_ASSERT(data);

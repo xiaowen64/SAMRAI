@@ -36,7 +36,7 @@ extern "C" {
    do {                                          \
       if (ierr != KIN_SUCCESS) {                                                                \
          std::ostringstream tboxos;                                                     \
-         SAMRAI::tbox::Utilities::abort( \
+         tbox::Utilities::abort( \
             tboxos.str().c_str(), __FILE__, __LINE__);      \
       }                                                                         \
    } while (0)
@@ -45,7 +45,7 @@ extern "C" {
    do {                                          \
       if (ierr != KIN_SUCCESS) {                                                                \
          std::ostrstream tboxos;                                                        \
-         SAMRAI::tbox::Utilities::abort(tboxos.str(), __FILE__, __LINE__);              \
+         tbox::Utilities::abort(tboxos.str(), __FILE__, __LINE__);              \
       }                                                                         \
    } while (0)
 #endif

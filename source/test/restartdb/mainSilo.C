@@ -17,8 +17,9 @@
 #include "SAMRAI/tbox/SiloDatabase.h"
 #include "SAMRAI/tbox/SAMRAI_MPI.h"
 #include "SAMRAI/tbox/PIO.h"
-#include "SAMRAI/tbox/Pointer.h"
 #include "SAMRAI/tbox/RestartManager.h"
+
+#include <boost/shared_ptr.hpp>
 #include <string>
 
 using namespace std;
@@ -39,17 +40,17 @@ public:
    }
 
    void putToDatabase(
-      tbox::Pointer<tbox::Database> db)
+      boost::shared_ptr<tbox::Database> db)
    {
       writeTestData(db);
    }
 
    void getFromDatabase()
    {
-      tbox::Pointer<tbox::Database> root_db =
+      boost::shared_ptr<tbox::Database> root_db =
          tbox::RestartManager::getManager()->getRootDatabase();
 
-      tbox::Pointer<tbox::Database> db;
+      boost::shared_ptr<tbox::Database> db;
       if (root_db->isDatabase("RestartTester")) {
          db = root_db->getDatabase("RestartTester");
       }
@@ -88,8 +89,8 @@ int main(
 
       setupTestData();
 
-      tbox::Pointer<tbox::SiloDatabase> database(new tbox::SiloDatabase(
-                                                    "SAMRAI Restart"));
+      boost::shared_ptr<tbox::SiloDatabase> database(new tbox::SiloDatabase(
+                                                     "SAMRAI Restart"));
 
       database->create("./restart."
          + tbox::Utilities::processorToString(
@@ -105,7 +106,7 @@ int main(
 
       tbox::plog << "\n--- Silo read database tests BEGIN ---" << endl;
 
-      database = new tbox::SiloDatabase("SAMRAI Restart");
+      database.reset(new tbox::SiloDatabase("SAMRAI Restart"));
 
       database->open("./restart."
          + tbox::Utilities::processorToString(

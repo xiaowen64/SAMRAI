@@ -38,7 +38,7 @@ PatchFaceDataNormOpsComplex::~PatchFaceDataNormOpsComplex()
  */
 
 int PatchFaceDataNormOpsComplex::numberOfEntries(
-   const tbox::Pointer<pdat::FaceData<dcomplex> >& data,
+   const boost::shared_ptr<pdat::FaceData<dcomplex> >& data,
    const hier::Box& box) const
 {
    TBOX_ASSERT(data);
@@ -64,8 +64,8 @@ int PatchFaceDataNormOpsComplex::numberOfEntries(
  */
 
 double PatchFaceDataNormOpsComplex::sumControlVolumes(
-   const tbox::Pointer<pdat::FaceData<dcomplex> >& data,
-   const tbox::Pointer<pdat::FaceData<double> >& cvol,
+   const boost::shared_ptr<pdat::FaceData<dcomplex> >& data,
+   const boost::shared_ptr<pdat::FaceData<double> >& cvol,
    const hier::Box& box) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
@@ -84,8 +84,8 @@ double PatchFaceDataNormOpsComplex::sumControlVolumes(
 }
 
 void PatchFaceDataNormOpsComplex::abs(
-   tbox::Pointer<pdat::FaceData<double> >& dst,
-   const tbox::Pointer<pdat::FaceData<dcomplex> >& src,
+   boost::shared_ptr<pdat::FaceData<double> >& dst,
+   const boost::shared_ptr<pdat::FaceData<dcomplex> >& src,
    const hier::Box& box) const
 {
    TBOX_ASSERT(dst && src);
@@ -102,9 +102,9 @@ void PatchFaceDataNormOpsComplex::abs(
 }
 
 double PatchFaceDataNormOpsComplex::L1Norm(
-   const tbox::Pointer<pdat::FaceData<dcomplex> >& data,
+   const boost::shared_ptr<pdat::FaceData<dcomplex> >& data,
    const hier::Box& box,
-   const tbox::Pointer<pdat::FaceData<double> > cvol) const
+   const boost::shared_ptr<pdat::FaceData<double> > cvol) const
 {
    TBOX_ASSERT(data);
    TBOX_DIM_ASSERT_CHECK_ARGS2(*data, box);
@@ -131,9 +131,9 @@ double PatchFaceDataNormOpsComplex::L1Norm(
 }
 
 double PatchFaceDataNormOpsComplex::L2Norm(
-   const tbox::Pointer<pdat::FaceData<dcomplex> >& data,
+   const boost::shared_ptr<pdat::FaceData<dcomplex> >& data,
    const hier::Box& box,
-   const tbox::Pointer<pdat::FaceData<double> > cvol) const
+   const boost::shared_ptr<pdat::FaceData<double> > cvol) const
 {
    TBOX_ASSERT(data);
    TBOX_DIM_ASSERT_CHECK_ARGS2(*data, box);
@@ -163,10 +163,10 @@ double PatchFaceDataNormOpsComplex::L2Norm(
 }
 
 double PatchFaceDataNormOpsComplex::weightedL2Norm(
-   const tbox::Pointer<pdat::FaceData<dcomplex> >& data,
-   const tbox::Pointer<pdat::FaceData<dcomplex> >& weight,
+   const boost::shared_ptr<pdat::FaceData<dcomplex> >& data,
+   const boost::shared_ptr<pdat::FaceData<dcomplex> >& weight,
    const hier::Box& box,
-   const tbox::Pointer<pdat::FaceData<double> > cvol) const
+   const boost::shared_ptr<pdat::FaceData<double> > cvol) const
 {
    TBOX_ASSERT(data && weight);
    TBOX_DIM_ASSERT_CHECK_ARGS3(*data, *weight, box);
@@ -199,9 +199,9 @@ double PatchFaceDataNormOpsComplex::weightedL2Norm(
 }
 
 double PatchFaceDataNormOpsComplex::RMSNorm(
-   const tbox::Pointer<pdat::FaceData<dcomplex> >& data,
+   const boost::shared_ptr<pdat::FaceData<dcomplex> >& data,
    const hier::Box& box,
-   const tbox::Pointer<pdat::FaceData<double> > cvol) const
+   const boost::shared_ptr<pdat::FaceData<double> > cvol) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(data);
@@ -216,10 +216,10 @@ double PatchFaceDataNormOpsComplex::RMSNorm(
 }
 
 double PatchFaceDataNormOpsComplex::weightedRMSNorm(
-   const tbox::Pointer<pdat::FaceData<dcomplex> >& data,
-   const tbox::Pointer<pdat::FaceData<dcomplex> >& weight,
+   const boost::shared_ptr<pdat::FaceData<dcomplex> >& data,
+   const boost::shared_ptr<pdat::FaceData<dcomplex> >& weight,
    const hier::Box& box,
-   const tbox::Pointer<pdat::FaceData<double> > cvol) const
+   const boost::shared_ptr<pdat::FaceData<double> > cvol) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(data && weight);
@@ -234,9 +234,9 @@ double PatchFaceDataNormOpsComplex::weightedRMSNorm(
 }
 
 double PatchFaceDataNormOpsComplex::maxNorm(
-   const tbox::Pointer<pdat::FaceData<dcomplex> >& data,
+   const boost::shared_ptr<pdat::FaceData<dcomplex> >& data,
    const hier::Box& box,
-   const tbox::Pointer<pdat::FaceData<double> > cvol) const
+   const boost::shared_ptr<pdat::FaceData<double> > cvol) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(data);
@@ -264,10 +264,10 @@ double PatchFaceDataNormOpsComplex::maxNorm(
 }
 
 dcomplex PatchFaceDataNormOpsComplex::dot(
-   const tbox::Pointer<pdat::FaceData<dcomplex> >& data1,
-   const tbox::Pointer<pdat::FaceData<dcomplex> >& data2,
+   const boost::shared_ptr<pdat::FaceData<dcomplex> >& data1,
+   const boost::shared_ptr<pdat::FaceData<dcomplex> >& data2,
    const hier::Box& box,
-   const tbox::Pointer<pdat::FaceData<double> > cvol) const
+   const boost::shared_ptr<pdat::FaceData<double> > cvol) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(data1 && data2);
@@ -296,9 +296,9 @@ dcomplex PatchFaceDataNormOpsComplex::dot(
 }
 
 dcomplex PatchFaceDataNormOpsComplex::integral(
-   const tbox::Pointer<pdat::FaceData<dcomplex> >& data,
+   const boost::shared_ptr<pdat::FaceData<dcomplex> >& data,
    const hier::Box& box,
-   const tbox::Pointer<pdat::FaceData<double> > vol) const
+   const boost::shared_ptr<pdat::FaceData<double> > vol) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(data);

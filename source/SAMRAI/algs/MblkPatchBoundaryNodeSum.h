@@ -22,11 +22,11 @@
 #include "SAMRAI/xfer/RefineSchedule.h"
 #include "SAMRAI/pdat/NodeVariable.h"
 #include "SAMRAI/pdat/OuternodeVariable.h"
-#include "SAMRAI/tbox/Pointer.h"
 #include "SAMRAI/xfer/CoarsenSchedule.h"
 #include "SAMRAI/xfer/RefineSchedule.h"
 #include "SAMRAI/xfer/RefineTransactionFactory.h"
 
+#include <boost/shared_ptr.hpp>
 #include <string>
 
 namespace SAMRAI {
@@ -83,7 +83,7 @@ public:
     */
    MblkPatchBoundaryNodeSum(
       const std::string& object_name,
-      tbox::Pointer<hier::PatchHierarchy> hierarchy);
+      boost::shared_ptr<hier::PatchHierarchy> hierarchy);
 
    /*!
     *  @brief Destructor for the schedule releases all internal storage.
@@ -115,7 +115,7 @@ public:
     */
    void
    setupSum(
-      tbox::Pointer<hier::PatchLevel> level);
+      boost::shared_ptr<hier::PatchLevel> level);
 
    /*!
     *  @brief Compute sum of node values at each shared node and replace
@@ -167,7 +167,7 @@ private:
     */
    void
    doLevelSum(
-      tbox::Pointer<hier::PatchLevel> level) const;
+      boost::shared_ptr<hier::PatchLevel> level) const;
 
    /*
     * Private member function to copy node data to outernode data
@@ -175,7 +175,7 @@ private:
     */
    void
    copyNodeToOuternodeOnLevel(
-      tbox::Pointer<hier::PatchLevel> level,
+      boost::shared_ptr<hier::PatchLevel> level,
       const tbox::Array<int>& node_data_id,
       const tbox::Array<int>& onode_data_id) const;
 
@@ -185,7 +185,7 @@ private:
     */
    void
    copyOuternodeToNodeOnLevel(
-      tbox::Pointer<hier::PatchLevel> level,
+      boost::shared_ptr<hier::PatchLevel> level,
       const tbox::Array<int>& onode_data_id,
       const tbox::Array<int>& node_data_id) const;
 
@@ -216,8 +216,8 @@ private:
     * Node-centered variables and patch data indices used as internal work quantities.
     */
    // These arrays are indexed [variable registration sequence number]
-   tbox::Array<tbox::Pointer<hier::Variable> > d_tmp_onode_src_variable;
-   tbox::Array<tbox::Pointer<hier::Variable> > d_tmp_onode_dst_variable;
+   tbox::Array<boost::shared_ptr<hier::Variable> > d_tmp_onode_src_variable;
+   tbox::Array<boost::shared_ptr<hier::Variable> > d_tmp_onode_dst_variable;
 
    // These arrays are indexed [variable registration sequence number]
    tbox::Array<int> d_onode_src_id;
@@ -229,18 +229,18 @@ private:
    hier::ComponentSelector d_onode_src_data_set;
    hier::ComponentSelector d_onode_dst_data_set;
 
-   tbox::Pointer<hier::PatchLevel> d_level;
+   boost::shared_ptr<hier::PatchLevel> d_level;
 
-   tbox::Pointer<hier::PatchHierarchy> d_hierarchy;
+   boost::shared_ptr<hier::PatchHierarchy> d_hierarchy;
    int d_coarsest_level;
    int d_finest_level;
 
    bool d_level_setup_called;
    bool d_hierarchy_setup_called;
 
-   tbox::Pointer<xfer::RefineTransactionFactory> d_sum_transaction_factory;
+   boost::shared_ptr<xfer::RefineTransactionFactory> d_sum_transaction_factory;
 
-   tbox::Array<tbox::Pointer<xfer::RefineSchedule> >
+   tbox::Array<boost::shared_ptr<xfer::RefineSchedule> >
    d_single_level_sum_schedule;
 
 };

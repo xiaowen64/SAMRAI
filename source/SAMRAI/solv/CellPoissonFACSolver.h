@@ -17,7 +17,8 @@
 #include "SAMRAI/solv/PoissonSpecifications.h"
 #include "SAMRAI/solv/SimpleCellRobinBcCoefs.h"
 #include "SAMRAI/tbox/Database.h"
-#include "SAMRAI/tbox/Pointer.h"
+
+#include <boost/shared_ptr.hpp>
 
 namespace SAMRAI {
 namespace solv {
@@ -128,8 +129,8 @@ public:
    CellPoissonFACSolver(
       const tbox::Dimension& dim,
       const std::string& object_name,
-      tbox::Pointer<tbox::Database> database =
-         tbox::Pointer<tbox::Database>());
+      boost::shared_ptr<tbox::Database> database =
+         boost::shared_ptr<tbox::Database>());
 
    /*!
     * @brief Destructor.
@@ -181,7 +182,7 @@ public:
    solveSystem(
       const int solution,
       const int rhs,
-      tbox::Pointer<hier::PatchHierarchy> hierarchy,
+      boost::shared_ptr<hier::PatchHierarchy> hierarchy,
       int coarse_ln = -1,
       int fine_ln = -1);
 
@@ -203,7 +204,7 @@ public:
     *
     * @return whether solver converged to specified level
     *
-    * @see solveSystem( const int, const int, tbox::Pointer< hier::PatchHierarchy >, int, int);
+    * @see solveSystem( const int, const int, boost::shared_ptr< hier::PatchHierarchy >, int, int);
     */
    bool
    solveSystem(
@@ -503,7 +504,7 @@ public:
    initializeSolverState(
       const int solution,
       const int rhs,
-      tbox::Pointer<hier::PatchHierarchy> hierarchy,
+      boost::shared_ptr<hier::PatchHierarchy> hierarchy,
       const int coarse_level = -1,
       const int fine_level = -1);
 
@@ -575,7 +576,7 @@ private:
     */
    void
    getFromInput(
-      tbox::Pointer<tbox::Database> database);
+      boost::shared_ptr<tbox::Database> database);
 
    /*
     * @brief Set @c d_uv and @c d_fv to vectors wrapping the data
@@ -631,31 +632,31 @@ private:
     */
    SimpleCellRobinBcCoefs d_simple_bc;
 
-   tbox::Pointer<hier::PatchHierarchy> d_hierarchy;
+   boost::shared_ptr<hier::PatchHierarchy> d_hierarchy;
    int d_ln_min;
    int d_ln_max;
 
    /*!
     * @brief Context for all internally maintained data.
     */
-   tbox::Pointer<hier::VariableContext> d_context;
+   boost::shared_ptr<hier::VariableContext> d_context;
    /*
     * @brief Vector wrapper for solution.
     * @see createVectorWrappers(), destroyVectorWrappers()
     */
-   tbox::Pointer<SAMRAIVectorReal<double> > d_uv;
+   boost::shared_ptr<SAMRAIVectorReal<double> > d_uv;
    /*
     * @brief Vector wrapper for source.
     * @see createVectorWrappers(), destroyVectorWrappers()
     */
-   tbox::Pointer<SAMRAIVectorReal<double> > d_fv;
+   boost::shared_ptr<SAMRAIVectorReal<double> > d_fv;
 
    bool d_solver_is_initialized;
    bool d_enable_logging;
 
    static bool s_initialized;
-   static int s_weight_id[SAMRAI::tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-   static int s_instance_counter[SAMRAI::tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+   static int s_weight_id[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+   static int s_instance_counter[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
 };
 
 }

@@ -60,7 +60,7 @@ TimerManager::s_finalize_handler(
  */
 
 void TimerManager::createManager(
-   Pointer<Database> input_db)
+   boost::shared_ptr<Database> input_db)
 {
    if (!s_timer_manager_instance) {
       s_timer_manager_instance = new TimerManager(input_db);
@@ -87,7 +87,7 @@ TimerManager *TimerManager::getManager()
       TBOX_WARNING("TimerManager::getManager() is called before\n"
          << "createManager().  Creating the timer manager\n"
          << "(without using input database.)\n");
-      createManager(tbox::Pointer<SAMRAI::tbox::Database>(NULL));
+      createManager(boost::shared_ptr<tbox::Database>());
    }
 
    return s_timer_manager_instance;
@@ -122,7 +122,7 @@ void TimerManager::registerSingletonSubclassInstance(
  */
 
 TimerManager::TimerManager(
-   Pointer<Database> input_db)
+   boost::shared_ptr<Database> input_db)
 {
 #ifdef ENABLE_SAMRAI_TIMERS
    /*
@@ -132,9 +132,9 @@ TimerManager::TimerManager(
     * for the different cases to avoid confusion in the Tau analysis tool.
     */
 #ifdef HAVE_TAU
-   d_main_timer = new Timer("UNINSTRUMENTED PARTS");
+   d_main_timer.reset(new Timer("UNINSTRUMENTED PARTS"));
 #else
-   d_main_timer = new Timer("TOTAL RUN TIME");
+   d_main_timer.reset(new Timer("TOTAL RUN TIME"));
 #endif
 
    d_exclusive_timer_stack.clearItems();
@@ -204,9 +204,9 @@ TimerManager::~TimerManager()
  */
 
 bool TimerManager::checkTimerExistsInArray(
-   Pointer<Timer>& timer,
+   boost::shared_ptr<Timer>& timer,
    const std::string& name,
-   const std::vector<Pointer<Timer> >& timer_array) const
+   const std::vector<boost::shared_ptr<Timer> >& timer_array) const
 {
 
    bool timer_found = false;
@@ -228,7 +228,7 @@ bool TimerManager::checkTimerExistsInArray(
 
 void TimerManager::activateExistingTimers() {
 #ifdef ENABLE_SAMRAI_TIMERS
-   std::vector<Pointer<Timer> >::iterator it = d_inactive_timers.begin();
+   std::vector<boost::shared_ptr<Timer> >::iterator it = d_inactive_timers.begin();
    while (it != d_inactive_timers.end()) {
       bool timer_active = checkTimerInNameLists((*it)->getName());
       if (timer_active) {
@@ -242,11 +242,11 @@ void TimerManager::activateExistingTimers() {
 #endif
 }
 
-Pointer<Timer> TimerManager::getTimer(
+boost::shared_ptr<Timer> TimerManager::getTimer(
    const std::string& name,
    bool ignore_timer_input)
 {
-   Pointer<Timer> timer;
+   boost::shared_ptr<Timer> timer;
 
 #ifdef ENABLE_SAMRAI_TIMERS
 
@@ -271,7 +271,7 @@ Pointer<Timer> TimerManager::getTimer(
             d_timers.reserve(d_timers.size()
                + DEFAULT_NUMBER_OF_TIMERS_INCREMENT);
          }
-         timer = new Timer(name);
+         timer.reset(new Timer(name));
          d_timers.push_back(timer);
       }
    } else {
@@ -282,7 +282,7 @@ Pointer<Timer> TimerManager::getTimer(
             d_inactive_timers.reserve(d_inactive_timers.size()
                + DEFAULT_NUMBER_OF_TIMERS_INCREMENT);
          }
-         timer = new Timer(name);
+         timer.reset(new Timer(name));
          timer->setActive(false);
          d_inactive_timers.push_back(timer);
       }
@@ -301,7 +301,7 @@ Pointer<Timer> TimerManager::getTimer(
 }
 
 bool TimerManager::checkTimerExists(
-   Pointer<Timer>& timer,
+   boost::shared_ptr<Timer>& timer,
    const std::string& name) const
 {
 #ifdef ENABLE_SAMRAI_TIMERS
@@ -341,7 +341,7 @@ bool TimerManager::checkTimerRunning(
 #ifdef ENABLE_SAMRAI_TIMERS
 
    TBOX_ASSERT(!name.empty());
-   Pointer<Timer> timer;
+   boost::shared_ptr<Timer> timer;
    if (checkTimerExistsInArray(timer, name, d_timers)) {
       is_running = timer->isRunning();
    }
@@ -2139,7 +2139,7 @@ double TimerManager::computePercentageDouble(
  */
 
 void TimerManager::getFromInput(
-   Pointer<Database> input_db)
+   boost::shared_ptr<Database> input_db)
 {
 #ifdef ENABLE_SAMRAI_TIMERS
    if (input_db) {
@@ -2396,8 +2396,8 @@ double TimerManager::computeOverheadConstantActiveOrInactive(
    bool active)
 {
 #ifdef ENABLE_SAMRAI_TIMERS
-   tbox::Pointer<tbox::Timer> outer_timer;
-   tbox::Pointer<tbox::Timer> inner_timer;
+   boost::shared_ptr<tbox::Timer> outer_timer;
+   boost::shared_ptr<tbox::Timer> inner_timer;
 
    std::string outer_name("TimerManger::Outer");
    outer_timer = tbox::TimerManager::getManager()->getTimer(outer_name, true);
@@ -2453,9 +2453,9 @@ void TimerManager::clearArrays(
     * for the different cases to avoid confusion in the Tau analysis tool.
     */
 #ifdef HAVE_TAU
-   d_main_timer = new Timer("UNINSTRUMENTED PARTS");
+   d_main_timer.reset(new Timer("UNINSTRUMENTED PARTS"));
 #else
-   d_main_timer = new Timer("TOTAL RUN TIME");
+   d_main_timer.reset(new Timer("TOTAL RUN TIME"));
 #endif
 
    d_timers.clear();

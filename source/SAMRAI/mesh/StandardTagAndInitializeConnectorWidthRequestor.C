@@ -163,8 +163,7 @@ int StandardTagAndInitializeConnectorWidthRequestor::computeCoarsenRatio(
    for (int ln = 1; ln < ratios_to_coarser.getSize(); ln++) {
 
       for (int d = 0; d < dim.getValue(); d++) {
-         int gcd =
-            SAMRAI::mesh::GCD(error_coarsen_ratio, ratios_to_coarser[ln](d));
+         int gcd = GCD(error_coarsen_ratio, ratios_to_coarser[ln](d));
          if ((gcd % error_coarsen_ratio) != 0) {
             gcd = ratios_to_coarser[ln](d);
             TBOX_ERROR(

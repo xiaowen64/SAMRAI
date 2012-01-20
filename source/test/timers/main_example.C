@@ -19,9 +19,10 @@ using namespace std;
 #include "SAMRAI/tbox/InputManager.h"
 #include "SAMRAI/tbox/SAMRAI_MPI.h"
 #include "SAMRAI/tbox/PIO.h"
-#include "SAMRAI/tbox/Pointer.h"
 #include "SAMRAI/tbox/Timer.h"
 #include "SAMRAI/tbox/TimerManager.h"
+
+#include <boost/shared_ptr.hpp>
 
 using namespace SAMRAI;
 
@@ -53,7 +54,8 @@ int main(
        * Create an input database "input_db" and parse input file (specified
        * on the command line.
        */
-      tbox::Pointer<tbox::InputDatabase> input_db(new tbox::InputDatabase("input_db"));
+      boost::shared_ptr<tbox::InputDatabase> input_db(
+         new tbox::InputDatabase("input_db"));
       tbox::InputManager::getManager()->parseInputFile(input_filename, input_db);
 
       /*
@@ -68,8 +70,8 @@ int main(
        * looked up the first time).
        */
       string name = "main::test";
-      tbox::Pointer<tbox::Timer> timer = tbox::TimerManager::getManager()->
-         getTimer(name);
+      boost::shared_ptr<tbox::Timer> timer =
+         tbox::TimerManager::getManager()->getTimer(name);
 
       /*
        * Start timer.  If the timer name was not specified in the input

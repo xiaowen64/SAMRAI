@@ -637,8 +637,8 @@ private:
 
    int d_mpi_err;
 
-   static Pointer<Timer> t_reduce_data;
-   static Pointer<Timer> t_wait_all;
+   static boost::shared_ptr<Timer> t_reduce_data;
+   static boost::shared_ptr<Timer> t_wait_all;
 
    static tbox::StartupShutdownManager::Handler
       s_initialize_finalize_handler;

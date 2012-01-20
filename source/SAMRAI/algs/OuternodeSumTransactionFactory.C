@@ -47,7 +47,7 @@ void OuternodeSumTransactionFactory::setRefineItems(
    const xfer::RefineClasses::Data** refine_items,
    int num_refine_items)
 {
-   algs::OuternodeSumTransaction::setRefineItems(refine_items,
+   OuternodeSumTransaction::setRefineItems(refine_items,
       num_refine_items);
    d_refine_items = refine_items;
    d_number_refine_items = num_refine_items;
@@ -68,11 +68,11 @@ void OuternodeSumTransactionFactory::unsetRefineItems()
  *************************************************************************
  */
 
-tbox::Pointer<tbox::Transaction>
+boost::shared_ptr<tbox::Transaction>
 OuternodeSumTransactionFactory::allocate(
-   tbox::Pointer<hier::PatchLevel> dst_level,
-   tbox::Pointer<hier::PatchLevel> src_level,
-   tbox::Pointer<hier::BoxOverlap> overlap,
+   boost::shared_ptr<hier::PatchLevel> dst_level,
+   boost::shared_ptr<hier::PatchLevel> src_level,
+   boost::shared_ptr<hier::BoxOverlap> overlap,
    const hier::Box& dst_node,
    const hier::Box& src_node,
    int ritem_id,
@@ -91,14 +91,14 @@ OuternodeSumTransactionFactory::allocate(
          dst_node,
          src_node,
          ritem_id);
-   return tbox::Pointer<tbox::Transaction>(transaction);
+   return boost::shared_ptr<tbox::Transaction>(transaction);
 }
 
-tbox::Pointer<tbox::Transaction>
+boost::shared_ptr<tbox::Transaction>
 OuternodeSumTransactionFactory::allocate(
-   tbox::Pointer<hier::PatchLevel> dst_level,
-   tbox::Pointer<hier::PatchLevel> src_level,
-   tbox::Pointer<hier::BoxOverlap> overlap,
+   boost::shared_ptr<hier::PatchLevel> dst_level,
+   boost::shared_ptr<hier::PatchLevel> src_level,
+   boost::shared_ptr<hier::BoxOverlap> overlap,
    const hier::Box& dst_node,
    const hier::Box& src_node,
    int ritem_id) const
@@ -124,7 +124,7 @@ OuternodeSumTransactionFactory::allocate(
  */
 
 void OuternodeSumTransactionFactory::preprocessScratchSpace(
-   tbox::Pointer<hier::PatchLevel> level,
+   boost::shared_ptr<hier::PatchLevel> level,
    double fill_time,
    const hier::ComponentSelector& preprocess_vector) const
 {
@@ -132,14 +132,14 @@ void OuternodeSumTransactionFactory::preprocessScratchSpace(
    TBOX_ASSERT(level);
 
    for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-      tbox::Pointer<hier::Patch> patch = *ip;
+      boost::shared_ptr<hier::Patch> patch = *ip;
 
       const int ncomponents = preprocess_vector.getSize();
       for (int n = 0; n < ncomponents; ++n) {
          if (preprocess_vector.isSet(n)) {
-            tbox::Pointer<pdat::OuternodeData<double> > onode_data(
+            boost::shared_ptr<pdat::OuternodeData<double> > onode_data(
                patch->getPatchData(n),
-               tbox::__dynamic_cast_tag());
+               boost::detail::dynamic_cast_tag());
             onode_data->fillAll(0.0);
          }
       }

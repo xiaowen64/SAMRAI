@@ -80,7 +80,7 @@ void PeriodicShiftCatalog::finalizeCallback()
 PeriodicShiftCatalog::PeriodicShiftCatalog(
    const tbox::Dimension& dim):
    d_dim(dim),
-   d_shifts(1, hier::IntVector::getZero(dim)),
+   d_shifts(1, IntVector::getZero(dim)),
    d_opposite_number(1),
    d_zero_shift_number(0)
 {

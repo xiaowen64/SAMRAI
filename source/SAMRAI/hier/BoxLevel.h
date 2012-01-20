@@ -18,9 +18,9 @@
 #include "SAMRAI/hier/PersistentOverlapConnectors.h"
 #include "SAMRAI/tbox/SAMRAI_MPI.h"
 #include "SAMRAI/tbox/SAMRAIManager.h"
-#include "SAMRAI/tbox/Pointer.h"
 #include "SAMRAI/tbox/Timer.h"
 
+#include <boost/shared_ptr.hpp>
 #include <vector>
 
 namespace SAMRAI {
@@ -132,7 +132,7 @@ public:
     */
    BoxLevel(
       const IntVector& ratio,
-      const tbox::Pointer<const GridGeometry>& grid_geom,
+      const boost::shared_ptr<const GridGeometry>& grid_geom,
       const tbox::SAMRAI_MPI& mpi = tbox::SAMRAI_MPI::getSAMRAIWorld(),
       const ParallelState parallel_state = DISTRIBUTED);
 
@@ -165,7 +165,7 @@ public:
    void
    initialize(
       const IntVector& ratio,
-      const tbox::Pointer<const GridGeometry>& grid_geom,
+      const boost::shared_ptr<const GridGeometry>& grid_geom,
       const tbox::SAMRAI_MPI& mpi = tbox::SAMRAI_MPI::getSAMRAIWorld(),
       const ParallelState parallel_state = DISTRIBUTED);
 
@@ -195,7 +195,7 @@ public:
    swapInitialize(
       BoxContainer& boxes,
       const IntVector& ratio,
-      const tbox::Pointer<const GridGeometry>& grid_geom,
+      const boost::shared_ptr<const GridGeometry>& grid_geom,
       const tbox::SAMRAI_MPI& mpi = tbox::SAMRAI_MPI::getSAMRAIWorld(),
       const ParallelState parallel_state = DISTRIBUTED);
 
@@ -660,7 +660,7 @@ public:
     *
     * If object has never been initialized, return NULL pointer.
     */
-   const tbox::Pointer<const GridGeometry>&
+   const boost::shared_ptr<const GridGeometry>&
    getGridGeometry() const;
 
    //@}
@@ -1037,7 +1037,7 @@ public:
    void
    getFromDatabase(
       tbox::Database& database,
-      const tbox::Pointer<const GridGeometry>& grid_geom);
+      const boost::shared_ptr<const GridGeometry>& grid_geom);
 
    //@}
 
@@ -1081,7 +1081,7 @@ public:
     * the BoxLevel from the BoxLevelHandle.
     *
     * If the BoxLevel go out of scope before the
-    * Connector disconnects, this tbox::Pointer object will
+    * Connector disconnects, this boost::shared_ptr object will
     * stay around until all Connectors have disconnected.
     *
     * Operations that can invalidate Connector data are those
@@ -1101,9 +1101,9 @@ public:
     *
     * @see BoxLevelHandle.
     *
-    * @return A tbox::Pointer to the BoxLevelHandle
+    * @return A boost::shared_ptr to the BoxLevelHandle
     */
-   const tbox::Pointer<BoxLevelHandle>&
+   const boost::shared_ptr<BoxLevelHandle>&
    getBoxLevelHandle() const;
 
    //@{
@@ -1318,7 +1318,7 @@ private:
    void
    initializePrivate(
       const IntVector& ratio,
-      const tbox::Pointer<const GridGeometry>& grid_geom,
+      const boost::shared_ptr<const GridGeometry>& grid_geom,
       const tbox::SAMRAI_MPI& mpi = tbox::SAMRAI_MPI::getSAMRAIWorld(),
       const ParallelState parallel_state = DISTRIBUTED);
 
@@ -1486,16 +1486,16 @@ private:
     * data because correctness depends on the Connector's
     * intended usage.
     */
-   mutable tbox::Pointer<BoxLevelHandle> d_handle;
+   mutable boost::shared_ptr<BoxLevelHandle> d_handle;
 
-   static tbox::Pointer<tbox::Timer> t_initialize_private;
-   static tbox::Pointer<tbox::Timer> t_acquire_remote_boxes;
-   static tbox::Pointer<tbox::Timer> t_cache_global_reduced_data;
+   static boost::shared_ptr<tbox::Timer> t_initialize_private;
+   static boost::shared_ptr<tbox::Timer> t_acquire_remote_boxes;
+   static boost::shared_ptr<tbox::Timer> t_cache_global_reduced_data;
 
    /*!
-    * @brief Pointer to the GridGeometry associated with this object.
+    * @brief boost::shared_ptr to the GridGeometry associated with this object.
     */
-   tbox::Pointer<const GridGeometry> d_grid_geometry;
+   boost::shared_ptr<const GridGeometry> d_grid_geometry;
 
    /*!
     * @brief A LocalId object with value of -1.
