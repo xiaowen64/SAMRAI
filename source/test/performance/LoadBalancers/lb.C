@@ -69,7 +69,7 @@ void
 generatePrebalanceByUserBoxes(
    hier::BoxLevel& L1,
    hier::Connector& L0_to_L1,
-   hier::Connector& balacne_to_L0,
+   hier::Connector& balance_to_L0,
    const hier::BoxLevel& L0,
    boost::shared_ptr<tbox::Database> database,
    const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
@@ -126,23 +126,28 @@ refineHead(
    hier::Connector& head_to_ref,
    const hier::IntVector &refinement_ratio );
 
-void
-outputMetadataL0(
+void outputMetadataL0(
    const hier::BoxLevel &L0,
-   const std::string &L0_name );
+   const hier::Connector &L0_to_L0,
+   int level_output_depth = 1,
+   int connector_output_depth = 0 );
 
 void outputMetadataBefore(
    const hier::Connector &La_to_Lb,
    const hier::Connector &Lb_to_La,
    const std::string &La_name,
-   const std::string &Lb_name );
+   const std::string &Lb_name,
+   int level_output_depth = 1,
+   int connector_output_depth = 0 );
 
 void outputMetadataAfter(
    const hier::Connector &La_to_Lb,
    const hier::Connector &Lb_to_La,
    const hier::Connector &Lb_to_Lb,
    const std::string &La_name,
-   const std::string &Lb_name );
+   const std::string &Lb_name,
+   int level_output_depth = 1,
+   int connector_output_depth = 0 );
 
 boost::shared_ptr<mesh::LoadBalanceStrategy>
 createLoadBalancer(
@@ -373,7 +378,7 @@ int main(
           * GridGeometry forbids increasing the max data ghost width
           * after it starts computing boundary boxes for a patch.  We
           * force it to accept a big ghost width here so that the
-          * methods below (particularly, those using registering tag
+          * methods below (particularly those registering tag
           * data) won't crash by asking for more ghost width than what
           * was registered when the first boundary boxes were
           * computed.
@@ -443,7 +448,7 @@ int main(
       /*
        * Step 1: Build L0.
        */
-      tbox::pout << "Generating L0" << std::endl;
+      tbox::pout << "\n\n\nGenerating L0" << std::endl;
 
       hier::BoxLevel L0(hier::IntVector(dim, 1), grid_geometry);
 
@@ -526,7 +531,10 @@ int main(
             (double)L0.getLocalNumberOfCells(),
             L0.getMPI());
 
-         outputMetadataL0(L0, "L0");
+         outputMetadataL0(
+            L0,
+            L0.getPersistentOverlapConnectors().
+            findOrCreateConnector( L0, ghost_cell_width, true ) );
       }
 
 
@@ -547,7 +555,7 @@ int main(
          /*
           * Step 2: Build L1.
           */
-         tbox::pout << "Generating L1" << std::endl;
+         tbox::pout << "\n\n\nGenerating L1" << std::endl;
 
 
          const int coarser_ln = 0;
@@ -647,7 +655,7 @@ int main(
          /*
           * Step 3: Build L2.
           */
-         tbox::pout << "Generating L2" << std::endl;
+         tbox::pout << "\n\n\nGenerating L2" << std::endl;
 
          const int coarser_ln = 1;
          const int finer_ln = coarser_ln + 1;
@@ -818,13 +826,17 @@ int main(
 
 /*
 ****************************************************************************
-* Output L0 data.
+* Output data for L0.
 ****************************************************************************
 */
 void outputMetadataL0(
    const hier::BoxLevel &L0,
-   const std::string &L0_name )
+   const hier::Connector &L0_to_L0,
+   int level_output_depth,
+   int connector_output_depth )
 {
+   const std::string L0_name("L0");
+   const std::string L0_to_L0_name(L0_name + "_to_" + L0_name );
    const std::string arrow("-> ");
 
    L0.cacheGlobalReducedData();
@@ -834,7 +846,12 @@ void outputMetadataL0(
    hier::BoxLevelStatistics L0_stats(L0);
    tbox::plog << L0_name << " stats:\n";
    L0_stats.printBoxStats(tbox::plog, L0_name + arrow);
-   tbox::plog << L0_name << ":\n" << L0.format( L0_name + arrow, 2 );
+   tbox::plog << L0_name << ":\n" << L0.format( L0_name + arrow, level_output_depth );
+
+   hier::ConnectorStatistics L0_L0_stats(L0_to_L0);
+   tbox::plog << L0_to_L0_name << " neighbor stats:\n";
+   L0_L0_stats.printNeighborStats(tbox::plog, L0_to_L0_name + arrow );
+   tbox::plog << L0_to_L0_name << ":\n" << L0_to_L0.format( L0_to_L0_name + arrow, connector_output_depth );
 
    return;
 }
@@ -850,7 +867,9 @@ void outputMetadataBefore(
    const hier::Connector &La_to_Lb,
    const hier::Connector &Lb_to_La,
    const std::string &La_name,
-   const std::string &Lb_name )
+   const std::string &Lb_name,
+   int level_output_depth,
+   int connector_output_depth )
 {
    const hier::BoxLevel &La = La_to_Lb.getBase();
    const hier::BoxLevel &Lb = La_to_Lb.getHead();
@@ -867,22 +886,22 @@ void outputMetadataBefore(
    hier::BoxLevelStatistics La_stats(La);
    tbox::plog << La_name << " stats:\n";
    La_stats.printBoxStats(tbox::plog, La_name + arrow);
-   tbox::plog << La_name << ":\n" << La.format( La_name + arrow, 2 );
+   tbox::plog << La_name << ":\n" << La.format( La_name + arrow, level_output_depth );
 
    hier::BoxLevelStatistics Lb_stats(Lb);
    tbox::plog << Lb_name << " stats:\n";
    Lb_stats.printBoxStats(tbox::plog, Lb_name + arrow);
-   tbox::plog << Lb_name << ":\n" << Lb.format( Lb_name + arrow, 2 );
+   tbox::plog << Lb_name << ":\n" << Lb.format( Lb_name + arrow, level_output_depth );
 
    hier::ConnectorStatistics Lb_La_stats(Lb_to_La);
    tbox::plog << Lb_to_La_name << " neighbor stats:\n";
    Lb_La_stats.printNeighborStats(tbox::plog, Lb_to_La_name + arrow );
-   tbox::plog << Lb_to_La_name << ":\n" << Lb_to_La.format( Lb_to_La_name + arrow, 2 );
+   tbox::plog << Lb_to_La_name << ":\n" << Lb_to_La.format( Lb_to_La_name + arrow, connector_output_depth );
 
    hier::ConnectorStatistics La_Lb_stats(La_to_Lb);
    tbox::plog << La_to_Lb_name << " neighbor stats:\n";
    La_Lb_stats.printNeighborStats(tbox::plog, La_to_Lb_name + arrow );
-   tbox::plog << La_to_Lb_name << ":\n" << La_to_Lb.format( La_to_Lb_name + arrow, 2 );
+   tbox::plog << La_to_Lb_name << ":\n" << La_to_Lb.format( La_to_Lb_name + arrow, connector_output_depth );
 
    return;
 }
@@ -899,7 +918,9 @@ void outputMetadataAfter(
    const hier::Connector &Lb_to_La,
    const hier::Connector &Lb_to_Lb,
    const std::string &La_name,
-   const std::string &Lb_name )
+   const std::string &Lb_name,
+   int level_output_depth,
+   int connector_output_depth )
 {
    const hier::BoxLevel &Lb = La_to_Lb.getHead();
 
@@ -915,22 +936,22 @@ void outputMetadataAfter(
    hier::BoxLevelStatistics Lb_stats(Lb);
    tbox::plog << Lb_name << " stats:\n";
    Lb_stats.printBoxStats(tbox::plog, Lb_name + arrow);
-   tbox::plog << Lb_name << ":\n" << Lb.format( Lb_name + arrow, 2 );
+   tbox::plog << Lb_name << ":\n" << Lb.format( Lb_name + arrow, level_output_depth );
 
    hier::ConnectorStatistics Lb_Lb_stats(Lb_to_Lb);
    tbox::plog << Lb_to_Lb_name << " neighbor stats:\n";
    Lb_Lb_stats.printNeighborStats(tbox::plog, Lb_to_Lb_name + arrow );
-   tbox::plog << Lb_to_Lb_name << ":\n" << Lb_to_Lb.format( Lb_to_Lb_name + arrow, 2 );
+   tbox::plog << Lb_to_Lb_name << ":\n" << Lb_to_Lb.format( Lb_to_Lb_name + arrow, connector_output_depth );
 
    hier::ConnectorStatistics Lb_La_stats(Lb_to_La);
    tbox::plog << Lb_to_La_name << " neighbor stats:\n";
    Lb_La_stats.printNeighborStats(tbox::plog, Lb_to_La_name + arrow );
-   tbox::plog << Lb_to_La_name << ":\n" << Lb_to_La.format( Lb_to_La_name + arrow, 2 );
+   tbox::plog << Lb_to_La_name << ":\n" << Lb_to_La.format( Lb_to_La_name + arrow, connector_output_depth );
 
    hier::ConnectorStatistics La_Lb_stats(La_to_Lb);
    tbox::plog << La_to_Lb_name << " neighbor stats:\n";
    La_Lb_stats.printNeighborStats(tbox::plog, La_to_Lb_name + arrow );
-   tbox::plog << La_to_Lb_name << ":\n" << La_to_Lb.format( La_to_Lb_name + arrow, 2 );
+   tbox::plog << La_to_Lb_name << ":\n" << La_to_Lb.format( La_to_Lb_name + arrow, connector_output_depth );
 
    return;
 }
