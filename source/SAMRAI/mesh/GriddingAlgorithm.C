@@ -2134,13 +2134,8 @@ void GriddingAlgorithm::recordStatistics(
       if (ln < d_hierarchy->getNumberOfLevels()) {
          boost::shared_ptr<hier::PatchLevel> patch_level =
             d_hierarchy->getPatchLevel(ln);
-         level_gridcells += patch_level->getLocalNumberOfCells();
-         level_local_patches += patch_level->getLocalNumberOfPatches();
-         for (hier::PatchLevel::Iterator ip(patch_level); ip; ip++) {
-            boost::shared_ptr<hier::Patch> patch = *ip;
-            level_gridcells += patch->getBox().size();
-            level_local_patches += 1;
-         }
+         level_gridcells = patch_level->getLocalNumberOfCells();
+         level_local_patches = patch_level->getLocalNumberOfPatches();
       }
       d_boxes_stat[ln]->recordProcStat(double(level_local_patches));
       d_cells_stat[ln]->recordProcStat(double(level_gridcells));
